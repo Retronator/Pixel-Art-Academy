@@ -1,2 +1,2 @@
 # Pixel-Art-Academy
-An adventure game that teaches you art.
+An adventure game for learning to draw.

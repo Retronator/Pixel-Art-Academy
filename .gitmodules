@@ -1,9 +1,6 @@
 [submodule "public"]
 	path = public
 	url = https://github.com/Retronator/Pixel-Art-Academy-Content
-[submodule "packages/landsofillusions"]
-	path = packages/landsofillusions
-	url = https://github.com/Retronator/Lands-of-Illusions
 [submodule "packages/artificialengines"]
 	path = packages/artificialengines
 	url = https://github.com/Retronator/Artificial-Engines.git
