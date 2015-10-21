@@ -4,3 +4,6 @@
 [submodule "packages/artificialengines"]
 	path = packages/artificialengines
 	url = https://github.com/Retronator/Artificial-Engines.git
+[submodule "packages/landsofillusions"]
+	path = packages/landsofillusions
+	url = https://github.com/Retronator/Lands-of-Illusions.git
