@@ -1,0 +1,48 @@
+<template name="PixelArtAcademy.Pages.Home">
+  <h1>Pixel Art Academy Alpha!</h1>
+  <p>Things to keep in mind:</p>
+  <ul>
+    <li><b>Security</b>: Webpage is for now running over an unsecure http protocol. I you are on a public network such as a cafe
+      or a dorm wi-fi,
+      someone could potentially listen and hijack the communication between your browser and the server. It's unlikely,
+      especially since there's no information to 'steal' yet, but I just wanted a disclaimer out there. So it's up to
+      you not to store any sensitive information in there until I upgrade to https. And you probably shouldn't even later on.
+    </li>
+    <li><b>More security</b>: Otherwise all the data is safely stored to the best of my knowledge (you are welcome to
+      analyze the
+      <a href="https://github.com/retronator" target="_blank">source
+        code</a>). No passwords are stored on the server, they don't even leave your browser except in hash form. The
+      hashes are stored.
+      oAuth tokens are stored with encryption.
+    </li>
+    <li><b>User data</b>: I don't guarantee that any user data won't get wiped at some point or another during the
+      alpha. Please don't use the alpha to build a portfolio to show to clients (yet). It's a playground to see the tech while it's
+      being built. So don't spend too much time customizing everything. We're very early on and there will be many
+      breaking changes happening, which I won't always have time to address with migrating old data to new formats.
+    </li>
+    <li><b>Personal information</b>: If you're under 13 years old, you aren't allowed to create an account on the site. You can use whatever public information and
+      tools there are, but if you create an account, you are agreeing that you are 13 years old or older. You will need an email or an external service to log you in. I store
+      the emails I collect that way in the database. That's as much personal information I collect on my own. Everything else are things you
+      explicitly enter into the game when you're logged in.
+    </li>
+    <li><b>Cookies</b>: I don't use cookies! I store your login info and character selection to local
+      storage (it stays on your computer) so you can continue without logging in again and reloading your character after you've left. I don't
+      have time (or desire, for now) to bother with analytics so there are no tracking cookies and collection of
+      that sort of information.
+    </li>
+    <li><b>Graphics</b>: There are no graphics! This is pure html/minimal css alpha to develop the functionality.
+      After the functionality is up, then I can be bothered with styling. Kind of like Dwarf Fortress.
+    </li>
+  </ul>
+  <p>By using Pixel Art Academy you are agreeing to these terms. Savvy? Good.</p>
+  <hr/>
+  <h2>Current functionality</h2>
+  <p>Here are the things you can play around with:</p>
+  <ul>
+    <li><b><a href="{{FlowRouterPath 'calendar'}}">Pixel Art Calendar</a></b>: One place for all that's going on in the pixel art community.</li>
+  </ul>
+  <p>A note for alpha level backers: once accounts are set up, you will get the ability to log into the page and start
+  creating characters. Characters are basically like your save games. Without a character you can only see public information
+  in the alpha. So while the alpha is not completely closed to only the alpha backers, you are the only ones that can
+  actually start playing with your characters, get personalized views, track progress, later on upload artworks and such things.</p>
+</template>
