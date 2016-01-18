@@ -3,18 +3,13 @@ PAA = PixelArtAcademy
 
 # Get Pixel Dailies themes for a certain date range.
 Meteor.publish 'pixelDailiesThemes', (dateRange) ->
-  check dateRange, Match.DateRange
-
-  dateRange = new AE.DateRange dateRange
-  start = dateRange.start()
-  end = dateRange.end()
+  check dateRange, AE.DateRange
 
   query =
     hashtag:
       $exists: true
 
-  query.start = $gte: start if start
-  query.end = $lt: end if end
+  query = dateRange.addToMongoQuery query, 'date'
 
   PAA.PixelDailies.Theme.documents.find query,
     fields:

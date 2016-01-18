@@ -30,6 +30,7 @@ Package.onUse(function(api) {
   api.addFiles('apps/apps.coffee');
 
   api.addFiles('apps/calendar/calendar.html');
+  api.addFiles('apps/calendar/calendar.styl');
   api.addFiles('apps/calendar/calendar.coffee');
   api.addFiles('apps/calendar/provider.coffee');
 });

@@ -1,7 +1,23 @@
 <template name="PixelArtAcademy.Apps.Calendar">
-  <div class="navigator">
-    <div class="current-month-text">{{currentMonthText}}</div>
-    <button class="previous-month">{{>t10e "Previous"}}</button>
-    <button class="next-month">{{>t10e "Next"}}</button>
+  <div class="apps-calendar">
+    <div class="navigator">
+      <div class="current-month-text">{{currentMonthText}}</div>
+      <button class="previous-month">{{>t10e "Previous"}}</button>
+      <button class="next-month">{{>t10e "Next"}}</button>
+    </div>
+    <ol class="days">
+      {{#each days}}
+        <li class="day">
+          <div class="date-day">{{getDate}}</div>
+          {{#each providers}}
+            <ul class="events">
+              {{#each calendarEvents}}
+                <li class="event">{{this}}</li>
+              {{/each}}
+            </ul>
+          {{/each}}
+        </li>
+      {{/each}}
+    </ol>
   </div>
 </template>
