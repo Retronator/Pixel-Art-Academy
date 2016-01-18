@@ -27,6 +27,9 @@ Package.onUse(function(api) {
   api.addFiles('pages/home/home.html');
   api.addFiles('pages/home/home.coffee');
 
-  api.addFiles('pages/calendar/calendar.html');
-  api.addFiles('pages/calendar/calendar.coffee');
+  api.addFiles('apps/apps.coffee');
+
+  api.addFiles('apps/calendar/calendar.html');
+  api.addFiles('apps/calendar/calendar.coffee');
+  api.addFiles('apps/calendar/provider.coffee');
 });

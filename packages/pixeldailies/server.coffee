@@ -15,7 +15,7 @@ class PAA.PixelDailies extends PAA.PixelDailies
     options.processedCount ?= 0
 
     # We can only see the history for 3200 tweets back (API limit).
-    return if options.processedCount >= 400
+    return if options.processedCount >= 3200
 
     # Get 200 tweets.
     params =
@@ -55,9 +55,12 @@ class PAA.PixelDailies extends PAA.PixelDailies
 
       return if existing
 
-      # Prepare new document parameters.
+      # Prepare new theme document parameters. For the date, strip the time part from it.
+      tweetTime = new Date tweet.created_at
+      tweetDate = new Date tweetTime.getFullYear(), tweetTime.getMonth(), tweetTime.getDate()
+
       theme =
-        date: new Date tweet.created_at
+        date: tweetDate
         text: tweet.text
         tweetData: tweet
 

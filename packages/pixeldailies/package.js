@@ -25,6 +25,9 @@ Package.onUse(function(api) {
 
   // Immediately add the server file because it rewrites the PixelDailies class.
   api.addFiles('server.coffee', 'server');
+  api.addFiles('subscriptions.coffee', 'server');
 
   api.addFiles('documents/theme.coffee');
+
+  api.addFiles('calendar/providers/theme.coffee');
 });
