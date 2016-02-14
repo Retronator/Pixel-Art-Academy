@@ -20,6 +20,7 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFiles('pixelartacademy.html');
+  api.addFiles('pixelartacademy.styl');
   api.addFiles('pixelartacademy.coffee');
 
   api.addFiles('pages/pages.coffee');
@@ -33,4 +34,6 @@ Package.onUse(function(api) {
   api.addFiles('apps/calendar/calendar.styl');
   api.addFiles('apps/calendar/calendar.coffee');
   api.addFiles('apps/calendar/provider.coffee');
+
+  api.addFiles('server.coffee', 'server');
 });

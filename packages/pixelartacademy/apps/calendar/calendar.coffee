@@ -9,9 +9,6 @@ class PAA.Apps.Calendar extends AM.Component
   onCreated: ->
     super
 
-    # Enable translations.
-    @initializeArtificialBabel PAA.babelServer
-
     # Create calendar providers.
     @providers = [
       new PAA.PixelDailies.ThemeCalendarProvider()
