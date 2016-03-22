@@ -22,11 +22,23 @@ Package.onUse(function(api) {
   api.addFiles('pixelartacademy.html');
   api.addFiles('pixelartacademy.styl');
   api.addFiles('pixelartacademy.coffee');
+  api.addFiles('server.coffee', 'server');
 
   api.addFiles('pages/pages.coffee');
 
   api.addFiles('pages/home/home.html');
   api.addFiles('pages/home/home.coffee');
+
+  api.addFiles('pages/admin/admin.html');
+  api.addFiles('pages/admin/admin.coffee');
+  api.addFiles('pages/admin/components/components.coffee');
+  api.addFiles('pages/admin/components/adminpage/adminpage.coffee');
+  api.addFiles('pages/admin/components/adminpage/adminpage.html');
+  api.addFiles('pages/admin/components/adminpage/adminpage.styl');
+  api.addFiles('pages/admin/components/index/index.coffee');
+  api.addFiles('pages/admin/components/index/index.html');
+  api.addFiles('pages/admin/components/index/index.styl');
+  api.addFiles('pages/admin/components/document/document.coffee');
 
   api.addFiles('apps/apps.coffee');
 
@@ -35,5 +47,5 @@ Package.onUse(function(api) {
   api.addFiles('apps/calendar/calendar.coffee');
   api.addFiles('apps/calendar/provider.coffee');
 
-  api.addFiles('server.coffee', 'server');
+  api.addFiles('character/methods.coffee', 'server');
 });

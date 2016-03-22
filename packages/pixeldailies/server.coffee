@@ -4,12 +4,18 @@ TwitterText = Npm.require 'twitter-text'
 
 # Prepare the server part of the PixelDailies class.
 class PAA.PixelDailies extends PAA.PixelDailies
-  @_twit = new Twit
-    consumer_key: 'dsAoBmJ4Cpo1OEfdavpRGzEzF'
-    consumer_secret: 'WTa0eb6CotiUnCH85fisziFDgAul98ULhCyXJUdY7tSfTSno39'
-    app_only_auth: true
+  # Setup Twitter API.
+  if Meteor.settings.twitter
+    @_twit = new Twit
+      consumer_key: Meteor.settings.twitter.consumerKey
+      consumer_secret: Meteor.settings.twitter.secret
+      app_only_auth: true
 
-  @_twitGet = Meteor.wrapAsync @_twit.get.bind @_twit
+    @_twitGet = Meteor.wrapAsync @_twit.get.bind @_twit
+
+  else
+    console.warn "You need to specify twitter consumer key and secret in the settings file and don't forget to run the server with the --settings flag pointing to it."
+    @_twitGet = ->
 
   @processTweetHistory: (options = {}) ->
     options.processedCount ?= 0

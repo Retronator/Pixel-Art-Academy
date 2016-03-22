@@ -11,7 +11,7 @@ class PAA.Apps.Calendar extends AM.Component
 
     # Create calendar providers.
     @providers = [
-      new PAA.PixelDailies.ThemeCalendarProvider()
+      new PAA.PixelDailies.ThemesCalendarProvider()
     ]
 
     today = new Date()

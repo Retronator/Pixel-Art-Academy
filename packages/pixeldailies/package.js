@@ -16,7 +16,6 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:landsofillusions');
   api.use('pixelartacademy');
 
   api.export('PixelArtAcademy');
@@ -27,7 +26,7 @@ Package.onUse(function(api) {
   api.addFiles('server.coffee', 'server');
   api.addFiles('subscriptions.coffee', 'server');
 
-  api.addFiles('documents/theme.coffee');
+  api.addFiles('themes/theme.coffee');
 
-  api.addFiles('calendar/providers/theme.coffee');
+  api.addFiles('calendar/themes.coffee');
 });

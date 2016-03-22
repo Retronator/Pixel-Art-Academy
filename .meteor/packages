@@ -18,5 +18,6 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 coffeescript
 retronator:landsofillusions
 kadira:flow-router
+artworks
 pixelartacademy
 pixeldailies

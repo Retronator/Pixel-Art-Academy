@@ -1,0 +1,12 @@
+<template name="PixelArtAcademy.Pages.Admin.Components.AdminPage">
+  <div class="admin-page">
+    {{> PixelArtAcademy.Pages.Admin.Header}}
+    <h3>{{capitalize options.pluralName}}</h3>
+    {{> PixelArtAcademy.Pages.Admin.Components.Index args options}}
+    {{#if document}}
+      <div class="document-area">
+        {{> documentPage document}}
+      </div>
+    {{/if}}
+  </div>
+</template>
