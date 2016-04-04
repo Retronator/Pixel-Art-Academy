@@ -26,5 +26,7 @@ class PAA.PixelDailies.ThemesCalendarProvider extends PAA.Apps.Calendar.Provider
       fields:
         tweetData: 0
 
-    # Convert themes to text
-    theme.hashtag for theme in themes.fetch()
+    # Return the array of components (+ data contexts) that will render the events.
+    for theme in themes.fetch()
+      component: new PAA.PixelDailies.ThemeCalendarComponent()
+      dataContext: theme
