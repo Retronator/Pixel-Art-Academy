@@ -1,0 +1,48 @@
+.apps-journal
+  .check-ins
+    list-style none
+
+    .check-in
+      position relative
+      margin-bottom 20px
+
+      .image
+        position relative
+        float left
+        width 400px
+        margin 0
+
+        img
+          max-width 100%
+
+        .actions
+          display none
+          position absolute
+          left 10px
+          bottom 10px
+
+        &:hover
+          .actions
+            display block
+
+      .data
+        float left
+        width 400px
+        margin-left 20px
+
+        .date
+          margin-bottom 10px
+
+        .text
+          position relative
+
+          textarea
+            width 400px
+            background none
+            border none
+            resize none
+
+      &::after
+        content ''
+        display block
+        clear both

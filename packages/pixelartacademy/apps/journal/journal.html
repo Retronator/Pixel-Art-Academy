@@ -1,0 +1,28 @@
+<template name="PixelArtAcademy.Apps.Journal">
+  <div class="apps-journal">
+    <div class="actions">
+      <button class="check-in">{{> t10e "Check-in"}}</button>
+    </div>
+    <ol class="check-ins">
+      {{#each checkIns}}
+        <li class="check-in">
+          <figure class="image">
+            {{#if artwork}}
+              <img src="{{artwork.image.url}}"/>
+            {{/if}}
+            {{#if image}}
+              <img src="{{image.url}}"/>
+            {{/if}}
+            <div class="actions">
+              <button class="delete">{{> t10e "Delete check-in"}}</button>
+            </div>
+          </figure>
+          <div class="data">
+            <div class="date">{{dateText}}</div>
+            <div class="text">{{> PixelArtAcademy.Apps.Journal.CheckInText}}</div>
+          </div>
+        </li>
+      {{/each}}
+    </ol>
+  </div>
+</template>
