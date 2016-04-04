@@ -1,6 +1,6 @@
 PAA = PixelArtAcademy
 
-class PAA.Artworks.Artwork extends Document
+class PixelArtAcademyArtworksArtwork extends Document
   # title: the (working) title of the artwork
   # wip: boolean whether this is an unfinished snapshot
   # artist: the author of the artwork
@@ -11,10 +11,12 @@ class PAA.Artworks.Artwork extends Document
   #   pixelScale: pixel size for display of pixel art images
   #
   @Meta
-    name: 'Artwork'
+    name: 'PixelArtAcademyArtworksArtwork'
     fields: =>
       artist: @ReferenceField PAA.Artworks.Artist, ['displayName'], false
 
   @defaultData: ->
     title: null
     wip: false
+
+PAA.Artworks.Artwork = PixelArtAcademyArtworksArtwork

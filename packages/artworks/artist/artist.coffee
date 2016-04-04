@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Artworks.Artist extends Document
+class PixelArtAcademyArtworksArtist extends Document
   # name: real life name of the artist
   #   first
   #   middle
@@ -19,7 +19,7 @@ class PAA.Artworks.Artist extends Document
   # character:
   #   _id
   @Meta
-    name: 'Artist'
+    name: 'PixelArtAcademyArtworksArtist'
     fields: =>
       displayName: @GeneratedField 'self', ['name', 'pseudonym'], (fields) ->
         return [fields._id, ''] unless fields.name or fields.pseudonym
@@ -56,3 +56,5 @@ class PAA.Artworks.Artist extends Document
     return true if services.twitter?.screenName is @profiles.twitter?.name
 
     false
+
+PAA.Artworks.Artist = PixelArtAcademyArtworksArtist
