@@ -47,5 +47,16 @@ Package.onUse(function(api) {
   api.addFiles('apps/calendar/calendar.coffee');
   api.addFiles('apps/calendar/provider.coffee');
 
+  api.addFiles('apps/journal/journal.html');
+  api.addFiles('apps/journal/journal.styl');
+  api.addFiles('apps/journal/journal.coffee');
+
+  api.addFiles('apps/journal/checkin/checkin.html');
+  api.addFiles('apps/journal/checkin/checkin.styl');
+  api.addFiles('apps/journal/checkin/checkin.coffee');
+
   api.addFiles('character/methods.coffee', 'server');
+
+  api.addFiles('importeddata/importeddata.coffee');
+  api.addFiles('importeddata/prealphapractice.coffee');
 });

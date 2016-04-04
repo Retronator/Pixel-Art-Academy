@@ -19,6 +19,8 @@ class PixelArtAcademy extends Artificial.Base.App
 
     # Apps
     @_addPage 'calendar', '/calendar', new @constructor.Apps.Calendar
+    @_addPage 'journal', '/journal', new @constructor.Apps.Journal
+    @_addPage 'journalCheckIn', '/journal/check-in', new @constructor.Apps.Journal.CheckIn
 
     FlowRouter.initialize()
 

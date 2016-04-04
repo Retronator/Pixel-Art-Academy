@@ -12,6 +12,7 @@ class PAA.Apps.Calendar extends AM.Component
     # Create calendar providers.
     @providers = [
       new PAA.PixelDailies.ThemesCalendarProvider()
+      new PAA.Practice.CheckInsCalendarProvider()
     ]
 
     today = new Date()
@@ -45,6 +46,11 @@ class PAA.Apps.Calendar extends AM.Component
     provider = @currentData()
 
     provider.getEvents date
+
+  renderEvent: ->
+    event = @parentDataWith 'component'
+
+    event.component.renderComponent @currentComponent()
 
   # Events
 

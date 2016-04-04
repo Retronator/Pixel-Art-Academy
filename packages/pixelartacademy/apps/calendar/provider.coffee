@@ -6,7 +6,9 @@ class PAA.Apps.Calendar.Provider
   constructor: ->
     @_monthSubscriptions = {}
 
-  # Returns all events for a specific day.
+  # Returns an array of events for a specific day. Event is an object with
+  # component: component instance that will render the event
+  # dataContext: the data context to be provided to the component
   getEvents: (dayDate) ->
     # Not implemented.
 

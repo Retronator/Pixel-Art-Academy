@@ -9,13 +9,17 @@
       {{#each days}}
         <li class="day">
           <div class="date-day">{{getDate}}</div>
-          {{#each providers}}
-            <ul class="events">
+          <ul class="events">
+            {{#each providers}}
               {{#each calendarEvents}}
-                <li class="event">{{this}}</li>
+                <li class="event">
+                  {{#with dataContext}}
+                    {{> renderEvent}}
+                  {{/with}}
+                </li>
               {{/each}}
-            </ul>
-          {{/each}}
+            {{/each}}
+          </ul>
         </li>
       {{/each}}
     </ol>

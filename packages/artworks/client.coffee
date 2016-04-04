@@ -3,8 +3,6 @@ PAA = PixelArtAcademy
 class PAA.Artworks extends PAA.Artworks
   @_uploader = new Slingshot.Upload "artworks"
 
-  console.log "UPLOADER", @_uploader
-
   @upload: (artworkId, file) ->
     error = @_uploader.validate file
 

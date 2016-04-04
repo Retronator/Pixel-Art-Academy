@@ -9,8 +9,6 @@ class PAA.Artworks.Components.Admin.Artwork extends PAA.Pages.Admin.Components.D
 
     @previewImage = new ReactiveField null
 
-    console.log @
-
   onCreated: ->
     super
 
