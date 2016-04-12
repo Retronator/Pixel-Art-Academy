@@ -3,8 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Apps.Journal extends AM.Component
-  @register 'PixelArtAcademy.Apps.Journal'
+class PAA.PixelBoy.Apps.Journal extends AM.Component
+  @register 'PixelArtAcademy.PixelBoy.Apps.Journal'
 
   onCreated: ->
     super
@@ -36,10 +36,14 @@ class PAA.Apps.Journal extends AM.Component
   events: ->
     super.concat
       'click button.check-in': @onClickCheckIn
+      'click button.import-check-ins': @onClickImportCheckIns
       'click .check-in .delete': @onClickDeleteCheckIn
 
   onClickCheckIn: (event) ->
     FlowRouter.go 'journalCheckIn'
+
+  onClickImportCheckIns: (event) ->
+    Meteor.call "PixelArtAcademy.Practice.CheckIn.import", LOI.characterId()
 
   onClickDeleteCheckIn: (event) ->
     Meteor.call "practiceCheckInRemove", @currentData()._id

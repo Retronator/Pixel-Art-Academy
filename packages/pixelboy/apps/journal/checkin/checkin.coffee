@@ -3,8 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Apps.Journal.CheckIn extends AM.Component
-  @register 'PixelArtAcademy.Apps.Journal.CheckIn'
+class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
+  @register 'PixelArtAcademy.PixelBoy.Apps.Journal.CheckIn'
 
   onCreated: ->
     super
@@ -26,19 +26,20 @@ class PAA.Apps.Journal.CheckIn extends AM.Component
     
     text = $('.text').val()
     imageFile = $('.image-file')[0]?.files[0]
-    imageUrl = $('.image-url').val()
+    externalUrl = $('.external-url').val()
 
-    if imageUrl
-      @_finishSubmitting text, imageUrl
+    if externalUrl
+      @_finishSubmitting text, externalUrl
 
-    else
+    else if imageFile
       PAA.Practice.upload imageFile, (imageUrl) =>
         @_finishSubmitting text, imageUrl
 
-  _finishSubmitting: (text, imageUrl) ->
-    console.log "submit", text, imageUrl
+    else
+      @_finishSubmitting text
 
-    Meteor.call 'practiceCheckIn', LOI.characterId(), text, imageUrl, (error) =>
+  _finishSubmitting: (text, url) ->
+    Meteor.call 'practiceCheckIn', LOI.characterId(), text, url, (error) =>
       @submitting false
 
       if error

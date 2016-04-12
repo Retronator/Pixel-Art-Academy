@@ -12,7 +12,9 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('pixelartacademy');
+  api.use('pixelboy');
   api.use('edgee:slingshot');
+  api.use('jparker:crypto-aes');
 
   api.export('PixelArtAcademy');
 
@@ -21,12 +23,24 @@ Package.onUse(function(api) {
   api.addFiles('client.coffee', 'client');
 
   api.addFiles('checkin/checkin.coffee');
-  api.addFiles('checkin/methods.coffee', 'server');
+  api.addFiles('checkin/methods.coffee');
+  api.addFiles('checkin/methods-server.coffee', 'server');
   api.addFiles('checkin/subscriptions.coffee', 'server');
 
   api.addFiles('calendar/checkinsprovider.coffee');
-  
+
   api.addFiles('calendar/checkincomponent.html');
   api.addFiles('calendar/checkincomponent.coffee');
   api.addFiles('calendar/checkincomponent.styl');
+
+  api.addFiles('importeddata/importeddata.coffee');
+  api.addFiles('importeddata/checkin.coffee', 'server');
+
+  api.addFiles('pages/pages.coffee');
+
+  api.addFiles('pages/importcheckins/importcheckins.coffee');
+  api.addFiles('pages/importcheckins/importcheckins.html');
+  api.addFiles('pages/importcheckins/importcheckins.styl');
+  api.addFiles('pages/importcheckins/methods.coffee', 'server');
+
 });

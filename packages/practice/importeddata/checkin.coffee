@@ -1,6 +1,6 @@
 PAA = PixelArtAcademy
 
-class PixelArtAcademyImportedDataPreAlphaPractice extends Document
+class PixelArtAcademyPracticeImportedDataCheckIn extends Document
   # timestamp: the time when form was submitted
   # backerEmail: the email of the backer
   # text: the text submitted on practice day
@@ -8,6 +8,6 @@ class PixelArtAcademyImportedDataPreAlphaPractice extends Document
   # feedback: (optional) private feedback shared with us
   # {extraData}: any extra data included in the form
   @Meta
-    name: 'PixelArtAcademyImportedDataPreAlphaPractice'
+    name: 'PixelArtAcademyPracticeImportedDataCheckIn'
 
-PAA.ImportedData.PreAlphaPractice = PixelArtAcademyImportedDataPreAlphaPractice
+PAA.Practice.ImportedData.CheckIn = PixelArtAcademyPracticeImportedDataCheckIn

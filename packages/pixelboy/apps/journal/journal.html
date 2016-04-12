@@ -1,7 +1,11 @@
-<template name="PixelArtAcademy.Apps.Journal">
+<template name="PixelArtAcademy.PixelBoy.Apps.Journal">
+  {{> PixelArtAcademy.PixelBoy.Components.AppSwitcher}}
+  <h1>Practice journal</h1>
+  <p>Complete your daily check-in and show what you've created today.</p>
   <div class="apps-journal">
     <div class="actions">
-      <button class="check-in">{{> t10e "Check-in"}}</button>
+      <button class="check-in">{{> t10e "New check-in"}}</button>
+      <button class="import-check-ins">{{> t10e "Import check-ins"}}</button>
     </div>
     <ol class="check-ins">
       {{#each checkIns}}
@@ -12,6 +16,9 @@
             {{/if}}
             {{#if image}}
               <img src="{{image.url}}"/>
+            {{/if}}
+            {{#if post}}
+              <a href="{{post.url}}" target="_blank">{{post.url}}</a>
             {{/if}}
             <div class="actions">
               <button class="delete">{{> t10e "Delete check-in"}}</button>

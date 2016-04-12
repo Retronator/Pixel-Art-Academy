@@ -1,9 +1,19 @@
 <template name="PixelArtAcademy.Practice.CheckInCalendarComponent">
   <div class="calendar-check-in">
     <p class="status">{{character.name}} checked in today.</p>
-    <figure class="image">
-      <img src="{{image.url}}"/>
-      <figcaption class="text">{{text}}</figcaption>
-    </figure>
+    {{#if showFigure}}
+      <figure class="image">
+        {{#if artwork}}
+          <img src="{{artwork.image.url}}"/>
+        {{/if}}
+        {{#if image}}
+          <img src="{{image.url}}"/>
+        {{/if}}
+        {{#if post}}
+          <a href="{{post.url}}" target="_blank">{{post.url}}</a>
+        {{/if}}
+        <figcaption class="text">{{text}}</figcaption>
+      </figure>
+    {{/if}}
   </div>
 </template>

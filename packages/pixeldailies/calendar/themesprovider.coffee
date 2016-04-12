@@ -1,7 +1,7 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
 
-class PAA.PixelDailies.ThemesCalendarProvider extends PAA.Apps.Calendar.Provider
+class PAA.PixelDailies.ThemesCalendarProvider extends PAA.PixelBoy.Apps.Calendar.Provider
   constructor: ->
     super
 

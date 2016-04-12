@@ -1,5 +1,12 @@
 <template name="PixelArtAcademy.Pages.Home">
   <h1>Pixel Art Academy Alpha!</h1>
+  <h2>Current functionality</h2>
+  <p>Here are the things you can play around with:</p>
+  <ul>
+    <li><strong><a href="{{FlowRouterPath 'journal'}}">Journal</a></strong>: Track your practice by checking in.</li>
+    <li><strong><a href="{{FlowRouterPath 'calendar'}}">Pixel Art Calendar</a></strong>: See what's going on in the pixel art community.</li>
+  </ul>
+  <hr/>
   <p>Things to keep in mind:</p>
   <ul>
     <li><strong>Security</strong>: Webpage is for now running over an unsecure http protocol. I you are on a public network such as a cafe
@@ -35,14 +42,4 @@
     </li>
   </ul>
   <p>By using Pixel Art Academy you are agreeing to these terms. Savvy? Good.</p>
-  <hr/>
-  <h2>Current functionality</h2>
-  <p>Here are the things you can play around with:</p>
-  <ul>
-    <li><strong><a href="{{FlowRouterPath 'calendar'}}">Pixel Art Calendar</a></strong>: Track your progress and see what's going on in the pixel art community.</li>
-  </ul>
-  <p>A note for alpha level backers: once accounts are set up, you will get the ability to log into the page and start
-  creating characters. Characters are basically like your save games. Without a character you can only see public information
-  in the alpha. So while the alpha is not completely closed to only the alpha backers, you are the only ones that can
-  actually start playing with your characters, get personalized views, track progress, later on upload artworks and such things.</p>
 </template>

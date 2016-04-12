@@ -1,0 +1,12 @@
+<template name="PixelArtAcademy.Pages.Login">
+  <h1>Pixel Art Academy Alpha!</h1>
+  {{#if currentUser}}
+      <p>You need to have alpha access to use Pixel Art Academy alpha version.</p>
+  {{else}}
+    <p>Please sign in through <a href="http://enter.landsofillusions.com">Lands of Illusions</a>.
+      When signed in there, you should automatically get signed in here as well.</p>
+    <p>NOTE FOR SAFARI USERS: This does not yet work in Safari due to stricter security settings. If you
+    really want to use the system before we find out another way to share login information, you can go to
+    Safari Preferences > Privacy tab and set Cookies and website data to Always allow.</p>
+  {{/if}}
+</template>

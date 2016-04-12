@@ -6,6 +6,8 @@ class PixelArtAcademyPracticeCheckIn extends Document
   # character: character that published the post
   #   _id
   #   name
+  # post: (optional) the external post with the check-in data
+  #   url
   # text: (optional) the text of the post
   # artwork: (optional) the artwork associated with the post
   #   _id

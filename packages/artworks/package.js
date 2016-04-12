@@ -12,6 +12,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('pixelartacademy');
+  api.use('pixelboy');
   api.use('edgee:slingshot');
 
   api.export('PixelArtAcademy');

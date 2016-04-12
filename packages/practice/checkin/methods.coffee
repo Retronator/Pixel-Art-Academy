@@ -2,22 +2,41 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 Meteor.methods
-  practiceCheckIn: (characterId, text, imageUrl) ->
+  practiceCheckIn: (characterId, text, url, time) ->
     check characterId, Match.DocumentId
-    check text, String
-    check imageUrl, String
+    check text, Match.OptionalOrNull String
+    check url, Match.OptionalOrNull String
+    check time, Match.OptionalOrNull Date
 
     # Make sure the character belongs to the current user.
     authorizeCharacter characterId
 
-    # We create a new artist for the given character.
-    PAA.Practice.CheckIn.documents.insert
-      time: new Date()
+    # We create a new check-in for the given character.
+    checkIn =
+      time: time or new Date()
       character:
         _id: characterId
-      text: text
-      image:
-        url: imageUrl
+
+    checkIn.text = text if text
+
+    if url
+      lastDotIndex = url.lastIndexOf('.')
+      extension = url.substring lastDotIndex + 1 if lastDotIndex
+
+      switch extension
+        when 'png', 'gif', 'jpg'
+          checkIn.image =
+            url: url
+
+        else
+          checkIn.post =
+            url: url
+
+    PAA.Practice.CheckIn.documents.upsert
+      time: checkIn.time
+      'character._id': checkIn.character._id
+    ,
+      checkIn
 
   practiceCheckInChangeText: (checkInId, newText) ->
     check checkInId, Match.DocumentId

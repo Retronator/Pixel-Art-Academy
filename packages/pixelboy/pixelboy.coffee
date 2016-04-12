@@ -1,3 +1,3 @@
 PAA = PixelArtAcademy
 
-class PAA.ImportedData
+class PAA.PixelBoy

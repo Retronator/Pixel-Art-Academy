@@ -29,6 +29,9 @@ Package.onUse(function(api) {
   api.addFiles('pages/home/home.html');
   api.addFiles('pages/home/home.coffee');
 
+  api.addFiles('pages/login/login.html');
+  api.addFiles('pages/login/login.coffee');
+
   api.addFiles('pages/admin/admin.html');
   api.addFiles('pages/admin/admin.coffee');
   api.addFiles('pages/admin/components/components.coffee');
@@ -40,23 +43,5 @@ Package.onUse(function(api) {
   api.addFiles('pages/admin/components/index/index.styl');
   api.addFiles('pages/admin/components/document/document.coffee');
 
-  api.addFiles('apps/apps.coffee');
-
-  api.addFiles('apps/calendar/calendar.html');
-  api.addFiles('apps/calendar/calendar.styl');
-  api.addFiles('apps/calendar/calendar.coffee');
-  api.addFiles('apps/calendar/provider.coffee');
-
-  api.addFiles('apps/journal/journal.html');
-  api.addFiles('apps/journal/journal.styl');
-  api.addFiles('apps/journal/journal.coffee');
-
-  api.addFiles('apps/journal/checkin/checkin.html');
-  api.addFiles('apps/journal/checkin/checkin.styl');
-  api.addFiles('apps/journal/checkin/checkin.coffee');
-
   api.addFiles('character/methods.coffee', 'server');
-
-  api.addFiles('importeddata/importeddata.coffee');
-  api.addFiles('importeddata/prealphapractice.coffee');
 });
