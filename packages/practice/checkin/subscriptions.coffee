@@ -16,4 +16,6 @@ Meteor.publish 'practiceCheckIns', (dateRange) ->
 
   query = dateRange.addToMongoQuery query, 'time'
 
-  PAA.Practice.CheckIn.documents.find query
+  PAA.Practice.CheckIn.documents.find query,
+    sort: 
+      time: -1

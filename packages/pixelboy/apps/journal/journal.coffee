@@ -62,3 +62,6 @@ class PAA.PixelBoy.Apps.Journal extends AM.Component
     load: -> @currentData()?.text
 
     save: (value) -> Meteor.call "practiceCheckInChangeText", @currentData()._id, value
+
+    placeholder: ->
+      'Enter journal text here.'

@@ -9,4 +9,4 @@ class PAA.Practice.CheckInCalendarComponent extends AM.Component
   showFigure: ->
     checkIn = @currentData()
 
-    checkIn.artwork or checkIn.text or checkIn.post or text
+    checkIn.artwork or checkIn.image or checkIn.post or checkIn.text

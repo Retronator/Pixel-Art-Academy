@@ -20,7 +20,9 @@ class PAA.Practice.CheckInsCalendarProvider extends PAA.PixelBoy.Apps.Calendar.P
 
     query = dateRange.addToMongoQuery query, 'time'
 
-    checkIns = PAA.Practice.CheckIn.documents.find query
+    checkIns = PAA.Practice.CheckIn.documents.find query,
+      sort:
+        time: -1
 
     # Return the array of components (+ data contexts) that will render the events.
     for checkIn in checkIns.fetch()
