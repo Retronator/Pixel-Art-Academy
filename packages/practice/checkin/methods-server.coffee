@@ -1,7 +1,20 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+Twit = Npm.require 'twit'
 
 Meteor.methods
+  getImgFromTweet: (id) ->
+    if Meteor.settings.twitter
+      @_tweet = new Twit
+        consumer_key: Meteor.settings.twitter.consumerKey
+        consumer_secret: Meteor.settings.twitter.secret
+        app_only_auth: true
+
+      @_tweetGetSync = Meteor.wrapAsync( @_tweet.get.bind @_tweet )
+
+      apiUrl = 'statuses/show/' + id
+      return @_tweetGetSync(apiUrl)
+
   "PixelArtAcademy.Practice.CheckIn.import": (characterId) ->
     check characterId, Match.DocumentId
 

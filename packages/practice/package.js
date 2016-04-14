@@ -10,6 +10,10 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  twit: '2.1.1'
+});
+
 Package.onUse(function(api) {
   api.use('pixelartacademy');
   api.use('pixelboy');
