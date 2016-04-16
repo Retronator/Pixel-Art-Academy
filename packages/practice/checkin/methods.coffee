@@ -2,11 +2,13 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 Meteor.methods
-  practiceCheckIn: (characterId, text, url, time) ->
+  'PixelArtAcademy.Practice.CheckIn.insert': (characterId, text, url, time) ->
     check characterId, Match.DocumentId
     check text, Match.OptionalOrNull String
     check url, Match.OptionalOrNull String
     check time, Match.OptionalOrNull Date
+
+    console.log "checking in with", text, url
 
     # Make sure the character belongs to the current user.
     authorizeCharacter characterId
@@ -20,17 +22,26 @@ Meteor.methods
     checkIn.text = text if text
 
     if url
-      lastDotIndex = url.lastIndexOf('.')
-      extension = url.substring lastDotIndex + 1 if lastDotIndex
+      # See if url is already an image.
+      try
+        response = HTTP.get url
+        contentType = response.headers['content-type']
 
-      switch extension
-        when 'png', 'gif', 'jpg'
+        # Check if the url is pointing directly to an image.
+        if /image/.test contentType
+          # Set the image directly as an image.
           checkIn.image =
             url: url
 
         else
+          # We have a post so save the post url for possible linking.
           checkIn.post =
             url: url
+
+          # Let's see if we can also extract an image from the url.
+          try
+            checkIn.image =
+              url: Meteor.call 'PixelArtAcademy.Practice.CheckIn.getExternalUrlImage', url
 
     PAA.Practice.CheckIn.documents.upsert
       time: checkIn.time
@@ -38,7 +49,7 @@ Meteor.methods
     ,
       checkIn
 
-  practiceCheckInChangeText: (checkInId, newText) ->
+  'PixelArtAcademy.Practice.CheckIn.changeText': (checkInId, newText) ->
     check checkInId, Match.DocumentId
     check newText, String
 
@@ -50,7 +61,7 @@ Meteor.methods
       $set:
         text: newText
 
-  practiceCheckInRemove: (checkInId) ->
+  'PixelArtAcademy.Practice.CheckIn.remove': (checkInId) ->
     check checkInId, Match.Optional Match.DocumentId
 
     # Make sure the check-in belongs to the current user.

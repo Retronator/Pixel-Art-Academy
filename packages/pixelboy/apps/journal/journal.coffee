@@ -37,6 +37,12 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
       month: 'long'
       year: 'numeric'
 
+  disableScrollingClass: ->
+    'disable-scrolling' if @showCheckInForm()
+
+  showCheckInForm: ->
+    FlowRouter.getParam('path') is 'check-in'
+
   # Events
 
   events: ->
@@ -46,13 +52,15 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
       'click .check-in .delete': @onClickDeleteCheckIn
 
   onClickCheckIn: (event) ->
-    FlowRouter.go 'journalCheckIn'
+    FlowRouter.go 'pixelboy',
+      app: 'journal'
+      path: 'check-in'
 
   onClickImportCheckIns: (event) ->
-    Meteor.call "PixelArtAcademy.Practice.CheckIn.import", LOI.characterId()
+    Meteor.call 'PixelArtAcademy.Practice.CheckIn.import', LOI.characterId()
 
   onClickDeleteCheckIn: (event) ->
-    Meteor.call "practiceCheckInRemove", @currentData()._id
+    Meteor.call 'PixelArtAcademy.Practice.CheckIn.remove', @currentData()._id
 
   # Components
   
@@ -67,7 +75,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
 
     load: -> @currentData()?.text
 
-    save: (value) -> Meteor.call "practiceCheckInChangeText", @currentData()._id, value
+    save: (value) -> Meteor.call 'PixelArtAcademy.Practice.CheckIn.changeText', @currentData()._id, value
 
     placeholder: ->
       'Enter journal text here.'

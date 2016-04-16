@@ -6,11 +6,15 @@
         {{#if artwork}}
           <img src="{{artwork.image.url}}"/>
         {{/if}}
-        {{#if image}}
-          <img src="{{image.url}}"/>
-        {{/if}}
-        {{#if post}}
-          <a href="{{post.url}}" target="_blank">{{post.url}}</a>
+        {{#if $and image post}}
+          <a href="{{post.url}}" target="_blank"><img src="{{image.url}}"/></a>
+        {{else}}
+          {{#if image}}
+            <img src="{{image.url}}"/>
+          {{/if}}
+          {{#if post}}
+            <a href="{{post.url}}" target="_blank">{{post.url}}</a>
+          {{/if}}
         {{/if}}
         <figcaption class="text">{{text}}</figcaption>
       </figure>

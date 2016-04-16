@@ -2,20 +2,87 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Twit = Npm.require 'twit'
 
+twit = null
+
+# Prepare Twit.
+if Meteor.settings.twitter
+  twit = new Twit
+    consumer_key: Meteor.settings.twitter.consumerKey
+    consumer_secret: Meteor.settings.twitter.secret
+    app_only_auth: true
+
+  twitGetSync = Meteor.wrapAsync twit.get.bind twit
+
 Meteor.methods
-  getImgFromTweet: (id) ->
-    if Meteor.settings.twitter
-      @_tweet = new Twit
-        consumer_key: Meteor.settings.twitter.consumerKey
-        consumer_secret: Meteor.settings.twitter.secret
-        app_only_auth: true
+  # Process a post url
+  'PixelArtAcademy.Practice.CheckIn.getExternalUrlImage': (url) ->
+    check url, String
 
-      @_tweetGetSync = Meteor.wrapAsync( @_tweet.get.bind @_tweet )
+    ogImageRegex = /og:image"\s*content="([^"]+)"/
 
-      apiUrl = 'statuses/show/' + id
-      return @_tweetGetSync(apiUrl)
+    # See if url is already an image.
+    try
+      response = HTTP.get url
+      contentType = response.headers['content-type']
 
-  "PixelArtAcademy.Practice.CheckIn.import": (characterId) ->
+      # Return the url directly if content type is an image.
+      return url if /image/.test contentType
+
+    catch
+      throw new Meteor.Error 'invalid-argument', "The provided url is not valid."
+    
+    # It is not, so let's parse the url to find what service it belongs to.
+    if /twitter\.com/.test url
+      tweetId = url.split('/status/')[1]
+      apiUrl = 'statuses/show/' + tweetId
+      tweetData = twitGetSync apiUrl
+
+      throw new Meteor.Error 'unavailable', "There was an error communicating with the server. Either the tweet doesn't exist, or the server is down - try again later!" unless tweetData
+      throw new Meteor.Error 'invalid-argument', "The tweet has no images associated with it." unless tweetData.entities?.media?[0]?.media_url_https
+
+      return tweetData.entities.media[0].media_url_https
+
+    else if /imgur\.com/.test url
+      # HACK: Look for the og:image tag in the head and remove the ?fb parameter.
+      results = ogImageRegex.exec response.content
+      return results[1].replace('?fb', '') if results[1]
+
+    # We didn't find a custom importer so let's try a general approach and look for the og:image tag in the head.
+    results = ogImageRegex.exec response.content
+    return results[1] if results[1]
+
+    # We don't know what to do with this url yet.
+    throw new Meteor.Error 'unsupported', "We do not yet support importing images from the given website. The check-in will include a link to your post."
+
+  'PixelArtAcademy.Practice.CheckIn.extractImagesFromPosts': ->
+    # Only an admin can perform this processing.
+    LOI.authorizeAdmin()
+
+    # Go over all check-ins that have a post, but no image.
+    checkIns = PAA.Practice.CheckIn.documents.find(
+      post: $exists: true
+      image: $exists: false
+    ).fetch()
+
+    processedCount = 0
+    for checkIn in checkIns
+      try
+        console.log checkIn.post.url
+        imageUrl = Meteor.call 'PixelArtAcademy.Practice.CheckIn.getExternalUrlImage', checkIn.post.url
+
+        processedCount++
+        PAA.Practice.CheckIn.documents.update checkIn._id,
+          $set:
+            image:
+              url: imageUrl
+
+      catch error
+        console.log error
+
+    console.log "Successfully processed", processedCount, "out of", checkIns.length, "check-ins."
+
+  # Import check-ins from the imported database and assign them to the given character.
+  'PixelArtAcademy.Practice.CheckIn.import': (characterId) ->
     check characterId, Match.DocumentId
 
     # Make sure the character belongs to the current user.

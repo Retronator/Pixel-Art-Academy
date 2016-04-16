@@ -10,11 +10,11 @@ class PAA.Pages.Login extends AM.Component
 
     # Redirect to account when sign in succeeded.
     @autorun =>
-      # Run inside non-reactive to start a new reactivity context. This autorun will stop as soon as login is removed and
-      # with it also all autoruns that would be run from withing this computation's context. Since we don't want to
-      # control the execution of autoruns inside FlowRouter's trigger, we break the reactivity context.
-      Tracker.nonreactive =>
-        FlowRouter.go 'home' if Meteor.userId() and LOI.characterId() and Roles.userIsInRole Meteor.userId(), 'alpha-access'
+      if Meteor.userId() and LOI.characterId() and Roles.userIsInRole Meteor.userId(), 'alpha-access'
+        # Run inside non-reactive to start a new reactivity context. This autorun will stop as soon as login is removed and
+        # with it also all autoruns that would be run from withing this computation's context. Since we don't want to
+        # control the execution of autoruns inside FlowRouter's trigger, we break the reactivity context.
+        Tracker.nonreactive => FlowRouter.go 'home'
 
   characters: ->
     user = LOI.Accounts.User.documents.findOne Meteor.userId(),

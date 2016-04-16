@@ -11,72 +11,99 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
 
     @submitting = new ReactiveField false
 
+    @imagePreviewUrl = new ReactiveField null
+    @errorMessage = new ReactiveField null
+    
+  onRendered: ->
+    $('body').addClass('disable-scrolling')
+
+  onDestroyed: ->
+    $('body').removeClass('disable-scrolling')
+
   # Helpers
 
   # Events
 
   events: ->
     super.concat
+      'click': @onClick
       'submit .check-in-form': @onSubmitCheckInForm
-      'input .external-url': @getExternalImgUrl
-      'change .image-file': @generateLocalImagePreview
+      'input .external-url': @onInputExternalUrl
+      'change .image-file': @onChangeImageFile
+
+  onClick: (event) ->
+    # If click happened outside the dialog, return to journal.
+    FlowRouter.go 'pixelboy', app: 'journal' unless $(event.target).closest('.dialog').length
 
   onSubmitCheckInForm: (event) ->
     event.preventDefault()
 
     @submitting true
 
-    text = $('.text').val()
-    imageFile = $('.image-file')[0]?.files[0]
-    externalUrl = $('.external-url').val()
+    text = @$('.text').val()
+    imageFile = @$('.image-file')[0]?.files[0]
+    externalUrl = @$('.external-url').val()
+
+    console.log "text is", text
 
     if externalUrl
+      # We are doing a check-in using an external url.
       @_finishSubmitting text, externalUrl
 
     else if imageFile
+      # We are checking-in by uploading a local image file.
       PAA.Practice.upload imageFile, (imageUrl) =>
         @_finishSubmitting text, imageUrl
 
     else
+      # This is a text-only check-in.
       @_finishSubmitting text
 
   _finishSubmitting: (text, url) ->
-    Meteor.call 'practiceCheckIn', LOI.characterId(), text, url, (error) =>
+    Meteor.call 'PixelArtAcademy.Practice.CheckIn.insert', LOI.characterId(), text, url, (error) =>
       @submitting false
 
       if error
-        console.log error.message
+        @errorMessage error.reason
+        return
 
-      else
-        FlowRouter.go 'journal'
+      # Check-in succeeded, so return back to the journal.
+      FlowRouter.go 'pixelboy', app: 'journal'
 
-  getExternalImgUrl: (event) ->
-    url = event.currentTarget.value
-    externalImgUrl = null
-    imgPreview = $('.image-preview')
-    placeholder = 'http://placehold.it/350x150?text=your+art'
-    errorIndicator = $('.preview-error')
+  onInputExternalUrl: (event) ->
+    @updatePreviewImage()
 
-    if /twitter\.com/.test(url)
-      id = url.split('/status/')[1]
-      Meteor.call 'getImgFromTweet', id, (error, data) =>
-        if !error
-          externalImgUrl = data.entities.media[0].media_url_https
-          imgPreview.attr('src', externalImgUrl)
-          errorIndicator.empty()
-        else
-          imgPreview.attr('src', placeholder)
-          errorIndicator.html('There was an error communicating with the server. Either the tweet doesn\'t exist, or the server is down - try again later!')
+  onChangeImageFile: (event) ->
+    @updatePreviewImage()
 
-    else
-      imgPreview.attr('src', placeholder)
-      errorIndicator.html('Error! Can\'t parse that URL - try again!')
+  updatePreviewImage: ->
+    # Clear the image and error.
+    @errorMessage null
+    @imagePreviewUrl null
 
-  generateLocalImagePreview: (event) ->
-    if event.currentTarget.files && event.currentTarget.files[0]
-      reader = new FileReader();
+    externalUrl = @$('.external-url').val()
 
-      reader.onload = (e) ->
-        $('.image-preview').attr('src', e.target.result)
+    if externalUrl
+      Meteor.call 'PixelArtAcademy.Practice.CheckIn.getExternalUrlImage', externalUrl, (error, result) =>
+        if error
+          @errorMessage error.reason
+          return
 
-      reader.readAsDataURL(event.currentTarget.files[0]);
+        @imagePreviewUrl result
+
+      return
+
+    # There is no external url, so fall back to the uploaded image.
+    imageFile = @$('.image-file')[0]?.files[0]
+
+    # Generate local image preview.
+    return unless imageFile
+
+    reader = new FileReader()
+
+    reader.onload = (event) =>
+      @imagePreviewUrl event.target.result
+
+    reader.readAsDataURL imageFile
+
+

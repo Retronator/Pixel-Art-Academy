@@ -19,6 +19,7 @@ Package.onUse(function(api) {
   api.use('pixelboy');
   api.use('edgee:slingshot');
   api.use('jparker:crypto-aes');
+  api.use('http');
 
   api.export('PixelArtAcademy');
 
@@ -41,6 +42,9 @@ Package.onUse(function(api) {
   api.addFiles('importeddata/checkin.coffee', 'server');
 
   api.addFiles('pages/pages.coffee');
+
+  api.addFiles('pages/extractimagesfromposts/extractimagesfromposts.coffee');
+  api.addFiles('pages/extractimagesfromposts/extractimagesfromposts.html');
 
   api.addFiles('pages/importcheckins/importcheckins.coffee');
   api.addFiles('pages/importcheckins/importcheckins.html');

@@ -19,9 +19,10 @@ class PixelArtAcademy extends Artificial.Base.App
     @_addAdminPage 'adminArtists', '/admin/artists/:documentId?', new @constructor.Artworks.Components.Admin.Artists
     @_addAdminPage 'adminArtworks', '/admin/artworks/:documentId?', new @constructor.Artworks.Components.Admin.Artworks
 
-    @_addAdminPage 'admin', '/admin/import-check-ins', new @constructor.Practice.Pages.ImportCheckIns
+    @_addAdminPage 'adminImportCheckIns', '/admin/check-ins/import', new @constructor.Practice.Pages.ImportCheckIns
+    @_addAdminPage 'adminExtractImagesFromCheckInPosts', '/admin/check-ins/extract-images-from-posts', new @constructor.Practice.Pages.ExtractImagesFromPosts
 
-    @_addPage 'pixelboy', '/pixelboy/:app?', new @constructor.PixelBoy
+    @_addPage 'pixelboy', '/pixelboy/:app?/:path?', new @constructor.PixelBoy
 
     FlowRouter.initialize()
 
