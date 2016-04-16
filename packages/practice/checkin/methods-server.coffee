@@ -49,7 +49,7 @@ Meteor.methods
 
     # We didn't find a custom importer so let's try a general approach and look for the og:image tag in the head.
     results = ogImageRegex.exec response.content
-    return results[1] if results[1]
+    return results[1] if results?[1]
 
     # We don't know what to do with this url yet.
     throw new Meteor.Error 'unsupported', "We do not yet support importing images from the given website. The check-in will include a link to your post."
@@ -65,9 +65,10 @@ Meteor.methods
     ).fetch()
 
     processedCount = 0
+    console.log "Processing check-in posts with posts but without images."
     for checkIn in checkIns
       try
-        console.log checkIn.post.url
+        console.log "Processing:", checkIn.post.url
         imageUrl = Meteor.call 'PixelArtAcademy.Practice.CheckIn.getExternalUrlImage', checkIn.post.url
 
         processedCount++
@@ -102,7 +103,7 @@ Meteor.methods
 
         console.log "Found", importedCheckIns.length, "check-ins for email", email.address
 
-        Meteor.call 'practiceCheckIn', characterId, importedCheckIn.text, importedCheckIn.image, importedCheckIn.timestamp for importedCheckIn in importedCheckIns
+        Meteor.call 'PixelArtAcademy.Practice.CheckIn.insert', characterId, importedCheckIn.text, importedCheckIn.image, importedCheckIn.timestamp for importedCheckIn in importedCheckIns
 
 authorizeCharacter = (characterId) ->
   currentUserId = Meteor.userId()

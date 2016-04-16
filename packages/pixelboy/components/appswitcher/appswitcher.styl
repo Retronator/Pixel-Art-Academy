@@ -6,5 +6,11 @@
     display inline-block
     text-transform uppercase
 
+    &::before
+      content "~ "
+
+    &:last-child::after
+      content " ~"
+
     a
       text-decoration none

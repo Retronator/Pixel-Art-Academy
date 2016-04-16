@@ -44,8 +44,6 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
     imageFile = @$('.image-file')[0]?.files[0]
     externalUrl = @$('.external-url').val()
 
-    console.log "text is", text
-
     if externalUrl
       # We are doing a check-in using an external url.
       @_finishSubmitting text, externalUrl

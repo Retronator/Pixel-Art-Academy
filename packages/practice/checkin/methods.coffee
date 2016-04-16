@@ -8,8 +8,6 @@ Meteor.methods
     check url, Match.OptionalOrNull String
     check time, Match.OptionalOrNull Date
 
-    console.log "checking in with", text, url
-
     # Make sure the character belongs to the current user.
     authorizeCharacter characterId
 

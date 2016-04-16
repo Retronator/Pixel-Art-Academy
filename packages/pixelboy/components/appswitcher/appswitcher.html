@@ -1,11 +1,8 @@
 <template name="PixelArtAcademy.PixelBoy.Components.AppSwitcher">
   <ul class="app-switcher">
-    <li>~</li>
-    <li><a href="{{FlowRouterPath 'home'}}">Home</a></li>
-    <li>~</li>
+    <li><a href="{{flowRouterPath 'home'}}">Home</a></li>
     {{#each apps}}
-      <li><a href="{{FlowRouterPath 'pixelboy' app=urlName}}">{{displayName}}</a></li>
-      <li>~</li>
+      <li><a href="{{flowRouterPath 'pixelboy' app=urlName}}">{{displayName}}</a></li>
     {{/each}}
   </ul>
 </template>
