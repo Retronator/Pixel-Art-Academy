@@ -9,6 +9,10 @@
     <ol class="check-ins">
       {{#each checkIns}}
         <li class="check-in">
+          <div class="data">
+            <div class="date">{{dateText}}</div>
+            <div class="text">{{> PixelArtAcademy.Apps.Journal.CheckInText}}</div>
+          </div>
           <figure class="image">
             {{#if artwork}}
               <img src="{{artwork.image.url}}"/>
@@ -27,10 +31,6 @@
               <button class="delete">{{> t10e "Delete check-in"}}</button>
             </div>
           </figure>
-          <div class="data">
-            <div class="date">{{dateText}}</div>
-            <div class="text">{{> PixelArtAcademy.Apps.Journal.CheckInText}}</div>
-          </div>
         </li>
       {{/each}}
     </ol>
