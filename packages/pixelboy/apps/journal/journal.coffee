@@ -3,8 +3,14 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Journal extends AM.Component
+class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
   @register 'PixelArtAcademy.PixelBoy.Apps.Journal'
+
+  displayName: ->
+    "Practice Journal"
+
+  urlName: ->
+    'journal'
 
   onCreated: ->
     super

@@ -1,9 +1,25 @@
 <template name="PixelArtAcademy.Pages.Login">
   <h1>Pixel Art Academy Alpha!</h1>
   {{#if currentUser}}
+    {{#if isInRole 'alpha-access'}}
+      {{#if characters.length}}
+        <p>Please load one of the characters to start.</p>
+        <ul class="characters">
+          {{#each characters}}
+            <li class="character">
+              {{name}}
+              <button class="load-character">Load</button>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p>You need to create a character to play the game. Please create one at <a href="http://enter.landsofillusions.world">Lands of Illusions</a>.</p>
+      {{/if}}
+    {{else}}
       <p>You need to have alpha access to use Pixel Art Academy alpha version.</p>
+    {{/if}}
   {{else}}
-    <p>Please sign in through <a href="http://enter.landsofillusions.com">Lands of Illusions</a>.
+    <p>Please sign in through <a href="http://enter.landsofillusions.world">Lands of Illusions</a>.
       When signed in there, you should automatically get signed in here as well.</p>
     <p>NOTE FOR SAFARI USERS: This does not yet work in Safari due to stricter security settings. If you
     really want to use the system before we find out another way to share login information, you can go to
