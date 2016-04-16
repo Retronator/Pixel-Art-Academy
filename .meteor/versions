@@ -43,7 +43,7 @@ jparker:crypto-md5@0.1.1
 jparker:crypto-mode@0.1.1
 jparker:crypto-padding@0.1.0
 jquery@1.11.4
-kadira:flow-router@2.10.0
+kadira:flow-router@2.10.1
 launch-screen@1.0.4
 limemakers:three@0.73.0
 livedata@1.0.15
@@ -55,6 +55,7 @@ minifiers@1.1.7
 minimongo@1.0.10
 mobile-experience@1.0.1
 mobile-status-bar@1.0.6
+momentjs:moment@2.11.2
 mongo@1.1.3
 mongo-id@1.0.1
 mrt:underscore-string-latest@2.3.3
@@ -65,6 +66,7 @@ observe-sequence@1.0.7
 ordered-dict@1.0.4
 peerlibrary:assert@0.2.5
 peerlibrary:base-component@0.14.0
+peerlibrary:blaze-common-component@0.1.0
 peerlibrary:blaze-components@0.16.2
 peerlibrary:check-extension@0.2.0
 peerlibrary:computed-field@0.3.1

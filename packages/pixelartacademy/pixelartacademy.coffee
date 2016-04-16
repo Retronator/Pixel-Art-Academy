@@ -19,12 +19,10 @@ class PixelArtAcademy extends Artificial.Base.App
     @_addAdminPage 'adminArtists', '/admin/artists/:documentId?', new @constructor.Artworks.Components.Admin.Artists
     @_addAdminPage 'adminArtworks', '/admin/artworks/:documentId?', new @constructor.Artworks.Components.Admin.Artworks
 
-    @_addAdminPage 'admin', '/admin/import-check-ins', new @constructor.Practice.Pages.ImportCheckIns
+    @_addAdminPage 'adminImportCheckIns', '/admin/check-ins/import', new @constructor.Practice.Pages.ImportCheckIns
+    @_addAdminPage 'adminExtractImagesFromCheckInPosts', '/admin/check-ins/extract-images-from-posts', new @constructor.Practice.Pages.ExtractImagesFromPosts
 
-    # Apps
-    @_addPage 'calendar', '/calendar', new @constructor.PixelBoy.Apps.Calendar
-    @_addPage 'journal', '/journal', new @constructor.PixelBoy.Apps.Journal
-    @_addPage 'journalCheckIn', '/journal/check-in', new @constructor.PixelBoy.Apps.Journal.CheckIn
+    @_addPage 'pixelboy', '/pixelboy/:app?/:path?', new @constructor.PixelBoy
 
     FlowRouter.initialize()
 
@@ -35,7 +33,7 @@ class PixelArtAcademy extends Artificial.Base.App
     @autorun =>
       return if FlowRouter.getRouteName() in @constructor.PATHS_NOT_REQUIRING_LOGIN
 
-      FlowRouter.go 'login' unless Meteor.userId()
+      FlowRouter.go 'login' unless Meteor.userId() and LOI.characterId()
 
   _addPage: (name, url, page) ->
     FlowRouter.route url,
@@ -50,7 +48,7 @@ class PixelArtAcademy extends Artificial.Base.App
             return if Meteor.loggingIn() or not Roles.subscription.ready()
             computation.stop()
 
-            unless Roles.userIsInRole Meteor.userId(), 'alpha-access'
+            unless LOI.characterId() and Roles.userIsInRole Meteor.userId(), 'alpha-access'
               FlowRouter.go 'login'
               return
 

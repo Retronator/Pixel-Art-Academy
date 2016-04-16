@@ -16,6 +16,10 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFiles('pixelboy.coffee');
+  api.addFiles('pixelboy.html');
+  api.addFiles('pixelboy.styl');
+
+  api.addFiles('app.coffee');
 
   api.addFiles('apps/apps.coffee');
 

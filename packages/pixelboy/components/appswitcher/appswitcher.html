@@ -3,9 +3,9 @@
     <li>~</li>
     <li><a href="{{FlowRouterPath 'home'}}">Home</a></li>
     <li>~</li>
-    <li><a href="{{FlowRouterPath 'journal'}}">Journal</a></li>
-    <li>~</li>
-    <li><a href="{{FlowRouterPath 'calendar'}}">Calendar</a></li>
-    <li>~</li>
+    {{#each apps}}
+      <li><a href="{{FlowRouterPath 'pixelboy' app=urlName}}">{{displayName}}</a></li>
+      <li>~</li>
+    {{/each}}
   </ul>
 </template>
