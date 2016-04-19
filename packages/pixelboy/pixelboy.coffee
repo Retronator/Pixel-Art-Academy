@@ -14,13 +14,11 @@ class PAA.PixelBoy extends PAA.Adventure.Item
     @itemComponent = new PAA.PixelBoy.Components.Item @
 
   renderComponent: (currentComponent) ->
-    # This renders a blaze component if the item needs it. In our case we render the 'outer chrome' of PixelBoy, but
-    # only when the item is visible (which in turn is when it's not deactivated (completely off-screen)).
-    return null unless @visible()
-
     @itemComponent.renderComponent currentComponent
 
   onActivate: (finishedActivatingCallback) ->
+    @itemComponent.$pixelboy().append("THIS WAS ADDED ON ACTIVATE")
+
     # TODO: Animate in the device. When it's fully in view call:
     finishedActivatingCallback()
 
@@ -37,13 +35,13 @@ class PAA.PixelBoy extends PAA.Adventure.Item
 
   visible: ->
     # This controls if the draw method needs to be called.
-    @activatedState() isnt PAA.Adventure.Item.activatedState.Deactivated
+    not @deactivated()
 
   draw: (appTime) ->
     # Do your game loop rendering code here, if needed.
 
-    # Demo:
-    $('.pixelboy').css
+    # Demo (quick and ugly):
+    @itemComponent.$pixelboy().css
       background: "rgb(#{Math.floor Math.random() * 10 + 100},#{Math.floor Math.random() * 10 + 100},#{Math.floor Math.random() * 50 + 100})"
       left: "#{50 + Math.sin appTime.totalAppTime * 10}%"
 

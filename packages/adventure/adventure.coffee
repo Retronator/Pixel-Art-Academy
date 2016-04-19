@@ -54,7 +54,12 @@ class PAA.Adventure extends AM.Component
   events: ->
     super.concat
       'click .inventory .item .activate-button': @onClickInventoryItemActivateButton
+      'click .inventory .item .deactivate-button': @onClickInventoryItemDectivateButton
 
   onClickInventoryItemActivateButton: ->
     item = @currentData()
     item.activate()
+
+  onClickInventoryItemDectivateButton: ->
+    item = @currentData()
+    item.deactivate()

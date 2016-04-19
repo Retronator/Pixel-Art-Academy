@@ -1,6 +1,6 @@
 .pixelboy
   position fixed
-  bottom 1rem
+  bottom -20rem
   left 50%
   transform translateX(-50%)
   width 24rem
@@ -8,3 +8,7 @@
   color white
   background black
   border solid grey 0.1rem
+  transition bottom 1s
+
+  &.activated
+    bottom 1rem

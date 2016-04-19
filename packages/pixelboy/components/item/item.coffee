@@ -6,7 +6,11 @@ class PAA.PixelBoy.Components.Item extends AM.Component
 
   constructor: (@pixelBoy) ->
 
-  onCreated: ->
+  $pixelboy: ->
+    @$('.pixelboy')
+
+  activatedClass: ->
+    'activated' if @pixelBoy.activated()
 
   events: ->
     super.concat
