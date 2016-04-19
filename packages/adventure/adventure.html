@@ -1,0 +1,31 @@
+<template name="PixelArtAcademy.Adventure">
+  <style>
+    html {
+      font-size: {{fontSize}}px
+    }
+  </style>
+  <div class="adventure">
+    <div class="display">
+      <div class="location">
+      </div>
+    </div>
+    <div class="ui">
+      <p>You carry:</p>
+      <ul class="inventory">
+        {{#each inventory}}
+          <li class="item">
+            {{displayName}}
+            {{#if isActivatable}}
+              {{#if deactivated}}
+                <button class="activate-button">{{activateVerbs.[0]}}</button>
+              {{/if}}
+              {{#if activated}}
+                <button class="deactivate-button">{{deactivateVerbs.[0]}}</button>
+              {{/if}}
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>

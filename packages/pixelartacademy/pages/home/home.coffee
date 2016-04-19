@@ -7,3 +7,10 @@ class PAA.Pages.Home extends AM.Component
 
   onCreated: ->
     super
+
+  events: ->
+    super.concat
+      'click .enter-button': @onClickEnterButton
+
+  onClickEnterButton: (event) ->
+    PAA.Adventure.goToLocation 'dorm'

@@ -22,7 +22,8 @@ class PixelArtAcademy extends Artificial.Base.App
     @_addAdminPage 'adminImportCheckIns', '/admin/check-ins/import', new @constructor.Practice.Pages.ImportCheckIns
     @_addAdminPage 'adminExtractImagesFromCheckInPosts', '/admin/check-ins/extract-images-from-posts', new @constructor.Practice.Pages.ExtractImagesFromPosts
 
-    @_addPage 'pixelboy', '/pixelboy/:app?/:path?', new @constructor.PixelBoy
+    @_addPage 'adventure', '/:parameter1?/:parameter2?/:parameter3?', new @constructor.Adventure @
+    @_addPage 'pixelBoy', '/pixelboy/os/:app?/:path?', new @constructor.PixelBoy
 
     FlowRouter.initialize()
 
@@ -80,3 +81,7 @@ class PixelArtAcademy extends Artificial.Base.App
 
       triggersExit: =>
         @components.remove page
+
+  fontSize: ->
+    # We scale all fonts set to their pixel perfect sizes with rems with 10px = 1rem as the base.
+    10 * @display.scale()

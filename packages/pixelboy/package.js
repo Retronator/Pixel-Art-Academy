@@ -12,14 +12,16 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('pixelartacademy');
+  api.use('adventure');
 
   api.export('PixelArtAcademy');
 
   api.addFiles('pixelboy.coffee');
-  api.addFiles('pixelboy.html');
-  api.addFiles('pixelboy.styl');
 
-  api.addFiles('app.coffee');
+  api.addFiles('os/os.coffee');
+  api.addFiles('os/os.html');
+
+  api.addFiles('os/app.coffee');
 
   api.addFiles('apps/apps.coffee');
 
@@ -37,6 +39,10 @@ Package.onUse(function(api) {
   api.addFiles('apps/journal/checkin/checkin.coffee');
 
   api.addFiles('components/components.coffee');
+
+  api.addFiles('components/item/item.coffee');
+  api.addFiles('components/item/item.html');
+  api.addFiles('components/item/item.styl');
 
   api.addFiles('components/appswitcher/appswitcher.html');
   api.addFiles('components/appswitcher/appswitcher.styl');

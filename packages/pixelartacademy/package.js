@@ -42,6 +42,4 @@ Package.onUse(function(api) {
   api.addFiles('pages/admin/components/index/index.html');
   api.addFiles('pages/admin/components/index/index.styl');
   api.addFiles('pages/admin/components/document/document.coffee');
-
-  api.addFiles('character/methods.coffee', 'server');
 });
