@@ -17,7 +17,7 @@ class PAA.PixelBoy extends PAA.Adventure.Item
     @itemComponent.renderComponent currentComponent
 
   onActivate: (finishedActivatingCallback) ->
-    @itemComponent.$pixelboy().append("THIS WAS ADDED ON ACTIVATE")
+    #@itemComponent.$pixelboy().append("THIS WAS ADDED ON ACTIVATE")
 
     # TODO: Animate in the device. When it's fully in view call:
     finishedActivatingCallback()
@@ -41,9 +41,9 @@ class PAA.PixelBoy extends PAA.Adventure.Item
     # Do your game loop rendering code here, if needed.
 
     # Demo (quick and ugly):
-    @itemComponent.$pixelboy().css
-      background: "rgb(#{Math.floor Math.random() * 10 + 100},#{Math.floor Math.random() * 10 + 100},#{Math.floor Math.random() * 50 + 100})"
-      left: "#{50 + Math.sin appTime.totalAppTime * 10}%"
+    #@itemComponent.$pixelboy().css
+    #  background: "rgb(#{Math.floor Math.random() * 10 + 100},#{Math.floor Math.random() * 10 + 100},#{Math.floor Math.random() * 50 + 100})"
+    #  left: "#{50 + Math.sin appTime.totalAppTime * 10}%"
 
     # If you need to, you can pass the update/draw calls down into the component, for example:
     @itemComponent.draw appTime
