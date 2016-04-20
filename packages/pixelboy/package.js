@@ -35,6 +35,10 @@ Package.onUse(function(api) {
   api.addFiles('apps/journal/journal.styl');
   api.addFiles('apps/journal/journal.coffee');
 
+  api.addFiles('apps/pico8/pico8.html');
+  api.addFiles('apps/pico8/pico8.styl');
+  api.addFiles('apps/pico8/pico8.coffee');
+
   api.addFiles('apps/journal/checkin/checkin.html');
   api.addFiles('apps/journal/checkin/checkin.styl');
   api.addFiles('apps/journal/checkin/checkin.coffee');
