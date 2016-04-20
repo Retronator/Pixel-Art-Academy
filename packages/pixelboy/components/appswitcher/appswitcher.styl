@@ -1,16 +1,20 @@
-.app-switcher
-  list-style none
-  padding 0
+@import "{retronator:landsofillusions}/typography/typography.import"
 
-  li
-    display inline-block
-    text-transform uppercase
+.pixelboy-os
+  .app-switcher
+    list-style none
+    padding 0
+    uni()
 
-    &::before
-      content "~ "
+    li
+      display inline-block
+      text-transform uppercase
 
-    &:last-child::after
-      content " ~"
+      &::before
+        content "~ "
 
-    a
-      text-decoration none
+      &:last-child::after
+        content " ~"
+
+      a
+        text-decoration none

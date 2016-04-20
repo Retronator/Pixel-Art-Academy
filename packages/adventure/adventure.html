@@ -4,9 +4,16 @@
       font-size: {{fontSize}}px
     }
   </style>
+  {{> Render display}}
   <div class="adventure">
     <div class="display">
       <div class="location">
+        {{> Render currentLocation}}
+      </div>
+      <div class="items">
+        {{#each inventory}}
+          {{> Render this}}
+        {{/each}}
       </div>
     </div>
     <div class="ui">

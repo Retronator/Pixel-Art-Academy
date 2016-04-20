@@ -22,8 +22,8 @@ class PixelArtAcademy extends Artificial.Base.App
     @_addAdminPage 'adminImportCheckIns', '/admin/check-ins/import', new @constructor.Practice.Pages.ImportCheckIns
     @_addAdminPage 'adminExtractImagesFromCheckInPosts', '/admin/check-ins/extract-images-from-posts', new @constructor.Practice.Pages.ExtractImagesFromPosts
 
-    @_addPage 'adventure', '/:parameter1?/:parameter2?/:parameter3?', new @constructor.Adventure @
-    @_addPage 'pixelBoy', '/pixelboy/os/:app?/:path?', new @constructor.PixelBoy
+    @_addPage 'pixelBoy', '/pixelboy/os/:app?/:path?', new @constructor.PixelBoy.OS
+    @_addPage 'adventure', '/:parameter1?/:parameter2?/:parameter3?', new @constructor.Adventure
 
     FlowRouter.initialize()
 
@@ -41,6 +41,11 @@ class PixelArtAcademy extends Artificial.Base.App
       name: name
 
       triggersEnter: =>
+        # Mark that we have actually entered this state, so that we only fire exit trigger when we've actually entered.
+        # If urls overlap the exit trigger gets called on these paths as well, so this helps us track that end prevent
+        # it.
+        page._entered = true
+
         if FlowRouter.getRouteName() in @constructor.PATHS_NOT_REQUIRING_LOGIN
           @components.add page
 
@@ -59,6 +64,9 @@ class PixelArtAcademy extends Artificial.Base.App
               @components.add page
 
       triggersExit: =>
+        # Make sure we event entered this page. See comment at triggersEnter for reasoning.
+        return unless page._entered
+
         @components.remove page
 
   _addAdminPage: (name, url, page) ->

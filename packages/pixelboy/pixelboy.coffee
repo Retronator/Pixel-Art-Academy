@@ -23,11 +23,21 @@ class PAA.PixelBoy extends PAA.Adventure.Item
 
       # From here on you can use @itemComponent.$pixelboy()
       # TODO: Animate in the device. When it's fully in view call:
-      finishedActivatingCallback()
+
+      # Wait for CSS animation to finish.
+      Meteor.setTimeout =>
+        finishedActivatingCallback()
+      ,
+        1000
 
   onDeactivate: (finishedDeactivatingCallback) ->
     # TODO: Animate out the device. When it's out of the view call:
-    finishedDeactivatingCallback()
+
+    # Wait for CSS animation to finish.
+    Meteor.setTimeout =>
+      finishedDeactivatingCallback()
+    ,
+      1000
 
   update: (appTime) ->
     # Do your game loop update code here, if needed. # All apps' update routines will be called before all apps' draw

@@ -20,6 +20,7 @@ Package.onUse(function(api) {
 
   api.addFiles('os/os.coffee');
   api.addFiles('os/os.html');
+  api.addFiles('os/os.styl');
 
   api.addFiles('os/app.coffee');
 

@@ -33,7 +33,7 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
 
   onClick: (event) ->
     # If click happened outside the dialog, return to journal.
-    FlowRouter.go 'pixelboy', app: 'journal' unless $(event.target).closest('.dialog').length
+    FlowRouter.go 'pixelBoy', app: 'journal' unless $(event.target).closest('.dialog').length
 
   onSubmitCheckInForm: (event) ->
     event.preventDefault()
@@ -66,7 +66,7 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
         return
 
       # Check-in succeeded, so return back to the journal.
-      FlowRouter.go 'pixelboy', app: 'journal'
+      FlowRouter.go 'pixelBoy', app: 'journal'
 
   onInputExternalUrl: (event) ->
     @updatePreviewImage()

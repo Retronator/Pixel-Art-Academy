@@ -52,7 +52,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.OS.App
       'click .check-in .delete': @onClickDeleteCheckIn
 
   onClickCheckIn: (event) ->
-    FlowRouter.go 'pixelboy',
+    FlowRouter.go 'pixelBoy',
       app: 'journal'
       path: 'check-in'
 

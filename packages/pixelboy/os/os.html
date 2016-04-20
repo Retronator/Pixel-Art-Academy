@@ -1,6 +1,16 @@
 <template name="PixelArtAcademy.PixelBoy.OS">
+  <style>
+    html {
+      font-size: {{display.scale}}px
+    }
+  </style>
+  {{> Render display}}
   <div class="pixelboy-os">
     {{> PixelArtAcademy.PixelBoy.Components.AppSwitcher}}
-    {{> renderCurrentApp}}
+    {{#if currentApp}}
+      {{> renderCurrentApp}}
+    {{else}}
+      <div class="boot-loader">PixelBoy OS v0.1</div>
+    {{/if}}
   </div>
 </template>

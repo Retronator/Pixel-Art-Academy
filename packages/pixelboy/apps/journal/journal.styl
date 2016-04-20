@@ -1,17 +1,23 @@
+@import "{retronator:landsofillusions}/styles/atari2600.import"
+
 .apps-journal
+  background atari2600colors[0][0]
+  padding 10rem
+
   .check-ins
     list-style none
     padding 0
 
     .check-in
       position relative
-      margin-bottom 20px
+      margin-bottom 20rem
 
       .image
         position relative
         float left
-        width 400px
-        min-height 1px
+        width 200rem
+        max-width 100%
+        min-height 1rem
         margin 0
         word-break break-all
 
@@ -21,8 +27,8 @@
         .actions
           display none
           position absolute
-          left 10px
-          bottom 10px
+          left 10rem
+          bottom 10rem
 
         &:hover
           .actions
@@ -30,17 +36,19 @@
 
       .data
         float left
-        width 400px
-        margin-right 20px
+        width 200rem
+        max-width 100%
+        margin-right 20rem
 
         .date
-          margin-bottom 10px
+          margin-bottom 10rem
 
         .text
           position relative
 
           textarea
-            width 400px
+            width 200rem
+            max-width 100%
             background none
             border none
             resize none

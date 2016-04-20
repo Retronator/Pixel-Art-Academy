@@ -53,7 +53,7 @@ class PAA.PixelBoy.Components.Item extends AM.Component
     @$('.pixelboy')
 
   activatedClass: ->
-    'activated' if @pixelBoy.activated()
+    'activated' if @pixelBoy.activating() or @pixelBoy.activated()
 
   pixelBoyStyle: ->
     # This determines the visual size of the PixelBoy (its screen/OS area).
@@ -61,9 +61,13 @@ class PAA.PixelBoy.Components.Item extends AM.Component
     height: "#{@height()}rem"
 
   osIframeAttributes: ->
+    app = FlowRouter.getParam 'parameter2'
+    path = FlowRouter.getParam 'parameter3'
+
     # This will determine the pixel-backing size of the canvas.
     width: @width()
     height: @height()
+    src: FlowRouter.path 'pixelBoy', app: app, path: path
 
   osIframeStyle: ->
     'pointer-events': if @resizing() then 'none' else 'initial'

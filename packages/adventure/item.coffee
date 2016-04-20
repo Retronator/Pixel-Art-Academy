@@ -28,19 +28,21 @@ class PAA.Adventure.Item
   activated: -> @activatedState() is @constructor.activatedState.Activated
   deactivating: -> @activatedState() is @constructor.activatedState.Deactivating
 
-  activate: ->
+  activate: (onActivatedCallback) ->
     # The item gets activated (used).
     @activatedState @constructor.activatedState.Activating
 
     @onActivate =>
       @activatedState @constructor.activatedState.Activated
+      onActivatedCallback?()
 
-  deactivate: ->
+  deactivate: (onDeactivatedCallback) ->
     # The item gets deactivated.
     @activatedState @constructor.activatedState.Deactivating
 
     @onDeactivate =>
       @activatedState @constructor.activatedState.Deactivated
+      onDeactivatedCallback?()
 
   draw: ->
     # Override and return a component if you want the item to provide some sort of UI.

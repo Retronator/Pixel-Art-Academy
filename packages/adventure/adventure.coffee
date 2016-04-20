@@ -5,11 +5,14 @@ PAA = PixelArtAcademy
 class PAA.Adventure extends AM.Component
   @register 'PixelArtAcademy.Adventure'
 
-  constructor: (@pixelArtAcademy) ->
+  constructor: ->
+    super
+
+  onCreated: ->
     super
 
     # Create pixel scaling display.
-    @display = new Artificial.Mirage.Display @pixelArtAcademy,
+    @display = new Artificial.Mirage.Display
       safeAreaWidth: 320
       safeAreaHeight: 240
       minScale: 2
@@ -24,16 +27,12 @@ class PAA.Adventure extends AM.Component
     @inventory = _.values @items
 
     @currentLocation = new ReactiveField @locations.dorm.keyName()
-    @activatedItem = new ReactiveField null
-
-  onCreated: ->
-    super
 
     $('html').addClass('pixel-art-academy-style-adventure')
-    @pixelArtAcademy.components.add @display
-    @pixelArtAcademy.components.add item for item in @inventory
 
   onRendered: ->
+    super
+
     # Handle url changes.
     @autorun =>
       mainParameter = FlowRouter.getParam 'parameter1'
@@ -49,20 +48,12 @@ class PAA.Adventure extends AM.Component
         for key, item of @items
           if mainParameter is item.keyName()
             # We are trying to use this item. Deactivate the one we might have been using before first.
-            existing = @activatedItem()
-            existing?.deactivate()
-
-            @activatedItem item
             item.activate()
 
   onDestroyed: ->
     super
 
     $('html').removeClass('pixel-art-academy-style-adventure')
-
-    # TODO: fix removal of components
-    # @pixelArtAcademy.components.remove @display
-    # @pixelArtAcademy.components.remove item for item in @inventory
 
   @goToLocation: (locationKeyName) ->
     FlowRouter.go 'adventure', parameter1: locationKeyName
