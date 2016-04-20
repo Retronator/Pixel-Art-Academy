@@ -1,14 +1,35 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "{retronator:landsofillusions}/styles/atari2600.import"
+
 .pixelboy
   position fixed
-  bottom -20rem
+  bottom -100vh
   left 50%
   transform translateX(-50%)
-  width 24rem
-  height 18rem
   color white
   background black
-  border solid grey 0.1rem
+  border solid 1rem atari2600colors[1][0]
   transition bottom 1s
 
   &.activated
-    bottom 1rem
+    bottom 20rem
+
+  .os
+    // We can't use absolute-cover() because we're styling the width/height
+    // of a canvas which need to be overriden directly from css.
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 100%
+    background atari2600colors[0][10]
+    border none
+
+  .glass
+    position absolute
+    left -3rem
+    top -3rem
+    right -3rem
+    bottom -3rem
+    border solid 1rem atari2600colors[7][0]
+    opacity 0.75

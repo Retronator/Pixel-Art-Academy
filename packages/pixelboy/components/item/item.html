@@ -1,5 +1,9 @@
 <template name="PixelArtAcademy.PixelBoy.Components.Item">
-  <div class="pixelboy {{activatedClass}}">
-    HI I AM PIXELBOY <button class="deactivate-button">{{pixelBoy.deactivateVerbs.[0]}}</button>
+  <div class="pixelboy {{activatedClass}}" {{style pixelBoyStyle}}>
+    <div class="hand-over"></div>
+    <iframe class="os" {{osIframeAttributes}}></iframe>
+    <div class="device-board"></div>
+    <div class="glass"></div>
+    <div class="hand-under"></div>
   </div>
 </template>

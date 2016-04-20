@@ -10,20 +10,21 @@ class PAA.Adventure extends AM.Component
 
     # Create pixel scaling display.
     @display = new Artificial.Mirage.Display @pixelArtAcademy,
-      safeAreaWidth: 240
-      safeAreaHeight: 180
+      safeAreaWidth: 320
+      safeAreaHeight: 240
       minScale: 2
-      minAspectRatio: 2/3
+      minAspectRatio: 1
 
-    @items = [
-      new PAA.PixelBoy
-    ]
-    
-    @locations = [
-      new PAA.Adventure.Locations.Dorm
-    ]
+    @items =
+      pixelBoy: new PAA.PixelBoy
 
-    @inventory = @items.slice()
+    @locations =
+      dorm: new PAA.Adventure.Locations.Dorm
+
+    @inventory = _.values @items
+
+    @currentLocation = new ReactiveField @locations.dorm.keyName()
+    @activatedItem = new ReactiveField null
 
   onCreated: ->
     super
@@ -31,6 +32,28 @@ class PAA.Adventure extends AM.Component
     $('html').addClass('pixel-art-academy-style-adventure')
     @pixelArtAcademy.components.add @display
     @pixelArtAcademy.components.add item for item in @inventory
+
+  onRendered: ->
+    # Handle url changes.
+    @autorun =>
+      mainParameter = FlowRouter.getParam 'parameter1'
+
+      # We only want to react to router changes.
+      Tracker.nonreactive =>
+        # Find if this is an item or location.
+        for key, location of @locations
+          if mainParameter is location.keyName()
+            # We are at a location.
+            @currentLocation location
+
+        for key, item of @items
+          if mainParameter is item.keyName()
+            # We are trying to use this item. Deactivate the one we might have been using before first.
+            existing = @activatedItem()
+            existing?.deactivate()
+
+            @activatedItem item
+            item.activate()
 
   onDestroyed: ->
     super
@@ -44,8 +67,11 @@ class PAA.Adventure extends AM.Component
   @goToLocation: (locationKeyName) ->
     FlowRouter.go 'adventure', parameter1: locationKeyName
 
+  @activateItem: (itemKeyName) ->
+    FlowRouter.go 'adventure', parameter1: itemKeyName
+
   fontSize: ->
-    10 * @display.scale()
+    @display.scale()
 
   drawInventoryItem: ->
     item = @currentData()
