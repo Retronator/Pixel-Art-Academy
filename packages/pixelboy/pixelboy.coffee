@@ -7,7 +7,7 @@ class PAA.PixelBoy extends PAA.Adventure.Item
   activateVerbs: -> ["look at", "open"]
   deactivateVerbs: -> ["put away", "close"]
 
-  constructor: ->
+  constructor: (@adventure) ->
     super
 
     # This is the blaze component we're using to render the chrome.

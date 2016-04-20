@@ -16,7 +16,7 @@ class PAA.Adventure extends AM.Component
       minAspectRatio: 1
 
     @items =
-      pixelBoy: new PAA.PixelBoy
+      pixelBoy: new PAA.PixelBoy @
 
     @locations =
       dorm: new PAA.Adventure.Locations.Dorm
