@@ -1,0 +1,54 @@
+.pixelboy
+  position fixed
+  bottom -20rem
+  left 50%
+  transform translateX(-50%)
+  width 24rem
+  height 18rem
+  color white
+  background black
+  transition bottom 1s
+
+  -webkit-box-shadow:
+    0px 0px 0px 0.05rem rgba(64,64,64,1),
+    0px 0px 0px 0.075rem rgba(146,146,146,1)
+  -moz-box-shadow:
+    0px 0px 0px 0.05rem rgba(64,64,64,1),
+    0px 0px 0px 0.075rem rgba(146,146,146,1)
+  box-shadow:
+    0px 0px 0px 0.05rem rgba(64,64,64,1),
+    0px 0px 0px 0.075rem rgba(146,146,146,1)
+
+  //add the hand holding the pixelboy
+  .pixelboy-hand
+    width 5.5rem
+    height 12rem
+    position absolute
+    //153px + border until contact between side of pixelboy and hand
+    left calc(-4.33rem - 0.225rem)
+    //99px + border until the contact between bottom of pixelboy and hand
+    bottom calc(-3.3rem - 0.225rem)
+
+  //since there's a transparent part of the bezel, continue the border
+  //in a psuedo-element so we ecan maintain that transparency
+  &::after
+    content ''
+    position absolute
+    top 50%
+    left 50%
+    transform translate(-50%, -50%)
+    width calc(100% + 0.3rem)
+    height calc(100% + 0.3rem)
+    z-index: -1;
+    -webkit-box-shadow:
+      0px 0px 0px 0.025rem rgba(238,238,238,1),
+      0px 0px 0px 0.075rem rgba(202,202,202,1)
+    -moz-box-shadow:
+      0px 0px 0px 0.025rem rgba(238,238,238,1),
+      0px 0px 0px 0.075rem rgba(202,202,202,1)
+    box-shadow:
+      0px 0px 0px 0.025rem rgba(238,238,238,1),
+      0px 0px 0px 0.075rem rgba(202,202,202,1)
+
+  &.activated
+    bottom 1rem

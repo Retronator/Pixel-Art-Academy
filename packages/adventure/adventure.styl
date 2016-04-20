@@ -1,0 +1,29 @@
+@import "{retronator:landsofillusions}/typography/typography.import"
+
+html.pixel-art-academy-style-adventure
+  margin 0
+  padding 0
+  background black
+  color white
+
+  // Pixel art image scaling
+  img
+  canvas
+    image-rendering optimizeSpeed
+    image-rendering -moz-crisp-edges            // Firefox
+    image-rendering -o-crisp-edges              // Opera
+    image-rendering -webkit-optimize-contrast   // Chrome, Safari
+    image-rendering pixelated                   // Chrome
+    image-rendering optimize-contrast           // CSS3
+    -ms-interpolation-mode nearest-neighbor     // IE8+
+
+  body
+    margin 0
+    padding 0
+    uni()
+
+  .adventure
+    .display
+      .location
+        min-height 10rem
+        background #111

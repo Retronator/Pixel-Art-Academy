@@ -29,6 +29,8 @@ Package.onUse(function(api) {
   api.addFiles('artwork/methods.coffee', 'server');
   api.addFiles('artwork/subscriptions.coffee', 'server');
 
+  api.addFiles('character/methods.coffee', 'server');
+
   api.addFiles('calendar/artworks.coffee');
 
   api.addFiles('components/components.coffee');

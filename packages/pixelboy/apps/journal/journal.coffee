@@ -3,7 +3,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
+class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.OS.App
   @register 'PixelArtAcademy.PixelBoy.Apps.Journal'
 
   displayName: ->
