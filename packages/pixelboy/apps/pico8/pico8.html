@@ -1,19 +1,18 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Pico8">
-  <script src="/assets/pixelboy/app/pico8/picoloader.js"></script>
   <div class="pico-app-screen">
-    <div id="pico-container"></div>
-      <div class="pico-controller action-buttons">
-        <button class="pico-button action-button" value="5">b</button>
-        <button class="pico-button action-button" value="4">a</button>
+    <div class="pico-container"></div>
+    <div class="pico-controller action-buttons">
+      <button class="pico-button action-button" value="5">b</button>
+      <button class="pico-button action-button" value="4">a</button>
+    </div>
+    <div class="pico-controller d-pad-container">
+      <div class="d-pad">
+        <button class="pico-button d-pad-direction up" value="2"></button>
+        <button class="pico-button d-pad-direction right" value="1"></button>
+        <button class="pico-button d-pad-direction down" value="3"></button>
+        <button class="pico-button d-pad-direction left" value="0"></button>
+        <div class="d-pad-keycap"></div>
       </div>
-      <div class="pico-controller d-pad-container">
-        <div class="d-pad">
-          <button class="pico-button d-pad-direction up" value="2"></button>
-          <button class="pico-button d-pad-direction right" value="1"></button>
-          <button class="pico-button d-pad-direction down" value="3"></button>
-          <button class="pico-button d-pad-direction left" value="0"></button>
-          <div class="d-pad-keycap"></div>
-        </div>
-      </div>
+    </div>
   </div>
 </template>
