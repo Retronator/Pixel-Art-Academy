@@ -16,22 +16,28 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.OS.App
     super
     @picoKeyIsPressed = new ReactiveField false
 
+  onRendered: ->
+    super
+
+    Pico.load $('.pico-container')[0], 'http://localhost.pixelart.academy:3005/pico8.png?cartridge=http%3A%2F%2Flocalhost.pixelart.academy%3A3005%2Fassets%2Fpixelboy%2Fapps%2Fpico8%2Ftest.p8.png'
+
   events: ->
     super.concat
-      'mousedown .pico-button': @onClickPicoButton
+      'mousedown .pico-button': @onPressPicoButton
       'mouseup .pico-button, mouseout .pico-button': @onReleasePicoButton
 
-  onClickPicoButton: (event) ->
-    # get input value
+  onPressPicoButton: (event) ->
+    # Get input value.
     keypress = event.currentTarget.value
-    # send value to pico-8
-    # PicoPress(keypress, 0)
+    
+    # Send value to pico-8.
+    Pico.press keypress, 0
     @picoKeyIsPressed true
 
   onReleasePicoButton: (event) ->
     if @picoKeyIsPressed()
       keypress = event.currentTarget.value
-      #send value to pico-8
-      # PicoRelease(keypress, 0)
-      console.log 'release ', keypress
+      
+      # Send value to pico-8.
+      Pico.release keypress, 0
       @picoKeyIsPressed false

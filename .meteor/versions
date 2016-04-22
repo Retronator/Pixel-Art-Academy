@@ -29,6 +29,7 @@ edgee:slingshot@0.7.1
 ejson@1.0.7
 es5-shim@4.1.14
 fastclick@1.0.7
+froatsnook:request@2.40.5
 geojson-utils@1.0.4
 hot-code-push@1.0.0
 html-tools@1.0.5
@@ -76,6 +77,7 @@ peerlibrary:peerdb@0.20.0
 peerlibrary:reactive-field@0.1.0
 peerlibrary:stacktrace@0.2.0
 peerlibrary:util@0.3.0
+pico8@0.0.1
 pixelartacademy@0.0.1
 pixelboy@0.0.1
 pixeldailies@0.0.1

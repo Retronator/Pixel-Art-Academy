@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "pngjs": {
+      "version": "2.3.0",
+      "dependencies": {
+        "node-zlib-backport": {
+          "version": "0.11.15"
+        }
+      }
+    }
+  }
+}

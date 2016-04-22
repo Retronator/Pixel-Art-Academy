@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('pixelartacademy');
   api.use('adventure');
+  api.use('pico8');
 
   api.export('PixelArtAcademy');
 
