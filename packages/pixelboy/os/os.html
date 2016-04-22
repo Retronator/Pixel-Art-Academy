@@ -6,11 +6,11 @@
   </style>
   {{> Render display}}
   <div class="pixelboy-os">
-    {{> PixelArtAcademy.PixelBoy.Components.AppSwitcher}}
+    <a href="{{flowRouterPath 'pixelBoy'}}" class="return-to-homescreen">home</a>
     {{#if currentApp}}
-      {{> renderCurrentApp}}
-    {{else}}
-      <div class="boot-loader">PixelBoy OS v0.1</div>
+      <div class="app-wrapper">
+        {{> renderCurrentApp}}
+      </div>
     {{/if}}
   </div>
 </template>

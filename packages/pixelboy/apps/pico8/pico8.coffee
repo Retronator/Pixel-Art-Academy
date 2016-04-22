@@ -13,6 +13,7 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.OS.App
     'pico8'
 
   constructor: ->
+    super
     @picoKeyIsPressed = new ReactiveField false
 
   events: ->

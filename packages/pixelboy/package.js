@@ -19,12 +19,18 @@ Package.onUse(function(api) {
   api.addFiles('pixelboy.coffee');
 
   api.addFiles('os/os.coffee');
+  api.addFiles('os/assets/velocity.min.js', 'client');
+  api.addFiles('os/assets/velocity.ui.js', 'client');
   api.addFiles('os/os.html');
   api.addFiles('os/os.styl');
 
   api.addFiles('os/app.coffee');
 
   api.addFiles('apps/apps.coffee');
+
+  api.addFiles('apps/homescreen/homescreen.html');
+  api.addFiles('apps/homescreen/homescreen.styl');
+  api.addFiles('apps/homescreen/homescreen.coffee');
 
   api.addFiles('apps/calendar/calendar.html');
   api.addFiles('apps/calendar/calendar.styl');
@@ -48,8 +54,4 @@ Package.onUse(function(api) {
   api.addFiles('components/item/item.coffee');
   api.addFiles('components/item/item.html');
   api.addFiles('components/item/item.styl');
-
-  api.addFiles('components/appswitcher/appswitcher.html');
-  api.addFiles('components/appswitcher/appswitcher.styl');
-  api.addFiles('components/appswitcher/appswitcher.coffee');
 });

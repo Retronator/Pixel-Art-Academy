@@ -10,6 +10,8 @@ class PAA.PixelBoy.OS extends AM.Component
   onCreated: ->
     super
 
+    homescreen = new PAA.PixelBoy.Apps.HomeScreen
+
     @apps = [
       new PAA.PixelBoy.Apps.Journal
       new PAA.PixelBoy.Apps.Calendar
@@ -18,10 +20,28 @@ class PAA.PixelBoy.OS extends AM.Component
 
     # Create a map for fast retrieval of apps by their url name.
     appsNameMap = _.object ([app.urlName(), app] for app in @apps)
+    @appsMap = appsNameMap
 
-    @currentApp = new ComputedField =>
+    @currentApp = new ReactiveField null #appsNameMap[FlowRouter.getParam 'app']
+
+    @autorun =>
       appUrlName = FlowRouter.getParam 'app'
-      appsNameMap[appUrlName]
+      Tracker.nonreactive =>
+        newApp = appsNameMap[appUrlName] or homescreen
+        currentApp = @currentApp()
+        return if newApp is currentApp
+        startNewApp = =>
+          return unless newApp
+
+          @currentApp newApp
+          newApp.activate()
+
+        if currentApp
+          currentApp.deactivate =>
+            startNewApp()
+
+        else
+          startNewApp()
 
     # Create pixel scaling display.
     @display = new Artificial.Mirage.Display

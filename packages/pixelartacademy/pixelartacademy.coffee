@@ -22,7 +22,10 @@ class PixelArtAcademy extends Artificial.Base.App
     @_addAdminPage 'adminImportCheckIns', '/admin/check-ins/import', new @constructor.Practice.Pages.ImportCheckIns
     @_addAdminPage 'adminExtractImagesFromCheckInPosts', '/admin/check-ins/extract-images-from-posts', new @constructor.Practice.Pages.ExtractImagesFromPosts
 
-    @_addPage 'pixelBoy', '/pixelboy/os/:app?/:path?', new @constructor.PixelBoy.OS
+    # @_addPage 'pixelBoy', '/pixelboy/os/:app?/:path?', new @constructor.PixelBoy.OS
+    FlowRouter.route '/pixelboy/os/:app?/:path?',
+      name: 'pixelBoy'
+    @components.add new @constructor.PixelBoy.OS
     @_addPage 'adventure', '/:parameter1?/:parameter2?/:parameter3?', new @constructor.Adventure
 
     FlowRouter.initialize()
