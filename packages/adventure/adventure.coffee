@@ -14,6 +14,4 @@ class PAA.Adventure extends LOI.Adventure
     @locations =
       dorm: new PAA.Adventure.Locations.Dorm
 
-    @startLocation = @locations.dorm
-
     super
