@@ -6,22 +6,17 @@ class PAA.PixelBoy.Components.Item extends AM.Component
 
   constructor: (@pixelBoy) ->
     # The actual current width and height of the physical device (measured as the inner screen/OS area).
-    @width = new ReactiveField 240
-    @height = new ReactiveField 180
+    @size = new ReactiveField
+      width: 0
+      height: 0
+    ,
+      EJSON.equals
 
-    # The minimum size the device should be let to resize.
-    @minWidth = new ReactiveField 100
-    @minHeight = new ReactiveField 100
-
-    # The maximum size the device should be let to resize.
-    @maxWidth = new ReactiveField 300
-    @maxHeight = new ReactiveField 200
-
-    @resizable = new ReactiveField false
     @resizing = new ReactiveField false
 
     @startResizeX = new ReactiveField null
     @startResizeY = new ReactiveField null
+
     @startWidth = new ReactiveField null
     @startHeight = new ReactiveField null
 
@@ -31,23 +26,70 @@ class PAA.PixelBoy.Components.Item extends AM.Component
   onRendered: ->
     super
 
-    $(window).on('mousemove.pixelboy', (event) => @onMousemove(event))
-    $(window).on('mouseup.pixelboy', (event) => @onMouseup(event))
+    $(window).on('mousemove.pixelboy', (event) => @onMouseMove(event))
+    $(window).on('mouseup.pixelboy', (event) => @onMouseUp(event))
 
+    # Perform automatic resizing, based on current app desires.
+    @autorun =>
+      app = @pixelBoy.os.currentApp()
+
+      size = @size()
+      newWidth = size.width
+      newHeight = size.height
+
+      # Bound it to min/max size of the app.
+      newWidth = Math.min app.maxWidth(), newWidth if app.maxWidth()
+      newWidth = Math.max app.minWidth(), newWidth if app.minWidth()
+
+      newHeight = Math.min app.maxHeight(), newHeight if app.maxHeight()
+      newHeight = Math.max app.minHeight(), newHeight if app.minHeight()
+
+      Tracker.nonreactive =>
+        # Set the new size values.
+        @size
+          width: newWidth
+          height: newHeight
+
+    # Handle manual resizing from user input.
     @autorun =>
       return unless @resizing()
+
       scale = @pixelBoy.adventure.display.scale()
-      newWidth = @startWidth() + (@endResizeX() - @startResizeX())/scale
-      newHeight = @startHeight() - (@endResizeY() - @startResizeY())/scale
-      newWidth = Math.min @maxWidth(), Math.max @minWidth(), newWidth
-      newHeight = Math.min @maxHeight(), Math.max @minHeight(), newHeight
-      @width newWidth
-      @height newHeight
+
+      # Calculate desired state based on dragging.
+      newWidth = @startWidth() + (@endResizeX() - @startResizeX()) * 2 / scale
+      newHeight = @startHeight() - (@endResizeY() - @startResizeY()) / scale
+
+      # Set the new size values.
+      @size
+        width: newWidth
+        height: newHeight
+
+    # Animate the size using velocity.
+    @autorun =>
+      size = @size()
+      scale = @pixelBoy.adventure.display.scale()
+
+      @$('.pixelboy').velocity('stop', true).velocity
+        width: size.width * scale
+        height: size.height * scale
+      ,
+        duration: if @resizing() then 100 else 1000
+        easing: if @resizing() then 'easeOutCirc' else 'easeInOutQuint'
+
+    # Add resizing class to body to force cursor.
+    @autorun =>
+      if @resizing()
+        $('body').addClass('pixelboy-resizing')
+
+      else
+        $('body').removeClass('pixelboy-resizing')
 
   onDestroyed: ->
     super
 
     $(window).off('.pixelboy')
+    $('body').removeClass('pixelboy-resizing')
 
   $pixelboy: ->
     @$('.pixelboy')
@@ -55,50 +97,41 @@ class PAA.PixelBoy.Components.Item extends AM.Component
   activatedClass: ->
     'activated' if @pixelBoy.activating() or @pixelBoy.activated()
 
-  pixelBoyStyle: ->
-    # This determines the visual size of the PixelBoy (its screen/OS area).
-    width: "#{@width()}rem"
-    height: "#{@height()}rem"
-
   osStyle: ->
     'pointer-events': if @resizing() then 'none' else 'initial'
 
   events: ->
     super.concat
-      'click .deactivate-button': @onClickDeactivateButton
-      'mouseover .glass': @onMouseoverGlass
-      'mouseout .glass': @onMouseoutGlass
-      'mousedown': @onMousedown
+      'click .hand': @onClickHand
+      'mousedown .glass': @onMouseDownGlass
 
-  onMouseoverGlass: (event) ->
-    @resizable true
-    $('.glass').addClass('resizable')
-
-  onMouseoutGlass: (event) ->
-    @resizable false
-    $('.glass').removeClass('resizable')
-
-  onMousedown: (event) ->
+  onMouseDownGlass: (event) ->
+    # Do not let text selection happen.
     event.preventDefault()
-    # get current x and y pos
-    if @resizable()
-      @startResizeX event.clientX
-      @startResizeY event.clientY
-      @endResizeX event.clientX
-      @endResizeY event.clientY
-      @startWidth @width()
-      @startHeight @height()
-      @resizing true
 
-  onMousemove: (event) ->
-    return unless @resizing()
+    # Get current x and y position.
+    @startResizeX event.clientX
+    @startResizeY event.clientY
+
     @endResizeX event.clientX
     @endResizeY event.clientY
 
-  onMouseup: (event) ->
+    size = @size()
+    @startWidth size.width
+    @startHeight size.height
+
+    @resizing true
+
+  onMouseMove: (event) ->
+    return unless @resizing()
+
+    @endResizeX event.clientX
+    @endResizeY event.clientY
+
+  onMouseUp: (event) ->
     @resizing false
 
-  onClickDeactivateButton: (event) ->
+  onClickHand: (event) ->
     @pixelBoy.deactivate()
 
   draw: (appTime) ->

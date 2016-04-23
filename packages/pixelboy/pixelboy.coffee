@@ -15,7 +15,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     @itemComponent = new PAA.PixelBoy.Components.Item @
 
     # This is the OS running on the PixelBoy.
-    @os = new PAA.PixelBoy.OS
+    @os = new PAA.PixelBoy.OS @
 
   renderComponent: (currentComponent) ->
     @itemComponent.renderComponent currentComponent

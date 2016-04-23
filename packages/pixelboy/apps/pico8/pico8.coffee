@@ -14,6 +14,15 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.OS.App
 
   constructor: ->
     super
+
+    @minWidth 80
+    @minHeight 120
+
+    @maxWidth @minWidth()
+    @maxHeight @minHeight()
+
+    @resizable false
+
     @picoKeyIsPressed = new ReactiveField false
 
   onRendered: ->
