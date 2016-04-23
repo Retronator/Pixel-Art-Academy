@@ -6,7 +6,6 @@ class PAA.Layouts.AlphaAccess extends BlazeLayoutComponent
   @register 'PixelArtAcademy.Layouts.AlphaAccess'
 
   loading: ->
-    console.log "loading", Meteor.loggingIn(), not Roles.subscription.ready()
     Meteor.loggingIn() or not Roles.subscription.ready()
 
   characters: ->

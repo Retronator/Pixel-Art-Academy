@@ -1,6 +1,7 @@
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy extends PAA.Adventure.Item
+class PAA.PixelBoy extends LOI.Adventure.Item
   keyName: -> 'pixelboy'
   displayName: -> "PixelBoy 2000"
   isActivatable: -> true

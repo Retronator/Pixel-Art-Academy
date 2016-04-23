@@ -15,15 +15,8 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
-  api.addFiles('adventure.html');
-  api.addFiles('adventure.styl');
   api.addFiles('adventure.coffee');
-
-  api.addFiles('item.coffee');
-
-  api.addFiles('location.coffee');
-
+  
   api.addFiles('locations/locations.coffee');
   api.addFiles('locations/dorm.coffee');
-
 });
