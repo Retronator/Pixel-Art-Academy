@@ -11,7 +11,18 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.OS.App
     'homescreen'
 
   onRendered: ->
-    super
+    # Run intro animation.
+    $('.app-wrapper').css
+      display: 'block'
+      opacity: 1
+      
+    $('.app-icon').velocity 'transition.slideUpIn', stagger: 150
+
+  onDeactivate: (finishedDeactivatingCallback) ->
+    $('.app-icon').velocity 'transition.fadeOut',
+      complete: ->
+        finishedDeactivatingCallback()
+      stagger: 150
 
   appUrlName: ->
     app = @currentData()

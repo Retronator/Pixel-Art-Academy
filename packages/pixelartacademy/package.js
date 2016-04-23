@@ -12,6 +12,8 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('kadira:flow-router');
+  api.use('kadira:blaze-layout');
+  api.use('peerlibrary:blaze-layout-component');
   api.use('retronator:landsofillusions');
   api.use('alanning:roles');
 
@@ -23,6 +25,14 @@ Package.onUse(function(api) {
   api.addFiles('pixelartacademy.styl');
   api.addFiles('pixelartacademy.coffee');
   api.addFiles('server.coffee', 'server');
+
+  api.addFiles('layouts/layouts.coffee');
+
+  api.addFiles('layouts/alphaaccess/alphaaccess.coffee');
+  api.addFiles('layouts/alphaaccess/alphaaccess.html');
+
+  api.addFiles('layouts/adminaccess/adminaccess.coffee');
+  api.addFiles('layouts/adminaccess/adminaccess.html');
 
   api.addFiles('pages/pages.coffee');
 

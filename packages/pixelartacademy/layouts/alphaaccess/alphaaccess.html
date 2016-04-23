@@ -1,0 +1,35 @@
+<template name="PixelArtAcademy.Layouts.AlphaAccess">
+  {{#if loading}}
+    Loading …
+  {{else}}
+    {{#if currentUser}}
+      {{#if isInRole 'alpha-access'}}
+        {{#if currentCharacter}}
+          {{> renderPage}}
+        {{else}}
+          {{#if characters.length}}
+            <p>Please load one of the characters to start.</p>
+            <ul class="characters">
+              {{#each characters}}
+                <li class="character">
+                  {{displayName}}
+                  <button class="load-character">Load</button>
+                </li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <p>You need to create a character to play the game. Please create one at <a href="{{settings 'landsOfIllusionsUrl'}}">Lands of Illusions</a>.</p>
+          {{/if}}
+        {{/if}}
+      {{else}}
+        <p>You need to have alpha access to use Pixel Art Academy alpha version.</p>
+      {{/if}}
+    {{else}}
+      <p>Please sign in through <a href="{{settings 'landsOfIllusionsUrl'}}">Lands of Illusions</a>.
+        When signed in there, you should automatically get signed in here as well.</p>
+      <p>NOTE FOR SAFARI USERS: This does not yet work in Safari due to stricter security settings. If you
+        really want to use the system before we find out another way to share login information, you can go to
+        Safari Preferences > Privacy tab and set Cookies and website data to Always allow.</p>
+    {{/if}}
+  {{/if}}
+</template>

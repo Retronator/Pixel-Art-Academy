@@ -1,6 +1,6 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.HomeScreen">
   <ul class="app-switcher">
-    {{#each apps}}
+    {{#each os.apps}}
       <li class="app-icon">
         <a href="{{flowRouterPath 'pixelBoy' app=appUrlName}}">
           <div class="icon"></div>

@@ -45,6 +45,7 @@ jparker:crypto-md5@0.1.1
 jparker:crypto-mode@0.1.1
 jparker:crypto-padding@0.1.0
 jquery@1.11.4
+kadira:blaze-layout@2.3.0
 kadira:flow-router@2.10.1
 launch-screen@1.0.4
 limemakers:three@0.73.0
@@ -70,6 +71,7 @@ peerlibrary:assert@0.2.5
 peerlibrary:base-component@0.14.0
 peerlibrary:blaze-common-component@0.1.0
 peerlibrary:blaze-components@0.16.2
+peerlibrary:blaze-layout-component@0.1.1
 peerlibrary:check-extension@0.2.0
 peerlibrary:computed-field@0.3.1
 peerlibrary:data-lookup@0.1.0
@@ -98,6 +100,7 @@ spacebars@1.0.7
 spacebars-compiler@1.0.7
 standard-minifiers@1.0.2
 stylus@2.511.1
+templating@1.1.5
 templating-tools@1.0.0
 tracker@1.0.9
 ui@1.0.8

@@ -10,12 +10,14 @@ class PAA.PixelBoy.OS extends AM.Component
   onCreated: ->
     super
 
-    homescreen = new PAA.PixelBoy.Apps.HomeScreen
+    $('html').addClass('pixel-art-academy-style-pixelboy-os')
+
+    homescreen = new PAA.PixelBoy.Apps.HomeScreen @
 
     @apps = [
-      new PAA.PixelBoy.Apps.Journal
-      new PAA.PixelBoy.Apps.Calendar
-      new PAA.PixelBoy.Apps.Pico8
+      new PAA.PixelBoy.Apps.Journal @
+      new PAA.PixelBoy.Apps.Calendar @
+      new PAA.PixelBoy.Apps.Pico8 @
     ]
 
     # Create a map for fast retrieval of apps by their url name.
@@ -29,7 +31,9 @@ class PAA.PixelBoy.OS extends AM.Component
       Tracker.nonreactive =>
         newApp = appsNameMap[appUrlName] or homescreen
         currentApp = @currentApp()
+        
         return if newApp is currentApp
+        
         startNewApp = =>
           return unless newApp
 
@@ -49,12 +53,7 @@ class PAA.PixelBoy.OS extends AM.Component
       safeAreaHeight: 240
       minScale: 2
 
-    $('html').addClass('pixel-art-academy-style-pixelboy-os')
-
   onDestroyed: ->
     super
 
     $('html').removeClass('pixel-art-academy-style-pixelboy-os')
-
-  renderCurrentApp: ->
-    @currentApp()?.renderComponent(@currentComponent()) or null

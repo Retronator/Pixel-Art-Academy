@@ -1,0 +1,11 @@
+<template name="PixelArtAcademy.Layouts.AdminAccess">
+  {{#if loading}}
+    Loading …
+  {{else}}
+    {{#if isInRole 'admin'}}
+      {{> renderPage}}
+    {{else}}
+      <p>Restricted area. Please turn back.</p>
+    {{/if}}
+  {{/if}}
+</template>
