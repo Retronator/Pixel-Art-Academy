@@ -60,16 +60,7 @@ class PAA.PixelBoy.Components.Item extends AM.Component
     width: "#{@width()}rem"
     height: "#{@height()}rem"
 
-  osIframeAttributes: ->
-    app = FlowRouter.getParam 'parameter2'
-    path = FlowRouter.getParam 'parameter3'
-
-    # This will determine the pixel-backing size of the canvas.
-    width: @width()
-    height: @height()
-    src: FlowRouter.path 'pixelBoy', app: app, path: path
-
-  osIframeStyle: ->
+  osStyle: ->
     'pointer-events': if @resizing() then 'none' else 'initial'
 
   events: ->

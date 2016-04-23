@@ -1,44 +1,42 @@
 @import "{retronator:landsofillusions}/typography/typography.import"
 
-.pixelboy-os
-  .app-switcher
-    list-style none
-    padding 0
-    uni()
+.apps-homescreen
+  list-style none
+  padding 0
+  uni()
+  text-align center
 
-    li
-      display inline-block
-      text-transform uppercase
-      text-align center
+  li
+    display inline-block
+    text-transform uppercase
+    text-align center
 
-    .app-icon
-      display inline-block !important //forcing inline-block bc velocity not registering it
-      opacity 0
-      vertical-align top
-      padding 0 5rem
-      max-width 70rem
+  .app-icon
+    display inline-block !important //forcing inline-block bc velocity not registering it
+    opacity 0
+    vertical-align top
+    padding 0 5rem
+    max-width 70rem
 
-      &:hover
-        cursor pointer
-        background transparent
-        font-weight bold
+    &:hover
+      cursor pointer
+      background transparent
+      font-weight bold
 
-        a
-          background-color transparent
-          color #ccc
-
-        .icon
-          animation bounce 1s step-start 0s infinite
-          -webkit-animation bounce 1s step-start 0s infinite
+      a
+        background-color transparent
+        color #ccc
 
       .icon
-        width 50rem
-        height 50rem
-        background #b4d455
-        margin 0 auto 5rem auto
+        animation bounce 1s step-start 0s infinite
+        -webkit-animation bounce 1s step-start 0s infinite
 
-@keyframes bounce {
-  50% {
-    transform: translateY(-5rem);
-  }
-}
+    .icon
+      width 50rem
+      height 50rem
+      background #b4d455
+      margin 0 auto 5rem auto
+
+@keyframes bounce
+  50%
+    transform translateY(-5rem)

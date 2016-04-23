@@ -10,9 +10,9 @@ class PAA.PixelBoy.OS extends AM.Component
   onCreated: ->
     super
 
-    $('html').addClass('pixel-art-academy-style-pixelboy-os')
+    @justOS = FlowRouter.getRouteName() is 'pixelBoy'
 
-    homescreen = new PAA.PixelBoy.Apps.HomeScreen @
+    homeScreen = new PAA.PixelBoy.Apps.HomeScreen @
 
     @apps = [
       new PAA.PixelBoy.Apps.Journal @
@@ -21,15 +21,22 @@ class PAA.PixelBoy.OS extends AM.Component
     ]
 
     # Create a map for fast retrieval of apps by their url name.
-    appsNameMap = _.object ([app.urlName(), app] for app in @apps)
+    appsNameMap = _.object ([app.keyName(), app] for app in @apps)
     @appsMap = appsNameMap
 
-    @currentApp = new ReactiveField null #appsNameMap[FlowRouter.getParam 'app']
+    @currentAppKeyName = ComputedField =>
+      FlowRouter.getParam('app') or FlowRouter.getParam('parameter2')
+
+    @currentAppPath = ComputedField =>
+      FlowRouter.getParam('path') or FlowRouter.getParam('parameter3')
+
+    @currentApp = new ReactiveField null
 
     @autorun =>
-      appUrlName = FlowRouter.getParam 'app'
+      appKeyName = @currentAppKeyName()
+
       Tracker.nonreactive =>
-        newApp = appsNameMap[appUrlName] or homescreen
+        newApp = appsNameMap[appKeyName] or homeScreen
         currentApp = @currentApp()
         
         return if newApp is currentApp
@@ -47,13 +54,37 @@ class PAA.PixelBoy.OS extends AM.Component
         else
           startNewApp()
 
-    # Create pixel scaling display.
-    @display = new Artificial.Mirage.Display
-      safeAreaWidth: 320
-      safeAreaHeight: 240
-      minScale: 2
+    if @justOS
+      # Create pixel scaling display.
+      @display = new Artificial.Mirage.Display
+        safeAreaWidth: 320
+        safeAreaHeight: 240
+        minScale: 2
+
+  onRendered: ->
+    super
+
+    @$root = if @justOS then $('html') else @$('.pixelboy-os').closest('.os')
+    @$root.addClass('pixel-art-academy-style-pixelboy-os')
 
   onDestroyed: ->
     super
 
-    $('html').removeClass('pixel-art-academy-style-pixelboy-os')
+    @$root.removeClass('pixel-art-academy-style-pixelboy-os')
+
+  appPath: (appKeyName, appPath) ->
+    appPath = null if appPath instanceof Spacebars.kw
+    
+    if @justOS
+      FlowRouter.path 'pixelBoy',
+        app: appKeyName
+        path: appPath
+
+    else
+      FlowRouter.path 'adventure',
+        parameter1: 'pixelboy'
+        parameter2: appKeyName
+        parameter3: appPath
+
+  go: (appKeyName, appPath) ->
+    FlowRouter.go @appPath appKeyName, appPath

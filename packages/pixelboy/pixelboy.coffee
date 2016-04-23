@@ -14,6 +14,9 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     # This is the blaze component we're using to render the chrome.
     @itemComponent = new PAA.PixelBoy.Components.Item @
 
+    # This is the OS running on the PixelBoy.
+    @os = new PAA.PixelBoy.OS
+
   renderComponent: (currentComponent) ->
     @itemComponent.renderComponent currentComponent
 

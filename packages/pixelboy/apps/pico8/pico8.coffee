@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.OS.App
   displayName: ->
     "Pico-8"
 
-  urlName: ->
+  keyName: ->
     'pico8'
 
   constructor: ->

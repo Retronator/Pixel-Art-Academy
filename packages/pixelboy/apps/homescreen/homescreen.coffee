@@ -7,7 +7,7 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.OS.App
   displayName: ->
     "Home Screen"
 
-  urlName: ->
+  keyName: ->
     'homescreen'
 
   onRendered: ->
@@ -24,9 +24,9 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.OS.App
         finishedDeactivatingCallback()
       stagger: 150
 
-  appUrlName: ->
+  appKeyName: ->
     app = @currentData()
-    app.urlName()
+    app.keyName()
 
   appDisplayName: ->
     app = @currentData()

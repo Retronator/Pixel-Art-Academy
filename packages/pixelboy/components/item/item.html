@@ -2,7 +2,11 @@
   <div class="pixelboy {{activatedClass}}" {{style pixelBoyStyle}}>
     <div class="glass"></div>
     <div class="screen"></div>
-    <iframe class="os" {{osIframeAttributes}} {{style osIframeStyle}}></iframe>
+
+    <div class="os" {{osAttributes}} {{style osStyle}}>
+      {{> Render pixelBoy.os}}
+    </div>
+
     <div class="hand"><img src="/assets/pixelboy/hand.png" /></div>
   </div>
 </template>

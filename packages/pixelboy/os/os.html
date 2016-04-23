@@ -1,12 +1,16 @@
 <template name="PixelArtAcademy.PixelBoy.OS">
-  <style>
-    html {
-      font-size: {{display.scale}}px
-    }
-  </style>
-  {{> Render display}}
+  {{#if justOS}}
+    <style>
+      html {
+        font-size: {{display.scale}}px
+      }
+    </style>
+    {{> Render display}}
+  {{/if}}
   <div class="pixelboy-os">
-    <a href="{{flowRouterPath 'pixelBoy'}}" class="return-to-homescreen">home</a>
+    <div class="homescreen-button-area">
+      <a href="{{appPath}}" class="homescreen-button button">home</a>
+    </div>
     {{#if currentApp}}
       <div class="app-wrapper">
         {{> Render currentApp}}

@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.OS.App
   displayName: ->
     "Practice Journal"
 
-  urlName: ->
+  keyName: ->
     'journal'
 
   onCreated: ->
@@ -41,7 +41,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.OS.App
     'disable-scrolling' if @showCheckInForm()
 
   showCheckInForm: ->
-    FlowRouter.getParam('path') is 'check-in'
+    @os.currentAppPath() is 'check-in'
 
   # Events
 
@@ -52,9 +52,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.OS.App
       'click .check-in .delete': @onClickDeleteCheckIn
 
   onClickCheckIn: (event) ->
-    FlowRouter.go 'pixelBoy',
-      app: 'journal'
-      path: 'check-in'
+    @os.go 'journal', 'check-in'
 
   onClickImportCheckIns: (event) ->
     Meteor.call 'PixelArtAcademy.Practice.CheckIn.import', LOI.characterId()

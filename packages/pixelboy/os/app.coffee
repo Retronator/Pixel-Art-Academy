@@ -11,7 +11,7 @@ class PAA.PixelBoy.OS.App extends AM.Component
   displayName: ->
     throw new Meteor.Error 'unimplemented', "You must specify app's display name."
 
-  urlName: ->
+  keyName: ->
     throw new Meteor.Error 'unimplemented', "You must specify app's url name."
 
   constructor: (@os) ->
@@ -23,7 +23,7 @@ class PAA.PixelBoy.OS.App extends AM.Component
   onRendered: ->
     $appWrapper = $('.app-wrapper')
     $appWrapper.velocity('transition.slideUpIn', complete: -> $appWrapper.css('transform', ''))
-    $('.return-to-homescreen').velocity('transition.slideDownIn')
+    $('.homescreen-button-area').velocity('transition.slideDownIn')
 
   deactivated: -> @activatedState() is @constructor.activatedState.Deactivated
   activating: -> @activatedState() is @constructor.activatedState.Activating
@@ -55,7 +55,7 @@ class PAA.PixelBoy.OS.App extends AM.Component
     # Override to perform any logic when item is about to be deactivated. Report that you've done the
     # necessary steps by calling the provided callback. By default we just call the callback straight away.
 
-    $('.return-to-homescreen').velocity 'transition.slideUpOut'
+    $('.homescreen-button-area').velocity 'transition.slideUpOut'
     $('.app-wrapper').velocity 'transition.slideDownOut',
       complete: ->
         finishedDeactivatingCallback()

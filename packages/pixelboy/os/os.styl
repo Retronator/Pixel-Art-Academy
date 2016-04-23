@@ -8,14 +8,19 @@ console-light-grey = atari2600colors[5][0]
 console-grey = atari2600colors[4][0]
 console-dark-grey = atari2600colors[3][0]
 
+// When just OS is loaded directly to html.
 html.pixel-art-academy-style-pixelboy-os
+html.pixel-art-academy-style-pixelboy-os body
   margin 0
   padding 0
-  background atari2600colors[1][10]
-  color white
 
-  body
-    uni()
+.pixel-art-academy-style-pixelboy-os
+  background atari2600colors[1][10]
+
+.pixelboy-os
+  padding 10rem
+  color white
+  uni()
 
   *
     box-sizing border-box
@@ -72,11 +77,15 @@ html.pixel-art-academy-style-pixelboy-os
     background-color atari2600colors[1][0]
 
   button
+  .button
+    display inline-block
     position relative
     top -4rem
     margin-top 4rem
+    padding 5rem
     background #666
     uni()
+    text-decoration none
     color black
     border none
     border-bottom 4rem solid atari2600colors[1][0]
@@ -127,11 +136,11 @@ html.pixel-art-academy-style-pixelboy-os
   .boot-loader
     acme-7()
 
-  .return-to-homescreen
+  .homescreen-button-area
     display none
-    position absolute
-    top 0
-    right 0
+    position fixed
+    top 15rem
+    right 15rem
     z-index 1
 
   .app-wrapper

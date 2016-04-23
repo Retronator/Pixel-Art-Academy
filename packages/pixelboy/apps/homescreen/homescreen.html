@@ -1,8 +1,8 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.HomeScreen">
-  <ul class="app-switcher">
+  <ul class="app apps-homescreen">
     {{#each os.apps}}
       <li class="app-icon">
-        <a href="{{flowRouterPath 'pixelBoy' app=appUrlName}}">
+        <a href="{{os.appPath appKeyName}}">
           <div class="icon"></div>
           {{appDisplayName}}</a>
       </li>

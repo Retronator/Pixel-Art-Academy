@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.OS.App
   displayName: ->
     "Pixel Art Calendar"
 
-  urlName: ->
+  keyName: ->
     'calendar'
 
   onCreated: ->
