@@ -1,0 +1,85 @@
+
+.location
+  position relative
+
+.actors
+  position absolute
+  top 0
+  left 0
+  right 0
+  bottom 0
+
+.actor.Jessie
+  background url('/assets/adventure/placeholder-char.png') no-repeat
+  width 36px
+  height 200px
+
+  position absolute
+  top 50%
+  left 50%
+  transform translate(-50%, -50%)
+
+.actor.Corinne
+  background url('/assets/adventure/placeholder-char.png') no-repeat
+  width 36px
+  height 200px
+
+  position absolute
+  top 50%
+  left 75%
+  transform translate(-50%, -50%)
+
+.actor
+  &:hover
+    .action
+      opacity 1
+
+  *
+    // since text-stroke isn't widly supported, hack the stroke
+    // using text-shadows that have been offset by 1rem
+    // http://caniuse.com/#feat=text-stroke for more info
+    text-shadow:
+      -1rem -1rem 0 #000,
+      1rem -1rem 0 #000,
+      -1rem 1rem 0 #000,
+      1rem 1rem 0 #000,
+      1rem 0 0 #000,
+      -1rem 0 0 #000,
+      0 1rem 0 #000,
+      0 -1rem 0 #000
+
+  .dialog-bubble
+    white-space nowrap
+    position absolute
+    bottom 100%
+    left 50%
+    transform translateX(-50%)
+    opacity 0
+
+    &.speaking
+      opacity 1
+
+    & > .blast
+      opacity 0
+      display none
+
+  .action-button
+    position absolute
+    top 0
+    left 0
+    right 0
+    bottom 0
+    cursor pointer
+
+.console-log
+  position absolute
+  bottom 0
+  left 0
+  right 0
+  background black
+
+  &::before
+    content '>'
+
+  &::after
+    content '_'

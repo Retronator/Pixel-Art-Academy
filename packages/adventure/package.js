@@ -16,7 +16,11 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFiles('adventure.coffee');
-  
+  api.addFiles('adventure.styl');
+
   api.addFiles('locations/locations.coffee');
   api.addFiles('locations/dorm.coffee');
+  api.addFiles('locations/studio.coffee');
+
+  api.addFiles('assets/jquery.blast.min.js', 'client')
 });
