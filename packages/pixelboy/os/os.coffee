@@ -4,13 +4,13 @@ PAA = PixelArtAcademy
 class PAA.PixelBoy.OS extends AM.Component
   @register 'PixelArtAcademy.PixelBoy.OS'
 
-  constructor: ->
+  constructor: (@pixelBoy) ->
     super
-
+    
   onCreated: ->
     super
 
-    @justOS = FlowRouter.getRouteName() is 'pixelBoy'
+    @justOS = not @pixelBoy
 
     homeScreen = new PAA.PixelBoy.Apps.HomeScreen @
 
@@ -32,6 +32,7 @@ class PAA.PixelBoy.OS extends AM.Component
 
     @currentApp = new ReactiveField null
 
+    # Set currentApp based on url.
     @autorun =>
       appKeyName = @currentAppKeyName()
 
@@ -60,6 +61,10 @@ class PAA.PixelBoy.OS extends AM.Component
         safeAreaWidth: 320
         safeAreaHeight: 240
         minScale: 2
+        
+    else
+      # Just take adventure's display.
+      @display = @pixelBoy.adventure.display
 
   onRendered: ->
     super
@@ -88,3 +93,5 @@ class PAA.PixelBoy.OS extends AM.Component
 
   go: (appKeyName, appPath) ->
     FlowRouter.go @appPath appKeyName, appPath
+    
+  

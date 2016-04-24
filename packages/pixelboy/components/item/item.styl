@@ -1,8 +1,9 @@
 @import "{retronator:artificialengines}/mirage/helpers.import"
 @import "{retronator:landsofillusions}/styles/atari2600.import"
 
-.resizable
-  cursor nesw-resize
+.pixelboy-resizing
+.pixelboy-resizing *
+  cursor nesw-resize !important
 
 .pixelboy
   position fixed
@@ -64,3 +65,4 @@
     border solid 1rem atari2600colors[7][0]
     opacity 0.75
     box-shadow -1rem 1rem atari2600colors[5][0]
+    cursor nesw-resize

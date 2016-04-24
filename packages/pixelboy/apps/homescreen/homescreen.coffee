@@ -9,6 +9,11 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.OS.App
 
   keyName: ->
     'homescreen'
+    
+  constructor: ->
+    super
+    
+    @setDefaultPixelBoySize()
 
   onRendered: ->
     # Run intro animation.
