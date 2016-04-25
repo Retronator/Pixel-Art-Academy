@@ -13,7 +13,6 @@ class PAA.Adventure extends LOI.Adventure
 
     @locations =
       dorm: new PAA.Adventure.Locations.Dorm
+      studio: new PAA.Adventure.Locations.Studio
 
     super
-
-    @currentLocation @locations.dorm
