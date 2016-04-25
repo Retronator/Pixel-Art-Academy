@@ -2,16 +2,24 @@
   .palette
     position absolute
     top calc(50% + 30rem)
-    right 10rem
+    right 8rem
     width 40rem
     transform translate(0,-50%)
     display flex
     flex-direction row
     flex-wrap wrap-reverse
 
+    .palette-case
+      position absolute
+      top -3rem
+      left 0
+      width 48rem
+      height 139rem
+      pointer-events none
+
     .ramp
       width 20rem
-      height 15rem
+      height 16rem
 
       .color
         width 100%

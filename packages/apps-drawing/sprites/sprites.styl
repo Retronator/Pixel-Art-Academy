@@ -5,33 +5,49 @@
 .apps-drawing
   .sprites
     position absolute
-    width 150rem
-    height 200rem
-    left: -100rem
-    top: -150rem
-    background atari2600colors[7][0]
+    width 122rem
+    height 180rem
+    left -93rem
+    top -150rem
+    z-index 1
     color atari2600colors[1][0]
     transition-delay 0s
+
+    .notebook-base
+      position absolute
+      width 100%
+      height 100%
+      top 0
+      left 0
+      z-index -1
 
     .sprites-list
       list-style none
       padding 0
       margin 0
+      position absolute
+      top 28rem
+      left 3rem
+      padding 0 5rem
 
       .sprite
         cursor pointer
 
         &.active
-          background-color lightgrey
+          //background-color lightgrey
 
     .display-button
       position absolute
-      bottom 0
-      right 0
+      border 0px none
+      background transparent none repeat scroll 0% 0%
+      padding 0px
+      margin 0px
+      bottom 4rem
+      right 2rem
 
   &.in-sprite-selection
     .sprites
-      left: 50%
-      top: 50%
-      transform: translate(-50%, -50%)
+      left 50%
+      top 50%
+      transform translate(-50%, -50%)
       transition-delay 0.5s, 0.5s, 0.5s, 0.5s, 0.5s

@@ -34,8 +34,8 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.SpriteCanvas extends AM.Component
     @tools =
       pencil: new @constructor.Pencil @
       eraser: new @constructor.Eraser @
-      colorPicker: new @constructor.ColorPicker @
       colorFill: new @constructor.ColorFill @
+      colorPicker: new @constructor.ColorPicker @
 
     @activeTool @tools.pencil
 
@@ -57,7 +57,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.SpriteCanvas extends AM.Component
 
       @canvasBounds.width canvas.width
       @canvasBounds.height canvas.height
-      
+
     # Redraw canvas routine.
     @autorun =>
       return unless @drawing.spriteId()
