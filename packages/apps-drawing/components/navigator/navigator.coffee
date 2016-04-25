@@ -4,7 +4,7 @@ AM = Artificial.Mirage
 class PixelArtAcademy.PixelBoy.Apps.Drawing.Components.Navigator extends AM.Component
   @register "PixelArtAcademy.PixelBoy.Apps.Drawing.Components.Navigator"
 
-  @zoomLevels: [100, 200, 300, 400, 500, 600, 700, 800]
+  @zoomLevels: [200, 300, 400, 500, 600, 800, 1000, 1200]
 
   constructor: (@options) ->
     super

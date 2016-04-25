@@ -25,7 +25,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.SpriteCanvas extends AM.Component
 
   onCreated: ->
     # Initialize components.
-    @camera new @constructor.Camera @, 8
+    @camera new @constructor.Camera @, 12
     @grid new @constructor.Grid @
     @mouse new @constructor.Mouse @
     @cursor new @constructor.Cursor @
@@ -96,7 +96,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.SpriteCanvas extends AM.Component
     @activeTool()?.styleClasses()
 
   spriteCanvasStyle: ->
-    padding: "#{2 * @camera()?.scale()}rem"
+    padding: "#{1 * @camera()?.scale()}rem"
 
   contentStyle: ->
     # Add rem units to size to scale with game resolution.

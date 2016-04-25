@@ -23,15 +23,20 @@
 
     .sprites-list
       list-style none
-      padding 0
       margin 0
       position absolute
       top 28rem
       left 3rem
       padding 0 5rem
+      width 100%
 
       .sprite
         cursor pointer
+        display block
+        width 100%
+
+        &:hover
+          background atari2600colors[6][0]
 
         &.active
           //background-color lightgrey
