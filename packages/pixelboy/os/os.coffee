@@ -6,7 +6,7 @@ class PAA.PixelBoy.OS extends AM.Component
 
   constructor: (@pixelBoy) ->
     super
-    
+
   onCreated: ->
     super
 
@@ -19,6 +19,7 @@ class PAA.PixelBoy.OS extends AM.Component
       new PAA.PixelBoy.Apps.Journal @
       new PAA.PixelBoy.Apps.Calendar @
       new PAA.PixelBoy.Apps.Pico8 @
+      new PAA.PixelBoy.Apps.JournalScene @
     ]
 
     # Create a map for fast retrieval of apps by their url name.
@@ -40,9 +41,9 @@ class PAA.PixelBoy.OS extends AM.Component
       Tracker.nonreactive =>
         newApp = appsNameMap[appKeyName] or homeScreen
         currentApp = @currentApp()
-        
+
         return if newApp is currentApp
-        
+
         startNewApp = =>
           return unless newApp
 
@@ -62,7 +63,7 @@ class PAA.PixelBoy.OS extends AM.Component
         safeAreaWidth: 320
         safeAreaHeight: 240
         minScale: 2
-        
+
     else
       # Just take adventure's display.
       @display = @pixelBoy.adventure.display
@@ -72,23 +73,23 @@ class PAA.PixelBoy.OS extends AM.Component
 
     @$root = if @justOS then $('html') else @$('.pixelboy-os').closest('.os')
     @$root.addClass('pixel-art-academy-style-pixelboy-os')
-    
+
     # Animate home screen button.
     @autorun =>
-      # We show the home screen button if the current app wants it 
+      # We show the home screen button if the current app wants it
       # to, but we always hide it when app starts deactivating.
       show = @currentApp().showHomeScreenButton() and not @currentApp().deactivating()
-      
+
       # Trigger velocity animation on change.
       if show and not @_homeScreenButtonShown
         Tracker.afterFlush =>
           $('.homescreen-button-area').velocity('transition.slideDownIn')
-  
+
       else if not show and @_homeScreenButtonShown
         $('.homescreen-button-area').velocity('transition.slideUpOut')
-  
+
       @_homeScreenButtonShown = show
-  
+
   onDestroyed: ->
     super
 
@@ -96,7 +97,7 @@ class PAA.PixelBoy.OS extends AM.Component
 
   appPath: (appKeyName, appPath) ->
     appPath = null if appPath instanceof Spacebars.kw
-    
+
     if @justOS
       FlowRouter.path 'pixelBoy',
         app: appKeyName
@@ -110,5 +111,3 @@ class PAA.PixelBoy.OS extends AM.Component
 
   go: (appKeyName, appPath) ->
     FlowRouter.go @appPath appKeyName, appPath
-    
-  

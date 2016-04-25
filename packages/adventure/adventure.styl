@@ -2,7 +2,7 @@
   .display
     .location
       position relative
-
+      background black !important //quick override - fix properly later
     .actors
       position absolute
       top 0
@@ -11,29 +11,40 @@
       bottom 0
 
     .actor.Jessie
-      background url('/assets/adventure/placeholder-char.png') no-repeat
-      width 36px
-      height 200px
-
+      width 9rem
+      height 50rem
       position absolute
       top 50%
       left 50%
       transform translate(-50%, -50%)
+      z-index 1
 
     .actor.Corinne
-      background url('/assets/adventure/placeholder-char.png') no-repeat
-      width 36px
-      height 200px
-
+      width 9rem
+      height 50rem
       position absolute
       top 50%
       left 75%
       transform translate(-50%, -50%)
+      z-index 1
+
+    .actor.ArtStudio
+      width 320rem
+      height 180rem
+      position absolute
+      top 50%
+      left 50%
+      transform translate(-50%, -50%)
+      z-index 0
 
     .actor
       &:hover
         .action
           opacity 1
+
+      img
+        width 100%
+        height 100%
 
       *
         // Since text-stroke isn't widly supported, hack the stroke

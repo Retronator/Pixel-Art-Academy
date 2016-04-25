@@ -43,6 +43,10 @@ Package.onUse(function(api) {
   api.addFiles('apps/journal/journal.styl');
   api.addFiles('apps/journal/journal.coffee');
 
+  api.addFiles('apps/journalscene/journalscene.html');
+  api.addFiles('apps/journalscene/journalscene.styl');
+  api.addFiles('apps/journalscene/journalscene.coffee');
+
   api.addFiles('apps/pico8/pico8.html');
   api.addFiles('apps/pico8/pico8.styl');
   api.addFiles('apps/pico8/pico8.coffee');
