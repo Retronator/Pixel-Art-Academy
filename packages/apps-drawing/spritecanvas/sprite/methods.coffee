@@ -10,7 +10,6 @@ Meteor.methods
         bounds: null
 
   spriteAddPixel: (spriteId, x, y, colorIndex, relativeShade) ->
-    console.log "count"
     check spriteId, Match.DocumentId
     check x, Match.Integer
     check y, Match.Integer

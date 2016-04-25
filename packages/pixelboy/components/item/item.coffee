@@ -121,12 +121,16 @@ class PAA.PixelBoy.Components.Item extends AM.Component
   osStyle: ->
     'pointer-events': if @resizing() then 'none' else 'initial'
 
+  resizableClass: ->
+    'resizable' if @pixelBoy.os.currentApp?()?.resizable()
+
   events: ->
     super.concat
       'click .hand': @onClickHand
       'mousedown .glass': @onMouseDownGlass
 
   onMouseDownGlass: (event) ->
+    return unless @pixelBoy.os.currentApp?()?.resizable()
     # Do not let text selection happen.
     event.preventDefault()
 

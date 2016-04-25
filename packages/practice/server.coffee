@@ -1,3 +1,4 @@
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Practice extends PAA.Practice
@@ -20,5 +21,5 @@ class PAA.Practice extends PAA.Practice
         # Store the file into the check-ins folder with a random name.
         "check-ins/#{Random.id()}.#{nameParts[1]}"
 
-  else
+  else if not LOI.isRunningLocally()
     console.warn "You need to specify amazon web services key and secret in the settings file and don't forget to run the server with the --settings flag pointing to it."

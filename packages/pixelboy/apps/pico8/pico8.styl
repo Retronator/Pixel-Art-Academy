@@ -1,228 +1,237 @@
-.pico8-app-wrapper
-  width 116rem
-  height 152rem
-  position relative
+.apps-pico8
+  overflow hidden
 
-  .case
-    width 100%
-    height 100%
+  .pico8-app-wrapper
+    width 116rem
+    height 152rem
+    position relative
+    margin 4rem
 
-  .menu-button
-    position absolute
-    width 23rem
-    height 9rem
-    left 20rem
-    bottom 6rem
-    cursor pointer
-    background transparent
-    border 0px
-    margin 0
-    padding 0
+    .case
+      width 100%
+      height 100%
 
-    .menu-button-state.pressed
-      display none
+    .menu-button
+      position absolute
+      width 23rem
+      height 9rem
+      left 20rem
+      bottom 6rem
+      cursor pointer
+      background transparent
+      border 0px
+      margin 0
+      padding 0
 
-    &:active
-      outline none
-
-      .menu-button-state.default
-        display none
       .menu-button-state.pressed
-        display initial
-
-    img
-      width 100%
-      height 100%
-      position absolute
-      top 0
-      left 0
-
-  .sound
-    width: 14rem
-    height 6rem
-    position absolute
-    bottom 8rem
-    left 51rem
-
-  .power-toggle
-    position absolute
-    width 20rem
-    height 24rem
-    opacity 0.5
-    right -5rem
-    top 15rem
-    z-index 1
-    cursor pointer
-
-  .power-toggle-controller
-    display none
-
-  //when switch off, power down
-  .power-toggle-controller:checked
-
-    & ~ .power-button
-      top 20rem
-
-    & ~ .picoscreen
-      .power-state.on
         display none
-      .power-state.off
-        display initial
 
-  .power-button
-    width 2rem
-    height 19rem
-    position absolute
-    left 100%
-    top 15rem
-    transition top 100ms
-
-    img
-      width 100%
-      height 100%
-
-  .d-pad
-    width 36rem
-    height 41rem
-    position absolute
-    bottom 12rem
-    right 12rem
-
-    //d-pad aesthetics
-    .d-pad-state
-      position absolute
-      top 0
-      left 0
-      width 100%
-      height 100%
-      display none
-
-      &.default
-        display initial
-
-    // d-pad buttons for events
-    .d-pad-button
-      position absolute
-      opacity 0
-      z-index 1
-      cursor pointer
-
-      &.up
-        top 0
-        left 11rem
-        width 14rem
-        height 13rem
-
-      &.right
-        top 11rem
-        right 0
-        width 11rem
-        height 16rem
-
-      &.down
-        bottom 3rem
-        left 11rem
-        width 14rem
-        height 13rem
-
-      &.left
-        top 11rem
-        left 0
-        width 11rem
-        height 16rem
-
-    // d-pad button pressed
-    .d-pad-button
       &:active
-      &.pressed
-        & ~ .d-pad-state.initial
+        outline none
+
+        .menu-button-state.default
           display none
-    .d-pad-button.up
-      &:active
-      &.pressed
-        & ~ .d-pad-state.up
-          display initial
-    .d-pad-button.right
-      &:active
-      &.pressed
-        & ~ .d-pad-state.right
-          display initial
-    .d-pad-button.down
-      &:active
-      &.pressed
-        & ~ .d-pad-state.down
-          display initial
-    .d-pad-button.left
-      &:active
-      &.pressed
-        & ~ .d-pad-state.left
+        .menu-button-state.pressed
           display initial
 
-  .main-buttons
-    width 40rem
-    height 21rem
-    position absolute
-    left 8rem
-    bottom 22rem
-
-    .main-button
-      position absolute
-      top 0
-      width 18rem
-      height 21rem
-      cursor pointer
-
-      &.left
-        left 0
-
-      &.right
-        right 0
-
-      .main-button-state
+      img
         width 100%
         height 100%
         position absolute
         top 0
         left 0
 
-        &.pressed
-          display none
+    .sound
+      width: 14rem
+      height 6rem
+      position absolute
+      bottom 8rem
+      left 51rem
 
-      &:active
-      &.pressed
-        .main-button-state.default
+    .power-toggle
+      position absolute
+      width 20rem
+      height 24rem
+      opacity 0.5
+      right -5rem
+      top 15rem
+      z-index 1
+      cursor pointer
+
+    .power-toggle-controller
+      display none
+
+    //when switch off, power down
+    .power-toggle-controller:checked
+
+      & ~ .power-button
+        top 20rem
+
+      & ~ .picoscreen
+        .power-state.on
           display none
-        .main-button-state.pressed
+        .power-state.off
           display initial
 
-  .picoscreen
-    width 108rem
-    height 88rem
-    position absolute
-    top 4rem
-    left 4rem
-
-    .pico-container
+    .power-button
+      width 2rem
+      height 19rem
       position absolute
-      top 11rem
-      left 22rem
-      width 64rem
-      height 64rem
+      left 100%
+      top 15rem
+      transition top 100ms
 
-      canvas
+      img
         width 100%
         height 100%
 
-    .power-indicator
+    .d-pad
+      width 36rem
+      height 41rem
       position absolute
-      width 4rem
-      height 4rem
-      top 11rem
-      right 4rem
+      bottom 12rem
+      right 12rem
 
-      .power-state
+      //d-pad aesthetics
+      .d-pad-state
+        position absolute
+        top 0
+        left 0
         width 100%
         height 100%
+        display none
 
-        &.off
-          display none
+        &.default
+          display initial
+
+      // d-pad buttons for events
+      .d-pad-button
+        position absolute
+        opacity 0
+        z-index 1
+        cursor pointer
+
+        &.up
+          top 0
+          left 11rem
+          width 14rem
+          height 13rem
+
+        &.right
+          top 11rem
+          right 0
+          width 11rem
+          height 16rem
+
+        &.down
+          bottom 3rem
+          left 11rem
+          width 14rem
+          height 13rem
+
+        &.left
+          top 11rem
+          left 0
+          width 11rem
+          height 16rem
+
+      // d-pad button pressed
+      .d-pad-button
+        &:active
+        &.pressed
+          & ~ .d-pad-state.initial
+            display none
+      .d-pad-button.up
+        &:active
+        &.pressed
+          & ~ .d-pad-state.up
+            display initial
+      .d-pad-button.right
+        &:active
+        &.pressed
+          & ~ .d-pad-state.right
+            display initial
+      .d-pad-button.down
+        &:active
+        &.pressed
+          & ~ .d-pad-state.down
+            display initial
+      .d-pad-button.left
+        &:active
+        &.pressed
+          & ~ .d-pad-state.left
+            display initial
+
+    .main-buttons
+      width 40rem
+      height 21rem
+      position absolute
+      left 8rem
+      bottom 22rem
+
+      .main-button
+        position absolute
+        top 0
+        width 18rem
+        height 21rem
+        cursor pointer
+
+        &.left
+          left 0
+
+        &.right
+          right 0
+
+        .main-button-state
+          width 100%
+          height 100%
+          position absolute
+          top 0
+          left 0
+
+          &.pressed
+            display none
+
+        &:active
+        &.pressed
+          .main-button-state.default
+            display none
+          .main-button-state.pressed
+            display initial
+
+    .picoscreen
+      width 108rem
+      height 88rem
+      position absolute
+      top 4rem
+      left 4rem
+
+      .pico-container
+        position absolute
+        top 11rem
+        left 22rem
+        width 64rem
+        height 64rem
+        opacity 0
+        transition opacity 0.5s
+
+        canvas
+          width 100%
+          height 100%
+
+        &.power-on
+          opacity 1
+
+      .power-indicator
+        position absolute
+        width 4rem
+        height 4rem
+        top 11rem
+        right 4rem
+
+        .power-state
+          width 100%
+          height 100%
+
+          &.off
+            display none

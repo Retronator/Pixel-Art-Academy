@@ -28,6 +28,6 @@ Package.onUse(function(api) {
   api.addFiles('picoloader.js', 'client');
   api.addFiles('server.coffee', 'server');
 
-  api.addAssets('pico8.js', 'client');
+  //api.addAssets('pico8.js', 'client');
   api.addAssets('pico8.min.js', 'client');
 });

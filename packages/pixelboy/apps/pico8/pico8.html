@@ -1,43 +1,47 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Pico8">
-  <div class="pico8-app-wrapper">
-    <img src="/assets/pixelboy/apps/pico8/case.png" class="case" alt="">
-    <img src="/assets/pixelboy/apps/pico8/sound.png" class="sound" alt="">
-    <label for="power-toggle" class="power-toggle"></label>
-    <input type="checkbox" id="power-toggle" class="power-toggle-controller" checked>
-    <div class="power-button">
-      <img src="/assets/pixelboy/apps/pico8/power-switch.png" alt="">
-    </div>
-    <button class="menu-button reset">
-      <img src="/assets/pixelboy/apps/pico8/menu-button.png" class="menu-button-state default" alt="">
-      <img src="/assets/pixelboy/apps/pico8/menu-button--pressed.png" class="menu-button-state pressed" alt="">
-    </button>
-    <div class="d-pad">
-      <button class="pico-button d-pad-button up reset" value="2"></button>
-      <button class="pico-button d-pad-button right reset" value="1"></button>
-      <button class="pico-button d-pad-button down reset" value="3"></button>
-      <button class="pico-button d-pad-button left reset" value="0"></button>
-      <img src="/assets/pixelboy/apps/pico8/d-pad.png" alt="" class="d-pad-state default">
-      <img src="/assets/pixelboy/apps/pico8/d-pad--up.png" alt="" class="d-pad-state up">
-      <img src="/assets/pixelboy/apps/pico8/d-pad--right.png" alt="" class="d-pad-state right">
-      <img src="/assets/pixelboy/apps/pico8/d-pad--down.png" alt="" class="d-pad-state down">
-      <img src="/assets/pixelboy/apps/pico8/d-pad--left.png" alt="" class="d-pad-state left">
-    </div>
-    <div class="main-buttons">
-      <buton class="pico-button main-button left reset" value="4">
-        <img src="/assets/pixelboy/apps/pico8/button.png" class="main-button-state default">
-        <img src="/assets/pixelboy/apps/pico8/button-pressed.png" class="main-button-state pressed">
-      </buton>
-      <buton class="pico-button main-button right reset" value="5">
-        <img src="/assets/pixelboy/apps/pico8/button.png" class="main-button-state default">
-        <img src="/assets/pixelboy/apps/pico8/button-pressed.png" class="main-button-state pressed">
-      </buton>
-    </div>
-    <div class="picoscreen">
-      <div class="power-indicator">
-        <img src="/assets/pixelboy/apps/pico8/powered-off.png" alt="" class="power-state off">
-        <img src="/assets/pixelboy/apps/pico8/powered-on.png" alt="" class="power-state on">
+  <div class="apps-pico8 app">
+    <div class="pico8-app-wrapper">
+      <img src="/assets/pixelboy/apps/pico8/case.png" class="case" alt="">
+      <img src="/assets/pixelboy/apps/pico8/sound.png" class="sound" alt="">
+      <label for="power-toggle" class="power-toggle"></label>
+      <input type="checkbox" id="power-toggle" class="power-toggle-controller" checked>
+      <div class="power-button">
+        <img src="/assets/pixelboy/apps/pico8/power-switch.png" alt="">
       </div>
-      <div class="pico-container"></div>
+      {{#if false}}
+        <button class="menu-button reset">
+          <img src="/assets/pixelboy/apps/pico8/menu-button.png" class="menu-button-state default" alt="">
+          <img src="/assets/pixelboy/apps/pico8/menu-button--pressed.png" class="menu-button-state pressed" alt="">
+        </button>
+      {{/if}}
+      <div class="d-pad">
+        <button class="pico-button d-pad-button up reset" value="2"></button>
+        <button class="pico-button d-pad-button right reset" value="1"></button>
+        <button class="pico-button d-pad-button down reset" value="3"></button>
+        <button class="pico-button d-pad-button left reset" value="0"></button>
+        <img src="/assets/pixelboy/apps/pico8/d-pad.png" alt="" class="d-pad-state default">
+        <img src="/assets/pixelboy/apps/pico8/d-pad--up.png" alt="" class="d-pad-state up">
+        <img src="/assets/pixelboy/apps/pico8/d-pad--right.png" alt="" class="d-pad-state right">
+        <img src="/assets/pixelboy/apps/pico8/d-pad--down.png" alt="" class="d-pad-state down">
+        <img src="/assets/pixelboy/apps/pico8/d-pad--left.png" alt="" class="d-pad-state left">
+      </div>
+      <div class="main-buttons">
+        <buton class="pico-button main-button left reset" value="4">
+          <img src="/assets/pixelboy/apps/pico8/button.png" class="main-button-state default">
+          <img src="/assets/pixelboy/apps/pico8/button-pressed.png" class="main-button-state pressed">
+        </buton>
+        <buton class="pico-button main-button right reset" value="5">
+          <img src="/assets/pixelboy/apps/pico8/button.png" class="main-button-state default">
+          <img src="/assets/pixelboy/apps/pico8/button-pressed.png" class="main-button-state pressed">
+        </buton>
+      </div>
+      <div class="picoscreen">
+        <div class="power-indicator">
+          <img src="/assets/pixelboy/apps/pico8/powered-off.png" alt="" class="power-state off">
+          <img src="/assets/pixelboy/apps/pico8/powered-on.png" alt="" class="power-state on">
+        </div>
+        <div class="pico-container {{powerOnClass}}"></div>
+      </div>
     </div>
   </div>
 </template>

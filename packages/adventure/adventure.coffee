@@ -11,8 +11,8 @@ class PAA.Adventure extends LOI.Adventure
     @items =
       pixelBoy: new PAA.PixelBoy @
 
-    @locations =
-      dorm: new PAA.Adventure.Locations.Dorm
-      studio: new PAA.Adventure.Locations.Studio
+    studio = new PAA.Adventure.Locations.Studio
 
     super
+
+    @currentLocation studio
