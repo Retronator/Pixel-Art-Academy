@@ -4,6 +4,8 @@
 </head>
 
 <body>
-{{> LandsOfIllusions.Accounts.Components.LocalData}}
+{{#unless isRunningLocally}}
+  {{> LandsOfIllusions.Accounts.Components.LocalData}}
+{{/unless}}
 {{> PixelArtAcademy}}
 </body>

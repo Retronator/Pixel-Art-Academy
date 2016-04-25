@@ -1,9 +1,14 @@
+LOI = LandsOfIllusions
 PNG = Npm.require('pngjs').PNG
 Request = request
 
 WebApp.connectHandlers.use '/pico8.png', (request, response, next) ->
   query = request.query
   cartridgeUrl = query.cartridge
+
+  # Create a local URL if needed.
+  unless cartridgeUrl.indexOf('http') > -1
+    cartridgeUrl = Meteor.absoluteUrl(cartridgeUrl)
 
   result = Request.getSync cartridgeUrl, encoding: null
 
@@ -49,11 +54,31 @@ WebApp.connectHandlers.use '/pico8.png', (request, response, next) ->
       spriteSheet[spriteX][spriteY] = leftIndex
       spriteSheet[spriteX + 1][spriteY] = rightIndex
 
-  # Rewrite the sprites with random colors.
+  if query.characterId
+    characterId = query.characterId
+
+    character = LOI.Accounts.Character.documents.findOne characterId
+
+    replaceSprite = (spriteIndex, spriteId) ->
+      originX = spriteIndex * 8
+      # Recolor into yellow.
+      for x in [0...8]
+        for y in [0...8]
+          spriteSheet[originX + x][y] = 10
+
+      sprite = LOI.Assets.Sprite.documents.findOne spriteId
+      for pixel in sprite.pixels
+        color = sprite.colorMap[pixel.colorIndex].ramp
+        spriteSheet[originX + pixel.x][pixel.y] = color
+
+    replaceSprite 0, character.gameSprites[0][0]
+    replaceSprite 1, character.gameSprites[0][1]
+
+  ### Rewrite the sprites with random colors.
   for x in [0...128]
     for y in [0...128]
       spriteSheet[x][y] = (Math.floor(x / 8) + Math.floor(y / 8)) % 16
-
+  ###
   ### DEBUG: Write out the top 8x8 sprites.
   console.log ""
   console.log "SPRITE SHEET:"

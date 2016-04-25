@@ -1,3 +1,4 @@
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Artworks extends PAA.Artworks
@@ -22,5 +23,5 @@ class PAA.Artworks extends PAA.Artworks
         # Store the file into the artworks folder with a random name.
         "artworks/#{Random.id()}.#{nameParts[1]}"
 
-  else
+  else if not LOI.isRunningLocally()
     console.warn "You need to specify amazon web services key and secret in the settings file and don't forget to run the server with the --settings flag pointing to it."

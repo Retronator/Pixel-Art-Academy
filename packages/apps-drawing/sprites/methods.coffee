@@ -6,6 +6,8 @@ Meteor.methods
     check spriteId, Match.DocumentId
 
     check options, Match.ObjectIncluding
+      name: Match.OptionalOrNull String
+
       palette: Match.OptionalOrNull Match.ObjectIncluding
         id: Match.OptionalOrNull Match.DocumentId
         name: Match.OptionalOrNull String
@@ -28,6 +30,7 @@ Meteor.methods
 
     LOI.Assets.Sprite.documents.insert
       _id: spriteId
+      name: options.name
       pixels: []
       palette:
         _id: paletteId

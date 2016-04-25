@@ -17,7 +17,7 @@ Meteor.startup ->
       fff1e8	white
       ff004d	red
       ffa300	orange
-      fff024  39	yellow
+      fff024  yellow
       00e756	green
       29adff	blue
       83769c	indigo

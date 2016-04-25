@@ -16,7 +16,10 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Sprites extends AM.Component
     @autorun =>
       # Always close sprite selection menu when a new sprite is selected.
       @drawing.isInSpriteSelection @spriteId() is null
+      
+    @subscribe 'characterGameSprites', LOI.characterId()
 
+    ###
     @subscribe 'allSprites', =>
       # Always show the first sprite image if none is displayed.
       @autorun (computation) =>
@@ -28,6 +31,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Sprites extends AM.Component
         # Switch to the first sprite image on the display list.
         sprite = @sprites().fetch()[0]
         @spriteId sprite?._id or null
+    ###
 
   sprites: ->
     LOI.Assets.Sprite.documents.find {},

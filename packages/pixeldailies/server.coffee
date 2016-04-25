@@ -1,3 +1,4 @@
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Twit = Npm.require 'twit'
 TwitterText = Npm.require 'twitter-text'
@@ -14,8 +15,10 @@ class PAA.PixelDailies extends PAA.PixelDailies
     @_twitGet = Meteor.wrapAsync @_twit.get.bind @_twit
 
   else
-    console.warn "You need to specify twitter consumer key and secret in the settings file and don't forget to run the server with the --settings flag pointing to it."
     @_twitGet = ->
+
+    if not LOI.isRunningLocally()
+      console.warn "You need to specify twitter consumer key and secret in the settings file and don't forget to run the server with the --settings flag pointing to it."
 
   @processTweetHistory: (options = {}) ->
     options.processedCount ?= 0
