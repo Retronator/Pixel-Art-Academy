@@ -16,8 +16,8 @@ class PAA.PixelBoy.OS extends AM.Component
 
     @apps = [
       new PAA.PixelBoy.Apps.Drawing @
-      new PAA.PixelBoy.Apps.Journal @
-      new PAA.PixelBoy.Apps.Calendar @
+      #new PAA.PixelBoy.Apps.Journal @
+      #new PAA.PixelBoy.Apps.Calendar @
       new PAA.PixelBoy.Apps.Pico8 @
       new PAA.PixelBoy.Apps.JournalScene @
     ]

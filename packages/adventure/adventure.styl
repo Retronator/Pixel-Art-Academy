@@ -3,23 +3,24 @@
     .location
       position relative
       background black !important //quick override - fix properly later
+
     .actors
       position absolute
       top 0
-      left 0
+      left 50%
       right 0
       bottom 0
 
     .actor.Jessie
-      width 9rem
+      width 25rem
       height 50rem
       position absolute
-      top 50%
-      left 50%
-      transform translate(-50%, -50%)
+      top 126rem
+      left -71rem
       z-index 1
 
     .actor.Corinne
+      display none
       width 9rem
       height 50rem
       position absolute
@@ -33,7 +34,7 @@
       height 180rem
       position absolute
       top 50%
-      left 50%
+      left 0
       transform translate(-50%, -50%)
       z-index 0
 
@@ -91,7 +92,7 @@
       background black
 
       &::before
-        content '>'
+        content '> '
 
       &::after
         content '_'

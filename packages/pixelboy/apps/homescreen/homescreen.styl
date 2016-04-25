@@ -3,10 +3,14 @@
 @import "{retronator:landsofillusions}/styles/atari2600.import"
 
 .apps-homescreen
-  list-style none
   padding 10rem
   uni()
   text-align center
+  margin 0
+
+  .apps-list
+    list-style none
+    padding 0
 
   .app-icon
     display inline-block !important // Forcing inline-block because velocity is not registering it.

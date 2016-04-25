@@ -14,7 +14,7 @@ class PAA.Adventure.Locations.Studio extends LOI.Adventure.Location
 
     jessie = new Actor
     jessie.displayName = 'Jessie'
-    jessie.sprite = '/assets/adventure/placeholder-char.png'
+    jessie.sprite = '/assets/adventure/character.png'
 
     jessie.addAbility Talking
     jessie.addAbility Action,
