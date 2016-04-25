@@ -23,6 +23,8 @@ class PAA.PixelBoy.Components.Item extends AM.Component
     @endResizeX = new ReactiveField null
     @endResizeY = new ReactiveField null
 
+    @positioningClass = new ReactiveField null
+
   onRendered: ->
     super
 
@@ -84,6 +86,18 @@ class PAA.PixelBoy.Components.Item extends AM.Component
 
       else
         $('body').removeClass('pixelboy-resizing')
+
+    # decide whether to center pixelBoy or fix it to the bottom
+    @autorun =>
+      size = @size()
+      scale = @pixelBoy.adventure.display.scale()
+      clientHeight = AM.Window.clientBounds().height()
+      pixelBoyHeightRequirement = (size.height + 35) * scale
+
+      if clientHeight < pixelBoyHeightRequirement
+        @positioningClass 'screen-center'
+      if clientHeight > pixelBoyHeightRequirement
+        @positioningClass 'screen-bottom'
 
   onDestroyed: ->
     super

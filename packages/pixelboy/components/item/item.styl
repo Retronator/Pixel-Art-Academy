@@ -12,8 +12,13 @@
   transform translateX(-50%)
   transition bottom 1s
 
-  &.activated
-    bottom 20rem
+  &.screen-center
+    bottom initial
+    top 50%
+    transform translate(-50%, -50%)
+
+  &.screen-bottom
+    bottom 35rem
 
   // The hand holding the pixelboy.
   .hand
