@@ -15,3 +15,5 @@ class PAA.Adventure extends LOI.Adventure
       dorm: new PAA.Adventure.Locations.Dorm
 
     super
+
+    @currentLocation @locations.dorm

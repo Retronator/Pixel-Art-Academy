@@ -1,0 +1,21 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Sprites">
+  <div class="sprites">
+    <div class="actions">
+      <button class="add-sprite">Add sprite</button>
+    </div>
+    <ul class="sprites-list">
+      {{#each sprites}}
+        <li class="sprite {{activeClass}}">{{nameOrId}}</li>
+      {{/each}}
+    </ul>
+    {{#if showDisplayButton}}
+      <button class="display-button">
+        {{#if drawing.isInSpriteSelection}}
+          back
+        {{else}}
+          menu
+        {{/if}}
+      </button>
+    {{/if}}
+  </div>
+</template>

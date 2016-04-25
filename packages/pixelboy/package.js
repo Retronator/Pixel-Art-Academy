@@ -25,6 +25,7 @@ Package.onUse(function(api) {
   api.addFiles('os/os.styl');
 
   api.addFiles('os/app.coffee');
+  api.addFiles('os/app.styl');
 
   api.addFiles('apps/apps.coffee');
 

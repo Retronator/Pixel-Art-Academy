@@ -12,6 +12,11 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.OS.App
   keyName: ->
     'calendar'
 
+  constructor: ->
+    super
+
+    @useConsoleTheme = true
+
   onCreated: ->
     super
 

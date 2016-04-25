@@ -15,6 +15,8 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.OS.App
   onCreated: ->
     super
 
+    @useConsoleTheme = true
+
     @autorun =>
       Meteor.subscribe 'characterCheckIns', LOI.characterId()
 

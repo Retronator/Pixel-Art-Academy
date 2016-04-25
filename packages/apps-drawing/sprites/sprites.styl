@@ -1,0 +1,37 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "{retronator:landsofillusions}/styles/atari2600.import"
+@import "{retronator:landsofillusions}/typography/typography.import"
+
+.apps-drawing
+  .sprites
+    position absolute
+    width 150rem
+    height 200rem
+    left: -100rem
+    top: -150rem
+    background atari2600colors[7][0]
+    color atari2600colors[1][0]
+    transition-delay 0s
+
+    .sprites-list
+      list-style none
+      padding 0
+      margin 0
+
+      .sprite
+        cursor pointer
+
+        &.active
+          background-color lightgrey
+
+    .display-button
+      position absolute
+      bottom 0
+      right 0
+
+  &.in-sprite-selection
+    .sprites
+      left: 50%
+      top: 50%
+      transform: translate(-50%, -50%)
+      transition-delay 0.5s, 0.5s, 0.5s, 0.5s, 0.5s

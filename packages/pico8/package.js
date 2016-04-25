@@ -19,8 +19,11 @@ Package.onUse(function(api) {
   api.use('webapp');
   api.use('http');
   api.use('froatsnook:request');
+  api.use('retronator:landsofillusions');
 
   api.export('Pico');
+
+  api.addFiles('palette.coffee', 'server');
 
   api.addFiles('picoloader.js', 'client');
   api.addFiles('server.coffee', 'server');

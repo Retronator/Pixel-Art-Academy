@@ -15,6 +15,7 @@ class PAA.PixelBoy.OS extends AM.Component
     homeScreen = new PAA.PixelBoy.Apps.HomeScreen @
 
     @apps = [
+      new PAA.PixelBoy.Apps.Drawing @
       new PAA.PixelBoy.Apps.Journal @
       new PAA.PixelBoy.Apps.Calendar @
       new PAA.PixelBoy.Apps.Pico8 @
@@ -71,7 +72,23 @@ class PAA.PixelBoy.OS extends AM.Component
 
     @$root = if @justOS then $('html') else @$('.pixelboy-os').closest('.os')
     @$root.addClass('pixel-art-academy-style-pixelboy-os')
-
+    
+    # Animate home screen button.
+    @autorun =>
+      # We show the home screen button if the current app wants it 
+      # to, but we always hide it when app starts deactivating.
+      show = @currentApp().showHomeScreenButton() and not @currentApp().deactivating()
+      
+      # Trigger velocity animation on change.
+      if show and not @_homeScreenButtonShown
+        Tracker.afterFlush =>
+          $('.homescreen-button-area').velocity('transition.slideDownIn')
+  
+      else if not show and @_homeScreenButtonShown
+        $('.homescreen-button-area').velocity('transition.slideUpOut')
+  
+      @_homeScreenButtonShown = show
+  
   onDestroyed: ->
     super
 

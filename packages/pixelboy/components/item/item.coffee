@@ -70,6 +70,15 @@ class PAA.PixelBoy.Components.Item extends AM.Component
       size = @size()
       scale = @pixelBoy.adventure.display.scale()
 
+      # Don't animate, just set on first go.
+      unless @initialSizeSet
+        @$('.pixelboy').css
+          width: size.width * scale
+          height: size.height * scale
+
+        @initialSizeSet = true
+        return
+
       @$('.pixelboy').velocity('stop', true).velocity
         width: size.width * scale
         height: size.height * scale

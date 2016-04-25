@@ -1,0 +1,11 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Components.Palette">
+  <div class="palette">
+    {{#each palette.ramps}}
+      <div class="ramp">
+        {{#each shades}}
+          <div class="color {{activeColorClass}}" {{style colorStyle}}></div>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+</template>

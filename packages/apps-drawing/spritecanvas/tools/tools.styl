@@ -1,0 +1,61 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "{retronator:landsofillusions}/styles/atari2600.import"
+@import "{retronator:landsofillusions}/typography/typography.import"
+
+.apps-drawing
+  .tool
+    position absolute
+    cursor pointer
+
+  .eraser
+  .pencil
+    left -10rem
+    width 40rem
+    height 10rem
+    transform: translate(0, -50%)
+
+    &.active
+      left 0
+
+  .pencil
+    top: calc(50% - 10rem)
+    background atari2600colors[4][9]
+
+  .eraser
+    top: calc(50% + 10rem)
+    background atari2600colors[3][5]
+
+  .color-picker
+    right -10rem
+    width 40rem
+    height 10rem
+    transform: translate(0, -50%)
+    top: calc(50% - 40rem)
+    background atari2600colors[5][0]
+
+    &.active
+      right 0
+
+  .color-fill
+    right -10rem
+    top -10rem
+    width 60rem
+    height 60rem
+    border-radius 30rem
+
+  &.in-sprite-selection
+    .eraser
+    .pencil
+      left -40rem
+
+    .color-picker
+      right -40rem
+
+    .color-fill
+      top -50rem
+      right -50rem
+
+  &.drawing-active
+    .tool
+      transition-delay 0s
+      transition-duration 0.3s, 0.3s, 0.3s, 0.3s, 0.3s

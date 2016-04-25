@@ -15,6 +15,8 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.OS.App
     
     @setDefaultPixelBoySize()
 
+    @showHomeScreenButton false
+
   onRendered: ->
     # Run intro animation.
     $('.app-wrapper').css

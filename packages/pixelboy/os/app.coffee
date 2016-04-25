@@ -23,6 +23,9 @@ class PAA.PixelBoy.OS.App extends AM.Component
     # Does this app lets the device resize?
     @resizable = new ReactiveField true
 
+    # Should the home screen button be shown?
+    @showHomeScreenButton = new ReactiveField true
+
     # The minimum size the device should be let to resize.
     @minWidth = new ReactiveField null
     @minHeight = new ReactiveField null
@@ -30,11 +33,26 @@ class PAA.PixelBoy.OS.App extends AM.Component
     # The maximum size the device should be let to resize.
     @maxWidth = new ReactiveField null
     @maxHeight = new ReactiveField null
+    
+    @useConsoleTheme = false
 
   onRendered: ->
+    super 
+    
     $appWrapper = $('.app-wrapper')
-    $appWrapper.velocity('transition.slideUpIn', complete: -> $appWrapper.css('transform', ''))
-    $('.homescreen-button-area').velocity('transition.slideDownIn')
+    $appWrapper.velocity('transition.slideUpIn', complete: ->
+      $appWrapper.css('transform', '')
+      console.log "done"
+    )
+
+    # Wait for OS to determine its root.
+    Tracker.afterFlush =>
+      @os.$root.addClass('pixel-art-academy-style-console-app') if @useConsoleTheme
+    
+  onDestroyed: ->
+    super
+
+    @os.$root.removeClass('pixel-art-academy-style-console-app') if @useConsoleTheme
 
   deactivated: -> @activatedState() is @constructor.activatedState.Deactivated
   activating: -> @activatedState() is @constructor.activatedState.Activating
@@ -66,7 +84,6 @@ class PAA.PixelBoy.OS.App extends AM.Component
     # Override to perform any logic when item is about to be deactivated. Report that you've done the
     # necessary steps by calling the provided callback. By default we just call the callback straight away.
 
-    $('.homescreen-button-area').velocity 'transition.slideUpOut'
     $('.app-wrapper').velocity 'transition.slideDownOut',
       complete: ->
         finishedDeactivatingCallback()

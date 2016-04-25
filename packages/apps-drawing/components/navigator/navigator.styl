@@ -1,0 +1,21 @@
+@import '{retronator:landsofillusions}/typography/typography.import'
+
+.apps-drawing
+  .navigator
+    position absolute
+    bottom 0
+    left 10rem
+    height 60rem
+    width 70rem
+
+    .zoom-display
+      retrotype()
+
+      .zoom-percentage-input
+        width 50rem
+        text-align right
+
+  &.in-sprite-selection
+    .navigator
+      bottom -60rem
+      left -40rem
