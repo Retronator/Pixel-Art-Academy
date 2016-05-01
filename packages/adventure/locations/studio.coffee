@@ -128,7 +128,9 @@ class PAA.Adventure.Locations.Studio extends LOI.Adventure.Location
 
       script:
         """
-          jessie: Done? Awesome! We'll put this into the game
-          jessie: tonight. We still need some artwork, so
-          jessie: come back tomorrow for another assignment.
+          jessie: Done? Awesome! We'll put this
+          jessie: into the game tonight.
+          jessie: We still need some artwork,
+          jessie: so come back tomorrow
+          jessie: for another assignment.
         """
