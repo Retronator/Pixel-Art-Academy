@@ -4,7 +4,8 @@
       {{#each lines}}
         <li class="line">
           <div class="author">{{character.displayName}}:</div>
-          <div class="text" {{style textStyle}}>{{text}}</div>
+          {{! We are using direct HTML injection with triple braces, so make sure formattedText is escaped properly!}}
+          <div class="text" {{style textStyle}}>{{{formattedText}}}</div>
         </li>
       {{/each}}
     </ul>
