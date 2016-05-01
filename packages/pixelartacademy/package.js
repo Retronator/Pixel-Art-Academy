@@ -13,7 +13,6 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('kadira:flow-router');
   api.use('retronator:landsofillusions');
-  api.use('alanning:roles');
 
   api.imply('retronator:landsofillusions');
 

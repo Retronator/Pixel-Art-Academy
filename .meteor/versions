@@ -1,5 +1,5 @@
 accounts-base@1.2.2
-alanning:roles@1.2.14
+alanning:roles@1.2.15
 artworks@0.0.1
 autoupdate@1.2.4
 babel-compiler@5.8.24_1
@@ -45,7 +45,7 @@ jparker:crypto-padding@0.1.0
 jquery@1.11.4
 kadira:flow-router@2.10.1
 launch-screen@1.0.4
-limemakers:three@0.73.0
+limemakers:three@0.75.0
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
@@ -65,14 +65,18 @@ oauth-encryption@1.0.6
 observe-sequence@1.0.7
 ordered-dict@1.0.4
 peerlibrary:assert@0.2.5
-peerlibrary:base-component@0.14.0
-peerlibrary:blaze-common-component@0.1.0
-peerlibrary:blaze-components@0.16.2
+peerlibrary:base-component@0.16.0
+peerlibrary:blaze-common-component@0.2.0
+peerlibrary:blaze-components@0.18.0
 peerlibrary:check-extension@0.2.0
 peerlibrary:computed-field@0.3.1
 peerlibrary:data-lookup@0.1.0
+peerlibrary:fiber-utils@0.6.0
 peerlibrary:peerdb@0.20.0
 peerlibrary:reactive-field@0.1.0
+peerlibrary:reactive-mongo@0.1.1
+peerlibrary:reactive-publish@0.2.0
+peerlibrary:server-autorun@0.5.2
 peerlibrary:stacktrace@0.2.0
 peerlibrary:util@0.3.0
 pixelartacademy@0.0.1

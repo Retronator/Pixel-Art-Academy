@@ -6,7 +6,7 @@ class PAA.Practice.CheckInsCalendarProvider extends PAA.PixelBoy.Apps.Calendar.P
     super
 
   subscriptionName: ->
-    'practiceCheckIns'
+    'PixelArtAcademy.Practice.CheckIn.forDateRange'
 
   # Returns all events for a specific day.
   getEvents: (dayDate) ->

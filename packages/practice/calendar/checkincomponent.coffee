@@ -6,7 +6,17 @@ class PAA.Practice.CheckInCalendarComponent extends AM.Component
   template: ->
     'PixelArtAcademy.Practice.CheckInCalendarComponent'
 
-  showFigure: ->
-    checkIn = @currentData()
+  showEntry: ->
+    checkIn = @data()
 
-    checkIn.artwork or checkIn.image or checkIn.post or checkIn.text
+    @showImage() or checkIn.text
+
+  showImage: ->
+    checkIn = @data()
+
+    checkIn.artwork or checkIn.image or checkIn.post
+
+  textStyle: ->
+    checkIn = @data()
+
+    color: "##{checkIn.character.colorObject().getHexString()}"

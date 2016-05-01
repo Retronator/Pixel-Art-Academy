@@ -6,6 +6,7 @@ class PixelArtAcademyPracticeCheckIn extends Document
   # character: character that published the post
   #   _id
   #   name
+  #   color
   # post: (optional) the external post with the check-in data
   #   url
   # text: (optional) the text of the post
@@ -17,9 +18,12 @@ class PixelArtAcademyPracticeCheckIn extends Document
   #   url
   # video: (optional) the video associated with the post
   #   url
+  # conversations: list of conversations revolving around this check-in
+  #   _id
   @Meta
     name: 'PixelArtAcademyPracticeCheckIn'
     fields: =>
-      character: @ReferenceField LOI.Accounts.Character, ['name'], true
+      character: @ReferenceField LOI.Accounts.Character, ['name', 'color'], true
+      conversation: [@ReferenceField LOI.Conversations.Conversation]
 
 PAA.Practice.CheckIn = PixelArtAcademyPracticeCheckIn

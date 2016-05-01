@@ -16,7 +16,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
     super
 
     @autorun =>
-      Meteor.subscribe 'characterCheckIns', LOI.characterId()
+      Meteor.subscribe 'PixelArtAcademy.Practice.CheckIn.byCharacter', LOI.characterId()
 
   # Helpers
 

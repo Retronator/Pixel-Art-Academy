@@ -23,6 +23,16 @@ Package.onUse(function(api) {
 
   api.addFiles('apps/apps.coffee');
 
+  api.addFiles('apps/components/components.coffee');
+
+  api.addFiles('apps/components/conversation/conversation.coffee');
+  api.addFiles('apps/components/conversation/conversation.html');
+  api.addFiles('apps/components/conversation/conversation.styl');
+
+  api.addFiles('apps/components/checkinconversations/checkinconversations.coffee');
+  api.addFiles('apps/components/checkinconversations/checkinconversations.html');
+  api.addFiles('apps/components/checkinconversations/checkinconversations.styl');
+
   api.addFiles('apps/calendar/calendar.html');
   api.addFiles('apps/calendar/calendar.styl');
   api.addFiles('apps/calendar/calendar.coffee');

@@ -8,8 +8,8 @@ Meteor.methods
     check url, Match.OptionalOrNull String
     check time, Match.OptionalOrNull Date
 
-    # Make sure the character belongs to the current user.
-    authorizeCharacter characterId
+    # Make sure the user can perform this character action.
+    LOI.Authorize.characterAction characterId
 
     # We create a new check-in for the given character.
     checkIn =
@@ -52,7 +52,7 @@ Meteor.methods
     check newText, String
 
     # Make sure the check-in belongs to the current user.
-    authorizeCheckIn checkInId
+    authorizeCheckInAction checkInId
 
     # Associate the artist with the character.
     PAA.Practice.CheckIn.documents.update checkInId,
@@ -63,23 +63,34 @@ Meteor.methods
     check checkInId, Match.Optional Match.DocumentId
 
     # Make sure the check-in belongs to the current user.
-    authorizeCheckIn checkInId
+    authorizeCheckInAction checkInId
 
     PAA.Practice.CheckIn.documents.remove checkInId
 
-authorizeCharacter = (characterId) ->
-  currentUserId = Meteor.userId()
+  'PixelArtAcademy.Practice.CheckIn.newConversation': (checkInId, characterId, firstLineText) ->
+    check checkInId, Match.Optional Match.DocumentId
 
-  # You need to be logged-in to perform actions with the character.
-  throw new Meteor.Error 'unauthorized', "Unauthorized." unless currentUserId
+    # Make sure the check-in exists.
+    checkIn = PAA.Practice.CheckIn.documents.findOne checkInId
+    throw new Meteor.Error 'not-found', "Check-in not found." unless checkIn
 
-  character = LOI.Accounts.Character.documents.findOne characterId
-  throw new Meteor.Error 'not-found', "Character not found." unless character
+    # Make sure the user controls the character that's starting the conversation.
+    LOI.Authorize.characterAction characterId
 
-  throw new Meteor.Error 'unauthorized', "Unauthorized." unless character.user._id is currentUserId
+    # Create a new conversation.
+    conversationId = Random.id()
+    Meteor.call 'LandsOfIllusions.Conversations.Conversation.insert', conversationId
 
-authorizeCheckIn = (checkInId) ->
+    # Associate the conversation to this check-in.
+    PAA.Practice.CheckIn.documents.update checkInId,
+      $addToSet:
+        conversations: conversationId
+
+    # Create the first line of conversation.
+    Meteor.call 'LandsOfIllusions.Conversations.Line.insert', conversationId, characterId, firstLineText
+
+authorizeCheckInAction = (checkInId) ->
   checkIn = PAA.Practice.CheckIn.documents.findOne checkInId
-  throw new Meteor.Error 'not-found', "Character not found." unless checkIn
+  throw new Meteor.Error 'not-found', "Check-in not found." unless checkIn
 
-  authorizeCharacter checkIn.character._id
+  LOI.Authorize.characterAction checkIn.character._id

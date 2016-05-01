@@ -1,0 +1,17 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Components.Conversation">
+  <div class="conversation">
+    <ul class="lines">
+      {{#each lines}}
+        <li class="line">
+          <div class="author">{{character.displayName}}:</div>
+          <div class="text" {{style textStyle}}>{{text}}</div>
+        </li>
+      {{/each}}
+    </ul>
+    {{#if currentCharacter}}
+      <form class="new-line-form">
+        <input class="new-line-text" placeholder="Type a reply …" />
+      </form>
+    {{/if}}
+  </div>
+</template>

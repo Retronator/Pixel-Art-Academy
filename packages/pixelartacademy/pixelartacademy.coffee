@@ -29,6 +29,8 @@ class PixelArtAcademy extends Artificial.Base.App
   onCreated: ->
     super
 
+    $('html').addClass('lands-of-illusions-style-console')
+
     # Define a login redirect so the path will be switched after logging out on any page.
     @autorun =>
       return if FlowRouter.getRouteName() in @constructor.PATHS_NOT_REQUIRING_LOGIN

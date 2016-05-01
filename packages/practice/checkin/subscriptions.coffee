@@ -1,15 +1,16 @@
 AE = Artificial.Everywhere
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-# Get Pixel Dailies themes for a certain date range.
-Meteor.publish 'characterCheckIns', (characterId) ->
+# Get check-ins for a certain character.
+Meteor.publish 'PixelArtAcademy.Practice.CheckIn.byCharacter', (characterId) ->
   check characterId, Match.DocumentId
 
   PAA.Practice.CheckIn.documents.find
     'character._id': characterId
 
 # Get practice check-ins for a certain date range.
-Meteor.publish 'practiceCheckIns', (dateRange) ->
+Meteor.publish 'PixelArtAcademy.Practice.CheckIn.forDateRange', (dateRange) ->
   check dateRange, AE.DateRange
 
   query = {}
@@ -19,3 +20,13 @@ Meteor.publish 'practiceCheckIns', (dateRange) ->
   PAA.Practice.CheckIn.documents.find query,
     sort: 
       time: -1
+
+Meteor.publish 'PixelArtAcademy.Practice.CheckIn.conversations', (checkInId) ->
+  check checkInId, Match.DocumentId
+
+  @autorun =>
+    checkIn = PAA.Practice.CheckIn.documents.findOne checkInId
+
+    return LOI.Conversations.Conversation.documents.find
+      _id:
+        $in: checkIn?.conversations or []

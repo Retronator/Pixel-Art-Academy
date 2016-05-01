@@ -56,7 +56,7 @@ Meteor.methods
 
   'PixelArtAcademy.Practice.CheckIn.extractImagesFromPosts': ->
     # Only an admin can perform this processing.
-    LOI.authorizeAdmin()
+    LOI.Authorize.admin()
 
     # Go over all check-ins that have a post, but no image.
     checkIns = PAA.Practice.CheckIn.documents.find(
@@ -87,7 +87,7 @@ Meteor.methods
     check characterId, Match.DocumentId
 
     # Make sure the character belongs to the current user.
-    authorizeCharacter characterId
+    LOI.Authorize.characterAction characterId
 
     user = Meteor.user()
 
@@ -104,14 +104,3 @@ Meteor.methods
         console.log "Found", importedCheckIns.length, "check-ins for email", email.address
 
         Meteor.call 'PixelArtAcademy.Practice.CheckIn.insert', characterId, importedCheckIn.text, importedCheckIn.image, importedCheckIn.timestamp for importedCheckIn in importedCheckIns
-
-authorizeCharacter = (characterId) ->
-  currentUserId = Meteor.userId()
-
-  # You need to be logged-in to perform actions with the character.
-  throw new Meteor.Error 'unauthorized', "Unauthorized." unless currentUserId
-
-  character = LOI.Accounts.Character.documents.findOne characterId
-  throw new Meteor.Error 'not-found', "Character not found." unless character
-
-  throw new Meteor.Error 'unauthorized', "Unauthorized." unless character.user._id is currentUserId
