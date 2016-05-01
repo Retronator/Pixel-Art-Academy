@@ -52,8 +52,6 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
       # Link should be 2 shades lighter than the text.
       linkColor = line.character.colorObject 2
 
-      console.log linkColor
-
       "<a href='#{url}' target='_blank' style='color:##{linkColor.getHexString()};'>#{urlText}</a>"
 
     formattedText
