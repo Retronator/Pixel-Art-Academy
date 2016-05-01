@@ -3,17 +3,19 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
+class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.OS.App
   @register 'PixelArtAcademy.PixelBoy.Apps.Journal'
 
   displayName: ->
     "Practice Journal"
 
-  urlName: ->
+  keyName: ->
     'journal'
 
   onCreated: ->
     super
+
+    @useConsoleTheme = true
 
     @autorun =>
       Meteor.subscribe 'characterCheckIns', LOI.characterId()
@@ -41,7 +43,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
     'disable-scrolling' if @showCheckInForm()
 
   showCheckInForm: ->
-    FlowRouter.getParam('path') is 'check-in'
+    @os.currentAppPath() is 'check-in'
 
   # Events
 
@@ -52,9 +54,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
       'click .check-in .delete': @onClickDeleteCheckIn
 
   onClickCheckIn: (event) ->
-    FlowRouter.go 'pixelboy',
-      app: 'journal'
-      path: 'check-in'
+    @os.go 'journal', 'check-in'
 
   onClickImportCheckIns: (event) ->
     Meteor.call 'PixelArtAcademy.Practice.CheckIn.import', LOI.characterId()

@@ -1,0 +1,55 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "{retronator:landsofillusions}/styles/atari2600.import"
+@import "{retronator:landsofillusions}/typography/typography.import"
+
+.pixel-art-academy-style-intro
+  background atari2600colors[7][10]
+  height 100%
+  overflow hidden
+
+  body
+    height 100%
+    padding 0
+    margin 0
+
+  .pages-intro
+    absolute-cover()
+    cursor pointer
+    background-image url('/assets/adventure/intro-background.png')
+    background-position center 30%
+    background-size cover
+    transition all 10s ease-in-out
+
+    .prompt
+      transition opacity 1s
+      opacity 1
+
+    .press-any-key
+      position absolute
+      top 50vh
+      left 50vw
+      width 100%
+      transform translate(-50%, -50%)
+      acme-9()
+      font-weight bold
+      text-transform uppercase
+      text-align center
+      color atari2600colors[0][0]
+      animation fade 3s ease-in-out 0s infinite
+
+    &.started
+      background-position center 100%
+
+      .prompt
+        opacity 0
+
+  .fade-overlay
+    fixed-cover()
+    z-index 1
+    background black
+    opacity 0
+    pointer-events none
+
+@keyframes fade
+  50%
+    opacity 0

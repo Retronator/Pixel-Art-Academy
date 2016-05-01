@@ -9,16 +9,21 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
   onCreated: ->
     super
 
+    @journal = @parentComponent()
+    @os = @journal.os
+
     @submitting = new ReactiveField false
 
     @imagePreviewUrl = new ReactiveField null
     @errorMessage = new ReactiveField null
     
   onRendered: ->
-    $('body').addClass('disable-scrolling')
+    # Wait so that also PixelBoy is rendered.
+    Tracker.afterFlush =>
+      @os.$root.addClass('disable-scrolling')
 
   onDestroyed: ->
-    $('body').removeClass('disable-scrolling')
+    @os.$root.removeClass('disable-scrolling')
 
   # Helpers
 
@@ -33,7 +38,7 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
 
   onClick: (event) ->
     # If click happened outside the dialog, return to journal.
-    FlowRouter.go 'pixelboy', app: 'journal' unless $(event.target).closest('.dialog').length
+    @os.go 'journal' unless $(event.target).closest('.dialog').length
 
   onSubmitCheckInForm: (event) ->
     event.preventDefault()
@@ -66,7 +71,7 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
         return
 
       # Check-in succeeded, so return back to the journal.
-      FlowRouter.go 'pixelboy', app: 'journal'
+      FlowRouter.go 'pixelBoy', app: 'journal'
 
   onInputExternalUrl: (event) ->
     @updatePreviewImage()

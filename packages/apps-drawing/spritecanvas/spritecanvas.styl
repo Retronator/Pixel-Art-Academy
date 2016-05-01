@@ -1,0 +1,24 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "{retronator:landsofillusions}/styles/atari2600.import"
+@import "{retronator:landsofillusions}/typography/typography.import"
+
+.apps-drawing
+  .sprite-canvas
+    position absolute
+    left: 50%
+    top: 50%
+    transform: translate(-50%, -50%)
+    background atari2600colors[7][0]
+    color atari2600colors[1][0]
+    cursor default
+
+    .content
+      display block
+
+      &.color-picker-active
+        cursor context-menu
+
+  &.in-sprite-selection
+    .sprite-canvas
+      top: 110%
+      transform: translate(-50%, 0)

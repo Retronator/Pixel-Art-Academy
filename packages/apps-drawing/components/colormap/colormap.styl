@@ -1,0 +1,58 @@
+@import '{retronator:landsofillusions}/typography/typography.import'
+
+.apps-drawing
+  .color-map
+    .color-map-table
+      border-collapse collapse
+
+      .legend
+        th
+          uni()
+          font-weight normal
+
+      .index
+        text-align center
+
+      .color
+        height 18rem
+
+        td
+          border 1rem solid black
+          padding 0
+          margin 0
+          height 18rem
+          font-size inherit
+          line-height 10rem
+          background rgba(255,255,255,0.65)
+
+        .preview
+          width 18rem
+          position relative
+
+          &::after
+            content ''
+            display none
+            position absolute
+            top -1rem
+            bottom -1rem
+            left -1rem
+            right -1rem
+            border 1rem dotted lightgrey
+
+          &.active::after
+            display block
+
+        input
+          border none
+          background none
+          width 26rem
+
+          &:focus
+            outline none
+
+        .color-name
+          input
+            width 60rem
+
+    .color-map-actions
+      margin-top 5rem

@@ -1,0 +1,25 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Components.ColorMap">
+  <div class="color-map">
+    <table class="color-map-table">
+      <tr class="legend">
+        <th class="index">index</th>
+        <th class="index">name</th>
+        <th class="preview"></th>
+        <th class="ramp">ramp</th>
+        <th class="shade">shade</th>
+      </tr>
+      {{#each colors}}
+        <tr class="color">
+          <td class="index">{{index}}</td>
+          <td class="color-name"><input class="color-name-input" value="{{name}}"/></td>
+          <td class="preview preview-color {{activeColorClass}}" {{style colorPreviewStyle}}></td>
+          <td class="ramp"><input class="ramp-input" type="number" min="0" max="15" value="{{ramp}}"/></td>
+          <td class="shade"><input class="shade-input" type="number" value="{{shade}}"/></td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="color-map-actions">
+      <button class="add-color borderless">Add color</button>
+    </div>
+  </div>
+</template>

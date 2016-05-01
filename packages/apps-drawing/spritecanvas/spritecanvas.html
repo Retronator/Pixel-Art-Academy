@@ -1,0 +1,8 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.SpriteCanvas">
+  <div class="sprite-canvas" {{style spriteCanvasStyle}}>
+    <canvas class="content {{activeToolClasses}}" {{style contentStyle}}></canvas>
+  </div>
+  {{#each toolsArray}}
+    {{> Render this}}
+  {{/each}}
+</template>

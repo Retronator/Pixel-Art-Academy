@@ -1,0 +1,22 @@
+<template name="PixelArtAcademy.PixelBoy.OS">
+  {{#if justOS}}
+    <style>
+      html {
+        font-size: {{display.scale}}px
+      }
+    </style>
+    {{> Render display}}
+  {{/if}}
+  <div class="pixelboy-os">
+    {{#if currentApp.showHomeScreenButton}}
+      <div class="homescreen-button-area">
+        <a href="{{appPath}}" class="homescreen-button button">home</a>
+      </div>
+    {{/if}}
+    {{#if currentApp}}
+      <div class="app-wrapper">
+        {{> Render currentApp}}
+      </div>
+    {{/if}}
+  </div>
+</template>

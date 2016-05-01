@@ -1,8 +1,7 @@
 @import "{retronator:artificialengines}/mirage/helpers.import"
 
 .apps-journal-check-in
-  absolute-cover()
-  position fixed
+  fixed-cover()
   overflow-y scroll
   padding 0 3em
   background rgba(0,0,0,0.9)
@@ -19,11 +18,15 @@
       width 100%
       min-height 5em
 
+    .image-file
+    .external-url
+      width 100%
+
     .image-preview
       max-width 100%
 
     .submit-area
       margin-top 2em
 
-body.disable-scrolling
-  overflow hidden
+.pixel-art-academy-style-pixelboy-os.disable-scrolling
+  overflow hidden !important

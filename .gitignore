@@ -1,4 +1,5 @@
 .meteor/local
 .idea/
 run
-deploy
+enter-deploy
+demo-deploy

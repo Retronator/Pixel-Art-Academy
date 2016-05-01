@@ -1,0 +1,49 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "{retronator:landsofillusions}/typography/typography.import"
+@import "{retronator:landsofillusions}/styles/atari2600.import"
+
+.apps-homescreen
+  padding 10rem
+  uni()
+  text-align center
+  margin 0
+
+  .apps-list
+    list-style none
+    padding 0
+
+  .app-icon
+    display inline-block !important // Forcing inline-block because velocity is not registering it.
+    opacity 0
+    vertical-align top
+    padding 0 5rem
+    max-width 70rem
+    text-transform uppercase
+    text-align center
+
+    .link
+      text-decoration none
+      color atari2600colors[6][0]
+
+    .icon
+      width 50rem
+      height 50rem
+      background #b4d455
+      margin 0 auto 5rem auto
+
+    &:hover
+      cursor pointer
+      background transparent
+      font-weight bold
+
+      .link
+        background-color transparent
+        color atari2600colors[7][0]
+
+      .icon
+        animation bounce 1s step-start 0s infinite
+        -webkit-animation bounce 1s step-start 0s infinite
+
+@keyframes bounce
+  50%
+    transform translateY(-5rem)

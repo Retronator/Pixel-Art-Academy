@@ -4,7 +4,8 @@
 </head>
 
 <body>
-{{> LandsOfIllusions.Accounts.Components.UserPanel}}
-{{> LandsOfIllusions.Accounts.Components.LocalData}}
+{{#unless isRunningLocally}}
+  {{> LandsOfIllusions.Accounts.Components.LocalData}}
+{{/unless}}
 {{> PixelArtAcademy}}
 </body>

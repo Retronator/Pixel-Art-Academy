@@ -1,0 +1,12 @@
+<template name="PixelArtAcademy.PixelBoy.Components.Item">
+  <div class="pixelboy {{activatedClass}} {{positioningClass}}">
+    <div class="glass {{resizableClass}}"></div>
+    <div class="screen"></div>
+
+    <div class="os" {{osAttributes}} {{style osStyle}}>
+      {{> Render pixelBoy.os}}
+    </div>
+
+    <a href="/" class="hand"><img src="/assets/pixelboy/hand.png" /></a>
+  </div>
+</template>
