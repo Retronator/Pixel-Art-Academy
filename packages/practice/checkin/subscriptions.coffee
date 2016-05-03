@@ -25,7 +25,9 @@ Meteor.publish 'PixelArtAcademy.Practice.CheckIn.conversations', (checkInId) ->
   check checkInId, Match.DocumentId
 
   @autorun =>
-    checkIn = PAA.Practice.CheckIn.documents.findOne checkInId
+    checkIn = PAA.Practice.CheckIn.documents.findOne checkInId,
+      fields:
+        conversations: 1
 
     return LOI.Conversations.Conversation.documents.find
       _id:
