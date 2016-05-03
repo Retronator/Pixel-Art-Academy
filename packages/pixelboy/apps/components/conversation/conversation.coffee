@@ -37,7 +37,7 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
     escapedText = div.innerHTML
     
     # Replace urls with links.
-    urlRegex = /(https?):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/
+    urlRegex = /(https?):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/g
 
     formattedText = escapedText.replace urlRegex, (url, protocol, domain, path) =>
       urlText = domain
