@@ -2,14 +2,14 @@ AE = Artificial.Everywhere
 PAA = PixelArtAcademy
 
 # Get Pixel Dailies themes for a certain date range.
-Meteor.publish 'pixelDailiesThemes', (dateRange) ->
+Meteor.publish 'PAA.PixelDailies.Theme.forDateRange', (dateRange) ->
   check dateRange, AE.DateRange
 
   query =
-    hashtag:
-      $exists: true
+    hashtags:
+      $exists: 1
 
-  query = dateRange.addToMongoQuery query, 'date'
+  query = dateRange.addToMongoQuery query, 'time'
 
   PAA.PixelDailies.Theme.documents.find query,
     fields:

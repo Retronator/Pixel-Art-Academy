@@ -21,6 +21,6 @@ class PAA.Practice.Pages.ImportCheckIns extends AM.Component
       data = "HEADER#{event.target.result}"
       encryptedData = CryptoJS.AES.encrypt(data, passphrase).toString()
 
-      Meteor.call 'PixelArtAcademy.Practice.CheckIn.import', encryptedData
+      Meteor.call 'PixelArtAcademy.Practice.importCheckIns', encryptedData
 
     reader.readAsText csvFile

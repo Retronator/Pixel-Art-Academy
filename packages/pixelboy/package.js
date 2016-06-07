@@ -29,7 +29,10 @@ Package.onUse(function(api) {
   api.addFiles('apps/components/conversation/conversation.html');
   api.addFiles('apps/components/conversation/conversation.styl');
 
-  api.addFiles('apps/components/checkinconversations/checkinconversations.coffee');
+	api.addFiles('apps/components/formattedtext/formattedtext.coffee');
+	api.addFiles('apps/components/formattedtext/formattedtext.html');
+
+	api.addFiles('apps/components/checkinconversations/checkinconversations.coffee');
   api.addFiles('apps/components/checkinconversations/checkinconversations.html');
   api.addFiles('apps/components/checkinconversations/checkinconversations.styl');
 

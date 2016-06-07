@@ -6,13 +6,13 @@ class PAA.PixelDailies.ThemesCalendarProvider extends PAA.PixelBoy.Apps.Calendar
     super
 
   subscriptionName: ->
-    'pixelDailiesThemes'
+    'PAA.PixelDailies.Theme.forDateRange'
 
   # Returns all events for a specific day.
   getEvents: (dayDate) ->
     # Return all themes that were posted on that date.
     query =
-      hashtag:
+      hashtags:
         $exists: true
 
     dateRange = new AE.DateRange
@@ -20,7 +20,7 @@ class PAA.PixelDailies.ThemesCalendarProvider extends PAA.PixelBoy.Apps.Calendar
       month: dayDate.getMonth()
       day: dayDate.getDate()
 
-    query = dateRange.addToMongoQuery query, 'date'
+    query = dateRange.addToMongoQuery query, 'time'
 
     themes = PAA.PixelDailies.Theme.documents.find query,
       fields:

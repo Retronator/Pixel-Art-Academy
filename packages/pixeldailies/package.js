@@ -17,7 +17,8 @@ Npm.depends({
 
 Package.onUse(function(api) {
   api.use('pixelartacademy');
-
+	api.use('chfritz:easycron');
+	
   api.export('PixelArtAcademy');
 
   api.addFiles('pixeldailies.coffee');
@@ -27,8 +28,16 @@ Package.onUse(function(api) {
 
   api.addFiles('theme/theme.coffee');
   api.addFiles('theme/subscriptions.coffee', 'server');
+	api.addFiles('theme/migrations/0000-multiplehashtags.coffee', 'server');
+	api.addFiles('theme/migrations/0001-datetotime.coffee', 'server');
+	api.addFiles('theme/migrations/0002-reprocesstime.coffee', 'server');
+	api.addFiles('theme/migrations/0003-hashtagstolowercase.coffee', 'server');
 
-  api.addFiles('calendar/themesprovider.coffee');
+	api.addFiles('submission/submission.coffee');
+	api.addFiles('submission/subscriptions.coffee', 'server');
+	api.addFiles('submission/migrations/0000-reprocessimages.coffee', 'server');
+
+	api.addFiles('calendar/themesprovider.coffee');
 
   api.addFiles('calendar/themecomponent.html');
   api.addFiles('calendar/themecomponent.coffee');

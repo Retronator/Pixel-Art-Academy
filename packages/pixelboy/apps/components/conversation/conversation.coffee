@@ -26,35 +26,11 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
     # Set the color to character's color.
     color: "##{line.character.colorObject()?.getHexString()}"
 
-  formattedText: ->
+  linkColor: ->
     line = @currentData()
-    text = line.text
 
-    # DANGER ZONE:
-    # We are using direct HTML injection with triple braces, i.e. {{{formattedText}}}, so make sure we escape properly.
-    div = document.createElement 'div'
-    div.appendChild document.createTextNode text
-    escapedText = div.innerHTML
-    
-    # Replace urls with links.
-    urlRegex = /(https?):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/g
-
-    formattedText = escapedText.replace urlRegex, (url, protocol, domain, path) =>
-      urlText = domain
-
-      if path
-        # Make sure the path is not longer than 10 characters.
-        path = "/…#{path.substring(path.length-8)}" if path.length > 10
-
-        # Add it to the domain.
-        urlText = "#{urlText}#{path}"
-
-      # Link should be 2 shades lighter than the text.
-      linkColor = line.character.colorObject 2
-
-      "<a href='#{url}' target='_blank' style='color:##{linkColor.getHexString()};'>#{urlText}</a>"
-
-    formattedText
+    # Link should be 2 shades lighter than the text.
+    line.character.colorObject 2
 
   events: ->
     super.concat

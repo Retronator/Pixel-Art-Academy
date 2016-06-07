@@ -2,16 +2,15 @@ PAA = PixelArtAcademy
 
 class PixelArtAcademyPixelDailiesTheme extends Document
   # date: date when this theme was posted
-  # hashtag: theme hashtag to identify submissions
+  # hashtags: array of theme hashtags to identify submissions
   # text: tweet text posted by @Pixel_Dailies
   # tweetData: raw data of the theme tweet
-  # processingError: boolean if the tweet had processing issues due to ambiguity
+  # processingError: string identifying any processing issues
   @Meta
     name: 'PixelArtAcademyPixelDailiesTheme'
 
   @ProcessingError:
     MissingPixelDailiesHashtag: 'Missing #pixel_dailies hashtag.'
     NoExtraHashtag: 'No extra hashtag.'
-    MultipleExtraHashtags: 'Multiple extra hashtags.'
 
 PAA.PixelDailies.Theme = PixelArtAcademyPixelDailiesTheme

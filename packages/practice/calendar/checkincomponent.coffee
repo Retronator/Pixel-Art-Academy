@@ -20,3 +20,9 @@ class PAA.Practice.CheckInCalendarComponent extends AM.Component
     checkIn = @data()
 
     color: "##{checkIn.character.colorObject().getHexString()}"
+
+  linkColor: ->
+    checkIn = @data()
+
+    # Link should be 2 shades lighter than the text.
+    checkIn.character.colorObject 2
