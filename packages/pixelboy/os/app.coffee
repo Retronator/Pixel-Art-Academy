@@ -14,6 +14,9 @@ class PAA.PixelBoy.OS.App extends AM.Component
   keyName: ->
     throw new Meteor.Error 'unimplemented', "You must specify app's url name."
 
+  iconName: ->
+    @keyName()
+
   constructor: (@os) ->
     super
     # An item that can be activated has 4 stages in its lifecycle. You can use this

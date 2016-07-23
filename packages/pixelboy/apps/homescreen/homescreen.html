@@ -4,7 +4,11 @@
       {{#each os.apps}}
         <li class="app-icon">
           <a class="link" href="{{os.appPath appKeyName}}">
-            <div class="icon"></div>
+            {{#if appIconName}}
+              <img src="/assets/pixelboy/icons/icon-{{appIconName}}.png" class="icon">
+            {{else}}
+              <span class="icon"></span>
+            {{/if}}
             {{appDisplayName}}</a>
         </li>
       {{/each}}

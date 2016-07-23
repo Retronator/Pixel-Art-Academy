@@ -12,6 +12,9 @@ class PAA.PixelBoy.Apps.JournalScene extends PAA.PixelBoy.OS.App
   keyName: ->
     'journalscene'
 
+  iconName: ->
+    'journal'
+
   onCreated: ->
     super
 

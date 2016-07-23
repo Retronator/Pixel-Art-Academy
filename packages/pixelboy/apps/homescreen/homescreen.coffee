@@ -38,3 +38,7 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.OS.App
   appDisplayName: ->
     app = @currentData()
     app.displayName()
+
+  appIconName: ->
+    app = @currentData()
+    app.iconName()
