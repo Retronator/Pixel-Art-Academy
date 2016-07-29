@@ -11,33 +11,8 @@ class PAA.Adventure.Locations.Dorm extends LOI.Adventure.Location
 
   constructor: ->
     super
-    
-    jessie = new Actor
-    jessie.addAbility Talking
-    jessie.addAbility Action,
-      verb: "Talk"
-      action: =>
-        @director.startScript scene1
 
-    corinne = new Actor
-    corinne.addAbility Talking
-
-    @addActor jessie
-    @addActor corinne
-
-    scene1 = LOI.Adventure.Script.create
-      director: @director
-
-      actors:
-        jessie: jessie
-        corinne: corinne
-
-      script:
-        """
-          jessie: Hey, how are you?
-          corinne: Good, you?
-          jessie: Doing great, what's up?
-          corinne: Not much. Just heading to the store.
-          corinne: Want to grab lunch afterwards?
-          jessie: Sure thing dawg!
-        """
+    dormroom = new Actor
+    dormroom.displayName = 'DormRoom'
+    dormroom.sprite = '/assets/adventure/dormroom.png'
+    @addActor dormroom

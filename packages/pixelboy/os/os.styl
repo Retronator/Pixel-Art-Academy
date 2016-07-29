@@ -1,6 +1,7 @@
 @import "{retronator:artificialengines}/mirage/helpers.import"
 @import "{retronator:landsofillusions}/styles/atari2600.import"
 @import "{retronator:landsofillusions}/typography/typography.import"
+@import "{retronator:landsofillusions}/styles/cursors.import"
 
 // When just OS is loaded directly to html.
 html.pixel-art-academy-style-pixelboy-os
@@ -12,6 +13,13 @@ html.pixel-art-academy-style-pixelboy-os body
   #__blaze-root
     height 100%
 
+html.lands-of-illusions-style-adventure
+  .pixelboy-os
+    cursor default
+
+    a
+      cursor pointer
+
 .pixel-art-academy-style-pixelboy-os
   background atari2600colors[1][10]
 
@@ -19,9 +27,13 @@ html.pixel-art-academy-style-pixelboy-os body
   color white
   height 100%
   uni()
+  cursor default
 
   *
     box-sizing border-box
+
+  a
+    cursor pointer
 
   // Pixel art image scaling
   img

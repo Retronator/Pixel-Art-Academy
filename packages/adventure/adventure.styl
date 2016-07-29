@@ -1,3 +1,5 @@
+@import "{retronator:landsofillusions}/styles/cursors.import"
+
 .adventure
   .display
     .location
@@ -31,6 +33,15 @@
 
     .actor.ArtStudio
       width 320rem
+      height 180rem
+      position absolute
+      top 50%
+      left 0
+      transform translate(-50%, -50%)
+      z-index 0
+
+    .actor.DormRoom
+      width 360rem
       height 180rem
       position absolute
       top 50%
@@ -82,7 +93,7 @@
         left 0
         right 0
         bottom 0
-        cursor pointer
+        cursor crosshair
 
     .console-log
       position absolute
