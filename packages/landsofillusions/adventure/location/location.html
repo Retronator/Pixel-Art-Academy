@@ -1,0 +1,10 @@
+<template name="LandsOfIllusions.Adventure.Location">
+  <div class="location">
+    <div class="actors">
+      {{#each actors}}
+        {{> Render this}}
+      {{/each}}
+    </div>
+    <div class="console-log">{{consoleLogCommand}}</div>
+  </div>
+</template>

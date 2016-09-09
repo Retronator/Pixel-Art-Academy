@@ -1,0 +1,8 @@
+pixel-text-outline(color)
+  value = ()
+  for x in -1 0 1
+    for y in -1 0 1
+      unless x is y
+        push(value, "%srem %srem 0 %s" % (x y color))
+
+  text-shadow unquote(join(',', value))

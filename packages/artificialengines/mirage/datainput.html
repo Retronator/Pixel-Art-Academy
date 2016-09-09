@@ -1,0 +1,7 @@
+<template name="Artificial.Mirage.DataInputComponent">
+  {{#if isTextarea}}
+    <textarea placeholder="{{placeholder}}">{{value}}</textarea>
+  {{else}}
+    <input type="{{type}}" value="{{value}}" placeholder="{{placeholder}}"/>
+  {{/if}}
+</template>

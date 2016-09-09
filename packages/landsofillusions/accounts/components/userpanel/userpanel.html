@@ -1,0 +1,53 @@
+<template name="LandsOfIllusions.Accounts.Components.UserPanel">
+  <div class="loi-accounts-user-panel">
+    {{#if currentUser}}
+      <div class="open-button-area">
+        <button class="show-panel-button link-button">
+          {{#if currentCharacter}}
+            {{currentCharacter.displayName}}
+          {{else}}
+            Load Character
+          {{/if}}
+          ▾
+        </button>
+      </div>
+      {{#if showPanel}}
+        <div class="panel">
+          <div class="close-panel-area">
+            <button class="close-panel-button link-button">Close</button>
+          </div>
+          {{#if showCharacters}}
+            <div class="characters-area">
+              {{#if currentUser.characters.length}}
+                <p>
+                  {{#if currentCharacter}}
+                    Switch character:
+                  {{else}}
+                    Load character:
+                  {{/if}}
+                </p>
+                <ul class="characters">
+                  {{#each currentUser.characters}}
+                    {{#if showCharacter}}
+                      <li class="character">
+                        <button class="load-character">{{displayName}}</button>
+                      </li>
+                    {{/if}}
+                  {{/each}}
+                </ul>
+              {{else}}
+                You have no characters. Go <a href="{{landsOfIllusionsUrl}}" class="login-link">create one</a>.
+              {{/if}}
+            </div>
+            <hr/>
+          {{/if}}
+          <div class="user">
+            <p>You are signed in with Lands of Illusions account <a href="{{landsOfIllusionsUrl}}" class="login-link">{{currentUser.displayName}}</a>.</p>
+          </div>
+        </div>
+      {{/if}}
+    {{else}}
+      <a href="{{landsOfIllusionsUrl}}" class="login-link">Sign in</a>
+    {{/if}}
+  </div>
+</template>

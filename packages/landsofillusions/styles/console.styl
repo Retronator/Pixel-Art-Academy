@@ -1,0 +1,130 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "../typography/typography.import"
+
+console-white = #eee
+console-lighter-grey = #dedede
+console-light-grey = #cacaca
+console-grey = #b2b2b2
+console-dark-grey = #929292
+
+html.lands-of-illusions-style-console
+  font-size 2px
+
+  body
+    margin 16px
+    background black
+    uni()
+    color console-grey
+
+  *
+    box-sizing border-box
+
+  // Pixel art image scaling
+  img
+  canvas
+    image-rendering optimizeSpeed
+    image-rendering -moz-crisp-edges            // Firefox
+    image-rendering -o-crisp-edges              // Opera
+    image-rendering -webkit-optimize-contrast   // Chrome, Safari
+    image-rendering pixelated                   // Chrome
+    image-rendering optimize-contrast           // CSS3
+    -ms-interpolation-mode nearest-neighbor     // IE8+
+
+
+  h1
+    kyrou-9()
+    color console-white
+    font-weight normal
+
+  h2
+    kyrou-7()
+    color console-white
+    font-weight normal
+
+  h3
+    kyrou-5()
+    color console-white
+    font-weight normal
+
+  ul
+    list-style square
+
+  ul, ol
+    li
+      margin-bottom 1em
+
+  strong
+    font-weight normal
+    color console-white
+
+  a
+    color console-white
+    cursor pointer
+
+    &:hover
+      background-color console-white
+      color black
+
+  hr
+    margin 2em 0
+    height 2px
+    border none
+    background-color #333
+
+  button
+    position relative
+    top -4px
+    margin-top 4px
+    background #666
+    uni()
+    color black
+    border none
+    border-bottom 4px solid #333
+    cursor pointer
+
+    &:focus
+      background: #777
+      outline none
+
+    &:hover
+      background: #888
+
+    &:active
+      border-bottom none
+      margin-bottom 4px
+      top 0
+
+    &:disabled
+      color #444
+      cursor default
+
+      &:hover
+        background #666
+
+    &.link-button
+      color console-white
+      cursor pointer
+      background none
+      padding 0
+      border none
+      top 0
+
+      &:hover
+        background-color console-white
+        color black
+
+      &:active
+        margin-bottom 0
+
+  input
+  textarea
+    uni()
+    background #333
+    border 2px solid #666
+    padding 0 4px
+    color console-lighter-grey
+    input-placeholder #666
+
+    &:focus
+      outline none
+      border-color #777
