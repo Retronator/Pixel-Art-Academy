@@ -4,3 +4,25 @@ absolute-cover()
   right 0
   bottom 0
   left 0
+
+fixed-cover()
+  position fixed
+  top 0
+  right 0
+  bottom 0
+  left 0
+
+input-placeholder(color)
+  // HACK: For some reason the selectors need to be separate.
+  &::placeholder
+    color color
+
+  &::-webkit-input-placeholder
+    color color
+
+  &::-moz-placeholder
+    color color
+    opacity 1
+
+  &:-ms-input-placeholder
+    color color

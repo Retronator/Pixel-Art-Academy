@@ -35,19 +35,23 @@ debug-rendering = false
       right 0
 
   .viewport-bounds
-    position fixed
-    display none unless debug-rendering
-    border 2px solid firebrick
-    color firebrick
-    pointer-events none
-    z-index 9999
+    display none
 
-    .scale
-      position absolute
-      bottom 0
-      right 0
-      padding 2px
+  &.debug
+    .viewport-bounds
+      display block
+      position fixed
+      border 2px solid firebrick
+      color firebrick
+      pointer-events none
+      z-index 9999
 
-    .safe-area
-      position absolute
-      border 2px solid goldenrod
+      .scale
+        position absolute
+        bottom 0
+        right 0
+        padding 2px
+
+      .safe-area
+        position absolute
+        border 2px solid goldenrod

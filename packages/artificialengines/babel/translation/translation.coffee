@@ -1,7 +1,9 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 AT = Artificial.Telepathy
+AM = Artificial.Mummification
 
-class AB.Translation extends AT.RemoteDocument
+class ArtificialBabelTranslation extends AM.Document
   # namespace: string name of related keys
   # key: English string that identifies this translation (namespace and key pair should be unique)
   # translations:
@@ -11,17 +13,36 @@ class AB.Translation extends AT.RemoteDocument
   #       quality: a number by which we can sort translations from different regions to find the best translation
   #       meta: TODO: information about the translation process, authors, revisions, voting etc.
   @Meta
-    # Make an abstract class, because we don't want to create a collection on the
-    # client. It will be instead created from the server using the remote connection.
-    abstract: true
+    name: 'ArtificialBabelTranslation'
 
-  translation: (language) ->
-    languageProperty = language.replace '-', '.'
+  # Helper method for quickly getting a translation. It's only particularly useful on the server where all the
+  # translations are immediately accessible. On the client we need to subscribe to the translation documents first
+  # without which this method will not return anything. Thus on the client you should work with helper methods on the
+  # Artificial.Babel class directly.
+  @translate: (options) ->
+    if options.id
+      query = options.id
+
+    else if options.namespace and options.key
+      query = _.pick options, 'namespace', 'key'
+
+    else
+      throw new AE.ArgumentNullException "Id or namespace-key pair was not provided."
+
+    translationDocument = AB.Translation.documents.findOne query
+
+    return "" unless translationDocument
+
+    translation = translationDocument.translate options.language or [Artificial.Babel.defaultLanguage]
+    translation.text
+
+  translation: (language = Artificial.Babel.defaultLanguage) ->
+    languageProperty = language.toLowerCase().replace '-', '.'
     _.nestedProperty translations, languageProperty
 
-  translate: (languagePreference) ->
+  translate: (languagePreference = [Artificial.Babel.defaultLanguage]) ->
     for language in languagePreference
-      languageParts = language.split '-'
+      languageParts = language.toLowerCase().split '-'
 
       translation = @_findTranslation @translations, languageParts
       return translation if translation
@@ -35,13 +56,13 @@ class AB.Translation extends AT.RemoteDocument
     return unless data
 
     # Search for the best translation when we come to the end of language parts.
-    if languageParts.length is 0
+    unless languageParts.length
       # There are no more language parts to narrow our scope, so
       # search for all the translations across all the nested objects.
       translations = @_findTranslations data, currentPath
       return unless translations.length
 
-      # We have at least one translation, but find one with the highest quality.
+      # We have at least one translation, so find one with the highest quality.
       best = _.last _.sortBy translations, (data) ->
         data.translation.quality
 
@@ -53,7 +74,7 @@ class AB.Translation extends AT.RemoteDocument
       # Try to find translations deeper.
       newPath = if currentPath.length then "#{currentPath}-#{languageParts[0]}" else languageParts[0]
 
-      @_findTranslation data[languageParts[0]], _.rest(languageParts), newPath
+      @_findTranslation data[languageParts[0]], _.tail(languageParts), newPath
 
   _findTranslations: (data, currentPath) ->
     # Return just this object in an array if it has the translated text.
@@ -71,11 +92,4 @@ class AB.Translation extends AT.RemoteDocument
       else
         []
 
-# On the server, also create an actual collection. On the clients, the
-# collection will be created together with the instance of the Babel Server.
-if Meteor.isServer
-  class ArtificialBabelTranslation extends AB.Translation
-    @Meta
-      name: 'ArtificialBabelTranslation'
-
-  AB.Translation = ArtificialBabelTranslation
+AB.Translation = ArtificialBabelTranslation

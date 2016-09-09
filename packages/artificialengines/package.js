@@ -22,16 +22,20 @@ Package.onUse(function(api) {
     'ejson',
 
     // 3rd party
-    'peerlibrary:assert',
-    'peerlibrary:peerdb',
-    'peerlibrary:blaze-components',
-    'peerlibrary:blaze-common-component',
-    'peerlibrary:reactive-field',
-    'peerlibrary:computed-field',
-    'peerlibrary:check-extension',
-    'peerlibrary:peerdb-migrations',
-    'limemakers:three',
-    'mrt:underscore-string-latest'
+    'peerlibrary:assert@0.2.5',
+    'peerlibrary:peerdb@0.20.0',
+    'peerlibrary:peerdb-migrations@0.2.1',
+    'peerlibrary:reactive-publish@0.2.0',
+    'peerlibrary:blaze-components@0.18.0',
+    'peerlibrary:blaze-common-component@0.2.0',
+    'peerlibrary:reactive-field@0.1.0',
+    'peerlibrary:computed-field@0.3.1',
+    'peerlibrary:check-extension@0.1.1',
+    'limemakers:three@0.75.0',
+    'mrt:underscore-string-latest@2.3.3',
+	  'kadira:flow-router',
+	  'okgrow:router-autoscroll',
+	  'erasaur:meteor-lodash@4.0.0'
   ];
 
 	api.use(packages);
@@ -41,7 +45,10 @@ Package.onUse(function(api) {
 
 	api.addFiles('artificial.coffee');
 
-  // Artificial Everywhere
+	// Global initialization
+	api.addFiles('everywhere/underscore/lodash.coffee');
+
+	// Artificial Everywhere
   api.addFiles('everywhere/everywhere.coffee');
 
   api.addFiles('everywhere/jquery/positioncss.coffee', 'client');
@@ -55,6 +62,7 @@ Package.onUse(function(api) {
   api.addFiles('everywhere/date.coffee');
   api.addFiles('everywhere/datehelper.coffee');
   api.addFiles('everywhere/daterange.coffee');
+  api.addFiles('everywhere/exceptions.coffee');
   api.addFiles('everywhere/match.coffee');
   api.addFiles('everywhere/reactivewrapper.coffee');
   api.addFiles('everywhere/rectangle.coffee');
@@ -79,7 +87,9 @@ Package.onUse(function(api) {
 	api.addFiles('mirage/display.coffee');
 	api.addFiles('mirage/display.styl');
   api.addFiles('mirage/helpers.import.styl', 'client', {isImport:true});
-	api.addFiles('mirage/window.coffee');
+  api.addFiles('mirage/render.coffee');
+  api.addFiles('mirage/render.html');
+  api.addFiles('mirage/window.coffee', 'client');
 
   api.addFiles('mirage/spacebars/meteorhelpers.coffee');
   api.addFiles('mirage/spacebars/stringhelpers.coffee');
@@ -94,32 +104,38 @@ Package.onUse(function(api) {
 
   api.addFiles('base/app.coffee');
   api.addFiles('base/app.html');
-  api.addFiles('base/services.coffee');
 
   // Artificial Mummification
   api.addFiles('mummification/mummification.coffee');
 
   api.addFiles('mummification/mongohelper.coffee');
+  api.addFiles('mummification/document.coffee');
 
   // Artificial Telepathy
   api.addFiles('telepathy/telepathy.coffee');
 
   api.addFiles('telepathy/flowrouter/helpers.coffee');
 
+	api.addFiles('telepathy/flowrouter/routelink.coffee');
+	api.addFiles('telepathy/flowrouter/routelink.html');
+
+  api.addFiles('telepathy/emailcomposer.coffee');
   api.addFiles('telepathy/remoteserver.coffee');
   api.addFiles('telepathy/remotedocument.coffee');
 
   // Artificial Babel
-  // Depends on Artificial Telepathy.
   api.addFiles('babel/babel.coffee');
-
-  api.addFiles('babel/server.coffee');
-  api.addFiles('babel/subscriptions.coffee', 'server');
+  api.addFiles('babel/initialize.coffee');
 
   api.addFiles('babel/translation/translation.coffee');
+  api.addFiles('babel/translation/subscriptions.coffee', 'server');
   api.addFiles('babel/translation/methods.coffee');
 
   api.addFiles('babel/components/components.coffee');
+
   api.addFiles('babel/components/translatable/translatable.html');
   api.addFiles('babel/components/translatable/translatable.coffee');
+
+  api.addFiles('babel/components/translation/translation.html');
+  api.addFiles('babel/components/translation/translation.coffee');
 });

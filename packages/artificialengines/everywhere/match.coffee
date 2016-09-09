@@ -17,3 +17,15 @@ Match.IntegerRange = (min, max) ->
   Match.Where (value) ->
     check value, Match.Integer
     min < value < max
+
+Match.NonNegativeNumber = Match.Where (value) ->
+  check value, Number
+  value >= 0
+
+Match.PositiveInteger = Match.Where (value) ->
+  check value, Match.Integer
+  value > 0
+
+Match.NonNegativeInteger = Match.Where (value) ->
+  check value, Match.Integer
+  value >= 0

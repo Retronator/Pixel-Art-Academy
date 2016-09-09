@@ -2,17 +2,20 @@ AM = Artificial.Mirage
 AE = Artificial.Everywhere
 
 class AM.Window
-  constructor: (@app) ->
-    @app.services.addService @constructor, @
+  @clientBounds = new ReactiveField null
+  @isInitialized = false
 
-    @clientBounds = new ReactiveField null
+  @initialize: ->
+    return if @isInitialized
+    @isInitialized = true
+
+    @$window = $(window)
 
     # Listen to resize event and set the initial dimensions.
-    $(window).resize =>
+    @$window.resize =>
       @_onResize()
 
     @_onResize()
 
-  _onResize: ->
-    $window = $(window)
-    @clientBounds new AE.Rectangle 0, 0, $window.width(), $window.height()
+  @_onResize: ->
+    @clientBounds new AE.Rectangle 0, 0, @$window.width(), @$window.height()

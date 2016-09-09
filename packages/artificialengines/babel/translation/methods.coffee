@@ -1,25 +1,28 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 
-AB.Translation.methods = (connection, documents) ->
-  'Artificial.Babel.translationInsert': (namespace, key) ->
+Meteor.methods
+  'Artificial.Babel.translationInsert': (namespace, key, defaultText) ->
     check namespace, String
     check key, String
 
     # Ensure namespace and key are unique.
-    existing = documents.findOne
+    existing = AB.Translation.documents.findOne
       namespace: namespace
       key: key
 
-    throw new Meteor.Error 'invalid-argument', "Namespace-key pair must be unique." if existing
+    if existing
+      throw new AE.ArgumentException "Namespace-key pair must be unique. (namespace: #{namespace}, key: #{key}, default text: #{defaultText})"
 
-    translationId = documents.insert
+    translationId = AB.Translation.documents.insert
       namespace: namespace
       key: key
 
     if Meteor.isServer
-      # See if we should insert the key as the translation for the default language.
-      if Artificial.Babel.insertKeyForDefaultLanguage
-        connection.call 'Artificial.Babel.translationUpdate', translationId, Artificial.Babel.defaultLanguage, key
+      # See if we should insert translation for the default language.
+      if (defaultText or Artificial.Babel.insertKeyForDefaultLanguage)
+        text = defaultText or key
+        Meteor.call 'Artificial.Babel.translationUpdate', translationId, Artificial.Babel.defaultLanguage, text
 
     # Return the id of the new translation.
     translationId
@@ -29,11 +32,10 @@ AB.Translation.methods = (connection, documents) ->
     check language, String
     check text, String
 
-    # Ensure namespace and key are unique.
-    translation = documents.findOne translationId
+    translation = AB.Translation.documents.findOne translationId
     throw new Meteor.Error 'not-found', "Translation does not exist." unless translation
 
-    languageProperty = language.replace '-', '.'
+    languageProperty = language.toLowerCase().replace '-', '.'
 
     set = {}
 
@@ -43,10 +45,4 @@ AB.Translation.methods = (connection, documents) ->
     # Reset the quality.
     set["translations.#{languageProperty}.quality"] = 0
 
-    documents.update translationId, $set: set
-
-# On the server, also serve the methods.
-if Meteor.isServer
-  # Simply pass Meteor as the connection (the object on which to call server methods).
-  methods = AB.Translation.methods Meteor, AB.Translation.documents
-  Meteor.methods methods
+    AB.Translation.documents.update translationId, $set: set

@@ -9,11 +9,10 @@ class AM.Component extends CommonComponent
     super
 
     # Artificial Babel
-    @babelServer = AB.server
-    @babelServer.subscribeComponent @
+    AB.subscribeComponent @
 
   onDestroyed: ->
-    @babelServer?.unsubscribeComponent @
+    AB.unsubscribeComponent @
 
   # Modified firstNode and lastNode helpers that skip over text nodes. Useful if the component doesn't have
   # persistent first and last nodes, since the original helpers will point to surrounding text elements.
@@ -100,7 +99,20 @@ class AM.Component extends CommonComponent
     # Removing kwargs.
     args.pop() if args[args.length - 1] instanceof Spacebars.kw
 
-    _.unique(args).length is 1
+    _.uniq(args).length is 1
+
+  $is: (args...) ->
+    @$equals args...
+
+  $gt: (args...) ->
+    return unless _.isNumber args[0] and _.isNumber args[1]
+
+    args[0] > args[1]
+
+  $lt: (args...) ->
+    return unless _.isNumber args[0] and _.isNumber args[1]
+
+    args[0] < args[1]
 
   # Styles
 
@@ -121,17 +133,16 @@ class AM.Component extends CommonComponent
 
   # Artificial Babel
 
-  # Enables translation of this component with Artificial Babel.
-  changeArtificialBabelServer: (server) ->
-    @babelServer?.unsubscribeComponent @
-
-    @babelServer = server
-    @babelServer.subscribeComponent @
-
   # Translates the provided key with Artificial Babel.
-  translate: (translationKey) ->
-    @babelServer.translateForComponent @, translationKey
+  translate: (key) ->
+    AB.translateForComponent @, key
 
   # Spacebars shorthand for translate that returns just the text of the translation.
-  t7e: (translationKey) ->
-    @translate(translationKey).text
+  t7e: (translationOrKey) ->
+    if translationOrKey instanceof AB.Translation
+      translation = translationOrKey
+      AB.translate(translation).text
+      
+    else
+      translationKey = translationOrKey
+      @translate(translationKey).text

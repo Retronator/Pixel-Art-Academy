@@ -1,8 +1,6 @@
 # Artificial Engines
 A Meteor game development library written in CoffeeScript.
 
-Note that this whole folder is licensed under LGPL as per LICENSE in this folder.
-
 ### Artificial Babel
 
 _Translation framework_
@@ -17,11 +15,10 @@ Database-based translation framework for easy, reactive translating.
 
 _The app framework_
 
-Tying all the pieces of your app together can be a hassle. Running an update and draw loop should be unified.
-Services need to be shared, components integrated. Artificial Base (AB) gives you the basic framework.
+Tying all the pieces of your app together can be a hassle. Running an update and draw loop should be unified. 
+Artificial Base (AB) gives you the basic framework.
 
 - **App**: The root class from which to inherit your custom app.
-- **Services**: A container for loose coupling of app components.
 
 ### Artificial Control
 
@@ -43,6 +40,7 @@ category. The place for them is Artificial Everywhere (AE).
 - **Date**: Date extensions.
 - **DateHelper**: Date extensions and helper methods to deal with the date object.
 - **DateRange**: A reactive range of time between two dates.
+- **Exceptions**: Exception classes with predefined error codes.
 - **Jquery**:
   - **PositionCSS**: A cross-browser way to read position css properties (left/right/top/bottom).
 - **Match**: Extensions to Meteor's match patterns.
@@ -77,6 +75,7 @@ _Data storage_
 
 Classes, extensions and helpers for database storage.
 
+- **Document**: Extended PeerDB document with common operations.
 - **MongoHelper**: Useful methods to help with mongo queries.
 
 ### Artificial Spectrum
@@ -90,5 +89,9 @@ one might require.
 
 _Network communication_
 
+- **EmailComposer**: Helper for constructing text and html emails.
+- **FlowRouter**:
+  - **Helpers**: Spacebars helpers for Flow Router.
+  - **RouteLink**: Component that displays a span or a link, depending if we're on this route or not. Useful for navigation menus.
 - **RemoteServer**: Meteor connection to a remote server.
 - **RemoteDocument**: PeerDB document that's coming from a remote server.

@@ -5,7 +5,7 @@ class AT.RemoteServer
     throw new Meteor.Error 'argument-null', "Remote server needs to be initialized with an url string or a connection object." unless @urlOrConnection
 
     if _.isString @urlOrConnection
-      @connection = DDP.connect @url
+      @connection = DDP.connect @urlOrConnection
 
     else
       @connection = @urlOrConnection

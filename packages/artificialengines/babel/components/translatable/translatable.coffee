@@ -12,7 +12,7 @@ class AB.Components.Translatable extends AM.Component
 
     @translation = new ComputedField =>
       parentComponent = @parentComponent()
-      parentComponent?.babelServer.translationForComponent parentComponent, @translationKey
+      AB.translationForComponent parentComponent, @translationKey
 
     @translated = new ComputedField =>
-      AB.Server.translate @translation(), @translationKey
+      AB.translate @translation(), @translationKey
