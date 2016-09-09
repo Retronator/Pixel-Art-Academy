@@ -1,0 +1,39 @@
+<template name="Retronator.Store.Layouts.Store">
+  <div class="layout-store">
+    {{> Retronator.Store.Layouts.Store.Header}}
+    {{> renderPage}}
+  </div>
+</template>
+
+<template name="Retronator.Store.Layouts.Store.Header">
+  <div class="header-area">
+    <header class="header">
+      <h1 class="title">
+        {{> RouteLink args 'Retronator Store' 'store'}}
+        <span class="powered-by">powered by <a href="https://stripe.com" target="_blank">Stripe</a></span>
+      </h1>
+      <nav class="navigation">
+        <ul class="tabs">
+          <li class="tab">{{> RouteLink args 'Store' 'store'}}</li>
+          <li class="tab">{{> RouteLink args 'Cart' 'cart'}}</li>
+          <li class="tab">{{> RouteLink args '$$$' 'money'}}</li>
+          {{#if currentUser}}
+            <li class="tab">{{> RouteLink args 'Inventory' 'inventory'}}</li>
+            <li class="tab">{{> RouteLink args 'Account' 'account'}}</li>
+          {{/if}}
+          <li class="tab">{{> loginButtons}}</li>
+        </ul>
+      </nav>
+      {{#if shoppingCart.items.length}}
+        <div class="shopping-cart">
+          {{itemsCountText}}
+          {{#if $is flowRouterRouteName 'cart'}}
+            <a class="button" href="{{flowRouterPath 'checkout'}}">Checkout</a>
+          {{else}}
+            <a class="button" href="{{flowRouterPath 'cart'}}">View cart</a>
+          {{/if}}
+        </div>
+      {{/if}}
+    </header>
+  </div>
+</template>

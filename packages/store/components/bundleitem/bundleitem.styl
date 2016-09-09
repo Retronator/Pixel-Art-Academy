@@ -1,0 +1,53 @@
+@import "../../styles/console.import"
+
+.bundle-item
+  position relative
+  margin 0
+  text-transform uppercase
+  cursor default
+
+  .name
+    display inline-block
+    position relative
+    padding-bottom 5px
+
+    .tooltip
+      display none
+      position absolute
+      bottom calc(100% + 1em)
+      padding 1em
+      width 400px
+      background #222
+      border 2px solid #333
+      box-shadow 0 10px 0 rgba(0,0,0,0.5)
+      color console-grey
+      text-transform none
+
+    .owned-indicator
+      display none
+      color #5c9e5c
+
+      .checkmark
+        position relative
+        top -2px
+        font-weight bold
+
+    &:hover
+      .tooltip
+        display block
+
+  &.owned
+    color #5c9e5c
+
+    &::after
+      content '√'
+      position relative
+      display inline
+      top -2px
+      font-weight bold
+
+    .tooltip
+      .owned-indicator
+        display block
+        margin-top 1em
+        color #5c9e5c

@@ -1,0 +1,11 @@
+<template name="Retronator.Store.Components.BundleItem">
+  <li class="bundle-item {{ownedClass}}">
+    <span class="name">
+    {{> t9n name}}
+      <div class="tooltip">
+        {{> t9n description}}
+        <div class="owned-indicator"><span class="checkmark">√</span> You own this item.</div>
+      </div>
+    </span>
+  </li>
+</template>

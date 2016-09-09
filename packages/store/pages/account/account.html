@@ -1,0 +1,137 @@
+<template name="Retronator.Store.Pages.Account">
+  <div class="pages-account">
+    <h2>Retronator user account</h2>
+    {{#if currentUser}}
+      <div class="section-body">
+        <p>Your account name is: {{> Retronator.Store.Pages.Account.Username}}</p>
+        <p>Your emails are:</p>
+        <ul>
+          {{#each currentUser.registered_emails}}
+            <li>
+              {{address}}
+              {{#if verified}}
+                &mdash; verified
+              {{else}}
+                <button class="verify-email">Send verification email</button>
+              {{/if}}
+            </li>
+          {{else}}
+            <p>You have no emails associated with your account. Make sure to add your backer email and verify it to
+              activate your reward.</p>
+          {{/each}}
+        </ul>
+        <form class="add-email-form">
+          <input class="add-email-address" type="email"/>
+          <button class="add-email-button">Add email</button>
+        </form>
+        <p>* For your purchases to be applied, your email must be entered and verified.</p>
+      </div>
+      <h2>Sign in services</h2>
+      <div class="section-body">
+        <p>You can sign in with:</p>
+        <ul>
+          {{#each loginServices}}
+            {{#if $equals this 'password'}}
+              {{#if loginServiceEnabled}}
+                <li>{{this}} &mdash; enabled</li>
+              {{/if}}
+            {{else}}
+              <li>
+                {{this}}
+                {{#if loginServiceEnabled}}
+                  &mdash; enabled
+                {{else}}
+                  <button class="link-service">Link account with {{this}}</button>
+                {{/if}}
+              </li>
+            {{/if}}
+          {{/each}}
+        </ul>
+      </div>
+      <h2>Your support</h2>
+      <div class="section-body support-area">
+        <p>You have contributed <span class="support-amount">${{supportAmount}}</span> to Retronator.</p>
+        <p>Show your name among supporters:</p>
+        {{#if showSupporterName}}
+          <p>{{> Retronator.Store.Pages.Account.SupporterName}}</p>
+        {{/if}}
+        <p>
+          <label class="anonymous-area">
+            <input class="anonymous-checkbox" type="checkbox" {{anonymousCheckboxAttributes}} /> I prefer to be anonymous.
+          </label>
+        </p>
+      </div>
+      <h2>Purchase history</h2>
+      <div class="section-body">
+        {{#if transactions.length}}
+          <ul class="transactions">
+            {{#each transactions}}
+              <li class="transaction">
+                <div class="date">{{dateText}}</div>
+                <div class="details-area">
+                  <p>Purchased:</p>
+                  <ul class="items">
+                    {{#each items}}
+                      <li>
+                        {{> t9n item.name}} {{#if givenGift}}(gift){{/if}}
+                        {{#if price}}
+                          - ${{price}}
+                        {{/if}}
+                        {{#if receivedGift}}
+                          <div class="gift">
+                            <p>This was a gift from {{receivedGift.transaction.ownerDisplayName}}</p>
+                          </div>
+                        {{/if}}
+                        {{#if givenGift}}
+                          <div class="gift">
+                            {{#if givenGift.transaction}}
+                              <p>The gift was claimed by {{givenGift.transaction.ownerDisplayName}}.</p>
+                            {{else}}
+                              <p>This item is a gift. Give this link to the recipient so they can claim it:</p>
+                              <p>
+                                <div class="gift-link">
+                                  <a href="{{claimLink}}" target="_blank">{{claimLink}}</a>
+                                </div>
+                              </p>
+                              <p>* You can click the link to see what they will see.</p>
+                            {{/if}}
+                          </div>
+                        {{/if}}
+                      </li>
+                    {{/each}}
+                  </ul>
+                  {{#if payments.length}}
+                    <p>Paid with:</p>
+                    <ul class="payments">
+                      {{#each payments}}
+                        <li>
+                          {{type}} — ${{paymentAmount}}
+                          {{#if authorizedOnly}}
+                            (authorized only)
+                          {{/if}}
+                        </li>
+                      {{/each}}
+                    </ul>
+                  {{/if}}
+                </div>
+              </li>
+            {{/each}}
+          </ul>
+          {{#if storeCredit}}
+            <p>* Your have a positive account balance of ${{storeCredit}}. You can use it to purchase items in the store.</p>
+          {{/if}}
+          {{#if authorizedPaymentsAmount}}
+            <p>* You have authorized ${{authorizedPaymentsAmount}} of payments. They will be collected when the game is
+              publicly released later this year. You will be emailed beforehand in case you need to cancel
+              your purchase at that time.</p>
+          {{/if}}
+        {{else}}
+          <p>You haven't made any purchases yet.</p>
+          <p>* Make sure you verified your email if you think you're missing purchases.</p>
+        {{/if}}
+      </div>
+    {{else}}
+      <p>You need to be signed in to view your account.</p>
+    {{/if}}
+  </div>
+</template>

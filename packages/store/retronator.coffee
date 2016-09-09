@@ -1,0 +1,2 @@
+unless Retronator
+  class Retronator

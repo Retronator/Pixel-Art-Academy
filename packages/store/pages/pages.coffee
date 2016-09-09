@@ -1,0 +1,1 @@
+class Retronator.Store.Pages

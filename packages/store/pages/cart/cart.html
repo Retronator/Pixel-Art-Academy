@@ -1,0 +1,52 @@
+<template name="Retronator.Store.Pages.Cart">
+  <div class="pages-cart">
+    <p>Your shopping cart includes:</p>
+    <div class="shopping-cart">
+      {{#if shoppingCart.items.length}}
+        <ul class="shopping-cart-items">
+          {{#each shoppingCart.items}}
+            <li class="store-item">
+              <h2 class="name">{{> t9n item.name}}</h2>
+              <p class="description">{{> t9n item.description}}</p>
+              <div class="price-area">
+                <div class="price">${{item.price}}</div>
+                <button class="remove-from-cart-button">Remove from cart</button>
+                {{#if item.isGiftable}}
+                  <label class="gift-label" title="You will receive a claim link to send to the recipient.">
+                    <input class="gift-checkbox" type="checkbox" {{giftCheckboxAttributes}}/> This is a gift
+                  </label>
+                  {{#if isGift}}
+                    <p>You will receive a claim link to send to the recipient.</p>
+                  {{/if}}
+                {{/if}}
+              </div>
+              {{#if item.items}}
+                <div class="bundle">
+                  <p>
+                    This bundle includes:
+                  </p>
+                  <ul class="bundle-items">
+                    {{#each item.items}}
+                      {{> Retronator.Store.Components.BundleItem}}
+                    {{/each}}
+                  </ul>
+                </div>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+        <div class="total">
+          <div class="total-price">Total: ${{shoppingCart.totalPrice}}</div>
+        </div>
+      {{else}}
+        <p>You do not have any items in your shopping cart. <a href="{{flowRouterPath 'store'}}">Return to the store</a></p>
+      {{/if}}
+    </div>
+    {{#if shoppingCart.items.length}}
+      <nav class="navigation">
+        <div class="item continue"><a href="{{flowRouterPath 'store'}}">Continue shopping</a></div>
+        <div class="item checkout"><a class="checkout-button button" href="{{flowRouterPath 'checkout'}}">Checkout</a></div>
+      </nav>
+    {{/if}}
+  </div>
+</template>

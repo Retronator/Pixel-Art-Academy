@@ -1,0 +1,64 @@
+@import "../../styles/console.import"
+
+.pages-checkout
+  h2
+    margin-top 2em
+
+  .purchase-completed
+    padding 1em
+    margin-bottom 15px
+    background #222
+    border 2px solid #333
+
+  .support-area
+    display flex
+
+    .area
+      width 50%
+      padding-right 10%
+
+  .shopping-cart-items
+    list-style none
+    background #222
+    border 2px solid #333
+    width 100%
+    padding 1em
+    border-spacing 0
+    margin 1em 0
+
+    tr:nth-last-child(-n+2) td
+      padding-bottom 1em
+
+    .price
+      text-align right
+
+    .total
+      text-transform uppercase
+
+      td
+        padding-top 1em
+        border-top 2px solid console-grey
+        padding-bottom 0 !important
+
+  .payment-form
+    .form-field
+      margin-bottom 3px
+
+      .label-text
+        display inline-block
+        width 150px
+
+      .expiration-year
+        width 4em
+
+    .actions
+      margin-top 15px
+
+      .submit-payment-button
+        width 370px
+        text-transform uppercase
+
+  .payment-smallprint
+    display block
+    font-size 1em
+    margin 1em 0 2em

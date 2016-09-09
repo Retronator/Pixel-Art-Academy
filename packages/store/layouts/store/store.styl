@@ -1,0 +1,78 @@
+@import "../../styles/console.import"
+
+.layout-store
+  max-width 800px
+  margin 140px auto 30px
+
+  .header-area
+    position fixed
+    z-index 1
+    top 0
+    left 0
+    right 0
+    height 100px
+    background black
+    border-bottom 2px solid #333
+    box-shadow 0 10px 0 rgba(0,0,0,0.5)
+
+    .header
+      position relative
+      max-width 830px
+      padding 1em
+      margin 0 auto
+
+      a
+        text-decoration none
+
+      .title
+        margin-top 0
+
+        .powered-by
+          uni()
+          font-weight normal
+          color console-grey
+
+          a
+            color console-lighter-grey
+
+            &:hover
+              color black
+
+      .navigation
+        .tabs
+          list-style none
+          padding 0
+          margin-bottom 0
+          color white
+
+          .tab
+            display inline-block
+            margin 0
+            text-transform uppercase
+
+            &:nth-child(n + 2)::before
+              content "~ "
+
+            .route-active
+              border-bottom 2px solid console-grey
+
+            a
+              text-decoration none
+
+            #login-buttons
+              display inline-block
+
+              .login-link-and-dropdown-list
+                .accounts-dialog
+                  text-transform initial
+                  color console-grey
+
+      .shopping-cart
+        position absolute
+        top 1.2em
+        right 1em
+
+      .sign-in-area
+        position absolute
+        top 1.7em
+        right 1em

@@ -1,0 +1,82 @@
+@import "../../styles/console.import"
+
+.pages-cart
+  h2
+    margin-top 2em
+
+  > .shopping-cart
+    padding 1em
+    margin-bottom 15px
+    max-width 800px
+    background #222
+    border 2px solid #333
+
+    .shopping-cart-items
+      list-style none
+      padding 0
+
+      .store-item
+        position relative
+        padding-right 210px
+        margin-bottom 50px
+
+        > .description
+          margin-left 30px
+
+        .price-area
+          position absolute
+          top 0
+          right 0
+          width 180px
+
+          .price
+            acme-9()
+            text-align center
+            margin-bottom 10px
+
+          .remove-from-cart-button
+            padding 6px 10px
+            width 100%
+
+          .gift-label
+            display block
+            text-align center
+            padding-right 10px
+
+        .bundle
+          margin-left 30px
+
+    .total
+      text-align right
+
+      .total-price
+        display inline-block
+        top 0
+        right 0
+        width 180px
+        acme-9()
+        text-align center
+
+  .navigation
+    position relative
+    display flex
+    margin 2em 1em
+    align-items center
+
+    a
+      text-decoration none
+
+    .item
+      width 50%
+
+    .continue
+      text-align left
+
+    .checkout
+      text-align right
+
+      .checkout-button
+        width 180px
+        padding 0.5em
+        acme-5()
+        text-transform uppercase
