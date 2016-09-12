@@ -1,4 +1,4 @@
 AE = Artificial.Everywhere
 PAA = PixelArtAcademy
 
-class PAA.ArtworksCalendarProvider extends PAA.PixelBoy.Apps.Calendar.Provider
+class PAA.ArtworksCalendarProvider extends LOI.PixelBoy.Apps.Calendar.Provider

@@ -8,7 +8,7 @@ Meteor.startup ->
   RA.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.Kickstarter.WhiteKeycard
     name: "White keycard"
-    description: "HOME SWEET HOME: This key will unlock your apartment in the city."
+    description: "Kickstarter-exclusive keycard skin for your ID card."
     items: listOfRetroplisItemsForKeycardColor 7
 
   RA.Transactions.Item.create

@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:landsofillusions',
-  version: '0.0.1',
+  version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: 'Game engine for Pixel Art Academy, Retropolis and beyond.',
   // URL to the Git repository containing the source code for this package.
@@ -11,47 +11,31 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.2.0.2');
-
   api.use('retronator:artificialengines');
-  api.use('accounts-base');
-  api.use('oauth-encryption');
-  api.use('alanning:roles@1.2.15');
+  api.use('retronator:accounts');
 
   api.imply('retronator:artificialengines');
-  api.imply('alanning:roles');
+  api.imply('retronator:accounts');
 
   api.export('LandsOfIllusions');
 
   api.addFiles('landsofillusions.coffee');
 
   // Authorize
+
   api.addFiles('authorize/authorize.coffee');
   api.addFiles('authorize/user.coffee');
   api.addFiles('authorize/character.coffee');
 
-  // User accounts
-  api.addFiles('accounts/accounts.coffee');
-  api.addFiles('accounts/spacebars.coffee', 'client');
+  // Character
 
-  api.addFiles('accounts/user/user.coffee');
-  api.addFiles('accounts/user/subscriptions.coffee', 'server');
-
-  api.addFiles('accounts/character/character.coffee');
-  api.addFiles('accounts/character/methods.coffee');
-  api.addFiles('accounts/character/subscriptions.coffee', 'server');
-
-  api.addFiles('accounts/components/components.coffee');
-
-  api.addFiles('accounts/components/localdata/localdata.html');
-  api.addFiles('accounts/components/localdata/localdata.styl');
-  api.addFiles('accounts/components/localdata/localdata.coffee');
-
-  api.addFiles('accounts/components/userpanel/userpanel.html');
-  api.addFiles('accounts/components/userpanel/userpanel.styl');
-  api.addFiles('accounts/components/userpanel/userpanel.coffee');
+  api.addFiles('character/spacebars.coffee', 'client');
+  api.addFiles('character/character.coffee');
+  api.addFiles('character/methods.coffee');
+  api.addFiles('character/subscriptions.coffee', 'server');
 
   // Assets
+
   api.addFiles('assets/assets.coffee');
   api.addFiles('assets/server.coffee');
 
@@ -64,6 +48,7 @@ Package.onUse(function(api) {
   api.addFiles('assets/mesh/mesh.coffee');
 
   // Adventure
+
   api.addFiles('adventure/adventure.html');
   api.addFiles('adventure/adventure.styl');
   api.addFiles('adventure/adventure.coffee');
@@ -94,6 +79,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/dialogline.coffee');
 
   // Conversations
+
   api.addFiles('conversations/conversations.coffee');
   api.addFiles('conversations/conversation.coffee');
   api.addFiles('conversations/line.coffee');
@@ -101,11 +87,13 @@ Package.onUse(function(api) {
   api.addFiles('conversations/subscriptions.coffee', 'server');
 
   // Typography
+
   api.addFiles('typography/typography.css', 'client');
   api.addFiles('typography/typography.styl', 'client');
   api.addFiles('typography/typography.import.styl', 'client', {isImport:true});
 
   // Styles
+
   api.addFiles('styles/styles.coffee');
   api.addFiles('styles/console.coffee');
   api.addFiles('styles/console.html');
@@ -113,4 +101,5 @@ Package.onUse(function(api) {
   api.addFiles('styles/console-accountsui.styl');
   api.addFiles('styles/helpers.import.styl', 'client', {isImport:true});
   api.addFiles('styles/atari2600.import.styl', 'client', {isImport:true});
+
 });

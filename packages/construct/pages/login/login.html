@@ -1,0 +1,59 @@
+<template name="LandsOfIllusions.Construct.Pages.Login">
+  <div class="login-page">
+    <h1>Welcome to Lands of Illusions!</h1>
+    <h2>Please Sign In.</h2>
+    {{> loginButtons}}
+
+    <h2>Lands of Illusions what?</h2>
+    <p>Lands of Illusions is the overarching world in which you will find the city of Retropolis with the Retropolis Academy of
+    Art, the setting place of Pixel Art Academy. However, Pixel Art Academy is just the start. There will be new locations added
+    in the future and to give you one account for all the future locations, you login and create your characters in the central Lands of
+    Illusions entry area.</p>
+    <p>Think of it like the loading program of The Matrix. It's where you authenticate and set your character, your residual self image
+    and stuff.</p>
+    <p>To put it in yet another way, backing Pixel Art Academy gives you access to ALL my future games, for free. This is
+    my heartfelt thanks for being with me at the very beginning of the Retronator journey.</p>
+    <p>Things to keep in mind:</p>
+    <ul>
+      <li><strong>Security</strong>: Webpage is for now running over an unsecure http protocol. I you are on a public network such as a cafe
+        or a dorm wi-fi,
+        someone could potentially listen and hijack the communication between your browser and the server. It's unlikely,
+        especially since there's no information to 'steal' yet, but I just wanted a disclaimer out there. So it's up to
+        you not to store any sensitive information in there until I upgrade to https. And you probably shouldn't even later on.
+      </li>
+      <li><strong>More security</strong>: Otherwise all the data is safely stored to the best of my knowledge (you are welcome to
+        analyze the
+        <a href="https://github.com/retronator" target="_blank">source
+          code</a>). No passwords are stored on the server, they don't even leave your browser except in hash form. The
+        hashes are stored.
+        oAuth tokens are stored with encryption.
+      </li>
+      <li><strong>User data</strong>: I don't guarantee that any user data won't get wiped at some point or another during the
+        alpha of Pixel Art Academy. It's a playground to see the tech while it's
+        being built, so don't spend too much time customizing everything. We're very early on and there will be many
+        breaking changes happening, which I won't always have time to address with migrating old data to new formats.
+      </li>
+      <li><strong>Personal information</strong>: If you're under 13 years old, you aren't allowed to create an account on the site. You can use whatever public information and
+        tools there are, but if you create an account, you are agreeing that you are 13 years old or older. You will need an email or an external service to log you in. I store
+        the emails I collect that way in the database. That's as much personal information I collect on my own. Everything else are things you
+        explicitly enter into the game when you're logged in.
+      </li>
+      <li><strong>Backer data</strong>: Backer data is stored on the server to give you the correct permissions when you create your
+        account and verify your backer email. The backer data is stored unencrypted, but is being transferred to the server in encrypted form
+        and the data never leaves the server thereafter. Only the server software ever accesses this data and the only thing that gets sent to your
+        browser is your own reward level, which is displayed in the accounts section. You can never see what level other players have backed at
+        (although you will be able to infer some information based on their actions) and others are also never explicitly told of your
+        backer level.
+      </li>
+      <li><strong>Cookies</strong>: I don't use cookies! I store your login info and character selection to local
+        storage (it stays on your computer) so you can continue without logging in again and reloading your character after you've left. I don't
+        have time (or desire, for now) to bother with analytics so there are no tracking cookies and collection of
+        that sort of information.
+      </li>
+      <li><strong>Graphics</strong>: There are no graphics! This is pure html/minimal css alpha to develop the functionality.
+        After the functionality is up, then I can be bothered with styling. Kind of like Dwarf Fortress.
+      </li>
+    </ul>
+    <p>By using Lands of Illusions you are agreeing to these terms. Savvy? Good.</p>
+  </div>
+</template>

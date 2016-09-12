@@ -3,8 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
-  @register 'PixelArtAcademy.PixelBoy.Apps.Journal.CheckIn'
+class LOI.PixelBoy.Apps.Journal.CheckIn extends AM.Component
+  @register 'LandsOfIllusions.PixelBoy.Apps.Journal.CheckIn'
 
   onCreated: ->
     super
@@ -33,7 +33,7 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
 
   onClick: (event) ->
     # If click happened outside the dialog, return to journal.
-    FlowRouter.go 'pixelboy', app: 'journal' unless $(event.target).closest('.dialog').length
+    FlowRouter.go 'LandsOfIllusions.PixelBoy', app: 'journal' unless $(event.target).closest('.dialog').length
 
   onSubmitCheckInForm: (event) ->
     event.preventDefault()
@@ -66,7 +66,7 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
         return
 
       # Check-in succeeded, so return back to the journal.
-      FlowRouter.go 'pixelboy', app: 'journal'
+      FlowRouter.go 'LandsOfIllusions.PixelBoy', app: 'journal'
 
   onInputExternalUrl: (event) ->
     @updatePreviewImage()
@@ -103,5 +103,3 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
       @imagePreviewUrl event.target.result
 
     reader.readAsDataURL imageFile
-
-

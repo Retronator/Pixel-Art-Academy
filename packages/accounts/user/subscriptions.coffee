@@ -8,14 +8,6 @@ Meteor.publish null, ->
     fields:
       displayName: true
 
-# Always send current user's items, since these also serve as our permissions.
-Meteor.publish null, ->
-  RA.User.documents.find
-    _id: @userId
-  ,
-    fields:
-      items: true
-
 # Current user's login services.
 Meteor.publish 'Retronator.Accounts.User.loginServicesForCurrentUser', ->
   RA.User.documents.find
@@ -24,6 +16,14 @@ Meteor.publish 'Retronator.Accounts.User.loginServicesForCurrentUser', ->
     fields:
       loginServices: true
 
+# Current user's contact email.
+Meteor.publish 'Retronator.Accounts.User.contactEmailForCurrentUser', ->
+  RA.User.documents.find
+    _id: @userId
+  ,
+    fields:
+      contactEmail: true
+
 # Current user's registered emails.
 Meteor.publish 'Retronator.Accounts.User.registeredEmailsForCurrentUser', ->
   RA.User.documents.find
@@ -31,11 +31,3 @@ Meteor.publish 'Retronator.Accounts.User.registeredEmailsForCurrentUser', ->
   ,
     fields:
       registered_emails: true
-
-# Current user's support amount.
-Meteor.publish 'Retronator.Accounts.User.supportAmountForCurrentUser', ->
-  RA.User.documents.find
-    _id: @userId
-  ,
-    fields:
-      supportAmount: true

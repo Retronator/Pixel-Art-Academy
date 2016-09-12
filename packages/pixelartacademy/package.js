@@ -1,6 +1,6 @@
 Package.describe({
-  name: 'pixelartacademy',
-  version: '0.0.1',
+  name: 'retronator:pixelartacademy',
+  version: '0.2.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -11,25 +11,28 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('kadira:flow-router');
   api.use('retronator:landsofillusions');
-
   api.imply('retronator:landsofillusions');
 
   api.export('PixelArtAcademy');
 
-  api.addFiles('pixelartacademy.html');
-  api.addFiles('pixelartacademy.styl');
   api.addFiles('pixelartacademy.coffee');
-  api.addFiles('server.coffee', 'server');
+
+  // Layouts
+
+  api.addFiles('layouts/layouts.coffee');
+
+  api.addFiles('layouts/alphaaccess/alphaaccess.coffee');
+  api.addFiles('layouts/alphaaccess/alphaaccess.html');
+  
+  api.addFiles('layouts/adminaccess/adminaccess.coffee');
+
+  // Pages
 
   api.addFiles('pages/pages.coffee');
 
   api.addFiles('pages/home/home.html');
   api.addFiles('pages/home/home.coffee');
-
-  api.addFiles('pages/login/login.html');
-  api.addFiles('pages/login/login.coffee');
 
   api.addFiles('pages/admin/admin.html');
   api.addFiles('pages/admin/admin.coffee');

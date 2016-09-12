@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'artworks',
+  name: 'retronator:artworks',
   version: '0.0.1',
   // Brief, one-line summary of the package.
   summary: '',
@@ -11,9 +11,9 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('pixelartacademy');
-  api.use('pixelboy');
-  api.use('edgee:slingshot');
+  api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelboy');
+  api.use('edgee:slingshot@0.7.1');
 
   api.export('PixelArtAcademy');
 

@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'pixelboy',
+  name: 'retronator:pixelboy',
   version: '0.0.1',
   // Brief, one-line summary of the package.
   summary: '',
@@ -11,9 +11,9 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('pixelartacademy');
+  api.use('retronator:pixelartacademy');
 
-  api.export('PixelArtAcademy');
+  api.export('LandsOfIllusions');
 
   api.addFiles('pixelboy.coffee');
   api.addFiles('pixelboy.html');

@@ -5,7 +5,7 @@ Meteor.methods
   'characterCreateArtist': (characterId) ->
     check characterId, Match.DocumentId
 
-    character = LOI.Accounts.Character.documents.findOne characterId
+    character = LOI.Character.documents.findOne characterId
     throw new Meteor.Error 'not-found', "Character not found." unless character
 
     # Make sure the character belongs to the logged in user.
@@ -20,7 +20,7 @@ Meteor.methods
     check artistId, Match.DocumentId
     check claimId, Match.OptionalOrNull Match.DocumentId
 
-    character = LOI.Accounts.Character.documents.findOne characterId
+    character = LOI.Character.documents.findOne characterId
     throw new Meteor.Error 'not-found', "Character not found." unless character
 
     artist = PAA.Artworks.Artist.documents.findOne characterId

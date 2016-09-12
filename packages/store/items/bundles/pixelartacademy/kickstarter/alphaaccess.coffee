@@ -24,6 +24,7 @@ class RS.Items.Bundles.PixelArtAcademyKickstarterAlphaAccess extends RS.Items.Bu
         CatalogKeys.PixelArtAcademy.SophomoreYear
         CatalogKeys.PixelArtAcademy.JuniorYear
         CatalogKeys.PixelArtAcademy.SeniorYear
+        CatalogKeys.PixelArtAcademy.AlphaAccess
         CatalogKeys.PixelArtAcademy.Kickstarter.CyanKeycard
         CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
         CatalogKeys.PixelArtAcademy.Kickstarter.ClassOf2016Artwork

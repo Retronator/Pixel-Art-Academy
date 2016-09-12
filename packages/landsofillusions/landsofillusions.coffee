@@ -1,30 +1,66 @@
+RA = Retronator.Accounts
+
 class LandsOfIllusions
   LOI = @
 
-  # Create the user helper on the LOI object for convenience.
-  @user: ->
-    @Accounts.User.documents.findOne Meteor.userId()
+  # Character selection and persistence
 
-  # Create the characterId and character helpers.
-  @characterId: ->
-    @Accounts._characterId()
+  @characterIdLocalStorageKey:  "LandsOfIllusions.characterId"
+  @characterId = new ReactiveField null
 
+  # Create the current character helper.
   @character: ->
-    @Accounts.Character.documents.findOne @characterId()
+    @Character.documents.findOne @characterId()
 
   # Helper to get the default Lands of Illusions palette.
   @palette: ->
     LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.defaultPaletteName
 
-  @isRunningLocally: ->
-    not Meteor.settings.public?.landsOfIllusionsUrl
+  # Method for switching the current character.
+  @switchCharacter: (characterId) ->
+    # There's nothing to do if the character is already loaded.
+    return if @characterId() is characterId
 
-Meteor.methods
-  # Convenience method for re-running auto-generated fields and syncing of references.
-  updateAllDocuments: ->
-    LOI.Authorize.admin()
-    Document.updateAll()
+    # Set the character on the object.
+    @characterId characterId
+
+    # Store it in local storage for continuity.
+    if characterId
+      localStorage.setItem @characterIdLocalStorageKey, characterId
+
+    else
+      localStorage.removeItem @characterIdLocalStorageKey
+
+LOI = LandsOfIllusions
 
 if Meteor.isClient
-  Blaze.registerHelper 'isRunningLocally', ->
-    LOI.isRunningLocally()
+  window.LandsOfIllusions = LOI
+
+# On the client load character ID from local storage.
+if Meteor.isClient
+  localCharacterId = localStorage.getItem LOI.characterIdLocalStorageKey
+  LOI.characterId localCharacterId if localCharacterId
+
+# Start account autoruns on client.
+if Meteor.isClient
+  LOI._charactersSubscription = Meteor.subscribe 'Retronator.Accounts.User.charactersForCurrentUser'
+
+  Meteor.startup ->
+    # Reactively subscribe to get all the data for the current character.
+    Meteor.autorun ->
+      characterId = LOI.characterId()
+      return unless characterId
+
+      Meteor.subscribe 'LandsOfIllusions.Character.character', characterId
+
+    # Automatically unload character if it doesn't belong to the current user.
+    Meteor.autorun ->
+      characterId = LOI.characterId()
+
+      # Nothing to do if we don't have a character or if the user/characters haven't been loaded yet.
+      return unless characterId and LOI._charactersSubscription.ready()
+
+      characters = Retronator.user()?.characters
+
+      unless _.find characters, ((character) -> character._id is characterId)
+        LOI.switchCharacter null

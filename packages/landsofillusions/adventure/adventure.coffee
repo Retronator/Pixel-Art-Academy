@@ -56,10 +56,10 @@ class LOI.Adventure extends AM.Component
     $('html').removeClass('lands-of-illusions-style-adventure')
 
   @goToLocation: (locationKeyName) ->
-    FlowRouter.go 'adventure', parameter1: locationKeyName
+    FlowRouter.go 'LandsOfIllusions.Adventure', parameter1: locationKeyName
 
   @activateItem: (itemKeyName) ->
-    FlowRouter.go 'adventure', parameter1: itemKeyName
+    FlowRouter.go 'LandsOfIllusions.Adventure', parameter1: itemKeyName
 
   fontSize: ->
     @display.scale()

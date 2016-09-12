@@ -9,11 +9,19 @@ class RS.Pages.Checkout extends AM.Component
   onCreated: ->
     super
 
+    # Get all store items data.
     @subscribe 'Retronator.Accounts.Transactions.Item.all'
-    @subscribe 'Retronator.Accounts.Transactions.Transaction.forCurrentUser'
+
+    # Get top recent transactions to display the supporters list.
     @subscribe 'Retronator.Accounts.Transactions.Transaction.topRecent'
-    @subscribe 'Retronator.Accounts.User.loginServicesForCurrentUser'
-    @subscribe 'Retronator.Accounts.User.registeredEmailsForCurrentUser'
+
+    # Get store balance and credit so we know if credit can be applied (and the user charged less).
+    @subscribe 'Retronator.Accounts.User.storeDataForCurrentUser'
+    
+    # Get user's contact email so we can pre-fill it in Stripe Checkout.
+    @subscribe 'Retronator.Accounts.User.contactEmailForCurrentUser'
+
+    @stripeInitialized = new ReactiveField false
 
     @showSupporterNameForLoggedOut = new ReactiveField true
 
@@ -23,12 +31,40 @@ class RS.Pages.Checkout extends AM.Component
 
     @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
 
-  showSupporterName: ->
-    if Meteor.userId()
-      Retronator.user().profile?.showSupporterName
+  onRendered: ->
+    super
 
-    else
-      @showSupporterNameForLoggedOut()
+    console.log "on rendered", StripeCheckout?
+
+    initializeStripeInterval = Meteor.setInterval =>
+      # Wait until checkout is ready.
+      console.log "ready?", StripeCheckout?
+      return unless StripeCheckout?
+
+      Meteor.clearInterval initializeStripeInterval
+
+      @_stripeCheckout = StripeCheckout.configure
+        key: Meteor.settings.public.stripe.publishableKey
+        token: (token) => @_stripeResponseHandler token
+        image: 'https://stripe.com/img/documentation/checkout/marketplace.png'
+        name: 'Retronator'
+        locale: 'auto'
+
+      @stripeInitialized true
+    ,
+      1
+
+  onDestroyed: ->
+    super
+
+    # Clean up after stripe checkout.
+    @_stripeCheckout.close()
+    $('.stripe_checkout_app').remove()
+
+  showSupporterName: ->
+    user = Retronator.user()
+
+    if user then user.profile?.showSupporterName else @showSupporterNameForLoggedOut()
 
   supporterName: ->
     return unless @showSupporterName()
@@ -78,15 +114,14 @@ class RS.Pages.Checkout extends AM.Component
     disabled: true if @submittingPayment()
 
   creditApplied: ->
-    user = Retronator.user()
-    return 0 unless user
+    storeCredit = Retronator.user()?.store?.credit or 0
 
     # Credit is applied up to the amount in the shopping cart.
-    Math.min user.storeCredit(), RS.shoppingCart.totalPrice()
+    Math.min storeCredit, RS.shoppingCart.totalPrice()
 
   paymentAmount: ->
     # See how much the user will need to pay to complete this transaction, after the credit is applied.
-    storeCredit = Retronator.user()?.storeCredit() ? 0
+    storeCredit = Retronator.user()?.store?.credit or 0
 
     # Existing store credit decreases the needed amount to pay, but of course not below zero.
     Math.max 0, RS.shoppingCart.totalPrice() - storeCredit
@@ -97,7 +132,7 @@ class RS.Pages.Checkout extends AM.Component
       'input .supporter-name': @onInputSupporterName
       'input .tip-amount': @onInputTipAmount
       'input .tip-message': @onInputTipMessage
-      'submit .payment-form': @onSubmitPaymentForm
+      'click .submit-payment-button': @onClickSubmitPaymentButton
 
   onChangeAnonymousCheckbox: (event) ->
     if Meteor.userId()
@@ -127,57 +162,32 @@ class RS.Pages.Checkout extends AM.Component
     message = $(event.target).val()
     RS.shoppingCart.tipMessage message
 
-  onSubmitPaymentForm: (event) ->
+  onClickSubmitPaymentButton: (event) ->
     event.preventDefault()
 
     # See if we need to process the payment or it's simply a confirmation.
     paymentAmount = @paymentAmount()
-    @_handleSimplePaymentConfirmation() unless paymentAmount
 
-    # Grab all customer inputs needed to tokenize credit card
-    stripeTokenParameters = 
-      name: @$('.name-on-card').val()
-      number: @$('.card-number').val()
-      cvc: @$('.cvc').val()
-      exp_month: @$('.expiration-month').val()
-      exp_year: @$('.expiration-year').val()
+    if paymentAmount
+      # The user needs to make a payment, so open checkout.
+      @_stripeCheckout.open
+        description: 'Things you are buying: 1\n, 2, 3'
+        amount: paymentAmount * 100
 
-    # Perform preliminary validation on the client.
-    unless Stripe.card.validateCardNumber stripeTokenParameters.number
-      @purchaseError "Invalid card number."
-      return
+    else
+      # The purchase does not need a payment, simply confirm the purchase.
+      @_confirmationPurchaseHandler()
 
-    unless Stripe.card.validateExpiry stripeTokenParameters.exp_month, stripeTokenParameters.exp_year
-      @purchaseError "Invalid expiry date."
-      return
-
-    unless Stripe.card.validateCVC stripeTokenParameters.cvc
-      @purchaseError "Invalid CVC."
-      return
-
-    # Validation has passed, go ahead and create the token.
-    @submittingPayment true
-
-    Stripe.card.createToken stripeTokenParameters, (status, response) =>
-      @_stripeResponseHandler status, response
-
-  _stripeResponseHandler: (status, response) ->
-    # If there's an error, let our user know and let them try again.
-    if response.error
-      @purchaseError response.error.message
-      @submittingPayment false
-      return
-
+  _stripeResponseHandler: (token) ->
     # Clear the error they may have accrued.
     @purchaseError null
 
     # Get tokenized credit card info.
-    creditCardToken = response.id
+    creditCardToken = token.id
 
     # Get the customer details.
     customer =
-      email: @$('.email').val()
-      name: @$('.name-on-card').val()
+      email: token.email
 
     # Create a payment on the server.
     Meteor.call 'Retronator.Accounts.Transactions.Transaction.insertStripePurchase', customer, creditCardToken, @paymentAmount(), RS.shoppingCart.toDataObject(), (error, data) =>
@@ -196,7 +206,7 @@ class RS.Pages.Checkout extends AM.Component
       # Remove all purchased items from the shopping cart.
       RS.shoppingCart.reset()
 
-  _handleSimplePaymentConfirmation: ->
+  _confirmationPurchaseHandler: ->
     # Create a transaction on the server.
     @submittingPayment true
 

@@ -91,7 +91,6 @@ _Network communication_
 
 - **EmailComposer**: Helper for constructing text and html emails.
 - **FlowRouter**:
-  - **Helpers**: Spacebars helpers for Flow Router.
+  - **AddRoute**: Add route to Flow Router using Blaze Layout.
+  - **Spacebars**: Spacebars helpers for Flow Router.
   - **RouteLink**: Component that displays a span or a link, depending if we're on this route or not. Useful for navigation menus.
-- **RemoteServer**: Meteor connection to a remote server.
-- **RemoteDocument**: PeerDB document that's coming from a remote server.

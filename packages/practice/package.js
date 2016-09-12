@@ -1,6 +1,6 @@
 Package.describe({
-  name: 'practice',
-  version: '0.0.1',
+  name: 'retronator:practice',
+  version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -15,13 +15,12 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
-  api.use('pixelartacademy');
-  api.use('pixelboy');
-  api.use('edgee:slingshot');
+  api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelboy');
+
+  api.use('edgee:slingshot@0.7.1');
   api.use('jparker:crypto-aes');
   api.use('http');
-	api.use('peerlibrary:server-autorun@0.5.2');
-	api.use('peerlibrary:reactive-publish@0.2.0');
 
   api.export('PixelArtAcademy');
 

@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 # Get check-ins for a certain character.
-Meteor.publish 'PixelArtAcademy.Practice.CheckIn.byCharacter', (characterId) ->
+Meteor.publish 'PixelArtAcademy.Practice.CheckIn.forCharacter', (characterId) ->
   check characterId, Match.DocumentId
 
   PAA.Practice.CheckIn.documents.find

@@ -1,15 +1,14 @@
 Package.describe({
   name: 'retronator:artificialengines',
-  version: '0.0.1'
+  version: '1.0.0'
 });
 
 Package.onUse(function(api) {
   api.versionsFrom('1.2.0.2');
 
   packages = [
-    // Official
+    // Meteor
     'coffeescript',
-    'underscore',
     'spacebars',
     'stylus',
     'tracker',
@@ -25,15 +24,18 @@ Package.onUse(function(api) {
     'peerlibrary:assert@0.2.5',
     'peerlibrary:peerdb@0.20.0',
     'peerlibrary:peerdb-migrations@0.2.1',
-    'peerlibrary:reactive-publish@0.2.0',
-    'peerlibrary:blaze-components@0.18.0',
+    'peerlibrary:reactive-publish@0.3.0',
+    'peerlibrary:blaze-components@0.19.0',
     'peerlibrary:blaze-common-component@0.2.0',
+    'peerlibrary:blaze-layout-component@0.1.1',
     'peerlibrary:reactive-field@0.1.0',
     'peerlibrary:computed-field@0.3.1',
     'peerlibrary:check-extension@0.1.1',
+    'peerlibrary:server-autorun@0.5.2',
     'limemakers:three@0.75.0',
     'mrt:underscore-string-latest@2.3.3',
 	  'kadira:flow-router',
+    'kadira:blaze-layout',
 	  'okgrow:router-autoscroll',
 	  'erasaur:meteor-lodash@4.0.0'
   ];
@@ -46,7 +48,7 @@ Package.onUse(function(api) {
 	api.addFiles('artificial.coffee');
 
 	// Global initialization
-	api.addFiles('everywhere/underscore/lodash.coffee');
+	api.addFiles('everywhere/lodash/lodash.coffee');
 
 	// Artificial Everywhere
   api.addFiles('everywhere/everywhere.coffee');
@@ -55,9 +57,9 @@ Package.onUse(function(api) {
 
   api.addFiles('everywhere/three/color.coffee');
 
-  api.addFiles('everywhere/underscore/lettercase.coffee');
-  api.addFiles('everywhere/underscore/nestedproperty.coffee');
-  api.addFiles('everywhere/underscore/urls.coffee');
+  api.addFiles('everywhere/lodash/lettercase.coffee');
+  api.addFiles('everywhere/lodash/nestedproperty.coffee');
+  api.addFiles('everywhere/lodash/urls.coffee');
 
   api.addFiles('everywhere/date.coffee');
   api.addFiles('everywhere/datehelper.coffee');
@@ -114,14 +116,13 @@ Package.onUse(function(api) {
   // Artificial Telepathy
   api.addFiles('telepathy/telepathy.coffee');
 
-  api.addFiles('telepathy/flowrouter/helpers.coffee');
+  api.addFiles('telepathy/flowrouter/addroute.coffee');
+  api.addFiles('telepathy/flowrouter/spacebars.coffee');
 
 	api.addFiles('telepathy/flowrouter/routelink.coffee');
 	api.addFiles('telepathy/flowrouter/routelink.html');
 
   api.addFiles('telepathy/emailcomposer.coffee');
-  api.addFiles('telepathy/remoteserver.coffee');
-  api.addFiles('telepathy/remotedocument.coffee');
 
   // Artificial Babel
   api.addFiles('babel/babel.coffee');

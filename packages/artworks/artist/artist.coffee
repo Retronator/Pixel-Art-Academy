@@ -35,7 +35,7 @@ class PixelArtAcademyArtworksArtist extends Document
 
         [fields._id, name]
 
-      character: @ReferenceField LOI.Accounts.Character, ['name'], false, 'artist', ['displayName']
+      character: @ReferenceField LOI.Character, ['name'], false, 'artist', ['displayName']
 
   @defaultData: ->
     name: {}

@@ -1,7 +1,8 @@
 AE = Artificial.Everywhere
+LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Practice.CheckInsCalendarProvider extends PAA.PixelBoy.Apps.Calendar.Provider
+class PAA.Practice.CheckInsCalendarProvider extends LOI.PixelBoy.Apps.Calendar.Provider
   constructor: ->
     super
 

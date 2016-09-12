@@ -1,2 +1,0 @@
-unless Retronator
-  class Retronator

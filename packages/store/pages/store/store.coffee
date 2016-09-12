@@ -9,6 +9,7 @@ class RS.Pages.Store extends AM.Component
   onCreated: ->
     super
 
+    # Get all store items data.
     @subscribe 'Retronator.Accounts.Transactions.Item.all'
 
     # Get all user's transactions and payments so we can determine which store items they are
@@ -54,4 +55,4 @@ class RS.Pages.Store extends AM.Component
     
     RS.shoppingCart.addItem item
       
-    FlowRouter.go 'cart'
+    FlowRouter.go 'Retronator.Store.Cart'

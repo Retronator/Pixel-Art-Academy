@@ -1,10 +1,16 @@
 AM = Artificial.Mirage
+
+# Babel gets constructed later so we have to set it to null here and initialize it below in the constructor.
+# We don't do it in Meteor.startup because startup will run after the first component is already created.
 AB = null
 
-Meteor.startup ->
-  AB = Artificial.Babel
-
 class AM.Component extends CommonComponent
+  constructor: ->
+    super
+
+    # Make sure AB gets initialized before we create the first component.
+    AB = Artificial.Babel
+
   onCreated: ->
     super
 
@@ -12,6 +18,8 @@ class AM.Component extends CommonComponent
     AB.subscribeComponent @
 
   onDestroyed: ->
+    super
+
     AB.unsubscribeComponent @
 
   # Modified firstNode and lastNode helpers that skip over text nodes. Useful if the component doesn't have

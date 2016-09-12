@@ -1,6 +1,6 @@
 Package.describe({
-  name: 'store',
-  version: '0.0.1',
+  name: 'retronator:store',
+  version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -11,23 +11,42 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:artificialengines');
+  api.use('retronator:retronator');
   api.use('retronator:accounts');
-
-  api.use('email');
-  api.use('accounts-password');
-
-  api.use('kadira:blaze-layout@2.3.0');
-  api.use('keyvan:my-force-ssl');
-  api.use('peerlibrary:blaze-layout-component@0.1.1');
-  api.use('benjick:stripe');
 
   api.export('Retronator');
 
-  api.addFiles('retronator.coffee');
-
   api.addFiles('store.coffee');
-  api.addFiles('store.html');
+
+  // HACK: Add transactions namespace in advance so that PeerDB delayed initialization work correct.
+  api.addFiles('transactions/transactions.coffee');
+
+  // User
+
+  api.addFiles('user/user.coffee');
+  api.addFiles('user/methods.coffee');
+  api.addFiles('user/subscriptions.coffee', 'server');
+  api.addFiles('user/topsupporters.coffee', 'server');
+
+  // Transactions
+
+  api.addFiles('transactions/item/item.coffee');
+  api.addFiles('transactions/item/subscriptions.coffee', 'server');
+
+  api.addFiles('transactions/payment/payment.coffee');
+  api.addFiles('transactions/payment/subscriptions.coffee', 'server');
+
+  api.addFiles('transactions/transaction/transaction.coffee');
+  api.addFiles('transactions/transaction/subscriptions.coffee', 'server');
+  api.addFiles('transactions/transaction/toprecent.coffee', 'server');
+
+  api.addFiles('transactions/transaction/methods-server/claim.coffee', 'server');
+  api.addFiles('transactions/transaction/methods-server/createtransaction.coffee', 'server');
+  api.addFiles('transactions/transaction/methods-server/emailcustomer.coffee', 'server');
+  api.addFiles('transactions/transaction/methods-server/confirmation.coffee', 'server');
+  api.addFiles('transactions/transaction/methods-server/stripe.coffee', 'server');
+
+  api.addFiles('transactions/shoppingcart/shoppingcart.coffee');
 
   // Add item document types. They need to be available on server and client for casting purposes.
   api.addFiles('items/items.coffee');

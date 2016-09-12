@@ -12,6 +12,8 @@ class AB.Components.Translatable extends AM.Component
 
     @translation = new ComputedField =>
       parentComponent = @parentComponent()
+      return unless parentComponent
+
       AB.translationForComponent parentComponent, @translationKey
 
     @translated = new ComputedField =>

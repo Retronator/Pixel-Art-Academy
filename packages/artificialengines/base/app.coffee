@@ -9,6 +9,8 @@ class AB.App extends AM.Component
     'Artificial.Base.App'
 
   constructor: ->
+    super
+
     @appTime = new ReactiveField
       elapsedAppTime: 0
       totalAppTime: 0

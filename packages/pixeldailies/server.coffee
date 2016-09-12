@@ -140,7 +140,7 @@ class PAA.PixelDailies extends PAA.PixelDailies
       hashtags = for hashtag in tweet.entities.hashtags
         hashtag.text.toLowerCase()
 
-      if _.contains hashtags, 'pixel_dailies'
+      if _.includes hashtags, 'pixel_dailies'
         themeHashtags = _.without hashtags, 'pixel_dailies', 'pixelart'
 
         if themeHashtags.length is 0

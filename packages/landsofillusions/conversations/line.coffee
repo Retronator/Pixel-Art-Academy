@@ -13,6 +13,6 @@ class LandsOfIllusionsConversationsLine extends Document
     name: 'LandsOfIllusionsConversationsLine'
     fields: =>
       conversation: @ReferenceField LOI.Conversations.Conversation, [], true, 'lines', ['character', 'time']
-      character: @ReferenceField LOI.Accounts.Character, ['name', 'color'], false
+      character: @ReferenceField LOI.Character, ['name', 'color'], false
 
 LOI.Conversations.Line = LandsOfIllusionsConversationsLine

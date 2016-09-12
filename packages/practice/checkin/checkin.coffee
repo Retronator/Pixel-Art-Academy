@@ -23,7 +23,7 @@ class PixelArtAcademyPracticeCheckIn extends Document
   @Meta
     name: 'PixelArtAcademyPracticeCheckIn'
     fields: =>
-      character: @ReferenceField LOI.Accounts.Character, ['name', 'color'], true
+      character: @ReferenceField LOI.Character, ['name', 'color'], true
       conversation: [@ReferenceField LOI.Conversations.Conversation]
 
 PAA.Practice.CheckIn = PixelArtAcademyPracticeCheckIn

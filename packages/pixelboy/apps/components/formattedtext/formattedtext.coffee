@@ -1,9 +1,9 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
+LOI = LandsOfIllusions
 
-class PAA.PixelBoy.Apps.Components.FormattedText extends AM.Component
-  @register "PixelArtAcademy.PixelBoy.Apps.Components.FormattedText"
+class LOI.PixelBoy.Apps.Components.FormattedText extends AM.Component
+  @register "LandsOfIllusions.PixelBoy.Apps.Components.FormattedText"
 
   constructor: (@text, @linkColor) ->
 

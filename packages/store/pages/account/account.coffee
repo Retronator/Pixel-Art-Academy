@@ -14,6 +14,7 @@ class RS.Pages.Account extends AM.Component
     @subscribe 'Retronator.Accounts.User.loginServicesForCurrentUser'
     @subscribe 'Retronator.Accounts.User.registeredEmailsForCurrentUser'
     @subscribe 'Retronator.Accounts.User.supportAmountForCurrentUser'
+    @subscribe 'Retronator.Accounts.User.storeDataForCurrentUser'
 
   loginServices: ->
     [
@@ -65,9 +66,6 @@ class RS.Pages.Account extends AM.Component
   claimLink: ->
     item = @currentData()
     item.givenGift.keyCode
-
-  storeCredit: ->
-    Retronator.user().storeCredit()
 
   paymentAmount: ->
     payment = @currentData()

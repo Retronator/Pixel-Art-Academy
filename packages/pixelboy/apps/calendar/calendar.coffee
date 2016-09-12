@@ -3,8 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
-  @register 'PixelArtAcademy.PixelBoy.Apps.Calendar'
+class LOI.PixelBoy.Apps.Calendar extends LOI.PixelBoy.App
+  @register 'LandsOfIllusions.PixelBoy.Apps.Calendar'
 
   displayName: ->
     "Pixel Art Calendar"

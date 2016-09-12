@@ -8,14 +8,8 @@ class RS.Pages.Cart extends AM.Component
   onCreated: ->
     super
 
+    # Get all store items data.
     @subscribe 'Retronator.Accounts.Transactions.Item.all'
-
-    @showTipEntry = new ReactiveField false
-    @displayName = new ReactiveField true
-
-    @purchaseError = new ReactiveField null
-    @submittingPayment = new ReactiveField false
-    @purchaseCompleted = new ReactiveField false
 
   shoppingCart: ->
     RS.shoppingCart

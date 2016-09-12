@@ -7,6 +7,8 @@ class PAA.PixelDailies.ThemeCalendarComponent extends AM.Component
     'PixelArtAcademy.PixelDailies.ThemeCalendarComponent'
 
   onCreated: ->
+    super
+    
     theme = @data()
 
     @showingTopOnly = new ReactiveField true

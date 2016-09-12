@@ -1,3 +1,3 @@
-PAA = PixelArtAcademy
+LOI = LandsOfIllusions
 
-class PAA.PixelBoy.Apps
+class LOI.PixelBoy.Apps

@@ -1,6 +1,6 @@
 Package.describe({
-  name: 'pixeldailies',
-  version: '0.0.1',
+  name: 'retronator:pixeldailies',
+  version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -16,8 +16,8 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
-  api.use('pixelartacademy');
-	api.use('chfritz:easycron');
+  api.use('retronator:pixelartacademy');
+	api.use('chfritz:easycron@0.0.4');
 	
   api.export('PixelArtAcademy');
 

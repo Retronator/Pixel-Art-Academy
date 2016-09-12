@@ -1,0 +1,27 @@
+<template name="LandsOfIllusions.Accounts.Pages.ImportUsers">
+  <header>
+    {{> loginButtons}}
+  </header>
+  <h1>Import users</h1>
+  <form class="upload-form">
+    <p>Select a csv file to import</p>
+    <input class="csv-file" type="file" accept="text/csv"/>
+    <p>Or input a list directly</p>
+    <textarea class="manual-input"></textarea>
+    <p>And select type</p>
+    <select class="manual-type">
+      <option value="Email">e-mail</option>
+      <option value="Twitter">twitter</option>
+    </select>
+    <p>Select reward tier:</p>
+    <select class="reward-tier">
+      <option value="">Determine from data</option>
+      {{#each rewards}}
+        <option value="{{_id}}">{{name}}</option>
+      {{/each}}
+    </select>
+    <p>Enter upload passphrase</p>
+    <input class="passphrase" type="password"/>
+    <div><button>Upload</button></div>
+  </form>
+</template>

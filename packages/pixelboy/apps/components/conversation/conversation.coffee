@@ -1,9 +1,9 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
+LOI = LandsOfIllusions
 
-class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
-  @register "PixelArtAcademy.PixelBoy.Apps.Components.Conversation"
+class LOI.PixelBoy.Apps.Components.Conversation extends AM.Component
+  @register "LandsOfIllusions.PixelBoy.Apps.Components.Conversation"
 
   onCreated: ->
     super

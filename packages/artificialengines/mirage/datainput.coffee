@@ -21,8 +21,11 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     mixins.push AM.AutoResizeTextareaMixin if @autoResizeTextarea
     mixins
 
-  isTextarea: ->
+  isTextArea: ->
     @type is 'textarea'
+
+  isSelect: ->
+    @type is 'select'
 
   load: ->
     console.error "You must implement the load method."
@@ -37,9 +40,17 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
   placeholder: ->
     @callFirstWith(@, 'placeholder')
 
+  selectedAttribute: ->
+    # Force comparison by string
+    option = @currentData()
+    selectedValue = @value()
+
+    'selected' if option.value is selectedValue
+
   events: -> [
     'change input, change textarea': @onChange
     'input input, input textarea': @onInput
+    'change select': @onChangeSelect
   ]
 
   onChange: (event) ->
@@ -47,3 +58,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
 
   onInput: (event) ->
     @save $(event.target).val() if @realtime
+
+  onChangeSelect: (event) ->
+    # Return the value of the option and the text.
+    @save $(event.target).val()

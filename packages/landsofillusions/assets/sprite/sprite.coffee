@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 # A 2D image asset.
-class LOI.Assets.Sprite extends Document
+class LandsOfIllusionsAssetsSprite extends Document
   # name: text identifier for the sprite
   # pixels: array of
   #   x: location of pixel in pixels
@@ -24,7 +24,7 @@ class LOI.Assets.Sprite extends Document
   # bounds: image bounds in pixels (or null if no pixels)
   #   left, right, top, bottom
   @Meta
-    name: 'Sprite'
+    name: 'LandsOfIllusionsAssetsSprite'
     fields: =>
       palette: @ReferenceField LOI.Assets.Palette, ['name'], false
 
@@ -37,3 +37,5 @@ class LOI.Assets.Sprite extends Document
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
+
+LOI.Assets.Sprite = LandsOfIllusionsAssetsSprite

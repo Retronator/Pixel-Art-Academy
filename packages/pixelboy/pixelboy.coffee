@@ -1,24 +1,24 @@
-AM = Artificial.Mirage
-PAA = PixelArtAcademy
+unless PixelArtAcademy
+  class PixelArtAcademy
 
-class PAA.PixelBoy extends AM.Component
-  @register "PixelArtAcademy.PixelBoy"
+AM = Artificial.Mirage
+LOI = LandsOfIllusions
+
+class LOI.PixelBoy extends AM.Component
+  @register "LandsOfIllusions.PixelBoy"
 
   constructor: ->
     @apps = [
-      new PAA.PixelBoy.Apps.Journal
-      new PAA.PixelBoy.Apps.Calendar
+      new LOI.PixelBoy.Apps.Journal
+      new LOI.PixelBoy.Apps.Calendar
     ]
 
     # Create a map for fast retrieval of apps by their url name.
-    appsNameMap = _.object ([app.urlName(), app] for app in @apps)
+    appsNameMap = _.fromPairs ([app.urlName(), app] for app in @apps)
 
     @currentApp = new ComputedField =>
       appUrlName = FlowRouter.getParam 'app'
       appsNameMap[appUrlName]
-
-  onCreated: ->
-
 
   renderCurrentApp: ->
     @currentApp()?.renderComponent(@currentComponent()) or null

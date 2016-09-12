@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 # A 3D model asset.
-class LOI.Assets.Mesh extends Document
+class LandsOfIllusionsAssetsMesh extends Document
   # name: text identifier for the mesh
   # polygons: array of
   #   vertices: array of
@@ -25,9 +25,11 @@ class LOI.Assets.Mesh extends Document
   #   min: {x, y, z}
   #   max: {x, y, z}
   @Meta
-    name: 'Mesh'
+    name: 'LandsOfIllusionsAssetsMesh'
     fields: =>
       palette: @ReferenceField LOI.Assets.Palette, ['name'], false
 
   constructor: ->
     super
+
+LOI.Assets.Mesh = LandsOfIllusionsAssetsMesh

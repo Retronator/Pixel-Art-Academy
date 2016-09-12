@@ -2,6 +2,7 @@ RS = Retronator.Store
 
 RS.Items.CatalogKeys =
   PixelArtAcademy:
+    AlphaAccess: ''
     FoundationYear: ''
     FreshmanYear: ''
     SophomoreYear: ''

@@ -1,10 +1,10 @@
 Package.describe({
   name: 'retronator:accounts',
-  version: '0.0.1'
+  version: '0.1.0'
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:artificialengines');
+  api.use('retronator:retronator');
 
   api.use('accounts-password');
   api.use('accounts-ui-unstyled');
@@ -18,7 +18,7 @@ Package.onUse(function(api) {
   api.use('bozhao:link-accounts@1.2.9');
   api.use('splendido:accounts-meld@1.3.1');
   api.use('splendido:accounts-emails-field@1.2.0');
-  api.use('benjick:stripe');
+  api.use('benjick:stripe@3.3.4', 'server');
 
   api.imply('accounts-password');
   api.imply('service-configuration');
@@ -28,37 +28,45 @@ Package.onUse(function(api) {
   api.addFiles('retronator.coffee');
   api.addFiles('accounts.coffee');
 
+  // Helpers
+
+  api.addFiles('spacebars.coffee', 'client');
+
+  // Initialization
+
   api.addFiles('initialize-server/signin.coffee', 'server');
 
-  // Users
-
-  // HACK: Add transactions namespace in advance so that PeerDB delayed initialization work correct.
-  api.addFiles('transactions/transactions.coffee');
-
+  // User
+  
   api.addFiles('user/user.coffee');
   api.addFiles('user/methods.coffee');
   api.addFiles('user/subscriptions.coffee', 'server');
-  api.addFiles('user/topsupporters.coffee', 'server');
 
-  // Transactions
+  // Layouts
 
-  api.addFiles('transactions/item/item.coffee');
-  api.addFiles('transactions/item/subscriptions.coffee', 'server');
+  api.addFiles('layouts/layouts.coffee');
 
-  api.addFiles('transactions/payment/payment.coffee');
-  api.addFiles('transactions/payment/subscriptions.coffee', 'server');
+  api.addFiles('layouts/adminaccess/adminaccess.coffee');
+  api.addFiles('layouts/adminaccess/adminaccess.html');
 
-  api.addFiles('transactions/transaction/transaction.coffee');
-  api.addFiles('transactions/transaction/subscriptions.coffee', 'server');
-  api.addFiles('transactions/transaction/toprecent.coffee', 'server');
+  api.addFiles('layouts/useraccess/useraccess.coffee');
+  api.addFiles('layouts/useraccess/useraccess.html');
 
-  api.addFiles('transactions/transaction/methods-server/claim.coffee', 'server');
-  api.addFiles('transactions/transaction/methods-server/createtransaction.coffee', 'server');
-  api.addFiles('transactions/transaction/methods-server/emailcustomer.coffee', 'server');
-  api.addFiles('transactions/transaction/methods-server/confirmation.coffee', 'server');
-  api.addFiles('transactions/transaction/methods-server/stripe.coffee', 'server');
+  api.addFiles('layouts/publicaccess/publicaccess.coffee');
+  api.addFiles('layouts/publicaccess/publicaccess.html');
 
-  api.addFiles('transactions/shoppingcart/shoppingcart.coffee');
+  // Pages
+  api.addFiles('pages/pages.coffee');
 
-  api.addFiles('transactions/stripe/client.coffee', 'client');
+  api.addFiles('pages/admin/admin.html');
+  api.addFiles('pages/admin/admin.coffee');
+
+  api.addFiles('pages/admin/importusers/importusers.coffee');
+  api.addFiles('pages/admin/importusers/importusers.html');
+  api.addFiles('pages/admin/importusers/importusers.styl');
+  api.addFiles('pages/admin/importusers/methods-server.coffee', 'server');
+
+  api.addFiles('pages/admin/scripts/scripts.coffee');
+  api.addFiles('pages/admin/scripts/scripts.html');
+  api.addFiles('pages/admin/scripts/methods-server/importedusers-emailstolowercase.coffee', 'server');
 });

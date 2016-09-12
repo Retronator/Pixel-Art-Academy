@@ -1,5 +1,6 @@
 <template name="Retronator.Store.Pages.Checkout">
   <div class="pages-checkout">
+    <script src="https://checkout.stripe.com/checkout.js"></script>
     {{#if purchaseCompleted}}
         <div class="purchase-completed">
           <p>Purchase completed successfully! See your new items in your <a href="{{flowRouterPath 'inventory'}}">inventory</a>.</p>
@@ -81,58 +82,31 @@
             Your purchase will be covered with your existing store balance. Simply confirm the payment below.
           {{/if}}
         {{/if}}
-        <form class="payment-form">
-          {{#if paymentAmount}}
-            <div class="form-field">
-              <label>
-                <span class="label-text">Email</span>
-                <input type="email" name="customer-email" class="email" value="matej@retronator.com"/>
-              </label>
-            </div>
-            <div class="form-field">
-              <label>
-                <span class="label-text">Card number</span>
-                <input name="cardnumber" autocomplete="cc-number" type="text" size="20" class="card-number" value="4242424242424242"/>
-              </label>
-            </div>
-            <div class="form-field">
-              <label>
-                <span class="label-text">Name on card</span>
-                <input name="ccname" autocomplete="cc-name" type="text" class="name-on-card" value="MJ"/>
-              </label>
-            </div>
-            <div class="form-field">
-              <label>
-                <span class="label-text">Expiration</span>
-                <input name="ccmonth" autocomplete="cc-exp-month" type="text" size="2" class="expiration-month" placeholder="MM" value="1"/>
-              </label>
-              <span> / </span>
-              <input name="ccyear" autocomplete="cc-exp-year" type="text" size="4" class="expiration-year" placeholder="YYYY" value="2020"/>
-            </div>
-            <div class="form-field">
-              <label>
-                <span class="label-text">CVC</span>
-                <input name="cvc" autocomplete="cc-csc" type="text" size="4" class="cvc" value="123"/>
-              </label>
-            </div>
-          {{/if}}
-          {{#if purchaseError}}
-            <div class="purchase-error">
-              <p>{{purchaseError}}</p>
-            </div>
-          {{/if}}
-          <div class="actions">
+        {{#if purchaseError}}
+          <div class="purchase-error">
+            <p>{{purchaseError}}</p>
+          </div>
+        {{/if}}
+        <div class="actions">
+          {{#if stripeInitialized}}
             <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
               {{#if submittingPayment}}
                 Submitting …
               {{else}}
-                Submit payment
+                {{#if paymentAmount}}
+                  Checkout with Stripe
+                {{else}}
+                  Confirm purchase
+                {{/if}}
               {{/if}}
             </button>
-          </div>
-        </form>
+          {{else}}
+            Please wait while Stripe Checkout initializes …
+          {{/if}}
+        </div>
         {{#if paymentAmount}}
-          <small class="payment-smallprint">* Your credit card won't be charged until the game is publicly released later this year.</small>
+          <small class="payment-smallprint">* Your credit card won't be charged until you get access to the game. You
+            will be emailed beforehand in case you need to cancel your purchase at that time.</small>
         {{/if}}
       {{else}}
         <p>You do not have any items in your shopping cart. <a href="{{flowRouterPath 'store'}}">Return to the store</a></p>

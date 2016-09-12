@@ -101,7 +101,6 @@ class Artificial.Babel
     # If the subscription is ready and we haven't received a
     # translation, it must have not been added to the database yet.
     if component._babelSubscriptionHandle.ready()
-      console.log "let's translate this"
       # Looks like we'll need to insert it.
       Meteor.call 'Artificial.Babel.translationInsert', namespace, key
 

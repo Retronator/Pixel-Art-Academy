@@ -36,10 +36,11 @@ Meteor.startup ->
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccess
     price: 40
     name: "Pixel Art Academy — alpha access pre-order"
-    description: "Get access to the alpha version and be part of the Foundation Year 2016, before the game publicly starts with Freshmen Year 2017. You will be able to create your own character and portrait."
+    description: "Get alpha access and be part of the Foundation Year 2016, before the game publicly starts with Freshmen Year 2017. You will be able to create your own character and portrait."
     items: [
       CatalogKeys.PixelArtAcademy.FoundationYear
       CatalogKeys.PixelArtAcademy.FreshmanYear
+      CatalogKeys.PixelArtAcademy.AlphaAccess
       CatalogKeys.LandsOfIllusions.Character.Creation
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
@@ -71,6 +72,7 @@ Meteor.startup ->
       CatalogKeys.PixelArtAcademy.SophomoreYear
       CatalogKeys.PixelArtAcademy.JuniorYear
       CatalogKeys.PixelArtAcademy.SeniorYear
+      CatalogKeys.PixelArtAcademy.AlphaAccess
       CatalogKeys.PixelArtAcademy.Kickstarter.GreenKeycard
       CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
       CatalogKeys.LandsOfIllusions.Character.Creation
@@ -263,6 +265,7 @@ kickstarterAlphaItemsWith = (extraItems) ->
     CatalogKeys.PixelArtAcademy.SophomoreYear
     CatalogKeys.PixelArtAcademy.JuniorYear
     CatalogKeys.PixelArtAcademy.SeniorYear
+    CatalogKeys.PixelArtAcademy.AlphaAccess
     CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
     CatalogKeys.PixelArtAcademy.Kickstarter.ClassOf2016Artwork
     CatalogKeys.LandsOfIllusions.Character.Creation
@@ -274,6 +277,7 @@ complimentaryAlphaItemsWithRetropolisItems = (keycardColor) ->
   alphaItems = [
     CatalogKeys.PixelArtAcademy.FoundationYear
     CatalogKeys.PixelArtAcademy.FreshmanYear
+    CatalogKeys.PixelArtAcademy.AlphaAccess
     CatalogKeys.LandsOfIllusions.Character.Creation
     CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
     CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor

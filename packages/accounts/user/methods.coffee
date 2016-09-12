@@ -8,20 +8,6 @@ Meteor.methods
       $set:
         'profile.name': name
 
-  'Retronator.Accounts.User.setSupporterName': (name) ->
-    check name, String
-
-    RA.User.documents.update Meteor.user(),
-      $set:
-        'profile.supporterName': name
-
-  'Retronator.Accounts.User.setShowSupporterName': (value) ->
-    check value, Boolean
-
-    RA.User.documents.update Meteor.user(),
-      $set:
-        'profile.showSupporterName': value
-
   'Retronator.Accounts.User.sendVerificationEmail': (emailAddress) ->
     check emailAddress, String
 
@@ -40,6 +26,3 @@ Meteor.methods
 
     # Also update registered_emails.
     AccountsEmailsField.updateEmails user: Meteor.user()
-
-  'Retronator.Accounts.User.generateItemsArrayForCurrentUser': ->
-    Retronator.user().generateItemsArray()

@@ -31,7 +31,7 @@ Meteor.methods
       character:
         _id: characterId
         # Insert name as well, to prevent "No Name" before de-normalization happens.
-        name: LOI.Accounts.Character.documents.findOne(characterId).name
+        name: LOI.Character.documents.findOne(characterId).name
       text: text
       time: new Date()
 

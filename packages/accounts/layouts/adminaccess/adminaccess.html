@@ -1,0 +1,16 @@
+<template name="Retronator.Accounts.Layouts.AdminAccess">
+  {{#if loading}}
+    Loading …
+  {{else}}
+    {{#if currentUser}}
+      {{#if hasItem 'Retronator.Admin'}}
+        {{> renderPage}}
+      {{else}}
+        <p>You need to have admin access to view this page.</p>
+      {{/if}}
+    {{else}}
+      <p>Authorization required.</p>
+      {{> loginButtons}}
+    {{/if}}
+  {{/if}}
+</template>

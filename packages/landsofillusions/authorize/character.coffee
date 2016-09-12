@@ -2,15 +2,15 @@ LOI = LandsOfIllusions
 
 LOI.Authorize.characterAction = (characterId) ->
   # You need to be logged-in to perform actions with the character.
-  currentUserId = Meteor.userId()
-  throw new Meteor.Error 'unauthorized', "Unauthorized." unless currentUserId
+  user = Retronator.user()
+  throw new AE.UnauthorizedException "You must be logged in to create a character." unless user
 
   # Character must exist.
-  character = LOI.Accounts.Character.documents.findOne characterId
-  throw new Meteor.Error 'not-found', "Character not found." unless character
+  character = LOI.Character.documents.findOne characterId
+  throw new AE.ArgumentException "Character not found." unless character
 
   # Admins can always perform actions.
-  return if Roles.userIsInRole currentUserId, 'admin'
+  return if user.hasItem 'Retronator.Admin'
 
   # The character must belong to the logged-in user.
-  throw new Meteor.Error 'unauthorized', "Unauthorized." unless character.user._id is currentUserId
+  throw new AE.UnauthorizedException "The character must belong to you." unless character.user._id is user._id

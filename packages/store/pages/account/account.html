@@ -117,12 +117,12 @@
               </li>
             {{/each}}
           </ul>
-          {{#if storeCredit}}
-            <p>* Your have a positive account balance of ${{storeCredit}}. You can use it to purchase items in the store.</p>
+          {{#if currentUser.store.credit}}
+            <p>* Your have a positive account balance of ${{currentUser.store.credit}}. You can use it to purchase items in the store.</p>
           {{/if}}
           {{#if authorizedPaymentsAmount}}
-            <p>* You have authorized ${{authorizedPaymentsAmount}} of payments. They will be collected when the game is
-              publicly released later this year. You will be emailed beforehand in case you need to cancel
+            <p>* You have authorized ${{authorizedPaymentsAmount}} of payments. They will be collected when you get
+              access to the game at end of this year. You will be emailed beforehand in case you need to cancel
               your purchase at that time.</p>
           {{/if}}
         {{else}}
