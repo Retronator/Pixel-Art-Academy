@@ -2,8 +2,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends AM.Component
-  template: ->
-    'LandsOfIllusions.Adventure'
+  @register 'LandsOfIllusions.Adventure'
 
   constructor: ->
     super
@@ -13,42 +12,45 @@ class LOI.Adventure extends AM.Component
 
     $('html').addClass('lands-of-illusions-style-adventure')
 
-    # Create pixel scaling display.
-    @display = new Artificial.Mirage.Display
-      safeAreaWidth: 320
-      safeAreaHeight: 240
-      minScale: 2
-      minAspectRatio: 1
-
-    @inventory = _.values @items
-
     @currentLocation = new ReactiveField null
+
+    @interface = new LOI.Adventure.Interface.Text @
+    @parser = new LOI.Adventure.Parser @
 
   onRendered: ->
     super
 
     # Handle url changes.
     @autorun =>
-      mainParameter = FlowRouter.getParam 'parameter1'
+      # Let's see what our url path is like.
+      parameters = [
+        FlowRouter.getParam 'parameter1'
+        FlowRouter.getParam 'parameter2'
+        FlowRouter.getParam 'parameter3'
+        FlowRouter.getParam 'parameter4'
+      ]
+
+      # Remove unused parameters.
+      parameters = _.without parameters, undefined
+
+      # Create a path from parameters.
+      path = parameters.join '.'
 
       # We only want to react to router changes.
       Tracker.nonreactive =>
         # Find if this is an item or location.
-        for key, location of @locations
-          if mainParameter is location.keyName()
-            # We are at a location.
-            @currentLocation location
+        locationClass = _.nestedProperty LOI.Adventure.Location.Locations, path
+        itemClass = null # _.nestedProperty LOI.Adventure.Item.Locations, path
 
-        for key, item of @items
-          if mainParameter is item.keyName()
-            # We are trying to use this item. Deactivate the one we might have been using before first.
-            item.activate()
+        if locationClass
+          # We are at a location.
+          location = new locationClass
+          @currentLocation location
 
-    previousScale = @display.scale()
-    @autorun =>
-      $('html').removeClass('scale-' + previousScale)
-      $('html').addClass('scale-' + @display.scale())
-      previousScale = @display.scale()
+        if itemClass
+          # We are trying to use this item.
+          item = new itemClass
+          item.activate()
 
   onDestroyed: ->
     super
@@ -60,23 +62,3 @@ class LOI.Adventure extends AM.Component
 
   @activateItem: (itemKeyName) ->
     FlowRouter.go 'LandsOfIllusions.Adventure', parameter1: itemKeyName
-
-  fontSize: ->
-    @display.scale()
-
-  drawInventoryItem: ->
-    item = @currentData()
-    item.draw @currentComponent()
-
-  events: ->
-    super.concat
-      'click .inventory .item .activate-button': @onClickInventoryItemActivateButton
-      'click .inventory .item .deactivate-button': @onClickInventoryItemDectivateButton
-
-  onClickInventoryItemActivateButton: ->
-    item = @currentData()
-    item.activate()
-
-  onClickInventoryItemDectivateButton: ->
-    item = @currentData()
-    item.deactivate()

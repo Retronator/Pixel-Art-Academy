@@ -2,13 +2,17 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Location extends AM.Component
-  @register 'LandsOfIllusions.Adventure.Location'
+  @Locations = {}
 
-  # The unique name that is used to identify the location in code and in urls
-  keyName: -> throw new Meteor.Error 'unimplemented', "You must specify locations's key name."
+  @setUrl: (@url) ->
+    # Store location class into locations broken down by its url.
+    _.nestedProperty LOI.Adventure.Location.Locations, @url.replace('/', '.'), @
 
-  # The name that appears as the location's description.
-  displayName: -> throw new Meteor.Error 'unimplemented', "You must specify location's display name."
+  template: ->
+    'LandsOfIllusions.Adventure.Location'
+    
+  illustrationHeight: ->
+    0
 
   constructor: ->
     super
@@ -17,5 +21,5 @@ class LOI.Adventure.Location extends AM.Component
     @actors = new ReactiveField []
 
   addActor: (actor) ->
-    actor.director = @director
+    actor.director @director
     @actors @actors().concat actor

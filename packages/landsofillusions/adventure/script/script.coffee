@@ -9,6 +9,7 @@ class LOI.Adventure.Script
     nextNode = null
 
     for line in lines
+      # Dialog is of the form "actorName: line to be said".
       dialog = line.match /\s*(.*\S)\s*:\s*(.*\S)\s*/
 
       if dialog
@@ -22,5 +23,5 @@ class LOI.Adventure.Script
 
         continue
 
-    # Return the nextNode which is the start node.
+    # Return nextNode which is by now the start node.
     nextNode

@@ -6,13 +6,5 @@ class RA.Layouts.AdminAccess extends BlazeLayoutComponent
   loading: ->
     Meteor.loggingIn()
 
-  characters: ->
-    user = Retronator.Accounts.User.documents.findOne Meteor.userId(),
-      fields:
-        landsOfIllusions:
-          characters: 1
-
-    user?.characters
-
   renderPage: (parentComponent) ->
     @_renderRegion 'page', parentComponent

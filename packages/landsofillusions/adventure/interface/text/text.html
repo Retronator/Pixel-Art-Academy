@@ -1,0 +1,42 @@
+<template name="LandsOfIllusions.Adventure.Interface.Text">
+  <style>
+    html {
+      font-size: {{display.scale}}px
+    }
+  </style>
+  {{> Render display}}
+  <div class="text-interface">
+    <div class="location">
+      {{> Render currentLocation}}
+    </div>
+    <div class="ui">
+      <div class="text-display scrollable">
+        <div class="text-display-content scrollable-content">
+          <div class="narrative">
+            {{#each narrative.lines}}
+              <p>{{this}}</p>
+            {{/each}}
+          </div>
+          {{#if showCommandLine}}
+            <div class="command-line">&gt; {{commandInput.command}}</div>
+          {{/if}}
+          <div class="bottom"></div>
+        </div>
+      </div>
+      {{#if showInventory}}
+        <div class="inventory scrollable">
+          <div class="inventory-content scrollable-content">
+            <p>You carry:</p>
+            <ul class="items">
+              {{#each inventory}}
+                <li class="item">
+                  &mdash; <a class="link" href="/">{{displayName}}</a>
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</template>

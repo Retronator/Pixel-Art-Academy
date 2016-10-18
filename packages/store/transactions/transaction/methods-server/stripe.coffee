@@ -96,7 +96,7 @@ Meteor.methods
       # Log the error since we'll probably need to resolve the stripe payment.
       console.error "Transaction was not completed successfully."
       console.error "The stripe customer affected has id:", stripeCustomer.id, " name:", customer?.name
-      throw error
+      throw new AE.InvalidOperationException "An error was encountered during creation of the transaction."
 
     # Return the transaction id if all went good.
     transactionId

@@ -12,7 +12,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:retronator');
-  api.use('retronator:accounts');
+  api.use('retronator:landsofillusions');
 
   api.export('Retronator');
 

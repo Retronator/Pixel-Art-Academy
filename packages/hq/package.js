@@ -1,6 +1,6 @@
 Package.describe({
-  name: 'retronator:retronator',
-  version: '0.1.0',
+  name: 'retronator:hq',
+  version: '0.0.1',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -11,8 +11,16 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:artificialengines');
-  
+  api.use('retronator:landsofillusions');
+  api.use('retronator:retronator');
+
   api.export('Retronator');
-  api.addFiles('retronator.coffee');
+
+  api.addFiles('hq.coffee');
+
+  // Locations
+
+  api.addFiles('locations/locations.coffee');
+  api.addFiles('locations/lobby.coffee');
+
 });

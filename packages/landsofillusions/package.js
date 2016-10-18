@@ -56,27 +56,47 @@ Package.onUse(function(api) {
   api.addFiles('adventure/item.coffee');
   api.addFiles('adventure/director.coffee');
 
+
+  // Location
+
   api.addFiles('adventure/location/location.coffee');
   api.addFiles('adventure/location/location.html');
   api.addFiles('adventure/location/location.styl');
 
+  // Actor
+
   api.addFiles('adventure/actor/actor.coffee');
-  api.addFiles('adventure/actor/actor.html');
 
   api.addFiles('adventure/actor/ability.coffee');
   api.addFiles('adventure/actor/abilities/abilities.coffee');
 
   api.addFiles('adventure/actor/abilities/action.coffee');
-  api.addFiles('adventure/actor/abilities/action.html');
-
   api.addFiles('adventure/actor/abilities/talking.coffee');
-  api.addFiles('adventure/actor/abilities/talking.html');
-  api.addFiles('adventure/actor/abilities/talking.styl');
+
+  // Script
 
   api.addFiles('adventure/script/script.coffee');
   api.addFiles('adventure/script/node.coffee');
   api.addFiles('adventure/script/nodes/nodes.coffee');
   api.addFiles('adventure/script/nodes/dialogline.coffee');
+
+  // Parser
+
+  api.addFiles('adventure/parser/parser.coffee');
+
+  // Interface
+
+  api.addFiles('adventure/interface/interface.coffee');
+
+  api.addFiles('adventure/interface/components/components.coffee');
+  api.addFiles('adventure/interface/components/narrative.coffee');
+  api.addFiles('adventure/interface/components/commandinput.coffee');
+
+  api.addFiles('adventure/interface/text/text.coffee');
+  api.addFiles('adventure/interface/text/text.html');
+  api.addFiles('adventure/interface/text/text.styl');
+
+  api.addFiles('adventure/interface/text/resizing.coffee');
 
   // Conversations
 

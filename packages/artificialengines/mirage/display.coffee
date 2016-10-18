@@ -45,7 +45,7 @@ class AM.Display extends AM.Component
         console.log "DISPLAY CALCULATION"
         console.log ""
 
-      scale = @minScale()
+      scale = @minScale() or 1
       clientBounds = @window.clientBounds()
       clientWidth = clientBounds.width()
       clientHeight = clientBounds.height()

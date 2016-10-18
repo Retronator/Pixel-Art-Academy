@@ -4,11 +4,11 @@
     {{> loginButtons}}
     <h2>Welcome to Lands of Illusions!</h2>
     <ul class="tabs">
-      <li><a href="{{flowRouterPath 'LandsOfIllusions.Start'}}">Start</a></li>
-      <li><a href="{{flowRouterPath 'LandsOfIllusions.Characters'}}">Characters</a></li>
+      <li><a href="{{flowRouterPath 'LandsOfIllusions.Construct.Start'}}">Start</a></li>
+      <li><a href="{{flowRouterPath 'LandsOfIllusions.Construct.Characters'}}">Characters</a></li>
     </ul>
     <div class="account">
-      {{#if $equals flowRouterRouteName 'LandsOfIllusions.Start'}}
+      {{#if $equals flowRouterRouteName 'LandsOfIllusions.Construct.Start'}}
         <p>You find yourself in an open white space, extending into infinity.</p>
         <p>Two red armchairs and an old-fashioned cathode ray tube television are the only items you can see. A man with sunglasses suddenly appears and speaks:</p>
         {{#if currentCharacter}}
@@ -21,7 +21,7 @@
         {{/if}}
       {{/if}}
 
-      {{#if $equals flowRouterRouteName 'LandsOfIllusions.Characters'}}
+      {{#if $equals flowRouterRouteName 'LandsOfIllusions.Construct.Characters'}}
         <p>Your characters are:</p>
         <ul class="characters">
           {{#each characters}}

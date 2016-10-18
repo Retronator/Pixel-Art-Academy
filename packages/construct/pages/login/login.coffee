@@ -9,7 +9,7 @@ class LOI.Construct.Pages.Login extends AM.Component
 
     # Redirect to account when sign in succeeded.
     @autorun =>
-      FlowRouter.go 'LandsOfIllusions.Start' if Meteor.userId()
+      FlowRouter.go 'LandsOfIllusions.Construct.Start' if Meteor.userId()
 
   onDestroyed: ->
     super

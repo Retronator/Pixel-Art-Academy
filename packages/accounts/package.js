@@ -4,6 +4,7 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:artificialengines');
   api.use('retronator:retronator');
 
   api.use('accounts-password');
@@ -22,11 +23,14 @@ Package.onUse(function(api) {
 
   api.imply('accounts-password');
   api.imply('service-configuration');
+  api.imply('email');
 
   api.export('Retronator');
 
   api.addFiles('retronator.coffee');
   api.addFiles('accounts.coffee');
+
+  api.addFiles('main.import.styl', 'client', {isImport: true});
 
   // Helpers
 
@@ -54,6 +58,14 @@ Package.onUse(function(api) {
 
   api.addFiles('layouts/publicaccess/publicaccess.coffee');
   api.addFiles('layouts/publicaccess/publicaccess.html');
+
+  // Components
+
+  api.addFiles('components/components.coffee');
+
+  api.addFiles('components/signin/signin.coffee');
+  api.addFiles('components/signin/signin.html');
+  api.addFiles('components/signin/signin.styl');
 
   // Pages
   api.addFiles('pages/pages.coffee');

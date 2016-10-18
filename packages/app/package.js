@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:app',
-  version: '0.0.1',
+  version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -11,12 +11,17 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:retronator');
   api.use('retronator:artificialengines');
-  api.use('retronator:store');
+  api.use('retronator:accounts');
+  api.use('retronator:landsofillusions');
+  api.use('retronator:hq');
+
+  /*api.use('retronator:store');
   api.use('retronator:construct');
   api.use('retronator:pixelboy');
   api.use('retronator:practice');
-  api.use('retronator:pixeldailies');
+  api.use('retronator:pixeldailies');*/
 
   // All Retronator websites run over SSL.
   api.use('keyvan:my-force-ssl');

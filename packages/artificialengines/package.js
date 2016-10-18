@@ -37,7 +37,8 @@ Package.onUse(function(api) {
 	  'kadira:flow-router',
     'kadira:blaze-layout',
 	  'okgrow:router-autoscroll',
-	  'erasaur:meteor-lodash@4.0.0'
+	  'erasaur:meteor-lodash@4.0.0',
+    'velocityjs:velocityjs@1.2.1'
   ];
 
 	api.use(packages);

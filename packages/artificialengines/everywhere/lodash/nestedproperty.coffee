@@ -7,20 +7,19 @@ _.mixin
     if value
       # Setter that modifies object in-place and creates any intermediate objects.
       for part, i in parts
-        # If we're already at the just set the property and return the original object.
+        # If we're already at the end just set the property and return the original object.
         if i is parts.length - 1
           nestedObject[part] = value
           return object
 
         else
           # We have to drop deeper. If nestedObject doesn't have the part property, create an empty object.
-          unless nestedObject[part]?
-            nestedProperty[part] = {}
+          nestedObject[part] ?= {}
 
           # Drop in if it is an actual object that we can drop into.
-          throw new Meteor.Error 'invalid-argument', "Property does not address a nested property." unless _.isObject nestedProperty[part]
+          throw new Meteor.Error 'invalid-argument', "Property does not address a nested property." unless _.isObject nestedObject[part]
 
-          nestedProperty = nestedProperty[part]
+          nestedObject = nestedObject[part]
 
     # Getter that returns undefined if hit with non-objects.
     for part in parts

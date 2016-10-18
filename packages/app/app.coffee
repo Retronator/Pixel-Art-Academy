@@ -12,27 +12,10 @@ class Retronator.App extends Artificial.Base.App
   constructor: ->
     super
 
-    # Pages
+    # Instantiate all app packages, which register router URLs.
+    new Retronator.Accounts
 
-    @_addPage 'PixelArtAcademy', '/', 'PixelArtAcademy.Pages.Home'
-
-    ###
-    @_addAdminPage 'admin', '/admin', new @constructor.Pages.Admin
-    @_addAdminPage 'adminArtists', '/admin/artists/:documentId?', new @constructor.Artworks.Components.Admin.Artists
-    @_addAdminPage 'adminArtworks', '/admin/artworks/:documentId?', new @constructor.Artworks.Components.Admin.Artworks
-
-    @_addAdminPage 'adminImportCheckIns', '/admin/check-ins/import', new @constructor.Practice.Pages.ImportCheckIns
-    @_addAdminPage 'adminExtractImagesFromCheckInPosts', '/admin/check-ins/extract-images-from-posts', new @constructor.Practice.Pages.ExtractImagesFromPosts
-    ###
-
-    @_addPage 'LandsOfIllusions.PixelBoy', '/pixelboy/:app?/:path?', 'LandsOfIllusions.PixelBoy'
-
-    # Secondary pages
-
-    new Retronator.Store
-    new LOI.Construct
+    # Add Lands of Illusions last so it captures all remaining URLs.
+    new LOI
 
     FlowRouter.initialize()
-
-  _addPage: (name, url, page) ->
-    AT.addRoute name, url, 'PixelArtAcademy.Layouts.AlphaAccess', page

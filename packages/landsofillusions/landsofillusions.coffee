@@ -2,6 +2,10 @@ RA = Retronator.Accounts
 
 class LandsOfIllusions
   LOI = @
+  
+  constructor: ->
+    # Create the main adventure engine url capture.
+    RA.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?', 'LandsOfIllusions.Adventure'
 
   # Character selection and persistence
 
