@@ -1,43 +1,92 @@
-.adventure
-  position fixed
-  left 0
-  right 0
-  top 0
-  bottom 0
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "../../../styles/atari2600.import"
+@import "../../../typography/typography.import"
 
-  .text-interface
-    line-height 10rem
+gridSpacing = 8rem
+lineHeight = gridSpacing
+sideMargin = gridSpacing
 
-    .location
+hoverable()
+  color atari2600grey(7)
+  text-transform uppercase
+  cursor pointer
+
+  &:hover
+    background atari2600grey(7)
+    color atari2600grey(0)
+
+.text-interface
+  fixed-cover()
+  background atari2600grey(0)
+  color atari2600grey(5)
+
+  line-height lineHeight
+
+  .location
+    position absolute
+    background slategrey
+    overflow hidden
+
+  .ui
+    position absolute
+
+    .text-display
       position absolute
-      background slategrey
+      overflow hidden
 
-    .ui
-      position absolute
-
-      .text-display
-        position absolute
-        overflow hidden
-
-        .narrative
-          p
-            margin 0
-            padding-bottom 10rem
-
-        .command-line
-          text-transform uppercase
-          padding-bottom 10rem
-
-        // This is an empty element at the bottom of the text-display so that velocityjs has a target to scroll to.
-        .bottom
-          height 0
-
-      .inventory
-        position absolute
-        overflow hidden
-
+      .narrative
         p
           margin 0
+          padding-bottom lineHeight
 
-      .scrollable-content
-        position absolute
+        .exits
+          .exit
+            &::after
+              content: ","
+
+            .name
+              hoverable()
+
+            &:last-child
+              &::after
+                content: "."
+
+        .actors-sentence
+          padding-bottom 0
+
+        .actors
+          list-style none
+          padding-left gridSpacing * 2
+          margin 0 0 lineHeight  0
+
+          .actor
+            margin 0
+
+      .command-line
+        text-transform uppercase
+        padding-bottom lineHeight
+
+      // This is an empty element at the bottom of the text-display so that velocityjs has a target to scroll to.
+      .bottom
+        height 0
+
+    .inventory
+      position absolute
+      overflow hidden
+
+      .items-sentence
+        margin 0
+
+      .items
+        list-style none
+        margin 0
+        padding 0
+
+        .item
+          margin 0
+
+          &::before
+            content: "— "
+
+    .scrollable-content
+      position absolute

@@ -1,26 +1,28 @@
+AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Parser
   constructor: (@adventure) ->
+    # Set Vocabulary shorthand.
+    @Vocabulary = LOI.Adventure.Parser.Vocabulary
+
+    # Make a new vocabulary instance.
+    @vocabulary = new @Vocabulary
+
+  destroy: ->
+    @vocabulary.destroy()
+
+  ready: ->
+    @vocabulary.ready()
 
   parse: (command) ->
-    location = @adventure.currentLocation()
+    # Create a rich command object.
+    command = new LOI.Adventure.Parser.Command command
 
-    words = _.map _.words(command), _.toLower
+    # Get the current location. Parse is not reactive so it's OK to save it 
+    # statically like that. It is only used in subsequent parse subroutines.
+    @location = @adventure.currentLocation()
 
-    # See if any of the words is a verb that one of the actors supports.
-    for actor in location.actors()
-      return unless actor.name
-
-      # See if actor's name is targeted in the command.
-      continue unless actor.name.toLowerCase() in words
-
-      # We indeed are targeted! Let's see if any of our action verbs is used.
-      for ability in actor.abilities()
-        if ability instanceof LOI.Adventure.Actor.Abilities.Action
-          action = ability
-
-          if action.verb in words
-            # Yes, we should do this action!!!"
-            action.execute()
+    return if @parseNavigation command
+    return if @parseAbilities command

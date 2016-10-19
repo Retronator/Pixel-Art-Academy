@@ -4,9 +4,6 @@ class Artificial.Babel
   # Default language when new translations are inserted.
   @defaultLanguage: 'en-US'
 
-  # Boolean whether to insert the key as a translation under default language.
-  @insertKeyForDefaultLanguage: true
-
   @LanguagePreferenceLocalStorageKey:  "Artificial.Babel.languagePreference"
 
   # User's current language preference setting.
@@ -26,6 +23,9 @@ class Artificial.Babel
   # Handle for keeping tracks of individual translation subscriptions.
   class @SubscriptionHandle
     constructor: (@namespace) ->
+
+    ready: ->
+      @_babelSubscriptionHandle.ready()
 
     stop: ->
       @_babelSubscriptionAutorun.stop()
@@ -64,6 +64,20 @@ class Artificial.Babel
 
     # Return null, The method will then repeat when the query above returns a document from the database.
     null
+
+  # Creates a new translation with the default text or updates it if it
+  # already exists. It returns the id of the new or existing translation.
+  @createTranslation: (namespace, key, defaultText) ->
+    existing = @Translation.documents.findOne
+      namespace: namespace
+      key: key
+
+    if existing
+      Meteor.call 'Artificial.Babel.translationUpdate', existing._id, @defaultLanguage, defaultText
+      existing._id
+
+    else
+      Meteor.call 'Artificial.Babel.translationInsert', namespace, key, defaultText
 
   # Components
 

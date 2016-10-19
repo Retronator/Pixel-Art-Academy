@@ -10,8 +10,6 @@ class LOI.Adventure extends AM.Component
   onCreated: ->
     super
 
-    $('html').addClass('lands-of-illusions-style-adventure')
-
     @currentLocation = new ReactiveField null
 
     @interface = new LOI.Adventure.Interface.Text @
@@ -39,12 +37,17 @@ class LOI.Adventure extends AM.Component
       # We only want to react to router changes.
       Tracker.nonreactive =>
         # Find if this is an item or location.
-        locationClass = _.nestedProperty LOI.Adventure.Location.Locations, path
-        itemClass = null # _.nestedProperty LOI.Adventure.Item.Locations, path
+        locationClass = LOI.Adventure.Location.getClassForPath path
+
+        # TODO: Item support.
+        itemClass = null
 
         if locationClass
-          # We are at a location.
+          # We are at a location. Destroy the previous location and create the new one.
+          @currentLocation()?.destroy()
           location = new locationClass
+
+          # Switch to new location.
           @currentLocation location
 
         if itemClass
@@ -57,8 +60,12 @@ class LOI.Adventure extends AM.Component
 
     $('html').removeClass('lands-of-illusions-style-adventure')
 
-  @goToLocation: (locationKeyName) ->
-    FlowRouter.go 'LandsOfIllusions.Adventure', parameter1: locationKeyName
+  ready: ->
+    @parser.ready() and @currentLocation()?.ready()
+
+  @goToLocation: (locationId) ->
+    locationClass = LOI.Adventure.Location.getClassForID locationId
+    FlowRouter.go 'LandsOfIllusions.Adventure', locationClass.urlParameters()
 
   @activateItem: (itemKeyName) ->
     FlowRouter.go 'LandsOfIllusions.Adventure', parameter1: itemKeyName

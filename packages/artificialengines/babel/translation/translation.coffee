@@ -40,7 +40,7 @@ class ArtificialBabelTranslation extends AM.Document
     languageProperty = language.toLowerCase().replace '-', '.'
     _.nestedProperty translations, languageProperty
 
-  translate: (languagePreference = [Artificial.Babel.defaultLanguage]) ->
+  translate: (languagePreference = AB.userLanguagePreference()) ->
     for language in languagePreference
       languageParts = language.toLowerCase().split '-'
 

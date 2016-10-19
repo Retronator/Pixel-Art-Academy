@@ -17,6 +17,10 @@ The project is using these fonts:
 - **Uni 05** by Craig Kroeger (www.miniml.com)
 
   Available free under license at http://www.miniml.com/fonts/license/index.html (attribution)
+  
+- **ZX Spectrum** by Darko Stanicic
+
+  Released as Healthware. 
 
 Fonts are served in the WOFF cross-browser format as base64 encoded data URIs directly inside the CSS.
 

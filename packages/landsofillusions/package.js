@@ -83,6 +83,14 @@ Package.onUse(function(api) {
   // Parser
 
   api.addFiles('adventure/parser/parser.coffee');
+  api.addFiles('adventure/parser/command.coffee');
+
+  api.addFiles('adventure/parser/parts/abilities.coffee');
+  api.addFiles('adventure/parser/parts/navigation.coffee');
+  
+  api.addFiles('adventure/parser/vocabulary/vocabulary.coffee');
+  api.addFiles('adventure/parser/vocabulary/vocabularykeys.coffee');
+  api.addFiles('adventure/parser/vocabulary/english-server.coffee', 'server');
 
   // Interface
 
@@ -106,10 +114,16 @@ Package.onUse(function(api) {
   api.addFiles('conversations/methods.coffee');
   api.addFiles('conversations/subscriptions.coffee', 'server');
 
+  // Pages
+
+  api.addFiles('pages/pages.coffee');
+  api.addFiles('pages/loading/loading.coffee');
+  api.addFiles('pages/loading/loading.html');
+  api.addFiles('pages/loading/loading.styl');
+
   // Typography
 
   api.addFiles('typography/typography.css', 'client');
-  api.addFiles('typography/typography.styl', 'client');
   api.addFiles('typography/typography.import.styl', 'client', {isImport:true});
 
   // Styles

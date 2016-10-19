@@ -2,4 +2,7 @@
   <div class="adventure">
     {{> Render interface}}
   </div>
+  {{#unless ready}}
+    {{> LandsOfIllusions.Pages.Loading}}
+  {{/unless}}
 </template>

@@ -35,6 +35,8 @@ class AM.Display extends AM.Component
     @debug = options.debug ? false
 
   onCreated: ->
+    super
+
     @window = AM.Window
 
     # React to window size changes.

@@ -19,10 +19,9 @@ Meteor.methods
       key: key
 
     if Meteor.isServer
-      # See if we should insert translation for the default language.
-      if (defaultText or Artificial.Babel.insertKeyForDefaultLanguage)
-        text = defaultText or key
-        Meteor.call 'Artificial.Babel.translationUpdate', translationId, Artificial.Babel.defaultLanguage, text
+      # Insert the provided default text or fall back to just the key.
+      text = defaultText or key
+      Meteor.call 'Artificial.Babel.translationUpdate', translationId, Artificial.Babel.defaultLanguage, text
 
     # Return the id of the new translation.
     translationId

@@ -7,7 +7,9 @@ class LOI.Adventure.Interface.Text.Resizing
     @textInterface.autorun =>
       # Register dependency on display scaling and viewport size.
       scale = @textInterface.display.scale()
-      lineHeight = 10 * scale
+      gridSpacing = 8 * scale
+      sideMargin = gridSpacing
+      lineHeight = gridSpacing
 
       viewport = @textInterface.display.viewport()
 
@@ -37,8 +39,8 @@ class LOI.Adventure.Interface.Text.Resizing
         # location illustration if possible. We do that by seeing if we have empty room left/right from the viewport.
         totalWidth = viewport.viewportBounds.width() + viewport.viewportBounds.x() * 2
 
-        # The UI content would be aligned if it's 20px bigger, since that'll be compensated by the 10px padding.
-        uiWidth = viewport.viewportBounds.width() + 20 * scale
+        # The UI content would be aligned if it's bigger, since that'll be compensated by the margin.
+        uiWidth = viewport.viewportBounds.width() + 2 * sideMargin * scale
 
         # However, make sure that it fits in the window (total width).
         uiWidth = Math.min uiWidth, totalWidth
@@ -58,15 +60,15 @@ class LOI.Adventure.Interface.Text.Resizing
         # Put 20px margin between text display and interface and 10px padding
         # on the outside (total 40px). After that split them 70/30%.
         textDisplaySize = new AE.Rectangle
-          x: 10 * scale
+          x: sideMargin
           y: 0
-          width: (uiWidth - 40 * scale) * 0.7
+          width: (uiWidth - 2 * sideMargin) * 0.7
           height: uiHeight
 
         inventorySize = new AE.Rectangle
-          x: textDisplaySize.right() + 20 * scale
+          x: textDisplaySize.right() + sideMargin
           y: 0
-          width: (uiWidth - 40 * scale) * 0.3
+          width: (uiWidth - 2 * sideMargin) * 0.3
           height: uiHeight
 
         $ui.css(uiSize.toDimensions())
@@ -96,7 +98,7 @@ class LOI.Adventure.Interface.Text.Resizing
           maxDisplayedContentHeight = viewportHeight - minimumIllustrationHeight - lineHeight
           newUIHeight = Math.min maxDisplayedContentHeight, totalContentHeight
 
-          # Make the UI a multiple of line height (10px)
+          # Make the UI a multiple of line height.
           newUIHeight = Math.max 0, Math.floor(newUIHeight / lineHeight) * lineHeight
 
           # Location fills in the rest that's not taken up by text display plus one line border.

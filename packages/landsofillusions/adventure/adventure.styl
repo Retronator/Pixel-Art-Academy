@@ -1,15 +1,15 @@
 @import "../typography/typography.import"
 @import "../styles/atari2600.import"
 
-html.lands-of-illusions-style-adventure
+html
   // Prevent elastic scrolling.
   overflow hidden
 
   height 100%
   margin 0
   padding 0
-  background atari2600colors[0][0]
-  color white
+  background atari2600grey(0)
+  color atari2600grey(7)
 
   *
     box-sizing border-box
@@ -30,27 +30,3 @@ html.lands-of-illusions-style-adventure
     margin 0
     padding 0
     uni()
-
-  .adventure
-    .display
-      .location
-        min-height 200rem
-        background atari2600colors[4][10]
-
-    .ui
-      padding-left 10rem
-
-      .inventory
-        list-style none
-        padding 0
-
-        .item
-          .link
-            display inline-block
-            text-transform uppercase
-            color white
-            text-decoration none
-
-            &:hover
-              color black
-              background white

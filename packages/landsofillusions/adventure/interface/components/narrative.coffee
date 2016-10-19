@@ -6,7 +6,10 @@ class LOI.Adventure.Interface.Components.Narrative
     @text = new ReactiveField ""
 
   lines: ->
-    @text().split('\n')
+    text = @text()
+    return [] unless text.length
+
+    text.split('\n')
 
   linesCount: ->
     @lines().length
@@ -19,6 +22,9 @@ class LOI.Adventure.Interface.Components.Narrative
 
     text += newText
     @text text
+
+  clear: ->
+    @text ""
 
   scroll: (options = {}) ->
     options.animate ?= true

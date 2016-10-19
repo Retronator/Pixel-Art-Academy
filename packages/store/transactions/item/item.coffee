@@ -60,17 +60,7 @@ class RetronatorAccountsTransactionsItem extends AM.Document
     
   @_createTranslation: (catalogKey, key, defaultText) ->
     namespace = "Retronator.Accounts.Transactions.Items.#{catalogKey}"
-
-    existing = AB.Translation.documents.findOne
-      namespace: namespace
-      key: key
-
-    if existing
-      Meteor.call 'Artificial.Babel.translationUpdate', existing._id, Artificial.Babel.defaultLanguage, defaultText
-      existing._id
-      
-    else
-      Meteor.call 'Artificial.Babel.translationInsert', namespace, key, defaultText
+    AB.createTranslation namespace, key, defaultText
 
   validateEligibility: ->
     # Override this with custom logic that tests whether the current user is eligible to buy this.

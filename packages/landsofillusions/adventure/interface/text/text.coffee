@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -25,8 +26,14 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     @commandInput = new LOI.Adventure.Interface.Components.CommandInput
       onEnter: =>
-        # Skip this even if we're waiting on dialog.
-        return if @_pausedDialogLine()
+        # Resume dialog on any key press.
+        pausedDialogLine = @_pausedDialogLine()
+        if pausedDialogLine
+          @_pausedDialogLine null
+
+          pausedDialogLine.end()
+          @commandInput.clear()
+          return
 
         command = @commandInput.command().trim()
         return unless command.length
@@ -38,16 +45,10 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       onKeyDown: =>
         # Scroll to bottom on key press.
         @narrative.scroll()
-
-        # Resume dialog on any key press.
-        pausedDialogLine = @_pausedDialogLine()
-        return unless pausedDialogLine
-        @_pausedDialogLine null
-
-        pausedDialogLine.end()
-        @commandInput.clear()
         
   onRendered: ->
+    super
+
     @_previousLineCount = @narrative.linesCount()
 
     # Enable magnification detection.
@@ -57,6 +58,9 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     super
 
     @commandInput.destroy()
+    
+  onLocationChanged: (location) ->
+    @narrative?.clear()
 
   _handleDialogLine: (dialogLine) ->
     @narrative.addText "#{dialogLine.actor.name} says: \"#{dialogLine.line}\""
@@ -68,6 +72,39 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     else
       # We're done with this text so finish it.
       dialogLine.end()
+      
+  introduction: ->
+    location = @location()
+    return unless location
+    
+    if location.constructor.visited
+      fullName = location.fullName()
+      return unless fullName
+
+      # We've already visited this location so simply return the full name.
+      "#{_.upperFirst fullName.text}."
+
+    else
+      # It's the first time we're visiting this location in this session so show the full description.
+      location.description()?.text
+      
+  exits: ->
+    exits = @location()?.exits()
+    return [] unless exits
+    
+    for directionKey, locationId of exits
+      directionKey: directionKey
+      locationId: locationId
+
+  exitName: ->
+    exit = @currentData()
+    location = @location()
+    
+    # Find exit's location name.
+    subscriptionHandle = location.exitsTranslationSubscribtions[exit.locationId]
+    key = LOI.Adventure.Location.translationKeys.shortName
+
+    AB.translate(subscriptionHandle, key).text
 
   showCommandLine: ->
     # Show command line unless we're waiting to display dialog.
@@ -75,7 +112,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
   showInventory: ->
     true
-
+    
   events: ->
     super.concat
       'mousewheel .scrollable': @onMouseWheelScrollable

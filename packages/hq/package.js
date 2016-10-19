@@ -21,6 +21,11 @@ Package.onUse(function(api) {
   // Locations
 
   api.addFiles('locations/locations.coffee');
+
   api.addFiles('locations/lobby.coffee');
+  api.addFiles('locations/lobby-elevator.coffee');
+
+  api.addFiles('locations/store.coffee');
+  api.addFiles('locations/store-elevator.coffee');
 
 });

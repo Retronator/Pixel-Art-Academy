@@ -7,12 +7,28 @@
   {{> Render display}}
   <div class="text-interface">
     <div class="location">
-      {{> Render currentLocation}}
+      {{> Render location}}
     </div>
     <div class="ui">
       <div class="text-display scrollable">
         <div class="text-display-content scrollable-content">
           <div class="narrative">
+            <p class="introduction">{{introduction}}</p>
+            {{#if exits.length}}
+              <p class="exits">{{> t10e "Possible exits are:"}}
+                {{#each exits}}
+                  <span class="exit"><span class="name">{{exitName}}</span></span>
+                {{/each}}
+              </p>
+            {{/if}}
+            <p class="actors-sentence">{{> t10e "You see:"}}</p>
+            <ul class="actors">
+              {{#each location.actors}}
+                <li class="actor">{{name}}.</li>
+              {{else}}
+                <li class="actor">{{> t10e "Nothing"}}.</li>
+              {{/each}}
+            </ul>
             {{#each narrative.lines}}
               <p>{{this}}</p>
             {{/each}}
@@ -26,12 +42,12 @@
       {{#if showInventory}}
         <div class="inventory scrollable">
           <div class="inventory-content scrollable-content">
-            <p>You carry:</p>
+            <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
             <ul class="items">
-              {{#each inventory}}
-                <li class="item">
-                  &mdash; <a class="link" href="/">{{displayName}}</a>
-                </li>
+              {{#each items}}
+                <li class="item">{{name}}</li>
+              {{else}}
+                <li class="item">{{> t10e "Nothing"}}</li>
               {{/each}}
             </ul>
           </div>
