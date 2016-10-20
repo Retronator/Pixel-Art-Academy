@@ -1,6 +1,6 @@
 Package.describe({
-  name: 'retronator:hq',
-  version: '0.0.1',
+  name: 'retronator:cast',
+  version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -12,21 +12,13 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
-  api.use('retronator:retronator');
-  api.use('retronator:cast');
+  api.use('retronator:pixelartacademy');
 
-  api.export('Retronator');
+  api.export('PixelArtAcademy');
 
-  api.addFiles('hq.coffee');
+  api.addFiles('cast.coffee');
 
-  // Locations
+  // Actors
 
-  api.addFiles('locations/locations.coffee');
-
-  api.addFiles('locations/lobby.coffee');
-  api.addFiles('locations/lobby-elevator.coffee');
-
-  api.addFiles('locations/store.coffee');
-  api.addFiles('locations/store-elevator.coffee');
-
+  api.addFiles('retro.coffee');
 });

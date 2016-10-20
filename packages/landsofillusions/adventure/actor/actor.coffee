@@ -1,8 +1,11 @@
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Actor
-  constructor: (options) ->
-    @name = options?.name
+  @initialize: (@options) ->
+    LOI.Avatar.initialize @options?.avatar
+
+  constructor: (@options) ->
+    @avatar = new LOI.Avatar @options?.avatar
 
     @abilities = new ReactiveField []
     @director = new ReactiveField null

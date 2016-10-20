@@ -1,5 +1,6 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
+PAA = PixelArtAcademy
 
 Vocabulary = LOI.Adventure.Parser.Vocabulary
 
@@ -28,31 +29,9 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
 
     @addExit Vocabulary.Keys.Directions.In, HQ.Locations.Lobby.Elevator.id()
 
-    jessie = new Actor
-      name: "Jessie"
+    retro = @addActor new PAA.Cast.Retro
 
-    jessie.addAbility Action,
+    retro.addAbility Action,
       verb: "talk"
       action: =>
         @director.startScript scene1
-
-    corinne = new Actor
-      name: "Corinne"
-
-    @addActor jessie
-    @addActor corinne
-
-    scene1 = LOI.Adventure.Script.create
-      director: @director
-      actors:
-        jessie: jessie
-        corinne: corinne
-      script:
-        """
-          jessie: Hey, how are you?
-          corinne: Good, you?
-          jessie: Doing great, what's up?
-          corinne: Not much. Just heading to the store.
-          corinne: Want to grab lunch afterwards?
-          jessie: Sure thing dawg!
-        """

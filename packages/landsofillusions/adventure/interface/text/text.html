@@ -24,7 +24,9 @@
             <p class="actors-sentence">{{> t10e "You see:"}}</p>
             <ul class="actors">
               {{#each location.actors}}
-                <li class="actor">{{name}}.</li>
+                <li class="actor">
+                  {{avatar.fullName}}.
+                </li>
               {{else}}
                 <li class="actor">{{> t10e "Nothing"}}.</li>
               {{/each}}

@@ -40,6 +40,9 @@ class LOI.Adventure.Location extends AM.Component
     actor.director @director
     @actors @actors().concat actor
 
+    # Allow chaining syntax
+    actor
+
   # Static location properties and methods
 
   # Id string for this location used to identify the location in code.

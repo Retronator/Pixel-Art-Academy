@@ -6,10 +6,13 @@ class LandsOfIllusionsCharacter extends Document
   # user: the owner of this character
   #   _id
   #   displayName
-  # name: how the character is called
-  # color: character's favorite color as used in the world, for example, in dialogs.
-  #   hue: ramp index in the Atari 2600 palette
-  #   shade: relative shade from -2 to +2
+  # avatar: information for the representation of the character
+  #   fullName: how the character is fully named
+  #   shortName: how the character can be quickly referred to
+  #   description: how the game describes the character to others, for example, when looked at
+  #   color: character's favorite color as used in the world, for example, in dialogs
+  #     hue: ramp index in the Atari 2600 palette
+  #     shade: relative shade from -2 to +2
   @Meta
     name: 'LandsOfIllusionsCharacter'
     fields: =>

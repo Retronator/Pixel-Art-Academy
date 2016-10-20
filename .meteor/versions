@@ -101,8 +101,10 @@ reload@1.1.4
 retronator:accounts@0.1.0
 retronator:app@0.1.0
 retronator:artificialengines@1.0.0
+retronator:cast@0.1.0
 retronator:hq@0.0.1
 retronator:landsofillusions@0.1.0
+retronator:pixelartacademy@0.2.0
 retronator:retronator@0.1.0
 retry@1.0.4
 routepolicy@1.0.6

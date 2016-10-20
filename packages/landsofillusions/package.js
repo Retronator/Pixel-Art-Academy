@@ -34,13 +34,17 @@ Package.onUse(function(api) {
   api.addFiles('character/methods.coffee');
   api.addFiles('character/subscriptions.coffee', 'server');
 
+  // Avatar
+
+  api.addFiles('avatar/avatar.coffee');
+
   // Assets
 
   api.addFiles('assets/assets.coffee');
   api.addFiles('assets/server.coffee');
 
   api.addFiles('assets/palette/palette.coffee');
-  api.addFiles('assets/palette/atari2600.coffee', 'server');
+  api.addFiles('assets/palette/atari2600.coffee');
   api.addFiles('assets/palette/subscriptions.coffee', 'server');
 
   api.addFiles('assets/sprite/sprite.coffee');
@@ -55,7 +59,6 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/item.coffee');
   api.addFiles('adventure/director.coffee');
-
 
   // Location
 
