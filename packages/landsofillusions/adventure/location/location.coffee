@@ -22,14 +22,40 @@ class LOI.Adventure.Location extends AM.Component
     @_exitsTranslationsAutorun = Tracker.autorun (computation) =>
       for directionKey, locationId of @exits()
         @exitsTranslationSubscribtions[locationId] = AB.subscribeNamespace locationId
-    
+
+    # Subscribe to this location's script translations.
+    translationNamespace = @constructor.id()
+    @_translationSubscribtionScript = AB.subscribeNamespace "#{translationNamespace}.Script"
+
+    # Create the scripts.
+    @scriptNodes = {}
+    if @constructor.scriptUrls
+      scripts = for scriptUrl in @constructor.scriptUrls()
+        LOI.Adventure.Script.load "/packages/#{scriptUrl}"
+
+      Promise.all(scripts).then (scripts) =>
+        console.log "got results", scripts
+        for scriptNodes in scripts
+          # Because we're on the client, we need to replace text with translations.
+          LOI.Adventure.Script.translate @constructor.id(), scriptNodes
+
+          # Add the loaded and translated script nodes to this location.
+          _.extend @scriptNodes, scriptNodes
+
+        @onScriptsLoaded()
+
   destroy: ->
     @_translationSubscribtion.stop()
+
     @_exitsTranslationsAutorun.stop()
     @exitsTranslationSubscribtions = null
 
+    @_translationSubscribtionScript.stop()
+
   ready: ->
     @_translationSubscribtion.ready()
+
+  onScriptsLoaded: -> # Override to create location's script logic. Use @scriptNodes to get access to script nodes.
 
   addExit: (directionKey, locationId) ->
     exits = @exits()
@@ -109,6 +135,14 @@ class LOI.Adventure.Location extends AM.Component
       for translationKey of @translationKeys
         defaultText = @[translationKey]()
         @_createTranslation translationKey, defaultText if defaultText
+
+    # On the server, compile the scripts.
+    if Meteor.isServer and @scriptUrls
+      for scriptUrl in @scriptUrls()
+        [packageId, urlParts...] = scriptUrl.split '/'
+        url = urlParts.join '/'
+        text = LOI.packages[packageId].assets.getText url
+        LOI.Adventure.Script.initialize @id(), text
 
   @_createTranslation: (key, defaultText) ->
     namespace = @id()

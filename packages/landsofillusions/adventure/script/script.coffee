@@ -1,6 +1,25 @@
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Script
+  # Load a script file.
+  @load: (url) ->
+    new Promise (resolve, reject) =>
+      HTTP.call 'GET', url, (error, result) =>
+        if error
+          console.error error
+          reject()
+          return
+
+        # Parse the script text into script nodes.
+        scriptNodes = new @Parser(result.content).parse()
+        resolve scriptNodes
+
+  # Call on the server to prepare translations of a script
+  @initialize: (id, scriptText) ->
+    scriptNodes = new @Parser(scriptText).parse()
+
+  @translate: (id, scriptNodes) ->
+
   @create: (options) ->
     # Work you way from end to start.
     lines = options.script.split /\r?\n/

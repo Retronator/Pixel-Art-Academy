@@ -12,6 +12,7 @@ words =
 
   Verbs:
     Go: ['go']
+    Talk: ['talk']
 
 # Generate default english translations.
 generateDefaultTranslations = (id, words) ->

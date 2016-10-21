@@ -11,6 +11,7 @@ LOI.Adventure.Parser.Vocabulary.Keys =
     
   Verbs:
     Go: ''
+    Talk: ''
 
 # Generate vocabulary keys.
 transformVocabularyKey = (prefix, keys) ->

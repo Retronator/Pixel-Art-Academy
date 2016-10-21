@@ -35,6 +35,12 @@ class LandsOfIllusions
     else
       localStorage.removeItem @characterIdLocalStorageKey
 
+  # Access to package's objects.
+  @packages = {}
+
+  @initializePackage: (packageObjects) ->
+    @packages[packageObjects.id] = packageObjects
+
 LOI = LandsOfIllusions
 
 if Meteor.isClient

@@ -24,9 +24,12 @@ Package.onUse(function(api) {
   api.addFiles('locations/locations.coffee');
 
   api.addFiles('locations/lobby.coffee');
+  api.addAssets('locations/lobby-retro.script', 'server');
+
   api.addFiles('locations/lobby-elevator.coffee');
 
   api.addFiles('locations/store.coffee');
+
   api.addFiles('locations/store-elevator.coffee');
 
 });

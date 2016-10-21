@@ -11,6 +11,9 @@ Talking = LOI.Adventure.Actor.Abilities.Talking
 class HQ.Locations.Lobby extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Lobby'
   @url: -> 'retronator/lobby'
+  @scriptUrls: -> [
+    'retronator_hq/locations/lobby-retro.script'
+  ]
 
   @fullName: -> "Retronator HQ lobby"
 
@@ -29,9 +32,18 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
 
     @addExit Vocabulary.Keys.Directions.In, HQ.Locations.Lobby.Elevator.id()
 
+  onScriptsLoaded: ->
     retro = @addActor new PAA.Cast.Retro
 
     retro.addAbility Action,
-      verb: "talk"
+      verb: Vocabulary.Keys.Verbs.Talk
       action: =>
-        @director.startScript scene1
+        @director.startScript dialogTree
+
+    dialogTree = LOI.Adventure.Script.create
+      director: @director
+
+      actors:
+        retro: retro
+
+      script: @scriptNodes["Retro dialog tree"]
