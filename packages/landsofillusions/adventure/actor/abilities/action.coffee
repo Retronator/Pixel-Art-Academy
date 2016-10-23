@@ -5,7 +5,7 @@ class Actor.Abilities.Action extends Actor.Ability
   constructor: (options) ->
     super
 
-    @verb = options.verb.toLowerCase()
+    @verb = options.verb
     @action = options.action
 
   execute: ->

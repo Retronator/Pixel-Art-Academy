@@ -1,46 +1,47 @@
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Script
-  # Load a script file.
-  @load: (url) ->
-    new Promise (resolve, reject) =>
-      HTTP.call 'GET', url, (error, result) =>
-        if error
-          console.error error
-          reject()
+  constructor: (@options) ->
+    @startNode = @options.startNode
+
+    # Process the script nodes.
+    @_processOnServer() if Meteor.isServer
+    @_processOnClient() if Meteor.isClient
+
+  _processOnServer: ->
+    # On the server we need to prepare translation documents for the script.
+
+  _processOnClient: ->
+    # On the client we need to load the translation documents.
+    
+    # Also replace jump nodes with actual label nodes they point to.
+    @_processNodes @startNode, (node) =>
+      if node.next instanceof @constructor.Nodes.Jump
+        jumpNode = node.next
+        node.next = @startNode.labels[jumpNode.labelName]
+
+  setActors: (actors) ->
+    # Replace actor names with actual object instances.
+    @_processNodes @startNode, (node) =>
+      if node.actor and _.isString node.actor
+        unless actors[node.actor]
+          console.warn "Unknown actor", node.actor
           return
 
-        # Parse the script text into script nodes.
-        scriptNodes = new @Parser(result.content).parse()
-        resolve scriptNodes
+        node.actor = actors[node.actor]
 
-  # Call on the server to prepare translations of a script
-  @initialize: (id, scriptText) ->
-    scriptNodes = new @Parser(scriptText).parse()
+  setDirector: (director) ->
+    # Set the director node on all the nodes.
+    @_processNodes @startNode, (node) =>
+      node.director = director
 
-  @translate: (id, scriptNodes) ->
+  _processNodes: (node, action) ->
+    # Call action on all the nodes of the script.
+    loop
+      action node
 
-  @create: (options) ->
-    # Work you way from end to start.
-    lines = options.script.split /\r?\n/
-    lines.reverse()
+      # If the node has sub-nodes, process those too.
+      @_processNodes node.node, action if node.node
 
-    nextNode = null
-
-    for line in lines
-      # Dialog is of the form "actorName: line to be said".
-      dialog = line.match /\s*(.*\S)\s*:\s*(.*\S)\s*/
-
-      if dialog
-        actorName = dialog[1]
-        line = dialog[2]
-
-        nextNode = new LOI.Adventure.Script.Nodes.DialogLine options.director,
-          actor: options.actors[actorName]
-          line: line
-          next: nextNode
-
-        continue
-
-    # Return nextNode which is by now the start node.
-    nextNode
+      # Continue until we don't have a next node anymore.
+      break unless node = node.next

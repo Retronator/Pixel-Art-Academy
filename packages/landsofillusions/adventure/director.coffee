@@ -10,8 +10,10 @@ class LOI.Adventure.Director
     @autorun =>
       console.log "got new scrips", @currentScripts()
 
-  startScript: (scriptNode) ->
-    @scriptTransition null, scriptNode
+  startScript: (script) ->
+    script.setDirector @
+
+    @scriptTransition null, script.startNode
 
   endScript: (scriptNode) ->
     @scriptTransition scriptNode, null

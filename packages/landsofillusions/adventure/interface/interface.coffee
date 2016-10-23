@@ -1,6 +1,8 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+Nodes = LOI.Adventure.Script.Nodes
+
 class LOI.Adventure.Interface extends AM.Component
   constructor: (@adventure) ->
     super
@@ -38,7 +40,32 @@ class LOI.Adventure.Interface extends AM.Component
     # Override to handle location changes.
 
   _handleScriptNode: (scriptNode) ->
-    @_handleDialogLine scriptNode if scriptNode instanceof LOI.Adventure.Script.Nodes.DialogLine
+    @_handleEmptyNode scriptNode if scriptNode instanceof Nodes.Script
+    @_handleLabelNode scriptNode if scriptNode instanceof Nodes.Label
+    @_handleDialogLine scriptNode if scriptNode instanceof Nodes.DialogLine
+    @_handleConditional scriptNode if scriptNode instanceof Nodes.Conditional
+
+  _handleEmptyNode: (scriptNode) ->
+    # Simply end the node.
+    scriptNode.end()
+
+  _handleLabelNode: (scriptNode) ->
+    # Every node we visit gets set to true on the state, so we can reference it later.
+    state = @location().state()
+    state[scriptNode.name] = true
+    @location().state state
+
+    # Automatically continue.
+    scriptNode.end()
 
   _handleDialogLine: (dialogLine) ->
     console.log "#{dialogLine.actor.name} says: \"#{dialogLine.line}\""
+
+  _handleConditional: (conditional) ->
+    # Give the state to the conditional so that it can evaluate which branch (true or false) to continue to.
+    state = @location().state()
+    conditional.end state
+
+    # Trigger state change. Even though the conditional expressions are usually thought of as
+    # read-only, one can still change state variables in them, for example [readCount++ > 10].
+    @location().state state

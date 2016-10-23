@@ -63,7 +63,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     @narrative?.clear()
 
   _handleDialogLine: (dialogLine) ->
-    @narrative.addText "#{dialogLine.actor.name} says: \"#{dialogLine.line}\""
+    @narrative.addText "#{dialogLine.actor.avatar.shortName()} says: \"#{dialogLine.line}\""
 
     if dialogLine.next
       # Let the user know there is more dialog and wait for their command to continue it.

@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:accounts');
   api.use('http');
+  api.use('promise');
 
   api.imply('retronator:artificialengines');
   api.imply('retronator:accounts');
@@ -79,6 +80,7 @@ Package.onUse(function(api) {
 
   // Script
 
+  api.addFiles('adventure/script/scriptfile.coffee');
   api.addFiles('adventure/script/script.coffee');
 
   api.addFiles('adventure/script/node.coffee');
@@ -86,6 +88,8 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/script.coffee');
   api.addFiles('adventure/script/nodes/label.coffee');
   api.addFiles('adventure/script/nodes/dialogline.coffee');
+  api.addFiles('adventure/script/nodes/conditional.coffee');
+  api.addFiles('adventure/script/nodes/jump.coffee');
 
   api.addFiles('adventure/script/parser/parser.coffee');
 

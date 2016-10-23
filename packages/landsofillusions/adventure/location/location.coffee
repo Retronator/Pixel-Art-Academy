@@ -5,70 +5,6 @@ LOI = LandsOfIllusions
 class LOI.Adventure.Location extends AM.Component
   template: -> 'LandsOfIllusions.Adventure.Location'
 
-  constructor: ->
-    super
-    
-    @exits = new ReactiveField {}
-
-    @director = new LOI.Adventure.Director @
-    @actors = new ReactiveField []
-
-    # Subscribe to this location's translations.
-    translationNamespace = @constructor.id()
-    @_translationSubscribtion = AB.subscribeNamespace translationNamespace
-
-    # Also subscribe to translations of exit locations so we get their names.
-    @exitsTranslationSubscribtions = {}
-    @_exitsTranslationsAutorun = Tracker.autorun (computation) =>
-      for directionKey, locationId of @exits()
-        @exitsTranslationSubscribtions[locationId] = AB.subscribeNamespace locationId
-
-    # Subscribe to this location's script translations.
-    translationNamespace = @constructor.id()
-    @_translationSubscribtionScript = AB.subscribeNamespace "#{translationNamespace}.Script"
-
-    # Create the scripts.
-    @scriptNodes = {}
-    if @constructor.scriptUrls
-      scripts = for scriptUrl in @constructor.scriptUrls()
-        LOI.Adventure.Script.load "/packages/#{scriptUrl}"
-
-      Promise.all(scripts).then (scripts) =>
-        console.log "got results", scripts
-        for scriptNodes in scripts
-          # Because we're on the client, we need to replace text with translations.
-          LOI.Adventure.Script.translate @constructor.id(), scriptNodes
-
-          # Add the loaded and translated script nodes to this location.
-          _.extend @scriptNodes, scriptNodes
-
-        @onScriptsLoaded()
-
-  destroy: ->
-    @_translationSubscribtion.stop()
-
-    @_exitsTranslationsAutorun.stop()
-    @exitsTranslationSubscribtions = null
-
-    @_translationSubscribtionScript.stop()
-
-  ready: ->
-    @_translationSubscribtion.ready()
-
-  onScriptsLoaded: -> # Override to create location's script logic. Use @scriptNodes to get access to script nodes.
-
-  addExit: (directionKey, locationId) ->
-    exits = @exits()
-    exits[directionKey] = locationId
-    @exits exits
-
-  addActor: (actor) ->
-    actor.director @director
-    @actors @actors().concat actor
-
-    # Allow chaining syntax
-    actor
-
   # Static location properties and methods
 
   # Id string for this location used to identify the location in code.
@@ -76,6 +12,21 @@ class LOI.Adventure.Location extends AM.Component
 
   # The URL at which the location is accessed.
   @url: -> throw new Meteor.Error 'unimplemented', "You must specify location's url."
+
+  # The semantic version at which the location's script is at. You
+  # can use the -wip suffix to force constant reloads and re-compiles.
+  @wipSuffix = 'wip'
+  @version: ->
+    "0.0.1-#{@wipSuffix}"
+
+  @versionUrl: (url) ->
+    version = @version()
+
+    # If we're in WIP mode, add a random url version.
+    version = Random.id() if _.endsWith @version(), @wipSuffix
+
+    # Return the url with version added.
+    "#{url}?#{version}"
 
   # Generates the parameters object that can be passed to the router to get to this location URL.
   @urlParameters: ->
@@ -139,10 +90,13 @@ class LOI.Adventure.Location extends AM.Component
     # On the server, compile the scripts.
     if Meteor.isServer and @scriptUrls
       for scriptUrl in @scriptUrls()
-        [packageId, urlParts...] = scriptUrl.split '/'
-        url = urlParts.join '/'
-        text = LOI.packages[packageId].assets.getText url
-        LOI.Adventure.Script.initialize @id(), text
+        [packageId, pathParts...] = scriptUrl.split '/'
+        path = pathParts.join '/'
+        text = LOI.packages[packageId].assets.getText path
+
+        new LOI.Adventure.ScriptFile
+          locationId: @id()
+          text: text
 
   @_createTranslation: (key, defaultText) ->
     namespace = @id()
@@ -153,3 +107,88 @@ class LOI.Adventure.Location extends AM.Component
     return unless translation
 
     translation.translate Artificial.Babel.userLanguagePreference()
+
+  # Location instance.
+
+  constructor: ->
+    super
+
+    @exits = new ReactiveField {}
+
+    @director = new LOI.Adventure.Director @
+    @actors = new ReactiveField []
+
+    @state = new ReactiveField {}
+    @_initializeState()
+
+    # Subscribe to this location's translations.
+    translationNamespace = @constructor.id()
+    @_translationSubscribtion = AB.subscribeNamespace translationNamespace
+
+    # Also subscribe to translations of exit locations so we get their names.
+    @exitsTranslationSubscribtions = {}
+    @_exitsTranslationsAutorun = Tracker.autorun (computation) =>
+      for directionKey, locationId of @exits()
+        @exitsTranslationSubscribtions[locationId] = AB.subscribeNamespace locationId
+
+    # Subscribe to this location's script translations.
+    translationNamespace = @constructor.id()
+    @_translationSubscribtionScript = AB.subscribeNamespace "#{translationNamespace}.Script"
+
+    # Create the scripts.
+    @scripts= {}
+
+    if @constructor.scriptUrls
+      scriptFiles = for scriptUrl in @constructor.scriptUrls()
+        file = new LOI.Adventure.ScriptFile
+          locationId: @constructor.id()
+          url: @constructor.versionUrl "/packages/#{scriptUrl}"
+
+        file.promise
+
+      Promise.all(scriptFiles).then (scriptFiles) =>
+        for scriptFile in scriptFiles
+          # Add the loaded and translated script nodes to this location.
+          _.extend @scripts, scriptFile.scripts
+
+        @onScriptsLoaded()
+
+  destroy: ->
+    @_translationSubscribtion.stop()
+
+    @_exitsTranslationsAutorun.stop()
+    @exitsTranslationSubscribtions = null
+
+    @_translationSubscribtionScript.stop()
+
+  ready: ->
+    @_translationSubscribtion.ready()
+
+  onScriptsLoaded: -> # Override to create location's script logic. Use @scriptNodes to get access to script nodes.
+
+  _initializeState: ->
+    localStorageKey = "#{@constructor.id()}.state"
+
+    # Load the current state from local storage.
+    storedState = localStorage.getItem localStorageKey
+    @state EJSON.parse storedState if storedState
+
+    # Start listening for state changes.
+    @_stateChangeAutorun = Tracker.autorun (computation) =>
+      state = @state()
+
+      # Store the new state into local storage.
+      encodedValue = EJSON.stringify state
+      localStorage.setItem localStorageKey, encodedValue
+
+  addExit: (directionKey, locationId) ->
+    exits = @exits()
+    exits[directionKey] = locationId
+    @exits exits
+
+  addActor: (actor) ->
+    actor.director @director
+    @actors @actors().concat actor
+
+    # Allow chaining syntax.
+    actor

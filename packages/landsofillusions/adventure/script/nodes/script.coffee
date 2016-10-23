@@ -6,4 +6,4 @@ class Script.Nodes.Script extends Script.Node
     super
     
     @name = options.name
-    @labels = {}
+    @labels = options.labels

@@ -40,10 +40,7 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
       action: =>
         @director.startScript dialogTree
 
-    dialogTree = LOI.Adventure.Script.create
-      director: @director
+    dialogTree = @scripts["Retro dialog tree"]
 
-      actors:
-        retro: retro
-
-      script: @scriptNodes["Retro dialog tree"]
+    dialogTree.setActors
+      retro: retro
