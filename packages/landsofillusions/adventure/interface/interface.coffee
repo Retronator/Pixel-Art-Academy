@@ -33,23 +33,24 @@ class LOI.Adventure.Interface extends AM.Component
 
       # We handle scripts once per change.
       Tracker.nonreactive =>
-        for scriptNode in scriptNodes
-           @_handleScriptNode scriptNode
+        @_handleNode node for node in scriptNodes
 
   onLocationChanged: (location) ->
     # Override to handle location changes.
 
-  _handleScriptNode: (scriptNode) ->
-    @_handleEmptyNode scriptNode if scriptNode instanceof Nodes.Script
-    @_handleLabelNode scriptNode if scriptNode instanceof Nodes.Label
+  _handleNode: (scriptNode) ->
+    @_handleEmpty scriptNode if scriptNode instanceof Nodes.Script
+    @_handleLabel scriptNode if scriptNode instanceof Nodes.Label
     @_handleDialogLine scriptNode if scriptNode instanceof Nodes.DialogLine
-    @_handleConditional scriptNode if scriptNode instanceof Nodes.Conditional
 
-  _handleEmptyNode: (scriptNode) ->
+    # Handle Code nodes, which includes Conditional nodes since they inherit from Code.
+    @_handleCode scriptNode if scriptNode instanceof Nodes.Code
+
+  _handleEmpty: (scriptNode) ->
     # Simply end the node.
     scriptNode.end()
 
-  _handleLabelNode: (scriptNode) ->
+  _handleLabel: (scriptNode) ->
     # Every node we visit gets set to true on the state, so we can reference it later.
     state = @location().state()
     state[scriptNode.name] = true
@@ -61,11 +62,10 @@ class LOI.Adventure.Interface extends AM.Component
   _handleDialogLine: (dialogLine) ->
     console.log "#{dialogLine.actor.name} says: \"#{dialogLine.line}\""
 
-  _handleConditional: (conditional) ->
-    # Give the state to the conditional so that it can evaluate which branch (true or false) to continue to.
+  _handleCode: (code) ->
+    # Give the location state to the code to use as context for the variables.
     state = @location().state()
-    conditional.end state
+    code.end state
 
-    # Trigger state change. Even though the conditional expressions are usually thought of as
-    # read-only, one can still change state variables in them, for example [readCount++ > 10].
+    # Trigger reactive state change.
     @location().state state

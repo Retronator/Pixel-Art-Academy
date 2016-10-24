@@ -14,40 +14,55 @@ class LOI.Adventure.ScriptFile.Parser
 
     # TODO: Replace with by -1 when upgrading to new CS.
     lines.reverse()
-    for line in lines
-      # Parse the line with matches in the correct order (for example, label must
-      # go before script, since script would also match the label regex).
-      for parseRoutine in [
-        '_parseLabelNode'
-        '_parseScriptNode'
-        '_parseDialogNode'
-      ]
-        node = @[parseRoutine] line
-
-        if node
-          # See if there is a condition on the line.
-          [..., conditionalNode] = @_parseConditional line
-
-          if conditionalNode
-            # Embed returned node in the conditional.
-            conditionalNode.node = node
-            conditionalNode.next = @nextNode
-            node = conditionalNode
-
-          # Set the created node as the next node, except on script nodes, which break continuity.
-          @nextNode = if node instanceof Nodes.Script then null else node
-
-          # Stop parsing this line.
-          break
+    @_parseLine line for line in lines
 
     console.log "COMPLETED PARSING", @scriptNodes
 
     @scriptNodes
 
+  _parseLine: (line) ->
+    # Parse the line with matches in the correct order (for example, label must
+    # go before script, since script would also match the label regex).
+    for parseRoutine in [
+      '_parseLabel'
+      '_parseScript'
+      '_parseChoice'
+      '_parseJump'
+      '_parseDialog'
+      '_parseCode'
+    ]
+      rest = null
+      node = @[parseRoutine] line
+
+      if _.isArray node
+        # We got back a new node and there's more text left to parse.
+        [rest, node] = node
+
+      if node
+        # See if there is a condition on the line.
+        [..., conditionalNode] = @_parseConditional line
+
+        if conditionalNode
+          # Embed returned node in the conditional.
+          conditionalNode.node = node
+          conditionalNode.next = @nextNode
+          node = conditionalNode
+
+        # Set the created node as the next node, except on script nodes, which break continuity.
+        @nextNode = if node instanceof Nodes.Script then null else node
+
+        # If there is some text left, parse the rest too.
+        if rest
+          rest = rest.trim()
+          @_parseLine rest if rest.length
+
+        # Stop parsing this line.
+        break
+
   ###
     ## label name
   ###
-  _parseLabelNode: (line) ->
+  _parseLabel: (line) ->
     return unless match = line.match /##\s*(.*?)\s*$/
 
     node = new Nodes.Label
@@ -61,7 +76,7 @@ class LOI.Adventure.ScriptFile.Parser
   ###
     # script name
   ###
-  _parseScriptNode: (line) ->
+  _parseScript: (line) ->
     return unless match = line.match /#\s*(.*?)\s*$/
 
     node = new Nodes.Script
@@ -84,7 +99,7 @@ class LOI.Adventure.ScriptFile.Parser
         dialog line 1
         dialog line 2
   ###
-  _parseDialogNode: (line) ->
+  _parseDialog: (line) ->
     return unless match = line.match /^(\S.*):((?:.|\n)*)/
 
     # We have a dialog line and we know who the actor is.
@@ -143,14 +158,47 @@ class LOI.Adventure.ScriptFile.Parser
     nextNode
 
   ###
-    any line [javascript condition]
+    * dialog line -> `label name`
+  ###
+  _parseChoice: (line) ->
+    return null unless match = line.match /\*\s*(.*?)\s*->/
+
+    choiceLine = match[1]
+
+    # Get the jump part out of the line.
+    [..., jumpNode] = @_parseJump line
+    
+    # Create a dialog node without an actor (the player's character delivers it), followed by the jump.
+    dialogNode = new Nodes.DialogLine
+      line: choiceLine
+      next: jumpNode
+      
+    # Create a choice node that delivers the line if chosen.
+    choiceNode = new Nodes.Choice
+      node: dialogNode
+      next: @nextNode
+
+    choiceNode
+
+  ###
+    `javascript expression`
+  ###
+  _parseCode: (line) ->
+    return null unless match = line.match /^`(.*?)`/
+
+    new Nodes.Code
+      expression: match[1]
+      next: @nextNode
+
+  ###
+    any line `javascript condition`
   ###
   _parseConditional: (line) ->
     # We should only consider the first line in (indented) multi-line strings.
     line = line.match(/^.*$/gm)[0]
 
     # Now detect the line [condition]
-    match = line.match /(.*)\[(.*)]/
+    match = line.match /(.+)`(.*)`/
     return [line, null] unless match
 
     line = match[1]
@@ -158,3 +206,17 @@ class LOI.Adventure.ScriptFile.Parser
       expression: match[2]
 
     [line, conditionalNode]
+
+  ###
+    any line -> [label name]
+    --or--
+    -> [label name]
+  ###
+  _parseJump: (line) ->
+    return [line, null] unless match = line.match /(.*)->\s*\[(.*?)]/
+
+    line = match[1]
+    jumpNode = new Nodes.Jump
+      labelName: match[2]
+
+    [line, jumpNode]

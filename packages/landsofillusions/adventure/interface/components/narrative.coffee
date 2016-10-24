@@ -2,7 +2,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Interface.Components.Narrative
-  constructor: (@textInterface) ->
+  constructor: (@options) ->
     @text = new ReactiveField ""
 
   lines: ->
@@ -38,5 +38,5 @@ class LOI.Adventure.Interface.Components.Narrative
     hidden = Math.max 0, totalContentHeight - uiHeight
 
     # Make sure the latest narrative is visible, by scrolling text display content to the bottom.
-    @textInterface.resizing._animateElement $textInterface.find('.text-display .scrollable-content'), options.animate,
+    @options.textInterface.resizing?._animateElement $textInterface.find('.text-display .scrollable-content'), options.animate,
       top: -hidden

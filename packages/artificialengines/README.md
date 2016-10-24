@@ -48,8 +48,9 @@ category. The place for them is Artificial Everywhere (AE).
 - **Rectangle**: A reactive rectangle data structure.
 - **Three.js**:
   - **Color**: Extra functionality for the color class.
-- **Underscore**:
+- **LoDash**:
   - **LetterCase**: String operations that change letter case.
+  - **Math**: Math operations not available natively.
   - **NestedProperty**: Access to properties on nested objects.
   - **Urls**: Operations that deal with URL strings.
 

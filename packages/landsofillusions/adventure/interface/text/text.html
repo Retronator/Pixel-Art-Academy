@@ -38,6 +38,15 @@
           {{#if showCommandLine}}
             <div class="command-line">&gt; {{commandInput.command}}</div>
           {{/if}}
+          {{#if showDialogSelection}}
+            <div class="dialog-selection">
+              <ul class="options">
+                {{#each dialogSelection.dialogLineOptions}}
+                  <li class="option {{activeDialogOptionClass}}">{{line}}</li>
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
           <div class="bottom"></div>
         </div>
       </div>

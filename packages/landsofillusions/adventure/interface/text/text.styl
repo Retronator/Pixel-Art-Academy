@@ -36,8 +36,7 @@ hoverable()
 
       .narrative
         p
-          margin 0
-          padding-bottom lineHeight
+          margin 0 0 lineHeight
 
         .exits
           .exit
@@ -52,7 +51,7 @@ hoverable()
                 content: "."
 
         .actors-sentence
-          padding-bottom 0
+          margin-bottom 0
 
         .actors
           list-style none
@@ -67,7 +66,25 @@ hoverable()
 
       .command-line
         text-transform uppercase
-        padding-bottom lineHeight
+        margin-bottom lineHeight
+
+      .dialog-selection
+        .options
+          list-style none
+          margin 0 0 lineHeight
+          padding 0
+
+          .option
+            padding 1rem 7rem
+            margin-top -1rem
+
+            &.active
+              background atari2600grey(7)
+              color atari2600grey(0)
+              padding-left 0
+
+              &::before
+                content "> "
 
       // This is an empty element at the bottom of the text-display so that velocityjs has a target to scroll to.
       .bottom

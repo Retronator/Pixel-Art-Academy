@@ -1,41 +1,39 @@
-# Retro dialog tree    
+# Retro dialog tree
 
 ## Start     
-retro: [!MainQuestion]
+retro: `!MainQuestion`
     Hey there, welcome to Retronator! 
     How can I help you today?
 
-retro: [MainQuestion]
-    Can I help you with anything else? [helped]
-    Hi again! [!helped]
+retro: `MainQuestion`
+    Can I help you with anything else? `helped`
+    Hi again! `!helped`
 
 ## MainQuestion
-* I would like to sign in. -> `SignIn`
-* I have a question. -> `Question`
-* Oh, just looking. -> `End` [!helped]
-* Thank you so much! -> `End` [helped]
+* I would like to sign in. -> [SignIn]
+* I have a question. -> [Question]
+* Oh, just looking. -> [End] `!helped`
+* Thank you so much! -> [End] `helped`
 
 ## SignIn
-[helped = true]
+`helped = true`
+`return 'Sign in'`
 
-retro: Certainly!
-
-[return 'Sign in']
--> `End`
+retro: Certainly! -> [End]
 
 ## Question
-[helped = true]
+`helped = true`
 
-* What is this place? -> `RetronatorHQ`
-* I'd like to know more about Pixel Art Academy. -> `PixelArtAcademy`
-* Actually, nevermind. -> `Start`
+* What is this place? -> [RetronatorHQ]
+* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy]
+* Actually, nevermind. -> [Start]
 
 ## RetronatorHQ
 retro:
     This is Retronator Headquarters where I work on Retronator Magazine and Pixel Art Academy. 
     You can visit the store on second floor if you'd like to purchase the game.
 
--> `Question`
+-> [Question]
 
 ## PixelArtAcademy
 retro: 
@@ -43,7 +41,7 @@ retro:
     Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist. 
     Take a look at the school's prospectus to find out more.
     
-[return 'Prospectus']
--> `End`
+`return 'Prospectus'`
+-> [End]
 
 ## End

@@ -6,16 +6,15 @@ class LOI.Adventure.Interface.Components.CommandInput
     @command = new ReactiveField ""
 
     # Capture key events.
-    $(document).keypress (event) =>
+    $(document).on 'keypress.commandInput', (event) =>
       @onKeyPress event
 
-    $(document).keydown (event) =>
+    $(document).on 'keydown.commandInput', (event) =>
       @onKeyDown event
 
   destroy: ->
     # Remove key events.
-    $(document).off('keypress')
-    $(document).off('keydown')
+    $(document).off('.commandInput')
 
   clear: ->
     @command ""

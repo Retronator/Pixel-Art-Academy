@@ -35,7 +35,7 @@ class LOI.Adventure.Interface.Text.Resizing
 
         $textInterface.find('.location').css(locationSize.toDimensions())
 
-        # Resize user interface. We make sure the UI has at least 10px side margin, but make the inner content align with
+        # Resize user interface. We make sure the UI has at least the side margin, but make the inner content align with
         # location illustration if possible. We do that by seeing if we have empty room left/right from the viewport.
         totalWidth = viewport.viewportBounds.width() + viewport.viewportBounds.x() * 2
 
@@ -48,7 +48,7 @@ class LOI.Adventure.Interface.Text.Resizing
         # UI height fills the rest.
         uiHeight = viewport.viewportBounds.height() - locationSize.height()
 
-        # But make it a multiple of line height (10px) and add one line for border.
+        # But make it a multiple of line height and add one line for border.
         uiHeight = Math.max 0, Math.floor(uiHeight / lineHeight - 1) * lineHeight
 
         uiSize = new AE.Rectangle
@@ -57,18 +57,18 @@ class LOI.Adventure.Interface.Text.Resizing
           width: uiWidth
           height: uiHeight
 
-        # Put 20px margin between text display and interface and 10px padding
-        # on the outside (total 40px). After that split them 70/30%.
+        # Put double the side margin gap between text display and interface and side margin
+        # on the outside (total 4 times the side margin). After that split them 70:30.
         textDisplaySize = new AE.Rectangle
           x: sideMargin
           y: 0
-          width: (uiWidth - 2 * sideMargin) * 0.7
+          width: (uiWidth - 4 * sideMargin) * 0.7
           height: uiHeight
 
         inventorySize = new AE.Rectangle
-          x: textDisplaySize.right() + sideMargin
+          x: textDisplaySize.right() + 2 * sideMargin
           y: 0
-          width: (uiWidth - 2 * sideMargin) * 0.3
+          width: (uiWidth - 4 * sideMargin) * 0.3
           height: uiHeight
 
         $ui.css(uiSize.toDimensions())

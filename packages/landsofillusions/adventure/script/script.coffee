@@ -4,7 +4,16 @@ class LOI.Adventure.Script
   constructor: (@options) ->
     @startNode = @options.startNode
 
-    # Process the script nodes.
+    # Gather all the nodes in this graph for easier processing.
+    @nodes = []
+
+    # First we add the main node.
+    @_addNode @startNode
+
+    # Second we add all the label nodes since some might be only reachable from jump calls.
+    @_addNode label for labelName, label of @startNode.labels
+
+    # Now process the script nodes.
     @_processOnServer() if Meteor.isServer
     @_processOnClient() if Meteor.isClient
 
@@ -15,14 +24,14 @@ class LOI.Adventure.Script
     # On the client we need to load the translation documents.
     
     # Also replace jump nodes with actual label nodes they point to.
-    @_processNodes @startNode, (node) =>
+    for node in @nodes
       if node.next instanceof @constructor.Nodes.Jump
         jumpNode = node.next
         node.next = @startNode.labels[jumpNode.labelName]
 
   setActors: (actors) ->
     # Replace actor names with actual object instances.
-    @_processNodes @startNode, (node) =>
+    for node in @nodes
       if node.actor and _.isString node.actor
         unless actors[node.actor]
           console.warn "Unknown actor", node.actor
@@ -32,16 +41,14 @@ class LOI.Adventure.Script
 
   setDirector: (director) ->
     # Set the director node on all the nodes.
-    @_processNodes @startNode, (node) =>
-      node.director = director
+    node.director = director for node in @nodes
 
-  _processNodes: (node, action) ->
-    # Call action on all the nodes of the script.
-    loop
-      action node
+  _addNode: (node) ->
+    # Add the node only if it hasn't already added.
+    return if not node or node in @nodes
 
-      # If the node has sub-nodes, process those too.
-      @_processNodes node.node, action if node.node
+    @nodes.push node
 
-      # Continue until we don't have a next node anymore.
-      break unless node = node.next
+    # Recursively add the next and node node.
+    @_addNode node.next
+    @_addNode node.node

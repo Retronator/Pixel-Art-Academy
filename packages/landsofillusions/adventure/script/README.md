@@ -35,13 +35,14 @@ actor name:
 
 #### Choice
 ```
-* dialog line
+* dialog line -> [label name]
 ```
-`Choice` node with `DialogLine` nodes that the player can decide between.
+`Choice` node with a `DialogLine` node that the player can decide between. 
+If choice is taken, script continues to given `Label`. (see `Jump` node below).
 
 #### Code
 ```
-[javascript code]
+`javascript expression`
 ```
 `Code` node that gets executed and potentially writes to the game state.
 
@@ -50,18 +51,18 @@ actor name:
 #### Conditionals
 
 ```
-any line [javascript condition]
+any line `javascript condition`
 ```
 Include the preceding node only if condition evaluates to a truthy value.
 
 #### Jump
 
 ```
-any line -> label name
+any line -> [label name]
 ```
 or
 ```
--> label name
+-> [label name]
 ```
 
 Jump to the `Label` node after this node (instead of following through to the node below in the script).

@@ -3,6 +3,8 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+Nodes = LOI.Adventure.Script.Nodes
+
 class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
   @register 'LandsOfIllusions.Adventure.Interface.Text'
 
@@ -20,32 +22,19 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       maxAspectRatio: 2
       debug: false
 
-    @_pausedDialogLine = new ReactiveField null
+    @_pausedDialogLines = new ReactiveField null
 
-    @narrative = new LOI.Adventure.Interface.Components.Narrative @
+    @narrative = new LOI.Adventure.Interface.Components.Narrative
+      textInterface: @
 
     @commandInput = new LOI.Adventure.Interface.Components.CommandInput
-      onEnter: =>
-        # Resume dialog on any key press.
-        pausedDialogLine = @_pausedDialogLine()
-        if pausedDialogLine
-          @_pausedDialogLine null
+      onEnter: => @onCommandInputEnter()
+      onKeyDown: => @onCommandInputKeyDown()
 
-          pausedDialogLine.end()
-          @commandInput.clear()
-          return
+    @dialogSelection = new LOI.Adventure.Interface.Components.DialogSelection
+      interface: @
+      onEnter: => @onDialogSelectionEnter()
 
-        command = @commandInput.command().trim()
-        return unless command.length
-
-        @narrative.addText "> #{command.toUpperCase()}"
-        @adventure.parser.parse command
-        @commandInput.clear()
-
-      onKeyDown: =>
-        # Scroll to bottom on key press.
-        @narrative.scroll()
-        
   onRendered: ->
     super
 
@@ -61,17 +50,6 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     
   onLocationChanged: (location) ->
     @narrative?.clear()
-
-  _handleDialogLine: (dialogLine) ->
-    @narrative.addText "#{dialogLine.actor.avatar.shortName()} says: \"#{dialogLine.line}\""
-
-    if dialogLine.next
-      # Let the user know there is more dialog and wait for their command to continue it.
-      @_pausedDialogLine dialogLine
-
-    else
-      # We're done with this text so finish it.
-      dialogLine.end()
       
   introduction: ->
     location = @location()
@@ -107,8 +85,20 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     AB.translate(subscriptionHandle, key).text
 
   showCommandLine: ->
-    # Show command line unless we're waiting to display dialog.
-    not @_pausedDialogLine()
+    # Show command line unless we're displaying a dialog.
+    not @showDialogSelection() and not @_pausedDialogLines()
+
+  showDialogSelection: ->
+    # After the new choices are re-rendered, scroll down the narrative.
+    Tracker.afterFlush => @narrative.scroll()
+
+    # Show the dialog selection when we have some choices available.
+    @dialogSelection.dialogLineOptions()
+
+  activeDialogOptionClass: ->
+    option = @currentData()
+
+    'active' if option is @dialogSelection.selectedDialogLine()
 
   showInventory: ->
     true
@@ -132,3 +122,78 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     newTop = _.clamp newTop, -ammountHidden, 0
 
     $scrollableContent.css top: newTop
+
+  onCommandInputEnter: ->
+    # Resume dialog on any key press.
+    pausedDialogLines = @_pausedDialogLines()
+    if pausedDialogLines
+      @_pausedDialogLines null
+
+      # Transition from the first dialog line to the next of the last.
+      firstDialogLine = _.first pausedDialogLines
+      lastDialogLine = _.last pausedDialogLines
+
+      firstDialogLine.director.scriptTransition firstDialogLine, lastDialogLine.next
+
+      # Clear the command input in case it accumulated any text in the mean time.
+      @commandInput.clear()
+      return
+
+    command = @commandInput.command().trim()
+    return unless command.length
+
+    @narrative.addText "> #{command.toUpperCase()}"
+    @adventure.parser.parse command
+    @commandInput.clear()
+
+  onCommandInputKeyDown: ->
+    # Scroll to bottom on key press.
+    @narrative.scroll()
+    
+  onDialogSelectionEnter: ->
+    # Continue with the selection.
+    @_dialogSelectionConfirm()
+
+  _dialogSelectionConfirm: ->
+    @dialogSelection.confirm()
+
+  # Overrides for how the text adventure interface deals with script nodes.
+
+  _handleDialogLine: (dialogLine) ->
+    unless dialogLine.actor
+      # There is no actor, which means the player is saying this. Simply dump it into the narrative and finish.
+      @narrative.addText "> \"#{dialogLine.line.toUpperCase()}\""
+      dialogLine.end()
+      return
+
+    # We have an actor that is saying this. Collect all the dialog lines in a row by the same actor.
+    dialogLines = [dialogLine]
+    scriptNode = dialogLine
+
+    while scriptNode = scriptNode.next
+      # Search for another dialog line by the same actor.
+      if scriptNode instanceof Nodes.DialogLine and scriptNode.actor is dialogLine.actor
+        # Found another one, add it and continue.
+        dialogLines.push scriptNode
+
+      else
+        # Nothing more to be found, so stop looking.
+        break
+
+    # Add a new paragraph to the narrative for each line.
+    for dialogLine in dialogLines
+      text = dialogLine.line
+
+      # Add the intro line at the start.
+      if dialogLine is _.first dialogLines
+        text = "#{dialogLine.actor.avatar.shortName()} says: \"#{text}"
+
+      # Add the closing quote at the end.
+      if dialogLine is _.last dialogLines
+        text = "#{text}\""
+
+      # Present the text to the player.
+      @narrative.addText text
+
+    # Wait for player's command to continue.
+    @_pausedDialogLines dialogLines

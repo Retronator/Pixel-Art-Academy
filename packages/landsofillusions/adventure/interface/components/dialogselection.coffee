@@ -1,0 +1,93 @@
+AM = Artificial.Mirage
+LOI = LandsOfIllusions
+
+Nodes = LOI.Adventure.Script.Nodes
+
+class LOI.Adventure.Interface.Components.DialogSelection
+  constructor: (@options) ->
+    @command = new ReactiveField ""
+
+    @selectedDialogLine = new ReactiveField null
+
+    # Provide a list of options.
+    @choiceNode = new ComputedField =>
+      # Listen to current scripts until we find a choice node.
+      location = @options.interface.adventure.currentLocation()
+      return unless location
+
+      for scriptNode in location.director.currentScripts()
+        return scriptNode if scriptNode instanceof Nodes.Choice
+
+    # Provide a list of dialog line options.
+    @dialogLineOptions = new ComputedField =>
+      scriptNode = @choiceNode()
+      return unless scriptNode
+
+      choiceNodes = [scriptNode]
+      locationState = @options.interface.adventure.currentLocation().state()
+
+      # Follow the next chain and collect choice nodes until you find a
+      # non-choice node. Note that choice nodes can be wrapped in conditionals.
+      while scriptNode = scriptNode.next
+        # Let's see if we have another choice node.
+        if scriptNode instanceof Nodes.Choice
+          # Looks like we have a choice! Add it to our choices.
+          choiceNodes.push scriptNode
+
+        else if scriptNode instanceof Nodes.Conditional and scriptNode.node instanceof Nodes.Choice
+          # We have a choice node inside a conditional, let's see if we should add it. We evaluate the
+          # conditional, but we don't trigger reactive change to the state since we're doing this from a reactive
+          # calculation itself (that might run many times). Thus dialog line conditionals are not a good place to put
+          # state changes.
+          result = scriptNode.evaluate locationState
+
+          # Add the embedded choice node to our list.
+          choiceNodes.push scriptNode.node if result
+
+        else
+          # We have gone over all the choice nodes in the line so we're done.
+          break
+
+      # Alright, we found all the choices. Set the first node as the initial choice.
+      @selectedDialogLine choiceNodes[0].node
+
+      # Return the embedded dialog nodes as the selection.
+      choiceNode.node for choiceNode in choiceNodes
+
+    # Capture key events.
+    $(document).on 'keydown.dialogSelection', (event) =>
+      @onKeyDown event
+
+  destroy: ->
+    # Remove key events.
+    $(document).off('.dialogSelection')
+
+  confirm: ->
+    # Confirms the current selection and transitions the script from the choice to the selected dialog line.
+    @options.interface.adventure.currentLocation().director.scriptTransition @choiceNode(), @selectedDialogLine()
+
+  onKeyDown: (event) ->
+    return unless @choiceNode()
+
+    switch event.which
+      # Up
+      when 38
+        event.preventDefault()
+        @_moveSelection -1
+        
+      # Down
+      when 40
+        event.preventDefault()
+        @_moveSelection 1
+
+      # Enter
+      when 13
+        @options?.onEnter?()
+
+  _moveSelection: (offset) ->
+    choices = @dialogLineOptions()
+
+    index = _.indexOf choices, @selectedDialogLine()
+
+    newIndex = _.clamp index + offset, 0, choices.length - 1
+    @selectedDialogLine choices[newIndex]
