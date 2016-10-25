@@ -114,6 +114,7 @@ Package.onUse(function(api) {
 
   api.addFiles('mummification/mongohelper.coffee');
   api.addFiles('mummification/document.coffee');
+  api.addFiles('mummification/persistentstorage.coffee');
 
   // Artificial Telepathy
   api.addFiles('telepathy/telepathy.coffee');

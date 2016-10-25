@@ -1,37 +1,94 @@
-# Retro dialog tree
+# Retronator.HQ.Locations.Lobby.Scripts.Retro
 
 ## Start     
-retro: `!MainQuestion`
+retro: `not _MainQuestion`
     Hey there, welcome to Retronator! 
     How can I help you today?
 
-retro: `MainQuestion`
-    Can I help you with anything else? `helped`
-    Hi again! `!helped`
+retro: `_MainQuestion`
+    Can I help you with anything else? `_helped`
+    Hi again! `not _helped`
 
 ## MainQuestion
+`_answered = false`
+
 * I would like to sign in. -> [SignIn]
 * I have a question. -> [Question]
-* Oh, just looking. -> [End] `!helped`
-* Thank you so much! -> [End] `helped`
+* Oh, just looking. -> [End] `not _helped`
+* Thank you so much! -> [End] `_helped`
 
 ## SignIn
-`helped = true`
-`return 'Sign in'`
+`_helped = true`
 
-retro: Certainly! -> [End]
+retro: Certainly!
+
+> You reach for your wallet and present your ID.
+
+### SignInActive
+
+-> [SignInFailed] `not @user`
+-> [JustRegistered] `@user and not @user.registered`
+
+retro: Welcome back, `@user.name`. I see you have driven here in your Ferrari. `@user.name`
+retro: Welcome back. `not @user.name`
+
+> Retro searches the file cabinet under the desk and hands you a folder.
+
+retro: Here is your account file. Feel free to update any information in there.
+-> [End]
+
+## SignInFailed
+
+<!-- TODO: Add in FAQ about signing in. -->
+
+retro: Perhaps next time. 
+
+-> [Start]
+
+## JustRegistered
+
+<!-- TODO: Add in the script for starting out. -->
+
+retro: Oh, you are new!!!
+
+-> [Start]
 
 ## Question
-`helped = true`
+`_helped = true`
 
 * What is this place? -> [RetronatorHQ]
-* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy]
-* Actually, nevermind. -> [Start]
+* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQ`
+* So about that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQ`
+* Actually, nevermind. -> [Start] `not _answered`
+* I would like to do something else. -> [MainQuestion] `_answered`
+* Thank you, you've been most helpful. -> [End] `_answered`
 
 ## RetronatorHQ
+`_answered = true`
+
 retro:
     This is Retronator Headquarters where I work on Retronator Magazine and Pixel Art Academy. 
     You can visit the store on second floor if you'd like to purchase the game.
+
+-> [Question]
+
+## RetronatorMagazine
+`_answered = true`
+
+retro: Yes, it's a publication you can read on Medium, all about pixel art! Would you like to read it now?
+    
+* Sure, I'll take a look. -> [ReadRetronatorMagazine]
+* Maybe later.
+
+retro: Sounds good. It's available at https://medium.com/retronator-magazine. 
+
+-> [Question]
+
+## ReadRetronatorMagazine
+
+> Retro turns around his computer screen and shows you the website.
+
+### OpenRetronatorMagazine
 
 -> [Question]
 
@@ -41,7 +98,10 @@ retro:
     Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist. 
     Take a look at the school's prospectus to find out more.
     
-`return 'Prospectus'`
+> Retro hands over a digital paper that seems to use some sort of e-ink to display information.
+
+### GiveProspectus
+
 -> [End]
 
 ## End

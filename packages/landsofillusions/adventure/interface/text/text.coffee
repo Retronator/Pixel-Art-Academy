@@ -197,3 +197,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     # Wait for player's command to continue.
     @_pausedDialogLines dialogLines
+
+  _handleNarrativeLine: (narrativeLine) ->
+    # Simply output the line to the narrative and move on.
+    @narrative.addText narrativeLine.line
+    narrativeLine.end()

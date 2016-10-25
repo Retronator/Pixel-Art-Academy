@@ -110,7 +110,7 @@ class LOI.Adventure.Location extends AM.Component
 
   # Location instance.
 
-  constructor: ->
+  constructor: (@options) ->
     super
 
     @exits = new ReactiveField {}
@@ -119,7 +119,9 @@ class LOI.Adventure.Location extends AM.Component
     @actors = new ReactiveField []
 
     @state = new ReactiveField {}
-    @_initializeState()
+    @_stateAutorun = Artificial.Mummification.PersistentStorage.persist
+      storageKey: "#{@constructor.id()}.state"
+      field: @state
 
     # Subscribe to this location's translations.
     translationNamespace = @constructor.id()
@@ -141,8 +143,9 @@ class LOI.Adventure.Location extends AM.Component
     if @constructor.scriptUrls
       scriptFiles = for scriptUrl in @constructor.scriptUrls()
         file = new LOI.Adventure.ScriptFile
-          locationId: @constructor.id()
           url: @constructor.versionUrl "/packages/#{scriptUrl}"
+          location: @
+          adventure: @options.adventure
 
         file.promise
 
@@ -161,25 +164,12 @@ class LOI.Adventure.Location extends AM.Component
 
     @_translationSubscribtionScript.stop()
 
+    @_stateAutorun.stop()
+
   ready: ->
     @_translationSubscribtion.ready()
 
   onScriptsLoaded: -> # Override to create location's script logic. Use @scriptNodes to get access to script nodes.
-
-  _initializeState: ->
-    localStorageKey = "#{@constructor.id()}.state"
-
-    # Load the current state from local storage.
-    storedState = localStorage.getItem localStorageKey
-    @state EJSON.parse storedState if storedState
-
-    # Start listening for state changes.
-    @_stateChangeAutorun = Tracker.autorun (computation) =>
-      state = @state()
-
-      # Store the new state into local storage.
-      encodedValue = EJSON.stringify state
-      localStorage.setItem localStorageKey, encodedValue
 
   addExit: (directionKey, locationId) ->
     exits = @exits()

@@ -40,7 +40,11 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
       action: =>
         @director.startScript dialogTree
 
-    dialogTree = @scripts["Retro dialog tree"]
+    dialogTree = @scripts['Retronator.HQ.Locations.Lobby.Scripts.Retro']
 
     dialogTree.setActors
       retro: retro
+
+    dialogTree.setCallbacks
+      SignInActive: (completeMethod) =>
+        # TODO: Open wallet sign in page.

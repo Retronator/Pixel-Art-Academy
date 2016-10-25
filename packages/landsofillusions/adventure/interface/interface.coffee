@@ -38,34 +38,28 @@ class LOI.Adventure.Interface extends AM.Component
   onLocationChanged: (location) ->
     # Override to handle location changes.
 
-  _handleNode: (scriptNode) ->
-    @_handleEmpty scriptNode if scriptNode instanceof Nodes.Script
-    @_handleLabel scriptNode if scriptNode instanceof Nodes.Label
-    @_handleDialogLine scriptNode if scriptNode instanceof Nodes.DialogLine
+  _handleNode: (node) ->
+    @_handleEmpty node if node instanceof Nodes.Script
+    @_handleEmpty node if node instanceof Nodes.Label
+    @_handleDialogLine node if node instanceof Nodes.DialogLine
+    @_handleNarrativeLine node if node instanceof Nodes.NarrativeLine
 
     # Handle Code nodes, which includes Conditional nodes since they inherit from Code.
-    @_handleCode scriptNode if scriptNode instanceof Nodes.Code
+    @_handleEmpty node if node instanceof Nodes.Code
+
+    @_handleCallback node if node instanceof Nodes.Callback
 
   _handleEmpty: (scriptNode) ->
     # Simply end the node.
     scriptNode.end()
 
-  _handleLabel: (scriptNode) ->
-    # Every node we visit gets set to true on the state, so we can reference it later.
-    state = @location().state()
-    state[scriptNode.name] = true
-    @location().state state
-
-    # Automatically continue.
-    scriptNode.end()
-
   _handleDialogLine: (dialogLine) ->
     console.log "#{dialogLine.actor.name} says: \"#{dialogLine.line}\""
 
-  _handleCode: (code) ->
-    # Give the location state to the code to use as context for the variables.
-    state = @location().state()
-    code.end state
+  _handleNarrativeLine: (narrativeLine) ->
+    console.log narrativeLine.line
 
-    # Trigger reactive state change.
-    @location().state state
+  _handleCallback: (callback) ->
+    # Call the callback and pass it the completion function.
+    callback.callback =>
+      callback.end()

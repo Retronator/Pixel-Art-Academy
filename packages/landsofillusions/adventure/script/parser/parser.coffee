@@ -5,6 +5,7 @@ class LOI.Adventure.ScriptFile.Parser
   constructor: (@scriptText) ->
     @scriptNodes = {}
     @labels = {}
+    @callbacks = {}
 
     # Break the script down into lines. Line here includes all indented lines following an un-indented line.
     lines = @scriptText.match /^.+$(?:\n[\t ]+.*)*/gm
@@ -24,11 +25,14 @@ class LOI.Adventure.ScriptFile.Parser
     # Parse the line with matches in the correct order (for example, label must
     # go before script, since script would also match the label regex).
     for parseRoutine in [
+      '_parseComment'
+      '_parseCallback'
       '_parseLabel'
       '_parseScript'
       '_parseChoice'
       '_parseJump'
       '_parseDialog'
+      '_parseNarrative'
       '_parseCode'
     ]
       rest = null
@@ -52,12 +56,47 @@ class LOI.Adventure.ScriptFile.Parser
         @nextNode = if node instanceof Nodes.Script then null else node
 
         # If there is some text left, parse the rest too.
-        if rest
+        if rest?
           rest = rest.trim()
           @_parseLine rest if rest.length
 
         # Stop parsing this line.
         break
+
+      # If there is some text left, parse the rest too.
+      if rest?
+        rest = rest.trim()
+        @_parseLine rest if rest.length
+
+        # Stop parsing this iteration since the rest has already finished parsing in the above call.
+        break
+
+  ###
+    <!-- Just hanging out here. -->
+  ###
+  _parseComment: (line) ->
+    # Replace all occurrences of comments out of the line.
+    newLine = line.replace /<!--.*?-->/g, ''
+
+    # If string was left unchanged, don't return anything so we don't trigger complete re-parsing.
+    return null if line is newLine
+
+    # Return the filtered line.
+    [newLine, null]
+
+  ####
+    ### callback name
+  ####
+  _parseCallback: (line) ->
+    return unless match = line.match /###\s*(.*?)\s*$/
+
+    node = new Nodes.Callback
+      name: match[1]
+      next: @nextNode
+
+    @callbacks[node.name] = node
+
+    node
 
   ###
     ## label name
@@ -74,21 +113,23 @@ class LOI.Adventure.ScriptFile.Parser
     node
         
   ###
-    # script name
+    # script id
   ###
   _parseScript: (line) ->
     return unless match = line.match /#\s*(.*?)\s*$/
 
     node = new Nodes.Script
-      name: match[1]
+      id: match[1]
       next: @nextNode
       labels: @labels
+      callbacks: @callbacks
 
-    # Reset the labels.
+    # Reset labels and callbacks.
     @labels = {}
+    @callbacks = {}
 
-    # Store the script by name
-    @scriptNodes[node.name] = node
+    # Store the script by its id.
+    @scriptNodes[node.id] = node
 
     node
 
@@ -100,7 +141,7 @@ class LOI.Adventure.ScriptFile.Parser
         dialog line 2
   ###
   _parseDialog: (line) ->
-    return unless match = line.match /^(\S.*):((?:.|\n)*)/
+    return unless match = line.match /^(\S.*?):((?:.|\n)*)/
 
     # We have a dialog line and we know who the actor is.
     actor = match[1]
@@ -157,6 +198,43 @@ class LOI.Adventure.ScriptFile.Parser
     # Return the final node (the one at the start of the dialog).
     nextNode
 
+
+  ###
+    > narrative line
+    --or--
+    > narrative line 1
+      narrative line 2
+  ###
+  _parseNarrative: (line) ->
+    # This method is mainly a copy of the dialog parsing above. See comments above for details.
+    # Refactor if maintenance becomes a problem and the code doesn't diverge too much.
+    return unless match = line.match /^> ((?:.|\n)*)/
+
+    lines = match[1].match /^.*$/gm
+    nextNode = @nextNode
+
+    # TODO: Replace with by -1 when upgrading to new CS.
+    for i in [lines.length-1..0]
+      line = lines[i]
+
+      [line, conditionalNode] = @_parseConditional line
+
+      line = line.trim()
+      continue unless line.length
+
+      node = new Nodes.NarrativeLine
+        line: line
+        next: nextNode
+
+      if conditionalNode and i > 0
+        conditionalNode.node = node
+        conditionalNode.next = nextNode
+        node = conditionalNode
+
+      nextNode = node
+
+    nextNode
+
   ###
     * dialog line -> `label name`
   ###
@@ -166,8 +244,9 @@ class LOI.Adventure.ScriptFile.Parser
     choiceLine = match[1]
 
     # Get the jump part out of the line.
-    [..., jumpNode] = @_parseJump line
-    
+    result = @_parseJump line
+    [..., jumpNode] = result if result
+
     # Create a dialog node without an actor (the player's character delivers it), followed by the jump.
     dialogNode = new Nodes.DialogLine
       line: choiceLine
@@ -198,7 +277,7 @@ class LOI.Adventure.ScriptFile.Parser
     line = line.match(/^.*$/gm)[0]
 
     # Now detect the line [condition]
-    match = line.match /(.+)`(.*)`/
+    match = line.match /(.+)`(.*)`\s*$/
     return [line, null] unless match
 
     line = match[1]
@@ -213,7 +292,7 @@ class LOI.Adventure.ScriptFile.Parser
     -> [label name]
   ###
   _parseJump: (line) ->
-    return [line, null] unless match = line.match /(.*)->\s*\[(.*?)]/
+    return null unless match = line.match /(.*)->\s*\[(.*?)]/
 
     line = match[1]
     jumpNode = new Nodes.Jump

@@ -78,6 +78,7 @@ Classes, extensions and helpers for database storage.
 
 - **Document**: Extended PeerDB document with common operations.
 - **MongoHelper**: Useful methods to help with mongo queries.
+- **PersistentStorage**: Storing helper for localStorage and sessionStorage.
 
 ### Artificial Spectrum
 

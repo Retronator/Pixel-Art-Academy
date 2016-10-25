@@ -24,7 +24,6 @@ class LOI.Adventure.Interface.Components.DialogSelection
       return unless scriptNode
 
       choiceNodes = [scriptNode]
-      locationState = @options.interface.adventure.currentLocation().state()
 
       # Follow the next chain and collect choice nodes until you find a
       # non-choice node. Note that choice nodes can be wrapped in conditionals.
@@ -39,7 +38,7 @@ class LOI.Adventure.Interface.Components.DialogSelection
           # conditional, but we don't trigger reactive change to the state since we're doing this from a reactive
           # calculation itself (that might run many times). Thus dialog line conditionals are not a good place to put
           # state changes.
-          result = scriptNode.evaluate locationState
+          result = scriptNode.evaluate triggerChange: false
 
           # Add the embedded choice node to our list.
           choiceNodes.push scriptNode.node if result

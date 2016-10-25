@@ -28,10 +28,12 @@ class LOI.Adventure.ScriptFile
   _processText: (scriptText, resolve) ->
     parser = new @constructor.Parser scriptText
 
-    for name, node of parser.scriptNodes
-      @scripts[name] = new LOI.Adventure.Script
+    for id, node of parser.scriptNodes
+      @scripts[id] = new LOI.Adventure.Script
+        id: id
         startNode: node
-        locationId: @options.locationId
+        location: @options.location
+        adventure: @options.adventure
 
     # Return the script file.
     resolve @

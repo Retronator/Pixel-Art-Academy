@@ -87,7 +87,9 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/nodes.coffee');
   api.addFiles('adventure/script/nodes/script.coffee');
   api.addFiles('adventure/script/nodes/label.coffee');
+  api.addFiles('adventure/script/nodes/callback.coffee');
   api.addFiles('adventure/script/nodes/dialogline.coffee');
+  api.addFiles('adventure/script/nodes/narrativeline.coffee');
   api.addFiles('adventure/script/nodes/code.coffee');
   api.addFiles('adventure/script/nodes/conditional.coffee');
   api.addFiles('adventure/script/nodes/jump.coffee');

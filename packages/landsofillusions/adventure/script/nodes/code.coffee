@@ -18,37 +18,65 @@ class Script.Nodes.Code extends Script.Node
     'null', 'true', 'false'
   ]
 
+  @coffeeScriptReplacements =
+    ' is ': ' == '
+    ' and ': ' && '
+    ' or ': ' || '
+    'not ': '!'
+
   constructor: (options) ->
     super
 
     @expression = options.expression
 
-    # Detect if this is a return statement.
-    if @expression.match /^return/
-      @return = true
+    # Change CoffeeScript syntax to JavaScript.
+    for word, replacement of @constructor.coffeeScriptReplacements
+      @expression = @expression.replace new RegExp(word, 'g'), replacement
 
-      # Remove return part.
-      @expression = @expression.replace /^(return)/, ''
-
-    # Make variable names in the expression to reference the state.
-    @expression = @expression.replace /[a-zA-Z_]\w*(?=(?:[^"']*["'][^"']*["'])*[^"']*$)/g, (identifier) =>
+    # Make variable names in the expression to reference the different states.
+    @expression = @expression.replace /[a-zA-Z_@][\w.]*(?=(?:[^"']*["'][^"']*["'])*[^"']*$)/g, (identifier) =>
       # Ignore reserved keywords.
       return identifier if identifier in @constructor.javaScriptKeywords
 
-      "_locationState.#{identifier}"
+      if _.startsWith identifier, '@'
+        "_globalState.#{identifier.substring 1}"
 
-  end: (state) ->
-    result = @evaluate state
+      else if _.startsWith identifier, '_'
+        "_ephemeralState.#{identifier.substring 1}"
 
-    if @return
-      # TODO: Do something with the result.
-      result
+      else if _.startsWith identifier, 'location.'
+        "_locationState.#{identifier.substring 9}"
+
+      else
+        "_scriptState.#{identifier}"
+
+    #console.log options.expression
+    #console.log @expression
+    #console.log ""
+
+  end: ->
+    @evaluate()
 
     # Finish transition.
     super
 
-  evaluate: (_locationState) ->
-    # Evaluate the conditional expression. _locationState is set in the context to provide state variables.
+  evaluate: (options = {}) ->
+    options.triggerChange ?= true
+
+    # Get the states into context
+    _scriptState = @script.state()
+    _ephemeralState = @script.ephemeralState()
+    _locationState = @script.options.location.state()
+    _globalState = @script.options.adventure.state()
+
+    console.log "eval", @expression
     result = eval @expression
+
+    # Trigger reactive state change.
+    if options.triggerChange
+      @script.state _scriptState
+      @script.ephemeralState _ephemeralState
+      @script.options.location.state _locationState
+      @script.options.adventure.state _globalState
 
     result

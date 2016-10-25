@@ -15,6 +15,12 @@ class LOI.Adventure extends AM.Component
     @interface = new LOI.Adventure.Interface.Text @
     @parser = new LOI.Adventure.Parser @
 
+    @state = new ReactiveField {}
+    Artificial.Mummification.PersistentStorage.persist
+      storageKey: "LandsOfIllusions.Adventure.state"
+      field: @state
+      tracker: @
+
   onRendered: ->
     super
 
@@ -46,6 +52,7 @@ class LOI.Adventure extends AM.Component
           # We are at a location. Destroy the previous location and create the new one.
           @currentLocation()?.destroy()
           location = new locationClass
+            adventure: @
 
           # Switch to new location.
           @currentLocation location

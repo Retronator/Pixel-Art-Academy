@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+AM = Artificial.Mummification
 
 class LOI.Adventure.Script
   constructor: (@options) ->
@@ -29,6 +30,32 @@ class LOI.Adventure.Script
         jumpNode = node.next
         node.next = @startNode.labels[jumpNode.labelName]
 
+    # Set the script reference to all nodes.
+    node.script = @ for node in @nodes
+
+    # Prepare the state objects.
+    storageKey = "#{@options.id}.state"
+    @state = new ReactiveField {}
+    @ephemeralState = new ReactiveField {}
+
+    @_stateChangeAutoruns = [
+      AM.PersistentStorage.persist
+        storageKey: storageKey
+        field: @state
+    ,
+      AM.PersistentStorage.persist
+        storageKey: storageKey
+        storage: sessionStorage
+        field: @ephemeralState
+    ]
+
+  destroy: ->
+    autorun.stop() for autorun in @_stateChangeAutoruns
+
+  setDirector: (director) ->
+    # Set the director node on all the nodes.
+    node.director = director for node in @nodes
+
   setActors: (actors) ->
     # Replace actor names with actual object instances.
     for node in @nodes
@@ -39,9 +66,14 @@ class LOI.Adventure.Script
 
         node.actor = actors[node.actor]
 
-  setDirector: (director) ->
-    # Set the director node on all the nodes.
-    node.director = director for node in @nodes
+  setCallbacks: (callbacks) ->
+    # Set callbacks to callback nodes
+    for name, callback of callbacks
+      unless @startNode.callbacks[name]
+        console.warn "Unknown callback", name
+        return
+
+      @startNode.callbacks[name].callback = callback
 
   _addNode: (node) ->
     # Add the node only if it hasn't already added.
