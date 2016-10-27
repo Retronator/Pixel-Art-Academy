@@ -1,4 +1,4 @@
-# Pixel-Art-Academy-Content
+# Pixel Art Academy Content
 Art, sound, music and other assets.
 
 Note that this whole folder is licensed under CC-SA as per the LICENSE document.

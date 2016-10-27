@@ -12,21 +12,38 @@ class LOI.Adventure extends AM.Component
 
     @currentLocation = new ReactiveField null
 
-    @interface = new LOI.Adventure.Interface.Text @
-    @parser = new LOI.Adventure.Parser @
+    @inventory = new LOI.Adventure.Inventory adventure: @
+    @activatedItem = new ReactiveField null
 
-    @state = new ReactiveField {}
+    @interface = new LOI.Adventure.Interface.Text adventure: @
+    @parser = new LOI.Adventure.Parser adventure: @
+
+    @state = new ReactiveField null
     Artificial.Mummification.PersistentStorage.persist
       storageKey: "LandsOfIllusions.Adventure.state"
       field: @state
       tracker: @
+
+    if @state()
+      # We loaded the state from local storage.
+
+    else
+      # It's our first time at Pixel Art Academy.
+
+      # Start in the lobby location.
+      lobby = new Retronator.HQ.Locations.Lobby adventure: @
+      @currentLocation lobby
+
+      # Start with a wallet in the inventory.
+      @inventory.addItem new Retronator.HQ.Items.Wallet adventure: @
 
   onRendered: ->
     super
 
     # Handle url changes.
     @autorun =>
-      # Let's see what our url path is like.
+      # Let's see what our url path is like. We do it with getParams instead
+      # of directly from location pathname to depend reactively on it.
       parameters = [
         FlowRouter.getParam 'parameter1'
         FlowRouter.getParam 'parameter2'
@@ -38,29 +55,46 @@ class LOI.Adventure extends AM.Component
       parameters = _.without parameters, undefined
 
       # Create a path from parameters.
-      path = parameters.join '.'
+      url = parameters.join '/'
 
       # We only want to react to router changes.
       Tracker.nonreactive =>
         # Find if this is an item or location.
-        locationClass = LOI.Adventure.Location.getClassForPath path
+        locationClass = LOI.Adventure.Location.getClassForUrl url
+        itemClass = LOI.Adventure.Item.getClassForUrl url
 
-        # TODO: Item support.
-        itemClass = null
+        console.log "parsed url", locationClass, itemClass
 
         if locationClass
-          # We are at a location. Destroy the previous location and create the new one.
-          @currentLocation()?.destroy()
-          location = new locationClass
-            adventure: @
+          # Deactivate an item that was activated via URL.
+          activatedItem = @activatedItem()
+          activatedItem?.deactivate()
 
-          # Switch to new location.
-          @currentLocation location
+          if locationClass isnt @currentLocation()?.constructor
+            # We are at a location. Destroy the previous location and create the new one.
+            @currentLocation()?.destroy()
+            location = new locationClass
+              adventure: @
+
+            # Switch to new location.
+            @currentLocation location
 
         if itemClass
           # We are trying to use this item.
-          item = new itemClass
-          item.activate()
+          item = @inventory[itemClass.id()]
+
+          console.log "got item", item
+
+          if item
+            # Good, we have this item in the inventory. Activate it.
+            item.activate()
+            @activatedItem item
+
+            console.log "activated", item.activatedState()
+
+          else
+            # We can't use an item we don't have. Return the URL to the location.
+            @constructor.goToLocation @currentLocation().id()
 
   onDestroyed: ->
     super
@@ -70,9 +104,12 @@ class LOI.Adventure extends AM.Component
   ready: ->
     @parser.ready() and @currentLocation()?.ready()
 
-  @goToLocation: (locationId) ->
+  @goToLocation: (locationClassOrId) ->
+    locationId = if _.isFunction locationClassOrId then locationClassOrId.id() else locationClassOrId
     locationClass = LOI.Adventure.Location.getClassForID locationId
     FlowRouter.go 'LandsOfIllusions.Adventure', locationClass.urlParameters()
 
-  @activateItem: (itemKeyName) ->
-    FlowRouter.go 'LandsOfIllusions.Adventure', parameter1: itemKeyName
+  @activateItem: (itemClassOrId) ->
+    itemId = if _.isFunction itemClassOrId then itemClassOrId.id() else itemClassOrId
+    itemClass = LOI.Adventure.Item.getClassForID itemId
+    FlowRouter.go 'LandsOfIllusions.Adventure', itemClass.urlParameters()

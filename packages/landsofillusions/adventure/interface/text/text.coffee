@@ -47,7 +47,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     super
 
     @commandInput.destroy()
-    
+    @dialogSelection.destroy()
+
   onLocationChanged: (location) ->
     @narrative?.clear()
       
@@ -77,12 +78,15 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
   exitName: ->
     exit = @currentData()
     location = @location()
-    
-    # Find exit's location name.
-    subscriptionHandle = location.exitsTranslationSubscribtions[exit.locationId]
-    key = LOI.Adventure.Location.translationKeys.shortName
 
-    AB.translate(subscriptionHandle, key).text
+    # Find exit's location name.
+    subscriptionHandle = location.exitsTranslationSubscribtions()[exit.locationId]
+    return unless subscriptionHandle?.ready()
+
+    key = LOI.Adventure.Location.translationKeys.shortName
+    translated = AB.translate subscriptionHandle, key
+
+    translated.text
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
@@ -102,6 +106,10 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
   showInventory: ->
     true
+    
+  items: ->
+    console.log "items", @adventure.inventory.items()
+    @adventure.inventory.items()
     
   events: ->
     super.concat

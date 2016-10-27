@@ -32,4 +32,12 @@ Package.onUse(function(api) {
 
   api.addFiles('locations/store-elevator.coffee');
 
+  // Items
+
+  api.addFiles('items/items.coffee');
+
+  api.addFiles('items/wallet/wallet.coffee');
+  api.addFiles('items/wallet/wallet.html');
+  api.addFiles('items/wallet/wallet.styl');
+
 });

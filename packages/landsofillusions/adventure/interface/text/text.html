@@ -9,6 +9,14 @@
     <div class="location">
       {{> Render location}}
     </div>
+    <div class="items">
+      {{#each items}}
+        {{! We need to render unless we're deactivated (so we can animate in activating/deactivating states).}}
+        {{#unless deactivated}}
+          {{> Render this}}
+        {{/unless}}
+      {{/each}}
+    </div>
     <div class="ui">
       <div class="text-display scrollable">
         <div class="text-display-content scrollable-content">
@@ -56,7 +64,7 @@
             <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
             <ul class="items">
               {{#each items}}
-                <li class="item">{{name}}</li>
+                <li class="item">{{shortName.text}}</li>
               {{else}}
                 <li class="item">{{> t10e "Nothing"}}</li>
               {{/each}}

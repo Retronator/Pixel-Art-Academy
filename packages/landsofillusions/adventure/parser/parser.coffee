@@ -1,9 +1,10 @@
 AB = Artificial.Babel
-AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Parser
-  constructor: (@adventure) ->
+  constructor: (@options) ->
+    @adventure = @options.adventure
+    
     # Set Vocabulary shorthand.
     @Vocabulary = LOI.Adventure.Parser.Vocabulary
 

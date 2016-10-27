@@ -50,10 +50,6 @@ class Script.Nodes.Code extends Script.Node
       else
         "_scriptState.#{identifier}"
 
-    #console.log options.expression
-    #console.log @expression
-    #console.log ""
-
   end: ->
     @evaluate()
 
@@ -69,7 +65,6 @@ class Script.Nodes.Code extends Script.Node
     _locationState = @script.options.location.state()
     _globalState = @script.options.adventure.state()
 
-    console.log "eval", @expression
     result = eval @expression
 
     # Trigger reactive state change.

@@ -59,14 +59,22 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure.styl');
   api.addFiles('adventure/adventure.coffee');
 
-  api.addFiles('adventure/item.coffee');
-  api.addFiles('adventure/director.coffee');
+  // Inventory
 
-  // Location
+  api.addFiles('adventure/inventory/inventory.coffee');
+
+  // Things
+
+  api.addFiles('adventure/thing/thing.coffee');
+  api.addFiles('adventure/thing/thing.html');
 
   api.addFiles('adventure/location/location.coffee');
-  api.addFiles('adventure/location/location.html');
-  api.addFiles('adventure/location/location.styl');
+
+  api.addFiles('adventure/item/item.coffee');
+
+  // Director
+
+  api.addFiles('adventure/director/director.coffee');
 
   // Actor
 
@@ -139,6 +147,13 @@ Package.onUse(function(api) {
   api.addFiles('pages/loading/loading.html');
   api.addFiles('pages/loading/loading.styl');
 
+  // Components
+
+  api.addFiles('components/components.coffee');
+  api.addFiles('components/overlay/overlay.coffee');
+  api.addFiles('components/overlay/overlay.html');
+  api.addFiles('components/overlay/overlay.styl');
+
   // Typography
 
   api.addFiles('typography/typography.css', 'client');
@@ -153,5 +168,9 @@ Package.onUse(function(api) {
   api.addFiles('styles/console-accountsui.styl');
   api.addFiles('styles/helpers.import.styl', 'client', {isImport:true});
   api.addFiles('styles/atari2600.import.styl', 'client', {isImport:true});
+
+  // Helpers
+
+  api.addFiles('helpers/spacebars.coffee');
 
 });

@@ -47,4 +47,4 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
 
     dialogTree.setCallbacks
       SignInActive: (completeMethod) =>
-        # TODO: Open wallet sign in page.
+        LOI.Adventure.activateItem Retronator.HQ.Items.Wallet

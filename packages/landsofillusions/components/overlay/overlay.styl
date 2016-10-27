@@ -1,0 +1,30 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+
+.lands-of-illusions-components-overlay
+  fixed-cover()
+  z-index 1
+  background black
+
+  .background
+    position absolute
+    z-index 0
+
+  .crop-bar
+    position absolute
+    z-index 2
+    background black
+    transform translateZ(0)
+
+    &.top-crop-bar
+      top 0
+      left 0
+      right 0
+
+    &.bottom-crop-bar
+      bottom 0
+      left 0
+      right 0
+
+  .safe-area
+    position absolute
+    z-index 1

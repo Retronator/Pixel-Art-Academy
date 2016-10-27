@@ -4,8 +4,10 @@ LOI = LandsOfIllusions
 Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Adventure.Interface extends AM.Component
-  constructor: (@adventure) ->
+  constructor: (@options) ->
     super
+
+    @adventure = @options.adventure
 
   onCreated: ->
     super

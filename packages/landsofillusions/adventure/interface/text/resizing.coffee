@@ -40,7 +40,7 @@ class LOI.Adventure.Interface.Text.Resizing
         totalWidth = viewport.viewportBounds.width() + viewport.viewportBounds.x() * 2
 
         # The UI content would be aligned if it's bigger, since that'll be compensated by the margin.
-        uiWidth = viewport.viewportBounds.width() + 2 * sideMargin * scale
+        uiWidth = viewport.viewportBounds.width() + 2 * sideMargin
 
         # However, make sure that it fits in the window (total width).
         uiWidth = Math.min uiWidth, totalWidth
