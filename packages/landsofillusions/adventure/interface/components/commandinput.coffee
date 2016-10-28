@@ -20,6 +20,8 @@ class LOI.Adventure.Interface.Components.CommandInput
     @command ""
 
   onKeyPress: (event) ->
+    # Don't capture events when interface is not active.
+
     # Ignore control characters.
     return if event.which < 32
 
@@ -31,6 +33,9 @@ class LOI.Adventure.Interface.Components.CommandInput
     @command newCommand
 
   onKeyDown: (event) ->
+    # Don't capture events when interface is not active.
+    return unless @options.interface.active()
+
     switch event.which
       # Backspace
       when 8

@@ -28,6 +28,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       textInterface: @
 
     @commandInput = new LOI.Adventure.Interface.Components.CommandInput
+      interface: @
       onEnter: => @onCommandInputEnter()
       onKeyDown: => @onCommandInputKeyDown()
 
@@ -48,6 +49,10 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     @commandInput.destroy()
     @dialogSelection.destroy()
+
+  active: ->
+    # The text interface is active unless there is an item active.
+    not @adventure.activeItem()
 
   onLocationChanged: (location) ->
     @narrative?.clear()
@@ -108,7 +113,6 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     true
     
   items: ->
-    console.log "items", @adventure.inventory.items()
     @adventure.inventory.items()
     
   events: ->

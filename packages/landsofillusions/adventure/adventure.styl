@@ -1,5 +1,5 @@
 @import "../typography/typography.import"
-@import "../styles/atari2600.import"
+@import "../styles/helpers.import"
 
 html
   // Prevent elastic scrolling.
@@ -13,17 +13,13 @@ html
 
   *
     box-sizing border-box
+    pixel-image-rendering()
+    background-size 100% 100%
 
-  // Pixel art image scaling
-  img
-  canvas
-    image-rendering optimizeSpeed
-    image-rendering -moz-crisp-edges            // Firefox
-    image-rendering -o-crisp-edges              // Opera
-    image-rendering -webkit-optimize-contrast   // Chrome, Safari
-    image-rendering pixelated                   // Chrome
-    image-rendering optimize-contrast           // CSS3
-    -ms-interpolation-mode nearest-neighbor     // IE8+
+  input
+  textarea
+    font inherit
+    color inherit
 
   body
     min-height 100%

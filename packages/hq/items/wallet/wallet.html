@@ -1,12 +1,28 @@
 <template name="Retronator.HQ.Items.Wallet">
   <div class="retronator-hq-items-wallet">
+    {{> LandsOfIllusions.Components.BackButton args onClickBackButtonHandler}}
     {{#LandsOfIllusions.Components.Overlay}}
-      <img class="wallet-layer bottom-layer" src="{{image '/retronator/hq/items/wallet/layer0.png'}}" />
-      <img class="wallet-layer" src="{{image '/retronator/hq/items/wallet/layer1.png'}}" />
-      <img class="wallet-layer" src="{{image '/retronator/hq/items/wallet/layer2.png'}}" />
-      <img class="wallet-layer" src="{{image '/retronator/hq/items/wallet/layer3.png'}}" />
-      <img class="wallet-layer" src="{{image '/retronator/hq/items/wallet/layer4.png'}}" />
-      <img class="wallet-layer" src="{{image '/retronator/hq/items/wallet/layer5.png'}}" />
+      {{#if currentUser}}
+        {{! TODO: Draw closed wallet or something.}}
+        {{#if inMessageOnlyFlow}}
+          {{> _loginButtonsMessages}}
+        {{else}}
+          {{#if inChangePasswordFlow}}
+            {{> _loginButtonsChangePassword}}
+          {{else}}
+            {{> _loginButtonsLoggedInDropdownActions}}
+          {{/if}}
+        {{/if}}
+      {{else}}
+        <div class="title">{{> t10e 'Choose your ID'}}</div>
+        <img class="wallet-layer layer-0" src="{{image '/retronator/hq/items/wallet/layer0.png'}}" />
+        <img class="wallet-layer layer-1" src="{{image '/retronator/hq/items/wallet/layer1.png'}}" />
+        <img class="wallet-layer layer-2" src="{{image '/retronator/hq/items/wallet/layer2.png'}}" />
+        <img class="wallet-layer layer-3" src="{{image '/retronator/hq/items/wallet/layer3.png'}}" />
+        <img class="wallet-layer layer-4" src="{{image '/retronator/hq/items/wallet/layer4.png'}}" />
+        <img class="wallet-layer layer-5" src="{{image '/retronator/hq/items/wallet/layer5.png'}}" />
+        {{> _loginButtonsLoggedOutDropdown}}
+      {{/if}}
     {{/LandsOfIllusions.Components.Overlay}}
   </div>
 </template>

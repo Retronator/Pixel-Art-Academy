@@ -1,18 +1,18 @@
-@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "../../styles/helpers.import"
 
 .lands-of-illusions-components-overlay
   fixed-cover()
   z-index 1
-  background black
 
   .background
-    position absolute
+    absolute-cover()
     z-index 0
+    background black image('/items/backgrounds/black-gradient.png') 50% 50% / 480rem 360rem no-repeat
 
   .crop-bar
     position absolute
     z-index 2
-    background black
+    //background black
     transform translateZ(0)
 
     &.top-crop-bar

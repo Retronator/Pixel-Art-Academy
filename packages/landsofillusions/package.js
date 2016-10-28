@@ -150,9 +150,14 @@ Package.onUse(function(api) {
   // Components
 
   api.addFiles('components/components.coffee');
+
   api.addFiles('components/overlay/overlay.coffee');
   api.addFiles('components/overlay/overlay.html');
   api.addFiles('components/overlay/overlay.styl');
+
+  api.addFiles('components/backbutton/backbutton.coffee');
+  api.addFiles('components/backbutton/backbutton.html');
+  api.addFiles('components/backbutton/backbutton.styl');
 
   // Typography
 

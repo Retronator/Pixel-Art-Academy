@@ -19,16 +19,22 @@ class LOI.Components.Overlay extends AM.Component
       maxOverlayHeight = 360 * scale
       maxBoundsHeight = viewport.maxBounds.height()
       gapHeight = (maxBoundsHeight - maxOverlayHeight) / 2
+      cropBarHeight = Math.max 0, viewport.maxBounds.top + gapHeight
 
-      backgroundSize = viewport.maxBounds.extrude -gapHeight, 0
-      cropBarHeight = Math.max 0, backgroundSize.top()
+      safeAreaSize = viewport.safeArea.toDimensions()
+      safeAreaSize.left += viewport.viewportBounds.left()
+      safeAreaSize.top += viewport.viewportBounds.top()
 
-      @$('.background').css backgroundSize.toDimensions()
       @$('.crop-bar').height cropBarHeight
-      @$('.safe-area').css viewport.safeArea.toDimensions()
+      @$('.safe-area').css safeAreaSize
 
     # Animate in.
-    @$('.lands-of-illusions-components-overlay').velocity
+    @$('.background').velocity
+      opacity: [1, 0]
+    ,
+      duration: 500
+
+    @$('.safe-area').velocity
       opacity: [1, 0]
     ,
       duration: 500

@@ -13,7 +13,7 @@ class LOI.Adventure extends AM.Component
     @currentLocation = new ReactiveField null
 
     @inventory = new LOI.Adventure.Inventory adventure: @
-    @activatedItem = new ReactiveField null
+    @activeItem = new ReactiveField null
 
     @interface = new LOI.Adventure.Interface.Text adventure: @
     @parser = new LOI.Adventure.Parser adventure: @
@@ -63,12 +63,11 @@ class LOI.Adventure extends AM.Component
         locationClass = LOI.Adventure.Location.getClassForUrl url
         itemClass = LOI.Adventure.Item.getClassForUrl url
 
-        console.log "parsed url", locationClass, itemClass
-
         if locationClass
           # Deactivate an item that was activated via URL.
-          activatedItem = @activatedItem()
-          activatedItem?.deactivate()
+          activeItem = @activeItem()
+          activeItem?.deactivate()
+          @activeItem null
 
           if locationClass isnt @currentLocation()?.constructor
             # We are at a location. Destroy the previous location and create the new one.
@@ -83,14 +82,10 @@ class LOI.Adventure extends AM.Component
           # We are trying to use this item.
           item = @inventory[itemClass.id()]
 
-          console.log "got item", item
-
           if item
             # Good, we have this item in the inventory. Activate it.
             item.activate()
-            @activatedItem item
-
-            console.log "activated", item.activatedState()
+            @activeItem item
 
           else
             # We can't use an item we don't have. Return the URL to the location.
@@ -113,3 +108,7 @@ class LOI.Adventure extends AM.Component
     itemId = if _.isFunction itemClassOrId then itemClassOrId.id() else itemClassOrId
     itemClass = LOI.Adventure.Item.getClassForID itemId
     FlowRouter.go 'LandsOfIllusions.Adventure', itemClass.urlParameters()
+
+  deactivateCurrentItem: ->
+    # We simply go back to the URL of the current location since that will deactivate the currently active item.
+    @constructor.goToLocation @currentLocation().id()
