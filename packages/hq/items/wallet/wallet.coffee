@@ -39,9 +39,6 @@ class HQ.Items.Wallet extends LOI.Adventure.Item
   inMessageOnlyFlow: ->
     @loginButtonsSession.get 'inMessageOnlyFlow'
 
-  dropdownVisible: ->
-    @loginButtonsSession.get 'dropdownVisible'
-
   onClickBackButtonHandler: ->
     => @onClickBackButton()
 
@@ -53,5 +50,4 @@ class HQ.Items.Wallet extends LOI.Adventure.Item
     Meteor.logout()
 
   onClickBackButton: ->
-    console.log @options
     @options.adventure.deactivateCurrentItem()

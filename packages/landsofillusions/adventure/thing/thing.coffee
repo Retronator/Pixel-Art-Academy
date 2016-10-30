@@ -68,12 +68,16 @@ class LOI.Adventure.Thing extends AM.Component
 
     @adventure = @options.adventure
 
+    @state = new ReactiveField null
+
     # Subscribe to this thing's translations.
     translationNamespace = @constructor.id()
     @_translationSubscribtion = AB.subscribeNamespace translationNamespace
 
   destroy: ->
     @_translationSubscribtion.stop()
+
+  initialState: -> {} # Override to return a non-empty initial state.
 
   # Convenience methods for static properties.
   id: -> @constructor.id()

@@ -113,7 +113,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     true
     
   items: ->
-    @adventure.inventory.items()
+    @adventure.inventory.values()
     
   events: ->
     super.concat

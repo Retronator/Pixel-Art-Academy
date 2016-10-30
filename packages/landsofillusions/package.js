@@ -53,15 +53,19 @@ Package.onUse(function(api) {
 
   api.addFiles('assets/mesh/mesh.coffee');
 
+  // Game state
+
+  api.addFiles('gamestate/gamestate.coffee');
+  api.addFiles('gamestate/localgamestate.coffee');
+  api.addFiles('gamestate/methods.coffee');
+  api.addFiles('gamestate/subscriptions.coffee', 'server');
+  api.addFiles('gamestate/statenode.coffee');
+
   // Adventure
 
   api.addFiles('adventure/adventure.html');
   api.addFiles('adventure/adventure.styl');
   api.addFiles('adventure/adventure.coffee');
-
-  // Inventory
-
-  api.addFiles('adventure/inventory/inventory.coffee');
 
   // Things
 

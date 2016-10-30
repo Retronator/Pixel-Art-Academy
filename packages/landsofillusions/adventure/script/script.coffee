@@ -26,9 +26,10 @@ class LOI.Adventure.Script
     
     # Also replace jump nodes with actual label nodes they point to.
     for node in @nodes
-      if node.next instanceof @constructor.Nodes.Jump
-        jumpNode = node.next
-        node.next = @startNode.labels[jumpNode.labelName]
+      for property in ['node', 'next']
+        if node[property] instanceof @constructor.Nodes.Jump
+          jumpNode = node[property]
+          node[property] = @startNode.labels[jumpNode.labelName]
 
     # Set the script reference to all nodes.
     node.script = @ for node in @nodes

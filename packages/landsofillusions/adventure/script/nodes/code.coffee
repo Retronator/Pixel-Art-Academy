@@ -65,7 +65,14 @@ class Script.Nodes.Code extends Script.Node
     _locationState = @script.options.location.state()
     _globalState = @script.options.adventure.state()
 
+    # Attach the user object to global state.
+    _globalState.user = Retronator.user()
+    _globalState.user?.name = _globalState.user?.profile.name
+
     result = eval @expression
+
+    # User is read-only and should not be saved.
+    _globalState.user = null
 
     # Trigger reactive state change.
     if options.triggerChange

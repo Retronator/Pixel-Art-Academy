@@ -40,4 +40,8 @@ Package.onUse(function(api) {
   api.addFiles('items/wallet/wallet.html');
   api.addFiles('items/wallet/wallet.styl');
 
+  api.addFiles('items/accountfile/accountfile.coffee');
+  api.addFiles('items/accountfile/accountfile.html');
+  api.addFiles('items/accountfile/accountfile.styl');
+  
 });

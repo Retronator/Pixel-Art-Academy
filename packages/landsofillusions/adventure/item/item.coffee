@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 class LOI.Adventure.Item extends LOI.Adventure.Thing
   # Static location properties and methods
 
-  # A map of all location constructors by url and ID.
+  # A map of all item constructors by url and ID.
   @_thingClassesByUrl = {}
   @_thingClassesByID = {}
 

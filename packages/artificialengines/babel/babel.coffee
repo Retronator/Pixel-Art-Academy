@@ -36,7 +36,7 @@ class Artificial.Babel
     subscriptionHandle = new @SubscriptionHandle namespace
 
     # Reactively subscribe to the translations so that we get updates when user's language preference changes.
-    subscriptionHandle._babelSubscriptionAutorun = Meteor.autorun =>
+    subscriptionHandle._babelSubscriptionAutorun = Tracker.autorun =>
       # Namespace is the component name.
       languages = @userLanguagePreference()
 

@@ -12,7 +12,8 @@ retro: `_MainQuestion`
 ## MainQuestion
 `_answered = false`
 
-* I would like to sign in. -> [SignIn]
+* I would like to sign in. -> [SignIn] `not @user`
+* I'm signing out. -> [SignOut] `@user`
 * I have a question. -> [Question]
 * Oh, just looking. -> [End] `not _helped`
 * Thank you so much! -> [End] `_helped`
@@ -27,14 +28,17 @@ retro: Certainly!
 ### SignInActive
 
 -> [SignInFailed] `not @user`
--> [JustRegistered] `@user and not @user.registered`
+-> [JustRegistered] `@user and not @registered`
 
 retro: Welcome back, `@user.name`. I see you have driven here in your Ferrari. `@user.name`
 retro: Welcome back. `not @user.name`
 
 > Retro searches the file cabinet under the desk and hands you a folder.
 
+### ReceiveAccountFile
+
 retro: Here is your account file. Feel free to update any information in there.
+
 -> [End]
 
 ## SignInFailed
@@ -51,7 +55,23 @@ retro: Perhaps next time.
 
 retro: Oh, you are new!!!
 
+`@registered = true`
+
 -> [Start]
+
+## SignOut
+
+retro: Alright. I'll store the account documents for you till next time.
+
+> You hand over the account file to Retro.
+
+### ReturnAccountFile
+
+retro: Hope to see you back soon. 
+
+### SignOut
+
+-> [End]
 
 ## Question
 `_helped = true`

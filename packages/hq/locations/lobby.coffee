@@ -32,6 +32,8 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
 
     @addExit Vocabulary.Keys.Directions.In, HQ.Locations.Lobby.Elevator.id()
 
+    @loginButtonsSession = Accounts._loginButtonsSession
+
   onScriptsLoaded: ->
     retro = @addActor new PAA.Cast.Retro
 
@@ -46,5 +48,31 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
       retro: retro
 
     dialogTree.setCallbacks
-      SignInActive: (completeMethod) =>
+      SignInActive: (complete) =>
         LOI.Adventure.activateItem Retronator.HQ.Items.Wallet
+
+        # Wait until wallet has been active and deactivated again.
+        walletActive = false
+
+        @autorun (computation) =>
+          activeItem = @options.adventure.activeItem()
+
+          if activeItem and not walletActive
+            walletActive = true
+
+          else if not activeItem and walletActive
+            computation.stop()
+            complete()
+
+      SignOut: (complete) =>
+        Meteor.logout()
+        complete()
+
+      ReceiveAccountFile: (complete) =>
+        @options.adventure.inventory.addItem new HQ.Items.AccountFile adventure: @options.adventure
+        complete()
+
+      ReturnAccountFile: (complete) =>
+        accountFile = @options.adventure.inventory[HQ.Items.AccountFile.id()]
+        @options.adventure.inventory.removeItem accountFile
+        complete()

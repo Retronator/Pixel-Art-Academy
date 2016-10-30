@@ -55,11 +55,6 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     @director = new LOI.Adventure.Director @
     @actors = new ReactiveField []
 
-    @state = new ReactiveField {}
-    @_stateAutorun = Artificial.Mummification.PersistentStorage.persist
-      storageKey: "#{@constructor.id()}.state"
-      field: @state
-
     # Subscribe to translations of exit locations so we get their names.
     # TODO: Find a way to just subscribe to location names, not whole location namespaces (probably overkill).
     @exitsTranslationSubscribtions = new ComputedField =>
@@ -96,10 +91,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     super
 
     @exitsTranslationSubscribtions.stop()
-
     @_translationSubscribtionScript.stop()
-
-    @_stateAutorun.stop()
 
   onScriptsLoaded: -> # Override to create location's script logic. Use @scriptNodes to get access to script nodes.
 
