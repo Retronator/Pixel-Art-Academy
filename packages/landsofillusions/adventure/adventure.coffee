@@ -7,28 +7,46 @@ class LOI.Adventure extends AM.Component
   constructor: ->
     super
 
+    console.log "Adventure constructed." if LOI.debug
+
   onCreated: ->
     super
+
+    console.log "Adventure created." if LOI.debug
 
     # Game state depends on whether the user is signed in or not and returns
     # the game  state from database when signed in or from local storage otherwise.
     @_localGameState = new LOI.LocalGameState
 
+    _gameStateUpdated = null
+
     @gameState = new ComputedField =>
       userId = Meteor.userId()
 
-      if userId
-        # Find the state from the database.
-        gameState = LOI.GameState.documents.findOne('user._id': userId)
-        return unless gameState
+      console.log "Game state provider is recomputing. User ID is", userId if LOI.debug
 
+      if userId
+        # Subscribe to user's game state and store subscription 
+        # handle so we can know when the game state should be ready.
+        @gameStateSubsription = Meteor.subscribe 'LandsOfIllusions.GameState.forCurrentUser'
+
+        console.log "Subscribed to game state from the database. Subscription:", @gameStateSubsription, "Is it ready?", @gameStateSubsription.ready() if LOI.debug
+        
+      # Find the state from the database.
+      console.log "We currently have these game state documents:", LOI.GameState.documents.find().fetch() if LOI.debug
+
+      gameState = LOI.GameState.documents.findOne('user._id': userId)
+
+      console.log "Did we find a game state for he current user? It's currently", gameState if LOI.debug
+
+      if gameState
         state = gameState.state
-        state.updated = => gameState.updated()
+        _gameStateUpdated = => gameState.updated()
 
       else
-        # Reactively get the state from local storage.
+        # Fallback to local storage until we have a state from the database.
         state = @_localGameState.state()
-        state.updated = => @_localGameState.updated()
+        _gameStateUpdated = => @_localGameState.updated()
 
       # Initialize state if needed.
       unless state.initialized
@@ -45,7 +63,15 @@ class LOI.Adventure extends AM.Component
         Tracker.nonreactive =>
           state.updated()
 
+      # Set the updated function.
+      @gameState?.updated = _gameStateUpdated
+
+      console.log "New game state has been set.", state if LOI.debug
+
       state
+
+    # Set the updated function for the first time.
+    @gameState.updated = _gameStateUpdated
 
     # We store player's current location locally so that multiple people
     # can use the same user account and walk around independently.
@@ -59,7 +85,9 @@ class LOI.Adventure extends AM.Component
     unless @currentLocationId()
       @currentLocationId Retronator.HQ.Locations.Lobby.id()
 
-    LOI.Adventure.goToLocation @currentLocationId()
+    # Go to location where we left off after initialization is done.
+    Tracker.afterFlush =>
+      LOI.Adventure.goToLocation @currentLocationId()
 
     # Instantiate current location. It depends only on the ID.
     # HACK: ComputedField triggers recomputation when called from events so we use ReactiveField + autorun manually.
@@ -73,15 +101,24 @@ class LOI.Adventure extends AM.Component
 
         currentLocationClass = LOI.Adventure.Location.getClassForID currentLocationId
 
+        console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug
+
         # Create a non-reactive reference so we can refer to it later.
         @_currentLocation = new currentLocationClass adventure: @
 
         # Reactively provide the state to the location.
+
         Tracker.autorun (computation) =>
-          state = @gameState()?.locations[currentLocationId]
+          return unless gameState = @gameState()
+
+          state = gameState.locations[currentLocationId]
 
           # Initialize location state if this is first time at location.
-          @gameState()?.locations[currentLocationId] = @_currentLocation.initialState() unless state
+          unless state
+            state = @_currentLocation.initialState()
+            gameState.locations[currentLocationId] = state
+            
+            Tracker.nonreactive => @gameState.updated()
 
           @_currentLocation.state state
 
@@ -95,23 +132,26 @@ class LOI.Adventure extends AM.Component
     @autorun (computation) =>
       activeItemId = @activeItemId()
 
-      Tracker.nonreactive =>
-        # Active item is not the same, so deactivate it if we have one.
-        @_activeItem?.deactivate()
+      console.log "Active item ID changed to", activeItemId if LOI.debug
 
-        return unless activeItemId
+      console.log "Do we have an active item to deactivate?", @_activeItem if LOI.debug
+      # Active item is not the same, so deactivate the current one if we have one.
+      @_activeItem?.deactivate()
 
-        activeItemClass = LOI.Adventure.Item.getClassForID activeItemId
+      # Do we even have the new item or did we switch to no item?
+      if activeItemId
+        # We do have an item, so find it in the inventory.
+        @_activeItem = @inventory[activeItemId]
 
-        # Create the new item and activate it.
-        @_activeItem = new activeItemClass adventure: @
-
-        Tracker.autorun (computation) =>
-          @_activeItem.state @gameState()?.player.inventory[activeItemId]
+        console.log "We have a new active item.", @_activeItem if LOI.debug
 
         @_activeItem.activate()
 
-        @activeItem @_activeItem
+      else
+        # No more object
+        @_activeItem = null
+
+      @activeItem @_activeItem
 
     # Create inventory.
     @inventory = new LOI.StateNode
@@ -120,7 +160,9 @@ class LOI.Adventure extends AM.Component
 
     # Reactively update inventory state.
     @autorun (computation) =>
-      @inventory.state @gameState()?.player.inventory
+      console.log "Setting updated inventory state to the inventory object.", @gameState()?.player.inventory if LOI.debug
+
+      @inventory.updateState @gameState()?.player.inventory
 
     @interface = new LOI.Adventure.Interface.Text adventure: @
     @parser = new LOI.Adventure.Parser adventure: @
@@ -128,8 +170,12 @@ class LOI.Adventure extends AM.Component
   onRendered: ->
     super
 
+    console.log "Adventure rendered." if LOI.debug
+
     # Handle url changes.
     @autorun =>
+      console.log "URL has changed to", location.parameters if LOI.debug
+
       # Let's see what our url path is like. We do it with getParams instead
       # of directly from location pathname to depend reactively on it.
       parameters = [
@@ -151,6 +197,8 @@ class LOI.Adventure extends AM.Component
         locationClass = LOI.Adventure.Location.getClassForUrl url
         itemClass = LOI.Adventure.Item.getClassForUrl url
 
+        console.log "URL has been converted to class. Location:", locationClass?.id(), "Item:", itemClass?.id() if LOI.debug
+
         if locationClass
           # We are at a location. Deactivate an item if there was one activated via URL.
           @activeItemId null
@@ -161,7 +209,7 @@ class LOI.Adventure extends AM.Component
 
         if itemClass
           # We are trying to use an item. See if we have it in the inventory.
-          if @state().player.inventory[itemClass.id()]
+          if @gameState().player.inventory[itemClass.id()]
             @activeItemId itemClass.id()
 
           else
@@ -171,12 +219,16 @@ class LOI.Adventure extends AM.Component
   onDestroyed: ->
     super
 
+    console.log "Adventure destroyed." if LOI.debug
+
     $('html').removeClass('lands-of-illusions-style-adventure')
 
   ready: ->
     @parser.ready() and @currentLocation()?.ready()
 
   @goToLocation: (locationClassOrId) ->
+    console.log "Routing to location with ID", locationClassOrId if LOI.debug
+
     locationId = if _.isFunction locationClassOrId then locationClassOrId.id() else locationClassOrId
     locationClass = LOI.Adventure.Location.getClassForID locationId
     FlowRouter.go 'LandsOfIllusions.Adventure', locationClass.urlParameters()

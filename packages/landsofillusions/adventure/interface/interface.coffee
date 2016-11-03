@@ -33,6 +33,8 @@ class LOI.Adventure.Interface extends AM.Component
 
       scriptNodes = location.director.currentScripts()
 
+      console.log "Interface has detected new script nodes:", scriptNodes if LOI.debug
+
       # We handle scripts once per change.
       Tracker.nonreactive =>
         @_handleNode node for node in scriptNodes
@@ -62,6 +64,12 @@ class LOI.Adventure.Interface extends AM.Component
     console.log narrativeLine.line
 
   _handleCallback: (callback) ->
+    unless callback.callback
+      # No callback was set for this node. Give a warning and just skip it.
+      console.warn "No callback is set for", callback.name
+      callback.end()
+      return
+
     # Call the callback and pass it the completion function.
     callback.callback =>
       callback.end()

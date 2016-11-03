@@ -7,9 +7,6 @@ class LOI.Adventure.Director
   onCreated: ->
     super
 
-    @autorun =>
-      console.log "got new scrips", @currentScripts()
-
   startScript: (script) ->
     script.setDirector @
 

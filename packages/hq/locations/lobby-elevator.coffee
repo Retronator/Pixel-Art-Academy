@@ -10,11 +10,12 @@ Talking = LOI.Adventure.Actor.Abilities.Talking
 class HQ.Locations.Lobby.Elevator extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Lobby.Elevator'
   @url: -> 'retronator/lobby/elevator'
+  @scriptUrls: -> [
+    'retronator_hq/locations/lobby-elevator-pad.script'
+  ]
 
   @fullName: -> "Lobby floor elevator"
-
   @shortName: -> "elevator"
-
   @description: ->
     "
       You are in the elevator on the lobby floor of Retronator HQ. The number pad on the side lets you travel to other
@@ -27,14 +28,29 @@ class HQ.Locations.Lobby.Elevator extends LOI.Adventure.Location
     super
 
     @addExit Vocabulary.Keys.Directions.Out, HQ.Locations.Lobby.id()
-
-    pad = new Actor
-      name: "number pad"
-      
-    @addActor pad
+  
+  onScriptsLoaded: ->
+    pad = @addActor new HQ.Actors.ElevatorNumberPad
 
     pad.addAbility Action,
-      verb: "press"
+      verb: Vocabulary.Keys.Verbs.Use
       action: =>
+        @director.startScript padInteraction
+
+    padInteraction = @scripts['Retronator.HQ.Locations.Lobby.Elevator.Scripts.NumberPad']
+
+    padInteraction.setActors
+      pad: pad
+
+    padInteraction.setCallbacks
+      Store: (complete) =>
         LOI.Adventure.goToLocation HQ.Locations.Store.Elevator.id()
-        
+        complete()
+
+      LOI: (complete) =>
+        LOI.Adventure.goToLocation HQ.Locations.Store.Elevator.id()
+        complete()
+
+      IdeaGarden: (complete) =>
+        LOI.Adventure.goToLocation HQ.Locations.Store.Elevator.id()
+        complete()

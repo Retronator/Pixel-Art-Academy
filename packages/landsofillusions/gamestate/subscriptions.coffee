@@ -1,7 +1,6 @@
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
-# Automatically publish current user's game state.
-Meteor.publish null, ->
+Meteor.publish 'LandsOfIllusions.GameState.forCurrentUser', ->
   LOI.GameState.documents.find
     'user._id': @userId

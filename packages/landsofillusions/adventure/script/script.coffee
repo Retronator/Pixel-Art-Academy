@@ -35,23 +35,19 @@ class LOI.Adventure.Script
     node.script = @ for node in @nodes
 
     # Prepare the state objects.
-    storageKey = "#{@options.id}.state"
     @state = new ReactiveField {}
+    
     @ephemeralState = new ReactiveField {}
-
-    @_stateChangeAutoruns = [
-      AM.PersistentStorage.persist
-        storageKey: storageKey
-        field: @state
-    ,
-      AM.PersistentStorage.persist
-        storageKey: storageKey
-        storage: sessionStorage
-        field: @ephemeralState
-    ]
+    @_stateChangeAutorun = AM.PersistentStorage.persist
+      storageKey: "#{@options.id}.state"
+      storage: sessionStorage
+      field: @ephemeralState
 
   destroy: ->
-    autorun.stop() for autorun in @_stateChangeAutoruns
+    @_stateChangeAutorun.stop()
+
+  id: ->
+    @startNode.id
 
   setDirector: (director) ->
     # Set the director node on all the nodes.

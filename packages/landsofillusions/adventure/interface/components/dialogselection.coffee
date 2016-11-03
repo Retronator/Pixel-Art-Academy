@@ -11,17 +11,25 @@ class LOI.Adventure.Interface.Components.DialogSelection
 
     # Provide a list of options.
     @choiceNode = new ComputedField =>
+      console.log "Dialog selection detected new script nodes." if LOI.debug
+
       # Listen to current scripts until we find a choice node.
       location = @options.interface.adventure.currentLocation()
-      return unless location
+      if location
+        for scriptNode in location.director.currentScripts()
+          return scriptNode if scriptNode instanceof Nodes.Choice
 
-      for scriptNode in location.director.currentScripts()
-        return scriptNode if scriptNode instanceof Nodes.Choice
+      # No choice node was found, so also reset our selected node.
+      @selectedDialogLine null
+
+      null
 
     # Provide a list of dialog line options.
     @dialogLineOptions = new ComputedField =>
       scriptNode = @choiceNode()
       return unless scriptNode
+
+      console.log "Dialog selection is generating dialog line options." if LOI.debug
 
       choiceNodes = [scriptNode]
 
@@ -47,6 +55,8 @@ class LOI.Adventure.Interface.Components.DialogSelection
           # We have gone over all the choice nodes in the line so we're done.
           break
 
+      console.log "We have collected choice nodes", choiceNodes if LOI.debug
+
       # Alright, we found all the choices. Set the first node as the initial choice.
       @selectedDialogLine choiceNodes[0].node
 
@@ -62,11 +72,16 @@ class LOI.Adventure.Interface.Components.DialogSelection
     $(document).off('.dialogSelection')
 
   confirm: ->
+    selectedDialogLine = @selectedDialogLine()
+    return unless selectedDialogLine
+    
     # Confirms the current selection and transitions the script from the choice to the selected dialog line.
-    @options.interface.adventure.currentLocation().director.scriptTransition @choiceNode(), @selectedDialogLine()
+    @options.interface.adventure.currentLocation().director.scriptTransition @choiceNode(), selectedDialogLine
 
   onKeyDown: (event) ->
     return unless @choiceNode()
+
+    console.log "Key down is being processed in dialog selection." if LOI.debug
 
     switch event.which
       # Up

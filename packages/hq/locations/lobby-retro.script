@@ -23,7 +23,7 @@ retro: `_MainQuestion`
 
 retro: Certainly!
 
-> You reach for your wallet and present your ID.
+> You reach for your wallet to present your ID.
 
 ### SignInActive
 
@@ -43,6 +43,8 @@ retro: Here is your account file. Feel free to update any information in there.
 
 ## SignInFailed
 
+> But you change your mind.
+
 <!-- TODO: Add in FAQ about signing in. -->
 
 retro: Perhaps next time. 
@@ -53,11 +55,18 @@ retro: Perhaps next time.
 
 <!-- TODO: Add in the script for starting out. -->
 
-retro: Oh, you are new!!!
+retro: 
+    Oh, you are new!!!
+    Let me just create a new account for you …
 
-`@registered = true`
+> Retro takes out a file folder and starts putting different papers into it.
 
--> [Start]
+### CreateNewAccount
+### ReceiveAccountFile
+
+retro: There you go! You should LOOK at your ACCOUNT file and fill out the information.
+
+-> [End]
 
 ## SignOut
 
@@ -81,7 +90,9 @@ retro: Hope to see you back soon.
 * So about that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQ`
 * Actually, nevermind. -> [Start] `not _answered`
 * I would like to do something else. -> [MainQuestion] `_answered`
-* Thank you, you've been most helpful. -> [End] `_answered`
+* Thank you, you've been most helpful. `_answered`
+
+retro: My pleasure. Let me know if you need anything else. -> [End]
 
 ## RetronatorHQ
 `_answered = true`
@@ -100,7 +111,7 @@ retro: Yes, it's a publication you can read on Medium, all about pixel art! Woul
 * Sure, I'll take a look. -> [ReadRetronatorMagazine]
 * Maybe later.
 
-retro: Sounds good. It's available at https://medium.com/retronator-magazine. 
+retro: Sounds good. It's available at medium.com/retronator-magazine. 
 
 -> [Question]
 
@@ -109,6 +120,8 @@ retro: Sounds good. It's available at https://medium.com/retronator-magazine.
 > Retro turns around his computer screen and shows you the website.
 
 ### OpenRetronatorMagazine
+
+retro: I hope you liked it.
 
 -> [Question]
 

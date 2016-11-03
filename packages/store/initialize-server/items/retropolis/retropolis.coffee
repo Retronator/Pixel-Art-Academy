@@ -17,7 +17,7 @@ Meteor.startup ->
   RA.Transactions.Item.create
     catalogKey: RS.Items.CatalogKeys.Retropolis.IdeaGardenAccess
     name: "Retronator HQ Idea Garden"
-    description: "Visit Retronator HQ wit its Idea Garden where you can explore designs of new features."
+    description: "Visit Retronator HQ with its Idea Garden where you can explore designs of new features."
 
   RA.Transactions.Item.create
     catalogKey: RS.Items.CatalogKeys.Retropolis.SecretLabAccess

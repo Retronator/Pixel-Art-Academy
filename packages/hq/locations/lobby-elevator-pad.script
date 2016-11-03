@@ -1,0 +1,54 @@
+# Retronator.HQ.Locations.Lobby.Elevator.Scripts.NumberPad
+
+## Start
+
+> You look at the number pad and see a selection of floors.
+> The number on the display indicates you are at first floor.
+
+## Selection
+
+* 1 - Lobby -> [Lobby]
+* 2 - Store -> [Store]
+* 3 - Lands of Illusions -> [LOI]
+* 4 - Idea Garden (authorized visitors only) -> [IdeaGarden]
+* Nevermind -> [Nevermind]
+
+## Lobby
+
+> You press the Lobby button, but nothing happens.
+> You realize you are already on the first floor and feel a little dumb.
+
+-> [Selection]
+
+## Store
+
+> Number 2 glows and the doors close.
+> After a short wait the elevator opens onto the Store floor.
+
+### Store
+
+-> [End]
+
+## LOI
+
+> Number 3 glows and the doors close.
+> After a medium wait the elevator opens onto the Lands of Illusions floor.
+
+### LOI
+
+-> [End]
+
+## IdeaGarden
+
+> Number 4 glows and the doors close.
+> After a long wait the elevator opens onto the Idea Garden floor.
+
+### IdeaGarden
+
+-> [End] 
+
+## Nevermind
+
+> You change your mind and leave the number pad alone.
+
+## End

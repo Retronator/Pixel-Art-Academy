@@ -19,6 +19,11 @@ Package.onUse(function(api) {
 
   api.addFiles('hq.coffee');
 
+  // Actors
+  api.addFiles('actors/actors.coffee');
+
+  api.addFiles('actors/elevatornumberpad.coffee');
+
   // Locations
 
   api.addFiles('locations/locations.coffee');
@@ -27,6 +32,7 @@ Package.onUse(function(api) {
   api.addAssets('locations/lobby-retro.script', ['client', 'server']);
 
   api.addFiles('locations/lobby-elevator.coffee');
+  api.addAssets('locations/lobby-elevator-pad.script', ['client', 'server']);
 
   api.addFiles('locations/store.coffee');
 

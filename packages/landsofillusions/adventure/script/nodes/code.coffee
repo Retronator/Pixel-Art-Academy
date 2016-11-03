@@ -59,11 +59,11 @@ class Script.Nodes.Code extends Script.Node
   evaluate: (options = {}) ->
     options.triggerChange ?= true
 
-    # Get the states into context
+    # Get the states into context.
     _scriptState = @script.state()
     _ephemeralState = @script.ephemeralState()
     _locationState = @script.options.location.state()
-    _globalState = @script.options.adventure.state()
+    _globalState = @script.options.adventure.gameState()
 
     # Attach the user object to global state.
     _globalState.user = Retronator.user()
@@ -75,10 +75,6 @@ class Script.Nodes.Code extends Script.Node
     _globalState.user = null
 
     # Trigger reactive state change.
-    if options.triggerChange
-      @script.state _scriptState
-      @script.ephemeralState _ephemeralState
-      @script.options.location.state _locationState
-      @script.options.adventure.state _globalState
+    @script.options.adventure.gameState.updated() if options.triggerChange
 
     result

@@ -41,6 +41,8 @@ class LandsOfIllusions
   @initializePackage: (packageObjects) ->
     @packages[packageObjects.id] = packageObjects
 
+  @debug = false
+
 LOI = LandsOfIllusions
 
 if Meteor.isClient

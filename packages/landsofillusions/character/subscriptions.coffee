@@ -1,8 +1,7 @@
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
-
-# Always send current user's characters.
+# Always send current user's characters field on the user document.
 userCharacterFieldCursor = (userId) ->
   RA.User.documents.find
     _id: userId

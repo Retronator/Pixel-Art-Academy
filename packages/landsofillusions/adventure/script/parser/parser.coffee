@@ -17,7 +17,7 @@ class LOI.Adventure.ScriptFile.Parser
     lines.reverse()
     @_parseLine line for line in lines
 
-    console.log "COMPLETED PARSING", @scriptNodes
+    console.log "Script parser has completed and created nodes", @scriptNodes if LOI.debug
 
     @scriptNodes
 
@@ -237,9 +237,14 @@ class LOI.Adventure.ScriptFile.Parser
 
   ###
     * dialog line -> `label name`
+    --or--
+    * dialog line
   ###
   _parseChoice: (line) ->
-    return null unless match = line.match /\*\s*(.*?)\s*->/
+    # Extract the potential conditional out of the line.
+    [line, ...] = @_parseConditional line
+
+    return null unless match = line.match /\*\s*(.*?)(?:\s->|$)/
 
     choiceLine = match[1]
 
@@ -247,10 +252,11 @@ class LOI.Adventure.ScriptFile.Parser
     result = @_parseJump line
     [..., jumpNode] = result if result
 
-    # Create a dialog node without an actor (the player's character delivers it), followed by the jump.
+    # Create a dialog node without an actor (the player's character delivers it),
+    # followed by the jump (or simply following to the next node if no jump is pressent).
     dialogNode = new Nodes.DialogLine
       line: choiceLine
-      next: jumpNode
+      next: jumpNode or @nextNode
       
     # Create a choice node that delivers the line if chosen.
     choiceNode = new Nodes.Choice

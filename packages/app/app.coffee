@@ -19,3 +19,5 @@ class Retronator.App extends Artificial.Base.App
     new LOI
 
     FlowRouter.initialize()
+
+    window.FlowRouter = FlowRouter

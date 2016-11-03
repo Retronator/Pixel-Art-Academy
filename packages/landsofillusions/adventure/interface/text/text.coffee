@@ -11,6 +11,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
   onCreated: ->
     super
 
+    console.log "Text interface is being created." if LOI.debug
+
     # Create pixel scaling display.
     @display = new AM.Display
       safeAreaWidth: 320
@@ -46,6 +48,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
   onDestroyed: ->
     super
+
+    console.log "Destroying text interface." if LOI.debug
 
     @commandInput.destroy()
     @dialogSelection.destroy()
@@ -113,7 +117,11 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     true
     
   items: ->
-    @adventure.inventory.values()
+    items = @adventure.inventory.values()
+
+    console.log "Text interface is displaying inventory items", items if LOI.debug
+
+    items
     
   events: ->
     super.concat

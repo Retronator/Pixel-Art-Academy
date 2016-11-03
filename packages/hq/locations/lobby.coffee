@@ -16,9 +16,7 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
   ]
 
   @fullName: -> "Retronator HQ lobby"
-
   @shortName: -> "lobby"
-
   @description: ->
     "
       You are in a comfortable lobby like hall. It is the entry level of Retronator HQ. The receptionist is working on
@@ -33,6 +31,10 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
     @addExit Vocabulary.Keys.Directions.In, HQ.Locations.Lobby.Elevator.id()
 
     @loginButtonsSession = Accounts._loginButtonsSession
+
+  initialState: ->
+    _.extend {}, super,
+      thisIsLobby: true
 
   onScriptsLoaded: ->
     retro = @addActor new PAA.Cast.Retro
@@ -54,7 +56,7 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
         # Wait until wallet has been active and deactivated again.
         walletActive = false
 
-        @autorun (computation) =>
+        Tracker.autorun (computation) =>
           activeItem = @options.adventure.activeItem()
 
           if activeItem and not walletActive
@@ -62,17 +64,35 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
 
           else if not activeItem and walletActive
             computation.stop()
-            complete()
+
+            console.log "Wallet has deactivated. The user ID is now", Meteor.userId(), "The subscription for the game state is", @options.adventure.gameStateSubsription if LOI.debug
+
+            # If user has signed in, wait also until the game state has been loaded.
+            Tracker.autorun (computation) =>
+              return if Meteor.userId() and not @options.adventure.gameStateSubsription.ready()
+              computation.stop()
+
+              complete()
+
+      ReceiveAccountFile: (complete) =>
+        @options.adventure.gameState().player.inventory[HQ.Items.AccountFile.id()] = {}
+        @options.adventure.gameState.updated()
+        complete()
+
+      CreateNewAccount: (complete) =>
+        # Insert the current local storage state as the start of the database one.
+        LOI.GameState.insertForCurrentUser @options.adventure.gameState(), =>
+          complete()
+
+      ReturnAccountFile: (complete) =>
+        delete @options.adventure.gameState().player.inventory[HQ.Items.AccountFile.id()]
+        @options.adventure.gameState.updated()
+        complete()
 
       SignOut: (complete) =>
         Meteor.logout()
         complete()
 
-      ReceiveAccountFile: (complete) =>
-        @options.adventure.inventory.addItem new HQ.Items.AccountFile adventure: @options.adventure
-        complete()
+      OpenRetronatorMagazine: (complete) =>
 
-      ReturnAccountFile: (complete) =>
-        accountFile = @options.adventure.inventory[HQ.Items.AccountFile.id()]
-        @options.adventure.inventory.removeItem accountFile
-        complete()
+      GiveProspectus: (complete) =>

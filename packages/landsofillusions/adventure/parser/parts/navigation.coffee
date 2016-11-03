@@ -17,12 +17,21 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
   
     # See if we have any of the verbs to go to a location.
     goWords = @vocabulary.getWords @Vocabulary.Keys.Verbs.Go
-  
+
+    console.log "We are searching for 'go' words, which for the current language are", goWords, "and we have the command", command if LOI.debug
+
     if command.has goWords
+      console.log "We found the 'go' word." if LOI.debug
+
       # Yes, the user is trying to go somewhere. Did they name any of the locations?
       for directionKey, locationId of @location.exits()
-        translationHandle = @location.exitsTranslationSubscribtions[locationId]
+        translationHandle = @location.exitsTranslationSubscribtions()[locationId]
+
+        console.log "For direction", directionKey, "that points to location with ID", locationId, "we have translation handle", translationHandle, "which is ready?", translationHandle.ready() if LOI.debug
+
         shortName = AB.translate(translationHandle, LOI.Adventure.Location.translationKeys.shortName).text
+
+        console.log "Short name for this location is", shortName if LOI.debug
   
         if command.has shortName
           # We found the name of this location! Let's go there.

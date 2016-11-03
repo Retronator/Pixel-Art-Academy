@@ -12,7 +12,11 @@ class LOI.Adventure.Interface.Components.CommandInput
     $(document).on 'keydown.commandInput', (event) =>
       @onKeyDown event
 
+    console.log "Command input constructed." if LOI.debug
+
   destroy: ->
+    console.log "Command input destroyed." if LOI.debug
+
     # Remove key events.
     $(document).off('.commandInput')
 
@@ -21,6 +25,7 @@ class LOI.Adventure.Interface.Components.CommandInput
 
   onKeyPress: (event) ->
     # Don't capture events when interface is not active.
+    return unless @options.interface.active()
 
     # Ignore control characters.
     return if event.which < 32
@@ -33,8 +38,12 @@ class LOI.Adventure.Interface.Components.CommandInput
     @command newCommand
 
   onKeyDown: (event) ->
+    interfaceActive = @options.interface.active()
+
+    console.log "Command input detected a key down and is checking if interface is active:", interfaceActive if LOI.debug
+
     # Don't capture events when interface is not active.
-    return unless @options.interface.active()
+    return unless interfaceActive
 
     switch event.which
       # Backspace
