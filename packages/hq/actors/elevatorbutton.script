@@ -6,7 +6,7 @@
 
 > You press the button and it glows with a cool light.
 
-### WaitForElevator
+Wait 2000ms.
 
 `@locations['Retronator.HQ.Locations.Elevator'].floor = _buttonFloor`
 

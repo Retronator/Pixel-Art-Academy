@@ -72,10 +72,3 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
   
       padInteraction.setActors
         pad: pad
-  
-      padInteraction.setCallbacks
-        Travel: (complete) =>
-          Meteor.setTimeout =>
-            complete()
-          ,
-            2000

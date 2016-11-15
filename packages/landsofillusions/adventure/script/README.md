@@ -55,6 +55,11 @@ If choice is taken, script continues to given `Label`. (see `Jump` node below).
 
 `Code` node that gets executed and potentially writes to the game state.
 
+#### Timeout
+    `wait number`
+    
+`Timeout` node that waits the provided number of milliseconds before continuing.
+
 ### Modifiers
 
 #### Conditionals

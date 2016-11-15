@@ -235,6 +235,10 @@ class LOI.Adventure extends AM.Component
     Tracker.afterFlush =>
       @rewriteUrl()
 
+    # Flush the state updates to the database when the page is about to unload.
+    window.onbeforeunload = =>
+      @gameState?.updated flush: true
+
   onRendered: ->
     super
 

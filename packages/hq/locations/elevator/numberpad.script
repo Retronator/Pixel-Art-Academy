@@ -69,7 +69,7 @@
 
 `location.floor = null`
 
-### Travel
+Wait 2000ms.
 
 `location.floor = _nextFloor`
 

@@ -50,6 +50,7 @@ class LOI.Adventure.Interface extends AM.Component
     @_handleEmpty node if node instanceof Nodes.Code
 
     @_handleCallback node if node instanceof Nodes.Callback
+    @_handleTimeout node if node instanceof Nodes.Timeout
 
   _handleEmpty: (scriptNode) ->
     # Simply end the node.
@@ -71,3 +72,9 @@ class LOI.Adventure.Interface extends AM.Component
     # Call the callback and pass it the completion function.
     callback.callback =>
       callback.end()
+
+  _handleTimeout: (timeout) ->
+    Meteor.setTimeout =>
+      timeout.end()
+    ,
+      timeout.milliseconds

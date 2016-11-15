@@ -29,6 +29,7 @@ class LOI.Adventure.ScriptFile.Parser
       '_parseCallback'
       '_parseLabel'
       '_parseScript'
+      '_parseTimeout'
       '_parseChoice'
       '_parseJump'
       '_parseDialog'
@@ -306,3 +307,15 @@ class LOI.Adventure.ScriptFile.Parser
       labelName: match[2]
 
     [line, jumpNode]
+
+  ###
+    wait number
+  ###
+  _parseTimeout: (line) ->
+    return null unless match = line.match /^wait (\d+)/i
+
+    milliseconds = match[1]
+
+    new Nodes.Timeout
+      milliseconds: milliseconds
+      next: @nextNode

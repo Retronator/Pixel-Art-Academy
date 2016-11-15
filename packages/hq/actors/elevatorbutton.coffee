@@ -28,13 +28,6 @@ class HQ.Actors.ElevatorButton extends LOI.Adventure.Thing
 
       buttonInteraction = options.location.scripts['Retronator.HQ.Actors.ElevatorButton']
 
-      buttonInteraction.setCallbacks
-        WaitForElevator: (complete) =>
-          Meteor.setTimeout =>
-            complete()
-          ,
-            2000
-
       # Tell the script which floor it's on.
       state = buttonInteraction.ephemeralState()
       state.buttonFloor = options.floor

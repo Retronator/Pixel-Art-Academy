@@ -19,13 +19,13 @@
         <div class="text-display-content scrollable-content">
           <div class="narrative">
             <p class="introduction">{{introduction}}</p>
-            {{#if exits.length}}
-              <p class="exits">{{> t10e "Possible exits are:"}}
-                {{#each exits}}
-                  <span class="exit"><span class="name">{{exitName}}</span></span>
-                {{/each}}
-              </p>
-            {{/if}}
+            <p class="exits">{{> t10e "Possible exits are:"}}
+              {{#each exits}}
+                <span class="exit"><span class="name">{{exitName}}</span></span>
+              {{else}}
+                <span class="exit">{{> t10e "None"}}</span>
+              {{/each}}
+            </p>
             <p class="things-sentence">{{> t10e "You see:"}}</p>
             <ul class="things">
               {{#each things}}

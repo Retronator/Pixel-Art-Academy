@@ -201,7 +201,9 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
   _handleDialogLine: (dialogLine) ->
     unless dialogLine.actor
       # There is no actor, which means the player is saying this. Simply dump it into the narrative and finish.
-      @narrative.addText "> \"#{dialogLine.line.toUpperCase()}\""
+      text = @_evaluateLine dialogLine
+
+      @narrative.addText "> \"#{text.toUpperCase()}\""
       dialogLine.end()
       return
 
@@ -221,7 +223,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     # Add a new paragraph to the narrative for each line.
     for dialogLine in dialogLines
-      text = dialogLine.line
+      text = @_evaluateLine dialogLine
 
       # Add the intro line at the start.
       if dialogLine is _.first dialogLines
@@ -239,5 +241,22 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
   _handleNarrativeLine: (narrativeLine) ->
     # Simply output the line to the narrative and move on.
-    @narrative.addText narrativeLine.line
+    text = @_evaluateLine narrativeLine
+
+    @narrative.addText text
     narrativeLine.end()
+
+  _evaluateLine: (lineNode) ->
+    lineNode.line.replace /`(.*?)`/g, (codeSection) ->
+      expression = codeSection.match(/`(.*?)`/)[1]
+      console.log "Evaluating embedded expression", expression, "from line", lineNode if LOI.debug
+
+      # Create a code node to evaluate the expression.
+      codeNode = new LOI.Adventure.Script.Nodes.Code
+        expression: expression
+
+      codeNode.script = lineNode.script
+
+      # Evaluate the expression, but we don't allow (or at least react to) state changes within the expression.
+      codeNode.evaluate
+        triggerChange: false
