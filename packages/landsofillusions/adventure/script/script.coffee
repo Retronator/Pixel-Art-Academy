@@ -70,7 +70,8 @@ class LOI.Adventure.Script
         console.warn "Unknown callback", name
         return
 
-      @startNode.callbacks[name].callback = callback
+      for callbackNode in @startNode.callbacks[name]
+        callbackNode.callback = callback
 
   _addNode: (node) ->
     # Add the node only if it hasn't already added.

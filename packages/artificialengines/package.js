@@ -62,6 +62,7 @@ Package.onUse(function(api) {
   api.addFiles('everywhere/lodash/nestedproperty.coffee');
   api.addFiles('everywhere/lodash/urls.coffee');
   api.addFiles('everywhere/lodash/math.coffee');
+  api.addFiles('everywhere/lodash/objects.coffee');
 
   api.addFiles('everywhere/date.coffee');
   api.addFiles('everywhere/datehelper.coffee');

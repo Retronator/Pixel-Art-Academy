@@ -3,14 +3,14 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
-class RS.Items.Bundles.PixelArtAcademyPreorderUpgrade extends RA.Transactions.Item
+class RS.Items.Bundles.PixelArtAcademyPreorderUpgrade extends RS.Transactions.Item
   validateEligibility: ->
     # Only existing players can buy upgrades.
     user = Meteor.user()
     @_throwEligibilityException "You need to be logged in to purchase an upgrade." unless user
 
     # Make sure the user has one of the prerequisite items.
-    transactions = RA.Transactions.Transaction.findTransactionsForUser(user).fetch()
+    transactions = RS.Transactions.Transaction.findTransactionsForUser(user).fetch()
 
     for transaction in transactions
       for transactionItem in transaction.items

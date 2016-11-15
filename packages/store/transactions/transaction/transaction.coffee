@@ -1,7 +1,8 @@
 AM = Artificial.Mummification
 RA = Retronator.Accounts
+RS = Retronator.Store
 
-class RetronatorAccountsTransactionsTransaction extends AM.Document
+class RetronatorStoreTransactionsTransaction extends AM.Document
   # time: when the transaction was conducted
   # user: logged-in user that this transaction belongs to or null if the user was not logged in
   #   _id
@@ -36,17 +37,17 @@ class RetronatorAccountsTransactionsTransaction extends AM.Document
   #   message: the public message to show for this transaction
   # totalValue: auto-generated value of the transaction
   @Meta
-    name: 'RetronatorAccountsTransactionsTransaction'
+    name: 'RetronatorStoreTransactionsTransaction'
     fields: =>
       user: @ReferenceField RA.User, ['displayName', 'supporterName'], false
       items: [
-        item: @ReferenceField RA.Transactions.Item, ['catalogKey'], false
+        item: @ReferenceField RS.Transactions.Item, ['catalogKey'], false
         receivedGift:
           transaction: @ReferenceField 'self', ['ownerDisplayName'], false
         givenGift:
           transaction: @ReferenceField 'self', ['ownerDisplayName'], false
       ]
-      payments: [@ReferenceField RA.Transactions.Payment, ['type', 'amount', 'authorizedOnly', 'storeCreditAmount']]
+      payments: [@ReferenceField RS.Transactions.Payment, ['type', 'amount', 'authorizedOnly', 'storeCreditAmount']]
       ownerDisplayName: @GeneratedField 'self', ['user', 'email', 'twitter'], (fields) ->
         displayName = fields.user?.displayName
         displayName ?= "@#{fields.twitter}" if fields.twitter
@@ -66,6 +67,9 @@ class RetronatorAccountsTransactionsTransaction extends AM.Document
 
         # Update the user of this transaction.
         @findUserForTransaction(transaction)?.onTransactionsUpdated()
+
+  @topRecent: 'Retronator.Store.Transactions.Transaction.topRecent'
+  @messages: 'Retronator.Store.Transactions.Transaction.messages'
 
   @findUserForTransaction: (transaction) ->
     return unless transaction
@@ -108,6 +112,6 @@ class RetronatorAccountsTransactionsTransaction extends AM.Document
       query.$or.push
         twitter: user.services.twitter.screenName
 
-    RA.Transactions.Transaction.documents.find query
+    RS.Transactions.Transaction.documents.find query
       
-RA.Transactions.Transaction = RetronatorAccountsTransactionsTransaction
+RS.Transactions.Transaction = RetronatorStoreTransactionsTransaction

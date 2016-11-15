@@ -4,21 +4,21 @@ RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
 # These are tiers that you can purchase in the store if you were a backer that hasn't selected a reward.
-class RS.Items.Bundles.PixelArtAcademyKickstarterTier extends RA.Transactions.Item
+class RS.Items.Bundles.PixelArtAcademyKickstarterTier extends RS.Transactions.Item
   validateEligibility: ->
     user = Meteor.user()
     @_throwEligibilityException "You need to be logged in to select a Kickstarter tier." unless user
 
     # Find this user's kickstarter pledge.
-    transactions = RA.Transactions.Transaction.findTransactionsForUser(user).fetch()
+    transactions = RS.Transactions.Transaction.findTransactionsForUser(user).fetch()
 
     for transaction in transactions
       for payment in transaction.payments
-        if payment.type is RA.Transactions.Payment.Types.KickstarterPledge
+        if payment.type is RS.Transactions.Payment.Types.KickstarterPledge
           # Make sure the pledge is for Pixel Art Academy.
           payment.refresh()
 
-          if payment.project is RA.Transactions.Payment.Projects.PixelArtAcademy
+          if payment.project is RS.Transactions.Payment.Projects.PixelArtAcademy
             pledge = payment
             break
 

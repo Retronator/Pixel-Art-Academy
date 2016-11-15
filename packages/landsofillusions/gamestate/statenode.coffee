@@ -2,17 +2,29 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.StateNode
-  constructor: (@options) ->
-    @_instances = {}
-    @_instancesUpdatedDependency = new Tracker.Dependency
+  constructor: (options) ->
+    instances = {}
+    instancesUpdatedDependency = new Tracker.Dependency
 
-    @_state = new ReactiveField null
+    state = new ReactiveField null
+
+    # We want the state node to behave as a function to which we pass an item ID of the instance we want.
+    stateNode = (id) ->
+      console.log "State node searching for id", id, instances[id] if LOI.debug
+      instancesUpdatedDependency.depend()
+      instances[id]
+
+    # Allow correct handling of instanceof operator.
+    if Object.setPrototypeOf
+      Object.setPrototypeOf stateNode, @constructor::
+    else
+      stateNode.__proto__ = @constructor::
 
     # Instantiate state property objects.
-    Tracker.autorun (computation) =>
+    stateUpdatedAutorun = Tracker.autorun (computation) ->
       # Compare properties vs instances.
-      instanceKeys = _.keys @_instances
-      stateKeys = if @_state() then _.keys @_state() else []
+      instanceKeys = _.keys instances
+      stateKeys = if state() then _.keys state() else []
 
       newKeys = _.difference stateKeys, instanceKeys
       retiredKeys = _.difference instanceKeys, stateKeys
@@ -21,37 +33,38 @@ class LOI.StateNode
 
       # Create new instances.
       for newKey in newKeys
-        constructor = @options.class.getClassForID newKey
+        constructor = LOI.Adventure.Thing.getClassForID newKey
 
         # We create the instance in a non-reactive context so that
         # reruns of this autorun don't invalidate instance's autoruns.
         instance = null
-        Tracker.nonreactive =>
-          instance = new constructor
-            adventure: @options.adventure
+        Tracker.nonreactive ->
+          instance = new constructor options
 
-        @_instances[newKey] = instance
+        instances[newKey] = instance
 
         # Reactively send state updates to the new instance.
-        instance._stateAutorun = Tracker.autorun (computation) =>
-          instance.state @_state()[newKey]
-
-        # Add shorthand accessor.
-        @[newKey] = @_instances[newKey]
+        instance._stateAutorun = Tracker.autorun (computation) ->
+          instance.state state()[newKey]
 
       # Destroy retired instances.
       for retiredKey in retiredKeys
-        @_instances[retiredKey].destroy?()
-        @_instances[retiredKey]._stateAutorun.stop()
-        delete @_instances[retiredKey]
-        delete @[retiredKey]
+        instances[retiredKey].destroy?()
+        instances[retiredKey]._stateAutorun.stop()
+        delete instances[retiredKey]
 
       # Notify of the change if we had any new or removed instances.
-      @_instancesUpdatedDependency.changed() if newKeys.length + retiredKeys.length
+      instancesUpdatedDependency.changed() if newKeys.length + retiredKeys.length
 
-  updateState: (state) ->
-    @_state state
+    stateNode.destroy = ->
+      stateUpdatedAutorun.stop()
 
-  values: ->
-    @_instancesUpdatedDependency.depend()
-    _.values @_instances
+    stateNode.updateState = (newState) ->
+      state newState
+
+    stateNode.values = ->
+      instancesUpdatedDependency.depend()
+      _.values instances
+
+    # Return the state node getter function (return must be explicit).
+    return stateNode

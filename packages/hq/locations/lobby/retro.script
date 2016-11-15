@@ -14,6 +14,7 @@ retro: `_MainQuestion`
 
 * I would like to sign in. -> [SignIn] `not @user`
 * I'm signing out. -> [SignOut] `@user`
+* Can I get my account file? -> [GetAccountFile] `@user and not @player.inventory['Retronator.HQ.Items.AccountFile']`
 * I have a question. -> [Question]
 * Oh, just looking. -> [End] `not _helped`
 * Thank you so much! -> [End] `_helped`
@@ -79,6 +80,20 @@ retro: Alright. I'll store the account documents for you till next time.
 retro: Hope to see you back soon. 
 
 ### SignOut
+
+-> [End]
+
+## GetAccountFile
+
+retro: Of course!
+
+> Retro searches for your account file in the cabinet and hands it over to you.
+
+### ReceiveAccountFile
+
+* Thank you.
+
+retro: You're welcome!
 
 -> [End]
 

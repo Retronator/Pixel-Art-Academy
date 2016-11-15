@@ -32,17 +32,17 @@ createKickstarterBacker = (email, amount, price, tier) ->
   return if user
 
   # Get item to add.
-  kickstarterItem = RA.Transactions.Item.documents.findOne catalogKey: tier
+  kickstarterItem = RS.Transactions.Item.documents.findOne catalogKey: tier
   console.log kickstarterItem, tier
 
   # Add a kickstarter payment.
-  paymentId = RA.Transactions.Payment.documents.insert
-    type: RA.Transactions.Payment.Types.KickstarterPledge
+  paymentId = RS.Transactions.Payment.documents.insert
+    type: RS.Transactions.Payment.Types.KickstarterPledge
     amount: amount
-    project: RA.Transactions.Payment.Projects.PixelArtAcademy
+    project: RS.Transactions.Payment.Projects.PixelArtAcademy
 
   # Add a transaction for this user's item.
-  RA.Transactions.Transaction.documents.insert
+  RS.Transactions.Transaction.documents.insert
     time: new Date()
     email: email
     items: [
@@ -56,3 +56,12 @@ createKickstarterBacker = (email, amount, price, tier) ->
 
   # Everything went OK, create the user.
   Accounts.createUser email: email, password: 'test'
+
+  # Update user's transactions.
+  user = Meteor.users.findOne 'emails.address': email
+
+  RA.User.documents.update user._id,
+    $set:
+      'emails.0.verified': true
+
+  user.onTransactionsUpdated()

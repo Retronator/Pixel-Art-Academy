@@ -42,7 +42,7 @@ class RS.Pages.Account extends AM.Component
     checked: true unless @showSupporterName()
 
   transactions: ->
-    transactions = RA.Transactions.Transaction.findTransactionsForUser Retronator.user()
+    transactions = RS.Transactions.Transaction.findTransactionsForUser Retronator.user()
     return unless transactions
 
     transactions = transactions.fetch()

@@ -10,11 +10,8 @@
       {{> Render location}}
     </div>
     <div class="items">
-      {{#each items}}
-        {{! We need to render unless we're deactivated (so we can animate in activating/deactivating states).}}
-        {{#unless deactivated}}
-          {{> Render this}}
-        {{/unless}}
+      {{#each activeItems}}
+        {{> Render this}}
       {{/each}}
     </div>
     <div class="ui">
@@ -29,14 +26,14 @@
                 {{/each}}
               </p>
             {{/if}}
-            <p class="actors-sentence">{{> t10e "You see:"}}</p>
-            <ul class="actors">
-              {{#each location.actors}}
-                <li class="actor">
+            <p class="things-sentence">{{> t10e "You see:"}}</p>
+            <ul class="things">
+              {{#each things}}
+                <li class="thing">
                   {{avatar.fullName}}.
                 </li>
               {{else}}
-                <li class="actor">{{> t10e "Nothing"}}.</li>
+                <li class="thing">{{> t10e "Nothing"}}.</li>
               {{/each}}
             </ul>
             {{#each narrative.lines}}
@@ -63,8 +60,8 @@
           <div class="inventory-content scrollable-content">
             <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
             <ul class="items">
-              {{#each items}}
-                <li class="item">{{fullName.text}}</li>
+              {{#each inventoryItems}}
+                <li class="item">{{avatar.fullName}}</li>
               {{else}}
                 <li class="item">{{> t10e "Nothing"}}</li>
               {{/each}}

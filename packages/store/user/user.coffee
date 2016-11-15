@@ -1,5 +1,7 @@
 RA = Retronator.Accounts
+RS = Retronator.Store
 
+# Override the user class with extra store functionality.
 class RetronatorAccountsUser extends RA.User
   # profile: a custom object, writable by default by the client
   #   supporterName: the name the user wants to publicly display as a supporter
@@ -22,7 +24,7 @@ class RetronatorAccountsUser extends RA.User
           supporterName = if user.profile?.showSupporterName then user.profile?.supporterName else null
           [user._id, supporterName]
 
-        items: [@ReferenceField RA.Transactions.Item, ['catalogKey']]
+        items: [@ReferenceField RS.Transactions.Item, ['catalogKey']]
 
       fields
 
@@ -34,9 +36,11 @@ class RetronatorAccountsUser extends RA.User
 
       triggers
 
+  @topSupporters: 'Retronator.Accounts.User.topSupporters'
+
   authorizedPaymentsAmount: ->
     # Authorized payments amount is the sum of all payments that were only authorized.
-    transactions = RA.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
 
     authorizedPaymentsAmount = 0
 
@@ -59,11 +63,11 @@ class RetronatorAccountsUser extends RA.User
   generateItemsArray: ->
     # Start by constructing an array of all item Ids.
     itemIds = []
-    transactions = RA.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
 
     # Helper function that recursively adds items.
     addItem = (item) =>
-      item = RA.Transactions.Item.documents.findOne item._id
+      item = RS.Transactions.Item.documents.findOne item._id
 
       # Add the item to the ids.
       itemIds = _.union itemIds, [item._id]
@@ -86,7 +90,7 @@ class RetronatorAccountsUser extends RA.User
 
   generateSupportAmount: ->
     # Support amount is the sum of all payments.
-    transactions = RA.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
 
     supportAmount = 0
 
@@ -99,7 +103,7 @@ class RetronatorAccountsUser extends RA.User
 
   generateStoreData: ->
     # Store balance is the sum of all payments minus sum of all purchases.
-    transactions = RA.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
 
     balance = 0
 

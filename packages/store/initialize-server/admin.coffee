@@ -1,4 +1,3 @@
-RA = Retronator.Accounts
 RS = Retronator.Store
 
 # Admin creation
@@ -17,9 +16,9 @@ Meteor.startup ->
   adminId = adminUser?._id or Accounts.createUser Meteor.settings.admin
 
   # Add admin item to admin user.
-  adminItem = RA.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Retronator.Admin
+  adminItem = RS.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Retronator.Admin
 
-  RA.Transactions.Transaction.documents.insert
+  RS.Transactions.Transaction.documents.insert
     time: new Date()
     user:
       _id: adminId

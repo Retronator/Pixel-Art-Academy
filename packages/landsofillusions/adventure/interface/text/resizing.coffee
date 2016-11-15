@@ -22,7 +22,7 @@ class LOI.Adventure.Interface.Text.Resizing
       $textInterface = $('.adventure .text-interface')
       $ui = $textInterface.find('.ui')
 
-      location = @textInterface.adventure.currentLocation()
+      location = @textInterface.options.adventure.currentLocation()
       illustrationHeight = (location?.illustrationHeight() or 0) * scale
 
       if resized
@@ -49,7 +49,8 @@ class LOI.Adventure.Interface.Text.Resizing
         uiHeight = viewport.viewportBounds.height() - locationSize.height()
 
         # But make it a multiple of line height and add one line for border.
-        uiHeight = Math.max 0, Math.floor(uiHeight / lineHeight - 1) * lineHeight
+        # Also subtract a pixel since one pixel line bleeds through on the top otherwise.
+        uiHeight = Math.max 0, Math.floor(uiHeight / lineHeight - 1) * lineHeight - 1
 
         uiSize = new AE.Rectangle
           x: viewport.viewportBounds.x() + viewport.viewportBounds.width() / 2 - uiWidth / 2
@@ -98,8 +99,9 @@ class LOI.Adventure.Interface.Text.Resizing
           maxDisplayedContentHeight = viewportHeight - minimumIllustrationHeight - lineHeight
           newUIHeight = Math.min maxDisplayedContentHeight, totalContentHeight
 
-          # Make the UI a multiple of line height.
-          newUIHeight = Math.max 0, Math.floor(newUIHeight / lineHeight) * lineHeight
+          # Make the UI a multiple of line height. Also subtract a pixel
+          # since one pixel line bleeds through on the top otherwise.
+          newUIHeight = Math.max 0, Math.floor(newUIHeight / lineHeight) * lineHeight - 1
 
           # Location fills in the rest that's not taken up by text display plus one line border.
           locationHeight = Math.min illustrationHeight, viewportHeight - newUIHeight - lineHeight

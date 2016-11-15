@@ -1,6 +1,5 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
-RA = Retronator.Accounts
 RS = Retronator.Store
 
 class RS.Components.TopSupporters extends AM.Component

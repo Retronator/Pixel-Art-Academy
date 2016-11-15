@@ -1,4 +1,4 @@
-RA = Retronator.Accounts
+RS = Retronator.Store
 
 class TopRecentTransactions
   @documents: new Meteor.Collection 'TopRecentTransactions'
@@ -110,15 +110,14 @@ class TopRecentTransactions
     for i in [0...@_sortedTransactions.length]
       @_sortedTransactions[i].index = i
 
-Meteor.publish 'Retronator.Accounts.Transactions.Transaction.topRecent', ->
+Meteor.publish RS.Transactions.Transaction.topRecent, ->
   # We are returning the list of top recent transactions with supporters' names, amounts and messages. We do this by
   # looking at last 50 transactions and only returning the top 10 sorted by value. We return these using a special
   # collection TopRecentTransactions that only holds these results.
-
   topRecentTransactions = new TopRecentTransactions @
 
   # Listen to last 50 transactions that have some value.
-  RA.Transactions.Transaction.documents.find(
+  RS.Transactions.Transaction.documents.find(
     totalValue:
       $gt: 0
   ,
@@ -138,10 +137,11 @@ summarizeMessage = (document) ->
   summary = TopRecentTransactions.summarizeDocument document
   _.omit summary, 'amount'
 
-Meteor.publish 'Retronator.Accounts.Transactions.Transaction.messages', (count) ->
+Meteor.publish RS.Transactions.Transaction.messages, (count) ->
+  console.log "COUNT GOT", count
   check count, Match.PositiveInteger
 
-  RA.Transactions.Transaction.documents.find(
+  RS.Transactions.Transaction.documents.find(
     totalValue:
       $gt: 0
     'tip.message':

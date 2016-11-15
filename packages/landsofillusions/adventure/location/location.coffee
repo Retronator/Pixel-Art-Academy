@@ -5,10 +5,6 @@ LOI = LandsOfIllusions
 class LOI.Adventure.Location extends LOI.Adventure.Thing
   # Static location properties and methods
 
-  # A map of all location constructors by url and ID.
-  @_thingClassesByUrl = {}
-  @_thingClassesByID = {}
-
   # Urls of scripts used at this location.
   @scriptUrls: -> []
 
@@ -50,23 +46,27 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
   constructor: (@options) ->
     super
 
-    @exits = new ReactiveField {}
+    @director new LOI.Adventure.Director @
 
-    @director = new LOI.Adventure.Director @
-    @actors = new ReactiveField []
+    console.log "Director made for location", @ if LOI.debug
 
-    # Subscribe to translations of exit locations so we get their names.
-    # TODO: Find a way to just subscribe to location names, not whole location namespaces (probably overkill).
-    @exitsTranslationSubscribtions = new ComputedField =>
+    @things = new LOI.StateNode
+      adventure: @options.adventure
+
+    # Subscribe to translations of exit locations' avatars so we get their names.
+    @exitsTranslationSubscriptions = new ComputedField =>
+      exits = @state()?.exits
+      return {} unless exits
+      
       subscriptions = {}
-      for directionKey, locationId of @exits()
-        subscriptions[locationId] = AB.subscribeNamespace locationId
+      for directionKey, locationId of exits
+        subscriptions[locationId] = AB.subscribeNamespace "#{locationId}.Avatar"
 
       subscriptions
 
     # Subscribe to this location's script translations.
     translationNamespace = @constructor.id()
-    @_translationSubscribtionScript = AB.subscribeNamespace "#{translationNamespace}.Script"
+    @_scriptTranslationSubscription = AB.subscribeNamespace "#{translationNamespace}.Script"
 
     # Create the scripts.
     @scripts= {}
@@ -76,7 +76,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
         file = new LOI.Adventure.ScriptFile
           url: @constructor.versionUrl "/packages/#{scriptUrl}"
           location: @
-          adventure: @adventure
+          adventure: @options.adventure
 
         file.promise
 
@@ -90,14 +90,18 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
 
         @onScriptsLoaded()
 
-    # Send state updates to scripts.
+    # Propagate state updates.
     @_stateUpdateAutorun = Tracker.autorun =>
       state = @state()
       return unless state
 
-      console.log "Location has received a new state", state, "and we are sending it to the scripts", @scripts if LOI.debug
+      console.log "Location", @, "has received a new state", state, "and we are sending it to the scripts", @scripts if LOI.debug
 
-      createdStates = false
+      # Update things.
+      @things.updateState state.things
+
+      # Update scripts.
+      createdScriptStates = false
 
       for scriptId, script of @scripts
         # Find the state of the script in location, or make it if it doesn't exist yet.
@@ -106,35 +110,36 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
         unless scriptState
           scriptState = {}
           state.scripts[scriptId] = scriptState
-          createdStates = true
+          createdScriptStates = true
 
         # Update the state.
         script.state scriptState
 
-      if createdStates
+      if createdScriptStates
         console.log "Updating the state of location has introduced new scripts." if LOI.debug
         Tracker.nonreactive => @options.adventure.gameState.updated()
 
   destroy: ->
     super
 
-    @exitsTranslationSubscribtions.stop()
-    @_translationSubscribtionScript.stop()
+    @exitsTranslationSubscriptions.stop()
+    @_scriptTranslationSubscription.stop()
     @_stateUpdateAutorun.stop()
 
   initialState: ->
     scripts: {}
+    things: {}
+
+  ready: ->
+    loaded = _.every _.flatten [
+      super
+      @state()
+      subscription.ready() for subscription in @exitsTranslationSubscriptions()
+      @_scriptTranslationSubscription.ready()
+    ]
+
+    console.log "Loaded location", @constructor.id() if loaded and LOI.debug
+
+    loaded
 
   onScriptsLoaded: -> # Override to create location's script logic. Use @scriptNodes to get access to script nodes.
-
-  addExit: (directionKey, locationId) ->
-    exits = @exits()
-    exits[directionKey] = locationId
-    @exits exits
-
-  addActor: (actor) ->
-    actor.director @director
-    @actors @actors().concat actor
-
-    # Allow chaining syntax.
-    actor

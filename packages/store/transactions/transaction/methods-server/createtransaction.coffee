@@ -1,6 +1,6 @@
-RA = Retronator.Accounts
+RS = Retronator.Store
 
-RA.Transactions.Transaction.create = (options) ->
+RS.Transactions.Transaction.create = (options) ->
   {customer, payments, shoppingCart} = options
 
   transaction =
@@ -47,10 +47,10 @@ RA.Transactions.Transaction.create = (options) ->
     transaction.items.push item
 
   # Insert the purchase document for this transaction.
-  transactionId = RA.Transactions.Transaction.documents.insert transaction
+  transactionId = RS.Transactions.Transaction.documents.insert transaction
 
   # Finally send an email confirmation to the customer.
-  RA.Transactions.Transaction.emailCustomer options
+  RS.Transactions.Transaction.emailCustomer options
       
   # Return transactionId if it was created successfully.
   transactionId

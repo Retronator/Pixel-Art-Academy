@@ -1,6 +1,7 @@
 RA = Retronator.Accounts
+RS = Retronator.Store
 
-Meteor.publish 'Retronator.Accounts.Transactions.Payment.forCurrentUser', ->
+Meteor.publish 'Retronator.Store.Transactions.Payment.forCurrentUser', ->
   # We are doing this inside an autorun in case the user document gets updated and new transactions would get matched.
   @autorun =>
     return unless @userId
@@ -13,7 +14,7 @@ Meteor.publish 'Retronator.Accounts.Transactions.Payment.forCurrentUser', ->
         twitter:
           screenname: 1
 
-    transactions = RA.Transactions.Transaction.findTransactionsForUser(user).fetch()
+    transactions = RS.Transactions.Transaction.findTransactionsForUser(user).fetch()
     
     # Get all payments from transactions.
     paymentIds = for transaction in transactions
@@ -21,6 +22,6 @@ Meteor.publish 'Retronator.Accounts.Transactions.Payment.forCurrentUser', ->
 
     paymentIds = _.flatten paymentIds
 
-    RA.Transactions.Payment.documents.find
+    RS.Transactions.Payment.documents.find
       _id:
         $in: paymentIds

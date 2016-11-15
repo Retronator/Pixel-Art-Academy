@@ -3,8 +3,6 @@ LOI = LandsOfIllusions
 
 class LOI.Adventure.Parser
   constructor: (@options) ->
-    @adventure = @options.adventure
-    
     # Set Vocabulary shorthand.
     @Vocabulary = LOI.Adventure.Parser.Vocabulary
 
@@ -23,7 +21,8 @@ class LOI.Adventure.Parser
 
     # Get the current location. Parse is not reactive so it's OK to save it 
     # statically like that. It is only used in subsequent parse subroutines.
-    @location = @adventure.currentLocation()
+    @location = @options.adventure.currentLocation()
 
+    return if @parseDebug command
     return if @parseNavigation command
     return if @parseAbilities command

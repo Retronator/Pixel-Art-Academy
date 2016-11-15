@@ -1,4 +1,4 @@
-RA = Retronator.Accounts
+RS = Retronator.Store
 
-Meteor.publish 'Retronator.Accounts.Transactions.Item.all', ->
-  RA.Transactions.Item.documents.find()
+Meteor.publish 'Retronator.Store.Transactions.Item.all', ->
+  RS.Transactions.Item.documents.find()

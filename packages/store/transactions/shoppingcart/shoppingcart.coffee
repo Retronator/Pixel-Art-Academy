@@ -1,9 +1,9 @@
 AE = Artificial.Everywhere
-RA = Retronator.Accounts
+RS = Retronator.Store
 
-class RA.Transactions.ShoppingCart
+class RS.Transactions.ShoppingCart
 
-  @ShoppingCartItemsLocalStorageKey: "Retronator.Accounts.Transactions.ShoppingCart.items"
+  @ShoppingCartItemsLocalStorageKey: "Retronator.Store.Transactions.ShoppingCart.items"
 
   constructor: (options) ->
     @_cartItems = options?.items ? []
@@ -24,7 +24,7 @@ class RA.Transactions.ShoppingCart
 
       for cartItem in @_cartItems
         # Find the item document.
-        item = RA.Transactions.Item.documents.findOne cartItem.item._id
+        item = RS.Transactions.Item.documents.findOne cartItem.item._id
         continue unless item
 
         cartItem.item = item.cast()

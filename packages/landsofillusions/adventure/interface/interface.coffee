@@ -7,15 +7,13 @@ class LOI.Adventure.Interface extends AM.Component
   constructor: (@options) ->
     super
 
-    @adventure = @options.adventure
-
   onCreated: ->
     super
 
     # React to location changes.
     @location = ComputedField =>
       # Find the location we're at.
-      location = @adventure.currentLocation()
+      location = @options.adventure.currentLocation()
       return unless location
 
       # Mark stored current location as visited (in this user session).
@@ -31,7 +29,7 @@ class LOI.Adventure.Interface extends AM.Component
       location = @location()
       return unless location
 
-      scriptNodes = location.director.currentScripts()
+      scriptNodes = location.director().currentScripts()
 
       console.log "Interface has detected new script nodes:", scriptNodes if LOI.debug
 

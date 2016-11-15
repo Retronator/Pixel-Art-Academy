@@ -4,13 +4,18 @@ LOI = LandsOfIllusions
 
 class LOI.Adventure.Thing extends AM.Component
   template: -> 'LandsOfIllusions.Adventure.Thing'
+    
   # Static thing properties and methods
+
+  # A map of all location constructors by url and ID.
+  @_thingClassesByUrl = {}
+  @_thingClassesByID = {}
 
   # Id string for this thing used to identify the thing in code.
   @id: -> throw new Meteor.Error 'unimplemented', "You must specify thing's id."
 
-  # The URL at which the thing is accessed.
-  @url: -> throw new Meteor.Error 'unimplemented', "You must specify thing's url."
+  # The URL at which the thing is accessed or null if it doesn't use an address.
+  @url: -> null
 
   # Generates the parameters object that can be passed to the router to get to this thing URL.
   @urlParameters: ->
@@ -24,17 +29,11 @@ class LOI.Adventure.Thing extends AM.Component
 
     parametersObject
 
-  @translationKeys:
-    fullName: 'fullName'
-    shortName: 'shortName'
-    description: 'description'
-
-  # The long name is displayed to succinctly describe the thing. Btw, we can't just use 'name'
-  # instead of 'shortName' because name gets overriden by CoffeeScript with the class name.
+  # The long name is displayed to succinctly describe the thing. Also, we can't just use 'name'
+  # instead of 'fullName' because name gets overriden by CoffeeScript with the class name.
   @fullName: -> throw new Meteor.Error 'unimplemented', "You must specify thing's full name."
 
-  # The short name of the thing which appears in possible exits. Default (null)
-  # means a hidden thing that can only be accessed by its url. 
+  # The short name of the thing which is used to refer to it in the text. 
   @shortName: -> null
 
   # The description text displayed when you enter the thing for the first time or specifically look around. Default
@@ -49,49 +48,58 @@ class LOI.Adventure.Thing extends AM.Component
     @_thingClassesByID[id]
 
   @initialize: ->
-    # Store thing class by map and ID.
-    @_thingClassesByUrl[@url()] = @
+    # Store thing class by ID and url.
     @_thingClassesByID[@id()] = @
+    @_thingClassesByUrl[@url()] = @ if @url()
 
-    # On the server, create translations.
-    if Meteor.isServer
-      for translationKey of @translationKeys
-        defaultText = @[translationKey]()
-        if defaultText
-          namespace = @id()
-          AB.createTranslation namespace, translationKey, defaultText
+    # Prepare the avatar for this thing.
+    LOI.Avatar.initialize @
 
   # Thing instance
 
   constructor: (@options) ->
     super
 
-    @adventure = @options.adventure
-
+    @avatar = new LOI.Avatar @constructor
+    @abilities = new ReactiveField []
+    @director = new ReactiveField null
     @state = new ReactiveField null
 
-    # Subscribe to this thing's translations.
-    translationNamespace = @constructor.id()
-    @_translationSubscribtion = AB.subscribeNamespace translationNamespace
+    @_autorunHandles = []
 
   destroy: ->
-    @_translationSubscribtion.stop()
+    @avatar.destroy()
+    for ability in @abilities()
+      # Break the two-way relationship and let the ability do any additional cleanup.
+      ability.thing null
+      ability.destroy()
+
+    handle.stop() for handle in @_autorunHandles
 
   initialState: -> {} # Override to return a non-empty initial state.
 
   # Convenience methods for static properties.
   id: -> @constructor.id()
 
-  # Translated strings.
-  fullName: -> @_getTranslation @constructor.translationKeys.fullName
-  shortName: -> @_getTranslation @constructor.translationKeys.shortName
-  description: -> @_getTranslation @constructor.translationKeys.description
-
-  _getTranslation: (key) ->
-    translation = Artificial.Babel.translation @_translationSubscribtion, key
-    return unless translation
-
-    translation.translate Artificial.Babel.userLanguagePreference()
-
   ready: ->
-    @_translationSubscribtion.ready()
+    @avatar.ready()
+
+  # A variant of autorun that works even when the component isn't being rendered.
+  autorun: (handler) ->
+    # If we're already created, we can simply use default implementation
+    # that will stop the autorun when component is removed from DOM.
+    return super if @isCreated()
+
+    handle = Tracker.autorun handler
+    @_autorunHandles.push handle
+
+    handle
+
+  addAbility: (ability) ->
+    # Create a two-way relationship and add the ability to the list.
+    ability.thing @
+    @abilities @abilities().concat ability
+    
+  # Helper to access running scripts.
+  currentScripts: ->
+    @director()?.currentScripts() or []

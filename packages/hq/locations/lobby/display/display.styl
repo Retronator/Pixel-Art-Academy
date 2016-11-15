@@ -1,0 +1,46 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-locations-lobby-display
+  fixed-cover()
+  z-index 1
+  background atari2600grey(0)
+
+  .display
+    margin 30rem
+
+    h2
+      margin-top 2em
+      kyrou-7()
+      color atari2600grey(7)
+      font-weight normal
+
+    h3
+      kyrou-5()
+      color atari2600grey(7)
+      font-weight normal
+
+    .supporters-area
+      display flex
+
+      .area
+        width 50%
+        padding-right 10%
+
+    .transaction-messages
+      .top-supporters
+        list-style none
+        padding 0
+
+        .supporter
+          .name-amount-area
+            width 20%
+            float left
+
+            .name
+              width 100%
+
+            .amount
+              display none
+
+          .message
+            padding-left 20%

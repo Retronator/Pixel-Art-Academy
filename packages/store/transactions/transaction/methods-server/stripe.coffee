@@ -1,13 +1,13 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
-RA = Retronator.Accounts
+RS = Retronator.Store
 
 stripe = StripeAPI Meteor.settings.stripe.secretKey
 
 customersCreateSync = Meteor.wrapAsync stripe.customers.create.bind stripe.customers
 
 Meteor.methods
-  'Retronator.Accounts.Transactions.Transaction.insertStripePurchase': (customer, creditCardToken, payAmount, shoppingCart) ->
+  'Retronator.Store.Transactions.Transaction.insertStripePurchase': (customer, creditCardToken, payAmount, shoppingCart) ->
     check customer, Match.OptionalOrNull Object
     check customer.email, String if customer?.email
     check customer.name, String if customer?.name
@@ -16,7 +16,7 @@ Meteor.methods
     check shoppingCart, Match.ShoppingCart
 
     # Re-create the shopping cart from the plain object.
-    shoppingCart = RA.Transactions.ShoppingCart.fromDataObject shoppingCart
+    shoppingCart = RS.Transactions.ShoppingCart.fromDataObject shoppingCart
 
     # Determine price of shopping cart items.
     totalPrice = shoppingCart.totalPrice()
@@ -63,31 +63,31 @@ Meteor.methods
     # Stripe customer is created so record the payment.
     payments = []
 
-    stripePaymentId = RA.Transactions.Payment.documents.insert
-      type: RA.Transactions.Payment.Types.StripePayment
+    stripePaymentId = RS.Transactions.Payment.documents.insert
+      type: RS.Transactions.Payment.Types.StripePayment
       stripeCustomerId: stripeCustomer.id
       amount: payAmount
       authorizedOnly: true
 
-    stripePayment = RA.Transactions.Payment.documents.findOne stripePaymentId
+    stripePayment = RS.Transactions.Payment.documents.findOne stripePaymentId
     throw new AE.InvalidOperationException "Stripe payment was not created successfully." unless stripePayment
 
     payments.push stripePayment
 
     if usedCreditAmount
-      creditPaymentId = RA.Transactions.Payment.documents.insert
-        type: RA.Transactions.Payment.Types.StoreCredit
+      creditPaymentId = RS.Transactions.Payment.documents.insert
+        type: RS.Transactions.Payment.Types.StoreCredit
         amount: 0
         storeCreditAmount: usedCreditAmount
 
-      creditPayment = RA.Transactions.Payment.documents.findOne creditPaymentId
+      creditPayment = RS.Transactions.Payment.documents.findOne creditPaymentId
       throw new AE.InvalidOperationException "Credit payment was not created successfully." unless creditPayment
 
       payments.push creditPayment
 
     # Finally try to complete the transaction.
     try
-      transactionId = RA.Transactions.Transaction.create
+      transactionId = RS.Transactions.Transaction.create
         customer: customer
         payments: payments
         shoppingCart: shoppingCart

@@ -77,16 +77,7 @@ Package.onUse(function(api) {
   // Then finish with other initialization.
   api.addFiles('initialize-server/admin.coffee', 'server');
   api.addFiles('initialize-server/test.coffee', 'server');
-  api.addFiles('initialize-server/peerdb.coffee', 'server');
 
-  // Layouts
-
-  api.addFiles('layouts/layouts.coffee');
-
-  api.addFiles('layouts/store/store.coffee');
-  api.addFiles('layouts/store/store.html');
-  api.addFiles('layouts/store/store.styl');
-  
   // Components
 
   api.addFiles('components/components.coffee');
@@ -98,45 +89,4 @@ Package.onUse(function(api) {
   api.addFiles('components/topsupporters/topsupporters.coffee');
   api.addFiles('components/topsupporters/topsupporters.html');
   api.addFiles('components/topsupporters/topsupporters.styl');
-
-  // Pages
-
-  api.addFiles('pages/pages.coffee');
-
-  api.addFiles('pages/store/store.coffee');
-  api.addFiles('pages/store/store.html');
-  api.addFiles('pages/store/store.styl');
-
-  api.addFiles('pages/cart/cart.coffee');
-  api.addFiles('pages/cart/cart.html');
-  api.addFiles('pages/cart/cart.styl');
-
-  api.addFiles('pages/checkout/checkout.coffee');
-  api.addFiles('pages/checkout/checkout.html');
-  api.addFiles('pages/checkout/checkout.styl');
-
-  api.addFiles('pages/claim/claim.coffee');
-  api.addFiles('pages/claim/claim.html');
-  api.addFiles('pages/claim/claim.styl');
-
-  api.addFiles('pages/money/money.coffee');
-  api.addFiles('pages/money/money.html');
-  api.addFiles('pages/money/money.styl');
-
-  api.addFiles('pages/inventory/inventory.coffee');
-  api.addFiles('pages/inventory/inventory.html');
-  api.addFiles('pages/inventory/inventory.styl');
-
-  api.addFiles('pages/account/account.coffee');
-  api.addFiles('pages/account/account.html');
-  api.addFiles('pages/account/account.styl');
-
-  // Typography
-
-  api.addFiles('typography/typography.css', 'client');
-  api.addFiles('typography/typography.import.styl', 'client', {isImport:true});
-
-  // Styles
-
-  api.addFiles('styles/console.import.styl', 'client', {isImport:true});
 });

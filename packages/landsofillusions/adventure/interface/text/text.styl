@@ -1,5 +1,5 @@
 @import "{retronator:artificialengines}/mirage/helpers.import"
-@import "../../../styles/atari2600.import"
+@import "../../../style/atari2600.import"
 @import "../../../typography/typography.import"
 
 gridSpacing = 8rem
@@ -50,15 +50,15 @@ hoverable()
               &::after
                 content: "."
 
-        .actors-sentence
+        .things-sentence
           margin-bottom 0
 
-        .actors
+        .things
           list-style none
           padding-left gridSpacing * 2
           margin 0 0 lineHeight  0
 
-          .actor
+          .thing
             margin 0
 
             &::before
@@ -75,8 +75,7 @@ hoverable()
           padding 0
 
           .option
-            padding 1rem 7rem
-            margin-top -1rem
+            padding 0 7rem
 
             &.active
               background atari2600grey(7)

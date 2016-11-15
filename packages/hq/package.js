@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:retronator');
+  api.use('retronator:store');
   api.use('retronator:cast');
 
   api.export('Retronator');
@@ -22,21 +23,23 @@ Package.onUse(function(api) {
   // Actors
   api.addFiles('actors/actors.coffee');
 
-  api.addFiles('actors/elevatornumberpad.coffee');
+  api.addFiles('actors/elevatorbutton.coffee');
+  api.addAssets('actors/elevatorbutton.script', ['client', 'server']);
 
   // Locations
 
   api.addFiles('locations/locations.coffee');
 
-  api.addFiles('locations/lobby.coffee');
-  api.addAssets('locations/lobby-retro.script', ['client', 'server']);
+  api.addFiles('locations/lobby/lobby.coffee');
+  api.addAssets('locations/lobby/retro.script', ['client', 'server']);
 
-  api.addFiles('locations/lobby-elevator.coffee');
-  api.addAssets('locations/lobby-elevator-pad.script', ['client', 'server']);
+  api.addFiles('locations/lobby/display/display.coffee');
+  api.addFiles('locations/lobby/display/display.html');
+  api.addFiles('locations/lobby/display/display.styl');
 
-  api.addFiles('locations/store.coffee');
-
-  api.addFiles('locations/store-elevator.coffee');
+  api.addFiles('locations/elevator/elevator.coffee');
+  api.addFiles('locations/elevator/numberpad.coffee');
+  api.addAssets('locations/elevator/numberpad.script', ['client', 'server']);
 
   // Items
 

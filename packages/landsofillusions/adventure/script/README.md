@@ -111,7 +111,7 @@ There are some special variables that provide other contexts:
 * `@locations`: All location states, addressable by location ID.
 * `@actors`: All actor states, addressable by actor ID.
 * `@items`: All item states, addressable by item ID.
-* `@inventory`: A subset of @items with only the items in your inventory.
+* `@player.inventory`: A subset of @items with only the items in your inventory.
 
 #### Persistence
 

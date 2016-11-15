@@ -34,7 +34,7 @@ class Script.Nodes.Code extends Script.Node
       @expression = @expression.replace new RegExp(word, 'g'), replacement
 
     # Make variable names in the expression to reference the different states.
-    @expression = @expression.replace /[a-zA-Z_@][\w.]*(?=(?:[^"']*["'][^"']*["'])*[^"']*$)/g, (identifier) =>
+    @expression = @expression.replace /[a-zA-Z_@](?:[\w.]|\[.*\])*(?=(?:[^"']*["'][^"']*["'])*[^"']*$)/g, (identifier) =>
       # Ignore reserved keywords.
       return identifier if identifier in @constructor.javaScriptKeywords
 
@@ -67,14 +67,25 @@ class Script.Nodes.Code extends Script.Node
 
     # Attach the user object to global state.
     _globalState.user = Retronator.user()
-    _globalState.user?.name = _globalState.user?.profile.name
+    _globalState.user?.name = _globalState.user?.profile?.name
 
-    result = eval @expression
+    console.log "Evaluating code node", @, "with states:", _globalState, _locationState, _scriptState, _ephemeralState if LOI.debug
+
+    try
+      result = eval @expression
+
+    catch e
+      console.error "Error while evaluating expression", @expression
+      throw e
+
+    console.log "Evaluated to", result if LOI.debug
 
     # User is read-only and should not be saved.
     _globalState.user = null
 
     # Trigger reactive state change.
-    @script.options.adventure.gameState.updated() if options.triggerChange
+    if options.triggerChange
+      @script.options.adventure.gameState.updated()
+      @script.ephemeralState _ephemeralState
 
     result

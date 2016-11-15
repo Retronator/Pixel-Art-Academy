@@ -1,7 +1,7 @@
-RA = Retronator.Accounts
+RS = Retronator.Store
 AT = Artificial.Telepathy
 
-RA.Transactions.Transaction.emailCustomer = ({customer, payments, shoppingCart}) ->
+RS.Transactions.Transaction.emailCustomer = ({customer, payments, shoppingCart}) ->
   unless customer.email
     # We don't have user's email, so we can't send them the email (for example, if they logged in with Twitter only).
     # Exception is not thrown so that the method completes, but we can't continue with emailing.
@@ -26,13 +26,13 @@ RA.Transactions.Transaction.emailCustomer = ({customer, payments, shoppingCart})
 
   for payment in payments
     switch payment.type
-      when RA.Transactions.Payment.Types.StripePayment
+      when RS.Transactions.Payment.Types.StripePayment
         email.addParagraph "At this point your credit card was only authorized. We will
                             collect the purchase price of $#{payment.amount} when the game's first public release
                             happens at the end of this year. You will be emailed beforehand in case you need to cancel
                             your purchase at that time."
 
-      when RA.Transactions.Payment.Types.StoreCredit
+      when RS.Transactions.Payment.Types.StoreCredit
         email.addParagraph "We #{if payments.length > 1 then "also " else ""}applied your store credit of $#{payment.storeCreditAmount} towards the purchase."
 
   email.addParagraph "Thank you so much for your order!"

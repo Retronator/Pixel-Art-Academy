@@ -56,7 +56,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
   active: ->
     # The text interface is active unless there is an item active.
-    not @adventure.activeItem()
+    not @options.adventure.activeItem()
 
   onLocationChanged: (location) ->
     @narrative?.clear()
@@ -66,21 +66,21 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     return unless location
     
     if location.constructor.visited
-      fullName = location.fullName()
+      fullName = location.avatar.fullName()
       return unless fullName
 
       # We've already visited this location so simply return the full name.
-      "#{_.upperFirst fullName.text}."
+      "#{_.upperFirst fullName}."
 
     else
       # It's the first time we're visiting this location in this session so show the full description.
-      location.description()?.text
+      location.avatar.description()
       
   exits: ->
-    exits = @location()?.exits()
+    exits = @location()?.state()?.exits
     return [] unless exits
     
-    for directionKey, locationId of exits
+    for directionKey, locationId of exits when locationId
       directionKey: directionKey
       locationId: locationId
 
@@ -89,13 +89,19 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     location = @location()
 
     # Find exit's location name.
-    subscriptionHandle = location.exitsTranslationSubscribtions()[exit.locationId]
+    subscriptionHandle = location.exitsTranslationSubscriptions()[exit.locationId]
     return unless subscriptionHandle?.ready()
 
-    key = LOI.Adventure.Location.translationKeys.shortName
+    key = LOI.Avatar.translationKeys.shortName
     translated = AB.translate subscriptionHandle, key
 
     translated.text
+
+  things: ->
+    sorted = _.sortBy @location().things.values(), (thing) ->
+      thing.state().displayOrder
+
+    sorted
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
@@ -115,9 +121,22 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
   showInventory: ->
     true
-    
-  items: ->
-    items = @adventure.inventory.values()
+
+  activeItems: ->
+    # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
+    items = _.flatten [
+      @options.adventure.inventory.values()
+      _.filter @options.adventure.currentLocation().things.values(), (thing) => thing instanceof LOI.Adventure.Item
+    ]
+
+    activeItems = _.filter items, (item) => not item.deactivated()
+
+    console.log "Text interface is displaying active items", activeItems if LOI.debug
+
+    activeItems
+
+  inventoryItems: ->
+    items = @options.adventure.inventory.values()
 
     console.log "Text interface is displaying inventory items", items if LOI.debug
 
@@ -163,7 +182,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     return unless command.length
 
     @narrative.addText "> #{command.toUpperCase()}"
-    @adventure.parser.parse command
+    @options.adventure.parser.parse command
     @commandInput.clear()
 
   onCommandInputKeyDown: ->

@@ -21,7 +21,7 @@ class RS.Pages.Store extends AM.Component
     RS.shoppingCart
 
   storeItems: ->
-    items = RA.Transactions.Item.documents.find
+    items = RS.Transactions.Item.documents.find
       price:
         $exists: true
     ,

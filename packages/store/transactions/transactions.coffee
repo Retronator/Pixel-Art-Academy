@@ -1,1 +1,3 @@
-class Retronator.Accounts.Transactions
+RS = Retronator.Store
+
+class RS.Transactions

@@ -94,7 +94,8 @@ class LOI.Adventure.ScriptFile.Parser
       name: match[1]
       next: @nextNode
 
-    @callbacks[node.name] = node
+    @callbacks[node.name] ?= []
+    @callbacks[node.name].push node
 
     node
 

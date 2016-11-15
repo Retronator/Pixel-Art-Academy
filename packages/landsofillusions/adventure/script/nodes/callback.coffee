@@ -6,3 +6,5 @@ class Script.Nodes.Callback extends Script.Node
     super
     
     @name = options.name
+
+  toString: -> "#{Callback}{#{@name}}"

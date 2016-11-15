@@ -7,9 +7,9 @@ summarizeUser = (user) ->
   time: user.createdAt
   name: user.supporterName
 
-Meteor.publish 'Retronator.Accounts.User.topSupporters', ->
-  # We are returning the list of top 10 recent transactions with supporters' names and amounts.
-  # We return these using a special collection TopSupporters that only holds these results.
+Meteor.publish RA.User.topSupporters, ->
+  # We are returning the list of top 10 users by their support amount. We return
+  # these using a special collection TopSupporters that only holds these results.
   RA.User.documents.find(
     supportAmount:
       $gt: 0

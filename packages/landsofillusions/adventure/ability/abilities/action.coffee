@@ -1,11 +1,11 @@
 LOI = LandsOfIllusions
-Actor = LOI.Adventure.Actor
+Ability = LOI.Adventure.Ability
 
-class Actor.Abilities.Action extends Actor.Ability
+class Ability.Action extends Ability
   constructor: (options) ->
     super
 
-    @verb = options.verb
+    @verbs = options.verbs or [options.verb]
     @action = options.action
 
   execute: ->

@@ -80,15 +80,12 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/director/director.coffee');
 
-  // Actor
+  // Ability
 
-  api.addFiles('adventure/actor/actor.coffee');
+  api.addFiles('adventure/ability/ability.coffee');
 
-  api.addFiles('adventure/actor/ability.coffee');
-  api.addFiles('adventure/actor/abilities/abilities.coffee');
-
-  api.addFiles('adventure/actor/abilities/action.coffee');
-  api.addFiles('adventure/actor/abilities/talking.coffee');
+  api.addFiles('adventure/ability/abilities/action.coffee');
+  api.addFiles('adventure/ability/abilities/talking.coffee');
 
   // Script
 
@@ -115,6 +112,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/parser/command.coffee');
 
   api.addFiles('adventure/parser/parts/abilities.coffee');
+  api.addFiles('adventure/parser/parts/debug.coffee');
   api.addFiles('adventure/parser/parts/navigation.coffee');
   
   api.addFiles('adventure/parser/vocabulary/vocabulary.coffee');
@@ -170,13 +168,13 @@ Package.onUse(function(api) {
 
   // Styles
 
-  api.addFiles('styles/styles.coffee');
-  api.addFiles('styles/console.coffee');
-  api.addFiles('styles/console.html');
-  api.addFiles('styles/console.styl');
-  api.addFiles('styles/console-accountsui.styl');
-  api.addFiles('styles/helpers.import.styl', 'client', {isImport:true});
-  api.addFiles('styles/atari2600.import.styl', 'client', {isImport:true});
+  //api.addFiles('styles/styles.coffee');
+  //api.addFiles('styles/console.coffee');
+  //api.addFiles('styles/console.html');
+  //api.addFiles('styles/console.styl');
+  //api.addFiles('styles/console-accountsui.styl');
+  api.addFiles('style/style.import.styl', 'client', {isImport:true});
+  api.addFiles('style/atari2600.import.styl', 'client', {isImport:true});
 
   // Helpers
 

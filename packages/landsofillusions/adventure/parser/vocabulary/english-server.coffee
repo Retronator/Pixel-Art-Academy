@@ -15,6 +15,7 @@ words =
     Talk: ['talk']
     Look: ['look', 'examine']
     Use: ['use']
+    Press: ['press', 'push']
 
 # Generate default english translations.
 generateDefaultTranslations = (id, words) ->
