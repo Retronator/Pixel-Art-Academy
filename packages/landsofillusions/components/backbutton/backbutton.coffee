@@ -25,4 +25,10 @@ class LOI.Components.BackButton extends AM.Component
       'click .lands-of-illusions-components-back-button': @onClick
 
   onClick: (event) ->
-    @onClickCallback event
+    if @onClickCallback
+      @onClickCallback event
+
+    else
+      # By default the back button deactivates the current item.
+      adventure = @ancestorComponent LOI.Adventure
+      adventure.deactivateCurrentItem()

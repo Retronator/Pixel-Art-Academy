@@ -28,6 +28,8 @@ class RetronatorStoreTransactionsPayment extends AM.Document
     name: 'RetronatorStoreTransactionsPayment'
     fields: =>
       referralUser: @ReferenceField RA.User, ['displayName'], false
+      
+  @forCurrentUser: 'Retronator.Store.Transactions.Payment.forCurrentUser'
 
   @Types:
     KickstarterPledge: 'KickstarterPledge'

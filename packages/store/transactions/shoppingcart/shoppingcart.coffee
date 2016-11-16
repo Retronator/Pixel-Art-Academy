@@ -5,18 +5,13 @@ class RS.Transactions.ShoppingCart
 
   @ShoppingCartItemsLocalStorageKey: "Retronator.Store.Transactions.ShoppingCart.items"
 
-  constructor: (options) ->
-    @_cartItems = options?.items ? []
-    @supporterName = new ReactiveField options?.supporterName ? null
-    @tipAmount = new ReactiveField options?.tip?.amount ? 0
-    @tipMessage = new ReactiveField options?.tip?.message ? null
+  constructor: (@options) ->
+    @_cartItems = @options?.items ? []
+    @supporterName = new ReactiveField @options?.supporterName ? null
+    @tipAmount = new ReactiveField @options?.tip?.amount ? 0
+    @tipMessage = new ReactiveField @options?.tip?.message ? null
 
     @_itemsDependency = new Tracker.Dependency
-
-    # On the client, try to load the items from local storage.
-    if Meteor.isClient and not @_cartItems.length
-      storedItems = localStorage.getItem @constructor.ShoppingCartItemsLocalStorageKey
-      @_cartItems = EJSON.parse storedItems if storedItems
 
     # Recreate items from the database. They might not yet be loaded from the database, so run it reactively.
     Tracker.autorun (computation) =>
@@ -123,17 +118,6 @@ class RS.Transactions.ShoppingCart
       throw new AE.ArgumentException "#{cartItem.item.debugName()} can't be purchased as a gift." if cartItem.isGift and not cartItem.item.isGiftable
     
   _onShoppingCartUpdated: ->
-    # On the client, store the shopping cart into local storage.
-    if Meteor.isClient
-      # Store only item ids.
-      items = for cartItem in @_cartItems
-        item:
-          _id: cartItem.item._id
-        isGift: cartItem.isGift
-
-      encodedItemIds = EJSON.stringify items
-      localStorage.setItem @constructor.ShoppingCartItemsLocalStorageKey, encodedItemIds
-
     @_itemsDependency.changed()
 
 Match.ShoppingCart = Match.ObjectIncluding

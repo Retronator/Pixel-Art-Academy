@@ -56,16 +56,16 @@ class LandsOfIllusionsGameState extends AM.Document
     @_renameKeys state, /_/g, '.'
 
   @_renameKeys: (entity, from, to) ->
-    if _.isObject entity
+    if _.isArray entity
+      clone = []
+      for arrayEntity in entity
+        clone.push @_renameKeys arrayEntity, from, to
+
+    else if _.isObject entity
       clone = {}
       for key, value of entity
         renamedKey = key.replace from, to
         clone[renamedKey] = @_renameKeys value, from, to
-
-    else if _.isArray entity
-      clone = []
-      for arrayEntity in entity
-        clone.push @_renameKeys arrayEntity, from, to
 
     else
       # Simply return the entity.

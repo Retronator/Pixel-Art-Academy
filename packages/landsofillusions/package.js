@@ -67,6 +67,26 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure.styl');
   api.addFiles('adventure/adventure.coffee');
 
+  // Parser
+
+  api.addFiles('adventure/parser/parser.coffee');
+  api.addFiles('adventure/parser/command.coffee');
+
+  api.addFiles('adventure/parser/parts/abilities.coffee');
+  api.addFiles('adventure/parser/parts/debug.coffee');
+  api.addFiles('adventure/parser/parts/navigation.coffee');
+
+  api.addFiles('adventure/parser/vocabulary/vocabulary.coffee');
+  api.addFiles('adventure/parser/vocabulary/vocabularykeys.coffee');
+  api.addFiles('adventure/parser/vocabulary/english-server.coffee', 'server');
+
+  // Ability
+
+  api.addFiles('adventure/ability/ability.coffee');
+
+  api.addFiles('adventure/ability/abilities/action.coffee');
+  api.addFiles('adventure/ability/abilities/talking.coffee');
+  
   // Things
 
   api.addFiles('adventure/thing/thing.coffee');
@@ -79,13 +99,6 @@ Package.onUse(function(api) {
   // Director
 
   api.addFiles('adventure/director/director.coffee');
-
-  // Ability
-
-  api.addFiles('adventure/ability/ability.coffee');
-
-  api.addFiles('adventure/ability/abilities/action.coffee');
-  api.addFiles('adventure/ability/abilities/talking.coffee');
 
   // Script
 
@@ -106,19 +119,6 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/timeout.coffee');
 
   api.addFiles('adventure/script/parser/parser.coffee');
-
-  // Parser
-
-  api.addFiles('adventure/parser/parser.coffee');
-  api.addFiles('adventure/parser/command.coffee');
-
-  api.addFiles('adventure/parser/parts/abilities.coffee');
-  api.addFiles('adventure/parser/parts/debug.coffee');
-  api.addFiles('adventure/parser/parts/navigation.coffee');
-  
-  api.addFiles('adventure/parser/vocabulary/vocabulary.coffee');
-  api.addFiles('adventure/parser/vocabulary/vocabularykeys.coffee');
-  api.addFiles('adventure/parser/vocabulary/english-server.coffee', 'server');
 
   // Interface
 

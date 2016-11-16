@@ -22,18 +22,22 @@ class HQ.Locations.Lobby.Display extends LOI.Adventure.Item
     "
 
   @initialize()
-    
+
+  constructor: ->
+    super
+
+    @addAbilityLook()
+
   onCreated: ->
     super
 
     @subscribe RS.Transactions.Transaction.topRecent
     @subscribe RA.User.topSupporters
 
-    #@_messagesCount = new ReactiveField 20
+    @_messagesCount = new ReactiveField 20
 
-    #@autorun (computation) =>
-      #console.log "sending count", @_messagesCount()
-      #@subscribe RS.Transactions.Transaction.messages, @_messagesCount()
+    @autorun (computation) =>
+      @subscribe RS.Transactions.Transaction.messages, @_messagesCount()
 
   topRecentTransactions: ->
     RS.Components.TopSupporters.topRecentTransactions.find {},
@@ -59,9 +63,3 @@ class HQ.Locations.Lobby.Display extends LOI.Adventure.Item
     ,
       sort:
         time: -1
-
-  onClickBackButtonHandler: ->
-    => @onClickBackButton()
-
-  onClickBackButton: ->
-    @options.adventure.deactivateCurrentItem()

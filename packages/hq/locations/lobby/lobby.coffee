@@ -29,25 +29,10 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
     super
 
     @loginButtonsSession = Accounts._loginButtonsSession
-
-    # The elevator exit should show up when elevator is on first floor.
-    @elevatorPresent = new ComputedField =>
-      state = @options.adventure.gameState()
-      return unless state?.locations[HQ.Locations.Elevator.id()]
-
-      # HACK: Wait also for the local state to be set, since otherwise the next autorun won't be ready yet.
-      return unless @state()
-
-      state.locations[HQ.Locations.Elevator.id()].floor is 1
-
-    @autorun (computation) =>
-      elevatorPresent = @elevatorPresent()
-
-      state = Tracker.nonreactive => @state()
-      return unless state
-
-      state.exits[Vocabulary.Keys.Directions.In] = if elevatorPresent then HQ.Locations.Elevator.id() else null
-      Tracker.nonreactive => @options.adventure.gameState.updated()
+    
+    HQ.Locations.Elevator.setupElevatorExit
+      location: @
+      floor: 1
 
   initialState: ->
     things = {}
@@ -126,19 +111,7 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
   
         GiveProspectus: (complete) =>
 
-    # Display
-          
-    Tracker.autorun (computation) =>
-      return unless display = @things HQ.Locations.Lobby.Display.id()
-      computation.stop()
-
-      display.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Look
-        action: =>
-          LOI.Adventure.goToItem HQ.Locations.Lobby.Display
-
     # Elevator button
-
     HQ.Actors.ElevatorButton.setupButton 
       location: @
       floor: 1

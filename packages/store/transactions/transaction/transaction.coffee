@@ -70,6 +70,9 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
 
   @topRecent: 'Retronator.Store.Transactions.Transaction.topRecent'
   @messages: 'Retronator.Store.Transactions.Transaction.messages'
+  @forCurrentUser: 'Retronator.Store.Transactions.Transaction.forCurrentUser'
+  @forGivenGiftKeyCode: 'Retronator.Store.Transactions.Transaction.forGivenGiftKeyCode'
+  @forReceivedGiftKeyCode: 'Retronator.Store.Transactions.Transaction.forReceivedGiftKeyCode'
 
   @findUserForTransaction: (transaction) ->
     return unless transaction

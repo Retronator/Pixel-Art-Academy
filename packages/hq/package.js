@@ -41,6 +41,18 @@ Package.onUse(function(api) {
   api.addFiles('locations/elevator/numberpad.coffee');
   api.addAssets('locations/elevator/numberpad.script', ['client', 'server']);
 
+  api.addFiles('locations/store/store.coffee');
+  api.addFiles('locations/store/checkout/checkout.coffee');
+
+  api.addFiles('locations/store/shelf/shelf.coffee');
+  api.addFiles('locations/store/shelf/shelf.html');
+  api.addFiles('locations/store/shelf/shelf.styl');
+  api.addFiles('locations/store/shelf/shelf-preorders.coffee');
+
+  api.addFiles('locations/store/shoppingcart/shoppingcart.coffee');
+  api.addFiles('locations/store/shoppingcart/shoppingcart.html');
+  api.addFiles('locations/store/shoppingcart/shoppingcart.styl');
+
   // Items
 
   api.addFiles('items/items.coffee');

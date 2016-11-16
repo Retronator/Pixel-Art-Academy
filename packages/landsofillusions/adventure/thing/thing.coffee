@@ -2,6 +2,11 @@ AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+Vocabulary = LOI.Adventure.Parser.Vocabulary
+
+Action = LOI.Adventure.Ability.Action
+Talking = LOI.Adventure.Ability.Talking
+
 class LOI.Adventure.Thing extends AM.Component
   template: -> 'LandsOfIllusions.Adventure.Thing'
     
@@ -66,6 +71,7 @@ class LOI.Adventure.Thing extends AM.Component
     @state = new ReactiveField null
 
     @_autorunHandles = []
+    @_subscriptionHandles = []
 
   destroy: ->
     @avatar.destroy()
@@ -74,7 +80,7 @@ class LOI.Adventure.Thing extends AM.Component
       ability.thing null
       ability.destroy()
 
-    handle.stop() for handle in @_autorunHandles
+    handle.stop() for handle in _.union @_autorunHandles, @_subscriptionHandles
 
   initialState: -> {} # Override to return a non-empty initial state.
 
@@ -95,11 +101,28 @@ class LOI.Adventure.Thing extends AM.Component
 
     handle
 
+  # A variant of subscribe that works even when the component isn't being rendered.
+  subscribe: (subscriptionName) ->
+    # If we're already created, we can simply use default implementation
+    # that will stop the subscribe when component is removed from DOM.
+    return super if @isCreated()
+
+    handle = Meteor.subscribe subscriptionName
+    @_subscriptionHandles.push handle
+
+    handle
+
   addAbility: (ability) ->
     # Create a two-way relationship and add the ability to the list.
     ability.thing @
     @abilities @abilities().concat ability
-    
+  
+  addAbilityLook: ->
+    @addAbility new Action
+      verb: Vocabulary.Keys.Verbs.Look
+      action: =>
+        LOI.Adventure.goToItem @constructor.id()
+
   # Helper to access running scripts.
   currentScripts: ->
     @director()?.currentScripts() or []

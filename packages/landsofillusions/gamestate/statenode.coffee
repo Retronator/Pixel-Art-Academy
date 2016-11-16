@@ -14,6 +14,8 @@ class LOI.StateNode
       instancesUpdatedDependency.depend()
       instances[id]
 
+    stateNode.ready = new ReactiveField false
+
     # Allow correct handling of instanceof operator.
     if Object.setPrototypeOf
       Object.setPrototypeOf stateNode, @constructor::
@@ -22,9 +24,11 @@ class LOI.StateNode
 
     # Instantiate state property objects.
     stateUpdatedAutorun = Tracker.autorun (computation) ->
+      return unless state()
+
       # Compare properties vs instances.
       instanceKeys = _.keys instances
-      stateKeys = if state() then _.keys state() else []
+      stateKeys = _.keys state()
 
       newKeys = _.difference stateKeys, instanceKeys
       retiredKeys = _.difference instanceKeys, stateKeys
@@ -55,6 +59,9 @@ class LOI.StateNode
 
       # Notify of the change if we had any new or removed instances.
       instancesUpdatedDependency.changed() if newKeys.length + retiredKeys.length
+
+      # We've completed at least one initialization so we can mark the state node as ready.
+      stateNode.ready true
 
     stateNode.destroy = ->
       stateUpdatedAutorun.stop()

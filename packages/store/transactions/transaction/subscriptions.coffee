@@ -1,7 +1,7 @@
 RA = Retronator.Accounts
 RS = Retronator.Store
 
-Meteor.publish 'Retronator.Store.Transactions.Transaction.forCurrentUser', ->
+Meteor.publish RS.Transactions.Transaction.forCurrentUser, ->
   # We are doing this inside an autorun in case the user document gets updated and new transactions would get matched.
   @autorun =>
     return unless @userId
@@ -27,7 +27,7 @@ Meteor.publish 'Retronator.Store.Transactions.Transaction.forCurrentUser', ->
     # Return both cursors.
     [transactions, users]
 
-Meteor.publish 'Retronator.Store.Transactions.Transaction.forGivenGiftKeyCode', (keyCode) ->
+Meteor.publish RS.Transactions.Transaction.forGivenGiftKeyCode, (keyCode) ->
   check keyCode, Match.DocumentId
 
   # This returns the transaction where the key code was gifted. We just need to be able to
@@ -39,7 +39,7 @@ Meteor.publish 'Retronator.Store.Transactions.Transaction.forGivenGiftKeyCode', 
       ownerDisplayName: 1
       items: 1
 
-Meteor.publish 'Retronator.Store.Transactions.Transaction.forReceivedGiftKeyCode', (keyCode) ->
+Meteor.publish RS.Transactions.Transaction.forReceivedGiftKeyCode, (keyCode) ->
   check keyCode, Match.DocumentId
 
   # This returns the transaction where the key code was received (claimed). We only

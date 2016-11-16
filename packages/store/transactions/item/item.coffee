@@ -25,6 +25,8 @@ class RetronatorStoreTransactionsItem extends AM.Document
       name: @ReferenceField AB.Translation, [], false
       description: @ReferenceField AB.Translation, [], false
       items: [@ReferenceField 'self', ['catalogKey']]
+      
+  @all: 'Retronator.Store.Transactions.Item.all'
 
   # Inserts an item into the database.
   @create: (documentData) ->    

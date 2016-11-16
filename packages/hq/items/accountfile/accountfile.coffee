@@ -23,10 +23,3 @@ class HQ.Items.AccountFile extends LOI.Adventure.Item
 
   onCreated: ->
     super
-
-  onClickBackButtonHandler: ->
-    => @onClickBackButton()
-
-  onClickBackButton: ->
-    console.log @options
-    @options.adventure.deactivateCurrentItem()

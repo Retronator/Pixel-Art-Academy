@@ -48,7 +48,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
 
     @director new LOI.Adventure.Director @
 
-    console.log "Director made for location", @ if LOI.debug
+    console.log "%cDirector made for location", 'background: LightSkyBlue', @ if LOI.debug
 
     @things = new LOI.StateNode
       adventure: @options.adventure
@@ -95,7 +95,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
       state = @state()
       return unless state
 
-      console.log "Location", @, "has received a new state", state, "and we are sending it to the scripts", @scripts if LOI.debug
+      console.log "%cLocation", 'background: LightSkyBlue', @, "has received a new state", state, "and we are sending it to the scripts", @scripts if LOI.debug
 
       # Update things.
       @things.updateState state.things
@@ -116,7 +116,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
         script.state scriptState
 
       if createdScriptStates
-        console.log "Updating the state of location has introduced new scripts." if LOI.debug
+        console.log "%cUpdating the state of location has introduced new scripts.", 'background: LightSkyBlue' if LOI.debug
         Tracker.nonreactive => @options.adventure.gameState.updated()
 
   destroy: ->
@@ -133,12 +133,12 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
   ready: ->
     loaded = _.every _.flatten [
       super
-      @state()
+      @things.ready()
       subscription.ready() for subscription in @exitsTranslationSubscriptions()
       @_scriptTranslationSubscription.ready()
     ]
 
-    console.log "Loaded location", @constructor.id() if loaded and LOI.debug
+    console.log "%cLoaded location", 'background: LightSkyBlue', @constructor.id(), @state() if loaded and LOI.debug
 
     loaded
 

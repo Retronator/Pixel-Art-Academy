@@ -45,9 +45,3 @@ class HQ.Items.Wallet extends LOI.Adventure.Item
   events: ->
     super.concat
       'click #login-buttons-logout': @onClickLogoutButton
-
-  onClickLogoutButton: ->
-    Meteor.logout()
-
-  onClickBackButton: ->
-    @options.adventure.deactivateCurrentItem()

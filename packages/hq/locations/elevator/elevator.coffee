@@ -42,6 +42,7 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
 
       switch floor
         when 1 then newFloorId = HQ.Locations.Lobby.id()
+        when 2 then newFloorId = HQ.Locations.Store.id()
 
       state.exits[Vocabulary.Keys.Directions.Out] = newFloorId
       Tracker.nonreactive => @options.adventure.gameState.updated()
@@ -56,6 +57,26 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
       things: things
       exits: exits
       floor: 1
+
+  @setupElevatorExit: (options) ->
+    # The elevator exit should show up when elevator is on first floor.
+    elevatorPresent = new ComputedField =>
+      state = options.location.options.adventure.gameState()
+      return unless state?.locations[HQ.Locations.Elevator.id()]
+
+      # HACK: Wait also for the local state to be set, since otherwise the next autorun won't be ready yet.
+      return unless options.location.state()
+
+      state.locations[HQ.Locations.Elevator.id()].floor is options.floor
+
+    options.location.autorun (computation) =>
+      present = elevatorPresent()
+
+      state = Tracker.nonreactive => options.location.state()
+      return unless state
+
+      state.exits[Vocabulary.Keys.Directions.In] = if present then HQ.Locations.Elevator.id() else null
+      Tracker.nonreactive => options.location.options.adventure.gameState.updated()
 
   onScriptsLoaded: ->
     # Number pad

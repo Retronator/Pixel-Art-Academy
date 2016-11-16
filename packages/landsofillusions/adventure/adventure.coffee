@@ -47,8 +47,9 @@ class LOI.Adventure extends AM.Component
           gameState.updated options
           _gameStateUpdatedDependency.changed()
 
-      else
-        # Fallback to local storage until we have a state from the database.
+      # Fallback to local storage if state is not found, but only
+      # if we're not waiting for it to load during initial setup.
+      else if @gameStateSubsription.ready()
         state = @_localGameState.state()
         _gameStateUpdated = (options) =>
           # Local game state does not need to be flushed.
@@ -57,8 +58,13 @@ class LOI.Adventure extends AM.Component
           @_localGameState.updated()
           _gameStateUpdatedDependency.changed()
 
+      else
+        # Looks like we're loading the state from the database during initial setup.
+        _gameStateUpdated = => # Dummy function.
+        state = null
+
       # Initialize state if needed.
-      unless state.initialized
+      unless state?.initialized ? false
         # It's our first time playing Pixel Art Academy. Start with a wallet in the inventory.
         @initializeGameState state
 
@@ -72,7 +78,7 @@ class LOI.Adventure extends AM.Component
       # Set the new updated function.
       @gameState?.updated = _gameStateUpdated
 
-      console.log "New game state has been set.", state if LOI.debug
+      console.log "%cNew game state has been set.", 'background: SlateGrey; color: white', state if LOI.debug
 
       state
 
@@ -205,7 +211,7 @@ class LOI.Adventure extends AM.Component
       # Create a path from parameters.
       url = parameters.join '/'
 
-      console.log "URL has changed to", url if LOI.debug
+      console.log "%cURL has changed to", 'background: PapayaWhip', url if LOI.debug
 
       # We only want to react to router changes.
       Tracker.nonreactive =>
@@ -228,7 +234,6 @@ class LOI.Adventure extends AM.Component
             @currentLocationId constructor.id()
 
         else if constructor.prototype instanceof LOI.Adventure.Item
-          console.log "Thing is an item with id", constructor.id()
           @activeItemId constructor.id()
 
     # Make sure we're at the right URL after initialization is done.
@@ -276,14 +281,16 @@ class LOI.Adventure extends AM.Component
     Meteor.logout()
 
   @goToLocation: (locationClassOrId) ->
-    console.log "Routing to location with ID", locationClassOrId if LOI.debug
-
     locationId = if _.isFunction locationClassOrId then locationClassOrId.id() else locationClassOrId
+    console.log "%cRouting to location with ID", 'background: NavajoWhite', locationId if LOI.debug
+
     locationClass = LOI.Adventure.Location.getClassForID locationId
     FlowRouter.go 'LandsOfIllusions.Adventure', locationClass.urlParameters()
 
   @goToItem: (itemClassOrId) ->
     itemId = if _.isFunction itemClassOrId then itemClassOrId.id() else itemClassOrId
+    console.log "%cRouting to item with ID", 'background: NavajoWhite', itemId if LOI.debug
+
     itemClass = LOI.Adventure.Item.getClassForID itemId
     FlowRouter.go 'LandsOfIllusions.Adventure', itemClass.urlParameters()
 
@@ -291,7 +298,7 @@ class LOI.Adventure extends AM.Component
   rewriteUrl: ->
     activeItemId = @activeItemId()
 
-    console.log "Rerouting to URL for item", activeItemId, "or location", @currentLocationId() if LOI.debug
+    console.log "%cRerouting to URL for item", 'background: NavajoWhite', activeItemId, "or location", @currentLocationId() if LOI.debug
 
     if activeItemId
       LOI.Adventure.goToItem activeItemId

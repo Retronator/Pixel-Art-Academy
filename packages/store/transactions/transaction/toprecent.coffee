@@ -138,7 +138,6 @@ summarizeMessage = (document) ->
   _.omit summary, 'amount'
 
 Meteor.publish RS.Transactions.Transaction.messages, (count) ->
-  console.log "COUNT GOT", count
   check count, Match.PositiveInteger
 
   RS.Transactions.Transaction.documents.find(

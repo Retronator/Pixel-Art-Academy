@@ -1,0 +1,81 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-locations-store-shelf
+  fixed-cover()
+  z-index 1
+  background atari2600grey(0)
+  overflow scroll
+
+  .shelf
+    margin 30rem
+
+    h2
+      margin-top 2em
+      kyrou-7()
+      color atari2600grey(7)
+      font-weight normal
+
+    h3
+      kyrou-5()
+      color atari2600grey(7)
+      font-weight normal
+
+    .store-items
+      list-style none
+      padding 0
+
+      .store-item
+        position relative
+        padding-right 150px
+        margin 50px 0
+
+        > .description
+          margin-left 30px
+
+        .buy-area
+          position absolute
+          top 0
+          right 0
+          width 120px
+
+          .price
+            acme-9()
+            text-align center
+            margin-bottom 10px
+
+          .add-to-cart-button
+            padding 6px 10px
+            width 100%
+
+        .bundle
+          margin-left 30px
+
+    button
+      position relative
+      top -4px
+      margin-top 4px
+      background #666
+      uni()
+      color black
+      border none
+      border-bottom 4px solid #333
+      cursor pointer
+
+      &:focus
+        background: #777
+        outline none
+
+      &:hover
+        background: #888
+
+      &:active
+        border-bottom none
+        margin-bottom 4px
+        top 0
+
+      &:disabled
+        color #444
+        cursor default
+
+        &:hover
+          background #666
