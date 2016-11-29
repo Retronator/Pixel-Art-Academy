@@ -26,7 +26,7 @@ Meteor.methods
 
     # See if user has available existing credit and needs to apply it towards the purchase.
     user = Retronator.user()
-    availableCreditAmount = user?.storeCredit or 0
+    availableCreditAmount = user?.store.credit or 0
 
     needsCreditAmount = totalPrice - payAmount
 

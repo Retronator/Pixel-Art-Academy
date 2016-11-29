@@ -55,4 +55,8 @@ class RetronatorAccountsUser extends Document
         [user._id, enabledServices]
       ]
 
+  @loginServicesForCurrentUser: 'Retronator.Accounts.User.loginServicesForCurrentUser'
+  @contactEmailForCurrentUser: 'Retronator.Store.User.contactEmailForCurrentUser'
+  @registeredEmailsForCurrentUser: 'Retronator.Accounts.User.registeredEmailsForCurrentUser'
+  
 RA.User = RetronatorAccountsUser

@@ -59,15 +59,21 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
       floor: 1
 
   @setupElevatorExit: (options) ->
-    # The elevator exit should show up when elevator is on first floor.
+    # The elevator exit should show up when elevator is on the provided floor.
     elevatorPresent = new ComputedField =>
       state = options.location.options.adventure.gameState()
-      return unless state?.locations[HQ.Locations.Elevator.id()]
+      elevator = state?.locations[HQ.Locations.Elevator.id()]
+      console.log "Elevator recomputing", elevator
+      return unless elevator
 
-      # HACK: Wait also for the local state to be set, since otherwise the next autorun won't be ready yet.
+      # HACK: Wait also for the local state to be set, since otherwise the autorun below won't be ready yet.
       return unless options.location.state()
 
-      state.locations[HQ.Locations.Elevator.id()].floor is options.floor
+      present = elevator.floor is options.floor
+
+      console.log "elevator is present", present
+
+      present
 
     options.location.autorun (computation) =>
       present = elevatorPresent()

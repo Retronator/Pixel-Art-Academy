@@ -32,42 +32,49 @@ class LOI.Adventure.ScriptFile.Parser
       '_parseTimeout'
       '_parseChoice'
       '_parseJump'
-      '_parseDialog'
       '_parseNarrative'
+      '_parseDialog'
       '_parseCode'
     ]
       rest = null
       node = @[parseRoutine] line
 
+      # We store which node is next after this line in case our line has a conditional and we have to jump to it.
+      nextNodeAfterThisLine = @nextNode
+
       if _.isArray node
         # We got back a new node and there's more text left to parse.
         [rest, node] = node
 
+        # Is there any actual text left?
+        rest = rest.trim()
+        rest = null unless rest.length
+
+        # If there's no node and no text left in rest, we've retrieved all we could from this line.
+        break unless rest or node
+
       if node
-        # See if there is a condition on the line.
-        [..., conditionalNode] = @_parseConditional line
-
-        if conditionalNode
-          # Embed returned node in the conditional.
-          conditionalNode.node = node
-          conditionalNode.next = @nextNode
-          node = conditionalNode
-
         # Set the created node as the next node, except on script nodes, which break continuity.
         @nextNode = if node instanceof Nodes.Script then null else node
 
         # If there is some text left, parse the rest too.
-        if rest?
-          rest = rest.trim()
-          @_parseLine rest if rest.length
+        @_parseLine rest if rest
+
+        # When we've parsed the whole line, see if there is a condition on the line.
+        [..., conditionalNode] = @_parseConditional line
+
+        if conditionalNode
+          # Wrap the parsed line nodes in the conditional.
+          conditionalNode.node = @nextNode
+          conditionalNode.next = nextNodeAfterThisLine
+          @nextNode = conditionalNode
 
         # Stop parsing this line.
         break
 
       # If there is some text left, parse the rest too.
-      if rest?
-        rest = rest.trim()
-        @_parseLine rest if rest.length
+      if rest
+        @_parseLine rest
 
         # Stop parsing this iteration since the rest has already finished parsing in the above call.
         break
@@ -238,7 +245,7 @@ class LOI.Adventure.ScriptFile.Parser
     nextNode
 
   ###
-    * dialog line -> `label name`
+    * dialog line -> [label name]
     --or--
     * dialog line
   ###
@@ -246,7 +253,7 @@ class LOI.Adventure.ScriptFile.Parser
     # Extract the potential conditional out of the line.
     [line, ...] = @_parseConditional line
 
-    return null unless match = line.match /\*\s*(.*?)(?:\s->|$)/
+    return unless match = line.match /\*\s*(.*?)(?:\s->|$)/
 
     choiceLine = match[1]
 
@@ -255,7 +262,7 @@ class LOI.Adventure.ScriptFile.Parser
     [..., jumpNode] = result if result
 
     # Create a dialog node without an actor (the player's character delivers it),
-    # followed by the jump (or simply following to the next node if no jump is pressent).
+    # followed by the jump (or simply following to the next node if no jump is present).
     dialogNode = new Nodes.DialogLine
       line: choiceLine
       next: jumpNode or @nextNode
@@ -271,7 +278,7 @@ class LOI.Adventure.ScriptFile.Parser
     `javascript expression`
   ###
   _parseCode: (line) ->
-    return null unless match = line.match /^`(.*?)`/
+    return unless match = line.match /^`(.*?)`/
 
     new Nodes.Code
       expression: match[1]
@@ -300,7 +307,7 @@ class LOI.Adventure.ScriptFile.Parser
     -> [label name]
   ###
   _parseJump: (line) ->
-    return null unless match = line.match /(.*)->\s*\[(.*?)]/
+    return unless match = line.match /(.*)->\s*\[(.*?)]/
 
     line = match[1]
     jumpNode = new Nodes.Jump
@@ -312,7 +319,7 @@ class LOI.Adventure.ScriptFile.Parser
     wait number
   ###
   _parseTimeout: (line) ->
-    return null unless match = line.match /^wait (\d+)/i
+    return unless match = line.match /^wait (\d+)/i
 
     milliseconds = match[1]
 

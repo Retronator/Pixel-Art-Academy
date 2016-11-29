@@ -1,5 +1,4 @@
 @import "{retronator:landsofillusions}/style/style.import"
-@import "{retronator:landsofillusions}/typography/typography.import"
 
 .retronator-hq-items-wallet
   .title
@@ -94,6 +93,9 @@
       top 113rem
       z-index 5
 
+      input
+        freehand()
+
     #login-password-label-and-input
       position absolute
       left 185rem
@@ -133,6 +135,7 @@
       position absolute
       text-align center
       cursor pointer
+      freehand()
 
       &:hover
         margin-top -1rem
@@ -146,6 +149,7 @@
       color atari2600blue(3)
       background-image image('/retronator/hq/items/wallet/password-paper.png')
       padding-top calc(1rem - 1px)
+      freehand()
 
     #signup-link
     #back-to-login-link
@@ -157,6 +161,8 @@
       color atari2600blue(4)
       background-image image('/retronator/hq/items/wallet/account-paper.png')
       padding-top calc(2rem - 1px)
+      freehand()
 
     #back-to-login-link
       left 222rem
+      freehand()

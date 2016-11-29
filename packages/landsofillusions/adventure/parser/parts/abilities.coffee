@@ -21,9 +21,7 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       # We indeed are targeted! Let's see if any of our action verbs is used.
       for ability in thing.abilities()
         if ability instanceof LOI.Adventure.Ability.Action
-          action = ability
-
-          for verb in action.verbs
+          for verb in ability.verbs
             wordsForVerb = @vocabulary.getWords verb
   
             console.log "We are searching for ability words", wordsForVerb if LOI.debug
@@ -32,5 +30,5 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
               # Yes, we should do this action!!!"
               console.log "We have it! Executing action ..." if LOI.debug
 
-              action.execute()
+              ability.execute()
               return true

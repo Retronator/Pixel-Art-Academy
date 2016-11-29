@@ -1,0 +1,121 @@
+<template name="Retronator.HQ.Locations.Store.Checkout.Receipt">
+  <div class="retronator-hq-locations-store-checkout-receipt">
+    {{> LandsOfIllusions.Components.BackButton}}
+    <div class="receipt-area">
+      <script src="https://checkout.stripe.com/checkout.js"></script>
+      {{#if purchaseCompleted}}
+        <div class="purchase-completed">
+          <p>Purchase completed successfully! See your new items in your <a href="{{flowRouterPath 'LandsOfIllusions.Adventure' parameter1='account' parameter2='inventory'}}">inventory</a>.</p>
+        </div>
+      {{else}}
+        {{#if receiptItems.length}}
+          <h2>We appreciate your support</h2>
+          <div class="support-area">
+            <div class="tip-area area">
+              <p>Show your name among supporters:</p>
+              {{#if showSupporterName}}
+                <p>
+                  {{#if currentUser}}
+                    {{> Retronator.Store.Pages.Account.SupporterName}}
+                  {{else}}
+                    <input class="supporter-name" placeholder="{{anonymousPlaceholder}}" value="{{supporterName}}"/>
+                  {{/if}}
+                </p>
+              {{/if}}
+              <p>
+                <label class="anonymous-area">
+                  <input class="anonymous-checkbox" type="checkbox" {{anonymousCheckboxAttributes}} /> I prefer to be anonymous.
+                </label>
+              </p>
+              <p>Add an optional tip:<br/>
+                <input class="tip-amount" type="number" step="5" min="0" value="{{state.tip.amount}}"/>
+              </p>
+              {{#if state.tip.amount}}
+                <p>
+                  Include a message with your tip:
+                </p>
+                <textarea class="tip-message">{{state.tip.message}}</textarea>
+                <p>
+                  * It will appear in the recent purchases list.
+                </p>
+              {{/if}}
+            </div>
+            <div class="recent-purchases-area area">
+              <h3>Top recent purchases</h3>
+              {{> Retronator.Store.Components.TopSupporters topRecentTransactions}}
+            </div>
+          </div>
+          <table class="shopping-cart-items">
+            {{#each receiptItems}}
+              <tr class="cart-item">
+                <td class="name">
+                  {{> t9n item.name}}
+                  {{#if isGift}}
+                    (gift)
+                  {{/if}}
+                </td>
+                <td class="price">${{item.price}}</td>
+              </tr>
+            {{/each}}
+            {{#if state.tip.amount}}
+              <tr class="store-item">
+                <td class="name">Tip</td>
+                <td class="price">${{state.tip.amount}}</td>
+              </tr>
+            {{/if}}
+            {{#if creditApplied}}
+              <tr class="store-item">
+                <td class="name">Store credit</td>
+                <td class="price">-${{creditApplied}}</td>
+              </tr>
+            {{/if}}
+            <tr class="total">
+              <td class="name">Total</td>
+              <td class="price">${{paymentAmount}}</td>
+            </tr>
+          </table>
+          <h2>Checkout</h2>
+          <p>Ready to purchase?</p>
+          {{#if creditApplied}}
+            {{#if paymentAmount}}
+              ${{creditApplied}} will be used from your existing store balance.
+              You can pay the remaining ${{paymentAmount}} with a credit card.
+            {{else}}
+              Your purchase will be covered with your existing store balance. Simply confirm the payment below.
+            {{/if}}
+          {{/if}}
+          {{#if purchaseError}}
+            <div class="purchase-error">
+              <p>{{purchaseError}}</p>
+              <p>Check at the bottom of the accounts if the transaction has still been created. Please email
+                hi@retronator.com since this is an unexpected bug in the system.</p>
+            </div>
+          {{/if}}
+          <div class="actions">
+            {{#if stripeInitialized}}
+              <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
+                {{#if submittingPayment}}
+                  Submitting …
+                {{else}}
+                  {{#if paymentAmount}}
+                    Checkout with Stripe
+                  {{else}}
+                    Confirm purchase
+                  {{/if}}
+                {{/if}}
+              </button>
+            {{else}}
+              Please wait while Stripe Checkout initializes …
+            {{/if}}
+          </div>
+          {{#if paymentAmount}}
+            <small class="payment-smallprint">* Your credit card won't be charged until you get access to the game. You
+              will be emailed beforehand in case you need to cancel your purchase at that time.</small>
+          {{/if}}
+        {{else}}
+          <p>You do not have any items in your shopping cart. <a href="{{flowRouterPath 'store'}}">Return to the store</a></p>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+</template>

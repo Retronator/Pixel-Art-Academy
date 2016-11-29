@@ -6,15 +6,24 @@ LOI.Adventure.Parser.Vocabulary.Keys =
     South: ''
     East: ''
     West: ''
+    Northeast: ''
+    Northwest: ''
+    Southeast: ''
+    Southwest: ''
     In: ''
     Out: ''
-    
+    Up: ''
+    Down: ''
+
   Verbs:
     Go: ''
     Talk: ''
     Look: ''
     Use: ''
     Press: ''
+    Read: ''
+    What: ''
+    Get: ''
 
 # Generate vocabulary keys.
 transformVocabularyKey = (prefix, keys) ->

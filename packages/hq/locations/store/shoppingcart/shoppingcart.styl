@@ -8,6 +8,7 @@
 
   .shopping-cart-area
     margin 30rem
+    max-width 400rem
 
     h2
       margin-top 2em
@@ -23,7 +24,6 @@
     > .shopping-cart
       padding 1em
       margin-bottom 15px
-      max-width 800px
       background #222
       border 2px solid #333
 
@@ -31,7 +31,7 @@
         list-style none
         padding 0
 
-        .store-item
+        .cart-item
           position relative
           padding-right 210px
           margin-bottom 50px
@@ -96,3 +96,42 @@
           padding 0.5em
           acme-5()
           text-transform uppercase
+
+    a
+      color atari2600grey(7)
+      cursor pointer
+
+      &:hover
+        background-color atari2600grey(7)
+        color atari2600grey(0)
+
+    button
+    .button
+      position relative
+      top -4px
+      margin-top 4px
+      background #666
+      uni()
+      color atari2600grey(0)
+      border none
+      border-bottom 4px solid #333
+      cursor pointer
+
+      &:focus
+        background: #777
+        outline none
+
+      &:hover
+        background: #888
+
+      &:active
+        border-bottom none
+        margin-bottom 4px
+        top 0
+
+      &:disabled
+        color #444
+        cursor default
+
+        &:hover
+          background #666

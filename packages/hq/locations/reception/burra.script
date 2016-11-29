@@ -1,11 +1,11 @@
-# Retronator.HQ.Locations.Lobby.Scripts.Retro
+# Retronator.HQ.Locations.Reception.Scripts.Burra
 
 ## Start     
-retro: `not _MainQuestion`
+burra: `not _MainQuestion`
     Hey there, welcome to Retronator! 
     How can I help you today?
 
-retro: `_MainQuestion`
+burra: `_MainQuestion`
     Can I help you with anything else? `_helped`
     Hi again! `not _helped`
 
@@ -22,7 +22,7 @@ retro: `_MainQuestion`
 ## SignIn
 `_helped = true`
 
-retro: Certainly!
+burra: Certainly!
 
 > You reach for your wallet to present your ID.
 
@@ -31,14 +31,14 @@ retro: Certainly!
 -> [SignInFailed] `not @user`
 -> [JustRegistered] `@user and not @registered`
 
-retro: Welcome back, `@user.name`. I see you have driven here in your Ferrari. `@user.name`
-retro: Welcome back. `not @user.name`
+burra: Welcome back, `@user.name`. I see you have driven here in your Ferrari. `@user.name`
+burra: Welcome back. `not @user.name`
 
-> Retro searches the file cabinet under the desk and hands you a folder.
+> Burra searches the file cabinet under the desk and hands you a folder.
 
 ### ReceiveAccountFile
 
-retro: Here is your account file. Feel free to update any information in there.
+burra: Here is your account file. Feel free to update any information in there.
 
 -> [End]
 
@@ -48,7 +48,7 @@ retro: Here is your account file. Feel free to update any information in there.
 
 <!-- TODO: Add in FAQ about signing in. -->
 
-retro: Perhaps next time. 
+burra: Perhaps next time. 
 
 -> [Start]
 
@@ -56,28 +56,28 @@ retro: Perhaps next time.
 
 <!-- TODO: Add in the script for starting out. -->
 
-retro: 
+burra: 
     Oh, you are new!!!
     Let me just create a new account for you …
 
-> Retro takes out a file folder and starts putting different papers into it.
+> Burra takes out a file folder and starts putting different papers into it.
 
 ### CreateNewAccount
 ### ReceiveAccountFile
 
-retro: There you go! You should LOOK at your ACCOUNT file and fill out the information.
+burra: There you go! You should LOOK at your ACCOUNT file and fill out the information.
 
 -> [End]
 
 ## SignOut
 
-retro: Alright. I'll store the account documents for you till next time.
+burra: Alright. I'll store the account documents for you till next time.
 
-> You hand over the account file to Retro.
+> You hand over the account file to Burra.
 
 ### ReturnAccountFile
 
-retro: Hope to see you back soon. 
+burra: Hope to see you back soon. 
 
 ### SignOut
 
@@ -85,15 +85,15 @@ retro: Hope to see you back soon.
 
 ## GetAccountFile
 
-retro: Of course!
+burra: Of course!
 
-> Retro searches for your account file in the cabinet and hands it over to you.
+> Burra searches for your account file in the cabinet and hands it over to you.
 
 ### ReceiveAccountFile
 
 * Thank you.
 
-retro: You're welcome!
+burra: You're welcome!
 
 -> [End]
 
@@ -107,13 +107,13 @@ retro: You're welcome!
 * I would like to do something else. -> [MainQuestion] `_answered`
 * Thank you, you've been most helpful. `_answered`
 
-retro: My pleasure. Let me know if you need anything else. -> [End]
+burra: My pleasure. Let me know if you need anything else. -> [End]
 
 ## RetronatorHQ
 `_answered = true`
 
-retro:
-    This is Retronator Headquarters where I work on Retronator Magazine and Pixel Art Academy. 
+burra:
+    This is Retronator Headquarters where Retronator Magazine and Pixel Art Academy get made. 
     You can visit the store on second floor if you'd like to purchase the game.
 
 -> [Question]
@@ -121,32 +121,32 @@ retro:
 ## RetronatorMagazine
 `_answered = true`
 
-retro: Yes, it's a publication you can read on Medium, all about pixel art! Would you like to read it now?
+burra: Yes, it's a publication you can read on Medium, all about pixel art! Would you like to read it now?
     
 * Sure, I'll take a look. -> [ReadRetronatorMagazine]
 * Maybe later.
 
-retro: Sounds good. It's available at medium.com/retronator-magazine. 
+burra: Sounds good. It's available at medium.com/retronator-magazine. 
 
 -> [Question]
 
 ## ReadRetronatorMagazine
 
-> Retro turns around his computer screen and shows you the website.
+> Burra turns around his computer screen and shows you the website.
 
 ### OpenRetronatorMagazine
 
-retro: I hope you liked it.
+burra: I hope you liked it.
 
 -> [Question]
 
 ## PixelArtAcademy
-retro: 
+burra: 
     Pixel Art Academy is a video game that teaches you how to draw! 
     Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist. 
     Take a look at the school's prospectus to find out more.
     
-> Retro hands over a digital paper that seems to use some sort of e-ink to display information.
+> Burra hands over a digital paper that seems to use some sort of e-ink to display information.
 
 ### GiveProspectus
 

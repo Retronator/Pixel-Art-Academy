@@ -9,7 +9,7 @@ Meteor.publish null, ->
       displayName: true
 
 # Current user's login services.
-Meteor.publish 'Retronator.Accounts.User.loginServicesForCurrentUser', ->
+Meteor.publish RA.User.loginServicesForCurrentUser, ->
   RA.User.documents.find
     _id: @userId
   ,
@@ -17,7 +17,7 @@ Meteor.publish 'Retronator.Accounts.User.loginServicesForCurrentUser', ->
       loginServices: true
 
 # Current user's contact email.
-Meteor.publish 'Retronator.Accounts.User.contactEmailForCurrentUser', ->
+Meteor.publish RA.User.contactEmailForCurrentUser, ->
   RA.User.documents.find
     _id: @userId
   ,
@@ -25,7 +25,7 @@ Meteor.publish 'Retronator.Accounts.User.contactEmailForCurrentUser', ->
       contactEmail: true
 
 # Current user's registered emails.
-Meteor.publish 'Retronator.Accounts.User.registeredEmailsForCurrentUser', ->
+Meteor.publish RA.User.registeredEmailsForCurrentUser, ->
   RA.User.documents.find
     _id: @userId
   ,

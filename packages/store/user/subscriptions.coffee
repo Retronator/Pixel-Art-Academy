@@ -9,7 +9,7 @@ Meteor.publish null, ->
       items: true
 
 # Current user's support amount.
-Meteor.publish 'Retronator.Accounts.User.supportAmountForCurrentUser', ->
+Meteor.publish RA.User.supportAmountForCurrentUser, ->
   RA.User.documents.find
     _id: @userId
   ,
@@ -17,7 +17,7 @@ Meteor.publish 'Retronator.Accounts.User.supportAmountForCurrentUser', ->
       supportAmount: true
 
 # Current user's store data.
-Meteor.publish 'Retronator.Accounts.User.storeDataForCurrentUser', ->
+Meteor.publish RA.User.storeDataForCurrentUser, ->
   RA.User.documents.find
     _id: @userId
   ,

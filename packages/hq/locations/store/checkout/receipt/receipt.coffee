@@ -1,35 +1,56 @@
 AB = Artificial.Babel
+AE = Artificial.Everywhere
 AM = Artificial.Mirage
+LOI = LandsOfIllusions
 RA = Retronator.Accounts
 RS = Retronator.Store
+HQ = Retronator.HQ
 
-class RS.Pages.Checkout extends AM.Component
-  @register 'Retronator.Store.Pages.Checkout'
-  
-  onCreated: ->
+class HQ.Locations.Store.Checkout.Receipt extends LOI.Adventure.Item
+  @id: -> 'Retronator.HQ.Locations.Store.Checkout.Receipt'
+  @url: -> 'retronator/store/checkout/receipt'
+
+  @register @id()
+  template: -> @constructor.id()
+
+  @fullName: -> "purchase receipt"
+
+  @shortName: -> "receipt"
+
+  @description: ->
+    "
+      The purchase receipt shows what you're buying at the store.
+    "
+
+  @initialize()
+
+  constructor: (@options) ->
     super
 
     # Get all store items data.
-    @subscribe 'Retronator.Accounts.Transactions.Item.all'
+    @subscribe RS.Transactions.Item.all
 
     # Get top recent transactions to display the supporters list.
-    @subscribe 'Retronator.Accounts.Transactions.Transaction.topRecent'
+    @subscribe RS.Transactions.Transaction.topRecent
 
     # Get store balance and credit so we know if credit can be applied (and the user charged less).
-    @subscribe 'Retronator.Accounts.User.storeDataForCurrentUser'
+    @subscribe RA.User.storeDataForCurrentUser
     
     # Get user's contact email so we can pre-fill it in Stripe Checkout.
-    @subscribe 'Retronator.Accounts.User.contactEmailForCurrentUser'
+    @subscribe RA.User.contactEmailForCurrentUser
 
     @stripeInitialized = new ReactiveField false
 
     @showSupporterNameForLoggedOut = new ReactiveField true
 
+    @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
+
+  onCreated: ->
+    super
+
     @purchaseError = new ReactiveField null
     @submittingPayment = new ReactiveField false
     @purchaseCompleted = new ReactiveField false
-
-    @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
 
   onRendered: ->
     super
@@ -71,13 +92,28 @@ class RS.Pages.Checkout extends AM.Component
 
     user = Retronator.user()
 
-    if user then user.profile.supporterName else RS.shoppingCart.supporterName()
+    if user then user.profile.supporterName else @state().supporterName()
 
   anonymousCheckboxAttributes: ->
     checked: true unless @showSupporterName()
 
-  shoppingCart: ->
-    RS.shoppingCart
+  receiptItems: ->
+    items = for receiptItem in @state().contents
+      item = RS.Transactions.Item.documents.findOne catalogKey: receiptItem.item
+      break unless item
+
+      item: item
+      isGift: receiptItem.isGift
+
+    console.log "rec", items, @state()
+
+    items
+
+  totalPrice: ->
+    # The total price is the sum of the items plus the tip.
+    itemsPrice = _.sum (storeItem.item.price for storeItem in @receiptItems())
+    
+    itemsPrice + (@state().tip.amount or 0)
 
   topRecentTransactions: ->
     # First get the existing top 10.
@@ -94,10 +130,10 @@ class RS.Pages.Checkout extends AM.Component
     # Create new transaction.
     newTransaction =
       name: @supporterName()
-      amount: RS.shoppingCart.totalPrice()
+      amount: @totalPrice()
       new: true
 
-    newTransaction.message = RS.shoppingCart.tipMessage() if RS.shoppingCart.tipAmount()
+    newTransaction.message = @state().tip.message if @state().tip.amount
 
     # Find where the new transaction needs to be inserted. We use
     # a negative amount because the list is in descending order.
@@ -117,14 +153,14 @@ class RS.Pages.Checkout extends AM.Component
     storeCredit = Retronator.user()?.store?.credit or 0
 
     # Credit is applied up to the amount in the shopping cart.
-    Math.min storeCredit, RS.shoppingCart.totalPrice()
+    Math.min storeCredit, @totalPrice()
 
   paymentAmount: ->
     # See how much the user will need to pay to complete this transaction, after the credit is applied.
     storeCredit = Retronator.user()?.store?.credit or 0
 
     # Existing store credit decreases the needed amount to pay, but of course not below zero.
-    Math.max 0, RS.shoppingCart.totalPrice() - storeCredit
+    Math.max 0, @totalPrice() - storeCredit
 
   events: ->
     super.concat
@@ -143,24 +179,36 @@ class RS.Pages.Checkout extends AM.Component
 
   onInputSupporterName: (event) ->
     name = $(event.target).val()
-    RS.shoppingCart.supporterName name
+    @state().supporterName name
+    @options.adventure.gameState.updated()
 
   onInputTipAmount: (event) ->
+    enteredString = $(event.target).val()
+
     # Make sure the entered value is a number.
     try
-      enteredValue = parseFloat $(event.target).val()
+      enteredValue = parseFloat enteredString
 
     catch
       enteredValue = 0
 
-    # Constrain to non-negative numbers.
-    value = Math.max 0, enteredValue
+    # If negative sign is entered the parsing succeeds with a NaN value.
+    enteredValue = 0 if _.isNaN enteredValue
 
-    RS.shoppingCart.tipAmount value
+    # Constrain to non-negative numbers and round to dollar amount.
+    value = Math.floor Math.max 0, enteredValue
+
+    # Rewrite the value in the input if needed.
+    newString = "#{value}"
+    $(event.target).val newString unless newString is enteredString
+
+    @state().tip.amount = value
+    @options.adventure.gameState.updated()
 
   onInputTipMessage: (event) ->
     message = $(event.target).val()
-    RS.shoppingCart.tipMessage message
+    @state().tip.message = message
+    @options.adventure.gameState.updated()
 
   onClickSubmitPaymentButton: (event) ->
     event.preventDefault()
@@ -190,7 +238,9 @@ class RS.Pages.Checkout extends AM.Component
       email: token.email
 
     # Create a payment on the server.
-    Meteor.call 'Retronator.Accounts.Transactions.Transaction.insertStripePurchase', customer, creditCardToken, @paymentAmount(), RS.shoppingCart.toDataObject(), (error, data) =>
+    shoppingCart = @_createShoppingCartObject()
+
+    Meteor.call 'Retronator.Store.Transactions.Transaction.insertStripePurchase', customer, creditCardToken, @paymentAmount(), shoppingCart, (error, data) =>
       @submittingPayment false
 
       if error
@@ -204,13 +254,28 @@ class RS.Pages.Checkout extends AM.Component
       @$('.payment-form input').val('')
 
       # Remove all purchased items from the shopping cart.
-      RS.shoppingCart.reset()
+      @_emptyShoppingCart()
+
+  _createShoppingCartObject: ->
+    items: @receiptItems()
+    supporterName: @state().supporterName
+    tip: @state().tip
+
+  _emptyShoppingCart: ->
+    store = @options.adventure.gameState().locations[HQ.Locations.Store.id()]
+    shoppingCart = store.things[HQ.Locations.Store.ShoppingCart.id()]
+
+    shoppingCart.contents = []
+
+    @options.adventure.gameState.updated()
 
   _confirmationPurchaseHandler: ->
     # Create a transaction on the server.
     @submittingPayment true
 
-    Meteor.call 'Retronator.Accounts.Transactions.Transaction.insertConfirmationPurchase', RS.shoppingCart.toDataObject(), (error, data) =>
+    shoppingCart = @_createShoppingCartObject()
+
+    Meteor.call 'Retronator.Store.Transactions.Transaction.insertConfirmationPurchase', shoppingCart, (error, data) =>
       @submittingPayment false
 
       if error
@@ -224,7 +289,7 @@ class RS.Pages.Checkout extends AM.Component
       @$('.payment-form input').val('')
 
       # Reset the shopping cart.
-      RS.shoppingCart.reset()
+      @_emptyShoppingCart()
 
   _displayError: (error) ->
     errorText = "Error: #{error.reason}"

@@ -26,3 +26,4 @@ class LOI.Adventure.Parser
     return if @parseDebug command
     return if @parseNavigation command
     return if @parseAbilities command
+    return if @parseDescription command

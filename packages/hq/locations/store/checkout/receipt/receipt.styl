@@ -1,0 +1,132 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-locations-store-checkout-receipt
+  fixed-cover()
+  z-index 1
+  background atari2600grey(0)
+  overflow scroll
+
+  .receipt-area
+    margin 30rem
+
+    h2
+      margin-top 2em
+      kyrou-7()
+      color atari2600grey(7)
+      font-weight normal
+
+    h3
+      kyrou-5()
+      color atari2600grey(7)
+      font-weight normal
+
+    .purchase-completed
+      padding 1em
+      margin-bottom 15px
+      background #222
+      border 2px solid #333
+
+    .support-area
+      display flex
+
+      .area
+        width 50%
+        padding-right 10%
+
+    .shopping-cart-items
+      list-style none
+      background #222
+      border 2px solid #333
+      width 100%
+      padding 1em
+      border-spacing 0
+      margin 1em 0
+
+      tr:nth-last-child(-n+2) td
+        padding-bottom 1em
+
+      .price
+        text-align right
+
+      .total
+        text-transform uppercase
+
+        td
+          padding-top 1em
+          border-top 2px solid atari2600grey(4)
+          padding-bottom 0 !important
+
+    .payment-form
+      .form-field
+        margin-bottom 3px
+
+        .label-text
+          display inline-block
+          width 150px
+
+        .expiration-year
+          width 4em
+
+      .actions
+        margin-top 15px
+
+        .submit-payment-button
+          width 370px
+          text-transform uppercase
+
+    .payment-smallprint
+      display block
+      font-size 1em
+      margin 1em 0 2em
+
+    a
+      color atari2600grey(7)
+      cursor pointer
+
+      &:hover
+        background-color atari2600grey(7)
+        color atari2600grey(0)
+
+    button
+    .button
+      position relative
+      top -4px
+      margin-top 4px
+      background #666
+      uni()
+      color atari2600grey(0)
+      border none
+      border-bottom 4px solid #333
+      cursor pointer
+
+      &:focus
+        background: #777
+        outline none
+
+      &:hover
+        background: #888
+
+      &:active
+        border-bottom none
+        margin-bottom 4px
+        top 0
+
+      &:disabled
+        color #444
+        cursor default
+
+        &:hover
+          background #666
+
+    input
+    textarea
+      uni()
+      background #333
+      border 2px solid #666
+      padding 0 4px
+      color console-lighter-grey
+      input-placeholder #666
+
+      &:focus
+        outline none
+        border-color #777

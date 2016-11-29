@@ -62,4 +62,5 @@ class LOI.Adventure.Parser.Vocabulary
     @_translationSubscription.ready()
 
   getWords: (key) ->
+    console.log "Getting words for", key, "from", @words() if LOI.debug
     _.nestedProperty @words(), key

@@ -21,4 +21,5 @@ Package.onUse(function(api) {
   // Actors
 
   api.addFiles('retro.coffee');
+  api.addFiles('burra.coffee');
 });

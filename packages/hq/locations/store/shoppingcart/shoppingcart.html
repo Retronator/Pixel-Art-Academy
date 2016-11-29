@@ -4,10 +4,10 @@
     <div class="shopping-cart-area">
       <p>Your shopping cart includes:</p>
       <div class="shopping-cart">
-        {{#if storeItems.length}}
+        {{#if cartItems.length}}
           <ul class="shopping-cart-items">
-            {{#each storeItems}}
-              <li class="store-item">
+            {{#each cartItems}}
+              <li class="cart-item">
                 <h2 class="name">{{> t9n item.name}}</h2>
                 <p class="description">{{> t9n item.description}}</p>
                 <div class="price-area">
@@ -44,10 +44,10 @@
           <p>You do not have any items in your shopping cart. <a href="{{flowRouterPath 'LandsOfIllusions.Adventure' parameter1='retronator' parameter2='store'}}">Return to the store</a></p>
         {{/if}}
       </div>
-      {{#if shoppingCart.items.length}}
+      {{#if cartItems.length}}
         <nav class="navigation">
-          <div class="item continue"><a href="{{flowRouterPath 'Retronator.Store'}}">Continue shopping</a></div>
-          <div class="item checkout"><a class="checkout-button button" href="{{flowRouterPath 'Retronator.Store.Checkout'}}">Checkout</a></div>
+          <div class="item continue"><a href="{{flowRouterPath 'LandsOfIllusions.Adventure' parameter1='retronator' parameter2='store'}}">Continue shopping</a></div>
+          <div class="item checkout"><a class="checkout-button button" href="{{flowRouterPath 'LandsOfIllusions.Adventure' parameter1='retronator' parameter2='store' parameter3='checkout'}}">Checkout</a></div>
         </nav>
       {{/if}}
     </div>

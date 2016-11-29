@@ -16,6 +16,8 @@ class LandsOfIllusionsGameState extends AM.Document
     fields: =>
       user: @ReferenceField Retronator.Accounts.User
       character: @ReferenceField LOI.Character
+      
+  @forCurrentUser = 'LandsOfIllusions.GameState.forCurrentUser'
 
   constructor: ->
     super

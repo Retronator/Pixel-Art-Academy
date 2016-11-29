@@ -24,11 +24,12 @@ class LOI.StateNode
 
     # Instantiate state property objects.
     stateUpdatedAutorun = Tracker.autorun (computation) ->
-      return unless state()
+      newState = state()
+      return unless newState
 
       # Compare properties vs instances.
       instanceKeys = _.keys instances
-      stateKeys = _.keys state()
+      stateKeys = _.keys newState
 
       newKeys = _.difference stateKeys, instanceKeys
       retiredKeys = _.difference instanceKeys, stateKeys
@@ -47,15 +48,14 @@ class LOI.StateNode
 
         instances[newKey] = instance
 
-        # Reactively send state updates to the new instance.
-        instance._stateAutorun = Tracker.autorun (computation) ->
-          instance.state state()[newKey]
-
       # Destroy retired instances.
       for retiredKey in retiredKeys
         instances[retiredKey].destroy?()
-        instances[retiredKey]._stateAutorun.stop()
         delete instances[retiredKey]
+
+      # Update states of instances.
+      for instanceKey, instance of instances
+        instance.state newState[instanceKey]
 
       # Notify of the change if we had any new or removed instances.
       instancesUpdatedDependency.changed() if newKeys.length + retiredKeys.length
@@ -67,6 +67,7 @@ class LOI.StateNode
       stateUpdatedAutorun.stop()
 
     stateNode.updateState = (newState) ->
+      console.log "State node received an update.", newState if LOI.debug
       state newState
 
     stateNode.values = ->

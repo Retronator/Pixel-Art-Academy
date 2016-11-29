@@ -9,8 +9,8 @@ class RetronatorAccountsUser extends RA.User
   # supporterName: auto-generated supporter name
   # supportAmount: generated sum of all payments
   # store:
-  #   balance:
-  #   credit:
+  #   balance: the sum of all payments minus sum of all purchases
+  #   credit: positive part of balance
   # items: generated array of items owned by this user
   #   _id
   #   catalogKey
@@ -37,6 +37,8 @@ class RetronatorAccountsUser extends RA.User
       triggers
 
   @topSupporters: 'Retronator.Accounts.User.topSupporters'
+  @supportAmountForCurrentUser: 'Retronator.Accounts.User.supportAmountForCurrentUser'
+  @storeDataForCurrentUser: 'Retronator.Accounts.User.storeDataForCurrentUser'
 
   authorizedPaymentsAmount: ->
     # Authorized payments amount is the sum of all payments that were only authorized.

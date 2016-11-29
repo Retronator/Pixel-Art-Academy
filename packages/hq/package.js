@@ -30,12 +30,18 @@ Package.onUse(function(api) {
 
   api.addFiles('locations/locations.coffee');
 
+  api.addFiles('locations/entrance/entrance.coffee');
+  api.addFiles('locations/entrance/sign.coffee');
+
   api.addFiles('locations/lobby/lobby.coffee');
-  api.addAssets('locations/lobby/retro.script', ['client', 'server']);
+  api.addAssets('locations/lobby/tablet.script', ['client', 'server']);
 
   api.addFiles('locations/lobby/display/display.coffee');
   api.addFiles('locations/lobby/display/display.html');
   api.addFiles('locations/lobby/display/display.styl');
+
+  api.addFiles('locations/reception/reception.coffee');
+  api.addAssets('locations/reception/burra.script', ['client', 'server']);
 
   api.addFiles('locations/elevator/elevator.coffee');
   api.addFiles('locations/elevator/numberpad.coffee');
@@ -43,6 +49,11 @@ Package.onUse(function(api) {
 
   api.addFiles('locations/store/store.coffee');
   api.addFiles('locations/store/checkout/checkout.coffee');
+  api.addAssets('locations/store/checkout/retro.script', ['client', 'server']);
+
+  api.addFiles('locations/store/checkout/receipt/receipt.coffee');
+  api.addFiles('locations/store/checkout/receipt/receipt.html');
+  api.addFiles('locations/store/checkout/receipt/receipt.styl');
 
   api.addFiles('locations/store/shelf/shelf.coffee');
   api.addFiles('locations/store/shelf/shelf.html');
@@ -64,5 +75,7 @@ Package.onUse(function(api) {
   api.addFiles('items/accountfile/accountfile.coffee');
   api.addFiles('items/accountfile/accountfile.html');
   api.addFiles('items/accountfile/accountfile.styl');
-  
+
+  api.addFiles('items/tablet/tablet.coffee');
+
 });

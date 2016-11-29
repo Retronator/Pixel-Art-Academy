@@ -7,8 +7,14 @@ words =
     South: ['south', 's']
     East: ['east', 'e']
     West: ['west', 'w']
+    Northeast: ['northeast', 'ne']
+    Northwest: ['northwest', 'nw']
+    Southeast: ['southeast', 'se']
+    Southwest: ['southwest', 'sw']
     In: ['in', 'enter']
     Out: ['out', 'exit']
+    Up: ['up']
+    Down: ['down']
 
   Verbs:
     Go: ['go']
@@ -16,6 +22,9 @@ words =
     Look: ['look', 'examine']
     Use: ['use']
     Press: ['press', 'push']
+    Read: ['read']
+    What: ['what']
+    Get: ['get', 'take', 'pick']
 
 # Generate default english translations.
 generateDefaultTranslations = (id, words) ->

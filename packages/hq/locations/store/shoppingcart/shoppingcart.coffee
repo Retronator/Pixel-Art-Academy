@@ -31,8 +31,8 @@ class HQ.Locations.Store.ShoppingCart extends LOI.Adventure.Item
     # Get all store items data.
     @subscribe RS.Transactions.Item.all
 
-  storeItems: ->
-    items = for cartItem in @state().contents
+  cartItems: ->
+    items = for cartItem, i in @state().contents
       item = RS.Transactions.Item.documents.findOne catalogKey: cartItem.item
       break unless item
 
@@ -42,6 +42,7 @@ class HQ.Locations.Store.ShoppingCart extends LOI.Adventure.Item
 
       item: item
       isGift: cartItem.isGift
+      cartIndex: i
 
     items
 
@@ -51,8 +52,8 @@ class HQ.Locations.Store.ShoppingCart extends LOI.Adventure.Item
     checked: true if item.isGift
 
   totalPrice: ->
-    # The total price is the sum of the items plus the tip.
-    _.sum (storeItem.item.price for storeItem in @storeItems())
+    # The total price is the sum of the items.
+    _.sum (storeItem.item.price for storeItem in @cartItems())
 
   events: ->
     super.concat
@@ -62,7 +63,13 @@ class HQ.Locations.Store.ShoppingCart extends LOI.Adventure.Item
   onClickRemoveFromCartButton: (event) ->
     item = @currentData()
 
-    RS.shoppingCart.removeItem item
+    # Remove the item's ID from the shopping cart contents.
+    store = @options.adventure.gameState().locations[HQ.Locations.Store.id()]
+    shoppingCart = store.things[HQ.Locations.Store.ShoppingCart.id()]
+
+    shoppingCart.contents.splice item.cartIndex, 1
+
+    @options.adventure.gameState.updated()
 
   onChangeGiftCheckbox: (event) ->
     item = @currentData()

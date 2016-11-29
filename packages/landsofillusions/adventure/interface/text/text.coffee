@@ -79,17 +79,16 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
   exits: ->
     exits = @location()?.state()?.exits
     return [] unless exits
-    
-    for directionKey, locationId of exits when locationId
-      directionKey: directionKey
-      locationId: locationId
+
+    # Generate a unique set of IDs from all directions (some directions might lead to same location).
+    _.uniq _.values exits
 
   exitName: ->
-    exit = @currentData()
+    exitLocationId = @currentData()
     location = @location()
 
     # Find exit's location name.
-    subscriptionHandle = location.exitsTranslationSubscriptions()[exit.locationId]
+    subscriptionHandle = location.exitsTranslationSubscriptions()[exitLocationId]
     return unless subscriptionHandle?.ready()
 
     key = LOI.Avatar.translationKeys.shortName
@@ -141,6 +140,9 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     console.log "Text interface is displaying inventory items", items if LOI.debug
 
     items
+
+  showDescription: (thing) ->
+    @narrative.addText thing.avatar?.description()
     
   events: ->
     super.concat

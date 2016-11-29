@@ -75,6 +75,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/parser/parts/abilities.coffee');
   api.addFiles('adventure/parser/parts/debug.coffee');
   api.addFiles('adventure/parser/parts/navigation.coffee');
+  api.addFiles('adventure/parser/parts/description.coffee');
 
   api.addFiles('adventure/parser/vocabulary/vocabulary.coffee');
   api.addFiles('adventure/parser/vocabulary/vocabularykeys.coffee');
@@ -104,6 +105,11 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/script/scriptfile.coffee');
   api.addFiles('adventure/script/script.coffee');
+
+  api.addFiles('adventure/script/helpers/helpers.coffee');
+  api.addFiles('adventure/script/helpers/iteminteraction.coffee');
+  api.addFiles('adventure/script/helpers/inventory.coffee');
+  api.addFiles('adventure/script/helpers/location.coffee');
 
   api.addFiles('adventure/script/node.coffee');
   api.addFiles('adventure/script/nodes/nodes.coffee');
