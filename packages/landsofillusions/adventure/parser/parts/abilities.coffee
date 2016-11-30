@@ -7,7 +7,7 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
     console.log "Checking if the command", command, "uses any of the things' abilities." if LOI.debug
 
     # See if any of the words is a verb that one of the actors supports.
-    for thing in @location.things.values()
+    for thing in @_availableThings()
       name = thing.avatar.shortName()
       continue unless name
 

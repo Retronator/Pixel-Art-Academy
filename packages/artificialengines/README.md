@@ -65,6 +65,7 @@ into a system, specially designed to adapt to different display resolutions and 
 - **CSSHelper**: Helper functions for dealing with CSS.
 - **DataInput**: Base class for an input component with easy setup for different mixins.
 - **Display**: Represents the display area and provides automatic pixel art scaling calculation.
+- **HTMLHelper**: Helper functions for dealing with HTML.
 - **Mixins**:
   - **AutoSelectInputMixin**: Selects the input text on focus.
   - **PersistentInputMixin**: Prevents the input value to be overridden while editing.

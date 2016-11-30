@@ -17,7 +17,7 @@ class LOI.Adventure.Interface extends AM.Component
       return unless location
 
       # Mark stored current location as visited (in this user session).
-      @_currentLocationClass?.visited = true
+      @_currentLocationClass?.visited true
       @_currentLocationClass = location.constructor
 
       @onLocationChanged location

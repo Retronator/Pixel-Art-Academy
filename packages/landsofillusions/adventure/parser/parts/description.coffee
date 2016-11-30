@@ -9,7 +9,7 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
     console.log "Checking if the command", command, "is trying to get the description of any of the items." if LOI.debug
 
     # Go over things and see if we're naming any of them.
-    for thing in _.flatten [@location.things.values(), @options.adventure.inventory.values()]
+    for thing in @_availableThings()
       name = thing.avatar.shortName()
       continue unless name
 

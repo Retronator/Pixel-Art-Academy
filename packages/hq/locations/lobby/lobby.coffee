@@ -19,7 +19,7 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
   @description: ->
     "
       You are in a comfortable lobby like hall. There is a big screen on the wall displaying all supporters of
-      Retronator. Underneath is a shelf with an array of tablets. The sign says: GET TABLET to explore Retronator HQ.
+      Retronator. Underneath is a shelf with an array of tablets. The sign says: _GET TABLET_ to explore Retronator HQ.
     "
   
   @initialize()

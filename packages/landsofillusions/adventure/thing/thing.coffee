@@ -117,9 +117,15 @@ class LOI.Adventure.Thing extends AM.Component
     ability.thing @
     @abilities @abilities().concat ability
   
-  addAbilityLook: ->
+  addAbilityToActivateByLooking: ->
     @addAbility new Action
       verb: Vocabulary.Keys.Verbs.Look
+      action: =>
+        LOI.Adventure.goToItem @constructor.id()
+
+  addAbilityToActivateByLookingOrUsing: ->
+    @addAbility new Action
+      verbs: [Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Use]
       action: =>
         LOI.Adventure.goToItem @constructor.id()
 

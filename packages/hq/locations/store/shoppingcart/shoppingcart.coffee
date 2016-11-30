@@ -26,7 +26,7 @@ class HQ.Locations.Store.ShoppingCart extends LOI.Adventure.Item
   constructor: (@options) ->
     super
     
-    @addAbilityLook()
+    @addAbilityToActivateByLooking()
 
     # Get all store items data.
     @subscribe RS.Transactions.Item.all

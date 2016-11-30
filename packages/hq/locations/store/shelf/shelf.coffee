@@ -11,7 +11,7 @@ class HQ.Locations.Store.Shelf extends LOI.Adventure.Item
   constructor: ->
     super
     
-    @addAbilityLook()
+    @addAbilityToActivateByLooking()
 
   onCreated: ->
     super

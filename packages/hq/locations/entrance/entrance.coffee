@@ -17,9 +17,8 @@ class HQ.Locations.Entrance extends LOI.Adventure.Location
   @shortName: -> "entrance"
   @description: ->
     "
-      You're in front of Retronator HQ. To the west the building rises above you
-      with four stories covered in glass. Possibilities are endless, but there is nowhere to go but IN. You
-      might want to type in READ SIGN if you're new to all of this.
+      You're on the streets of San Francisco. To the west is the lobby of Retronator HQ. Possibilities are endless,
+      yet there is nowhere to go but _IN_. You might want to _READ SIGN_ if you're new to all of this.
     "
   
   @initialize()

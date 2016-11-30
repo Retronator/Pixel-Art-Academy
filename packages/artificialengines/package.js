@@ -92,12 +92,14 @@ Package.onUse(function(api) {
 	api.addFiles('mirage/display.coffee');
 	api.addFiles('mirage/display.styl');
   api.addFiles('mirage/helpers.import.styl', 'client', {isImport:true});
+  api.addFiles('mirage/htmlhelper.coffee');
   api.addFiles('mirage/render.coffee');
   api.addFiles('mirage/render.html');
   api.addFiles('mirage/window.coffee', 'client');
 
   api.addFiles('mirage/spacebars/meteorhelpers.coffee');
   api.addFiles('mirage/spacebars/stringhelpers.coffee');
+  api.addFiles('mirage/spacebars/htmlhelpers.coffee');
 
   api.addFiles('mirage/mixins/autoresizetextarea.coffee');
   api.addFiles('mirage/mixins/autoselectinput.coffee');

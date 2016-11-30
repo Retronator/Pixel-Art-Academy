@@ -18,7 +18,7 @@
       <div class="text-display scrollable">
         <div class="text-display-content scrollable-content">
           <div class="narrative">
-            <p class="introduction">{{introduction}}</p>
+            <p class="introduction">{{{introduction}}}</p>
             <p class="exits">{{> t10e "Possible exits are:"}}
               {{#each exits}}
                 <span class="exit"><span class="name">{{exitName}}</span></span>
@@ -37,11 +37,19 @@
               {{/each}}
             </ul>
             {{#each narrative.lines}}
-              <p>{{this}}</p>
+              <p>{{{narrativeLine}}}</p>
             {{/each}}
           </div>
           {{#if showCommandLine}}
-            <div class="command-line">&gt; {{commandInput.command}}</div>
+            <div class="command-line">
+              &gt;
+              {{#if hoveredCommand}}
+                {{hoveredCommand}}
+              {{else}}
+               {{commandInput.command}}<span class="caret {{caretIdleClass}}">■</span>
+             {{/if}}
+              <input class="dummy-input"/>
+            </div>
           {{/if}}
           {{#if showDialogSelection}}
             <div class="dialog-selection">

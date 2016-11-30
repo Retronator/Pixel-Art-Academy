@@ -38,6 +38,21 @@ hoverable()
         p
           margin 0 0 lineHeight
 
+        .command
+          position relative
+          hoverable()
+
+          &::after
+            display block
+            content ''
+            absolute-cover()
+            right 1rem
+            border-bottom 1rem solid atari2600grey(5)
+
+          &:hover
+            &::after
+              display none
+
         .exits
           .exit
             &::after
@@ -65,8 +80,25 @@ hoverable()
               content: "— "
 
       .command-line
+        position relative
         text-transform uppercase
         margin-bottom lineHeight
+
+        .caret
+          &.idle
+            animation blink 1s step-start 0s infinite
+
+        .dummy-input
+          position absolute
+          left -10%
+          width 120%
+          top -100%
+          height 300%
+
+          opacity 0
+
+          &:focus
+            left -300%
 
       .dialog-selection
         .options
@@ -109,3 +141,7 @@ hoverable()
 
     .scrollable-content
       position absolute
+
+@keyframes blink
+  50%
+    visibility hidden

@@ -13,3 +13,12 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       @options.adventure.gameState.updated()
 
       return true
+
+    if command.has 'reset game state'
+      console.log "We are resetting the whole game state." if LOI.debug
+
+      state = @options.adventure.gameState()
+      @options.adventure.initializeGameState state
+      @options.adventure.gameState.updated()
+
+      return true

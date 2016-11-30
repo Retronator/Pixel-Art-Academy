@@ -38,6 +38,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       interface: @
       onEnter: => @onDialogSelectionEnter()
 
+    @hoveredCommand = new ReactiveField null
+
   onRendered: ->
     super
 
@@ -65,7 +67,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     location = @location()
     return unless location
     
-    if location.constructor.visited
+    if location.constructor.visited()
       fullName = location.avatar.fullName()
       return unless fullName
 
@@ -74,7 +76,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     else
       # It's the first time we're visiting this location in this session so show the full description.
-      location.avatar.description()
+      @_formatOutput location.avatar.description()
       
   exits: ->
     exits = @location()?.state()?.exits
@@ -143,10 +145,52 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
   showDescription: (thing) ->
     @narrative.addText thing.avatar?.description()
+
+  caretIdleClass: ->
+    'idle' if @commandInput.idle()
+
+  narrativeLine: ->
+    lineText = @currentData()
+
+    @_formatOutput lineText
+    
+  _formatOutput: (text) ->
+    return unless text
+
+    # WARNING: The output of this function should be HTML escaped
+    # since the results will be directly injected with triple braces.
+
+    # Extract commands between underscores. First we'll split the text by underscores.
+    underscoreParts = text.split '_'
+
+    text = ""
+
+    # Every even string will now be a command.
+    for part, i in underscoreParts
+      if i % 2
+        # Add the command span around the part.
+        text = "#{text}<span class='command'>#{AM.HtmlHelper.escapeText part}</span>"
+
+      else
+        # Simply add the escaped text.
+        text = "#{text}#{AM.HtmlHelper.escapeText part}"
+
+    text
+
+  # Use to get back to the initial state with full location description.
+  resetInterface: ->
+    @narrative?.clear()
+    @location().constructor.visited false
     
   events: ->
     super.concat
       'mousewheel .scrollable': @onMouseWheelScrollable
+      'mouseenter .command': @onMouseEnterCommand
+      'mouseleave .command': @onMouseLeaveCommand
+      'click .command': @onClickCommand
+      'mouseenter .exits .exit .name': @onMouseEnterExit
+      'mouseleave .exits .exit .name': @onMouseLeaveExit
+      'click .exits .exit .name': @onClickExit
 
   onMouseWheelScrollable: (event) ->
     event.preventDefault()
@@ -164,6 +208,26 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     $scrollableContent.css top: newTop
 
+  onMouseEnterCommand: (event) ->
+    @hoveredCommand $(event.target).text()
+
+  onMouseLeaveCommand: (event) ->
+    @hoveredCommand null
+
+  onClickCommand: (event) ->
+    @_executeCommand @hoveredCommand()
+    @hoveredCommand null
+
+  onMouseEnterExit: (event) ->
+    @hoveredCommand "GO TO #{$(event.target).text()}"
+
+  onMouseLeaveExit: (event) ->
+    @hoveredCommand null
+
+  onClickExit: (event) ->
+    @_executeCommand @hoveredCommand()
+    @hoveredCommand null
+
   onCommandInputEnter: ->
     # Resume dialog on any key press.
     pausedDialogLines = @_pausedDialogLines()
@@ -180,7 +244,9 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       @commandInput.clear()
       return
 
-    command = @commandInput.command().trim()
+    @_executeCommand @hoveredCommand() or @commandInput.command().trim()
+
+  _executeCommand: (command) ->
     return unless command.length
 
     @narrative.addText "> #{command.toUpperCase()}"

@@ -14,6 +14,13 @@ class LOI.Adventure.Interface.Components.CommandInput
 
     console.log "Command input constructed." if LOI.debug
 
+    @idle = new ReactiveField true
+
+    @_resumeIdle = _.debounce =>
+      @idle true
+    ,
+      1000
+
   destroy: ->
     console.log "Command input destroyed." if LOI.debug
 
@@ -22,6 +29,10 @@ class LOI.Adventure.Interface.Components.CommandInput
 
   clear: ->
     @command ""
+
+  _notIdle: ->
+    @idle false
+    @_resumeIdle()
 
   onKeyPress: (event) ->
     # Don't capture events when interface is not active.
@@ -36,6 +47,8 @@ class LOI.Adventure.Interface.Components.CommandInput
     newCommand = "#{command}#{character}"
 
     @command newCommand
+
+    @_notIdle()
 
   onKeyDown: (event) ->
     interfaceActive = @options.interface.active()
@@ -55,6 +68,8 @@ class LOI.Adventure.Interface.Components.CommandInput
 
         newCommand = command.substring 0, command.length-1
         @command newCommand
+
+        @_notIdle()
 
       # Enter
       when 13

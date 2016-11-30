@@ -27,3 +27,7 @@ class LOI.Adventure.Parser
     return if @parseNavigation command
     return if @parseAbilities command
     return if @parseDescription command
+    return if @parseLookLocation command
+
+  _availableThings: ->
+    _.flatten [@location.things.values(), @options.adventure.inventory.values()]

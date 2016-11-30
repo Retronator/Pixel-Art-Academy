@@ -26,7 +26,7 @@ class HQ.Locations.Lobby.Display extends LOI.Adventure.Item
   constructor: ->
     super
 
-    @addAbilityLook()
+    @addAbilityToActivateByLooking()
 
   onCreated: ->
     super

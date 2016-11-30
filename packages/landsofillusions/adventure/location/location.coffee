@@ -41,6 +41,9 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
           locationId: @id()
           text: text
 
+    # Add a visited field unique to this location class.
+    @visited = new ReactiveField false
+
   # Location instance
 
   constructor: (@options) ->
@@ -131,14 +134,16 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     things: {}
 
   ready: ->
-    loaded = _.every _.flatten [
+    conditions = [
       super
       @things.ready()
       subscription.ready() for subscription in @exitsTranslationSubscriptions()
       @_scriptTranslationSubscription.ready()
     ]
 
-    console.log "%cLoaded location", 'background: LightSkyBlue', @constructor.id(), @state() if loaded and LOI.debug
+    loaded = _.every _.flatten conditions
+
+    console.log "%cLocation #{@constructor.id()} loaded?", 'background: LightSkyBlue', loaded, conditions if LOI.debug
 
     loaded
 

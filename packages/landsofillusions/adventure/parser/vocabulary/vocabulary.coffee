@@ -24,12 +24,19 @@ class LOI.Adventure.Parser.Vocabulary
             translate vocabularyLocation[word], subWord, words[subWord]
 
         else
-          # We are on the leaf node which has the vocabualary key of this word.
+          # We are on the leaf node which has the vocabulary key of this word.
           vocabularyKey = words
 
-          # Find all the translations that use this vocabulary key.
-          keyRegex = new RegExp "#{vocabularyKey}.*", 'g'
+          # We add a dot at the end so we don't match any other keys that have the same start as this one.
+          keyPattern = "#{vocabularyKey}."
 
+          # We use the \\ to output one \ into the regex. With the dot that
+          # follows this will come down to \. which will match a literal dot.
+          keyPattern = keyPattern.replace /\./g, '\\.'
+
+          keyRegex = new RegExp keyPattern, 'g'
+
+          # Find all the translations that use this vocabulary key.
           translations = Artificial.Babel.Translation.documents.find(
             namespace: @_translationSubscription.namespace
             key:
