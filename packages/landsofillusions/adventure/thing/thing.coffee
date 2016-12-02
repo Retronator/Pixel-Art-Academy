@@ -14,7 +14,8 @@ class LOI.Adventure.Thing extends AM.Component
 
   # A map of all location constructors by url and ID.
   @_thingClassesByUrl = {}
-  @_thingClassesByID = {}
+  @_thingClassesByWildcardUrl = {}
+  @_thingClassesById = {}
 
   # Id string for this thing used to identify the thing in code.
   @id: -> throw new Meteor.Error 'unimplemented', "You must specify thing's id."
@@ -30,7 +31,7 @@ class LOI.Adventure.Thing extends AM.Component
     parametersObject = {}
 
     for urlParameter, i in urlParameters
-      parametersObject["parameter#{i + 1}"] = urlParameter
+      parametersObject["parameter#{i + 1}"] = urlParameter unless urlParameter is '*'
 
     parametersObject
 
@@ -47,15 +48,30 @@ class LOI.Adventure.Thing extends AM.Component
 
   # Helper methods to access class constructors.
   @getClassForUrl: (url) ->
-    @_thingClassesByUrl[url]
+    thingClass = @_thingClassesByUrl[url]
+    return thingClass if thingClass
 
-  @getClassForID: (id) ->
-    @_thingClassesByID[id]
+    # Try wildcard urls as well.
+    for thingUrl, thingClass of @_thingClassesByWildcardUrl
+      if url.indexOf(thingUrl) is 0
+        return thingClass
+
+  @getClassForId: (id) ->
+    @_thingClassesById[id]
 
   @initialize: ->
     # Store thing class by ID and url.
-    @_thingClassesByID[@id()] = @
-    @_thingClassesByUrl[@url()] = @ if @url()
+    @_thingClassesById[@id()] = @
+
+    url = @url()
+    if url
+      # See if we have a wildcard URL.
+      if match = url.match /(.*)\/\*$/
+        url = match[1]
+        @_thingClassesByWildcardUrl[url] = @
+
+      else
+        @_thingClassesByUrl[url] = @
 
     # Prepare the avatar for this thing.
     LOI.Avatar.initialize @

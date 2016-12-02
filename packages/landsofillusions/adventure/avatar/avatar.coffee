@@ -9,17 +9,17 @@ class LOI.Avatar
 
   # Initialize database parts of an NPC avatar.
   @initialize: (options) ->
-    id = _.propertyValue options.id
+    id = _.propertyValue options, 'id'
     translationNamespace = "#{id}.Avatar"
 
     # On the server, create this avatar's translated names.
     if Meteor.isServer
       for translationKey of @translationKeys
-        defaultText = _.propertyValue options[translationKey]
+        defaultText = _.propertyValue options, translationKey
         AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
 
   constructor: (@options) ->
-    id = _.propertyValue @options.id
+    id = _.propertyValue @options, 'id'
     translationNamespace = "#{id}.Avatar"
 
     # Subscribe to this avatar's translations.

@@ -28,9 +28,19 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
     super
 
   initialState: ->
+    apps = {}
+    apps[HQ.Items.Tablet.Apps.Welcome.id()] = {}
+    apps[HQ.Items.Tablet.Apps.Menu.id()] = {}
+    apps[HQ.Items.Tablet.Apps.Manual.id()] = {}
+
     things = {}
     things[HQ.Locations.Lobby.Display.id()] = displayOrder: 1
-    things[HQ.Items.Tablet.id()] = displayOrder: 2
+    things[HQ.Items.Tablet.id()] =
+      displayOrder: 2
+      apps:
+        apps
+      os:
+        activeAppId: HQ.Items.Tablet.Apps.Welcome.id()
 
     exits = {}
     exits[Vocabulary.Keys.Directions.East] = HQ.Locations.Entrance.id()

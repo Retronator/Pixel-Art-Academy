@@ -7,18 +7,18 @@ lineHeight = gridSpacing
 sideMargin = gridSpacing
 
 hoverable()
-  color atari2600grey(7)
+  color atariGrey(7)
   text-transform uppercase
   cursor pointer
 
   &:hover
-    background atari2600grey(7)
-    color atari2600grey(0)
+    background atariGrey(7)
+    color atariGrey(0)
 
 .text-interface
   fixed-cover()
-  background atari2600grey(0)
-  color atari2600grey(5)
+  background atariGrey(0)
+  color atariGrey(5)
 
   line-height lineHeight
 
@@ -47,7 +47,7 @@ hoverable()
             content ''
             absolute-cover()
             right 1rem
-            border-bottom 1rem solid atari2600grey(5)
+            border-bottom 1rem solid atariGrey(5)
 
           &:hover
             &::after
@@ -110,8 +110,8 @@ hoverable()
             padding 0 7rem
 
             &.active
-              background atari2600grey(7)
-              color atari2600grey(0)
+              background atariGrey(7)
+              color atariGrey(0)
               padding-left 0
 
               &::before

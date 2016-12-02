@@ -1,0 +1,41 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-items-tablet
+  .tablet
+    position absolute
+    bottom -300rem
+    left 0
+    height 100%
+    filter drop-shadow(-5px 5px 20px black)
+    transition bottom 1s
+
+    &.activated
+      bottom 0
+
+    .screen
+      position absolute
+      z-index 1
+      top 25rem
+      left 10rem
+      width 300rem
+      height 205rem
+      background black
+      overflow hidden
+
+    .case
+      position absolute
+      z-index 2
+      top 1rem
+      left 10rem
+      width 300rem
+      height 238rem
+      pointer-events none
+
+    .hand
+      position absolute
+      z-index 3
+      top 104rem
+      left -42rem
+      width 85rem
+      height 196rem
+      pointer-events none

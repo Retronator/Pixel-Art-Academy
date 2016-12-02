@@ -1,0 +1,15 @@
+<template name="Retronator.HQ.Items.Tablet.Apps.Menu">
+  <div class="retronator-hq-items-tablet-apps-menu">
+    <div class="paper">
+      <h1 class="title">Retronator HQ<br/>Menu</h1>
+      <ol class="apps">
+        {{#each apps}}
+          <li class="app"><a class="link" href="{{appUrl}}">{{this.avatar.shortName}}</a></li>
+        {{/each}}
+      </ol>
+      <div class="hint">
+        <p>Talk to people to find more useful items.</p>
+      </div>
+    </div>
+  </div>
+</template>

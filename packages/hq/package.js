@@ -72,10 +72,32 @@ Package.onUse(function(api) {
   api.addFiles('items/wallet/wallet.html');
   api.addFiles('items/wallet/wallet.styl');
 
-  api.addFiles('items/accountfile/accountfile.coffee');
-  api.addFiles('items/accountfile/accountfile.html');
-  api.addFiles('items/accountfile/accountfile.styl');
-
   api.addFiles('items/tablet/tablet.coffee');
+  api.addFiles('items/tablet/tablet.html');
+  api.addFiles('items/tablet/tablet.styl');
 
+  api.addFiles('items/tablet/os/os.coffee');
+  api.addFiles('items/tablet/os/os.html');
+  api.addFiles('items/tablet/os/os.styl');
+  
+  api.addFiles('items/tablet/os/app.coffee');
+  api.addFiles('items/tablet/os/app.styl');
+
+  api.addFiles('items/tablet/apps/apps.coffee');
+
+  api.addFiles('items/tablet/apps/menu/menu.coffee');
+  api.addFiles('items/tablet/apps/menu/menu.html');
+  api.addFiles('items/tablet/apps/menu/menu.styl');
+
+  api.addFiles('items/tablet/apps/welcome/welcome.coffee');
+  api.addFiles('items/tablet/apps/welcome/welcome.html');
+  api.addFiles('items/tablet/apps/welcome/welcome.styl');
+
+  api.addFiles('items/tablet/apps/account/account.coffee');
+  api.addFiles('items/tablet/apps/account/account.html');
+  api.addFiles('items/tablet/apps/account/account.styl');
+
+  api.addFiles('items/tablet/apps/manual/manual.coffee');
+  api.addFiles('items/tablet/apps/manual/manual.html');
+  api.addFiles('items/tablet/apps/manual/manual.styl');
 });

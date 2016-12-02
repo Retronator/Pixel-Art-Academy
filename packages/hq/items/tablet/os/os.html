@@ -1,0 +1,12 @@
+<template name="Retronator.HQ.Items.Tablet.OS">
+  <div class="retronator-hq-items-tablet-os">
+    {{#if currentApp.showHomeScreenButton}}
+      <a href="{{menuLink}}" class="menu-button"></a>
+    {{/if}}
+    {{#if currentApp}}
+      <div class="app-area">
+        {{> Render currentApp}}
+      </div>
+    {{/if}}
+  </div>
+</template>

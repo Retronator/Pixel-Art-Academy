@@ -120,7 +120,7 @@ class LOI.Adventure extends LOI.Adventure
       Tracker.nonreactive =>
         @_currentLocation?.destroy()
 
-        currentLocationClass = LOI.Adventure.Location.getClassForID currentLocationId
+        currentLocationClass = LOI.Adventure.Location.getClassForId currentLocationId
 
         console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug
 
@@ -132,7 +132,7 @@ class LOI.Adventure extends LOI.Adventure
           return unless gameState = @gameState()
 
           state = gameState.locations[currentLocationId]
-          console.log "Sending new state to location", currentLocationId, "game state:", gameState, "location state", state
+          console.log "Sending new state to location", currentLocationId, "game state:", gameState, "location state", state if LOI.debug
 
           # Initialize location state if this is first time at location or the location is at a new version.
           targetVersion = currentLocationClass.version()
@@ -166,6 +166,9 @@ class LOI.Adventure extends LOI.Adventure
       return unless currentLocation?.ready()
 
       activeItemId = @activeItemId()
+
+      # Did the item even change?
+      return if activeItemId is @_activeItem?.constructor.id()
 
       console.log "Active item ID changed to", activeItemId if LOI.debug
 
@@ -207,46 +210,7 @@ class LOI.Adventure extends LOI.Adventure
     @parser = new LOI.Adventure.Parser adventure: @
 
     # Handle url changes.
-    @autorun =>
-      # Let's see what our url path is like. We do it with getParams instead
-      # of directly from location pathname to depend reactively on it.
-      parameters = [
-        FlowRouter.getParam 'parameter1'
-        FlowRouter.getParam 'parameter2'
-        FlowRouter.getParam 'parameter3'
-        FlowRouter.getParam 'parameter4'
-      ]
-
-      # Remove unused parameters.
-      parameters = _.without parameters, undefined
-
-      # Create a path from parameters.
-      url = parameters.join '/'
-
-      console.log "%cURL has changed to", 'background: PapayaWhip', url if LOI.debug
-
-      # We only want to react to router changes.
-      Tracker.nonreactive =>
-        # Find if this is an item or location.
-        constructor = LOI.Adventure.Thing.getClassForUrl url
-
-        console.log "Thing class for this URL is", constructor if LOI.debug
-
-        unless constructor
-          # We didn't find a thing for this URL so return it to current state.
-          @rewriteUrl()
-          return
-
-        if constructor.prototype instanceof LOI.Adventure.Location
-          # We are at a location. Deactivate an item if there was one activated via URL.
-          @activeItemId null
-
-          if constructor isnt @currentLocation()?.constructor
-            # We are at a location. Switch to it.
-            @currentLocationId constructor.id()
-
-        else if constructor.prototype instanceof LOI.Adventure.Item
-          @activeItemId constructor.id()
+    @_handleUrlChanges()
 
     # Make sure we're at the right URL after initialization is done.
     Tracker.afterFlush =>

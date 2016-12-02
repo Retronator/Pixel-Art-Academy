@@ -55,6 +55,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure.html');
   api.addFiles('adventure/adventure.styl');
   api.addFiles('adventure/adventure.coffee');
+  api.addFiles('adventure/adventure-routing.coffee');
   api.addFiles('adventure/adventure-initialization.coffee');
 
   // Character

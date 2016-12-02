@@ -3,6 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.StateNode
   constructor: (options) ->
+    options.classProvider ?= LOI.Adventure.Thing
     instances = {}
     instancesUpdatedDependency = new Tracker.Dependency
 
@@ -38,7 +39,7 @@ class LOI.StateNode
 
       # Create new instances.
       for newKey in newKeys
-        constructor = LOI.Adventure.Thing.getClassForID newKey
+        constructor = options.classProvider.getClassForId newKey
 
         # We create the instance in a non-reactive context so that
         # reruns of this autorun don't invalidate instance's autoruns.

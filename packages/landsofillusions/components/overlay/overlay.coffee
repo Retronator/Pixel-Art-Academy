@@ -19,7 +19,7 @@ class LOI.Components.Overlay extends AM.Component
       maxOverlayHeight = 360 * scale
       maxBoundsHeight = viewport.maxBounds.height()
       gapHeight = (maxBoundsHeight - maxOverlayHeight) / 2
-      cropBarHeight = Math.max 0, viewport.maxBounds.top + gapHeight
+      cropBarHeight = Math.max 0, viewport.maxBounds.top() + gapHeight
 
       safeAreaSize = viewport.safeArea.toDimensions()
       safeAreaSize.left += viewport.viewportBounds.left()
@@ -38,3 +38,34 @@ class LOI.Components.Overlay extends AM.Component
       opacity: [1, 0]
     ,
       duration: 500
+
+    @$('.crop-bar').velocity
+      height: [cropBarHeight, 0]
+    ,
+      duration: 200
+      easing: 'easeOutQuint'
+
+    # See if we're inside of an item - if yes, we can listen to know when to deactivate.
+    itemParent = @ancestorComponentWith (component) =>
+      component instanceof LOI.Adventure.Item
+
+    if itemParent
+      @autorun (computation) =>
+        if itemParent.activatedState() is LOI.Adventure.Item.activatedStates.Deactivating
+          # Animate out.
+          @$('.background').velocity
+            opacity: 0
+          ,
+            duration: 500
+
+          @$('.safe-area').velocity
+            opacity: 0
+          ,
+            duration: 500
+
+          @$('.crop-bar').velocity
+            height: 0
+          ,
+            duration: 200
+            delay: 300
+            easing: 'easeInQuint'
