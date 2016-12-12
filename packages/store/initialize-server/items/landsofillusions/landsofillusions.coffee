@@ -3,22 +3,12 @@ RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
 Meteor.startup ->
-  # CHARACTERS
-
-  RS.Transactions.Item.create
-    catalogKey: CatalogKeys.LandsOfIllusions.Character.Creation
-    name: "Create a character"
-    description: "You can create up to 10 characters to play in the world of Pixel Art Academy."
-
-  RS.Transactions.Item.create
-    catalogKey: CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
-    name: "Character selection"
-    description: "Select from one of the pre-made characters."
+  # AVATARS
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
     name: "Character editor"
-    description: "Create your character and portrait by choosing and customizing individual parts. Also great for social media profile pictures."
+    description: "Create your own character by customizing body and portrait parts. It's also great for social media profile pictures."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.LandsOfIllusions.Character.Avatar.CustomItem

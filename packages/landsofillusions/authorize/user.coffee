@@ -4,10 +4,17 @@ LOI = LandsOfIllusions
 LOI.Authorize.player = ->
   user = Retronator.user()
 
-  # Players are people that can create game characters.
-  return if user.hasItem Retronator.Store.Items.CatalogKeys.LandsOfIllusions.Character.Creation
+  return if user.hasItem Retronator.Store.Items.CatalogKeys.PixelArtAcademy.PlayerAccess
 
-  throw new AE.UnauthorizedException "You do not have administrator privileges to perform this action."
+  throw new AE.UnauthorizedException "You are not a player and cannot perform this action."
+
+# Confirms that the user has alpha access.
+LOI.Authorize.alphaAccess = ->
+  user = Retronator.user()
+
+  return if user.hasItem Retronator.Store.Items.CatalogKeys.PixelArtAcademy.AlphaAccess
+
+  throw new AE.UnauthorizedException "You are not a player and cannot perform this action."
 
 # Confirms administrator privileges.
 LOI.Authorize.admin = ->

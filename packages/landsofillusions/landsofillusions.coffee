@@ -41,7 +41,7 @@ class LandsOfIllusions
   @initializePackage: (packageObjects) ->
     @packages[packageObjects.id] = packageObjects
 
-  @debug = true
+  @debug = false
 
 LOI = LandsOfIllusions
 

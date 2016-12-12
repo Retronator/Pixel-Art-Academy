@@ -3,6 +3,9 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
+Vocabulary = LOI.Adventure.Parser.Vocabulary
+Action = LOI.Adventure.Ability.Action
+
 class HQ.Items.Wallet extends LOI.Adventure.Item
   @register 'Retronator.HQ.Items.Wallet'
   template: -> 'Retronator.HQ.Items.Wallet'
@@ -24,7 +27,15 @@ class HQ.Items.Wallet extends LOI.Adventure.Item
   constructor: ->
     super
 
-    @addAbilityToActivateByLookingOrUsing()
+    @addAbility new Action
+      verbs: [Vocabulary.Keys.Verbs.Use]
+      action: =>
+        location = @options.adventure.currentLocation()
+        if location.id() is HQ.Locations.Reception.id()
+          location.useWallet()
+        
+        else
+          location.director().startScript location.scripts['Retronator.HQ.Items.Wallet.use']
 
   onCreated: ->
     super

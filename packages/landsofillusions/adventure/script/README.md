@@ -112,11 +112,10 @@ There are some special variables that provide other contexts:
 
 * `@user`: The logged in user's state. It's null when not logged in.
 * `@user.name`: A read-only variable with user's account name.
+* `@user.itemKeys`: A read-only list of catalog keys that this user has purchased.
 * `location`: The local state unique to the location you're at.
 * `@locations`: All location states, addressable by location ID.
-* `@actors`: All actor states, addressable by actor ID.
-* `@items`: All item states, addressable by item ID.
-* `@player.inventory`: A subset of @items with only the items in your inventory.
+* `@player.inventory`: A map of items in your inventory.
 
 #### Persistence
 

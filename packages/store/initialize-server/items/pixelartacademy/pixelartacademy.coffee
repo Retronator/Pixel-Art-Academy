@@ -3,17 +3,24 @@ RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
 Meteor.startup ->
-  # PIXEL ART ACADEMY YEARS
+  # PIXEL ART ACADEMY ACCESS
+
+  RS.Transactions.Item.create
+    catalogKey: CatalogKeys.PixelArtAcademy.PlayerAccess
+    name: "Pixel Art Academy - Player Access"
+    description: "You are a player of Pixel Art Academy! Enter the game world and play through episodes once they're released."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.AlphaAccess
     name: "Pixel Art Academy - Alpha Access"
-    description: "You can play new episodes while they are still in development."
+    description: "You can play around with episodes while they're still in development."
+
+  # PIXEL ART ACADEMY YEARS
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.FoundationYear
     name: "Pixel Art Academy - Foundation Year"
-    description: "You are part of the founding class of 2016 and get to play with the prototype version of Pixel Art Academy before the public release in 2017."
+    description: "You were part of the founding class of 2016 and played with the early prototype before it was even cool."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.FreshmanYear
@@ -23,17 +30,17 @@ Meteor.startup ->
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.SophomoreYear
     name: "Pixel Art Academy - Sophomore Year"
-    description: "Access to second season episodes if we can keep development sustainable until 2018."
+    description: "Access to second season episodes, if we can keep development sustainable in 2018."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.JuniorYear
     name: "Pixel Art Academy - Junior Year"
-    description: "Third season episodes if we're still alive and kicking for 2019."
+    description: "Third season episodes, if we're still alive and kicking for 2019."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.SeniorYear
     name: "Pixel Art Academy - Senior Year"
-    description: "Final season of Pixel Art Academy episodes if we're lucky enough to reach the end of the decade in 2020."
+    description: "Final season of Pixel Art Academy episodes, if we're lucky enough to reach the end of the decade in 2020."
     
   # CLASS HELP
 

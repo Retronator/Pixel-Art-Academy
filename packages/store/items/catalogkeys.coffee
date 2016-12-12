@@ -2,6 +2,7 @@ RS = Retronator.Store
 
 RS.Items.CatalogKeys =
   PixelArtAcademy:
+    PlayerAccess: ''
     AlphaAccess: ''
     FoundationYear: ''
     FreshmanYear: ''
@@ -37,9 +38,7 @@ RS.Items.CatalogKeys =
     VIP: ''
   LandsOfIllusions:
     Character:
-      Creation: ''
       Avatar:
-        AvatarSelection: ''
         AvatarEditor: ''
         CustomItem: ''
         UniqueItem: ''
@@ -54,7 +53,7 @@ RS.Items.CatalogKeys =
         FullGame: ''
         AlphaAccess: ''
         AvatarEditorUpgrade: ''
-        FoundationYearUpgrade: ''
+        AlphaAccessUpgrade: ''
       Kickstarter:
         NoReward: ''
         BasicGame: ''

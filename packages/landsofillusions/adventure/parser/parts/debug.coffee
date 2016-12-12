@@ -9,7 +9,7 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       console.log "We are resetting location state." if LOI.debug
 
       state = @options.adventure.gameState()
-      state.locations[@location.id()] = @location.initialState()
+      state.locations[@location.id()] = @location.constructor.initialState()
       @options.adventure.gameState.updated()
 
       return true

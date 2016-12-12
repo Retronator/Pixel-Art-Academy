@@ -10,6 +10,7 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Elevator'
   @url: -> 'retronator/lobby/elevator'
   @scriptUrls: -> [
+    'retronator_hq/hq.script'
     'retronator_hq/locations/elevator/numberpad.script'
   ]
 
@@ -38,16 +39,25 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
       state = Tracker.nonreactive => @state()
       return unless state
 
+      state.exits[Vocabulary.Keys.Directions.West] = null
+      state.exits[Vocabulary.Keys.Directions.East] = null
+
       newFloorId = null
 
       switch floor
-        when 1 then newFloorId = HQ.Locations.Lobby.id()
-        when 2 then newFloorId = HQ.Locations.Store.id()
+        when 1 then newFloorId = HQ.Locations.Gallery.id()
+        when 2 then newFloorId = HQ.Locations.Checkout.id()
+        when '3a' then newFloorId = HQ.Locations.LandsOfIllusions.Hallway.id()
+        when '3b' then newFloorId = HQ.Locations.IdeaGarden.id()
+        when 4 then newFloorId = HQ.Locations.Studio.Hallway.id()
 
+      direction = if floor is '3a' then Vocabulary.Keys.Directions.West else Vocabulary.Keys.Directions.East
+      state.exits[direction] = newFloorId
       state.exits[Vocabulary.Keys.Directions.Out] = newFloorId
+
       Tracker.nonreactive => @options.adventure.gameState.updated()
 
-  initialState: ->
+  @initialState: ->
     things = {}
     things[HQ.Locations.Elevator.NumberPad.id()] = {}
 
@@ -71,9 +81,11 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
 
       present = elevator.floor is options.floor
 
-      console.log "elevator is present", present
+      console.log "elevator is present", present, elevator.floor, options.floor
 
       present
+
+    options.directions ?= [Vocabulary.Keys.Directions.In, Vocabulary.Keys.Directions.West]
 
     options.location.autorun (computation) =>
       present = elevatorPresent()
@@ -81,7 +93,9 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
       state = Tracker.nonreactive => options.location.state()
       return unless state
 
-      state.exits[Vocabulary.Keys.Directions.In] = if present then HQ.Locations.Elevator.id() else null
+      for direction in options.directions
+        state.exits[direction] = if present then HQ.Locations.Elevator.id() else null
+
       Tracker.nonreactive => options.location.options.adventure.gameState.updated()
 
   onScriptsLoaded: ->
@@ -91,7 +105,7 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
       computation.stop()
   
       pad.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Use
+        verbs: [Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.Press]
         action: =>
           @director().startScript padInteraction
 

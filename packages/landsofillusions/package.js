@@ -56,6 +56,10 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure.styl');
   api.addFiles('adventure/adventure.coffee');
   api.addFiles('adventure/adventure-routing.coffee');
+  api.addFiles('adventure/adventure-state.coffee');
+  api.addFiles('adventure/adventure-location.coffee');
+  api.addFiles('adventure/adventure-item.coffee');
+  api.addFiles('adventure/adventure-inventory.coffee');
   api.addFiles('adventure/adventure-initialization.coffee');
 
   // Character
@@ -189,5 +193,6 @@ Package.onUse(function(api) {
   // Helpers
 
   api.addFiles('helpers/spacebars.coffee');
+  api.addFiles('helpers/lodash.coffee');
 
 });

@@ -60,7 +60,7 @@ Package.onUse(function(api) {
 
   api.addFiles('items/bundles/pixelartacademy/preorder/upgrade.coffee');
   api.addFiles('items/bundles/pixelartacademy/preorder/avatareditor.coffee');
-  api.addFiles('items/bundles/pixelartacademy/preorder/foundationyear.coffee');
+  api.addFiles('items/bundles/pixelartacademy/preorder/alphaaccess.coffee');
 
   // Initialization
 

@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class Retronator.HQ
-  @debug = true
+  @debug = false
 
 if Meteor.isServer
   LOI.initializePackage

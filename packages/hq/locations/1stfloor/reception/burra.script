@@ -1,0 +1,252 @@
+# Retronator.HQ.Locations.Reception.Scripts.Burra
+
+## Start     
+burra: `not _MainQuestion`
+    Hey there, welcome to Retronator! 
+    How can I help you today?
+
+burra: `_MainQuestion`
+    Can I help you with anything else? `_helped`
+    Hi again! `not _helped`
+
+## MainQuestion
+`_answered = false`
+
+* I would like to sign in. -> [SignIn] `not @user`
+* I'm signing out. -> [SignOut] `@user`
+* Can I get my tablet? -> [GetTablet] `@user and not @player.inventory['Retronator.HQ.Items.Tablet']`
+* I'm missing my account app. -> [GetAccountApp] `@user and @player.inventory['Retronator.HQ.Items.Tablet'] and not @player.inventory['Retronator.HQ.Items.Tablet'].apps['Retronator.HQ.Items.Tablet.Apps.Account']`
+* I have a question. -> [Question]
+* Oh, just looking. -> [End] `not _helped and not _MainQuestion`
+* Whoops, nevermind. -> [End] `not _helped and _MainQuestion`
+* Thank you so much! -> [End] `_helped`
+
+<!-- SIGN IN FLOW -->
+
+## SignIn
+`_helped = true`
+
+burra: Certainly!
+
+## UseWallet
+
+> You reach for your wallet to present your ID.
+
+### SignInActive
+
+-> [SignInFailed] `not @user`
+-> [JustRegistered] `@user and not @registered`
+
+burra: Welcome back, `@user.name`. I see you have driven here in your Ferrari. `@user.name` <!-- Reference to Another World. -->
+burra: Welcome back. `not @user.name`
+
+-> [AlreadyHaveTablet] `@player.inventory['Retronator.HQ.Items.Tablet']`
+
+> Burra searches the file cabinet under the desk and hands you your tablet.
+
+### ReceiveTablet
+
+burra: Here is your tablet. Feel free to update any information in your account app.
+
+-> [End]
+
+## AlreadyHaveTablet
+
+burra: Looks like you're all set. Let me know if you need anything else.
+
+-> [End]
+
+## SignInFailed
+
+> But you change your mind.
+
+burra: Do you need help with signing in?
+
+## SignInQuestions
+
+* What does signing in do? -> [SignInHelp] `not _SignInHelp`
+* Can I link multiple social networks? -> [SignInSocialNetworks] `_SignInHelp`
+* Thanks for all the info! `_SignInHelp` -> [Start]
+* Nah, all good. `not _SignInHelp`
+
+burra: Alright, Perhaps next time. 
+
+-> [Start]
+
+## SignInHelp
+
+burra: 
+    When you sign in, you can continue playing from where you left off last time.
+    If this is your first time, you can create an account by choosing that option in your wallet.
+    But you can simply use one of your social networks to create an account or log in all with a click of a button.
+    
+-> [SignInQuestions]
+
+## SignInSocialNetworks
+
+burra:
+    Yes! When you have an account, either tied to an email and password, or created with a social login, you can link multiple social networks and emails to it.
+    To do this, _use tablet_ and load the Account app.
+    
+-> [SignInQuestions]
+
+## JustRegistered
+
+burra: 
+    Oh, I see you are new here!
+    Let me create a new account for you …
+
+> Burra types into her computer and after a short moment has you registered.
+
+### CreateNewAccount
+
+-> [NeedTablet] `not @player.inventory['Retronator.HQ.Items.Tablet']`
+
+### ReceiveAccountApp
+
+burra: 
+    There you go! I've added the Account app to your tablet. 
+    Have you tried to _use tablet_ yet? It lets you fill out information about yourself and manage your account.
+    Talk to me again if you have any questions.
+
+-> [End]
+
+## NeedTablet
+
+burra: 
+    Alright, your account is created. To start, you will need one of our Retronator Spectrum Tablets. 
+    There should be one to the _north_ in the lobby.
+    You can _pick up tablet_ and bring it back so I can install your account file to it.
+    
+-> [End]
+
+## SignOut
+
+-> [SignOutFinish] `not @player.inventory['Retronator.HQ.Items.Tablet']`
+
+burra: Sounds good. I'll store the tablet for you till next time.
+
+> You hand over the tablet to Burra.
+
+### ReturnTablet
+
+## SignOutFinish
+
+burra: 
+    Don't forget to sign in with me next time to continue from where you left off.
+    Hope to see you back soon. 
+
+### SignOut
+
+-> [End]
+
+<!-- TABLET -->
+
+## GetTablet
+
+burra: Of course!
+
+-> [NoTablet] `not location.things['PixelArtAcademy.Cast.Burra'].inventory['Retronator.HQ.Items.Tablet']`
+
+> Burra searches for your Spectrum in the cabinet and hands it over to you.
+
+### ReceiveTablet
+
+* Thank you.
+
+burra: You're welcome!
+
+## NoTablet
+
+> Burra searches for your Spectrum in the cabinet, but doesn't find it.
+
+burra: 
+    Hmmm, it doesn't seem to be here somehow.
+    Can you talk to Retro upstairs? He can look into it.
+
+-> [End]
+
+<!-- ACCOUNT APP -->
+
+##  GetAccountApp
+
+burra: Let me send it over.
+
+> Burra swipes from her tablet to yours to complete the wireless transfer.
+
+### ReceiveAccountApp
+
+burra: There you go!
+
+-> [End]
+
+<!-- QUESTIONS -->
+
+## Question
+`_helped = true`
+
+* What is this place? -> [RetronatorHQ]
+* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQ and not PixelArtAcademy`
+* So is Pixel Art Academy like an online course? -> [PixelArtAcademyCourse] `PixelArtAcademy`
+* So about that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQ`
+* Actually, nevermind. -> [Start] `not _answered`
+* I would like to do something else. -> [MainQuestion] `_answered`
+* Thank you, you've been most helpful. `_answered`
+
+burra: My pleasure. Let me know if you need anything else. -> [End]
+
+## RetronatorHQ
+`_answered = true`
+
+burra:
+    This is Retronator Headquarters where Retronator Magazine and Pixel Art Academy get made. 
+    You can visit the store on second floor if you'd like to purchase the game.
+
+-> [Question]
+
+## RetronatorMagazine
+`_answered = true`
+
+burra: Yes, it's a publication you can read on Medium, all about pixel art! Would you like to read it now?
+    
+* Sure, I'll take a look. -> [ReadRetronatorMagazine]
+* Maybe later.
+
+burra: Sounds good. It's available at medium.com/retronator-magazine. 
+
+-> [Question]
+
+## ReadRetronatorMagazine
+
+> Burra turns around her computer screen and shows you the website.
+
+### OpenRetronatorMagazine
+
+burra: I hope you liked it.
+
+-> [Question]
+
+## PixelArtAcademy
+
+burra: 
+    Pixel Art Academy is a video game that teaches you how to draw! 
+    Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist. 
+    Take a look at the school's prospectus to find out more.
+    
+> Burra gives you the Pixel Art Academy prospectus that you can read on your tablet.
+
+### ReceiveProspectusApp
+
+-> [End]
+
+## PixelArtAcademyCourse
+
+burra:
+    Not really. It's not a course with an instructor that you have to follow at certain times.
+    Pixel Art Academy is first and foremost a videogame, but what your character learns you learn with them.
+    You will get assignments in the game and you'll have to draw to complete them.
+    Characters in the game world will also point you to online learning materials based on your needs.
+    
+-> [Question]
+
+## End

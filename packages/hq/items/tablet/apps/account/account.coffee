@@ -9,7 +9,7 @@ class HQ.Items.Tablet.Apps.Account extends HQ.Items.Tablet.OS.App
   @id: -> 'Retronator.HQ.Items.Tablet.Apps.Account'
   @url: -> 'account'
 
-  @fullName: -> "Account"
+  @fullName: -> "Account File"
 
   @description: ->
     "

@@ -76,6 +76,8 @@ class LOI.Adventure.Thing extends AM.Component
     # Prepare the avatar for this thing.
     LOI.Avatar.initialize @
 
+  @initialState: -> {} # Override to return a non-empty initial state.
+
   # Thing instance
 
   constructor: (@options) ->
@@ -97,8 +99,6 @@ class LOI.Adventure.Thing extends AM.Component
       ability.destroy()
 
     handle.stop() for handle in _.union @_autorunHandles, @_subscriptionHandles
-
-  initialState: -> {} # Override to return a non-empty initial state.
 
   # Convenience methods for static properties.
   id: -> @constructor.id()

@@ -1,0 +1,83 @@
+AE = Artificial.Everywhere
+AM = Artificial.Mirage
+LOI = LandsOfIllusions
+HQ = Retronator.HQ
+RA = Retronator.Accounts
+RS = Retronator.Store
+
+class HQ.Items.Tablet.Apps.ShoppingCart extends LOI.Adventure.Item
+  # STATE
+  # contents: list of cart items
+  #   item: store item object
+  #   cartIndex: where to appear in the shopping cart
+  #   isGift: boolean if this item will be a gift
+  #
+  @id: -> 'Retronator.HQ.Locations.Store.ShoppingCart'
+  @url: -> 'retronator/store/cart'
+
+  @register @id()
+  template: -> @constructor.id()
+
+  @fullName: -> "shopping cart"
+
+  @shortName: -> "cart"
+
+  @description: ->
+    "
+      It's a shopping cart that holds the items you want to buy.
+    "
+
+  @initialize()
+
+  constructor: (@options) ->
+    super
+    
+    @addAbilityToActivateByLooking()
+
+    # Get all store items data.
+    @subscribe RS.Transactions.Item.all
+
+  cartItems: ->
+    items = for cartItem, i in @state().contents
+      item = RS.Transactions.Item.documents.findOne catalogKey: cartItem.item
+      break unless item
+
+      # Load bundle items as well.
+      for bundleItem in item.items
+        bundleItem.refresh()
+
+      item: item
+      isGift: cartItem.isGift
+      cartIndex: i
+
+    items
+
+  giftCheckboxAttributes: ->
+    item = @currentData()
+
+    checked: true if item.isGift
+
+  totalPrice: ->
+    # The total price is the sum of the items.
+    _.sum (storeItem.item.price for storeItem in @cartItems())
+
+  events: ->
+    super.concat
+      'click .remove-from-cart-button': @onClickRemoveFromCartButton
+      'change .gift-checkbox': @onChangeGiftCheckbox
+
+  onClickRemoveFromCartButton: (event) ->
+    item = @currentData()
+
+    # Remove the item's ID from the shopping cart contents.
+    store = @options.adventure.gameState().locations[HQ.Locations.Store.id()]
+    shoppingCart = store.things[HQ.Locations.Store.ShoppingCart.id()]
+
+    shoppingCart.contents.splice item.cartIndex, 1
+
+    @options.adventure.gameState.updated()
+
+  onChangeGiftCheckbox: (event) ->
+    item = @currentData()
+
+    RS.shoppingCart.setItemIsGift item, event.target.checked

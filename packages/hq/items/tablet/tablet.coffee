@@ -6,7 +6,8 @@ HQ = Retronator.HQ
 class HQ.Items.Tablet extends LOI.Adventure.Item
   # STATE
   # os: state of the OS
-  # {apps}: an object with available apps and their states
+  # apps: an object with available apps and their states
+  #   {appId}: the state of the app
   @register 'Retronator.HQ.Items.Tablet'
   template: -> 'Retronator.HQ.Items.Tablet'
 
@@ -49,6 +50,11 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
 
   destroy: ->
     @_stateUpdateAutorun.stop()
+    
+  addApp: (appClassOrId) ->
+    appId = _.thingId appClassOrId
+    @state().apps[appId] = {}
+    @options.adventure.gameState.updated()
 
   activatedClass: ->
     'activated' if (@isRendered() and @activating()) or @activated()

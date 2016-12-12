@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 Script = LOI.Adventure.Script
 
 class Script.Nodes.Code extends Script.Node
-  # The list of JavaScript keywords that should not be treated as identifiers.
-  @javaScriptKeywords = [
+  # The list of keywords that should not be treated as identifiers.
+  @reservedKeywords = [
     'break', 'case', 'catch'
     'class', 'const', 'continue'
     'debugger', 'default', 'delete'
@@ -34,9 +34,9 @@ class Script.Nodes.Code extends Script.Node
       @expression = @expression.replace new RegExp(word, 'g'), replacement
 
     # Make variable names in the expression to reference the different states.
-    @expression = @expression.replace /[a-zA-Z_@](?:[\w.]|\[.*\])*(?=(?:[^"']*["'][^"']*["'])*[^"']*$)/g, (identifier) =>
+    @expression = @expression.replace /[a-zA-Z_@](?:[\w.]|\[.*?\])*(?=(?:[^"']*["'][^"']*["'])*[^"']*$)/g, (identifier) =>
       # Ignore reserved keywords.
-      return identifier if identifier in @constructor.javaScriptKeywords
+      return identifier if identifier in @constructor.reservedKeywords
 
       if _.startsWith identifier, '@'
         "_globalState.#{identifier.substring 1}"
@@ -66,8 +66,13 @@ class Script.Nodes.Code extends Script.Node
     _globalState = @script.options.adventure.gameState()
 
     # Attach the user object to global state.
-    _globalState.user = Retronator.user()
-    _globalState.user?.name = _globalState.user?.profile?.name
+    if user = Retronator.user()
+      _globalState.user = user
+      _globalState.user.name = _globalState.user.profile?.name
+
+      _globalState.user.itemKeys = {}
+      for item in _globalState.user.items
+        _globalState.user.itemKeys[item.catalogKey] = item
 
     console.log "Evaluating code node", @, "with states:", _globalState, _locationState, _scriptState, _ephemeralState if LOI.debug
 

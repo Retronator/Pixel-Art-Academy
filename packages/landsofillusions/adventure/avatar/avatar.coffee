@@ -23,13 +23,13 @@ class LOI.Avatar
     translationNamespace = "#{id}.Avatar"
 
     # Subscribe to this avatar's translations.
-    @_translationSubscribtion = AB.subscribeNamespace translationNamespace
+    @_translationSubscription = AB.subscribeNamespace translationNamespace
 
   destroy: ->
-    @_translationSubscribtion.stop()
+    @_translationSubscription.stop()
 
   ready: ->
-    @_translationSubscribtion.ready()
+    @_translationSubscription.ready()
 
   fullName: -> @_translateIfAvailable @constructor.translationKeys.fullName
   shortName: -> @_translateIfAvailable @constructor.translationKeys.shortName
@@ -42,5 +42,5 @@ class LOI.Avatar
       shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
   _translateIfAvailable: (key) ->
-    translated = AB.translate @_translationSubscribtion, key
+    translated = AB.translate @_translationSubscription, key
     if translated.language then translated.text else null

@@ -83,7 +83,12 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     return [] unless exits
 
     # Generate a unique set of IDs from all directions (some directions might lead to same location).
-    _.uniq _.values exits
+    exits = _.uniq _.values exits
+    exits = _.without exits, null
+
+    console.log "Displaying exits", exits if LOI.debug
+
+    exits
 
   exitName: ->
     exitLocationId = @currentData()
@@ -95,6 +100,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     key = LOI.Avatar.translationKeys.shortName
     translated = AB.translate subscriptionHandle, key
+
+    console.log "Displaying exit name for", key, "translated", translated if LOI.debug
 
     translated.text
 

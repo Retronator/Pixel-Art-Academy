@@ -16,7 +16,7 @@ class LOI.Adventure extends LOI.Adventure
     # Create a path from parameters.
     parameters.join '/'
 
-  _handleUrlChanges: ->
+  _initializeRouting: ->
     @autorun =>
       url = @currentUrl()
 

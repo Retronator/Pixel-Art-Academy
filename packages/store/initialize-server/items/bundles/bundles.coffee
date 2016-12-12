@@ -11,23 +11,23 @@ Meteor.startup ->
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.BasicGame
     price: 10
+    discountedFrom: 15
     name: "Pixel Art Academy — basic game pre-order"
-    description: "Select from one of the pre-made characters and play through storylines, build your library of knowledge, complete assignments and track your art progress once the game launches with Freshman Year 2017."
+    description: "Select from one of the pre-made characters and play through storylines, build your library of knowledge, complete assignments and track your art progress when the first episode launches in 2017. With a pre-order you also secure the lower price."
     items: [
+      CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
-      CatalogKeys.LandsOfIllusions.Character.Creation
-      CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
     ]
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.FullGame
     price: 20
+    discountedFrom: 25
     name: "Pixel Art Academy — full game pre-order"
-    description: "Start playing once the game launches with Freshman Year 2017. You will be able to create your own character and portrait by choosing and customizing individual parts."
+    description: "Start playing once the first episode launches in 2017. You will be able to create your own character and portrait by choosing and customizing individual parts. As a pre-order bonus you enjoy the lower price and get the Retropolis Day Pass."
     items: [
+      CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
-      CatalogKeys.LandsOfIllusions.Character.Creation
-      CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
       CatalogKeys.Retropolis.DayPass
     ]
@@ -35,14 +35,13 @@ Meteor.startup ->
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccess
     price: 40
+    discountedFrom: 45
     name: "Pixel Art Academy — alpha access pre-order"
-    description: "Get alpha access and be part of the Foundation Year 2016, before the game publicly starts with Freshmen Year 2017. You will be able to create your own character and portrait."
+    description: "Get alpha access and start playing episodes in 2017 as soon as they enter alpha stage. You will be able to create your own character and portrait. Pre-ordering also gives you the lower price as well as the Retropolis Day and Nightlife Passes."
     items: [
-      CatalogKeys.PixelArtAcademy.FoundationYear
-      CatalogKeys.PixelArtAcademy.FreshmanYear
+      CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.AlphaAccess
-      CatalogKeys.LandsOfIllusions.Character.Creation
-      CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
+      CatalogKeys.PixelArtAcademy.FreshmanYear
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
       CatalogKeys.Retropolis.DayPass
       CatalogKeys.Retropolis.NightlifePass
@@ -50,14 +49,14 @@ Meteor.startup ->
 
   RS.Items.Bundles.PixelArtAcademyPreOrderAvatarEditorUpgrade.create()
 
-  RS.Items.Bundles.PixelArtAcademyPreOrderFoundationYearUpgrade.create()
+  RS.Items.Bundles.PixelArtAcademyPreOrderAlphaAccessUpgrade.create()
 
   # KICKSTARTER TIERS
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.NoReward
     name: "Pixel Art Academy Kickstarter tier — No Reward"
-    description: "You haven't chosen to receive a reward at the time of the Kickstarter. If you pledged enough to be able to get one of the three main tiers, you can use your store credit to select one now."
+    description: "You haven't chosen to receive a reward at the time of the Kickstarter. If you pledged enough to be able to get one of the three main tiers, you can use your store credit to purchase one now."
     items: []
 
   RS.Items.Bundles.PixelArtAcademyKickstarterBasicGame.create()
@@ -68,15 +67,14 @@ Meteor.startup ->
     name: "Pixel Art Academy Kickstarter tier — Early bird: YOUR OWN CHARACTER!"
     description: "Start playing once the game launches with Freshman Year 2017. You will be able to create your own character and portrait by choosing and customizing individual parts. I can already see it as your new Twitter avatar! The portrait (and your name) will also appear in a special section of the Retropolis Academy of Art Yearbook. I will also send you 50 backer updates with news from the development."
     items: [
+      CatalogKeys.PixelArtAcademy.PlayerAccess
+      CatalogKeys.PixelArtAcademy.AlphaAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
       CatalogKeys.PixelArtAcademy.SophomoreYear
       CatalogKeys.PixelArtAcademy.JuniorYear
       CatalogKeys.PixelArtAcademy.SeniorYear
-      CatalogKeys.PixelArtAcademy.AlphaAccess
       CatalogKeys.PixelArtAcademy.Kickstarter.GreenKeycard
       CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
-      CatalogKeys.LandsOfIllusions.Character.Creation
-      CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
     ]
 
@@ -199,9 +197,8 @@ Meteor.startup ->
     name: "Pixel Art Academy complimentary basic game access"
     description: complimentaryDescription
     items: [
+      CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
-      CatalogKeys.LandsOfIllusions.Character.Creation
-      CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
     ]
 
   RS.Transactions.Item.create
@@ -209,9 +206,8 @@ Meteor.startup ->
     name: "Pixel Art Academy complimentary full game access"
     description: complimentaryDescription
     items: [
+      CatalogKeys.PixelArtAcademy.PlayerAccess
       CatalogKeys.PixelArtAcademy.FreshmanYear
-      CatalogKeys.LandsOfIllusions.Character.Creation
-      CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
       CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
       CatalogKeys.Retropolis.DayPass
     ]
@@ -260,12 +256,13 @@ Meteor.startup ->
 
 kickstarterAlphaItemsWith = (extraItems) ->
   [
+    CatalogKeys.PixelArtAcademy.PlayerAccess
+    CatalogKeys.PixelArtAcademy.AlphaAccess
     CatalogKeys.PixelArtAcademy.FoundationYear
     CatalogKeys.PixelArtAcademy.FreshmanYear
     CatalogKeys.PixelArtAcademy.SophomoreYear
     CatalogKeys.PixelArtAcademy.JuniorYear
     CatalogKeys.PixelArtAcademy.SeniorYear
-    CatalogKeys.PixelArtAcademy.AlphaAccess
     CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
     CatalogKeys.PixelArtAcademy.Kickstarter.ClassOf2016Artwork
     CatalogKeys.LandsOfIllusions.Character.Creation
@@ -275,11 +272,9 @@ kickstarterAlphaItemsWith = (extraItems) ->
 
 complimentaryAlphaItemsWithRetropolisItems = (keycardColor) ->
   alphaItems = [
-    CatalogKeys.PixelArtAcademy.FoundationYear
-    CatalogKeys.PixelArtAcademy.FreshmanYear
+    CatalogKeys.PixelArtAcademy.PlayerAccess
     CatalogKeys.PixelArtAcademy.AlphaAccess
-    CatalogKeys.LandsOfIllusions.Character.Creation
-    CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
+    CatalogKeys.PixelArtAcademy.FreshmanYear
     CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
   ]
 

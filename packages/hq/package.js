@@ -19,6 +19,7 @@ Package.onUse(function(api) {
   api.export('Retronator');
 
   api.addFiles('hq.coffee');
+  api.addAssets('hq.script', ['client', 'server']);
 
   // Actors
   api.addFiles('actors/actors.coffee');
@@ -26,44 +27,71 @@ Package.onUse(function(api) {
   api.addFiles('actors/elevatorbutton.coffee');
   api.addAssets('actors/elevatorbutton.script', ['client', 'server']);
 
+  api.addFiles('actors/operator.coffee');
+
   // Locations
 
   api.addFiles('locations/locations.coffee');
 
-  api.addFiles('locations/entrance/entrance.coffee');
-  api.addFiles('locations/entrance/sign.coffee');
+  api.addFiles('locations/1stfloor/entrance/entrance.coffee');
+  api.addFiles('locations/1stfloor/entrance/sign.coffee');
 
-  api.addFiles('locations/lobby/lobby.coffee');
-  api.addAssets('locations/lobby/tablet.script', ['client', 'server']);
+  api.addFiles('locations/1stfloor/lobby/lobby.coffee');
+  api.addAssets('locations/1stfloor/lobby/tablet.script', ['client', 'server']);
 
-  api.addFiles('locations/lobby/display/display.coffee');
-  api.addFiles('locations/lobby/display/display.html');
-  api.addFiles('locations/lobby/display/display.styl');
+  api.addFiles('locations/1stfloor/lobby/display/display.coffee');
+  api.addFiles('locations/1stfloor/lobby/display/display.html');
+  api.addFiles('locations/1stfloor/lobby/display/display.styl');
 
-  api.addFiles('locations/reception/reception.coffee');
-  api.addAssets('locations/reception/burra.script', ['client', 'server']);
+  api.addFiles('locations/1stfloor/reception/reception.coffee');
+  api.addAssets('locations/1stfloor/reception/burra.script', ['client', 'server']);
+
+  api.addFiles('locations/1stfloor/restroom/restroom.coffee');
+
+  api.addFiles('locations/1stfloor/gallery/gallery.coffee');
 
   api.addFiles('locations/elevator/elevator.coffee');
   api.addFiles('locations/elevator/numberpad.coffee');
   api.addAssets('locations/elevator/numberpad.script', ['client', 'server']);
 
-  api.addFiles('locations/store/store.coffee');
-  api.addFiles('locations/store/checkout/checkout.coffee');
-  api.addAssets('locations/store/checkout/retro.script', ['client', 'server']);
+  api.addFiles('locations/2ndfloor/steps/steps.coffee');
 
-  api.addFiles('locations/store/checkout/receipt/receipt.coffee');
-  api.addFiles('locations/store/checkout/receipt/receipt.html');
-  api.addFiles('locations/store/checkout/receipt/receipt.styl');
+  api.addFiles('locations/2ndfloor/store/store.coffee');
 
-  api.addFiles('locations/store/shelf/shelf.coffee');
-  api.addFiles('locations/store/shelf/shelf.html');
-  api.addFiles('locations/store/shelf/shelf.styl');
-  api.addFiles('locations/store/shelf/shelf-preorders.coffee');
+  api.addFiles('locations/2ndfloor/checkout/checkout.coffee');
+  api.addAssets('locations/2ndfloor/checkout/retro.script', ['client', 'server']);
 
-  api.addFiles('locations/store/shoppingcart/shoppingcart.coffee');
-  api.addFiles('locations/store/shoppingcart/shoppingcart.html');
-  api.addFiles('locations/store/shoppingcart/shoppingcart.styl');
+  api.addFiles('locations/2ndfloor/store/shelf/shelf.coffee');
+  api.addFiles('locations/2ndfloor/store/shelf/shelf.html');
+  api.addFiles('locations/2ndfloor/store/shelf/shelf.styl');
+  api.addFiles('locations/2ndfloor/store/shelf/shelf-preorders.coffee');
 
+  api.addFiles('locations/3rdfloor/chillout/chillout.coffee');
+
+  api.addFiles('locations/3rdfloor/ideagarden/ideagarden.coffee');
+
+  api.addFiles('locations/3rdfloor/theater/theater.coffee');
+
+  api.addFiles('locations/3rdfloor/landsofillusions/landsofillusions.coffee');
+  api.addFiles('locations/3rdfloor/landsofillusions/methods-server.coffee', ['server']);
+  api.addAssets('locations/3rdfloor/landsofillusions/operator.script', ['client', 'server']);
+
+  api.addFiles('locations/3rdfloor/landsofillusions/hallway/hallway.coffee');
+  api.addAssets('locations/3rdfloor/landsofillusions/hallway/operator.script', ['client', 'server']);
+
+  api.addFiles('locations/3rdfloor/landsofillusions/cabin/cabin.coffee');
+  api.addAssets('locations/3rdfloor/landsofillusions/cabin/operator.script', ['client', 'server']);
+
+  api.addFiles('locations/4thfloor/studio/studio.coffee');
+
+  api.addFiles('locations/4thfloor/studio/kitchen/kitchen.coffee');
+
+  api.addFiles('locations/4thfloor/studio/hallway/hallway.coffee');
+
+  api.addFiles('locations/4thfloor/studio/bathroom/bathroom.coffee');
+
+  api.addFiles('locations/4thfloor/studio/bedroom/bedroom.coffee');
+  
   // Items
 
   api.addFiles('items/items.coffee');
@@ -100,4 +128,17 @@ Package.onUse(function(api) {
   api.addFiles('items/tablet/apps/manual/manual.coffee');
   api.addFiles('items/tablet/apps/manual/manual.html');
   api.addFiles('items/tablet/apps/manual/manual.styl');
+
+  api.addFiles('items/tablet/apps/prospectus/prospectus.coffee');
+  api.addFiles('items/tablet/apps/prospectus/prospectus.html');
+  api.addFiles('items/tablet/apps/prospectus/prospectus.styl');
+
+  api.addFiles('items/tablet/apps/shoppingcart/shoppingcart.coffee');
+  api.addFiles('items/tablet/apps/shoppingcart/shoppingcart.html');
+  api.addFiles('items/tablet/apps/shoppingcart/shoppingcart.styl');
+
+  api.addFiles('items/tablet/apps/shoppingcart/receipt/receipt.coffee');
+  api.addFiles('items/tablet/apps/shoppingcart/receipt/receipt.html');
+  api.addFiles('items/tablet/apps/shoppingcart/receipt/receipt.styl');
+
 });

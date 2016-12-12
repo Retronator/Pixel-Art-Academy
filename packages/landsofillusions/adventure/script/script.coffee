@@ -73,6 +73,10 @@ class LOI.Adventure.Script
       for callbackNode in @startNode.callbacks[name]
         callbackNode.callback = callback
 
+    # We expect all callbacks to be set in one go so warn about any that were left unset.
+    for name, callbacks of @startNode.callbacks
+      console.warn "Callback for #{name} was not set" unless callbacks[0]?.callback
+
   _addNode: (node) ->
     # Add the node only if it hasn't already added.
     return if not node or node in @nodes

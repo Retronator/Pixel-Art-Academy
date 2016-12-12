@@ -19,13 +19,12 @@ class RS.Items.Bundles.PixelArtAcademyKickstarterFullGame extends RS.Items.Bundl
       price: @price
 
       items: [
+        CatalogKeys.PixelArtAcademy.PlayerAccess
         CatalogKeys.PixelArtAcademy.FreshmanYear
         CatalogKeys.PixelArtAcademy.SophomoreYear
         CatalogKeys.PixelArtAcademy.JuniorYear
         CatalogKeys.PixelArtAcademy.SeniorYear
         CatalogKeys.PixelArtAcademy.Kickstarter.YellowKeycard
         CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
-        CatalogKeys.LandsOfIllusions.Character.Creation
-        CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarSelection
         CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
       ]

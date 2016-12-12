@@ -1,0 +1,13 @@
+# Retronator.HQ.Locations.LandsOfIllusions.Hallway.Scripts.Operator
+
+## Start
+
+operator: 
+    Our facilities are equipped with the most advanced virtual reality systems.
+    I hope you're excited to give it a try. Here's your cabin.
+    
+### Move
+
+> Panzer opens the door and goes west.
+
+## End

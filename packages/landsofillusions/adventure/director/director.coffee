@@ -7,10 +7,16 @@ class LOI.Adventure.Director
   onCreated: ->
     super
 
-  startScript: (script) ->
+  startScript: (script, options = {}) ->
     script.setDirector @
 
-    @scriptTransition null, script.startNode
+    if options.label
+      startNode = script.startNode.labels[options.label]
+
+    else
+      startNode = script.startNode
+
+    @scriptTransition null, startNode
 
   endScript: (scriptNode) ->
     @scriptTransition scriptNode, null

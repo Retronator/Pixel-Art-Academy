@@ -44,6 +44,10 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     # Add a visited field unique to this location class.
     @visited = new ReactiveField false
 
+  @initialState: ->
+    scripts: {}
+    things: {}
+
   # Location instance
 
   constructor: (@options) ->
@@ -72,7 +76,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     @_scriptTranslationSubscription = AB.subscribeNamespace "#{translationNamespace}.Script"
 
     # Create the scripts.
-    @scripts= {}
+    @scripts = {}
 
     if @constructor.scriptUrls
       scriptFiles = for scriptUrl in @constructor.scriptUrls()
@@ -128,10 +132,6 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     @exitsTranslationSubscriptions.stop()
     @_scriptTranslationSubscription.stop()
     @_stateUpdateAutorun.stop()
-
-  initialState: ->
-    scripts: {}
-    things: {}
 
   ready: ->
     conditions = [
