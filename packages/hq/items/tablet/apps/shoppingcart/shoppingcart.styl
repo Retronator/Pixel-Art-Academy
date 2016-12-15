@@ -1,17 +1,22 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.retronator-hq-locations-store-shopping-cart
-  fixed-cover()
-  z-index 1
+.retronator-hq-items-tablet-apps-shopping-cart
+  absolute-cover()
   background atariGrey(0)
-  overflow scroll
 
   .shopping-cart-area
-    margin 30rem
+    absolute-cover()
+    overflow scroll
+    padding 20rem 30rem
     max-width 400rem
 
+    &.receipt-visible
+      left -120rem
+      width 100%
+      right auto
+
     h2
-      margin-top 2em
+      margin-top 0
       kyrou-7()
       color atariGrey(7)
       font-weight normal
@@ -22,10 +27,10 @@
       font-weight normal
 
     > .shopping-cart
-      padding 1em
-      margin-bottom 15px
-      background #222
-      border 2px solid #333
+      padding 10rem
+      margin-bottom 7rem
+      background atariGrey(1)
+      border 1rem solid atariGrey(2)
 
       .shopping-cart-items
         list-style none
@@ -33,11 +38,11 @@
 
         .cart-item
           position relative
-          padding-right 210px
-          margin-bottom 50px
+          margin-bottom 30rem
 
-          > .description
-            margin-left 30px
+          > .name
+            padding-right 105rem
+            min-height 35rem
 
           .price-area
             position absolute
@@ -48,19 +53,20 @@
             .price
               acme-9()
               text-align center
-              margin-bottom 10px
+              margin-bottom 5rem
 
             .remove-from-cart-button
-              padding 6px 10px
+              padding 3rem 5rem
               width 100%
 
             .gift-label
               display block
               text-align center
-              padding-right 10px
+              padding-right 5rem
 
           .bundle
-            margin-left 30px
+            .bundle-items
+              list-style square
 
       .total
         text-align right
@@ -69,14 +75,14 @@
           display inline-block
           top 0
           right 0
-          width 180px
+          width 90rem
           acme-9()
           text-align center
 
     .navigation
       position relative
       display flex
-      margin 2em 1em
+      margin 20rem 10rem
       align-items center
 
       a

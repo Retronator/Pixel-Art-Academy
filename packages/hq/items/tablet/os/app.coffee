@@ -56,6 +56,8 @@ class HQ.Items.Tablet.OS.App extends AM.Component
     # Prepare the avatar for this app.
     LOI.Avatar.initialize @
 
+  @initialState: -> {} # Override to return a non-empty initial state.
+
   constructor: (@options) ->
     super
 
@@ -69,6 +71,8 @@ class HQ.Items.Tablet.OS.App extends AM.Component
 
     # Should the home screen button be shown?
     @showHomeScreenButton = new ReactiveField true
+
+  fullUrl: -> @constructor.fullUrl()
 
   deactivated: -> @activatedState() is @constructor.activatedState.Deactivated
   activating: -> @activatedState() is @constructor.activatedState.Activating

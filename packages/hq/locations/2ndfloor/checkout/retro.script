@@ -16,8 +16,9 @@ retro: How can I help you today?
 
 ## MainQuestion
 
-### AnalyzeShoppingCart
+### AnalyzeUser
 
+* I'm a backer, but didn't choose a reward. -> [NoRewardBacker] `_noRewardBacker`
 * I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
 * But I don't have the Shopping Cart app. -> [ShoppingCartApp] `HowToBuy`
@@ -25,6 +26,71 @@ retro: How can I help you today?
 * I would like to ask something else … -> [Contact] `PixelArtAcademy`
 * I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
 * That would be all, thank you. -> [EndHelped] `_helped`
+
+<!-- NO REWARD BACKERS -->
+
+## NoRewardBacker
+
+`_helped = true`
+
+retro:
+    First of all, thanks for your support!
+    Would you like to claim a backers tier now?
+    
+* Yes, please! -> [SelectTier]
+* Maybe later.
+
+retro: No problem, take your time.
+
+-> [Start]
+
+## SelectTier
+
+-> [AlphaAccessTier] `_eligibleBackerTiers[2]`
+-> [FullGameTier] `_eligibleBackerTiers[1]`
+-> [BasicGameTier] `_eligibleBackerTiers[0]`
+
+## AlphaAccessTier
+
+retro: 
+    You qualify for the Alpha Access Tier.
+    Please note that even if you pledged more than $40, due to limited availability of higher items, they are not claimable any more.
+    
+-> [AddTierToCart]
+
+## FullGameTier
+
+retro: You qualify for the Full Game Tier.
+    
+-> [AddTierToCart]
+
+## BasicGameTier
+
+retro: You qualify for the Basic Game Tier.
+    
+-> [AddTierToCart]
+
+## AddTierToCart
+
+retro: Let me add it to your Shopping Cart app …
+
+-> [NoTablet] `not _tablet`
+
+> Retro slides over the Kickstarter tier bundle onto your tablet with a flick of his finger.
+
+### AddTierToCart
+
+retro: 
+    There you go, you are all set.
+    Do you want to checkout now?
+    You won't have to pay since your pledge was converted to store credit.
+    
+* Yes, let's do this! -> [PurchaseConfirm]
+* I think I'll browser around some more first.
+
+retro: No problem.
+
+-> [Start]
 
 <!-- PURCHASING -->
 
@@ -34,7 +100,7 @@ retro: How can I help you today?
 
 retro: Certainly. Can I see your shopping cart?
 
-> You open the Shopping Cart app and hand him the tablet.
+> You open the Shopping Cart app and hand the tablet to Retro.
 
 retro: Alright, let me see …
 
@@ -45,12 +111,23 @@ retro: Alright, let me see …
 
 ## PurchaseConfirm
 
-retro: 
-    Does this look correct? 
-    The display behind me shows where you will appear in the supporters charts.
+retro: Let me open up the receipt …
+    
+> Retro works on his computer and your tablet for a few moments.
+
+> The receipt appears in the Shopping Cart app.
+
+retro:
+    As you go over the receipt, the display behind me will show where you will appear in the supporters charts.
     Adding a tip even lets you write a message to go with it.
+   
+> Retro hands you your tablet back.
+
+retro: Does everything look correct?
   
 ### Checkout
+
+-> [TransactionCanceled] `_transactionCanceled`
 
 ## TransactionComplete
 
@@ -71,25 +148,84 @@ retro:
     
 -> [Start]
 
+## TransactionCanceled
+
+> You decide it's not yet time to complete the purchase.
+
+`_afterTransactionQuestion = false`
+
+## TransactionCanceledQuestions
+
+* Thanks for the info, let's see that receipt again. `_afterTransactionQuestion`
+* I need to change some items first. -> [Change]
+* Where does the purchase show up? -> [PurchaseDisplay]
+* What is the tip message for? -> [TipMessage]
+* I don't think I'm ready to buy right now. -> [NoBuy]
+
+## Change
+
+retro: 
+    Of course, go ahead. 
+    Simply _use tablet_ and open up the Shopping Cart app to remove items.
+    To add new items, just go back to the shelves in the _east_.
+    
+-> [End]
+
+## PurchaseDisplay
+
+`_afterTransactionQuestion = true`
+
+retro:
+    Individual purchases show up in the "Latest Purchases" section on the main display in the lobby.
+    All the purchases including tips are also summed up for a spot on the "Top Supporters" list.
+    It's all anonymous by default, unless you choose to show a certain name for it.
+    You can set your supporter name in your Account app and set a short message to appear on the Top Supporters list.
+    When you include a tip you also get to set a separate message specifically for that purchase.
+
+-> [TransactionCanceledQuestions] 
+
+## TipMessage
+
+`_afterTransactionQuestion = true`
+
+retro:
+    You can say why you decided to purchase the game or anything else.
+    Please use common sense and make it appropriate for general public.
+    These messages are then rotated on the display in the Lobby and the one behind me.
+    I love to hear from you guys.
+    
+-> [TransactionCanceledQuestions] 
+
+## NoBuy
+
+retro: No problem at all. We'll be ready when you are.
+
+-> [Start]
+
 <!-- Purchase dialogs -->
 
 ## DoubleCheck
 
-retro: And you know what you're getting into by pre-ordering Pixel Art Academy?
+retro: 
+    Nice, I see you're pre-ordering the game.
+    You know what you're getting into, right?
 
-* Yes, I can't wait to order it. -> [DoubleCheckYes]
+* Yes, I can't wait to support it. -> [DoubleCheckYes]
 * Uhm, what do you mean?
 
 retro:
-    I mean that you're supporting a game that is mainly developed by one person (me), and it will be slowly released in episodes.
-    And it's a game where you will actually learn how to draw, doing actual drawing.
+    I mean that you're pre-ordering a game that is mainly developed by one person (me).
+    This means it will be in development for a long time.
+    On the bright side, it will be released in episodes as we go along.
+    And let's not forget, this is a game about actual drawing. 
+    You will literally learn how to draw and create artworks.
     
 * Yes, I'm sure I want this. -> [DoubleCheckYes]
 * I guess I should ask more about the game first.
 
 retro: Good idea!
 
--> [PixelArtAcademy]
+-> [PixelArtAcademyQuestions]
 
 ## DoubleCheckYes
 
@@ -101,16 +237,16 @@ retro: All good!
 
 ## AlphaAccess
 
-retro: I see you're buying alpha access. You know what this entails?
+retro: I see you're buying alpha access. You know what this means, right?
 
 * Yes, I want to get alpha access! -> [AlphaAccessYes]
 * Maybe I need my memory refreshed.
 
 retro:
-    Alpha access gives you the ability to play with the episodes while they are still in development.
+    Alpha access gives you the ability to play the episodes while they are still in development.
     That's exactly that the episodes will be, in development.
     Unfinished, broken, full of bugs.
-    For the price tag you're not really getting some big value.
+    For the price tag you're not really getting a big value.
     Purchasing alpha access is mostly meant for supporting the game more.
     As a thank you, you're able to try things out before everyone else.
     
@@ -124,6 +260,8 @@ retro: No problem. You can easily remove items out of your shopping cart.
 ## AlphaAccessYes
 
 retro: Well then, in that case I thank you immensely for your support!
+
+-> [PurchaseConfirm]
 
 <!-- MAIN QUESTIONS -->
 
@@ -209,8 +347,9 @@ retro:
 
 retro:
     Game's main storylines will be divided into seasons and episodes.
-    Each season will last for a year and have a couple to a few episodes.
-    This pretty much depends on how development goes.
+    Each season's production will last a year.
+    The result will be a couple to a few episodes per year.
+    It pretty much depends on how development goes in practice.
     
 ## SeasonsQuestions
 

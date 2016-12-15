@@ -17,7 +17,7 @@ class HQ.Locations.Store.Shelf extends LOI.Adventure.Item
     super
 
     # Get all store items data.
-    @subscribe RS.Transactions.Item.all
+    @_itemsSubscription = @subscribe RS.Transactions.Item.all
 
     # Get all user's transactions and payments so we can determine which store items they are
     # eligible for. Payments are needed to determine if the user has a kickstarter pledge.
@@ -27,7 +27,11 @@ class HQ.Locations.Store.Shelf extends LOI.Adventure.Item
   shoppingCart: ->
     RS.shoppingCart
 
+  catalogKeys: -> [] # Override with specific shelf items.
+
   storeItems: ->
+    return unless @_itemsSubscription.ready()
+
     items = RS.Transactions.Item.documents.find
       price:
         $exists: true
@@ -35,23 +39,40 @@ class HQ.Locations.Store.Shelf extends LOI.Adventure.Item
       sort:
         price: 1
 
-    # Show only items that the user is eligible to purchase.
+    # Show only items that are supposed to be on this shelf.
     items = _.filter items.fetch(), (item) =>
-      # We need to perform validation with inherited child's code, so first do a cast.
-      item = item.cast()
+      item.catalogKey in @catalogKeys()
 
-      try
-        item.validateEligibility()
-
-      catch error
-        return false
-
-      true
+    # Cast the items to enable any extra functionality.
+    items = for item in items
+      item.cast()
 
     # Refresh all the items to populate bundle sub-items.
     item.refresh() for item in items
 
+    console.log "Shelf displaying items", items if HQ.debug
+
     items
+    
+  playerTablet: ->
+    @options.adventure.inventory HQ.Items.Tablet
+    
+  canBuy: ->
+    item = @currentData()
+
+    # We need to perform validation with inherited child's code, so first do a cast.
+    item = item.cast()
+
+    try
+      item.validateEligibility()
+
+    catch error
+      return false
+
+    true
+
+  canBuyClass: ->
+    'can-buy' if @canBuy()
 
   events: ->
     super.concat
@@ -59,16 +80,23 @@ class HQ.Locations.Store.Shelf extends LOI.Adventure.Item
 
   onClickAddToCartButton: (event) ->
     item = @currentData()
+        
+    # Add the Shopping Cart app to the tablet.
+    tablet = @playerTablet()
+    shoppingCart = tablet.addApp HQ.Items.Tablet.Apps.ShoppingCart
 
     # Add the item's ID to the shopping cart state.
-    store = @options.adventure.gameState().locations[HQ.Locations.Store.id()]
-    shoppingCart = store.things[HQ.Locations.Store.ShoppingCart.id()] ?= {}
-    shoppingCart.contents ?= []
+    shoppingCartState = shoppingCart.state()
+    shoppingCartState.contents ?= []
 
-    shoppingCart.contents.push
+    shoppingCartState.contents.push
       item: item.catalogKey
       isGift: false
 
+    # Switch the tablet app to Shopping Cart.
+    tablet.os.state().activeAppId = HQ.Items.Tablet.Apps.ShoppingCart.id()
+
     @options.adventure.gameState.updated()
 
-    LOI.Adventure.goToItem HQ.Locations.Store.ShoppingCart
+    # Activate the tablet into overlaid mode 
+    tablet.activate()

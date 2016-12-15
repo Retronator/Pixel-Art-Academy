@@ -73,15 +73,12 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
     elevatorPresent = new ComputedField =>
       state = options.location.options.adventure.gameState()
       elevator = state?.locations[HQ.Locations.Elevator.id()]
-      console.log "Elevator recomputing", elevator
       return unless elevator
 
       # HACK: Wait also for the local state to be set, since otherwise the autorun below won't be ready yet.
       return unless options.location.state()
 
       present = elevator.floor is options.floor
-
-      console.log "elevator is present", present, elevator.floor, options.floor
 
       present
 

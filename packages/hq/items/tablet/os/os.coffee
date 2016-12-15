@@ -11,6 +11,30 @@ class HQ.Items.Tablet.OS extends AM.Component
 
     @state = new ReactiveField null
 
+    # If the tablet is not the main active tablet, we shouldn't use the URL
+    # to change the app, so we hijack the links and change the app via state.
+    FlowRouter.triggers.enter [(context, redirect, stop) =>
+      unless @options.tablet.isMainActiveItem()
+        # First check if this even is an app url (we assume that if an app is in context).
+        tabletUrl = HQ.Items.Tablet.urlParameters().parameter1
+        return unless tabletUrl is context.params.parameter1
+
+        appUrl = context.params.parameter2
+
+        appClass = HQ.Items.Tablet.OS.App.getClassForUrl appUrl if appUrl
+        return unless appClass
+
+        console.log "We're trying to get to app", appClass.id() if HQ.debug
+
+        # Yes, this is an app, so the link should just change the state.
+        @options.tablet.os.state().activeAppId = appClass.id()
+        @options.adventure.gameState.updated()
+
+        # Stay at the same URL.
+        redirect location.pathname
+    ],
+      only: ['LandsOfIllusions.Adventure']
+
   onCreated: ->
     super
 
@@ -19,21 +43,25 @@ class HQ.Items.Tablet.OS extends AM.Component
     @currentApp = new ReactiveField null
 
     @autorun (computation) =>
-      # Listen for parameter changes.
+      # Listen for app changes. If we're the main active item we can rely on the URL, otherwise only on the state.
 
-      # Make sure we're still on the tablet URL.
-      tabletUrl = HQ.Items.Tablet.urlParameters().parameter1
-      return unless tabletUrl is FlowRouter.getParam 'parameter1'
+      appClass = null
 
-      appUrl = FlowRouter.getParam 'parameter2'
-      
-      console.log "OS is selecting the app from url", appUrl if HQ.debug
+      isMainActiveItem = @options.tablet.isMainActiveItem()
 
-      if appUrl
-        appClass = HQ.Items.Tablet.OS.App.getClassForUrl appUrl
+      if isMainActiveItem
+        # Make sure we're still on the tablet URL.
+        tabletUrl = HQ.Items.Tablet.urlParameters().parameter1
+        return unless tabletUrl is FlowRouter.getParam 'parameter1'
 
-      else
-        # If we didn't find an app url, see if we have the ID stored in the state.
+        appUrl = FlowRouter.getParam 'parameter2'
+
+        console.log "OS is selecting the app from url", appUrl if HQ.debug
+
+        appClass = HQ.Items.Tablet.OS.App.getClassForUrl appUrl if appUrl
+
+      # If we didn't find an app from url, see if we have the ID stored in the state.
+      unless appClass
         Tracker.nonreactive =>
           state = @state()
           console.log "No url. Trying to load from state", state if HQ.debug
@@ -60,6 +88,9 @@ class HQ.Items.Tablet.OS extends AM.Component
       currentApp = @currentApp()
 
       rewriteUrl = =>
+        # We don't use URLs when we're not active.
+        return unless isMainActiveItem
+
         # Rewrite the url to match the app. Start with the tablet+app URL.
         urlParameters =
           parameter1: tabletUrl
@@ -81,16 +112,15 @@ class HQ.Items.Tablet.OS extends AM.Component
         ,
           0
 
+      # Is the current app already the one we want? Then we don't have to create it.
       if currentApp?.constructor.id() is appClass.id()
         rewriteUrl()
         return
 
-      newApp = new appClass
-        os: @
-        tablet: @options.tablet
-        adventure: @options.adventure
+      # Nope, it looks like we do need a new app.
+      newApp = @options.tablet.apps appClass
 
-      console.log "Made new app instance", newApp if HQ.debug
+      console.log "Spectrum OS switching to app", newApp if HQ.debug
 
       startNewApp = =>
         @currentApp newApp
@@ -107,7 +137,7 @@ class HQ.Items.Tablet.OS extends AM.Component
   goToApp: (appClassOrId) ->
     appClass = if _.isFunction appClassOrId then appClassOrId else HQ.Items.Tablet.OS.App.getClassForId appClassOrId
 
-    urlParameters = appClass.appUrlParameters()
+    urlParameters = appClass.urlParameters()
 
     # Change active app in OS state.
     Tracker.nonreactive =>
@@ -117,5 +147,11 @@ class HQ.Items.Tablet.OS extends AM.Component
     # Route to correct URL.
     FlowRouter.go 'LandsOfIllusions.Adventure', urlParameters
     
-  menuLink: ->
-     HQ.Items.Tablet.Apps.Menu.fullUrl()
+  menuApp: ->
+    @options.tablet.apps HQ.Items.Tablet.Apps.Menu
+
+  event: ->
+    super.concat
+      'click .menu-button': @onClickLink
+
+  onClickLink: (event) ->

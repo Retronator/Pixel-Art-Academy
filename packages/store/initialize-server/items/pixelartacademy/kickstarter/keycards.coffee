@@ -68,7 +68,7 @@ Meteor.startup ->
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.RetronatorBlackKeycard
     name: "Retronator black keycard"
-    description: "RETRONATOR: Top-level administrator access to the whole system."
+    description: "Top-level administrator access to the whole system."
     items: listOfRetroplisItemsForKeycardColor 0
 
   RS.Transactions.Item.create

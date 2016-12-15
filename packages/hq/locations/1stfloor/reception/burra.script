@@ -16,7 +16,7 @@ burra: `_MainQuestion`
 * I'm signing out. -> [SignOut] `@user`
 * Can I get my tablet? -> [GetTablet] `@user and not @player.inventory['Retronator.HQ.Items.Tablet']`
 * I'm missing my account app. -> [GetAccountApp] `@user and @player.inventory['Retronator.HQ.Items.Tablet'] and not @player.inventory['Retronator.HQ.Items.Tablet'].apps['Retronator.HQ.Items.Tablet.Apps.Account']`
-* I have a question. -> [Question]
+* I have a question. -> [QuestionIntro]
 * Oh, just looking. -> [End] `not _helped and not _MainQuestion`
 * Whoops, nevermind. -> [End] `not _helped and _MainQuestion`
 * Thank you so much! -> [End] `_helped`
@@ -66,7 +66,7 @@ burra: Do you need help with signing in?
 
 * What does signing in do? -> [SignInHelp] `not _SignInHelp`
 * Can I link multiple social networks? -> [SignInSocialNetworks] `_SignInHelp`
-* Thanks for all the info! `_SignInHelp` -> [Start]
+* Thanks for all the info! -> [SignInThanks] `_SignInHelp`
 * Nah, all good. `not _SignInHelp`
 
 burra: Alright, Perhaps next time. 
@@ -89,6 +89,12 @@ burra:
     To do this, _use tablet_ and load the Account app.
     
 -> [SignInQuestions]
+
+## SignInThanks
+
+burra: No problem. Can I help you with something else?
+
+-> [MainQuestion]
 
 ## JustRegistered
 
@@ -182,8 +188,12 @@ burra: There you go!
 
 <!-- QUESTIONS -->
 
-## Question
+## QuestionIntro
 `_helped = true`
+
+burra: Ask away!
+
+## Question
 
 * What is this place? -> [RetronatorHQ]
 * I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQ and not PixelArtAcademy`

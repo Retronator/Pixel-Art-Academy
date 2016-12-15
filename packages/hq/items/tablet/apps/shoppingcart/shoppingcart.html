@@ -1,7 +1,7 @@
-<template name="Retronator.HQ.Locations.Store.ShoppingCart">
-  <div class="retronator-hq-locations-store-shopping-cart">
+<template name="Retronator.HQ.Items.Tablet.Apps.ShoppingCart">
+  <div class="retronator-hq-items-tablet-apps-shopping-cart">
     {{> LandsOfIllusions.Components.BackButton}}
-    <div class="shopping-cart-area">
+    <div class="shopping-cart-area {{receiptVisibleClass}}">
       <p>Your shopping cart includes:</p>
       <div class="shopping-cart">
         {{#if cartItems.length}}
@@ -9,7 +9,6 @@
             {{#each cartItems}}
               <li class="cart-item">
                 <h2 class="name">{{> t9n item.name}}</h2>
-                <p class="description">{{> t9n item.description}}</p>
                 <div class="price-area">
                   <div class="price">${{item.price}}</div>
                   <button class="remove-from-cart-button">Remove from cart</button>
@@ -22,6 +21,7 @@
                     {{/if}}
                   {{/if}}
                 </div>
+                <p class="description">{{> t9n item.description}}</p>
                 {{#if item.items}}
                   <div class="bundle">
                     <p>
@@ -41,15 +41,15 @@
             <div class="total-price">Total: ${{totalPrice}}</div>
           </div>
         {{else}}
-          <p>You do not have any items in your shopping cart. <a href="{{flowRouterPath 'LandsOfIllusions.Adventure' parameter1='retronator' parameter2='store'}}">Return to the store</a></p>
+          <p>You do not have any items in your shopping cart.</p>
         {{/if}}
       </div>
       {{#if cartItems.length}}
-        <nav class="navigation">
-          <div class="item continue"><a href="{{flowRouterPath 'LandsOfIllusions.Adventure' parameter1='retronator' parameter2='store'}}">Continue shopping</a></div>
-          <div class="item checkout"><a class="checkout-button button" href="{{flowRouterPath 'LandsOfIllusions.Adventure' parameter1='retronator' parameter2='store' parameter3='checkout'}}">Checkout</a></div>
-        </nav>
+        <p>To complete the purchase, talk to Retro at the checkout counter.</p>
       {{/if}}
     </div>
+    {{#if state.receiptVisible}}
+      {{> Render receipt}}
+    {{/if}}
   </div>
 </template>

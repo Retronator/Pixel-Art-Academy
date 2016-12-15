@@ -29,7 +29,8 @@ class HQ.Locations.Store extends LOI.Adventure.Location
 
   @initialState: ->
     things = {}
-    things[HQ.Locations.Store.Shelf.PreOrders.id()] = displayOrder: 0
+    things[HQ.Locations.Store.Shelf.Game.id()] = displayOrder: 0
+    things[HQ.Locations.Store.Shelf.Upgrades.id()] = displayOrder: 1
 
     exits = {}
     exits[Vocabulary.Keys.Directions.West] = HQ.Locations.Checkout.id()

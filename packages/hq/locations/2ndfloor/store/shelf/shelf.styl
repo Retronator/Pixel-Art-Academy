@@ -26,56 +26,86 @@
 
       .store-item
         position relative
-        padding-right 150px
-        margin 50px 0
+        padding-right 75rem
+        margin 25rem 0
 
         > .description
-          margin-left 30px
+          margin-left 15rem
 
         .buy-area
           position absolute
           top 0
           right 0
-          width 120px
+          width 60rem
 
           .price
             acme-9()
             text-align center
-            margin-bottom 10px
+            margin-bottom 5rem
+
+          .discounter-from
+            position relative
+            top -2rem
+            acme-7()
+            font-weight normal
+            text-decoration none
+            color atariGrey(3)
+
+            &::after
+              content ''
+              position absolute
+              top 50%
+              left -2rem
+              right -2rem
+              height 0
+              border-top 1rem solid
 
           .add-to-cart-button
-            padding 6px 10px
+            padding 3rem 5rem
             width 100%
 
+          .hint
+            background atariCyan(0)
+            border 1rem solid atariCyan(2)
+            text-align center
+            padding 2rem
+
+            &:not-eligible
+              background atariRed(0)
+              border-color atariRed(2)
+
         .bundle
-          margin-left 30px
+          margin-left 15rem
+
+          .bundle-items
+            list-style square
 
     button
       position relative
-      top -4px
-      margin-top 4px
-      background #666
+      top -2rem
+      margin-top 2rem
+      background atariGreen(3)
       uni()
-      color black
+      color atariGreen(0)
       border none
-      border-bottom 4px solid #333
+      border-bottom 2rem solid atariGreen(1)
       cursor pointer
 
       &:focus
-        background: #777
+        background: atariGreen(4)
         outline none
 
       &:hover
-        background: #888
+        background: atariGreen(4)
 
       &:active
         border-bottom none
-        margin-bottom 4px
+        margin-bottom 2rem
         top 0
 
       &:disabled
-        color #444
+        color atariGrey(2)
         cursor default
 
         &:hover
-          background #666
+          background atariGrey(2)

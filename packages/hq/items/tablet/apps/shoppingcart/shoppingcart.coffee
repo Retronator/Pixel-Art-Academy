@@ -5,22 +5,24 @@ HQ = Retronator.HQ
 RA = Retronator.Accounts
 RS = Retronator.Store
 
-class HQ.Items.Tablet.Apps.ShoppingCart extends LOI.Adventure.Item
+class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
   # STATE
   # contents: list of cart items
   #   item: store item object
   #   cartIndex: where to appear in the shopping cart
   #   isGift: boolean if this item will be a gift
-  #
-  @id: -> 'Retronator.HQ.Locations.Store.ShoppingCart'
-  @url: -> 'retronator/store/cart'
+  # showSupporterName: should the transaction show the supporter name or be anonymous (only applies to logged out user)
+  # supporterName: the name that will appear with the transaction (only applies to logged out user)
+  # tip:
+  #   amount: how much extra you're paying to support the game
+  #   message: the message that you can add with the tip
+  # receiptVisible: is the app showing the receipt
+  @id: -> 'Retronator.HQ.Items.Tablet.Apps.ShoppingCart'
+  @url: -> 'shoppingcart'
 
   @register @id()
-  template: -> @constructor.id()
 
-  @fullName: -> "shopping cart"
-
-  @shortName: -> "cart"
+  @fullName: -> "Shopping Cart"
 
   @description: ->
     "
@@ -29,16 +31,36 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends LOI.Adventure.Item
 
   @initialize()
 
+  @initialState: ->
+    contents: []
+    supporterName: null
+    tip:
+      amount: 0
+      message: null
+
   constructor: (@options) ->
     super
-    
-    @addAbilityToActivateByLooking()
+
+    @receipt = new HQ.Items.Tablet.Apps.ShoppingCart.Receipt
+      shoppingCart: @
+      adventure: @options.adventure
+
+    @showHomeScreenButton = new ComputedField =>
+      return true unless state = @state()
+      not state.receiptVisible
+
+  onCreated: ->
+    super
 
     # Get all store items data.
     @subscribe RS.Transactions.Item.all
 
   cartItems: ->
-    items = for cartItem, i in @state().contents
+    state = @state()
+    console.log "shopping cart has state", state
+    return unless state
+
+    items = for cartItem, i in state.contents
       item = RS.Transactions.Item.documents.findOne catalogKey: cartItem.item
       break unless item
 
@@ -61,6 +83,9 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends LOI.Adventure.Item
     # The total price is the sum of the items.
     _.sum (storeItem.item.price for storeItem in @cartItems())
 
+  receiptVisibleClass: ->
+    'receipt-visible' if @state().receiptVisible
+    
   events: ->
     super.concat
       'click .remove-from-cart-button': @onClickRemoveFromCartButton
@@ -70,10 +95,11 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends LOI.Adventure.Item
     item = @currentData()
 
     # Remove the item's ID from the shopping cart contents.
-    store = @options.adventure.gameState().locations[HQ.Locations.Store.id()]
-    shoppingCart = store.things[HQ.Locations.Store.ShoppingCart.id()]
+    tablet = @options.adventure.inventory HQ.Items.Tablet
+    shoppingCart = tablet.addApp HQ.Items.Tablet.Apps.ShoppingCart
 
-    shoppingCart.contents.splice item.cartIndex, 1
+    shoppingCartState = shoppingCart.state()
+    shoppingCartState.contents.splice item.cartIndex, 1
 
     @options.adventure.gameState.updated()
 

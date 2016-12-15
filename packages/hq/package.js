@@ -61,10 +61,15 @@ Package.onUse(function(api) {
   api.addFiles('locations/2ndfloor/checkout/checkout.coffee');
   api.addAssets('locations/2ndfloor/checkout/retro.script', ['client', 'server']);
 
+  api.addFiles('locations/2ndfloor/checkout/display/display.coffee');
+  api.addFiles('locations/2ndfloor/checkout/display/display.html');
+  api.addFiles('locations/2ndfloor/checkout/display/display.styl');
+
   api.addFiles('locations/2ndfloor/store/shelf/shelf.coffee');
   api.addFiles('locations/2ndfloor/store/shelf/shelf.html');
   api.addFiles('locations/2ndfloor/store/shelf/shelf.styl');
-  api.addFiles('locations/2ndfloor/store/shelf/shelf-preorders.coffee');
+  api.addFiles('locations/2ndfloor/store/shelf/shelf-game.coffee');
+  api.addFiles('locations/2ndfloor/store/shelf/shelf-upgrades.coffee');
 
   api.addFiles('locations/3rdfloor/chillout/chillout.coffee');
 

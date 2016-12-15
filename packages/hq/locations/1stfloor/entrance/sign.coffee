@@ -9,8 +9,6 @@ Talking = LOI.Adventure.Ability.Talking
 class HQ.Locations.Entrance.Sign extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.Locations.Entrance.Sign'
 
-  @register @id()
-
   @fullName: -> "instructions sign"
 
   @shortName: -> "sign"

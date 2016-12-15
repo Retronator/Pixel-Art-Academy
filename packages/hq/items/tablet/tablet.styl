@@ -1,6 +1,14 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .retronator-hq-items-tablet
+  position fixed
+  z-index 2
+
+  &.overlaid
+    .lands-of-illusions-components-overlay
+      .background
+        background none
+
   .tablet
     position absolute
     bottom -300rem

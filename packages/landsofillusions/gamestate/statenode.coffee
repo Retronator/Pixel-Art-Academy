@@ -10,7 +10,8 @@ class LOI.StateNode
     state = new ReactiveField null
 
     # We want the state node to behave as a function to which we pass an item ID of the instance we want.
-    stateNode = (id) ->
+    stateNode = (classOrId) ->
+      id = _.thingId classOrId
       console.log "State node searching for id", id, instances[id] if LOI.debug
       instancesUpdatedDependency.depend()
       instances[id]
@@ -41,6 +42,10 @@ class LOI.StateNode
       for newKey in newKeys
         constructor = options.classProvider.getClassForId newKey
 
+        unless constructor
+          console.error "Invalid thing with key", newKey, "in state node", stateNode
+          continue
+
         # We create the instance in a non-reactive context so that
         # reruns of this autorun don't invalidate instance's autoruns.
         instance = null
@@ -54,8 +59,11 @@ class LOI.StateNode
         instances[retiredKey].destroy?()
         delete instances[retiredKey]
 
+      console.log "New state node instances are", instances if LOI.debug
+
       # Update states of instances.
       for instanceKey, instance of instances
+        console.log "State node is updating state of", instanceKey, "with state", newState[instanceKey] if LOI.debug
         instance.state newState[instanceKey]
 
       # Notify of the change if we had any new or removed instances.

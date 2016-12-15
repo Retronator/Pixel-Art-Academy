@@ -1,5 +1,5 @@
-<template name="Retronator.HQ.Locations.Store.Checkout.Receipt">
-  <div class="retronator-hq-locations-store-checkout-receipt">
+<template name="Retronator.HQ.Items.Tablet.Apps.ShoppingCart.Receipt">
+  <div class="retronator-hq-items-tablet-apps-shopping-cart-receipt">
     {{> LandsOfIllusions.Components.BackButton}}
     <div class="receipt-area">
       <script src="https://checkout.stripe.com/checkout.js"></script>
@@ -9,79 +9,94 @@
         </div>
       {{else}}
         {{#if receiptItems.length}}
-          <h2>We appreciate your support</h2>
-          <div class="support-area">
-            <div class="tip-area area">
-              <p>Show your name among supporters:</p>
-              {{#if showSupporterName}}
-                <p>
+          <div class="receipt">
+            <h2>Retronator<br/>Store</h2>
+            <div>----------------------</div>
+            <ol class="shopping-cart-items">
+              {{#each receiptItems}}
+                <li class="cart-item">
+                  <span class="name">
+                    {{> t9n item.name}}
+                    {{#if isGift}}
+                      (gift)
+                    {{/if}}
+                  </span>
+                  <span class="price">${{item.price}}</span>
+                </li>
+              {{/each}}
+            </ol>
+            <div>----------------------</div>
+            <ol class="receipt-items">
+              <li class="receipt-item">
+                <span class="name">Subtotal</span>
+                <span class="price">${{itemsPrice}}</span>
+              </li>
+            </ol>
+            <div class="support-area">
+              <p>Show your name<br/>among supporters:</p>
+              <p>
+                {{#if showSupporterName}}
                   {{#if currentUser}}
                     {{> Retronator.Store.Pages.Account.SupporterName}}
                   {{else}}
-                    <input class="supporter-name" placeholder="{{anonymousPlaceholder}}" value="{{supporterName}}"/>
+                    <input class="supporter-name" placeholder="{{t7e 'Your name here'}}" value="{{supporterName}}"/>
                   {{/if}}
-                </p>
-              {{/if}}
+                {{else}}
+                  <input class="supporter-name" placeholder="{{t7e '/'}}" disabled />
+                {{/if}}
+              </p>
               <p>
                 <label class="anonymous-area">
-                  <input class="anonymous-checkbox" type="checkbox" {{anonymousCheckboxAttributes}} /> I prefer to be anonymous.
+                  <input class="anonymous-checkbox" type="checkbox" {{anonymousCheckboxAttributes}} /><span class="label">I prefer to be anonymous.</span>
                 </label>
               </p>
               <p>Add an optional tip:<br/>
-                <input class="tip-amount" type="number" step="5" min="0" value="{{state.tip.amount}}"/>
+                <span class="tip-amount-area"><input class="tip-amount" type="number" step="5" min="0" value="{{state.tip.amount}}"/></span>
+              </p>
+              <p>
+                Include a message with your tip:
               </p>
               {{#if state.tip.amount}}
-                <p>
-                  Include a message with your tip:
-                </p>
-                <textarea class="tip-message">{{state.tip.message}}</textarea>
-                <p>
-                  * It will appear in the recent purchases list.
-                </p>
+                <textarea class="tip-message" placeholder="{{t7e 'Write your message here'}}">{{state.tip.message}}</textarea>
+              {{else}}
+                <textarea class="tip-message" disabled></textarea>
               {{/if}}
+              <p>
+                * It will appear in the recent purchases list.
+              </p>
             </div>
-            <div class="recent-purchases-area area">
-              <h3>Top recent purchases</h3>
-              {{> Retronator.Store.Components.TopSupporters topRecentTransactions}}
+            <ol class="receipt-items">
+              <li class="receipt-item">
+                <span class="name">Subtotal</span>
+                <span class="price">${{itemsPrice}}</span>
+              </li>
+              <li class="receipt-item">
+                <span class="name">Tip</span>
+                <span class="price">${{state.tip.amount}}</span>
+              </li>
+              {{#if creditApplied}}
+                <li class="receipt-item">
+                  <span class="name">Store credit</span>
+                  <span class="price">-${{creditApplied}}</span>
+                </li>
+              {{/if}}
+              <li class="receipt-item total">
+                <span class="name">Total</span>
+                <span class="price">${{paymentAmount}}</span>
+              </li>
+            </ol>
+            <p>======================</p>
+            <div class="receipt-bottom">
+              <p>Thank you for your support!</p>
             </div>
           </div>
-          <table class="shopping-cart-items">
-            {{#each receiptItems}}
-              <tr class="cart-item">
-                <td class="name">
-                  {{> t9n item.name}}
-                  {{#if isGift}}
-                    (gift)
-                  {{/if}}
-                </td>
-                <td class="price">${{item.price}}</td>
-              </tr>
-            {{/each}}
-            {{#if state.tip.amount}}
-              <tr class="store-item">
-                <td class="name">Tip</td>
-                <td class="price">${{state.tip.amount}}</td>
-              </tr>
-            {{/if}}
-            {{#if creditApplied}}
-              <tr class="store-item">
-                <td class="name">Store credit</td>
-                <td class="price">-${{creditApplied}}</td>
-              </tr>
-            {{/if}}
-            <tr class="total">
-              <td class="name">Total</td>
-              <td class="price">${{paymentAmount}}</td>
-            </tr>
-          </table>
-          <h2>Checkout</h2>
           <p>Ready to purchase?</p>
           {{#if creditApplied}}
             {{#if paymentAmount}}
-              ${{creditApplied}} will be used from your existing store balance.
-              You can pay the remaining ${{paymentAmount}} with a credit card.
+              <p>${{creditApplied}} will be used from your existing store balance.
+                You can pay the remaining ${{paymentAmount}} with a credit card.</p>
             {{else}}
-              Your purchase will be covered with your existing store balance. Simply confirm the payment below.
+              <p>Your purchase will be covered with your existing store balance. Simply confirm the payment below.</p>
             {{/if}}
           {{/if}}
           {{#if purchaseError}}
@@ -92,28 +107,30 @@
             </div>
           {{/if}}
           <div class="actions">
-            {{#if stripeInitialized}}
-              <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
-                {{#if submittingPayment}}
-                  Submitting …
-                {{else}}
-                  {{#if paymentAmount}}
-                    Checkout with Stripe
+            <p>
+              {{#if stripeInitialized}}
+                <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
+                  {{#if submittingPayment}}
+                    Submitting …
                   {{else}}
-                    Confirm purchase
+                    {{#if paymentAmount}}
+                      Checkout with Stripe
+                    {{else}}
+                      Confirm purchase
+                    {{/if}}
                   {{/if}}
-                {{/if}}
-              </button>
-            {{else}}
-              Please wait while Stripe Checkout initializes …
-            {{/if}}
+                </button>
+              {{else}}
+                Please wait while Stripe Checkout initializes …
+              {{/if}}
+            </p>
           </div>
           {{#if paymentAmount}}
-            <small class="payment-smallprint">* Your credit card won't be charged until you get access to the game. You
-              will be emailed beforehand in case you need to cancel your purchase at that time.</small>
+            <small class="payment-smallprint"><p>* Your credit card won't be charged until you get access to the game. You
+              will be emailed beforehand in case you need to cancel your purchase at that time.</p></small>
           {{/if}}
         {{else}}
-          <p>You do not have any items in your shopping cart. <a href="{{flowRouterPath 'store'}}">Return to the store</a></p>
+          <p>Cannot show receipt. You do not have any items in your shopping cart.</p>
         {{/if}}
       {{/if}}
     </div>

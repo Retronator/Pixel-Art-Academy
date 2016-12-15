@@ -6,25 +6,13 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 HQ = Retronator.HQ
 
-class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends LOI.Adventure.Item
-  @id: -> 'Retronator.HQ.Locations.Store.Checkout.Receipt'
-  @url: -> 'retronator/store/checkout/receipt'
-
-  @register @id()
-  template: -> @constructor.id()
-
-  @fullName: -> "purchase receipt"
-
-  @shortName: -> "receipt"
-
-  @description: ->
-    "
-      The purchase receipt shows what you're buying at the store.
-    "
-
-  @initialize()
+class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
+  @register 'Retronator.HQ.Items.Tablet.Apps.ShoppingCart.Receipt'
 
   constructor: (@options) ->
+    super
+
+  onCreated: ->
     super
 
     # Get all store items data.
@@ -41,12 +29,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends LOI.Adventure.Item
 
     @stripeInitialized = new ReactiveField false
 
-    @showSupporterNameForLoggedOut = new ReactiveField true
-
     @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
-
-  onCreated: ->
-    super
 
     @purchaseError = new ReactiveField null
     @submittingPayment = new ReactiveField false
@@ -82,38 +65,52 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends LOI.Adventure.Item
     @_stripeCheckout.close()
     $('.stripe_checkout_app').remove()
 
+  state: ->
+    @options.shoppingCart.state()
+
   showSupporterName: ->
     user = Retronator.user()
 
-    if user then user.profile?.showSupporterName else @showSupporterNameForLoggedOut()
+    if user then user.profile?.showSupporterName else @state().showSupporterName
 
   supporterName: ->
     return unless @showSupporterName()
 
     user = Retronator.user()
 
-    if user then user.profile.supporterName else @state().supporterName()
+    if user then user.profile.supporterName else @state().supporterName
 
   anonymousCheckboxAttributes: ->
     checked: true unless @showSupporterName()
 
   receiptItems: ->
-    items = for receiptItem in @state().contents
+    for receiptItem in @state().contents
       item = RS.Transactions.Item.documents.findOne catalogKey: receiptItem.item
-      break unless item
+      continue unless item
 
       item: item
       isGift: receiptItem.isGift
-
-    console.log "rec", items, @state()
-
-    items
+    
+  itemsPrice: ->
+    # The sum of all items to be purchased.
+    _.sum (storeItem.item.price for storeItem in @receiptItems())
 
   totalPrice: ->
-    # The total price is the sum of the items plus the tip.
-    itemsPrice = _.sum (storeItem.item.price for storeItem in @receiptItems())
-    
-    itemsPrice + (@state().tip.amount or 0)
+    # Total is the items price with added tip.
+    @itemsPrice() + (@state().tip.amount or 0)
+
+  creditApplied: ->
+    storeCredit = Retronator.user()?.store?.credit or 0
+
+    # Credit is applied up to the amount in the shopping cart.
+    Math.min storeCredit, @totalPrice()
+
+  paymentAmount: ->
+    # See how much the user will need to pay to complete this transaction, after the credit is applied.
+    storeCredit = Retronator.user()?.store?.credit or 0
+
+    # Existing store credit decreases the needed amount to pay, but of course not below zero.
+    Math.max 0, @totalPrice() - storeCredit
 
   topRecentTransactions: ->
     # First get the existing top 10.
@@ -143,24 +140,8 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends LOI.Adventure.Item
     recentTransactions.splice insertIndex, 0, newTransaction
     recentTransactions
 
-  anonymousPlaceholder: ->
-    AB.translate(@_userBabelSubscription, 'Anonymous').text
-
   submitPaymentButtonAttributes: ->
     disabled: true if @submittingPayment()
-
-  creditApplied: ->
-    storeCredit = Retronator.user()?.store?.credit or 0
-
-    # Credit is applied up to the amount in the shopping cart.
-    Math.min storeCredit, @totalPrice()
-
-  paymentAmount: ->
-    # See how much the user will need to pay to complete this transaction, after the credit is applied.
-    storeCredit = Retronator.user()?.store?.credit or 0
-
-    # Existing store credit decreases the needed amount to pay, but of course not below zero.
-    Math.max 0, @totalPrice() - storeCredit
 
   events: ->
     super.concat
@@ -175,11 +156,12 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends LOI.Adventure.Item
       Meteor.call "Retronator.Accounts.User.setShowSupporterName", not event.target.checked
 
     else
-      @showSupporterNameForLoggedOut not event.target.checked
+      @state().showSupporterName = not event.target.checked
+      @options.adventure.gameState.updated()
 
   onInputSupporterName: (event) ->
     name = $(event.target).val()
-    @state().supporterName name
+    @state().supporterName = name
     @options.adventure.gameState.updated()
 
   onInputTipAmount: (event) ->
@@ -219,7 +201,6 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends LOI.Adventure.Item
     if paymentAmount
       # The user needs to make a payment, so open checkout.
       @_stripeCheckout.open
-        description: 'Things you are buying: 1\n, 2, 3'
         amount: paymentAmount * 100
 
     else

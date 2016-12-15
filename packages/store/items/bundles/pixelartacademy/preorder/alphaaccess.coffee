@@ -3,7 +3,7 @@ RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
 class RS.Items.Bundles.PixelArtAcademyPreOrderAlphaAccessUpgrade extends RS.Items.Bundles.PixelArtAcademyPreorderUpgrade
-  @type: 'Retronator.Store.Items.Bundles.PixelArtAcademyPreOrderFoundationYearUpgrade'
+  @type: 'Retronator.Store.Items.Bundles.PixelArtAcademyPreOrderAlphaAccessUpgrade'
   @register @type, @
 
   @eligiblePrerequisiteItems: [
@@ -16,10 +16,10 @@ class RS.Items.Bundles.PixelArtAcademyPreOrderAlphaAccessUpgrade extends RS.Item
 
   @create: ->
     super
-      catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.FoundationYearUpgrade
+      catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccessUpgrade
       
-      name: "ADD ON: Alpha access with Retropolis Nightlife Pass"
-      description: "Only available as a pre-order, get the Retropolis Nightlife Pass together with alpha access."
+      name: "Upgrade: Alpha access with Retropolis Nightlife Pass"
+      description: "Only available as a pre-order, get alpha access together with the Retropolis Nightlife Pass."
 
       price: 20
 

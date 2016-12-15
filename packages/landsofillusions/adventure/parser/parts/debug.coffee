@@ -22,3 +22,17 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       @options.adventure.gameState.updated()
 
       return true
+
+    if command.has 'reset tablet apps'
+      console.log "We are resetting all apps on the tablet." if LOI.debug
+
+      tablet = @options.adventure.inventory Retronator.HQ.Items.Tablet
+      apps = tablet.state().apps
+
+      for appId, app of apps
+        appClass = Retronator.HQ.Items.Tablet.OS.App.getClassForId appId
+        apps[appId] = appClass.initialState()
+
+      @options.adventure.gameState.updated()
+
+      return true

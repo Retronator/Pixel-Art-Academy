@@ -36,6 +36,7 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
 
     @apps = new LOI.StateNode
       adventure: @options.adventure
+      tablet: @
       classProvider: HQ.Items.Tablet.OS.App
 
     # Send state updates to the OS and apps.
@@ -53,11 +54,30 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
     
   addApp: (appClassOrId) ->
     appId = _.thingId appClassOrId
-    @state().apps[appId] = {}
-    @options.adventure.gameState.updated()
+    appClass = HQ.Items.Tablet.OS.App.getClassForId appId
+
+    console.log "Adding app", appId, appClass if HQ.debug
+
+    # Add app unless it's already been added.
+    stateApps = @state().apps
+    unless stateApps[appId]
+      stateApps[appId] = appClass.initialState()
+      @options.adventure.gameState.updated()
+
+    # Return the new (or existing app).
+    @apps appId
 
   activatedClass: ->
     'activated' if (@isRendered() and @activating()) or @activated()
+
+  # Since the tablet can also be activated by itself, this tells us if we're the main active item (in which case the url
+  # dictates the app) or we've been activated from code, in which case we can only rely on tablet state.
+  isMainActiveItem: ->
+    @options.adventure.activeItemId() is @id()
+
+  overlaidClass: ->
+    # The tablet is overlaying other items if it's not the main active item.
+    'overlaid' unless @isMainActiveItem()
 
   onActivate: (finishedActivatingCallback) ->
     Meteor.setTimeout =>

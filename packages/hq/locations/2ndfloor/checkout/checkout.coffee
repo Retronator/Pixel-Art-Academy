@@ -36,10 +36,18 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
       location: @
       floor: 2
 
+    @_itemsSubscription = @subscribe RS.Transactions.Item.all
+
+  destroy: ->
+    super
+
+    @_itemsSubscription.stop()
+
   @initialState: ->
     things = {}
     things[PAA.Cast.Retro.id()] = displayOrder: 0
-    things[HQ.Actors.ElevatorButton.id()] = displayOrder: 1
+    things[HQ.Locations.Checkout.Display.id()] = displayOrder: 1
+    things[HQ.Actors.ElevatorButton.id()] = displayOrder: 2
 
     exits = {}
     exits[Vocabulary.Keys.Directions.North] = HQ.Locations.Steps.id()
@@ -67,12 +75,12 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
         retro: retro
         
       retroDialog.setCallbacks
-        AnalyzeShoppingCart: (complete) =>
+        AnalyzeUser: (complete) =>
           shoppingCart = []
-          tablet = @options.adventure.inventory[HQ.Items.Tablet.id()]
+          tablet = @options.adventure.inventory HQ.Items.Tablet
           
           if tablet
-            shoppingCartApp = tablet.apps[HQ.Items.Tablet.Apps.ShoppingCart.id()]
+            shoppingCartApp = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
             shoppingCart = shoppingCartApp?.state().contents
 
           buyingBaseGame = false
@@ -80,39 +88,73 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
 
           console.log "Analyzing shopping cart", shoppingCart
 
-          for item in shoppingCart
-            switch item.catalogKey
-              when RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.BasicGame, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.FullGame, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccess
+          PreOrderKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder
+
+          for cartItem in shoppingCart
+            switch cartItem.item
+              when PreOrderKeys.BasicGame, PreOrderKeys.FullGame, PreOrderKeys.AlphaAccess
                 buyingBaseGame = true
 
-            switch item.catalogKey
-              when RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccessUpgrade, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccess
+            switch cartItem.item
+              when PreOrderKeys.AlphaAccessUpgrade, PreOrderKeys.AlphaAccess
                 buyingAlphaAccess = true
 
+          KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
+
+          eligibleBackerTiers = []
+
+          for tierKey in [KickstarterKeys.BasicGame, KickstarterKeys.FullGame, KickstarterKeys.AlphaAccess]
+            tier = RS.Transactions.Item.documents.findOne(catalogKey: tierKey)?.cast()
+
+            unless tier
+              console.warn "Item for tier", tierKey, "not found."
+              eligibleBackerTiers.push false
+              continue
+
+            try
+              tier.validateEligibility()
+
+            catch
+              eligibleBackerTiers.push false
+              continue
+
+            eligibleBackerTiers.push true
+
+          noRewardBacker = true in eligibleBackerTiers
+
           ephemeralState = retroDialog.ephemeralState()
+          ephemeralState.tablet = if tablet then true else false
           ephemeralState.shoppingCart = shoppingCart
           ephemeralState.buyingBaseGame = buyingBaseGame
           ephemeralState.buyingAlphaAccess = buyingAlphaAccess
+          ephemeralState.noRewardBacker = noRewardBacker
+          ephemeralState.eligibleBackerTiers = eligibleBackerTiers
+
+          console.log "Analyzed user and set ephemeral state to", ephemeralState if HQ.debug
+
           complete()
 
         Checkout: (complete) =>
-          # Create receipt from shopping cart contents.
-          gameState = @options.adventure.gameState()
-          shoppingCart = gameState.locations[HQ.Locations.Store.id()].things[HQ.Locations.Store.ShoppingCart.id()]
-
-          @options.adventure.scriptHelpers.addItemToInventory
-            item: HQ.Locations.Store.Checkout.Receipt
-            state:
-              contents: shoppingCart.contents
-              tip:
-                amount: 0
-                message: null
-
+          # Show the receipt on the tablet.
+          tablet = @options.adventure.inventory HQ.Items.Tablet
+          shoppingCartApp = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
+          shoppingCartApp.state().receiptVisible = true
           @options.adventure.gameState.updated()
+          
+          # Look at display.
+          LOI.Adventure.goToItem HQ.Locations.Checkout.Display
 
-          @options.adventure.scriptHelpers.itemInteraction
-            item: Retronator.HQ.Locations.Store.Checkout.Receipt
-            callback: =>
+          # Activate the tablet so it gets overlaid.
+          tablet.activate()
+
+          # Wait until the tablet is deactivated
+          Tracker.autorun (computation) =>
+            if tablet.deactivated()
+              computation.stop()
+
+              # Return to location
+              @options.adventure.deactivateCurrentItem()
+
               complete()
 
     # Elevator button
