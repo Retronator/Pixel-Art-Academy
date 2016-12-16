@@ -68,12 +68,16 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
         # Update the user of this transaction.
         @findUserForTransaction(transaction)?.onTransactionsUpdated()
 
+  # Subscriptions
   @topRecent: 'Retronator.Store.Transactions.Transaction.topRecent'
   @messages: 'Retronator.Store.Transactions.Transaction.messages'
   @forCurrentUser: 'Retronator.Store.Transactions.Transaction.forCurrentUser'
   @forGivenGiftKeyCode: 'Retronator.Store.Transactions.Transaction.forGivenGiftKeyCode'
   @forReceivedGiftKeyCode: 'Retronator.Store.Transactions.Transaction.forReceivedGiftKeyCode'
 
+  # Methods
+  @insertStripePurchase: 'Retronator.Store.Transactions.Transaction.insertStripePurchase'
+  
   @findUserForTransaction: (transaction) ->
     return unless transaction
 

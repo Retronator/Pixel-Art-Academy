@@ -50,7 +50,12 @@ RS.Transactions.Transaction.create = (options) ->
   transactionId = RS.Transactions.Transaction.documents.insert transaction
 
   # Finally send an email confirmation to the customer.
-  RS.Transactions.Transaction.emailCustomer options
+  try
+    RS.Transactions.Transaction.emailCustomer options
+
+  catch error
+    # We don't really want to throw an exception if only the emailing part failed.
+    console.error "Error while emailing customer about the transaction", error
       
   # Return transactionId if it was created successfully.
   transactionId

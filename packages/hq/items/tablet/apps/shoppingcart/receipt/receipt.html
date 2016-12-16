@@ -5,7 +5,7 @@
       <script src="https://checkout.stripe.com/checkout.js"></script>
       {{#if purchaseCompleted}}
         <div class="purchase-completed">
-          <p>Purchase completed successfully! See your new items in your <a href="{{flowRouterPath 'LandsOfIllusions.Adventure' parameter1='account' parameter2='inventory'}}">inventory</a>.</p>
+          <p>Purchase completed successfully!</p>
         </div>
       {{else}}
         {{#if receiptItems.length}}
@@ -37,12 +37,12 @@
               <p>
                 {{#if showSupporterName}}
                   {{#if currentUser}}
-                    {{> Retronator.Store.Pages.Account.SupporterName}}
+                    {{> Retronator.HQ.Items.Tablet.Apps.Account.SupporterName}}
                   {{else}}
                     <input class="supporter-name" placeholder="{{t7e 'Your name here'}}" value="{{supporterName}}"/>
                   {{/if}}
                 {{else}}
-                  <input class="supporter-name" placeholder="{{t7e '/'}}" disabled />
+                  <input class="supporter-name" placeholder="{{anonymousPlaceholder}}" disabled />
                 {{/if}}
               </p>
               <p>
@@ -59,7 +59,7 @@
               {{#if state.tip.amount}}
                 <textarea class="tip-message" placeholder="{{t7e 'Write your message here'}}">{{state.tip.message}}</textarea>
               {{else}}
-                <textarea class="tip-message" disabled></textarea>
+                <textarea class="tip-message" placeholder="{{t7e 'Add a tip to include a message'}}" disabled></textarea>
               {{/if}}
               <p>
                 * It will appear in the recent purchases list.

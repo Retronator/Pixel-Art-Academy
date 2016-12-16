@@ -10,7 +10,6 @@ Meteor.methods
   'Retronator.Store.Transactions.Transaction.insertStripePurchase': (customer, creditCardToken, payAmount, shoppingCart) ->
     check customer, Match.OptionalOrNull Object
     check customer.email, String if customer?.email
-    check customer.name, String if customer?.name
     check creditCardToken, String
     check payAmount, Number
     check shoppingCart, Match.ShoppingCart

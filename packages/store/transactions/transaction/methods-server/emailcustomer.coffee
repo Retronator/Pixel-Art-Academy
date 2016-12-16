@@ -8,10 +8,6 @@ RS.Transactions.Transaction.emailCustomer = ({customer, payments, shoppingCart})
     console.warning "Email was not sent for customer", customer, "payments", payments, "shoppingCart", shoppingCart
     return
 
-  unless customer.name
-    # We don't have the user's name, which we use below. While it doesn't break things, something's probably wrong.
-    console.warning "Email sent didn't have the customer's name. Customer was", customer, "payments", payments, "shoppingCart", shoppingCart
-
   email = new AT.EmailComposer
   
   email.addParagraph "Hey#{if customer.name then " #{customer.name}" else ""},"

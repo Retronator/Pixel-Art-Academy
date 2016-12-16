@@ -35,6 +35,13 @@ class HQ.Locations.Checkout.Display extends LOI.Adventure.Item
 
   topRecentTransactions: ->
     # Get top recent transactions from the shopping cart receipt component.
+    if tablet = @options.adventure.inventory HQ.Items.Tablet
+      if shoppingCart = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
+        # If receipt is showing, use receipts' top transactions.
+        if shoppingCart.state().receiptVisible
+          return shoppingCart.receipt.topRecentTransactions()
+
+    # We couldn't get to receipt's modified transactions so just show the unmodified ones.
     RS.Components.TopSupporters.topRecentTransactions.find {},
       sort: [
         ['amount', 'desc']

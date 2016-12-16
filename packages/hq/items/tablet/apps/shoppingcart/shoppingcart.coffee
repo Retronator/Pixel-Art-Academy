@@ -33,6 +33,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
 
   @initialState: ->
     contents: []
+    showSupporterName: true
     supporterName: null
     tip:
       amount: 0
@@ -57,7 +58,6 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
 
   cartItems: ->
     state = @state()
-    console.log "shopping cart has state", state
     return unless state
 
     items = for cartItem, i in state.contents

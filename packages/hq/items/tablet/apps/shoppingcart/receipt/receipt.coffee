@@ -38,6 +38,8 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
   onRendered: ->
     super
 
+    $('.retronator-hq-items-tablet').addClass('receipt-visible')
+
     console.log "on rendered", StripeCheckout?
 
     initializeStripeInterval = Meteor.setInterval =>
@@ -61,6 +63,8 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
   onDestroyed: ->
     super
 
+    $('.retronator-hq-items-tablet').removeClass('receipt-visible')
+
     # Clean up after stripe checkout.
     @_stripeCheckout.close()
     $('.stripe_checkout_app').remove()
@@ -79,7 +83,10 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
     user = Retronator.user()
 
     if user then user.profile.supporterName else @state().supporterName
-
+  
+  anonymousPlaceholder: ->
+    AB.translate(@_userBabelSubscription, 'Anonymous').text
+    
   anonymousCheckboxAttributes: ->
     checked: true unless @showSupporterName()
 
@@ -221,7 +228,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
     # Create a payment on the server.
     shoppingCart = @_createShoppingCartObject()
 
-    Meteor.call 'Retronator.Store.Transactions.Transaction.insertStripePurchase', customer, creditCardToken, @paymentAmount(), shoppingCart, (error, data) =>
+    Meteor.call RS.Transactions.Transaction.insertStripePurchase, customer, creditCardToken, @paymentAmount(), shoppingCart, (error, data) =>
       @submittingPayment false
 
       if error
@@ -229,26 +236,25 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
         return
 
       # Purchase is successfully completed.
-      @purchaseCompleted true
-
-      # Clear all inserted payment info.
-      @$('.payment-form input').val('')
-
-      # Remove all purchased items from the shopping cart.
-      @_emptyShoppingCart()
+      @_completePurchase()
 
   _createShoppingCartObject: ->
     items: @receiptItems()
     supporterName: @state().supporterName
     tip: @state().tip
 
-  _emptyShoppingCart: ->
-    store = @options.adventure.gameState().locations[HQ.Locations.Store.id()]
-    shoppingCart = store.things[HQ.Locations.Store.ShoppingCart.id()]
+  _completePurchase: ->
+    @purchaseCompleted true
 
-    shoppingCart.contents = []
+    # Reset the shopping cart after 2 seconds.
+    Meteor.setTimeout =>
+      # Reset the shopping cart state.
+      _.extend @state(), HQ.Items.Tablet.Apps.ShoppingCart.initialState(),
+        receiptVisible: false
 
-    @options.adventure.gameState.updated()
+      @options.adventure.gameState.updated()
+    ,
+      2000
 
   _confirmationPurchaseHandler: ->
     # Create a transaction on the server.
@@ -264,15 +270,10 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
         return
 
       # Purchase is successfully completed.
-      @purchaseCompleted true
-
-      # Clear all inserted payment info.
-      @$('.payment-form input').val('')
-
-      # Reset the shopping cart.
-      @_emptyShoppingCart()
+      @_completePurchase()
 
   _displayError: (error) ->
     errorText = "Error: #{error.reason}"
     errorText = "#{errorText} #{error.details}" if error.details
     @purchaseError errorText
+    console.error error

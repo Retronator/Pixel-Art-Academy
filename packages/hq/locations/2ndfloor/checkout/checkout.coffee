@@ -86,7 +86,7 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
           buyingBaseGame = false
           buyingAlphaAccess = false
 
-          console.log "Analyzing shopping cart", shoppingCart
+          console.log "Analyzing shopping cart", shoppingCart if HQ.debug
 
           PreOrderKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder
 
@@ -124,6 +124,7 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
 
           ephemeralState = retroDialog.ephemeralState()
           ephemeralState.tablet = if tablet then true else false
+          ephemeralState.hasShoppingCartApp = shoppingCartApp?
           ephemeralState.shoppingCart = shoppingCart
           ephemeralState.buyingBaseGame = buyingBaseGame
           ephemeralState.buyingAlphaAccess = buyingAlphaAccess
@@ -147,10 +148,15 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
           # Activate the tablet so it gets overlaid.
           tablet.activate()
 
+          retroDialog.ephemeralState().transactionCanceled = false
+
           # Wait until the tablet is deactivated
           Tracker.autorun (computation) =>
             if tablet.deactivated()
               computation.stop()
+
+              # If receipt is still visible, transaction was canceled.
+              retroDialog.ephemeralState().transactionCanceled = true if shoppingCartApp.state().receiptVisible
 
               # Return to location
               @options.adventure.deactivateCurrentItem()

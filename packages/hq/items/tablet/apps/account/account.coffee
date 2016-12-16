@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -20,3 +21,21 @@ class HQ.Items.Tablet.Apps.Account extends HQ.Items.Tablet.OS.App
 
   onCreated: ->
     super
+
+  class @SupporterName extends AM.DataInputComponent
+    @register 'Retronator.HQ.Items.Tablet.Apps.Account.SupporterName'
+
+    onCreated: ->
+      super
+
+      @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
+      @_receiptBabelSubscription = AB.subscribeNamespace 'Retronator.HQ.Items.Tablet.Apps.ShoppingCart.Receipt'
+
+    load: ->
+      Retronator.user()?.profile?.supporterName
+
+    save: (value) ->
+      Meteor.call "Retronator.Accounts.User.setSupporterName", value
+
+    placeholder: ->
+      AB.translate(@_receiptBabelSubscription, 'Your name here').text

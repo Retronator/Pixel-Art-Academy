@@ -1,5 +1,11 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
+// When we're looking at the receipt overlaid, we should move
+// it to the left to reveal the supporters display behind it.
+.retronator-hq-items-tablet.overlaid.receipt-visible
+  .tablet
+    left -180rem
+
 .retronator-hq-items-tablet-apps-shopping-cart-receipt
   absolute-cover()
   z-index 1
@@ -80,9 +86,6 @@
         text-align right
 
       .support-area
-        .supporter-name[disabled]
-          text-align center
-
         .tip-amount-area
           position relative
           display block

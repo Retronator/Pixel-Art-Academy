@@ -21,7 +21,7 @@ retro: How can I help you today?
 * I'm a backer, but didn't choose a reward. -> [NoRewardBacker] `_noRewardBacker`
 * I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
-* But I don't have the Shopping Cart app. -> [ShoppingCartApp] `HowToBuy`
+* But I don't have the Shopping Cart app. -> [ShoppingCartApp] `HowToBuy and not _hasShoppingCartApp`
 * Can I ask you about Pixel Art Academy? -> [PixelArtAcademy]
 * I would like to ask something else … -> [Contact] `PixelArtAcademy`
 * I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
@@ -124,6 +124,8 @@ retro:
 > Retro hands you your tablet back.
 
 retro: Does everything look correct?
+
+## Checkout
   
 ### Checkout
 
@@ -156,7 +158,7 @@ retro:
 
 ## TransactionCanceledQuestions
 
-* Thanks for the info, let's see that receipt again. `_afterTransactionQuestion`
+* Thanks for the info, let's see that receipt again. -> [Checkout] `_afterTransactionQuestion`
 * I need to change some items first. -> [Change]
 * Where does the purchase show up? -> [PurchaseDisplay]
 * What is the tip message for? -> [TipMessage]
@@ -167,7 +169,7 @@ retro:
 retro: 
     Of course, go ahead. 
     Simply _use tablet_ and open up the Shopping Cart app to remove items.
-    To add new items, just go back to the shelves in the _east_.
+    To add new items, just go back to the shelves to the _east_.
     
 -> [End]
 
@@ -198,7 +200,7 @@ retro:
 
 ## NoBuy
 
-retro: No problem at all. We'll be ready when you are.
+retro: No problem at all. I'll be ready when you are.
 
 -> [Start]
 
@@ -244,14 +246,14 @@ retro: I see you're buying alpha access. You know what this means, right?
 
 retro:
     Alpha access gives you the ability to play the episodes while they are still in development.
-    That's exactly that the episodes will be, in development.
+    The episodes will be exactly that, in development.
     Unfinished, broken, full of bugs.
     For the price tag you're not really getting a big value.
     Purchasing alpha access is mostly meant for supporting the game more.
     As a thank you, you're able to try things out before everyone else.
     
 * Yes, take my money! -> [AlphaAccessYes]
-* I see. I'll need to think more about it.
+* I see. I'll need to think about it.
 
 retro: No problem. You can easily remove items out of your shopping cart.
 
