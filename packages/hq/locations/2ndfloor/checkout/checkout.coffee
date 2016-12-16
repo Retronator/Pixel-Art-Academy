@@ -81,7 +81,7 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
           
           if tablet
             shoppingCartApp = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
-            shoppingCart = shoppingCartApp?.state().contents
+            shoppingCart = shoppingCartApp.state().contents if shoppingCartApp
 
           buyingBaseGame = false
           buyingAlphaAccess = false
@@ -90,14 +90,15 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
 
           PreOrderKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder
 
-          for cartItem in shoppingCart
-            switch cartItem.item
-              when PreOrderKeys.BasicGame, PreOrderKeys.FullGame, PreOrderKeys.AlphaAccess
-                buyingBaseGame = true
+          if shoppingCart
+            for cartItem in shoppingCart
+              switch cartItem.item
+                when PreOrderKeys.BasicGame, PreOrderKeys.FullGame, PreOrderKeys.AlphaAccess
+                  buyingBaseGame = true
 
-            switch cartItem.item
-              when PreOrderKeys.AlphaAccessUpgrade, PreOrderKeys.AlphaAccess
-                buyingAlphaAccess = true
+              switch cartItem.item
+                when PreOrderKeys.AlphaAccessUpgrade, PreOrderKeys.AlphaAccess
+                  buyingAlphaAccess = true
 
           KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
 

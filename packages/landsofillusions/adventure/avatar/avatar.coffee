@@ -37,10 +37,16 @@ class LOI.Avatar
     
   color: ->
     # Return the desired color or use default white.
-    @options.color or
+    color = _.propertyValue @options, 'color'
+
+    color or
       hue: LOI.Assets.Palette.Atari2600.hues.grey
       shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
+  colorObject: ->
+    color = @color()
+    LOI.palette()?.color color.hue, color.shade + 6
+      
   _translateIfAvailable: (key) ->
     translated = AB.translate @_translationSubscription, key
     if translated.language then translated.text else null

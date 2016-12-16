@@ -169,21 +169,13 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     # WARNING: The output of this function should be HTML escaped
     # since the results will be directly injected with triple braces.
+    text = AM.HtmlHelper.escapeText text
 
-    # Extract commands between underscores. First we'll split the text by underscores.
-    underscoreParts = text.split '_'
+    # Create color spans.
+    text = text.replace /%c#([\da-f]{6})(.*?)%%/g, '<span style="color: #$1">$2</span>'
 
-    text = ""
-
-    # Every even string will now be a command.
-    for part, i in underscoreParts
-      if i % 2
-        # Add the command span around the part.
-        text = "#{text}<span class='command'>#{AM.HtmlHelper.escapeText part}</span>"
-
-      else
-        # Simply add the escaped text.
-        text = "#{text}#{AM.HtmlHelper.escapeText part}"
+    # Extract commands between underscores.
+    text = text.replace /_(.*?)_/g, '<span class="command">$1</span>'
 
     text
 
@@ -288,6 +280,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     # We have an actor that is saying this. Collect all the dialog lines in a row by the same actor.
     dialogLines = [dialogLine]
     scriptNode = dialogLine
+    dialogColor = dialogLine.actor.avatar.colorObject()?.getHexString()
 
     while scriptNode = scriptNode.next
       # Search for another dialog line by the same actor.
@@ -301,18 +294,20 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     # Add a new paragraph to the narrative for each line.
     for dialogLine in dialogLines
+      start = "%c##{dialogColor}"
       text = @_evaluateLine dialogLine
+      end = '%%'
 
       # Add the intro line at the start.
       if dialogLine is _.first dialogLines
-        text = "#{dialogLine.actor.avatar.shortName()} says: \"#{text}"
+        start = "#{dialogLine.actor.avatar.shortName()} says: #{start}\""
 
       # Add the closing quote at the end.
       if dialogLine is _.last dialogLines
-        text = "#{text}\""
+        end = "\"#{end}"
 
       # Present the text to the player.
-      @narrative.addText text
+      @narrative.addText "#{start}#{text}#{end}"
 
     # Wait for player's command to continue.
     @_pausedDialogLines dialogLines
