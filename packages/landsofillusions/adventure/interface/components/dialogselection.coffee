@@ -66,6 +66,9 @@ class LOI.Adventure.Interface.Components.DialogSelection
     # Capture key events.
     $(document).on 'keydown.dialogSelection', (event) =>
       @onKeyDown event
+      
+    # Use this to pause dialog selection handling.
+    @paused = new ReactiveField false
 
   destroy: ->
     # Remove key events.
@@ -79,7 +82,7 @@ class LOI.Adventure.Interface.Components.DialogSelection
     @options.interface.options.adventure.currentLocation().director().scriptTransition @choiceNode(), selectedDialogLine
 
   onKeyDown: (event) ->
-    return unless @choiceNode()
+    return unless @choiceNode() and not @paused()
 
     console.log "Key down is being processed in dialog selection." if LOI.debug
 

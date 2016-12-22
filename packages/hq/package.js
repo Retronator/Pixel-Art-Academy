@@ -84,8 +84,12 @@ Package.onUse(function(api) {
   api.addFiles('locations/3rdfloor/landsofillusions/hallway/hallway.coffee');
   api.addAssets('locations/3rdfloor/landsofillusions/hallway/operator.script', ['client', 'server']);
 
-  api.addFiles('locations/3rdfloor/landsofillusions/cabin/cabin.coffee');
-  api.addAssets('locations/3rdfloor/landsofillusions/cabin/operator.script', ['client', 'server']);
+  api.addFiles('locations/3rdfloor/landsofillusions/room/room.coffee');
+  api.addAssets('locations/3rdfloor/landsofillusions/room/operator.script', ['client', 'server']);
+
+  api.addFiles('locations/3rdfloor/landsofillusions/room/chair/chair.coffee');
+  api.addFiles('locations/3rdfloor/landsofillusions/room/chair/chair.html');
+  api.addFiles('locations/3rdfloor/landsofillusions/room/chair/chair.styl');
 
   api.addFiles('locations/4thfloor/studio/studio.coffee');
 

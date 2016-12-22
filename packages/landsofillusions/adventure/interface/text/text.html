@@ -42,12 +42,16 @@
           </div>
           {{#if showCommandLine}}
             <div class="command-line">
-              &gt;
-              {{#if hoveredCommand}}
-                {{hoveredCommand}}
+              {{#if waitingKeypress}}
+                …
               {{else}}
-               {{commandInput.command}}<span class="caret {{caretIdleClass}}">■</span>
-             {{/if}}
+                &gt;
+                {{#if hoveredCommand}}
+                  {{hoveredCommand}}
+                {{else}}
+                 {{commandInput.command}}<span class="caret {{caretIdleClass}}">■</span>
+               {{/if}}
+              {{/if}}
               <input class="dummy-input"/>
             </div>
           {{/if}}

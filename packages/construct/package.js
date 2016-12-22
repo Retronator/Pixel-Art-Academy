@@ -12,19 +12,31 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('retronator:hq');
 
   api.export('LandsOfIllusions');
 
   api.addFiles('construct.coffee');
 
-  // Pages
+  // Actors
 
-  api.addFiles('pages/pages.coffee');
+  api.addFiles('actors/actors.coffee');
+  api.addFiles('actors/captain.coffee');
 
-  api.addFiles('pages/login/login.html');
-  api.addFiles('pages/login/login.coffee');
+  // Locations
 
-  api.addFiles('pages/account/account.html');
-  api.addFiles('pages/account/account.styl');
-  api.addFiles('pages/account/account.coffee');
+  api.addFiles('locations/locations.coffee');
+  
+  api.addFiles('locations/loading/loading.coffee');
+  api.addFiles('locations/loading/loading.styl');
+  api.addAssets('locations/loading/captain.script', ['client', 'server']);
+
+  api.addFiles('locations/loading/tv/tv.coffee');
+  api.addFiles('locations/loading/tv/tv.html');
+  api.addFiles('locations/loading/tv/tv.styl');
+
+  api.addFiles('locations/c3/c3.coffee');
+  api.addFiles('locations/c3/entrance/entrance.coffee');
+  api.addFiles('locations/c3/lobby/lobby.coffee');
+
 });

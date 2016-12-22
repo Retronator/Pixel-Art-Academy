@@ -12,6 +12,7 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
   @url: -> 'retronator/landsofillusions/hallway'
   @scriptUrls: -> [
     'retronator_hq/hq.script'
+    'retronator_hq/actors/elevatorbutton.script'
     'retronator_hq/locations/3rdfloor/landsofillusions/hallway/operator.script'
   ]
 
@@ -19,7 +20,7 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
   @shortName: -> "hallway"
   @description: ->
     "
-      The narrow hallway leads from the reception deck towards a number of adjacent cabins to the west.
+      The narrow hallway leads from the reception deck towards a number of adjacent rooms to the west.
       Elevator access is also available to the east.
     "
   
@@ -31,7 +32,7 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
 
     exits = {}
     exits[Vocabulary.Keys.Directions.North] = HQ.Locations.LandsOfIllusions.id()
-    exits[Vocabulary.Keys.Directions.West] = HQ.Locations.LandsOfIllusions.Cabin.id()
+    exits[Vocabulary.Keys.Directions.West] = HQ.Locations.LandsOfIllusions.Room.id()
 
     _.merge {}, super,
       things: things
@@ -61,6 +62,7 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
         return
 
       return unless operator = @things HQ.Actors.Operator.id()
+      return unless operator.ready()
       computation.stop()
 
       operatorDialog = @scripts['Retronator.HQ.Locations.LandsOfIllusions.Hallway.Scripts.Operator']
@@ -74,7 +76,7 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
           @options.adventure.scriptHelpers.moveThingBetweenLocations
             thing: HQ.Actors.Operator
             sourceLocation: @
-            destinationLocation: HQ.Locations.LandsOfIllusions.Cabin
+            destinationLocation: HQ.Locations.LandsOfIllusions.Room
 
           complete()
 

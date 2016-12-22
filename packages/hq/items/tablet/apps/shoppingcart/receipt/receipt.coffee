@@ -40,11 +40,8 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
 
     $('.retronator-hq-items-tablet').addClass('receipt-visible')
 
-    console.log "on rendered", StripeCheckout?
-
     initializeStripeInterval = Meteor.setInterval =>
       # Wait until checkout is ready.
-      console.log "ready?", StripeCheckout?
       return unless StripeCheckout?
 
       Meteor.clearInterval initializeStripeInterval
@@ -59,6 +56,8 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
       @stripeInitialized true
     ,
       1
+
+    @_scrollToNewSupporter()
 
   onDestroyed: ->
     super
@@ -193,6 +192,14 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends AM.Component
 
     @state().tip.amount = value
     @options.adventure.gameState.updated()
+
+    @_scrollToNewSupporter()
+
+  _scrollToNewSupporter: ->
+    Tracker.afterFlush =>
+      $('.retronator-store-components-top-supporters .new.supporter').velocity('stop').velocity 'scroll',
+        duration: 200
+        container: $('.retronator-hq-locations-checkout-display .screen')
 
   onInputTipMessage: (event) ->
     message = $(event.target).val()

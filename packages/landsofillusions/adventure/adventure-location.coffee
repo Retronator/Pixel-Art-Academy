@@ -27,6 +27,10 @@ class LOI.Adventure extends LOI.Adventure
 
         currentLocationClass = LOI.Adventure.Location.getClassForId currentLocationId
 
+        unless currentLocationClass
+          console.error "Location class not found", currentLocationId
+          return
+
         console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug
 
         # Create a non-reactive reference so we can refer to it later.

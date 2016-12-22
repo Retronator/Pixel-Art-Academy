@@ -29,7 +29,7 @@ operator: Great! If you would please scan your keycard …
 -> [FirstTime] `not FirstTime`
 
 operator: 
-    Thank you! Your usual cabin is ready for you. 
+    Thank you! Your usual room is ready for you. 
     Feel free to head over at any time you'd like.
     
 -> [Seletion]
@@ -37,7 +37,7 @@ operator:
 ## FirstTime
 
 operator: 
-    Thank you! I have a cabin available for you. 
+    Thank you! I have a room available for you. 
     It'll be through the hallway on your left.
 
 > You mistakenly look to the right.

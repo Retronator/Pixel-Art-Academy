@@ -1,0 +1,193 @@
+# LandsOfIllusions.Construct.Locations.Loading.Scripts.Captain
+
+## Start
+
+> A man with sunglasses suddenly appears.
+
+-> [FirstTime] `not FirstTime`
+
+captain: Welcome back.
+
+-> [GetStarted] `not MainDialog`
+
+-> [End]
+
+<!-- INTRODUCTION DIALOG -->
+
+## FirstTime
+
+captain: Welcome to Lands of Illusions!
+    
+* Where am I?
+
+## WhereAmI
+
+captain: 
+    Right now you are inside a loading program called the Construct. 
+    Unfortunately you cannot enter the Lands of Illusions world yourself.
+    You will need to create an artificial intelligence agent — an AI character — that will act in the world for you.
+
+## IntroQuestions
+
+* Alright, let's get this started. -> [GetStarted]
+* The characters … They're AI programs? -> [Character]
+* Couldn't I just inhabit my own avatar? -> [Avatar] `Character`
+* I could just create a character like myself. -> [SelfAvatar] `Avatar`
+* How do I get out of here? -> [HowToExit]
+
+## Character
+
+captain: 
+    Yes. However, we are on the brink of strong AI. 
+    The characters are pretty much alive, depending on your definition of alive.
+    If alive means you can perceive the world and act upon it with free will, then our characters are just as alive as you are.
+    
+* But they don't live in the real world. -> [RealWorld]
+* They have free will? -> [FreeWill]
+
+## RealWorld
+
+captain:
+    Does it matter? They are alive under the constraints of their world.
+    Just like you are limited in your own.
+    
+-> [IntroQuestions]
+
+## FreeWill
+
+captain:
+    Indeed. When you're not connected to Lands of Illusions, life goes on. 
+    Your characters are quite capable to live on their own without you.
+    You have a symbiotic link with them so you can instruct them what to do, but in the end, it's their choice to listen to you or not.
+    Take good care of them and they will take good care of you.
+    
+-> [IntroQuestions]
+
+## Avatar
+
+captain:
+    There is good research out there that makes an agent a better choice.
+    By interacting with an autonomous being you form a social bond that will help your learning.
+    
+<!-- TODO: trigger Protege Effect Illustrapedia entry. -->
+    
+-> [IntroQuestions]
+
+##  SelfAvatar    
+
+captain:
+    That is good middle ground. 
+    But remember, they are still a separate entity.
+    They will live on their own while you're not there.
+
+-> [IntroQuestions]
+
+## HowToExit
+
+captain:
+    At any time while in Lands of Illusions, either in the Construct or in the simulations, you can always _talk to Panzer_.
+    He can take you out of immersion or help with switching characters.
+    
+-> [IntroQuestions]
+
+## GetStarted
+
+-> [NoCharacters] `not @user.characters.length and not _NoCharacters`
+
+-> [MainDialog]
+
+<!-- MAIN DIALOG -->
+
+## MainDialog
+
+captain: How can I help you? `not _MainQuestions`
+captain: Any more questions? `_MainQuestions`
+
+## MainQuestions
+
+* How do I select a character again? -> [SelectCharacter]
+* Take me to the character center. -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+* Tell me about the Construct again. -> [WhereAmI]
+* I want to exit Lands of Illusions. -> [Exit]
+* Thank you, that's all for now.
+
+captain: Good luck.
+
+-> [End]
+
+## SelectCharacter
+
+captain:
+    To do that you can _use TV_ and we'll establish a neural link with the character you want.
+
+-> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+-> [NoEditor]
+
+## NoCharacters
+
+captain: 
+    First you will need to select a character.
+    You can do that if you _use the TV_.
+
+-> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+-> [NoEditor]
+
+## NoEditor
+
+captain:
+    Since you only have the basic game, you can only select from existing characters.
+    If you wanted to create your own character, you can purchase the Avatar Editor upgrade in the Retronator HQ store.
+    
+* That's OK. I'll choose one. -> [NoEditorEnd]
+* Oh, that would be sweet! Let me go to the store, I'll be back.
+
+captain:
+    A generous decision. Your purchase helps support the development of the game.
+    Let me disconnect you and I'll be here when you're ready.
+    
+* Sounds good to me!
+
+-> [Exit]
+
+## NoEditorEnd
+
+captain:
+    Great. The TV there when you're ready.
+    
+-> [MainDialog]
+
+## HasEditor
+
+captain:
+    Since you own the Avatar Editor you can also design a character on your own.
+    The staff at the Character Construction Center will help you with that.
+    Are you ready to do so?
+     
+* Let's go! -> [C3]
+* One more thing …
+
+captain: Of course, how can I help?
+
+-> [MainQuestions]
+
+## C3
+
+captain: Perfect. Operator, load the C3 program.
+
+### C3
+
+-> [End]
+
+## Exit
+
+captain: 
+    Alright. Operator, engage disconnect protocol.
+
+operator:
+    Roger that, unplugging now.
+
+### Exit
+
+-> [End]
+
+## End

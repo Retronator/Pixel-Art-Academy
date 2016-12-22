@@ -97,8 +97,9 @@ Wait 2000ms.
 
 > After a short wait the elevator opens onto the Lobby floor. `location.floor is 1`
 > After a short wait the elevator opens onto the Store floor. `location.floor is 2`
-> After a short wait the elevator opens onto the Lands of Illusions floor. `location.floor is 3`
-> After a short wait the elevator opens onto the Idea Garden floor. `location.floor is 4`
+> After a short wait the elevator arrives to third floor with doors opening to Lands of Illusions. `location.floor is '3a'`
+> After a short wait the elevator arrives to third floor with doors opening to Idea Garden. `location.floor is '3b'`
+> After a short wait the elevator opens into the studio apartment. `location.floor is 4`
 
 -> [End]
 

@@ -25,6 +25,8 @@ words =
     Read: ['read']
     What: ['what']
     Get: ['get', 'take', 'pick']
+    Sit: ['sit']
+    Stand: ['stand']
 
 # Generate default english translations.
 generateDefaultTranslations = (id, words) ->

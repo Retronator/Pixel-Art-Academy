@@ -83,6 +83,9 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
           LOI.GameState.insertForCurrentUser @options.adventure.gameState(), =>
             complete()
 
+            # Now that the local state has been transferred, clear it for next player.
+            @options.adventure.clearLocalGameState()
+
         ReceiveTablet: (complete) =>
           @options.adventure.scriptHelpers.receiveItemFromActor
             location: @
@@ -114,7 +117,6 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
 
           # Wait for our window to get focus.
           $(window).on 'focus.medium', =>
-            console.log "GOT FOCUS BACK"
             complete()
             $(window).off '.medium'
 

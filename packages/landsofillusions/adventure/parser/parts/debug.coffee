@@ -18,7 +18,7 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       console.log "We are resetting the whole game state." if LOI.debug
 
       state = @options.adventure.gameState()
-      @options.adventure.initializeGameState state
+      LOI.Adventure.resetGameState state
       @options.adventure.gameState.updated()
 
       return true
@@ -36,3 +36,11 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       @options.adventure.gameState.updated()
 
       return true
+
+    if command.has 'fullscreen'
+      body = $('body')[0]
+
+      body.requestFullscreen?()
+      body.webkitRequestFullscreen?()
+      body.mozRequestFullScreen?()
+      body.msRequestFullscreen?()

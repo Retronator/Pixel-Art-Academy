@@ -69,6 +69,7 @@ class Script.Nodes.Code extends Script.Node
     if user = Retronator.user()
       _globalState.user = user
       _globalState.user.name = _globalState.user.profile?.name
+      _globalState.user.characters ?= []
 
       _globalState.user.itemKeys = {}
       for item in _globalState.user.items

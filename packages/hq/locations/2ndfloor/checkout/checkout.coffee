@@ -157,7 +157,12 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
               computation.stop()
 
               # If receipt is still visible, transaction was canceled.
-              retroDialog.ephemeralState().transactionCanceled = true if shoppingCartApp.state().receiptVisible
+              if shoppingCartApp.state().receiptVisible
+                retroDialog.ephemeralState().transactionCanceled = true
+
+                # Hide the receipt after this.
+                shoppingCartApp.state().receiptVisible = false
+                @options.adventure.gameState.updated()
 
               # Return to location
               @options.adventure.deactivateCurrentItem()

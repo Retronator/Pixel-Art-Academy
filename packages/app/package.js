@@ -17,6 +17,7 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:hq');
   api.use('retronator:store');
+  api.use('retronator:construct');
 
   /*api.use('retronator:construct');
   api.use('retronator:pixelboy');

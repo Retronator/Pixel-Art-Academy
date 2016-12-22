@@ -1,7 +1,21 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-class LOI.Adventure extends LOI.Adventure 
+class LOI.Adventure extends LOI.Adventure
+  @resetGameState: (state) ->
+    inventory = {}
+    inventory[Retronator.HQ.Items.Wallet.id()] = {}
+
+    locations = {}
+    locations[Retronator.HQ.Locations.Elevator.id()] =
+      floor: 1
+
+    _.extend state,
+      player:
+        inventory: inventory
+      locations: locations
+      initialized: true
+      
   _initializeState: ->
     # Game state depends on whether the user is signed in or not and returns
     # the game  state from database when signed in or from local storage otherwise.
@@ -59,8 +73,8 @@ class LOI.Adventure extends LOI.Adventure
 
       # Initialize state if needed.
       if state and not state.initialized
-        # It's our first time playing Pixel Art Academy. Start with a wallet in the inventory.
-        @initializeGameState state
+        # It's our first time playing Pixel Art Academy. Start with a clear state.
+        LOI.Adventure.resetGameState state
 
         Tracker.nonreactive => _gameStateUpdated()
 
@@ -88,3 +102,8 @@ class LOI.Adventure extends LOI.Adventure
     # Flush the state updates to the database when the page is about to unload.
     window.onbeforeunload = =>
       @gameState?.updated flush: true
+
+  clearLocalGameState: ->
+    localGameState = @_localGameState.state()
+    LOI.Adventure.resetGameState localGameState
+    @_localGameState.updated()
