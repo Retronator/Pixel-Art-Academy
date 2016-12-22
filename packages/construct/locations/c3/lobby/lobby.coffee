@@ -5,10 +5,10 @@ Vocabulary = LOI.Adventure.Parser.Vocabulary
 Action = LOI.Adventure.Ability.Action
 Talking = LOI.Adventure.Ability.Talking
 
-class LOI.Construct.Locations.C3.Lobby extends LOI.Adventure.Location
+class LOI.Construct.Locations.C3.Lobby extends LOI.Construct.Location
   @id: -> 'LandsOfIllusions.Construct.Locations.C3.Lobby'
   @url: -> 'c3/lobby'
-  @scriptUrls: -> [
+  @scriptUrls: -> super.concat [
   ]
 
   @fullName: -> "Character Construction Center lobby"

@@ -1,0 +1,37 @@
+# LandsOfIllusions.Construct.Scripts.Operator
+
+## Start
+
+operator: Operator.
+
+* I need an exit. -> [Exit]
+* I want to return to the Construct. -> [Construct] `location.id isnt 'LandsOfIllusions.Construct.Locations.Loading'`
+* Nevermind. -> [End]
+
+## Exit
+
+operator: 
+    Got it.
+    Engaging disconnect procedure.
+    
+> …
+    
+### Exit
+
+-> [End]
+
+## Construct
+
+operator: 
+    On it.
+    Unloading simulation.
+    
+> …
+    
+### Construct
+
+-> [End]
+
+
+
+## End

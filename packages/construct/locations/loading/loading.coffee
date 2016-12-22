@@ -5,10 +5,10 @@ Vocabulary = LOI.Adventure.Parser.Vocabulary
 Action = LOI.Adventure.Ability.Action
 Talking = LOI.Adventure.Ability.Talking
 
-class LOI.Construct.Locations.Loading extends LOI.Adventure.Location
+class LOI.Construct.Locations.Loading extends LOI.Construct.Location
   @id: -> 'LandsOfIllusions.Construct.Locations.Loading'
   @url: -> 'construct'
-  @scriptUrls: -> [
+  @scriptUrls: -> super.concat [
     'retronator_construct/locations/loading/captain.script'
   ]
 
@@ -25,15 +25,10 @@ class LOI.Construct.Locations.Loading extends LOI.Adventure.Location
   constructor: ->
     super
 
-    @_operator = new Retronator.HQ.Actors.Operator
-      adventure: @options.adventure
-
     $('body').addClass('construct')
 
   destroy: ->
     super
-
-    @_operator.destroy()
 
     $('body').removeClass('construct')
 
@@ -49,11 +44,16 @@ class LOI.Construct.Locations.Loading extends LOI.Adventure.Location
       exits: exits
 
   onScriptsLoaded: ->
+    super
+
     # Captain
     Tracker.autorun (computation) =>
       return unless captain = @things LOI.Construct.Actors.Captain
       return unless captain.ready()
-      return unless @_operator.ready()
+
+      return unless operatorLink = @options.adventure.inventory LOI.Construct.Items.OperatorLink
+      return unless operatorLink.operator.ready()
+
       computation.stop()
 
       captain.addAbility new Action
@@ -65,7 +65,7 @@ class LOI.Construct.Locations.Loading extends LOI.Adventure.Location
 
       captainDialog.setActors
         captain: captain
-        operator: @_operator
+        operator: operatorLink.operator
 
       captainDialog.setCallbacks
         C3: (complete) =>

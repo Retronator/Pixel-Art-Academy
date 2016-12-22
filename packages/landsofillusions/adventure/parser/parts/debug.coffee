@@ -37,6 +37,16 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
 
       return true
 
+    if command.has 'clean inventory'
+      inventoryState = @options.adventure.gameState().player.inventory
+
+      # Clear all the items for which the ID doesn't correspond to a thing.
+      for itemId of inventoryState
+        itemClass = LOI.Adventure.Thing.getClassForId itemId
+        delete inventoryState[itemId] unless itemClass
+
+      @options.adventure.gameState.updated()
+
     if command.has 'fullscreen'
       body = $('body')[0]
 

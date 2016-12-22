@@ -1,8 +1,7 @@
 LOI = LandsOfIllusions
-HQ = Retronator.HQ
 
 class LOI.Construct.Actors.Captain extends LOI.Adventure.Thing
-  @id: -> 'LandsOfIllusionsConstruct.Actors.Captain'
+  @id: -> 'LandsOfIllusions.Construct.Actors.Captain'
   @fullName: -> "Gordon 'Captain' Morgan"
   @shortName: -> "Captain"
   @description: -> "It's the Captain, Gordon Morgan. He takes care of the Construct."

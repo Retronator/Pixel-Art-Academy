@@ -17,11 +17,18 @@ Package.onUse(function(api) {
   api.export('LandsOfIllusions');
 
   api.addFiles('construct.coffee');
+  api.addFiles('location.coffee');
+  api.addAssets('operator.script', ['client', 'server']);
 
   // Actors
 
   api.addFiles('actors/actors.coffee');
   api.addFiles('actors/captain.coffee');
+
+  // Items
+
+  api.addFiles('items/items.coffee');
+  api.addFiles('items/operatorlink.coffee');
 
   // Locations
 

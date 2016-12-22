@@ -41,3 +41,7 @@ class LOI.Adventure.Parser.Command
 
     # We didn't find the word.
     false
+
+  # Do we have an exact match with the phrase?
+  is: (phrase) ->
+    @normalizedCommand is _.toLower _.deburr phrase

@@ -85,7 +85,7 @@ captain:
 ## HowToExit
 
 captain:
-    At any time while in Lands of Illusions, either in the Construct or in the simulations, you can always _talk to Panzer_.
+    At any time while in Lands of Illusions, either in the Construct or in the simulations, you can always _talk to operator_.
     He can take you out of immersion or help with switching characters.
     
 -> [IntroQuestions]
@@ -173,6 +173,8 @@ captain: Of course, how can I help?
 ## C3
 
 captain: Perfect. Operator, load the C3 program.
+
+> …
 
 ### C3
 

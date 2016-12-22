@@ -18,25 +18,27 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
         LOI.Adventure.goToLocation locationId
         return true
   
-    # See if we have any of the verbs to go to a location.
+    # No direction was named. See if we can go to location by name.
     goWords = @vocabulary.getWords @Vocabulary.Keys.Verbs.Go
+    hasGoWords = command.has goWords
 
     console.log "We are searching for 'go' words, which for the current language are", goWords, "and we have the command", command if LOI.debug
 
-    if command.has goWords
-      console.log "We found the 'go' word." if LOI.debug
+    # Did they name any of the locations?
+    for directionKey, locationId of exits when locationId
+      translationHandle = @location.exitsTranslationSubscriptions()[locationId]
 
-      # Yes, the user is trying to go somewhere. Did they name any of the locations?
-      for directionKey, locationId of exits when locationId
-        translationHandle = @location.exitsTranslationSubscriptions()[locationId]
+      console.log "For direction", directionKey, "that points to location with ID", locationId, "we have translation handle", translationHandle, "which is ready?", translationHandle.ready() if LOI.debug
 
-        console.log "For direction", directionKey, "that points to location with ID", locationId, "we have translation handle", translationHandle, "which is ready?", translationHandle.ready() if LOI.debug
+      shortName = AB.translate(translationHandle, LOI.Avatar.translationKeys.shortName).text
 
-        shortName = AB.translate(translationHandle, LOI.Avatar.translationKeys.shortName).text
+      console.log "Short name for this location is", shortName if LOI.debug
 
-        console.log "Short name for this location is", shortName if LOI.debug
-  
-        if command.has shortName
-          # We found the name of this location! Let's go there.
+      if command.has shortName
+        # We found the name of this location! It can either be named without anything else, or with the go words.
+        justLocation = command.is shortName
+
+        if hasGoWords or justLocation
+          # Let's go there.
           LOI.Adventure.goToLocation locationId
           return true

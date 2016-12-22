@@ -17,7 +17,7 @@ words =
     Down: ['down']
 
   Verbs:
-    Go: ['go']
+    Go: ['go', 'travel']
     Talk: ['talk']
     Look: ['look', 'examine']
     Use: ['use']

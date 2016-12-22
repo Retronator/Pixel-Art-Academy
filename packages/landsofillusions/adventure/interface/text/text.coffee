@@ -171,7 +171,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     activeItems
 
   inventoryItems: ->
-    items = @options.adventure.inventory.values()
+    items = _.filter @options.adventure.inventory.values(), (item) -> not item.state().doNotDisplay
 
     console.log "Text interface is displaying inventory items", items if LOI.debug
 
@@ -215,8 +215,6 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       @narrative.scroll()
 
   _waitForNode: (node) ->
-    console.log "********shoulw we wait?", node
-
     # If we're still displaying something, we shouldn't
     # immediately display the node, but instead wait for a key press.
     lastNode = @_lastNode()

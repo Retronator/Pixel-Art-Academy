@@ -85,6 +85,9 @@ class HQ.Locations.LandsOfIllusions.Room extends LOI.Adventure.Location
         complete()
 
       PlugIn: (complete) =>
+        # Add the Construct operator to inventory to enable talking to the operator.
+        @options.adventure.scriptHelpers.addItemToInventory item: LOI.Construct.Items.OperatorLink
+
         # Start Lands of Illusions VR Experience.
         LOI.Adventure.goToItem HQ.Locations.LandsOfIllusions.Room.Chair
 

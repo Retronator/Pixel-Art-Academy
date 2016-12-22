@@ -20,6 +20,7 @@ class Script.Nodes.Code extends Script.Node
 
   @coffeeScriptReplacements =
     ' is ': ' == '
+    ' isnt ': ' != '
     ' and ': ' && '
     ' or ': ' || '
     'not ': '!'
@@ -62,7 +63,11 @@ class Script.Nodes.Code extends Script.Node
     # Get the states into context.
     _scriptState = @script.state()
     _ephemeralState = @script.ephemeralState()
-    _locationState = @script.options.location.state()
+
+    location = @script.options.location
+    _locationState = location.state()
+    _locationState.id = location.id()
+
     _globalState = @script.options.adventure.gameState()
 
     # Attach the user object to global state.
