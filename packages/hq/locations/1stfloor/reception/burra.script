@@ -198,7 +198,7 @@ burra: Ask away!
 ## Question
 
 * What is this place? -> [RetronatorHQ]
-* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQ and not PixelArtAcademy`
+* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQ`
 * So is Pixel Art Academy like an online course? -> [PixelArtAcademyCourse] `PixelArtAcademy`
 * So about that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQ`
 * Actually, nevermind. -> [Start] `not _answered`
@@ -243,6 +243,10 @@ burra: I hope you liked it.
 burra: 
     Pixel Art Academy is a video game that teaches you how to draw! 
     Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist. 
+
+-> [NoTabletForProspectus] `not @player.inventory['Retronator.HQ.Items.Tablet']`
+    
+burra:
     Take a look at the school's prospectus to find out more.
     
 > Burra gives you the Pixel Art Academy prospectus that you can read on your tablet.
@@ -250,6 +254,13 @@ burra:
 ### ReceiveProspectusApp
 
 -> [End]
+
+## NoTabletForProspectus
+
+burra:
+    If you get one of the tablets in the lobby I can give you the school's digital prospectus.
+    
+-> [Question]
 
 ## PixelArtAcademyCourse
 

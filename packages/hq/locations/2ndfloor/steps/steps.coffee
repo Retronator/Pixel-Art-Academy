@@ -20,7 +20,7 @@ class HQ.Locations.Steps extends LOI.Adventure.Location
     "
       The stairs that lead to the second floor are accompanied with bigger steps on the sides, perfect for sitting and
       lounging. Tetromino-shaped cushions are distributed for comfort and a few hipster kids are using them, glued
-      tirelessly to their laptops. The stairs turn a corner in an L-shape to the south. Continue going _up_ or stop to chat?
+      tirelessly to their laptops. The stairs turn a corner in an L-shape to the south.
     "
   
   @initialize()
