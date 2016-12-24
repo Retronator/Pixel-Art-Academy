@@ -13,7 +13,7 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       directionWords = @vocabulary.getWords directionKey
   
       # Did the user say this word?
-      if command.has directionWords
+      if command.is directionWords
         # Yes, the user is trying to go to this direction!
         LOI.Adventure.goToLocation locationId
         return true

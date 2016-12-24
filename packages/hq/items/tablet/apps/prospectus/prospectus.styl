@@ -141,12 +141,12 @@
 
   @keyframes blink {
     50% {
-      opacity: 0.0;
+      visibility hidden
     }
   }
   @-webkit-keyframes blink {
     50% {
-      opacity: 0.0;
+      visibility hidden
     }
   }
 
@@ -168,7 +168,7 @@
       text-transform none
 
   nav
-    position fixed
+    position absolute
     top 0
     left 0
     width 100%
@@ -176,7 +176,7 @@
     line-height 2
     padding 0 2em
     text-align right
-    z-index 100
+    z-index 2
     background-color black
     uni()
 
@@ -507,14 +507,10 @@
     margin-bottom 0
 
   .payment-form-screen
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    overflow: auto;
-    z-index 2
+    absolute-cover()
+    background-color rgba(0, 0, 0, 0.8)
+    overflow auto
+    z-index 3
 
     .retronator-store-components-bundle-item
       .tooltip
@@ -606,7 +602,6 @@
 .retronator-hq-items-tablet
   .retronator-hq-items-tablet-apps-prospectus
     absolute-cover()
-    transform translateZ(0)
 
     .main-wrapper
       absolute-cover()

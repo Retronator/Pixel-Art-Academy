@@ -1,17 +1,17 @@
 <template name="Retronator.HQ.Items.Tablet.Apps.Prospectus">
   <div class="retronator-hq-items-tablet-apps-prospectus">
+    <nav>
+      <div class="social-media-icons">
+        <a href="https://www.facebook.com/retronator" class="social-media-icon facebook" target="_blank" rel="external"><img src="{{image '/retronator/hq/items/tablet/apps/prospectus/socialicons.png'}}" class="social-media-background" data-socialmedia="facebook"></a>
+        <a href="https://twitter.com/pixelartacademy" class="social-media-icon twitter" target="_blank" rel="external"><img src="{{image '/retronator/hq/items/tablet/apps/prospectus/socialicons.png'}}" class="social-media-background" data-socialmedia="twitter"></a>
+        <a href="http://www.retronator.com/" class="social-media-icon tumblr" target="_blank" rel="external"><img src="{{image '/retronator/hq/items/tablet/apps/prospectus/socialicons.png'}}" class="social-media-background" data-socialmedia="tumblr"></a>
+      </div>
+      <a href="#info">Prospectus</a>
+      <a href="#student-life">Student Life</a>
+      <a href="#press">Press</a>
+      <a href="#enroll" class="cta">Buy</a>
+    </nav>
     <div class="main-wrapper {{iosClass}}">
-      <nav>
-        <div class="social-media-icons">
-          <a href="https://www.facebook.com/retronator" class="social-media-icon facebook" target="_blank" rel="external"><img src="{{image '/retronator/hq/items/tablet/apps/prospectus/socialicons.png'}}" class="social-media-background" data-socialmedia="facebook"></a>
-          <a href="https://twitter.com/pixelartacademy" class="social-media-icon twitter" target="_blank" rel="external"><img src="{{image '/retronator/hq/items/tablet/apps/prospectus/socialicons.png'}}" class="social-media-background" data-socialmedia="twitter"></a>
-          <a href="http://www.retronator.com/" class="social-media-icon tumblr" target="_blank" rel="external"><img src="{{image '/retronator/hq/items/tablet/apps/prospectus/socialicons.png'}}" class="social-media-background" data-socialmedia="tumblr"></a>
-        </div>
-        <a href="#info">Prospectus</a>
-        <a href="#student-life">Student Life</a>
-        <a href="#press">Press</a>
-        <a href="#enroll" class="cta">Buy</a>
-      </nav>
       <section id="jumbotron" class="jumbotron expand">
         <div class="jumbotron-content">
           <h1>
@@ -199,10 +199,10 @@
           </div>
         </div>
       </section>
-      {{#if selectedItem}}
-        {{> Retronator.HQ.Items.Tablet.Apps.Prospectus.Purchase selectedItem}}
-      {{/if}}
     </div>
+    {{#if selectedItem}}
+      {{> Retronator.HQ.Items.Tablet.Apps.Prospectus.Purchase selectedItem}}
+    {{/if}}
   </div>
 </template>
 

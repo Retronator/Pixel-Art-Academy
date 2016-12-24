@@ -43,5 +43,11 @@ class LOI.Adventure.Parser.Command
     false
 
   # Do we have an exact match with the phrase?
-  is: (phrase) ->
-    @normalizedCommand is _.toLower _.deburr phrase
+  is: (phrases) ->
+    # If a single phrase is sent in, wrap it into an array.
+    phrases = [phrases] if _.isString phrases
+
+    for phrase in phrases
+      return true if @normalizedCommand is _.toLower _.deburr phrase
+
+    false
