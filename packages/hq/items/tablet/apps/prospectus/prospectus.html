@@ -148,7 +148,7 @@
               If you are even remotely interested in doing pixel art, this is education done right.
               <cite><a href="http://indieruckus.com/author/brian/" rel="external" target="_blank">Brian Hamby</a>, <a href="http://indieruckus.com/learn-pixel-art-in-an-art-school-themed-mmorpg/" rel="external" target="_blank">IndieRuckus</a></cite>
             </blockquote>
-            <p>We've also been featured on <a href="http://kotaku.com/pixel-art-game-will-teach-you-pixel-art-1722384778" rel="external" target="_blank">Kotaku</a>, <a href="http://boingboing.net/2015/08/12/pixel-art-academy.html" rel="external" target="_blank">Boing Boing's Offworld</a>, and <a href="http://observer.com/2015/08/learn-pixel-art-in-digital-art-school/" rel="external" target="_blank">Observer</a></p>
+            <p>We've also been featured on <a href="http://kotaku.com/pixel-art-game-will-teach-you-pixel-art-1722384778" rel="external" target="_blank">Kotaku</a>, Boing Boing's <a href="http://boingboing.net/2015/08/12/pixel-art-academy.html" rel="external" target="_blank">Offworld</a>, and <a href="http://observer.com/2015/08/learn-pixel-art-in-digital-art-school/" rel="external" target="_blank">Observer</a>.</p>
           </div>
         </div>
       </section>
@@ -156,9 +156,10 @@
         <div class="line">
           <div class="unit size1of1">
             <h2>Support the Development</h2>
-            <p>Pixel Art Academy is an adventure game in development mainly by one person.</p>
-            <p>Game content will come out in short episodes. You can wait until the first episode launches in 2017
-              or you can pre-order the first season to support the development and secure the lower price.</p>
+            <p>Pixel Art Academy is an adventure game in development mainly by one person, so it will take its time.</p>
+            <p>That's why game content will be released in short episodes as they are completed.</p>
+            <p>You can wait until the first episode launches in 2017
+              or you can pre-order the first season now to support the development and secure the lower price.</p>
           </div>
         </div>
         <div class="featured-product">
@@ -199,71 +200,65 @@
         </div>
       </section>
       {{#if selectedItem}}
-        <div class="payment-form-screen">
-          <div class="payment-form-wrapper">
-            <span class="close-payment">close</span>
-            {{#if paymentSuccess}}
-              <div class="payment-success">
-                <h2>Payment Successful!</h2>
-                <p>Thank you for purchasing Pixel Art Academy!</p>
-                <p>We sent you an email which confirms that you've pre-ordered the game. Your credit card won't be charged until the 1.0 version of the game is released and you can start playing.</p>
-                <p>Feel free to <button class="reset-payments">buy another copy</button> for a friend!</p>
-              </div>
-            {{/if}}
-            {{#if paymentFailure}}
-              <div class="payment-failure">
-                <h2>Something Went Wrong</h2>
-                <p>It looks like your payment didn't go through.</p>
-              </div>
-            {{/if}}
-            <form id="payment-form" class="payment-form">
-              {{#if paymentErrors}}
-                <div class="payment-errors">{{paymentErrors}}</div>
-              {{/if}}
-              <div class="form-field">
-                <label>
-                  <span class="label-text">Email</span>
-                  <input type="email" name="customer-email"/>
-                </label>
-              </div>
-              <p>* This email will be used to match your purchase to your game account.</p>
-              <div class="form-field">
-                <label>
-                  <span class="label-text">Card number</span>
-                  <input name="cardnumber" autocomplete="cc-number" type="text" size="20" data-stripe="number"/>
-                </label>
-              </div>
-              <div class="form-field">
-                <label>
-                  <span class="label-text">Name on card</span>
-                  <input name="ccname" autocomplete="cc-name" type="text" data-stripe="name"/>
-                </label>
-              </div>
-              <div class="form-field">
-                <label>
-                  <span class="label-text">Expiration</span>
-                  <input name="ccmonth" autocomplete="cc-exp-month" type="text" size="2" data-stripe="exp-month" placeholder="MM"/>
-                </label>
-                <span> / </span>
-                <input name="ccyear" autocomplete="cc-exp-year" type="text" size="4" data-stripe="exp-year" placeholder="YYYY"/>
-              </div>
-              <div class="form-field">
-                <label>
-                  <span class="label-text">CVC</span>
-                  <input name="cvc" autocomplete="cc-csc" type="text" size="4" data-stripe="cvc"/>
-                </label>
-              </div>
-              <button class="submit-payment">
-                {{#if submittingPayment}}
-                  Submitting …
-                {{else}}
-                  Submit payment
-                {{/if}}
-              </button>
-              <p class="payment-smallprint">* Your credit card won't be charged until the 1.0 version of the game is released and you can start playing.</p>
-            </form>
-          </div>
+        {{> Retronator.HQ.Items.Tablet.Apps.Prospectus.Purchase selectedItem}}
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="Retronator.HQ.Items.Tablet.Apps.Prospectus.Purchase">
+  <div class="payment-form-screen">
+    <div class="payment-form-wrapper">
+      <span class="close-payment">close</span>
+      {{#if paymentSuccess}}
+        <div class="payment-success">
+          <h2>Payment Successful!</h2>
+          <p>Thank you for purchasing Pixel Art Academy!</p>
+          <p>We sent you an email which confirms that you've pre-ordered the game.</p>
+          <p>Your credit card won't be charged until the first episode of the game is released and you can start playing.
+            You will be emailed beforehand in case you need to cancel your purchase at that time.</p>
         </div>
+      {{else}}
+        {{#if purchaseError}}
+          <div class="purchase-error">
+            <p>{{purchaseError}}</p>
+            <p>It looks like there was an error processing the purchase.</p>
+            <p>The purchase might still have gone through, so please email
+              hi@retronator.com so we can double check your purchase status.</p>
+          </div>
+        {{else}}
+          {{#if purchaseItem.items}}
+            <div class="bundle">
+              <h3 class="headline">{{> t9n purchaseItem.name}} includes:</h3>
+              <ul class="bundle-items">
+                {{#each purchaseItem.items}}
+                  {{> Retronator.Store.Components.BundleItem}}
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
+          <div class="actions">
+            <p>
+              {{#if stripeInitialized}}
+                <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
+                  {{#if submittingPayment}}
+                    Submitting …
+                  {{else}}
+                    {{#if paymentAmount}}
+                      Checkout with Stripe
+                    {{else}}
+                      Confirm purchase
+                    {{/if}}
+                  {{/if}}
+                </button>
+              {{else}}
+                Please wait while Stripe Checkout initializes …
+              {{/if}}
+            </p>
+          </div>
+          <p class="payment-smallprint">* Your credit card won't be charged until the first episode of the game is released and you can start playing.
+            You will be emailed beforehand in case you need to cancel your purchase at that time.</p>
+        {{/if}}
       {{/if}}
     </div>
   </div>
@@ -273,7 +268,7 @@
   <h3>{{> t9n name}}</h3>
   <div class="price">
     ${{price}}
-    <small><del>${{discountedFrom}}</del></small>
+    <small><del class="discounted-from">${{discountedFrom}}</del></small>
   </div>
   <button class="purchase-product" data-game="{{name}}">buy now</button>
   <div class="description">

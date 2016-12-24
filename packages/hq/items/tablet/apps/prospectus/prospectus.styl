@@ -1,9 +1,6 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .retronator-hq-items-tablet-apps-prospectus
-  absolute-cover()
-  transform translateZ(0)
-
   *
     position relative
     box-sizing border-box
@@ -12,8 +9,6 @@
     margin-right 0
 
   .main-wrapper
-    absolute-cover()
-    overflow scroll
     background black
 
   h1
@@ -35,6 +30,7 @@
   a
     text-decoration none
     color #eee
+    white-space nowrap
 
     &::after
       display block
@@ -71,10 +67,15 @@
       width 100%
       height 4rem
       background-color #333
+      border none
 
     &:focus
       background: #777
       outline none
+
+    &:hover
+      &:after
+        display block
 
     &:hover:not([disabled='false'])
       background: #888
@@ -82,6 +83,7 @@
     &:active:not([disabled='false'])
       border-bottom none
       transform translateY(0)
+
       &::after
         height 0
 
@@ -460,6 +462,18 @@
           kyrou-7()
           font-weight normal
 
+          .discounted-from
+            text-decoration none
+
+            &::after
+              content ''
+              position absolute
+              top 50%
+              left -2rem
+              right -2rem
+              height 0
+              border-top 1rem solid
+
       .purchase-product
         margin 1em
         display inline-block
@@ -502,6 +516,20 @@
     overflow: auto;
     z-index 2
 
+    .retronator-store-components-bundle-item
+      .tooltip
+        left 50%
+        transform translateX(-50%)
+
+    .bundle
+      .headline
+        kyrou-9()
+        font-weight normal
+        line-height 12rem
+
+      .bundle-items
+        list-style square
+
   .payment-form-wrapper
     width 24em
     background black
@@ -509,14 +537,6 @@
     padding 2em
     padding-top 3em
     margin 3em auto
-
-    .form-field
-      margin-bottom 2rem
-
-      .label-text
-        uni()
-        display inline-block
-        width 10em
 
     .submit-payment
       display inline-block
@@ -536,9 +556,6 @@
     top 0
     padding 1em
     cursor pointer
-
-  .payment-success + form
-    display none
 
   .reset-payments
     font-size 1em !important
@@ -585,3 +602,20 @@
     width 60%
   .size4of5
     width 80%
+
+.retronator-hq-items-tablet
+  .retronator-hq-items-tablet-apps-prospectus
+    absolute-cover()
+    transform translateZ(0)
+
+    .main-wrapper
+      absolute-cover()
+      overflow scroll
+
+    // Don't do fixed backgrounds when running on the tablet.
+    #jumbotron
+      background-attachment local
+
+  .student-life
+    .infoblock
+      background-attachment local

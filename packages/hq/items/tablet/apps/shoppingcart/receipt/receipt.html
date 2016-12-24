@@ -8,12 +8,12 @@
           <p>Purchase completed successfully!</p>
         </div>
       {{else}}
-        {{#if receiptItems.length}}
+        {{#if purchaseItems.length}}
           <div class="receipt">
             <h2>Retronator<br/>Store</h2>
             <div>----------------------</div>
             <ol class="shopping-cart-items">
-              {{#each receiptItems}}
+              {{#each purchaseItems}}
                 <li class="cart-item">
                   <span class="name">
                     {{> t9n item.name}}
@@ -102,8 +102,9 @@
           {{#if purchaseError}}
             <div class="purchase-error">
               <p>{{purchaseError}}</p>
-              <p>Check at the bottom of the accounts if the transaction has still been created. Please email
-                hi@retronator.com since this is an unexpected bug in the system.</p>
+              <p>It looks like there was an error processing the purchase.</p>
+              <p>The payment might still have gone through, so please email
+                hi@retronator.com so we can double check your purchase status.</p>
             </div>
           {{/if}}
           <div class="actions">
@@ -126,7 +127,7 @@
             </p>
           </div>
           {{#if paymentAmount}}
-            <small class="payment-smallprint"><p>* Your credit card won't be charged until you get access to the game. You
+            <small class="payment-smallprint"><p>* Your credit card won't be charged until the first episode of the game is released and you can start playing. You
               will be emailed beforehand in case you need to cancel your purchase at that time.</p></small>
           {{/if}}
         {{else}}

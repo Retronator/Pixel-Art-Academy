@@ -23,14 +23,14 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
     super
 
     @_itemsSubscription = @subscribe RS.Transactions.Item.all
-
     @selectedItem = new ReactiveField null
-    @paymentSuccess = new ReactiveField null
-    # TODO: hacking error message, replace with $equals later
-    @paymentFailure = new ReactiveField null
-    @paymentErrors = new ReactiveField null
-    @submittingPayment = new ReactiveField false
 
+    @stripeInitialized = new ReactiveField false
+
+    @purchaseError = new ReactiveField null
+    @submittingPayment = new ReactiveField false
+    @purchaseCompleted = new ReactiveField false
+    
   onRendered: ->
     super
 
@@ -202,3 +202,21 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
 
   alphaAccess: ->
     RS.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccess
+
+  class @Purchase extends HQ.Items.Tablet.Apps.Components.Stripe
+    @register 'Retronator.HQ.Items.Tablet.Apps.Prospectus.Purchase'
+
+    purchaseItem: ->
+      selectedItem = @data()
+
+      # Load bundle items as well.
+      for bundleItem in selectedItem.items
+        bundleItem.refresh()
+
+      selectedItem
+      
+    purchaseItems: ->
+      selectedItem = @data()
+
+      item: selectedItem
+      isGift: false

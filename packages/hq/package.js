@@ -122,6 +122,10 @@ Package.onUse(function(api) {
 
   api.addFiles('items/tablet/apps/apps.coffee');
 
+  api.addFiles('items/tablet/apps/components/components.coffee');
+
+  api.addFiles('items/tablet/apps/components/stripe/stripe.coffee');
+
   api.addFiles('items/tablet/apps/menu/menu.coffee');
   api.addFiles('items/tablet/apps/menu/menu.html');
   api.addFiles('items/tablet/apps/menu/menu.styl');
