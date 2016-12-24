@@ -80,7 +80,9 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     Meteor.setTimeout =>
       Tracker.afterFlush =>
-        @narrative.scroll()
+        # Scroll the text portion of the narrative (but not the
+        # main window, since we want to display the full location).
+        @narrative.scroll scrollMain: false
     ,
       1
 
@@ -140,11 +142,13 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     # Wait if we're paused.
     return if @waitingKeypress()
 
+    # Show the dialog selection when we have some choices available.
+    return unless options = @dialogSelection.dialogLineOptions()
+
     # After the new choices are re-rendered, scroll down the narrative.
     Tracker.afterFlush => @narrative.scroll()
 
-    # Show the dialog selection when we have some choices available.
-    @dialogSelection.dialogLineOptions()
+    options
 
   activeDialogOptionClass: ->
     option = @currentData()
@@ -325,7 +329,11 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     event.preventDefault()
 
     $scrollable = $(event.currentTarget)
-    $scrollableContent = $scrollable.find('.scrollable-content')
+
+    # If scrolling is locked to a container, don't let others scroll.
+    return if @_scrollLockTarget and @_scrollLockTarget isnt $scrollable[0]
+
+    $scrollableContent = $scrollable.find('.scrollable-content').eq(0)
 
     delta = event.originalEvent.wheelDeltaY
     top = $scrollableContent.position().top
@@ -334,6 +342,24 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     # Limit scrolling to the amount of content.
     ammountHidden = Math.max 0, $scrollableContent.height() - $scrollable.height()
     newTop = _.clamp newTop, -ammountHidden, 0
+
+    # See if we need to do anything at all.
+    if newTop is top
+      # If we scrolled to the bottom, immediately stop scroll lock. This makes scroll lock only work when scrolling up.
+      if newTop is -ammountHidden
+        @_scrollLockTarget = null
+
+      return
+
+    # We've scrolled in this container so lock scrolling to it.
+    @_scrollLockTarget = $scrollable[0]
+
+    @_unlockScrollAfterAWhile ?= _.debounce =>
+      @_scrollLockTarget = null
+    ,
+      1000
+
+    @_unlockScrollAfterAWhile()
 
     $scrollableContent.css top: newTop
 

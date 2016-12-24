@@ -18,6 +18,7 @@ Package.onUse(function(api) {
   api.use('retronator:hq');
   api.use('retronator:store');
   api.use('retronator:construct');
+  api.use('retronator:landingpage');
 
   /*api.use('retronator:construct');
   api.use('retronator:pixelboy');

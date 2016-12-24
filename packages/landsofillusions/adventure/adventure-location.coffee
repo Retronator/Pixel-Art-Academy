@@ -11,9 +11,13 @@ class LOI.Adventure extends LOI.Adventure
       field: @currentLocationId
       tracker: @
 
-    # If we don't have a locally stored location, start at the entrance.
+    # If we don't have a locally stored location, start at the default location.
     unless @currentLocationId()
-      @currentLocationId Retronator.HQ.Locations.Entrance.id()
+      if location.hostname is Meteor.settings.public.welcomeHostname
+        @currentLocationId PixelArtAcademy.LandingPage.Locations.Retropolis.id()
+
+      else
+        @currentLocationId Retronator.HQ.Locations.Entrance.id()
 
     # Instantiate current location. It depends only on the ID.
     # HACK: ComputedField triggers recomputation when called from events so we use ReactiveField + autorun manually.

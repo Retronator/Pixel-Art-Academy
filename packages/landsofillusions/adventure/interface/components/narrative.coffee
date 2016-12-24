@@ -23,20 +23,38 @@ class LOI.Adventure.Interface.Components.Narrative
     text += newText
     @text text
 
+    Tracker.afterFlush => @scroll()
+
   clear: ->
     @text ""
 
   scroll: (options = {}) ->
     options.animate ?= true
+    options.scrollMain ?= true
 
     $textInterface = $('.adventure .text-interface')
+    $textDisplayContent = $textInterface.find('.text-display-content')
+    $textInterfaceContent = $textInterface.find('.text-interface-content')
     $ui = $textInterface.find('.ui')
 
-    totalContentHeight = $textInterface.find('.text-display-content').height()
+    displayContentHeight = $textDisplayContent.height()
+
     uiHeight = options.height or $ui.height()
 
-    hidden = Math.max 0, totalContentHeight - uiHeight
+    hiddenNarrative = Math.max 0, displayContentHeight - uiHeight
 
-    # Make sure the latest narrative is visible, by scrolling text display content to the bottom.
+    # Make sure the latest narrative is visible by scrolling text display content to the bottom.
     @options.textInterface.resizing?._animateElement $textInterface.find('.text-display .scrollable-content'), options.animate,
-      top: -hidden
+      top: -hiddenNarrative
+
+    uiTop = $ui.position().top
+    hiddenTotal = uiTop + Math.min(uiHeight, displayContentHeight) - $(window).height()
+
+    if options.scrollMain
+      # Now also scroll the main content to bring the bottom into view, but only if scrolling down.
+      currentTop = $textInterfaceContent.position().top
+      newTop = -hiddenTotal
+
+      if newTop < currentTop
+        @options.textInterface.resizing?._animateElement $textInterfaceContent, options.animate,
+          top: newTop

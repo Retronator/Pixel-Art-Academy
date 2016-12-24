@@ -64,7 +64,7 @@ class LOI.Adventure.Thing extends AM.Component
     @_thingClassesById[@id()] = @
 
     url = @url()
-    if url
+    if url?
       # See if we have a wildcard URL.
       if match = url.match /(.*)\/\*$/
         url = match[1]

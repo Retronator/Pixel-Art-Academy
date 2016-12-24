@@ -5,82 +5,84 @@
     }
   </style>
   {{> Render display}}
-  <div class="text-interface">
-    <div class="location">
-      {{> Render location}}
-    </div>
-    <div class="items">
-      {{#each activeItems}}
-        {{> Render this}}
-      {{/each}}
-    </div>
-    <div class="ui">
-      <div class="text-display scrollable">
-        <div class="text-display-content scrollable-content">
-          <div class="narrative">
-            <p class="introduction">{{{introduction}}}</p>
-            <p class="exits">{{> t10e "Possible exits are:"}}
-              {{#each exits}}
-                <span class="exit"><span class="name">{{exitName}}</span></span>
-              {{else}}
-                <span class="exit">{{> t10e "None"}}</span>
-              {{/each}}
-            </p>
-            <p class="things-sentence">{{> t10e "You see:"}}</p>
-            <ul class="things">
-              {{#each things}}
-                <li class="thing">
-                  {{avatar.fullName}}.
-                </li>
-              {{else}}
-                <li class="thing">{{> t10e "Nothing"}}.</li>
-              {{/each}}
-            </ul>
-            {{#each narrative.lines}}
-              <p>{{{narrativeLine}}}</p>
-            {{/each}}
-          </div>
-          {{#if showCommandLine}}
-            <div class="command-line">
-              {{#if waitingKeypress}}
-                …
-              {{else}}
-                &gt;
-                {{#if hoveredCommand}}
-                  {{hoveredCommand}}
+  <div class="text-interface scrollable">
+    <div class="text-interface-content scrollable-content">
+      <div class="location">
+        {{> Render location}}
+      </div>
+      <div class="items">
+        {{#each activeItems}}
+          {{> Render this}}
+        {{/each}}
+      </div>
+      <div class="ui">
+        <div class="text-display scrollable">
+          <div class="text-display-content scrollable-content">
+            <div class="narrative">
+              <p class="introduction">{{{introduction}}}</p>
+              <p class="exits">{{> t10e "Possible exits are:"}}
+                {{#each exits}}
+                  <span class="exit"><span class="name">{{exitName}}</span></span>
                 {{else}}
-                 {{commandInput.command}}<span class="caret {{caretIdleClass}}">■</span>
-               {{/if}}
-              {{/if}}
-              <input class="dummy-input"/>
+                  <span class="exit">{{> t10e "None"}}</span>
+                {{/each}}
+              </p>
+              <p class="things-sentence">{{> t10e "You see:"}}</p>
+              <ul class="things">
+                {{#each things}}
+                  <li class="thing">
+                    {{avatar.fullName}}.
+                  </li>
+                {{else}}
+                  <li class="thing">{{> t10e "Nothing"}}.</li>
+                {{/each}}
+              </ul>
+              {{#each narrative.lines}}
+                <p>{{{narrativeLine}}}</p>
+              {{/each}}
             </div>
-          {{/if}}
-          {{#if showDialogSelection}}
-            <div class="dialog-selection">
-              <ul class="options">
-                {{#each dialogSelection.dialogLineOptions}}
-                  <li class="option {{activeDialogOptionClass}}">{{line}}</li>
+            {{#if showCommandLine}}
+              <div class="command-line">
+                {{#if waitingKeypress}}
+                  …
+                {{else}}
+                  &gt;
+                  {{#if hoveredCommand}}
+                    {{hoveredCommand}}
+                  {{else}}
+                   {{commandInput.command}}<span class="caret {{caretIdleClass}}">■</span>
+                 {{/if}}
+                {{/if}}
+                <input class="dummy-input"/>
+              </div>
+            {{/if}}
+            {{#if showDialogSelection}}
+              <div class="dialog-selection">
+                <ul class="options">
+                  {{#each dialogSelection.dialogLineOptions}}
+                    <li class="option {{activeDialogOptionClass}}">{{line}}</li>
+                  {{/each}}
+                </ul>
+              </div>
+            {{/if}}
+            <div class="bottom"></div>
+          </div>
+        </div>
+        {{#if showInventory}}
+          <div class="inventory scrollable">
+            <div class="inventory-content scrollable-content">
+              <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
+              <ul class="items">
+                {{#each inventoryItems}}
+                  <li class="item">{{avatar.fullName}}</li>
+                {{else}}
+                  <li class="item">{{> t10e "Nothing"}}</li>
                 {{/each}}
               </ul>
             </div>
-          {{/if}}
-          <div class="bottom"></div>
-        </div>
-      </div>
-      {{#if showInventory}}
-        <div class="inventory scrollable">
-          <div class="inventory-content scrollable-content">
-            <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
-            <ul class="items">
-              {{#each inventoryItems}}
-                <li class="item">{{avatar.fullName}}</li>
-              {{else}}
-                <li class="item">{{> t10e "Nothing"}}</li>
-              {{/each}}
-            </ul>
           </div>
-        </div>
-      {{/if}}
+        {{/if}}
+      </div>
     </div>
   </div>
 </template>

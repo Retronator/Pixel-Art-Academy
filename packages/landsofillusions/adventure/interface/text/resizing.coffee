@@ -48,9 +48,13 @@ class LOI.Adventure.Interface.Text.Resizing
         # UI height fills the rest.
         uiHeight = viewport.viewportBounds.height() - locationSize.height()
 
+        # Make sure UI gets at least half the screen. It is OK if it is
+        # hidden below the screen, the user will scroll down in that case.
+        uiHeight = Math.max viewport.viewportBounds.height() / 2, uiHeight
+
         # But make it a multiple of line height and add one line for border.
         # Also subtract a pixel since one pixel line bleeds through on the top otherwise.
-        uiHeight = Math.max 0, Math.floor(uiHeight / lineHeight - 1) * lineHeight - 1
+        uiHeight = Math.floor(uiHeight / lineHeight - 1) * lineHeight - 1
 
         uiSize = new AE.Rectangle
           x: viewport.viewportBounds.x() + viewport.viewportBounds.width() / 2 - uiWidth / 2
@@ -85,7 +89,9 @@ class LOI.Adventure.Interface.Text.Resizing
         # If lines have changed, animate addition of new content.
         animate = linesChanged
 
+        locationHeight = illustrationHeight
         uiHeight = $ui.height()
+
         totalContentHeight = $textInterface.find('.text-display-content').height()
 
         if totalContentHeight > uiHeight
@@ -103,10 +109,6 @@ class LOI.Adventure.Interface.Text.Resizing
           # since one pixel line bleeds through on the top otherwise.
           newUIHeight = Math.max 0, Math.floor(newUIHeight / lineHeight) * lineHeight - 1
 
-          # Location fills in the rest that's not taken up by text display plus one line border.
-          locationHeight = Math.min illustrationHeight, viewportHeight - newUIHeight - lineHeight
-          @_animateElement $textInterface.find('.location'), animate, height: locationHeight
-
           # Put UI below the location with 1 line margin.
           @_animateElement $ui, animate,
             top: locationHeight + lineHeight
@@ -116,6 +118,12 @@ class LOI.Adventure.Interface.Text.Resizing
           @textInterface.narrative.scroll
             animate: animate
             height: newUIHeight
+
+          uiHeight = newUIHeight
+
+        # Set total interface height so that scrolling can use it in its calculations.
+        $textInterface.find('.text-interface-content').css
+          height: locationHeight + lineHeight + uiHeight
 
   _animateElement: ($element, animate, properties) ->
     if animate

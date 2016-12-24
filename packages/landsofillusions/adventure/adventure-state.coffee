@@ -4,11 +4,12 @@ LOI = LandsOfIllusions
 class LOI.Adventure extends LOI.Adventure
   @resetGameState: (state) ->
     inventory = {}
-    inventory[Retronator.HQ.Items.Wallet.id()] = {}
-
     locations = {}
-    locations[Retronator.HQ.Locations.Elevator.id()] =
-      floor: 1
+
+    if location.hostname is Meteor.settings.public.playHostname
+      inventory[Retronator.HQ.Items.Wallet.id()] = {}
+      locations[Retronator.HQ.Locations.Elevator.id()] =
+        floor: 1
 
     _.extend state,
       player:

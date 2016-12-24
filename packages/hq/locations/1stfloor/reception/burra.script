@@ -197,6 +197,7 @@ burra: Ask away!
 
 ## Question
 
+* What does signing in do? -> [SignInHelp]
 * What is this place? -> [RetronatorHQ]
 * I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQ`
 * So is Pixel Art Academy like an online course? -> [PixelArtAcademyCourse] `PixelArtAcademy`
