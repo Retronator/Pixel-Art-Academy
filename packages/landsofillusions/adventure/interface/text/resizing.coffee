@@ -21,6 +21,7 @@ class LOI.Adventure.Interface.Text.Resizing
 
       $textInterface = $('.adventure .text-interface')
       $ui = $textInterface.find('.ui')
+      $uiBackground = $textInterface.find('.ui-background')
 
       location = @textInterface.options.adventure.currentLocation()
       illustrationHeight = (location?.illustrationHeight() or 0) * scale
@@ -78,6 +79,10 @@ class LOI.Adventure.Interface.Text.Resizing
 
         $ui.css(uiSize.toDimensions())
 
+        # Background adds an extra line border around the UI
+        uiBackgroundSize = uiSize.extrude lineHeight
+        $uiBackground.css(uiBackgroundSize.toDimensions())
+
         $textInterface.find('.text-display').css(textDisplaySize.toDimensions()).height('100%')
         $textInterface.find('.text-display-content').width(textDisplaySize.width())
 
@@ -122,7 +127,7 @@ class LOI.Adventure.Interface.Text.Resizing
           uiHeight = newUIHeight
 
         # Set total interface height so that scrolling can use it in its calculations.
-        $textInterface.find('.text-interface-content').css
+        $textInterface.find('.ui-area-content').css
           height: locationHeight + lineHeight + uiHeight
 
   _animateElement: ($element, animate, properties) ->
@@ -132,4 +137,5 @@ class LOI.Adventure.Interface.Text.Resizing
         easing: 'ease-out'
 
     else
-      $element.css properties
+      for name, value of properties
+        $.Velocity.hook $element, name, value

@@ -34,7 +34,7 @@ class LOI.Adventure.Interface.Components.Narrative
 
     $textInterface = $('.adventure .text-interface')
     $textDisplayContent = $textInterface.find('.text-display-content')
-    $textInterfaceContent = $textInterface.find('.text-interface-content')
+    $uiAreaContent = $textInterface.find('.ui-area-content')
     $ui = $textInterface.find('.ui')
 
     displayContentHeight = $textDisplayContent.height()
@@ -44,17 +44,19 @@ class LOI.Adventure.Interface.Components.Narrative
     hiddenNarrative = Math.max 0, displayContentHeight - uiHeight
 
     # Make sure the latest narrative is visible by scrolling text display content to the bottom.
-    @options.textInterface.resizing?._animateElement $textInterface.find('.text-display .scrollable-content'), options.animate,
-      top: -hiddenNarrative
+    newTextTop = -hiddenNarrative
+
+    @options.textInterface.resizing?._animateElement $textDisplayContent, options.animate,
+      translateY: "#{newTextTop}px"
 
     uiTop = $ui.position().top
     hiddenTotal = uiTop + Math.min(uiHeight, displayContentHeight) - $(window).height()
 
     if options.scrollMain
       # Now also scroll the main content to bring the bottom into view, but only if scrolling down.
-      currentTop = $textInterfaceContent.position().top
+      currentTop = parseInt $.Velocity.hook($uiAreaContent, 'translateY') or 0
       newTop = -hiddenTotal
 
       if newTop < currentTop
-        @options.textInterface.resizing?._animateElement $textInterfaceContent, options.animate,
-          top: newTop
+        @options.textInterface.resizing?._animateElement $uiAreaContent, options.animate,
+          translateY: "#{newTop}px"

@@ -83,20 +83,20 @@ class HQ.Locations.Store.Shelf extends LOI.Adventure.Item
         
     # Add the Shopping Cart app to the tablet.
     tablet = @playerTablet()
-    shoppingCart = tablet.addApp HQ.Items.Tablet.Apps.ShoppingCart
+    tablet.addApp HQ.Items.Tablet.Apps.ShoppingCart, (shoppingCart) =>
 
-    # Add the item's ID to the shopping cart state.
-    shoppingCartState = shoppingCart.state()
-    shoppingCartState.contents ?= []
+      # Add the item's ID to the shopping cart state.
+      shoppingCartState = shoppingCart.state()
+      shoppingCartState.contents ?= []
 
-    shoppingCartState.contents.push
-      item: item.catalogKey
-      isGift: false
+      shoppingCartState.contents.push
+        item: item.catalogKey
+        isGift: false
 
-    # Switch the tablet app to Shopping Cart.
-    tablet.os.state().activeAppId = HQ.Items.Tablet.Apps.ShoppingCart.id()
+      # Switch the tablet app to Shopping Cart.
+      tablet.os.state().activeAppId = HQ.Items.Tablet.Apps.ShoppingCart.id()
 
-    @options.adventure.gameState.updated()
+      @options.adventure.gameState.updated()
 
-    # Activate the tablet into overlaid mode 
-    tablet.activate()
+      # Activate the tablet into overlaid mode
+      tablet.activate()

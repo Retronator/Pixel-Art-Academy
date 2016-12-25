@@ -9,6 +9,8 @@
   z-index 1000
   background image('/interface/back-arrow.png') 0 0 / 100% 100%
   cursor pointer
+  opacity 1
+  transition opacity ease-out 0.5s
 
   &:hover
     margin-top -1rem
@@ -18,3 +20,12 @@
 
   &:focus
     outline none
+
+  &.closing
+    opacity 0
+
+.overlaid
+  .lands-of-illusions-components-back-button
+    width 22rem
+    height 22rem
+    background image('/interface/close-circle.png') 0 0 / 100% 100%

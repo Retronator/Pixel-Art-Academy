@@ -23,6 +23,8 @@ Package.onUse(function(api) {
   api.addFiles('locations/locations.coffee');
 
   api.addFiles('locations/retropolis/retropolis.coffee');
+  api.addFiles('locations/retropolis/retropolis.html');
+  api.addFiles('locations/retropolis/retropolis.styl');
 
   // Items
 

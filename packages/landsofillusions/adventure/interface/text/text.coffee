@@ -63,6 +63,22 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     # Enable magnification detection.
     @resizing = new LOI.Adventure.Interface.Text.Resizing @
 
+    # Clamp scrollable areas to content size.
+    @autorun =>
+      # React to viewport changes.
+      @display.viewport()
+
+      @$('.scrollable').each ->
+        $scrollable = $(@)
+        $scrollableContent = $scrollable.find('.scrollable-content').eq(0)
+
+        top = parseInt $.Velocity.hook($scrollableContent, 'translateY') or 0
+
+        amountHidden = Math.max 0, $scrollableContent.height() - $scrollable.height()
+        newTop = _.clamp top, -amountHidden, 0
+
+        $.Velocity.hook $scrollableContent, 'translateY', "#{newTop}px"
+
   onDestroyed: ->
     super
 
@@ -336,17 +352,17 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     $scrollableContent = $scrollable.find('.scrollable-content').eq(0)
 
     delta = event.originalEvent.wheelDeltaY
-    top = $scrollableContent.position().top
+    top = parseInt $.Velocity.hook($scrollableContent, 'translateY') or 0
     newTop = top + delta
     
     # Limit scrolling to the amount of content.
-    ammountHidden = Math.max 0, $scrollableContent.height() - $scrollable.height()
-    newTop = _.clamp newTop, -ammountHidden, 0
+    amountHidden = Math.max 0, $scrollableContent.height() - $scrollable.height()
+    newTop = _.clamp newTop, -amountHidden, 0
 
     # See if we need to do anything at all.
     if newTop is top
       # If we scrolled to the bottom, immediately stop scroll lock. This makes scroll lock only work when scrolling up.
-      if newTop is -ammountHidden
+      if newTop is -amountHidden
         @_scrollLockTarget = null
 
       return
@@ -361,7 +377,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     @_unlockScrollAfterAWhile()
 
-    $scrollableContent.css top: newTop
+    $.Velocity.hook $scrollableContent, 'translateY', "#{newTop}px"
 
   onMouseEnterCommand: (event) ->
     @hoveredCommand $(event.target).text()

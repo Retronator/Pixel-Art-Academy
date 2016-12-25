@@ -1,111 +1,113 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .retronator-hq-locations-store-shelf
-  fixed-cover()
-  z-index 1
-  background atariGrey(0)
-  overflow scroll
+  .safe-area
+    display none
 
-  .shelf
-    margin 30rem
+  .background
+    .viewport-area
+      overflow auto
 
-    h2
-      margin-top 2em
-      kyrou-7()
-      color atariGrey(7)
-      font-weight normal
+      .shelf
+        margin 30rem
 
-    h3
-      kyrou-5()
-      color atariGrey(7)
-      font-weight normal
+        h2
+          margin-top 2em
+          kyrou-7()
+          color atariGrey(7)
+          font-weight normal
 
-    .store-items
-      list-style none
-      padding 0
+        h3
+          kyrou-5()
+          color atariGrey(7)
+          font-weight normal
 
-      .store-item
-        position relative
-        padding-right 75rem
-        margin 25rem 0
+        .store-items
+          list-style none
+          padding 0
 
-        > .description
-          margin-left 15rem
-
-        .buy-area
-          position absolute
-          top 0
-          right 0
-          width 60rem
-
-          .price
-            acme-9()
-            text-align center
-            margin-bottom 5rem
-
-          .discounter-from
+          .store-item
             position relative
-            top -2rem
-            acme-7()
-            font-weight normal
-            text-decoration none
-            color atariGrey(3)
+            padding-right 75rem
+            margin 25rem 0
 
-            &::after
-              content ''
+            > .description
+              margin-left 15rem
+
+            .buy-area
               position absolute
-              top 50%
-              left -2rem
-              right -2rem
-              height 0
-              border-top 1rem solid
+              top 0
+              right 0
+              width 60rem
 
-          .add-to-cart-button
-            padding 3rem 5rem
-            width 100%
+              .price
+                acme-9()
+                text-align center
+                margin-bottom 5rem
 
-          .hint
-            background atariCyan(0)
-            border 1rem solid atariCyan(2)
-            text-align center
-            padding 2rem
+              .discounter-from
+                position relative
+                top -2rem
+                acme-7()
+                font-weight normal
+                text-decoration none
+                color atariGrey(3)
 
-            &:not-eligible
-              background atariRed(0)
-              border-color atariRed(2)
+                &::after
+                  content ''
+                  position absolute
+                  top 50%
+                  left -2rem
+                  right -2rem
+                  height 0
+                  border-top 1rem solid
 
-        .bundle
-          margin-left 15rem
+              .add-to-cart-button
+                padding 3rem 5rem
+                width 100%
 
-          .bundle-items
-            list-style square
+              .hint
+                background atariCyan(0)
+                border 1rem solid atariCyan(2)
+                text-align center
+                padding 2rem
 
-    button
-      position relative
-      top -2rem
-      margin-top 2rem
-      background atariGreen(3)
-      uni()
-      color atariGreen(0)
-      border none
-      border-bottom 2rem solid atariGreen(1)
-      cursor pointer
+                &:not-eligible
+                  background atariRed(0)
+                  border-color atariRed(2)
 
-      &:focus
-        background: atariGreen(4)
-        outline none
+            .bundle
+              margin-left 15rem
 
-      &:hover
-        background: atariGreen(4)
+              .bundle-items
+                list-style square
 
-      &:active
-        border-bottom none
-        margin-bottom 2rem
-        top 0
+        button
+          position relative
+          top -2rem
+          margin-top 2rem
+          background atariGreen(3)
+          uni()
+          color atariGreen(0)
+          border none
+          border-bottom 2rem solid atariGreen(1)
+          cursor pointer
 
-      &:disabled
-        color atariGrey(2)
-        cursor default
+          &:focus
+            background: atariGreen(4)
+            outline none
 
-        &:hover
-          background atariGrey(2)
+          &:hover
+            background: atariGreen(4)
+
+          &:active
+            border-bottom none
+            margin-bottom 2rem
+            top 0
+
+          &:disabled
+            color atariGrey(2)
+            cursor default
+
+            &:hover
+              background atariGrey(2)

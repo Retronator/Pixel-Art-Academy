@@ -52,7 +52,7 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
   destroy: ->
     @_stateUpdateAutorun.stop()
     
-  addApp: (appClassOrId) ->
+  addApp: (appClassOrId, completeCallback) ->
     appId = _.thingId appClassOrId
     appClass = HQ.Items.Tablet.OS.App.getClassForId appId
 
@@ -64,8 +64,11 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
       stateApps[appId] = appClass.initialState()
       @options.adventure.gameState.updated()
 
-    # Return the new (or existing app).
-    @apps appId
+    Tracker.autorun (computation) =>
+      return unless app = @apps appId
+      computation.stop()
+
+      completeCallback? app
 
   activatedClass: ->
     'activated' if (@isRendered() and @activating()) or @activated()
@@ -76,8 +79,9 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
     @options.adventure.activeItemId() is @id()
 
   overlaidClass: ->
-    # The tablet is overlaying other items if it's not the main active item.
-    'overlaid' unless @isMainActiveItem()
+    # The tablet is overlaying other items if it's not the main
+    # active item, but make sure there is another item set there.
+    'overlaid' if @options.adventure.activeItemId() and not @isMainActiveItem()
 
   onActivate: (finishedActivatingCallback) ->
     Meteor.setTimeout =>

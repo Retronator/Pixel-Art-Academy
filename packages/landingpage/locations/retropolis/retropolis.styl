@@ -1,0 +1,73 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-landingpage-locations-retropolis
+  .landing-page
+    position relative
+    color black
+
+    // Hiding images until they're initialized
+    &.initializing img
+    img.initializing
+      visibility hidden
+
+    // Parallax elements
+    *[data-depth]
+      position absolute
+
+    .top-section
+      position fixed
+      z-index 3
+      text-align center
+
+      .top
+        position absolute
+        z-index 1
+        left 0
+        right 0
+        top 0
+
+        .title
+          display inline-block
+          vertical-align middle
+
+          .retronator
+            margin 0
+            line-height initial
+            retrotype()
+
+          .pixel-art-academy
+            position relative
+            margin 0
+            line-height initial
+            font-weight bold
+            acme-9()
+
+      .middle
+        position absolute
+        left 0
+        right 0
+
+      .bottom
+        position absolute
+        z-index 1
+        left 0
+        right 0
+        bottom 0
+        vertical-align middle
+        uni()
+        animation blink 5s ease-in-out 0s infinite
+
+    .scene
+      position absolute
+      background atariCyan(7)
+      overflow hidden
+
+      .middle-section
+        position absolute
+
+        .water
+          opacity 0.8
+
+  @keyframes blink
+    50%
+      opacity 0
