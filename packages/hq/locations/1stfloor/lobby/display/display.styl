@@ -1,47 +1,72 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .retronator-hq-locations-lobby-display
-  fixed-cover()
-  z-index 1
-  background atariGrey(0)
-  overflow scroll
+  .safe-area
+    display none
 
-  .display
-    margin 30rem
+  .background
+    .viewport-area
+      overflow auto
 
-    h2
-      margin-top 2em
-      kyrou-7()
-      color atariGrey(7)
-      font-weight normal
+      .display
+        margin 30rem
 
-    h3
-      kyrou-5()
-      color atariGrey(7)
-      font-weight normal
+        h2
+          margin-top 2em
+          kyrou-7()
+          color atariGrey(7)
+          font-weight normal
 
-    .supporters-area
-      display flex
+        h3
+          kyrou-5()
+          color atariGrey(7)
+          font-weight normal
 
-      .area
-        width 50%
-        padding-right 10%
+        a
+          position relative
+          display inline-block
+          color atariGrey(5)
+          cursor pointer
+          text-decoration none
+          white-space nowrap
 
-    .transaction-messages
-      .top-supporters
-        list-style none
-        padding 0
+          &::after
+            display block
+            content ''
+            absolute-cover()
+            right 1rem
+            bottom -1rem
+            border-bottom 1rem solid atariGrey(7)
 
-        .supporter
-          .name-amount-area
-            width 20%
-            float left
+          &:hover
+            background-color atariGrey(7)
+            color atariGrey(0)
 
-            .name
-              width 100%
-
-            .amount
+            &::after
               display none
 
-          .message
-            padding-left 20%
+        .supporters-area
+          display flex
+
+          .area
+            width 50%
+            padding-right 10%
+
+        .transaction-messages
+          .retronator-store-components-top-supporters
+            list-style none
+            padding 0
+
+            .supporter
+              .name-amount-area
+                width 20%
+                float left
+
+                .name
+                  width 100%
+
+                .amount
+                  display none
+
+              .message
+                padding-left 20%

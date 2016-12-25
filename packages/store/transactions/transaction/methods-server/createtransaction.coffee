@@ -12,7 +12,10 @@ RS.Transactions.Transaction.create = (options) ->
     transaction.tip =
       amount: shoppingCart.tipAmount()
 
-    transaction.tip.message = shoppingCart.tipMessage() if shoppingCart.tipMessage()
+    if shoppingCart.tipMessage()
+      transaction.tip.message = _.truncate shoppingCart.tipMessage(),
+        length: 100
+        omission: '…'
 
   user = Retronator.user()
   

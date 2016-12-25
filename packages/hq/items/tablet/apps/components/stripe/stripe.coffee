@@ -107,16 +107,6 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
   _completePurchase: ->
     @purchaseCompleted true
 
-    # Reset the shopping cart after 2 seconds.
-    Meteor.setTimeout =>
-      # Reset the shopping cart state.
-      _.extend @state(), HQ.Items.Tablet.Apps.ShoppingCart.initialState(),
-        receiptVisible: false
-
-      @options.adventure.gameState.updated()
-    ,
-      2000
-
   _confirmationPurchaseHandler: ->
     # Create a transaction on the server.
     @submittingPayment true

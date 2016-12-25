@@ -130,5 +130,6 @@ Match.ShoppingCart = Match.ObjectIncluding
   tip:
     amount: Match.Where (value) ->
       check value, Number
-      value >= 0
+      0 <= value <= 1000
+
     message: Match.OptionalOrNull String

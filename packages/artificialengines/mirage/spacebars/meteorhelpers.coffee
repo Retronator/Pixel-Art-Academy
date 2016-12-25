@@ -1,2 +1,2 @@
 Template.registerHelper 'settings', (key) ->
-  Meteor.settings.public[key]
+  _.nestedProperty Meteor.settings.public, key

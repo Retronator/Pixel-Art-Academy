@@ -89,7 +89,7 @@ class HQ.Items.Tablet.Apps.Account extends HQ.Items.Tablet.OS.App
   authorizedPaymentsAmount: ->
     Retronator.user().authorizedPaymentsAmount()
 
-# Events
+  # Events
 
   events: ->
     super.concat

@@ -1,6 +1,9 @@
 <template name="Retronator.HQ.Items.Tablet.Apps.ShoppingCart">
   <div class="retronator-hq-items-tablet-apps-shopping-cart">
     <div class="shopping-cart-area {{receiptVisibleClass}}">
+      {{#if cartItems.length}}
+        <p>NOTE: To complete the purchase, talk to Retro at the checkout counter.</p>
+      {{/if}}
       <p>Your shopping cart includes:</p>
       <div class="shopping-cart">
         {{#if cartItems.length}}
@@ -43,9 +46,6 @@
           <p>You do not have any items in your shopping cart.</p>
         {{/if}}
       </div>
-      {{#if cartItems.length}}
-        <p>To complete the purchase, talk to Retro at the checkout counter.</p>
-      {{/if}}
     </div>
     {{#if state.receiptVisible}}
       {{> Render receipt}}

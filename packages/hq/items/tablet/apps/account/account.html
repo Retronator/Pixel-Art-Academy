@@ -99,6 +99,18 @@
                         {{/if}}
                       </li>
                     {{/each}}
+                    {{#if tip}}
+                      {{# if tip.amount}}
+                        <li>
+                          {{t7e 'Tip'}} - ${{tip.amount}}
+                          {{#if tip.message}}
+                            <div class="message">
+                              <p>You included the message: "{{tip.message}}"</p>
+                            </div>
+                          {{/if}}
+                        </li>
+                      {{/if}}
+                    {{/if}}
                   </ul>
                   {{#if payments.length}}
                     <p>Paid with:</p>

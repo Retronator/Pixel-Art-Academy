@@ -29,11 +29,11 @@ captain:
 
 ## IntroQuestions
 
-* Alright, let's get this started. -> [GetStarted]
 * The characters … They're AI programs? -> [Character]
 * Couldn't I just inhabit my own avatar? -> [Avatar] `Character`
 * I could just create a character like myself. -> [SelfAvatar] `Avatar`
 * How do I get out of here? -> [HowToExit]
+* Alright, let's get this started. -> [GetStarted]
 
 ## Character
 

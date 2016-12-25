@@ -77,17 +77,21 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
 
     # Create the scripts.
     @scripts = {}
+    @scriptsReady = new ReactiveField false
 
-    if @constructor.scriptUrls
-      scriptFiles = for scriptUrl in @constructor.scriptUrls()
-        file = new LOI.Adventure.ScriptFile
+    scriptUrls = @constructor.scriptUrls?()
+
+    if scriptUrls?.length
+      scriptFilePromises = for scriptUrl in scriptUrls
+        scriptFile = new LOI.Adventure.ScriptFile
           url: @constructor.versionUrl "/packages/#{scriptUrl}"
           location: @
           adventure: @options.adventure
 
-        file.promise
+        # Return the generated script file promise.
+        scriptFile.promise
 
-      Promise.all(scriptFiles).then (scriptFiles) =>
+      Promise.all(scriptFilePromises).then (scriptFiles) =>
         for scriptFile in scriptFiles
           # Add the loaded and translated script nodes to this location.
           _.extend @scripts, scriptFile.scripts
@@ -96,6 +100,11 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
         @state @state()
 
         @onScriptsLoaded()
+
+        @scriptsReady true
+
+    else
+      @scriptsReady true
 
     # Propagate state updates.
     @_stateUpdateAutorun = Tracker.autorun =>
@@ -139,6 +148,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
       @things.ready()
       subscription.ready() for subscription in @exitsTranslationSubscriptions()
       @_scriptTranslationSubscription.ready()
+      @scriptsReady()
     ]
 
     loaded = _.every _.flatten conditions

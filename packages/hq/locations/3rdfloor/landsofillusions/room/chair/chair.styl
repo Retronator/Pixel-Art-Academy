@@ -2,7 +2,8 @@
 
 .retronator-hq-locations-landsofillusions-room-chair
   fixed-cover()
-  z-index 1
+  // We need to use important to override the relative positioning for all items.
+  position fixed !important
   transition background 4s
   background rgba(255,255,255,0)
 

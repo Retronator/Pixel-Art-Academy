@@ -22,7 +22,7 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
   @description: ->
     "
       At the top of the stairs, the floor opens onto a cafe-style co-working space/store hybrid that gives you that warm, 
-      bookstore feeling. Ah, you feel at home already. The place owner, Retro,
+      bookstore feeling. The place owner, Retro,
       is sitting behind a long desk that doubles as the store checkout area. Yellow walls and pixel art decals
       immediately brighten your day. You can see store shelves further out to the east.
     "
@@ -139,8 +139,11 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
         Checkout: (complete) =>
           # Show the receipt on the tablet.
           tablet = @options.adventure.inventory HQ.Items.Tablet
+          tablet.state().os.activeAppId = HQ.Items.Tablet.Apps.ShoppingCart.id()
+
           shoppingCartApp = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
           shoppingCartApp.state().receiptVisible = true
+
           @options.adventure.gameState.updated()
           
           # Look at display.

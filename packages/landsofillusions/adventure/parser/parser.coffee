@@ -23,6 +23,13 @@ class LOI.Adventure.Parser
     # statically like that. It is only used in subsequent parse subroutines.
     @location = @options.adventure.currentLocation()
 
+    # Track with analytics. Save the command as action and location as label.
+    eventCategory = 'Adventure Command'
+    eventAction = command.normalizedCommand
+    eventLabel = @location.id()
+
+    ga 'send', 'event', eventCategory, eventAction, eventLabel
+
     return if @parseDebug command
     return if @parseNavigation command
     return if @parseAbilities command

@@ -29,8 +29,17 @@ class LOI.Components.Overlay extends AM.Component
       @$('.safe-area').css safeAreaSize
       
       # Inside the background the template in the else block can add a .max-area and .viewport-area divs for us to position.
-      @$('.viewport-area').css viewport.viewportBounds.toDimensions()
-      @$('.max-area').css viewport.maxBounds.toDimensions()
+
+      viewportAreaSize = viewport.viewportBounds.toDimensions()
+      maxAreaSize = viewport.maxBounds.toDimensions()
+
+      for area in [viewportAreaSize, maxAreaSize]
+        area.top = Math.max area.top, cropBarHeight
+        area.height = Math.min area.height, maxOverlayHeight
+
+      @$('.viewport-area').css viewportAreaSize
+
+      @$('.max-area').css maxAreaSize
 
     # Animate in.
     @$('.background').velocity

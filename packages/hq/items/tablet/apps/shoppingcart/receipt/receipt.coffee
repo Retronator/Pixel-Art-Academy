@@ -123,7 +123,13 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
     @state().tip
 
   supporterName: ->
-    @state().supporterName
+    user = Retronator.user()
+
+    if user
+      user.profile?.supporterName if Retronator.user().profile?.showSupporterName
+
+    else
+      @state().supporterName
 
   events: ->
     super.concat
@@ -159,8 +165,8 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
     # If negative sign is entered the parsing succeeds with a NaN value.
     enteredValue = 0 if _.isNaN enteredValue
 
-    # Constrain to non-negative numbers and round to dollar amount.
-    value = Math.floor Math.max 0, enteredValue
+    # Constrain between 0 and 1000 and round to dollar amount.
+    value = Math.floor _.clamp enteredValue, 0, 1000
 
     # Rewrite the value in the input if needed.
     newString = "#{value}"
@@ -181,3 +187,19 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
     message = $(event.target).val()
     @state().tip.message = message
     @options.adventure.gameState.updated()
+
+  _completePurchase: ->
+    super
+
+    # Reset the shopping cart after 2 seconds.
+    Meteor.setTimeout =>
+      # Reset the shopping cart state.
+      _.extend @state(), HQ.Items.Tablet.Apps.ShoppingCart.initialState(),
+        receiptVisible: false
+
+      @options.adventure.gameState.updated()
+
+      # Deactivate tablet.
+      @options.shoppingCart.options.tablet.deactivate()
+    ,
+      2000

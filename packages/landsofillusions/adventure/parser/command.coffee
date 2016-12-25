@@ -7,7 +7,7 @@ LOI = LandsOfIllusions
 class LOI.Adventure.Parser.Command
   constructor: (@command) ->
     # Make lowercase and normalize (deburr) to basic latin letter.
-    @normalizedCommand = _.toLower _.deburr @command
+    @normalizedCommand = @_normalize @command
     @commandWords = @normalizedCommand.match /[-\w]+/g
 
     # We generate all possible multiple-word phrases as well.
@@ -33,8 +33,7 @@ class LOI.Adventure.Parser.Command
     words = [words] if _.isString words
 
     for word in words
-      # Make lowercase and normalize (deburr) to basic latin letter.
-      word = _.toLower _.deburr word
+      word = @_normalize word
 
       # We have the word if it is found somewhere in the command.
       return true if word in @commandWords
@@ -48,6 +47,10 @@ class LOI.Adventure.Parser.Command
     phrases = [phrases] if _.isString phrases
 
     for phrase in phrases
-      return true if @normalizedCommand is _.toLower _.deburr phrase
+      return true if @normalizedCommand is @_normalize phrase
 
     false
+    
+  _normalize: (string) ->
+    # Remove whitespace, make lowercase and normalize (deburr) to basic latin letter.
+    _.toLower _.deburr _.trim string
