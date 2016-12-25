@@ -14,6 +14,8 @@ class HQ.Locations.Chillout extends LOI.Adventure.Location
     'retronator_hq/hq.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Lands of Illusions and Idea Garden entrance"
   @shortName: -> "chillout"
   @description: ->

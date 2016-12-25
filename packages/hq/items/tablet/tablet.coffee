@@ -8,11 +8,13 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
   # os: state of the OS
   # apps: an object with available apps and their states
   #   {appId}: the state of the app
-  @register 'Retronator.HQ.Items.Tablet'
-  template: -> 'Retronator.HQ.Items.Tablet'
-
   @id: -> 'Retronator.HQ.Items.Tablet'
   @url: -> 'spectrum/*'
+
+  @register @id()
+  template: -> @constructor.id()
+
+  @version: -> '0.0.1'
 
   @fullName: -> "Spectrum tablet"
 

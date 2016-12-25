@@ -34,7 +34,7 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
 
       @stripeInitialized true
     ,
-      1
+      100
 
   onDestroyed: ->
     super

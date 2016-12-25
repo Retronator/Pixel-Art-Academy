@@ -14,6 +14,8 @@ class HQ.Locations.Steps extends LOI.Adventure.Location
     'retronator_hq/hq.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Retronator HQ lounge steps"
   @shortName: -> "steps"
   @description: ->

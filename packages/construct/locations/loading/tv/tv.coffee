@@ -12,6 +12,8 @@ class LOI.Construct.Locations.Loading.TV extends LOI.Adventure.Item
   @register @id()
   template: -> @constructor.id()
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Television"
 
   @shortName: -> "TV"

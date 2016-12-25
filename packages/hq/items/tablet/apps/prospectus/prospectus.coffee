@@ -22,15 +22,10 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
   onCreated: ->
     super
 
-    @_itemsSubscription = @subscribe RS.Transactions.Item.all
+    @subscribe RS.Transactions.Item.all
+
     @selectedItem = new ReactiveField null
 
-    @stripeInitialized = new ReactiveField false
-
-    @purchaseError = new ReactiveField null
-    @submittingPayment = new ReactiveField false
-    @purchaseCompleted = new ReactiveField false
-    
   onRendered: ->
     super
 
@@ -92,17 +87,8 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
 
   events: ->
     super.concat
-      'submit #payment-form': @tokenizeCreditCard
       'click .purchase-product': @processItemId
       'click .close-payment': @resetItemId
-      'click .reset-payments': @resetPayments
-
-  resetPayments: (event) ->
-    @paymentSuccess null
-    @paymentFailure null
-    $('#payment-form input').val('')
-    @paymentErrors null
-    $('#payment-form button').prop('disabled', false)
 
   resetItemId: (event) ->
     @selectedItem null
@@ -116,83 +102,6 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
 
     # Disable scrolling when the payment form is active.
     $('body, html').addClass('disable-scrolling')
-
-  tokenizeCreditCard: (event) ->
-    #stop the form from submitting so we can control it
-    event.preventDefault()
-
-    #grab all customer inputs needed to tokenize credit card
-    $creditCardName = $('[data-stripe="name"]').val()
-    $creditCardNumber = $('[data-stripe="number"]').val()
-    $creditCardCvc = $('[data-stripe="cvc"]').val()
-    $creditCardExpirationMonth = $('[data-stripe="exp-month"]').val()
-    $creditCardExpirationYear = $('[data-stripe="exp-year"]').val()
-
-    #inform user of client-side validation errors
-    if not Stripe.card.validateCardNumber($creditCardNumber)
-      @paymentErrors "Invalid card number! Please check your inputs and try again."
-      return
-
-    if not Stripe.card.validateExpiry($creditCardExpirationMonth, $creditCardExpirationYear)
-      @paymentErrors "Invalid expiry date! Please make sure that the date is in the future"
-      return
-
-    if not Stripe.card.validateCVC($creditCardCvc)
-      @paymentErrors "Invalid CVC. Please check your inputs and try again."
-      return
-
-    $('#payment-form button').prop('disabled', true)
-    @submittingPayment true
-
-    # If it passes validations, go ahead and create the token.
-    Stripe.card.createToken {
-      name: $creditCardName
-      number: $creditCardNumber
-      cvc: $creditCardCvc
-      exp_month: $creditCardExpirationMonth
-      exp_year: $creditCardExpirationYear
-    }, (status, response) =>
-      @stripeResponseHandler(status, response)
-
-#when we get a response from stripe
-  stripeResponseHandler: (status, response) ->
-
-#if there's an error, let our user know and let them try again
-    if response.error
-      @paymentErrors response.error.message
-      $('#payment-form button').prop('disabled', false)
-      return
-
-    #otherwise, clear the errors they may have accrued and send the information to the server
-    #needed to make a new customer/save their card information
-    @paymentErrors null
-
-    #grab tokenized credit card
-    creditCardToken = response.id
-    #grab the customer details
-    customer =
-      email: $('[name="customer-email"]').val()
-      name: $('[data-stripe="name"]').val()
-
-    #pass customer to the server to create
-    Retronator.Store.server.call 'Retronator.Store.Purchase.insertStripePurchase', customer, creditCardToken, @selectedItem(), (error, data) =>
-      @submittingPayment false
-
-      if error
-        @paymentErrors error.reason
-        @paymentFailure true
-        $('#payment-form button').prop('disabled', false)
-        return
-
-      @paymentFailure null
-      # Google Analytics: trigger success event
-      window.dataLayer = window.dataLayer || []
-      window.dataLayer.push({
-        'event' : 'Game Purchased'
-        'purchase_label' : @selectedItem().name
-        'value' : @selectedItem().priceMinimum
-      })
-      return @paymentSuccess true
 
   basicGame: ->
     RS.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.BasicGame
@@ -218,5 +127,12 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
     purchaseItems: ->
       selectedItem = @data()
 
-      item: selectedItem
-      isGift: false
+      [
+        item: selectedItem
+        isGift: false
+      ]
+
+    paymentAmount: ->
+      selectedItem = @data()
+
+      selectedItem.price

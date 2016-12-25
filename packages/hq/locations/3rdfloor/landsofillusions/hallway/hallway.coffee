@@ -16,6 +16,8 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
     'retronator_hq/locations/3rdfloor/landsofillusions/hallway/operator.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Lands of Illusions hallway"
   @shortName: -> "hallway"
   @description: ->

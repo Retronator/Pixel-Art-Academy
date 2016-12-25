@@ -59,6 +59,23 @@ class LOI.Adventure.Thing extends AM.Component
   @getClassForId: (id) ->
     @_thingClassesById[id]
 
+  # The semantic version of this thing, so we can know when we need to fetch assets (images,
+  # scripts) again. You can use the -wip suffix to force constant reloads and recompiles.
+  @wipSuffix = 'wip'
+  @version: -> "0.0.1-#{@wipSuffix}"
+  version: -> @constructor.version()
+
+  @versionUrl: (url) ->
+    version = @version()
+
+    # If we're in WIP mode, add a random url version.
+    version = Random.id() if _.endsWith version, @wipSuffix
+
+    # Return the url with version added.
+    "#{url}?#{version}"
+
+  versionUrl: (url) -> @constructor.versionUrl url
+
   @initialize: ->
     # Store thing class by ID and url.
     @_thingClassesById[@id()] = @

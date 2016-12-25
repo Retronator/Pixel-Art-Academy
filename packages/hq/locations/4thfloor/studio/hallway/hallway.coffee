@@ -15,6 +15,8 @@ class HQ.Locations.Studio.Hallway extends LOI.Adventure.Location
     'retronator_hq/actors/elevatorbutton.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Studio hallway"
   @shortName: -> "hallway"
   @description: ->

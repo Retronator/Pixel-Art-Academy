@@ -1,6 +1,8 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .retronator-hq-items-tablet-apps-prospectus
+  color atariGrey(5)
+
   *
     position relative
     box-sizing border-box
@@ -108,20 +110,19 @@
   .cta
     &::before
       content '> '
-      white-space no-wrap
+      white-space nowrap
 
     &::after
       display inline
-      position static
+      position relative
       content '_'
       border-bottom none
       right auto
       left auto
       top auto
       bottom auto
-      white-space no-wrap
-      animation blink 1s step-start 0s infinite;
-      -webkit-animation blink 1s step-start 0s infinite;
+      white-space nowrap
+      animation blink 1s step-start 0s infinite
 
     &:hover
       &::after
@@ -139,16 +140,9 @@
       outline none
       border-color #777
 
-  @keyframes blink {
-    50% {
+  @keyframes blink
+    50%
       visibility hidden
-    }
-  }
-  @-webkit-keyframes blink {
-    50% {
-      visibility hidden
-    }
-  }
 
   blockquote
     kyrou-7()

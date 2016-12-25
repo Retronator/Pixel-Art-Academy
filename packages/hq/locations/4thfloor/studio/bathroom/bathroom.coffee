@@ -14,6 +14,8 @@ class HQ.Locations.Studio.Bathroom extends LOI.Adventure.Location
     'retronator_hq/hq.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Studio bathroom"
   @shortName: -> "bathroom"
   @description: ->

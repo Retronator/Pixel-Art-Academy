@@ -14,6 +14,8 @@ class HQ.Locations.Theater extends LOI.Adventure.Location
     'retronator_hq/hq.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Patron Club theater"
   @shortName: -> "theater"
   @description: ->

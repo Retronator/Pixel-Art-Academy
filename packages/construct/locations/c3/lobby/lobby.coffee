@@ -11,6 +11,8 @@ class LOI.Construct.Locations.C3.Lobby extends LOI.Construct.Location
   @scriptUrls: -> super.concat [
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Character Construction Center lobby"
   @shortName: -> "lobby"
   @description: ->

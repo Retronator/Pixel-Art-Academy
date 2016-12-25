@@ -7,11 +7,13 @@ Vocabulary = LOI.Adventure.Parser.Vocabulary
 Action = LOI.Adventure.Ability.Action
 
 class HQ.Items.Wallet extends LOI.Adventure.Item
-  @register 'Retronator.HQ.Items.Wallet'
-  template: -> 'Retronator.HQ.Items.Wallet'
-
   @id: -> 'Retronator.HQ.Items.Wallet'
   @url: -> 'signin'
+
+  @register @id()
+  template: -> @constructor.id()
+
+  @version: -> '0.0.1'
 
   @fullName: -> "wallet"
 

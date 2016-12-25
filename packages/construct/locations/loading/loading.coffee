@@ -12,6 +12,8 @@ class LOI.Construct.Locations.Loading extends LOI.Construct.Location
     'retronator_construct/locations/loading/captain.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "The Construct loading program"
   @shortName: -> "construct"
   @description: ->

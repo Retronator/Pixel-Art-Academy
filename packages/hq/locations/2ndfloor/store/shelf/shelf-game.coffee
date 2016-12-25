@@ -11,6 +11,8 @@ class HQ.Locations.Store.Shelf.Game extends HQ.Locations.Store.Shelf
 
   @register @id()
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Game shelf"
 
   @shortName: -> "game"

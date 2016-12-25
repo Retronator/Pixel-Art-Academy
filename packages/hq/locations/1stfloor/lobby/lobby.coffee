@@ -15,6 +15,8 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
     'retronator_hq/locations/1stfloor/lobby/tablet.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Retronator HQ lobby"
   @shortName: -> "lobby"
   @description: ->

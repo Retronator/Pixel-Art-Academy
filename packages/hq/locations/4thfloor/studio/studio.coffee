@@ -14,6 +14,8 @@ class HQ.Locations.Studio extends LOI.Adventure.Location
     'retronator_hq/hq.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Painting studio"
   @shortName: -> "studio"
   @description: ->

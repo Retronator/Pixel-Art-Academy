@@ -12,6 +12,8 @@ class HQ.Locations.Lobby.Display extends LOI.Adventure.Item
   @register @id()
   template: -> @constructor.id()
 
+  @version: -> '0.0.1'
+
   @fullName: -> "supporters display"
 
   @shortName: -> "display"

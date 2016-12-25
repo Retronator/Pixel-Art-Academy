@@ -14,6 +14,8 @@ class HQ.Locations.Entrance extends LOI.Adventure.Location
     'retronator_hq/hq.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Retronator HQ entrance"
   @shortName: -> "entrance"
   @description: ->

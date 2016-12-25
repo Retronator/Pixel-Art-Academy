@@ -15,6 +15,8 @@ class HQ.Locations.LandsOfIllusions.Room extends LOI.Adventure.Location
     'retronator_hq/locations/3rdfloor/landsofillusions/room/operator.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Lands of Illusions virtual reality room"
   @shortName: -> "room"
   @description: ->

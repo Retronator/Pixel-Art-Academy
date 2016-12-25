@@ -14,6 +14,8 @@ class HQ.Locations.Studio.Kitchen extends LOI.Adventure.Location
     'retronator_hq/hq.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Studio kitchen"
   @shortName: -> "kitchen"
   @description: ->

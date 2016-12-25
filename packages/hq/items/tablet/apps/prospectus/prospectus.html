@@ -207,10 +207,11 @@
 </template>
 
 <template name="Retronator.HQ.Items.Tablet.Apps.Prospectus.Purchase">
+  <script src="https://checkout.stripe.com/checkout.js"></script>
   <div class="payment-form-screen">
     <div class="payment-form-wrapper">
       <span class="close-payment">close</span>
-      {{#if paymentSuccess}}
+      {{#if purchaseCompleted}}
         <div class="payment-success">
           <h2>Payment Successful!</h2>
           <p>Thank you for purchasing Pixel Art Academy!</p>

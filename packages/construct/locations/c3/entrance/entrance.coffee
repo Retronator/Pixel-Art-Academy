@@ -10,6 +10,8 @@ class LOI.Construct.Locations.C3.Entrance extends LOI.Construct.Location
   @url: -> 'c3/entrance'
   @scriptUrls: -> super.concat [
   ]
+    
+  @version: -> '0.0.1'
 
   @fullName: -> "Character Construction Center entrance"
   @shortName: -> "entrance"

@@ -17,6 +17,8 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
     'retronator_hq/actors/elevatorbutton.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Retronator Store checkout counter"
   @shortName: -> "checkout"
   @description: ->

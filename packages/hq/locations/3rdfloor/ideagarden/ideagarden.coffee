@@ -15,6 +15,8 @@ class HQ.Locations.IdeaGarden extends LOI.Adventure.Location
     'retronator_hq/actors/elevatorbutton.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Retronator Idea Garden"
   @shortName: -> "Idea Garden"
   @description: ->

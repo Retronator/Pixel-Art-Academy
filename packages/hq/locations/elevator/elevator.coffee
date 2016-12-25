@@ -14,6 +14,8 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
     'retronator_hq/locations/elevator/numberpad.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Retronator HQ elevator"
   @shortName: -> "elevator"
   @description: ->

@@ -15,6 +15,8 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
     'retronator_hq/locations/3rdfloor/landsofillusions/operator.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Lands of Illusions reception"
   @shortName: -> "Lands of Illusions"
   @description: ->

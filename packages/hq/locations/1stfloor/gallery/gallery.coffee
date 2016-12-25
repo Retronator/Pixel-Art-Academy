@@ -15,6 +15,8 @@ class HQ.Locations.Gallery extends LOI.Adventure.Location
     'retronator_hq/actors/elevatorbutton.script'
   ]
 
+  @version: -> '0.0.1'
+
   @fullName: -> "Retronator HQ gallery"
   @shortName: -> "gallery"
   @description: ->

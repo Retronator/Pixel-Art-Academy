@@ -8,21 +8,6 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
   # Urls of scripts used at this location.
   @scriptUrls: -> []
 
-  # The semantic version of this location's scripts, so we can know when we need to 
-  # recompile them. You can use the -wip suffix to force constant reloads and recompiles.
-  @wipSuffix = 'wip'
-  @version: ->
-    "0.0.1-#{@wipSuffix}"
-
-  @versionUrl: (url) ->
-    version = @version()
-
-    # If we're in WIP mode, add a random url version.
-    version = Random.id() if _.endsWith version, @wipSuffix
-
-    # Return the url with version added.
-    "#{url}?#{version}"
-
   # The maximum height of location's illustration. By default there is no illustration (height 0).
   @illustrationHeight: -> 0
   illustrationHeight: -> @constructor.illustrationHeight()
@@ -84,7 +69,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     if scriptUrls?.length
       scriptFilePromises = for scriptUrl in scriptUrls
         scriptFile = new LOI.Adventure.ScriptFile
-          url: @constructor.versionUrl "/packages/#{scriptUrl}"
+          url: @versionUrl "/packages/#{scriptUrl}"
           location: @
           adventure: @options.adventure
 

@@ -8,6 +8,8 @@ class HQ.Locations.LandsOfIllusions.Room.Chair extends LOI.Adventure.Item
   @register @id()
   template: -> @constructor.id()
 
+  @version: -> '0.0.1'
+
   @fullName: -> "virtual reality chair"
 
   @shortName: -> "chair"
