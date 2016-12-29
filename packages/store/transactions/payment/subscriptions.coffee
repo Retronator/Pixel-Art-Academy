@@ -17,7 +17,7 @@ Meteor.publish 'Retronator.Store.Transactions.Payment.forCurrentUser', ->
     transactions = RS.Transactions.Transaction.findTransactionsForUser(user).fetch()
     
     # Get all payments from transactions.
-    paymentIds = for transaction in transactions
+    paymentIds = for transaction in transactions when transaction.payments
       payment._id for payment in transaction.payments
 
     paymentIds = _.flatten paymentIds

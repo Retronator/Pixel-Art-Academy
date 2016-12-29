@@ -16,3 +16,10 @@ class Retronator.Accounts
 
   @addAdminPage: (url, page) ->
     AT.addRoute page, url, 'Retronator.Accounts.Layouts.AdminAccess', page
+
+  @authorizeAdmin: ->
+    user = Retronator.user()
+
+    return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
+  
+    throw new AE.UnauthorizedException "You do not have administrator privileges to perform this action."

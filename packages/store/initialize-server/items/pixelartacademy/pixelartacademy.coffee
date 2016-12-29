@@ -81,3 +81,7 @@ Meteor.startup ->
     name: "Artwork: Pixel China Mountains"
     description: "Huge signed canvas print of Pixel China Mountains, in real life and as a unique game item."
 
+  RS.Transactions.Item.create
+    catalogKey: CatalogKeys.PixelArtAcademy.Kickstarter.ArtworkShipping
+    name: "Artwork Shipping"
+    description: "Shipping cost for sending the physical artwork in the US."

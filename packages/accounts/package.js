@@ -20,6 +20,8 @@ Package.onUse(function(api) {
   api.use('splendido:accounts-meld@1.3.1');
   api.use('splendido:accounts-emails-field@1.2.0');
   api.use('benjick:stripe@3.3.4', 'server');
+  api.use('jparker:crypto-aes');
+  api.use('peerlibrary:directcollection');
 
   api.imply('accounts-password');
   api.imply('service-configuration');
@@ -81,4 +83,5 @@ Package.onUse(function(api) {
   api.addFiles('pages/admin/scripts/scripts.coffee');
   api.addFiles('pages/admin/scripts/scripts.html');
   api.addFiles('pages/admin/scripts/methods-server/importedusers-emailstolowercase.coffee', 'server');
+  api.addFiles('pages/admin/scripts/methods-server/updatedocuments.coffee', 'server');
 });

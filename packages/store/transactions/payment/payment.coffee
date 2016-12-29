@@ -9,12 +9,13 @@ class RetronatorStoreTransactionsPayment extends AM.Document
   # KICKSTARTER PLEDGE
   # backerEmail: Kickstarter user's email who made the pledge
   # project: name of the project the pledge is associated with
+  # backerNumber: kickstarter backer number
+  # backerId: kickstarter backer UID
+  # backerName: kickstarter backer Name
   #
   # STRIPE PAYMENT
   # authorizedOnly: true if the amount was not actually collected and this is just an intended payment
   # stripeCustomerId: customer id returned from stripe API
-  # stripePaymentId: customer id returned from stripe API
-  # name: name on card as entered at checkout
   #
   # REFERRAL CODE
   # referralCode: the code used for the referral

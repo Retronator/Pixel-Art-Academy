@@ -15,6 +15,7 @@ class Retronator.App extends Artificial.Base.App
 
     # Instantiate all app packages, which register router URLs.
     new Retronator.Accounts
+    new Retronator.Store
 
     # Add Lands of Illusions last so it captures all remaining URLs.
     new LOI

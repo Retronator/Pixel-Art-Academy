@@ -6,4 +6,5 @@ class RA.Pages.Admin.Scripts extends AM.Component
 
   events: ->
     super.concat
-      'click .imported-users-emails-to-lowercase-button': => Meteor.call 'LandsOfIllusions.Accounts.ImportedUsersEmailsToLowerCase'
+      'click .imported-users-emails-to-lowercase-button': => Meteor.call 'Retronator.Accounts.ImportedUsersEmailsToLowerCase'
+      'click .update-documents': => Meteor.call 'Retronator.Accounts.UpdateDocuments'

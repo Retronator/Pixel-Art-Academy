@@ -1,11 +1,17 @@
-# TODO: Upgrade to Retronator Accounts.
+RA = Retronator.Accounts
+
+###
+  This method used to be able to import any kind of users, but has now been modified to only correctly update
+  Kickstarter backers. It is to be removed as soon as the integrity of the converted backers data (into transactions)
+  has been confirmed.
+###
 
 Meteor.methods
   'Retronator.Accounts.importUsers': (rewardTierId, encodedData) ->
     check rewardTierId, Match.OptionalOrNull Match.DocumentId
     check encodedData, String
 
-    LOI.Authorize.admin()
+    RA.authorizeAdmin()
 
     unless Meteor.settings.dataUploadPassphrase
       console.warn "You need to specify the data upload passphrase in the settings file and don't forget to run the server with the --settings flag pointing to it."
@@ -36,6 +42,8 @@ Meteor.methods
     for index in [0...parts.length]
       columnIndices[parts[index]] = index
 
+    importedDataUserCollection = new DirectCollection 'LandsOfIllusionsAccountsImportedDataUsers'
+
     # Now create a backer for each remaining line using the column mapping.
     usersCount = 0
     for line in lines[1..]
@@ -45,13 +53,19 @@ Meteor.methods
       parts[i] = parts[i].replace(/^"(.*)"$/, '$1') for i in [0...parts.length]
 
       # See if the reward id is included in the data.
-      rewardId = if parts[columnIndices['Reward ID']] then parseInt parts[columnIndices['Reward ID']] else null
-      dataRewardTierId = if rewardId then LOI.Accounts.RewardTier.documents.findOne(rewardId: rewardId)._id else null
+      #rewardId = if parts[columnIndices['Reward ID']] then parseInt parts[columnIndices['Reward ID']] else null
+      #dataRewardTierId = if rewardId then Retronator.Store.Transactions.Item.documents.findOne(rewardId: rewardId)._id else null
 
       # If no default reward ID is passed to the method and the reward is not included in the data we can't do anything.
-      continue unless dataRewardTierId or rewardTierId
+      #continue unless dataRewardTierId or rewardTierId
 
       # Convert parts to ImportedData.User.
+      backerId = parseInt parts[columnIndices['Backer UID']] if parts[columnIndices['Backer UID']]
+      console.log "We have a backer with ID", backerId
+      return unless backerId
+
+      existing = importedDataUserCollection.findOne backerId: backerId
+
       user = {}
       user.backerNumber = parseInt parts[columnIndices['Backer Number']] if parts[columnIndices['Backer Number']]
       user.backerId = parseInt parts[columnIndices['Backer UID']] if parts[columnIndices['Backer UID']]
@@ -64,38 +78,54 @@ Meteor.methods
       shipping.amount = parseFloat parts[columnIndices['Shipping Amount']].match(/-?\d+\.\d+/)[0] if parts[columnIndices['Shipping Amount']]
       user.shipping = shipping unless _.isEmpty shipping
 
-      user.reward = {}
-      user.reward.minimum = parseFloat parts[columnIndices['Reward Minimum']].match(/-?\d+\.\d+/)[0] if parts[columnIndices['Reward Minimum']]
-      user.reward.rewardId = parseInt parts[columnIndices['Reward Id']] if parts[columnIndices['Reward Id']]
-      user.reward.tier =
-        _id: dataRewardTierId or rewardTierId
+      if existing
+        user['reward.minimum'] = parseFloat parts[columnIndices['Reward Minimum']].match(/-?\d+\.\d+/)[0] if parts[columnIndices['Reward Minimum']]
+        user['reward.rewardId'] = parseInt parts[columnIndices['Reward ID']] if parts[columnIndices['Reward ID']]
+
+        # Just set tier name for no reward.
+        unless user['reward.minimum']
+          user['reward.tier.name'] = 'No reward'
+
+      else
+        user.reward = {}
+        user.reward.minimum = parseFloat parts[columnIndices['Reward Minimum']].match(/-?\d+\.\d+/)[0] if parts[columnIndices['Reward Minimum']]
+        user.reward.rewardId = parseInt parts[columnIndices['Reward ID']] if parts[columnIndices['Reward ID']]
+
+        unless user.reward.minimum
+          user.reward.tier = name: 'No reward'
 
       pledge = {}
       pledge.amount = parseFloat parts[columnIndices['Pledge Amount']].match(/-?\d+\.\d+/)[0] if parts[columnIndices['Pledge Amount']]
       pledge.status = parts[columnIndices['Pledge Status']] if parts[columnIndices['Pledge Status']]
-      pledge.time = new Date(parts[columnIndices['Pledge Time']]) if parts[columnIndices['Pledge Time']]
+      pledge.time = new Date(parts[columnIndices['Pledged At']]) if parts[columnIndices['Pledged At']]
       pledge.rewardsSent = parts[columnIndices['Rewards Sent?']] if parts[columnIndices['Rewards Sent?']]
       user.pledge = pledge unless _.isEmpty pledge
 
       user.notes = parts[columnIndices['Notes']] if parts[columnIndices['Notes']]
 
-      query = {}
-      # If we have a backer ID try to treat is a unique key.
-      if user.backerId
-        query.backerId = user.backerId
+      ###
+      pledgeTime = new Date(parts[columnIndices['Pledged At']]) if parts[columnIndices['Pledged At']]
+      console.log "The time pledged was", pledgeTime
 
-      # Next up is users' email.
-      else if user.email
-          query.email = user.email
+      usersCount += importedDataUserCollection.update
+        backerId: backerId
+      ,
+        $set:
+          'pledge.time': pledgeTime
 
-      # The only option for matching left is Twitter handle.
-      else if user.twitter
-        query.twitter = user.twitter
+###
 
-      # Make sure we have at least one of these three acting as our unique key.
-      continue unless query.backerId or query.email or query.twitter
+      console.log "Upserting", user
 
-      usersCount++
-      LOI.Accounts.ImportedData.User.documents.upsert query, user
+      if existing
+        usersCount += importedDataUserCollection.update
+          backerId: backerId
+        ,
+          $set: user
+
+      else
+        importedDataUserCollection.insert user
+
+        usersCount++
 
     console.log "Successfully imported", usersCount, "users."

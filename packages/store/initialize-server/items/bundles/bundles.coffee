@@ -161,7 +161,7 @@ Meteor.startup ->
     ]
 
   RS.Transactions.Item.create
-    catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.AvatarTrack.UniqueCustomAvatar
+    catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtCollector.ZXCosmopolis
     rewardId: 4291892
     name: "Pixel Art Academy Kickstarter tier — Art collector: ZX COSMOPOLIS!"
     description: "Get a huge 44'' unique signed canvas print of ZX Cosmopolis from my personal collection.\n
@@ -175,7 +175,7 @@ Meteor.startup ->
     ]
 
   RS.Transactions.Item.create
-    catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.AvatarTrack.UniqueCustomAvatar
+    catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtCollector.PixelChinaMountains
     rewardId: 4292042
     name: "Pixel Art Academy Kickstarter tier — Art collector: PIXEL CHINA MOUNTAINS!"
     description: "Get a huge 44'' unique signed canvas print of Pixel China Mountains from my personal collection.\n

@@ -137,7 +137,6 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
       'input .supporter-name': @onInputSupporterName
       'input .tip-amount': @onInputTipAmount
       'input .tip-message': @onInputTipMessage
-      'click .submit-payment-button': @onClickSubmitPaymentButton
 
   onChangeAnonymousCheckbox: (event) ->
     if Meteor.userId()

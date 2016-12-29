@@ -10,7 +10,7 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
   #   supporterName
   # email: user email entered for this transaction if user was not logged in during payment
   # twitter: twitter handle for this transaction if it was given to a twitter user
-  # ownerDisplayName: the name used to display who initiated this transaction
+  # ownerDisplayName: auto-generated name used to display who initiated this transaction
   # items: array of items received in this transaction
   #   item: the item document
   #     _id
@@ -31,6 +31,7 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
   #   type
   #   amount
   #   authorizedOnly
+  #   storeCreditAmount
   # supporterName: the public name to show for this transaction for logged-out users
   # tip:
   #   amount: how much money was tipped
@@ -54,9 +55,11 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
         displayName ?= fields.email or ''
         [fields._id, displayName]
       totalValue: @GeneratedField 'self', ['items', 'tip'], (fields) ->
-        # The total value of a transaction is the sum of all item's prices and the tip.
+        return unless fields.items
+
+        # The total value of a transaction is the sum of all items' prices and the tip.
         value = fields.tip?.amount or 0
-        value += transactionItem.price for transactionItem in fields.items
+        value += (transactionItem.price or 0) for transactionItem in fields.items
         [fields._id, value]
     triggers: =>
       transactionsUpdated: @Trigger ['user._id', 'twitter', 'email'], (transaction, oldTransaction) =>

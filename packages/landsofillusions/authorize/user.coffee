@@ -1,3 +1,4 @@
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
 # Confirms that the user can play the game.
@@ -18,8 +19,4 @@ LOI.Authorize.alphaAccess = ->
 
 # Confirms administrator privileges.
 LOI.Authorize.admin = ->
-  user = Retronator.user()
-
-  return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
-
-  throw new AE.UnauthorizedException "You do not have administrator privileges to perform this action."
+  RA.authorizeAdmin()

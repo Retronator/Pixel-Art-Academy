@@ -2,7 +2,7 @@
 
 Meteor.methods
   'Retronator.Accounts.ImportedUsersEmailsToLowerCase': ->
-    LOI.authorizeAdmin()
+    RA.authorizeAdmin()
 
     LOI.Accounts.ImportedData.User.documents.find().forEach (document, index, cursor) ->
       importedUser = document

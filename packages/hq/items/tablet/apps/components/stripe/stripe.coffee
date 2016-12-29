@@ -54,10 +54,6 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
 
   events: ->
     super.concat
-      'change .anonymous-checkbox': @onChangeAnonymousCheckbox
-      'input .supporter-name': @onInputSupporterName
-      'input .tip-amount': @onInputTipAmount
-      'input .tip-message': @onInputTipMessage
       'click .submit-payment-button': @onClickSubmitPaymentButton
 
   onClickSubmitPaymentButton: (event) ->

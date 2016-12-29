@@ -14,6 +14,8 @@ Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:landsofillusions');
 
+  api.use('peerlibrary:directcollection');
+
   api.export('Retronator');
 
   api.addFiles('store.coffee');
@@ -89,4 +91,16 @@ Package.onUse(function(api) {
   api.addFiles('components/topsupporters/topsupporters.coffee');
   api.addFiles('components/topsupporters/topsupporters.html');
   api.addFiles('components/topsupporters/topsupporters.styl');
+
+  // Pages
+  api.addFiles('pages/pages.coffee');
+
+  api.addFiles('pages/admin/admin.html');
+  api.addFiles('pages/admin/admin.coffee');
+
+  api.addFiles('pages/admin/scripts/scripts.coffee');
+  api.addFiles('pages/admin/scripts/scripts.html');
+  api.addFiles('pages/admin/scripts/methods-server/convertpreorders.coffee', 'server');
+  api.addFiles('pages/admin/scripts/methods-server/convertimportedusers.coffee', 'server');
+  api.addFiles('pages/admin/scripts/methods-server/user-ontransactionsupdated.coffee', 'server');
 });

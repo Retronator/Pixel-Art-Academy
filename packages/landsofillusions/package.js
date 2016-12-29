@@ -50,6 +50,25 @@ Package.onUse(function(api) {
   api.addFiles('gamestate/subscriptions.coffee', 'server');
   api.addFiles('gamestate/statenode.coffee');
 
+  // Character
+
+  api.addFiles('character/spacebars.coffee', 'client');
+  api.addFiles('character/character.coffee');
+  api.addFiles('character/methods.coffee');
+  api.addFiles('character/subscriptions.coffee', 'server');
+
+  // Avatar
+
+  api.addFiles('avatar/avatar.coffee');
+
+  // Conversations
+
+  api.addFiles('conversations/conversations.coffee');
+  api.addFiles('conversations/conversation.coffee');
+  api.addFiles('conversations/line.coffee');
+  api.addFiles('conversations/methods.coffee');
+  api.addFiles('conversations/subscriptions.coffee', 'server');
+
   // Adventure
 
   api.addFiles('adventure/adventure.html');
@@ -61,17 +80,6 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure-item.coffee');
   api.addFiles('adventure/adventure-inventory.coffee');
   api.addFiles('adventure/adventure-initialization.coffee');
-
-  // Character
-
-  api.addFiles('adventure/character/spacebars.coffee', 'client');
-  api.addFiles('adventure/character/character.coffee');
-  api.addFiles('adventure/character/methods.coffee');
-  api.addFiles('adventure/character/subscriptions.coffee', 'server');
-
-  // Avatar
-
-  api.addFiles('adventure/avatar/avatar.coffee');
 
   // Parser
 
@@ -147,14 +155,6 @@ Package.onUse(function(api) {
   api.addFiles('adventure/interface/text/text.styl');
 
   api.addFiles('adventure/interface/text/resizing.coffee');
-
-  // Conversations
-
-  api.addFiles('adventure/conversations/conversations.coffee');
-  api.addFiles('adventure/conversations/conversation.coffee');
-  api.addFiles('adventure/conversations/line.coffee');
-  api.addFiles('adventure/conversations/methods.coffee');
-  api.addFiles('adventure/conversations/subscriptions.coffee', 'server');
 
   // Pages
 

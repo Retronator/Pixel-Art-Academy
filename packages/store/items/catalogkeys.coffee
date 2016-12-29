@@ -28,6 +28,7 @@ RS.Items.CatalogKeys =
       ClassOf2016Artwork: ''
       ZXCosmopolis: ''
       PixelChinaMountains: ''
+      ArtworkShipping: ''
   Retropolis:
     DayPass: ''
     NightlifePass: ''
@@ -68,7 +69,7 @@ RS.Items.CatalogKeys =
         ArtistTrack:
           ClassHelp: ''
           Paintover: ''
-          VideoPaintover: ''
+          PaintoverVideo: ''
         ArtCollector:
           ZXCosmopolis: ''
           PixelChinaMountains: ''

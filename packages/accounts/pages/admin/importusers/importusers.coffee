@@ -10,6 +10,7 @@ class RA.Pages.AdmingImportUsers extends AM.Component
     Meteor.subscribe 'LandsOfIllusions.Accounts.RewardTier.all'
   
   rewards: ->
+    return
     LOI.Accounts.RewardTier.documents.find()
 
   events: ->
@@ -27,7 +28,7 @@ class RA.Pages.AdmingImportUsers extends AM.Component
 
     submitData = (data) ->
       encryptedData = CryptoJS.AES.encrypt(data, passphrase).toString()
-      Meteor.call 'LandsOfIllusions.Accounts.importUsers', rewardTierId, encryptedData
+      Meteor.call 'Retronator.Accounts.importUsers', rewardTierId, encryptedData
 
     if manualList.length
       submitData "HEADER#{manualType}\n#{manualList}"
