@@ -1,5 +1,5 @@
 .meteor/local
 .idea/
 run
-*-deploy
+deploy
 .DS_Store
