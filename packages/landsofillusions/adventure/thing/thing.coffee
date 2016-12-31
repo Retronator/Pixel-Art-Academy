@@ -161,7 +161,13 @@ class LOI.Adventure.Thing extends AM.Component
       verbs: [Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Use]
       action: =>
         LOI.Adventure.goToItem @constructor.id()
-
+          
+  addAbilityToActivateByReading: ->
+    @addAbility new Action
+      verbs: [Vocabulary.Keys.Verbs.Read, Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Use]
+      action: =>
+        LOI.Adventure.goToItem @constructor.id()
+        
   # Helper to access running scripts.
   currentScripts: ->
     @director()?.currentScripts() or []

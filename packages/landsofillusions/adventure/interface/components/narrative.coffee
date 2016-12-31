@@ -33,8 +33,9 @@ class LOI.Adventure.Interface.Components.Narrative
     options.scrollMain ?= true
 
     $textInterface = $('.adventure .text-interface')
+    return unless $textInterface.length
+
     $textDisplayContent = $textInterface.find('.text-display-content')
-    $uiAreaContent = $textInterface.find('.ui-area-content')
     $ui = $textInterface.find('.ui')
 
     displayContentHeight = $textDisplayContent.height()
@@ -54,9 +55,11 @@ class LOI.Adventure.Interface.Components.Narrative
 
     if options.scrollMain
       # Now also scroll the main content to bring the bottom into view, but only if scrolling down.
-      currentTop = parseInt $.Velocity.hook($uiAreaContent, 'translateY') or 0
-      newTop = -hiddenTotal
+      currentTop = $(window).scrollTop()
+      newTop = hiddenTotal
 
-      if newTop < currentTop
-        @options.textInterface.resizing?._animateElement $uiAreaContent, options.animate,
-          translateY: "#{newTop}px"
+      if newTop > currentTop
+        duration = _.clamp (newTop - currentTop), 150, 1000
+        $('html').velocity 'scroll',
+          offset: newTop
+          duration: duration

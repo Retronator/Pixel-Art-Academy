@@ -27,10 +27,6 @@ class LOI.Adventure extends LOI.Adventure
         # Find if this is an item or location.
         constructor = LOI.Adventure.Thing.getClassForUrl url
 
-        # Make sure we're on the right subdomain.
-        constructor = null if constructor?.welcomeHostname and location.hostname isnt Meteor.settings.public.welcomeHostname
-        constructor = null if not constructor?.welcomeHostname and location.hostname is Meteor.settings.public.welcomeHostname
-
         console.log "Thing class for this URL is", constructor if LOI.debug
 
         unless constructor

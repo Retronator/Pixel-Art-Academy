@@ -28,13 +28,11 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
       pixel artist, you feel the adventure in the air.
     "
     
-  @welcomeHostname = true
-
   @initialize()
 
   @initialState: ->
     things = {}
-    things[PAA.LandingPage.Items.About.id()] = {}
+    things[PAA.LandingPage.Items.Prospectus.id()] = {}
     things[PAA.Cast.Retro.id()] = {}
 
     exits = {}
@@ -56,15 +54,19 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
     @_sceneBounds = new ReactiveField null
 
   illustrationHeight: ->
-    illustrationHeight = @_sceneBounds()?.height() / @display.scale()
+    illustrationHeight = @_sceneBounds()?.height() / @display?.scale()
 
     illustrationHeight or 0
 
   onCreated: ->
+    super
+
     # Set the initializing flag for the first rendering pass, before we have time to initialize rendered elements.
     @initializingClass = new ReactiveField "initializing"
 
   onRendered: ->
+    super
+
     @app = @ancestorComponent Retronator.App
     @app.addComponent @
 
@@ -190,6 +192,7 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
     # Cache elements.
     @$paralaxSections = @$('.landing-page .parallax-section')
     @$uiAreaContent = $('.ui-area-content')
+    @$window = $(window)
 
     # Enable magnification detection.
     @autorun =>
@@ -206,8 +209,15 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
     # We are finished with initialization.
     @initializingClass ""
 
+    @$window.on 'scroll.landing-page', =>
+      @hasScrolled = true
+
   onDestroyed: ->
+    super
+
     @app.removeComponent @
+
+    @$window.off '.landing-page'
 
   draw: (appTime) ->
     scale = @display.scale()
@@ -240,8 +250,6 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
         width: viewport.maxBounds.width()
         height: middleSectionBounds.bottom()
 
-      console.log "scene bounds", sceneBounds.toDimensions()
-
       @_sceneBounds sceneBounds
 
       # Apply changes.
@@ -272,11 +280,11 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
       middleScenePillarboxBarHeight = (viewport.viewportBounds.height() - middleSectionBounds.height()) * 0.5
       @middleParallaxOrigin = middleSectionBounds.top() - middleScenePillarboxBarHeight
 
-    scrollTop = -parseInt $.Velocity.hook(@$uiAreaContent, 'translateY') or 0
 
-    unless scrollTop is @_currentScrollTop
-      @_currentScrollTop = scrollTop
+    if @hasScrolled
       @hasScrolled = false
+
+      scrollTop = @$window.scrollTop()
 
       @topScrollDelta = scrollTop - @topParallaxOrigin
       @middleScrollDelta = scrollTop - @middleParallaxOrigin

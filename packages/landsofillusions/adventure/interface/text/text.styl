@@ -16,14 +16,13 @@ hoverable()
     color atariGrey(0)
 
 .text-interface
-  fixed-cover()
   background atariGrey(0)
   color atariGrey(5)
 
   line-height lineHeight
 
   > .location
-    position absolute
+    position fixed
     z-index 1
 
   > .items
@@ -39,7 +38,7 @@ hoverable()
       z-index 1
 
   > .ui-area
-    absolute-cover()
+    position relative
     z-index 2
 
   .ui-background

@@ -30,7 +30,11 @@ Package.onUse(function(api) {
 
   api.addFiles('items/items.coffee');
 
-  api.addFiles('items/about/about.coffee');
-  api.addFiles('items/about/about.styl');
-  api.addFiles('items/about/about.html');
+  api.addFiles('items/prospectus/prospectus.coffee');
+
+  api.addFiles('pages/pages.coffee');
+
+  api.addFiles('pages/about/about.coffee');
+  api.addFiles('pages/about/about.styl');
+  api.addFiles('pages/about/about.html');
 });

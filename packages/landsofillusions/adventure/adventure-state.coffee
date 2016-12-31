@@ -6,10 +6,9 @@ class LOI.Adventure extends LOI.Adventure
     inventory = {}
     locations = {}
 
-    if location.hostname is Meteor.settings.public.playHostname
-      inventory[Retronator.HQ.Items.Wallet.id()] = {}
-      locations[Retronator.HQ.Locations.Elevator.id()] =
-        floor: 1
+    inventory[Retronator.HQ.Items.Wallet.id()] = {}
+    locations[Retronator.HQ.Locations.Elevator.id()] =
+      floor: 1
 
     _.extend state,
       player:

@@ -79,9 +79,12 @@ class LOI.Adventure.Interface.Text.Resizing
 
         $ui.css(uiSize.toDimensions())
 
-        # Background adds an extra line border around the UI
-        uiBackgroundSize = uiSize.extrude lineHeight
-        $uiBackground.css(uiBackgroundSize.toDimensions())
+        # Background puts black behind the UI plus an extra line above the UI.
+        uiBackgroundSize = uiSize.toDimensions()
+        uiBackgroundSize.top -= lineHeight
+        uiBackgroundSize.height += lineHeight
+
+        $uiBackground.css uiBackgroundSize
 
         $textInterface.find('.text-display').css(textDisplaySize.toDimensions()).height('100%')
         $textInterface.find('.text-display-content').width(textDisplaySize.width())

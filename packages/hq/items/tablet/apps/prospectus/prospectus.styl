@@ -1,25 +1,23 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .retronator-hq-items-tablet-apps-prospectus
+  position relative
   color atariGrey(5)
 
   *
     position relative
     box-sizing border-box
-    margin-top 0
-    margin-left 0
-    margin-right 0
 
   .main-wrapper
     background black
 
   h1
-    font-size 1em
+    acme-9()
     font-weight normal
 
   h2
     acme-7()
-    color console-white
+    color atariGrey(7)
     text-transform uppercase
 
   .byline
@@ -27,7 +25,7 @@
 
   p
     uni()
-    margin-bottom 1.5em
+    margin-bottom 10rem
 
   a
     text-decoration none
@@ -90,10 +88,10 @@
         height 0
 
     &:disabled
-      color console-dark-grey
+      color atariGrey(4)
 
     &.link-button
-      color console-white
+      color atariGrey(7)
       cursor pointer
       background none
       padding 0
@@ -101,7 +99,7 @@
       top 0
 
       &:hover
-        background-color console-white
+        background-color atariGrey(7)
         color black
 
       &:active
@@ -112,45 +110,25 @@
       content '> '
       white-space nowrap
 
-    &::after
-      display inline
-      position relative
-      content '_'
-      border-bottom none
-      right auto
-      left auto
-      top auto
-      bottom auto
-      white-space nowrap
-      animation blink 1s step-start 0s infinite
-
-    &:hover
-      &::after
-        display inline
-
   input
   textarea
     uni()
     background #333
-    border 0.2em solid #666
+    border 2rem solid #666
     padding 0 4rem
-    color console-light-grey
+    color atariGrey(6)
 
     &:focus
       outline none
       border-color #777
 
-  @keyframes blink
-    50%
-      visibility hidden
-
   blockquote
     kyrou-7()
-    padding 1em 0 2em 2em
+    padding 10rem 0 20rem 20rem
 
     &::before
       content '"'
-      font-size 2em
+      font-size 20rem
       position absolute
       top 0
       left 0
@@ -158,7 +136,7 @@
     cite
       uni()
       font-style normal
-      font-size 1em
+      font-size 10rem
       text-transform none
 
   nav
@@ -166,9 +144,9 @@
     top 0
     left 0
     width 100%
-    height 2em
-    line-height 2
-    padding 0 2em
+    height 15rem
+    line-height 15rem
+    padding 0 15rem
     text-align right
     z-index 2
     background-color black
@@ -176,7 +154,7 @@
 
     .social-media-icons
       float left
-      font-size 1.25em
+      font-size 12rem
 
       .social-media-icon
         display inline-block
@@ -215,10 +193,6 @@
           img
             left -32rem
 
-    //around the width the nav bumps into 2 lins, hide it
-    @media only screen and (max-width: 40em)
-      display none
-
     & > a
       margin-left 8rem
 
@@ -237,7 +211,6 @@
     background-position center bottom
     background-size cover
     color #eee
-    margin-bottom 2rem
 
     &::after
       content ''
@@ -260,12 +233,12 @@
     padding-left 0
 
     h1
-      padding-bottom 10rem
+      padding-bottom 15rem
 
       .subheading
         display block
         uni()
-        margin-bottom 5rem
+        margin-bottom 8rem
 
         .retronator
           retrotype()
@@ -282,6 +255,9 @@
           uni()
           color dark-grey
 
+    .tagline
+      margin-bottom 15rem
+
     .button
       uni()
       font-size 12rem
@@ -291,21 +267,21 @@
       text-transform uppercase
       border 0
       cursor pointer
-      margin-bottom 1em
+      margin-bottom 15rem
       display inline-block
       padding 4rem 8rem
 
       &:hover
         color #eee
-        text-shadow 1.25rem 1.25rem black
+        text-shadow 1.5rem 1.5rem black
         background-color transparent
 
   section:not(.jumbotron)
     margin auto
-    padding 4em 0 1em
+    padding 25rem 0 10rem
 
   section > *
-    padding-left 15rem
+    padding 0 20rem 0 30rem
 
   .core-features
     text-align center
@@ -314,21 +290,14 @@
       kyrou-5()
 
     .description
-      margin 1em
-
-    @media only screen and (max-width: 40em)
-      .size1of3
-        width 100%
-        margin 0 auto
-        max-width 15em
-        float initial
+      margin 10rem
 
   .core-features-img
-    height 5em
+    height 50rem
+    padding-top 10rem
 
     > img
-      top 50%
-      transform translateY(-50%)
+      position static
 
     > [src*="icon-character"]
       height 21rem
@@ -344,19 +313,18 @@
 
   .enrollment
     text-align center
-    margin-top 1em
-    line-height 1.5em
+    margin-top 10rem
 
   .student-life
     .infoblock
-      min-height 20em
+      min-height 200rem
       background-position center bottom
       background-repeat no-repeat
       background-attachment fixed
       background-size cover
 
       .line
-        height 20em
+        height 200rem
 
         .unit
           top 50%
@@ -364,7 +332,7 @@
 
           &.size2of3
             border 1rem solid #eee
-            padding 1em 1em 0 1em
+            padding 10rem 10rem 0 10rem
             text-shadow 1rem 1rem black
             color #eee
             background hsla(211,20%,20%,0.7)
@@ -395,21 +363,26 @@
         background-attachment scroll
         background-position center center
 
+  .support-intro
+    background-color #a7e2fd
+    padding-top 20rem
+    color black
+
   .featured-product
     background-image image('/retronator/hq/items/tablet/apps/prospectus/greetings.png')
     background-position left top
     background-repeat no-repeat
     background-color #a7e2fd
     background-size 350rem
-    margin-bottom 1em
-    padding 2em
+    margin-bottom 10rem
+    padding 20rem
 
     .products
       .store-item
         color black
         z-index 1
-        padding 1em
-        margin-bottom 1em
+        padding 10rem
+        margin-bottom 10rem
         background hsla(0,0%,100%,0.9)
         border 2rem solid #689ec2
 
@@ -429,12 +402,12 @@
             background-color atariGreen(2)
 
     .line.products
-      max-width 38em
+      max-width 380rem
 
     .more
       color black
       text-align center
-      margin-top 2em
+      margin-top 20rem
 
   .products
     text-align center
@@ -443,10 +416,10 @@
       h3
         acme-9()
         font-weight normal
-        line-height 1.5em
+        line-height 15rem
 
       .price
-        margin 1.5em 0 0.5em
+        margin 15rem 0 5rem
         kyrou-9()
         font-weight bold
 
@@ -469,12 +442,12 @@
               border-top 1rem solid
 
       .purchase-product
-        margin 1em
+        margin 10rem
         display inline-block
         vertical-align middle
 
       .product-image
-        height: 1.9em
+        height: 19rem
         display inline-block
         vertical-align middle
 
@@ -497,7 +470,7 @@
           vertical-align middle
 
   .payment-smallprint
-    color console-dark-grey
+    color atariGrey(4)
     margin-bottom 0
 
   .payment-form-screen
@@ -521,34 +494,34 @@
         list-style square
 
   .payment-form-wrapper
-    width 24em
+    width 240rem
     background black
     border 1rem solid #eee
-    padding 2em
-    padding-top 3em
-    margin 3em auto
+    padding 20rem
+    padding-top 30rem
+    margin 30rem auto
 
     .submit-payment
       display inline-block
       width 100%
-      margin 1em 0
+      margin 10rem 0
 
     .payment-errors
       uni()
       padding 5rem
       background #222
-      margin-bottom 1em
+      margin-bottom 10rem
 
   .close-payment
     uni()
     position absolute
     right 0
     top 0
-    padding 1em
+    padding 10rem
     cursor pointer
 
   .reset-payments
-    font-size 1em !important
+    font-size 10rem !important
 
   /* **************** GRIDS ***************** */
   .line::after
@@ -559,7 +532,7 @@
     visibility hidden
 
   .line
-    max-width 38em
+    max-width 380rem
     margin 0 auto
     @media only screen and (min-width: 1024px)
       margin auto
@@ -593,18 +566,27 @@
   .size4of5
     width 80%
 
+.prospectus-disable-scrolling
+  overflow hidden
+
 .retronator-hq-items-tablet
   .retronator-hq-items-tablet-apps-prospectus
     absolute-cover()
+
+    .home-link
+      display none
 
     .main-wrapper
       absolute-cover()
       overflow scroll
 
-    // Don't do fixed backgrounds when running on the tablet.
     #jumbotron
       background-attachment local
 
-  .student-life
-    .infoblock
-      background-attachment local
+    .student-life
+      .infoblock
+        background-attachment local
+
+    section:not(.jumbotron)
+      margin auto
+      padding 15rem 0 10rem

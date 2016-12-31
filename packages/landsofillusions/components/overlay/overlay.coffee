@@ -5,7 +5,14 @@ LOI = LandsOfIllusions
 class LOI.Components.Overlay extends AM.Component
   @register 'LandsOfIllusions.Components.Overlay'
 
+  onCreated: ->
+    super
+
+    $('body').addClass('overlay-disable-scrolling')
+
   onRendered: ->
+    super
+
     cropBarHeight = 0
 
     # Resize elements.
@@ -82,3 +89,8 @@ class LOI.Components.Overlay extends AM.Component
             duration: 200
             delay: 300
             easing: 'easeInQuint'
+
+  onDestroyed: ->
+    super
+
+    $('body').removeClass('overlay-disable-scrolling')

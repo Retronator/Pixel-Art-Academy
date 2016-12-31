@@ -333,6 +333,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
   events: ->
     super.concat
+      'mousewheel': @onMouseWheel
       'mousewheel .scrollable': @onMouseWheelScrollable
       'mouseenter .command': @onMouseEnterCommand
       'mouseleave .command': @onMouseLeaveCommand
@@ -341,9 +342,12 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       'mouseleave .exits .exit .name': @onMouseLeaveExit
       'click .exits .exit .name': @onClickExit
 
-  onMouseWheelScrollable: (event) ->
-    event.preventDefault()
+  onMouseWheel: (event) ->
+    # If scrolling is locked to a container, don't let the main window scroll.
+    if @_scrollLockTarget and @_scrollLockTarget isnt event.currentTarget
+      event.preventDefault()
 
+  onMouseWheelScrollable: (event) ->
     $scrollable = $(event.currentTarget)
 
     # If scrolling is locked to a container, don't let others scroll.
@@ -378,6 +382,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     @_unlockScrollAfterAWhile()
 
     $.Velocity.hook $scrollableContent, 'translateY', "#{newTop}px"
+
+    event.preventDefault()
 
   onMouseEnterCommand: (event) ->
     @hoveredCommand $(event.target).text()
