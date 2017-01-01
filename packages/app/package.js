@@ -24,10 +24,18 @@ Package.onUse(function(api) {
   api.use('retronator:pixelboy');
   api.use('retronator:practice');
   api.use('retronator:pixeldailies');*/
+  
+  // Routing portion, fork from force-ssl.
+  api.use('webapp', 'server');
+  
+  // Make sure we come after livedata, so we load after the sockjs server has been instantiated.
+  api.use('ddp', 'server');
 
-  // All Retronator websites run over SSL.
-  api.use('keyvan:my-force-ssl');
+  api.addFiles('routing.coffee');
+  api.addFiles('routing-server.coffee', 'server');
 
+  // Add other files.
   api.addFiles('app.html');
   api.addFiles('app.coffee');
+
 });
