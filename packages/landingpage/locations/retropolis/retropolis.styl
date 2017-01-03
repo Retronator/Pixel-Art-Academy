@@ -26,26 +26,67 @@
         right 0
         top 0
 
-        .title
+        .header
           display inline-block
+          position relative
           vertical-align middle
+          width 100%
 
-          .retronator
+          .title
             margin 0
             line-height initial
-            retrotype()
 
-          .pixel-art-academy
-            position relative
-            margin 0
+            .retronator
+              display block
+              retrotype()
+
+            .pixel-art-academy
+              display block
+              position relative
+              margin-top -2rem
+              font-weight bold
+              acme-9()
+
+          .by
+            adventure()
             line-height initial
-            font-weight bold
-            acme-9()
+
+          .retro
+            position absolute
+            top -2rem
+            right 48rem
+            width 25rem
+            z-index 2
+
+          .divider
+            position absolute
+            left 20rem
+            right 20rem
+            top 26rem
+            z-index 1
+
+            &::before
+            &::after
+              content ''
+              position absolute
+              border-bottom 1rem solid atariGrey(0)
+
+            &::before
+              left 0
+              right 86rem
+
+            &::after
+              left 203rem
+              right 0
 
       .middle
         position absolute
         left 0
         right 0
+
+        .lands-of-illusions-components-menu
+          display inline-block
+          vertical-align middle
 
       .bottom
         position absolute
@@ -53,9 +94,14 @@
         left 0
         right 0
         bottom 0
-        vertical-align middle
         uni()
         animation blink 5s ease-in-out 0s infinite
+
+        .scroll-to-start
+          display inline-block
+          height 37rem
+          vertical-align middle
+          line-height initial
 
     .scene
       position absolute

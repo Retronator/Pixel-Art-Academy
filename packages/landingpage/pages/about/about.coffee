@@ -1,11 +1,10 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-class PixelArtAcademy.LandingPage.Pages.About extends LOI.Adventure.Thing
-  @id: -> 'PixelArtAcademy.LandingPage.Pages.About'
-
-  @register @id()
-  template: -> @constructor.id()
+class PixelArtAcademy.LandingPage.Pages.About extends AM.Component
+  @register 'PixelArtAcademy.LandingPage.Pages.About'
+    
+  @version: -> '0.0.1'
 
   onCreated: ->
     super

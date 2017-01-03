@@ -35,8 +35,8 @@ class LOI.Adventure extends LOI.Adventure
           @_activeItem.activate()
 
         else
-          # We can't use an item we don't have or see. Return the URL to the location.
-          @constructor.goToLocation @currentLocationId()
+          # We can't use an item we don't have or see.
+          @activeItemId null
 
       else
         # No more object

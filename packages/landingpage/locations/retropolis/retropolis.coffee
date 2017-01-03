@@ -32,7 +32,6 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
 
   @initialState: ->
     things = {}
-    things[PAA.LandingPage.Items.Prospectus.id()] = {}
     things[PAA.Cast.Retro.id()] = {}
 
     exits = {}
@@ -44,14 +43,16 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
   middleSceneHeight = 180
   middleSceneOffsetFactor = 0.5
 
-  coatOfArmsHeight = 103
-  coatOfArmsRealHeight = 180
-  coatOfArmsOffset = 5
+  menuHeight = 120
 
   constructor: ->
     super
 
     @_sceneBounds = new ReactiveField null
+
+    @menu = new LOI.Components.Menu
+      adventure: @options.adventure
+      landingPage: true
 
   illustrationHeight: ->
     illustrationHeight = @_sceneBounds()?.height() / @display?.scale()
@@ -79,8 +80,7 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
     topParallaxElements = []
     middleParallaxElements = []
 
-    sceneItems =
-      coatOfArms: []
+    sceneItems = {}
 
     @$('.landing-page *[data-depth]').each ->
       $element = $(@)
@@ -110,7 +110,6 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
       sceneItems.frigates2 = parallaxInfo if $element.hasClass('frigates-2')
       sceneItems.frigates3 = parallaxInfo if $element.hasClass('frigates-3')
       sceneItems.frigates4 = parallaxInfo if $element.hasClass('frigates-4')
-      sceneItems.coatOfArms.push parallaxInfo if $element.hasClass('coat-of-arms')
 
     @sceneItems = sceneItems
 
@@ -123,7 +122,7 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
     scaleField = @display.scale
 
     # Preprocess all the images.
-    @$('.landing-page').find('img').each ->
+    @$('.scene').find('img').each ->
       $image = $(@)
       $image.addClass('initializing')
 
@@ -191,8 +190,7 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
 
     # Cache elements.
     @$paralaxSections = @$('.landing-page .parallax-section')
-    @$uiAreaContent = $('.ui-area-content')
-    @$window = $(window)
+    @$uiArea = $('.ui-area')
 
     # Enable magnification detection.
     @autorun =>
@@ -209,15 +207,10 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
     # We are finished with initialization.
     @initializingClass ""
 
-    @$window.on 'scroll.landing-page', =>
-      @hasScrolled = true
-
   onDestroyed: ->
     super
 
-    @app.removeComponent @
-
-    @$window.off '.landing-page'
+    @app?.removeComponent @
 
   draw: (appTime) ->
     scale = @display.scale()
@@ -226,12 +219,12 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
       @hasResized = false
 
       # Also trigger parallax.
-      @hasScrolled = true
+      forceScroll = true
 
       viewport = @display.viewport()
 
       topSectionBounds = new AE.Rectangle
-        x: viewport.viewportBounds.x() + viewport.safeArea.x()
+        x: viewport.safeArea.x()
         y: viewport.viewportBounds.y()
         width: viewport.safeArea.width()
         height: viewport.viewportBounds.height()
@@ -257,14 +250,17 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
 
       @$('.landing-page .top-section').css topSectionBounds.toDimensions()
 
-      topSectionRestHeight = topSectionBounds.height() * 0.5 - coatOfArmsHeight * 0.5 * scale
+      topSectionRestHeight = topSectionBounds.height() * 0.5 - menuHeight * 0.5 * scale
+      topSectionMiddleHeight = menuHeight * scale
+
       @$('.landing-page .top-section .top, .landing-page .top-section .bottom').css
         height: topSectionRestHeight
         lineHeight: "#{topSectionRestHeight}px"
 
       @$('.landing-page .top-section .middle').css
-        top: topSectionBounds.height() * 0.5 - coatOfArmsRealHeight * 0.5 * scale + coatOfArmsOffset * scale
-        left: (topSectionBounds.width() - 240 * scale) * 0.5
+        top: topSectionRestHeight
+        height: topSectionMiddleHeight
+        lineHeight: "#{topSectionMiddleHeight}px"
 
       @$('.landing-page .middle-section').css middleSectionBounds.toDimensions()
 
@@ -280,11 +276,11 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
       middleScenePillarboxBarHeight = (viewport.viewportBounds.height() - middleSectionBounds.height()) * 0.5
       @middleParallaxOrigin = middleSectionBounds.top() - middleScenePillarboxBarHeight
 
+    scrollTop = -parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
 
-    if @hasScrolled
+    if forceScroll or scrollTop isnt @_currentScrollTop
+      @_currentScrollTop = scrollTop
       @hasScrolled = false
-
-      scrollTop = @$window.scrollTop()
 
       @topScrollDelta = scrollTop - @topParallaxOrigin
       @middleScrollDelta = scrollTop - @middleParallaxOrigin

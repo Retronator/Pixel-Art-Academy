@@ -175,6 +175,10 @@ Package.onUse(function(api) {
   api.addFiles('components/backbutton/backbutton.html');
   api.addFiles('components/backbutton/backbutton.styl');
 
+  api.addFiles('components/menu/menu.coffee');
+  api.addFiles('components/menu/menu.html');
+  api.addFiles('components/menu/menu.styl');
+
   // Typography
 
   api.addFiles('typography/typography.css', 'client');

@@ -19,7 +19,7 @@ class LOI.Adventure extends LOI.Adventure
   _initializeState: ->
     # Game state depends on whether the user is signed in or not and returns
     # the game  state from database when signed in or from local storage otherwise.
-    @_localGameState = new LOI.LocalGameState
+    @localGameState = new LOI.LocalGameState
 
     _gameStateUpdatedDependency = new Tracker.Dependency
 
@@ -37,7 +37,7 @@ class LOI.Adventure extends LOI.Adventure
       # Find the state from the database.
       console.log "We currently have these game state documents:", LOI.GameState.documents.find().fetch() if LOI.debug
 
-      gameState = LOI.GameState.documents.findOne('user._id': userId)
+      gameState = LOI.GameState.documents.findOne 'user._id': userId
       console.log "Did we find a game state for the current user? We got", gameState if LOI.debug
 
       # Here we decide which provider of the game state we'll use, the database or local storage. In general this is
@@ -63,12 +63,12 @@ class LOI.Adventure extends LOI.Adventure
 
       else
         # Fallback to local storage.
-        state = @_localGameState.state()
+        state = @localGameState.state()
         _gameStateUpdated = (options) =>
-          # Local game state does not need to be flushed.
+          # Local game state does not need to be flushed, so just return.
           return if options?.flush
 
-          @_localGameState.updated()
+          @localGameState.updated()
           _gameStateUpdatedDependency.changed()
 
       # Initialize state if needed.
@@ -104,6 +104,6 @@ class LOI.Adventure extends LOI.Adventure
       @gameState?.updated flush: true
 
   clearLocalGameState: ->
-    localGameState = @_localGameState.state()
+    localGameState = @localGameState.state()
     LOI.Adventure.resetGameState localGameState
-    @_localGameState.updated()
+    @localGameState.updated()

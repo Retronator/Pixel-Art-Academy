@@ -59,22 +59,8 @@ class LOI.Adventure.Thing extends AM.Component
   @getClassForId: (id) ->
     @_thingClassesById[id]
 
-  # The semantic version of this thing, so we can know when we need to fetch assets (images,
-  # scripts) again. You can use the -wip suffix to force constant reloads and recompiles.
-  @wipSuffix = 'wip'
+  # Start all things with a WIP version.
   @version: -> "0.0.1-#{@wipSuffix}"
-  version: -> @constructor.version()
-
-  @versionUrl: (url) ->
-    version = @version()
-
-    # If we're in WIP mode, add a random url version.
-    version = Random.id() if _.endsWith version, @wipSuffix
-
-    # Return the url with version added.
-    "#{url}?#{version}"
-
-  versionUrl: (url) -> @constructor.versionUrl url
 
   @initialize: ->
     # Store thing class by ID and url.
@@ -154,19 +140,19 @@ class LOI.Adventure.Thing extends AM.Component
     @addAbility new Action
       verb: Vocabulary.Keys.Verbs.Look
       action: =>
-        LOI.Adventure.goToItem @constructor.id()
+        @options.adventure.goToItem @constructor.id()
 
   addAbilityToActivateByLookingOrUsing: ->
     @addAbility new Action
       verbs: [Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Use]
       action: =>
-        LOI.Adventure.goToItem @constructor.id()
+        @options.adventure.goToItem @constructor.id()
           
   addAbilityToActivateByReading: ->
     @addAbility new Action
       verbs: [Vocabulary.Keys.Verbs.Read, Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Use]
       action: =>
-        LOI.Adventure.goToItem @constructor.id()
+        @options.adventure.goToItem @constructor.id()
         
   # Helper to access running scripts.
   currentScripts: ->

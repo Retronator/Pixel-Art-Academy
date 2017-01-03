@@ -33,7 +33,11 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     @commandInput = new LOI.Adventure.Interface.Components.CommandInput
       interface: @
       onEnter: => @onCommandInputEnter()
-      onKeyDown: => @onCommandInputKeyDown()
+
+    # Listen for command input changes.
+    @autorun (computation) =>
+      @commandInput.command()
+      @onCommandInputChanged()
 
     @dialogSelection = new LOI.Adventure.Interface.Components.DialogSelection
       interface: @
@@ -65,8 +69,9 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     # Clamp scrollable areas to content size.
     @autorun =>
-      # React to viewport changes.
+      # React to viewport and fullscreen changes.
       @display.viewport()
+      AM.Window.isFullscreen()
 
       @$('.scrollable').each ->
         $scrollable = $(@)
@@ -79,6 +84,17 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
         $.Velocity.hook $scrollableContent, 'translateY', "#{newTop}px"
 
+    # Listen to scroll events so that we can sync transform-based scrolling to it.
+    $uiArea = $('.ui-area')
+    @textInterface = $('.text-interface')[0]
+    @$window = $(window)
+
+    @$window.on 'scroll.text-interface', =>
+      scrollTop = @$window.scrollTop()
+      $.Velocity.hook $uiArea, 'translateY', "#{-scrollTop}px"
+
+    # Listen to fullscreen changes and sync scroll top to
+
   onDestroyed: ->
     super
 
@@ -86,6 +102,11 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     @commandInput.destroy()
     @dialogSelection.destroy()
+
+    $(window).off '.text-interface'
+
+    # Clean up body height that was set from resizing.
+    $('body').css height: ''
 
   active: ->
     # The text interface is active unless there is an item active.
@@ -333,8 +354,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
   events: ->
     super.concat
-      'mousewheel': @onMouseWheel
-      'mousewheel .scrollable': @onMouseWheelScrollable
+      'wheel': @onWheel
+      'wheel .scrollable': @onWheelScrollable
       'mouseenter .command': @onMouseEnterCommand
       'mouseleave .command': @onMouseLeaveCommand
       'click .command': @onClickCommand
@@ -342,12 +363,12 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       'mouseleave .exits .exit .name': @onMouseLeaveExit
       'click .exits .exit .name': @onClickExit
 
-  onMouseWheel: (event) ->
+  onWheel: (event) ->
     # If scrolling is locked to a container, don't let the main window scroll.
     if @_scrollLockTarget and @_scrollLockTarget isnt event.currentTarget
       event.preventDefault()
 
-  onMouseWheelScrollable: (event) ->
+  onWheelScrollable: (event) ->
     $scrollable = $(event.currentTarget)
 
     # If scrolling is locked to a container, don't let others scroll.
@@ -355,9 +376,9 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     $scrollableContent = $scrollable.find('.scrollable-content').eq(0)
 
-    delta = event.originalEvent.wheelDeltaY
+    delta = event.originalEvent.deltaY
     top = parseInt $.Velocity.hook($scrollableContent, 'translateY') or 0
-    newTop = top + delta
+    newTop = top - delta
     
     # Limit scrolling to the amount of content.
     amountHidden = Math.max 0, $scrollableContent.height() - $scrollable.height()
@@ -382,6 +403,10 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     @_unlockScrollAfterAWhile()
 
     $.Velocity.hook $scrollableContent, 'translateY', "#{newTop}px"
+
+    # When scrolling the main text adventure sync also scrollTop of the page.
+    if event.currentTarget is @textInterface
+      @$window.scrollTop -newTop
 
     event.preventDefault()
 
@@ -418,6 +443,9 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     @_executeCommand @hoveredCommand() or @commandInput.command().trim()
 
+    # Scroll to bottom on enter.
+    @narrative.scroll()
+
   _executeCommand: (command) ->
     return unless command.length
 
@@ -425,8 +453,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     @options.adventure.parser.parse command
     @commandInput.clear()
 
-  onCommandInputKeyDown: ->
-    # Scroll to bottom on key press.
+  onCommandInputChanged: ->
+    # Scroll to bottom to reveal new command.
     @narrative.scroll()
     
   onDialogSelectionEnter: ->

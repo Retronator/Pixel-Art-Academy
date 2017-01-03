@@ -48,16 +48,10 @@ class LOI.Components.Overlay extends AM.Component
 
       @$('.max-area').css maxAreaSize
 
-    # Animate in.
-    @$('.background').velocity
-      opacity: [1, 0]
-    ,
-      duration: 500
+    @$('.background').addClass('visible')
+    @$('.safe-area').addClass('visible')
 
-    @$('.safe-area').velocity
-      opacity: [1, 0]
-    ,
-      duration: 500
+    @$('.crop-bar').height 0
 
     @$('.crop-bar').velocity
       height: [cropBarHeight, 0]
@@ -73,15 +67,8 @@ class LOI.Components.Overlay extends AM.Component
       @autorun (computation) =>
         if itemParent.activatedState() is LOI.Adventure.Item.activatedStates.Deactivating
           # Animate out.
-          @$('.background').velocity
-            opacity: 0
-          ,
-            duration: 500
-
-          @$('.safe-area').velocity
-            opacity: 0
-          ,
-            duration: 500
+          @$('.background').removeClass('visible')
+          @$('.safe-area').removeClass('visible')
 
           @$('.crop-bar').velocity
             height: 0

@@ -149,7 +149,7 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
           @options.adventure.gameState.updated()
           
           # Look at display.
-          LOI.Adventure.goToItem HQ.Locations.Checkout.Display
+          @options.adventure.goToItem HQ.Locations.Checkout.Display
 
           # Activate the tablet so it gets overlaid.
           tablet.activate()

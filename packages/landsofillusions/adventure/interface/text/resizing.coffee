@@ -79,12 +79,9 @@ class LOI.Adventure.Interface.Text.Resizing
 
         $ui.css(uiSize.toDimensions())
 
-        # Background puts black behind the UI plus an extra line above the UI.
-        uiBackgroundSize = uiSize.toDimensions()
-        uiBackgroundSize.top -= lineHeight
-        uiBackgroundSize.height += lineHeight
-
-        $uiBackground.css uiBackgroundSize
+        # Background adds an extra line border around the UI
+        uiBackgroundSize = uiSize.extrude lineHeight
+        $uiBackground.css(uiBackgroundSize.toDimensions())
 
         $textInterface.find('.text-display').css(textDisplaySize.toDimensions()).height('100%')
         $textInterface.find('.text-display-content').width(textDisplaySize.width())
@@ -118,9 +115,12 @@ class LOI.Adventure.Interface.Text.Resizing
           newUIHeight = Math.max 0, Math.floor(newUIHeight / lineHeight) * lineHeight - 1
 
           # Put UI below the location with 1 line margin.
-          @_animateElement $ui, animate,
-            top: locationHeight + lineHeight
-            height: newUIHeight
+          @_animateElement
+            $element: $ui
+            animate: animate
+            properties:
+              top: locationHeight + lineHeight
+              height: newUIHeight
 
           # Scroll to bottom on resizes.
           @textInterface.narrative.scroll
@@ -130,15 +130,20 @@ class LOI.Adventure.Interface.Text.Resizing
           uiHeight = newUIHeight
 
         # Set total interface height so that scrolling can use it in its calculations.
-        $textInterface.find('.ui-area-content').css
-          height: locationHeight + lineHeight + uiHeight
+        $textInterface.find('.ui-area').add('body').height locationHeight + lineHeight + uiHeight
 
-  _animateElement: ($element, animate, properties) ->
-    if animate
-      $element.velocity('stop').velocity properties,
-        duration: 150
+  _animateElement: (options) ->
+    options.duration ?= 150
+
+    if options.animate
+      options.$element.velocity('stop').velocity options.properties,
+        duration: options.duration
         easing: 'ease-out'
+        complete: options.complete
+        progress: options.progress
 
     else
-      for name, value of properties
-        $.Velocity.hook $element, name, value
+      for name, value of options.properties
+        $.Velocity.hook options.$element, name, value
+
+      options.complete?()

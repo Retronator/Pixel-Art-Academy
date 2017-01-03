@@ -50,6 +50,9 @@ class LOI.Adventure.Interface.Components.CommandInput
 
     @_notIdle()
 
+    # Don't let space scroll.
+    return false if event.which is 32
+
   onKeyDown: (event) ->
     interfaceActive = @options.interface.active()
 

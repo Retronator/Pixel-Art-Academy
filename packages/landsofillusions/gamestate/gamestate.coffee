@@ -5,7 +5,7 @@ class LandsOfIllusionsGameState extends AM.Document
   # state: object that holds all game information
   #   player
   #     inventory
-  #   things
+  #   locations
   #     scripts
   # user: the user this state belongs to or null if it's a character state
   #   _id

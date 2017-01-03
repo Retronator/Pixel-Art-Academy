@@ -30,11 +30,15 @@ Package.onUse(function(api) {
 
   api.addFiles('items/items.coffee');
 
-  api.addFiles('items/prospectus/prospectus.coffee');
+  // Pages
 
   api.addFiles('pages/pages.coffee');
 
   api.addFiles('pages/about/about.coffee');
   api.addFiles('pages/about/about.styl');
   api.addFiles('pages/about/about.html');
+
+  api.addFiles('pages/press/press.coffee');
+  api.addFiles('pages/press/press.styl');
+  api.addFiles('pages/press/press.html');
 });

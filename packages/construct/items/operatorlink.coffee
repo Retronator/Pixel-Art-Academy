@@ -40,11 +40,11 @@ class LOI.Construct.Items.OperatorLink extends LOI.Adventure.Item
 
         operatorDialog.setCallbacks
           Exit: (complete) =>
-            LOI.Adventure.goToLocation HQ.Locations.LandsOfIllusions.Room
+            @options.adventure.goToLocation HQ.Locations.LandsOfIllusions.Room
             complete()
 
           Construct: (complete) =>
-            LOI.Adventure.goToLocation LOI.Construct.Locations.Loading
+            @options.adventure.goToLocation LOI.Construct.Locations.Loading
             complete()
 
         location.director().startScript operatorDialog

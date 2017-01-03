@@ -60,9 +60,21 @@ class HQ.Items.Wallet extends LOI.Adventure.Item
   onClickBackButtonHandler: ->
     => @onClickBackButton()
 
+  onActivate: (finishedActivatingCallback) ->
+    Meteor.setTimeout =>
+      finishedActivatingCallback()
+    ,
+      500
+
+  onDeactivate: (finishedDeactivatingCallback) ->
+    Meteor.setTimeout =>
+      finishedDeactivatingCallback()
+    ,
+      500
+
   events: ->
     super.concat
       'click #login-buttons-logout': @onClickLogoutButton
 
   onClickLogoutButton: (event) ->
-    Meteor.logout()
+    @options.adventure.logout()

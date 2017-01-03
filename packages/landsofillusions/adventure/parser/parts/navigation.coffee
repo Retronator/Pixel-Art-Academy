@@ -15,7 +15,7 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       # Did the user say this word?
       if command.is directionWords
         # Yes, the user is trying to go to this direction!
-        LOI.Adventure.goToLocation locationId
+        @options.adventure.goToLocation locationId
         return true
   
     # No direction was named. See if we can go to location by name.
@@ -40,5 +40,5 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
 
         if hasGoWords or justLocation
           # Let's go there.
-          LOI.Adventure.goToLocation locationId
+          @options.adventure.goToLocation locationId
           return true

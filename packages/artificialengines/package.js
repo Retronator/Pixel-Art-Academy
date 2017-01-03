@@ -100,6 +100,7 @@ Package.onUse(function(api) {
   api.addFiles('mirage/spacebars/meteorhelpers.coffee');
   api.addFiles('mirage/spacebars/stringhelpers.coffee');
   api.addFiles('mirage/spacebars/htmlhelpers.coffee');
+  api.addFiles('mirage/spacebars/image.coffee');
 
   api.addFiles('mirage/mixins/autoresizetextarea.coffee');
   api.addFiles('mirage/mixins/autoselectinput.coffee');

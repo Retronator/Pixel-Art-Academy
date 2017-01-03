@@ -91,7 +91,7 @@ class HQ.Locations.LandsOfIllusions.Room extends LOI.Adventure.Location
         @options.adventure.scriptHelpers.addItemToInventory item: LOI.Construct.Items.OperatorLink
 
         # Start Lands of Illusions VR Experience.
-        LOI.Adventure.goToItem HQ.Locations.LandsOfIllusions.Room.Chair
+        @options.adventure.goToItem HQ.Locations.LandsOfIllusions.Room.Chair
 
         complete()
 

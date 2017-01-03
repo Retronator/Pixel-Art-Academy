@@ -139,6 +139,28 @@ class AM.Component extends CommonComponent
     if styleClassesArray?.length
       class: styleClassesArray.join ' '
 
+  # Versioning of resources
+
+  @wipSuffix = 'wip'
+
+  # The semantic version of this component, so we can know when we need to fetch assets (images, scripts) again. 
+  # Null means this component is not versioned and the version resolution should be checked in an ancestor component
+  # instead. You can also use the -wip suffix to force constant reloads and recompiles.
+  @version: -> null
+  version: -> @constructor.version()
+
+  # Returns a URL modified to include the version the component is at.
+  @versionedUrl: (url) ->
+    version = @version()
+
+    # If we're in WIP mode, add a random url version.
+    version = Random.id() if _.endsWith version, @wipSuffix
+
+    # Return the url with version added.
+    "#{url}?#{version}"
+
+  versionedUrl: (url) -> @constructor.versionedUrl url
+
   # Artificial Babel
 
   # Translates the provided key with Artificial Babel.

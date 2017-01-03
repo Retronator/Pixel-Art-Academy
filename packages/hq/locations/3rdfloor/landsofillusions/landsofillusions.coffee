@@ -73,7 +73,7 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
           complete()
 
         Leave: (complete) =>
-          LOI.Adventure.goToLocation HQ.Locations.Chillout
+          @options.adventure.goToLocation HQ.Locations.Chillout
           complete()
 
         AnalyzeUser: (complete) =>

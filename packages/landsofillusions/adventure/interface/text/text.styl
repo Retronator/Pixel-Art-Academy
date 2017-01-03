@@ -16,6 +16,8 @@ hoverable()
     color atariGrey(0)
 
 .text-interface
+  fixed-cover()
+  overflow hidden
   background atariGrey(0)
   color atariGrey(5)
 
@@ -23,6 +25,7 @@ hoverable()
 
   > .location
     position fixed
+    transform translateZ(0)
     z-index 1
 
   > .items
@@ -38,123 +41,123 @@ hoverable()
       z-index 1
 
   > .ui-area
-    position relative
     z-index 2
 
-  .ui-background
-    position absolute
-    z-index 1
-    background atariGrey(0)
-
-  .ui
-    position absolute
-    z-index 2
-
-    .text-display
+    .ui-background
       position absolute
-      overflow hidden
+      z-index 1
+      background atariGrey(0)
 
-      .narrative
-        p
-          margin 0 0 lineHeight
+    .ui
+      position absolute
+      z-index 2
+      pointer-events auto
 
-        .command
-          position relative
-          hoverable()
+      .text-display
+        position absolute
+        overflow hidden
 
-          &::after
-            display block
-            content ''
-            absolute-cover()
-            right 1rem
-            border-bottom 1rem solid atariGrey(5)
+        .narrative
+          p
+            margin 0 0 lineHeight
 
-          &:hover
+          .command
+            position relative
+            hoverable()
+
             &::after
-              display none
+              display block
+              content ''
+              absolute-cover()
+              right 1rem
+              border-bottom 1rem solid atariGrey(5)
 
-        .exits
-          .exit
-            &::after
-              content: ","
-
-            .name
-              hoverable()
-
-            &:last-child
+            &:hover
               &::after
-                content: "."
+                display none
 
-        .things-sentence
-          margin-bottom 0
+          .exits
+            .exit
+              &::after
+                content: ","
 
-        .things
+              .name
+                hoverable()
+
+              &:last-child
+                &::after
+                  content: "."
+
+          .things-sentence
+            margin-bottom 0
+
+          .things
+            list-style none
+            padding-left gridSpacing * 2
+            margin 0 0 lineHeight  0
+
+            .thing
+              margin 0
+
+              &::before
+                content: "— "
+
+        .command-line
+          position relative
+          text-transform uppercase
+          margin-bottom lineHeight
+
+          .caret
+            &.idle
+              animation blink 1s step-start 0s infinite
+
+          .dummy-input
+            position absolute
+            left -10%
+            width 120%
+            top -100%
+            height 300%
+
+            opacity 0
+
+            &:focus
+              left -300%
+
+        .dialog-selection
+          .options
+            list-style none
+            margin 0 0 lineHeight
+            padding 0
+
+            .option
+              padding 0 7rem
+
+              &.active
+                background atariGrey(7)
+                color atariGrey(0)
+                padding-left 0
+
+                &::before
+                  content "> "
+                  margin-right 1rem
+
+      .inventory
+        position absolute
+        overflow hidden
+
+        .items-sentence
+          margin 0
+
+        .items
           list-style none
-          padding-left gridSpacing * 2
-          margin 0 0 lineHeight  0
+          margin 0
+          padding 0
 
-          .thing
+          .item
             margin 0
 
             &::before
               content: "— "
-
-      .command-line
-        position relative
-        text-transform uppercase
-        margin-bottom lineHeight
-
-        .caret
-          &.idle
-            animation blink 1s step-start 0s infinite
-
-        .dummy-input
-          position absolute
-          left -10%
-          width 120%
-          top -100%
-          height 300%
-
-          opacity 0
-
-          &:focus
-            left -300%
-
-      .dialog-selection
-        .options
-          list-style none
-          margin 0 0 lineHeight
-          padding 0
-
-          .option
-            padding 0 7rem
-
-            &.active
-              background atariGrey(7)
-              color atariGrey(0)
-              padding-left 0
-
-              &::before
-                content "> "
-                margin-right 1rem
-
-    .inventory
-      position absolute
-      overflow hidden
-
-      .items-sentence
-        margin 0
-
-      .items
-        list-style none
-        margin 0
-        padding 0
-
-        .item
-          margin 0
-
-          &::before
-            content: "— "
 
   .scrollable-content
     position absolute

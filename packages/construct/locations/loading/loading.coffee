@@ -71,11 +71,11 @@ class LOI.Construct.Locations.Loading extends LOI.Construct.Location
 
       captainDialog.setCallbacks
         C3: (complete) =>
-          LOI.Adventure.goToLocation LOI.Construct.Locations.C3.Entrance
+          @options.adventure.goToLocation LOI.Construct.Locations.C3.Entrance
           complete()
 
         Exit: (complete) =>
-          LOI.Adventure.goToLocation Retronator.HQ.Locations.LandsOfIllusions.Room
+          @options.adventure.goToLocation Retronator.HQ.Locations.LandsOfIllusions.Room
           complete()
 
       # Auto-start the captain script.

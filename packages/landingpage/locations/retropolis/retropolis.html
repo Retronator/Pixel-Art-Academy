@@ -3,33 +3,25 @@
   <div class="landing-page {{initializingClass}}">
     <div class="top-section parallax-section">
       <div class="top" data-depth="1">
-        <hgroup class="title">
-          <h2 class="retronator">Retronator</h2>
-          <h1 class="pixel-art-academy">Pixel Art Academy</h1>
-        </hgroup>
+        <div class="header">
+          <h1 class="title">
+            <span class="retronator">Retronator</span>
+            <span class="pixel-art-academy">Pixel Art Academy</span>
+          </h1>
+          <div class="by">by Matej 'Retro' Jan</div>
+          <img class="retro" src="{{image '/pixelartacademy/landingpage/locations/retropolis/retro.png'}}"/>
+          <div class="divider"></div>
+        </div>
       </div>
-      <div class="middle">
-        <div class="coat-of-arms" data-depth="1.5">
-          <img src="{{image '/pixelartacademy/landingpage/locations/retropolis/coatofarms/layers/behind.png'}}" />
-        </div>
-        <div class="coat-of-arms" data-depth="1.51">
-          <img src="{{image '/pixelartacademy/landingpage/locations/retropolis/coatofarms/layers/shield.png'}}" />
-        </div>
-        <div class="coat-of-arms" data-depth="1.52">
-          <img src="{{image '/pixelartacademy/landingpage/locations/retropolis/coatofarms/layers/ribbon-top.png'}}" />
-        </div>
-        <div class="coat-of-arms" data-depth="1.6">
-          <img src="{{image '/pixelartacademy/landingpage/locations/retropolis/coatofarms/layers/tools.png'}}" />
-        </div>
-        <div class="coat-of-arms" data-depth="1.65">
-          <img src="{{image '/pixelartacademy/landingpage/locations/retropolis/coatofarms/layers/main-ribbon.png'}}" />
-        </div>
+      <div class="middle" data-depth="1.5">
+        {{> Render menu}}
       </div>
       <div class="bottom" data-depth="1">
-        Scroll down to continue
+        <div class="scroll-to-start">
+          {{> t10e "Scroll down to begin"}}
+        </div>
       </div>
     </div>
-
     <div class="scene parallax-section">
       <div class="middle-section">
         <div class="sky" style="top: -96px;" data-depth="0.5"><img src="{{image '/pixelartacademy/landingpage/locations/retropolis/sky.png'}}"/></div>

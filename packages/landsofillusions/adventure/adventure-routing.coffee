@@ -17,66 +17,30 @@ class LOI.Adventure extends LOI.Adventure
     parameters.join '/'
 
   _initializeRouting: ->
+    # Match url to the active item or current location.
     @autorun =>
-      url = @currentUrl()
+      activeItemId = @activeItemId()
+      currentLocationId = @currentLocationId()
 
-      console.log "%cURL has changed to", 'background: PapayaWhip', url if LOI.debug
-
-      # We only want to react to router changes.
-      Tracker.nonreactive =>
-        # Find if this is an item or location.
-        constructor = LOI.Adventure.Thing.getClassForUrl url
-
-        console.log "Thing class for this URL is", constructor if LOI.debug
-
-        unless constructor
-          # We didn't find a thing for this URL. Just go to whatever location/item is set in the state.
-          @rewriteUrl()
-          return
-
-        if constructor.prototype instanceof LOI.Adventure.Location
-          # We are at a location. Deactivate an item if there was one activated via URL.
-          @activeItemId null
-
-          if constructor isnt @currentLocation()?.constructor
-            # We are at a location. Switch to it.
-            @currentLocationId constructor.id()
-
-        else if constructor.prototype instanceof LOI.Adventure.Item
-          @activeItemId constructor.id()
-
-  # Rewrites the URL to match the current item or location we're at.
-  rewriteUrl: ->
-    activeItemId = @activeItemId()
-    currentLocationId = @currentLocationId()
-
-    thingClass = LOI.Adventure.Thing.getClassForId activeItemId or currentLocationId
-    desiredUrl = thingClass.url()
-    currentUrl = @currentUrl()
-
-    if _.endsWith desiredUrl, '/*'
-      urlPrefix = desiredUrl.substring 0, desiredUrl.length - 2
-      return if currentUrl.indexOf urlPrefix is 0
+      thingClass = LOI.Adventure.Thing.getClassForId activeItemId or currentLocationId
+      return unless thingClass
       
-    else
-      return if desiredUrl is currentUrl
+      desiredUrl = thingClass.url()
+      currentUrl = @currentUrl()
 
-    console.log "%cRerouting to URL for item", 'background: NavajoWhite', activeItemId, "or location", currentLocationId if LOI.debug
+      if _.endsWith desiredUrl, '/*'
+        urlPrefix = desiredUrl.substring 0, desiredUrl.length - 2
+        return if currentUrl.indexOf urlPrefix is 0
 
-    if activeItemId
-      LOI.Adventure.goToItem activeItemId
+      else
+        return if desiredUrl is currentUrl
 
-    else
-      LOI.Adventure.goToLocation currentLocationId
+      console.log "%cRewriting URL for item", 'background: NavajoWhite', activeItemId, "or location", currentLocationId if LOI.debug
 
-  @goToLocation: (locationClassOrId) ->
-    locationClass = if _.isFunction locationClassOrId then locationClassOrId else LOI.Adventure.Location.getClassForId locationClassOrId     
-    console.log "%cRouting to location with ID", 'background: NavajoWhite', locationClass.id() if LOI.debug
+      FlowRouter.go 'LandsOfIllusions.Adventure', thingClass.urlParameters()
 
-    FlowRouter.go 'LandsOfIllusions.Adventure', locationClass.urlParameters()
+  goToLocation: (locationClassOrId) ->
+    @currentLocationId _.thingId locationClassOrId
 
-  @goToItem: (itemClassOrId) ->
-    itemClass = if _.isFunction itemClassOrId then itemClassOrId else LOI.Adventure.Item.getClassForId itemClassOrId
-    console.log "%cRouting to item with ID", 'background: NavajoWhite', itemClass.id() if LOI.debug
-
-    FlowRouter.go 'LandsOfIllusions.Adventure', itemClass.urlParameters()
+  goToItem: (itemClassOrId) ->
+    @activeItemId _.thingId itemClassOrId

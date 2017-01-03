@@ -21,7 +21,7 @@ httpServer.addListener 'request', (request, response) ->
   # received it on localhost, and all proxies involved received on localhost.
   localhostRegexp = /^\s*(127\.0\.0\.1|::1)\s*$/
 
-  isLocal = localhostRegexp.test(remoteAddress) and (not request.headers['x-forwarded-for'] or _.every(request.headers['x-forwarded-for'].split(','), (x) ->
+  isLocalhost = localhostRegexp.test(remoteAddress) and (not request.headers['x-forwarded-for'] or request.headers['x-forwarded-for'] is 'undefined' or _.every(request.headers['x-forwarded-for'].split(','), (x) ->
     localhostRegexp.test x
   ))
 
@@ -29,18 +29,20 @@ httpServer.addListener 'request', (request, response) ->
   # received it as SSL, or a proxy did and translated it for us.
   isSsl = request.connection.pair or request.headers['x-forwarded-proto'] and request.headers['x-forwarded-proto'].indexOf('https') isnt -1
 
-  parsedUrl = url.parse Meteor.absoluteUrl()
-  host = parsedUrl.hostname
+  requestedHost = request.headers.host
 
   isInvalidSubdomain = false
 
-  domainParts = host.split '.'
+  isIp = requestedHost.match /^\s*\d*.\d*.\d*\.\d*/
+  domainParts = requestedHost.split '.'
 
   # Remove the domain part.
-  if domainParts.length > 2
+  if not isIp and domainParts.length > 2
     subdomainParts = domainParts[0...-2]
 
     subdomain = subdomainParts.join '.'
+
+    isLocalhost = true if subdomain is 'localhost'
 
     # Right now we don't have any valid subdomains.
     # TODO: Add support for registering valid subdomains.
@@ -48,19 +50,21 @@ httpServer.addListener 'request', (request, response) ->
 
   # Redirect the URL if:
   #   - we're not on localhost and
+  #   - we're not accessing directly through an ip and
   #     - we have a subdomain that is not a valid subdomain or
   #     - we are not using ssl
-  if not isLocal and (isInvalidSubdomain or not isSsl)
+  if not isLocalhost and not isIp and (isInvalidSubdomain or not isSsl)
     # Connection is not cool. Send a 302 redirect.
+    redirectedHost = requestedHost
 
     # Redirect to main domain if subdomain is not specifically handled.
-    host = domainParts[-2..-1].join '.' if isInvalidSubdomain
+    redirectedHost = domainParts[-2..-1].join '.' if isInvalidSubdomain
 
     # Strip off the port number. If we went to a URL with a custom
     # port, we don't know what the custom SSL port is anyway.
-    host = host.replace /:\d+$/, ''
+    redirectedHost = redirectedHost.replace /:\d+$/, ''
 
-    response.writeHead 302, 'Location': 'https://' + host + request.url
+    response.writeHead 302, 'Location': 'https://' + redirectedHost + request.url
     response.end()
 
     return

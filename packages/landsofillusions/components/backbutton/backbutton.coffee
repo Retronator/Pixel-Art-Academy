@@ -11,6 +11,8 @@ class LOI.Components.BackButton extends AM.Component
     @closing = new ReactiveField false
 
   onRendered: ->
+    super
+    
     @$backButton = @$('.lands-of-illusions-components-back-button')
 
     # Positioning depends on whether this is inside an overlaid (2nd layer) item or not (1st layer).

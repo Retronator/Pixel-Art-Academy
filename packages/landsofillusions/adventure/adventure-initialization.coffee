@@ -25,10 +25,6 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeInventory()
     @_initializeRouting()
 
-    # Make sure we're at the right URL after initialization is done.
-    Tracker.afterFlush =>
-      @rewriteUrl()
-
   onRendered: ->
     super
 

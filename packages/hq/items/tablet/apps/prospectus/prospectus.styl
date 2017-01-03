@@ -230,7 +230,7 @@
     width 100%
     transform translate(-50%, -50%)
     z-index 1
-    padding-left 0
+    padding 0
 
     h1
       padding-bottom 15rem
@@ -358,6 +358,9 @@
 
   // On iOS background-attachment fixed does not work. Fallback to scroll.
   .ios
+    #jumbotron
+      background-attachment scroll
+
     .student-life
       .infoblock
         background-attachment scroll

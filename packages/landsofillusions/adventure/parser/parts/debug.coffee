@@ -48,9 +48,4 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       @options.adventure.gameState.updated()
 
     if command.has 'fullscreen'
-      body = $('body')[0]
-
-      body.requestFullscreen?()
-      body.webkitRequestFullscreen?()
-      body.mozRequestFullScreen?()
-      body.msRequestFullscreen?()
+      AM.Window.enterFullscreen()

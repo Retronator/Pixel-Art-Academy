@@ -1,0 +1,59 @@
+<template name="LandsOfIllusions.Components.Menu">
+  <ul class="lands-of-illusions-components-menu">
+    {{#if inMainMenu}}
+      {{#if options.landingPage}}
+        <li class="about menu-item"><a href="{{flowRouterPath 'PixelArtAcademy.LandingPage.Pages.About'}}">About</a></li>
+      {{/if}}
+      {{#if newVisible}}
+        <li class="new menu-item">Start new game</li>
+      {{/if}}
+      {{#if continueVisible}}
+        <li class="continue menu-item">Continue</li>
+      {{/if}}
+      {{#if loadVisible}}
+        <li class="load menu-item">Load game</li>
+      {{/if}}
+      {{#if saveVisible}}
+        <li class="save menu-item">Save game</li>
+      {{/if}}
+      {{#if accountVisible}}
+        <li class="account menu-item">Account</li>
+      {{/if}}
+      <li class="fullscreen menu-item">
+        Fullscreen:
+        {{#if isFullscreen}}
+          on
+        {{else}}
+          off
+        {{/if}}
+      </li>
+      {{#if settingsVisible}}
+        <li class="settings menu-item">Settings</li>
+      {{/if}}
+      {{#if options.landingPage}}
+        <li class="press menu-item"><a href="{{flowRouterPath 'PixelArtAcademy.LandingPage.Pages.Press'}}">Press page</a></li>
+      {{/if}}
+      {{#if quitVisible}}
+        <li class="quit menu-item">Quit</li>
+      {{/if}}
+    {{/if}}
+    {{#if inSettings}}
+      <li class="language">
+        Language: English
+      </li>
+      <li class="audio menu-item">
+        Audio:
+        {{#if audioOn}}on{{/if}}
+        {{#if audioFullscreen}}when fullscreen{{/if}}
+        {{#if audioOff}}off{{/if}}
+      </li>
+      <li class="sounds">
+        Sounds: <input type="range" min="0" max="100" step="10" value="{{soundLevel}}"/>
+      </li>
+      <li class="music">
+        Music: <input type="range" min="0" max="100" step="10" value="{{musicLevel}}"/>
+      </li>
+      <li class="back menu-item">Back</li>
+    {{/if}}
+  </ul>
+</template>

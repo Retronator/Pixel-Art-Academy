@@ -27,5 +27,4 @@ class LOI.Adventure extends AM.Component
     @interface.showDescription thing
 
   deactivateCurrentItem: ->
-    # We simply go back to the URL of the current location since that will deactivate the currently active item.
-    @constructor.goToLocation @currentLocation().id()
+    @activeItemId null

@@ -69,7 +69,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     if scriptUrls?.length
       scriptFilePromises = for scriptUrl in scriptUrls
         scriptFile = new LOI.Adventure.ScriptFile
-          url: @versionUrl "/packages/#{scriptUrl}"
+          url: @versionedUrl "/packages/#{scriptUrl}"
           location: @
           adventure: @options.adventure
 

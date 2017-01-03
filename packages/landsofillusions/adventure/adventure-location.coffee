@@ -11,9 +11,6 @@ class LOI.Adventure extends LOI.Adventure
       field: @currentLocationId
       tracker: @
 
-    # If we don't have a locally stored location, start at the default location.
-    @currentLocationId PixelArtAcademy.LandingPage.Locations.Retropolis.id() unless @currentLocationId()
-
     # Instantiate current location. It depends only on the ID.
     # HACK: ComputedField triggers recomputation when called from events so we use ReactiveField + autorun manually.
     @currentLocation = new ReactiveField null
@@ -22,6 +19,15 @@ class LOI.Adventure extends LOI.Adventure
       currentLocationId = @currentLocationId()
 
       Tracker.nonreactive =>
+        # If we don't have a location set, start at the default location.
+        unless currentLocationId
+          currentLocationId = PixelArtAcademy.LandingPage.Locations.Retropolis.id()
+          @currentLocationId currentLocationId
+
+        # Save current location to state. We don't really use it except until the next time we load the game.
+        @gameState.currentLocationId = currentLocationId
+        @gameState.updated()
+
         @_currentLocation?.destroy()
 
         currentLocationClass = LOI.Adventure.Location.getClassForId currentLocationId
