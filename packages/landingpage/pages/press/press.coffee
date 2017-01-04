@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 class PixelArtAcademy.LandingPage.Pages.Press extends AM.Component
   @register 'PixelArtAcademy.LandingPage.Pages.Press'
 
-  @version: -> '0.0.1'
+  @version: -> '0.0.2'
 
   sceneWidth = 360
   sceneScale = 2

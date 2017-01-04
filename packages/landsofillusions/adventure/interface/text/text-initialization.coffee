@@ -64,3 +64,6 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface.Text
 
     # Clean up body height that was set from resizing.
     $('body').css height: ''
+
+    # Clean up overflow hidden on html from scrolling wheel detection.
+    $('html').css overflow: ''
