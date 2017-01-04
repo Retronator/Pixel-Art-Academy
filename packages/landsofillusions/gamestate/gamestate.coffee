@@ -29,6 +29,9 @@ class LandsOfIllusionsGameState extends AM.Document
   @insertForCurrentUser: (state, callback) ->
     Meteor.call 'LandsOfIllusions.GameState.insertForCurrentUser', @_prepareStateForDatabase(state), callback
 
+  @clearForCurrentUser: (state, callback) ->
+    Meteor.call 'LandsOfIllusions.GameState.clearForCurrentUser'
+
   updated: (options = {}) ->
     # Prepare the helper function that sends updates to the server only every 10 seconds.
     unless @_throttledUpdate

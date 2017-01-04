@@ -2,24 +2,16 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
-  @resetGameState: (state) ->
-    inventory = {}
-    locations = {}
-
-    inventory[Retronator.HQ.Items.Wallet.id()] = {}
-    locations[Retronator.HQ.Locations.Elevator.id()] =
-      floor: 1
-
-    _.extend state,
-      player:
-        inventory: inventory
-      locations: locations
-      initialized: true
-      
+  @GameStateSourceType:
+    LocalStorage: 'LocalStorage'
+    Database: 'Database'
+  
   _initializeState: ->
     # Game state depends on whether the user is signed in or not and returns
     # the game  state from database when signed in or from local storage otherwise.
     @localGameState = new LOI.LocalGameState
+    
+    @gameStateSource = new ReactiveField null
 
     _gameStateUpdatedDependency = new Tracker.Dependency
 
@@ -34,10 +26,10 @@ class LOI.Adventure extends LOI.Adventure
       @gameStateSubsription = Meteor.subscribe LOI.GameState.forCurrentUser
       console.log "Subscribed to game state from the database. Subscription:", @gameStateSubsription, "Is it ready?", @gameStateSubsription.ready() if LOI.debug
         
-      # Find the state from the database.
-      console.log "We currently have these game state documents:", LOI.GameState.documents.find().fetch() if LOI.debug
-
+      # Find the state from the database. This creates a dependency on game state document updates.
       gameState = LOI.GameState.documents.findOne 'user._id': userId
+
+      console.log "We currently have these game state documents:", LOI.GameState.documents.find().fetch() if LOI.debug
       console.log "Did we find a game state for the current user? We got", gameState if LOI.debug
 
       # Here we decide which provider of the game state we'll use, the database or local storage. In general this is
@@ -50,7 +42,10 @@ class LOI.Adventure extends LOI.Adventure
       # (location, inventory) can happen relative to actual game state from the database (for example, whether the url
       # points to an object we have in our possession).
       if gameState
+        @gameStateSource @constructor.GameStateSourceType.Database
+
         state = gameState.state
+        
         _gameStateUpdated = (options) =>
           gameState.updated options
           _gameStateUpdatedDependency.changed()
@@ -58,25 +53,25 @@ class LOI.Adventure extends LOI.Adventure
       else if userId and not @gameStateSubsription.ready()
         # Looks like we're loading the state from the database during initial setup, so just wait.
         console.log "Waiting for game state subscription to complete." if LOI.debug
-        _gameStateUpdated = => # Dummy function.
+
+        @gameStateSource null
+
         state = null
+        _gameStateUpdated = => # Dummy function.
 
       else
         # Fallback to local storage.
+        @gameStateSource @constructor.GameStateSourceType.LocalStorage
+
+        # This creates a dependency on local game state updates.
         state = @localGameState.state()
+        
         _gameStateUpdated = (options) =>
-          # Local game state does not need to be flushed, so just return.
+          # Local game state does not need to be flushed, so just return when that command is given.
           return if options?.flush
 
           @localGameState.updated()
           _gameStateUpdatedDependency.changed()
-
-      # Initialize state if needed.
-      if state and not state.initialized
-        # It's our first time playing Pixel Art Academy. Start with a clear state.
-        LOI.Adventure.resetGameState state
-
-        Tracker.nonreactive => _gameStateUpdated()
 
       # Flush updates in the previous state.
       Tracker.nonreactive =>
@@ -90,8 +85,8 @@ class LOI.Adventure extends LOI.Adventure
       state
       
     # To deal with delayed updates of game state from the database (the document gets refreshed with a throttled
-    # schedule) we create a game state variable that is changed every time the game state gets updated from the
-    # database (new document from @_gameState) and when it was just updated locally.
+    # schedule) we create a game state variable that is changed every time the game state gets updated locally, as
+    # well as from the database (new document coming from @_gameStateProvider).
     @gameState = new ComputedField =>
       _gameStateUpdatedDependency.depend()
       _gameStateProvider()
@@ -102,8 +97,14 @@ class LOI.Adventure extends LOI.Adventure
     # Flush the state updates to the database when the page is about to unload.
     window.onbeforeunload = =>
       @gameState?.updated flush: true
+      
+  clearGameState: ->
+    switch @gameStateSource()
+      when @constructor.GameStateSourceType.Database
+        LOI.GameState.clearForCurrentUser()
+
+      when @constructor.GameStateSourceType.LocalStorage
+        @clearLocalGameState()
 
   clearLocalGameState: ->
-    localGameState = @localGameState.state()
-    LOI.Adventure.resetGameState localGameState
-    @localGameState.updated()
+    @localGameState.state {}

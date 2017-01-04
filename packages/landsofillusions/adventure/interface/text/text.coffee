@@ -132,8 +132,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     text
 
   active: ->
-    # The text interface is active unless there is an item active.
-    not @options.adventure.activeItem()    
+    # The text interface is active unless there are any modal dialogs.
+    not @options.adventure.modalDialogs().length
 
   # Use to get back to the initial state with full location description.
   resetInterface: ->

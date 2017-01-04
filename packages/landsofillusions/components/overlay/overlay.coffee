@@ -59,13 +59,13 @@ class LOI.Components.Overlay extends AM.Component
       duration: 200
       easing: 'easeOutQuint'
 
-    # See if we're inside of an item - if yes, we can listen to know when to deactivate.
-    itemParent = @ancestorComponentWith (component) =>
-      component instanceof LOI.Adventure.Item
+    # See if we're inside of a component with activatable state - if yes, we can listen to know when to deactivate.
+    activatableParent = @ancestorComponentWith 'activatedState'
 
-    if itemParent
+    if activatableParent
       @autorun (computation) =>
-        if itemParent.activatedState() is LOI.Adventure.Item.activatedStates.Deactivating
+        activatedState = activatableParent.callFirstWith(null, 'activatedState')
+        if activatedState is LOI.Adventure.Item.activatedStates.Deactivating
           # Animate out.
           @$('.background').removeClass('visible')
           @$('.safe-area').removeClass('visible')

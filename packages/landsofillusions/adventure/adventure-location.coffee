@@ -32,8 +32,9 @@ class LOI.Adventure extends LOI.Adventure
           @currentLocationId currentLocationId
 
         # Save current location to state. We don't really use it except until the next time we load the game.
-        @gameState().currentLocationId = currentLocationId
-        @gameState.updated()
+        if state = @gameState()
+          state.currentLocationId = currentLocationId
+          @gameState.updated()
 
         console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug
 

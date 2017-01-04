@@ -43,3 +43,6 @@ class LOI.Adventure extends LOI.Adventure
         @_activeItem = null
 
       @activeItem @_activeItem
+
+  deactivateCurrentItem: ->
+    @activeItemId null

@@ -1,0 +1,97 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-account
+  fixed-cover()
+  color atariGrey(5)
+
+  .account-file
+    filter drop-shadow(-5px 5px 20px black)
+
+    .cover-button
+      display block
+      position absolute
+      left 76rem
+      width 164rem
+      top 14rem
+      bottom 20rem
+      background none
+      border none
+      cursor pointer
+      z-index 12
+
+    .navigation-button
+      display block
+      position absolute
+      top 190rem
+      width 20rem
+      height 20rem
+      border none
+      background none
+      cursor pointer
+      background-repeat no-repeat
+      background-size 7rem 12rem
+      background-position 50% 50%
+      z-index 10
+
+      &:focus
+        outline none
+
+      &.previous
+        left 165rem
+        background-image image('/landsofillusions/components/account/previous.png')
+
+      &.next
+        left 290rem
+        background-image image('/landsofillusions/components/account/next.png')
+
+    .page-content
+      position absolute
+      z-index 9
+      left 160rem
+      width 158rem
+      top 18rem
+      bottom 23rem
+      padding 14rem
+      color atariBlue(4)
+
+    .account-file-layer
+      position absolute
+      width 340rem
+      height 228rem
+      top 0
+      left -10rem
+      visibility hidden
+
+      &.visible
+        visibility visible
+
+      &.cover-closed
+        z-index 11
+
+      &.page-1
+        z-index 8
+
+      &.page-2
+        z-index 7
+
+      &.page-3
+        z-index 6
+
+      &.page-4
+        z-index 5
+
+      &.page-5
+        z-index 4
+
+      &.papers-bottom
+        z-index 3
+
+      &.cover-open
+        z-index 2
+
+      &.cover-back
+        z-index 1
+
+    &.on-cover
+      .account-file-layer
+        left -90rem

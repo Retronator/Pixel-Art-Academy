@@ -42,7 +42,7 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
 
     @_sceneBounds = new ReactiveField null
 
-    @menu = new LOI.Components.Menu
+    @menuItems = new LOI.Components.Menu.Items
       adventure: @options.adventure
       landingPage: true
 
@@ -60,6 +60,13 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
 
     # Set the initializing flag for the first rendering pass, before we have time to initialize rendered elements.
     @initializingClass = new ReactiveField "initializing"
+
+    # Prevent default menu handling on escape.
+    @options.adventure.menu.customShowMenu = =>
+      # Simply scroll up to the menu.
+      @options.adventure.interface.scroll 
+        position: 0
+        animate: true
 
   onRendered: ->
     super
@@ -207,6 +214,8 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
     super
 
     @app?.removeComponent @
+
+    @options.adventure.menu.customShowMenu = null
 
   onScroll: ->
     @draw()

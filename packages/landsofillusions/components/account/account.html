@@ -1,0 +1,33 @@
+<template name="LandsOfIllusions.Components.Account">
+  {{#unless deactivated}}
+    <div class="landsofillusions-components-account">
+      {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
+      {{#LandsOfIllusions.Components.Overlay}}
+        <div class="account-file {{onCoverClass}}">
+          {{#if $is currentPageNumber 0}}
+            <button class="cover-button"></button>
+          {{/if}}
+          <img class="account-file-layer cover-closed {{coverClosedVisibleClass}}" src="{{image '/landsofillusions/components/account/cover-closed.png'}}" />
+          {{#if $gt currentPageNumber 0}}
+            <button class="navigation-button previous"></button>
+            {{#if $lt currentPageNumber pages.length}}
+              <button class="navigation-button next"></button>
+            {{/if}}
+          {{/if}}
+          {{#each pages}}
+            {{#if $is currentPageNumber pageNumber}}
+              <div class="page-content">
+                WE ARE ON PAGE {{pageNumber}}
+                {{! > Render this}}
+              </div>
+            {{/if}}
+            <img class="account-file-layer {{pageClass}} {{pageVisibleClass}}" src="{{image pageImageUrl}}" />
+          {{/each}}
+          <img class="account-file-layer papers-bottom visible" src="{{image '/landsofillusions/components/account/papers-bottom.png'}}" />
+          <img class="account-file-layer cover-open {{coverOpenVisibleClass}}" src="{{image '/landsofillusions/components/account/cover-open.png'}}" />
+          <img class="account-file-layer cover-back visible" src="{{image '/landsofillusions/components/account/cover-back.png'}}" />
+        </div>
+      {{/LandsOfIllusions.Components.Overlay}}
+    </div>
+  {{/unless}}
+</template>

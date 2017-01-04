@@ -185,6 +185,21 @@ Package.onUse(function(api) {
   api.addFiles('components/menu/menu.html');
   api.addFiles('components/menu/menu.styl');
 
+  api.addFiles('components/menu/items/items.coffee');
+  api.addFiles('components/menu/items/items.html');
+  api.addFiles('components/menu/items/items.styl');
+
+  api.addFiles('components/mixins/mixins.coffee');
+  api.addFiles('components/mixins/activatable/activatable.coffee');
+
+  api.addFiles('components/signin/signin.coffee');
+  api.addFiles('components/signin/signin.html');
+  api.addFiles('components/signin/signin.styl');
+
+  api.addFiles('components/account/account.coffee');
+  api.addFiles('components/account/account.html');
+  api.addFiles('components/account/account.styl');
+
   // Typography
 
   api.addFiles('typography/typography.css', 'client');

@@ -7,14 +7,22 @@ class LOI.Adventure extends LOI.Adventure
   constructor: ->
     super
 
+    console.log "Adventure constructed." if LOI.debug
+
     @scriptHelpers = new LOI.Adventure.Script.Helpers @
 
-    console.log "Adventure constructed." if LOI.debug
+    @menu = new LOI.Components.Menu
+      adventure: @
+
+    @_modalDialogs = []
+    @_modalDialogsDependency = new Tracker.Dependency
 
   onCreated: ->
     super
 
     console.log "Adventure created." if LOI.debug
+
+    $('html').addClass('adventure')
 
     @interface = new LOI.Adventure.Interface.Text adventure: @
     @parser = new LOI.Adventure.Parser adventure: @
@@ -34,3 +42,5 @@ class LOI.Adventure extends LOI.Adventure
     super
 
     console.log "Adventure destroyed." if LOI.debug
+
+    $('html').removeClass('adventure')
