@@ -1,37 +1,49 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
-class LOI.StateNode
+class LOI.StateInstances
   constructor: (options) ->
     options.classProvider ?= LOI.Adventure.Thing
     instances = {}
     instancesUpdatedDependency = new Tracker.Dependency
 
-    state = new ReactiveField null
+    if options.state
+      stateGetter = options.state
+
+    else
+      stateGetter = new LOI.StateObject options
 
     # We want the state node to behave as a function to which we pass an item ID of the instance we want.
-    stateNode = (classOrId) ->
+    stateInstances = (classOrId) ->
       id = _.thingId classOrId
       console.log "State node searching for id", id, instances[id] if LOI.debug
       instancesUpdatedDependency.depend()
       instances[id]
 
-    stateNode.ready = new ReactiveField false
+    stateInstances.ready = new ReactiveField false
 
     # Allow correct handling of instanceof operator.
     if Object.setPrototypeOf
-      Object.setPrototypeOf stateNode, @constructor::
+      Object.setPrototypeOf stateInstances, @constructor::
     else
-      stateNode.__proto__ = @constructor::
+      stateInstances.__proto__ = @constructor::
 
     # Instantiate state property objects.
     stateUpdatedAutorun = Tracker.autorun (computation) ->
-      newState = state()
+      newState = stateGetter()
       return unless newState
 
       # Compare properties vs instances.
       instanceKeys = _.keys instances
-      stateKeys = _.keys newState
+
+      if _.isArray newState
+        stateKeys = newState
+
+      else if _.isObject newState
+        stateKeys = _.keys newState
+
+      else
+        stateKeys = []
 
       newKeys = _.difference stateKeys, instanceKeys
       retiredKeys = _.difference instanceKeys, stateKeys
@@ -43,7 +55,7 @@ class LOI.StateNode
         constructor = options.classProvider.getClassForId newKey
 
         unless constructor
-          console.error "Invalid thing with key", newKey, "in state node", stateNode
+          console.error "Invalid thing with key", newKey, "in state node", stateInstances
           continue
 
         # We create the instance in a non-reactive context so that
@@ -61,27 +73,18 @@ class LOI.StateNode
 
       console.log "New state node instances are", instances if LOI.debug
 
-      # Update states of instances.
-      for instanceKey, instance of instances
-        console.log "State node is updating state of", instanceKey, "with state", newState[instanceKey] if LOI.debug
-        instance.state newState[instanceKey]
-
       # Notify of the change if we had any new or removed instances.
       instancesUpdatedDependency.changed() if newKeys.length + retiredKeys.length
 
       # We've completed at least one initialization so we can mark the state node as ready.
-      stateNode.ready true
+      stateInstances.ready true
 
-    stateNode.destroy = ->
+    stateInstances.destroy = ->
       stateUpdatedAutorun.stop()
 
-    stateNode.updateState = (newState) ->
-      console.log "State node received an update.", newState if LOI.debug
-      state newState
-
-    stateNode.values = ->
+    stateInstances.values = ->
       instancesUpdatedDependency.depend()
       _.values instances
 
     # Return the state node getter function (return must be explicit).
-    return stateNode
+    return stateInstances

@@ -34,18 +34,15 @@ class HQ.Locations.Gallery extends LOI.Adventure.Location
       location: @
       floor: 1
 
-  @initialState: ->
-    things = {}
-    things[HQ.Actors.ElevatorButton.id()] = displayOrder: 1
+  things: ->
+    [HQ.Actors.ElevatorButton.id()]
 
-    exits = {}
+  exits: ->
+    exits = @elevatorExits()
     exits[Vocabulary.Keys.Directions.North] = HQ.Locations.Restroom.id()
     exits[Vocabulary.Keys.Directions.East] = HQ.Locations.Reception.id()
     exits[Vocabulary.Keys.Directions.Northeast] = HQ.Locations.Lobby.id()
-
-    _.merge {}, super,
-      things: things
-      exits: exits
+    exits
 
   onScriptsLoaded: ->
     # Elevator button

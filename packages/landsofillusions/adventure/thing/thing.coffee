@@ -79,7 +79,7 @@ class LOI.Adventure.Thing extends AM.Component
     # Prepare the avatar for this thing.
     LOI.Avatar.initialize @
 
-  @initialState: -> {} # Override to return a non-empty initial state.
+  @state: -> {} # Override to return a non-empty state.
 
   # Thing instance
 
@@ -89,10 +89,16 @@ class LOI.Adventure.Thing extends AM.Component
     @avatar = new LOI.Avatar @constructor
     @abilities = new ReactiveField []
     @director = new ReactiveField null
-    @state = new ReactiveField null
+
+    # State object for this thing.
+    @address = new LOI.StateAddress "things.#{@id()}"
+    @stateObject = new LOI.StateObject
+      adventure: @options.adventure
+      address: @address
 
     @_autorunHandles = []
     @_subscriptionHandles = []
+
 
   destroy: ->
     @avatar.destroy()

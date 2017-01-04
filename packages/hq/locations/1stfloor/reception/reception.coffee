@@ -33,7 +33,7 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
 
     @loginButtonsSession = Accounts._loginButtonsSession
 
-  @initialState: ->
+  @state: ->
     things = {}
     things[PAA.Cast.Burra.id()] =
       displayOrder: 0

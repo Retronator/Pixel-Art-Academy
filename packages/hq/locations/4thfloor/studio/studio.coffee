@@ -30,7 +30,7 @@ class HQ.Locations.Studio extends LOI.Adventure.Location
   constructor: ->
     super
 
-  @initialState: ->
+  @state: ->
     things = {}
 
     exits = {}

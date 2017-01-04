@@ -29,7 +29,7 @@ class HQ.Locations.Store extends LOI.Adventure.Location
   constructor: ->
     super
 
-  @initialState: ->
+  @state: ->
     things = {}
     things[HQ.Locations.Store.Shelf.Game.id()] = displayOrder: 0
     things[HQ.Locations.Store.Shelf.Upgrades.id()] = displayOrder: 1

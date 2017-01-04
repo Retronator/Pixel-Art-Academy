@@ -31,14 +31,6 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
 
   @initialize()
 
-  @initialState: ->
-    contents: []
-    showSupporterName: true
-    supporterName: null
-    tip:
-      amount: 0
-      message: null
-
   constructor: (@options) ->
     super
 
@@ -46,21 +38,21 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
       shoppingCart: @
       adventure: @options.adventure
 
-    @showHomeScreenButton = new ComputedField =>
-      return true unless state = @state()
-      not state.receiptVisible
+    @contents = @stateObject.field 'contents', default: []
 
+    @receiptVisible = @stateObject.field 'receiptVisible'
+      
   onCreated: ->
     super
 
     # Get all store items data.
     @subscribe RS.Transactions.Item.all
 
-  cartItems: ->
-    state = @state()
-    return unless state
+  showHomeScreenButton: ->
+    not @receiptVisible()
 
-    items = for cartItem, i in state.contents
+  cartItems: ->
+    items = for cartItem, i in @contents()
       item = RS.Transactions.Item.documents.findOne catalogKey: cartItem.item
       break unless item
 
@@ -84,7 +76,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
     _.sum (storeItem.item.price for storeItem in @cartItems())
 
   receiptVisibleClass: ->
-    'receipt-visible' if @state().receiptVisible
+    'receipt-visible' if @receiptVisible()
     
   events: ->
     super.concat
@@ -95,13 +87,9 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
     item = @currentData()
 
     # Remove the item's ID from the shopping cart contents.
-    tablet = @options.adventure.inventory HQ.Items.Tablet
-    shoppingCart = tablet.addApp HQ.Items.Tablet.Apps.ShoppingCart
-
-    shoppingCartState = shoppingCart.state()
-    shoppingCartState.contents.splice item.cartIndex, 1
-
-    @options.adventure.gameState.updated()
+    contents = @contents()
+    contents.splice item.cartIndex, 1
+    @contents contents
 
   onChangeGiftCheckbox: (event) ->
     item = @currentData()

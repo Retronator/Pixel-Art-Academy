@@ -25,7 +25,7 @@ class LOI.Adventure extends LOI.Adventure
 
     _gameStateUpdated = null
 
-    @_gameState = new ComputedField =>
+    _gameStateProvider = new ComputedField =>
       userId = Meteor.userId()
       console.log "Game state provider is recomputing. User ID is", userId if LOI.debug
 
@@ -94,7 +94,7 @@ class LOI.Adventure extends LOI.Adventure
     # database (new document from @_gameState) and when it was just updated locally.
     @gameState = new ComputedField =>
       _gameStateUpdatedDependency.depend()
-      @_gameState()
+      _gameStateProvider()
 
     # Set the updated function for the first time.
     @gameState.updated = _gameStateUpdated

@@ -56,14 +56,12 @@ class HQ.Items.Tablet.OS.App extends AM.Component
     # Prepare the avatar for this app.
     LOI.Avatar.initialize @
 
-  @initialState: -> {} # Override to return a non-empty initial state.
+  @state: -> {} # Override to return a non-empty state.
 
   constructor: (@options) ->
     super
 
     @avatar = new LOI.Avatar @constructor
-
-    @state = new ReactiveField null
 
     # An item that can be activated has 4 stages in its lifecycle. You can use this
     # as a reactive variable to depend on the state the item is currently in.

@@ -12,6 +12,15 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
   constructor: (@options) ->
     super
 
+    stateObject = @options.stateObject
+
+    @showSupporterName = stateObject.field 'showSupporterName', default: true
+    @supporterName = stateObject.field 'supporterName'
+
+    @tip =
+      amount: stateObject.field 'tip.amount', default: 0
+      message: stateObject.field 'tip.message'
+
   onCreated: ->
     super
 
@@ -41,20 +50,17 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
 
     $('.retronator-hq-items-tablet').removeClass('receipt-visible')
 
-  state: ->
-    @options.shoppingCart.state()
-
   showSupporterName: ->
     user = Retronator.user()
 
-    if user then user.profile?.showSupporterName else @state().showSupporterName
+    if user then user.profile?.showSupporterName else @showSupporterName()
 
   supporterName: ->
     return unless @showSupporterName()
 
     user = Retronator.user()
 
-    if user then user.profile.supporterName else @state().supporterName
+    if user then user.profile.supporterName else @supporterName()
   
   anonymousPlaceholder: ->
     AB.translate(@_userBabelSubscription, 'Anonymous').text
@@ -63,7 +69,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
     checked: true unless @showSupporterName()
 
   purchaseItems: ->
-    for receiptItem in @state().contents
+    for receiptItem in @options.shoppingCart.contents()
       item = RS.Transactions.Item.documents.findOne catalogKey: receiptItem.item
       continue unless item
 
@@ -76,7 +82,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
 
   totalPrice: ->
     # Total is the items price with added tip.
-    @itemsPrice() + (@state().tip.amount or 0)
+    @itemsPrice() + (@tip.amount() or 0)
 
   creditApplied: ->
     storeCredit = Retronator.user()?.store?.credit or 0
@@ -109,7 +115,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
       amount: @totalPrice()
       new: true
 
-    newTransaction.message = @state().tip.message if @state().tip.amount
+    newTransaction.message = @tip.message() if @tip.amount()
 
     # Find where the new transaction needs to be inserted. We use
     # a negative amount because the list is in descending order.
@@ -119,8 +125,10 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
     recentTransactions.splice insertIndex, 0, newTransaction
     recentTransactions
 
+  # This overrides the tip plain object in Stripe component parent.
   tip: ->
-    @state().tip
+    amount: @tip.amount()
+    message: @tip.message()
 
   supporterName: ->
     user = Retronator.user()
@@ -129,7 +137,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
       user.profile?.supporterName if Retronator.user().profile?.showSupporterName
 
     else
-      @state().supporterName
+      @supporterName()
 
   events: ->
     super.concat
@@ -143,13 +151,11 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
       Meteor.call "Retronator.Accounts.User.setShowSupporterName", not event.target.checked
 
     else
-      @state().showSupporterName = not event.target.checked
-      @options.adventure.gameState.updated()
+      @showSupporterName not event.target.checked
 
   onInputSupporterName: (event) ->
     name = $(event.target).val()
-    @state().supporterName = name
-    @options.adventure.gameState.updated()
+    @supporterName name
 
   onInputTipAmount: (event) ->
     enteredString = $(event.target).val()
@@ -171,8 +177,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
     newString = "#{value}"
     $(event.target).val newString unless newString is enteredString
 
-    @state().tip.amount = value
-    @options.adventure.gameState.updated()
+    @tip.amount value
 
     @_scrollToNewSupporter()
 
@@ -184,8 +189,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
 
   onInputTipMessage: (event) ->
     message = $(event.target).val()
-    @state().tip.message = message
-    @options.adventure.gameState.updated()
+    @tip.message message
 
   _completePurchase: ->
     super
@@ -193,10 +197,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
     # Reset the shopping cart after 2 seconds.
     Meteor.setTimeout =>
       # Reset the shopping cart state.
-      _.extend @state(), HQ.Items.Tablet.Apps.ShoppingCart.initialState(),
-        receiptVisible: false
-
-      @options.adventure.gameState.updated()
+      @options.shoppingCart.stateObject.clear()
 
       # Deactivate tablet.
       @options.shoppingCart.options.tablet.deactivate()

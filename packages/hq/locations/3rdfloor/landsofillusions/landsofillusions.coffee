@@ -33,17 +33,14 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
   constructor: ->
     super
 
-  @initialState: ->
-    things = {}
-    things[HQ.Actors.Operator.id()] = displayOrder: 0
+  things: -> 
+    [HQ.Actors.Operator.id()]
 
+  exits: ->
     exits = {}
     exits[Vocabulary.Keys.Directions.East] = HQ.Locations.Chillout.id()
     exits[Vocabulary.Keys.Directions.South] = HQ.Locations.LandsOfIllusions.Hallway.id()
-
-    _.merge {}, super,
-      things: things
-      exits: exits
+    exits
 
   onScriptsLoaded: ->
     # Operator

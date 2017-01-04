@@ -14,16 +14,22 @@ class LOI.Adventure.Interface.Components.Narrative
   linesCount: ->
     @lines().length
 
-  addText: (newText, addNewLine = true) ->
+  addText: (newText, options = {}) ->
     text = @text()
 
+    options.addNewLine ?= true
+    options.scroll ?= true
+
     if text.length > 0
-      text += "\n" if addNewLine
+      text += "\n" if options.addNewLine
 
     text += newText
     @text text
 
-    Tracker.afterFlush => @scroll()
+    if options.scroll
+      Tracker.afterFlush =>
+        @options.textInterface.resize()
+        @scroll()
 
   clear: ->
     @text ""
@@ -36,44 +42,28 @@ class LOI.Adventure.Interface.Components.Narrative
     return unless $textInterface.length
 
     $textDisplayContent = $textInterface.find('.text-display-content')
-    $uiArea = $textInterface.find('.ui-area')
     $ui = $textInterface.find('.ui')
 
     displayContentHeight = $textDisplayContent.height()
 
     uiHeight = options.height or $ui.height()
 
+    # If UI doesn't have at least some height, it's probably not rendered correctly yet.
+    return unless uiHeight
+
     hiddenNarrative = Math.max 0, displayContentHeight - uiHeight
 
     # Make sure the latest narrative is visible by scrolling text display content to the bottom.
     newTextTop = -hiddenNarrative
 
-    @options.textInterface.resizing?._animateElement
+    @options.textInterface.animateElement
       $element: $textDisplayContent
       animate: options.animate
       properties:
         translateY: "#{newTextTop}px"
 
-    uiTop = $ui.position().top
-    hiddenTotal = uiTop + Math.min(uiHeight, displayContentHeight) - $(window).height()
-
     if options.scrollMain
-      # Now also scroll the main content to bring the bottom into view, but only if scrolling down.
-      currentTop = parseInt $.Velocity.hook($uiArea, 'translateY') or 0
-      newTop = -hiddenTotal
-
-      if newTop < currentTop
-        duration = _.clamp (currentTop - newTop), 150, 1000
-
-        $window = $(window)
-
-        @options.textInterface.resizing?._animateElement
-          $element: $uiArea
-          animate: options.animate
-          duration: duration
-          properties:
-            translateY: "#{newTop}px"
-            tween: [newTop, currentTop]
-
-          progress: (elements, complete, remaining, start, tweenValue) =>
-            $window.scrollTop -tweenValue
+      @options.textInterface.scroll
+        position: @options.textInterface.maxScrollTop()
+        animate: options.animate
+        slow: options.slow

@@ -37,4 +37,4 @@ class LOI.Adventure.Parser
     return if @parseLookLocation command
 
   _availableThings: ->
-    _.flatten [@location.things.values(), @options.adventure.inventory.values()]
+    _.flatten [@location.thingInstances.values(), @options.adventure.inventory.values()]

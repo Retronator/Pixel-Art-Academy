@@ -31,25 +31,17 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
     super
 
     @addAbilityToActivateByLookingOrUsing()
-    
+
     @os = new HQ.Items.Tablet.OS
       adventure: @options.adventure
       tablet: @
+      address: @address.child 'os'
 
-    @apps = new LOI.StateNode
+    @apps = new LOI.StateInstances
       adventure: @options.adventure
       tablet: @
+      address: @address.child 'apps'
       classProvider: HQ.Items.Tablet.OS.App
-
-    # Send state updates to the OS and apps.
-    @_stateUpdateAutorun = Tracker.autorun =>
-      state = @state()
-      return unless state
-
-      console.log "%cTablet", 'background: Plum', @, "has received a new state", state, "and we are sending it to the OS", @os, "and apps", @apps if HQ.debug
-
-      @os.state state.os
-      @apps.updateState state.apps
 
   destroy: ->
     @_stateUpdateAutorun.stop()
@@ -61,9 +53,11 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
     console.log "Adding app", appId, appClass if HQ.debug
 
     # Add app unless it's already been added.
-    stateApps = @state().apps
+    @stateObject appId, {}
+
+    stateApps = @stateObject().apps
     unless stateApps[appId]
-      stateApps[appId] = appClass.initialState()
+      stateApps[appId] = {}
       @options.adventure.gameState.updated()
 
     Tracker.autorun (computation) =>

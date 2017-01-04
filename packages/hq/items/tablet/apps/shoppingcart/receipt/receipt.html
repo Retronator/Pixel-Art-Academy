@@ -51,13 +51,13 @@
                 </label>
               </p>
               <p>Add an optional tip:<br/>
-                <span class="tip-amount-area"><input class="tip-amount" type="number" step="5" min="0" max="1000" value="{{state.tip.amount}}"/></span>
+                <span class="tip-amount-area"><input class="tip-amount" type="number" step="5" min="0" max="1000" value="{{tip.amount}}"/></span>
               </p>
               <p>
                 Include a message with your tip:
               </p>
-              {{#if state.tip.amount}}
-                <textarea class="tip-message" placeholder="{{t7e 'Write your message here'}}" maxlength="100">{{state.tip.message}}</textarea>
+              {{#if tip.amount}}
+                <textarea class="tip-message" placeholder="{{t7e 'Write your message here'}}" maxlength="100">{{tip.message}}</textarea>
               {{else}}
                 <textarea class="tip-message" placeholder="{{t7e 'Add a tip to include a message'}}" disabled></textarea>
               {{/if}}
@@ -72,7 +72,7 @@
               </li>
               <li class="receipt-item">
                 <span class="name">Tip</span>
-                <span class="price">${{state.tip.amount}}</span>
+                <span class="price">${{tip.amount}}</span>
               </li>
               {{#if creditApplied}}
                 <li class="receipt-item">

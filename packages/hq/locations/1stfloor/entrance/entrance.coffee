@@ -29,14 +29,11 @@ class HQ.Locations.Entrance extends LOI.Adventure.Location
   constructor: ->
     super
 
-  @initialState: ->
-    things = {}
-    things[HQ.Locations.Entrance.Sign.id()] = displayOrder: 1
+  things: -> [HQ.Locations.Entrance.Sign.id()]
 
+  exits: ->
     exits = {}
     exits[Vocabulary.Keys.Directions.West] = HQ.Locations.Lobby.id()
     exits[Vocabulary.Keys.Directions.In] = HQ.Locations.Lobby.id()
-
-    _.merge {}, super,
-      things: things
-      exits: exits
+    exits[Vocabulary.Keys.Directions.Out] = PixelArtAcademy.LandingPage.Locations.Retropolis.id()
+    exits

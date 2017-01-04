@@ -29,7 +29,7 @@ class HQ.Locations.Restroom extends LOI.Adventure.Location
   constructor: ->
     super
 
-  @initialState: ->
+  @state: ->
     things = {}
 
     exits = {}

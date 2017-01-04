@@ -28,18 +28,6 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
   
   @initialize()
 
-  @initialState: ->
-    things = {}
-    things[HQ.Actors.ElevatorButton.id()] = displayOrder: 1
-
-    exits = {}
-    exits[Vocabulary.Keys.Directions.North] = HQ.Locations.LandsOfIllusions.id()
-    exits[Vocabulary.Keys.Directions.West] = HQ.Locations.LandsOfIllusions.Room.id()
-
-    _.merge {}, super,
-      things: things
-      exits: exits
-
   constructor: ->
     super
 
@@ -47,6 +35,24 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
       location: @
       floor: '3a'
       directions: [Vocabulary.Keys.Directions.In, Vocabulary.Keys.Directions.East]
+
+    @operatorLocation = new LOI.StateField
+      adventure: options.adventure
+      address: "things.#{HQ.Actors.Operator.id()}.location"
+
+  things: ->
+    things = []
+
+    things.push HQ.Actors.Operator.id() if @operatorLocation() is @id()
+    things.push HQ.Actors.ElevatorButton.id()
+
+    things
+
+  exits: ->
+    exits = @elevatorExits()
+    exits[Vocabulary.Keys.Directions.North] = HQ.Locations.LandsOfIllusions.id()
+    exits[Vocabulary.Keys.Directions.West] = HQ.Locations.LandsOfIllusions.Room.id()
+    exits
 
   onScriptsLoaded: ->
     # Elevator button
@@ -56,14 +62,13 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
 
     # Operator
     Tracker.autorun (computation) =>
-      return unless state = @state()
+      return unless @thingInstances.ready()
 
-      unless state.things[HQ.Actors.Operator.id()]
+      unless operator = @thingInstances HQ.Actors.Operator.id()
         # Operator is not at this location so quit.
         computation.stop()
         return
 
-      return unless operator = @things HQ.Actors.Operator.id()
       return unless operator.ready()
       computation.stop()
 

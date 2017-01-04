@@ -19,60 +19,26 @@ class LOI.Adventure extends LOI.Adventure
       currentLocationId = @currentLocationId()
 
       Tracker.nonreactive =>
-        # If we don't have a location set, start at the default location.
-        unless currentLocationId
-          currentLocationId = PixelArtAcademy.LandingPage.Locations.Retropolis.id()
-          @currentLocationId currentLocationId
-
-        # Save current location to state. We don't really use it except until the next time we load the game.
-        @gameState.currentLocationId = currentLocationId
-        @gameState.updated()
-
         @_currentLocation?.destroy()
 
         currentLocationClass = LOI.Adventure.Location.getClassForId currentLocationId
 
+        # If we don't have a location set (or if it's not found), start at the default location.
         unless currentLocationClass
-          console.error "Location class not found", currentLocationId
-          return
+          console.error "Location class not found", currentLocationId if currentLocationId
+
+          currentLocationClass = PixelArtAcademy.LandingPage.Locations.Retropolis
+          currentLocationId = currentLocationClass.id()
+          @currentLocationId currentLocationId
+
+        # Save current location to state. We don't really use it except until the next time we load the game.
+        @gameState().currentLocationId = currentLocationId
+        @gameState.updated()
 
         console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug
 
         # Create a non-reactive reference so we can refer to it later.
-        @_currentLocation = new currentLocationClass adventure: @
-
-        # Reactively provide the state to the location.
-        Tracker.autorun (computation) => 
-          return unless state = @getLocationState currentLocationId
-          console.log "Sending new state to location", currentLocationId, "game state:", @gameState(), "location state", state if LOI.debug
-
-          @_currentLocation.state state
-
+        @_currentLocation = new currentLocationClass 
+          adventure: @
+        
         @currentLocation @_currentLocation
-
-  getLocationState: (locationClassOrId) ->
-    return unless gameState = @gameState()
-
-    locationId = _.thingId locationClassOrId
-    locationClass = LOI.Adventure.Location.getClassForId locationId
-    
-    state = gameState.locations[locationId]
-
-    # Initialize location state if this is first time at location or the location is at a new version.
-    targetVersion = locationClass.version()
-    unless state?.version is targetVersion
-      console.log "Preparing to initialize location to new version", targetVersion if LOI.debug
-      console.log "Location ID is", locationId, locationClass if LOI.debug
-
-      existingState = state or {}
-      console.log "Current state is", existingState if LOI.debug
-
-      state = _.merge locationClass.initialState(), existingState, version: targetVersion
-
-      gameState.locations[locationId] = state
-
-      console.log "Initialized location", locationId, "with new state", state if LOI.debug
-
-      Tracker.nonreactive => @gameState.updated()
-
-    state

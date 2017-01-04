@@ -113,6 +113,12 @@ class LOI.Components.Menu extends AM.Component
     else
       AM.Window.enterFullscreen()
 
+    # Do a late UI resize to accommodate any fullscreen transitions.
+    Meteor.setTimeout =>
+      @options.adventure.interface.resize()
+    ,
+      1000
+
   onClickSettings: (event) ->
     @currentScreen @constructor.Screens.Settings
 

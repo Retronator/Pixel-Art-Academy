@@ -30,20 +30,13 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
   constructor: ->
     super
 
-  @initialState: ->
-    apps = {}
-    apps[HQ.Items.Tablet.Apps.Welcome.id()] = {}
-    apps[HQ.Items.Tablet.Apps.Menu.id()] = {}
-    apps[HQ.Items.Tablet.Apps.Manual.id()] = {}
+  things: ->
+    [
+      HQ.Locations.Lobby.Display.id()
+      HQ.Items.Tablet.id()
+    ]
 
-    things = {}
-    things[HQ.Locations.Lobby.Display.id()] = displayOrder: 1
-    things[HQ.Items.Tablet.id()] =
-      displayOrder: 2
-      apps: apps
-      os:
-        activeAppId: HQ.Items.Tablet.Apps.Welcome.id()
-
+  exits: ->
     exits = {}
     exits[Vocabulary.Keys.Directions.East] = HQ.Locations.Entrance.id()
     exits[Vocabulary.Keys.Directions.Out] = HQ.Locations.Entrance.id()
@@ -51,15 +44,12 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
     exits[Vocabulary.Keys.Directions.Southwest] = HQ.Locations.Gallery.id()
     exits[Vocabulary.Keys.Directions.West] = HQ.Locations.Steps.id()
     exits[Vocabulary.Keys.Directions.Up] = HQ.Locations.Steps.id()
-
-    _.merge {}, super,
-      things: things
-      exits: exits
+    exits
 
   onScriptsLoaded: ->
     # Tablet
     Tracker.autorun (computation) =>
-      return unless tablet = @things HQ.Items.Tablet.id()
+      return unless tablet = @thingInstances HQ.Items.Tablet.id()
       computation.stop()
 
       tablet.addAbility new Action

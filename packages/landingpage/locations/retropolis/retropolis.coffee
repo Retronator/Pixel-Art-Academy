@@ -18,6 +18,8 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
   @register @id()
   template: -> @constructor.id()
 
+  @version: -> '0.0.2'
+
   @fullName: -> "Retropolis Landing Page"
   @shortName: -> "Retropolis"
   @description: ->
@@ -29,16 +31,6 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
     "
     
   @initialize()
-
-  @initialState: ->
-    things = {}
-    things[PAA.Cast.Retro.id()] = {}
-
-    exits = {}
-
-    _.merge {}, super,
-      things: things
-      exits: exits
 
   middleSceneHeight = 180
   middleSceneOffsetFactor = 0.5
@@ -53,6 +45,10 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
     @menu = new LOI.Components.Menu
       adventure: @options.adventure
       landingPage: true
+
+    @_lastAppTime =
+      elapsedAppTime: 0
+      totalAppTime: 0
 
   illustrationHeight: ->
     illustrationHeight = @_sceneBounds()?.height() / @display?.scale()
@@ -212,7 +208,19 @@ class PAA.LandingPage.Locations.Retropolis extends LOI.Adventure.Location
 
     @app?.removeComponent @
 
+  onScroll: ->
+    @draw()
+
   draw: (appTime) ->
+    return unless @isRendered()
+
+    # Support for calls without app time. Just reuse last one.
+    if appTime
+      @_lastAppTime = appTime
+
+    else
+      appTime = @_lastAppTime
+
     scale = @display.scale()
 
     if @hasResized

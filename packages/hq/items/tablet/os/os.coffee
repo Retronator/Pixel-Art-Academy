@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
 class HQ.Items.Tablet.OS extends AM.Component
@@ -9,7 +10,9 @@ class HQ.Items.Tablet.OS extends AM.Component
   constructor: (@options) ->
     super
 
-    @state = new ReactiveField null
+    @stateObject = new LOI.StateObject @options
+
+    @activeAppId = @stateObject.field 'activeAppId'
 
     # If the tablet is not the main active tablet, we shouldn't use the URL
     # to change the app, so we hijack the links and change the app via state.
@@ -63,13 +66,10 @@ class HQ.Items.Tablet.OS extends AM.Component
       # If we didn't find an app from url, see if we have the ID stored in the state.
       unless appClass
         Tracker.nonreactive =>
-          state = @state()
-          console.log "No url. Trying to load from state", state if HQ.debug
-          appClass = HQ.Items.Tablet.OS.App.getClassForId state?.activeAppId
+          appClass = HQ.Items.Tablet.OS.App.getClassForId @activeAppId()
           
       # Make sure we have this app available.
-      availableApps = @options.tablet.state().apps
-      appClass = null unless availableApps[appClass?.id()]
+      appClass = null unless @options.tablet.apps appClass?.id()
 
       # If we still don't have an app class, start with the menu.
       appClass ?= HQ.Items.Tablet.Apps.Menu
@@ -78,7 +78,7 @@ class HQ.Items.Tablet.OS extends AM.Component
 
       # Change active app in OS state.
       Tracker.nonreactive =>
-        @state().activeAppId = appClass.id()
+        @activeAppId appClass.id()
 
       @currentAppId appClass.id()
 
@@ -141,8 +141,7 @@ class HQ.Items.Tablet.OS extends AM.Component
 
     # Change active app in OS state.
     Tracker.nonreactive =>
-      @state().activeAppId = appClass.id()
-      @options.adventure.gameState.updated()
+      @activeAppId appClass.id()
       
     # Route to correct URL.
     FlowRouter.go 'LandsOfIllusions.Adventure', urlParameters

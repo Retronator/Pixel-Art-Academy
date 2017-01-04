@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 class LOI.Adventure.Script.Helpers extends LOI.Adventure.Script.Helpers
   addItemToInventory: (options) ->
-    @adventure.gameState().player.inventory[options.item.id()] = options.state or options.item.initialState()
+    @adventure.gameState().player.inventory[options.item.id()] = options.state or {}
     @adventure.gameState.updated()
 
   removeItemFromInventory: (options) ->

@@ -8,121 +8,6 @@ Nodes = LOI.Adventure.Script.Nodes
 class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
   @register 'LandsOfIllusions.Adventure.Interface.Text'
 
-  onCreated: ->
-    super
-
-    console.log "Text interface is being created." if LOI.debug
-
-    # Create pixel scaling display.
-    @display = new AM.Display
-      safeAreaWidth: 320
-      safeAreaHeight: 240
-      maxDisplayWidth: 480
-      maxDisplayHeight: 640
-      minScale: 2
-      minAspectRatio: 1/2
-      maxAspectRatio: 2
-      debug: false
-
-    @_lastNode = new ReactiveField null
-    @_pausedNode = new ReactiveField null
-
-    @narrative = new LOI.Adventure.Interface.Components.Narrative
-      textInterface: @
-
-    @commandInput = new LOI.Adventure.Interface.Components.CommandInput
-      interface: @
-      onEnter: => @onCommandInputEnter()
-
-    # Listen for command input changes.
-    @autorun (computation) =>
-      @commandInput.command()
-      @onCommandInputChanged()
-
-    @dialogSelection = new LOI.Adventure.Interface.Components.DialogSelection
-      interface: @
-      onEnter: => @onDialogSelectionEnter()
-
-    # Pause dialog selection when we're waiting for a key press ourselves.
-    @autorun (computation) =>
-      @dialogSelection.paused @waitingKeypress()
-
-    @hoveredCommand = new ReactiveField null
-
-    # Reset last node when we're showing the dialog selection or taking command input.
-    @autorun (computation) =>
-      if @showCommandLine() and not @waitingKeypress()
-        # A bit of a hack, but because waiting for keypress might kick back in after the other nodes are reactively
-        # processed, we just wait a little bit and see if the conditions are still the same after the wait.
-        Meteor.setTimeout =>
-          @_lastNode null if @showCommandLine() and not @waitingKeypress()
-        ,
-          1
-
-  onRendered: ->
-    super
-
-    @_previousLineCount = @narrative.linesCount()
-
-    # Enable magnification detection.
-    @resizing = new LOI.Adventure.Interface.Text.Resizing @
-
-    # Clamp scrollable areas to content size.
-    @autorun =>
-      # React to viewport and fullscreen changes.
-      @display.viewport()
-      AM.Window.isFullscreen()
-
-      @$('.scrollable').each ->
-        $scrollable = $(@)
-        $scrollableContent = $scrollable.find('.scrollable-content').eq(0)
-
-        top = parseInt $.Velocity.hook($scrollableContent, 'translateY') or 0
-
-        amountHidden = Math.max 0, $scrollableContent.height() - $scrollable.height()
-        newTop = _.clamp top, -amountHidden, 0
-
-        $.Velocity.hook $scrollableContent, 'translateY', "#{newTop}px"
-
-    # Listen to scroll events so that we can sync transform-based scrolling to it.
-    $uiArea = $('.ui-area')
-    @textInterface = $('.text-interface')[0]
-    @$window = $(window)
-
-    @$window.on 'scroll.text-interface', =>
-      scrollTop = @$window.scrollTop()
-      $.Velocity.hook $uiArea, 'translateY', "#{-scrollTop}px"
-
-    # Listen to fullscreen changes and sync scroll top to
-
-  onDestroyed: ->
-    super
-
-    console.log "Destroying text interface." if LOI.debug
-
-    @commandInput.destroy()
-    @dialogSelection.destroy()
-
-    $(window).off '.text-interface'
-
-    # Clean up body height that was set from resizing.
-    $('body').css height: ''
-
-  active: ->
-    # The text interface is active unless there is an item active.
-    not @options.adventure.activeItem()
-
-  onLocationChanged: (location) ->
-    @narrative?.clear()
-
-    Meteor.setTimeout =>
-      Tracker.afterFlush =>
-        # Scroll the text portion of the narrative (but not the
-        # main window, since we want to display the full location).
-        @narrative.scroll scrollMain: false
-    ,
-      1
-
   introduction: ->
     location = @location()
     return unless location
@@ -139,7 +24,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       @_formatOutput location.avatar.description()
       
   exits: ->
-    exits = @location()?.state()?.exits
+    exits = @location()?.exits()
     return [] unless exits
 
     # Generate a unique set of IDs from all directions (some directions might lead to same location).
@@ -166,10 +51,9 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     translated.text
 
   things: ->
-    sorted = _.sortBy @location().things.values(), (thing) ->
-      thing.state().displayOrder
+    location = @location()
 
-    sorted
+    location.thingInstances thingId for thingId in location.things()
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
@@ -199,7 +83,7 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
     items = _.flatten [
       @options.adventure.inventory.values()
-      _.filter @options.adventure.currentLocation().things.values(), (thing) => thing instanceof LOI.Adventure.Item
+      _.filter @options.adventure.currentLocation().thingInstances.values(), (thing) => thing instanceof LOI.Adventure.Item
     ]
 
     activeItems = _.filter items, (item) => not item.deactivated()
@@ -247,6 +131,10 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     text
 
+  active: ->
+    # The text interface is active unless there is an item active.
+    not @options.adventure.activeItem()    
+
   # Use to get back to the initial state with full location description.
   resetInterface: ->
     @narrative?.clear()
@@ -254,103 +142,6 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
 
     Tracker.afterFlush =>
       @narrative.scroll()
-
-  _waitForNode: (node) ->
-    # If we're still displaying something, we shouldn't
-    # immediately display the node, but instead wait for a key press.
-    lastNode = @_lastNode()
-    if lastNode
-      @_lastNode null
-
-      # Wait for player's command to continue.
-      @_pausedNode node
-
-      # Return true to indicate not to handle this node yet.
-      return true
-
-    else
-      # We don't have a previous node (or it was cleared to continue), so no need to wait. Return false.
-      return false
-
-  _handleNode: (node) ->
-    super
-
-    @_handleChoice node if node instanceof Nodes.Choice
-
-  _handleChoice: (choice) ->
-    # We don't really have to handle choice node, because the dialog selection
-    # module does that, but we still want to pause before we display it.
-    @_waitForNode choice
-
-  _handleDialogLine: (dialogLine) ->
-    return if @_waitForNode dialogLine
-
-    unless dialogLine.actor
-      # There is no actor, which means the player is saying this. Simply dump it into the narrative and finish.
-      text = @_evaluateLine dialogLine
-
-      @narrative.addText "> \"#{text.toUpperCase()}\""
-
-      dialogLine.end()
-      return
-
-    # We have an actor that is saying this.
-    dialogColor = dialogLine.actor.avatar.colorObject()?.getHexString()
-
-    # Add a new paragraph to the narrative
-    start = "%c##{dialogColor}"
-    text = @_evaluateLine dialogLine
-    end = '%%'
-
-    # Add the intro line at the start.
-    unless @_inMultilineDialog
-      start = "#{dialogLine.actor.avatar.shortName()} says: #{start}\""
-
-    if dialogLine.next instanceof Nodes.DialogLine and dialogLine.next.actor is dialogLine.actor
-      # Next line is by the same actor.
-      @_inMultilineDialog = true
-
-    else
-      @_inMultilineDialog = false
-
-      # Add the closing quote at the end.
-      end = "\"#{end}"
-
-    # Present the text to the player.
-    @narrative.addText "#{start}#{text}#{end}"
-
-    # This is a line node so set that we displayed it.
-    @_lastNode dialogLine
-
-    dialogLine.end()
-
-  _handleNarrativeLine: (narrativeLine) ->
-    return if @_waitForNode narrativeLine
-
-    # Simply output the line to the narrative.
-    text = @_evaluateLine narrativeLine
-
-    @narrative.addText text
-
-    # This is a line node so set that we displayed it.
-    @_lastNode narrativeLine
-
-    narrativeLine.end()
-
-  _evaluateLine: (lineNode) ->
-    lineNode.line.replace /`(.*?)`/g, (codeSection) ->
-      expression = codeSection.match(/`(.*?)`/)[1]
-      console.log "Evaluating embedded expression", expression, "from line", lineNode if LOI.debug
-
-      # Create a code node to evaluate the expression.
-      codeNode = new LOI.Adventure.Script.Nodes.Code
-        expression: expression
-
-      codeNode.script = lineNode.script
-
-      # Evaluate the expression, but we don't allow (or at least react to) state changes within the expression.
-      codeNode.evaluate
-        triggerChange: false
 
   events: ->
     super.concat
@@ -362,53 +153,6 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       'mouseenter .exits .exit .name': @onMouseEnterExit
       'mouseleave .exits .exit .name': @onMouseLeaveExit
       'click .exits .exit .name': @onClickExit
-
-  onWheel: (event) ->
-    # If scrolling is locked to a container, don't let the main window scroll.
-    if @_scrollLockTarget and @_scrollLockTarget isnt event.currentTarget
-      event.preventDefault()
-
-  onWheelScrollable: (event) ->
-    $scrollable = $(event.currentTarget)
-
-    # If scrolling is locked to a container, don't let others scroll.
-    return if @_scrollLockTarget and @_scrollLockTarget isnt $scrollable[0]
-
-    $scrollableContent = $scrollable.find('.scrollable-content').eq(0)
-
-    delta = event.originalEvent.deltaY
-    top = parseInt $.Velocity.hook($scrollableContent, 'translateY') or 0
-    newTop = top - delta
-    
-    # Limit scrolling to the amount of content.
-    amountHidden = Math.max 0, $scrollableContent.height() - $scrollable.height()
-    newTop = _.clamp newTop, -amountHidden, 0
-
-    # See if we need to do anything at all.
-    if newTop is top
-      # If we scrolled to the bottom, immediately stop scroll lock. This makes scroll lock only work when scrolling up.
-      if newTop is -amountHidden
-        @_scrollLockTarget = null
-
-      return
-
-    # We've scrolled in this container so lock scrolling to it.
-    @_scrollLockTarget = $scrollable[0]
-
-    @_unlockScrollAfterAWhile ?= _.debounce =>
-      @_scrollLockTarget = null
-    ,
-      1000
-
-    @_unlockScrollAfterAWhile()
-
-    $.Velocity.hook $scrollableContent, 'translateY', "#{newTop}px"
-
-    # When scrolling the main text adventure sync also scrollTop of the page.
-    if event.currentTarget is @textInterface
-      @$window.scrollTop -newTop
-
-    event.preventDefault()
 
   onMouseEnterCommand: (event) ->
     @hoveredCommand $(event.target).text()
@@ -429,37 +173,3 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
   onClickExit: (event) ->
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
-
-  onCommandInputEnter: ->
-    # Resume dialog on any key press.
-    if pausedLineNode = @_pausedNode()
-      # Clear the paused node and handle it.
-      @_pausedNode null
-      @_handleNode pausedLineNode
-
-      # Clear the command input in case it accumulated any text in the mean time.
-      @commandInput.clear()
-      return
-
-    @_executeCommand @hoveredCommand() or @commandInput.command().trim()
-
-    # Scroll to bottom on enter.
-    @narrative.scroll()
-
-  _executeCommand: (command) ->
-    return unless command.length
-
-    @narrative.addText "> #{command.toUpperCase()}"
-    @options.adventure.parser.parse command
-    @commandInput.clear()
-
-  onCommandInputChanged: ->
-    # Scroll to bottom to reveal new command.
-    @narrative.scroll()
-    
-  onDialogSelectionEnter: ->
-    # Continue with the selection.
-    @_dialogSelectionConfirm()
-
-  _dialogSelectionConfirm: ->
-    @dialogSelection.confirm()

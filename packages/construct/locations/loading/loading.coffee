@@ -34,7 +34,7 @@ class LOI.Construct.Locations.Loading extends LOI.Construct.Location
 
     $('body').removeClass('construct')
 
-  @initialState: ->
+  @state: ->
     things = {}
     things[LOI.Construct.Actors.Captain.id()] = {}
     things[LOI.Construct.Locations.Loading.TV.id()] = {}

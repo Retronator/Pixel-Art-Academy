@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 
 class LOI.Adventure.Parser extends LOI.Adventure.Parser
   parseNavigation: (command) ->
-    exits = @location.state().exits
+    exits = @location.exits()
     return unless exits
 
     # See if any of the words is a direction of one of the exits. Go over all directions.

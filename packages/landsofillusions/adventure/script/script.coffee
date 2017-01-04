@@ -35,8 +35,10 @@ class LOI.Adventure.Script
     node.script = @ for node in @nodes
 
     # Prepare the state objects.
-    @state = new ReactiveField {}
-    
+    @stateObject = new LOI.StateObject
+      adventure: @options.adventure
+      address: new LOI.StateAddress "scripts.#{@id()}"
+
     @ephemeralState = new ReactiveField {}
     @_stateChangeAutorun = AM.PersistentStorage.persist
       storageKey: "#{@options.id}.state"

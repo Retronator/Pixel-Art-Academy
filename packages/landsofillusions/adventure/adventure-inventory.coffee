@@ -4,11 +4,8 @@ LOI = LandsOfIllusions
 class LOI.Adventure extends LOI.Adventure
   _initializeInventory: ->
     # Create inventory.
-    @inventory = new LOI.StateNode
+    @inventory = new LOI.StateInstances
       adventure: @
-
-    # Reactively update inventory state.
-    @autorun (computation) =>
-      console.log "Setting updated inventory state to the inventory object.", @gameState()?.player.inventory if LOI.debug
-
-      @inventory.updateState @gameState()?.player.inventory
+      state: =>
+        # TODO: Implement inventory logic.
+        {}

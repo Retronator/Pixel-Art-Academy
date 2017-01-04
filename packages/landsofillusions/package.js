@@ -48,7 +48,10 @@ Package.onUse(function(api) {
   api.addFiles('gamestate/localgamestate.coffee');
   api.addFiles('gamestate/methods.coffee');
   api.addFiles('gamestate/subscriptions.coffee', 'server');
-  api.addFiles('gamestate/statenode.coffee');
+  api.addFiles('gamestate/stateobject.coffee');
+  api.addFiles('gamestate/statefield.coffee');
+  api.addFiles('gamestate/stateaddress.coffee');
+  api.addFiles('gamestate/stateinstances.coffee');
 
   // Character
 
@@ -153,8 +156,11 @@ Package.onUse(function(api) {
   api.addFiles('adventure/interface/text/text.coffee');
   api.addFiles('adventure/interface/text/text.html');
   api.addFiles('adventure/interface/text/text.styl');
-
-  api.addFiles('adventure/interface/text/resizing.coffee');
+  api.addFiles('adventure/interface/text/text-initialization.coffee');
+  api.addFiles('adventure/interface/text/text-handlers.coffee');
+  api.addFiles('adventure/interface/text/text-nodehandling.coffee');
+  api.addFiles('adventure/interface/text/text-resizing.coffee');
+  api.addFiles('adventure/interface/text/text-scrolling.coffee');
 
   // Pages
 

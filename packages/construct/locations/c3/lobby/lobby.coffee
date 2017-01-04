@@ -30,7 +30,7 @@ class LOI.Construct.Locations.C3.Lobby extends LOI.Construct.Location
   destroy: ->
     super
 
-  @initialState: ->
+  @state: ->
     things = {}
 
     exits = {}

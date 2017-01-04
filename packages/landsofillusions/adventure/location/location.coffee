@@ -29,10 +29,6 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     # Add a visited field unique to this location class.
     @visited = new ReactiveField false
 
-  @initialState: ->
-    scripts: {}
-    things: {}
-
   # Location instance
 
   constructor: (@options) ->
@@ -42,16 +38,14 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
 
     console.log "%cDirector made for location", 'background: LightSkyBlue', @ if LOI.debug
 
-    @things = new LOI.StateNode
+    @thingInstances = new LOI.StateInstances
       adventure: @options.adventure
+      state: => @things()
 
     # Subscribe to translations of exit locations' avatars so we get their names.
     @exitsTranslationSubscriptions = new ComputedField =>
-      exits = @state()?.exits
-      return {} unless exits
-      
       subscriptions = {}
-      for directionKey, locationId of exits
+      for directionKey, locationId of @exits()
         subscriptions[locationId] = AB.subscribeNamespace "#{locationId}.Avatar"
 
       subscriptions
@@ -81,9 +75,6 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
           # Add the loaded and translated script nodes to this location.
           _.extend @scripts, scriptFile.scripts
 
-        # Now that all the scripts are loaded, trigger update of script states.
-        @state @state()
-
         @onScriptsLoaded()
 
         @scriptsReady true
@@ -91,46 +82,16 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     else
       @scriptsReady true
 
-    # Propagate state updates.
-    @_stateUpdateAutorun = Tracker.autorun =>
-      state = @state()
-      return unless state
-
-      console.log "%cLocation", 'background: LightSkyBlue', @, "has received a new state", state, "and we are sending it to the scripts", @scripts if LOI.debug
-
-      # Update things.
-      @things.updateState state.things
-
-      # Update scripts.
-      createdScriptStates = false
-
-      for scriptId, script of @scripts
-        # Find the state of the script in location, or make it if it doesn't exist yet.
-        scriptState = state.scripts[scriptId]
-
-        unless scriptState
-          scriptState = {}
-          state.scripts[scriptId] = scriptState
-          createdScriptStates = true
-
-        # Update the state.
-        script.state scriptState
-
-      if createdScriptStates
-        console.log "%cUpdating the state of location has introduced new scripts.", 'background: LightSkyBlue' if LOI.debug
-        Tracker.nonreactive => @options.adventure.gameState.updated()
-
   destroy: ->
     super
 
     @exitsTranslationSubscriptions.stop()
     @_scriptTranslationSubscription.stop()
-    @_stateUpdateAutorun.stop()
 
   ready: ->
     conditions = [
       super
-      @things.ready()
+      @thingInstances.ready()
       subscription.ready() for subscription in @exitsTranslationSubscriptions()
       @_scriptTranslationSubscription.ready()
       @scriptsReady()
@@ -143,3 +104,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     loaded
 
   onScriptsLoaded: -> # Override to create location's script logic. Use @scriptNodes to get access to script nodes.
+
+  exits: -> {} # Override to provide location exits in {direction: locationId} format
+
+  things: -> [] # Override to provide an array of thing IDs at this location.

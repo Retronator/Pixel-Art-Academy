@@ -27,19 +27,16 @@ class HQ.Locations.IdeaGarden extends LOI.Adventure.Location
     "
   
   @initialize()
+  
+  things: ->
+    [HQ.Actors.ElevatorButton.id()]
 
-  @initialState: ->
-    things = {}
-    things[HQ.Actors.ElevatorButton.id()] = displayOrder: 1
-
-    exits = {}
+  exits: ->
+    exits = @elevatorExits()
     exits[Vocabulary.Keys.Directions.North] = HQ.Locations.Chillout.id()
     exits[Vocabulary.Keys.Directions.East] = HQ.Locations.Theater.id()
+    exits
 
-    _.merge {}, super,
-      things: things
-      exits: exits
-  
   constructor: ->
     super
     

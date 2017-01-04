@@ -33,20 +33,17 @@ class HQ.Locations.Studio.Hallway extends LOI.Adventure.Location
     HQ.Locations.Elevator.setupElevatorExit
       location: @
       floor: 4
-      
-  @initialState: ->
-    things = {}
-    things[HQ.Actors.ElevatorButton.id()] = displayOrder: 1
 
-    exits = {}
+  things: ->
+    [HQ.Actors.ElevatorButton.id()]
+
+  exits: ->
+    exits = @elevatorExits()
     exits[Vocabulary.Keys.Directions.North] = HQ.Locations.Studio.Kitchen.id()
     exits[Vocabulary.Keys.Directions.Northeast] = HQ.Locations.Studio.id()
     exits[Vocabulary.Keys.Directions.East] = HQ.Locations.Studio.Bathroom.id()
     exits[Vocabulary.Keys.Directions.South] = HQ.Locations.Studio.Bedroom.id()
-
-    _.merge {}, super,
-      things: things
-      exits: exits
+    exits
 
   onScriptsLoaded: ->
     # Elevator button

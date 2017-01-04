@@ -45,20 +45,19 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
 
     @_itemsSubscription.stop()
 
-  @initialState: ->
-    things = {}
-    things[PAA.Cast.Retro.id()] = displayOrder: 0
-    things[HQ.Locations.Checkout.Display.id()] = displayOrder: 1
-    things[HQ.Actors.ElevatorButton.id()] = displayOrder: 2
+  things: ->
+    [
+      PAA.Cast.Retro.id()
+      HQ.Locations.Checkout.Display.id()
+      HQ.Actors.ElevatorButton.id()
+    ]
 
-    exits = {}
+  exits: ->
+    exits = @elevatorExits()
     exits[Vocabulary.Keys.Directions.North] = HQ.Locations.Steps.id()
     exits[Vocabulary.Keys.Directions.Down] = HQ.Locations.Steps.id()
     exits[Vocabulary.Keys.Directions.East] = HQ.Locations.Store.id()
-
-    _.merge {}, super,
-      things: things
-      exits: exits
+    exits
 
   onScriptsLoaded: ->
     # Retro

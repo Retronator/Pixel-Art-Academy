@@ -31,7 +31,7 @@ class HQ.Locations.Chillout extends LOI.Adventure.Location
   constructor: ->
     super
 
-  @initialState: ->
+  @state: ->
     things = {}
 
     exits = {}

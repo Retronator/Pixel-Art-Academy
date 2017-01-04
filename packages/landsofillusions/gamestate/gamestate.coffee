@@ -3,10 +3,11 @@ LOI = LandsOfIllusions
 
 class LandsOfIllusionsGameState extends AM.Document
   # state: object that holds all game information
-  #   player
-  #     inventory
-  #   locations
-  #     scripts
+  #   things: a map of all things
+  #     {thingId}: state of the thing
+  #   scripts: a map of all scripts
+  #     {scriptId}: state of the script
+  #   currentLocationId: the last known location of the player
   # user: the user this state belongs to or null if it's a character state
   #   _id
   # character: the character this state belongs to or null if it's a user state

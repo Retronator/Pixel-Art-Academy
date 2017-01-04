@@ -53,7 +53,7 @@ class HQ.Locations.LandsOfIllusions.Room extends LOI.Adventure.Location
 
     @_operator.destroy()
 
-  @initialState: ->
+  @state: ->
     things = {}
     things[HQ.Locations.LandsOfIllusions.Room.Chair.id()] = {}
 

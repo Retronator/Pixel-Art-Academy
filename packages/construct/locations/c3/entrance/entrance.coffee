@@ -27,7 +27,7 @@ class LOI.Construct.Locations.C3.Entrance extends LOI.Construct.Location
   constructor: ->
     super
 
-  @initialState: ->
+  @state: ->
     things = {}
 
     exits = {}

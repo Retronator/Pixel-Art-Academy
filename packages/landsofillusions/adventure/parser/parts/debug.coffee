@@ -9,7 +9,7 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       console.log "We are resetting location state." if LOI.debug
 
       state = @options.adventure.gameState()
-      state.locations[@location.id()] = @location.constructor.initialState()
+      state.locations[@location.id()] = {}
       @options.adventure.gameState.updated()
 
       return true
@@ -29,9 +29,7 @@ class LOI.Adventure.Parser extends LOI.Adventure.Parser
       tablet = @options.adventure.inventory Retronator.HQ.Items.Tablet
       apps = tablet.state().apps
 
-      for appId, app of apps
-        appClass = Retronator.HQ.Items.Tablet.OS.App.getClassForId appId
-        apps[appId] = appClass.initialState()
+      apps[appId] = {} for appId, app of apps
 
       @options.adventure.gameState.updated()
 

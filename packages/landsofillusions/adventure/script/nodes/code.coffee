@@ -61,11 +61,11 @@ class Script.Nodes.Code extends Script.Node
     options.triggerChange ?= true
 
     # Get the states into context.
-    _scriptState = @script.state()
+    _scriptState = @script.stateObject()
     _ephemeralState = @script.ephemeralState()
 
     location = @script.options.location
-    _locationState = location.state()
+    _locationState = location.stateObject()
     _locationState.id = location.id()
 
     _globalState = @script.options.adventure.gameState()

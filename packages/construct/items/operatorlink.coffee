@@ -54,6 +54,6 @@ class LOI.Construct.Items.OperatorLink extends LOI.Adventure.Item
 
     @operator.destroy()
 
-  @initialState: ->
+  @state: ->
     # Don't show operator in the inventory.
     doNotDisplay: true
