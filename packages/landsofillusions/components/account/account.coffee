@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 class LOI.Components.Account extends AM.Component
   @register 'LandsOfIllusions.Components.Account'
 
-  @version: -> '0.0.1-wip'
+  @version: -> '0.0.2'
 
   constructor: ->
     super
@@ -14,20 +14,16 @@ class LOI.Components.Account extends AM.Component
 
     @currentPageNumber = new ReactiveField 0
 
-  mixins: -> [@activatable]
-
-  pages: ->
-    [
-      pageNumber: 1
-    ,
-      pageNumber: 2
-    ,
-      pageNumber: 3
-    ,
-      pageNumber: 4
-    ,
-      pageNumber: 5
+    @pages = [
+      new @constructor.General
     ]
+
+    page.pageNumber = index + 1 for page, index in @pages
+
+    @emptyPages = for index in [@pages.length..5]
+      pageNumber: index
+
+  mixins: -> [@activatable]
 
   onCoverClass: ->
     'on-cover' unless @currentPageNumber()
@@ -88,7 +84,7 @@ class LOI.Components.Account extends AM.Component
     @currentPageNumber 1
 
   onClickPrevious: (event) ->
-    @currentPageNumber _.clamp @currentPageNumber() - 1, 0, @pages().length
+    @currentPageNumber _.clamp @currentPageNumber() - 1, 0, @pages.length
 
   onClickNext: (event) ->
-    @currentPageNumber _.clamp @currentPageNumber() + 1, 0, @pages().length
+    @currentPageNumber _.clamp @currentPageNumber() + 1, 0, @pages.length

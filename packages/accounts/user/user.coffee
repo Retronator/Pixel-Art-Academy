@@ -59,4 +59,10 @@ class RetronatorAccountsUser extends Document
   @contactEmailForCurrentUser: 'Retronator.Store.User.contactEmailForCurrentUser'
   @registeredEmailsForCurrentUser: 'Retronator.Accounts.User.registeredEmailsForCurrentUser'
   
+  @rename: 'Retronator.Accounts.User.rename'
+  @sendVerificationEmail: 'Retronator.Accounts.User.sendVerificationEmail'
+  @addEmail: 'Retronator.Accounts.User.addEmail'
+  @removeEmail: 'Retronator.Accounts.User.removeEmail'
+  @setPrimaryEmail: 'Retronator.Accounts.User.setPrimaryEmail'
+  
 RA.User = RetronatorAccountsUser

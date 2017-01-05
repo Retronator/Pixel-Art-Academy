@@ -41,11 +41,13 @@ Package.onUse(function(api) {
   // Initialization
 
   api.addFiles('initialize-server/signin.coffee', 'server');
+  api.addFiles('initialize-server/emails.coffee', 'server');
 
   // User
   
   api.addFiles('user/user.coffee');
   api.addFiles('user/methods.coffee');
+  api.addFiles('user/methods-server.coffee', 'server');
   api.addFiles('user/subscriptions.coffee', 'server');
 
   // Layouts

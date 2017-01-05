@@ -4,25 +4,38 @@ Meteor.methods
   'Retronator.Accounts.User.rename': (name) ->
     check name, String
 
-    RA.User.documents.update Meteor.user(),
+    user = Retronator.user()
+
+    throw new AE.UnauthorizedException "You must be logged in to rename your user account." unless user
+
+    RA.User.documents.update user._id,
       $set:
         'profile.name': name
 
-  'Retronator.Accounts.User.sendVerificationEmail': (emailAddress) ->
+  'Retronator.Accounts.User.setPrimaryEmail': (emailAddress) ->
     check emailAddress, String
 
-    return unless Meteor.isServer
-    return unless Meteor.userId()
+    user = Retronator.user()
 
-    Accounts.sendVerificationEmail Meteor.userId(), emailAddress
+    throw new AE.UnauthorizedException "You must be logged in to set your primary email." unless user
 
-  'Retronator.Accounts.User.addEmail': (emailAddress) ->
-    check emailAddress, String
+    emailIndex = _.findIndex user.registered_emails, (email) -> email.address is emailAddress
 
-    return unless Meteor.isServer
-    return unless Meteor.userId()
+    throw new AE.ArgumentException "You must provide an existing email address to set it as primary." if emailIndex is -1
 
-    Accounts.addEmail Meteor.userId(), emailAddress
+    primaryIndex = _.findIndex user.registered_emails, (email) -> email.primary
 
-    # Also update registered_emails.
-    AccountsEmailsField.updateEmails user: Meteor.user()
+    return if emailIndex is primaryIndex
+
+    if primaryIndex > -1
+      # Unset the previous primary email.
+      set = {}
+      set["registered_emails.#{primaryIndex}.primary"] = false
+
+      RA.User.documents.update user._id, $set: set
+
+    # Set the new primary email.
+    set = {}
+    set["registered_emails.#{emailIndex}.primary"] = true
+
+    RA.User.documents.update user._id, $set: set

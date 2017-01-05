@@ -199,6 +199,11 @@ Package.onUse(function(api) {
   api.addFiles('components/account/account.coffee');
   api.addFiles('components/account/account.html');
   api.addFiles('components/account/account.styl');
+  api.addFiles('components/account/account-pagecontent.styl');
+
+  api.addFiles('components/account/general/general.coffee');
+  api.addFiles('components/account/general/general.html');
+  api.addFiles('components/account/general/general.styl');
 
   // Typography
 

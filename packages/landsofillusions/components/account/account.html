@@ -17,10 +17,12 @@
           {{#each pages}}
             {{#if $is currentPageNumber pageNumber}}
               <div class="page-content">
-                WE ARE ON PAGE {{pageNumber}}
-                {{! > Render this}}
+                {{> Render this}}
               </div>
             {{/if}}
+            <img class="account-file-layer {{pageClass}} {{pageVisibleClass}}" src="{{image pageImageUrl}}" />
+          {{/each}}
+          {{#each emptyPages}}
             <img class="account-file-layer {{pageClass}} {{pageVisibleClass}}" src="{{image pageImageUrl}}" />
           {{/each}}
           <img class="account-file-layer papers-bottom visible" src="{{image '/landsofillusions/components/account/papers-bottom.png'}}" />

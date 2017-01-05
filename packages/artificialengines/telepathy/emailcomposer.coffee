@@ -6,12 +6,18 @@ class AT.EmailComposer
     @html = "<!DOCTYPE html><html><body>"
 
   addParagraph: (text) ->
-
     formattedText = @_formatText text
     @text += "#{formattedText}\n\n"
 
     html = @_transformTextToHtml text
     @html += "<p>#{html}</p>\n"
+    
+  addLinkParagraph: (url, text) ->
+    text ?= url
+    
+    @text += "#{url}\n\n"
+
+    @html += "<p><a href='#{url}'>#{text}</a></p>\n"
 
   end: ->
     @html += "</body></html>"

@@ -1,0 +1,155 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-account-general
+  .account-name
+    position relative
+
+    &::after
+      content ''
+      display block
+      position absolute
+      z-index -1
+      bottom 1rem
+      left 0
+      right 0
+      border-bottom 1rem dotted atariGrey(4)
+
+  .emails
+    width 100%
+    border-collapse collapse
+    border-spacing 1rem
+    margin-bottom 25rem
+
+    .email
+      height 11rem
+
+      td
+        border 1rem solid atariGrey(5)
+        padding 0
+
+      .address
+        .address-input
+
+          overflow hidden
+          text-overflow ellipsis
+
+      .primary
+        width 13rem
+
+        .primary-label
+          display block
+          width 100%
+          height 100%
+          line-height 100%
+
+          .primary-input
+            display none
+
+            &:checked + .checkmark
+              visibility visible
+
+          .checkmark
+            width 6rem
+            height 7rem
+            vertical-align middle
+            margin-left 2rem
+            visibility hidden
+
+
+      .verified
+        width 13rem
+        position relative
+        padding 1rem 2rem
+
+        .stamp
+          position absolute
+          z-index 1
+          left -4rem
+          top -5rem
+          width 20rem
+          height 20rem
+          pointer-events none
+          mix-blend-mode multiply
+
+        .verify-email-button
+          display block
+          top 0
+          left 0
+          width 8rem
+          height 8rem
+          padding 0
+          border none
+          background atariGrey(6)
+          cursor pointer
+
+          &:hover
+            background atariGrey(5)
+
+          &:active
+            background atariGrey(7)
+
+          &:focus
+            outline none
+
+      &:last-of-type
+        .primary
+          position relative
+
+          &::before
+            content 'primary'
+            position absolute
+            right 30rem
+            top 14rem
+            checkout()
+            color atariGrey(3)
+
+          &::after
+            content ''
+            position absolute
+            right 5rem
+            width 23rem
+            top 13rem
+            height 5rem
+            border-right 1rem solid atariGrey(5)
+            border-bottom 1rem solid atariGrey(5)
+
+        .verified
+          position relative
+
+          &::before
+            content 'verified'
+            position absolute
+            right 43rem
+            top 22rem
+            checkout()
+            color atariGrey(3)
+
+          &::after
+            content ''
+            position absolute
+            right 5rem
+            width 36rem
+            top 13rem
+            height 13rem
+            border-right 1rem solid atariGrey(5)
+            border-bottom 1rem solid atariGrey(5)
+
+      // Randomize stamp locations for 2nd row and on.
+      for index in (1..10)
+        &:nth-child({index})
+          .stamp
+            left -4rem + random-integer(-1, 1)
+            top -5rem + random-integer(-1, 1)
+
+  .smallprint
+    position relative
+    checkout()
+    margin 0 15rem 5rem
+    color atariGrey(4)
+    hyphens auto
+
+    &::before
+      content '*'
+      position absolute
+      top 0
+      left -6rem

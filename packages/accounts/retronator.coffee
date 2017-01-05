@@ -1,3 +1,3 @@
 # Add the user helper.
-Retronator.user = ->
-  Retronator.Accounts.User.documents.findOne Meteor.userId()
+Retronator.user = (options) ->
+  Retronator.Accounts.User.documents.findOne Meteor.userId(), options

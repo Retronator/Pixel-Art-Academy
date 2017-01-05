@@ -1,0 +1,57 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-account
+  .account-file
+    margin-right 5rem
+
+    .page-content
+      position absolute
+      z-index 9
+      left 160rem
+      width 158rem
+      top 18rem
+      bottom 23rem
+      padding 14rem
+      color atariGrey(2)
+
+      h2
+        margin 0 0 3rem
+        acme-5()
+        font-weight bold
+        text-transform uppercase
+
+      h3
+        margin 3rem 0 1rem
+        acme-5()
+        font-weight normal
+
+      input
+      textarea
+        width 100%
+        freehand()
+        background none
+        border none
+        padding 0 4px
+        margin 0
+        color atariBlue(4)
+        input-placeholder atariGrey(3)
+
+        &:focus
+          outline none
+
+      textarea
+        border 1rem solid atariAzure(2)
+        height 3em
+        padding 3rem
+
+      label
+        cursor pointer
+
+      input[type='checkbox']
+        display none
+
+        & + .label::before
+          content '[ ] '
+
+        &:checked + .label::before
+          content '[✔︎] '
