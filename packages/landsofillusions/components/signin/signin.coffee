@@ -4,10 +4,11 @@ LOI = LandsOfIllusions
 
 class LOI.Components.SignIn extends AM.Component
   @register 'LandsOfIllusions.Components.SignIn'
+  @url: -> 'signin'
 
   @version: -> '0.0.1'
 
-  constructor: ->
+  constructor: (@options) ->
     super
 
     @activatable = new LOI.Components.Mixins.Activatable()

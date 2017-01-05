@@ -14,7 +14,10 @@ class LOI.Components.Menu extends AM.Component
       adventure: @options.adventure
 
     @signIn = new LOI.Components.SignIn
+      adventure: @options.adventure
+
     @account = new LOI.Components.Account
+      adventure: @options.adventure
 
     @_transitionDuration = 200
 

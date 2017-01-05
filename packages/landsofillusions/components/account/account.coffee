@@ -7,7 +7,7 @@ class LOI.Components.Account extends AM.Component
 
   @version: -> '0.0.2'
 
-  constructor: ->
+  constructor: (@options) ->
     super
 
     @activatable = new LOI.Components.Mixins.Activatable()
@@ -23,7 +23,31 @@ class LOI.Components.Account extends AM.Component
     @emptyPages = for index in [@pages.length..5]
       pageNumber: index
 
+    LOI.Adventure.registerDirectRoute 'account/*', =>
+      # Show the dialog if we need to.
+      @show() if @activatable.deactivated()
+
+      return unless pageUrl = FlowRouter.getParam 'parameter2'
+
+      for page, index in @pages
+        if page.constructor.url() is pageUrl
+          @currentPageNumber index + 1
+
   mixins: -> [@activatable]
+
+  show: ->
+    @options.adventure.menu.showModalDialog dialog: @
+
+  url: ->
+    url = 'account'
+    pageNumber = @currentPageNumber()
+
+    # Return the main URL while on the cover.
+    return url unless pageNumber
+
+    # Return the URL for the page.
+    page = @pages[pageNumber-1]
+    "#{url}/#{page.constructor.url()}"
 
   onCoverClass: ->
     'on-cover' unless @currentPageNumber()

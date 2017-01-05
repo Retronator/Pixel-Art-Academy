@@ -12,7 +12,7 @@ class LOI.Adventure.Thing extends AM.Component
     
   # Static thing properties and methods
 
-  # A map of all location constructors by url and ID.
+  # A map of all thing constructors by url and ID.
   @_thingClassesByUrl = {}
   @_thingClassesByWildcardUrl = {}
   @_thingClassesById = {}

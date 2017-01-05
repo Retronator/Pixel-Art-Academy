@@ -21,6 +21,8 @@ class LOI.Components.Mixins.Activatable extends AM.Component
   deactivating: -> @activatedState() is @constructor.activatedStates.Deactivating
 
   activate: (onActivatedCallback) ->
+    return if @activating() or @activated()
+
     # The dialog gets activated (used).
     @activatedState @constructor.activatedStates.Activating
 
@@ -29,6 +31,8 @@ class LOI.Components.Mixins.Activatable extends AM.Component
       onActivatedCallback?()
 
   deactivate: (onDeactivatedCallback) ->
+    return if @deactivating() or @deactivated()
+
     # The dialog gets deactivated.
     @activatedState @constructor.activatedStates.Deactivating
 

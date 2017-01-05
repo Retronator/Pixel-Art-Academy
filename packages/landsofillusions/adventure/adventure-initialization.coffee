@@ -31,12 +31,15 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeCurrentLocation()
     @_initializeActiveItem()
     @_initializeInventory()
-    @_initializeRouting()
 
   onRendered: ->
     super
 
     console.log "Adventure rendered." if LOI.debug
+
+    # Only initialize routing after we've rendered adventure so that the persistent components 
+    # (such as the menu) got rendered and had the chance to register their URL handlers.
+    @_initializeRouting()
 
   onDestroyed: ->
     super

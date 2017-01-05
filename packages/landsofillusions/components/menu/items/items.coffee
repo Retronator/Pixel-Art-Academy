@@ -125,7 +125,7 @@ class LOI.Components.Menu.Items extends AM.Component
         userAutorun.stop()
 
   onClickAccount: (event) ->
-    @options.adventure.menu.showModalDialog dialog: @options.adventure.menu.account
+    @options.adventure.menu.account.show()
 
   onClickFullscreen: (event) ->
     if AM.Window.isFullscreen()

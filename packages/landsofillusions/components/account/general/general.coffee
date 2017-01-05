@@ -7,6 +7,7 @@ RA = Retronator.Accounts
 
 class LOI.Components.Account.General extends AM.Component
   @register 'LandsOfIllusions.Components.Account.General'
+  @url: -> 'general'
 
   onCreated: ->
     super
