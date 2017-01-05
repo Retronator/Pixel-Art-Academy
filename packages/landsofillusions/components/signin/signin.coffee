@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 class LOI.Components.SignIn extends AM.Component
   @register 'LandsOfIllusions.Components.SignIn'
 
-  @version: -> '0.0.1-wip'
+  @version: -> '0.0.1'
 
   constructor: ->
     super
