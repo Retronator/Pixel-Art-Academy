@@ -1,94 +1,79 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.landsofillusions-components-account-general
-  .support-area
-    .support-amount
-      acme-9()
-
-  .transactions
+.landsofillusions-components-account-services
+  .services
     list-style none
     padding 0
+    margin 8rem 0
 
-    .transaction
-      .date
+    &::after
+      content ''
+      display block
+      clear both
+
+    .service
+      position relative
+      float left
+      border 1rem solid atariGrey(5)
+      width 65rem
+      height 40rem
+      margin-left -1rem
+      margin-top -1rem
+      padding 0 1rem
+
+      .name
+        display block
+        checkout()
+        color atariGrey(4)
         text-transform uppercase
-        color console-lighter-grey
 
-      .details-area
-        background #222
-        border 2px solid #333
-        width 100%
-        padding 0 1em
-        margin 1em 0
+      .link-service-button
+        display block
+        top 0
+        left 0
+        width 61rem
+        height 30rem
+        padding 0
+        border none
+        background none
+        cursor pointer
 
-        .gift
-          .gift-link
-            display inline-block
-            background #111
-            padding 1em 1.5em
+        &:hover
+        &:focus
+          background atariGrey(6)
 
-            a
-              text-decoration none
-              color console-grey
+        &:active
+          background none
 
-              &:hover
-                color black
+        &:focus
+          outline none
 
-  a
-    color atariGrey(7)
-    cursor pointer
+      .stamp
+        position absolute
+        z-index 1
+        pointer-events none
+        mix-blend-mode multiply
 
-    &:hover
-      background-color atariGrey(7)
-      color atariGrey(0)
+        &.password
+          width 29rem
+          height 29rem
+          left 17rem
+          top 3rem
 
-  button
-  .button
-    position relative
-    top -4px
-    margin-top 4px
-    background #666
-    uni()
-    color atariGrey(0)
-    border none
-    border-bottom 4px solid #333
-    cursor pointer
+        &.facebook
+          width 57rem
+          height 36rem
+          left 3rem
+          top -2rem
 
-    &:focus
-      background: #777
-      outline none
+        &.twitter
+          width 53rem
+          height 34rem
+          left 3rem
+          top -2rem
 
-    &:hover
-      background: #888
-
-    &:active
-      border-bottom none
-      margin-bottom 4px
-      top 0
-
-    &:disabled
-      color #444
-      cursor default
-
-      &:hover
-        background #666
-
-  ul
-  ol
-    list-style square
-
-    li
-      margin-bottom 1em
-
-  input
-  textarea
-    uni()
-    background atariGrey(1)
-    border 1rem solid atariGrey(2)
-    padding 0 2rem
-    color atariGrey(5)
-    input-placeholder atariGrey(4)
-
-    &:focus
-      outline none
-      border-color atariGrey(3)
+        &.google
+          width 56rem
+          height 32rem
+          left 11rem
+          top 10rem

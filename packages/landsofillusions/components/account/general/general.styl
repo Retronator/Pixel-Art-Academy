@@ -83,6 +83,7 @@
           cursor pointer
 
           &:hover
+          &:focus
             background atariGrey(5)
 
           &:active
@@ -140,16 +141,3 @@
           .stamp
             left -4rem + random-integer(-1, 1)
             top -5rem + random-integer(-1, 1)
-
-  .smallprint
-    position relative
-    checkout()
-    margin 0 15rem 5rem
-    color atariGrey(4)
-    hyphens auto
-
-    &::before
-      content '*'
-      position absolute
-      top 0
-      left -6rem

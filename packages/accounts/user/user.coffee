@@ -50,8 +50,12 @@ class RetronatorAccountsUser extends Document
         [user._id, displayName]
 
       loginServices: [@GeneratedField 'self', ['services'], (user) ->
-        availableServices = ['password', 'facebook', 'twitter', 'google']
+        availableServices = ['facebook', 'twitter', 'google']
         enabledServices = _.intersection _.keys(user.services), availableServices
+
+        # Add password only if it has really been set (since the password key can also have just a reset token object).
+        enabledServices.push 'password' if user.services.password?.bcrypt
+
         [user._id, enabledServices]
       ]
 
@@ -64,5 +68,6 @@ class RetronatorAccountsUser extends Document
   @addEmail: 'Retronator.Accounts.User.addEmail'
   @removeEmail: 'Retronator.Accounts.User.removeEmail'
   @setPrimaryEmail: 'Retronator.Accounts.User.setPrimaryEmail'
+  @sendPasswordResetEmail: 'Retronator.Accounts.User.sendPasswordResetEmail'
   
 RA.User = RetronatorAccountsUser

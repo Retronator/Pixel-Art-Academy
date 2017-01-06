@@ -15,15 +15,17 @@
       color atariGrey(2)
 
       h2
-        margin 0 0 3rem
+        margin 0 0 5rem
         acme-5()
         font-weight bold
         text-transform uppercase
+        line-height 7rem
 
       h3
-        margin 3rem 0 1rem
+        margin 3rem 0 3rem
         acme-5()
         font-weight normal
+        line-height 7rem
 
       input
       textarea
@@ -55,3 +57,19 @@
 
         &:checked + .label::before
           content '[✔︎] '
+
+      .smallprint
+        position relative
+        checkout()
+        margin 0 15rem 5rem
+        color atariGrey(4)
+        hyphens auto
+
+        &.wide
+          margin 0 6rem 5rem
+
+        &::before
+          content '*'
+          position absolute
+          top 0
+          left -6rem

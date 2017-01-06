@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 RA = Retronator.Accounts
 
 Meteor.methods
@@ -33,3 +34,12 @@ Meteor.methods
 
     # Also update registered_emails. We need to fetch user here so it has the updated email fields.
     AccountsEmailsField.updateEmails user: Retronator.user()
+
+  'Retronator.Accounts.User.sendPasswordResetEmail': ->
+    user = Retronator.user()
+
+    throw new AE.UnauthorizedException "You must be logged in to send the password reset email." unless user
+
+    throw new AE.InvalidOperationException "You must have at least one email to send the reset password to." unless user.contactEmail
+
+    Accounts.sendResetPasswordEmail user._id, user.contactEmail

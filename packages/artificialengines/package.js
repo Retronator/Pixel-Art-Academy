@@ -33,11 +33,10 @@ Package.onUse(function(api) {
     'peerlibrary:check-extension@0.1.1',
     'peerlibrary:server-autorun@0.5.2',
     'limemakers:three@0.75.0',
-    'mrt:underscore-string-latest@2.3.3',
-	  'kadira:flow-router',
+    'kadira:flow-router',
     'kadira:blaze-layout',
-	  'okgrow:router-autoscroll',
-	  'stevezhu:lodash@4.16.4',
+    'okgrow:router-autoscroll',
+    'stevezhu:lodash@4.16.4',
     'velocityjs:velocityjs@1.2.1'
   ];
 

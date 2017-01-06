@@ -132,8 +132,15 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
     text
 
   active: ->
-    # The text interface is active unless there are any modal dialogs.
-    not @options.adventure.modalDialogs().length
+    # The text interface is inactive when there are any modal dialogs.
+    return if @options.adventure.modalDialogs().length
+
+    # It's also inactive when we're in any of the accounts-ui flows/dialogs.
+    accountsUiSessionVariables = ['inChangePasswordFlow', 'inMessageOnlyFlow', 'resetPasswordToken', 'enrollAccountToken', 'justVerifiedEmail', 'justResetPassword', 'configureLoginServiceDialogVisible', 'configureOnDesktopVisible']
+    for variable in accountsUiSessionVariables
+      return if Accounts._loginButtonsSession.get variable
+
+    true
 
   # Use to get back to the initial state with full location description.
   resetInterface: ->

@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 class LOI.Components.Account extends AM.Component
   @register 'LandsOfIllusions.Components.Account'
 
-  @version: -> '0.0.2'
+  @version: -> '0.0.3'
 
   constructor: (@options) ->
     super
@@ -16,6 +16,7 @@ class LOI.Components.Account extends AM.Component
 
     @pages = [
       new @constructor.General
+      new @constructor.Services
     ]
 
     page.pageNumber = index + 1 for page, index in @pages
@@ -108,7 +109,7 @@ class LOI.Components.Account extends AM.Component
     @currentPageNumber 1
 
   onClickPrevious: (event) ->
-    @currentPageNumber _.clamp @currentPageNumber() - 1, 0, @pages.length
+    @currentPageNumber Math.max 1, @currentPageNumber() - 1
 
   onClickNext: (event) ->
-    @currentPageNumber _.clamp @currentPageNumber() + 1, 0, @pages.length
+    @currentPageNumber Math.min @pages.length, @currentPageNumber() + 1

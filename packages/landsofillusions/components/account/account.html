@@ -9,7 +9,9 @@
           {{/if}}
           <img class="account-file-layer cover-closed {{coverClosedVisibleClass}}" src="{{image '/landsofillusions/components/account/cover-closed.png'}}" />
           {{#if $gt currentPageNumber 0}}
-            <button class="navigation-button previous"></button>
+            {{#if $gt currentPageNumber 1}}
+              <button class="navigation-button previous"></button>
+            {{/if}}
             {{#if $lt currentPageNumber pages.length}}
               <button class="navigation-button next"></button>
             {{/if}}
