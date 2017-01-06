@@ -35,5 +35,11 @@ cursor(type)
     html.scale-2 &
       cursor url('/interface/cursors/2x/text.png?0.1.1') 2 0, text
 
+  else if type is wait
+    cursor url('/interface/cursors/3x/wait.png') 36 20, text
+
+    html.scale-2 &
+      cursor url('/interface/cursors/2x/wait.png') 24 20, text
+
   else
     cursor arguments

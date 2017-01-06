@@ -51,6 +51,11 @@ class LOI.Components.Overlay extends AM.Component
     @$('.background').addClass('visible')
     @$('.safe-area').addClass('visible')
 
+    Meteor.setTimeout =>
+      @$('.transition-cover').removeClass('visible')
+    ,
+      600
+
     @$('.crop-bar').height 0
 
     @$('.crop-bar').velocity
@@ -69,6 +74,7 @@ class LOI.Components.Overlay extends AM.Component
           # Animate out.
           @$('.background').removeClass('visible')
           @$('.safe-area').removeClass('visible')
+          @$('.transition-cover').addClass('visible')
 
           @$('.crop-bar').velocity
             height: 0
