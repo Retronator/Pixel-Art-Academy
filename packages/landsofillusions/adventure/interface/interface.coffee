@@ -16,9 +16,12 @@ class LOI.Adventure.Interface extends AM.Component
       location = @options.adventure.currentLocation()
       return unless location
 
-      # Mark stored current location as visited (in this user session).
-      @_currentLocationClass?.visited true
-      @_currentLocationClass = location.constructor
+      # Mark stored current (previous) location as visited when location changes (in this user session).
+      unless location.constructor is @_previousLocationClass
+        @_previousLocationClass?.visited true
+
+        # Now store the new location as the
+        @_previousLocationClass = location.constructor
 
       @onLocationChanged location
 
