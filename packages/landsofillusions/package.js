@@ -218,13 +218,10 @@ Package.onUse(function(api) {
 
   // Styles
 
-  //api.addFiles('styles/styles.coffee');
-  //api.addFiles('styles/console.coffee');
-  //api.addFiles('styles/console.html');
-  //api.addFiles('styles/console.styl');
-  //api.addFiles('styles/console-accountsui.styl');
   api.addFiles('style/style.import.styl', 'client', {isImport:true});
   api.addFiles('style/atari2600.import.styl', 'client', {isImport:true});
+  api.addFiles('style/cursors.import.styl', 'client', {isImport:true});
+  api.addFiles('style/cursors.styl');
 
   // Helpers
 

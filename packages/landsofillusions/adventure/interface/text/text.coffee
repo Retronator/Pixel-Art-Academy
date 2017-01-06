@@ -160,6 +160,8 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
       'mouseenter .exits .exit .name': @onMouseEnterExit
       'mouseleave .exits .exit .name': @onMouseLeaveExit
       'click .exits .exit .name': @onClickExit
+      'mouseenter .text-interface': @onMouseEnterTextInterface
+      'mouseleave .text-interface': @onMouseLeaveTextInterface
 
   onMouseEnterCommand: (event) ->
     @hoveredCommand $(event.target).text()
@@ -180,3 +182,31 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface
   onClickExit: (event) ->
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
+
+  onMouseEnterTextInterface: (event) ->
+    # Make crosshair cursor animate.
+    $textInterface = @$('.text-interface')
+    cursorTimeFrame = 0
+
+    # Just to make sure, clear any leftover animations.
+    Meteor.clearInterval @_crossHairAnimation
+
+    # Start new animation.
+    @_crossHairAnimation = Meteor.setInterval =>
+      # Advance cursor
+      cursorTimeFrame++
+      cursorTimeFrame = 0 if cursorTimeFrame is 5
+
+      cursorFrame = 1 if cursorTimeFrame < 3
+      cursorFrame = 2 if cursorTimeFrame is 3
+      cursorFrame = 3 if cursorTimeFrame is 4
+
+      unless cursorFrame is @_previousCursorFrame
+        $textInterface.addClass("cursor-frame-#{cursorFrame}")
+        $textInterface.removeClass("cursor-frame-#{@_previousCursorFrame}")
+        @_previousCursorFrame = cursorFrame
+    ,
+      175
+
+  onMouseLeaveTextInterface: (event) ->
+    Meteor.clearInterval @_crossHairAnimation

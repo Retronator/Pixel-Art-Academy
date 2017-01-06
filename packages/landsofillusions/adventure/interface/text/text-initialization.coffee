@@ -19,6 +19,14 @@ class LOI.Adventure.Interface.Text extends LOI.Adventure.Interface.Text
       maxAspectRatio: 2
       debug: false
 
+    # Add 2x scale class to html so we can scale cursors.
+    @autorun (computation) =>
+      if @display.scale() is 2
+        $('html').addClass('scale-2')
+
+      else
+        $('html').removeClass('scale-2')
+
     @narrative = new LOI.Adventure.Interface.Components.Narrative
       textInterface: @
 

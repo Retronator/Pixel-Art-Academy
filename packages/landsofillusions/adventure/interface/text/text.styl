@@ -1,6 +1,5 @@
 @import "{retronator:artificialengines}/mirage/helpers.import"
-@import "../../../style/atari2600.import"
-@import "../../../typography/typography.import"
+@import "../../../style/style.import"
 
 gridSpacing = 8rem
 lineHeight = gridSpacing
@@ -19,8 +18,8 @@ hoverable()
   fixed-cover()
   background atariGrey(0)
   color atariGrey(5)
-
   line-height lineHeight
+  cursor crosshair
 
   > .location
     position fixed
