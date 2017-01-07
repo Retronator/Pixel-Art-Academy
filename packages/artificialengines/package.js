@@ -21,23 +21,23 @@ Package.onUse(function(api) {
     'ejson',
 
     // 3rd party
-    'peerlibrary:assert@0.2.5',
-    'peerlibrary:peerdb@0.20.0',
-    'peerlibrary:peerdb-migrations@0.2.1',
-    'peerlibrary:reactive-publish@0.3.0',
-    'peerlibrary:blaze-components@0.19.0',
-    'peerlibrary:blaze-common-component@0.2.0',
-    'peerlibrary:blaze-layout-component@0.1.1',
-    'peerlibrary:reactive-field@0.1.0',
-    'peerlibrary:computed-field@0.3.1',
-    'peerlibrary:check-extension@0.1.1',
-    'peerlibrary:server-autorun@0.5.2',
-    'limemakers:three@0.75.0',
+    'peerlibrary:assert',
+    'peerlibrary:peerdb',
+    'peerlibrary:peerdb-migrations',
+    'peerlibrary:reactive-publish',
+    'peerlibrary:blaze-components',
+    'peerlibrary:blaze-common-component',
+    'peerlibrary:blaze-layout-component',
+    'peerlibrary:reactive-field',
+    'peerlibrary:computed-field',
+    'peerlibrary:check-extension',
+    'peerlibrary:server-autorun',
+    'limemakers:three',
     'kadira:flow-router',
     'kadira:blaze-layout',
     'okgrow:router-autoscroll',
-    'stevezhu:lodash@4.16.4',
-    'velocityjs:velocityjs@1.2.1'
+    'stevezhu:lodash',
+    'velocityjs:velocityjs'
   ];
 
 	api.use(packages);

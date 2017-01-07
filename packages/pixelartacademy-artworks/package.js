@@ -13,7 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-pixelboy');
-  api.use('edgee:slingshot@0.7.1');
+  api.use('edgee:slingshot');
 
   api.export('PixelArtAcademy');
 

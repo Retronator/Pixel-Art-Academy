@@ -19,7 +19,7 @@ Package.onUse(function(api) {
   api.use('bozhao:link-accounts@1.2.9');
   api.use('splendido:accounts-meld@1.3.1');
   api.use('splendido:accounts-emails-field@1.2.0');
-  api.use('benjick:stripe@3.3.4', 'server');
+  api.use('benjick:stripe', 'server');
   api.use('jparker:crypto-aes');
   api.use('peerlibrary:directcollection');
 
