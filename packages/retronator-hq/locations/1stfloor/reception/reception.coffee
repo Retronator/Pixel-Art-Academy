@@ -128,6 +128,6 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
           complete()
 
     # Elevator button
-    HQ.Actors.ElevatorButton.setupButton 
+    HQ.Actors.ElevatorButton.setupButton
       location: @
       floor: 1

@@ -22,4 +22,3 @@ class AB.Components.Translation extends AM.Component
     translation.refresh()
 
     AB.translate(translation).text
-    

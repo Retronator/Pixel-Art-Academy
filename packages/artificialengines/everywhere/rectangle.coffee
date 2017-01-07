@@ -49,7 +49,7 @@ class AE.Rectangle
 
     @y() + @height()
 
-  center: () ->
+  center: ->
     x: @x() + @width() * 0.5
     y: @y() + @height() * 0.5
 

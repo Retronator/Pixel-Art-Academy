@@ -15,7 +15,7 @@ class RetronatorStoreTransactionsItem extends AM.Document
   #   _id
   #   catalogKey
   # isGiftable: can this item be purchased for someone else
-  # {extraData}: any extra data set for the item  
+  # {extraData}: any extra data set for the item
   @type: 'Retronator.Store.Transactions.Item'
   @register @type, @
 
@@ -29,7 +29,7 @@ class RetronatorStoreTransactionsItem extends AM.Document
   @all: 'Retronator.Store.Transactions.Item.all'
 
   # Inserts an item into the database.
-  @create: (documentData) ->    
+  @create: (documentData) ->
     # Transform name and descriptions into translation documents.
     documentData.name =
       _id: @_createTranslation documentData.catalogKey, 'name', documentData.name

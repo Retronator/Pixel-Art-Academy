@@ -33,7 +33,7 @@ class AE.DateRange
         params = [object.year, object.month, object.day, object.hours, object.minutes, object.seconds, object.milliseconds]
         paramProperties = ['year', 'month', 'day', 'hours', 'minues', 'seconds', 'milliseconds']
 
-        for i in [params.length-1..0]
+        for i in [params.length - 1..0]
           if params[i]?
             # Increase property by 1.
             endObject[paramProperties[i]]++

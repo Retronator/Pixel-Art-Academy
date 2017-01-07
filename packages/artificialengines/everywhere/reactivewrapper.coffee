@@ -48,7 +48,7 @@ class AE.ReactiveWrapper
     if Object.setPrototypeOf
       Object.setPrototypeOf getterSetter, @constructor::
     else
-      getterSetter.__proto__ = @constructor::
+      getterSetter.__proto__ = @constructor.prototype
 
     getterSetter.toString = ->
       "ReactiveField{#{@()}}"

@@ -61,4 +61,4 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @_dialogSelectionConfirm()
 
   _dialogSelectionConfirm: ->
-    @dialogSelection.confirm()    
+    @dialogSelection.confirm()

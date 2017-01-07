@@ -8,7 +8,9 @@ Meteor.methods
     LOI.Authorize.admin()
 
     unless Meteor.settings.dataUploadPassphrase
-      console.warn "You need to specify the data upload passphrase in the settings file and don't forget to run the server with the --settings flag pointing to it."
+      console.warn "You need to specify the data upload passphrase in the settings file and
+                    don't forget to run the server with the --settings flag pointing to it."
+      
       throw new Meteor.Error 'invalid-operation', "Passphrase not specified."
 
     passphrase = Meteor.settings.dataUploadPassphrase
@@ -60,6 +62,7 @@ Meteor.methods
       # Getting Started Study format:
       checkIn.backerEmail = parts[columnIndices['Backer Email']] if parts[columnIndices['Backer Email']]
       checkIn.image = parts[columnIndices['Link to your image']] if parts[columnIndices['Link to your image']]
+      
       checkIn.feedback = parts[columnIndices['Anything else you wanted to share?']] if parts[columnIndices['Anything else you wanted to share?']]
 
       checkInsCount++

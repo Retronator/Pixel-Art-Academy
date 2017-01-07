@@ -89,4 +89,3 @@ listOfRetroplisItemsForKeycardColor = (keycardColor) ->
   ]
 
   items.slice keycardColor
-  

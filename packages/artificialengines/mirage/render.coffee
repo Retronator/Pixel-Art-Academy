@@ -20,5 +20,5 @@ class AM.Render extends BlazeComponent
         throw new AE.InvalidOperationException "We're trying to include a rendered component that we're not a parent of."
 
       return component._blazeTemplate
-    
+
     component._blazeTemplate = component.renderComponent? @currentComponent()

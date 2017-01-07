@@ -69,7 +69,7 @@ class LOI.Interface.Components.CommandInput
         command = @command()
         return unless command.length
 
-        newCommand = command.substring 0, command.length-1
+        newCommand = command.substring 0, command.length - 1
         @command newCommand
 
         @_notIdle()

@@ -8,7 +8,7 @@ class Migration extends Document.PatchMigration
 
     collection.findEach
       _schema: currentSchema
-      hashtags: 
+      hashtags:
         $exists: 1
     ,
       fields:

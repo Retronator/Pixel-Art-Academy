@@ -18,8 +18,12 @@ Meteor.startup ->
 createVerificationEmail = (user, url) ->
   email = new AT.EmailComposer
 
-  email.addParagraph "Hey#{if user.profile?.name then " #{user.profile.name}" else ""},"
+  if user.profile?.name
+    email.addParagraph "Hey #{user.profile.name},"
 
+  else
+    email.addParagraph "Hey,"
+  
   email.addParagraph "To verify this email in your Pixel Art Academy account,
                         click on the link below:"
 

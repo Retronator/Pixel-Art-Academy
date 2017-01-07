@@ -14,8 +14,9 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
 
     stateObject = @options.stateObject
 
-    @showSupporterName = stateObject.field 'showSupporterName', default: true
-    @supporterName = stateObject.field 'supporterName'
+    # Fields that control supporter display for logged out users (guests).
+    @guestShowSupporterName = stateObject.field 'showSupporterName', default: true
+    @guestSupporterName = stateObject.field 'supporterName'
 
     @tip =
       amount: stateObject.field 'tip.amount', default: 0
@@ -53,15 +54,15 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
   showSupporterName: ->
     user = Retronator.user()
 
-    if user then user.profile?.showSupporterName else @showSupporterName()
+    if user then user.profile?.showSupporterName else @guestShowSupporterName()
 
   supporterName: ->
     return unless @showSupporterName()
 
     user = Retronator.user()
 
-    if user then user.profile.supporterName else @supporterName()
-  
+    if user then user.profile.supporterName else @guestSupporterName()
+    
   anonymousPlaceholder: ->
     AB.translate(@_userBabelSubscription, 'Anonymous').text
     
@@ -129,15 +130,6 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
   tip: ->
     amount: @tip.amount()
     message: @tip.message()
-
-  supporterName: ->
-    user = Retronator.user()
-
-    if user
-      user.profile?.supporterName if Retronator.user().profile?.showSupporterName
-
-    else
-      @supporterName()
 
   events: ->
     super.concat

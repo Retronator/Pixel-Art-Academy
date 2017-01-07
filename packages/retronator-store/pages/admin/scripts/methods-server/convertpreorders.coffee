@@ -53,7 +53,7 @@ Meteor.methods
 
       # Figure out if this is a pre-order of the basic or the full game.
       switch preOrder.item._id
-        when 'wdMKrYTYKY9uxrT56' 
+        when 'wdMKrYTYKY9uxrT56'
           itemCatalogKey = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.BasicGame
           price = 10
         

@@ -15,7 +15,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       maxDisplayWidth: 480
       maxDisplayHeight: 640
       minScale: 2
-      minAspectRatio: 1/2
+      minAspectRatio: 1 / 2
       maxAspectRatio: 2
       debug: false
 

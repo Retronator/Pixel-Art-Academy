@@ -18,8 +18,8 @@ class LOI.Parser.Command
     maxWordsInPhrase = Math.min 3, wordsCount
 
     for wordsInPhraseCount in [2..maxWordsInPhrase] by 1
-      for i in [0..wordsCount-wordsInPhraseCount]
-        wordsInPhrase = @commandWords[i..i+wordsInPhraseCount-1]
+      for i in [0..wordsCount - wordsInPhraseCount]
+        wordsInPhrase = @commandWords[i..i + wordsInPhraseCount - 1]
         phrase = wordsInPhrase.join ' '
         phrases.push phrase
 

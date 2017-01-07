@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-# Script file represents a .script file that can include multiple scripts (root Script nodes). 
+# Script file represents a .script file that can include multiple scripts (root Script nodes).
 # The class creates a promise that gets fulfilled when the file has been successfully loaded and parsed.
 class LOI.Adventure.ScriptFile
   constructor: (@options) ->

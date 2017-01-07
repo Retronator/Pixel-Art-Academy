@@ -4,7 +4,7 @@ class Artificial.Babel
   # Default language when new translations are inserted.
   @defaultLanguage: 'en-US'
 
-  @LanguagePreferenceLocalStorageKey:  "Artificial.Babel.languagePreference"
+  @LanguagePreferenceLocalStorageKey: "Artificial.Babel.languagePreference"
 
   # User's current language preference setting.
   @_userLanguagePreference: new ReactiveField null

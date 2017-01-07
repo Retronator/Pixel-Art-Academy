@@ -64,7 +64,7 @@ class SP.Locations.Terrace extends LOI.Adventure.Location
     # Prevent default menu handling on escape.
     @options.adventure.menu.customShowMenu = =>
       # Simply scroll up to the menu.
-      @options.adventure.interface.scroll 
+      @options.adventure.interface.scroll
         position: 0
         animate: true
 

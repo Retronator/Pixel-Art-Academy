@@ -10,7 +10,11 @@ RS.Transactions.Transaction.emailCustomer = ({customer, payments, shoppingCart})
 
   email = new AT.EmailComposer
   
-  email.addParagraph "Hey#{if customer.name then " #{customer.name}" else ""},"
+  if customer.name
+    email.addParagraph "Hey #{customer.name},"
+
+  else
+    email.addParagraph "Hey,"
 
   itemNamesList = for cartItem in shoppingCart.items()
     cartItem.item.name.refresh().translate().text

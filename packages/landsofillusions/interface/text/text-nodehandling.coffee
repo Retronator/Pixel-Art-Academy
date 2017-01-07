@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-class LOI.Interface.Text extends LOI.Interface.Text  
+class LOI.Interface.Text extends LOI.Interface.Text
   initializeNodeHandling: ->
     @_lastNode = new ReactiveField null
     @_pausedNode = new ReactiveField null

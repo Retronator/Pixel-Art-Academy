@@ -18,4 +18,4 @@ class HQ.Items.Tablet.Apps.Welcome extends HQ.Items.Tablet.OS.App
 
   @showInMenu: -> false
 
-  @initialize()    
+  @initialize()

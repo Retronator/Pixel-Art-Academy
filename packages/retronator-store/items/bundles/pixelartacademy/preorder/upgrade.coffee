@@ -16,7 +16,7 @@ class RS.Items.Bundles.PixelArtAcademyPreorderUpgrade extends RS.Transactions.It
       for transactionItem in transaction.items
         prerequisiteFound = true if transactionItem.item.catalogKey in @constructor.eligiblePrerequisiteItems
 
-    @_throwEligibilityException "You need to have one of the required basic game packages for this upgrade to make sense." unless prerequisiteFound 
+    @_throwEligibilityException "You need to have one of the required basic game packages for this upgrade to make sense." unless prerequisiteFound
 
     # Make sure the user didn't already buy this upgrade.
     for transaction in transactions

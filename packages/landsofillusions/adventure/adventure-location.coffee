@@ -39,7 +39,7 @@ class LOI.Adventure extends LOI.Adventure
         console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug
 
         # Create a non-reactive reference so we can refer to it later.
-        @_currentLocation = new currentLocationClass 
+        @_currentLocation = new currentLocationClass
           adventure: @
         
         @currentLocation @_currentLocation

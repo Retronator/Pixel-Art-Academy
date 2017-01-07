@@ -9,7 +9,7 @@ class LandsOfIllusions
 
   # Character selection and persistence
 
-  @characterIdLocalStorageKey:  "LandsOfIllusions.characterId"
+  @characterIdLocalStorageKey: "LandsOfIllusions.characterId"
   @characterId = new ReactiveField null
 
   # Create the current character helper.

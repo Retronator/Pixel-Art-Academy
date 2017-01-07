@@ -26,7 +26,7 @@ Date.fromObject = (object) ->
     currentDate = new Date()
     insertCurrentDate = false
 
-    for i in [params.length-1..0]
+    for i in [params.length - 1..0]
       if params[i]?
         insertCurrentDate = true
 

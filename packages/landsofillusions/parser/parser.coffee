@@ -19,7 +19,7 @@ class LOI.Parser
     # Create a rich command object.
     command = new LOI.Parser.Command command
 
-    # Get the current location. Parse is not reactive so it's OK to save it 
+    # Get the current location. Parse is not reactive so it's OK to save it
     # statically like that. It is only used in subsequent parse subroutines.
     @location = @options.adventure.currentLocation()
 

@@ -54,7 +54,7 @@ class PAA.PixelDailies extends PAA.PixelDailies
 
       newOptions =
         processedCount: options.processedCount + 200
-        maxId: data[data.length-1].id
+        maxId: data[data.length - 1].id
 
       # Only countdown if we had count specified to begin with.
       newOptions.count = options.count - count if options.count
@@ -227,11 +227,11 @@ class PAA.PixelDailies extends PAA.PixelDailies
 
     textWords = text.split ' '
 
-    doubleCompoundWords = for i in [0...textWords.length-1]
-      "#{textWords[i]} #{textWords[i+1]}"
+    doubleCompoundWords = for i in [0...textWords.length - 1]
+      "#{textWords[i]} #{textWords[i + 1]}"
 
-    tripleCompoundWords = for i in [0...textWords.length-2]
-      "#{textWords[i]} #{textWords[i+1]} #{textWords[i+2]}"
+    tripleCompoundWords = for i in [0...textWords.length - 2]
+      "#{textWords[i]} #{textWords[i + 1]} #{textWords[i + 2]}"
 
     textWords = textWords.concat doubleCompoundWords, tripleCompoundWords
 
@@ -261,7 +261,7 @@ class PAA.PixelDailies extends PAA.PixelDailies
     for c1, i in s
       for c2, j in t
         cost = if c1 is c2 then 0 else 1
-        d[i+1][j+1] = Math.min d[i][j+1]+1, d[i+1][j]+1, d[i][j] + cost
+        d[i + 1][j + 1] = Math.min d[i][j + 1] + 1, d[i + 1][j] + 1, d[i][j] + cost
 
     d[n][m]
 

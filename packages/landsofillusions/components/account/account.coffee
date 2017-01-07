@@ -47,7 +47,7 @@ class LOI.Components.Account extends AM.Component
     return url unless pageNumber
 
     # Return the URL for the page.
-    page = @pages[pageNumber-1]
+    page = @pages[pageNumber - 1]
     "#{url}/#{page.constructor.url()}"
 
   onCoverClass: ->

@@ -21,7 +21,7 @@ class LOI.Adventure extends LOI.Adventure
       userId = Meteor.userId()
       console.log "Game state provider is recomputing. User ID is", userId if LOI.debug
 
-      # Subscribe to user's game state and store subscription 
+      # Subscribe to user's game state and store subscription
       # handle so we can know when the game state should be ready.
       @gameStateSubsription = Meteor.subscribe LOI.GameState.forCurrentUser
       console.log "Subscribed to game state from the database. Subscription:", @gameStateSubsription, "Is it ready?", @gameStateSubsription.ready() if LOI.debug

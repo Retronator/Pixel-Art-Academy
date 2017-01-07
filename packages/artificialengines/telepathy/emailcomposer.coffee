@@ -46,7 +46,7 @@ class AT.EmailComposer
           continue
 
         # Check if adding to current line would go over 40 characters.
-        if currentLine.length + 1 + nextWord.length> 40
+        if currentLine.length + 1 + nextWord.length > 40
           # We need a new line.
           appendCurrentLine()
           currentLine = nextWord

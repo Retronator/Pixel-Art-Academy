@@ -33,7 +33,7 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
   constructor: ->
     super
 
-  things: -> 
+  things: ->
     [HQ.Actors.Operator.id()]
 
   exits: ->

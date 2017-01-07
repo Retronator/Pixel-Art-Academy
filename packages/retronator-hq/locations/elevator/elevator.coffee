@@ -59,7 +59,7 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
   @setupElevatorExit: (options) ->
     options.location.elevatorExits = new ReactiveField {}
     
-    elevatorFloor = new LOI.StateField 
+    elevatorFloor = new LOI.StateField
       adventure: options.location.options.adventure
       address: "things.#{HQ.Locations.Elevator.id()}.floor"
       default: 1
