@@ -14,3 +14,11 @@ class PixelArtAcademy.LandingPage.Pages.About extends AM.Component
       safeAreaWidth: 320
       safeAreaHeight: 240
       minScale: 2
+      
+    # Add 2x scale class to html so we can scale cursors.
+    @autorun (computation) =>
+      if @display.scale() is 2
+        $('html').addClass('scale-2')
+
+      else
+        $('html').removeClass('scale-2')

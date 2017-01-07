@@ -17,6 +17,9 @@ class PixelArtAcademy.LandingPage.Pages.Press extends AM.Component
     # Set the initializing flag for the first rendering pass, before we have time to initialize rendered elements.
     @initializingClass = new ReactiveField "initializing"
 
+    # Add 2x scale class to html so we can scale cursors.
+    $('html').addClass('scale-2')
+
   onRendered: ->
     super
 
@@ -130,3 +133,8 @@ class PixelArtAcademy.LandingPage.Pages.Press extends AM.Component
         $image.css css
 
     @initializingClass ""
+
+  onDestroyed: ->
+    super
+
+    $('html').removeClass('scale-2')
