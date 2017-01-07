@@ -12,12 +12,12 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
-  api.use('retronator:accounts');
+  api.use('retronator:retronator-accounts');
   api.use('http');
   api.use('promise');
 
   api.imply('retronator:artificialengines');
-  api.imply('retronator:accounts');
+  api.imply('retronator:retronator-accounts');
 
   api.export('LandsOfIllusions');
 
@@ -72,6 +72,25 @@ Package.onUse(function(api) {
   api.addFiles('conversations/methods.coffee');
   api.addFiles('conversations/subscriptions.coffee', 'server');
 
+  // Parser
+
+  api.addFiles('parser/parser.coffee');
+  api.addFiles('parser/command.coffee');
+
+  api.addFiles('parser/parts/abilities.coffee');
+  api.addFiles('parser/parts/debug.coffee');
+  api.addFiles('parser/parts/navigation.coffee');
+  api.addFiles('parser/parts/description.coffee');
+  api.addFiles('parser/parts/looklocation.coffee');
+
+  api.addFiles('parser/vocabulary/vocabulary.coffee');
+  api.addFiles('parser/vocabulary/vocabularykeys.coffee');
+  api.addFiles('parser/vocabulary/english-server.coffee', 'server');
+
+  // Director
+
+  api.addFiles('director/director.coffee');
+
   // Adventure
 
   api.addFiles('adventure/adventure.html');
@@ -83,21 +102,6 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure-item.coffee');
   api.addFiles('adventure/adventure-inventory.coffee');
   api.addFiles('adventure/adventure-initialization.coffee');
-
-  // Parser
-
-  api.addFiles('adventure/parser/parser.coffee');
-  api.addFiles('adventure/parser/command.coffee');
-
-  api.addFiles('adventure/parser/parts/abilities.coffee');
-  api.addFiles('adventure/parser/parts/debug.coffee');
-  api.addFiles('adventure/parser/parts/navigation.coffee');
-  api.addFiles('adventure/parser/parts/description.coffee');
-  api.addFiles('adventure/parser/parts/looklocation.coffee');
-
-  api.addFiles('adventure/parser/vocabulary/vocabulary.coffee');
-  api.addFiles('adventure/parser/vocabulary/vocabularykeys.coffee');
-  api.addFiles('adventure/parser/vocabulary/english-server.coffee', 'server');
 
   // Ability
 
@@ -114,10 +118,6 @@ Package.onUse(function(api) {
   api.addFiles('adventure/location/location.coffee');
 
   api.addFiles('adventure/item/item.coffee');
-
-  // Director
-
-  api.addFiles('adventure/director/director.coffee');
 
   // Script
 
@@ -146,21 +146,21 @@ Package.onUse(function(api) {
 
   // Interface
 
-  api.addFiles('adventure/interface/interface.coffee');
+  api.addFiles('interface/interface.coffee');
 
-  api.addFiles('adventure/interface/components/components.coffee');
-  api.addFiles('adventure/interface/components/narrative.coffee');
-  api.addFiles('adventure/interface/components/commandinput.coffee');
-  api.addFiles('adventure/interface/components/dialogselection.coffee');
+  api.addFiles('interface/components/components.coffee');
+  api.addFiles('interface/components/narrative.coffee');
+  api.addFiles('interface/components/commandinput.coffee');
+  api.addFiles('interface/components/dialogselection.coffee');
 
-  api.addFiles('adventure/interface/text/text.coffee');
-  api.addFiles('adventure/interface/text/text.html');
-  api.addFiles('adventure/interface/text/text.styl');
-  api.addFiles('adventure/interface/text/text-initialization.coffee');
-  api.addFiles('adventure/interface/text/text-handlers.coffee');
-  api.addFiles('adventure/interface/text/text-nodehandling.coffee');
-  api.addFiles('adventure/interface/text/text-resizing.coffee');
-  api.addFiles('adventure/interface/text/text-scrolling.coffee');
+  api.addFiles('interface/text/text.coffee');
+  api.addFiles('interface/text/text.html');
+  api.addFiles('interface/text/text.styl');
+  api.addFiles('interface/text/text-initialization.coffee');
+  api.addFiles('interface/text/text-handlers.coffee');
+  api.addFiles('interface/text/text-nodehandling.coffee');
+  api.addFiles('interface/text/text-resizing.coffee');
+  api.addFiles('interface/text/text-scrolling.coffee');
 
   // Pages
 

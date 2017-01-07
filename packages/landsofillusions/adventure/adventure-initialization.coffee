@@ -24,8 +24,8 @@ class LOI.Adventure extends LOI.Adventure
 
     $('html').addClass('adventure')
 
-    @interface = new LOI.Adventure.Interface.Text adventure: @
-    @parser = new LOI.Adventure.Parser adventure: @
+    @interface = new LOI.Interface.Text adventure: @
+    @parser = new LOI.Parser adventure: @
 
     @_initializeState()
     @_initializeCurrentLocation()

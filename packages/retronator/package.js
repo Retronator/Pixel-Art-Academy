@@ -12,7 +12,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
-  
+
   api.export('Retronator');
   api.addFiles('retronator.coffee');
 });

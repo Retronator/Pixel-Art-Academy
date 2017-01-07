@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:app',
-  version: '0.5.1',
+  version: '0.6.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -13,14 +13,16 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:artificialengines');
-  api.use('retronator:accounts');
   api.use('retronator:landsofillusions');
-  api.use('retronator:hq');
-  api.use('retronator:store');
-  api.use('retronator:construct');
-  api.use('retronator:landingpage');
+  api.use('retronator:retronator-accounts');
+  api.use('retronator:retronator-store');
+  api.use('retronator:pixelartacademy-landingpage');
+  api.use('retronator:pixelartacademy-season1-episode0');
 
-  /*api.use('retronator:construct');
+  /*
+  api.use('retronator:landsofillusions-construct');
+  api.use('retronator:retronator-hq');
+  api.use('retronator:construct');
   api.use('retronator:pixelboy');
   api.use('retronator:practice');
   api.use('retronator:pixeldailies');*/

@@ -25,9 +25,9 @@ class LOI.Adventure extends LOI.Adventure
 
         # If we don't have a location set (or if it's not found), start at the default location.
         unless currentLocationClass
-          console.error "Location class not found", currentLocationId if currentLocationId
+          console.warn "Location class not found, moving back to start.", currentLocationId if currentLocationId
 
-          currentLocationClass = PixelArtAcademy.LandingPage.Locations.Retropolis
+          currentLocationClass = Retropolis.Spaceport.Locations.Terrace
           currentLocationId = currentLocationClass.id()
           @currentLocationId currentLocationId
 

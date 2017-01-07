@@ -2,7 +2,7 @@ AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-Vocabulary = LOI.Adventure.Parser.Vocabulary
+Vocabulary = LOI.Parser.Vocabulary
 
 Action = LOI.Adventure.Ability.Action
 Talking = LOI.Adventure.Ability.Talking

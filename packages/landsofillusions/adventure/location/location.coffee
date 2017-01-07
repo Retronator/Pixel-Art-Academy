@@ -34,7 +34,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
   constructor: (@options) ->
     super
 
-    @director new LOI.Adventure.Director @
+    @director new LOI.Director @
 
     console.log "%cDirector made for location", 'background: LightSkyBlue', @ if LOI.debug
 
