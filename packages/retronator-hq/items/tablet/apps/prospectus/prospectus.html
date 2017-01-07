@@ -262,7 +262,11 @@
                   {{/if}}
                 </button>
               {{else}}
-                Please wait while Stripe Checkout initializes …
+                {{#if stripeEnabled}}
+                  Please wait while Stripe Checkout initializes …
+                {{else}}
+                  Stripe is not configured. Purchases cannot be made.
+                {{/if}}
               {{/if}}
             </p>
           </div>

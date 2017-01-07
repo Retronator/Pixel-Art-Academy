@@ -3,7 +3,7 @@ RS = Retronator.Store
 # Admin creation
 Meteor.startup ->
   unless Meteor.settings.admin
-    console.warn "You need to specify an admin user in the settings file and don't forget to run the server with the --settings flag pointing to it."
+    console.warn "Set admin user info in the settings file if you want to have an admin user automatically created for you."
     return
 
   # First check if we already have the admin user.

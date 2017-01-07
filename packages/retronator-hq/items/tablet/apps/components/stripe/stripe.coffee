@@ -11,6 +11,7 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
     super
 
     @stripeInitialized = new ReactiveField false
+    @stripeEnabled = false
 
     @purchaseError = new ReactiveField null
     @submittingPayment = new ReactiveField false
@@ -19,22 +20,28 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
   onRendered: ->
     super
 
-    initializeStripeInterval = Meteor.setInterval =>
-      # Wait until checkout is ready.
-      return unless StripeCheckout?
+    if Meteor.settings.public.stripe?.publishableKey
+      @stripeEnabled = true
 
-      Meteor.clearInterval initializeStripeInterval
+      initializeStripeInterval = Meteor.setInterval =>
+        # Wait until checkout is ready.
+        return unless StripeCheckout?
 
-      @_stripeCheckout = StripeCheckout.configure
-        key: Meteor.settings.public.stripe.publishableKey
-        token: (token) => @_stripeResponseHandler token
-        image: 'https://stripe.com/img/documentation/checkout/marketplace.png'
-        name: 'Retronator'
-        locale: 'auto'
+        Meteor.clearInterval initializeStripeInterval
 
-      @stripeInitialized true
-    ,
-      100
+        @_stripeCheckout = StripeCheckout.configure
+          key: Meteor.settings.public.stripe.publishableKey
+          token: (token) => @_stripeResponseHandler token
+          image: 'https://stripe.com/img/documentation/checkout/marketplace.png'
+          name: 'Retronator'
+          locale: 'auto'
+
+        @stripeInitialized true
+      ,
+        100
+
+    else
+      console.warn "Set Stripe public and secret key in the settings file if you want to enable Stripe purchases."
 
   onDestroyed: ->
     super

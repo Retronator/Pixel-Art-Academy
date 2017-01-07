@@ -2,12 +2,17 @@ AE = Artificial.Everywhere
 AM = Artificial.Mummification
 RS = Retronator.Store
 
-stripe = StripeAPI Meteor.settings.stripe.secretKey
+if Meteor.settings.stripe?.secretKey
+  stripe = StripeAPI Meteor.settings.stripe.secretKey
+  customersCreateSync = Meteor.wrapAsync stripe.customers.create.bind stripe.customers
 
-customersCreateSync = Meteor.wrapAsync stripe.customers.create.bind stripe.customers
+else
+  console.warn "Set Stripe public and secret key in the settings file if you want to enable Stripe purchases."
 
 Meteor.methods
   'Retronator.Store.Transactions.Transaction.insertStripePurchase': (customer, creditCardToken, payAmount, shoppingCart) ->
+    throw new AE.InvalidOperationException "Stripe has not been configured." unless stripe
+
     check customer, Match.OptionalOrNull Object
     check customer.email, String if customer?.email
     check creditCardToken, String

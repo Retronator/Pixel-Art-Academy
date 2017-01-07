@@ -146,7 +146,7 @@ class LOI.Components.Menu.Items extends AM.Component
   onClickQuit: (event) ->
     # On quit we should log out and go back to the landing page.
     @options.adventure.logout()
-    @options.adventure.goToLocation PixelArtAcademy.LandingPage.Locations.Retropolis
+    @options.adventure.goToLocation Retropolis.Spaceport.Locations.Terrace
 
   onClickBack: (event) ->
     @currentScreen @constructor.Screens.MainMenu

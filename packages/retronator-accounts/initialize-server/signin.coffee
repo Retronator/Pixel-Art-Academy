@@ -4,13 +4,11 @@ if Meteor.settings.oauthSecretKey
     oauthSecretKey: Meteor.settings.oauthSecretKey
 
 else
-  console.warn "You need to specify oauthSecretKey in the settings file and don't forget to run the server with the --settings flag pointing to it."
+  console.warn "Set oauthSecretKey in the settings file if you want sensitive login services data to be encrypted."
 
 # Facebook sign-in configuration
 Meteor.startup ->
-  unless Meteor.settings.facebook
-    console.warn "You need to specify facebook app ID and secret in the settings file and don't forget to run the server with the --settings flag pointing to it."
-    return
+  return unless Meteor.settings.facebook
 
   ServiceConfiguration.configurations.upsert
     service: "facebook"
@@ -21,9 +19,7 @@ Meteor.startup ->
 
 # Twitter sign-in configuration
 Meteor.startup ->
-  unless Meteor.settings.twitter
-    console.warn "You need to specify twitter consumer key and secret in the settings file and don't forget to run the server with the --settings flag pointing to it."
-    return
+  return unless Meteor.settings.twitter
 
   ServiceConfiguration.configurations.upsert
     service: "twitter"
@@ -34,9 +30,7 @@ Meteor.startup ->
 
 # Google sign-in configuration
 Meteor.startup ->
-  unless Meteor.settings.google
-    console.warn "You need to specify google client id and secret in the settings file and don't forget to run the server with the --settings flag pointing to it."
-    return
+  return unless Meteor.settings.google
 
   ServiceConfiguration.configurations.upsert
     service: "google"
