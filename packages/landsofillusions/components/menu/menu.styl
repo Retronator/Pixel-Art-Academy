@@ -1,0 +1,26 @@
+@import "../../style/style.import"
+
+.lands-of-illusions-components-menu
+  position fixed
+  z-index 1
+
+  .menu-overlay
+    fixed-cover()
+    visibility hidden
+    opacity 0
+    background-color rgba(0,0,0,0.8)
+
+    &.visible
+      visibility visible
+
+    .lands-of-illusions-components-menu-items
+      position absolute
+      top 50%
+      width 100%
+      color atariGrey(5)
+      text-align center
+      transform translateY(-50%)
+
+      .actionable
+        &:hover
+          color atariGrey(7)

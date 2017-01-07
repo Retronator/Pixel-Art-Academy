@@ -1,0 +1,16 @@
+<template name="LandsOfIllusions.PixelBoy.Apps.Components.CheckInConversations">
+  <div class="check-in-conversations">
+    <form class="new-conversation-form">
+      <input class="text" placeholder="Say something nice …"/>
+    </form>
+    {{#if conversations.count}}
+      <ul class="conversations-list">
+        {{#each conversations}}
+          <li class="conversation-item">
+            {{> LandsOfIllusions.PixelBoy.Apps.Components.Conversation}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+  </div>
+</template>

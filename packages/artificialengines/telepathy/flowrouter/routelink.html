@@ -1,0 +1,7 @@
+<template name="RouteLink">
+  {{#if $is flowRouterRouteName route}}
+    <span class="route-active">{{text}}</span>
+  {{else}}
+    <a class="link" href="{{flowRouterPath route}}">{{text}}</a>
+  {{/if}}
+</template>

@@ -1,0 +1,13 @@
+<template name="Retronator.Store.Components.TopSupporters">
+  <ol class="retronator-store-components-top-supporters">
+    {{#each supporters}}
+      <li class="supporter {{supporterClass}}">
+        <div class="name-amount-area">
+          <div class="name">{{name}}</div>
+          <div class="amount">${{amount}}</div>
+        </div>
+        {{#if message}}<div class="message">{{message}}</div>{{/if}}
+      </li>
+    {{/each}}
+  </ol>
+</template>

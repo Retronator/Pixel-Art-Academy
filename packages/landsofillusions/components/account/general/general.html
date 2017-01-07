@@ -1,0 +1,49 @@
+<template name="LandsOfIllusions.Components.Account.General">
+  <div class="landsofillusions-components-account-general">
+    <h2>Registration</h2>
+    <h3>Account name</h3>
+    <div class="account-name">
+      {{> LandsOfIllusions.Components.Account.General.Username}}
+    </div>
+    <h3>Emails</h3>
+    <table class="emails">
+      {{#each user.registered_emails}}
+        <tr class="email">
+          <td class="address">
+            <input class="address-input" type="email" value="{{address}}"/>
+          </td>
+          <td class="primary">
+            <label class="primary-label">
+              <input class="primary-input" type="radio" name="primary" value="{{address}}" {{primaryCheckedAttribute}}/><img class="checkmark" src="{{image '/landsofillusions/components/account/general/primary-checkmark.png'}}" />
+            </label>
+          </td>
+          <td class="verified">
+            {{#if verified}}
+              <img class="stamp" src="{{image '/landsofillusions/components/account/general/verified-stamp.png'}}" />
+            {{else}}
+              <button class="verify-email-button"></button>
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+      <tr class="email">
+        <td class="address">
+          <input class="address-input new-address-input" type="email" placeholder="{{t7e 'Write new email here'}}" />
+        </td>
+        <td class="primary"></td>
+        <td class="verified"></td>
+      </tr>
+      {{#each emptyLines}}
+        <tr class="email new-email">
+          <td class="address"></td>
+          <td class="primary"></td>
+          <td class="verified"></td>
+        </tr>
+      {{/each}}
+    </table>
+    {{#if $lt emailsCount 5}}
+      <p class="smallprint">Primary email is used for contacting you.</p>
+      <p class="smallprint">For your purchases to be applied, email must be entered and verified.</p>
+    {{/if}}
+  </div>
+</template>

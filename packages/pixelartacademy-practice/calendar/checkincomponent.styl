@@ -1,0 +1,40 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.calendar-check-in
+  max-width 90%
+  margin-bottom 2em
+
+  .entry
+    display inline-block
+    background #333
+    margin 0 0 1em
+    word-break break-all
+    max-width 100%
+
+    .image
+      margin 1em
+
+      a
+        &:hover
+          background none
+
+      img
+        max-width 100%
+
+    .body
+      margin 1em
+      max-width 27.5em
+
+      .name
+        pixel-text-outline black
+
+      .text
+        white-space pre-wrap
+        pixel-text-outline black
+        word-break keep-all
+        margin 0
+
+        a
+          &:hover
+            color black !important
+            pixel-text-outline transparent

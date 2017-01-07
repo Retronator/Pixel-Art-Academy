@@ -1,0 +1,35 @@
+<template name="PixelArtAcademy.Layouts.AlphaAccess">
+  {{> LandsOfIllusions.Styles.Console}}
+  {{#if loading}}
+    Loading …
+  {{else}}
+    {{#if currentUser}}
+      {{#if hasItem 'PixelArtAcademy.FoundationYear'}}
+        {{#if currentCharacter}}
+          {{> renderPage}}
+        {{else}}
+          {{#if characters.length}}
+            <p>Please load one of the characters to start.</p>
+            <ul class="characters">
+              {{#each characters}}
+                <li class="character">
+                  {{displayName}}
+                  <button class="load-character">Load</button>
+                </li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <p>You need to create a character to play the game. Please create one in <a href="{{flowRouterPath 'LandsOfIllusions'}}">Lands of Illusions</a>.</p>
+          {{/if}}
+        {{/if}}
+      {{else}}
+        <p>You need to have Foundation Year alpha access to use Pixel Art Academy prototype. Why don't you pick it up
+          in <a href="{{flowRouterPath 'Retronator.Store'}}">Retronator Store</a>?</p>
+      {{/if}}
+    {{else}}
+      <p>Welcome to Pixel Art Academy! We are currently in the prototype state and only users with Foundation Year
+        pass have access to the game. Please sign in so we can check if you have access.</p>
+      {{> loginButtons}}
+    {{/if}}
+  {{/if}}
+</template>

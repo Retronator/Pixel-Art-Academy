@@ -1,0 +1,19 @@
+<template name="LandsOfIllusions.Components.Account.Services">
+  <div class="landsofillusions-components-account-services">
+    <h2>Sign-in services</h2>
+    <h3>Approved methods</h3>
+    <ul class="services">
+      {{#each loginServices}}
+        <li class="service">
+          <span class="name">{{this}}</span>
+          {{#if loginServiceEnabled}}
+            <img class="stamp {{toLower this}}" src="{{image stampUrl}}" />
+          {{else}}
+            <button class="link-service-button"></button>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+    <p class="smallprint wide">Place stamp to enable sign-in with the service.</p>
+  </div>
+</template>

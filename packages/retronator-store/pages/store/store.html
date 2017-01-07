@@ -1,0 +1,30 @@
+<template name="Retronator.Store.Pages.Store">
+  <div class="pages-store">
+    <p>Select the item you would like to purchase:</p>
+    <ul class="store-items">
+      {{#each storeItems}}
+        <li class="store-item">
+          <h2 class="name">{{> t9n name}}</h2>
+          <p class="description">{{> t9n description}}</p>
+          <div class="buy-area">
+            <div class="price">${{price}}</div>
+            <button class="add-to-cart-button">Add to cart</button>
+          </div>
+          {{#if items}}
+            <div class="bundle">
+              <p>
+                This bundle includes:
+              </p>
+              <ul class="bundle-items">
+                {{#each items}}
+                  {{> Retronator.Store.Components.BundleItem}}
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+    <p>Have an item key code? Enter it <a href="{{flowRouterPath 'claim'}}">here</a>.</p>
+  </div>
+</template>

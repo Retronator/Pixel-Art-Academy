@@ -1,0 +1,113 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-locations-store-shelf
+  .safe-area
+    display none
+
+  .background
+    .viewport-area
+      overflow auto
+
+      .shelf
+        margin 30rem
+
+        h2
+          margin-top 2em
+          kyrou-7()
+          color atariGrey(7)
+          font-weight normal
+
+        h3
+          kyrou-5()
+          color atariGrey(7)
+          font-weight normal
+
+        .store-items
+          list-style none
+          padding 0
+
+          .store-item
+            position relative
+            padding-right 75rem
+            margin 25rem 0
+
+            > .description
+              margin-left 15rem
+
+            .buy-area
+              position absolute
+              top 0
+              right 0
+              width 60rem
+
+              .price
+                acme-9()
+                text-align center
+                margin-bottom 5rem
+
+              .discounter-from
+                position relative
+                top -2rem
+                acme-7()
+                font-weight normal
+                text-decoration none
+                color atariGrey(3)
+
+                &::after
+                  content ''
+                  position absolute
+                  top 50%
+                  left -2rem
+                  right -2rem
+                  height 0
+                  border-top 1rem solid
+
+              .add-to-cart-button
+                padding 3rem 5rem
+                width 100%
+
+              .hint
+                background atariCyan(0)
+                border 1rem solid atariCyan(2)
+                text-align center
+                padding 2rem
+
+                &:not-eligible
+                  background atariRed(0)
+                  border-color atariRed(2)
+
+            .bundle
+              margin-left 15rem
+
+              .bundle-items
+                list-style square
+
+        button
+          position relative
+          top -2rem
+          margin-top 2rem
+          background atariGreen(3)
+          uni()
+          color atariGreen(0)
+          border none
+          border-bottom 2rem solid atariGreen(1)
+          cursor pointer
+
+          &:focus
+            background: atariGreen(4)
+            outline none
+
+          &:hover
+            background: atariGreen(4)
+
+          &:active
+            border-bottom none
+            margin-bottom 2rem
+            top 0
+
+          &:disabled
+            color atariGrey(2)
+            cursor default
+
+            &:hover
+              background atariGrey(2)

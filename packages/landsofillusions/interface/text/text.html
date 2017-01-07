@@ -1,0 +1,88 @@
+<template name="LandsOfIllusions.Adventure.Interface.Text">
+  <style>
+    html {
+      font-size: {{display.scale}}px
+    }
+  </style>
+  {{> Render display}}
+  <div class="text-interface scrollable">
+    <div class="location">
+      {{> Render location}}
+    </div>
+    <div class="items">
+      {{#each activeItems}}
+        {{> Render this}}
+      {{/each}}
+    </div>
+    <div class="ui-area scrollable-content">
+      <div class="ui-background"></div>
+      <div class="ui">
+        <div class="text-display scrollable">
+          <div class="text-display-content scrollable-content">
+            <div class="narrative">
+              <p class="introduction">{{{introduction}}}</p>
+              <p class="exits">{{> t10e "Possible exits are:"}}
+                {{#each exits}}
+                  <span class="exit"><span class="name">{{exitName}}</span></span>
+                {{else}}
+                  <span class="exit">{{> t10e "None"}}</span>
+                {{/each}}
+              </p>
+              <p class="things-sentence">{{> t10e "You see:"}}</p>
+              <ul class="things">
+                {{#each things}}
+                  <li class="thing">
+                    {{avatar.fullName}}.
+                  </li>
+                {{else}}
+                  <li class="thing">{{> t10e "Nothing"}}.</li>
+                {{/each}}
+              </ul>
+              {{#each narrative.lines}}
+                <p>{{{narrativeLine}}}</p>
+              {{/each}}
+            </div>
+            {{#if showCommandLine}}
+              <div class="command-line">
+                {{#if waitingKeypress}}
+                  …
+                {{else}}
+                  &gt;
+                  {{#if hoveredCommand}}
+                    {{hoveredCommand}}
+                  {{else}}
+                   {{commandInput.command}}<span class="caret {{caretIdleClass}}">■</span>
+                 {{/if}}
+                {{/if}}
+                <input class="dummy-input"/>
+              </div>
+            {{/if}}
+            {{#if showDialogSelection}}
+              <div class="dialog-selection">
+                <ul class="options">
+                  {{#each dialogSelection.dialogLineOptions}}
+                    <li class="option {{activeDialogOptionClass}}">{{line}}</li>
+                  {{/each}}
+                </ul>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+        {{#if showInventory}}
+          <div class="inventory scrollable">
+            <div class="inventory-content scrollable-content">
+              <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
+              <ul class="items">
+                {{#each inventoryItems}}
+                  <li class="item">{{avatar.fullName}}</li>
+                {{else}}
+                  <li class="item">{{> t10e "Nothing"}}</li>
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</template>

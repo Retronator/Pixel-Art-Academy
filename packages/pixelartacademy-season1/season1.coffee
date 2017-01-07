@@ -1,0 +1,1 @@
+class PixelArtAcademy.Season1

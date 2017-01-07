@@ -1,0 +1,42 @@
+.retronator-store-components-top-supporters
+  .supporter
+    margin-bottom 0
+
+    .name-amount-area
+      display inline-flex
+      width 100%
+
+      .name
+        width 80%
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+
+      .amount
+        width 20%
+        text-align right
+
+    .message
+      margin 4px 0 8px
+
+      &::before
+        content: '"'
+
+      &::after
+        content: '"'
+
+    &.new
+      display block
+      position relative
+      border 2px solid #333
+      padding 8px 8px 8px 30px
+      margin 4px -10px 4px -32px
+
+      &::before
+        content: '→'
+        position absolute
+        top 8px
+        left 8px
+
+      .message
+        margin-bottom 0

@@ -1,0 +1,11 @@
+<template name="LandsOfIllusions.Components.Menu">
+  <div class="lands-of-illusions-components-menu">
+    <div class="menu-overlay {{menuVisibleClass}}">
+      {{#if menuVisible}}
+        {{> Render menuItems}}
+      {{/if}}
+    </div>
+    {{> Render signIn}}
+    {{> Render account}}
+  </div>
+</template>

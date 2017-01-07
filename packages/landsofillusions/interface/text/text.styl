@@ -1,0 +1,165 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "../../style/style.import"
+
+gridSpacing = 8rem
+lineHeight = gridSpacing
+sideMargin = gridSpacing
+
+hoverable()
+  color atariGrey(7)
+  text-transform uppercase
+  cursor pointer
+
+  &:hover
+    background atariGrey(7)
+    color atariGrey(0)
+
+.text-interface
+  fixed-cover()
+  background atariGrey(0)
+  color atariGrey(5)
+  line-height lineHeight
+  cursor crosshair
+
+  > .location
+    position fixed
+    transform translateZ(0)
+    z-index 1
+
+  > .items
+    position absolute
+    z-index 3
+
+    // Items should create their own stacking context so that they can be properly overlaid.
+    > *
+      position relative
+      z-index 0
+
+    > .overlaid
+      z-index 1
+
+  > .ui-area
+    z-index 2
+
+    .ui-background
+      position absolute
+      z-index 1
+      background atariGrey(0)
+
+    .ui
+      position absolute
+      z-index 2
+      pointer-events auto
+
+      .text-display
+        position absolute
+        overflow hidden
+
+        .narrative
+          p
+            margin 0 0 lineHeight
+
+          .command
+            position relative
+            hoverable()
+
+            &::after
+              display block
+              content ''
+              absolute-cover()
+              right 1rem
+              border-bottom 1rem solid atariGrey(5)
+
+            &:hover
+              &::after
+                display none
+
+          .exits
+            .exit
+              &::after
+                content: ","
+
+              .name
+                hoverable()
+
+              &:last-child
+                &::after
+                  content: "."
+
+          .things-sentence
+            margin-bottom 0
+
+          .things
+            list-style none
+            padding-left gridSpacing * 2
+            margin 0 0 lineHeight  0
+
+            .thing
+              margin 0
+
+              &::before
+                content: "— "
+
+        .command-line
+          position relative
+          text-transform uppercase
+          margin-bottom lineHeight
+
+          .caret
+            &.idle
+              animation blink 1s step-start 0s infinite
+
+          .dummy-input
+            position absolute
+            left -10%
+            width 120%
+            top -100%
+            height 300%
+
+            opacity 0
+
+            &:focus
+              left -300%
+
+        .dialog-selection
+          .options
+            list-style none
+            margin 0 0 lineHeight
+            padding 0
+
+            .option
+              padding 0 7rem
+
+              &.active
+                background atariGrey(7)
+                color atariGrey(0)
+                padding-left 0
+
+                &::before
+                  content "> "
+                  margin-right 1rem
+
+      .inventory
+        position absolute
+        overflow hidden
+
+        .items-sentence
+          margin 0
+
+        .items
+          list-style none
+          margin 0
+          padding 0
+
+          .item
+            margin 0
+
+            &::before
+              content: "— "
+
+  .scrollable-content
+    position absolute
+
+@keyframes blink
+  50%
+    visibility hidden

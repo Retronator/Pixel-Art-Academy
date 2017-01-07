@@ -1,0 +1,17 @@
+<template name="LandsOfIllusions.PixelBoy.Apps.Components.Conversation">
+  <div class="conversation">
+    <ul class="lines">
+      {{#each lines}}
+        <li class="line">
+          <div class="author">{{character.displayName}}:</div>
+          <div class="text" {{style textStyle}}>{{> LandsOfIllusions.PixelBoy.Apps.Components.FormattedText args text linkColor}}</div>
+        </li>
+      {{/each}}
+    </ul>
+    {{#if currentCharacter}}
+      <form class="new-line-form">
+        <input class="new-line-text" placeholder="Type a reply …" />
+      </form>
+    {{/if}}
+  </div>
+</template>

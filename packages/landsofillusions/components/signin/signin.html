@@ -1,0 +1,28 @@
+<template name="LandsOfIllusions.Components.SignIn">
+  {{#unless deactivated}}
+    <div class="landsofillusions-components-signin">
+      {{> LandsOfIllusions.Components.BackButton}}
+      {{#LandsOfIllusions.Components.Overlay}}
+        {{#if currentUser}}
+          {{! TODO: Draw closed wallet or something.}}
+          {{#if inMessageOnlyFlow}}
+            {{> _loginButtonsMessages}}
+          {{else}}
+            {{#if inChangePasswordFlow}}
+              {{> _loginButtonsChangePassword}}
+            {{/if}}
+          {{/if}}
+        {{else}}
+          <div class="title">{{> t10e 'Choose your ID'}}</div>
+          <img class="wallet-layer layer-0" src="{{image '/landsofillusions/components/signin/layer0.png'}}" />
+          <img class="wallet-layer layer-1" src="{{image '/landsofillusions/components/signin/layer1.png'}}" />
+          <img class="wallet-layer layer-2" src="{{image '/landsofillusions/components/signin/layer2.png'}}" />
+          <img class="wallet-layer layer-3" src="{{image '/landsofillusions/components/signin/layer3.png'}}" />
+          <img class="wallet-layer layer-4" src="{{image '/landsofillusions/components/signin/layer4.png'}}" />
+          <img class="wallet-layer layer-5" src="{{image '/landsofillusions/components/signin/layer5.png'}}" />
+          {{> _loginButtonsLoggedOutDropdown}}
+        {{/if}}
+      {{/LandsOfIllusions.Components.Overlay}}
+    </div>
+  {{/unless}}
+</template>

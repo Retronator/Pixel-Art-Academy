@@ -1,0 +1,18 @@
+<template name="Artificial.Mirage.DataInputComponent">
+  {{#if isTextArea}}
+  {{! Text area }}
+    <textarea placeholder="{{placeholder}}">{{value}}</textarea>
+  {{else}}
+    {{#if isSelect}}
+    {{! Select }}
+      <select>
+        {{#each options}}
+          <option value="{{this.value}}" {{selectedAttribute}}>{{name}}</option>
+        {{/each}}
+      </select>
+    {{else}}
+    {{! Other inputs }}
+      <input type="{{type}}" value="{{value}}" placeholder="{{placeholder}}"/>
+    {{/if}}
+  {{/if}}
+</template>

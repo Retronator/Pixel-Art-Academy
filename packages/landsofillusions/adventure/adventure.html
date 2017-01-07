@@ -1,0 +1,10 @@
+<template name="LandsOfIllusions.Adventure">
+  <div class="adventure">
+    {{> Render interface}}
+    {{> Render menu}}
+  </div>
+  {{#unless ready}}
+    {{> LandsOfIllusions.Pages.Loading}}
+  {{/unless}}
+  <a class="build-version" href="https://github.com/retronator/pixel-art-academy" target="_blank">alpha build 0.6.0</a>
+</template>

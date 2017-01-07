@@ -1,0 +1,17 @@
+<template name="Retronator.HQ.Locations.Checkout.Display">
+  <div class="retronator-hq-locations-checkout-display">
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#LandsOfIllusions.Components.Overlay}}
+      <div class="display">
+        <div class="screen">
+          <div class="recent-purchases">
+            <h3>Top recent<br/>purchases</h3>
+            {{> Retronator.Store.Components.TopSupporters topRecentTransactions}}
+          </div>
+        </div>
+      </div>
+      <img class="retro" src="{{image '/retronator/hq/locations/checkout/retro.png'}}"/>
+      <div class="table"></div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>

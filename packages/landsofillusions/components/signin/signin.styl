@@ -1,0 +1,182 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-signin
+  fixed-cover()
+  color atariGrey(5)
+
+  .title
+    position absolute
+    top 30rem
+    left 0
+    right 0
+    kyrou-9()
+    font-weight bold
+    text-align center
+    pixel-text-emboss(atariGrey(0), atariGrey(2))
+
+  .wallet-layer
+    absolute-cover()
+    width 100%
+    height 100%
+    pointer-events none
+
+    &.layer-0
+      filter drop-shadow(-5px 5px 20px black)
+      z-index 0
+
+    &.layer-1
+      z-index 2
+
+    &.layer-2
+      z-index 4
+
+    &.layer-3
+      z-index 6
+
+    &.layer-4
+      z-index 8
+
+    &.layer-5
+      z-index 10
+
+  .message
+    position absolute
+    left 0
+    right 0
+    bottom 35rem
+    text-align center
+    color atariGrey(5)
+
+    &.error-message
+      color atariRed(4)
+
+  #login-sign-in-link
+  .login-close-text
+  .or
+    display none
+
+  .login-text-and-button
+    .login-button
+      position absolute
+      left 18rem
+      width 127rem
+      height 52rem
+      text-align center
+      color atariGrey(6)
+      padding-top calc(2rem - 1px)
+      cursor pointer
+
+      &:hover
+        margin-top -1rem
+
+      &:active
+        margin-top -3rem
+
+  #login-buttons-facebook
+    top 86rem
+    z-index 5
+    background-image image('/landsofillusions/components/signin/facebook-card.png')
+
+  #login-buttons-twitter
+    top 99rem
+    z-index 7
+    background-image image('/landsofillusions/components/signin/twitter-card.png')
+
+  #login-buttons-google
+    top 112rem
+    z-index 9
+    background-image image('/landsofillusions/components/signin/google-card.png')
+
+  .login-form
+    color atariGrey(2)
+
+    &::before
+      content ''
+      position absolute
+      top 106rem
+      left 180rem
+      width 122rem
+      height 64rem
+      z-index 5
+      background atariGrey(7)
+
+    #login-email-label-and-input
+    #forgot-password-email-label-and-input
+      position absolute
+      left 185rem
+      top 113rem
+      z-index 5
+
+      input
+        freehand()
+
+    #login-password-label-and-input
+      position absolute
+      left 185rem
+      top 134rem
+      z-index 5
+
+    #login-buttons-password
+    #login-buttons-forgot-password
+      position absolute
+      right 30rem
+      top 155rem
+      z-index 5
+      color atariBlue(3)
+      cursor pointer
+      white-space nowrap
+      border-bottom 1rem solid atariGrey(6)
+
+      &:hover
+        border-bottom-color atariGrey(5)
+
+    #login-buttons-forgot-password
+      top 134rem
+
+    label
+      display block
+
+    input
+      width 109rem
+      border 0
+      color atariGrey(1)
+      background atariGrey(5)
+
+    #forgot-password-link
+    #signup-link
+    #back-to-login-link
+      display block
+      position absolute
+      text-align center
+      cursor pointer
+      freehand()
+
+      &:hover
+        margin-top -1rem
+
+    #signup-link
+    #back-to-login-link
+      top 73rem
+      left 220rem
+      z-index 3
+      width 76rem
+      height 15rem
+      background-image image('/landsofillusions/components/signin/account-paper.png')
+      color atariBlue(3)
+      padding-top 2rem
+      freehand()
+
+    #forgot-password-link
+      top 85rem
+      left 175rem
+      z-index 5
+      width 81rem
+      height 15rem
+      background-image image('/landsofillusions/components/signin/password-paper.png')
+      color atariBlue(4)
+      padding-top 1rem
+      freehand()
+
+    #back-to-login-link
+      left 222rem
+      freehand()

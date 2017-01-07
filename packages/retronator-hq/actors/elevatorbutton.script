@@ -1,0 +1,27 @@
+# Retronator.HQ.Actors.ElevatorButton
+
+## Start
+
+-> [SameFloor] `@locations['Retronator.HQ.Locations.Elevator'].floor is _buttonFloor`
+
+> You press the button and it glows with a cool light.
+
+Wait 2000ms.
+
+`@locations['Retronator.HQ.Locations.Elevator'].floor = _buttonFloor`
+
+> After a short wait, the elevator arrives.
+
+-> [End]
+
+## SameFloor
+
+`_amountPressed = _amountPressed || 0`
+
+> You press the button but nothing happens. The elevator is already here. `_amountPressed is 0`
+
+> No matter how hard you press, nothing changes. The elevator is already here. `_amountPressed > 0`
+
+`_amountPressed++`
+
+## End

@@ -1,0 +1,128 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-landingpage-locations-retropolis
+  .landing-page
+    position relative
+    color black
+
+    // Hiding images until they're initialized
+    &.initializing img
+    img.initializing
+      visibility hidden
+
+    // Parallax elements
+    *[data-depth]
+      position absolute
+
+    .top-section
+      position fixed
+      z-index 3
+      text-align center
+
+      .top
+        position absolute
+        z-index 1
+        left 0
+        right 0
+        top 0
+
+        .header
+          display inline-block
+          position relative
+          vertical-align middle
+          width 100%
+
+          .title
+            margin 0
+            line-height initial
+
+            .retronator
+              display block
+              retrotype()
+
+            .pixel-art-academy
+              display block
+              position relative
+              margin-top -2rem
+              font-weight bold
+              acme-9()
+
+          .by
+            adventure()
+            line-height initial
+
+          .retro
+            position absolute
+            top -2rem
+            right 48rem
+            width 25rem
+            z-index 2
+
+          .divider
+            position absolute
+            left 20rem
+            right 20rem
+            top 26rem
+            z-index 1
+
+            &::before
+            &::after
+              content ''
+              position absolute
+              border-bottom 1rem solid atariGrey(0)
+
+            &::before
+              left 0
+              right 86rem
+
+            &::after
+              left 203rem
+              right 0
+
+      .middle
+        position absolute
+        left 0
+        right 0
+
+        .lands-of-illusions-components-menu-items
+          display inline-block
+          vertical-align middle
+
+          .actionable
+            display inline-block
+            width 100%
+            padding 0 10rem
+
+            &:hover
+              background atariGrey(0)
+              color atariGrey(7)
+
+      .bottom
+        position absolute
+        z-index 1
+        left 0
+        right 0
+        bottom 0
+        uni()
+        animation blink 5s ease-in-out 0s infinite
+
+        .scroll-to-start
+          display inline-block
+          height 37rem
+          vertical-align middle
+          line-height initial
+
+    .scene
+      position absolute
+      background atariCyan(7)
+      overflow hidden
+
+      .middle-section
+        position absolute
+
+        .water
+          opacity 0.8
+
+  @keyframes blink
+    50%
+      opacity 0

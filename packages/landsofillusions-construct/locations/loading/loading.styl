@@ -1,0 +1,45 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+// Construct loading program overrides text adventure styling to an inverted (white) theme.
+
+construct-hoverable()
+  color atariGrey(0)
+
+  &:hover
+    background atariGrey(0)
+    color atariGrey(7)
+
+body.construct
+  .am-display
+    .crop-bar
+      background white
+
+  .text-interface
+    background white
+    color atariGrey(0)
+
+    .ui-background
+      background white
+
+    .ui
+      .text-display
+        .narrative
+          .command
+            construct-hoverable()
+
+            &::after
+              border-bottom 1rem solid atariGrey(2)
+          .exits
+            .exit
+              &::after
+                content: ","
+
+              .name
+                construct-hoverable()
+
+        .dialog-selection
+          .options
+            .option
+              &.active
+                background atariGrey(0)
+                color atariGrey(7)

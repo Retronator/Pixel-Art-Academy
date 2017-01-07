@@ -1,0 +1,24 @@
+<template name="Retronator.Store.Pages.Inventory">
+  <div class="pages-inventory">
+    <h2>Inventory</h2>
+    {{#if currentUser}}
+      {{#if items}}
+        <p>These are all the items you own:</p>
+        <ul class="items">
+          {{#each items}}
+            <li class="item">
+              <h3 class="name">{{> t9n name}}</h3>
+              <p class="description">{{> t9n description}}</p>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p>You don't own any items yet. Why not find something in the <a href="{{flowRouterPath 'store'}}">store</a>?</p>
+      {{/if}}
+      <p><button class="refresh-button">Refresh inventory</button></p>
+      <p>* Make sure you added and verified your email in the accounts tab if you think you're missing inventory items.</p>
+    {{else}}
+      <p>You need to be signed in to view your inventory.</p>
+    {{/if}}
+  </div>
+</template>

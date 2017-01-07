@@ -1,0 +1,127 @@
+@import "../../style/style.import"
+
+@import "{retronator:artificialengines}/mirage/helpers.import"
+
+html.adventure
+  body
+    >.accounts-dialog
+      position fixed
+      top 0
+      left 0
+      z-index 1
+      width 220rem
+      border 1rem solid atariGrey(3)
+      background atariGrey(1)
+      padding 10rem
+      filter drop-shadow(0 10rem 10rem rgba(0,0,0,0.5))
+
+      &.accounts-centered-dialog
+        left 50%
+        margin 20rem 0 0 -110rem
+
+      .login-close-text
+        display inline-block
+        margin-bottom 10px
+
+      .login-button
+        display inline-block
+        width 100%
+        position relative
+        top -2rem
+        background atariGrey(3)
+        padding 2rem
+        margin 4rem 0
+        uni()
+        text-align center
+        color atariGrey(0)
+        border none
+        border-bottom 2rem solid atariGrey(2)
+        cursor pointer
+
+        &:last-child
+          margin-bottom 0
+
+          &:active
+            margin-bottom 2rem
+
+        &:focus
+          background: atariGrey(4)
+          outline none
+
+        &:hover
+          background: atariGrey(4)
+
+        &:active
+          border-bottom none
+          margin-bottom 6rem
+          top 0
+
+      .or
+        text-align center
+        margin 5rem 0 7rem
+
+        .hline
+          display inline-block
+          height 1rem
+          border none
+          background-color atariGrey(4)
+          vertical-align middle
+
+        .or-text
+          display inline-block
+          vertical-align middle
+
+      .login-form
+        text-align right
+
+        #login-email-label-and-input
+          margin-bottom 3rem
+
+        #login-email-label
+        #login-password-label
+          display inline-block
+
+        .login-button
+          margin-top 5rem
+          width auto
+          float right
+
+        .additional-link-container
+          display block
+
+          &:last-child::after
+            content ' '
+            display block
+            clear both
+
+        #signup-link
+        #back-to-login-link
+          display block
+          float right
+          clear both
+
+        #forgot-password-link
+          display block
+          float left
+
+      #login-buttons-do-change-password
+        margin-top 10rem
+
+      #reset-password-new-password
+        width 100%
+        color atariGrey(0)
+
+      .accounts-close
+        position absolute
+        top 2rem
+        right 2rem
+        cursor pointer
+        color atariGrey(4)
+
+        &:hover
+          color atariGrey(5)
+
+    > .hide-background
+      fixed-cover()
+      z-index 1
+      background rgba(0,0,0,0.9)

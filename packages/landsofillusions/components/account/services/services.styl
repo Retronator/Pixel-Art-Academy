@@ -1,0 +1,79 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-account-services
+  .services
+    list-style none
+    padding 0
+    margin 8rem 0
+
+    &::after
+      content ''
+      display block
+      clear both
+
+    .service
+      position relative
+      float left
+      border 1rem solid atariGrey(5)
+      width 65rem
+      height 40rem
+      margin-left -1rem
+      margin-top -1rem
+      padding 0 1rem
+
+      .name
+        display block
+        checkout()
+        color atariGrey(4)
+        text-transform uppercase
+
+      .link-service-button
+        display block
+        top 0
+        left 0
+        width 61rem
+        height 30rem
+        padding 0
+        border none
+        background none
+        cursor pointer
+
+        &:hover
+        &:focus
+          background atariGrey(6)
+
+        &:active
+          background none
+
+        &:focus
+          outline none
+
+      .stamp
+        position absolute
+        z-index 1
+        pointer-events none
+        mix-blend-mode multiply
+
+        &.password
+          width 29rem
+          height 29rem
+          left 17rem
+          top 3rem
+
+        &.facebook
+          width 57rem
+          height 36rem
+          left 3rem
+          top -2rem
+
+        &.twitter
+          width 53rem
+          height 34rem
+          left 3rem
+          top -2rem
+
+        &.google
+          width 56rem
+          height 32rem
+          left 11rem
+          top 10rem

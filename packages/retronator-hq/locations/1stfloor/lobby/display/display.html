@@ -1,0 +1,32 @@
+<template name="Retronator.HQ.Locations.Lobby.Display">
+  <div class="retronator-hq-locations-lobby-display">
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#LandsOfIllusions.Components.Overlay}}
+    {{else}}
+      <div class="viewport-area">
+        <div class="display">
+          <h2>Where does the money go?</h2>
+          <p>In the future this display will show a little nicer breakdown of how I'm spending the money, but for now,
+            here's a link to my very high tech <a target="_blank" href="https://docs.google.com/spreadsheets/d/1Jgo84wbooLdzZfFpFLIMm6551GF2VCyX4XELAM_7LiA/edit?usp=sharing">Google spreadsheet</a>
+            with all the earnings and expenses.</p>
+          <p>I see you as my patron and want to share the joy and tears of making Retronator a sustainable business with you.</p>
+          <h2>Who is supporting Retronator?</h2>
+          <div class="supporters-area">
+            <div class="recent-purchases-area area">
+              <h3>Top recent purchases</h3>
+              {{> Retronator.Store.Components.TopSupporters topRecentTransactions}}
+            </div>
+            <div class="top-supporters-area area">
+              <h3>Top supporters overall</h3>
+              {{> Retronator.Store.Components.TopSupporters topSupporters}}
+            </div>
+          </div>
+          <h3>More messages from supporters</h3>
+          <div class="transaction-messages">
+            {{> Retronator.Store.Components.TopSupporters transactionMessages}}
+          </div>
+        </div>
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>

@@ -1,0 +1,8 @@
+<template name="LandsOfIllusions.PixelBoy.Components.AppSwitcher">
+  <ul class="app-switcher">
+    <li><a href="{{flowRouterPath 'PixelArtAcademy'}}">Home</a></li>
+    {{#each parentComponent.apps}}
+      <li><a href="{{flowRouterPath 'LandsOfIllusions.PixelBoy' app=urlName}}">{{displayName}}</a></li>
+    {{/each}}
+  </ul>
+</template>

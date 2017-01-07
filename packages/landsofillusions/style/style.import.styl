@@ -1,0 +1,36 @@
+@import "{retronator:artificialengines}/mirage/helpers.import"
+@import "atari2600.import"
+@import "cursors.import"
+@import "../typography/typography.import"
+
+pixel-text-outline(color)
+  value = ()
+  for x in -1 0 1
+    for y in -1 0 1
+      unless x is y
+        push(value, "%srem %srem 0 %s" % (x y color))
+
+  text-shadow unquote(join(',', value))
+
+pixel-text-emboss(mainColor, topColor)
+  value = ()
+  for x in -1 1 0
+    for y in -1 0 1
+      if y is -1 and x is 0
+        push(value, "%srem %srem 0 %s" % (x y topColor))
+      else
+        push(value, "%srem %srem 0 %s" % (x y+1 mainColor))
+
+  text-shadow unquote(join(',', value))
+
+pixel-image-rendering()
+  image-rendering -moz-crisp-edges            // Firefox
+  image-rendering -o-crisp-edges              // Opera
+  image-rendering -webkit-crisp-edges         // Safari
+  image-rendering -webkit-optimize-contrast   // Safari
+  image-rendering pixelated                   // Chrome
+  image-rendering crisp-edges                 // CSS3
+  -ms-interpolation-mode nearest-neighbor
+
+image(url)
+  url(url + '?' + random())

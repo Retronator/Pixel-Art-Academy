@@ -1,0 +1,427 @@
+# Retronator.HQ.Locations.Store.Checkout.Scripts.Retro
+
+## Start
+
+retro: Hi, welcome to Retronator Store. How are you? `not _IntroductionOver`
+retro: Can I help you with anything else? -> [MainQuestion] `_IntroductionOver`
+
+* Fine, thank you. -> [IntroductionOver]
+* Great, how are you?
+
+retro: Doing great as well!
+
+## IntroductionOver
+
+retro: How can I help you today?
+
+## MainQuestion
+
+### AnalyzeUser
+
+* I'm a backer, but didn't choose a reward. -> [NoRewardBacker] `_noRewardBacker`
+* I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
+* How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
+* But I don't have the Shopping Cart app. -> [ShoppingCartApp] `_HowToBuy and not _hasShoppingCartApp`
+* Can I ask you about Pixel Art Academy? -> [PixelArtAcademy]
+* I would like to ask something else … -> [Contact] `PixelArtAcademy`
+* I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
+* That would be all, thank you. -> [EndHelped] `_helped`
+
+<!-- NO REWARD BACKERS -->
+
+## NoRewardBacker
+
+`_helped = true`
+
+retro:
+    First of all, thanks for your support!
+    Would you like to claim a backers tier now?
+    
+* Yes, please! -> [SelectTier]
+* Maybe later.
+
+retro: No problem, take your time.
+
+-> [Start]
+
+## SelectTier
+
+-> [AlphaAccessTier] `_eligibleBackerTiers[2]`
+-> [FullGameTier] `_eligibleBackerTiers[1]`
+-> [BasicGameTier] `_eligibleBackerTiers[0]`
+
+## AlphaAccessTier
+
+retro: 
+    You qualify for the Alpha Access Tier.
+    Please note that even if you pledged more than $40, due to limited availability of higher items, they are not claimable any more.
+    
+-> [AddTierToCart]
+
+## FullGameTier
+
+retro: You qualify for the Full Game Tier.
+    
+-> [AddTierToCart]
+
+## BasicGameTier
+
+retro: You qualify for the Basic Game Tier.
+    
+-> [AddTierToCart]
+
+## AddTierToCart
+
+retro: Let me add it to your Shopping Cart app …
+
+-> [NoTablet] `not _tablet`
+
+> Retro slides over the Kickstarter tier bundle onto your tablet with a flick of his finger.
+
+### AddTierToCart
+
+retro: 
+    There you go, you are all set.
+    Do you want to checkout now?
+    You won't have to pay since your pledge was converted to store credit.
+    
+* Yes, let's do this! -> [PurchaseConfirm]
+* I think I'll browser around some more first.
+
+retro: No problem.
+
+-> [Start]
+
+<!-- PURCHASING -->
+
+## Purchase
+
+`_helped = true`
+
+retro: Certainly. Can I see your shopping cart?
+
+> You open the Shopping Cart app and hand the tablet to Retro.
+
+retro: Alright, let me see …
+
+-> [DoubleCheck] `_buyingBaseGame`
+-> [AlphaAccess] `_buyingAlphaAccess`
+
+> After a short look he returns the tablet that is now displaying the receipt.
+
+## PurchaseConfirm
+
+retro: Let me open up the receipt …
+    
+> Retro works on his computer and your tablet for a few moments.
+
+> The receipt appears in the Shopping Cart app.
+
+retro:
+    As you go over the receipt, the display behind me will show where you will appear in the supporters charts.
+    Adding a tip even lets you write a message to go with it.
+   
+> Retro hands you your tablet back.
+
+retro: Does everything look correct?
+
+## Checkout
+  
+### Checkout
+
+-> [TransactionCanceled] `_transactionCanceled`
+
+## TransactionComplete
+
+retro: Thank you so much for that.
+
+-> [NonUserPurchase] `not @user`
+
+retro: You will find the receipt in your Account app. `@user`
+
+-> [Start]
+
+## NonUserPurchase
+
+retro:
+    I will send a confirmation to your email.
+    Don't forget to register for an account at the reception.
+    You will need to enter the email you used in order for the purchase to be applied properly.
+    
+-> [Start]
+
+## TransactionCanceled
+
+> You decide it's not yet time to complete the purchase.
+
+`_afterTransactionQuestion = false`
+
+## TransactionCanceledQuestions
+
+* Thanks for the info, let's see that receipt again. -> [Checkout] `_afterTransactionQuestion`
+* I need to change some items first. -> [Change]
+* Where does the purchase show up? -> [PurchaseDisplay]
+* What is the tip message for? -> [TipMessage]
+* I don't think I'm ready to buy right now. -> [NoBuy]
+
+## Change
+
+retro: 
+    Of course, go ahead. 
+    Simply _use tablet_ and open up the Shopping Cart app to remove items.
+    To add new items, just go back to the shelves to the _east_.
+    
+-> [End]
+
+## PurchaseDisplay
+
+`_afterTransactionQuestion = true`
+
+retro:
+    Individual purchases show up in the "Latest Purchases" section on the main display in the lobby.
+    All the purchases including tips are also summed up for a spot on the "Top Supporters" list.
+    It's all anonymous by default, unless you choose to show a certain name for it.
+    You can set your supporter name in your Account app and set a short message to appear on the Top Supporters list.
+    When you include a tip you also get to set a separate message specifically for that purchase.
+
+-> [TransactionCanceledQuestions] 
+
+## TipMessage
+
+`_afterTransactionQuestion = true`
+
+retro:
+    You can say why you decided to purchase the game or anything else.
+    Please use common sense and make it appropriate for general public.
+    These messages are then rotated on the display in the Lobby and the one behind me.
+    I love to hear from you guys.
+    
+-> [TransactionCanceledQuestions] 
+
+## NoBuy
+
+retro: No problem at all. I'll be ready when you are.
+
+-> [Start]
+
+<!-- Purchase dialogs -->
+
+## DoubleCheck
+
+retro: 
+    Nice, I see you're pre-ordering the game.
+    You know what you're getting into, right?
+
+* Yes, I can't wait to support it. -> [DoubleCheckYes]
+* Uhm, what do you mean?
+
+retro:
+    I mean that you're pre-ordering a game that is mainly developed by one person (me).
+    This means it will be in development for a long time.
+    On the bright side, it will be released in episodes as we go along.
+    And let's not forget, this is a game about actual drawing. 
+    You will literally have to learn how to draw and create artworks.
+    But that's why you're here for, right?
+    
+* Yes, I'm sure I want this. -> [DoubleCheckYes]
+* I guess I should ask more about the game first.
+
+retro: Good idea!
+
+-> [PixelArtAcademyQuestions]
+
+## DoubleCheckYes
+
+-> [AlphaAccess] `_buyingAlphaAccess`
+
+retro: All good!
+
+-> [PurchaseConfirm]
+
+## AlphaAccess
+
+retro: I see you're buying alpha access. You know what this means, right?
+
+* Yes, I want to get alpha access! -> [AlphaAccessYes]
+* Maybe I need my memory refreshed.
+
+retro:
+    Alpha access gives you the ability to play the episodes while they are still in development.
+    The episodes will be exactly that, in development.
+    Unfinished, broken, full of bugs.
+    For the price tag you're not really getting a big value.
+    Purchasing alpha access is mostly meant for supporting the game more.
+    As a thank you, you're able to try things out before everyone else.
+    
+* Yes, take my money! -> [AlphaAccessYes]
+* I see. I'll need to think about it.
+
+retro: No problem. You can easily remove items out of your shopping cart.
+
+-> [Start]
+
+## AlphaAccessYes
+
+retro: Well then, in that case I thank you immensely for your support!
+
+-> [PurchaseConfirm]
+
+<!-- MAIN QUESTIONS -->
+
+## HowToBuy
+
+`_helped = true`
+
+-> [NeedTablet] `not @player.inventory['Retronator.HQ.Items.Tablet']`
+
+retro: Go to the shelves in the store area to the _east_.
+    
+## HowToBuyShelves
+
+retro:
+    You will find game bundles you can pre-order there.
+    Press 'Add to cart' next to the bundle you want and it will appear in the Shopping Cart app on your tablet.
+    
+-> [MainQuestion]
+
+## NeedTablet
+
+retro: 
+    To buy things, you will first need one of our Retronator Spectrum Tablets. 
+    You can find one on the 1st floor in the lobby just _down_ these stairs.
+    When you come back up, go to the shelves in the store area to the _east_.
+
+-> [HowToBuyShelves]
+    
+## ShoppingCartApp
+
+`_helped = true`
+
+retro: No worries, it will appear automatically once you add something to your cart.
+
+-> [MainQuestion]
+
+<!-- PIXEL ART ACADEMY QUESTIONS -->
+
+## PixelArtAcademy
+
+`_helped = true`
+
+retro: Yes, please!
+
+## PixelArtAcademyQuestions
+
+* Is this an online course? -> [Course]
+* When will the game be released? -> [Release]
+* Can you explain how seasons and episodes work? -> [Seasons]
+* How's development going? -> [Development]
+* Actually, nevermind. -> [Nevermind] `not _answeredAboutPixelArtAcademy`
+* Thanks for the information. `_answeredAboutPixelArtAcademy`
+
+retro: My pleasure.
+
+-> [Start]
+
+## Course
+
+retro:
+    No, not in a general sense.
+    It is first and foremost a video game, just made to learn how to draw.
+    You learn by playing through the game's storylines.
+    As you complete drawing quests you are actually learning and drawing pixel art yourself!
+    But there is no traditional classroom or online course environment. 
+
+-> [PixelArtAcademyQuestions]
+
+## Release
+
+`_answeredAboutPixelArtAcademy = true`
+
+retro:
+    Pixel Art Academy is not a typical game with a release date.
+    Instead, it will be continuously in development.
+    Over time I'll be adding more content and improving existing one.
+    The first episode will come out in 2017.
+    It's mainly just me working on it, so it'll take a while.
+    
+-> [PixelArtAcademyQuestions]
+    
+## Seasons
+
+`_answeredAboutPixelArtAcademy = true`
+
+retro:
+    Game's main storylines will be divided into seasons and episodes.
+    Each season's production will last a year.
+    The result will be a couple to a few episodes per year.
+    It pretty much depends on how development goes in practice.
+    
+## SeasonsQuestions
+
+* Do I have to play the episodes in order? -> [Order]
+* Can I replay episodes? -> [Replay]
+* I have some other questions.
+
+retro: Of course, ask ahead. -> [PixelArtAcademyQuestions]
+
+## Order
+
+retro:
+    No, not at all. Episodes in Pixel Art Academy are non-linear.
+    You usually start them by talking to key characters.
+    Some will require other things to be achieved in the game, but in general the order you complete them is up to you.
+
+-> [SeasonsQuestions]
+
+## Replay
+
+retro:
+    Yes! Most episode storylines will be written in a way that you won't see all content in one go.
+    Replaying will be encouraged as it will lead to more learning and practice on your part.
+    That's what we both want, right?
+
+-> [SeasonsQuestions]
+
+## Development
+
+retro:
+    Right now the game is mainly developed by me only. 
+    Burra helps with outreach and I've had some help from objectsforheads on the coding front in the past.
+    Development by one person, as you can imagine, takes time.
+    It's my full-time investment though, I live and breathe this game.
+    Since it's pretty much my lifestyle, I'm careful that I don't burn out doing it.
+    Therefore, the development goes as slow as it needs to while putting most of my days into it.
+
+-> [PixelArtAcademyQuestions]
+
+## Nevermind
+
+retro: No problem. Can I help you with anything else?
+
+-> [MainQuestion]
+
+## Contact
+
+`_helped = true`
+
+retro: 
+    You can always ask me any other questions by writing to hi@retronator.com. 
+    I'll get back to you as soon as I have more time.
+    
+-> [MainQuestion]
+
+## EndHelped
+
+retro: Have a wonderful day!
+
+-> [End]
+
+## EndBrowsing
+
+retro: 
+    Feel free to do so.
+    I'll be around if you need anything.
+
+-> [End]
+
+## End
