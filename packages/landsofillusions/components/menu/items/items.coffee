@@ -84,7 +84,7 @@ class LOI.Components.Menu.Items extends AM.Component
     @options.adventure.clearGameState()
 
     # Start back at Retropolis landing page.
-    if @options.adventure.currentLocationId() is PixelArtAcademy.LandingPage.Locations.Retropolis.id()
+    if @options.adventure.currentLocationId() is Retropolis.Spaceport.Locations.Terrace.id()
       # If we were already at Retropolis, scroll down to help the player understand they should scroll down to begin.
       @options.adventure.interface.narrative.scroll()
 

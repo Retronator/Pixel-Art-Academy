@@ -17,7 +17,7 @@ Npm.depends({
 
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
-	api.use('chfritz:easycron@0.0.4');
+	api.use('chfritz:easycron');
 	
   api.export('PixelArtAcademy');
 
