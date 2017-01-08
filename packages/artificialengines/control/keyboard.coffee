@@ -7,15 +7,15 @@ class AC.Keyboard
     return if @isInitialized
     @isInitialized = true
 
-    @_state = new AC.KeyboardState()
-    @_stateDependency = new Tracker.Dependency()
+    @_state = new AC.KeyboardState
+    @_stateDependency = new Tracker.Dependency
 
     $(window).keydown (event) => @onKeyDown event
     $(window).keyup (event) => @onKeyUp event
 
   @getState: ->
     @_stateDependency.depend()
-    state = new AC.KeyboardState()
+    state = new AC.KeyboardState
     $.extend state, @_state
     state
 

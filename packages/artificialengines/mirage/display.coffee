@@ -211,12 +211,12 @@ class AM.Display extends AM.Component
 
       if @isRendered()
         # Update crop bars.
-        $('.am-display .horizontal-crop-bar').css height: viewportBounds.top()
-        $('.am-display .vertical-crop-bar').css width: viewportBounds.left()
+        $('.artificial-mirage-display .horizontal-crop-bar').css height: viewportBounds.top()
+        $('.artificial-mirage-display .vertical-crop-bar').css width: viewportBounds.left()
 
         # Update @debug rectangles.
-        $('.am-display .viewport-bounds').css viewportBounds.toDimensions()
-        $('.am-display .viewport-bounds .safe-area').css safeArea.toDimensions()
+        $('.artificial-mirage-display .viewport-bounds').css viewportBounds.toDimensions()
+        $('.artificial-mirage-display .viewport-bounds .safe-area').css safeArea.toDimensions()
 
       @viewport
         viewportBounds: viewportBounds

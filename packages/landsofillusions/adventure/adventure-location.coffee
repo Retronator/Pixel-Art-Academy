@@ -7,7 +7,7 @@ class LOI.Adventure extends LOI.Adventure
     # can use the same user account and walk around independently.
     @currentLocationId = new ReactiveField null
     Artificial.Mummification.PersistentStorage.persist
-      storageKey: "LandsOfIllusions.Adventure.currentLocationId"
+      storageKey: 'LandsOfIllusions.Adventure.currentLocationId'
       field: @currentLocationId
       tracker: @
 

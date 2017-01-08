@@ -13,6 +13,7 @@ AC.Keys =
   capsLock: 20
   esc: 27
   escape: 27
+  lastControlCharacter: 31
   space: 32
   pageUp: 33
   pageDown: 34

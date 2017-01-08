@@ -1,3 +1,4 @@
+AC = Artificial.Control
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
@@ -39,9 +40,10 @@ class LOI.Interface.Components.CommandInput
     return unless @options.interface.active()
 
     # Ignore control characters.
-    return if event.which < 32
+    charCode = event.which
+    return if charCode <= AC.Keys.lastControlCharacter
 
-    character = String.fromCharCode event.which
+    character = String.fromCharCode charCode
 
     command = @command()
     newCommand = "#{command}#{character}"
@@ -51,7 +53,7 @@ class LOI.Interface.Components.CommandInput
     @_notIdle()
 
     # Don't let space scroll.
-    return false if event.which is 32
+    return false if event.which is AC.Keys.space
 
   onKeyDown: (event) ->
     interfaceActive = @options.interface.active()
@@ -61,9 +63,10 @@ class LOI.Interface.Components.CommandInput
     # Don't capture events when interface is not active.
     return unless interfaceActive
 
-    switch event.which
-      # Backspace
-      when 8
+    keyCode = event.which
+
+    switch keyCode
+      when AC.Keys.backspace
         event.preventDefault()
 
         command = @command()
@@ -74,8 +77,7 @@ class LOI.Interface.Components.CommandInput
 
         @_notIdle()
 
-      # Enter
-      when 13
+      when AC.Keys.enter
         @options?.onEnter?()
 
     # Trigger event for any key down.
