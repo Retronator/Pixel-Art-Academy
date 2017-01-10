@@ -1,3 +1,4 @@
+AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -22,19 +23,24 @@ class LOI.Components.Menu extends AM.Component
     @_transitionDuration = 200
 
     # Set this variable to override show menu function.
-    @customShowMenu = null
+    @customShowMenu = new ReactiveField null
 
   onCreated: ->
     super
 
     $(document).on 'keydown.menu', (event) =>
       # Toggle menu on escape.
-      if event.which is 27
-        if @menuVisible()
-          @hideMenu()
+      if event.which is AC.Keys.escape
+        # See if we should handle the menu change ourselves or to delegate.
+        if customShowMenuHandler = @customShowMenu()
+          customShowMenuHandler()
 
         else
-          @showMenu()
+          if @menuVisible()
+            @hideMenu()
+
+          else
+            @showMenu()
 
   onDestroyed: ->
     super
@@ -42,10 +48,6 @@ class LOI.Components.Menu extends AM.Component
     $(document).off '.menu'
 
   showMenu: ->
-    if @customShowMenu
-      @customShowMenu()
-      return
-
     # Make menu visible and do the fade in.
     @menuVisible true
     @$('.menu-overlay').velocity('stop').velocity
@@ -65,6 +67,9 @@ class LOI.Components.Menu extends AM.Component
   menuVisibleClass: ->
     'visible' if @menuVisible()
 
+  menuButtonVisibleClass: ->
+    'visible' unless @menuVisible()
+
   # Activates an item and waits for the player to complete interacting with it.
   showModalDialog: (options) ->
     # Wait until dialog has been active and deactivated again.
@@ -82,3 +87,10 @@ class LOI.Components.Menu extends AM.Component
         @options.adventure.removeModalDialog options.dialog
     
         options.callback?()
+
+  events: ->
+    super.concat
+      'click .menu-button': @onClickMenuButton
+
+  onClickMenuButton: (event) ->
+    @showMenu()

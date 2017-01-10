@@ -5,6 +5,9 @@
         {{> Render menuItems}}
       {{/if}}
     </div>
+    {{#unless customShowMenu}}
+      <button class="menu-button {{menuButtonVisibleClass}}">Menu</button>
+    {{/unless}}
     {{> Render signIn}}
     {{> Render account}}
   </div>

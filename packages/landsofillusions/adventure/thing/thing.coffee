@@ -40,7 +40,7 @@ class LOI.Adventure.Thing extends AM.Component
   @fullName: -> throw new Meteor.Error 'unimplemented', "You must specify thing's full name."
 
   # The short name of the thing which is used to refer to it in the text. 
-  @shortName: -> null
+  @shortName: -> @fullName()
 
   # The description text displayed when you enter the thing for the first time or specifically look around. Default
   # (null) means no description.

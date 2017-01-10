@@ -4,6 +4,27 @@
   position fixed
   z-index 1
 
+  .menu-button
+    position fixed
+    top 0
+    right 0
+    background none
+    border none
+    padding 8rem
+    color atariGrey(1)
+    adventure()
+    text-transform uppercase
+    opacity 0
+    transition opacity 200ms
+
+    &:hover
+    &:focus
+      color atariGrey(2)
+      outline none
+
+    &.visible
+      opacity 1
+
   .menu-overlay
     fixed-cover()
     visibility hidden

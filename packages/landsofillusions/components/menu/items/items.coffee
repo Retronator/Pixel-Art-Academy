@@ -26,8 +26,8 @@ class LOI.Components.Menu.Items extends AM.Component
     @aboutVisible()
 
   newVisible: ->
-    # New game is visible for the logged-out user.
-    not Retronator.user()
+    # New game is visible only on the landing page.
+    @options.landingPage
 
   continueVisible: ->
     # Continue is visible when we're not on the landing page.
@@ -38,23 +38,18 @@ class LOI.Components.Menu.Items extends AM.Component
     not Retronator.user()
 
   saveVisible: ->
-    # Save game is visible when a guest doesn't have any changes to game state things.
+    # Save game is visible when a guest doesn't have an empty game state.
     return if Retronator.user()
 
-    gameState = @options.adventure.gameState()
-    return unless gameState?.things
-
-    things = _.keys gameState.things
-
-    things.length
+    not @options.adventure.isGameStateEmpty()
 
   accountVisible: ->
     # Account is visible for logged in users.
     Retronator.user()
 
   quitVisible: ->
-    # Quit is visible for logged in users.
-    Retronator.user()
+    # Quit is visible when the game state is not empty.
+    not @options.adventure.isGameStateEmpty()
 
   inMainMenu: ->
     @currentScreen() is @constructor.Screens.MainMenu
@@ -80,16 +75,8 @@ class LOI.Components.Menu.Items extends AM.Component
     @options.adventure.menu.hideMenu()
 
   onClickNew: (event) ->
-    # Reset game state.
-    @options.adventure.clearGameState()
-
-    # Start back at Retropolis landing page.
-    if @options.adventure.currentLocationId() is Retropolis.Spaceport.Locations.Terrace.id()
-      # If we were already at Retropolis, scroll down to help the player understand they should scroll down to begin.
-      @options.adventure.interface.narrative.scroll()
-
-    else
-      @options.adventure.goToLocation PixelArtAcademy.LandingPage.Locations.Retropolis
+    # Scroll down to help the player understand they should scroll down to begin.
+    @options.adventure.interface.narrative.scroll()
 
   onClickLoad: (event) ->
     # Wait until user is logged in.
@@ -144,8 +131,16 @@ class LOI.Components.Menu.Items extends AM.Component
     @currentScreen @constructor.Screens.Settings
 
   onClickQuit: (event) ->
-    # On quit we should log out and go back to the landing page.
+    # Close the menu.
+    @options.adventure.menu.hideMenu()
+
+    # Reset the local game state, so when we logout it will kick in.
+    @options.adventure.clearLocalGameState()
+
+    # Log out.
     @options.adventure.logout()
+
+    # Go to the terrace.
     @options.adventure.goToLocation Retropolis.Spaceport.Locations.Terrace
 
   onClickBack: (event) ->

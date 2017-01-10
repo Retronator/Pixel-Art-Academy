@@ -2,28 +2,28 @@
   <ul class="lands-of-illusions-components-menu-items">
     {{#if inMainMenu}}
       {{#if aboutVisible}}
-        <li class="about menu-item">
-          <a class="actionable" href="{{flowRouterPath 'PixelArtAcademy.LandingPage.Pages.About'}}" target="_blank">
+        <li class="menu-item">
+          <a class="about actionable" href="{{flowRouterPath 'PixelArtAcademy.LandingPage.Pages.About'}}" target="_blank">
             About
           </a>
         </li>
       {{/if}}
       {{#if continueVisible}}
-        <li class="continue menu-item"><span class="actionable">Continue</span></li>
+        <li class="menu-item"><span class="continue actionable">Continue</span></li>
       {{/if}}
       {{#if newVisible}}
-        <li class="new menu-item"><span class="actionable">Start new game</span></li>
+        <li class="menu-item"><span class="new actionable">Start new game</span></li>
       {{/if}}
       {{#if loadVisible}}
-        <li class="load menu-item"><span class="actionable">Load game</span></li>
+        <li class="menu-item"><span class="load actionable">Load game</span></li>
       {{/if}}
       {{#if saveVisible}}
-        <li class="save menu-item"><span class="actionable">Save game</span></li>
+        <li class="menu-item"><span class="save actionable">Save game</span></li>
       {{/if}}
       {{#if accountVisible}}
-        <li class="account menu-item"><span class="actionable">Account</span></li>
+        <li class="menu-item"><span class="account actionable">Account</span></li>
       {{/if}}
-      <li class="fullscreen menu-item"><span class="actionable">
+      <li class="menu-item"><span class="fullscreen actionable">
         Fullscreen:
         {{#if isFullscreen}}
           on
@@ -32,24 +32,24 @@
         {{/if}}
       </span></li>
       {{#if settingsVisible}}
-        <li class="settings menu-item"><span class="actionable">Settings</span></li>
+        <li class="menu-item"><span class="settings actionable">Settings</span></li>
       {{/if}}
       {{#if pressVisible}}
-        <li class="press menu-item">
-          <a class="actionable" href="{{flowRouterPath 'PixelArtAcademy.LandingPage.Pages.Press'}}" target="_blank">
+        <li class="menu-item">
+          <a class="press actionable" href="{{flowRouterPath 'PixelArtAcademy.LandingPage.Pages.Press'}}" target="_blank">
             Press page
           </a>
         </li>
       {{/if}}
       {{#if quitVisible}}
-        <li class="quit menu-item"><span class="actionable">Quit</span></li>
+        <li class="menu-item"><span class="quit actionable">Quit</span></li>
       {{/if}}
     {{/if}}
     {{#if inSettings}}
       <li class="language menu-item">
         Language: English
       </li>
-      <li class="audio menu-item"><span class="actionable">
+      <li class="menu-item"><span class="audio actionable">
         Audio:
         {{#if audioOn}}on{{/if}}
         {{#if audioFullscreen}}when fullscreen{{/if}}
@@ -61,7 +61,7 @@
       <li class="music menu-item">
         Music: <input type="range" min="0" max="100" step="10" value="{{musicLevel}}"/>
       </li>
-      <li class="back menu-item"><span class="actionable">Back</span></li>
+      <li class="menu-item"><span class="back actionable">Back</span></li>
     {{/if}}
   </ul>
 </template>

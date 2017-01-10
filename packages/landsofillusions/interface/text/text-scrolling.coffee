@@ -19,6 +19,13 @@ class LOI.Interface.Text extends LOI.Interface.Text
       scrollTop = @$window.scrollTop()
       $.Velocity.hook @$uiArea, 'translateY', "#{-scrollTop}px"
 
+    # HACK: For some reason, we need at least 100ms delay in changing the main slider,
+    # otherwise, even if we pass in the correct position, the window just scrolls to 0.
+    @matchScrollbar = _.debounce (position) =>
+      @$window.scrollTop position
+    ,
+      100
+
   # The current full height of the text interface (non-reactive).
   height: ->
     @$uiArea.height()
@@ -62,8 +69,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @options.adventure.currentLocation().onScroll?()
 
     # Also scroll the main slider.
-    @$window.scrollTop position unless @wheelDetected
-    
+    @matchScrollbar position unless @wheelDetected
+
   onWheel: (event) ->
     @onWheelEvent()
 

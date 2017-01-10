@@ -108,3 +108,12 @@ class LOI.Adventure extends LOI.Adventure
 
   clearLocalGameState: ->
     @localGameState.state {}
+
+  isGameStateEmpty: ->
+    # Save game is empty when it doesn't have any changes to game state things.
+    gameState = @gameState()
+    return true unless gameState?.things
+
+    things = _.keys gameState.things
+
+    not things.length
