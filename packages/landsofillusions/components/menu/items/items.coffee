@@ -38,18 +38,18 @@ class LOI.Components.Menu.Items extends AM.Component
     not Retronator.user()
 
   saveVisible: ->
-    # Save game is visible when a guest doesn't have an empty game state.
+    # Save game is visible when a guest isn't on the landing page.
     return if Retronator.user()
 
-    not @options.adventure.isGameStateEmpty()
+    not @options.landingPage
 
   accountVisible: ->
     # Account is visible for logged in users.
     Retronator.user()
 
   quitVisible: ->
-    # Quit is visible when the game state is not empty.
-    not @options.adventure.isGameStateEmpty()
+    # Quit is visible when you are not on the landing page.
+    not @options.landingPage
 
   inMainMenu: ->
     @currentScreen() is @constructor.Screens.MainMenu
@@ -140,8 +140,9 @@ class LOI.Components.Menu.Items extends AM.Component
     # Log out.
     @options.adventure.logout()
 
-    # Go to the terrace.
+    # Go to the terrace and scroll to top.
     @options.adventure.goToLocation Retropolis.Spaceport.Locations.Terrace
+    @options.adventure.interface.scrollTo position: 0
 
   onClickBack: (event) ->
     @currentScreen @constructor.Screens.MainMenu
