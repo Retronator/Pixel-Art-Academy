@@ -24,7 +24,7 @@ class HQ.Actors.ElevatorButton extends LOI.Adventure.Thing
       button.addAbility new Action
         verbs: [Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.Press]
         action: =>
-          options.location.director().startScript buttonInteraction
+          LOI.adventure.director.startScript buttonInteraction
 
       buttonInteraction = options.location.scripts['Retronator.HQ.Actors.ElevatorButton']
 

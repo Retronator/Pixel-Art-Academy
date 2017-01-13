@@ -133,6 +133,7 @@ Package.onUse(function(api) {
   // Artificial Babel
   api.addFiles('babel/babel.coffee');
   api.addFiles('babel/initialize.coffee');
+  api.addFiles('babel/helpers.coffee');
 
   api.addFiles('babel/translation/translation.coffee');
   api.addFiles('babel/translation/subscriptions.coffee', 'server');

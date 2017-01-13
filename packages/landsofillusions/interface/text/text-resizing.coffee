@@ -11,7 +11,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     sideMargin = gridSpacing
     lineHeight = gridSpacing
 
-    location = @options.adventure.currentLocation()
+    location = LOI.adventure.currentLocation()
     illustrationHeight = (location.illustrationHeight() or 0) * scale
 
     $textInterface = $('.adventure .text-interface')

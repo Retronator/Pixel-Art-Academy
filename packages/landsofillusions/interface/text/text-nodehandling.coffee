@@ -2,6 +2,8 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+Nodes = LOI.Adventure.Script.Nodes
+
 class LOI.Interface.Text extends LOI.Interface.Text
   initializeNodeHandling: ->
     @_lastNode = new ReactiveField null
@@ -66,7 +68,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Add the intro line at the start.
     unless @_inMultilineDialog
-      start = "#{dialogLine.actor.avatar.shortName()} says: #{start}\""
+      start = "#{_.capitalize dialogLine.actor.avatar.shortName()} says: #{start}\""
 
     if dialogLine.next instanceof Nodes.DialogLine and dialogLine.next.actor is dialogLine.actor
       # Next line is by the same actor.
@@ -98,6 +100,33 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @_lastNode narrativeLine
 
     narrativeLine.end()
+
+  _handleInterfaceLine: (interfaceLine) ->
+    return if @_waitForNode interfaceLine
+
+    # If the interface line is a silent one, it doesn't appear in the narrative.
+    unless interfaceLine.silent
+      # Simply output the line to the narrative.
+      text = @_evaluateLine interfaceLine
+
+      @narrative.addText text
+
+    # Interface nodes don't stop the narrative and just end.
+    interfaceLine.end()
+
+  _handleCommandLine: (commandLine) ->
+    return if @_waitForNode commandLine
+
+    # If the command should replace the last command, we delete the previous lines.
+    @narrative.removeLastCommand() if commandLine.replaceLastCommand
+
+    # If the command line is a silent one, it doesn't appear in the narrative.
+    unless commandLine.silent
+      # We act as if the user entered this as a command.
+      @narrative.addText "> #{_.upperCase commandLine.line}"
+
+    # Command nodes don't stop the narrative and just end.
+    commandLine.end()
 
   _evaluateLine: (lineNode) ->
     lineNode.line.replace /`(.*?)`/g, (codeSection) ->

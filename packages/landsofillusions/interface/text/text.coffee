@@ -3,8 +3,6 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-Nodes = LOI.Adventure.Script.Nodes
-
 class LOI.Interface.Text extends LOI.Interface
   @register 'LandsOfIllusions.Adventure.Interface.Text'
 
@@ -28,12 +26,13 @@ class LOI.Interface.Text extends LOI.Interface
     return [] unless exits
 
     # Generate a unique set of IDs from all directions (some directions might lead to same location).
-    exits = _.uniq _.values exits
-    exits = _.without exits, null
+    exitIds = (exitClass.id() for directionKey, exitClass of exits)
+    exitIds = _.uniq _.values exitIds
+    exitIds = _.without exitIds, null
 
-    console.log "Displaying exits", exits if LOI.debug
+    console.log "Displaying exits", exitIds if LOI.debug
 
-    exits
+    exitIds
 
   exitName: ->
     exitLocationId = @currentData()
@@ -77,13 +76,13 @@ class LOI.Interface.Text extends LOI.Interface
     'active' if option is @dialogSelection.selectedDialogLine()
 
   showInventory: ->
-    true
+    not @inIntro()
 
   activeItems: ->
     # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
     items = _.flatten [
-      @options.adventure.inventory.values()
-      _.filter @options.adventure.currentLocation().thingInstances.values(), (thing) => thing instanceof LOI.Adventure.Item
+      LOI.adventure.inventory.values()
+      _.filter LOI.adventure.currentLocation().thingInstances.values(), (thing) => thing instanceof LOI.Adventure.Item
     ]
 
     activeItems = _.filter items, (item) => not item.deactivated()
@@ -96,7 +95,7 @@ class LOI.Interface.Text extends LOI.Interface
     activeItems
 
   inventoryItems: ->
-    items = _.filter @options.adventure.inventory.values(), (item) -> not item.state().doNotDisplay
+    items = _.filter LOI.adventure.inventory.values(), (item) -> not item.state().doNotDisplay
 
     console.log "Text interface is displaying inventory items", items if LOI.debug
 
@@ -109,7 +108,7 @@ class LOI.Interface.Text extends LOI.Interface
     'idle' if @commandInput.idle()
 
   waitingKeypress: ->
-    @_pausedNode()
+    @_pausedNode() or @inIntro()
 
   narrativeLine: ->
     lineText = @currentData()
@@ -133,7 +132,7 @@ class LOI.Interface.Text extends LOI.Interface
 
   active: ->
     # The text interface is inactive when there are any modal dialogs.
-    return if @options.adventure.modalDialogs().length
+    return if LOI.adventure.modalDialogs().length
 
     # It's also inactive when we're in any of the accounts-ui flows/dialogs.
     accountsUiSessionVariables = ['inChangePasswordFlow', 'inMessageOnlyFlow', 'resetPasswordToken', 'enrollAccountToken', 'justVerifiedEmail', 'justResetPassword', 'configureLoginServiceDialogVisible', 'configureOnDesktopVisible']
@@ -145,10 +144,25 @@ class LOI.Interface.Text extends LOI.Interface
   # Use to get back to the initial state with full location description.
   resetInterface: ->
     @narrative?.clear()
+
     @location().constructor.visited false
+    @inIntro true
 
     Tracker.afterFlush =>
       @narrative.scroll()
+
+  stopIntro: (options = {}) ->
+    options.scroll ?= true
+
+    @inIntro false
+
+    Tracker.afterFlush =>
+      @resize()
+
+      if options.scroll
+        @scroll
+          position: @maxScrollTop()
+          animate: true
 
   events: ->
     super.concat

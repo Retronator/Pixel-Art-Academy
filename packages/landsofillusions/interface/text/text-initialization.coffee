@@ -40,6 +40,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     @hoveredCommand = new ReactiveField null
 
+    @inIntro = new ReactiveField true
+
     # Node handling must get initialized before handlers, since the latter depends on it.
     @initializeNodeHandling()
     @initializeHandlers()
@@ -55,7 +57,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @autorun =>
       @display.viewport()
       AM.Window.isFullscreen()
-      @options.adventure.currentLocation()?.illustrationHeight?()
+      LOI.adventure.currentLocation()?.illustrationHeight?()
 
       Tracker.afterFlush =>
         @resize()

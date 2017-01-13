@@ -55,10 +55,10 @@ class HQ.Locations.Lobby extends LOI.Adventure.Location
       tablet.addAbility new Action
         verb: Vocabulary.Keys.Verbs.Get
         action: =>
-          @options.adventure.scriptHelpers.pickUpItem
+          LOI.adventure.scriptHelpers.pickUpItem
             location: @
             item: HQ.Items.Tablet
 
-          @director().startScript pickUpTablet
+          LOI.adventure.director.startScript pickUpTablet
 
       pickUpTablet = @scripts['Retronator.HQ.Locations.Lobby.Scripts.PickUpTablet']

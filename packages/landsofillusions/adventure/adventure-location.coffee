@@ -40,6 +40,5 @@ class LOI.Adventure extends LOI.Adventure
 
         # Create a non-reactive reference so we can refer to it later.
         @_currentLocation = new currentLocationClass
-          adventure: @
         
         @currentLocation @_currentLocation

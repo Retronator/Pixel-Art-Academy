@@ -9,7 +9,6 @@ class LOI.StateObject
       # We want to create a new internal state field that we'll depend upon to isolate reactivity.
       unless stateFields[fieldName]
         stateFields[fieldName] = new LOI.StateField _.extend getterOptions,
-          adventure: options.adventure
           address: options.address.child fieldName
 
       stateFields[fieldName]
@@ -23,7 +22,7 @@ class LOI.StateObject
         # in terms of controlling reactivity, so we just return the value directly. Another reason of doing it this way
         # is that this returns an editable, actual game state. This is for example used from script nodes to write to
         # location state.
-        return _.nestedProperty options.adventure.gameState(), options.address.string()
+        return _.nestedProperty LOI.adventure.gameState(), options.address.string()
 
       field = fieldGetter fieldName
 
@@ -42,8 +41,8 @@ class LOI.StateObject
 
     stateObject.clear = ->
       # Set this state node to an empty object.
-      _.nestedProperty options.adventure.gameState(), options.address.string(), {}
-      options.adventure.gameState.updated()
+      _.nestedProperty LOI.adventure.gameState(), options.address.string(), {}
+      LOI.adventure.gameState.updated()
 
     stateObject.destroy = ->
       field.stop() for name, field of stateFields

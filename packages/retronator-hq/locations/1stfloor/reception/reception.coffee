@@ -56,10 +56,10 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
       burra.addAbility new Action
         verb: Vocabulary.Keys.Verbs.Talk
         action: =>
-          @director().startScript dialog
+          LOI.adventure.director.startScript dialog
 
       @useWallet = =>
-        @director().startScript dialog, label: 'UseWallet'
+        LOI.adventure.director.startScript dialog, label: 'UseWallet'
 
       dialog = @scripts['Retronator.HQ.Locations.Reception.Scripts.Burra']
   
@@ -68,28 +68,28 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
 
       dialog.setCallbacks
         SignInActive: (complete) =>
-          @options.adventure.scriptHelpers.itemInteraction
+          LOI.adventure.scriptHelpers.itemInteraction
             item: Retronator.HQ.Items.Wallet
             callback: =>
-              console.log "Wallet has deactivated. The user ID is now", Meteor.userId(), "The subscription for the game state is", @options.adventure.gameStateSubsription if LOI.debug
+              console.log "Wallet has deactivated. The user ID is now", Meteor.userId(), "The subscription for the game state is", LOI.adventure.gameStateSubsription if LOI.debug
   
               Tracker.autorun (computation) =>
                 # If user has signed in, wait also until the game state has been loaded.
-                return if Meteor.userId() and not @options.adventure.gameStateSubsription.ready()
+                return if Meteor.userId() and not LOI.adventure.gameStateSubsription.ready()
                 computation.stop()
   
                 complete()
 
         CreateNewAccount: (complete) =>
           # Insert the current local storage state as the start of the database one.
-          LOI.GameState.insertForCurrentUser @options.adventure.gameState(), =>
+          LOI.GameState.insertForCurrentUser LOI.adventure.gameState(), =>
             complete()
 
             # Now that the local state has been transferred, clear it for next player.
-            @options.adventure.clearLocalGameState()
+            LOI.adventure.clearLocalGameState()
 
         ReceiveTablet: (complete) =>
-          @options.adventure.scriptHelpers.receiveItemFromActor
+          LOI.adventure.scriptHelpers.receiveItemFromActor
             location: @
             actor: PAA.Cast.Burra
             item: HQ.Items.Tablet
@@ -97,7 +97,7 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
           complete()
 
         ReturnTablet: (complete) =>
-          @options.adventure.scriptHelpers.giveItemToActor
+          LOI.adventure.scriptHelpers.giveItemToActor
             location: @
             actor: PAA.Cast.Burra
             item: HQ.Items.Tablet
@@ -105,12 +105,12 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
           complete()
 
         ReceiveAccountApp: (complete) =>
-          tablet = @options.adventure.inventory HQ.Items.Tablet.id()
+          tablet = LOI.adventure.inventory HQ.Items.Tablet.id()
           tablet.addApp HQ.Items.Tablet.Apps.Account
           complete()
 
         SignOut: (complete) =>
-          @options.adventure.logout()
+          LOI.adventure.logout()
           complete()
   
         OpenRetronatorMagazine: (complete) =>
@@ -123,7 +123,7 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
             $(window).off '.medium'
 
         ReceiveProspectusApp: (complete) =>
-          tablet = @options.adventure.inventory HQ.Items.Tablet.id()
+          tablet = LOI.adventure.inventory HQ.Items.Tablet.id()
           tablet.addApp HQ.Items.Tablet.Apps.Prospectus
           complete()
 

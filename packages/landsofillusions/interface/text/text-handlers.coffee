@@ -13,21 +13,35 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @autorun (computation) =>
       @dialogSelection.paused @waitingKeypress()
 
-  onLocationChanged: (location) ->
-    @narrative?.clear()
+  onLocationChanged: ->
+    location = @location()
 
-    # Wait for location to load.
+    # Wait for narrative to be created and location to load.
     Tracker.autorun (computation) =>
+      return unless @isCreated()
       return unless location.ready()
       computation.stop()
 
-      # All the texts have been loaded from the DB at this point. Wait for everything to be rendered.
-      Tracker.afterFlush =>
+      if location.constructor.visited()
+        # If we've been here before, just start with a fresh narrative.
+        @narrative.clear()
+
+      else
+        # We haven't been here yet, so completely reset the interface into intro mode.
+        @resetInterface()
+
+      @narrative.addText "What do you want to do?"
+
+      # All the texts have been loaded from the DB at this point.
+      # Wait for all the reactivity to finish reflowing the page.
+      Meteor.setTimeout =>
         @resize()
 
         # Set scroll position to reveal the top or the bottom of the UI.
         scrollPosition = if location.constructor.visited() then @maxScrollTop() else 0
         @scroll position: scrollPosition
+      ,
+        0
 
   onCommandInputEnter: ->
     # Resume dialog on any key press.
@@ -40,6 +54,10 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @commandInput.clear()
       return
 
+    if @inIntro()
+      @stopIntro()
+      return
+
     @_executeCommand @hoveredCommand() or @commandInput.command().trim()
 
     # Scroll to bottom on enter.
@@ -49,7 +67,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     return unless command.length
 
     @narrative.addText "> #{command.toUpperCase()}"
-    @options.adventure.parser.parse command
+    LOI.adventure.parser.parse command
     @commandInput.clear()
 
   onCommandInputChanged: ->

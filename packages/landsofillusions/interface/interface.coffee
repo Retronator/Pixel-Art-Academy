@@ -11,34 +11,34 @@ class LOI.Interface extends AM.Component
     super
 
     # React to location changes.
-    @location = ComputedField =>
-      # Find the location we're at.
-      location = @options.adventure.currentLocation()
-      return unless location
-
-      # Mark stored current (previous) location as visited when location changes (in this user session).
-      unless location.constructor is @_previousLocationClass
-        @_previousLocationClass?.visited true
-
-        # Now store the new location as the
-        @_previousLocationClass = location.constructor
-
-      @onLocationChanged location
-
-      location
-
-    # Listen to the script.
     @autorun (computation) =>
+      # Find the location we're at.
       location = @location()
       return unless location
 
-      scriptNodes = location.director().currentScripts()
+      # We only want to react to change of location.
+      Tracker.nonreactive =>
+        # Mark stored current (previous) location as visited when location changes (in this user session).
+        unless location.constructor is @_previousLocationClass
+          @_previousLocationClass?.visited true
+
+          # Now store the new location as the
+          @_previousLocationClass = location.constructor
+
+        @onLocationChanged()
+
+    # Listen to the script.
+    @autorun (computation) =>
+      scriptNodes = LOI.adventure.director.currentScripts()
 
       console.log "Interface has detected new script nodes:", scriptNodes if LOI.debug
 
       # We handle scripts once per change.
       Tracker.nonreactive =>
         @_handleNode node for node in scriptNodes
+
+  location: ->
+    LOI.adventure.currentLocation()
 
   onLocationChanged: (location) ->
     # Override to handle location changes.
@@ -48,6 +48,8 @@ class LOI.Interface extends AM.Component
     @_handleEmpty node if node instanceof Nodes.Label
     @_handleDialogLine node if node instanceof Nodes.DialogLine
     @_handleNarrativeLine node if node instanceof Nodes.NarrativeLine
+    @_handleInterfaceLine node if node instanceof Nodes.InterfaceLine
+    @_handleCommandLine node if node instanceof Nodes.CommandLine
 
     # Handle Code nodes, which includes Conditional nodes since they inherit from Code.
     @_handleEmpty node if node instanceof Nodes.Code

@@ -27,7 +27,7 @@ class HQ.Locations.LandsOfIllusions.Room.Chair extends LOI.Adventure.Item
   onActivate: (finishedActivatingCallback) ->
     Meteor.setTimeout =>
       finishedActivatingCallback()
-      @options.adventure.goToLocation LOI.Construct.Locations.Loading
+      LOI.adventure.goToLocation LOI.Construct.Locations.Loading
     ,
       4000
 

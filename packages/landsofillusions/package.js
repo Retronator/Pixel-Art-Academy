@@ -75,13 +75,9 @@ Package.onUse(function(api) {
   // Parser
 
   api.addFiles('parser/parser.coffee');
+  api.addFiles('parser/parser-likelyactions.coffee');
   api.addFiles('parser/command.coffee');
-
-  api.addFiles('parser/parts/abilities.coffee');
-  api.addFiles('parser/parts/debug.coffee');
-  api.addFiles('parser/parts/navigation.coffee');
-  api.addFiles('parser/parts/description.coffee');
-  api.addFiles('parser/parts/looklocation.coffee');
+  api.addFiles('parser/commandresponse.coffee');
 
   api.addFiles('parser/vocabulary/vocabulary.coffee');
   api.addFiles('parser/vocabulary/vocabularykeys.coffee');
@@ -102,6 +98,10 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure-item.coffee');
   api.addFiles('adventure/adventure-inventory.coffee');
   api.addFiles('adventure/adventure-initialization.coffee');
+
+  // Listener
+
+  api.addFiles('adventure/listener/listener.coffee');
 
   // Ability
 
@@ -136,6 +136,8 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/callback.coffee');
   api.addFiles('adventure/script/nodes/dialogline.coffee');
   api.addFiles('adventure/script/nodes/narrativeline.coffee');
+  api.addFiles('adventure/script/nodes/interfaceline.coffee');
+  api.addFiles('adventure/script/nodes/commandline.coffee');
   api.addFiles('adventure/script/nodes/code.coffee');
   api.addFiles('adventure/script/nodes/conditional.coffee');
   api.addFiles('adventure/script/nodes/jump.coffee');
@@ -143,6 +145,14 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/timeout.coffee');
 
   api.addFiles('adventure/script/parser/parser.coffee');
+
+  // Parser Listeners
+
+  api.addFiles('parser/listeners/abilities.coffee');
+  api.addFiles('parser/listeners/debug.coffee');
+  api.addFiles('parser/listeners/navigation.coffee');
+  api.addFiles('parser/listeners/description.coffee');
+  api.addFiles('parser/listeners/looklocation.coffee');
 
   // Interface
 

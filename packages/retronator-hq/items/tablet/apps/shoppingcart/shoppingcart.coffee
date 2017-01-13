@@ -36,7 +36,6 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
 
     @receipt = new HQ.Items.Tablet.Apps.ShoppingCart.Receipt
       shoppingCart: @
-      adventure: @options.adventure
 
     @contents = @stateObject.field 'contents', default: []
 

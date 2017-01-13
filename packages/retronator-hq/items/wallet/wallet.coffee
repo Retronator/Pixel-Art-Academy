@@ -32,12 +32,12 @@ class HQ.Items.Wallet extends LOI.Adventure.Item
     @addAbility new Action
       verbs: [Vocabulary.Keys.Verbs.Use]
       action: =>
-        location = @options.adventure.currentLocation()
+        location = LOI.adventure.currentLocation()
         if location.id() is HQ.Locations.Reception.id()
           location.useWallet()
         
         else
-          location.director().startScript location.scripts['Retronator.HQ.Items.Wallet.use']
+          LOI.adventure.director.startScript location.scripts['Retronator.HQ.Items.Wallet.use']
 
   onCreated: ->
     super
@@ -77,4 +77,4 @@ class HQ.Items.Wallet extends LOI.Adventure.Item
       'click #login-buttons-logout': @onClickLogoutButton
 
   onClickLogoutButton: (event) ->
-    @options.adventure.logout()
+    LOI.adventure.logout()

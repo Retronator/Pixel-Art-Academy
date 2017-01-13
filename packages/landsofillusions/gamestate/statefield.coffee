@@ -6,7 +6,7 @@ class LOI.StateField
     # We want to create an internal computed field that we'll depend upon to isolate reactivity.
     # TODO: Pass "don't stop" to computed field to keep autorun alive, since we're not in reactive context.
     field = new ComputedField =>
-      value = _.nestedProperty options.adventure.gameState(), options.address.string()
+      value = _.nestedProperty LOI.adventure.gameState(), options.address.string()
 
       # If we didn't find the value, see if we have a default value set.
       value ?= options.default
@@ -19,8 +19,8 @@ class LOI.StateField
       # Is this a setter?
       if value?
         # We directly change the value of the field and trigger state update.
-        _.nestedProperty options.adventure.gameState(), options.address.string(), value
-        options.adventure.gameState.updated()
+        _.nestedProperty LOI.adventure.gameState(), options.address.string(), value
+        LOI.adventure.gameState.updated()
         return
 
       # No, this is a getter, so just return the value from the computed field.

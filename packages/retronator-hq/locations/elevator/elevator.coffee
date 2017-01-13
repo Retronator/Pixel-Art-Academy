@@ -60,7 +60,6 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
     options.location.elevatorExits = new ReactiveField {}
     
     elevatorFloor = new LOI.StateField
-      adventure: options.location.options.adventure
       address: "things.#{HQ.Locations.Elevator.id()}.floor"
       default: 1
 
@@ -92,7 +91,7 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
       pad.addAbility new Action
         verbs: [Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.Press]
         action: =>
-          @director().startScript padInteraction
+          LOI.adventure.director.startScript padInteraction
 
       padInteraction = @scripts['Retronator.HQ.Locations.Elevator.Scripts.NumberPad']
   

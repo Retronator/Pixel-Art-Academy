@@ -50,4 +50,4 @@ class LOI.Components.SignIn extends AM.Component
       'click #login-buttons-logout': @onClickLogoutButton
 
   onClickLogoutButton: (event) ->
-    @options.adventure.logout()
+    LOI.adventure.logout()

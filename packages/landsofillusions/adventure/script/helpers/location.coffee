@@ -2,17 +2,17 @@ LOI = LandsOfIllusions
 
 class LOI.Adventure.Script.Helpers extends LOI.Adventure.Script.Helpers
   addThingToLocation: (options) ->
-    locationState = @adventure.getLocationState options.location
+    locationState = LOI.adventure.getLocationState options.location
 
     locationState.things[options.thing.id()] = options.state or {}
-    @adventure.gameState.updated()
+    LOI.adventure.gameState.updated()
 
   removeThingFromLocation: (options) ->
-    locationState = @adventure.getLocationState options.location
+    locationState = LOI.adventure.getLocationState options.location
     thing = locationState.things[options.thing.id()]
     
     delete locationState.things[options.thing.id()]
-    @adventure.gameState.updated()
+    LOI.adventure.gameState.updated()
     
     thing
 
@@ -26,4 +26,4 @@ class LOI.Adventure.Script.Helpers extends LOI.Adventure.Script.Helpers
       thing: options.thing
       state: thing
 
-    @adventure.gameState.updated()
+    LOI.adventure.gameState.updated()

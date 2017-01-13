@@ -33,12 +33,10 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
     @addAbilityToActivateByLookingOrUsing()
 
     @os = new HQ.Items.Tablet.OS
-      adventure: @options.adventure
       tablet: @
       address: @address.child 'os'
 
     @apps = new LOI.StateInstances
-      adventure: @options.adventure
       tablet: @
       address: @address.child 'apps'
       classProvider: HQ.Items.Tablet.OS.App
@@ -58,7 +56,7 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
     stateApps = @stateObject().apps
     unless stateApps[appId]
       stateApps[appId] = {}
-      @options.adventure.gameState.updated()
+      LOI.adventure.gameState.updated()
 
     Tracker.autorun (computation) =>
       return unless app = @apps appId
@@ -72,12 +70,12 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
   # Since the tablet can also be activated by itself, this tells us if we're the main active item (in which case the url
   # dictates the app) or we've been activated from code, in which case we can only rely on tablet state.
   isMainActiveItem: ->
-    @options.adventure.activeItemId() is @id()
+    LOI.adventure.activeItemId() is @id()
 
   overlaidClass: ->
     # The tablet is overlaying other items if it's not the main
     # active item, but make sure there is another item set there.
-    'overlaid' if @options.adventure.activeItemId() and not @isMainActiveItem()
+    'overlaid' if LOI.adventure.activeItemId() and not @isMainActiveItem()
 
   onActivate: (finishedActivatingCallback) ->
     Meteor.setTimeout =>

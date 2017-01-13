@@ -6,26 +6,26 @@ class LOI.Parser.Vocabulary
     # Subscribe to the whole vocabulary namespace.
     @_translationSubscription = AB.subscribeNamespace 'LandsOfIllusions.Adventure.Parser.Vocabulary'
 
-    # Create a vocabulary of words translated to user's language.
-    @words = new ReactiveField {}
+    # Create a vocabulary of phrases translated to user's language.
+    @phrases = new ReactiveField {}
 
     @_translationAutorun = Tracker.autorun (computation) =>
       return unless @_translationSubscription.ready()
 
-      vocabularyWords = {}
+      vocabularyPhrases = {}
 
-      # We have all translation documents downloaded from the server. Go over all vocabulary words and translate them.
-      translate = (vocabularyLocation, word, words) =>
-        if _.isObject words
+      # We have all translation documents downloaded from the server. Go over all vocabulary phrases and translate them.
+      translate = (vocabularyLocation, phrase, phrases) =>
+        if _.isObject phrases
           # We are on an object node so generate translations of each property in turn.
-          vocabularyLocation[word] = {}
+          vocabularyLocation[phrase] = {}
 
-          for subWord of words
-            translate vocabularyLocation[word], subWord, words[subWord]
+          for subPhrase of phrases
+            translate vocabularyLocation[phrase], subPhrase, phrases[subPhrase]
 
         else
-          # We are on the leaf node which has the vocabulary key of this word.
-          vocabularyKey = words
+          # We are on the leaf node which has the vocabulary key of this phrase.
+          vocabularyKey = phrases
 
           # We add a dot at the end so we don't match any other keys that have the same start as this one.
           keyPattern = "#{vocabularyKey}."
@@ -43,23 +43,23 @@ class LOI.Parser.Vocabulary
               $regex: keyRegex
           ).fetch()
 
-          # Translate all words and add them to this location.
-          vocabularyLocation[word] = []
+          # Translate all phrases and add them to this location.
+          vocabularyLocation[phrase] = []
           
           for translation in translations
             translated = translation.translate()
             
-            # Only add in the word if it actually has an entry for this language.
+            # Only add in the phrase if it actually has an entry for this language.
             if translated.language
-              # Make lowercase and normalize (deburr) to basic latin letter.
+              # Make lowercase and normalize (deburr) to basic latin letters.
               text = _.toLower _.deburr translated.text
-              vocabularyLocation[word].push text
+              vocabularyLocation[phrase].push text
 
-      for word of LOI.Parser.Vocabulary.Keys
-        translate vocabularyWords, word, LOI.Parser.Vocabulary.Keys[word]
+      for phrase of LOI.Parser.Vocabulary.Keys
+        translate vocabularyPhrases, phrase, LOI.Parser.Vocabulary.Keys[phrase]
 
-      # Update vocabulary with new words.
-      @words vocabularyWords
+      # Update vocabulary with new phrases.
+      @phrases vocabularyPhrases
 
   destroy: ->
     @_translationSubscription.stop()
@@ -68,6 +68,6 @@ class LOI.Parser.Vocabulary
   ready: ->
     @_translationSubscription.ready()
 
-  getWords: (key) ->
-    console.log "Getting words for", key, "from", @words() if LOI.debug
-    _.nestedProperty @words(), key
+  getPhrases: (key) ->
+    console.log "Getting phrases for", key, "from", @phrases() if LOI.debug
+    _.nestedProperty @phrases(), key

@@ -72,11 +72,11 @@ class LOI.Components.Menu.Items extends AM.Component
       'click .back': @onClickBack
 
   onClickContinue: (event) ->
-    @options.adventure.menu.hideMenu()
+    LOI.adventure.menu.hideMenu()
 
   onClickNew: (event) ->
     # Scroll down to help the player understand they should scroll down to begin.
-    @options.adventure.interface.narrative.scroll()
+    LOI.adventure.interface.narrative.scroll()
 
   onClickLoad: (event) ->
     # Wait until user is logged in.
@@ -86,7 +86,7 @@ class LOI.Components.Menu.Items extends AM.Component
 
       # Wait also until the game state has been loaded.
       Tracker.autorun (computation) =>
-        return unless @options.adventure.gameStateSubsription.ready()
+        return unless LOI.adventure.gameStateSubsription.ready()
         computation.stop()
 
         databaseState = LOI.GameState.documents.findOne 'user._id': user._id
@@ -95,24 +95,24 @@ class LOI.Components.Menu.Items extends AM.Component
           # Move user to the last location saved to the state. We do this only on load so that multiple players using
           # the same account can move independently, at least inside the current session (they will get synced again on
           # reload).
-          @options.adventure.currentLocationId databaseState.state.currentLocationId
+          LOI.adventure.currentLocationId databaseState.state.currentLocationId
 
         else
           # TODO: Show dialog informing the user we're saving the local game state.
-          LOI.GameState.insertForCurrentUser @options.adventure.localGameState.state(), =>
+          LOI.GameState.insertForCurrentUser LOI.adventure.localGameState.state(), =>
             # Now that the local state has been transferred, clear it for next player.
-            @options.adventure.clearLocalGameState()
+            LOI.adventure.clearLocalGameState()
 
-      @options.adventure.menu.signIn.activatable.deactivate()
+      LOI.adventure.menu.signIn.activatable.deactivate()
 
-    @options.adventure.menu.showModalDialog
-      dialog: @options.adventure.menu.signIn
+    LOI.adventure.menu.showModalDialog
+      dialog: LOI.adventure.menu.signIn
       callback: =>
         # User has returned from the load screen.
         userAutorun.stop()
 
   onClickAccount: (event) ->
-    @options.adventure.menu.account.show()
+    LOI.adventure.menu.account.show()
 
   onClickFullscreen: (event) ->
     if AM.Window.isFullscreen()
@@ -123,7 +123,7 @@ class LOI.Components.Menu.Items extends AM.Component
 
     # Do a late UI resize to accommodate any fullscreen transitions.
     Meteor.setTimeout =>
-      @options.adventure.interface.resize()
+      LOI.adventure.interface.resize()
     ,
       1000
 
@@ -132,17 +132,17 @@ class LOI.Components.Menu.Items extends AM.Component
 
   onClickQuit: (event) ->
     # Close the menu.
-    @options.adventure.menu.hideMenu()
+    LOI.adventure.menu.hideMenu()
 
     # Reset the local game state, so when we logout it will kick in.
-    @options.adventure.clearLocalGameState()
+    LOI.adventure.clearLocalGameState()
 
     # Log out.
-    @options.adventure.logout()
+    LOI.adventure.logout()
 
     # Go to the terrace and scroll to top.
-    @options.adventure.goToLocation Retropolis.Spaceport.Locations.Terrace
-    @options.adventure.interface.scrollTo position: 0
+    LOI.adventure.goToLocation Retropolis.Spaceport.Locations.Terrace
+    LOI.adventure.interface.scrollTo position: 0
 
   onClickBack: (event) ->
     @currentScreen @constructor.Screens.MainMenu

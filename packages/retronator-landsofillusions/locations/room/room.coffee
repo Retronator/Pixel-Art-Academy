@@ -34,12 +34,11 @@ class HQ.Locations.LandsOfIllusions.Room extends LOI.Adventure.Location
     # Because the operator can be at this location or in the
     # reception, we need to create him ourselves to assure persistence.
     @_operator = new HQ.Actors.Operator
-      adventure: @options.adventure
 
     Tracker.autorun (computation) =>
       # Provide operator state, either from the reception or from the room.
-      reception = @options.adventure.getLocationState HQ.Locations.LandsOfIllusions
-      room = @options.adventure.getLocationState HQ.Locations.LandsOfIllusions.Room
+      reception = LOI.adventure.getLocationState HQ.Locations.LandsOfIllusions
+      room = LOI.adventure.getLocationState HQ.Locations.LandsOfIllusions.Room
 
       @_operatorInReception = reception?.things[HQ.Actors.Operator.id()]
       @_operatorInRoom = room?.things[HQ.Actors.Operator.id()]
@@ -79,7 +78,7 @@ class HQ.Locations.LandsOfIllusions.Room extends LOI.Adventure.Location
 
       Move: (complete) =>
         # Operator leaves back to the reception.
-        @options.adventure.scriptHelpers.moveThingBetweenLocations
+        LOI.adventure.scriptHelpers.moveThingBetweenLocations
           thing: HQ.Actors.Operator
           sourceLocation: @
           destinationLocation: HQ.Locations.LandsOfIllusions
@@ -88,17 +87,17 @@ class HQ.Locations.LandsOfIllusions.Room extends LOI.Adventure.Location
 
       PlugIn: (complete) =>
         # Add the Construct operator to inventory to enable talking to the operator.
-        @options.adventure.scriptHelpers.addItemToInventory item: LOI.Construct.Items.OperatorLink
+        LOI.adventure.scriptHelpers.addItemToInventory item: LOI.Construct.Items.OperatorLink
 
         # Start Lands of Illusions VR Experience.
-        @options.adventure.goToItem HQ.Locations.LandsOfIllusions.Room.Chair
+        LOI.adventure.goToItem HQ.Locations.LandsOfIllusions.Room.Chair
 
         complete()
 
     # Operator starts talking automatically if he's in the room.
     Tracker.autorun (computation) =>
       # Wait for state to become available.
-      return unless @options.adventure.gameState()
+      return unless LOI.adventure.gameState()
       return unless @_operatorInRoom or @_operatorInReception
       computation.stop()
 
@@ -107,7 +106,7 @@ class HQ.Locations.LandsOfIllusions.Room extends LOI.Adventure.Location
           return unless @_operator.ready()
           computation.stop()
 
-          @director().startScript operatorDialog
+          LOI.adventure.director.startScript operatorDialog
 
     # Chair
     Tracker.autorun (computation) =>
@@ -121,4 +120,4 @@ class HQ.Locations.LandsOfIllusions.Room extends LOI.Adventure.Location
           return @_waitToSeatComplete() if @_waitToSeatComplete
 
           # Otherwise start the self-start plug-in script.
-          @director().startScript operatorDialog, label: 'SelfStart'
+          LOI.adventure.director.startScript operatorDialog, label: 'SelfStart'

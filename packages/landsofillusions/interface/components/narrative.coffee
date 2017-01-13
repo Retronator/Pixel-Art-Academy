@@ -31,6 +31,17 @@ class LOI.Interface.Components.Narrative
         @options.textInterface.resize()
         @scroll()
 
+  removeLastCommand: ->
+    lines = @lines()
+
+    # Find the last line with the character '>' which signifies a command.
+    lastCommandIndex = _.findLastIndex lines, (line) => line[0] is '>'
+
+    newLines = lines[...lastCommandIndex]
+    newText = newLines.join '\n'
+
+    @text newText
+
   clear: ->
     @text ""
 

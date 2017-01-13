@@ -7,12 +7,14 @@ class LOI.Adventure extends LOI.Adventure
   constructor: ->
     super
 
+    # Set the global instance.
+    LOI.adventure = @
+
     console.log "Adventure constructed." if LOI.debug
 
     @scriptHelpers = new LOI.Adventure.Script.Helpers @
 
     @menu = new LOI.Components.Menu
-      adventure: @
 
     @_modalDialogs = []
     @_modalDialogsDependency = new Tracker.Dependency
@@ -24,8 +26,11 @@ class LOI.Adventure extends LOI.Adventure
 
     $('html').addClass('adventure')
 
-    @interface = new LOI.Interface.Text adventure: @
-    @parser = new LOI.Parser adventure: @
+    @interface = new LOI.Interface.Text
+
+    @parser = new LOI.Parser
+
+    @director = new LOI.Director
 
     @_initializeState()
     @_initializeCurrentLocation()

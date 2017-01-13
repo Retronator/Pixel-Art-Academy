@@ -8,4 +8,4 @@ class LOI.Adventure.Script.Node
     @transition @next
 
   transition: (nextNode) ->
-    @director.scriptTransition @, nextNode
+    LOI.adventure.director.scriptTransition @, nextNode

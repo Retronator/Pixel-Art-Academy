@@ -21,26 +21,28 @@
           <div class="text-display-content scrollable-content">
             <div class="narrative">
               <p class="introduction">{{{introduction}}}</p>
-              <p class="exits">{{> t10e "Possible exits are:"}}
-                {{#each exits}}
-                  <span class="exit"><span class="name">{{exitName}}</span></span>
-                {{else}}
-                  <span class="exit">{{> t10e "None"}}</span>
+              {{#unless inIntro}}
+                <p class="exits">{{> t10e "Possible exits are:"}}
+                  {{#each exits}}
+                    <span class="exit"><span class="name">{{exitName}}</span></span>
+                  {{else}}
+                    <span class="exit">{{> t10e "None"}}</span>
+                  {{/each}}
+                </p>
+                <p class="things-sentence">{{> t10e "You see:"}}</p>
+                <ul class="things">
+                  {{#each things}}
+                    <li class="thing">
+                      {{avatar.fullName}}.
+                    </li>
+                  {{else}}
+                    <li class="thing">{{> t10e "Nothing"}}.</li>
+                  {{/each}}
+                </ul>
+                {{#each narrative.lines}}
+                  <p>{{{narrativeLine}}}</p>
                 {{/each}}
-              </p>
-              <p class="things-sentence">{{> t10e "You see:"}}</p>
-              <ul class="things">
-                {{#each things}}
-                  <li class="thing">
-                    {{avatar.fullName}}.
-                  </li>
-                {{else}}
-                  <li class="thing">{{> t10e "Nothing"}}.</li>
-                {{/each}}
-              </ul>
-              {{#each narrative.lines}}
-                <p>{{{narrativeLine}}}</p>
-              {{/each}}
+              {{/unless}}
             </div>
             {{#if showCommandLine}}
               <div class="command-line">
@@ -68,7 +70,7 @@
             {{/if}}
           </div>
         </div>
-        {{#if showInventory}}
+        {{#unless inIntro}}
           <div class="inventory scrollable">
             <div class="inventory-content scrollable-content">
               <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
@@ -81,7 +83,7 @@
               </ul>
             </div>
           </div>
-        {{/if}}
+        {{/unless}}
       </div>
     </div>
   </div>

@@ -55,7 +55,7 @@ class HQ.Locations.Store.Shelf extends LOI.Adventure.Item
     items
     
   playerTablet: ->
-    @options.adventure.inventory HQ.Items.Tablet
+    LOI.adventure.inventory HQ.Items.Tablet
     
   canBuy: ->
     item = @currentData()
@@ -96,7 +96,7 @@ class HQ.Locations.Store.Shelf extends LOI.Adventure.Item
       # Switch the tablet app to Shopping Cart.
       tablet.os.state().activeAppId = HQ.Items.Tablet.Apps.ShoppingCart.id()
 
-      @options.adventure.gameState.updated()
+      LOI.adventure.gameState.updated()
 
       # Activate the tablet into overlaid mode
       tablet.activate()

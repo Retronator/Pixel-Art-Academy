@@ -2,6 +2,15 @@ LOI = LandsOfIllusions
 AM = Artificial.Mummification
 
 class LOI.Adventure.Script
+  @_scriptClassesById = {}
+
+  @getClassForId: (id) ->
+    @_scriptClassesById[id]
+
+  @initialize: ->
+    # Store script class by ID.
+    @_scriptClassesById[@id()] = @
+
   constructor: (@options) ->
     @startNode = @options.startNode
 
@@ -36,7 +45,6 @@ class LOI.Adventure.Script
 
     # Prepare the state objects.
     @stateObject = new LOI.StateObject
-      adventure: @options.adventure
       address: new LOI.StateAddress "scripts.#{@id()}"
 
     @ephemeralState = new ReactiveField {}
@@ -45,15 +53,16 @@ class LOI.Adventure.Script
       storage: sessionStorage
       field: @ephemeralState
 
+    # On the client, do any custom initialization logic.
+    @initialize()
+
   destroy: ->
     @_stateChangeAutorun.stop()
 
   id: ->
     @startNode.id
 
-  setDirector: (director) ->
-    # Set the director node on all the nodes.
-    node.director = director for node in @nodes
+  initialize: -> # Override to setup the script on the client.
 
   setActors: (actors) ->
     # Replace actor names with actual object instances.

@@ -29,11 +29,11 @@ class LOI.Adventure.ScriptFile
     parser = new @constructor.Parser scriptText
 
     for id, node of parser.scriptNodes
-      @scripts[id] = new LOI.Adventure.Script
-        id: id
+      constructor = LOI.Adventure.Script.getClassForId id
+      @scripts[id] = new constructor
         startNode: node
-        location: @options.location
-        adventure: @options.adventure
+        listener: @options.listener
+        parent: @options.listener?.options.parent
 
     # Return the script file.
     resolve @

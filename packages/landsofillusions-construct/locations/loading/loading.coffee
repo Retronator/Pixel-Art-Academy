@@ -53,7 +53,7 @@ class LOI.Construct.Locations.Loading extends LOI.Construct.Location
       return unless captain = @things LOI.Construct.Actors.Captain
       return unless captain.ready()
 
-      return unless operatorLink = @options.adventure.inventory LOI.Construct.Items.OperatorLink
+      return unless operatorLink = LOI.adventure.inventory LOI.Construct.Items.OperatorLink
       return unless operatorLink.operator.ready()
 
       computation.stop()
@@ -61,7 +61,7 @@ class LOI.Construct.Locations.Loading extends LOI.Construct.Location
       captain.addAbility new Action
         verb: Vocabulary.Keys.Verbs.Talk
         action: =>
-          @director().startScript captainDialog, label: 'MainDialog'
+          LOI.adventure.director.startScript captainDialog, label: 'MainDialog'
 
       captainDialog = @scripts['LandsOfIllusions.Construct.Locations.Loading.Scripts.Captain']
 
@@ -71,12 +71,12 @@ class LOI.Construct.Locations.Loading extends LOI.Construct.Location
 
       captainDialog.setCallbacks
         C3: (complete) =>
-          @options.adventure.goToLocation LOI.Construct.Locations.C3.Entrance
+          LOI.adventure.goToLocation LOI.Construct.Locations.C3.Entrance
           complete()
 
         Exit: (complete) =>
-          @options.adventure.goToLocation Retronator.HQ.Locations.LandsOfIllusions.Room
+          LOI.adventure.goToLocation Retronator.HQ.Locations.LandsOfIllusions.Room
           complete()
 
       # Auto-start the captain script.
-      @director().startScript captainDialog
+      LOI.adventure.director.startScript captainDialog

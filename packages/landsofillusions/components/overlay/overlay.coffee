@@ -17,10 +17,10 @@ class LOI.Components.Overlay extends AM.Component
 
     # Resize elements.
     @autorun (computation) =>
-      adventure = @ancestorComponent LOI.Adventure
+      LOI.adventure = @ancestorComponent LOI.Adventure
 
-      scale = adventure.interface.display.scale()
-      viewport = adventure.interface.display.viewport()
+      scale = LOI.adventure.interface.display.scale()
+      viewport = LOI.adventure.interface.display.viewport()
 
       # Background can be at most 360px * scale high. Crop bars need to fill the rest when overlay is active.
       maxOverlayHeight = 360 * scale

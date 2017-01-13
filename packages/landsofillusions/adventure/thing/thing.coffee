@@ -62,6 +62,8 @@ class LOI.Adventure.Thing extends AM.Component
   # Start all things with a WIP version.
   @version: -> "0.0.1-#{@wipSuffix}"
 
+  @listenerClasses: -> [] # Override for listeners to be initialized when thing is created.
+
   @initialize: ->
     # Store thing class by ID and url.
     @_thingClassesById[@id()] = @
@@ -88,17 +90,19 @@ class LOI.Adventure.Thing extends AM.Component
 
     @avatar = new LOI.Avatar @constructor
     @abilities = new ReactiveField []
-    @director = new ReactiveField null
 
     # State object for this thing.
     @address = new LOI.StateAddress "things.#{@id()}"
     @stateObject = new LOI.StateObject
-      adventure: @options.adventure
       address: @address
 
     @_autorunHandles = []
     @_subscriptionHandles = []
-
+    
+    @listeners = []
+    for listenerClass in @constructor.listenerClasses()
+      @listeners.push new listenerClass
+        parent: @
 
   destroy: ->
     @avatar.destroy()
@@ -113,7 +117,12 @@ class LOI.Adventure.Thing extends AM.Component
   id: -> @constructor.id()
 
   ready: ->
-    @avatar.ready()
+    conditions = _.flattenDeep [
+      @avatar.ready()
+      listener.ready() for listener in @listeners
+    ]
+
+    _.every conditions
 
   # A variant of autorun that works even when the component isn't being rendered.
   autorun: (handler) ->
@@ -146,20 +155,20 @@ class LOI.Adventure.Thing extends AM.Component
     @addAbility new Action
       verb: Vocabulary.Keys.Verbs.Look
       action: =>
-        @options.adventure.goToItem @constructor.id()
+        LOI.adventure.goToItem @constructor.id()
 
   addAbilityToActivateByLookingOrUsing: ->
     @addAbility new Action
       verbs: [Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Use]
       action: =>
-        @options.adventure.goToItem @constructor.id()
+        LOI.adventure.goToItem @constructor.id()
           
   addAbilityToActivateByReading: ->
     @addAbility new Action
       verbs: [Vocabulary.Keys.Verbs.Read, Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Use]
       action: =>
-        @options.adventure.goToItem @constructor.id()
+        LOI.adventure.goToItem @constructor.id()
         
   # Helper to access running scripts.
   currentScripts: ->
-    @director()?.currentScripts() or []
+    LOI.adventure.director.currentScripts() or []

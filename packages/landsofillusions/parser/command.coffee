@@ -2,54 +2,51 @@ AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-# Command represents the words in a user command. Note that words in this context are semantic strings
-# that can be made out of multiple lexical words (for example, 'look' and 'look at' both count as a word).
+# Command represents the words and phrases in a user command.
 class LOI.Parser.Command
   constructor: (@command) ->
     # Make lowercase and normalize (deburr) to basic latin letter.
     @normalizedCommand = @_normalize @command
-    @commandWords = @normalizedCommand.match /[-\w]+/g
 
-    # We generate all possible multiple-word phrases as well.
-    phrases = []
-    wordsCount = @commandWords.length
+    # We generate all possible multiple-word phrases out of the command.
+    @phrases = AB.Helpers.generatePhrases
+      text: @normalizedCommand
 
-    # Limit the longest phrases to 3 words.
-    maxWordsInPhrase = Math.min 3, wordsCount
+    console.log "Command has possible phrases", @phrases if LOI.debug
 
-    for wordsInPhraseCount in [2..maxWordsInPhrase] by 1
-      for i in [0..wordsCount - wordsInPhraseCount]
-        wordsInPhrase = @commandWords[i..i + wordsInPhraseCount - 1]
-        phrase = wordsInPhrase.join ' '
-        phrases.push phrase
+  # Returns the likelihood of this command including at least one of the given phrases.
+  has: (phrases) ->
+    # If a single phrase is sent in, wrap it into an array.
+    phrases = [phrases] if _.isString phrases
 
-    @commandWords = @commandWords.concat phrases
+    likelihood = 0
 
-    console.log "Command has possible words", @commandWords if LOI.debug
+    for phrase in phrases
+      phraseLikelihood = AB.Helpers.phraseLikelihoodInText
+        phrase: @_normalize phrase
+        textPhrases: @phrases
 
-  # Does this command include any of the words?
-  has: (words) ->
-    # If a single word is sent in, wrap it into an array.
-    words = [words] if _.isString words
+      likelihood = Math.max likelihood, phraseLikelihood
 
-    for word in words
-      word = @_normalize word
-
-      # We have the word if it is found somewhere in the command.
-      return true if word in @commandWords
-
-    # We didn't find the word.
-    false
+    likelihood
 
   # Do we have an exact match with the phrase?
   is: (phrases) ->
     # If a single phrase is sent in, wrap it into an array.
     phrases = [phrases] if _.isString phrases
 
-    for phrase in phrases
-      return true if @normalizedCommand is @_normalize phrase
+    likelihood = 0
 
-    false
+    for phrase in phrases
+      normalizedPhrase = @_normalize phrase
+      distance = AB.Helpers.levenshteinDistance normalizedPhrase, @normalizedCommand
+
+      # Normalize to original phrase length.
+      phraseLikelihood = 1 - distance / normalizedPhrase.length
+
+      likelihood = Math.max likelihood, phraseLikelihood
+
+    likelihood
     
   _normalize: (string) ->
     # Remove whitespace, make lowercase and normalize (deburr) to basic latin letter.

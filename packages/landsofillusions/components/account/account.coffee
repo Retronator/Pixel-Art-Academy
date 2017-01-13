@@ -37,7 +37,7 @@ class LOI.Components.Account extends AM.Component
   mixins: -> [@activatable]
 
   show: ->
-    @options.adventure.menu.showModalDialog dialog: @
+    LOI.adventure.menu.showModalDialog dialog: @
 
   url: ->
     url = 'account'

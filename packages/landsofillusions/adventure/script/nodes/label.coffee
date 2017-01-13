@@ -8,13 +8,15 @@ class Script.Nodes.Label extends Script.Node
     @name = options.name
 
   end: ->
-    # Every node we visit gets set to true on the script state, so we can reference it later.
-    for field in ['state', 'ephemeralState']
-      state = @script[field]()
-      state[@name] = true
+    # Set that we have visited this label.
 
-      # Trigger reactive change.
-      @script[field] state
+    # For ephemeral state, we need to change the plain object and rewrite it to trigger reactivity.
+    state = @script.ephemeralState()
+    state[@name] = true
+    @script.ephemeralState state
+
+    # For normal state, we just use the state object setter.
+    @script.stateObject @name, true
 
     # Finish transition.
     super

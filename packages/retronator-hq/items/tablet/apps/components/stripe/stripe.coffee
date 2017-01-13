@@ -69,6 +69,8 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
     # See if we need to process the payment or it's simply a confirmation.
     paymentAmount = @paymentAmount()
 
+    ga 'send', 'event', 'Store Transaction', 'Initiated', 'Total', paymentAmount
+
     if paymentAmount
       # The user needs to make a payment, so open checkout.
       @_stripeCheckout.open
@@ -92,7 +94,9 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
     # Create a payment on the server.
     shoppingCart = @_createShoppingCartObject()
 
-    Meteor.call RS.Transactions.Transaction.insertStripePurchase, customer, creditCardToken, @paymentAmount(), shoppingCart, (error, data) =>
+    paymentAmount = @paymentAmount()
+
+    Meteor.call RS.Transactions.Transaction.insertStripePurchase, customer, creditCardToken, paymentAmount, shoppingCart, (error, data) =>
       @submittingPayment false
 
       if error
@@ -100,15 +104,21 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
         return
 
       # Purchase is successfully completed.
-      @_completePurchase()
+      @_completePurchase shoppingCart, paymentAmount
 
   _createShoppingCartObject: ->
     items: @purchaseItems()
     supporterName: @supporterName()
     tip: @tip()
 
-  _completePurchase: ->
+  _completePurchase: (shoppingCart, paymentAmount) ->
     @purchaseCompleted true
+
+    # Generate analytics events.
+    ga 'send', 'event', 'Store Transaction', 'Complete', 'Total', paymentAmount
+
+    for cartItem in shoppingCart.cartItems
+      ga 'send', 'event', 'Store Transaction', 'Item Purchased', cartItem.item.catalogKey, cartItem.item.price
 
   _confirmationPurchaseHandler: ->
     # Create a transaction on the server.
@@ -124,7 +134,9 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
         return
 
       # Purchase is successfully completed.
-      @_completePurchase()
+      ga 'send', 'event', 'Game Purchased', 'Click', shoppingCart.cartItems[0].item.catalogKey, 0
+
+      @_completePurchase shoppingCart, 0
 
   _displayError: (error) ->
     errorText = "Error: #{error.reason}"

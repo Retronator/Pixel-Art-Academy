@@ -1,8 +1,13 @@
 RA = Retronator.Accounts
 
 class LandsOfIllusions
+  @debug = false
+
   LOI = @
-  
+
+  # Global Adventure instance.
+  LOI.adventure = null
+
   constructor: ->
     # Create the main adventure engine url capture.
     RA.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?', 'LandsOfIllusions.Adventure'
@@ -40,8 +45,6 @@ class LandsOfIllusions
 
   @initializePackage: (packageObjects) ->
     @packages[packageObjects.id] = packageObjects
-
-  @debug = false
 
 LOI = LandsOfIllusions
 

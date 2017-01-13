@@ -37,7 +37,6 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
       directions: [Vocabulary.Keys.Directions.In, Vocabulary.Keys.Directions.East]
 
     @operatorLocation = new LOI.StateField
-      adventure: options.adventure
       address: "things.#{HQ.Actors.Operator.id()}.location"
 
   things: ->
@@ -80,7 +79,7 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
       operatorDialog.setCallbacks
         Move: (complete) =>
           # Operator leaves to the cabin for you to follow.
-          @options.adventure.scriptHelpers.moveThingBetweenLocations
+          LOI.adventure.scriptHelpers.moveThingBetweenLocations
             thing: HQ.Actors.Operator
             sourceLocation: @
             destinationLocation: HQ.Locations.LandsOfIllusions.Room
@@ -88,4 +87,4 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
           complete()
 
       # Operator starts talking automatically.
-      @director().startScript operatorDialog
+      LOI.adventure.director.startScript operatorDialog

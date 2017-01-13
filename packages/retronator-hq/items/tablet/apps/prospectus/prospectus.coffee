@@ -48,7 +48,7 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
     'ios' if /iPad|iPhone|iPod/.test(navigator.userAgent) and not window.MSStream
 
   backgroundSize: ->
-    display = @options.adventure.interface.display
+    display = LOI.adventure.interface.display
     width = display.viewport().viewportBounds.width()
     scale = display.scale()
 
@@ -57,7 +57,7 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
     tabletWidth / width * 100
 
   backgroundPositionY: ->
-    display = @options.adventure.interface.display
+    display = LOI.adventure.interface.display
     height = display.viewport().viewportBounds.height()
     scale = display.scale()
 
@@ -93,8 +93,20 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
 
   events: ->
     super.concat
+      'click .social-media-icon': @onClickSocialMediaIcon
       'click .purchase-product': @processItemId
       'click .close-payment': @resetItemId
+
+  onClickSocialMediaIcon: (event) ->
+    $icon = $(event.target)
+
+    socialNetwork = null
+
+    socialNetwork = 'Facebook' if $icon.hasClass('facebook')
+    socialNetwork = 'Twitter' if $icon.hasClass('twitter')
+    socialNetwork = 'Tumblr' if $icon.hasClass('tumblr')
+
+    ga 'send', 'event', 'Social Media Engagement', 'Click', socialNetwork if socialNetwork
 
   resetItemId: (event) ->
     @selectedItem null
@@ -105,6 +117,8 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
   processItemId: (event) ->
     item = @currentData()
     @selectedItem item
+
+    ga 'send', 'event', 'Game Selected', 'Click', item.catalogKey
 
     # Disable scrolling when the payment form is active.
     $('body').addClass('prospectus-disable-scrolling')

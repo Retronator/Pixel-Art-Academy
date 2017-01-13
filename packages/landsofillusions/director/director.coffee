@@ -1,15 +1,13 @@
 LOI = LandsOfIllusions
 
 class LOI.Director
-  constructor: (@location) ->
+  constructor: (@options) ->
     @currentScripts = new ReactiveField []
 
   onCreated: ->
     super
 
   startScript: (script, options = {}) ->
-    script.setDirector @
-
     if options.label
       startNode = script.startNode.labels[options.label]
 
@@ -18,7 +16,10 @@ class LOI.Director
 
     @scriptTransition null, startNode
 
-  endScript: (scriptNode) ->
+  startNode: (scriptNode) ->
+    @scriptTransition null, scriptNode
+
+  endNode: (scriptNode) ->
     @scriptTransition scriptNode, null
 
   scriptTransition: (currentScriptNode, nextScriptNode) ->

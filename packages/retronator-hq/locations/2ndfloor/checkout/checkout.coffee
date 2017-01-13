@@ -68,7 +68,7 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
       retro.addAbility new Action
         verb: Vocabulary.Keys.Verbs.Talk
         action: =>
-          @director().startScript retroDialog
+          LOI.adventure.director.startScript retroDialog
 
       retroDialog = @scripts['Retronator.HQ.Locations.Store.Checkout.Scripts.Retro']
   
@@ -78,7 +78,7 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
       retroDialog.setCallbacks
         AnalyzeUser: (complete) =>
           shoppingCart = []
-          tablet = @options.adventure.inventory HQ.Items.Tablet
+          tablet = LOI.adventure.inventory HQ.Items.Tablet
           
           if tablet
             shoppingCartApp = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
@@ -139,16 +139,16 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
 
         Checkout: (complete) =>
           # Show the receipt on the tablet.
-          tablet = @options.adventure.inventory HQ.Items.Tablet
+          tablet = LOI.adventure.inventory HQ.Items.Tablet
           tablet.state().os.activeAppId = HQ.Items.Tablet.Apps.ShoppingCart.id()
 
           shoppingCartApp = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
           shoppingCartApp.state().receiptVisible = true
 
-          @options.adventure.gameState.updated()
+          LOI.adventure.gameState.updated()
           
           # Look at display.
-          @options.adventure.goToItem HQ.Locations.Checkout.Display
+          LOI.adventure.goToItem HQ.Locations.Checkout.Display
 
           # Activate the tablet so it gets overlaid.
           tablet.activate()
@@ -166,10 +166,10 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
 
                 # Hide the receipt after this.
                 shoppingCartApp.state().receiptVisible = false
-                @options.adventure.gameState.updated()
+                LOI.adventure.gameState.updated()
 
               # Return to location
-              @options.adventure.deactivateCurrentItem()
+              LOI.adventure.deactivateCurrentItem()
 
               complete()
 

@@ -12,13 +12,10 @@ class LOI.Components.Menu extends AM.Component
     @menuVisible = new ReactiveField false
 
     @menuItems = new @constructor.Items
-      adventure: @options.adventure
 
     @signIn = new LOI.Components.SignIn
-      adventure: @options.adventure
 
     @account = new LOI.Components.Account
-      adventure: @options.adventure
 
     @_transitionDuration = 200
 
@@ -75,7 +72,7 @@ class LOI.Components.Menu extends AM.Component
     # Wait until dialog has been active and deactivated again.
     dialogWasActivated = false
 
-    @options.adventure.addModalDialog options.dialog
+    LOI.adventure.addModalDialog options.dialog
     options.dialog.activatable.activate()
 
     Tracker.autorun (computation) =>
@@ -84,7 +81,7 @@ class LOI.Components.Menu extends AM.Component
 
       else if options.dialog.activatable.deactivated() and dialogWasActivated
         computation.stop()
-        @options.adventure.removeModalDialog options.dialog
+        LOI.adventure.removeModalDialog options.dialog
     
         options.callback?()
 

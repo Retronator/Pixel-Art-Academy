@@ -37,7 +37,8 @@ class LOI.StateInstances
       instanceKeys = _.keys instances
 
       if _.isArray newState
-        stateKeys = newState
+        stateKeys = for thing in newState
+          _.thingId thing
 
       else if _.isObject newState
         stateKeys = _.keys newState

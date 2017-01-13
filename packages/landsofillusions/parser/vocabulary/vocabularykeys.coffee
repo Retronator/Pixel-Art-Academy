@@ -27,6 +27,12 @@ LOI.Parser.Vocabulary.Keys =
     Sit: ''
     Stand: ''
 
+  Questions:
+    WhichPlace: ''
+    WhichThing: ''
+    WhichPerson: ''
+    WhichVerb: ''
+
 # Generate vocabulary keys.
 transformVocabularyKey = (prefix, keys) ->
   # Nothing to do on leaf nodes, simply return the text to be set.

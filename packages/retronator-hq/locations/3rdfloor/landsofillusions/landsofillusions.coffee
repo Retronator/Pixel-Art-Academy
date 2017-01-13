@@ -52,7 +52,7 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
       operator.addAbility new Action
         verb: Vocabulary.Keys.Verbs.Talk
         action: =>
-          @director().startScript operatorDialog
+          LOI.adventure.director.startScript operatorDialog
 
       operatorDialog = @scripts['Retronator.HQ.Locations.LandsOfIllusions.Scripts.Operator']
 
@@ -62,7 +62,7 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
       operatorDialog.setCallbacks
         FirstTime: (complete) =>
           # Operator leaves to the hallway for you to follow.
-          @options.adventure.scriptHelpers.moveThingBetweenLocations
+          LOI.adventure.scriptHelpers.moveThingBetweenLocations
             thing: HQ.Actors.Operator
             sourceLocation: @
             destinationLocation: HQ.Locations.LandsOfIllusions.Hallway
@@ -70,7 +70,7 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
           complete()
 
         Leave: (complete) =>
-          @options.adventure.goToLocation HQ.Locations.Chillout
+          LOI.adventure.goToLocation HQ.Locations.Chillout
           complete()
 
         AnalyzeUser: (complete) =>
@@ -100,4 +100,4 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
       isPlayer = user.hasItem Retronator.Store.Items.CatalogKeys.PixelArtAcademy.PlayerAccess
       playApproved = operatorDialog.ephemeralState().PlayApproved
 
-      @director().startScript operatorDialog unless isPlayer and playApproved
+      LOI.adventure.director.startScript operatorDialog unless isPlayer and playApproved

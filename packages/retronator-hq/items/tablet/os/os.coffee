@@ -31,7 +31,7 @@ class HQ.Items.Tablet.OS extends AM.Component
 
         # Yes, this is an app, so the link should just change the state.
         @options.tablet.os.state().activeAppId = appClass.id()
-        @options.adventure.gameState.updated()
+        LOI.adventure.gameState.updated()
 
         # Stay at the same URL.
         redirect location.pathname

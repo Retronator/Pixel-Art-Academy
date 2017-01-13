@@ -13,5 +13,5 @@ class LOI.Parser extends LOI.Parser
     if command.has wordsForVerb
       console.log "We have it! Reset interface to display initial description." if LOI.debug
 
-      @options.adventure.interface.resetInterface?()
+      LOI.adventure.interface.resetInterface?()
       return true

@@ -30,5 +30,5 @@ class LOI.Parser extends LOI.Parser
           # Yes, we should output the descriptions.
           console.log "We have it! Display description." if LOI.debug
 
-          @options.adventure.showDescription thing
+          LOI.adventure.showDescription thing
           return true
