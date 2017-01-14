@@ -1,3 +1,3 @@
 SP = Retropolis.Spaceport
 
-class SP.Locations
+class SP.AirportTerminal

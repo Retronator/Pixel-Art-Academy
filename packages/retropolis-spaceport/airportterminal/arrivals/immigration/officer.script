@@ -1,0 +1,24 @@
+#  Retropolis.Spaceport.AirportTerminal.Immigration.Officer
+
+## Start
+
+officer: Next please.
+
+## MainQuestion
+
+officer: How can I help you?
+
+* I want to enter. -> [Enter]
+* Sorry, nevermind. -> [End]
+
+## Enter
+
+officer: Alright, go on.
+
+> You head east.
+
+### Enter
+
+-> [End]
+
+## End

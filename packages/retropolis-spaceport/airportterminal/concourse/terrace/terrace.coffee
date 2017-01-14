@@ -2,15 +2,12 @@ AE = Artificial.Everywhere
 AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
-SP = Retropolis.Spaceport
+RS = Retropolis.Spaceport
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
-class SP.Locations.Terrace extends LOI.Adventure.Location
-  @id: -> 'Retropolis.Spaceport.Locations.Terrace'
+class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
+  @id: -> 'Retropolis.Spaceport.AirportTerminal.Terrace'
   @url: -> ''
   @scriptUrls: -> [
   ]
@@ -20,14 +17,13 @@ class SP.Locations.Terrace extends LOI.Adventure.Location
 
   @version: -> '0.0.2'
 
-  @fullName: -> "Retropolis Landing Page"
-  @shortName: -> "Retropolis"
+  @fullName: -> "Retropolis International Spaceport terrace"
+  @shortName: -> "terrace"
   @description: ->
     "
-      You exit the Retropolis International Spaceport. A
-      magnificent view of the city opens before you. Armed
-      with a suitcase and a burning desire to become a
-      pixel artist, you feel the adventure in the air.
+      You are on a terrace of the Retropolis International Spaceport.
+      A magnificent view of the city lies before you. To the south you can return back
+      inside the airport terminal.
     "
     
   @initialize()
@@ -43,17 +39,35 @@ class SP.Locations.Terrace extends LOI.Adventure.Location
     @_sceneBounds = new ReactiveField null
 
     @menuItems = new LOI.Components.Menu.Items
-      adventure: @options.adventure
       landingPage: true
 
     @_lastAppTime =
       elapsedAppTime: 0
       totalAppTime: 0
 
-  illustrationHeight: ->
-    illustrationHeight = @_sceneBounds()?.height() / @display?.scale()
+  things: -> [
+    @constructor.Retropolis
+  ]
 
-    illustrationHeight or 0
+  exits: ->
+    "#{Vocabulary.Keys.Directions.South}": RS.AirportTerminal.Concourse
+    "#{Vocabulary.Keys.Directions.In}": RS.AirportTerminal.Concourse
+
+  isLandingPage: ->
+    # We treat the terrace location as a landing page when the user still has a clear game state.
+    LOI.adventure.isGameStateEmpty()
+
+  topSectionVisibleClass: ->
+    'visible' if @isLandingPage()
+
+  illustrationHeight: ->
+    if @isLandingPage()
+      illustrationHeight = @_sceneBounds()?.height() / @display?.scale()
+
+      illustrationHeight or 0
+
+    else
+      middleSceneHeight
 
   onCreated: ->
     super
@@ -61,12 +75,21 @@ class SP.Locations.Terrace extends LOI.Adventure.Location
     # Set the initializing flag for the first rendering pass, before we have time to initialize rendered elements.
     @initializingClass = new ReactiveField "initializing"
 
-    # Prevent default menu handling on escape.
-    @options.adventure.menu.customShowMenu = =>
-      # Simply scroll up to the menu.
-      @options.adventure.interface.scroll
-        position: 0
-        animate: true
+    # Set things up if we're the landing page.
+    @autorun (computation) =>
+      if @isLandingPage()
+        # Prevent default menu handling on escape.
+        LOI.adventure.menu.customShowMenu =>
+          # Simply scroll up to the menu.
+          LOI.adventure.interface.scroll
+            position: 0
+            animate: true
+
+      else
+        LOI.adventure.menu.customShowMenu null
+
+      # Also trigger resize, since the parallax offsets must change without the top section.
+      @hasResized = true
 
   onRendered: ->
     super
@@ -74,7 +97,7 @@ class SP.Locations.Terrace extends LOI.Adventure.Location
     @app = @ancestorComponent Retronator.App
     @app.addComponent @
 
-    @display = @options.adventure.interface.display
+    @display = LOI.adventure.interface.display
 
     ### Parallax ###
 
@@ -215,7 +238,7 @@ class SP.Locations.Terrace extends LOI.Adventure.Location
 
     @app?.removeComponent @
 
-    @options.adventure.menu.customShowMenu = null
+    LOI.adventure.menu.customShowMenu null
 
   onScroll: ->
     @draw()
@@ -246,10 +269,14 @@ class SP.Locations.Terrace extends LOI.Adventure.Location
         width: viewport.safeArea.width()
         height: viewport.viewportBounds.height()
 
+      # If we're not on the landing page, we don't have the top section.
+      unless @isLandingPage()
+        topSectionBounds.height 0
+
       # Middle section is absolute inside the scene.
       middleSectionBounds = new AE.Rectangle
         x: 0
-        y: viewport.viewportBounds.height() * (1 + middleSceneOffsetFactor)
+        y: topSectionBounds.bottom() * (1 + middleSceneOffsetFactor)
         width: viewport.maxBounds.width()
         height: middleSceneHeight * scale
 
@@ -286,12 +313,17 @@ class SP.Locations.Terrace extends LOI.Adventure.Location
 
       # Update parallax origins. They tells us at what scroll top the images are at the original setup.
 
-      # The top scene is correct simply as the page is rendered on top.
-      @topParallaxOrigin = 0
+      if @isLandingPage()
+        # The top scene is correct simply as the page is rendered on top.
+        @topParallaxOrigin = 0
 
-      # It should be when the middle section is exactly in the middle of the screen.
-      middleScenePillarboxBarHeight = (viewport.viewportBounds.height() - middleSectionBounds.height()) * 0.5
-      @middleParallaxOrigin = middleSectionBounds.top() - middleScenePillarboxBarHeight
+        # It should be when the middle section is exactly in the middle of the screen.
+        middleScenePillarboxBarHeight = (viewport.viewportBounds.height() - middleSectionBounds.height()) * 0.5
+        @middleParallaxOrigin = middleSectionBounds.top() - middleScenePillarboxBarHeight
+
+      else
+        # The middle scene is correct at 0 when we're not on the landing page.
+        @middleParallaxOrigin = 0
 
     scrollTop = -parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
 
@@ -304,7 +336,7 @@ class SP.Locations.Terrace extends LOI.Adventure.Location
 
       unless @airshipsMoving
         @airshipsMovingTimeStart = appTime.totalAppTime
-        @airshipsMoving = true if scrollTop > 0
+        @airshipsMoving = true if scrollTop > 0 or not @isLandingPage()
 
       # Move sections.
       @$paralaxSections.css transform: "translate3d(0, #{-scrollTop}px, 0)"
