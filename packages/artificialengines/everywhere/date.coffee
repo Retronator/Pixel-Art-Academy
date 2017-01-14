@@ -1,5 +1,7 @@
 AE = Artificial.Everywhere
 
+# Date extensions.
+
 # Creates a date from a date, string or object with any of the year, month, day, hours, minutes, seconds, milliseconds.
 # Unlike the normal Date constructor, if you specify just some of the year/month/... properties, the higher order ones
 # will be taken from the current date, not from Jan 1 1970. The lower ones (the smaller values) will be set to 0.

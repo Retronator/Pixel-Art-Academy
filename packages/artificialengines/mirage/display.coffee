@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 
+# Represents the display area and provides automatic pixel art scaling calculation.
 class AM.Display extends AM.Component
   @register 'Artificial.Mirage.Display'
 

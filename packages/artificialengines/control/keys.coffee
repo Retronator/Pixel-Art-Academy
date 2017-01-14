@@ -1,5 +1,6 @@
 AC = Artificial.Control
 
+# Enumeration of all the keyboard keys.
 AC.Keys =
   backspace: 8
   tab: 9

@@ -1,4 +1,4 @@
-# Match extensions
+# Extensions to Meteor's Match patterns.
 
 # Numbers
 

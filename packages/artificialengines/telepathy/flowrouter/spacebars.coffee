@@ -1,3 +1,5 @@
+# Spacebars helpers for Flow Router.
+
 # Create the {{flowRouterPath}} helper.
 Template.registerHelper 'flowRouterPath', (pathDef, kw) ->
   params = if kw?.hash then kw.hash else {}

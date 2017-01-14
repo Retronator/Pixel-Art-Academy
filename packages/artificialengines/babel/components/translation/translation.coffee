@@ -1,6 +1,7 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
 
+# Document that stores the translated texts for a given key in a namespace.
 class AB.Components.Translation extends AM.Component
   @register 'Artificial.Babel.Components.Translation'
 

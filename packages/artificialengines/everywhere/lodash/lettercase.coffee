@@ -1,3 +1,5 @@
+# String operations that change letter case.
+
 _.mixin
   # Converts a string like "title case" to "TitleCase"
   titleCase: (string) ->

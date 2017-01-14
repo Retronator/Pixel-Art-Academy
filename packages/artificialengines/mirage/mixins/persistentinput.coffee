@@ -1,5 +1,6 @@
 AM = Artificial.Mirage
 
+# Prevents the input value to be overridden while editing.
 class Artificial.Mirage.PersistentInputMixin extends BlazeComponent
   onCreated: ->
     @storedValue = new ReactiveField()

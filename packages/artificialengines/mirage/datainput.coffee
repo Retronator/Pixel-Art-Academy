@@ -1,5 +1,6 @@
 AM = Artificial.Mirage
 
+# Base class for an input component with easy setup for different mixins.
 class Artificial.Mirage.DataInputComponent extends AM.Component
   template: ->
     'Artificial.Mirage.DataInputComponent'

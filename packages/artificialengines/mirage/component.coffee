@@ -4,6 +4,7 @@ AM = Artificial.Mirage
 # We don't do it in Meteor.startup because startup will run after the first component is already created.
 AB = null
 
+# Extension of BlazeComponent with custom functionality.
 class AM.Component extends CommonComponent
   constructor: ->
     super

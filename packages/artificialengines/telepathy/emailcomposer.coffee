@@ -1,5 +1,6 @@
 AT = Artificial.Telepathy
 
+# Helper for constructing text and html emails.
 class AT.EmailComposer
   constructor: ->
     @text = ""

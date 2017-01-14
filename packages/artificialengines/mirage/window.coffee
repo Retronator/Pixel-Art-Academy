@@ -1,6 +1,7 @@
 AM = Artificial.Mirage
 AE = Artificial.Everywhere
 
+# The bounds of your browser window.
 class AM.Window
   @isInitialized = false
 

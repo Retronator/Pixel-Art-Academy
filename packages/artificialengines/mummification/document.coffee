@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
 
+# Extended PeerDB document with common operations.
 class AM.Document extends Document
   @Meta
     abstract: true

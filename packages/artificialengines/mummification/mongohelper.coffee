@@ -1,5 +1,6 @@
 AM = Artificial.Mummification
 
+# Useful methods to help with mongo queries.
 class AM.MongoHelper
   # returns a new query where the additional conditions have been
   # merged to the query, potentially adding the $and operation.

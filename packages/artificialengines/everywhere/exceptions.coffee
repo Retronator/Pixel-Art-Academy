@@ -1,5 +1,7 @@
 AE = Artificial.Everywhere
 
+# Exception classes with predefined error codes.
+
 class AE.ArgumentException extends Meteor.Error
   constructor: (reason, details) -> super 'argument-exception', reason, details
 
@@ -9,8 +11,8 @@ class AE.ArgumentNullException extends Meteor.Error
 class AE.ArgumentOutOfRangeException extends Meteor.Error
   constructor: (reason, details) -> super 'argument-out-of-range-exception', reason, details
 
+# Arithmetic, casting, or conversion error.
 class AE.ArithmeticException extends Meteor.Error
-  # Arithmetic, casting, or conversion error.
   constructor: (reason, details) -> super 'arithmetic-exception', reason, details
 
 class AE.InvalidOperationException extends Meteor.Error

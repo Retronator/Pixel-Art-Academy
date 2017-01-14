@@ -1,5 +1,6 @@
 AC = Artificial.Control
 
+# A snapshot of pressed keys.
 class AC.KeyboardState
   getPressedKeys: ->
     _.keys @

@@ -2,6 +2,7 @@ AB = Artificial.Base
 AC = Artificial.Control
 AM = Artificial.Mirage
 
+# The root class from which to inherit your custom app.
 class AB.App extends AM.Component
   @register 'Artificial.Base.App'
 

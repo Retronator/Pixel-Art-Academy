@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
 
+# A reactive rectangle data structure.
 class AE.Rectangle
   constructor: (x, y, width, height) ->
     if _.isObject x

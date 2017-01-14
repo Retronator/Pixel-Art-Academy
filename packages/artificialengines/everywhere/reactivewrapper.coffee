@@ -1,5 +1,7 @@
 AE = Artificial.Everywhere
 
+# A reactive field with extra reactivity for manual updates.
+
 # A reactive object variable that allows you to react to updates made internally on the object. It is particularly
 # useful to handle changes of objects from external libraries that are not reactive. We add a layer for reactive
 # updates on top of that. For methods that access the object in the reactive wrapper, if you want to react only to

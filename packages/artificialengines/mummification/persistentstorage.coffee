@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
 
+# Storing helper for localStorage and sessionStorage.
 class AM.PersistentStorage
   @persist: (options) ->
     options.storage ?= localStorage

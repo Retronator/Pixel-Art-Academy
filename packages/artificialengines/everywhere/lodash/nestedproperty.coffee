@@ -1,3 +1,5 @@
+# Access to properties on nested objects.
+
 _.mixin
   # Gets or sets a property that can be on a nested object, specified with the dot notation.
   nestedProperty: (object, property, value) ->

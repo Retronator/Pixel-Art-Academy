@@ -1,5 +1,6 @@
 AM = Artificial.Mirage
 
+# Helper functions for dealing with CSS.
 class AM.CSSHelper
   @objectToString: (styleObject) ->
     propertyStrings = for camelCaseKey, value of styleObject

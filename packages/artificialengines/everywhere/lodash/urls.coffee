@@ -1,3 +1,5 @@
+# Operations that deal with URL strings.
+
 _.mixin
   urlOrigin: (url) ->
     pathArray = url.split '/'

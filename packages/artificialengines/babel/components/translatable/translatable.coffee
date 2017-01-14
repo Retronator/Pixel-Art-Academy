@@ -1,6 +1,7 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
 
+# Component for translating the text in-place.
 class AB.Components.Translatable extends AM.Component
   @register 'Artificial.Babel.Components.Translatable'
 

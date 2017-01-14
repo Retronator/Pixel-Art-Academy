@@ -1,5 +1,6 @@
 AC = Artificial.Control
 
+# Static class with a reactive source of the current keyboard state.
 class AC.Keyboard
   @isInitialized = false
 
