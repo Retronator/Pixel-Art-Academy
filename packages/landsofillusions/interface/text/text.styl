@@ -128,16 +128,18 @@ hoverable()
             padding 0
 
             .option
+              position relative
               padding 0 7rem
 
               &.active
                 background atariGrey(7)
                 color atariGrey(0)
-                padding-left 0
 
                 &::before
                   content "> "
-                  margin-right 1rem
+                  position absolute
+                  left 0
+                  top 0
 
       .inventory
         position absolute

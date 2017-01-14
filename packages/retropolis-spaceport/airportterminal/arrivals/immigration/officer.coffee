@@ -34,8 +34,16 @@ class RS.AirportTerminal.Immigration.Officer extends LOI.Adventure.Thing
           officer: officer
           
         @setCallbacks
-          Enter: (complete) =>
-            LOI.adventure.goToLocation RS.AirportTerminal.BaggageClaim
+          OpenFacebook: (complete) =>
+            window.open 'https://www.facebook.com/retronator/', '_blank'
+            complete()
+
+          OpenRetronator: (complete) =>
+            window.open 'https://twitter.com/retronator', '_blank'
+            complete()
+
+          OpenPixelArtAcademy: (complete) =>
+            window.open 'https://twitter.com/PixelArtAcademy', '_blank'
             complete()
 
     @initialize()
@@ -56,4 +64,4 @@ class RS.AirportTerminal.Immigration.Officer extends LOI.Adventure.Thing
         idealForm: (translatedPhrase) =>
           "#{translatedPhrase} #{officer.avatar.shortName()}"
         action: =>
-          LOI.adventure.director.startScript @scripts[@constructor.Scripts.Dialog.id()], label: 'MainQuestion'
+          LOI.adventure.director.startScript @scripts[@constructor.Scripts.Dialog.id()]
