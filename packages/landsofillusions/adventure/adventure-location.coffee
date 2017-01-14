@@ -27,7 +27,7 @@ class LOI.Adventure extends LOI.Adventure
         unless currentLocationClass
           console.warn "Location class not found, moving back to start.", currentLocationId if currentLocationId
 
-          currentLocationClass = Retropolis.Spaceport.Locations.Terrace
+          currentLocationClass = Retropolis.Spaceport.AirportTerminal.Terrace
           currentLocationId = currentLocationClass.id()
           @currentLocationId currentLocationId
 

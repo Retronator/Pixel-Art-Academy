@@ -30,11 +30,7 @@ class LOI.StateObject
       field value
 
     # Allow correct handling of instanceof operator.
-    if Object.setPrototypeOf
-      Object.setPrototypeOf stateObject, @constructor.prototype
-
-    else
-      stateObject.__proto__ = @constructor.prototype
+    Object.setPrototypeOf stateObject, @constructor.prototype
 
     stateObject.field = (fieldName, options) ->
       fieldGetter fieldName, options

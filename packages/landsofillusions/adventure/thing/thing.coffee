@@ -170,5 +170,5 @@ class LOI.Adventure.Thing extends AM.Component
         LOI.adventure.goToItem @constructor.id()
         
   # Helper to access running scripts.
-  currentScripts: ->
-    LOI.adventure.director.currentScripts() or []
+  currentScriptNodes: ->
+    LOI.adventure.director.currentScriptNodes() or []

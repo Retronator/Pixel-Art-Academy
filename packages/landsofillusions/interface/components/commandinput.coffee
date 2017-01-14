@@ -36,8 +36,9 @@ class LOI.Interface.Components.CommandInput
     @_resumeIdle()
 
   onKeyPress: (event) ->
-    # Don't capture events when interface is not active.
-    return unless @options.interface.active()
+    # Don't capture events when interface is not active (some other dialog is blocking it) or when
+    # the interface itself is waiting for key presses (intro or dialog paused).
+    return unless @options.interface.active() and not @options.interface.waitingKeypress()
 
     # Ignore control characters.
     charCode = event.which

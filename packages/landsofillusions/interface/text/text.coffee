@@ -156,6 +156,9 @@ class LOI.Interface.Text extends LOI.Interface
 
     @inIntro false
 
+    # Mark location as visited after the intro of the location is done.
+    @location().stateObject 'visited', true
+
     Tracker.afterFlush =>
       @resize()
 

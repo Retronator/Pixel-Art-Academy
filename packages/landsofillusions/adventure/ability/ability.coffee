@@ -8,5 +8,5 @@ class LOI.Adventure.Ability
   destroy: ->
 
   # Pass-through helper to access running scripts.
-  currentScripts: ->
-    @thing()?.currentScripts() or []
+  currentScriptNodes: ->
+    @thing()?.currentScriptNodes() or []

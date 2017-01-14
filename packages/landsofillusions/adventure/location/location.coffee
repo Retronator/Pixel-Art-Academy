@@ -25,6 +25,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
 
     @thingInstances = new LOI.StateInstances
       state: => @things()
+      location: @
 
     # Subscribe to translations of exit locations' avatars so we get their names.
     @exitsTranslationSubscriptions = new ComputedField =>
@@ -44,7 +45,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
     conditions = _.flattenDeep [
       super
       @thingInstances.ready()
-      subscription.ready() for subscription in @exitsTranslationSubscriptions()
+      subscription.ready() for locationId, subscription of @exitsTranslationSubscriptions()
     ]
 
     ready = _.every conditions

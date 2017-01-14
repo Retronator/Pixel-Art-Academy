@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 class LOI.Director
   constructor: (@options) ->
-    @currentScripts = new ReactiveField []
+    @currentScriptNodes = new ReactiveField []
 
   onCreated: ->
     super
@@ -23,7 +23,7 @@ class LOI.Director
     @scriptTransition scriptNode, null
 
   scriptTransition: (currentScriptNode, nextScriptNode) ->
-    scriptNodes = @currentScripts()
+    scriptNodes = @currentScriptNodes()
 
     # Give out warnings if nodes don't exist or are already present.
     console.warn "Node to be transitioned from is not active.", currentScriptNode if currentScriptNode and not (currentScriptNode in scriptNodes)
@@ -36,4 +36,4 @@ class LOI.Director
     scriptNodes = _.union scriptNodes, [nextScriptNode] if nextScriptNode
 
     # Trigger update of running scripts.
-    @currentScripts scriptNodes
+    @currentScriptNodes scriptNodes

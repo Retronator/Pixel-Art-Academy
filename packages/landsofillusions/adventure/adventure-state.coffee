@@ -110,10 +110,7 @@ class LOI.Adventure extends LOI.Adventure
     @localGameState.state {}
 
   isGameStateEmpty: ->
-    # Save game is empty when it doesn't have any changes to game state things.
+    # Save game is empty when the game isn't marked as started.
     gameState = @gameState()
-    return true unless gameState?.things
 
-    things = _.keys gameState.things
-
-    not things.length
+    not gameState.gameStarted

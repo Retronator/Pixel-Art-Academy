@@ -77,6 +77,9 @@ class LOI.Adventure.Listener
 
     handle
 
+  ready: ->
+    @scriptsReady()
+
   onScriptsLoaded: -> # Override to start reactive logic. Use @scripts to get access to script objects.
 
   onCommand: (commandResponse) -> # Override to listen to commands.

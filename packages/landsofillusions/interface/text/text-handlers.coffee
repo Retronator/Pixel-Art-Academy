@@ -22,29 +22,45 @@ class LOI.Interface.Text extends LOI.Interface.Text
       return unless location.ready()
       computation.stop()
 
-      if location.constructor.visited()
-        # If we've been here before, just start with a fresh narrative.
+      # If we've been here before, just start with a fresh narrative. This is the persistent visited, not the
+      # per-session one, since we want to do the intro only when it's really the first time to see the location.
+      if location.stateObject 'visited'
         @narrative.clear()
 
       else
         # We haven't been here yet, so completely reset the interface into intro mode.
         @resetInterface()
 
-      @narrative.addText "What do you want to do?"
+      # We have cleared the interface so it can now start processing any scripts.
+      @interfaceReady true
 
-      # All the texts have been loaded from the DB at this point.
-      # Wait for all the reactivity to finish reflowing the page.
+      # Wait one frame so that any script nodes are processed. Then we can
+      # see if the interface is empty, or it is already paused on something.
       Meteor.setTimeout =>
-        @resize()
+        @narrative.addText "What do you want to do?", scroll: false unless @_pausedNode()
+  
+        # All the texts have been loaded from the DB at this point.
+        # Wait for all the reactivity to finish reflowing the page.
+        Meteor.setTimeout =>
+          @resize()
 
-        # Set scroll position to reveal the top or the bottom of the UI.
-        scrollPosition = if location.constructor.visited() then @maxScrollTop() else 0
-        @scroll position: scrollPosition
+          # Set scroll position to reveal the top or the bottom of the UI.
+          scrollPosition = if location.constructor.visited() then @maxScrollTop() else 0
+          @scroll position: scrollPosition
+        ,
+          0
       ,
         0
 
+
+
   onCommandInputEnter: ->
-    # Resume dialog on any key press.
+    # Stop intro on enter.
+    if @inIntro()
+      @stopIntro()
+      return
+
+    # After intro is stopped, enter resumes dialogs.
     if pausedLineNode = @_pausedNode()
       # Clear the paused node and handle it.
       @_pausedNode null
@@ -54,10 +70,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @commandInput.clear()
       return
 
-    if @inIntro()
-      @stopIntro()
-      return
-
+    # At this point, enter confirms the command that has been entered.
     @_executeCommand @hoveredCommand() or @commandInput.command().trim()
 
     # Scroll to bottom on enter.

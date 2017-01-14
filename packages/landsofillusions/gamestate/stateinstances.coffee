@@ -20,13 +20,22 @@ class LOI.StateInstances
       instancesUpdatedDependency.depend()
       instances[id]
 
-    stateInstances.ready = new ReactiveField false
+    stateInstancesInitialized = new ReactiveField false
+
+    stateInstances.ready = =>
+      conditions = [
+        stateInstancesInitialized()
+        instance.ready() for instanceId, instance of instances
+      ]
+
+      if LOI.debug
+        console.log "%cInstances ready?", 'background: LightSkyBlue'
+        console.log instanceId, instance.ready() for instanceId, instance of instances
+
+      _.every _.flattenDeep conditions
 
     # Allow correct handling of instanceof operator.
-    if Object.setPrototypeOf
-      Object.setPrototypeOf stateInstances, @constructor::
-    else
-      stateInstances.__proto__ = @constructor::
+    Object.setPrototypeOf stateInstances, @constructor::
 
     # Instantiate state property objects.
     stateUpdatedAutorun = Tracker.autorun (computation) ->
@@ -77,8 +86,8 @@ class LOI.StateInstances
       # Notify of the change if we had any new or removed instances.
       instancesUpdatedDependency.changed() if newKeys.length + retiredKeys.length
 
-      # We've completed at least one initialization so we can mark the state node as ready.
-      stateInstances.ready true
+      # We've completed at least one initialization.
+      stateInstancesInitialized true
 
     stateInstances.destroy = ->
       stateUpdatedAutorun.stop()

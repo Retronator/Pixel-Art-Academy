@@ -9,7 +9,7 @@ class LOI.Components.Menu.Items extends AM.Component
     MainMenu: 'MainMenu'
     Settings: 'Settings'
 
-  constructor: (@options) ->
+  constructor: (@options = {}) ->
     super
 
     @currentScreen = new ReactiveField @constructor.Screens.MainMenu
@@ -141,8 +141,8 @@ class LOI.Components.Menu.Items extends AM.Component
     LOI.adventure.logout()
 
     # Go to the terrace and scroll to top.
-    LOI.adventure.goToLocation Retropolis.Spaceport.Locations.Terrace
-    LOI.adventure.interface.scrollTo position: 0
+    LOI.adventure.goToLocation Retropolis.Spaceport.AirportTerminal.Terrace
+    LOI.adventure.interface.scroll position: 0
 
   onClickBack: (event) ->
     @currentScreen @constructor.Screens.MainMenu

@@ -7,6 +7,8 @@ class LOI.Interface extends AM.Component
   constructor: (@options) ->
     super
 
+    @interfaceReady = new ReactiveField false
+
   onCreated: ->
     super
 
@@ -18,6 +20,9 @@ class LOI.Interface extends AM.Component
 
       # We only want to react to change of location.
       Tracker.nonreactive =>
+        # Reset interface to not ready.
+        @interfaceReady false
+
         # Mark stored current (previous) location as visited when location changes (in this user session).
         unless location.constructor is @_previousLocationClass
           @_previousLocationClass?.visited true
@@ -25,11 +30,15 @@ class LOI.Interface extends AM.Component
           # Now store the new location as the
           @_previousLocationClass = location.constructor
 
+        # Do any initialization needed after location change.
         @onLocationChanged()
 
     # Listen to the script.
     @autorun (computation) =>
-      scriptNodes = LOI.adventure.director.currentScripts()
+      # We want to wait until the inferface is ready after the location change has been initiated.
+      return unless @interfaceReady()
+
+      scriptNodes = LOI.adventure.director.currentScriptNodes()
 
       console.log "Interface has detected new script nodes:", scriptNodes if LOI.debug
 
@@ -41,7 +50,7 @@ class LOI.Interface extends AM.Component
     LOI.adventure.currentLocation()
 
   onLocationChanged: (location) ->
-    # Override to handle location changes.
+    # Override to handle location changes. Call "@interfaceReady true" when ready to start handling nodes.
 
   _handleNode: (node) ->
     @_handleEmpty node if node instanceof Nodes.Script

@@ -40,7 +40,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     @hoveredCommand = new ReactiveField null
 
-    @inIntro = new ReactiveField true
+    @inIntro = new ReactiveField false
 
     # Node handling must get initialized before handlers, since the latter depends on it.
     @initializeNodeHandling()

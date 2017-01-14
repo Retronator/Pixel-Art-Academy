@@ -16,7 +16,7 @@ class LOI.Interface.Components.DialogSelection
       # Listen to current scripts until we find a choice node.
       location = LOI.adventure.currentLocation()
       if location
-        for scriptNode in LOI.adventure.director.currentScripts()
+        for scriptNode in LOI.adventure.director.currentScriptNodes()
           return scriptNode if scriptNode instanceof Nodes.Choice
 
       # No choice node was found, so also reset our selected node.

@@ -9,7 +9,7 @@ class Ability.Talking extends Ability
     @_autorun = Meteor.autorun (computation) =>
       return unless @thing()
 
-      for scriptNode in @currentScripts()
+      for scriptNode in @currentScriptNodes()
         continue unless scriptNode instanceof LOI.Adventure.Script.Nodes.DialogLine
 
         # See if the dialog line should be spoken by this actor.
