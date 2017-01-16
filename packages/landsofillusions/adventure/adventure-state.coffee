@@ -113,4 +113,4 @@ class LOI.Adventure extends LOI.Adventure
     # Save game is empty when the game isn't marked as started.
     gameState = @gameState()
 
-    not gameState.gameStarted
+    not gameState?.gameStarted
