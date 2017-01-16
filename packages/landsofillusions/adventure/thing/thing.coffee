@@ -88,7 +88,7 @@ class LOI.Adventure.Thing extends AM.Component
   constructor: (@options) ->
     super
 
-    @avatar = new LOI.Avatar @constructor
+    @avatar = @constructor.createAvatar()
     @abilities = new ReactiveField []
 
     # State object for this thing.
@@ -115,6 +115,9 @@ class LOI.Adventure.Thing extends AM.Component
 
   # Convenience methods for static properties.
   id: -> @constructor.id()
+
+  @createAvatar: ->
+    new LOI.Avatar @
 
   ready: ->
     conditions = _.flattenDeep [

@@ -21,33 +21,16 @@ class LOI.Interface.Text extends LOI.Interface
       # It's the first time we're visiting this location in this session so show the full description.
       @_formatOutput location.avatar.description()
       
-  exits: ->
-    exits = @location()?.exits()
-    return [] unless exits
+  exitAvatars: ->
+    exitAvatarsByLocationId = @location()?.exitAvatarsByLocationId()
+    return [] unless exitAvatarsByLocationId
 
     # Generate a unique set of IDs from all directions (some directions might lead to same location).
-    exitIds = (exitClass.id() for directionKey, exitClass of exits)
-    exitIds = _.uniq _.values exitIds
-    exitIds = _.without exitIds, null
+    exitAvatars = _.values exitAvatarsByLocationId
 
-    console.log "Displaying exits", exitIds if LOI.debug
+    console.log "Displaying exits", exitAvatars if LOI.debug
 
-    exitIds
-
-  exitName: ->
-    exitLocationId = @currentData()
-    location = @location()
-
-    # Find exit's location name.
-    subscriptionHandle = location.exitsTranslationSubscriptions()[exitLocationId]
-    return unless subscriptionHandle?.ready()
-
-    key = LOI.Avatar.translationKeys.shortName
-    translated = AB.translate subscriptionHandle, key
-
-    console.log "Displaying exit name for", key, "translated", translated if LOI.debug
-
-    translated.text
+    exitAvatars
 
   things: ->
     location = @location()

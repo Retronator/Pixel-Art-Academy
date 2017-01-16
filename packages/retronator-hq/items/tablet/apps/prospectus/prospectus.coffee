@@ -98,7 +98,7 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
       'click .close-payment': @resetItemId
 
   onClickSocialMediaIcon: (event) ->
-    $icon = $(event.target)
+    $icon = $(event.currentTarget)
 
     socialNetwork = null
 

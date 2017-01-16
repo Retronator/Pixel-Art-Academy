@@ -17,7 +17,8 @@ phrases =
     Down: ['down']
 
   Verbs:
-    Go: ['go to', 'travel']
+    GoToLocationName: ['go to', 'travel to']
+    GoToDirection: ['go', 'towards', 'move', 'travel']
     Talk: ['talk to', 'speak with', 'chat with']
     Look: ['look at', 'examine']
     Use: ['use']
@@ -27,6 +28,8 @@ phrases =
     Get: ['get', 'take', 'pick up']
     Sit: ['sit down']
     Stand: ['stand up']
+
+  IgnorePrepositions: ['to', 'with', 'is']
 
   Questions:
     WhichPlace: ['where']

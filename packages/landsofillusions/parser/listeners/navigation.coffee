@@ -14,16 +14,19 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
     # Register possible direction phrases as phrase actions.
     presentDirectionKeys = []
 
-    for directionKey, location of exits when location
+    for directionKey, locationClass of exits when locationClass
       presentDirectionKeys.push directionKey
 
-      do (directionKey, location) =>
+      do (directionKey, locationClass) =>
+        action = => LOI.adventure.goToLocation locationClass.id()
+
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
+          action: action
+
         commandResponse.onExactPhrase
-          phraseKey: directionKey
-          idealForm: =>
-            commandResponse.options.parser.vocabulary.getPhrases(directionKey)[0]
-          action: =>
-            LOI.adventure.goToLocation location.id()
+          form: [directionKey]
+          action: action
 
     # Register the rest of the directions to give negative feedback.
     allDirectionKeys = _.values Vocabulary.Keys.Directions
@@ -34,47 +37,31 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
       do (directionKey) =>
         directionTranslation = LOI.adventure.parser.vocabulary.getPhrases(directionKey)[0]
 
+        # Prepare the feedback action.
+        action = =>
+          line = "You cannot go #{directionTranslation}."
+
+          # Special line if you're trying to go inside, but can't, and the way to get here was to go inside.
+          if directionKey is Vocabulary.Keys.Directions.In and Vocabulary.Keys.Directions.Out in presentDirectionKeys
+            line = "You are already inside."
+
+          # Same for outside.
+          if directionKey is Vocabulary.Keys.Directions.Out and Vocabulary.Keys.Directions.In in presentDirectionKeys
+            line = "You are already outside."
+
+          LOI.adventure.director.startNode new Nodes.InterfaceLine line: line
+
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
+          action: action
+
         commandResponse.onExactPhrase
-          phraseKey: directionKey
-          idealForm: => directionTranslation
-          action: =>
-            line = "You cannot go #{directionTranslation}."
+          form: [directionKey]
+          action: action
 
-            # Special line if you're trying to go inside, but can't, and the way to get here was to go inside.
-            if directionKey is Vocabulary.Keys.Directions.In and Vocabulary.Keys.Directions.Out in presentDirectionKeys
-              line = "You are already inside."
-
-            # Same for outside.
-            if directionKey is Vocabulary.Keys.Directions.Out and Vocabulary.Keys.Directions.In in presentDirectionKeys
-              line = "You are already outside."
-
-            LOI.adventure.director.startNode new Nodes.InterfaceLine line: line
-
-    return
-
-    # TODO
-
-    # No direction was named. See if we can go to location by name.
-    goPhrases = commandResponse.options.parser.vocabulary.getPhrases Vocabulary.Keys.Verbs.Go
-    hasGoPhrases = command.has goPhrases
-
-    console.log "We are searching for 'go' phrases, which for the current language are", goPhrases, "and we have the command", command if LOI.debug
-
-    # Did they name any of the locations?
-    for directionKey, locationId of exits when locationId
-      translationHandle = @location.exitsTranslationSubscriptions()[locationId]
-
-      console.log "For direction", directionKey, "that points to location with ID", locationId, "we have translation handle", translationHandle, "which is ready?", translationHandle.ready() if LOI.debug
-
-      shortName = AB.translate(translationHandle, LOI.Avatar.translationKeys.shortName).text
-
-      console.log "Short name for this location is", shortName if LOI.debug
-
-      if command.has shortName
-        # We found the name of this location! It can either be named without anything else, or with the go phrases.
-        justLocation = command.is shortName
-
-        if hasGoPhrases or justLocation
-          # Let's go there.
-          LOI.adventure.goToLocation locationId
-          return true
+    # Next up wire going to the location by name.
+    for locationId, avatar of location.exitAvatarsByLocationId()
+      do (avatar) =>
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.GoToLocationName, avatar]
+          action: => LOI.adventure.goToLocation locationId

@@ -3,9 +3,10 @@ AB = Artificial.Babel
 class AB.Helpers
   # Generates an array of phrases made out of 1 to maxWordsInPhrase sequential words from the text.
   # - text: text from which to generate phrases
+  # - words: alternative to text, provide the array of words directly.
   # - maxWordsInPhrase: how many words can generated phrases have at most
   @generatePhrases: (options) ->
-    words = _.words options.text
+    words = options.words or _.words(options.text)
 
     # We generate all possible multiple-word phrases.
     phrases = []

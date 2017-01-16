@@ -11,8 +11,8 @@ class LOI.Parser extends LOI.Parser
     likelyActions = _.reverse _.sortBy likelyActions, 'likelihood'
 
     if LOI.debug
-      console.log "We're not sure what the user wanted ... possibilities:"
-      console.log likelyAction.translatedPhrase, likelyAction.likelihood for likelyAction in likelyActions
+      console.log "We're not sure what the user wanted ... top 10 possibilities:"
+      console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood for likelyAction in likelyActions[0...10]
 
     # If the most likely action is below 0.5, we tell the user we don't understand.
     bestLikelihood = likelyActions[0].likelihood
@@ -22,8 +22,9 @@ class LOI.Parser extends LOI.Parser
       return
 
     # If we're above, there might be more possibilities that are
-    # close together. We find all in the range of 0.2 from the best one.
-    likelyActions = _.filter likelyActions, (likelyAction) => likelyAction.likelihood > bestLikelihood - 0.2
+    # close together. We find all in the range of 0.2 from the best one, but still not below 0.5
+    likelyActions = _.filter likelyActions, (likelyAction) =>
+      (likelyAction.likelihood > bestLikelihood - 0.2) and (likelyAction.likelihood >= 0.5)
 
     # Since each alias and translation variant creates its own likely action, multiple can be for the
     # same phrase action. In that case, only include the most likely one in the consideration.

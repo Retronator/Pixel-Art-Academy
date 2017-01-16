@@ -16,7 +16,8 @@ LOI.Parser.Vocabulary.Keys =
     Down: ''
 
   Verbs:
-    Go: ''
+    GoToLocationName: ''
+    GoToDirection: ''
     Talk: ''
     Look: ''
     Use: ''
@@ -26,6 +27,8 @@ LOI.Parser.Vocabulary.Keys =
     Get: ''
     Sit: ''
     Stand: ''
+    
+  IgnorePrepositions: ''
 
   Questions:
     WhichPlace: ''

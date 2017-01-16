@@ -23,8 +23,8 @@
               <p class="introduction">{{{introduction}}}</p>
               {{#unless inIntro}}
                 <p class="exits">{{> t10e "Possible exits are:"}}
-                  {{#each exits}}
-                    <span class="exit"><span class="name">{{exitName}}</span></span>
+                  {{#each exitAvatars}}
+                    <span class="exit"><span class="name">{{shortName}}</span></span>
                   {{else}}
                     <span class="exit">{{> t10e "None"}}</span>
                   {{/each}}

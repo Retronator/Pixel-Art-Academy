@@ -28,24 +28,30 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
       location: @
 
     # Subscribe to translations of exit locations' avatars so we get their names.
-    @exitsTranslationSubscriptions = new ComputedField =>
-      subscriptions = {}
-      for directionKey, locationClass of @exits()
-        locationId = _.thingId locationClass
-        subscriptions[locationId] = AB.subscribeNamespace "#{locationId}.Avatar"
+    @exitAvatarsByLocationId = new ComputedField =>
+      # Generate a unique set of exit classes from all directions (some directions might lead to
+      # same location) so we don't have multiple avatar objects for the same location.
+      exitClasses = _.uniq _.values @exits()
+      exitClasses = _.without exitClasses, null
 
-      subscriptions
+      avatarsById = {}
+      avatarsById[exitClass.id()] = exitClass.createAvatar() for exitClass in exitClasses
+      
+      avatarsById
 
   destroy: ->
     super
 
-    @exitsTranslationSubscriptions.stop()
+    exitAvatarsByLocationId = @exitAvatarsByLocationId()
+    @exitAvatarsByLocationId.stop()
+
+    avatar.destroy() for locationId, avatar of exitAvatarsByLocationId
 
   ready: ->
     conditions = _.flattenDeep [
       super
       @thingInstances.ready()
-      subscription.ready() for locationId, subscription of @exitsTranslationSubscriptions()
+      avatar.ready() for locationId, avatar of @exitAvatarsByLocationId()
     ]
 
     ready = _.every conditions

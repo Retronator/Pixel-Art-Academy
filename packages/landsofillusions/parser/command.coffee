@@ -14,10 +14,11 @@ class LOI.Parser.Command
 
     console.log "Command has possible phrases", @phrases if LOI.debug
 
+    @ignorePrepositions = LOI.adventure.parser.vocabulary.getPhrases LOI.Parser.Vocabulary.Keys.IgnorePrepositions
+
   # Returns the likelihood of this command including at least one of the given phrases.
   has: (phrases) ->
-    # If a single phrase is sent in, wrap it into an array.
-    phrases = [phrases] if _.isString phrases
+    phrases = @_preparePhrases phrases
 
     likelihood = 0
 
@@ -33,7 +34,7 @@ class LOI.Parser.Command
   # Do we have an exact match with the phrase?
   is: (phrases) ->
     # If a single phrase is sent in, wrap it into an array.
-    phrases = [phrases] if _.isString phrases
+    phrases = @_preparePhrases phrases
 
     likelihood = 0
 
@@ -51,3 +52,15 @@ class LOI.Parser.Command
   _normalize: (string) ->
     # Remove whitespace, make lowercase and normalize (deburr) to basic latin letter.
     _.toLower _.deburr _.trim string
+
+  _preparePhrases: (phrases) ->
+    # If a single phrase is sent in, wrap it into an array.
+    phrases = [phrases] if _.isString phrases
+
+    # Remove all prepositions.
+    for phrase, i in phrases
+      phraseWords = _.words phrase
+      phraseWordsWithoutPrepositions = _.difference phraseWords, @ignorePrepositions
+      phrases[i] = phraseWordsWithoutPrepositions.join ' '
+
+    phrases

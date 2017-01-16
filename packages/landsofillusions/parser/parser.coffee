@@ -58,20 +58,6 @@ class LOI.Parser
     # Pull all actions into one array.
     likelyActions = _.flatten likelyActions
 
-    # Filter only certain action that can definitely be executed.
-    certainActions = _.filter likelyActions, (likelyAction) =>
-      likelyAction.likelihood is 1
-    
-    if certainActions.length is 1
-      # Great! We have exactly one certain action. Simply execute it.
-      certainActions[0].phraseAction.action()
-      return
-      
-    else if certainActions.length > 1
-      # We have multiple possibilities what to do. Let the user interface ask the user what to do.
-      console.log "User should choose between", certainActions
-      return
-
     # We only have uncertain possibilities.
     @chooseLikelyAction likelyActions
     
@@ -93,5 +79,12 @@ class LOI.Parser
   _createCommandNodeSequence: (likelyAction) ->
     new Nodes.CommandLine
       replaceLastCommand: true
-      line: _.capitalize likelyAction.phraseAction.idealForm likelyAction.translatedPhrase
+      line: _.capitalize @_createIdealForm likelyAction
       next: @_createCallbackNode likelyAction.phraseAction
+
+  _createIdealForm: (likelyAction) ->
+    # See if phrase action provides a method to generate the ideal form.
+    return likelyAction.phraseAction.idealForm likelyAction if likelyAction.phraseAction.idealForm?
+
+    # Otherwise we use the default which is just all form parts joined in order.
+    likelyAction.translatedForm.join ' '

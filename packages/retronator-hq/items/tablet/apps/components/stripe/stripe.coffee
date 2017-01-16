@@ -117,7 +117,7 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
     # Generate analytics events.
     ga 'send', 'event', 'Store Transaction', 'Complete', 'Total', paymentAmount
 
-    for cartItem in shoppingCart.cartItems
+    for cartItem in shoppingCart.items
       ga 'send', 'event', 'Store Transaction', 'Item Purchased', cartItem.item.catalogKey, cartItem.item.price
 
   _confirmationPurchaseHandler: ->

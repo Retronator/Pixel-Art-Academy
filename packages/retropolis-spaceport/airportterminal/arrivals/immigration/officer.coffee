@@ -49,19 +49,13 @@ class RS.AirportTerminal.Immigration.Officer extends LOI.Adventure.Thing
     @initialize()
 
     onScriptsLoaded: ->
-      officer = @options.parent
-
       # Auto-start conversation.
       LOI.adventure.director.startScript @scripts[@constructor.Scripts.Dialog.id()]
 
     onCommand: (commandResponse) ->
       officer = @options.parent
-      commandResponse.requireAvatar officer.avatar
 
       commandResponse.onPhrase
-        phraseKey: Vocabulary.Keys.Verbs.Talk
-        aliases: [Vocabulary.Keys.Verbs.Use]
-        idealForm: (translatedPhrase) =>
-          "#{translatedPhrase} #{officer.avatar.shortName()}"
+        form: [[Vocabulary.Keys.Verbs.Talk, Vocabulary.Keys.Verbs.Use], officer.avatar]
         action: =>
           LOI.adventure.director.startScript @scripts[@constructor.Scripts.Dialog.id()]
