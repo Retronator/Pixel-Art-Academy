@@ -3,6 +3,9 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.PixelDailies.ThemesCalendarProvider extends PAA.PixelBoy.Apps.Calendar.Provider
+  @calendarComponentClass: ->
+    PAA.PixelDailies.ThemeCalendarComponent
+
   constructor: ->
     super
 
@@ -23,11 +26,6 @@ class PAA.PixelDailies.ThemesCalendarProvider extends PAA.PixelBoy.Apps.Calendar
 
     query = dateRange.addToMongoQuery query, 'time'
 
-    themes = PAA.PixelDailies.Theme.documents.find query,
+    PAA.PixelDailies.Theme.documents.find query,
       fields:
         tweetData: 0
-
-    # Return the array of components (+ data contexts) that will render the events.
-    for theme in themes.fetch()
-      component: new PAA.PixelDailies.ThemeCalendarComponent()
-      dataContext: theme

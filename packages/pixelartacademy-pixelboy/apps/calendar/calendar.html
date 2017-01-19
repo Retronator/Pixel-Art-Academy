@@ -17,9 +17,7 @@
             {{#each providers}}
               {{#each calendarEvents}}
                 <li class="event">
-                  {{#with dataContext}}
-                    {{> renderEvent}}
-                  {{/with}}
+                  {{> renderCalendarComponent this}}
                 </li>
               {{/each}}
             {{/each}}

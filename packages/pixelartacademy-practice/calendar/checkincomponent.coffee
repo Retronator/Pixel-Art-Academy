@@ -6,6 +6,12 @@ class PAA.Practice.CheckInCalendarComponent extends AM.Component
   template: ->
     'PixelArtAcademy.Practice.CheckInCalendarComponent'
 
+  checkIn: ->
+    # Fetch full check-in data (we have a bare object with just the id).
+    checkIn = @currentData()
+
+    PAA.Practice.CheckIn.documents.findOne checkIn._id
+
   showEntry: ->
     checkIn = @data()
 

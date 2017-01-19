@@ -68,6 +68,13 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
 
     event.component.renderComponent @currentComponent()
 
+  renderCalendarComponent: ->
+    calendarProvider = @parentDataWith (data) => data instanceof PAA.PixelBoy.Apps.Calendar.Provider
+    calendarComponentClass = calendarProvider.constructor.calendarComponentClass()
+
+    calendarComponent = new calendarComponentClass
+    calendarComponent.renderComponent @currentComponent()
+
   # Events
 
   events: ->
