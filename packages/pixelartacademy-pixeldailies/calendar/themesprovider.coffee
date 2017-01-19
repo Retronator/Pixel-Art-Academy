@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelDailies.ThemesCalendarProvider extends LOI.PixelBoy.Apps.Calendar.Provider
+class PAA.PixelDailies.ThemesCalendarProvider extends PAA.PixelBoy.Apps.Calendar.Provider
   constructor: ->
     super
 

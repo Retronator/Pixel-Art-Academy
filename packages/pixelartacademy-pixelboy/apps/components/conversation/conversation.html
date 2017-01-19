@@ -1,10 +1,10 @@
-<template name="LandsOfIllusions.PixelBoy.Apps.Components.Conversation">
+<template name="PixelArtAcademy.PixelBoy.Apps.Components.Conversation">
   <div class="conversation">
     <ul class="lines">
       {{#each lines}}
         <li class="line">
           <div class="author">{{character.displayName}}:</div>
-          <div class="text" {{style textStyle}}>{{> LandsOfIllusions.PixelBoy.Apps.Components.FormattedText args text linkColor}}</div>
+          <div class="text" {{style textStyle}}>{{> PixelArtAcademy.PixelBoy.Apps.Components.FormattedText args text linkColor}}</div>
         </li>
       {{/each}}
     </ul>

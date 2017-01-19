@@ -219,6 +219,10 @@ Package.onUse(function(api) {
   api.addFiles('components/account/services/services.html');
   api.addFiles('components/account/services/services.styl');
 
+  api.addFiles('components/account/characters/characters.coffee');
+  api.addFiles('components/account/characters/characters.html');
+  api.addFiles('components/account/characters/characters.styl');
+
   api.addFiles('components/dialogs/accounts.styl');
 
   // Typography

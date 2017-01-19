@@ -1,5 +1,5 @@
-<template name="LandsOfIllusions.PixelBoy.Apps.Journal">
-  <div class="app apps-journal {{disableScrollingClass}}">
+<template name="PixelArtAcademy.PixelBoy.Apps.Journal">
+  <div class="app pixelartacademy-pixelboy-apps-journal {{disableScrollingClass}}">
     <h1>Practice Journal</h1>
     <p>Complete your daily check-in and show what you've created today.</p>
     <div class="actions">
@@ -17,11 +17,11 @@
             {{#if artwork}}
               <img src="{{artwork.image.url}}"/>
             {{/if}}
-            {{#if $and image post}}
-              <a href="{{post.url}}" target="_blank"><img src="{{image.url}}"/></a>
+            {{#if $and this.image post}}
+              <a href="{{post.url}}" target="_blank"><img src="{{this.image.url}}"/></a>
             {{else}}
-              {{#if image}}
-                <img src="{{image.url}}"/>
+              {{#if this.image}}
+                <img src="{{this.image.url}}"/>
               {{/if}}
               {{#if post}}
                 <a href="{{post.url}}" target="_blank">{{post.url}}</a>
@@ -31,12 +31,12 @@
               <button class="delete">{{> t10e "Delete check-in"}}</button>
             </div>
           </figure>
-          {{> LandsOfIllusions.PixelBoy.Apps.Components.CheckInConversations}}
+          {{> PixelArtAcademy.PixelBoy.Apps.Components.CheckInConversations}}
         </li>
       {{/each}}
     </ol>
     {{#if showCheckInForm}}
-      {{> LandsOfIllusions.PixelBoy.Apps.Journal.CheckIn}}
+      {{> PixelArtAcademy.PixelBoy.Apps.Journal.CheckIn}}
     {{/if}}
   </div>
 </template>

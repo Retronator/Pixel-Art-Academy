@@ -17,6 +17,7 @@ class LOI.Components.Account extends AM.Component
     @pages = [
       new @constructor.General
       new @constructor.Services
+      new @constructor.Characters
     ]
 
     page.pageNumber = index + 1 for page, index in @pages

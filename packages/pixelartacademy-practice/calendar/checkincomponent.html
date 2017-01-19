@@ -8,11 +8,11 @@
             {{#if artwork}}
               <img src="{{artwork.image.url}}"/>
             {{/if}}
-            {{#if $and image post}}
-              <a href="{{post.url}}" target="_blank"><img src="{{image.url}}"/></a>
+            {{#if $and this.image post}}
+              <a href="{{post.url}}" target="_blank"><img src="{{this.image.url}}"/></a>
             {{else}}
-              {{#if image}}
-                <img src="{{image.url}}"/>
+              {{#if this.image}}
+                <img src="{{this.image.url}}"/>
               {{/if}}
               {{#if post}}
                 <a href="{{post.url}}" target="_blank">{{post.url}}</a>

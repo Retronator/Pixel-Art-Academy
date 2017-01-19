@@ -1,0 +1,111 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy
+  color atariGrey(5)
+  adventure()
+
+  *
+    box-sizing border-box
+
+  // Pixel art image scaling
+  img
+  canvas
+    pixel-image-rendering()
+
+  h1
+    kyrou-9()
+    color atariGrey(7)
+    font-weight normal
+
+  h2
+    kyrou-7()
+    color atariGrey(7)
+    font-weight normal
+
+  h3
+    kyrou-5()
+    color atariGrey(7)
+    font-weight normal
+
+  ul
+    list-style square
+
+  ul, ol
+    li
+      margin-bottom 1em
+
+  strong
+    font-weight normal
+    color atariGrey(7)
+
+  a
+    color atariGrey(7)
+    cursor pointer
+
+    &:hover
+      background-color atariGrey(7)
+      color atariGrey(0)
+
+  hr
+    margin 2em 0
+    height 1rem
+    border none
+    background-color atariGrey(3)
+
+  button
+    position relative
+    top -2rem
+    margin-top 2rem
+    background atariGrey(2)
+    uni()
+    color black
+    border none
+    border-bottom 4px solid atariGrey(1)
+    cursor pointer
+
+    &:focus
+      background: atariGrey(3)
+      outline none
+
+    &:hover
+      background: atariGrey(3)
+
+    &:active
+      border-bottom none
+      margin-bottom 2rem
+      top 0
+
+    &:disabled
+      color atariGrey(3)
+      cursor default
+
+      &:hover
+        background atariGrey(3)
+
+    &.link-button
+      color atariGrey(7)
+      cursor pointer
+      background none
+      padding 0
+      border none
+      top 0
+
+      &:hover
+        background-color atariGrey(7)
+        color atariGrey(0)
+
+      &:active
+        margin-bottom 0
+
+  input
+  textarea
+    uni()
+    background atariGrey(2)
+    border 2px solid atariGrey(3)
+    padding 0 4px
+    color atariGrey(6)
+    input-placeholder atariGrey(3)
+
+    &:focus
+      outline none
+      border-color atariGrey(4)

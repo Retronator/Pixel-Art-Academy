@@ -71,6 +71,37 @@ class AM.Component extends CommonComponent
     @componentChildrenWith (child) ->
       child instanceof constructor
 
+  # Code based on childComponentsWith.
+  parentDataWith: (propertyOrMatcherOrFunction) ->
+    if _.isString propertyOrMatcherOrFunction
+      property = propertyOrMatcherOrFunction
+      propertyOrMatcherOrFunction = (data) =>
+        property of data
+
+    else if not _.isFunction propertyOrMatcherOrFunction
+      assert _.isObject propertyOrMatcherOrFunction
+      matcher = propertyOrMatcherOrFunction
+      propertyOrMatcherOrFunction = (data) =>
+        for property, value of matcher
+          return false unless property of data
+
+          if _.isFunction parent[property]
+            return false unless parent[property]() is value
+
+          else
+            return false unless parent[property] is value
+
+        true
+
+    level = 0
+
+    loop
+      data = Template.parentData level
+      return null unless data
+      return data if propertyOrMatcherOrFunction.call data, data
+
+      level++
+
   # Helpers
 
   $equals: (args...) ->

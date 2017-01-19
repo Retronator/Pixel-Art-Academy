@@ -1,5 +1,7 @@
+AT = Artificial.Telepathy
+
 # Add route to Flow Router using Blaze Layout.
-Artificial.Telepathy.addRoute = (name, url, layout, page) ->
+AT.addRoute = (name, url, layout, page) ->
   FlowRouter.route url,
     name: name
     action: (params, queryParams) ->

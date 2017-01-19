@@ -1,8 +1,9 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 
 # Abstract class for providing a set of items to display in the calendar app.
-class LOI.PixelBoy.Apps.Calendar.Provider
+class PAA.PixelBoy.Apps.Calendar.Provider
   constructor: ->
     @_monthSubscriptions = {}
 

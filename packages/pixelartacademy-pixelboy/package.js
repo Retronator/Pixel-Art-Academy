@@ -11,9 +11,10 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
 
-  api.export('LandsOfIllusions');
+  api.export('PixelArtAcademy');
 
   api.addFiles('pixelboy.coffee');
   api.addFiles('pixelboy.html');

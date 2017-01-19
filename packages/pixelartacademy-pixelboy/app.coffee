@@ -1,7 +1,8 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 
-class LOI.PixelBoy.App extends AM.Component
+class PAA.PixelBoy.App extends AM.Component
 
   displayName: ->
     throw new Meteor.Error 'unimplemented', "You must specify app's display name."
