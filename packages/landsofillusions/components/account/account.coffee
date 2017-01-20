@@ -14,13 +14,14 @@ class LOI.Components.Account extends AM.Component
 
     @currentPageNumber = new ReactiveField 0
 
+    @contentsPage = new @constructor.General
+
     @pages = [
-      new @constructor.General
       new @constructor.Services
       new @constructor.Characters
     ]
 
-    page.pageNumber = index + 1 for page, index in @pages
+    page.pageNumber = index + 2 for page, index in @pages
 
     @emptyPages = for index in [@pages.length..5]
       pageNumber: index
@@ -75,11 +76,30 @@ class LOI.Components.Account extends AM.Component
 
     "/landsofillusions/components/account/page-#{page.pageNumber}.png"
 
+  currentTabClass: ->
+    page = @currentData()
+
+    'current' if @currentPageNumber() is page.pageNumber
+
+  tabName: ->
+    page = @currentData()
+
+    page.constructor.url()
+
+  previousPage: ->
+    @currentPageNumber Math.max 1, @currentPageNumber() - 1
+
+  nextPage: ->
+    @currentPageNumber Math.min @pages.length, @currentPageNumber() + 1
+
   onActivate: (finishedActivatingCallback) ->
     Meteor.setTimeout =>
+      # Flip to first page.
+      @currentPageNumber 1
+
       finishedActivatingCallback()
     ,
-      500
+      1000
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -89,28 +109,12 @@ class LOI.Components.Account extends AM.Component
 
   backButtonCallback: ->
     =>
-      # Flip back to cover if needed.
-      if @currentPageNumber()
-        @currentPageNumber 0
-        Meteor.setTimeout =>
-          @activatable.deactivate()
-        ,
-          500
-
-      else
+      # Flip back to cover.
+      @currentPageNumber 0
+      Meteor.setTimeout =>
         @activatable.deactivate()
+      ,
+        500
 
   events: ->
-    super.concat
-      'click .cover-button': @onClickCoverButton
-      'click .previous': @onClickPrevious
-      'click .next': @onClickNext
-
-  onClickCoverButton: (event) ->
-    @currentPageNumber 1
-
-  onClickPrevious: (event) ->
-    @currentPageNumber Math.max 1, @currentPageNumber() - 1
-
-  onClickNext: (event) ->
-    @currentPageNumber Math.min @pages.length, @currentPageNumber() + 1
+    super

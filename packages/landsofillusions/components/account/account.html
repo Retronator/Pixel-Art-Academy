@@ -4,18 +4,11 @@
       {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
       {{#LandsOfIllusions.Components.Overlay}}
         <div class="account-file {{onCoverClass}}">
-          {{#if $is currentPageNumber 0}}
-            <button class="cover-button"></button>
-          {{/if}}
           <img class="account-file-layer cover-closed {{coverClosedVisibleClass}}" src="{{image '/landsofillusions/components/account/cover-closed.png'}}" />
-          {{#if $gt currentPageNumber 0}}
-            {{#if $gt currentPageNumber 1}}
-              <button class="navigation-button previous"></button>
-            {{/if}}
-            {{#if $lt currentPageNumber pages.length}}
-              <button class="navigation-button next"></button>
-            {{/if}}
-          {{/if}}
+          <div class="page-content">
+            {{> Render contentsPage}}
+          </div>
+          <img class="account-file-layer page-1 visible" src="{{image '/landsofillusions/components/account/page-1.png'}}" />
           {{#each pages}}
             {{#if $is currentPageNumber pageNumber}}
               <div class="page-content">

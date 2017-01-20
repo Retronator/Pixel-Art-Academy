@@ -11,8 +11,8 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
+  api.use('retronator:landsofillusions');
 
   api.export('PixelArtAcademy');
 
