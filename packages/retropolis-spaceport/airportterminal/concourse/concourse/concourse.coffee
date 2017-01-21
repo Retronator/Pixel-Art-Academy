@@ -25,9 +25,14 @@ class RS.AirportTerminal.Concourse extends LOI.Adventure.Location
   constructor: ->
     super
     
-    # When the user reaches the concorse, the game is marked as started.
-    LOI.adventure.gameState().gameStarted = true
-    LOI.adventure.gameState.updated()
+    # When the user reaches the concourse, the game is marked as started.
+    # TODO: Move this into S01E01 first chapter trigger.
+    Tracker.autorun (computation) =>
+      return unless gameState = LOI.adventure.gameState()
+      computation.stop()
+
+      gameState.gameStarted = true
+      LOI.adventure.gameState.updated()
 
   things: -> [
   ]
