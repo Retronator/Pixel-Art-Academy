@@ -12,7 +12,14 @@ Install [Meteor](https://www.meteor.com):
 curl https://install.meteor.com/ | sh
 ```
 
-Checkout and run with:
+Checkout and update:
+
+```
+meteor update
+meteor update --all-packages
+```
+
+Run with:
 
 ```
 meteor
