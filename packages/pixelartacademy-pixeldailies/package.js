@@ -10,6 +10,11 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  twit: '2.2.5',
+  'twitter-text': '1.14.3'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
 	api.use('chfritz:easycron');
