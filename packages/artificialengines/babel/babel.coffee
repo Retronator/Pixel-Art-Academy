@@ -79,6 +79,19 @@ class Artificial.Babel
     else
       Meteor.call 'Artificial.Babel.translationInsert', namespace, key, defaultText
 
+  @translate: (translationOrHandle, key) ->
+    if translationOrHandle instanceof @SubscriptionHandle
+      translation = @translation translationOrHandle, key
+
+    else
+      translation = translationOrHandle
+
+    return translation.translate @userLanguagePreference() if translation
+
+    # If we don't have a translation for this yet, just return the key.
+    text: key
+    language: null
+
   # Components
 
   # Subscribe to a namespace using the target component.
@@ -123,16 +136,3 @@ class Artificial.Babel
 
   @translateForComponent: (component, key) ->
     @translate @translationForComponent component, key
-
-  @translate: (translationOrHandle, key) ->
-    if translationOrHandle instanceof @SubscriptionHandle
-      translation = @translation translationOrHandle, key
-
-    else
-      translation = translationOrHandle
-
-    return translation.translate @userLanguagePreference() if translation
-
-    # If we don't have a translation for this yet, just return the key.
-    text: key
-    language: null

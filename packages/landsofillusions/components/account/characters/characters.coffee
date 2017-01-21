@@ -5,9 +5,12 @@ LOI = LandsOfIllusions
 HQ = Retronator.HQ
 RA = Retronator.Accounts
 
-class LOI.Components.Account.Characters extends AM.Component
+class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   @register 'LandsOfIllusions.Components.Account.Characters'
   @url: -> 'characters'
+  @displayName: -> 'Characters'
+    
+  @initialize()
 
   onCreated: ->
     super
@@ -20,6 +23,13 @@ class LOI.Components.Account.Characters extends AM.Component
         characters: 1
 
     user?.characters
+
+  emptyLines: ->
+    charactersCount = @characters()?.length or 0
+    return if charactersCount >= 5
+
+    # Return an array with enough elements to pad the characters list to 5 rows.
+    '' for i in [charactersCount...5]
 
   dialogPreviewStyle: ->
     # Set the color to character's color.

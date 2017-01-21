@@ -4,29 +4,33 @@ LOI = LandsOfIllusions
 
 class LOI.Components.Account extends AM.Component
   @register 'LandsOfIllusions.Components.Account'
+  @url: -> 'account'
 
-  @version: -> '0.0.3'
+  @version: -> '0.0.4'
+
+  mixins: -> [@activatable]
 
   constructor: (@options) ->
     super
 
     @activatable = new LOI.Components.Mixins.Activatable()
 
+    @lastTurnedPageNumber = 1
     @currentPageNumber = new ReactiveField 0
 
-    @contentsPage = new @constructor.General
-
     @pages = [
+      new @constructor.Contents
+      new @constructor.General
       new @constructor.Services
       new @constructor.Characters
     ]
 
-    page.pageNumber = index + 2 for page, index in @pages
+    page.pageNumber = index + 1 for page, index in @pages
 
-    @emptyPages = for index in [@pages.length..5]
+    @emptyPages = for index in [@pages.length + 1..5]
       pageNumber: index
 
-    LOI.Adventure.registerDirectRoute 'account/*', =>
+    LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>
       # Show the dialog if we need to.
       @show() if @activatable.deactivated()
 
@@ -36,7 +40,41 @@ class LOI.Components.Account extends AM.Component
         if page.constructor.url() is pageUrl
           @currentPageNumber index + 1
 
-  mixins: -> [@activatable]
+  onRendered: ->
+    super
+
+    # Animate page turning.
+    @autorun (computation) =>
+      return unless @activatable.activated()
+
+      # We need to add turned pages if new current page number is bigger than the last turned one.
+      currentPageNumber = @currentPageNumber()
+      addingTurnedPages = currentPageNumber > @lastTurnedPageNumber
+
+      if addingTurnedPages
+        firstPageToTurn = @lastTurnedPageNumber
+        lastPageToTurn = currentPageNumber - 1
+
+      else
+        firstPageToTurn = @lastTurnedPageNumber - 1
+        lastPageToTurn = currentPageNumber
+
+      for pageNumber in [firstPageToTurn..lastPageToTurn]
+        do (pageNumber) =>
+          $page = @$(".page-#{pageNumber}")
+
+          distanceToFirstPage = Math.abs pageNumber - firstPageToTurn
+
+          Meteor.setTimeout =>
+            if addingTurnedPages
+              $page.addClass('turned')
+
+            else
+              $page.removeClass('turned')
+          ,
+            distanceToFirstPage * 200
+
+      @lastTurnedPageNumber = currentPageNumber
 
   show: ->
     LOI.adventure.menu.showModalDialog dialog: @
@@ -94,12 +132,12 @@ class LOI.Components.Account extends AM.Component
 
   onActivate: (finishedActivatingCallback) ->
     Meteor.setTimeout =>
-      # Flip to first page.
-      @currentPageNumber 1
+      # Flip to first page if we're on the cover (we might be coming directly from URL).
+      @currentPageNumber 1 unless @currentPageNumber()
 
       finishedActivatingCallback()
     ,
-      1000
+      750
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -109,12 +147,21 @@ class LOI.Components.Account extends AM.Component
 
   backButtonCallback: ->
     =>
-      # Flip back to cover.
-      @currentPageNumber 0
+      currentPageNumber = @currentPageNumber()
+
+      # Flip back to page 1.
+      @currentPageNumber 1
+
       Meteor.setTimeout =>
-        @activatable.deactivate()
+        # Now flip to cover.
+        @currentPageNumber 0
+
+        Meteor.setTimeout =>
+          @activatable.deactivate()
+        ,
+          500
       ,
-        500
+        if currentPageNumber > 1 then currentPageNumber * 200 else 0
 
   events: ->
     super

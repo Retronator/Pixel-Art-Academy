@@ -5,17 +5,26 @@ AM = Artificial.Mirage
 class AB.Components.Translatable extends AM.Component
   @register 'Artificial.Babel.Components.Translatable'
 
-  constructor: (@translationKey) ->
+  constructor: (@translationOrKey) ->
     super
 
   onCreated: ->
     super
 
     @translation = new ComputedField =>
+      return unless @translationOrKey
+
+      # Return translation if it was passed directly.
+      return @translationOrKey if @translationOrKey instanceof AB.Translation
+
+      # Fetch translation for the parent component using the provided key.
+      translationKey = @translationOrKey
       parentComponent = @parentComponent()
       return unless parentComponent
 
-      AB.translationForComponent parentComponent, @translationKey
+      AB.translationForComponent parentComponent, translationKey
 
     @translated = new ComputedField =>
-      AB.translate @translation(), @translationKey
+      return unless translation = @translation()
+
+      AB.translate translation

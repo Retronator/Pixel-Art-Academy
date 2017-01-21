@@ -174,6 +174,10 @@ class AM.Component extends CommonComponent
 
   # Artificial Babel
 
+  # Returns the Artificial Babel Translation for the provided key.
+  translation: (key) ->
+    AB.translationForComponent @, key
+
   # Translates the provided key with Artificial Babel.
   translate: (key) ->
     AB.translateForComponent @, key

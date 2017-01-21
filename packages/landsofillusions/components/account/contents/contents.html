@@ -1,0 +1,33 @@
+<template name="LandsOfIllusions.Components.Account.Contents">
+  <div class="landsofillusions-components-account-contents">
+    <h2>Account file</h2>
+    <h3>Contents</h3>
+    <ol class="contents">
+      {{#each pages}}
+        <li class="content">
+          {{#if currentPage}}
+            <span class="current-page">
+              {{> LandsOfIllusions.Components.Account.Contents.PageLine}}
+            </span>
+          {{else}}
+            <a class="page-link" href="/{{accountUrl}}/{{this.url}}">
+              {{> LandsOfIllusions.Components.Account.Contents.PageLine}}
+            </a>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ol>
+    <p class="smallprint bottom">HINT: You can click and edit everything in this account file.</p>
+  </div>
+</template>
+
+<template name="LandsOfIllusions.Components.Account.Contents.PageLine">
+  <span class="page-line">
+    <span class="page-name">
+      {{> t9n this.displayNameTranslation}}
+    </span>
+    <span class="page-number">
+      {{this.pageNumber}}
+    </span>
+  </span>
+</template>

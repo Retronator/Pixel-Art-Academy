@@ -48,8 +48,8 @@ class LOI.Components.Menu.Items extends AM.Component
     Retronator.user()
 
   quitVisible: ->
-    # Quit is visible when you are not on the landing page.
-    not @options.landingPage
+    # Quit is visible when you are not on the landing page or if you're logged in.
+    not @options.landingPage or Retronator.user()
 
   inMainMenu: ->
     @currentScreen() is @constructor.Screens.MainMenu

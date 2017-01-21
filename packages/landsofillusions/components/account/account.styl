@@ -5,19 +5,18 @@
   color atariGrey(5)
 
   .account-file
-    filter drop-shadow(-5px 5px 20px black)
-
     .account-file-layer
       position absolute
       width 340rem
       height 228rem
       top 0
       left -10rem
-      visibility hidden
-      pointer-events none
+      transition 0.6s cubic-bezier(0.23, 1, 0.32, 1)
+      transition-property left, top
 
-      &.visible
-        visibility visible
+      &.turned
+        left -175rem
+        top 5rem
 
       &.cover-closed
         z-index 11
@@ -46,6 +45,24 @@
       &.cover-back
         z-index 0
 
+      &.cover-closed
+      &.cover-open
+        visibility hidden
+
+        &.visible
+          visibility visible
+
+      > .page-number
+        position absolute
+        bottom 16rem
+        right 21rem
+        atariGrey(5)
+
     &.on-cover
       .account-file-layer
         left -90rem
+
+    .pages
+      for pageNumber in (1..5)
+        .page-{pageNumber}
+          background-image image('/landsofillusions/components/account/page-' + pageNumber + '.png')

@@ -5,9 +5,12 @@ LOI = LandsOfIllusions
 HQ = Retronator.HQ
 RA = Retronator.Accounts
 
-class LOI.Components.Account.Services extends AM.Component
+class LOI.Components.Account.Services extends LOI.Components.Account.Page
   @register 'LandsOfIllusions.Components.Account.Services'
   @url: -> 'services'
+  @displayName: -> 'Sign-in services'
+
+  @initialize()
 
   onCreated: ->
     super

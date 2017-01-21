@@ -5,24 +5,22 @@
       {{#LandsOfIllusions.Components.Overlay}}
         <div class="account-file {{onCoverClass}}">
           <img class="account-file-layer cover-closed {{coverClosedVisibleClass}}" src="{{image '/landsofillusions/components/account/cover-closed.png'}}" />
-          <div class="page-content">
-            {{> Render contentsPage}}
-          </div>
-          <img class="account-file-layer page-1 visible" src="{{image '/landsofillusions/components/account/page-1.png'}}" />
-          {{#each pages}}
-            {{#if $is currentPageNumber pageNumber}}
-              <div class="page-content">
-                {{> Render this}}
+          <div class="pages">
+            {{#each pages}}
+              <div class="account-file-layer page {{pageClass}}">
+                <div class="page-content">
+                  {{> Render this}}
+                </div>
+                <div class="page-number">{{pageNumber}}</div>
               </div>
-            {{/if}}
-            <img class="account-file-layer {{pageClass}} {{pageVisibleClass}}" src="{{image pageImageUrl}}" />
-          {{/each}}
-          {{#each emptyPages}}
-            <img class="account-file-layer {{pageClass}} {{pageVisibleClass}}" src="{{image pageImageUrl}}" />
-          {{/each}}
-          <img class="account-file-layer papers-bottom visible" src="{{image '/landsofillusions/components/account/papers-bottom.png'}}" />
+            {{/each}}
+            {{#each emptyPages}}
+              <div class="account-file-layer page {{pageClass}}"></div>
+            {{/each}}
+          </div>
+          <img class="account-file-layer papers-bottom" src="{{image '/landsofillusions/components/account/papers-bottom.png'}}" />
           <img class="account-file-layer cover-open {{coverOpenVisibleClass}}" src="{{image '/landsofillusions/components/account/cover-open.png'}}" />
-          <img class="account-file-layer cover-back visible" src="{{image '/landsofillusions/components/account/cover-back.png'}}" />
+          <img class="account-file-layer cover-back" src="{{image '/landsofillusions/components/account/cover-back.png'}}" />
         </div>
       {{/LandsOfIllusions.Components.Overlay}}
     </div>
