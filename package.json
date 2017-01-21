@@ -1,0 +1,28 @@
+{
+  "name": "pixelartacademy",
+  "version": "0.1.0",
+  "description": "An adventure game for learning how to draw.",
+  "dependencies": {
+    "babel-runtime": "^6.20.0",
+    "bcrypt": "^1.0.2",
+    "node-aes-gcm": "^0.2.1",
+    "twit": "^2.2.5",
+    "twitter-text": "^1.14.3"
+  },
+  "devDependencies": {
+    "coffeelint": "^1.16.0"
+  },
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Retronator/Pixel-Art-Academy.git"
+  },
+  "author": "Matej Jan",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Retronator/Pixel-Art-Academy/issues"
+  },
+  "homepage": "https://github.com/Retronator/Pixel-Art-Academy#readme"
+}

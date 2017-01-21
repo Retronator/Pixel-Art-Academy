@@ -8,6 +8,9 @@ Meteor.publish 'PixelArtAcademy.Practice.CheckIn.forCharacter', (characterId) ->
 
   PAA.Practice.CheckIn.documents.find
     'character._id': characterId
+  ,
+    sort:
+      time: -1
 
 # Get practice check-ins for a certain date range.
 Meteor.publish 'PixelArtAcademy.Practice.CheckIn.forDateRange', (dateRange) ->

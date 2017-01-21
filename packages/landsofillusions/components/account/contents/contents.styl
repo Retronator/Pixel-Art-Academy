@@ -1,0 +1,38 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-account-contents
+  .contents
+    padding 0
+    list-style none
+    text-transform uppercase
+
+    .content
+      margin-left -5rem
+
+      .page-link
+      .current-page
+        display block
+        padding 5rem
+        color atariGrey(1)
+
+        .page-line
+          display block
+          position relative
+          padding-top 1rem
+          border-bottom 1rem solid atariGrey(5)
+
+          .page-number
+            position absolute
+            right 0
+            color atariGrey(2)
+
+      .page-link
+        display block
+        padding 5rem
+        cursor pointer
+        color atariGrey(1)
+        text-decoration none
+
+        &:hover
+          .page-line
+            background atariGrey(6)

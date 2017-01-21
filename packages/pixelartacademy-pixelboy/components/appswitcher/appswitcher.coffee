@@ -1,5 +1,6 @@
 LOI = LandsOfIllusions
 AM = Artificial.Mirage
+PAA = PixelArtAcademy
 
-class LOI.PixelBoy.Components.AppSwitcher extends AM.Component
-  @register 'LandsOfIllusions.PixelBoy.Components.AppSwitcher'
+class PAA.PixelBoy.Components.AppSwitcher extends AM.Component
+  @register 'PixelArtAcademy.PixelBoy.Components.AppSwitcher'

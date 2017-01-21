@@ -1,16 +1,14 @@
-unless PixelArtAcademy
-  class PixelArtAcademy
-
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 
-class LOI.PixelBoy extends AM.Component
-  @register "LandsOfIllusions.PixelBoy"
+class PAA.PixelBoy extends AM.Component
+  @register "PixelArtAcademy.PixelBoy"
 
   constructor: ->
     @apps = [
-      new LOI.PixelBoy.Apps.Journal
-      new LOI.PixelBoy.Apps.Calendar
+      new PAA.PixelBoy.Apps.Journal
+      new PAA.PixelBoy.Apps.Calendar
     ]
 
     # Create a map for fast retrieval of apps by their url name.

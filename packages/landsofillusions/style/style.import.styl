@@ -7,8 +7,11 @@ pixel-text-outline(color)
   value = ()
   for x in -1 0 1
     for y in -1 0 1
-      unless x is y
+      if abs(x) isnt abs(y)
         push(value, "%srem %srem 0 %s" % (x y color))
+      else
+        unless x is 0 and y is 0
+          push(value, "%srem %srem 0 %s" % (x y transparentify(color, 0.4)))
 
   text-shadow unquote(join(',', value))
 

@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 LOI.Authorize.characterAction = (characterId) ->

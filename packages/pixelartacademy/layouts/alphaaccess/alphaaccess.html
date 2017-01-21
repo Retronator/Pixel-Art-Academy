@@ -4,7 +4,7 @@
     Loading …
   {{else}}
     {{#if currentUser}}
-      {{#if hasItem 'PixelArtAcademy.FoundationYear'}}
+      {{#if hasItem 'PixelArtAcademy.AlphaAccess'}}
         {{#if currentCharacter}}
           {{> renderPage}}
         {{else}}
@@ -23,12 +23,11 @@
           {{/if}}
         {{/if}}
       {{else}}
-        <p>You need to have Foundation Year alpha access to use Pixel Art Academy prototype. Why don't you pick it up
-          in <a href="{{flowRouterPath 'Retronator.Store'}}">Retronator Store</a>?</p>
+        <p>You need to have alpha access to use Pixel Art Academy prototype.</p>
       {{/if}}
     {{else}}
-      <p>Welcome to Pixel Art Academy! We are currently in the prototype state and only users with Foundation Year
-        pass have access to the game. Please sign in so we can check if you have access.</p>
+      <p>Welcome to Pixel Art Academy! We are currently in the prototype state and only users with Alpha Access
+        have access to the game. Please sign in so we can check if you have access.</p>
       {{> loginButtons}}
     {{/if}}
   {{/if}}

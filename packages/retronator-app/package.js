@@ -18,14 +18,14 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-landingpage');
   api.use('retronator:pixelartacademy-season1-episode0');
+  api.use('retronator:pixelartacademy-pixelboy');
+  api.use('retronator:pixelartacademy-practice');
+  api.use('retronator:pixelartacademy-pixeldailies');
 
   /*
   api.use('retronator:landsofillusions-construct');
   api.use('retronator:retronator-hq');
-  api.use('retronator:construct');
-  api.use('retronator:pixelboy');
-  api.use('retronator:practice');
-  api.use('retronator:pixeldailies');*/
+  api.use('retronator:construct');*/
   
   // Routing portion, fork from force-ssl.
   api.use('webapp', 'server');

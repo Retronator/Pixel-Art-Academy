@@ -15,11 +15,9 @@ class AB.Components.Translation extends AM.Component
 
       @subscribe 'Artificial.Babel.Translation.withId', translation._id, AB.userLanguagePreference()
 
-  text: ->
+  translation: ->
     translation = @data()
     return unless translation
 
     # Refresh the data context document with the text field, which will appear once the subscription kicks in.
     translation.refresh()
-
-    AB.translate(translation).text

@@ -21,9 +21,7 @@ class RS.Pages.Claim extends AM.Component
 
       @subscribe 'Retronator.Accounts.Transactions.Transaction.forReceivedGiftKeyCode', keyCode
 
-      t = RS.Transactions.Transaction.documents.findOne 'items.receivedGift.keyCode': keyCode
-      console.log "reciving transaction is", t
-      t
+      RS.Transactions.Transaction.documents.findOne 'items.receivedGift.keyCode': keyCode
 
     @giftingTransaction = new ComputedField =>
       keyCode = @keyCode()

@@ -1,0 +1,157 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-account-characters
+  .characters
+    list-style none
+    padding 0
+
+    .character
+      border 1rem solid atariGrey(5)
+      margin-top -1rem
+      height 14rem
+
+      .load-character
+        width 100%
+        height 12rem
+        padding 2rem 4rem
+        background none
+        border none
+        text-align left
+        font inherit
+        freehand()
+        color atariBlue(4)
+
+        &:hover
+        &:focus
+          outline none
+          background-color atariGrey(6)
+
+  .character-sheet
+    position absolute
+    top 31rem
+    right -2rem
+    width 153rem
+    padding 5rem 10rem
+    z-index 1
+    background atariBrown(7)
+    border-bottom 1rem solid atariBrown(5)
+    box-shadow -1rem 2rem 0 transparentify(atariGrey(6), atariGrey(7))
+    color atariBrown(4)
+
+    input
+    textarea
+    select
+      color atariBlue(3) !important
+
+    .title
+      text-transform uppercase
+      margin-top 0
+      text-align center
+      adventure()
+      color atariBrown(2)
+
+    .properties
+      &::after
+        content ''
+        display block
+        clear both
+
+      .property
+        float left
+        width 100%
+        border-bottom 1rem solid atariBrown(6)
+        margin-bottom 6rem
+
+        .label
+          display block
+          position relative
+
+          .name
+            position absolute
+            left 0
+            bottom 0
+            width 0
+            checkout()
+            line-height 6rem
+            text-transform uppercase
+
+          .value
+            display block
+
+            input
+            select
+              position relative
+              top 2rem
+
+        &.name
+          .label
+            padding-left 20rem
+
+        &.dialog-color-hue
+          width 55%
+
+          .label
+            padding-left 26rem
+
+          .value
+            select
+              width 47rem
+
+        &.dialog-color-shade
+          width 45%
+
+          .label
+            padding-left 23rem
+
+          .value
+            select
+              width 40rem
+
+    .preview-caption
+      margin 2rem 0 1rem
+      checkout()
+      line-height 6rem
+      text-transform uppercase
+
+    .dialog-preview
+      display inline-block
+      padding 5rem 10rem
+      margin-bottom 10rem
+      border 1rem solid atariBrown(6)
+      background atariBrown(5)
+      pixel-text-outline black
+      adventure()
+      line-height 9rem
+      text-transform none
+
+    .unload-character
+      position absolute
+      top 4rem
+      right 4rem
+      width 11rem
+      height 11rem
+      padding 2rem
+      line-height 5rem
+      text-align left
+      border 1rem solid atariBrown(6)
+      background none
+      color atariBrown(3)
+      adventure()
+
+      &::before
+        content 'X'
+
+      &:hover
+      &:focus
+        outline none
+        color atariBrown(0)
+
+    .smallprint
+      color atariBrown(5) !important
+
+  .paperclip
+    position absolute
+    z-index 2
+    right -4rem
+    top 54rem
+    width 23rem

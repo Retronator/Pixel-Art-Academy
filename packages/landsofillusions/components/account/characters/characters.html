@@ -1,0 +1,71 @@
+<template name="LandsOfIllusions.Components.Account.Characters">
+<div class="landsofillusions-components-account-characters">
+  <h2>Characters</h2>
+  <h3>Character selection</h3>
+  <p>Available characters are:</p>
+  <ul class="characters">
+    {{#each characters}}
+      <li class="character">
+        <button class="load-character">{{displayName}}</button>
+      </li>
+    {{/each}}
+    {{#each emptyLines}}
+      <li class="character"></li>
+    {{/each}}
+  </ul>
+  {{#unless characters.length}}
+    <p class="smallprint">
+      You do not have any characters.
+      Create them at Retronator HQ in the game.
+    </p>
+  {{/unless}}
+  {{#if currentCharacter}}
+    {{#with currentCharacter}}
+      <div class="character-sheet">
+        <img class="paperclip" src="{{image '/landsofillusions/components/account/paperclip-right.png'}}" />
+        <button class="unload-character"></button>
+        <h4 class="title">Character Sheet</h4>
+        <div class="properties">
+          <div class="property name">
+            <label class="label">
+              <span class="name">Name</span>
+              <span class="value">
+                {{> LandsOfIllusions.Components.Account.Characters.CharacterName}}
+              </span>
+            </label>
+          </div>
+          <div class="property dialog-color-hue">
+            <label class="label">
+              <span class="name">Dialog color</span>
+              <span class="value">
+                {{> LandsOfIllusions.Components.Account.Characters.CharacterColorHue}}
+              </span>
+            </label>
+          </div>
+          <div class="property dialog-color-shade">
+            <label class="label">
+              <span class="name">Shade</span>
+              <span class="value">
+                {{> LandsOfIllusions.Components.Account.Characters.CharacterColorShade}}
+              </span>
+            </label>
+          </div>
+        </div>
+        <p class="preview-caption">Preview</p>
+        <div class="dialog-preview" {{style dialogPreviewStyle}}>
+          I'm not just saying this to be clever, I'm also saying it because it's true.
+        </div>
+        <p class="smallprint">
+          Close this sheet to unload the character in the game.
+        </p>
+      </div>
+    {{/with}}
+  {{else}}
+    {{#if characters.length}}
+      <p class="smallprint">
+        Select a character to load them in the game.
+      </p>
+    {{/if}}
+  {{/if}}
+</div>
+</template>

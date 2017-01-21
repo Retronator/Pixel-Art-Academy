@@ -1,33 +1,35 @@
 <template name="PixelArtAcademy.Practice.CheckInCalendarComponent">
   <div class="calendar-check-in">
-    <p class="status">{{character.displayName}} checked in today.</p>
-    {{#if showEntry}}
-      <figure class="entry">
-        {{#if showImage}}
-          <div class="image">
-            {{#if artwork}}
-              <img src="{{artwork.image.url}}"/>
-            {{/if}}
-            {{#if $and image post}}
-              <a href="{{post.url}}" target="_blank"><img src="{{image.url}}"/></a>
-            {{else}}
-              {{#if image}}
-                <img src="{{image.url}}"/>
+    {{#with checkIn}}
+      <p class="status">{{character.displayName}} checked in today.</p>
+      {{#if showEntry}}
+        <figure class="entry">
+          {{#if showImage}}
+            <div class="image">
+              {{#if artwork}}
+                <img src="{{artwork.image.url}}"/>
               {{/if}}
-              {{#if post}}
-                <a href="{{post.url}}" target="_blank">{{post.url}}</a>
+              {{#if $and this.image post}}
+                <a href="{{post.url}}" target="_blank"><img src="{{this.image.url}}"/></a>
+              {{else}}
+                {{#if this.image}}
+                  <img src="{{this.image.url}}"/>
+                {{/if}}
+                {{#if post}}
+                  <a href="{{post.url}}" target="_blank">{{post.url}}</a>
+                {{/if}}
               {{/if}}
-            {{/if}}
-          </div>
-        {{/if}}
-        {{#if text}}
-          <figcaption class="body">
-            <div class="name">{{character.displayName}}:</div>
-            <div class="text" {{style textStyle}}>{{> LandsOfIllusions.PixelBoy.Apps.Components.FormattedText args text linkColor}}</div>
-          </figcaption>
-        {{/if}}
-      </figure>
-    {{/if}}
-    {{> LandsOfIllusions.PixelBoy.Apps.Components.CheckInConversations}}
+            </div>
+          {{/if}}
+          {{#if text}}
+            <figcaption class="body">
+              <div class="name">{{character.displayName}}:</div>
+              <div class="text" {{style textStyle}}>{{> PixelArtAcademy.PixelBoy.Apps.Components.FormattedText args text linkColor}}</div>
+            </figcaption>
+          {{/if}}
+        </figure>
+      {{/if}}
+      {{> PixelArtAcademy.PixelBoy.Apps.Components.CheckInConversations}}
+    {{/with}}
   </div>
 </template>

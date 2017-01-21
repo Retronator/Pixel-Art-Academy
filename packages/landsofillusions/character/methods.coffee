@@ -15,7 +15,7 @@ Meteor.methods
       throw new AE.UnauthorizedException "You can only create characters that belong to you." unless user._id is userId
 
       # User must have the create-character role
-      throw new AE.UnauthorizedException "You must be able to create characters." unless user.hasItem 'LandsOfIllusions.Character.Creation'
+      throw new AE.UnauthorizedException "You must be a player to create characters." unless user.hasItem 'PixelArtAcademy.PlayerAccess'
 
     character =
       user:

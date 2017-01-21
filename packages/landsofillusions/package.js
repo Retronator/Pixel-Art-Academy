@@ -209,7 +209,12 @@ Package.onUse(function(api) {
   api.addFiles('components/account/account.coffee');
   api.addFiles('components/account/account.html');
   api.addFiles('components/account/account.styl');
+  api.addFiles('components/account/account-page.coffee');
   api.addFiles('components/account/account-pagecontent.styl');
+
+  api.addFiles('components/account/contents/contents.coffee');
+  api.addFiles('components/account/contents/contents.html');
+  api.addFiles('components/account/contents/contents.styl');
 
   api.addFiles('components/account/general/general.coffee');
   api.addFiles('components/account/general/general.html');
@@ -218,6 +223,10 @@ Package.onUse(function(api) {
   api.addFiles('components/account/services/services.coffee');
   api.addFiles('components/account/services/services.html');
   api.addFiles('components/account/services/services.styl');
+
+  api.addFiles('components/account/characters/characters.coffee');
+  api.addFiles('components/account/characters/characters.html');
+  api.addFiles('components/account/characters/characters.styl');
 
   api.addFiles('components/dialogs/accounts.styl');
 

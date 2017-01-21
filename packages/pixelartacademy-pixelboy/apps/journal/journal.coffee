@@ -3,8 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class LOI.PixelBoy.Apps.Journal extends LOI.PixelBoy.App
-  @register 'LandsOfIllusions.PixelBoy.Apps.Journal'
+class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
+  @register 'PixelArtAcademy.PixelBoy.Apps.Journal'
 
   displayName: ->
     "Practice Journal"
@@ -52,7 +52,7 @@ class LOI.PixelBoy.Apps.Journal extends LOI.PixelBoy.App
       'click .check-in .delete': @onClickDeleteCheckIn
 
   onClickCheckIn: (event) ->
-    FlowRouter.go 'LandsOfIllusions.PixelBoy',
+    FlowRouter.go 'PixelArtAcademy.PixelBoy',
       app: 'journal'
       path: 'check-in'
 

@@ -2,12 +2,10 @@
 
 .landsofillusions-components-account
   .account-file
-    margin-right 5rem
-
     .page-content
       position absolute
       z-index 9
-      left 160rem
+      left 170rem
       width 158rem
       top 18rem
       bottom 23rem
@@ -29,14 +27,16 @@
 
       input
       textarea
+      select
         width 100%
-        freehand()
-        background none
-        border none
         padding 0 4px
         margin 0
+        border none
+        background none
+        freehand()
         color atariBlue(4)
         input-placeholder atariGrey(3)
+        appearance none
 
         &:focus
           outline none
@@ -61,15 +61,18 @@
       .smallprint
         position relative
         checkout()
-        margin 0 15rem 5rem
+        margin 0 6rem 5rem
         color atariGrey(4)
         hyphens auto
-
-        &.wide
-          margin 0 6rem 5rem
 
         &::before
           content '*'
           position absolute
           top 0
           left -6rem
+
+        &.bottom
+          position absolute
+          bottom 0
+          left 14rem
+          right 14rem

@@ -3,8 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class LOI.PixelBoy.Apps.Calendar extends LOI.PixelBoy.App
-  @register 'LandsOfIllusions.PixelBoy.Apps.Calendar'
+class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
+  @register 'PixelArtAcademy.PixelBoy.Apps.Calendar'
 
   displayName: ->
     "Pixel Art Calendar"
@@ -58,7 +58,7 @@ class LOI.PixelBoy.Apps.Calendar extends LOI.PixelBoy.App
     new Date selectedDate.getFullYear(), selectedDate.getMonth(), day for day in [lastDay..1]
 
   calendarEvents: ->
-    date = @parentDataWith -> _.isDate @
+    date = @parentDataWith (data) => _.isDate data
     provider = @currentData()
 
     provider.getEvents date
@@ -67,6 +67,13 @@ class LOI.PixelBoy.Apps.Calendar extends LOI.PixelBoy.App
     event = @parentDataWith 'component'
 
     event.component.renderComponent @currentComponent()
+
+  renderCalendarComponent: ->
+    calendarProvider = @parentDataWith (data) => data instanceof PAA.PixelBoy.Apps.Calendar.Provider
+    calendarComponentClass = calendarProvider.constructor.calendarComponentClass()
+
+    calendarComponent = new calendarComponentClass
+    calendarComponent.renderComponent @currentComponent()
 
   # Events
 
