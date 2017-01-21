@@ -3,7 +3,13 @@
     <ul class="lines">
       {{#each lines}}
         <li class="line">
-          <div class="author">{{character.displayName}}:</div>
+          <div class="author">
+            {{#if character}}
+              {{character.displayName}}:
+            {{else}}
+              {{> t10e "<Deleted user>"}}:
+            {{/if}}
+          </div>
           <div class="text" {{style textStyle}}>{{> PixelArtAcademy.PixelBoy.Apps.Components.FormattedText args text linkColor}}</div>
         </li>
       {{/each}}

@@ -24,13 +24,17 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
     line = @currentData()
 
     # Set the color to character's color.
-    color: "##{line.character.colorObject()?.getHexString()}"
+    if line.character
+      color: "##{line.character.colorObject()?.getHexString()}"
+
+    else
+      color: "##{LOI.palette()?.color(0, 4).getHexString()}"
 
   linkColor: ->
     line = @currentData()
 
     # Link should be 2 shades lighter than the text.
-    line.character.colorObject 2
+    line.character?.colorObject 2
 
   events: ->
     super.concat
