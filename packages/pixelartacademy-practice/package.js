@@ -10,10 +10,6 @@ Package.describe({
   documentation: 'README.md'
 });
 
-Npm.depends({
-  twit: '2.2.5'
-});
-
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-pixelboy');
@@ -32,12 +28,6 @@ Package.onUse(function(api) {
   api.addFiles('checkin/methods.coffee');
   api.addFiles('checkin/methods-server.coffee', 'server');
   api.addFiles('checkin/subscriptions.coffee', 'server');
-
-  api.addFiles('calendar/checkinsprovider.coffee');
-
-  api.addFiles('calendar/checkincomponent.html');
-  api.addFiles('calendar/checkincomponent.coffee');
-  api.addFiles('calendar/checkincomponent.styl');
 
   api.addFiles('importeddata/importeddata.coffee');
   api.addFiles('importeddata/checkin.coffee', 'server');

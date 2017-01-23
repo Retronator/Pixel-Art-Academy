@@ -1,5 +1,3 @@
-RA = Retronator.Accounts
-
 class LandsOfIllusions
   @debug = false
 
@@ -10,7 +8,7 @@ class LandsOfIllusions
 
   constructor: ->
     # Create the main adventure engine url capture.
-    RA.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?', 'LandsOfIllusions.Adventure'
+    Retronator.App.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?', 'LandsOfIllusions.Adventure'
 
   # Character selection and persistence
 
@@ -49,7 +47,7 @@ class LandsOfIllusions
 LOI = LandsOfIllusions
 
 if Meteor.isClient
-  window.LandsOfIllusions = LOI
+  window.LOI = LOI
 
 # On the client load character ID from local storage.
 if Meteor.isClient

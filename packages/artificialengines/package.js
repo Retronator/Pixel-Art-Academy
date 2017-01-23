@@ -3,6 +3,10 @@ Package.describe({
   version: '1.0.0'
 });
 
+Npm.depends({
+  twit: '2.2.5'
+});
+
 Package.onUse(function(api) {
   api.versionsFrom('1.2.0.2');
 
@@ -112,12 +116,16 @@ Package.onUse(function(api) {
   api.addFiles('base/app.coffee');
   api.addFiles('base/app.html');
 
+  api.addFiles('base/method.coffee');
+  api.addFiles('base/subscription.coffee');
+
   // Artificial Mummification
   api.addFiles('mummification/mummification.coffee');
 
   api.addFiles('mummification/mongohelper.coffee');
   api.addFiles('mummification/document.coffee');
   api.addFiles('mummification/persistentstorage.coffee');
+  api.addFiles('mummification/renamecollectionmigration.coffee', 'server');
 
   // Artificial Telepathy
   api.addFiles('telepathy/telepathy.coffee');
@@ -129,6 +137,8 @@ Package.onUse(function(api) {
 	api.addFiles('telepathy/flowrouter/routelink.html');
 
   api.addFiles('telepathy/emailcomposer.coffee');
+
+  api.addFiles('telepathy/twitter.coffee', 'server');
 
   // Artificial Babel
   api.addFiles('babel/babel.coffee');

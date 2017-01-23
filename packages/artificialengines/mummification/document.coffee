@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
 
@@ -5,6 +6,16 @@ AM = Artificial.Mummification
 class AM.Document extends Document
   @Meta
     abstract: true
+
+  @id: -> throw new AE.NotImplementedException
+    
+  @method: (name) ->
+    return new AB.Method
+      name: "#{@id()}.#{name}"
+
+  @subscription: (name) ->
+    return new AB.Subscription
+      name: "#{@id()}.#{name}"
 
   @_documentClasses: {}
 

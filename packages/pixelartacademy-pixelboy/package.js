@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartdatabase');
 
   api.export('PixelArtAcademy');
 
@@ -41,6 +42,20 @@ Package.onUse(function(api) {
   api.addFiles('apps/calendar/calendar.styl');
   api.addFiles('apps/calendar/calendar.coffee');
   api.addFiles('apps/calendar/provider.coffee');
+
+  api.addFiles('apps/calendar/providers/providers.coffee');
+
+  api.addFiles('apps/calendar/providers/pixeldailies/pixeldailies.coffee');
+  api.addFiles('apps/calendar/providers/pixeldailies/themesprovider.coffee');
+  api.addFiles('apps/calendar/providers/pixeldailies/themecomponent.html');
+  api.addFiles('apps/calendar/providers/pixeldailies/themecomponent.coffee');
+  api.addFiles('apps/calendar/providers/pixeldailies/themecomponent.styl');
+
+  api.addFiles('apps/calendar/providers/practice/practice.coffee');
+  api.addFiles('apps/calendar/providers/practice/checkinsprovider.coffee');
+  api.addFiles('apps/calendar/providers/practice/checkincomponent.html');
+  api.addFiles('apps/calendar/providers/practice/checkincomponent.coffee');
+  api.addFiles('apps/calendar/providers/practice/checkincomponent.styl');
 
   api.addFiles('apps/journal/journal.html');
   api.addFiles('apps/journal/journal.styl');
