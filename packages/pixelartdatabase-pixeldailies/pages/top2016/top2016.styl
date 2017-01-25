@@ -9,7 +9,7 @@
       position relative
       z-index 2
       font-weight normal
-      padding 10rem
+      padding 25rem 15rem
       margin 0
       text-align center
 
@@ -19,27 +19,26 @@
       .retronator
         retrotype()
         font-size 18rem
-        letter-spacing 0.1rem
         color atariGrey(5)
 
       .year2016
         acme-9()
-        font-size 52rem
-        line-height 68rem
+        font-size 68rem
+        line-height 100rem
         font-weight bold
         text-shadow 0 2rem 0 atariGrey(0), 0 4rem 10rem atariGrey(0)
 
       .pixeldailies
         kyrou-9()
-        font-size 12rem
-        letter-spacing 4.25rem
+        font-size 16rem
+        letter-spacing 5.2rem
         font-weight bold
         text-transform uppercase
         text-shadow 0 1.5rem 0 atariGrey(0), 0 2rem 5rem atariGrey(0)
 
       .retrospective
         acme-9()
-        font-size 8rem
+        font-size 12rem
         text-transform lowercase
         margin 5rem 0
         color atariGrey(6)
@@ -93,3 +92,45 @@
     &:focus
       color atariGrey(7)
       border-bottom-color atariGrey(7)
+
+@media (max-width: 768px)
+  .pixelartdatabase-pixeldailies-pages-top2016
+    .header
+      .title
+        padding 10rem
+
+        .retronator
+          letter-spacing 0.1rem
+
+        .year2016
+          font-size 52rem
+          line-height 68rem
+
+        .pixeldailies
+          font-size 12rem
+          letter-spacing 4.25rem
+
+        .retrospective
+          font-size 8rem
+
+@media (max-width: 414px)
+  .pixelartdatabase-pixeldailies-pages-top2016
+    .header
+      .title
+        padding 10rem 5rem
+
+        .retronator
+          font-size 12rem
+          letter-spacing 0.3rem
+
+        .year2016
+          font-size 36rem
+          line-height 50rem
+
+        .pixeldailies
+          font-size 8rem
+          letter-spacing 3.2rem
+          line-height 15rem
+
+        .retrospective
+          font-size 8rem

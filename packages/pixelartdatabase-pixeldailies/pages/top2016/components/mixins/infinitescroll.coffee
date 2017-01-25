@@ -4,9 +4,10 @@ PADB = PixelArtDatabase
 
 class PADB.PixelDailies.Pages.Top2016.Components.Mixins.InfiniteScroll
   # - count: reactive field with the number of items displayed.
-  constructor: ->
+  constructor: (@options = {}) ->
+    @options.step ?= 1
     @count = new ReactiveField 0
-    @limit = new ReactiveField 10
+    @limit = new ReactiveField @options.step
 
   onRendered: ->
     @_$window = $(window)
@@ -45,4 +46,4 @@ class PADB.PixelDailies.Pages.Top2016.Components.Mixins.InfiniteScroll
     if scrollTop > triggerTop
       # Only increase the limit if we actually have that many artworks on the client.
       if @limit() is @count()
-        @limit @limit() + 10
+        @limit @limit() + @options.step

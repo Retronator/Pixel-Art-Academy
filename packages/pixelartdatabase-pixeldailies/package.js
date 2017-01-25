@@ -67,6 +67,11 @@ Package.onUse(function(api) {
   api.addFiles('pages/top2016/components/mixins/mixins.coffee');
   api.addFiles('pages/top2016/components/mixins/infinitescroll.coffee');
 
+  api.addFiles('pages/top2016/themes/themes.html');
+  api.addFiles('pages/top2016/themes/themes.styl');
+  api.addFiles('pages/top2016/themes/themes.coffee');
+  api.addFiles('pages/top2016/themes/subscriptions.coffee', 'server');
+
   api.addFiles('pages/top2016/artworks/artworks.html');
   api.addFiles('pages/top2016/artworks/artworks.styl');
   api.addFiles('pages/top2016/artworks/artworks.coffee');

@@ -3,8 +3,7 @@ PADB = PixelArtDatabase
 
 class PADB.PixelDailies.Theme extends AM.Document
   @id: -> 'PixelArtDatabase.PixelDailies.Theme'
-  
-  # date: date when this theme was posted
+  # time: time when this theme was posted
   # hashtags: array of theme hashtags to identify submissions
   # text: tweet text posted by @Pixel_Dailies
   # tweetData: raw data of the theme tweet
