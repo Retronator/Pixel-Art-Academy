@@ -1,3 +1,3 @@
-PAA = PixelArtAcademy
+PADB = PixelArtDatabase
 
-class PAA.Artworks.Components
+class PixelArtDatabase.Components

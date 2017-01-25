@@ -1,27 +1,23 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mummification
 PADB = PixelArtDatabase
 
-# Finds or creates a profile.
-PADB.Profile.get = (query) ->
-  profile = PADB.Profile.documents.findOne query
-  return profile if profile
-  
-  # It looks like the profile hasn't been made yet, so create it.
-
+PADB.Profile.create = (options) ->
   # Let's see if we were provided with the platform type and username.
-  if query.platformType and query.username
-    switch query.platformType
+  if options.platformType and options.username
+    switch options.platformType
       when PADB.Profile.PlatformTypes.Twitter
-        profile = PADB.Profile.Providers.Twitter.createProfile username: query.username
+        profile = PADB.Profile.Providers.Twitter.createProfileData username: options.username
 
-        PADB.Profile.documents.insert profile if profile
+  throw new AE.ArgumentException 'Profile could not be created with provided options.' unless profile
 
-  # Also try to get the artist so that it gets created on the profile.
-  profile = PADB.Profile.documents.findOne query
-  return unless profile
+  # Create the artist if it was not provided.
+  options.artist ?= PADB.Artist.createFromProfile profile
 
-  PADB.Artist.get
-    'profiles._id': profile._id
+  profile.artist =
+    _id: options.artist._id
 
-  # Find the new document, if it was made.
-  PADB.Profile.documents.findOne query
+  profileId = PADB.Profile.documents.insert profile
+
+  # Return the new document.
+  PADB.Profile.documents.findOne profileId

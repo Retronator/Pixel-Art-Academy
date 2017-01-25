@@ -27,7 +27,7 @@ class Calendar.Providers.PixelDailies.ThemesProvider extends Calendar.Provider
       month: dayDate.getMonth()
       day: dayDate.getDate()
 
-    query = dateRange.addToMongoQuery query, 'time'
+    dateRange.addToMongoQuery query, 'time'
 
     PADB.PixelDailies.Theme.documents.find query,
       fields:

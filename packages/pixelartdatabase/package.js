@@ -33,9 +33,13 @@ Package.onUse(function(api) {
   api.addFiles('profile/providers-server/providers.coffee', 'server');
   api.addFiles('profile/providers-server/twitter.coffee', 'server');
 
-  /*
   api.addFiles('components/components.coffee');
 
+  api.addFiles('components/stream/stream.coffee');
+  api.addFiles('components/stream/stream.styl');
+  api.addFiles('components/stream/stream.html');
+
+  /*
   api.addFiles('components/uploader/uploader.html');
   api.addFiles('components/uploader/uploader.coffee');
 

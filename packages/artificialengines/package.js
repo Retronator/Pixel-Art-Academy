@@ -109,6 +109,9 @@ Package.onUse(function(api) {
   api.addFiles('mirage/mixins/autoselectinput.coffee');
   api.addFiles('mirage/mixins/persistentinput.coffee');
 
+  api.addFiles('mirage/mixins/fullscreenscrolling/fullscreenscrolling.coffee');
+  api.addFiles('mirage/mixins/fullscreenscrolling/fullscreenscrolling.styl');
+
   // Artificial Base
   // Depends on Artificial Mirage.
   api.addFiles('base/base.coffee');
@@ -125,7 +128,6 @@ Package.onUse(function(api) {
   api.addFiles('mummification/mongohelper.coffee');
   api.addFiles('mummification/document.coffee');
   api.addFiles('mummification/persistentstorage.coffee');
-  api.addFiles('mummification/renamecollectionmigration.coffee', 'server');
 
   // Artificial Telepathy
   api.addFiles('telepathy/telepathy.coffee');

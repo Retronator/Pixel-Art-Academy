@@ -124,7 +124,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
     ).fetch()
 
     unless themes.length
-      #console.warn "No themes found in the last 5 days. That's weird.", tweetTime
+      console.warn "No themes found in the last 5 days. That's weird.", tweetTime
       return
 
     tweetText = tweet.text.toLowerCase()
@@ -135,6 +135,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
 
     # Remove special characters.
     tweetText = tweetText.replace /\W+/g, ' '
+    tweetPhrases = AB.Helpers.generatePhrases text: tweetText
 
     # Add parameters by which we'll sort how good a match the theme is.
     for theme in themes
@@ -143,7 +144,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
 
       # Try to see if a theme hashtag is in the text.
       for themeHashtag in theme.hashtags
-        match = @_wordMatchInText themeHashtag, tweetText
+        match = AB.Helpers.phraseLikelihoodInText phrase: themeHashtag, textPhrases: tweetPhrases
         theme.exactMatchCount++ if match is 1
         theme.fuzzyMatchCount = Math.max match, theme.fuzzyMatchCount
 
@@ -155,8 +156,8 @@ class PADB.PixelDailies extends PADB.PixelDailies
       # Sort descending by fuzzy match count.
       b.fuzzyMatchCount - a.fuzzyMatchCount
 
-    #if not themes[0].exactMatchCount and themes[0].fuzzyMatchCount > 0.5
-      #console.log "Fuzzy match made on", tweetText, themes
+    if not themes[0].exactMatchCount and themes[0].fuzzyMatchCount > 0.5
+      console.log "Fuzzy match made on", tweetText, themes
 
     # Don't do a match with a theme that didn't get an exact match and fuzzy match is below 50%.
     unless themes[0].exactMatchCount or themes[0].fuzzyMatchCount > 0.5
@@ -164,40 +165,3 @@ class PADB.PixelDailies extends PADB.PixelDailies
       return
 
     themes[0]
-
-  @_wordMatchInText: (word, text, returnStatus) ->
-    # Return a number from 0-1, how likely this word appears in the text (considering typos and close matches).
-    bestMatch = 0
-
-    textWords = text.split ' '
-
-    doubleCompoundWords = for i in [0...textWords.length - 1]
-      "#{textWords[i]} #{textWords[i + 1]}"
-
-    tripleCompoundWords = for i in [0...textWords.length - 2]
-      "#{textWords[i]} #{textWords[i + 1]} #{textWords[i + 2]}"
-
-    textWords = textWords.concat doubleCompoundWords, tripleCompoundWords
-
-    # First match individual words.
-    for otherWord in textWords
-      distance = AB.Helpers.levenshteinDistance word, otherWord
-      match = 1 - distance / word.length
-      if match > bestMatch
-        bestMatch = match
-        bestMatchWord = "#{word} + #{otherWord} = #{match}"
-
-    if returnStatus then bestMatchWord else bestMatch
-
-# Initialize on startup.
-Meteor.startup ->
-  # Parse the full history of last 3200 tweets on startup.
-  PADB.PixelDailies.processTweetHistory()
-
-  # Gather new tweets every hour. Do it 10 minutes after so that the new theme is captured as soon as possible.
-  new Cron =>
-    console.log "Fetching 200 latest Pixel Dailies tweets."
-    PADB.PixelDailies.processTweetHistory
-      count: 200
-  ,
-    minute: 10

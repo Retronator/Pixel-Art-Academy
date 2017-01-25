@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AT = Artificial.Telepathy
 Twit = Npm.require 'twit'
 
@@ -16,19 +17,33 @@ class AT.Twitter
   @usersLookup: -> @get 'users/lookup', arguments...
 
   @get: (url, params, callback) ->
-    if callback
-      @_twitGet url, params, (error, data, response) =>
-        if error
-          console.log "Error accessing Twitter API.", error
+    throw new AE.InvalidOperationException 'Twitter was not initialized.' unless @initialized
+
+    try
+      if callback
+        @_twitGet url, params, (error, data, response) =>
+          if error
+            @handleError error
+            return
+
+          callback data
+
+      else
+        data = @_twitGet url, params
+
+        unless data
+          console.log "Error accessing Twitter API."
           return
 
-        callback data
+        data
 
-    else
-      data = @_twitGet url, params
+    catch error
+      @handleError error
 
-      unless data
-        console.log "Error accessing Twitter API."
-        return
+  @handleError: (error) ->
+    switch error.code
+      when 88
+        throw new AE.LimitExceededException "Twitter API rate limit exceeded."
 
-      data
+      else
+        throw error

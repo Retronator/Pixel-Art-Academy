@@ -1,0 +1,31 @@
+<template name="PixelArtDatabase.Components.Stream">
+  <div class="pixelartdatabase-components-stream">
+    <ol class="artworks">
+      {{#each displayedArtworks}}
+        <li class="artwork-area">
+          <figure class="artwork-with-caption">
+            <div class="artwork-frame">
+              {{#if videoUrl}}
+                <video class="artwork" src="{{videoUrl}}" loop poster="{{imageUrl}}">
+                  <img class="artwork" src="{{imageUrl}}"/>
+                </video>
+              {{else}}
+                <img class="artwork" src="{{imageUrl}}"/>
+              {{/if}}
+            </div>
+            <figcaption class="caption">
+              {{> renderCaption artwork}}
+            </figcaption>
+          </figure>
+          {{#if $and videoUrl animatedBackgrounds}}
+            <video class="background" src="{{videoUrl}}" loop poster="{{imageUrl}}">
+              <img class="background" src="{{imageUrl}}"/>
+            </video>
+          {{else}}
+            <img class="background" src="{{imageUrl}}"/>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ol>
+  </div>
+</template>

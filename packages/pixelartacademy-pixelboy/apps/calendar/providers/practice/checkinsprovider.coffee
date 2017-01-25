@@ -24,7 +24,7 @@ class Calendar.Providers.Practice.CheckInsProvider extends Calendar.Provider
       month: dayDate.getMonth()
       day: dayDate.getDate()
 
-    query = dateRange.addToMongoQuery query, 'time'
+    dateRange.addToMongoQuery query, 'time'
 
     # Only grab a list of check-in ids to prevent reactive updates of the whole array on check-in changes.
     PAA.Practice.CheckIn.documents.find query,

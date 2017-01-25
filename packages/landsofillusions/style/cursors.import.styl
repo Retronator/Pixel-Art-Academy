@@ -2,13 +2,13 @@ cursor(type)
   if type is default
     cursor url('/interface/cursors/2x/arrow.png') 2 0, default
 
-    html.scale-3 &
+    html:not([data-scale='2']) &
       cursor url('/interface/cursors/3x/arrow.png') 3 0, default
 
   else if type is pointer
     cursor url('/interface/cursors/2x/pointer.png?0.1.0') 6 2, pointer
 
-    html.scale-3 &
+    html:not([data-scale='2']) &
       cursor url('/interface/cursors/3x/pointer.png?0.1.0') 10 2, pointer
 
   else if type is crosshair
@@ -20,25 +20,25 @@ cursor(type)
     &.cursor-frame-3
       cursor url('/interface/cursors/2x/crosshair-3.png') 20 18, crosshair
 
-    html.scale-3 &
+    html:not([data-scale='2']) &
       cursor url('/interface/cursors/3x/crosshair-1.png') 31 28, crosshair
 
-    html.scale-3 &.cursor-frame-2
+    html:not([data-scale='2']) &.cursor-frame-2
       cursor url('/interface/cursors/3x/crosshair-2.png') 31 28, crosshair
 
-    html.scale-3 &.cursor-frame-3
+    html:not([data-scale='2']) &.cursor-frame-3
       cursor url('/interface/cursors/3x/crosshair-3.png') 31 28, crosshair
 
   else if type is text
     cursor url('/interface/cursors/2x/text.png?0.1.1') 2 0, text
 
-    html.scale-3 &
+    html:not([data-scale='2']) &
       cursor url('/interface/cursors/3x/text.png?0.1.1') 3 0, text
 
   else if type is wait
     cursor url('/interface/cursors/2x/wait.png') 24 20, text
 
-    html.scale-3 &
+    html:not([data-scale='2']) &
       cursor url('/interface/cursors/3x/wait.png') 36 20, text
 
   else

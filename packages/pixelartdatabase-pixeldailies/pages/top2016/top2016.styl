@@ -1,0 +1,95 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartdatabase-pixeldailies-pages-top2016
+  .header
+    position relative
+    color atariGrey(7)
+
+    .title
+      position relative
+      z-index 2
+      font-weight normal
+      padding 10rem
+      margin 0
+      text-align center
+
+      > *
+        display block
+
+      .retronator
+        retrotype()
+        font-size 18rem
+        letter-spacing 0.1rem
+        color atariGrey(5)
+
+      .year2016
+        acme-9()
+        font-size 52rem
+        line-height 68rem
+        font-weight bold
+        text-shadow 0 2rem 0 atariGrey(0), 0 4rem 10rem atariGrey(0)
+
+      .pixeldailies
+        kyrou-9()
+        font-size 12rem
+        letter-spacing 4.25rem
+        font-weight bold
+        text-transform uppercase
+        text-shadow 0 1.5rem 0 atariGrey(0), 0 2rem 5rem atariGrey(0)
+
+      .retrospective
+        acme-9()
+        font-size 8rem
+        text-transform lowercase
+        margin 5rem 0
+        color atariGrey(6)
+
+      .retronator
+      .retrospective
+        text-shadow 0 1rem 0 atariGrey(0), 0 2rem 5rem atariGrey(0)
+
+    .background
+      absolute-cover()
+      z-index 0
+      pixel-image-rendering()
+      background-size cover
+
+      &.transition
+        transition background-position ease-in-out 10s
+
+      &.old
+        z-index 1
+
+      &::after
+        content ''
+        absolute-cover()
+        background linear-gradient(to bottom, atariGrey(0) 0%, transparent 100%)
+
+    .background-author
+      position absolute
+      z-index 3
+      bottom 0
+      right 0
+      acme-9()
+      font-size 8px
+      padding 2rem 4rem
+      opacity 0.5
+      text-decoration none
+      transition opacity 0.2s
+      text-shadow 0 1rem 1rem black
+
+      &:hover
+        opacity 1
+
+  .pixelartdatabase-pixeldailies-pages-top2016-components-navigation
+    text-align center
+
+  .fullscreen
+    border-bottom 1rem solid atariGrey(4)
+    cursor pointer
+    transition color 0.2s, border-color 0.2s
+
+    &:hover
+    &:focus
+      color atariGrey(7)
+      border-bottom-color atariGrey(7)

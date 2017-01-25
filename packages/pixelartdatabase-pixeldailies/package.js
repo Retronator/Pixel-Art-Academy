@@ -47,6 +47,25 @@ Package.onUse(function(api) {
   api.addFiles('pages/home/home.coffee');
 
   api.addFiles('pages/top2016/top2016.coffee');
+  api.addFiles('pages/top2016/top2016.html');
+  api.addFiles('pages/top2016/top2016.styl');
+
+  api.addFiles('pages/top2016/layout/layout.html');
+  api.addFiles('pages/top2016/layout/layout.styl');
+  api.addFiles('pages/top2016/layout/layout.coffee');
+
+  api.addFiles('pages/top2016/components/components.coffee');
+
+  api.addFiles('pages/top2016/components/stream/stream.html');
+  api.addFiles('pages/top2016/components/stream/stream.styl');
+  api.addFiles('pages/top2016/components/stream/stream.coffee');
+
+  api.addFiles('pages/top2016/components/navigation/navigation.html');
+  api.addFiles('pages/top2016/components/navigation/navigation.styl');
+  api.addFiles('pages/top2016/components/navigation/navigation.coffee');
+
+  api.addFiles('pages/top2016/components/mixins/mixins.coffee');
+  api.addFiles('pages/top2016/components/mixins/infinitescroll.coffee');
 
   api.addFiles('pages/top2016/artworks/artworks.html');
   api.addFiles('pages/top2016/artworks/artworks.styl');
@@ -59,4 +78,6 @@ Package.onUse(function(api) {
   api.addFiles('pages/admin/scripts/scripts.coffee');
   api.addFiles('pages/admin/scripts/scripts.html');
   api.addFiles('pages/admin/scripts/methods-server/archiveallsubmissions.coffee', 'server');
+  api.addFiles('pages/admin/scripts/methods-server/rematchmissingthemes.coffee', 'server');
+
 });

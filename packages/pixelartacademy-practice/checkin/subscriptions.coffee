@@ -18,7 +18,7 @@ Meteor.publish 'PixelArtAcademy.Practice.CheckIn.forDateRange', (dateRange) ->
 
   query = {}
 
-  query = dateRange.addToMongoQuery query, 'time'
+  dateRange.addToMongoQuery query, 'time'
 
   PAA.Practice.CheckIn.documents.find query,
     sort:

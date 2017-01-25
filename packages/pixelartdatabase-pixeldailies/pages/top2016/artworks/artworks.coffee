@@ -10,42 +10,35 @@ class PADB.PixelDailies.Pages.Top2016.Artworks extends AM.Component
 
   onCreated: ->
     super
-    
-    @limit = new ReactiveField 10
 
-    @autorun (computation) =>    
-      @constructor.mostPopular.subscribe @, @limit()
+    @infiniteScroll = new ReactiveField null
+
+    @autorun (computation) =>
+      return unless infiniteScroll = @infiniteScroll()
+
+      @constructor.mostPopular.subscribe @, infiniteScroll.limit()
 
     @artworks = new ComputedField =>
       artworks = for artwork in PADB.Artwork.documents.find().fetch()
-        # Add extra data to artworks.
-        for representation in artwork.representations
-          if representation.type is PADB.Artwork.RepresentationTypes.Image
-            artwork.imageUrl ?= representation.url
-
-          if representation.type is PADB.Artwork.RepresentationTypes.Video
-            artwork.videoUrl ?= representation.url
+        # Find image URL.
+        imageRepresentation = _.find artwork.representations, type: PADB.Artwork.RepresentationTypes.Image
 
         submission = PADB.PixelDailies.Submission.documents.findOne
-          'images.imageUrl': artwork.imageUrl
+          'images.imageUrl': imageRepresentation.url
 
         artwork.favoritesCount = submission.favoritesCount
 
         artwork
 
-      _.reverse _.sortBy artworks, 'favoritesCount'
+      artworks = _.reverse _.sortBy artworks, 'favoritesCount'
+
+      # Add ranks.
+      artwork.rank = index + 1 for artwork, index in artworks
+
+      artworks
 
   onRendered: ->
-    $window = $(window)
-    $document = $(document)
+    super
 
-    $window.on 'scroll.artworks', (event) =>
-      scrollTop = $window.scrollTop()
-
-      # Increase limit when we're inside the last 2 window heights of the page.
-      triggerTop = $document.height() - $window.height() * 3
-
-      if scrollTop > triggerTop
-        # Only increase the limit if we actually have that many artworks on the client.
-        if @limit() is @artworks().length
-          @limit @limit() + 10
+    stream = @childComponents(PixelArtDatabase.PixelDailies.Pages.Top2016.Components.Stream)[0]
+    @infiniteScroll stream.infiniteScroll

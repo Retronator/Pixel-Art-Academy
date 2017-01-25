@@ -1,7 +1,7 @@
 <template name="Artificial.Telepathy.RouteLink">
   {{#if $is flowRouterRouteName route}}
-    <span class="route-active">{{text}}</span>
+    <span class="route-link active">{{text}}</span>
   {{else}}
-    <a class="link" href="{{flowRouterPath route}}">{{text}}</a>
+    <a class="route-link" href="{{flowRouterPath route}}">{{text}}</a>
   {{/if}}
 </template>

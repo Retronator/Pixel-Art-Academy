@@ -9,7 +9,7 @@ PADB.PixelDailies.Theme.forDateRange.publish (dateRange) ->
     hashtags:
       $exists: 1
 
-  query = dateRange.addToMongoQuery query, 'time'
+  dateRange.addToMongoQuery query, 'time'
 
   PADB.PixelDailies.Theme.documents.find query,
     fields:
