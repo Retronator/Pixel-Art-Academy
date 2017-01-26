@@ -10,14 +10,9 @@
 
     .month
       > .name
-        padding 5rem 10rem
+        padding 10rem
         kyrou-9()
         font-weight bold
-        opacity 0
-        transition opacity 0.2s
-
-      &.visible-days > .name
-        opacity 1
 
       .days
         list-style none
@@ -86,11 +81,6 @@
               background transparentify(atariGrey(7), 0.5)
               color atariGrey(0)
               transition background-color 0.2s
-
-          &.hidden
-            top 20rem
-            left 20rem
-            opacity 0
 
           &.has-submission:hover
             top -2rem

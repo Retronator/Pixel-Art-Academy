@@ -2,7 +2,7 @@
   <div class="pixelartdatabase-pixeldailies-pages-yearreview-components-calendar">
     <ol class="months">
       {{#each months}}
-        <li class="month {{visibleDaysInMonthClass}}">
+        <li class="month">
           <div class="name">{{monthName}}</div>
           <ol class="days">
             {{#each paddingDays}}
@@ -10,7 +10,7 @@
             {{/each}}
             {{#each days}}
               {{#with dayData}}
-                <li class="day {{hiddenClass}} {{hasSubmissionClass}}" data-day="{{number}}" data-month="{{month}}" data-year="{{year}}">
+                <li class="day {{hasSubmissionClass}}">
                   <div class="face">
                     <div class="number">{{number}}</div>
                     {{#if submission}}

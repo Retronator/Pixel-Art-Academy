@@ -97,94 +97,6 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
         # Update infinite scroll with how many submissions we've shown.
         @infiniteScroll.updateCount submissions.length
 
-        # Show any new submissions after a delay, so they have time to load.
-        Meteor.setTimeout =>
-          @showNextDay()
-        ,
-          1000
-
-  onRendered: ->
-    @_$window = $(window)
-    @_$window.on 'scroll.pixelartdatabase-pixeldailies-pages-yearreview-components-calendar', (event) => @onScroll()
-
-  onDestroyed: ->
-    @_$window.off '.pixelartdatabase-pixeldailies-pages-yearreview-components-calendar'
-
-  onScroll: ->
-    # See if we have something new to show on scroll.
-    @showNextDay()
-
-  showNextDay: ->
-    return if @_showingNextDayTimeout
-
-    @_showingNextDayTimeout = Meteor.setTimeout =>
-      @_showingNextDayTimeout = null
-
-      monthsByYear = @monthsByYear()
-
-      # Find the first day that is not yet visible.
-      for year, months of monthsByYear
-        year = parseInt year
-        nextYear = year + 1
-        isLastYear = not monthsByYear[nextYear]?
-
-        for monthNumber, month of months
-          monthNumber = parseInt monthNumber
-          nextMonthNumber = monthNumber + 1
-          isLastMonth = not months[nextMonthNumber]?
-
-          for dayIndex, day of month.days when not day.visible
-            dayIndex = parseInt dayIndex
-
-            # If this is the very last displayed month in the calendar,
-            # don't make the days after the last submission visible.
-            if isLastYear and isLastMonth
-              # Try to find another submission this month.
-              found = false
-
-              loop
-                nextDay = month.days[dayIndex]
-                break unless nextDay
-
-                if nextDay.submission
-                  found = true
-                  break
-
-                dayIndex++
-
-              return unless found
-
-            # The day we're trying to show needs to be in the view field.
-            daySelector = ".day[data-year='#{year}'][data-month='#{monthNumber}'][data-day='#{day.number}']"
-            $day = @$(daySelector)
-
-            viewportBottom = @_$window.scrollTop() + @_$window.height()
-            dayTop = $day.offset().top
-
-            return unless dayTop < viewportBottom
-
-            day.visible = true
-
-            # Trigger reactivity.
-            @monthsByYear monthsByYear
-
-            # Continue showing next day after the delay.
-            @showNextDay()
-            return
-    ,
-      100
-
-  visibleDaysInMonthClass: ->
-    month = @currentData()
-
-    # Grab latest month data.
-    monthsByYear = @monthsByYear()
-    month = monthsByYear[month.year][month.number]
-
-    visibleDaysInMonth = _.sum _.map month.days, (day) => if day.visible then 1 else 0
-      
-    'visible-days' if visibleDaysInMonth
-
   monthName: ->
     month = @currentData()
     monthDate = new Date 2016, month.number
@@ -198,10 +110,6 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
     # Grab latest day data.
     monthsByYear = @monthsByYear()
     monthsByYear[day.year][day.month].days[day.number - 1]
-
-  hiddenClass: ->
-    day = @currentData()
-    'hidden' unless day.visible
 
   hasSubmissionClass: ->
     day = @currentData()
