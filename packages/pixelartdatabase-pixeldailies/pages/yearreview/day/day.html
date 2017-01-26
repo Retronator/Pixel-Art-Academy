@@ -14,11 +14,24 @@
           <h2 class="hashtags">
             {{#each theme.hashtags}}
               #{{this}}
+            {{else}}
+              {{#if themesReady}}
+              No theme found.
+              {{else}}
+                …
+              {{/if}}
             {{/each}}
           </h2>
+          <a href="{{previousDayUrl}}" class="previous navigation-link">◄</a>
+          <a href="{{nextDayUrl}}" class="next navigation-link">►</a>
         </div>
       </header>
       {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream artworks}}
+      {{#if $and themesReady nextTheme}}
+        <a class="next-theme-link" href="{{nextThemeUrl}}">
+          {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.ThemeBanner nextTheme}}
+        </a>
+      {{/if}}
     </div>
   {{else}}
     {{> PixelArtDatabase.PixelDailies.Pages.YearReview}}

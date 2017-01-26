@@ -22,12 +22,25 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
       dayRange.addToMongoQuery themeQuery, 'time'
 
-      themesCursor = PADB.PixelDailies.Theme.documents.find themeQuery,
-        limit: 1
+      # Find the main theme.
+      theme = PADB.PixelDailies.Theme.documents.findOne themeQuery
+
+      # If we didn't find a theme on that day, use the requested date as the search start.
+      themeTime = theme?.time or date
+
+      # Return the main theme and next theme.
+      themesCursor = PADB.PixelDailies.Theme.documents.find
+        time:
+          $gte: themeTime
+        processingError:
+          $exists: false
+      ,
+        sort:
+          time: 1
+        limit: 2
         fields:
           tweetData: 0
 
-      theme = themesCursor.fetch()[0]
       return [themesCursor] unless theme
 
       submissionsCursor = PADB.PixelDailies.Submission.documents.find
@@ -69,35 +82,74 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
       new Date "#{day} #{month} #{year}"
 
     @infiniteScroll = new ReactiveField null
+    @_themeSubmissionSubscriptionsHandle = new ReactiveField null
 
     @autorun (computation) =>
       return unless date = @date()
       return unless infiniteScroll = @infiniteScroll()
 
-      @constructor.themeSubmissions.subscribe @, date, infiniteScroll.limit()
+      @_themeSubmissionSubscriptionsHandle @constructor.themeSubmissions.subscribe @, date, infiniteScroll.limit()
 
     @theme = new ReactiveField null
+    @nextTheme = new ReactiveField null
     @artworks = new ReactiveField null
 
     @autorun (computation) =>
-      return unless date = @date()
-      return [] unless infiniteScroll = @infiniteScroll()
+      date = @date()
+      infiniteScroll = @infiniteScroll()
+
+      unless date and infiniteScroll
+        @artworks []
+        return
+
       [themesCursor, submissionsCursor, artworksCursor] = @constructor.themeSubmissions.query date, infiniteScroll.limit()
 
-      @theme themesCursor.fetch()[0]
+      # Find the theme on the given day
+      dayRange = new AE.DateRange
+        year: date.getFullYear()
+        month: date.getMonth()
+        day: date.getDate()
 
-      return unless artworksCursor
+      themeQuery =
+        processingError:
+          $exists: false
 
-      artworks = for artwork in artworksCursor.fetch()
-        # Find image URL.
-        imageRepresentation = _.find artwork.representations, type: PADB.Artwork.RepresentationTypes.Image
+      dayRange.addToMongoQuery themeQuery, 'time'
 
-        submission = PADB.PixelDailies.Submission.documents.findOne
-          'images.imageUrl': imageRepresentation.url
+      # Find the main theme.
+      theme = PADB.PixelDailies.Theme.documents.findOne themeQuery
+      @theme theme
 
-        artwork.favoritesCount = submission.favoritesCount
+      # Find the next theme.
+      themeTime = theme?.time or date
+      @nextTheme PADB.PixelDailies.Theme.documents.findOne
+        time:
+          $gt: themeTime
+      ,
+        sort:
+          time: 1
 
-        artwork
+      unless artworksCursor
+        @artworks []
+        return
+
+      if artworksCursor
+        artworks = for artwork in artworksCursor.fetch()
+          # Find image URL.
+          imageRepresentation = _.find artwork.representations, type: PADB.Artwork.RepresentationTypes.Image
+
+          submission = PADB.PixelDailies.Submission.documents.findOne
+            'images.imageUrl': imageRepresentation.url
+
+          artwork.favoritesCount = submission.favoritesCount
+
+          artwork
+
+        # If we don't have the artworks loaded yet, use top submissions as placeholders. We pretty
+        # much repeat the archive submission code to create a temporary artwork out of the submission.
+        unless artworks.length
+          artworks = for submission in theme.topSubmissions
+            @_convertSubmissionToArtwork submission
 
       artworks = _.reverse _.sortBy artworks, 'favoritesCount'
 
@@ -105,6 +157,31 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
       artwork.rank = index + 1 for artwork, index in artworks
 
       @artworks artworks
+
+  _convertSubmissionToArtwork: (submission) ->
+    artwork = new PADB.Artwork
+
+    # Find type of the image.
+    image = submission.images[0]
+    artwork.type = if image.animated then PADB.Artwork.Types.AnimatedImage else PADB.Artwork.Types.Image
+
+    # Create representations of this image.
+    artwork.representations = [
+      type: PADB.Artwork.RepresentationTypes.Image
+      url: image.imageUrl
+    ,
+      type: PADB.Artwork.RepresentationTypes.Post
+      url: submission.tweetUrl
+    ]
+
+    if image.animated
+      artwork.representations.push
+        type: PADB.Artwork.RepresentationTypes.Video
+        url: image.videoUrl
+
+    artwork.favoritesCount = submission.favoritesCount
+
+    artwork
 
   onRendered: ->
     super
@@ -117,6 +194,9 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
       @infiniteScroll stream.infiniteScroll
 
+  themesReady: ->
+    @_themeSubmissionSubscriptionsHandle()?.ready()
+
   dateTitle: ->
     @date().toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US',
       weekday: 'long'
@@ -127,3 +207,22 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
   topArtworkImageUrl: ->
     return unless artwork = @artworks()?[0]
     artwork.firstImageRepresentation().url
+
+  nextThemeUrl: ->
+    @_dateUrl @nextTheme().time
+
+  previousDayUrl: ->
+    @_offsetDayUrl -1
+
+  nextDayUrl: ->
+    @_offsetDayUrl 1
+
+  _offsetDayUrl: (offset) ->
+    date = @date()
+    @_dateUrl new Date date.getFullYear(), date.getMonth(), date.getDate() + offset
+
+  _dateUrl: (date) ->
+    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
+      year: date.getFullYear()
+      month: _.toLower date.toLocaleString 'en-US', month: 'long'
+      day: date.getDate()

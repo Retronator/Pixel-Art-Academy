@@ -18,9 +18,8 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
     # Update current count for infinite scroll.
     @autorun (computation) =>
       artworks = @data()
-      return unless artworks
 
-      @infiniteScroll.updateCount artworks.length
+      @infiniteScroll.updateCount artworks?.length or 0
 
   artworkCaptionClass: ->
     @constructor.ArtworkCaption
@@ -41,7 +40,8 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
           'images.imageUrl': imageRepresentation.url
 
     title: ->
-      submission = @submission()
+      return unless submission = @submission()
+
       lowercaseHashtags = for hashtag in submission.theme?.hashtags or []
         "##{_.toLower hashtag}"
 
@@ -76,7 +76,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
       _.trim "#{title} #{endingWords.join ' '}"
 
     date: ->
-      @submission().time.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US',
+      @submission()?.time.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US',
         month: 'long'
         day: 'numeric'
         year: 'numeric'

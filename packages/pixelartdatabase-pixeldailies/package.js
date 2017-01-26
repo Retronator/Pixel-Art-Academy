@@ -72,6 +72,10 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/components/navigation/navigation.styl');
   api.addFiles('pages/yearreview/components/navigation/navigation.coffee');
 
+  api.addFiles('pages/yearreview/components/themebanner/themebanner.html');
+  api.addFiles('pages/yearreview/components/themebanner/themebanner.styl');
+  api.addFiles('pages/yearreview/components/themebanner/themebanner.coffee');
+
   api.addFiles('pages/yearreview/components/mixins/mixins.coffee');
   api.addFiles('pages/yearreview/components/mixins/infinitescroll.coffee');
 

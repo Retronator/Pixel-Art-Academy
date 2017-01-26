@@ -49,7 +49,10 @@ class PADB.Components.Stream extends AM.Component
     # Update active artwork on resizes and artworks updates.
     @autorun (computation) =>
       AM.Window.clientBounds()
-      @data()
+      @displayedArtworks()
+
+      # Reset active artwork index so that all areas get deactivated first.
+      @activeArtworkIndex null
 
       # Wait till the new artwork areas get rendered.
       Tracker.afterFlush =>
@@ -63,7 +66,7 @@ class PADB.Components.Stream extends AM.Component
       # Go over all the artworks and activate the one at the new index.
       for artworkArea, index in @_artworkAreas
         # We should make active also the two neighbors.
-        areaShouldBeActive = Math.abs(activeArtworkIndex - index) < 2
+        areaShouldBeActive = if activeArtworkIndex? then Math.abs(activeArtworkIndex - index) < 2 else false
 
         # Activate or deactivate areas. Note that active is undefined at the start.
         if areaShouldBeActive and artworkArea.active isnt true

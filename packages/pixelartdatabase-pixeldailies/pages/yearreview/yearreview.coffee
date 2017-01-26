@@ -67,8 +67,6 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     currentLimit = calendar.infiniteScroll.limit()
     newLimit = Math.max currentLimit, @yearCalendarProvider.limit()
 
-    console.log "setting limit", newLimit
-
     calendar.infiniteScroll.limit newLimit
     @calendar calendar
 
