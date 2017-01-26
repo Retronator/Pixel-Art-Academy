@@ -46,36 +46,42 @@ Package.onUse(function(api) {
   api.addFiles('pages/home/home.styl');
   api.addFiles('pages/home/home.coffee');
 
-  api.addFiles('pages/top2016/top2016.coffee');
-  api.addFiles('pages/top2016/top2016.html');
-  api.addFiles('pages/top2016/top2016.styl');
+  api.addFiles('pages/yearreview/yearreview.coffee');
+  api.addFiles('pages/yearreview/yearreview.html');
+  api.addFiles('pages/yearreview/yearreview.styl');
 
-  api.addFiles('pages/top2016/layout/layout.html');
-  api.addFiles('pages/top2016/layout/layout.styl');
-  api.addFiles('pages/top2016/layout/layout.coffee');
+  api.addFiles('pages/yearreview/years/years.coffee');
+  api.addFiles('pages/yearreview/years/year2016.coffee');
 
-  api.addFiles('pages/top2016/components/components.coffee');
+  api.addFiles('pages/yearreview/layout/layout.html');
+  api.addFiles('pages/yearreview/layout/layout.styl');
+  api.addFiles('pages/yearreview/layout/layout.coffee');
 
-  api.addFiles('pages/top2016/components/stream/stream.html');
-  api.addFiles('pages/top2016/components/stream/stream.styl');
-  api.addFiles('pages/top2016/components/stream/stream.coffee');
+  api.addFiles('pages/yearreview/components/components.coffee');
 
-  api.addFiles('pages/top2016/components/navigation/navigation.html');
-  api.addFiles('pages/top2016/components/navigation/navigation.styl');
-  api.addFiles('pages/top2016/components/navigation/navigation.coffee');
+  api.addFiles('pages/yearreview/components/stream/stream.html');
+  api.addFiles('pages/yearreview/components/stream/stream.styl');
+  api.addFiles('pages/yearreview/components/stream/stream.coffee');
 
-  api.addFiles('pages/top2016/components/mixins/mixins.coffee');
-  api.addFiles('pages/top2016/components/mixins/infinitescroll.coffee');
+  api.addFiles('pages/yearreview/components/calendar/calendar.html');
+  api.addFiles('pages/yearreview/components/calendar/calendar.styl');
+  api.addFiles('pages/yearreview/components/calendar/calendar.coffee');
+  api.addFiles('pages/yearreview/components/calendar/provider.coffee');
 
-  api.addFiles('pages/top2016/themes/themes.html');
-  api.addFiles('pages/top2016/themes/themes.styl');
-  api.addFiles('pages/top2016/themes/themes.coffee');
-  api.addFiles('pages/top2016/themes/subscriptions.coffee', 'server');
+  api.addFiles('pages/yearreview/components/navigation/navigation.html');
+  api.addFiles('pages/yearreview/components/navigation/navigation.styl');
+  api.addFiles('pages/yearreview/components/navigation/navigation.coffee');
 
-  api.addFiles('pages/top2016/artworks/artworks.html');
-  api.addFiles('pages/top2016/artworks/artworks.styl');
-  api.addFiles('pages/top2016/artworks/artworks.coffee');
-  api.addFiles('pages/top2016/artworks/subscriptions.coffee', 'server');
+  api.addFiles('pages/yearreview/components/mixins/mixins.coffee');
+  api.addFiles('pages/yearreview/components/mixins/infinitescroll.coffee');
+
+  api.addFiles('pages/yearreview/themes/themescalendarprovider.coffee');
+  api.addFiles('pages/yearreview/themes/subscriptions.coffee', 'server');
+
+  api.addFiles('pages/yearreview/artworks/artworks.html');
+  api.addFiles('pages/yearreview/artworks/artworks.styl');
+  api.addFiles('pages/yearreview/artworks/artworks.coffee');
+  api.addFiles('pages/yearreview/artworks/subscriptions.coffee', 'server');
 
   api.addFiles('pages/admin/admin.html');
   api.addFiles('pages/admin/admin.coffee');
@@ -84,5 +90,5 @@ Package.onUse(function(api) {
   api.addFiles('pages/admin/scripts/scripts.html');
   api.addFiles('pages/admin/scripts/methods-server/archiveallsubmissions.coffee', 'server');
   api.addFiles('pages/admin/scripts/methods-server/rematchmissingthemes.coffee', 'server');
-
+  api.addFiles('pages/admin/scripts/methods-server/updatethemesubmissions.coffee', 'server');
 });

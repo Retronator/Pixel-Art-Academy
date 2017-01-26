@@ -231,7 +231,13 @@ class AM.Display extends AM.Component
 
     # Set scale attribute on html so we can scale cursors.
     @autorun (computation) =>
-      $('html').attr('data-scale', @scale())
+      if @_currentScale
+        $('html').removeClass("scale-#{@_currentScale}")
+        $('html').removeClass("scale-#{scale}-or-up") for scale in [2..@_currentScale]
+
+      @_currentScale = @scale()
+      $('html').addClass("scale-#{@_currentScale}")
+      $('html').addClass("scale-#{scale}-or-up") for scale in [2..@_currentScale]
 
   debugClass: ->
     'debug' if @debug

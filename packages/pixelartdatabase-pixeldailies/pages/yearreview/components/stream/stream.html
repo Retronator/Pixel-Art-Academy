@@ -1,0 +1,21 @@
+<template name="PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream">
+  <div class="pixelartdatabase-pixeldailies-pages-yearreview-components-stream">
+    {{> PixelArtDatabase.Components.Stream args artworkCaptionClass}}
+  </div>
+</template>
+
+<template name="PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream.ArtworkCaption">
+  <div class="title">
+    <span class="rank">{{rank}}.</span>
+    <a class="text" href="{{submission.tweetUrl}}" title="{{submission.text}}" target="_blank">{{title}}</a>
+  </div>
+  <span class="favorites">{{submission.favoritesCount}} favorites</span><span class="comma">,</span>
+  <span class="authors">
+    {{#each authors}}
+      <a class="author" href="{{twitterProfile.url}}" target="_blank">
+        {{displayName}}
+        (<span class="username">@{{twitterProfile.username}}</span>)</a><span class="comma">,</span>
+    {{/each}}
+  </span>
+  <span class="date">{{date}}</span>
+</template>

@@ -1,0 +1,138 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartdatabase-pixeldailies-pages-yearreview-components-calendar
+  overflow-x hidden
+
+  .months
+    list-style none
+    padding 0 0 20rem
+    margin 0
+
+    .month
+      > .name
+        padding 5rem 10rem
+        kyrou-9()
+        font-weight bold
+        opacity 0
+        transition opacity 0.2s
+
+      &.visible-days > .name
+        opacity 1
+
+      .days
+        list-style none
+        padding 0
+        margin 0
+
+        .padding-day
+        .day
+          display block
+          float left
+          width 14vw
+          height 14vw
+
+          &:nth-child(7n+0)
+          &:nth-child(7n+1)
+            width 15vw
+
+        .day
+          position relative
+          top 0
+          left 0
+          background atariGrey(1)
+          cursor pointer
+          transition top 0.2s, left 0.2s, opacity 0.2s
+
+          &::after
+            content ''
+            absolute-cover()
+            transition box-shadow 0.2s
+            box-shadow  1rem 1rem 0 atariGrey(1),
+                        2rem 2rem 0 atariGrey(1),
+                        3rem 3rem 0 atariGrey(1),
+                        4rem 4rem 0 atariGrey(1)
+
+          .face
+            z-index 1
+            absolute-cover()
+            transition box-shadow 0.2s
+            overflow hidden
+
+            .top-submission
+              absolute-cover-size()
+              object-fit cover
+              pixel-image-rendering()
+
+            .number
+              position absolute
+              top 0
+              left 0
+              z-index 1
+              padding 3rem
+              background rgba(0, 0, 0, 0.5)
+              acme-7()
+              transition color 0.2s
+
+            .hashtag
+              position absolute
+              bottom 0
+              left 0
+              right 0
+              height 15rem
+              z-index 1
+              padding 3rem 6rem
+              overflow hidden
+              text-overflow ellipsis
+              background transparentify(atariGrey(7), 0.5)
+              color atariGrey(0)
+              transition background-color 0.2s
+
+          &.hidden
+            top 20rem
+            left 20rem
+            opacity 0
+
+          &.has-submission:hover
+            top -2rem
+            left -2rem
+
+            &::after
+              content ''
+              absolute-cover()
+              box-shadow  1rem 1rem 0 atariGrey(3),
+                          2rem 2rem 0 atariGrey(3),
+                          3rem 3rem 0 atariGrey(3),
+                          4rem 4rem 0 atariGrey(3)
+            .face
+              z-index 2
+              box-shadow 5rem 5rem 10rem 5rem transparentify(atariGrey(0), 0.5)
+
+              .number
+                color atariGrey(7)
+
+              .hashtag
+                background transparentify(atariGrey(7), 0.7)
+
+      &::after
+        content ''
+        display block
+        clear both
+
+@media (max-width: 768px)
+  .pixelartdatabase-pixeldailies-pages-yearreview-themes
+    .months
+      .month
+        .days
+          .padding-day
+            display none
+
+          .day
+            width 33vw
+            height 33vw
+
+            &:nth-child(3n+0)
+              width 34vw
+
+            &:nth-child(7n+0)
+            &:nth-child(7n+1)
+              width 33vw

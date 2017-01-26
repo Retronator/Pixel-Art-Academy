@@ -24,6 +24,13 @@ class PADB.PixelDailies.Submission extends AM.Document
     name: @id()
     fields: =>
       theme: @ReferenceField PADB.PixelDailies.Theme, ['hashtags'], false
+    triggers: =>
+      favoritesCountUpdated: @Trigger ['theme._id', 'favoritesCount'], (submission, oldSubmission) =>
+        # Update the themes of both submissions.
+        themeIds = _.uniq [submission?.theme?._id, oldSubmission?.theme?._id]
+        themeIds = _.without themeIds, undefined
+
+        PADB.PixelDailies.Theme.updateSubmissions themeId for themeId in themeIds
 
   @ProcessingError:
     NoThemeMatch: 'No theme match.'

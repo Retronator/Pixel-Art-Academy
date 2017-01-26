@@ -131,12 +131,11 @@ class PADB.Components.Stream extends AM.Component
   measureArtworkAreas: ->
     # Get scroll top positions of all artworks.
     $artworkAreas = @$('.artwork-area')
-    appOffset = @_$app.offset().top
 
     for artworkAreaElement, index in $artworkAreas
       @_artworkAreas[index] ?= {}
       @_artworkAreas[index].element = artworkAreaElement
-      @_artworkAreas[index].top = $(artworkAreaElement).find('.artwork').offset().top - appOffset
+      @_artworkAreas[index].top = $(artworkAreaElement).find('.artwork').offset().top
 
       displayedArtwork = Blaze.getData(artworkAreaElement)
       @_artworkAreas[index].artwork = displayedArtwork.artwork
