@@ -11,11 +11,9 @@
   </div>
   <span class="favorites">{{submission.favoritesCount}} favorites</span><span class="comma">,</span>
   <span class="authors">
-    {{#each authors}}
-      <a class="author" href="{{twitterProfile.url}}" target="_blank">
-        {{displayName}}
-        (<span class="username">@{{twitterProfile.username}}</span>)</a><span class="comma">,</span>
-    {{/each}}
+    <a class="author" href="https://twitter.com/{{submission.user.screenName}}" target="_blank">
+      {{submission.user.name}}
+      (<span class="username">@{{submission.user.screenName}}</span>)</a><span class="comma">,</span>
   </span>
   <span class="date">{{date}}</span>
 </template>

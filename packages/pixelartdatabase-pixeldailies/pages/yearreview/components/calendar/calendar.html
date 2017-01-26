@@ -11,21 +11,27 @@
             {{#each days}}
               {{#with dayData}}
                 <li class="day {{hasSubmissionClass}}">
-                  <div class="face">
-                    <div class="number">{{number}}</div>
-                    {{#if submission}}
-                      <div class="hashtag">#{{submissionHashtag}}</div>
-                      {{#with submissionImage}}
-                        {{#if videoUrl}}
-                          <video class="top-submission" src="{{videoUrl}}" loop poster="{{imageUrl}}">
+                  {{#if submission}}
+                    <a class="face" href="{{submission.url}}">
+                      <span class="number">{{number}}</span>
+                      {{#if submission}}
+                        <span class="hashtag">#{{submissionHashtag}}</span>
+                        {{#with submissionImage}}
+                          {{#if videoUrl}}
+                            <video class="top-submission" src="{{videoUrl}}" loop poster="{{imageUrl}}">
+                              <img class="top-submission" src="{{imageUrl}}"/>
+                            </video>
+                          {{else}}
                             <img class="top-submission" src="{{imageUrl}}"/>
-                          </video>
-                        {{else}}
-                          <img class="top-submission" src="{{imageUrl}}"/>
-                        {{/if}}
-                      {{/with}}
-                    {{/if}}
-                  </div>
+                          {{/if}}
+                        {{/with}}
+                      {{/if}}
+                    </a>
+                  {{else}}
+                    <span class="face">
+                      <span class="number">{{number}}</span>
+                    </span>
+                  {{/if}}
                 </li>
               {{/with}}
             {{/each}}

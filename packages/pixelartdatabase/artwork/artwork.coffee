@@ -47,3 +47,7 @@ class PADB.Artwork extends AM.Document
   # Subscriptions
 
   @all: @subscription 'all'
+
+  # Returns the first image representation.
+  firstImageRepresentation: ->
+    _.find @representations, type: PADB.Artwork.RepresentationTypes.Image

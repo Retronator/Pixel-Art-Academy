@@ -3,33 +3,41 @@ PADB = PixelArtDatabase
 
 class PADB.PixelDailies.Pages.YearReview extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.YearReview'
-  
+
+  @themeProvidersByYears = {}
+
   constructor: ->
     super
 
-    year = @year()
-    @yearClass = @constructor.Years[year]
-    
-    # See if this is a valid year.
-    unless @yearClass
-      FlowRouter.go 'PixelArtDatabase.PixelDailies.Pages.Home'
-      return
-
-    @isValidYear = true
-    
-    @backgrounds = _.cloneDeep @yearClass.backgrounds
-    
-    # Shuffle the backgrounds, but leave the starting one fixed.
-    @backgrounds = _.flatten [@backgrounds[0], _.shuffle @backgrounds[1..]]
-
     @currentBackgroundIndex = new ReactiveField null
-
-    @yearCalendarProvider = new @constructor.ThemesCalendarProvider year: year
-
     @calendar = new ReactiveField null
 
   onCreated: ->
     super
+
+    # React to year changes.
+    @autorun (computation) =>
+      year = @year()
+      @yearClass = @constructor.Years[year]
+
+      # See if this is a valid year.
+      unless @yearClass
+        FlowRouter.go 'PixelArtDatabase.PixelDailies.Pages.Home'
+        return
+
+      @isValidYear = true
+
+      @backgrounds = _.cloneDeep @yearClass.backgrounds
+
+      # Shuffle the backgrounds, but leave the starting one fixed.
+      @backgrounds = _.flatten [@backgrounds[0], _.shuffle @backgrounds[1..]]
+
+      # Create a persistent calendar provider so we don't have to re-fetch themes between page changes. We need to
+      # subscribe in a non-rective context, so that the subscription doesn't get invalidated when this component is
+      # destroyed.
+      Tracker.nonreactive =>
+        @constructor.themeProvidersByYears[year] ?= new @constructor.ThemesCalendarProvider year: year
+        @yearCalendarProvider = @constructor.themeProvidersByYears[year]
 
     @autorun (computation) =>
       return unless calendar = @calendar()
@@ -53,12 +61,19 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
 
     @currentBackgroundIndex 0
 
-    @calendar @childComponents(@constructor.Components.Calendar)[0]
+    calendar = @childComponents(@constructor.Components.Calendar)[0]
+
+    # Raise limit to the number of currently loaded themes.
+    currentLimit = calendar.infiniteScroll.limit()
+    newLimit = Math.max currentLimit, @yearCalendarProvider.limit()
+
+    console.log "setting limit", newLimit
+
+    calendar.infiniteScroll.limit newLimit
+    @calendar calendar
 
   onDestroyed: ->
     Meteor.clearInterval @_changeBackgroundInterval
-
-    @yearCalendarProvider.destroy()
 
   year: ->
     parseInt FlowRouter.getParam 'year'

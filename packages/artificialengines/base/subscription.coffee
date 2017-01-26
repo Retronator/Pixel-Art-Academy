@@ -3,6 +3,7 @@ AB = Artificial.Base
 
 class AB.Subscription
   constructor: (@options) ->
+    @query = @options.query
 
   subscribe: ->
     subscribeProvider = Meteor

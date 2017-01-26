@@ -16,7 +16,7 @@ class PADB.PixelDailies.Pages.YearReview.ThemesCalendarProvider extends PADB.Pix
       @constructor.themes.subscribe @options.year, @limit()
 
   destroy: ->
-    @_subscriptionAutorun.destroy()
+    @_subscriptionAutorun.stop()
 
   submissions: ->
     PADB.PixelDailies.Theme.documents
@@ -46,6 +46,12 @@ class PADB.PixelDailies.Pages.YearReview.ThemesCalendarProvider extends PADB.Pix
 
         # Add theme data.
         topSubmission.theme = theme
+
+        # Add theme url.
+        topSubmission.url = FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
+          year: theme.time.getFullYear()
+          month: _.toLower theme.time.toLocaleString 'en-US', month: 'long'
+          day: theme.time.getDate()
 
       topSubmission
 

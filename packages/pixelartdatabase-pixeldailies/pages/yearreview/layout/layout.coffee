@@ -7,8 +7,10 @@ class PADB.PixelDailies.Pages.YearReview.Layout extends BlazeLayoutComponent
   onCreated: ->
     super
 
-    document.title = "Retronator // 2016 Pixel Dailies Retrospective"
-    
+    @autorun (computation) =>
+      year = FlowRouter.getParam 'year'
+      document.title = "Retronator // #{year} Pixel Dailies Retrospective"
+
     @display = new AM.Display
       safeAreaWidth: 350
       safeAreaHeight: 350

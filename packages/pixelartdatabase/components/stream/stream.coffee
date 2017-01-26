@@ -16,6 +16,7 @@ class PADB.Components.Stream extends AM.Component
 
     @displayedArtworks = new ComputedField =>
       artworks = @data()
+      return unless artworks
 
       # Add extra data to artworks.
       for artwork in artworks

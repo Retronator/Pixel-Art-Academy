@@ -16,7 +16,11 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
     super
 
     # Update current count for infinite scroll.
-    @autorun (computation) => @infiniteScroll.updateCount @data().length
+    @autorun (computation) =>
+      artworks = @data()
+      return unless artworks
+
+      @infiniteScroll.updateCount artworks.length
 
   artworkCaptionClass: ->
     @constructor.ArtworkCaption
@@ -31,7 +35,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
         artwork = @data()
         return unless artwork
 
-        imageRepresentation = _.find artwork.representations, type: PADB.Artwork.RepresentationTypes.Image
+        imageRepresentation = artwork.firstImageRepresentation()
 
         PADB.PixelDailies.Submission.documents.findOne
           'images.imageUrl': imageRepresentation.url
@@ -76,11 +80,3 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
         month: 'long'
         day: 'numeric'
         year: 'numeric'
-
-    twitterProfile: ->
-      artist = @currentData()
-      artist.refresh()
-      return unless artist.profiles
-
-      twitterProfile = _.find artist.profiles, platformType: PADB.Profile.PlatformTypes.Twitter
-      twitterProfile.refresh()

@@ -83,6 +83,11 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/artworks/artworks.coffee');
   api.addFiles('pages/yearreview/artworks/subscriptions.coffee', 'server');
 
+  api.addFiles('pages/yearreview/day/day.html');
+  api.addFiles('pages/yearreview/day/day.styl');
+  api.addFiles('pages/yearreview/day/day.coffee');
+  api.addFiles('pages/yearreview/day/subscriptions.coffee', 'server');
+
   api.addFiles('pages/admin/admin.html');
   api.addFiles('pages/admin/admin.coffee');
 

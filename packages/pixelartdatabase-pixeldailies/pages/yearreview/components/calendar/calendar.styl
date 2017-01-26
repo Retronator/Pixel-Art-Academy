@@ -35,7 +35,6 @@
           top 0
           left 0
           background atariGrey(1)
-          cursor pointer
           transition top 0.2s, left 0.2s, opacity 0.2s
 
           &::after
@@ -82,26 +81,29 @@
               color atariGrey(0)
               transition background-color 0.2s
 
-          &.has-submission:hover
-            top -2rem
-            left -2rem
+          &.has-submission
+            cursor pointer
 
-            &::after
-              content ''
-              absolute-cover()
-              box-shadow  1rem 1rem 0 atariGrey(3),
-                          2rem 2rem 0 atariGrey(3),
-                          3rem 3rem 0 atariGrey(3),
-                          4rem 4rem 0 atariGrey(3)
-            .face
-              z-index 2
-              box-shadow 5rem 5rem 10rem 5rem transparentify(atariGrey(0), 0.5)
+            &:hover
+              top -2rem
+              left -2rem
 
-              .number
-                color atariGrey(7)
+              &::after
+                content ''
+                absolute-cover()
+                box-shadow  1rem 1rem 0 atariGrey(3),
+                            2rem 2rem 0 atariGrey(3),
+                            3rem 3rem 0 atariGrey(3),
+                            4rem 4rem 0 atariGrey(3)
+              .face
+                z-index 2
+                box-shadow 5rem 5rem 10rem 5rem transparentify(atariGrey(0), 0.5)
 
-              .hashtag
-                background transparentify(atariGrey(7), 0.7)
+                .number
+                  color atariGrey(7)
+
+                .hashtag
+                  background transparentify(atariGrey(7), 0.7)
 
       &::after
         content ''
@@ -109,7 +111,7 @@
         clear both
 
 @media (max-width: 768px)
-  .pixelartdatabase-pixeldailies-pages-yearreview-themes
+  .pixelartdatabase-pixeldailies-pages-yearreview-components-calendar
     .months
       .month
         .days
