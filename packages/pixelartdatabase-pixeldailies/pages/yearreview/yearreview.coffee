@@ -78,6 +78,13 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
 
     @backgrounds[index]
 
+  authorUrl: ->
+    background = @currentData()
+
+    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
+      year: FlowRouter.getParam 'year'
+      screenName: _.toLower background.author
+
   insertDOMElement: (parent, node, before) ->
     super
     $node = $(node)

@@ -16,8 +16,6 @@ PADB.PixelDailies.Pages.YearReview.ThemesCalendarProvider.themes.publish (year, 
 
   yearRange.addToMongoQuery themesQuery, 'time'
 
-  total = PADB.PixelDailies.Theme.documents.find(themesQuery).count()
-
   PADB.PixelDailies.Theme.documents.find themesQuery,
     sort:
       time: 1

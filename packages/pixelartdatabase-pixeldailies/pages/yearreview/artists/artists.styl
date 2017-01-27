@@ -1,0 +1,136 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartdatabase-pixeldailies-pages-yearreview-artists
+  .header
+    position relative
+    z-index 1
+    color atariGrey(7)
+    box-shadow 0 0 50rem atariGrey(0)
+
+    .view-options
+      position absolute
+      top 100%
+      padding 20rem 5vh
+
+      .view-mode-button
+        position relative
+        adventure()
+        margin-left 10rem
+        padding 2rem 4rem 2rem 5rem
+        background none
+        border none
+        color inherit
+        text-transform uppercase
+
+        &:disabled
+        &:hover
+          color atariGrey(0)
+          background atariGrey(7)
+          box-shadow 1rem 1rem 0 atariGrey(0),
+                     2rem 2rem 0 atariGrey(0),
+                     2rem 2rem 10rem transparentify(atariGrey(0), 0.3)
+
+        &:active
+          top 2rem
+          left 2rem
+          box-shadow none
+
+        &:disabled
+          background atariGrey(6)
+          cursor default
+
+  .profiles
+    position relative
+    z-index 0
+    list-style none
+    padding 0
+    margin 0
+
+    .profile
+      position relative
+      z-index 2
+
+      &:first-child
+        .information
+          padding-top 60rem
+
+      .information
+        display block
+        position relative
+        z-index 2
+        padding 20rem 5vh
+        text-decoration none
+
+        .username
+          display block
+          kyrou-9()
+          margin 0 0 0 1rem
+          color atariGrey(6)
+          text-shadow 1rem 1rem 0 atariGrey(0), 2rem 2rem 5rem transparentify(atariGrey(0), 0.5)
+
+          .twitter-link
+            text-decoration none
+            transition color 0.2s
+
+            &:hover
+              color atariGrey(7)
+
+        .display-name
+          display block
+          acme-9()
+          font-size 20rem
+          margin-top 0
+          color atariGrey(7)
+          text-shadow 2.25rem 2.25rem 0 atariGrey(0), 4rem 4rem 10rem transparentify(atariGrey(0), 0.5)
+
+        .statistics
+          display block
+          margin-top 20rem
+
+          .statistic
+            display block
+
+      .background
+        absolute-cover()
+        z-index 0
+        background atariGrey(0)
+        overflow hidden
+
+        &::after
+          content ''
+          absolute-cover()
+          background linear-gradient(to right, transparentify(atariGrey(0), 0.6) 0%, transparentify(atariGrey(0), 0.4) 100%)
+
+        &.old
+          z-index 1
+
+        &.transition
+          transition opacity ease-in 1s
+
+        .key-artwork-area
+          position absolute
+          left 30%
+          width 80%
+          top 0
+          bottom 0
+          z-index 1
+          mix-blend-mode screen
+
+          .key-artwork
+            absolute-cover-size()
+            object-fit cover
+            pixel-image-rendering()
+
+            &.transition
+              transition background-position ease-in-out 10s
+
+          &::after
+            content ''
+            absolute-cover()
+            background linear-gradient(to right, atariGrey(0) 0%, transparent 100%)
+
+        .color
+          absolute-cover()
+          background-size cover
+          z-index 0
+          filter blur(100px)

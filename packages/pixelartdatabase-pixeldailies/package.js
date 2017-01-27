@@ -93,6 +93,11 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/artworks/artworks.coffee');
   api.addFiles('pages/yearreview/artworks/subscriptions.coffee', 'server');
 
+  api.addFiles('pages/yearreview/artists/artists.html');
+  api.addFiles('pages/yearreview/artists/artists.styl');
+  api.addFiles('pages/yearreview/artists/artists.coffee');
+  api.addFiles('pages/yearreview/artists/subscriptions.coffee', 'server');
+
   api.addFiles('pages/yearreview/artist/artist.html');
   api.addFiles('pages/yearreview/artist/artist.styl');
   api.addFiles('pages/yearreview/artist/artist.coffee');
