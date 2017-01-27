@@ -50,6 +50,8 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/yearreview.html');
   api.addFiles('pages/yearreview/yearreview.styl');
 
+  api.addFiles('pages/yearreview/helpers.coffee');
+
   api.addFiles('pages/yearreview/years/years.coffee');
   api.addFiles('pages/yearreview/years/year2016.coffee');
 
@@ -76,6 +78,10 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/components/themebanner/themebanner.styl');
   api.addFiles('pages/yearreview/components/themebanner/themebanner.coffee');
 
+  api.addFiles('pages/yearreview/components/header/header.html');
+  api.addFiles('pages/yearreview/components/header/header.styl');
+  api.addFiles('pages/yearreview/components/header/header.coffee');
+
   api.addFiles('pages/yearreview/components/mixins/mixins.coffee');
   api.addFiles('pages/yearreview/components/mixins/infinitescroll.coffee');
 
@@ -86,6 +92,12 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/artworks/artworks.styl');
   api.addFiles('pages/yearreview/artworks/artworks.coffee');
   api.addFiles('pages/yearreview/artworks/subscriptions.coffee', 'server');
+
+  api.addFiles('pages/yearreview/artist/artist.html');
+  api.addFiles('pages/yearreview/artist/artist.styl');
+  api.addFiles('pages/yearreview/artist/artist.coffee');
+  api.addFiles('pages/yearreview/artist/calendarprovider.coffee');
+  api.addFiles('pages/yearreview/artist/subscriptions.coffee', 'server');
 
   api.addFiles('pages/yearreview/day/day.html');
   api.addFiles('pages/yearreview/day/day.styl');

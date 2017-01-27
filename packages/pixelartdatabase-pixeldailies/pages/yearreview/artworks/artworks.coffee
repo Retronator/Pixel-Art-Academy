@@ -26,60 +26,32 @@ class PADB.PixelDailies.Pages.YearReview.Artworks extends AM.Component
         fields:
           tweetData: 0
 
-      submissions = submissionsCursor.fetch()
-
-      artworkIds = for submission in submissions
-        for image in submission.images
-          artwork = PADB.Artwork.documents.findOne
-            'representations.url': image.imageUrl
-
-          artwork?._id
-
-      artworkIds = _.flatten artworkIds
-
-      artworksCursor = PADB.Artwork.documents.find
-        _id:
-          $in: artworkIds
+      artworksCursor = PADB.PixelDailies.Pages.YearReview.Helpers.prepareArtworksCursorForSubmissionsCursor submissionsCursor
 
       [submissionsCursor, artworksCursor]
 
   onCreated: ->
     super
 
-    @infiniteScroll = new ReactiveField null
+    @stream = new ReactiveField null
 
+    # Subscribe to most popular artworks.
     @autorun (computation) =>
-      return unless infiniteScroll = @infiniteScroll()
+      return unless stream = @stream()
 
-      @constructor.mostPopular.subscribe @, @year(), infiniteScroll.limit()
+      @constructor.mostPopular.subscribe @, @year(), stream.infiniteScroll.limit()
 
+    # Prepare artworks for the stream.
     @artworks = new ComputedField =>
-      return [] unless infiniteScroll = @infiniteScroll()
-      [submissionsCursor, artworksCursor] = @constructor.mostPopular.query @year(), infiniteScroll.limit()
+      return [] unless stream = @stream()
+      [submissionsCursor, artworksCursor] = @constructor.mostPopular.query @year(), stream.infiniteScroll.limit()
 
-      artworks = for artwork in artworksCursor.fetch()
-        # Find image URL.
-        imageRepresentation = _.find artwork.representations, type: PADB.Artwork.RepresentationTypes.Image
-
-        submission = PADB.PixelDailies.Submission.documents.findOne
-          'images.imageUrl': imageRepresentation.url
-
-        artwork.favoritesCount = submission.favoritesCount
-
-        artwork
-
-      artworks = _.reverse _.sortBy artworks, 'favoritesCount'
-
-      # Add ranks.
-      artwork.rank = index + 1 for artwork, index in artworks
-
-      artworks
+      PADB.PixelDailies.Pages.YearReview.Helpers.prepareTopArtworks artworksCursor.fetch()
 
   onRendered: ->
     super
 
-    stream = @childComponents(PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream)[0]
-    @infiniteScroll stream.infiniteScroll
+    @stream @childComponents(PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream)[0]
 
   year: ->
     parseInt FlowRouter.getParam 'year'

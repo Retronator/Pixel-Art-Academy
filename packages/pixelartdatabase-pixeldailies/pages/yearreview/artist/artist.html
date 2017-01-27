@@ -1,0 +1,42 @@
+<template name="PixelArtDatabase.PixelDailies.Pages.YearReview.Artist">
+  <div class="pixelartdatabase-pixeldailies-pages-yearreview-artist">
+    <header class="header">
+      {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Header}}
+      <div class="user-banner">
+        <div class="profile">
+          <div class="screen-name">
+            <a class="twitter-link" href="https://twitter.com/{{screenName}}">@{{screenName}}</a>
+          </div>
+          {{#with profile}}
+            <h2 class="display-name">
+              {{displayName}}
+            </h2>
+            <div class="information">
+              <div class="description">{{description}}</div>
+              <div class="statistics">
+                <h3 class="title">{{year}} stats</h3>
+                <div class="statistic">Submissions: 10</div>
+                <div class="statistic">Total favorites: 200</div>
+              </div>
+            </div>
+          {{/with}}
+        </div>
+        {{#with background}}
+          <div class="background">
+            <div class="key-image-area">
+              <div class="key-image" style="background-image: url({{url}});"></div>
+            </div>
+            <div class="color" style="background-image: url({{url}});"></div>
+          </div>
+        {{/with}}
+      </div>
+    </header>
+    {{#if streamView}}
+      {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream topArtworks}}
+    {{else}}
+      {{#if yearCalendarProvider}}
+        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar args yearCalendarProvider}}
+      {{/if}}
+    {{/if}}
+  </div>
+</template>

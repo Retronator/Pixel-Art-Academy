@@ -2,7 +2,7 @@
   <div class="pixelartdatabase-pixeldailies-pages-yearreview-components-calendar">
     <ol class="months">
       {{#each months}}
-        <li class="month">
+        <li class="month {{monthHasSubmissionsClass}}">
           <div class="name">{{monthName}}</div>
           <ol class="days">
             {{#each paddingDays}}
@@ -14,18 +14,18 @@
                   {{#if submission}}
                     <a class="face" href="{{submission.url}}">
                       <span class="number">{{number}}</span>
-                      {{#if submission}}
+                      {{#if submission.theme}}
                         <span class="hashtag">#{{submissionHashtag}}</span>
-                        {{#with submissionImage}}
-                          {{#if videoUrl}}
-                            <video class="top-submission" src="{{videoUrl}}" loop poster="{{imageUrl}}">
-                              <img class="top-submission" src="{{imageUrl}}"/>
-                            </video>
-                          {{else}}
-                            <img class="top-submission" src="{{imageUrl}}"/>
-                          {{/if}}
-                        {{/with}}
                       {{/if}}
+                      {{#with submissionImage}}
+                        {{#if videoUrl}}
+                          <video class="top-submission" src="{{videoUrl}}" loop poster="{{imageUrl}}">
+                            <img class="top-submission" src="{{imageUrl}}"/>
+                          </video>
+                        {{else}}
+                          <img class="top-submission" src="{{imageUrl}}"/>
+                        {{/if}}
+                      {{/with}}
                     </a>
                   {{else}}
                     <span class="face">

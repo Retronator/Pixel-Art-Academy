@@ -9,6 +9,11 @@
     margin 0
 
     .month
+      display none
+
+      &.has-submissions
+        display block
+
       > .name
         padding 10rem
         kyrou-9()
@@ -119,12 +124,13 @@
             display none
 
           .day
-            width 33vw
-            height 33vw
-
-            &:nth-child(3n+0)
-              width 34vw
+            display none
+            width 33.333vw
+            height 33.333vw
 
             &:nth-child(7n+0)
             &:nth-child(7n+1)
-              width 33vw
+              width 33.333vw
+
+            &.has-submission
+              display block

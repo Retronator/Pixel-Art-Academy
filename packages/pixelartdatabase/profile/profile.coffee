@@ -27,3 +27,7 @@ class PADB.Profile extends AM.Document
     FacebookPage: 'FacebookPage'
     FacebookProfile: 'FacebookProfile'
     Other: 'Other'
+
+  # Subscriptions
+
+  @forUsername: @subscription 'forUsername'

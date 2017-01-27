@@ -1,0 +1,84 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartdatabase-pixeldailies-pages-yearreview-artist
+  .header
+    position relative
+    color atariGrey(7)
+
+    .user-banner
+      position relative
+      z-index 2
+      padding 20rem 5vh
+
+      .profile
+        position relative
+        z-index 2
+
+        .screen-name
+          display block
+          kyrou-9()
+          margin 0
+          color atariGrey(6)
+          text-shadow 0 1rem 0 atariGrey(0), 0 2rem 5rem transparentify(atariGrey(0), 0.5)
+
+          .twitter-link
+            text-decoration none
+
+        .display-name
+          display block
+          acme-9()
+          font-size 20rem
+          margin-top 0
+          color atariGrey(7)
+          text-shadow 0 2rem 0 atariGrey(0), 0 4rem 10rem transparentify(atariGrey(0), 0.5)
+
+        .information
+          width 30em
+
+        .statistics
+          margin-top 20rem
+
+          .title
+            kyrou-7()
+            text-transform uppercase
+
+      .background
+        absolute-cover()
+        z-index 0
+        background atariGrey(0)
+        overflow hidden
+
+        &.old
+          z-index 1
+
+        &.transition
+          transition opacity ease-in 1s
+
+        .key-image-area
+          position absolute
+          left 30%
+          width 80%
+          top 0
+          bottom 0
+          z-index 1
+          mix-blend-mode screen
+
+          .key-image
+            absolute-cover-size()
+            background-size cover
+            background-position center center
+            pixel-image-rendering()
+
+            &.transition
+              transition background-position ease-in-out 10s
+
+          &::after
+            content ''
+            absolute-cover()
+            background linear-gradient(to right, atariGrey(0) 0%, transparent 100%)
+
+        .color
+          absolute-cover()
+          background-size cover
+          z-index 0
+          filter blur(100px)

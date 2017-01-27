@@ -30,6 +30,8 @@ Package.onUse(function(api) {
 
   api.addFiles('profile/profile.coffee');
   api.addFiles('profile/server.coffee', 'server');
+  api.addFiles('profile/subscriptions.coffee', 'server');
+
   api.addFiles('profile/providers-server/providers.coffee', 'server');
   api.addFiles('profile/providers-server/twitter.coffee', 'server');
 

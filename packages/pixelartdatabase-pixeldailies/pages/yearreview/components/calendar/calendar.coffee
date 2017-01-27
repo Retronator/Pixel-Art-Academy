@@ -21,6 +21,11 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
   onCreated: ->
     super
 
+    # Match provider and infinite scroll limit.
+    @autorun (computation) =>
+      # Update how many items the provider should return.
+      @provider.limit @infiniteScroll.limit()
+
     # Months is a skeleton structure that only provides the structure for html elements, but no real data.
     @months = new ReactiveField null
 
@@ -97,6 +102,17 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
         # Update infinite scroll with how many submissions we've shown.
         @infiniteScroll.updateCount submissions.length
 
+  monthHasSubmissionsClass: ->
+    month = @currentData()
+
+    # Grab latest month data.
+    monthsByYear = @monthsByYear()
+    month = monthsByYear[month.year][month.number]
+
+    submissionsCount = _.sum _.map month.days, (day) => if day.submission then 1 else 0
+
+    'has-submissions' if submissionsCount
+
   monthName: ->
     month = @currentData()
     monthDate = new Date 2016, month.number
@@ -121,6 +137,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
 
   submissionImage: ->
     day = @currentData()
+    console.log day unless day.submission.images[0]
     day.submission.images[0]
 
   events: ->

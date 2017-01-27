@@ -10,7 +10,6 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     super
 
     @currentBackgroundIndex = new ReactiveField null
-    @calendar = new ReactiveField null
 
   onCreated: ->
     super
@@ -39,12 +38,6 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
         @constructor.themeProvidersByYears[year] ?= new @constructor.ThemesCalendarProvider year: year
         @yearCalendarProvider = @constructor.themeProvidersByYears[year]
 
-    @autorun (computation) =>
-      return unless calendar = @calendar()
-      
-      # Update how many items the provider should return.
-      @yearCalendarProvider.limit calendar.infiniteScroll.limit()
-
   onRendered: ->
     super
 
@@ -68,7 +61,6 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     newLimit = Math.max currentLimit, @yearCalendarProvider.limit()
 
     calendar.infiniteScroll.limit newLimit
-    @calendar calendar
 
   onDestroyed: ->
     Meteor.clearInterval @_changeBackgroundInterval
@@ -85,9 +77,6 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     return unless index?
 
     @backgrounds[index]
-
-  isFullscreen: ->
-    AM.Window.isFullscreen()
 
   insertDOMElement: (parent, node, before) ->
     super
