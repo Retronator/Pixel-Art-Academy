@@ -110,6 +110,7 @@ Package.onUse(function(api) {
   api.addFiles('pages/admin/scripts/scripts.coffee');
   api.addFiles('pages/admin/scripts/scripts.html');
   api.addFiles('pages/admin/scripts/methods-server/archiveallsubmissions.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/rematchmissingthemes.coffee', 'server');
+  api.addFiles('pages/admin/scripts/methods-server/reprocesssubmissions.coffee', 'server');
   api.addFiles('pages/admin/scripts/methods-server/updatethemesubmissions.coffee', 'server');
+  api.addFiles('pages/admin/scripts/methods-server/reprocessprofiles.coffee', 'server');
 });

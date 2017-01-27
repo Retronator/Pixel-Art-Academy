@@ -23,6 +23,7 @@ Package.onUse(function(api) {
     'reactive-dict',
     'check',
     'ejson',
+    'markdown',
 
     // 3rd party
     'peerlibrary:assert',

@@ -3,7 +3,6 @@ RA = Retronator.Accounts
 PADB = PixelArtDatabase
 
 Meteor.methods
-  # For all users, call onTransactionsUpdated.
   'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts.archiveAllSubmissions': ->
     RA.authorizeAdmin()
 
@@ -16,7 +15,7 @@ Meteor.methods
     for submission in submissions
       # Find the twitter profile and listen for rate limit exception.
       try
-        PADB.PixelDailies.archiveSubmission submission, true
+        PADB.PixelDailies.archiveSubmission submission
         count++
 
       catch error

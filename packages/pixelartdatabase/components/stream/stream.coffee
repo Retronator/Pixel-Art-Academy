@@ -135,6 +135,7 @@ class PADB.Components.Stream extends AM.Component
   measureArtworkAreas: ->
     # Get scroll top positions of all artworks.
     $artworkAreas = @$('.artwork-area')
+    return unless $artworkAreas.length
 
     for artworkAreaElement, index in $artworkAreas
       @_artworkAreas[index] ?= {}

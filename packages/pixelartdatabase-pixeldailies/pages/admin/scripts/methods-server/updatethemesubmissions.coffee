@@ -3,7 +3,6 @@ RA = Retronator.Accounts
 PADB = PixelArtDatabase
 
 Meteor.methods
-# For all users, call onTransactionsUpdated.
   'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts.updateThemeSubmissions': ->
     RA.authorizeAdmin()
 

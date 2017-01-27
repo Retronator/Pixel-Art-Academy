@@ -22,6 +22,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
       include_rts: true
       screen_name: 'Pixel_Dailies'
       count: count
+      tweet_mode: 'extended'
 
     # Start back from maxId if set.
     params.max_id = options.maxId if options.maxId

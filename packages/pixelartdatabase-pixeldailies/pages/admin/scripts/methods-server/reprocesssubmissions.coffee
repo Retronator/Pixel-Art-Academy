@@ -3,15 +3,15 @@ RA = Retronator.Accounts
 PADB = PixelArtDatabase
 
 Meteor.methods
-  # For all users, call onTransactionsUpdated.
-  'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts.rematchMissingThemes': ->
+  'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts.reprocessSubmissions': ->
     RA.authorizeAdmin()
 
     submissions = PADB.PixelDailies.Submission.documents.find(
-      processingError: PADB.PixelDailies.Submission.ProcessingError.NoThemeMatch
+      processingError:
+        $exists: true
     ).fetch()
 
-    console.log "Rematching Pixel Dailies submissions. Total:", submissions.length
+    console.log "Reprocessing Pixel Dailies submissions with errors. Total:", submissions.length
 
     count = 0
 
@@ -22,4 +22,4 @@ Meteor.methods
       
       count++ unless submission.processingError
 
-    console.log "#{count} submissions were successfully matched."
+    console.log "#{count} submissions were successfully corrected."

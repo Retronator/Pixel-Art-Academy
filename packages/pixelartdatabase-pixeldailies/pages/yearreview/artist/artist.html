@@ -12,7 +12,9 @@
               {{displayName}}
             </h2>
             <div class="information">
-              <div class="description">{{description}}</div>
+              <div class="description">
+                {{#markdown}}{{description}}{{/markdown}}
+              </div>
               <div class="statistics">
                 <h3 class="title">{{year}} stats</h3>
                 <div class="statistic">Submissions: 10</div>

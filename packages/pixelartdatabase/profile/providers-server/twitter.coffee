@@ -21,36 +21,46 @@ class PADB.Profile.Providers.Twitter
   @createProfileData: (options) ->
     throw new AE.InvalidOperationException 'Twitter API is not initialized.' unless AT.Twitter.initialized
 
-    throw new AE.ArgumentNullException 'You must provide the profile username.' unless options.username
+    throw new AE.ArgumentNullException 'You must provide the profile username or source data.' unless options.username or options.sourceData
 
-    # Query the API.
-    try
-      data = AT.Twitter.usersLookup
-        screen_name: options.username
-        include_entities: true
+    # Fetch Twitter profile data if it wasn't provided.
+    unless options.sourceData
+      # Query the API.
+      try
+        data = AT.Twitter.usersLookup
+          screen_name: options.username
+          include_entities: true
 
-    catch error
-      # Pass through the limit exceeded exception since we should stop processing the requests.
-      throw error if error instanceof AE.LimitExceededException
+      catch error
+        # Pass through the limit exceeded exception since we should stop processing the requests.
+        throw error if error instanceof AE.LimitExceededException
 
-      switch error.code
-        when 17
-          # No user was found for the username. Return a profile with the error.
-          profile =
-            platformType: PADB.Profile.PlatformTypes.Twitter
-            username: options.username
-            error: error
+        switch error.code
+          when 17
+            # No user was found for the username. Return a profile with the error.
+            profile =
+              platformType: PADB.Profile.PlatformTypes.Twitter
+              username: options.username
+              error: error
 
-          return profile
+            return profile
 
-        else
-          throw error
+          else
+            throw error
 
-    unless data?[0]
-      console.error "Error creating profile for twitter user with options", options
-      return
+      unless data?[0]
+        console.error "Error creating profile for twitter user with options", options
+        return
 
-    sourceData = data[0]
+      options.sourceData = data[0]
+
+    sourceData = options.sourceData
+
+    # Expand links in description
+    description = sourceData.description
+
+    for url in sourceData.entities?.description?.urls
+      description = description.replace url.url, "[#{url.display_url}](#{url.expanded_url})"
 
     # Create the profile out of source data.
     profile =
@@ -59,7 +69,7 @@ class PADB.Profile.Providers.Twitter
       username: sourceData.screen_name
       displayName: sourceData.name
       imageUrl: sourceData.profile_image_url
-      description: sourceData.description
+      description: description
       followersCount: sourceData.followers_count
       sourceData: sourceData
 

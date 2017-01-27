@@ -1,4 +1,5 @@
 AB = Artificial.Babel
+AT = Artificial.Telepathy
 PADB = PixelArtDatabase
 
 class PADB.PixelDailies extends PADB.PixelDailies
@@ -18,10 +19,20 @@ class PADB.PixelDailies extends PADB.PixelDailies
 
         return
 
+      # If source tweet is truncated it will be missing images, so we have to fetch it from the source.
+      if tweet.retweeted_status.truncated
+        # The status might not exist anymore, which will throw an error from Twit, so we need to catch it.
+        try
+          tweet.retweeted_status = AT.Twitter.statusesShow
+            id: tweet.retweeted_status.id_str
+            tweet_mode: 'extended'
+
+        catch e
+
       # Process (or reprocess) the tweet.
       submission =
         time: new Date tweet.retweeted_status.created_at
-        text: tweet.retweeted_status.text
+        text: tweet.retweeted_status.full_text or tweet.retweeted_status.text
         user:
           name: tweet.retweeted_status.user.name
           screenName: tweet.retweeted_status.user.screen_name
@@ -127,7 +138,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
       console.warn "No themes found in the last 5 days. That's weird.", tweetTime
       return
 
-    tweetText = tweet.text.toLowerCase()
+    tweetText = (tweet.full_text or tweet.text).toLowerCase()
 
     # Remove urls.
     urlRegex = /(https?):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/g
@@ -156,8 +167,8 @@ class PADB.PixelDailies extends PADB.PixelDailies
       # Sort descending by fuzzy match count.
       b.fuzzyMatchCount - a.fuzzyMatchCount
 
-    if not themes[0].exactMatchCount and themes[0].fuzzyMatchCount > 0.5
-      console.log "Fuzzy match made on", tweetText, themes
+    #if not themes[0].exactMatchCount and themes[0].fuzzyMatchCount > 0.5
+      #console.log "Fuzzy match made on", tweetText, themes
 
     # Don't do a match with a theme that didn't get an exact match and fuzzy match is below 50%.
     unless themes[0].exactMatchCount or themes[0].fuzzyMatchCount > 0.5
