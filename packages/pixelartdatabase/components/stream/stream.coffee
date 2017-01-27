@@ -146,7 +146,7 @@ class PADB.Components.Stream extends AM.Component
 
   # Determines which artwork we're viewing.
   updateActiveArtwork: (options) ->
-    newIndex = null
+    newIndex = -1
 
     scrollTop = @_$window.scrollTop()
 
@@ -161,4 +161,4 @@ class PADB.Components.Stream extends AM.Component
         break
 
     @activeArtworkIndex newIndex
-    @activeArtwork @_artworkAreas[newIndex].artwork if newIndex?
+    @activeArtwork if newIndex > -1 then @_artworkAreas[newIndex].artwork else null

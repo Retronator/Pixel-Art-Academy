@@ -41,7 +41,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
     @stream = new ReactiveField null
 
-    @streamView = new ReactiveField false
+    @streamViewActive = new ReactiveField false
 
   onCreated: ->
     super
@@ -76,8 +76,10 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     super
 
     @_changeBackgroundInterval = Meteor.setInterval =>
+      # Choose between one of the first 10 artworks that are always subscribed (but could be less than 10 total).
       artworksCount = @topArtworks()?.length or 1
-      newIndex = (@currentBackgroundIndex() + 1) % artworksCount
+      bannerArtworksCount = Math.min 10, artworksCount
+      newIndex = (@currentBackgroundIndex() + 1) % bannerArtworksCount
 
       # Temporarily remove the background so that animations get triggered.
       @currentBackgroundIndex null
@@ -90,7 +92,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     @currentBackgroundIndex 0
 
     @autorun (computation) =>
-      if @streamView()
+      if @streamViewActive()
         Tracker.afterFlush =>
           @stream @childComponents(PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream)[0]
 
@@ -118,6 +120,12 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     return unless artwork
 
     url: artwork.firstImageRepresentation().url
+
+  calendarButtonDisabledAttribute: ->
+    disabled: true unless @streamViewActive()
+
+  streamButtonDisabledAttribute: ->
+    disabled: true if @streamViewActive()
 
   insertDOMElement: (parent, node, before) ->
     super
@@ -157,7 +165,11 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
   events: ->
     super.concat
-      'click .fullscreen': @onClickFullscreen
+      'click .calendar.view-mode-button': @onClickCalendarViewModeButton
+      'click .stream.view-mode-button': @onClickStreamViewModeButton
 
-  onClickFullscreen: (event) ->
-    AM.Window.enterFullscreen()
+  onClickCalendarViewModeButton: (event) ->
+    @streamViewActive false
+
+  onClickStreamViewModeButton: (event) ->
+    @streamViewActive true

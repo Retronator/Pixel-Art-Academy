@@ -106,10 +106,3 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     ,
       duration: 1000
       complete: => $node.remove()
-
-  events: ->
-    super.concat
-      'click .fullscreen': @onClickFullscreen
-
-  onClickFullscreen: (event) ->
-    AM.Window.enterFullscreen()

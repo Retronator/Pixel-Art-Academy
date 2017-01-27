@@ -5,7 +5,7 @@
       <div class="user-banner">
         <div class="profile">
           <div class="screen-name">
-            <a class="twitter-link" href="https://twitter.com/{{screenName}}">@{{screenName}}</a>
+            <a class="twitter-link" href="https://twitter.com/{{screenName}}" target="_blank">@{{screenName}}</a>
           </div>
           {{#with profile}}
             <h2 class="display-name">
@@ -19,6 +19,10 @@
                 <div class="statistic">Total favorites: 200</div>
               </div>
             </div>
+            <div class="view-options">
+              <button class="calendar view-mode-button" {{calendarButtonDisabledAttribute}}>Calendar</button>
+              <button class="stream view-mode-button" {{streamButtonDisabledAttribute}}>Most favorites</button>
+            </div>
           {{/with}}
         </div>
         {{#with background}}
@@ -31,7 +35,7 @@
         {{/with}}
       </div>
     </header>
-    {{#if streamView}}
+    {{#if streamViewActive}}
       {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream topArtworks}}
     {{else}}
       {{#if yearCalendarProvider}}
