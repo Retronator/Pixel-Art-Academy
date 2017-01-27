@@ -17,8 +17,10 @@
               </div>
               <div class="statistics">
                 <h3 class="title">{{year}} stats</h3>
-                <div class="statistic">Submissions: 10</div>
-                <div class="statistic">Total favorites: 200</div>
+                {{#with statistics}}
+                  <div class="statistic">Submissions: {{submissionsCount}}</div>
+                  <div class="statistic">Total favorites: {{favoritesCount}}</div>
+                {{/with}}
               </div>
             </div>
             <div class="view-options">

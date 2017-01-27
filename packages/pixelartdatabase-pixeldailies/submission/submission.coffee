@@ -25,6 +25,13 @@ class PADB.PixelDailies.Submission extends AM.Document
     fields: =>
       theme: @ReferenceField PADB.PixelDailies.Theme, ['hashtags'], false
     triggers: =>
+      updateUserStatistics: @Trigger ['favoritesCount', 'user'], (submission, oldSubmission) =>
+        # Update statistics of both users.
+        screenNames = _.uniq [submission?.user?.screenName, oldSubmission?.user?.screenName]
+        screenNames = _.without screenNames, undefined
+
+        @updateUserStatistics screenName for screenName in screenNames
+
       favoritesCountUpdated: @Trigger ['theme._id', 'favoritesCount'], (submission, oldSubmission) =>
         # Update the themes of both submissions.
         themeIds = _.uniq [submission?.theme?._id, oldSubmission?.theme?._id]
@@ -39,3 +46,40 @@ class PADB.PixelDailies.Submission extends AM.Document
   # Subscriptions
 
   @forTheme: @subscription 'forTheme'
+
+  @updateUserStatistics: (screenName) ->
+    # Find the twitter profile.
+    profile = PADB.Profile.Providers.Twitter.getByScreenName screenName
+
+    submissions = @documents.find(
+      'user.screenName': new RegExp screenName, 'i'
+      processingError:
+        $ne: PADB.PixelDailies.Submission.ProcessingError.NoImages
+    ).fetch()
+
+    statisticsByYear = {}
+
+    for submission in submissions
+      year = submission.time.getFullYear()
+      statisticsByYear[year] ?= {}
+      statistics = statisticsByYear[year]
+
+      statistics.submissionsCount ?= 0
+      statistics.submissionsCount++
+
+      statistics.favoritesCount ?= 0
+      statistics.favoritesCount += submission.favoritesCount
+
+    overallStatistics =
+      submissionsCount: 0
+      favoritesCount: 0
+
+    for year, statistics of statisticsByYear
+      overallStatistics.submissionsCount += statistics.submissionsCount
+      overallStatistics.favoritesCount += statistics.favoritesCount
+
+    PADB.Profile.documents.update profile._id,
+      $set:
+        pixelDailies:
+          statisticsByYear: statisticsByYear
+          statistics: overallStatistics

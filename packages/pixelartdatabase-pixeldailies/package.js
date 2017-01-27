@@ -113,4 +113,5 @@ Package.onUse(function(api) {
   api.addFiles('pages/admin/scripts/methods-server/reprocesssubmissions.coffee', 'server');
   api.addFiles('pages/admin/scripts/methods-server/updatethemesubmissions.coffee', 'server');
   api.addFiles('pages/admin/scripts/methods-server/reprocessprofiles.coffee', 'server');
+  api.addFiles('pages/admin/scripts/methods-server/updateuserstatistics.coffee', 'server');
 });

@@ -112,6 +112,11 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     PADB.Profile.documents.findOne
       username: new RegExp @screenName(), 'i'
 
+  statistics: ->
+    @profile().pixelDailies.statisticsByYear[@year()] or
+      favoritesCount: 0
+      submissionsCount: 0
+
   background: ->
     index = @currentBackgroundIndex()
     return unless index?
