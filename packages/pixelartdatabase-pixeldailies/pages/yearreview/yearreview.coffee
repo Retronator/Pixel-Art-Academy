@@ -78,13 +78,6 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
 
     @backgrounds[index]
 
-  authorUrl: ->
-    background = @currentData()
-
-    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
-      year: FlowRouter.getParam 'year'
-      screenName: _.toLower background.author
-
   insertDOMElement: (parent, node, before) ->
     super
     $node = $(node)
@@ -96,10 +89,13 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
 
     $node.css(backgroundPositionY: position[0])
 
+    transitionDelay = if @_firstTransitionDone then 500 else 2000
+    @_firstTransitionDone = true
+
     Meteor.setTimeout =>
       $node.addClass('transition').css(backgroundPositionY: position[1])
     ,
-      500
+      transitionDelay
 
   removeDOMElement: (parent, node) ->
     $node = $(node)

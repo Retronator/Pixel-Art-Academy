@@ -10,5 +10,5 @@ Template.registerHelper 'flowRouterPath', (pathDef, routeParameters = {}) ->
 Template.registerHelper 'flowRouterRouteName', ->
   FlowRouter.getRouteName()
 
-Template.registerHelper 'routeParameter', (parameter) ->
+Template.registerHelper 'flowRouterParameter', (parameter) ->
   FlowRouter.getParam parameter

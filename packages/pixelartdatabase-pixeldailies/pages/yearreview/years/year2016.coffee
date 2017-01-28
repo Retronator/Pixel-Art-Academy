@@ -3,9 +3,15 @@ PADB = PixelArtDatabase
 
 class PADB.PixelDailies.Pages.YearReview.Years[2016]
   @backgrounds = [
+    # This is the year review header image.
     url: 'http://pbs.twimg.com/media/Ci9SIL8UkAI1tI5.png'
     position: ['0%', '50%']
     author: 'skittlefuck'
+  ,
+    # This one appears on the about page
+    url: 'http://pbs.twimg.com/media/Cecn8oIW8AAK6uS.jpg'
+    position: ['0%', '100%']
+    author: 'orangemagik'
   ,
     url: 'http://pbs.twimg.com/media/CxLBA7PVEAELURt.png'
     position: ['100%', '0%']
@@ -38,8 +44,4 @@ class PADB.PixelDailies.Pages.YearReview.Years[2016]
     url: 'http://pbs.twimg.com/media/CoK5EvbUkAAOfUh.jpg'
     position: ['100%', '0%']
     author: 'VeryJerryPie'
-  ,
-    url: 'http://pbs.twimg.com/media/Cecn8oIW8AAK6uS.jpg'
-    position: ['0%', '100%']
-    author: 'orangemagik'
   ]

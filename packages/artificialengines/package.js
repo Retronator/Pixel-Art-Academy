@@ -67,6 +67,7 @@ Package.onUse(function(api) {
   api.addFiles('everywhere/lodash/urls.coffee');
   api.addFiles('everywhere/lodash/math.coffee');
   api.addFiles('everywhere/lodash/objects.coffee');
+  api.addFiles('everywhere/lodash/strings.coffee');
 
   api.addFiles('everywhere/date.coffee');
   api.addFiles('everywhere/datehelper.coffee');
@@ -100,6 +101,9 @@ Package.onUse(function(api) {
   api.addFiles('mirage/render.coffee');
   api.addFiles('mirage/render.html');
   api.addFiles('mirage/window.coffee', 'client');
+
+  api.addFiles('mirage/markdown/markdown.coffee');
+  api.addFiles('mirage/markdown/markdown.html');
 
   api.addFiles('mirage/spacebars/meteorhelpers.coffee');
   api.addFiles('mirage/spacebars/stringhelpers.coffee');

@@ -80,9 +80,3 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
         month: 'long'
         day: 'numeric'
         year: 'numeric'
-
-    authorUrl: ->
-      return unless submission = @submission()
-      FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
-        year: FlowRouter.getParam 'year'
-        screenName: _.toLower submission.user.screenName

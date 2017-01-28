@@ -1,4 +1,5 @@
 @import "{retronator:landsofillusions}/style/style.import"
+@import "../yearreview.import"
 
 .pixelartdatabase-pixeldailies-pages-yearreview-artists
   .header
@@ -39,6 +40,24 @@
           background atariGrey(6)
           cursor default
 
+    .disclaimer
+      display block
+      position absolute
+      top 100%
+      margin 40rem calc(5vh + 8rem) 20rem
+      adventure()
+      adventure-link()
+      opacity 0.5
+
+      &::before
+        content '*'
+        position absolute
+        top 0
+        left -8rem
+
+      a
+        border-bottom-color atariGrey(2)
+
   .profiles
     position relative
     z-index 0
@@ -52,7 +71,7 @@
 
       &:first-child
         .information
-          padding-top 60rem
+          padding-top 80rem
 
       .information
         display block
@@ -65,15 +84,8 @@
           display block
           kyrou-9()
           margin 0 0 0 1rem
-          color atariGrey(6)
+          color atariGrey(5)
           text-shadow 1rem 1rem 0 atariGrey(0), 2rem 2rem 5rem transparentify(atariGrey(0), 0.5)
-
-          .twitter-link
-            text-decoration none
-            transition color 0.2s
-
-            &:hover
-              color atariGrey(7)
 
         .display-name
           display block
@@ -134,3 +146,4 @@
           background-size cover
           z-index 0
           filter blur(100px)
+

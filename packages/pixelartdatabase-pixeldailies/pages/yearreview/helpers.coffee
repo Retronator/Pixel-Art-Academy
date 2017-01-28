@@ -37,3 +37,11 @@ class PADB.PixelDailies.Pages.YearReview.Helpers
     PADB.Artwork.documents.find
       _id:
         $in: artworkIds
+
+  @artistUrl: (screenName) ->
+    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
+      year: FlowRouter.getParam 'year'
+      screenName: screenName
+
+  Template.registerHelper 'pixelDailiesArtistUrl', (screenName) =>
+    @artistUrl screenName

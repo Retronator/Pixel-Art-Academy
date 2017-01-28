@@ -59,7 +59,7 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
   constructor: ->
     super
 
-    @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll step: 20
+    @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll step: 10
     @sortingParameter = new ReactiveField @constructor.SortingParameters.FavoritesCount
 
   onCreated: ->
@@ -72,7 +72,13 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
     @profiles = new ComputedField =>
       [profilesCursor, submissionsCursor] = @constructor.highestRanked.query @sortingParameter(), @year(), @infiniteScroll.limit()
 
-      profilesCursor.fetch()
+      profiles = profilesCursor.fetch()
+
+      # Add ranks.
+      for profile, index in profiles
+        profile.rank = index + 1
+
+      profiles
 
     # Update current count for infinite scroll.
     @autorun (computation) =>
@@ -91,13 +97,6 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
 
   followersButtonDisabledAttribute: ->
     disabled: true if @sortingParameter() is @constructor.SortingParameters.FollowersCount
-
-  profileUrl: ->
-    profile = @currentData()
-
-    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
-      year: FlowRouter.getParam 'year'
-      screenName: _.toLower profile.username
 
   statistics: ->
     profile = @currentData()

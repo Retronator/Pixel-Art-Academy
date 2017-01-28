@@ -8,24 +8,28 @@
         <button class="submissions view-mode-button" {{submissionsButtonDisabledAttribute}}>Most submissions</button>
         <button class="followers view-mode-button" {{followersButtonDisabledAttribute}}>Most followers</button>
       </div>
+      <small class="disclaimer">
+        Only images retweeted by <a href="https://twitter.com/Pixel_dailies" target="_blank">@Pixel_Dailies</a> are included.<br/>
+        Followers count was archived at time of publishing.
+      </small>
     </header>
     <ol class="profiles">
       {{#each profiles}}
         <li class="profile">
-          <a class="information" href="{{profileUrl}}">
+          <a class="information" href="{{pixelDailiesArtistUrl username}}">
             <span class="username">
-              @{{username}}
+              <span title="rank: {{rank}}">@{{username}}</span>
             </span>
             <span class="display-name">
-              {{displayName}}
+              <span title="rank: {{rank}}">{{displayName}}</span>
             </span>
-              <span class="statistics">
-                {{#with statistics}}
-                  <span class="statistic">Submissions: {{submissionsCount}}</span>
-                  <span class="statistic">Total favorites: {{favoritesCount}}</span>
-                {{/with}}
-                <span class="statistic">Followers: {{followersCount}}</span>
-              </span>
+            <span class="statistics">
+              {{#with statistics}}
+                <span class="statistic">Submissions: {{submissionsCount}}</span>
+                <span class="statistic">Total favorites: {{favoritesCount}}</span>
+              {{/with}}
+              <span class="statistic">Followers: {{followersCount}}</span>
+            </span>
           </a>
           {{#with background}}
             <div class="background">

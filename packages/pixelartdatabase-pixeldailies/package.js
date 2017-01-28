@@ -49,6 +49,7 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/yearreview.coffee');
   api.addFiles('pages/yearreview/yearreview.html');
   api.addFiles('pages/yearreview/yearreview.styl');
+  api.addFiles('pages/yearreview/yearreview.styl', ['client'], {isImport: true});
 
   api.addFiles('pages/yearreview/helpers.coffee');
 
@@ -108,6 +109,10 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/day/day.styl');
   api.addFiles('pages/yearreview/day/day.coffee');
   api.addFiles('pages/yearreview/day/subscriptions.coffee', 'server');
+
+  api.addFiles('pages/yearreview/about/about.html');
+  api.addFiles('pages/yearreview/about/about.styl');
+  api.addFiles('pages/yearreview/about/about.coffee');
 
   api.addFiles('pages/admin/admin.html');
   api.addFiles('pages/admin/admin.coffee');
