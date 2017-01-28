@@ -13,8 +13,8 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartdatabase');
-	api.use('chfritz:easycron');
-	
+  api.use('chfritz:easycron');
+
   api.export('PixelArtDatabase');
 
   api.addFiles('pixeldailies.coffee');
@@ -27,16 +27,16 @@ Package.onUse(function(api) {
   api.addFiles('theme/theme.coffee');
   api.addFiles('theme/subscriptions.coffee', 'server');
 
-	api.addFiles('theme/migrations/0000-multiplehashtags.coffee', 'server');
-	api.addFiles('theme/migrations/0001-datetotime.coffee', 'server');
-	api.addFiles('theme/migrations/0002-reprocesstime.coffee', 'server');
-	api.addFiles('theme/migrations/0003-hashtagstolowercase.coffee', 'server');
+  api.addFiles('theme/migrations/0000-multiplehashtags.coffee', 'server');
+  api.addFiles('theme/migrations/0001-datetotime.coffee', 'server');
+  api.addFiles('theme/migrations/0002-reprocesstime.coffee', 'server');
+  api.addFiles('theme/migrations/0003-hashtagstolowercase.coffee', 'server');
   api.addFiles('theme/migrations/0004-renamecollection.coffee', 'server');
 
-	api.addFiles('submission/submission.coffee');
-	api.addFiles('submission/subscriptions.coffee', 'server');
+  api.addFiles('submission/submission.coffee');
+  api.addFiles('submission/subscriptions.coffee', 'server');
 
-	api.addFiles('submission/migrations/0000-reprocessimages.coffee', 'server');
+  api.addFiles('submission/migrations/0000-reprocessimages.coffee', 'server');
   api.addFiles('submission/migrations/0001-renamecollection.coffee', 'server');
 
   // Pages
