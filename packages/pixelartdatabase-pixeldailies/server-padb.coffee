@@ -3,14 +3,14 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies extends PADB.PixelDailies
   # Archives the submission into the database.
   @archiveSubmission: (submission, log) ->
-    console.log "archiving", submission if log
+    console.log "Archiving submission", submission if log
     # First we need to see if this is a valid submission.
     return if submission.processingError is PADB.PixelDailies.Submission.ProcessingError.NoImages
 
     # Find the twitter profile.
     profile = PADB.Profile.Providers.Twitter.getByScreenName submission.user.screenName
 
-    console.log "profile", profile if log
+    console.log "Got Twitter profile", profile if log
 
     # Create an artwork out of each image in the submission.
     for image in submission.images
@@ -49,7 +49,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
       # Find if we already have an artwork by searching for the image url in this tweet.
       existing = PADB.Artwork.documents.findOne 'representations.url': image.imageUrl
 
-      console.log "made artwork", artwork, "existing", existing if log
+      console.log "New artwork data", artwork, "existing data", existing if log
 
       if existing
         PADB.Artwork.documents.update existing._id, artwork
