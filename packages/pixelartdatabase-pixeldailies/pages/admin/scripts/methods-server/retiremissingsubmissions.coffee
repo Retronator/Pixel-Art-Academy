@@ -17,7 +17,7 @@ Meteor.methods
 
     count = 0
 
-    for submission, index in submissions[..100]
+    for submission, index in submissions
       # Make an HTTP HEAD request for the first image and see what code we get.
       try
         HTTP.call 'HEAD', submission.images[0].imageUrl
