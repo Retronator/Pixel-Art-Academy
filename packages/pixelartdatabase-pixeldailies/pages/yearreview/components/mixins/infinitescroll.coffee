@@ -22,17 +22,16 @@ class PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
 
   # Call this to tell the mixin how many items (out of the limit) have been loaded.
   updateCount: (value) ->
-    # Update the number with a delay so that things get time to load and render and change the height of the document.
-    Meteor.setTimeout =>
+    # Update the number after new documents have finished rendering.
+    Tracker.afterFlush =>
       @count value
       @update()
-    ,
-      1000
 
   onScroll: ->
     @update()
 
   update: (options) ->
+    return unless @_$window
     scrollTop = @_$window.scrollTop()
 
     # Increase limit when we're inside the last few window heights of the page.

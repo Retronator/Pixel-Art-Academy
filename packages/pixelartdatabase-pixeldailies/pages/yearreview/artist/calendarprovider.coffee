@@ -31,7 +31,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist.CalendarProvider extends PADB.Pi
     @yearRange = new AE.DateRange year: @options.year
 
     @_subscriptionAutorun = Tracker.autorun (computation) =>
-      @constructor.submissions.subscribe @options.screenName, @options.year, @limit()
+      @subscriptionHandle @constructor.submissions.subscribe @options.screenName, @options.year, @limit()
 
   destroy: ->
     @_subscriptionAutorun.stop()

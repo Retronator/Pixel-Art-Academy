@@ -10,6 +10,8 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     super
 
     @currentBackgroundIndex = new ReactiveField null
+    @yearCalendarProvider = new ReactiveField null
+    @isValidYear = new ReactiveField false
 
   onCreated: ->
     super
@@ -24,7 +26,7 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
         FlowRouter.go 'PixelArtDatabase.PixelDailies.Pages.Home'
         return
 
-      @isValidYear = true
+      @isValidYear true
 
       @backgrounds = _.cloneDeep @yearClass.backgrounds
 
@@ -36,7 +38,7 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
       # destroyed.
       Tracker.nonreactive =>
         @constructor.themeProvidersByYears[year] ?= new @constructor.ThemesCalendarProvider year: year
-        @yearCalendarProvider = @constructor.themeProvidersByYears[year]
+        @yearCalendarProvider @constructor.themeProvidersByYears[year]
 
   onRendered: ->
     super
@@ -54,14 +56,6 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
 
     @currentBackgroundIndex 0
 
-    calendar = @childComponents(@constructor.Components.Calendar)[0]
-
-    # Raise limit to the number of currently loaded themes.
-    currentLimit = calendar.infiniteScroll.limit()
-    newLimit = Math.max currentLimit, @yearCalendarProvider.limit()
-
-    calendar.infiniteScroll.limit newLimit
-
   onDestroyed: ->
     Meteor.clearInterval @_changeBackgroundInterval
 
@@ -77,6 +71,13 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     return unless index?
 
     @backgrounds[index]
+
+  allMonthsDisplayed: ->
+    calendar = @childComponents(@constructor.Components.Calendar)[0]
+    return unless calendar
+
+    # All months are displayed if the last month is december
+    _.last(calendar.months())?.number is 11
 
   insertDOMElement: (parent, node, before) ->
     super

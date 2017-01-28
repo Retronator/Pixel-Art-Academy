@@ -82,6 +82,10 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/components/header/header.html');
   api.addFiles('pages/yearreview/components/header/header.styl');
   api.addFiles('pages/yearreview/components/header/header.coffee');
+  
+  api.addFiles('pages/yearreview/components/footer/footer.html');
+  api.addFiles('pages/yearreview/components/footer/footer.styl');
+  api.addFiles('pages/yearreview/components/footer/footer.coffee');
 
   api.addFiles('pages/yearreview/components/mixins/mixins.coffee');
   api.addFiles('pages/yearreview/components/mixins/infinitescroll.coffee');

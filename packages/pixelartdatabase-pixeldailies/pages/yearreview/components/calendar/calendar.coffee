@@ -15,16 +15,12 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
     super
 
     @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
-      step: 50
+      # Provider can already have a higher limit, so start there.
+      step: Math.max 53, @provider.limit()
       windowHeightCounts: 2
 
-  onCreated: ->
-    super
-
-    # Match provider and infinite scroll limit.
-    @autorun (computation) =>
-      # Update how many items the provider should return.
-      @provider.limit @infiniteScroll.limit()
+    # Indicates that the months are rendering.
+    @rendering = new ReactiveField true
 
     # Months is a skeleton structure that only provides the structure for html elements, but no real data.
     @months = new ReactiveField null
@@ -35,72 +31,91 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
     # Array of submissions sorted by time.
     @submissions = new ReactiveField null
 
-    # Process submissions.
+  onRendered: ->
+    super
+
+    # Match provider and infinite scroll limit.
     @autorun (computation) =>
-      submissions = @provider.submissions()
-      return unless submissions.length
+      # Update how many items the provider should return.
+      @provider.limit @infiniteScroll.limit()
 
-      # We only want to react to submission changes.
-      Tracker.nonreactive =>
-        # Sort submissions by time.
-        submissions = _.sortBy submissions, 'time'
-        @submissions submissions
+    Meteor.setTimeout =>
+      # Process submissions.
+      @autorun (computation) =>
+        submissions = @provider.submissions()
+        return unless submissions.length
 
-        firstSubmission = _.first submissions
-        lastSubmission = _.last submissions
+        # We only want to react to submission changes.
+        Tracker.nonreactive =>
+          # Sort submissions by time.
+          submissions = _.sortBy submissions, 'time'
+          @submissions submissions
 
-        startYear = firstSubmission.time.getFullYear()
-        monthOffset = firstSubmission.time.getMonth()
+          firstSubmission = _.first submissions
+          lastSubmission = _.last submissions
 
-        months = []
-        monthsByYear = @monthsByYear()
+          startYear = firstSubmission.time.getFullYear()
+          monthOffset = firstSubmission.time.getMonth()
 
-        loop
-          firstDay = new Date startYear, monthOffset, 1
-          break if firstDay > lastSubmission.time
+          months = []
+          monthsByYear = @monthsByYear()
 
-          firstDayDayOfWeek = firstDay.getDay()
+          loop
+            firstDay = new Date startYear, monthOffset, 1
+            break if firstDay > lastSubmission.time
 
-          year = firstDay.getFullYear()
-          monthNumber = firstDay.getMonth()
+            firstDayDayOfWeek = firstDay.getDay()
 
-          # Only create the month if we need to. This preserves existing month and day IDs.
-          monthsByYear[year] ?= {}
-          monthsByYear[year][monthNumber] ?=
-            # We provide the _id so that #each does not trash existing months.
-            _id: Random.id()
-            year: firstDay.getFullYear()
-            number: monthNumber
+            year = firstDay.getFullYear()
+            monthNumber = firstDay.getMonth()
 
-            paddingDays: ('' for i in [0...firstDayDayOfWeek])
-
-            # Create an array of days for this month. It needs to be an array so we can iterate over it with #each.
-            days: for dayNumber in [1..AE.DateHelper.daysInMonth(monthNumber, 2016)]
-              # We provide the _id so that #each does not trash existing days.
+            # Only create the month if we need to. This preserves existing month and day IDs.
+            monthsByYear[year] ?= {}
+            monthsByYear[year][monthNumber] ?=
+              # We provide the _id so that #each does not trash existing months.
               _id: Random.id()
-              number: dayNumber
-              month: monthNumber
-              year: year
+              year: firstDay.getFullYear()
+              number: monthNumber
 
-          months.push monthsByYear[year][monthNumber]
+              paddingDays: ('' for i in [0...firstDayDayOfWeek])
 
-          monthOffset++
+              # Create an array of days for this month. It needs to be an array so we can iterate over it with #each.
+              days: for dayNumber in [1..AE.DateHelper.daysInMonth(monthNumber, 2016)]
+                # We provide the _id so that #each does not trash existing days.
+                _id: Random.id()
+                number: dayNumber
+                month: monthNumber
+                year: year
 
-        @months months
+            months.push monthsByYear[year][monthNumber]
 
-        # Populate submissions to corresponding dates.
-        for submission in submissions
-          year = submission.time.getFullYear()
-          monthNumber = submission.time.getMonth()
-          dayNumber = submission.time.getDate()
+            monthOffset++
 
-          day = monthsByYear[year][monthNumber].days[dayNumber - 1]
-          day.submission = submission
+          # Populate submissions to corresponding dates.
+          for submission in submissions
+            year = submission.time.getFullYear()
+            monthNumber = submission.time.getMonth()
+            dayNumber = submission.time.getDate()
 
-        @monthsByYear monthsByYear
+            day = monthsByYear[year][monthNumber].days[dayNumber - 1]
+            day.submission = submission
 
-        # Update infinite scroll with how many submissions we've shown.
-        @infiniteScroll.updateCount submissions.length
+          # Mark that we're rendering.
+          @rendering true
+
+          # Wait until loading has had time to render.
+          Tracker.afterFlush =>
+            # Trigger rendering of the calendar.
+            @months months
+            @monthsByYear monthsByYear
+
+            # Update infinite scroll with how many submissions we've shown.
+            @infiniteScroll.updateCount submissions.length
+
+            # Wait until calendar has rendered.
+            Tracker.afterFlush =>
+              @rendering false
+      100
 
   monthHasSubmissionsClass: ->
     month = @currentData()
@@ -139,6 +154,10 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
     day = @currentData()
     console.log day unless day.submission.images[0]
     day.submission.images[0]
+
+  loading: ->
+    # We're loading if provider is not ready or we're still rendering the results.
+    (not @provider.ready()) or @rendering()
 
   events: ->
     super.concat

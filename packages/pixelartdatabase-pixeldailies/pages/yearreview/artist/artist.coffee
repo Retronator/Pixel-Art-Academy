@@ -68,6 +68,9 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
     # Prepare top user's artworks.
     @topArtworks = new ComputedField =>
+      # Wait for most popular subscription to kick in.
+      return unless @subscriptionsReady()
+
       [submissionsCursor, artworksCursor] = @constructor.mostPopular.query @screenName(), @year(), @topArtworksLimit()
 
       PADB.PixelDailies.Pages.YearReview.Helpers.prepareTopArtworks artworksCursor.fetch()
@@ -121,7 +124,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     index = @currentBackgroundIndex()
     return unless index?
 
-    artwork = @topArtworks()[index]
+    artwork = @topArtworks()?[index]
     return unless artwork
 
     url: artwork.firstImageRepresentation().url

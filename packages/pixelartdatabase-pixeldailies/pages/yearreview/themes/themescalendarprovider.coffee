@@ -13,14 +13,12 @@ class PADB.PixelDailies.Pages.YearReview.ThemesCalendarProvider extends PADB.Pix
     @yearRange = new AE.DateRange year: @options.year
 
     @_subscriptionAutorun = Tracker.autorun (computation) =>
-      @constructor.themes.subscribe @options.year, @limit()
+      @subscriptionHandle @constructor.themes.subscribe @options.year, @limit()
 
   destroy: ->
     @_subscriptionAutorun.stop()
 
   submissions: ->
-    PADB.PixelDailies.Theme.documents
-
     # Get themes in the given year.
     themesQuery =
       submissionsCount:
