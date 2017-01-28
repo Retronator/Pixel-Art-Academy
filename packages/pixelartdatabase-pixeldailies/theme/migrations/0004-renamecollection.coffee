@@ -1,0 +1,1 @@
+PixelArtDatabase.PixelDailies.Theme.renameCollectionMigration 'PixelArtAcademyPixelDailiesThemes', 'PixelArtDatabase.PixelDailies.Themes'

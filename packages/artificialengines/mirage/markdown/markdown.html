@@ -1,0 +1,7 @@
+<template name="Artificial.Mirage.Markdown">
+  {{#markdown}}{{process Template.contentBlock}}{{/markdown}}
+</template>
+
+<template name="Markdown">
+  {{#Artificial.Mirage.Markdown}}{{> Template.contentBlock}}{{/Artificial.Mirage.Markdown}}
+</template>

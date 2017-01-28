@@ -8,7 +8,7 @@ Meteor.methods
     LOI.Authorize.admin()
 
     unless Meteor.settings.dataUploadPassphrase
-      console.warn "You need to specify the data upload passphrase in the settings file and
+      console.error "You need to specify the data upload passphrase in the settings file and
                     don't forget to run the server with the --settings flag pointing to it."
       
       throw new Meteor.Error 'invalid-operation', "Passphrase not specified."

@@ -1,0 +1,58 @@
+<template name="PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar">
+  <div class="pixelartdatabase-pixeldailies-pages-yearreview-components-calendar">
+    <ol class="months">
+      {{#each months}}
+        <li class="month {{monthHasSubmissionsClass}}">
+          <div class="name">{{monthName}}</div>
+          <ol class="days">
+            {{#each paddingDays}}
+              <li class="padding-day"></li>
+            {{/each}}
+            {{#each days}}
+              {{#with dayData}}
+                <li class="day {{hasSubmissionClass}}">
+                  {{#if submission}}
+                    {{#if submission.url}}
+                      <a class="face" href="{{submission.url}}">
+                        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar.DayFace}}
+                      </a>
+                    {{else}}
+                      <span class="face">
+                        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar.DayFace}}
+                      </span>
+                    {{/if}}
+                  {{else}}
+                    <span class="face">
+                      <span class="number">{{number}}</span>
+                    </span>
+                  {{/if}}
+                </li>
+              {{/with}}
+            {{/each}}
+          </ol>
+        </li>
+      {{/each}}
+    </ol>
+    {{#if loading}}
+      <div class="loading">
+        Loading …
+      </div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar.DayFace">
+  <span class="number">{{number}}</span>
+  {{#if submission.theme}}
+    <span class="hashtag">#{{submissionHashtag}}</span>
+  {{/if}}
+  {{#with submissionImage}}
+    {{#if videoUrl}}
+      <video class="top-submission" src="{{videoUrl}}" loop poster="{{imageUrl}}">
+        <img class="top-submission" src="{{imageUrl}}"/>
+      </video>
+    {{else}}
+      <img class="top-submission" src="{{imageUrl}}"/>
+    {{/if}}
+  {{/with}}
+</template>

@@ -5,4 +5,17 @@ AT = Artificial.Telepathy
 class AT.RouteLink extends AM.Component
   @register 'Artificial.Telepathy.RouteLink'
 
-  constructor: (@text, @route) ->
+  constructor: (@text, @route, @parameters) ->
+
+  isRouteActive: ->
+    routeName = FlowRouter.getRouteName()
+    return unless @route is routeName
+
+    # All parameters need to match, both ways.
+    for parameter, value of @parameters
+      return unless FlowRouter.getParam(parameter) is value
+
+    for parameter, value of FlowRouter.current().params
+      return unless @parameters[parameter] is value
+
+    true

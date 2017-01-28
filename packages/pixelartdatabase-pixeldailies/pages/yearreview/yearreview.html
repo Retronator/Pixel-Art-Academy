@@ -1,0 +1,32 @@
+<template name="PixelArtDatabase.PixelDailies.Pages.YearReview">
+  {{#if isValidYear}}
+    <div class="pixelartdatabase-pixeldailies-pages-yearreview">
+      <header class="header">
+        <h1 class="title">
+          <span class="retronator">Retronator</span>
+          <span class="year2016">{{year}}</span>
+          <span class="pixeldailies">Pixel Dailies</span>
+          {{#if isCurrentYear}}
+            <span class="subtitle calendar">Calendar</span>
+          {{else}}
+            <span class="subtitle retrospective">Retrospective</span>
+          {{/if}}
+        </h1>
+        {{#with background}}
+          <div class="background" style="background-image: url({{url}});">
+          </div>
+          <a class="background-author" href="{{pixelDailiesArtistUrl author}}">@{{author}}</a>
+        {{/with}}
+      </header>
+      <div class="page-content">
+        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Navigation}}
+      </div>
+      {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar args yearCalendarProvider}}
+      {{#if allMonthsDisplayed}}
+        <footer class="footer">
+          {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Footer}}
+        </footer>
+      {{/if}}
+    </div>
+  {{/if}}
+</template>

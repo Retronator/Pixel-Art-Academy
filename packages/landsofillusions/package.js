@@ -241,6 +241,7 @@ Package.onUse(function(api) {
   api.addFiles('style/atari2600.import.styl', 'client', {isImport:true});
   api.addFiles('style/cursors.import.styl', 'client', {isImport:true});
   api.addFiles('style/cursors.styl');
+  api.addFiles('style/defaults.styl');
 
   // Helpers
 

@@ -1,0 +1,77 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartdatabase-pixeldailies-pages-yearreview-day
+  .header
+    position relative
+    z-index 1
+    box-shadow 0 0 10rem atariGrey(0)
+
+    .theme
+      position absolute
+      // We need to be above fading out artworks.
+      z-index 3
+      top 50rem
+      left 0
+      right 0
+      margin-top 10rem
+      padding 40rem
+      text-align center
+
+      .date
+        kyrou-9()
+        margin 0
+        color atariGrey(6)
+        text-shadow 0 1rem 0 atariGrey(0), 0 2rem 5rem transparentify(atariGrey(0), 0.5)
+
+      .hashtags
+        acme-9()
+        font-size 20rem
+        margin 0
+        color atariGrey(7)
+        text-shadow 0 2rem 0 atariGrey(0), 0 4rem 10rem transparentify(atariGrey(0), 0.5)
+
+      .navigation-link
+        position absolute
+        top 50%
+        padding 5vh
+        adventure()
+        font-size 14rem
+        transform translateY(-50%)
+        color atariGrey(5)
+        opacity 0
+        transition opacity 0.2s
+        text-decoration none
+
+        &:focus
+          opacity 1
+
+        &:active
+          margin-top 1rem
+
+        &.previous
+          left 0
+
+        &.next
+          right 0
+
+      &:hover
+        .navigation-link
+          opacity 0.2
+
+          &:hover
+          &:focus
+            opacity 1
+
+  .pixelartdatabase-pixeldailies-pages-yearreview-components-stream
+    min-height calc(100vh - 50rem - 76rem)
+
+    .artworks
+      .artwork-area
+        padding-top calc(10vh + 100rem)
+
+  .next-theme-link
+    text-decoration none
+
+    .pixelartdatabase-pixeldailies-pages-yearreview-components-themebanner
+      padding 10rem
+      box-shadow 0 0 50rem atariGrey(0)

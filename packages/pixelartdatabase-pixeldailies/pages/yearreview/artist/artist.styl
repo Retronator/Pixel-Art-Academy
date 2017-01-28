@@ -1,0 +1,174 @@
+@import "{retronator:landsofillusions}/style/style.import"
+@import "../yearreview.import"
+
+.pixelartdatabase-pixeldailies-pages-yearreview-artist
+  .header
+    position relative
+    color atariGrey(7)
+
+    .user-banner
+      position relative
+      z-index 2
+      padding 20rem 5vh
+      box-shadow 0 0 50rem atariGrey(0)
+
+      .profile
+        position relative
+        z-index 2
+
+        .screen-name
+          display block
+          kyrou-9()
+          margin 0 0 0 1rem
+          color atariGrey(6)
+          text-shadow 1rem 1rem 0 atariGrey(0), 2rem 2rem 5rem transparentify(atariGrey(0), 0.5)
+
+          .twitter-link
+            text-decoration none
+            transition color 0.2s
+
+            &:hover
+              color atariGrey(7)
+
+        .display-name
+          display block
+          acme-9()
+          font-size 20rem
+          margin-top 0
+          color atariGrey(7)
+          text-shadow 2.25rem 2.25rem 0 atariGrey(0), 4rem 4rem 10rem transparentify(atariGrey(0), 0.5)
+
+        .information
+          width 30em
+          margin-left 2.25rem
+
+          .description
+            adventure-link()
+
+        .statistics
+          margin-top 20rem
+
+          .title
+            display inline-block
+            margin-top 0
+            position relative
+            kyrou-7()
+            text-transform uppercase
+
+            &::after
+              content '*'
+              position absolute
+              z-index 1
+              top -2rem
+              right -8rem
+              opacity 0.5
+
+        .view-options
+          margin-top 20rem
+
+          .view-mode-button
+            position relative
+            adventure()
+            margin-right 10rem
+            padding 2rem 4rem 2rem 5rem
+            background none
+            border none
+            color inherit
+            text-transform uppercase
+
+            &:disabled
+            &:hover
+              color atariGrey(0)
+              background atariGrey(7)
+              box-shadow 1rem 1rem 0 atariGrey(0),
+                         2rem 2rem 0 atariGrey(0),
+                         2rem 2rem 10rem transparentify(atariGrey(0), 0.3)
+
+            &:active
+              top 2rem
+              left 2rem
+              box-shadow none
+
+            &:disabled
+              background atariGrey(6)
+              cursor default
+
+      .background
+        absolute-cover()
+        z-index 0
+        background atariGrey(0)
+        overflow hidden
+
+        &::after
+          content ''
+          absolute-cover()
+          background linear-gradient(to right, transparentify(atariGrey(0), 0.6) 0%, transparentify(atariGrey(0), 0.4) 100%)
+
+        &.old
+          z-index 1
+
+        &.transition
+          transition opacity ease-in 1s
+
+        .key-image-area
+          position absolute
+          left 30%
+          width 80%
+          top 0
+          bottom 0
+          z-index 1
+          mix-blend-mode screen
+
+          .key-image
+            absolute-cover-size()
+            background-size cover
+            background-position center center
+            pixel-image-rendering()
+
+            &.transition
+              transition background-position ease-in-out 10s
+
+          &::after
+            content ''
+            absolute-cover()
+            background linear-gradient(to right, atariGrey(0) 0%, transparent 100%)
+
+        .color
+          absolute-cover()
+          background-size cover
+          z-index 0
+          filter blur(100px)
+
+  .stream
+    .pixelartdatabase-pixeldailies-pages-yearreview-components-stream
+      .artworks
+        .artwork-area
+          padding-top calc(10vh + 100rem)
+
+  .displayed-artworks
+    fixed-cover()
+    z-index 2
+    overflow-y scroll
+    cursor pointer
+
+    .pixelartdatabase-pixeldailies-pages-yearreview-components-stream
+      .artworks
+        .artwork-area
+          padding-top 0
+
+  .disclaimer
+    display block
+    position relative
+    margin 20rem
+    adventure()
+    adventure-link()
+    color atariGrey(3)
+
+    &::before
+      content '*'
+      position absolute
+      top 0
+      left -8rem
+
+    a
+      border-bottom-color atariGrey(2)

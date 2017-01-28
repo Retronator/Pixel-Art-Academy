@@ -20,7 +20,8 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-season1-episode0');
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:pixelartacademy-practice');
-  api.use('retronator:pixelartacademy-pixeldailies');
+  api.use('retronator:pixelartdatabase');
+  api.use('retronator:pixelartdatabase-pixeldailies');
 
   /*
   api.use('retronator:landsofillusions-construct');
