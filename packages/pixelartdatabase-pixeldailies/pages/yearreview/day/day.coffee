@@ -45,6 +45,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
       submissionsCursor = PADB.PixelDailies.Submission.documents.find
         'theme._id': theme._id
+        processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
       ,
         sort:
           favoritesCount: -1

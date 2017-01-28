@@ -39,7 +39,6 @@ class PADB.PixelDailies.Pages.YearReview.Helpers
       _id:
         $in: artworkIds
 
-
   @convertSubmissionToArtworks: (submission) ->
     # Find type of the image.
     for image in submission.images
@@ -72,3 +71,9 @@ class PADB.PixelDailies.Pages.YearReview.Helpers
 
   Template.registerHelper 'pixelDailiesArtistUrl', (screenName) =>
     @artistUrl screenName
+
+  @displayableSubmissionsCondition:
+    $nin: [
+      PADB.PixelDailies.Submission.ProcessingError.NoImages
+      PADB.PixelDailies.Submission.ProcessingError.ImagesNotFound
+    ]

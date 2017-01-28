@@ -16,8 +16,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
       submissionsQuery =
         'user.screenName': new RegExp screenName, 'i'
-        processingError:
-          $ne: PADB.PixelDailies.Submission.ProcessingError.NoImages
+        processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
 
       yearRange.addToMongoQuery submissionsQuery, 'time'
 
