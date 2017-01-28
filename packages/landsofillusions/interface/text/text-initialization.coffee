@@ -19,14 +19,6 @@ class LOI.Interface.Text extends LOI.Interface.Text
       maxAspectRatio: 2
       debug: false
 
-    # Add 2x scale class to html so we can scale cursors.
-    @autorun (computation) =>
-      if @display.scale() is 2
-        $('html').addClass('scale-2')
-
-      else
-        $('html').removeClass('scale-2')
-
     @narrative = new LOI.Interface.Components.Narrative
       textInterface: @
 

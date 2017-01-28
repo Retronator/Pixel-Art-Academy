@@ -45,6 +45,7 @@
     &:hover
       background-color atariGrey(7)
       color atariGrey(0)
+      text-shadow none !important
 
   hr
     margin 2em 0
@@ -53,34 +54,48 @@
     background-color atariGrey(3)
 
   button
+    display inline-block
     position relative
-    top -2rem
-    margin-top 2rem
-    background atariGrey(2)
-    uni()
+    z-index 0
+    padding 4rem 8rem
+    adventure()
     color black
     border none
-    border-bottom 4px solid atariGrey(1)
+    border-bottom 4rem solid transparent
     cursor pointer
+    margin-bottom 10rem
+    background transparent
+    vertical-align top
 
-    &:focus
-      background: atariGrey(3)
-      outline none
+    &::after
+      content ''
+      position absolute
+      z-index -1
+      top 0
+      left 0
+      right 0
+      bottom -4rem
+      background #666
+      border-bottom 4rem solid #333
 
     &:hover
-      background: atariGrey(3)
+    &:focus
+      outline none
+
+      &::after
+        background: #888
 
     &:active
+      border-top 4rem solid transparent
       border-bottom none
-      margin-bottom 2rem
-      top 0
+
+      &::after
+        top 0
+        bottom 0
+        border-bottom none
 
     &:disabled
-      color atariGrey(3)
-      cursor default
-
-      &:hover
-        background atariGrey(3)
+      color atariGrey(4)
 
     &.link-button
       color atariGrey(7)

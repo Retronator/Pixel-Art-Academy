@@ -3,6 +3,10 @@ Package.describe({
   version: '1.0.0'
 });
 
+Npm.depends({
+  twit: '2.2.5'
+});
+
 Package.onUse(function(api) {
   api.versionsFrom('1.2.0.2');
 
@@ -19,6 +23,7 @@ Package.onUse(function(api) {
     'reactive-dict',
     'check',
     'ejson',
+    'markdown',
 
     // 3rd party
     'peerlibrary:assert',
@@ -62,6 +67,7 @@ Package.onUse(function(api) {
   api.addFiles('everywhere/lodash/urls.coffee');
   api.addFiles('everywhere/lodash/math.coffee');
   api.addFiles('everywhere/lodash/objects.coffee');
+  api.addFiles('everywhere/lodash/strings.coffee');
 
   api.addFiles('everywhere/date.coffee');
   api.addFiles('everywhere/datehelper.coffee');
@@ -96,6 +102,9 @@ Package.onUse(function(api) {
   api.addFiles('mirage/render.html');
   api.addFiles('mirage/window.coffee', 'client');
 
+  api.addFiles('mirage/markdown/markdown.coffee');
+  api.addFiles('mirage/markdown/markdown.html');
+
   api.addFiles('mirage/spacebars/meteorhelpers.coffee');
   api.addFiles('mirage/spacebars/stringhelpers.coffee');
   api.addFiles('mirage/spacebars/htmlhelpers.coffee');
@@ -105,12 +114,18 @@ Package.onUse(function(api) {
   api.addFiles('mirage/mixins/autoselectinput.coffee');
   api.addFiles('mirage/mixins/persistentinput.coffee');
 
+  api.addFiles('mirage/mixins/fullscreenscrolling/fullscreenscrolling.coffee');
+  api.addFiles('mirage/mixins/fullscreenscrolling/fullscreenscrolling.styl');
+
   // Artificial Base
   // Depends on Artificial Mirage.
   api.addFiles('base/base.coffee');
 
   api.addFiles('base/app.coffee');
   api.addFiles('base/app.html');
+
+  api.addFiles('base/method.coffee');
+  api.addFiles('base/subscription.coffee');
 
   // Artificial Mummification
   api.addFiles('mummification/mummification.coffee');
@@ -129,6 +144,8 @@ Package.onUse(function(api) {
 	api.addFiles('telepathy/flowrouter/routelink.html');
 
   api.addFiles('telepathy/emailcomposer.coffee');
+
+  api.addFiles('telepathy/twitter.coffee', 'server');
 
   // Artificial Babel
   api.addFiles('babel/babel.coffee');

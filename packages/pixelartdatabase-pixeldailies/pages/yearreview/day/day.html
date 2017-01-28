@@ -1,0 +1,35 @@
+<template name="PixelArtDatabase.PixelDailies.Pages.YearReview.Day">
+  {{#if date}}
+    <div class="pixelartdatabase-pixeldailies-pages-yearreview-day">
+      <header class="header">
+        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Header}}
+        <div class="theme">
+          <h1 class="date">
+            {{dateTitle}}
+          </h1>
+          <h2 class="hashtags">
+            {{#each theme.hashtags}}
+              #{{this}}
+            {{else}}
+              {{#if themesReady}}
+              No theme found.
+              {{else}}
+                …
+              {{/if}}
+            {{/each}}
+          </h2>
+          <a href="{{previousDayUrl}}" class="previous navigation-link">◄</a>
+          <a href="{{nextDayUrl}}" class="next navigation-link">►</a>
+        </div>
+      </header>
+      {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream artworks}}
+      {{#if $and themesReady nextTheme}}
+        <a class="next-theme-link" href="{{nextThemeUrl}}">
+          {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.ThemeBanner nextTheme}}
+        </a>
+      {{/if}}
+    </div>
+  {{else}}
+    {{> PixelArtDatabase.PixelDailies.Pages.YearReview}}
+  {{/if}}
+</template>

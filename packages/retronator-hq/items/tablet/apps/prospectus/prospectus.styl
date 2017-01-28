@@ -49,43 +49,41 @@
   button:not(.reset)
   .button:not(.reset)
     display inline-block
-    transform translateY(-4rem)
-    margin-top 4rem
-    background #666
     padding 4rem 8rem
     adventure()
     color black
     border none
+    border-bottom 4rem solid transparent
     cursor pointer
     margin-bottom 10rem
+    background transparent
 
     &::after
       content ''
       position absolute
-      top 100%
+      z-index -1
+      top 0
       left 0
-      width 100%
-      height 4rem
-      background-color #333
-      border none
-
-    &:focus
-      background: #777
-      outline none
-
-    &:hover
-      &:after
-        display block
+      right 0
+      bottom -4rem
+      background #666
+      border-bottom 4rem solid #333
 
     &:hover:not([disabled='false'])
-      background: #888
-
-    &:active:not([disabled='false'])
-      border-bottom none
-      transform translateY(0)
+    &:focus
+      outline none
 
       &::after
-        height 0
+        background: #888
+
+    &:active:not([disabled='false'])
+      border-top 4rem solid transparent
+      border-bottom none
+
+      &::after
+        top 0
+        bottom 0
+        border-bottom none
 
     &:disabled
       color atariGrey(4)
@@ -397,13 +395,13 @@
           adventure()
           text-transform uppercase
           padding 6rem 10rem
-          background atariGreen(4)
-
-          &:hover
-            background atariGreen(5)
 
           &::after
-            background-color atariGreen(2)
+            background atariGreen(4)
+            border-bottom-color atariGreen(2)
+
+          &:hover::after
+            background atariGreen(5)
 
     .line.products
       max-width 380rem
@@ -504,6 +502,7 @@
     padding 20rem
     padding-top 30rem
     margin 30rem auto
+    z-index 1
 
     .submit-payment
       display inline-block

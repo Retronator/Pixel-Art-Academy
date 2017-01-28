@@ -5,45 +5,54 @@ AE = Artificial.Everywhere
 # Creates a date from a date, string or object with any of the year, month, day, hours, minutes, seconds, milliseconds.
 # Unlike the normal Date constructor, if you specify just some of the year/month/... properties, the higher order ones
 # will be taken from the current date, not from Jan 1 1970. The lower ones (the smaller values) will be set to 0.
-Date.fromObject = (object) ->
-  throw new Meteor.Error 'argument-null', "Object must be provided." unless object?
+Date.fromObject = (options) ->
+  throw new Meteor.Error 'argument-null', "Object must be provided." unless options?
 
   date = null
 
-  if _.isDate object
-    date = object
+  if _.isDate options
+    date = options
 
-  else if _.isString object
-    date = new Date object
-    throw new Meteor.Error 'invalid-argument', "object is not a valid date string." if _.isNaN(date.getDate())
+  else if _.isString options
+    date = new Date options
+    throw new Meteor.Error 'invalid-argument', "options is not a valid date string." if _.isNaN(date.getDate())
 
-  else if _.isNumber object
-    date = new Date object
-    throw new Meteor.Error 'invalid-argument', "object is not a valid date number value." if _.isNaN(date.getDate())
+  else if _.isNumber options
+    date = new Date options
+    throw new Meteor.Error 'invalid-argument', "options is not a valid date number value." if _.isNaN(date.getDate())
 
-  else if object.year? or object.month? or object.day? or object.hours? or object.minutes? or object.seconds? or object.milliseconds?
-    params = [object.year, object.month, object.day, object.hours, object.minutes, object.seconds, object.milliseconds]
-    paramMethods = ['getFullYear', 'getMonth', 'getDate', 'getHours', 'getMinutes', 'getSeconds', 'getMilliseconds']
+  else if options.year? or options.month? or options.day? or options.hours? or options.minutes? or options.seconds? or options.milliseconds?
+    parameters = [options.year, options.month, options.day, options.hours, options.minutes, options.seconds, options.milliseconds]
+    parameterMethods = ['getFullYear', 'getMonth', 'getDate', 'getHours', 'getMinutes', 'getSeconds', 'getMilliseconds']
+    parameterDefaults = [null, 0, 1, 0, 0, 0, 0]
 
     currentDate = new Date()
     insertCurrentDate = false
 
-    for i in [params.length - 1..0]
-      if params[i]?
+    for i in [parameters.length - 1..0]
+      if parameters[i]?
+        # Parameter in this place is already specified, but from now on,
+        # any higher parameter missing should be replaced from current data.
         insertCurrentDate = true
 
       else if insertCurrentDate
-        params[i] = currentDate[paramMethods[i]]()
+        # Parameter in this place is missing and we should copy it from the current date.
+        parameters[i] = currentDate[parameterMethods[i]]()
 
-    params = _.without params, undefined
-    date = new Date params...
+      else
+        # Parameter in this place is missing and we should just use the default.
+        parameters[i] = parameterDefaults[i]
+
+    # We can't use the ... operator to expand the parameters for
+    # the Date constructor, so we need to pass them explicitly.
+    date = new Date parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6]
 
     # One and two digit years need to be explicitly set via setFullYear since otherwise they get added to 1900.
-    if 0 <= object.year < 100
-      date.setFullYear object.year
+    if 0 <= options.year < 100
+      date.setFullYear options.year
 
   else
-    throw new Meteor.Error 'invalid-argument', "object is not in any of the valid formats."
+    throw new Meteor.Error 'invalid-argument', "options is not in any of the valid formats."
 
   date
 

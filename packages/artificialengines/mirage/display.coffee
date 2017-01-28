@@ -12,8 +12,9 @@ class AM.Display extends AM.Component
     @safeAreaWidth = new ReactiveField options.safeAreaWidth
     @safeAreaHeight = new ReactiveField options.safeAreaHeight
 
-    # The scale at which to start calculating.
+    # The scales at which to start and end calculating.
     @minScale = new ReactiveField options.minScale
+    @maxScale = new ReactiveField options.maxScale
 
     # The aspect ratio to maintain with the final image.
     @minAspectRatio = new ReactiveField options.minAspectRatio
@@ -49,6 +50,7 @@ class AM.Display extends AM.Component
         console.log ""
 
       scale = @minScale() or 1
+      maxScale = @maxScale()
       clientBounds = @window.clientBounds()
       clientWidth = clientBounds.width()
       clientHeight = clientBounds.height()
@@ -115,6 +117,9 @@ class AM.Display extends AM.Component
 
         # Test if next scale level would make the minimum viewport go out of usable client bounds.
         break if minViewportSize.width > usableClientSize.width or minViewportSize.height > usableClientSize.height
+
+        # Stop at max scale, if set.
+        break if scale is maxScale
 
         # It is safe to increase the scale.
         scale++
@@ -223,6 +228,16 @@ class AM.Display extends AM.Component
         viewportBounds: viewportBounds
         maxBounds: maxBounds
         safeArea: safeArea
+
+    # Set scale attribute on html so we can scale cursors.
+    @autorun (computation) =>
+      if @_currentScale
+        $('html').removeClass("scale-#{@_currentScale}")
+        $('html').removeClass("scale-#{scale}-or-up") for scale in [2..@_currentScale]
+
+      @_currentScale = @scale()
+      $('html').addClass("scale-#{@_currentScale}")
+      $('html').addClass("scale-#{scale}-or-up") for scale in [2..@_currentScale]
 
   debugClass: ->
     'debug' if @debug

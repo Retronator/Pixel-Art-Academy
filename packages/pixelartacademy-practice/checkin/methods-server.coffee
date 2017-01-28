@@ -1,17 +1,6 @@
+AT = Artificial.Telepathy
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
-Twit = Npm.require 'twit'
-
-twit = null
-
-# Prepare Twit.
-if Meteor.settings.twitter
-  twit = new Twit
-    consumer_key: Meteor.settings.twitter.consumerKey
-    consumer_secret: Meteor.settings.twitter.secret
-    app_only_auth: true
-
-  twitGetSync = Meteor.wrapAsync twit.get.bind twit
 
 Meteor.methods
   # Process a post url
@@ -35,7 +24,7 @@ Meteor.methods
     if /twitter\.com/.test url
       tweetId = url.split('/status/')[1]
       apiUrl = 'statuses/show/' + tweetId
-      tweetData = twitGetSync apiUrl
+      tweetData = AT.Twitter.get apiUrl
 
       throw new Meteor.Error 'unavailable', "There was an error communicating with the server. Either the tweet doesn't exist, or the server is down - try again later!" unless tweetData
       throw new Meteor.Error 'invalid-argument', "The tweet has no images associated with it." unless tweetData.entities?.media?[0]?.media_url_https

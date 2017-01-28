@@ -21,5 +21,8 @@ class AE.InvalidOperationException extends Meteor.Error
 class AE.NotImplementedException extends Meteor.Error
   constructor: (reason, details) -> super 'not-implemented-exception', reason, details
 
+class AE.LimitExceededException extends Meteor.Error
+  constructor: (reason, details) -> super 'limit-exceeded-exception', reason, details
+
 class AE.UnauthorizedException extends Meteor.Error
   constructor: (reason, details) -> super 'unauthorized-exception', reason, details

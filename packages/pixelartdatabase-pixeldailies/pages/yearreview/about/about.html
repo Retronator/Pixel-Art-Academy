@@ -1,0 +1,64 @@
+<template name="PixelArtDatabase.PixelDailies.Pages.YearReview.About">
+  <div class="pixelartdatabase-pixeldailies-pages-yearreview-about">
+    <header class="header">
+      {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Header}}
+    </header>
+    <article class="article">
+      <div class="page-content">
+        <div class="about-pixel-dailies">
+          {{#Markdown}}
+            Hi, my name is [Matej 'Retro' Jan]({{pixelDailiesArtistUrl 'retronator'}}) and you are currently browsing
+            the Top Pixel Dailies archive.
+
+            **<a href="https://twitter.com/Pixel_Dailies" target="_blank">Pixel Dailies</a>** is a pixel art group
+            started by [Ben 'eigenbom' Porter]({{pixelDailiesArtistUrl 'eigenbom'}}). Every day a theme is announced on
+            <a href="https://twitter.com/Pixel_Dailies" target="_blank">Twitter</a> and it's up to each individual
+            to interpret it and spend as much time on it as they'd like. You can read more about the group on
+            <a href="http://bp.io/pd" target="_blank">Ben's page</a>.
+
+            Over the course of the day, the <a href="https://twitter.com/Pixel_Dailies" target="_blank">@Pixel_Dailies</a>
+            account retweets a selection of submissions. I collect these retweets and add them to the archive. Big thanks
+            to moderators [@Khoklavixche]({{pixelDailiesArtistUrl 'khoklavixche'}}), [@neobrsk]({{pixelDailiesArtistUrl 'neobrsk'}}),
+            [@shroomarts]({{pixelDailiesArtistUrl 'shroomarts'}}) and [@eigenbom]({{pixelDailiesArtistUrl 'eigenbom'}})
+            for updating the account.
+
+            The statistics only reflect retweets found on the <a href="https://twitter.com/Pixel_Dailies" target="_blank">@Pixel_Dailies</a>
+            timeline. I'm working on a way for you to archive all the #pixel\_dailies tweets on your own Twitter
+            timeline. Stay tuned.
+
+            **<a href="http://www.retronator.com" target="_blank">Retronator</a>** is my pixel art blog and game
+            development company. I'm currently working on <a href="https://pixelart.academy" target="_blank">Pixel Art Academy</a>,
+            an adventure game for learning how to draw, and
+            <a href="https://medium.com/retronator-magazine" target="_blank">Retronator Magazine</a>, an online
+            publication about pixel art.
+
+            In my Kickstarter campaign for Pixel Art Academy I said:
+
+            > My pet peeve with most online galleries is that they put your artwork in a small little box, surround it
+              by ads and tons of menus, so I wanted Pixel Art Academy to give you a place where you can really enjoy
+              exploring artworks.
+
+            <iframe class="video" width="560" height="315" src="https://www.youtube.com/embed/ImQNo8wHw8c?rel=0&amp;start=201" frameborder="0" allowfullscreen></iframe>
+
+            Top Pixel Dailies is my first step on delivering that promise. If you want to support the development, you
+            can <a href="https://pixelart.academy/about" target="_blank">pre-order Pixel Art Academy</a>.
+
+            Happy daily drawing and enjoy exploring the archive!
+
+            —Retro
+
+          {{/Markdown}}
+        </div>
+      </div>
+      {{#with background}}
+        <div class="background">
+          <img class="image" src="{{url}}"/>
+        </div>
+        <a class="background-author" href="{{pixelDailiesArtistUrl author}}">@{{author}}</a>
+      {{/with}}
+    </article>
+    <footer class="footer">
+      {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Footer}}
+    </footer>
+  </div>
+</template>

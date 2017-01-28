@@ -10,6 +10,17 @@ class Retronator.App extends Artificial.Base.App
   @register 'Retronator.App'
   template: -> 'Retronator.App'
 
+  # Routing helpers for default layouts
+
+  @addPublicPage: (url, page) ->
+    AT.addRoute page, url, 'Retronator.Accounts.Layouts.PublicAccess', page
+
+  @addUserPage: (url, page) ->
+    AT.addRoute page, url, 'Retronator.Accounts.Layouts.UserAccess', page
+
+  @addAdminPage: (url, page) ->
+    AT.addRoute page, url, 'Retronator.Accounts.Layouts.AdminAccess', page
+    
   constructor: ->
     super
 
@@ -18,6 +29,8 @@ class Retronator.App extends Artificial.Base.App
     new Retronator.Store
     new PixelArtAcademy
     new PixelArtAcademy.LandingPage
+    new PixelArtDatabase
+    new PixelArtDatabase.PixelDailies
 
     # Add Lands of Illusions last so it captures all remaining URLs.
     new LOI

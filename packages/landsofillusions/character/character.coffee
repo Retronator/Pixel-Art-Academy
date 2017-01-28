@@ -1,8 +1,9 @@
 AB = Artificial.Babel
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
-class LandsOfIllusionsCharacter extends Document
+class LOI.Character extends AM.Document
   # user: the owner of this character
   #   _id
   #   displayName
@@ -27,5 +28,3 @@ class LandsOfIllusionsCharacter extends Document
 if Meteor.isClient
   Meteor.startup ->
     LOI.Character._babelSubscription = AB.subscribeNamespace 'LandsOfIllusions.Character'
-
-LOI.Character = LandsOfIllusionsCharacter

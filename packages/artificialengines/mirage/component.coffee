@@ -133,6 +133,10 @@ class AM.Component extends CommonComponent
 
     args[0] <= args[1]
 
+  # Checks that the value exists (is not null or undefined).
+  $exists: (value) ->
+    value?
+
   # Styles
 
   # Converts a style object to a css string. Useful in templates

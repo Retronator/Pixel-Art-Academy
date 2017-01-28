@@ -11,39 +11,39 @@ class AE.DateRange
   # and end are placed at the edge of that range — if you specify just the year you will get a range of that whole year,
   # if you specify the year and month, you will get all the days in that month. If you specify just the month, the year
   # will be taken from the current date (and similar for the rest).
-  constructor: (startOrObject, end) ->
-    if _.isObject(startOrObject) and not _.isDate(startOrObject)
-      object = startOrObject
+  constructor: (startOrOptions, end) ->
+    if _.isObject(startOrOptions) and not _.isDate(startOrOptions)
+      options = startOrOptions
 
-      if object instanceof AE.DateRange
-        start = object.start()
-        end = object.end()
+      if options instanceof AE.DateRange
+        start = options.start()
+        end = options.end()
 
-      else if object.start or object.end
-        start = object.start
-        end = object.end
+      else if options.start or options.end
+        start = options.start
+        end = options.end
 
-      else if object.year? or object.month? or object.day? or object.hours? or object.minutes? or object.seconds? or object.milliseconds?
-        start = Date.fromObject object
+      else if options.year? or options.month? or options.day? or options.hours? or options.minutes? or options.seconds? or options.milliseconds?
+        start = Date.fromObject options
 
         # Create the end date object by taking the start date object and increasing by one the first defined property
         # from the end backwards. For example, if year and month are specified, end would be at month+1
-        endObject = $.extend {}, object
+        endObject = _.clone options
 
-        params = [object.year, object.month, object.day, object.hours, object.minutes, object.seconds, object.milliseconds]
-        paramProperties = ['year', 'month', 'day', 'hours', 'minues', 'seconds', 'milliseconds']
+        parameters = [options.year, options.month, options.day, options.hours, options.minutes, options.seconds, options.milliseconds]
+        parameterProperties = ['year', 'month', 'day', 'hours', 'minutes', 'seconds', 'milliseconds']
 
-        for i in [params.length - 1..0]
-          if params[i]?
+        for i in [parameters.length - 1..0]
+          if parameters[i]?
             # Increase property by 1.
-            endObject[paramProperties[i]]++
+            endObject[parameterProperties[i]]++
             break
 
         # Create an actual date for the end of the range.
         end = Date.fromObject endObject
 
     else
-      start = startOrObject
+      start = startOrOptions
 
     # Make sure we have dates for the values.
     start = Date.fromObject start if start and not _.isDate start
@@ -55,7 +55,7 @@ class AE.DateRange
     # The exclusive end of the date range.
     @end = new ReactiveField end
 
-  # Returns a modified mongo query where $gte/$lt conditions have been set for the given property.
+  # Modifies a mongo query where $gte/$lt conditions have been set for the given property.
   addToMongoQuery: (query, property) ->
     start = @start()
     end = @end()

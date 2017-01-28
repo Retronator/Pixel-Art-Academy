@@ -12,7 +12,7 @@ class RS.AirportTerminal.Gates extends LOI.Adventure.Location
   @version: -> '0.0.1'
 
   @fullName: -> "Airport terminal gate"
-  @shortName: -> "concourse"
+  @shortName: -> "gates"
   @description: ->
     "
       You are at the airport gates that allow passengers to board the planes. All doors are closed as the

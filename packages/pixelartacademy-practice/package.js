@@ -29,12 +29,6 @@ Package.onUse(function(api) {
   api.addFiles('checkin/methods-server.coffee', 'server');
   api.addFiles('checkin/subscriptions.coffee', 'server');
 
-  api.addFiles('calendar/checkinsprovider.coffee');
-
-  api.addFiles('calendar/checkincomponent.html');
-  api.addFiles('calendar/checkincomponent.coffee');
-  api.addFiles('calendar/checkincomponent.styl');
-
   api.addFiles('importeddata/importeddata.coffee');
   api.addFiles('importeddata/checkin.coffee', 'server');
 

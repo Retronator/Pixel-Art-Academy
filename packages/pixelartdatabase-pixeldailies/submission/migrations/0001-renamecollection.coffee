@@ -1,0 +1,1 @@
+PixelArtDatabase.PixelDailies.Submission.renameCollectionMigration 'PixelArtAcademyPixelDailiesSubmissions', 'PixelArtDatabase.PixelDailies.Submissions'
