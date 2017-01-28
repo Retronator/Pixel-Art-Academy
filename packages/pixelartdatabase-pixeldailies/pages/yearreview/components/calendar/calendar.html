@@ -12,21 +12,15 @@
               {{#with dayData}}
                 <li class="day {{hasSubmissionClass}}">
                   {{#if submission}}
-                    <a class="face" href="{{submission.url}}">
-                      <span class="number">{{number}}</span>
-                      {{#if submission.theme}}
-                        <span class="hashtag">#{{submissionHashtag}}</span>
-                      {{/if}}
-                      {{#with submissionImage}}
-                        {{#if videoUrl}}
-                          <video class="top-submission" src="{{videoUrl}}" loop poster="{{imageUrl}}">
-                            <img class="top-submission" src="{{imageUrl}}"/>
-                          </video>
-                        {{else}}
-                          <img class="top-submission" src="{{imageUrl}}"/>
-                        {{/if}}
-                      {{/with}}
-                    </a>
+                    {{#if submission.url}}
+                      <a class="face" href="{{submission.url}}">
+                        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar.DayFace}}
+                      </a>
+                    {{else}}
+                      <span class="face">
+                        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar.DayFace}}
+                      </span>
+                    {{/if}}
                   {{else}}
                     <span class="face">
                       <span class="number">{{number}}</span>
@@ -45,4 +39,20 @@
       </div>
     {{/if}}
   </div>
+</template>
+
+<template name="PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar.DayFace">
+  <span class="number">{{number}}</span>
+  {{#if submission.theme}}
+    <span class="hashtag">#{{submissionHashtag}}</span>
+  {{/if}}
+  {{#with submissionImage}}
+    {{#if videoUrl}}
+      <video class="top-submission" src="{{videoUrl}}" loop poster="{{imageUrl}}">
+        <img class="top-submission" src="{{imageUrl}}"/>
+      </video>
+    {{else}}
+      <img class="top-submission" src="{{imageUrl}}"/>
+    {{/if}}
+  {{/with}}
 </template>

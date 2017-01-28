@@ -40,14 +40,24 @@
       </div>
     </header>
     {{#if streamViewActive}}
-      {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream topArtworks}}
+      <div class="stream">
+        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream topArtworks}}
+      </div>
     {{else}}
       {{#if yearCalendarProvider}}
-        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar args yearCalendarProvider}}
+        <div class="calendar">
+          {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Calendar args yearCalendarProvider}}
+        </div>
       {{/if}}
     {{/if}}
     <small class="disclaimer">
       Only images retweeted by <a href="https://twitter.com/Pixel_dailies" target="_blank">@Pixel_Dailies</a> are included.
     </small>
+    {{#if displayedArtworks}}
+      <style>html {overflow: hidden};</style>
+      <div class="displayed-artworks">
+        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream displayedArtworks}}
+      </div>
+    {{/if}}
   </div>
 </template>

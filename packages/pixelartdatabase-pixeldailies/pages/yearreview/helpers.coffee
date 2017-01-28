@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 PADB = PixelArtDatabase
 
 class PADB.PixelDailies.Pages.YearReview.Helpers
@@ -37,6 +38,32 @@ class PADB.PixelDailies.Pages.YearReview.Helpers
     PADB.Artwork.documents.find
       _id:
         $in: artworkIds
+
+
+  @convertSubmissionToArtworks: (submission) ->
+    # Find type of the image.
+    for image in submission.images
+      artwork = new PADB.Artwork
+
+      artwork.type = if image.animated then PADB.Artwork.Types.AnimatedImage else PADB.Artwork.Types.Image
+
+      # Create representations of this image.
+      artwork.representations = [
+        type: PADB.Artwork.RepresentationTypes.Image
+        url: image.imageUrl
+      ,
+        type: PADB.Artwork.RepresentationTypes.Post
+        url: submission.tweetUrl
+      ]
+
+      if image.animated
+        artwork.representations.push
+          type: PADB.Artwork.RepresentationTypes.Video
+          url: image.videoUrl
+
+      artwork.favoritesCount = submission.favoritesCount
+
+      artwork
 
   @artistUrl: (screenName) ->
     FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',

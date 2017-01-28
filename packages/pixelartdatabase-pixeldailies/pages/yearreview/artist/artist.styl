@@ -139,10 +139,22 @@
           z-index 0
           filter blur(100px)
 
-  .pixelartdatabase-pixeldailies-pages-yearreview-components-stream
-    .artworks
-      .artwork-area
-        padding-top calc(10vh + 100rem)
+  .stream
+    .pixelartdatabase-pixeldailies-pages-yearreview-components-stream
+      .artworks
+        .artwork-area
+          padding-top calc(10vh + 100rem)
+
+  .displayed-artworks
+    fixed-cover()
+    z-index 2
+    overflow-y scroll
+    cursor pointer
+
+    .pixelartdatabase-pixeldailies-pages-yearreview-components-stream
+      .artworks
+        .artwork-area
+          padding-top 0
 
   .disclaimer
     display block

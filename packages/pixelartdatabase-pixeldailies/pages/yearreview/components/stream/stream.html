@@ -6,7 +6,9 @@
 
 <template name="PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream.ArtworkCaption">
   <div class="title">
-    <span class="rank">{{rank}}.</span>
+    {{#if $exists rank}}
+      <span class="rank">{{rank}}.</span>
+    {{/if}}
     <a class="text" href="{{submission.tweetUrl}}" title="{{submission.text}}" target="_blank">{{title}}</a>
   </div>
   <span class="favorites">{{submission.favoritesCount}} favorites</span><span class="comma">,</span>

@@ -43,6 +43,8 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
     @streamViewActive = new ReactiveField false
 
+    @displayedSubmission = new ReactiveField null
+
   onCreated: ->
     super
 
@@ -74,6 +76,12 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
       [submissionsCursor, artworksCursor] = @constructor.mostPopular.query @screenName(), @year(), @topArtworksLimit()
 
       PADB.PixelDailies.Pages.YearReview.Helpers.prepareTopArtworks artworksCursor.fetch()
+
+    # Convert displayed submission to artworks, so we can show them in a stream.
+    @displayedArtworks = new ComputedField =>
+      return unless submission = @displayedSubmission()
+
+      PADB.PixelDailies.Pages.YearReview.Helpers.convertSubmissionToArtworks submission
 
   onRendered: ->
     super
@@ -175,9 +183,19 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     super.concat
       'click .calendar.view-mode-button': @onClickCalendarViewModeButton
       'click .stream.view-mode-button': @onClickStreamViewModeButton
+      'click .day': @onClickDay
+      'click .displayed-artworks': @onClickDisplayedArtworks
 
   onClickCalendarViewModeButton: (event) ->
     @streamViewActive false
 
   onClickStreamViewModeButton: (event) ->
     @streamViewActive true
+    
+  onClickDay: (event) ->
+    day = @currentData()
+    @displayedSubmission day.submission
+
+  onClickDisplayedArtworks: (event) ->
+    # Close displayed artworks.
+    @displayedSubmission null

@@ -70,6 +70,9 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
 
     # Prepare top user's artworks.
     @profiles = new ComputedField =>
+      # Show previous results if available to avoid flickering.
+      return @_cachedProfiles unless @subscriptionsReady()
+
       [profilesCursor, submissionsCursor] = @constructor.highestRanked.query @sortingParameter(), @year(), @infiniteScroll.limit()
 
       profiles = profilesCursor.fetch()
@@ -78,12 +81,13 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
       for profile, index in profiles
         profile.rank = index + 1
 
+      # Cache results so we can show them while we're switching sorting parameters.
+      @_cachedProfiles = profiles
+
       profiles
 
     # Update current count for infinite scroll.
     @autorun (computation) =>
-      artworks = @data()
-
       @infiniteScroll.updateCount @profiles()?.length or 0
 
   year: ->

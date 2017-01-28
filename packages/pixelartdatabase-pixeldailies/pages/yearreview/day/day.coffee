@@ -149,7 +149,9 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
         # much repeat the archive submission code to create a temporary artwork out of the submission.
         unless artworks.length
           artworks = for submission in theme.topSubmissions
-            @_convertSubmissionToArtwork submission
+            PADB.PixelDailies.Pages.YearReview.Helpers.convertSubmissionToArtworks submission
+
+          artworks = _.flatten artworks
 
       artworks = _.reverse _.sortBy artworks, 'favoritesCount'
 
@@ -157,31 +159,6 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
       artwork.rank = index + 1 for artwork, index in artworks
 
       @artworks artworks
-
-  _convertSubmissionToArtwork: (submission) ->
-    artwork = new PADB.Artwork
-
-    # Find type of the image.
-    image = submission.images[0]
-    artwork.type = if image.animated then PADB.Artwork.Types.AnimatedImage else PADB.Artwork.Types.Image
-
-    # Create representations of this image.
-    artwork.representations = [
-      type: PADB.Artwork.RepresentationTypes.Image
-      url: image.imageUrl
-    ,
-      type: PADB.Artwork.RepresentationTypes.Post
-      url: submission.tweetUrl
-    ]
-
-    if image.animated
-      artwork.representations.push
-        type: PADB.Artwork.RepresentationTypes.Video
-        url: image.videoUrl
-
-    artwork.favoritesCount = submission.favoritesCount
-
-    artwork
 
   onRendered: ->
     super
