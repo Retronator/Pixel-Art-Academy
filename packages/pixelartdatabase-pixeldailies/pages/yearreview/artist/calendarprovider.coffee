@@ -13,8 +13,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist.CalendarProvider extends PADB.Pi
       # We should match the screen name regardless of case.
       submissionsQuery =
         'user.screenName': new RegExp screenName, 'i'
-        processingError:
-          $ne: PADB.PixelDailies.Submission.ProcessingError.NoImages
+        processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
 
       yearRange.addToMongoQuery submissionsQuery, 'time'
 

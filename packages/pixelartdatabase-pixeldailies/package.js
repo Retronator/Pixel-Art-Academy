@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartdatabase');
   api.use('chfritz:easycron');
+  api.use('http');
 
   api.export('PixelArtDatabase');
 
@@ -49,7 +50,7 @@ Package.onUse(function(api) {
   api.addFiles('pages/yearreview/yearreview.coffee');
   api.addFiles('pages/yearreview/yearreview.html');
   api.addFiles('pages/yearreview/yearreview.styl');
-  api.addFiles('pages/yearreview/yearreview.styl', ['client'], {isImport: true});
+  api.addFiles('pages/yearreview/yearreview.import.styl', ['client'], {isImport: true});
 
   api.addFiles('pages/yearreview/helpers.coffee');
 
@@ -128,4 +129,5 @@ Package.onUse(function(api) {
   api.addFiles('pages/admin/scripts/methods-server/updatethemesubmissions.coffee', 'server');
   api.addFiles('pages/admin/scripts/methods-server/reprocessprofiles.coffee', 'server');
   api.addFiles('pages/admin/scripts/methods-server/updateuserstatistics.coffee', 'server');
+  api.addFiles('pages/admin/scripts/methods-server/retiremissingsubmissions.coffee', 'server');
 });

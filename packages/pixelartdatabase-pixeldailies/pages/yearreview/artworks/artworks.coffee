@@ -14,8 +14,7 @@ class PADB.PixelDailies.Pages.YearReview.Artworks extends AM.Component
       yearRange = new AE.DateRange year: year
 
       submissionsQuery =
-        processingError:
-          $ne: PADB.PixelDailies.Submission.ProcessingError.NoImages
+        processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
 
       yearRange.addToMongoQuery submissionsQuery, 'time'
 

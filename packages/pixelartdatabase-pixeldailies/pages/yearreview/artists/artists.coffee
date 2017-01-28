@@ -31,8 +31,7 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
       yearRange = new AE.DateRange year: year
 
       submissionsQuery =
-        processingError:
-          $ne: PADB.PixelDailies.Submission.ProcessingError.NoImages
+        processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
 
       yearRange.addToMongoQuery submissionsQuery, 'time'
 
@@ -112,8 +111,7 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
 
     submission = PADB.PixelDailies.Submission.documents.findOne
       'user.screenName': new RegExp profile.username, 'i'
-      processingError:
-        $ne: PADB.PixelDailies.Submission.ProcessingError.NoImages
+      processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
     ,
       sort:
         favoritesCount: -1

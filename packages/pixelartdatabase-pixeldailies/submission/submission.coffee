@@ -25,14 +25,14 @@ class PADB.PixelDailies.Submission extends AM.Document
     fields: =>
       theme: @ReferenceField PADB.PixelDailies.Theme, ['hashtags'], false
     triggers: =>
-      updateUserStatistics: @Trigger ['favoritesCount', 'user'], (submission, oldSubmission) =>
+      updateUserStatistics: @Trigger ['favoritesCount', 'user', 'processingError'], (submission, oldSubmission) =>
         # Update statistics of both users.
         screenNames = _.uniq [submission?.user?.screenName, oldSubmission?.user?.screenName]
         screenNames = _.without screenNames, undefined
 
         @updateUserStatistics screenName for screenName in screenNames
 
-      favoritesCountUpdated: @Trigger ['theme._id', 'favoritesCount'], (submission, oldSubmission) =>
+      favoritesCountUpdated: @Trigger ['theme._id', 'favoritesCount', 'processingError'], (submission, oldSubmission) =>
         # Update the themes of both submissions.
         themeIds = _.uniq [submission?.theme?._id, oldSubmission?.theme?._id]
         themeIds = _.without themeIds, undefined
@@ -42,6 +42,7 @@ class PADB.PixelDailies.Submission extends AM.Document
   @ProcessingError:
     NoThemeMatch: 'No theme match.'
     NoImages: 'No images.'
+    ImagesNotFound: 'Images not found.'
 
   # Subscriptions
 
