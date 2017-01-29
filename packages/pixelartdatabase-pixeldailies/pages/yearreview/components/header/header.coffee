@@ -12,3 +12,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Header extends AM.Component
   isCurrentYear: ->
     currentYear = new Date().getFullYear()
     @year() is currentYear
+
+  homePath: ->
+    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
+      year: @year()
