@@ -56,6 +56,9 @@ class PADB.PixelDailies.Submission extends AM.Document
       'user.screenName': new RegExp screenName, 'i'
       processingError:
         $ne: PADB.PixelDailies.Submission.ProcessingError.NoImages
+    ,
+      fields:
+        tweetData: 0
     ).fetch()
 
     statisticsByYear = {}
@@ -63,24 +66,36 @@ class PADB.PixelDailies.Submission extends AM.Document
     for submission in submissions
       year = submission.time.getFullYear()
       statisticsByYear[year] ?= {}
-      statistics = statisticsByYear[year]
+      statistics = @_prepareCumulativeStatistics statisticsByYear[year]
 
-      statistics.submissionsCount ?= 0
       statistics.submissionsCount++
-
-      statistics.favoritesCount ?= 0
       statistics.favoritesCount += submission.favoritesCount
+      for image in submission.images when image.animated
+        statistics.animatedSubmissionsCount++
+        break
 
-    overallStatistics =
-      submissionsCount: 0
-      favoritesCount: 0
+      @_calculateDirectStatistics statistics
+
+    overallStatistics = @_prepareCumulativeStatistics()
 
     for year, statistics of statisticsByYear
-      overallStatistics.submissionsCount += statistics.submissionsCount
-      overallStatistics.favoritesCount += statistics.favoritesCount
+      for cumulativeProperty in ['submissionsCount', 'favoritesCount', 'animatedSubmissionsCount']
+        overallStatistics[cumulativeProperty] += statistics[cumulativeProperty]
+
+    @_calculateDirectStatistics overallStatistics
 
     PADB.Profile.documents.update profile._id,
       $set:
         pixelDailies:
           statisticsByYear: statisticsByYear
           statistics: overallStatistics
+
+  @_prepareCumulativeStatistics: (statistics = {}) ->
+    statistics.submissionsCount ?= 0
+    statistics.favoritesCount ?= 0
+    statistics.animatedSubmissionsCount ?= 0
+
+    statistics
+
+  @_calculateDirectStatistics: (statistics) ->
+    statistics.animatedSubmissionRatio = statistics.animatedSubmissionsCount / statistics.submissionsCount

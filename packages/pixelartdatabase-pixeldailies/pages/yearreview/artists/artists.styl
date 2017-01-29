@@ -142,8 +142,12 @@
             background linear-gradient(to right, atariGrey(0) 0%, transparent 100%)
 
         .color
+          display none
           absolute-cover()
-          background-size cover
           z-index 0
+          object-fit cover
           filter blur(100px)
 
+  .loading
+    padding 20rem
+    text-align center

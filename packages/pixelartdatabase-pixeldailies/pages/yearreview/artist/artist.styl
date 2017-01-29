@@ -146,15 +146,21 @@
           padding-top calc(10vh + 100rem)
 
   .displayed-artworks
-    fixed-cover()
-    z-index 2
-    overflow-y scroll
     cursor pointer
 
     .pixelartdatabase-pixeldailies-pages-yearreview-components-stream
       .artworks
         .artwork-area
-          padding-top 0
+          .artwork-with-caption
+            .artwork-frame
+              line-height 80vh
+              margin-bottom 10vh
+
+    & ~ .header
+    & ~ .stream
+    & ~ .calendar
+    & ~ .disclaimer
+      display none
 
   .disclaimer
     display block

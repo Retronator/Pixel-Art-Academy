@@ -35,18 +35,23 @@
             <div class="background">
               <div class="key-artwork-area">
                 {{#if animated}}
-                  <video class="key-artwork" src="{{videoUrl}}" loop autoplay poster="{{imageUrl}}">
+                  <video class="key-artwork" src="{{videoUrl}}" loop poster="{{imageUrl}}">
                     <img class="key-artwork" src="{{imageUrl}}"/>
                   </video>
                 {{else}}
                   <img class="key-artwork" src="{{imageUrl}}"/>
                 {{/if}}
               </div>
-              <div class="color" style="background-image: url({{imageUrl}});"></div>
+              <img class="color" src="{{imageUrl}}"/>
             </div>
           {{/with}}
         </li>
       {{/each}}
     </ol>
+    {{#if loading}}
+      <div class="loading">
+        Loading …
+      </div>
+    {{/if}}
   </div>
 </template>
