@@ -78,7 +78,9 @@ class PADB.Components.Stream extends AM.Component
 
           for video in $artworkArea.find('video')
             video.currentTime = 0
-            video.play()
+            video.play().then =>
+              # HACK: Safari sometimes hides the video after it starts playing, so we trigger it to be re-rendered.
+              $(video).css display: 'block'
 
           $backgroundVideo = $artworkArea.find('video.background')
           backgroundVideo = $backgroundVideo[0]

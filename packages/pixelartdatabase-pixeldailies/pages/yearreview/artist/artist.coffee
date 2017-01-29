@@ -85,6 +85,8 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
   onRendered: ->
     super
 
+    @_$window = $(window)
+
     @_changeBackgroundInterval = Meteor.setInterval =>
       # Choose between one of the first 10 artworks that are always subscribed (but could be less than 10 total).
       artworksCount = @topArtworks()?.length or 1
@@ -122,10 +124,21 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     PADB.Profile.documents.findOne
       username: new RegExp @screenName(), 'i'
 
+  escapedDescription: ->
+    profile = @currentData()
+
+    # We need to escape the hashtag at the start of the description since it would be treated as a header.
+    # We need to use double \\ to escape it in the string as well and produce a literal \.
+    profile.description.replace /^#/, '\\#'
+
   statistics: ->
     @profile().pixelDailies.statisticsByYear[@year()] or
       favoritesCount: 0
       submissionsCount: 0
+
+  animatedPercentage: ->
+    statistics = @currentData()
+    Math.floor statistics.animatedSubmissionRatio * 100
 
   background: ->
     index = @currentBackgroundIndex()
@@ -195,6 +208,16 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     day = @currentData()
     @displayedSubmission day.submission
 
+    @_scrollTopBeforeDisplayingSubmissions = @_$window.scrollTop()
+
+    # Wait till the content reflows to avoid flickering when jumping up before the artworks have been rendered there.
+    Tracker.afterFlush =>
+      @_$window.scrollTop 0
+
   onClickDisplayedArtworks: (event) ->
     # Close displayed artworks.
     @displayedSubmission null
+
+    # Wait till the content reflows.
+    Tracker.afterFlush =>
+      @_$window.scrollTop @_scrollTopBeforeDisplayingSubmissions
