@@ -106,7 +106,7 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
     socialNetwork = 'Twitter' if $icon.hasClass('twitter')
     socialNetwork = 'Tumblr' if $icon.hasClass('tumblr')
 
-    ga 'send', 'event', 'Social Media Engagement', 'Click', socialNetwork if socialNetwork
+    ga? 'send', 'event', 'Social Media Engagement', 'Click', socialNetwork if socialNetwork
 
   resetItemId: (event) ->
     @selectedItem null
@@ -118,7 +118,7 @@ class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
     item = @currentData()
     @selectedItem item
 
-    ga 'send', 'event', 'Game Selected', 'Click', item.catalogKey
+    ga? 'send', 'event', 'Game Selected', 'Click', item.catalogKey
 
     # Disable scrolling when the payment form is active.
     $('body').addClass('prospectus-disable-scrolling')
