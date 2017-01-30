@@ -18,6 +18,14 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
     "Gallery of the best Pixel Dailies submissions for #{@dateTitle date: date, weekday: true}."
 
+  @image: (options) ->
+    date = @date options
+    return PADB.PixelDailies.Pages.YearReview.description options unless date
+
+    # Find the best submission for this day.
+    [themesCursor, submissionsCursor, artworksCursor] = @themeSubmissions.query date, 1
+    submissionsCursor.fetch()[0].images[0].imageUrl
+
   @date: (options) ->
     return unless options.year and options.month and options.day
 

@@ -12,7 +12,7 @@ class PixelArtAcademy.LandingPage.Pages.Press extends AM.Component
     "Information, videos and artworks about Pixel Art Academy."
 
   @image: ->
-    Meteor.absoluteUrl "pixelartacademy/landingpage/pages/press/Pixel%20Art%20Academy%20Title.png"
+    Meteor.absoluteUrl "pixelartacademy/landingpage/pages/press/Pixel Art Academy Title.png"
 
   sceneWidth = 360
   sceneScale = 2
