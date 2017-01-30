@@ -14,13 +14,14 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
       
   @description: (options) ->
     profile = @profile options.screenName
+    return unless profile
 
     "The best Pixel Dailies submissions from #{profile.displayName} in #{options.year}."
 
   @image: (options) ->
     # Find the best submission for this artist.
     [submissionsCursor, artworksCursor] = @mostPopular.query options.screenName, options.year, 1
-    submissionsCursor.fetch()[0].images[0].imageUrl
+    submissionsCursor.fetch()[0]?.images[0].imageUrl
 
   @profile: (screenName) ->
     PADB.Profile.documents.findOne

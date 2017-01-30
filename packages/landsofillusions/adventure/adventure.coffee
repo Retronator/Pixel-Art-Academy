@@ -9,7 +9,7 @@ class LOI.Adventure extends AM.Component
     "A pixel art adventure about drawing, in development by Retronator."
 
   @image: ->
-    Meteor.absoluteUrl "pixelartacademy/landingpage/pages/press/Pixel Art Academy Title.png"
+    Meteor.absoluteUrl "pixelartacademy/title.png"
 
   ready: ->
     console.log "Am I ready? Parser:", @parser.ready(), "Current location:", @currentLocation()?.ready() if LOI.debug

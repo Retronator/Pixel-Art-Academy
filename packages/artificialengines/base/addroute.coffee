@@ -38,16 +38,20 @@ AB.addRoute = (url, layoutClass, componentClass) ->
         headHtml += "<meta property='og:image' content='#{head.image}' />\n"
 
       # Replace parameters in the url.
-      for parameterName, parameter of routeParameters
-        url = url.replace ":#{parameterName}", parameter
+      canonicalUrl = url
 
-      # Remove undefined parameters.
-      url = url.replace /undefined\?/g, ''
+      for parameterName, parameter of routeParameters
+        # Parameter starts with a colon and could end with a question mark. Question mark literal needs to be escaped
+        # in a regex, so we want to have \? in the regex, but to put a backslash in a javascript string, we need to
+        # escape the backslash too, giving us \\?. The final regex questions mark matches the literal questions mark
+        # 0 to 1 times.
+        parameterRegex = new RegExp ":#{parameterName}\\??", 'g'
+        canonicalUrl = canonicalUrl.replace parameterRegex, parameter or ''
 
       # Trim leading and ending slashes (that could result when removing parameters).
-      url = _.trim url, '/'
+      canonicalUrl = _.trim canonicalUrl, '/'
 
-      absoluteUrl = Meteor.absoluteUrl url
+      absoluteUrl = Meteor.absoluteUrl canonicalUrl
 
       headHtml += "<meta property='og:url' content='#{absoluteUrl}' />\n"
 
