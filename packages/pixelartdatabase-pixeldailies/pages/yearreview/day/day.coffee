@@ -6,6 +6,33 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day'
 
+  @title: (options) ->
+    date = @date options
+    return PADB.PixelDailies.Pages.YearReview.title options unless date
+
+    "Retronator // Top Pixel Dailies: #{@dateTitle date: date}"
+
+  @description: (options) ->
+    date = @date options
+    return PADB.PixelDailies.Pages.YearReview.description options unless date
+
+    "Gallery of the best Pixel Dailies submissions for #{@dateTitle date: date, weekday: true}."
+
+  @date: (options) ->
+    return unless options.year and options.month and options.day
+
+    new Date "#{options.day} #{options.month} #{options.year}"
+
+  @dateTitle: (options) ->
+    dateFormat =
+      month: 'long'
+      day: 'numeric'
+      year: 'numeric'
+
+    dateFormat.weekday = 'long' if options.weekday
+      
+    options.date.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US', dateFormat
+
   # Subscriptions
   @themeSubmissions: new AB.Subscription
     name: "#{@componentName()}.themeSubmissions"
@@ -74,13 +101,10 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
     super
 
     @date = new ComputedField =>
-      year = FlowRouter.getParam 'year'
-      month = FlowRouter.getParam 'month'
-      day = FlowRouter.getParam 'day'
-
-      return unless year and month and day
-
-      new Date "#{day} #{month} #{year}"
+      @constructor.date
+        year: FlowRouter.getParam 'year'
+        month: FlowRouter.getParam 'month'
+        day: FlowRouter.getParam 'day'
 
     @infiniteScroll = new ReactiveField null
     @_themeSubmissionSubscriptionsHandle = new ReactiveField null
@@ -176,11 +200,9 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
     @_themeSubmissionSubscriptionsHandle()?.ready()
 
   dateTitle: ->
-    @date().toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US',
-      weekday: 'long'
-      month: 'long'
-      day: 'numeric'
-      year: 'numeric'
+    @constructor.dateTitle
+      date: @date()
+      weekday: true
 
   topArtworkImageUrl: ->
     return unless artwork = @artworks()?[0]

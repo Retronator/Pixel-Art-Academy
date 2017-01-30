@@ -69,7 +69,7 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
     # See if we need to process the payment or it's simply a confirmation.
     paymentAmount = @paymentAmount()
 
-    ga 'send', 'event', 'Store Transaction', 'Initiated', 'Total', paymentAmount
+    ga? 'send', 'event', 'Store Transaction', 'Initiated', 'Total', paymentAmount
 
     if paymentAmount
       # The user needs to make a payment, so open checkout.
@@ -115,10 +115,10 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
     @purchaseCompleted true
 
     # Generate analytics events.
-    ga 'send', 'event', 'Store Transaction', 'Complete', 'Total', paymentAmount
+    ga? 'send', 'event', 'Store Transaction', 'Complete', 'Total', paymentAmount
 
     for cartItem in shoppingCart.items
-      ga 'send', 'event', 'Store Transaction', 'Item Purchased', cartItem.item.catalogKey, cartItem.item.price
+      ga? 'send', 'event', 'Store Transaction', 'Item Purchased', cartItem.item.catalogKey, cartItem.item.price
 
   _confirmationPurchaseHandler: ->
     # Create a transaction on the server.
@@ -134,7 +134,7 @@ class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
         return
 
       # Purchase is successfully completed.
-      ga 'send', 'event', 'Game Purchased', 'Click', shoppingCart.cartItems[0].item.catalogKey, 0
+      ga? 'send', 'event', 'Game Purchased', 'Click', shoppingCart.cartItems[0].item.catalogKey, 0
 
       @_completePurchase shoppingCart, 0
 

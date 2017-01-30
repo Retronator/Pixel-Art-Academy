@@ -34,7 +34,7 @@ class LOI.Parser
     eventAction = command.normalizedCommand
     eventLabel = LOI.adventure.currentLocationId()
 
-    ga 'send', 'event', eventCategory, eventAction, eventLabel
+    ga? 'send', 'event', eventCategory, eventAction, eventLabel
     
     # Gather all available listeners.
     listeners = _.flattenDeep [

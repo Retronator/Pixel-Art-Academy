@@ -2,6 +2,15 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends AM.Component
+  @title: ->
+    "Pixel Art Academy // Adventure game for learning how to draw"
+    
+  @description: ->
+    "A pixel art adventure about drawing, in development by Retronator."
+
+  @image: ->
+    Meteor.absoluteUrl "pixelartacademy/landingpage/pages/press/Pixel%20Art%20Academy%20Title.png"
+
   ready: ->
     console.log "Am I ready? Parser:", @parser.ready(), "Current location:", @currentLocation()?.ready() if LOI.debug
     @parser.ready() and @currentLocation()?.ready()

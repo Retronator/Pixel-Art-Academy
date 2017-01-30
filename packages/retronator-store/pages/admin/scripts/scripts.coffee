@@ -1,5 +1,5 @@
 AM = Artificial.Mirage
-RS = Retronator.Accounts
+RS = Retronator.Store
 
 class RS.Pages.Admin.Scripts extends AM.Component
   @register 'Retronator.Store.Pages.Admin.Scripts'

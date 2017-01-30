@@ -1,7 +1,7 @@
-RA = Retronator.Accounts
+RA = Retronator.App
 
 class RA.Layouts.UserAccess extends BlazeLayoutComponent
-  @register 'Retronator.Accounts.Layouts.UserAccess'
+  @register 'Retronator.App.Layouts.UserAccess'
 
   loading: ->
     Meteor.loggingIn()

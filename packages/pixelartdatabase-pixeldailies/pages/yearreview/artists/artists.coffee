@@ -6,6 +6,12 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artists'
 
+  @title: (options) ->
+    "Retronator // Top Pixel Dailies #{options.year}: Artists"
+
+  @description: (options) ->
+    "The best artists from the Pixel Dailies community in #{options.year}."
+
   @SortingParameters:
     FavoritesCount: 'pixelDailies.statisticsByYear.{{year}}.favoritesCount'
     SubmissionsCount: 'pixelDailies.statisticsByYear.{{year}}.submissionsCount'

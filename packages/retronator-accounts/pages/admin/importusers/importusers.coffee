@@ -1,7 +1,7 @@
 AM = Artificial.Mirage
 RA = Retronator.Accounts
 
-class RA.Pages.AdmingImportUsers extends AM.Component
+class RA.Pages.Admin.ImportUsers extends AM.Component
   @register 'Retronator.Accounts.Pages.Admin.ImportUsers'
   
   # TODO: Upgrade to Retronator Accounts.

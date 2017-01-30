@@ -8,7 +8,7 @@ class LandsOfIllusions
 
   constructor: ->
     # Create the main adventure engine url capture.
-    Retronator.App.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?', 'LandsOfIllusions.Adventure'
+    Retronator.App.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?', LOI.Adventure
 
   # Character selection and persistence
 

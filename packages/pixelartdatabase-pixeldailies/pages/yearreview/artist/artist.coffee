@@ -6,6 +6,26 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist'
 
+  @title: (options) ->
+    profile = @profile options.screenName
+    return unless profile
+    
+    "Retronator // Top Pixel Dailies #{options.year}: #{profile.displayName} (@#{profile.username})"
+      
+  @description: (options) ->
+    profile = @profile options.screenName
+
+    "The best Pixel Dailies submissions from #{profile.displayName} in #{options.year}."
+
+  @image: (options) ->
+    # Find the best submission for this artist.
+    [submissionsCursor, artworksCursor] = @mostPopular.query options.screenName, options.year, 1
+    submissionsCursor.fetch()[0].images[0].imageUrl
+
+  @profile: (screenName) ->
+    PADB.Profile.documents.findOne
+      username: new RegExp screenName, 'i'
+    
   # Subscriptions
   
   @mostPopular: new AB.Subscription
@@ -121,8 +141,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     FlowRouter.getParam 'screenName'
 
   profile: ->
-    PADB.Profile.documents.findOne
-      username: new RegExp @screenName(), 'i'
+    @constructor.profile @screenName()
 
   escapedDescription: ->
     profile = @currentData()
