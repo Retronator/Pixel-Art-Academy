@@ -33,21 +33,30 @@ class ArtificialBabelTranslation extends AM.Document
 
     return "" unless translationDocument
 
-    translation = translationDocument.translate options.language or [Artificial.Babel.defaultLanguage]
+    translation = translationDocument.translate options.language
     translation.text
 
+  # Returns translation data for a specific language.
   translation: (language = Artificial.Babel.defaultLanguage) ->
     languageProperty = language.toLowerCase().replace '-', '.'
     _.nestedProperty translations, languageProperty
 
+  # Finds the best translation in order of preferred languages.
   translate: (languagePreference = AB.userLanguagePreference()) ->
-    for language in languagePreference
-      languageParts = language.toLowerCase().split '-'
+    # Start with an empty array if there is no language preference.
+    languagePreference ?= []
+
+    # Go over preferred languages and resort to default language otherwise.
+    languages = _.map languagePreference, _.toLower
+    languages = _.union languages, [AB.defaultLanguage.toLowerCase()]
+
+    for language in languages
+      languageParts = language.split '-'
 
       translation = @_findTranslation @translations, languageParts
       return translation if translation
 
-    # We've looked through all the preferred languages and couldn't find a translation, so return just the key.
+    # We've looked through all the languages and couldn't find a translation, so return just the key.
     text: @key
     language: null
 
