@@ -6,6 +6,15 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
 
   @themeProvidersByYears = {}
 
+  @title: (options) ->
+    currentYear = new Date().getFullYear()
+    subtitle = if options.year is currentYear then "Calendar" else "Retrospective"
+
+    "Retronator // #{options.year} Pixel Dailies #{subtitle}"
+
+  @description: (options) ->
+    "Gallery of the best pixel art works from the Pixel Dailies community in #{options.year}."
+
   constructor: ->
     super
 

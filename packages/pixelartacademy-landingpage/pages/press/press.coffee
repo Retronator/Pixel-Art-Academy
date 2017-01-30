@@ -5,6 +5,15 @@ class PixelArtAcademy.LandingPage.Pages.Press extends AM.Component
 
   @version: -> '0.0.2'
 
+  @title: ->
+    "Pixel Art Academy // Press page"
+
+  @description: ->
+    "Information, videos and artworks about Pixel Art Academy."
+
+  @image: ->
+    Meteor.absoluteUrl "pixelartacademy/landingpage/pages/press/Pixel%20Art%20Academy%20Title.png"
+
   sceneWidth = 360
   sceneScale = 2
 

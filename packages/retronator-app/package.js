@@ -40,4 +40,17 @@ Package.onUse(function(api) {
   api.addFiles('app.html');
   api.addFiles('app.coffee');
 
+  // Layouts
+
+  api.addFiles('layouts/layouts.coffee');
+
+  api.addFiles('layouts/adminaccess/adminaccess.coffee');
+  api.addFiles('layouts/adminaccess/adminaccess.html');
+
+  api.addFiles('layouts/useraccess/useraccess.coffee');
+  api.addFiles('layouts/useraccess/useraccess.html');
+
+  api.addFiles('layouts/publicaccess/publicaccess.coffee');
+  api.addFiles('layouts/publicaccess/publicaccess.html');
+
 });
