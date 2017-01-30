@@ -20,7 +20,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
   @image: (options) ->
     date = @date options
-    return PADB.PixelDailies.Pages.YearReview.description options unless date
+    return unless date
 
     # Find the best submission for this day.
     [themesCursor, submissionsCursor, artworksCursor] = @themeSubmissions.query date, 1
