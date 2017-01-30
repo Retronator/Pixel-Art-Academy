@@ -7,13 +7,13 @@ Calendar = PAA.PixelBoy.Apps.Calendar
 
 class Calendar.Providers.PixelDailies.ThemesProvider extends Calendar.Provider
   @calendarComponentClass: ->
-    PADB.PixelDailies.ThemeCalendarComponent
+    Calendar.Providers.PixelDailies.ThemeComponent
 
   constructor: ->
     super
 
   subscriptionName: ->
-    'PADB.PixelDailies.Theme.forDateRange'
+    'PixelArtDatabase.PixelDailies.Theme.forDateRange'
 
   # Returns all events for a specific day.
   getEvents: (dayDate) ->
