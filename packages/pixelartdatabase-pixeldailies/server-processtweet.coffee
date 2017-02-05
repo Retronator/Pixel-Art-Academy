@@ -47,13 +47,13 @@ class PADB.PixelDailies extends PADB.PixelDailies
             when 'photo'
               submission.tweetUrl ?= media.url
               submission.images.push
-                imageUrl: media.media_url
+                imageUrl: media.media_url_https
 
             when 'animated_gif'
               submission.tweetUrl ?= media.url
               submission.images.push
                 animated: true
-                imageUrl: media.media_url
+                imageUrl: media.media_url_https
                 videoUrl: media.video_info.variants[0].url
 
       if submission.images.length

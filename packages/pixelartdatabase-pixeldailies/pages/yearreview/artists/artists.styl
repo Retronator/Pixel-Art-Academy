@@ -64,6 +64,7 @@
     list-style none
     padding 0
     margin 0
+    min-height 80rem
 
     .profile
       position relative
@@ -111,10 +112,7 @@
         &::after
           content ''
           absolute-cover()
-          background linear-gradient(to right, transparentify(atariGrey(0), 0.3) 0%, transparentify(atariGrey(7), 0.15) 100%)
-
-        &.old
-          z-index 1
+          background linear-gradient(to right, transparentify(atariGrey(0), 0.6) 0%, transparentify(atariGrey(0), 0.4) 100%)
 
         &.transition
           transition opacity ease-in 1s
@@ -143,7 +141,7 @@
 
         .color
           display none
-          absolute-cover()
+          absolute-cover-size()
           z-index 0
           object-fit cover
           filter blur(100px)

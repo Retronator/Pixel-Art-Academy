@@ -151,7 +151,13 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
     submission?.images[0]
 
   onScroll: ->
-    @_updateProfilesVisibility()
+    # Update visibility every 0.2s when scrolling.
+    @_throttledUpdateProfilesVisibility ?= _.throttle =>
+      @_updateProfilesVisibility()
+    ,
+      200
+
+    @_throttledUpdateProfilesVisibility()
 
   _measureProfiles: ->
     # Get top and bottom positions of all artworks.
@@ -171,16 +177,16 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
       @_profilesVisibilityData[index].bottom = bottom
 
   _updateProfilesVisibility: ->
+    viewportTop = @_$window.scrollTop()
+    windowHeight = @_$window.height()
+    viewportBottom = viewportTop + windowHeight
+
+    # Expand one extra screen beyond the viewport
+    visibilityEdgeTop = viewportTop - windowHeight
+    visibilityEdgeBottom = viewportBottom + windowHeight
+
     # Go over all the profiles and activate the one at the new index.
     for visibilityData, index in @_profilesVisibilityData
-      viewportTop = @_$window.scrollTop()
-      windowHeight = @_$window.height()
-      viewportBottom = viewportTop + windowHeight
-
-      # Expand one extra screen beyond the viewport
-      visibilityEdgeTop = viewportTop - windowHeight
-      visibilityEdgeBottom = viewportBottom + windowHeight
-
       # Profile is visible if it is anywhere in between the visibility edges.
       profileShouldBeActive = visibilityData.bottom > visibilityEdgeTop and visibilityData.top < visibilityEdgeBottom
 

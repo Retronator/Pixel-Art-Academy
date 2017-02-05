@@ -25,6 +25,7 @@ Package.onUse(function(api) {
   api.addFiles('artwork/artwork.coffee');
   api.addFiles('artwork/methods.coffee');
   api.addFiles('artwork/subscriptions.coffee', 'server');
+  api.addFiles('artwork/migrations/0000-converttohttps.coffee', 'server');
 
   api.addFiles('character/character.coffee');
 

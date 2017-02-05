@@ -10,7 +10,9 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
   constructor: ->
     super
 
-    @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll step: 10
+    @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
+      step: 10
+      windowHeightCounts: 3
 
   onCreated: ->
     super
