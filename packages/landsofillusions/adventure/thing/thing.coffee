@@ -18,7 +18,7 @@ class LOI.Adventure.Thing extends AM.Component
   @_thingClassesById = {}
 
   # Id string for this thing used to identify the thing in code.
-  @id: -> throw new Meteor.Error 'unimplemented', "You must specify thing's id."
+  @id: -> throw new AE.NotImplementedException "You must specify thing's id."
 
   # The URL at which the thing is accessed or null if it doesn't use an address.
   @url: -> null
@@ -81,6 +81,12 @@ class LOI.Adventure.Thing extends AM.Component
     # Prepare the avatar for this thing.
     LOI.Avatar.initialize @
 
+    # On the server, prepare any extra translations.
+    if Meteor.isServer
+      translationNamespace = @id()
+      for translationKey, defaultText of @translations?()
+        AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
+
   @state: -> {} # Override to return a non-empty state.
 
   # Thing instance
@@ -96,6 +102,7 @@ class LOI.Adventure.Thing extends AM.Component
     @stateObject = new LOI.StateObject
       address: @address
 
+    # Provides support for autorun and subscribe calls even when component is not created.
     @_autorunHandles = []
     @_subscriptionHandles = []
     
@@ -103,6 +110,21 @@ class LOI.Adventure.Thing extends AM.Component
     for listenerClass in @constructor.listenerClasses()
       @listeners.push new listenerClass
         parent: @
+
+    # Subscribe to this thing's translations.
+    translationNamespace = @constructor.id()
+    @_translationSubscription = AB.subscribeNamespace translationNamespace
+    
+    @translations = new ComputedField =>
+      return unless @_translationSubscription.ready()
+
+      translations = {}
+
+      for translationKey, defaultText of @constructor.translations?()
+        translated = AB.translate @_translationSubscription, translationKey
+        translations[translationKey] = translated.text if translated.language
+
+      translations
 
   destroy: ->
     @avatar.destroy()
@@ -112,6 +134,8 @@ class LOI.Adventure.Thing extends AM.Component
       ability.destroy()
 
     handle.stop() for handle in _.union @_autorunHandles, @_subscriptionHandles
+
+    @_translationSubscription.stop()
 
   # Convenience methods for static properties.
   id: -> @constructor.id()
@@ -123,6 +147,7 @@ class LOI.Adventure.Thing extends AM.Component
     conditions = _.flattenDeep [
       @avatar.ready()
       listener.ready() for listener in @listeners
+      @_translationSubscription.ready()
     ]
 
     _.every conditions

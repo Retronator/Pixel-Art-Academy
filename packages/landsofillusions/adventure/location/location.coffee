@@ -23,10 +23,6 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
   constructor: (@options) ->
     super
 
-    @thingInstances = new LOI.StateInstances
-      state: => @things()
-      location: @
-
     # Subscribe to translations of exit locations' avatars so we get their names.
     @exitAvatarsByLocationId = new ComputedField =>
       # Generate a unique set of exit classes from all directions (some directions might lead to
@@ -50,7 +46,6 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
   ready: ->
     conditions = _.flattenDeep [
       super
-      @thingInstances.ready()
       avatar.ready() for locationId, avatar of @exitAvatarsByLocationId()
     ]
 

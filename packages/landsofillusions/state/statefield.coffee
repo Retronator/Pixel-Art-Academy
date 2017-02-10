@@ -32,6 +32,9 @@ class LOI.StateField
       # No, this is a getter, so just return the value from the computed field.
       field()
 
+    stateField.stop = ->
+      field.stop()
+
     # Allow correct handling of instanceof operator.
     Object.setPrototypeOf stateField, @constructor.prototype
 

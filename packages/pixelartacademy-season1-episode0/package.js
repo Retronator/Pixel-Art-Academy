@@ -17,5 +17,26 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-hq');
 
   api.export('PixelArtAcademy');
-  api.addFiles('episode0.coffee');
+
+  api.addFile('episode0');
+
+  // Chapter 0
+
+  api.addFile('chapter0/chapter0');
+
+  api.addFile('chapter0/start/start');
+
+  api.addThing('chapter0/start/scenes/terrace');
+
+  api.addThing('chapter0/start/items/backpack');
+
+  // Chapter 1
+
+  api.addFile('chapter1/chapter1');
+
+  api.addFile('chapter1/immigration/immigration');
+
+  api.addThing('chapter1/immigration/scenes/concourse');
+  api.addThing('chapter1/immigration/scenes/immigration');
+
 });

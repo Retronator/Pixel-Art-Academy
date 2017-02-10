@@ -47,7 +47,7 @@ class LandsOfIllusions
 LOI = LandsOfIllusions
 
 if Meteor.isClient
-  window.LOI = LOI
+  window.LandsOfIllusions = LOI
 
 # On the client load character ID from local storage.
 if Meteor.isClient

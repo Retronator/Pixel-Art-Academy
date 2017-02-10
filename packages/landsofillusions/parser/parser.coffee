@@ -62,8 +62,7 @@ class LOI.Parser
     @chooseLikelyAction likelyActions
     
   _availableThings: ->
-    location = LOI.adventure.currentLocation()
-    _.flatten [location.thingInstances.values(), LOI.adventure.inventory.values()]
+    LOI.adventure.currentThings()
 
   # Creates a node that performs the action of the likely command
   _createCallbackNode: (phraseAction) ->

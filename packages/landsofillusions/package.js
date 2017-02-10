@@ -44,14 +44,14 @@ Package.onUse(function(api) {
 
   // Game state
 
-  api.addFiles('gamestate/gamestate.coffee');
-  api.addFiles('gamestate/localgamestate.coffee');
-  api.addFiles('gamestate/methods.coffee');
-  api.addFiles('gamestate/subscriptions.coffee', 'server');
-  api.addFiles('gamestate/stateobject.coffee');
-  api.addFiles('gamestate/statefield.coffee');
-  api.addFiles('gamestate/stateaddress.coffee');
-  api.addFiles('gamestate/stateinstances.coffee');
+  api.addFiles('state/gamestate.coffee');
+  api.addFiles('state/localgamestate.coffee');
+  api.addFiles('state/methods.coffee');
+  api.addFiles('state/subscriptions.coffee', 'server');
+  api.addFiles('state/stateobject.coffee');
+  api.addFiles('state/statefield.coffee');
+  api.addFiles('state/stateaddress.coffee');
+  api.addFiles('state/stateinstances.coffee');
 
   // Character
 
@@ -97,6 +97,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure-location.coffee');
   api.addFiles('adventure/adventure-item.coffee');
   api.addFiles('adventure/adventure-inventory.coffee');
+  api.addFiles('adventure/adventure-episodes.coffee');
   api.addFiles('adventure/adventure-initialization.coffee');
 
   // Listener
@@ -145,6 +146,13 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/timeout.coffee');
 
   api.addFiles('adventure/script/parser/parser.coffee');
+
+  // Storylines
+
+  api.addFiles('adventure/episode/episode.coffee');
+  api.addFiles('adventure/chapter/chapter.coffee');
+  api.addFiles('adventure/section/section.coffee');
+  api.addFiles('adventure/scene/scene.coffee');
 
   // Parser Listeners
 

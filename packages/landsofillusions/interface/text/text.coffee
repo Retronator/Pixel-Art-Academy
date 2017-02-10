@@ -33,9 +33,7 @@ class LOI.Interface.Text extends LOI.Interface
     exitAvatars
 
   things: ->
-    location = @location()
-
-    location.thingInstances thingId for thingId in location.things()
+    LOI.adventure.currentThings()
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
@@ -65,7 +63,7 @@ class LOI.Interface.Text extends LOI.Interface
     # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
     items = _.flatten [
       LOI.adventure.inventory.values()
-      _.filter LOI.adventure.currentLocation().thingInstances.values(), (thing) => thing instanceof LOI.Adventure.Item
+      _.filter LOI.adventure.currentThings(), (thing) => thing instanceof LOI.Adventure.Item
     ]
 
     activeItems = _.filter items, (item) => not item.deactivated()

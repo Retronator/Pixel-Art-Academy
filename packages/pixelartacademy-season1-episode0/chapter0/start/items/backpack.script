@@ -1,0 +1,21 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Immigration.Backpack
+
+## OpenOutsideInventory
+
+> You need to [Pick it up](get backpack) first.
+
+-> [End]
+
+## AlreadyOpened
+
+> It's already opened.
+
+-> [End]
+
+## AlreadyInInventory
+
+> You already carry your backpack.
+
+-> [End]
+
+## End

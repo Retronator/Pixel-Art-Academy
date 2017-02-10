@@ -27,6 +27,7 @@ LOI.Parser.Vocabulary.Keys =
     Get: ''
     Sit: ''
     Stand: ''
+    Open: ''
     
   IgnorePrepositions: ''
 

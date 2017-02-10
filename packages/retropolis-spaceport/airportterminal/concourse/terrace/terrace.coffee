@@ -47,6 +47,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
 
   things: -> [
     @constructor.Retropolis
+    @constructor.VendingMachine
   ]
 
   exits: ->

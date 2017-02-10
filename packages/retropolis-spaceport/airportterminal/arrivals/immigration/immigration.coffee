@@ -25,8 +25,8 @@ class RS.AirportTerminal.Immigration extends LOI.Adventure.Location
     super
 
   things: -> [
+    RS.AirportTerminal.Immigration.Terminal
   ]
 
   exits: ->
     "#{Vocabulary.Keys.Directions.West}": RS.AirportTerminal.Concourse
-    "#{Vocabulary.Keys.Directions.East}": RS.AirportTerminal.Immigration.Counter

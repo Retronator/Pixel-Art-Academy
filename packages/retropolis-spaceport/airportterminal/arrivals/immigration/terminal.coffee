@@ -3,11 +3,10 @@ RS = Retropolis.Spaceport
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class RS.AirportTerminal.Immigration.Officer extends LOI.Adventure.Thing
-  @id: -> 'Retropolis.Spaceport.AirportTerminal.Immigration.Officer'
-  @fullName: -> "immigration officer"
-  @shortName: -> "officer"
-  @description: -> "It's one of the immigration officers that can allow you into Retropolis."
+class RS.AirportTerminal.Immigration.Terminal extends LOI.Adventure.Thing
+  @id: -> 'Retropolis.Spaceport.AirportTerminal.Immigration.Terminal'
+  @fullName: -> "immigration terminal"
+  @description: -> "It's an automated immigration system that you can use to enter Retropolis."
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.yellow
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
@@ -20,11 +19,11 @@ class RS.AirportTerminal.Immigration.Officer extends LOI.Adventure.Thing
 
   class @DialogListener extends LOI.Adventure.Listener
     @scriptUrls: -> [
-      'retronator_retropolis-spaceport/airportterminal/arrivals/immigration/officer.script'
+      'retronator_retropolis-spaceport/airportterminal/arrivals/immigration/terminal.script'
     ]
 
     class @Scripts.Dialog extends LOI.Adventure.Script
-      @id: -> 'Retropolis.Spaceport.AirportTerminal.Immigration.Officer'
+      @id: -> 'Retropolis.Spaceport.AirportTerminal.Immigration.Terminal'
       @initialize()
 
       initialize: ->

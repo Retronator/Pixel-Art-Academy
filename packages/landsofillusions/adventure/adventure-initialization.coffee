@@ -38,6 +38,7 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeCurrentLocation()
     @_initializeActiveItem()
     @_initializeInventory()
+    @_initializeEpisodes()
 
   onRendered: ->
     super

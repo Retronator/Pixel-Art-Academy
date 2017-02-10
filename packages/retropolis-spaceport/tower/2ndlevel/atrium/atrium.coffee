@@ -3,8 +3,8 @@ RS = Retropolis.Spaceport
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class RS.AirportTerminal.Atrium2ndLevel extends LOI.Adventure.Location
-  @id: -> 'Retropolis.Spaceport.AirportTerminal.Atrium2ndFloor'
+class RS.Tower.Atrium2ndLevel extends LOI.Adventure.Location
+  @id: -> 'Retropolis.Spaceport.Tower.Atrium2ndFloor'
   @url: -> 'spaceport/atrium/2nd-level'
   @scriptUrls: -> [
   ]
@@ -31,3 +31,4 @@ class RS.AirportTerminal.Atrium2ndLevel extends LOI.Adventure.Location
   exits: ->
     "#{Vocabulary.Keys.Directions.Northwest}": RS.AirportTerminal.Arrivals
     "#{Vocabulary.Keys.Directions.Southwest}": RS.AirportTerminal.Departures
+    "#{Vocabulary.Keys.Directions.Southeast}": RS.AirshipTerminal.Terminal

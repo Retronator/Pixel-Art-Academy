@@ -28,6 +28,7 @@ phrases =
     Get: ['get', 'take', 'pick up']
     Sit: ['sit down']
     Stand: ['stand up']
+    Open: ['open']
 
   IgnorePrepositions: ['to', 'with', 'is']
 

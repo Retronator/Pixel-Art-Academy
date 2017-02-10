@@ -26,6 +26,7 @@ Package.onUse(function(api) {
   api.addFiles('airportterminal/concourse/terrace/terrace.html');
   api.addFiles('airportterminal/concourse/terrace/terrace.styl');
   api.addFiles('airportterminal/concourse/terrace/retropolis.coffee');
+  api.addFiles('airportterminal/concourse/terrace/vendingmachine.coffee');
 
   api.addFiles('airportterminal/concourse/concourse/concourse.coffee');
 
@@ -38,14 +39,25 @@ Package.onUse(function(api) {
   api.addFiles('airportterminal/arrivals/customs/customs.coffee');
 
   api.addFiles('airportterminal/arrivals/immigration/immigration.coffee');
-  api.addFiles('airportterminal/arrivals/immigration/counter.coffee');
-  api.addFiles('airportterminal/arrivals/immigration/officer.coffee');
-  api.addAssets('airportterminal/arrivals/immigration/officer.script', ['client', 'server']);
+  api.addFiles('airportterminal/arrivals/immigration/terminal.coffee');
+  api.addAssets('airportterminal/arrivals/immigration/terminal.script', ['client', 'server']);
 
   api.addFiles('airportterminal/departures/departures/departures.coffee');
   api.addFiles('airportterminal/departures/checkin/checkin.coffee');
   api.addFiles('airportterminal/departures/security/security.coffee');
   api.addFiles('airportterminal/departures/security/scanner.coffee');
 
+  api.addFiles('tower/tower.coffee');
   api.addFiles('tower/2ndlevel/atrium/atrium.coffee');
+
+  api.addFiles('airshipterminal/airshipterminal.coffee');
+
+  api.addFiles('airshipterminal/terminal/terminal.coffee');
+  api.addFiles('airshipterminal/terminal/schedule.coffee');
+  api.addFiles('airshipterminal/terminal/routesmap.coffee');
+
+  api.addFiles('airshipterminal/dock/dock.coffee');
+
+  api.addFiles('airshipterminal/airship/airship.coffee');
+  api.addFiles('airshipterminal/airship/cabin/cabin.coffee');
 });
