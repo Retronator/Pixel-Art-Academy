@@ -33,7 +33,7 @@ class LOI.Interface.Text extends LOI.Interface
     exitAvatars
 
   things: ->
-    LOI.adventure.currentThings()
+    LOI.adventure.currentLocationThings()
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
@@ -57,14 +57,11 @@ class LOI.Interface.Text extends LOI.Interface
     'active' if option is @dialogSelection.selectedDialogLine()
 
   showInventory: ->
-    not @inIntro()
+    not @inIntro() and @inventoryItems().length
 
   activeItems: ->
     # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
-    items = _.flatten [
-      LOI.adventure.inventory.values()
-      _.filter LOI.adventure.currentThings(), (thing) => thing instanceof LOI.Adventure.Item
-    ]
+    items = _.filter LOI.adventure.currentActiveThings(), (thing) => thing instanceof LOI.Adventure.Item
 
     activeItems = _.filter items, (item) => not item.deactivated()
 
@@ -76,14 +73,14 @@ class LOI.Interface.Text extends LOI.Interface
     activeItems
 
   inventoryItems: ->
-    items = _.filter LOI.adventure.inventory.values(), (item) -> not item.state().doNotDisplay
+    items = _.filter LOI.adventure.currentInventoryThings(), (item) -> not item.state()?.doNotDisplay
 
     console.log "Text interface is displaying inventory items", items if LOI.debug
 
     items
 
   showDescription: (thing) ->
-    @narrative.addText thing.avatar?.description()
+    @narrative.addText thing.description()
 
   caretIdleClass: ->
     'idle' if @commandInput.idle()
@@ -106,8 +103,10 @@ class LOI.Interface.Text extends LOI.Interface
     # Create color spans.
     text = text.replace /%c#([\da-f]{6})(.*?)%%/g, '<span style="color: #$1">$2</span>'
 
-    # Extract commands between underscores.
-    text = text.replace /_(.*?)_/g, '<span class="command">$1</span>'
+    # Extract commands from image notation.
+    text = text.replace /!\[(.*?)]\((.*?)\)/g, (match, text, command) ->
+      command = text unless command.length
+      "<span class='command' title='#{command}'>#{text}</span>"
 
     text
 
@@ -138,7 +137,7 @@ class LOI.Interface.Text extends LOI.Interface
     @inIntro false
 
     # Mark location as visited after the intro of the location is done.
-    @location().stateObject 'visited', true
+    @location().state 'visited', true
 
     Tracker.afterFlush =>
       @resize()
@@ -162,7 +161,7 @@ class LOI.Interface.Text extends LOI.Interface
       'mouseleave .text-interface': @onMouseLeaveTextInterface
 
   onMouseEnterCommand: (event) ->
-    @hoveredCommand $(event.target).text()
+    @hoveredCommand $(event.target).attr 'title'
 
   onMouseLeaveCommand: (event) ->
     @hoveredCommand null

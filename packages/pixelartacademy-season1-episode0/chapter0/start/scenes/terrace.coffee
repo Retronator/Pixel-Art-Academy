@@ -8,8 +8,6 @@ class C0.Start.Terrace extends LOI.Adventure.Scene
   @location: -> RS.AirportTerminal.Terrace
 
   things: ->
-    backpackState = _.nestedProperty LOI.adventure.gameState(), "things.#{C0.Start.Backpack.id()}"
-
     [
-      C0.Start.Backpack unless backpackState?.inInventory
+      C0.Start.Backpack unless C0.Start.Backpack.state 'inInventory'
     ]

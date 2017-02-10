@@ -36,6 +36,13 @@ class LOI.Interface.Text extends LOI.Interface.Text
       # We don't have a previous node (or it was cleared to continue), so no need to wait. Return false.
       return false
 
+  _nodeDisplayed: (node) ->
+    @_lastNode node
+
+    # Remove last node after the scripts have had the chance to advance.
+    Tracker.afterFlush =>
+      @_lastNode null
+
   _handleNode: (node) ->
     super
 
@@ -84,7 +91,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @narrative.addText "#{start}#{text}#{end}"
 
     # This is a line node so set that we displayed it.
-    @_lastNode dialogLine
+    @_nodeDisplayed dialogLine
 
     dialogLine.end()
 
@@ -97,7 +104,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @narrative.addText text
 
     # This is a line node so set that we displayed it.
-    @_lastNode narrativeLine
+    @_nodeDisplayed narrativeLine
 
     narrativeLine.end()
 

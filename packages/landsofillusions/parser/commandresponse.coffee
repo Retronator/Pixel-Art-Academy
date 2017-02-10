@@ -111,7 +111,6 @@ class LOI.Parser.CommandResponse
 
           # See if we've already calculated this phrase's likelihood.
           if likelihoodCache[translatedPhrase]
-            console.log "got cached"
             phraseLikeliehood = likelihoodCache[translatedPhrase]
 
           else
@@ -122,6 +121,8 @@ class LOI.Parser.CommandResponse
 
               when @constructor.MatchingModes.Includes
                 phraseLikeliehood = @options.command.has translatedPhrase
+
+            likelihoodCache[translatedPhrase] = phraseLikeliehood
 
           likelihood *= phraseLikeliehood
 

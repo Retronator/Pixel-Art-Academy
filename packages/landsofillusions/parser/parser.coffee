@@ -17,6 +17,7 @@ class LOI.Parser
     # Create global listeners.
     @globalListeners = [
       new @constructor.NavigationListener
+      new @constructor.DescriptionListener
     ]
 
   destroy: ->
@@ -62,7 +63,7 @@ class LOI.Parser
     @chooseLikelyAction likelyActions
     
   _availableThings: ->
-    LOI.adventure.currentThings()
+    LOI.adventure.currentActiveThings()
 
   # Creates a node that performs the action of the likely command
   _createCallbackNode: (phraseAction) ->
@@ -72,9 +73,12 @@ class LOI.Parser
         complete()
 
         # Start the chosen action.
-        phraseAction.action()
+        result = phraseAction.action()
 
-  # Creates a node sequence that outputs the likely command to narrative and performs its action.
+        if result is true
+          LOI.adventure.interface.narrative.addText "OK."
+
+# Creates a node sequence that outputs the likely command to narrative and performs its action.
   _createCommandNodeSequence: (likelyAction) ->
     new Nodes.CommandLine
       replaceLastCommand: true

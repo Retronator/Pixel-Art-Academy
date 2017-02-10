@@ -98,6 +98,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure-item.coffee');
   api.addFiles('adventure/adventure-inventory.coffee');
   api.addFiles('adventure/adventure-episodes.coffee');
+  api.addFiles('adventure/adventure-things.coffee');
   api.addFiles('adventure/adventure-initialization.coffee');
 
   // Listener

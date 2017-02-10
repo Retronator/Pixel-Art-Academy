@@ -5,6 +5,8 @@ class LOI.StateField
   constructor: (options) ->
     # We want to create an internal computed field that we'll depend upon to isolate reactivity.
     field = new ComputedField =>
+      return unless LOI.adventureInitialized()
+
       value = _.nestedProperty LOI.adventure.gameState(), options.address.string()
 
       # If we didn't find the value, see if we have a default value set.

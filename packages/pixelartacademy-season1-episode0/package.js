@@ -29,6 +29,8 @@ Package.onUse(function(api) {
   api.addThing('chapter0/start/scenes/terrace');
 
   api.addThing('chapter0/start/items/backpack');
+  api.addFile('chapter0/start/items/passport');
+  api.addFile('chapter0/start/items/acceptanceletter');
 
   // Chapter 1
 

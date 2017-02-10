@@ -22,6 +22,7 @@ class LOI.StateObject
         # in terms of controlling reactivity, so we just return the value directly. Another reason of doing it this way
         # is that this returns an editable, actual game state. This is for example used from script nodes to write to
         # location state.
+        return unless LOI.adventureInitialized()
         return _.nestedProperty LOI.adventure.gameState(), options.address.string()
 
       field = fieldGetter fieldName

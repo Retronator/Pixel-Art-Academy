@@ -7,3 +7,6 @@ class PAA.Season1.Episode0.Chapter0 extends LOI.Adventure.Chapter
   @sections: -> [
     @Start
   ]
+
+  inventory: ->
+    PAA.Season1.Episode0.Chapter1._inventory @

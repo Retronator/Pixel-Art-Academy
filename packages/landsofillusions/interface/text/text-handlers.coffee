@@ -24,7 +24,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
       # If we've been here before, just start with a fresh narrative. This is the persistent visited, not the
       # per-session one, since we want to do the intro only when it's really the first time to see the location.
-      if location.stateObject 'visited'
+      if location.state 'visited'
         @narrative.clear()
 
       else
@@ -51,8 +51,6 @@ class LOI.Interface.Text extends LOI.Interface.Text
           0
       ,
         0
-
-
 
   onCommandInputEnter: ->
     # Stop intro on enter.

@@ -39,6 +39,9 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeActiveItem()
     @_initializeInventory()
     @_initializeEpisodes()
+    @_initializeThings()
+
+    LOI.adventureInitialized true
 
   onRendered: ->
     super

@@ -16,11 +16,11 @@ class LOI.Adventure.Episode
   constructor: ->
     # State object for this episode.
     @address = new LOI.StateAddress "storylines.#{@id()}"
-    @stateObject = new LOI.StateObject
+    @state = new LOI.StateObject
       address: @address
 
     @currentChapter = new ComputedField =>
-      currentChapterId = @stateObject 'currentChapter'
+      currentChapterId = @state 'currentChapter'
 
       if currentChapterId
         for chapterClass of @constructor.chapters

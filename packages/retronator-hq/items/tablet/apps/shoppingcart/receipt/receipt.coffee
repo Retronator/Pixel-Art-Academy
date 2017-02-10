@@ -12,7 +12,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
   constructor: (@options) ->
     super
 
-    stateObject = @options.stateObject
+    stateObject = @options.state
 
     # Fields that control supporter display for logged out users (guests).
     @guestShowSupporterName = stateObject.field 'showSupporterName', default: true
@@ -189,7 +189,7 @@ class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Com
     # Reset the shopping cart after 2 seconds.
     Meteor.setTimeout =>
       # Reset the shopping cart state.
-      @options.shoppingCart.stateObject.clear()
+      @options.shoppingCart.state.clear()
 
       # Deactivate tablet.
       @options.shoppingCart.options.tablet.deactivate()

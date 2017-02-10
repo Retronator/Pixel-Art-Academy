@@ -28,7 +28,7 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
   constructor: ->
     super
 
-    @elevatorFloor = @stateObject.field 'floor', default: 1
+    @elevatorFloor = @state.field 'floor', default: 1
 
   things: ->
     [HQ.Locations.Elevator.NumberPad.id()]

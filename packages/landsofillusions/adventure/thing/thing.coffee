@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -87,7 +88,12 @@ class LOI.Adventure.Thing extends AM.Component
       for translationKey, defaultText of @translations?()
         AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
 
-  @state: -> {} # Override to return a non-empty state.
+    # Create static state field.
+    @stateAddress = new LOI.StateAddress "things.#{@id()}"
+    @state = new LOI.StateObject address: @stateAddress
+
+  @createAvatar: ->
+    new LOI.Avatar @
 
   # Thing instance
 
@@ -97,10 +103,7 @@ class LOI.Adventure.Thing extends AM.Component
     @avatar = @constructor.createAvatar()
     @abilities = new ReactiveField []
 
-    # State object for this thing.
-    @address = new LOI.StateAddress "things.#{@id()}"
-    @stateObject = new LOI.StateObject
-      address: @address
+    @state = @constructor.state
 
     # Provides support for autorun and subscribe calls even when component is not created.
     @_autorunHandles = []
@@ -140,8 +143,7 @@ class LOI.Adventure.Thing extends AM.Component
   # Convenience methods for static properties.
   id: -> @constructor.id()
 
-  @createAvatar: ->
-    new LOI.Avatar @
+  description: -> @avatar?.description()
 
   ready: ->
     conditions = _.flattenDeep [

@@ -16,7 +16,7 @@ class Script.Nodes.Label extends Script.Node
     @script.ephemeralState state
 
     # For normal state, we just use the state object setter.
-    @script.stateObject @name, true
+    @script.state @name, true
 
     # Finish transition.
     super

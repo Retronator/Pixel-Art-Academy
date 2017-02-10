@@ -4,7 +4,11 @@ LOI = LandsOfIllusions
 class LOI.Adventure extends LOI.Adventure
   _initializeInventory: ->
     # Create inventory.
-    @inventory = new LOI.StateInstances
-      state: =>
-        # TODO: Implement inventory logic.
-        {}
+    @currentInventoryThingClasses = new ComputedField =>
+      # Wait for initialization to finish so that episodes have initialized as well.
+      return unless LOI.adventureInitialized()
+
+      thingClasses = for chapter in @currentChapters()
+        chapter.inventory?()
+
+      _.flatten thingClasses

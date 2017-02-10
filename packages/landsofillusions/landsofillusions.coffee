@@ -5,6 +5,7 @@ class LandsOfIllusions
 
   # Global Adventure instance.
   LOI.adventure = null
+  LOI.adventureInitialized = new ReactiveField false
 
   constructor: ->
     # Create the main adventure engine url capture.

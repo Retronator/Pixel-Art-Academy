@@ -29,8 +29,9 @@ phrases =
     Sit: ['sit down']
     Stand: ['stand up']
     Open: ['open']
+    Close: ['close']
 
-  IgnorePrepositions: ['to', 'with', 'is']
+  IgnorePrepositions: ['to', 'with', 'is', 'at']
 
   Questions:
     WhichPlace: ['where']

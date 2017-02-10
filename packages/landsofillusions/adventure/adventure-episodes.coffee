@@ -13,33 +13,28 @@ class LOI.Adventure extends LOI.Adventure
     @episodes = for episodeClass in @episodeClasses
       new episodeClass
 
-  currentChapters: ->
-    episode.currentChapter() for episode in @episodes
+    @currentChapters = new ComputedField =>
+      episode.currentChapter() for episode in @episodes
 
-  currentSections: ->
-    sections = for chapter in @currentChapters()
-      chapter.currentSections()
+    @currentSections = new ComputedField =>
+      sections = for chapter in @currentChapters()
+        chapter.currentSections()
 
-    _.flattenDeep sections
+      _.flattenDeep sections
 
-  currentScenes: ->
-    currentLocation = @currentLocation()
+    # We use a cache to avoid reconstruction.
+    @_scenes = {}
 
-    scenes = for section in @currentSections()
-      for sceneClass in section.constructor.scenes() when sceneClass.location().id() is currentLocation.id()
-        new sceneClass
+    @currentScenes = new ComputedField =>
+      currentLocation = @currentLocation()
 
-    _.flattenDeep scenes
+      scenes = for section in @currentSections()
+        for sceneClass in section.constructor.scenes() when sceneClass.location().id() is currentLocation.id()
+          # Create the scene if needed. We create the instance in a non-reactive
+          # context so that reruns of this autorun don't invalidate instance's autoruns.
+          Tracker.nonreactive =>
+            @_scenes[sceneClass.id()] ?= new sceneClass
 
-  currentThings: ->
-    currentLocation = @currentLocation()
+          @_scenes[sceneClass.id()]
 
-    locationThings = currentLocation.things()
-    sceneThings = for scene in @currentScenes()
-      scene.things()
-
-    thingClasses = _.flattenDeep _.union locationThings, sceneThings
-
-    for thingClass in thingClasses
-      new thingClass
-        location: currentLocation
+      _.flattenDeep scenes

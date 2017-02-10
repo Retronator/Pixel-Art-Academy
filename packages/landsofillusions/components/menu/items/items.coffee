@@ -140,6 +140,9 @@ class LOI.Components.Menu.Items extends AM.Component
     # Log out.
     LOI.adventure.logout()
 
+    # Reset the interface.
+    LOI.adventure.interface.resetInterface()
+
     # Go to the terrace and scroll to top.
     LOI.adventure.goToLocation Retropolis.Spaceport.AirportTerminal.Terrace
     LOI.adventure.interface.scroll position: 0

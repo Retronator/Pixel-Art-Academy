@@ -70,7 +70,7 @@
             {{/if}}
           </div>
         </div>
-        {{#unless inIntro}}
+        {{#if showInventory}}
           <div class="inventory scrollable">
             <div class="inventory-content scrollable-content">
               <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
@@ -83,7 +83,7 @@
               </ul>
             </div>
           </div>
-        {{/unless}}
+        {{/if}}
       </div>
     </div>
   </div>
