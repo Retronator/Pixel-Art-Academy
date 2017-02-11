@@ -7,3 +7,8 @@ class C1.Immigration extends LOI.Adventure.Section
   @scenes: -> [
     @Terrace
   ]
+
+  active: ->
+    return unless C1.Start.finished()
+
+    super

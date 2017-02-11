@@ -1,10 +1,10 @@
 LOI = LandsOfIllusions
-C0 = PixelArtAcademy.Season1.Episode0.Chapter0
+C1 = PixelArtAcademy.Season1.Episode0.Chapter1
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C0.Start.AcceptanceLetter extends LOI.Adventure.Thing
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter0.Start.AcceptanceLetter'
+class C1.Start.AcceptanceLetter extends LOI.Adventure.Thing
+  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Start.AcceptanceLetter'
   @register @id()
 
   @version: -> '0.0.1'

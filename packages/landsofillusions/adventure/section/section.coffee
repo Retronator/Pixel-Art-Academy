@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Section extends LOI.Adventure.Thing
@@ -5,9 +6,10 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
 
   @fullName: -> "" # Sections don't need to be named.
 
-  active: -> throw new AE.NotImplementedException
+  @finished: -> false # Override to set goal state conditions.
+  finished: -> @constructor.finished()
 
-  constructor: ->
-    super
-
-    @finished = new ReactiveField false
+  active: ->
+    # By default the section is active until it is finished. Override and add
+    # additional logic to create prerequisites for the section being started.
+    not @finished()

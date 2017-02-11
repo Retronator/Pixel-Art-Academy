@@ -19,22 +19,18 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('episode0');
-
-  // Chapter 0
-
-  api.addFile('chapter0/chapter0');
-
-  api.addFile('chapter0/start/start');
-
-  api.addThing('chapter0/start/scenes/terrace');
-
-  api.addThing('chapter0/start/items/backpack');
-  api.addFile('chapter0/start/items/passport');
-  api.addFile('chapter0/start/items/acceptanceletter');
-
+  
   // Chapter 1
 
   api.addFile('chapter1/chapter1');
+
+  api.addFile('chapter1/start/start');
+
+  api.addThing('chapter1/start/scenes/terrace');
+
+  api.addThing('chapter1/start/items/backpack');
+  api.addFile('chapter1/start/items/passport');
+  api.addFile('chapter1/start/items/acceptanceletter');
 
   api.addFile('chapter1/immigration/immigration');
 

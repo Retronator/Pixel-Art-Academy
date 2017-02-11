@@ -1,10 +1,10 @@
 LOI = LandsOfIllusions
-C0 = PixelArtAcademy.Season1.Episode0.Chapter0
+C1 = PixelArtAcademy.Season1.Episode0.Chapter1
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C0.Start.Backpack extends LOI.Adventure.Thing
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter0.Start.Backpack'
+class C1.Start.Backpack extends LOI.Adventure.Thing
+  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Start.Backpack'
   @register @id()
 
   @version: -> '0.0.1'
@@ -34,11 +34,11 @@ class C0.Start.Backpack extends LOI.Adventure.Thing
 
   class @Listener extends LOI.Adventure.Listener
     @scriptUrls: -> [
-      'retronator_pixelartacademy-season1-episode0/chapter0/start/items/backpack.script'
+      'retronator_pixelartacademy-season1-episode0/chapter1/start/items/backpack.script'
     ]
 
     class @Scripts.Backpack extends LOI.Adventure.Script
-      @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter0.Start.Backpack'
+      @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Start.Backpack'
       @initialize()
 
     @initialize()

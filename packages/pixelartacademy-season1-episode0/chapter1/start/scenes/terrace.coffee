@@ -1,9 +1,9 @@
 LOI = LandsOfIllusions
-C0 = PixelArtAcademy.Season1.Episode0.Chapter0
+C1 = PixelArtAcademy.Season1.Episode0.Chapter1
 RS = Retropolis.Spaceport
 
-class C0.Start.Terrace extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter0.Start.Terrace'
+class C1.Start.Terrace extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Start.Terrace'
 
   @location: -> RS.AirportTerminal.Terrace
 
@@ -22,16 +22,16 @@ class C0.Start.Terrace extends LOI.Adventure.Scene
 
   things: ->
     [
-      C0.Start.Backpack unless C0.Start.Backpack.state 'inInventory'
+      C1.Start.Backpack unless C1.Start.Backpack.state 'inInventory'
     ]
 
   class @Listener extends LOI.Adventure.Listener
     @scriptUrls: -> [
-      'retronator_pixelartacademy-season1-episode0/chapter0/start/scenes/terrace.script'
+      'retronator_pixelartacademy-season1-episode0/chapter1/start/scenes/terrace.script'
     ]
 
     class @Scripts.Terrace extends LOI.Adventure.Script
-      @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter0.Start.Terrace'
+      @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Start.Terrace'
       @initialize()
 
     @initialize()
@@ -51,7 +51,7 @@ class C0.Start.Terrace extends LOI.Adventure.Scene
     onExitAttempt: (exitResponse) ->
       return unless exitResponse.currentLocationClass is @options.parent.constructor.location()
 
-      hasBackpack = C0.Start.Backpack.state 'inInventory'
+      hasBackpack = C1.Start.Backpack.state 'inInventory'
       return if hasBackpack
 
       LOI.adventure.director.startScript @scripts[@constructor.Scripts.Terrace.id()], label: 'LeaveWithoutBackpack'
