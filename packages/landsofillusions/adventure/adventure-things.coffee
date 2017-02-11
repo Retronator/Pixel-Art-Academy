@@ -6,8 +6,8 @@ class LOI.Adventure extends LOI.Adventure
     # We use caches to avoid reconstruction.
     @_things = {}
 
-    # Returns all things that are available to listen to commands.
-    @currentActiveThings = new ComputedField =>
+    # Instantiates and returns all physical things (items, characters) that are available to listen to commands.
+    @currentPhysicalThings = new ComputedField =>
       return unless currentLocation = @currentLocation()
 
       locationThingClasses = currentLocation.things()
@@ -28,16 +28,29 @@ class LOI.Adventure extends LOI.Adventure
 
         @_things[thingClass.id()]
 
+    # Returns all physical and storyline things that are available to listen to commands.
+    @currentThings = new ComputedField =>
+      things = _.flattenDeep [
+        @episodes
+        @currentChapters()
+        @currentSections()
+        @currentScenes()
+        @currentLocation()
+        @currentPhysicalThings()
+      ]
+
+      _.without things, undefined
+
     @currentInventoryThings = new ComputedField =>
-      return unless currentActiveThings = @currentActiveThings()
+      return unless currentPhysicalThings = @currentPhysicalThings()
       return unless currentInventoryThingClasses = @currentInventoryThingClasses()
 
-      thing for thing in currentActiveThings when thing.constructor in currentInventoryThingClasses
+      thing for thing in currentPhysicalThings when thing.constructor in currentInventoryThingClasses
 
     # Returns current things that are at the location (and not in the inventory).
     @currentLocationThings = new ComputedField =>
       return unless currentLocation = @currentLocation()
-      return unless currentActiveThings = @currentActiveThings()
+      return unless currentPhysicalThings = @currentPhysicalThings()
 
       # Things at the location are a union of fixed location things and temporary things placed by active scenes.
       locationThings = currentLocation.things()
@@ -46,4 +59,4 @@ class LOI.Adventure extends LOI.Adventure
 
       thingClasses = _.uniq _.flattenDeep _.union locationThings, sceneThings
 
-      thing for thing in currentActiveThings when thing.constructor in thingClasses
+      thing for thing in currentPhysicalThings when thing.constructor in thingClasses

@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
-Action = LOI.Adventure.Ability.Action
+
 
 class HQ.Items.Wallet extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.Items.Wallet'

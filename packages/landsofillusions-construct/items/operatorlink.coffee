@@ -3,7 +3,7 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
+
 
 class LOI.Construct.Items.OperatorLink extends LOI.Adventure.Item
   @id: -> 'LandsOfIllusions.Construct.Items.OperatorLink'

@@ -40,6 +40,7 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeInventory()
     @_initializeEpisodes()
     @_initializeThings()
+    @_initializeListeners()
 
     LOI.adventureInitialized true
 

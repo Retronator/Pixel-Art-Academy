@@ -2,9 +2,6 @@ LOI = LandsOfIllusions
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class LOI.Construct.Locations.C3.Lobby extends LOI.Construct.Location
   @id: -> 'LandsOfIllusions.Construct.Locations.C3.Lobby'
   @url: -> 'c3/lobby'

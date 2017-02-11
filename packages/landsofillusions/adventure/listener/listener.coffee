@@ -83,3 +83,9 @@ class LOI.Adventure.Listener
   onScriptsLoaded: -> # Override to start reactive logic. Use @scripts to get access to script objects.
 
   onCommand: (commandResponse) -> # Override to listen to commands.
+
+  onEnter: (enterResponse) -> # Override to react to entering a location.
+
+  onExitAttempt: (exitResponse) -> # Override to react to location change attempts, potentially preventing the exit.
+
+  onExit: (exitResponse) -> # Override to react to leaving a location.

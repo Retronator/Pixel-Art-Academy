@@ -14,10 +14,11 @@ class LOI.Parser
     # Make a new vocabulary instance.
     @vocabulary = new @Vocabulary
     
-    # Create global listeners.
-    @globalListeners = [
-      new @constructor.NavigationListener
-      new @constructor.DescriptionListener
+    # Create parser listeners.
+    @listeners = [
+      new LOI.Parser.NavigationListener
+      new LOI.Parser.DescriptionListener
+      new LOI.Parser.LookLocationListener
     ]
 
   destroy: ->
@@ -37,14 +38,8 @@ class LOI.Parser
 
     ga? 'send', 'event', eventCategory, eventAction, eventLabel
     
-    # Gather all available listeners.
-    listeners = _.flattenDeep [
-      @globalListeners
-      thing.listeners for thing in @_availableThings()
-    ]
-
     # Get all possible likely actions from all the listeners.
-    likelyActions = for listener in listeners
+    likelyActions = for listener in LOI.adventure.currentListeners()
       # Create the command response object.
       commandResponse = new @constructor.CommandResponse
         command: command
@@ -61,9 +56,6 @@ class LOI.Parser
 
     # We only have uncertain possibilities.
     @chooseLikelyAction likelyActions
-    
-  _availableThings: ->
-    LOI.adventure.currentActiveThings()
 
   # Creates a node that performs the action of the likely command
   _createCallbackNode: (phraseAction) ->

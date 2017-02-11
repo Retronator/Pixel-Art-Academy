@@ -4,9 +4,6 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.Steps extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Steps'
   @url: -> 'retronator/steps'

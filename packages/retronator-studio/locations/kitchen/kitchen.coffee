@@ -4,9 +4,6 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.Studio.Kitchen extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Studio.Kitchen'
   @url: -> 'retronator/studio/kitchen'

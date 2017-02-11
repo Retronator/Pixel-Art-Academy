@@ -42,3 +42,26 @@ class LOI.Adventure extends LOI.Adventure
         @_currentLocation = new currentLocationClass
         
         @currentLocation @_currentLocation
+
+  goToLocation: (locationClassOrId) ->
+    currentLocationClass = _.thingClass @currentLocationId()
+    destinationLocationClass = _.thingClass locationClassOrId
+    
+    # Query all the listeners if they need to perform any action on exit.
+    results = for listener in @currentListeners()
+      exitResponse = new LOI.Parser.ExitResponse {currentLocationClass, destinationLocationClass}
+
+      listener.onExitAttempt exitResponse
+
+      {exitResponse, listener}
+
+    # See if exit was prevented.
+    for result in results
+      return if result.exitResponse.wasExitPrevented()
+
+    # Notify the listeners that exit will complete.
+    for result in results
+      result.listener.onExit result.exitResponse
+
+    # Change location.
+    @currentLocationId _.thingId locationClassOrId

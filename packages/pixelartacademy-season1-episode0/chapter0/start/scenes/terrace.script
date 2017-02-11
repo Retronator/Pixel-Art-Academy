@@ -1,5 +1,9 @@
-# PixelArtAcademy.Season1.Episode0.Chapter0.Start.Terrace.Intro
+# PixelArtAcademy.Season1.Episode0.Chapter0.Start.Terrace
 
-> You exit the Retropolis International Spaceport. 
-> A magnificent view of the city opens before you and you feel the adventure in the air. 
-> The terrace you're standing on connects back to the airport terminal in the south.
+## LeaveWithoutBackpack
+
+> Don't forget your backpack! ![Pick it up](pick up backpack) before you leave.
+
+-> [End]
+
+## End

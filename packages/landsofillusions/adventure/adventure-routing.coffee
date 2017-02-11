@@ -94,8 +94,5 @@ class LOI.Adventure extends LOI.Adventure
 
       FlowRouter.go 'LandsOfIllusions.Adventure', parametersObject
 
-  goToLocation: (locationClassOrId) ->
-    @currentLocationId _.thingId locationClassOrId
-
   goToItem: (itemClassOrId) ->
     @activeItemId _.thingId itemClassOrId

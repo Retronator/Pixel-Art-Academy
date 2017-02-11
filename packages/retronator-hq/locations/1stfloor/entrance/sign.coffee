@@ -3,9 +3,6 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.Entrance.Sign extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.Locations.Entrance.Sign'
 

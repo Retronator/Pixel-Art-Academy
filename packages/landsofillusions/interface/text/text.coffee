@@ -9,7 +9,11 @@ class LOI.Interface.Text extends LOI.Interface
   introduction: ->
     location = @location()
     return unless location
-    
+
+    if currentIntroductionFunction = @_currentIntroductionFunction()
+      introduction = currentIntroductionFunction()
+      return @_formatOutput introduction
+
     if location.constructor.visited()
       fullName = location.avatar.fullName()
       return unless fullName
@@ -61,7 +65,7 @@ class LOI.Interface.Text extends LOI.Interface
 
   activeItems: ->
     # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
-    items = _.filter LOI.adventure.currentActiveThings(), (thing) => thing instanceof LOI.Adventure.Item
+    items = _.filter LOI.adventure.currentPhysicalThings(), (thing) => thing instanceof LOI.Adventure.Item
 
     activeItems = _.filter items, (item) => not item.deactivated()
 
@@ -127,6 +131,8 @@ class LOI.Interface.Text extends LOI.Interface
 
     @location().constructor.visited false
     @inIntro true
+
+    @initializeIntroductionFunction()
 
     Tracker.afterFlush =>
       @narrative.scroll()

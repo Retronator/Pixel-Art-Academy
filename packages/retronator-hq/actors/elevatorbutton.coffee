@@ -3,7 +3,7 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
+
 
 class HQ.Actors.ElevatorButton extends LOI.Adventure.Thing
   @id: -> 'Retronator.HQ.Actors.ElevatorButton'

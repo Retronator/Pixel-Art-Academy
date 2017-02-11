@@ -19,6 +19,10 @@ class C0.Start.Backpack extends LOI.Adventure.Thing
   @translations: ->
     openHint: "You can ![open it](open backpack) to see its contents."
 
+  @listenerClasses: -> [
+    @Listener
+  ]
+    
   @initialize()
 
   description: ->
@@ -27,10 +31,6 @@ class C0.Start.Backpack extends LOI.Adventure.Thing
     return super if opened
 
     "#{super} #{@translations().openHint}"
-
-  @listenerClasses: -> [
-    @Listener
-  ]
 
   class @Listener extends LOI.Adventure.Listener
     @scriptUrls: -> [

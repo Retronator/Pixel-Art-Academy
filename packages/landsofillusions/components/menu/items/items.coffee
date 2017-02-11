@@ -143,8 +143,11 @@ class LOI.Components.Menu.Items extends AM.Component
     # Reset the interface.
     LOI.adventure.interface.resetInterface()
 
+    # Clear location to trigger location changes.
+    LOI.adventure.currentLocationId null
+
     # Go to the terrace and scroll to top.
-    LOI.adventure.goToLocation Retropolis.Spaceport.AirportTerminal.Terrace
+    LOI.adventure.currentLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
     LOI.adventure.interface.scroll position: 0
 
   onClickBack: (event) ->

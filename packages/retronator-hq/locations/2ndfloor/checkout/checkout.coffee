@@ -5,9 +5,6 @@ RS = Retronator.Store
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.Checkout extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Store.Checkout'
   @url: -> 'retronator/checkout'

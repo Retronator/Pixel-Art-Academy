@@ -13,6 +13,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @autorun (computation) =>
       @dialogSelection.paused @waitingKeypress()
 
+    @_currentIntroductionFunction = new ReactiveField null
+
   onLocationChanged: ->
     location = @location()
 
@@ -21,6 +23,9 @@ class LOI.Interface.Text extends LOI.Interface.Text
       return unless @isCreated()
       return unless location.ready()
       computation.stop()
+
+      # Initialize introduction function after location has changed and new listeners have been created.
+      @initializeIntroductionFunction()
 
       # If we've been here before, just start with a fresh narrative. This is the persistent visited, not the
       # per-session one, since we want to do the intro only when it's really the first time to see the location.
@@ -51,6 +56,25 @@ class LOI.Interface.Text extends LOI.Interface.Text
           0
       ,
         0
+
+  initializeIntroductionFunction: ->
+    # Query all the listeners if they need to perform any action on enter.
+    currentLocationClass = @location().constructor
+
+    results = for listener in LOI.adventure.currentListeners()
+      enterResponse = new LOI.Parser.EnterResponse {currentLocationClass}
+
+      listener.onEnter enterResponse
+
+      {enterResponse, listener}
+
+    # Set the new introduction function, if it was set by any of the listeners.
+    @_currentIntroductionFunction null
+
+    for result in results
+      introductionFunction = result.enterResponse.introductionFunction()
+
+      @_currentIntroductionFunction introductionFunction if introductionFunction
 
   onCommandInputEnter: ->
     # Stop intro on enter.

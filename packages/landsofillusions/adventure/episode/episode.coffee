@@ -1,7 +1,7 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-class LOI.Adventure.Episode
+class LOI.Adventure.Episode extends LOI.Adventure.Thing
   @id: -> throw new AE.NotImplementedException
   @chapters: -> throw new AE.NotImplementedException
 
@@ -11,13 +11,12 @@ class LOI.Adventure.Episode
     @_episodeClassesById[id]
 
   @initialize: ->
+    super
+
     @_episodeClassesById[@id()] = @
 
   constructor: ->
-    # State object for this episode.
-    @address = new LOI.StateAddress "storylines.#{@id()}"
-    @state = new LOI.StateObject
-      address: @address
+    super
 
     @currentChapter = new ComputedField =>
       currentChapterId = @state 'currentChapter'

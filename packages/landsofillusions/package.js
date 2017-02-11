@@ -78,6 +78,8 @@ Package.onUse(function(api) {
   api.addFiles('parser/parser-likelyactions.coffee');
   api.addFiles('parser/command.coffee');
   api.addFiles('parser/commandresponse.coffee');
+  api.addFiles('parser/enterresponse.coffee');
+  api.addFiles('parser/exitresponse.coffee');
 
   api.addFiles('parser/vocabulary/vocabulary.coffee');
   api.addFiles('parser/vocabulary/vocabularykeys.coffee');
@@ -99,18 +101,14 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure-inventory.coffee');
   api.addFiles('adventure/adventure-episodes.coffee');
   api.addFiles('adventure/adventure-things.coffee');
+  api.addFiles('adventure/adventure-listeners.coffee');
+
+  // Initalization gets included last because it does component registering as the last child in the chain.
   api.addFiles('adventure/adventure-initialization.coffee');
 
   // Listener
 
   api.addFiles('adventure/listener/listener.coffee');
-
-  // Ability
-
-  api.addFiles('adventure/ability/ability.coffee');
-
-  api.addFiles('adventure/ability/abilities/action.coffee');
-  api.addFiles('adventure/ability/abilities/talking.coffee');
   
   // Things
 
@@ -157,7 +155,6 @@ Package.onUse(function(api) {
 
   // Parser Listeners
 
-  api.addFiles('parser/listeners/abilities.coffee');
   api.addFiles('parser/listeners/debug.coffee');
   api.addFiles('parser/listeners/navigation.coffee');
   api.addFiles('parser/listeners/description.coffee');

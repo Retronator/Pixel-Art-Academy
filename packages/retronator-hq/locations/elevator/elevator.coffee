@@ -3,9 +3,6 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.Elevator extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Elevator'
   @url: -> 'retronator/lobby/elevator'

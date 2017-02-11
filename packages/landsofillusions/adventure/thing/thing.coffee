@@ -5,9 +5,6 @@ LOI = LandsOfIllusions
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class LOI.Adventure.Thing extends AM.Component
   template: -> 'LandsOfIllusions.Adventure.Thing'
     
@@ -43,8 +40,7 @@ class LOI.Adventure.Thing extends AM.Component
   # The short name of the thing which is used to refer to it in the text. 
   @shortName: -> @fullName()
 
-  # The description text displayed when you enter the thing for the first time or specifically look around. Default
-  # (null) means no description.
+  # The description text displayed when you look at the thing. Default (null) means no description.
   @description: -> null
 
   # Helper methods to access class constructors.
@@ -101,18 +97,14 @@ class LOI.Adventure.Thing extends AM.Component
     super
 
     @avatar = @constructor.createAvatar()
-    @abilities = new ReactiveField []
 
     @state = @constructor.state
 
     # Provides support for autorun and subscribe calls even when component is not created.
     @_autorunHandles = []
     @_subscriptionHandles = []
-    
-    @listeners = []
-    for listenerClass in @constructor.listenerClasses()
-      @listeners.push new listenerClass
-        parent: @
+
+    LOI.Adventure.initializeListenerProvider @
 
     # Subscribe to this thing's translations.
     translationNamespace = @constructor.id()
@@ -131,10 +123,6 @@ class LOI.Adventure.Thing extends AM.Component
 
   destroy: ->
     @avatar.destroy()
-    for ability in @abilities()
-      # Break the two-way relationship and let the ability do any additional cleanup.
-      ability.thing null
-      ability.destroy()
 
     handle.stop() for handle in _.union @_autorunHandles, @_subscriptionHandles
 
@@ -175,30 +163,3 @@ class LOI.Adventure.Thing extends AM.Component
     @_subscriptionHandles.push handle
 
     handle
-
-  addAbility: (ability) ->
-    # Create a two-way relationship and add the ability to the list.
-    ability.thing @
-    @abilities @abilities().concat ability
-  
-  addAbilityToActivateByLooking: ->
-    @addAbility new Action
-      verb: Vocabulary.Keys.Verbs.Look
-      action: =>
-        LOI.adventure.goToItem @constructor.id()
-
-  addAbilityToActivateByLookingOrUsing: ->
-    @addAbility new Action
-      verbs: [Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Use]
-      action: =>
-        LOI.adventure.goToItem @constructor.id()
-          
-  addAbilityToActivateByReading: ->
-    @addAbility new Action
-      verbs: [Vocabulary.Keys.Verbs.Read, Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Use]
-      action: =>
-        LOI.adventure.goToItem @constructor.id()
-        
-  # Helper to access running scripts.
-  currentScriptNodes: ->
-    LOI.adventure.director.currentScriptNodes() or []
