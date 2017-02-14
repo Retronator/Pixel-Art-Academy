@@ -140,6 +140,8 @@ class LOI.Adventure.Thing extends AM.Component
   # Convenience methods for static properties.
   id: -> @constructor.id()
 
+  fullName: -> @avatar?.fullName()
+  shortName: -> @avatar?.shortName()
   description: -> @avatar?.description()
 
   ready: ->

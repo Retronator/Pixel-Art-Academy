@@ -29,6 +29,8 @@ LOI.Parser.Vocabulary.Keys =
     Stand: ''
     Open: ''
     Close: ''
+    Drink: ''
+    DrinkFrom: ''
     
   IgnorePrepositions: ''
 

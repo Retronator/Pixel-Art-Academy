@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:retropolis');
   api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartacademy-items');
 
   api.export('Retropolis');
 

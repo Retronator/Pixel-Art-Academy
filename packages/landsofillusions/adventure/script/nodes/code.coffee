@@ -35,9 +35,15 @@ class Script.Nodes.Code extends Script.Node
       @expression = @expression.replace new RegExp(word, 'g'), replacement
 
     # Make variable names in the expression to reference the different states.
-    @expression = @expression.replace /[a-zA-Z_@](?:[\w.]|\[.*?\])*(?=(?:[^"']*["'][^"']*["'])*[^"']*$)/g, (identifier) =>
+    @expression = @expression.replace /(?:[a-zA-Z_@]|\.[a-zA-Z_@])[\w.]*(?=(?:[^"']*["'][^"']*["'])*[^"']*$)/g, (identifier) =>
       # Ignore reserved keywords.
       return identifier if identifier in @constructor.reservedKeywords
+
+      # Ignore identifiers that start with a dot, since these are fields on objects.
+      return identifier if _.startsWith identifier, '.'
+
+      # Rename _ (underscore library) to lodash, since lodash is loaded in the window namespace.
+      return identifier.replace '_.', 'lodash.' if _.startsWith identifier, '_.'
 
       if _.startsWith identifier, '@'
         "_globalState.#{identifier.substring 1}"
@@ -80,6 +86,9 @@ class Script.Nodes.Code extends Script.Node
       for item in _globalState.user.items
         _globalState.user.itemKeys[item.catalogKey] = item
 
+    # Add script parent to script state.
+    _scriptState.parent = @script.options.parent
+
     console.log "Evaluating code node", @, "with states:", _globalState, _locationState, _scriptState, _ephemeralState if LOI.debug
 
     try
@@ -91,8 +100,9 @@ class Script.Nodes.Code extends Script.Node
 
     console.log "Evaluated to", result if LOI.debug
 
-    # User is read-only and should not be saved.
-    _globalState.user = null
+    # Delete read-only fields that should not be saved.
+    delete _globalState.user
+    delete _scriptState.parent
 
     # Trigger reactive state change.
     if options.triggerChange

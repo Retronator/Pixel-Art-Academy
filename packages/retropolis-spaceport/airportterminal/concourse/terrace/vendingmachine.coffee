@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 RS = Retropolis.Spaceport
 
 Vocabulary = LOI.Parser.Vocabulary
@@ -40,8 +41,19 @@ class RS.AirportTerminal.Terrace.VendingMachine extends LOI.Adventure.Item
 
         @setCallbacks
           PrepareDrink: (complete) =>
-            @state ''
-            
+            drinkType = @ephemeralState 'drinkType'
+            drink = PAA.Items.Bottle.createDrink drinkType
+
+            @ephemeralState 'drink', drink
+
+            complete()
+
+          ReceiveBottle: (complete) =>
+            drinkType = @ephemeralState 'drinkType'
+
+            PAA.Items.Bottle.state 'drinkType', drinkType
+            PAA.Items.Bottle.state 'inInventory', true
+
             complete()
 
     @initialize()

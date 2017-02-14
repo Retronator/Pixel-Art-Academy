@@ -15,17 +15,17 @@ machine:
 
 ## AJ
 
-`_type = 'AppleJuice'`
+`_drinkType = 'AppleJuice'`
 -> [Pour]
 
 ## OJ
 
-`_type = 'OrangeJuice'`
+`_drinkType = 'LemonLimeJuice'`
 -> [Pour]
 
 ## Water
 
-`_type = 'Water'`
+`_drinkType = 'Water'`
 -> [Pour]
 
 ## Pour
@@ -34,7 +34,22 @@ machine:
 
 > The robotic machine places a clear glass bottle under a nozzle. 
 
-> `` flows out and as the liquid fills towards the top, a label appears on the glass.
+> `_.capitalize(_drink.fullName())` flows out and as the liquid fills towards the top, a label digitally appears on the glass.
 
+> You take the bottle and the machine displays:
+
+### ReceiveBottle
+
+machine:
+    Enjoy your `_drink.fullName()`.
+    You can keep the bottle, return it to the vending machine, or drop it off at one of the collection stations around the city.
+
+-> [End]
+
+## ReturnBottle
+
+> You push the bottle into a collection slot.
+
+machine: Thank you for returning the bottle. Retropolis stays clean because citizens take good care of it.
 
 ## End

@@ -30,8 +30,10 @@ phrases =
     Stand: ['stand up']
     Open: ['open']
     Close: ['close']
+    Drink: ['drink']
+    DrinkFrom: ['drink from']
 
-  IgnorePrepositions: ['to', 'with', 'is', 'at']
+  IgnorePrepositions: ['to', 'with', 'is', 'at', 'from']
 
   Questions:
     WhichPlace: ['where']

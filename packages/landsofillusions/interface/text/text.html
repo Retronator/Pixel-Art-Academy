@@ -33,7 +33,7 @@
                 <ul class="things">
                   {{#each things}}
                     <li class="thing">
-                      {{avatar.fullName}}.
+                      {{fullName}}.
                     </li>
                   {{else}}
                     <li class="thing">{{> t10e "Nothing"}}.</li>
@@ -76,7 +76,7 @@
               <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
               <ul class="items">
                 {{#each inventoryItems}}
-                  <li class="item">{{avatar.fullName}}</li>
+                  <li class="item">{{fullName}}</li>
                 {{else}}
                   <li class="item">{{> t10e "Nothing"}}</li>
                 {{/each}}

@@ -17,6 +17,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-store');
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-landingpage');
+  api.use('retronator:pixelartacademy-items');
   api.use('retronator:pixelartacademy-season1-episode0');
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:pixelartacademy-practice');

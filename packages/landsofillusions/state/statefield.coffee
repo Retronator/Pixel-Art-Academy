@@ -19,8 +19,9 @@ class LOI.StateField
 
     # We want the state field to behave as a getter/setter.
     stateField = (value) ->
-      # Is this a setter?
-      if value?
+      # Is this a setter? We compare to undefined and not just use
+      # value? since we want to be able to set the value null to the field.
+      if value isnt undefined
         # Do we even need to do any change?
         oldValue = field()
 
