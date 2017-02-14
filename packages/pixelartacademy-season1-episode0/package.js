@@ -24,6 +24,9 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/chapter1');
 
+  api.addFile('chapter1/actors/actors');
+  api.addFile('chapter1/actors/alex');
+
   api.addFile('chapter1/start/start');
 
   api.addThing('chapter1/start/scenes/terrace');

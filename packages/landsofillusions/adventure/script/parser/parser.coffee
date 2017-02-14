@@ -55,7 +55,15 @@ class LOI.Adventure.ScriptFile.Parser
 
       if node
         # Set the created node as the next node, except on script nodes, which break continuity.
-        @nextNode = if node instanceof Nodes.Script then null else node
+        if node instanceof Nodes.Script
+          @nextNode = null
+          @lastNonChoiceNode = null
+
+        else
+          @nextNode = node
+
+        # Also store this as the last non-choice node, so choice nodes can jump to it, if needed.
+        @lastNonChoiceNode = node unless node instanceof Nodes.Choice
 
         # If there is some text left, parse the rest too.
         @_parseLine rest if rest
@@ -262,10 +270,10 @@ class LOI.Adventure.ScriptFile.Parser
     [..., jumpNode] = result if result
 
     # Create a dialog node without an actor (the player's character delivers it),
-    # followed by the jump (or simply following to the next node if no jump is present).
+    # followed by the jump (or following to the last non-choice node if no jump is present).
     dialogNode = new Nodes.DialogLine
       line: choiceLine
-      next: jumpNode or @nextNode
+      next: jumpNode or @lastNonChoiceNode
       
     # Create a choice node that delivers the line if chosen.
     choiceNode = new Nodes.Choice

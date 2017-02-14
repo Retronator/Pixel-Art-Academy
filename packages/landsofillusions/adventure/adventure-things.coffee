@@ -60,3 +60,7 @@ class LOI.Adventure extends LOI.Adventure
       thingClasses = _.uniq _.flattenDeep _.union locationThings, sceneThings
 
       thing for thing in currentPhysicalThings when thing.constructor in thingClasses
+
+  getCurrentThing: (thingClass) ->
+    things = @currentThings()
+    _.find things, (thing) -> thing.constructor is thingClass

@@ -121,6 +121,13 @@ hoverable()
             &:focus
               left -300%
 
+          .keypress-hint
+            opacity 0
+            transition opacity 5s
+
+            &.visible
+              opacity 1
+
         .dialog-selection
           .options
             list-style none

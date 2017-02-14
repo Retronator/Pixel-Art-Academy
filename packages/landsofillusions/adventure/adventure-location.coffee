@@ -43,6 +43,31 @@ class LOI.Adventure extends LOI.Adventure
         
         @currentLocation @_currentLocation
 
+    # Run logic on entering a new location.
+    @autorun (computation) =>
+      return unless location = @currentLocation()
+      currentLocationClass = location.constructor
+
+      # Wait for listeners to get instantiated as well.
+      Tracker.afterFlush => Tracker.nonreactive =>
+        # Query all the listeners if they need to perform any action on enter.
+        listeners = LOI.adventure.currentListeners()
+
+        # Exclude the listeners that are part of scenes that don't happen on this location.
+        listeners = _.filter listeners, (listener) =>
+          listenerScene = listener.options.parent if listener.options.parent instanceof LOI.Adventure.Scene
+          return if listenerScene and listenerScene.constructor.location() isnt currentLocationClass
+
+          true
+
+        # Query the listeners and save the results for the interface to use as well.
+        @locationOnEnterResponseResults = for listener in listeners
+          enterResponse = new LOI.Parser.EnterResponse {currentLocationClass}
+
+          listener.onEnter enterResponse
+
+          {enterResponse, listener}
+
   goToLocation: (locationClassOrId) ->
     currentLocationClass = _.thingClass @currentLocationId()
     destinationLocationClass = _.thingClass locationClassOrId

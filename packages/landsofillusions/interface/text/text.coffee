@@ -90,7 +90,28 @@ class LOI.Interface.Text extends LOI.Interface
     'idle' if @commandInput.idle()
 
   waitingKeypress: ->
-    @_pausedNode() or @inIntro()
+    waiting = @_pausedNode() or @inIntro()
+
+    # Show the hint if the player needs to press enter. We need to manually add the class so that
+    # transition kicks in. First we need to clear any previously set timeouts though.
+    Meteor.clearTimeout @_keypressHintTimetout
+
+    if waiting
+      # Show the hint after a delay, so that the player has time to read the text before they are prompted.
+      lastNarrativeLine = _.last @narrative.lines()
+
+      # Average reading time is about 1000 characters per minute, or 17 per second.
+      readTime = lastNarrativeLine.length / 17
+
+      # We also add in a delay of 2s so we don't annoy the player.
+      hintDelayTime = readTime + 2
+
+      @_keypressHintTimetout = Meteor.setTimeout =>
+        @$('.command-line .keypress-hint').addClass('visible')
+      ,
+        hintDelayTime * 1000
+
+    waiting
 
   narrativeLine: ->
     lineText = @currentData()

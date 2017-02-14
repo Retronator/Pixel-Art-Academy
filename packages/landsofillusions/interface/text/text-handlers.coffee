@@ -58,20 +58,10 @@ class LOI.Interface.Text extends LOI.Interface.Text
         0
 
   initializeIntroductionFunction: ->
-    # Query all the listeners if they need to perform any action on enter.
-    currentLocationClass = @location().constructor
-
-    results = for listener in LOI.adventure.currentListeners()
-      enterResponse = new LOI.Parser.EnterResponse {currentLocationClass}
-
-      listener.onEnter enterResponse
-
-      {enterResponse, listener}
-
     # Set the new introduction function, if it was set by any of the listeners.
     @_currentIntroductionFunction null
 
-    for result in results
+    for result in LOI.adventure.locationOnEnterResponseResults
       introductionFunction = result.enterResponse.introductionFunction()
 
       @_currentIntroductionFunction introductionFunction if introductionFunction

@@ -6,4 +6,31 @@
 
 -> [End]
 
+## AlexEnters
+
+> Alex enters.
+
+### AlexEnters
+
+-> [End]
+
+## AlexIsPresent
+
+alex: There you are! Isn't it wonderful?
+
+* It's even better than I imagined.
+* I always wanted to come here.
+
+alex: 
+    Well, you'll get to see it up-close soon enough.
+    We should hurry up though, the last airship leaves in 10 minutes.
+    
+> Alex leaves ![south](go south).
+
+### AlexLeaves
+
+> Something feels strange. You seem to know Alex, but you can't really tell from where.
+
+-> [End]
+
 ## End
