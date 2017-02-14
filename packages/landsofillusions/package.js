@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-accounts');
   api.use('http');
   api.use('promise');
+  api.use('modules');
 
   api.imply('retronator:artificialengines');
   api.imply('retronator:retronator-accounts');
