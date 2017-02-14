@@ -70,7 +70,7 @@ class LOI.Parser
         if result is true
           LOI.adventure.interface.narrative.addText "OK."
 
-# Creates a node sequence that outputs the likely command to narrative and performs its action.
+  # Creates a node sequence that outputs the likely command to narrative and performs its action.
   _createCommandNodeSequence: (likelyAction) ->
     new Nodes.CommandLine
       replaceLastCommand: true
@@ -82,4 +82,18 @@ class LOI.Parser
     return likelyAction.phraseAction.idealForm likelyAction if likelyAction.phraseAction.idealForm?
 
     # Otherwise we use the default which is just all form parts joined in order.
+    # But we should auto-correct avatars if they require it.
+    for formPart, index in likelyAction.phraseAction.form
+      if formPart instanceof LOI.Avatar
+        avatar = formPart
+
+        switch avatar.nameAutoCorrectStyle()
+          when LOI.Avatar.NameAutoCorrectStyle.ShortName
+            # The exact short name string is required.
+            likelyAction.translatedForm[index] = avatar.shortName()
+
+          when LOI.Avatar.NameAutoCorrectStyle.FullName
+            # The exact full name string is required.
+            likelyAction.translatedForm[index] = avatar.fullName()
+
     likelyAction.translatedForm.join ' '

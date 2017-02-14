@@ -13,7 +13,7 @@ class RS.AirportTerminal.Immigration.Terminal extends LOI.Adventure.Thing
 
   @initialize()
 
-  @listenerClasses: -> [
+  @listeners: -> [
     @DialogListener
   ]
 

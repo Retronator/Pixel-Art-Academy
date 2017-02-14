@@ -64,7 +64,7 @@ class Script.Nodes.Code extends Script.Node
     _scriptState = @script.state()
     _ephemeralState = @script.ephemeralState()
 
-    location = @script.options.location
+    location = LOI.adventure.currentLocation()
     _locationState = location.state()
     _locationState.id = location.id()
 
@@ -97,6 +97,6 @@ class Script.Nodes.Code extends Script.Node
     # Trigger reactive state change.
     if options.triggerChange
       LOI.adventure.gameState.updated()
-      @script.ephemeralState _ephemeralState
+      @script.ephemeralState.set _ephemeralState
 
     result

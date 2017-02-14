@@ -126,7 +126,15 @@ class LOI.Interface.Text extends LOI.Interface
     text = AM.HtmlHelper.escapeText text
 
     # Create color spans.
-    text = text.replace /%c#([\da-f]{6})(.*?)%%/g, '<span style="color: #$1">$2</span>'
+    text = text.replace /%%c#([\da-f]{6})(.*?)c%%/g, '<span style="color: #$1">$2</span>'
+
+    # Create text transform spans.
+    text = text.replace /%%t([L|U])(.*?)t%%/g, (match, transformType, text) =>
+      switch transformType
+        when 'L' then transform = 'lowercase'
+        when 'U' then transform = 'uppercase'
+
+      "<span style='text-transform: #{transform}'>#{text}</span>"
 
     # Extract commands from image notation.
     text = text.replace /!\[(.*?)]\((.*?)\)/g, (match, text, command) ->

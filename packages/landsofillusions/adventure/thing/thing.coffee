@@ -40,8 +40,17 @@ class LOI.Adventure.Thing extends AM.Component
   # The short name of the thing which is used to refer to it in the text. 
   @shortName: -> @fullName()
 
+  # This sets how this thing's name should be corrected when not spelled correctly. 
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Word
+
   # The description text displayed when you look at the thing. Default (null) means no description.
   @description: -> null
+
+  # Text transform for dialog lines delivered by this avatar.
+  @dialogTextTransform: -> LOI.Avatar.DialogTextTransform.Auto
+    
+  # How this thing delivers dialog, used by the interface to format it appropriately.
+  @dialogDeliveryType: -> LOI.Avatar.DialogDeliveryType.Saying
 
   # Helper methods to access class constructors.
   @getClassForUrl: (url) ->
@@ -59,7 +68,7 @@ class LOI.Adventure.Thing extends AM.Component
   # Start all things with a WIP version.
   @version: -> "0.0.1-#{@wipSuffix}"
 
-  @listenerClasses: -> [] # Override for listeners to be initialized when thing is created.
+  @listeners: -> [] # Override for listeners to be initialized when thing is created.
 
   @initialize: ->
     # Store thing class by ID and url.

@@ -69,13 +69,23 @@ class LOI.Interface.Text extends LOI.Interface.Text
     dialogColor = dialogLine.actor.avatar.colorObject()?.getHexString()
 
     # Add a new paragraph to the narrative
-    start = "%c##{dialogColor}"
+    start = "%%c##{dialogColor}"
     text = @_evaluateLine dialogLine
-    end = '%%'
+    end = 'c%%'
+
+    # Add text transformation.
+    switch dialogLine.actor.avatar.dialogTextTransform()
+      when LOI.Avatar.DialogTextTransform.Lowercase
+        start = "%%tL#{start}"
+        end = "t%%#{end}"
+      when LOI.Avatar.DialogTextTransform.Uppercase
+        start = "%%tU#{start}"
+        end = "t%%#{end}"
 
     # Add the intro line at the start.
     unless @_inMultilineDialog
-      start = "#{_.capitalize dialogLine.actor.avatar.shortName()} says: #{start}\""
+      if dialogLine.actor.avatar.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
+        start = "#{_.capitalize dialogLine.actor.avatar.shortName()} says: #{start}\""
 
     if dialogLine.next instanceof Nodes.DialogLine and dialogLine.next.actor is dialogLine.actor
       # Next line is by the same actor.
@@ -85,7 +95,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @_inMultilineDialog = false
 
       # Add the closing quote at the end.
-      end = "\"#{end}"
+      if dialogLine.actor.avatar.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
+        end = "\"#{end}"
 
     # Present the text to the player.
     @narrative.addText "#{start}#{text}#{end}"

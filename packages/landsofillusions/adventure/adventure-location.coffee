@@ -44,6 +44,8 @@ class LOI.Adventure extends LOI.Adventure
         @currentLocation @_currentLocation
 
     # Run logic on entering a new location.
+    @locationOnEnterResponseResults = new ReactiveField null
+    
     @autorun (computation) =>
       return unless location = @currentLocation()
       currentLocationClass = location.constructor
@@ -61,12 +63,14 @@ class LOI.Adventure extends LOI.Adventure
           true
 
         # Query the listeners and save the results for the interface to use as well.
-        @locationOnEnterResponseResults = for listener in listeners
+        responseResults = for listener in listeners
           enterResponse = new LOI.Parser.EnterResponse {currentLocationClass}
 
           listener.onEnter enterResponse
 
           {enterResponse, listener}
+
+        @locationOnEnterResponseResults responseResults
 
   goToLocation: (locationClassOrId) ->
     currentLocationClass = _.thingClass @currentLocationId()

@@ -52,6 +52,7 @@ Package.onUse(function(api) {
   api.addFiles('state/statefield.coffee');
   api.addFiles('state/stateaddress.coffee');
   api.addFiles('state/stateinstances.coffee');
+  api.addFiles('state/ephemeralstateobject.coffee');
 
   // Character
 

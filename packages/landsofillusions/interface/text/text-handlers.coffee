@@ -58,13 +58,18 @@ class LOI.Interface.Text extends LOI.Interface.Text
         0
 
   initializeIntroductionFunction: ->
-    # Set the new introduction function, if it was set by any of the listeners.
-    @_currentIntroductionFunction null
+    # Wait for new enter responses.
+    Tracker.autorun (computation) =>
+      return unless responseResults = LOI.adventure.locationOnEnterResponseResults()
+      computation.stop()
+      
+      # Set the new introduction function, if it was set by any of the listeners.
+      @_currentIntroductionFunction null
 
-    for result in LOI.adventure.locationOnEnterResponseResults
-      introductionFunction = result.enterResponse.introductionFunction()
+      for result in responseResults
+        introductionFunction = result.enterResponse.introductionFunction()
 
-      @_currentIntroductionFunction introductionFunction if introductionFunction
+        @_currentIntroductionFunction introductionFunction if introductionFunction
 
   onCommandInputEnter: ->
     # Stop intro on enter.

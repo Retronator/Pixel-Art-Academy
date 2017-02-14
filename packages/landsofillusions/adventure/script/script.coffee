@@ -47,11 +47,12 @@ class LOI.Adventure.Script
     @state = new LOI.StateObject
       address: new LOI.StateAddress "scripts.#{@id()}"
 
-    @ephemeralState = new ReactiveField {}
+    @ephemeralState = new LOI.EphemeralStateObject
+
     @_stateChangeAutorun = AM.PersistentStorage.persist
       storageKey: "#{@options.id}.state"
       storage: sessionStorage
-      field: @ephemeralState
+      field: @ephemeralState.field()
 
     # On the client, do any custom initialization logic.
     @initialize()

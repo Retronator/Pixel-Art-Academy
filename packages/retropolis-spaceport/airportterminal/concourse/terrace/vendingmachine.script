@@ -1,0 +1,40 @@
+# Retropolis.Spaceport.AirshipTerminal.Terrace.VendingMachine
+
+## Start
+
+> The vending machine displays a message:
+    
+machine:
+    Welcome to Retropolis Spaceport — Airport Terminal. 
+    Would you like a beverage? Kindly provided by the city of Retropolis.
+
+* Apple juice. -> [AJ]
+* Orange juice. -> [OJ]
+* Water. -> [Water]
+* Nevermind. -> [End]
+
+## AJ
+
+`_type = 'AppleJuice'`
+-> [Pour]
+
+## OJ
+
+`_type = 'OrangeJuice'`
+-> [Pour]
+
+## Water
+
+`_type = 'Water'`
+-> [Pour]
+
+## Pour
+
+### PrepareDrink
+
+> The robotic machine places a clear glass bottle under a nozzle. 
+
+> `` flows out and as the liquid fills towards the top, a label appears on the glass.
+
+
+## End

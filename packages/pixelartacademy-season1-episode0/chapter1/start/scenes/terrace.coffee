@@ -14,7 +14,7 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
       The terrace you're standing on connects back to the airport terminal in the south.
     "
 
-  @listenerClasses: -> [
+  @listeners: -> [
     @Listener
   ]
 

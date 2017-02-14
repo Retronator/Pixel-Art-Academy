@@ -6,6 +6,20 @@ class LOI.Avatar
     fullName: 'fullName'
     shortName: 'shortName'
     description: 'description'
+    
+  @NameAutoCorrectStyle:
+    Word: 'Word'
+    ShortName: 'ShortName'
+    FullName: 'FullName'
+
+  @DialogTextTransform:
+    Auto: 'Auto'
+    Uppercase: 'Uppercase'
+    Lowercase: 'Lowercase'
+
+  @DialogDeliveryType:
+    Saying: 'Saying'
+    Displaying: 'Displaying'
 
   # Initialize database parts of an NPC avatar.
   @initialize: (options) ->
@@ -35,6 +49,8 @@ class LOI.Avatar
   shortName: -> @_translateIfAvailable @constructor.translationKeys.shortName
   description: -> @_translateIfAvailable @constructor.translationKeys.description
     
+  nameAutoCorrectStyle: -> _.propertyValue @options, 'nameAutoCorrectStyle'
+    
   color: ->
     # Return the desired color or use default white.
     color = _.propertyValue @options, 'color'
@@ -46,7 +62,10 @@ class LOI.Avatar
   colorObject: ->
     color = @color()
     LOI.palette()?.color color.hue, color.shade + 6
-      
+
+  dialogTextTransform: -> _.propertyValue @options, 'dialogTextTransform'
+  dialogDeliveryType: -> _.propertyValue @options, 'dialogDeliveryType'
+
   _translateIfAvailable: (key) ->
     translated = AB.translate @_translationSubscription, key
     if translated.language then translated.text else null

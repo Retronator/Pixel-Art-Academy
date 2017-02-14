@@ -19,7 +19,7 @@ class C1.Start.Backpack extends LOI.Adventure.Thing
   @translations: ->
     openHint: "You can ![open it](open backpack) to see its contents."
 
-  @listenerClasses: -> [
+  @listeners: -> [
     @Listener
   ]
     

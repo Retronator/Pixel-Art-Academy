@@ -13,6 +13,6 @@ class LOI.Adventure extends LOI.Adventure
       
   @initializeListenerProvider: (providerInstance) ->
     providerInstance.listeners = []
-    for listenerClass in providerInstance.constructor.listenerClasses()
+    for listenerClass in providerInstance.constructor.listeners()
       providerInstance.listeners.push new listenerClass
         parent: providerInstance
