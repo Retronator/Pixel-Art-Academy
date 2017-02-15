@@ -102,8 +102,10 @@ class LOI.Parser.CommandResponse
       console.log "Form combinations", (combination.join ' ' for combination in formCombinations) if LOI.debug
 
       likelihoodCache = {}
+      commandWords = _.words @options.command.normalizedCommand
 
       for combinationPhrases in formCombinations
+        # Calculate likelihood of desired phrases being present in the command.
         likelihood = 1
 
         for translatedPhrase in combinationPhrases
@@ -128,9 +130,18 @@ class LOI.Parser.CommandResponse
 
         console.log "For phrase", combinationPhrases.join(' '), "likelihood in mode", matchingMode, "is", likelihood if LOI.debug
 
+        # We also calculate precision, how closely the phrase has matched the command.
+        targetWords = _.words combinationPhrases.join '_'
+
+        differenceA = _.difference targetWords, commandWords
+        differenceB = _.difference commandWords, targetWords
+
+        precision = 1 - (differenceA.length + differenceB.length) / commandWords.length
+
         # Return an action with the likelihood that this is what the user wanted.
         phraseAction: phraseAction
         likelihood: likelihood
+        precision: precision
         translatedForm: combinationPhrases
 
     # Likely actions include nested arrays for all actions so we return a flattened version.

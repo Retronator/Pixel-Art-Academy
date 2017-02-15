@@ -31,7 +31,12 @@ LOI.Parser.Vocabulary.Keys =
     Close: ''
     Drink: ''
     DrinkFrom: ''
-    
+    Return: ''
+    ReturnTo: ''
+    GiveTo: ''
+    UseIn: ''
+    UseWith: ''
+
   IgnorePrepositions: ''
 
   Questions:

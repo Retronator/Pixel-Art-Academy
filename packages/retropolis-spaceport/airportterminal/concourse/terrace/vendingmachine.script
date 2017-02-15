@@ -50,6 +50,10 @@ machine:
 
 > You push the bottle into a collection slot.
 
+### ReturnBottle
+
+> The machine displays:
+
 machine: Thank you for returning the bottle. Retropolis stays clean because citizens take good care of it.
 
 ## End

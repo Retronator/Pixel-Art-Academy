@@ -96,4 +96,23 @@ class LOI.Parser
             # The exact full name string is required.
             likelyAction.translatedForm[index] = avatar.fullName()
 
-    likelyAction.translatedForm.join ' '
+    # Add form parts together into the sentence, doing any word order substitutions if necessary.
+    words = []
+
+    i = 0
+    while i < likelyAction.translatedForm.length
+      formPart = likelyAction.translatedForm[i]
+      partWords = formPart.split ' '
+
+      # Replace underscore with the following form part.
+      for word, j in partWords when word is '_'
+        partWords[j] = likelyAction.translatedForm[i + 1]
+
+        # Mark that we've used another part.
+        i++
+
+      # We're done with this part.
+      words = words.concat partWords
+      i++
+
+    words.join ' '

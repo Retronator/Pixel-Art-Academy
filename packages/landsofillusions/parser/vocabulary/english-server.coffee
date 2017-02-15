@@ -32,8 +32,13 @@ phrases =
     Close: ['close']
     Drink: ['drink']
     DrinkFrom: ['drink from']
+    Return: ['return']
+    ReturnTo: ['return _ to']
+    GiveTo: ['give _ to']
+    UseIn: ['use _ in']
+    UseWith: ['use _ with']
 
-  IgnorePrepositions: ['to', 'with', 'is', 'at', 'from']
+  IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in']
 
   Questions:
     WhichPlace: ['where']

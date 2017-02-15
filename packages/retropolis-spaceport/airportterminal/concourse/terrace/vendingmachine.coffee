@@ -3,6 +3,7 @@ PAA = PixelArtAcademy
 RS = Retropolis.Spaceport
 
 Vocabulary = LOI.Parser.Vocabulary
+Verbs = Vocabulary.Keys.Verbs
 
 class RS.AirportTerminal.Terrace.VendingMachine extends LOI.Adventure.Item
   @id: -> 'Retropolis.Spaceport.AirshipTerminal.Terrace.VendingMachine'
@@ -56,6 +57,10 @@ class RS.AirportTerminal.Terrace.VendingMachine extends LOI.Adventure.Item
 
             complete()
 
+          ReturnBottle: (complete) =>
+            PAA.Items.Bottle.state 'inInventory', false
+            complete()
+
     @initialize()
 
     onCommand: (commandResponse) ->
@@ -65,3 +70,17 @@ class RS.AirportTerminal.Terrace.VendingMachine extends LOI.Adventure.Item
         form: [Vocabulary.Keys.Verbs.Use, machine.avatar]
         action: =>
           LOI.adventure.director.startScript @scripts[@constructor.Script.id()]
+
+      bottle = LOI.adventure.getCurrentThing PAA.Items.Bottle
+      
+      if bottle
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.Return, bottle.avatar]
+          action: => @_returnBottle()
+
+        commandResponse.onPhrase
+          form: [[Verbs.ReturnTo, Verbs.GiveTo, Verbs.UseWith, Verbs.UseIn], bottle.avatar, machine.avatar]
+          action: => @_returnBottle()
+
+    _returnBottle: ->
+      LOI.adventure.director.startScript @scripts[@constructor.Script.id()], label: 'ReturnBottle'
