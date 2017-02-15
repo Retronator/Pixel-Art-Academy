@@ -126,7 +126,10 @@ class LOI.Interface.Text extends LOI.Interface
     text = AM.HtmlHelper.escapeText text
 
     # Create color spans.
-    text = text.replace /%%c#([\da-f]{6})(.*?)c%%/g, '<span style="color: #$1">$2</span>'
+    text = text.replace /%%c(\d+)-(\d+)%(.*?)c%%/g, (match, hue, shade, text) ->
+      colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade).getHexString()
+
+      "<span style='color: ##{colorHexString}' data-hue='#{hue}' data-shade='#{shade}'>#{text}</span>"
 
     # Create text transform spans.
     text = text.replace /%%t([L|U])(.*?)t%%/g, (match, transformType, text) =>
@@ -139,7 +142,24 @@ class LOI.Interface.Text extends LOI.Interface
     # Extract commands from image notation.
     text = text.replace /!\[(.*?)]\((.*?)\)/g, (match, text, command) ->
       command = text unless command.length
-      "<span class='command' title='#{command}'>#{text}</span>"
+      "<span class='command' title='#{command}'>#{text}<span class='underline'></span><span class='background'></span></span>"
+
+    Tracker.afterFlush =>
+      # Add colors to commands.
+      for element in @$('.narrative .command')
+        $command = $(element)
+        colorParent = $command.parent('*[data-hue]')
+
+        if colorParent
+          hue = colorParent.data 'hue'
+          shade = colorParent.data 'shade'
+          colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade + 1).getHexString()
+
+          $command.css color: "##{colorHexString}"
+
+          $command.find('.underline').css borderBottomColor: "##{colorHexString}"
+
+          $command.find('.background').css backgroundColor: "##{colorHexString}"
 
     text
 

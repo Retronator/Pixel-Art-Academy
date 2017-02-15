@@ -86,6 +86,13 @@ class Script.Nodes.Code extends Script.Node
       for item in _globalState.user.items
         _globalState.user.itemKeys[item.catalogKey] = item
 
+    # Attach player object to global state.
+    _globalState.player =
+      inventory: {}
+
+    # Create a map of inventory items
+    _globalState.player.inventory[thing.id()] = thing for thing in LOI.adventure.currentInventoryThings()
+
     # Add script parent to script state.
     _scriptState.parent = @script.options.parent
 
@@ -102,6 +109,7 @@ class Script.Nodes.Code extends Script.Node
 
     # Delete read-only fields that should not be saved.
     delete _globalState.user
+    delete _globalState.player
     delete _scriptState.parent
 
     # Trigger reactive state change.

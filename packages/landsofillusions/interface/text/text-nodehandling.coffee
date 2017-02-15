@@ -66,10 +66,10 @@ class LOI.Interface.Text extends LOI.Interface.Text
       return
 
     # We have an actor that is saying this.
-    dialogColor = dialogLine.actor.avatar.colorObject()?.getHexString()
+    dialogColor = dialogLine.actor.avatar.color()
 
     # Add a new paragraph to the narrative
-    start = "%%c##{dialogColor}"
+    start = "%%c#{dialogColor.hue}-#{dialogColor.shade}%"
     text = @_evaluateLine dialogLine
     end = 'c%%'
 

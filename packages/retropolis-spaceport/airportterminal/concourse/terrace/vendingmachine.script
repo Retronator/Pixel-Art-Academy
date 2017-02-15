@@ -3,10 +3,16 @@
 ## Start
 
 > The vending machine displays a message:
+
+`_hasBottle = !!@player.inventory['PixelArtAcademy.Items.Bottle']`
+
+-> [AlreadyHasBottle] `_hasBottle`
     
 machine:
     Welcome to Retropolis Spaceport — Airport Terminal. 
     Would you like a beverage? Kindly provided by the city of Retropolis.
+    
+## Selection
 
 * Apple juice. -> [AJ]
 * Orange juice. -> [OJ]
@@ -16,23 +22,37 @@ machine:
 ## AJ
 
 `_drinkType = 'AppleJuice'`
--> [Pour]
+-> [Prepare]
 
 ## OJ
 
 `_drinkType = 'LemonLimeJuice'`
--> [Pour]
+-> [Prepare]
 
 ## Water
 
 `_drinkType = 'Water'`
--> [Pour]
+-> [Prepare]
 
-## Pour
+## Prepare
 
 ### PrepareDrink
 
+-> [PrepareOwnBottle] `_hasBottle`
+
 > The robotic machine places a clear glass bottle under a nozzle. 
+
+-> [Pour]
+
+## PrepareOwnBottle
+
+> You place your bottle under the nozzle and the machine takes over.
+
+### ReturnBottle
+
+-> [Pour]
+
+## Pour
 
 > `_.capitalize(_drink.fullName())` flows out and as the liquid fills towards the top, a label digitally appears on the glass.
 
@@ -42,8 +62,22 @@ machine:
 
 machine:
     Enjoy your `_drink.fullName()`.
-    You can keep the bottle, return it to the vending machine, or drop it off at one of the collection stations around the city.
+    You can keep the bottle, ![return it](return bottle) to the vending machine, or drop it off at one of the collection stations around the city.
 
+-> [End]
+
+## AlreadyHasBottle
+
+-> [BottleIsFull] `@player.inventory['PixelArtAcademy.Items.Bottle'].state('drinkType')`
+
+machine: I see you already have a bottle. Would you like a refill?
+    
+-> [Selection]
+
+## BottleIsFull
+
+machine: I see you already have a bottle. Please ![drink the contents](drink from bottle) or ![return the bottle](return bottle) to receive a new beverage.
+    
 -> [End]
 
 ## ReturnBottle

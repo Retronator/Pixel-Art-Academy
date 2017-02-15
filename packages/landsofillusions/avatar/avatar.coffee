@@ -60,7 +60,9 @@ class LOI.Avatar
       shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
   colorObject: ->
-    color = @color()
+    @constructor.colorObject @color()
+
+  @colorObject: (color) ->
     LOI.palette()?.color color.hue, color.shade + 6
 
   dialogTextTransform: -> _.propertyValue @options, 'dialogTextTransform'
