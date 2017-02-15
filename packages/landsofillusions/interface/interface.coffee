@@ -35,7 +35,7 @@ class LOI.Interface extends AM.Component
 
     # Listen to the script.
     @autorun (computation) =>
-      # We want to wait until the inferface is ready after the location change has been initiated.
+      # We want to wait until the interface is ready after the location change has been initiated.
       return unless @interfaceReady()
 
       scriptNodes = LOI.adventure.director.currentScriptNodes()

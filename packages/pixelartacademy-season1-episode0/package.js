@@ -27,13 +27,17 @@ Package.onUse(function(api) {
   api.addFile('chapter1/actors/actors');
   api.addFile('chapter1/actors/alex');
 
+  api.addThing('chapter1/items/backpack');
+  api.addFile('chapter1/items/passport');
+  api.addFile('chapter1/items/acceptanceletter');
+
+  // Start
+
   api.addFile('chapter1/start/start');
 
   api.addThing('chapter1/start/scenes/terrace');
 
-  api.addThing('chapter1/start/items/backpack');
-  api.addFile('chapter1/start/items/passport');
-  api.addFile('chapter1/start/items/acceptanceletter');
+  // Immigration
 
   api.addFile('chapter1/immigration/immigration');
 

@@ -9,7 +9,27 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
   @finished: -> false # Override to set goal state conditions.
   finished: -> @constructor.finished()
 
+  constructor: ->
+    super
+
+    # React to section becoming active.
+    @autorun (computation) =>
+      active = @active()
+      return unless active?
+
+      if active and @_wasActive is false
+        @onStart()
+
+      @_wasActive = active
+
   active: ->
-    # By default the section is active until it is finished. Override and add
-    # additional logic to create prerequisites for the section being started.
-    not @finished()
+    # Override and add additional logic to create prerequisites for the section being started.
+    finished = @finished()
+
+    # Finished can return undefined, which means it is not ready to determine its state.
+    return unless finished?
+
+    # By default the section is active until it is finished.
+    not finished
+
+  onStart: -> # Override to provide any initialization logic when the section begins.

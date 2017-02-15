@@ -11,6 +11,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @textInterfaceElement = @$textInterface[0]
     @$window = $(window)
     @$uiArea = $('.ui-area')
+    @$ui = @$textInterface.find('.ui')
 
     # Listen to scroll events so that we can sync transform-based scrolling to it.
     @$window.on 'scroll.text-interface', =>
@@ -74,6 +75,12 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Also scroll the main slider.
     @matchScrollbar position unless @wheelDetected
+
+    # See if narrative is in view.
+    if @interfaceReady()
+      viewportBottom = -@scrollTop() + @$window.height()
+      narrativeTop = @$ui.position().top
+      @uiInView narrativeTop < viewportBottom
 
   onWheel: (event) ->
     @onWheelEvent()

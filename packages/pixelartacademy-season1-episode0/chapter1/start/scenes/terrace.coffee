@@ -22,7 +22,7 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
 
   things: ->
     [
-      C1.Start.Backpack unless C1.Start.Backpack.state 'inInventory'
+      C1.Backpack unless C1.Backpack.state 'inInventory'
       C1.Actors.Alex if @state 'alexPresent'
     ]
 
@@ -60,17 +60,23 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
 
         @options.parent.state 'introductionDone', true
 
-      # Alex should enter after 30s unless he is already present or he has already talked to you.
+      # Alex should enter after 30s unless they are already present or they have already talked to you.
       unless @options.parent.state('alexPresent') or C1.Actors.Alex.state('firstTalkDone')
-        @_alexEntersTimeout = Meteor.setTimeout =>
-          LOI.adventure.director.startScript @scripts[@constructor.Scripts.Terrace.id()], label: "AlexEnters"
-        ,
-          30000
+        # But wait first that the interface is ready.
+        @autorun (computation) =>
+          return unless LOI.adventure.interface.uiInView()
+          computation.stop()
+
+          @_alexEntersTimeout = Meteor.setTimeout =>
+            LOI.adventure.director.startScript @scripts[@constructor.Scripts.Terrace.id()], label: "AlexEnters"
+          ,
+            30000
 
       # Alex should talk when at location.
       @_alexTalksAutorun = @autorun (computation) =>
         return unless @scriptsReady()
         return unless alex = LOI.adventure.getCurrentThing C1.Actors.Alex
+        return unless alex.ready()
         computation.stop()
 
         script = @scripts[@constructor.Scripts.Terrace.id()]
@@ -81,7 +87,7 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
     onExitAttempt: (exitResponse) ->
       return unless exitResponse.currentLocationClass is @options.parent.constructor.location()
 
-      hasBackpack = C1.Start.Backpack.state 'inInventory'
+      hasBackpack = C1.Backpack.state 'inInventory'
       return if hasBackpack
 
       LOI.adventure.director.startScript @scripts[@constructor.Scripts.Terrace.id()], label: 'LeaveWithoutBackpack'
@@ -92,4 +98,4 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
 
       # Stop Alex's timer if we leave location before they enter.
       Meteor.clearTimeout @_alexEntersTimeout
-      @_alexTalksAutorun.stop()
+      @_alexTalksAutorun?.stop()

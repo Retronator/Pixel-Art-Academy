@@ -9,13 +9,12 @@ class LOI.Adventure.ScriptFile.Parser
 
     # Break the script down into lines. Line here includes all indented lines following an un-indented line.
     lines = @scriptText.match /^.+$(?:\n[\t ]+.*)*/gm
+    return @scriptNodes unless lines
 
     # Parse lines from back to front so we always have a next node ready.
     @nextNode = null
 
-    # TODO: Replace with by -1 when upgrading to new CS.
-    lines.reverse()
-    @_parseLine line for line in lines
+    @_parseLine line for line in lines by -1
 
     console.log "Script parser has completed and created nodes", @scriptNodes if LOI.debug
 

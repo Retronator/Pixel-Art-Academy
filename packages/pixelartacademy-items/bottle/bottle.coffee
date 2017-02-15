@@ -63,8 +63,6 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
   description: ->
     drinkType = @state 'drinkType'
 
-    console.log "trans", @translations()
-
     if @isEmpty()
       extraDescription = @translations().emptyDescription
 

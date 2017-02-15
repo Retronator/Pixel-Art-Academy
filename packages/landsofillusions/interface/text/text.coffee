@@ -96,9 +96,10 @@ class LOI.Interface.Text extends LOI.Interface
     # transition kicks in. First we need to clear any previously set timeouts though.
     Meteor.clearTimeout @_keypressHintTimetout
 
-    if waiting
+    lines = @narrative.lines()
+    if waiting and lines.length
       # Show the hint after a delay, so that the player has time to read the text before they are prompted.
-      lastNarrativeLine = _.last @narrative.lines()
+      lastNarrativeLine = _.last lines
 
       # Average reading time is about 1000 characters per minute, or 17 per second.
       readTime = lastNarrativeLine.length / 17
@@ -126,7 +127,10 @@ class LOI.Interface.Text extends LOI.Interface
     text = AM.HtmlHelper.escapeText text
 
     # Create color spans.
-    text = text.replace /%%c(\d+)-(\d+)%(.*?)c%%/g, (match, hue, shade, text) ->
+    text = text.replace /%%c(\d+)-([-\d]+)%(.*?)c%%/g, (match, hue, shade, text) ->
+      hue = parseInt hue
+      shade = parseInt shade
+
       colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade).getHexString()
 
       "<span style='color: ##{colorHexString}' data-hue='#{hue}' data-shade='#{shade}'>#{text}</span>"
@@ -150,7 +154,7 @@ class LOI.Interface.Text extends LOI.Interface
         $command = $(element)
         colorParent = $command.parent('*[data-hue]')
 
-        if colorParent
+        if colorParent.length
           hue = colorParent.data 'hue'
           shade = colorParent.data 'shade'
           colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade + 1).getHexString()
