@@ -38,7 +38,7 @@ class RS.AirportTerminal.Terrace.VendingMachine extends LOI.Adventure.Item
       initialize: ->
         machine = @options.parent
 
-        @setActors {machine}
+        @setThings {machine}
 
         @setCallbacks
           PrepareDrink: (complete) =>

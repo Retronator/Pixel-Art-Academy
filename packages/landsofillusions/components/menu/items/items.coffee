@@ -146,6 +146,9 @@ class LOI.Components.Menu.Items extends AM.Component
     # Clear location to trigger location changes.
     LOI.adventure.currentLocationId null
 
+    # Cleanup storyline classes.
+    LOI.adventure.resetEpisodes()
+
     # Go to the terrace and scroll to top.
     LOI.adventure.currentLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
     LOI.adventure.interface.scroll position: 0

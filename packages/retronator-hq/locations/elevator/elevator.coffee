@@ -92,5 +92,5 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
 
       padInteraction = @scripts['Retronator.HQ.Locations.Elevator.Scripts.NumberPad']
   
-      padInteraction.setActors
+      padInteraction.setThings
         pad: pad

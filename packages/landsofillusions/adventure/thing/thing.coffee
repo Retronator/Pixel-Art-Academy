@@ -108,6 +108,7 @@ class LOI.Adventure.Thing extends AM.Component
     @avatar = @constructor.createAvatar()
 
     @state = @constructor.state
+    @stateAddress = @constructor.stateAddress
 
     # Provides support for autorun and subscribe calls even when component is not created.
     @_autorunHandles = []
@@ -130,12 +131,27 @@ class LOI.Adventure.Thing extends AM.Component
 
       translations
 
+    @thingReady = new ComputedField =>
+      conditions = _.flattenDeep [
+        @avatar.ready()
+        listener.ready() for listener in @listeners
+        @_translationSubscription.ready()
+      ]
+
+      console.log "Thing ready?", @id(), conditions if LOI.debug
+
+      _.every conditions
+
   destroy: ->
     @avatar.destroy()
 
     handle.stop() for handle in _.union @_autorunHandles, @_subscriptionHandles
 
     @_translationSubscription.stop()
+
+    @thingReady.stop()
+
+    LOI.Adventure.destroyListenerProvider @
 
   # Convenience methods for static properties.
   id: -> @constructor.id()
@@ -145,13 +161,7 @@ class LOI.Adventure.Thing extends AM.Component
   description: -> @avatar?.description()
 
   ready: ->
-    conditions = _.flattenDeep [
-      @avatar.ready()
-      listener.ready() for listener in @listeners
-      @_translationSubscription.ready()
-    ]
-
-    _.every conditions
+    @thingReady()
 
   # A variant of autorun that works even when the component isn't being rendered.
   autorun: (handler) ->

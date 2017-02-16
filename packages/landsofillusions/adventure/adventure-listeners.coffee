@@ -16,3 +16,7 @@ class LOI.Adventure extends LOI.Adventure
     for listenerClass in providerInstance.constructor.listeners()
       providerInstance.listeners.push new listenerClass
         parent: providerInstance
+
+  @destroyListenerProvider: (providerInstance) ->
+    listener.destroy() for listener in providerInstance.listeners
+    providerInstance.listeners = null

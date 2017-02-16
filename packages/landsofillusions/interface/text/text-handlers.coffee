@@ -42,7 +42,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       # Wait one frame so that any script nodes are processed. Then we can
       # see if the interface is empty, or it is already paused on something.
       Meteor.setTimeout =>
-        @narrative.addText "What do you want to do?", scroll: false unless @_pausedNode()
+        @narrative.addText "What do you want to do?", scroll: false unless @waitingKeypress()
   
         # All the texts have been loaded from the DB at this point.
         # Wait for all the reactivity to finish reflowing the page.

@@ -29,7 +29,7 @@ class RS.AirportTerminal.Immigration.Terminal extends LOI.Adventure.Thing
       initialize: ->
         officer = @options.parent
 
-        @setActors
+        @setThings
           officer: officer
           
         @setCallbacks

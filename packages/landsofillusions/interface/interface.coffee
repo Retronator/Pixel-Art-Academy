@@ -38,6 +38,10 @@ class LOI.Interface extends AM.Component
       # We want to wait until the interface is ready after the location change has been initiated.
       return unless @interfaceReady()
 
+      # We also don't want to process new nodes while UI isn't active or it is waiting for user interaction.
+      return unless @active()
+      return if @waitingKeypress()
+
       scriptNodes = LOI.adventure.director.currentScriptNodes()
 
       console.log "Interface has detected new script nodes:", scriptNodes if LOI.debug

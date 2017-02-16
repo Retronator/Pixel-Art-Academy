@@ -60,7 +60,7 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
 
       dialog = @scripts['Retronator.HQ.Locations.Reception.Scripts.Burra']
   
-      dialog.setActors
+      dialog.setThings
         burra: burra
 
       dialog.setCallbacks

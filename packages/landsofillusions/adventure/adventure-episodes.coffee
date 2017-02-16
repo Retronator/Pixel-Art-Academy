@@ -14,7 +14,8 @@ class LOI.Adventure extends LOI.Adventure
       new episodeClass
 
     @currentChapters = new ComputedField =>
-      episode.currentChapter() for episode in @episodes
+      chapters = (episode.currentChapter() for episode in @episodes)
+      _.without chapters, null
 
     @currentSections = new ComputedField =>
       sections = for chapter in @currentChapters()
@@ -22,19 +23,20 @@ class LOI.Adventure extends LOI.Adventure
 
       _.flattenDeep sections
 
-    # We use a cache to avoid reconstruction.
-    @_scenes = {}
-
     @currentScenes = new ComputedField =>
       currentLocation = @currentLocation()
 
       scenes = for section in @currentSections()
-        for sceneClass in section.constructor.scenes() when sceneClass.location().id() is currentLocation.id()
-          # Create the scene if needed. We create the instance in a non-reactive
-          # context so that reruns of this autorun don't invalidate instance's autoruns.
-          Tracker.nonreactive =>
-            @_scenes[sceneClass.id()] ?= new sceneClass
-
-          @_scenes[sceneClass.id()]
+        scene for scene in section.scenes when scene.location().id() is currentLocation.id()
 
       _.flattenDeep scenes
+
+  resetEpisodes: ->
+    episode.destroy() for episode in @episodes
+
+    @_initializeEpisodes()
+
+  episodesReady: ->
+    return false unless LOI.adventureInitialized()
+
+    _.every (episode.ready() for episode in @episodes)

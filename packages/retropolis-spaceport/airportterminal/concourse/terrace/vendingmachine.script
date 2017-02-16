@@ -68,7 +68,7 @@ machine:
 
 ## AlreadyHasBottle
 
--> [BottleIsFull] `@player.inventory['PixelArtAcademy.Items.Bottle'].state('drinkType')`
+-> [BottleIsFull] `@player.inventory['PixelArtAcademy.Items.Bottle'].drinkType`
 
 machine: I see you already have a bottle. Would you like a refill?
     

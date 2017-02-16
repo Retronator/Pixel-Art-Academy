@@ -84,13 +84,6 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
       @id: -> 'PixelArtAcademy.Items.Bottle'
       @initialize()
 
-      initialize: ->
-        @setCallbacks
-          Drink: (complete) =>
-            bottle = @options.parent
-            bottle.state 'drinkType', null
-            complete()
-
     @initialize()
 
     onCommand: (commandResponse) ->

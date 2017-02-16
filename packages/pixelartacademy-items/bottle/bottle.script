@@ -2,9 +2,9 @@
 
 ## Drink
 
-> You drink the `parent.drink().fullName()` and feel refreshed.
+> You drink the `thisInstance.drink().fullName()` and feel refreshed.
 
-### Drink
+`this.drinkType = null`
 
 -> [End]
 

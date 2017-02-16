@@ -12,8 +12,17 @@ class LOI.Adventure extends AM.Component
     Meteor.absoluteUrl "pixelartacademy/title.png"
 
   ready: ->
-    console.log "Am I ready? Parser:", @parser.ready(), "Current location:", @currentLocation()?.ready() if LOI.debug
-    @parser.ready() and @currentLocation()?.ready()
+    currentLocation = @currentLocation()
+
+    conditions = [
+      @parser.ready()
+      if currentLocation? then currentLocation.ready() else false
+      @episodesReady()
+    ]
+
+    console.log "Adventure ready?", conditions if LOI.debug
+
+    _.every conditions
 
   logout: ->
     # Notify game state that it should flush any cached updates.

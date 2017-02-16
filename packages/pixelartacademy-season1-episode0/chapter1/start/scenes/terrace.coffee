@@ -35,17 +35,6 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
       @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Start.Terrace'
       @initialize()
 
-      initialize: ->
-        @setCallbacks
-          AlexEnters: (complete) =>
-            @options.parent.state 'alexPresent', true
-            complete()
-
-          AlexLeaves: (complete) =>
-            @options.parent.state 'alexPresent', false
-            C1.Actors.Alex.state 'firstTalkDone', true
-            complete()
-
     @initialize()
 
     onEnter: (enterResponse) ->
@@ -56,7 +45,7 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
 
       unless introductionDone
         enterResponse.overrideIntroduction =>
-          @options.parent.translations().intro
+          @options.parent.translations()?.intro
 
         @options.parent.state 'introductionDone', true
 
@@ -74,13 +63,15 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
 
       # Alex should talk when at location.
       @_alexTalksAutorun = @autorun (computation) =>
+        return unless @options.parent.state('alexPresent')
+
         return unless @scriptsReady()
         return unless alex = LOI.adventure.getCurrentThing C1.Actors.Alex
         return unless alex.ready()
         computation.stop()
 
         script = @scripts[@constructor.Scripts.Terrace.id()]
-        script.setActors {alex}
+        script.setThings {alex}
 
         LOI.adventure.director.startScript script, label: "AlexIsPresent"
 
@@ -95,7 +86,11 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
 
     onExit: (exitResponse) ->
       return unless exitResponse.currentLocationClass is @options.parent.constructor.location()
+      super
 
-      # Stop Alex's timer if we leave location before they enter.
+    cleanup: ->
+      # Stop Alex's timer.
       Meteor.clearTimeout @_alexEntersTimeout
+
       @_alexTalksAutorun?.stop()
+

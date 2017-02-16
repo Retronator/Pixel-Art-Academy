@@ -69,7 +69,7 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
 
       retroDialog = @scripts['Retronator.HQ.Locations.Store.Checkout.Scripts.Retro']
   
-      retroDialog.setActors
+      retroDialog.setThings
         retro: retro
         
       retroDialog.setCallbacks

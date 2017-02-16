@@ -34,7 +34,7 @@ class LOI.Construct.Items.OperatorLink extends LOI.Adventure.Item
         # Don't react in locations that don't have the operator script.
         return unless operatorDialog = location.scripts['LandsOfIllusions.Construct.Scripts.Operator']
 
-        operatorDialog.setActors
+        operatorDialog.setThings
           operator: @operator
 
         operatorDialog.setCallbacks

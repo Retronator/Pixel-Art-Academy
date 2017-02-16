@@ -41,6 +41,11 @@ class LOI.StateObject
       _.nestedProperty LOI.adventure.gameState(), options.address.string(), {}
       LOI.adventure.gameState.updated()
 
+    # Sets the whole state object.
+    stateObject.set = (newState) ->
+      _.nestedProperty LOI.adventure.gameState(), options.address.string(), newState
+      LOI.adventure.gameState.updated()
+
     stateObject.destroy = ->
       field.stop() for name, field of stateFields
 

@@ -15,7 +15,7 @@ class C1.Immigration.Concourse extends LOI.Adventure.Scene
 
   things: ->
     [
-      C1.Actors.Alex if @state 'alexPresent'
+      C1.Actors.Alex unless @state 'alexLeft'
     ]
 
   class @Listener extends LOI.Adventure.Listener
@@ -27,12 +27,22 @@ class C1.Immigration.Concourse extends LOI.Adventure.Scene
       @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Immigration.Concourse'
       @initialize()
 
-      initialize: ->
-
     @initialize()
 
     onEnter: (enterResponse) ->
+      # Alex should talk when at location.
+      @_alexTalksAutorun = @autorun (computation) =>
+        return if @options.parent.state('alexLeft')
 
-    onExitAttempt: (exitResponse) ->
+        return unless @scriptsReady()
+        return unless alex = LOI.adventure.getCurrentThing C1.Actors.Alex
+        return unless alex.ready()
+        computation.stop()
 
-    onExit: (exitResponse) ->
+        script = @scripts[@constructor.Scripts.Concourse.id()]
+        script.setThings {alex}
+
+        LOI.adventure.director.startScript script, label: "AlexTalks"
+
+    cleanup: ->
+      @_alexTalksAutorun?.stop()

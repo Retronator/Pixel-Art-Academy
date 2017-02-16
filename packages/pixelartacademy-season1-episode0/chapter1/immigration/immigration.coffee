@@ -18,6 +18,3 @@ class C1.Immigration extends LOI.Adventure.Section
     super
 
   @initialize()
-
-  onStart: ->
-    C1.Immigration.Concourse.state 'alexPresent', true

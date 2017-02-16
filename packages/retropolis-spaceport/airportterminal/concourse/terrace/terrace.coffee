@@ -45,6 +45,9 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       elapsedAppTime: 0
       totalAppTime: 0
 
+  url: ->
+    if @isLandingPage() then '' else 'spaceport/terrace'
+
   things: -> [
     @constructor.Retropolis
     @constructor.VendingMachine

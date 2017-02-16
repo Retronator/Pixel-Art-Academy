@@ -13,6 +13,8 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
     @Immigration
   ]
 
+  @initialize()
+
   inventory: ->
     hasBackpack = C1.Backpack.state 'inInventory'
     backpackOpened = C1.Backpack.state 'opened'

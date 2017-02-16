@@ -67,11 +67,12 @@ class LOI.Adventure extends LOI.Adventure
 
       unless desiredUrl?
         # We don't have any URLs in the dialogs, next try active item (first) and location (second).
-        activeItemId = @activeItemId()
-        currentLocationId = @currentLocationId()
+        activeItem = @activeItem()
+        currentLocation = @currentLocation()
 
-        thingClass = LOI.Adventure.Thing.getClassForId activeItemId or currentLocationId
-        desiredUrl = thingClass?.url()
+        thing = activeItem or currentLocation
+        desiredUrl = thing?.url?()
+        desiredUrl ?= thing?.constructor.url()
 
       return unless desiredUrl?
 

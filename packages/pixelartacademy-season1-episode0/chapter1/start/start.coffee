@@ -10,8 +10,6 @@ class C1.Start extends LOI.Adventure.Section
   ]
 
   @finished: ->
-    return unless LOI.adventure.ready()
-
     # Start section is over when the player has left the terrace. Make sure we don't return undefined though.
     @state('leftTerrace') is true
     
@@ -24,6 +22,7 @@ class C1.Start extends LOI.Adventure.Section
   class @Listener extends LOI.Adventure.Listener
     onExit: (exitResponse) ->
       return unless exitResponse.currentLocationClass is RS.AirportTerminal.Terrace
+      super
 
       # Mark the goal condition when the player exits the terrace.
       @options.parent.state 'leftTerrace', true

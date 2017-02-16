@@ -62,7 +62,7 @@ class LOI.Construct.Locations.Loading extends LOI.Construct.Location
 
       captainDialog = @scripts['LandsOfIllusions.Construct.Locations.Loading.Scripts.Captain']
 
-      captainDialog.setActors
+      captainDialog.setThings
         captain: captain
         operator: operatorLink.operator
 

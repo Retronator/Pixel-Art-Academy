@@ -10,13 +10,13 @@
 
 > Alex enters.
 
-### AlexEnters
+`scene.alexPresent = true`
 
 -> [End]
 
 ## AlexIsPresent
 
-alex: There you are! Isn't it wonderful?
+alex: There you are! Wow, look at that city. Isn't it wonderful?
 
 * It's even better than I imagined.
 * I always wanted to come here.
@@ -27,7 +27,8 @@ alex:
     
 > Alex leaves ![south](go south).
 
-### AlexLeaves
+`scene.alexPresent = false`
+`alex.firstTalkDone = true`
 
 > Something feels strange. You seem to know Alex, but you can't really tell from where.
 

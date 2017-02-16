@@ -9,8 +9,10 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
   @finished: -> false # Override to set goal state conditions.
   finished: -> @constructor.finished()
 
-  constructor: ->
+  constructor: (@options) ->
     super
+
+    @chapter = @options.chapter
 
     # React to section becoming active.
     @autorun (computation) =>
@@ -21,6 +23,14 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
         @onStart()
 
       @_wasActive = active
+
+    @scenes = for sceneClass in @constructor.scenes()
+      new sceneClass section: @
+
+  destroy: ->
+    super
+
+    scene.destroy() for scene in @scenes
 
   active: ->
     # Override and add additional logic to create prerequisites for the section being started.
@@ -33,3 +43,16 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
     not finished
 
   onStart: -> # Override to provide any initialization logic when the section begins.
+
+  ready: ->
+    activeWasDetermined = @active()?
+    
+    # Section is ready when it has determined its active status.
+    conditions = _.flattenDeep [
+      super
+      activeWasDetermined
+    ]
+
+    console.log "Section ready?", @id(), conditions if LOI.debug
+
+    _.every conditions

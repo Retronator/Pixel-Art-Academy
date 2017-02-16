@@ -67,9 +67,11 @@ class LOI.Adventure.Listener
       @scriptsReady true
 
   destroy: ->
-    @exitsTranslationSubscriptions.stop()
     @_scriptTranslationSubscription.stop()
+
     handle.stop() for handle in @_autorunHandles
+
+    @cleanup()
 
   autorun: (handler) ->
     handle = Tracker.autorun handler
@@ -88,4 +90,9 @@ class LOI.Adventure.Listener
 
   onExitAttempt: (exitResponse) -> # Override to react to location change attempts, potentially preventing the exit.
 
-  onExit: (exitResponse) -> # Override to react to leaving a location.
+  onExit: (exitResponse) ->
+    # Override to react to leaving a location.
+
+    @cleanup()
+
+  cleanup: -> # Override to clean any timers or autoruns that need to be cleaned when listener exits or is destroyed.

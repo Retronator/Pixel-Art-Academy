@@ -70,7 +70,7 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
 
       operatorDialog = @scripts['Retronator.HQ.Locations.LandsOfIllusions.Hallway.Scripts.Operator']
 
-      operatorDialog.setActors
+      operatorDialog.setThings
         operator: operator
 
       operatorDialog.setCallbacks

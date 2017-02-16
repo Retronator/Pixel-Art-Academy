@@ -12,7 +12,7 @@ class Script.Nodes.Code extends Script.Node
     'function', 'if', 'import'
     'in', 'instanceof', 'new'
     'return', 'super', 'switch'
-    'this', 'throw', 'try'
+    'throw', 'try'
     'typeof', 'var', 'void'
     'while', 'with', 'yield'
     'null', 'true', 'false'
@@ -72,9 +72,24 @@ class Script.Nodes.Code extends Script.Node
 
     location = LOI.adventure.currentLocation()
     _locationState = location.state()
+    
+    unless _locationState
+      _locationState = {}
+      _locationStateWasNull = true
+      
     _locationState.id = location.id()
 
     _globalState = LOI.adventure.gameState()
+
+    transferredThings = []
+    transferThingToState = (thing, state, stateFieldName) =>
+      thingState = thing.state()
+      thingStateWasEmpty = thingState?
+
+      state[stateFieldName] = thingState or {}
+      state["#{stateFieldName}Instance"] = thing
+
+      transferredThings.push {thing, state, stateFieldName, thingStateWasEmpty}
 
     # Attach the user object to global state.
     if user = Retronator.user()
@@ -91,26 +106,66 @@ class Script.Nodes.Code extends Script.Node
       inventory: {}
 
     # Create a map of inventory items
-    _globalState.player.inventory[thing.id()] = thing for thing in LOI.adventure.currentInventoryThings()
+    currentInventoryThings = LOI.adventure.currentInventoryThings()
 
-    # Add script parent to script state.
-    _scriptState.parent = @script.options.parent
+    for thing in currentInventoryThings
+      transferThingToState thing, _globalState.player.inventory, thing.id()
+
+    # Add script parent as this.
+    transferThingToState @script.options.parent, _scriptState, 'this'
+
+    # Add storytelling states to script state.
+    if @script.options.parent instanceof LOI.Adventure.Scene
+      scene = @script.options.parent
+      section = scene.section
+      chapter = section.chapter
+      episode = chapter.episode
+
+      transferThingToState scene, _scriptState, 'scene'
+      transferThingToState section, _scriptState, 'section'
+      transferThingToState chapter, _scriptState, 'chapter'
+      transferThingToState episode, _scriptState, 'episode'
+
+    # Add provided things as shorthands to script state.
+    if @script.things
+      for shorthand, thing of @script.things
+        transferThingToState thing, _scriptState, shorthand
 
     console.log "Evaluating code node", @, "with states:", _globalState, _locationState, _scriptState, _ephemeralState if LOI.debug
 
     try
       result = eval @expression
 
-    catch e
+    catch error
       console.error "Error while evaluating expression", @expression
-      throw e
+      throw error
 
     console.log "Evaluated to", result if LOI.debug
+
+    # Transfer thing states to game state (reverse effects of transferThingToState).
+    for transferredThing in transferredThings
+      newThingState = transferredThing.state[transferredThing.stateFieldName]
+
+      # We don't want to write an empty state back into the state if it didn't have any data to begin with.
+      if transferredThing.thingStateWasEmpty
+        # See if location state was modified and set it if needed.
+        transferState = true if _.keys(newThingState).length
+
+      else
+        transferState = true
+
+      _.nestedProperty _globalState, transferredThing.thing.stateAddress.string(), newThingState if transferState
+
+      delete transferredThing.state[transferredThing.stateFieldName]
+      delete transferredThing.state["#{transferredThing.stateFieldName}Instance"]
 
     # Delete read-only fields that should not be saved.
     delete _globalState.user
     delete _globalState.player
-    delete _scriptState.parent
+
+    if _locationStateWasNull
+      # See if location state was modified and set it if needed.
+      _.nestedProperty _globalState, location.stateAddress.string(), _locationState if _.keys(_locationState).length
 
     # Trigger reactive state change.
     if options.triggerChange

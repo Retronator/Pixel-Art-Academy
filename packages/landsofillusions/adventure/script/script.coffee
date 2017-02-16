@@ -65,15 +65,18 @@ class LOI.Adventure.Script
 
   initialize: -> # Override to setup the script on the client.
 
-  setActors: (actors) ->
-    # Replace actor names with actual object instances.
+  # Sets things that have a shorthand name in the script (actors, thing variables in script context).
+  setThings: (things) ->
+    @things = things
+
+    # Replace actor names with actual thing instances.
     for node in @nodes
       if node.actor and _.isString node.actor
-        unless actors[node.actor]
+        unless things[node.actor]
           console.warn "Unknown actor", node.actor
           return
 
-        node.actor = actors[node.actor]
+        node.actor = things[node.actor]
 
   setCallbacks: (callbacks) ->
     # Set callbacks to callback nodes

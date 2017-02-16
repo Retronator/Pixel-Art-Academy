@@ -47,6 +47,7 @@ class LOI.Adventure extends LOI.Adventure
     @locationOnEnterResponseResults = new ReactiveField null
     
     @autorun (computation) =>
+      return unless LOI.adventureInitialized()
       return unless location = @currentLocation()
       currentLocationClass = location.constructor
 
