@@ -21,12 +21,16 @@ class RS.AirportTerminal.Arrivals extends LOI.Adventure.Location
   
   @initialize()
 
-  constructor: ->
-    super
+  @defaultScriptUrl: -> 'retronator_retropolis-spaceport/airportterminal/arrivals/arrivals/arrivals.script'
 
   things: -> [
   ]
 
   exits: ->
     "#{Vocabulary.Keys.Directions.South}": RS.AirportTerminal.Customs
-    "#{Vocabulary.Keys.Directions.Southeast}": RS.AirportTerminal.Atrium2ndLevel
+    "#{Vocabulary.Keys.Directions.Southeast}": RS.Tower.Atrium2ndLevel
+
+  onExitAttempt: (exitResponse) ->
+    if exitResponse.destinationLocationClass is RS.AirportTerminal.Customs
+      @startScript label: 'ExitToCustoms'
+      exitResponse.preventExit()

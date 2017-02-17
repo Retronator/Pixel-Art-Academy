@@ -1,0 +1,29 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Immigration.Customs
+
+## AlexEnters
+
+> You turn back to look for Alex.
+
+> Alex enters.
+
+`scene.alexPresent = true`
+
+-> [End]
+
+## AlexTalks
+
+-> [InteractWithAlex] `scene.alexTalked`
+
+alex: I need to check my bags. Go ahead, I'll be right after you.
+
+`scene.alexTalked = true`
+
+-> [End]
+
+## InteractWithAlex
+
+> Alex is busy going through his luggage.
+
+-> [End]
+
+## End

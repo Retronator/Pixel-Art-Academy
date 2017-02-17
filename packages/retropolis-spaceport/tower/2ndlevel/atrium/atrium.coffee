@@ -16,7 +16,7 @@ class RS.Tower.Atrium2ndLevel extends LOI.Adventure.Location
   @description: ->
     "
       You are on the 2nd level of the atrium at the Retropolis International Spaceport. It's the main hub of the
-      tower that and its circular elevated pathway leads around the various departments. Escalators also lead up
+      tower and leads around various departments. Escalators lead up
       and down to 1st and 3rd level of the tower. It's all pretty overwhelming.
     "
   

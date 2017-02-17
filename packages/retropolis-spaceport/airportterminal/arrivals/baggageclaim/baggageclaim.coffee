@@ -21,8 +21,7 @@ class RS.AirportTerminal.BaggageClaim extends LOI.Adventure.Location
   
   @initialize()
 
-  constructor: ->
-    super
+  @defaultScriptUrl: -> 'retronator_retropolis-spaceport/airportterminal/arrivals/baggageclaim/baggageclaim.script'
 
   things: -> [
     @constructor.BaggageCarousel
@@ -30,3 +29,9 @@ class RS.AirportTerminal.BaggageClaim extends LOI.Adventure.Location
 
   exits: ->
     "#{Vocabulary.Keys.Directions.North}": RS.AirportTerminal.Customs
+    "#{Vocabulary.Keys.Directions.West}": RS.AirportTerminal.Immigration
+
+  onExitAttempt: (exitResponse) ->
+    if exitResponse.destinationLocationClass is RS.AirportTerminal.Immigration
+      @startScript label: 'ExitToImmigration'
+      exitResponse.preventExit()

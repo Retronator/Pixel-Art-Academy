@@ -16,9 +16,10 @@ class LOI.Parser
     
     # Create parser listeners.
     @listeners = [
-      new LOI.Parser.NavigationListener
-      new LOI.Parser.DescriptionListener
-      new LOI.Parser.LookLocationListener
+      new @constructor.DebugListener
+      new @constructor.NavigationListener
+      new @constructor.DescriptionListener
+      new @constructor.LookLocationListener
     ]
 
   destroy: ->

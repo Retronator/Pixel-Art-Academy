@@ -50,6 +50,9 @@ phrases =
     WhichPerson: ['who']
     WhichVerb: ['what']
 
+  Debug:
+    ResetSections: ['reset sections']
+
 # Generate default english translations.
 generateDefaultTranslations = (id, phrases) ->
   if _.isObject phrases

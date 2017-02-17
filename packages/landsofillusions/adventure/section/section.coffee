@@ -33,6 +33,9 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
     scene.destroy() for scene in @scenes
 
   active: ->
+    @_activeUntilFinished()
+
+  _activeUntilFinished: ->
     # Override and add additional logic to create prerequisites for the section being started.
     finished = @finished()
 
@@ -41,6 +44,22 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
 
     # By default the section is active until it is finished.
     not finished
+
+  requireFinishedSections: (sections) ->
+    # Allow for passing of a single section.
+    sections = [sections] unless _.isArray sections
+
+    # See if sections are finished.
+    sectionsFinished = (section.finished() for section in sections)
+
+    # If any of the sections returns undefined, we're not yet ready to determine our active state.
+    return if sectionsFinished.indexOf(undefined) > -1
+
+    # We're not active if all required sections are not finished.
+    return false unless _.every sectionsFinished
+
+    # Section has the prerequisites. Now check that it hasn't finished yet.
+    @_activeUntilFinished()
 
   onStart: -> # Override to provide any initialization logic when the section begins.
 
@@ -56,3 +75,6 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
     console.log "Section ready?", @id(), conditions if LOI.debug
 
     _.every conditions
+
+  reset: ->
+    @state.set {}

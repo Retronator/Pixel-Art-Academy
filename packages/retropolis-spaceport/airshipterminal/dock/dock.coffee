@@ -15,7 +15,7 @@ class RS.AirshipTerminal.Dock extends LOI.Adventure.Location
   @shortName: -> "dock"
   @description: ->
     "
-      You are on an elevated platform that extends from the airship terminal building away over the hillside.
+      You are on an elevated platform that extends from the terminal away over the hillside.
       From the main platform, three smaller piers allow access to individual airships.
     "
   

@@ -90,32 +90,7 @@ class LOI.Interface.Text extends LOI.Interface
     'idle' if @commandInput.idle()
 
   waitingKeypress: ->
-    waiting = @_pausedNode() or @inIntro()
-
-    # Show the hint if the player needs to press enter. We need to manually add the class so that
-    # transition kicks in. First we need to clear any previously set timeouts though.
-    Meteor.clearTimeout @_keypressHintTimetout
-
-    lines = @narrative.lines()
-    if waiting and lines.length
-      # Hide hint if already present.
-      @$('.command-line .keypress-hint').removeClass('visible')
-
-      # Show the hint after a delay, so that the player has time to read the text before they are prompted.
-      lastNarrativeLine = _.last lines
-
-      # Average reading time is about 1000 characters per minute, or 17 per second.
-      readTime = lastNarrativeLine.length / 17
-
-      # We also add in a delay of 2s so we don't annoy the player.
-      hintDelayTime = readTime + 2
-
-      @_keypressHintTimetout = Meteor.setTimeout =>
-        @$('.command-line .keypress-hint').addClass('visible')
-      ,
-        hintDelayTime * 1000
-
-    waiting
+    @_pausedNode() or @inIntro()
 
   narrativeLine: ->
     lineText = @currentData()
@@ -229,16 +204,20 @@ class LOI.Interface.Text extends LOI.Interface
     @hoveredCommand null
 
   onClickCommand: (event) ->
+    return if @waitingKeypress()
+
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
 
   onMouseEnterExit: (event) ->
-    @hoveredCommand "GO TO #{$(event.target).text()}"
+    @hoveredCommand "Go to #{$(event.target).text()}"
 
   onMouseLeaveExit: (event) ->
     @hoveredCommand null
 
   onClickExit: (event) ->
+    return if @waitingKeypress()
+
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
 

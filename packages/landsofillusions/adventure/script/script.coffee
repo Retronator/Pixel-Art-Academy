@@ -72,11 +72,19 @@ class LOI.Adventure.Script
     # Replace actor names with actual thing instances.
     for node in @nodes
       if node.actor and _.isString node.actor
-        unless things[node.actor]
-          console.warn "Unknown actor", node.actor
-          return
+        continue unless things[node.actor]
 
         node.actor = things[node.actor]
+
+  setCurrentThings: (thingClasses) ->
+    Tracker.autorun (computation) =>
+      things = {}
+      for key, thingClass of thingClasses
+        return unless things[key] = LOI.adventure.getCurrentThing thingClass
+
+      computation.stop()
+
+      @setThings things
 
   setCallbacks: (callbacks) ->
     # Set callbacks to callback nodes

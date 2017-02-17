@@ -48,6 +48,9 @@ LOI.Parser.Vocabulary.Keys =
     WhichThing: ''
     WhichPerson: ''
     WhichVerb: ''
+    
+  Debug:
+    ResetSections: ''
 
 # Generate vocabulary keys.
 transformVocabularyKey = (prefix, keys) ->

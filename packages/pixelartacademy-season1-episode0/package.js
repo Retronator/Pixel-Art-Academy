@@ -45,5 +45,12 @@ Package.onUse(function(api) {
   api.addThing('chapter1/immigration/scenes/concourse');
   api.addFile('chapter1/immigration/scenes/immigration');
   api.addThing('chapter1/immigration/scenes/baggageclaim');
+  api.addThing('chapter1/immigration/scenes/customs');
 
+  // Airships
+
+  api.addFile('chapter1/airship/airship');
+
+  api.addThing('chapter1/airship/scenes/arrivals');
+  api.addThing('chapter1/airship/scenes/tower');
 });

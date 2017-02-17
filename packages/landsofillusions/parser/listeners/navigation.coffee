@@ -61,7 +61,7 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
 
     # Next up wire going to the location by name.
     for locationId, avatar of location.exitAvatarsByLocationId()
-      do (avatar) =>
+      do (locationId, avatar) =>
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.GoToLocationName, avatar]
           action: => LOI.adventure.goToLocation locationId

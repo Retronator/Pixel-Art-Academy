@@ -36,9 +36,9 @@ Package.onUse(function(api) {
 
   api.addFile('airportterminal/concourse/gates/gates');
 
-  api.addFile('airportterminal/arrivals/arrivals/arrivals');
+  api.addThing('airportterminal/arrivals/arrivals/arrivals');
 
-  api.addFile('airportterminal/arrivals/baggageclaim/baggageclaim');
+  api.addThing('airportterminal/arrivals/baggageclaim/baggageclaim');
   api.addFile('airportterminal/arrivals/baggageclaim/baggagecarousel');
 
   api.addFile('airportterminal/arrivals/customs/customs');
