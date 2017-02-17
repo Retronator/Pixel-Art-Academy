@@ -8,7 +8,7 @@ Verbs = Vocabulary.Keys.Verbs
 class RS.AirportTerminal.Terrace.VendingMachine extends LOI.Adventure.Item
   @id: -> 'Retropolis.Spaceport.AirshipTerminal.Terrace.VendingMachine'
   @fullName: -> "vending machine"
-  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.FullName
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
   @description: ->
     "
       It seems to dispense beverages.
@@ -22,65 +22,54 @@ class RS.AirportTerminal.Terrace.VendingMachine extends LOI.Adventure.Item
 
   @initialize()
 
-  @listeners: -> [
-    @Listener
-  ]
+  # Script
 
-  class @Listener extends LOI.Adventure.Listener
-    @scriptUrls: -> [
-      'retronator_retropolis-spaceport/airportterminal/concourse/terrace/vendingmachine.script'
-    ]
+  @defaultScriptUrl: -> 'retronator_retropolis-spaceport/airportterminal/concourse/terrace/vendingmachine.script'
 
-    class @Script extends LOI.Adventure.Script
-      @id: -> 'Retropolis.Spaceport.AirshipTerminal.Terrace.VendingMachine'
-      @initialize()
+  initializeScript: ->
+    machine = @options.parent
 
-      initialize: ->
-        machine = @options.parent
+    @setThings {machine}
 
-        @setThings {machine}
+    @setCallbacks
+      PrepareDrink: (complete) =>
+        drinkType = @ephemeralState 'drinkType'
+        drink = PAA.Items.Bottle.createDrink drinkType
 
-        @setCallbacks
-          PrepareDrink: (complete) =>
-            drinkType = @ephemeralState 'drinkType'
-            drink = PAA.Items.Bottle.createDrink drinkType
+        @ephemeralState 'drink', drink
 
-            @ephemeralState 'drink', drink
+        complete()
 
-            complete()
+      ReceiveBottle: (complete) =>
+        drinkType = @ephemeralState 'drinkType'
 
-          ReceiveBottle: (complete) =>
-            drinkType = @ephemeralState 'drinkType'
+        PAA.Items.Bottle.state 'drinkType', drinkType
+        PAA.Items.Bottle.state 'inInventory', true
 
-            PAA.Items.Bottle.state 'drinkType', drinkType
-            PAA.Items.Bottle.state 'inInventory', true
+        complete()
 
-            complete()
+      ReturnBottle: (complete) =>
+        PAA.Items.Bottle.state 'inInventory', false
+        complete()
 
-          ReturnBottle: (complete) =>
-            PAA.Items.Bottle.state 'inInventory', false
-            complete()
+  # Listener
 
-    @initialize()
+  @avatars: ->
+    bottle: PAA.Items.Bottle
 
-    onCommand: (commandResponse) ->
-      machine = @options.parent
+  onCommand: (commandResponse) ->
+    machine = @options.parent
 
-      commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.Use, machine.avatar]
-        action: =>
-          LOI.adventure.director.startScript @scripts[@constructor.Script.id()]
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.Use, machine.avatar]
+      action: => @startScript()
 
-      bottle = LOI.adventure.getCurrentThing PAA.Items.Bottle
-      
-      if bottle
-        commandResponse.onPhrase
-          form: [Vocabulary.Keys.Verbs.Return, bottle.avatar]
-          action: => @_returnBottle()
+    _returnBottle = => @startScript label: 'ReturnBottle'
 
-        commandResponse.onPhrase
-          form: [[Verbs.ReturnTo, Verbs.GiveTo, Verbs.UseWith, Verbs.UseIn], bottle.avatar, machine.avatar]
-          action: => @_returnBottle()
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.Return, @avatars.bottle]
+      action: => _returnBottle()
 
-    _returnBottle: ->
-      LOI.adventure.director.startScript @scripts[@constructor.Script.id()], label: 'ReturnBottle'
+    commandResponse.onPhrase
+      form: [[Verbs.ReturnTo, Verbs.GiveTo, Verbs.UseWith, Verbs.UseIn], @avatars.bottle, machine.avatar]
+      action: => _returnBottle()

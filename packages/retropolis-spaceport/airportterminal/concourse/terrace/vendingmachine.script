@@ -82,6 +82,8 @@ machine: I see you already have a bottle. Please ![drink the contents](drink fro
 
 ## ReturnBottle
 
+-> [NoBottle] `not @player.inventory['PixelArtAcademy.Items.Bottle']`
+
 > You push the bottle into a collection slot.
 
 ### ReturnBottle
@@ -89,5 +91,13 @@ machine: I see you already have a bottle. Please ![drink the contents](drink fro
 > The machine displays:
 
 machine: Thank you for returning the bottle. Retropolis stays clean because citizens take good care of it.
+
+-> [End]
+
+## NoBottle
+
+> You don't have a bottle.
+
+-> [End]
 
 ## End

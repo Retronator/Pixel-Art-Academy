@@ -30,6 +30,7 @@ Package.onUse(function(api) {
   api.addThing('chapter1/items/backpack');
   api.addFile('chapter1/items/passport');
   api.addFile('chapter1/items/acceptanceletter');
+  api.addThing('chapter1/items/suitcase');
 
   // Start
 
@@ -42,6 +43,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/immigration/immigration');
 
   api.addThing('chapter1/immigration/scenes/concourse');
-  api.addThing('chapter1/immigration/scenes/immigration');
+  api.addFile('chapter1/immigration/scenes/immigration');
+  api.addThing('chapter1/immigration/scenes/baggageclaim');
 
 });

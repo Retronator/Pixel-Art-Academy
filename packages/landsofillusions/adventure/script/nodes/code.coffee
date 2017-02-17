@@ -118,13 +118,13 @@ class Script.Nodes.Code extends Script.Node
     if @script.options.parent instanceof LOI.Adventure.Scene
       scene = @script.options.parent
       section = scene.section
-      chapter = section.chapter
-      episode = chapter.episode
+      chapter = section?.chapter
+      episode = chapter?.episode
 
       transferThingToState scene, _scriptState, 'scene'
-      transferThingToState section, _scriptState, 'section'
-      transferThingToState chapter, _scriptState, 'chapter'
-      transferThingToState episode, _scriptState, 'episode'
+      transferThingToState section, _scriptState, 'section' if section
+      transferThingToState chapter, _scriptState, 'chapter' if chapter
+      transferThingToState episode, _scriptState, 'episode' if episode
 
     # Add provided things as shorthands to script state.
     if @script.things

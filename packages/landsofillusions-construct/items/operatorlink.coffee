@@ -25,7 +25,7 @@ class LOI.Construct.Items.OperatorLink extends LOI.Adventure.Item
     @operator = new HQ.Actors.Operator
 
     @addAbility new Action
-      verb: Vocabulary.Keys.Verbs.Talk
+      verb: Vocabulary.Keys.Verbs.TalkTo
       action: =>
         # Don't react if the real operator is on location.
         location = LOI.adventure.currentLocation()

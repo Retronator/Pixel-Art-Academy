@@ -88,13 +88,18 @@ class LOI.Parser
         avatar = formPart
 
         switch avatar.nameAutoCorrectStyle()
-          when LOI.Avatar.NameAutoCorrectStyle.ShortName
-            # The exact short name string is required.
-            likelyAction.translatedForm[index] = avatar.shortName()
+          when LOI.Avatar.NameAutoCorrectStyle.Name
+            # We need to auto-correct to at least short name, but full name if any of the non-short name words are used.
+            formWords = _.words likelyAction.translatedForm
+            shortNameWords = _.words avatar.shortName()
 
-          when LOI.Avatar.NameAutoCorrectStyle.FullName
-            # The exact full name string is required.
-            likelyAction.translatedForm[index] = avatar.fullName()
+            allFormWordsAreInShortName = _.difference(shortNameWords, formWords).length is 0
+
+            if allFormWordsAreInShortName
+              likelyAction.translatedForm[index] = avatar.shortName()
+
+            else
+              likelyAction.translatedForm[index] = avatar.fullName()
 
     # Add form parts together into the sentence, doing any word order substitutions if necessary.
     words = []

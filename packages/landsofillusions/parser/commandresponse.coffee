@@ -138,10 +138,15 @@ class LOI.Parser.CommandResponse
 
         precision = 1 - (differenceA.length + differenceB.length) / commandWords.length
 
+        # Priority is another ordering mechanism, one provided by the listener,
+        # for example, when overriding a generic response with a custom one.
+        priority = phraseAction.priority or 0
+
         # Return an action with the likelihood that this is what the user wanted.
         phraseAction: phraseAction
         likelihood: likelihood
         precision: precision
+        priority: priority
         translatedForm: combinationPhrases
 
     # Likely actions include nested arrays for all actions so we return a flattened version.

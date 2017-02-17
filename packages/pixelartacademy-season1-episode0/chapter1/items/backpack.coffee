@@ -18,10 +18,6 @@ class C1.Backpack extends LOI.Adventure.Thing
 
   @translations: ->
     openHint: "You can ![open it](open backpack) to see its contents."
-
-  @listeners: -> [
-    @Listener
-  ]
     
   @initialize()
 
@@ -32,67 +28,50 @@ class C1.Backpack extends LOI.Adventure.Thing
 
     "#{super} #{@translations().openHint}"
 
-  class @Listener extends LOI.Adventure.Listener
-    @scriptUrls: -> [
-      'retronator_pixelartacademy-season1-episode0/chapter1/items/backpack.script'
-    ]
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/items/backpack.script'
 
-    class @Scripts.Backpack extends LOI.Adventure.Script
-      @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Backpack'
-      @initialize()
+  onCommand: (commandResponse) ->
+    backpack = @options.parent
 
-    @initialize()
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.Get], backpack.avatar]
+      action: =>
+        if backpack.state 'inInventory'
+          @startScript label: 'AlreadyInInventory'
+          return
 
-    onCommand: (commandResponse) ->
-      backpack = @options.parent
+        backpack.state 'inInventory', true
 
-      commandResponse.onPhrase
-        form: [[Vocabulary.Keys.Verbs.Get], backpack.avatar]
-        action: =>
-          inInventory = backpack.state 'inInventory'
+        true
 
-          if inInventory
-            LOI.adventure.director.startScript @scripts[@constructor.Scripts.Backpack.id()], label: 'AlreadyInInventory'
-            return
+    useOutsideInventory = =>
+      return false if backpack.state 'inInventory'
 
-          backpack.state 'inInventory', true
+      @startScript label: 'UseOutsideInventory'
+      true
 
-          true
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.Open, Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookIn], backpack.avatar]
+      action: =>
+        return if useOutsideInventory()
 
-      commandResponse.onPhrase
-        form: [[Vocabulary.Keys.Verbs.Open, Vocabulary.Keys.Verbs.Use], backpack.avatar]
-        action: =>
-          opened = backpack.state 'opened'
+        if backpack.state 'opened'
+          @startScript label: 'AlreadyOpened'
+          return
 
-          if opened
-            LOI.adventure.director.startScript @scripts[@constructor.Scripts.Backpack.id()], label: 'AlreadyOpened'
-            return
+        backpack.state 'opened', true
 
-          inInventory = backpack.state 'inInventory'
+        true
 
-          unless inInventory
-            LOI.adventure.director.startScript @scripts[@constructor.Scripts.Backpack.id()], label: 'UseOutsideInventory'
-            return
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.Close], backpack.avatar]
+      action: =>
+        return if useOutsideInventory()
 
-          backpack.state 'opened', true
+        unless backpack.state 'opened'
+          @startScript label: 'AlreadyClosed'
+          return
 
-          true
+        backpack.state 'opened', false
 
-      commandResponse.onPhrase
-        form: [[Vocabulary.Keys.Verbs.Close], backpack.avatar]
-        action: =>
-          opened = backpack.state 'opened'
-
-          unless opened
-            LOI.adventure.director.startScript @scripts[@constructor.Scripts.Backpack.id()], label: 'AlreadyClosed'
-            return
-
-          inInventory = backpack.state 'inInventory'
-
-          unless inInventory
-            LOI.adventure.director.startScript @scripts[@constructor.Scripts.Backpack.id()], label: 'UseOutsideInventory'
-            return
-
-          backpack.state 'opened', false
-
-          true
+        true

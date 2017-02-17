@@ -26,71 +26,53 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
       C1.Actors.Alex if @state 'alexPresent'
     ]
 
-  class @Listener extends LOI.Adventure.Listener
-    @scriptUrls: -> [
-      'retronator_pixelartacademy-season1-episode0/chapter1/start/scenes/terrace.script'
-    ]
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/start/scenes/terrace.script'
 
-    class @Scripts.Terrace extends LOI.Adventure.Script
-      @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Start.Terrace'
-      @initialize()
+  onEnter: (enterResponse) ->
+    # Provide the introduction text the first time we enter.
+    introductionDone = @options.parent.state 'introductionDone'
 
-    @initialize()
+    unless introductionDone
+      enterResponse.overrideIntroduction =>
+        @options.parent.translations()?.intro
 
-    onEnter: (enterResponse) ->
-      return unless enterResponse.currentLocationClass is @options.parent.constructor.location()
+      @options.parent.state 'introductionDone', true
 
-      # Provide the introduction text the first time we enter.
-      introductionDone = @options.parent.state 'introductionDone'
-
-      unless introductionDone
-        enterResponse.overrideIntroduction =>
-          @options.parent.translations()?.intro
-
-        @options.parent.state 'introductionDone', true
-
-      # Alex should enter after 30s unless they are already present or they have already talked to you.
-      unless @options.parent.state('alexPresent') or C1.Actors.Alex.state('firstTalkDone')
-        # But wait first that the interface is ready.
-        @autorun (computation) =>
-          return unless LOI.adventure.interface.uiInView()
-          computation.stop()
-
-          @_alexEntersTimeout = Meteor.setTimeout =>
-            LOI.adventure.director.startScript @scripts[@constructor.Scripts.Terrace.id()], label: "AlexEnters"
-          ,
-            30000
-
-      # Alex should talk when at location.
-      @_alexTalksAutorun = @autorun (computation) =>
-        return unless @options.parent.state('alexPresent')
-
-        return unless @scriptsReady()
-        return unless alex = LOI.adventure.getCurrentThing C1.Actors.Alex
-        return unless alex.ready()
+    # Alex should enter after 30s unless they are already present or they have already talked to you.
+    unless @options.parent.state('alexPresent') or C1.Actors.Alex.state('firstTalkDone')
+      # But wait first that the interface is ready.
+      @autorun (computation) =>
+        return unless LOI.adventure.interface.uiInView()
         computation.stop()
 
-        script = @scripts[@constructor.Scripts.Terrace.id()]
-        script.setThings {alex}
+        @_alexEntersTimeout = Meteor.setTimeout =>
+          @startScript label: "AlexEnters"
+        ,
+          30000
 
-        LOI.adventure.director.startScript script, label: "AlexIsPresent"
+    # Alex should talk when at location.
+    @_alexTalksAutorun = @autorun (computation) =>
+      return unless @options.parent.state('alexPresent')
 
-    onExitAttempt: (exitResponse) ->
-      return unless exitResponse.currentLocationClass is @options.parent.constructor.location()
+      return unless @scriptsReady()
+      return unless alex = LOI.adventure.getCurrentThing C1.Actors.Alex
+      return unless alex.ready()
+      computation.stop()
 
-      hasBackpack = C1.Backpack.state 'inInventory'
-      return if hasBackpack
+      @script.setThings {alex}
 
-      LOI.adventure.director.startScript @scripts[@constructor.Scripts.Terrace.id()], label: 'LeaveWithoutBackpack'
-      exitResponse.preventExit()
+      @startScript label: "AlexIsPresent"
 
-    onExit: (exitResponse) ->
-      return unless exitResponse.currentLocationClass is @options.parent.constructor.location()
-      super
+  onExitAttempt: (exitResponse) ->
+    hasBackpack = C1.Backpack.state 'inInventory'
+    return if hasBackpack
 
-    cleanup: ->
-      # Stop Alex's timer.
-      Meteor.clearTimeout @_alexEntersTimeout
+    @startScript label: 'LeaveWithoutBackpack'
+    exitResponse.preventExit()
 
-      @_alexTalksAutorun?.stop()
+  cleanup: ->
+    # Stop Alex's timer.
+    Meteor.clearTimeout @_alexEntersTimeout
+
+    @_alexTalksAutorun?.stop()
 

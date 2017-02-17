@@ -1,60 +1,66 @@
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 RS = Retropolis.Spaceport
 
 Vocabulary = LOI.Parser.Vocabulary
+Verbs = Vocabulary.Keys.Verbs
 
 class RS.AirportTerminal.Immigration.Terminal extends LOI.Adventure.Thing
   @id: -> 'Retropolis.Spaceport.AirportTerminal.Immigration.Terminal'
   @fullName: -> "immigration terminal"
+  @shortName: -> "terminal"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
   @description: -> "It's an automated immigration system that you can use to enter Retropolis."
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.yellow
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
+  @dialogDeliveryType: -> LOI.Avatar.DialogDeliveryType.Displaying
+  @dialogTextTransform: -> LOI.Avatar.DialogTextTransform.Uppercase
+
+  @defaultScriptUrl: -> 'retronator_retropolis-spaceport/airportterminal/arrivals/immigration/terminal.script'
+
   @initialize()
 
-  @listeners: -> [
-    @DialogListener
-  ]
+  initializeScript: ->
+    terminal = @options.parent
 
-  class @DialogListener extends LOI.Adventure.Listener
-    @scriptUrls: -> [
-      'retronator_retropolis-spaceport/airportterminal/arrivals/immigration/terminal.script'
-    ]
+    @setThings {terminal}
 
-    class @Scripts.Dialog extends LOI.Adventure.Script
-      @id: -> 'Retropolis.Spaceport.AirportTerminal.Immigration.Terminal'
-      @initialize()
+    @setCallbacks
+      EndImmigration: (complete) ->
+        # Move on to baggage claim.
+        LOI.adventure.goToLocation RS.AirportTerminal.BaggageClaim
 
-      initialize: ->
-        officer = @options.parent
+        complete()
 
-        @setThings
-          officer: officer
-          
-        @setCallbacks
-          OpenFacebook: (complete) =>
-            window.open 'https://www.facebook.com/retronator/', '_blank'
-            complete()
+  @avatars: ->
+    passport: PAA.Season1.Episode0.Chapter1.Passport
+    letter: PAA.Season1.Episode0.Chapter1.AcceptanceLetter
 
-          OpenRetronator: (complete) =>
-            window.open 'https://twitter.com/retronator', '_blank'
-            complete()
+  onCommand: (commandResponse) ->
+    terminal = @options.parent
 
-          OpenPixelArtAcademy: (complete) =>
-            window.open 'https://twitter.com/PixelArtAcademy', '_blank'
-            complete()
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.Use, terminal.avatar]
+      action: =>
+        @startScript()
 
-    @initialize()
+    showPassport = => @startScript label: 'ShowPassport'
+    showLetter = => @startScript label: 'ShowLetter'
 
-    onScriptsLoaded: ->
-      # Auto-start conversation.
-      LOI.adventure.director.startScript @scripts[@constructor.Scripts.Dialog.id()]
+    commandResponse.onPhrase
+      form: [[Verbs.UseWith, Verbs.ShowTo, Verbs.GiveTo], @avatars.passport, terminal.avatar]
+      action: => showPassport()
 
-    onCommand: (commandResponse) ->
-      officer = @options.parent
+    commandResponse.onPhrase
+      form: [[Verbs.UseWith, Verbs.ShowTo, Verbs.GiveTo], @avatars.letter, terminal.avatar]
+      action: => showLetter()
 
-      commandResponse.onPhrase
-        form: [[Vocabulary.Keys.Verbs.Talk, Vocabulary.Keys.Verbs.Use], officer.avatar]
-        action: =>
-          LOI.adventure.director.startScript @scripts[@constructor.Scripts.Dialog.id()]
+    commandResponse.onPhrase
+      form: [Verbs.Show, @avatars.passport]
+      action: => showPassport()
+
+    commandResponse.onPhrase
+      form: [Verbs.Show, @avatars.letter]
+      action: => showLetter()

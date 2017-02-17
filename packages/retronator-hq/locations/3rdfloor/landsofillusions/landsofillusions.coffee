@@ -47,7 +47,7 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
       computation.stop()
 
       operator.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Talk
+        verb: Vocabulary.Keys.Verbs.TalkTo
         action: =>
           LOI.adventure.director.startScript operatorDialog
 

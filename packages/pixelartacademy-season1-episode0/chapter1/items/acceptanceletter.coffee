@@ -10,6 +10,8 @@ class C1.AcceptanceLetter extends LOI.Adventure.Thing
   @version: -> '0.0.1'
 
   @fullName: -> "acceptance letter"
+  @shortName: -> "letter"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "

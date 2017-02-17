@@ -2,8 +2,11 @@ AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-class LOI.Adventure.Location extends LOI.Adventure.Thing
+class LOI.Adventure.Location extends LOI.Adventure.Scene
   # Static location properties and methods
+
+  # Override for Scene location.
+  @location: -> @
 
   # Urls of scripts used at this location.
   @scriptUrls: -> []
@@ -20,8 +23,8 @@ class LOI.Adventure.Location extends LOI.Adventure.Thing
 
   # Location instance
 
-  constructor: (@options) ->
-    super
+  constructor: (@options = {}) ->
+    super @options
 
     # Subscribe to translations of exit locations' avatars so we get their names.
     @exitAvatarsByLocationId = new ComputedField =>

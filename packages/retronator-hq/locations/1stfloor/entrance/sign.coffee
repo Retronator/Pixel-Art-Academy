@@ -25,6 +25,6 @@ class HQ.Locations.Entrance.Sign extends LOI.Adventure.Item
     super
 
     @addAbility new Action
-      verbs: [Vocabulary.Keys.Verbs.Look, Vocabulary.Keys.Verbs.Read]
+      verbs: [Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Read]
       action: =>
         LOI.adventure.showDescription @

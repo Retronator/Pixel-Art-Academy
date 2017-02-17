@@ -149,6 +149,9 @@ class LOI.Components.Menu.Items extends AM.Component
     # Cleanup storyline classes.
     LOI.adventure.resetEpisodes()
 
+    # Cleanup running scripts.
+    LOI.adventure.director.stopAllScripts()
+
     # Go to the terrace and scroll to top.
     LOI.adventure.currentLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
     LOI.adventure.interface.scroll position: 0

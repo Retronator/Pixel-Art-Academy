@@ -51,7 +51,7 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
       computation.stop()
 
       burra.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Talk
+        verb: Vocabulary.Keys.Verbs.TalkTo
         action: =>
           LOI.adventure.director.startScript dialog
 

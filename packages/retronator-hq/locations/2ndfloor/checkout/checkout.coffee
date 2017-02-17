@@ -63,7 +63,7 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
       computation.stop()
 
       retro.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Talk
+        verb: Vocabulary.Keys.Verbs.TalkTo
         action: =>
           LOI.adventure.director.startScript retroDialog
 

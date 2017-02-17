@@ -98,6 +98,9 @@ class LOI.Interface.Text extends LOI.Interface
 
     lines = @narrative.lines()
     if waiting and lines.length
+      # Hide hint if already present.
+      @$('.command-line .keypress-hint').removeClass('visible')
+
       # Show the hint after a delay, so that the player has time to read the text before they are prompted.
       lastNarrativeLine = _.last lines
 

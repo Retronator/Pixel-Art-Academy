@@ -75,38 +75,21 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
   isEmpty: ->
     not @drink()
 
-  class @Listener extends LOI.Adventure.Listener
-    @scriptUrls: -> [
-      'retronator_pixelartacademy-items/bottle/bottle.script'
-    ]
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-items/bottle/bottle.script'
 
-    class @Script extends LOI.Adventure.Script
-      @id: -> 'PixelArtAcademy.Items.Bottle'
-      @initialize()
+  onCommand: (commandResponse) ->
+    bottle = @options.parent
 
-    @initialize()
+    drinkAction = =>
+      @startScript label: if bottle.isEmpty() then 'DrinkFromEmpty' else 'Drink'
 
-    onCommand: (commandResponse) ->
-      bottle = @options.parent
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.DrinkFrom, Vocabulary.Keys.Verbs.Use], bottle.avatar]
+      action: => drinkAction()
 
+    drinkAvatar = bottle.drink()
+
+    if drinkAvatar
       commandResponse.onPhrase
-        form: [[Vocabulary.Keys.Verbs.DrinkFrom, Vocabulary.Keys.Verbs.Use], bottle.avatar]
-        action: =>
-          @_drink()
-
-      drink = bottle.drink()
-
-      if drink
-        commandResponse.onPhrase
-          form: [[Vocabulary.Keys.Verbs.Drink, Vocabulary.Keys.Verbs.Use], drink]
-          action: =>
-            @_drink()
-
-    _drink: ->
-      bottle = @options.parent
-
-      if bottle.isEmpty()
-        LOI.adventure.director.startScript @scripts[@constructor.Script.id()], label: 'DrinkFromEmpty'
-
-      else
-        LOI.adventure.director.startScript @scripts[@constructor.Script.id()], label: 'Drink'
+        form: [[Vocabulary.Keys.Verbs.Drink, Vocabulary.Keys.Verbs.Use], drinkAvatar]
+        action: => drinkAction()

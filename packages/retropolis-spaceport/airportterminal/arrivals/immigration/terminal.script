@@ -2,72 +2,87 @@
 
 ## Start
 
-officer: 
-    Excuse me, immigration is closed at this moment.
-    Check back later when chapter 1 of episode 0 is done.
-    You can follow Retronator on social media to follow development.
+-> [ConfirmImmigration] `passportShown and letterShown`
+-> [PassportShown] `passportShown`
+-> [LetterShown] `letterShown`
 
-* Oh, is there a Facebook page? -> [Facebook]
-* I'll follow on Twitter. -> [Twitter]
-* I already do, it's awesome. -> [Already]
-* I don't use social media, but thanks anyway. -> [Nothing]
+> The terminal is a bright translucent glass display as tall as you.
 
-## Facebook
-
-officer:
-    Yes, indeed there is.
-    Let me open it up for you.
-    
-> Officer shows you the Facebook page.
-
-### OpenFacebook
+terminal: Welcome to Retropolis immigration procedure. ![Papers, please](show passport to terminal).
 
 -> [End]
 
-## Twitter
+## PassportShown
 
-officer:
-    Great! There are two accounts.
-    @Retronator is Retro's — the author's — account where you can find his development and pixel art banter.
-    @PixelArtAcademy has updates for players of the game and tweets from the pixel art community.
-    Which one do you want to visit?
-    
-* @Retronator. I want to know how the game's made. -> [Retronator]
-* @PixelArtAcademy. I'm looking for game updates. -> [PixelArtAcademy]
-* Actually, I changed my mind. -> [Nothing]
-
-## Retronator
-
-officer: Game development behind the scenes look it is!
-
-> Officer shows you the @Retronator account.
-
-### OpenRetronator
-
--> [End]
-
-## PixelArtAcademy
-
-officer: Getting ready to be a player, fantastic.
-
-> Officer shows you the @PixelArtAcademy account.
-
-### OpenPixelArtAcademy
-
--> [End]
-
-## Already
-
-officer: 
-    Oh, thanks so much! See you there.
-    I mean … Retro will see you there.
-    I'm just a nameless virtual character.
+terminal: 
+    So far you have presented: passport.
+    Please also present: acceptance letter.
     
 -> [End]
 
-## Nothing
+## PassportShown
 
-officer: No problem, come back in a while to see if more content has been published.
+terminal: 
+    So far you have presented: acceptance letter.
+    Please also present: passport.
+
+## ShowPassport
+
+-> [NoPassport] `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Passport']`
+
+`passportShown = true`
+
+-> [ConfirmImmigration] `letterShown`
+
+terminal: 
+    Thank you. Our system indicates you are here to study at the Retropolis Academy of Art. 
+    Please present your acceptance letter.
+
+-> [End]
+
+## ShowLetter
+
+-> [NoLetter] `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Passport']`
+
+`letterShown = true`
+
+-> [ConfirmImmigration] `passportShown`
+
+terminal:
+    Thank you. Your letter indicates you're here to study at the Retropolis Academy of Art. We're excited to have you. 
+    Please also present your [passport](show passport to terminal).
+    
+-> [End]
+
+## NoPassport
+
+> I don't see your passport. Maybe ![look in your backpack](open backpack)?
+
+-> [End]
+
+## NoLetter
+
+> I don't see your acceptance letter. Maybe ![look in your backpack](open backpack)?
+
+-> [End]
+
+## ConfirmImmigration
+
+terminal:
+    Good. Everything seems to be in order. 
+    You will need to report to the student center at the Academy to finalize your enrollment.
+
+* Confirm.
+
+terminal: You may now proceed to claim your baggage. Have a lovely stay in Retropolis.
+
+* End immigration procedure.
+
+> The checkpoint gate opens and you pass through to the baggage claim area.
+
+pause
+
+### EndImmigration
 
 -> [End]
 

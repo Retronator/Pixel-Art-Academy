@@ -53,25 +53,34 @@ class LOI.Adventure extends LOI.Adventure
 
       # Wait for listeners to get instantiated as well.
       Tracker.afterFlush => Tracker.nonreactive =>
-        # Query all the listeners if they need to perform any action on enter.
-        listeners = LOI.adventure.currentListeners()
+        # Wait for listeners to be ready.
+        @autorun (computation) =>
+          return unless listeners = LOI.adventure.currentListeners()
 
-        # Exclude the listeners that are part of scenes that don't happen on this location.
-        listeners = _.filter listeners, (listener) =>
-          listenerScene = listener.options.parent if listener.options.parent instanceof LOI.Adventure.Scene
-          return if listenerScene and listenerScene.constructor.location() isnt currentLocationClass
+          # Exclude the listeners that are part of scenes that don't happen on this location.
+          listeners = _.filter listeners, (listener) =>
+            listenerScene = listener.options.parent if listener.options.parent instanceof LOI.Adventure.Scene
+            return if listenerScene and listenerScene.constructor.location() isnt currentLocationClass
 
-          true
+            true
 
-        # Query the listeners and save the results for the interface to use as well.
-        responseResults = for listener in listeners
-          enterResponse = new LOI.Parser.EnterResponse {currentLocationClass}
+          # Wait for all listeners to be ready.
+          for listener in listeners
+            return unless listener.ready()
 
-          listener.onEnter enterResponse
+          computation.stop()
 
-          {enterResponse, listener}
+          Tracker.nonreactive =>
+            # Query all the listeners if they need to perform any action on
+            # enter and save the results for the interface to use as well.
+            responseResults = for listener in listeners
+              enterResponse = new LOI.Parser.EnterResponse {currentLocationClass}
 
-        @locationOnEnterResponseResults responseResults
+              listener.onEnter enterResponse
+
+              {enterResponse, listener}
+
+            @locationOnEnterResponseResults responseResults
 
   goToLocation: (locationClassOrId) ->
     currentLocationClass = _.thingClass @currentLocationId()

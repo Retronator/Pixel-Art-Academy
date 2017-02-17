@@ -19,6 +19,11 @@ Package.onUse(function(api) {
 
   api.addFile('spaceport');
 
+  // Items
+
+  api.addFile('items/items');
+  api.addFile('items/announcer');
+
   // Locations
 
   api.addFile('airportterminal/airportterminal');
@@ -34,10 +39,11 @@ Package.onUse(function(api) {
   api.addFile('airportterminal/arrivals/arrivals/arrivals');
 
   api.addFile('airportterminal/arrivals/baggageclaim/baggageclaim');
+  api.addFile('airportterminal/arrivals/baggageclaim/baggagecarousel');
 
   api.addFile('airportterminal/arrivals/customs/customs');
 
-  api.addFile('airportterminal/arrivals/immigration/immigration');
+  api.addThing('airportterminal/arrivals/immigration/immigration');
   api.addThing('airportterminal/arrivals/immigration/terminal');
 
   api.addFile('airportterminal/departures/departures/departures');

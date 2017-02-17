@@ -32,6 +32,10 @@ class LOI.Director
     queuedScriptNodes = @queuedScriptNodes()
     queuedScriptNodes.push startNode
     @queuedScriptNodes queuedScriptNodes
+    
+  stopAllScripts: ->
+    @queuedScriptNodes []
+    @currentScriptNodes []
 
   startNode: (scriptNode) ->
     @scriptTransition null, scriptNode

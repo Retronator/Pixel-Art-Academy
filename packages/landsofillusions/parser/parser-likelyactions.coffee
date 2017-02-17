@@ -8,7 +8,7 @@ class LOI.Parser extends LOI.Parser
     Nodes = LOI.Adventure.Script.Nodes
 
     # Sort all actions descending by likelihood.
-    likelyActions = _.reverse _.sortBy likelyActions, 'likelihood', 'precision'
+    likelyActions = _.reverse _.sortBy likelyActions, 'likelihood', 'precision', 'priority'
 
     if LOI.debug
       console.log "We're not sure what the user wanted ... top 10 possibilities:"
@@ -27,7 +27,9 @@ class LOI.Parser extends LOI.Parser
       (likelyAction.likelihood > bestLikelihood - 0.2) and (likelyAction.likelihood > 0.6)
 
     # If all actions that are left have the same likelihood, take the most precise ones.
-    if _.first(likelyActions).likelihood is _.last(likelyActions).likelihood
+    equalLikelihood = _.first(likelyActions).likelihood is _.last(likelyActions).likelihood
+
+    if equalLikelihood
       bestPrecision = likelyActions[0].precision
 
       likelyActions = _.filter likelyActions, (likelyAction) =>
@@ -40,6 +42,15 @@ class LOI.Parser extends LOI.Parser
     likelyActions = _.uniqWith likelyActions, (a, b) =>
       # Consider likely actions with the same phrase action as equal.
       a.phraseAction is b.phraseAction
+
+    # If all actions that are left have the same likelihood and precision, take the one with the highest priority
+    equalPrecision = _.first(likelyActions).precision is _.last(likelyActions).precision
+
+    if equalLikelihood and equalPrecision
+      bestPriority = likelyActions[0].priority
+
+      likelyActions = _.filter likelyActions, (likelyAction) =>
+        likelyAction.priority is bestPriority
 
     # If we have only one possibility left, just choose that one (autocorrect style).
     if likelyActions.length is 1

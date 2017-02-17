@@ -9,8 +9,7 @@ class LOI.Avatar
     
   @NameAutoCorrectStyle:
     Word: 'Word'
-    ShortName: 'ShortName'
-    FullName: 'FullName'
+    Name: 'Name'
 
   @DialogTextTransform:
     Auto: 'Auto'

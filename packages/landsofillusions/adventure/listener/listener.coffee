@@ -7,6 +7,8 @@ class LOI.Adventure.Listener
 
   @scriptUrls: -> [] # Override to provide a list of script URLs to load.
 
+  @avatars: -> {} # Override with a map of shorthands and thing classes for the things the listener needs to respond to.
+
   @initialize: ->
     # On the server, compile the scripts.
     if Meteor.isServer
@@ -66,10 +68,19 @@ class LOI.Adventure.Listener
     else
       @scriptsReady true
 
+    @avatars = {}
+    for key, thingClass of @constructor.avatars()
+      @avatars[key] = new LOI.Avatar thingClass
+
   destroy: ->
     @_scriptTranslationSubscription.stop()
 
     handle.stop() for handle in @_autorunHandles
+
+    for key, avatar of @avatars
+      avatar.destroy()
+
+    @avatars = null
 
     @cleanup()
 
@@ -80,6 +91,9 @@ class LOI.Adventure.Listener
     handle
 
   ready: ->
+    for key, avatar of @avatars
+      return false unless avatar.ready()
+
     @scriptsReady()
 
   onScriptsLoaded: -> # Override to start reactive logic. Use @scripts to get access to script objects.

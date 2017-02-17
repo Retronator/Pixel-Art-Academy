@@ -50,7 +50,7 @@ class LOI.Adventure.Script
     @ephemeralState = new LOI.EphemeralStateObject
 
     @_stateChangeAutorun = AM.PersistentStorage.persist
-      storageKey: "#{@options.id}.state"
+      storageKey: "#{@id()}.state"
       storage: sessionStorage
       field: @ephemeralState.field()
 

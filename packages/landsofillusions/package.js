@@ -117,8 +117,6 @@ Package.onUse(function(api) {
   api.addFiles('adventure/thing/thing.coffee');
   api.addFiles('adventure/thing/thing.html');
 
-  api.addFiles('adventure/location/location.coffee');
-
   api.addFiles('adventure/item/item.coffee');
 
   // Script
@@ -145,6 +143,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/jump.coffee');
   api.addFiles('adventure/script/nodes/choice.coffee');
   api.addFiles('adventure/script/nodes/timeout.coffee');
+  api.addFiles('adventure/script/nodes/pause.coffee');
 
   api.addFiles('adventure/script/parser/parser.coffee');
 
@@ -154,6 +153,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/chapter/chapter.coffee');
   api.addFiles('adventure/section/section.coffee');
   api.addFiles('adventure/scene/scene.coffee');
+  api.addFiles('adventure/location/location.coffee');
 
   // Parser Listeners
 

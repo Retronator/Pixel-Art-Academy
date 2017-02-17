@@ -6,6 +6,8 @@ class C1.Immigration extends LOI.Adventure.Section
 
   @scenes: -> [
     @Concourse
+    @Immigration
+    @BaggageClaim
   ]
 
   active: ->

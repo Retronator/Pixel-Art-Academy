@@ -68,7 +68,10 @@ class LOI.Adventure.Thing extends AM.Component
   # Start all things with a WIP version.
   @version: -> "0.0.1-#{@wipSuffix}"
 
-  @listeners: -> [] # Override for listeners to be initialized when thing is created.
+  # Override for listeners to be initialized when thing is created.
+  @listeners: -> [
+    @Listener
+  ]
 
   @initialize: ->
     # Store thing class by ID and url.
@@ -96,6 +99,42 @@ class LOI.Adventure.Thing extends AM.Component
     # Create static state field.
     @stateAddress = new LOI.StateAddress "things.#{@id()}"
     @state = new LOI.StateObject address: @stateAddress
+
+    # Create default listener.
+    parent = @
+
+    class @Listener extends LOI.Adventure.Listener
+      @id: -> "#{parent.id()}.Listener"
+
+      @scriptUrls: ->
+        urls = []
+
+        url = parent.defaultScriptUrl?()
+        urls.push url if url
+
+        urls
+
+      parentThing = parent
+      class @Script extends LOI.Adventure.Script
+        @id: -> parentThing.id()
+        @initialize()
+        initialize: -> @options.parent.initializeScript.call @
+
+      @avatars: -> parent.avatars()
+      @initialize()
+
+      startScript: (options) ->
+        LOI.adventure.director.startScript @script, options
+
+      onScriptsLoaded: ->
+        @script = @scripts[@options.parent.id()]
+        @options.parent.onScriptsLoaded.call @
+
+      onCommand: (commandResponse) -> @options.parent.onCommand.call @, commandResponse
+      onEnter: (enterResponse) -> @options.parent.onEnter.call @, enterResponse
+      onExitAttempt: (exitResponse) -> @options.parent.onExitAttempt.call @, exitResponse
+      onExit: (exitResponse) -> @options.parent.onExit.call @, exitResponse
+      cleanup: -> @options.parent.cleanup.call @
 
   @createAvatar: ->
     new LOI.Avatar @
@@ -184,3 +223,21 @@ class LOI.Adventure.Thing extends AM.Component
     @_subscriptionHandles.push handle
 
     handle
+
+  # Default listener handlers
+
+  @scriptUrls: -> [] # Override to provide a list of script URLs to load.
+  @avatars: -> {} # Override with a map of shorthands and thing classes for the things the listener needs to respond to.
+
+  onScriptsLoaded: -> # Override to start reactive logic. Use @scripts to get access to script objects.
+  onCommand: (commandResponse) -> # Override to listen to commands.
+  onEnter: (enterResponse) -> # Override to react to entering a location.
+  onExitAttempt: (exitResponse) -> # Override to react to location change attempts, potentially preventing the exit.
+  onExit: (exitResponse) ->
+    # Override to react to leaving a location.
+    @cleanup()
+  cleanup: -> # Override to clean any timers or autoruns that need to be cleaned when listener exits or is destroyed.
+
+  # Default script handlers
+
+  initializeScript: -> # Override to setup the script on the client.

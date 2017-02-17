@@ -56,7 +56,7 @@ class LOI.Construct.Locations.Loading extends LOI.Construct.Location
       computation.stop()
 
       captain.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Talk
+        verb: Vocabulary.Keys.Verbs.TalkTo
         action: =>
           LOI.adventure.director.startScript captainDialog, label: 'MainDialog'
 

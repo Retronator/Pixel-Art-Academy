@@ -1,0 +1,19 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Immigration.BaggageClaim
+
+## LookAtAlex
+
+> Alex is waiting for you to get your suitcase.
+
+-> [End]
+
+## TalkToAlex
+
+alex: Let's hurry up, we should catch the airship before they close the airport for the rocket launch.
+
+-> [End]
+
+## LeaveWithoutSuitcase
+
+alex: Come on, get your suitcase.
+
+## End

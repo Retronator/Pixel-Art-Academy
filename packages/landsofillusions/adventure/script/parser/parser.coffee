@@ -29,6 +29,7 @@ class LOI.Adventure.ScriptFile.Parser
       '_parseLabel'
       '_parseScript'
       '_parseTimeout'
+      '_parsePause'
       '_parseChoice'
       '_parseJump'
       '_parseNarrative'
@@ -332,4 +333,13 @@ class LOI.Adventure.ScriptFile.Parser
 
     new Nodes.Timeout
       milliseconds: milliseconds
+      next: @nextNode
+
+  ###
+    pause
+  ###
+  _parsePause: (line) ->
+    return unless match = line.match /^pause$/i
+
+    new Nodes.Pause
       next: @nextNode
