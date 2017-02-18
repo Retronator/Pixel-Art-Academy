@@ -10,6 +10,7 @@ class C1.Airship extends LOI.Adventure.Section
     @Tower
     @Terminal
     @Dock
+    @Cabin
   ]
 
   @initialize()

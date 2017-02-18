@@ -55,4 +55,5 @@ Package.onUse(function(api) {
   api.addThing('chapter1/sections/airship/scenes/tower');
   api.addThing('chapter1/sections/airship/scenes/terminal');
   api.addThing('chapter1/sections/airship/scenes/dock');
+  api.addThing('chapter1/sections/airship/scenes/cabin');
 });

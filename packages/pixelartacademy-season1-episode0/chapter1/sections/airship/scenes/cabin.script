@@ -1,0 +1,85 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Airship.Cabin
+
+alex: Let's find a seat.
+
+* Over there, by the windows. -> [SitWindows]
+* In the middle, at the table displays. -> [SitTable]
+
+## SitWindows
+
+`_sittingPlace = windows`
+
+-> [DoorsClose]
+
+## SitTable
+
+`_sittingPlace = table`
+
+-> [DoorsClose]
+
+## DoorsClose
+
+> The doors close behind you and you find some empty seats.
+
+> Airship smoothly gains altitude and floats away from the Spaceport.
+
+-> [AtWindows] `_sittingPlace is windows`
+-> [AtTable] `_sittingPlace is table`
+
+## AtWindows
+
+* Look at Spaceport. -> [Spaceport]
+* Look at launch pad. -> [LaunchPad]
+
+## Spaceport
+
+> The star shaped structure is now fully visible with its three wings extending from the central tower.
+
+> In the distance you are leaving behind a lagoon with the seaport and the more industrial sections of the small island.
+
+-> [Ending]
+
+## LaunchPad
+
+> As the airship heads on its way toward Retropolis, you gaze follows from the big Spaceport hangars towards two launch pads. 
+> The northwest site houses a rocket that is ready to take a new group of colonists into orbit.
+
+-> [Ending]
+
+## AtTable
+
+> The table you sit at holds a display with various information.
+
+* Read about the Academy. -> [Academy]
+* Read about Retropolis. -> [Retropolis]
+
+## Academy
+
+table:
+    Retropolis Academy of Art is the main destination for creative activities in Retropolis.
+    Citizens and visitors practice to improve their skills and work on personal and group projects in all fields of art. 
+    The Academy is a place to explore individual expression as well as contribute to the community with applied arts.
+
+-> [Ending]
+
+## Retropolis
+
+table:
+    The city of Retropolis is a marvel of civil and behavioral engineering.
+    It started as a settlement called Walden 14, designed as an experiment in radical automation by the Walden communities.
+    Harnessing the advent of digital computers in the 1940s, technological progress — in combination with a carefully planned society — led to unprecedented gains in knowledge, economy and personal freedom.
+
+-> [Ending]
+
+## Ending
+
+> Tired from all the excitement, you close your eyes for a moment.
+
+* This almost seems too good to be true.
+* I can't believe I'm finally here.
+
+> With your mind lingering with thoughts of Retropolis, the exhaustion gets the best of you and you fall asleep.
+
+`section.asleep = true`
+
+## End

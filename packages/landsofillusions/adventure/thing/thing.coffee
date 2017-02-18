@@ -73,6 +73,14 @@ class LOI.Adventure.Thing extends AM.Component
     @Listener
   ]
 
+  @_translations: ->
+    translations = @translations?() or {}
+
+    intro = @intro?()
+    translations.intro = intro if intro
+
+    translations
+
   @initialize: ->
     # Store thing class by ID and url.
     @_thingClassesById[@id()] = @
@@ -93,7 +101,8 @@ class LOI.Adventure.Thing extends AM.Component
     # On the server, prepare any extra translations.
     if Meteor.isServer
       translationNamespace = @id()
-      for translationKey, defaultText of @translations?()
+
+      for translationKey, defaultText of @_translations()
         AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
 
     # Create static state field.
@@ -131,10 +140,29 @@ class LOI.Adventure.Thing extends AM.Component
         @options.parent.onScriptsLoaded.call @
 
       onCommand: (commandResponse) -> @options.parent.onCommand.call @, commandResponse
-      onEnter: (enterResponse) -> @options.parent.onEnter.call @, enterResponse
+      onEnter: (enterResponse) ->
+        if @options.parent.constructor.intro
+          enterResponse.overrideIntroduction =>
+            @options.parent.translations()?.intro
+
+        @options.parent.onEnter.call @, enterResponse
+
       onExitAttempt: (exitResponse) -> @options.parent.onExitAttempt.call @, exitResponse
       onExit: (exitResponse) -> @options.parent.onExit.call @, exitResponse
       cleanup: -> @options.parent.cleanup.call @
+
+      setCurrentThings: (thingClasses, callback) ->
+        Tracker.autorun (computation) =>
+          things = {}
+          for key, thingClass of thingClasses
+            things[key] = LOI.adventure.getCurrentThing thingClass
+            return unless things[key]?.ready()
+
+          computation.stop()
+
+          @script.setThings things
+
+          Tracker.nonreactive => callback?()
 
   @createAvatar: ->
     new LOI.Avatar @
@@ -164,7 +192,7 @@ class LOI.Adventure.Thing extends AM.Component
 
       translations = {}
 
-      for translationKey, defaultText of @constructor.translations?()
+      for translationKey, defaultText of @constructor._translations()
         translated = AB.translate @_translationSubscription, translationKey
         translations[translationKey] = translated.text if translated.language
 
@@ -195,10 +223,6 @@ class LOI.Adventure.Thing extends AM.Component
   # Convenience methods for static properties.
   id: -> @constructor.id()
 
-  fullName: -> @avatar?.fullName()
-  shortName: -> @avatar?.shortName()
-  description: -> @avatar?.description()
-
   ready: ->
     @thingReady()
 
@@ -223,6 +247,16 @@ class LOI.Adventure.Thing extends AM.Component
     @_subscriptionHandles.push handle
 
     handle
+
+  # Avatar pass-through methods
+
+  fullName: -> @avatar?.fullName()
+  shortName: -> @avatar?.shortName()
+  nameAutoCorrectStyle: -> @avatar?.nameAutoCorrectStyle()
+  description: -> @avatar?.description()
+  color: -> @avatar?.color()
+  dialogTextTransform: -> @avatar?.dialogTextTransform()
+  dialogDeliveryType: -> @avatar?.dialogDeliveryType()
 
   # Default listener handlers
 

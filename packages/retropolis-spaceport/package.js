@@ -64,4 +64,5 @@ Package.onUse(function(api) {
 
   api.addFile('airshipterminal/airship/airship');
   api.addFile('airshipterminal/airship/cabin/cabin');
+  api.addFile('airshipterminal/airship/cabin/tabledisplay');
 });

@@ -9,6 +9,10 @@ class RS.AirshipTerminal.Airship.Cabin extends LOI.Adventure.Location
   @scriptUrls: -> [
   ]
 
+  things: -> [
+    RS.AirshipTerminal.Airship.Cabin.TableDisplay
+  ]
+
   @version: -> '0.0.1'
 
   @fullName: -> "airship cabin"

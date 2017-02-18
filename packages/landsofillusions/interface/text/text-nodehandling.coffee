@@ -71,7 +71,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       return
 
     # We have an actor that is saying this.
-    dialogColor = dialogLine.actor.avatar.color()
+    dialogColor = dialogLine.actor.color()
 
     # Add a new paragraph to the narrative
     start = "%%c#{dialogColor.hue}-#{dialogColor.shade}%"
@@ -79,7 +79,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     end = 'c%%'
 
     # Add text transformation.
-    switch dialogLine.actor.avatar.dialogTextTransform()
+    switch dialogLine.actor.dialogTextTransform()
       when LOI.Avatar.DialogTextTransform.Lowercase
         start = "%%tL#{start}"
         end = "t%%#{end}"
@@ -89,8 +89,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Add the intro line at the start.
     unless @_inMultilineDialog
-      if dialogLine.actor.avatar.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
-        start = "#{_.capitalize dialogLine.actor.avatar.shortName()} says: #{start}\""
+      if dialogLine.actor.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
+        start = "#{_.capitalize dialogLine.actor.shortName()} says: #{start}\""
 
     if dialogLine.next instanceof Nodes.DialogLine and dialogLine.next.actor is dialogLine.actor
       # Next line is by the same actor.
@@ -100,7 +100,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @_inMultilineDialog = false
 
       # Add the closing quote at the end.
-      if dialogLine.actor.avatar.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
+      if dialogLine.actor.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
         end = "\"#{end}"
 
     # Present the text to the player.
