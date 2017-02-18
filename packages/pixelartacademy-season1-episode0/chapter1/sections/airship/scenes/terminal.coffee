@@ -69,4 +69,4 @@ class C1.Airship.Terminal extends LOI.Adventure.Scene
         @startScript label: 'LookAtSchedule'
 
   cleanup: ->
-    @_departureAutorun.stop()
+    @_departureAutorun?.stop()

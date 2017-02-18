@@ -51,6 +51,9 @@ class LOI.Adventure extends LOI.Adventure
       return unless location = @currentLocation()
       currentLocationClass = location.constructor
 
+      # Clear previous enter responses.
+      Tracker.nonreactive => @locationOnEnterResponseResults null
+
       # Wait for listeners to get instantiated as well.
       Tracker.afterFlush => Tracker.nonreactive =>
         # Wait for listeners to be ready.

@@ -7,13 +7,13 @@ alex: Let's find a seat.
 
 ## SitWindows
 
-`_sittingPlace = windows`
+`_sittingPlace = 'windows'`
 
 -> [DoorsClose]
 
 ## SitTable
 
-`_sittingPlace = table`
+`_sittingPlace = 'table'`
 
 -> [DoorsClose]
 
@@ -23,8 +23,8 @@ alex: Let's find a seat.
 
 > Airship smoothly gains altitude and floats away from the Spaceport.
 
--> [AtWindows] `_sittingPlace is windows`
--> [AtTable] `_sittingPlace is table`
+-> [AtWindows] `_sittingPlace is 'windows'`
+-> [AtTable] `_sittingPlace is 'table'`
 
 ## AtWindows
 

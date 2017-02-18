@@ -25,7 +25,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       computation.stop()
 
       # Initialize introduction function after location has changed and new listeners have been created.
-      @initializeIntroductionFunction()
+      Tracker.nonreactive => @initializeIntroductionFunction()
 
       # If we've been here before, just start with a fresh narrative. This is the persistent visited, not the
       # per-session one, since we want to do the intro only when it's really the first time to see the location.

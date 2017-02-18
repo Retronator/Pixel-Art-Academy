@@ -58,9 +58,9 @@ class RS.AirportTerminal.Immigration.Terminal extends LOI.Adventure.Thing
       action: => showLetter()
 
     commandResponse.onPhrase
-      form: [Verbs.Show, @avatars.passport]
+      form: [[Verbs.Show, Verbs.Use], @avatars.passport]
       action: => showPassport()
 
     commandResponse.onPhrase
-      form: [Verbs.Show, @avatars.letter]
+      form: [[Verbs.Show, Verbs.Use], @avatars.letter]
       action: => showLetter()
