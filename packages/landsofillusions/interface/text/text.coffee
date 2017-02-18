@@ -158,6 +158,9 @@ class LOI.Interface.Text extends LOI.Interface
 
   # Use to get back to the initial state with full location description.
   resetInterface: ->
+    @_lastNode null
+    @_pausedNode null
+
     @narrative?.clear()
 
     @location().constructor.visited false

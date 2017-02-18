@@ -68,6 +68,11 @@ class Script.Nodes.Code extends Script.Node
 
     # Get the states into context.
     _scriptState = @script.state()
+
+    unless _scriptState
+      _scriptState = {}
+      _scriptStateWasNull = true
+    
     _ephemeralState = @script.ephemeralState()
 
     location = LOI.adventure.currentLocation()
@@ -146,15 +151,29 @@ class Script.Nodes.Code extends Script.Node
     for transferredThing in transferredThings
       newThingState = transferredThing.state[transferredThing.stateFieldName]
 
+      console.log "Writing back state", transferredThing.thing.stateAddress.string(), newThingState if LOI.debug
+
       # We don't want to write an empty state back into the state if it didn't have any data to begin with.
+      transferState = false
+
       if transferredThing.thingStateWasEmpty
         # See if location state was modified and set it if needed.
         transferState = true if _.keys(newThingState).length
 
+        console.log "Starting state was empty … do we still transfer it?", transferState if LOI.debug
+
       else
         transferState = true
 
-      _.nestedProperty _globalState, transferredThing.thing.stateAddress.string(), newThingState if transferState
+      if transferState
+        # Because we might have nested empty states (if scene and section were both null they were created as separate
+        # objects, which are not nested as they would need to be), we can only overwrite the new state over the old one.
+        existingState = _.nestedProperty _globalState, transferredThing.thing.stateAddress.string()
+
+        # Overwrite new state over existing state.
+        newThingState = _.merge {}, existingState, newThingState
+
+        _.nestedProperty _globalState, transferredThing.thing.stateAddress.string(), newThingState
 
       delete transferredThing.state[transferredThing.stateFieldName]
       delete transferredThing.state["#{transferredThing.stateFieldName}Instance"]
@@ -162,6 +181,10 @@ class Script.Nodes.Code extends Script.Node
     # Delete read-only fields that should not be saved.
     delete _globalState.user
     delete _globalState.player
+
+    if _scriptStateWasNull
+      # See if location state was modified and set it if needed.
+      _.nestedProperty _globalState, @script.stateAddress.string(), _scriptState if _.keys(_scriptState).length
 
     if _locationStateWasNull
       # See if location state was modified and set it if needed.

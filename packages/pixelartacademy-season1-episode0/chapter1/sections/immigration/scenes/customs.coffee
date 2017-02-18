@@ -4,10 +4,10 @@ RS = Retropolis.Spaceport
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C1.Airship.Arrivals extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Airship.Arrivals'
+class C1.Immigration.Customs extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Immigration.Customs'
 
-  @location: -> RS.AirportTerminal.Arrivals
+  @location: -> RS.AirportTerminal.Customs
 
   @initialize()
 
@@ -16,22 +16,10 @@ class C1.Airship.Arrivals extends LOI.Adventure.Scene
       C1.Actors.Alex if @state 'alexPresent'
     ]
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/airship/scenes/arrivals.script'
-
-  constructor: ->
-    @announcer = new RS.Items.Announcer
-
-    super
-
-  initializeScript: ->
-    announcer = @options.parent.announcer
-
-    @setThings {announcer}
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/immigration/scenes/customs.script'
 
   onEnter: (enterResponse) ->
-    @startScript label: "AlexEnters" unless @options.parent.state('alexPresent') or @options.parent.state('alexLeft')
-
-    return if @options.parent.state('alexLeft')
+    @startScript label: "AlexEnters" unless @options.parent.state('alexPresent')
 
     # Alex should talk when at location.
     @_alexTalksAutorun = @autorun (computation) =>
@@ -47,7 +35,7 @@ class C1.Airship.Arrivals extends LOI.Adventure.Scene
       @startScript label: "AlexTalks"
 
   onCommand: (commandResponse) ->
-    return unless alex = LOI.adventure.getCurrentThing C1.Actors.Alex
+    alex = LOI.adventure.getCurrentThing C1.Actors.Alex
     @script.setThings {alex}
 
     commandResponse.onPhrase
@@ -57,3 +45,4 @@ class C1.Airship.Arrivals extends LOI.Adventure.Scene
 
   cleanup: ->
     @_alexTalksAutorun?.stop()
+

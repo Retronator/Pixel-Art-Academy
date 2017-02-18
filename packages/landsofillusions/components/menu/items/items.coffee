@@ -146,6 +146,9 @@ class LOI.Components.Menu.Items extends AM.Component
     # Clear location to trigger location changes.
     LOI.adventure.currentLocationId null
 
+    # Reset game time.
+    LOI.adventure.resetTime()
+
     # Cleanup storyline classes.
     LOI.adventure.resetEpisodes()
 

@@ -7,10 +7,6 @@ class C1.Immigration.Immigration extends LOI.Adventure.Scene
 
   @location: -> RS.AirportTerminal.Immigration
 
-  @listeners: -> [
-    @Listener
-  ]
-
   @translations: ->
     intro: "You line up in the queue and wait for your turn at one of the automated immigration checkpoints."
 

@@ -5,6 +5,7 @@ LOI = LandsOfIllusions
 
 class LOI.Components.Menu extends AM.Component
   @register 'LandsOfIllusions.Components.Menu'
+  @url: -> 'menu'
 
   constructor: (@options) ->
     super
@@ -45,6 +46,8 @@ class LOI.Components.Menu extends AM.Component
     $(document).off '.menu'
 
   showMenu: ->
+    LOI.adventure.addModalDialog @
+
     # Make menu visible and do the fade in.
     @menuVisible true
     @$('.menu-overlay').velocity('stop').velocity
@@ -53,6 +56,8 @@ class LOI.Components.Menu extends AM.Component
       duration: @_transitionDuration
 
   hideMenu: ->
+    LOI.adventure.removeModalDialog @
+
     # Fade out and then make menu not visible.
     @$('.menu-overlay').velocity('stop').velocity
       opacity: [0, 1]

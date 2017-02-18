@@ -22,33 +22,39 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
       C1.Actors.Alex if @state 'alexPresent'
     ]
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/start/scenes/terrace.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/start/scenes/terrace.script'
 
   onEnter: (enterResponse) ->
+    scene = @options.parent
+
     # Provide the introduction text the first time we enter.
-    introductionDone = @options.parent.state 'introductionDone'
+    introductionDone = scene.state 'introductionDone'
 
     unless introductionDone
       enterResponse.overrideIntroduction =>
-        @options.parent.translations()?.intro
+        scene.translations()?.intro
 
-      @options.parent.state 'introductionDone', true
+      scene.state 'introductionDone', true
 
     # Alex should enter after 30s unless they are already present or they have already talked to you.
-    unless @options.parent.state('alexPresent') or C1.Actors.Alex.state('firstTalkDone')
-      # But wait first that the interface is ready.
+    unless scene.state('alexPresent') or C1.Actors.Alex.state('firstTalkDone')
+      # But wait first that the interface and time is ready.
       @autorun (computation) =>
         return unless LOI.adventure.interface.uiInView()
+        return unless time = LOI.adventure.time()
         computation.stop()
-
+        
         @_alexEntersTimeout = Meteor.setTimeout =>
           @startScript label: "AlexEnters"
         ,
           30000
+        
+        # Also record the adventure time so we have our 10 min countdown for airship departure.
+        scene.section.chapter.state 'startTime', time
 
     # Alex should talk when at location.
     @_alexTalksAutorun = @autorun (computation) =>
-      return unless @options.parent.state('alexPresent')
+      return unless scene.state('alexPresent')
 
       return unless @scriptsReady()
       return unless alex = LOI.adventure.getCurrentThing C1.Actors.Alex

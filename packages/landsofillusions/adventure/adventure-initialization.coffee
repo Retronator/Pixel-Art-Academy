@@ -41,6 +41,7 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeEpisodes()
     @_initializeThings()
     @_initializeListeners()
+    @_initializeTime()
 
     LOI.adventureInitialized true
 
@@ -55,6 +56,8 @@ class LOI.Adventure extends LOI.Adventure
 
   onDestroyed: ->
     super
+
+    Meteor.clearInterval @_gameTimeInterval
 
     console.log "Adventure destroyed." if LOI.debug
 

@@ -15,7 +15,7 @@ class C1.Immigration.BaggageClaim extends LOI.Adventure.Scene
       Your suitcase arrives shortly as well. The arrivals area is north through the customs.
     "
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/immigration/scenes/baggageclaim.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/immigration/scenes/baggageclaim.script'
 
   @initialize()
 

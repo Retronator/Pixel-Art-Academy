@@ -4,10 +4,10 @@ RS = Retropolis.Spaceport
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C1.Immigration.Customs extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Immigration.Customs'
+class C1.Airship.Arrivals extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Airship.Arrivals'
 
-  @location: -> RS.AirportTerminal.Customs
+  @location: -> RS.AirportTerminal.Arrivals
 
   @initialize()
 
@@ -16,14 +16,29 @@ class C1.Immigration.Customs extends LOI.Adventure.Scene
       C1.Actors.Alex if @state 'alexPresent'
     ]
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/immigration/scenes/customs.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/airship/scenes/arrivals.script'
+
+  constructor: ->
+    @announcer = new RS.Items.Announcer
+
+    super
+
+  initializeScript: ->
+    scene = @options.parent
+    announcer = scene.announcer
+
+    @setThings {announcer}
 
   onEnter: (enterResponse) ->
-    @startScript label: "AlexEnters" unless @options.parent.state('alexPresent')
+    scene = @options.parent
+
+    @startScript label: "AlexEnters" unless scene.state('alexPresent') or scene.state('alexLeft')
+
+    return if scene.state('alexLeft')
 
     # Alex should talk when at location.
     @_alexTalksAutorun = @autorun (computation) =>
-      return unless @options.parent.state('alexPresent')
+      return unless scene.state('alexPresent')
 
       return unless @scriptsReady()
       return unless alex = LOI.adventure.getCurrentThing C1.Actors.Alex
@@ -35,7 +50,7 @@ class C1.Immigration.Customs extends LOI.Adventure.Scene
       @startScript label: "AlexTalks"
 
   onCommand: (commandResponse) ->
-    alex = LOI.adventure.getCurrentThing C1.Actors.Alex
+    return unless alex = LOI.adventure.getCurrentThing C1.Actors.Alex
     @script.setThings {alex}
 
     commandResponse.onPhrase
@@ -45,4 +60,3 @@ class C1.Immigration.Customs extends LOI.Adventure.Scene
 
   cleanup: ->
     @_alexTalksAutorun?.stop()
-

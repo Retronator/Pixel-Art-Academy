@@ -1,3 +1,3 @@
-SP = Retropolis.Spaceport
+RS = Retropolis.Spaceport
 
-class SP.AirshipTerminal
+class RS.AirshipTerminal

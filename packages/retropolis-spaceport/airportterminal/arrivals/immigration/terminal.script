@@ -50,7 +50,7 @@ terminal:
 
 terminal:
     Thank you. Your letter indicates you're here to study at the Retropolis Academy of Art. We're excited to have you. 
-    Please also present your [passport](show passport to terminal).
+    Please also present your ![passport](show passport to terminal).
     
 -> [End]
 

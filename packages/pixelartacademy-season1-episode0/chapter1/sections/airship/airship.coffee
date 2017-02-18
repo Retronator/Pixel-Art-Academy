@@ -8,6 +8,8 @@ class C1.Airship extends LOI.Adventure.Section
   @scenes: -> [
     @Arrivals
     @Tower
+    @Terminal
+    @Dock
   ]
 
   @initialize()

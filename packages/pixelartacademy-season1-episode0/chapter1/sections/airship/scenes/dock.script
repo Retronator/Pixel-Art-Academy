@@ -1,0 +1,39 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Airship.Dock
+
+> After you leave the air-conditioned terminal, hot tropical air takes over your senses.
+
+> Alex enters.
+
+`scene.alexPresent = true`
+
+-> [Run] `chapterInstance.timeToAirshipDeparture() < 3 * 60`
+
+> The airship in the distance is docked to the platform. The gates are going to close soon so you and Alex hurry up to the entrance.
+
+-> [Success]
+
+## Run
+
+> You see the airship in the distance, but the gates are just about to close. 
+> You grab your suitcase and run to the end of the platform.
+
+-> [Success] `chapter.hadDrink`
+
+> As you run you feel the heat ramp up. 
+> Out of breathe, the world starts to spin and your vision blurs. You fall down and everything turns black.
+
+`section.passOut = true`
+
+-> [End]
+
+## Success
+
+> Just in time, you proceed through the gate with Alex and ascend up the airship wing towards the cabin.
+
+pause
+
+### BoardAirship
+
+-> [End]
+
+## End

@@ -1,0 +1,50 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Airship.Terminal
+
+## NotTooLate
+
+> You hear an announcement.
+
+announcer: The airship for Retropolis will be leaving momentarily.
+
+> The doors that lead to the boarding platform are going to close, but it's not too late yet.
+
+`scene.announcementDone = true`
+
+-> [End]
+
+## TooLate
+
+> The doors that lead to the boarding platform are shut closed. You see an airship already in the air, leaving for Retropolis.
+
+-> [Announcement]
+
+## TooLateAtLocation
+
+> The doors to the boarding platform close. You can see an airship detach from the dock and take off.
+
+## Announcement
+
+> You hear an announcement.
+
+announcer:
+    The airship terminal is now closed due to the rocket launch later today.
+    Please exit through the main entrance.
+
+* Oh, no …
+* I should have been faster.
+
+> You try to look for Alex, but don't see anyone.
+
+> The hallway suddenly begins to distort and your vision becomes blurry.
+
+> The announcements echo around the hall.
+
+announcer: Please exit …
+
+> Your vision turns black.
+
+`section.tooLate = true`
+
+-> [End]
+
+## End

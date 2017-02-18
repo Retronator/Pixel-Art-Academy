@@ -7,10 +7,6 @@ class C1.Immigration.Concourse extends LOI.Adventure.Scene
 
   @location: -> RS.AirportTerminal.Concourse
 
-  @listeners: -> [
-    @Listener
-  ]
-
   @initialize()
 
   things: ->
@@ -18,7 +14,7 @@ class C1.Immigration.Concourse extends LOI.Adventure.Scene
       C1.Actors.Alex unless @state 'alexLeft'
     ]
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/immigration/scenes/concourse.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/immigration/scenes/concourse.script'
 
   onEnter: (enterResponse) ->
     # Alex should talk when at location.

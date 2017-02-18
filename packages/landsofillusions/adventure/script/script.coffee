@@ -44,8 +44,8 @@ class LOI.Adventure.Script
     node.script = @ for node in @nodes
 
     # Prepare the state objects.
-    @state = new LOI.StateObject
-      address: new LOI.StateAddress "scripts.#{@id()}"
+    @stateAddress = new LOI.StateAddress "scripts.#{@id()}"
+    @state = new LOI.StateObject address: @stateAddress
 
     @ephemeralState = new LOI.EphemeralStateObject
 

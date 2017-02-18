@@ -34,23 +34,25 @@ Package.onUse(function(api) {
 
   // Start
 
-  api.addFile('chapter1/start/start');
+  api.addFile('chapter1/sections/start/start');
 
-  api.addThing('chapter1/start/scenes/terrace');
+  api.addThing('chapter1/sections/start/scenes/terrace');
 
   // Immigration
 
-  api.addFile('chapter1/immigration/immigration');
+  api.addFile('chapter1/sections/immigration/immigration');
 
-  api.addThing('chapter1/immigration/scenes/concourse');
-  api.addFile('chapter1/immigration/scenes/immigration');
-  api.addThing('chapter1/immigration/scenes/baggageclaim');
-  api.addThing('chapter1/immigration/scenes/customs');
+  api.addThing('chapter1/sections/immigration/scenes/concourse');
+  api.addFile('chapter1/sections/immigration/scenes/immigration');
+  api.addThing('chapter1/sections/immigration/scenes/baggageclaim');
+  api.addThing('chapter1/sections/immigration/scenes/customs');
 
   // Airships
 
-  api.addFile('chapter1/airship/airship');
+  api.addFile('chapter1/sections/airship/airship');
 
-  api.addThing('chapter1/airship/scenes/arrivals');
-  api.addThing('chapter1/airship/scenes/tower');
+  api.addThing('chapter1/sections/airship/scenes/arrivals');
+  api.addThing('chapter1/sections/airship/scenes/tower');
+  api.addThing('chapter1/sections/airship/scenes/terminal');
+  api.addThing('chapter1/sections/airship/scenes/dock');
 });

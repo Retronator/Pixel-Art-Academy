@@ -93,3 +93,7 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
       commandResponse.onPhrase
         form: [[Vocabulary.Keys.Verbs.Drink, Vocabulary.Keys.Verbs.Use], drinkAvatar]
         action: => drinkAction()
+
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.Drink]
+        action: => drinkAction()

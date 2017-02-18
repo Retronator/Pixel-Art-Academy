@@ -14,7 +14,7 @@ class RS.AirshipTerminal.Terminal extends LOI.Adventure.Location
   @fullName: -> "airship terminal"
   @description: ->
     "
-      The long hallway connects the main tower to a docking platform further southeast.
+      You enter the airship terminal. The long hallway connects the main tower to a docking platform further southeast.
     "
   
   @initialize()
@@ -23,6 +23,8 @@ class RS.AirshipTerminal.Terminal extends LOI.Adventure.Location
     super
 
   things: -> [
+    RS.AirshipTerminal.Terminal.RoutesMap
+    RS.AirshipTerminal.Terminal.Schedule
   ]
 
   exits: ->
