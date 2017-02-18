@@ -47,4 +47,8 @@ announcer: Please exit …
 
 -> [End]
 
+## LookAtSchedule
+
+> You look for the last departure and see that the airship leaves in `_timeToDeparture`.
+
 ## End

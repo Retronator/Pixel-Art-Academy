@@ -18,7 +18,7 @@ class LOI.Parser extends LOI.Parser
     bestLikelihood = likelyActions[0].likelihood
 
     if bestLikelihood <= 0.6
-      LOI.adventure.interface.narrative.addText "I don't know what you mean."
+      LOI.adventure.interface.narrative.addText "I can't do that."
       return
 
     # If we're above, there might be more possibilities that are
