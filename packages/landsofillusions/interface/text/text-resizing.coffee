@@ -94,6 +94,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
   animateElement: (options) ->
     options.duration ?= 150
     options.animate ?= true
+    options.easing ?= 'ease-out'
 
     # Cancel any previous animation.
     options.$element.velocity('stop')
@@ -101,7 +102,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     if options.animate
       options.$element.velocity options.properties,
         duration: options.duration
-        easing: 'ease-out'
+        easing: options.easing
         complete: options.complete
         progress: options.progress
 

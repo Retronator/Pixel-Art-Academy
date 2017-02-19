@@ -1,0 +1,17 @@
+<template name="LandsOfIllusions.Components.ChapterTitle">
+  {{#unless deactivated}}
+    <div class="landsofillusions-components-chaptertitle">
+      {{#LandsOfIllusions.Components.Overlay}}
+        <h1 class="episode-title">
+          {{> t10e "episode"}}: {{chapter.episode.fullName}}
+        </h1>
+        <div class="chapter-title-area">
+          <h2 class="chapter-title">
+            <span class="heading">{{> t10e "Chapter"}} {{chapter.number}}</span>
+            <span class="chapter-name">{{chapter.fullName}}</span>
+          </h2>
+        </div>
+      {{/LandsOfIllusions.Components.Overlay}}
+    </div>
+  {{/unless}}
+</template>

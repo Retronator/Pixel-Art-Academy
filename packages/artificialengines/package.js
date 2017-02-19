@@ -12,6 +12,12 @@ Package.onUse(function(api) {
   api.constructor.prototype.addFile = function(path) {
     this.addFiles(path + ".coffee");
   };
+  api.constructor.prototype.addHtml = function(path) {
+    this.addFiles(path + ".html");
+  };
+  api.constructor.prototype.addStyle = function(path) {
+    this.addFiles(path + ".styl");
+  };
   api.constructor.prototype.addComponent = function(path) {
     this.addFiles([path + ".coffee", path + ".html", path + ".styl"]);
   };

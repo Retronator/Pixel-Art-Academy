@@ -58,7 +58,7 @@ class LOI.Adventure extends LOI.Adventure
     # Rewrite url to match the top-most dialog, active item or current location.
     @autorun (computation) =>
       # Find the first dialog in the stack that has a url.
-      for dialog in _.reverse @modalDialogs()
+      for dialog in @modalDialogs()
         # See if the instance or constructor can provide the url.
         if dialog.url or dialog.constructor.url
           desiredUrl = dialog.url?()

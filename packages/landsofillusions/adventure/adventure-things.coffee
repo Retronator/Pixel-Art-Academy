@@ -31,7 +31,7 @@ class LOI.Adventure extends LOI.Adventure
     # Returns all physical and storyline things that are available to listen to commands.
     @currentThings = new ComputedField =>
       things = _.flattenDeep [
-        @episodes
+        @episodes()
         @currentChapters()
         @currentSections()
         @currentScenes()

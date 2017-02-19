@@ -1,3 +1,4 @@
+AC = Artificial.Control
 LOI = LandsOfIllusions
 C1 = PixelArtAcademy.Season1.Episode0.Chapter1
 RS = Retropolis.Spaceport
@@ -66,13 +67,100 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
       @startScript label: "AlexIsPresent"
 
   onExitAttempt: (exitResponse) ->
+    # We need the backpack before we can leave.
     hasBackpack = C1.Backpack.state 'inInventory'
-    return if hasBackpack
+    unless hasBackpack
+      @startScript label: 'LeaveWithoutBackpack'
+      exitResponse.preventExit()
+      return
 
-    @startScript label: 'LeaveWithoutBackpack'
+    # We have the backpack, but don't leave just yet, we'll do the title animation, unless it already ran (this method
+    # will be called the second time around when animation has finished, so we need to let it through at that time).
+    return if @_titleAnimationStarted
+
+    @_titleAnimationStarted = true
     exitResponse.preventExit()
 
+    scene = @options.parent
+    scene._animateTitle()
+
+  _animateTitle: ->
+    LOI.adventure.addModalDialog @
+    @cleanup()
+
+    # Skip animation on enter.
+    $(document).on 'keydown.startSection', (event) =>
+      # Only process keys if we're the top-most dialog.
+      return unless LOI.adventure.modalDialogs()[0] is @
+
+      keyCode = event.which
+      @_showChapterTitle() if keyCode is AC.Keys.enter or keyCode is AC.Keys.escape
+
+    # Fade out UI
+    $('.ui').velocity
+      opacity: [0, 1]
+    ,
+      duration: 1000
+
+    # Scroll full scene into view after a delay so that the narrative has finished scrolling.
+    Meteor.setTimeout =>
+      # We need to scroll so that the title section is in view.
+      position = parseInt $('.title-section').css 'top'
+
+      LOI.adventure.interface.scroll
+        position: position
+        animate: true
+        easing: 'ease-in-out'
+        duration: 5000
+    ,
+      1000
+
+    # Fade in title.
+    $('.landing-page .title-section .middle').velocity
+      opacity: 1
+    ,
+      delay: 5000
+      duration: 2000
+      easing: 'ease-in-out'
+      complete: =>
+        $('.landing-page .title-section .top').velocity
+          opacity: 1
+        ,
+          duration: 2000
+          delay: 1000
+          easing: 'ease-in-out'
+          complete: =>
+            Meteor.setTimeout =>
+              @_showChapterTitle()
+            ,
+              3000
+
+  _showChapterTitle: ->
+    # Only allow one call to this.
+    return if @_chapterTitleShown
+    @_chapterTitleShown = true
+
+    @section.chapter.showChapterTitle
+      onActivated: =>
+        # Mark the section goal condition when the player exits the terrace.
+        @section.state 'leftTerrace', true
+
+        # Set the whole game as started.
+        gameState = LOI.adventure.gameState()
+        gameState.gameStarted = true
+        LOI.adventure.gameState.updated()
+
+        # Move on to Concourse.
+        LOI.adventure.goToLocation RS.AirportTerminal.Concourse
+
+        # Clean up.
+        $(document).off '.startSection'
+        LOI.adventure.removeModalDialog @
+        $('.ui').velocity('stop').css opacity: 1
+
   cleanup: ->
+    super
+
     # Stop Alex's timer.
     Meteor.clearTimeout @_alexEntersTimeout
 

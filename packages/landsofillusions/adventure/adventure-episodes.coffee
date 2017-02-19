@@ -10,11 +10,12 @@ class LOI.Adventure extends LOI.Adventure
       PAA.Season1.Episode0
     ]
 
-    @episodes = for episodeClass in @episodeClasses
-      new episodeClass
+    @episodes = new ReactiveField []
+
+    @resetEpisodes()
 
     @currentChapters = new ComputedField =>
-      chapters = (episode.currentChapter() for episode in @episodes)
+      chapters = (episode.currentChapter() for episode in @episodes())
       _.without chapters, null
 
     @currentSections = new ComputedField =>
@@ -32,11 +33,17 @@ class LOI.Adventure extends LOI.Adventure
       _.flattenDeep scenes
 
   resetEpisodes: ->
-    episode.destroy() for episode in @episodes
+    # Destroy previous episodes.
+    episode.destroy() for episode in @episodes()
 
-    @_initializeEpisodes()
+    # Create new ones.
+    episodes = for episodeClass in @episodeClasses
+      new episodeClass
+
+    # Update main episodes field to trigger reactive re-creation of all storylines.
+    @episodes episodes
 
   episodesReady: ->
     return false unless LOI.adventureInitialized()
 
-    _.every (episode.ready() for episode in @episodes)
+    _.every (episode.ready() for episode in @episodes())

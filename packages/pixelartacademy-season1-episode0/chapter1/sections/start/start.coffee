@@ -14,15 +14,3 @@ class C1.Start extends LOI.Adventure.Section
     @state('leftTerrace') is true
 
   @initialize()
-
-  onExit: (exitResponse) ->
-    return unless exitResponse.currentLocationClass is RS.AirportTerminal.Terrace
-    super
-
-    # Mark the goal condition when the player exits the terrace.
-    @options.parent.state 'leftTerrace', true
-
-    # Set the whole game as started.
-    gameState = LOI.adventure.gameState()
-    gameState.gameStarted = true
-    LOI.adventure.gameState.updated()

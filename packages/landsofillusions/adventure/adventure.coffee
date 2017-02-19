@@ -37,7 +37,8 @@ class LOI.Adventure extends AM.Component
   # Tracking of modal dialogs, so that the interface can know when to listen for input events.
 
   addModalDialog: (dialog) ->
-    @_modalDialogs.push dialog
+    # We add new dialogs at the beginning so the first is the (assumed) top-most.
+    @_modalDialogs.unshift dialog
     @_modalDialogsDependency.changed()
 
   removeModalDialog: (dialog) ->

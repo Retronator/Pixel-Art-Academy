@@ -33,6 +33,10 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
 
   menuHeight = 120
 
+  coatOfArmsHeight = 103
+  coatOfArmsRealHeight = 180
+  coatOfArmsOffset = -2
+
   constructor: ->
     super
 
@@ -62,6 +66,9 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
     LOI.adventure.isGameStateEmpty()
 
   topSectionVisibleClass: ->
+    'visible' if @isLandingPage()
+
+  titleSectionVisibleClass: ->
     'visible' if @isLandingPage()
 
   illustrationHeight: ->
@@ -108,9 +115,11 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
     # Preprocess parallax elements to avoid trashing.
     parallaxElements = []
     topParallaxElements = []
+    titleParallaxElements = []
     middleParallaxElements = []
 
-    sceneItems = {}
+    sceneItems =
+      coatOfArms: []
 
     @$('.landing-page *[data-depth]').each ->
       $element = $(@)
@@ -130,7 +139,15 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
 
       parallaxElements.push parallaxInfo
 
-      localArray = if $element.closest('.top-section').length then topParallaxElements else middleParallaxElements
+      if $element.closest('.top-section').length
+        localArray = topParallaxElements
+
+      else if $element.closest('.title-section').length
+        localArray = titleParallaxElements
+
+      else
+        localArray = middleParallaxElements
+
       localArray.push parallaxInfo
 
       sceneItems.quadrocopter = parallaxInfo if $element.hasClass('quadrocopter')
@@ -140,10 +157,12 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       sceneItems.frigates2 = parallaxInfo if $element.hasClass('frigates-2')
       sceneItems.frigates3 = parallaxInfo if $element.hasClass('frigates-3')
       sceneItems.frigates4 = parallaxInfo if $element.hasClass('frigates-4')
+      sceneItems.coatOfArms.push parallaxInfo if $element.hasClass('coat-of-arms')
 
     @sceneItems = sceneItems
 
     @topParallaxElements = topParallaxElements
+    @titleParallaxElements = titleParallaxElements
     @middleParallaxElements = middleParallaxElements
 
     # Image scaling
@@ -152,7 +171,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
     scaleField = @display.scale
 
     # Preprocess all the images.
-    @$('.scene').find('img').each ->
+    @$('.scene').add('.title-section').find('img').each ->
       $image = $(@)
       $image.addClass('initializing')
 
@@ -291,12 +310,18 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
         width: viewport.maxBounds.width()
         height: middleSectionBounds.bottom()
 
+      # Move the title section over the middle.
+      titleSectionBounds = topSectionBounds.clone()
+      titleSectionBounds.y middleSectionBounds.y() - (topSectionBounds.height() - middleSectionBounds.height()) * 0.5 + sceneBounds.y()
+
       @_sceneBounds sceneBounds
 
       # Apply changes.
       @$('.landing-page .scene').css sceneBounds.toDimensions()
 
       @$('.landing-page .top-section').css topSectionBounds.toDimensions()
+
+      @$('.landing-page .title-section').css titleSectionBounds.toDimensions()
 
       topSectionRestHeight = topSectionBounds.height() * 0.5 - menuHeight * 0.5 * scale
       topSectionMiddleHeight = menuHeight * scale
@@ -309,6 +334,13 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
         top: topSectionRestHeight
         height: topSectionMiddleHeight
         lineHeight: "#{topSectionMiddleHeight}px"
+
+      @$('.landing-page .title-section .top').css
+        height: topSectionRestHeight
+        lineHeight: "#{topSectionRestHeight}px"
+
+      @$('.landing-page .title-section .middle').css
+        top: titleSectionBounds.height() * 0.5 - coatOfArmsRealHeight * 0.5 * scale + coatOfArmsOffset * scale
 
       @$('.landing-page .middle-section').css middleSectionBounds.toDimensions()
 
@@ -325,6 +357,8 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
         middleScenePillarboxBarHeight = (viewport.viewportBounds.height() - middleSectionBounds.height()) * 0.5
         @middleParallaxOrigin = middleSectionBounds.top() - middleScenePillarboxBarHeight
 
+        @titleParallaxOrigin = @middleParallaxOrigin
+
       else
         # The middle scene is correct at 0 when we're not on the landing page.
         @middleParallaxOrigin = 0
@@ -336,6 +370,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       @hasScrolled = false
 
       @topScrollDelta = scrollTop - @topParallaxOrigin
+      @titleScrollDelta = scrollTop - @titleParallaxOrigin
       @middleScrollDelta = scrollTop - @middleParallaxOrigin
 
       unless @airshipsMoving
@@ -353,6 +388,15 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       for element in @topParallaxElements
         offset = @topScrollDelta * element.scaleFactor
         element.$element.css transform: "translate3d(0, #{offset}px, 0)"
+
+      for element in @titleParallaxElements
+        offset = @titleScrollDelta * element.scaleFactor
+        element.$element.css transform: "translate3d(0, #{offset}px, 0)"
+
+    for element in @sceneItems.coatOfArms
+      tilt = Math.sin(appTime.totalAppTime + 2) * 10 * scale
+      offset = (@titleScrollDelta + tilt) * element.scaleFactor + 0.6 * tilt
+      element.$element.css transform: "translate3d(0, #{offset}px, 0)"
 
     x = Math.sin(appTime.totalAppTime / 2) * 5 * scale
     y = @middleScrollDelta * @sceneItems.quadrocopter.scaleFactor + Math.sin(appTime.totalAppTime) * 3 * scale

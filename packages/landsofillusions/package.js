@@ -151,7 +151,7 @@ Package.onUse(function(api) {
   // Storylines
 
   api.addFiles('adventure/episode/episode.coffee');
-  api.addFiles('adventure/chapter/chapter.coffee');
+  api.addComponent('adventure/chapter/chapter');
   api.addFiles('adventure/section/section.coffee');
   api.addFiles('adventure/scene/scene.coffee');
   api.addFiles('adventure/location/location.coffee');
@@ -192,52 +192,27 @@ Package.onUse(function(api) {
 
   api.addFiles('components/components.coffee');
 
-  api.addFiles('components/overlay/overlay.coffee');
-  api.addFiles('components/overlay/overlay.html');
-  api.addFiles('components/overlay/overlay.styl');
+  api.addFile('components/mixins/mixins');
+  api.addFile('components/mixins/activatable/activatable');
 
-  api.addFiles('components/backbutton/backbutton.coffee');
-  api.addFiles('components/backbutton/backbutton.html');
-  api.addFiles('components/backbutton/backbutton.styl');
+  api.addComponent('components/overlay/overlay');
+  api.addComponent('components/backbutton/backbutton');
+  api.addComponent('components/signin/signin');
+  api.addComponent('components/chaptertitle/chaptertitle');
 
-  api.addFiles('components/menu/menu.coffee');
-  api.addFiles('components/menu/menu.html');
-  api.addFiles('components/menu/menu.styl');
+  api.addComponent('components/menu/menu');
+  api.addComponent('components/menu/items/items');
 
-  api.addFiles('components/menu/items/items.coffee');
-  api.addFiles('components/menu/items/items.html');
-  api.addFiles('components/menu/items/items.styl');
+  api.addComponent('components/account/account');
+  api.addFile('components/account/account-page');
+  api.addStyle('components/account/account-pagecontent');
 
-  api.addFiles('components/mixins/mixins.coffee');
-  api.addFiles('components/mixins/activatable/activatable.coffee');
+  api.addComponent('components/account/contents/contents');
+  api.addComponent('components/account/general/general');
+  api.addComponent('components/account/services/services');
+  api.addComponent('components/account/characters/characters');
 
-  api.addFiles('components/signin/signin.coffee');
-  api.addFiles('components/signin/signin.html');
-  api.addFiles('components/signin/signin.styl');
-
-  api.addFiles('components/account/account.coffee');
-  api.addFiles('components/account/account.html');
-  api.addFiles('components/account/account.styl');
-  api.addFiles('components/account/account-page.coffee');
-  api.addFiles('components/account/account-pagecontent.styl');
-
-  api.addFiles('components/account/contents/contents.coffee');
-  api.addFiles('components/account/contents/contents.html');
-  api.addFiles('components/account/contents/contents.styl');
-
-  api.addFiles('components/account/general/general.coffee');
-  api.addFiles('components/account/general/general.html');
-  api.addFiles('components/account/general/general.styl');
-
-  api.addFiles('components/account/services/services.coffee');
-  api.addFiles('components/account/services/services.html');
-  api.addFiles('components/account/services/services.styl');
-
-  api.addFiles('components/account/characters/characters.coffee');
-  api.addFiles('components/account/characters/characters.html');
-  api.addFiles('components/account/characters/characters.styl');
-
-  api.addFiles('components/dialogs/accounts.styl');
+  api.addStyle('components/dialogs/accounts');
 
   // Typography
 

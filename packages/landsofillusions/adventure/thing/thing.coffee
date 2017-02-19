@@ -222,6 +222,7 @@ class LOI.Adventure.Thing extends AM.Component
 
   # Convenience methods for static properties.
   id: -> @constructor.id()
+  url: -> @constructor.url()
 
   ready: ->
     @thingReady()

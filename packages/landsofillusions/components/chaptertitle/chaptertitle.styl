@@ -1,0 +1,67 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-chaptertitle
+  cursor pointer
+  text-align center
+
+  .landsofillusions-components-overlay
+    .background
+      &::after
+        content: ''
+        absolute-cover()
+        background rgba(atariGrey(0), 0.2)
+
+  .episode-title
+    position absolute
+    bottom 150rem
+    left 0
+    right 0
+    adventure()
+    color atariOrange(5)
+    text-shadow 0 2rem 3rem rgba(atariGrey(0), 0.5)
+
+  .chapter-title-area
+    position absolute
+    top 60rem
+    left 0
+    width 100%
+
+    .chapter-title
+      display inline-block
+      position relative
+      height 120rem
+      padding-top 37rem
+      color atariOrange(6)
+      background-image image('/landsofillusions/components/chaptertitle/banner-middle.png')
+      background-repeat repeat-x
+
+      &::before
+      &::after
+        content ''
+        display block
+        position absolute
+        top 0
+        width 103rem
+        height 100%
+        background-size 100%
+
+      &::before
+        right 100%
+        background-image image('/landsofillusions/components/chaptertitle/banner-left.png')
+
+      &::after
+        left 100%
+        background-image image('/landsofillusions/components/chaptertitle/banner-right.png')
+
+      .heading
+        display block
+        position relative
+        adventure()
+        pixel-text-outline atariRed(1)
+
+      .chapter-name
+        display block
+        padding 0 3rem 0 4rem
+        kyrou-9()
+        font-weight bold
+        text-transform uppercase

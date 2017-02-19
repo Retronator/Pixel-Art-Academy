@@ -16,6 +16,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # Listen to scroll events so that we can sync transform-based scrolling to it.
     @$window.on 'scroll.text-interface', =>
       return if @wheelDetected
+      return unless @active()
 
       scrollTop = @$window.scrollTop()
       $.Velocity.hook @$uiArea, 'translateY', "#{-scrollTop}px"
@@ -53,12 +54,13 @@ class LOI.Interface.Text extends LOI.Interface.Text
     
     newTop = -options.position
 
-    duration = _.clamp Math.abs(currentTop - newTop), 150, 700
+    options.duration ?= _.clamp Math.abs(currentTop - newTop), 150, 700
 
     @animateElement
       $element: @$uiArea
       animate: options.animate
-      duration: duration
+      duration: options.duration
+      easing: options.easing
       properties:
         translateY: "#{newTop}px"
         tween: [newTop, currentTop]
@@ -84,6 +86,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
   onWheel: (event) ->
     @onWheelEvent()
+    return unless @active()
 
     # If scrolling is locked to a container, don't let the native browser slider scroll.
     if @_scrollLockTarget and @_scrollLockTarget isnt event.currentTarget
@@ -91,6 +94,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
   onWheelScrollable: (event) ->
     @onWheelEvent()
+    return unless @active()
+
     $scrollable = $(event.currentTarget)
 
     # If scrolling is locked to a container, only continue if it's locked on us.
