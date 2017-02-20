@@ -4,6 +4,9 @@
   cursor pointer
   text-align center
 
+  &.to-be-continued
+    cursor default
+
   .landsofillusions-components-overlay
     .background
       &::after
@@ -12,13 +15,21 @@
         background rgba(atariGrey(0), 0.2)
 
   .episode-title
+  .call-to-action
     position absolute
-    bottom 150rem
     left 0
     right 0
     adventure()
     color atariOrange(5)
     text-shadow 0 2rem 3rem rgba(atariGrey(0), 0.5)
+
+  .episode-title
+    bottom 150rem
+
+    .to-be-continued
+      display block
+      margin 10rem 0 5rem
+      text-transform uppercase
 
   .chapter-title-area
     position absolute
@@ -65,3 +76,22 @@
         kyrou-9()
         font-weight bold
         text-transform uppercase
+
+  .call-to-action
+    top 155rem
+
+    .coming-soon
+      margin-bottom 10rem
+      text-transform uppercase
+
+    .support
+      .pre-order
+        cursor pointer
+        text-decoration none
+        border-bottom 1rem solid atariOrange(5)
+
+        &:hover
+          color atariGrey(0)
+          background atariOrange(7)
+          border-bottom-color atariOrange(7)
+          text-shadow none

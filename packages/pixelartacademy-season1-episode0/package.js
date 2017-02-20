@@ -22,7 +22,7 @@ Package.onUse(function(api) {
   
   // Chapter 1
 
-  api.addFile('chapter1/chapter1');
+  api.addComponent('chapter1/chapter1');
 
   api.addFile('chapter1/actors/actors');
   api.addFile('chapter1/actors/alex');
@@ -56,4 +56,8 @@ Package.onUse(function(api) {
   api.addThing('chapter1/sections/airship/scenes/terminal');
   api.addThing('chapter1/sections/airship/scenes/dock');
   api.addThing('chapter1/sections/airship/scenes/cabin');
+
+  // Chapter 2
+
+  api.addComponent('chapter2/chapter2');
 });

@@ -1,0 +1,14 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-season1-episode0-chapter1
+  .fade
+    fixed-cover()
+    z-index 1
+    background black
+    opacity 0
+    visibility hidden
+    transition opacity ease-out 5s
+
+    &.visible
+      opacity 1
+      visibility visible

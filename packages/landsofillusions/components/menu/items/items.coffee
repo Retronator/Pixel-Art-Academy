@@ -134,6 +134,9 @@ class LOI.Components.Menu.Items extends AM.Component
     # Close the menu.
     LOI.adventure.menu.hideMenu()
 
+    # Remove other modal menus.
+    LOI.adventure.removeModalDialog dialog for dialog of LOI.adventure.modalDialogs()
+
     # Reset the local game state, so when we logout it will kick in.
     LOI.adventure.clearLocalGameState()
 

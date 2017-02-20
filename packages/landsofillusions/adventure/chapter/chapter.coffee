@@ -17,6 +17,13 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Thing
     @sections = for sectionClass in @constructor.sections()
       new sectionClass chapter: @
       
+    @chapterTitle = new ReactiveField null
+
+  getSection: (sectionOrId) ->
+    sectionId = _.thingId sectionOrId
+
+    _.find @sections, (section) => section.id() is sectionId
+      
   destroy: ->
     super
 
@@ -34,13 +41,18 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Thing
     ]
 
     _.every conditions
-        
-  chapterTitle: ->
-    @childComponentsOfType(LOI.Components.ChapterTitle)[0]
 
-  showChapterTitle: (options) ->
-    chapterTitle = @chapterTitle()
-    chapterTitle.activatable.activate()
+  showChapterTitle: (options = {}) ->
+    # Create new chapter title.
+    chapterTitle = new LOI.Components.ChapterTitle options
+    @chapterTitle chapterTitle
+
+    # Wait till chapter title gets rendered.
+    @autorun (computation) =>
+      return unless chapterTitle.isRendered()
+      computation.stop()
+
+      chapterTitle.activatable.activate()
 
     # Wait till chapter title gets activated.
     @autorun (computation) =>

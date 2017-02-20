@@ -21,7 +21,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     @currentChapter = new ReactiveField null
 
     @autorun (computation) =>
-      return unless LOI.adventure.gameState()
+      return unless LOI.adventureInitialized()
 
       currentChapterId = @state 'currentChapter'
 

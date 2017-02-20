@@ -5,6 +5,7 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   C1 = @
 
   @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1'
+  template: -> @constructor.id()
 
   @fullName: -> "Living the dream"
   @number: -> 1
@@ -34,6 +35,26 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
       @_hadBottle = hasBottle
       @_hadDrink = hasDrink
 
+    @inOutro = new ReactiveField false
+
+    # Listen for the goal condition.
+    @autorun (computation) =>
+      endingConditions = for endingCondition in ['tooLate', 'passOut', 'asleep']
+        @constructor.Airship.state endingCondition
+
+      if _.some endingConditions
+        # The chapter is finished, proceed with outro animation.
+        computation.stop()
+        
+        @inOutro true
+        LOI.adventure.addModalDialog @
+        
+        Meteor.setTimeout =>
+          LOI.adventure.removeModalDialog @
+          PixelArtAcademy.Season1.Episode0.state 'currentChapter', 'PixelArtAcademy.Season1.Episode0.Chapter2'
+        ,
+          6000
+
   inventory: ->
     hasBackpack = C1.Backpack.state 'inInventory'
     backpackOpened = C1.Backpack.state 'opened'
@@ -56,3 +77,6 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
 
     # Departure is in 10 minutes.
     10 * 60 - elapsedSeconds
+
+  fadeVisibleClass: ->
+    'visible' if @inOutro()

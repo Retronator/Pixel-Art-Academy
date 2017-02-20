@@ -19,7 +19,7 @@ class RS.AirshipTerminal.Airship.Cabin extends LOI.Adventure.Location
   @description: ->
     "
       The interior of the airship is more like a spacious train carriage than a crammed airplane.
-      The windows are similarly generous in size as well. Observation seats run along the windows,
+      The windows are generous in size as well. Observation seats run along the windows,
       while seats with tables allow people to work in the center.
     "
   

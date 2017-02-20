@@ -21,18 +21,20 @@ class LOI.Components.ChapterTitle extends AM.Component
     LOI.adventure.addModalDialog @
 
     Meteor.setTimeout =>
-      $(document).on 'keydown.chapterTitle', (event) =>
-        # Only process keys if we're the top-most dialog.
-        return unless LOI.adventure.modalDialogs()[0] is @
+      # unless this is a to-be-continued title, let the chapter title end.
+      unless @options.toBeContinued
+        $(document).on 'keydown.chapterTitle', (event) =>
+          # Only process keys if we're the top-most dialog.
+          return unless LOI.adventure.modalDialogs()[0] is @
 
-        keyCode = event.which
-        @activatable.deactivate() if keyCode is AC.Keys.enter
+          keyCode = event.which
+          @activatable.deactivate() if keyCode is AC.Keys.enter
 
-      # Automatically continue after 5 seconds.
-      Meteor.setTimeout =>
-        @activatable.deactivate()
-      ,
-        5000
+        # Automatically continue after 5 seconds.
+        Meteor.setTimeout =>
+          @activatable.deactivate()
+        ,
+          5000
 
       finishedActivatingCallback()
     ,
@@ -51,9 +53,15 @@ class LOI.Components.ChapterTitle extends AM.Component
   chapter: ->
     @ancestorComponentOfType LOI.Adventure.Chapter
 
+  toBeContinuedClass: ->
+    'to-be-continued' if @options.toBeContinued
+
   events: ->
     super.concat
       'click': @onClick
 
   onClick: (event) ->
+    # Don't hide it if this is a to-be-continued title.
+    return if @options.toBeContinued
+
     @activatable.deactivate()

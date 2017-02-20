@@ -59,6 +59,9 @@ class LOI.Adventure extends LOI.Adventure
 
     Meteor.clearInterval @_gameTimeInterval
 
+    LOI.adventure = null
+    LOI.adventureInitialized false
+
     console.log "Adventure destroyed." if LOI.debug
 
     $('html').removeClass('adventure')

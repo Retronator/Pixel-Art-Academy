@@ -64,24 +64,31 @@ class LOI.Interface.Text extends LOI.Interface.Text
       Meteor.clearTimeout @_keypressHintTimetout
 
       # We need to manually add the hint visible class so that transition kicks in.
+
+      # Hide hint if already present.
+      @$('.command-line .keypress-hint').removeClass('visible')
+
+      # Show the hint after a delay, so that the player has time to read the text before they are prompted.
       lines = @narrative.lines()
       if lines.length
-        # Hide hint if already present.
-        @$('.command-line .keypress-hint').removeClass('visible')
+        targetText = _.last lines
 
-        # Show the hint after a delay, so that the player has time to read the text before they are prompted.
-        lastNarrativeLine = _.last lines
+      else
+        targetText = @introduction()
 
-        # Average reading time is about 1000 characters per minute, or 17 per second.
-        readTime = lastNarrativeLine.length / 17
+        # Wait some more if the introduction text hasn't been loaded yet.
+        return unless targetText
 
-        # We also add in a delay of 2s so we don't annoy the player.
-        hintDelayTime = readTime + 2
+      # Average reading time is about 1000 characters per minute, or 17 per second.
+      readTime = targetText.length / 17
 
-        @_keypressHintTimetout = Meteor.setTimeout =>
-          @$('.command-line .keypress-hint').addClass('visible')
-        ,
-          hintDelayTime * 1000
+      # We also add in a delay of 2s so we don't annoy the player.
+      hintDelayTime = readTime + 2
+
+      @_keypressHintTimetout = Meteor.setTimeout =>
+        @$('.command-line .keypress-hint').addClass('visible')
+      ,
+        hintDelayTime * 1000
 
   onDestroyed: ->
     super

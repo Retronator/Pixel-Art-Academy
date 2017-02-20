@@ -128,7 +128,10 @@ class LOI.Interface.Text extends LOI.Interface
 
     Tracker.afterFlush =>
       # Add colors to commands.
-      for element in @$('.narrative .command')
+      commands = @$('.narrative .command')
+      return unless commands
+
+      for element in commands
         $command = $(element)
         colorParent = $command.parent('*[data-hue]')
 
