@@ -5,6 +5,7 @@ class LandsOfIllusions
 
   # Global Adventure instance.
   LOI.adventure = null
+  LOI.adventureInitialized = new ReactiveField false
 
   constructor: ->
     # Create the main adventure engine url capture.
@@ -47,7 +48,7 @@ class LandsOfIllusions
 LOI = LandsOfIllusions
 
 if Meteor.isClient
-  window.LOI = LOI
+  window.LandsOfIllusions = LOI
 
 # On the client load character ID from local storage.
 if Meteor.isClient

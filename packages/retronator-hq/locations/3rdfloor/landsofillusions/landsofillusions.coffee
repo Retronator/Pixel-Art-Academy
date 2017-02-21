@@ -4,9 +4,6 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.LandsOfIllusions'
   @url: -> 'retronator/landsofillusions'
@@ -50,13 +47,13 @@ class HQ.Locations.LandsOfIllusions extends LOI.Adventure.Location
       computation.stop()
 
       operator.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Talk
+        verb: Vocabulary.Keys.Verbs.TalkTo
         action: =>
           LOI.adventure.director.startScript operatorDialog
 
       operatorDialog = @scripts['Retronator.HQ.Locations.LandsOfIllusions.Scripts.Operator']
 
-      operatorDialog.setActors
+      operatorDialog.setThings
         operator: operator
 
       operatorDialog.setCallbacks

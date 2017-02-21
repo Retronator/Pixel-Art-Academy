@@ -12,15 +12,34 @@ class LOI.Adventure extends AM.Component
     Meteor.absoluteUrl "pixelartacademy/title.png"
 
   ready: ->
-    console.log "Am I ready? Parser:", @parser.ready(), "Current location:", @currentLocation()?.ready() if LOI.debug
-    @parser.ready() and @currentLocation()?.ready()
+    currentLocation = @currentLocation()
 
-  logout: ->
+    conditions = [
+      @parser.ready()
+      if currentLocation? then currentLocation.ready() else false
+      @episodesReady()
+    ]
+
+    console.log "Adventure ready?", conditions if LOI.debug
+
+    _.every conditions
+
+  logout: (options = {}) ->
     # Notify game state that it should flush any cached updates.
-    @gameState?.updated flush: true
+    @gameState?.updated
+      flush: true
+      callback: =>
+        # Log out the user.
+        Meteor.logout()
 
-    # Log out the user.
-    Meteor.logout()
+        # Now that there is no more user, wait until game state has returned to local storage.
+        Tracker.autorun (computation) =>
+          return unless LOI.adventure.gameStateSource() is LOI.Adventure.GameStateSourceType.LocalStorage
+          computation.stop()
+
+          Tracker.nonreactive =>
+            # Inform the caller that the log out procedure has completed.
+            options.callback?()
 
   showDescription: (thing) ->
     @interface.showDescription thing
@@ -28,7 +47,8 @@ class LOI.Adventure extends AM.Component
   # Tracking of modal dialogs, so that the interface can know when to listen for input events.
 
   addModalDialog: (dialog) ->
-    @_modalDialogs.push dialog
+    # We add new dialogs at the beginning so the first is the (assumed) top-most.
+    @_modalDialogs.unshift dialog
     @_modalDialogsDependency.changed()
 
   removeModalDialog: (dialog) ->

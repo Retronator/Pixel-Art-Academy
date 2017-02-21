@@ -36,15 +36,27 @@ class LOI.Interface.Text extends LOI.Interface.Text
       # We don't have a previous node (or it was cleared to continue), so no need to wait. Return false.
       return false
 
+  _nodeDisplayed: (node) ->
+    @_lastNode node
+
+    # Remove last node after the scripts have had the chance to advance.
+    Tracker.afterFlush =>
+      @_lastNode null
+
   _handleNode: (node) ->
     super
 
-    @_handleChoice node if node instanceof Nodes.Choice
-
-  _handleChoice: (choice) ->
     # We don't really have to handle choice node, because the dialog selection
     # module does that, but we still want to pause before we display it.
-    @_waitForNode choice
+    @_waitForNode node if node instanceof Nodes.Choice
+
+    @_handlePause node if node instanceof Nodes.Pause
+
+  _handlePause: (pause) ->
+    # Just force a wait before going on.
+    return if @_waitForNode pause
+
+    pause.end()
 
   _handleDialogLine: (dialogLine) ->
     return if @_waitForNode dialogLine
@@ -59,16 +71,26 @@ class LOI.Interface.Text extends LOI.Interface.Text
       return
 
     # We have an actor that is saying this.
-    dialogColor = dialogLine.actor.avatar.colorObject()?.getHexString()
+    dialogColor = dialogLine.actor.color()
 
     # Add a new paragraph to the narrative
-    start = "%c##{dialogColor}"
+    start = "%%c#{dialogColor.hue}-#{dialogColor.shade}%"
     text = @_evaluateLine dialogLine
-    end = '%%'
+    end = 'c%%'
+
+    # Add text transformation.
+    switch dialogLine.actor.dialogTextTransform()
+      when LOI.Avatar.DialogTextTransform.Lowercase
+        start = "%%tL#{start}"
+        end = "t%%#{end}"
+      when LOI.Avatar.DialogTextTransform.Uppercase
+        start = "%%tU#{start}"
+        end = "t%%#{end}"
 
     # Add the intro line at the start.
     unless @_inMultilineDialog
-      start = "#{_.capitalize dialogLine.actor.avatar.shortName()} says: #{start}\""
+      if dialogLine.actor.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
+        start = "#{_.capitalize dialogLine.actor.shortName()} says: #{start}\""
 
     if dialogLine.next instanceof Nodes.DialogLine and dialogLine.next.actor is dialogLine.actor
       # Next line is by the same actor.
@@ -78,13 +100,14 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @_inMultilineDialog = false
 
       # Add the closing quote at the end.
-      end = "\"#{end}"
+      if dialogLine.actor.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
+        end = "\"#{end}"
 
     # Present the text to the player.
     @narrative.addText "#{start}#{text}#{end}"
 
     # This is a line node so set that we displayed it.
-    @_lastNode dialogLine
+    @_nodeDisplayed dialogLine
 
     dialogLine.end()
 
@@ -97,7 +120,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @narrative.addText text
 
     # This is a line node so set that we displayed it.
-    @_lastNode narrativeLine
+    @_nodeDisplayed narrativeLine
 
     narrativeLine.end()
 

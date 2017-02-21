@@ -58,7 +58,7 @@ class LOI.Adventure extends LOI.Adventure
     # Rewrite url to match the top-most dialog, active item or current location.
     @autorun (computation) =>
       # Find the first dialog in the stack that has a url.
-      for dialog in _.reverse @modalDialogs()
+      for dialog in @modalDialogs()
         # See if the instance or constructor can provide the url.
         if dialog.url or dialog.constructor.url
           desiredUrl = dialog.url?()
@@ -67,11 +67,12 @@ class LOI.Adventure extends LOI.Adventure
 
       unless desiredUrl?
         # We don't have any URLs in the dialogs, next try active item (first) and location (second).
-        activeItemId = @activeItemId()
-        currentLocationId = @currentLocationId()
+        activeItem = @activeItem()
+        currentLocation = @currentLocation()
 
-        thingClass = LOI.Adventure.Thing.getClassForId activeItemId or currentLocationId
-        desiredUrl = thingClass?.url()
+        thing = activeItem or currentLocation
+        desiredUrl = thing?.url?()
+        desiredUrl ?= thing?.constructor.url()
 
       return unless desiredUrl?
 
@@ -93,9 +94,6 @@ class LOI.Adventure extends LOI.Adventure
         parametersObject["parameter#{i + 1}"] = urlParameter unless urlParameter is '*'
 
       FlowRouter.go 'LandsOfIllusions.Adventure', parametersObject
-
-  goToLocation: (locationClassOrId) ->
-    @currentLocationId _.thingId locationClassOrId
 
   goToItem: (itemClassOrId) ->
     @activeItemId _.thingId itemClassOrId

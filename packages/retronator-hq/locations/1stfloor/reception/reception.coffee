@@ -4,9 +4,6 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.Reception extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Reception'
   @url: -> 'retronator/reception'
@@ -54,7 +51,7 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
       computation.stop()
 
       burra.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Talk
+        verb: Vocabulary.Keys.Verbs.TalkTo
         action: =>
           LOI.adventure.director.startScript dialog
 
@@ -63,7 +60,7 @@ class HQ.Locations.Reception extends LOI.Adventure.Location
 
       dialog = @scripts['Retronator.HQ.Locations.Reception.Scripts.Burra']
   
-      dialog.setActors
+      dialog.setThings
         burra: burra
 
       dialog.setCallbacks

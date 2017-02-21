@@ -2,6 +2,9 @@
   <div class="adventure">
     {{> Render interface}}
     {{> Render menu}}
+    {{#each currentChapters}}
+      {{> Render this}}
+    {{/each}}
   </div>
   {{#unless ready}}
     {{> LandsOfIllusions.Pages.Loading}}

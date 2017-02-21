@@ -67,15 +67,8 @@ class LOI.Adventure extends LOI.Adventure
         state = @localGameState.state()
         
         _gameStateUpdated = (options) =>
-          # Local game state does not need to be flushed, so just return when that command is given.
-          return if options?.flush
-
-          @localGameState.updated()
+          @localGameState.updated options
           _gameStateUpdatedDependency.changed()
-
-      # Flush updates in the previous state.
-      Tracker.nonreactive =>
-        @gameState?.updated flush: true
 
       # Set the new updated function.
       @gameState?.updated = _gameStateUpdated

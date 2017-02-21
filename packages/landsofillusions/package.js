@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-accounts');
   api.use('http');
   api.use('promise');
+  api.use('modules');
 
   api.imply('retronator:artificialengines');
   api.imply('retronator:retronator-accounts');
@@ -44,14 +45,15 @@ Package.onUse(function(api) {
 
   // Game state
 
-  api.addFiles('gamestate/gamestate.coffee');
-  api.addFiles('gamestate/localgamestate.coffee');
-  api.addFiles('gamestate/methods.coffee');
-  api.addFiles('gamestate/subscriptions.coffee', 'server');
-  api.addFiles('gamestate/stateobject.coffee');
-  api.addFiles('gamestate/statefield.coffee');
-  api.addFiles('gamestate/stateaddress.coffee');
-  api.addFiles('gamestate/stateinstances.coffee');
+  api.addFiles('state/gamestate.coffee');
+  api.addFiles('state/localgamestate.coffee');
+  api.addFiles('state/methods.coffee');
+  api.addFiles('state/subscriptions.coffee', 'server');
+  api.addFiles('state/stateobject.coffee');
+  api.addFiles('state/statefield.coffee');
+  api.addFiles('state/stateaddress.coffee');
+  api.addFiles('state/stateinstances.coffee');
+  api.addFiles('state/ephemeralstateobject.coffee');
 
   // Character
 
@@ -78,6 +80,8 @@ Package.onUse(function(api) {
   api.addFiles('parser/parser-likelyactions.coffee');
   api.addFiles('parser/command.coffee');
   api.addFiles('parser/commandresponse.coffee');
+  api.addFiles('parser/enterresponse.coffee');
+  api.addFiles('parser/exitresponse.coffee');
 
   api.addFiles('parser/vocabulary/vocabulary.coffee');
   api.addFiles('parser/vocabulary/vocabularykeys.coffee');
@@ -97,25 +101,22 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure-location.coffee');
   api.addFiles('adventure/adventure-item.coffee');
   api.addFiles('adventure/adventure-inventory.coffee');
+  api.addFiles('adventure/adventure-episodes.coffee');
+  api.addFiles('adventure/adventure-things.coffee');
+  api.addFiles('adventure/adventure-listeners.coffee');
+  api.addFiles('adventure/adventure-time.coffee');
+
+  // Initalization gets included last because it does component registering as the last child in the chain.
   api.addFiles('adventure/adventure-initialization.coffee');
 
   // Listener
 
   api.addFiles('adventure/listener/listener.coffee');
-
-  // Ability
-
-  api.addFiles('adventure/ability/ability.coffee');
-
-  api.addFiles('adventure/ability/abilities/action.coffee');
-  api.addFiles('adventure/ability/abilities/talking.coffee');
   
   // Things
 
   api.addFiles('adventure/thing/thing.coffee');
   api.addFiles('adventure/thing/thing.html');
-
-  api.addFiles('adventure/location/location.coffee');
 
   api.addFiles('adventure/item/item.coffee');
 
@@ -143,12 +144,20 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/jump.coffee');
   api.addFiles('adventure/script/nodes/choice.coffee');
   api.addFiles('adventure/script/nodes/timeout.coffee');
+  api.addFiles('adventure/script/nodes/pause.coffee');
 
   api.addFiles('adventure/script/parser/parser.coffee');
 
+  // Storylines
+
+  api.addFiles('adventure/episode/episode.coffee');
+  api.addComponent('adventure/chapter/chapter');
+  api.addFiles('adventure/section/section.coffee');
+  api.addFiles('adventure/scene/scene.coffee');
+  api.addFiles('adventure/location/location.coffee');
+
   // Parser Listeners
 
-  api.addFiles('parser/listeners/abilities.coffee');
   api.addFiles('parser/listeners/debug.coffee');
   api.addFiles('parser/listeners/navigation.coffee');
   api.addFiles('parser/listeners/description.coffee');
@@ -183,52 +192,27 @@ Package.onUse(function(api) {
 
   api.addFiles('components/components.coffee');
 
-  api.addFiles('components/overlay/overlay.coffee');
-  api.addFiles('components/overlay/overlay.html');
-  api.addFiles('components/overlay/overlay.styl');
+  api.addFile('components/mixins/mixins');
+  api.addFile('components/mixins/activatable/activatable');
 
-  api.addFiles('components/backbutton/backbutton.coffee');
-  api.addFiles('components/backbutton/backbutton.html');
-  api.addFiles('components/backbutton/backbutton.styl');
+  api.addComponent('components/overlay/overlay');
+  api.addComponent('components/backbutton/backbutton');
+  api.addComponent('components/signin/signin');
+  api.addComponent('components/chaptertitle/chaptertitle');
 
-  api.addFiles('components/menu/menu.coffee');
-  api.addFiles('components/menu/menu.html');
-  api.addFiles('components/menu/menu.styl');
+  api.addComponent('components/menu/menu');
+  api.addComponent('components/menu/items/items');
 
-  api.addFiles('components/menu/items/items.coffee');
-  api.addFiles('components/menu/items/items.html');
-  api.addFiles('components/menu/items/items.styl');
+  api.addComponent('components/account/account');
+  api.addFile('components/account/account-page');
+  api.addStyle('components/account/account-pagecontent');
 
-  api.addFiles('components/mixins/mixins.coffee');
-  api.addFiles('components/mixins/activatable/activatable.coffee');
+  api.addComponent('components/account/contents/contents');
+  api.addComponent('components/account/general/general');
+  api.addComponent('components/account/services/services');
+  api.addComponent('components/account/characters/characters');
 
-  api.addFiles('components/signin/signin.coffee');
-  api.addFiles('components/signin/signin.html');
-  api.addFiles('components/signin/signin.styl');
-
-  api.addFiles('components/account/account.coffee');
-  api.addFiles('components/account/account.html');
-  api.addFiles('components/account/account.styl');
-  api.addFiles('components/account/account-page.coffee');
-  api.addFiles('components/account/account-pagecontent.styl');
-
-  api.addFiles('components/account/contents/contents.coffee');
-  api.addFiles('components/account/contents/contents.html');
-  api.addFiles('components/account/contents/contents.styl');
-
-  api.addFiles('components/account/general/general.coffee');
-  api.addFiles('components/account/general/general.html');
-  api.addFiles('components/account/general/general.styl');
-
-  api.addFiles('components/account/services/services.coffee');
-  api.addFiles('components/account/services/services.html');
-  api.addFiles('components/account/services/services.styl');
-
-  api.addFiles('components/account/characters/characters.coffee');
-  api.addFiles('components/account/characters/characters.html');
-  api.addFiles('components/account/characters/characters.styl');
-
-  api.addFiles('components/dialogs/accounts.styl');
+  api.addStyle('components/dialogs/accounts');
 
   // Typography
 

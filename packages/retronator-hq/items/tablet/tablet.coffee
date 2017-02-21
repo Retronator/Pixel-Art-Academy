@@ -51,9 +51,9 @@ class HQ.Items.Tablet extends LOI.Adventure.Item
     console.log "Adding app", appId, appClass if HQ.debug
 
     # Add app unless it's already been added.
-    @stateObject appId, {}
+    @state appId, {}
 
-    stateApps = @stateObject().apps
+    stateApps = @state().apps
     unless stateApps[appId]
       stateApps[appId] = {}
       LOI.adventure.gameState.updated()

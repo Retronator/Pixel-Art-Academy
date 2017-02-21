@@ -1,0 +1,23 @@
+#  Retropolis.Spaceport.AirportTerminal.Immigration
+
+## PlayAnnouncement
+
+> An informational message plays on the speakers.
+
+-> [UseTerminalHint] `@player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
+
+announcer: Please have your passports and invitation papers ready.
+
+## UseTerminalHint
+
+announcer: When you're ready, locate an available terminal to validate your immigration documents.
+
+-> [End]
+
+## TerminalAvailable
+
+> One of the terminals turns on a green light to indicate you can ![use it](use terminal).
+
+-> [End]
+
+## End

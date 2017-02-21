@@ -1,0 +1,29 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Immigration.Concourse
+
+## AlexTalks
+
+-> [AlexTalkedAlready] `alex.firstTalkDone`
+
+alex: There you are! We should hurry, the last airship leaves in 10 minutes.
+
+-> [AlexLeaves]
+
+## AlexTalkedAlready
+
+alex: Immigration is this way.
+
+## AlexLeaves
+
+> Alex leaves ![east](east).
+
+`scene.alexLeft = true`
+
+-> [End] `alex.firstTalkDone`
+
+> Something feels strange. You seem to know Alex, but you can't really tell from where.
+
+`alex.firstTalkDone = true`
+
+-> [End]
+
+## End

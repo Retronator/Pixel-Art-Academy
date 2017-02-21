@@ -4,9 +4,6 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.Chillout extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Chillout'
   @url: -> 'retronator/chillout'

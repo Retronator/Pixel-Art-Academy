@@ -7,6 +7,8 @@ class LOI.Adventure.Listener
 
   @scriptUrls: -> [] # Override to provide a list of script URLs to load.
 
+  @avatars: -> {} # Override with a map of shorthands and thing classes for the things the listener needs to respond to.
+
   @initialize: ->
     # On the server, compile the scripts.
     if Meteor.isServer
@@ -66,10 +68,21 @@ class LOI.Adventure.Listener
     else
       @scriptsReady true
 
+    @avatars = {}
+    for key, thingClass of @constructor.avatars()
+      @avatars[key] = new LOI.Avatar thingClass
+
   destroy: ->
-    @exitsTranslationSubscriptions.stop()
     @_scriptTranslationSubscription.stop()
+
     handle.stop() for handle in @_autorunHandles
+
+    for key, avatar of @avatars
+      avatar.destroy()
+
+    @avatars = null
+
+    @cleanup()
 
   autorun: (handler) ->
     handle = Tracker.autorun handler
@@ -78,8 +91,22 @@ class LOI.Adventure.Listener
     handle
 
   ready: ->
+    for key, avatar of @avatars
+      return false unless avatar.ready()
+
     @scriptsReady()
 
   onScriptsLoaded: -> # Override to start reactive logic. Use @scripts to get access to script objects.
 
   onCommand: (commandResponse) -> # Override to listen to commands.
+
+  onEnter: (enterResponse) -> # Override to react to entering a location.
+
+  onExitAttempt: (exitResponse) -> # Override to react to location change attempts, potentially preventing the exit.
+
+  onExit: (exitResponse) ->
+    # Override to react to leaving a location.
+
+    @cleanup()
+
+  cleanup: -> # Override to clean any timers or autoruns that need to be cleaned when listener exits or is destroyed.

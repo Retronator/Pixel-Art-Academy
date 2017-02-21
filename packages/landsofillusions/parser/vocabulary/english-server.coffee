@@ -19,8 +19,9 @@ phrases =
   Verbs:
     GoToLocationName: ['go to', 'travel to']
     GoToDirection: ['go', 'towards', 'move', 'travel']
-    Talk: ['talk to', 'speak with', 'chat with']
-    Look: ['look at', 'examine']
+    TalkTo: ['talk to', 'talk with', 'speak to', 'speak with', 'chat with']
+    LookAt: ['look at', 'examine']
+    Look: ['look', 'look around', 'description']
     Use: ['use']
     Press: ['press', 'push']
     Read: ['read']
@@ -28,14 +29,29 @@ phrases =
     Get: ['get', 'take', 'pick up']
     Sit: ['sit down']
     Stand: ['stand up']
+    Open: ['open']
+    Close: ['close']
+    Drink: ['drink']
+    DrinkFrom: ['drink from']
+    Return: ['return']
+    ReturnTo: ['return _ to']
+    GiveTo: ['give _ to']
+    UseIn: ['use _ in']
+    UseWith: ['use _ with']
+    ShowTo: ['show _ to', 'present _ to']
+    Show: ['show', 'present']
+    LookIn: ['look in']
 
-  IgnorePrepositions: ['to', 'with', 'is']
+  IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in']
 
   Questions:
     WhichPlace: ['where']
     WhichThing: ['which']
     WhichPerson: ['who']
     WhichVerb: ['what']
+
+  Debug:
+    ResetSections: ['reset sections']
 
 # Generate default english translations.
 generateDefaultTranslations = (id, phrases) ->
