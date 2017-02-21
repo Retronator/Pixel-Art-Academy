@@ -35,25 +35,25 @@ class LandsOfIllusionsGameState extends AM.Document
   updated: (options = {}) ->
     # Prepare the helper function that sends updates to the server only every 10 seconds.
     unless @_throttledUpdate
-      @_throttledUpdate = _.throttle =>
-        @_update()
+      @_throttledUpdate = _.throttle (options) =>
+        @_update options
       ,
         10000
       ,
         leading: false
 
+    # Call the throttled update.
+    @_throttledUpdate options
+
     if options.flush
-      # Flush any waiting calls.
+      # Flush to force immediate execution.
       @_throttledUpdate.flush()
 
-    else
-      # Call the throttled update.
-      @_throttledUpdate()
-
-  _update: ->
+  _update: (options) ->
     # Update the whole state on the server.
     # TODO: Probably we could update only changed objects.
-    Meteor.call 'LandsOfIllusions.GameState.update', @_id, @constructor._prepareStateForDatabase @state
+    Meteor.call 'LandsOfIllusions.GameState.update', @_id, @constructor._prepareStateForDatabase(@state), (error, result) =>
+      options.callback? error, result
 
   @_prepareStateForDatabase: (state) ->
     @_renameKeys state, /\./g, '_'

@@ -52,7 +52,7 @@ class LOI.Components.Overlay extends AM.Component
     @$('.safe-area').addClass('visible')
 
     Meteor.setTimeout =>
-      @$('.transition-cover').removeClass('visible')
+      @$('.transition-cover')?.removeClass('visible')
     ,
       600
 

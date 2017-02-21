@@ -12,6 +12,8 @@ class LOI.LocalGameState
   destroy: ->
     @_stateAutorun.stop()
 
-  updated: ->
+  updated: (options = {}) ->
     # Simply re-write the state into storage.
     @state @state()
+
+    options.callback?()

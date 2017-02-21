@@ -141,26 +141,26 @@ class LOI.Components.Menu.Items extends AM.Component
     LOI.adventure.clearLocalGameState()
 
     # Log out.
-    LOI.adventure.logout()
+    LOI.adventure.logout
+      callback: =>
+        # Reset the interface.
+        LOI.adventure.interface.resetInterface()
 
-    # Reset the interface.
-    LOI.adventure.interface.resetInterface()
+        # Clear location to trigger location changes.
+        LOI.adventure.currentLocationId null
 
-    # Clear location to trigger location changes.
-    LOI.adventure.currentLocationId null
+        # Reset game time.
+        LOI.adventure.resetTime()
 
-    # Reset game time.
-    LOI.adventure.resetTime()
+        # Cleanup storyline classes.
+        LOI.adventure.resetEpisodes()
 
-    # Cleanup storyline classes.
-    LOI.adventure.resetEpisodes()
+        # Cleanup running scripts.
+        LOI.adventure.director.stopAllScripts()
 
-    # Cleanup running scripts.
-    LOI.adventure.director.stopAllScripts()
-
-    # Go to the terrace and scroll to top.
-    LOI.adventure.currentLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
-    LOI.adventure.interface.scroll position: 0
+        # Go to the terrace and scroll to top.
+        LOI.adventure.currentLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
+        LOI.adventure.interface.scroll position: 0
 
   onClickBack: (event) ->
     @currentScreen @constructor.Screens.MainMenu

@@ -24,12 +24,22 @@ class LOI.Adventure extends AM.Component
 
     _.every conditions
 
-  logout: ->
+  logout: (options = {}) ->
     # Notify game state that it should flush any cached updates.
-    @gameState?.updated flush: true
+    @gameState?.updated
+      flush: true
+      callback: =>
+        # Log out the user.
+        Meteor.logout()
 
-    # Log out the user.
-    Meteor.logout()
+        # Now that there is no more user, wait until game state has returned to local storage.
+        Tracker.autorun (computation) =>
+          return unless LOI.adventure.gameStateSource() is LOI.Adventure.GameStateSourceType.LocalStorage
+          computation.stop()
+
+          Tracker.nonreactive =>
+            # Inform the caller that the log out procedure has completed.
+            options.callback?()
 
   showDescription: (thing) ->
     @interface.showDescription thing

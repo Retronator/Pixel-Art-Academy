@@ -51,7 +51,7 @@ class LOI.Components.ChapterTitle extends AM.Component
       500
 
   chapter: ->
-    @ancestorComponentOfType LOI.Adventure.Chapter
+    @options.chapter
 
   toBeContinuedClass: ->
     'to-be-continued' if @options.toBeContinued

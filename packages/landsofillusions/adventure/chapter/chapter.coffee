@@ -44,7 +44,9 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Thing
 
   showChapterTitle: (options = {}) ->
     # Create new chapter title.
-    chapterTitle = new LOI.Components.ChapterTitle options
+    chapterTitle = new LOI.Components.ChapterTitle _.extend {}, options,
+      chapter: @
+
     @chapterTitle chapterTitle
 
     # Wait till chapter title gets rendered.
