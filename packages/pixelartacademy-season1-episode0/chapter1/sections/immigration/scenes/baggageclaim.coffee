@@ -20,7 +20,7 @@ class C1.Immigration.BaggageClaim extends LOI.Adventure.Scene
   @initialize()
 
   things: -> [
-    C1.Suitcase unless C1.Suitcase.state 'inInventory'
+    C1.Items.Suitcase unless C1.Items.Suitcase.state 'inInventory'
     C1.Actors.Alex
   ]
 
@@ -42,7 +42,7 @@ class C1.Immigration.BaggageClaim extends LOI.Adventure.Scene
       action: => @startScript label: 'TalkToAlex'
 
   onExitAttempt: (exitResponse) ->
-    hasSuitcase = C1.Suitcase.state 'inInventory'
+    hasSuitcase = C1.Items.Suitcase.state 'inInventory'
     return if hasSuitcase
 
     @startScript label: 'LeaveWithoutSuitcase'

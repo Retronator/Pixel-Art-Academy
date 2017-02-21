@@ -80,6 +80,8 @@ table:
 
 > With your mind lingering with thoughts of Retropolis, the exhaustion gets the best of you and you fall asleep.
 
+pause
+
 `section.asleep = true`
 
 ## End

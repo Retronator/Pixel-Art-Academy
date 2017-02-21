@@ -19,7 +19,7 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
 
   things: ->
     [
-      C1.Backpack unless C1.Backpack.state 'inInventory'
+      C1.Items.Backpack unless C1.Items.Backpack.state 'inInventory'
       C1.Actors.Alex if @state 'alexPresent'
     ]
 
@@ -68,7 +68,7 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
 
   onExitAttempt: (exitResponse) ->
     # We need the backpack before we can leave.
-    hasBackpack = C1.Backpack.state 'inInventory'
+    hasBackpack = C1.Items.Backpack.state 'inInventory'
     unless hasBackpack
       @startScript label: 'LeaveWithoutBackpack'
       exitResponse.preventExit()
@@ -142,7 +142,7 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
 
     @section.chapter.showChapterTitle
       onActivated: =>
-        # Mark the section goal condition when the player exits the terrace.
+        # Mark the section goal condition.
         @section.state 'leftTerrace', true
 
         # Set the whole game as started.

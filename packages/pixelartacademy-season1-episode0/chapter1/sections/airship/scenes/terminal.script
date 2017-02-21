@@ -43,6 +43,8 @@ announcer: Please exit …
 
 > Your vision turns black.
 
+pause
+
 `section.tooLate = true`
 
 -> [End]

@@ -28,7 +28,7 @@ terminal:
 
 ## ShowPassport
 
--> [NoPassport] `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Passport']`
+-> [NoPassport] `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
 `passportShown = true`
 
@@ -42,7 +42,7 @@ terminal:
 
 ## ShowLetter
 
--> [NoLetter] `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Passport']`
+-> [NoLetter] `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
 `letterShown = true`
 

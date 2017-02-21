@@ -3,8 +3,8 @@ C1 = PixelArtAcademy.Season1.Episode0.Chapter1
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C1.Backpack extends LOI.Adventure.Thing
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Backpack'
+class C1.Items.Backpack extends LOI.Adventure.Thing
+  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Items.Backpack'
   @register @id()
 
   @version: -> '0.0.1'

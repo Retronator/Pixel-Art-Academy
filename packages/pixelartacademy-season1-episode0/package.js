@@ -27,6 +27,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/actors/actors');
   api.addFile('chapter1/actors/alex');
 
+  api.addFile('chapter1/items/items');
   api.addThing('chapter1/items/backpack');
   api.addFile('chapter1/items/passport');
   api.addFile('chapter1/items/acceptanceletter');

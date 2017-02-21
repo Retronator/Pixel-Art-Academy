@@ -35,8 +35,8 @@ class RS.AirportTerminal.Immigration.Terminal extends LOI.Adventure.Thing
         complete()
 
   @avatars: ->
-    passport: PAA.Season1.Episode0.Chapter1.Passport
-    letter: PAA.Season1.Episode0.Chapter1.AcceptanceLetter
+    passport: PAA.Season1.Episode0.Chapter1.Items.Passport
+    letter: PAA.Season1.Episode0.Chapter1.Items.AcceptanceLetter
 
   onCommand: (commandResponse) ->
     terminal = @options.parent

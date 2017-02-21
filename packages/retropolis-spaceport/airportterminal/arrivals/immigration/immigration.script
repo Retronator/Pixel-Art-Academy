@@ -4,7 +4,7 @@
 
 > An informational message plays on the speakers.
 
--> [UseTerminalHint] `@player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Passport']`
+-> [UseTerminalHint] `@player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
 announcer: Please have your passports and invitation papers ready.
 

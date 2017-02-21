@@ -56,19 +56,19 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
           6000
 
   inventory: ->
-    hasBackpack = C1.Backpack.state 'inInventory'
-    backpackOpened = C1.Backpack.state 'opened'
+    hasBackpack = C1.Items.Backpack.state 'inInventory'
+    backpackOpened = C1.Items.Backpack.state 'opened'
 
     hasBottle = PAA.Items.Bottle.state 'inInventory'
 
-    hasSuitcase = C1.Suitcase.state 'inInventory'
+    hasSuitcase = C1.Items.Suitcase.state 'inInventory'
 
     [
-      C1.Backpack if hasBackpack
-      C1.Passport if hasBackpack and backpackOpened
-      C1.AcceptanceLetter if hasBackpack and backpackOpened
+      C1.Items.Backpack if hasBackpack
+      C1.Items.Passport if hasBackpack and backpackOpened
+      C1.Items.AcceptanceLetter if hasBackpack and backpackOpened
       PAA.Items.Bottle if hasBottle
-      C1.Suitcase if hasSuitcase
+      C1.Items.Suitcase if hasSuitcase
     ]
 
   timeToAirshipDeparture: ->

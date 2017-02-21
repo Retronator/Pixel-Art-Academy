@@ -47,7 +47,7 @@ class RS.AirportTerminal.Immigration extends LOI.Adventure.Location
 
     # Wait for player to have their passport ready before terminal says it's available.
     @_terminalAvailableAutorun = @autorun (computation) =>
-      passport = LOI.adventure.getCurrentThing PixelArtAcademy.Season1.Episode0.Chapter1.Passport
+      passport = LOI.adventure.getCurrentThing PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport
       return unless passport
       computation.stop()
 
