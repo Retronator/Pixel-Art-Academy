@@ -4,12 +4,11 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies.Pages.YearReview.Layout extends BlazeLayoutComponent
   @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Layout'
 
+  @image: (parameters) ->
+    Meteor.absoluteUrl "pixelartdatabase/pixeldailies/yearreview/years/#{parameters.year}.png"
+
   onCreated: ->
     super
-
-    @autorun (computation) =>
-      year = FlowRouter.getParam 'year'
-      document.title = "Pixel Art Academy // Top Pixel Dailies Archive"
 
     @display = new AM.Display
       safeAreaWidth: 350

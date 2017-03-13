@@ -20,7 +20,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
       windowHeightCounts: 2
 
     # Indicates that the months are rendering.
-    @rendering = new ReactiveField true
+    @rendering = new ReactiveField false
 
     # Months is a skeleton structure that only provides the structure for html elements, but no real data.
     @months = new ReactiveField null

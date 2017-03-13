@@ -67,8 +67,12 @@ class AM.Component extends CommonComponent
 
     return false
 
-  componentChildrenOfType: (constructor) ->
-    @componentChildrenWith (child) ->
+  ancestorComponentOfType: (constructor) ->
+    @ancestorComponentWith (ancestor) ->
+      ancestor instanceof constructor
+    
+  childComponentsOfType: (constructor) ->
+    @childComponentsWith (child) ->
       child instanceof constructor
 
   # Code based on childComponentsWith.

@@ -3,7 +3,7 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
+
 
 class LOI.Construct.Items.OperatorLink extends LOI.Adventure.Item
   @id: -> 'LandsOfIllusions.Construct.Items.OperatorLink'
@@ -25,7 +25,7 @@ class LOI.Construct.Items.OperatorLink extends LOI.Adventure.Item
     @operator = new HQ.Actors.Operator
 
     @addAbility new Action
-      verb: Vocabulary.Keys.Verbs.Talk
+      verb: Vocabulary.Keys.Verbs.TalkTo
       action: =>
         # Don't react if the real operator is on location.
         location = LOI.adventure.currentLocation()
@@ -34,7 +34,7 @@ class LOI.Construct.Items.OperatorLink extends LOI.Adventure.Item
         # Don't react in locations that don't have the operator script.
         return unless operatorDialog = location.scripts['LandsOfIllusions.Construct.Scripts.Operator']
 
-        operatorDialog.setActors
+        operatorDialog.setThings
           operator: @operator
 
         operatorDialog.setCallbacks

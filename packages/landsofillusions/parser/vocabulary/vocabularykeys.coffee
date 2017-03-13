@@ -18,7 +18,8 @@ LOI.Parser.Vocabulary.Keys =
   Verbs:
     GoToLocationName: ''
     GoToDirection: ''
-    Talk: ''
+    TalkTo: ''
+    LookAt: ''
     Look: ''
     Use: ''
     Press: ''
@@ -27,7 +28,19 @@ LOI.Parser.Vocabulary.Keys =
     Get: ''
     Sit: ''
     Stand: ''
-    
+    Open: ''
+    Close: ''
+    Drink: ''
+    DrinkFrom: ''
+    Return: ''
+    ReturnTo: ''
+    GiveTo: ''
+    UseIn: ''
+    UseWith: ''
+    ShowTo: ''
+    Show: ''
+    LookIn: ''
+
   IgnorePrepositions: ''
 
   Questions:
@@ -35,6 +48,9 @@ LOI.Parser.Vocabulary.Keys =
     WhichThing: ''
     WhichPerson: ''
     WhichVerb: ''
+    
+  Debug:
+    ResetSections: ''
 
 # Generate vocabulary keys.
 transformVocabularyKey = (prefix, keys) ->

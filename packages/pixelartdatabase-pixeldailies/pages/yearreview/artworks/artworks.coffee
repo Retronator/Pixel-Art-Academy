@@ -6,6 +6,12 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies.Pages.YearReview.Artworks extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artworks'
 
+  @title: (options) ->
+    "Retronator // Top Pixel Dailies #{options.year}: Artworks"
+
+  @description: (options) ->
+    "Gallery of the best pixel art works from the Pixel Dailies community in #{options.year}."
+
   # Subscriptions
   @mostPopular: new AB.Subscription
     name: "#{@componentName()}.mostPopular"

@@ -5,6 +5,9 @@ PAA = PixelArtAcademy
 class PAA.Layouts.AlphaAccess extends BlazeLayoutComponent
   @register 'PixelArtAcademy.Layouts.AlphaAccess'
 
+  @title: ->
+    "Pixel Art Academy // Alpha backers build"
+
   loading: ->
     Meteor.loggingIn()
 

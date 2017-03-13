@@ -1,7 +1,8 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
-AT = Artificial.Telepathy
+AB = Artificial.Base
 LOI = LandsOfIllusions
+RA = Retronator.Accounts
 
 FlowRouter.wait()
 
@@ -12,14 +13,14 @@ class Retronator.App extends Artificial.Base.App
 
   # Routing helpers for default layouts
 
-  @addPublicPage: (url, page) ->
-    AT.addRoute page, url, 'Retronator.Accounts.Layouts.PublicAccess', page
+  @addPublicPage: (url, pageClass) ->
+    AB.addRoute url, @Layouts.PublicAccess, pageClass
 
-  @addUserPage: (url, page) ->
-    AT.addRoute page, url, 'Retronator.Accounts.Layouts.UserAccess', page
+  @addUserPage: (url, pageClass) ->
+    AB.addRoute url, @Layouts.UserAccess, pageClass
 
-  @addAdminPage: (url, page) ->
-    AT.addRoute page, url, 'Retronator.Accounts.Layouts.AdminAccess', page
+  @addAdminPage: (url, pageClass) ->
+    AB.addRoute url, @Layouts.AdminAccess, pageClass
     
   constructor: ->
     super
@@ -35,10 +36,11 @@ class Retronator.App extends Artificial.Base.App
     # Add Lands of Illusions last so it captures all remaining URLs.
     new LOI
 
-    BlazeLayout.setRoot '.retronator-app'
+    if Meteor.isClient
+      BlazeLayout.setRoot '.retronator-app'
 
-    FlowRouter.initialize()
-    window.FlowRouter = FlowRouter
+      FlowRouter.initialize()
+      window.FlowRouter = FlowRouter
 
     @components = {}
 
@@ -60,3 +62,8 @@ class Retronator.App extends Artificial.Base.App
   draw: (appTime) ->
     for name, component of @components
       component.draw? appTime
+
+# On the server, the component will not be created through rendering so we simply instantiate it here.
+if Meteor.isServer
+  Meteor.startup =>
+    new Retronator.App()

@@ -9,7 +9,11 @@ class LOI.Interface.Text extends LOI.Interface
   introduction: ->
     location = @location()
     return unless location
-    
+
+    if currentIntroductionFunction = @_currentIntroductionFunction()
+      introduction = currentIntroductionFunction()
+      return @_formatOutput introduction
+
     if location.constructor.visited()
       fullName = location.avatar.fullName()
       return unless fullName
@@ -33,9 +37,7 @@ class LOI.Interface.Text extends LOI.Interface
     exitAvatars
 
   things: ->
-    location = @location()
-
-    location.thingInstances thingId for thingId in location.things()
+    LOI.adventure.currentLocationThings()
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
@@ -59,14 +61,11 @@ class LOI.Interface.Text extends LOI.Interface
     'active' if option is @dialogSelection.selectedDialogLine()
 
   showInventory: ->
-    not @inIntro()
+    not @inIntro() and @inventoryItems().length
 
   activeItems: ->
     # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
-    items = _.flatten [
-      LOI.adventure.inventory.values()
-      _.filter LOI.adventure.currentLocation().thingInstances.values(), (thing) => thing instanceof LOI.Adventure.Item
-    ]
+    items = _.filter LOI.adventure.currentPhysicalThings(), (thing) => thing instanceof LOI.Adventure.Item
 
     activeItems = _.filter items, (item) => not item.deactivated()
 
@@ -78,14 +77,14 @@ class LOI.Interface.Text extends LOI.Interface
     activeItems
 
   inventoryItems: ->
-    items = _.filter LOI.adventure.inventory.values(), (item) -> not item.state().doNotDisplay
+    items = _.filter LOI.adventure.currentInventoryThings(), (item) -> not item.state()?.doNotDisplay
 
     console.log "Text interface is displaying inventory items", items if LOI.debug
 
     items
 
   showDescription: (thing) ->
-    @narrative.addText thing.avatar?.description()
+    @narrative.addText thing.description()
 
   caretIdleClass: ->
     'idle' if @commandInput.idle()
@@ -106,10 +105,46 @@ class LOI.Interface.Text extends LOI.Interface
     text = AM.HtmlHelper.escapeText text
 
     # Create color spans.
-    text = text.replace /%c#([\da-f]{6})(.*?)%%/g, '<span style="color: #$1">$2</span>'
+    text = text.replace /%%c(\d+)-([-\d]+)%(.*?)c%%/g, (match, hue, shade, text) ->
+      hue = parseInt hue
+      shade = parseInt shade
 
-    # Extract commands between underscores.
-    text = text.replace /_(.*?)_/g, '<span class="command">$1</span>'
+      colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade).getHexString()
+
+      "<span style='color: ##{colorHexString}' data-hue='#{hue}' data-shade='#{shade}'>#{text}</span>"
+
+    # Create text transform spans.
+    text = text.replace /%%t([L|U])(.*?)t%%/g, (match, transformType, text) =>
+      switch transformType
+        when 'L' then transform = 'lowercase'
+        when 'U' then transform = 'uppercase'
+
+      "<span style='text-transform: #{transform}'>#{text}</span>"
+
+    # Extract commands from image notation.
+    text = text.replace /!\[(.*?)]\((.*?)\)/g, (match, text, command) ->
+      command = text unless command.length
+      "<span class='command' title='#{command}'>#{text}<span class='underline'></span><span class='background'></span></span>"
+
+    Tracker.afterFlush =>
+      # Add colors to commands.
+      commands = @$('.narrative .command')
+      return unless commands
+
+      for element in commands
+        $command = $(element)
+        colorParent = $command.parent('*[data-hue]')
+
+        if colorParent.length
+          hue = colorParent.data 'hue'
+          shade = colorParent.data 'shade'
+          colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade + 1).getHexString()
+
+          $command.css color: "##{colorHexString}"
+
+          $command.find('.underline').css borderBottomColor: "##{colorHexString}"
+
+          $command.find('.background').css backgroundColor: "##{colorHexString}"
 
     text
 
@@ -126,10 +161,15 @@ class LOI.Interface.Text extends LOI.Interface
 
   # Use to get back to the initial state with full location description.
   resetInterface: ->
+    @_lastNode null
+    @_pausedNode null
+
     @narrative?.clear()
 
     @location().constructor.visited false
     @inIntro true
+
+    @initializeIntroductionFunction()
 
     Tracker.afterFlush =>
       @narrative.scroll()
@@ -140,7 +180,7 @@ class LOI.Interface.Text extends LOI.Interface
     @inIntro false
 
     # Mark location as visited after the intro of the location is done.
-    @location().stateObject 'visited', true
+    @location().state 'visited', true
 
     Tracker.afterFlush =>
       @resize()
@@ -164,22 +204,26 @@ class LOI.Interface.Text extends LOI.Interface
       'mouseleave .text-interface': @onMouseLeaveTextInterface
 
   onMouseEnterCommand: (event) ->
-    @hoveredCommand $(event.target).text()
+    @hoveredCommand $(event.target).attr 'title'
 
   onMouseLeaveCommand: (event) ->
     @hoveredCommand null
 
   onClickCommand: (event) ->
+    return if @waitingKeypress()
+
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
 
   onMouseEnterExit: (event) ->
-    @hoveredCommand "GO TO #{$(event.target).text()}"
+    @hoveredCommand "Go to #{$(event.target).text()}"
 
   onMouseLeaveExit: (event) ->
     @hoveredCommand null
 
   onClickExit: (event) ->
+    return if @waitingKeypress()
+
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
 

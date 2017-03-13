@@ -4,9 +4,6 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.LandsOfIllusions.Hallway'
   @url: -> 'retronator/landsofillusions/hallway'
@@ -73,7 +70,7 @@ class HQ.Locations.LandsOfIllusions.Hallway extends LOI.Adventure.Location
 
       operatorDialog = @scripts['Retronator.HQ.Locations.LandsOfIllusions.Hallway.Scripts.Operator']
 
-      operatorDialog.setActors
+      operatorDialog.setThings
         operator: operator
 
       operatorDialog.setCallbacks

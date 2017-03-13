@@ -75,6 +75,7 @@
 
       &::after
         background: #888
+        display block
 
     &:active:not([disabled='false'])
       border-top 4rem solid transparent
@@ -258,8 +259,9 @@
       margin-bottom 15rem
 
     .button
-      adventure()
-      font-size 12rem
+      acme-9()
+      font-size 8rem
+      font-weight bold
       background-color #eee
       color black
       text-shadow none
@@ -268,12 +270,14 @@
       cursor pointer
       margin-bottom 15rem
       display inline-block
-      padding 4rem 8rem
+      padding 6rem 10rem
+      box-shadow 1.5rem 1.5rem black
 
       &:hover
         color #eee
         text-shadow 1.5rem 1.5rem black
         background-color transparent
+        box-shadow none
 
   section:not(.jumbotron)
     margin auto
@@ -281,6 +285,11 @@
 
   section > *
     padding 0 20rem 0 30rem
+
+  .trailer
+    width 330rem
+    height 186rem
+    margin-bottom 15rem
 
   .core-features
     text-align center
@@ -369,6 +378,12 @@
     background-color #a7e2fd
     padding-top 20rem
     color black
+
+    .no-release-date
+      text-transform uppercase
+
+    h2
+      color black
 
   .featured-product
     background-image image('/retronator/hq/items/tablet/apps/prospectus/greetings.png')

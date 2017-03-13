@@ -39,6 +39,7 @@ Package.onUse(function(api) {
 
   api.addFiles('submission/migrations/0000-reprocessimages.coffee', 'server');
   api.addFiles('submission/migrations/0001-renamecollection.coffee', 'server');
+  api.addFiles('submission/migrations/0002-converttohttps.coffee', 'server');
 
   // Pages
   api.addFiles('pages/pages.coffee');

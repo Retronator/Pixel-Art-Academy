@@ -6,7 +6,9 @@ _.mixin
     nestedObject = object
     parts = property.split '.'
 
-    if value
+    # Is this a setter? We compare to undefined and not just use
+    # value? since we want to be able to set the value null to the property.
+    if value isnt undefined
       # Setter that modifies object in-place and creates any intermediate objects.
       for part, i in parts
         # If we're already at the end just set the property and return the original object.

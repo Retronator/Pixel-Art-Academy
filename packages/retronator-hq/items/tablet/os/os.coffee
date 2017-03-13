@@ -10,9 +10,9 @@ class HQ.Items.Tablet.OS extends AM.Component
   constructor: (@options) ->
     super
 
-    @stateObject = new LOI.StateObject @options
+    @state = new LOI.StateObject @options
 
-    @activeAppId = @stateObject.field 'activeAppId'
+    @activeAppId = @state.field 'activeAppId'
 
     # If the tablet is not the main active tablet, we shouldn't use the URL
     # to change the app, so we hijack the links and change the app via state.

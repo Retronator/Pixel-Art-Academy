@@ -37,9 +37,9 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
     @receipt = new HQ.Items.Tablet.Apps.ShoppingCart.Receipt
       shoppingCart: @
 
-    @contents = @stateObject.field 'contents', default: []
+    @contents = @state.field 'contents', default: []
 
-    @receiptVisible = @stateObject.field 'receiptVisible'
+    @receiptVisible = @state.field 'receiptVisible'
       
   onCreated: ->
     super

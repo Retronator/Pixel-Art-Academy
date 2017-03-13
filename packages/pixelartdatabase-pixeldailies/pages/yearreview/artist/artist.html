@@ -14,7 +14,7 @@
           </div>
           {{#with profile}}
             <h2 class="display-name">
-              {{displayName}}
+              {{deburr displayName}}
             </h2>
             <div class="information">
               <div class="description">
@@ -24,7 +24,9 @@
                 <h3 class="title">{{year}} stats</h3>
                 {{#with statistics}}
                   <div class="statistic">Submissions: {{submissionsCount}}</div>
-                  <div class="statistic">Animated: {{animatedPercentage}}%</div>
+                  {{#if animatedSubmissionsCount}}
+                    <div class="statistic">Animated: {{animatedSubmissionsCount}}</div>
+                  {{/if}}
                   <div class="statistic">Total favorites: {{favoritesCount}}</div>
                 {{/with}}
               </div>

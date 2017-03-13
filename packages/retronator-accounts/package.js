@@ -50,19 +50,6 @@ Package.onUse(function(api) {
   api.addFiles('user/methods-server.coffee', 'server');
   api.addFiles('user/subscriptions.coffee', 'server');
 
-  // Layouts
-
-  api.addFiles('layouts/layouts.coffee');
-
-  api.addFiles('layouts/adminaccess/adminaccess.coffee');
-  api.addFiles('layouts/adminaccess/adminaccess.html');
-
-  api.addFiles('layouts/useraccess/useraccess.coffee');
-  api.addFiles('layouts/useraccess/useraccess.html');
-
-  api.addFiles('layouts/publicaccess/publicaccess.coffee');
-  api.addFiles('layouts/publicaccess/publicaccess.html');
-
   // Components
 
   api.addFiles('components/components.coffee');

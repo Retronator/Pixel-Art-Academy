@@ -33,7 +33,7 @@
                 <ul class="things">
                   {{#each things}}
                     <li class="thing">
-                      {{avatar.fullName}}.
+                      {{fullName}}.
                     </li>
                   {{else}}
                     <li class="thing">{{> t10e "Nothing"}}.</li>
@@ -47,7 +47,7 @@
             {{#if showCommandLine}}
               <div class="command-line">
                 {{#if waitingKeypress}}
-                  …
+                  … <span class="keypress-hint">Press enter to continue</span>
                 {{else}}
                   &gt;
                   {{#if hoveredCommand}}
@@ -70,20 +70,20 @@
             {{/if}}
           </div>
         </div>
-        {{#unless inIntro}}
+        {{#if showInventory}}
           <div class="inventory scrollable">
             <div class="inventory-content scrollable-content">
               <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
               <ul class="items">
                 {{#each inventoryItems}}
-                  <li class="item">{{avatar.fullName}}</li>
+                  <li class="item">{{fullName}}</li>
                 {{else}}
                   <li class="item">{{> t10e "Nothing"}}</li>
                 {{/each}}
               </ul>
             </div>
           </div>
-        {{/unless}}
+        {{/if}}
       </div>
     </div>
   </div>

@@ -5,10 +5,11 @@ class LandsOfIllusions
 
   # Global Adventure instance.
   LOI.adventure = null
+  LOI.adventureInitialized = new ReactiveField false
 
   constructor: ->
     # Create the main adventure engine url capture.
-    Retronator.App.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?', 'LandsOfIllusions.Adventure'
+    Retronator.App.addPublicPage '/:parameter1?/:parameter2?/:parameter3?/:parameter4?', LOI.Adventure
 
   # Character selection and persistence
 
@@ -47,7 +48,7 @@ class LandsOfIllusions
 LOI = LandsOfIllusions
 
 if Meteor.isClient
-  window.LOI = LOI
+  window.LandsOfIllusions = LOI
 
 # On the client load character ID from local storage.
 if Meteor.isClient

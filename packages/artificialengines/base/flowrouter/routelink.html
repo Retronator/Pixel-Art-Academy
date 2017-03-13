@@ -1,0 +1,7 @@
+<template name="Artificial.Base.RouteLink">
+  {{#if isRouteActive}}
+    <span class="route-link active">{{text}}</span>
+  {{else}}
+    <a class="route-link" href="{{flowRouterPath route parameters}}">{{text}}</a>
+  {{/if}}
+</template>

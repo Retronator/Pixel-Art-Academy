@@ -8,23 +8,32 @@ class LOI.Parser extends LOI.Parser
     Nodes = LOI.Adventure.Script.Nodes
 
     # Sort all actions descending by likelihood.
-    likelyActions = _.reverse _.sortBy likelyActions, 'likelihood'
+    likelyActions = _.reverse _.sortBy likelyActions, 'likelihood', 'precision', 'priority'
 
     if LOI.debug
       console.log "We're not sure what the user wanted ... top 10 possibilities:"
-      console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood for likelyAction in likelyActions[0...10]
+      console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision for likelyAction in likelyActions[0...10]
 
-    # If the most likely action is below 0.5, we tell the user we don't understand.
+    # If the most likely action is not above 60%, we tell the user we don't understand.
     bestLikelihood = likelyActions[0].likelihood
 
-    if bestLikelihood < 0.5
-      LOI.adventure.interface.narrative.addText "I don't know what you mean."
+    if bestLikelihood <= 0.6
+      LOI.adventure.interface.narrative.addText "I can't do that."
       return
 
     # If we're above, there might be more possibilities that are
-    # close together. We find all in the range of 0.2 from the best one, but still not below 0.5
+    # close together. We find all in the range of 0.2 from the best one, but still not below 0.6
     likelyActions = _.filter likelyActions, (likelyAction) =>
-      (likelyAction.likelihood > bestLikelihood - 0.2) and (likelyAction.likelihood >= 0.5)
+      (likelyAction.likelihood > bestLikelihood - 0.2) and (likelyAction.likelihood > 0.6)
+
+    # If all actions that are left have the same likelihood, take the most precise ones.
+    equalLikelihood = _.first(likelyActions).likelihood is _.last(likelyActions).likelihood
+
+    if equalLikelihood
+      bestPrecision = likelyActions[0].precision
+
+      likelyActions = _.filter likelyActions, (likelyAction) =>
+        likelyAction.precision is bestPrecision
 
     # Since each alias and translation variant creates its own likely action, multiple can be for the
     # same phrase action. In that case, only include the most likely one in the consideration.
@@ -33,6 +42,15 @@ class LOI.Parser extends LOI.Parser
     likelyActions = _.uniqWith likelyActions, (a, b) =>
       # Consider likely actions with the same phrase action as equal.
       a.phraseAction is b.phraseAction
+
+    # If all actions that are left have the same likelihood and precision, take the one with the highest priority
+    equalPrecision = _.first(likelyActions).precision is _.last(likelyActions).precision
+
+    if equalLikelihood and equalPrecision
+      bestPriority = likelyActions[0].priority
+
+      likelyActions = _.filter likelyActions, (likelyAction) =>
+        likelyAction.priority is bestPriority
 
     # If we have only one possibility left, just choose that one (autocorrect style).
     if likelyActions.length is 1

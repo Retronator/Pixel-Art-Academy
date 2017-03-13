@@ -13,39 +13,56 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:retropolis');
   api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartacademy-items');
 
   api.export('Retropolis');
 
-  api.addFiles('spaceport.coffee');
+  api.addFile('spaceport');
+
+  // Items
+
+  api.addFile('items/items');
+  api.addFile('items/announcer');
 
   // Locations
 
-  api.addFiles('airportterminal/airportterminal.coffee');
+  api.addFile('airportterminal/airportterminal');
 
-  api.addFiles('airportterminal/concourse/terrace/terrace.coffee');
-  api.addFiles('airportterminal/concourse/terrace/terrace.html');
-  api.addFiles('airportterminal/concourse/terrace/terrace.styl');
-  api.addFiles('airportterminal/concourse/terrace/retropolis.coffee');
+  api.addComponent('airportterminal/concourse/terrace/terrace');
+  api.addFile('airportterminal/concourse/terrace/retropolis');
+  api.addThing('airportterminal/concourse/terrace/vendingmachine');
 
-  api.addFiles('airportterminal/concourse/concourse/concourse.coffee');
+  api.addFile('airportterminal/concourse/concourse/concourse');
 
-  api.addFiles('airportterminal/concourse/gates/gates.coffee');
+  api.addFile('airportterminal/concourse/gates/gates');
 
-  api.addFiles('airportterminal/arrivals/arrivals/arrivals.coffee');
+  api.addThing('airportterminal/arrivals/arrivals/arrivals');
 
-  api.addFiles('airportterminal/arrivals/baggageclaim/baggageclaim.coffee');
+  api.addThing('airportterminal/arrivals/baggageclaim/baggageclaim');
+  api.addFile('airportterminal/arrivals/baggageclaim/baggagecarousel');
 
-  api.addFiles('airportterminal/arrivals/customs/customs.coffee');
+  api.addFile('airportterminal/arrivals/customs/customs');
 
-  api.addFiles('airportterminal/arrivals/immigration/immigration.coffee');
-  api.addFiles('airportterminal/arrivals/immigration/counter.coffee');
-  api.addFiles('airportterminal/arrivals/immigration/officer.coffee');
-  api.addAssets('airportterminal/arrivals/immigration/officer.script', ['client', 'server']);
+  api.addThing('airportterminal/arrivals/immigration/immigration');
+  api.addThing('airportterminal/arrivals/immigration/terminal');
 
-  api.addFiles('airportterminal/departures/departures/departures.coffee');
-  api.addFiles('airportterminal/departures/checkin/checkin.coffee');
-  api.addFiles('airportterminal/departures/security/security.coffee');
-  api.addFiles('airportterminal/departures/security/scanner.coffee');
+  api.addFile('airportterminal/departures/departures/departures');
+  api.addFile('airportterminal/departures/checkin/checkin');
+  api.addFile('airportterminal/departures/security/security');
+  api.addFile('airportterminal/departures/security/scanner');
 
-  api.addFiles('tower/2ndlevel/atrium/atrium.coffee');
+  api.addFile('tower/tower');
+  api.addFile('tower/2ndlevel/atrium/atrium');
+
+  api.addFile('airshipterminal/airshipterminal');
+
+  api.addFile('airshipterminal/terminal/terminal');
+  api.addFile('airshipterminal/terminal/schedule');
+  api.addFile('airshipterminal/terminal/routesmap');
+
+  api.addFile('airshipterminal/dock/dock');
+
+  api.addFile('airshipterminal/airship/airship');
+  api.addFile('airshipterminal/airship/cabin/cabin');
+  api.addFile('airshipterminal/airship/cabin/tabledisplay');
 });

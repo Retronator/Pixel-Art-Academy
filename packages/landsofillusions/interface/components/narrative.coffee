@@ -18,13 +18,17 @@ class LOI.Interface.Components.Narrative
     text = @text()
 
     options.addNewLine ?= true
-    options.scroll ?= true
 
     if text.length > 0
       text += "\n" if options.addNewLine
 
     text += newText
     @text text
+
+    @onTextUpdated options
+
+  onTextUpdated: (options = {}) ->
+    options.scroll ?= true
 
     if options.scroll
       Tracker.afterFlush =>
@@ -44,6 +48,7 @@ class LOI.Interface.Components.Narrative
 
   clear: ->
     @text ""
+    @onTextUpdated()
 
   scroll: (options = {}) ->
     options.animate ?= true

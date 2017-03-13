@@ -6,3 +6,6 @@ Template.registerHelper 'toLower', (string) ->
 
 Template.registerHelper 'toUpper', (string) ->
   _.toUpper string
+
+Template.registerHelper 'deburr', (string) ->
+  _.deburr string

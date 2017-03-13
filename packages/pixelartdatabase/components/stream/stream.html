@@ -1,5 +1,5 @@
 <template name="PixelArtDatabase.Components.Stream">
-  <div class="pixelartdatabase-components-stream">
+  <div class="pixelartdatabase-components-stream {{lowPerformanceClass}}">
     <ol class="artworks">
       {{#each displayedArtworks}}
         <li class="artwork-area">
@@ -17,7 +17,7 @@
               {{> renderCaption artwork}}
             </figcaption>
           </figure>
-          {{#if $and videoUrl animatedBackgrounds}}
+          {{#if showVideoBackground}}
             <video class="background" src="{{videoUrl}}" loop poster="{{imageUrl}}">
               <img class="background" src="{{imageUrl}}"/>
             </video>

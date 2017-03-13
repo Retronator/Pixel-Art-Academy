@@ -5,9 +5,6 @@ RS = Retronator.Store
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.Checkout extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Store.Checkout'
   @url: -> 'retronator/checkout'
@@ -66,13 +63,13 @@ class HQ.Locations.Checkout extends LOI.Adventure.Location
       computation.stop()
 
       retro.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Talk
+        verb: Vocabulary.Keys.Verbs.TalkTo
         action: =>
           LOI.adventure.director.startScript retroDialog
 
       retroDialog = @scripts['Retronator.HQ.Locations.Store.Checkout.Scripts.Retro']
   
-      retroDialog.setActors
+      retroDialog.setThings
         retro: retro
         
       retroDialog.setCallbacks

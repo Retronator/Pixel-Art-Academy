@@ -28,10 +28,16 @@ generateFieldsForLanguages = (languages) ->
     namespace: 1
     key: 1
 
-  if languages?.length
+  if languages?
+    # Make all languages lowercase.
+    languages = _.map languages, _.toLower
+
+    # Add default language.
+    languages.push AB.defaultLanguage.toLowerCase()
+
     # Construct the minimal required language set by removing subsets (for example 'en' already includes 'en-US').
     for language in languages
-      # Compare to at all the other languages.
+      # Compare to all the other languages.
       for otherLanguage in _.without languages, language
         # If the other language is contained within the language, we don't need it.
         languages = _.without languages, otherLanguage if _.startsWith otherLanguage, language

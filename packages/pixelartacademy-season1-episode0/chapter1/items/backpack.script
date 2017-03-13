@@ -1,0 +1,27 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Items.Backpack
+
+## UseOutsideInventory
+
+> You need to ![Pick it up](pick up backpack) first.
+
+-> [End]
+
+## AlreadyOpened
+
+> It's already opened.
+
+-> [End]
+
+## AlreadyClosed
+
+> It's already closed.
+
+-> [End]
+
+## AlreadyInInventory
+
+> You already carry your backpack.
+
+-> [End]
+
+## End

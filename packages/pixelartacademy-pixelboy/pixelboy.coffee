@@ -5,11 +5,17 @@ PAA = PixelArtAcademy
 class PAA.PixelBoy extends AM.Component
   @register "PixelArtAcademy.PixelBoy"
 
+  @title: (options) ->
+    for appClass in @appClasses() when appClass.urlName() is options.app
+      return "Pixel Art Academy // #{appClass.displayName()}"
+
+  @appClasses: -> [
+    PAA.PixelBoy.Apps.Journal
+    PAA.PixelBoy.Apps.Calendar
+  ]
+
   constructor: ->
-    @apps = [
-      new PAA.PixelBoy.Apps.Journal
-      new PAA.PixelBoy.Apps.Calendar
-    ]
+    @apps = (new appClass for appClass in @constructor.appClasses())
 
     # Create a map for fast retrieval of apps by their url name.
     appsNameMap = _.fromPairs ([app.urlName(), app] for app in @apps)

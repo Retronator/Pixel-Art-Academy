@@ -1,0 +1,12 @@
+<template name="Retronator.App.Layouts.UserAccess">
+  {{#if loading}}
+    Loading …
+  {{else}}
+    {{#if currentUser}}
+      {{> renderPage}}
+    {{else}}
+      <p>You need to be signed in to see this page.</p>
+      {{> Retronator.Accounts.Components.SignIn}}
+    {{/if}}
+  {{/if}}
+</template>

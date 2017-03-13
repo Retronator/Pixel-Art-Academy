@@ -61,18 +61,33 @@ hoverable()
 
           .command
             position relative
-            hoverable()
+            white-space nowrap
+            text-transform uppercase
+            cursor pointer
 
-            &::after
+            .underline
               display block
               content ''
               absolute-cover()
               right 1rem
               border-bottom 1rem solid atariGrey(5)
 
+            .background
+              display none
+
             &:hover
-              &::after
+              color atariGrey(0) !important
+
+              .underline
                 display none
+
+              .background
+                display block
+                content ''
+                absolute-cover()
+                z-index -1
+                right 1rem
+                background-color atariGrey(7)
 
           .exits
             .exit
@@ -120,6 +135,13 @@ hoverable()
 
             &:focus
               left -300%
+
+          .keypress-hint
+            opacity 0
+
+            &.visible
+              opacity 1
+              transition opacity 5s
 
         .dialog-selection
           .options

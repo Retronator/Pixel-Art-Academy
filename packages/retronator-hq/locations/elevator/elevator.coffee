@@ -3,9 +3,6 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class HQ.Locations.Elevator extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.Elevator'
   @url: -> 'retronator/lobby/elevator'
@@ -28,7 +25,7 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
   constructor: ->
     super
 
-    @elevatorFloor = @stateObject.field 'floor', default: 1
+    @elevatorFloor = @state.field 'floor', default: 1
 
   things: ->
     [HQ.Locations.Elevator.NumberPad.id()]
@@ -95,5 +92,5 @@ class HQ.Locations.Elevator extends LOI.Adventure.Location
 
       padInteraction = @scripts['Retronator.HQ.Locations.Elevator.Scripts.NumberPad']
   
-      padInteraction.setActors
+      padInteraction.setThings
         pad: pad

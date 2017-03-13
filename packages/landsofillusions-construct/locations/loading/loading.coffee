@@ -2,9 +2,6 @@ LOI = LandsOfIllusions
 
 Vocabulary = LOI.Parser.Vocabulary
 
-Action = LOI.Adventure.Ability.Action
-Talking = LOI.Adventure.Ability.Talking
-
 class LOI.Construct.Locations.Loading extends LOI.Construct.Location
   @id: -> 'LandsOfIllusions.Construct.Locations.Loading'
   @url: -> 'construct'
@@ -59,13 +56,13 @@ class LOI.Construct.Locations.Loading extends LOI.Construct.Location
       computation.stop()
 
       captain.addAbility new Action
-        verb: Vocabulary.Keys.Verbs.Talk
+        verb: Vocabulary.Keys.Verbs.TalkTo
         action: =>
           LOI.adventure.director.startScript captainDialog, label: 'MainDialog'
 
       captainDialog = @scripts['LandsOfIllusions.Construct.Locations.Loading.Scripts.Captain']
 
-      captainDialog.setActors
+      captainDialog.setThings
         captain: captain
         operator: operatorLink.operator
 

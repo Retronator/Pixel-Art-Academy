@@ -102,8 +102,10 @@ class LOI.Parser.CommandResponse
       console.log "Form combinations", (combination.join ' ' for combination in formCombinations) if LOI.debug
 
       likelihoodCache = {}
+      commandWords = _.words @options.command.normalizedCommand
 
       for combinationPhrases in formCombinations
+        # Calculate likelihood of desired phrases being present in the command.
         likelihood = 1
 
         for translatedPhrase in combinationPhrases
@@ -111,7 +113,6 @@ class LOI.Parser.CommandResponse
 
           # See if we've already calculated this phrase's likelihood.
           if likelihoodCache[translatedPhrase]
-            console.log "got cached"
             phraseLikeliehood = likelihoodCache[translatedPhrase]
 
           else
@@ -123,13 +124,29 @@ class LOI.Parser.CommandResponse
               when @constructor.MatchingModes.Includes
                 phraseLikeliehood = @options.command.has translatedPhrase
 
+            likelihoodCache[translatedPhrase] = phraseLikeliehood
+
           likelihood *= phraseLikeliehood
 
         console.log "For phrase", combinationPhrases.join(' '), "likelihood in mode", matchingMode, "is", likelihood if LOI.debug
 
+        # We also calculate precision, how closely the phrase has matched the command.
+        targetWords = _.words combinationPhrases.join '_'
+
+        differenceA = _.difference targetWords, commandWords
+        differenceB = _.difference commandWords, targetWords
+
+        precision = 1 - (differenceA.length + differenceB.length) / commandWords.length
+
+        # Priority is another ordering mechanism, one provided by the listener,
+        # for example, when overriding a generic response with a custom one.
+        priority = phraseAction.priority or 0
+
         # Return an action with the likelihood that this is what the user wanted.
         phraseAction: phraseAction
         likelihood: likelihood
+        precision: precision
+        priority: priority
         translatedForm: combinationPhrases
 
     # Likely actions include nested arrays for all actions so we return a flattened version.

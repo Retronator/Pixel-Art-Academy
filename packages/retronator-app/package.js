@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:app',
-  version: '0.8.3',
+  version: '0.10.8',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -17,6 +17,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-store');
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-landingpage');
+  api.use('retronator:pixelartacademy-items');
   api.use('retronator:pixelartacademy-season1-episode0');
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:pixelartacademy-practice');
@@ -39,5 +40,18 @@ Package.onUse(function(api) {
   // Add other files.
   api.addFiles('app.html');
   api.addFiles('app.coffee');
+
+  // Layouts
+
+  api.addFiles('layouts/layouts.coffee');
+
+  api.addFiles('layouts/adminaccess/adminaccess.coffee');
+  api.addFiles('layouts/adminaccess/adminaccess.html');
+
+  api.addFiles('layouts/useraccess/useraccess.coffee');
+  api.addFiles('layouts/useraccess/useraccess.html');
+
+  api.addFiles('layouts/publicaccess/publicaccess.coffee');
+  api.addFiles('layouts/publicaccess/publicaccess.html');
 
 });

@@ -8,6 +8,27 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
+  // Extend API with helper functions.
+  api.constructor.prototype.addFile = function(path) {
+    this.addFiles(path + ".coffee");
+  };
+  api.constructor.prototype.addHtml = function(path) {
+    this.addFiles(path + ".html");
+  };
+  api.constructor.prototype.addStyle = function(path) {
+    this.addFiles(path + ".styl");
+  };
+  api.constructor.prototype.addComponent = function(path) {
+    this.addFiles([path + ".coffee", path + ".html", path + ".styl"]);
+  };
+  api.constructor.prototype.addThing = function(path) {
+    this.addFiles(path + ".coffee");
+    this.addAssets(path + ".script", ['client', 'server']);
+  };
+  api.constructor.prototype.addScript = function(path) {
+    this.addAssets(path + ".script", ['client', 'server']);
+  };
+
   api.versionsFrom('1.2.0.2');
 
   var packages = [
@@ -42,7 +63,9 @@ Package.onUse(function(api) {
     'kadira:blaze-layout',
     'okgrow:router-autoscroll',
     'stevezhu:lodash',
-    'velocityjs:velocityjs'
+    'velocityjs:velocityjs',
+    'meteorhacks:picker',
+    'meteorhacks:inject-initial'
   ];
 
 	api.use(packages);
@@ -127,6 +150,16 @@ Package.onUse(function(api) {
   api.addFiles('base/method.coffee');
   api.addFiles('base/subscription.coffee');
 
+  api.addFiles('base/addroute.coffee');
+
+  api.addFiles('base/picker-server/addroute.coffee', 'server');
+
+  api.addFiles('base/flowrouter/addroute.coffee');
+  api.addFiles('base/flowrouter/spacebars.coffee');
+
+  api.addFiles('base/flowrouter/routelink.coffee');
+  api.addFiles('base/flowrouter/routelink.html');
+
   // Artificial Mummification
   api.addFiles('mummification/mummification.coffee');
 
@@ -136,12 +169,6 @@ Package.onUse(function(api) {
 
   // Artificial Telepathy
   api.addFiles('telepathy/telepathy.coffee');
-
-  api.addFiles('telepathy/flowrouter/addroute.coffee');
-  api.addFiles('telepathy/flowrouter/spacebars.coffee');
-
-	api.addFiles('telepathy/flowrouter/routelink.coffee');
-	api.addFiles('telepathy/flowrouter/routelink.html');
 
   api.addFiles('telepathy/emailcomposer.coffee');
 

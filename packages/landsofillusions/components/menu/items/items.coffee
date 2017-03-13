@@ -134,15 +134,33 @@ class LOI.Components.Menu.Items extends AM.Component
     # Close the menu.
     LOI.adventure.menu.hideMenu()
 
+    # Remove other modal menus.
+    LOI.adventure.removeModalDialog dialog for dialog of LOI.adventure.modalDialogs()
+
     # Reset the local game state, so when we logout it will kick in.
     LOI.adventure.clearLocalGameState()
 
     # Log out.
-    LOI.adventure.logout()
+    LOI.adventure.logout
+      callback: =>
+        # Reset the interface.
+        LOI.adventure.interface.resetInterface()
 
-    # Go to the terrace and scroll to top.
-    LOI.adventure.goToLocation Retropolis.Spaceport.AirportTerminal.Terrace
-    LOI.adventure.interface.scroll position: 0
+        # Clear location to trigger location changes.
+        LOI.adventure.currentLocationId null
+
+        # Reset game time.
+        LOI.adventure.resetTime()
+
+        # Cleanup storyline classes.
+        LOI.adventure.resetEpisodes()
+
+        # Cleanup running scripts.
+        LOI.adventure.director.stopAllScripts()
+
+        # Go to the terrace and scroll to top.
+        LOI.adventure.currentLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
+        LOI.adventure.interface.scroll position: 0
 
   onClickBack: (event) ->
     @currentScreen @constructor.Screens.MainMenu

@@ -42,3 +42,68 @@ class LOI.Adventure extends LOI.Adventure
         @_currentLocation = new currentLocationClass
         
         @currentLocation @_currentLocation
+
+    # Run logic on entering a new location.
+    @locationOnEnterResponseResults = new ReactiveField null
+    
+    @autorun (computation) =>
+      return unless LOI.adventureInitialized()
+      return unless location = @currentLocation()
+      currentLocationClass = location.constructor
+
+      # Clear previous enter responses.
+      Tracker.nonreactive => @locationOnEnterResponseResults null
+
+      # Wait for listeners to get instantiated as well.
+      Tracker.afterFlush => Tracker.nonreactive =>
+        # Wait for listeners to be ready.
+        @autorun (computation) =>
+          return unless listeners = LOI.adventure.currentListeners()
+
+          # Exclude the listeners that are part of scenes that don't happen on this location.
+          listeners = _.filter listeners, (listener) =>
+            listenerScene = listener.options.parent if listener.options.parent instanceof LOI.Adventure.Scene
+            return if listenerScene and listenerScene.constructor.location() isnt currentLocationClass
+
+            true
+
+          # Wait for all listeners to be ready.
+          for listener in listeners
+            return unless listener.ready()
+
+          computation.stop()
+
+          Tracker.nonreactive =>
+            # Query all the listeners if they need to perform any action on
+            # enter and save the results for the interface to use as well.
+            responseResults = for listener in listeners
+              enterResponse = new LOI.Parser.EnterResponse {currentLocationClass}
+
+              listener.onEnter enterResponse
+
+              {enterResponse, listener}
+
+            @locationOnEnterResponseResults responseResults
+
+  goToLocation: (locationClassOrId) ->
+    currentLocationClass = _.thingClass @currentLocationId()
+    destinationLocationClass = _.thingClass locationClassOrId
+    
+    # Query all the listeners if they need to perform any action on exit.
+    results = for listener in @currentListeners()
+      exitResponse = new LOI.Parser.ExitResponse {currentLocationClass, destinationLocationClass}
+
+      listener.onExitAttempt exitResponse
+
+      {exitResponse, listener}
+
+    # See if exit was prevented.
+    for result in results
+      return if result.exitResponse.wasExitPrevented()
+
+    # Notify the listeners that exit will complete.
+    for result in results
+      result.listener.onExit result.exitResponse
+
+    # Change location.
+    @currentLocationId _.thingId locationClassOrId

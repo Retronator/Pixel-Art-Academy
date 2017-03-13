@@ -9,13 +9,12 @@ class LOI.Adventure.ScriptFile.Parser
 
     # Break the script down into lines. Line here includes all indented lines following an un-indented line.
     lines = @scriptText.match /^.+$(?:\n[\t ]+.*)*/gm
+    return @scriptNodes unless lines
 
     # Parse lines from back to front so we always have a next node ready.
     @nextNode = null
 
-    # TODO: Replace with by -1 when upgrading to new CS.
-    lines.reverse()
-    @_parseLine line for line in lines
+    @_parseLine line for line in lines by -1
 
     console.log "Script parser has completed and created nodes", @scriptNodes if LOI.debug
 
@@ -30,6 +29,7 @@ class LOI.Adventure.ScriptFile.Parser
       '_parseLabel'
       '_parseScript'
       '_parseTimeout'
+      '_parsePause'
       '_parseChoice'
       '_parseJump'
       '_parseNarrative'
@@ -55,7 +55,15 @@ class LOI.Adventure.ScriptFile.Parser
 
       if node
         # Set the created node as the next node, except on script nodes, which break continuity.
-        @nextNode = if node instanceof Nodes.Script then null else node
+        if node instanceof Nodes.Script
+          @nextNode = null
+          @lastNonChoiceNode = null
+
+        else
+          @nextNode = node
+
+        # Also store this as the last non-choice node, so choice nodes can jump to it, if needed.
+        @lastNonChoiceNode = node unless node instanceof Nodes.Choice
 
         # If there is some text left, parse the rest too.
         @_parseLine rest if rest
@@ -262,10 +270,10 @@ class LOI.Adventure.ScriptFile.Parser
     [..., jumpNode] = result if result
 
     # Create a dialog node without an actor (the player's character delivers it),
-    # followed by the jump (or simply following to the next node if no jump is present).
+    # followed by the jump (or following to the last non-choice node if no jump is present).
     dialogNode = new Nodes.DialogLine
       line: choiceLine
-      next: jumpNode or @nextNode
+      next: jumpNode or @lastNonChoiceNode
       
     # Create a choice node that delivers the line if chosen.
     choiceNode = new Nodes.Choice
@@ -325,4 +333,13 @@ class LOI.Adventure.ScriptFile.Parser
 
     new Nodes.Timeout
       milliseconds: milliseconds
+      next: @nextNode
+
+  ###
+    pause
+  ###
+  _parsePause: (line) ->
+    return unless match = line.match /^pause$/i
+
+    new Nodes.Pause
       next: @nextNode
