@@ -55,8 +55,9 @@ Package.onUse(function(api) {
 
   api.addFiles('pages/yearreview/helpers.coffee');
 
-  api.addFiles('pages/yearreview/years/years.coffee');
-  api.addFiles('pages/yearreview/years/year2016.coffee');
+  api.addFile('pages/yearreview/years/years');
+  api.addFile('pages/yearreview/years/year2016');
+  api.addFile('pages/yearreview/years/year2017');
 
   api.addFiles('pages/yearreview/layout/layout.html');
   api.addFiles('pages/yearreview/layout/layout.styl');
@@ -123,12 +124,13 @@ Package.onUse(function(api) {
   api.addFiles('pages/admin/admin.html');
   api.addFiles('pages/admin/admin.coffee');
 
-  api.addFiles('pages/admin/scripts/scripts.coffee');
-  api.addFiles('pages/admin/scripts/scripts.html');
-  api.addFiles('pages/admin/scripts/methods-server/archiveallsubmissions.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/reprocesssubmissions.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/updatethemesubmissions.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/reprocessprofiles.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/updateuserstatistics.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/retiremissingsubmissions.coffee', 'server');
+  api.addFile('pages/admin/scripts/scripts');
+  api.addHtml('pages/admin/scripts/scripts');
+  api.addServerFile('pages/admin/scripts/methods-server/processtweethistory');
+  api.addServerFile('pages/admin/scripts/methods-server/archiveallsubmissions');
+  api.addServerFile('pages/admin/scripts/methods-server/reprocesssubmissions');
+  api.addServerFile('pages/admin/scripts/methods-server/updatethemesubmissions');
+  api.addServerFile('pages/admin/scripts/methods-server/reprocessprofiles');
+  api.addServerFile('pages/admin/scripts/methods-server/updateuserstatistics');
+  api.addServerFile('pages/admin/scripts/methods-server/retiremissingsubmissions');
 });
