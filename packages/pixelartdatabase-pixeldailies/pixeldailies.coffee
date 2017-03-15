@@ -4,7 +4,8 @@ PADB = PixelArtDatabase
 
 class PADB.PixelDailies
   constructor: ->
-    Retronator.App.addPublicPage '/pixeldailies', @constructor.Pages.Home
+    AB.addRoute '/pixeldailies', @constructor.Pages.Home.Layout, @constructor.Pages.Home
+    AB.addRoute '/pixeldailies/about', @constructor.Pages.Home.Layout, @constructor.Pages.About
 
     @_addYearReviewPage '/pixeldailies/:year/artworks', @constructor.Pages.YearReview.Artworks
     @_addYearReviewPage '/pixeldailies/:year/artists', @constructor.Pages.YearReview.Artists

@@ -13,9 +13,11 @@
                 <img class="artwork" src="{{imageUrl}}"/>
               {{/if}}
             </div>
-            <figcaption class="caption">
-              {{> renderCaption artwork}}
-            </figcaption>
+            {{#if hasCaption}}
+              <figcaption class="caption">
+                {{> renderCaption artwork}}
+              </figcaption>
+            {{/if}}
           </figure>
           {{#if showVideoBackground}}
             <video class="background" src="{{videoUrl}}" loop poster="{{imageUrl}}">
