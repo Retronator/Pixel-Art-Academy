@@ -5,6 +5,9 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies.Pages.Home extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.Home'
 
+  @title: (options) ->
+    "Retronator // Pixel Dailies Archive"
+
   # Subscriptions
   @themes: new AB.Subscription
     name: "PixelArtDatabase.PixelDailies.Pages.Home.themes"

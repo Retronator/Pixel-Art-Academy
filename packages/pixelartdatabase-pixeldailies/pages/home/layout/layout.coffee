@@ -5,7 +5,7 @@ class PADB.PixelDailies.Pages.Home.Layout extends BlazeLayoutComponent
   @register 'PixelArtDatabase.PixelDailies.Pages.Home.Layout'
 
   @image: (parameters) ->
-    Meteor.absoluteUrl "pixelartdatabase/pixeldailies.png"
+    Meteor.absoluteUrl "pixelartdatabase/pixeldailies/archive.png"
 
   onCreated: ->
     super
