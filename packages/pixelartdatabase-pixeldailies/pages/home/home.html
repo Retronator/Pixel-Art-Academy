@@ -32,7 +32,7 @@
                 {{/if}}
               </div>
               <div class="date">
-                <a class="tweet-link" href="https://twitter.com/Pixel_Dailies/status/{{tweetData.id}}" target="_blank">
+                <a class="tweet-link" href="https://twitter.com/Pixel_Dailies/status/{{tweetData.id_str}}" target="_blank">
                   {{todaysDate}}
                 </a>
               </div>
@@ -55,8 +55,10 @@
         <a class="background-author" href="{{pixelDailiesArtistUrl author}}">@{{author}}</a>
       {{/with}}
     </div>
-    {{#each lastThemes}}
-      {{> PixelArtDatabase.PixelDailies.Pages.Home.Theme}}
+    {{#each themes}}
+      {{#if topSubmissions}}
+        {{> PixelArtDatabase.PixelDailies.Pages.Home.Theme}}
+      {{/if}}
     {{/each}}
   </div>
 </template>

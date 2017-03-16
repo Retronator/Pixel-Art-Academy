@@ -65,9 +65,6 @@ class PADB.PixelDailies.Pages.Home extends AM.Component
       day: 'numeric'
       year: 'numeric'
 
-  lastThemes: ->
-    @themes()[1..]
-
   background: ->
     url: 'https://pbs.twimg.com/media/C1XpVnQXEAAiNuD.png'
     author: 'vierbit'
