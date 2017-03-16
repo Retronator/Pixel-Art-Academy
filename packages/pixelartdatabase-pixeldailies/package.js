@@ -42,93 +42,68 @@ Package.onUse(function(api) {
   api.addFiles('submission/migrations/0002-converttohttps.coffee', 'server');
 
   // Pages
-  api.addFiles('pages/pages.coffee');
+  api.addFile('pages/pages');
 
-  api.addFiles('pages/home/home.html');
-  api.addFiles('pages/home/home.styl');
-  api.addFiles('pages/home/home.coffee');
+  api.addFile('pages/components/components');
+  api.addComponent('pages/components/themebanner/themebanner');
+  api.addStyleImport('pages/style/style');
 
-  api.addFiles('pages/yearreview/yearreview.coffee');
-  api.addFiles('pages/yearreview/yearreview.html');
-  api.addFiles('pages/yearreview/yearreview.styl');
-  api.addFiles('pages/yearreview/yearreview.import.styl', ['client'], {isImport: true});
+  api.addComponent('pages/home/home');
+  api.addServerFile('pages/home/subscriptions');
+  api.addComponent('pages/home/layout/layout');
+  api.addComponent('pages/home/header/header');
+  api.addComponent('pages/home/navigation/navigation');
+  api.addComponent('pages/home/artworkcaption/artworkcaption');
 
-  api.addFiles('pages/yearreview/helpers.coffee');
+  api.addComponent('pages/about/about');
 
-  api.addFiles('pages/yearreview/years/years.coffee');
-  api.addFiles('pages/yearreview/years/year2016.coffee');
+  api.addComponent('pages/yearreview/yearreview');
 
-  api.addFiles('pages/yearreview/layout/layout.html');
-  api.addFiles('pages/yearreview/layout/layout.styl');
-  api.addFiles('pages/yearreview/layout/layout.coffee');
+  api.addFile('pages/yearreview/helpers');
 
-  api.addFiles('pages/yearreview/components/components.coffee');
+  api.addFile('pages/yearreview/years/years');
+  api.addFile('pages/yearreview/years/year2016');
+  api.addFile('pages/yearreview/years/year2017');
 
-  api.addFiles('pages/yearreview/components/stream/stream.html');
-  api.addFiles('pages/yearreview/components/stream/stream.styl');
-  api.addFiles('pages/yearreview/components/stream/stream.coffee');
+  api.addComponent('pages/yearreview/layout/layout');
 
-  api.addFiles('pages/yearreview/components/calendar/calendar.html');
-  api.addFiles('pages/yearreview/components/calendar/calendar.styl');
-  api.addFiles('pages/yearreview/components/calendar/calendar.coffee');
-  api.addFiles('pages/yearreview/components/calendar/provider.coffee');
+  api.addFile('pages/yearreview/components/components');
+  api.addComponent('pages/yearreview/components/stream/stream');
+  api.addComponent('pages/yearreview/components/calendar/calendar');
+  api.addFile('pages/yearreview/components/calendar/provider');
+  api.addComponent('pages/yearreview/components/navigation/navigation');
+  api.addComponent('pages/yearreview/components/header/header');
+  api.addComponent('pages/yearreview/components/footer/footer');
+  api.addFile('pages/yearreview/components/mixins/mixins');
+  api.addFile('pages/yearreview/components/mixins/infinitescroll');
 
-  api.addFiles('pages/yearreview/components/navigation/navigation.html');
-  api.addFiles('pages/yearreview/components/navigation/navigation.styl');
-  api.addFiles('pages/yearreview/components/navigation/navigation.coffee');
+  api.addFile('pages/yearreview/themes/themescalendarprovider');
+  api.addServerFile('pages/yearreview/themes/subscriptions');
 
-  api.addFiles('pages/yearreview/components/themebanner/themebanner.html');
-  api.addFiles('pages/yearreview/components/themebanner/themebanner.styl');
-  api.addFiles('pages/yearreview/components/themebanner/themebanner.coffee');
+  api.addComponent('pages/yearreview/artworks/artworks');
+  api.addServerFile('pages/yearreview/artworks/subscriptions');
 
-  api.addFiles('pages/yearreview/components/header/header.html');
-  api.addFiles('pages/yearreview/components/header/header.styl');
-  api.addFiles('pages/yearreview/components/header/header.coffee');
-  
-  api.addFiles('pages/yearreview/components/footer/footer.html');
-  api.addFiles('pages/yearreview/components/footer/footer.styl');
-  api.addFiles('pages/yearreview/components/footer/footer.coffee');
+  api.addComponent('pages/yearreview/artists/artists');
+  api.addServerFile('pages/yearreview/artists/subscriptions');
 
-  api.addFiles('pages/yearreview/components/mixins/mixins.coffee');
-  api.addFiles('pages/yearreview/components/mixins/infinitescroll.coffee');
+  api.addComponent('pages/yearreview/artist/artist');
+  api.addFile('pages/yearreview/artist/calendarprovider');
+  api.addServerFile('pages/yearreview/artist/subscriptions');
 
-  api.addFiles('pages/yearreview/themes/themescalendarprovider.coffee');
-  api.addFiles('pages/yearreview/themes/subscriptions.coffee', 'server');
+  api.addComponent('pages/yearreview/day/day');
+  api.addServerFile('pages/yearreview/day/subscriptions');
 
-  api.addFiles('pages/yearreview/artworks/artworks.html');
-  api.addFiles('pages/yearreview/artworks/artworks.styl');
-  api.addFiles('pages/yearreview/artworks/artworks.coffee');
-  api.addFiles('pages/yearreview/artworks/subscriptions.coffee', 'server');
+  api.addComponent('pages/yearreview/about/about');
 
-  api.addFiles('pages/yearreview/artists/artists.html');
-  api.addFiles('pages/yearreview/artists/artists.styl');
-  api.addFiles('pages/yearreview/artists/artists.coffee');
-  api.addFiles('pages/yearreview/artists/subscriptions.coffee', 'server');
+  api.addUnstyledComponent('pages/admin/admin');
 
-  api.addFiles('pages/yearreview/artist/artist.html');
-  api.addFiles('pages/yearreview/artist/artist.styl');
-  api.addFiles('pages/yearreview/artist/artist.coffee');
-  api.addFiles('pages/yearreview/artist/calendarprovider.coffee');
-  api.addFiles('pages/yearreview/artist/subscriptions.coffee', 'server');
-
-  api.addFiles('pages/yearreview/day/day.html');
-  api.addFiles('pages/yearreview/day/day.styl');
-  api.addFiles('pages/yearreview/day/day.coffee');
-  api.addFiles('pages/yearreview/day/subscriptions.coffee', 'server');
-
-  api.addFiles('pages/yearreview/about/about.html');
-  api.addFiles('pages/yearreview/about/about.styl');
-  api.addFiles('pages/yearreview/about/about.coffee');
-
-  api.addFiles('pages/admin/admin.html');
-  api.addFiles('pages/admin/admin.coffee');
-
-  api.addFiles('pages/admin/scripts/scripts.coffee');
-  api.addFiles('pages/admin/scripts/scripts.html');
-  api.addFiles('pages/admin/scripts/methods-server/archiveallsubmissions.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/reprocesssubmissions.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/updatethemesubmissions.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/reprocessprofiles.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/updateuserstatistics.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/retiremissingsubmissions.coffee', 'server');
+  api.addFile('pages/admin/scripts/scripts');
+  api.addHtml('pages/admin/scripts/scripts');
+  api.addServerFile('pages/admin/scripts/methods-server/processtweethistory');
+  api.addServerFile('pages/admin/scripts/methods-server/archiveallsubmissions');
+  api.addServerFile('pages/admin/scripts/methods-server/reprocesssubmissions');
+  api.addServerFile('pages/admin/scripts/methods-server/updatethemesubmissions');
+  api.addServerFile('pages/admin/scripts/methods-server/reprocessprofiles');
+  api.addServerFile('pages/admin/scripts/methods-server/updateuserstatistics');
+  api.addServerFile('pages/admin/scripts/methods-server/retiremissingsubmissions');
 });

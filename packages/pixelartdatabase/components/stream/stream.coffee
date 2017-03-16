@@ -60,6 +60,9 @@ class PADB.Components.Stream extends AM.Component
 
     @_$window.off '.pixelartdatabase-components-stream'
 
+  hasCaption: ->
+    @captionComponentClass?
+
   renderCaption: ->
     caption = new @captionComponentClass
     caption.renderComponent @currentComponent()

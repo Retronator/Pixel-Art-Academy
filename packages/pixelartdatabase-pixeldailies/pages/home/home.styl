@@ -1,4 +1,214 @@
 @import "{retronator:landsofillusions}/style/style.import"
+@import "../style/style.import"
 
 .pixelartdatabase-pixeldailies-pages-home
-  // TODO
+  .intro
+    position relative
+    padding 50rem 0 50rem
+    min-height 67.2vw
+    color atariGrey(4)
+    kyrou-9()
+    line-height 14rem
+    overflow hidden
+
+    .page-content
+      position relative
+      z-index 1
+      adventure-link()
+      text-align justify
+      hyphens auto
+      background transparentify(atariGrey(1), 0.8)
+      box-shadow 2rem 2rem 0 atariGrey(0),
+                 0 10rem 20rem transparentify(atariGrey(0), 0.5)
+
+      a
+        display inline
+        border-bottom none
+        text-decoration none
+        color atariGrey(6)
+
+      strong
+        kyrou-7()
+        color atariGrey(7)
+        adventure-link()
+
+        a
+          padding-left 1rem
+          line-height 8rem
+
+          &:hover
+          &:focus
+            border-top 1rem solid atariGrey(7)
+
+      blockquote
+        margin 0
+        padding 0 2em
+        border-left 1rem solid atariGrey(4)
+        color atariGrey(3)
+        line-height 11rem
+
+        p:first-child::before
+        p:last-child::after
+          content '"'
+
+      .video
+        margin-top 5rem
+
+      .welcome
+        .todays-theme
+          position relative
+          z-index 1
+          background atariGrey(7)
+          color atariGrey(0)
+          margin 20rem 10rem
+          padding 7rem
+          text-align left
+          hyphens none
+          adventure()
+          filter drop-shadow(2rem 2rem 0 atariGrey(2))
+
+          &::before
+            content ''
+            position absolute
+            z-index -1
+            background atariGrey(7)
+            top 1rem
+            bottom 1rem
+            left -1rem
+            right -1rem
+
+          &::after
+            content ''
+            position absolute
+            z-index -1
+            background atariGrey(7)
+            top 2rem
+            bottom 2rem
+            left -2rem
+            right -2rem
+
+          a
+            color atariGrey(0)
+
+            &:hover
+              color #31a2f2
+
+          .header
+            .avatar
+              position relative
+              width 30rem
+              vertical-align middle
+              pixel-image-rendering()
+              box-shadow 1rem 1rem 0 atariGrey(2)
+
+              &:hover
+                top -1rem
+                left -1rem
+                box-shadow 2rem 2rem 0 atariGrey(2)
+
+            .names
+              display inline-block
+              margin-left 8rem
+              vertical-align middle
+
+              .name
+                display block
+                kyrou-9()
+                line-height 14rem
+                font-weight bold
+
+              .username
+                display block
+                color atariGrey(3)
+
+                &:hover
+                  color #31a2f2
+
+          .text
+            kyrou-9()
+            font-weight bold
+            margin 10rem 0
+
+          .date
+            .tweet-link
+              color atariGrey(3)
+
+              &:hover
+                color #31a2f2
+
+    .below-hint
+      position relative
+      z-index 1
+      text-align center
+      margin-top 20rem
+      opacity 0.8
+      adventure()
+
+    .background
+      position absolute
+      z-index 0
+      top 0
+      left 0
+      right 0
+      pixel-image-rendering()
+      overflow hidden
+
+      .image
+        width 100%
+
+      &::after
+        content ''
+        absolute-cover()
+        z-index 0
+        background linear-gradient(to top, atariGrey(0) 0%, transparent 100%)
+
+    .background-author
+      position absolute
+      z-index 2
+      top 0
+      right 0
+      acme-9()
+      color atariGrey(7)
+      font-size 8px
+      padding 4rem
+      opacity 0.7
+      text-decoration none
+      transition opacity 0.2s
+      text-shadow 0 1rem 1rem black
+
+      &:hover
+        opacity 1
+
+  .theme
+    position relative
+
+    .theme-link
+      text-decoration none
+
+    .pixelartdatabase-components-stream
+      .artworks
+        .artwork-area
+          &:last-child
+            .caption
+              padding-bottom 40rem
+
+    .view-all
+      position absolute
+      bottom 20rem
+      left 0
+      right 0
+      text-shadow 0 1rem 2rem black
+      text-align center
+
+      .view-all-link
+        opacity 0.6
+        transition opacity 0.2s
+        text-decoration none
+
+        .hashtags
+          text-decoration underline
+
+        &:hover
+        &:focus
+         opacity 1
+

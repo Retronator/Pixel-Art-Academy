@@ -2,8 +2,8 @@ AB = Artificial.Base
 AM = Artificial.Mirage
 PADB = PixelArtDatabase
 
-class PADB.PixelDailies.Pages.YearReview.Components.ThemeBanner extends AM.Component
-  @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Components.ThemeBanner'
+class PADB.PixelDailies.Pages.Components.ThemeBanner extends AM.Component
+  @register 'PixelArtDatabase.PixelDailies.Pages.Components.ThemeBanner'
 
   dateTitle: ->
     theme = @data()
@@ -16,4 +16,4 @@ class PADB.PixelDailies.Pages.YearReview.Components.ThemeBanner extends AM.Compo
 
   themeImageUrl: ->
     theme = @data()
-    theme.topSubmissions[0]?.images[0].imageUrl
+    theme.topSubmissions?[0]?.images[0].imageUrl
