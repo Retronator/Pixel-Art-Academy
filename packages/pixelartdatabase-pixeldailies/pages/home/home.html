@@ -4,12 +4,12 @@
     <div class="intro">
       <div class="page-content">
         <div class="welcome">
-          {{#Markdown}}
-            Welcome to the Pixel Dailies Archive. This is a fan project made to highlight the [Pixel Dailies](https://twitter.com/Pixel_Dailies) community.
-            Learn more on the [about page]({{flowRouterPath 'PixelArtDatabase.PixelDailies.Pages.About'}}).
-          {{/Markdown}}
-
           {{#with todaysTheme}}
+            {{#Markdown}}
+              Welcome to the Pixel Dailies Archive. This is a fan project made to highlight the [Pixel Dailies](https://twitter.com/Pixel_Dailies) community.
+              Learn more on the [about page]({{flowRouterPath 'PixelArtDatabase.PixelDailies.Pages.About'}}).
+            {{/Markdown}}
+
             <div class="todays-theme">
               <div class="header">
                 <a href="https://twitter.com/Pixel_Dailies" target="_blank">
@@ -37,14 +37,17 @@
                 </a>
               </div>
             </div>
-          {{/with}}
 
-          {{#Markdown}}
-            To submit an artwork, post it on your Twitter account and include the theme hashtag as well as
-            @pixel\_dailies and #pixel\_dailies in the text.
-          {{/Markdown}}
+            {{#Markdown}}
+              To submit an artwork, post it with your Twitter account and include {{#each hashtags}}#{{this}}, {{/each}}
+              #pixel\_dailies, and @pixel\_dailies in the text.
+            {{/Markdown}}
+          {{/with}}
         </div>
       </div>
+      <p class="below-hint">
+        Below are top submissions from previous days.
+      </p>
       {{#with background}}
         <div class="background">
           <img class="image" src="{{url}}"/>
@@ -52,7 +55,7 @@
         <a class="background-author" href="{{pixelDailiesArtistUrl author}}">@{{author}}</a>
       {{/with}}
     </div>
-    {{#each lastWeekThemes}}
+    {{#each lastThemes}}
       {{> PixelArtDatabase.PixelDailies.Pages.Home.Theme}}
     {{/each}}
   </div>
@@ -67,7 +70,7 @@
       {{> PixelArtDatabase.Components.Stream args artworkCaptionClass}}
     {{/with}}
     <div class="view-all">
-      <a href="{{themeUrl}}" class="view-all-link">View all <span class="hashtags">{{#each hashtags}}#{{this}}{{/each}}</span> submissions</a>
+      <a href="{{themeUrl}}" class="view-all-link">View all <span class="hashtags">{{#each hashtags}}#{{this}} {{/each}}</span> submissions</a>
     </div>
   </div>
 </template>

@@ -66,7 +66,7 @@ class PADB.PixelDailies.Pages.YearReview.Helpers
 
   @artistUrl: (screenName) ->
     FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
-      year: FlowRouter.getParam 'year'
+      year: FlowRouter.getParam('year') or new Date().getFullYear()
       screenName: screenName
 
   Template.registerHelper 'pixelDailiesArtistUrl', (screenName) =>

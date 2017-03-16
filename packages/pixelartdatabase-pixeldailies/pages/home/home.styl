@@ -1,10 +1,14 @@
 @import "{retronator:landsofillusions}/style/style.import"
+@import "../style/style.import"
 
 .pixelartdatabase-pixeldailies-pages-home
   .intro
     position relative
-    padding 50rem 0
+    padding 50rem 0 50rem
+    min-height 67.2vw
     color atariGrey(4)
+    kyrou-9()
+    line-height 14rem
     overflow hidden
 
     .page-content
@@ -60,6 +64,7 @@
           padding 7rem
           text-align left
           hyphens none
+          adventure()
           filter drop-shadow(2rem 2rem 0 atariGrey(2))
 
           &::before
@@ -108,7 +113,8 @@
 
               .name
                 display block
-                kyrou-7()
+                kyrou-9()
+                line-height 14rem
                 font-weight bold
 
               .username
@@ -119,33 +125,42 @@
                   color #31a2f2
 
           .text
-            kyrou-7()
+            kyrou-9()
+            font-weight bold
             margin 10rem 0
 
           .date
             .tweet-link
-              color atariGrey(2)
+              color atariGrey(3)
 
               &:hover
                 color #31a2f2
+
+    .below-hint
+      position relative
+      z-index 1
+      text-align center
+      margin-top 20rem
+      opacity 0.8
+      adventure()
 
     .background
       position absolute
       z-index 0
       top 0
-      left -5%
-      right -5%
+      left 0
+      right 0
       pixel-image-rendering()
       overflow hidden
 
       .image
         width 100%
 
-    &::after
-      content ''
-      absolute-cover()
-      z-index 0
-      background linear-gradient(to top, atariGrey(0) 0%, transparent 100%)
+      &::after
+        content ''
+        absolute-cover()
+        z-index 0
+        background linear-gradient(to top, atariGrey(0) 0%, transparent 100%)
 
     .background-author
       position absolute

@@ -6,19 +6,52 @@ class PADB.PixelDailies.Pages.Home extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.Home'
 
   # Subscriptions
-  @themes: new AB.Subscription name: "PixelArtDatabase.PixelDailies.Pages.Home.themes"
+  @themes: new AB.Subscription
+    name: "PixelArtDatabase.PixelDailies.Pages.Home.themes"
+    query: (limit) ->
+      themesCursor = PADB.PixelDailies.Theme.documents.find {},
+        sort:
+          time: -1
+        limit: limit
 
+      themes = themesCursor.fetch()
+      themeIds = (theme._id for theme in themes)
+
+      submissionsCursor = PADB.PixelDailies.Submission.documents.find
+        'theme._id':
+          $in: themeIds
+
+      [themesCursor, submissionsCursor]
+
+  mixins: -> [@infiniteScroll]
+
+  constructor: ->
+    super
+
+    @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
+      step: 3
+      windowHeightCounts: 3
+  
   onCreated: ->
     super
 
-    @constructor.themes.subscribe()
+    # Subscribe to last themes.
+    @autorun (computation) =>
+      @constructor.themes.subscribe @, @infiniteScroll.limit()
+
+    # Prepare artworks for the stream.
+    @themes = new ComputedField =>
+      [themesCursor, submissionsCursor] = @constructor.themes.query @infiniteScroll.limit()
+      themesCursor.fetch()
+
+    # Update current count for infinite scroll.
+    @autorun (computation) =>
+      themes = @themes()
+
+      @infiniteScroll.updateCount themes?.length or 0
 
   todaysTheme: ->
-    theme = PADB.PixelDailies.Theme.documents.findOne {},
-      sort:
-        time: -1
-
-    console.log "t", theme
+    theme = @themes()[0]
 
     # Return empty object when loading so that a placeholder is rendered.
     theme or {}
@@ -32,16 +65,12 @@ class PADB.PixelDailies.Pages.Home extends AM.Component
       day: 'numeric'
       year: 'numeric'
 
-  lastWeekThemes: ->
-    PADB.PixelDailies.Theme.documents.find {},
-      sort:
-        time: -1
-      limit: 7
-      skip: 1
+  lastThemes: ->
+    @themes()[1..]
 
   background: ->
-    url: 'https://pbs.twimg.com/media/C18pKdxUcAAKyQX.png'
-    author: 'EnchaeC'
+    url: 'https://pbs.twimg.com/media/C1XpVnQXEAAiNuD.png'
+    author: 'vierbit'
 
   class @Theme extends AM.Component
     @register 'PixelArtDatabase.PixelDailies.Pages.Home.Theme'
@@ -69,7 +98,7 @@ class PADB.PixelDailies.Pages.Home extends AM.Component
       return unless theme.topSubmissions
 
       # Show top 3 artworks.
-      artworks = for submission in theme.topSubmissions[...3]
+      artworks = for submission in theme.topSubmissions[...3] when submission.images
         PADB.PixelDailies.Pages.YearReview.Helpers.convertSubmissionToArtworks submission
 
       _.flatten artworks
