@@ -7,11 +7,6 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Cafe extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Cafe'
   @url: -> 'retronator/reception'
-  @scriptUrls: -> [
-    'retronator-hq/hq.script'
-    'retronator-hq/locations/1stfloor/reception/burra.script'
-    'retronator-hq/actors/elevatorbutton.script'
-  ]
 
   @version: -> '0.0.1'
 
@@ -19,8 +14,10 @@ class HQ.Cafe extends LOI.Adventure.Location
   @shortName: -> "café"
   @description: ->
     "
-      You are at a long counter at the south side of the lobby. The receptionist is working on
-      something very important.
+      The cosy café has plenty of tables and you recognize some familiar faces from the Pixel Art Academy Facebook
+      group. The north wall displays a selection of artworks from the current featured pixel artist. In the south
+      there is a self-serve bar and Burra's carefully decorated workstation. A passageway connects to the coworking space
+      in the west, and there are big steps with stairs heading up towards the store.
     "
   
   @initialize()
@@ -30,19 +27,48 @@ class HQ.Cafe extends LOI.Adventure.Location
 
     @loginButtonsSession = Accounts._loginButtonsSession
 
-  @state: ->
-    things = {}
-    things[PAA.Cast.Burra.id()] =
-      displayOrder: 0
-      inventory: {}
+  things: -> [
+    @constructor.Artworks
+    PAA.Cast.Burra
+  ]
 
-    exits = {}
-    exits[Vocabulary.Keys.Directions.North] = HQ.Lobby.id()
-    exits[Vocabulary.Keys.Directions.West] = HQ.Gallery.id()
+  exits: ->
+    "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.SecondStreet
 
-    _.merge {}, super,
-      things: things
-      exits: exits
+  class @BurraListener extends LOI.Adventure.Listener
+    @id: -> "Retronator.HQ.Cafe.Burra"
+
+    @scriptUrls: -> [
+      'retronator_retronator-hq/1stfloor/cafe/burra.script'
+    ]
+
+    class @Script extends LOI.Adventure.Script
+      @id: -> "Retronator.HQ.Cafe.Burra"
+      @initialize()
+
+    @initialize()
+
+    startScript: (options) ->
+      LOI.adventure.director.startScript @script, options
+
+    onScriptsLoaded: ->
+      @script = @scripts[@id()]
+
+    onCommand: (commandResponse) ->
+      return unless burra = LOI.adventure.getCurrentThing PAA.Cast.Burra
+      @script.setThings {burra}
+
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.TalkTo, burra.avatar]
+        action: => LOI.adventure.director.startScript @script
+
+    onEnter: (enterResponse) ->
+
+    onExitAttempt: (exitResponse) ->
+      
+    onExit: (exitResponse) ->
+      
+    cleanup: ->
 
   onScriptsLoaded: ->
     # Burra

@@ -5,5 +5,5 @@ class Retronator.HQ
 
 if Meteor.isServer
   LOI.initializePackage
-    id: 'retronator-hq'
+    id: 'retronator_retronator-hq'
     assets: Assets

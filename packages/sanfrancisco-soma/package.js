@@ -25,4 +25,5 @@ Package.onUse(function(api) {
   api.addFile('moscone/moscone');
   api.addFile('2nd/2nd');
   api.addFile('2nd/retronatorhq');
+  api.addFile('2nd/artistsign');
 });

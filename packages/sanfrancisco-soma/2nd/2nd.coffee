@@ -14,9 +14,9 @@ class Soma.SecondStreet extends LOI.Adventure.Location
   @fullName: -> "2nd Street"
   @description: ->
     "
-      You found yourself on 2nd Street in San Francisco. Companies such as LinkedIn and Zipcar have offices here …
+      You find yourself on 2nd Street in San Francisco. Companies such as LinkedIn and Zipcar have offices here …
       as well as Retronator. Retronator headquarters sport a café, store, gallery and a coworking space. It's all very
-      inviting 
+      enticing and inviting you to ![go in](in).
     "
   
   @initialize()
@@ -26,6 +26,7 @@ class Soma.SecondStreet extends LOI.Adventure.Location
 
   things: -> [
     Soma.SecondStreet.RetronatorHQ
+    Soma.SecondStreet.ArtistSign
   ]
 
   exits: ->

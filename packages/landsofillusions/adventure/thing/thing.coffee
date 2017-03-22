@@ -151,6 +151,7 @@ class LOI.Adventure.Thing extends AM.Component
       onExit: (exitResponse) -> @options.parent.onExit.call @, exitResponse
       cleanup: -> @options.parent.cleanup.call @
 
+      # Sets things that have a shorthand name in the script, by pulling them from current things.
       setCurrentThings: (thingClasses, callback) ->
         Tracker.autorun (computation) =>
           things = {}

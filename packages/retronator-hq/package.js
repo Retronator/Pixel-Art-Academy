@@ -32,6 +32,7 @@ Package.onUse(function(api) {
   // Locations
 
   api.addFile('1stfloor/cafe/cafe');
+  api.addFile('1stfloor/cafe/artworks');
   api.addScript('1stfloor/cafe/burra');
 
   /*

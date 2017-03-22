@@ -6,8 +6,6 @@ Vocabulary = LOI.Parser.Vocabulary
 class RS.AirshipTerminal.Airship.Cabin extends LOI.Adventure.Location
   @id: -> 'Retropolis.AirshipTerminal.Airship.Cabin'
   @url: -> 'airship/cabin'
-  @scriptUrls: -> [
-  ]
 
   things: -> [
     RS.AirshipTerminal.Airship.Cabin.TableDisplay

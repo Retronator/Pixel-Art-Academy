@@ -24,6 +24,12 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
           form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
           action: action
 
+        # Also do an exact phrase with the go verb to avoid ignoring
+        # direction keys that are also prepositions (such as 'in').
+        commandResponse.onExactPhrase
+          form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
+          action: action
+
         commandResponse.onExactPhrase
           form: [directionKey]
           action: action
