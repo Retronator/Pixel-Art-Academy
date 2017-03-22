@@ -16,8 +16,13 @@ Package.onUse(function(api) {
 
   api.export('SanFrancisco');
 
+  api.addFile('soma');
+
   // Locations
 
-  api.addFiles('locations/locations.coffee');
-  
+  api.addFile('caltrain/caltrain');
+  api.addFile('4thking/4thking');
+  api.addFile('moscone/moscone');
+  api.addFile('2nd/2nd');
+  api.addFile('2nd/retronatorhq');
 });

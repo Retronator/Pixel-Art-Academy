@@ -1,0 +1,146 @@
+# Retronator.HQ.Elevator.Scripts.NumberPad
+
+## Start
+
+> You look at the number pad and see a selection of floors.
+
+> The number on the display indicates you are at first floor. `location.floor is 1`
+> The number on the display indicates you are at second floor. `location.floor is 2`
+> The number on the display indicates you are at third floor. `location.floor is '3a' or location.floor is '3b'`
+> The number on the display indicates you are at fourth floor. `location.floor is 4`
+
+## Selection
+
+* 1 - Lobby -> [Lobby]
+* 2 - Store -> [Store]
+* 3A - Lands of Illusions -> [LOI]
+* 3B - Idea Garden -> [IdeaGarden]
+* 4 - Studio -> [Studio]
+* Nevermind -> [Nevermind] `not Travel`
+* Nevermind -> [End] `Travel`
+
+## Lobby
+
+-> [SameFloor] `location.floor is 1`
+
+`_nextFloor = 1`
+
+-> [Travel]
+
+## Store
+
+-> [SameFloor] `location.floor is 2`
+
+`_nextFloor = 2`
+
+-> [Travel]
+
+## LOI
+
+-> [SameFloor] `location.floor is '3a'`
+
+`_nextFloor = '3a'`
+
+-> [Travel]
+
+## IdeaGarden
+
+-> [SameFloor] `location.floor is '3b'`
+
+`_nextFloor = '3b'`
+
+-> [Travel]
+
+## Studio
+
+-> [SameFloor] `location.floor is 4`
+
+`_nextFloor = 4`
+
+-> [Travel]
+
+## SameFloor
+
+> You press the Lobby button, but nothing happens. `location.floor is 1`
+> You press the Store button, but nothing happens. `location.floor is 2`
+> You press the Lands of Illusions button, but nothing happens. `location.floor is '3a'`
+> You press the Idea Garden button, but nothing happens. `location.floor is '3b'`
+> You press the Studio button, but nothing happens. `location.floor is 4`
+
+> You realize you are already on the first floor and feel a little dumb. `location.floor is 1`
+> You realize you are already on the second floor and feel a little dumb. `location.floor is 2`
+> You realize you are already on the third floor and feel a little dumb. `location.floor is '3a' or location.floor is '3b'`
+> You realize you are already on the fourth floor and feel a little dumb. `location.floor is 4`
+
+-> [Selection]
+
+## Travel
+
+-> [PlayerAccess] `_nextFloor is '3a' and @user.itemKeys['PixelArtAcademy.PlayerAccess']`
+-> [NoPlayerAccess] `_nextFloor is '3a' and not @user.itemKeys['PixelArtAcademy.PlayerAccess']`
+
+-> [IdeaGardenAccess] `_nextFloor is '3b' and @user.itemKeys['Retropolis.IdeaGardenAccess']`
+-> [NoIdeaGardenAccess] `_nextFloor is '3b' and not @user.itemKeys['Retropolis.IdeaGardenAccess']`
+
+-> [PatronClubMember] `_nextFloor is 4 and @user.itemKeys['Retropolis.PatronClubMember']`
+-> [NoPatronClubMember] `_nextFloor is 4 and not @user.itemKeys['Retropolis.PatronClubMember']`
+
+## TravelContinues
+
+> Number `_nextFloor` glows and the doors close.
+
+`location.floor = null`
+
+Wait 2000ms.
+
+`location.floor = _nextFloor`
+
+> After a short wait the elevator opens onto the Lobby floor. `location.floor is 1`
+> After a short wait the elevator opens onto the Store floor. `location.floor is 2`
+> After a short wait the elevator arrives to third floor with doors opening to Lands of Illusions. `location.floor is '3a'`
+> After a short wait the elevator arrives to third floor with doors opening to Idea Garden. `location.floor is '3b'`
+> After a short wait the elevator opens into the studio apartment. `location.floor is 4`
+
+-> [End]
+
+## PlayerAccess
+
+> The display asks for authorization and you use your keycard to confirm you are a player of Pixel Art Academy.
+
+-> [TravelContinues]
+
+## IdeaGardenAccess
+
+> The display asks for authorization and you use your keycard to confirm you have access to the Idea Garden.
+
+-> [TravelContinues]
+
+## PatronClubMember
+
+> The display asks for authorization and you use your keycard to confirm you are one of the patrons of Pixel Art Academy.
+
+-> [TravelContinues]
+
+## NoPlayerAccess
+
+> The display asks for authorization but you are not yet a player of Pixel Art Academy. The elevator stays put.
+
+-> [Selection]
+
+## NoIdeaGardenAccess
+
+> The display asks for authorization but your keycard does not have Idea Garden access. The elevator stays put.
+
+-> [Selection]
+
+## NoPatronClubMember
+
+> The display asks for authorization but you are not a member of the Patron Club. The elevator stays put.
+
+-> [Selection]
+
+## Nevermind
+
+> You change your mind and leave the number pad alone.
+
+## End

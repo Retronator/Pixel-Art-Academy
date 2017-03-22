@@ -23,6 +23,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartdatabase');
   api.use('retronator:pixelartdatabase-pixeldailies');
+  api.use('retronator:sanfrancisco-soma');
 
   /*
   api.use('retronator:landsofillusions-construct');

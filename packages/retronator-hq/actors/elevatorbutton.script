@@ -2,13 +2,13 @@
 
 ## Start
 
--> [SameFloor] `@locations['Retronator.HQ.Locations.Elevator'].floor is _buttonFloor`
+-> [SameFloor] `@locations['Retronator.HQ.Elevator'].floor is _buttonFloor`
 
 > You press the button and it glows with a cool light.
 
 Wait 2000ms.
 
-`@locations['Retronator.HQ.Locations.Elevator'].floor = _buttonFloor`
+`@locations['Retronator.HQ.Elevator'].floor = _buttonFloor`
 
 > After a short wait, the elevator arrives.
 

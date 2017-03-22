@@ -33,7 +33,7 @@ class HQ.Items.Wallet extends LOI.Adventure.Item
       verbs: [Vocabulary.Keys.Verbs.Use]
       action: =>
         location = LOI.adventure.currentLocation()
-        if location.id() is HQ.Locations.Reception.id()
+        if location.id() is HQ.Cafe.id()
           location.useWallet()
         
         else

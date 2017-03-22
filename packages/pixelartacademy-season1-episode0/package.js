@@ -61,4 +61,10 @@ Package.onUse(function(api) {
   // Chapter 2
 
   api.addComponent('chapter2/chapter2');
+
+  // Registration
+
+  api.addFile('chapter2/sections/registration/registration');
+
+  api.addFile('chapter2/sections/registration/scenes/cafe/cafe');
 });

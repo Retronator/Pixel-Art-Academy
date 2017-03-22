@@ -1,0 +1,54 @@
+<template name="Retronator.HQ.Store.Shelf">
+  <div class="retronator-hq-locations-store-shelf">
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#LandsOfIllusions.Components.Overlay}}
+    {{else}}
+      <div class="viewport-area">
+        <div class="shelf">
+          <p>Select the item you would like to purchase:</p>
+          <ul class="store-items">
+            {{#each storeItems}}
+              <li class="store-item">
+                <h2 class="name">{{> t9n name}}</h2>
+                <p class="description">{{> t9n description}}</p>
+                <div class="buy-area">
+                  <div class="price">
+                    ${{price}}
+                    {{#if discountedFrom}}
+                      <del class="discounter-from">${{discountedFrom}}</del>
+                    {{/if}}
+                  </div>
+                  {{#if playerTablet}}
+                    {{#if canBuy}}
+                      <button class="add-to-cart-button">Add to cart</button>
+                    {{else}}
+                      {{#if currentUser}}
+                        <p class="hint not-eligible">You are not eligible to buy this item.</p>
+                      {{else}}
+                      <p class="hint">You need to be signed in to check eligibility for this item.</p>
+                      {{/if}}
+                    {{/if}}
+                  {{else}}
+                    <p class="hint">You need the Retronator Spectrum Tablet to purchase items.</p>
+                  {{/if}}
+                </div>
+                {{#if items}}
+                  <div class="bundle">
+                    <p>
+                      This bundle includes:
+                    </p>
+                    <ul class="bundle-items">
+                      {{#each items}}
+                        {{> Retronator.Store.Components.BundleItem}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>
