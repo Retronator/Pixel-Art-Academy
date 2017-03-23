@@ -21,10 +21,16 @@ class LOI.Adventure extends LOI.Adventure
       thingClasses = _.without thingClasses, undefined
 
       for thingClass in thingClasses
-        # Create the thing if needed. We create the instance in a non-reactive
-        # context so that reruns of this autorun don't invalidate instance's autoruns.
-        Tracker.nonreactive =>
-          @_things[thingClass.id()] ?= new thingClass
+        # Create the thing if needed. We allow passing thing instances as well, so no need to instantiate those.
+        if thingClass instanceof LOI.Adventure.Thing
+          thingInstance = thingClass
+          @_things[thingClass.id()] = thingInstance
+
+        else
+          # We create the instance in a non-reactive context so that
+          # reruns of this autorun don't invalidate instance's autoruns.
+          Tracker.nonreactive =>
+            @_things[thingClass.id()] ?= new thingClass
 
         @_things[thingClass.id()]
 
@@ -57,9 +63,10 @@ class LOI.Adventure extends LOI.Adventure
       sceneThings = for scene in @currentScenes()
         scene.things()
 
+      # Note: thing classes can also hold instances, if they were created manually by locations.
       thingClasses = _.uniq _.flattenDeep _.union locationThings, sceneThings
 
-      thing for thing in currentPhysicalThings when thing.constructor in thingClasses
+      thing for thing in currentPhysicalThings when thing.constructor in thingClasses or thing in thingClasses
 
   getCurrentThing: (thingClassOrId) ->
     thingClass = _.thingClass thingClassOrId

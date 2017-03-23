@@ -1,25 +1,27 @@
-# Retronator.HQ.Elevator.Scripts.NumberPad
+# Retronator.HQ.Elevator.NumberPad
 
 ## Start
 
 > You look at the number pad and see a selection of floors.
 
-> The number on the display indicates you are at first floor. `location.floor is 1`
-> The number on the display indicates you are at second floor. `location.floor is 2`
-> The number on the display indicates you are at third floor. `location.floor is '3a' or location.floor is '3b'`
-> The number on the display indicates you are at fourth floor. `location.floor is 4`
+> The number on the display indicates you are on floor `location.floor`. `location.floor > 0`
+> The number on the display indicates you are in basement `-location.floor`. `location.floor < 0`
 
 ## Selection
 
-* 1 - Lobby -> [Lobby]
+* 6 - Terrace -> [Terrace] `@user.itemKeys['Retropolis.PatronClubMember']`
+* 5 - Residence -> [Residence] `@user.itemKeys['Retropolis.PatronClubMember']`
+* 4 - Art Studio -> [Studio]
+* 3 - Gallery -> [Gallery]
 * 2 - Store -> [Store]
-* 3A - Lands of Illusions -> [LOI]
-* 3B - Idea Garden -> [IdeaGarden]
-* 4 - Studio -> [Studio]
+* 1 - Café -> [Cafe]
+* B1 - Lands of Illusions -> [LOI]
+* B2 - Recording Studio -> [Recording]
+* B3 - Secret Lab -> [SecretLab] `@user.itemKeys['Retropolis.SecretLabAccess']`
 * Nevermind -> [Nevermind] `not Travel`
 * Nevermind -> [End] `Travel`
 
-## Lobby
+## Cafe
 
 -> [SameFloor] `location.floor is 1`
 
@@ -35,19 +37,11 @@
 
 -> [Travel]
 
-## LOI
+## Gallery
 
--> [SameFloor] `location.floor is '3a'`
+-> [SameFloor] `location.floor is 3`
 
-`_nextFloor = '3a'`
-
--> [Travel]
-
-## IdeaGarden
-
--> [SameFloor] `location.floor is '3b'`
-
-`_nextFloor = '3b'`
+`_nextFloor = 3`
 
 -> [Travel]
 
@@ -59,53 +53,107 @@
 
 -> [Travel]
 
+## Residence
+
+-> [SameFloor] `location.floor is 5`
+
+`_nextFloor = 5`
+
+-> [Travel]
+
+## Terrace
+
+-> [SameFloor] `location.floor is 6`
+
+`_nextFloor = 6`
+
+-> [Travel]
+
+## LOI
+
+-> [SameFloor] `location.floor is -1`
+
+`_nextFloor = -1`
+
+-> [Travel]
+
+## Recording
+
+-> [SameFloor] `location.floor is -2`
+
+`_nextFloor = -2`
+
+-> [Travel]
+
+## SecretLab
+
+-> [SameFloor] `location.floor is -3`
+
+`_nextFloor = -3`
+
+-> [Travel]
+
 ## SameFloor
 
-> You press the Lobby button, but nothing happens. `location.floor is 1`
+> You press the Café button, but nothing happens. `location.floor is 1`
 > You press the Store button, but nothing happens. `location.floor is 2`
-> You press the Lands of Illusions button, but nothing happens. `location.floor is '3a'`
-> You press the Idea Garden button, but nothing happens. `location.floor is '3b'`
-> You press the Studio button, but nothing happens. `location.floor is 4`
+> You press the Galery button, but nothing happens. `location.floor is 3`
+> You press the Art Studio button, but nothing happens. `location.floor is 4`
+> You press the Residence button, but nothing happens. `location.floor is 5`
+> You press the Terrace button, but nothing happens. `location.floor is 6`
+> You press the Lands of Illusions button, but nothing happens. `location.floor is -1`
+> You press the Recording Studio button, but nothing happens. `location.floor is -2`
+> You press the Secret Lab button, but nothing happens. `location.floor is -3`
 
 > You realize you are already on the first floor and feel a little dumb. `location.floor is 1`
 > You realize you are already on the second floor and feel a little dumb. `location.floor is 2`
-> You realize you are already on the third floor and feel a little dumb. `location.floor is '3a' or location.floor is '3b'`
+> You realize you are already on the third floor and feel a little dumb. `location.floor is 3`
 > You realize you are already on the fourth floor and feel a little dumb. `location.floor is 4`
+> You realize you are already on the fifth floor and feel a little dumb. `location.floor is 5`
+> You realize you are already on the sixth floor and feel a little dumb. `location.floor is 6`
+> You realize you are already in the basement and feel a little dumb. `location.floor is -1`
+> You realize you are already in the 2nd basement level and feel a little dumb. `location.floor is -2`
+> You realize you are already in the 3rd basement level and feel a little dumb. `location.floor is -3`
 
 -> [Selection]
 
 ## Travel
 
--> [PlayerAccess] `_nextFloor is '3a' and @user.itemKeys['PixelArtAcademy.PlayerAccess']`
--> [NoPlayerAccess] `_nextFloor is '3a' and not @user.itemKeys['PixelArtAcademy.PlayerAccess']`
+-> [IdeaGardenAccess] `_nextFloor is -2 and @user.itemKeys['Retropolis.IdeaGardenAccess']`
+-> [NoIdeaGardenAccess] `_nextFloor is -2 and not @user.itemKeys['Retropolis.IdeaGardenAccess']`
 
--> [IdeaGardenAccess] `_nextFloor is '3b' and @user.itemKeys['Retropolis.IdeaGardenAccess']`
--> [NoIdeaGardenAccess] `_nextFloor is '3b' and not @user.itemKeys['Retropolis.IdeaGardenAccess']`
+-> [SecretLabAccess] `_nextFloor < -2 and @user.itemKeys['Retropolis.SecretLabAccess']`
+-> [NoSecretLabAccess] `_nextFloor < -2 and not @user.itemKeys['Retropolis.SecretLabAccess']`
 
--> [PatronClubMember] `_nextFloor is 4 and @user.itemKeys['Retropolis.PatronClubMember']`
--> [NoPatronClubMember] `_nextFloor is 4 and not @user.itemKeys['Retropolis.PatronClubMember']`
+-> [PatronClubMember] `_nextFloor > 4 and @user.itemKeys['Retropolis.PatronClubMember']`
+-> [NoPatronClubMember] `_nextFloor > 4 and not @user.itemKeys['Retropolis.PatronClubMember']`
 
 ## TravelContinues
 
-> Number `_nextFloor` glows and the doors close.
+> Number `_nextFloor` glows and the doors close. `_nextFloor > 0`
+> Number B`-_nextFloor` glows and the doors close. `_nextFloor < 0`
 
-`location.floor = null`
+`location.floor = 'travelling'`
 
-Wait 2000ms.
+Wait 1500ms.
 
 `location.floor = _nextFloor`
 
-> After a short wait the elevator opens onto the Lobby floor. `location.floor is 1`
+> After a short wait the elevator opens onto the passage of the Café floor. `location.floor is 1`
 > After a short wait the elevator opens onto the Store floor. `location.floor is 2`
-> After a short wait the elevator arrives to third floor with doors opening to Lands of Illusions. `location.floor is '3a'`
-> After a short wait the elevator arrives to third floor with doors opening to Idea Garden. `location.floor is '3b'`
-> After a short wait the elevator opens into the studio apartment. `location.floor is 4`
+> After a short wait the elevator opens onto the Gallery floor. `location.floor is 3`
+> After a short wait the elevator opens onto the Art Studio floor. `location.floor is 4`
+> After a short wait the elevator opens onto the residence. `location.floor is 5`
+> After a short wait the elevator opens onto the top floor. `location.floor is 6`
+> After a short wait the elevator opens onto the basement floor. `location.floor is -1`
+> After a short wait the elevator opens onto the Recording Studio floor. `location.floor is -2`
+> After a short wait the elevator opens onto the Secret Laboratory. `location.floor is -3`
 
 -> [End]
 
-## PlayerAccess
+## SecretLabAccess
 
-> The display asks for authorization and you use your keycard to confirm you are a player of Pixel Art Academy.
+> The display asks for authorization and you use your keycard to confirm you have access to the Secret Lab.
 
 -> [TravelContinues]
 
@@ -121,15 +169,15 @@ Wait 2000ms.
 
 -> [TravelContinues]
 
-## NoPlayerAccess
-
-> The display asks for authorization but you are not yet a player of Pixel Art Academy. The elevator stays put.
-
--> [Selection]
-
 ## NoIdeaGardenAccess
 
 > The display asks for authorization but your keycard does not have Idea Garden access. The elevator stays put.
+
+-> [Selection]
+
+## NoSecretLabAccess
+
+> The display asks for authorization but your keycard does not have Secret Lab access. The elevator stays put.
 
 -> [Selection]
 
@@ -142,5 +190,7 @@ Wait 2000ms.
 ## Nevermind
 
 > You change your mind and leave the number pad alone.
+
+-> [End]
 
 ## End

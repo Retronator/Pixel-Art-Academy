@@ -22,14 +22,26 @@ class HQ.Basement extends LOI.Adventure.Location
 
   @userProblemMessage = 'Retronator.HQ.LandsOfIllusions.userProblemMessage'
 
+  @defaultScriptUrl: -> 'retronator_retronator-hq/basement1/basement/basement.script'
+
+  constructor: ->
+    super
+
+    # Elevator button
+    @elevatorButton = new HQ.Items.ElevatorButton
+      location: @
+      floor: -1
+
   things: -> [
     HQ.Actors.Operator
+    @elevatorButton
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.Up}": HQ.Coworking
-
-  @defaultScriptUrl: -> 'retronator_retronator-hq/basement1/basement/basement.script'
+    HQ.Elevator.addElevatorExit
+      floor: -1
+    ,
+      "#{Vocabulary.Keys.Directions.Up}": HQ.Coworking
 
   initializeScript: ->
     @setCurrentThings
@@ -43,10 +55,6 @@ class HQ.Basement extends LOI.Adventure.Location
           sourceLocation: @
           destinationLocation: HQ.LandsOfIllusions.Hallway
 
-        complete()
-
-      Leave: (complete) =>
-        LOI.adventure.goToLocation HQ.Chillout
         complete()
 
       AnalyzeUser: (complete) =>

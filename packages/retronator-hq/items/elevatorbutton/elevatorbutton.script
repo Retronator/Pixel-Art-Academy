@@ -1,14 +1,14 @@
-# Retronator.HQ.Actors.ElevatorButton
+# Retronator.HQ.Items.ElevatorButton
 
 ## Start
 
--> [SameFloor] `@locations['Retronator.HQ.Elevator'].floor is _buttonFloor`
+-> [SameFloor] `@things.Retronator.HQ.Elevator.floor is _buttonFloor`
 
-> You press the button and it glows with a cool light.
+> You press the button and it glows with a cool light …
 
-Wait 2000ms.
+wait 1500
 
-`@locations['Retronator.HQ.Elevator'].floor = _buttonFloor`
+`@things.Retronator.HQ.Elevator.floor = _buttonFloor`
 
 > After a short wait, the elevator arrives.
 

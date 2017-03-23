@@ -22,75 +22,45 @@ class HQ.Elevator extends LOI.Adventure.Location
 
   @initialize()
 
-  constructor: ->
-    super
+  @floor: ->
+    return unless LOI.adventure.gameState()
 
-    @elevatorFloor = @state.field 'floor', default: 1
+    floor = @state 'floor'
 
-  things: ->
-    [HQ.Elevator.NumberPad.id()]
+    # Set floor to 1 by default
+    unless floor
+      floor = 1
+      @state 'floor', floor
+
+    floor
+
+  things: -> [
+    HQ.Elevator.NumberPad
+  ]
 
   exits: ->
     # We register dependency on elevator floor.
-    floor = @elevatorFloor()
+    floor = @constructor.floor()
+
+    switch floor
+      when 1 then exitLocation = HQ.Passage
+      when -1 then exitLocation = HQ.Basement
 
     exits = {}
 
-    newFloorId = null
-
-    switch floor
-      when 1 then newFloorId = HQ.Gallery.id()
-      when 2 then newFloorId = HQ.Checkout.id()
-      when '3a' then newFloorId = HQ.LandsOfIllusions.Hallway.id()
-      when '3b' then newFloorId = HQ.IdeaGarden.id()
-      when 4 then newFloorId = HQ.Studio.Hallway.id()
-
-    direction = if floor is '3a' then Vocabulary.Keys.Directions.West else Vocabulary.Keys.Directions.East
-
-    if newFloorId
-      exits[direction] = newFloorId
-      exits[Vocabulary.Keys.Directions.Out] = newFloorId
+    if exitLocation
+      exits[Vocabulary.Keys.Directions.North] = exitLocation
+      exits[Vocabulary.Keys.Directions.Out] = exitLocation
 
     exits
 
-  @setupElevatorExit: (options) ->
-    options.location.elevatorExits = new ReactiveField {}
-    
-    elevatorFloor = new LOI.StateField
-      address: "things.#{HQ.Elevator.id()}.floor"
-      default: 1
+  @addElevatorExit: (options, exits) ->
+    # See if elevator floor is the same as the location floor.
+    elevatorFloor = HQ.Elevator.floor()
+    locationFloor = options.floor
 
-    # The elevator exit should show up when elevator is on the provided floor.
-    elevatorPresent = new ComputedField =>
-      # Do we still need this hack? HACK: Wait also for the local state to be set, since otherwise the autorun below won't be ready yet.
-      # return unless options.location.ready()
+    return exits unless elevatorFloor is locationFloor
 
-      elevatorFloor() is options.floor
-
-    options.directions ?= [Vocabulary.Keys.Directions.In, Vocabulary.Keys.Directions.West]
-
-    options.location.autorun (computation) =>
-      present = elevatorPresent()
-      
-      exits = {}
-
-      for direction in options.directions
-        state.exits[direction] = if present then HQ.Elevator.id() else null
-
-      options.location.elevatorExits exits
-
-  onScriptsLoaded: ->
-    # Number pad
-    Tracker.autorun (computation) =>
-      return unless pad = @things HQ.Elevator.NumberPad.id()
-      computation.stop()
-  
-      pad.addAbility new Action
-        verbs: [Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.Press]
-        action: =>
-          LOI.adventure.director.startScript padInteraction
-
-      padInteraction = @scripts['Retronator.HQ.Elevator.Scripts.NumberPad']
-  
-      padInteraction.setThings
-        pad: pad
+    # Add the south exit to exits.
+    _.extend exits,
+      "#{Vocabulary.Keys.Directions.South}": HQ.Elevator

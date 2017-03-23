@@ -24,10 +24,18 @@ Package.onUse(function(api) {
 
   api.addFile('actors/actors');
   api.addFile('actors/operator');
-  
+
+  // Items
+
+  api.addFile('items/items');
+  api.addThing('items/elevatorbutton/elevatorbutton');
+
   // Locations
 
   api.addThing('basement1/basement/basement');
+
+  api.addFile('elevator/elevator');
+  api.addThing('elevator/numberpad');
 
   api.addFile('floor1/cafe/cafe');
   api.addFile('floor1/cafe/artworks');
