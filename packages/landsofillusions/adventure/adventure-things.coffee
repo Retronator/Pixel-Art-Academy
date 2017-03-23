@@ -61,6 +61,8 @@ class LOI.Adventure extends LOI.Adventure
 
       thing for thing in currentPhysicalThings when thing.constructor in thingClasses
 
-  getCurrentThing: (thingClass) ->
+  getCurrentThing: (thingClassOrId) ->
+    thingClass = _.thingClass thingClassOrId
     things = @currentThings()
+
     _.find things, (thing) -> thing.constructor is thingClass

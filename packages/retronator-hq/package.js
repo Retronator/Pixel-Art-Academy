@@ -18,22 +18,17 @@ Package.onUse(function(api) {
 
   api.export('Retronator');
 
-  api.addFiles('hq.coffee');
-  api.addAssets('hq.script', ['client', 'server']);
-
-  // Actors
-  api.addFiles('actors/actors.coffee');
-
-  api.addFiles('actors/elevatorbutton.coffee');
-  api.addAssets('actors/elevatorbutton.script', ['client', 'server']);
-
-  api.addFiles('actors/operator.coffee');
-
+  api.addFile('hq');
+  
   // Locations
 
-  api.addFile('1stfloor/cafe/cafe');
-  api.addFile('1stfloor/cafe/artworks');
-  api.addScript('1stfloor/cafe/burra');
+  api.addFile('floor1/cafe/cafe');
+  api.addFile('floor1/cafe/artworks');
+  api.addScript('floor1/cafe/burra');
+  api.addComponent('floor1/cafe/display/display');
+
+  api.addFile('floor1/passage/passage');
+  api.addFile('floor1/restroom/restroom');
 
   /*
   api.addFiles('1stfloor/entrance/entrance.coffee');

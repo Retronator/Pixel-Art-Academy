@@ -5,9 +5,11 @@ HQ = Retronator.HQ
 RA = Retronator.Accounts
 RS = Retronator.Store
 
-class HQ.Lobby.Display extends LOI.Adventure.Item
-  @id: -> 'Retronator.HQ.Lobby.Display'
-  @url: -> 'retronator/lobby/display'
+Vocabulary = LOI.Parser.Vocabulary
+
+class HQ.Cafe.Display extends LOI.Adventure.Item
+  @id: -> 'Retronator.HQ.Cafe.Display'
+  @url: -> 'retronator/cafe/display'
 
   @register @id()
   template: -> @constructor.id()
@@ -15,7 +17,6 @@ class HQ.Lobby.Display extends LOI.Adventure.Item
   @version: -> '0.0.1'
 
   @fullName: -> "supporters display"
-
   @shortName: -> "display"
 
   @description: ->
@@ -28,8 +29,6 @@ class HQ.Lobby.Display extends LOI.Adventure.Item
   constructor: ->
     super
 
-    @addAbilityToActivateByLooking()
-
   onCreated: ->
     super
 
@@ -40,6 +39,13 @@ class HQ.Lobby.Display extends LOI.Adventure.Item
 
     @autorun (computation) =>
       @subscribe RS.Transactions.Transaction.messages, @_messagesCount()
+
+  onDeactivate: (finishedDeactivatingCallback) ->
+    Meteor.setTimeout =>
+      finishedDeactivatingCallback()
+      LOI.adventure.deactivateCurrentItem()
+    ,
+      500
 
   topRecentTransactions: ->
     RS.Components.TopSupporters.topRecentTransactions.find {},
@@ -65,3 +71,14 @@ class HQ.Lobby.Display extends LOI.Adventure.Item
     ,
       sort:
         time: -1
+
+  # Listener
+
+  onCommand: (commandResponse) ->
+    display = @options.parent
+
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], display.avatar]
+      priority: 1
+      action: =>
+        LOI.adventure.goToItem display

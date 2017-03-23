@@ -27,7 +27,7 @@ class LOI.Adventure extends LOI.Adventure
       # Do we even have the new item or did we switch to no item?
       if activeItemId
         # We do have an item, so find it in the inventory or at the location.
-        @_activeItem = (@inventory activeItemId) or (currentLocation.things activeItemId)
+        @_activeItem = @getCurrentThing activeItemId
 
         console.log "Did we find the new active item?", @_activeItem if LOI.debug
 

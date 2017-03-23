@@ -6,7 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class HQ.Cafe extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Cafe'
-  @url: -> 'retronator/reception'
+  @url: -> 'retronator/cafe'
 
   @version: -> '0.0.1'
 
@@ -19,6 +19,11 @@ class HQ.Cafe extends LOI.Adventure.Location
       there is a self-serve bar and Burra's carefully decorated workstation. A passageway connects to the coworking space
       in the west, and there are big steps with stairs heading up towards the store.
     "
+
+  @listeners: ->
+    super.concat [
+      @BurraListener
+    ]
   
   @initialize()
 
@@ -29,17 +34,19 @@ class HQ.Cafe extends LOI.Adventure.Location
 
   things: -> [
     @constructor.Artworks
+    @constructor.Display
     PAA.Cast.Burra
   ]
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.SecondStreet
+    "#{Vocabulary.Keys.Directions.West}": HQ.Passage
 
   class @BurraListener extends LOI.Adventure.Listener
     @id: -> "Retronator.HQ.Cafe.Burra"
 
     @scriptUrls: -> [
-      'retronator_retronator-hq/1stfloor/cafe/burra.script'
+      'retronator_retronator-hq/floor1/cafe/burra.script'
     ]
 
     class @Script extends LOI.Adventure.Script
@@ -52,9 +59,10 @@ class HQ.Cafe extends LOI.Adventure.Location
       LOI.adventure.director.startScript @script, options
 
     onScriptsLoaded: ->
-      @script = @scripts[@id()]
+      @script = @scripts[@constructor.Script.id()]
 
     onCommand: (commandResponse) ->
+      console.log "hello", LOI.adventure.getCurrentThing PAA.Cast.Burra
       return unless burra = LOI.adventure.getCurrentThing PAA.Cast.Burra
       @script.setThings {burra}
 
