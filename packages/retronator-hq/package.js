@@ -19,8 +19,15 @@ Package.onUse(function(api) {
   api.export('Retronator');
 
   api.addFile('hq');
+
+  // Actors
+
+  api.addFile('actors/actors');
+  api.addFile('actors/operator');
   
   // Locations
+
+  api.addThing('basement1/basement/basement');
 
   api.addFile('floor1/cafe/cafe');
   api.addFile('floor1/cafe/artworks');
@@ -29,6 +36,7 @@ Package.onUse(function(api) {
 
   api.addFile('floor1/passage/passage');
   api.addFile('floor1/restroom/restroom');
+  api.addFile('floor1/coworking/coworking');
 
   /*
   api.addFiles('1stfloor/entrance/entrance.coffee');

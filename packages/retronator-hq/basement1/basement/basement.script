@@ -1,9 +1,18 @@
-# Retronator.HQ.LandsOfIllusions.Scripts.Operator
+# Retronator.HQ.Basement
 
-## Start
+## OperatorDialog
 
-operator: Hi there. How can I help you today? `not _Selection`
-operator: Can I help you with anything else? `_Selection`
+-> [ComeAgain] `_Selection`
+
+> The operator, a muscular man with a friendly smile, greets you from behind the counter.
+
+operator: Hi there. How can I help you today?
+
+-> [Selection]
+
+## ComeAgain
+
+operator: Can I help you with anything else? 
 
 ## Selection
 
@@ -11,7 +20,7 @@ operator: Can I help you with anything else? `_Selection`
 * Can you tell me about Lands of Illusions? -> [LandsOfIllusions] `not _LandsOfIllusionsQuestions`
 * I have more questions about Lands of Illusions? -> [LandsOfIllusionsQuestionsIntro] `_LandsOfIllusionsQuestions`
 * Whoops, I must be in the wrong place. -> [Whoops] `not _helped`
-* Thank you very much. Bye! -> [Leave] `_helped`
+* Thank you very much. Bye! -> [Bye] `_helped`
 
 ## Play
 `_helped = true`
@@ -272,7 +281,7 @@ operator:
     For example, if you wanted to learn about history, why not just travel back in time?
     Or you could go on a journey to Mars and experience being one of the first colonists.
     Currently we offer an adventure into the city of Retropolis.
-    It's a utopia built by artists, scientists and engineers, where they could work and achieve their most ambitious dreams.
+    It's a utopia built by artists, scientists and engineers, where you can work on and achieve your most ambitious dreams.
 
 -> [LandsOfIllusionsQuestions]
 
@@ -284,8 +293,7 @@ operator: Of course, ask away!
 
 ## LandsOfIllusionsQuestions
 
-* Awesome! But … it's just a videogame, right? -> [Videogame] `not _LandsOfIllusionsQuestions`
-* This is just a videogame, right? -> [Videogame] `_LandsOfIllusionsQuestions`
+* This is just a videogame, right? -> [Videogame]
 * Can I play at any time? -> [Time]
 * What do I have to buy? -> [Buy]
 * Is it possible to play with more people? -> [Multiplayer]
@@ -295,7 +303,7 @@ operator: Of course, ask away!
 
 operator: Of course!
 
--> [Start]
+-> [OperatorDialog]
 
 ## Videogame
 
@@ -356,15 +364,7 @@ operator:
 
 operator: No problem.
 
-## Leave
-
--> [End] `_PlayApproved`
-
-> You leave back to the chillout area.
-
-### Leave
-
--> [End]
+-> [Bye]
 
 ## Bye
 

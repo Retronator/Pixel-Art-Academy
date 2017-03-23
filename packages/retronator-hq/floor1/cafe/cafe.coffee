@@ -62,7 +62,6 @@ class HQ.Cafe extends LOI.Adventure.Location
       @script = @scripts[@constructor.Script.id()]
 
     onCommand: (commandResponse) ->
-      console.log "hello", LOI.adventure.getCurrentThing PAA.Cast.Burra
       return unless burra = LOI.adventure.getCurrentThing PAA.Cast.Burra
       @script.setThings {burra}
 

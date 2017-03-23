@@ -25,6 +25,6 @@ class HQ.Passage extends LOI.Adventure.Location
 
   exits: ->
     "#{Vocabulary.Keys.Directions.East}": HQ.Cafe
-    "#{Vocabulary.Keys.Directions.West}": HQ.Cafe
+    "#{Vocabulary.Keys.Directions.West}": HQ.Coworking
     "#{Vocabulary.Keys.Directions.North}": HQ.Restroom
     "#{Vocabulary.Keys.Directions.South}": HQ.Cafe
