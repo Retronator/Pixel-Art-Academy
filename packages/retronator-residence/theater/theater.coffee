@@ -4,8 +4,8 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.Locations.Theater extends LOI.Adventure.Location
-  @id: -> 'Retronator.HQ.Locations.Theater'
+class HQ..Theater extends LOI.Adventure.Location
+  @id: -> 'Retronator.HQ..Theater'
   @url: -> 'retronator/theater'
   @scriptUrls: -> [
     'retronator_hq/hq.script'
@@ -31,9 +31,9 @@ class HQ.Locations.Theater extends LOI.Adventure.Location
     things = {}
 
     exits = {}
-    exits[Vocabulary.Keys.Directions.West] = HQ.Locations.IdeaGarden.id()
-    exits[Vocabulary.Keys.Directions.Up] = HQ.Locations.Studio.id()
-    exits[Vocabulary.Keys.Directions.North] = HQ.Locations.Studio.id()
+    exits[Vocabulary.Keys.Directions.West] = HQ..IdeaGarden.id()
+    exits[Vocabulary.Keys.Directions.Up] = HQ.Residence.id()
+    exits[Vocabulary.Keys.Directions.North] = HQ.Residence.id()
 
     _.merge {}, super,
       things: things

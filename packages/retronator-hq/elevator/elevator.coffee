@@ -23,11 +23,11 @@ class HQ.Elevator extends LOI.Adventure.Location
   @initialize()
 
   @floor: ->
-    return unless LOI.adventure.gameState()
+    return unless LOI.adventureInitialized() and LOI.adventure.gameState()
 
     floor = @state 'floor'
 
-    # Set floor to 1 by default
+    # Set floor to 1 by default.
     unless floor
       floor = 1
       @state 'floor', floor
@@ -43,6 +43,11 @@ class HQ.Elevator extends LOI.Adventure.Location
     floor = @constructor.floor()
 
     switch floor
+      when 6 then exitLocation = HQ.Residence.UpstairsHallway
+      when 5 then exitLocation = HQ.Residence.Hallway
+      when 4 then exitLocation = HQ.ArtStudio
+      when 3 then exitLocation = HQ.GalleryWest
+      when 2 then exitLocation = HQ.Store
       when 1 then exitLocation = HQ.Passage
       when -1 then exitLocation = HQ.Basement
 

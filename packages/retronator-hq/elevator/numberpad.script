@@ -9,8 +9,8 @@
 
 ## Selection
 
-* 6 - Terrace -> [Terrace] `@user.itemKeys['Retropolis.PatronClubMember']`
-* 5 - Residence -> [Residence] `@user.itemKeys['Retropolis.PatronClubMember']`
+* 6 - Terrace -> [Terrace]
+* 5 - Residence -> [Residence]
 * 4 - Art Studio -> [Studio]
 * 3 - Gallery -> [Gallery]
 * 2 - Store -> [Store]

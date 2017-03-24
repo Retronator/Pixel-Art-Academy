@@ -5,9 +5,11 @@ HQ = Retronator.HQ
 RA = Retronator.Accounts
 RS = Retronator.Store
 
-class HQ.Checkout.Display extends LOI.Adventure.Item
-  @id: -> 'Retronator.HQ.Checkout.Display'
-  @url: -> 'retronator/checkout/display'
+Vocabulary = LOI.Parser.Vocabulary
+
+class HQ.Store.Display extends LOI.Adventure.Item
+  @id: -> 'Retronator.HQ.Store.Display'
+  @url: -> 'retronator/store/display'
 
   @register @id()
   template: -> @constructor.id()
@@ -15,8 +17,8 @@ class HQ.Checkout.Display extends LOI.Adventure.Item
   @version: -> '0.0.1'
 
   @fullName: -> "supporters display"
-
   @shortName: -> "display"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "
@@ -25,16 +27,19 @@ class HQ.Checkout.Display extends LOI.Adventure.Item
 
   @initialize()
 
-  constructor: ->
-    super
-
-    @addAbilityToActivateByLooking()
-
   onCreated: ->
     super
 
     @subscribe RS.Transactions.Transaction.topRecent
 
+  onDeactivate: (finishedDeactivatingCallback) ->
+    Meteor.setTimeout =>
+      # HACK: Deactivate item on adventure first to prevent a render component error. TODO: Figure out why.
+      LOI.adventure.deactivateCurrentItem()
+      finishedDeactivatingCallback()
+    ,
+      500
+    
   topRecentTransactions: ->
     # Get top recent transactions from the shopping cart receipt component.
     if tablet = LOI.adventure.inventory HQ.Items.Tablet
@@ -49,3 +54,14 @@ class HQ.Checkout.Display extends LOI.Adventure.Item
         ['amount', 'desc']
         ['time', 'desc']
       ]
+
+  # Listener
+
+  onCommand: (commandResponse) ->
+    display = @options.parent
+
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], display.avatar]
+      priority: 1
+      action: =>
+        LOI.adventure.goToItem display

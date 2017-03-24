@@ -17,9 +17,8 @@ class HQ.Steps extends LOI.Adventure.Location
   @shortName: -> "steps"
   @description: ->
     "
-      The stairs that lead to the second floor are accompanied with bigger steps on the sides, perfect for sitting and
-      lounging. Tetromino-shaped cushions are distributed for comfort and a few hipster kids are using them, glued
-      tirelessly to their laptops. The stairs turn a corner in an L-shape to the south.
+      The stairs that lead to the second floor are accompanied by bigger steps, where a few hipster kids lounge glued
+      to their laptops. You can continue up or down.
     "
   
   @initialize()
@@ -27,15 +26,6 @@ class HQ.Steps extends LOI.Adventure.Location
   constructor: ->
     super
 
-  @state: ->
-    things = {}
-
-    exits = {}
-    exits[Vocabulary.Keys.Directions.Down] = HQ.Lobby.id()
-    exits[Vocabulary.Keys.Directions.East] = HQ.Lobby.id()
-    exits[Vocabulary.Keys.Directions.Up] = HQ.Checkout.id()
-    exits[Vocabulary.Keys.Directions.South] = HQ.Checkout.id()
-
-    _.merge {}, super,
-      things: things
-      exits: exits
+  exits: ->
+    "#{Vocabulary.Keys.Directions.Down}": HQ.Cafe
+    "#{Vocabulary.Keys.Directions.Up}": HQ.Store

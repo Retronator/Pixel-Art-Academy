@@ -39,8 +39,9 @@ class HQ.Cafe extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.SecondStreet
+    "#{Vocabulary.Keys.Directions.Up}": HQ.Steps
     "#{Vocabulary.Keys.Directions.West}": HQ.Passage
+    "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.SecondStreet
 
   class @BurraListener extends LOI.Adventure.Listener
     @id: -> "Retronator.HQ.Cafe.Burra"

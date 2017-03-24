@@ -106,6 +106,12 @@ class Script.Nodes.Code extends Script.Node
       for item in _globalState.user.items
         _globalState.user.itemKeys[item.catalogKey] = item
 
+    else
+      # Create a dummy user.
+      _globalState.user =
+        itemKeys: {}
+        characters: []
+
     # Attach player object to global state.
     _globalState.player =
       inventory: {}

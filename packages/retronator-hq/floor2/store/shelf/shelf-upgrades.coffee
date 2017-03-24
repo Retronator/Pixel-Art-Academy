@@ -13,9 +13,8 @@ class HQ.Store.Shelf.Upgrades extends HQ.Store.Shelf
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Upgrades shelf"
-
-  @shortName: -> "upgrades"
+  @fullName: -> "upgrades shelf"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "

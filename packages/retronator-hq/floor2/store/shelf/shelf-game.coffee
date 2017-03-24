@@ -13,9 +13,8 @@ class HQ.Store.Shelf.Game extends HQ.Store.Shelf
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Game shelf"
-
-  @shortName: -> "game"
+  @fullName: -> "game shelf"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "

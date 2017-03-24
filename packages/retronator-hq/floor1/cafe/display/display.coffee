@@ -18,6 +18,7 @@ class HQ.Cafe.Display extends LOI.Adventure.Item
 
   @fullName: -> "supporters display"
   @shortName: -> "display"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "
@@ -42,8 +43,9 @@ class HQ.Cafe.Display extends LOI.Adventure.Item
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
-      finishedDeactivatingCallback()
+      # HACK: Deactivate item on adventure first to prevent a render component error. TODO: Figure out why.
       LOI.adventure.deactivateCurrentItem()
+      finishedDeactivatingCallback()
     ,
       500
 

@@ -1,5 +1,6 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
+PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -21,6 +22,7 @@ class HQ.Coworking extends LOI.Adventure.Location
   @initialize()
 
   things: -> [
+    PAA.Cast.Reuben
   ]
 
   exits: ->

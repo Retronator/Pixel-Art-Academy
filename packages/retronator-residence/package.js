@@ -1,6 +1,6 @@
 Package.describe({
-  name: 'retronator:pixelartacademy-cast',
-  version: '0.1.0',
+  name: 'retronator:retronator-residence',
+  version: '0.0.1',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -12,17 +12,18 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
-  api.use('retronator:pixelartacademy');
+  api.use('retronator:retronator');
+  api.use('retronator:retronator-store');
+  api.use('retronator:pixelartacademy-cast');
+  api.use('retronator:retronator-hq');
 
-  api.export('PixelArtAcademy');
+  api.export('Retronator');
 
-  api.addFiles('cast.coffee');
+  api.addFile('residence');
 
-  // Actors
+  // Locations
 
-  api.addFiles('retro.coffee');
-  api.addFiles('burra.coffee');
-  api.addFiles('corinne.coffee');
-  api.addFiles('shelley.coffee');
-  api.addFiles('reuben.coffee');
+  api.addFile('hallway/hallway');
+  api.addFile('upstairshallway/upstairshallway');
+
 });

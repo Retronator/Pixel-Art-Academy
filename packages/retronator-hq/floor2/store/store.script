@@ -1,6 +1,6 @@
-# Retronator.HQ.Store.Checkout.Scripts.Retro
+# Retronator.HQ.Store
 
-## Start
+## RetroDialog
 
 retro: Hi, welcome to Retronator Store. How are you? `not _IntroductionOver`
 retro: Can I help you with anything else? -> [MainQuestion] `_IntroductionOver`
@@ -42,7 +42,7 @@ retro:
 
 retro: No problem, take your time.
 
--> [Start]
+-> [RetroDialog]
 
 ## SelectTier
 
@@ -90,7 +90,7 @@ retro:
 
 retro: No problem.
 
--> [Start]
+-> [RetroDialog]
 
 <!-- PURCHASING -->
 
@@ -139,7 +139,7 @@ retro: Thank you so much for that.
 
 retro: You will find the receipt in your Account app. `@user`
 
--> [Start]
+-> [RetroDialog]
 
 ## NonUserPurchase
 
@@ -148,7 +148,7 @@ retro:
     Don't forget to register for an account at the reception.
     You will need to enter the email you used in order for the purchase to be applied properly.
     
--> [Start]
+-> [RetroDialog]
 
 ## TransactionCanceled
 
@@ -202,7 +202,7 @@ retro:
 
 retro: No problem at all. I'll be ready when you are.
 
--> [Start]
+-> [RetroDialog]
 
 <!-- Purchase dialogs -->
 
@@ -258,7 +258,7 @@ retro:
 
 retro: No problem. You can easily remove items out of your shopping cart.
 
--> [Start]
+-> [RetroDialog]
 
 ## AlphaAccessYes
 
@@ -320,7 +320,7 @@ retro: Yes, please!
 
 retro: My pleasure.
 
--> [Start]
+-> [RetroDialog]
 
 ## Course
 

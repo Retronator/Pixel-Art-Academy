@@ -5,13 +5,13 @@ HQ = Retronator.HQ
 RA = Retronator.Accounts
 RS = Retronator.Store
 
+Vocabulary = LOI.Parser.Vocabulary
+
 class HQ.Store.Shelf extends LOI.Adventure.Item
   template: -> 'Retronator.HQ.Store.Shelf'
-    
+
   constructor: ->
     super
-    
-    @addAbilityToActivateByLooking()
 
   onCreated: ->
     super
@@ -23,6 +23,14 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
     # eligible for. Payments are needed to determine if the user has a kickstarter pledge.
     @subscribe RS.Transactions.Transaction.forCurrentUser
     @subscribe RS.Transactions.Payment.forCurrentUser
+
+  onDeactivate: (finishedDeactivatingCallback) ->
+    Meteor.setTimeout =>
+      # HACK: Deactivate item on adventure first to prevent a render component error. TODO: Figure out why.
+      LOI.adventure.deactivateCurrentItem()
+      finishedDeactivatingCallback()
+    ,
+      500
 
   shoppingCart: ->
     RS.shoppingCart
@@ -53,10 +61,7 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
     console.log "Shelf displaying items", items if HQ.debug
 
     items
-    
-  playerTablet: ->
-    LOI.adventure.inventory HQ.Items.Tablet
-    
+
   canBuy: ->
     item = @currentData()
 
@@ -100,3 +105,14 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
 
       # Activate the tablet into overlaid mode
       tablet.activate()
+
+  # Listener
+
+  onCommand: (commandResponse) ->
+    shelf = @options.parent
+
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], shelf.avatar]
+      priority: 1
+      action: =>
+        LOI.adventure.goToItem shelf
