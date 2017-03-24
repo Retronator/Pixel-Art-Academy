@@ -15,10 +15,8 @@ class HQ.Store.Bookshelves extends LOI.Adventure.Location
   @shortName: -> "bookshelves"
   @description: ->
     "
-      At the top of the stairs, the floor opens onto a cafe-style co-working space/store hybrid that gives you that warm, 
-      bookstore feeling. The place owner, Retro,
-      is sitting behind a long desk that doubles as the store checkout area. Yellow walls and pixel art decals
-      immediately brighten your day. You can see store shelves further out to the east.
+      In the east, the store opens towards the building's glass front facade.
+      Tall bookshelves line the walls, divided into sections.
     "
 
   @initialize()

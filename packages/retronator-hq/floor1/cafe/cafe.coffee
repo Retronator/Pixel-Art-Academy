@@ -10,14 +10,14 @@ class HQ.Cafe extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Retronator HQ café"
+  @fullName: -> "Retronator Café"
   @shortName: -> "café"
   @description: ->
     "
       The cosy café has plenty of tables and you recognize some familiar faces from the Pixel Art Academy Facebook
       group. The north wall displays a selection of artworks from the current featured pixel artist. In the south
       there is a self-serve bar and Burra's carefully decorated workstation. A passageway connects to the coworking space
-      in the west, and there are big steps with stairs heading up towards the store.
+      in the west, and there are big steps with stairs heading up to the store.
     "
 
   @listeners: ->
@@ -34,7 +34,6 @@ class HQ.Cafe extends LOI.Adventure.Location
 
   things: -> [
     @constructor.Artworks
-    @constructor.Display
     PAA.Cast.Burra
   ]
 

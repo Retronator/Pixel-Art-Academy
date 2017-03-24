@@ -40,7 +40,6 @@ Package.onUse(function(api) {
   api.addFile('floor1/cafe/cafe');
   api.addFile('floor1/cafe/artworks');
   api.addScript('floor1/cafe/burra');
-  api.addComponent('floor1/cafe/display/display');
 
   api.addFile('floor1/passage/passage');
   api.addFile('floor1/restroom/restroom');

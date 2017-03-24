@@ -10,7 +10,7 @@ class HQ.GalleryWest extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Retronator HQ gallery west wing"
+  @fullName: -> "Retronator Gallery west wing"
   @shortName: -> "gallery"
   @description: ->
     "

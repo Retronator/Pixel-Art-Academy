@@ -17,8 +17,10 @@ class HQ.Store extends LOI.Adventure.Location
   @shortName: -> "store"
   @description: ->
     "
-      The store opens towards the building's glass front facade. Tall shelves line the walls, divided into sections.
-      Stairs curve northwest to the third floor.
+      At the top of the stairs, the floor opens onto a store that gives you that warm, bookstore feeling.
+      The place owner, Retro, is sitting behind a long desk that doubles as the store checkout area.
+      Yellow walls and pixel art decals immediately brighten your day. Stairs continue up to the gallery and
+      you can see bookshelves further out to the east.
     "
   
   @initialize()
@@ -33,6 +35,7 @@ class HQ.Store extends LOI.Adventure.Location
 
   things: -> [
     PAA.Cast.Retro
+    HQ.Store.Display
     HQ.Store.Shelf.Game
     HQ.Store.Shelf.Upgrades
     @elevatorButton

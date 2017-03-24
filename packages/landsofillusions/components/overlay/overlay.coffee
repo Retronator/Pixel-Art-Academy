@@ -48,8 +48,7 @@ class LOI.Components.Overlay extends AM.Component
 
       @$('.max-area').css maxAreaSize
 
-    @$('.background').addClass('visible')
-    @$('.safe-area').addClass('visible')
+    @$('.landsofillusions-components-overlay').addClass('visible')
 
     Meteor.setTimeout =>
       @$('.transition-cover')?.removeClass('visible')
@@ -72,8 +71,7 @@ class LOI.Components.Overlay extends AM.Component
         activatedState = activatableParent.callFirstWith(null, 'activatedState')
         if activatedState is LOI.Adventure.Item.activatedStates.Deactivating
           # Animate out.
-          @$('.background').removeClass('visible')
-          @$('.safe-area').removeClass('visible')
+          @$('.landsofillusions-components-overlay').removeClass('visible')
           @$('.transition-cover').addClass('visible')
 
           @$('.crop-bar').velocity

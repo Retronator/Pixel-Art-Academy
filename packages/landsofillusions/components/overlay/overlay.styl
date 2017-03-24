@@ -3,6 +3,11 @@
 .landsofillusions-components-overlay
   fixed-cover()
   z-index 1
+  opacity 0
+  transition opacity ease-in 0.5s
+
+  &.visible
+    opacity 1
 
   .transition-cover
     fixed-cover()
@@ -12,14 +17,6 @@
 
     &.visible
       visibility visible
-
-  > .background
-  > .safe-area
-    opacity 0
-    transition opacity ease-in 0.5s
-
-    &.visible
-      opacity 1
 
   > .background
     absolute-cover()

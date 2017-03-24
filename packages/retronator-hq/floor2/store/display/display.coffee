@@ -42,7 +42,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
     
   topRecentTransactions: ->
     # Get top recent transactions from the shopping cart receipt component.
-    if tablet = LOI.adventure.inventory HQ.Items.Tablet
+    if false and tablet = LOI.adventure.inventory HQ.Items.Tablet
       if shoppingCart = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
         # If receipt is showing, use receipts' top transactions.
         if shoppingCart.state().receiptVisible
