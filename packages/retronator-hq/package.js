@@ -28,7 +28,13 @@ Package.onUse(function(api) {
   // Items
 
   api.addFile('items/items');
+
+  api.addFile('items/components/components');
+  api.addFile('items/components/stripe/stripe');
+
   api.addThing('items/elevatorbutton/elevatorbutton');
+  api.addThingComponent('items/shoppingcart/shoppingcart');
+  api.addComponent('items/receipt/receipt');
 
   // Locations
 

@@ -25,7 +25,7 @@ phrases =
     Use: ['use']
     Press: ['press', 'push']
     Read: ['read']
-    What: ['what is']
+    WhatIs: ['what is']
     Get: ['get', 'take', 'pick up']
     Sit: ['sit down']
     Stand: ['stand up']

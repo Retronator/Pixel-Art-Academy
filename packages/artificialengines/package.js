@@ -34,6 +34,10 @@ Package.onUse(function(api) {
     this.addFiles(path + ".coffee", architecture);
     this.addAssets(path + ".script", ['client', 'server']);
   };
+  api.constructor.prototype.addThingComponent = function(path, architecture) {
+    this.addFiles([path + ".coffee", path + ".html", path + ".styl"]);
+    this.addAssets(path + ".script", ['client', 'server']);
+  };
   api.constructor.prototype.addScript = function(path) {
     this.addAssets(path + ".script", ['client', 'server']);
   };

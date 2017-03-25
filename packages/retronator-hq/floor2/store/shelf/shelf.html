@@ -18,18 +18,14 @@
                       <del class="discounter-from">${{discountedFrom}}</del>
                     {{/if}}
                   </div>
-                  {{#if playerTablet}}
-                    {{#if canBuy}}
-                      <button class="add-to-cart-button">Add to cart</button>
-                    {{else}}
-                      {{#if currentUser}}
-                        <p class="hint not-eligible">You are not eligible to buy this item.</p>
-                      {{else}}
-                      <p class="hint">You need to be signed in to check eligibility for this item.</p>
-                      {{/if}}
-                    {{/if}}
+                  {{#if canBuy}}
+                    <button class="add-to-cart-button">Add to cart</button>
                   {{else}}
-                    <p class="hint">You need the Retronator Spectrum Tablet to purchase items.</p>
+                    {{#if currentUser}}
+                      <p class="hint not-eligible">You are not eligible to buy this item.</p>
+                    {{else}}
+                    <p class="hint">You need to be signed in to check eligibility for this item.</p>
+                    {{/if}}
                   {{/if}}
                 </div>
                 {{#if items}}

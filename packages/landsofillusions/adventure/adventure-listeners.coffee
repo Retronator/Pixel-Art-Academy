@@ -19,4 +19,4 @@ class LOI.Adventure extends LOI.Adventure
 
   @destroyListenerProvider: (providerInstance) ->
     listener.destroy() for listener in providerInstance.listeners
-    providerInstance.listeners = null
+    providerInstance.listeners = []

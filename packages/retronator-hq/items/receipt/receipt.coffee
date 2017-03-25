@@ -6,21 +6,34 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 HQ = Retronator.HQ
 
-class HQ.Items.Tablet.Apps.ShoppingCart.Receipt extends HQ.Items.Tablet.Apps.Components.Stripe
-  @register 'Retronator.HQ.Items.Tablet.Apps.ShoppingCart.Receipt'
+class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
+  @id: -> 'Retronator.HQ.Items.Receipt'
+  @url: -> 'retronator/store/receipt'
+  @register @id()
+
+  @version: -> '0.0.1'
+
+  @fullName: -> "store receipt"
+  @shortName: -> "receipt"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
+
+  @description: ->
+    "
+      It's the receipt for things you bought in Retronator Store.
+    "
+
+  @initialize()
 
   constructor: (@options) ->
     super
 
-    stateObject = @options.state
-
     # Fields that control supporter display for logged out users (guests).
-    @guestShowSupporterName = stateObject.field 'showSupporterName', default: true
-    @guestSupporterName = stateObject.field 'supporterName'
+    @guestShowSupporterName = @state 'showSupporterName', default: true
+    @guestSupporterName = @state 'supporterName'
 
     @tip =
-      amount: stateObject.field 'tip.amount', default: 0
-      message: stateObject.field 'tip.message'
+      amount: @state 'tip.amount', default: 0
+      message: @state 'tip.message'
 
   onCreated: ->
     super

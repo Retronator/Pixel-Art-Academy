@@ -6,7 +6,7 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 HQ = Retronator.HQ
 
-class HQ.Items.Tablet.Apps.Components.Stripe extends AM.Component
+class HQ.Items.Components.Stripe extends LOI.Adventure.Item
   onCreated: ->
     super
 

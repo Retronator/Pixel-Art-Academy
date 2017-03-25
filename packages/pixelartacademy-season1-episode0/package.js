@@ -62,9 +62,18 @@ Package.onUse(function(api) {
 
   api.addComponent('chapter2/chapter2');
 
+  api.addFile('chapter2/items/items');
+
   // Registration
 
   api.addFile('chapter2/sections/registration/registration');
 
   api.addFile('chapter2/sections/registration/scenes/cafe/cafe');
+
+  // Shopping
+
+  api.addFile('chapter2/sections/shopping/shopping');
+
+  api.addFile('chapter2/sections/shopping/scenes/store/store');
+
 });

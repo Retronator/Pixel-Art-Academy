@@ -24,7 +24,7 @@ LOI.Parser.Vocabulary.Keys =
     Use: ''
     Press: ''
     Read: ''
-    What: ''
+    WhatIs: ''
     Get: ''
     Sit: ''
     Stand: ''

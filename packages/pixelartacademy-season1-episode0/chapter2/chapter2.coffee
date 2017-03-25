@@ -1,5 +1,6 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+HQ = Retronator.HQ
 
 class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
   C2 = @
@@ -13,6 +14,8 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
   @url: -> 'chapter2'
 
   @sections: -> [
+    C2.Registration
+    C2.Shopping
   ]
 
   @initialize()
@@ -46,3 +49,10 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
   fadeVisibleClass: ->
     'visible' unless @state 'introDone'
+
+  inventory: ->
+    hasShoppingCart = HQ.Items.ShoppingCart.state 'inInventory'
+  
+    [
+      HQ.Items.ShoppingCart if hasShoppingCart
+    ]
