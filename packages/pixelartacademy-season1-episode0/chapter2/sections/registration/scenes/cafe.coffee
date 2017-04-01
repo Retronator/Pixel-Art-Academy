@@ -19,25 +19,15 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
 
     @setCallbacks
       SignInActive: (complete) =>
-        LOI.adventure.scriptHelpers.itemInteraction
-          item: Retronator.HQ.Items.Wallet
-          callback: =>
-            console.log "Wallet has deactivated. The user ID is now", Meteor.userId(), "The subscription for the game state is", LOI.adventure.gameStateSubsription if LOI.debug
+        LOI.adventure.saveGame =>
+          # If user has signed in, wait until the game state has been loaded.
+          Tracker.autorun (computation) =>
+            return if Meteor.userId() and not LOI.adventure.gameStateSubsription.ready()
+            computation.stop()
 
-            Tracker.autorun (computation) =>
-              # If user has signed in, wait also until the game state has been loaded.
-              return if Meteor.userId() and not LOI.adventure.gameStateSubsription.ready()
-              computation.stop()
+            console.log "Save game dialog has deactivated. The user ID is now", Meteor.userId(), "The subscription for the game state is", LOI.adventure.gameStateSubsription if LOI.debug
 
-              complete()
-
-      CreateNewAccount: (complete) =>
-        # Insert the current local storage state as the start of the database one.
-        LOI.GameState.insertForCurrentUser LOI.adventure.gameState(), =>
-          complete()
-
-          # Now that the local state has been transferred, clear it for next player.
-          LOI.adventure.clearLocalGameState()
+            complete()
 
       ReceiveAccount: (complete) =>
         HQ.Items.Account.state 'inInventory', true

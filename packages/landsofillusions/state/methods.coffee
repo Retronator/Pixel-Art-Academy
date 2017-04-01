@@ -11,9 +11,6 @@ Meteor.methods
     existingGameState = LOI.GameState.documents.findOne 'user._id': user._id
     throw new AE.InvalidOperationException "This user already has a game state. Update it instead." if existingGameState
     
-    # Set the registered variable on the state.
-    state.registered = true
-
     # Insert the state.
     LOI.GameState.documents.insert
       user:

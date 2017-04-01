@@ -118,3 +118,81 @@ class LOI.Adventure extends LOI.Adventure
     gameState = @gameState()
 
     not gameState?.gameStarted
+
+  loadGame: ->
+    # Wait until user is logged in.
+    userAutorun = Tracker.autorun (computation) =>
+      return unless user = Retronator.user()
+      computation.stop()
+
+      # Wait also until the game state has been loaded.
+      Tracker.autorun (computation) =>
+        return unless LOI.adventure.gameStateSubsription.ready()
+        computation.stop()
+
+        databaseState = LOI.GameState.documents.findOne 'user._id': user._id
+
+        if databaseState
+          # Move user to the last location saved to the state. We do this only on load so that multiple players using
+          # the same account can move independently, at least inside the current session (they will get synced again on
+          # reload).
+          LOI.adventure.currentLocationId databaseState.state.currentLocationId
+
+        else
+          # TODO: Show dialog informing the user we're saving the local game state.
+          console.warn "This account does not have a save game yet. Your current state will be set as the save game for it."
+          LOI.GameState.insertForCurrentUser LOI.adventure.localGameState.state(), =>
+            # Now that the local state has been transferred, clear it for next player.
+            LOI.adventure.clearLocalGameState()
+
+        LOI.adventure.menu.signIn.activatable.deactivate()
+
+    # Set sign in dialog to show sign in (and not create account) by default:
+    Accounts._loginButtonsSession.set 'inSignupFlow', false
+    Accounts._loginButtonsSession.set 'inForgotPasswordFlow', false
+
+    LOI.adventure.menu.showModalDialog
+      dialog: LOI.adventure.menu.signIn
+      callback: =>
+        # User has returned from the load screen.
+        userAutorun.stop()
+
+  saveGame: (callback) ->
+    # Wait until user is logged in.
+    userAutorun = Tracker.autorun (computation) =>
+      return unless user = Retronator.user()
+      computation.stop()
+
+      # Wait also until the game state has been loaded.
+      Tracker.autorun (computation) =>
+        return unless LOI.adventure.gameStateSubsription.ready()
+        computation.stop()
+
+        databaseState = LOI.GameState.documents.findOne 'user._id': user._id
+
+        if databaseState
+          # TODO: Show dialog informing the user that the account already has a game state and it will be overwriting it.
+          console.warn "This account already has a save game. Your current state will overwrite it."
+
+          LOI.GameState.replaceForCurrentUser LOI.adventure.localGameState.state(), =>
+            # Now that the local state has been transferred, clear it for next player.
+            LOI.adventure.clearLocalGameState()
+
+        else
+          # Insert the current local state as the state for this (new) user.
+          LOI.GameState.insertForCurrentUser LOI.adventure.localGameState.state(), =>
+            # Now that the local state has been transferred, clear it for next player.
+            LOI.adventure.clearLocalGameState()
+
+        LOI.adventure.menu.signIn.activatable.deactivate()
+
+    # Set sign in dialog to show create account (and not sign in) by default:
+    Accounts._loginButtonsSession.set 'inSignupFlow', true
+    Accounts._loginButtonsSession.set 'inForgotPasswordFlow', false
+
+    LOI.adventure.menu.showModalDialog
+      dialog: LOI.adventure.menu.signIn
+      callback: =>
+        # User has returned from the load screen.
+        userAutorun.stop()
+        callback?()

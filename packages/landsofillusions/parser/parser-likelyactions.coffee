@@ -38,10 +38,10 @@ class LOI.Parser extends LOI.Parser
     # Since each alias and translation variant creates its own likely action, multiple can be for the
     # same phrase action. In that case, only include the most likely one in the consideration.
 
-    # Go from start to end of likely actions, and delete all subsequent actions that have the same phrase action.
+    # Go from start to end of likely actions, and delete all subsequent actions that have the same action.
     likelyActions = _.uniqWith likelyActions, (a, b) =>
       # Consider likely actions with the same phrase action as equal.
-      a.phraseAction is b.phraseAction
+      a.phraseAction.action is b.phraseAction.action
 
     # If all actions that are left have the same likelihood and precision, take the one with the highest priority
     equalPrecision = _.first(likelyActions).precision is _.last(likelyActions).precision

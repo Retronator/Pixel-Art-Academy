@@ -13,8 +13,8 @@ phrases =
     Southwest: ['southwest', 'sw']
     In: ['in', 'enter', 'inside']
     Out: ['out', 'exit', 'outside']
-    Up: ['up']
-    Down: ['down']
+    Up: ['up', 'upstairs']
+    Down: ['down', 'downstairs']
 
   Verbs:
     GoToLocationName: ['go to', 'travel to']

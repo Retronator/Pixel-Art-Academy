@@ -6,7 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Items.Account extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.Items.Account'
 
-  @fullName: -> "account file"
+  @fullName: -> "account folder"
   @shortName: -> "account"
 
   @description: ->

@@ -6,7 +6,8 @@ burra: `not _MainQuestion`
     It looks like you're new around here.
 
 burra: `_MainQuestion`
-    Ready to register? `_helped`
+    Ready to save your game? `_helped and not @user.signedIn`
+    Ready to register? `_helped and @user.signedIn`
     Hi again! `not _helped`
 
 ## MainQuestion
@@ -14,7 +15,9 @@ burra: `_MainQuestion`
 
 * I'm here to play Pixel Art Academy. -> [PlayPixelArtAcademy] `not _helped`
 * Yes, let's do this. -> [PlayPixelArtAcademy] `_helped`
-* Whoops, nevermind. -> [End]
+* What does saving do again? -> [SignInHelp] `_helped and not @user.signedIn`
+* Whoops, nevermind. -> [End] `not _helped`
+* Thank you so much! -> [End] `_helped`
 
 ## PlayPixelArtAcademy
 `_helped = true`
@@ -24,14 +27,37 @@ burra: Certainly!
 -> [PlayUser] `@user.signedIn`
 -> [PlayNotUser] `not @user.signedIn`
 
+<!-- USER REGISTRATION FLOW -->
+<!-- (Already saved prior to coming to the cafe.) -->
+
 ## PlayUser
 
-burra: Ah yes, I recognize you, `@user.name`. I see you have driven here in your Ferrari. `@user.name` <!-- Reference to Another World. -->
-burra: Ah yes, I recognize you. `not @user.name`
+<!-- Reference to Another World. -->
+burra: Ah yes, I recognize you, `@user.name`. I see you have driven here in your Ferrari. `@user.name`
+burra: Ah yes, I recognize you. I see you have driven here in your Ferrari. `not @user.name`
 
-burra: I have already prepared an account for you. One moment. `not @player.inventory['Retronator.HQ.Items.Account']`
-    
+* Yes, time to go to another world! -> [AnotherWorldYes]
+* Actually, I took the train.
+
+burra: Works for me too.
+
+-> [ReceiveAccountUser]
+
+## AnotherWorldYes
+
+burra: 
+    Just watch out for those alien slugs.
+
+## ReceiveAccountUser
+
+burra: Alright, I've already prepared an account for you.
+
+> Burra searches the file cabinet under the counter and hands you a document folder.
+
 -> [ReceiveAccount]
+
+<!-- GUEST REGISTRATION FLOW -->
+<!-- (Player hasn't saved the game yet.) -->
 
 ## PlayNotUser
 
@@ -91,42 +117,18 @@ burra: No problem. Come back when you're ready.
 ## SignIn
 
 burra: 
-    Great! Please choose any of the IDs to sign in.
+    Great! Please choose any of the IDs to sign in. 
+    It can be your email, or any of your social networks.
     You'll be able to add other IDs later too.
 
 > You reach for your wallet to present your ID.
 
+pause
+
 ### SignInActive
 
 -> [SignInFailed] `not @user.signedIn`
--> [JustRegistered] `@user.signedIn and not @registered`
-
-burra: Welcome back, `@user.name`. I see you have driven here in your Ferrari. `@user.name` <!-- Reference to Another World. -->
-burra: Welcome back. `not @user.name`
-
-burra: 
-    You now have a fresh start in Retronator HQ. 
-    If you already created any characters, they will still be available to you.
-    
-## ReceiveAccount
-
--> [AlreadyHaveAccount] `@player.inventory['Retronator.HQ.Items.Account']`
-
-> Burra searches the file cabinet under the desk and hands you your account.
-
-### ReceiveAccount
-
-burra: Here is your account file. Feel free to update any information in there.
-
--> [NextSteps]
-
-## AlreadyHaveAccount
-
-burra: Looks like you're all set.
-
--> [NextSteps]
-
--> [End]
+-> [SignInSucceeded]
 
 ## SignInFailed
 
@@ -136,76 +138,76 @@ burra: Do you need help with saving the game?
 
 ## SignInQuestions
 
-* What does saving do? -> [SignInHelp] `not _SignInHelp`
+* What does saving do again? -> [SignInHelp] `not _SignInHelp`
 * Can I link multiple social networks? -> [SignInSocialNetworks] `_SignInHelp`
 * Thanks for all the info! -> [SignInThanks] `_SignInHelp`
-* Nah, all good. `not _SignInHelp`
+* Nah, all good. -> [MaybeLater] `not _SignInHelp`
 
-burra: 
+## MaybeLater
+
+burra:
     Alright, perhaps next time. 
-    Can I help you with anything else?
 
--> [MainQuestion]
+-> [End]
 
 ## SignInHelp
 
-burra: 
-    If you save your game, you can continue playing from where you left off last time on any computer.
-    To use your email and password, use the create an account option in your wallet.
-    But you can simply use one of your social networks to save and load with a click of a button.
+burra:
+    If you save your game, you can continue playing from where you left off last time, on any computer.
+    You can save by creating an account with an email and password, or simply use one of your social networks.
     
 -> [SignInQuestions]
 
 ## SignInSocialNetworks
 
 burra:
-    Yes! I will give you an account file where you can link multiple social networks and emails to it.
+    Yes! Once you've saved your game, I will give you an account folder where you can link multiple social networks and emails to it.
     
 -> [SignInQuestions]
 
 ## SignInThanks
 
-burra: No problem. Can I help you with something else?
+burra: No problem. Ready to save now?
 
--> [MainQuestion]
+* Yes, let's do this. -> [SignIn]
+* Maybe later. -> [MaybeLater]
 
-## JustRegistered
+## SignInSucceeded
 
 burra: 
     Perfect!
     Let me create a new account for you …
 
-> Burra puts a new account file together and after a short moment has you registered.
+> Burra puts a new document folder together and after a short moment has you registered.
 
-### CreateNewAccount
+<!-- RECEIVE ACCOUNT -->
+    
+## ReceiveAccount
+
+### ReceiveAccount
 
 burra: 
-    There you go! This is your account file with all your information.
-    You can write into it to change anything you want.
-    
+    There you go! This is your account folder with all your information.
+    You can write on the documents to change anything you want.
+
 * Thank you.
 * Much appreciated.
 
--> [AlreadyHasGame] `@player.inventory['PixelArtAcademy.PlayerAccess']`
+-> [AlreadyHasGame] `@user.itemKeys['PixelArtAcademy.PlayerAccess']`
     
 burra:
-    If you're a backer of have pre-ordered the game, make sure to add and validate the email you used when buying the game.
-    Otherwise you can head upstairs to the store to get yourself a copy.
-    Talk to me again if you have any questions.
+    If you're a backer or have pre-ordered the game, make sure to add and validate the email you used when buying the game.
+    Otherwise you can head ![upstairs](up) to the store to get yourself a copy.
 
--> [End]
+-> [EndConversation]
 
 ## AlreadyHasGame
 
 burra:
-    I see you already bought the game previously.
-    Thank you so much for your support!
-    
--> [NextSteps]
-    
-## NextSteps
+    I see you already bought the game. Thank you so much for your support!
+    Go ![west](west) through the coworking space and down to the basement where you can enter Lands of Illusions.
 
-burra: Go west through the coworking space and down to the basement where you can enter Lands of Illusions.
+## EndConversation
 
 * Awesome, I will do that!
 

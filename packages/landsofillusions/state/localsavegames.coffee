@@ -20,4 +20,9 @@ LOI.load = (slot) ->
   state = EJSON.parse encodedValue
   LOI.adventure.replaceGameState state
 
+  # Move user to the last location saved to the state. We do this only on load so that multiple players using
+  # the same account can move independently, at least inside the current session (they will get synced again on
+  # reload).
+  LOI.adventure.currentLocationId state.currentLocationId
+
   return state
