@@ -68,12 +68,12 @@ Package.onUse(function(api) {
 
   api.addFile('chapter2/sections/registration/registration');
 
-  api.addFile('chapter2/sections/registration/scenes/cafe/cafe');
+  api.addThing('chapter2/sections/registration/scenes/cafe');
 
   // Shopping
 
   api.addFile('chapter2/sections/shopping/shopping');
 
-  api.addFile('chapter2/sections/shopping/scenes/store/store');
+  api.addFile('chapter2/sections/shopping/scenes/store');
 
 });

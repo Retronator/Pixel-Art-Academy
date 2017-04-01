@@ -38,8 +38,8 @@ class HQ.Cafe extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.Up}": HQ.Steps
-    "#{Vocabulary.Keys.Directions.West}": HQ.Passage
+    "#{Vocabulary.Keys.Directions.Up}": HQ.Store
+    "#{Vocabulary.Keys.Directions.West}": HQ.Coworking
     "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.SecondStreet
 
   class @BurraListener extends LOI.Adventure.Listener

@@ -54,6 +54,7 @@ Package.onUse(function(api) {
   api.addFiles('state/stateaddress.coffee');
   api.addFiles('state/stateinstances.coffee');
   api.addFiles('state/ephemeralstateobject.coffee');
+  api.addFiles('state/localsavegames.coffee');
 
   // Character
 

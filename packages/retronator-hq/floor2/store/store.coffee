@@ -47,7 +47,7 @@ class HQ.Store extends LOI.Adventure.Location
     ,
       "#{Vocabulary.Keys.Directions.East}": @constructor.Bookshelves
       "#{Vocabulary.Keys.Directions.Up}": HQ.GalleryWest
-      "#{Vocabulary.Keys.Directions.Down}": HQ.Steps
+      "#{Vocabulary.Keys.Directions.Down}": HQ.Cafe
 
   initializeScript: ->
     @setCurrentThings

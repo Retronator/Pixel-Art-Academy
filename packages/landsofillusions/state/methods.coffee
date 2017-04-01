@@ -32,6 +32,20 @@ Meteor.methods
       $set:
         state: {}
 
+  'LandsOfIllusions.GameState.replaceForCurrentUser': (state) ->
+    check state, Object
+
+    user = Retronator.user()
+    throw new AE.UnauthorizedException "You must be logged in to update game state." unless user
+
+    gameState = LOI.GameState.documents.findOne 'user._id': user._id
+    throw new AE.ArgumentNullException "User does not have a game state." unless gameState
+
+    # Everything seems OK, set an empty state.
+    LOI.GameState.documents.update gameState._id,
+      $set:
+        state: state
+
   'LandsOfIllusions.GameState.update': (gameStateId, state) ->
     check gameStateId, Match.DocumentId
     check state, Object

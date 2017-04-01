@@ -48,7 +48,7 @@ class HQ.Elevator extends LOI.Adventure.Location
       when 4 then exitLocation = HQ.ArtStudio
       when 3 then exitLocation = HQ.GalleryWest
       when 2 then exitLocation = HQ.Store
-      when 1 then exitLocation = HQ.Passage
+      when 1 then exitLocation = HQ.Coworking
       when -1 then exitLocation = HQ.Basement
 
     exits = {}

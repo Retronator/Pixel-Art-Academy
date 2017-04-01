@@ -21,10 +21,22 @@ class HQ.Coworking extends LOI.Adventure.Location
   
   @initialize()
 
+  constructor: ->
+    super
+
+    # Elevator button
+    @elevatorButton = new HQ.Items.ElevatorButton
+      location: @
+      floor: 1
+
   things: -> [
     PAA.Cast.Reuben
+    @elevatorButton
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.East}": HQ.Passage
-    "#{Vocabulary.Keys.Directions.Down}": HQ.Basement
+    HQ.Elevator.addElevatorExit
+      floor: 1
+    ,
+      "#{Vocabulary.Keys.Directions.East}": HQ.Cafe
+      "#{Vocabulary.Keys.Directions.Down}": HQ.Basement

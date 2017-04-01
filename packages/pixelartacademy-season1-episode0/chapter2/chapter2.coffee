@@ -52,7 +52,9 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
   inventory: ->
     hasShoppingCart = HQ.Items.ShoppingCart.state 'inInventory'
-  
+    hasAccount = HQ.Items.Account.state 'inInventory'
+
     [
+      HQ.Items.Account if hasAccount
       HQ.Items.ShoppingCart if hasShoppingCart
     ]

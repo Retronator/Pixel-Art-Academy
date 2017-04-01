@@ -36,6 +36,8 @@ Package.onUse(function(api) {
   api.addThingComponent('items/shoppingcart/shoppingcart');
   api.addComponent('items/receipt/receipt');
 
+  api.addFile('items/account/account');
+
   // Locations
 
   api.addThing('basement1/basement/basement');
@@ -47,18 +49,15 @@ Package.onUse(function(api) {
   api.addFile('floor1/cafe/artworks');
   api.addScript('floor1/cafe/burra');
 
-  api.addFile('floor1/passage/passage');
-  api.addFile('floor1/restroom/restroom');
   api.addFile('floor1/coworking/coworking');
-
-  api.addFile('floor2/steps/steps');
 
   api.addThing('floor2/store/store');
   api.addComponent('floor2/store/display/display');
   api.addComponent('floor2/store/shelf/shelf');
   api.addFile('floor2/store/shelf/shelf-game');
   api.addFile('floor2/store/shelf/shelf-upgrades');
-  api.addFile('floor2/store/bookshelves/bookshelves');
+
+  api.addFile('floor2/bookshelves/bookshelves');
 
   api.addFile('floor3/gallery/galleryeast');
   api.addFile('floor3/gallery/gallerywest');

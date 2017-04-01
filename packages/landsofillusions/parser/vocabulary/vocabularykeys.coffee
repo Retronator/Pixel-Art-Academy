@@ -40,6 +40,7 @@ LOI.Parser.Vocabulary.Keys =
     ShowTo: ''
     Show: ''
     LookIn: ''
+    WakeUp: ''
 
   IgnorePrepositions: ''
 

@@ -10,3 +10,7 @@ class C2.Registration extends LOI.Adventure.Section
   ]
 
   @initialize()
+
+  @finished: ->
+    # Registration section is over when the player gets the account.
+    HQ.Items.Account.state('inInventory') is true

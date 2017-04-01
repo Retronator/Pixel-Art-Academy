@@ -90,7 +90,18 @@ class LOI.Adventure extends LOI.Adventure
     # Flush the state updates to the database when the page is about to unload.
     window.onbeforeunload = =>
       @gameState?.updated flush: true
-      
+
+  replaceGameState: (newState) ->
+    switch @gameStateSource()
+      when @constructor.GameStateSourceType.Database
+        LOI.GameState.replaceForCurrentUser newState
+
+      when @constructor.GameStateSourceType.LocalStorage
+        @replaceLocalGameState newState
+
+  replaceLocalGameState: (newState) ->
+    @localGameState.state newState
+
   clearGameState: ->
     switch @gameStateSource()
       when @constructor.GameStateSourceType.Database

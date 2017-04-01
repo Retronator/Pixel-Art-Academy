@@ -41,8 +41,9 @@ phrases =
     ShowTo: ['show _ to', 'present _ to']
     Show: ['show', 'present']
     LookIn: ['look in']
+    WakeUp: ['wake up', 'awaken']
 
-  IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in']
+  IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up']
 
   Questions:
     WhichPlace: ['where']
