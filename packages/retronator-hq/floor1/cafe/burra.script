@@ -16,9 +16,10 @@ burra: `_End`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
 * Can I order a sandwich? -> [Sandwich] `not Sandwich`
 * How about coffee? -> [Coffee] `Sandwich and not Coffee`
-* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQDepartments`
+* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQDepartments and not PixelArtAcademy`
 * So is Pixel Art Academy like an online course? -> [PixelArtAcademyCourse] `PixelArtAcademy`
 * So about that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQDepartments`
+* What exactly is Lands of Illusions? -> [LandsOfIllusions] `RetronatorHQDepartments`
 * Oh, just looking. -> [End] `not _answered and not _End`
 * Whoops, nevermind. -> [End] `not _answered and _End`
 * Thank you so much! `_answered`
@@ -45,7 +46,7 @@ burra: It's mainly Retro working on Pixel Art Academy and Retronator Magazine.
 
 burra:
     You can visit the store on the 2nd floor where you can buy the game.
-    Further upstairs you can visit a gallery of Retro's artworks.
+    Further upstairs is the gallery of Retro's artworks.
     And if you bought Pixel Art Academy, head on downstairs to our virtual reality center Lands of Illusions.
     
 -> [MainQuestion]
@@ -60,7 +61,7 @@ burra: Yes, it's a publication you can read on Medium, all about pixel art! Woul
 
 burra: Sounds good. It's available at medium.com/retronator-magazine. 
 
--> [Question]
+-> [MainQuestion]
 
 ## ReadRetronatorMagazine
 
@@ -70,7 +71,7 @@ burra: Sounds good. It's available at medium.com/retronator-magazine.
 
 burra: I hope you liked it.
 
--> [Question]
+-> [MainQuestion]
 
 ## PixelArtAcademy
 
@@ -93,7 +94,16 @@ burra:
     You will get assignments in the game and you'll have to draw to complete them.
     Characters in the game world will also point you to online learning materials based on your needs.
     
--> [Question]
+-> [MainQuestion]
+
+## LandsOfIllusions
+
+burra:
+    It's a virtual reality center where you can immerse into one of Retronator's video game worlds.
+    Go west to the coworking space and down one level to reach it.
+    Panzer will be able to tell you all about it.
+    
+-> [MainQuestion]    
 
 <!-- OTHER -->
 
