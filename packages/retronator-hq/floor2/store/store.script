@@ -21,7 +21,7 @@ retro: How can I help you today?
 * I'm a backer, but didn't choose a reward. -> [NoRewardBacker] `_noRewardBacker`
 * I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
-* But I don't have the Shopping Cart app. -> [ShoppingCartApp] `_HowToBuy and not _hasShoppingCartApp`
+* I'm one of the Kickstarter backers. -> [Kickstarter]
 * Can I ask you about Pixel Art Academy? -> [PixelArtAcademy]
 * I would like to ask something else … -> [Contact] `PixelArtAcademy`
 * I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
@@ -272,35 +272,30 @@ retro: Well then, in that case I thank you immensely for your support!
 
 `_helped = true`
 
--> [NeedTablet] `not @player.inventory['Retronator.HQ.Items.Tablet']`
-
-retro: Go to the shelves in the store area to the _east_.
-    
-## HowToBuyShelves
-
-retro:
-    You will find game bundles you can pre-order there.
-    Press 'Add to cart' next to the bundle you want and it will appear in the Shopping Cart app on your tablet.
+retro: 
+    All the game bundles and upgrade options are on the shelves over there.
+    Simply ![look at a shelf](look at shelf) and add the bundle you want to the shopping cart.
     
 -> [MainQuestion]
 
-## NeedTablet
-
-retro: 
-    To buy things, you will first need one of our Retronator Spectrum Tablets. 
-    You can find one on the 1st floor in the lobby just _down_ these stairs.
-    When you come back up, go to the shelves in the store area to the _east_.
-
--> [HowToBuyShelves]
-    
-## ShoppingCartApp
+## Kickstarter
 
 `_helped = true`
 
-retro: No worries, it will appear automatically once you add something to your cart.
+retro:
+    Oh, awesome, nice to meet you! Thanks for your support!
+    You should be all set to play the game.
+    
+retro: Just register downstairs with Burra with your backer email. `not @user.signedIn`
 
+* How do I start playing?
+
+retro:
+    Head down to Lands of Illusions in the basement and talk to Panzer.
+    He'll help you out if you have any problems.
+    
 -> [MainQuestion]
-
+    
 <!-- PIXEL ART ACADEMY QUESTIONS -->
 
 ## PixelArtAcademy
@@ -341,7 +336,7 @@ retro:
     Pixel Art Academy is not a typical game with a release date.
     Instead, it will be continuously in development.
     Over time I'll be adding more content and improving existing one.
-    The first episode will come out in 2017.
+    The first episode will come out later in 2017.
     It's mainly just me working on it, so it'll take a while.
     
 -> [PixelArtAcademyQuestions]
@@ -419,8 +414,7 @@ retro: Have a wonderful day!
 ## EndBrowsing
 
 retro: 
-    Feel free to do so.
-    I'll be around if you need anything.
+    Feel free to do so. I'll be around if you need anything.
 
 -> [End]
 

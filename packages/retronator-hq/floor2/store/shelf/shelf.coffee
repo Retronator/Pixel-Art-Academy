@@ -26,8 +26,6 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
-      # HACK: Deactivate item on adventure first to prevent a render component error. TODO: Figure out why.
-      LOI.adventure.deactivateCurrentItem()
       finishedDeactivatingCallback()
     ,
       500
@@ -86,25 +84,14 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
   onClickAddToCartButton: (event) ->
     item = @currentData()
         
-    # Add the Shopping Cart app to the tablet.
-    tablet = @playerTablet()
-    tablet.addApp HQ.Items.Tablet.Apps.ShoppingCart, (shoppingCart) =>
+    # Add the shopping cart to player inventory tablet.
+    HQ.Items.ShoppingCart.state 'inInventory', true
 
-      # Add the item's ID to the shopping cart state.
-      shoppingCartState = shoppingCart.state()
-      shoppingCartState.contents ?= []
+    # Add the item's ID to the shopping cart state.
+    HQ.Items.ShoppingCart.addItem item.catalogKey
 
-      shoppingCartState.contents.push
-        item: item.catalogKey
-        isGift: false
-
-      # Switch the tablet app to Shopping Cart.
-      tablet.os.state().activeAppId = HQ.Items.Tablet.Apps.ShoppingCart.id()
-
-      LOI.adventure.gameState.updated()
-
-      # Activate the tablet into overlaid mode
-      tablet.activate()
+    # Switch display to shopping cart.
+    LOI.adventure.goToItem HQ.Items.ShoppingCart
 
   # Listener
 

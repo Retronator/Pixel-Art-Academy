@@ -225,6 +225,11 @@ class LOI.Adventure.Thing extends AM.Component
   id: -> @constructor.id()
   url: -> @constructor.url()
 
+  # Override to control if the item appears in the interface.
+  isVisible: -> true
+  displayInLocation: -> @isVisible()
+  displayInInventory: -> @isVisible()
+
   ready: ->
     @thingReady()
 

@@ -35,6 +35,16 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
 
   @defaultScriptUrl: -> 'retronator_retronator-hq/items/shoppingcart.script'
 
+  @addItem: (catalogKey) ->
+    # Add the item's ID to the shopping cart state.
+    contents = @state('contents') or []
+
+    contents.push
+      item: catalogKey
+      isGift: false
+
+    @state 'contents', contents
+
   constructor: (@options) ->
     super
 
@@ -48,8 +58,6 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
-      # HACK: Deactivate item on adventure first to prevent a render component error. TODO: Figure out why.
-      LOI.adventure.deactivateCurrentItem()
       finishedDeactivatingCallback()
     ,
       500

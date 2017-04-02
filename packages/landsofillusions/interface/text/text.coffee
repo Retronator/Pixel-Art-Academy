@@ -37,7 +37,9 @@ class LOI.Interface.Text extends LOI.Interface
     exitAvatars
 
   things: ->
-    LOI.adventure.currentLocationThings()
+    return [] unless things = LOI.adventure.currentLocationThings()
+
+    thing for thing in things when thing.displayInLocation()
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
@@ -77,7 +79,9 @@ class LOI.Interface.Text extends LOI.Interface
     activeItems
 
   inventoryItems: ->
-    items = _.filter LOI.adventure.currentInventoryThings(), (item) -> not item.state()?.doNotDisplay
+    return [] unless items = LOI.adventure.currentInventoryThings()
+
+    items = (item for item in items when item.displayInInventory())
 
     console.log "Text interface is displaying inventory items", items if LOI.debug
 

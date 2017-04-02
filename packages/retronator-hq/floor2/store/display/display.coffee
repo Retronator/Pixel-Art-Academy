@@ -47,8 +47,6 @@ class HQ.Store.Display extends LOI.Adventure.Item
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
-      # HACK: Deactivate item on adventure first to prevent a render component error. TODO: Figure out why.
-      LOI.adventure.deactivateCurrentItem()
       finishedDeactivatingCallback()
     ,
       500

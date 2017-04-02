@@ -52,4 +52,10 @@ class LOI.Components.BackButton extends AM.Component
     else
       # By default the back button deactivates the component it appears in.
       deactivatableParent = @ancestorComponentWith 'deactivate'
-      deactivatableParent?.callFirstWith null, 'deactivate'
+
+      # If the component is also the main active item, deactivate it at the adventure level (which changes the url).
+      if LOI.adventure.activeItemId() is deactivatableParent.id?()
+        LOI.adventure.deactivateCurrentItem()
+
+      else
+        deactivatableParent?.callFirstWith null, 'deactivate'

@@ -1,15 +1,13 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
 PAA = PixelArtAcademy
+RS = Retronator.Store
 
 Vocabulary = LOI.Parser.Vocabulary
 
 class HQ.Store extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Store'
   @url: -> 'retronator/store'
-  @scriptUrls: -> [
-    'retronator-hq/hq.script'
-  ]
 
   @version: -> '0.0.1'
 
@@ -22,7 +20,9 @@ class HQ.Store extends LOI.Adventure.Location
       Yellow walls and pixel art decals immediately brighten your day. Stairs continue up to the gallery and
       you can see bookshelves further out to the east.
     "
-  
+
+  @defaultScriptUrl: -> 'retronator_retronator-hq/floor2/store/store.script'
+
   @initialize()
 
   constructor: ->
@@ -33,11 +33,21 @@ class HQ.Store extends LOI.Adventure.Location
       location: @
       floor: 2
 
+    @shelves = new HQ.Store.Shelves
+
+    @_itemsSubscription = @subscribe RS.Transactions.Item.all
+
+  destroy: ->
+    super
+
+    @_itemsSubscription.stop()
+
   things: -> [
     PAA.Cast.Retro
     HQ.Store.Display
     HQ.Store.Shelf.Game
     HQ.Store.Shelf.Upgrades
+    HQ.Store.Shelves
     @elevatorButton
   ]
 
@@ -49,18 +59,15 @@ class HQ.Store extends LOI.Adventure.Location
       "#{Vocabulary.Keys.Directions.Up}": HQ.GalleryWest
       "#{Vocabulary.Keys.Directions.Down}": HQ.Cafe
 
+  # Script
+
   initializeScript: ->
     @setCurrentThings
       retro: PAA.Cast.Retro
   
     @setCallbacks
       AnalyzeUser: (complete) =>
-        shoppingCart = []
-        tablet = LOI.adventure.inventory HQ.Items.Tablet
-        
-        if tablet
-          shoppingCartApp = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
-          shoppingCart = shoppingCartApp.state().contents if shoppingCartApp
+        shoppingCart = HQ.Items.ShoppingCart.state().contents or []
 
         buyingBaseGame = false
         buyingAlphaAccess = false
@@ -69,15 +76,14 @@ class HQ.Store extends LOI.Adventure.Location
 
         PreOrderKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder
 
-        if shoppingCart
-          for cartItem in shoppingCart
-            switch cartItem.item
-              when PreOrderKeys.BasicGame, PreOrderKeys.FullGame, PreOrderKeys.AlphaAccess
-                buyingBaseGame = true
+        for cartItem in shoppingCart
+          switch cartItem.item
+            when PreOrderKeys.BasicGame, PreOrderKeys.FullGame, PreOrderKeys.AlphaAccess
+              buyingBaseGame = true
 
-            switch cartItem.item
-              when PreOrderKeys.AlphaAccessUpgrade, PreOrderKeys.AlphaAccess
-                buyingAlphaAccess = true
+          switch cartItem.item
+            when PreOrderKeys.AlphaAccessUpgrade, PreOrderKeys.AlphaAccess
+              buyingAlphaAccess = true
 
         KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
 
@@ -102,9 +108,8 @@ class HQ.Store extends LOI.Adventure.Location
 
         noRewardBacker = true in eligibleBackerTiers
 
-        ephemeralState = retroDialog.ephemeralState()
-        ephemeralState.tablet = if tablet then true else false
-        ephemeralState.hasShoppingCartApp = shoppingCartApp?
+        ephemeralState = @ephemeralState()
+        ephemeralState.hasShoppingCart = HQ.Items.ShoppingCart.state 'inInventory'
         ephemeralState.shoppingCart = shoppingCart
         ephemeralState.buyingBaseGame = buyingBaseGame
         ephemeralState.buyingAlphaAccess = buyingAlphaAccess
@@ -112,6 +117,11 @@ class HQ.Store extends LOI.Adventure.Location
         ephemeralState.eligibleBackerTiers = eligibleBackerTiers
 
         console.log "Analyzed user and set ephemeral state to", ephemeralState if HQ.debug
+
+        complete()
+
+      AddTierToCart: (complete) =>
+        # TODO: Add a qualifying Kickstarter tier to the shopping cart.
 
         complete()
 
@@ -150,6 +160,8 @@ class HQ.Store extends LOI.Adventure.Location
             LOI.adventure.deactivateCurrentItem()
 
             complete()
+
+  # Listener
 
   onCommand: (commandResponse) ->
     return unless retro = LOI.adventure.getCurrentThing PAA.Cast.Retro
