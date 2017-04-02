@@ -1,6 +1,6 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.retronator-hq-items-tablet-apps-prospectus
+.retronator-hq-items-prospectus-content
   position relative
   color atariGrey(5)
 
@@ -206,7 +206,7 @@
     min-height 100%
     height 100%
     text-align center
-    background-image image('/retronator/hq/items/tablet/apps/prospectus/background.png')
+    background-image image('/retronator/hq/items/prospectus/background.png')
     background-attachment fixed
     background-position center bottom
     background-size cover
@@ -233,7 +233,7 @@
     padding 0
 
     h1
-      padding-bottom 15rem
+      padding-bottom 5rem
 
       .subheading
         display block
@@ -247,37 +247,17 @@
         acme-9()
         font-weight bold
         display inline-block
+        background-color #eee
+        padding 6rem 10rem 14rem
+        box-shadow 1.5rem 1.5rem black
+        color black
 
         .author
           position absolute
-          right 8rem
-          bottom -9rem
+          right 18rem
+          top 15rem
           adventure()
           color dark-grey
-
-    .tagline
-      margin-bottom 15rem
-
-    .button
-      acme-9()
-      font-size 8rem
-      font-weight bold
-      background-color #eee
-      color black
-      text-shadow none
-      text-transform uppercase
-      border 0
-      cursor pointer
-      margin-bottom 15rem
-      display inline-block
-      padding 6rem 10rem
-      box-shadow 1.5rem 1.5rem black
-
-      &:hover
-        color #eee
-        text-shadow 1.5rem 1.5rem black
-        background-color transparent
-        box-shadow none
 
   section:not(.jumbotron)
     margin auto
@@ -351,17 +331,17 @@
             margin-bottom 5rem
 
       &.campus
-        background-image image('/retronator/hq/items/tablet/apps/prospectus/campus.png')
+        background-image image('/retronator/hq/items/prospectus/campus.png')
         background-color #002C5C
 
       &.studio
-        background-image image('/retronator/hq/items/tablet/apps/prospectus/studio.png')
+        background-image image('/retronator/hq/items/prospectus/studio.png')
 
       &.pixelboy
-        background-image image('/retronator/hq/items/tablet/apps/prospectus/pixelboy.png')
+        background-image image('/retronator/hq/items/prospectus/pixelboy.png')
 
       &.library
-        background-image image('/retronator/hq/items/tablet/apps/prospectus/library.png')
+        background-image image('/retronator/hq/items/prospectus/library.png')
         background-color black
 
   // On iOS background-attachment fixed does not work. Fallback to scroll.
@@ -379,14 +359,33 @@
     padding-top 20rem
     color black
 
-    .no-release-date
-      text-transform uppercase
-
     h2
       color black
 
+    a
+      text-decoration none
+      color black
+      white-space nowrap
+
+      &::after
+        display block
+        content ''
+        absolute-cover()
+        right 1rem
+        border-bottom 1rem solid black
+
+      &:hover
+        background-color black
+        color #eee
+
+        &::after
+          display none
+
   .featured-product
     background-image image('/retronator/hq/items/tablet/apps/prospectus/greetings.png')
+
+  .support-area
+    background-image image('/retronator/hq/items/prospectus/greetings.png')
     background-position left top
     background-repeat no-repeat
     background-color #a7e2fd
@@ -394,152 +393,32 @@
     margin-bottom 10rem
     padding 20rem
 
-    .products
-      .store-item
-        color black
-        z-index 1
-        padding 10rem
-        margin-bottom 10rem
-        background hsla(0,0%,100%,0.9)
-        border 2rem solid #689ec2
-
-        h3
-          font-weight bold
-
-        .purchase-product
-          adventure()
-          text-transform uppercase
-          padding 6rem 10rem
-
-          &::after
-            background atariGreen(4)
-            border-bottom-color atariGreen(2)
-
-          &:hover::after
-            background atariGreen(5)
-
-    .line.products
-      max-width 380rem
-
-    .more
+    .support-content
       color black
+      z-index 1
+      padding 10rem
+      margin-bottom 10rem
+      background hsla(0,0%,100%,0.9)
+      border 2rem solid #689ec2
       text-align center
-      margin-top 20rem
 
-  .products
-    text-align center
+      h2
+        color black
 
-    .store-item
       h3
-        acme-9()
-        font-weight normal
-        line-height 15rem
-
-      .price
-        margin 15rem 0 5rem
-        kyrou-9()
         font-weight bold
 
-        small
-          position relative
-          top -2rem
-          kyrou-7()
-          font-weight normal
-
-          .discounted-from
-            text-decoration none
-
-            &::after
-              content ''
-              position absolute
-              top 50%
-              left -2rem
-              right -2rem
-              height 0
-              border-top 1rem solid
-
-      .purchase-product
-        margin 10rem
-        display inline-block
-        vertical-align middle
-
-      .product-image
-        height: 19rem
-        display inline-block
-        vertical-align middle
-
-      ul
-        list-style square
-        text-align left
-
-        li
-          p
-            margin-bottom 5rem
-
-      .keycard
-        text-align right
+      .play-button
         adventure()
         text-transform uppercase
-        opacity 0.6
+        padding 6rem 10rem
 
-        .product-image
-          display inline-block
-          vertical-align middle
+        &::after
+          background atariGreen(4)
+          border-bottom-color atariGreen(2)
 
-  .payment-smallprint
-    color atariGrey(4)
-    margin-bottom 0
-
-  .payment-form-screen
-    absolute-cover()
-    background-color rgba(0, 0, 0, 0.8)
-    overflow auto
-    z-index 3
-
-    .retronator-store-components-bundle-item
-      .tooltip
-        left 50%
-        transform translateX(-50%)
-
-    .bundle
-      .headline
-        kyrou-9()
-        font-weight normal
-        line-height 12rem
-
-      .bundle-items
-        list-style square
-
-  .payment-form-wrapper
-    width 240rem
-    background black
-    border 1rem solid #eee
-    padding 20rem
-    padding-top 30rem
-    margin 30rem auto
-    z-index 1
-
-    .submit-payment
-      display inline-block
-      width 100%
-      margin 10rem 0
-
-    .payment-errors
-      adventure()
-      padding 5rem
-      background #222
-      margin-bottom 10rem
-
-  .close-payment
-    adventure()
-    position absolute
-    right 0
-    top 0
-    padding 10rem
-    cursor pointer
-
-  .reset-payments
-    font-size 10rem !important
+        &:hover::after
+          background atariGreen(5)
 
   /* **************** GRIDS ***************** */
   .line::after
@@ -561,6 +440,7 @@
 
   .size1of1
     float none
+    padding-right 5rem
 
   .size1of2
     width 50%
@@ -584,27 +464,60 @@
   .size4of5
     width 80%
 
-.prospectus-disable-scrolling
-  overflow hidden
 
-.retronator-hq-items-tablet
-  .retronator-hq-items-tablet-apps-prospectus
-    absolute-cover()
+.retronator-hq-items-prospectus
+  .safe-area
+    .hand
+      position absolute
+      z-index 3
+      top 105rem
+      left -60rem
+      width 85rem
+      height 196rem
+      pointer-events none
 
-    .home-link
-      display none
-
-    .main-wrapper
+    .retronator-hq-items-prospectus-content
       absolute-cover()
-      overflow scroll
+      border 1rem solid
+      border-bottom 2rem solid
+      border-color atariGrey(1) atariGrey(2) atariGrey(0) atariGrey(0)
 
-    #jumbotron
-      background-attachment local
+      &::after
+        content ''
+        absolute-cover()
+        z-index 2
+        pointer-events none
+        border 2rem solid rgba(atariGrey(1), 0.5)
 
-    .student-life
-      .infoblock
+      &::before
+        content ''
+        absolute-cover()
+        z-index 3
+        pointer-events none
+        border 1rem solid rgba(atariGrey(1), 0.5)
+
+      .home-link
+        display none
+
+      .main-wrapper
+        absolute-cover()
+        overflow scroll
+
+      #jumbotron
         background-attachment local
 
-    section:not(.jumbotron)
-      margin auto
-      padding 15rem 0 10rem
+      .student-life
+        .infoblock
+          background-attachment local
+
+      section:not(.jumbotron)
+        margin auto
+        padding 15rem 0 10rem
+
+      .play-button
+        display none
+
+      .trailer
+        width 263rem
+        height 148rem
+        margin-bottom 15rem

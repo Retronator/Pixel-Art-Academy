@@ -8,21 +8,7 @@ HQ = Retronator.HQ
 
 class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
   @id: -> 'Retronator.HQ.Items.Receipt'
-  @url: -> 'retronator/store/receipt'
   @register @id()
-
-  @version: -> '0.0.1'
-
-  @fullName: -> "store receipt"
-  @shortName: -> "receipt"
-  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
-
-  @description: ->
-    "
-      It's the receipt for things you bought in Retronator Store.
-    "
-
-  @initialize()
 
   constructor: (@options) ->
     super

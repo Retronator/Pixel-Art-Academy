@@ -7,12 +7,20 @@ class LOI.Parser extends LOI.Parser
     # Nodes are not yet available when parser is defined, so we need to access them here.
     Nodes = LOI.Adventure.Script.Nodes
 
-    # Sort all actions descending by likelihood.
+    # Sort all actions descending by likelihood, precision and priority.
     likelyActions = _.reverse _.sortBy likelyActions, 'likelihood', 'precision', 'priority'
+
+    # Since each alias and translation variant creates its own likely action, multiple can be for the
+    # same phrase action. In that case, only include the most likely one in the consideration.
+
+    # Go from start to end of likely actions, and delete all subsequent actions that have the same action.
+    likelyActions = _.uniqWith likelyActions, (a, b) =>
+      # Consider likely actions with the same phrase action as equal.
+      a.phraseAction.action is b.phraseAction.action
 
     if LOI.debug
       console.log "We're not sure what the user wanted ... top 10 possibilities:"
-      console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision for likelyAction in likelyActions[0...10]
+      console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision, likelyAction.priority for likelyAction in likelyActions[0...10]
 
     # If the most likely action is not above 60%, we tell the user we don't understand.
     bestLikelihood = likelyActions[0].likelihood
@@ -34,14 +42,6 @@ class LOI.Parser extends LOI.Parser
 
       likelyActions = _.filter likelyActions, (likelyAction) =>
         likelyAction.precision is bestPrecision
-
-    # Since each alias and translation variant creates its own likely action, multiple can be for the
-    # same phrase action. In that case, only include the most likely one in the consideration.
-
-    # Go from start to end of likely actions, and delete all subsequent actions that have the same action.
-    likelyActions = _.uniqWith likelyActions, (a, b) =>
-      # Consider likely actions with the same phrase action as equal.
-      a.phraseAction.action is b.phraseAction.action
 
     # If all actions that are left have the same likelihood and precision, take the one with the highest priority
     equalPrecision = _.first(likelyActions).precision is _.last(likelyActions).precision

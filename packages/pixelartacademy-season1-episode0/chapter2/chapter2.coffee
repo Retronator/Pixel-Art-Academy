@@ -51,10 +51,10 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
     'visible' unless @state 'introDone'
 
   inventory: ->
-    hasShoppingCart = HQ.Items.ShoppingCart.state 'inInventory'
-    hasAccount = HQ.Items.Account.state 'inInventory'
+    items = []
 
-    [
-      HQ.Items.Account if hasAccount
-      HQ.Items.ShoppingCart if hasShoppingCart
-    ]
+    for itemClassName in ['ShoppingCart', 'Account', 'Prospectus']
+      hasItem = HQ.Items[itemClassName].state 'inInventory'
+      items.push HQ.Items[itemClassName] if hasItem
+
+    items

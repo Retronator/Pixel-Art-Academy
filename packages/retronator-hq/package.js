@@ -34,6 +34,7 @@ Package.onUse(function(api) {
 
   api.addThing('items/elevatorbutton/elevatorbutton');
   api.addThingComponent('items/shoppingcart/shoppingcart');
+  api.addComponent('items/prospectus/prospectus');
   api.addComponent('items/receipt/receipt');
 
   api.addFile('items/account/account');

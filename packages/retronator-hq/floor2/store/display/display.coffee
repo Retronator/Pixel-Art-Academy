@@ -27,6 +27,19 @@ class HQ.Store.Display extends LOI.Adventure.Item
 
   @initialize()
 
+  # Listener
+
+  onCommand: (commandResponse) ->
+    display = @options.parent
+
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], display.avatar]
+      priority: 1
+      action: =>
+        LOI.adventure.goToItem display
+
+  # Component
+
   onCreated: ->
     super
 
@@ -54,14 +67,3 @@ class HQ.Store.Display extends LOI.Adventure.Item
         ['amount', 'desc']
         ['time', 'desc']
       ]
-
-  # Listener
-
-  onCommand: (commandResponse) ->
-    display = @options.parent
-
-    commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], display.avatar]
-      priority: 1
-      action: =>
-        LOI.adventure.goToItem display

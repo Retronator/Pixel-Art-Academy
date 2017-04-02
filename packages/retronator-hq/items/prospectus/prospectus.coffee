@@ -4,136 +4,138 @@ LOI = LandsOfIllusions
 HQ = Retronator.HQ
 RS = Retronator.Store
 
-class HQ.Items.Tablet.Apps.Prospectus extends HQ.Items.Tablet.OS.App
-  @register 'Retronator.HQ.Items.Tablet.Apps.Prospectus'
+Vocabulary = LOI.Parser.Vocabulary
 
-  @id: -> 'Retronator.HQ.Items.Tablet.Apps.Prospectus'
-  @url: -> 'pixelartacademy'
+class HQ.Items.Prospectus extends LOI.Adventure.Item
+  @id: -> 'Retronator.HQ.Items.Prospectus'
+  @url: -> 'prospectus'
 
-  @fullName: -> "Pixel Art Academy Prospectus"
+  @register @id()
+  template: -> @constructor.id()
+
+  @fullName: -> "school prospectus"
+  @shortName: -> "prospectus"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "
-      Informational package about studying at Retropolis Academy of Art.
+      It's a hi-tech digital informational package about studying at Retropolis Academy of Art.
     "
 
   @initialize()
 
-  onCreated: ->
-    super
+  # Listener
 
-    @subscribe RS.Transactions.Item.all
+  onCommand: (commandResponse) ->
+    prospectus = @options.parent
 
-    @selectedItem = new ReactiveField null
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookAt], prospectus.avatar]
+      priority: 1
+      action: =>
+        LOI.adventure.goToItem prospectus
 
-  onRendered: ->
-    super
+  class @Content extends AM.Component
+    @register 'Retronator.HQ.Items.Prospectus.Content'
 
-    @measureSectionTops()
-    $(document).on 'resize.prospectus', => @measureSectionTops()
+    onCreated: ->
+      super
 
-    @_$mainWrapper = $('.retronator-hq-items-tablet-apps-prospectus .main-wrapper')
+      @subscribe RS.Transactions.Item.all
 
-    # Are we scrolling inside the body (about page) or inside the main wrapper (app)?
-    @_$scrollTarget = if $('.pixelartacademy-landingpage-pages-about').length > 0 then $(window) else @_$mainWrapper
-    @_$scrollTarget.on 'scroll.prospectus', => @watchScroll()
+      @selectedItem = new ReactiveField null
 
-  onDestroyed: ->
-    super
+    onRendered: ->
+      super
 
-    $(document).off '.prospectus'
-    @_$scrollTarget.off '.prospectus'
+      Tracker.afterFlush =>
+        @measureSectionTops()
 
-  iosClass: ->
-    'ios' if /iPad|iPhone|iPod/.test(navigator.userAgent) and not window.MSStream
+      $(window).on 'resize.prospectus', => @measureSectionTops()
 
-  backgroundSize: ->
-    display = LOI.adventure.interface.display
-    width = display.viewport().viewportBounds.width()
-    scale = display.scale()
+      @_$mainWrapper = $('.retronator-hq-items-prospectus-content .main-wrapper')
 
-    tabletWidth = 300 * scale
+      # Are we scrolling inside the body (about page) or inside the main wrapper (app)?
+      @_$scrollTarget = if $('.pixelartacademy-landingpage-pages-about').length > 0 then $(window) else @_$mainWrapper
+      @_$scrollTarget.on 'scroll.prospectus', => @watchScroll()
 
-    tabletWidth / width * 100
+    onDestroyed: ->
+      super
 
-  backgroundPositionY: ->
-    display = LOI.adventure.interface.display
-    height = display.viewport().viewportBounds.height()
-    scale = display.scale()
+      $(window).off '.prospectus'
+      @_$scrollTarget.off '.prospectus'
 
-    tabletHeight = 200 * scale
+    iosClass: ->
+      'ios' if /iPad|iPhone|iPod/.test(navigator.userAgent) and not window.MSStream
 
-    bottomGapPercentage = (1 - tabletHeight / height)
+    backgroundSize: ->
+      display = LOI.adventure.interface.display
+      width = display.viewport().viewportBounds.width()
+      scale = display.scale()
 
-    (1 + bottomGapPercentage) * 100
+      tabletWidth = 300 * scale
 
-  measureSectionTops: ->
-    # Get scroll top positions of all sections.
-    $links = $('nav > a')
-    $hashes = _.tail ($(link).attr('href') for link in $links)
+      tabletWidth / width * 100
 
-    @_sectionTops = [0]
-    @_sectionTops.push $(hash).position().top for hash in $hashes
+    backgroundPositionY: ->
+      display = LOI.adventure.interface.display
+      height = display.viewport().viewportBounds.height()
+      scale = display.scale()
 
-  watchScroll: ->
-    active = 0
-    index = null
+      tabletHeight = 200 * scale
 
-    scrollPositionTop = @_$scrollTarget.scrollTop()
-    scrollPositonBotttom = scrollPositionTop + @_$scrollTarget.height()
+      bottomGapPercentage = (1 - tabletHeight / height)
 
-    for i in [0...@_sectionTops.length]
-      if scrollPositonBotttom > @_sectionTops[i]
-        active = i
+      (1 + bottomGapPercentage) * 100
 
-    if active isnt index
-      index = active
-      $('nav > a').removeClass('active')
-      $('nav > a:eq(' + index + ')').addClass('active')
+    measureSectionTops: ->
+      # Get scroll top positions of all sections.
+      $links = @$('nav > a')
+      $hashes = ($(link).attr('href') for link in $links)
 
-  events: ->
-    super.concat
-      'click .social-media-icon': @onClickSocialMediaIcon
-      'click .purchase-product': @processItemId
-      'click .close-payment': @resetItemId
+      @_sectionTops = []
+      for hash in $hashes
+        offset = $(hash).parent().position().top
+        @_sectionTops.push $(hash).position().top - offset
 
-  onClickSocialMediaIcon: (event) ->
-    $icon = $(event.currentTarget)
+    watchScroll: ->
+      active = 0
+      index = null
 
-    socialNetwork = null
+      scrollPositionTop = @_$scrollTarget.scrollTop()
+      scrollPositonBotttom = scrollPositionTop + @_$scrollTarget.height()
 
-    socialNetwork = 'Facebook' if $icon.hasClass('facebook')
-    socialNetwork = 'Twitter' if $icon.hasClass('twitter')
-    socialNetwork = 'Tumblr' if $icon.hasClass('tumblr')
+      for i in [0...@_sectionTops.length]
+        if scrollPositonBotttom > @_sectionTops[i]
+          active = i
 
-    ga? 'send', 'event', 'Social Media Engagement', 'Click', socialNetwork if socialNetwork
+      if active isnt index
+        index = active
+        $('nav > a').removeClass('active')
+        $('nav > a:eq(' + index + ')').addClass('active')
 
-  resetItemId: (event) ->
-    @selectedItem null
+    events: ->
+      super.concat
+        'click .social-media-icon': @onClickSocialMediaIcon
+        'click .play-button': @onClickPlayButton
 
-    # Re-enable scrolling when the payment form is closed.
-    $('body, html').removeClass('prospectus-disable-scrolling')
+    onClickSocialMediaIcon: (event) ->
+      $icon = $(event.currentTarget)
 
-  processItemId: (event) ->
-    item = @currentData()
-    @selectedItem item
+      socialNetwork = null
 
-    ga? 'send', 'event', 'Game Selected', 'Click', item.catalogKey
+      socialNetwork = 'Facebook' if $icon.hasClass('facebook')
+      socialNetwork = 'Twitter' if $icon.hasClass('twitter')
+      socialNetwork = 'Tumblr' if $icon.hasClass('tumblr')
 
-    # Disable scrolling when the payment form is active.
-    $('body').addClass('prospectus-disable-scrolling')
+      ga? 'send', 'event', 'Social Media Engagement', 'Click', socialNetwork if socialNetwork
 
-  basicGame: ->
-    RS.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.BasicGame
+    onClickPlayButton: (event) ->
+      FlowRouter.go 'LandsOfIllusions.Adventure'
 
-  fullGame: ->
-    RS.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.FullGame
-
-  alphaAccess: ->
-    RS.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccess
-
-  class @Purchase extends HQ.Items.Tablet.Apps.Components.Stripe
-    @register 'Retronator.HQ.Items.Tablet.Apps.Prospectus.Purchase'
+  class @Purchase extends HQ.Items.Components.Stripe
+    @id: -> 'Retronator.HQ.Items.Prospectus.Purchase'
+    @register @id()
 
     purchaseItem: ->
       selectedItem = @data()
