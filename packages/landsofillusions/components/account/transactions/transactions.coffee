@@ -5,8 +5,8 @@ LOI = LandsOfIllusions
 HQ = Retronator.HQ
 RA = Retronator.Accounts
 
-class LOI.Components.Account.General extends LOI.Components.Account.Page
-  @register 'LandsOfIllusions.Components.Account.General'
+class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
+  @register 'LandsOfIllusions.Components.Account.Transactions'
   @url: -> 'transactions'
   @displayName: -> 'Transactions'
 
@@ -112,7 +112,7 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
   # Components
 
   class @Username extends AM.DataInputComponent
-    @register 'LandsOfIllusions.Components.Account.General.Username'
+    @register 'LandsOfIllusions.Components.Account.Transactions.Username'
 
     load: ->
       user = RA.User.documents.findOne Meteor.userId(),
@@ -132,7 +132,7 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
       user?.displayName
 
   class @SupporterName extends AM.DataInputComponent
-    @register 'LandsOfIllusions.Components.Account.General.SupporterName'
+    @register 'LandsOfIllusions.Components.Account.Transactions.SupporterName'
 
     onCreated: ->
       super

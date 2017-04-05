@@ -2,6 +2,7 @@ LOI = LandsOfIllusions
 HQ = Retronator.HQ
 PAA = PixelArtAcademy
 RS = Retronator.Store
+RA = Retronator.Accounts
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -35,12 +36,12 @@ class HQ.Store extends LOI.Adventure.Location
 
     @shelves = new HQ.Store.Shelves
 
-    @_itemsSubscription = @subscribe RS.Transactions.Item.all
+    @subscribe RS.Transactions.Item.all
+    @subscribe RA.User.registeredEmailsForCurrentUser
+    @subscribe RS.Transactions.Transaction.forCurrentUser
 
   destroy: ->
     super
-
-    @_itemsSubscription.stop()
 
   things: -> [
     PAA.Cast.Retro
@@ -67,7 +68,7 @@ class HQ.Store extends LOI.Adventure.Location
   
     @setCallbacks
       AnalyzeUser: (complete) =>
-        shoppingCart = HQ.Items.ShoppingCart.state().contents or []
+        shoppingCart = HQ.Items.ShoppingCart.state()?.contents or []
 
         buyingBaseGame = false
         buyingAlphaAccess = false
@@ -89,7 +90,9 @@ class HQ.Store extends LOI.Adventure.Location
 
         eligibleBackerTiers = []
 
-        for tierKey in [KickstarterKeys.BasicGame, KickstarterKeys.FullGame, KickstarterKeys.AlphaAccess]
+        kickstarterTierKeys = [KickstarterKeys.BasicGame, KickstarterKeys.FullGame, KickstarterKeys.AlphaAccess]
+
+        for tierKey in kickstarterTierKeys
           tier = RS.Transactions.Item.documents.findOne(catalogKey: tierKey)?.cast()
 
           unless tier
@@ -104,7 +107,10 @@ class HQ.Store extends LOI.Adventure.Location
             eligibleBackerTiers.push false
             continue
 
-          eligibleBackerTiers.push true
+          # Make sure any kickstarter tier is not already in the shopping cart.
+          inCart = _.find shoppingCart, (cartItem) => cartItem.item in kickstarterTierKeys
+
+          eligibleBackerTiers.push not inCart
 
         noRewardBacker = true in eligibleBackerTiers
 
@@ -122,44 +128,64 @@ class HQ.Store extends LOI.Adventure.Location
 
       AddTierToCart: (complete) =>
         # TODO: Add a qualifying Kickstarter tier to the shopping cart.
+        ephemeralState = @ephemeralState()
+        KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
 
+        # We search from highest down to find the first available tier.
+        for tierKey, i in [KickstarterKeys.AlphaAccess, KickstarterKeys.FullGame, KickstarterKeys.BasicGame]
+          if ephemeralState.eligibleBackerTiers[2 - i]
+            HQ.Items.ShoppingCart.addItem tierKey
+
+            # We added the tier, don't add others.
+            break
+
+        complete()
+        
+      CheckoutShoppingCart: (complete) =>
+        HQ.Items.ShoppingCart.state 'atCheckout', true
+        complete()
+
+      ReturnShoppingCart: (complete) =>
+        HQ.Items.ShoppingCart.state 'atCheckout', false
+        complete()
+
+      RemoveShoppingCart: (complete) =>
+        HQ.Items.ShoppingCart.state 'atCheckout', false
+        HQ.Items.ShoppingCart.state 'inInventory', false
+        complete()
+
+      AddReceipt: (complete) =>
+        HQ.Items.Receipt.state 'inInventory', true
+        complete()
+        
+      RemoveReceipt: (complete) =>
+        HQ.Items.Receipt.state 'inInventory', false
         complete()
 
       Checkout: (complete) =>
-        # Show the receipt on the tablet.
-        tablet = LOI.adventure.inventory HQ.Items.Tablet
-        tablet.state().os.activeAppId = HQ.Items.Tablet.Apps.ShoppingCart.id()
-
-        shoppingCartApp = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
-        shoppingCartApp.state().receiptVisible = true
-
-        LOI.adventure.gameState.updated()
+        receipt = LOI.adventure.getCurrentThing HQ.Items.Receipt
         
         # Look at display.
-        LOI.adventure.goToItem HQ.Checkout.Display
+        LOI.adventure.goToItem HQ.Store.Display
 
-        # Activate the tablet so it gets overlaid.
-        tablet.activate()
+        # Reset canceled status.
+        receipt.transactionCompleted = false
 
-        retroDialog.ephemeralState().transactionCanceled = false
+        # Activate the receipt so it gets overlaid.
+        receipt.activate()
 
-        # Wait until the tablet is deactivated
+        # Wait until the receipt is deactivated
         Tracker.autorun (computation) =>
-          if tablet.deactivated()
-            computation.stop()
+          return unless receipt.deactivated()
+          computation.stop()
 
-            # If receipt is still visible, transaction was canceled.
-            if shoppingCartApp.state().receiptVisible
-              retroDialog.ephemeralState().transactionCanceled = true
+          # Let the script know if transaction succeeded or not.
+          @ephemeralState().transactionCanceled = not receipt.transactionCompleted
 
-              # Hide the receipt after this.
-              shoppingCartApp.state().receiptVisible = false
-              LOI.adventure.gameState.updated()
+          # Return to location.
+          LOI.adventure.deactivateCurrentItem()
 
-            # Return to location
-            LOI.adventure.deactivateCurrentItem()
-
-            complete()
+          complete()
 
   # Listener
 

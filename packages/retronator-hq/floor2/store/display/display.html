@@ -5,12 +5,15 @@
       <div class="display">
         <div class="screen">
           <div class="recent-purchases">
-            <h3>Top recent<br/>purchases</h3>
+            <h3 class="title">Top recent<br/>purchases</h3>
             {{> Retronator.Store.Components.TopSupporters topRecentTransactions}}
           </div>
         </div>
       </div>
-      <img class="retro" src="{{image '/retronator/hq/locations/store/retro.png'}}"/>
+      <img class="retro" src="{{image '/retronator/hq/locations/store/retro.gif'}}"/>
+      {{#if smiling}}
+        <img class="smile" src="{{image '/retronator/hq/locations/store/retro-smile.gif'}}"/>
+      {{/if}}
       <div class="table"></div>
     {{/LandsOfIllusions.Components.Overlay}}
   </div>

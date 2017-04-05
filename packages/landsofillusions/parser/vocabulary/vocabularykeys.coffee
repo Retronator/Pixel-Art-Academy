@@ -41,6 +41,7 @@ LOI.Parser.Vocabulary.Keys =
     Show: ''
     LookIn: ''
     WakeUp: ''
+    Buy: ''
 
   IgnorePrepositions: ''
 

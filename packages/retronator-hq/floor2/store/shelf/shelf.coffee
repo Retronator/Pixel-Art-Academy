@@ -99,7 +99,15 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
     shelf = @options.parent
 
     commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], shelf.avatar]
+      form: [
+        [
+          Vocabulary.Keys.Verbs.LookAt
+          Vocabulary.Keys.Verbs.Use
+          Vocabulary.Keys.Verbs.Buy
+          Vocabulary.Keys.Verbs.Get
+        ]
+        shelf.avatar
+      ]
       priority: 1
       action: =>
         LOI.adventure.goToItem shelf

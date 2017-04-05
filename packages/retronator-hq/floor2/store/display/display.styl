@@ -13,9 +13,18 @@
     position absolute
     z-index 2
     top 88rem
-    left 33rem
+    left 84rem
     width 95rem
     height 130rem
+    pointer-events none
+
+  .smile
+    position absolute
+    z-index 3
+    top 88rem
+    left 114rem
+    width 35rem
+    height 50rem
     pointer-events none
 
   .table
@@ -24,8 +33,8 @@
     left -80rem
     right -80rem
     bottom -60rem
-    background atariGrey(5)
-    border-top 1rem solid atariGrey(4)
+    background atariGrey(4)
+    border-top 1rem solid atariGrey(3)
 
   .display
     position absolute
@@ -42,7 +51,6 @@
     .screen
       position relative
       height 148rem
-      overflow-y scroll
       padding 5rem 7rem
       background atariGrey(0)
       border 1rem solid atariGrey(2)
@@ -51,12 +59,23 @@
       color atariGrey(4)
 
       h3
+        position absolute
+        top 0
+        left 0
+        width 100%
+        z-index 1
+        padding 5rem 7rem
         margin 0
         acme-7()
         font-weight normal
+        background atariGrey(0)
 
       .recent-purchases
         width 140rem
 
         .retronator-store-components-top-supporters
-          padding-left 15rem
+          absolute-cover()
+          top 30rem
+          overflow-y scroll
+          padding 0 110rem 5rem 23rem
+          margin 0

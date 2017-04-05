@@ -6,7 +6,7 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 HQ = Retronator.HQ
 
-class HQ.Items.Components.Stripe extends AM.Component
+class HQ.Items.Components.Stripe extends LOI.Adventure.Item
   onCreated: ->
     super
 
@@ -134,7 +134,8 @@ class HQ.Items.Components.Stripe extends AM.Component
         return
 
       # Purchase is successfully completed.
-      ga? 'send', 'event', 'Game Purchased', 'Click', shoppingCart.cartItems[0].item.catalogKey, 0
+      console.log "ga", shoppingCart
+      ga? 'send', 'event', 'Game Purchased', 'Click', shoppingCart.items[0].item.catalogKey, 0
 
       @_completePurchase shoppingCart, 0
 

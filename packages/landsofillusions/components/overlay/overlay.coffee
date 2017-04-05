@@ -33,7 +33,7 @@ class LOI.Components.Overlay extends AM.Component
       safeAreaSize.top += viewport.viewportBounds.top()
 
       @$('.crop-bar').height cropBarHeight
-      @$('.safe-area').css safeAreaSize
+      @$('.landsofillusions-components-overlay > .safe-area').css safeAreaSize
       
       # Inside the background the template in the else block can add a .max-area and .viewport-area divs for us to position.
 
@@ -45,8 +45,14 @@ class LOI.Components.Overlay extends AM.Component
         area.height = Math.min area.height, maxOverlayHeight
 
       @$('.viewport-area').css viewportAreaSize
-
       @$('.max-area').css maxAreaSize
+
+      # Safe area can also appear inside viewport area.
+      viewportAreaSafeAreaSize = viewport.safeArea.toDimensions()
+      viewportAreaSafeAreaSize.top -= viewportAreaSize.top
+      viewportAreaSafeAreaSize.left -= viewportAreaSize.left
+
+      @$('.viewport-area .safe-area').css viewportAreaSafeAreaSize
 
     @$('.landsofillusions-components-overlay').addClass('visible')
 

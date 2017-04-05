@@ -27,6 +27,19 @@ class HQ.Store.Display extends LOI.Adventure.Item
 
   @initialize()
 
+  constructor: ->
+    super
+
+    @smiling = new ReactiveField false
+
+  smile: ->
+    @smiling true
+
+    Meteor.setTimeout =>
+      @smiling false
+    ,
+      5500
+
   # Listener
 
   onCommand: (commandResponse) ->
@@ -52,12 +65,9 @@ class HQ.Store.Display extends LOI.Adventure.Item
       500
     
   topRecentTransactions: ->
-    # Get top recent transactions from the shopping cart receipt component.
-    if false and tablet = LOI.adventure.inventory HQ.Items.Tablet
-      if shoppingCart = tablet.apps HQ.Items.Tablet.Apps.ShoppingCart
-        # If receipt is showing, use receipts' top transactions.
-        if shoppingCart.state().receiptVisible
-          return shoppingCart.receipt.topRecentTransactions()
+    # Get top recent transactions from the receipt.
+    if receipt = LOI.adventure.getCurrentThing HQ.Items.Receipt
+      return receipt.topRecentTransactions() if receipt.totalPrice()
 
     # We couldn't get to receipt's modified transactions so just show the unmodified ones.
     RS.Components.TopSupporters.topRecentTransactions.find {},

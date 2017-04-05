@@ -21,7 +21,8 @@ retro: How can I help you today?
 * I'm a backer, but didn't choose a reward. -> [NoRewardBacker] `_noRewardBacker`
 * I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
-* I'm one of the Kickstarter backers. -> [Kickstarter]
+* I'm one of the Kickstarter backers. -> [Kickstarter] `not _noRewardBacker`
+* How do I play the game? -> [PlayGame] `@user.itemKeys['PixelArtAcademy.PlayerAccess']`
 * Can I ask you about Pixel Art Academy? -> [PixelArtAcademy]
 * I would like to ask something else … -> [Contact] `PixelArtAcademy`
 * I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
@@ -54,7 +55,7 @@ retro: No problem, take your time.
 
 retro: 
     You qualify for the Alpha Access Tier.
-    Please note that even if you pledged more than $40, due to limited availability of higher items, they are not claimable any more.
+    Please note that even if you pledged more than $40, due to limited availability of higher items, they cannot be claimed any more.
     
 -> [AddTierToCart]
 
@@ -72,11 +73,9 @@ retro: You qualify for the Basic Game Tier.
 
 ## AddTierToCart
 
-retro: Let me add it to your Shopping Cart app …
+retro: Let me add it to your shopping cart …
 
--> [NoTablet] `not _tablet`
-
-> Retro slides over the Kickstarter tier bundle onto your tablet with a flick of his finger.
+> Retro searches under his desk and hands you a Kickstarter tier bundle.
 
 ### AddTierToCart
 
@@ -98,32 +97,28 @@ retro: No problem.
 
 `_helped = true`
 
-retro: Certainly. Can I see your shopping cart?
+retro: Certainly.
 
-> You open the Shopping Cart app and hand the tablet to Retro.
+### CheckoutShoppingCart
+
+> You hand over the shopping cart to Retro.
 
 retro: Alright, let me see …
 
 -> [DoubleCheck] `_buyingBaseGame`
 -> [AlphaAccess] `_buyingAlphaAccess`
 
-> After a short look he returns the tablet that is now displaying the receipt.
-
 ## PurchaseConfirm
 
-retro: Let me open up the receipt …
-    
-> Retro works on his computer and your tablet for a few moments.
+> After entering the items into his computer, he gives you a receipt.
 
-> The receipt appears in the Shopping Cart app.
+### AddReceipt
 
 retro:
     As you go over the receipt, the display behind me will show where you will appear in the supporters charts.
     Adding a tip even lets you write a message to go with it.
    
-> Retro hands you your tablet back.
-
-retro: Does everything look correct?
+pause
 
 ## Checkout
   
@@ -137,7 +132,10 @@ retro: Thank you so much for that.
 
 -> [NonUserPurchase] `not @user`
 
-retro: You will find the receipt in your Account app. `@user`
+> You store the receipt into your account folder. `@user`
+
+### RemoveReceipt
+### RemoveShoppingCart
 
 -> [RetroDialog]
 
@@ -145,16 +143,26 @@ retro: You will find the receipt in your Account app. `@user`
 
 retro:
     I will send a confirmation to your email.
-    Don't forget to register for an account at the reception.
-    You will need to enter the email you used in order for the purchase to be applied properly.
+    
+### RemoveReceipt
+### RemoveShoppingCart
+    
+retro:
+    Don't forget to register for an account with Burra downstairs.
+    You will need to enter the email you just used in order for the purchase to be applied properly.
     
 -> [RetroDialog]
 
 ## TransactionCanceled
 
+### RemoveReceipt
+### ReturnShoppingCart
+
 > You decide it's not yet time to complete the purchase.
 
 `_afterTransactionQuestion = false`
+
+retro: Anything I can help you with purchasing?
 
 ## TransactionCanceledQuestions
 
@@ -168,8 +176,8 @@ retro:
 
 retro: 
     Of course, go ahead. 
-    Simply _use tablet_ and open up the Shopping Cart app to remove items.
-    To add new items, just go back to the shelves to the _east_.
+    Simply ![look at your shopping cart](look at shopping cart) to remove items.
+    To add new items, just get them from the shelves.
     
 -> [End]
 
@@ -178,10 +186,10 @@ retro:
 `_afterTransactionQuestion = true`
 
 retro:
-    Individual purchases show up in the "Latest Purchases" section on the main display in the lobby.
+    Individual purchases show up in the "Latest Purchases" section on the display behind me.
     All the purchases including tips are also summed up for a spot on the "Top Supporters" list.
     It's all anonymous by default, unless you choose to show a certain name for it.
-    You can set your supporter name in your Account app and set a short message to appear on the Top Supporters list.
+    You can set your supporter name in your account folder and set a short message to appear on the Top Supporters list.
     When you include a tip you also get to set a separate message specifically for that purchase.
 
 -> [TransactionCanceledQuestions] 
@@ -192,8 +200,8 @@ retro:
 
 retro:
     You can say why you decided to purchase the game or anything else.
-    Please use common sense and make it appropriate for general public.
-    These messages are then rotated on the display in the Lobby and the one behind me.
+    Please use common sense and make it appropriate for the general public.
+    These messages are then rotated on the display behind me.
     I love to hear from you guys.
     
 -> [TransactionCanceledQuestions] 
@@ -284,15 +292,21 @@ retro:
 
 retro:
     Oh, awesome, nice to meet you! Thanks for your support!
-    You should be all set to play the game.
     
-retro: Just register downstairs with Burra with your backer email. `not @user.signedIn`
+retro: You should register downstairs with Burra with your backer email. `not @user.signedIn`
 
+* My pleasure. -> [KickstarterPleasure]
 * How do I start playing?
 
 retro:
     Head down to Lands of Illusions in the basement and talk to Panzer.
     He'll help you out if you have any problems.
+    
+-> [MainQuestion]
+
+## KickstarterPleasure
+
+retro: The pleasure is mine.
     
 -> [MainQuestion]
     
@@ -393,6 +407,17 @@ retro:
 
 retro: No problem. Can I help you with anything else?
 
+-> [MainQuestion]
+
+## PlayGame
+
+`_helped = true`
+
+retro: 
+    You can play in our Lands of Illusions virtual reality center.
+    Head on downstairs, all the way to the basement.
+    Talk to Panzer, he'll set things up for you.
+    
 -> [MainQuestion]
 
 ## Contact

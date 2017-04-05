@@ -42,6 +42,7 @@ phrases =
     Show: ['show', 'present']
     LookIn: ['look in']
     WakeUp: ['wake up', 'awaken']
+    Buy: ['buy', 'purchase']
 
   IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up']
 

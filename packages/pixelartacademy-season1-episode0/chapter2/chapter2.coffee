@@ -53,7 +53,7 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
   inventory: ->
     items = []
 
-    for itemClassName in ['ShoppingCart', 'Account', 'Prospectus']
+    for itemClassName in ['ShoppingCart', 'Account', 'Prospectus', 'Receipt']
       hasItem = HQ.Items[itemClassName].state 'inInventory'
       items.push HQ.Items[itemClassName] if hasItem
 

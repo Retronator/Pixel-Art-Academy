@@ -45,6 +45,9 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
 
     @state 'contents', contents
 
+  @clearItems: ->
+    @state 'contents', []
+
   constructor: (@options) ->
     super
 
@@ -85,6 +88,10 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
   totalPrice: ->
     # The total price is the sum of the items.
     _.sum (storeItem.item.price for storeItem in @cartItems())
+    
+  isVisible: ->
+    # Show the shopping cart unless it's in the process of checkout.
+    not @state 'atCheckout'
 
   events: ->
     super.concat

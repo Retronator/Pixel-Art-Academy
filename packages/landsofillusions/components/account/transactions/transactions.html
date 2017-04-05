@@ -1,8 +1,8 @@
-<template name="LandsOfIllusions.Components.Account.General">
-  <div class="landsofillusions-components-account-general">
+<template name="LandsOfIllusions.Components.Account.Transactions">
+  <div class="landsofillusions-components-account-transactions">
     <h2>User account</h2>
     <div class="section-body">
-      <p>Account name: {{> LandsOfIllusions.Components.Account.General.Username}}</p>
+      <p>Account name: {{> LandsOfIllusions.Components.Account.Transactions.Username}}</p>
       <p>Emails:</p>
       <ul>
         {{#each currentUser.registered_emails}}
@@ -52,7 +52,7 @@
       <p>You have contributed <span class="support-amount">${{supportAmount}}</span> to Retronator.</p>
       <p>Show your name among supporters:</p>
       {{#if showSupporterName}}
-        <p>{{> LandsOfIllusions.Components.Account.General.SupporterName}}</p>
+        <p>{{> LandsOfIllusions.Components.Account.Transactions.SupporterName}}</p>
       {{/if}}
       <p>
         <label class="anonymous-area">

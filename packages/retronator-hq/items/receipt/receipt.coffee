@@ -8,21 +8,43 @@ HQ = Retronator.HQ
 
 class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
   @id: -> 'Retronator.HQ.Items.Receipt'
+  @url: -> 'retronator/store/receipt'
+
   @register @id()
+  template: -> @id()
+
+  @version: -> '0.0.1'
+
+  @fullName: -> "store receipt"
+  @shortName: -> "receipt"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
+
+  @description: ->
+    "
+      It's the receipt for things you bought in Retronator Store.
+    "
+
+  @initialize()
 
   constructor: (@options) ->
     super
 
     # Fields that control supporter display for logged out users (guests).
-    @guestShowSupporterName = @state 'showSupporterName', default: true
-    @guestSupporterName = @state 'supporterName'
+    @guestShowSupporterName = @state.field 'showSupporterName', default: true
+    @guestSupporterName = @state.field 'supporterName'
 
-    @tip =
-      amount: @state 'tip.amount', default: 0
-      message: @state 'tip.message'
+    @tipStateFields =
+      amount: @state.field 'tip.amount', default: 0
+      message: @state.field 'tip.message'
+
+    @scrolled = new ReactiveField false
+    @scrolledToBottom = new ReactiveField false
 
   onCreated: ->
     super
+
+    @scrolled false
+    @scrolledToBottom false
 
     # Get all store items data.
     @subscribe RS.Transactions.Item.all
@@ -41,14 +63,28 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
   onRendered: ->
     super
 
-    $('.retronator-hq-items-tablet').addClass('receipt-visible')
+    $viewportArea = @$('.viewport-area')
 
-    @_scrollToNewSupporter()
+    $viewportArea.scroll (event) =>
+      @scrolled true
+
+      scrollTop = $viewportArea.scrollTop()
+      viewportHeight = $viewportArea.height()
+
+      totalHeight = $viewportArea[0].scrollHeight
+      maxScrollTop = totalHeight - viewportHeight
+
+      @scrolledToBottom scrollTop is maxScrollTop
+
+    @display = LOI.adventure.getCurrentThing HQ.Store.Display
+
+    Meteor.setTimeout =>
+      @_scrollToNewSupporter duration: 1000
+    ,
+      1000
 
   onDestroyed: ->
     super
-
-    $('.retronator-hq-items-tablet').removeClass('receipt-visible')
 
   showSupporterName: ->
     user = Retronator.user()
@@ -65,11 +101,16 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
   anonymousPlaceholder: ->
     AB.translate(@_userBabelSubscription, 'Anonymous').text
     
-  anonymousCheckboxAttributes: ->
+  anonymousYesAttributes: ->
+    checked: true if @showSupporterName()
+
+  anonymousNoAttributes: ->
     checked: true unless @showSupporterName()
 
   purchaseItems: ->
-    for receiptItem in @options.shoppingCart.contents()
+    contents = HQ.Items.ShoppingCart.state 'contents'
+
+    for receiptItem in contents
       item = RS.Transactions.Item.documents.findOne catalogKey: receiptItem.item
       continue unless item
 
@@ -82,7 +123,7 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
   totalPrice: ->
     # Total is the items price with added tip.
-    @itemsPrice() + (@tip.amount() or 0)
+    @itemsPrice() + (@tipStateFields.amount() or 0)
 
   creditApplied: ->
     storeCredit = Retronator.user()?.store?.credit or 0
@@ -115,7 +156,7 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
       amount: @totalPrice()
       new: true
 
-    newTransaction.message = @tip.message() if @tip.amount()
+    newTransaction.message = @tipStateFields.message() if @tipStateFields.amount()
 
     # Find where the new transaction needs to be inserted. We use
     # a negative amount because the list is in descending order.
@@ -127,22 +168,24 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
   # This overrides the tip plain object in Stripe component parent.
   tip: ->
-    amount: @tip.amount()
-    message: @tip.message()
+    amount: @tipStateFields.amount()
+    message: @tipStateFields.message()
 
   events: ->
     super.concat
-      'change .anonymous-checkbox': @onChangeAnonymousCheckbox
+      'change .anonymous-radio': @onChangeAnonymousRadio
       'input .supporter-name': @onInputSupporterName
       'input .tip-amount': @onInputTipAmount
       'input .tip-message': @onInputTipMessage
 
-  onChangeAnonymousCheckbox: (event) ->
+  onChangeAnonymousRadio: (event) ->
+    showSupporterName = parseInt($(event.target).val()) is 1
+
     if Meteor.userId()
-      Meteor.call "Retronator.Accounts.User.setShowSupporterName", not event.target.checked
+      Meteor.call "Retronator.Accounts.User.setShowSupporterName", showSupporterName
 
     else
-      @showSupporterName not event.target.checked
+      @showSupporterName showSupporterName
 
   onInputSupporterName: (event) ->
     name = $(event.target).val()
@@ -168,29 +211,47 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
     newString = "#{value}"
     $(event.target).val newString unless newString is enteredString
 
-    @tip.amount value
+    oldValue = @tipStateFields.amount()
+    @tipStateFields.amount value
+
+    @display.smile() if value > oldValue
 
     @_scrollToNewSupporter()
 
-  _scrollToNewSupporter: ->
+  _scrollToNewSupporter: (options = {}) ->
+    options.duration ?= 200
+
     Tracker.afterFlush =>
-      $('.retronator-store-components-top-supporters .new.supporter').velocity('stop').velocity 'scroll',
-        duration: 200
-        container: $('.retronator-hq-locations-checkout-display .screen')
+      $newSupporter = $('.retronator-store-components-top-supporters .new.supporter')
+
+      # Scroll to one higher if possible so that the user sees how much they need to go higher.
+      $previousSupporter = $newSupporter.prev()
+      $scrollTarget = $previousSupporter or $newSupporter
+
+      $scrollTarget.velocity('stop').velocity 'scroll',
+        duration: options.duration
+        container: $('.retronator-store-components-top-supporters')
 
   onInputTipMessage: (event) ->
     message = $(event.target).val()
-    @tip.message message
+    @tipStateFields.message message
 
   _completePurchase: ->
     super
 
-    # Reset the shopping cart after 2 seconds.
-    Meteor.setTimeout =>
-      # Reset the shopping cart state.
-      @options.shoppingCart.state.clear()
+    @transactionCompleted = true
 
-      # Deactivate tablet.
-      @options.shoppingCart.options.tablet.deactivate()
+    @display.smile()
+
+    # Reset the shopping cart state.
+    HQ.Items.ShoppingCart.clearItems()
+
+    # Reset the tip
+    @tipStateFields.amount 0
+    @tipStateFields.message null
+
+    # deactivate receipt after 4 seconds.
+    Meteor.setTimeout =>
+      @deactivate()
     ,
-      2000
+      4000

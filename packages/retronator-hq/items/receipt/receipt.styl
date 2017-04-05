@@ -1,161 +1,222 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.pixelartacademy-season1-episode0-chapter2-items-receipt
-  absolute-cover()
-  z-index 1
-  overflow scroll
-  background rgba(0,0,0,0.8)
+.retronator-hq-items-receipt
+  fixed-cover()
+  position fixed !important
 
-  .receipt-area
-    width 134rem
-    margin-left auto
-    padding 10rem 20rem 10rem 10rem
+  .landsofillusions-components-overlay
+    > .safe-area
+      pointer-events none
 
-    .receipt
-      position relative
+      .scroll-hint
+        position absolute
+        bottom 5rem
+        left calc(50% - 48rem)
+        color atariGrey(2)
+
+  .background
+    background none
+
+    .viewport-area
+      overflow scroll
+      cursor default
+      color atariGrey(0)
+
+      .safe-area
+        .receipt
+          position relative
+          z-index 1
+          width 104rem
+          padding 8rem
+          checkout()
+          color atariAzure(2)
+          background image('/retronator/hq/items/receipt/top.png')
+          background-size 100%
+          background-repeat no-repeat
+
+          &::before
+            content ''
+            absolute-cover()
+            z-index -1
+            top 13rem
+            background atariGrey(5)
+
+          h2
+            margin 0
+            text-transform uppercase
+            font-weight normal
+            text-align center
+            checkout()
+
+          .purchase-completed
+            // TODO
+
+          .shopping-cart-items
+          .receipt-items
+            list-style none
+            margin 0
+            padding 0
+            text-transform uppercase
+
+            .cart-item
+            .receipt-item
+              position relative
+
+              .name
+                display block
+                width 56rem
+
+              .price
+                position absolute
+                top 0
+                right 0
+                text-align right
+
+          .shopping-cart-items
+            .cart-item
+              margin-bottom 1em
+
+              &:last-child
+                margin-bottom 0
+
+          .receipt-items
+            .receipt-item
+              .name
+                text-align right
+
+              &.total
+                margin-top 1em
+
+          .items-subtotal
+            text-transform uppercase
+            text-align right
+
+          .support-area
+            .anonymous-option
+              display block
+
+              .label
+                text-transform uppercase
+
+            .tip-amount-area
+              position relative
+              display block
+              margin-top 2rem
+
+              .tip-amount
+                freehand()
+
+          .receipt-bottom
+            text-transform uppercase
+            text-align center
+
+        input
+        textarea
+          width 100%
+          freehand()
+          background none
+          border none
+          border-bottom 1rem solid atariAzure(2)
+          padding 0 4px
+          color atariGrey(0)
+          input-placeholder atariGrey(3)
+
+          &:focus
+            outline none
+
+        textarea
+          border 1rem solid atariAzure(2)
+          height 3em
+          padding 3rem
+
+        label
+          cursor pointer
+
+        input[type='checkbox']
+          display none
+
+          & + .label::before
+            content '[ ] '
+
+          &:checked + .label::before
+            content '[✔︎] '
+
+        input[type='radio']
+          display none
+
+          & + .label::before
+            content '[ ] '
+
+          &:checked + .label::before
+            content '[✕] '
+
+  .message-area
+    pointer-events initial
+
+    .message
+      position absolute
       z-index 1
-      width 104rem
-      padding 8rem
-      checkout()
-      color atariAzure(2)
-      background image('/retronator/hq/items/tablet/apps/shopping-cart/receipt-top.png')
-      background-size 100%
-      background-repeat no-repeat
+      left 172rem
+      bottom 102rem
+      width 148rem
+      padding 0 8rem
+      background atariGrey(5)
+      adventure()
+      color atariRed(4)
+      pixel-text-outline atariGrey(0)
+
+      &::after
+        content ''
+        position absolute
+        z-index -1
+        left -1rem
+        right -1rem
+        top 1rem
+        bottom 1rem
+        background atariGrey(5)
 
       &::before
         content ''
-        absolute-cover()
+        position absolute
         z-index -1
-        top 13rem
-        background atariGrey(5)
+        width 20rem
+        right 100%
+        bottom 10rem
+        height 1rem
+        background atariGrey(7)
 
-      h2
-        margin 0
-        text-transform uppercase
-        font-weight normal
+      .actions
         text-align center
-        checkout()
 
-      .purchase-completed
-        // TODO
-
-      .shopping-cart-items
-      .receipt-items
-        list-style none
-        margin 0
-        padding 0
-        text-transform uppercase
-
-        .cart-item
-        .receipt-item
+        button
           position relative
-
-          .name
-            display block
-            width 56rem
-
-          .price
-            position absolute
-            top 0
-            right 0
-            text-align right
-
-      .shopping-cart-items
-        .cart-item
-          margin-bottom 1em
-
-          &:last-child
-            margin-bottom 0
-
-      .receipt-items
-        .receipt-item
-          .name
-            text-align right
-
-          &.total
-            margin-top 1em
-
-      .items-subtotal
-        text-transform uppercase
-        text-align right
-
-      .support-area
-        .tip-amount-area
-          position relative
-          display block
+          top -2rem
           margin-top 2rem
+          background atariGreen(3)
+          uni()
+          color atariGreen(0)
+          border none
+          border-bottom 2rem solid atariGreen(1)
+          cursor pointer
 
-          .tip-amount
-            freehand()
+          &:focus
+            background atariGreen(4)
+            outline none
 
-      .receipt-bottom
-        text-transform uppercase
-        text-align center
+          &:hover
+            background atariGreen(4)
 
-    .actions
-      .submit-payment-button
-        width 104rem
+          &:active
+            border-bottom none
+            margin-bottom 2rem
+            top 0
 
-    .payment-smallprint
-      adventure()
+          &:disabled
+            color atariGrey(2)
+            cursor default
 
-    button
-      position relative
-      top -2rem
-      margin-top 2rem
-      background atariGreen(3)
-      uni()
-      color atariGreen(0)
-      border none
-      border-bottom 2rem solid atariGreen(1)
-      cursor pointer
+            &:hover
+              background atariGrey(2)
 
-      &:focus
-        background atariGreen(4)
-        outline none
-
-      &:hover
-        background atariGreen(4)
-
-      &:active
-        border-bottom none
-        margin-bottom 2rem
-        top 0
-
-      &:disabled
-        color atariGrey(2)
-        cursor default
-
-        &:hover
-          background atariGrey(2)
-
-    input
-    textarea
-      width 100%
-      freehand()
-      background none
-      border none
-      border-bottom 1rem solid atariAzure(2)
-      padding 0 4px
-      color atariGrey(0)
-      input-placeholder atariGrey(3)
-
-      &:focus
-        outline none
-
-    textarea
-      border 1rem solid atariAzure(2)
-      height 3em
-      padding 3rem
-
-    label
-      cursor pointer
-
-    input[type='checkbox']
-      display none
-
-      & + .label::before
-        content '[ ] '
-
-      &:checked + .label::before
-        content '[✔︎] '
+        .submit-payment-button
+          width 100rem
