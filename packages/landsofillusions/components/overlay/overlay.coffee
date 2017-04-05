@@ -50,7 +50,6 @@ class LOI.Components.Overlay extends AM.Component
       # Safe area can also appear inside viewport area.
       viewportAreaSafeAreaSize = viewport.safeArea.toDimensions()
       viewportAreaSafeAreaSize.top -= viewportAreaSize.top
-      viewportAreaSafeAreaSize.left -= viewportAreaSize.left
 
       @$('.viewport-area .safe-area').css viewportAreaSafeAreaSize
 

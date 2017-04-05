@@ -130,16 +130,16 @@ pause
 
 retro: Thank you so much for that.
 
--> [NonUserPurchase] `not @user`
+-> [NoAccountPurchase] `not @player.inventory['Retronator.HQ.Items.Account']`
 
-> You store the receipt into your account folder. `@user`
+> You store the receipt into your account folder.
 
 ### RemoveReceipt
 ### RemoveShoppingCart
 
 -> [RetroDialog]
 
-## NonUserPurchase
+## NoAccountPurchase
 
 retro:
     I will send a confirmation to your email.
@@ -149,7 +149,7 @@ retro:
     
 retro:
     Don't forget to register for an account with Burra downstairs.
-    You will need to enter the email you just used in order for the purchase to be applied properly.
+    You will need to enter the email you just used in order for the purchase to be applied properly. `not @user.signedIn`
     
 -> [RetroDialog]
 

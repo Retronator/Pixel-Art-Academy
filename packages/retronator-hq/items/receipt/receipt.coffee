@@ -185,11 +185,11 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
       Meteor.call "Retronator.Accounts.User.setShowSupporterName", showSupporterName
 
     else
-      @showSupporterName showSupporterName
+      @guestShowSupporterName showSupporterName
 
   onInputSupporterName: (event) ->
     name = $(event.target).val()
-    @supporterName name
+    @guestSupporterName name
 
   onInputTipAmount: (event) ->
     enteredString = $(event.target).val()
