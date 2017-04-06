@@ -16,6 +16,7 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
   @sections: -> [
     C2.Registration
     C2.Shopping
+    C2.Immersion
   ]
 
   @initialize()

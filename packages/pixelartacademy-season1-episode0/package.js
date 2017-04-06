@@ -76,4 +76,11 @@ Package.onUse(function(api) {
 
   api.addFile('chapter2/sections/shopping/scenes/store');
 
+  // Immersion
+
+  api.addFile('chapter2/sections/immersion/immersion');
+
+  api.addThing('chapter2/sections/immersion/scenes/basement');
+  api.addThing('chapter2/sections/immersion/scenes/landsofillusions');
+  api.addThing('chapter2/sections/immersion/scenes/room');
 });

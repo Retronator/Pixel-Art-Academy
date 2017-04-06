@@ -20,6 +20,15 @@ class LOI.Adventure extends LOI.Adventure
       # Remove any thing classes that had conditional statements and could evaluate to undefined.
       thingClasses = _.without thingClasses, undefined
 
+      # Remove thing classes that scenes dictate to remove.
+      removedSceneThingClasses = for scene in @currentScenes()
+        scene.removedThings()
+
+      removedSceneThingClasses = _.uniq _.flattenDeep removedSceneThingClasses
+      removedSceneThingClasses = _.without removedSceneThingClasses, undefined
+
+      thingClasses = _.difference thingClasses, removedSceneThingClasses
+
       for thingClass in thingClasses
         # Create the thing if needed. We allow passing thing instances as well, so no need to instantiate those.
         if thingClass instanceof LOI.Adventure.Thing

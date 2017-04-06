@@ -69,3 +69,4 @@ class HQ.Elevator extends LOI.Adventure.Location
     # Add the south exit to exits.
     _.extend exits,
       "#{Vocabulary.Keys.Directions.South}": HQ.Elevator
+      "#{Vocabulary.Keys.Directions.In}": HQ.Elevator

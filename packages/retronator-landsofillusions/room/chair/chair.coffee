@@ -1,8 +1,8 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
-class HQ.Locations.LandsOfIllusions.Room.Chair extends LOI.Adventure.Item
-  @id: -> 'Retronator.HQ.Locations.LandsOfIllusions.Room.Chair'
+class HQ.LandsOfIllusions.Room.Chair extends LOI.Adventure.Item
+  @id: -> 'Retronator.HQ.LandsOfIllusions.Room.Chair'
   @url: -> 'retronator/landsofillusions/room/chair'
 
   @register @id()

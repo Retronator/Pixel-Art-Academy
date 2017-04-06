@@ -14,13 +14,11 @@ class HQ.Basement extends LOI.Adventure.Location
   @description: ->
     "
       You exit to the basement with a long hallway connecting to the Lands of Illusions virtual reality center in the 
-      east. The north wall is made of glass and that lets you see into the Idea Garden, where Retro designs new 
-      features. There is a small reception desk near the card-reader doors.
+      east. Big windows along north wall let you see into the Idea Garden where Retro designs new
+      features. There is a small reception desk near the entrance.
     "
   
   @initialize()
-
-  @userProblemMessage = 'Retronator.HQ.LandsOfIllusions.userProblemMessage'
 
   @defaultScriptUrl: -> 'retronator_retronator-hq/basement1/basement/basement.script'
 
@@ -42,42 +40,11 @@ class HQ.Basement extends LOI.Adventure.Location
       floor: -1
     ,
       "#{Vocabulary.Keys.Directions.Up}": HQ.Coworking
+      "#{Vocabulary.Keys.Directions.East}": HQ.LandsOfIllusions
 
   initializeScript: ->
     @setCurrentThings
       operator: HQ.Actors.Operator
-
-    @setCallbacks
-      FirstTime: (complete) =>
-        # Operator leaves to the hallway for you to follow.
-        LOI.adventure.scriptHelpers.moveThingBetweenLocations
-          thing: HQ.Actors.Operator
-          sourceLocation: @
-          destinationLocation: HQ.LandsOfIllusions.Hallway
-
-        complete()
-
-      AnalyzeUser: (complete) =>
-        # Create a list of verified emails.
-        user = Retronator.user()
-
-        verifiedEmails = []
-
-        if user.registered_emails
-          for email in user.registered_emails
-            verifiedEmails.push email.address if email.verified
-
-        operatorDialog.ephemeralState().verifiedEmails = verifiedEmails
-        complete()
-
-      SendUserProblemMessage: (complete) =>
-        operatorDialog.ephemeralState().sendUserProblemMessageError = false
-
-        Meteor.method HQ.LandsOfIllusions.userProblemMessage, (error, result) =>
-          if error
-            operatorDialog.ephemeralState().sendUserProblemMessageError = true
-
-          complete()
 
   onCommand: (commandResponse) ->
     return unless operator = LOI.adventure.getCurrentThing HQ.Actors.Operator

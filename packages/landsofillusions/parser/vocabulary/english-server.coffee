@@ -27,7 +27,8 @@ phrases =
     Read: ['read']
     WhatIs: ['what is']
     Get: ['get', 'take', 'pick up']
-    Sit: ['sit down']
+    SitDown: ['sit down']
+    SitIn: ['sit in']
     Stand: ['stand up']
     Open: ['open']
     Close: ['close']
@@ -44,7 +45,7 @@ phrases =
     WakeUp: ['wake up', 'awaken']
     Buy: ['buy', 'purchase']
 
-  IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up']
+  IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up', 'down']
 
   Questions:
     WhichPlace: ['where']

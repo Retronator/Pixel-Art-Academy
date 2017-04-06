@@ -26,6 +26,7 @@ Package.onUse(function(api) {
   api.use('retronator:sanfrancisco-soma');
   api.use('retronator:retronator-hq');
   api.use('retronator:retronator-residence');
+  api.use('retronator:retronator-landsofillusions');
 
   /*
   api.use('retronator:landsofillusions-construct');

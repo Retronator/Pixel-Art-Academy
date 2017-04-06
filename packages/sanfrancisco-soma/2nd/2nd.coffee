@@ -32,3 +32,4 @@ class Soma.SecondStreet extends LOI.Adventure.Location
   exits: ->
     "#{Vocabulary.Keys.Directions.Southwest}": Soma.MosconeCenter
     "#{Vocabulary.Keys.Directions.In}": Retronator.HQ.Cafe
+    "#{Vocabulary.Keys.Directions.West}": Retronator.HQ.Cafe
