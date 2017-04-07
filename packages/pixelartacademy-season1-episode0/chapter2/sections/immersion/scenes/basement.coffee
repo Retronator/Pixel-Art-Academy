@@ -1,6 +1,7 @@
 LOI = LandsOfIllusions
 C2 = PixelArtAcademy.Season1.Episode0.Chapter2
 HQ = Retronator.HQ
+RA = Retronator.Accounts
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -12,8 +13,6 @@ class C2.Immersion.Basement extends LOI.Adventure.Location
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/immersion/scenes/basement.script'
 
-  @userProblemMessage = 'Retronator.HQ.LandsOfIllusions.userProblemMessage'
-
   constructor: ->
     super
 
@@ -21,6 +20,8 @@ class C2.Immersion.Basement extends LOI.Adventure.Location
     @elevatorButton = new HQ.Items.ElevatorButton
       location: @
       floor: -1
+
+    @subscribe RA.User.registeredEmailsForCurrentUser
 
   things: -> [
     HQ.Actors.Operator unless C2.Immersion.state 'operatorState'
@@ -61,11 +62,11 @@ class C2.Immersion.Basement extends LOI.Adventure.Location
         complete()
 
       SendUserProblemMessage: (complete) =>
-        operatorDialog.ephemeralState().sendUserProblemMessageError = false
+        @ephemeralState().sendUserProblemMessageError = false
 
-        Meteor.method HQ.LandsOfIllusions.userProblemMessage, (error, result) =>
+        Meteor.call C2.Immersion.userProblemMessage, (error, result) =>
           if error
-            operatorDialog.ephemeralState().sendUserProblemMessageError = true
+            @ephemeralState().sendUserProblemMessageError = true
 
           complete()
 
@@ -78,3 +79,12 @@ class C2.Immersion.Basement extends LOI.Adventure.Location
       form: [Vocabulary.Keys.Verbs.TalkTo, operator.avatar]
       priority: 1
       action: => @startScript label: 'OperatorDialog'
+
+  onExitAttempt: (exitResponse) ->
+    return unless exitResponse.destinationLocationClass is HQ.LandsOfIllusions
+
+    hasInteracted = C2.Immersion.state 'operatorState'
+    return if hasInteracted
+
+    @startScript label: 'SneakBy'
+    exitResponse.preventExit()

@@ -1,14 +1,15 @@
+C2 = PixelArtAcademy.Season1.Episode0.Chapter2
 HQ = Retronator.HQ
 AT = Artificial.Telepathy
 
 methods = {}
-methods[HQ.LandsOfIllusions.userProblemMessage] =  ->
+methods[C2.Immersion.userProblemMessage] =  ->
   user = Retronator.user()
   
   # First send an email to myself.
   adminEmail = new AT.EmailComposer
   adminEmail.addParagraph "User is having trouble logging into Lands of Illusions."
-  adminEmail.addParagraph EJSON.stringify user
+  adminEmail.addParagraph "ID: #{user._id}"
   adminEmail.end()
 
   Email.send

@@ -14,7 +14,7 @@ burra: `_MainQuestion`
 `_answered = false`
 
 * I'm here to play Pixel Art Academy. -> [PlayPixelArtAcademy] `not _helped`
-* Yes, let's do this. -> [PlayPixelArtAcademy] `_helped`
+* Yes, let's do this. -> [SaveOrRegister] `_helped`
 * What does saving do again? -> [SignInHelp] `_helped and not @user.signedIn`
 * Whoops, nevermind. -> [End] `not _helped`
 * Thank you so much! -> [End] `_helped`
@@ -26,6 +26,11 @@ burra: Certainly!
 
 -> [PlayUser] `@user.signedIn`
 -> [PlayNotUser] `not @user.signedIn`
+
+## SaveOrRegister
+
+-> [SignIn] `not @user.signedIn`
+-> [PlayUser] `@user.signedIn`
 
 <!-- USER REGISTRATION FLOW -->
 <!-- (Already saved prior to coming to the cafe.) -->
@@ -61,7 +66,7 @@ burra: Alright, I've already prepared an account for you.
 
 ## PlayNotUser
 
-burra: 
+burra:
     First you'll need to save your game.
     This will create a Retronator account for you so your game progress is safe.
 
@@ -184,11 +189,11 @@ burra:
     
 ## ReceiveAccount
 
+burra: There you go! This is your account folder with all your information.
+
 ### ReceiveAccount
 
-burra: 
-    There you go! This is your account folder with all your information.
-    You can write on the documents to change anything you want.
+burra: You can write on the documents to change anything you want.
 
 * Thank you.
 * Much appreciated.

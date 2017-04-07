@@ -28,8 +28,8 @@ RS.Transactions.Transaction.emailCustomer = ({customer, payments, shoppingCart})
     switch payment.type
       when RS.Transactions.Payment.Types.StripePayment
         email.addParagraph "At this point your credit card was only authorized. We will
-                            collect the purchase price of $#{payment.amount} when the game's first public release
-                            happens at the end of this year. You will be emailed beforehand in case you need to cancel
+                            collect the purchase price of $#{payment.amount} when the game's first gameplay chapter
+                            releases later this year. You will be emailed beforehand in case you need to cancel
                             your purchase at that time."
 
       when RS.Transactions.Payment.Types.StoreCredit

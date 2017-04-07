@@ -17,3 +17,5 @@ class C2.Immersion extends LOI.Adventure.Section
     BackAtCounter: 'BackAtCounter'
 
   @initialize()
+
+  @userProblemMessage = 'Retronator.HQ.LandsOfIllusions.userProblemMessage'

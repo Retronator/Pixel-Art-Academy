@@ -13,5 +13,8 @@ class C2.Shopping extends LOI.Adventure.Section
   @initialize()
 
   @finished: ->
+    # You have to be signed in to complete the shopping section.
+    return false unless user = Retronator.user()
+    
     # Shopping section ends when the user gains player access.
-    Retronator.user().hasItem RS.Items.CatalogKeys.PixelArtAcademy.PlayerAccess
+    user.hasItem RS.Items.CatalogKeys.PixelArtAcademy.PlayerAccess
