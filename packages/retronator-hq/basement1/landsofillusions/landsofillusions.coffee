@@ -16,6 +16,8 @@ class HQ.LandsOfIllusions extends LOI.Adventure.Location
 
   @fullName: -> "Lands of Illusions reception"
   @shortName: -> "Lands of Illusions"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
+
   @description: ->
     """
       You are in a reception room that could just as well be a spaceship deck.

@@ -8,7 +8,7 @@
 
 captain: Welcome back.
 
--> [GetStarted] <!-- before we finish chapter 3, we always show title card. `not MainDialog` -->
+-> [GetStarted] `not MainDialog`
 
 -> [End]
 
@@ -100,12 +100,6 @@ captain:
 
 ## MainDialog
 
-pause
-
-### ShowTitle
-
--> [End]
-
 captain: How can I help you? `not _MainQuestions`
 captain: Any more questions? `_MainQuestions`
 
@@ -180,7 +174,11 @@ captain: Of course, how can I help?
 
 captain: Perfect. Operator, load the C3 program.
 
-> …
+pause
+
+### ShowTitle
+
+-> [End]
 
 ### C3
 
@@ -195,6 +193,12 @@ operator:
     Roger that, unplugging now.
 
 ### Exit
+
+-> [End]
+
+## LookAtTV
+
+### ShowTitle
 
 -> [End]
 

@@ -61,7 +61,7 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
       @startScript label: 'SelfStart'
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.SitIn, chair.avatar]
+      form: [[Vocabulary.Keys.Verbs.SitIn, Vocabulary.Keys.Verbs.Use], chair.avatar]
       action: => sitInChair()
 
     commandResponse.onPhrase

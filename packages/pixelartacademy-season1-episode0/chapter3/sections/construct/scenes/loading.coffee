@@ -74,7 +74,13 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
 
   onCommand: (commandResponse) ->
     return unless captain = LOI.adventure.getCurrentThing LOI.Construct.Actors.Captain
+    return unless tv = LOI.adventure.getCurrentThing LOI.Construct.Loading.TV
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, captain.avatar]
       action: => @startScript label: 'MainDialog'
+
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], tv.avatar]
+      priority: 1
+      action: => @startScript label: 'LookAtTV'

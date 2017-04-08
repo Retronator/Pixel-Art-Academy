@@ -71,7 +71,7 @@ class C2.Immersion.Room extends LOI.Adventure.Scene
         @startScript label: 'SelfStart'
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.SitIn, chair.avatar]
+      form: [[Vocabulary.Keys.Verbs.SitIn, Vocabulary.Keys.Verbs.Use], chair.avatar]
       priority: 1
       action: => action()
 

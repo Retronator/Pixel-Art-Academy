@@ -14,7 +14,7 @@ class HQ.Basement extends LOI.Adventure.Location
   @description: ->
     "
       You exit to the basement with a long hallway connecting to the Lands of Illusions virtual reality center in the 
-      east. Big windows along north wall let you see into the Idea Garden where Retro designs new
+      east. Big windows along the north wall let you see into the Idea Garden where Retro designs new
       features. There is a small reception desk near the entrance.
     "
   

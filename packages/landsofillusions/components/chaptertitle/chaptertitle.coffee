@@ -59,9 +59,15 @@ class LOI.Components.ChapterTitle extends AM.Component
   events: ->
     super.concat
       'click': @onClick
+      'click .return': @onClickReturn
 
   onClick: (event) ->
     # Don't hide it if this is a to-be-continued title.
     return if @options.toBeContinued
+
+    @activatable.deactivate()
+
+  onClickReturn: (event) ->
+    LOI.adventure.goToLocation Retronator.HQ.LandsOfIllusions.Room
 
     @activatable.deactivate()

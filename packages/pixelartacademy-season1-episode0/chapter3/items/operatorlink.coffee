@@ -16,7 +16,7 @@ class C3.Items.OperatorLink extends LOI.Adventure.Item
       This is a neural link with the operator who controls your immersion. It allows you to talk to them.
     "
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter3/sections/construct/scenes/loading.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter3/items/operatorlink.script'
 
   @initialize()
 
@@ -25,20 +25,6 @@ class C3.Items.OperatorLink extends LOI.Adventure.Item
 
     @operator = new HQ.Actors.Operator
 
-
-  initializeScript: ->
-    @setThings
-      operator: @options.parent.operator
-
-    @setCallbacks
-      Exit: (complete) =>
-        LOI.adventure.goToLocation HQ.Locations.LandsOfIllusions.Room
-        complete()
-
-      Construct: (complete) =>
-        LOI.adventure.goToLocation LOI.Construct.Locations.Loading
-        complete()
-
   destroy: ->
     super
 
@@ -46,9 +32,28 @@ class C3.Items.OperatorLink extends LOI.Adventure.Item
 
   isVisible: -> false
 
+  # Script
+
+  initializeScript: ->
+    @setThings
+      operator: @options.parent.operator
+
+    @setCallbacks
+      Exit: (complete) =>
+        LOI.adventure.goToLocation HQ.LandsOfIllusions.Room
+        complete()
+
+      Construct: (complete) =>
+        LOI.adventure.goToLocation LOI.Construct.Loading
+        complete()
+
+  # Listener
+
   onCommand: (commandResponse) ->
-    operator = @options.parent.operator
+    console.log "ccc"
+    operatorLink = @options.parent
+    operator = operatorLink.operator
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.TalkTo, operator.avatar]
+      form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, operator.avatar]]
       action: => @startScript()
