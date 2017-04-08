@@ -41,6 +41,14 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
       introDone = @state 'introDone'
       return if introDone
 
+    # Listen for the goal condition.
+    @autorun (computation) =>
+      # Chapter 2 ends when you enter the construct.
+      if LOI.Construct.Loading.state 'visited'
+        computation.stop()
+
+        PixelArtAcademy.Season1.Episode0.state 'currentChapter', PAA.Season1.Episode0.Chapter3.id()
+
   onRendered: ->
     unless @state 'introDone'
       # Run the intro script.

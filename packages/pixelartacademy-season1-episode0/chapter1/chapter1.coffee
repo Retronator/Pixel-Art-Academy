@@ -53,7 +53,7 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
         
         Meteor.setTimeout =>
           LOI.adventure.removeModalDialog @
-          PixelArtAcademy.Season1.Episode0.state 'currentChapter', 'PixelArtAcademy.Season1.Episode0.Chapter2'
+          PixelArtAcademy.Season1.Episode0.state 'currentChapter', PAA.Season1.Episode0.Chapter2.id()
         ,
           6000
 

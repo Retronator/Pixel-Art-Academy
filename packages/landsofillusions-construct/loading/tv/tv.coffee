@@ -5,8 +5,8 @@ HQ = Retronator.HQ
 RA = Retronator.Accounts
 RS = Retronator.Store
 
-class LOI.Construct.Locations.Loading.TV extends LOI.Adventure.Item
-  @id: -> 'LandsOfIllusions.Construct.Locations.Loading.TV'
+class LOI.Construct.Loading.TV extends LOI.Adventure.Item
+  @id: -> 'LandsOfIllusions.Construct.Loading.TV'
   @url: -> 'character-selection'
 
   @register @id()
@@ -27,5 +27,3 @@ class LOI.Construct.Locations.Loading.TV extends LOI.Adventure.Item
 
   constructor: ->
     super
-
-    @addAbilityToActivateByLooking()

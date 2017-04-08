@@ -6,5 +6,5 @@ class LOI.Construct
 
 if Meteor.isServer
   LOI.initializePackage
-    id: 'retronator_construct'
+    id: 'retronator_landsofillusions-construct'
     assets: Assets

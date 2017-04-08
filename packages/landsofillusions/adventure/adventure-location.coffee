@@ -47,12 +47,13 @@ class LOI.Adventure extends LOI.Adventure
     @locationOnEnterResponseResults = new ReactiveField null
     
     @autorun (computation) =>
-      return unless LOI.adventureInitialized()
-      return unless location = @currentLocation()
-      currentLocationClass = location.constructor
-
       # Clear previous enter responses.
       Tracker.nonreactive => @locationOnEnterResponseResults null
+
+      return unless LOI.adventureInitialized()
+      return unless location = @currentLocation()
+      return unless location.ready()
+      currentLocationClass = location.constructor
 
       # Wait for listeners to get instantiated as well.
       Tracker.afterFlush => Tracker.nonreactive =>

@@ -5,7 +5,7 @@
 operator: Operator.
 
 * I need an exit. -> [Exit]
-* I want to return to the Construct. -> [Construct] `location.id isnt 'LandsOfIllusions.Construct.Locations.Loading'`
+* I want to return to the Construct. -> [Construct] `location.id isnt 'LandsOfIllusions.Construct.Loading'`
 * Nevermind. -> [End]
 
 ## Exit

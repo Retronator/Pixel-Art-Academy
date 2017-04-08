@@ -1,14 +1,14 @@
-# LandsOfIllusions.Construct.Locations.Loading.Scripts.Captain
+# PixelArtAcademy.Season1.Episode0.Chapter3.Construct.Loading
 
 ## Start
 
 > A man with sunglasses suddenly appears.
 
--> [FirstTime] `not FirstTime`
+-> [FirstTime] `not GetStarted`
 
 captain: Welcome back.
 
--> [GetStarted] `not MainDialog`
+-> [GetStarted] <!-- before we finish chapter 3, we always show title card. `not MainDialog` -->
 
 -> [End]
 
@@ -85,7 +85,7 @@ captain:
 ## HowToExit
 
 captain:
-    At any time while in Lands of Illusions, either in the Construct or in the simulations, you can always _talk to operator_.
+    At any time while in Lands of Illusions, either in the Construct or in the simulations, you can always ![talk to operator](talk to operator).
     He can take you out of immersion or help with switching characters.
     
 -> [IntroQuestions]
@@ -99,6 +99,12 @@ captain:
 <!-- MAIN DIALOG -->
 
 ## MainDialog
+
+pause
+
+### ShowTitle
+
+-> [End]
 
 captain: How can I help you? `not _MainQuestions`
 captain: Any more questions? `_MainQuestions`
@@ -118,7 +124,7 @@ captain: Good luck.
 ## SelectCharacter
 
 captain:
-    To do that you can _use TV_ and we'll establish a neural link with the character you want.
+    To do that you can ![use the TV](use TV) and we'll establish a neural link with the character you want.
 
 -> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 -> [NoEditor]
@@ -127,7 +133,7 @@ captain:
 
 captain: 
     First you will need to select a character.
-    You can do that if you _use the TV_.
+    You can do that if you ![use the TV](use TV).
 
 -> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 -> [NoEditor]

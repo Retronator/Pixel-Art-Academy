@@ -5,7 +5,7 @@ RA = Retronator.Accounts
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C2.Immersion.Basement extends LOI.Adventure.Location
+class C2.Immersion.Basement extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter2.Immersion.Basement'
   @location: -> HQ.Basement
 

@@ -5,7 +5,7 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C2.Immersion.LandsOfIllusions extends LOI.Adventure.Location
+class C2.Immersion.LandsOfIllusions extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter2.Immersion.LandsOfIllusions'
   @location: -> HQ.LandsOfIllusions
 
