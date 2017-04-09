@@ -1,94 +1,238 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.landsofillusions-components-account-general
+.landsofillusions-components-account-transactions
   .support-area
+    margin-bottom 7rem
+
+    p
+      margin 2rem 0
+
     .support-amount
       acme-9()
 
-  .transactions
-    list-style none
-    padding 0
+  .unload-transaction
+  .unload-info
+    width 11rem
+    height 11rem
+    padding 2rem
+    line-height 5rem
+    text-align left
+    border none
+    background none
+    color atariGrey(3)
+    adventure()
 
-    .transaction
-      .date
-        text-transform uppercase
-        color console-lighter-grey
-
-      .details-area
-        background #222
-        border 2px solid #333
-        width 100%
-        padding 0 1em
-        margin 1em 0
-
-        .gift
-          .gift-link
-            display inline-block
-            background #111
-            padding 1em 1.5em
-
-            a
-              text-decoration none
-              color console-grey
-
-              &:hover
-                color black
-
-  a
-    color atariGrey(7)
-    cursor pointer
+    &::before
+      content 'X'
 
     &:hover
-      background-color atariGrey(7)
+    &:focus
+      outline none
       color atariGrey(0)
 
-  button
-  .button
+  .purchase-history
     position relative
-    top -4px
-    margin-top 4px
-    background #666
-    uni()
-    color atariGrey(0)
-    border none
-    border-bottom 4px solid #333
+    left -7rem
+    width 151rem
+    padding 4rem 12rem
+    list-style none
+    background image('/landsofillusions/components/account/feed-paper.png')
+    background-size 100%
+    filter drop-shadow(-1rem 1rem 0 transparentify(atariGrey(6), atariGrey(7)))
+    text-transform uppercase
+
+    .clamp
+      position absolute
+      z-index 2
+      right -12rem
+      top 54rem
+      width 19rem
+
+    h3.title
+      checkout()
+      padding 1rem 4rem
+      color atariIndigo(2)
+      text-transform uppercase
+      margin 0 0 9rem
+
+    .transactions
+      width 100%
+      border-spacing 0
+      checkout()
+      color atariIndigo(2)
+
+      .transaction
+        height 9rem
+
+        .date
+        .description
+          padding 0 4rem
+
+          .action
+            padding 0
+            background none
+            border none
+            border-bottom 1rem solid atariIndigo(2)
+            text-align left
+            font inherit
+            checkout()
+            color atariIndigo(2)
+
+            &:hover
+            &:focus
+              outline none
+              color atariIndigo(0)
+              background transparentify(atariGreen(6), atariGreen(7))
+
+        .description
+          .action
+            text-transform uppercase
+
+        .total
+          position relative
+          text-align right
+          padding-right 5rem
+
+          &.authorized-only
+            &::after
+              position absolute
+              right 0
+              top 0
+              content: '*'
+
+        &.load-authorized-payments-info
+        &.load-credit-info
+          margin-top 9rem
+
+    .smallprint
+      color atariIndigo(2) !important
+      margin 9rem 0 0 10rem !important
+      line-height 9rem !important
+      text-transform uppercase
+
+    .info-note
+      position absolute
+      top 10rem
+      right -3rem
+      width 132rem
+      height 116rem
+      background-image image('/landsofillusions/components/account/note.png')
+      filter drop-shadow(-1rem 1rem 0 transparentify(atariGrey(6), atariGrey(7)))
+      cursor pointer
+      text-transform initial
+
+      .content
+        transform rotate(-5deg)
+        padding 5rem 10rem
+        margin 0
+
+        .unload-info
+          float right
+          margin 10rem 0 10rem 10rem
+          top 2rem
+          right 7rem
+
+  .receipt
+    position absolute
+    z-index 3
+    top -20rem
+    left 30rem
+    width 104rem
+    padding 8rem
+    checkout()
+    color atariAzure(2)
+    background image('/retronator/hq/items/receipt/top.png')
+    background-size 100%
+    background-repeat no-repeat
+    filter drop-shadow(-10rem 5rem 15rem transparentify(atariGrey(3), atariGrey(7)))
     cursor pointer
 
-    &:focus
-      background: #777
-      outline none
+    .unload-transaction
+      position absolute
+      top 4rem
+      right 4rem
 
-    &:hover
-      background: #888
+    .date
+      text-align center
+      margin 3rem 0 0
 
-    &:active
-      border-bottom none
-      margin-bottom 4px
-      top 0
+    &::before
+      content ''
+      absolute-cover()
+      z-index -1
+      top 13rem
+      background atariGrey(5)
 
-    &:disabled
-      color #444
-      cursor default
+    h3.receipt-title
+      margin 0
+      text-transform uppercase
+      font-weight normal
+      text-align center
+      checkout()
 
-      &:hover
-        background #666
+    .shopping-cart-items
+    .receipt-items
+      list-style none
+      margin 0
+      padding 0
+      text-transform uppercase
 
-  ul
-  ol
-    list-style square
+      .cart-item
+      .receipt-item
+        position relative
 
-    li
-      margin-bottom 1em
+        .name
+          display block
+          width 56rem
 
-  input
-  textarea
-    uni()
-    background atariGrey(1)
-    border 1rem solid atariGrey(2)
-    padding 0 2rem
-    color atariGrey(5)
-    input-placeholder atariGrey(4)
+        .price
+          position absolute
+          top 0
+          right 0
+          text-align right
 
-    &:focus
-      outline none
-      border-color atariGrey(3)
+    .shopping-cart-items
+      .cart-item
+        margin-bottom 1em
+
+        &:last-child
+          margin-bottom 0
+
+    .receipt-items
+      .receipt-item
+        .name
+          text-align right
+
+        &.total
+          margin-top 1em
+
+    .items-subtotal
+      text-transform uppercase
+      text-align right
+
+    .tip
+      .title
+        margin 10rem 0 2rem
+        text-transform uppercase
+
+      .message
+        width 100%
+        freehand()
+        color atariGrey(0)
+        input-placeholder atariGrey(3)
+        border 1rem solid atariAzure(2)
+        padding 3rem
+
+    .payment-area
+      .title
+        margin 10rem 0 2rem
+        text-transform uppercase
+
+      .payments
+        list-style none
+        margin-top 0
+        padding 0
+
+    .receipt-bottom
+      text-transform uppercase
+      text-align center

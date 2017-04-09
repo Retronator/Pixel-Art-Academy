@@ -96,7 +96,7 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
     user = Retronator.user()
 
-    if user then user.profile.supporterName else @guestSupporterName()
+    if user then user.profile.name else @guestSupporterName()
     
   anonymousPlaceholder: ->
     AB.translate(@_userBabelSubscription, 'Anonymous').text
@@ -255,3 +255,23 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
       @deactivate()
     ,
       4000
+
+  # Components
+
+  class @SupporterName extends AM.DataInputComponent
+    @register 'Retronator.HQ.Items.Receipt.SupporterName'
+
+    load: ->
+      user = RA.User.documents.findOne Meteor.userId(),
+        fields:
+          'profile.name': 1
+
+      user?.profile?.name
+
+    save: (value) ->
+      Meteor.call "Retronator.Accounts.User.rename", value
+
+    placeholder: ->
+      # We display the same placeholder as with the custom input when we're not logged in.
+      receipt = @parentComponent()
+      AB.translateForComponent(receipt, 'Your name here').text

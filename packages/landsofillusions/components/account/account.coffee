@@ -6,7 +6,7 @@ class LOI.Components.Account extends AM.Component
   @register 'LandsOfIllusions.Components.Account'
   @url: -> 'account'
 
-  @version: -> '0.0.4'
+  @version: -> '0.0.5'
 
   mixins: -> [@activatable]
 
@@ -23,11 +23,12 @@ class LOI.Components.Account extends AM.Component
       new @constructor.General
       new @constructor.Services
       new @constructor.Characters
+      new @constructor.Transactions
     ]
 
     page.pageNumber = index + 1 for page, index in @pages
 
-    @emptyPages = for index in [@pages.length + 1..5]
+    @emptyPages = for index in [@pages.length + 1..6]
       pageNumber: index
 
     LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>

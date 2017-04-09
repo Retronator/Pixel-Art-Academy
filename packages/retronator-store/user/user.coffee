@@ -4,8 +4,7 @@ RS = Retronator.Store
 # Override the user class with extra store functionality.
 class RetronatorAccountsUser extends RA.User
   # profile: a custom object, writable by default by the client
-  #   supporterName: the name the user wants to publicly display as a supporter
-  #   showSupporterName: boolean whether to use the supporter name or not
+  #   showSupporterName: boolean whether to show username in public displays
   # supporterName: auto-generated supporter name
   # supportAmount: generated sum of all payments
   # store:
@@ -21,7 +20,7 @@ class RetronatorAccountsUser extends RA.User
     fields: (fields) =>
       _.extend fields,
         supporterName: @GeneratedField 'self', ['profile'], (user) ->
-          supporterName = if user.profile?.showSupporterName then user.profile?.supporterName else null
+          supporterName = if user.profile?.showSupporterName then user.profile?.name else null
           [user._id, supporterName]
 
         items: [@ReferenceField RS.Transactions.Item, ['catalogKey']]

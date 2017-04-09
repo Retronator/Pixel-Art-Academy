@@ -53,10 +53,19 @@
         display none
 
         & + .label::before
-          content '[ ] '
+          content ''
+          display inline-block
+          width 7rem
+          height 7rem
+          padding 0 0 1rem 1rem
+          margin-right 3rem
+          vertical-align bottom
+          border 1rem solid atariGrey(3)
+          text-align center
+          color atariAzure(2)
 
         &:checked + .label::before
-          content '[✔︎] '
+          content '✔︎'
 
       .smallprint
         position relative

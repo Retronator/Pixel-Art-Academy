@@ -13,7 +13,7 @@ class RS.Items.Bundles.PixelArtAcademyKickstarterFullGame extends RS.Items.Bundl
       catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.FullGame
       rewardId: 4291884
       
-      name: "Pixel Art Academy Kickstarter tier — YOUR OWN CHARACTER!"
+      name: "Pixel Art Academy Kickstarter tier - YOUR OWN CHARACTER!"
       description: "Start playing once the game launches with Freshman Year 2017. You will be able to create your own character and portrait by choosing and customizing individual parts. The portrait (and your name) will also appear in a special section of the Retropolis Academy of Art Yearbook. I will also send you 50 backer updates with news from the development."
 
       price: @price
