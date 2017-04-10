@@ -23,12 +23,13 @@ class LOI.Components.Account extends AM.Component
       new @constructor.General
       new @constructor.Services
       new @constructor.Characters
+      new @constructor.Inventory
       new @constructor.Transactions
     ]
 
     page.pageNumber = index + 1 for page, index in @pages
 
-    @emptyPages = for index in [@pages.length + 1..6]
+    @emptyPages = for index in [@pages.length + 1...6]
       pageNumber: index
 
     LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>

@@ -48,7 +48,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
 
   emptyLines: ->
     transactionsCount = @transactions()?.length or 0
-    maximumRows = Math.max 5, transactionsCount
+    maximumRows = Math.max 3, transactionsCount
 
     maximumRows++ if maximumRows % 2 is 1
 
@@ -89,7 +89,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
       'click .load-authorized-payments-info': @onClickLoadAuthorizedPaymentsInfo
       'click .info-note': @onClickInfoNote
       'click .load-transaction': @onClickLoadTransaction
-      'click .receipt': @onClickReceipt
+      'click': @onClick
 
   onChangeAnonymousCheckbox: (event) ->
     Meteor.call "Retronator.Accounts.User.setShowSupporterName", not event.target.checked
@@ -115,5 +115,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     @showCreditInfo false
     @showAuthorizedPaymentsInfo false
 
-  onClickReceipt: (event) ->
+  onClick: (event) ->
+    return if $(event.target).closest('.load-transaction').length
+
     @currentTransaction null
