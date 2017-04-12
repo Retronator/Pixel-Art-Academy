@@ -13,7 +13,7 @@ class RS.Items.Bundles.PixelArtAcademyKickstarterBasicGame extends RS.Items.Bund
       catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.BasicGame
       rewardId: 4199759
 
-      name: "Pixel Art Academy Kickstarter tier — THE GAME!"
+      name: "Pixel Art Academy Kickstarter tier - THE GAME!"
       description: "Select from one of the pre-made characters and play through storylines, build your library of knowledge, complete assignments and track your art progress once the game launches with Freshman Year 2017. As a Kickstarter backer, your name will be listed in a special section of the Retropolis Academy of Art Yearbook. I will also send you 50 backer updates (about one a week) with news from the development on the way to the release."
 
       price: @price

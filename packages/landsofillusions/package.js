@@ -212,6 +212,7 @@ Package.onUse(function(api) {
   api.addComponent('components/account/general/general');
   api.addComponent('components/account/services/services');
   api.addComponent('components/account/characters/characters');
+  api.addComponent('components/account/inventory/inventory');
   api.addComponent('components/account/transactions/transactions');
 
   api.addStyle('components/dialogs/accounts');
