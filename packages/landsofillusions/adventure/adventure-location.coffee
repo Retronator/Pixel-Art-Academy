@@ -2,7 +2,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
-  _initializeCurrentLocation: ->
+  _initializeLocation: ->
     # We store player's current location locally so that multiple people
     # can use the same user account and walk around independently.
     @currentLocationId = new ReactiveField null
@@ -12,9 +12,7 @@ class LOI.Adventure extends LOI.Adventure
       tracker: @
 
     # Instantiate current location. It depends only on the ID.
-    # HACK: ComputedField triggers recomputation when called from events so we use ReactiveField + autorun manually.
-    @currentLocation = new ReactiveField null
-    @autorun (computation) =>
+    @currentLocation = new ComputedField =>
       # React to location ID changes.
       currentLocationId = @currentLocationId()
 
@@ -41,7 +39,10 @@ class LOI.Adventure extends LOI.Adventure
         # Create a non-reactive reference so we can refer to it later.
         @_currentLocation = new currentLocationClass
         
-        @currentLocation @_currentLocation
+        @_currentLocation
+    ,
+      # Make sure to keep this computed field running.
+      true
 
     # Run logic on entering a new location.
     @locationOnEnterResponseResults = new ReactiveField null

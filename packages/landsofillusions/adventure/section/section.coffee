@@ -4,23 +4,31 @@ LOI = LandsOfIllusions
 class LOI.Adventure.Section extends LOI.Adventure.Thing
   @scenes: -> throw new AE.NotImplementedException
 
-  @fullName: -> "" # Sections don't need to be named.
+  @fullName: -> null # Sections don't need to be named.
 
   @finished: -> false # Override to set goal state conditions.
   finished: -> @constructor.finished()
 
+  @timelineId: -> # Override to set a default timeline for scenes.
+  timelineId: ->
+    # By default we use the timeline of the chapter.
+    @constructor.timelineId() or @options?.parent?.timelineId()
+  
   constructor: (@options) ->
     super
 
-    @chapter = @options.chapter
+    @chapter = @options.parent if @options?.parent instanceof LOI.Adventure.Chapter
 
-    @scenes = for sceneClass in @constructor.scenes()
-      new sceneClass section: @
+    @_scenes = for sceneClass in @constructor.scenes()
+      new sceneClass parent: @
 
   destroy: ->
     super
 
     scene.destroy() for scene in @scenes
+
+  scenes: ->
+    @_scenes
 
   active: ->
     @_activeUntilFinished()

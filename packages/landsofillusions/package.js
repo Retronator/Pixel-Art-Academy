@@ -100,6 +100,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure-routing.coffee');
   api.addFiles('adventure/adventure-state.coffee');
   api.addFiles('adventure/adventure-location.coffee');
+  api.addFiles('adventure/adventure-timeline.coffee');
   api.addFiles('adventure/adventure-item.coffee');
   api.addFiles('adventure/adventure-inventory.coffee');
   api.addFiles('adventure/adventure-episodes.coffee');
@@ -109,6 +110,11 @@ Package.onUse(function(api) {
 
   // Initalization gets included last because it does component registering as the last child in the chain.
   api.addFiles('adventure/adventure-initialization.coffee');
+
+  // Situations
+
+  api.addFiles('adventure/situation/situation.coffee');
+  api.addFiles('adventure/situation/circumstance.coffee');
 
   // Listener
 
@@ -151,11 +157,16 @@ Package.onUse(function(api) {
 
   // Storylines
 
+  api.addFiles('adventure/global/global.coffee');
   api.addFiles('adventure/episode/episode.coffee');
   api.addComponent('adventure/chapter/chapter');
   api.addFiles('adventure/section/section.coffee');
   api.addFiles('adventure/scene/scene.coffee');
+
+  // Locations and inventory
+
   api.addFiles('adventure/location/location.coffee');
+  api.addFiles('adventure/location/inventory.coffee');
 
   // Parser Listeners
 

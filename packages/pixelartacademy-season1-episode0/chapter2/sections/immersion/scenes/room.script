@@ -17,6 +17,8 @@ operator: Awesome. Let me set things up.
 > Panzer pulls the headset towards your head and you look into the visor. 
 > Everything is black but for a small rotating cube in the center.
 
+### ActivateHeadset
+
 operator: I'm turning on the sound and haptic system. 
 
 > The chair switches into a reclining position and a clear sound rushes through the surround system.
@@ -59,6 +61,8 @@ operator:
 
 > The visor releases and the sounds of the bustling headquarters enter your ears again.
 
+### DeactivateHeadset
+
 > You stand up from the recliner to prepare yourself for the journey.
 
 -> [End]
@@ -67,6 +71,8 @@ operator:
 
 > You sit down and put on the headset that drops towards you. 
 > Noise canceling technology creates complete silence before the intro sound plays through the system.
+
+### ActivateHeadset
 
 * Panzer, I'm ready for immersion. -> [Confirm]
 * Just one more thing … -> [Cancel]

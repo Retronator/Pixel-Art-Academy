@@ -39,6 +39,11 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
 
     'checked' if email.address is @user().contactEmail
 
+  hasUnverifiedEmails: ->
+    unverifiedEmails = _.filter @user().registered_emails, (email) => not email.verified
+
+    unverifiedEmails.length
+
   # Events
 
   events: ->

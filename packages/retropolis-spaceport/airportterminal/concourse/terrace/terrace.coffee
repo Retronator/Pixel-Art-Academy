@@ -56,7 +56,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.South}": RS.AirportTerminal.Concourse
+    "#{Vocabulary.Keys.Directions.East}": RS.AirportTerminal.Concourse
     "#{Vocabulary.Keys.Directions.In}": RS.AirportTerminal.Concourse
 
   isLandingPage: ->

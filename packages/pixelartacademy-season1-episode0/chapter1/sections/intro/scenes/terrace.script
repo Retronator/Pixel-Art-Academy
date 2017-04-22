@@ -1,4 +1,4 @@
-# PixelArtAcademy.Season1.Episode0.Chapter1.Start.Terrace
+# PixelArtAcademy.Season1.Episode0.Chapter1.Intro.Terrace
 
 ## LeaveWithoutBackpack
 
@@ -25,7 +25,7 @@ alex:
     Well, you'll get to see it up-close soon enough.
     We should hurry up though, the last airship leaves in 10 minutes.
     
-> Alex leaves ![south](go south).
+> Alex leaves ![east](go east).
 
 `scene.alexPresent = false`
 `alex.firstTalkDone = true`

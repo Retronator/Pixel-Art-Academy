@@ -133,10 +133,11 @@ class LOI.Adventure extends LOI.Adventure
         databaseState = LOI.GameState.documents.findOne 'user._id': user._id
 
         if databaseState
-          # Move user to the last location saved to the state. We do this only on load so that multiple players using
-          # the same account can move independently, at least inside the current session (they will get synced again on
-          # reload).
+          # Move user to the last location and timeline saved to the state. We do this only on load so that multiple
+          # players using the same account can move independently, at least inside the current session (they will get
+          # synced again on reload).
           LOI.adventure.currentLocationId databaseState.state.currentLocationId
+          LOI.adventure.currentTimelineId databaseState.state.currentTimelineId
 
         else
           # TODO: Show dialog informing the user we're saving the local game state.

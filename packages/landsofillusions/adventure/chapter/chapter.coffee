@@ -9,27 +9,59 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Thing
 
   @sections: -> throw new AE.NotImplementedException
 
+  @timelineId: -> # Override to set a default timeline for scenes.
+  timelineId: ->
+    # By default we use the timeline of the episode.
+    @constructor.timelineId() or @episode.timelineId()
+
+  @finished: -> false # Override to set goal state conditions.
+  finished: -> @constructor.finished()
+
   constructor: (@options) ->
     super
 
     @episode = @options.episode
 
     @sections = for sectionClass in @constructor.sections()
-      new sectionClass chapter: @
+      new sectionClass parent: @
       
     @chapterTitle = new ReactiveField null
 
-  getSection: (sectionOrId) ->
-    sectionId = _.thingId sectionOrId
-
-    _.find @sections, (section) => section.id() is sectionId
-      
   destroy: ->
     super
 
     section.destroy() for section in @sections
     @sections = []
 
+  getSection: (sectionClassOrId) ->
+    sectionId = _.thingId sectionClassOrId
+
+    _.find @sections, (section) => section.id() is sectionId
+      
+  scenes: -> # Override to provide any scenes for the whole chapter.
+
+  active: ->
+    @_activeUntilFinished()
+
+  _activeUntilFinished: ->
+    # Override and add additional logic to create prerequisites for the section being started.
+    finished = @finished()
+
+    # Finished can return undefined, which means it is not ready to determine its state.
+    return unless finished?
+
+    # By default the section is active until it is finished.
+    not finished
+
+  requireFinishedSections: (sections) ->
+    # Allow for passing of a single section.
+    sections = [sections] unless _.isArray sections
+
+    # See if sections are finished.
+    return unless section.finished() for section in sections
+
+    true
+    
   currentSections: ->
     section for section in @sections when section.active()
 

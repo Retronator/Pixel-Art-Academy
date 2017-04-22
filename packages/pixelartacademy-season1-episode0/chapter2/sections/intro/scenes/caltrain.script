@@ -1,0 +1,62 @@
+# PixelArtAcademy.Season1.Episode0.Chapter2.Intro.Caltrain
+
+## Start
+
+conductor: Excuse me. Hello. Are you OK? Time to wake up.
+
+> You open your eyes and realize the train has come to a stop.
+
+conductor: You've reached the destination. Are you alright?
+
+* Yeah. Yes! I must have fallen asleep.
+
+conductor: 
+    You seem like you've had quite a dream.
+    Welcome to San Francisco!
+
+* Thank you. I'll see myself out.
+* San Francisco!? Ah, yes.
+
+> You get up from your seat, remembering why you're here:
+> To find out more about the game Pixel Art Academy.
+
+`scene.talkDone = true`
+
+-> [End]
+
+## ConductorTalk
+
+conductor: How may I help you?
+
+* Do you know where Retronator is? They make this game, Pixel Art Academy.
+
+conductor: Ah yes, a fan myself! Retronator's headquarters are located on 2nd street.
+
+-> [ConductorQuestions]
+
+## ShowProspectus
+
+> The conductor looks at the prospectus.
+
+conductor: Oh, are you here to visit Retronator? Their headquarters are located on 2nd street.
+
+## ConductorQuestions
+
+* How do you get to 2nd street? -> [2ndStreet]
+* Thank you -> [ThankYou]
+
+## 2ndStreet
+
+conductor:
+    When you step ![out](out) to the train station, walk ![northwest](nw) up 4th until you get to Moscone Center.
+    Turn right down Howard and go ![northeast](ne) to 2nd street. Retronator HQ will be on your left.
+    
+* Thank you -> [ThankYou]
+
+## ThankYou
+
+conductor: My pleasure.
+
+-> [End]
+
+## End

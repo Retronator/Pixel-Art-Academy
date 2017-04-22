@@ -34,6 +34,11 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
 
         complete()
 
+      ReceiveKeycard: (complete) =>
+        HQ.Items.Keycard.state 'inInventory', true
+
+        complete()
+
   onCommand: (commandResponse) ->
     return unless burra = LOI.adventure.getCurrentThing PAA.Cast.Burra
 

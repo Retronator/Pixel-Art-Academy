@@ -56,4 +56,4 @@ class LOI.Adventure.Location extends LOI.Adventure.Scene
 
     ready
 
-  exits: -> {} # Override to provide location exits in {direction: location class} format
+  exits: -> # Override to provide location exits in {direction: location class} format

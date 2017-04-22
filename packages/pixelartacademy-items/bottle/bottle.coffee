@@ -30,10 +30,6 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
   @createDrink: (drinkType) ->
     new LOI.Avatar @DrinkTypes[drinkType]
 
-  @listeners: -> [
-    @Listener
-  ]
-
   @translations: ->
     fullName: "bottle of {{drinkName}}"
     emptyName: "empty bottle"
@@ -76,6 +72,16 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
     not @drink()
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-items/bottle/bottle.script'
+
+  initializeScript: ->
+    bottle = @options.parent
+
+    @setCallbacks
+      Drink: (complete) ->
+        bottle.state 'drinkType', null
+        bottle.state 'lastDrinkTime', LOI.adventure.time()
+
+        complete()
 
   onCommand: (commandResponse) ->
     bottle = @options.parent

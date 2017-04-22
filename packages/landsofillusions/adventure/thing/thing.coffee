@@ -173,6 +173,9 @@ class LOI.Adventure.Thing extends AM.Component
   constructor: (@options) ->
     super
 
+    # To ease debugging, we save the ID value as a variable on the instance.
+    @ID = @id()
+
     @avatar = @constructor.createAvatar()
 
     @state = @constructor.state
@@ -282,3 +285,11 @@ class LOI.Adventure.Thing extends AM.Component
   # Default script handlers
 
   initializeScript: -> # Override to setup the script on the client.
+
+  # Debug
+
+  @typeName: -> 'LOI.Adventure.Thing'
+  typeName: -> @constructor.typeName()
+
+  toString: ->
+    "#{@typeName()}{#{@id()}}"

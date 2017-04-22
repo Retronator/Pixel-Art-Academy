@@ -38,6 +38,7 @@ Package.onUse(function(api) {
   api.addComponent('items/receipt/receipt');
 
   api.addFile('items/account/account');
+  api.addFile('items/keycard/keycard');
 
   // Locations
 

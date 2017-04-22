@@ -15,7 +15,7 @@ class HQ.GalleryWest extends LOI.Adventure.Location
   @description: ->
     "
       You enter a gallery with huge pixel art pieces hanged on the walls. This is the permanent collection of
-      artworks made by Matej 'Retro' Jan. One day you might even be able to look at them.
+      artworks made by Matej 'Retro' Jan. One day you'll be able to look at them, but they're not coded into the game yet.
       The hall continues to the east wing of the gallery. Stairs continue up to the art studio.
     "
   

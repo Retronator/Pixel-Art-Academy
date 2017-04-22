@@ -35,9 +35,22 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.South}": HQ.LandsOfIllusions
     "#{Vocabulary.Keys.Directions.Out}": HQ.LandsOfIllusions
 
+  @activateHeadsetCallback: (complete) =>
+    chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
+    chair.activate()
+
+    complete()
+
+  @deactivateHeadsetCallback: (complete) =>
+    chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
+    chair.deactivate()
+
+    complete()
+
   @plugInCallback: (complete) =>
     # Start Lands of Illusions VR Experience.
-    LOI.adventure.goToItem HQ.LandsOfIllusions.Room.Chair
+    chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
+    chair.plugIn()
 
     complete()
 
@@ -50,7 +63,9 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
       operator: operator
       
     @setCallbacks
+      ActivateHeadset: (complete) => HQ.LandsOfIllusions.Room.activateHeadsetCallback complete
       PlugIn: (complete) => HQ.LandsOfIllusions.Room.plugInCallback complete
+      DeactivateHeadset: (complete) => HQ.LandsOfIllusions.Room.deactivateHeadsetCallback complete
 
   # Listener
         

@@ -2,7 +2,6 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Episode extends LOI.Adventure.Thing
-  @id: -> throw new AE.NotImplementedException
   @chapters: -> throw new AE.NotImplementedException
 
   @_episodeClassesById = {}
@@ -15,50 +14,60 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
 
     @_episodeClassesById[@id()] = @
 
+  @timelineId: -> # Override to set a default timeline for scenes.
+  timelineId: -> @constructor.timelineId()
+
+  @startSection: -> throw new AE.NotImplementedException
+
   constructor: ->
     super
 
-    @currentChapter = new ReactiveField null
+    startSectionClass = @constructor.startSection()
+    @startSection = new startSectionClass
+      parent: @
 
-    @autorun (computation) =>
+    @chapters = []
+
+    @currentChapters = new ComputedField =>
       return unless LOI.adventureInitialized()
       return unless LOI.adventure.gameState()
 
-      currentChapterId = @state 'currentChapter'
+      # Episode chapters are active only if the start section was completed.
+      return [] unless @startSection.finished()
 
-      # Start in first chapter, if none is set.
-      currentChapterId ?= @constructor.chapters()[0].id()
+      currentChapters = []
 
-      if currentChapterId isnt @_currentChapterId
-        @_currentChapterId = currentChapterId
-
-        for chapterClass in @constructor.chapters()
-          currentChapterClass = chapterClass if chapterClass.id() is currentChapterId
-
-        # Destroy the old chapter.
-        @_currentChapter?.destroy()
-
-        # Instantiate the chapter. We do it in a non-reactive context so that its autoruns don't get invalidated.
+      # Add chapters up to including the one that isn't finished yet.
+      for chapterClass, chapterIndex in @constructor.chapters()
+        # Instantiate the chapter if needed.
         Tracker.nonreactive =>
-          @_currentChapter = new currentChapterClass episode: @
+          @chapters[chapterIndex] ?= new chapterClass episode: @
 
-        @currentChapter @_currentChapter
+        currentChapters[chapterIndex] = @chapters[chapterIndex]
+
+        # Don't add further chapters if this one wasn't finished.
+        break unless @chapters[chapterIndex].finished()
+
+      currentChapters
+    ,
+      true
 
   destroy: ->
     super
 
-    @_currentChapter?.destroy()
+    chapter.destroy() for chapter in @chapters
 
-  id: ->
-    @constructor.id()
+    @startSection.destroy()
+
+  scenes: -> # Override to provide any scenes for the whole episode.
 
   ready: ->
-    # Episode is ready when its current chapter is ready
-    currentChapter = @currentChapter()
+    # Episode is ready when its current chapters are ready.
+    return unless currentChapters = @currentChapters()
 
     conditions = _.flattenDeep [
       super
-      if currentChapter? then currentChapter.ready() else false
+      chapter.ready() for chapter in currentChapters
     ]
 
     _.every conditions

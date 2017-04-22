@@ -15,7 +15,7 @@ class Soma.Caltrain extends LOI.Adventure.Location
   @shortName: -> "Caltrain"
   @description: ->
     "
-      You are in a carriage of a Caltrain running between San Francisco and San Jose.
+      You are in a Caltrain carriage of a train running between San Francisco and San Jose.
     "
   
   @initialize()

@@ -69,5 +69,6 @@ class LOI.Components.ChapterTitle extends AM.Component
 
   onClickReturn: (event) ->
     LOI.adventure.goToLocation Retronator.HQ.LandsOfIllusions.Room
+    LOI.adventure.goToTimeline PixelArtAcademy.TimelineIds.RealLife
 
     @activatable.deactivate()

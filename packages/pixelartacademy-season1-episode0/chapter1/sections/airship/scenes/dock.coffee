@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode0.Chapter1
 RS = Retropolis.Spaceport
 
@@ -31,4 +32,15 @@ class C1.Airship.Dock extends LOI.Adventure.Scene
         complete()
 
   onEnter: (enterResponse) ->
+    ephemeralState = @script.ephemeralState()
+
+    hadDrink = false
+    bottles = PAA.Items.Bottle.getCopies timelineId: PAA.TimelineIds.DareToDream
+
+    # Return first bottle we find.
+    if bottles.length
+      hadDrink = bottles[0].state 'lastDrinkTime'
+
+    ephemeralState.hadDrink = hadDrink
+
     @startScript()

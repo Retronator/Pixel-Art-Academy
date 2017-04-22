@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 HQ = Retronator.HQ
 C3 = PixelArtAcademy.Season1.Episode0.Chapter3
 
@@ -41,6 +42,7 @@ class C3.Items.OperatorLink extends LOI.Adventure.Item
     @setCallbacks
       Exit: (complete) =>
         LOI.adventure.goToLocation HQ.LandsOfIllusions.Room
+        LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
         complete()
 
       Construct: (complete) =>

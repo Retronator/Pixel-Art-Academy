@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 C3 = PixelArtAcademy.Season1.Episode0.Chapter3
 HQ = Retronator.HQ
 
@@ -8,5 +9,7 @@ class C3.Construct extends LOI.Adventure.Section
   @scenes: -> [
     @Loading
   ]
+
+  @timelineId: -> PAA.TimelineIds.Construct
 
   @initialize()

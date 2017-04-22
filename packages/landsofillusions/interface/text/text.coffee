@@ -23,9 +23,12 @@ class LOI.Interface.Text extends LOI.Interface
 
     else
       # It's the first time we're visiting this location in this session so show the full description.
-      @_formatOutput location.avatar.description()
+      situation = LOI.adventure.currentSituation()
+
+      @_formatOutput situation.description.last()
       
   exitAvatars: ->
+    # TODO: Get exits from current situation so they can be dynamically modified.
     exitAvatarsByLocationId = @location()?.exitAvatarsByLocationId()
     return [] unless exitAvatarsByLocationId
 

@@ -43,6 +43,7 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
 
       Exit: (complete) =>
         LOI.adventure.goToLocation Retronator.HQ.LandsOfIllusions.Room
+        LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
         complete()
 
   _showChapterTitle: ->

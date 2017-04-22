@@ -4,7 +4,15 @@ LOI = LandsOfIllusions
 class LOI.Adventure extends LOI.Adventure
   _initializeEpisodes: ->
     PAA = PixelArtAcademy
-    
+
+    # Global classes.
+    @globalClasses = [
+      PAA.Items
+    ]
+
+    @globals = for globalClass in @globalClasses
+      new globalClass
+
     # Create episodes.
     @episodeClasses = [
       PAA.Season1.Episode0
@@ -15,22 +23,44 @@ class LOI.Adventure extends LOI.Adventure
     @resetEpisodes()
 
     @currentChapters = new ComputedField =>
-      chapters = (episode.currentChapter() for episode in @episodes())
-      _.without chapters, null
+      chapters = _.flattenDeep (episode.currentChapters() for episode in @episodes())
+
+      _.without chapters, null, undefined
 
     @currentSections = new ComputedField =>
-      sections = for chapter in @currentChapters()
-        chapter.currentSections()
+      chapterSections = (chapter.currentSections() for chapter in @currentChapters())
+      startSections = (episode.startSection for episode in @episodes() when not episode.startSection.finished())
 
-      _.flattenDeep sections
-
+      _.flattenDeep [chapterSections, startSections]
+      
     @currentScenes = new ComputedField =>
-      currentLocation = @currentLocation()
+      # Add scenes in decreasing order of priority (most general things first, specific overrides later)
+      scenes = _.flattenDeep [
+        global.scenes() for global in @globals
+        episode.scenes() for episode in @episodes()
+        chapter.scenes() for chapter in @currentChapters()
+        section.scenes() for section in @currentSections()
+      ]
 
-      scenes = for section in @currentSections()
-        scene for scene in section.scenes when scene.location().id() is currentLocation.id()
+      _.without scenes, null, undefined
 
-      _.flattenDeep scenes
+    # Active scenes are the ones at current location/time and contribute to current situation.
+    @activeScenes = new ComputedField =>
+      currentLocationId = @currentLocationId()
+      currentTimelineId = @currentTimelineId()
+
+      scenes = []
+
+      for scene in LOI.adventure.currentScenes()
+        # We compare IDs since we can get in a class or an instance.
+        validLocation = (scene.location().id() is currentLocationId) or not scene.location()
+
+        sceneTimelineId = scene.timelineId()
+        validTimeline = (not sceneTimelineId) or (currentTimelineId is sceneTimelineId) or (currentTimelineId in sceneTimelineId)
+
+        scenes.push scene if validLocation and validTimeline
+
+      scenes
 
   resetEpisodes: ->
     # Destroy previous episodes.

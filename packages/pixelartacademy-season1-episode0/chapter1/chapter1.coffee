@@ -15,63 +15,55 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   @url: -> 'chapter1'
 
   @sections: -> [
-    @Start
+    @Intro
     @Immigration
     @Airship
   ]
+    
+  @timelineId: -> PAA.TimelineIds.DareToDream
 
   @initialize()
-
+  
   constructor: ->
     super
-
-    # React to player drinking.
-    @autorun (computation) =>
-      hasBottle = PAA.Items.Bottle.state 'inInventory'
-      hasDrink = PAA.Items.Bottle.state 'drinkType'
-
-      # Drinking happened if the bottle is in the inventory and the drink went from full to empty.
-      if hasBottle and @_hadBottle and @_hadDrink and not hasDrink
-        @state 'hadDrink', true
-
-      @_hadBottle = hasBottle
-      @_hadDrink = hasDrink
+    
+    @inventory = new @constructor.Inventory parent: @
 
     @inOutro = new ReactiveField false
 
-    # Listen for the goal condition.
+    # Play outro animation when we finish the chapter.
     @autorun (computation) =>
+      return if @finished()
+
       endingConditions = for endingCondition in ['tooLate', 'passOut', 'asleep']
         @constructor.Airship.state endingCondition
 
-      if _.some endingConditions
-        # The chapter is finished, proceed with outro animation.
-        computation.stop()
+      # Any of the ending conditions triggers the chapter to be finished.
+      return unless _.some endingConditions
+      computation.stop()
+      
+      # Only do it once (since chapter finished will trigger on each subsequent reload).
+      return if @state 'playedOutro'
+
+      # The chapter is finished, proceed with outro animation.
+      @inOutro true
+      LOI.adventure.addModalDialog @
+      
+      Meteor.setTimeout =>
+        LOI.adventure.removeModalDialog @
+        @state 'playedOutro', true
+      ,
+        6000
+
+  destroy: ->
+    @inventory.destroy()
         
-        @inOutro true
-        LOI.adventure.addModalDialog @
-        
-        Meteor.setTimeout =>
-          LOI.adventure.removeModalDialog @
-          PixelArtAcademy.Season1.Episode0.state 'currentChapter', PAA.Season1.Episode0.Chapter2.id()
-        ,
-          6000
-
-  inventory: ->
-    hasBackpack = C1.Items.Backpack.state 'inInventory'
-    backpackOpened = C1.Items.Backpack.state 'opened'
-
-    hasBottle = PAA.Items.Bottle.state 'inInventory'
-
-    hasSuitcase = C1.Items.Suitcase.state 'inInventory'
-
-    [
-      C1.Items.Backpack if hasBackpack
-      C1.Items.Passport if hasBackpack and backpackOpened
-      C1.Items.AcceptanceLetter if hasBackpack and backpackOpened
-      PAA.Items.Bottle if hasBottle
-      C1.Items.Suitcase if hasSuitcase
-    ]
+  finished: ->
+    @state 'playedOutro'
+    
+  scenes: -> [
+    @inventory
+  ]
 
   timeToAirshipDeparture: ->
     return unless time = LOI.adventure.time()

@@ -10,6 +10,8 @@ class PixelArtAcademy.Season1.Episode0 extends LOI.Adventure.Episode
     @Chapter2
     @Chapter3
   ]
+    
+  @startSection: -> @Start
 
   @initialize()
 

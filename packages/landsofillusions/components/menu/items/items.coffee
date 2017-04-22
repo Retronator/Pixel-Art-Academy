@@ -106,8 +106,8 @@ class LOI.Components.Menu.Items extends AM.Component
 
   onClickQuit: (event) ->
     # If the player could save the game, warn them about losing progress.
-    if @saveVisible()
-      # TODO: Show a confirmation dialog to quit.
+    if @saveVisible() and false
+      # TODO: Show a confirmation dialog to quit. Remove false above when it is in place.
 
     else
       @_quit()

@@ -12,6 +12,9 @@ class C2.Shopping extends LOI.Adventure.Section
 
   @initialize()
 
+  active: ->
+    @requireFinishedSections C2.Intro
+
   @finished: ->
     # You have to be signed in to complete the shopping section.
     return false unless user = Retronator.user()

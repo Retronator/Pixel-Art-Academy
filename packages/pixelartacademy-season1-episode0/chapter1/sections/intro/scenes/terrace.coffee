@@ -3,8 +3,8 @@ LOI = LandsOfIllusions
 C1 = PixelArtAcademy.Season1.Episode0.Chapter1
 RS = Retropolis.Spaceport
 
-class C1.Start.Terrace extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Start.Terrace'
+class C1.Intro.Terrace extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Intro.Terrace'
 
   @location: -> RS.AirportTerminal.Terrace
 
@@ -12,10 +12,15 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
     intro: "
       You exit the Retropolis International Spaceport.
       A magnificent view of the city opens before you and you feel the adventure in the air.
-      The terrace you're standing on connects back to the airport terminal in the south.
+      The terrace you're standing on connects back to the airport terminal in the east.
     "
 
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/intro/scenes/terrace.script'
+
   @initialize()
+
+  description: ->
+    @translations()?.intro
 
   things: ->
     [
@@ -23,19 +28,8 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
       C1.Actors.Alex if @state 'alexPresent'
     ]
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/start/scenes/terrace.script'
-
   onEnter: (enterResponse) ->
     scene = @options.parent
-
-    # Provide the introduction text the first time we enter.
-    introductionDone = scene.state 'introductionDone'
-
-    unless introductionDone
-      enterResponse.overrideIntroduction =>
-        scene.translations()?.intro
-
-      scene.state 'introductionDone', true
 
     # Alex should enter after 30s unless they are already present or they have already talked to you.
     unless scene.state('alexPresent') or C1.Actors.Alex.state('firstTalkDone')
@@ -165,4 +159,3 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
     Meteor.clearTimeout @_alexEntersTimeout
 
     @_alexTalksAutorun?.stop()
-

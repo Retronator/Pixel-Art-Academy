@@ -42,7 +42,9 @@ class C2.Immersion.Room extends LOI.Adventure.Scene
 
         complete()
 
+      ActivateHeadset: (complete) => HQ.LandsOfIllusions.Room.activateHeadsetCallback complete
       PlugIn: (complete) => HQ.LandsOfIllusions.Room.plugInCallback complete
+      DeactivateHeadset: (complete) => HQ.LandsOfIllusions.Room.deactivateHeadsetCallback complete
 
   # Listener
 
