@@ -226,11 +226,12 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
       # Scroll to one higher if possible so that the user sees how much they need to go higher.
       $previousSupporter = $newSupporter.prev()
-      $scrollTarget = $previousSupporter or $newSupporter
+      $scrollTarget = if $previousSupporter.length then $previousSupporter else $newSupporter
+      $scrollContainer = $('.retronator-hq-store-display .screen')
+      middleHeight = $scrollContainer.outerHeight() / 2
+      targetTop = $scrollTarget.position().top - middleHeight
 
-      $scrollTarget.velocity('stop').velocity 'scroll',
-        duration: options.duration
-        container: $('.retronator-store-components-top-supporters')
+      $scrollContainer.stop().animate scrollTop: targetTop, options.duration
 
   onInputTipMessage: (event) ->
     message = $(event.target).val()

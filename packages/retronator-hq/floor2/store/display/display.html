@@ -2,19 +2,33 @@
   <div class="retronator-hq-store-display">
     {{> LandsOfIllusions.Components.BackButton}}
     {{#LandsOfIllusions.Components.Overlay}}
-      <div class="display">
-        <div class="screen">
-          <div class="recent-purchases">
-            <h3 class="title">Top recent<br/>purchases</h3>
-            {{> Retronator.Store.Components.TopSupporters topRecentTransactions}}
+      <div class="scene {{viewClass}}">
+        <div class="display">
+          <div class="screen">
+            <div class="content">
+              <div class="supporters-area">
+                <div class="recent-purchases supporters-list">
+                  <h3 class="title">Top recent<br/>purchases</h3>
+                  {{> Retronator.Store.Components.TopSupporters topRecentTransactions}}
+                </div>
+                <div class="top-supporters supporters-list">
+                  <h3 class="title">Top supporters overall</h3>
+                  {{> Retronator.Store.Components.TopSupporters topSupporters}}
+                </div>
+              </div>
+              <h3>More messages from supporters</h3>
+              <div class="transaction-messages">
+                {{> Retronator.Store.Components.TopSupporters transactionMessages}}
+              </div>
+            </div>
           </div>
         </div>
+        <img class="retro" src="{{image '/retronator/hq/locations/store/retro.gif'}}"/>
+        {{#if smiling}}
+          <img class="smile" src="{{image '/retronator/hq/locations/store/retro-smile.gif'}}"/>
+        {{/if}}
+        <div class="table"></div>
       </div>
-      <img class="retro" src="{{image '/retronator/hq/locations/store/retro.gif'}}"/>
-      {{#if smiling}}
-        <img class="smile" src="{{image '/retronator/hq/locations/store/retro-smile.gif'}}"/>
-      {{/if}}
-      <div class="table"></div>
     {{/LandsOfIllusions.Components.Overlay}}
   </div>
 </template>

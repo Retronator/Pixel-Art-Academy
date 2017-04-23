@@ -166,7 +166,11 @@ class HQ.Store extends LOI.Adventure.Location
         receipt = LOI.adventure.getCurrentThing HQ.Items.Receipt
         
         # Look at display.
-        LOI.adventure.goToItem HQ.Store.Display
+        display = LOI.adventure.getCurrentThing HQ.Store.Display
+        display.view HQ.Store.Display.Views.Left
+        display.showReceiptSupporters true
+        
+        LOI.adventure.goToItem display
 
         # Reset canceled status.
         receipt.transactionCompleted = false
@@ -183,6 +187,8 @@ class HQ.Store extends LOI.Adventure.Location
           @ephemeralState().transactionCanceled = not receipt.transactionCompleted
 
           # Return to location.
+          display.view HQ.Store.Display.Views.Center
+          display.showReceiptSupporters false
           LOI.adventure.deactivateCurrentItem()
 
           complete()
