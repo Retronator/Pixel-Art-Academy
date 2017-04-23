@@ -10,6 +10,9 @@ class C3.Inventory extends LOI.Adventure.Scene
 
   @initialize()
 
-  things: -> [
-      C3.Items.OperatorLink
-    ]
+  things: ->
+    things = []
+
+    things.push C3.Items.OperatorLink if LOI.adventure.currentRegionId() is LOI.Construct.id()
+
+    things

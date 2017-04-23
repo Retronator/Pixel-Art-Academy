@@ -166,6 +166,7 @@ Package.onUse(function(api) {
 
   // Locations and inventory
 
+  api.addFiles('adventure/region/region.coffee');
   api.addFiles('adventure/location/location.coffee');
   api.addFiles('adventure/location/inventory.coffee');
 

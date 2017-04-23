@@ -6,6 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class RS.Tower.Atrium2ndLevel extends LOI.Adventure.Location
   @id: -> 'Retropolis.Spaceport.Tower.Atrium2ndFloor'
   @url: -> 'spaceport/atrium/2nd-level'
+  @region: -> RS
 
   @version: -> '0.0.1'
 

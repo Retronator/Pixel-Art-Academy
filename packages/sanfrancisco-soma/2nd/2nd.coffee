@@ -6,8 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class Soma.SecondStreet extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.Soma.SecondStreet'
   @url: -> 'sf/2nd-street'
-  @scriptUrls: -> [
-  ]
+  @region: -> Soma
 
   @version: -> '0.0.1'
 

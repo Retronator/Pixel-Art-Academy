@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.Residence extends LOI.Adventure.Location
+class HQ.Residence.Studio extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Residence'
   @url: -> 'retronator/residence'
   @scriptUrls: -> [

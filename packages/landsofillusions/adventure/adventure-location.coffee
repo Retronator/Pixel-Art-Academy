@@ -44,6 +44,33 @@ class LOI.Adventure extends LOI.Adventure
       # Make sure to keep this computed field running.
       true
 
+    @currentRegionId = new ComputedField =>
+      @currentLocation().region().id()
+    ,
+      true
+
+    @currentRegion = new ComputedField =>
+      currentRegionClass = LOI.Adventure.Region.getClassForId @currentRegionId()
+
+      # Check that the player can be in this region.
+      playerHasPermission = currentRegionClass.playerHasPermission()
+
+      # If it returns undefined it means it can't yet determine it.
+      return unless playerHasPermission?
+
+      # If we don't have permission, redirect to region's exit location.
+      unless playerHasPermission
+        @currentLocationId _.thingId currentRegionClass.exitLocation()
+        return
+
+      # Everything is OK, instantiate the region.
+      Tracker.nonreactive =>
+        @_currentRegion?.destroy()
+        @_currentRegion = new currentRegionClass
+        @_currentRegion
+    ,
+      true
+
     # Run logic on entering a new location.
     @locationOnEnterResponseResults = new ReactiveField null
     

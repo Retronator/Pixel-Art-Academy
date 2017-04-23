@@ -9,6 +9,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
   @id: -> 'Retropolis.Spaceport.AirportTerminal.Terrace'
   @url: -> ''
+  @region: -> RS
 
   @register @id()
   template: -> @constructor.id()

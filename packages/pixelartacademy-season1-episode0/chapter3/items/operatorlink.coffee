@@ -52,7 +52,6 @@ class C3.Items.OperatorLink extends LOI.Adventure.Item
   # Listener
 
   onCommand: (commandResponse) ->
-    console.log "ccc"
     operatorLink = @options.parent
     operator = operatorLink.operator
 

@@ -8,6 +8,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Store.Bookshelves extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Store.Bookshelves'
   @url: -> 'retronator/store/bookshelves'
+  @region: -> HQ
 
   @version: -> '0.0.1'
 

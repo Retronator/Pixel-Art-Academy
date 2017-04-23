@@ -6,10 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Elevator extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Elevator'
   @url: -> 'retronator/lobby/elevator'
-  @scriptUrls: -> [
-    'retronator-hq/hq.script'
-    'retronator-hq/locations/elevator/numberpad.script'
-  ]
+  @region: -> HQ
 
   @version: -> '0.0.1'
 

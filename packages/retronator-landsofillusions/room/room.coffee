@@ -7,6 +7,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.LandsOfIllusions.Room'
   @url: -> 'retronator/landsofillusions/room'
+  @region: -> HQ.LandsOfIllusions
 
   @version: -> '0.0.1'
 
@@ -32,8 +33,8 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.South}": HQ.LandsOfIllusions
-    "#{Vocabulary.Keys.Directions.Out}": HQ.LandsOfIllusions
+    "#{Vocabulary.Keys.Directions.South}": HQ.LandsOfIllusions.Hallway
+    "#{Vocabulary.Keys.Directions.Out}": HQ.LandsOfIllusions.Hallway
 
   @activateHeadsetCallback: (complete) =>
     chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair

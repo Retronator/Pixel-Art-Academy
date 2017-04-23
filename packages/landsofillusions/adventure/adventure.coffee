@@ -13,10 +13,12 @@ class LOI.Adventure extends AM.Component
 
   ready: ->
     currentLocation = @currentLocation()
+    currentRegion = @currentRegion()
 
     conditions = [
       @parser.ready()
       if currentLocation? then currentLocation.ready() else false
+      if currentRegion? then currentRegion.ready() else false
       @episodesReady()
     ]
 

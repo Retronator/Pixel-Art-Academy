@@ -6,6 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class RS.AirshipTerminal.Dock extends LOI.Adventure.Location
   @id: -> 'Retropolis.Spaceport.AirshipTerminal.Dock'
   @url: -> 'spaceport/airship-dock'
+  @region: -> RS
 
   @version: -> '0.0.1'
 

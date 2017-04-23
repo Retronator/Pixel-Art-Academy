@@ -7,6 +7,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Residence.Hallway extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Residence.Hallway'
   @url: -> 'retronator/residence/hallway'
+  @region: -> HQ.Residence
 
   @version: -> '0.0.1'
 

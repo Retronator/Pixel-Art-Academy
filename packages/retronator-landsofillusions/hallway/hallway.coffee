@@ -4,9 +4,10 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.LandsOfIllusions extends LOI.Adventure.Location
-  @id: -> 'Retronator.HQ.LandsOfIllusions'
+class HQ.LandsOfIllusions.Hallway extends LOI.Adventure.Location
+  @id: -> 'Retronator.HQ.LandsOfIllusions.Hallway'
   @url: -> 'retronator/landsofillusions'
+  @region: -> HQ.LandsOfIllusions
 
   @version: -> '0.0.1'
 

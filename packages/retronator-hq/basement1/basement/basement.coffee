@@ -6,6 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Basement extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Basement'
   @url: -> 'retronator/basement'
+  @region: -> HQ
 
   @version: -> '0.0.1'
 
@@ -40,7 +41,7 @@ class HQ.Basement extends LOI.Adventure.Location
       floor: -1
     ,
       "#{Vocabulary.Keys.Directions.Up}": HQ.Coworking
-      "#{Vocabulary.Keys.Directions.East}": HQ.LandsOfIllusions
+      "#{Vocabulary.Keys.Directions.East}": HQ.LandsOfIllusions.Hallway
 
   initializeScript: ->
     @setCurrentThings
