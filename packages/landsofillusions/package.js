@@ -107,6 +107,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/adventure-things.coffee');
   api.addFiles('adventure/adventure-listeners.coffee');
   api.addFiles('adventure/adventure-time.coffee');
+  api.addFiles('adventure/adventure-dialogs.coffee');
 
   // Initalization gets included last because it does component registering as the last child in the chain.
   api.addFiles('adventure/adventure-initialization.coffee');
@@ -227,6 +228,7 @@ Package.onUse(function(api) {
   api.addComponent('components/account/transactions/transactions');
 
   api.addStyle('components/dialogs/accounts');
+  api.addComponent('components/dialogs/dialog');
 
   // Typography
 

@@ -170,9 +170,7 @@ class LOI.Adventure.ScriptFile.Parser
 
     nextNode = @nextNode
 
-    # TODO: Replace with by -1 when upgrading to new CS.
-    for i in [lines.length - 1..0]
-      line = lines[i]
+    for line, i in lines by -1
       # Extract the conditional out of the line.
       [line, conditionalNode] = @_parseConditional line
 
@@ -231,10 +229,7 @@ class LOI.Adventure.ScriptFile.Parser
     lines = match[1].match /^.*$/gm
     nextNode = @nextNode
 
-    # TODO: Replace with by -1 when upgrading to new CS.
-    for i in [lines.length - 1..0]
-      line = lines[i]
-
+    for line, i in lines by -1
       [line, conditionalNode] = @_parseConditional line
 
       line = line.trim()

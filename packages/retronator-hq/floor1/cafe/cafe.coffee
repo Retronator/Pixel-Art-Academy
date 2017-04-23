@@ -14,10 +14,10 @@ class HQ.Cafe extends LOI.Adventure.Location
   @shortName: -> "café"
   @description: ->
     "
-      The cosy café has plenty of tables and you recognize some familiar faces from the Pixel Art Academy Facebook
-      group. The north wall displays a selection of artworks from the current featured pixel artist. In the south
+      The cosy café has a handful of tables with artsy folks occupying most of them.
+      The north wall displays a selection of artworks from the current featured pixel artist. In the south
       there is a self-serve bar and Burra's carefully decorated workstation. A passageway connects to the coworking space
-      in the west, and there are big steps with stairs heading up to the store.
+      in the west, and there are big stairs heading up to the store.
     "
 
   @listeners: ->
@@ -65,10 +65,6 @@ class HQ.Cafe extends LOI.Adventure.Location
             $(window).on 'focus.medium', =>
               complete()
               $(window).off '.medium'
-
-          ReceiveProspectus: (complete) =>
-            HQ.Items.Prospectus.state 'inInventory', true
-            complete()
 
     @initialize()
 

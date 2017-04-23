@@ -32,8 +32,10 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
     # Move the player to caltrain on start.
     @autorun (computation) =>
       return unless LOI.adventure.gameState()
+      computation.stop()
 
       movedToCaltrain = @state 'movedToCaltrain'
+
       return if movedToCaltrain
 
       LOI.adventure.goToLocation SanFrancisco.Soma.Caltrain
@@ -44,11 +46,10 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
     @autorun (computation) =>
       return unless LOI.adventure.gameState()
       return unless LOI.adventure.ready()
+      computation.stop()
 
       fadeOutDone = @state 'fadeOutDone'
       return if fadeOutDone
-
-      computation.stop()
 
       Meteor.setTimeout =>
         @state 'fadeOutDone', true

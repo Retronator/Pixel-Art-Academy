@@ -1,0 +1,56 @@
+@import "../../style/style.import"
+
+.lands-of-illusions-components-dialog
+  position fixed
+  z-index 4
+
+  .dialog-overlay
+    fixed-cover()
+    background-color rgba(0,0,0,0.2)
+
+    .dialog
+      position fixed
+      z-index 2
+      left 50%
+      top 50%
+      transform translate(-50%, -50%)
+      padding 10rem
+      border 1rem solid atariGrey(3)
+      background atariGrey(1)
+      text-align center
+      filter drop-shadow(0 10rem 10rem rgba(0,0,0,0.5))
+
+      .text
+        margin-bottom 10rem
+
+      .buttons
+        margin 0 0 -2rem 0
+        padding 0
+        list-style none
+
+        .button
+          display inline-block
+          min-width 60rem
+          position relative
+          top -2rem
+          background atariGrey(3)
+          padding 2rem 4rem
+          margin 0 2rem
+          uni()
+          text-align center
+          color atariGrey(0)
+          border none
+          border-bottom 2rem solid atariGrey(2)
+          cursor pointer
+
+          &:focus
+            background: atariGrey(4)
+            outline none
+
+          &:hover
+            background: atariGrey(4)
+
+          &:active
+            border-bottom none
+            margin-bottom 2rem
+            top 0

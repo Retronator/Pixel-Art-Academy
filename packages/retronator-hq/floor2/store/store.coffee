@@ -127,7 +127,6 @@ class HQ.Store extends LOI.Adventure.Location
         complete()
 
       AddTierToCart: (complete) =>
-        # TODO: Add a qualifying Kickstarter tier to the shopping cart.
         ephemeralState = @ephemeralState()
         KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
 

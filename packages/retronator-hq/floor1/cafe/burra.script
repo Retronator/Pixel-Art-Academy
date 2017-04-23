@@ -67,6 +67,8 @@ burra: Sounds good. It's available at medium.com/retronator-magazine.
 
 > Burra turns around her computer screen and shows you the website.
 
+pause
+
 ### OpenRetronatorMagazine
 
 burra: I hope you liked it.
@@ -78,11 +80,9 @@ burra: I hope you liked it.
 burra: 
     Pixel Art Academy is a video game that teaches you how to draw! 
     Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist. 
-    Take a look at the school's prospectus to find out more.
+    It's in development currently, but you can pre-order it in the store above if you want to support it. 
     
-> Burra gives you the Pixel Art Academy prospectus.
-
-### ReceiveProspectus
+-> [MainQuestion]
 
 -> [End]
 

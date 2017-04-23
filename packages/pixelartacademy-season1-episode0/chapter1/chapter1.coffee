@@ -47,7 +47,9 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
 
       # The chapter is finished, proceed with outro animation.
       @inOutro true
-      LOI.adventure.addModalDialog @
+      LOI.adventure.addModalDialog
+        dialog: @
+        dontRender: true
       
       Meteor.setTimeout =>
         LOI.adventure.removeModalDialog @
@@ -59,7 +61,7 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
     @inventory.destroy()
         
   finished: ->
-    @state 'playedOutro'
+    @state('playedOutro') is true
     
   scenes: -> [
     @inventory

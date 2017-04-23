@@ -24,8 +24,6 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Thing
 
     @sections = for sectionClass in @constructor.sections()
       new sectionClass parent: @
-      
-    @chapterTitle = new ReactiveField null
 
   destroy: ->
     super
@@ -79,14 +77,8 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Thing
     chapterTitle = new LOI.Components.ChapterTitle _.extend {}, options,
       chapter: @
 
-    @chapterTitle chapterTitle
-
-    # Wait till chapter title gets rendered.
-    @autorun (computation) =>
-      return unless chapterTitle.isRendered()
-      computation.stop()
-
-      chapterTitle.activatable.activate()
+    LOI.adventure.showActivatableModalDialog
+      dialog: chapterTitle
 
     # Wait till chapter title gets activated.
     @autorun (computation) =>

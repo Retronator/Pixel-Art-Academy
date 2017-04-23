@@ -18,14 +18,12 @@ class LOI.Components.ChapterTitle extends AM.Component
   mixins: -> [@activatable]
 
   onActivate: (finishedActivatingCallback) ->
-    LOI.adventure.addModalDialog @
-
     Meteor.setTimeout =>
       # unless this is a to-be-continued title, let the chapter title end.
       unless @options.toBeContinued
         $(document).on 'keydown.chapterTitle', (event) =>
           # Only process keys if we're the top-most dialog.
-          return unless LOI.adventure.modalDialogs()[0] is @
+          return unless LOI.adventure.modalDialogs()[0].dialog is @
 
           keyCode = event.which
           @activatable.deactivate() if keyCode is AC.Keys.enter
@@ -44,8 +42,6 @@ class LOI.Components.ChapterTitle extends AM.Component
     $(document).off '.chapterTitle'
 
     Meteor.setTimeout =>
-      LOI.adventure.removeModalDialog @
-
       finishedDeactivatingCallback()
     ,
       500

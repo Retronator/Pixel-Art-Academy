@@ -79,13 +79,18 @@ class C1.Intro.Terrace extends LOI.Adventure.Scene
     scene._animateTitle()
 
   _animateTitle: ->
-    LOI.adventure.addModalDialog @
+    # We add ourselves as a modal dialog to prevent user input.
+    @dontRenderAsDialog = true
+    LOI.adventure.addModalDialog
+      dialog: @
+      dontRender: true
+
     @cleanup()
 
     # Skip animation on enter.
     $(document).on 'keydown.startSection', (event) =>
       # Only process keys if we're the top-most dialog.
-      return unless LOI.adventure.modalDialogs()[0] is @
+      return unless LOI.adventure.modalDialogs()[0].dialog is @
 
       keyCode = event.which
       @_showChapterTitle() if keyCode is AC.Keys.enter or keyCode is AC.Keys.escape

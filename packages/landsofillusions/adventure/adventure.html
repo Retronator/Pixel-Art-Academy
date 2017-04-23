@@ -5,6 +5,11 @@
     {{#each currentChapters}}
       {{> Render this}}
     {{/each}}
+    {{#each modalDialogs}}
+      {{#unless dontRender}}
+        {{> Render dialog}}
+      {{/unless}}
+    {{/each}}
   </div>
   {{#unless ready}}
     {{> LandsOfIllusions.Pages.Loading}}

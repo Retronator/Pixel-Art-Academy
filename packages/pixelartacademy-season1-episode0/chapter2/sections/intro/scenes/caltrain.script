@@ -14,11 +14,10 @@ conductor:
     You seem like you've had quite a dream.
     Welcome to San Francisco!
 
-* Thank you. I'll see myself out.
 * San Francisco!? Ah, yes.
+* Thank you. I'll see myself out.
 
-> You get up from your seat, remembering why you're here:
-> To find out more about the game Pixel Art Academy.
+> You get up from your seat, remembering why you're here: to find out more about the game Pixel Art Academy.
 
 `scene.talkDone = true`
 
@@ -29,8 +28,9 @@ conductor:
 conductor: How may I help you?
 
 * Do you know where Retronator is? They make this game, Pixel Art Academy.
+* Ah, nothing. -> [Nothing]
 
-conductor: Ah yes, a fan myself! Retronator's headquarters are located on 2nd street.
+conductor: Ah yes, I'm a fan myself! Retronator's headquarters are located on 2nd street.
 
 -> [ConductorQuestions]
 
@@ -56,6 +56,12 @@ conductor:
 ## ThankYou
 
 conductor: My pleasure.
+
+-> [End]
+
+## Nothing
+
+conductor: Carry on.
 
 -> [End]
 

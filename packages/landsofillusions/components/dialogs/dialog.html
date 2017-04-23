@@ -1,0 +1,14 @@
+<template name="LandsOfIllusions.Components.Dialog">
+  <div class="lands-of-illusions-components-dialog">
+    <div class="dialog-overlay">
+      <div class="dialog">
+        <div class="text">{{options.message}}</div>
+        <ul class="buttons">
+          {{#each options.buttons}}
+            <button class="button">{{text}}</button>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>

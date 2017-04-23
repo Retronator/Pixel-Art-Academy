@@ -27,7 +27,7 @@ class C2.Immersion.Basement extends LOI.Adventure.Scene
     HQ.Actors.Operator unless C2.Immersion.state 'operatorState'
   ]
 
-  removedThings: ->
+  removeThings: ->
     # Because operator generally appears in the basement, we need to remove him when some of these scenes run.
     operatorState = C2.Immersion.state 'operatorState'
 

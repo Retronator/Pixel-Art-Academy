@@ -79,7 +79,9 @@ class LOI.Components.Account extends AM.Component
       @lastTurnedPageNumber = currentPageNumber
 
   show: ->
-    LOI.adventure.menu.showModalDialog dialog: @
+    LOI.adventure.showActivatableModalDialog
+      dialog: @
+      dontRender: true
 
   url: ->
     url = 'account'

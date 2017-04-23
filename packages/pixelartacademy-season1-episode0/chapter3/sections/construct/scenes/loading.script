@@ -2,7 +2,7 @@
 
 ## Start
 
-> A man with sunglasses suddenly appears.
+> A man with sunglasses appears.
 
 -> [FirstTime] `not GetStarted`
 
@@ -25,11 +25,11 @@ captain: Welcome to Lands of Illusions!
 captain: 
     Right now you are inside a loading program called the Construct. 
     Unfortunately you cannot enter the Lands of Illusions world yourself.
-    You will need to create an artificial intelligence agent — an AI character — that will act in the world for you.
+    You will need to create an artificial intelligence agent—an AI character—that will act in the world for you.
 
 ## IntroQuestions
 
-* The characters … They're AI programs? -> [Character]
+* My character … It'll be an AI program? -> [Character]
 * Couldn't I just inhabit my own avatar? -> [Avatar] `Character`
 * I could just create a character like myself. -> [SelfAvatar] `Avatar`
 * How do I get out of here? -> [HowToExit]
@@ -39,7 +39,7 @@ captain:
 
 captain: 
     Yes. However, we are on the brink of strong AI. 
-    The characters are pretty much alive, depending on your definition of alive.
+    The characters we make are pretty much alive, depending on your definition of alive.
     If alive means you can perceive the world and act upon it with free will, then our characters are just as alive as you are.
     
 * But they don't live in the real world. -> [RealWorld]
@@ -152,7 +152,7 @@ captain:
 ## NoEditorEnd
 
 captain:
-    Great. The TV there when you're ready.
+    Great. The TV is there when you're ready.
     
 -> [MainDialog]
 
@@ -164,6 +164,7 @@ captain:
     Are you ready to do so?
      
 * Let's go! -> [C3]
+* I'll just select one on the TV. -> [TV]
 * One more thing …
 
 captain: Of course, how can I help?
@@ -183,6 +184,12 @@ pause
 ### C3
 
 -> [End]
+
+## TV
+
+captain: As you wish.
+
+-> [MainDialog]
 
 ## Exit
 
