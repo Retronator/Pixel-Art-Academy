@@ -31,7 +31,7 @@ class HQ.Theater extends LOI.Adventure.Location
     things = {}
 
     exits = {}
-    exits[Vocabulary.Keys.Directions.West] = HQ..IdeaGarden.id()
+    exits[Vocabulary.Keys.Directions.West] = HQ.IdeaGarden.id()
     exits[Vocabulary.Keys.Directions.Up] = HQ.Residence.id()
     exits[Vocabulary.Keys.Directions.North] = HQ.Residence.id()
 

@@ -37,6 +37,7 @@ class LOI.Adventure extends LOI.Adventure
       # Add scenes in decreasing order of priority (most general things first, specific overrides later)
       scenes = _.flattenDeep [
         global.scenes() for global in @globals
+        @currentRegion()?.scenes()
         episode.scenes() for episode in @episodes()
         chapter.scenes() for chapter in @currentChapters()
         section.scenes() for section in @currentSections()
@@ -46,17 +47,19 @@ class LOI.Adventure extends LOI.Adventure
 
     # Active scenes are the ones at current location/time and contribute to current situation.
     @activeScenes = new ComputedField =>
-      currentLocationId = @currentLocationId()
+      currentLocation = @currentLocation()
       currentTimelineId = @currentTimelineId()
 
       scenes = []
 
       for scene in LOI.adventure.currentScenes()
         # We compare IDs since we can get in a class or an instance.
-        validLocation = (scene.location().id() is currentLocationId) or not scene.location()
+        currentLocationClass = currentLocation.constructor
+        sceneLocation = scene.location()
+        validLocation = not sceneLocation or (currentLocationClass is sceneLocation) or (currentLocationClass in sceneLocation)
 
         sceneTimelineId = scene.timelineId()
-        validTimeline = (not sceneTimelineId) or (currentTimelineId is sceneTimelineId) or (currentTimelineId in sceneTimelineId)
+        validTimeline = not sceneTimelineId or (currentTimelineId is sceneTimelineId) or (currentTimelineId in sceneTimelineId)
 
         scenes.push scene if validLocation and validTimeline
 

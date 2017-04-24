@@ -47,7 +47,7 @@ class LOI.Adventure.Region extends LOI.Adventure.Thing
   destroy: ->
     super
 
-    scene.destroy() for scene in @scenes
+    scene.destroy() for scene in @_scenes
 
   scenes: ->
     @_scenes

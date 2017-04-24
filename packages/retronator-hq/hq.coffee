@@ -6,6 +6,10 @@ class Retronator.HQ extends LOI.Adventure.Region
 
   @initialize()
 
+  @scenes: -> [
+    @Items.Intercom
+  ]
+
 if Meteor.isServer
   LOI.initializePackage
     id: 'retronator_retronator-hq'

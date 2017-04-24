@@ -40,6 +40,8 @@ Package.onUse(function(api) {
   api.addFile('items/account/account');
   api.addFile('items/keycard/keycard');
 
+  api.addThing('items/intercom/intercom');
+
   // Locations
 
   api.addThing('basement1/basement/basement');
