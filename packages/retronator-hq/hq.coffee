@@ -7,7 +7,8 @@ class Retronator.HQ extends LOI.Adventure.Region
   @initialize()
 
   @scenes: -> [
-    @Items.Intercom
+    @Scenes.Intercom
+    @Scenes.Shelley
   ]
 
 if Meteor.isServer

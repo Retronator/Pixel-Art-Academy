@@ -248,12 +248,12 @@ class LOI.Adventure.Thing extends AM.Component
     handle
 
   # A variant of subscribe that works even when the component isn't being rendered.
-  subscribe: (subscriptionName) ->
+  subscribe: (subscriptionName, params...) ->
     # If we're already created, we can simply use default implementation
     # that will stop the subscribe when component is removed from DOM.
     return super if @isCreated()
 
-    handle = Meteor.subscribe subscriptionName
+    handle = Meteor.subscribe subscriptionName, params...
     @_subscriptionHandles.push handle
 
     handle

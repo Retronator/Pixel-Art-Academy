@@ -92,10 +92,9 @@ class LOI.Adventure extends LOI.Adventure
           # Exclude the listeners that are part of scenes that don't happen on this location.
           listeners = _.filter listeners, (listener) =>
             listenerScene = listener.options.parent if listener.options.parent instanceof LOI.Adventure.Scene
-            return unless listenerSceneClass = listenerScene?.constructor
 
             # We want to include scenes that are present on all locations.
-            return true unless listenerLocationClass = listenerSceneClass.location()
+            return true unless listenerLocationClass = listenerScene?.location()
 
             # If the location is specified, it must match with current location.
             listenerLocationClass is currentLocationClass

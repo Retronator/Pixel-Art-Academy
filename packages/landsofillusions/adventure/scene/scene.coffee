@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Scene extends LOI.Adventure.Thing

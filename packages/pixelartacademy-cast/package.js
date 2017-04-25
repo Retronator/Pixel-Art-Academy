@@ -22,7 +22,7 @@ Package.onUse(function(api) {
 
   api.addFiles('retro.coffee');
   api.addFiles('burra.coffee');
-  api.addFiles('corinne.coffee');
+  api.addFiles('coco.coffee');
   api.addFiles('shelley.coffee');
-  api.addFiles('reuben.coffee');
+  api.addFiles('aeronaut.coffee');
 });

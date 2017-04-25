@@ -1,8 +1,8 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Cast.Reuben extends LOI.Adventure.Thing
-  @id: -> 'PixelArtAcademy.Cast.Reuben'
+class PAA.Cast.Aeronaut extends LOI.Adventure.Thing
+  @id: -> 'PixelArtAcademy.Cast.Aeronaut'
   @fullName: -> "Reuben 'Aeronaut' Thiessen"
   @shortName: -> "Reuben"
   @description: -> "It's Reuben Thiessen a.k.a. Aeronaut. He flew into town with his Cessna 182 Skylane."
