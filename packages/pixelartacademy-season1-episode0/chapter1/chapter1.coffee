@@ -33,7 +33,7 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
 
     # Play outro animation when we finish the chapter.
     @autorun (computation) =>
-      return if @finished()
+      return unless @active() and not @finished()
 
       endingConditions = for endingCondition in ['tooLate', 'passOut', 'asleep']
         @constructor.Airship.state endingCondition
@@ -47,6 +47,7 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
 
       # The chapter is finished, proceed with outro animation.
       @inOutro true
+
       LOI.adventure.addModalDialog
         dialog: @
         dontRender: true
@@ -75,11 +76,21 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
     10 * 60 - elapsedSeconds
 
   fadeVisibleClass: ->
-    'visible' if @inOutro()
+    'visible' if @inOutro() and not @finished()
+
+  # Listener
 
   onCommand: (commandResponse) ->
+    return unless LOI.adventure.currentTimelineId() is PAA.TimelineIds.DareToDream
+
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.WakeUp]
       action: =>
-        C1.Items.Backpack.state 'inInventory', true
+        # End intro section.
+        C1.Intro.state 'leftTerrace', true
+
+        # End immigration section.
+        C1.Immigration.state 'leftCustoms', true
+
+        # End airship section.
         C1.Airship.state 'asleep', true

@@ -6,16 +6,33 @@ conductor: Excuse me. Hello. Are you OK? Time to wake up.
 
 > You open your eyes and realize the train has come to a stop.
 
-conductor: You've reached the destination. Are you alright?
+conductor: We've reached our final destination. Are you alright?
 
 * Yeah. Yes! I must have fallen asleep.
+* Just a bit drowsy.
 
 conductor: 
     You seem like you've had quite a dream.
     Welcome to San Francisco!
 
-* San Francisco!? Ah, yes.
-* Thank you. I'll see myself out.
+* San Francisco!? Ah, yes. -> [AhYes]
+* Thank you. I'll see myself out. -> [SeeMyselfOut]
+
+## AhYes
+
+> The conductor looks at you funny.
+
+conductor: Well, have a good day now.
+
+-> [GetUp]
+
+## SeeMyselfOut
+
+conductor: No problem, have a good day.
+
+-> [GetUp]
+
+## GetUp
 
 > You get up from your seat, remembering why you're here: to find out more about the game Pixel Art Academy.
 
@@ -30,7 +47,7 @@ conductor: How may I help you?
 * Do you know where Retronator is? They make this game, Pixel Art Academy.
 * Ah, nothing. -> [Nothing]
 
-conductor: Ah yes, I'm a fan myself! Retronator's headquarters are located on 2nd street.
+conductor: Let me check my phone … Ah, yes, Retronator's headquarters is located right here in SOMA on 2nd street.
 
 -> [ConductorQuestions]
 
@@ -38,20 +55,31 @@ conductor: Ah yes, I'm a fan myself! Retronator's headquarters are located on 2n
 
 > The conductor looks at the prospectus.
 
-conductor: Oh, are you here to visit Retronator? Their headquarters are located on 2nd street.
+conductor: Oh, are you here to visit Retronator? I think their headquarters is located on 2nd street right here in SOMA.
 
 ## ConductorQuestions
 
+* SOMA? -> [SOMA]
 * How do you get to 2nd street? -> [2ndStreet]
 * Thank you -> [ThankYou]
+
+## SOMA
+
+conductor: 
+    That's short for South of Market. You're new to SF aren't you? I mean … San Francisco. We say SF for short.
+    Market street is the main street going through downtown. SOMA is the area south of that street, where you are now.
+    
+-> [ConductorQuestions]
 
 ## 2ndStreet
 
 conductor:
-    When you step ![out](out) to the train station, walk ![northwest](nw) up 4th until you get to Moscone Center.
+    When you step ![out](out) to the train station, walk ![northwest](nw) up 4th until you get to the Moscone Center.
     Turn right down Howard and go ![northeast](ne) to 2nd street. Retronator HQ will be on your left.
     
-* Thank you -> [ThankYou]
+conductor: Oh, HQ … that's short for headquarters, hehehe. `SOMA`
+
+-> [ConductorQuestions]
 
 ## ThankYou
 

@@ -46,6 +46,8 @@ operator: That's what I like to hear.
 
 operator: Now, sit tight. The Captain will greet you in the Loading program in a second.
 
+`section.completed = true`
+
 pause
 
 ### PlugIn

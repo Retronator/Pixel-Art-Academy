@@ -14,11 +14,11 @@ burra: `_End`
 * What is this place? -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
 * What is this place again? -> [RetronatorHQ] `RetronatorHQDepartments`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
-* Can I order a sandwich? -> [Sandwich] `not Sandwich`
-* How about coffee? -> [Coffee] `Sandwich and not Coffee`
-* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQDepartments and not PixelArtAcademy`
+* Can I order a sandwich? -> [Sandwich]
+* How about coffee? -> [Coffee] `Sandwich`
+* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQDepartments`
 * So is Pixel Art Academy like an online course? -> [PixelArtAcademyCourse] `PixelArtAcademy`
-* So about that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQDepartments`
+* About that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQDepartments`
 * What exactly is Lands of Illusions? -> [LandsOfIllusions] `RetronatorHQDepartments`
 * Oh, just looking. -> [End] `not _answered and not _End`
 * Whoops, nevermind. -> [End] `not _answered and _End`
@@ -79,8 +79,14 @@ burra: I hope you liked it.
 
 burra: 
     Pixel Art Academy is a video game that teaches you how to draw! 
-    Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist. 
-    It's in development currently, but you can pre-order it in the store above if you want to support it. 
+    Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist.
+    
+* Groovy!
+* Can I play yet?
+
+burra:
+    It's in development currently, but you can pre-order it in the store above if you want to support it.
+    Oh, and check out the school prospectus in your inventory if you haven't yet.
     
 -> [MainQuestion]
 
@@ -115,21 +121,27 @@ burra: What? Make it yourself.
 * Oh, I thought this was a café. -> [ExplainCafe]
 * Sudo make me a sandwich. <!-- XKCD joke -->
 
-burra: Sudo make it yourself.
+burra: 
+    Sudo make it yourself.
+    This isn't exactly your usual café.
+    
+-> [Cafe]
 
 ## ExplainCafe
 
-burra: 
-    You're not in a usual café. This is Retronator Headquarters. 
-    We have a coworking space and our bar and kitchen are open to members.
-    So really, just help yourself.
+burra: Yes, but you're not in a usual café. 
+    
+## Cafe
+
+burra:
+    It's part of our coworking space and the bar and kitchen are open to our members. So really, just help yourself.
     
 -> [MainQuestion]
 
 ## Coffee
 `_answered = true`
 
-burra: Sorry, the coffee hasn't been coded into the game yet. <!-- joke from the prototype -->
+burra: Sorry, coffee hasn't been coded into the game yet. <!-- joke from the prototype -->
 
 -> [MainQuestion]
 

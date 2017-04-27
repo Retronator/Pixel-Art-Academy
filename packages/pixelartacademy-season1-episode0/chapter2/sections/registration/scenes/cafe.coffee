@@ -15,7 +15,7 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/registration/scenes/cafe.script'
 
   initializeScript: ->
-    @setCurrentThings burra: PAA.Cast.Burra
+    @setCurrentThings burra: HQ.Actors.Burra
 
     @setCallbacks
       SignInActive: (complete) =>
@@ -40,7 +40,7 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
         complete()
 
   onCommand: (commandResponse) ->
-    return unless burra = LOI.adventure.getCurrentThing PAA.Cast.Burra
+    return unless burra = LOI.adventure.getCurrentThing HQ.Actors.Burra
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, burra.avatar]

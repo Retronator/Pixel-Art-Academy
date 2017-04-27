@@ -15,7 +15,7 @@ class RS.AirportTerminal.Arrivals extends LOI.Adventure.Location
   @description: ->
     "
       You are in the arrivals waiting area of the main spaceport tower. Passengers coming out through customs are being
-      greeted by their loved ones. The way out leads south-east to the main atrium.
+      greeted by their loved ones. The way out leads southeast to the main atrium.
     "
   
   @initialize()

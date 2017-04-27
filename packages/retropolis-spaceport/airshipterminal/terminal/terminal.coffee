@@ -29,3 +29,4 @@ class RS.AirshipTerminal.Terminal extends LOI.Adventure.Location
   exits: ->
     "#{Vocabulary.Keys.Directions.Northwest}": RS.Tower.Atrium2ndLevel
     "#{Vocabulary.Keys.Directions.Southeast}": RS.AirshipTerminal.Dock
+    "#{Vocabulary.Keys.Directions.Out}": RS.AirshipTerminal.Dock

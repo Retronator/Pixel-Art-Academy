@@ -28,6 +28,26 @@ class C1.Intro.Terrace extends LOI.Adventure.Scene
       C1.Actors.Alex if @state 'alexPresent'
     ]
 
+  _scheduleAlex: (options) ->
+    @_alexEntersTimeout = Meteor.setTimeout =>
+      # Don't do the action if the user is busy doing something.
+      if LOI.adventure.interface.busy()
+        # Retry in 10 seconds.
+        @_scheduleAlex delay: 5000
+        return
+
+      # Looks OK, start interaction.
+      @listeners[0].startScript label: "AlexEnters"
+    ,
+      options.delay
+
+  destroy: ->
+    super
+
+    Meteor.clearTimeout @_alexEntersTimeout
+
+  # Listener
+
   onEnter: (enterResponse) ->
     scene = @options.parent
 
@@ -38,12 +58,9 @@ class C1.Intro.Terrace extends LOI.Adventure.Scene
         return unless LOI.adventure.interface.uiInView()
         return unless time = LOI.adventure.time()
         computation.stop()
-        
-        @_alexEntersTimeout = Meteor.setTimeout =>
-          @startScript label: "AlexEnters"
-        ,
-          30000
-        
+
+        scene._scheduleAlex delay: 30000
+
         # Also record the adventure time so we have our 10 min countdown for airship departure.
         scene.section.chapter.state 'startTime', time
 
@@ -79,6 +96,9 @@ class C1.Intro.Terrace extends LOI.Adventure.Scene
     scene._animateTitle()
 
   _animateTitle: ->
+    console.log "animating title"
+    console.trace()
+
     # We add ourselves as a modal dialog to prevent user input.
     @dontRenderAsDialog = true
     LOI.adventure.addModalDialog
@@ -159,8 +179,5 @@ class C1.Intro.Terrace extends LOI.Adventure.Scene
 
   cleanup: ->
     super
-
-    # Stop Alex's timer.
-    Meteor.clearTimeout @_alexEntersTimeout
 
     @_alexTalksAutorun?.stop()

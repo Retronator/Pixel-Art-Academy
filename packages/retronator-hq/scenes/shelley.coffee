@@ -49,7 +49,7 @@ class Retronator.HQ.Scenes.Shelley extends LOI.Adventure.Scene
   things: ->
     things = []
 
-    things.push PAA.Cast.Shelley if LOI.adventure.currentLocationId() is @currentLocationId()
+    things.push HQ.Actors.Shelley if LOI.adventure.currentLocationId() is @currentLocationId()
 
     things
 
@@ -126,6 +126,6 @@ class Retronator.HQ.Scenes.Shelley extends LOI.Adventure.Scene
   # Listener
 
   @avatars: ->
-    shelley: PAA.Cast.Shelley
-    coco: PAA.Cast.CoCo
-    retro: PAA.Cast.Retro
+    shelley: HQ.Actors.Shelley
+    corinne: HQ.Actors.Corinne
+    retro: HQ.Actors.Retro

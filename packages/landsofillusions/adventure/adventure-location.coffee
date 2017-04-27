@@ -60,6 +60,7 @@ class LOI.Adventure extends LOI.Adventure
 
       # If we don't have permission, redirect to region's exit location.
       unless playerHasPermission
+        console.warn "Player does not have permission to be in the region", currentRegionClass
         @currentLocationId _.thingId currentRegionClass.exitLocation()
         return
 

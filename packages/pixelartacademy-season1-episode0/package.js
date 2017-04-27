@@ -79,6 +79,7 @@ Package.onUse(function(api) {
   api.addFile('chapter2/sections/intro/intro');
 
   api.addThing('chapter2/sections/intro/scenes/caltrain');
+  api.addFile('chapter2/sections/intro/scenes/2nd');
 
   // Registration
 

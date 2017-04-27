@@ -61,6 +61,8 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
         [themesCursor, submissionsCursor] = PADB.PixelDailies.Pages.Home.themes.query 1
 
         latestTheme = themesCursor.fetch()[0]
+        return unless latestTheme.hashtags?.length
+
         script.ephemeralState().pixelDailiesHashtag = latestTheme.hashtags[0]
 
         script.startNode.labels.CurrentPixelDailies
@@ -72,6 +74,8 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
         [themesCursor, submissionsCursor] = PADB.PixelDailies.Pages.Home.themes.query 2
 
         yesterdayTheme = themesCursor.fetch()[1]
+        return unless yesterdayTheme.hashtags?.length and yesterdayTheme.topSubmissions?.length
+
         topSubmission = yesterdayTheme.topSubmissions[0]
 
         _.extend script.ephemeralState(),
@@ -162,5 +166,5 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
   # Listener
 
   @avatars: ->
-    burra: PAA.Cast.Burra
-    retro: PAA.Cast.Retro
+    burra: HQ.Actors.Burra
+    retro: HQ.Actors.Retro

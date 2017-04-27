@@ -7,6 +7,7 @@ class C2.Intro extends LOI.Adventure.Section
 
   @scenes: -> [
     @Caltrain
+    @SecondStreet
   ]
 
   @initialize()

@@ -1,8 +1,9 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+HQ = Retronator.HQ
 
-class PAA.Cast.Burra extends LOI.Adventure.Thing
-  @id: -> 'PixelArtAcademy.Cast.Burra'
+class HQ.Actors.Burra extends LOI.Adventure.Thing
+  @id: -> 'Retronator.HQ.Actors.Burra'
   @fullName: -> "Sarah 'Burra' Burrough"
   @shortName: -> "Burra"
   @description: -> "It's Sarah Burrough a.k.a. Burra. She's doing outreach for Pixel Art Academy."

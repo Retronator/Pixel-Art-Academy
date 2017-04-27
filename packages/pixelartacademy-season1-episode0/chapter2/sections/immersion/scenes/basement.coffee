@@ -81,7 +81,7 @@ class C2.Immersion.Basement extends LOI.Adventure.Scene
       action: => @startScript label: 'OperatorDialog'
 
   onExitAttempt: (exitResponse) ->
-    return unless exitResponse.destinationLocationClass is HQ.LandsOfIllusions
+    return unless exitResponse.destinationLocationClass is HQ.LandsOfIllusions.Hallway
 
     hasInteracted = C2.Immersion.state 'operatorState'
     return if hasInteracted

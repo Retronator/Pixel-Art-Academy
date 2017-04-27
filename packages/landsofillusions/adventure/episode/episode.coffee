@@ -26,31 +26,21 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     @startSection = new startSectionClass
       parent: @
 
-    @chapters = []
+    previousChapter = null
 
-    @currentChapters = new ComputedField =>
-      return unless LOI.adventureInitialized()
-      return unless LOI.adventure.gameState()
+    @chapters = for chapterClass in @constructor.chapters()
+      chapter = new chapterClass
+        parent: @
+        previousChapter: previousChapter
 
-      # Episode chapters are active only if the start section was completed.
-      return [] unless @startSection.finished()
+      previousChapter = chapter
 
-      currentChapters = []
+      chapter
 
-      # Add chapters up to including the one that isn't finished yet.
-      for chapterClass, chapterIndex in @constructor.chapters()
-        # Instantiate the chapter if needed.
-        Tracker.nonreactive =>
-          @chapters[chapterIndex] ?= new chapterClass episode: @
+    @idd = Random.id()
 
-        currentChapters[chapterIndex] = @chapters[chapterIndex]
-
-        # Don't add further chapters if this one wasn't finished.
-        break unless @chapters[chapterIndex].finished()
-
-      currentChapters
-    ,
-      true
+  currentChapters: ->
+    chapter for chapter in @chapters when chapter.active()
 
   destroy: ->
     super

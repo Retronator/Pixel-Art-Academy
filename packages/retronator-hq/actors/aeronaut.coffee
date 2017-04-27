@@ -1,8 +1,9 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+HQ = Retronator.HQ
 
-class PAA.Cast.Aeronaut extends LOI.Adventure.Thing
-  @id: -> 'PixelArtAcademy.Cast.Aeronaut'
+class HQ.Actors.Aeronaut extends LOI.Adventure.Thing
+  @id: -> 'Retronator.HQ.Actors.Aeronaut'
   @fullName: -> "Reuben 'Aeronaut' Thiessen"
   @shortName: -> "Reuben"
   @description: -> "It's Reuben Thiessen a.k.a. Aeronaut. He flew into town with his Cessna 182 Skylane."

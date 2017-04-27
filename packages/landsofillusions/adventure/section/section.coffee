@@ -19,16 +19,39 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
 
     @chapter = @options.parent if @options?.parent instanceof LOI.Adventure.Chapter
 
-    @_scenes = for sceneClass in @constructor.scenes()
-      new sceneClass parent: @
+    # Cached field to minimize reactivity.
+    @_active = new ComputedField =>
+      @active()
+    ,
+      true
+
+    @scenes = new ReactiveField []
+
+    @autorun (computation) =>
+      # Create scenes JIT when section becomes active.
+      active = @_active()
+
+      # Destroy previous set of scenes.
+      Tracker.nonreactive =>
+        console.log "Destroyed scenes for", @id() if LOI.debug and @scenes().length
+        scene.destroy() for scene in @scenes()
+
+        if active
+          scenes = for sceneClass in @constructor.scenes()
+            new sceneClass parent: @
+
+          console.log "Created scenes for", @id() if LOI.debug
+
+        else
+          scenes = []
+
+        # Set the new scenes.
+        @scenes scenes
 
   destroy: ->
     super
 
-    scene.destroy() for scene in @scenes
-
-  scenes: ->
-    @_scenes
+    scene.destroy() for scene in @scenes()
 
   active: ->
     @_activeUntilFinished()

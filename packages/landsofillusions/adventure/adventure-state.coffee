@@ -81,6 +81,10 @@ class LOI.Adventure extends LOI.Adventure
     # schedule) we create a game state variable that is changed every time the game state gets updated locally, as
     # well as from the database (new document coming from @_gameStateProvider).
     @gameState = new ComputedField =>
+      # Wait until adventure is initialized before returning anything
+      # since state objects also don't return anything prior to that.
+      return unless LOI.adventureInitialized()
+
       _gameStateUpdatedDependency.depend()
       _gameStateProvider()
 

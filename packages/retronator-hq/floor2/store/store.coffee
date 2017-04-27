@@ -45,7 +45,7 @@ class HQ.Store extends LOI.Adventure.Location
     super
 
   things: -> [
-    PAA.Cast.Retro
+    HQ.Actors.Retro
     HQ.Store.Display
     HQ.Store.Shelf.Game
     HQ.Store.Shelf.Upgrades
@@ -65,7 +65,7 @@ class HQ.Store extends LOI.Adventure.Location
 
   initializeScript: ->
     @setCurrentThings
-      retro: PAA.Cast.Retro
+      retro: HQ.Actors.Retro
   
     @setCallbacks
       AnalyzeUser: (complete) =>
@@ -190,7 +190,7 @@ class HQ.Store extends LOI.Adventure.Location
   # Listener
 
   onCommand: (commandResponse) ->
-    return unless retro = LOI.adventure.getCurrentThing PAA.Cast.Retro
+    return unless retro = LOI.adventure.getCurrentThing HQ.Actors.Retro
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]

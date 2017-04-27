@@ -1,8 +1,9 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+HQ = Retronator.HQ
 
-class PAA.Cast.Shelley extends LOI.Adventure.Thing
-  @id: -> 'PixelArtAcademy.Cast.Shelley'
+class HQ.Actors.Shelley extends LOI.Adventure.Thing
+  @id: -> 'Retronator.HQ.Actors.Shelley'
   @fullName: -> "Shelley Williamson"
   @shortName: -> "Shelley"
   @description: -> "It's Shelley Williamson, Retro's art dealer."

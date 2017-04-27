@@ -20,54 +20,53 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Thing
   constructor: (@options) ->
     super
 
-    @episode = @options.episode
+    @episode = @options.parent
+    @previousChapter = @options.previousChapter
 
-    @sections = for sectionClass in @constructor.sections()
-      new sectionClass parent: @
+    # Cached field to minimize reactivity.
+    @_active = new ComputedField =>
+      @active()
+    ,
+      true
+
+    @sections = new ComputedField =>
+      # Create sections JIT when chapter becomes active.
+      return [] unless @_active()
+
+      Tracker.nonreactive =>
+        console.log "Created sections for chapter", @id() if LOI.debug
+
+        for sectionClass in @constructor.sections()
+          new sectionClass parent: @
+    ,
+      true
 
   destroy: ->
     super
 
-    section.destroy() for section in @sections
-    @sections = []
+    section.destroy() for section in @sections()
 
   getSection: (sectionClassOrId) ->
     sectionId = _.thingId sectionClassOrId
 
-    _.find @sections, (section) => section.id() is sectionId
+    _.find @sections(), (section) => section.id() is sectionId
       
   scenes: -> # Override to provide any scenes for the whole chapter.
 
   active: ->
-    @_activeUntilFinished()
+    # Chapter starts being active when the previous chapter gets finished. It stays active forever to preserve 
+    # inventory and other permanent changes, as well as access to unfinished sections. First chapter is special and
+    # gets activated when episode's starting section gets completed.
+    if @previousChapter then @previousChapter.finished() else @episode.startSection.finished()
 
-  _activeUntilFinished: ->
-    # Override and add additional logic to create prerequisites for the section being started.
-    finished = @finished()
-
-    # Finished can return undefined, which means it is not ready to determine its state.
-    return unless finished?
-
-    # By default the section is active until it is finished.
-    not finished
-
-  requireFinishedSections: (sections) ->
-    # Allow for passing of a single section.
-    sections = [sections] unless _.isArray sections
-
-    # See if sections are finished.
-    return unless section.finished() for section in sections
-
-    true
-    
   currentSections: ->
-    section for section in @sections when section.active()
+    section for section in @sections() when section.active()
 
   ready: ->
     # Chapter is ready when all its sections are ready.
     conditions = _.flattenDeep [
       super
-      (section.ready() for section in @sections)
+      (section.ready() for section in @sections())
     ]
 
     _.every conditions

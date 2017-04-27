@@ -35,7 +35,7 @@ class HQ.Cafe extends LOI.Adventure.Location
 
   things: -> [
     @constructor.Artworks
-    PAA.Cast.Burra
+    HQ.Actors.Burra
   ]
 
   exits: ->
@@ -56,7 +56,7 @@ class HQ.Cafe extends LOI.Adventure.Location
       @initialize()
 
       initialize: ->
-        @setCurrentThings burra: PAA.Cast.Burra
+        @setCurrentThings burra: HQ.Actors.Burra
 
         @setCallbacks
           OpenRetronatorMagazine: (complete) =>
@@ -77,7 +77,7 @@ class HQ.Cafe extends LOI.Adventure.Location
       @script = @scripts[@constructor.Script.id()]
 
     onCommand: (commandResponse) ->
-      return unless burra = LOI.adventure.getCurrentThing PAA.Cast.Burra
+      return unless burra = LOI.adventure.getCurrentThing HQ.Actors.Burra
       @script.setThings {burra}
 
       commandResponse.onPhrase

@@ -31,22 +31,23 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
     # Move the player to caltrain on start.
     @autorun (computation) =>
-      return unless LOI.adventure.gameState()
-      computation.stop()
+      return unless @active() and not @finished()
 
       movedToCaltrain = @state 'movedToCaltrain'
 
       return if movedToCaltrain
 
-      LOI.adventure.goToLocation SanFrancisco.Soma.Caltrain
+      # Force the move so that exit responses are not called.
+      LOI.adventure.currentLocationId SanFrancisco.Soma.Caltrain.id()
       LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
       @state 'movedToCaltrain', true
 
+  onRendered: ->
+    super
+
     # Finish intro.
     @autorun (computation) =>
-      return unless LOI.adventure.gameState()
-      return unless LOI.adventure.ready()
-      computation.stop()
+      return unless @active() and not @finished()
 
       fadeOutDone = @state 'fadeOutDone'
       return if fadeOutDone
@@ -55,6 +56,11 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
         @state 'fadeOutDone', true
       ,
         1000
+
+  destroy: ->
+    super
+
+    console.log "C2 destroy"
 
   fadeVisibleClass: ->
     'visible' unless @state 'fadeOutDone'

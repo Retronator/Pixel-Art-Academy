@@ -24,5 +24,5 @@ class C2.Immersion extends LOI.Adventure.Section
     @requireFinishedSections C2.Intro
 
   @finished: ->
-    # Immersion section ends when you enter the construct. Make sure you don't return undefined.
-    LOI.Construct.Loading.state('visited') is true
+    # Immersion section ends when you complete the immersion script. Make sure you don't return undefined.
+    @state('completed') is true
