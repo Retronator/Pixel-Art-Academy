@@ -81,6 +81,10 @@ class LOI.Adventure extends LOI.Adventure
     # schedule) we create a game state variable that is changed every time the game state gets updated locally, as
     # well as from the database (new document coming from @_gameStateProvider).
     @gameState = new ComputedField =>
+      # Wait until adventure is initialized before returning anything
+      # since state objects also don't return anything prior to that.
+      return unless LOI.adventureInitialized()
+
       _gameStateUpdatedDependency.depend()
       _gameStateProvider()
 
@@ -133,26 +137,50 @@ class LOI.Adventure extends LOI.Adventure
         databaseState = LOI.GameState.documents.findOne 'user._id': user._id
 
         if databaseState
-          # Move user to the last location saved to the state. We do this only on load so that multiple players using
-          # the same account can move independently, at least inside the current session (they will get synced again on
-          # reload).
+          # Move user to the last location and timeline saved to the state. We do this only on load so that multiple
+          # players using the same account can move independently, at least inside the current session (they will get
+          # synced again on reload).
           LOI.adventure.currentLocationId databaseState.state.currentLocationId
+          LOI.adventure.currentTimelineId databaseState.state.currentTimelineId
+
+          LOI.adventure.menu.signIn.activatable.deactivate()
 
         else
-          # TODO: Show dialog informing the user we're saving the local game state.
-          console.warn "This account does not have a save game yet. Your current state will be set as the save game for it."
-          LOI.GameState.insertForCurrentUser LOI.adventure.localGameState.state(), =>
-            # Now that the local state has been transferred, clear it for next player.
-            LOI.adventure.clearLocalGameState()
+          # Show dialog informing the user we're saving the local game state.
+          dialog = new LOI.Components.Dialog
+            message: "
+              The account you loaded doesn't have a save game yet.
+              Do you want to save your current game position to it?
+            "
+            buttons: [
+              text: "Save game"
+              value: true
+            ,
+              text: "Cancel"
+            ]
 
-        LOI.adventure.menu.signIn.activatable.deactivate()
+          LOI.adventure.showActivatableModalDialog
+            dialog: dialog
+            callback: =>
+              if dialog.result
+                # The player has confirmed to use the local state for the loaded account.
+                LOI.GameState.insertForCurrentUser LOI.adventure.localGameState.state(), =>
+                  # Now that the local state has been transferred, clear it for next player.
+                  LOI.adventure.clearLocalGameState()
+
+              else
+                # The player canceled. Log them out since we shouldn't continue without a game state.
+                Meteor.logout()
+
+              LOI.adventure.menu.signIn.activatable.deactivate()
 
     # Set sign in dialog to show sign in (and not create account) by default:
     Accounts._loginButtonsSession.set 'inSignupFlow', false
     Accounts._loginButtonsSession.set 'inForgotPasswordFlow', false
 
-    LOI.adventure.menu.showModalDialog
+    LOI.adventure.showActivatableModalDialog
       dialog: LOI.adventure.menu.signIn
+      dontRender: true
       callback: =>
         # User has returned from the load screen.
         userAutorun.stop()
@@ -171,12 +199,33 @@ class LOI.Adventure extends LOI.Adventure
         databaseState = LOI.GameState.documents.findOne 'user._id': user._id
 
         if databaseState
-          # TODO: Show dialog informing the user that the account already has a game state and it will be overwriting it.
-          console.warn "This account already has a save game. Your current state will overwrite it."
+          # Show dialog informing the user that the account already has a game state and it will be overwriting it.
+          dialog = new LOI.Components.Dialog
+            message: "
+              The account you selected already has a save game.
+              Do you want to overwrite it with your current game position?
+            "
+            buttons: [
+              text: "Overwrite"
+              value: true
+            ,
+              text: "Cancel"
+            ]
 
-          LOI.GameState.replaceForCurrentUser LOI.adventure.localGameState.state(), =>
-            # Now that the local state has been transferred, clear it for next player.
-            LOI.adventure.clearLocalGameState()
+          LOI.adventure.showActivatableModalDialog
+            dialog: dialog
+            callback: =>
+              if dialog.result
+                # The player has confirmed to use the local state for the loaded account.
+                LOI.GameState.replaceForCurrentUser LOI.adventure.localGameState.state(), =>
+                  # Now that the local state has been transferred, clear it for next player.
+                  LOI.adventure.clearLocalGameState()
+
+              else
+                # The player canceled. Log them out since we shouldn't store our game state there.
+                Meteor.logout()
+
+              LOI.adventure.menu.signIn.activatable.deactivate()
 
         else
           # Insert the current local state as the state for this (new) user.
@@ -184,14 +233,15 @@ class LOI.Adventure extends LOI.Adventure
             # Now that the local state has been transferred, clear it for next player.
             LOI.adventure.clearLocalGameState()
 
-        LOI.adventure.menu.signIn.activatable.deactivate()
+          LOI.adventure.menu.signIn.activatable.deactivate()
 
     # Set sign in dialog to show create account (and not sign in) by default:
     Accounts._loginButtonsSession.set 'inSignupFlow', true
     Accounts._loginButtonsSession.set 'inForgotPasswordFlow', false
 
-    LOI.adventure.menu.showModalDialog
+    LOI.adventure.showActivatableModalDialog
       dialog: LOI.adventure.menu.signIn
+      dontRender: true
       callback: =>
         # User has returned from the load screen.
         userAutorun.stop()

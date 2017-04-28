@@ -18,7 +18,6 @@ Package.onUse(function(api) {
 
   api.addFile('items');
 
-  // Actors
-
   api.addThing('bottle/bottle');
+  api.addFile('bottle/scene');
 });

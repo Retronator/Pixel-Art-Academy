@@ -43,7 +43,13 @@
     </table>
     {{#if $lt emailsCount 5}}
       <p class="smallprint">Primary email is used for contacting you.</p>
-      <p class="smallprint">For your purchases to be applied, email must be entered and verified.</p>
+      {{#if emailsCount}}
+        {{#if hasUnverifiedEmails}}
+          <p class="smallprint">Verify your email by clicking on the red verified field.</p>
+        {{/if}}
+      {{else}}
+        <p class="smallprint">For your purchases to be applied, email must be entered and verified.</p>
+      {{/if}}
     {{/if}}
   </div>
 </template>

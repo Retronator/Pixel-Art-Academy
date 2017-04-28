@@ -5,7 +5,7 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C2.Immersion.Room extends LOI.Adventure.Location
+class C2.Immersion.Room extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter2.Immersion.Room'
   @location: -> HQ.LandsOfIllusions.Room
 
@@ -42,7 +42,9 @@ class C2.Immersion.Room extends LOI.Adventure.Location
 
         complete()
 
+      ActivateHeadset: (complete) => HQ.LandsOfIllusions.Room.activateHeadsetCallback complete
       PlugIn: (complete) => HQ.LandsOfIllusions.Room.plugInCallback complete
+      DeactivateHeadset: (complete) => HQ.LandsOfIllusions.Room.deactivateHeadsetCallback complete
 
   # Listener
 
@@ -71,7 +73,7 @@ class C2.Immersion.Room extends LOI.Adventure.Location
         @startScript label: 'SelfStart'
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.SitIn, chair.avatar]
+      form: [[Vocabulary.Keys.Verbs.SitIn, Vocabulary.Keys.Verbs.Use], chair.avatar]
       priority: 1
       action: => action()
 

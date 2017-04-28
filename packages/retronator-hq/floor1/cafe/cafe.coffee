@@ -7,6 +7,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Cafe extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Cafe'
   @url: -> 'retronator/cafe'
+  @region: -> HQ
 
   @version: -> '0.0.1'
 
@@ -14,10 +15,10 @@ class HQ.Cafe extends LOI.Adventure.Location
   @shortName: -> "café"
   @description: ->
     "
-      The cosy café has plenty of tables and you recognize some familiar faces from the Pixel Art Academy Facebook
-      group. The north wall displays a selection of artworks from the current featured pixel artist. In the south
+      The cosy café has a handful of tables with artsy folks occupying most of them.
+      The north wall displays a selection of artworks from the current featured pixel artist. In the south
       there is a self-serve bar and Burra's carefully decorated workstation. A passageway connects to the coworking space
-      in the west, and there are big steps with stairs heading up to the store.
+      in the west, and there are big stairs heading up to the store.
     "
 
   @listeners: ->
@@ -34,12 +35,13 @@ class HQ.Cafe extends LOI.Adventure.Location
 
   things: -> [
     @constructor.Artworks
-    PAA.Cast.Burra
+    HQ.Actors.Burra
   ]
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Up}": HQ.Store
     "#{Vocabulary.Keys.Directions.West}": HQ.Coworking
+    "#{Vocabulary.Keys.Directions.East}": SanFrancisco.Soma.SecondStreet
     "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.SecondStreet
 
   class @BurraListener extends LOI.Adventure.Listener
@@ -54,7 +56,7 @@ class HQ.Cafe extends LOI.Adventure.Location
       @initialize()
 
       initialize: ->
-        @setCurrentThings burra: PAA.Cast.Burra
+        @setCurrentThings burra: HQ.Actors.Burra
 
         @setCallbacks
           OpenRetronatorMagazine: (complete) =>
@@ -66,10 +68,6 @@ class HQ.Cafe extends LOI.Adventure.Location
               complete()
               $(window).off '.medium'
 
-          ReceiveProspectus: (complete) =>
-            HQ.Items.Prospectus.state 'inInventory', true
-            complete()
-
     @initialize()
 
     startScript: (options) ->
@@ -79,7 +77,7 @@ class HQ.Cafe extends LOI.Adventure.Location
       @script = @scripts[@constructor.Script.id()]
 
     onCommand: (commandResponse) ->
-      return unless burra = LOI.adventure.getCurrentThing PAA.Cast.Burra
+      return unless burra = LOI.adventure.getCurrentThing HQ.Actors.Burra
       @script.setThings {burra}
 
       commandResponse.onPhrase

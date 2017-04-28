@@ -39,6 +39,11 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
 
     'checked' if email.address is @user().contactEmail
 
+  hasUnverifiedEmails: ->
+    unverifiedEmails = _.filter @user().registered_emails, (email) => not email.verified
+
+    unverifiedEmails.length
+
   # Events
 
   events: ->
@@ -50,7 +55,19 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
   onClickVerifyEmail: (event) ->
     email = @currentData()
 
-    Meteor.call RA.User.sendVerificationEmail, email.address
+    Meteor.call RA.User.sendVerificationEmail, email.address, (error) =>
+      if error
+        message = "Whoops, something went wrong with sending the verification email. Please email me at hi@retronator.com to resolve this."
+
+      else
+        message = "A verification email has been sent to #{email.address}. Click the link in the email to complete verification."
+
+      LOI.adventure.showActivatableModalDialog
+        dialog: new LOI.Components.Dialog
+          message: message
+          buttons: [
+            text: "OK"
+          ]
 
   onChangeAddressInput: (event) ->
     email = @currentData()
@@ -67,7 +84,6 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
   onChangePrimaryInput: (event) ->
     primaryAddress = @$('.primary-input:checked').val()
 
-    console.log "primary", primaryAddress
     Meteor.call RA.User.setPrimaryEmail, primaryAddress
 
   # Components

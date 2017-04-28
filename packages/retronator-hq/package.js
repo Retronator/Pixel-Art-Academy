@@ -24,6 +24,11 @@ Package.onUse(function(api) {
 
   api.addFile('actors/actors');
   api.addFile('actors/operator');
+  api.addFile('actors/aeronaut');
+  api.addFile('actors/burra');
+  api.addFile('actors/corinne');
+  api.addFile('actors/retro');
+  api.addFile('actors/shelley');
 
   // Items
 
@@ -38,6 +43,14 @@ Package.onUse(function(api) {
   api.addComponent('items/receipt/receipt');
 
   api.addFile('items/account/account');
+  api.addFile('items/keycard/keycard');
+
+  // Scenes
+  
+  api.addFile('scenes/scenes');
+  
+  api.addThing('scenes/intercom');
+  api.addThing('scenes/shelley');
 
   // Locations
 

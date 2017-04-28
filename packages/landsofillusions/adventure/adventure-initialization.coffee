@@ -35,10 +35,11 @@ class LOI.Adventure extends LOI.Adventure
     @director = new LOI.Director
 
     @_initializeState()
-    @_initializeCurrentLocation()
+    @_initializeLocation()
+    @_initializeTimeline()
     @_initializeActiveItem()
-    @_initializeInventory()
     @_initializeEpisodes()
+    @_initializeInventory()
     @_initializeThings()
     @_initializeListeners()
     @_initializeTime()

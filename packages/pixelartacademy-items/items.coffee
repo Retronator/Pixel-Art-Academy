@@ -1,7 +1,14 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Items
+class PAA.Items extends LOI.Adventure.Global
+  @id: -> 'PixelArtAcademy.Items'
+
+  @scenes: -> [
+    @Bottle.Scene
+  ]
+
+  @initialize()
 
 if Meteor.isServer
   LOI.initializePackage

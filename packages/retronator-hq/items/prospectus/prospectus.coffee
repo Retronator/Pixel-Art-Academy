@@ -30,7 +30,7 @@ class HQ.Items.Prospectus extends LOI.Adventure.Item
     prospectus = @options.parent
 
     commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookAt], prospectus.avatar]
+      form: [[Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Read], prospectus.avatar]
       priority: 1
       action: =>
         LOI.adventure.goToItem prospectus

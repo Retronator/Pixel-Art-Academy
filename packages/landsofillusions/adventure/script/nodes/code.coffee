@@ -140,7 +140,8 @@ class Script.Nodes.Code extends Script.Node
 
     # Add provided things as shorthands to script state.
     if @script.things
-      for shorthand, thing of @script.things
+      # We make sure things are really Things because sometimes avatars are set instead of full instances.
+      for shorthand, thing of @script.things when thing instanceof LOI.Adventure.Thing
         transferThingToState thing, _scriptState, shorthand
 
     console.log "Evaluating code node", @, "with states:", _globalState, _locationState, _scriptState, _ephemeralState if LOI.debug

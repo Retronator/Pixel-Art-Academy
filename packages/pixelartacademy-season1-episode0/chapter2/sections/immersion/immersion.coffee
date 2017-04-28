@@ -19,3 +19,10 @@ class C2.Immersion extends LOI.Adventure.Section
   @initialize()
 
   @userProblemMessage = 'Retronator.HQ.LandsOfIllusions.userProblemMessage'
+
+  active: ->
+    @requireFinishedSections C2.Intro
+
+  @finished: ->
+    # Immersion section ends when you complete the immersion script. Make sure you don't return undefined.
+    @state('completed') is true

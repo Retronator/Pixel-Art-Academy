@@ -9,6 +9,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
   @id: -> 'Retropolis.Spaceport.AirportTerminal.Terrace'
   @url: -> ''
+  @region: -> RS
 
   @register @id()
   template: -> @constructor.id()
@@ -56,7 +57,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.South}": RS.AirportTerminal.Concourse
+    "#{Vocabulary.Keys.Directions.East}": RS.AirportTerminal.Concourse
     "#{Vocabulary.Keys.Directions.In}": RS.AirportTerminal.Concourse
 
   isLandingPage: ->

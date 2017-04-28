@@ -6,8 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class Soma.MosconeCenter extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.Soma.MosconeCenter'
   @url: -> 'sf/moscone-center'
-  @scriptUrls: -> [
-  ]
+  @region: -> Soma
 
   @version: -> '0.0.1'
 

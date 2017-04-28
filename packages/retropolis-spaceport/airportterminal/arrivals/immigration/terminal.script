@@ -20,11 +20,13 @@ terminal:
     
 -> [End]
 
-## PassportShown
+## LetterShown
 
 terminal: 
     So far you have presented: acceptance letter.
     Please also present: passport.
+    
+-> [End]
 
 ## ShowPassport
 

@@ -6,6 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Basement extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Basement'
   @url: -> 'retronator/basement'
+  @region: -> HQ
 
   @version: -> '0.0.1'
 
@@ -14,7 +15,7 @@ class HQ.Basement extends LOI.Adventure.Location
   @description: ->
     "
       You exit to the basement with a long hallway connecting to the Lands of Illusions virtual reality center in the 
-      east. Big windows along north wall let you see into the Idea Garden where Retro designs new
+      east. Big windows along the north wall let you see into the Idea Garden where Retro designs new
       features. There is a small reception desk near the entrance.
     "
   
@@ -40,7 +41,7 @@ class HQ.Basement extends LOI.Adventure.Location
       floor: -1
     ,
       "#{Vocabulary.Keys.Directions.Up}": HQ.Coworking
-      "#{Vocabulary.Keys.Directions.East}": HQ.LandsOfIllusions
+      "#{Vocabulary.Keys.Directions.East}": HQ.LandsOfIllusions.Hallway
 
   initializeScript: ->
     @setCurrentThings

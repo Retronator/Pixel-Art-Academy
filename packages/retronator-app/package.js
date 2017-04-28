@@ -27,10 +27,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-hq');
   api.use('retronator:retronator-residence');
   api.use('retronator:retronator-landsofillusions');
-
-  /*
   api.use('retronator:landsofillusions-construct');
-  api.use('retronator:construct');*/
   
   // Routing portion, fork from force-ssl.
   api.use('webapp', 'server');

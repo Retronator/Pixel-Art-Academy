@@ -8,7 +8,7 @@ class C1.Immigration.Concourse extends LOI.Adventure.Scene
   @location: -> RS.AirportTerminal.Concourse
 
   @intro: -> "
-    The airport terminal is small and cozy with only a few dozen
+    The airport terminal is quiet and cozy with only a few dozen
     people heading from airplanes towards immigration in the east.
   "
 

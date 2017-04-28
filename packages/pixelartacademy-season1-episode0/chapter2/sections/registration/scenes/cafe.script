@@ -94,7 +94,7 @@ burra:
 
 burra: You started it.
     
-* Yeah, I guess I did.
+* I guess I did.
 
 burra: So …
 
@@ -210,13 +210,26 @@ burra:
 
 burra:
     I see you already bought the game. Thank you so much for your support!
-    Go ![west](west) through the coworking space and down to the basement where you can enter Lands of Illusions.
+    Go ![west](west) through the coworking space and ![down](down) to the basement where you can enter Lands of Illusions.
 
 ## EndConversation
 
 * Awesome, I will do that!
 
-burra: Let me know if you need anything else. See you around.
+> Burra hands you a keycard.
+
+burra: It's dangerous to go alone! Take this.
+    
+### ReceiveKeycard
+
+burra:
+    You'll need it to validate your access to different parts of the headquarters.
+    Let me know if you need anything else. See you around.
+
+> You store the keycard in your account folder.
+
+* Thanks, laters!
+* See you!
 
 -> [End]
 

@@ -11,8 +11,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
     sideMargin = gridSpacing
     lineHeight = gridSpacing
 
-    location = LOI.adventure.currentLocation()
-    illustrationHeight = (location.illustrationHeight() or 0) * scale
+    situation = LOI.adventure.currentSituation()
+    illustrationHeight = (situation.illustrationHeight.last() or 0) * scale
 
     $textInterface = $('.adventure .text-interface')
     $ui = $textInterface.find('.ui')

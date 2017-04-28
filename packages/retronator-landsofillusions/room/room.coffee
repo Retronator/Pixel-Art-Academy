@@ -7,6 +7,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.LandsOfIllusions.Room'
   @url: -> 'retronator/landsofillusions/room'
+  @region: -> HQ.LandsOfIllusions
 
   @version: -> '0.0.1'
 
@@ -32,12 +33,25 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.South}": HQ.LandsOfIllusions
-    "#{Vocabulary.Keys.Directions.Out}": HQ.LandsOfIllusions
+    "#{Vocabulary.Keys.Directions.South}": HQ.LandsOfIllusions.Hallway
+    "#{Vocabulary.Keys.Directions.Out}": HQ.LandsOfIllusions.Hallway
+
+  @activateHeadsetCallback: (complete) =>
+    chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
+    chair.activate()
+
+    complete()
+
+  @deactivateHeadsetCallback: (complete) =>
+    chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
+    chair.deactivate()
+
+    complete()
 
   @plugInCallback: (complete) =>
     # Start Lands of Illusions VR Experience.
-    LOI.adventure.goToItem HQ.LandsOfIllusions.Room.Chair
+    chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
+    chair.plugIn()
 
     complete()
 
@@ -50,7 +64,9 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
       operator: operator
       
     @setCallbacks
+      ActivateHeadset: (complete) => HQ.LandsOfIllusions.Room.activateHeadsetCallback complete
       PlugIn: (complete) => HQ.LandsOfIllusions.Room.plugInCallback complete
+      DeactivateHeadset: (complete) => HQ.LandsOfIllusions.Room.deactivateHeadsetCallback complete
 
   # Listener
         
@@ -61,7 +77,7 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
       @startScript label: 'SelfStart'
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.SitIn, chair.avatar]
+      form: [[Vocabulary.Keys.Verbs.SitIn, Vocabulary.Keys.Verbs.Use], chair.avatar]
       action: => sitInChair()
 
     commandResponse.onPhrase

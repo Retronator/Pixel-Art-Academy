@@ -4,23 +4,54 @@ LOI = LandsOfIllusions
 class LOI.Adventure.Section extends LOI.Adventure.Thing
   @scenes: -> throw new AE.NotImplementedException
 
-  @fullName: -> "" # Sections don't need to be named.
+  @fullName: -> null # Sections don't need to be named.
 
   @finished: -> false # Override to set goal state conditions.
   finished: -> @constructor.finished()
 
+  @timelineId: -> # Override to set a default timeline for scenes.
+  timelineId: ->
+    # By default we use the timeline of the chapter.
+    @constructor.timelineId() or @options?.parent?.timelineId()
+  
   constructor: (@options) ->
     super
 
-    @chapter = @options.chapter
+    @chapter = @options.parent if @options?.parent instanceof LOI.Adventure.Chapter
 
-    @scenes = for sceneClass in @constructor.scenes()
-      new sceneClass section: @
+    # Cached field to minimize reactivity.
+    @_active = new ComputedField =>
+      @active()
+    ,
+      true
+
+    @scenes = new ReactiveField []
+
+    @autorun (computation) =>
+      # Create scenes JIT when section becomes active.
+      active = @_active()
+
+      # Destroy previous set of scenes.
+      Tracker.nonreactive =>
+        console.log "Destroyed scenes for", @id() if LOI.debug and @scenes().length
+        scene.destroy() for scene in @scenes()
+
+        if active
+          scenes = for sceneClass in @constructor.scenes()
+            new sceneClass parent: @
+
+          console.log "Created scenes for", @id() if LOI.debug
+
+        else
+          scenes = []
+
+        # Set the new scenes.
+        @scenes scenes
 
   destroy: ->
     super
 
-    scene.destroy() for scene in @scenes
+    scene.destroy() for scene in @scenes()
 
   active: ->
     @_activeUntilFinished()

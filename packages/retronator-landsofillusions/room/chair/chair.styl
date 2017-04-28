@@ -6,11 +6,22 @@
   position fixed !important
   transition background 4s
   background rgba(255,255,255,0)
+  pointer-events none
 
-  &.activated
+  &.pluggedIn
     background rgba(255,255,255,1)
 
   .landsofillusions-components-overlay
     .crop-bar
     .background
       background none
+
+    .safe-area
+      pointer-events none
+
+      .cube
+        position absolute
+        left 135rem
+        top 95rem
+        width 50rem
+        height 50rem

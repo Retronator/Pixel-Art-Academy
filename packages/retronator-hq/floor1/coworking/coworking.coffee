@@ -7,6 +7,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Coworking extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Coworking'
   @url: -> 'retronator/coworking'
+  @region: -> HQ
 
   @version: -> '0.0.1'
 
@@ -30,7 +31,7 @@ class HQ.Coworking extends LOI.Adventure.Location
       floor: 1
 
   things: -> [
-    PAA.Cast.Reuben
+    HQ.Actors.Aeronaut
     @elevatorButton
   ]
 

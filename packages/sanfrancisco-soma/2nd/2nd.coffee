@@ -6,8 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class Soma.SecondStreet extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.Soma.SecondStreet'
   @url: -> 'sf/2nd-street'
-  @scriptUrls: -> [
-  ]
+  @region: -> Soma
 
   @version: -> '0.0.1'
 
@@ -15,8 +14,8 @@ class Soma.SecondStreet extends LOI.Adventure.Location
   @description: ->
     "
       You find yourself on 2nd Street in San Francisco. Companies such as LinkedIn and Zipcar have offices here …
-      as well as Retronator. Retronator headquarters sport a café, store, gallery and a coworking space. It's all very
-      enticing and inviting you to ![go in](in).
+      as well as Retronator. Retronator headquarters holds a café, store, gallery and a coworking space. It's all very
+      enticing and inviting you to go ![in](in).
     "
   
   @initialize()

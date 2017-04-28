@@ -2,15 +2,15 @@
   <div class="landsofillusions-components-account-inventory {{otherSideClass}}">
     {{#unless otherSide}}
       <h2>Inventory</h2>
-      {{#if items.length}}
-        <p>You are the proud owner of:</p>
-      {{else}}
-        <p>You don't own any items yet.</p>
-        <p>You can buy things in the Retronator HQ shop in the game.</p>
-        <p class="smallprint">
+      <p>You are the proud owner of:</p>
+      {{#unless items.length}}
+        <ul class="items">
+          <li class="item">This lonely access keycard. You can buy other things in Retronator HQ shop in the game.</li>
+        </ul>
+        <p class="smallprint bottom">
           Make sure you verified your email if you think you're missing purchases.
         </p>
-      {{/if}}
+      {{/unless}}
     {{/unless}}
     {{#if displayedPixelArtAcademyItems}}
       <p class="category">Pixel Art Academy</p>
@@ -42,15 +42,13 @@
         {{/if}}
       </ul>
     {{/if}}
-    {{#if keycardClass}}
-      <img class="clamp" src="{{image '/landsofillusions/components/account/wide-clamp-right.png'}}" />
-      {{#unless otherSide}}
-        <div class="keycard {{keycardClass}}">
-          <div class="name">{{currentUser.displayName}}</div>
-          <img class="card" src="{{image keycardImage}}" />
-        </div>
-      {{/unless}}
-    {{/if}}
+    <img class="clamp" src="{{image '/landsofillusions/components/account/wide-clamp-right.png'}}" />
+    {{#unless otherSide}}
+      <div class="keycard {{keycardClass}}">
+        <div class="name">{{currentUser.displayName}}</div>
+        <img class="card" src="{{image keycardImage}}" />
+      </div>
+    {{/unless}}
     {{#if showTurn}}
       <button class="turn">
         {{#if otherSide}}

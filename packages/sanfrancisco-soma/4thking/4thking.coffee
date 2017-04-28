@@ -6,8 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class Soma.FourthAndKing extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.Soma.FourthAndKing'
   @url: -> 'sf/4th-and-king'
-  @scriptUrls: -> [
-  ]
+  @region: -> Soma
 
   @version: -> '0.0.1'
 
@@ -15,7 +14,7 @@ class Soma.FourthAndKing extends LOI.Adventure.Location
   @shortName: -> "4th and King"
   @description: ->
     "
-      You are at the San Francisco 4th and King Street Caltrain railroad station.
+      You are at the San Francisco 4th and King Street Caltrain station.
       There is not much to do in this part of the city. Downtown skyscrapers seem more enticing
       and can be reached by traveling northwest on 4th street.
     "

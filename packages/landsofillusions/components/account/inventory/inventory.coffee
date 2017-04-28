@@ -179,7 +179,8 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
     for keycardClass, keycardKey of keycards
       return keycardClass if user.hasItem keycardKey
 
-    null
+    # Otherwise return the default player keycard.
+    'default'
 
   keycardImage: ->
     @versionedUrl "/landsofillusions/components/account/inventory/keycards/#{@keycardClass()}.png"

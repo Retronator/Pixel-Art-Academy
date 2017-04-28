@@ -5,8 +5,9 @@ PAA = PixelArtAcademy
 Vocabulary = LOI.Parser.Vocabulary
 
 class HQ.GalleryEast extends LOI.Adventure.Location
-  @id: -> 'Retronator.HQ.EastGallery'
+  @id: -> 'Retronator.HQ.GalleryEast'
   @url: -> 'retronator/gallery/east'
+  @region: -> HQ
 
   @version: -> '0.0.1'
 
@@ -22,8 +23,7 @@ class HQ.GalleryEast extends LOI.Adventure.Location
   @initialize()
 
   things: -> [
-    PAA.Cast.Corinne
-    PAA.Cast.Shelley
+    HQ.Actors.Corinne
   ]
 
   exits: ->
