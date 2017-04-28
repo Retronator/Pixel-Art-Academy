@@ -19,9 +19,6 @@ class LOI.Director
 
         @queuedScriptNodes queuedScriptNodes
 
-  onCreated: ->
-    super
-
   startScript: (script, options = {}) ->
     if options.label
       startNode = script.startNode.labels[options.label]

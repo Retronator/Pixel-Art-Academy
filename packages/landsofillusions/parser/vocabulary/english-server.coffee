@@ -26,7 +26,7 @@ phrases =
     Press: ['press', 'push']
     Read: ['read']
     WhatIs: ['what is']
-    WhatIs: ['who is']
+    WhoIs: ['who is']
     Get: ['get', 'take', 'pick up']
     SitDown: ['sit down']
     SitIn: ['sit in']

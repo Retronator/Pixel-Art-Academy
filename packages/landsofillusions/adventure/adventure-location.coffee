@@ -19,6 +19,9 @@ class LOI.Adventure extends LOI.Adventure
       Tracker.nonreactive =>
         @_currentLocation?.destroy()
 
+        # Clear any running scripts.
+        LOI.adventure.director.stopAllScripts()
+
         currentLocationClass = LOI.Adventure.Location.getClassForId currentLocationId
 
         # If we don't have a location set (or if it's not found), start at the default location.
