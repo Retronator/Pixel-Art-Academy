@@ -4,8 +4,8 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C2.Shopping.Store extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter2.Shopping.Store'
+class C2.Store extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter2.Store'
 
   @location: -> HQ.Store
 

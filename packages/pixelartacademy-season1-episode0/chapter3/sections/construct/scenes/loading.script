@@ -30,7 +30,7 @@ captain:
 ## IntroQuestions
 
 * My character … It'll be an AI program? -> [Character]
-* Couldn't I just inhabit my own avatar? -> [Avatar] `Character`
+* Why an AI agent and not just me in avatar form? -> [Avatar] `Character`
 * I could just create a character like myself. -> [SelfAvatar] `Avatar`
 * How do I get out of here? -> [HowToExit]
 * Alright, let's get this started. -> [GetStarted]
@@ -40,7 +40,7 @@ captain:
 captain: 
     Yes. However, we are on the brink of strong AI. 
     The characters we make are pretty much alive, depending on your definition of alive.
-    If alive means you can perceive the world and act upon it with free will, then our characters are just as alive as you are.
+    If alive means they can perceive the world and act upon it with free will, then our characters are just as alive as you are.
     
 * But they don't live in the real world. -> [RealWorld]
 * They have free will? -> [FreeWill]

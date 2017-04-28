@@ -28,6 +28,7 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
     super
 
     @inventory = new @constructor.Inventory parent: @
+    @store = new @constructor.Store parent: @
 
     # Move the player to caltrain on start.
     @autorun (computation) =>
@@ -60,8 +61,6 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
   destroy: ->
     super
 
-    console.log "C2 destroy"
-
   fadeVisibleClass: ->
     'visible' unless @state 'fadeOutDone'
 
@@ -71,4 +70,5 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
   scenes: -> [
     @inventory
+    @store
   ]

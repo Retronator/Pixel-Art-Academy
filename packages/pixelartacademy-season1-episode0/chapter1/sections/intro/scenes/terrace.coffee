@@ -11,7 +11,7 @@ class C1.Intro.Terrace extends LOI.Adventure.Scene
   @translations: ->
     intro: "
       You exit the Retropolis International Spaceport.
-      A magnificent view of the city opens before you and you feel the adventure in the air.
+      A magnificent view of the city opens before you and you feel adventure in the air.
       The terrace you're standing on connects back to the airport terminal in the east.
     "
 
@@ -96,9 +96,6 @@ class C1.Intro.Terrace extends LOI.Adventure.Scene
     scene._animateTitle()
 
   _animateTitle: ->
-    console.log "animating title"
-    console.trace()
-
     # We add ourselves as a modal dialog to prevent user input.
     @dontRenderAsDialog = true
     LOI.adventure.addModalDialog

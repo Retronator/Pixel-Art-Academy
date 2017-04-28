@@ -222,11 +222,14 @@ burra: It's dangerous to go alone! Take this.
     
 ### ReceiveKeycard
 
-> You store the keycard in your account folder.
-
 burra:
     You'll need it to validate your access to different parts of the headquarters.
     Let me know if you need anything else. See you around.
+
+> You store the keycard in your account folder.
+
+* Thanks, laters!
+* See you!
 
 -> [End]
 

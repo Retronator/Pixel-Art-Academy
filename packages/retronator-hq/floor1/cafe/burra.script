@@ -11,7 +11,7 @@ burra: `_End`
 
 ## MainQuestion
 
-* What is this place? -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
+* I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
 * What is this place again? -> [RetronatorHQ] `RetronatorHQDepartments`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
 * Can I order a sandwich? -> [Sandwich]
@@ -81,12 +81,11 @@ burra:
     Pixel Art Academy is a video game that teaches you how to draw! 
     Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist.
     
-* Groovy!
 * Can I play yet?
 
 burra:
-    It's in development currently, but you can pre-order it in the store above if you want to support it.
-    Oh, and check out the school prospectus in your inventory if you haven't yet.
+    The game is in development currently, but you can pre-order it in the store above if you want to support it.
+    Oh, and I see you have a school prospectus in your inventory. You can read it to get a taste.
     
 -> [MainQuestion]
 
@@ -123,18 +122,18 @@ burra: What? Make it yourself.
 
 burra: 
     Sudo make it yourself.
-    This isn't exactly your usual café.
+    This isn't exactly your usual café—you're at Retronator HQ. 
     
 -> [Cafe]
 
 ## ExplainCafe
 
-burra: Yes, but you're not in a usual café. 
+burra: Yes, but you're not in a usual café—you're at Retronator HQ!
     
 ## Cafe
 
 burra:
-    It's part of our coworking space and the bar and kitchen are open to our members. So really, just help yourself.
+    The Café is part of our coworking space and the bar and kitchen are open to our members. So really, just help yourself.
     
 -> [MainQuestion]
 

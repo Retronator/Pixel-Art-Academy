@@ -34,7 +34,7 @@ conductor: No problem, have a good day.
 
 ## GetUp
 
-> You get up from your seat, remembering why you're here: to find out more about the game Pixel Art Academy.
+> You get up from your seat. In your pocket you have a school prospectus and you remember why you're here: to find out more about the game Pixel Art Academy.
 
 `scene.talkDone = true`
 
@@ -66,7 +66,7 @@ conductor: Oh, are you here to visit Retronator? I think their headquarters is l
 ## SOMA
 
 conductor: 
-    That's short for South of Market. You're new to SF aren't you? I mean … San Francisco. We say SF for short.
+    That's short for South of Market. You're new to SF aren't you? … Oh, I mean San Francisco. We say SF for short.
     Market street is the main street going through downtown. SOMA is the area south of that street, where you are now.
     
 -> [ConductorQuestions]

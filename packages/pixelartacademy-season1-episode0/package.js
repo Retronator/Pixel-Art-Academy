@@ -68,6 +68,7 @@ Package.onUse(function(api) {
 
   api.addComponent('chapter2/chapter2');
   api.addFile('chapter2/inventory');
+  api.addFile('chapter2/store');
 
   api.addFile('chapter2/actors/actors');
   api.addFile('chapter2/actors/conductor');
@@ -90,8 +91,6 @@ Package.onUse(function(api) {
   // Shopping
 
   api.addFile('chapter2/sections/shopping/shopping');
-
-  api.addFile('chapter2/sections/shopping/scenes/store');
 
   // Immersion
 
