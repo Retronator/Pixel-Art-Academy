@@ -6,7 +6,7 @@ burra: `not _End`
     How can I help you today?
 
 burra: `_End`
-    Can I help you with anything else? `_answered`
+    Anything else? `_answered`
     Hi again! `not _answered`
 
 ## MainQuestion
@@ -94,8 +94,8 @@ burra:
 ## PixelArtAcademyCourse
 
 burra:
-    Not really. It's not a course with an instructor that you have to follow at certain times.
-    Pixel Art Academy is first and foremost a videogame, but what your character learns you learn with them.
+    Not really. Pixel Art Academy is first and foremost a video game, but what your character learns you learn with them.
+    It's not a course with an instructor that you have to follow at certain times.
     You will get assignments in the game and you'll have to draw to complete them.
     Characters in the game world will also point you to online learning materials based on your needs.
     
@@ -133,7 +133,7 @@ burra: Yes, but you're not in a usual café—you're at Retronator HQ!
 ## Cafe
 
 burra:
-    The Café is part of our coworking space and the bar and kitchen are open to our members. So really, just help yourself.
+    The Café is part of our coworking space and the bar and kitchen are open to our members. So really, just help yourself to glorious tea.
     
 -> [MainQuestion]
 

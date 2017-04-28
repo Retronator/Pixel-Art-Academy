@@ -55,7 +55,7 @@ burra:
 
 ## ReceiveAccountUser
 
-burra: Alright, I've already prepared an account for you.
+burra: Alright, I'll just grab your file.
 
 > Burra searches the file cabinet under the counter and hands you a document folder.
 
@@ -101,7 +101,7 @@ burra: So …
 ## BlowMind
 
 burra:
-    You can do many things in Retronator HQ without saving: talk to Retro, visit the gallery, see featured artists …
+    You can do many things in Retronator HQ without saving: visit the Gallery, See featured artists … Oh and you can talk to Retro.
     But if you want to play Pixel Art Academy, your game needs to be saved.
     
 * Right …
@@ -172,7 +172,7 @@ burra:
 
 ## SignInThanks
 
-burra: No problem. Ready to save now?
+burra: No problem. But not to sound like The Paperclip—Ready to save now?
 
 * Yes, let's do this. -> [SignIn]
 * Maybe later. -> [MaybeLater]
@@ -218,12 +218,12 @@ burra:
 
 > Burra hands you a keycard.
 
-burra: It's dangerous to go alone! Take this.
+burra: It's dangerous to go alone! Take this. <!-- Zelda reference -->
     
 ### ReceiveKeycard
 
 burra:
-    You'll need it to validate your access to different parts of the headquarters.
+    You'll need it to validate your access to different parts of our HQ.
     Let me know if you need anything else. See you around.
 
 > You store the keycard in your account folder.

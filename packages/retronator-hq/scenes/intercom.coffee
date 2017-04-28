@@ -103,9 +103,16 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
           
     # Funny Sketches
     sketches = [
-      'BurraUnderwaterAdventure'
-      'JustSomeTestDialog'
+      'PlayHarder'
+      'Talent'
+      'RetrosLaboratory'
+      'DaisyDaisy'
+      'PodBayDoors'
       'RetroSwears'
+      'OrangeSherbet'
+      'ThemeHospital'
+      'WoodChuck'
+      'PapersPlease'
     ]
     @_playedSketches ?= []
     messages.FunnySketches =
