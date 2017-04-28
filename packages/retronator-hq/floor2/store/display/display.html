@@ -16,10 +16,12 @@
                   {{> Retronator.Store.Components.TopSupporters topSupporters}}
                 </div>
               </div>
-              <h3>More messages from supporters</h3>
-              <div class="transaction-messages">
-                {{> Retronator.Store.Components.TopSupporters transactionMessages}}
-              </div>
+              {{#if transactionMessages.count}}
+                <h3>More messages from supporters</h3>
+                <div class="transaction-messages">
+                  {{> Retronator.Store.Components.TopSupporters transactionMessages}}
+                </div>
+              {{/if}}
             </div>
           </div>
         </div>

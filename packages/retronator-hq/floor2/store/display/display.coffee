@@ -67,7 +67,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
     super
 
     @subscribe RS.Transactions.Transaction.topRecent, 15
-    @subscribe RA.User.topSupporters, 25
+    @subscribe RA.User.topSupporters, 15
 
     @_messagesCount = new ReactiveField 50
 
