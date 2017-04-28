@@ -22,6 +22,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
 
     @autorun (computation) =>
       return unless LOI.adventureInitialized()
+      return unless LOI.adventure.gameState()
 
       currentChapterId = @state 'currentChapter'
 

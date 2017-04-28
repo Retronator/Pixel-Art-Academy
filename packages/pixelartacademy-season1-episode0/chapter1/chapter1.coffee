@@ -1,6 +1,8 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Vocabulary = LOI.Parser.Vocabulary
+
 class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   C1 = @
 
@@ -80,3 +82,10 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
 
   fadeVisibleClass: ->
     'visible' if @inOutro()
+
+  onCommand: (commandResponse) ->
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.WakeUp]
+      action: =>
+        C1.Items.Backpack.state 'inInventory', true
+        C1.Airship.state 'asleep', true

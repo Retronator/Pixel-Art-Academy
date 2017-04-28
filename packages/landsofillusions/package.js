@@ -54,6 +54,7 @@ Package.onUse(function(api) {
   api.addFiles('state/stateaddress.coffee');
   api.addFiles('state/stateinstances.coffee');
   api.addFiles('state/ephemeralstateobject.coffee');
+  api.addFiles('state/localsavegames.coffee');
 
   // Character
 
@@ -211,6 +212,8 @@ Package.onUse(function(api) {
   api.addComponent('components/account/general/general');
   api.addComponent('components/account/services/services');
   api.addComponent('components/account/characters/characters');
+  api.addComponent('components/account/inventory/inventory');
+  api.addComponent('components/account/transactions/transactions');
 
   api.addStyle('components/dialogs/accounts');
 

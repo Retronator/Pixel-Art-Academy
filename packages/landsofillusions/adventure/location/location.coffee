@@ -8,9 +8,7 @@ class LOI.Adventure.Location extends LOI.Adventure.Scene
   # Override for Scene location.
   @location: -> @
 
-  # Urls of scripts used at this location.
-  @scriptUrls: -> []
-
+  # The maximum height of location's illustration. By default there is no illustration (height 0).
   # The maximum height of location's illustration. By default there is no illustration (height 0).
   @illustrationHeight: -> 0
   illustrationHeight: -> @constructor.illustrationHeight()
@@ -59,5 +57,3 @@ class LOI.Adventure.Location extends LOI.Adventure.Scene
     ready
 
   exits: -> {} # Override to provide location exits in {direction: location class} format
-
-  things: -> [] # Override to provide an array of thing classes at this location.

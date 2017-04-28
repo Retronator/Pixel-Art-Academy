@@ -1,9 +1,9 @@
 LOI = LandsOfIllusions
 
-class Retronator.LandsOfIllusions
+class Retronator.HQ.LandsOfIllusions
   @debug = false
 
 if Meteor.isServer
   LOI.initializePackage
-    id: 'retronator_retronator_landsofillusions'
+    id: 'retronator_retronator-landsofillusions'
     assets: Assets

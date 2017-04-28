@@ -1,0 +1,30 @@
+# Retronator.HQ.LandsOfIllusions.Room
+
+## SelfStart
+
+> You sit down and put on the headset that drops towards you. 
+> Noise canceling technology creates complete silence before the intro sound plays through the system.
+> You can now speak to the operator.
+
+* Panzer, I'm ready for immersion. -> [Confirm]
+* Just one more thing … -> [Cancel]
+
+## Confirm
+
+operator: You know the drill.
+
+pause
+
+### PlugIn
+
+-> [End]
+
+## Cancel
+
+> The visor releases and the ambient sound of the room enters your ears again.
+
+> You stand up from the recliner and are ready to go about your day.
+
+-> [End]
+
+## End

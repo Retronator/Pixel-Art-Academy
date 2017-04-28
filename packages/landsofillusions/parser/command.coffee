@@ -33,8 +33,9 @@ class LOI.Parser.Command
 
   # Do we have an exact match with the phrase?
   is: (phrases) ->
-    # If a single phrase is sent in, wrap it into an array.
-    phrases = @_preparePhrases phrases
+    # If a single phrase is sent in, wrap it into an array. We don't use _preparePhrases
+    # since we don't want prepositions removed when doing an exact match.
+    phrases = [phrases] if _.isString phrases
 
     likelihood = 0
 

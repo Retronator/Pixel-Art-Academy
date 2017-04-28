@@ -109,4 +109,7 @@ class LOI.Adventure.Listener
 
     @cleanup()
 
-  cleanup: -> # Override to clean any timers or autoruns that need to be cleaned when listener exits or is destroyed.
+  cleanup: ->
+    handle.stop() for handle in @_autorunHandles
+    
+    # Override to clean any timers or other autoruns that need to be cleaned when listener exits or is destroyed.

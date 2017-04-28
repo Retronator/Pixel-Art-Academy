@@ -14,16 +14,6 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
 
     @chapter = @options.chapter
 
-    # React to section becoming active.
-    @autorun (computation) =>
-      active = @active()
-      return unless active?
-
-      if active and @_wasActive is false
-        @onStart()
-
-      @_wasActive = active
-
     @scenes = for sceneClass in @constructor.scenes()
       new sceneClass section: @
 
@@ -60,8 +50,6 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
 
     # Section has the prerequisites. Now check that it hasn't finished yet.
     @_activeUntilFinished()
-
-  onStart: -> # Override to provide any initialization logic when the section begins.
 
   ready: ->
     activeWasDetermined = @active()?

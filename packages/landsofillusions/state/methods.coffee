@@ -11,9 +11,6 @@ Meteor.methods
     existingGameState = LOI.GameState.documents.findOne 'user._id': user._id
     throw new AE.InvalidOperationException "This user already has a game state. Update it instead." if existingGameState
     
-    # Set the registered variable on the state.
-    state.registered = true
-
     # Insert the state.
     LOI.GameState.documents.insert
       user:
@@ -31,6 +28,20 @@ Meteor.methods
     LOI.GameState.documents.update gameState._id,
       $set:
         state: {}
+
+  'LandsOfIllusions.GameState.replaceForCurrentUser': (state) ->
+    check state, Object
+
+    user = Retronator.user()
+    throw new AE.UnauthorizedException "You must be logged in to update game state." unless user
+
+    gameState = LOI.GameState.documents.findOne 'user._id': user._id
+    throw new AE.ArgumentNullException "User does not have a game state." unless gameState
+
+    # Everything seems OK, set an empty state.
+    LOI.GameState.documents.update gameState._id,
+      $set:
+        state: state
 
   'LandsOfIllusions.GameState.update': (gameStateId, state) ->
     check gameStateId, Match.DocumentId

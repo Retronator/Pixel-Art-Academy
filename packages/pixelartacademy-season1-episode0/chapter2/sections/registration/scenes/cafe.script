@@ -1,0 +1,223 @@
+# PixelArtAcademy.Season1.Episode0.Chapter2.Registration.Cafe
+
+## Start     
+burra: `not _MainQuestion`
+    Hey there, welcome to Retronator! 
+    It looks like you're new around here.
+
+burra: `_MainQuestion`
+    Ready to save your game? `_helped and not @user.signedIn`
+    Ready to register? `_helped and @user.signedIn`
+    Hi again! `not _helped`
+
+## MainQuestion
+`_answered = false`
+
+* I'm here to play Pixel Art Academy. -> [PlayPixelArtAcademy] `not _helped`
+* Yes, let's do this. -> [SaveOrRegister] `_helped`
+* What does saving do again? -> [SignInHelp] `_helped and not @user.signedIn`
+* Whoops, nevermind. -> [End] `not _helped`
+* Thank you so much! -> [End] `_helped`
+
+## PlayPixelArtAcademy
+`_helped = true`
+
+burra: Certainly!
+
+-> [PlayUser] `@user.signedIn`
+-> [PlayNotUser] `not @user.signedIn`
+
+## SaveOrRegister
+
+-> [SignIn] `not @user.signedIn`
+-> [PlayUser] `@user.signedIn`
+
+<!-- USER REGISTRATION FLOW -->
+<!-- (Already saved prior to coming to the cafe.) -->
+
+## PlayUser
+
+<!-- Reference to Another World. -->
+burra: Ah yes, I recognize you, `@user.name`. I see you have driven here in your Ferrari. `@user.name`
+burra: Ah yes, I recognize you. I see you have driven here in your Ferrari. `not @user.name`
+
+* Yes, time to go to another world! -> [AnotherWorldYes]
+* Actually, I took the train.
+
+burra: Works for me too.
+
+-> [ReceiveAccountUser]
+
+## AnotherWorldYes
+
+burra: 
+    Just watch out for those alien slugs.
+
+## ReceiveAccountUser
+
+burra: Alright, I've already prepared an account for you.
+
+> Burra searches the file cabinet under the counter and hands you a document folder.
+
+-> [ReceiveAccount]
+
+<!-- GUEST REGISTRATION FLOW -->
+<!-- (Player hasn't saved the game yet.) -->
+
+## PlayNotUser
+
+burra:
+    First you'll need to save your game.
+    This will create a Retronator account for you so your game progress is safe.
+
+* Sounds like a smart thing to do. -> [SignIn]
+* Save game? Am I in a video game? What's going on? -> [SaveGameWTF]
+* Maybe later. -> [MaybeLater]
+
+## SaveGameWTF
+
+burra:
+    Yes and no. You're in the Pixel Art Academy meta game right now.
+    It's where you can learn about the game, buy it, and then go play it.
+    A game about a game, get it?
+    
+* You're blowing my mind right now. -> [BlowMind]
+* No way. No way. This is crazy. -> [Crazy] <!-- Reference to The Matrix. -->
+
+## Crazy
+
+burra:
+    There are two ways out of this building: one is to save the game, the other is to quit. 
+    You take a chance either way. I leave it to you.
+    
+* Stop quoting The Matrix.
+
+burra: You started it.
+    
+* Yeah, I guess I did.
+
+burra: So …
+
+## BlowMind
+
+burra:
+    You can do many things in Retronator HQ without saving: talk to Retro, visit the gallery, see featured artists …
+    But if you want to play Pixel Art Academy, your game needs to be saved.
+    
+* Right …
+
+burra:
+    Don't worry, it's simple. You'll show me your ID, and I will create an account for you. 
+    You can then load the game from any computer using that ID.
+    
+* OK, let's do this. -> [SignIn]
+* Maybe later. -> [MaybeLater]
+
+## MaybeLater
+
+burra: No problem. Come back when you're ready.
+
+-> [End]
+
+## SignIn
+
+burra: 
+    Great! Please choose any of the IDs to sign in. 
+    It can be your email, or any of your social networks.
+    You'll be able to add other IDs later too.
+
+> You reach for your wallet to present your ID.
+
+pause
+
+### SignInActive
+
+-> [SignInFailed] `not @user.signedIn`
+-> [SignInSucceeded]
+
+## SignInFailed
+
+> But you change your mind.
+
+burra: Do you need help with saving the game?
+
+## SignInQuestions
+
+* What does saving do again? -> [SignInHelp] `not _SignInHelp`
+* Can I link multiple social networks? -> [SignInSocialNetworks] `_SignInHelp`
+* Thanks for all the info! -> [SignInThanks] `_SignInHelp`
+* Nah, all good. -> [MaybeLater] `not _SignInHelp`
+
+## MaybeLater
+
+burra:
+    Alright, perhaps next time. 
+
+-> [End]
+
+## SignInHelp
+
+burra:
+    If you save your game, you can continue playing from where you left off last time, on any computer.
+    You can save by creating an account with an email and password, or simply use one of your social networks.
+    
+-> [SignInQuestions]
+
+## SignInSocialNetworks
+
+burra:
+    Yes! Once you've saved your game, I will give you an account folder where you can link multiple social networks and emails to it.
+    
+-> [SignInQuestions]
+
+## SignInThanks
+
+burra: No problem. Ready to save now?
+
+* Yes, let's do this. -> [SignIn]
+* Maybe later. -> [MaybeLater]
+
+## SignInSucceeded
+
+burra: 
+    Perfect!
+    Let me create a new account for you …
+
+> Burra puts a new document folder together and after a short moment has you registered.
+
+<!-- RECEIVE ACCOUNT -->
+    
+## ReceiveAccount
+
+burra: There you go! This is your account folder with all your information.
+
+### ReceiveAccount
+
+burra: You can write on the documents to change anything you want.
+
+* Thank you.
+* Much appreciated.
+
+-> [AlreadyHasGame] `@user.itemKeys['PixelArtAcademy.PlayerAccess']`
+    
+burra:
+    If you're a backer or have pre-ordered the game, make sure to add and validate the email you used when buying the game.
+    Otherwise you can head ![upstairs](up) to the store to get yourself a copy.
+
+-> [EndConversation]
+
+## AlreadyHasGame
+
+burra:
+    I see you already bought the game. Thank you so much for your support!
+    Go ![west](west) through the coworking space and down to the basement where you can enter Lands of Illusions.
+
+## EndConversation
+
+* Awesome, I will do that!
+
+burra: Let me know if you need anything else. See you around.
+
+-> [End]
+
+## End

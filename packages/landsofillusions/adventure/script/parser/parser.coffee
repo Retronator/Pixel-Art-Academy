@@ -62,9 +62,6 @@ class LOI.Adventure.ScriptFile.Parser
         else
           @nextNode = node
 
-        # Also store this as the last non-choice node, so choice nodes can jump to it, if needed.
-        @lastNonChoiceNode = node unless node instanceof Nodes.Choice
-
         # If there is some text left, parse the rest too.
         @_parseLine rest if rest
 
@@ -76,6 +73,10 @@ class LOI.Adventure.ScriptFile.Parser
           conditionalNode.node = @nextNode
           conditionalNode.next = nextNodeAfterThisLine
           @nextNode = conditionalNode
+
+        # Also store this as the last non-choice node, so choice nodes can jump to it, if needed.
+        # We need to do this after we've parsed the conditional so we have the correct next node set.
+        @lastNonChoiceNode = @nextNode unless @nextNode instanceof Nodes.Choice
 
         # Stop parsing this line.
         break

@@ -12,3 +12,5 @@ class LOI.Adventure.Scene extends LOI.Adventure.Thing
     @section = @options.section
 
   things: -> [] # Override to provide a list of things that should be present at this location.
+
+  removedThings: -> [] # Override to provide a list of things that generally are, but shouldn't be present due to this scene.

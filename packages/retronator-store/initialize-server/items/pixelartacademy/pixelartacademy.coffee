@@ -7,12 +7,12 @@ Meteor.startup ->
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.PlayerAccess
-    name: "Pixel Art Academy - Player Access"
+    name: "Pixel Art Academy - Player access"
     description: "You are a player of Pixel Art Academy! Enter the game world and play through episodes once they're released."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.AlphaAccess
-    name: "Pixel Art Academy - Alpha Access"
+    name: "Pixel Art Academy - Alpha access"
     description: "You can play around with episodes while they're still in development."
 
   # PIXEL ART ACADEMY YEARS
@@ -46,17 +46,17 @@ Meteor.startup ->
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.Help.ClassHelp
-    name: "Pixel Art Academy - Class Help"
+    name: "Pixel Art Academy - Class help"
     description: "Request help on an assignment or general art guidance. Retro will write you detailed feedback on your artwork and steps to take in the future."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.Help.Paintover
-    name: "Pixel Art Academy - Class Help"
+    name: "Pixel Art Academy - Class help"
     description: "Request a paintover of one of your artwork. Retro will accompany it with detailed feedback and general art guidance."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.Help.PaintoverVideo
-    name: "Pixel Art Academy - Class Help"
+    name: "Pixel Art Academy - Class help"
     description: "Request a paintover of one of your artwork and Retro will create a video detailing his changes and the art lessons contained within. He will also write you general art guidance for meeting your own goals."
 
   # KICKSTARTER
@@ -64,7 +64,7 @@ Meteor.startup ->
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.Kickstarter.RetropolisAcademyOfArtYearbook
     name: "Retropolis Academy of Art Kickstarter Yearbook"
-    description: "As a Kickstarter backer, your will be listed in the special edition of the Retropolis Academy of Art Yearbook."
+    description: "As a Kickstarter backer, you will be listed in the special edition of the Retropolis Academy of Art Yearbook."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.Kickstarter.ClassOf2016Artwork

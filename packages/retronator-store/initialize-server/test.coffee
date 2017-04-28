@@ -15,6 +15,18 @@ Meteor.startup ->
   createKickstarterBacker 'fullearly@backer.com', 15, 15, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.EarlyFullGame
   createKickstarterBacker 'alphaearly@backer.com', 35, 35, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.EarlyAlphaAccess
 
+  # Kickstarter backers with special tiers
+  createKickstarterBacker 'avatar1@backer.com', 70, 70, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.AvatarTrack.CustomItem
+  createKickstarterBacker 'avatar2@backer.com', 100, 100, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.AvatarTrack.UniqueItem
+  createKickstarterBacker 'avatar3@backer.com', 150, 150, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.AvatarTrack.UniqueCustomAvatar
+
+  createKickstarterBacker 'art1@backer.com', 70, 70, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtistTrack.ClassHelp
+  createKickstarterBacker 'art2@backer.com', 100, 100, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtistTrack.Paintover
+  createKickstarterBacker 'art3@backer.com', 150, 150, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtistTrack.PaintoverVideo
+
+  createKickstarterBacker 'zx@backer.com', 500, 500, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtCollector.ZXCosmopolis
+  createKickstarterBacker 'nes@backer.com', 1000, 1000, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtCollector.PixelChinaMountains
+
   # Kickstarter backers that overpledged
   createKickstarterBacker 'fullover@backer.com', 30, 20, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.FullGame
 

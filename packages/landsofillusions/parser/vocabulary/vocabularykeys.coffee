@@ -24,9 +24,10 @@ LOI.Parser.Vocabulary.Keys =
     Use: ''
     Press: ''
     Read: ''
-    What: ''
+    WhatIs: ''
     Get: ''
-    Sit: ''
+    SitDown: ''
+    SitIn: ''
     Stand: ''
     Open: ''
     Close: ''
@@ -40,6 +41,8 @@ LOI.Parser.Vocabulary.Keys =
     ShowTo: ''
     Show: ''
     LookIn: ''
+    WakeUp: ''
+    Buy: ''
 
   IgnorePrepositions: ''
 

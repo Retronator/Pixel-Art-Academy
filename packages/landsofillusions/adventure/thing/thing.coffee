@@ -151,6 +151,7 @@ class LOI.Adventure.Thing extends AM.Component
       onExit: (exitResponse) -> @options.parent.onExit.call @, exitResponse
       cleanup: -> @options.parent.cleanup.call @
 
+      # Sets things that have a shorthand name in the script, by pulling them from current things.
       setCurrentThings: (thingClasses, callback) ->
         Tracker.autorun (computation) =>
           things = {}
@@ -223,6 +224,11 @@ class LOI.Adventure.Thing extends AM.Component
   # Convenience methods for static properties.
   id: -> @constructor.id()
   url: -> @constructor.url()
+
+  # Override to control if the item appears in the interface.
+  isVisible: -> true
+  displayInLocation: -> @isVisible()
+  displayInInventory: -> @isVisible()
 
   ready: ->
     @thingReady()

@@ -7,8 +7,8 @@ summarizeUser = (user) ->
   time: user.createdAt
   name: user.supporterName
 
-Meteor.publish RA.User.topSupporters, ->
-  # We are returning the list of top 10 users by their support amount. We return
+Meteor.publish RA.User.topSupporters, (count) ->
+  # We are returning the list of top users by their support amount. We return
   # these using a special collection TopSupporters that only holds these results.
   RA.User.documents.find(
     supportAmount:
@@ -19,7 +19,7 @@ Meteor.publish RA.User.topSupporters, ->
         ['supportAmount', 'desc']
         ['createdAt', 'desc']
       ]
-    limit: 10
+    limit: count
   ).observe
     added: (user) => @added 'TopSupporters', user._id, summarizeUser user
     changed: (user) => @changed 'TopSupporters', user._id, summarizeUser user

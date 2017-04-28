@@ -55,6 +55,6 @@ class LOI.Adventure extends AM.Component
     @_modalDialogs.splice @_modalDialogs.indexOf(dialog), 1
     @_modalDialogsDependency.changed()
 
-  modalDialogs: (dialog) ->
+  modalDialogs: ->
     @_modalDialogsDependency.depend()
     @_modalDialogs

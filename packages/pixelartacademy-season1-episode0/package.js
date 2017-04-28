@@ -61,4 +61,27 @@ Package.onUse(function(api) {
   // Chapter 2
 
   api.addComponent('chapter2/chapter2');
+
+  api.addFile('chapter2/items/items');
+
+  // Registration
+
+  api.addFile('chapter2/sections/registration/registration');
+
+  api.addThing('chapter2/sections/registration/scenes/cafe');
+
+  // Shopping
+
+  api.addFile('chapter2/sections/shopping/shopping');
+
+  api.addFile('chapter2/sections/shopping/scenes/store');
+
+  // Immersion
+
+  api.addFile('chapter2/sections/immersion/immersion');
+  api.addServerFile('chapter2/sections/immersion/methods-server');
+
+  api.addThing('chapter2/sections/immersion/scenes/basement');
+  api.addThing('chapter2/sections/immersion/scenes/landsofillusions');
+  api.addThing('chapter2/sections/immersion/scenes/room');
 });

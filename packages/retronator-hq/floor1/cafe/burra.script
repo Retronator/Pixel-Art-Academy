@@ -1,0 +1,136 @@
+# Retronator.HQ.Cafe.Burra
+
+## Start     
+burra: `not _End`
+    Hey there, welcome to Retronator! 
+    How can I help you today?
+
+burra: `_End`
+    Can I help you with anything else? `_answered`
+    Hi again! `not _answered`
+
+## MainQuestion
+
+* What is this place? -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
+* What is this place again? -> [RetronatorHQ] `RetronatorHQDepartments`
+* What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
+* Can I order a sandwich? -> [Sandwich] `not Sandwich`
+* How about coffee? -> [Coffee] `Sandwich and not Coffee`
+* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQDepartments and not PixelArtAcademy`
+* So is Pixel Art Academy like an online course? -> [PixelArtAcademyCourse] `PixelArtAcademy`
+* So about that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQDepartments`
+* What exactly is Lands of Illusions? -> [LandsOfIllusions] `RetronatorHQDepartments`
+* Oh, just looking. -> [End] `not _answered and not _End`
+* Whoops, nevermind. -> [End] `not _answered and _End`
+* Thank you so much! `_answered`
+
+burra: My pleasure. Let me know if you need anything else. -> [End]
+
+<!-- QUESTIONS -->
+
+## RetronatorHQ
+`_answered = true`
+
+burra: This is Retronator Headquarters where Pixel Art Academy and Retronator Magazine get made. 
+
+-> [RetronatorHQDepartments]
+
+## RetronatorHQActivity
+`_answered = true`
+
+burra: It's mainly Retro working on Pixel Art Academy and Retronator Magazine. 
+
+-> [RetronatorHQDepartments]
+
+## RetronatorHQDepartments
+
+burra:
+    You can visit the store on the 2nd floor where you can buy the game.
+    Further upstairs is the gallery of Retro's artworks.
+    And if you bought Pixel Art Academy, head on downstairs to our virtual reality center Lands of Illusions.
+    
+-> [MainQuestion]
+
+## RetronatorMagazine
+`_answered = true`
+
+burra: Yes, it's a publication you can read on Medium, all about pixel art! Would you like to read it now?
+    
+* Sure, I'll take a look. -> [ReadRetronatorMagazine]
+* Maybe later.
+
+burra: Sounds good. It's available at medium.com/retronator-magazine. 
+
+-> [MainQuestion]
+
+## ReadRetronatorMagazine
+
+> Burra turns around her computer screen and shows you the website.
+
+### OpenRetronatorMagazine
+
+burra: I hope you liked it.
+
+-> [MainQuestion]
+
+## PixelArtAcademy
+
+burra: 
+    Pixel Art Academy is a video game that teaches you how to draw! 
+    Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist. 
+    Take a look at the school's prospectus to find out more.
+    
+> Burra gives you the Pixel Art Academy prospectus.
+
+### ReceiveProspectus
+
+-> [End]
+
+## PixelArtAcademyCourse
+
+burra:
+    Not really. It's not a course with an instructor that you have to follow at certain times.
+    Pixel Art Academy is first and foremost a videogame, but what your character learns you learn with them.
+    You will get assignments in the game and you'll have to draw to complete them.
+    Characters in the game world will also point you to online learning materials based on your needs.
+    
+-> [MainQuestion]
+
+## LandsOfIllusions
+
+burra:
+    It's a virtual reality center where you can immerse into one of Retronator's video game worlds.
+    Go west to the coworking space and down one level to reach it.
+    Panzer will be able to tell you all about it.
+    
+-> [MainQuestion]    
+
+<!-- OTHER -->
+
+## Sandwich
+`_answered = true`
+
+burra: What? Make it yourself.
+
+* Oh, I thought this was a café. -> [ExplainCafe]
+* Sudo make me a sandwich. <!-- XKCD joke -->
+
+burra: Sudo make it yourself.
+
+## ExplainCafe
+
+burra: 
+    You're not in a usual café. This is Retronator Headquarters. 
+    We have a coworking space and our bar and kitchen are open to members.
+    So really, just help yourself.
+    
+-> [MainQuestion]
+
+## Coffee
+`_answered = true`
+
+burra: Sorry, the coffee hasn't been coded into the game yet. <!-- joke from the prototype -->
+
+-> [MainQuestion]
+
+## End

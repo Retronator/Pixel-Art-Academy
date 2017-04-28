@@ -1,0 +1,46 @@
+# Retronator.HQ.Basement
+
+## OperatorDialog
+
+-> [ComeAgain] `_Selection`
+
+`_howAreYou = true`
+
+operator: Hi, how are you doing today.
+
+-> [Selection]
+
+## ComeAgain
+
+`_howAreYou = false`
+
+operator: Can I help you with anything else? 
+
+## Selection
+
+* I'm back to play the game. -> [Play]
+* Pretty good, and you? -> [HowAreYou] `_howAreYou`
+* See you around. -> [Bye]
+
+## Play
+`_helped = true`
+
+operator: 
+    Great! Your usual room is ready for you. 
+    Feel free to head over at any time you'd like.
+    
+-> [Selection]
+
+## HowAreYou
+
+operator: Doing good myself. It's nice to have you back.
+
+-> [Selection]
+
+## Bye
+
+operator: You too.
+
+-> [End]
+
+## End

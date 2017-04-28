@@ -1,145 +1,180 @@
-<template name="LandsOfIllusions.Components.Account.General">
-  <div class="landsofillusions-components-account-general">
-    <h2>User account</h2>
-    <div class="section-body">
-      <p>Account name: {{> LandsOfIllusions.Components.Account.General.Username}}</p>
-      <p>Emails:</p>
-      <ul>
-        {{#each currentUser.registered_emails}}
-          <li>
-            {{address}}
-            {{#if verified}}
-              &mdash; verified
-            {{else}}
-              <button class="verify-email">Send verification email</button>
-            {{/if}}
-          </li>
-        {{else}}
-          <p>You have no emails associated with your account. Make sure to add your backer email and verify it to
-            activate your reward.</p>
-        {{/each}}
-      </ul>
-      <form class="add-email-form">
-        <input class="add-email-address" type="email"/>
-        <button class="add-email-button">Add email</button>
-      </form>
-      <p>* For your purchases to be applied, your email must be entered and verified.</p>
-    </div>
-    <h2>Sign in services</h2>
-    <div class="section-body">
-      <p>You can sign in with:</p>
-      <ul>
-        {{#each loginServices}}
-          {{#if $equals this 'password'}}
-            {{#if loginServiceEnabled}}
-              <li>{{this}} &mdash; enabled</li>
-            {{/if}}
-          {{else}}
-            <li>
-              {{this}}
-              {{#if loginServiceEnabled}}
-                &mdash; enabled
-              {{else}}
-                <button class="link-service">Link account with {{this}}</button>
-              {{/if}}
-            </li>
-          {{/if}}
-        {{/each}}
-      </ul>
-    </div>
-    <h2>Your support</h2>
-    <div class="section-body support-area">
-      <p>You have contributed <span class="support-amount">${{supportAmount}}</span> to Retronator.</p>
-      <p>Show your name among supporters:</p>
-      {{#if showSupporterName}}
-        <p>{{> LandsOfIllusions.Components.Account.General.SupporterName}}</p>
-      {{/if}}
+<template name="LandsOfIllusions.Components.Account.Transactions">
+  <div class="landsofillusions-components-account-transactions">
+    <h2>Transactions</h2>
+    <h3>Your support</h3>
+    <div class="support-area">
+      <p>Total contribution: <span class="support-amount">${{supportAmount}}</span>.</p>
       <p>
         <label class="anonymous-area">
-          <input class="anonymous-checkbox" type="checkbox" {{anonymousCheckboxAttributes}} /> I prefer to be anonymous.
+          <input class="anonymous-checkbox" type="checkbox" {{anonymousCheckboxAttributes}} />
+          <span class="label">show as anonymous</span>
         </label>
       </p>
     </div>
-    <h2>Purchase history</h2>
-    <div class="section-body">
-      {{#if transactions.length}}
-        <ul class="transactions">
-          {{#each transactions}}
-            <li class="transaction">
-              <div class="date">{{dateText}}</div>
-              <div class="details-area">
-                <p>Purchased:</p>
-                <ul class="items">
-                  {{#each items}}
-                    <li>
-                      {{> t9n item.name}} {{#if givenGift}}(gift){{/if}}
-                      {{#if price}}
-                        - ${{price}}
-                      {{/if}}
-                      {{#if receivedGift}}
-                        <div class="gift">
-                          <p>This was a gift from {{receivedGift.transaction.ownerDisplayName}}</p>
-                        </div>
-                      {{/if}}
-                      {{#if givenGift}}
-                        <div class="gift">
-                          {{#if givenGift.transaction}}
-                            <p>The gift was claimed by {{givenGift.transaction.ownerDisplayName}}.</p>
-                          {{else}}
-                            <p>This item is a gift. Give this link to the recipient so they can claim it:</p>
-                            <p>
-                            <div class="gift-link">
-                              <a href="{{claimLink}}" target="_blank">{{claimLink}}</a>
-                            </div>
-                            </p>
-                            <p>* You can click the link to see what they will see.</p>
-                          {{/if}}
-                        </div>
-                      {{/if}}
-                    </li>
-                  {{/each}}
-                  {{#if tip}}
-                    {{# if tip.amount}}
-                      <li>
-                        {{t7e 'Tip'}} - ${{tip.amount}}
-                        {{#if tip.message}}
-                          <div class="message">
-                            <p>You included the message: "{{tip.message}}"</p>
-                          </div>
-                        {{/if}}
-                      </li>
-                    {{/if}}
-                  {{/if}}
-                </ul>
-                {{#if payments.length}}
-                  <p>Paid with:</p>
-                  <ul class="payments">
-                    {{#each payments}}
-                      <li>
-                        {{type}} — ${{paymentAmount}}
-                        {{#if authorizedOnly}}
-                          (authorized only)
-                        {{/if}}
-                      </li>
-                    {{/each}}
-                  </ul>
-                {{/if}}
-              </div>
-            </li>
-          {{/each}}
-        </ul>
+    <div class="purchase-history">
+      <img class="clamp" src="{{image '/landsofillusions/components/account/clamp-right.png'}}" />
+      <h3 class="title">Purchase history</h3>
+      <table class="transactions">
+        {{#each transactions}}
+          <tr class="transaction">
+            <td class="date">
+              <button class="action load-transaction">
+                {{dateText}}
+              </button>
+            </td>
+            <td class="total {{authorizedOnlyClass}}">${{totalValue}}</td>
+          </tr>
+        {{/each}}
+        {{#each emptyLines}}
+          <tr class="transaction">
+            <td class="description" colspan="2">
+            </td>
+          </tr>
+        {{/each}}
         {{#if currentUser.store.credit}}
-          <p>* Your have a positive account balance of ${{currentUser.store.credit}}. You can use it to purchase items in the store.</p>
+          <tr class="transaction">
+            <td class="description">
+              <button class="action load-credit-info">
+                Positive balance
+              </button>
+            </td>
+            <td class="total {{authorizedOnlyClass}}">${{currentUser.store.credit}}</td>
+          </tr>
+        {{else}}
+          {{#if authorizedPaymentsAmount}}
+            <tr class="transaction">
+              <td class="description">
+                <button class="action load-authorized-payments-info">
+                  Total authorized
+                </button>
+              </td>
+              <td class="total {{authorizedOnlyClass}}">${{authorizedPaymentsAmount}}</td>
+            </tr>
+          {{else}}
+            {{#if transactions.length}}
+              <tr class="transaction">
+                <td class="description" colspan="2">
+                  end listing
+                </td>
+              </tr>
+            {{/if}}
+          {{/if}}
         {{/if}}
+      </table>
+      {{#if transactions.length}}
         {{#if authorizedPaymentsAmount}}
-          <p>* You have authorized ${{authorizedPaymentsAmount}} of payments. They will be collected when you get
-            access to the first episode in 2017. You will be emailed beforehand in case you need to cancel
-            any purchase at that time.</p>
+          <p class="smallprint">Authorized only</p>
         {{/if}}
       {{else}}
-        <p>You haven't made any purchases yet.</p>
-        <p>* Make sure you verified your email if you think you're missing purchases.</p>
+        <p class="smallprint">
+          You haven't made any purchases yet.
+          Make sure you verified your email if you think you're missing purchases.
+        </p>
+      {{/if}}
+      {{#if showCreditInfo}}
+        <div class="info-note">
+          <div class="content">
+            <div class="unload-info"></div>
+            <p>Your have a positive account balance of ${{currentUser.store.credit}}.</p>
+            <p>You can use it to purchase items in the store.</p>
+          </div>
+        </div>
+      {{/if}}
+      {{#if showAuthorizedPaymentsInfo}}
+        <div class="info-note">
+          <div class="content">
+            <div class="unload-info"></div>
+            <p>You have authorized ${{authorizedPaymentsAmount}} of payments.</p>
+            <p>They will be collected when you get
+            access to the first gameplay chapter in 2017. You will be emailed beforehand in case you need to cancel
+            any purchase at that time.</p>
+          </div>
+        </div>
       {{/if}}
     </div>
+    {{#if currentTransaction}}
+      {{#with currentTransaction}}
+        <div class="receipt">
+          <button class="unload-transaction"></button>
+          <h3 class="receipt-title">Retronator<br/>Store</h3>
+          <div class="date">{{dateText}}</div>
+          <div>----------------------</div>
+          <ol class="shopping-cart-items">
+            {{#each items}}
+              <li class="cart-item">
+                <span class="name">
+                  {{> t9n item.name}}
+                </span>
+                <span class="price">${{price}}</span>
+                {{#if receivedGift}}
+                  <div class="gift">
+                    <p>Gift from {{receivedGift.transaction.ownerDisplayName}}</p>
+                  </div>
+                {{/if}}
+                {{#if givenGift}}
+                  <div class="gift">
+                    {{#if givenGift.transaction}}
+                      <p>Gift claimed by {{givenGift.transaction.ownerDisplayName}}.</p>
+                    {{else}}
+                      <p>This item is a gift. Give this link to the recipient so they can claim it:</p>
+                      <p>
+                        <div class="gift-link">
+                          <a href="{{claimLink}}" target="_blank">{{claimLink}}</a>
+                        </div>
+                      </p>
+                      <p>* You can click the link to see what they will see.</p>
+                    {{/if}}
+                  </div>
+                {{/if}}
+              </li>
+            {{/each}}
+            {{#if tip}}
+              {{# if tip.amount}}
+                <li class="cart-item">
+                    <span class="name">
+                      {{t7e 'Tip'}}
+                    </span>
+                  <span class="price">${{tip.amount}}</span>
+                </li>
+              {{/if}}
+            {{/if}}
+          </ol>
+          <div>----------------------</div>
+          <ol class="receipt-items">
+            <li class="receipt-item">
+              <span class="name">Total</span>
+              <span class="price">${{totalValue}}</span>
+            </li>
+          </ol>
+          {{#if tip.message}}
+            <div class="tip">
+              <p class="title">Tip message</p>
+              <div class="message">
+                {{tip.message}}
+              </div>
+            </div>
+          {{/if}}
+          {{#if payments.length}}
+            <div class="payment-area">
+              <p class="title">Payment</p>
+              <ul class="payments">
+                {{#each payments}}
+                  <li class="payment">
+                    {{type}} - ${{paymentAmount}}
+                    {{#if authorizedOnly}}
+                      (authorized only)
+                    {{/if}}
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
+          <p>======================</p>
+          <div class="receipt-bottom">
+            <p>Thank you for your support!</p>
+          </div>
+        </div>
+      {{/with}}
+    {{/if}}
   </div>
 </template>

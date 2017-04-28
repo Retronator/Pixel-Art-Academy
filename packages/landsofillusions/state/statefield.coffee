@@ -25,7 +25,9 @@ class LOI.StateField
         # Do we even need to do any change?
         oldValue = field()
 
-        unless value is oldValue
+        # We need to rewrite the field if the value changed (and with objects
+        # we never know if they were internally changed, so we do it always).
+        if value isnt oldValue or _.isObject(value)
           # We directly change the value of the field and trigger state update.
           _.nestedProperty LOI.adventure.gameState(), options.address.string(), value
           LOI.adventure.gameState.updated()

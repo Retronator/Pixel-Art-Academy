@@ -33,7 +33,7 @@ class LOI.Components.Overlay extends AM.Component
       safeAreaSize.top += viewport.viewportBounds.top()
 
       @$('.crop-bar').height cropBarHeight
-      @$('.safe-area').css safeAreaSize
+      @$('.landsofillusions-components-overlay > .safe-area').css safeAreaSize
       
       # Inside the background the template in the else block can add a .max-area and .viewport-area divs for us to position.
 
@@ -45,11 +45,15 @@ class LOI.Components.Overlay extends AM.Component
         area.height = Math.min area.height, maxOverlayHeight
 
       @$('.viewport-area').css viewportAreaSize
-
       @$('.max-area').css maxAreaSize
 
-    @$('.background').addClass('visible')
-    @$('.safe-area').addClass('visible')
+      # Safe area can also appear inside viewport area.
+      viewportAreaSafeAreaSize = viewport.safeArea.toDimensions()
+      viewportAreaSafeAreaSize.top -= viewportAreaSize.top
+
+      @$('.viewport-area .safe-area').css viewportAreaSafeAreaSize
+
+    @$('.landsofillusions-components-overlay').addClass('visible')
 
     Meteor.setTimeout =>
       @$('.transition-cover')?.removeClass('visible')
@@ -72,8 +76,7 @@ class LOI.Components.Overlay extends AM.Component
         activatedState = activatableParent.callFirstWith(null, 'activatedState')
         if activatedState is LOI.Adventure.Item.activatedStates.Deactivating
           # Animate out.
-          @$('.background').removeClass('visible')
-          @$('.safe-area').removeClass('visible')
+          @$('.landsofillusions-components-overlay').removeClass('visible')
           @$('.transition-cover').addClass('visible')
 
           @$('.crop-bar').velocity

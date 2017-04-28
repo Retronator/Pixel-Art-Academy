@@ -20,11 +20,26 @@ class LOI.Adventure extends LOI.Adventure
       # Remove any thing classes that had conditional statements and could evaluate to undefined.
       thingClasses = _.without thingClasses, undefined
 
+      # Remove thing classes that scenes dictate to remove.
+      removedSceneThingClasses = for scene in @currentScenes()
+        scene.removedThings()
+
+      removedSceneThingClasses = _.uniq _.flattenDeep removedSceneThingClasses
+      removedSceneThingClasses = _.without removedSceneThingClasses, undefined
+
+      thingClasses = _.difference thingClasses, removedSceneThingClasses
+
       for thingClass in thingClasses
-        # Create the thing if needed. We create the instance in a non-reactive
-        # context so that reruns of this autorun don't invalidate instance's autoruns.
-        Tracker.nonreactive =>
-          @_things[thingClass.id()] ?= new thingClass
+        # Create the thing if needed. We allow passing thing instances as well, so no need to instantiate those.
+        if thingClass instanceof LOI.Adventure.Thing
+          thingInstance = thingClass
+          @_things[thingClass.id()] = thingInstance
+
+        else
+          # We create the instance in a non-reactive context so that
+          # reruns of this autorun don't invalidate instance's autoruns.
+          Tracker.nonreactive =>
+            @_things[thingClass.id()] ?= new thingClass
 
         @_things[thingClass.id()]
 
@@ -57,10 +72,13 @@ class LOI.Adventure extends LOI.Adventure
       sceneThings = for scene in @currentScenes()
         scene.things()
 
+      # Note: thing classes can also hold instances, if they were created manually by locations.
       thingClasses = _.uniq _.flattenDeep _.union locationThings, sceneThings
 
-      thing for thing in currentPhysicalThings when thing.constructor in thingClasses
+      thing for thing in currentPhysicalThings when thing.constructor in thingClasses or thing in thingClasses
 
-  getCurrentThing: (thingClass) ->
+  getCurrentThing: (thingClassOrId) ->
+    thingClass = _.thingClass thingClassOrId
     things = @currentThings()
+
     _.find things, (thing) -> thing.constructor is thingClass

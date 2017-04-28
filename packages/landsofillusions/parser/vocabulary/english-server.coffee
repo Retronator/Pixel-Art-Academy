@@ -13,8 +13,8 @@ phrases =
     Southwest: ['southwest', 'sw']
     In: ['in', 'enter', 'inside']
     Out: ['out', 'exit', 'outside']
-    Up: ['up']
-    Down: ['down']
+    Up: ['up', 'upstairs']
+    Down: ['down', 'downstairs']
 
   Verbs:
     GoToLocationName: ['go to', 'travel to']
@@ -25,9 +25,10 @@ phrases =
     Use: ['use']
     Press: ['press', 'push']
     Read: ['read']
-    What: ['what is']
+    WhatIs: ['what is']
     Get: ['get', 'take', 'pick up']
-    Sit: ['sit down']
+    SitDown: ['sit down']
+    SitIn: ['sit in']
     Stand: ['stand up']
     Open: ['open']
     Close: ['close']
@@ -41,8 +42,10 @@ phrases =
     ShowTo: ['show _ to', 'present _ to']
     Show: ['show', 'present']
     LookIn: ['look in']
+    WakeUp: ['wake up', 'awaken']
+    Buy: ['buy', 'purchase']
 
-  IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in']
+  IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up', 'down']
 
   Questions:
     WhichPlace: ['where']
