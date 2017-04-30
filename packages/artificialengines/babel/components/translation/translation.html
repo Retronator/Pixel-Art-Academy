@@ -1,5 +1,11 @@
 <template name="Artificial.Babel.Components.Translation">
-  {{> Artificial.Babel.Components.Translatable args translation}}
+  <span class="artificial-babel-components-translation">
+    {{#if translationSubscription.ready}}
+      {{> Artificial.Babel.Components.Translatable args translation}}
+    {{else}}
+      <span class="loading-dot dot-1">.</span><span class="loading-dot dot-2">.</span><span class="loading-dot dot-3">.</span>
+    {{/if}}
+  </span>
 </template>
 
 <template name="t9n">

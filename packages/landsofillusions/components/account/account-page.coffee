@@ -21,6 +21,14 @@ class LOI.Components.Account.Page extends AM.Component
         defaultText = _.propertyValue @, translationKey
         AB.createTranslation translationNamespace, translationKey, defaultText
 
+  constructor: ->
+    super
+
+    translationNamespace = @componentName()
+
+    # Subscribe to translation keys in advance to avoid loading on display.
+    @translationSubscription = Meteor.subscribe 'Artificial.Babel.Translation', translationNamespace, null, AB.userLanguagePreference()
+
   url: -> @constructor.url()
     
   displayNameTranslation: ->

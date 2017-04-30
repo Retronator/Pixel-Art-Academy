@@ -13,7 +13,7 @@ class AB.Components.Translation extends AM.Component
       translation = @data()
       return unless translation
 
-      @subscribe 'Artificial.Babel.Translation.withId', translation._id, AB.userLanguagePreference()
+      @translationSubscription = @subscribe 'Artificial.Babel.Translation.withId', translation._id, AB.userLanguagePreference()
 
   translation: ->
     translation = @data()

@@ -201,6 +201,5 @@ Package.onUse(function(api) {
   api.addFiles('babel/components/translatable/translatable.html');
   api.addFiles('babel/components/translatable/translatable.coffee');
 
-  api.addFiles('babel/components/translation/translation.html');
-  api.addFiles('babel/components/translation/translation.coffee');
+  api.addComponent('babel/components/translation/translation');
 });
