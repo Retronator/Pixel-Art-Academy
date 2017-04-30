@@ -122,6 +122,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
     RS.Components.TopSupporters.topRecentTransactions.find({},
       sort: [
         ['amount', 'desc']
+        ['priority', 'desc']
         ['time', 'desc']
       ]
     ).fetch()
@@ -130,6 +131,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
     RS.Components.TopSupporters.topSupporters.find {},
       sort: [
         ['amount', 'desc']
+        ['priority', 'desc']
         ['time', 'desc']
       ]
 

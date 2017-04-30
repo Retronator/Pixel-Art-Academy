@@ -27,12 +27,15 @@ class LOI.Components.Account.Page extends AM.Component
     translationNamespace = @componentName()
 
     # Subscribe to translation keys in advance to avoid loading on display.
-    @translationSubscription = Meteor.subscribe 'Artificial.Babel.Translation', translationNamespace, null, AB.userLanguagePreference()
+    Tracker.autorun (computation) =>
+      Meteor.subscribe 'Artificial.Babel.Translation', translationNamespace, null, AB.userLanguagePreference()
 
   url: -> @constructor.url()
     
   displayNameTranslation: ->
-    # We need component translations, but they won't be subscribed to until the page component has finished creating.
-    return unless @isCreated()
+    translationNamespace = @componentName()
 
-    @translation @constructor.translationKeys.displayName
+    # We directly return the translation document instead of going through the component since we subscribed on our own.
+    AB.Translation.documents.findOne
+      namespace: translationNamespace
+      key: @constructor.translationKeys.displayName

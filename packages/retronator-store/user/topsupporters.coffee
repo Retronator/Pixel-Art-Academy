@@ -12,12 +12,16 @@ summarizeUser = (user) ->
   ).count()
 
   supporterRank = higherRankingUsersCount + 1
+  
+  # We want to show people with name and/or message first.
+  priority = (if user.supporterName then 1 else 0) + (if user.profile?supporterMessage then 1 else 0)
 
   amount: user.supportAmount
   rank: supporterRank
   time: user.createdAt
   name: user.supporterName
   message: user.profile?.supporterMessage
+  priority: priority
 
 Meteor.publish RA.User.topSupporters, (count) ->
   # We are returning the list of top users by their support amount. We return
@@ -29,6 +33,8 @@ Meteor.publish RA.User.topSupporters, (count) ->
     sort:
       [
         ['supportAmount', 'desc']
+        ['supporterName', 'desc']
+        ['profile.supporterMessage', 'desc']
         ['createdAt', 'desc']
       ]
     limit: count
