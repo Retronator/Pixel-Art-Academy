@@ -157,6 +157,9 @@ class LOI.Components.Menu.Items extends AM.Component
         # Reset the interface.
         LOI.adventure.interface.resetInterface()
 
+        # Clear active item.
+        LOI.adventure.activeItemId null
+
         # Clear location to trigger location changes.
         LOI.adventure.currentLocationId null
 

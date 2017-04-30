@@ -119,3 +119,26 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     return if $(event.target).closest('.load-transaction').length
 
     @currentTransaction null
+
+  # Components
+
+  class @SupporterMessage extends AM.DataInputComponent
+    @register 'LandsOfIllusions.Components.Account.Transactions.SupporterMessage'
+
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.TextArea
+
+    load: ->
+      user = RA.User.documents.findOne Meteor.userId(),
+        fields:
+          'profile.supporterMessage': 1
+
+      user?.profile?.supporterMessage
+
+    save: (value) ->
+      Meteor.call "Retronator.Accounts.User.setSupporterMessage", value
+
+    placeholder: ->
+      @translate('Add a message to supporters list').text
