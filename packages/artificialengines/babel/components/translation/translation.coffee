@@ -15,6 +15,10 @@ class AB.Components.Translation extends AM.Component
 
       @translationSubscription = @subscribe 'Artificial.Babel.Translation.withId', translation._id, AB.userLanguagePreference()
 
+  showLoading: ->
+    # We should show loading if translation has no data and the subscription isn't ready.
+    not @translation().translations and not translationSubscription.ready()
+
   translation: ->
     translation = @data()
     return unless translation

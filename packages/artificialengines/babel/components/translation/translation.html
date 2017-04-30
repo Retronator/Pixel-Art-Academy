@@ -1,9 +1,9 @@
 <template name="Artificial.Babel.Components.Translation">
   <span class="artificial-babel-components-translation">
-    {{#if translationSubscription.ready}}
-      {{> Artificial.Babel.Components.Translatable args translation}}
-    {{else}}
+    {{#if showLoading}}
       Loading …
+    {{else}}
+      {{> Artificial.Babel.Components.Translatable args translation}}
     {{/if}}
   </span>
 </template>
