@@ -47,8 +47,13 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     transactions
 
   emptyLines: ->
-    transactionsCount = @transactions()?.length or 0
-    maximumRows = Math.max 3, transactionsCount
+    transactionsCount = @transactions()?.length
+
+    if transactionsCount
+      maximumRows = Math.max 3, transactionsCount
+
+    else
+      maximumRows = 2
 
     maximumRows++ if maximumRows % 2 is 1
 

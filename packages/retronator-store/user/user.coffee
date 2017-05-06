@@ -70,6 +70,8 @@ class RetronatorAccountsUser extends RA.User
 
     # Helper function that recursively adds items.
     addItem = (item) =>
+      return unless item
+      
       item = RS.Transactions.Item.documents.findOne item._id
 
       # Add the item to the ids.
