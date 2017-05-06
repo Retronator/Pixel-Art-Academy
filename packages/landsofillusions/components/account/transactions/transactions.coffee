@@ -44,7 +44,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
       for item in transaction.items
         item.item.refresh()
 
-    transactions
+    _.sortBy transactions, 'time'
 
   emptyLines: ->
     transactionsCount = @transactions()?.length
