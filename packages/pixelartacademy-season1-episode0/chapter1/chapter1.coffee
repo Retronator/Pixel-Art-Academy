@@ -83,7 +83,7 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   onCommand: (commandResponse) ->
     return unless LOI.adventure.currentTimelineId() is PAA.TimelineIds.DareToDream
 
-    commandResponse.onPhrase
+    commandResponse.onExactPhrase
       form: [Vocabulary.Keys.Verbs.WakeUp]
       action: =>
         # End intro section.
