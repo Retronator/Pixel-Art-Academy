@@ -17,10 +17,11 @@ phrases =
     Down: ['down', 'downstairs']
 
   Verbs:
-    GoToLocationName: ['go to', 'travel to']
+    GoToLocationName: ['go to', 'travel to', 'enter', 'leave to']
     GoToDirection: ['go', 'towards', 'move', 'travel']
+    ExitLocation: ['exit', 'leave']
     TalkTo: ['talk to', 'talk with', 'speak to', 'speak with', 'chat with']
-    LookAt: ['look at', 'examine']
+    LookAt: ['look at', 'examine', 'see']
     Look: ['look', 'look around', 'description']
     Use: ['use']
     Press: ['press', 'push']

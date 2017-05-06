@@ -18,7 +18,7 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
       presentDirectionKeys.push directionKey
 
       do (directionKey, locationClass) =>
-        action = => LOI.adventure.goToLocation locationClass.id()
+        action = => LOI.adventure.goToLocation locationClass
 
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
@@ -29,10 +29,12 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
         commandResponse.onExactPhrase
           form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
           action: action
+          priority: 1
 
         commandResponse.onExactPhrase
           form: [directionKey]
           action: action
+          priority: 1
 
     # Register the rest of the directions to give negative feedback.
     allDirectionKeys = _.values Vocabulary.Keys.Directions
@@ -71,3 +73,19 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.GoToLocationName, avatar]
           action: => LOI.adventure.goToLocation locationId
+
+    # If there is only one way out of the location, wire exiting the location.
+    locationClasses = _.uniq _.map presentDirectionKeys, (directionKey) -> exits[directionKey]
+    onlyExitLocation = if locationClasses.length is 1 then locationClasses[0] else null
+
+    if onlyExitLocation
+      action = => LOI.adventure.goToLocation onlyExitLocation
+
+      commandResponse.onExactPhrase
+        form: [Vocabulary.Keys.Verbs.ExitLocation]
+        action: action
+        priority: 1
+
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.ExitLocation, location.avatar]
+        action: action
