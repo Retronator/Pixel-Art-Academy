@@ -3,15 +3,15 @@ RS = Retronator.Store
 class TopRecentTransactions
   @documents: new Meteor.Collection 'TopRecentTransactions'
 
-  constructor: (@publish) ->
+  constructor: (@publish, @count) ->
     @_sortedTransactions = []
 
   added: (document) ->
     # Add the new document and see at what index it got placed.
     sortedDocument = @_addAndSort document
 
-    # If the index is in the top 10, add the document to the collection.
-    @_addToPublished sortedDocument if sortedDocument.index < 10
+    # If the index is in the top @count, add the document to the collection.
+    @_addToPublished sortedDocument if sortedDocument.index < @count
 
   changed: (document, oldDocument) ->
     # Remove the old document and see from which index it got removed.
@@ -23,27 +23,27 @@ class TopRecentTransactions
     newIndex = sortedDocument.index
 
     # Now we have four options.
-    if newIndex < 10 and oldIndex < 10
-      # Document was in top 10 and remained in top 10 in which case we just report the change.
+    if newIndex < @count and oldIndex < @count
+      # Document was in top @count and remained in top @count in which case we just report the change.
       @_changePublished sortedDocument
 
-    else if newIndex < 10
-      # Document moved into the top 10 because of the change so we add it.
+    else if newIndex < @count
+      # Document moved into the top @count because of the change so we add it.
       @_addToPublished sortedDocument
 
-    else if oldIndex < 10
-      # Document fell out of top 10 because of the change so we remove it.
+    else if oldIndex < @count
+      # Document fell out of top @count because of the change so we remove it.
       @_removeFromPublished sortedDocument
 
     else
-      # The object wasn't in the top 10 and now also isn't so we have nothing to do.
+      # The object wasn't in the top @count and now also isn't so we have nothing to do.
 
   removed: (document) ->
     # Remove the document and see from which index it got removed.
     sortedDocument = @_remove document
 
-    # If the index is in the top 10, remove the document from the collection.
-    @_removeFromPublished sortedDocument if sortedDocument.index < 10
+    # If the index is in the top @count, remove the document from the collection.
+    @_removeFromPublished sortedDocument if sortedDocument.index < @count
 
   _addAndSort: (document) ->
     # Create our internal document structure.
@@ -84,8 +84,8 @@ class TopRecentTransactions
   _addToPublished: (sortedDocument) ->
     @publish.added 'TopRecentTransactions', sortedDocument._id, sortedDocument.publicDocument
 
-    # Also remove the 11th document, since it was pushed out of the top 10.
-    eleventhSortedDocument = @_sortedTransactions[10]
+    # Also remove the 11th document, since it was pushed out of the top @count.
+    eleventhSortedDocument = @_sortedTransactions[@count]
     @publish.removed 'TopRecentTransactions', eleventhSortedDocument._id if eleventhSortedDocument
 
   _changePublished: (sortedDocument) ->
@@ -94,36 +94,42 @@ class TopRecentTransactions
   _removeFromPublished: (sortedDocument) ->
     @publish.removed 'TopRecentTransactions', sortedDocument._id
 
-    # Also add the 10th document, since it was pushed into the top 10.
-    tenthSortedDocument = @_sortedTransactions[9]
+    # Also add the @countth document, since it was pushed into the top @count.
+    tenthSortedDocument = @_sortedTransactions[@count - 1]
     @publish.added 'TopRecentTransactions', tenthSortedDocument._id, tenthSortedDocument.publicDocument if tenthSortedDocument
 
   @summarizeDocument: (document) ->
     # Create a summary document that only has a supporter name, amount and message. It's OK for fields to be set to
     # undefined otherwise since the field should be removed when calling changed on the publish handle.
+    supporterName = if document.user?._id then document.user.supporterName else document.supporterName
+
+    # We want to show people with name and/or message first.
+    priority = (if supporterName then 1 else 0) + (if document.tip?.message then 1 else 0)
+
     amount: document.totalValue
     time: document.time
     message: document.tip?.message
-    name: if document.user?._id then document.user.supporterName else document.supporterName
+    name: supporterName
+    priority: priority
 
   _updateSortedIndices: ->
     for i in [0...@_sortedTransactions.length]
       @_sortedTransactions[i].index = i
 
-Meteor.publish RS.Transactions.Transaction.topRecent, ->
+Meteor.publish RS.Transactions.Transaction.topRecent, (count) ->
   # We are returning the list of top recent transactions with supporters' names, amounts and messages. We do this by
-  # looking at last 50 transactions and only returning the top 10 sorted by value. We return these using a special
+  # looking at last 50 transactions and only returning the top ones sorted by value. We return these using a special
   # collection TopRecentTransactions that only holds these results.
-  topRecentTransactions = new TopRecentTransactions @
+  topRecentTransactions = new TopRecentTransactions @, count
 
-  # Listen to last 50 transactions that have some value.
+  # Listen to last transactions (4 times as much as we'll send to the client) that have some value.
   RS.Transactions.Transaction.documents.find(
     totalValue:
       $gt: 0
   ,
     sort:
       time: -1
-    limit: 50
+    limit: count * 4
   ).observe
     added: (document) => topRecentTransactions.added document
     changed: (document, oldDocument) => topRecentTransactions.changed document, oldDocument

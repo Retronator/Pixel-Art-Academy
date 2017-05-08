@@ -15,7 +15,7 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   @url: -> 'chapter1'
 
   @sections: -> [
-    @Intro
+    @Start
     @Immigration
     @Airship
   ]
@@ -83,11 +83,11 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   onCommand: (commandResponse) ->
     return unless LOI.adventure.currentTimelineId() is PAA.TimelineIds.DareToDream
 
-    commandResponse.onPhrase
+    commandResponse.onExactPhrase
       form: [Vocabulary.Keys.Verbs.WakeUp]
       action: =>
         # End intro section.
-        C1.Intro.state 'leftTerrace', true
+        C1.Start.state 'leftTerrace', true
 
         # End immigration section.
         C1.Immigration.state 'leftCustoms', true

@@ -2,13 +2,19 @@ AM = Artificial.Mirage
 
 # Base class for an input component with easy setup for different mixins.
 class Artificial.Mirage.DataInputComponent extends AM.Component
+  @Types:
+    Text: 'text'
+    TextArea: 'textarea'
+    Select: 'select'
+    Number: 'number'
+
   template: ->
     'Artificial.Mirage.DataInputComponent'
 
   constructor: ->
     super
 
-    @type = 'text'
+    @type = @constructor.Types.Text
 
     @persistent = true
     @realtime = true
@@ -23,10 +29,10 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     mixins
 
   isTextArea: ->
-    @type is 'textarea'
+    @type is @constructor.Types.TextArea
 
   isSelect: ->
-    @type is 'select'
+    @type is @constructor.Types.Select
 
   load: ->
     console.error "You must implement the load method."

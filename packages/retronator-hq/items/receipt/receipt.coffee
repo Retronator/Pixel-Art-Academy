@@ -74,7 +74,8 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
       totalHeight = $viewportArea[0].scrollHeight
       maxScrollTop = totalHeight - viewportHeight
 
-      @scrolledToBottom scrollTop is maxScrollTop
+      # We use greater or equal because elastic scrolling can overshoot the max number.
+      @scrolledToBottom scrollTop >= maxScrollTop
 
     @display = LOI.adventure.getCurrentThing HQ.Store.Display
 
@@ -226,11 +227,12 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
       # Scroll to one higher if possible so that the user sees how much they need to go higher.
       $previousSupporter = $newSupporter.prev()
-      $scrollTarget = $previousSupporter or $newSupporter
+      $scrollTarget = if $previousSupporter.length then $previousSupporter else $newSupporter
+      $scrollContainer = $('.retronator-hq-store-display .screen .content-area')
+      middleHeight = $scrollContainer.outerHeight() / 2
+      targetTop = $scrollTarget.position().top - middleHeight
 
-      $scrollTarget.velocity('stop').velocity 'scroll',
-        duration: options.duration
-        container: $('.retronator-store-components-top-supporters')
+      $scrollContainer.stop().animate scrollTop: targetTop, options.duration
 
   onInputTipMessage: (event) ->
     message = $(event.target).val()

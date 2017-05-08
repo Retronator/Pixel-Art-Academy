@@ -42,4 +42,7 @@ class LOI.Adventure extends LOI.Adventure
           computation.stop()
           @removeModalDialog dialogOptions.dialog
 
-          dialogOptions.callback?()
+          # Call callback in nonreactive context in case the callback runs any of its own
+          # autoruns (we don't want them to get invalidated when this autorun completes).
+          Tracker.nonreactive =>
+            dialogOptions.callback?()

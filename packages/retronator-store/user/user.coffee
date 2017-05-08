@@ -5,8 +5,9 @@ RS = Retronator.Store
 class RetronatorAccountsUser extends RA.User
   # profile: a custom object, writable by default by the client
   #   showSupporterName: boolean whether to show username in public displays
+  #   supporterMessage: supporter message to show in public displays
   # supporterName: auto-generated supporter name
-  # supportAmount: generated sum of all payments
+  # supportAmount: trigger-generated sum of all payments
   # store:
   #   balance: the sum of all payments minus sum of all purchases
   #   credit: positive part of balance
@@ -36,6 +37,7 @@ class RetronatorAccountsUser extends RA.User
       triggers
 
   @topSupporters: 'Retronator.Accounts.User.topSupporters'
+  @topSupportersCurrentUser: 'Retronator.Accounts.User.topSupportersCurrentUser'
   @supportAmountForCurrentUser: 'Retronator.Accounts.User.supportAmountForCurrentUser'
   @storeDataForCurrentUser: 'Retronator.Accounts.User.storeDataForCurrentUser'
 
@@ -68,7 +70,7 @@ class RetronatorAccountsUser extends RA.User
 
     # Helper function that recursively adds items.
     addItem = (item) =>
-      item = RS.Transactions.Item.documents.findOne item._id
+      return unless item = RS.Transactions.Item.documents.findOne item?._id
 
       # Add the item to the ids.
       itemIds = _.union itemIds, [item._id]

@@ -17,7 +17,13 @@ class RS.Components.TopSupporters extends AM.Component
     transaction = @currentData()
 
     'new' if transaction.new
-  
+
+  valueAttribute: ->
+    transaction = @currentData()
+    return unless transaction.rank
+
+    value: transaction.rank
+
   name: ->
     transaction = @currentData()
     transaction.name or @anonymousPlaceholder()

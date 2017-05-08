@@ -63,7 +63,7 @@ Package.onUse(function(api) {
     'peerlibrary:assert',
     'peerlibrary:peerdb',
     'peerlibrary:peerdb-migrations',
-    'peerlibrary:reactive-publish',
+    'peerlibrary:reactive-publish@0.3.0',
     'peerlibrary:blaze-components',
     'peerlibrary:blaze-common-component',
     'peerlibrary:blaze-layout-component',
@@ -201,6 +201,5 @@ Package.onUse(function(api) {
   api.addFiles('babel/components/translatable/translatable.html');
   api.addFiles('babel/components/translatable/translatable.coffee');
 
-  api.addFiles('babel/components/translation/translation.html');
-  api.addFiles('babel/components/translation/translation.coffee');
+  api.addComponent('babel/components/translation/translation');
 });

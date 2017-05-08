@@ -27,10 +27,17 @@ class HQ.Store.Display extends LOI.Adventure.Item
 
   @initialize()
 
+  @Views:
+    Center: 'Center'
+    Left: 'Left'
+
   constructor: ->
     super
 
     @smiling = new ReactiveField false
+
+    @view = new ReactiveField @constructor.Views.Center
+    @showReceiptSupporters = new ReactiveField false
 
   smile: ->
     @smiling true
@@ -39,6 +46,9 @@ class HQ.Store.Display extends LOI.Adventure.Item
       @smiling false
     ,
       5500
+
+  viewClass: ->
+    _.lowerCase @view()
 
   # Listener
 
@@ -56,7 +66,43 @@ class HQ.Store.Display extends LOI.Adventure.Item
   onCreated: ->
     super
 
-    @subscribe RS.Transactions.Transaction.topRecent
+    @subscribe RS.Transactions.Transaction.topRecent, 15
+    @subscribe RA.User.topSupportersCurrentUser
+
+    @_topSupportersCount = new ReactiveField 10
+
+    @autorun (computation) =>
+      @subscribe RA.User.topSupporters, @_topSupportersCount()
+
+    @_messagesCount = new ReactiveField 50
+
+    @autorun (computation) =>
+      @subscribe RS.Transactions.Transaction.messages, @_messagesCount()
+
+  onRendered: ->
+    super
+
+    # Fix supporter list titles to be inside the screen.
+    $supportersArea = @$('.content-area .supporters-area')
+    $supportersListTitles = @$('.supporters-list-titles')
+    $supportersListTitlesTitles = $supportersListTitles.find('.title')
+
+    $contentArea = @$('.content-area')
+
+    $contentArea.scroll (event) =>
+      scrollTop = $contentArea.scrollTop()
+      areaHeight = $supportersArea.outerHeight()
+      titleHeight = $supportersListTitlesTitles.outerHeight()
+
+      # Make sure the title still stays inside supporters area.
+      titleBottom = scrollTop + titleHeight
+      titleOffset = Math.min areaHeight - titleBottom, 0
+
+      $supportersListTitles.css top: titleOffset
+
+    # HACK: For unknown reason, events method does not work?!?
+    @$('.top-supporters .show-more-button').click (event) =>
+      @_topSupportersCount @_topSupportersCount() + 40
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -65,13 +111,37 @@ class HQ.Store.Display extends LOI.Adventure.Item
       500
     
   topRecentTransactions: ->
-    # Get top recent transactions from the receipt.
-    if receipt = LOI.adventure.getCurrentThing HQ.Items.Receipt
-      return receipt.topRecentTransactions() if receipt.totalPrice()
+    if @showReceiptSupporters()
+      # Get top recent transactions from the receipt.
+      receipt = LOI.adventure.getCurrentThing HQ.Items.Receipt
 
-    # We couldn't get to receipt's modified transactions so just show the unmodified ones.
-    RS.Components.TopSupporters.topRecentTransactions.find {},
+      # Make sure that receipt exists, since it could disappear from state (for example, multiple browsers).
+      return receipt.topRecentTransactions() if receipt
+
+    # Show normal supporters list otherwise.
+    RS.Components.TopSupporters.topRecentTransactions.find({},
       sort: [
         ['amount', 'desc']
+        ['priority', 'desc']
         ['time', 'desc']
       ]
+    ).fetch()
+
+  topSupporters: ->
+    RS.Components.TopSupporters.topSupporters.find {},
+      sort: [
+        ['amount', 'desc']
+        ['priority', 'desc']
+        ['time', 'desc']
+      ]
+
+  transactionMessages: ->
+    # Show all the transaction messages not already shown in the top 10 recent transactions.
+    topRecentTransactionIds = _.map @topRecentTransactions(), '_id'
+
+    RS.Components.TopSupporters.transactionMessages.find
+      _id:
+        $nin: topRecentTransactionIds
+    ,
+      sort:
+        time: -1

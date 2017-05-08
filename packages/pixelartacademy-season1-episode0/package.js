@@ -39,11 +39,11 @@ Package.onUse(function(api) {
   api.addFile('chapter1/items/acceptanceletter');
   api.addThing('chapter1/items/suitcase');
 
-  // Intro
+  // Start
 
-  api.addFile('chapter1/sections/intro/intro');
+  api.addFile('chapter1/sections/start/start');
 
-  api.addThing('chapter1/sections/intro/scenes/terrace');
+  api.addThing('chapter1/sections/start/scenes/terrace');
 
   // Immigration
 

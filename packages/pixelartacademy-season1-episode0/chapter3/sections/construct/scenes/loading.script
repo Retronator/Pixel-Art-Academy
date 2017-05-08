@@ -92,7 +92,15 @@ captain:
 
 ## GetStarted
 
--> [NoCharacters] `not @user.characters.length and not _NoCharacters`
+-> [NoCharacters] `not @user.characters.length`
+
+captain:
+    I see you already have a character ready to play with. 
+    You can ![use the TV](use TV) to select it and we'll establish a neural link with it.
+    
+captain: `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+    Since you own the Avatar Editor you can also modify their design and attributes.
+    The staff at the Character Construction Center will help you with that.
 
 -> [MainDialog]
 

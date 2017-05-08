@@ -99,9 +99,9 @@ retro: No problem.
 
 retro: Certainly.
 
-### CheckoutShoppingCart
-
 > You hand over the shopping cart to Retro.
+
+### CheckoutShoppingCart
 
 retro: Alright, let me see …
 
@@ -166,11 +166,22 @@ retro: Anything I can help you with purchasing?
 
 ## TransactionCanceledQuestions
 
-* Thanks for the info, let's see that receipt again. -> [Checkout] `_afterTransactionQuestion`
+* Thanks for the info, let's see that receipt again. -> [CheckoutAgain] `_afterTransactionQuestion`
 * I need to change some items first. -> [Change]
 * Where does the purchase show up? -> [PurchaseDisplay]
 * What is the tip message for? -> [TipMessage]
 * I don't think I'm ready to buy right now. -> [NoBuy]
+
+## CheckoutAgain
+
+### CheckoutShoppingCart
+### AddReceipt
+
+> Retro gives you the receipt back.
+
+pause
+
+-> [Checkout]
 
 ## Change
 

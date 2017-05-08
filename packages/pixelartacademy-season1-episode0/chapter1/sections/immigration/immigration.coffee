@@ -19,7 +19,7 @@ class C1.Immigration extends LOI.Adventure.Section
   @initialize()
 
   active: ->
-    @requireFinishedSections C1.Intro
+    @requireFinishedSections C1.Start
 
   onExit: (exitResponse) ->
     return unless exitResponse.currentLocationClass is RS.AirportTerminal.Customs

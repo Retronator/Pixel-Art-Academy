@@ -3,8 +3,8 @@ LOI = LandsOfIllusions
 C1 = PixelArtAcademy.Season1.Episode0.Chapter1
 RS = Retropolis.Spaceport
 
-class C1.Intro.Terrace extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Intro.Terrace'
+class C1.Start.Terrace extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter1.Start.Terrace'
 
   @location: -> RS.AirportTerminal.Terrace
 
@@ -15,7 +15,7 @@ class C1.Intro.Terrace extends LOI.Adventure.Scene
       The terrace you're standing on connects back to the airport terminal in the east.
     "
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/intro/scenes/terrace.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/start/scenes/terrace.script'
 
   @initialize()
 

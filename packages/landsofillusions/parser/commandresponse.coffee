@@ -52,8 +52,10 @@ class LOI.Parser.CommandResponse
             avatar = alias
 
             # We create all possible name phrase sequences out of the short and full name.
-            shortNamePhrases = AB.Helpers.generatePhrases text: avatar.shortName()
-            fullNamePhrases = AB.Helpers.generatePhrases text: avatar.fullName()
+            normalizeAvatarName = (name) -> _.toLower _.deburr name
+
+            shortNamePhrases = AB.Helpers.generatePhrases text: normalizeAvatarName avatar.shortName()
+            fullNamePhrases = AB.Helpers.generatePhrases text: normalizeAvatarName avatar.fullName()
 
             _.union shortNamePhrases, fullNamePhrases
 
