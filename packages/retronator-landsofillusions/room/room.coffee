@@ -11,7 +11,7 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Lands of Illusions virtual reality room"
+  @fullName: -> "Lands of Illusions immersion room"
   @shortName: -> "room"
   @description: ->
     "
