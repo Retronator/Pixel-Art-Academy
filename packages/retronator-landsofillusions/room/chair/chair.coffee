@@ -10,13 +10,13 @@ class HQ.LandsOfIllusions.Room.Chair extends LOI.Adventure.Item
 
   @version: -> '0.0.1'
 
-  @fullName: -> "virtual reality chair"
+  @fullName: -> "recliner chair"
 
   @shortName: -> "chair"
 
   @description: ->
     "
-      It's a comfortable looking recliner that will take you to Lands of Illusions.
+      It's a comfortable looking recliner you can use while you're in immersion.
     "
 
   @initialize()

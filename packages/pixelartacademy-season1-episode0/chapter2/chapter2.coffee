@@ -18,7 +18,7 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
     C2.Shopping
     C2.Immersion
   ]
-
+    
   @initialize()
 
   constructor: ->
@@ -52,10 +52,12 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
     'visible' unless @state 'introDone'
 
   inventory: ->
-    items = []
+    items = [
+      HQ.Items.Sync if @constructor.Immersion.state 'syncGiven'
+    ]
 
     for itemClassName in ['ShoppingCart', 'Account', 'Prospectus', 'Receipt']
       hasItem = HQ.Items[itemClassName].state 'inInventory'
       items.push HQ.Items[itemClassName] if hasItem
-
+      
     items

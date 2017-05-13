@@ -15,7 +15,6 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
   @description: ->
     "
       You enter a cosy room with a big futuristic reclining chair located in the middle.
-      A virtual reality headset is suspended from the ceiling and connected to a computer terminal on the side.
     "
 
   @defaultScriptUrl: -> 'retronator_retronator-landsofillusions/room/room.script'

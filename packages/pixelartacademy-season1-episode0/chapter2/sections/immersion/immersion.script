@@ -1,0 +1,21 @@
+# PixelArtAcademy.Season1.Episode0.Chapter2.Immersion.Room
+
+## LookAtSyncTimeLeft
+
+> The device says you have `_timeToImmersion` left before the neurotransmitters are ready. 
+
+-> [End]
+
+## LookAtSyncTimeOver
+
+> The device says the neurotransmitters are ready.
+
+-> [End]
+
+## Alarm
+
+> SYNC alerts you with a gentle buzz. A notification on the device says the neurotransmitters are ready.
+
+-> [End]
+
+## End

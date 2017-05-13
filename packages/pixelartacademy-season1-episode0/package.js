@@ -78,7 +78,7 @@ Package.onUse(function(api) {
 
   // Immersion
 
-  api.addFile('chapter2/sections/immersion/immersion');
+  api.addThing('chapter2/sections/immersion/immersion');
   api.addServerFile('chapter2/sections/immersion/methods-server');
 
   api.addThing('chapter2/sections/immersion/scenes/basement');

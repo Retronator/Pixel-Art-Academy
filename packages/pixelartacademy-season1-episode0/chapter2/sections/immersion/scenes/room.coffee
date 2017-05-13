@@ -33,6 +33,11 @@ class C2.Immersion.Room extends LOI.Adventure.Location
         @options.parent.state "waitToSit", true
 
         complete()
+        
+      VideoDisplay: (complete) =>
+        # Activate the video display and wait until it's closed.
+        
+        complete()
 
       Move: (complete) =>
         @options.parent.state 'waitToSit', false
@@ -61,24 +66,17 @@ class C2.Immersion.Room extends LOI.Adventure.Location
   onCommand: (commandResponse) ->
     return unless chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
 
-    action = =>
-      # If we're in the middle of the operator script, just continue on sit down.
-      if @options.parent.state 'waitToSit'
-        @startScript label: 'Sit'
-
-      else
-        # Otherwise start the self-start plug-in script.
-        @startScript label: 'SelfStart'
+    action = => @startScript label: 'Sit'
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.SitIn, chair.avatar]
       priority: 1
-      action: => action()
+      action: action
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.SitDown]
       priority: 1
-      action: => action()
+      action: action
 
   cleanup: ->
     @_operatorTalksAutorun?.stop()
