@@ -16,7 +16,6 @@ class C2.Immersion extends LOI.Adventure.Section
   @OperatorStates:
     InLandsOfIllusions: 'InLandsOfIllusions'
     InRoom: 'InRoom'
-    IntroDone: 'IntroDone'
     BackAtCounter: 'BackAtCounter'
 
   @avatars: ->

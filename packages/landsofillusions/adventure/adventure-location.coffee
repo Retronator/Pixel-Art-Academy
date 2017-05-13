@@ -28,7 +28,16 @@ class LOI.Adventure extends LOI.Adventure
         unless currentLocationClass
           console.warn "Location class not found, moving back to start.", currentLocationId if currentLocationId
 
-          currentLocationClass = Retropolis.Spaceport.AirportTerminal.Terrace
+          switch @currentTimelineId()
+            when PixelArtAcademy.TimelineIds.DareToDream
+              currentLocationClass = Retropolis.Spaceport.AirportTerminal.Terrace
+
+            when PixelArtAcademy.TimelineIds.RealLife
+              currentLocationClass = Retronator.HQ.Cafe
+
+            when PixelArtAcademy.TimelineIds.Construct
+              currentLocationClass = LandsOfIllusions.Construct.Loading
+
           currentLocationId = currentLocationClass.id()
           @currentLocationId currentLocationId
 
