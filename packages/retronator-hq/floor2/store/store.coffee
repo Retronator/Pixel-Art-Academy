@@ -9,6 +9,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Store extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Store'
   @url: -> 'retronator/store'
+  @region: -> HQ
 
   @version: -> '0.0.1'
 
@@ -44,7 +45,7 @@ class HQ.Store extends LOI.Adventure.Location
     super
 
   things: -> [
-    PAA.Cast.Retro
+    HQ.Actors.Retro
     HQ.Store.Display
     HQ.Store.Shelf.Game
     HQ.Store.Shelf.Upgrades
@@ -64,7 +65,7 @@ class HQ.Store extends LOI.Adventure.Location
 
   initializeScript: ->
     @setCurrentThings
-      retro: PAA.Cast.Retro
+      retro: HQ.Actors.Retro
   
     @setCallbacks
       AnalyzeUser: (complete) =>
@@ -127,7 +128,6 @@ class HQ.Store extends LOI.Adventure.Location
         complete()
 
       AddTierToCart: (complete) =>
-        # TODO: Add a qualifying Kickstarter tier to the shopping cart.
         ephemeralState = @ephemeralState()
         KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
 
@@ -196,7 +196,7 @@ class HQ.Store extends LOI.Adventure.Location
   # Listener
 
   onCommand: (commandResponse) ->
-    return unless retro = LOI.adventure.getCurrentThing PAA.Cast.Retro
+    return unless retro = LOI.adventure.getCurrentThing HQ.Actors.Retro
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]

@@ -15,14 +15,20 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:retropolis-spaceport');
   api.use('retronator:retronator-hq');
+  api.use('retronator:sanfrancisco-soma');
 
   api.export('PixelArtAcademy');
 
   api.addFile('episode0');
-  
+
+  // Start
+
+  api.addFile('start/start');
+
   // Chapter 1
 
   api.addComponent('chapter1/chapter1');
+  api.addFile('chapter1/inventory');
 
   api.addFile('chapter1/actors/actors');
   api.addFile('chapter1/actors/alex');
@@ -61,8 +67,20 @@ Package.onUse(function(api) {
   // Chapter 2
 
   api.addComponent('chapter2/chapter2');
+  api.addFile('chapter2/inventory');
+  api.addFile('chapter2/store');
+
+  api.addFile('chapter2/actors/actors');
+  api.addFile('chapter2/actors/conductor');
 
   api.addFile('chapter2/items/items');
+
+  // Intro
+
+  api.addFile('chapter2/sections/intro/intro');
+
+  api.addThing('chapter2/sections/intro/scenes/caltrain');
+  api.addFile('chapter2/sections/intro/scenes/2nd');
 
   // Registration
 
@@ -74,8 +92,6 @@ Package.onUse(function(api) {
 
   api.addFile('chapter2/sections/shopping/shopping');
 
-  api.addFile('chapter2/sections/shopping/scenes/store');
-
   // Immersion
 
   api.addThing('chapter2/sections/immersion/immersion');
@@ -84,4 +100,18 @@ Package.onUse(function(api) {
   api.addThing('chapter2/sections/immersion/scenes/basement');
   api.addThing('chapter2/sections/immersion/scenes/landsofillusions');
   api.addThing('chapter2/sections/immersion/scenes/room');
+
+  // Chapter 3
+
+  api.addFile('chapter3/chapter3');
+  api.addFile('chapter3/inventory');
+
+  api.addFile('chapter3/items/items');
+  api.addThing('chapter3/items/operatorlink');
+
+  // Construct
+
+  api.addFile('chapter3/sections/construct/construct');
+
+  api.addThing('chapter3/sections/construct/scenes/loading');
 });

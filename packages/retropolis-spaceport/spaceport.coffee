@@ -1,7 +1,10 @@
 LOI = LandsOfIllusions
 
-class Retropolis.Spaceport
+class Retropolis.Spaceport extends LOI.Adventure.Region
+  @id: -> 'Retropolis.Spaceport'
   @debug = false
+
+  @initialize()
 
 if Meteor.isServer
   LOI.initializePackage

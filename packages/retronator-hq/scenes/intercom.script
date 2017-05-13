@@ -1,0 +1,102 @@
+# Retronator.HQ.Scenes.Intercom
+
+## Intro
+
+> You hear an announcement on the intercom.
+
+## PlayHarder
+
+retro: Work hard, play harder.
+
+-> [End]
+
+## Talent
+
+retro: Everyone can learn how to draw. There is no talent. 
+
+-> [End]
+
+## RetrosLaboratory
+
+retro: Ah, what a fine day for Science! <!-- Dexter's Lab reference -->
+
+-> [End]
+
+## DaisyDaisy
+
+retro: Daisy, Daisy, give me your answer, do. I'm half crazy all for the love of you! <!-- 2001: A Space Odyssey reference -->
+
+-> [End]
+
+## PodBayDoors
+
+retro: Open the pod bay doors, Burra.
+burra: I'm sorry, Retro. I'm afraid I can't do that.
+
+<!-- 2001: A Space Odyssey reference -->
+
+-> [End]
+
+## RetroSwears
+
+retro: Oh for BEEP's sake!
+burra: What happened?
+retro: Bugs made a nest in the source code again.
+
+-> [End]
+
+## CurrentPixelDailies
+
+burra: Today's Pixel Dailies theme is hashtag `_pixelDailiesHashtag`. Get your pixels ready!
+
+-> [End]
+
+## YesterdaysPixelDailies
+
+burra: Yesterday's Pixel Dailies theme was hashtag `_pixelDailiesHashtag`. `_pixelDailiesUser` got the most favorites: `_pixelDailiesFavorites`. Wonderful!
+
+-> [End]
+
+## TransactionMessage
+
+burra: Our supporter `_transactionMessage.name` left a message saying, `_transactionMessage.message`. `_transactionMessage.name`
+burra: One of our supporters left a message saying, `_transactionMessage.message`. `not _transactionMessage.name`
+
+-> [End]
+
+## OrangeSherbet
+
+retro: I’m going across the street to get you some orange sherbet.
+burra: Well, that new training scheme is going well; I’ll try cake next time. 
+
+<!-- Austin Powers: International Man of Mystery reference -->
+
+-> [End]
+
+## ThemeHospital
+
+burra: Warning, a cheat is running the hospital!
+
+<!-- Theme Hospital, Bullfrog reference -->
+
+-> [End]
+
+## WoodChuck
+
+burra: How much wood could a woodchuck chuck if a woodchuck could chuck wood?
+retro: As Guybrush Threepwood once said, A woodchuck would chuck no amount of wood since a woodchuck can't chuck wood.
+burra: I did wonder.
+
+<!-- Monkey Island 2: LeChuck’s Revenge reference -->
+
+-> [End]
+
+## PapersPlease
+
+retro: Glory to Arstotzka!
+
+<!-- Papers Please reference -->
+
+-> [End]
+
+## End

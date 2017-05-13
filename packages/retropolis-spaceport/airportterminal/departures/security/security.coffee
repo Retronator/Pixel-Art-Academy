@@ -6,6 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class RS.AirportTerminal.Security extends LOI.Adventure.Location
   @id: -> 'Retropolis.Spaceport.AirportTerminal.Security'
   @url: -> 'spaceport/security'
+  @region: -> RS
 
   @version: -> '0.0.1'
 

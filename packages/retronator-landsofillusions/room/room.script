@@ -4,6 +4,9 @@
 
 > You sit down and put on the headset that drops towards you. 
 > Noise canceling technology creates complete silence before the intro sound plays through the system.
+
+### ActivateHeadset
+
 > You can now speak to the operator.
 
 * Panzer, I'm ready for immersion. -> [Confirm]
@@ -22,6 +25,8 @@ pause
 ## Cancel
 
 > The visor releases and the ambient sound of the room enters your ears again.
+
+### DeactivateHeadset
 
 > You stand up from the recliner and are ready to go about your day.
 

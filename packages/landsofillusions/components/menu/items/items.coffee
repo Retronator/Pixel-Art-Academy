@@ -80,7 +80,24 @@ class LOI.Components.Menu.Items extends AM.Component
     LOI.adventure.interface.narrative.scroll()
 
   onClickLoad: (event) ->
-    LOI.adventure.loadGame()
+    # If the player could save the game, warn them about losing progress.
+    if @saveVisible()
+      dialog = new LOI.Components.Dialog
+        message: "You will lose current game progress if you load another game."
+        buttons: [
+          text: "Continue"
+          value: true
+        ,
+          text: "Cancel"
+        ]
+
+      LOI.adventure.showActivatableModalDialog
+        dialog: dialog
+        callback: =>
+          LOI.adventure.loadGame() if dialog.result
+
+    else
+      LOI.adventure.loadGame()
 
   onClickSave: (event) ->
     LOI.adventure.saveGame()
@@ -107,7 +124,19 @@ class LOI.Components.Menu.Items extends AM.Component
   onClickQuit: (event) ->
     # If the player could save the game, warn them about losing progress.
     if @saveVisible()
-      # TODO: Show a confirmation dialog to quit.
+      dialog = new LOI.Components.Dialog
+        message: "You will lose current game progress if you quit without saving. Proceed?"
+        buttons: [
+          text: "Quit"
+          value: true
+        ,
+          text: "Cancel"
+        ]
+
+      LOI.adventure.showActivatableModalDialog
+        dialog: dialog
+        callback: =>
+          @_quit() if dialog.result
 
     else
       @_quit()
@@ -117,7 +146,7 @@ class LOI.Components.Menu.Items extends AM.Component
     LOI.adventure.menu.hideMenu()
 
     # Remove other modal menus.
-    LOI.adventure.removeModalDialog dialog for dialog of LOI.adventure.modalDialogs()
+    LOI.adventure.removeModalDialog dialogOptions.dialog for dialogOptions in LOI.adventure.modalDialogs()
 
     # Reset the local game state, so when we logout it will kick in.
     LOI.adventure.clearLocalGameState()
@@ -127,6 +156,9 @@ class LOI.Components.Menu.Items extends AM.Component
       callback: =>
         # Reset the interface.
         LOI.adventure.interface.resetInterface()
+
+        # Clear active item.
+        LOI.adventure.activeItemId null
 
         # Clear location to trigger location changes.
         LOI.adventure.currentLocationId null
@@ -142,6 +174,8 @@ class LOI.Components.Menu.Items extends AM.Component
 
         # Go to the terrace and scroll to top.
         LOI.adventure.currentLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
+        LOI.adventure.currentTimelineId PixelArtAcademy.TimelineIds.DareToDream
+
         LOI.adventure.interface.scroll position: 0
 
   onClickBack: (event) ->

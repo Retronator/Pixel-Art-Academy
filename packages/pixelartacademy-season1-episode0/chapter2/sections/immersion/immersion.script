@@ -8,6 +8,8 @@
 
 ## LookAtSyncTimeOver
 
+-> [UseSyncFirstImmersion] `section.operatorState is 'BackAtCounter'`
+
 > The device says the neurotransmitters are ready.
 
 -> [End]
@@ -15,6 +17,42 @@
 ## Alarm
 
 > SYNC alerts you with a gentle buzz. A notification on the device says the neurotransmitters are ready.
+
+-> [End]
+
+## UseSyncFirstImmersion
+
+You look at your new wristwatch and it indicates you're ready for immersion.
+
+* Talk to operator.
+* Nevermind. -> [End]
+
+## TalkToOperator
+
+operator: Operator.
+
+* I'm ready to begin. -> [FirstImmersion]
+* Oh, wait, I need a moment.
+
+operator: No sweat. Just call back when you're ready to begin.
+
+-> [End]
+
+## FirstImmersion
+
+operator: Got it. I hope you're sitting down because this will knock your socks off.
+
+> A clear sound like those at the start of the movies rushes through your ears.
+> You cannot help but feel the shivers travel down your spine as dopamine floods your brain.
+> Ambient sounds are replaced with complete silence and you now only hear Panzer's voice.
+
+operator: Now sit tight. The Captain will greet you in the Loading program in a second.
+
+`this.completed = true`
+
+pause
+
+### PlugIn
 
 -> [End]
 

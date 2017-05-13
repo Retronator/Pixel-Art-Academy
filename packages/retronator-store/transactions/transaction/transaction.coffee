@@ -8,8 +8,8 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
   #   _id
   #   displayName
   #   supporterName
-  # email: user email entered for this transaction if user was not logged in during payment
-  # twitter: twitter handle for this transaction if it was given to a twitter user
+  # email: lowercase user email entered for this transaction if user was not logged in during payment
+  # twitter: lowercase twitter handle for this transaction if it was given to a twitter user
   # ownerDisplayName: auto-generated name used to display who initiated this transaction
   # items: array of items received in this transaction
   #   item: the item document
@@ -107,7 +107,8 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
     verifiedEmails = []
     if user.registered_emails
       for email in user.registered_emails
-        verifiedEmails.push email.address if email.verified
+        # We want to compare without case.
+        verifiedEmails.push new RegExp email.address, 'i' if email.verified
 
     query = $or: [
       'user._id': user._id
@@ -120,7 +121,7 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
 
     if user.services?.twitter?.screenName
       query.$or.push
-        twitter: user.services.twitter.screenName
+        twitter: new RegExp user.services.twitter.screenName, 'i'
 
     RS.Transactions.Transaction.documents.find query
       

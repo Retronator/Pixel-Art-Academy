@@ -17,8 +17,6 @@ Package.onUse(function(api) {
   api.export('LandsOfIllusions');
 
   api.addFiles('construct.coffee');
-  api.addFiles('location.coffee');
-  api.addAssets('operator.script', ['client', 'server']);
 
   // Actors
 
@@ -28,18 +26,10 @@ Package.onUse(function(api) {
   // Items
 
   api.addFiles('items/items.coffee');
-  api.addFiles('items/operatorlink.coffee');
 
   // Locations
 
-  api.addFiles('locations/locations.coffee');
-  
-  api.addFiles('locations/loading/loading.coffee');
-  api.addFiles('locations/loading/loading.styl');
-  api.addAssets('locations/loading/captain.script', ['client', 'server']);
-
-  api.addFiles('locations/loading/tv/tv.coffee');
-  api.addFiles('locations/loading/tv/tv.html');
-  api.addFiles('locations/loading/tv/tv.styl');
-
+  api.addFile('loading/loading');
+  api.addStyle('loading/loading');
+  api.addComponent('loading/tv/tv');
 });

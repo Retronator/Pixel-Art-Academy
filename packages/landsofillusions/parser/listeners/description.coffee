@@ -11,6 +11,6 @@ class LOI.Parser.DescriptionListener extends LOI.Adventure.Listener
     for thing in currentPhysicalThings
       do (thing) ->
         commandResponse.onPhrase
-          form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.WhatIs], thing.avatar]
+          form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.WhatIs, Vocabulary.Keys.Verbs.WhoIs], thing.avatar]
           action: =>
             LOI.adventure.showDescription thing

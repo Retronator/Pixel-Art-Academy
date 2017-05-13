@@ -5,7 +5,7 @@ RA = Retronator.Accounts
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C2.Immersion.Basement extends LOI.Adventure.Location
+class C2.Immersion.Basement extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter2.Immersion.Basement'
   @location: -> HQ.Basement
 
@@ -27,7 +27,7 @@ class C2.Immersion.Basement extends LOI.Adventure.Location
     HQ.Actors.Operator unless C2.Immersion.state 'operatorState'
   ]
 
-  removedThings: ->
+  removeThings: ->
     # Because operator generally appears in the basement, we need to remove him when some of these scenes run.
     operatorState = C2.Immersion.state 'operatorState'
 
@@ -81,7 +81,7 @@ class C2.Immersion.Basement extends LOI.Adventure.Location
       action: => @startScript label: 'OperatorDialog'
 
   onExitAttempt: (exitResponse) ->
-    return unless exitResponse.destinationLocationClass is HQ.LandsOfIllusions
+    return unless exitResponse.destinationLocationClass is HQ.LandsOfIllusions.Hallway
 
     hasInteracted = C2.Immersion.state 'operatorState'
     return if hasInteracted

@@ -23,9 +23,12 @@ class LOI.Interface.Text extends LOI.Interface
 
     else
       # It's the first time we're visiting this location in this session so show the full description.
-      @_formatOutput location.avatar.description()
+      situation = LOI.adventure.currentSituation()
+
+      @_formatOutput situation.description.last()
       
   exitAvatars: ->
+    # TODO: Get exits from current situation so they can be dynamically modified.
     exitAvatarsByLocationId = @location()?.exitAvatarsByLocationId()
     return [] unless exitAvatarsByLocationId
 
@@ -152,6 +155,7 @@ class LOI.Interface.Text extends LOI.Interface
 
     text
 
+  # Query this to see if the interface is listening to user commands.
   active: ->
     # The text interface is inactive when there are any modal dialogs.
     return if LOI.adventure.modalDialogs().length
@@ -165,7 +169,18 @@ class LOI.Interface.Text extends LOI.Interface
       return if Accounts._loginButtonsSession.get variable
 
     true
+    
+  # Query this to see if the user is doing something with the interface.
+  busy: ->
+    busyConditions = [
+      not LOI.adventure.interface.active()
+      LOI.adventure.interface.waitingKeypress()
+      LOI.adventure.interface.commandInput.command().length
+      LOI.adventure.interface.showDialogSelection()
+    ]
 
+    _.some busyConditions
+    
   # Use to get back to the initial state with full location description.
   resetInterface: ->
     @_lastNode null

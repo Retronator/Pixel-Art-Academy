@@ -67,7 +67,12 @@ class HQ.Store.Display extends LOI.Adventure.Item
     super
 
     @subscribe RS.Transactions.Transaction.topRecent, 15
-    @subscribe RA.User.topSupporters, 25
+    @subscribe RA.User.topSupportersCurrentUser
+
+    @_topSupportersCount = new ReactiveField 10
+
+    @autorun (computation) =>
+      @subscribe RA.User.topSupporters, @_topSupportersCount()
 
     @_messagesCount = new ReactiveField 50
 
@@ -78,21 +83,26 @@ class HQ.Store.Display extends LOI.Adventure.Item
     super
 
     # Fix supporter list titles to be inside the screen.
-    $supportersArea = @$('.supporters-area')
-    $supportersListTitles = $supportersArea.find('.title')
+    $supportersArea = @$('.content-area .supporters-area')
+    $supportersListTitles = @$('.supporters-list-titles')
+    $supportersListTitlesTitles = $supportersListTitles.find('.title')
 
-    $screen = @$('.screen')
+    $contentArea = @$('.content-area')
 
-    $screen.scroll (event) =>
-      scrollTop = $screen.scrollTop()
+    $contentArea.scroll (event) =>
+      scrollTop = $contentArea.scrollTop()
       areaHeight = $supportersArea.outerHeight()
-      titleHeight = $supportersListTitles.outerHeight()
+      titleHeight = $supportersListTitlesTitles.outerHeight()
 
-      # Make sure the title still stays inside its container.
-      maxTitleTop = areaHeight - titleHeight
-      titleTop = Math.min scrollTop, maxTitleTop
+      # Make sure the title still stays inside supporters area.
+      titleBottom = scrollTop + titleHeight
+      titleOffset = Math.min areaHeight - titleBottom, 0
 
-      $supportersListTitles.css top: titleTop
+      $supportersListTitles.css top: titleOffset
+
+    # HACK: For unknown reason, events method does not work?!?
+    @$('.top-supporters .show-more-button').click (event) =>
+      @_topSupportersCount @_topSupportersCount() + 40
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -104,12 +114,15 @@ class HQ.Store.Display extends LOI.Adventure.Item
     if @showReceiptSupporters()
       # Get top recent transactions from the receipt.
       receipt = LOI.adventure.getCurrentThing HQ.Items.Receipt
-      return receipt.topRecentTransactions()
+
+      # Make sure that receipt exists, since it could disappear from state (for example, multiple browsers).
+      return receipt.topRecentTransactions() if receipt
 
     # Show normal supporters list otherwise.
     RS.Components.TopSupporters.topRecentTransactions.find({},
       sort: [
         ['amount', 'desc']
+        ['priority', 'desc']
         ['time', 'desc']
       ]
     ).fetch()
@@ -118,6 +131,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
     RS.Components.TopSupporters.topSupporters.find {},
       sort: [
         ['amount', 'desc']
+        ['priority', 'desc']
         ['time', 'desc']
       ]
 

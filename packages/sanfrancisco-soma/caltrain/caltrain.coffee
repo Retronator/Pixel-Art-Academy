@@ -6,16 +6,15 @@ Vocabulary = LOI.Parser.Vocabulary
 class Soma.Caltrain extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.Soma.Caltrain'
   @url: -> 'sf/caltrain'
-  @scriptUrls: -> [
-  ]
+  @region: -> Soma
 
   @version: -> '0.0.1'
 
   @fullName: -> "Caltrain carriage"
-  @shortName: -> "Caltrain"
+  @shortName: -> "train"
   @description: ->
     "
-      You are in a carriage of a Caltrain running between San Francisco and San Jose.
+      You are in a Caltrain carriage of a train running between San Francisco and San Jose.
     "
   
   @initialize()

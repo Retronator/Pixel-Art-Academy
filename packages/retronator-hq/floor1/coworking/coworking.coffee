@@ -7,6 +7,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Coworking extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Coworking'
   @url: -> 'retronator/coworking'
+  @region: -> HQ
 
   @version: -> '0.0.1'
 
@@ -15,8 +16,7 @@ class HQ.Coworking extends LOI.Adventure.Location
   @description: ->
     "
       The passageway opens to a dimly-lit room with a cyberpunk hacker vibe to it.
-      Tables shaped like tetrominos fill the space and hold workstations
-      for the permanent residents of the coworking space.
+      Tables fill the space, together with workstations for the permanent residents of the coworking space.
     "
   
   @initialize()
@@ -30,7 +30,7 @@ class HQ.Coworking extends LOI.Adventure.Location
       floor: 1
 
   things: -> [
-    PAA.Cast.Reuben
+    HQ.Actors.Aeronaut
     @elevatorButton
   ]
 

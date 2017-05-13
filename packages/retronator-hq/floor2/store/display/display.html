@@ -5,20 +5,31 @@
       <div class="scene {{viewClass}}">
         <div class="display">
           <div class="screen">
-            <div class="content">
-              <div class="supporters-area">
-                <div class="recent-purchases supporters-list">
-                  <h3 class="title">Top recent<br/>purchases</h3>
-                  {{> Retronator.Store.Components.TopSupporters topRecentTransactions}}
-                </div>
-                <div class="top-supporters supporters-list">
-                  <h3 class="title">Top supporters overall</h3>
-                  {{> Retronator.Store.Components.TopSupporters topSupporters}}
-                </div>
+            <div class="supporters-list-titles supporters-area {{fixedTitlesVisibleClass}}">
+              <div class="supporters-list">
+                <h3 class="title">Top recent<br/>purchases</h3>
               </div>
-              <h3>More messages from supporters</h3>
-              <div class="transaction-messages">
-                {{> Retronator.Store.Components.TopSupporters transactionMessages}}
+              <div class="supporters-list">
+                <h3 class="title">Top registered<br/>supporters</h3>
+              </div>
+            </div>
+            <div class="content-area">
+              <div class="content">
+                <div class="supporters-area">
+                  <div class="recent-purchases supporters-list">
+                    {{> Retronator.Store.Components.TopSupporters topRecentTransactions}}
+                  </div>
+                  <div class="top-supporters supporters-list">
+                    {{> Retronator.Store.Components.TopSupporters topSupporters}}
+                    <button class="show-more-button">Show more</button>
+                  </div>
+                </div>
+                {{#if transactionMessages.count}}
+                  <h3>More messages from supporters</h3>
+                  <div class="transaction-messages">
+                    {{> Retronator.Store.Components.TopSupporters transactionMessages}}
+                  </div>
+                {{/if}}
               </div>
             </div>
           </div>

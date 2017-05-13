@@ -43,13 +43,28 @@ class RS.AirportTerminal.Terrace.VendingMachine extends LOI.Adventure.Item
       ReceiveBottle: (complete) =>
         drinkType = @ephemeralState 'drinkType'
 
-        PAA.Items.Bottle.state 'drinkType', drinkType
-        PAA.Items.Bottle.state 'inInventory', true
+        # Find a copy of a bottle for this timeline.
+        copies = PAA.Items.Bottle.getCopies timelineId: LOI.adventure.currentTimelineId()
+
+        if copies.length
+          copy = copies[0]
+
+        else
+          # Create a new copy if this is the first time it's being created in this timeline.
+          copy = PAA.Items.Bottle.createCopy timelineId: LOI.adventure.currentTimelineId()
+
+        copy.state 'drinkType', drinkType
+        copy.state 'inInventory', true
 
         complete()
 
       ReturnBottle: (complete) =>
-        PAA.Items.Bottle.state 'inInventory', false
+        copies = PAA.Items.Bottle.getCopies timelineId: LOI.adventure.currentTimelineId()
+
+        # Return first bottle we find.
+        if copies.length
+          copies[0].state 'inInventory', false
+
         complete()
 
   # Listener

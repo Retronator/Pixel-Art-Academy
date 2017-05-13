@@ -320,6 +320,8 @@ operator:
 
 operator: Tell me, what do you see in front of you?
 
+### ActivateHeadset
+
 > A white rotating cube appears out of nowhere and floats in mid air.
 
 * Whoa!
@@ -334,9 +336,13 @@ operator: Hey Mikey, I think they like it. How about some more?
 * Oh yeah. -> [ImmersionPrep]
 * I need a moment to breathe.
 
+### DeactivateHeadset
+
 > You stand up from the recliner to contemplate what just happened.
 
 ## ImmersionPrep
+
+### DeactivateHeadset
 
 operator: 
     What you've seen so far was just the augmented reality part. Now you're ready for real immersion.
@@ -354,27 +360,6 @@ operator:
     If you need anything, all you have to do is ![talk to operator](talk to operator).
     Panzer out.
     
--> [End]
-
-## FirstImmersion
-
-You look at your new wristwatch and it indicates you're ready for immersion.
-
-* Panzer, I'm ready to begin.
-* Nevermind. -> [End]
-
-operator: Got it. I hope you're comfortable because this will knock your socks off.
-
-> A clear sound like those at the start of the movies rushes through your ears.
-> You cannot help but feel the shivers travel down your spine as dopamine floods your brain.
-> Ambient sounds are replaced with complete silence and you now only hear Panzer's voice.
-
-operator: Now, sit tight. The Captain will greet you in the Loading program in a second.
-
-pause
-
-### PlugIn
-
 -> [End]
 
 ## End

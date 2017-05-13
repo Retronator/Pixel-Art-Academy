@@ -18,11 +18,4 @@ Package.onUse(function(api) {
 
   api.addFiles('cast.coffee');
 
-  // Actors
-
-  api.addFiles('retro.coffee');
-  api.addFiles('burra.coffee');
-  api.addFiles('corinne.coffee');
-  api.addFiles('shelley.coffee');
-  api.addFiles('reuben.coffee');
 });

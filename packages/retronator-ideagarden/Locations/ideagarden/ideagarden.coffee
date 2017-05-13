@@ -7,10 +7,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Locations.IdeaGarden extends LOI.Adventure.Location
   @id: -> 'Retronator.HQ.Locations.IdeaGarden'
   @url: -> 'retronator/ideagarden'
-  @scriptUrls: -> [
-    'retronator_hq/hq.script'
-    'retronator_hq/actors/elevatorbutton.script'
-  ]
+  @region: -> HQ.IdeaGarden
 
   @version: -> '0.0.1'
 

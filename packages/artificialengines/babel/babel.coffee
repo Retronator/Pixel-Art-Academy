@@ -47,12 +47,7 @@ class Artificial.Babel
 
   # Main translation entry point. It tries to find a translation and inserts it if it's not present.
   @translation: (handle, key) ->
-    throw new AE.ArgumentNullException "Subscription handle must be provided." unless handle?
-    throw new AE.ArgumentNullException "Key must be provided." unless key?
-
-    translation = @Translation.documents.findOne
-      namespace: handle.namespace
-      key: key
+    translation = @existingTranslation handle, key
 
     return translation if translation
 
@@ -79,9 +74,18 @@ class Artificial.Babel
     else
       Meteor.call 'Artificial.Babel.translationInsert', namespace, key, defaultText
 
+  # Returns a translation that has already been created.
+  @existingTranslation: (handle, key) ->
+    throw new AE.ArgumentNullException "Subscription handle must be provided." unless handle?
+    throw new AE.ArgumentNullException "Key must be provided." unless key?
+
+    @Translation.documents.findOne
+      namespace: handle.namespace
+      key: key
+
   @translate: (translationOrHandle, key) ->
     if translationOrHandle instanceof @SubscriptionHandle
-      translation = @translation translationOrHandle, key
+      translation = @existingTranslation translationOrHandle, key
 
     else
       translation = translationOrHandle

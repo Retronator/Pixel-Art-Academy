@@ -23,7 +23,7 @@ Package.onUse(function(api) {
 
   // Locations
 
-  api.addFile('landsofillusions/landsofillusions');
+  api.addFile('hallway/hallway');
 
   api.addThing('room/room');
   api.addComponent('room/chair/chair');

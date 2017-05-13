@@ -27,7 +27,11 @@ class LOI.Components.Account extends AM.Component
       new @constructor.Transactions
     ]
 
-    page.pageNumber = index + 1 for page, index in @pages
+    for page, index in @pages
+      page.pageNumber = index + 1
+
+      # Add ID to avoid re-creating the component in #each.
+      page._id = Random.id()
 
     @emptyPages = for index in [@pages.length + 1...6]
       pageNumber: index
@@ -79,7 +83,9 @@ class LOI.Components.Account extends AM.Component
       @lastTurnedPageNumber = currentPageNumber
 
   show: ->
-    LOI.adventure.menu.showModalDialog dialog: @
+    LOI.adventure.showActivatableModalDialog
+      dialog: @
+      dontRender: true
 
   url: ->
     url = 'account'

@@ -129,18 +129,25 @@ class Script.Nodes.Code extends Script.Node
     # Add storytelling states to script state.
     if @script.options.parent instanceof LOI.Adventure.Scene
       scene = @script.options.parent
-      section = scene.section
-      chapter = section?.chapter
-      episode = chapter?.episode
 
-      transferThingToState scene, _scriptState, 'scene'
-      transferThingToState section, _scriptState, 'section' if section
-      transferThingToState chapter, _scriptState, 'chapter' if chapter
-      transferThingToState episode, _scriptState, 'episode' if episode
+    if scene?.section or @script.options.parent instanceof LOI.Adventure.Section
+      section = scene?.section or @script.options.parent
+
+    if section?.chapter or @script.options.parent instanceof LOI.Adventure.Chapter
+      chapter = section?.chapter or @script.options.parent
+
+    if chapter?.episode or @script.options.parent instanceof LOI.Adventure.Episode
+      episode = chapter?.episode or @script.options.parent
+
+    transferThingToState scene, _scriptState, 'scene' if scene
+    transferThingToState section, _scriptState, 'section' if section
+    transferThingToState chapter, _scriptState, 'chapter' if chapter
+    transferThingToState episode, _scriptState, 'episode' if episode
 
     # Add provided things as shorthands to script state.
     if @script.things
-      for shorthand, thing of @script.things
+      # We make sure things are really Things because sometimes avatars are set instead of full instances.
+      for shorthand, thing of @script.things when thing instanceof LOI.Adventure.Thing
         transferThingToState thing, _scriptState, shorthand
 
     console.log "Evaluating code node", @, "with states:", _globalState, _locationState, _scriptState, _ephemeralState if LOI.debug

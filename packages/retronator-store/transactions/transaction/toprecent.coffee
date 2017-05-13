@@ -101,10 +101,16 @@ class TopRecentTransactions
   @summarizeDocument: (document) ->
     # Create a summary document that only has a supporter name, amount and message. It's OK for fields to be set to
     # undefined otherwise since the field should be removed when calling changed on the publish handle.
+    supporterName = if document.user?._id then document.user.supporterName else document.supporterName
+
+    # We want to show people with name and/or message first.
+    priority = (if supporterName then 1 else 0) + (if document.tip?.message then 1 else 0)
+
     amount: document.totalValue
     time: document.time
     message: document.tip?.message
-    name: if document.user?._id then document.user.supporterName else document.supporterName
+    name: supporterName
+    priority: priority
 
   _updateSortedIndices: ->
     for i in [0...@_sortedTransactions.length]
@@ -116,7 +122,7 @@ Meteor.publish RS.Transactions.Transaction.topRecent, (count) ->
   # collection TopRecentTransactions that only holds these results.
   topRecentTransactions = new TopRecentTransactions @, count
 
-  # Listen to last 50 transactions that have some value.
+  # Listen to last transactions (4 times as much as we'll send to the client) that have some value.
   RS.Transactions.Transaction.documents.find(
     totalValue:
       $gt: 0

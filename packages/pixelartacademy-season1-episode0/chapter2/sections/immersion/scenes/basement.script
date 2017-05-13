@@ -12,7 +12,9 @@ operator: Hi there. How can I help you today?
 
 ## SneakBy
 
--> [SneakByAgain] `_Selection`
+-> [SneakByAgain] `SneakByFirstTime`
+
+## SneakByFirstTime
 
 > The operator, a muscular man with a friendly smile, calls out after you before you can enter.
 
@@ -22,7 +24,7 @@ operator: Hello there, can I help you?
 
 ## SneakByAgain
 
-> Panzer again calls after you.
+> Panzer calls after you again.
 
 ## ComeAgain
 
@@ -293,9 +295,20 @@ operator:
 operator:
     Yes. Lands of Illusions is a virtual reality system that lets you travel to places you can't in real life.
     For example, if you wanted to learn about history, why not just travel back in time?
+    
+* Interesting.
+* Yeah …
+
+operator:
     Or you could go on a journey to Mars and experience being one of the first colonists.
     Currently we offer an adventure into the city of Retropolis.
     It's a utopia built by artists, scientists and engineers, where you can work on and achieve your most ambitious dreams.
+
+* Sounds like my kind of thing.
+* When can I start?
+
+operator:
+    Yeah, well, it's still very much under construction right now. But you can support the development by pre-ordering upstairs in the store.
 
 -> [LandsOfIllusionsQuestions]
 
@@ -307,6 +320,7 @@ operator: Of course, ask away!
 
 ## LandsOfIllusionsQuestions
 
+* Can you tell me about the system again? -> [LandsOfIllusions]
 * This is just a videogame, right? -> [Videogame]
 * Can I play at any time? -> [Time]
 * What do I have to buy? -> [Buy]
@@ -367,9 +381,9 @@ operator:
 
 operator: 
     You can definitely run the game on your own since we're open source. 
-    You can download your game save file and import it into your own server.
     If you run it locally on your machine you'll essentially have offline play.
-    However, all other online-only features (multiplayer, uploading artworks), won't work.
+    However, all other online-only features (multiplayer, uploading artworks), will be local to your server.
+    Talk to Retro about downloading your game save file or if you have any other questions.
 
 -> [LandsOfIllusionsQuestions]
 

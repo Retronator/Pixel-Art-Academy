@@ -6,19 +6,19 @@ burra: `not _End`
     How can I help you today?
 
 burra: `_End`
-    Can I help you with anything else? `_answered`
+    Anything else? `_answered`
     Hi again! `not _answered`
 
 ## MainQuestion
 
-* What is this place? -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
+* I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
 * What is this place again? -> [RetronatorHQ] `RetronatorHQDepartments`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
-* Can I order a sandwich? -> [Sandwich] `not Sandwich`
-* How about coffee? -> [Coffee] `Sandwich and not Coffee`
-* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQDepartments and not PixelArtAcademy`
+* Can I order a sandwich? -> [Sandwich]
+* How about coffee? -> [Coffee] `Sandwich`
+* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQDepartments`
 * So is Pixel Art Academy like an online course? -> [PixelArtAcademyCourse] `PixelArtAcademy`
-* So about that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQDepartments`
+* About that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQDepartments`
 * What exactly is Lands of Illusions? -> [LandsOfIllusions] `RetronatorHQDepartments`
 * Oh, just looking. -> [End] `not _answered and not _End`
 * Whoops, nevermind. -> [End] `not _answered and _End`
@@ -67,6 +67,8 @@ burra: Sounds good. It's available at medium.com/retronator-magazine.
 
 > Burra turns around her computer screen and shows you the website.
 
+pause
+
 ### OpenRetronatorMagazine
 
 burra: I hope you liked it.
@@ -77,20 +79,23 @@ burra: I hope you liked it.
 
 burra: 
     Pixel Art Academy is a video game that teaches you how to draw! 
-    Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist. 
-    Take a look at the school's prospectus to find out more.
+    Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist.
     
-> Burra gives you the Pixel Art Academy prospectus.
+* Can I play yet?
 
-### ReceiveProspectus
+burra:
+    The game is in development currently, but you can pre-order it in the store above if you want to support it.
+    Oh, and I see you have a school prospectus in your inventory. You can read it to get a taste.
+    
+-> [MainQuestion]
 
 -> [End]
 
 ## PixelArtAcademyCourse
 
 burra:
-    Not really. It's not a course with an instructor that you have to follow at certain times.
-    Pixel Art Academy is first and foremost a videogame, but what your character learns you learn with them.
+    Not really. Pixel Art Academy is first and foremost a video game, but what your character learns you learn with them.
+    It's not a course with an instructor that you have to follow at certain times.
     You will get assignments in the game and you'll have to draw to complete them.
     Characters in the game world will also point you to online learning materials based on your needs.
     
@@ -115,21 +120,27 @@ burra: What? Make it yourself.
 * Oh, I thought this was a café. -> [ExplainCafe]
 * Sudo make me a sandwich. <!-- XKCD joke -->
 
-burra: Sudo make it yourself.
+burra: 
+    Sudo make it yourself.
+    This isn't exactly your usual café—you're at Retronator HQ. 
+    
+-> [Cafe]
 
 ## ExplainCafe
 
-burra: 
-    You're not in a usual café. This is Retronator Headquarters. 
-    We have a coworking space and our bar and kitchen are open to members.
-    So really, just help yourself.
+burra: Yes, but you're not in a usual café—you're at Retronator HQ!
+    
+## Cafe
+
+burra:
+    The Café is part of our coworking space and the bar and kitchen are open to our members. So really, just help yourself to glorious tea.
     
 -> [MainQuestion]
 
 ## Coffee
 `_answered = true`
 
-burra: Sorry, the coffee hasn't been coded into the game yet. <!-- joke from the prototype -->
+burra: Sorry, coffee hasn't been coded into the game yet. <!-- joke from the prototype -->
 
 -> [MainQuestion]
 

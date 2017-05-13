@@ -45,6 +45,7 @@
 
     .display
       position absolute
+      z-index 0
       left 160rem
       top 10rem
       width 300rem
@@ -57,67 +58,92 @@
 
       .screen
         position relative
+        z-index -1
         height 148rem
         background atariGrey(0)
         border 1rem solid atariGrey(2)
         border-top-color atariGrey(0)
         border-right-color atariGrey(0)
         color atariGrey(4)
-        overflow-y scroll
+        overflow hidden
 
-        .content
-          h3
-            padding 5rem 7rem
-            margin 0
-            acme-7()
-            font-weight normal
-            background atariGrey(0)
+        h3
+          padding 5rem 7rem
+          margin 0
+          acme-7()
+          font-weight normal
+          background atariGrey(0)
 
-          .supporters-area
-            display flex
+        .supporters-list-titles
+          position absolute
+          width 100%
+          z-index 1
 
-            .supporters-list
-              position relative
-              padding-top 25rem
-              width 50%
+        .supporters-area
+          display flex
 
-              .title
-                position absolute
-                width 100%
-                z-index 1
-                top 0
-                left 0
+          .supporters-list
+            position relative
+            width 50%
 
+            .title
+              position absolute
+              width 100%
+              top 0
+              left 0
+
+        .content-area
+          absolute-cover()
+          overflow-y scroll
+
+          .content
+            .show-more-button
+              border none
+              background atariGrey(1)
+              color atariGrey(3)
+              font inherit
+              margin 0 0 10rem 20rem
+
+              &:hover
+                background atariGrey(2)
+                color atariGrey(4)
+
+            .supporters-area
+              display flex
+
+              .supporters-list
+                padding-top 25rem
+
+                .retronator-store-components-top-supporters
+                  z-index 0
+                  top 30rem
+                  padding 0 10rem 5rem 20rem
+                  margin 0
+
+                  .supporter
+                    .name-amount-area
+                      .name
+                        width 75%
+
+                      .amount
+                        width 25%
+
+            .transaction-messages
               .retronator-store-components-top-supporters
-                z-index 0
-                top 30rem
-                padding 0 10rem 5rem 20rem
-                margin 0
+                list-style none
+                padding 0 10rem
 
                 .supporter
                   .name-amount-area
+                    width 25%
+                    float left
+
                     .name
-                      width 75%
+                      width 100%
 
                     .amount
-                      width 25%
+                      display none
 
-          .transaction-messages
-            .retronator-store-components-top-supporters
-              list-style none
-              padding 0 10rem
-
-              .supporter
-                .name-amount-area
-                  width 25%
-                  float left
-
-                  .name
-                    width 100%
-
-                  .amount
-                    display none
-
-                .message
-                  margin-left 25%
-                  padding-left 10rem
+                  .message
+                    margin-left 25%
+                    padding-left 10rem

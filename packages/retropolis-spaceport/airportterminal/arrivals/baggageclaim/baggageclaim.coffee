@@ -6,6 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class RS.AirportTerminal.BaggageClaim extends LOI.Adventure.Location
   @id: -> 'Retropolis.Spaceport.AirportTerminal.BaggageClaim'
   @url: -> 'spaceport/baggage-claim'
+  @region: -> RS
 
   @version: -> '0.0.1'
 

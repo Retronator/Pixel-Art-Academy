@@ -10,6 +10,31 @@ class LOI.Adventure.Item extends LOI.Adventure.Thing
     Activated: 'Activated'
     Deactivating: 'Deactivating'
 
+  # Items with multiple copies
+  
+  @createCopy: (options = {}) ->
+    copyId = Random.id()
+    copyStateAddress = @stateAddress.child "copies.#{copyId}"
+
+    copy = new @
+      stateAddress: copyStateAddress
+
+    copy.state 'timelineId', options.timelineId if options.timelineId
+
+    copy
+
+  @getCopies: (options = {}) ->
+    copies = @state 'copies'
+
+    copyInstances = for copyId of copies
+      new @
+        stateAddress: @stateAddress.child "copies.#{copyId}"
+
+    if options.timelineId
+      copyInstances = _.filter copyInstances, (copy) -> copy.state('timelineId') is options.timelineId
+
+    copyInstances
+
   # Item instance
     
   # Tells if the item supports the activate interaction.
@@ -21,6 +46,11 @@ class LOI.Adventure.Item extends LOI.Adventure.Thing
     # An item that can be activated has 4 stages in its lifecycle. You can use this
     # as a reactive variable to depend on the state the item is currently in.
     @activatedState = new ReactiveField @constructor.activatedStates.Deactivated
+
+    # Override state address if it was provided (used with copies).
+    if @options?.stateAddress
+      @stateAddress = @options.stateAddress
+      @state = new LOI.StateObject address: @stateAddress
 
   deactivated: -> @activatedState() is @constructor.activatedStates.Deactivated
   activating: -> @activatedState() is @constructor.activatedStates.Activating

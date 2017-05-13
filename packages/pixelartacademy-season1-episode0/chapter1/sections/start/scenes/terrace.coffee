@@ -11,11 +11,16 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
   @translations: ->
     intro: "
       You exit the Retropolis International Spaceport.
-      A magnificent view of the city opens before you and you feel the adventure in the air.
-      The terrace you're standing on connects back to the airport terminal in the south.
+      A magnificent view of the city opens before you and you feel adventure in the air.
+      The terrace you're standing on connects back to the airport terminal in the east.
     "
 
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/start/scenes/terrace.script'
+
   @initialize()
+
+  description: ->
+    @translations()?.intro
 
   things: ->
     [
@@ -23,19 +28,28 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
       C1.Actors.Alex if @state 'alexPresent'
     ]
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/start/scenes/terrace.script'
+  _scheduleAlex: (options) ->
+    @_alexEntersTimeout = Meteor.setTimeout =>
+      # Don't do the action if the user is busy doing something.
+      if LOI.adventure.interface.busy()
+        # Retry in 10 seconds.
+        @_scheduleAlex delay: 5000
+        return
+
+      # Looks OK, start interaction.
+      @listeners[0].startScript label: "AlexEnters"
+    ,
+      options.delay
+
+  destroy: ->
+    super
+
+    Meteor.clearTimeout @_alexEntersTimeout
+
+  # Listener
 
   onEnter: (enterResponse) ->
     scene = @options.parent
-
-    # Provide the introduction text the first time we enter.
-    introductionDone = scene.state 'introductionDone'
-
-    unless introductionDone
-      enterResponse.overrideIntroduction =>
-        scene.translations()?.intro
-
-      scene.state 'introductionDone', true
 
     # Alex should enter after 30s unless they are already present or they have already talked to you.
     unless scene.state('alexPresent') or C1.Actors.Alex.state('firstTalkDone')
@@ -44,12 +58,9 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
         return unless LOI.adventure.interface.uiInView()
         return unless time = LOI.adventure.time()
         computation.stop()
-        
-        @_alexEntersTimeout = Meteor.setTimeout =>
-          @startScript label: "AlexEnters"
-        ,
-          30000
-        
+
+        scene._scheduleAlex delay: 30000
+
         # Also record the adventure time so we have our 10 min countdown for airship departure.
         scene.section.chapter.state 'startTime', time
 
@@ -85,13 +96,18 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
     scene._animateTitle()
 
   _animateTitle: ->
-    LOI.adventure.addModalDialog @
+    # We add ourselves as a modal dialog to prevent user input.
+    @dontRenderAsDialog = true
+    LOI.adventure.addModalDialog
+      dialog: @
+      dontRender: true
+
     @cleanup()
 
     # Skip animation on enter.
     $(document).on 'keydown.startSection', (event) =>
       # Only process keys if we're the top-most dialog.
-      return unless LOI.adventure.modalDialogs()[0] is @
+      return unless LOI.adventure.modalDialogs()[0].dialog is @
 
       keyCode = event.which
       @_showChapterTitle() if keyCode is AC.Keys.enter or keyCode is AC.Keys.escape
@@ -161,8 +177,4 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
   cleanup: ->
     super
 
-    # Stop Alex's timer.
-    Meteor.clearTimeout @_alexEntersTimeout
-
     @_alexTalksAutorun?.stop()
-

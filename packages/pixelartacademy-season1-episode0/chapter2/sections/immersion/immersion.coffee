@@ -20,6 +20,7 @@ class C2.Immersion extends LOI.Adventure.Section
     BackAtCounter: 'BackAtCounter'
 
   @avatars: ->
+    operator: HQ.Actors.Operator
     sync: HQ.Items.Sync
 
   @initialize()
@@ -51,6 +52,13 @@ class C2.Immersion extends LOI.Adventure.Section
       ,
         timeToImmersion * 1000
 
+  active: ->
+    @requireFinishedSections C2.Intro
+
+  @finished: ->
+    # Immersion section ends when you complete the immersion script. Make sure you don't return undefined.
+    @state('completed') is true
+
   # The time, in seconds, until the user can start immersion.
   timeToImmersion: ->
     # We require real life minutes to pass (and not game time, since
@@ -67,7 +75,7 @@ class C2.Immersion extends LOI.Adventure.Section
     section = @options.parent
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.LookAt, @avatars.sync]
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], @avatars.sync]
       priority: 1
       action: =>
         minutesLeft = Math.floor section.timeToImmersion() / 60
@@ -87,3 +95,10 @@ class C2.Immersion extends LOI.Adventure.Section
 
           @script.ephemeralState 'timeToDeparture', timeToDeparture
           @startScript label: 'LookAtSyncTimeLeft'
+
+    if section.state('operatorState') is C2.Immersion.OperatorStates.BackAtCounter
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.TalkTo, @avatars.operator]
+        priority: 1
+        action: =>
+          @startScript label: 'TalkToOperator'

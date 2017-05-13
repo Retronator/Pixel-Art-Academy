@@ -166,11 +166,22 @@ retro: Anything I can help you with purchasing?
 
 ## TransactionCanceledQuestions
 
-* Thanks for the info, let's see that receipt again. -> [Checkout] `_afterTransactionQuestion`
+* Thanks for the info, let's see that receipt again. -> [CheckoutAgain] `_afterTransactionQuestion`
 * I need to change some items first. -> [Change]
 * Where does the purchase show up? -> [PurchaseDisplay]
 * What is the tip message for? -> [TipMessage]
 * I don't think I'm ready to buy right now. -> [NoBuy]
+
+## CheckoutAgain
+
+### CheckoutShoppingCart
+### AddReceipt
+
+> Retro gives you the receipt back.
+
+pause
+
+-> [Checkout]
 
 ## Change
 
@@ -282,7 +293,7 @@ retro: Well then, in that case I thank you immensely for your support!
 
 retro: 
     All the game bundles and upgrade options are on the shelves over there.
-    Simply ![look at a shelf](look at shelf) and add the bundle you want to the shopping cart.
+    Simply ![look at a shelf](look at shelves) and add the bundle you want to the shopping cart.
     
 -> [MainQuestion]
 
@@ -377,7 +388,7 @@ retro: Of course, ask ahead. -> [PixelArtAcademyQuestions]
 
 retro:
     No, not at all. Episodes in Pixel Art Academy are non-linear.
-    You usually start them by talking to key characters.
+    You usually start them by talking to a key character.
     Some will require other things to be achieved in the game, but in general the order you complete them is up to you.
 
 -> [SeasonsQuestions]
@@ -394,12 +405,10 @@ retro:
 ## Development
 
 retro:
-    Right now the game is mainly developed by me only. 
-    Burra helps with outreach and I've had some help from objectsforheads on the coding front in the past.
+    Slow but steady. Right now the game is mainly developed by me only. 
+    Burra helps with outreach and I've had help from objectsforheads on the coding front in the past.
     Development by one person, as you can imagine, takes time.
-    It's my full-time investment though, I live and breathe this game.
-    Since it's pretty much my lifestyle, I'm careful that I don't burn out doing it.
-    Therefore, the development goes as slow as it needs to while putting most of my days into it.
+    It's my full-time investment though, I put most of my days into it.
 
 -> [PixelArtAcademyQuestions]
 

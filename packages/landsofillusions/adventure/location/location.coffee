@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AM = Artificial.Mirage
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Adventure.Location extends LOI.Adventure.Scene
@@ -7,6 +8,10 @@ class LOI.Adventure.Location extends LOI.Adventure.Scene
 
   # Override for Scene location.
   @location: -> @
+
+  # The region this location belongs to.
+  @region: -> throw new AE.NotImplementedException "You must specify region class."
+  region: -> @constructor.region()
 
   # The maximum height of location's illustration. By default there is no illustration (height 0).
   # The maximum height of location's illustration. By default there is no illustration (height 0).
@@ -56,4 +61,4 @@ class LOI.Adventure.Location extends LOI.Adventure.Scene
 
     ready
 
-  exits: -> {} # Override to provide location exits in {direction: location class} format
+  exits: -> # Override to provide location exits in {direction: location class} format

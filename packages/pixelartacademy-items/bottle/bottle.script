@@ -4,7 +4,7 @@
 
 > You drink the `thisInstance.drink().fullName()` and feel refreshed.
 
-`this.drinkType = null`
+### Drink
 
 -> [End]
 
