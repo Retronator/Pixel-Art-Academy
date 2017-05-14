@@ -75,6 +75,7 @@ Package.onUse(function(api) {
 
   api.addFile('chapter2/items/items');
   api.addComponent('chapter2/items/videotablet/videotablet');
+  api.addFile('chapter2/items/videotablet/videos');
 
   // Intro
 

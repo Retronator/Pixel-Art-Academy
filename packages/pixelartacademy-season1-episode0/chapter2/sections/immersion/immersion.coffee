@@ -36,16 +36,8 @@ class C2.Immersion extends LOI.Adventure.Section
       # Don't do anything if alarm time has already passed.
       return if timeToImmersion < 0
 
-      console.log "Starting alarm till immersion", timeToImmersion
-
       Meteor.setTimeout =>
-        # Only start the script if you haven't already started 
-        # the section the alarm is supposed to make you pay attention to.
-        syncSetupStarted = _.nestedProperty LOI.adventure.gameState(), 'scripts.PixelArtAcademy.Season1.Episode0.Chapter2.Immersion.Room.RoomSyncSetupProcedure'
-
-        console.log "ALARM", syncSetupStarted
-
-        @listeners[0].startScript label: 'Alarm' unless syncSetupStarted
+        @listeners[0].startScript label: 'Alarm'
       ,
         timeToImmersion * 1000
 
@@ -63,9 +55,9 @@ class C2.Immersion extends LOI.Adventure.Section
     return unless redPillTime = @state('redPillTime')
     elapsedMilliseconds = Date.now() - redPillTime
 
-    # You can immerse after 11 minutes. It's 11 and not 10 so that when you look at the watch
-    # right after the dialog ends, it shows 10 minutes. The units of returned value are seconds.
-    11 * 60 - elapsedMilliseconds / 1000
+    # You can immerse after 6 minutes. It's 6 and not 5 so that when you look at the watch
+    # right after the dialog ends, it shows 5 minutes. The units of returned value are seconds.
+    6 * 60 - elapsedMilliseconds / 1000
 
   # Script
 
@@ -78,6 +70,13 @@ class C2.Immersion extends LOI.Adventure.Section
       PlugIn: (complete) => HQ.LandsOfIllusions.Room.plugInCallback complete
       DeactivateHeadset: (complete) => HQ.LandsOfIllusions.Room.deactivateHeadsetCallback complete
 
+      AnalyzeAlarm: (complete) =>
+        # Only start the alarm if you haven't already started the sync setup procedure.
+        syncSetupStarted = _.nestedProperty LOI.adventure.gameState(), 'scripts.PixelArtAcademy.Season1.Episode0.Chapter2.Immersion.Room.SyncSetupProcedure'
+        @ephemeralState().syncSetupStarted = syncSetupStarted
+
+        complete()
+
   # Listener
 
   @avatars: ->
@@ -86,12 +85,15 @@ class C2.Immersion extends LOI.Adventure.Section
   onCommand: (commandResponse) ->
     section = @options.parent
 
-    if sync = LOI.adventure.getCurrentThing HQ.Items.Sync
+    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
+    timeToImmersion = section.timeToImmersion()
+
+    if sync and timeToImmersion
       commandResponse.onPhrase
         form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], sync.avatar]
         priority: 1
         action: =>
-          minutesLeft = Math.floor section.timeToImmersion() / 60
+          minutesLeft = Math.floor timeToImmersion / 60
 
           if minutesLeft < 0
             @startScript label: 'LookAtSyncTimeOver'

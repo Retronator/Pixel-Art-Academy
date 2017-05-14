@@ -16,6 +16,10 @@
 
 ## Alarm
 
+### AnalyzeAlarm
+
+-> [End] `_syncSetupStarted`
+
 > SYNC alerts you with a gentle buzz. A notification on the device says the neurotransmitters are ready.
 
 -> [End]

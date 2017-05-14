@@ -154,8 +154,6 @@ operator: No problem.
  
 ## VideoIntro
 
-### VideoDisplay
-
 operator: A whole lot of things! Let me find something you'd like.
 
 ## VideoQuestions
@@ -277,6 +275,8 @@ operator: Here you go. I think you'll like the first one the most, but I added a
 
 operator: How was that? Did you like the choice?
 
+### GetTimeToImmersion
+
 `_timeLeft = _timeToImmersion > 0`
 
 * Great stuff! -> [VideoGreat]
@@ -288,7 +288,7 @@ operator: How was that? Did you like the choice?
 
 operator: Glad to hear that! I knew my YouTube skills wouldn't go to waste.
     
-operator: Time's up though, we're ready to continue. -> [VideoTimeOver] `not _timeLeft`
+operator: Time flies when you're watching good videos, we're ready to continue with the procedure. -> [VideoTimeOver] `not _timeLeft`
 operator: There's actually more time left, do you want to see another one? -> [VideoTimeLeft] `_timeLeft`
 
 ## VideoGood
