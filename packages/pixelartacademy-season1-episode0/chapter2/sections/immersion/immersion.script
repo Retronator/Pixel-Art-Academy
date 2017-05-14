@@ -1,4 +1,4 @@
-# PixelArtAcademy.Season1.Episode0.Chapter2.Immersion.Room
+# PixelArtAcademy.Season1.Episode0.Chapter2.Immersion
 
 ## LookAtSyncTimeLeft
 
@@ -20,33 +20,50 @@
 
 -> [End]
 
-## UseSyncFirstImmersion
+## LookAtSyncFirstImmersion
 
 You look at your new wristwatch and it indicates you're ready for immersion.
 
-* Talk to operator.
+* Activate
 * Nevermind. -> [End]
 
-## TalkToOperator
+> You activate your SYNC device.
 
-operator: Operator.
-
-* I'm ready to begin. -> [FirstImmersion]
-* Oh, wait, I need a moment.
-
-operator: No sweat. Just call back when you're ready to begin.
-
--> [End]
+`_alreadyConfirmed = false`
 
 ## FirstImmersion
 
-operator: Got it. I hope you're sitting down because this will knock your socks off.
+> As the system starts, ambient sounds are replaced with complete silence.
+> A clear sound like those at the start of the movies rushes through your ears and the white cube reappears.
 
-> A clear sound like those at the start of the movies rushes through your ears.
-> You cannot help but feel the shivers travel down your spine as dopamine floods your brain.
-> Ambient sounds are replaced with complete silence and you now only hear Panzer's voice.
+### ActivateHeadset
 
-operator: Now sit tight. The Captain will greet you in the Loading program in a second.
+> You cannot help but feel the shivers travel down your spine as dopamine floods your brain. `not FirstSetupDone`
+
+-> [Complete] `_alreadyConfirmed`
+
+## FirstSetupDone
+
+* Panzer, I'm ready for immersion. -> [Confirm]
+* Oh, wait, I need a moment. -> [Cancel]
+
+## Cancel
+
+operator: No sweat. Just call back when you're ready to begin.
+
+### DeactivateHeadset
+
+-> [End]
+
+## Confirm
+
+operator: That's what I like to hear.
+
+## Complete
+
+operator: 
+    I hope you're sitting down because this will knock your socks off.
+    Now sit tight. The Captain will greet you in the Loading program in a second.
 
 `this.completed = true`
 
@@ -55,5 +72,18 @@ pause
 ### PlugIn
 
 -> [End]
+
+## TalkToOperator
+
+operator: Operator.
+
+* Panzer, I'm ready for immersion.
+* Just one more thing … -> [Cancel]
+
+operator: That's what I like to hear.
+
+`_alreadyConfirmed = true`
+
+-> [FirstImmersion]
 
 ## End

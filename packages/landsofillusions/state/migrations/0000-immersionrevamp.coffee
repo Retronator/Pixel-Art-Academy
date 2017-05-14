@@ -18,9 +18,12 @@ class Migration extends Document.PatchMigration
         _.nestedProperty state, 'things.PixelArtAcademy.Season1.Episode0.Chapter2.Immersion', {}
         _.nestedProperty state, 'things.PixelArtAcademy.Season1.Episode0.Chapter3', {}
 
+        _.nestedProperty state, 'scripts.PixelArtAcademy.Season1.Episode0.Chapter2.Immersion', {}
+        _.nestedProperty state, 'scripts.PixelArtAcademy.Season1.Episode0.Chapter3', {}
+
         # Move out of Construct if necessary.
         if state.currentLocationId is 'LandsOfIllusions.Construct.Loading' or state.currentTimelineId is 'Construct'
-          state.currentLocationId = 'Retronator.HQ.LandsOfIllusions.Room'
+          state.currentLocationId = 'Retronator.HQ.Basement'
           state.currentTimelineId = 'RealLife'
 
         updated = collection.update

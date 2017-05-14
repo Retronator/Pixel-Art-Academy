@@ -18,9 +18,7 @@ class C2.Immersion extends LOI.Adventure.Section
     InRoom: 'InRoom'
     BackAtCounter: 'BackAtCounter'
 
-  @avatars: ->
-    operator: HQ.Actors.Operator
-    sync: HQ.Items.Sync
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/immersion/immersion.script'
 
   @initialize()
 
@@ -63,41 +61,59 @@ class C2.Immersion extends LOI.Adventure.Section
     # We require real life minutes to pass (and not game time, since
     # we want to allow the user to do other things on the internet).
     return unless redPillTime = @state('redPillTime')
-    elapsedMiliseconds = Date.now() - redPillTime
+    elapsedMilliseconds = Date.now() - redPillTime
 
-    # You can immerse after 5 minutes. The units of returned value are seconds.
-    5 * 60 - elapsedMiliseconds / 1000
+    # You can immerse after 11 minutes. It's 11 and not 10 so that when you look at the watch
+    # right after the dialog ends, it shows 10 minutes. The units of returned value are seconds.
+    11 * 60 - elapsedMilliseconds / 1000
+
+  # Script
+
+  initializeScript: ->
+    @setThings
+      operator: @options.listener.avatars.operator
+
+    @setCallbacks
+      ActivateHeadset: (complete) => HQ.LandsOfIllusions.Room.activateHeadsetCallback complete
+      PlugIn: (complete) => HQ.LandsOfIllusions.Room.plugInCallback complete
+      DeactivateHeadset: (complete) => HQ.LandsOfIllusions.Room.deactivateHeadsetCallback complete
 
   # Listener
+
+  @avatars: ->
+    operator: HQ.Actors.Operator
 
   onCommand: (commandResponse) ->
     section = @options.parent
 
-    commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], @avatars.sync]
-      priority: 1
-      action: =>
-        minutesLeft = Math.floor section.timeToImmersion() / 60
+    if sync = LOI.adventure.getCurrentThing HQ.Items.Sync
+      commandResponse.onPhrase
+        form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], sync.avatar]
+        priority: 1
+        action: =>
+          minutesLeft = Math.floor section.timeToImmersion() / 60
 
-        if minutesLeft < 0
-          @startScript label: 'LookAtSyncTimeOver'
-
-        else
-          if minutesLeft = 0
-            timeToDeparture = "less than a minute"
-
-          else if minutesLeft is 1
-            timeToDeparture = "one minute"
+          if minutesLeft < 0
+            @startScript label: 'LookAtSyncTimeOver'
 
           else
-            timeToDeparture = "#{minutesLeft} minutes"
+            if minutesLeft is 0
+              timeToImmersion = "less than a minute"
 
-          @script.ephemeralState 'timeToDeparture', timeToDeparture
-          @startScript label: 'LookAtSyncTimeLeft'
+            else if minutesLeft is 1
+              timeToImmersion = "one minute"
 
-    if section.state('operatorState') is C2.Immersion.OperatorStates.BackAtCounter
+            else
+              timeToImmersion = "#{minutesLeft} minutes"
+
+            @script.ephemeralState 'timeToImmersion', timeToImmersion
+            @startScript label: 'LookAtSyncTimeLeft'
+
+    if section.state('operatorState') is C2.Immersion.OperatorStates.BackAtCounter and operatorLink = LOI.adventure.getCurrentThing HQ.Items.OperatorLink
+      operator = operatorLink.operator
+
       commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.TalkTo, @avatars.operator]
+        form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, operator.avatar]]
         priority: 1
         action: =>
           @startScript label: 'TalkToOperator'

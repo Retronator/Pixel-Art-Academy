@@ -53,7 +53,7 @@ operator: Great! If you would please scan your keycard …
 ## PlayApproved
 
 operator: 
-    Thank you! I have a room available for you. 
+    Thank you! We need to set you up in one of our immersion rooms. 
     It'll be through the hallway on your left.
 
 > You mistakenly look to the right. <!-- Matrix reference -->

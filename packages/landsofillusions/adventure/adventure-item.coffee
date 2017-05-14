@@ -6,9 +6,7 @@ class LOI.Adventure extends LOI.Adventure
     # Similar to location, create the active item.
     @activeItemId = new ReactiveField null
 
-    # HACK: ComputedField triggers recomputation when called from events so we use ReactiveField + autorun manually.
-    @activeItem = new ReactiveField null
-    @autorun (computation) =>
+    @activeItem = new ComputedField =>
       # Wait until location is ready and all things at location have loaded.
       currentLocation = @currentLocation()
       return unless currentLocation?.ready()
@@ -42,7 +40,10 @@ class LOI.Adventure extends LOI.Adventure
         # No more object
         @_activeItem = null
 
-      @activeItem @_activeItem
+      @_activeItem
+    ,
+      # Make sure to keep this computed field running.
+      true
 
   deactivateCurrentItem: ->
     @activeItemId null

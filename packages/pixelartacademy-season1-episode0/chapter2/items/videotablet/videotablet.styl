@@ -1,0 +1,32 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-season1-episode0-chapter2-items-videotablet
+  .safe-area
+    .hand
+      position absolute
+      z-index 3
+      top 105rem
+      left -60rem
+      width 85rem
+      height 196rem
+      pointer-events none
+
+    .tablet
+      absolute-cover()
+      border 1rem solid
+      border-bottom 2rem solid
+      border-color atariGrey(1) atariGrey(2) atariGrey(0) atariGrey(0)
+
+      &::after
+        content ''
+        absolute-cover()
+        z-index 2
+        pointer-events none
+        border 2rem solid rgba(atariGrey(1), 0.5)
+
+      &::before
+        content ''
+        absolute-cover()
+        z-index 3
+        pointer-events none
+        border 1rem solid rgba(atariGrey(1), 0.5)

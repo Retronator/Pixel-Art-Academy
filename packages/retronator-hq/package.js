@@ -46,6 +46,8 @@ Package.onUse(function(api) {
   api.addFile('items/sync/sync');
   api.addFile('items/keycard/keycard');
 
+  api.addThing('items/operatorlink/operatorlink');
+
   // Scenes
   
   api.addFile('scenes/scenes');

@@ -24,5 +24,6 @@ LOI.load = (slot) ->
   # the same account can move independently, at least inside the current session (they will get synced again on
   # reload).
   LOI.adventure.currentLocationId state.currentLocationId
+  LOI.adventure.currentTimelineId state.currentTimelineId
 
   return state

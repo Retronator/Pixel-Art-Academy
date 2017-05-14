@@ -12,7 +12,7 @@ burra: `_End`
 ## MainQuestion
 
 * I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
-* What is this place again? -> [RetronatorHQ] `RetronatorHQDepartments`
+* Can you tell me about the HQ again? -> [RetronatorHQ] `RetronatorHQDepartments`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
 * Can I order a sandwich? -> [Sandwich]
 * How about coffee? -> [Coffee] `Sandwich`

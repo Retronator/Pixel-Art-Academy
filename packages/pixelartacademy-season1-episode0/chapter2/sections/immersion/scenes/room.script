@@ -17,7 +17,7 @@ operator:
 <!-- Switch to different stages in the procedure. Do it last to first so that we jump as far ahead as we can. -->
 -> [RedPillSitDown] `RedPillWaiting`
 -> [AugmentedDoneSitDown] `AugmentedDone`
--> [IntroDoneSitDown] `IntroDone`
+-> [ReadyToJump] `IntroDone`
 
 operator: 
     You'll be able to play our games from anywhere at anytime, but feel free to use this room if you need a place to relax when you sync in.
@@ -36,10 +36,10 @@ operator:
 
 `section.syncGiven = true`
 
-operator: This wearable is a wireless transmitter that will communicate between our system and your brain.
+operator: This is SYNC, a wireless transmitter that will communicate between our system and your brain.
 
 * OK. -> [RedPill]
-* My brain? How will it reach my brain?
+* My brain? How will it talk to my brain?
 
 operator:
     Ah, the tricky piece of the puzzle. 
@@ -69,7 +69,11 @@ operator: Your wearable will transmit electromagnetic signals through them to au
 * High tech!
 * A bit scary.
 
-operator: Haha, yes. Are you ready to jump down the rabbit hole?
+operator: Haha, yes. 
+
+## ReadyToJump
+
+operator: Ready to jump down the rabbit hole?
 
 ## IntroDone
     
@@ -84,18 +88,13 @@ operator: No sweat. Just return to the room and ![sit in chair](sit in chair) wh
 
 -> [End]
 
-## IntroDoneSitDown
-
-* Ready to jump down that rabbit hole. -> [Wonderland]
-* Just one more thing … -> [StandUpToPrepare]
-
 ## Wonderland
 
 operator: Buckle your seatbelt, Dorothy, 'cause Kansas is going bye-bye.
 
 > Panzer gives you the pill and you drink it down with some water.
 
-`redPillTime = Date.now()`
+### RedPillStart
 
 ## RedPillWaiting
 
@@ -124,7 +123,7 @@ operator:
     I know you probably live a busy life, but it's good to slow down and take some time for yourself.
     So just relax and enjoy a movie without looking at the clock.
 
-* Yeah, you're right. What do you have? -> [VideoQuestions]
+* Yeah, you're right. What do you have? -> [VideoIntro]
 * I'll just wait.
 
 operator: No problem.
@@ -133,7 +132,9 @@ operator: No problem.
 
 ## RedPillSitDown
 
--> [TimeLeft] `Date.now() - redPillTime < 5 * 60 * 1000`
+### GetTimeToImmersion
+
+-> [TimeLeft] `_timeToImmersion > 0`
 
 operator: Good, it's time to begin!
 
@@ -143,7 +144,8 @@ operator: Good, it's time to begin!
 
 operator: Looks like there's some more time left. Do you want to watch the videos?
 
-* What do you have? -> [VideoQuestions]
+* What do you have? -> [VideoIntro]
+* The videos? -> [VideoWhy]
 * I'll just wait.
 
 operator: No problem.
@@ -152,16 +154,18 @@ operator: No problem.
  
 ## VideoIntro
 
+### VideoDisplay
+
 operator: A whole lot of things! Let me find something you'd like.
 
 ## VideoQuestions
 
 `videoGaming = 0; videoNonGaming = 0; videoPixelArt = 0; videoGameDev = 0; videoArt = 0; videoTech = 0; videoRelax = 0; videoThink = 0;`
     
-operator: Do you prefer a video about gaming or about other things?
+operator: Do you prefer a video about gaming or other things?
 
 * Gaming sounds good. -> [VideoGaming]
-* Other things. -> [VideoOther]
+* Other things if possible. -> [VideoOther]
 * Either is fine. -> [VideoArtTechQuestion]
 
 ## VideoGaming
@@ -174,7 +178,7 @@ operator: Do you prefer a video about gaming or about other things?
 
 `videoGaming--; videoOther++;`
 
--> [VideoGamingQuestion]
+-> [VideoArtTechQuestion]
 
 ## VideoGamingQuestion
 
@@ -230,7 +234,7 @@ operator: Finally, I can try to find something more relaxing to watch or somethi
 
 -> [VideoEnd]
 
-## VideoRelax
+## VideoThink
 
 `videoRelax--; videoThink++;`
 
@@ -238,7 +242,13 @@ operator: Finally, I can try to find something more relaxing to watch or somethi
 
 ## VideoEnd
 
+> Panzer thinks for a few moments.
+
 operator: Alright, I think I have something for you.
+
+-> [HandOverTablet] `Perplexed`
+
+## Perplexed
 
 > Panzer pulls up a few videos on a tablet.
 
@@ -259,13 +269,15 @@ operator: Hahaha, no problem. Don't be afraid though, nobody is judging you. Jus
 
 operator: Here you go. I think you'll like the first one the most, but I added a couple more just in case.
 
+## HandOverTablet
+
 > Panzer hands over the tablet and you look at the selection.
 
 ### VideoDisplay
 
 operator: How was that? Did you like the choice?
 
-`_timeLeft = Date.now() - redPillTime < 5 * 60 * 1000`
+`_timeLeft = _timeToImmersion > 0`
 
 * Great stuff! -> [VideoGreat]
 * It was good, yeah. -> [VideoGood]
@@ -291,7 +303,7 @@ operator: Sorry I couldn't find a better one. There's still some time to kill. D
 
 ## VideoTimeLeft
 
-* Sure thing.
+* Sure thing. -> [VideoQuestions]
 * I'll just wait. -> [StandUpKillTime]
 
 ## VideoTimeOver
@@ -320,9 +332,9 @@ operator:
 
 operator: Tell me, what do you see in front of you?
 
-### ActivateHeadset
-
 > A white rotating cube appears out of nowhere and floats in mid air.
+
+### ActivateHeadset
 
 * Whoa!
 * What the …
@@ -360,6 +372,14 @@ operator:
     If you need anything, all you have to do is ![talk to operator](talk to operator).
     Panzer out.
     
+-> [End]
+
+## SelfStart
+
+> You sit down and activate your SYNC device.
+
+### FirstImmersion
+
 -> [End]
 
 ## End

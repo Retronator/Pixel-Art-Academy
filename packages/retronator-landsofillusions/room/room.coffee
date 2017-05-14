@@ -15,7 +15,7 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
   @shortName: -> "room"
   @description: ->
     "
-      You enter a cosy room with a big futuristic reclining chair located in the middle.
+      You enter a cosy room with a futuristic reclining chair located in the middle.
     "
 
   @defaultScriptUrl: -> 'retronator_retronator-landsofillusions/room/room.script'

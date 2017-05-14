@@ -14,6 +14,7 @@ class C2.Inventory extends LOI.Adventure.Scene
     items = [
       HQ.Items.Prospectus
       HQ.Items.Sync if C2.Immersion.state 'syncGiven'
+      HQ.Items.OperatorLink if C2.Immersion.state('operatorState') is C2.Immersion.OperatorStates.BackAtCounter
     ]
     
     for itemClassName in ['ShoppingCart', 'Account', 'Receipt', 'Keycard']

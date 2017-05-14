@@ -6,22 +6,11 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Items.Sync extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.Items.Sync'
 
-  @fullName: -> "SYnchronization Neural Connector"
-  @shortName: -> "SYNC"
-  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
+  @fullName: -> "SYNC"
 
   @description: ->
     "
-      It's the SYnchronization Neural Connector, SYNC for short.
+      It's Neurasync's Synchronization Neural Connector, SYNC for short. It looks like a fitness tracker wristband.
     "
 
   @initialize()
-
-  onCommand: (commandResponse) ->
-    account = @options.parent
-
-    commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.LookIn], account.avatar]
-      priority: 1
-      action: =>
-        LOI.adventure.menu.account.show()
