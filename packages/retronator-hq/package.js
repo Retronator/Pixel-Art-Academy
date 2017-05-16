@@ -41,9 +41,12 @@ Package.onUse(function(api) {
   api.addThingComponent('items/shoppingcart/shoppingcart');
   api.addComponent('items/prospectus/prospectus');
   api.addComponent('items/receipt/receipt');
-
+  
   api.addFile('items/account/account');
+  api.addThingComponent('items/sync/sync');
   api.addFile('items/keycard/keycard');
+
+  api.addThing('items/operatorlink/operatorlink');
 
   // Scenes
   

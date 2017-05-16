@@ -26,6 +26,6 @@ Package.onUse(function(api) {
   api.addFile('hallway/hallway');
 
   api.addThing('room/room');
-  api.addComponent('room/chair/chair');
+  api.addFile('room/chair/chair');
 
 });

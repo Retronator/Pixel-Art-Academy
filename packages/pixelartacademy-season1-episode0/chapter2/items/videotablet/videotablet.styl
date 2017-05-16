@@ -1,0 +1,116 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-season1-episode0-chapter2-items-videotablet
+  .safe-area
+    .hand
+      position absolute
+      z-index 3
+      top 105rem
+      left -60rem
+      width 85rem
+      height 196rem
+      pointer-events none
+
+    .tablet
+      absolute-cover()
+      top 10rem
+      border 1rem solid
+      border-bottom 2rem solid
+      border-color atariGrey(1) atariGrey(2) atariGrey(0) atariGrey(0)
+
+      &::after
+        content ''
+        absolute-cover()
+        z-index 2
+        pointer-events none
+        border 2rem solid rgba(atariGrey(1), 0.5)
+
+      &::before
+        content ''
+        absolute-cover()
+        z-index 3
+        pointer-events none
+        border 1rem solid rgba(atariGrey(1), 0.5)
+
+      .screen
+        height 100%
+        background black
+
+        .selection
+          .meta
+            height 40rem
+            padding 10rem
+
+            .title
+              kyrou-9()
+              line-height 14rem
+              margin -2rem 30rem 2rem 0
+              overflow hidden
+              white-space nowrap
+              text-overflow ellipsis
+
+            .author
+              acme-7()
+              color atariGrey(3)
+
+          .video
+            width 318rem
+            height 178rem
+
+          .close-button
+            position absolute
+            top 0
+            right 0
+            padding 8rem
+            border none
+            font inherit
+            color atariGrey(2)
+            background none
+            text-transform uppercase
+
+            &:hover
+              color atariGrey(4)
+
+        .videos
+          height 100%
+          list-style none
+          padding 8rem
+          margin 0
+          display flex
+          flex-wrap wrap
+
+          .video
+            width 50%
+            height 50%
+            padding 5rem 6rem
+            margin 0
+            cursor pointer
+
+            &:hover
+              background atariGrey(1)
+
+              .meta
+                .title
+                  color atariGrey(7)
+
+                .author
+                  color atariGrey(4)
+
+            .meta
+              line-height 7rem
+              height 15rem
+              margin-bottom 2rem
+              overflow hidden
+
+              .title
+                text-transform uppercase
+                margin-right 3rem
+
+              .author
+                white-space nowrap
+                color atariGrey(3)
+
+            .thumbnail
+              width 139rem
+              height 78rem
+              background atariGrey(1)

@@ -56,6 +56,8 @@ Package.onUse(function(api) {
   api.addFiles('state/ephemeralstateobject.coffee');
   api.addFiles('state/localsavegames.coffee');
 
+  api.addServerFile('state/migrations/0000-immersionrevamp');
+
   // Character
 
   api.addFiles('character/spacebars.coffee', 'client');

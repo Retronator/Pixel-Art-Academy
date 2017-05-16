@@ -1,0 +1,40 @@
+<template name="PixelArtAcademy.Season1.Episode0.Chapter2.Items.VideoTablet">
+  <div class="pixelartacademy-season1-episode0-chapter2-items-videotablet">
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#LandsOfIllusions.Components.Overlay}}
+      <div class="tablet">
+        <div class="screen">
+          {{#if selection}}
+            <div class="selection">
+              {{#with selection}}
+                <div class="meta">
+                  <div class="title">{{title}}</div>
+                  <div class="author">{{author}}</div>
+                </div>
+                <iframe class="video" width="853" height="480" src="https://www.youtube.com/embed/{{this.id}}?rel=0&amp;showinfo=0&amp;autoplay=1&amp;iv_load_policy=3" frameborder="0" allowfullscreen></iframe>
+                <button class="close-button">{{t7e "close"}}</button>
+              {{/with}}
+            </div>
+          {{else}}
+            <ol class="videos">
+              {{#each videos}}
+                {{> PixelArtAcademy.Season1.Episode0.Chapter2.Items.VideoTablet.Video video}}
+              {{/each}}
+            </ol>
+          {{/if}}
+        </div>
+      </div>
+      <img class="hand" src="{{image '/retronator/hq/items/hand.png'}}" />
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>
+
+<template name="PixelArtAcademy.Season1.Episode0.Chapter2.Items.VideoTablet.Video">
+  <li class="video">
+    <div class="meta">
+      <span class="title">{{title}}</span>
+      <span class="author">{{author}}</span>
+    </div>
+    <canvas class="thumbnail" width="139" height="78"></canvas>
+  </li>
+</template>

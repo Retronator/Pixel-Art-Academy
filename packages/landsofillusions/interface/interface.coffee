@@ -48,7 +48,7 @@ class LOI.Interface extends AM.Component
 
       # We handle scripts once per change.
       Tracker.nonreactive =>
-        @_handleNode node for node in scriptNodes
+        @_handleNode node for node in scriptNodes when not node.handled
 
   location: ->
     LOI.adventure.currentLocation()
@@ -57,6 +57,9 @@ class LOI.Interface extends AM.Component
     # Override to handle location changes. Call "@interfaceReady true" when ready to start handling nodes.
 
   _handleNode: (node) ->
+    # Mark node as handled to avoid double handling.
+    node.handled = true
+
     @_handleEmpty node if node instanceof Nodes.Script
     @_handleEmpty node if node instanceof Nodes.Label
     @_handleDialogLine node if node instanceof Nodes.DialogLine

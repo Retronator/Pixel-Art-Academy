@@ -18,9 +18,13 @@ class C2.Immersion.Room extends LOI.Adventure.Scene
 
     @operator = new HQ.Actors.Operator
 
-  things: -> [
-    HQ.Actors.Operator if C2.Immersion.state('operatorState') is C2.Immersion.OperatorStates.InRoom
-  ]
+  things: ->
+    operatorInRoom = C2.Immersion.state('operatorState') is C2.Immersion.OperatorStates.InRoom
+
+    [
+      HQ.Actors.Operator if operatorInRoom
+      C2.Items.VideoTablet if operatorInRoom
+    ]
 
   # Script
 
@@ -33,6 +37,21 @@ class C2.Immersion.Room extends LOI.Adventure.Scene
         @options.parent.state "waitToSit", true
 
         complete()
+        
+      RedPillStart: (complete) =>
+        @options.parent.section.state 'redPillTime', Date.now()
+        
+        complete()
+        
+      GetTimeToImmersion: (complete) =>
+        @ephemeralState().timeToImmersion = @options.parent.section.timeToImmersion()
+
+        complete()
+
+      VideoDisplay: (complete) =>
+        LOI.adventure.scriptHelpers.itemInteraction
+          item: C2.Items.VideoTablet
+          callback: => complete()
 
       Move: (complete) =>
         @options.parent.state 'waitToSit', false
@@ -42,9 +61,14 @@ class C2.Immersion.Room extends LOI.Adventure.Scene
 
         complete()
 
-      ActivateHeadset: (complete) => HQ.LandsOfIllusions.Room.activateHeadsetCallback complete
-      PlugIn: (complete) => HQ.LandsOfIllusions.Room.plugInCallback complete
-      DeactivateHeadset: (complete) => HQ.LandsOfIllusions.Room.deactivateHeadsetCallback complete
+      ActivateHeadset: (complete) => HQ.Items.Sync.activateHeadsetCallback complete
+      DeactivateHeadset: (complete) => HQ.Items.Sync.deactivateHeadsetCallback complete
+
+      FirstImmersion: (complete) =>
+        scene = @options.parent
+        scene.section.listeners[0].startScript label: 'FirstImmersion'
+
+        complete()
 
   # Listener
 
@@ -61,26 +85,30 @@ class C2.Immersion.Room extends LOI.Adventure.Scene
       @startScript()
 
   onCommand: (commandResponse) ->
-    return unless chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
-
-    action = =>
+    sitAction = =>
       # If we're in the middle of the operator script, just continue on sit down.
       if @options.parent.state 'waitToSit'
         @startScript label: 'Sit'
 
       else
-        # Otherwise start the self-start plug-in script.
+        # Otherwise start the self-start script.
         @startScript label: 'SelfStart'
 
-    commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.SitIn, Vocabulary.Keys.Verbs.Use], chair.avatar]
-      priority: 1
-      action: => action()
+    if chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
+      commandResponse.onPhrase
+        form: [[Vocabulary.Keys.Verbs.SitIn, Vocabulary.Keys.Verbs.Use], chair.avatar]
+        priority: 1
+        action: sitAction
 
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.SitDown]
-      priority: 1
-      action: => action()
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.SitDown]
+        priority: 1
+        action: sitAction
+
+    if operator = LOI.adventure.getCurrentThing HQ.Actors.Operator
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.TalkTo, operator.avatar]
+        action: sitAction
 
   cleanup: ->
     @_operatorTalksAutorun?.stop()

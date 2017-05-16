@@ -53,5 +53,8 @@ class LOI.Director
     # Add new script node.
     scriptNodes = _.union scriptNodes, [nextScriptNode] if nextScriptNode
 
+    # Mark the new node as not handled.
+    nextScriptNode?.handled = false
+
     # Trigger update of running scripts.
     @currentScriptNodes scriptNodes

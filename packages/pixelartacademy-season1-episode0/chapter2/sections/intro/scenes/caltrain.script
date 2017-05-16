@@ -47,7 +47,7 @@ conductor: How may I help you?
 * Do you know where Retronator is? They make this game, Pixel Art Academy.
 * Ah, nothing. -> [Nothing]
 
-conductor: Let me check my phone … Ah, yes, Retronator's headquarters is located right here in SOMA on 2nd street.
+conductor: Let me check my phone … Ah, yes, Retronator's headquarters are located right here in SOMA on 2nd street.
 
 -> [ConductorQuestions]
 
@@ -55,7 +55,7 @@ conductor: Let me check my phone … Ah, yes, Retronator's headquarters is locat
 
 > The conductor looks at the prospectus.
 
-conductor: Oh, are you here to visit Retronator? I think their headquarters is located on 2nd street right here in SOMA.
+conductor: Oh, are you here to visit Retronator? I think their headquarters are located on 2nd street right here in SOMA.
 
 ## ConductorQuestions
 

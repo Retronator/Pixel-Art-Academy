@@ -37,10 +37,6 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
         @options.parent._showChapterTitle()
         complete()
 
-      C3: (complete) =>
-        LOI.adventure.goToLocation LOI.Construct.C3.Entrance
-        complete()
-
       Exit: (complete) =>
         LOI.adventure.goToLocation Retronator.HQ.LandsOfIllusions.Room
         LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
@@ -57,8 +53,6 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
   # Listener
 
   onEnter: (enterResponse) ->
-    console.log "enter"
-
     # Captain should talk when at location.
     @_captainTalksAutorun = @autorun (computation) =>
       return unless @scriptsReady()

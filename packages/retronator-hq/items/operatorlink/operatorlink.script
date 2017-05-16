@@ -1,0 +1,35 @@
+# Retronator.HQ.Items.OperatorLink
+
+## Start
+
+operator: Operator.
+
+* I need an exit. -> [Exit] `location.id is 'LandsOfIllusions.Construct.Loading'`
+* I'd like to enter the Construct. -> [Construct] `location.id isnt 'LandsOfIllusions.Construct.Loading'`
+* Nevermind. -> [End]
+
+## Exit
+
+operator: 
+    Got it.
+    Engaging disconnect procedure.
+    
+> …
+    
+### Exit
+
+-> [End]
+
+## Construct
+
+operator: 
+    On it.
+    Starting loading program.
+    
+> …
+    
+### Construct
+
+-> [End]
+
+## End

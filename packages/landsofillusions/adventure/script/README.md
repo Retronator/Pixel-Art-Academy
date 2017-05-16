@@ -110,9 +110,11 @@ scripts while `happy` would hold true only in this script's code.
 
 There are some special variables that provide other contexts:
 
+* `this`: Parent object of the script, usually a thing with same ID as the script.
+* `<thing shorthand>`: Thing objects provided with the `setThings` method on the script.
 * `@user`: The logged in user's state. It's null when not logged in.
 * `@user.name`: A read-only variable with user's account name.
-* `@user.itemKeys`: A read-only list of catalog keys that this user has purchased.
+* `@user.itemKeys`: A read-only map of catalog keys that this user has purchased.
 * `location`: The local state unique to the location you're at.
 * `@locations`: All location states, addressable by location ID.
 * `@player.inventory`: A map of items in your inventory.

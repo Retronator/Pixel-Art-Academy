@@ -1,0 +1,102 @@
+# PixelArtAcademy.Season1.Episode0.Chapter2.Immersion
+
+## LookAtSyncTimeLeft
+
+> The device says you have `_timeToImmersion` left before the neurotransmitters are ready. 
+
+-> [End]
+
+## LookAtSyncTimeOver
+
+-> [LookAtSyncFirstImmersion] `section.operatorState is 'BackAtCounter'`
+
+> The device says the neurotransmitters are ready.
+
+-> [End]
+
+## Alarm
+
+### AnalyzeAlarm
+
+-> [End] `_syncSetupStarted`
+
+> SYNC alerts you with a gentle buzz. A notification on the device says the neurotransmitters are ready.
+
+-> [End]
+
+## LookAtSyncFirstImmersion
+
+> You look at your new wristwatch and it indicates you're ready for immersion.
+
+* Activate
+* Nevermind. -> [End]
+
+> You activate your SYNC device and ambient sounds turn to complete silence.
+
+`_alreadyConfirmed = false`
+
+## FirstImmersion
+
+> A clear sound like those at the start of the movies rushes through your ears and the white cube reappears.
+
+### ActivateHeadset
+
+> You cannot help but feel the shivers travel down your spine as dopamine floods your brain. `not FirstSetupDone`
+
+-> [Complete] `_alreadyConfirmed`
+
+## FirstSetupDone
+
+* Panzer, I'm ready for immersion. -> [Confirm]
+* Oh, wait, I need a moment. -> [Cancel]
+
+## Cancel
+
+> You deactivate SYNC and the surrounding sounds enter your ears again.
+
+### DeactivateHeadset
+
+-> [End]
+
+## Confirm
+
+operator: That's what I like to hear.
+
+## Complete
+
+operator: 
+    I hope you're sitting down because this will knock your socks off.
+    Now sit tight. The Captain will greet you in the Loading program in a second.
+
+`this.completed = true`
+
+pause
+
+### PlugIn
+
+-> [End]
+
+## TalkToOperator
+
+operator: Operator.
+
+* Panzer, I'm ready for immersion.
+* Just one more thing … -> [CancelOperator]
+
+## OperatorStart
+
+operator: That's what I like to hear.
+
+> Your SYNC device gets activated and ambient sounds turn to complete silence.
+
+`_alreadyConfirmed = true`
+
+-> [FirstImmersion]
+
+## CancelOperator
+
+operator: No sweat. Just call back when you're ready to begin.
+
+-> [End]
+
+## End

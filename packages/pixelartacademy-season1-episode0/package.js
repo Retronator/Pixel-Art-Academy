@@ -74,6 +74,8 @@ Package.onUse(function(api) {
   api.addFile('chapter2/actors/conductor');
 
   api.addFile('chapter2/items/items');
+  api.addComponent('chapter2/items/videotablet/videotablet');
+  api.addFile('chapter2/items/videotablet/videos');
 
   // Intro
 
@@ -94,7 +96,7 @@ Package.onUse(function(api) {
 
   // Immersion
 
-  api.addFile('chapter2/sections/immersion/immersion');
+  api.addThing('chapter2/sections/immersion/immersion');
   api.addServerFile('chapter2/sections/immersion/methods-server');
 
   api.addThing('chapter2/sections/immersion/scenes/basement');
@@ -107,7 +109,6 @@ Package.onUse(function(api) {
   api.addFile('chapter3/inventory');
 
   api.addFile('chapter3/items/items');
-  api.addThing('chapter3/items/operatorlink');
 
   // Construct
 
