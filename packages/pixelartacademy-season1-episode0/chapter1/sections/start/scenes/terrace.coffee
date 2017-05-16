@@ -11,8 +11,8 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
   @translations: ->
     intro: "
       You exit the Retropolis International Spaceport.
-      A magnificent view of the city opens before you and you feel adventure in the air.
-      The terrace you're standing on connects back to the airport terminal in the east.
+      A magnificent view of the city opens before you.
+      Armed with a backpack and a burning desire to become a pixel artist, you feel the adventure in the air.
     "
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter1/sections/start/scenes/terrace.script'

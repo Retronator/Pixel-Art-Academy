@@ -11,11 +11,11 @@ class HQ.LandsOfIllusions.Hallway extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Lands of Illusions VR center"
+  @fullName: -> "Lands of Illusions alternate reality center"
   @shortName: -> "Lands of Illusions"
   @description: ->
     "
-      The hallway of the VR center leads from the reception deck towards a number of adjacent immersion rooms.
+      The hallway of the alternate reality center leads from the reception deck towards a number of adjacent immersion rooms.
       There is an open door to one on the north side.
     "
 

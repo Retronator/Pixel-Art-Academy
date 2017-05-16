@@ -35,8 +35,12 @@ class LOI.Adventure extends LOI.Adventure
     @director = new LOI.Director
 
     @_initializeState()
-    @_initializeLocation()
+
+    # Timeline needs to be initialized before location, because the logic
+    # for missing locations depends on the timeline to know where to move you.
     @_initializeTimeline()
+    @_initializeLocation()
+
     @_initializeActiveItem()
     @_initializeEpisodes()
     @_initializeInventory()

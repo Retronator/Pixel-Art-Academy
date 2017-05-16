@@ -1,23 +1,22 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 HQ = Retronator.HQ
-C3 = PixelArtAcademy.Season1.Episode0.Chapter3
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C3.Items.OperatorLink extends LOI.Adventure.Item
-  @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter3.Items.OperatorLink'
+class HQ.Items.OperatorLink extends LOI.Adventure.Item
+  @id: -> 'Retronator.HQ.Items.OperatorLink'
 
   @fullName: -> "operator neural link"
-
   @shortName: -> "operator"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "
       This is a neural link with the operator who controls your immersion. It allows you to talk to them.
     "
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter3/items/operatorlink.script'
+  @defaultScriptUrl: -> 'retronator_retronator-hq/items/operatorlink/operatorlink.script'
 
   @initialize()
 
@@ -47,6 +46,7 @@ class C3.Items.OperatorLink extends LOI.Adventure.Item
 
       Construct: (complete) =>
         LOI.adventure.goToLocation LOI.Construct.Loading
+        LOI.adventure.goToTimeline PAA.TimelineIds.Construct
         complete()
 
   # Listener
@@ -57,4 +57,5 @@ class C3.Items.OperatorLink extends LOI.Adventure.Item
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, operator.avatar]]
+      priority: -1
       action: => @startScript()

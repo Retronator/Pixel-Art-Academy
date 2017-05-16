@@ -70,6 +70,12 @@ class C2.Immersion.Basement extends LOI.Adventure.Scene
 
           complete()
 
+      FirstImmersion: (complete) =>
+        scene = @options.parent
+        scene.section.listeners[0].startScript label: 'OperatorStart'
+
+        complete()
+
   # Listener
 
   onCommand: (commandResponse) ->

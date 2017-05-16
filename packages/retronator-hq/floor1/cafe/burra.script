@@ -12,7 +12,7 @@ burra: `_End`
 ## MainQuestion
 
 * I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
-* What is this place again? -> [RetronatorHQ] `RetronatorHQDepartments`
+* Can you tell me about the HQ again? -> [RetronatorHQ] `RetronatorHQDepartments`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
 * Can I order a sandwich? -> [Sandwich]
 * How about coffee? -> [Coffee] `Sandwich`
@@ -47,7 +47,7 @@ burra: It's mainly Retro working on Pixel Art Academy and Retronator Magazine.
 burra:
     You can visit the store on the 2nd floor where you can buy the game.
     Further upstairs is the gallery of Retro's artworks.
-    And if you bought Pixel Art Academy, head on downstairs to our virtual reality center Lands of Illusions.
+    And if you bought Pixel Art Academy, head on downstairs to our alternate reality center Lands of Illusions.
     
 -> [MainQuestion]
 
@@ -104,7 +104,7 @@ burra:
 ## LandsOfIllusions
 
 burra:
-    It's a virtual reality center where you can immerse into one of Retronator's video game worlds.
+    It's an alternate reality center where you can immerse into one of Retronator's video game worlds.
     Go west to the coworking space and down one level to reach it.
     Panzer will be able to tell you all about it.
     

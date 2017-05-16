@@ -41,8 +41,9 @@ class C2.Immersion.LandsOfIllusions extends LOI.Adventure.Scene
   # Listener
 
   onEnter: (enterResponse) ->
-    enterResponse.overrideIntroduction =>
-      @options.parent.translations()?.intro
+    if C2.Immersion.state('operatorState') is C2.Immersion.OperatorStates.InLandsOfIllusions
+      enterResponse.overrideIntroduction =>
+        @options.parent.translations()?.intro
 
     # Operator should talk when at location.
     @_operatorTalksAutorun = @autorun (computation) =>

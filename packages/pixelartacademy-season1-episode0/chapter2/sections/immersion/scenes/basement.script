@@ -53,7 +53,7 @@ operator: Great! If you would please scan your keycard …
 ## PlayApproved
 
 operator: 
-    Thank you! I have a room available for you. 
+    Thank you! We need to set you up in one of our immersion rooms. 
     It'll be through the hallway on your left.
 
 > You mistakenly look to the right. <!-- Matrix reference -->
@@ -107,11 +107,9 @@ operator:
 
 ## Continue
 
-operator: 
-    Great! Just head on over to your room and ![sit down](sit down). 
-    I'll start the immersion process from here.
+### FirstImmersion
 
--> [Selection]
+-> [End]
 
 <!-- HELPING A KICKSTARTER BACKER -->
 
@@ -293,7 +291,7 @@ operator:
 `_helped = true`
 
 operator:
-    Yes. Lands of Illusions is a virtual reality system that lets you travel to places you can't in real life.
+    Yes. Lands of Illusions is an alternate reality system that lets you travel to places you can't in real life.
     For example, if you wanted to learn about history, why not just travel back in time?
     
 * Interesting.
