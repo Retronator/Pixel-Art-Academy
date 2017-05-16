@@ -237,10 +237,10 @@ retro:
 retro:
     I mean that you're pre-ordering a game that is mainly developed by one person (me).
     This means it will be in development for a long time.
-    On the bright side, it will be released in episodes as we go along.
+    On the bright side, I will be releasing the episodes as we go along.
     And let's not forget, this is a game about actual drawing. 
     You will literally have to learn how to draw and create artworks.
-    But that's why you're here for, right?
+    But that's what you're here for, right?
     
 * Yes, I'm sure I want this. -> [DoubleCheckYes]
 * I guess I should ask more about the game first.
@@ -334,7 +334,8 @@ retro: Yes, please!
 * Is this an online course? -> [Course]
 * When will the game be released? -> [Release]
 * Can you explain how seasons and episodes work? -> [Seasons]
-* How's development going? -> [Development]
+* Where's development right now? -> [Development]
+* Why aren't there any pictures? -> [TextAdventure]
 * Actually, nevermind. -> [Nevermind] `not _answeredAboutPixelArtAcademy`
 * Thanks for the information. `_answeredAboutPixelArtAcademy`
 
@@ -405,10 +406,21 @@ retro:
 ## Development
 
 retro:
-    Slow but steady. Right now the game is mainly developed by me only. 
-    Burra helps with outreach and I've had help from objectsforheads on the coding front in the past.
-    Development by one person, as you can imagine, takes time.
-    It's my full-time investment though, I put most of my days into it.
+    So far I've been mostly building the adventure game engine.
+    Only the intro episode you're playing right now is finished.
+    Well, not yet really, Chapter 1 and 2 are done and I'm working on Chapter 3 right now.
+    In Chapter 3 you'll be able to create a character and then the game will really begin.
+    But there's nothing more to play right now.
+
+-> [PixelArtAcademyQuestions]
+
+## TextAdventure
+
+retro:
+    I know, it's a bit funny for a game about drawing to be just text.
+    Illustrations are definitely coming in the future and once upon a time there will even be a point-and-click interface.
+    But while I'm building the game world things change so much I would be wasting my time drawing the locations.
+    Only after things have stabilized will I take the time to make things prettier.
 
 -> [PixelArtAcademyQuestions]
 

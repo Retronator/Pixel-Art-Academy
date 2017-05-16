@@ -23,11 +23,6 @@ class PAA.Season1.Episode0.Chapter3 extends LOI.Adventure.Chapter
 
     @inventory = new @constructor.Inventory parent: @
 
-  inventory: ->
-    [
-      C3.Items.OperatorLink
-    ]
-
   scenes: -> [
     @inventory
   ]

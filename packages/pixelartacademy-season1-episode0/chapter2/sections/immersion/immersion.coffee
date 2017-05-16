@@ -66,9 +66,9 @@ class C2.Immersion extends LOI.Adventure.Section
       operator: @options.listener.avatars.operator
 
     @setCallbacks
-      ActivateHeadset: (complete) => HQ.LandsOfIllusions.Room.activateHeadsetCallback complete
-      PlugIn: (complete) => HQ.LandsOfIllusions.Room.plugInCallback complete
-      DeactivateHeadset: (complete) => HQ.LandsOfIllusions.Room.deactivateHeadsetCallback complete
+      ActivateHeadset: (complete) => HQ.Items.Sync.activateHeadsetCallback complete
+      PlugIn: (complete) => HQ.Items.Sync.plugInCallback complete
+      DeactivateHeadset: (complete) => HQ.Items.Sync.deactivateHeadsetCallback complete
 
       AnalyzeAlarm: (complete) =>
         # Only start the alarm if you haven't already started the sync setup procedure.
@@ -116,6 +116,6 @@ class C2.Immersion extends LOI.Adventure.Section
 
       commandResponse.onPhrase
         form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, operator.avatar]]
-        priority: 1
+        priority: 0.5
         action: =>
           @startScript label: 'TalkToOperator'

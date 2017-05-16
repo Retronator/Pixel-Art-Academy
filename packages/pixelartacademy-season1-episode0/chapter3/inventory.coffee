@@ -7,12 +7,14 @@ class C3.Inventory extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter3.Inventory'
 
   @location: -> LOI.Adventure.Inventory
+  @timelineId: -> PAA.TimelineIds.Construct
 
   @initialize()
 
+  constructor: ->
+    super
+
   things: ->
-    things = []
-
-    things.push C3.Items.OperatorLink if LOI.adventure.currentRegionId() is LOI.Construct.id()
-
-    things
+    [
+      HQ.Items.OperatorLink
+    ]

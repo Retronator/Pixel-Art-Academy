@@ -107,11 +107,9 @@ operator:
 
 ## Continue
 
-operator: 
-    Great! Just head on over to your room and ![sit down](sit down). 
-    I'll start the immersion process from here.
+### FirstImmersion
 
--> [Selection]
+-> [End]
 
 <!-- HELPING A KICKSTARTER BACKER -->
 

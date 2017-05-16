@@ -53,8 +53,6 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
   # Listener
 
   onEnter: (enterResponse) ->
-    console.log "enter"
-
     # Captain should talk when at location.
     @_captainTalksAutorun = @autorun (computation) =>
       return unless @scriptsReady()

@@ -8,7 +8,7 @@
 
 captain: Welcome back.
 
--> [GetStarted] `not MainDialog`
+-> [GetStarted] `not MainQuestions`
 
 -> [End]
 
@@ -26,7 +26,7 @@ captain: Right now you are inside a loading program called the Construct.
 
 captain: It's where we modify the alternate reality you experience in the real world.
 
--> [NeuronLevel] `MainDialog`
+-> [NeuronLevel] `MainQuestions`
 
 ## WhereAmIQuestion
 
@@ -37,9 +37,9 @@ captain: It's where we modify the alternate reality you experience in the real w
 
 captain: 
     The AR system operates at the neuron level so just like we can use it to augment your reality, we can completely take over your perception.
-    Your body is in `_realWorldLocation`, but your mind is in the Construct.
+    Your body is in Retronator HQ, but your mind is in the Construct.
 
--> [MainQuestions] `MainDialog`
+-> [MainQuestions] `MainQuestions`
 
 * What kind of modifications do you do? -> [Modifications]
 
@@ -106,10 +106,10 @@ captain: That was rhetorical.
 
 captain:
     Thanks to Skinner, the very video games you play are designed to keep you glued to your screen.
-    Every time a monster drops some loot, it's Skinner's operant conditioning at work. But I digress. `not MainDialog`
-    Every time a monster drops some loot, it's Skinner's operant conditioning at work. `MainDialog`
+    Every time a monster drops some loot, it's Skinner's operant conditioning at work. But I digress. `not MainQuestions`
+    Every time a monster drops some loot, it's Skinner's operant conditioning at work. `MainQuestions`
 
--> [SkinnerWalden2] `MainDialog`
+-> [SkinnerWalden2] `MainQuestions`
 
 * Fascinating! -> [SkinnerFascinating]
 * Gee, if I knew I was getting a lecture …
@@ -154,7 +154,7 @@ captain:
     Over the years, the Walden community quickly expanded to new Walden settlements. 
     In the 1950s they created Walden 14 on an island in the Pacific Ocean, with the goal to focus on radical automation.
 
--> [MainQuestions] `MainDialog`
+-> [MainQuestions] `MainQuestions`
 
 * This sounds familiar …
 * Go on.
@@ -241,8 +241,7 @@ captain: `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 ## NoCharacters
 
 captain: 
-    First you will need to select a character.
-    You can do that if you ![use the TV](use TV).
+    To make your character selection, ![use the TV](use TV) and we'll setup a symbiotic link with them.
 
 -> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 -> [NoEditor]
@@ -252,7 +251,9 @@ captain:
 captain:
     Since you only have the basic game, you can only select from existing characters.
     If you wanted to create your own character, you can purchase the Avatar Editor upgrade in the Retronator HQ store.
-    
+
+-> [MainQuestions] `MainQuestions`
+
 * That's OK. I'll choose one. -> [NoEditorEnd]
 * Oh, that would be sweet! Let me go to the store, I'll be back.
 
@@ -275,6 +276,8 @@ captain: Great. The TV is there when you're ready.
 captain:
     Since you own the Avatar Editor you can also design a character on your own
     The staff at the Cyborg Construction Center will help you with that.
+     
+-> [MainQuestions] `MainQuestions`
      
 * Where is this center? -> [C3]
 * I'll just select one on the TV. -> [TV]
@@ -362,6 +365,8 @@ captain:
 
 operator:
     Roger that, unplugging now.
+    
+pause
 
 ### Exit
 

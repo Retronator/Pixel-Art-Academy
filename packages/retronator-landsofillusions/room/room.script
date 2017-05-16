@@ -3,7 +3,7 @@
 ## SelfStart
 
 > You sit down and activate your SYNC device.
-> The ambient sounds get replaced with complete silence before the intro sound plays through the system.
+> The buzzing of Retronator HQ gets replaced with complete silence before you hear the intro sound.
 
 ### ActivateHeadset
 
@@ -22,7 +22,7 @@ pause
 
 ## Cancel
 
-> You deactivate SYNC and ambient sound of the room enter your ears again.
+> You deactivate SYNC and ambient sounds of the headquarters enter your ears again.
 
 ### DeactivateHeadset
 

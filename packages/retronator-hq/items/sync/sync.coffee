@@ -18,7 +18,28 @@ class HQ.Items.Sync extends LOI.Adventure.Item
       It's Neurasync's Synchronization Neural Connector, SYNC for short. It looks like a fitness tracker wristband.
     "
 
+  @defaultScriptUrl: -> 'retronator_retronator-hq/items/sync/sync.script'
+
   @initialize()
+
+  @activateHeadsetCallback: (complete) =>
+    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
+    sync.activate()
+
+    complete()
+
+  @deactivateHeadsetCallback: (complete) =>
+    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
+    sync.deactivate()
+
+    complete()
+
+  @plugInCallback: (complete) =>
+    # Start Lands of Illusions VR Experience.
+    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
+    sync.plugIn()
+
+    complete()
 
   onCreated: ->
     super
@@ -49,3 +70,28 @@ class HQ.Items.Sync extends LOI.Adventure.Item
       finishedDeactivatingCallback()
     ,
       500
+
+  # Script
+
+  initializeScript: ->
+    operator = @options.listener.avatars.operator
+
+    @setThings
+      operator: operator
+
+    @setCallbacks
+      ActivateHeadset: (complete) => HQ.Items.Sync.activateHeadsetCallback complete
+      PlugIn: (complete) => HQ.Items.Sync.plugInCallback complete
+      DeactivateHeadset: (complete) => HQ.Items.Sync.deactivateHeadsetCallback complete
+
+  # Listener
+
+  @avatars: ->
+    operator: HQ.Actors.Operator
+
+  onCommand: (commandResponse) ->
+    sync = @options.parent
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.Use, sync.avatar]
+      action: => @startScript()

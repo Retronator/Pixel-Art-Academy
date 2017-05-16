@@ -4,8 +4,8 @@
 
 operator: Operator.
 
-* I need an exit. -> [Exit]
-* I want to return to the Construct. -> [Construct] `location.id isnt 'LandsOfIllusions.Construct.Loading'`
+* I need an exit. -> [Exit] `location.id is 'LandsOfIllusions.Construct.Loading'`
+* I'd like to enter the Construct. -> [Construct] `location.id isnt 'LandsOfIllusions.Construct.Loading'`
 * Nevermind. -> [End]
 
 ## Exit
@@ -24,7 +24,7 @@ operator:
 
 operator: 
     On it.
-    Unloading simulation.
+    Starting loading program.
     
 > …
     

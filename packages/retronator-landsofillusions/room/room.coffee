@@ -35,25 +35,6 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.South}": HQ.LandsOfIllusions.Hallway
     "#{Vocabulary.Keys.Directions.Out}": HQ.LandsOfIllusions.Hallway
 
-  @activateHeadsetCallback: (complete) =>
-    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
-    sync.activate()
-
-    complete()
-
-  @deactivateHeadsetCallback: (complete) =>
-    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
-    sync.deactivate()
-
-    complete()
-
-  @plugInCallback: (complete) =>
-    # Start Lands of Illusions VR Experience.
-    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
-    sync.plugIn()
-
-    complete()
-
   # Script
 
   initializeScript: ->
@@ -63,9 +44,9 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
       operator: operator
       
     @setCallbacks
-      ActivateHeadset: (complete) => HQ.LandsOfIllusions.Room.activateHeadsetCallback complete
-      PlugIn: (complete) => HQ.LandsOfIllusions.Room.plugInCallback complete
-      DeactivateHeadset: (complete) => HQ.LandsOfIllusions.Room.deactivateHeadsetCallback complete
+      ActivateHeadset: (complete) => HQ.Items.Sync.activateHeadsetCallback complete
+      PlugIn: (complete) => HQ.Items.Sync.plugInCallback complete
+      DeactivateHeadset: (complete) => HQ.Items.Sync.deactivateHeadsetCallback complete
 
   # Listener
         

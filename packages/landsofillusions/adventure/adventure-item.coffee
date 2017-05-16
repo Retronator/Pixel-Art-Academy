@@ -14,7 +14,7 @@ class LOI.Adventure extends LOI.Adventure
       activeItemId = @activeItemId()
 
       # Did the item even change?
-      return if activeItemId is @_activeItem?.constructor.id()
+      return @_activeItem if activeItemId is @_activeItem?.constructor.id()
 
       console.log "Active item ID changed to", activeItemId if LOI.debug
 

@@ -46,6 +46,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
 
       Construct: (complete) =>
         LOI.adventure.goToLocation LOI.Construct.Loading
+        LOI.adventure.goToTimeline PAA.TimelineIds.Construct
         complete()
 
   # Listener
@@ -56,4 +57,5 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, operator.avatar]]
+      priority: -1
       action: => @startScript()
