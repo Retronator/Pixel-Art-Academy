@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.Items.Map">
+  <div class="pixelartacademy-items-map">
+    <div class="map-content {{minimapClass}}">
+      {{#if miniMap}}
+        I AM MINI MAP
+      {{else}}
+        I AM MAP
+      {{/if}}
+    </div>
+    {{#if fullscreenOverlay}}
+      <div class="fullscreen">
+        {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
+        {{#LandsOfIllusions.Components.Overlay}}
+        {{/LandsOfIllusions.Components.Overlay}}
+      </div>
+    {{/if}}
+  </div>
+</template>
