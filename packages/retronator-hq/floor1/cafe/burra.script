@@ -11,6 +11,7 @@ burra: `_End`
 
 ## MainQuestion
 
+* I'd like to register for an account. -> [Register] `not @player.inventory['Retronator.HQ.Items.Account']`
 * I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
 * Can you tell me about the HQ again? -> [RetronatorHQ] `RetronatorHQDepartments`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
@@ -111,6 +112,12 @@ burra:
 -> [MainQuestion]    
 
 <!-- OTHER -->
+
+## Register
+
+### Register
+
+-> [End]
 
 ## Sandwich
 `_answered = true`

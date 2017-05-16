@@ -16,8 +16,8 @@ burra: `_MainQuestion`
 * I'm here to play Pixel Art Academy. -> [PlayPixelArtAcademy] `not _helped`
 * Yes, let's do this. -> [SaveOrRegister] `_helped`
 * What does saving do again? -> [SignInHelp] `_helped and not @user.signedIn`
-* Whoops, nevermind. -> [End] `not _helped`
-* Thank you so much! -> [End] `_helped`
+
+## GeneralQuestionsPlaceholder
 
 ## PlayPixelArtAcademy
 `_helped = true`

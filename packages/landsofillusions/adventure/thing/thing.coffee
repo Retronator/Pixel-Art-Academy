@@ -258,6 +258,9 @@ class LOI.Adventure.Thing extends AM.Component
 
     handle
 
+  getListener: (listenerClass) ->
+    _.find @listeners, (listener) -> listener instanceof listenerClass
+
   # Avatar pass-through methods
 
   fullName: -> @avatar?.fullName()
