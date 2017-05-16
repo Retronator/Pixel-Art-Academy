@@ -303,7 +303,7 @@ captain: Any more questions? `_MainQuestions`
 ## MainQuestions
 
 * Where is the cyborg what-was-it center? -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and not C3`
-* Where is the Cyborg Construction Center? -> [C3Short] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and C3`
+* Where is the Cyborg Construction Center again? -> [C3Short] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and C3`
 * How do I get out of here? -> [HowToExit]
 * Can I have multiple characters? -> [MultipleCharacters]
 * How do I select a character again? -> [SelectCharacter] `not @user.characters.length`
@@ -354,7 +354,7 @@ captain:
 
 captain:
     Indeed! Feel free to play with different characters.
-    You can even et a quick start with selecting a pre-existing character and later create one of your own. `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+    You can even get a quick start with selecting a pre-existing character and later create one of your own. `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 
 -> [MainQuestions]
 
