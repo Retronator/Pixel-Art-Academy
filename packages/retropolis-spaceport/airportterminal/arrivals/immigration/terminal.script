@@ -8,7 +8,11 @@
 
 > The terminal is a bright translucent glass display as tall as you.
 
-terminal: Welcome to Retropolis immigration procedure. ![Papers, please](show passport to terminal).
+terminal: Welcome to Retropolis immigration procedure. Papers, please.
+
+> You remember you have your passport in ![your backpack](open backpack). `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
+
+> Papers? I guess it wants you to ![show your passport](show passport to terminal). `@player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
 -> [End]
 
