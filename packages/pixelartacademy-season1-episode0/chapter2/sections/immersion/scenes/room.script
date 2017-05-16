@@ -348,16 +348,18 @@ operator: Hey Mikey, I think they like it. How about some more?
 * Oh yeah. -> [ImmersionPrep]
 * I need a moment to breathe.
 
-### DeactivateHeadset
-
 > You stand up from the recliner to contemplate what just happened.
 
 ## ImmersionPrep
 
-### DeactivateHeadset
-
 operator: 
     What you've seen so far was just the augmented reality part. Now you're ready for real immersion.
+
+> Panzer deactivates the test.
+    
+### DeactivateHeadset
+
+operator:
     I'll monitor your state from my control station at the reception.
     When you're ready, ![use your SYNC](sync) device to initiate immersion.
 
@@ -365,18 +367,11 @@ operator:
 
 ### Move
 
-> After a moment, you get startled as you hear Panzer's voice directly in your head.
-
-operator:
-    Oh yeah, I forgot to mention, you have a direct line to me now.
-    If you need anything, all you have to do is ![talk to operator](talk to operator).
-    Panzer out.
-    
 -> [End]
 
 ## SelfStart
 
-> You sit down and activate your SYNC device.
+> You sit down and activate your SYNC device. Ambient sounds turn to complete silence.
 
 ### FirstImmersion
 

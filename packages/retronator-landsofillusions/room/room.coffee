@@ -36,21 +36,21 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.Out}": HQ.LandsOfIllusions.Hallway
 
   @activateHeadsetCallback: (complete) =>
-    chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
-    chair.activate()
+    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
+    sync.activate()
 
     complete()
 
   @deactivateHeadsetCallback: (complete) =>
-    chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
-    chair.deactivate()
+    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
+    sync.deactivate()
 
     complete()
 
   @plugInCallback: (complete) =>
     # Start Lands of Illusions VR Experience.
-    chair = LOI.adventure.getCurrentThing HQ.LandsOfIllusions.Room.Chair
-    chair.plugIn()
+    sync = LOI.adventure.getCurrentThing HQ.Items.Sync
+    sync.plugIn()
 
     complete()
 

@@ -8,7 +8,7 @@
 
 ## LookAtSyncTimeOver
 
--> [UseSyncFirstImmersion] `section.operatorState is 'BackAtCounter'`
+-> [LookAtSyncFirstImmersion] `section.operatorState is 'BackAtCounter'`
 
 > The device says the neurotransmitters are ready.
 
@@ -26,18 +26,17 @@
 
 ## LookAtSyncFirstImmersion
 
-You look at your new wristwatch and it indicates you're ready for immersion.
+> You look at your new wristwatch and it indicates you're ready for immersion.
 
 * Activate
 * Nevermind. -> [End]
 
-> You activate your SYNC device.
+> You activate your SYNC device and ambient sounds turn to complete silence.
 
 `_alreadyConfirmed = false`
 
 ## FirstImmersion
 
-> As the system starts, ambient sounds are replaced with complete silence.
 > A clear sound like those at the start of the movies rushes through your ears and the white cube reappears.
 
 ### ActivateHeadset
@@ -53,7 +52,7 @@ You look at your new wristwatch and it indicates you're ready for immersion.
 
 ## Cancel
 
-operator: No sweat. Just call back when you're ready to begin.
+> You deactivate SYNC and the surrounding sounds enter your ears again.
 
 ### DeactivateHeadset
 
@@ -82,12 +81,20 @@ pause
 operator: Operator.
 
 * Panzer, I'm ready for immersion.
-* Just one more thing … -> [Cancel]
+* Just one more thing … -> [CancelOperator]
 
 operator: That's what I like to hear.
+
+> Your SYNC device gets activated and ambient sounds turn to complete silence.
 
 `_alreadyConfirmed = true`
 
 -> [FirstImmersion]
+
+## CancelOperator
+
+operator: No sweat. Just call back when you're ready to begin.
+
+-> [End]
 
 ## End

@@ -2,7 +2,7 @@
 
 ## Start
 
-> A man with sunglasses appears.
+> A man with sunglasses speaks.
 
 -> [FirstTime] `not GetStarted`
 
@@ -20,116 +20,223 @@ captain: Welcome to Lands of Illusions!
     
 * Where am I?
 
-## WhereAmI
+captain: Right now you are inside a loading program called the Construct.
+
+## Construct
+
+captain: It's where we modify the alternate reality you experience in the real world.
+
+-> [NeuronLevel] `MainDialog`
+
+## WhereAmIQuestion
+
+* How did you change where I am?
+* What kind of modifications? -> [Modifications]
+
+## NeuronLevel
 
 captain: 
-    Right now you are inside a loading program called the Construct. 
-    Unfortunately you cannot enter the Lands of Illusions world yourself.
-    You will need to create an artificial intelligence agent—an AI character—that will act in the world for you.
+    The AR system operates at the neuron level so just like we can use it to augment your reality, we can completely take over your perception.
+    Your body is in `_realWorldLocation`, but your mind is in the Construct.
+
+-> [MainQuestions] `MainDialog`
+
+* What kind of modifications do you do? -> [Modifications]
+
+## Modifications
+
+captain: Do you know of the utopian city Retropolis?
+
+* Not really. -> [RetropolisNo]
+* The place with the Academy of Art? -> [RetropolisPixelArtAcademy]
+* Yeah, but it's made up, right? -> [RetropolisMadeUp]
+
+## RetropolisNo
+
+captain: Neither does anyone in the real world.
+
+-> [AlternateReality]
+
+## RetropolisPixelArtAcademy
+
+captain: Yes indeed. So far it has existed only in the prospectus of Pixel Art Academy.
+
+-> [AlternateReality]
+
+## RetropolisMadeUp
+
+captain: In the world you just left behind, yes.
+
+-> [AlternateReality]
+
+## AlternateReality
+
+captain: Yet, when you exit the Construct, you will enter an alternate reality where Retropolis got formed in 1984 on an island next to the settlement Walden 14.
+
+* I'm starting to get it. -> [GetIt]
+* Walden 14?
+
+## Walden14
+
+-> [SkinnerRepeat] `HeardOfSkinner`
+
+## HeardOfSkinner
+
+captain: Tell me, have you heard of B.F. Skinner?
+
+* I'm afraid not. -> [SkinnerNo]
+* The behavioral psychologist? -> [SkinnerYes]
+* The famous producer of hides?
+
+captain: Yeah … no.
+
+## SkinnerNo
+
+> The Captain switches the TV to show a scientist working with pigeons.
+
+captain: 
+    Skinner was the most eminent psychologist of the 20th century, right in front of Jean Piaget and Sigmund Freud. 
+    You've heard of Freud, haven't you?
+
+* …
+
+captain: That was rhetorical. 
+    
+## SkinnerGames
+
+captain:
+    Thanks to Skinner, the very video games you play are designed to keep you glued to your screen.
+    Every time a monster drops some loot, it's Skinner's operant conditioning at work. But I digress. `not MainDialog`
+    Every time a monster drops some loot, it's Skinner's operant conditioning at work. `MainDialog`
+
+-> [SkinnerWalden2] `MainDialog`
+
+* Fascinating! -> [SkinnerFascinating]
+* Gee, if I knew I was getting a lecture …
+
+captain: Well, you did ask about Walden 14 …
+
+* Yes, yes I did. -> [SkinnerFascinating]
+* I just wanted the very very short version.
+
+captain: 
+    Very well. Walden 14 is a settlement started in the 1950s in the middle of the Pacific Ocean. 
+    Skinner wrote about its predecessor, Walden Two. That's as short as it gets.
+
+* Perfect. Let's move on. -> [GetIt]
+* Actually, I'd like to hear the full story. -> [SkinnerFascinating]
+
+## SkinnerYes
+
+captain: The one and only.
+
+## SkinnerRepeat
+
+> The Captain switches the TV to show a scientist working with learning machines.
+
+-> [SkinnerWalden2]
+
+## SkinnerFascinating
+
+> The TV now shows Skinner working with learning machines.
+
+-> [SkinnerWalden2]
+
+## SkinnerWalden2
+
+captain: 
+    Skinner was obsessed with figuring out how to change human behavior, but not in a negative, controlling way.
+    At the end of 1940s he wrote about a settlement called Walden Two that was devoted to creating a better society through social engineering.
+    
+> A small village appears on the TV.
+
+captain: 
+    Over the years, the Walden community quickly expanded to new Walden settlements. 
+    In the 1950s they created Walden 14 on an island in the Pacific Ocean, with the goal to focus on radical automation.
+
+-> [MainQuestions] `MainDialog`
+
+* This sounds familiar …
+* Go on.
+
+> The TV shows Retropolis again.
+
+## GetIt
+
+captain: You will travel to Walden 14 and the city of Retropolis soon enough …
+
+> The Captain looks as though he said something too quickly.
+
+captain: 
+    Well, unfortunately you cannot go there yourself.
+    While you may treat this as a video game experience that you can hop in and out of, such behavior would disrupt the alternate reality of people living in it.
+
+* So … how will this work?
+
+> The Captain switches the TV to show a robot being constructed.
+
+captain: 
+    You will create an alternate reality character. 
+    It will be a cybernetic organism with an artificial intelligence component—a cyborg hybrid. 
 
 ## IntroQuestions
 
-* My character … It'll be an AI program? -> [Character]
-* Why an AI agent and not just me in avatar form? -> [Avatar] `Character`
-* I could just create a character like myself. -> [SelfAvatar] `Avatar`
-* How do I get out of here? -> [HowToExit]
+* My character will be a cyborg? -> [Cyborg]
+* It will have free will? -> [FreeWill] `Cyborg`
+* Why can't I completely control my character? -> [Control] `FreeWill`
+* I could just create a character like myself. -> [Myself] `Control`
 * Alright, let's get this started. -> [GetStarted]
 
-## Character
+## Cyborg
 
 captain: 
-    Yes. However, we are on the brink of strong AI. 
-    The characters we make are pretty much alive, depending on your definition of alive.
-    If alive means they can perceive the world and act upon it with free will, then our characters are just as alive as you are.
-    
-* But they don't live in the real world. -> [RealWorld]
-* They have free will? -> [FreeWill]
+    Yes. A cyborg is part human, part robot. 
+    Your neural connection will provide the human part, but as an AI hybrid it will also have free will of its own.
 
-## RealWorld
-
-captain:
-    Does it matter? They are alive under the constraints of their world.
-    Just like you are limited in your own.
-    
 -> [IntroQuestions]
 
 ## FreeWill
 
-captain:
-    Indeed. When you're not connected to Lands of Illusions, life goes on. 
-    Your characters are quite capable to live on their own without you.
+captain: 
+    Indeed. When you're not connected to the system, life goes on. 
+    Your character is quite capable to live on its own without you.
     You have a symbiotic link with them so you can instruct them what to do, but in the end, it's their choice to listen to you or not.
     Take good care of them and they will take good care of you.
-    
+
 -> [IntroQuestions]
 
-## Avatar
+## Control
 
-captain:
-    There is good research out there that makes an agent a better choice.
-    By interacting with an autonomous being you form a social bond that will help your learning.
+captain: 
+    There is good research out there that makes an intelligent agent a better choice than a mere avatar shell.
+    By interacting with an autonomous being you will form a social bond that will help your learning.
     
 <!-- TODO: trigger Protege Effect Illustrapedia entry. -->
-    
+
 -> [IntroQuestions]
 
-##  SelfAvatar    
+## Myself
 
-captain:
+captain: 
     That is good middle ground. 
     But remember, they are still a separate entity.
     They will live on their own while you're not there.
 
 -> [IntroQuestions]
 
-## HowToExit
-
-captain:
-    At any time while in Lands of Illusions, either in the Construct or in the simulations, you can always ![talk to operator](talk to operator).
-    He can take you out of immersion or help with switching characters.
-    
--> [IntroQuestions]
-
 ## GetStarted
 
 -> [NoCharacters] `not @user.characters.length`
 
-captain:
+captain: 
     I see you already have a character ready to play with. 
-    You can ![use the TV](use TV) to select it and we'll establish a neural link with it.
+    You can ![use your SYNC](sync) device to select it and we'll establish a neural link with them.
     
 captain: `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
     Since you own the Avatar Editor you can also modify their design and attributes.
-    The staff at the Character Construction Center will help you with that.
+    The staff at the Cyborg Construction Center will help you with that.
 
 -> [MainDialog]
-
-<!-- MAIN DIALOG -->
-
-## MainDialog
-
-captain: How can I help you? `not _MainQuestions`
-captain: Any more questions? `_MainQuestions`
-
-## MainQuestions
-
-* How do I select a character again? -> [SelectCharacter]
-* Take me to the character center. -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
-* Tell me about the Construct again. -> [WhereAmI]
-* I want to exit Lands of Illusions. -> [Exit]
-* Thank you, that's all for now.
-
-captain: Good luck.
-
--> [End]
-
-## SelectCharacter
-
-captain:
-    To do that you can ![use the TV](use TV) and we'll establish a neural link with the character you want.
-
--> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
--> [NoEditor]
 
 ## NoCharacters
 
@@ -159,45 +266,94 @@ captain:
 
 ## NoEditorEnd
 
-captain:
-    Great. The TV is there when you're ready.
+captain: Great. The TV is there when you're ready.
     
 -> [MainDialog]
 
 ## HasEditor
 
 captain:
-    Since you own the Avatar Editor you can also design a character on your own.
-    The staff at the Character Construction Center will help you with that.
-    Are you ready to do so?
+    Since you own the Avatar Editor you can also design a character on your own
+    The staff at the Cyborg Construction Center will help you with that.
      
-* Let's go! -> [C3]
+* Where is this center? -> [C3]
 * I'll just select one on the TV. -> [TV]
-* One more thing …
+* One more thing … 
 
 captain: Of course, how can I help?
 
+-> [MainDialog]
+
+## TV
+
+captain: Very well.
+
 -> [MainQuestions]
 
-## C3
+<!-- MAIN DIALOG -->
 
-captain: Perfect. Operator, load the C3 program.
+## MainDialog
 
-pause
+captain: How can I help you? `not _MainQuestions`
+captain: Any more questions? `_MainQuestions`
+
+## MainQuestions
+
+* Where is the cyborg what-was-it center? -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and not C3`
+* Where is the Cyborg Construction Center? -> [C3Short] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and C3`
+* How do I get out of here? -> [HowToExit]
+* Can I have multiple characters? -> [MultipleCharacters]
+* How do I select a character again? -> [SelectCharacter] `not @user.characters.length`
+* How do I play with my character? -> [LinkCharacter] `@user.characters.length`
+* Tell me about the Construct again. -> [Construct]
+* Can you tell me more about Walden 14? -> [Walden14] `not Walden14`
+* Can you repeat the Walden part? -> [Walden14] `Walden14`
+* Thank you, that's all for now.
+
+captain: Good luck.
 
 ### ShowTitle
 
 -> [End]
 
-### C3
+## SelectCharacter
 
--> [End]
+captain: To do that ![use the TV](use TV) to select somebody you like and we'll setup a symbiotic link with them.
 
-## TV
+-> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+-> [NoEditor]
 
-captain: As you wish.
+## LinkCharacter
 
--> [MainDialog]
+captain: To do that ![use the TV](use TV) to select it and we'll establish a neural link with them.
+
+-> [MainQuestions]
+
+## C3
+
+captain: Cyborg Construction Center, or C3 for short, is a cyborg and android manufacturer in San Francisco.
+    
+## C3Short
+    
+captain: It's in Mission Bay, south of SOMA. Ask at the reception in the HQ if you have trouble finding it.
+
+-> [MainQuestions]
+
+## HowToExit
+
+captain: 
+    At any time you're in full immersion—either in the Construct or synced with your character—you can always ![talk to operator](talk to operator).
+    He can take you back to the real world or help with switching characters.
+
+-> [MainQuestions]
+
+## MultipleCharacters
+
+captain:
+    Indeed! Feel free to play with different characters.
+    You can even et a quick start with selecting a pre-existing character and later create one of your own. `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+
+-> [MainQuestions]
 
 ## Exit
 

@@ -43,7 +43,7 @@ Package.onUse(function(api) {
   api.addComponent('items/receipt/receipt');
   
   api.addFile('items/account/account');
-  api.addFile('items/sync/sync');
+  api.addComponent('items/sync/sync');
   api.addFile('items/keycard/keycard');
 
   api.addThing('items/operatorlink/operatorlink');
