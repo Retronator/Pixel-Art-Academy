@@ -36,6 +36,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     @uiInView = new ReactiveField false
 
+    @minimapSize = new ReactiveField null
+
     # Node handling must get initialized before handlers, since the latter depends on it.
     @initializeNodeHandling()
     @initializeHandlers()

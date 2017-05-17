@@ -1,11 +1,9 @@
 <template name="PixelArtAcademy.Items.Map">
-  <div class="pixelartacademy-items-map">
+  <div class="pixelartacademy-items-map {{visibleClass}}">
     <div class="map-content {{minimapClass}}">
-      {{#if miniMap}}
-        I AM MINI MAP
-      {{else}}
-        I AM MAP
-      {{/if}}
+      {{#each locations}}
+        {{> PixelArtAcademy.Items.Map.Node}}
+      {{/each}}
     </div>
     {{#if fullscreenOverlay}}
       <div class="fullscreen">

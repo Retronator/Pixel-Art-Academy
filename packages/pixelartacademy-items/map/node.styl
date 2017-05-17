@@ -1,0 +1,167 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-items-map-node
+  position absolute
+  border 1rem solid atariGrey(1)
+  padding 1rem
+  transition all ease-out 0.5s
+  opacity 0
+
+  &.visible
+    opacity 1
+
+  .name-area
+    position relative
+    overflow hidden
+    height 100%
+
+    .name
+      position absolute
+      width 100%
+      max-height 12rem
+      top 50%
+      left 0
+      transform translateY(-50%)
+      checkout()
+      color atariGrey(2)
+      text-transform uppercase
+      line-height 6rem
+      text-align center
+
+  &.current
+    background atariGrey(1)
+    z-index -1
+
+    .name-area
+      .name
+        color atariGrey(4)
+
+  &::after
+    content ''
+    position absolute
+
+  &.east::after
+  &.west::after
+  &.north::after
+  &.south::after
+    background atariGrey(1)
+
+  &.east::after
+  &.west::after
+    width 9rem
+    height 1rem
+    top calc(50% - 0.5rem)
+
+  &.north::after
+  &.south::after
+    height 9rem
+    width 1rem
+    left calc(50% - 0.5rem)
+
+  &.northwest::after
+  &.west::after
+  &.southwest::after
+    right -10rem
+
+  &.northeast::after
+  &.east::after
+  &.southeast::after
+    left -10rem
+
+  &.southwest::after
+  &.south::after
+  &.southeast::after
+  &.down::after
+    top -10rem
+
+  &.northwest::after
+  &.north::after
+  &.northeast::after
+  &.up::after
+    bottom -10rem
+
+  &.northeast::after
+  &.northwest::after
+  &.southeast::after
+  &.southwest::after
+  &.up::after
+  &.down::after
+    width 9rem
+    height 9rem
+    background-size 100%
+
+  &.northwest::after
+  &.southeast::after
+    background-image image('/items/map/minimap/diagonal-down.png')
+
+  &.northeast::after
+  &.southwest::after
+    background-image image('/items/map/minimap/diagonal-up.png')
+
+  &.up::after
+  &.down::after
+    left calc(50% - 3.5rem)
+    background-image image('/items/map/minimap/stairs-down.png')
+
+  &.in::after
+  &.out::after
+    left calc(50% - 2.5rem)
+    width 5rem
+    height 13rem
+    background-size 100%
+    background-image image('/items/map/minimap/door-in-n.png')
+    background-color transparent
+
+  &.in::after
+    bottom -10rem
+
+  &.out::after
+    top -14rem
+
+  &.in.south::after
+  &.out.north::after
+    background-image image('/items/map/minimap/door-in-s.png')
+    height 11rem
+
+  &.in.south::after
+    top -10rem
+    bottom auto
+
+  &.out.north::after
+    top auto
+    bottom -11rem
+
+  &.in.east::after
+  &.in.west::after
+  &.out.east::after
+  &.out.west::after
+    top calc(50% - 5.5rem)
+    width 13rem
+    height 9rem
+    background-size 100%
+
+  &.in.west::after
+  &.out.west::after
+    left auto
+    right -10rem
+
+  &.in.east::after
+  &.out.east::after
+    left -13rem
+
+  &.in.east::after
+  &.out.west::after
+    background-image image('/items/map/minimap/door-in-e.png')
+
+  &.in.west::after
+  &.out.east::after
+    background-image image('/items/map/minimap/door-in-w.png')
+
+  &.northwest.up::after
+  &.southwest.down::after
+    left auto
+    right -10rem
+
+  &.southwest.down::after
+  &.northeast.up::after
+    background-image image('/items/map/minimap/stairs-up.png')

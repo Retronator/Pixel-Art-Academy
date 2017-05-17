@@ -1,14 +1,12 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-items-map
+  display none
+
+  &.visible
+    display block
+
   .map-content
     position fixed
-    right 50%
-    bottom 50%
     z-index 2
-    padding 1rem
     transition all ease-out 0.5s
-
-    &.mini-map
-      right 10%
-      bottom 10%

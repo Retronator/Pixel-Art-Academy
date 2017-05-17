@@ -40,6 +40,7 @@ class HQ.Cafe extends LOI.Adventure.Location
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Up}": HQ.Store
+    "#{Vocabulary.Keys.Directions.Northwest}": HQ.Store
     "#{Vocabulary.Keys.Directions.West}": HQ.Coworking
     "#{Vocabulary.Keys.Directions.East}": SanFrancisco.Soma.SecondStreet
     "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.SecondStreet

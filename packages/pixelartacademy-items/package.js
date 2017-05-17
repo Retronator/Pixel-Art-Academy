@@ -22,5 +22,7 @@ Package.onUse(function(api) {
   api.addFile('bottle/scene');
 
   api.addComponent('map/map');
+  api.addComponent('map/node');
   api.addFile('map/scene');
+
 });

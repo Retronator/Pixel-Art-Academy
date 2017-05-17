@@ -2,6 +2,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
+Directions = Vocabulary.Keys.Directions
 
 class PAA.Items.Map extends LOI.Adventure.Item
   @id: -> 'PixelArtAcademy.Items.Map'
@@ -27,7 +28,72 @@ class PAA.Items.Map extends LOI.Adventure.Item
     @miniMap = new ReactiveField true
     @fullscreenOverlay = new ReactiveField false
 
+    @size = new ReactiveField null, EJSON.equals
+
+    @anyNorthLocations = new ReactiveField false
+    @anySouthLocations = new ReactiveField false
+
+    @locations = new ComputedField =>
+      return unless currentLocation = LOI.adventure.currentLocation()
+
+      # Build a map of locations with their avatars.
+      locations =
+        "#{currentLocation.id()}":
+          _id: currentLocation.id()
+          avatar: currentLocation.avatar
+          current: true
+
+      # TODO: Get exits from current situation so they can be dynamically modified.
+      for exitId, exitAvatar of currentLocation.exitAvatarsByLocationId()
+        locations[exitId] =
+          _id: exitId
+          avatar: exitAvatar
+
+      # Add direction data to locations.
+      anyNorthLocations = false
+      anySouthLocations = false
+
+      for exitDirection, exitClass of currentLocation.exits()
+        exitId = exitClass.id()
+
+        switch exitDirection
+          when Directions.In, Directions.Out, Directions.Up, Directions.Down
+            locations[exitId].specialDirection = exitDirection
+
+          else
+            locations[exitId].direction = exitDirection
+
+        switch exitDirection
+          when Directions.Northwest, Directions.North, Directions.Northeast
+            anyNorthLocations = true
+
+          when Directions.Southwest, Directions.South, Directions.Southeast
+            anySouthLocations = true
+
+      # Set extra location variables.
+      @anyNorthLocations anyNorthLocations
+      @anySouthLocations anySouthLocations
+
+      # Return just a list of locations and sort them by _id to prevent re-rendering.
+      _.sortBy _.values(locations), '_id'
+
   isVisible: -> false
+    
+  onRendered: ->
+    super
+
+    # Resize elements.
+    @autorun (computation) =>
+      viewport = LOI.adventure.interface.display.viewport()
+
+      viewportSize = viewport.viewportBounds
+      return unless minimapSize = LOI.adventure.interface.minimapSize()
+
+      mapSize = if @miniMap() then minimapSize else viewportSize
+
+      @$('.map-content').css mapSize.toDimensions()
+
+      @size mapSize
 
   onActivate: (finishedDeactivatingCallback) ->
     # Start enlarging the map.
@@ -47,6 +113,10 @@ class PAA.Items.Map extends LOI.Adventure.Item
 
   minimapClass: ->
     'mini-map' if @miniMap()
+
+  visibleClass: ->
+    # Don't show the mini map if interface is only showing the description.
+    'visible' unless LOI.adventure.interface.inIntro()
     
   # Listener
 
