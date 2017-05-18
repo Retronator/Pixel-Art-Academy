@@ -20,15 +20,17 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
     C2.Immersion
   ]
 
+  @scenes: -> [
+    @Inventory
+    @Store
+  ]
+
   @timelineId: -> PAA.TimelineIds.RealLife
 
   @initialize()
 
   constructor: ->
     super
-
-    @inventory = new @constructor.Inventory parent: @
-    @store = new @constructor.Store parent: @
 
     # Move the player to caltrain on start.
     @autorun (computation) =>
@@ -58,17 +60,9 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
       ,
         1000
 
-  destroy: ->
-    super
-
   fadeVisibleClass: ->
     'visible' unless @state 'fadeOutDone'
 
   finished: ->
     # Chapter 2 ends when you finish immersion.
     C2.Immersion.finished()
-
-  scenes: -> [
-    @inventory
-    @store
-  ]

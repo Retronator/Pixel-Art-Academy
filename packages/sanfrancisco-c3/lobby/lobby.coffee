@@ -3,7 +3,7 @@ C3 = SanFrancisco.C3
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C3.Lobby extends LOI.Construct.Location
+class C3.Lobby extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.C3.Lobby'
   @url: -> 'c3/lobby'
   @region: -> SanFrancisco.Soma

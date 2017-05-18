@@ -49,6 +49,7 @@ class PAA.Items.Map extends LOI.Adventure.Item
 
     @locations = new ComputedField =>
       return unless currentLocation = LOI.adventure.currentLocation()
+      return unless currentSituation = LOI.adventure.currentSituation()
 
       # Build a map of locations with their avatars.
       locations =
@@ -57,15 +58,13 @@ class PAA.Items.Map extends LOI.Adventure.Item
           avatar: currentLocation.avatar
           current: true
 
-      # TODO: Get exits from current situation so they can be dynamically modified.
-      for exitId, exitAvatar of currentLocation.exitAvatarsByLocationId()
-        locations[exitId] =
-          _id: exitId
-          avatar: exitAvatar
-
-      if exits = currentLocation.exits()
+      if exits = currentSituation.exits()
         for exitDirection, exitClass of exits
           exitId = exitClass.id()
+
+          locations[exitId] ?=
+            _id: exitId
+            avatar: LOI.adventure.getAvatar exitClass
 
           switch exitDirection
             when Directions.In, Directions.Out, Directions.Up, Directions.Down

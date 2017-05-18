@@ -28,7 +28,8 @@ Package.onUse(function(api) {
   // Chapter 1
 
   api.addComponent('chapter1/chapter1');
-  api.addFile('chapter1/inventory');
+
+  api.addFile('chapter1/scenes/inventory');
 
   api.addFile('chapter1/actors/actors');
   api.addFile('chapter1/actors/alex');
@@ -67,8 +68,9 @@ Package.onUse(function(api) {
   // Chapter 2
 
   api.addComponent('chapter2/chapter2');
-  api.addFile('chapter2/inventory');
-  api.addFile('chapter2/store');
+
+  api.addFile('chapter2/scenes/inventory');
+  api.addFile('chapter2/scenes/store');
 
   api.addFile('chapter2/actors/actors');
   api.addFile('chapter2/actors/conductor');
@@ -106,7 +108,10 @@ Package.onUse(function(api) {
   // Chapter 3
 
   api.addFile('chapter3/chapter3');
-  api.addFile('chapter3/inventory');
+
+  api.addFile('chapter3/scenes/inventory');
+  api.addFile('chapter3/scenes/2nd');
+  api.addFile('chapter3/scenes/4thking');
 
   api.addFile('chapter3/items/items');
 

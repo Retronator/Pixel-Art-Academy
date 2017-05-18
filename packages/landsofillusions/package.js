@@ -162,8 +162,8 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/global/global.coffee');
   api.addFiles('adventure/episode/episode.coffee');
-  api.addComponent('adventure/chapter/chapter');
   api.addFiles('adventure/section/section.coffee');
+  api.addComponent('adventure/chapter/chapter');
   api.addFiles('adventure/scene/scene.coffee');
 
   // Locations and inventory

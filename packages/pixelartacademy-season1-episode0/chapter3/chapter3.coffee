@@ -16,13 +16,13 @@ class PAA.Season1.Episode0.Chapter3 extends LOI.Adventure.Chapter
     C3.Construct
   ]
 
+  @scenes: -> [
+    @Inventory
+    @SecondStreet
+    @FourthAndKing
+  ]
+
   @initialize()
 
   constructor: ->
     super
-
-    @inventory = new @constructor.Inventory parent: @
-
-  scenes: -> [
-    @inventory
-  ]

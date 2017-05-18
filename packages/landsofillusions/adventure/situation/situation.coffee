@@ -39,6 +39,17 @@ class LOI.Adventure.Situation
 
     @_applyScene scene for scene in scenes
 
+    @exitsById = new ComputedField =>
+      # Generate a unique set of exit classes from all directions (some directions might lead to
+      # same location) so we don't have multiple avatar objects for the same location.
+      exitClasses = _.uniq _.values @exits()
+      exitClasses = _.without exitClasses, null
+
+      exitsById = {}
+      exitsById[exitClass.id()] = exitClass for exitClass in exitClasses
+
+      exitsById
+
   _applyScene: (scene) ->
     console.log "%cApplying scene", 'background: thistle', scene.id() if LOI.debug
     

@@ -3,7 +3,7 @@ C3 = SanFrancisco.C3
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C3.Hallway extends LOI.Construct.Location
+class C3.Hallway extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.C3.Hallway'
   @url: -> 'c3/hallway'
   @region: -> SanFrancisco.Soma
@@ -27,6 +27,6 @@ class C3.Hallway extends LOI.Construct.Location
     super
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.North}": Soma.Behavior
-    "#{Vocabulary.Keys.Directions.Northeast}": Soma.Stasis
-    "#{Vocabulary.Keys.Directions.West}": Soma.Lobby
+    "#{Vocabulary.Keys.Directions.North}": C3.Behavior
+    "#{Vocabulary.Keys.Directions.Northeast}": C3.Stasis
+    "#{Vocabulary.Keys.Directions.West}": C3.Lobby

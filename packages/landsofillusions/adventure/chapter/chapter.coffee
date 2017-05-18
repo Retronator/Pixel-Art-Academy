@@ -1,8 +1,14 @@
 LOI = LandsOfIllusions
 
-class LOI.Adventure.Chapter extends LOI.Adventure.Thing
+class LOI.Adventure.Chapter extends LOI.Adventure.Section
   @register 'LandsOfIllusions.Adventure.Chapter'
   template: -> 'LandsOfIllusions.Adventure.Chapter'
+
+  @fullName: ->
+    # Unlike sections, chapters do need a name so we need to revert the override from the section class.
+    throw new AE.NotImplementedException
+
+  @scenes: -> [] # Override to provide any scenes that are always active in a chapter.
 
   @number: -> throw new AE.NotImplementedException
   number: -> @constructor.number()
@@ -18,16 +24,11 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Thing
   finished: -> @constructor.finished()
 
   constructor: (@options) ->
-    super
-
+    # Set the episode and chapter before calling super, because super executes active, which needs these fields.
     @episode = @options.parent
     @previousChapter = @options.previousChapter
 
-    # Cached field to minimize reactivity.
-    @_active = new ComputedField =>
-      @active()
-    ,
-      true
+    super
 
     @sections = new ComputedField =>
       # Create sections JIT when chapter becomes active.
@@ -51,8 +52,6 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Thing
 
     _.find @sections(), (section) => section.id() is sectionId
       
-  scenes: -> # Override to provide any scenes for the whole chapter.
-
   active: ->
     # Chapter starts being active when the previous chapter gets finished. It stays active forever to preserve 
     # inventory and other permanent changes, as well as access to unfinished sections. First chapter is special and

@@ -49,9 +49,17 @@
     .direction
       right calc(100% + 1.5rem)
 
+  &.east.in
+    .direction
+      right calc(100% + 2.5rem)
+
   &.west
     .direction
       left calc(100% + 3.5rem)
+
+  &.west.out
+    .direction
+      left calc(100% + 2.5rem)
 
   &.north
   &.south
@@ -220,8 +228,13 @@
     right -10rem
 
   &.in.east::before
+    left -10rem
+
   &.out.east::before
     left -13rem
+
+  &.out.west::before
+    right -13rem
 
   &.in.east::before
   &.out.west::before
@@ -316,6 +329,10 @@
         &.down
           .direction
             left calc(50% + 17rem)
+
+        &.in.south
+          .direction
+            left calc(50% + 5rem)
 
         &.northwest
         &.southwest
@@ -427,11 +444,16 @@
           background-size 100%
 
         &.in.west::before
-        &.out.west::before
           left auto
           right -3rem
 
+        &.out.west::before
+          left auto
+          right -23rem
+
         &.in.east::before
+          left -3rem
+
         &.out.east::before
           left -23rem
 

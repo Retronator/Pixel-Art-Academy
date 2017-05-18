@@ -3,7 +3,7 @@ C3 = SanFrancisco.C3
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C3.Behavior extends LOI.Construct.Location
+class C3.Behavior extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.C3.Behavior'
   @url: -> 'c3/behavior-setup'
   @region: -> C3
@@ -15,7 +15,7 @@ class C3.Behavior extends LOI.Construct.Location
   @description: ->
     "
       Behavior Setup is an isolated room at the east end of the manufacturing hall.
-      Machine noises are replaced with hushing of fans as supercomputers run machine learning algorithms and behavior
+      Machine noises are replaced with hushing fans as supercomputers run machine learning algorithms and behavior
       simulations. Several workstations are lined up at the wall, each facing its own window that reveals a small test
       room behind it.
     "

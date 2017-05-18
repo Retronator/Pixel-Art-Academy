@@ -26,18 +26,6 @@ class LOI.Interface.Text extends LOI.Interface
       situation = LOI.adventure.currentSituation()
 
       @_formatOutput situation.description.last()
-      
-  exitAvatars: ->
-    # TODO: Get exits from current situation so they can be dynamically modified.
-    exitAvatarsByLocationId = @location()?.exitAvatarsByLocationId()
-    return [] unless exitAvatarsByLocationId
-
-    # Generate a unique set of IDs from all directions (some directions might lead to same location).
-    exitAvatars = _.values exitAvatarsByLocationId
-
-    console.log "Displaying exits", exitAvatars if LOI.debug
-
-    exitAvatars
 
   things: ->
     return [] unless things = LOI.adventure.currentLocationThings()
@@ -211,6 +199,13 @@ class LOI.Interface.Text extends LOI.Interface
         @scroll
           position: @maxScrollTop()
           animate: true
+
+  ready: ->
+    conditions = _.flattenDeep [
+      avatar.ready() for avatar in @exitAvatars()
+    ]
+
+    _.every conditions
 
   events: ->
     super.concat

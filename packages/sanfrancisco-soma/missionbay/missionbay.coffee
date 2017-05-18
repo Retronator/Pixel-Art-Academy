@@ -14,7 +14,7 @@ class Soma.MissionBay extends LOI.Adventure.Location
   @shortName: -> "Mission Bay"
   @description: ->
     "
-      You are at the UCSF/Mission Bay Muni station. University of California San Francisco Medical Center makes up for
+      You are at the UCSF/Mission Bay Muni station. University of California San Francisco Medical Center makes up
       most of the neighborhood, with Uber's fancy HQ and the Golden State Warriors' Chase Center highlighting the rest.
     "
   
