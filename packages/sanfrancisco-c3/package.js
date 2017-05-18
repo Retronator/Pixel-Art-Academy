@@ -16,14 +16,14 @@ Package.onUse(function(api) {
 
   api.export('SanFrancisco');
 
-  api.addFiles('c3.coffee');
+  api.addFile('c3');
 
   // Locations
 
-  api.addFiles('locations/locations.coffee');
+  api.addFile('behavior/behavior');
+  api.addFile('design/design');
+  api.addFile('hallway/hallway');
+  api.addFile('lobby/lobby');
+  api.addFile('stasis/stasis');
 
-  api.addFiles('locations/c3.coffee');
-  api.addFiles('locations/entrance/entrance.coffee');
-  api.addFiles('locations/lobby/lobby.coffee');
-  
 });

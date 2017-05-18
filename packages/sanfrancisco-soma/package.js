@@ -26,4 +26,8 @@ Package.onUse(function(api) {
   api.addFile('2nd/2nd');
   api.addFile('2nd/retronatorhq');
   api.addFile('2nd/artistsign');
+  api.addFile('2ndking/2ndking');
+  api.addFile('c3/c3');
+  api.addFile('missionbay/missionbay');
+  api.addFile('missionrock/missionrock');
 });

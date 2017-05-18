@@ -7,4 +7,4 @@ class SanFrancisco.C3 extends LOI.Adventure.Region
   @initialize()
   
   @playerHasPermission: -> @validateAvatarEditor()
-  @exitLocation: -> LandsOfIllusions.Construct.Loading
+  @exitLocation: -> SanFrancisco.C3.Lobby
