@@ -7,6 +7,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     TextArea: 'textarea'
     Select: 'select'
     Number: 'number'
+    Checkbox: 'checkbox'
 
   template: ->
     'Artificial.Mirage.DataInputComponent'
@@ -34,6 +35,9 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
   isSelect: ->
     @type is @constructor.Types.Select
 
+  isCheckbox: ->
+    @type is @constructor.Types.Checkbox
+
   load: ->
     console.error "You must implement the load method."
 
@@ -54,6 +58,9 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
 
     'selected' if option.value is selectedValue
 
+  checkedAttribute: ->
+    'checked' if @value()
+
   events: -> [
     'change input, change textarea': @onChange
     'input input, input textarea': @onInput
@@ -61,6 +68,9 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
   ]
 
   onChange: (event) ->
+    if @type is @constructor.Types.Checkbox
+      @save $(event.target).is(':checked')
+
     @save $(event.target).val() unless @realtime
 
   onInput: (event) ->

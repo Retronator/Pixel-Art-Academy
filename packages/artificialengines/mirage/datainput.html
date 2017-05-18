@@ -11,8 +11,12 @@
         {{/each}}
       </select>
     {{else}}
-    {{! Other inputs }}
-      <input type="{{type}}" value="{{value}}" placeholder="{{placeholder}}"/>
+      {{#if isCheckbox}}
+        <input type="checkbox" {{checkedAttribute}}/>
+      {{else}}
+        {{! Other inputs }}
+        <input type="{{type}}" value="{{value}}" placeholder="{{placeholder}}"/>
+      {{/if}}
     {{/if}}
   {{/if}}
 </template>

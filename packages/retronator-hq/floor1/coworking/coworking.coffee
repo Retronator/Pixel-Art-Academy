@@ -40,4 +40,3 @@ class HQ.Coworking extends LOI.Adventure.Location
     ,
       "#{Vocabulary.Keys.Directions.East}": HQ.Cafe
       "#{Vocabulary.Keys.Directions.Down}": HQ.Basement
-      "#{Vocabulary.Keys.Directions.Southwest}": HQ.Basement

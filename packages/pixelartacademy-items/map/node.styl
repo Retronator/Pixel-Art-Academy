@@ -4,6 +4,7 @@
   position absolute
   border 1rem solid atariGrey(1)
   padding 1rem
+  background atariGrey(0)
   transition all ease-out 0.5s
   opacity 0
 
@@ -18,11 +19,10 @@
     .name
       position absolute
       width 100%
-      max-height 12rem
+      max-height 14rem
       top 50%
       left 0
       transform translateY(-50%)
-      checkout()
       color atariGrey(2)
       text-transform uppercase
       line-height 6rem
@@ -36,6 +36,71 @@
       .name
         color atariGrey(4)
 
+  // Horizontal positioining of directions
+
+  .direction
+    position absolute
+    z-index -1
+    text-transform uppercase
+    color atariGrey(1)
+    text-align center
+
+  &.east
+    .direction
+      right calc(100% + 1.5rem)
+
+  &.west
+    .direction
+      left calc(100% + 3.5rem)
+
+  &.north
+  &.south
+  &.in.no-direction
+  &.out.no-direction
+    .direction
+      left calc(50% + 3rem)
+
+  &.up
+  &.down
+    .direction
+      left calc(50% + 7rem)
+
+  &.northwest
+  &.southwest
+    .direction
+      left auto
+      right -1rem
+
+  &.northeast
+  &.southeast
+    .direction
+      left 1rem
+
+  // Vertical positioning of directions
+
+  &.east
+  &.west
+    .direction
+      bottom 50%
+
+  &.northwest
+  &.north
+  &.northeast
+  &.in.no-direction
+  &.up
+    .direction
+      top calc(100% + 1rem)
+
+  &.southwest
+  &.south
+  &.southeast
+  &.out.no-direction
+  &.down
+    .direction
+      bottom calc(100% + 1rem)
+
+  // Node connections
+
   &::after
     content ''
     position absolute
@@ -44,6 +109,8 @@
   &.west::after
   &.north::after
   &.south::after
+  &.in.no-direction::after
+  &.out.no-direction::after
     background atariGrey(1)
 
   &.east::after
@@ -54,6 +121,8 @@
 
   &.north::after
   &.south::after
+  &.in.no-direction::after
+  &.out.no-direction::after
     height 9rem
     width 1rem
     left calc(50% - 0.5rem)
@@ -72,12 +141,14 @@
   &.south::after
   &.southeast::after
   &.down::after
+  &.out.no-direction::after
     top -10rem
 
   &.northwest::after
   &.north::after
   &.northeast::after
   &.up::after
+  &.in.no-direction::after
     bottom -10rem
 
   &.northeast::after
@@ -103,8 +174,11 @@
     left calc(50% - 3.5rem)
     background-image image('/items/map/minimap/stairs-down.png')
 
-  &.in::after
-  &.out::after
+  &.in::before
+  &.out::before
+    content ''
+    position absolute
+    z-index 1
     left calc(50% - 2.5rem)
     width 5rem
     height 13rem
@@ -112,50 +186,82 @@
     background-image image('/items/map/minimap/door-in-n.png')
     background-color transparent
 
-  &.in::after
+  &.in::before
     bottom -10rem
 
-  &.out::after
+  &.out::before
     top -14rem
 
-  &.in.south::after
-  &.out.north::after
+  &.in.south::before
+  &.out.north::before
     background-image image('/items/map/minimap/door-in-s.png')
     height 11rem
 
-  &.in.south::after
+  &.in.south::before
     top -10rem
     bottom auto
 
-  &.out.north::after
+  &.out.north::before
     top auto
     bottom -11rem
 
-  &.in.east::after
-  &.in.west::after
-  &.out.east::after
-  &.out.west::after
+  &.in.east::before
+  &.in.west::before
+  &.out.east::before
+  &.out.west::before
     top calc(50% - 5.5rem)
     width 13rem
     height 9rem
     background-size 100%
 
-  &.in.west::after
-  &.out.west::after
+  &.in.west::before
+  &.out.west::before
     left auto
     right -10rem
 
-  &.in.east::after
-  &.out.east::after
+  &.in.east::before
+  &.out.east::before
     left -13rem
 
-  &.in.east::after
-  &.out.west::after
+  &.in.east::before
+  &.out.west::before
     background-image image('/items/map/minimap/door-in-e.png')
 
-  &.in.west::after
-  &.out.east::after
+  &.in.west::before
+  &.out.east::before
     background-image image('/items/map/minimap/door-in-w.png')
+
+  &.in.northwest::before
+  &.out.northwest::before
+  &.in.southeast::before
+  &.out.southeast::before
+  &.in.northeast::before
+  &.out.northeast::before
+  &.in.southwest::before
+  &.out.southwest::before
+    width 5rem
+    height 8rem
+
+  &.in.northwest::before
+  &.out.northwest::before
+  &.in.southeast::before
+  &.out.southeast::before
+    background-image image('/items/map/minimap/door-in-nw.png')
+
+  &.in.northeast::before
+  &.out.northeast::before
+  &.in.southwest::before
+  &.out.southwest::before
+    background-image image('/items/map/minimap/door-in-ne.png')
+
+  &.out.southeast::before
+    left -13rem
+    top -16rem
+
+  &.in.northwest::before
+    left auto
+    right -2rem
+    bottom -2rem
 
   &.northwest.up::after
   &.southwest.down::after
@@ -165,3 +271,215 @@
   &.southwest.down::after
   &.northeast.up::after
     background-image image('/items/map/minimap/stairs-up.png')
+
+  &.special-positioning.up::after
+    left auto
+    right 0
+
+  &.special-positioning.in::after
+    left 20%
+
+  &.special-positioning.in::before
+    left calc(20% - 2.5rem)
+
+.pixelartacademy-items-map
+  .map-content
+    &.mini-map
+      .pixelartacademy-items-map-node
+        .name-area
+          .name
+            checkout()
+
+    &.big-map
+      .pixelartacademy-items-map-node
+        border 1rem solid atariGrey(2)
+
+        .name-area
+          .name
+            max-height 16rem
+            line-height 8rem
+            color atariGrey(3)
+
+        &.current
+          .name-area
+            .name
+              color atariGrey(5)
+
+        .direction
+          padding 1rem
+          color atariGrey(2)
+
+        &.up
+          .direction
+            left calc(50% + 8rem)
+
+        &.down
+          .direction
+            left calc(50% + 17rem)
+
+        &.northwest
+        &.southwest
+          .direction
+            left auto
+            right -1rem
+
+        &.northeast
+        &.southeast
+          .direction
+            left 1rem
+
+        &.east::after
+        &.west::after
+        &.north::after
+        &.south::after
+          background atariGrey(2)
+
+        &.east::after
+        &.west::after
+          width 19rem
+
+        &.north::after
+        &.south::after
+          height 19rem
+
+        &.northwest::after
+        &.west::after
+        &.southwest::after
+          right -20rem
+
+        &.northeast::after
+        &.east::after
+        &.southeast::after
+          left -20rem
+
+        &.southwest::after
+        &.south::after
+        &.southeast::after
+        &.down::after
+          top -20rem
+
+        &.northwest::after
+        &.north::after
+        &.northeast::after
+        &.up::after
+          bottom -20rem
+
+        &.northeast::after
+        &.northwest::after
+        &.southeast::after
+        &.southwest::after
+        &.up::after
+        &.down::after
+          width 19rem
+          height 19rem
+          background-size 100%
+
+        &.northwest::after
+        &.southeast::after
+          background-image image('/items/map/bigmap/diagonal-down.png')
+
+        &.northeast::after
+        &.southwest::after
+          background-image image('/items/map/bigmap/diagonal-up.png')
+
+        &.up::after
+        &.down::after
+          left calc(50% - 3.5rem)
+          background-image image('/items/map/bigmap/stairs-down.png')
+
+        &.in::before
+        &.out::before
+          content ''
+          position absolute
+          left calc(50% - 3.5rem)
+          width 7rem
+          height 6rem
+          background-size 100%
+          background-image image('/items/map/bigmap/door-in-n.png')
+          background-color transparent
+
+        &.in::before
+          bottom -2rem
+
+        &.out::before
+          top -25rem
+
+        &.in.south::before
+        &.out.north::before
+          background-image image('/items/map/bigmap/door-in-s.png')
+          height 7rem
+
+        &.in.south::before
+          top -6rem
+          bottom auto
+
+        &.out.north::before
+          top auto
+          bottom -22rem
+
+        &.in.east::before
+        &.in.west::before
+        &.out.east::before
+        &.out.west::before
+          top calc(50% - 6.5rem)
+          width 5rem
+          height 10rem
+          background-size 100%
+
+        &.in.west::before
+        &.out.west::before
+          left auto
+          right -3rem
+
+        &.in.east::before
+        &.out.east::before
+          left -23rem
+
+        &.in.east::before
+        &.out.west::before
+          background-image image('/items/map/bigmap/door-in-e.png')
+
+        &.in.west::before
+        &.out.east::before
+          background-image image('/items/map/bigmap/door-in-w.png')
+
+        &.northwest.up::after
+        &.southwest.down::after
+          left auto
+          right -20rem
+
+        &.southwest.down::after
+        &.northeast.up::after
+          background-image image('/items/map/bigmap/stairs-up.png')
+
+        &.in.northwest::before
+        &.out.northwest::before
+        &.in.southeast::before
+        &.out.southeast::before
+        &.in.northeast::before
+        &.out.northeast::before
+        &.in.southwest::before
+        &.out.southwest::before
+          width 5rem
+          height 10rem
+
+        &.in.northwest::before
+        &.out.northwest::before
+        &.in.southeast::before
+        &.out.southeast::before
+          background-image image('/items/map/bigmap/door-in-nw.png')
+
+        &.in.northeast::before
+        &.out.northeast::before
+        &.in.southwest::before
+        &.out.southwest::before
+          background-image image('/items/map/bigmap/door-in-ne.png')
+
+        &.out.southeast::before
+          left -23rem
+          top -28rem
+
+        &.in.northwest::before
+          left auto
+          right -3rem
+          bottom -3rem
