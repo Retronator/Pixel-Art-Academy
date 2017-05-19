@@ -7,11 +7,14 @@ class Soma.Items.Map extends LOI.Adventure.Item
   @id: -> 'SanFrancisco.Soma.Items.Map'
   @url: -> 'sf/map'
 
+  @version: -> '0.0.1'
+
   @register @id()
   template: -> @constructor.id()
 
   @fullName: -> "map of San Francisco"
   @shortName: -> "SF map"
+  @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "
@@ -21,6 +24,12 @@ class Soma.Items.Map extends LOI.Adventure.Item
   @defaultScriptUrl: -> 'retronator_retronator-hq/items/sync/sync.script'
 
   @initialize()
+
+  onDeactivate: (finishedDeactivatingCallback) ->
+    Meteor.setTimeout =>
+      finishedDeactivatingCallback()
+    ,
+      500
 
   # Listener
 

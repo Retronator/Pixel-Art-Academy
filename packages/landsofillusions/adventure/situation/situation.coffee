@@ -60,15 +60,15 @@ class LOI.Adventure.Situation
         circumstance.add addValues
         console.log "Added", addValues, "to circumstance", circumstanceName if LOI.debug
 
-      if removeValues = scene["remove#{_.capitalize circumstanceName}"]?()
+      if removeValues = scene["remove#{_.upperFirst circumstanceName}"]?()
         circumstance.remove removeValues
         console.log "Removed", removeValues, "from circumstance", circumstanceName if LOI.debug
 
-      if clear = scene["clear#{_.capitalize circumstanceName}"]?()
+      if clear = scene["clear#{_.upperFirst circumstanceName}"]?()
         circumstance.clear()
         console.log "Cleared circumstance", circumstanceName if LOI.debug
 
-      if overrideValues = scene["override#{_.capitalize circumstanceName}"]?()
+      if overrideValues = scene["override#{_.upperFirst circumstanceName}"]?()
         circumstance.override overrideValues
         console.log "Overrode with", addValues, "in circumstance", circumstanceName if LOI.debug
 

@@ -15,6 +15,7 @@ class C2.Inventory extends LOI.Adventure.Scene
       HQ.Items.Prospectus
       HQ.Items.Sync if C2.Immersion.state 'syncGiven'
       HQ.Items.OperatorLink if C2.Immersion.state('operatorState') is C2.Immersion.OperatorStates.BackAtCounter
+      SanFrancisco.Soma.Items.Map if SanFrancisco.Soma.Items.Map.state 'inInventory'
     ]
     
     for itemClassName in ['ShoppingCart', 'Account', 'Receipt', 'Keycard']

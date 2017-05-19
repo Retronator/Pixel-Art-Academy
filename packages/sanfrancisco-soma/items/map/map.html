@@ -3,6 +3,11 @@
     {{> LandsOfIllusions.Components.BackButton}}
     {{#LandsOfIllusions.Components.Overlay}}
       I AM MAP
+    {{else}}
+      <div class="map-area max-area">
+        <img class="map" src="{{image '/sanfrancisco/soma/items/map/map.png'}}"/>
+        <img class="hand" src="{{image '/sanfrancisco/soma/items/map/hand.png'}}" />
+      </div>
     {{/LandsOfIllusions.Components.Overlay}}
   </div>
 </template>

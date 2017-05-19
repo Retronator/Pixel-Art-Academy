@@ -36,6 +36,7 @@ class HQ.Cafe extends LOI.Adventure.Location
   things: -> [
     @constructor.Artworks
     HQ.Actors.Burra
+    SanFrancisco.Soma.Items.Map unless SanFrancisco.Soma.Items.Map.state 'inInventory'
   ]
 
   exits: ->

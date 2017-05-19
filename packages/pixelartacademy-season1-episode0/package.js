@@ -112,7 +112,6 @@ Package.onUse(function(api) {
   api.addFile('chapter3/scenes/inventory');
   api.addFile('chapter3/scenes/2nd');
   api.addFile('chapter3/scenes/4thking');
-  api.addFile('chapter3/scenes/cafe');
 
   api.addFile('chapter3/items/items');
 
