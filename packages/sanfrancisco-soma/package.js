@@ -18,6 +18,12 @@ Package.onUse(function(api) {
 
   api.addFile('soma');
 
+  // Items
+
+  api.addFile('items/items');
+
+  api.addComponent('items/map/map');
+
   // Locations
 
   api.addFile('caltrain/caltrain');

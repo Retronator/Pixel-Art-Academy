@@ -100,24 +100,28 @@ The code gets executed in script's context. The variable values here are
 known as script state and each script has their own namespace (the name
 of the root Script node).
 
-If you want a variable to be available everywhere,
-use the `@` sign before variable names.
+If you want a variable to be available everywhere, you can store it in the global
+game state which can be accessed with the `@` sign.
 
     @happy = true
 
-This is also known as the global state. `@happy` will be `true` across
-scripts while `happy` would hold true only in this script's code.
+`@happy` will be `true` across scripts while `happy` would hold true only in this script's code.
+
+Note that you should use the namespace that's as restrictive as it can be to store the value.
+For example, a variable that needs to be the same across all scripts from episode 0 would have
+the address `@scripts.PixelArtAcademy.Season1.Episode0`.
 
 There are some special variables that provide other contexts:
 
 * `this`: Parent object of the script, usually a thing with same ID as the script.
 * `<thing shorthand>`: Thing objects provided with the `setThings` method on the script.
+* `location`: The state of the current location you're at.
 * `@user`: The logged in user's state. It's null when not logged in.
 * `@user.name`: A read-only variable with user's account name.
 * `@user.itemKeys`: A read-only map of catalog keys that this user has purchased.
-* `location`: The local state unique to the location you're at.
-* `@locations`: All location states, addressable by location ID.
 * `@player.inventory`: A map of items in your inventory.
+* `@scripts`: All script states, addressable by script ID.
+* `@things`: All thing states, addressable by thing ID.
 
 #### Persistence
 

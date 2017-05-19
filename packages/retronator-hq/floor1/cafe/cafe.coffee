@@ -77,6 +77,18 @@ class HQ.Cafe extends LOI.Adventure.Location
             cafeListener.startScript label: 'PlayPixelArtAcademy'
 
             complete()
+            
+          ReceiveMap: (complete) =>
+            SanFrancisco.Soma.Items.Map.state 'inInventory', true
+            
+            complete()
+
+          C3Map: (complete) =>
+            SanFrancisco.Soma.Items.Map.state 'c3Highlighted', true
+
+            LOI.adventure.scriptHelpers.itemInteraction
+              item: LOI.adventure.getCurrentThing SanFrancisco.Soma.Items.Map
+              callback: => complete()
 
     @initialize()
 
