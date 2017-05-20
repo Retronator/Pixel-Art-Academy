@@ -14,6 +14,7 @@ LOI.Parser.Vocabulary.Keys =
     Out: ''
     Up: ''
     Down: ''
+    Back: ''
 
   Verbs:
     GoToLocationName: ''

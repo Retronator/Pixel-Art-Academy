@@ -4,7 +4,8 @@ Package.describe({
 });
 
 Npm.depends({
-  twit: '2.2.5'
+  twit: '2.2.5',
+  'tumblr.js': '1.1.1'
 });
 
 Package.onUse(function(api) {
@@ -186,6 +187,7 @@ Package.onUse(function(api) {
   api.addFiles('telepathy/emailcomposer.coffee');
 
   api.addFiles('telepathy/twitter.coffee', 'server');
+  api.addFiles('telepathy/tumblr.coffee', 'server');
 
   // Artificial Babel
   api.addFiles('babel/babel.coffee');

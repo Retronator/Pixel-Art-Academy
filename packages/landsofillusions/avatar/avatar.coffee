@@ -5,6 +5,7 @@ class LOI.Avatar
   @translationKeys:
     fullName: 'fullName'
     shortName: 'shortName'
+    descriptiveName: 'descriptiveName'
     description: 'description'
     
   @NameAutoCorrectStyle:
@@ -46,6 +47,7 @@ class LOI.Avatar
 
   fullName: -> @_translateIfAvailable @constructor.translationKeys.fullName
   shortName: -> @_translateIfAvailable @constructor.translationKeys.shortName
+  descriptiveName: -> @_translateIfAvailable @constructor.translationKeys.descriptiveName
   description: -> @_translateIfAvailable @constructor.translationKeys.description
     
   nameAutoCorrectStyle: -> _.propertyValue @options, 'nameAutoCorrectStyle'

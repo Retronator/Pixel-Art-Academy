@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:retronator');
   api.use('retronator:retronator-store');
+  api.use('retronator:retronator-blog');
   api.use('retronator:pixelartacademy-cast');
 
   api.export('Retronator');
@@ -74,6 +75,7 @@ Package.onUse(function(api) {
   api.addFile('floor2/store/shelf/shelf-game');
   api.addFile('floor2/store/shelf/shelf-upgrades');
   api.addThing('floor2/store/shelf/shelves');
+  api.addFile('floor2/store/table/table');
 
   api.addFile('floor2/bookshelves/bookshelves');
 

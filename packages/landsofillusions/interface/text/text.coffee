@@ -39,10 +39,34 @@ class LOI.Interface.Text extends LOI.Interface
 
     exitAvatars
 
+  exitAvatarName: ->
+    exitAvatar = @currentData()
+
+    # Show the text for back instead of location name for that direction.
+    Back = LOI.Parser.Vocabulary.Keys.Directions.Back
+    backExit = LOI.adventure.currentSituation().exits()[Back]
+
+    return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.options.id() is backExit?.id()
+
+    exitAvatar.shortName()
+
   things: ->
     return [] unless things = LOI.adventure.currentLocationThings()
 
     thing for thing in things when thing.displayInLocation()
+
+  thingDescription: ->
+    # WARNING: The output of this function should be HTML escaped
+    # since the results will be directly injected with triple braces.
+    thing = @currentData()
+
+    # Look for a special description.
+    description = thing.descriptiveName()
+
+    # If that's not available, just use the full name formatted as a sentence.
+    description ?= "#{_.upperFirst thing.fullName()}."
+
+    @_formatOutput description
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
@@ -100,15 +124,16 @@ class LOI.Interface.Text extends LOI.Interface
     @_pausedNode() or @inIntro()
 
   narrativeLine: ->
+    # WARNING: The output of this function should be HTML escaped
+    # since the results will be directly injected with triple braces.
     lineText = @currentData()
 
     @_formatOutput lineText
     
   _formatOutput: (text) ->
+    # NOTE: The output of this function is HTML escaped and can be used directly injected with triple braces.
     return unless text
 
-    # WARNING: The output of this function should be HTML escaped
-    # since the results will be directly injected with triple braces.
     text = AM.HtmlHelper.escapeText text
 
     # Create color spans.

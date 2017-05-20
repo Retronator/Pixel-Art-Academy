@@ -43,6 +43,9 @@ class LOI.Adventure.Thing extends AM.Component
   # This sets how this thing's name should be corrected when not spelled correctly. 
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Word
 
+  # The description text displayed in the interface. Default (null) means no longer descriptive name.
+  @descriptiveName: -> null
+
   # The description text displayed when you look at the thing. Default (null) means no description.
   @description: -> null
 
@@ -263,6 +266,7 @@ class LOI.Adventure.Thing extends AM.Component
   fullName: -> @avatar?.fullName()
   shortName: -> @avatar?.shortName()
   nameAutoCorrectStyle: -> @avatar?.nameAutoCorrectStyle()
+  descriptiveName: -> @avatar?.descriptiveName()
   description: -> @avatar?.description()
   color: -> @avatar?.color()
   dialogTextTransform: -> @avatar?.dialogTextTransform()

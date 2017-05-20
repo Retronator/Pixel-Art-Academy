@@ -17,10 +17,9 @@ class HQ.Store extends LOI.Adventure.Location
   @shortName: -> "store"
   @description: ->
     "
-      At the top of the stairs, the floor opens onto a store that gives you that warm, bookstore feeling.
-      The place owner, Retro, is sitting behind a long desk that doubles as the store checkout area.
-      Yellow walls and pixel art decals immediately brighten your day. Stairs continue up to the gallery and
-      you can see bookshelves further out to the east.
+      You are in a comfortable bookstore like hall. The place owner, Retro, is sitting behind a long desk that
+      doubles as the store checkout area. Stairs continue up to the gallery and
+      you can see bookshelves near the windows to the east.
     "
 
   @defaultScriptUrl: -> 'retronator_retronator-hq/floor2/store/store.script'
@@ -45,6 +44,7 @@ class HQ.Store extends LOI.Adventure.Location
     super
 
   things: -> [
+    @constructor.Table
     HQ.Actors.Retro
     HQ.Store.Display
     HQ.Store.Shelf.Game
@@ -57,8 +57,8 @@ class HQ.Store extends LOI.Adventure.Location
     HQ.Elevator.addElevatorExit
       floor: 2
     ,
-      "#{Vocabulary.Keys.Directions.East}": @constructor.Bookshelves
       "#{Vocabulary.Keys.Directions.Up}": HQ.GalleryWest
+      "#{Vocabulary.Keys.Directions.East}": @constructor.Bookshelves
       "#{Vocabulary.Keys.Directions.Down}": HQ.Cafe
 
   # Script

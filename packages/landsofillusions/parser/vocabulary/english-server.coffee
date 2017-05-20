@@ -15,6 +15,7 @@ phrases =
     Out: ['out', 'exit', 'outside']
     Up: ['up', 'upstairs']
     Down: ['down', 'downstairs']
+    Back: ['back']
 
   Verbs:
     GoToLocationName: ['go to', 'travel to', 'enter', 'leave to']
