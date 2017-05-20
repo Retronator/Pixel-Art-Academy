@@ -29,9 +29,12 @@ class HQ.Store.Table extends LOI.Adventure.Location
 
     @autorun (computation) =>
       Blog.Post.all.subscribe 5, @postsSkip()
+      
+    # Dynamically create the 5 things on the table.
+    @_things = new ComputedField =>
+      @constructor.Item.createItem post for post in Blog.Post.documents.find().fetch()
 
-  things: -> [
-  ]
+  things: -> @_things()
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Back}": HQ.Store

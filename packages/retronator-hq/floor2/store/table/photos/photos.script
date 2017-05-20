@@ -1,0 +1,19 @@
+# Retronator.HQ.Store.Table.Item.Photos
+
+## LookAtPhoto
+
+> You look at the photo.
+
+### LookAtPhotos
+
+-> [End]
+
+## LookAtPhotos
+
+> You look at the photos.
+
+### LookAtPhotos
+
+-> [End]
+
+## End

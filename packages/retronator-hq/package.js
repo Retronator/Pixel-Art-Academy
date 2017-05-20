@@ -75,7 +75,10 @@ Package.onUse(function(api) {
   api.addFile('floor2/store/shelf/shelf-game');
   api.addFile('floor2/store/shelf/shelf-upgrades');
   api.addThing('floor2/store/shelf/shelves');
+
   api.addFile('floor2/store/table/table');
+  api.addFile('floor2/store/table/item');
+  api.addThingComponent('floor2/store/table/photos/photos');
 
   api.addFile('floor2/bookshelves/bookshelves');
 
