@@ -17,6 +17,8 @@ class LOI.Components.Menu extends AM.Component
     @signIn = new LOI.Components.SignIn
 
     @account = new LOI.Components.Account
+    
+    @mediaplayer = new LOI.Components.MediaPlayer
 
     @_transitionDuration = 200
 
