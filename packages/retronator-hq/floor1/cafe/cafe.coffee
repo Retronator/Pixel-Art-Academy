@@ -85,7 +85,14 @@ class HQ.Cafe extends LOI.Adventure.Location
             complete()
 
           C3Map: (complete) =>
-            SanFrancisco.Soma.Items.Map.state 'c3Highlighted', true
+            # To trigger the animation after multiple asks, first turn it off.
+            SanFrancisco.Soma.Items.Map.state 'c3Highlighted', false
+
+            # Highlight after 2 seconds so that it animates while the map is opened.
+            Meteor.setTimeout =>
+              SanFrancisco.Soma.Items.Map.state 'c3Highlighted', true
+            ,
+              2000
 
             LOI.adventure.scriptHelpers.itemInteraction
               item: LOI.adventure.getCurrentThing SanFrancisco.Soma.Items.Map

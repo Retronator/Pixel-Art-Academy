@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:sanfrancisco');
   api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartacademy');
 
   api.export('SanFrancisco');
 
@@ -36,4 +37,6 @@ Package.onUse(function(api) {
   api.addFile('c3/c3');
   api.addFile('missionbay/missionbay');
   api.addFile('missionrock/missionrock');
+  api.addThing('muni/muni');
+  api.addThing('muni/scene');
 });

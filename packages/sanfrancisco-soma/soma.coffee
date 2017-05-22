@@ -5,3 +5,12 @@ class SanFrancisco.Soma extends LOI.Adventure.Region
   @debug = false
 
   @initialize()
+
+  @scenes: -> [
+    @Muni.Scene
+  ]
+
+if Meteor.isServer
+  LOI.initializePackage
+    id: 'retronator_sanfrancisco-soma'
+    assets: Assets
