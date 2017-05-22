@@ -1,18 +1,28 @@
-# Retronator.HQ.Store.Table.Item.Photos
+# Retronator.HQ.Store.Table.Interaction.Photos
+
+> WAAHA
 
 ## LookAtPhoto
 
 > You look at the photo.
 
-### LookAtPhotos
-
--> [End]
+-> [Finish]
 
 ## LookAtPhotos
 
 > You look at the photos.
 
+-> [Finish]
+
+## Finish
+
+pause
+
+## Activate
+
 ### LookAtPhotos
+
+### End
 
 -> [End]
 

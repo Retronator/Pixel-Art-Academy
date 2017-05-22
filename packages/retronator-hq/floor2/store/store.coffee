@@ -45,16 +45,20 @@ class HQ.Store extends LOI.Adventure.Location
   destroy: ->
     super
 
-  things: -> [
-    @constructor.Table
-    @retro
-    @retro.newestTableItem()
-    HQ.Store.Display
-    HQ.Store.Shelf.Game
-    HQ.Store.Shelf.Upgrades
-    HQ.Store.Shelves
-    @elevatorButton
-  ]
+  things: ->
+    newestTableItem = @retro.newestTableItem()
+
+    _.flattenDeep [
+      @constructor.Table
+      @retro
+      newestTableItem
+      newestTableItem?.interactions
+      HQ.Store.Display
+      HQ.Store.Shelf.Game
+      HQ.Store.Shelf.Upgrades
+      HQ.Store.Shelves
+      @elevatorButton
+    ]
 
   exits: ->
     HQ.Elevator.addElevatorExit

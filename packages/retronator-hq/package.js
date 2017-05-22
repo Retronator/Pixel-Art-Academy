@@ -79,8 +79,13 @@ Package.onUse(function(api) {
   api.addThing('floor2/store/shelf/shelves');
 
   api.addFile('floor2/store/table/table');
-  api.addFile('floor2/store/table/item');
-  api.addThingComponent('floor2/store/table/photos/photos');
+
+  api.addFile('floor2/store/table/item/item');
+  api.addFile('floor2/store/table/item/item-createtextscript');
+  api.addFile('floor2/store/table/item/photos');
+
+  api.addFile('floor2/store/table/interaction/interaction');
+  api.addThingComponent('floor2/store/table/interaction/photos/photos');
 
   api.addFile('floor2/bookshelves/bookshelves');
 

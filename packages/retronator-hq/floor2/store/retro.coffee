@@ -17,7 +17,10 @@ class HQ.Store.Retro extends HQ.Actors.Retro
 
       return unless newestPost
 
-      HQ.Store.Table.Item.createItem newestPost, visible: false
+      HQ.Store.Table.Item.createItem
+        post: newestPost
+        retro: @
+        visible: false
 
   descriptiveName: ->
     return unless newestPost = @newestTableItem()?.post
