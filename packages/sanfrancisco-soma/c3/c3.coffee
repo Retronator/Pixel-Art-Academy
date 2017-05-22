@@ -11,7 +11,7 @@ class Soma.C3 extends LOI.Adventure.Location
   @version: -> '0.0.1'
 
   @fullName: -> "Cyborg Construction Center entrance"
-  @shortName: -> "entrance"
+  @shortName: -> "C3 entrance"
   @description: ->
     "
       You are in front of a building with big glass sliding doors to the east. The title Cyborg Construction Center is

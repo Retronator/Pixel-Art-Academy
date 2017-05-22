@@ -28,35 +28,50 @@ class Soma.Muni.Scene extends LOI.Adventure.Scene
       return unless currentLocation = LOI.adventure.currentLocation()
 
       Tracker.nonreactive =>
-        # Remove the Muni from location.
-        @atLocation false
-
         # Clear any event that was happening with Muni.
         Meteor.clearTimeout @_eventTimeout
 
-        if currentLocation.constructor in [
-          Soma.SecondAndKing
-          Soma.FourthAndKing
-          Soma.MissionRock
-          Soma.MissionBay
-        ]
-          # Come to location in 5 seconds.
-          @_scheduleArrival 5000
+        # Add or remove the Muni from location
+        if currentLocation.id() is Soma.Muni.getLocation()?.id()
+          @atLocation true
+
+          @_scheduleDeparture 5000
+
+        else
+          @atLocation false
+
+          # Move train from whatever station it was so it doesn't appear there if we return.
+          Soma.Muni.setLocation null unless currentLocation instanceof Soma.Muni
+
+          if currentLocation.constructor in [
+            Soma.MosconeStation
+            Soma.FourthAndKing
+            Soma.MissionRock
+            Soma.MissionBay
+          ]
+            # Come to location in 3 seconds.
+            @_scheduleArrival 3000
 
   _scheduleArrival: (time) ->
     @_eventTimeout = Meteor.setTimeout =>
       @atLocation true
       @listener.startScript label: 'Arrive'
+      Soma.Muni.setLocation LOI.adventure.currentLocation()
 
       # Leave after 20 seconds.
-      @_eventTimeout = Meteor.setTimeout =>
-        @atLocation false
-        @listener.startScript label: 'Leave'
+      @_scheduleDeparture 20000
+    ,
+      time
 
-        # Come back after 20 seconds.
-        @_scheduleArrival 20000
-      ,
-        20000
+  _scheduleDeparture: (time) ->
+    # Leave after 20 seconds.
+    @_eventTimeout = Meteor.setTimeout =>
+      @atLocation false
+      @listener.startScript label: 'Leave'
+      Soma.Muni.setLocation null
+
+      # Come back after 20 seconds.
+      @_scheduleArrival 20000
     ,
       time
 

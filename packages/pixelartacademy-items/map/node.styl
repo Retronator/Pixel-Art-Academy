@@ -285,6 +285,9 @@
   &.northeast.up::after
     background-image image('/items/map/minimap/stairs-up.png')
 
+  &.northeast.up::after
+    left -10rem
+
   &.special-positioning.up::after
     left auto
     right 0
@@ -349,6 +352,8 @@
         &.west::after
         &.north::after
         &.south::after
+        &.in.no-direction::after
+        &.out.no-direction::after
           background atariGrey(2)
 
         &.east::after
@@ -357,6 +362,8 @@
 
         &.north::after
         &.south::after
+        &.in.no-direction::after
+        &.out.no-direction::after
           height 19rem
 
         &.northwest::after
@@ -373,12 +380,14 @@
         &.south::after
         &.southeast::after
         &.down::after
+        &.out.no-direction::after
           top -20rem
 
         &.northwest::after
         &.north::after
         &.northeast::after
         &.up::after
+        &.in.no-direction::after
           bottom -20rem
 
         &.northeast::after
@@ -473,6 +482,9 @@
         &.southwest.down::after
         &.northeast.up::after
           background-image image('/items/map/bigmap/stairs-up.png')
+
+        &.northeast.up::after
+          left -20rem
 
         &.in.northwest::before
         &.out.northwest::before

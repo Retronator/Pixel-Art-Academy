@@ -14,7 +14,8 @@ class Soma.SecondAndKing extends LOI.Adventure.Location
   @shortName: -> "2nd and King"
   @description: ->
     "
-      You are at a Muni station in front of the famous AT&T Park baseball stadium, the home of the San Francisco Giants.
+      You are in front of the famous AT&T Park baseball stadium, the home of the San Francisco Giants.
+      2nd street goes northwest and King street southwest.
     "
   
   @initialize()

@@ -2,4 +2,72 @@
 
 ## Start
 
+> Which station do you want to go off at?
+
+## Destinations
+
+* Yuerba Buena/Moscone -> [MosconeStation]
+* 4th and King -> [FourthAndKing]
+* Mission Rock -> [MissionRock]
+* UCSF Mission Bay -> [MissionBay]
+* Nevermind
+
+> You change your mind and quickly exit the train.
+
+pause
+
+### Exit
+
+-> [End]
+
+##  MosconeStation
+
+`_nextStation = 'SanFrancisco.Soma.MosconeStation'`
+
+-> [Travel]
+
+##  FourthAndKing
+
+`_nextStation = 'SanFrancisco.Soma.FourthAndKing'`
+
+-> [Travel]
+
+##  MissionRock
+
+`_nextStation = 'SanFrancisco.Soma.MissionRock'`
+
+-> [Travel]
+
+##  MissionBay
+
+`_nextStation = 'SanFrancisco.Soma.MissionBay'`
+
+-> [Travel]
+
+## Travel
+
+-> [SameStation] `this.locationId is _nextStation`
+
+> The train doors close and you find a seat.
+
+`this.locationId = null`
+
+> As the train continues to your destination, you look out the window and think about life.
+
+wait 3000
+
+> The train reaches your stop.
+
+`this.locationId = _nextStation`
+
+-> [End]
+
+## SameStation
+
+> You realize you're already at this station and feel a bit silly.
+
+> Do you want to go somewhere else?
+
+-> [Destinations]
+
 ## End

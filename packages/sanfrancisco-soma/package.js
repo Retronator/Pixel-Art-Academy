@@ -30,6 +30,7 @@ Package.onUse(function(api) {
   api.addFile('caltrain/caltrain');
   api.addFile('4thking/4thking');
   api.addFile('moscone/moscone');
+  api.addFile('moscone/station');
   api.addFile('2nd/2nd');
   api.addFile('2nd/retronatorhq');
   api.addFile('2nd/artistsign');

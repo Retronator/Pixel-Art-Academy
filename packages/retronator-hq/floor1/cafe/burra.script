@@ -125,8 +125,8 @@ burra:
 
 burra: 
     Ready to create your character, huh?
-    Go southeast to King street and wait for the Muni train. Take the T line south to Mission Bay station. 
-    C3 is just past the Chase Center on 16th street.
+    Go southwest and down to Moscone Station. Wait for the Muni train—take line T south to Mission Bay. 
+    C3 is just southeast past the Chase Center.
 
 -> [C3HasMap] `@player.inventory['SanFrancisco.Soma.Items.Map']`
 
