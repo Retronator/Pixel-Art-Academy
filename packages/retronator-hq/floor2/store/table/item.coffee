@@ -7,10 +7,12 @@ class HQ.Store.Table.Item extends LOI.Adventure.Item
   @_constructors: ->
     photo: @Photos
 
-  @createItem: (post) ->
+  @createItem: (post, options) ->
     constructor = @_constructors()[post.type] or @Photos
 
-    new constructor {post}
+    options.post = post
+
+    new constructor options
 
   constructor: (@options) ->
     super @options
@@ -22,6 +24,9 @@ class HQ.Store.Table.Item extends LOI.Adventure.Item
 
   id: ->
     @_id
+
+  isVisible: ->
+    @options.visible ? true
 
   onScriptsLoaded: ->
     super

@@ -29,7 +29,7 @@ class HQ.Store.Table.Item.Photos extends HQ.Store.Table.Item
 
   descriptiveName: ->
     if @post.photos.length is 1
-      "A ![photo](photo)."
+      "A ![photo](look at photo)."
 
     else
       "A set of ![photos](look at photos)."

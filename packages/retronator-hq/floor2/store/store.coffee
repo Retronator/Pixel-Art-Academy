@@ -17,7 +17,7 @@ class HQ.Store extends LOI.Adventure.Location
   @shortName: -> "store"
   @description: ->
     "
-      You are in a comfortable bookstore like hall. The place owner, Retro, is sitting behind a long desk that
+      You are in a comfortable store like hall. The place owner, Retro, is sitting behind a long desk that
       doubles as the store checkout area. Stairs continue up to the gallery and
       you can see bookshelves near the windows to the east.
     "
@@ -36,6 +36,8 @@ class HQ.Store extends LOI.Adventure.Location
 
     @shelves = new HQ.Store.Shelves
 
+    @retro = new HQ.Store.Retro
+
     @subscribe RS.Transactions.Item.all
     @subscribe RA.User.registeredEmailsForCurrentUser
     @subscribe RS.Transactions.Transaction.forCurrentUser
@@ -45,7 +47,8 @@ class HQ.Store extends LOI.Adventure.Location
 
   things: -> [
     @constructor.Table
-    HQ.Actors.Retro
+    @retro
+    @retro.newestTableItem()
     HQ.Store.Display
     HQ.Store.Shelf.Game
     HQ.Store.Shelf.Upgrades
@@ -65,7 +68,7 @@ class HQ.Store extends LOI.Adventure.Location
 
   initializeScript: ->
     @setCurrentThings
-      retro: HQ.Actors.Retro
+      retro: HQ.Store.Retro
   
     @setCallbacks
       AnalyzeUser: (complete) =>
@@ -196,7 +199,7 @@ class HQ.Store extends LOI.Adventure.Location
   # Listener
 
   onCommand: (commandResponse) ->
-    return unless retro = LOI.adventure.getCurrentThing HQ.Actors.Retro
+    return unless retro = LOI.adventure.getCurrentThing HQ.Store.Retro
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]

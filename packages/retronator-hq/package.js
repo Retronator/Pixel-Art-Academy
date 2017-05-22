@@ -70,6 +70,8 @@ Package.onUse(function(api) {
   api.addFile('floor1/coworking/coworking');
 
   api.addThing('floor2/store/store');
+  api.addFile('floor2/store/retro');
+
   api.addComponent('floor2/store/display/display');
   api.addComponent('floor2/store/shelf/shelf');
   api.addFile('floor2/store/shelf/shelf-game');
