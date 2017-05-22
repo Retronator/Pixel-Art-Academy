@@ -203,8 +203,15 @@ class HQ.Store extends LOI.Adventure.Location
   # Listener
 
   onCommand: (commandResponse) ->
-    return unless retro = LOI.adventure.getCurrentThing HQ.Store.Retro
+    if retro = LOI.adventure.getCurrentThing HQ.Store.Retro
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]
+        action: => @startScript label: 'RetroDialog'
+      table = @options.parent
 
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]
-      action: => @startScript label: 'RetroDialog'
+    if table = LOI.adventure.getCurrentThing HQ.Store.Table
+      commandResponse.onPhrase
+        form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], table.avatar]
+        priority: 1
+        action: =>
+          LOI.adventure.goToLocation table

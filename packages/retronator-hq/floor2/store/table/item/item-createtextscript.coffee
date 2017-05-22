@@ -104,6 +104,13 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
             actor: retro
             line: "%%html#{html}html%%"
 
+      else if tag.toLowerCase() is 'ul'
+        html = $postPart.html()
+
+        nodes.push new Nodes.DialogLine
+          actor: retro
+          line: "%%html#{html}html%%"
+
       else
         console.warn "Not sure how to display post part", $postPart, "with tag", tag
 

@@ -275,7 +275,19 @@ class LOI.Interface.Text extends LOI.Interface
     @hoveredCommand null
 
   onMouseEnterExit: (event) ->
-    @hoveredCommand "Go to #{$(event.target).text()}"
+    exitAvatar = @currentData()
+
+    # Show just "go back" instead of "go to back".
+    Back = LOI.Parser.Vocabulary.Keys.Directions.Back
+    backExit = LOI.adventure.currentSituation().exits()[Back]
+
+    if exitAvatar.options.id() is backExit?.id()
+      command = "Go #{$(event.target).text()}"
+      
+    else
+      command = "Go to #{$(event.target).text()}"
+
+    @hoveredCommand command
 
   onMouseLeaveExit: (event) ->
     @hoveredCommand null

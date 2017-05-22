@@ -27,25 +27,25 @@ class HQ.Store.Table extends LOI.Adventure.Location
     
     @postsSkip = new ReactiveField 0
 
+    retro = HQ.Actors.Retro.createAvatar()
+
     @autorun (computation) =>
       Blog.Post.all.subscribe 5, @postsSkip()
       
     # Dynamically create the 5 things on the table.
     @_things = new ComputedField =>
-      @constructor.Item.createItem post for post in Blog.Post.documents.find().fetch()
+      for post in Blog.Post.documents.find().fetch()
+        @constructor.Item.createItem
+          post: post
+          retro: retro
 
-  things: -> @_things()
+  things: ->
+    things = @_things()
+
+    _.flattenDeep [
+      things
+      thing.interactions for thing in things
+    ]
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Back}": HQ.Store
-
-  # Listener
-
-  onCommand: (commandResponse) ->
-    table = @options.parent
-
-    commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], table.avatar]
-      priority: 1
-      action: =>
-        LOI.adventure.goToLocation table
