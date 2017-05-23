@@ -18,6 +18,8 @@ class C3.Design extends LOI.Adventure.Location
       A terminal with various design charts is available to use.
     "
 
+  @defaultScriptUrl: -> 'retronator_sanfrancisco-c3/design/design.script'
+
   @initialize()
 
   constructor: ->
@@ -29,3 +31,22 @@ class C3.Design extends LOI.Adventure.Location
   exits: ->
     "#{Vocabulary.Keys.Directions.South}": C3.Lobby
     "#{Vocabulary.Keys.Directions.East}": C3.Behavior
+
+  things: -> [
+    C3.Actors.DrShelley
+  ]
+
+  # Script
+
+  initializeScript: ->
+    @setCurrentThings
+      drshelley: C3.Actors.DrShelley
+
+  # Listener
+
+  onCommand: (commandResponse) ->
+    return unless drShelley = LOI.adventure.getCurrentThing C3.Actors.DrShelley
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.TalkTo, drShelley.avatar]
+      action: => @startScript label: 'ShelleyDialog'

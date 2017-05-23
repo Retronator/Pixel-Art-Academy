@@ -8,3 +8,8 @@ class SanFrancisco.C3 extends LOI.Adventure.Region
   
   @playerHasPermission: -> @validateAvatarEditor()
   @exitLocation: -> SanFrancisco.C3.Lobby
+
+if Meteor.isServer
+  LOI.initializePackage
+    id: 'retronator_sanfrancisco-c3'
+    assets: Assets

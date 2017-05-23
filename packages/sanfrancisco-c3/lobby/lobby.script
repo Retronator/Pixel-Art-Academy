@@ -1,0 +1,68 @@
+# SanFrancisco.C3.Lobby
+
+## SneakBy
+
+> Before you can walk by, the receptionist calls after you.
+
+## ReceptionistDialog
+
+-> [AnythingElse] `_helped or this.entryApproved`
+
+receptionist: Hi there, would you like to check in?
+
+-> [MainQuestions]
+
+## AnythingElse
+
+receptionist: Can I help you with anything else? 
+
+-> [MainQuestions]
+
+## MainQuestions
+
+* Yes, I'm here to create a character. -> [Create] `not this.entryApproved`
+* I must be in the wrong place. `not _helped and not this.entryApproved`
+* All good, thank you. `_helped or this.entryApproved`
+
+## GoodDay
+
+`_helped = true`
+
+receptionist: Good day.
+
+-> [End]
+
+## Create
+
+receptionist: Very well. Please scan your keycard.
+
+-> [Access] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+
+You press your keycard to the detector, but it beeps with a red light.
+
+receptionist: 
+    I'm sorry, it seems that you do not have access to our facility.
+    By the looks of your keycard you're coming here from Retronator. 
+    Their store sells an upgrade that includes our services.
+
+* Thank you, I will look into that.
+
+-> [GoodDay]
+
+## Access
+
+> You press your keycard to the detector, and it gives a happy beep.
+
+`this.entryApproved = true`
+
+receptionist: 
+    Welcome, `@user.name`. `@user.name`
+    Welcome! `not @user.name`
+    You will first want to head over to Design Control. 
+    Talk to Dr. Shelley there if you have any questions.
+
+* Perfect, I will do that.
+
+-> [GoodDay]
+
+## End

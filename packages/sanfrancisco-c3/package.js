@@ -18,12 +18,18 @@ Package.onUse(function(api) {
 
   api.addFile('c3');
 
+  // Actors
+
+  api.addFile('actors/actors');
+  api.addFile('actors/receptionist');
+  api.addFile('actors/drshelley');
+
   // Locations
 
   api.addFile('behavior/behavior');
-  api.addFile('design/design');
+  api.addThing('design/design');
   api.addFile('hallway/hallway');
-  api.addFile('lobby/lobby');
+  api.addThing('lobby/lobby');
   api.addFile('stasis/stasis');
 
 });
