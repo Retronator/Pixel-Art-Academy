@@ -34,7 +34,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
       
     # Dynamically create the 5 things on the table.
     @_things = new ComputedField =>
-      for post in Blog.Post.documents.find().fetch()
+      for post in Blog.Post.documents.find({}, sort: time: -1).fetch()
         @constructor.Item.createItem
           post: post
           retro: retro

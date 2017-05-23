@@ -2,9 +2,13 @@
   <div class="retronator-hq-store-table-interaction-photos">
     {{> LandsOfIllusions.Components.BackButton}}
     {{#LandsOfIllusions.Components.Overlay}}
-      <div class="photos">
-        THESE ARE THE PHOTOS BITCH!
-      </div>
+      <ul class="photos">
+        {{#each pixelImages}}
+          <li class="photo">
+            {{> Render this}}
+          </li>
+        {{/each}}
+      </ul>
     {{/LandsOfIllusions.Components.Overlay}}
   </div>
 </template>

@@ -49,6 +49,7 @@ class Retronator.Blog extends Retronator.Blog
       when @Post.Types.Photo
         post.photos = postData.photos
         post.text = postData.caption
+        post.layout = postData.photoset_layout if postData.photoset_layout
 
       when @Post.Types.Quote
         post.quote =

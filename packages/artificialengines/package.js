@@ -138,6 +138,7 @@ Package.onUse(function(api) {
   api.addFiles('mirage/render.coffee');
   api.addFiles('mirage/render.html');
   api.addFiles('mirage/window.coffee', 'client');
+  api.addUnstyledComponent('mirage/pixelimage');
 
   api.addFiles('mirage/markdown/markdown.coffee');
   api.addFiles('mirage/markdown/markdown.html');
