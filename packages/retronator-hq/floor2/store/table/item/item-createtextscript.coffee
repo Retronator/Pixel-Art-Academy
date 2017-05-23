@@ -8,11 +8,16 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
   _createTextScript: ->
     nodes = []
     retro = @options.retro
+    table = @options.table
 
     for postPart in $(@post.text)
       lastNode = _.last nodes
 
       tag = postPart.tagName
+
+      # Skip comments (<!-- more --> and such).
+      continue unless tag
+
       $postPart = $(postPart)
 
       if tag.toLowerCase() is 'p' or tag.toLowerCase() is 'figure'
@@ -69,7 +74,7 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
 
             imageInteractionNode = new Nodes.Callback
               callback: (complete) =>
-                imageInteraction.start justActivate: true
+                table.startInteraction imageInteraction
                 complete()
 
             imageInteractionNode.imageInteraction = imageInteraction

@@ -6,7 +6,7 @@ class LOI.Adventure extends AM.Component
     "Pixel Art Academy // Adventure game for learning how to draw"
     
   @description: ->
-    "Become an art student in the text/point-and-click adventure by Retronator."
+    "Become a pixel art student in the text/point-and-click adventure game by Retronator."
 
   @image: ->
     Meteor.absoluteUrl "pixelartacademy/title.png"

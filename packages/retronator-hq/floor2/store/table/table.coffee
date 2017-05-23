@@ -10,6 +10,9 @@ class HQ.Store.Table extends LOI.Adventure.Location
   @url: -> 'retronator/store/table'
   @region: -> HQ
 
+  @register @id()
+  template: -> @constructor.id()
+
   @version: -> '0.0.1'
 
   @fullName: -> "Retro's table"
@@ -22,6 +25,9 @@ class HQ.Store.Table extends LOI.Adventure.Location
 
   @initialize()
 
+  @showPost: (post) ->
+    @state 'activePostId', post._id
+
   constructor: ->
     super
     
@@ -30,22 +36,72 @@ class HQ.Store.Table extends LOI.Adventure.Location
     retro = HQ.Actors.Retro.createAvatar()
 
     @autorun (computation) =>
-      Blog.Post.all.subscribe 5, @postsSkip()
+      activePostId = @state 'activePostId'
+      
+      if activePostId
+        Blog.Post.forId.subscribe activePostId
+
+      else
+        Blog.Post.all.subscribe 5, @postsSkip()
       
     # Dynamically create the 5 things on the table.
     @_things = new ComputedField =>
-      for post in Blog.Post.documents.find({}, sort: time: -1).fetch()
-        @constructor.Item.createItem
+      activePostId = @state 'activePostId'
+
+      for post in Blog.Post.documents.find(activePostId or {}, sort: time: -1).fetch()
+        itemOptions =
           post: post
-          retro: retro
+
+        if activePostId
+          _.extend itemOptions,
+            retro: retro
+            table: @
+            interactions: true
+
+        @constructor.Item.createItem itemOptions
+
+    @currentInteraction = new ReactiveField null
+
+    @autorun (computation) =>
+      return unless activePostId = @state 'activePostId'
+      return unless item = @_things()?[0]
+      return unless item.post._id is activePostId
+      return if item.started()
+
+      # We made the item for the current active post.
+      item.start()
+
+  startInteraction: (interaction) ->
+    @currentInteraction interaction
+
+  illustrationHeight: ->
+    @currentInteraction()?.illustrationHeight() or 0
 
   things: ->
     things = @_things()
 
     _.flattenDeep [
       things
-      thing.interactions for thing in things
     ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.Back}": HQ.Store
+    activePostId = @state 'activePostId'
+
+    if activePostId
+      "#{Vocabulary.Keys.Directions.In}": HQ.Store.Table
+      "#{Vocabulary.Keys.Directions.Out}": HQ.Store
+
+    else
+      "#{Vocabulary.Keys.Directions.Back}": HQ.Store
+
+  # Listener
+
+  onExitAttempt: (exitResponse) ->
+    table = @options.parent
+
+    # On exit, clear active post.
+    table.state 'activePostId', null
+
+    # If we're just returning back to table, reset the interface since the location won't really change.
+    if exitResponse.destinationLocationClass is HQ.Store.Table
+      LOI.adventure.interface.resetInterface?()

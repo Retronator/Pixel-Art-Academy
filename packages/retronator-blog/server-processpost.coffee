@@ -24,6 +24,10 @@ class Retronator.Blog extends Retronator.Blog
       time: new Date postData.timestamp * 1000
       notesCount: postData.note_count
       data: postData
+      tumblr:
+        id: postData.id
+        slug: postData.slug
+        url: postData.post_url
 
     if postData.source_url
       post.source =

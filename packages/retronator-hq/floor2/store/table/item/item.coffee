@@ -4,9 +4,10 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.Store.Table.Item extends LOI.Adventure.Item
+class HQ.Store.Table.Item extends LOI.Adventure.Thing
   @_constructors: ->
     photo: @Photos
+    text: @Article
 
   @createItem: (@options) ->
     constructor = @_constructors()[@options.post.type] or @Photos
@@ -21,10 +22,13 @@ class HQ.Store.Table.Item extends LOI.Adventure.Item
     # We need to provide our own ID since multiple instances of this item will appear.
     @_id = Random.id()
 
-    # Construct the interaction script and collect all interactions that
-    # need to be present at the location so they can be rendered by the interface.
-    @interactions = []
-    @interactionStartNode = @_createInteractionScript()
+    if @options.interactions
+      # Construct the interaction script and collect all interactions that
+      # need to be present at the location so they can be rendered by the interface.
+      @interactions = []
+      @interactionStartNode = @_createInteractionScript()
+
+    @started = new ReactiveField false
 
   _createInteractionScript: ->
     # We start with the main interaction.
@@ -35,35 +39,23 @@ class HQ.Store.Table.Item extends LOI.Adventure.Item
 
     mainInteractionNode = new LOI.Adventure.Script.Nodes.Callback
       callback: (complete) =>
-        mainInteraction.start endNode: textNode
+        @options.table.startInteraction mainInteraction
         complete()
 
     mainInteractionNode
 
-  @_createMainInteraction: ->
+  _createMainInteraction: ->
     throw new AE.NotImplementedException "You must provide a method to create the main interaction with this item type."
 
-  @_createTextScript: ->
-    
   id: ->
     @_id
 
   isVisible: ->
     @options.visible ? true
 
-  # A variant of item interaction helper that directly activates an item instead of going through adventure.
-  interact: (callback) ->
-    # Wait until item has been active and deactivated again.
-    itemWasActive = false
-    @activate()
-
-    Tracker.autorun (computation) =>
-      if @activated() and not itemWasActive
-        itemWasActive = true
-
-      else if @deactivated() and itemWasActive
-        computation.stop()
-        callback()
+  start: ->
+    @started true
+    LOI.adventure.director.startNode @interactionStartNode
 
   # Listener
 
@@ -80,4 +72,11 @@ class HQ.Store.Table.Item extends LOI.Adventure.Item
       form: [Vocabulary.Keys.Verbs.LookAt, item.avatar]
       priority: 1
       action: =>
-        LOI.adventure.director.startNode item.interactionStartNode
+        # Go to table if needed.
+        atTable =  LOI.adventure.currentLocation() instanceof HQ.Store.Table
+        LOI.adventure.goToLocation HQ.Store.Table unless atTable
+
+        HQ.Store.Table.showPost item.post
+
+        # If we were at the table, reset the interface manually since there will be no location change.
+        LOI.adventure.interface.resetInterface?() if atTable

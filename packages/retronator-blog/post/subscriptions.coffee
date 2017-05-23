@@ -7,6 +7,8 @@ Blog.Post.all.publish (limit, skip) ->
   check skip, Match.OptionalOrNull Number
 
   Blog.Post.documents.find {},
+    sort:
+      time: -1
     skip: skip
     limit: limit
     fields:
@@ -21,5 +23,13 @@ Blog.Post.forDateRange.publish (dateRange) ->
   dateRange.addToMongoQuery query, 'time'
 
   Blog.Post.documents.find query,
+    fields:
+      data: 0
+
+# Get a specific blog post.
+Blog.Post.forId.publish (id) ->
+  check id, Match.DocumentId
+
+  Blog.Post.documents.find id,
     fields:
       data: 0
