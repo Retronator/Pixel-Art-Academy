@@ -28,6 +28,7 @@ Package.onUse(function(api) {
 
   api.addFile('behavior/behavior');
   api.addThing('design/design');
+  api.addComponent('design/terminal/terminal');
   api.addFile('hallway/hallway');
   api.addThing('lobby/lobby');
   api.addFile('stasis/stasis');

@@ -34,6 +34,7 @@ class C3.Design extends LOI.Adventure.Location
 
   things: -> [
     C3.Actors.DrShelley
+    C3.Design.Terminal
   ]
 
   # Script
@@ -45,8 +46,17 @@ class C3.Design extends LOI.Adventure.Location
   # Listener
 
   onCommand: (commandResponse) ->
-    return unless drShelley = LOI.adventure.getCurrentThing C3.Actors.DrShelley
+    if drShelley = LOI.adventure.getCurrentThing C3.Actors.DrShelley
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.TalkTo, drShelley.avatar]
+        action: => @startScript label: 'ShelleyDialog'
 
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.TalkTo, drShelley.avatar]
-      action: => @startScript label: 'ShelleyDialog'
+    if terminal = LOI.adventure.getCurrentThing C3.Design.Terminal
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.Use, terminal.avatar]
+        priority: 1
+        action: =>
+          LOI.adventure.scriptHelpers.itemInteraction
+            item: terminal
+            callback: =>
+              @startScript label: 'MakingOfACyborg'

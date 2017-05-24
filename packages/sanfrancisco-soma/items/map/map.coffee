@@ -21,8 +21,6 @@ class Soma.Items.Map extends LOI.Adventure.Item
       It's Retronator's signature isometric pixel art map of San Francisco, centered on the SOMA district.
     "
 
-  @defaultScriptUrl: -> 'retronator_retronator-hq/items/sync/sync.script'
-
   @initialize()
 
   onDeactivate: (finishedDeactivatingCallback) ->
