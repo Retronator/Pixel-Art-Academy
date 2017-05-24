@@ -15,8 +15,6 @@ Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
 
-  api.use('peerlibrary:directcollection');
-
   api.export('Retronator');
 
   api.addFiles('store.coffee');

@@ -21,7 +21,6 @@ Package.onUse(function(api) {
   api.use('splendido:accounts-emails-field@1.2.0');
   api.use('benjick:stripe', 'server');
   api.use('jparker:crypto-aes');
-  api.use('peerlibrary:directcollection');
 
   api.imply('accounts-password');
   api.imply('service-configuration');
@@ -45,10 +44,11 @@ Package.onUse(function(api) {
 
   // User
   
-  api.addFiles('user/user.coffee');
-  api.addFiles('user/methods.coffee');
-  api.addFiles('user/methods-server.coffee', 'server');
-  api.addFiles('user/subscriptions.coffee', 'server');
+  api.addFile('user/user');
+  api.addFile('user/methods');
+  api.addServerFile('user/methods-server');
+  api.addServerFile('user/subscriptions');
+  api.addServerFile('user/migrations/0000-publicname');
 
   // Components
 

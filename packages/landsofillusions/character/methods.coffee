@@ -20,24 +20,14 @@ Meteor.methods
     character =
       user:
         _id: userId
-      name: ""
-      color:
-        hue: 0
-        shade: 0
+      avatar:
+        color:
+          hue: 0
+          shade: 0
 
     character._id = characterId if characterId
 
     LOI.Character.documents.insert character
-
-  'LandsOfIllusions.Character.rename': (characterId, name) ->
-    check characterId, Match.DocumentId
-    check name, String
-
-    LOI.Authorize.characterAction characterId
-
-    LOI.Character.documents.update characterId,
-      $set:
-        name: name
 
   'LandsOfIllusions.Character.changeColor': (characterId, hue, shade) ->
     check characterId, Match.DocumentId
@@ -47,7 +37,7 @@ Meteor.methods
     LOI.Authorize.characterAction characterId
 
     set = {}
-    set['color.hue'] = hue if hue?
-    set['color.shade'] = shade if shade?
+    set['avatar.color.hue'] = hue if hue?
+    set['avatar.color.shade'] = shade if shade?
 
     LOI.Character.documents.update characterId, $set: set

@@ -25,3 +25,6 @@ Meteor.publish 'LandsOfIllusions.Character.charactersForCurrentUser', ->
 Meteor.publish 'LandsOfIllusions.Character.charactersForUser', (userId) ->
   LOI.Character.documents.find
     'user._id': userId
+  ,
+    fields:
+      user: 0

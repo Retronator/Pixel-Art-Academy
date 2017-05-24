@@ -1,7 +1,8 @@
+AM = Artificial.Mummification
 AB = Artificial.Babel
 RA = Retronator.Accounts
 
-class RetronatorAccountsUser extends Document
+class RA.User extends AM.Document
   # username: user's username
   # emails: list of emails used to login with a password
   #   address: email address
@@ -13,12 +14,13 @@ class RetronatorAccountsUser extends Document
   # contactEmail: auto-generated email where we can contact the user.
   # createdAt: time when user joined
   # profile: a custom object, writable by default by the client
-  #   name: the name the user wants to privately display in the system
-  # displayName: auto-generated display name
+  #   name: the name the user wants to display in the system
+  # displayName: auto-generated system display name
+  # publicName: auto-generated public name
   # services: array of authentication/linked service and their login tokens
   # loginServices: auto-generated array of service names that were added to services and can be used to login
   @Meta
-    name: 'RetronatorAccountsUser'
+    name: 'Retronator.Accounts.User'
     collection: Meteor.users
     fields: =>
       contactEmail: @GeneratedField 'self', ['registered_emails', 'emails'], (user) ->
@@ -49,6 +51,10 @@ class RetronatorAccountsUser extends Document
         displayName = user.profile?.name or user.username or user.registered_emails?[0]?.address or ''
         [user._id, displayName]
 
+      publicName: @GeneratedField 'self', ['profile'], (user) ->
+        publicName = user.profile?.name or null
+        [user._id, publicName]
+
       loginServices: [@GeneratedField 'self', ['services'], (user) ->
         availableServices = ['facebook', 'twitter', 'google']
         enabledServices = _.intersection _.keys(user.services), availableServices
@@ -69,5 +75,3 @@ class RetronatorAccountsUser extends Document
   @removeEmail: 'Retronator.Accounts.User.removeEmail'
   @setPrimaryEmail: 'Retronator.Accounts.User.setPrimaryEmail'
   @sendPasswordResetEmail: 'Retronator.Accounts.User.sendPasswordResetEmail'
-  
-RA.User = RetronatorAccountsUser

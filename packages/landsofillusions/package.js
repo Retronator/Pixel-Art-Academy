@@ -60,10 +60,14 @@ Package.onUse(function(api) {
 
   // Character
 
-  api.addFiles('character/spacebars.coffee', 'client');
-  api.addFiles('character/character.coffee');
-  api.addFiles('character/methods.coffee');
-  api.addFiles('character/subscriptions.coffee', 'server');
+  api.addClientFile('character/spacebars');
+  api.addFile('character/character');
+  api.addFile('character/methods');
+  api.addServerFile('character/subscriptions');
+  api.addServerFile('character/migrations/0000-renamecollection');
+  api.addServerFile('character/migrations/0001-userpublicname');
+  api.addServerFile('character/migrations/0002-ownername');
+  api.addServerFile('character/migrations/0003-migrateavatarfields');
 
   // Avatar
 

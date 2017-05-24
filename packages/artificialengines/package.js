@@ -15,6 +15,9 @@ Package.onUse(function(api) {
   api.constructor.prototype.addServerFile = function(path) {
     this.addFiles(path + ".coffee", ['server']);
   };
+  api.constructor.prototype.addClientFile = function(path) {
+    this.addFiles(path + ".coffee", ['client']);
+  };
   api.constructor.prototype.addHtml = function(path) {
     this.addFiles(path + ".html");
   };
@@ -71,6 +74,7 @@ Package.onUse(function(api) {
     'peerlibrary:computed-field',
     'peerlibrary:check-extension',
     'peerlibrary:server-autorun',
+    'peerlibrary:directcollection',
     'limemakers:three',
     'kadira:flow-router',
     'kadira:blaze-layout',
@@ -188,18 +192,17 @@ Package.onUse(function(api) {
   api.addFiles('telepathy/twitter.coffee', 'server');
 
   // Artificial Babel
-  api.addFiles('babel/babel.coffee');
-  api.addFiles('babel/initialize.coffee');
-  api.addFiles('babel/helpers.coffee');
+  api.addFile('babel/babel');
+  api.addFile('babel/initialize');
+  api.addFile('babel/helpers');
 
-  api.addFiles('babel/translation/translation.coffee');
-  api.addFiles('babel/translation/subscriptions.coffee', 'server');
-  api.addFiles('babel/translation/methods.coffee');
+  api.addFile('babel/translation/translation');
+  api.addServerFile('babel/translation/subscriptions');
+  api.addFile('babel/translation/methods');
 
-  api.addFiles('babel/components/components.coffee');
+  api.addFile('babel/components/components');
 
-  api.addFiles('babel/components/translatable/translatable.html');
-  api.addFiles('babel/components/translatable/translatable.coffee');
+  api.addUnstyledComponent('babel/components/translatable/translatable');
 
   api.addComponent('babel/components/translation/translation');
 });

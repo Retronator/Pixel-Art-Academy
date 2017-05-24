@@ -3,7 +3,7 @@ AB = Artificial.Babel
 AT = Artificial.Telepathy
 AM = Artificial.Mummification
 
-class ArtificialBabelTranslation extends AM.Document
+class AB.Translation extends AM.Document
   # namespace: string name of related keys
   # key: English string that identifies this translation (namespace and key pair should be unique)
   # translations:
@@ -100,5 +100,3 @@ class ArtificialBabelTranslation extends AM.Document
 
       else
         []
-
-AB.Translation = ArtificialBabelTranslation

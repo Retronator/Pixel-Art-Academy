@@ -61,18 +61,6 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   onClickUnloadCharacter: (event) ->
     LOI.switchCharacter null
 
-  class @CharacterName extends AM.DataInputComponent
-    @register 'LandsOfIllusions.Components.Account.Characters.CharacterName'
-
-    load: ->
-      @data()?.name
-
-    save: (value) ->
-      Meteor.call "LandsOfIllusions.Character.rename", @data()._id, value
-
-    placeholder: ->
-      @data()?.displayName()
-
   class @CharacterColorHue extends AM.DataInputComponent
     @register 'LandsOfIllusions.Components.Account.Characters.CharacterColorHue'
 
@@ -88,7 +76,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       value: i, name: ramp.name for ramp, i in palette.ramps
 
     load: ->
-      @data()?.color?.hue or 0
+      @data()?.avatar?.color?.hue or 0
 
     save: (value) ->
       # Change the hue part of color.
@@ -109,7 +97,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       value: i - 2, name: name for name, i in ['darkest', 'darker', 'normal', 'lighter', 'lightest']
 
     load: ->
-      @data()?.color?.shade or 0
+      @data()?.avatar?.color?.shade or 0
 
     save: (value) ->
       # Change the shade part of color.
