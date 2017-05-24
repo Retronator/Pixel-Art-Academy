@@ -36,6 +36,13 @@ class HQ.Store.Table.Item.Photos extends HQ.Store.Table.Item
     else
       "It's a set of photos."
 
+  introduction: ->
+    if @post.photos.length is 1
+      "You look at the photo."
+
+    else
+      "You look at the photos."
+
   _createMainInteraction: ->
     # The main interaction is to look at a set of photos in this post.
     new HQ.Store.Table.Interaction.Photos @post.photos

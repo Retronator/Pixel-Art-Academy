@@ -22,18 +22,11 @@ class HQ.Store.Table.Item extends LOI.Adventure.Thing
     # We need to provide our own ID since multiple instances of this item will appear.
     @_id = Random.id()
 
-    if @options.interactions
-      # Construct the interaction script and collect all interactions that
-      # need to be present at the location so they can be rendered by the interface.
-      @interactions = []
-      @interactionStartNode = @_createInteractionScript()
-
     @started = new ReactiveField false
 
   _createInteractionScript: ->
     # We start with the main interaction.
     mainInteraction = @_createMainInteraction()
-    @interactions.push mainInteraction
 
     textNode = @_createTextScript() if @post.text
 
@@ -41,6 +34,8 @@ class HQ.Store.Table.Item extends LOI.Adventure.Thing
       callback: (complete) =>
         @options.table.startInteraction mainInteraction
         complete()
+
+      next: textNode
 
     mainInteractionNode
 
@@ -55,7 +50,7 @@ class HQ.Store.Table.Item extends LOI.Adventure.Thing
 
   start: ->
     @started true
-    LOI.adventure.director.startNode @interactionStartNode
+    LOI.adventure.director.startNode @_createInteractionScript()
 
   # Listener
 
@@ -71,12 +66,4 @@ class HQ.Store.Table.Item extends LOI.Adventure.Thing
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.LookAt, item.avatar]
       priority: 1
-      action: =>
-        # Go to table if needed.
-        atTable =  LOI.adventure.currentLocation() instanceof HQ.Store.Table
-        LOI.adventure.goToLocation HQ.Store.Table unless atTable
-
-        HQ.Store.Table.showPost item.post
-
-        # If we were at the table, reset the interface manually since there will be no location change.
-        LOI.adventure.interface.resetInterface?() if atTable
+      action: => HQ.Store.Table.showPost item.post

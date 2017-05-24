@@ -23,7 +23,8 @@ class HQ.Store.Retro extends HQ.Actors.Retro
         visible: false
 
   descriptiveName: ->
-    return unless newestPost = @newestTableItem()?.post
+    justName = "Matej '![Retro](talk to Retro)' Jan."
+    return justName unless newestPost = @newestTableItem()?.post
 
     switch newestPost.type
       when Blog.Post.Types.Photo
@@ -33,4 +34,4 @@ class HQ.Store.Retro extends HQ.Actors.Retro
         else
           action = "browsing through some ![photos](look at photos)"
 
-    "Matej '![Retro](talk to Retro)' Jan. He is #{action}."
+    "#{justName} He is #{action}."

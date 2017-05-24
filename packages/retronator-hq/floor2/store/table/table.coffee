@@ -28,12 +28,22 @@ class HQ.Store.Table extends LOI.Adventure.Location
   @showPost: (post) ->
     @state 'activePostId', post._id
 
+    # Go to table if needed.
+    atTable = LOI.adventure.currentLocation() instanceof HQ.Store.Table
+    LOI.adventure.goToLocation HQ.Store.Table unless atTable
+
+    # Reset the interface to force showing the intro text.
+    #Tracker.afterFlush =>
+      #LOI.adventure.interface.resetInterface()
+
   constructor: ->
     super
     
     @postsSkip = new ReactiveField 0
 
     retro = HQ.Actors.Retro.createAvatar()
+
+    @currentInteraction = new ReactiveField null
 
     @autorun (computation) =>
       activePostId = @state 'activePostId'
@@ -42,6 +52,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
         Blog.Post.forId.subscribe activePostId
 
       else
+        @currentInteraction null
         Blog.Post.all.subscribe 5, @postsSkip()
       
     # Dynamically create the 5 things on the table.
@@ -56,11 +67,8 @@ class HQ.Store.Table extends LOI.Adventure.Location
           _.extend itemOptions,
             retro: retro
             table: @
-            interactions: true
 
         @constructor.Item.createItem itemOptions
-
-    @currentInteraction = new ReactiveField null
 
     @autorun (computation) =>
       return unless activePostId = @state 'activePostId'
@@ -71,11 +79,11 @@ class HQ.Store.Table extends LOI.Adventure.Location
       # We made the item for the current active post.
       item.start()
 
-  startInteraction: (interaction) ->
-    @currentInteraction interaction
+  onRendered: ->
+    super
 
-  illustrationHeight: ->
-    @currentInteraction()?.illustrationHeight() or 0
+    @$uiArea = $('.ui-area')
+    @$table = $('.retronator-hq-store-table')
 
   things: ->
     things = @_things()
@@ -88,20 +96,41 @@ class HQ.Store.Table extends LOI.Adventure.Location
     activePostId = @state 'activePostId'
 
     if activePostId
-      "#{Vocabulary.Keys.Directions.In}": HQ.Store.Table
+      "#{Vocabulary.Keys.Directions.Back}": HQ.Store.Table
       "#{Vocabulary.Keys.Directions.Out}": HQ.Store
 
     else
       "#{Vocabulary.Keys.Directions.Back}": HQ.Store
+
+  illustrationHeight: ->
+    @currentInteraction()?.illustrationHeight() or 0
+
+  description: ->
+    # Show the introduction text of the active item.
+    if @state 'activePostId'
+      item = @_things()?[0]
+      return item?.introduction()
+
+    super
+
+  onScroll: ->
+    scrollTop = -parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
+    @$table.css transform: "translate3d(0, #{-scrollTop}px, 0)"
+
+  startInteraction: (interaction) ->
+    @currentInteraction interaction
 
   # Listener
 
   onExitAttempt: (exitResponse) ->
     table = @options.parent
 
-    # On exit, clear active post.
-    table.state 'activePostId', null
+    console.log "Exit", exitResponse
 
-    # If we're just returning back to table, reset the interface since the location won't really change.
-    if exitResponse.destinationLocationClass is HQ.Store.Table
-      LOI.adventure.interface.resetInterface?()
+    if exitResponse.currentLocationClass is HQ.Store.Table
+      # On exit, clear active post.
+      table.state 'activePostId', null
+
+      if exitResponse.destinationLocationClass is HQ.Store.Table
+        LOI.adventure.interface.resetInterface
+          resetIntroduction: false

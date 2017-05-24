@@ -219,16 +219,19 @@ class LOI.Interface.Text extends LOI.Interface
     _.some busyConditions
     
   # Use to get back to the initial state with full location description.
-  resetInterface: ->
+  resetInterface: (options = {}) ->
+    options.resetIntroduction ?= true
+
     @_lastNode null
     @_pausedNode null
 
     @narrative?.clear()
 
-    @location().constructor.visited false
-    @inIntro true
+    if options.resetIntroduction
+      @location().constructor.visited false
+      @inIntro true
 
-    @initializeIntroductionFunction()
+      @initializeIntroductionFunction()
 
     Tracker.afterFlush =>
       @narrative.scroll()

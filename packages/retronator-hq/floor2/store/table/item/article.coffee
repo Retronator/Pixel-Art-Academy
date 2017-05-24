@@ -25,6 +25,9 @@ class HQ.Store.Table.Item.Article extends HQ.Store.Table.Item
   description: ->
     "It's an article."
 
+  introduction: ->
+    "You read the article."
+
   _createMainInteraction: ->
     # The main interaction is to look at an article.
     null
@@ -36,5 +39,4 @@ class HQ.Store.Table.Item.Article extends HQ.Store.Table.Item
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.Read, article.avatar]
-      action: =>
-        LOI.adventure.director.startNode article.interactionStartNode
+      action: => HQ.Store.Table.showPost item.post

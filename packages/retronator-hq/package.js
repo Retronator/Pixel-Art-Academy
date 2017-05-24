@@ -78,7 +78,7 @@ Package.onUse(function(api) {
   api.addFile('floor2/store/shelf/shelf-upgrades');
   api.addThing('floor2/store/shelf/shelves');
 
-  api.addUnstyledComponent('floor2/store/table/table');
+  api.addComponent('floor2/store/table/table');
 
   api.addFile('floor2/store/table/item/item');
   api.addFile('floor2/store/table/item/item-createtextscript');

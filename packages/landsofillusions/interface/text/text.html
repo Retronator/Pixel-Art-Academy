@@ -20,7 +20,9 @@
         <div class="text-display scrollable">
           <div class="text-display-content scrollable-content">
             <div class="narrative">
-              <p class="introduction">{{{introduction}}}</p>
+              {{#if introduction}}
+                <p class="introduction">{{{introduction}}}</p>
+              {{/if}}
               {{#unless inIntro}}
                 <p class="exits">{{> t10e "Possible exits are:"}}
                   {{#each exitAvatars}}

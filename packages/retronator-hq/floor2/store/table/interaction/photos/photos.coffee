@@ -10,12 +10,18 @@ class HQ.Store.Table.Interaction.Photos extends HQ.Store.Table.Interaction
   constructor: (@photos) ->
     super
 
+    @_illustrationHeight = new ReactiveField 0
+
   onCreated: ->
     super
 
     @pixelImages = for photo in @photos
       new AM.PixelImage
         source: photo.original_size.url
+
+    # Search for the first parent that has a display.
+    parentWithDisplay = @ancestorComponentWith 'display'
+    @display = parentWithDisplay.display
 
   onRendered: ->
     super
@@ -27,8 +33,8 @@ class HQ.Store.Table.Interaction.Photos extends HQ.Store.Table.Interaction
           sourceHeight = pixelImage.sourceHeight()
 
           Tracker.nonreactive =>
-            targetWidth = Math.min sourceWidth, 100
-            targetHeight = Math.min sourceHeight, 240
+            targetWidth = Math.min sourceWidth, 320
+            targetHeight = sourceHeight
             widthScale = targetWidth / sourceWidth
             heightScale = targetHeight / sourceHeight
             scale = Math.min widthScale, heightScale
@@ -36,8 +42,17 @@ class HQ.Store.Table.Interaction.Photos extends HQ.Store.Table.Interaction
             pixelImage.targetWidth sourceWidth * scale
             pixelImage.targetHeight sourceHeight * scale
 
+            # Measure new dimensions
+            Tracker.afterFlush =>
+              screenHeight = @$('.retronator-hq-store-table-interaction-photos').outerHeight()
+              displayScale = @display.scale()
+
+              displayHeight = screenHeight / displayScale
+
+              @_illustrationHeight displayHeight
+
   addPhoto: (photo) ->
     @photos.push photo
 
   illustrationHeight: ->
-    100
+    @_illustrationHeight()
