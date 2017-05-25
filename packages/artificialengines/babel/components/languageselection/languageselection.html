@@ -1,0 +1,58 @@
+<template name="Artificial.Babel.Components.LanguageSelection">
+  <span class="artificial-babel-components-languageselection">
+    {{!
+      we prefix all classes with 'abcls' since this component can appear deeply
+      within other components and we don't want to be style from parent definitions.
+    }}
+    <span class="abcls-languages-area">
+      <span class="abcls-current-language">
+        <span class="abcls-label">{{t7e "Language"}}:</span>
+        {{#if currentLanguage}}
+          <span class="abcls-name">{{> t9n currentLanguage.name}}</span>
+          <span class="abcls-code">{{currentLanguage.code}}</span>
+        {{else}}
+          {{t7e "Click to select"}}
+        {{/if}}
+      </span>
+      {{#if showLanguages}}
+        <span class="abcls-languages">
+          {{#each languages}}
+            <span class="abcls-language">
+              <span class="abcls-name">{{> t9n name}}</span>
+              <span class="abcls-native-name">{{nativeLanguageName}}</span>
+              <span class="abcls-code">{{code}}</span>
+            </span>
+          {{/each}}
+        </span>
+      {{/if}}
+    </span>
+    <span class="abcls-regions-area">
+      <span class="abcls-current-region">
+        <span class="abcls-label">{{t7e "Region"}}:</span>
+        {{#if currentRegion}}
+          <span class="abcls-name">{{> t9n currentRegion.name}}</span>
+          <span class="abcls-code">{{currentRegion.code}}</span>
+        {{else}}
+          {{t7e "None"}}
+        {{/if}}
+      </span>
+      {{#if showRegions}}
+        <span class="abcls-regions">
+          <span class="abcls-no-region">{{t7e "No region"}}</span>
+          {{#each regions}}
+            <span class="abcls-region">
+              <span class="abcls-flag"></span>
+              <span class="abcls-name">{{> t9n name}}</span>
+              <span class="abcls-code">{{code}}</span>
+            </span>
+          {{/each}}
+          {{#unless showAllRegions}}
+            <span class="abcls-all-regions">
+              <button class="abcls-show-all-regions-button">{{t7e "Show all regions"}}</button>
+            </span>
+          {{/unless}}
+        </span>
+      {{/if}}
+    </span>
+  </span>
+</template>

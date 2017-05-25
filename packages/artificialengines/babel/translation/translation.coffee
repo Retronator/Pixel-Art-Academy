@@ -3,7 +3,9 @@ AB = Artificial.Babel
 AT = Artificial.Telepathy
 AM = Artificial.Mummification
 
+# Document that stores the translated texts for a given key in a namespace.
 class AB.Translation extends AM.Document
+  @id: -> 'Artificial.Babel.Translation'
   # namespace: string name of related keys
   # key: English string that identifies this translation (namespace and key pair should be unique)
   # translations:
@@ -13,7 +15,11 @@ class AB.Translation extends AM.Document
   #       quality: a number by which we can sort translations from different regions to find the best translation
   #       meta: TODO: information about the translation process, authors, revisions, voting etc.
   @Meta
-    name: 'ArtificialBabelTranslation'
+    name: @id()
+
+  @insert: @method 'insert'
+  @update: @method 'update'
+  @remove: @method 'remove'
 
   # Helper method for quickly getting a translation. It's only particularly useful on the server where all the
   # translations are immediately accessible. On the client we need to subscribe to the translation documents first
@@ -39,7 +45,7 @@ class AB.Translation extends AM.Document
   # Returns translation data for a specific language.
   translation: (language = Artificial.Babel.defaultLanguage) ->
     languageProperty = language.toLowerCase().replace '-', '.'
-    _.nestedProperty translations, languageProperty
+    _.nestedProperty @translations, languageProperty
 
   # Finds the best translation in order of preferred languages.
   translate: (languagePreference = AB.userLanguagePreference()) ->

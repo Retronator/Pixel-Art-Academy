@@ -2,7 +2,7 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 
 # Debug users creation.
-Meteor.startup ->
+Document.startup ->
   # Don't do this on production server.
   return unless Meteor.settings.test
 

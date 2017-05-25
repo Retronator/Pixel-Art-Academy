@@ -100,10 +100,11 @@ class LOI.Adventure.Thing extends AM.Component
 
     # On the server, prepare any extra translations.
     if Meteor.isServer
-      translationNamespace = @id()
+      Document.startup =>
+        translationNamespace = @id()
 
-      for translationKey, defaultText of @_translations()
-        AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
+        for translationKey, defaultText of @_translations()
+          AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
 
     # Create static state field.
     @stateAddress = new LOI.StateAddress "things.#{@id()}"

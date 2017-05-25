@@ -236,6 +236,8 @@ Package.onUse(function(api) {
 
   api.addStyle('components/dialogs/accounts');
   api.addComponent('components/dialogs/dialog');
+  
+  api.addComponent('components/translationinput/translationinput');
 
   // Typography
 

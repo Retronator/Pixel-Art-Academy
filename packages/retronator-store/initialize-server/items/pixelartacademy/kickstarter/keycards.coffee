@@ -2,7 +2,7 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
-Meteor.startup ->
+Document.startup ->
   # KICKSTARTER KEYCARDS
   
   RS.Transactions.Item.create

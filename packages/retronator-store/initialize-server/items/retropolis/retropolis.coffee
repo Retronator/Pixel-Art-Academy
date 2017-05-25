@@ -1,7 +1,7 @@
 RA = Retronator.Accounts
 RS = Retronator.Store
 
-Meteor.startup ->
+Document.startup ->
   # RETROPOLIS ITEMS
 
   RS.Transactions.Item.create

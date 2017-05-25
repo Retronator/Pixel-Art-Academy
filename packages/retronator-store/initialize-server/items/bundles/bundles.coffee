@@ -2,7 +2,7 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
-Meteor.startup ->
+Document.startup ->
   # Here we populate the store with all the items. Simple items are defined inline here, others
   # that have specific eligibility checking are their own classes that handle their creation.
 

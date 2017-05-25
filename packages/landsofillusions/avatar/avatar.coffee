@@ -27,9 +27,10 @@ class LOI.Avatar
 
     # On the server, create this avatar's translated names.
     if Meteor.isServer
-      for translationKey of @translationKeys
-        defaultText = _.propertyValue options, translationKey
-        AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
+      Document.startup =>
+        for translationKey of @translationKeys
+          defaultText = _.propertyValue options, translationKey
+          AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
 
   constructor: (@options) ->
     id = _.propertyValue @options, 'id'

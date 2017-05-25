@@ -14,16 +14,16 @@ class Migration extends Document.MajorMigration
       (document) =>
         # Create the avatar object with character colors.
         avatar =
-          color: document.color
+          color: document.color or hue: 0, shade: 0
 
-        # Move name into a translation document for full name.
+        # Move name into a translation document (under global 0 language) for full name.
         characterName = document.name
 
         nameTranslation =
           _id: Random.id()
           translations:
-            en:
-              us:
+            '0':
+              '0':
                 text: characterName
                 quality: 0
 
@@ -62,7 +62,7 @@ class Migration extends Document.MajorMigration
         count += collection.update _id: document._id,
           $set:
             color: avatar.color
-            name: fullNameDocument?.translations?.en?.us?.text or 'Name lost during migration'
+            name: fullNameDocument?.translations?['0']?['0']?.text or 'Name lost during migration'
           $unset:
             avatar: 1
 

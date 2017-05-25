@@ -17,9 +17,10 @@ class LOI.Components.Account.Page extends AM.Component
 
     # On the server, create this avatar's translated names.
     if Meteor.isServer
-      for translationKey of @translationKeys
-        defaultText = _.propertyValue @, translationKey
-        AB.createTranslation translationNamespace, translationKey, defaultText
+      Document.startup =>
+        for translationKey of @translationKeys
+          defaultText = _.propertyValue @, translationKey
+          AB.createTranslation translationNamespace, translationKey, defaultText
 
   constructor: ->
     super

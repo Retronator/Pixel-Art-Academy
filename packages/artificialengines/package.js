@@ -96,26 +96,27 @@ Package.onUse(function(api) {
 	api.addFiles('everywhere/lodash/lodash.coffee');
 
 	// Artificial Everywhere
-  api.addFiles('everywhere/everywhere.coffee');
+  api.addFile('everywhere/everywhere');
 
-  api.addFiles('everywhere/jquery/positioncss.coffee', 'client');
+  api.addClientFile('everywhere/jquery/positioncss');
 
-  api.addFiles('everywhere/three/color.coffee');
+  api.addFile('everywhere/three/color');
 
-  api.addFiles('everywhere/lodash/lettercase.coffee');
-  api.addFiles('everywhere/lodash/nestedproperty.coffee');
-  api.addFiles('everywhere/lodash/urls.coffee');
-  api.addFiles('everywhere/lodash/math.coffee');
-  api.addFiles('everywhere/lodash/objects.coffee');
-  api.addFiles('everywhere/lodash/strings.coffee');
+  api.addFile('everywhere/lodash/lettercase');
+  api.addFile('everywhere/lodash/nestedproperty');
+  api.addFile('everywhere/lodash/urls');
+  api.addFile('everywhere/lodash/math');
+  api.addFile('everywhere/lodash/objects');
+  api.addFile('everywhere/lodash/strings');
 
-  api.addFiles('everywhere/date.coffee');
-  api.addFiles('everywhere/datehelper.coffee');
-  api.addFiles('everywhere/daterange.coffee');
-  api.addFiles('everywhere/exceptions.coffee');
-  api.addFiles('everywhere/match.coffee');
-  api.addFiles('everywhere/reactivewrapper.coffee');
-  api.addFiles('everywhere/rectangle.coffee');
+  api.addFile('everywhere/csvparser');
+  api.addFile('everywhere/date');
+  api.addFile('everywhere/datehelper');
+  api.addFile('everywhere/daterange');
+  api.addFile('everywhere/exceptions');
+  api.addFile('everywhere/match');
+  api.addFile('everywhere/reactivewrapper');
+  api.addFile('everywhere/rectangle');
 
   // Artificial Control
   api.addFiles('control/control.coffee');
@@ -199,10 +200,21 @@ Package.onUse(function(api) {
   api.addFile('babel/translation/translation');
   api.addServerFile('babel/translation/subscriptions');
   api.addFile('babel/translation/methods');
+  api.addServerFile('babel/translation/migrations/0000-renamecollection');
+
+  api.addFile('babel/language/language');
+  api.addServerFile('babel/language/subscriptions');
+
+  api.addFile('babel/region/region');
+  api.addServerFile('babel/region/subscriptions');
+
+  api.addServerFile('babel/initialize-server/languages-data');
+  api.addServerFile('babel/initialize-server/languages');
+  api.addServerFile('babel/initialize-server/regions-data');
+  api.addServerFile('babel/initialize-server/regions');
 
   api.addFile('babel/components/components');
-
   api.addUnstyledComponent('babel/components/translatable/translatable');
-
   api.addComponent('babel/components/translation/translation');
+  api.addUnstyledComponent('babel/components/languageselection/languageselection');
 });

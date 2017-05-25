@@ -45,7 +45,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
       @processTweetHistory newOptions
 
 # Initialize on startup.
-Meteor.startup ->
+Document.startup ->
   return unless AT.Twitter.initialized
 
   # Parse the full history of last 3200 tweets on startup.

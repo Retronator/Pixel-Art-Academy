@@ -1,0 +1,73 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-translationinput
+  position relative
+
+  .artificial-babel-components-translatable
+    display block
+    position relative
+
+    &:hover
+      > input
+        padding-right 2em !important
+
+      .language-selector
+        visibility visible
+
+    .language-selector
+      display block
+      visibility visible
+      position absolute
+      top 100%
+      bottom 0
+      left 0
+      right 0
+      z-index 1
+
+      .current-language
+        display block
+        position absolute
+        right 0
+        bottom 0
+
+      .existing-translations
+      .add-translation
+      .language-selection
+        display block
+        width 100%
+        background atariGrey(7)
+
+      .language-selection
+        padding 2rem
+
+        .artificial-babel-components-languageselection
+          display block
+          width 100%
+
+          .abcls-languages-area
+          .abcls-regions-area
+            display block
+            width 100%
+            position relative
+            padding 2rem
+
+            .abcls-current-language
+            .abcls-current-region
+              display block
+              width 100%
+
+            .abcls-languages
+            .abcls-regions
+              display block
+              position absolute
+              top 100%
+              left 0
+              right 0
+              z-index 1
+              background atariGrey(7)
+              max-height 10em
+              overflow-y auto
+
+              .abcls-language
+              .abcls-region
+                display block

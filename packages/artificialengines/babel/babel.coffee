@@ -9,6 +9,9 @@ class Artificial.Babel
   # User's current language preference setting.
   @_userLanguagePreference: new ReactiveField null
 
+  # Global toggle that turn translatables into editable inputs.
+  @inTranslationMode: new ReactiveField false
+
   @userLanguagePreference: (value) ->
     if value
       @_userLanguagePreference value
@@ -55,7 +58,7 @@ class Artificial.Babel
     # translation, it must have not been added to the database yet.
     if handle._babelSubscriptionHandle.ready()
       # Looks like we'll need to insert it.
-      Meteor.call 'Artificial.Babel.translationInsert', handle.namespace, key
+      Artifical.Babel.Translation.insert handle.namespace, key
 
     # Return null, The method will then repeat when the query above returns a document from the database.
     null
@@ -68,11 +71,12 @@ class Artificial.Babel
       key: key
 
     if existing
-      Meteor.call 'Artificial.Babel.translationUpdate', existing._id, @defaultLanguage, defaultText
+      Artificial.Babel.Translation.update existing._id, @defaultLanguage, defaultText if defaultText
+
       existing._id
 
     else
-      Meteor.call 'Artificial.Babel.translationInsert', namespace, key, defaultText
+      Artificial.Babel.Translation.insert namespace, key, defaultText
 
   # Returns a translation that has already been created.
   @existingTranslation: (handle, key) ->
@@ -133,10 +137,10 @@ class Artificial.Babel
     # translation, it must have not been added to the database yet.
     if component._babelSubscriptionHandle.ready()
       # Looks like we'll need to insert it.
-      Meteor.call 'Artificial.Babel.translationInsert', namespace, key
+      Artificial.Babel.Translation.insert namespace, key
 
     # Return null, The method will then repeat when the query above returns a document from the database.
     null
 
   @translateForComponent: (component, key) ->
-    @translate @translationForComponent component, key
+    @translate @translationForComponent(component, key), key
