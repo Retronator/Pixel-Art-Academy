@@ -27,7 +27,6 @@ generateFieldsForLanguages = (languages) ->
   fields =
     namespace: 1
     key: 1
-    best: 1
 
   if languages?
     # Make all languages lowercase.
@@ -50,6 +49,15 @@ generateFieldsForLanguages = (languages) ->
       # Change language dash into subdocument notation.
       field = "translations.#{language.toLowerCase().replace '-', '.'}"
       fields[field] = 1
+
+    # Subscribe to all region languages' bests.
+    for language in _.filter(minimalLanguages, (language) => language.length is 5)
+      {languageCode} = _.splitLanguageRegion language
+      field = "translations.#{languageCode.toLowerCase()}.best"
+      fields[field] = 1
+
+    # Finally the overall best.
+    fields['translations.best'] = 1
 
   else
     # Include all languages.

@@ -58,27 +58,35 @@ class AB.Translation extends AM.Document
     translation.text
 
   # Returns translation data for a specific language.
-  translationData: (languageRegion = Artificial.Babel.defaultLanguage) ->
-    languageProperty = languageRegion.toLowerCase().replace '-', '.'
-    _.nestedProperty @translations, languageProperty
+  translationData: (languageRegion) ->
+    if languageRegion?.length
+      languageProperty = languageRegion.toLowerCase().replace '-', '.'
+      _.nestedProperty @translations, languageProperty
+
+    else
+      # Return the global translation.
+      @translations
 
   # Returns an array with all translation data available.
   allTranslationData: ->
     translations = []
 
-    for languageCode, languageData of @translations
+    # See if there is a global translation.
+    @_addTranslation translations, @translations
+
+    for languageCode, languageData of @translations when languageCode.length is 2
       # See if there is a translation on the language itself.
       @_addTranslation translations, languageData, languageCode
 
       # Go through all regions as well.
-      for regionCode, translationData of languageData
+      for regionCode, translationData of languageData when regionCode.length is 2
         @_addTranslation translations, translationData, languageCode, regionCode
 
     translations
 
   _addTranslation: (translations, translationData, languageCode, regionCode) ->
     # Translation is present if it holds a text field.
-    return unless translationData.text
+    return unless translationData.text?
 
     languageRegion = _.joinLanguageRegion languageCode, regionCode
 
@@ -86,63 +94,52 @@ class AB.Translation extends AM.Document
 
   # Finds the best translation in order of preferred languages.
   translate: (languagePreference = AB.userLanguagePreference()) ->
-    # Start with an empty array if there is no language preference.
-    languagePreference ?= []
-
-    # Go over preferred languages and resort to default language otherwise.
-    languages = _.map languagePreference, _.toLower
-    languages = _.union languages, [AB.defaultLanguage.toLowerCase()]
-
-    for language in languages
-      languageParts = language.split '-'
-
-      translation = @_findTranslation @translations, languageParts
+    for languageRegion in languagePreference
+      translation = @_findTranslation languageRegion
       return translation if translation
 
-    # We've looked through all the languages and couldn't find a translation, so return just the key.
-    text: @key
-    language: null
+    # We couldn't find any of user's specific wishes. Let's try again with languages of regions.
+    for languageRegion in languagePreference
+      {languageCode, regionCode} = _.splitLanguageRegion languageRegion
 
-  _findTranslation: (data, languageParts, currentPath = '') ->
-    # Return if we didn't find the object for that language part.
-    return unless data
+      # Only process the ones with regions, but translate as if the user requested that language (without region).
+      if regionCode
+        translation = @_findTranslation languageCode
+        return translation if translation
 
-    # Search for the best translation when we come to the end of language parts.
-    unless languageParts.length
-      # There are no more language parts to narrow our scope, so
-      # search for all the translations across all the nested objects.
-      translations = @_findTranslations data, currentPath
-      return unless translations.length
-
-      # We have at least one translation, so find one with the highest quality.
-      best = _.last _.sortBy translations, (data) ->
-        data.translation.quality
-
-      # Return the translation text with a language descriptor.
-      text: best.translation.text
-      language: best.path
+    # Finally, just return the best translation.
+    if @translations?.best?
+      text: @translations.best.text
+      language: @translations.best.languageRegion
 
     else
-      # Try to find translations deeper.
-      newPath = if currentPath.length then "#{currentPath}-#{languageParts[0].toUpperCase()}" else languageParts[0]
+      # Not even the best translation is available (we have no translations at all), so return just the key.
+      text: @key
+      language: null
 
-      @_findTranslation data[languageParts[0]], _.tail(languageParts), newPath
+  _findTranslation: (languageRegion) ->
+    {languageCode, regionCode} = _.splitLanguageRegion languageRegion
 
-  _findTranslations: (data, currentPath) ->
-    # Return just this object in an array if it has the translated text.
-    return [
-      translation: data
-      path: currentPath
-    ] if data.text
+    if regionCode
+      # If the user cares about the region, look for that region's entry directly.
+      translationData = @translationData languageRegion
 
-    # Search for the objects in all the properties and make one array of all their results.
-    _.flatten _.map data, (value, key) =>
-      if _.isObject value
-        newPath = if currentPath.length then "#{currentPath}-#{key}" else key
-        @_findTranslations value, newPath
+      return unless translationData
 
-      else
-        []
+      text: translationData.text
+      language: _.joinLanguageRegion languageCode, regionCode
+
+    else if languageCode
+      # Otherwise the user just cares about the best translation in the given language
+      translationData = @translationData languageCode
+
+      return unless translationData
+
+      text: translationData.best.text
+      language: translationData.best.languageRegion
+
+    else
+      null
 
   # Populates the translations with the best translations.
   generateBestTranslations: ->

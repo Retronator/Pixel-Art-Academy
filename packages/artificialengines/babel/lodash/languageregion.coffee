@@ -3,7 +3,7 @@
 _.mixin
   # Converts 'en-US' into {languageCode: 'en', regionCode: 'us'}
   splitLanguageRegion: (languageRegionString) ->
-    if languageRegionString
+    if languageRegionString?.length
       parts = languageRegionString.toLowerCase().split('-')
 
     else
@@ -20,7 +20,7 @@ _.mixin
     else
       languageCode = languageCodeOrObject
 
-    languageRegionString = languageCode.toLowerCase()
+    languageRegionString = languageCode?.toLowerCase() or ''
     languageRegionString += "-#{regionCode.toUpperCase()}" if regionCode
 
     languageRegionString

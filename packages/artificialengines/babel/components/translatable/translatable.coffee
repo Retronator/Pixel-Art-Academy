@@ -33,28 +33,18 @@ class AB.Components.Translatable extends AM.Component
     @translated = new ComputedField =>
       return unless translation = @translation()
 
-      AB.translate translation
-
-    # Start with user's preferred language.
-    @currentLanguageRegion = new ReactiveField AB.userLanguagePreference()?[0] or AB.defaultLanguage
+      translation.translate()
 
     @currentTranslationInfo = new ComputedField =>
       return unless translation = @translation()
+      return unless translated = @translated()
 
-      languageRegion = @currentLanguageRegion()
+      languageRegion = translated.language
       translationData = translation.translationData languageRegion
 
       {translationData, languageRegion}
 
-    # When translation gets loaded, translate it using the current language,
-    # see which language we're actually displaying and update accordingly.
-    @autorun (computation) =>
-      return unless translation = @translation()
-
-      translationResult = translation.translate [@currentLanguageRegion()]
-
-      Tracker.nonreactive =>
-        @currentLanguageRegion translationResult.language
+    @showTranslationSelector = new ReactiveField false
 
   editable: ->
     editable = Artificial.Babel.inTranslationMode() or @options.editable
@@ -80,6 +70,37 @@ class AB.Components.Translatable extends AM.Component
   addTranslationText: ->
     addTranslationText = @options.addTranslationText?()
     addTranslationText or @translate("Add translation").text
+
+  removeTranslationText: ->
+    removeTranslationText = @options.removeTranslationText?()
+    removeTranslationText or @translate("Remove translation").text
+
+  events: ->
+    super.concat
+      'click .current-translation .language': @onClickCurrentTranslationLanguage
+      'click .translation-selector .language': @onClickTranslationSelectorLanguage
+      'click .add-translation': @onClickAddTranslation
+      'click .remove-translation': @onClickRemoveTranslation
+
+  onClickCurrentTranslationLanguage: (event) ->
+    @showTranslationSelector not @showTranslationSelector()
+
+  onClickTranslationSelectorLanguage: (event) ->
+    translationComponent = @currentComponent()
+    translationComponent.showLanguageSelection not translationComponent.showLanguageSelection()
+
+  onClickAddTranslation: (event) ->
+    return unless translation = @translation()
+
+    # For now, just add a global language entry.
+    # TODO: Implement actual handling of multiple languages.
+    AB.Translation.update translation._id, '', ''
+
+  onClickRemoveTranslation: (event) ->
+    return unless translation = @translation()
+    translationInfo = @currentData()
+
+    AB.Translation.remove translation._id, translationInfo.languageRegion
 
   class @Input extends AM.DataInputComponent
     @register 'Artificial.Babel.Components.Translatable.Input'
@@ -131,9 +152,18 @@ class AB.Components.Translatable extends AM.Component
         translation: => @translation()
         languageRegion: => @languageRegion()
 
+      @showLanguageSelection = new ReactiveField()
+
     languageRegion: ->
       translationInfo = @data()
       translationInfo.languageRegion
+
+    languageRegionCodes: ->
+      translationInfo = @data()
+      _.splitLanguageRegion translationInfo.languageRegion
+
+    removeTranslationText: ->
+      @callAncestorWith 'removeTranslationText'
 
     class @LanguageSelection extends AB.Components.LanguageSelection
       @register 'Artificial.Babel.Components.Translatable.Translation.LanguageSelection'

@@ -42,8 +42,16 @@ AB.Translation.update.method (translationId, language, text) ->
 
   languageProperty = language.toLowerCase().replace '-', '.'
 
+  # Create translations if this is the first update.
+  translation.translations ?= {}
+
   if languageProperty.length
     languageData = _.nestedProperty translation.translations, languageProperty
+
+    unless languageData
+      # If this is a new translation, create its node.
+      languageData = {}
+      _.nestedProperty translation.translations, languageProperty, languageData
 
   else
     # We are updating the global, language-agnostic translation.
@@ -66,10 +74,22 @@ removeLanguage = (translations, language) ->
 
   if languageCode
     languageData = translations[languageCode]
+    # See if there is even anything to do.
+    return unless languageData
 
     if regionCode
+      # See if there is even anything to do.
+      return unless languageData[regionCode]
+
       # When deleting a region, we can delete the whole node.
       delete languageData[regionCode]
+
+      # See if there are any other regions left in the language.
+      languageRegions = _.filter _.keys(languageData), (key) => key.length is 2
+
+      unless languageRegions.length
+        # There are no region translations anymore, we can delete the whole language node.
+        delete translations[languageCode]
 
     else
       # See if we have any language regions (those with 2 characters).
@@ -161,8 +181,6 @@ AB.Translation.move.method (translationId, oldLanguage, newLanguage) ->
     translation.translations = newTranslationData
 
   translation.generateBestTranslations()
-
-  console.log "moved from", oldLanguage, "to", newLanguage, "made", translation.translations
 
   AB.Translation.documents.update translationId,
     $set:

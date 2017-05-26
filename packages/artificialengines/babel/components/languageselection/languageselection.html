@@ -11,48 +11,53 @@
           <span class="abcls-name">{{> t9n currentLanguage.name}}</span>
           <span class="abcls-code">{{currentLanguage.code}}</span>
         {{else}}
-          {{t7e "Click to select"}}
+          {{t7e "None"}}
         {{/if}}
       </span>
       {{#if showLanguages}}
         <span class="abcls-languages">
-          {{#each languages}}
+          <span class="abcls-search">{{> Render languageSearch}}</span>
+          <span class="abcls-no-language">{{t7e "No language"}}</span>
+          {{#each filteredLanguageNames}}
             <span class="abcls-language">
-              <span class="abcls-name">{{> t9n name}}</span>
-              <span class="abcls-native-name">{{nativeLanguageName}}</span>
-              <span class="abcls-code">{{code}}</span>
+              <span class="abcls-name">{{name}}</span>
+              <span class="abcls-native-name">{{nativeName}}</span>
+              <span class="abcls-code">{{language.code}}</span>
             </span>
           {{/each}}
         </span>
       {{/if}}
     </span>
-    <span class="abcls-regions-area">
-      <span class="abcls-current-region">
-        <span class="abcls-label">{{t7e "Region"}}:</span>
-        {{#if currentRegion}}
-          <span class="abcls-name">{{> t9n currentRegion.name}}</span>
-          <span class="abcls-code">{{currentRegion.code}}</span>
-        {{else}}
-          {{t7e "None"}}
+    {{#if currentLanguage}}
+      <span class="abcls-regions-area">
+        <span class="abcls-current-region">
+          <span class="abcls-label">{{t7e "Region"}}:</span>
+          {{#if currentRegion}}
+            <span class="abcls-name">{{> t9n currentRegion.name}}</span>
+            <span class="abcls-code">{{currentRegion.code}}</span>
+          {{else}}
+            {{t7e "None"}}
+          {{/if}}
+        </span>
+        {{#if showRegions}}
+          <span class="abcls-regions">
+            <span class="abcls-search">{{> Render regionSearch}}</span>
+            <span class="abcls-no-region">{{t7e "No region"}}</span>
+            {{#each filteredRegionNames}}
+              <span class="abcls-region">
+                <span class="abcls-flag"></span>
+                <span class="abcls-name">{{name}}</span>
+                <span class="abcls-code">{{region.code}}</span>
+              </span>
+            {{/each}}
+            {{#if showAllRegionsButton}}
+              <span class="abcls-all-regions">
+                <button class="abcls-show-all-regions-button">{{t7e "Show all regions"}}</button>
+              </span>
+            {{/if}}
+          </span>
         {{/if}}
       </span>
-      {{#if showRegions}}
-        <span class="abcls-regions">
-          <span class="abcls-no-region">{{t7e "No region"}}</span>
-          {{#each regions}}
-            <span class="abcls-region">
-              <span class="abcls-flag"></span>
-              <span class="abcls-name">{{> t9n name}}</span>
-              <span class="abcls-code">{{code}}</span>
-            </span>
-          {{/each}}
-          {{#unless showAllRegions}}
-            <span class="abcls-all-regions">
-              <button class="abcls-show-all-regions-button">{{t7e "Show all regions"}}</button>
-            </span>
-          {{/unless}}
-        </span>
-      {{/if}}
-    </span>
+    {{/if}}
   </span>
 </template>

@@ -28,6 +28,36 @@ class AB.Components.LanguageSelection extends AM.Component
     # Cache loaded language to minimize reactivity.
     @languageRegion = new ComputedField => @load()
 
+    @languageFilter = new ReactiveField ''
+    @regionFilter = new ReactiveField ''
+
+    @languageSearch = new @constructor.Search @languageFilter
+    @regionSearch = new @constructor.Search @regionFilter
+
+    # Cache languages and regions with their translations pulled in.
+    @languages = new ComputedField =>
+      for language in AB.Language.documents.find().fetch()
+        language.name.refresh()
+        language
+
+    @regions = new ComputedField =>
+      for region in AB.Region.documents.find().fetch()
+        region.name.refresh()
+        region
+
+    # Cache language and region name translations.
+    @languageNames = new ComputedField =>
+      for language in @languages()
+        language: language
+        name: language.name.translate(AB.userLanguagePreference())?.text
+        nativeName: language.name.translationData(language.code)?.text
+
+    # Cache language and region name translations.
+    @regionNames = new ComputedField =>
+      for region in @regions()
+        region: region
+        name: region.name.translate(AB.userLanguagePreference())?.text
+
   currentLanguage: ->
     AB.Language.documents.findOne
       code: _.splitLanguageRegion(@languageRegion()).languageCode
@@ -36,37 +66,49 @@ class AB.Components.LanguageSelection extends AM.Component
     AB.Region.documents.findOne
       code: _.splitLanguageRegion(@languageRegion()).regionCode
 
-  languages: ->
-    AB.Language.documents.find()
+  filteredLanguageNames: ->
+    # Filter by translated and native name and language code.
+    languageFilter = @languageFilter().toLowerCase()
 
-  regions: ->
-    if @showAllRegions()
-      AB.Region.documents.find()
+    _.filter @languageNames(), (language) =>
+      _.some [
+        _.startsWith(language.name?.toLowerCase(), languageFilter)
+        _.startsWith(language.nativeName?.toLowerCase(), languageFilter)
+        _.startsWith(language.language.code, languageFilter)
+      ]
+
+  filteredRegionNames: ->
+    regionFilter = @regionFilter().toLowerCase()
+
+    # If we're searching, search within all regions.
+    if @showAllRegions() or regionFilter.length
+      regions = @regionNames()
 
     else
       # Show only top-ranked regions of this language.
       return unless language = @currentLanguage()
 
-      topRank = language.regions[0]?.rank
+      topRank = language.regions?[0]?.rank
       languageRegions = _.filter language.regions, (languageRegion) -> languageRegion.rank is topRank
       regionIds = (languageRegion.region._id for languageRegion in languageRegions)
 
-      AB.Region.documents.find
-        _id:
-          $in: regionIds
+      regions = _.filter @regionNames(), (region) =>
+        region.region._id in regionIds
 
-  nativeLanguageName: ->
-    language = @currentData()
+    # Filter by translated name and region code.
+    _.filter regions, (region) =>
+      _.some [
+        _.startsWith(region.name?.toLowerCase(), regionFilter)
+        _.startsWith(region.region.code, regionFilter)
+      ]
 
-    # Refresh language name to get translations.
-    language.name.refresh()
-
-    # Get whatever translation is set under this language's code (or leave blank if it isn't).
-    language.name.translationData(language.code)?.text
+  showAllRegionsButton: ->
+    not @showAllRegions() and not @regionFilter()
 
   events: ->
     super.concat
       'click .abcls-current-language': @onClickCurrentLanguage
+      'click .abcls-no-language': @onClickNoLanguage
       'click .abcls-language': @onClickLanguage
       'click .abcls-current-region': @onClickCurrentRegion
       'click .abcls-no-region': @onClickNoRegion
@@ -77,10 +119,21 @@ class AB.Components.LanguageSelection extends AM.Component
     @showLanguages not @showLanguages()
     @showRegions false
 
-  onClickLanguage: (event) ->
-    language = @currentData()
+    # Clear out and focus on the search field.
+    @languageFilter ''
 
-    @save _.joinLanguageRegion language.code
+    Tracker.afterFlush =>
+      @$('.abcls-languages .abcls-search input').focus()
+
+  onClickNoLanguage: (event) ->
+    @save ''
+
+    @showLanguages false
+
+  onClickLanguage: (event) ->
+    languageName = @currentData()
+
+    @save _.joinLanguageRegion languageName.language.code
 
     @showLanguages false
     @showAllRegions false
@@ -89,17 +142,40 @@ class AB.Components.LanguageSelection extends AM.Component
     @showRegions not @showRegions()
     @showLanguages false
 
+    # Clear out and focus on the search field.
+    @regionFilter ''
+
+    Tracker.afterFlush =>
+      @$('.abcls-regions .abcls-search input').focus()
+
   onClickNoRegion: (event) ->
     @save _.joinLanguageRegion @currentLanguage().code
 
     @showRegions false
 
   onClickRegion: (event) ->
-    region = @currentData()
+    regionName = @currentData()
 
-    @save _.joinLanguageRegion @currentLanguage().code, region.code
+    @save _.joinLanguageRegion @currentLanguage().code, regionName.region.code
 
     @showRegions false
 
   onClickShowAllRegionsButton: (event) ->
     @showAllRegions true
+
+  # Components
+
+  class @Search extends AM.DataInputComponent
+    @register 'Artificial.Babel.Components.LanguageSelection.Search'
+
+    constructor: (@field) ->
+      super
+
+    load: ->
+      @field()
+
+    save: (value) ->
+      @field value
+
+    placeholder: ->
+      @translate("Search").text

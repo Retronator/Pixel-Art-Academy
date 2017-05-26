@@ -40,7 +40,7 @@ de,ger,deu,German,allemand,alemán,tedesco,Deutsch,alemão,alemany,Deutsch
 dv,div,div,Divehi; Dhivehi; Maldivian,maldivien,maldivo,divehi; dhivehi; maldiviano,Dhivehi,divehi; maldívio,divehi,ދިވެހިބަސ
 dz,dzo,dzo,Dzongkha,dzongkha,dzongkha,dzongkha,Dzongkha,dzongkha; zoncá,dzongka,རྫོང་ཁ
 ee,ewe,ewe,Ewe,éwé,ewe,ewe,Ewe,éwé ou Jeje,ewe,Ɛʋɛgbɛ
-el,gre,ell,"Greek, Modern (1453-)",grec moderne (après 1453),griego (moderno),greco moderno (1453-),(Nej-)Griechisch,grego moderno (desde 1453),grec modern (a partir del 1453),Ελληνικά
+el,gre,ell,Greek,grec,griego,greco,Griechisch,grego moderno,grec modern,Ελληνικά
 en,eng,eng,English,anglais,inglés,inglese,Änglisch,inglês,anglès,English
 eo,epo,epo,Esperanto,espéranto,esperanto,esperanto,Esperanto,esperanto,esperanto,Esperanto
 es,spa,spa,Spanish; Castilian,espagnol; castillan,español; castellano,spagnolo; castigliano,Spanisch,castelhano; espanhol,castellà; espanyol,español; castellano

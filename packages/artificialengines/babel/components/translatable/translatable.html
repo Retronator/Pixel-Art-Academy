@@ -6,14 +6,16 @@
           {{> Artificial.Babel.Components.Translatable.Translation}}
         {{/with}}
       </span>
-      <span class="translation-selector">
-        <span class="translations">
-          {{#each translations}}
-            {{> Artificial.Babel.Components.Translatable.Translation}}
-          {{/each}}
+      {{#if showTranslationSelector}}
+        <span class="translation-selector">
+          <span class="translations">
+            {{#each translations}}
+              {{> Artificial.Babel.Components.Translatable.Translation}}
+            {{/each}}
+          </span>
+          <span class="add-translation">{{addTranslationText}}</span>
         </span>
-        <span class="add-translation">{{addTranslationText}}</span>
-      </span>
+      {{/if}}
     </span>
   {{else}}
     {{translated.text}}
@@ -25,12 +27,20 @@
     <span class="info">
       <span class="text">{{> Render translatableInput}}</span>
       <span class="language">
-        {{languageRegion}}
+        {{#if languageRegion.length}}
+            <span class="language-code {{languageRegionCodes.languageCode}}">{{languageRegionCodes.languageCode}}</span>{{#if languageRegionCodes.regionCode
+              }}<span class="dash">-</span><span class="region-code {{languageRegionCodes.regionCode}}">{{toUpper languageRegionCodes.regionCode}}</span>{{/if}}
+        {{else}}
+          <span class="global">{{t7e "Global"}}</span>
+        {{/if}}
       </span>
     </span>
-    <span class="language-selection">
-      {{> Render languageSelection}}
-    </span>
+    {{#if showLanguageSelection}}
+      <span class="language-selection">
+        {{> Render languageSelection}}
+      </span>
+      <span class="remove-translation">{{removeTranslationText}}</span>
+    {{/if}}
   </span>
 </template>
 
