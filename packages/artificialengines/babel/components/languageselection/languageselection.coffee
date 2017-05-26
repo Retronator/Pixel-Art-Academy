@@ -3,13 +3,16 @@ AM = Artificial.Mirage
 
 # Component for choosing a language and region.
 class AB.Components.LanguageSelection extends AM.Component
-  @register 'Artificial.Babel.Components.LanguageSelection'
+  template: -> 'Artificial.Babel.Components.LanguageSelection'
+
+  load: ->
+    throw new AE.NotImplementedException "You must implement the load method."
+
+  save: (value) ->
+    throw new AE.NotImplementedException "You must implement the save method."
 
   onCreated: ->
     super
-
-    @currentLanguage = new ReactiveField null
-    @currentRegion = new ReactiveField null
 
     # Subscribe to all languages, regions and the translations of their names.
     AB.Language.all.subscribe @
@@ -21,6 +24,17 @@ class AB.Components.LanguageSelection extends AM.Component
     @showLanguages = new ReactiveField false
     @showRegions = new ReactiveField false
     @showAllRegions = new ReactiveField false
+
+    # Cache loaded language to minimize reactivity.
+    @languageRegion = new ComputedField => @load()
+
+  currentLanguage: ->
+    AB.Language.documents.findOne
+      code: _.splitLanguageRegion(@languageRegion()).languageCode
+
+  currentRegion: ->
+    AB.Region.documents.findOne
+      code: _.splitLanguageRegion(@languageRegion()).regionCode
 
   languages: ->
     AB.Language.documents.find()
@@ -48,7 +62,7 @@ class AB.Components.LanguageSelection extends AM.Component
     language.name.refresh()
 
     # Get whatever translation is set under this language's code (or leave blank if it isn't).
-    language.name.translation(language.code)?.text
+    language.name.translationData(language.code)?.text
 
   events: ->
     super.concat
@@ -66,8 +80,8 @@ class AB.Components.LanguageSelection extends AM.Component
   onClickLanguage: (event) ->
     language = @currentData()
 
-    @currentLanguage language
-    @currentRegion null
+    @save _.joinLanguageRegion language.code
+
     @showLanguages false
     @showAllRegions false
 
@@ -76,13 +90,15 @@ class AB.Components.LanguageSelection extends AM.Component
     @showLanguages false
 
   onClickNoRegion: (event) ->
-    @currentRegion null
+    @save _.joinLanguageRegion @currentLanguage().code
+
     @showRegions false
 
   onClickRegion: (event) ->
     region = @currentData()
 
-    @currentRegion region
+    @save _.joinLanguageRegion @currentLanguage().code, region.code
+
     @showRegions false
 
   onClickShowAllRegionsButton: (event) ->

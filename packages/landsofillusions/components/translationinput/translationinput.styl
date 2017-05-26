@@ -8,37 +8,65 @@
     position relative
 
     &:hover
-      > input
-        padding-right 2em !important
+      .current-translation
+        .translation
+          .info
+            .text
+              input
+                padding-right 2em !important
 
-      .language-selector
-        visibility visible
+            .language
+              visibility visible
 
-    .language-selector
+    .current-translation
+    .translation-selector
       display block
-      visibility visible
+      width 100%
+
+    .current-translation
+      .translation
+        .info
+          .language
+            visibility hidden
+
+    .translation-selector
       position absolute
       top 100%
-      bottom 0
       left 0
       right 0
       z-index 1
+      background atariGrey(7)
+      visibility visible
 
-      .current-language
-        display block
-        position absolute
-        right 0
-        bottom 0
-
-      .existing-translations
+      .translations
       .add-translation
-      .language-selection
         display block
         width 100%
-        background atariGrey(7)
+
+    .translation
+      display block
+      width 100%
+
+      .info
+        display block
+        position relative
+        width 100%
+
+        .language
+          display block
+          position absolute
+          z-index 1
+          right 0
+          top 0
 
       .language-selection
-        padding 2rem
+        display block
+        z-index 1
+        left 0
+        right 0
+        top 100%
+        visibility visible
+        background atariGrey(7)
 
         .artificial-babel-components-languageselection
           display block

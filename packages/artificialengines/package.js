@@ -197,6 +197,8 @@ Package.onUse(function(api) {
   api.addFile('babel/initialize');
   api.addFile('babel/helpers');
 
+  api.addFile('babel/lodash/languageregion');
+
   api.addFile('babel/translation/translation');
   api.addServerFile('babel/translation/subscriptions');
   api.addFile('babel/translation/methods');
@@ -214,7 +216,7 @@ Package.onUse(function(api) {
   api.addServerFile('babel/initialize-server/regions');
 
   api.addFile('babel/components/components');
+  api.addUnstyledComponent('babel/components/languageselection/languageselection');
   api.addUnstyledComponent('babel/components/translatable/translatable');
   api.addComponent('babel/components/translation/translation');
-  api.addUnstyledComponent('babel/components/languageselection/languageselection');
 });

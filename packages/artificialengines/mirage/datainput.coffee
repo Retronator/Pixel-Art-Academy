@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mirage
 
 # Base class for an input component with easy setup for different mixins.
@@ -39,10 +40,10 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     @type is @constructor.Types.Checkbox
 
   load: ->
-    console.error "You must implement the load method."
+    throw new AE.NotImplementedException "You must implement the load method."
 
   save: (value) ->
-    console.error "You must implement the save method."
+    throw new AE.NotImplementedException "You must implement the save method."
 
   value: ->
     # We do the comparison with ? since we want to preserve empty strings '' (or would not).

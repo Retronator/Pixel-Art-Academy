@@ -20,6 +20,7 @@ class AB.Translation extends AM.Document
   @insert: @method 'insert'
   @update: @method 'update'
   @remove: @method 'remove'
+  @move: @method 'move'
 
   # Helper method for quickly getting a translation. It's only particularly useful on the server where all the
   # translations are immediately accessible. On the client we need to subscribe to the translation documents first
@@ -43,9 +44,31 @@ class AB.Translation extends AM.Document
     translation.text
 
   # Returns translation data for a specific language.
-  translation: (language = Artificial.Babel.defaultLanguage) ->
-    languageProperty = language.toLowerCase().replace '-', '.'
+  translationData: (languageRegion = Artificial.Babel.defaultLanguage) ->
+    languageProperty = languageRegion.toLowerCase().replace '-', '.'
     _.nestedProperty @translations, languageProperty
+
+  # Returns an array with all translation data available.
+  allTranslationData: ->
+    translations = []
+
+    for languageCode, languageData of @translations
+      # See if there is a translation on the language itself.
+      @_addTranslation translations, languageData, languageCode
+
+      # Go through all regions as well.
+      for regionCode, translationData of languageData
+        @_addTranslation translations, translationData, languageCode, regionCode
+
+    translations
+
+  _addTranslation: (translations, translationData, languageCode, regionCode) ->
+    # Translation is present if it holds a text field.
+    return unless translationData.text
+
+    languageRegion = _.joinLanguageRegion languageCode, regionCode
+
+    translations.push {languageRegion, translationData}
 
   # Finds the best translation in order of preferred languages.
   translate: (languagePreference = AB.userLanguagePreference()) ->
@@ -87,7 +110,7 @@ class AB.Translation extends AM.Document
 
     else
       # Try to find translations deeper.
-      newPath = if currentPath.length then "#{currentPath}-#{languageParts[0]}" else languageParts[0]
+      newPath = if currentPath.length then "#{currentPath}-#{languageParts[0].toUpperCase()}" else languageParts[0]
 
       @_findTranslation data[languageParts[0]], _.tail(languageParts), newPath
 

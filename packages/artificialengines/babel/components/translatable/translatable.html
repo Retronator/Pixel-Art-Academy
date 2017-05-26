@@ -1,18 +1,18 @@
 <template name="Artificial.Babel.Components.Translatable">
   {{#if editable}}
     <span class="artificial-babel-components-translatable">
-      {{> Render translatableInput}}
-      <span class="language-selector">
-        <span class="current-language">{{currentLanguage}}</span>
-        <span class="existing-translations">
-          {{#each existingTranslations}}
-            {{> Artificial.Babel.Components.Translatable.ExistingTranslation}}
+      <span class="current-translation">
+        {{#with currentTranslationInfo}}
+          {{> Artificial.Babel.Components.Translatable.Translation}}
+        {{/with}}
+      </span>
+      <span class="translation-selector">
+        <span class="translations">
+          {{#each translations}}
+            {{> Artificial.Babel.Components.Translatable.Translation}}
           {{/each}}
         </span>
         <span class="add-translation">{{addTranslationText}}</span>
-        <span class="language-selection">
-          {{> Artificial.Babel.Components.LanguageSelection}}
-        </span>
       </span>
     </span>
   {{else}}
@@ -20,13 +20,20 @@
   {{/if}}
 </template>
 
-<template name="Artificial.Babel.Components.Translatable.ExistingTranslation">
-  <span class="existing-translation">
-    <span class="text">{{text}}</span>
-    <span class="language">{{language}}</span>
+<template name="Artificial.Babel.Components.Translatable.Translation">
+  <span class="translation">
+    <span class="info">
+      <span class="text">{{> Render translatableInput}}</span>
+      <span class="language">
+        {{languageRegion}}
+      </span>
+    </span>
+    <span class="language-selection">
+      {{> Render languageSelection}}
+    </span>
   </span>
 </template>
 
 <template name="t10e">
-  {{> Artificial.Babel.Components.Translatable args this}}
+  {{> Artificial.Babel.Components.Translatable}}
 </template>
