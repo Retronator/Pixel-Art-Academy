@@ -3,13 +3,6 @@ AB = Artificial.Babel
 
 # On the server, create regions.
 Document.startup ->
-  AB.Region.create
-    code: '0'
-    name:
-      en: "World"
-
-  AB.Language.addRegion '0', '0', 1
-
   # Add the regions from the data string.
   dataRows = AE.CSVParser.parse AB.Region.data
 

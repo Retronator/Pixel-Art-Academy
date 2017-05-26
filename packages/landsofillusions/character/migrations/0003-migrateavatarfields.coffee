@@ -22,10 +22,12 @@ class Migration extends Document.MajorMigration
         nameTranslation =
           _id: Random.id()
           translations:
-            '0':
-              '0':
-                text: characterName
-                quality: 0
+            text: characterName
+            quality: 0
+            best:
+              text: characterName
+              quality: 0
+              languageRegion: ''
 
         translationsCollection.insert nameTranslation
 
@@ -62,7 +64,7 @@ class Migration extends Document.MajorMigration
         count += collection.update _id: document._id,
           $set:
             color: avatar.color
-            name: fullNameDocument?.translations?['0']?['0']?.text or 'Name lost during migration'
+            name: fullNameDocument?.translations?.text or fullNameDocument?.translations?.best?.text or 'Name lost during migration'
           $unset:
             avatar: 1
 

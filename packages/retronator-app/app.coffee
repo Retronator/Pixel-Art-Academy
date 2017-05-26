@@ -26,6 +26,7 @@ class Retronator.App extends Artificial.Base.App
     super
 
     # Instantiate all app packages, which register router URLs.
+    new Artificial.Pages
     new Retronator.Accounts
     new Retronator.Store
     new PixelArtAcademy

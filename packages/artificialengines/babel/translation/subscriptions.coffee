@@ -27,22 +27,26 @@ generateFieldsForLanguages = (languages) ->
   fields =
     namespace: 1
     key: 1
+    best: 1
 
   if languages?
     # Make all languages lowercase.
     languages = _.map languages, _.toLower
 
-    # Add default language.
-    languages.push AB.defaultLanguage.toLowerCase()
+    minimalLanguages = []
 
     # Construct the minimal required language set by removing subsets (for example 'en' already includes 'en-US').
     for language in languages
+      redundant = false
+
       # Compare to all the other languages.
       for otherLanguage in _.without languages, language
-        # If the other language is contained within the language, we don't need it.
-        languages = _.without languages, otherLanguage if _.startsWith otherLanguage, language
+        # If this language is contained within the other language, we don't need it.
+        redundant = true if _.startsWith language, otherLanguage
 
-    for language in languages
+      minimalLanguages.push language unless redundant
+
+    for language in minimalLanguages
       # Change language dash into subdocument notation.
       field = "translations.#{language.toLowerCase().replace '-', '.'}"
       fields[field] = 1

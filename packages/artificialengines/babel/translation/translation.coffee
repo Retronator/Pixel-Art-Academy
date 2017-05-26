@@ -9,11 +9,25 @@ class AB.Translation extends AM.Document
   # namespace: string name of related keys
   # key: English string that identifies this translation (namespace and key pair should be unique)
   # translations:
+  #   text: language-agnostic text of the key
+  #   quality: a number by which we can sort translations from different languages to find the best translation
+  #   meta: TODO: information about the translation process, authors, revisions, voting etc.
+  #   best: computed best translation from all the translations
+  #     text: text of the best translation
+  #     quality: quality of the best translation
+  #     languageRegion: which language-region this translation comes from
   #   {language}: two-character language code
+  #     text: translated text of the key for this specific language (but region-agnostic)
+  #     quality
+  #     meta
+  #     best: computed best translation for this language and regions
+  #       text
+  #       quality
+  #       languageRegion
   #     {region}: two-character region code
-  #       text: translated text of the key
-  #       quality: a number by which we can sort translations from different regions to find the best translation
-  #       meta: TODO: information about the translation process, authors, revisions, voting etc.
+  #       text: translated text of the key for this specific region of the language
+  #       quality
+  #       meta
   @Meta
     name: @id()
 
@@ -129,3 +143,41 @@ class AB.Translation extends AM.Document
 
       else
         []
+
+  # Populates the translations with the best translations.
+  generateBestTranslations: ->
+    @_generateBestTranslations @translations, ''
+
+  _generateBestTranslations: (node, languageRegion) ->
+    # Set the best to local translation if it's there.
+    best =
+      text: node.text
+      quality: node.quality ? -1
+      languageRegion: languageRegion
+
+    # Go through all the node keys.
+    for key, childNode of node
+      # If the key is 2 characters long it is a language or region, so dig deeper.
+      if key.length is 2
+        if languageRegion.length
+          # We're in a language node, so the node here is a region. Compare its quality directly.
+          regionNode = childNode
+
+          if regionNode.quality > best.quality
+            best.text = regionNode.text
+            best.quality = regionNode.quality
+            best.languageRegion = "#{languageRegion}-#{key.toUpperCase()}"
+
+        else
+          # We're at the top node, so compute the best translation for the whole language node first.
+          language = key.toLowerCase()
+          languageNode = childNode
+          @_generateBestTranslations languageNode, language
+
+          # Now compare our best with their best.
+          if languageNode.best.quality > best.quality
+            best.text = languageNode.best.text
+            best.quality = languageNode.best.quality
+            best.languageRegion = languageNode.best.languageRegion
+
+    node.best = best

@@ -42,36 +42,54 @@ AB.Translation.update.method (translationId, language, text) ->
 
   languageProperty = language.toLowerCase().replace '-', '.'
 
-  set = {}
+  if languageProperty.length
+    languageData = _.nestedProperty translation.translations, languageProperty
+
+  else
+    # We are updating the global, language-agnostic translation.
+    languageData = translation.translations
 
   # Override the translation.
-  set["translations.#{languageProperty}.text"] = text
+  languageData.text = text
 
   # Reset the quality.
-  set["translations.#{languageProperty}.quality"] = 0
+  languageData.quality = 0
 
-  AB.Translation.documents.update translationId, $set: set
+  translation.generateBestTranslations()
+
+  AB.Translation.documents.update translationId,
+    $set:
+      translations: translation.translations
 
 removeLanguage = (translations, language) ->
   {languageCode, regionCode} = _.splitLanguageRegion language
 
-  languageData = translations[languageCode]
+  if languageCode
+    languageData = translations[languageCode]
 
-  if regionCode
-    # When deleting a region, we can delete the whole node.
-    delete languageData[regionCode]
-
-  else
-    languageRegions = _.without(_.keys(languageData), ['text', 'quality', 'meta'])
-    if languageRegions.length
-      # We have region translations, so just delete the translation set in the language node.
-      delete languageData.text
-      delete languageData.quality
-      delete languageData.meta
+    if regionCode
+      # When deleting a region, we can delete the whole node.
+      delete languageData[regionCode]
 
     else
-      # There are no region translations, we can delete the whole language node.
-      delete translations[languageCode]
+      # See if we have any language regions (those with 2 characters).
+      languageRegions = _.filter _.keys(languageData), (key) => key.length is 2
+
+      if languageRegions.length
+        # We have region translations, so just delete the translation set in the language node.
+        delete languageData.text
+        delete languageData.quality
+        delete languageData.meta
+
+      else
+        # There are no region translations, we can delete the whole language node.
+        delete translations[languageCode]
+
+  else
+    # When deleting the global translation, we just delete the fields.
+    delete translations.text
+    delete translations.quality
+    delete translations.meta
 
 AB.Translation.remove.method (translationId, language) ->
   check translationId, Match.DocumentId
@@ -87,6 +105,8 @@ AB.Translation.remove.method (translationId, language) ->
     throw new AE.ArgumentException "Translation does not exist."
 
   removeLanguage translation.translations, language
+
+  translation.generateBestTranslations()
 
   AB.Translation.documents.update translationId,
     $set:
@@ -109,17 +129,40 @@ AB.Translation.move.method (translationId, oldLanguage, newLanguage) ->
   oldLanguageProperty = oldLanguage.toLowerCase().replace '-', '.'
   newLanguageProperty = newLanguage.toLowerCase().replace '-', '.'
 
-  oldTranslationData = _.nestedProperty translation.translations, oldLanguageProperty
+  if oldLanguageProperty.length
+    oldTranslationData = _.nestedProperty translation.translations, oldLanguageProperty
+
+  else
+    oldTranslationData = translation.translations
+
   throw new AE.ArgumentException "Old language doesn't have a translation." unless oldTranslationData
+
+  # Clone translation data.
+  translationData =
+    text: oldTranslationData.text
+    quality: oldTranslationData.quality
+    meta: oldTranslationData.meta
 
   removeLanguage translation.translations, oldLanguage
 
-  newTranslationData = _.nestedProperty(translation.translations, newLanguageProperty) or {}
+  if newLanguageProperty.length
+    newTranslationData = _.nestedProperty(translation.translations, newLanguageProperty) or {}
+
+  else
+    newTranslationData = translation.translations or {}
 
   # Move the old data to new data.
-  _.extend newTranslationData, oldTranslationData
+  _.extend newTranslationData, translationData
 
-  _.nestedProperty translation.translations, newLanguageProperty, newTranslationData
+  if newLanguageProperty.length
+    _.nestedProperty translation.translations, newLanguageProperty, newTranslationData
+
+  else
+    translation.translations = newTranslationData
+
+  translation.generateBestTranslations()
+
+  console.log "moved from", oldLanguage, "to", newLanguage, "made", translation.translations
 
   AB.Translation.documents.update translationId,
     $set:

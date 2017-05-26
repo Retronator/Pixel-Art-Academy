@@ -3,12 +3,6 @@ AE = Artificial.Everywhere
 
 # On the server, create languages.
 Document.startup ->
-  # Add the global language (for language agnostic entries).
-  AB.Language.create
-    code: '0'
-    name:
-      en: "Global"
-
   # Add the languages from the data string.
   dataRows = AE.CSVParser.parse AB.Language.data
 
