@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.Palette.Atari2600
-  @hues =
+LOI.Assets.Palette.Atari2600 =
+  hues:
     grey: 0
     yellow: 1
     orange: 2
@@ -19,7 +19,7 @@ class LOI.Assets.Palette.Atari2600
     olive: 14
     brown: 15
     
-  @characterShades =
+  characterShades:
     darkest: -2
     darker: -1
     normal: 0

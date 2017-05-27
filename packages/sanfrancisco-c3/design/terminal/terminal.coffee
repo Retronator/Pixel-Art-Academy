@@ -1,3 +1,4 @@
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
@@ -28,3 +29,48 @@ class C3.Design.Terminal extends LOI.Adventure.Item
       finishedDeactivatingCallback()
     ,
       500
+
+  onCreated: ->
+    super
+    
+    @bodyNode = new ComputedField =>
+      return unless character = LOI.character()
+      return unless character.avatarData.body
+  
+      # Create the body hierarchy.
+      AM.Hierarchy.create character.avatarData.body
+
+    @descriptionTranslations = new ComputedField =>
+      return unless bodyNode = @bodyNode()
+    
+      # Find all nodes that hold a description.
+      nodesWithDescription = bodyNode.childNodesWith (node) => node.description
+    
+      for node in nodesWithDescription
+        node.description()
+  
+    @portraitNodes = new ComputedField =>
+      return unless bodyNode = @bodyNode()
+
+      # Get the head node.
+      headNode = bodyNode.head()
+
+      # Find all nodes that hold a sprite.
+      headNode.childNodesWith (node) => node.spriteId
+    
+    # Subscribe to all sprites of the portrait.
+    @autorun (computation) =>
+      return unless portraitNodes = @portraitNodes()
+
+      for portraitNode in portraitNodes
+        spriteId = portraitNode.spriteId()
+
+        LOI.Assets.Sprite.forId.subscribe spriteId
+
+    @portraitSprites = new ComputedField =>
+      return unless portraitNodes = @portraitNodes()
+
+      spriteIds = for portraitNode in portraitNodes
+        portraitNode.spriteId()
+
+      LOI.Assets.Sprite.documents.find _id: $in: spriteIds

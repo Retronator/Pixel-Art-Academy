@@ -60,3 +60,6 @@ class C3.Design extends LOI.Adventure.Location
             item: terminal
             callback: =>
               @startScript label: 'MakingOfACyborg'
+
+  onEnter: ->
+    LOI.adventure.goToItem C3.Design.Terminal

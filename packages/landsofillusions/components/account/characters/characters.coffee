@@ -15,14 +15,19 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   onCreated: ->
     super
 
-    @subscribe 'Retronator.Accounts.User.charactersForCurrentUser'
+    @subscribe 'LandsOfIllusions.Character.charactersForCurrentUser'
 
   characters: ->
     user = RA.User.documents.findOne Meteor.userId(),
       fields:
         characters: 1
 
-    user?.characters
+    return unless characters = user?.characters
+    
+    for character in characters
+      character.refresh()
+      
+    characters
 
   emptyLines: ->
     charactersCount = @characters()?.length or 0
@@ -35,7 +40,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     # Set the color to character's color.
     character = @currentData()
 
-    color: "##{character.colorObject()?.getHexString()}"
+    color: "##{character.avatar.colorObject()?.getHexString()}"
 
   showLoadButtonClass: ->
     character = @currentData()
@@ -70,13 +75,12 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       @type = 'select'
 
     options: ->
-      palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.systemPaletteNames.atari2600
-      return unless palette
+      return unless palette = LOI.palette()
 
-      value: i, name: ramp.name for ramp, i in palette.ramps
+      value: rampIndex, name: ramp.name for ramp, rampIndex in palette.ramps
 
     load: ->
-      @data()?.avatar?.color?.hue or 0
+      @data()?.avatarData?.color?.hue or 0
 
     save: (value) ->
       # Change the hue part of color.
@@ -94,10 +98,10 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       @type = 'select'
 
     options: ->
-      value: i - 2, name: name for name, i in ['darkest', 'darker', 'normal', 'lighter', 'lightest']
+      value: shadeIndex - 2, name: name for name, shadeIndex in ['darkest', 'darker', 'normal', 'lighter', 'lightest']
 
     load: ->
-      @data()?.avatar?.color?.shade or 0
+      @data()?.avatarData?.color?.shade or 0
 
     save: (value) ->
       # Change the shade part of color.

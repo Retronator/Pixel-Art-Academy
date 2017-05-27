@@ -54,14 +54,14 @@ class HQ.Items.Tablet.OS.App extends AM.Component
     @_appClassesByUrl[@url()] = @
 
     # Prepare the avatar for this app.
-    LOI.Avatar.initialize @
+    LOI.Adventure.Thing.Avatar.initialize @
 
   @state: -> {} # Override to return a non-empty state.
 
   constructor: (@options) ->
     super
 
-    @avatar = new LOI.Avatar @constructor
+    @avatar = new LOI.Adventure.Thing.Avatar @constructor
 
     # An item that can be activated has 4 stages in its lifecycle. You can use this
     # as a reactive variable to depend on the state the item is currently in.

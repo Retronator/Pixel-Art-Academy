@@ -3,7 +3,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 # Input control for editing translation values.
-class LOI.Components.TranslatiddonInput extends AM.Component
+class LOI.Components.TranslationInput extends AM.Component
   @register 'LandsOfIllusions.Components.TranslationInput'
 
   onCreated: ->

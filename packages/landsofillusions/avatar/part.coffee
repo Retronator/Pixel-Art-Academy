@@ -1,6 +1,7 @@
 AB = Artificial.Babel
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
+RA = Retronator.Accounts
 
 class LOI.Avatar.Part extends AM.Document
   # author: the designer of this part
@@ -10,7 +11,7 @@ class LOI.Avatar.Part extends AM.Document
   # authorName: public name of the author
   # name: how this part was named by the author 
   #   _id
-  # description: how this part was named by the author
+  # description: how this part was described by the author
   #   _id
   # type: type of this part
   @Meta

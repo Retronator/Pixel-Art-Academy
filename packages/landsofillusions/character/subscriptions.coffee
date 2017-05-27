@@ -9,8 +9,7 @@ userCharacterFieldCursor = (userId) ->
     fields:
       'characters': true
   
-Meteor.publish null, ->
-  userCharacterFieldCursor @userId
+Meteor.publish null, -> userCharacterFieldCursor @userId
       
 # Also create an explicit subscription so we can know when it is ready.
 Meteor.publish 'Retronator.Accounts.User.charactersForCurrentUser', -> userCharacterFieldCursor @userId

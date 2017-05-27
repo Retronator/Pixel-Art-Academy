@@ -35,7 +35,7 @@ class LOI.Adventure.Thing extends AM.Component
 
   # The long name is displayed to succinctly describe the thing. Also, we can't just use 'name'
   # instead of 'fullName' because name gets overriden by CoffeeScript with the class name.
-  @fullName: -> throw new Meteor.Error 'unimplemented', "You must specify thing's full name."
+  @fullName: -> throw new AE.NotImplementedException "You must specify thing's full name."
 
   # The short name of the thing which is used to refer to it in the text. 
   @shortName: -> @fullName()
@@ -96,7 +96,7 @@ class LOI.Adventure.Thing extends AM.Component
         @_thingClassesByUrl[url] = @
 
     # Prepare the avatar for this thing.
-    LOI.Avatar.initialize @
+    LOI.Adventure.Thing.Avatar.initialize @
 
     # On the server, prepare any extra translations.
     if Meteor.isServer
@@ -167,7 +167,7 @@ class LOI.Adventure.Thing extends AM.Component
           Tracker.nonreactive => callback?()
 
   @createAvatar: ->
-    new LOI.Avatar @
+    new @Avatar @
 
   # Thing instance
 

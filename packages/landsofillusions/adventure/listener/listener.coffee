@@ -70,7 +70,7 @@ class LOI.Adventure.Listener
 
     @avatars = {}
     for key, thingClass of @constructor.avatars()
-      @avatars[key] = new LOI.Avatar thingClass
+      @avatars[key] = new LOI.Adventure.Thing.Avatar thingClass
 
   destroy: ->
     @_scriptTranslationSubscription.stop()

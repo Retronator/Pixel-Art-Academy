@@ -32,16 +32,15 @@ Package.onUse(function(api) {
 
   // Assets
 
-  api.addFiles('assets/assets.coffee');
-  api.addFiles('assets/server.coffee');
+  api.addFile('assets/assets');
+  api.addFile('assets/server');
 
-  api.addFiles('assets/palette/palette.coffee');
-  api.addFiles('assets/palette/atari2600.coffee');
-  api.addFiles('assets/palette/subscriptions.coffee', 'server');
+  api.addFile('assets/palette/palette');
+  api.addFile('assets/palette/atari2600');
+  api.addServerFile('assets/palette/subscriptions');
 
-  api.addFiles('assets/sprite/sprite.coffee');
-
-  api.addFiles('assets/mesh/mesh.coffee');
+  api.addFile('assets/sprite/sprite');
+  api.addFile('assets/mesh/mesh');
 
   // Game state
 
@@ -58,20 +57,23 @@ Package.onUse(function(api) {
 
   api.addServerFile('state/migrations/0000-immersionrevamp');
 
+  // Avatar
+
+  api.addFile('avatar/avatar');
+  api.addFile('avatar/part');
+  api.addFile('avatar/data');
+
   // Character
 
-  api.addClientFile('character/spacebars');
   api.addFile('character/character');
+  api.addFile('character/avatar');
   api.addFile('character/methods');
   api.addServerFile('character/subscriptions');
   api.addServerFile('character/migrations/0000-renamecollection');
   api.addServerFile('character/migrations/0001-userpublicname');
   api.addServerFile('character/migrations/0002-ownername');
   api.addServerFile('character/migrations/0003-migrateavatarfields');
-
-  // Avatar
-
-  api.addFiles('avatar/avatar.coffee');
+  api.addClientFile('character/spacebars');
 
   // Conversations
 
@@ -127,12 +129,14 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/listener/listener.coffee');
   
-  // Things
+  // Thing
 
-  api.addFiles('adventure/thing/thing.coffee');
-  api.addFiles('adventure/thing/thing.html');
+  api.addUnstyledComponent('adventure/thing/thing');
+  api.addFile('adventure/thing/avatar');
 
-  api.addFiles('adventure/item/item.coffee');
+  // Item
+
+  api.addFile('adventure/item/item');
 
   // Script
 
@@ -238,6 +242,8 @@ Package.onUse(function(api) {
   api.addComponent('components/dialogs/dialog');
   
   api.addComponent('components/translationinput/translationinput');
+
+  api.addUnstyledComponent('components/sprite/sprite');
 
   // Typography
 

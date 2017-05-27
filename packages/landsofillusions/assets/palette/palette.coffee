@@ -1,7 +1,9 @@
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
-class LandsOfIllusionsAssetsPalette extends Document
-  # name: name of the palette
+class LOI.Assets.Palette extends AM.Document
+  @id: -> 'LandsOfIllusions.Assets.Palette'
+  # name: unique name of the palette
   # ramps: array of
   #   name: name of the ramp
   #   shades: array of
@@ -9,7 +11,10 @@ class LandsOfIllusionsAssetsPalette extends Document
   #     g: green attribute (0.0-1.0)
   #     b: blue attribute (0.0-1.0)
   @Meta
-    name: 'LandsOfIllusionsAssetsPalette'
+    name: @id()
+
+  @forId: @subscription 'forId'
+  @forName: @subscription 'forName'
 
   # Enumeration of palette names provided by the system.
   @systemPaletteNames:
@@ -32,5 +37,3 @@ class LandsOfIllusionsAssetsPalette extends Document
     colorData = ramp.shades[shadeIndex]
 
     new THREE.Color.fromObject colorData
-
-LOI.Assets.Palette = LandsOfIllusionsAssetsPalette

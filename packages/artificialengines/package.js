@@ -142,11 +142,16 @@ Package.onUse(function(api) {
   api.addFiles('base/flowrouter/routelink.html');
 
   // Artificial Mummification
-  api.addFiles('mummification/mummification.coffee');
+  api.addFile('mummification/mummification');
 
-  api.addFiles('mummification/mongohelper.coffee');
-  api.addFiles('mummification/document.coffee');
-  api.addFiles('mummification/persistentstorage.coffee');
+  api.addFile('mummification/mongohelper');
+  api.addFile('mummification/document');
+  api.addFile('mummification/persistentstorage');
+
+  api.addFile('mummification/hierarchy/hierarchy');
+  api.addFile('mummification/hierarchy/node');
+  api.addFile('mummification/hierarchy/field');
+  api.addFile('mummification/hierarchy/template');
 
   // Artificial Telepathy
   api.addFiles('telepathy/telepathy.coffee');

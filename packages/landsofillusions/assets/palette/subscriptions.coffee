@@ -6,14 +6,12 @@ Meteor.publish null, ->
     name: LOI.Assets.Palette.defaultPaletteName
 
 # Subscription to a specific palette.
-Meteor.publish 'LandsOfIllusions.Assets.Palette', (paletteIdOrName, options) ->
-  check paletteIdOrName, Match.OneOf Match.DocumentId, String
-  check options, Match.Optional Object
+LOI.Assets.Palette.forId.publish (id) ->
+  check id Match.DocumentId
 
-  if Match.test paletteIdOrName, Match.DocumentId
-    query = _id: paletteIdOrName
+  LOI.Assets.Palette.documents.find id
 
-  else
-    query = name: paletteIdOrName
+LOI.Assets.Palette.forName.publish (name) ->
+  check name, String
 
-  LOI.Assets.Palette.documents.findOne query, options
+  LOI.Assets.Palette.documents.find name: name
