@@ -15,7 +15,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   onCreated: ->
     super
 
-    @subscribe 'LandsOfIllusions.Character.charactersForCurrentUser'
+    LOI.Character.forCurrentUser.subscribe @
 
   characters: ->
     user = RA.User.documents.findOne Meteor.userId(),
@@ -84,7 +84,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
 
     save: (value) ->
       # Change the hue part of color.
-      Meteor.call "LandsOfIllusions.Character.changeColor", @data()._id, parseInt value
+      LOI.Character.updateColor @data().document()._id, parseInt value
 
     placeholder: ->
       @data()?.displayName()
@@ -105,7 +105,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
 
     save: (value) ->
       # Change the shade part of color.
-      Meteor.call "LandsOfIllusions.Character.changeColor", @data()._id, null, parseInt value
+      LOI.Character.updateColor @data().document()._id, null, parseInt value
 
     placeholder: ->
       @data()?.displayName()

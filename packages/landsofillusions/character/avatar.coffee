@@ -1,20 +1,35 @@
+AM = Artificial.Mummification
 AB = Artificial.Babel
 LOI = LandsOfIllusions
 
 # Character's implementation of the avatar that takes the data from the character document.
 class LOI.Character.Avatar extends LOI.Avatar
-  constructor: (@avatar) ->
+  constructor: (@character) ->
     super
 
-  fullName: ->
-    return @_loading() unless @avatar
+    # Create the body and outfit hierarchies.
+    @body = AM.Hierarchy.create
+      load: => @_avatar()?.body
+      save: (address, value) =>
+        LOI.Character.updateAvatarBody @character.id, address, value
 
-    @avatar.fullName?.translate().text or @_noName()
+    @outfit = AM.Hierarchy.create
+      load: => @_avatar().outfit
+      save: (address, value) =>
+        LOI.Character.updateAvatarOutfit @character.id, address, value
+
+  _avatar: ->
+    @character.document()?.avatar
+
+  fullName: ->
+    return @_loading() unless avatar = @_avatar()
+
+    avatar.fullName?.translate().text or @_noName()
 
   shortName: ->
-    return @_loading() unless @avatar
+    return @_loading() unless avatar = @_avatar()
 
-    @avatar.shortName?.translate().text or @fullName()
+    avatar.shortName?.translate().text or @fullName()
 
   _loading: ->
     return if Meteor.isServer
@@ -27,7 +42,7 @@ class LOI.Character.Avatar extends LOI.Avatar
     AB.translate(@constructor._babelSubscription, 'No Name').text
 
   color: ->
-    @avatar?.color or super
+    @_avatar()?.color or super
 
 if Meteor.isClient
   Meteor.startup ->

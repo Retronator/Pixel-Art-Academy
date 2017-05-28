@@ -6,4 +6,4 @@ Template.registerHelper 'loggingIn', ->
   Meteor.loggingIn()
 
 Template.registerHelper 'hasItem', (key) ->
-  Retronator.user().hasItem key
+  Retronator.user()?.hasItem key

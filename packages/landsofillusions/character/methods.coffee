@@ -1,43 +1,82 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-Meteor.methods
-  'LandsOfIllusions.Character.insert': (userId, characterId) ->
-    check userId, Match.DocumentId
-    check characterId, Match.Optional Match.DocumentId
+LOI.Character.insert.method ->
+  user = Retronator.requireUser()
 
-    user = Retronator.user()
-    throw new AE.UnauthorizedException "You must be logged in to create a character." unless user
+  # User must be a player.
+  LOI.Authorize.player()
 
-    # An admin can always add a character.
-    unless user.hasItem 'Retronator.Admin'
-      # Only the user itself can add a character.
-      throw new AE.UnauthorizedException "You can only create characters that belong to you." unless user._id is userId
+  # Create a character that will belong to the user executing this method.
+  character =
+    user:
+      _id: user._id
 
-      # User must have the create-character role
-      throw new AE.UnauthorizedException "You must be a player to create characters." unless user.hasItem 'PixelArtAcademy.PlayerAccess'
+  LOI.Character.documents.insert character
 
-    character =
-      user:
-        _id: userId
-      avatar:
-        color:
-          hue: 0
-          shade: 0
+LOI.Character.updateColor.method (characterId, hue, shade) ->
+  check characterId, Match.DocumentId
+  check hue, Match.OptionalOrNull Match.Integer
+  check shade, Match.OptionalOrNull Match.Integer
 
-    character._id = characterId if characterId
+  LOI.Authorize.player()
+  LOI.Authorize.characterAction characterId
 
-    LOI.Character.documents.insert character
+  set = {}
+  set['avatar.color.hue'] = hue if hue?
+  set['avatar.color.shade'] = shade if shade?
 
-  'LandsOfIllusions.Character.changeColor': (characterId, hue, shade) ->
-    check characterId, Match.DocumentId
-    check hue, Match.OptionalOrNull Match.Integer
-    check shade, Match.OptionalOrNull Match.Integer
+  LOI.Character.documents.update characterId, $set: set
+    
+LOI.Character.updateAvatarBody.method (characterId, address, value) ->
+  check characterId, Match.DocumentId
+  check address, String
+  check value, Match.Any
 
-    LOI.Authorize.characterAction characterId
+  LOI.Authorize.characterAction characterId
+  LOI.Authorize.avatarEditor()
 
-    set = {}
-    set['avatar.color.hue'] = hue if hue?
-    set['avatar.color.shade'] = shade if shade?
+  LOI.Character.documents.update characterId,
+    $set:
+      "avatar.body.#{address}": value
 
-    LOI.Character.documents.update characterId, $set: set
+LOI.Character.updateAvatarOutfit.method (characterId, address, value) ->
+  check characterId, Match.DocumentId
+  check address, String
+  check value, Match.Any
+
+  # Note that we don't authorize avatar editor because all players can change their outfit.
+  LOI.Authorize.characterAction characterId
+
+  LOI.Character.documents.update characterId,
+    $set:
+      "avatar.outfit.#{address}": value
+
+LOI.Character.updateBehavior.method (characterId, address, value) ->
+  check characterId, Match.DocumentId
+  check address, String
+  check value, Match.Any
+
+  LOI.Authorize.characterAction characterId
+  LOI.Authorize.avatarEditor()
+
+  LOI.Character.documents.update characterId,
+    $set:
+      "behavior.#{address}": value
+
+LOI.Character.Template.updateData.method (templateId, address, value) ->
+  check id, Match.DocumentId
+  check address, String
+  check value, Match.Any
+
+  LOI.Authorize.avatarEditor()
+
+  template = LOI.Character.Template.documents.findOne templateId
+  
+  # User must be the author of this template.
+  user = Retronator.requireUser()
+  throw new AE.UnauthorizedException "You must be the author of the template to change it." unless template.author._id is user._id
+
+  LOI.Character.documents.update templateId,
+    $set:
+      "data.#{address}": value

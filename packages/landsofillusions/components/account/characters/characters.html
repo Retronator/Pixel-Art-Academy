@@ -6,7 +6,7 @@
   <ul class="characters">
     {{#each characters}}
       <li class="character">
-        <button class="load-character">{{avatar.fullName}}</button>
+        <button class="load-character">{{avatar.fullName.translate.text}}</button>
       </li>
     {{/each}}
     {{#each emptyLines}}
@@ -30,7 +30,7 @@
             <label class="label">
               <span class="name">Name</span>
               <span class="value">
-                {{> LandsOfIllusions.Components.TranslationInput avatarData.fullName}}
+                {{> LandsOfIllusions.Components.TranslationInput document.avatar.fullName}}
               </span>
             </label>
           </div>

@@ -37,10 +37,16 @@ class LOI.Character extends AM.Document
       avatar:
         fullName: @ReferenceField AB.Translation, ['translations'], false
         shortName: @ReferenceField AB.Translation, ['translations'], false
+  
+  # Methods
 
-  constructor: ->
-    super
+  @insert: @method 'insert'
+  @updateColor: @method 'setColor'
+  @updateAvatarBody: @method 'updateAvatarBody'
+  @updateAvatarOutfit: @method 'updateAvatarOutfit'
+  @updateBehavior: @method 'updateBehavior'
 
-    # Replace avatar plain data with the object. Keep the data since we need it where we need to manipulate avatar data.
-    @avatarData = @avatar
-    @avatar = new @constructor.Avatar @avatarData
+  # Subscriptions
+
+  @forId: @subscription 'forId'
+  @forCurrentUser: @subscription 'forCurrentUser'

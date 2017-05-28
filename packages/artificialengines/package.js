@@ -149,6 +149,7 @@ Package.onUse(function(api) {
   api.addFile('mummification/persistentstorage');
 
   api.addFile('mummification/hierarchy/hierarchy');
+  api.addFile('mummification/hierarchy/address');
   api.addFile('mummification/hierarchy/node');
   api.addFile('mummification/hierarchy/field');
   api.addFile('mummification/hierarchy/template');

@@ -15,7 +15,7 @@ class RA.User extends RA.User
   #   _id
   #   catalogKey
   @Meta
-    name: 'Retronator.Accounts.User'
+    name: @id()
     replaceParent: true
     collection: Meteor.users
     fields: (fields) =>

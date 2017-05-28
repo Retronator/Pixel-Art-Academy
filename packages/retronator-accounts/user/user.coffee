@@ -3,6 +3,7 @@ AB = Artificial.Babel
 RA = Retronator.Accounts
 
 class RA.User extends AM.Document
+  @id: -> 'Retronator.Accounts.User'
   # username: user's username
   # emails: list of emails used to login with a password
   #   address: email address
@@ -20,7 +21,7 @@ class RA.User extends AM.Document
   # services: array of authentication/linked service and their login tokens
   # loginServices: auto-generated array of service names that were added to services and can be used to login
   @Meta
-    name: 'Retronator.Accounts.User'
+    name: @id()
     collection: Meteor.users
     fields: =>
       contactEmail: @GeneratedField 'self', ['registered_emails', 'emails'], (user) ->

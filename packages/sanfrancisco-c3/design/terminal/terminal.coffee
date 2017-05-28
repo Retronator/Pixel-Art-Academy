@@ -32,17 +32,20 @@ class C3.Design.Terminal extends LOI.Adventure.Item
 
   onCreated: ->
     super
-    
-    @bodyNode = new ComputedField =>
-      return unless character = LOI.character()
-      return unless character.avatarData.body
-  
-      # Create the body hierarchy.
-      AM.Hierarchy.create character.avatarData.body
+
+    @headEyes = new ComputedField =>
+      LOI.character()?.avatar.body('head')? 'numberOfEyes'
+
+    Meteor.setInterval =>
+      LOI.character()?.avatar.body('head')? 'numberOfEyes', _.random 10
+    ,
+      5000
 
     @descriptionTranslations = new ComputedField =>
-      return unless bodyNode = @bodyNode()
-    
+      return unless bodyNode = LOI.character()?.avatar.body
+
+      return
+
       # Find all nodes that hold a description.
       nodesWithDescription = bodyNode.childNodesWith (node) => node.description
     
@@ -50,10 +53,12 @@ class C3.Design.Terminal extends LOI.Adventure.Item
         node.description()
   
     @portraitNodes = new ComputedField =>
-      return unless bodyNode = @bodyNode()
+      return unless bodyNode = LOI.character()?.avatar.body
 
       # Get the head node.
-      headNode = bodyNode.head()
+      headNode = bodyNode 'head'
+
+      return
 
       # Find all nodes that hold a sprite.
       headNode.childNodesWith (node) => node.spriteId

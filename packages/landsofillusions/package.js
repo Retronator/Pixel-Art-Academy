@@ -60,13 +60,13 @@ Package.onUse(function(api) {
   // Avatar
 
   api.addFile('avatar/avatar');
-  api.addFile('avatar/part');
-  api.addFile('avatar/data');
 
   // Character
 
   api.addFile('character/character');
+  api.addFile('character/instance');
   api.addFile('character/avatar');
+  api.addFile('character/template');
   api.addFile('character/methods');
   api.addServerFile('character/subscriptions');
   api.addServerFile('character/migrations/0000-renamecollection');
@@ -74,6 +74,11 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0002-ownername');
   api.addServerFile('character/migrations/0003-migrateavatarfields');
   api.addClientFile('character/spacebars');
+
+  // User
+
+  api.addFile('user/user');
+  api.addServerFile('user/subscriptions');
 
   // Conversations
 

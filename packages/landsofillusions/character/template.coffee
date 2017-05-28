@@ -3,7 +3,8 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
-class LOI.Avatar.Part extends AM.Document
+class LOI.Character.Template extends AM.Hierarchy.Template
+  @id: -> 'LandsOfIllusions.Character.Template'
   # author: the designer of this part
   #   _id
   #   displayName
@@ -14,10 +15,14 @@ class LOI.Avatar.Part extends AM.Document
   # description: how this part was described by the author
   #   _id
   # type: type of this part
+  # data: data of the template (root node), as inherited from hierarchy template
   @Meta
-    name: 'LandsOfIllusions.Avatar.Part'
+    name: @id()
     fields: =>
       author: @ReferenceField RA.User, ['displayName'] , true, 'characters', ['name']
       authorName: @GeneratedField 'self', ['author'], (part) ->
         authorName = part.author?.publicName or null
         [user._id, authorName]
+
+  @updateData: @method 'updateData'
+  @forId: @subscription 'forId'

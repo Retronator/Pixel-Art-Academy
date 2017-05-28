@@ -7,7 +7,7 @@ class Retronator.Accounts
     Retronator.App.addAdminPage '/admin/accounts/scripts', @constructor.Pages.Admin.Scripts
 
   @authorizeAdmin: ->
-    user = Retronator.user()
+    user = Retronator.requireUser()
 
     return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
 
