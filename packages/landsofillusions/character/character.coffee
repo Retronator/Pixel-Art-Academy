@@ -27,13 +27,13 @@ class LOI.Character extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: @ReferenceField RA.User, ['displayName', 'publicName'] , true, 'characters', ['displayName']
+      user: @ReferenceField RA.User, ['displayName', 'publicName'] , true, 'characters', ['displayName', 'avatar.fullName']
       ownerName: @GeneratedField 'self', ['user'], (character) ->
         ownerName = character.user?.publicName or null
         [character._id, ownerName]
-        displayName: @GeneratedField 'self', ['avatar'], (character) ->
-          displayName = character.avatar.fullName?.translations?.best?.text or null
-          [character._id, displayName]
+      displayName: @GeneratedField 'self', ['avatar'], (character) ->
+        displayName = character.avatar.fullName?.translations?.best?.text or null
+        [character._id, displayName]
       avatar:
         fullName: @ReferenceField AB.Translation, ['translations'], false
         shortName: @ReferenceField AB.Translation, ['translations'], false

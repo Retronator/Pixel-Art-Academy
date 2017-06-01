@@ -2,28 +2,8 @@
   <div class="sanfrancisco-c3-design-terminal">
     {{> LandsOfIllusions.Components.BackButton}}
     {{#LandsOfIllusions.Components.Overlay}}
-      I AM CHARACTER DESIGN TERMINAL
-      <div>
-        SUBJECT: {{currentCharacter.avatar.fullName}}
-      </div>
-      <div>
-        HEAD # OF EYES: {{headEyes}}
-      </div>
-      <div>
-        DESCRIPTION:
-        {{#each descriptionTranslations}}
-          <div>{{this}}</div>
-        {{/each}}
-      </div>
-      <div>
-        PORTRAIT (N/A)
-        <div class="portrait">
-          {{#each portraitSprites}}
-            <div class="portrait-sprite">
-              {{> LandsOfIllusions.Components.Sprite}}
-            </div>
-          {{/each}}
-        </div>
+      <div class="display">
+        {{> Render currentScreen}}
       </div>
     {{/LandsOfIllusions.Components.Overlay}}
   </div>

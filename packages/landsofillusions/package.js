@@ -73,6 +73,8 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0001-userpublicname');
   api.addServerFile('character/migrations/0002-ownername');
   api.addServerFile('character/migrations/0003-migrateavatarfields');
+  api.addServerFile('character/migrations/0004-displayname');
+  api.addServerFile('character/migrations/0005-usercharactersupdate');
   api.addClientFile('character/spacebars');
 
   // User

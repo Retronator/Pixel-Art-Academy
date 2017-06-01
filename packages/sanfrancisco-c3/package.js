@@ -27,8 +27,12 @@ Package.onUse(function(api) {
   // Locations
 
   api.addFile('behavior/behavior');
+
   api.addThing('design/design');
   api.addComponent('design/terminal/terminal');
+  api.addComponent('design/terminal/screens/mainmenu/mainmenu');
+  api.addComponent('design/terminal/screens/character/character');
+
   api.addFile('hallway/hallway');
   api.addThing('lobby/lobby');
   api.addFile('stasis/stasis');

@@ -1,4 +1,122 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .sanfrancisco-c3-design-terminal
-  // TODO
+  .display
+    padding 10rem
+    height 204rem
+
+    .screen-title
+      margin 0 0 10rem 0
+      acme-9()
+      font-weight normal
+      color atariYellow(7)
+
+    .section-title
+      margin 4rem 0 6rem 0
+      acme-7()
+      font-weight normal
+      color atariOrange(5)
+
+    .main-text
+      color atariRed(2)
+      margin 4rem 0
+
+      strong
+        font-weight normal
+        text-transform uppercase
+
+    .document-selection
+      position relative
+      width 100%
+      height 66rem
+      margin 6rem 0 4rem
+      padding 1rem 0 0
+      overflow-y auto
+      list-style none
+
+      &::after
+        content ''
+        absolute-cover()
+        border 1rem solid atariCyan(1)
+
+      .document
+        height 14rem
+        margin-top -1rem
+
+        .document-selection-button
+          position relative
+          z-index 1
+          width 100%
+          height 14rem
+          padding 2rem 4rem
+          border 1rem solid atariCyan(1)
+          background none
+          text-align left
+          font inherit
+          color atariCyan(3)
+          .document-selection-button
+
+          &:focus
+          &:hover
+            z-index 2
+            border-color atariCyan(3)
+            color atariCyan(4)
+            outline none
+
+    .action-button
+      position relative
+      padding 2rem 4rem
+      border 1rem solid atariAqua(2)
+      background none
+      font inherit
+      color atariAqua(3)
+      text-transform uppercase
+      text-align center
+
+      &::after
+        content ''
+        position absolute
+        z-index -1
+        top 1rem
+        bottom 1rem
+        left 1rem
+        right 1rem
+        background atariGrey(1)
+
+      &:hover
+      &:focus
+        z-index 1
+        border-color atariAqua(4)
+        color atariAqua(4)
+        outline none
+
+    .main-actions
+      position absolute
+      top 10rem
+      right 10rem
+      width 70rem
+
+      .action-button
+        width 100%
+        padding 3rem 4rem
+        margin-bottom 4rem
+        acme-5()
+
+        &.main-button
+          color atariGrey(6)
+
+          &::after
+            background atariAqua(1)
+
+    .text-entry
+      position relative
+      padding 2rem 4rem
+      border 1rem solid atariCyan(2)
+      background none
+      font inherit
+      color atariGrey(5)
+      background atariGrey(0)
+
+  .landsofillusions-components-overlay
+    > .background
+      background-image image('/sanfrancisco/c3/design/terminal-background.png')
