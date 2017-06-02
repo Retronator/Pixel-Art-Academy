@@ -6,6 +6,12 @@ AB.Translation.insert.method (namespace, key, defaultText) ->
   check key, String
   check defaultText, Match.OptionalOrNull String
 
+  # TODO: Allow creation of translations only for admins and translators.
+  AB.Translation._insert namespace, key, defaultText
+
+# We separate the actual body of the method so we can call it on the server without error checking
+# (for when the server needs to create translations for users that don't otherwise have permissions).
+AB.Translation._insert = (namespace, key, defaultText) ->
   # Ensure namespace and key are unique.
   existing = AB.Translation.documents.findOne
     namespace: namespace
@@ -31,6 +37,12 @@ AB.Translation.update.method (translationId, language, text) ->
   check language, String
   check text, String
 
+  # TODO: Allow updating translations only for admins and translators.
+  AB.Translation._update translationId, language, text
+
+# We separate the actual body of the method so we can call it on the server without error checking
+# (for when the server needs to create translations for users that don't otherwise have permissions).
+AB.Translation._update = (translationId, language, text) ->
   translation = AB.Translation.documents.findOne translationId
 
   unless translation
@@ -68,6 +80,27 @@ AB.Translation.update.method (translationId, language, text) ->
   AB.Translation.documents.update translationId,
     $set:
       translations: translation.translations
+
+AB.Translation.remove.method (translationId) ->
+  check translationId, Match.DocumentId
+
+  # TODO: Allow removal of translations only for admins.
+  AB.Translation._remove translationId
+
+# We separate the actual body of the method so we can call it on the server without error checking
+# (for when the server needs to create translations for users that don't otherwise have permissions).
+AB.Translation._remove = (translationId) ->
+  # Ensure namespace and key are unique.
+  existing = AB.Translation.documents.findOne translationId
+
+  unless existing
+    # On the client it's OK if we don't have a translation (it might have been embedded in another document).
+    return if Meteor.isClient
+
+    # On the server, throw an error on missing translations.
+    throw new AE.ArgumentException "Translation does not exist."
+
+  AB.Translation.documents.remove translationId
 
 removeLanguage = (translations, language) ->
   {languageCode, regionCode} = _.splitLanguageRegion language
@@ -111,10 +144,16 @@ removeLanguage = (translations, language) ->
     delete translations.quality
     delete translations.meta
 
-AB.Translation.remove.method (translationId, language) ->
+AB.Translation.removeLanguage.method (translationId, language) ->
   check translationId, Match.DocumentId
   check language, String
 
+  # TODO: Allow updating translations only for admins and translators.
+  AB.Translation._removeLanguage translationId, language
+
+# We separate the actual body of the method so we can call it on the server without error checking
+# (for when the server needs to create translations for users that don't otherwise have permissions).
+AB.Translation._removeLanguage = (translationId, language) ->
   translation = AB.Translation.documents.findOne translationId
 
   unless translation
@@ -132,10 +171,17 @@ AB.Translation.remove.method (translationId, language) ->
     $set:
       translations: translation.translations
 
-AB.Translation.move.method (translationId, oldLanguage, newLanguage) ->
+AB.Translation.moveLanguage.method (translationId, oldLanguage, newLanguage) ->
   check translationId, Match.DocumentId
   check oldLanguage, String
   check newLanguage, String
+
+  # TODO: Allow updating translations only for admins and translators.
+  AB.Translation._moveLanguage translationId, oldLanguage, newLanguage
+
+# We separate the actual body of the method so we can call it on the server without error checking
+# (for when the server needs to create translations for users that don't otherwise have permissions).
+AB.Translation._moveLanguage = (translationId, oldLanguage, newLanguage) ->
 
   translation = AB.Translation.documents.findOne translationId
 

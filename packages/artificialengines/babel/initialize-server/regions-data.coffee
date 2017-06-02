@@ -238,8 +238,8 @@ Turks & Caicos Islands,Turks and Caicos Islands,Îles Turques-et-Caïques,TC,TCA
 Tuvalu,Tuvalu,Tuvalu,TV,TUV,798,TUV,tv,TV,TV,688,TUV,TV,252,TUV,AUD,TUVALU,2,Australian Dollar,036,Yes,Funafuti,OC,.tv,"tvl,en,sm,gil",2110297,2G
 U.S. Outlying Islands,,,UM,UMI,581,,"ji,xf,wk,uc,up",,USA,,,"FQ,HQ,DQ,JQ,KQ,MQ,BQ,LQ,WQ",,,,,,,,Territories of US,,OC,.um,en-UM,5854968,
 U.S. Virgin Islands,United States Virgin Islands,Îles Vierges américaines,VI,VIR,850,VIR,vi,VI,USA,1-340,VIR,VQ,258,ISV,USD,VIRGIN ISLANDS (U.S.),2,US Dollar,840,Territory of US,Charlotte Amalie,NA,.vi,en-VI,4796775,
-UK,United Kingdom of Great Britain and Northern Ireland,Royaume-Uni de Grande-Bretagne et d'Irlande du Nord,GB,GBR,826,G,xxk,UK,GB,44,"ENG,NIR,SCO,WAL",UK,256,GBR,GBP,UNITED KINGDOM,2,Pound Sterling,826,Yes,London,EU,.uk,"en-GB,cy-GB,gd",2635167,X0
-US,United States of America,États-Unis d'Amérique,US,USA,840,USA,xxu,US,USA,1,USA,US,259,USA,USD,UNITED STATES,2,US Dollar,840,Yes,Washington,NA,.us,"en-US,es-US,haw,fr",6252001,
+United Kingdom,United Kingdom of Great Britain and Northern Ireland,Royaume-Uni de Grande-Bretagne et d'Irlande du Nord,GB,GBR,826,G,xxk,UK,GB,44,"ENG,NIR,SCO,WAL",UK,256,GBR,GBP,UNITED KINGDOM,2,Pound Sterling,826,Yes,London,EU,.uk,"en-GB,cy-GB,gd",2635167,X0
+United States,United States of America,États-Unis d'Amérique,US,USA,840,USA,xxu,US,USA,1,USA,US,259,USA,USD,UNITED STATES,2,US Dollar,840,Yes,Washington,NA,.us,"en-US,es-US,haw,fr",6252001,
 Uganda,Uganda,Ouganda,UG,UGA,800,UGA,ug,UG,EAU,256,UGA,UG,253,UGA,UGX,UGANDA,0,Uganda Shilling,800,Yes,Kampala,AF,.ug,"en-UG,lg,sw,ar",226074,W9
 Ukraine,Ukraine,Ukraine,UA,UKR,804,UKR,un,UR,UA,380,UKR,UP,254,UKR,UAH,UKRAINE,2,Hryvnia,980,Yes,Kiev,EU,.ua,"uk,ru-UA,rom,pl,hu",690791,2H
 United Arab Emirates,United Arab Emirates,Émirats arabes unis,AE,ARE,784,UAE,ts,ER,,971,UAE,AE,255,UAE,AED,UNITED ARAB EMIRATES,2,UAE Dirham,784,Yes,Abu Dhabi,AS,.ae,"ar-AE,fa,en,hi,ur",290557,C0

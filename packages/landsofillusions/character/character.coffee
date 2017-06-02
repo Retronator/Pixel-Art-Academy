@@ -41,7 +41,8 @@ class LOI.Character extends AM.Document
   # Methods
 
   @insert: @method 'insert'
-  @updateColor: @method 'setColor'
+  @updateName: @method 'updateName'
+  @updateColor: @method 'updateColor'
   @updateAvatarBody: @method 'updateAvatarBody'
   @updateAvatarOutfit: @method 'updateAvatarOutfit'
   @updateBehavior: @method 'updateBehavior'

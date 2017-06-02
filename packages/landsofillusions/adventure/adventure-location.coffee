@@ -78,6 +78,9 @@ class LOI.Adventure extends LOI.Adventure
 
       # Everything is OK, instantiate the region.
       Tracker.nonreactive =>
+        # Do we even need to create a new region or is this just a recompute to determine new permissions?
+        return @_currentRegion if @_currentRegion instanceof currentRegionClass
+
         @_currentRegion?.destroy()
         @_currentRegion = new currentRegionClass
         @_currentRegion

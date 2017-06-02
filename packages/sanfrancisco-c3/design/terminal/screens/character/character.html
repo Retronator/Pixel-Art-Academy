@@ -3,10 +3,14 @@
     <h1 class="screen-title">Agent Design</h1>
     {{#with character}}
       <p class="main-text">
-        <label><strong>Full name</strong>: <input class="text-entry" value="{{avatar.fullName}}"/></label>
+        <label class="full-name"><strong>Full name</strong>:
+          {{> renderFullNameInput document.avatar.fullName}}
+        </label>
       </p>
       <p class="main-text">
-        <label><strong>Short name</strong>: <input class="text-entry" value="{{avatar.shortName}}"/></label>
+        <label class="short-name"><strong>Short name</strong>:
+          {{> renderShortNameInput document.avatar.shortName}}
+        </label>
       </p>
     {{/with}}
   </div>

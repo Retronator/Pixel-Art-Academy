@@ -34,7 +34,8 @@ class AB.Translation extends AM.Document
   @insert: @method 'insert'
   @update: @method 'update'
   @remove: @method 'remove'
-  @move: @method 'move'
+  @moveLanguage: @method 'moveLanguage'
+  @removeLanguage: @method 'removeLanguage'
 
   # Helper method for quickly getting a translation. It's only particularly useful on the server where all the
   # translations are immediately accessible. On the client we need to subscribe to the translation documents first

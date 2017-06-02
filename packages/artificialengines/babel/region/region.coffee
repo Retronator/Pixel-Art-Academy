@@ -24,7 +24,7 @@ class AB.Region extends AM.Document
 
     # Remove the default translation, since we'll use only the ones provided
     # in the data, but it was already created by default, using the key.
-    AB.Translation.remove regionData.name._id, Artificial.Babel.defaultLanguage
+    AB.Translation.removeLanguage regionData.name._id, Artificial.Babel.defaultLanguage
 
     # Update translations of the name.
     for nameLanguageCode, name of nameEntries

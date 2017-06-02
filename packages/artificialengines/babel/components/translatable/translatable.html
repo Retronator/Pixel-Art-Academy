@@ -1,19 +1,32 @@
 <template name="Artificial.Babel.Components.Translatable">
   {{#if editable}}
     <span class="artificial-babel-components-translatable">
-      <span class="current-translation">
-        {{#with currentTranslationInfo}}
-          {{> Artificial.Babel.Components.Translatable.Translation}}
-        {{/with}}
-      </span>
+      {{#with currentTranslationInfo}}
+        {{#if translationData}}
+          <span class="current-translation">
+            {{> Artificial.Babel.Components.Translatable.Translation}}
+          </span>
+        {{else}}
+          <span class="new-translation">
+            {{> Artificial.Babel.Components.Translatable.NewTranslation}}
+          </span>
+        {{/if}}
+      {{/with}}
       {{#if showTranslationSelector}}
         <span class="translation-selector">
           <span class="translations">
             {{#each translations}}
               {{> Artificial.Babel.Components.Translatable.Translation}}
             {{/each}}
+            {{#if showNewTranslationInput}}
+              {{#with newTranslationInfo}}
+                {{> Artificial.Babel.Components.Translatable.NewTranslation}}
+              {{/with}}
+            {{/if}}
           </span>
-          <span class="add-translation">{{addTranslationText}}</span>
+          {{#unless showNewTranslationInput}}
+            <span class="add-translation">{{addTranslationText}}</span>
+          {{/unless}}
         </span>
       {{/if}}
     </span>

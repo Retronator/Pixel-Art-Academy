@@ -9,6 +9,7 @@
 
     &:hover
       .current-translation
+      .new-translation
         .translation
           .info
             .text
@@ -24,6 +25,7 @@
       width 100%
 
     .current-translation
+    .new-translation
       .translation
         .info
           .language
@@ -52,16 +54,22 @@
         position relative
         width 100%
 
+        .text
+          input
+            width 100%
+
         .language
           display block
           position absolute
           z-index 1
           right 0
-          top 0
+          top 50%
+          transform translateY(-50%)
+          checkout()
 
       .language-selection
         display block
-        z-index 1
+        z-index 2
         left 0
         right 0
         top 100%
@@ -77,6 +85,7 @@
             display block
             width 100%
             position relative
+            z-index 2
             padding 2rem
 
             .abcls-current-language
