@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-_.extend LOI.Character.Part.Types
+_.extend LOI.Character.Part.Types,
   Body: new LOI.Character.Part
     type: 'Body'
     name: 'body'

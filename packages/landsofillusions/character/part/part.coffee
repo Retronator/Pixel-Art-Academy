@@ -6,3 +6,12 @@ class LOI.Character.Part
   @Types: {}
 
   constructor: (@options) ->
+    return unless @options.dataNode
+
+    # Instantiate all the properties.
+    @properties = for propertyName, property of @options.properties
+      property.create @options.dataNode.field propertyName
+
+  create: (dataNode) ->
+    # We create a copy of ourselves with the data added.
+    new @constructor _.extend {}, @options, {dataNode}

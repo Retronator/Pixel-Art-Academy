@@ -129,7 +129,7 @@
 
     input[type='text']
     select
-    .character-part
+    .avatar-part
       position relative
       padding 2rem 4rem
       border 1rem solid atariCyan(2)
@@ -137,9 +137,14 @@
       color atariGrey(5)
       background atariGrey(0)
 
-    .character-part
+    .avatar-part
       width 34rem
       height 34rem
+      cursor pointer
+
+      &:hover
+      &:focus
+        border-color atariCyan(3)
 
   .landsofillusions-components-overlay
     > .background

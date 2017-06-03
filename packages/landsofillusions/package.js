@@ -60,6 +60,7 @@ Package.onUse(function(api) {
   // Avatar
 
   api.addFile('avatar/avatar');
+  api.addFile('avatar/humanavatar');
 
   // Character
 
@@ -76,6 +77,21 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0004-displayname');
   api.addServerFile('character/migrations/0005-usercharactersupdate');
   api.addClientFile('character/spacebars');
+
+  api.addFile('character/part/part');
+  api.addFile('character/part/parts/shape');
+
+  api.addFile('character/part/property');
+  api.addFile('character/part/properties/array');
+  api.addFile('character/part/properties/integer');
+  api.addFile('character/part/properties/oneof');
+  api.addFile('character/part/properties/color');
+  api.addFile('character/part/properties/relativecolorshade');
+
+  api.addFile('character/part/landmark');
+  api.addFile('character/part/landmarks/position');
+
+  api.addFile('character/part/initialize');
 
   // User
 

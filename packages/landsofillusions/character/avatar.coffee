@@ -3,20 +3,29 @@ AB = Artificial.Babel
 LOI = LandsOfIllusions
 
 # Character's implementation of the avatar that takes the data from the character document.
-class LOI.Character.Avatar extends LOI.Avatar
+class LOI.Character.Avatar extends LOI.HumanAvatar
   constructor: (@character) ->
-    super
-
-    # Create the body and outfit hierarchies.
-    @body = AM.Hierarchy.create
+    # Create the body and outfit data hierarchies first.
+    body = AM.Hierarchy.create
       load: => @_avatar()?.body
       save: (address, value) =>
         LOI.Character.updateAvatarBody @character.id, address, value
 
-    @outfit = AM.Hierarchy.create
-      load: => @_avatar().outfit
+    outfit = AM.Hierarchy.create
+      load: => @_avatar()?.outfit
       save: (address, value) =>
         LOI.Character.updateAvatarOutfit @character.id, address, value
+
+    @_dataNode = AM.Hierarchy.create
+      load: => {body, outfit}
+
+    # Now we can call HumanAvatar's constructor which will turn this data into an actual part hierarchy.
+    super
+
+  _avatar: ->
+    @character.document()?.avatar
+
+  dataNode: -> @_dataNode
 
   fullName: ->
     return @_loading() unless character = @character.document()
