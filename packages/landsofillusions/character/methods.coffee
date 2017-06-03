@@ -15,6 +15,16 @@ LOI.Character.insert.method ->
 
   LOI.Character.documents.insert character
 
+LOI.Character.removeUser.method (characterId) ->
+  check characterId, Match.DocumentId
+
+  LOI.Authorize.player()
+  LOI.Authorize.characterAction characterId
+
+  LOI.Character.documents.update characterId,
+    $set:
+      user: null
+  
 LOI.Character.updateName.method (characterId, nameField, language, name) ->
   check characterId, Match.DocumentId
   check nameField, Match.OneOf 'fullName', 'shortName'
@@ -27,10 +37,10 @@ LOI.Character.updateName.method (characterId, nameField, language, name) ->
   character = LOI.Character.documents.findOne characterId
 
   # If name is not present, but we're also trying to set an empty name, there's nothing to do.
-  return unless character.avatar[nameField] or name
+  return unless character.avatar?[nameField] or name
 
   # Create the translation if it's not.
-  if character.avatar[nameField]
+  if character.avatar?[nameField]
     translationId = character.avatar[nameField]._id
 
   else
@@ -127,3 +137,35 @@ LOI.Character.Template.updateData.method (templateId, address, value) ->
   LOI.Character.documents.update templateId,
     $set:
       "data.#{address}": value
+
+LOI.Character.approveDesign.method (characterId) ->
+  check characterId, Match.DocumentId
+
+  LOI.Authorize.player()
+  LOI.Authorize.characterAction characterId
+
+  LOI.Character.documents.update characterId,
+    $set:
+      designApproved: true
+
+LOI.Character.approveBehavior.method (characterId) ->
+  check characterId, Match.DocumentId
+
+  LOI.Authorize.player()
+  LOI.Authorize.characterAction characterId
+
+  LOI.Character.documents.update characterId,
+    $set:
+      behaviorApproved: true
+
+LOI.Character.activate.method (characterId) ->
+  check characterId, Match.DocumentId
+
+  LOI.Authorize.player()
+  LOI.Authorize.characterAction characterId
+
+  LOI.Character.documents.update characterId,
+    $set:
+      activated: true
+
+  # TODO: Create character state etc.

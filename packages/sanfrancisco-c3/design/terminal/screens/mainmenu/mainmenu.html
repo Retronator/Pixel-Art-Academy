@@ -13,12 +13,17 @@
       <ul class="document-selection">
         {{#each currentUser.characters}}
           {{#with character}}
-            <li class="document"><button class="document-selection-button character-selection-button">{{avatar.fullName}}</button></li>
+            <li class="document">
+              <button class="document-selection-button character-selection-button">
+                {{avatar.fullName}}
+                {{#unless document.designApproved}} (draft){{/unless}}
+              </button>
+            </li>
           {{/with}}
         {{/each}}
       </ul>
       <div class="actions">
-        <button class="action-button">New</button>
+        <button class="action-button new-character-button">New</button>
       </div>
     </div>
     <div class="cyborg-parts section">
@@ -26,7 +31,7 @@
       <ul class="document-selection">
       </ul>
       <div class="actions">
-        <button class="action-button">New</button>
+        <button class="action-button new-character-part-button">New</button>
       </div>
     </div>
   </div>

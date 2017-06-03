@@ -18,18 +18,15 @@ class LOI.Character.Avatar extends LOI.Avatar
       save: (address, value) =>
         LOI.Character.updateAvatarOutfit @character.id, address, value
 
-  _avatar: ->
-    @character.document()?.avatar
-
   fullName: ->
-    return @_loading() unless avatar = @_avatar()
+    return @_loading() unless character = @character.document()
 
-    avatar.fullName?.translate().text or @_noName()
+    character.avatar?.fullName?.translate().text or @_noName()
 
   shortName: ->
-    return @_loading() unless avatar = @_avatar()
+    return @_loading() unless character = @character.document()
 
-    avatar.shortName?.translate().text or @fullName()
+    character.avatar?.shortName?.translate().text or @fullName()
 
   _loading: ->
     return if Meteor.isServer
@@ -42,7 +39,7 @@ class LOI.Character.Avatar extends LOI.Avatar
     @constructor.noName()
 
   color: ->
-    @_avatar()?.color or super
+    @character.document()?.avatar?.color or super
 
   @noNameTranslation: ->
     AB.translation @_babelSubscription, 'No Name'

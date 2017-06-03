@@ -30,9 +30,9 @@
         </span>
       {{/if}}
     </span>
-  {{else}}
-    {{translated.text}}
-  {{/if}}
+  {{else}}{{! We make sure no extra spaces are added for cases when the translatable is flush with other text.
+    }}{{translated.text}}{{!
+  }}{{/if}}
 </template>
 
 <template name="Artificial.Babel.Components.Translatable.Translation">

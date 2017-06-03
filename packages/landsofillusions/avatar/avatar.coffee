@@ -36,4 +36,6 @@ class LOI.Avatar
     @constructor.colorObject @color(), relativeShade
 
   @colorObject: (color, relativeShade = 0) ->
-    LOI.palette()?.color color.hue, 6 + color.shade + relativeShade
+    hue = color?.hue or 0
+    shade = color?.shade or 0
+    LOI.palette()?.color hue, 6 + shade + relativeShade

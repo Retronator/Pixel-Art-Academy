@@ -87,7 +87,7 @@
       &:focus
         z-index 1
         border-color atariAqua(4)
-        color atariAqua(4)
+        color atariAqua(5)
         outline none
 
     .main-actions
@@ -108,14 +108,38 @@
           &::after
             background atariAqua(1)
 
+          &:hover
+          &:focus
+            color atariGrey(7)
+
+            &::after
+              background atariAqua(2)
+
+        &.danger-button
+          border-color atariGrey(1)
+          color atariRed(3)
+
+          &:hover
+          &:focus
+            border-color atariRed(2)
+            color atariGrey(6)
+
+            &::after
+              background atariRed(2)
+
     input[type='text']
+    select
+    .character-part
       position relative
       padding 2rem 4rem
       border 1rem solid atariCyan(2)
-      background none
       font inherit
       color atariGrey(5)
       background atariGrey(0)
+
+    .character-part
+      width 34rem
+      height 34rem
 
   .landsofillusions-components-overlay
     > .background

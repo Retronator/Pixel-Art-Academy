@@ -6,6 +6,9 @@ RA = Retronator.Accounts
 # A wrapper around the Character document that persists between document updates.
 class LOI.Character.Instance
   constructor: (@id) ->
+    # Also store it with the usual underscore notation for use in #each and general ease.
+    @_id = @id
+
     # Subscribe to get all the data for the character.
     @_documentSubscription = LOI.Character.forId.subscribe @id
 

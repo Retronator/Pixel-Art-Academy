@@ -55,3 +55,84 @@ class C3.Design.Terminal.Character extends AM.Component
 
   renderShortNameInput: ->
     @shortNameInput.renderComponent @currentComponent()
+
+  dialogPreviewStyle: ->
+    # Set the color to character's color.
+    character = @currentData()
+
+    color: "##{character.avatar.colorObject()?.getHexString()}"
+
+  events: ->
+    super.concat
+      'click .done-button': @onClickDoneButton
+      'click .save-draft-button': @onClickSaveDraftButton
+      'click .delete-button': @onClickDeleteButton
+
+  onClickDoneButton: (event) ->
+    character = @currentData()
+
+    # If the design is already approved, there is nothing to do, simply return to main menu.
+    if character.document().designApproved
+      @_returnToMenu()
+      return
+
+    LOI.Character.approveDesign character.id, (error) =>
+      if error
+        console.error error
+        return
+
+      # Close the terminal and proceed with the story.
+      # TODO: Homage cinematic to Ghost in the Shell.
+      LOI.adventure.deactivateCurrentItem()
+
+      designControl = LOI.adventure.currentLocation()
+      designControl.listeners[0].startScript label: 'MakingOfACyborg'
+
+  onClickSaveDraftButton: (event) ->
+    # We simply return to main menu.
+    @_returnToMenu()
+
+  onClickDeleteButton: (event) ->
+    character = @currentData()
+    designApproved = character.document().designApproved
+
+    if designApproved
+      message = "Do you really want to retire this agent? You will lose control of them and you cannot undo this action."
+
+    else
+      message = "Do you really want to delete this design? You cannot undo this action."
+
+    # Double check that the user wants to be removed from their character.
+    dialog = new LOI.Components.Dialog
+      message: message
+      buttons: [
+        text: if designApproved then "Retire" else "Delete"
+        value: true
+      ,
+        text: "Cancel"
+      ]
+
+    LOI.adventure.showActivatableModalDialog
+      dialog: dialog
+      callback: =>
+        if dialog.result
+          # Remove the user from the character.
+          LOI.Character.removeUser character.id, (error) =>
+            if error
+              console.error error
+              return
+
+            # Return to main menu.
+            @_returnToMenu()
+
+  _returnToMenu: ->
+    @terminal.switchToScreen @terminal.screens.mainMenu
+
+  _showOKDialog: (message, callback) ->
+    LOI.adventure.showActivatableModalDialog
+      dialog: new LOI.Components.Dialog
+        message: message
+        buttons: [
+          text: "OK"
+        ]
+      callback: callback

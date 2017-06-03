@@ -80,7 +80,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       value: rampIndex, name: ramp.name for ramp, rampIndex in palette.ramps
 
     load: ->
-      @data()?.avatarData?.color?.hue or 0
+      @data()?.document()?.avatar?.color?.hue or 0
 
     save: (value) ->
       # Change the hue part of color.
@@ -101,7 +101,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       value: shadeIndex - 2, name: name for name, shadeIndex in ['darkest', 'darker', 'normal', 'lighter', 'lightest']
 
     load: ->
-      @data()?.avatarData?.color?.shade or 0
+      @data()?.document()?.avatar?.color?.shade or 0
 
     save: (value) ->
       # Change the shade part of color.

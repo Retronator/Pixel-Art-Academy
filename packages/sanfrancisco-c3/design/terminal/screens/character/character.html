@@ -2,16 +2,53 @@
   <div class="sanfrancisco-c3-design-terminal-character screen">
     <h1 class="screen-title">Agent Design</h1>
     {{#with character}}
-      <p class="main-text">
-        <label class="full-name"><strong>Full name</strong>:
-          {{> renderFullNameInput document.avatar.fullName}}
-        </label>
-      </p>
-      <p class="main-text">
-        <label class="short-name"><strong>Short name</strong>:
-          {{> renderShortNameInput document.avatar.shortName}}
-        </label>
-      </p>
+      <div class="character">
+        <p class="main-text">
+          <label class="full-name"><strong>Full name</strong>:
+            {{> renderFullNameInput document.avatar.fullName}}
+          </label>
+        </p>
+        <p class="main-text">
+          <label class="short-name"><strong>Short name</strong>:
+            {{> renderShortNameInput document.avatar.shortName}}
+          </label>
+        </p>
+        <p class="main-text">
+          <label class="dialog-color"><strong>Dialog color</strong>:
+            {{> LandsOfIllusions.Components.Account.Characters.CharacterColorHue}}
+          </label>
+          <label class="dialog-hue"><strong>hue</strong>:
+            {{> LandsOfIllusions.Components.Account.Characters.CharacterColorShade}}
+          </label>
+        </p>
+        <p class="main-text">
+          <strong>Preview</strong>:
+        </p>
+        <div class="dialog-preview">
+          {{avatar.shortName}} says:
+          <span {{style dialogPreviewStyle}}>
+            "I'm not just saying this to be clever, I'm also saying it because it's true."
+          </span>
+        </div>
+        <p class="main-text avatar-item">
+          <strong>Body</strong>:
+          <div class="character-part"></div>
+        </p>
+        <p class="main-text avatar-item">
+          <strong>Outfit</strong>:
+          <div class="character-part"></div>
+        </p>
+      </div>
+      <div class="main-actions">
+        {{#if document.designApproved}}
+          <button class="main-button action-button done-button">Done</button>
+          <button class="action-button danger-button delete-button">Retire</button>
+        {{else}}
+          <button class="main-button action-button done-button">Create</button>
+          <button class="action-button save-draft-button">Save draft</button>
+          <button class="action-button danger-button delete-button">Delete</button>
+        {{/if}}
+      </div>
     {{/with}}
   </div>
 </template>

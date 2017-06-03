@@ -53,13 +53,10 @@ class C3.Design extends LOI.Adventure.Location
 
     if terminal = LOI.adventure.getCurrentThing C3.Design.Terminal
       commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.Use, terminal.avatar]
+        form: [[Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookAt], terminal.avatar]
         priority: 1
         action: =>
-          LOI.adventure.scriptHelpers.itemInteraction
-            item: terminal
-            callback: =>
-              @startScript label: 'MakingOfACyborg'
+          LOI.adventure.goToItem terminal
 
   onEnter: ->
     LOI.adventure.goToItem C3.Design.Terminal

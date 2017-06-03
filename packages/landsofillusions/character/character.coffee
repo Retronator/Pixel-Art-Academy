@@ -24,15 +24,18 @@ class LOI.Character extends AM.Document
   #   body: avatar data for character's body representation
   #   outfit: avatar data for character's current clothes/accessories
   # behavior: avatar data for character's behavior design
+  # designApproved: whether the character has finished the design stage
+  # behaviorApproved: whether the character has finished the behavior stage
+  # activated: whether the character has been deployed in the world
   @Meta
     name: @id()
     fields: =>
-      user: @ReferenceField RA.User, ['displayName', 'publicName'] , true, 'characters', ['displayName', 'avatar.fullName']
+      user: @ReferenceField RA.User, ['displayName', 'publicName'], false, 'characters', ['displayName', 'avatar.fullName']
       ownerName: @GeneratedField 'self', ['user'], (character) ->
         ownerName = character.user?.publicName or null
         [character._id, ownerName]
       displayName: @GeneratedField 'self', ['avatar'], (character) ->
-        displayName = character.avatar.fullName?.translations?.best?.text or null
+        displayName = character.avatar?.fullName?.translations?.best?.text or null
         [character._id, displayName]
       avatar:
         fullName: @ReferenceField AB.Translation, ['translations'], false
@@ -41,11 +44,17 @@ class LOI.Character extends AM.Document
   # Methods
 
   @insert: @method 'insert'
+  @removeUser: @method 'removeUser'
+
   @updateName: @method 'updateName'
   @updateColor: @method 'updateColor'
   @updateAvatarBody: @method 'updateAvatarBody'
   @updateAvatarOutfit: @method 'updateAvatarOutfit'
   @updateBehavior: @method 'updateBehavior'
+
+  @approveDesign: @method 'approveDesign'
+  @approveBehavior: @method 'approveBehavior'
+  @activate: @method 'activate'
 
   # Subscriptions
 

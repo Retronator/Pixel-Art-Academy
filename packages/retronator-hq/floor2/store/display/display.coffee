@@ -100,10 +100,6 @@ class HQ.Store.Display extends LOI.Adventure.Item
 
       $supportersListTitles.css top: titleOffset
 
-    # HACK: For unknown reason, events method does not work?!?
-    @$('.top-supporters .show-more-button').click (event) =>
-      @_topSupportersCount @_topSupportersCount() + 40
-
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
       finishedDeactivatingCallback()
@@ -145,3 +141,10 @@ class HQ.Store.Display extends LOI.Adventure.Item
     ,
       sort:
         time: -1
+
+  events: ->
+    super.concat
+      'click .top-supporters .show-more-button': @onClickTopSupportersShowMoreButton
+
+  onClickTopSupportersShowMoreButton: (event) ->
+    @_topSupportersCount @_topSupportersCount() + 40
