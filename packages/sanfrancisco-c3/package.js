@@ -32,6 +32,7 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/terminal');
   api.addComponent('design/terminal/screens/mainmenu/mainmenu');
   api.addComponent('design/terminal/screens/character/character');
+  api.addComponent('design/terminal/screens/avatarpart/avatarpart');
 
   api.addFile('hallway/hallway');
   api.addThing('lobby/lobby');

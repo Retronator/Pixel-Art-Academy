@@ -18,6 +18,7 @@ _.extend LOI.Character.Part.Types,
         name: 'legs'
         type: 'Legs'
       skin: new LOI.Character.Part.Property.Color
+        name: 'skin'
 
   Torso: new LOI.Character.Part
     type: 'Torso'
@@ -114,3 +115,7 @@ _.extend LOI.Character.Part.Types,
     landmarks:
       centerPosition: new LOI.Character.Part.Landmark.Position
       edgePosition: new LOI.Character.Part.Landmark.Position
+
+  Outfit: new LOI.Character.Part
+    type: 'Outfit'
+    name: 'outfit'

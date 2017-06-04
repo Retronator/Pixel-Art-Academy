@@ -35,6 +35,7 @@ class C3.Design.Terminal extends LOI.Adventure.Item
     @screens =
       mainMenu: new @constructor.MainMenu @
       character: new @constructor.Character @
+      avatarPart: new @constructor.AvatarPart @
 
     @currentScreen = new ReactiveField @screens.mainMenu
 

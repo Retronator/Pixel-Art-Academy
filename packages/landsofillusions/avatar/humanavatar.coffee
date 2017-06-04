@@ -7,8 +7,8 @@ class LOI.HumanAvatar extends LOI.Avatar
     super
     
     dataNode = @dataNode()
-    
+
     @body = LOI.Character.Part.Types.Body.create dataNode 'body'
-    @outfit = LOI.Character.Part.Types.Body.create dataNode 'outfit'
+    @outfit = LOI.Character.Part.Types.Outfit.create dataNode 'outfit'
 
   dataNode: -> throw new AE.NotImplementedException "You have to provide the data node for the avatar."

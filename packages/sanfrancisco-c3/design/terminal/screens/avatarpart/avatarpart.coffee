@@ -7,3 +7,18 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
   constructor: (@terminal) ->
     super
+
+    @part = new ReactiveField null
+
+  setPart: (part) ->
+    @part part
+
+  partProperties: ->
+    _.values @part().options.properties
+
+  events: ->
+    super.concat
+      'click .done-button': @onClickDoneButton
+
+  onClickDoneButton: (event) ->
+    @terminal.switchToScreen @terminal.screens.character

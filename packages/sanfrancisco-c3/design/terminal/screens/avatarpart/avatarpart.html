@@ -1,5 +1,22 @@
 <template name="SanFrancisco.C3.Design.Terminal.AvatarPart">
   <div class="sanfrancisco-c3-design-terminal-avatarpart screen">
-
+    {{#with part}}
+      <h1 class="screen-title">{{capitalize options.name}} Design</h1>
+      <div class="part">
+        <ul class="properties">
+          {{#each partProperties}}
+            <li class="property">
+              <p class="main-text avatar-item">
+                <strong>{{capitalize options.name}}</strong>:
+                <div class="avatar-part"></div>
+              </p>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/with}}
+    <div class="main-actions">
+      <button class="main-button action-button done-button">Done</button>
+    </div>
   </div>
 </template>

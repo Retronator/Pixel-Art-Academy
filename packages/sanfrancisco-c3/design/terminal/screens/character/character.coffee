@@ -67,6 +67,8 @@ class C3.Design.Terminal.Character extends AM.Component
       'click .done-button': @onClickDoneButton
       'click .save-draft-button': @onClickSaveDraftButton
       'click .delete-button': @onClickDeleteButton
+      'click .body-part': @onClickBodyPart
+      'click .outfit-part': @onClickOutfitPart
 
   onClickDoneButton: (event) ->
     character = @currentData()
@@ -128,11 +130,10 @@ class C3.Design.Terminal.Character extends AM.Component
   _returnToMenu: ->
     @terminal.switchToScreen @terminal.screens.mainMenu
 
-  _showOKDialog: (message, callback) ->
-    LOI.adventure.showActivatableModalDialog
-      dialog: new LOI.Components.Dialog
-        message: message
-        buttons: [
-          text: "OK"
-        ]
-      callback: callback
+  onClickBodyPart: (event) ->
+    @terminal.screens.avatarPart.setPart @character().avatar.body
+    @terminal.switchToScreen @terminal.screens.avatarPart
+
+  onClickOutfitPart: (event) ->
+    @terminal.screens.avatarPart.setPart @character().avatar.outfit
+    @terminal.switchToScreen @terminal.screens.avatarPart
