@@ -4,4 +4,6 @@ class LOI.Character.Part.Property.RelativeColorShade extends LOI.Character.Part.
   constructor: (@options = {}) ->
     super
 
+    @type = 'relativeColorShade'
+
     return unless @options.dataField

@@ -19,6 +19,7 @@ _.extend LOI.Character.Part.Types,
         type: 'Legs'
       skin: new LOI.Character.Part.Property.Color
         name: 'skin'
+        colorsPresetName: 'Skin'
 
   Torso: new LOI.Character.Part
     type: 'Torso'

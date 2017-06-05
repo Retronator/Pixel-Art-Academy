@@ -8,7 +8,12 @@
             <li class="property">
               <p class="main-text avatar-item">
                 <strong>{{capitalize options.name}}</strong>:
-                <div class="avatar-part"></div>
+                {{#if $is type 'oneOf'}}
+                  <div class="avatar-part"></div>
+                {{/if}}
+                {{#if $is type 'color'}}
+                  {{> SanFrancisco.C3.Design.Terminal.Properties.Color this}}
+                {{/if}}
               </p>
             </li>
           {{/each}}

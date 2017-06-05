@@ -34,6 +34,9 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/screens/character/character');
   api.addComponent('design/terminal/screens/avatarpart/avatarpart');
 
+  api.addFile('design/terminal/components/properties/properties');
+  api.addComponent('design/terminal/components/properties/color/color');
+
   api.addFile('hallway/hallway');
   api.addThing('lobby/lobby');
   api.addFile('stasis/stasis');
