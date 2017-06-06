@@ -8,5 +8,24 @@ class AM.Hierarchy
     # Build a hierarchy of nodes that represents the data.
     new @Node options
 
-  @convertObjectToStoredValue: (options) ->
-    # TODO: Expand plain object into a structure with fields, nodes and templates.
+  @convertObjectToStoredValue: (value) ->
+    if value instanceof AM.Hierarchy.Template
+      # We're converting a template and just store its ID.
+      templateId: storedProperty._id
+
+    else if value instanceof AM.Hierarchy.Node
+      # Just copy node's data.
+      node: value.data()
+
+    else if _.isObject value
+      # We've converting a standard object, which should become a node. Covert its properties as well first.
+      node = fields: {}
+
+      for propertyName, property of value
+        node.fields[propertyName] = @convertObjectToStoredValue property
+
+      {node}
+
+    else
+      # We're converting a raw value.
+      {value}

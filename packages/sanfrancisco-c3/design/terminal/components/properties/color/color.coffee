@@ -66,8 +66,20 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
     @colors ?= @constructor.Presets[@property.options.colorsPresetName] if @property.options.colorsPresetName
     @colors ?= @constructor.Presets.Default
 
-    @selectedHue = new ReactiveField @colors.defaultHue or 0
-    @selectedShade = new ReactiveField @colors.defaultShade or 0
+    @selectedHue = new ComputedField =>
+      # Try to load from property data.
+      colorNode = @property.options.dataField()
+      return hue if hue = colorNode? 'hue'
+
+      @colors.defaultHue or 0
+
+    @selectedShade = new ComputedField =>
+      # Try to load from property data.
+      colorNode = @property.options.dataField()
+      return shade if shade = colorNode? 'shade'
+
+      @colors.defaultShade or 0
+
     @pageNumber = {}
     @pagesCount = {}
     @currentColorIndices = {}
@@ -111,28 +123,37 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
     selectedHue = @selectedHue()
     selectedShade = @selectedShade()
     previewShade = @colors.huePreviewShade ? selectedShade
+    palette = LOI.palette()
 
     swatches: for hueIndex in @currentColorIndices.hues()
-      color: LOI.palette().color hueIndex, previewShade
+      color: palette.color hueIndex, previewShade
       value: hueIndex
       selected: hueIndex is selectedHue
     hasPreviousPage: @pageNumber.hues() > 0
     hasNextPage: @pageNumber.hues() < @pagesCount.hues() - 1
     pageNumber: @pageNumber.hues
-    valueField: @selectedHue
+    save: (value) =>
+      @property.options.dataField
+        hue: value
+        shade: selectedShade
 
   shades: ->
     selectedHue = @selectedHue()
     selectedShade = @selectedShade()
+    palette = LOI.palette()
 
     swatches: for shadeIndex in @currentColorIndices.shades()
-      color: LOI.palette().color selectedHue, shadeIndex
+      color: palette.color selectedHue, shadeIndex
       value: shadeIndex
       selected: shadeIndex is selectedShade
     hasPreviousPage: @pageNumber.shades() > 0
     hasNextPage: @pageNumber.shades() < @pagesCount.shades() - 1
     pageNumber: @pageNumber.shades
     valueField: @selectedShade
+    save: (value) =>
+      @property.options.dataField
+        hue: selectedHue
+        shade: value
 
   # Components
 
@@ -158,7 +179,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
     onClickSwatch: (event) ->
       swatchesData = @data()
       swatch = @currentData()
-      swatchesData.valueField swatch.value
+      swatchesData.save swatch.value
 
     onClickPreviousPageButton: (event) ->
       swatchesData = @data()

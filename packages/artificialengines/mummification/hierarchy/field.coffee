@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mummification
 
 class AM.Hierarchy.Field
@@ -23,26 +24,10 @@ class AM.Hierarchy.Field
         # We need to rewrite the field if the value changed (and with objects
         # we never know if they were internally changed, so we do it always).
         if value isnt oldValue or _.isObject(value)
-          # Let's take a look what kind of value we're setting.
-          if value instanceof AM.Hierarchy.Template
-            saveValue =
-              templateId: value._id
-              
-          else if value instanceof AM.Hierarchy.Node
-            # Just copy node's data.
-            saveValue =
-              node: value.data()
-
-          else if _.isObject value
-            saveValue =
-              node: AM.Hierarchy.convertObjectToStoredValue value
-
-          else
-            saveValue =
-              value: value
+          storedValue = AM.Hierarchy.convertObjectToStoredValue value
 
           # Send the new structure to the save function.
-          options.save options.address.string(), saveValue
+          options.save options.address.string(), storedValue
 
         return
 
@@ -68,19 +53,32 @@ class AM.Hierarchy.Field
 
       else if data.node
         cleanTemplate()
-        
-        # We create a new node if needed (if not, the node's load 
+
+        # We create a new node if needed (if not, the node's load
         # function will already be dynamically loading new values).
-        node ?= new AM.Hierarchy.Node
-          address: options.address.nodeChild()
-          load: =>
-            # We dynamically load the value from the parent so that we 
-            # don't have to keep re-creating nodes whenever data changes.
-            options.load().node
-          save: options.save
-            
+        unless node
+          # We allow sending in already instantiated nodes.
+          if data.node instanceof AM.Hierarchy.Node
+            node = data.node
+
+          else
+            # In general we instantiate a node that will return the
+            # plain node data. We oly want to react to changes in the data.
+            Tracker.nonreactive =>
+              node = new AM.Hierarchy.Node
+                address: options.address.nodeChild()
+                load: =>
+                  # We dynamically load the value from the parent so that we
+                  # don't have to keep re-creating nodes whenever data changes.
+                  options.load().node
+                save: options.save
+
         # Return the node.
         node
+
+      else
+        console.error "Data field", options.address.string(), "got value", data
+        throw AE.InvalidOperationException "Data field is not in correct format."
 
     field.destroy = ->
       cleanTemplate()

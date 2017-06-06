@@ -17,7 +17,12 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
         LOI.Character.updateAvatarOutfit @character.id, address, value
 
     @_dataNode = AM.Hierarchy.create
-      load: => fields: {body, outfit}
+      load: =>
+        fields:
+          body:
+            node: body
+          outfit:
+            node: outfit
 
     # Now we can call HumanAvatar's constructor which will turn this data into an actual part hierarchy.
     super

@@ -14,7 +14,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part part
 
   partProperties: ->
-    _.values @part().options.properties
+    _.values @part().properties
 
   events: ->
     super.concat
