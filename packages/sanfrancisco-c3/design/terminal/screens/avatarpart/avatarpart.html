@@ -1,27 +1,50 @@
 <template name="SanFrancisco.C3.Design.Terminal.AvatarPart">
   <div class="sanfrancisco-c3-design-terminal-avatarpart screen">
-    {{#with part}}
-      <h1 class="screen-title">{{capitalize options.name}} Design</h1>
-      <div class="part">
-        <ul class="properties">
-          {{#each partProperties}}
-            <li class="property">
-              <p class="main-text avatar-item">
-                <strong>{{capitalize options.name}}</strong>:
-                {{#if $is type 'oneOf'}}
-                  <div class="avatar-part"></div>
-                {{/if}}
-                {{#if $is type 'color'}}
-                  {{> SanFrancisco.C3.Design.Terminal.Properties.Color this}}
-                {{/if}}
-              </p>
-            </li>
-          {{/each}}
-        </ul>
-      </div>
-    {{/with}}
+      <h1 class="screen-title">{{capitalize part.options.name}} Design</h1>
+      {{#if showTemplates}}
+        <div class="templates-area">
+          <button class="new-part-button avatar-part">New</button>
+          <ul class="templates">
+            {{#each templates}}
+              <li class="template avatar-part"></li>
+            {{/each}}
+          </ul>
+        </div>
+      {{else}}
+        {{#with part}}
+          <div class="part">
+            <ul class="properties">
+              {{#each partProperties}}
+                <li class="property">
+                  <p class="main-text avatar-item">
+                    <strong>{{capitalize options.name}}</strong>:
+                    {{#if $is this.type 'oneOf'}}
+                      <div class="avatar-part"></div>
+                    {{/if}}
+                    {{#if $is this.type 'color'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Color this}}
+                    {{/if}}
+                  </p>
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        {{/with}}
+      {{/if}}
     <div class="main-actions">
-      <button class="main-button action-button done-button">Done</button>
+      {{#if showTemplates}}
+        <button class="main-button action-button done-button">Back</button>
+      {{else}}
+        <button class="main-button action-button done-button">Done</button>
+        <button class="action-button replace-button">Replace</button>
+        {{#if isTemplate}}
+          {{#unless isOwnTemplate}}
+            <button class="action-button customize-button">Customize</button>
+          {{/unless}}
+        {{else}}
+          <button class="action-button save-as-template-button">Save as template</button>
+        {{/if}}
+      {{/if}}
     </div>
   </div>
 </template>

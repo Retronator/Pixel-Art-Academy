@@ -24,6 +24,7 @@ class AM.Hierarchy.Template extends AM.Document
     # The field that loaded the template will want a node with our data.
     # Note that this resets the address hierarchy from here on out to this template.
     @node = new AM.Hierarchy.Node
+      template: @
       load: => @data
       save: (address, value) =>
         @constructor.updateData @_id, address, value

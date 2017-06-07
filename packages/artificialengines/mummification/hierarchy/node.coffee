@@ -26,12 +26,20 @@ class AM.Hierarchy.Node
     # Allow correct handling of instanceof operator.
     Object.setPrototypeOf node, @constructor.prototype
 
+    # Transfer the presence of a template.
+    node.template = options.template
+    
     node.field = (fieldName, options) ->
       fieldGetter fieldName, options
       
     # Returns the raw loaded data directly.
     node.data = ->
       options.load()
+
+    # Removes any data at this node.
+    node.clear = ->
+      # We save null as the value, which will unset the field on the server.
+      options.save options.address.string(), null
 
     node.destroy = ->
       field.destroy() for name, field of hierarchyFields

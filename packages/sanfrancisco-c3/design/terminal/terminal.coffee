@@ -39,5 +39,8 @@ class C3.Design.Terminal extends LOI.Adventure.Item
 
     @currentScreen = new ReactiveField @screens.mainMenu
 
+    # Subscribe to all user's templates for the full duration of the terminal being open.
+    LOI.Character.Part.Template.forCurrentUser.subscribe @
+
   switchToScreen: (screen) ->
     @currentScreen screen

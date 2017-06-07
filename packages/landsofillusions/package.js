@@ -67,7 +67,6 @@ Package.onUse(function(api) {
   api.addFile('character/character');
   api.addFile('character/instance');
   api.addFile('character/avatar');
-  api.addFile('character/template');
   api.addFile('character/methods');
   api.addServerFile('character/subscriptions');
   api.addServerFile('character/migrations/0000-renamecollection');
@@ -79,6 +78,10 @@ Package.onUse(function(api) {
   api.addClientFile('character/spacebars');
 
   api.addFile('character/part/part');
+  api.addFile('character/part/template');
+  api.addFile('character/part/methods');
+  api.addServerFile('character/part/subscriptions');
+
   api.addFile('character/part/parts/shape');
 
   api.addFile('character/part/property');

@@ -84,7 +84,21 @@ LOI.Character.updateColor.method (characterId, hue, shade) ->
   set['avatar.color.shade'] = shade if shade?
 
   LOI.Character.documents.update characterId, $set: set
-    
+
+updateCharacterPart = (field, characterId, address, value) ->
+  field += ".#{address}" if address
+
+  if value?
+    update =
+      $set:
+        "#{field}": value
+  else
+    update =
+      $unset:
+        "#{field}": true
+
+  LOI.Character.documents.update characterId, update
+
 LOI.Character.updateAvatarBody.method (characterId, address, value) ->
   check characterId, Match.DocumentId
   check address, String
@@ -93,9 +107,7 @@ LOI.Character.updateAvatarBody.method (characterId, address, value) ->
   LOI.Authorize.characterAction characterId
   LOI.Authorize.avatarEditor()
 
-  LOI.Character.documents.update characterId,
-    $set:
-      "avatar.body.#{address}": value
+  updateCharacterPart 'avatar.body', characterId, address, value
 
 LOI.Character.updateAvatarOutfit.method (characterId, address, value) ->
   check characterId, Match.DocumentId
@@ -105,9 +117,7 @@ LOI.Character.updateAvatarOutfit.method (characterId, address, value) ->
   # Note that we don't authorize avatar editor because all players can change their outfit.
   LOI.Authorize.characterAction characterId
 
-  LOI.Character.documents.update characterId,
-    $set:
-      "avatar.outfit.#{address}": value
+  updateCharacterPart 'avatar.outfit', characterId, address, value
 
 LOI.Character.updateBehavior.method (characterId, address, value) ->
   check characterId, Match.DocumentId
@@ -117,26 +127,7 @@ LOI.Character.updateBehavior.method (characterId, address, value) ->
   LOI.Authorize.characterAction characterId
   LOI.Authorize.avatarEditor()
 
-  LOI.Character.documents.update characterId,
-    $set:
-      "behavior.#{address}": value
-
-LOI.Character.Template.updateData.method (templateId, address, value) ->
-  check id, Match.DocumentId
-  check address, String
-  check value, Match.Any
-
-  LOI.Authorize.avatarEditor()
-
-  template = LOI.Character.Template.documents.findOne templateId
-  
-  # User must be the author of this template.
-  user = Retronator.requireUser()
-  throw new AE.UnauthorizedException "You must be the author of the template to change it." unless template.author._id is user._id
-
-  LOI.Character.documents.update templateId,
-    $set:
-      "data.#{address}": value
+  updateCharacterPart 'behavior', characterId, address, value
 
 LOI.Character.approveDesign.method (characterId) ->
   check characterId, Match.DocumentId

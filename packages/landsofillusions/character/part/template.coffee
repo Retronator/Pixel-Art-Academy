@@ -3,8 +3,8 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
-class LOI.Character.Template extends AM.Hierarchy.Template
-  @id: -> 'LandsOfIllusions.Character.Template'
+class LOI.Character.Part.Template extends AM.Hierarchy.Template
+  @id: -> 'LandsOfIllusions.Character.Part.Template'
   # author: the designer of this part
   #   _id
   #   displayName
@@ -24,5 +24,8 @@ class LOI.Character.Template extends AM.Hierarchy.Template
         authorName = part.author?.publicName or null
         [user._id, authorName]
 
-  @updateData: @method 'updateData'
   @forId: @subscription 'forId'
+  @forType: @subscription 'forType'
+  @forCurrentUser: @subscription 'forCurrentUser'
+
+  @updateData: @method 'updateData'
