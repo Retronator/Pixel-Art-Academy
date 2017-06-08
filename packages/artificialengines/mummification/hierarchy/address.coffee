@@ -1,7 +1,7 @@
 AM = Artificial.Mummification
 
 class AM.Hierarchy.Address
-  constructor: (@_string) ->
+  constructor: (@_string = '') ->
 
   string: ->
     @_string
@@ -11,4 +11,5 @@ class AM.Hierarchy.Address
     new @constructor "#{prefix}fields.#{field}"
 
   nodeChild: ->
-    new @constructor "#{@_string}.node"
+    prefix = if @_string then "#{@_string}." else ''
+    new @constructor "#{prefix}node"

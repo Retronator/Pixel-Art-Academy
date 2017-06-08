@@ -17,11 +17,20 @@ class AB.Components.Translatable extends AM.Component
   onCreated: ->
     super
 
+    # Reactively subscribe to the translation so that refresh on the translation will work.
+    @autorun (computation) =>
+      return unless translationOrKey = @data()
+      return unless translationOrKey instanceof AB.Translation
+
+      translation = translationOrKey
+
+      @translationSubscription = @subscribe 'Artificial.Babel.Translation.withId', translation._id
+
     @translation = new ComputedField =>
       return unless @translationOrKey = @data()
 
-      # Return translation if it was passed directly.
-      return @translationOrKey if @translationOrKey instanceof AB.Translation
+      # Return refreshed translation if it was passed directly.
+      return @translationOrKey.refresh() if @translationOrKey instanceof AB.Translation
 
       # Fetch translation for the parent component using the provided key.
       translationKey = @translationOrKey
@@ -42,11 +51,11 @@ class AB.Components.Translatable extends AM.Component
         languageRegion = translated.language
         translationData = translation.translationData languageRegion
 
-        {translationData, languageRegion}
+        return {translationData, languageRegion} if translationData
 
-      else
-        # We don't have a translation and will need to create it if the user types in something.
-        languageRegion: @options.newTranslationLanguage ? AB.userLanguagePreference()[0]
+      # We don't have a translation (or the translation has no translations)
+      # and will need to create it if the user types in something.
+      languageRegion: @options.newTranslationLanguage ? AB.userLanguagePreference()[0]
 
     @showTranslationSelector = new ReactiveField false
 
@@ -207,9 +216,14 @@ class AB.Components.Translatable extends AM.Component
     onCreated: ->
       super
 
+      @translation = new ComputedField =>
+        # Find translation document in the data context of the parent.
+        @parentDataWith (data) => data instanceof AB.Translation
+
       # Replace translatable input with one that will create the translation after first entry.
       @translatableInput = new AB.Components.Translatable.NewInput
         type: AB.Components.Translatable.Types.Text
+        translation: => @translation()
         languageRegion: => @languageRegion()
 
       @languageSelection = new @constructor.LanguageSelection
@@ -253,7 +267,11 @@ class AB.Components.Translatable extends AM.Component
 
     save: (value) ->
       languageRegion = @options.languageRegion()
-      @callAncestorWith 'onTranslationInserted', languageRegion, value
+
+      unless @callAncestorWith 'onTranslationInserted', languageRegion, value
+        # If we have the translation, we can insert the new value right into.
+        if translation = @options.translation()
+          AB.Translation.update translation._id, languageRegion, value
 
       # Hide the new input.
       @callAncestorWith 'showNewTranslationInput', false

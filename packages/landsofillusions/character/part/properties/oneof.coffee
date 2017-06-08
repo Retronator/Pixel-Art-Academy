@@ -5,5 +5,3 @@ class LOI.Character.Part.Property.OneOf extends LOI.Character.Part.Property
     super
     
     @type = 'oneOf'
-
-    return unless @options.dataField

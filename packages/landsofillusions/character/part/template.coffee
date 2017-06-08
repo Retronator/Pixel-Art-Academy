@@ -19,13 +19,16 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
   @Meta
     name: @id()
     fields: =>
-      author: @ReferenceField RA.User, ['displayName'] , true, 'characters', ['name']
+      author: @ReferenceField RA.User, ['displayName', 'publicName'], false
       authorName: @GeneratedField 'self', ['author'], (part) ->
         authorName = part.author?.publicName or null
-        [user._id, authorName]
+        [part._id, authorName]
+      name: @ReferenceField AB.Translation, [], false
+      description: @ReferenceField AB.Translation, [], false
 
   @forId: @subscription 'forId'
   @forType: @subscription 'forType'
   @forCurrentUser: @subscription 'forCurrentUser'
 
+  @insert: @method 'insert'
   @updateData: @method 'updateData'

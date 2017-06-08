@@ -8,6 +8,7 @@ class AB.Translation extends AM.Document
   @id: -> 'Artificial.Babel.Translation'
   # namespace: string name of related keys
   # key: English string that identifies this translation (namespace and key pair should be unique)
+  # ownerId: when the translation is a user supplied string, this field allows that user who created it to change translations
   # translations:
   #   text: language-agnostic text of the key
   #   quality: a number by which we can sort translations from different languages to find the best translation

@@ -6,31 +6,25 @@ LOI = LandsOfIllusions
 class LOI.Character.Avatar extends LOI.HumanAvatar
   constructor: (@character) ->
     # Create the body and outfit data hierarchies first.
-    body = AM.Hierarchy.create
+    bodyDataField = AM.Hierarchy.create
+      templateClass: LOI.Character.Part.Template
+      type: LOI.Character.Part.Types.Body.options.type
       load: => @_avatar()?.body
       save: (address, value) =>
         LOI.Character.updateAvatarBody @character.id, address, value
 
-    outfit = AM.Hierarchy.create
+    outfitDataField = AM.Hierarchy.create
+      templateClass: LOI.Character.Part.Template
+      type: LOI.Character.Part.Types.Outfit.options.type
       load: => @_avatar()?.outfit
       save: (address, value) =>
         LOI.Character.updateAvatarOutfit @character.id, address, value
 
-    @_dataNode = AM.Hierarchy.create
-      load: =>
-        fields:
-          body:
-            node: body
-          outfit:
-            node: outfit
-
     # Now we can call HumanAvatar's constructor which will turn this data into an actual part hierarchy.
-    super
+    super {bodyDataField, outfitDataField}
 
   _avatar: ->
     @character.document()?.avatar
-
-  dataNode: -> @_dataNode
 
   fullName: ->
     return @_loading() unless character = @character.document()

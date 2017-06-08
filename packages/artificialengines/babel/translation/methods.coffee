@@ -37,7 +37,7 @@ AB.Translation.update.method (translationId, language, text) ->
   check language, String
   check text, String
 
-  # TODO: Allow updating translations only for admins and translators.
+  # TODO: Allow updating translations only for admins, translators and translation owner.
   AB.Translation._update translationId, language, text
 
 # We separate the actual body of the method so we can call it on the server without error checking

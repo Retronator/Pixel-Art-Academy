@@ -68,15 +68,21 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
 
     @selectedHue = new ComputedField =>
       # Try to load from property data.
-      colorNode = @property.options.dataField()
-      return hue if hue = colorNode? 'hue'
+      colorNode = @property.options.dataLocation()
+      hue = colorNode? 'hue'
+
+      # Compare for existence since hue can be 0.
+      return hue if hue?
 
       @colors.defaultHue or 0
 
     @selectedShade = new ComputedField =>
       # Try to load from property data.
-      colorNode = @property.options.dataField()
-      return shade if shade = colorNode? 'shade'
+      colorNode = @property.options.dataLocation()
+      shade = colorNode? 'shade'
+
+      # Compare for existence since shade can be 0.
+      return shade if shade?
 
       @colors.defaultShade or 0
 
@@ -133,7 +139,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
     hasNextPage: @pageNumber.hues() < @pagesCount.hues() - 1
     pageNumber: @pageNumber.hues
     save: (value) =>
-      @property.options.dataField
+      @property.options.dataLocation
         hue: value
         shade: selectedShade
 
@@ -151,7 +157,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
     pageNumber: @pageNumber.shades
     valueField: @selectedShade
     save: (value) =>
-      @property.options.dataField
+      @property.options.dataLocation
         hue: selectedHue
         shade: value
 

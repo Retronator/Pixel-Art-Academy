@@ -16,15 +16,21 @@ class AM.Hierarchy.Template extends AM.Document
   @Meta
     abstract: true
 
-  # Child class should implement these fields.
+  # Child class should implement these methods and subscriptions. They need to be 
+  # initialized in child classes because they will require the id method of the class.
+  @insert: null
   @updateData: null
   @forId: null
 
   constructor: ->
+    super
+    
     # The field that loaded the template will want a node with our data.
     # Note that this resets the address hierarchy from here on out to this template.
     @node = new AM.Hierarchy.Node
+      templateClass: @constructor
       template: @
+      address: new AM.Hierarchy.Address
       load: => @data
       save: (address, value) =>
         @constructor.updateData @_id, address, value

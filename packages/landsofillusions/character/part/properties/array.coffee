@@ -5,5 +5,3 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
     super
 
     @type = 'array'
-
-    return unless @options.dataField

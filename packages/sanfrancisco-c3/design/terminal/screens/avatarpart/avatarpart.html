@@ -11,6 +11,36 @@
           </ul>
         </div>
       {{else}}
+        {{#if partTemplate}}
+          {{#with partTemplate}}
+            <div class="template-info main-text">
+              {{#if isOwnPartTemplate}}
+                <div class="name">
+                  <span class="label">Template</span>: {{> renderTemplateNameInput name}}
+                </div>
+                <div class="description">
+                  {{> renderTemplateDescriptionInput description}}
+                </div>
+                <p>
+                  You are the designer of this template and can edit it.
+                </p>
+              {{else}}
+                <div class="name">
+                  <span class="label">Template</span>: {{> t9n name}}
+                </div>
+                <div class="description">
+                  {{> t9n description}}
+                </div>
+                <div class="author">
+                  <span class="label">Designer</span>: {{authorName}}
+                </div>
+                <p>
+                  Click Customize to create your own design based on this template.
+                </p>
+              {{/if}}
+          </div>
+          {{/with}}
+        {{/if}}
         {{#with part}}
           <div class="part">
             <ul class="properties">
@@ -37,10 +67,12 @@
       {{else}}
         <button class="main-button action-button done-button">Done</button>
         <button class="action-button replace-button">Replace</button>
-        {{#if isTemplate}}
-          {{#unless isOwnTemplate}}
-            <button class="action-button customize-button">Customize</button>
-          {{/unless}}
+        {{#if partTemplate}}
+          {{#if isOwnPartTemplate}}
+            <button class="action-button unlink-template-button">Unlink template</button>
+          {{else}}
+            <button class="action-button unlink-template-button">Customize</button>
+          {{/if}}
         {{else}}
           <button class="action-button save-as-template-button">Save as template</button>
         {{/if}}

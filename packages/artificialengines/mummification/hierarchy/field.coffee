@@ -6,12 +6,14 @@ class AM.Hierarchy.Field
   constructor: (options) ->
     templateSubscription = null
     node = null
+    placeholderNode = null
 
     cleanTemplate = ->
       templateSubscription?.stop()
 
     cleanNode = ->
       node?.destroy()
+      node = null
 
     # We want the hierarchy field to behave as a getter/setter.
     field = (value) ->
@@ -34,7 +36,7 @@ class AM.Hierarchy.Field
       # No, this is a getter, so load the data.
       return unless data = options.load()
 
-      if data.value
+      if data.value?
         # This is a raw value, clean up if we previously had templates/nodes.
         cleanTemplate()
         cleanNode()
@@ -46,10 +48,10 @@ class AM.Hierarchy.Field
         cleanNode()
         
         # Subscribe to this template.
-        templateSubscription = AM.Hierarchy.Template.forId.subscribe data.templateId
+        templateSubscription = options.templateClass.forId.subscribe data.templateId
 
         # Return the template document's root node (it will be null until the subscription kicks in).
-        AM.Hierarchy.Template.documents.findOne(data.templateId)?.node
+        options.templateClass.documents.findOne(data.templateId)?.node
 
       else if data.node
         cleanTemplate()
@@ -63,29 +65,55 @@ class AM.Hierarchy.Field
 
           else
             # In general we instantiate a node that will return the
-            # plain node data. We oly want to react to changes in the data.
+            # plain node data. We only want to react to changes in the data.
             Tracker.nonreactive =>
-              node = new AM.Hierarchy.Node
+              node = new AM.Hierarchy.Node _.extend {}, options,
                 address: options.address.nodeChild()
                 load: =>
                   # We dynamically load the value from the parent so that we
                   # don't have to keep re-creating nodes whenever data changes.
                   options.load().node
-                save: options.save
 
         # Return the node.
         node
 
       else
         console.error "Data field", options.address.string(), "got value", data
-        throw AE.InvalidOperationException "Data field is not in correct format."
+        console.trace()
+        throw new AE.InvalidOperationException "Data field is not in correct format."
+
+    # Allow correct handling of instanceof operator.
+    Object.setPrototypeOf field, @constructor.prototype
+
+    # Gets a node, even if the data for it does not exist yet.
+    # This allows us to save at locations that haven't been set yet.
+    field.getNode = ->
+      # First try to normally get the field value.
+      resultNode = field()
+
+      if resultNode instanceof AM.Hierarchy.Node
+        # We have a node so just return it.
+        resultNode
+
+      else if not resultNode
+        # We return a placeholder node, that doesn't load any data (since it's not present).
+        placeholderNode ?= new AM.Hierarchy.Node _.extend {}, options,
+          address: options.address.nodeChild()
+          load: => null
+
+        placeholderNode
+
+      else
+        # We should only get a node or undefined. If we're getting a value it's probably an addressing error.
+        throw new AE.ArgumentException "The data at this address is a terminal value, not a node."
+
+    # Store options on field.
+    field.options = options
 
     field.destroy = ->
       cleanTemplate()
       cleanNode()
-
-    # Allow correct handling of instanceof operator.
-    Object.setPrototypeOf field, @constructor.prototype
+      placeholderNode?.destroy()
 
     # Return the field getter/setter function (return must be explicit).
     return field

@@ -153,6 +153,7 @@ Package.onUse(function(api) {
   api.addFile('mummification/hierarchy/node');
   api.addFile('mummification/hierarchy/field');
   api.addFile('mummification/hierarchy/template');
+  api.addFile('mummification/hierarchy/location');
 
   // Artificial Telepathy
   api.addFiles('telepathy/telepathy.coffee');

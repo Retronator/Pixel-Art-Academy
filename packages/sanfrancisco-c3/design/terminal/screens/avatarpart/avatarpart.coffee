@@ -21,7 +21,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     super
 
     @hasCustomData = new ComputedField =>
-      @part()?.options.dataNode?.data()
+      @part()?.options.dataLocation()?.data()
 
     @showTemplates = new ComputedField =>
       return true if @forceShowTemplates()
@@ -39,6 +39,18 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
       LOI.Character.Part.Template.forType.subscribe @, type
 
+    @templateNameInput = new LOI.Components.TranslationInput
+      placeholderText: => @translation "Name your template"
+
+    @templateDescriptionInput = new LOI.Components.TranslationInput
+      placeholderText: => @translation "Describe your design"
+
+  renderTemplateNameInput: ->
+    @templateNameInput.renderComponent @currentComponent()
+
+  renderTemplateDescriptionInput: ->
+    @templateDescriptionInput.renderComponent @currentComponent()
+
   templates: ->
     return unless type = @type()
 
@@ -54,18 +66,23 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   partProperties: ->
     _.values @part().properties
 
-  isTemplate: ->
-    @part().options.dataNode()?.template
+  # Note that we can't name this helper 'template' since that would override Blaze Component template method.
+  partTemplate: ->
+    @part().options.dataLocation()?.template
 
-  isOwnTemplate: ->
+  isOwnPartTemplate: ->
     userId = Meteor.userId()
-    @part().options.dataNode()?.template.author._id is userId
+    template = @partTemplate()
+    template.author._id is userId
 
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
       'click .replace-button': @onClickReplaceButton
+      'click .save-as-template-button': @onClickSaveAsTemplateButton
+      'click .unlink-template-button': @onClickUnlinkTemplateButton
       'click .new-part-button': @onClickNewPartButton
+      'click .template': @onClickTemplate
 
   onClickDoneButton: (event) ->
     if @forceShowTemplates()
@@ -80,9 +97,22 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @forceShowTemplates true
     @forceShowEditor false
 
+  onClickSaveAsTemplateButton: (event) ->
+    @part()?.options.dataLocation.createTemplate()
+
+  onClickUnlinkTemplateButton: (event) ->
+    @part()?.options.dataLocation.unlinkTemplate()
+
   onClickNewPartButton: (event) ->
     # Delete current data at this node.
-    @part()?.options.dataNode.clear()
+    @part()?.options.dataLocation.clear()
 
     @forceShowEditor true
+    @forceShowTemplates false
+
+  onClickTemplate: (event) ->
+    template = @currentData()
+
+    @part()?.options.dataLocation.setTemplate template._id
+
     @forceShowTemplates false

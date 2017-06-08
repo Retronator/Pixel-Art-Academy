@@ -3,12 +3,13 @@ LOI = LandsOfIllusions
 
 # Game representation of a human.
 class LOI.HumanAvatar extends LOI.Avatar
-  constructor: ->
+  constructor: (@options) ->
     super
     
-    dataNode = @dataNode()
+    @body = LOI.Character.Part.Types.Body.create
+      dataLocation: new AM.Hierarchy.Location
+        rootField: @options.bodyDataField
 
-    @body = LOI.Character.Part.Types.Body.create dataNode 'body'
-    @outfit = LOI.Character.Part.Types.Outfit.create dataNode 'outfit'
-
-  dataNode: -> throw new AE.NotImplementedException "You have to provide the data node for the avatar."
+    @outfit = LOI.Character.Part.Types.Outfit.create
+      dataLocation: new AM.Hierarchy.Location
+        rootField: @options.outfitDataField

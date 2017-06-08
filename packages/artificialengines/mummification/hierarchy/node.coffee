@@ -8,7 +8,7 @@ class AM.Hierarchy.Node
     fieldGetter = (fieldName) ->
       # We want to create a new internal hierarchy field that we'll depend upon to isolate reactivity.
       unless hierarchyFields[fieldName]
-        hierarchyFields[fieldName] = new AM.Hierarchy.Field
+        hierarchyFields[fieldName] = new AM.Hierarchy.Field _.extend {}, options,
           address: options.address.fieldChild fieldName
           load: =>
             options.load()?.fields[fieldName]
@@ -26,20 +26,18 @@ class AM.Hierarchy.Node
     # Allow correct handling of instanceof operator.
     Object.setPrototypeOf node, @constructor.prototype
 
+    # Store options on node.
+    node.options = options
+
     # Transfer the presence of a template.
-    node.template = options.template
+    node.template = options?.template
     
-    node.field = (fieldName, options) ->
-      fieldGetter fieldName, options
+    node.field = (fieldName) ->
+      fieldGetter fieldName
       
     # Returns the raw loaded data directly.
     node.data = ->
       options.load()
-
-    # Removes any data at this node.
-    node.clear = ->
-      # We save null as the value, which will unset the field on the server.
-      options.save options.address.string(), null
 
     node.destroy = ->
       field.destroy() for name, field of hierarchyFields

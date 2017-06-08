@@ -3,10 +3,10 @@ AM = Artificial.Mummification
 class AM.Hierarchy
   @create: (options) ->
     # Create a blank address if needed.
-    options.address ?= new AM.Hierarchy.Address ''
+    options.address ?= new AM.Hierarchy.Address
 
     # Build a hierarchy of nodes that represents the data.
-    new @Node options
+    new @Field options
 
   @convertObjectToStoredValue: (value) ->
     if value instanceof AM.Hierarchy.Template
