@@ -12,7 +12,12 @@ class LOI.Character.Part
     # Instantiate all the properties.
     @properties = for propertyName, property of @options.properties
       propertyDataLocation = @options.dataLocation.child propertyName
-      property.create dataLocation: propertyDataLocation
+      property.create
+        dataLocation: propertyDataLocation
+        parentPart: @
+
+  destroy: ->
+    property.destroy() for property in @properties
 
   create: (options) ->
     # We create a copy of ourselves with the instance options added.

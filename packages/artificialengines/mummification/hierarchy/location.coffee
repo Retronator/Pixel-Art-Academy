@@ -35,7 +35,7 @@ class AM.Hierarchy.Location
       # Delegate the get/set.
       field value
 
-    location.getField = getField
+    location.field = getField
 
     # Allow correct handling of instanceof operator.
     Object.setPrototypeOf location, @constructor.prototype
@@ -51,20 +51,20 @@ class AM.Hierarchy.Location
 
     # Removes any data at this location.
     location.clear = ->
-      field = location.getField()
+      field = location.field()
 
       # We save null as the value, which will unset the field on the server.
       field.options.save field.options.address.string(), null
 
     # Sets this field to inherit data from a template.
     location.setTemplate = (templateId) ->
-      field = location.getField()
+      field = location.field()
 
       field.options.save field.options.address.string(), {templateId}
 
     # Converts this node into a template.
     location.createTemplate = ->
-      field = location.getField()
+      field = location.field()
       node = field()
       throw new AE.InvalidOperationException "Location already holds a template." if node.template
 
@@ -83,7 +83,7 @@ class AM.Hierarchy.Location
 
     # Takes the data from the template and converts it into a node in this field.
     location.unlinkTemplate = (templateId) ->
-      field = location.getField()
+      field = location.field()
       node = field()
       throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
 

@@ -1,15 +1,13 @@
 LOI = LandsOfIllusions
 
-class LOI.Character.Part.Property.Color extends LOI.Character.Part.Property
+class LOI.Character.Part.Property.Sprite extends LOI.Character.Part.Property
   # node
   #   fields
-  #     hue
-  #       value
-  #     shade
+  #     spriteId: ID of the sprite document
   #       value
   constructor: (@options = {}) ->
     super
 
-    @type = 'color'
+    @type = 'sprite'
 
     return unless @options.dataLocation

@@ -1,6 +1,9 @@
 Template.registerHelper 'capitalize', (string) ->
   _.capitalize string if string
 
+Template.registerHelper 'titleCase', (string) ->
+  _.titleCase string if string
+
 Template.registerHelper 'toLower', (string) ->
   _.toLower string if string
 

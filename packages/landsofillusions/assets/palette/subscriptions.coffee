@@ -7,7 +7,7 @@ Meteor.publish null, ->
 
 # Subscription to a specific palette.
 LOI.Assets.Palette.forId.publish (id) ->
-  check id Match.DocumentId
+  check id, Match.DocumentId
 
   LOI.Assets.Palette.documents.find id
 

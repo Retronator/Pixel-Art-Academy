@@ -5,6 +5,9 @@ _.extend LOI.Character.Part.Types,
     type: 'Body'
     name: 'body'
     properties:
+      testShape: new LOI.Character.Part.Property.OneOf
+        name: 'test shape'
+        type: 'TestShape'
       head: new LOI.Character.Part.Property.OneOf
         name: 'head'
         type: 'Head'
@@ -21,6 +24,14 @@ _.extend LOI.Character.Part.Types,
         name: 'skin'
         colorsPresetName: 'Skin'
 
+  TestShape: new LOI.Character.Part.Shape
+    type: 'TestShape'
+    name: 'test shape'
+
+  Head: new LOI.Character.Part
+    type: 'Head'
+    name: 'head'
+
   Torso: new LOI.Character.Part
     type: 'Torso'
     name: 'torso'
@@ -29,7 +40,7 @@ _.extend LOI.Character.Part.Types,
         name: 'chest'
         type: 'Chest'
       abdomen: new LOI.Character.Part.Property.OneOf
-        name: 'belly'
+        name: 'abdomen'
         type: 'Abdomen'
       groin: new LOI.Character.Part.Property.OneOf
         name: 'groin'
@@ -116,6 +127,22 @@ _.extend LOI.Character.Part.Types,
     landmarks:
       centerPosition: new LOI.Character.Part.Landmark.Position
       edgePosition: new LOI.Character.Part.Landmark.Position
+
+  Abdomen: new LOI.Character.Part
+    type: 'Abdomen'
+    name: 'abdomen'
+
+  Groin: new LOI.Character.Part
+    type: 'Groin'
+    name: 'groin'
+
+  Arms: new LOI.Character.Part
+    type: 'Arms'
+    name: 'arms'
+
+  Legs: new LOI.Character.Part
+    type: 'Legs'
+    name: 'legs'
 
   Outfit: new LOI.Character.Part
     type: 'Outfit'

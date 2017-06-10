@@ -5,3 +5,5 @@ class LOI.Character.Part.Property.RelativeColorShade extends LOI.Character.Part.
     super
 
     @type = 'relativeColorShade'
+
+    return unless @options.dataLocation

@@ -9,6 +9,9 @@ class AM.Hierarchy.Node
       # We want to create a new internal hierarchy field that we'll depend upon to isolate reactivity.
       unless hierarchyFields[fieldName]
         hierarchyFields[fieldName] = new AM.Hierarchy.Field _.extend {}, options,
+          # Clear template (we don't want to pass it down since
+          # only the root note should be marked as being the template).
+          template: null
           address: options.address.fieldChild fieldName
           load: =>
             options.load()?.fields[fieldName]

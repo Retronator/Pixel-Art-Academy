@@ -40,6 +40,9 @@ Package.onUse(function(api) {
   api.addServerFile('assets/palette/subscriptions');
 
   api.addFile('assets/sprite/sprite');
+  api.addFile('assets/sprite/methods');
+  api.addServerFile('assets/sprite/subscriptions');
+
   api.addFile('assets/mesh/mesh');
 
   // Game state
@@ -90,6 +93,7 @@ Package.onUse(function(api) {
   api.addFile('character/part/properties/oneof');
   api.addFile('character/part/properties/color');
   api.addFile('character/part/properties/relativecolorshade');
+  api.addFile('character/part/properties/sprite');
 
   api.addFile('character/part/landmark');
   api.addFile('character/part/landmarks/position');

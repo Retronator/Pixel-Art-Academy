@@ -17,6 +17,8 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     # We use this when the user wants to customize the options.
     @forceShowEditor = new ReactiveField false
 
+    @partStack = []
+
   onCreated: ->
     super
 
@@ -56,19 +58,30 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
     LOI.Character.Part.Template.documents.find {type}
 
-  setPart: (part) ->
+  pushPart: (part) ->
+    # Put current part on the stack
+    currentPart = @part()
+    @partStack.push currentPart if currentPart
+
+    # Set new part as active.
     @part part
 
     # Reset force modes.
     @forceShowTemplates false
     @forceShowEditor false
 
+  popPart: ->
+    # Get the last part from the stack.
+    lastPart = @partStack.pop()
+
+    @part lastPart
+
   partProperties: ->
     _.values @part().properties
 
   # Note that we can't name this helper 'template' since that would override Blaze Component template method.
   partTemplate: ->
-    @part().options.dataLocation()?.template
+    @part()?.options.dataLocation()?.template
 
   isOwnPartTemplate: ->
     userId = Meteor.userId()
@@ -90,8 +103,11 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       @forceShowTemplates false
 
     else
-      # We return back to the character screen.
-      @terminal.switchToScreen @terminal.screens.character
+      # Pop this part off the stack.
+      @popPart()
+
+      # We return back to the character screen if there's no more parts to show.
+      @terminal.switchToScreen @terminal.screens.character unless @part()
 
   onClickReplaceButton: (event) ->
     @forceShowTemplates true

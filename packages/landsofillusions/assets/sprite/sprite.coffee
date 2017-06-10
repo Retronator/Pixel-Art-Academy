@@ -1,7 +1,9 @@
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 # A 2D image asset.
-class LandsOfIllusionsAssetsSprite extends Document
+class LOI.Assets.Sprite extends AM.Document
+  @id: -> 'LandsOfIllusions.Assets.Sprite'
   # name: text identifier for the sprite
   # pixels: array of
   #   x: location of pixel in pixels
@@ -24,9 +26,15 @@ class LandsOfIllusionsAssetsSprite extends Document
   # bounds: image bounds in pixels (or null if no pixels)
   #   left, right, top, bottom
   @Meta
-    name: 'LandsOfIllusionsAssetsSprite'
+    name: @id()
     fields: =>
       palette: @ReferenceField LOI.Assets.Palette, ['name'], false
+
+  @forId: @subscription 'forId'
+
+  @insert: @method 'insert'
+  @update: @method 'update'
+  @remove: @method 'remove'
 
   constructor: ->
     super
@@ -37,5 +45,3 @@ class LandsOfIllusionsAssetsSprite extends Document
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
-
-LOI.Assets.Sprite = LandsOfIllusionsAssetsSprite

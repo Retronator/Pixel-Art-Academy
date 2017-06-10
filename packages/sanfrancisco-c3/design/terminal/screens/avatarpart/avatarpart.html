@@ -1,6 +1,6 @@
 <template name="SanFrancisco.C3.Design.Terminal.AvatarPart">
   <div class="sanfrancisco-c3-design-terminal-avatarpart screen">
-      <h1 class="screen-title">{{capitalize part.options.name}} Design</h1>
+      <h1 class="screen-title">{{titleCase part.options.name}} Design</h1>
       {{#if showTemplates}}
         <div class="templates-area">
           <button class="new-part-button avatar-part">New</button>
@@ -49,10 +49,16 @@
                   <p class="main-text avatar-item">
                     <strong>{{capitalize options.name}}</strong>:
                     {{#if $is this.type 'oneOf'}}
-                      <div class="avatar-part"></div>
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.OneOf this}}
+                    {{/if}}
+                    {{#if $is this.type 'array'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Array this}}
                     {{/if}}
                     {{#if $is this.type 'color'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.Color this}}
+                    {{/if}}
+                    {{#if $is this.type 'sprite'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Sprite this}}
                     {{/if}}
                   </p>
                 </li>

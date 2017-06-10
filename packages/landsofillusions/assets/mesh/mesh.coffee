@@ -1,7 +1,9 @@
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 # A 3D model asset.
-class LandsOfIllusionsAssetsMesh extends Document
+class LOI.Assets.Mesh extends AM.Document
+  @id: -> 'LandsOfIllusions.Assets.Mesh'
   # name: text identifier for the mesh
   # polygons: array of
   #   vertices: array of
@@ -25,11 +27,9 @@ class LandsOfIllusionsAssetsMesh extends Document
   #   min: {x, y, z}
   #   max: {x, y, z}
   @Meta
-    name: 'LandsOfIllusionsAssetsMesh'
+    name: @id()
     fields: =>
       palette: @ReferenceField LOI.Assets.Palette, ['name'], false
 
   constructor: ->
     super
-
-LOI.Assets.Mesh = LandsOfIllusionsAssetsMesh

@@ -29,6 +29,15 @@ LOI.Character.Part.Template.updateData.method (templateId, address, value) ->
   user = Retronator.requireUser()
   throw new AE.UnauthorizedException "You must be the author of the template to change it." unless template.author._id is user._id
 
-  LOI.Character.Part.Template.documents.update templateId,
-    $set:
-      "data.#{address}": value
+  if value?
+    update =
+      $set:
+        "data.#{address}": value
+  else
+    update =
+      $unset:
+        "data.#{address}": true
+
+  console.log "updating", templateId, update, address, value
+
+  LOI.Character.Part.Template.documents.update templateId, update
