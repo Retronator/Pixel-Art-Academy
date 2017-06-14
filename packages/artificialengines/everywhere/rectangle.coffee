@@ -13,7 +13,7 @@ class AE.Rectangle
         height = object.height()
 
       else
-        {x, y, width, height} = object
+        {x, y, width, height} = @_fromDimensions object
 
     @x = new ReactiveField x or 0
     @y = new ReactiveField y or 0
@@ -22,13 +22,15 @@ class AE.Rectangle
 
   # Construct a Rectangle object with a pair of any two of [left, right, width] and any two of [top, bottom, height].
   @fromDimensions: (dimensions) ->
-    new AE.Rectangle
-      x: dimensions.left ? dimensions.right - dimensions.width
-      y: dimensions.top ? dimensions.bottom - dimensions.height
-      width: dimensions.width ? dimensions.right - dimensions.left
-      height: dimensions.height ? dimensions.bottom - dimensions.top
+    new AE.Rectangle @_fromDimensions dimensions
 
-  ### Dimensions ###
+  _fromDimensions: (dimensions) ->
+    x: dimensions.left ? dimensions.right - dimensions.width
+    y: dimensions.top ? dimensions.bottom - dimensions.height
+    width: dimensions.width ? dimensions.right - dimensions.left
+    height: dimensions.height ? dimensions.bottom - dimensions.top
+
+  # Dimensions
 
   left: (value) ->
     @x value if value?
@@ -99,7 +101,7 @@ class AE.Rectangle
       top: @top() - top
       bottom: @bottom() + bottom
 
-  ### Utility ###
+  # Utility
 
   @typeName: -> 'AE.Rectangle'
   typeName: -> @constructor.typeName()

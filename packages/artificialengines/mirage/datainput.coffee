@@ -46,14 +46,13 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     throw new AE.NotImplementedException "You must implement the save method."
 
   value: ->
-    # We do the comparison with ? since we want to preserve empty strings '' (or would not).
+    # We do the comparison with ? since we want to preserve empty strings '' ('or' would not).
     @callFirstWith(@, 'value') ? @load()
 
   placeholder: ->
     @callFirstWith(@, 'placeholder')
 
   selectedAttribute: ->
-    # Force comparison by string
     option = @currentData()
     selectedValue = @value()
 

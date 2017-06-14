@@ -1,0 +1,19 @@
+<template name="LandsOfIllusions.Assets.Components.AssetInfo">
+  <div class="landsofillusions-assets-components-assetinfo">
+    <div class="properties">
+      {{#with assetData}}
+        <label class="name">Name:
+          {{> LandsOfIllusions.Assets.Components.AssetInfo.Name}}
+        </label>
+        <label class="palette">Palette:
+          {{> LandsOfIllusions.Assets.Components.AssetInfo.Palette}}
+        </label>
+      {{/with}}
+      <div class="actions">
+        <button class="clear-button">Clear</button>
+        <button class="delete-button">Delete</button>
+      </div>
+      {{> Render colorMap}}
+    </div>
+  </div>
+</template>

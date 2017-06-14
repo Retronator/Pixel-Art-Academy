@@ -30,21 +30,6 @@ Package.onUse(function(api) {
   api.addFiles('authorize/user.coffee');
   api.addFiles('authorize/character.coffee');
 
-  // Assets
-
-  api.addFile('assets/assets');
-  api.addFile('assets/server');
-
-  api.addFile('assets/palette/palette');
-  api.addFile('assets/palette/atari2600');
-  api.addServerFile('assets/palette/subscriptions');
-
-  api.addFile('assets/sprite/sprite');
-  api.addFile('assets/sprite/methods');
-  api.addServerFile('assets/sprite/subscriptions');
-
-  api.addFile('assets/mesh/mesh');
-
   // Game state
 
   api.addFiles('state/gamestate.coffee');

@@ -64,6 +64,7 @@ Package.onUse(function(api) {
   api.addClientFile('everywhere/jquery/positioncss');
 
   api.addFile('everywhere/three/color');
+  api.addFile('everywhere/three/vectors');
 
   api.addFile('everywhere/lodash/lettercase');
   api.addFile('everywhere/lodash/nestedproperty');

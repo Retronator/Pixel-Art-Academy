@@ -1,3 +1,4 @@
+RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
 # Always publish the default palette.
@@ -5,7 +6,11 @@ Meteor.publish null, ->
   LOI.Assets.Palette.documents.find
     name: LOI.Assets.Palette.defaultPaletteName
 
-# Subscription to a specific palette.
+LOI.Assets.Palette.all.publish ->
+  RA.authorizeAdmin userId: @userId
+
+  LOI.Assets.Palette.documents.find {}
+
 LOI.Assets.Palette.forId.publish (id) ->
   check id, Match.DocumentId
 

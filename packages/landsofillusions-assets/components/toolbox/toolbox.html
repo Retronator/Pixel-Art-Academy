@@ -1,0 +1,13 @@
+<template name="LandsOfIllusions.Assets.Components.Toolbox">
+  <div class="landsofillusions-assets-components-toolbox">
+    <ul class="tools">
+      {{#each options.tools}}
+        <li class="tool {{toolClass}} {{activeToolClass}}">
+          <button class="tool-button">
+            <span class="name">{{name}}</span>
+          </button>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

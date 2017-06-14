@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:sanfrancisco');
   api.use('retronator:landsofillusions');
+  api.use('retronator:landsofillusions-assets');
 
   api.export('SanFrancisco');
 

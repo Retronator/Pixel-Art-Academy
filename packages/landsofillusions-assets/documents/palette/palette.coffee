@@ -13,8 +13,11 @@ class LOI.Assets.Palette extends AM.Document
   @Meta
     name: @id()
 
+  @all: @subscription 'all'
   @forId: @subscription 'forId'
   @forName: @subscription 'forName'
+  
+  @insert: @method 'insert'
 
   # Enumeration of palette names provided by the system.
   @systemPaletteNames:

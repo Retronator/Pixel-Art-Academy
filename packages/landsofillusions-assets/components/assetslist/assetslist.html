@@ -1,0 +1,12 @@
+<template name="LandsOfIllusions.Assets.Components.AssetsList">
+  <div class="landsofillusions-assets-components-assetslist">
+    <div class="actions">
+      <button class="new-asset-button">New</button>
+    </div>
+    <ul class="assets">
+      {{#each assets}}
+        <li class="asset {{activeClass}}">{{nameOrId}}</li>
+      {{/each}}
+    </ul>
+  </div>
+</template>
