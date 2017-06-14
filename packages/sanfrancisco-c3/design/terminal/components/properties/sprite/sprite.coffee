@@ -12,32 +12,27 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
 
     @spriteId = @property.options.dataLocation.child 'spriteId'
 
-    @spriteIdInput = new @constructor.IDInput dataLocation: @spriteId
+    @spriteList = new LOI.Assets.Components.AssetsList
+      documentClass: LOI.Assets.Sprite
+      getAssetId: @spriteId
+      setAssetId: (spriteId) =>
+        # Set the new sprite.
+        @spriteId spriteId
+
+        # Close the selection UI.
+        @showSpriteList false
+
+    @showSpriteList = new ReactiveField false
+
+    @spriteImage = new LOI.Assets.Components.SpriteImage
+      spriteId: @spriteId
+
+  showSpritePreview: ->
+    @spriteId()
 
   events: ->
     super.concat
-      'click .new-sprite-button': @onClickNewSpriteButton
+      'click .choose-sprite-button': @onClickChooseSpriteButton
 
-  onClickNewSpriteButton: (event) ->
-    LOI.Assets.Sprite.insert (error, spriteId) =>
-      if error
-        console.error error
-        return
-
-      # Set the new sprite as the sprite of this property.
-      @spriteId spriteId
-
-  # Components
-
-  class @IDInput extends AM.DataInputComponent
-    constructor: (@options) ->
-      super
-      
-      @realtime = false
-      @autoSelect = true
-
-    load: ->
-      @options.dataLocation()
-
-    save: (value) ->
-      @options.dataLocation value
+  onClickChooseSpriteButton: (event) ->
+    @showSpriteList not @showSpriteList()

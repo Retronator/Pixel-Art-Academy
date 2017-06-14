@@ -38,6 +38,4 @@ LOI.Character.Part.Template.updateData.method (templateId, address, value) ->
       $unset:
         "data.#{address}": true
 
-  console.log "updating", templateId, update, address, value
-
   LOI.Character.Part.Template.documents.update templateId, update

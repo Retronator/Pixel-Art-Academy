@@ -11,4 +11,7 @@ LOI.Assets.Sprite.all.publish ->
   # Only admins (and later sprite editors) can see all the sprite.
   RA.authorizeAdmin userId: @userId
 
-  LOI.Assets.Sprite.documents.find()
+  # We only return sprite names when subscribing to all so that we can list them.
+  LOI.Assets.Sprite.documents.find {},
+    fields:
+      name: 1

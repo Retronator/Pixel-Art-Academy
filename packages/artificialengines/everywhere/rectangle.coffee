@@ -13,7 +13,7 @@ class AE.Rectangle
         height = object.height()
 
       else
-        {x, y, width, height} = @_fromDimensions object
+        {x, y, width, height} = @constructor._fromDimensions object
 
     @x = new ReactiveField x or 0
     @y = new ReactiveField y or 0
@@ -24,9 +24,11 @@ class AE.Rectangle
   @fromDimensions: (dimensions) ->
     new AE.Rectangle @_fromDimensions dimensions
 
-  _fromDimensions: (dimensions) ->
-    x: dimensions.left ? dimensions.right - dimensions.width
-    y: dimensions.top ? dimensions.bottom - dimensions.height
+  @_fromDimensions: (dimensions) ->
+    left = dimensions.x ? dimensions.left
+    top = dimensions.y ? dimensions.top
+    x: left ? dimensions.right - dimensions.width
+    y: top ? dimensions.bottom - dimensions.height
     width: dimensions.width ? dimensions.right - dimensions.left
     height: dimensions.height ? dimensions.bottom - dimensions.top
 

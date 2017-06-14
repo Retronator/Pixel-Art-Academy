@@ -61,6 +61,8 @@ Package.onUse(function(api) {
   api.addFile('components/pixelcanvas/cursor');
   api.addFile('components/pixelcanvas/camera');
 
+  api.addUnstyledComponent('components/spriteimage/spriteimage');
+
   // Engine
 
   api.addFile('engine/engine');

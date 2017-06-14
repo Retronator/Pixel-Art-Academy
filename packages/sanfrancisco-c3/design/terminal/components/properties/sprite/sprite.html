@@ -1,9 +1,15 @@
 <template name="SanFrancisco.C3.Design.Terminal.Properties.Sprite">
   <div class="sanfrancisco-c3-design-terminal-properties-sprite">
-    <div class="id">
-      ID:
-      {{> Render spriteIdInput}}
-      <button class="new-sprite-button action-button">New sprite</button>
+    <div class="sprite-selection">
+      <button class="choose-sprite-button action-button">Choose sprite</button>
+      {{#if showSpriteList}}
+        {{> Render spriteList}}
+      {{/if}}
     </div>
+    {{#if showSpritePreview}}
+      <div class="sprite-preview">
+        {{> Render spriteImage}}
+      </div>
+    {{/if}}
   </div>
 </template>
