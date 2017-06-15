@@ -14,16 +14,15 @@ class LOI.Assets.Components.AssetsList extends AM.Component
     super
 
     @options.documentClass.all.subscribe @, =>
-      # Always show the first asset image if none is displayed.
+      # Deselect asset if it gets deleted.
       @autorun (computation) =>
-        currentAssetId = @assetId()
+        return unless currentAssetId = @assetId()
 
-        # Make sure the current asset exists.
+        # See if the current asset exists.
         return if currentAssetId and @options.documentClass.documents.findOne currentAssetId
 
-        # Switch to the first asset image on the display list.
-        asset = @assets().fetch()[0]
-        @options.setAssetId asset?._id or null
+        # Clear the asset selection.
+        @options.setAssetId null
 
   assets: ->
     @options.documentClass.documents.find {},

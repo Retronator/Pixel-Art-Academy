@@ -8,6 +8,7 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
     # Create the body and outfit data hierarchies first.
     bodyDataField = AM.Hierarchy.create
       templateClass: LOI.Character.Part.Template
+      # TODO: We need to set the type somehow different so it's dynamic in the location (test with create template).
       type: LOI.Character.Part.Types.Body.options.type
       load: => @_avatar()?.body
       save: (address, value) =>

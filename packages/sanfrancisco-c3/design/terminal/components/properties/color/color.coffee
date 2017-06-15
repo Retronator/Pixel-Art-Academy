@@ -60,6 +60,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
   onCreated: ->
     super
 
+    # TODO: Make property reactive to data change.
     @property = @data()
 
     @colors = @property.options.colors

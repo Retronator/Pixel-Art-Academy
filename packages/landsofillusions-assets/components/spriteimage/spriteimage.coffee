@@ -13,14 +13,14 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
     super
 
     @spriteData = new ComputedField =>
-      spriteId = @options.spriteId()
+      return unless spriteId = @options.spriteId()
 
       LOI.Assets.Sprite.forId.subscribe spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
 
     @sprite = new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
-      lightDirection: @lightDirection
+      lightDirection: @options.lightDirection
 
   onRendered: ->
     super

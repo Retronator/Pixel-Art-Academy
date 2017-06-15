@@ -26,10 +26,13 @@ class LOI.Assets.SpriteEditor extends AM.Component
       FlowRouter.getParam 'spriteId'
 
     @spriteData = new ComputedField =>
-      spriteId = @spriteId()
+      return unless spriteId = @spriteId()
+
+      LOI.Assets.Sprite.forId.subscribe spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
       
     @paletteId = new ComputedField =>
+      # Minimize reactivity to only palette changes.
       LOI.Assets.Sprite.documents.findOne(@spriteId(),
         fields:
           palette: 1
