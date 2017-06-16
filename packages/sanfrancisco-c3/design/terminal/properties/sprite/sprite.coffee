@@ -52,8 +52,12 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
     window.open FlowRouter.path 'LandsOfIllusions.Assets.SpriteEditor', spriteId: @spriteId()
 
   onMouseMoveSpritePreview: (event) ->
-    percentageX = event.offsetX / $('.sprite-preview').outerWidth() * 2 - 1
-    percentageY = event.offsetY / $('.sprite-preview').outerHeight() * 2 - 1
+    $spritePreview = @$('.sprite-preview')
+    spritePreviewOffset = $spritePreview.offset()
+
+    percentageX = (event.pageX - spritePreviewOffset.left) / $spritePreview.outerWidth() * 2 - 1
+    percentageY = (event.pageY - spritePreviewOffset.top) / $spritePreview.outerHeight() * 2 - 1
+    
     @lightDirection new THREE.Vector3(-percentageX, percentageY, -1).normalize()
 
   onMouseLeaveSpritePreview: (event) ->

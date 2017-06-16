@@ -5,9 +5,6 @@ _.extend LOI.Character.Part.Types,
     type: 'Body'
     name: 'body'
     properties:
-      testShape: new LOI.Character.Part.Property.OneOf
-        name: 'test shape'
-        type: 'TestShape'
       head: new LOI.Character.Part.Property.OneOf
         name: 'head'
         type: 'Head'
@@ -23,10 +20,6 @@ _.extend LOI.Character.Part.Types,
       skin: new LOI.Character.Part.Property.Color
         name: 'skin'
         colorsPresetName: 'Skin'
-
-  TestShape: new LOI.Character.Part.Shape
-    type: 'TestShape'
-    name: 'test shape'
 
   Head: new LOI.Character.Part
     type: 'Head'

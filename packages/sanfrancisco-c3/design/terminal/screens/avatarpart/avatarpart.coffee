@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
@@ -57,6 +58,18 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     return unless type = @type()
 
     LOI.Character.Part.Template.documents.find {type}
+
+  templatePart: ->
+    template = @currentData()
+    part = @part()
+
+    dataField = AMu.Hierarchy.create
+      templateClass: LOI.Character.Part.Template
+      load: => template
+
+    part.create
+      dataLocation: new AMu.Hierarchy.Location
+        rootField: dataField
 
   pushPart: (part) ->
     # Put current part on the stack

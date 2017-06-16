@@ -35,11 +35,14 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/screens/character/character');
   api.addComponent('design/terminal/screens/avatarpart/avatarpart');
 
-  api.addFile('design/terminal/components/properties/properties');
-  api.addComponent('design/terminal/components/properties/oneof/oneof');
-  api.addComponent('design/terminal/components/properties/array/array');
-  api.addComponent('design/terminal/components/properties/color/color');
-  api.addComponent('design/terminal/components/properties/sprite/sprite');
+  api.addFile('design/terminal/components/components');
+  api.addComponent('design/terminal/components/avatarpartpreview/avatarpartpreview');
+
+  api.addFile('design/terminal/properties/properties');
+  api.addComponent('design/terminal/properties/oneof/oneof');
+  api.addComponent('design/terminal/properties/array/array');
+  api.addComponent('design/terminal/properties/color/color');
+  api.addComponent('design/terminal/properties/sprite/sprite');
 
   api.addFile('hallway/hallway');
   api.addThing('lobby/lobby');

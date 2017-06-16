@@ -10,3 +10,7 @@ class LOI.Character.Part.Shape extends LOI.Character.Part
         name: 'front'
 
     super options
+
+  createRenderer: (engineOptions) ->
+    new LOI.Character.Part.Renderers.Shape engineOptions,
+      frontSpriteId: @options.dataLocation.child('front').child('spriteId')

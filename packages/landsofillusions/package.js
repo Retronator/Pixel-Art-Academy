@@ -72,6 +72,10 @@ Package.onUse(function(api) {
 
   api.addFile('character/part/parts/shape');
 
+  api.addFile('character/part/renderers/renderers');
+  api.addFile('character/part/renderers/shape');
+  api.addFile('character/part/renderers/default');
+
   api.addFile('character/part/property');
   api.addFile('character/part/properties/array');
   api.addFile('character/part/properties/integer');

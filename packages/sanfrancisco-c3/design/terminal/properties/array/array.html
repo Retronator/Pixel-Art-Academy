@@ -3,7 +3,9 @@
     <button class="new-part-button avatar-part">New</button>
     <ul class="parts">
       {{#each parts}}
-        <li class="part avatar-part"></li>
+        <li class="part avatar-part">
+          {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview}}
+        </li>
       {{/each}}
     </ul>
   </div>
