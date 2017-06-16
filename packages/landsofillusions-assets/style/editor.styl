@@ -208,9 +208,9 @@ html.asset-editor
 
   .landsofillusions-assets-components-toolbox
     position absolute
-    top 100rem
+    top 120rem
     left 5rem
-    width 60rem
+    width 70rem
 
     .tools
       list-style none
@@ -228,10 +228,22 @@ html.asset-editor
           .tool-button
             background atariAqua(1)
 
+        &.enabled
+          .tool-button
+            background atariCyan(1)
+
   .landsofillusions-assets-components-shadingsphere
     position absolute
     bottom 5rem
     left 5rem
+
+    .options
+      display inline-block
+      vertical-align bottom
+      margin-left 5rem
+
+      .option
+        margin-top 5rem
 
     .landsofillusions-assets-components-pixelcanvas
       display inline-block

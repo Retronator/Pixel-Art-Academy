@@ -17,11 +17,12 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @assetInfo = new ReactiveField null
     @materials = new ReactiveField null
     @tools = new ReactiveField null
+    @actions = new ReactiveField null
     @toolbox = new ReactiveField null
     @shadingSphere = new ReactiveField null
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, 0, -1).normalize()
-    @visualizeNormals = new ReactiveField true
+    @paintNormals = new ReactiveField true
 
     @spriteId = new ComputedField =>
       FlowRouter.getParam 'spriteId'
@@ -50,7 +51,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @sprite new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
       lightDirection: @lightDirection
-      visualizeNormals: @visualizeNormals
+      visualizeNormals: @paintNormals
 
     @pixelCanvas new LOI.Assets.Components.PixelCanvas
       initialCameraScale: 8
@@ -87,14 +88,15 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @toolbox new LOI.Assets.Components.Toolbox
       tools: @tools
       activeTool: @activeTool
+      actions: @actions
       
     @shadingSphere new LOI.Assets.Components.ShadingSphere
       palette: @palette
       materials: @materials
       lightDirection: @lightDirection
-      visualizeNormals: @visualizeNormals
+      visualizeNormals: @paintNormals
       radius: => 30
-      angleSnap: => THREE.Math.degToRad 30
+      initialAngleSnap: 30
 
     # Create tools.
     toolClasses = [
@@ -102,6 +104,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
       @constructor.Tools.Eraser
       @constructor.Tools.ColorFill
       @constructor.Tools.ColorPicker
+      @constructor.Tools.PaintNormals
     ]
 
     tools = for toolClass in toolClasses
@@ -109,8 +112,6 @@ class LOI.Assets.SpriteEditor extends AM.Component
         editor: => @
           
     @tools tools
-
-    @activeTool tools[0]
 
   onDestroyed: ->
     super

@@ -25,7 +25,10 @@ class LOI.Assets.Components.Toolbox extends AM.Component
   toolClass: ->
     tool = @currentData()
 
-    _.kebabCase tool.name
+    toolClass = _.kebabCase tool.name
+    extraToolClass = tool.toolClass?()
+
+    [toolClass, extraToolClass].join ' '
 
   activeToolClass: ->
     tool = @currentData()
@@ -39,7 +42,11 @@ class LOI.Assets.Components.Toolbox extends AM.Component
   onClickToolButton: (event) ->
     tool = @currentData()
 
-    @options.activeTool tool
+    if tool.method
+      tool.method()
+
+    else
+      @options.activeTool tool
 
   onKeyDown: (event) ->
     key = event.which

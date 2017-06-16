@@ -76,5 +76,6 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/eraser');
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
+  api.addFile('spriteeditor/tools/paintnormals');
 
 });

@@ -12,13 +12,14 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
     @currentNormal = new ReactiveField new THREE.Vector3 0, 0, 1
 
     @editLight = new ReactiveField false
+    @angleSnap = new ReactiveField @options.initialAngleSnap
 
     @pixelCanvas = new ReactiveField null
 
     @sphereSpriteGeometry = new ComputedField =>
       # Construct the sphere sprite.
       return unless radius = @options.radius()
-      angleSnap = @options.angleSnap?()
+      angleSnap = @angleSnap()
 
       bounds = new AE.Rectangle(
         left: Math.floor -radius
@@ -52,28 +53,37 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
 
       # Add palette information to sprite.
       palette = @options.palette()
-      return unless paletteId = palette.options.paletteId()
+      visualizeNormals = @options.visualizeNormals()
+      paletteId = palette.options.paletteId()
 
-      spriteData.palette =
-        _id: paletteId
+      if visualizeNormals
+        # Just return the sprite without any extra color information.
+        spriteData
 
-      # Get the ramp and shade we're using.
-      material =
-        ramp: palette.currentRamp()
-        shade: palette.currentShade()
+      else if paletteId
+        spriteData.palette =
+          _id: paletteId
 
-      # See if we're setting a named color.
-      materialIndex = @options.materials().currentIndex()
+        # Get the ramp and shade we're using.
+        material =
+          ramp: palette.currentRamp()
+          shade: palette.currentShade()
 
-      if materialIndex?
-        assetData = @options.materials().assetData()
-        material = assetData.materials?[materialIndex]
+        # See if we're setting a named color.
+        materialIndex = @options.materials().currentIndex()
 
-      return unless material?.ramp? and material?.shade?
+        if materialIndex?
+          assetData = @options.materials().assetData()
+          material = assetData.materials?[materialIndex]
 
-      spriteData.materials = 0: material
+        return unless material?.ramp? and material?.shade?
 
-      spriteData
+        spriteData.materials = 0: material
+
+        spriteData
+
+      else
+        return null
 
     @circleSpriteGeometry = new ComputedField =>
       return unless palette = LOI.palette()
@@ -169,6 +179,8 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
       ]
       activeTool: => normalPicker
 
+    @angleSnapInput = new @constructor.AngleSnap @angleSnap
+
   setNormal: (normal) ->
     @currentNormal normal
 
@@ -188,11 +200,12 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
     else
       normal
 
-  @snapNormalToAngle: (normal, angleSnap) ->
+  @snapNormalToAngle: (normal, angleSnapDegrees) ->
     backward = new THREE.Vector3 0, 0, 1
     up = new THREE.Vector3 0, 1, 0
 
     # Find the angle from the center.
+    angleSnap = THREE.Math.degToRad angleSnapDegrees
     snapToAngle = (angle) -> angle = Math.round(angle / angleSnap) * angleSnap
 
     verticalAngle = snapToAngle normal.angleTo backward
@@ -212,3 +225,24 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
 
   onClickEditLightButton: (event) ->
     @editLight not @editLight()
+
+  # Components
+
+  class @AngleSnap extends AM.DataInputComponent
+    @register 'LandsOfIllusions.Assets.Components.ShadingSphere.AngleSnap'
+
+    constructor: (@angleSnap) ->
+      super
+
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      for angle in [0, 25, 30, 45, 90]
+        name: if angle then "#{angle}°" else "None"
+        value: angle
+
+    load: ->
+      @angleSnap()
+
+    save: (value) ->
+      @angleSnap parseInt value
