@@ -20,9 +20,6 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   #     materialIndex: the index of the named color of the pixel
   #     normal: the direction of the surface that this pixel represents in right-handed 3D coordinates
   #       x, y, z
-  # landmarks: array of named locations
-  #   name: name of the landmark
-  #   x, y: floating point location of the landmark
   # bounds: image bounds in pixels (or null if no pixels)
   #   left, right, top, bottom
   @Meta

@@ -50,6 +50,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/navigator/navigator');
   api.addUnstyledComponent('components/palette/palette');
   api.addUnstyledComponent('components/materials/materials');
+  api.addUnstyledComponent('components/landmarks/landmarks');
   api.addUnstyledComponent('components/toolbox/toolbox');
 
   api.addUnstyledComponent('components/shadingsphere/shadingsphere');

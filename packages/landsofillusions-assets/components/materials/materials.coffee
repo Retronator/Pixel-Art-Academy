@@ -26,7 +26,7 @@ class LOI.Assets.Components.Materials extends AM.Component
 
       @paletteSubscriptionHandle = LOI.Assets.Palette.forId.subscribe assetData.palette._id
 
-    # Deselect index if it's outside asset's named colors.
+    # Deselect index if it's outside asset's materials.
     @autorun (computation) =>
       return if @assetData()?.materials?[@currentIndex()]
       
@@ -36,7 +36,7 @@ class LOI.Assets.Components.Materials extends AM.Component
     # Make sure index is a number and not a string. But it could be null too for deselecting.
     index = parseInt index if index?
 
-    # Set current named color index.
+    # Set current material index.
     @currentIndex index
 
     # Deselect the color in the palette if we've set one of our own.
@@ -110,25 +110,25 @@ class LOI.Assets.Components.Materials extends AM.Component
   events: ->
     super.concat
       'click .preview-color': @onClickPreviewColor
-      'change .name-input, change .ramp-input, change .shade-input, change .dither-input': @onChangeColor
+      'change .name-input, change .ramp-input, change .shade-input, change .dither-input': @onChangeMaterial
       'click .add-material-button': @onClickAddMaterialButton
 
   onClickPreviewColor: (event) ->
     data = @currentData()
     @setIndex data.index
 
-  onChangeColor: (event) ->
-    $color = $(event.target).closest('.color')
+  onChangeMAterial: (event) ->
+    $material = $(event.target).closest('.material')
 
     index = @_parseIntOrNull @currentData().index
     return unless index?
 
     material =
       # We null the name if it's an empty string
-      name: $color.find('.name-input').val() or null
-      ramp: @_parseIntOrNull $color.find('.ramp-input').val()
-      shade: @_parseIntOrNull $color.find('.shade-input').val()
-      dither: @_parseFloatOrNull $color.find('.dither-input').val()
+      name: $material.find('.name-input').val() or null
+      ramp: @_parseIntOrNull $material.find('.ramp-input').val()
+      shade: @_parseIntOrNull $material.find('.shade-input').val()
+      dither: @_parseFloatOrNull $material.find('.dither-input').val()
 
     LOI.Assets.VisualAsset.updateMaterial @assetData()._id, @options.documentClass.name, index, material
 

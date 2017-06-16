@@ -1,6 +1,6 @@
 <template name="LandsOfIllusions.Assets.Components.Materials">
   <div class="landsofillusions-assets-components-materials">
-    <table class="color-table">
+    <table class="materials-table">
       <tr class="legend">
         <th class="preview"></th>
         <th class="name">name</th>
@@ -9,7 +9,7 @@
         <th class="shade">dither</th>
       </tr>
       {{#each colors}}
-        <tr class="color">
+        <tr class="material">
           <td class="preview preview-color {{activeColorClass}}" {{style colorPreviewStyle}}></td>
           <td class="name"><input class="name-input" value="{{name}}"/></td>
           <td class="ramp"><input class="ramp-input" type="number" min="0" max="15" value="{{ramp}}"/></td>

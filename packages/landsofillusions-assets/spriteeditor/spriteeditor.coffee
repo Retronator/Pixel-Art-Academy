@@ -16,13 +16,14 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @assetsList = new ReactiveField null
     @assetInfo = new ReactiveField null
     @materials = new ReactiveField null
+    @landmarks = new ReactiveField null
     @tools = new ReactiveField null
     @actions = new ReactiveField null
     @toolbox = new ReactiveField null
     @shadingSphere = new ReactiveField null
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, 0, -1).normalize()
-    @paintNormals = new ReactiveField true
+    @paintNormals = new ReactiveField false
 
     @spriteId = new ComputedField =>
       FlowRouter.getParam 'spriteId'
@@ -58,6 +59,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
       activeTool: @activeTool
       drawComponents: => [
         @sprite()
+        @landmarks()
       ]
         
     @assetsList new LOI.Assets.Components.AssetsList
@@ -84,6 +86,11 @@ class LOI.Assets.SpriteEditor extends AM.Component
       assetId: @spriteId
       documentClass: LOI.Assets.Sprite
       palette: @palette
+
+    @landmarks new LOI.Assets.Components.Landmarks
+      assetId: @spriteId
+      documentClass: LOI.Assets.Sprite
+      pixelCanvas: @pixelCanvas
 
     @toolbox new LOI.Assets.Components.Toolbox
       tools: @tools

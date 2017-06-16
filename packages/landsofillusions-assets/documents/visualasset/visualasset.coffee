@@ -13,6 +13,9 @@ class LOI.Assets.VisualAsset extends AM.Document
   #     name: what the color represents
   #     ramp: index of the ramp within the palette
   #     shade: index of the shade in the ramp
+  # landmarks: array of named locations
+  #   name: name of the landmark
+  #   x, y, z: floating point location of the landmark
   # history: list of operations that produce this image
   #   forward: update delta that creates the result of the operation
   #   backward: update delta that undoes the operation from the resulting state
@@ -23,6 +26,7 @@ class LOI.Assets.VisualAsset extends AM.Document
 
   @updatePalette: @method 'updatePalette'
   @updateMaterial: @method 'updateMaterial'
+  @updateLandmark: @method 'updateLandmark'
 
   # Child documents should implement these.
   @forId: null

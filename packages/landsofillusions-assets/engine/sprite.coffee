@@ -25,8 +25,7 @@ class LOI.Assets.Engine.Sprite
       canvasPixelsCount = @_canvas.width * @_canvas.height
       
       # Clear the image buffer to transparent.
-      for i in [0...canvasPixelsCount]
-        imageData.data[i * 4 + 3] = 0
+      imageData.data.fill 0
 
       # Build the depth buffer if needed.
       unless @_depthBuffer?.length is canvasPixelsCount

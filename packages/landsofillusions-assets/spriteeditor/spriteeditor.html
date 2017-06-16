@@ -1,11 +1,16 @@
 <template name="LandsOfIllusions.Assets.SpriteEditor">
   <div class="landsofillusions-assets-spriteeditor landsofillusions-assets-editor">
+    <div class="left-sidebar">
+      {{> Render assetsList}}
+      {{> Render toolbox}}
+    </div>
+    <div class="right-sidebar">
+      {{> Render navigator}}
+      {{> Render assetInfo}}
+      {{> Render materials}}
+      {{> Render landmarks}}
+    </div>
     {{> Render pixelCanvas}}
-    {{> Render assetsList}}
-    {{> Render assetInfo}}
-    {{> Render toolbox}}
-    {{> Render navigator}}
-    {{> Render materials}}
     {{> Render palette}}
     {{> Render shadingSphere}}
   </div>
