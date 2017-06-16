@@ -37,6 +37,7 @@ class LOI.Assets.Engine.Sprite
 
       # Prepare constants.
       inverseLightDirection = @options.lightDirection?()?.clone().multiplyScalar(-1)
+      materialsData = @options.materialsData?()
 
       for layer in spriteData.layers
         continue unless layer.pixels
@@ -61,7 +62,14 @@ class LOI.Assets.Engine.Sprite
 
           # Determine the color.
           if pixel.materialIndex?
-            paletteColor = spriteData.materials[pixel.materialIndex]
+            material = spriteData.materials[pixel.materialIndex]
+
+            paletteColor = _.clone material
+
+            # Override material data if we have it present.
+            if materialData = materialsData?[material.name]
+              for key, value of materialData
+                paletteColor[key] = value if value?
 
           else if pixel.paletteColor
             paletteColor = pixel.paletteColor

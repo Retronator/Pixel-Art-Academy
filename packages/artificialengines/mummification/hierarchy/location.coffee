@@ -43,11 +43,16 @@ class AM.Hierarchy.Location
     # Store options on location.
     location.options = options
 
-    location.child = (field) ->
+    # Creates a location with the given address below the current location.
+    location.child = (address) ->
       prefix = if options.address then "#{options.address}." else ''
 
       new location.constructor _.extend {}, options,
-        address: "#{prefix}#{field}"
+        address: "#{prefix}#{address}"
+
+    # Creates a location at the given absolute address in this hierarchy.
+    location.absoluteAddress = (address) ->
+      new location.constructor _.extend {}, options, {address}
 
     # Removes any data at this location.
     location.clear = ->

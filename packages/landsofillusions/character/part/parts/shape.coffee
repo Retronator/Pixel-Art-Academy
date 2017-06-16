@@ -13,4 +13,5 @@ class LOI.Character.Part.Shape extends LOI.Character.Part
 
   createRenderer: (engineOptions) ->
     new LOI.Character.Part.Renderers.Shape engineOptions,
-      frontSpriteId: @options.dataLocation.child('front').child('spriteId')
+      skin: @options.dataLocation.absoluteAddress('skin')
+      frontSpriteId: @options.dataLocation.child('front.spriteId')
