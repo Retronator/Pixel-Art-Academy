@@ -21,6 +21,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @shadingSphere = new ReactiveField null
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, 0, -1).normalize()
+    @visualizeNormals = new ReactiveField true
 
     @spriteId = new ComputedField =>
       FlowRouter.getParam 'spriteId'
@@ -49,6 +50,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @sprite new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
       lightDirection: @lightDirection
+      visualizeNormals: @visualizeNormals
 
     @pixelCanvas new LOI.Assets.Components.PixelCanvas
       initialCameraScale: 8
@@ -90,7 +92,9 @@ class LOI.Assets.SpriteEditor extends AM.Component
       palette: @palette
       materials: @materials
       lightDirection: @lightDirection
-      radius: => 20
+      visualizeNormals: @visualizeNormals
+      radius: => 30
+      angleSnap: => THREE.Math.degToRad 30
 
     # Create tools.
     toolClasses = [

@@ -124,10 +124,26 @@ _.extend LOI.Character.Part.Types,
   Abdomen: new LOI.Character.Part
     type: 'Abdomen'
     name: 'abdomen'
+    properties:
+      shape: new LOI.Character.Part.Property.OneOf
+        name: 'shape'
+        type: 'AbdomenShape'
+
+  AbdomenShape: new LOI.Character.Part.Shape
+    type: 'AbdomenShape'
+    name: 'abdomen shape'
 
   Groin: new LOI.Character.Part
     type: 'Groin'
     name: 'groin'
+    properties:
+      shape: new LOI.Character.Part.Property.OneOf
+        name: 'shape'
+        type: 'GroinShape'
+
+  GroinShape: new LOI.Character.Part.Shape
+    type: 'GroinShape'
+    name: 'groin shape'
 
   Arms: new LOI.Character.Part
     type: 'Arms'

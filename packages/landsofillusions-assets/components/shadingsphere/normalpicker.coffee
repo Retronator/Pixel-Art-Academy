@@ -14,10 +14,15 @@ class LOI.Assets.Components.ShadingSphere.NormalPicker extends LandsOfIllusions.
   calculateNormal: ->
     return unless @mouseState.leftButton
 
+    editLight = @options.editor().editLight()
+
     canvasCoordinate = @options.editor().pixelCanvas().mouse().canvasCoordinate()
 
+    # Snap to angle when choosing a normal, but not for changing light.
+    angleSnap = @options.editor().options.angleSnap?() unless editLight
+
     # Set the new normal.
-    normal = @options.editor().canvasCoordinateToNormal canvasCoordinate
+    normal = @options.editor().canvasCoordinateToNormal canvasCoordinate, angleSnap
 
     if @options.editor().editLight()
       # Set light direction to the inverse of the normal

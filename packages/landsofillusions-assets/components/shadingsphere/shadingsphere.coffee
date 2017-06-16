@@ -18,6 +18,7 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
     @sphereSpriteGeometry = new ComputedField =>
       # Construct the sphere sprite.
       return unless radius = @options.radius()
+      angleSnap = @options.angleSnap?()
 
       bounds = new AE.Rectangle(
         left: Math.floor -radius
@@ -39,8 +40,8 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
           pixelCenter = new THREE.Vector2 x + 0.5, y + 0.5
           continue if pixelCenter.length() > radius
 
-          normal = @canvasCoordinateToNormal pixelCenter
-
+          normal = @canvasCoordinateToNormal pixelCenter, angleSnap
+          
           pixels.push {x, y, normal, materialIndex}
 
       layers: [pixels: pixels]
@@ -149,6 +150,7 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
     sphereSprite = new LOI.Assets.Engine.Sprite
       spriteData: @sphereSpriteData
       lightDirection: @options.lightDirection
+      visualizeNormals: @options.visualizeNormals
 
     circleSprite = new LOI.Assets.Engine.Sprite
       spriteData: @circleSpriteData
@@ -170,7 +172,7 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
   setNormal: (normal) ->
     @currentNormal normal
 
-  canvasCoordinateToNormal: (coordinate) ->
+  canvasCoordinateToNormal: (coordinate, angleSnap) ->
     radius = @options.radius()
 
     # We reverse the y coordinate because normal is in right-handed 3D space.
@@ -178,7 +180,28 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
     y = -coordinate.y
     z = Math.sqrt(Math.pow(radius, 2) - Math.pow(x, 2) - Math.pow(y, 2))
 
-    new THREE.Vector3(x, y, z).normalize()
+    normal = new THREE.Vector3(x, y, z).normalize()
+
+    if angleSnap
+      @constructor.snapNormalToAngle normal, angleSnap
+
+    else
+      normal
+
+  @snapNormalToAngle: (normal, angleSnap) ->
+    backward = new THREE.Vector3 0, 0, 1
+    up = new THREE.Vector3 0, 1, 0
+
+    # Find the angle from the center.
+    snapToAngle = (angle) -> angle = Math.round(angle / angleSnap) * angleSnap
+
+    verticalAngle = snapToAngle normal.angleTo backward
+    horizontalAngle = snapToAngle Math.atan2 normal.y, normal.x
+
+    rotationAxis = up.transformDirection new THREE.Matrix4().makeRotationZ horizontalAngle
+    rotationQuaternion = new THREE.Quaternion().setFromAxisAngle rotationAxis, verticalAngle
+
+    backward.transformDirection new THREE.Matrix4().makeRotationFromQuaternion rotationQuaternion
 
   editLightActiveClass: ->
     'active' if @editLight()
