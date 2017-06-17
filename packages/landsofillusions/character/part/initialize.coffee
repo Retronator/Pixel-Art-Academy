@@ -28,6 +28,9 @@ _.extend LOI.Character.Part.Types,
   Torso: new LOI.Character.Part
     type: 'Torso'
     name: 'torso'
+    renderer: new LOI.Character.Part.Renderers.Default
+      origin:
+        landmark: 'navel'
     properties:
       chest: new LOI.Character.Part.Property.OneOf
         name: 'chest'
@@ -53,6 +56,11 @@ _.extend LOI.Character.Part.Types,
   ChestShape: new LOI.Character.Part.Shape
     type: 'ChestShape'
     name: 'chest shape'
+    renderer: new LOI.Character.Part.Renderers.Shape
+      origin:
+        landmark: 'xiphoid'
+        x: 0
+        y: 3.5
 
   ChestBodyFat: new LOI.Character.Part.Shape
     type: 'ChestBodyFat'
@@ -132,6 +140,9 @@ _.extend LOI.Character.Part.Types,
   AbdomenShape: new LOI.Character.Part.Shape
     type: 'AbdomenShape'
     name: 'abdomen shape'
+    renderer: new LOI.Character.Part.Renderers.Shape
+      origin:
+        landmark: 'navel'
 
   Groin: new LOI.Character.Part
     type: 'Groin'

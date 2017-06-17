@@ -25,5 +25,6 @@ class LOI.Character.Part
 
   createRenderer: (engineOptions) ->
     # Override to provide this part's renderer.
-    new LOI.Character.Part.Renderers.Default engineOptions,
-      part: @
+    renderer = @options.renderer or new LOI.Character.Part.Renderers.Default
+
+    renderer.create part: @, engineOptions

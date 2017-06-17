@@ -46,3 +46,6 @@ class LOI.Assets.VisualAsset extends AM.Document
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
+
+  getLandmarkForName: (name) ->
+    _.find @landmarks, (landmark) -> landmark.name is name

@@ -111,7 +111,7 @@ class LOI.Assets.Engine.Sprite
               else
                 normal = new THREE.Vector3 0, 0, 1
 
-              shadeFactor = THREE.Math.clamp normal.dot(inverseLightDirection), 0, 1
+              shadeFactor = 0.3 + 0.7 * THREE.Math.clamp normal.dot(inverseLightDirection), 0, 1
 
             else
               shadeFactor = 1

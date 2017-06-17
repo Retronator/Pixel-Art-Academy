@@ -117,7 +117,7 @@ class LOI.Assets.Components.Materials extends AM.Component
     data = @currentData()
     @setIndex data.index
 
-  onChangeMAterial: (event) ->
+  onChangeMaterial: (event) ->
     $material = $(event.target).closest('.material')
 
     index = @_parseIntOrNull @currentData().index

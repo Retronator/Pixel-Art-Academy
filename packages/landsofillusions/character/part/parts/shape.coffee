@@ -12,6 +12,12 @@ class LOI.Character.Part.Shape extends LOI.Character.Part
     super options
 
   createRenderer: (engineOptions) ->
-    new LOI.Character.Part.Renderers.Shape engineOptions,
+    # Override to provide this part's renderer.
+    renderer = @options.renderer or new LOI.Character.Part.Renderers.Shape
+
+    renderer.create
+      part: @
       skin: @options.dataLocation.absoluteAddress('skin')
       frontSpriteId: @options.dataLocation.child('front.spriteId')
+    ,
+      engineOptions

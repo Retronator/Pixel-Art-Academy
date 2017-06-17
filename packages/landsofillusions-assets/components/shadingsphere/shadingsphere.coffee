@@ -237,7 +237,7 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
       @type = AM.DataInputComponent.Types.Select
 
     options: ->
-      for angle in [0, 25, 30, 45, 90]
+      for angle in [0, 22.5, 30, 45, 90]
         name: if angle then "#{angle}°" else "None"
         value: angle
 
@@ -245,4 +245,4 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
       @angleSnap()
 
     save: (value) ->
-      @angleSnap parseInt value
+      @angleSnap parseFloat value
