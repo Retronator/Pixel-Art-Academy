@@ -38,8 +38,8 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
         hues.red
         hues.peach
         hues.orange
-        hues.yellow
         hues.brown
+        hues.yellow
         hues.olive
         hues.lime
         hues.green
@@ -53,7 +53,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
         hues.grey
       ]
       defaultHue: hues.peach
-      shades: [1, 2, 3, 4, 5, 6, 7]
+      shades: [2, 3, 4, 5, 6, 7, 8]
       defaultShade: 4
       huePreviewShade: 4
 

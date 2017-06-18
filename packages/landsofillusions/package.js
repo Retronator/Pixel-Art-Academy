@@ -76,11 +76,13 @@ Package.onUse(function(api) {
   api.addFile('character/part/renderers/renderer');
   api.addFile('character/part/renderers/shape');
   api.addFile('character/part/renderers/default');
+  api.addFile('character/part/renderers/body');
 
   api.addFile('character/part/property');
+  api.addFile('character/part/properties/oneof');
   api.addFile('character/part/properties/array');
   api.addFile('character/part/properties/integer');
-  api.addFile('character/part/properties/oneof');
+  api.addFile('character/part/properties/string');
   api.addFile('character/part/properties/color');
   api.addFile('character/part/properties/relativecolorshade');
   api.addFile('character/part/properties/sprite');

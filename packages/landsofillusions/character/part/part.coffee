@@ -23,8 +23,10 @@ class LOI.Character.Part
     # We create a copy of ourselves with the instance options added.
     new @constructor _.extend {}, @options, options
 
-  createRenderer: (engineOptions) ->
+  createRenderer: (engineOptions, options = {}) ->
     # Override to provide this part's renderer.
     renderer = @options.renderer or new LOI.Character.Part.Renderers.Default
 
-    renderer.create part: @, engineOptions
+    options = _.extend {}, options, part: @
+    
+    renderer.create options, engineOptions

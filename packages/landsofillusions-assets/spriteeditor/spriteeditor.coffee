@@ -103,7 +103,6 @@ class LOI.Assets.SpriteEditor extends AM.Component
       lightDirection: @lightDirection
       visualizeNormals: @paintNormals
       radius: => 30
-      initialAngleSnap: 30
 
     # Create tools.
     toolClasses = [

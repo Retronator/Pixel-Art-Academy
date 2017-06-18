@@ -56,10 +56,7 @@ class AM.Hierarchy.Location
 
     # Removes any data at this location.
     location.clear = ->
-      field = location.field()
-
-      # We save null as the value, which will unset the field on the server.
-      field.options.save field.options.address.string(), null
+      location.field().clear()
 
     # Sets this field to inherit data from a template.
     location.setTemplate = (templateId) ->

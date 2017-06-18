@@ -12,7 +12,8 @@ class LOI.Character.Part.Renderers.Default extends LOI.Character.Part.Renderers.
 
     for property in @options.part.properties
       if property instanceof LOI.Character.Part.Property.OneOf
-        @renderers.push property.part.createRenderer @engineOptions
+        @renderers.push property.part.createRenderer @engineOptions,
+          flippedHorizontal: @options.flippedHorizontal
 
     @landmarks = new ComputedField =>
       # Create landmarks and update renderer translations.
@@ -30,6 +31,9 @@ class LOI.Character.Part.Renderers.Default extends LOI.Character.Part.Renderers.
       # landmarks until all renderers' translations have been determined.
       undeterminedRenderers = _.clone @renderers
       processedWithoutMatch = 0
+
+      # Clear existing translations.
+      renderer._translation = null for renderer in undeterminedRenderers
 
       while processedWithoutMatch < undeterminedRenderers.length
         renderer = undeterminedRenderers.shift()
@@ -68,7 +72,7 @@ class LOI.Character.Part.Renderers.Default extends LOI.Character.Part.Renderers.
   getRendererForPartType: (type) ->
     _.find @renderers, (renderer) -> renderer.options.part.options.type is type
 
-  drawToContext: (context) ->
+  drawToContext: (context, options = {}) ->
     # Depend on landmarks to update when renderer translations change.
     @landmarks()
 
@@ -81,5 +85,5 @@ class LOI.Character.Part.Renderers.Default extends LOI.Character.Part.Renderers.
 
       context.translate translation.x, translation.y
 
-      renderer.drawToContext context
+      renderer.drawToContext context, options
       context.restore()

@@ -7,6 +7,7 @@ class AM.Hierarchy.Field
     templateSubscription = null
     node = null
     placeholderNode = null
+    metaData = null
 
     cleanTemplate = ->
       templateSubscription?.stop()
@@ -20,16 +21,13 @@ class AM.Hierarchy.Field
       # Is this a setter? We compare to undefined and not just use
       # value? since we want to be able to set the value null to the field.
       if value isnt undefined
-        # Do we even need to do any change?
-        oldValue = field()
+        storedValue = AM.Hierarchy.convertObjectToStoredValue value
 
-        # We need to rewrite the field if the value changed (and with objects
-        # we never know if they were internally changed, so we do it always).
-        if value isnt oldValue or _.isObject(value)
-          storedValue = AM.Hierarchy.convertObjectToStoredValue value
+        # Add meta data if we have it set.
+        _.extend storedValue, metaData if metaData
 
-          # Send the new structure to the save function.
-          options.save options.address.string(), storedValue
+        # Send the new structure to the save function.
+        options.save options.address.string(), storedValue
 
         return
 
@@ -79,6 +77,10 @@ class AM.Hierarchy.Field
         # Return the node.
         node
 
+      else if data.type
+        # This is a placeholder node that doesn't have a value yet, but it
+        # knows what type it will be. Used in fields with dynamic types.
+
       else
         console.error "Data field", options.address.string(), "got value", data
         console.trace()
@@ -86,6 +88,9 @@ class AM.Hierarchy.Field
 
     # Allow correct handling of instanceof operator.
     Object.setPrototypeOf field, @constructor.prototype
+
+    # Store options on field.
+    field.options = options
 
     # Gets a node, even if the data for it does not exist yet.
     # This allows us to save at locations that haven't been set yet.
@@ -109,8 +114,25 @@ class AM.Hierarchy.Field
         # We should only get a node or undefined. If we're getting a value it's probably an addressing error.
         throw new AE.ArgumentException "The data at this address is a terminal value, not a node."
 
-    # Store options on field.
-    field.options = options
+    field.setMetaData = (newMetaData) ->
+      metaData = newMetaData
+
+      data = options.load() or {}
+
+      # Add meta data if we have it set.
+      _.extend data, metaData
+
+      # Send the new structure to the save function.
+      options.save options.address.string(), data
+
+    field.clear = ->
+      if metaData
+        # Replace the field with just the meta data.
+        options.save options.address.string(), metaData
+
+      else
+        # We save null as the value, which will unset the field on the server.
+        options.save options.address.string(), null
 
     field.destroy = ->
       cleanTemplate()

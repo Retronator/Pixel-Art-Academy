@@ -24,6 +24,7 @@ class LOI.Character.Part.Renderers.Shape extends LOI.Character.Part.Renderers.Re
       spriteData: @frontSpriteData
       lightDirection: @engineOptions.lightDirection
       materialsData: @materialsData
+      flippedHorizontal: @options.flippedHorizontal
 
     @activeSprite = new ComputedField =>
       @frontSprite
@@ -59,7 +60,7 @@ class LOI.Character.Part.Renderers.Shape extends LOI.Character.Part.Renderers.Re
 
     landmarks
 
-  drawToContext: (context) ->
+  drawToContext: (context, options = {}) ->
     sprite = @activeSprite()
 
     context.save()
@@ -67,5 +68,5 @@ class LOI.Character.Part.Renderers.Shape extends LOI.Character.Part.Renderers.Re
     translation = @translation()
     context.translate translation.x, translation.y
 
-    sprite.drawToContext context
+    sprite.drawToContext context, options
     context.restore()

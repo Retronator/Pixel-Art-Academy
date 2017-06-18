@@ -107,11 +107,12 @@ class LOI.Assets.Engine.Sprite
             if inverseLightDirection
               if pixel.normal
                 normal = new THREE.Vector3 pixel.normal.x, pixel.normal.y, pixel.normal.z
+                normal.x *= -1 if @options.flippedHorizontal
 
               else
                 normal = new THREE.Vector3 0, 0, 1
 
-              shadeFactor = 0.3 + 0.7 * THREE.Math.clamp normal.dot(inverseLightDirection), 0, 1
+              shadeFactor = 0.4 + 0.6 * THREE.Math.clamp normal.dot(inverseLightDirection), 0, 1
 
             else
               shadeFactor = 1
@@ -140,13 +141,28 @@ class LOI.Assets.Engine.Sprite
                       bestColor = shade
                       bestColorDistance = distance
 
-                ditherPercentage = 2 * bestColorDistance / (bestColorDistance + secondBestColorDistance)
+                    else if distance < secondBestColorDistance
+                      secondBestColor = shade
+                      secondBestColorDistance = distance
 
                 destinationColor = bestColor
+
+                # Dither routine
+
+                ditherPercentage = 2 * bestColorDistance / (bestColorDistance + secondBestColorDistance)
 
                 if ditherPercentage > 1 - (paletteColor.dither or 0)
                   if Math.abs(pixel.x % 2) + Math.abs(pixel.y % 2) is 1
                     destinationColor = secondBestColor
+
+                ### Smooth shading routine
+                #closest = THREE.Color.fromObject bestColor
+                #farthest = THREE.Color.fromObject secondBestColor
+
+                #blendFactor = bestColorDistance / (bestColorDistance + secondBestColorDistance)
+
+                #destinationColor = closest.lerp(farthest, blendFactor)
+                ###
 
               else
                 destinationColor = shadedColor

@@ -1,6 +1,15 @@
 <template name="SanFrancisco.C3.Design.Terminal.Properties.Array">
   <div class="sanfrancisco-c3-design-terminal-properties-array">
-    <button class="new-part-button avatar-part">New</button>
+    <button class="new-array-part-button avatar-part">New</button>
+    {{#if showTypes}}
+      <ul class="types">
+        {{#each options.types}}
+          <li class="type">
+            <button class="new-array-part-type-button">{{this}}</button>
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
     <ul class="parts">
       {{#each parts}}
         <li class="part avatar-part">
