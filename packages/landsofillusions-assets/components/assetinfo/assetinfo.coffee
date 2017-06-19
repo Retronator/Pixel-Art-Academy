@@ -7,7 +7,7 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
   constructor: (@options) ->
     super
 
-    @assetId = @options.assetId
+    @assetId = @options.getAssetId
 
     @assetData = new ComputedField =>
       @options.documentClass.documents.findOne @assetId(),
@@ -21,12 +21,22 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
     super.concat
       'click .clear-button': @onClickClearButton
       'click .delete-button': @onClickDeleteButton
+      'click .duplicate-button': @onClickDuplicateButton
 
   onClickClearButton: (event) ->
     @options.documentClass.clear @assetId()
 
   onClickDeleteButton: (event) ->
     @options.documentClass.remove @assetId()
+
+  onClickDuplicateButton: (event) ->
+    @options.documentClass.duplicate @assetId(), (error, duplicateAssetId) =>
+      if error
+        console.error error
+        return
+
+      # Switch to the duplicate
+      @options.setAssetId duplicateAssetId
 
   class @Name extends AM.DataInputComponent
     @register 'LandsOfIllusions.Assets.Components.AssetInfo.Name'

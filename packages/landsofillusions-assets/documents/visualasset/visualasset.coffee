@@ -36,6 +36,7 @@ class LOI.Assets.VisualAsset extends AM.Document
   @update: null
   @clear: null
   @remove: null
+  @duplicate: null
 
   constructor: ->
     super

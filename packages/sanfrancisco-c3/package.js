@@ -43,6 +43,7 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/properties/array/array');
   api.addComponent('design/terminal/properties/color/color');
   api.addComponent('design/terminal/properties/sprite/sprite');
+  api.addComponent('design/terminal/properties/string/string');
 
   api.addFile('hallway/hallway');
   api.addThing('lobby/lobby');

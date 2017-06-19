@@ -35,25 +35,27 @@ class LOI.Assets.Components.Toolbox extends AM.Component
 
     'active' if tool is @options.activeTool()
 
-  events: ->
-    super.concat
-      'click .tool-button': @onClickToolButton
-
-  onClickToolButton: (event) ->
-    tool = @currentData()
-
+  _activateTool: (tool) ->
     if tool.method
       tool.method()
 
     else
       @options.activeTool tool
 
+  events: ->
+    super.concat
+      'click .tool-button': @onClickToolButton
+
+  onClickToolButton: (event) ->
+    tool = @currentData()
+    @_activateTool tool
+
   onKeyDown: (event) ->
     key = event.which
 
     # Find if the pressed key matches any of the tools' shortcuts.
     if targetTool = _.find(@options.tools(), (tool) => key is tool.shortcut)
-      @options.activeTool targetTool
+      @_activateTool targetTool
 
     # Look if it matches the hold shortcut.
     if targetTool = _.find(@options.tools(), (tool) => key is tool.holdShortcut)

@@ -45,7 +45,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LandsOfIllusions.Assets.Tools
     spriteData = @options.editor().spriteData()
     existingPixel = _.find spriteData.layers?[0]?.pixels, (searchPixel) -> pixel.x is searchPixel.x and pixel.y is searchPixel.y
 
-    if paintNormals
+    if paintNormals and existingPixel
       # Get the color from the existing pixel.
       for property in ['materialIndex', 'paletteColor']
         pixel[property] = existingPixel[property] if existingPixel[property]?

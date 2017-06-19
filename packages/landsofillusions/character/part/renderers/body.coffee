@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 
-# This is a default renderer that simply renders all the parts found in the properties.
 class LOI.Character.Part.Renderers.Body extends LOI.Character.Part.Renderers.Renderer
   constructor: ->
     super

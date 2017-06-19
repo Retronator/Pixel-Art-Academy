@@ -32,6 +32,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @update: @method 'update'
   @clear: @method 'clear'
   @remove: @method 'remove'
+  @duplicate: @method 'duplicate'
 
   @addPixel: @method 'addPixel'
   @removePixel: @method 'removePixel'

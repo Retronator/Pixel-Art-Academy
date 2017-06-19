@@ -8,12 +8,24 @@ class LOI.Character.Part.Renderers.Default extends LOI.Character.Part.Renderers.
     # Prepare renderer only when it has been created with engine options passed in.
     return unless @engineOptions
 
-    @renderers = []
+    @renderers = new ComputedField =>
+      renderers = []
 
-    for property in @options.part.properties
-      if property instanceof LOI.Character.Part.Property.OneOf
-        @renderers.push property.part.createRenderer @engineOptions,
-          flippedHorizontal: @options.flippedHorizontal
+      for property in @options.part.properties
+        if property instanceof LOI.Character.Part.Property.OneOf
+          renderer = property.part.createRenderer @engineOptions,
+            flippedHorizontal: @options.flippedHorizontal
+
+          renderers.push renderer if renderer
+
+        else if property instanceof LOI.Character.Part.Property.Array
+          for part in property.parts()
+            renderer = part.createRenderer @engineOptions,
+              flippedHorizontal: @options.flippedHorizontal
+
+            renderers.push renderer if renderer
+
+      renderers
 
     @landmarks = new ComputedField =>
       # Create landmarks and update renderer translations.
@@ -29,7 +41,7 @@ class LOI.Character.Part.Renderers.Default extends LOI.Character.Part.Renderers.
 
       # Calculate translations of all renderers by matching the
       # landmarks until all renderers' translations have been determined.
-      undeterminedRenderers = _.clone @renderers
+      undeterminedRenderers = _.clone @renderers()
       processedWithoutMatch = 0
 
       # Clear existing translations.
@@ -70,13 +82,13 @@ class LOI.Character.Part.Renderers.Default extends LOI.Character.Part.Renderers.
       landmarks
 
   getRendererForPartType: (type) ->
-    _.find @renderers, (renderer) -> renderer.options.part.options.type is type
+    _.find @renderers(), (renderer) -> renderer.options.part.options.type is type
 
   drawToContext: (context, options = {}) ->
     # Depend on landmarks to update when renderer translations change.
     @landmarks()
 
-    for renderer in @renderers
+    for renderer in @renderers()
       context.save()
 
       translation = _.defaults {}, renderer._translation,

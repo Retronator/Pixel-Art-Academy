@@ -62,11 +62,13 @@ class LOI.Assets.SpriteEditor extends AM.Component
         @landmarks()
       ]
         
+    setAssetId = (spriteId) =>
+      FlowRouter.setParams {spriteId}
+        
     @assetsList new LOI.Assets.Components.AssetsList
       documentClass: LOI.Assets.Sprite
       getAssetId: @spriteId
-      setAssetId: (spriteId) =>
-        FlowRouter.setParams {spriteId}
+      setAssetId: setAssetId
 
     @navigator new LOI.Assets.Components.Navigator
       camera: @pixelCanvas().camera
@@ -77,7 +79,8 @@ class LOI.Assets.SpriteEditor extends AM.Component
 
     @assetInfo new LOI.Assets.Components.AssetInfo
       documentClass: LOI.Assets.Sprite
-      assetId: @spriteId
+      getAssetId: @spriteId
+      setAssetId: setAssetId
       getPaletteId: @paletteId
       setPaletteId: (paletteId) =>
         LOI.Assets.Sprite.update @spriteId(), $set: palette: _id: paletteId

@@ -93,7 +93,7 @@ class LOI.Assets.Components.Materials extends AM.Component
 
   colorPreviewStyle: ->
     colorData = @currentData()
-    return unless palette = LOI.Assets.Palette.documents.findOne @assetData().palette?._id
+    return unless palette = LOI.Assets.Palette.documents.findOne @assetData()?.palette?._id
 
     ramp = colorData.ramp or 0
     maxShade = palette.ramps[ramp].shades.length - 1

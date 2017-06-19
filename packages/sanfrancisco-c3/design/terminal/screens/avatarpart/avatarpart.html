@@ -62,6 +62,9 @@
                     {{#if $is this.type 'sprite'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.Sprite this}}
                     {{/if}}
+                    {{#if $is this.type 'string'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.String this}}
+                    {{/if}}
                   </p>
                 </li>
               {{/each}}

@@ -33,6 +33,22 @@ LOI.Assets.Sprite.remove.method (spriteId) ->
 
   LOI.Assets.Sprite.documents.remove spriteId
 
+LOI.Assets.Sprite.duplicate.method (spriteId) ->
+  check spriteId, Match.DocumentId
+
+  RA.authorizeAdmin()
+
+  sprite = LOI.Assets.Sprite.documents.findOne spriteId
+  throw new AE.ArgumentException "Sprite does not exist." unless sprite
+
+  # Move desired properties to a plain object.
+  duplicate = {}
+
+  for own key, value of sprite when not (key in ['name', '_id', '_schema'])
+    duplicate[key] = value
+
+  LOI.Assets.Sprite.documents.insert duplicate
+
 LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
   check spriteId, Match.DocumentId
   check layerIndex, Match.Integer
