@@ -6,11 +6,13 @@ class LOI.Character.Part.Renderers.HumanAvatar extends LOI.Character.Part.Render
 
     # Prepare renderer only when it has been created with engine options passed in.
     return unless @engineOptions
+    
+    bodyRenderer = @options.humanAvatar.body.createRenderer @engineOptions
 
-    @renderers = [
-      @options.humanAvatar.body.createRenderer @engineOptions
-      @options.humanAvatar.outfit.createRenderer @engineOptions
-    ]
+    outfitRenderer = @options.humanAvatar.outfit.createRenderer @engineOptions,
+      landmarksSource: bodyRenderer
+
+    @renderers = [bodyRenderer, outfitRenderer]
 
   drawToContext: (context, options = {}) ->
     for renderer in @renderers

@@ -16,6 +16,8 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
 
     @parts = new ReactiveField []
 
+    @partsByOrder = {}
+
     # Instantiate array parts that are in the data.
     @_arrayAutorun = Tracker.autorun =>
       partsNode = @options.dataLocation()
@@ -27,10 +29,22 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
       @_highestOrder = if orderedFieldKeys.length then parseFloat _.last orderedFieldKeys else null
 
       parts = for fieldKey in orderedFieldKeys
+        # Create a property that reads from data location with this order key.
         partData = fields[fieldKey]
+        part = @partsByOrder[fieldKey]
 
-        LOI.Character.Part.Types[partData.type].create
-          dataLocation: @options.dataLocation.child fieldKey
+        # If we have the part already, make sure it's of the correct type.
+        unless part?.options.type is partData.type
+          Tracker.nonreactive =>
+            part = LOI.Character.Part.Types[partData.type].create
+              dataLocation: @options.dataLocation.child fieldKey
+
+          # Add the _id field so that foreach knows to reuse/recreate the field.
+          part._id = Random.id()
+
+          @partsByOrder[fieldKey] = part
+
+        part
 
       @parts parts
 
@@ -45,7 +59,7 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
     newDataLocation = @options.dataLocation.child newOrder
 
     # Set field meta data.
-    newDataLocation.field().setMetaData
+    newDataLocation.setMetaData
       type: type
 
     LOI.Character.Part.Types[type].create

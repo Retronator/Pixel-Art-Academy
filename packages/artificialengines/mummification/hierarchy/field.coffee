@@ -115,7 +115,7 @@ class AM.Hierarchy.Field
         throw new AE.ArgumentException "The data at this address is a terminal value, not a node."
 
     field.setMetaData = (newMetaData) ->
-      metaData = newMetaData
+      return unless metaData = newMetaData
 
       data = options.load() or {}
 

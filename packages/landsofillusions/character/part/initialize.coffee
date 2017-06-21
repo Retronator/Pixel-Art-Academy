@@ -395,16 +395,25 @@ _.extend LOI.Character.Part.Types,
     type: 'Outfit'
     name: 'outfit'
     properties:
+      articles: new LOI.Character.Part.Property.Array
+        name: 'articles'
+        type: 'OutfitArticle'
+
+  OutfitArticle: new LOI.Character.Part
+    type: 'OutfitArticle'
+    name: 'article'
+    properties:
       parts: new LOI.Character.Part.Property.Array
         name: 'parts'
-        type: 'OutfitPart'
+        type: 'OutfitArticlePart'
       customColors: new LOI.Character.Part.Property.Array
         name: 'custom colors'
         type: 'CustomColor'
-
-  OutfitPart: new LOI.Character.Part.Shape
-    type: 'OutfitPart'
-    name: 'outfit part'
+          
+  OutfitArticlePart: new LOI.Character.Part.Shape
+    type: 'OutfitArticlePart'
+    name: 'article part'
+    renderer: new LOI.Character.Part.Renderers.MappedShape
 
   CustomColor: new LOI.Character.Part
     type: 'CustomColor'

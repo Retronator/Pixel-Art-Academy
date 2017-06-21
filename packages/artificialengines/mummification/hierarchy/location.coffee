@@ -5,6 +5,7 @@ class AM.Hierarchy.Location
   constructor: (options) ->
     # We start at the top of the hierarchy if no address is given.
     options.address ?= ''
+    metaData = null
 
     getField = ->
       # We need to traverse from the root of the hierarchy down on each get/set
@@ -21,11 +22,15 @@ class AM.Hierarchy.Location
           node = field.getNode()
 
         # We've reached the end of the chain, so we can access the targetField (if we even got the node).
-        node.field targetField
+        result = node.field targetField
 
       else
         # We're at the top of the hierarchy so we return directly the root field.
-        options.rootField
+        result = options.rootField
+       
+      # Before we return the field, set its meta data.
+      result.setMetaData metaData
+      result
 
     # We want the hierarchy location to behave as a getter/setter.
     location = (value) ->
@@ -58,6 +63,10 @@ class AM.Hierarchy.Location
     location.clear = ->
       location.field().clear()
 
+    # Ensure the field in this location has the extra meta data attached.
+    location.setMetaData = (newMetaData) ->
+      metaData = newMetaData
+      
     # Sets this field to inherit data from a template.
     location.setTemplate = (templateId) ->
       field = location.field()

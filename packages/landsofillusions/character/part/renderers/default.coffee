@@ -8,21 +8,21 @@ class LOI.Character.Part.Renderers.Default extends LOI.Character.Part.Renderers.
     # Prepare renderer only when it has been created with engine options passed in.
     return unless @engineOptions
 
+    propertyRendererOptions =
+      flippedHorizontal: @options.flippedHorizontal
+      landmarksSource: @options.landmarksSource
+
     @renderers = new ComputedField =>
       renderers = []
 
       for property in @options.part.properties
         if property instanceof LOI.Character.Part.Property.OneOf
-          renderer = property.part.createRenderer @engineOptions,
-            flippedHorizontal: @options.flippedHorizontal
-
+          renderer = property.part.createRenderer @engineOptions, propertyRendererOptions
           renderers.push renderer if renderer
 
         else if property instanceof LOI.Character.Part.Property.Array
           for part in property.parts()
-            renderer = part.createRenderer @engineOptions,
-              flippedHorizontal: @options.flippedHorizontal
-
+            renderer = part.createRenderer @engineOptions, propertyRendererOptions
             renderers.push renderer if renderer
 
       renderers
