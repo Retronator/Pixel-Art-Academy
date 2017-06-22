@@ -11,6 +11,7 @@ class LOI.Character.Part.Renderers.Default extends LOI.Character.Part.Renderers.
     propertyRendererOptions =
       flippedHorizontal: @options.flippedHorizontal
       landmarksSource: @options.landmarksSource
+      materialsData: @options.materialsData
 
     @renderers = new ComputedField =>
       renderers = []

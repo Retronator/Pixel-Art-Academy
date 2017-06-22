@@ -131,8 +131,12 @@ class AM.Hierarchy.Field
         options.save options.address.string(), metaData
 
       else
-        # We save null as the value, which will unset the field on the server.
-        options.save options.address.string(), null
+        # Remove the data to get a clear state.
+        field.remove()
+
+    field.remove = ->
+      # We save null as the value, which will unset the field on the server.
+      options.save options.address.string(), null
 
     field.destroy = ->
       cleanTemplate()

@@ -38,7 +38,7 @@ _.extend LOI.Character.Part.Types,
       origin:
         landmark: 'atlas'
 
-  HeadShape: new LOI.Character.Part.Shape
+  HeadShape: new LOI.Character.Part.SkinShape
     type: 'HeadShape'
     name: 'head shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -56,7 +56,7 @@ _.extend LOI.Character.Part.Types,
         name: 'shape'
         type: 'NeckShape'
 
-  NeckShape: new LOI.Character.Part.Shape
+  NeckShape: new LOI.Character.Part.SkinShape
     type: 'NeckShape'
     name: 'neck shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -98,7 +98,7 @@ _.extend LOI.Character.Part.Types,
         name: 'additions'
         types: ['ChestBodyFat', 'ChestMuscles', 'Breasts']
 
-  ChestShape: new LOI.Character.Part.Shape
+  ChestShape: new LOI.Character.Part.SkinShape
     type: 'ChestShape'
     name: 'chest shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -116,11 +116,11 @@ _.extend LOI.Character.Part.Types,
       shoulderRight: new LOI.Character.Part.Landmark.Position
         name: 'shoulderRight'
 
-  ChestBodyFat: new LOI.Character.Part.Shape
+  ChestBodyFat: new LOI.Character.Part.SkinShape
     type: 'ChestBodyFat'
     name: 'chest body fat'
 
-  ChestMuscles: new LOI.Character.Part.Shape
+  ChestMuscles: new LOI.Character.Part.SkinShape
     type: 'ChestMuscles'
     name: 'chest muscles'
 
@@ -169,14 +169,14 @@ _.extend LOI.Character.Part.Types,
       centerPosition: new LOI.Character.Part.Landmark.Position
       edgePosition: new LOI.Character.Part.Landmark.Position
 
-  BreastsShapeTop: new LOI.Character.Part.Shape
+  BreastsShapeTop: new LOI.Character.Part.SkinShape
     type: 'BreastsShapeTop'
     name: 'breasts shape top'
     landmarks:
       centerPosition: new LOI.Character.Part.Landmark.Position
       edgePosition: new LOI.Character.Part.Landmark.Position
 
-  BreastsShapeBottom: new LOI.Character.Part.Shape
+  BreastsShapeBottom: new LOI.Character.Part.SkinShape
     type: 'BreastsShapeBottom'
     name: 'breasts shape bottom'
     landmarks:
@@ -191,7 +191,7 @@ _.extend LOI.Character.Part.Types,
         name: 'shape'
         type: 'AbdomenShape'
 
-  AbdomenShape: new LOI.Character.Part.Shape
+  AbdomenShape: new LOI.Character.Part.SkinShape
     type: 'AbdomenShape'
     name: 'abdomen shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -213,7 +213,7 @@ _.extend LOI.Character.Part.Types,
         name: 'shape'
         type: 'GroinShape'
 
-  GroinShape: new LOI.Character.Part.Shape
+  GroinShape: new LOI.Character.Part.SkinShape
     type: 'GroinShape'
     name: 'groin shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -254,7 +254,7 @@ _.extend LOI.Character.Part.Types,
         name: 'shape'
         type: 'UpperArmShape'
 
-  UpperArmShape: new LOI.Character.Part.Shape
+  UpperArmShape: new LOI.Character.Part.SkinShape
     type: 'UpperArmShape'
     name: 'upper arm shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -276,7 +276,7 @@ _.extend LOI.Character.Part.Types,
         name: 'shape'
         type: 'LowerArmShape'
 
-  LowerArmShape: new LOI.Character.Part.Shape
+  LowerArmShape: new LOI.Character.Part.SkinShape
     type: 'LowerArmShape'
     name: 'lower arm shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -298,7 +298,7 @@ _.extend LOI.Character.Part.Types,
         name: 'shape'
         type: 'HandShape'
 
-  HandShape: new LOI.Character.Part.Shape
+  HandShape: new LOI.Character.Part.SkinShape
     type: 'HandShape'
     name: 'hand shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -335,7 +335,7 @@ _.extend LOI.Character.Part.Types,
         name: 'shape'
         type: 'ThighShape'
 
-  ThighShape: new LOI.Character.Part.Shape
+  ThighShape: new LOI.Character.Part.SkinShape
     type: 'ThighShape'
     name: 'thigh shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -357,7 +357,7 @@ _.extend LOI.Character.Part.Types,
         name: 'shape'
         type: 'LowerLegShape'
 
-  LowerLegShape: new LOI.Character.Part.Shape
+  LowerLegShape: new LOI.Character.Part.SkinShape
     type: 'LowerLegShape'
     name: 'lower leg shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -379,7 +379,7 @@ _.extend LOI.Character.Part.Types,
         name: 'shape'
         type: 'FootShape'
 
-  FootShape: new LOI.Character.Part.Shape
+  FootShape: new LOI.Character.Part.SkinShape
     type: 'FootShape'
     name: 'foot shape'
     renderer: new LOI.Character.Part.Renderers.Shape
@@ -399,7 +399,7 @@ _.extend LOI.Character.Part.Types,
         name: 'articles'
         type: 'OutfitArticle'
 
-  OutfitArticle: new LOI.Character.Part
+  OutfitArticle: new LOI.Character.Part.CustomColors
     type: 'OutfitArticle'
     name: 'article'
     properties:
@@ -409,7 +409,7 @@ _.extend LOI.Character.Part.Types,
       customColors: new LOI.Character.Part.Property.Array
         name: 'custom colors'
         type: 'CustomColor'
-          
+
   OutfitArticlePart: new LOI.Character.Part.Shape
     type: 'OutfitArticlePart'
     name: 'article part'

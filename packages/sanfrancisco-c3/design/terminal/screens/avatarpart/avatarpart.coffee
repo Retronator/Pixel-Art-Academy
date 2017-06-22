@@ -108,6 +108,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       'click .save-as-template-button': @onClickSaveAsTemplateButton
       'click .unlink-template-button': @onClickUnlinkTemplateButton
       'click .new-part-button': @onClickNewPartButton
+      'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
 
   onClickDoneButton: (event) ->
@@ -138,6 +139,13 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
     @forceShowEditor true
     @forceShowTemplates false
+
+  onClickDeleteButton: (event) ->
+    # Delete current data at this node.
+    @part()?.options.dataLocation.remove()
+
+    # Pop this part off the stack.
+    @popPart()
 
   onClickTemplate: (event) ->
     template = @currentData()

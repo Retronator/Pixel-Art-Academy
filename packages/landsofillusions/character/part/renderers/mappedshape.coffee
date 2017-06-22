@@ -17,7 +17,7 @@ class LOI.Character.Part.Renderers.MappedShape extends LOI.Character.Part.Render
     @frontSprite = new LOI.Assets.Engine.Sprite
       spriteData: @frontSpriteData
       lightDirection: @engineOptions.lightDirection
-      materialsData: @materialsData
+      materialsData: @options.materialsData
       flippedHorizontal: @options.flippedHorizontal
 
     @activeSprite = new ComputedField =>

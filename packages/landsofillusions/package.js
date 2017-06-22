@@ -71,6 +71,8 @@ Package.onUse(function(api) {
   api.addServerFile('character/part/subscriptions');
 
   api.addFile('character/part/parts/shape');
+  api.addFile('character/part/parts/skinshape');
+  api.addFile('character/part/parts/customcolors');
 
   api.addFile('character/part/renderers/renderers');
   api.addFile('character/part/renderers/renderer');

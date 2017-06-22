@@ -17,7 +17,6 @@ class LOI.Character.Part.Shape extends LOI.Character.Part
 
     options = _.extend {}, options,
       part: @
-      skin: @options.dataLocation.absoluteAddress('skin')
       frontSpriteId: @options.dataLocation.child('front.spriteId')
 
     renderer.create options, engineOptions

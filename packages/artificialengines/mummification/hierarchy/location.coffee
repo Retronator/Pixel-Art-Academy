@@ -59,9 +59,13 @@ class AM.Hierarchy.Location
     location.absoluteAddress = (address) ->
       new location.constructor _.extend {}, options, {address}
 
-    # Removes any data at this location.
+    # Removes any data at this location (but preserves meta data/instance).
     location.clear = ->
       location.field().clear()
+
+    # Removes this location completely.
+    location.remove = ->
+      location.field().remove()
 
     # Ensure the field in this location has the extra meta data attached.
     location.setMetaData = (newMetaData) ->

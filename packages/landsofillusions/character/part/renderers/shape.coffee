@@ -7,12 +7,6 @@ class LOI.Character.Part.Renderers.Shape extends LOI.Character.Part.Renderers.Re
     # Prepare renderer only when it has been created with engine options passed in.
     return unless @engineOptions
 
-    @materialsData = new ComputedField =>
-      # Provide character's skin color.
-      skin:
-        ramp: @options.skin.child('hue')()
-        shade: @options.skin.child('shade')()
-
     # Shape renderer subscribes to all sprite directions and draws the one needed by the engine.
     @frontSpriteData = new ComputedField =>
       return unless spriteId = @options.frontSpriteId()
@@ -23,7 +17,7 @@ class LOI.Character.Part.Renderers.Shape extends LOI.Character.Part.Renderers.Re
     @frontSprite = new LOI.Assets.Engine.Sprite
       spriteData: @frontSpriteData
       lightDirection: @engineOptions.lightDirection
-      materialsData: @materialsData
+      materialsData: @options.materialsData
       flippedHorizontal: @options.flippedHorizontal
 
     @activeSprite = new ComputedField =>
