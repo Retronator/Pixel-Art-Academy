@@ -8,5 +8,9 @@ class LOI.Character.Part.Property
   destroy: ->
 
   create: (options) ->
+    # Set this property's type as template meta data.
+    options.dataLocation.setTemplateMetaData
+      type: @options.type
+
     # We create a copy of ourselves with the data added.
     new @constructor _.extend {}, @options, options

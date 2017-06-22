@@ -36,8 +36,15 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
         # If we have the part already, make sure it's of the correct type.
         unless part?.options.type is partData.type
           Tracker.nonreactive =>
+            partDataLocation = @options.dataLocation.child fieldKey
+
+            # Add array field meta data so that it will be preserved when
+            # changing data in this field (e.g. when changing to templates).
+            partDataLocation.setMetaData
+              type: partData.type
+
             part = LOI.Character.Part.Types[partData.type].create
-              dataLocation: @options.dataLocation.child fieldKey
+              dataLocation: partDataLocation
 
           # Add the _id field so that foreach knows to reuse/recreate the field.
           part._id = Random.id()

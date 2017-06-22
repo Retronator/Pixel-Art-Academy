@@ -20,6 +20,10 @@ class LOI.Character.Part
     property.destroy() for property in @properties
 
   create: (options) ->
+    # Set this part's type as template meta data.
+    options.dataLocation.setTemplateMetaData
+      type: @options.type
+
     # We create a copy of ourselves with the instance options added.
     new @constructor _.extend {}, @options, options
 

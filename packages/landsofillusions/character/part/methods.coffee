@@ -1,9 +1,9 @@
 AB = Artificial.Babel
 LOI = LandsOfIllusions
 
-LOI.Character.Part.Template.insert.method (data, options) ->
+LOI.Character.Part.Template.insert.method (data, metaData) ->
   check data, Match.ObjectIncluding fields: Object
-  check options, Match.ObjectIncluding type: String
+  check metaData, Match.ObjectIncluding type: String
 
   LOI.Authorize.avatarEditor()
 
@@ -13,7 +13,7 @@ LOI.Character.Part.Template.insert.method (data, options) ->
     author: _id: userId
     name: _id: AB.Translation.documents.insert ownerId: userId
     description: _id: AB.Translation.documents.insert ownerId: userId
-    type: options.type
+    type: metaData.type
     data: data
 
 LOI.Character.Part.Template.updateData.method (templateId, address, value) ->

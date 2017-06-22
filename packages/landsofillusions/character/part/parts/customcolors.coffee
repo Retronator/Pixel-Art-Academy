@@ -11,7 +11,7 @@ class LOI.Character.Part.CustomColors extends LOI.Character.Part
 
       customColorsProperty = _.find @properties, (property) => property.options.type is 'CustomColor'
 
-      return unless customColorsFields = customColorsProperty.options.dataLocation().data()?.fields
+      return unless customColorsFields = customColorsProperty.options.dataLocation()?.data()?.fields
 
       for customColorOrder, customColor of customColorsFields
         nameField = customColor.node.fields.name

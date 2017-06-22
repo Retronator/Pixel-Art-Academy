@@ -6,6 +6,7 @@ class AM.Hierarchy.Location
     # We start at the top of the hierarchy if no address is given.
     options.address ?= ''
     metaData = null
+    templateMetaData = null
 
     getField = ->
       # We need to traverse from the root of the hierarchy down on each get/set
@@ -70,12 +71,19 @@ class AM.Hierarchy.Location
     # Ensure the field in this location has the extra meta data attached.
     location.setMetaData = (newMetaData) ->
       metaData = newMetaData
-      
+
+    # Add extra information that is to be used to create a template out of this location.
+    location.setTemplateMetaData = (newTemplateMetaData) ->
+      templateMetaData = newTemplateMetaData
+
     # Sets this field to inherit data from a template.
     location.setTemplate = (templateId) ->
       field = location.field()
 
-      field.options.save field.options.address.string(), {templateId}
+      # Add field meta data.
+      data = _.extend {templateId}, metaData
+
+      field.options.save field.options.address.string(), data
 
     # Converts this node into a template.
     location.createTemplate = ->
@@ -88,7 +96,7 @@ class AM.Hierarchy.Location
 
       # Create the template with this data. We also send our options
       # in case the method implementation needs any of our meta data.
-      field.options.templateClass.insert data, field.options, (error, templateId) =>
+      field.options.templateClass.insert data, templateMetaData, (error, templateId) =>
         if error
           console.error error
           return
@@ -104,8 +112,14 @@ class AM.Hierarchy.Location
 
       templateData = node.template.data
 
+      # We change the template data into a local node field with associated meta data.
+      data = _.extend
+        node: templateData
+      ,
+        metaData
+
       # We save this using parent's save function and address, not the template's.
-      field.options.save field.options.address.string(), node: templateData
+      field.options.save field.options.address.string(), data
 
     # Return the location getter/setter function (return must be explicit).
     return location
