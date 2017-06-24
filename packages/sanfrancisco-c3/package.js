@@ -25,9 +25,17 @@ Package.onUse(function(api) {
   api.addFile('actors/receptionist');
   api.addFile('actors/drshelley');
 
+  // Items
+
+  api.addFile('items/items');
+  api.addComponent('items/terminal/terminal');
+
   // Locations
 
-  api.addFile('behavior/behavior');
+  api.addThing('behavior/behavior');
+  api.addComponent('behavior/terminal/terminal');
+  api.addComponent('behavior/terminal/screens/mainmenu/mainmenu');
+  api.addComponent('behavior/terminal/screens/character/character');
 
   api.addThing('design/design');
   api.addComponent('design/terminal/terminal');

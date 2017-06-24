@@ -20,6 +20,8 @@ class C3.Behavior extends LOI.Adventure.Location
       room behind it.
     "
 
+  @defaultScriptUrl: -> 'retronator_sanfrancisco-c3/behavior/behavior.script'
+
   @initialize()
 
   constructor: ->
@@ -32,3 +34,28 @@ class C3.Behavior extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.West}": C3.Design
     "#{Vocabulary.Keys.Directions.South}": C3.Hallway
     "#{Vocabulary.Keys.Directions.East}": C3.Stasis
+
+  things: -> [
+    C3.Behavior.Terminal
+  ]
+
+  # Script
+
+  initializeScript: ->
+    @setCallbacks
+      UseTerminal: ->
+        terminal = LOI.adventure.getCurrentThing C3.Behavior.Terminal
+        LOI.adventure.goToItem terminal
+
+  # Listener
+
+  onCommand: (commandResponse) ->
+    if terminal = LOI.adventure.getCurrentThing C3.Behavior.Terminal
+      commandResponse.onPhrase
+        form: [[Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookAt], terminal.avatar]
+        priority: 1
+        action: =>
+          @startScript label: 'UseTerminal'
+
+  onEnter: ->
+    LOI.adventure.goToItem C3.Behavior.Terminal

@@ -101,6 +101,24 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     template = @partTemplate()
     template.author._id is userId
 
+  backButtonCallback: ->
+    @closePart()
+
+    # Instruct the back button to cancel closing (so it doesn't disappear).
+    cancel: true
+
+  closePart: ->
+    if @forceShowTemplates()
+      # We only need to not show templates in this case.
+      @forceShowTemplates false
+
+    else
+      # Pop this part off the stack.
+      @popPart()
+
+      # We return back to the character screen if there's no more parts to show.
+      @terminal.switchToScreen @terminal.screens.character unless @part()
+
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
@@ -112,16 +130,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       'click .template': @onClickTemplate
 
   onClickDoneButton: (event) ->
-    if @forceShowTemplates()
-      # We only need to not show templates in this case.
-      @forceShowTemplates false
-
-    else
-      # Pop this part off the stack.
-      @popPart()
-
-      # We return back to the character screen if there's no more parts to show.
-      @terminal.switchToScreen @terminal.screens.character unless @part()
+    @closePart()
 
   onClickReplaceButton: (event) ->
     @forceShowTemplates true
@@ -153,3 +162,6 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
+
+    # Return to previous item where we will see the result of choosing this part.
+    @closePart()

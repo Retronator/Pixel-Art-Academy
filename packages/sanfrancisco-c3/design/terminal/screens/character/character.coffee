@@ -62,6 +62,13 @@ class C3.Design.Terminal.Character extends AM.Component
 
     color: "##{character.avatar.colorObject()?.getHexString()}"
 
+  backButtonCallback: ->
+    # We return to main menu.
+    @_returnToMenu()
+
+    # Instruct the back button to cancel closing (so it doesn't disappear).
+    cancel: true
+
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
@@ -78,17 +85,23 @@ class C3.Design.Terminal.Character extends AM.Component
       @_returnToMenu()
       return
 
-    LOI.Character.approveDesign character.id, (error) =>
-      if error
-        console.error error
-        return
+    @terminal.showDialog
+      message: "You are ordering the construction of this agent. It will become available for behavior setup."
+      confirmButtonText: "Confirm"
+      confirmButtonClass: "positive-button"
+      cancelButtonText: "Cancel"
+      confirmAction: =>
+        LOI.Character.approveDesign character.id, (error) =>
+          if error
+            console.error error
+            return
 
-      # Close the terminal and proceed with the story.
-      # TODO: Homage cinematic to Ghost in the Shell.
-      LOI.adventure.deactivateCurrentItem()
+          # Close the terminal and proceed with the story.
+          # TODO: Homage cinematic to Ghost in the Shell.
+          LOI.adventure.deactivateCurrentItem()
 
-      designControl = LOI.adventure.currentLocation()
-      designControl.listeners[0].startScript label: 'MakingOfACyborg'
+          designControl = LOI.adventure.currentLocation()
+          designControl.listeners[0].startScript label: 'MakingOfACyborg'
 
   onClickSaveDraftButton: (event) ->
     # We simply return to main menu.
@@ -105,27 +118,20 @@ class C3.Design.Terminal.Character extends AM.Component
       message = "Do you really want to delete this design? You cannot undo this action."
 
     # Double check that the user wants to be removed from their character.
-    dialog = new LOI.Components.Dialog
+    @terminal.showDialog
       message: message
-      buttons: [
-        text: if designApproved then "Retire" else "Delete"
-        value: true
-      ,
-        text: "Cancel"
-      ]
+      confirmButtonText: if designApproved then "Retire" else "Delete"
+      confirmButtonClass: "danger-button"
+      cancelButtonText: "Cancel"
+      confirmAction: =>
+        # Remove the user from the character.
+        LOI.Character.removeUser character.id, (error) =>
+          if error
+            console.error error
+            return
 
-    LOI.adventure.showActivatableModalDialog
-      dialog: dialog
-      callback: =>
-        if dialog.result
-          # Remove the user from the character.
-          LOI.Character.removeUser character.id, (error) =>
-            if error
-              console.error error
-              return
-
-            # Return to main menu.
-            @_returnToMenu()
+          # Return to main menu.
+          @_returnToMenu()
 
   _returnToMenu: ->
     @terminal.switchToScreen @terminal.screens.mainMenu

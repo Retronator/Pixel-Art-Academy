@@ -3,22 +3,22 @@ C3 = SanFrancisco.C3
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C3.Design.Terminal extends C3.Items.Terminal
-  @id: -> 'SanFrancisco.C3.Design.Terminal'
-  @url: -> 'c3/design-control/terminal'
+class C3.Behavior.Terminal extends C3.Items.Terminal
+  @id: -> 'SanFrancisco.C3.Behavior.Terminal'
+  @url: -> 'c3/behavior-control/terminal'
 
   @version: -> '0.0.1'
 
   @register @id()
   template: -> @constructor.id()
 
-  @fullName: -> "design terminal"
+  @fullName: -> "behavior terminal"
   @shortName: -> "terminal"
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->
     "
-      It's the computer where you can design your character.
+      It's the computer where you can setup your character's properties.
     "
 
   @initialize()
@@ -35,6 +35,8 @@ class C3.Design.Terminal extends C3.Items.Terminal
     @screens =
       mainMenu: new @constructor.MainMenu @
       character: new @constructor.Character @
-      avatarPart: new @constructor.AvatarPart @
 
     @switchToScreen @screens.mainMenu
+
+    # Subscribe to all user's characters to see their designed status.
+    LOI.Character.forCurrentUser.subscribe @
