@@ -27,6 +27,7 @@ class LOI.Avatar
   fullName: -> throw new AE.NotImplementedException "You must provide avatar's full name."
   shortName: -> null
   description: -> null
+  nameAutoCorrectStyle: -> @constructor.NameAutoCorrectStyle.Word
 
   color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.grey

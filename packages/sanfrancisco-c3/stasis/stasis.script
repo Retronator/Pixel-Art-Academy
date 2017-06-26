@@ -1,0 +1,48 @@
+# SanFrancisco.C3.Stasis
+
+## UseControlPanel
+
+> The control panel asks to pair with your SYNC device.
+
+> Which agent do you want to sync with?
+
+### AgentSelection
+
+-> [End]
+
+## Sync
+
+> You establish a connection to the control panel and a symbiotic link with `_characterFullName` gets added to your SYNC device. 
+ 
+> As the agent's brain boots, the avatar shortly opens its eyes and meets its gaze with yours. 
+ 
+> You feel a profound sensation as you look at each other as if you were looking in the mirror.
+
+> The eyes close and the control panel indicates that deployment has started.
+ 
+> Bubbles start forming in the vat and the body slowly ascends towards the ceiling.
+ 
+operator: Hey.
+ 
+* …
+ 
+operator: Do you copy?
+ 
+* Yeah … Yes! -> [PanzerYes]
+* Just a bit taken aback. -> [PanzerAback]
+ 
+## PanzerYes
+
+operator: Good! 
+
+-> [PanzerContinues]
+ 
+##  PanzerAback
+ 
+operator: I can see why.
+ 
+## PanzerContinues
+ 
+operator: I just got confirmation of a new agent being linked to our system.
+
+## End

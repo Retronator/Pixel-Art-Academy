@@ -55,6 +55,12 @@ Package.onUse(function(api) {
 
   api.addFile('hallway/hallway');
   api.addThing('lobby/lobby');
-  api.addFile('stasis/stasis');
+
+  api.addThing('stasis/stasis');
+  api.addFile('stasis/emptyvat');
+  api.addFile('stasis/vat');
+  api.addFile('stasis/controlpanel');
+
+  api.addThing('remotecontrol/remotecontrol');
 
 });
