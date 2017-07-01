@@ -10,9 +10,12 @@ class LOI.Character.Part
     return unless @options.dataLocation
 
     # Instantiate all the properties.
-    @properties = for propertyName, property of @options.properties
+    @properties = {}
+
+    for propertyName, property of @options.properties
       propertyDataLocation = @options.dataLocation.child propertyName
-      property.create
+      
+      @properties[propertyName] = property.create
         dataLocation: propertyDataLocation
         parentPart: @
 

@@ -8,7 +8,20 @@
             {{t7e document.avatar.fullName}}
           </div>
         </p>
-
+        <h2 class="section-title">
+          Personality:
+          {{#if personalityTemplate}}
+            {{personalityTemplate.name}}
+          {{else}}
+            Custom
+          {{/if}}
+        </h2>
+        <p class="traits">
+          {{personalityTraits}}
+        </p>
+        <div class="actions">
+          <button class="action-button modify-personality-button">Modify</button>
+        </div>
       </div>
       <div class="main-actions">
         {{#if document.behaviorApproved}}

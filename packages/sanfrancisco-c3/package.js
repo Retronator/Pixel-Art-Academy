@@ -36,6 +36,11 @@ Package.onUse(function(api) {
   api.addComponent('behavior/terminal/terminal');
   api.addComponent('behavior/terminal/screens/mainmenu/mainmenu');
   api.addComponent('behavior/terminal/screens/character/character');
+  api.addComponent('behavior/terminal/screens/personality/personality');
+  api.addComponent('behavior/terminal/screens/personality/factor');
+
+  api.addFile('behavior/terminal/components/components');
+  api.addComponent('behavior/terminal/components/personalitypartpreview/personalitypartpreview');
 
   api.addThing('design/design');
   api.addComponent('design/terminal/terminal');

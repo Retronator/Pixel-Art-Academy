@@ -1,0 +1,73 @@
+<template name="SanFrancisco.C3.Behavior.Terminal.Personality">
+  <div class="sanfrancisco-c3-behavior-terminal-personality screen">
+      <h1 class="screen-title">Personality</h1>
+      {{#if showTemplates}}
+        <div class="templates-area">
+          <button class="custom-personality-button personality-part">Custom</button>
+          <ul class="templates">
+            {{#each templates}}
+              <li class="template personality-part">
+                {{> SanFrancisco.C3.Design.Terminal.Components.PersonalityPartPreview templatePart}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{else}}
+        {{#if partTemplate}}
+          {{#with partTemplate}}
+            <div class="template-info main-text">
+              {{#if isOwnPartTemplate}}
+                <div class="name">
+                  <span class="label">Template</span>: {{> renderTemplateNameInput name}}
+                </div>
+                <div class="description">
+                  {{> renderTemplateDescriptionInput description}}
+                </div>
+                <p>
+                  You are the designer of this template and can edit it.
+                </p>
+              {{else}}
+                <div class="name">
+                  <span class="label">Template</span>: {{> t9n name}}
+                </div>
+                <div class="description">
+                  {{> t9n description}}
+                </div>
+                <div class="author">
+                  <span class="label">Designer</span>: {{authorName}}
+                </div>
+                <p>
+                  Click Customize to create your own design based on this template.
+                </p>
+              {{/if}}
+          </div>
+          {{/with}}
+        {{/if}}
+        <div class="personality">
+          <ul class="factors">
+            {{#each factors}}
+              {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor}}
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+    <div class="main-actions">
+      {{#if showTemplates}}
+        <button class="main-button action-button done-button">Back</button>
+      {{else}}
+        <button class="main-button action-button done-button">Done</button>
+        <button class="action-button replace-button">Replace</button>
+        {{#if partTemplate}}
+          {{#if isOwnPartTemplate}}
+            <button class="action-button unlink-template-button">Unlink template</button>
+          {{else}}
+            <button class="action-button unlink-template-button">Customize</button>
+          {{/if}}
+        {{else}}
+          <button class="action-button save-as-template-button">Save as template</button>
+        {{/if}}
+        <button class="action-button delete-button danger-button">Delete</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

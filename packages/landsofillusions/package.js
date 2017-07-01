@@ -87,6 +87,7 @@ Package.onUse(function(api) {
   api.addFile('character/part/properties/array');
   api.addFile('character/part/properties/integer');
   api.addFile('character/part/properties/string');
+  api.addFile('character/part/properties/boolean');
   api.addFile('character/part/properties/color');
   api.addFile('character/part/properties/relativecolorshade');
   api.addFile('character/part/properties/sprite');
@@ -94,7 +95,14 @@ Package.onUse(function(api) {
   api.addFile('character/part/landmark');
   api.addFile('character/part/landmarks/position');
 
-  api.addFile('character/part/initialize');
+  api.addFile('character/part/initialize/body');
+  api.addFile('character/part/initialize/outfit');
+  api.addFile('character/part/initialize/behavior');
+
+  api.addFile('character/behavior/behavior');
+  api.addFile('character/behavior/personality');
+  api.addFile('character/behavior/factor');
+  api.addFile('character/behavior/initialize');
 
   // User
 

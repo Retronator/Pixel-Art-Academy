@@ -18,10 +18,16 @@ class LOI.Character.Instance
     @avatar = new LOI.Character.Avatar @
 
     # Create the behavior hierarchy.
-    @behavior = AM.Hierarchy.create
+    behaviorDataField = AM.Hierarchy.create
+      templateClass: LOI.Character.Part.Template
+      type: LOI.Character.Part.Types.Outfit.options.type
       load: => @document()?.behavior
       save: (address, value) =>
         LOI.Character.updateBehavior @id, address, value
+
+    @behavior = LOI.Character.Part.Types.Behavior.create
+      dataLocation: new AM.Hierarchy.Location
+        rootField: behaviorDataField
 
   destroy: ->
     @_documentSubscription.stop()

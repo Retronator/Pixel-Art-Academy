@@ -33,6 +33,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
     super.concat
       'click .done-button': @onClickDoneButton
       'click .save-draft-button': @onClickSaveDraftButton
+      'click .modify-personality-button': @onClickModifyPersonalityButton
 
   onClickDoneButton: (event) ->
     character = @currentData()
@@ -65,3 +66,6 @@ class C3.Behavior.Terminal.Character extends AM.Component
 
   _returnToMenu: ->
     @terminal.switchToScreen @terminal.screens.mainMenu
+
+  onClickModifyPersonalityButton: (event) ->
+    @terminal.switchToScreen @terminal.screens.personality
