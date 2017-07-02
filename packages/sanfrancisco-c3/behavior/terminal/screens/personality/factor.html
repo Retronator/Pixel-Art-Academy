@@ -1,19 +1,6 @@
 <template name="SanFrancisco.C3.Behavior.Terminal.Personality.Factor">
   <li class="sanfrancisco-c3-behavior-terminal-personality-factor">
-    <div class="names">
-      <div class="left" {{style leftFactorStyle}}>{{leftFactorName}}</div>
-      <div class="right" {{style rightFactorStyle}}>{{rightFactorName}}</div>
-    </div>
-    <div class="axis">
-      <div class="left">
-        <div class="indicator" {{style leftIndicatorStyle}}></div>
-        <div class="progress-bar" {{style leftProgressBarStyle}}></div>
-      </div>
-      <div class="right">
-        <div class="indicator" {{style rightIndicatorStyle}}></div>
-        <div class="progress-bar" {{style rightProgressBarStyle}}></div>
-      </div>
-    </div>
+    {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis}}
     <div class="information">
       <div class="factor-template">
         <span class="label-name">Template:</span> {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.TemplateDropdown}}
@@ -34,5 +21,32 @@
         </div>
       </div>
     </div>
+    <div class="traits">
+      <span class="title">Traits:</span>
+      {{#if traits}}
+        {{traits}}
+      {{else}}
+        None
+      {{/if}}
+    </div>
   </li>
+</template>
+
+<template name="SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis">
+  <div class="sanfrancisco-c3-behavior-terminal-personality-factor-axis">
+    <div class="names">
+      <div class="left" {{style leftFactorStyle}}>{{leftFactorName}}</div>
+      <div class="right" {{style rightFactorStyle}}>{{rightFactorName}}</div>
+    </div>
+    <div class="axis">
+      <div class="left">
+        <div class="indicator" {{style leftIndicatorStyle}}></div>
+        <div class="progress-bar" {{style leftProgressBarStyle}}></div>
+      </div>
+      <div class="right">
+        <div class="indicator" {{style rightIndicatorStyle}}></div>
+        <div class="progress-bar" {{style rightProgressBarStyle}}></div>
+      </div>
+    </div>
+  </div>
 </template>

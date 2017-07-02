@@ -38,6 +38,7 @@ Package.onUse(function(api) {
   api.addComponent('behavior/terminal/screens/character/character');
   api.addComponent('behavior/terminal/screens/personality/personality');
   api.addComponent('behavior/terminal/screens/personality/factor');
+  api.addComponent('behavior/terminal/screens/personality/traits');
 
   api.addFile('behavior/terminal/components/components');
   api.addComponent('behavior/terminal/components/personalitypartpreview/personalitypartpreview');

@@ -72,33 +72,12 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     template = @partTemplate()
     template.author._id is userId
 
-  leftFactorName: -> @_factorName false
-  rightFactorName: -> @_factorName true
-
-  _factorName: (right) ->
-    @_getFactorSide(right).name
-
-  _getFactorSide: (right) ->
-    factor = @data()
-
-    if right is not factor.options.displayReversed then factor.options.positive else factor.options.negative
-
-  leftFactorStyle: -> @_factorStyle false
-  rightFactorStyle: -> @_factorStyle true
-
-  _factorStyle: (right) ->
-    return unless palette = LOI.palette()
-
-    colorData = @_getFactorSide(right).color
-    color = palette.color colorData.hue, colorData.shade
-
-    color: "##{color.getHexString()}"
-
   events: ->
     super.concat
       'click .factor-save-as-template-button': @onClickSaveAsTemplateButton
       'click .factor-unlink-template-button': @onClickUnlinkTemplateButton
       'click .factor-reset-button': @onClickResetButton
+      'click .traits': @onClickTraits
 
   onClickSaveAsTemplateButton: (event) ->
     @part()?.options.dataLocation.createTemplate()
@@ -113,6 +92,15 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     # Pop this part off the stack.
     @popPart()
 
+  onClickTraits: (event) ->
+    factor = @data()
+
+    personality = @ancestorComponentOfType C3.Behavior.Terminal.Personality
+    terminal = personality.terminal
+
+    terminal.screens.traits.setFactor factor, @part
+    terminal.switchToScreen terminal.screens.traits
+
   # Components
 
   class @TemplateDropdown extends AM.DataInputComponent
@@ -120,3 +108,28 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
       super
 
       @type = AM.DataInputComponent.Types.Select
+
+  class @Axis extends AM.Component
+    @register 'SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis'
+  
+    leftFactorName: -> @_factorName false
+    rightFactorName: -> @_factorName true
+  
+    _factorName: (right) ->
+      @_getFactorSide(right).name
+  
+    _getFactorSide: (right) ->
+      factor = @data()
+  
+      if right is not factor.options.displayReversed then factor.options.positive else factor.options.negative
+  
+    leftFactorStyle: -> @_factorStyle false
+    rightFactorStyle: -> @_factorStyle true
+  
+    _factorStyle: (right) ->
+      return unless palette = LOI.palette()
+  
+      colorData = @_getFactorSide(right).color
+      color = palette.color colorData.hue, colorData.shade
+  
+      color: "##{color.getHexString()}"

@@ -1,5 +1,6 @@
 <template name="SanFrancisco.C3.Behavior.Terminal.Personality">
   <div class="sanfrancisco-c3-behavior-terminal-personality screen">
+    <div class="main-content">
       <h1 class="screen-title">Personality</h1>
       {{#if showTemplates}}
         <div class="templates-area">
@@ -43,6 +44,22 @@
           </div>
           {{/with}}
         {{/if}}
+        <div class="auto-traits">
+          <label class="auto-traits">
+            {{> SanFrancisco.C3.Behavior.Terminal.Personality.AutoTraitsCheckbox autoTraitsDataLocation}}
+            <span class="label">Automatic traits selection</span>
+          </label>
+        </div>
+        {{#if autoTraits}}
+          <p class="main-text">
+            Adjust sliders to shape agent's personality. Multiple sliders need to be set for most traits.
+            Click on traits for granular control.
+          </p>
+        {{else}}
+          <p class="main-text">
+            Select traits under each of the five axes. Bars will indicate agent's personality signature.
+          </p>
+        {{/if}}
         <div class="personality">
           <ul class="factors">
             {{#each factors}}
@@ -51,6 +68,7 @@
           </ul>
         </div>
       {{/if}}
+    </div>
     <div class="main-actions">
       {{#if showTemplates}}
         <button class="main-button action-button done-button">Back</button>

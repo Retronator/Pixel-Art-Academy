@@ -25,5 +25,5 @@ _.extend LOI.Character.Part.Types,
   PersonalityTrait: new LOI.Character.Part
     type: 'PersonalityTrait'
     properties:
-      id: new LOI.Character.Part.Property.String
+      name: new LOI.Character.Part.Property.String
       weight: new LOI.Character.Part.Property.Integer

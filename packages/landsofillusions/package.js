@@ -103,6 +103,8 @@ Package.onUse(function(api) {
   api.addFile('character/behavior/personality');
   api.addFile('character/behavior/factor');
   api.addFile('character/behavior/initialize');
+  api.addFile('character/behavior/trait');
+  api.addFile('character/behavior/traits-data');
 
   // User
 

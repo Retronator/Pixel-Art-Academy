@@ -201,3 +201,21 @@
       &:focus
         border-color atariCyan(3)
         z-index 1
+
+    input[type='checkbox']
+      display none
+
+      & + .label::before
+        content '✔'
+        display inline-block
+        width 7rem
+        height 7rem
+        padding 0 0 1rem 1rem
+        margin-right 6rem
+        vertical-align baseline
+        border 1rem solid atariCyan(2)
+        text-align center
+        color transparent
+
+      &:checked + .label::before
+        color atariCyan(5)

@@ -104,6 +104,14 @@ class C3.Behavior.Terminal.Personality extends AM.Component
       Factors[5]
     ]
 
+  autoTraitsDataLocation: ->
+    @part().properties.autoTraits.options.dataLocation
+
+  autoTraits: ->
+    # Auto traits are on by default.
+    autoTraitsDataLocation = @autoTraitsDataLocation()
+    autoTraitsDataLocation() ? true
+
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
@@ -150,3 +158,24 @@ class C3.Behavior.Terminal.Personality extends AM.Component
 
     # Return to previous item where we will see the result of choosing this part.
     @closeScreen()
+
+  # Components
+
+  class @AutoTraitsCheckbox extends AM.DataInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.Personality.AutoTraitsCheckbox'
+
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Checkbox
+
+    load: ->
+      autoTraitsDataLocation = @data()
+
+      # Auto traits are on by default.
+      autoTraitsDataLocation() ? true
+
+    save: (value) ->
+      autoTraitsDataLocation = @data()
+
+      autoTraitsDataLocation value

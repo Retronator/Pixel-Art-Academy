@@ -1,0 +1,44 @@
+<template name="SanFrancisco.C3.Behavior.Terminal.Personality.Traits">
+  <div class="sanfrancisco-c3-behavior-terminal-personality-traits screen">
+    <div class="main-content">
+      <p class="main-text">
+        For each personality trait, choose the side that represents the agent best, or leave it in balance.
+      </p>
+      <div class="factor">
+        {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis factor}}
+        <div class="traits-section">
+          <h3 class="title">Main traits</h3>
+          <ul class="primary-traits traits">
+            {{#each mainTraits}}
+              <li class="trait">
+                <div class="selector">
+                  <button class="left-selector-button selector-button"></button>
+                  <button class="middle-selector-button selector-button"></button>
+                  <button class="right-selector-button selector-button"></button>
+                  <div class="name" {{style traitNameStyle}}>{{capitalize name}}</div>
+                </div>
+                <div class="left-factors">
+                  <div class="primary-factor" {{style leftPrimaryFactorStyle}}>{{leftPrimaryFactorName}}</div>
+                  {{#if leftSecondaryFactorName}}
+                    <div class="plus-sign">+</div>
+                    <div class="secondary-factor" {{style leftSecondaryFactorStyle}}>{{leftSecondaryFactorName}}</div>
+                  {{/if}}
+                </div>
+                <div class="right-factors">
+                  <div class="primary-factor" {{style rightPrimaryFactorStyle}}>{{rightPrimaryFactorName}}</div>
+                  {{#if rightSecondaryFactorName}}
+                    <div class="plus-sign">+</div>
+                    <div class="secondary-factor" {{style rightSecondaryFactorStyle}}>{{rightSecondaryFactorName}}</div>
+                  {{/if}}
+                </div>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="main-actions">
+      <button class="main-button action-button done-button">Done</button>
+    </div>
+  </div>
+</template>
