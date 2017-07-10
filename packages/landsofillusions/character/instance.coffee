@@ -16,18 +16,8 @@ class LOI.Character.Instance
       LOI.Character.documents.findOne @id
 
     @avatar = new LOI.Character.Avatar @
-
-    # Create the behavior hierarchy.
-    behaviorDataField = AM.Hierarchy.create
-      templateClass: LOI.Character.Part.Template
-      type: LOI.Character.Part.Types.Outfit.options.type
-      load: => @document()?.behavior
-      save: (address, value) =>
-        LOI.Character.updateBehavior @id, address, value
-
-    @behavior = LOI.Character.Part.Types.Behavior.create
-      dataLocation: new AM.Hierarchy.Location
-        rootField: behaviorDataField
+    @behavior = new LOI.Character.Behavior @
 
   destroy: ->
     @_documentSubscription.stop()
+    @behavior.destroy()

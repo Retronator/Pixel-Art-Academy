@@ -13,31 +13,61 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
     super
 
     @factor = new ReactiveField null
-    @part = new ReactiveField null
+    @partField = new ReactiveField null
+    
+    @traitsProperty = new ComputedField =>
+      return unless factorPart = @partField()?()
+
+      factorPart.properties.traits
 
   onCreated: ->
     super
 
-  setFactor: (factor, part) ->
+  setFactor: (factor, partField) ->
     @factor factor
-    @part part
+    @partField partField
 
   mainTraits: ->
     LOI.Character.Behavior.Personality.Trait.documents.find
-      'primaryFactor.type': @factor().options.typeNumber
+      'primaryFactor.type': @factor().options.type
+
+  middleSelectorActiveClass: (weight) ->
+    'active' if @_selectorActive 0
+
+  _selectorActive: (weight) ->
+    traitInfo = @currentData()
+    return unless traits = @traitsProperty()?.parts()
+
+    return unless trait = _.find traits, (trait) => trait.properties.name.options.dataLocation() is traitInfo.name
+
+    trait.properties.weight.options.dataLocation() is weight
+
+  leftSelectorActiveStyle: -> @_selectorActiveStyle -1, false
+  rightSelectorActiveStyle: -> @_selectorActiveStyle 1, true
+
+  _selectorActiveStyle: (weight, right) ->
+    return unless palette = LOI.palette()
+
+    # We should flip the weight if the trait's positive weight isn't on the right side.
+    weight *= -1 unless @_rightIsPositive()
+
+    return unless @_selectorActive weight
+
+    trait = @currentData()
+    factor = LOI.Character.Behavior.Personality.Factors[trait.primaryFactor.type]
+
+    colorData = @_getFactorSide(factor, right).color
+    borderColor = palette.color colorData.hue, colorData.shade
+    backgroundColor = palette.color colorData.hue, colorData.shade - 2
+
+    borderColor: "##{borderColor.getHexString()}"
+    backgroundColor: "##{backgroundColor.getHexString()}"
 
   traitNameStyle: ->
     trait = @currentData()
 
-    # The trait name is on the right by default
-    right = true
-
-    # If the primary factor is negative we should display on the left.
-    right = false if trait.primaryFactor.sign < 0
-
-    # We should reverse the side if the factor display is reversed.
-    factor = LOI.Character.Behavior.Personality.Factors[trait.primaryFactor.type]
-    right = not right if factor.options.displayReversed
+    # See if the trait's positive weight is on the right side.
+    right = @_rightIsPositive()
 
     # Don't let long words to be on the edge.
     iCharCount = trait.name.match(/i/gi)?.length or 0
@@ -46,6 +76,21 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
     leftPercentage = if right then 100 - offset else offset
 
     left: "#{leftPercentage}%"
+
+  _rightIsPositive: ->
+    trait = @currentData()
+
+    # The positive weight is on the right by default.
+    positive = true
+
+    # If the primary factor is negative, positive weight will be on the left.
+    positive = false if trait.primaryFactor.sign < 0
+
+    # We should reverse the side if the factor display is reversed.
+    factor = LOI.Character.Behavior.Personality.Factors[trait.primaryFactor.type]
+    positive = not positive if factor.options.displayReversed
+
+    positive
 
   leftPrimaryFactorName: -> @_primaryFactorName false
   rightPrimaryFactorName: -> @_primaryFactorName true
@@ -126,7 +171,44 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
+      'click .left-selector-button': @onClickLeftSelectorButton
+      'click .middle-selector-button': @onClickMiddleSelectorButton
+      'click .right-selector-button': @onClickRightSelectorButton
 
   onClickDoneButton: (event) ->
     # We return back to the personality screen.
     @terminal.switchToScreen @terminal.screens.personality
+
+  onClickLeftSelectorButton: (event) ->
+    @_applySelectorButton -1
+
+  onClickMiddleSelectorButton: (event) ->
+    @_applySelectorButton 0
+
+  onClickRightSelectorButton: (event) ->
+    @_applySelectorButton 1
+    
+  _applySelectorButton: (weight) ->
+    traitInfo = @currentData()
+    traitsProperty = @traitsProperty()
+    traits = traitsProperty?.parts()
+
+    # We should flip the weight if the trait's positive weight isn't on the right side.
+    weight *= -1 unless @_rightIsPositive()
+
+    existingTrait = null
+
+    if traits
+      # See if we have an existing trait.
+      existingTrait = _.find traits, (trait) => trait.properties.name.options.dataLocation() is traitInfo.name
+
+    if existingTrait
+      # Modify the weight of existing trait.
+      existingTrait.properties.weight.options.dataLocation weight
+
+    else
+      # Create a new entry.
+      traitPart = traitsProperty.newPart 'PersonalityTrait'
+      traitPart.options.dataLocation
+        name: traitInfo.name
+        weight: weight

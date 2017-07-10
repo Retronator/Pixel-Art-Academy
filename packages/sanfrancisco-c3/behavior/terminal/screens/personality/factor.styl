@@ -37,21 +37,51 @@
 
 .sanfrancisco-c3-behavior-terminal-personality-factor-axis
   .names
-  .axis
     display flex
-
-  .left
-  .right
-    width 50%
-
-  .right
-    text-align right
-
-  .names
     acme-7()
 
+    .left
+    .right
+      width 50%
+
+    .right
+      text-align right
+
   .axis
+    position relative
     margin 3rem 0
     border 1rem solid atariGrey(2)
     background atariGrey(1)
     height 7rem
+
+    .left
+    .right
+      position absolute
+      top 0
+      bottom 0
+
+      .indicator
+        position absolute
+        top -1rem
+        width 7rem
+        height 7rem
+        border 1rem solid atariGrey(2)
+
+      .progress-bar
+        position absolute
+        top 0
+        bottom 0
+
+    .left
+      left 7rem
+      right 50%
+
+      .progress-bar
+        right 0
+
+    .right
+      left 50%
+      right 7rem
+
+      .progress-bar
+        left 0

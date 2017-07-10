@@ -14,26 +14,35 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
   onCreated: ->
     super
 
-    # Get the behavior part from the character.
+    # Get this factor part from the character.
     @autorun (computation) =>
       factor = @data()
       
       personality = @ancestorComponentOfType C3.Behavior.Terminal.Personality
-      factorParts = personality.part().properties.factors.parts()
-      
-      factorPart = _.find factorParts, (factorPart) => factorPart.option.type is factor.options.type
+      factorsProperty = personality.part().properties.factors
+      factorPart = factorsProperty.partsByOrder[factor.options.type]
 
-      console.log "p", factorPart, factorParts
+      unless factorPart
+        # The factor part does not exist yet (since there is no data for it), so we create it.
+        Tracker.nonreactive =>
+          partDataLocation = factorsProperty.options.dataLocation.child factor.options.type
+
+          partDataLocation.setMetaData
+            type: factorsProperty.options.type
+
+          factorPart = LOI.Character.Part.Types[factorsProperty.options.type].create
+            dataLocation: partDataLocation
+
+          # Set the factor index.
+          factorPart.properties.index.options.dataLocation factor.options.type
 
       @part factorPart
 
     @hasCustomData = new ComputedField =>
       @part()?.options.dataLocation()?.data()
 
-    # Subscribe to this factor's templates
-    @autorun (computation) =>
-      factor = @data()
-      LOI.Character.Part.Template.forType.subscribe @, factor.options.type
+    # Subscribe to factor templates.
+    LOI.Character.Part.Template.forType.subscribe @, 'PersonalityFactor'
 
     @templateNameInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Name the template"
@@ -72,6 +81,17 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     template = @partTemplate()
     template.author._id is userId
 
+  traits: ->
+    factorPart = @part()
+    traits = factorPart.properties.traits.parts()
+    return unless traits.length
+
+    enabledTraits = _.filter traits, (trait) -> trait.properties.weight.options.dataLocation() > 0
+
+    traitNames = (_.capitalize trait.properties.name.options.dataLocation() for trait in enabledTraits)
+
+    traitNames.join ', '
+
   events: ->
     super.concat
       'click .factor-save-as-template-button': @onClickSaveAsTemplateButton
@@ -95,8 +115,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
   onClickTraits: (event) ->
     factor = @data()
 
-    personality = @ancestorComponentOfType C3.Behavior.Terminal.Personality
-    terminal = personality.terminal
+    terminal = @ancestorComponentOfType C3.Behavior.Terminal
 
     terminal.screens.traits.setFactor factor, @part
     terminal.switchToScreen terminal.screens.traits
@@ -111,6 +130,12 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
 
   class @Axis extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis'
+
+    onCreated: ->
+      super
+
+      @terminal = @ancestorComponentOfType C3.Behavior.Terminal
+      @behavior = @terminal.screens.character.character()?.behavior
   
     leftFactorName: -> @_factorName false
     rightFactorName: -> @_factorName true
@@ -133,3 +158,49 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
       color = palette.color colorData.hue, colorData.shade
   
       color: "##{color.getHexString()}"
+
+    leftIndicatorStyle: -> @_indicatorStyle false
+    rightIndicatorStyle: -> @_indicatorStyle true
+
+    _indicatorStyle: (right) ->
+      return unless palette = LOI.palette()
+
+      percentage = @_indicatorPositionPercentage right
+
+      colorData = @_getFactorSide(right).color
+      borderColor = palette.color colorData.hue, colorData.shade
+      backgroundColor = palette.color colorData.hue, colorData.shade - 2
+
+      style =
+        borderColor: "##{borderColor.getHexString()}"
+        backgroundColor: "##{backgroundColor.getHexString()}"
+
+      if right
+        style.left = "#{percentage}%"
+
+      else
+        style.right = "#{percentage}%"
+
+      style
+
+    _indicatorPositionPercentage: (right) ->
+      factor = @data()
+
+      factorPower = @behavior.personality.factorPowers()[factor.options.type]
+
+      power = if right is not factor.options.displayReversed then factorPower.positive else factorPower.negative
+      Math.min 100, power * 10
+
+    leftProgressBarStyle: -> @_progressBarStyle false
+    rightProgressBarStyle: -> @_progressBarStyle true
+
+    _progressBarStyle: (right) ->
+      return unless palette = LOI.palette()
+
+      percentage = @_indicatorPositionPercentage right
+
+      colorData = @_getFactorSide(right).color
+      backgroundColor = palette.color colorData.hue, colorData.shade - 2
+
+      width: "#{percentage}%"
+      backgroundColor: "##{backgroundColor.getHexString()}"

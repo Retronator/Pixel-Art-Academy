@@ -11,15 +11,13 @@
     <div class="ai-agents section">
       <h2 class="section-title">Agent Behavior Profiles</h2>
       <ul class="document-selection">
-        {{#each designedCharacters}}
-          {{#with character}}
-            <li class="document">
-              <button class="document-selection-button character-selection-button">
-                {{avatar.fullName}}
-                {{#unless document.behaviorApproved}} (draft){{/unless}}
-              </button>
-            </li>
-          {{/with}}
+        {{#each characters}}
+          <li class="document">
+            <button class="document-selection-button character-selection-button">
+              {{avatar.fullName}}
+              {{#unless document.behaviorApproved}} (draft){{/unless}}
+            </button>
+          </li>
         {{/each}}
       </ul>
     </div>

@@ -59,7 +59,7 @@ if Meteor.isClient
     charactersSubscription = Retronator.Accounts.User.charactersFieldForCurrentUser.subscribe()
 
     # Create the current character on the client.
-    Meteor.autorun ->
+    Tracker.autorun ->
       characterId = LOI.characterId()
 
       # Only react to character changes.

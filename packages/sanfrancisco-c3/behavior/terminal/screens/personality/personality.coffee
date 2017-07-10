@@ -25,7 +25,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
 
     # Get the personality part from the character.
     @autorun (computation) =>
-      behaviorPart = @terminal.screens.character.character()?.behavior
+      behaviorPart = @terminal.screens.character.character()?.behavior.part
       personalityPart = behaviorPart.properties.personality.part
 
       @part personalityPart
