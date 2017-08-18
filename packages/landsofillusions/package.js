@@ -104,6 +104,7 @@ Package.onUse(function(api) {
   api.addFile('character/behavior/factor');
   api.addFile('character/behavior/trait');
   api.addFile('character/behavior/traits-data');
+  api.addFile('character/behavior/focalpoints');
   api.addFile('character/behavior/initialize');
 
   // User

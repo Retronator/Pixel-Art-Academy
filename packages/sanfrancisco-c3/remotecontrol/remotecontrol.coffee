@@ -11,7 +11,7 @@ class C3.RemoteControl extends LOI.Adventure.Location
   @version: -> '0.0.1'
 
   @fullName: -> "Character Construction Center Remote Control"
-  @shortName: -> "lobby"
+  @shortName: -> "remote control"
   @description: ->
     "
       The series of halls ends with a room with multiple reclining stations.

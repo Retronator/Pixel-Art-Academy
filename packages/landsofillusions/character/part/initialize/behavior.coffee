@@ -10,6 +10,9 @@ LOI = LandsOfIllusions
 #       name: the unique adjective name of this trait
 #       weight: -1, 0, 1 value indicating manually-selected alignment with this trait
 #   autoTraits
+# focalPoints: array of
+#   name: name of the focal point
+#   hoursPerWeek: average amount of hours spent per week
 
 _.extend LOI.Character.Part.Types,
   Behavior: new LOI.Character.Part
@@ -17,6 +20,8 @@ _.extend LOI.Character.Part.Types,
     properties:
       personality: new LOI.Character.Part.Property.OneOf
         type: 'Personality'
+      focalPoints: new LOI.Character.Part.Property.Array
+        type: 'FocalPoint'
 
   Personality: new LOI.Character.Part
     type: 'Personality'
@@ -39,3 +44,9 @@ _.extend LOI.Character.Part.Types,
     properties:
       name: new LOI.Character.Part.Property.String
       weight: new LOI.Character.Part.Property.Integer
+
+  FocalPoint: new LOI.Character.Part
+    type: 'FocalPoint'
+    properties:
+      name: new LOI.Character.Part.Property.String
+      hoursPerWeek: new LOI.Character.Part.Property.Integer

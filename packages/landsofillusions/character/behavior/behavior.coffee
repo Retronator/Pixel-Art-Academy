@@ -16,6 +16,7 @@ class LOI.Character.Behavior
         rootField: behaviorDataField
 
     @personality = new @constructor.Personality @
+    @focalPoints = new @constructor.FocalPoints @
 
   destroy: ->
     @personality.destroy()
