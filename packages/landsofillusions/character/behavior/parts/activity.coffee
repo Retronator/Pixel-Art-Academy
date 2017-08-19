@@ -2,6 +2,12 @@ AB = Artificial.Babel
 LOI = LandsOfIllusions
 
 class LOI.Character.Behavior.Activity extends LOI.Character.Part
+  @Keys:
+    Sleep: 'Sleep'
+    Job: 'Job'
+    School: 'School'
+    Drawing: 'Drawing'
+
   # Prepares a focal point on the server.
   @create: (options) ->
     # Transform name and descriptions into translation documents.

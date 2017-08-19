@@ -8,10 +8,33 @@
       <h2 class="section-title">
         Available
       </h2>
+      <ul class="perks">
+        {{#each availablePerks}}
+          <li class="perk">
+            {{name}}
+          </li>
+        {{/each}}
+      </ul>
       <h2 class="section-title">
         Unavailable
       </h2>
     </div>
+    {{#with displayedPerk}}
+      <div class="perk-info">
+        <div class="name">
+          {{name}}
+        </div>
+        <div class="description">
+          {{description}}
+        </div>
+        <div class="requirements">
+          {{requirements}}
+        </div>
+        <div class="effects">
+          {{effects}}
+        </div>
+      </div>
+    {{/with}}
     <div class="main-actions">
       <button class="main-button action-button done-button">Done</button>
     </div>

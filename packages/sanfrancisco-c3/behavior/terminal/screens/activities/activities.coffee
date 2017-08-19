@@ -3,8 +3,7 @@ AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
-# Note that we can't use Activities shorthand because it would get overwritten with the Activities class below.
-ActivitiesKeys = LOI.Character.Behavior.Activities.Keys
+Activity = LOI.Character.Behavior.Activity
 
 class C3.Behavior.Terminal.Activities extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Activities'
@@ -98,19 +97,19 @@ class C3.Behavior.Terminal.Activities extends AM.Component
   activities: ->
     # Start with the default activities.
     activities =
-      "#{ActivitiesKeys.Sleep}":
+      "#{Activity.Keys.Sleep}":
         nameEditable: false
         hoursPerWeek: 0
 
-      "#{ActivitiesKeys.Job}":
+      "#{Activity.Keys.Job}":
         nameEditable: false
         hoursPerWeek: 0
 
-      "#{ActivitiesKeys.School}":
+      "#{Activity.Keys.School}":
         nameEditable: false
         hoursPerWeek: 0
 
-      "#{ActivitiesKeys.Drawing}":
+      "#{Activity.Keys.Drawing}":
         nameEditable: false
         hoursPerWeek: 0
 
@@ -133,7 +132,7 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     # Find sleep focal point.
     sleepActivity = _.find @property().parts(), (activityPart) =>
       activityName = activityPart.properties.key.options.dataLocation()
-      activityName is ActivitiesKeys.Sleep
+      activityName is Activity.Keys.Sleep
 
     sleepActivity?.properties.hoursPerWeek.options.dataLocation() or 0
 
@@ -144,7 +143,7 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     total = 0
 
     # Find job and sleep focal points.
-    for activityName in [ActivitiesKeys.Job, ActivitiesKeys.School]
+    for activityName in [Activity.Keys.Job, Activity.Keys.School]
       activity = _.find @property().parts(), (activityPart) =>
         activityPart.properties.key.options.dataLocation() is activityName
 
@@ -161,7 +160,7 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     for activityPart in @property().parts()
       activityKey = activityPart.properties.key.options.dataLocation()
 
-      continue if activityKey in [ActivitiesKeys.Job, ActivitiesKeys.School, ActivitiesKeys.Sleep]
+      continue if activityKey in [Activity.Keys.Job, Activity.Keys.School, Activity.Keys.Sleep]
 
       total += activityPart.properties.hoursPerWeek.options.dataLocation()
 

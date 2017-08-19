@@ -29,7 +29,7 @@ class LOI.Components.Account.Page extends AM.Component
 
     # Subscribe to translation keys in advance to avoid loading on display.
     Tracker.autorun (computation) =>
-      Meteor.subscribe 'Artificial.Babel.Translation', translationNamespace, null, AB.userLanguagePreference()
+      AB.Translation.forNamespace.subscribe translationNamespace, null, AB.userLanguagePreference()
 
   url: -> @constructor.url()
     
