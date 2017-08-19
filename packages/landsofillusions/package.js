@@ -111,14 +111,14 @@ Package.onUse(function(api) {
   api.addFile('character/behavior/behavior');
 
   api.addFile('character/behavior/properties/properties');
-  api.addFile('character/behavior/properties/focalpoints');
+  api.addFile('character/behavior/properties/activities');
   api.addFile('character/behavior/properties/perks');
 
   api.addFile('character/behavior/parts/parts');
   api.addFile('character/behavior/parts/personality');
   api.addFile('character/behavior/parts/personality-factor');
   api.addFile('character/behavior/parts/trait');
-  api.addFile('character/behavior/parts/focalpoint');
+  api.addFile('character/behavior/parts/activity');
   api.addFile('character/behavior/parts/perk');
 
   // Perk definitions must come after properties/perks
@@ -128,7 +128,7 @@ Package.onUse(function(api) {
   api.addFile('character/behavior/initialize/personality');
   api.addFile('character/behavior/initialize/traits-data');
   api.addFile('character/behavior/initialize/traits');
-  api.addFile('character/behavior/initialize/focalpoints');
+  api.addFile('character/behavior/initialize/activities');
   api.addFile('character/behavior/initialize/perks');
 
   // User

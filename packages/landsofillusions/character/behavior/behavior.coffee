@@ -11,8 +11,8 @@ LOI = LandsOfIllusions
 #       key: the unique adjective name of this trait
 #       weight: -1, 0, 1 value indicating manually-selected alignment with this trait
 #   autoTraits
-# focalPoints: array of
-#   key: system name of the focal point
+# activities: array of
+#   key: system name of the activity
 #   hoursPerWeek: average amount of hours spent per week
 # perks: array of
 #   key: system name of the perk

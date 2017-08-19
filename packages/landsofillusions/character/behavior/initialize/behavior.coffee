@@ -6,8 +6,8 @@ LOI.Character.Part.registerClasses
     properties:
       personality: new LOI.Character.Part.Property.OneOf
         type: 'Behavior.Personality'
-      focalPoints: new LOI.Character.Part.Property.Array
-        type: 'Behavior.FocalPoint'
+      activities: new LOI.Character.Part.Property.Array
+        type: 'Behavior.Activity'
       perks: new LOI.Character.Part.Property.Array
         type: 'Behavior.Perk'
 
@@ -20,8 +20,8 @@ LOI.Character.Part.registerClasses
           type: 'Behavior.Personality.Factor'
         autoTraits: new LOI.Character.Part.Property.Boolean
 
-    FocalPoint: new LOI.Character.Behavior.FocalPoint
-      type: 'Behavior.FocalPoint'
+    Activity: new LOI.Character.Behavior.Activity
+      type: 'Behavior.Activity'
       properties:
         key: new LOI.Character.Part.Property.String
         hoursPerWeek: new LOI.Character.Part.Property.Integer

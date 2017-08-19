@@ -1,7 +1,7 @@
 AB = Artificial.Babel
 LOI = LandsOfIllusions
 
-class LOI.Character.Behavior.FocalPoint extends LOI.Character.Part
+class LOI.Character.Behavior.Activity extends LOI.Character.Part
   # Prepares a focal point on the server.
   @create: (options) ->
     # Transform name and descriptions into translation documents.
@@ -12,6 +12,6 @@ class LOI.Character.Behavior.FocalPoint extends LOI.Character.Part
   @createSelf: ->
     @create @
 
-  @_createTranslation: (focalPointKey, translationKey, defaultText) ->
-    namespace = "LandsOfIllusions.Character.Behavior.FocalPoint.#{focalPointKey}"
+  @_createTranslation: (activityKey, translationKey, defaultText) ->
+    namespace = "LandsOfIllusions.Character.Behavior.Activity.#{activityKey}"
     AB.createTranslation namespace, translationKey, defaultText

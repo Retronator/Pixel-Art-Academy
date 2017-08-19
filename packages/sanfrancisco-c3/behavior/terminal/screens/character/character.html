@@ -30,18 +30,18 @@
             Add meaningful activities the agent wants to focus on, and set desired time. Include commute time in amounts.
           </p>
           <table class="focal-points">
-            {{#each focalPoints}}
+            {{#each activities}}
               <tr class="focal-point">
                 <td class="name">
                   {{#if nameEditable}}
-                    {{> SanFrancisco.C3.Behavior.Terminal.Character.FocalPointName}}
+                    {{> SanFrancisco.C3.Behavior.Terminal.Character.ActivityName}}
                   {{else}}
                     {{key}}
                   {{/if}}
                 </td>
                 <td class="time">
-                  {{> SanFrancisco.C3.Behavior.Terminal.Character.FocalPointHoursPerWeek}} h/week or
-                  {{> SanFrancisco.C3.Behavior.Terminal.Character.FocalPointHoursPerDay}} h/day
+                  {{> SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerWeek}} h/week or
+                  {{> SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerDay}} h/day
                 </td>
               </tr>
             {{/each}}
@@ -72,7 +72,7 @@
                 <td>Remaining hours</td><td>{{hoursAfterJobSchool}}</td>
               </tr>
               <tr>
-                <td>Hours spent on activities</td><td>-{{hoursFocalPoints}}</td>
+                <td>Hours spent on activities</td><td>-{{hoursActivities}}</td>
               </tr>
               <tr>
                 <td>Remaining hours</td><td>{{extraHoursPerWeek}}</td>

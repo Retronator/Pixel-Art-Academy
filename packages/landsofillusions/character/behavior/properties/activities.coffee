@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Character.Behavior.FocalPoints extends LOI.Character.Part.Property.Array
+class LOI.Character.Behavior.Activities extends LOI.Character.Part.Property.Array
   @Keys:
     Sleep: 'Sleep'
     Job: 'Job'

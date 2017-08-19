@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
 Factors = LOI.Character.Behavior.Personality.Factors
-FocalPoints = LOI.Character.Behavior.FocalPoints
+Activities = LOI.Character.Behavior.Activities
 
 class C3.Behavior.Terminal.Character extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Character'
@@ -52,47 +52,47 @@ class C3.Behavior.Terminal.Character extends AM.Component
 
     traitNames.join ', '
     
-  focalPoints: ->
+  activities: ->
     # Start with the default focal points.
-    focalPoints =
-      "#{FocalPoints.Keys.Sleep}": 
+    activities =
+      "#{Activities.Keys.Sleep}": 
         nameEditable: false
         hoursPerWeek: 0
         
-      "#{FocalPoints.Keys.Job}":
+      "#{Activities.Keys.Job}":
         nameEditable: false
         hoursPerWeek: 0
         
-      "#{FocalPoints.Keys.School}":
+      "#{Activities.Keys.School}":
         nameEditable: false
         hoursPerWeek: 0
         
-      "#{FocalPoints.Keys.Drawing}":
+      "#{Activities.Keys.Drawing}":
         nameEditable: false
         hoursPerWeek: 0
 
     # Add all character's focal points.
-    for focalPointPart in @character().behavior.part.properties.focalPoints.parts()
-      focalPointKey = focalPointPart.properties.key.options.dataLocation()
-      focalPointHoursPerWeek = focalPointPart.properties.hoursPerWeek.options.dataLocation()
+    for activityPart in @character().behavior.part.properties.activities.parts()
+      activityKey = activityPart.properties.key.options.dataLocation()
+      activityHoursPerWeek = activityPart.properties.hoursPerWeek.options.dataLocation()
       
-      unless focalPoints[focalPointKey]
-        focalPoints[focalPointKey] = nameEditable: true
+      unless activities[activityKey]
+        activities[activityKey] = nameEditable: true
 
-      focalPoints[focalPointKey].part = focalPointPart
-      focalPoints[focalPointKey].hoursPerWeek = focalPointHoursPerWeek
+      activities[activityKey].part = activityPart
+      activities[activityKey].hoursPerWeek = activityHoursPerWeek
 
     # Return an array.
-    for focalPointName, focalPoint of focalPoints
-      _.extend {}, focalPoint, key: focalPointName
+    for activityName, activity of activities
+      _.extend {}, activity, key: activityName
 
   hoursSleep: ->
     # Find sleep focal point.
-    sleepFocalPoint = _.find @character().behavior.part.properties.focalPoints.parts(), (focalPointPart) =>
-      focalPointName = focalPointPart.properties.key.options.dataLocation()
-      focalPointName is FocalPoints.Keys.Sleep
+    sleepActivity = _.find @character().behavior.part.properties.activities.parts(), (activityPart) =>
+      activityName = activityPart.properties.key.options.dataLocation()
+      activityName is Activities.Keys.Sleep
 
-    sleepFocalPoint?.properties.hoursPerWeek.options.dataLocation() or 0
+    sleepActivity?.properties.hoursPerWeek.options.dataLocation() or 0
 
   hoursAfterSleep: ->
     24 * 7 - @hoursSleep()
@@ -101,31 +101,31 @@ class C3.Behavior.Terminal.Character extends AM.Component
     total = 0
 
     # Find job and sleep focal points.
-    for focalPointName in [FocalPoints.Keys.Job, FocalPoints.Keys.School]
-      focalPoint = _.find @character().behavior.part.properties.focalPoints.parts(), (focalPointPart) =>
-        focalPointPart.properties.key.options.dataLocation() is focalPointName
+    for activityName in [Activities.Keys.Job, Activities.Keys.School]
+      activity = _.find @character().behavior.part.properties.activities.parts(), (activityPart) =>
+        activityPart.properties.key.options.dataLocation() is activityName
 
-      total += focalPoint?.properties.hoursPerWeek.options.dataLocation() or 0
+      total += activity?.properties.hoursPerWeek.options.dataLocation() or 0
 
     total
 
   hoursAfterJobSchool: ->
     @hoursAfterSleep() - @hoursJobSchool()
 
-  hoursFocalPoints: ->
+  hoursActivities: ->
     total = 0
 
-    for focalPointPart in @character().behavior.part.properties.focalPoints.parts()
-      focalPointKey = focalPointPart.properties.key.options.dataLocation()
+    for activityPart in @character().behavior.part.properties.activities.parts()
+      activityKey = activityPart.properties.key.options.dataLocation()
 
-      continue if focalPointKey in [FocalPoints.Keys.Job, FocalPoints.Keys.School, FocalPoints.Keys.Sleep]
+      continue if activityKey in [Activities.Keys.Job, Activities.Keys.School, Activities.Keys.Sleep]
 
-      total += focalPointPart.properties.hoursPerWeek.options.dataLocation()
+      total += activityPart.properties.hoursPerWeek.options.dataLocation()
 
     total
 
   extraHoursPerWeek: ->
-    @hoursAfterJobSchool() - @hoursFocalPoints()
+    @hoursAfterJobSchool() - @hoursActivities()
 
   extraHoursPerDay: ->
     Math.round(@extraHoursPerWeek() / 0.7) / 10
@@ -141,7 +141,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
       'click .done-button': @onClickDoneButton
       'click .save-draft-button': @onClickSaveDraftButton
       'click .modify-personality-button': @onClickModifyPersonalityButton
-      'change .new-focal-point': @onChangeNewFocalPoint
+      'change .new-focal-point': @onChangeNewActivity
 
   onClickDoneButton: (event) ->
     character = @currentData()
@@ -178,7 +178,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
   onClickModifyPersonalityButton: (event) ->
     @terminal.switchToScreen @terminal.screens.personality
 
-  onChangeNewFocalPoint: (event) ->
+  onChangeNewActivity: (event) ->
     $input = $(event.target)
     name = $input.val()
     return unless name.length
@@ -186,8 +186,8 @@ class C3.Behavior.Terminal.Character extends AM.Component
     # Clear input for next entry.
     $input.val('')
 
-    focalPointType = LOI.Character.Part.Types.Behavior.FocalPoint.options.type
-    newPart = @character().behavior.part.properties.focalPoints.newPart focalPointType
+    activityType = LOI.Character.Part.Types.Behavior.Activity.options.type
+    newPart = @character().behavior.part.properties.activities.newPart activityType
 
     newPart.options.dataLocation
       key: name
@@ -195,8 +195,8 @@ class C3.Behavior.Terminal.Character extends AM.Component
 
   # Components
 
-  class @FocalPointHoursPerWeek extends AM.DataInputComponent
-    @register 'SanFrancisco.C3.Behavior.Terminal.Character.FocalPointHoursPerWeek'
+  class @ActivityHoursPerWeek extends AM.DataInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerWeek'
 
     constructor: ->
       super
@@ -208,55 +208,55 @@ class C3.Behavior.Terminal.Character extends AM.Component
         step: 1
 
     load: ->
-      focalPointInfo = @data()
-      focalPointInfo.hoursPerWeek
+      activityInfo = @data()
+      activityInfo.hoursPerWeek
 
     save: (value) ->
-      focalPointInfo = @data()
+      activityInfo = @data()
 
-      if focalPointInfo.part
-        part = focalPointInfo.part
+      if activityInfo.part
+        part = activityInfo.part
         part.properties.hoursPerWeek.options.dataLocation value * @_saveFactor()
 
       else
         characterComponent = @ancestorComponentOfType C3.Behavior.Terminal.Character
 
-        focalPointType = LOI.Character.Part.Types.Behavior.FocalPoint.options.type
-        newPart = characterComponent.character().behavior.part.properties.focalPoints.newPart focalPointType
+        activityType = LOI.Character.Part.Types.Behavior.Activity.options.type
+        newPart = characterComponent.character().behavior.part.properties.activities.newPart activityType
 
         newPart.options.dataLocation
-          key: focalPointInfo.key
+          key: activityInfo.key
           hoursPerWeek: value * @_saveFactor()
 
     _saveFactor: ->
       1
 
-  class @FocalPointHoursPerDay extends @FocalPointHoursPerWeek
-    @register 'SanFrancisco.C3.Behavior.Terminal.Character.FocalPointHoursPerDay'
+  class @ActivityHoursPerDay extends @ActivityHoursPerWeek
+    @register 'SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerDay'
 
     load: ->
-      focalPointInfo = @data()
-      Math.round(focalPointInfo.hoursPerWeek / 0.7) / 10
+      activityInfo = @data()
+      Math.round(activityInfo.hoursPerWeek / 0.7) / 10
 
     _saveFactor: ->
       7
 
-  class @FocalPointName extends AM.DataInputComponent
-    @register 'SanFrancisco.C3.Behavior.Terminal.Character.FocalPointName'
+  class @ActivityName extends AM.DataInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.Character.ActivityName'
 
     load: ->
-      focalPointInfo = @data()
-      focalPointInfo.key
+      activityInfo = @data()
+      activityInfo.key
 
       # TODO: Get translation for key.
 
     save: (value) ->
-      focalPointInfo = @data()
+      activityInfo = @data()
 
       if value.length
         # Update focal point name.
-        focalPointInfo.part.properties.key.options.dataLocation value
+        activityInfo.part.properties.key.options.dataLocation value
 
       else
         # Delete focal point.
-        focalPointInfo.part.options.dataLocation.remove()
+        activityInfo.part.options.dataLocation.remove()
