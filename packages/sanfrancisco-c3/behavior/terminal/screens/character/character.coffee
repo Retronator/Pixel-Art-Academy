@@ -63,12 +63,21 @@ class C3.Behavior.Terminal.Character extends AM.Component
 
     activityNames.join ', '
 
+  perks: ->
+    perks = @character().behavior.part.properties.perks.activePerks()
+
+    # TODO: Replace with translated names.
+    perkNames = (_.capitalize perk.properties.key.options.dataLocation() for perk in perks)
+
+    perkNames.join ', '
+
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
       'click .save-draft-button': @onClickSaveDraftButton
       'click .modify-personality-button': @onClickModifyPersonalityButton
       'click .modify-activities-button': @onClickModifyActivitiesButton
+      'click .modify-perks-button': @onClickModifyPerksButton
 
   onClickDoneButton: (event) ->
     character = @currentData()
@@ -107,3 +116,6 @@ class C3.Behavior.Terminal.Character extends AM.Component
 
   onClickModifyActivitiesButton: (event) ->
     @terminal.switchToScreen @terminal.screens.activities
+
+  onClickModifyPerksButton: (event) ->
+    @terminal.switchToScreen @terminal.screens.perks

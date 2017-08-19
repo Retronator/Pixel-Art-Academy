@@ -6,10 +6,10 @@ LOI.Character.Part.registerClasses
     properties:
       personality: new LOI.Character.Part.Property.OneOf
         type: 'Behavior.Personality'
-      activities: new LOI.Character.Part.Property.Array
+      activities: new LOI.Character.Behavior.Activities
         type: 'Behavior.Activity'
         templateType: 'Behavior.Activities'
-      perks: new LOI.Character.Part.Property.Array
+      perks: new LOI.Character.Behavior.Perks
         type: 'Behavior.Perk'
 
 LOI.Character.Part.registerClasses
