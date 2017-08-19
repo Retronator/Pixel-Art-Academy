@@ -61,6 +61,16 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
 
     @_arrayAutorun.stop()
 
+  create: (options) ->
+    newArray = super
+
+    if @options.templateType
+      # Override template type if we have set it.
+      options.dataLocation.setTemplateMetaData
+        type: @options.templateType
+
+    newArray
+
   newPart: (type) ->
     newOrder = if @_highestOrder? then @_highestOrder + 1 else 0
 

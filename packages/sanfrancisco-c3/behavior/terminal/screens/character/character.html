@@ -10,12 +10,7 @@
             </div>
           </p>
           <h2 class="section-title">
-            Personality:
-            {{#if personalityTemplate}}
-              {{personalityTemplate.name}}
-            {{else}}
-              Custom
-            {{/if}}
+            Personality
           </h2>
           <p class="traits">
             {{personalityTraits}}
@@ -24,71 +19,13 @@
             <button class="action-button modify-personality-button">Modify</button>
           </div>
           <h2 class="section-title">
-            Time allocation
+            Activities
           </h2>
-          <p class="main-text">
-            Add meaningful activities the agent wants to focus on, and set desired time. Include commute time in amounts.
+          <p class="activities">
+            {{activities}}
           </p>
-          <table class="focal-points">
-            {{#each activities}}
-              <tr class="focal-point">
-                <td class="name">
-                  {{#if nameEditable}}
-                    {{> SanFrancisco.C3.Behavior.Terminal.Character.ActivityName}}
-                  {{else}}
-                    {{key}}
-                  {{/if}}
-                </td>
-                <td class="time">
-                  {{> SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerWeek}} h/week or
-                  {{> SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerDay}} h/day
-                </td>
-              </tr>
-            {{/each}}
-            <tr class="focal-point">
-              <td class="name">
-                <input class="new-focal-point" placeholder="New activity" type="text"/>
-              </td>
-            </tr>
-          </table>
-          <p class="main-text">
-            Time allocation analysis:
-          </p>
-          <div class="time-analysis">
-            <table class="time-calculation">
-              <tr>
-                <td>Total number of hours in a week</td><td>168</td>
-              </tr>
-              <tr>
-                <td>Hours of sleep</td><td>-{{hoursSleep}}</td>
-              </tr>
-              <tr>
-                <td>Remaining hours</td><td>{{hoursAfterSleep}}</td>
-              </tr>
-              <tr>
-                <td>Hours required by job/school</td><td>-{{hoursJobSchool}}</td>
-              </tr>
-              <tr>
-                <td>Remaining hours</td><td>{{hoursAfterJobSchool}}</td>
-              </tr>
-              <tr>
-                <td>Hours spent on activities</td><td>-{{hoursActivities}}</td>
-              </tr>
-              <tr>
-                <td>Remaining hours</td><td>{{extraHoursPerWeek}}</td>
-              </tr>
-            </table>
-            <p>The agent has {{extraHoursPerWeek}} extra hours available in a week, or {{extraHoursPerDay}} per day.</p>
-            {{#if extraHoursTooLow}}
-              <p>This is probably too low to be able to deal with everything else in life. Consider adjusting your expectations.</p>
-            {{else}}
-              {{#if extraHoursTooHigh}}
-                <p>This seems to be more than plenty for the agent to deal with everything else in life.
-                  Consider adding more meaningful activities to their life.</p>
-              {{else}}
-                <p>This looks like a manageable amount to deal with everything else in life. Good job!</p>
-              {{/if}}
-            {{/if}}
+          <div class="actions">
+            <button class="action-button modify-activities-button">Modify</button>
           </div>
         </div>
       </div>

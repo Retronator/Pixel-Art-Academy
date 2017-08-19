@@ -8,6 +8,7 @@ LOI.Character.Part.registerClasses
         type: 'Behavior.Personality'
       activities: new LOI.Character.Part.Property.Array
         type: 'Behavior.Activity'
+        templateType: 'Behavior.Activities'
       perks: new LOI.Character.Part.Property.Array
         type: 'Behavior.Perk'
 

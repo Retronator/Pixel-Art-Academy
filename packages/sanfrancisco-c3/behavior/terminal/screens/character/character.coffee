@@ -3,7 +3,6 @@ LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
 Factors = LOI.Character.Behavior.Personality.Factors
-Activities = LOI.Character.Behavior.Activities
 
 class C3.Behavior.Terminal.Character extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Character'
@@ -53,95 +52,23 @@ class C3.Behavior.Terminal.Character extends AM.Component
     traitNames.join ', '
     
   activities: ->
-    # Start with the default focal points.
-    activities =
-      "#{Activities.Keys.Sleep}": 
-        nameEditable: false
-        hoursPerWeek: 0
-        
-      "#{Activities.Keys.Job}":
-        nameEditable: false
-        hoursPerWeek: 0
-        
-      "#{Activities.Keys.School}":
-        nameEditable: false
-        hoursPerWeek: 0
-        
-      "#{Activities.Keys.Drawing}":
-        nameEditable: false
-        hoursPerWeek: 0
+    activities = []
 
-    # Add all character's focal points.
     for activityPart in @character().behavior.part.properties.activities.parts()
-      activityKey = activityPart.properties.key.options.dataLocation()
       activityHoursPerWeek = activityPart.properties.hoursPerWeek.options.dataLocation()
-      
-      unless activities[activityKey]
-        activities[activityKey] = nameEditable: true
+      activities.push activityPart if activityHoursPerWeek > 0
 
-      activities[activityKey].part = activityPart
-      activities[activityKey].hoursPerWeek = activityHoursPerWeek
+    # TODO: Replace with translated names.
+    activityNames = (_.capitalize activity.properties.key.options.dataLocation() for activity in activities)
 
-    # Return an array.
-    for activityName, activity of activities
-      _.extend {}, activity, key: activityName
-
-  hoursSleep: ->
-    # Find sleep focal point.
-    sleepActivity = _.find @character().behavior.part.properties.activities.parts(), (activityPart) =>
-      activityName = activityPart.properties.key.options.dataLocation()
-      activityName is Activities.Keys.Sleep
-
-    sleepActivity?.properties.hoursPerWeek.options.dataLocation() or 0
-
-  hoursAfterSleep: ->
-    24 * 7 - @hoursSleep()
-
-  hoursJobSchool: ->
-    total = 0
-
-    # Find job and sleep focal points.
-    for activityName in [Activities.Keys.Job, Activities.Keys.School]
-      activity = _.find @character().behavior.part.properties.activities.parts(), (activityPart) =>
-        activityPart.properties.key.options.dataLocation() is activityName
-
-      total += activity?.properties.hoursPerWeek.options.dataLocation() or 0
-
-    total
-
-  hoursAfterJobSchool: ->
-    @hoursAfterSleep() - @hoursJobSchool()
-
-  hoursActivities: ->
-    total = 0
-
-    for activityPart in @character().behavior.part.properties.activities.parts()
-      activityKey = activityPart.properties.key.options.dataLocation()
-
-      continue if activityKey in [Activities.Keys.Job, Activities.Keys.School, Activities.Keys.Sleep]
-
-      total += activityPart.properties.hoursPerWeek.options.dataLocation()
-
-    total
-
-  extraHoursPerWeek: ->
-    @hoursAfterJobSchool() - @hoursActivities()
-
-  extraHoursPerDay: ->
-    Math.round(@extraHoursPerWeek() / 0.7) / 10
-
-  extraHoursTooLow: ->
-    @extraHoursPerWeek() < 20
-
-  extraHoursTooHigh: ->
-    @extraHoursPerWeek() > 50
+    activityNames.join ', '
 
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
       'click .save-draft-button': @onClickSaveDraftButton
       'click .modify-personality-button': @onClickModifyPersonalityButton
-      'change .new-focal-point': @onChangeNewActivity
+      'click .modify-activities-button': @onClickModifyActivitiesButton
 
   onClickDoneButton: (event) ->
     character = @currentData()
@@ -178,85 +105,5 @@ class C3.Behavior.Terminal.Character extends AM.Component
   onClickModifyPersonalityButton: (event) ->
     @terminal.switchToScreen @terminal.screens.personality
 
-  onChangeNewActivity: (event) ->
-    $input = $(event.target)
-    name = $input.val()
-    return unless name.length
-
-    # Clear input for next entry.
-    $input.val('')
-
-    activityType = LOI.Character.Part.Types.Behavior.Activity.options.type
-    newPart = @character().behavior.part.properties.activities.newPart activityType
-
-    newPart.options.dataLocation
-      key: name
-      hoursPerWeek: 0
-
-  # Components
-
-  class @ActivityHoursPerWeek extends AM.DataInputComponent
-    @register 'SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerWeek'
-
-    constructor: ->
-      super
-
-      @type = AM.DataInputComponent.Types.Number
-      @placeholder = 0
-      @customAttributes =
-        min: 0
-        step: 1
-
-    load: ->
-      activityInfo = @data()
-      activityInfo.hoursPerWeek
-
-    save: (value) ->
-      activityInfo = @data()
-
-      if activityInfo.part
-        part = activityInfo.part
-        part.properties.hoursPerWeek.options.dataLocation value * @_saveFactor()
-
-      else
-        characterComponent = @ancestorComponentOfType C3.Behavior.Terminal.Character
-
-        activityType = LOI.Character.Part.Types.Behavior.Activity.options.type
-        newPart = characterComponent.character().behavior.part.properties.activities.newPart activityType
-
-        newPart.options.dataLocation
-          key: activityInfo.key
-          hoursPerWeek: value * @_saveFactor()
-
-    _saveFactor: ->
-      1
-
-  class @ActivityHoursPerDay extends @ActivityHoursPerWeek
-    @register 'SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerDay'
-
-    load: ->
-      activityInfo = @data()
-      Math.round(activityInfo.hoursPerWeek / 0.7) / 10
-
-    _saveFactor: ->
-      7
-
-  class @ActivityName extends AM.DataInputComponent
-    @register 'SanFrancisco.C3.Behavior.Terminal.Character.ActivityName'
-
-    load: ->
-      activityInfo = @data()
-      activityInfo.key
-
-      # TODO: Get translation for key.
-
-    save: (value) ->
-      activityInfo = @data()
-
-      if value.length
-        # Update focal point name.
-        activityInfo.part.properties.key.options.dataLocation value
-
-      else
-        # Delete focal point.
-        activityInfo.part.options.dataLocation.remove()
+  onClickModifyActivitiesButton: (event) ->
+    @terminal.switchToScreen @terminal.screens.activities
