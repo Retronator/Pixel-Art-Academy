@@ -123,13 +123,13 @@ Package.onUse(function(api) {
 
   // Perk definitions must come after properties/perks
   api.addFile('character/behavior/parts/perks/deadendjob');
+  api.addFile('character/behavior/parts/perks/creativemess');
 
   api.addFile('character/behavior/initialize/behavior');
   api.addFile('character/behavior/initialize/personality');
   api.addFile('character/behavior/initialize/traits-data');
   api.addFile('character/behavior/initialize/traits');
   api.addFile('character/behavior/initialize/activities');
-  api.addFile('character/behavior/initialize/perks');
 
   // User
 

@@ -5,6 +5,13 @@
       <h2 class="section-title">
         Selected
       </h2>
+      <ul class="perks">
+        {{#each selectedPerks}}
+          <li class="perk">
+            {{name}}
+          </li>
+        {{/each}}
+      </ul>
       <h2 class="section-title">
         Available
       </h2>
@@ -18,6 +25,13 @@
       <h2 class="section-title">
         Unavailable
       </h2>
+      <ul class="perks">
+        {{#each unavailablePerks}}
+          <li class="perk">
+            {{name}}
+          </li>
+        {{/each}}
+      </ul>
     </div>
     {{#with displayedPerk}}
       <div class="perk-info">

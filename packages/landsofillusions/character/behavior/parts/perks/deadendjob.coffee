@@ -1,7 +1,8 @@
 LOI = LandsOfIllusions
 
-class LOI.Character.Behavior.Perks.DeadEndJob extends LOI.Character.Behavior.Perk
-  @key: 'DeadEndJob'
+class LOI.Character.Behavior.Perk.DeadEndJob extends LOI.Character.Behavior.Perk
+  @register 'DeadEndJob'
+  
   @displayName: "Dead-end job"
   @description: "Your work makes you exhaustingly brain-dead, but gives you one more reason to change your life around."
   @effects: """
@@ -10,5 +11,13 @@ class LOI.Character.Behavior.Perks.DeadEndJob extends LOI.Character.Behavior.Per
       """
   @requirements: "Allocate time for a job."
 
-  satisfiesRequirements: ->
-    # Override this with custom logic that tests whether the character can have this perk.
+  @satisfiesRequirements: (behaviorPart) ->
+    super
+
+    # Search activities for a job with some time allocated to it.
+    _.find behaviorPart.properties.activities.parts(), (activityPart) ->
+      activityKey = activityPart.properties.key.options.dataLocation()
+      activityHoursPerWeek = activityPart.properties.hoursPerWeek.options.dataLocation()
+
+      activityKey is LOI.Character.Behavior.Activity.Keys.Job and activityHoursPerWeek > 0
+
