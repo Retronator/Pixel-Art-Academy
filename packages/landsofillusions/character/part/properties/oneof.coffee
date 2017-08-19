@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Character.Part.Property.OneOf extends LOI.Character.Part.Property
@@ -9,5 +10,6 @@ class LOI.Character.Part.Property.OneOf extends LOI.Character.Part.Property
     return unless @options.dataLocation
 
     # One-of properties simply hold a part of the given type.
-    @part = LOI.Character.Part.Types[@options.type].create
-      dataLocation: @options.dataLocation
+    if partClass = LOI.Character.Part.getClassForType @options.type
+      @part = partClass.create
+        dataLocation: @options.dataLocation

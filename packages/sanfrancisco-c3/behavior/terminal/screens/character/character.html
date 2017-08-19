@@ -27,7 +27,7 @@
             Time allocation
           </h2>
           <p class="main-text">
-            Add meaningful things the agent wants to focus on (focal points) and desired time. Include commute time in amounts.
+            Add meaningful activities the agent wants to focus on, and set desired time. Include commute time in amounts.
           </p>
           <table class="focal-points">
             {{#each focalPoints}}
@@ -36,7 +36,7 @@
                   {{#if nameEditable}}
                     {{> SanFrancisco.C3.Behavior.Terminal.Character.FocalPointName}}
                   {{else}}
-                    {{name}}
+                    {{key}}
                   {{/if}}
                 </td>
                 <td class="time">
@@ -47,7 +47,7 @@
             {{/each}}
             <tr class="focal-point">
               <td class="name">
-                <input class="new-focal-point" placeholder="New focal point" type="text"/>
+                <input class="new-focal-point" placeholder="New activity" type="text"/>
               </td>
             </tr>
           </table>
@@ -72,7 +72,7 @@
                 <td>Remaining hours</td><td>{{hoursAfterJobSchool}}</td>
               </tr>
               <tr>
-                <td>Hours spent on focal points</td><td>-{{hoursFocalPoints}}</td>
+                <td>Hours spent on activities</td><td>-{{hoursFocalPoints}}</td>
               </tr>
               <tr>
                 <td>Remaining hours</td><td>{{extraHoursPerWeek}}</td>
@@ -86,7 +86,7 @@
                 <p>This seems to be more than plenty for the agent to deal with everything else in life.
                   Consider adding more meaningful activities to their life.</p>
               {{else}}
-                <p>This looks like a very manageable amount to deal with everything else in life. Good job!</p>
+                <p>This looks like a manageable amount to deal with everything else in life. Good job!</p>
               {{/if}}
             {{/if}}
           </div>

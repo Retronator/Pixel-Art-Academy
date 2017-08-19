@@ -54,7 +54,6 @@ Package.onUse(function(api) {
 
   api.addFile('character/character');
   api.addFile('character/instance');
-  api.addFile('character/avatar');
   api.addFile('character/methods');
   api.addServerFile('character/subscriptions');
   api.addServerFile('character/migrations/0000-renamecollection');
@@ -64,23 +63,13 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0004-displayname');
   api.addServerFile('character/migrations/0005-usercharactersupdate');
   api.addClientFile('character/spacebars');
+  
+  // Part system
 
   api.addFile('character/part/part');
   api.addFile('character/part/template');
   api.addFile('character/part/methods');
   api.addServerFile('character/part/subscriptions');
-
-  api.addFile('character/part/parts/shape');
-  api.addFile('character/part/parts/skinshape');
-  api.addFile('character/part/parts/customcolors');
-
-  api.addFile('character/part/renderers/renderers');
-  api.addFile('character/part/renderers/renderer');
-  api.addFile('character/part/renderers/shape');
-  api.addFile('character/part/renderers/default');
-  api.addFile('character/part/renderers/body');
-  api.addFile('character/part/renderers/humanavatar');
-  api.addFile('character/part/renderers/mappedshape');
 
   api.addFile('character/part/property');
   api.addFile('character/part/properties/oneof');
@@ -88,24 +77,59 @@ Package.onUse(function(api) {
   api.addFile('character/part/properties/integer');
   api.addFile('character/part/properties/string');
   api.addFile('character/part/properties/boolean');
-  api.addFile('character/part/properties/color');
-  api.addFile('character/part/properties/relativecolorshade');
-  api.addFile('character/part/properties/sprite');
+  
+  // Avatar parts
 
-  api.addFile('character/part/landmark');
-  api.addFile('character/part/landmarks/position');
+  api.addFile('character/avatar/avatar');
+  api.addFile('character/avatar/landmark');
 
-  api.addFile('character/part/initialize/body');
-  api.addFile('character/part/initialize/outfit');
-  api.addFile('character/part/initialize/behavior');
+  api.addFile('character/avatar/parts/parts');
+  api.addFile('character/avatar/parts/shape');
+  api.addFile('character/avatar/parts/skinshape');
+  api.addFile('character/avatar/parts/customcolors');
+
+  api.addFile('character/avatar/properties/properties');
+  api.addFile('character/avatar/properties/color');
+  api.addFile('character/avatar/properties/relativecolorshade');
+  api.addFile('character/avatar/properties/sprite');
+
+  api.addFile('character/avatar/renderers/renderers');
+  api.addFile('character/avatar/renderers/renderer');
+  api.addFile('character/avatar/renderers/shape');
+  api.addFile('character/avatar/renderers/default');
+  api.addFile('character/avatar/renderers/body');
+  api.addFile('character/avatar/renderers/humanavatar');
+  api.addFile('character/avatar/renderers/mappedshape');
+  
+  api.addFile('character/avatar/landmarks/position');
+
+  api.addFile('character/avatar/initialize/body');
+  api.addFile('character/avatar/initialize/outfit');
+
+  // Behavior parts
 
   api.addFile('character/behavior/behavior');
-  api.addFile('character/behavior/personality');
-  api.addFile('character/behavior/factor');
-  api.addFile('character/behavior/trait');
-  api.addFile('character/behavior/traits-data');
-  api.addFile('character/behavior/focalpoints');
-  api.addFile('character/behavior/initialize');
+
+  api.addFile('character/behavior/properties/properties');
+  api.addFile('character/behavior/properties/focalpoints');
+  api.addFile('character/behavior/properties/perks');
+
+  api.addFile('character/behavior/parts/parts');
+  api.addFile('character/behavior/parts/personality');
+  api.addFile('character/behavior/parts/personality-factor');
+  api.addFile('character/behavior/parts/trait');
+  api.addFile('character/behavior/parts/focalpoint');
+  api.addFile('character/behavior/parts/perk');
+
+  // Perk definitions must come after properties/perks
+  api.addFile('character/behavior/parts/perks/deadendjob');
+
+  api.addFile('character/behavior/initialize/behavior');
+  api.addFile('character/behavior/initialize/personality');
+  api.addFile('character/behavior/initialize/traits-data');
+  api.addFile('character/behavior/initialize/traits');
+  api.addFile('character/behavior/initialize/focalpoints');
+  api.addFile('character/behavior/initialize/perks');
 
   // User
 

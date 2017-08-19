@@ -43,11 +43,12 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
             partDataLocation.setMetaData
               type: partData.type
 
-            part = LOI.Character.Part.Types[partData.type].create
-              dataLocation: partDataLocation
+            if partClass = LOI.Character.Part.getClassForType partData.type
+              part = partClass.create
+                dataLocation: partDataLocation
 
           # Add the _id field so that foreach knows to reuse/recreate the field.
-          part._id = Random.id()
+          part._id = Random.id() if part
 
           @partsByOrder[fieldKey] = part
 
@@ -69,5 +70,6 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
     newDataLocation.setMetaData
       type: type
 
-    LOI.Character.Part.Types[type].create
-      dataLocation: newDataLocation
+    if partClass = LOI.Character.Part.getClassForType type
+      partClass.create
+        dataLocation: newDataLocation

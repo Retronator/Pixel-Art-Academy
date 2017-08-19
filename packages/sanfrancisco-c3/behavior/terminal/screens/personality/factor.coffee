@@ -30,7 +30,8 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
           partDataLocation.setMetaData
             type: factorsProperty.options.type
 
-          factorPart = LOI.Character.Part.Types[factorsProperty.options.type].create
+          factorPartClass = LOI.Character.Part.getClassForType factorsProperty.options.type
+          factorPart = factorPartClass.create
             dataLocation: partDataLocation
 
           # Set the factor index.
@@ -42,7 +43,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
       @part()?.options.dataLocation()?.data()
 
     # Subscribe to factor templates.
-    LOI.Character.Part.Template.forType.subscribe @, 'PersonalityFactor'
+    LOI.Character.Part.Template.forType.subscribe @, 'Behavior.Personality.Factor'
 
     @templateNameInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Name the template"
@@ -58,7 +59,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
 
   templates: ->
     LOI.Character.Part.Template.documents.find
-      type: LOI.Character.Part.Types.Personality.options.type
+      type: LOI.Character.Part.Types.Behavior.Personality.options.type
 
   templatePart: ->
     template = @currentData()
@@ -88,7 +89,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
 
     enabledTraits = _.filter traits, (trait) -> trait.properties.weight.options.dataLocation() > 0
 
-    traitNames = (_.capitalize trait.properties.name.options.dataLocation() for trait in enabledTraits)
+    traitNames = (_.capitalize trait.properties.key.options.dataLocation() for trait in enabledTraits)
 
     traitNames.join ', '
 
@@ -141,7 +142,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     rightFactorName: -> @_factorName true
   
     _factorName: (right) ->
-      @_getFactorSide(right).name
+      @_getFactorSide(right).key
   
     _getFactorSide: (right) ->
       factor = @data()
@@ -186,7 +187,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     _indicatorPositionPercentage: (right) ->
       factor = @data()
 
-      factorPower = @behavior.personality.factorPowers()[factor.options.type]
+      factorPower = @behavior.part.properties.personality.part.factorPowers()[factor.options.type]
 
       power = if right is not factor.options.displayReversed then factorPower.positive else factorPower.negative
       Math.min 100, power * 10

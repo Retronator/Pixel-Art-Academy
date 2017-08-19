@@ -35,11 +35,11 @@ class C3.Behavior.Terminal.Character extends AM.Component
   personalityTraits: ->
     traits = []
 
-    personality = @character().behavior.personality
+    personality = @character().behavior.part.properties.personality
 
     for factorIndex, factor of Factors
       factorsProperty = personality.part.properties.factors
-      factorPart = factorsProperty.partsByOrder[factor.options.type]
+      continue unless factorPart = factorsProperty.partsByOrder[factor.options.type]
 
       traitParts = factorPart.properties.traits.parts()
       continue unless traitParts.length
@@ -47,49 +47,50 @@ class C3.Behavior.Terminal.Character extends AM.Component
       enabledTraits = _.filter traitParts, (traitPart) -> traitPart.properties.weight.options.dataLocation() > 0
       traits = traits.concat enabledTraits
 
-    traitNames = (_.capitalize trait.properties.name.options.dataLocation() for trait in traits)
+    # TODO: Replace with translated names.
+    traitNames = (_.capitalize trait.properties.key.options.dataLocation() for trait in traits)
 
     traitNames.join ', '
     
   focalPoints: ->
     # Start with the default focal points.
     focalPoints =
-      "#{FocalPoints.Names.Sleep}": 
+      "#{FocalPoints.Keys.Sleep}": 
         nameEditable: false
         hoursPerWeek: 0
         
-      "#{FocalPoints.Names.Job}":
+      "#{FocalPoints.Keys.Job}":
         nameEditable: false
         hoursPerWeek: 0
         
-      "#{FocalPoints.Names.School}":
+      "#{FocalPoints.Keys.School}":
         nameEditable: false
         hoursPerWeek: 0
         
-      "#{FocalPoints.Names.Drawing}":
+      "#{FocalPoints.Keys.Drawing}":
         nameEditable: false
         hoursPerWeek: 0
 
     # Add all character's focal points.
-    for focalPointPart in @character().behavior.focalPoints.property.parts()
-      focalPointName = focalPointPart.properties.name.options.dataLocation()
+    for focalPointPart in @character().behavior.part.properties.focalPoints.parts()
+      focalPointKey = focalPointPart.properties.key.options.dataLocation()
       focalPointHoursPerWeek = focalPointPart.properties.hoursPerWeek.options.dataLocation()
       
-      unless focalPoints[focalPointName]
-        focalPoints[focalPointName] = nameEditable: true
+      unless focalPoints[focalPointKey]
+        focalPoints[focalPointKey] = nameEditable: true
 
-      focalPoints[focalPointName].part = focalPointPart
-      focalPoints[focalPointName].hoursPerWeek = focalPointHoursPerWeek
+      focalPoints[focalPointKey].part = focalPointPart
+      focalPoints[focalPointKey].hoursPerWeek = focalPointHoursPerWeek
 
     # Return an array.
     for focalPointName, focalPoint of focalPoints
-      _.extend {}, focalPoint, name: focalPointName
+      _.extend {}, focalPoint, key: focalPointName
 
   hoursSleep: ->
     # Find sleep focal point.
-    sleepFocalPoint = _.find @character().behavior.focalPoints.property.parts(), (focalPointPart) =>
-      focalPointName = focalPointPart.properties.name.options.dataLocation()
-      focalPointName is FocalPoints.Names.Sleep
+    sleepFocalPoint = _.find @character().behavior.part.properties.focalPoints.parts(), (focalPointPart) =>
+      focalPointName = focalPointPart.properties.key.options.dataLocation()
+      focalPointName is FocalPoints.Keys.Sleep
 
     sleepFocalPoint?.properties.hoursPerWeek.options.dataLocation() or 0
 
@@ -100,9 +101,9 @@ class C3.Behavior.Terminal.Character extends AM.Component
     total = 0
 
     # Find job and sleep focal points.
-    for focalPointName in [FocalPoints.Names.Job, FocalPoints.Names.School]
-      focalPoint = _.find @character().behavior.focalPoints.property.parts(), (focalPointPart) =>
-        focalPointPart.properties.name.options.dataLocation() is focalPointName
+    for focalPointName in [FocalPoints.Keys.Job, FocalPoints.Keys.School]
+      focalPoint = _.find @character().behavior.part.properties.focalPoints.parts(), (focalPointPart) =>
+        focalPointPart.properties.key.options.dataLocation() is focalPointName
 
       total += focalPoint?.properties.hoursPerWeek.options.dataLocation() or 0
 
@@ -114,10 +115,10 @@ class C3.Behavior.Terminal.Character extends AM.Component
   hoursFocalPoints: ->
     total = 0
 
-    for focalPointPart in @character().behavior.focalPoints.property.parts()
-      focalPointName = focalPointPart.properties.name.options.dataLocation()
+    for focalPointPart in @character().behavior.part.properties.focalPoints.parts()
+      focalPointKey = focalPointPart.properties.key.options.dataLocation()
 
-      continue if focalPointName in [FocalPoints.Names.Job, FocalPoints.Names.School, FocalPoints.Names.Sleep]
+      continue if focalPointKey in [FocalPoints.Keys.Job, FocalPoints.Keys.School, FocalPoints.Keys.Sleep]
 
       total += focalPointPart.properties.hoursPerWeek.options.dataLocation()
 
@@ -185,10 +186,11 @@ class C3.Behavior.Terminal.Character extends AM.Component
     # Clear input for next entry.
     $input.val('')
 
-    newPart = @character().behavior.focalPoints.property.newPart 'FocalPoint'
+    focalPointType = LOI.Character.Part.Types.Behavior.FocalPoint.options.type
+    newPart = @character().behavior.part.properties.focalPoints.newPart focalPointType
 
     newPart.options.dataLocation
-      name: name
+      key: name
       hoursPerWeek: 0
 
   # Components
@@ -218,10 +220,12 @@ class C3.Behavior.Terminal.Character extends AM.Component
 
       else
         characterComponent = @ancestorComponentOfType C3.Behavior.Terminal.Character
-        newPart = characterComponent.character().behavior.focalPoints.property.newPart 'FocalPoint'
+
+        focalPointType = LOI.Character.Part.Types.Behavior.FocalPoint.options.type
+        newPart = characterComponent.character().behavior.part.properties.focalPoints.newPart focalPointType
 
         newPart.options.dataLocation
-          name: focalPointInfo.name
+          key: focalPointInfo.key
           hoursPerWeek: value * @_saveFactor()
 
     _saveFactor: ->
@@ -242,14 +246,16 @@ class C3.Behavior.Terminal.Character extends AM.Component
 
     load: ->
       focalPointInfo = @data()
-      focalPointInfo.name
+      focalPointInfo.key
+
+      # TODO: Get translation for key.
 
     save: (value) ->
       focalPointInfo = @data()
 
       if value.length
         # Update focal point name.
-        focalPointInfo.part.properties.name.options.dataLocation value
+        focalPointInfo.part.properties.key.options.dataLocation value
 
       else
         # Delete focal point.

@@ -3,9 +3,19 @@ LOI = LandsOfIllusions
 
 # The general part that makes a certain aspect of a character (avatar, behavior, etc).
 class LOI.Character.Part
-  # Types get added in the initialize script.
-  @Types: {}
-  
+  # Types will get added in the initialize script.
+  @Types = {}
+
+  @registerClasses: (classes) ->
+    _.merge @Types, classes
+
+  # Helper to access Types with a nested string.
+  @getClassForType: (type) ->
+    partClass = _.nestedProperty @Types, type
+    return partClass if partClass
+
+    console.error "Can't find part of type", type
+
   constructor: (@options) ->
     return unless @options.dataLocation
 
@@ -32,7 +42,7 @@ class LOI.Character.Part
 
   createRenderer: (engineOptions, options = {}) ->
     # Override to provide this part's renderer.
-    renderer = @options.renderer or new LOI.Character.Part.Renderers.Default
+    renderer = @options.renderer or new LOI.Character.Avatar.Renderers.Default
 
     options = _.extend {}, options, part: @
     

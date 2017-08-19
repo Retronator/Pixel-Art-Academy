@@ -20,4 +20,3 @@ class LOI.Character.Instance
 
   destroy: ->
     @_documentSubscription.stop()
-    @behavior.destroy()

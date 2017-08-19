@@ -38,7 +38,7 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
     traitInfo = @currentData()
     return unless traits = @traitsProperty()?.parts()
 
-    return unless trait = _.find traits, (trait) => trait.properties.name.options.dataLocation() is traitInfo.name
+    return unless trait = _.find traits, (trait) => trait.properties.key.options.dataLocation() is traitInfo.key
 
     trait.properties.weight.options.dataLocation() is weight
 
@@ -70,8 +70,8 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
     right = @_rightIsPositive()
 
     # Don't let long words to be on the edge.
-    iCharCount = trait.name.match(/i/gi)?.length or 0
-    offset = Math.max 0, (trait.name.length - iCharCount - 10) * 5
+    iCharCount = trait.key.match(/i/gi)?.length or 0
+    offset = Math.max 0, (trait.key.length - iCharCount - 10) * 5
 
     leftPercentage = if right then 100 - offset else offset
 
@@ -102,7 +102,7 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
     trait = @currentData()
     factor = LOI.Character.Behavior.Personality.Factors[trait.primaryFactor.type]
 
-    @_getFactorSide(factor, right).name
+    @_getFactorSide(factor, right).key
 
   _secondaryFactorName: (right) ->
     trait = @currentData()
@@ -114,7 +114,7 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
 
     right = @_negateSecondaryRight trait, right
 
-    @_getFactorSide(factor, right).name
+    @_getFactorSide(factor, right).key
 
   _negateSecondaryRight: (trait, right) ->
     # By default right is just right.
@@ -200,7 +200,7 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
 
     if traits
       # See if we have an existing trait.
-      existingTrait = _.find traits, (trait) => trait.properties.name.options.dataLocation() is traitInfo.name
+      existingTrait = _.find traits, (trait) => trait.properties.key.options.dataLocation() is traitInfo.key
 
     if existingTrait
       # Modify the weight of existing trait.
@@ -208,7 +208,8 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
 
     else
       # Create a new entry.
-      traitPart = traitsProperty.newPart 'PersonalityTrait'
+      traitType = LOI.Character.Part.Types.Behavior.Personality.Trait.options.type
+      traitPart = traitsProperty.newPart traitType
       traitPart.options.dataLocation
-        name: traitInfo.name
+        key: traitInfo.key
         weight: weight

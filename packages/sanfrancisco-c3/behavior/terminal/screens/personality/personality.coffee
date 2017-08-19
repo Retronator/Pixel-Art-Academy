@@ -41,7 +41,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
       not @hasCustomData()
 
     # Subscribe to personality templates
-    LOI.Character.Part.Template.forType.subscribe @, LOI.Character.Part.Types.Personality.options.type
+    LOI.Character.Part.Template.forType.subscribe @, LOI.Character.Part.Types.Behavior.Personality.options.type
 
     @templateNameInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Name the template"
@@ -57,7 +57,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
 
   templates: ->
     LOI.Character.Part.Template.documents.find
-      type: LOI.Character.Part.Types.Personality.options.type
+      type: LOI.Character.Part.Types.Behavior.Personality.options.type
 
   templatePart: ->
     template = @currentData()
