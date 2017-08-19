@@ -24,7 +24,7 @@ class AB.Components.Translatable extends AM.Component
 
       translation = translationOrKey
 
-      @translationSubscription = @subscribe 'Artificial.Babel.Translation.withId', translation._id
+      @translationSubscription = AB.Translation.forId.subscribe @, translation._id
 
     @translation = new ComputedField =>
       return unless @translationOrKey = @data()

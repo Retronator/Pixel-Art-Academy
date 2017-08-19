@@ -1,12 +1,13 @@
 AB = Artificial.Babel
 
-Meteor.publish 'Artificial.Babel.Translation', (namespace, keyOrKeys, languages) ->
+AB.Translation.forNamespace.publish (namespace, keyOrKeys, languages) ->
   check namespace, String
   check keyOrKeys, Match.OptionalOrNull Match.OneOf String, [String]
   check languages, Match.OptionalOrNull [String]
 
+  # Search through the namespace and all sub-namespaces.
   query =
-    namespace: namespace
+    namespace: new RegExp('^' + namespace)
 
   query.key = keyOrKeys if _.isString keyOrKeys
   query.key = $in: keyOrKeys if _.isArray keyOrKeys
@@ -14,7 +15,7 @@ Meteor.publish 'Artificial.Babel.Translation', (namespace, keyOrKeys, languages)
   AB.Translation.documents.find query,
     fields: generateFieldsForLanguages languages
 
-Meteor.publish 'Artificial.Babel.Translation.withId', (translationId, languages) ->
+AB.Translation.forId.publish (translationId, languages) ->
   check translationId, Match.DocumentId
   check languages, Match.OptionalOrNull [String]
 

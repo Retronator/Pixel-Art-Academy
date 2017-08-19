@@ -44,7 +44,7 @@ class Artificial.Babel
       languages = @userLanguagePreference() if languages is undefined
 
       # Save the handle so we can check its ready state before trying to insert keys into the database.
-      subscriptionHandle._babelSubscriptionHandle = Meteor.subscribe 'Artificial.Babel.Translation', namespace, null, languages
+      subscriptionHandle._babelSubscriptionHandle = @Translation.forNamespace.subscribe namespace, null, languages
 
     subscriptionHandle
 
@@ -113,7 +113,7 @@ class Artificial.Babel
       languages = @userLanguagePreference()
 
       # Save the handle on component so we can check its ready state before trying to insert keys into the database.
-      component._babelSubscriptionHandle = Meteor.subscribe 'Artificial.Babel.Translation', namespace, null, languages
+      component._babelSubscriptionHandle = @Translation.forNamespace.subscribe namespace, null, languages
 
   # Cleans up the subscription to this component's namespace.
   @unsubscribeComponent: (component) ->

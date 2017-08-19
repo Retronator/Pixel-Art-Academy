@@ -18,8 +18,8 @@ class AB.Components.LanguageSelection extends AM.Component
     AB.Language.all.subscribe @
     AB.Region.all.subscribe @
 
-    @subscribe 'Artificial.Babel.Translation', 'Artificial.Babel.Language.Names'
-    @subscribe 'Artificial.Babel.Translation', 'Artificial.Babel.Region.Names'
+    AB.Translation.forNamespace.subscribe 'Artificial.Babel.Language.Names'
+    AB.Translation.forNamespace.subscribe 'Artificial.Babel.Region.Names'
 
     @showLanguages = new ReactiveField false
     @showRegions = new ReactiveField false

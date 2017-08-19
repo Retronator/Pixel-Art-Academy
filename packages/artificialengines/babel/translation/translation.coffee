@@ -38,6 +38,9 @@ class AB.Translation extends AM.Document
   @moveLanguage: @method 'moveLanguage'
   @removeLanguage: @method 'removeLanguage'
 
+  @forId: @subscription 'forId'
+  @forNamespace: @subscription 'forNamespace'
+
   # Helper method for quickly getting a translation. It's only particularly useful on the server where all the
   # translations are immediately accessible. On the client we need to subscribe to the translation documents first
   # without which this method will not return anything. Thus on the client you should work with helper methods on the
