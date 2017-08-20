@@ -19,7 +19,7 @@ class C3.Behavior.Terminal.Environment extends AM.Component
       behaviorPart = @terminal.screens.character.character()?.behavior.part
       @behaviorPart behaviorPart
 
-      environmentPart = behaviorPart.properties.environment
+      environmentPart = behaviorPart.properties.environment.part
       @part environmentPart
 
   backButtonCallback: ->
@@ -41,3 +41,66 @@ class C3.Behavior.Terminal.Environment extends AM.Component
 
   onClickModifyPeopleButton: (event) ->
     @terminal.switchToScreen @terminal.screens.people
+    
+  # Components
+  class @Clutter extends AM.DataInputComponent
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Select
+
+      # Override with property name.
+      @property = null
+
+    onCreated: ->
+      super
+
+      @environmentComponent = @ancestorComponentOfType C3.Behavior.Terminal.Environment
+
+    options: ->
+      [
+        value: null
+        name: ""
+      ,
+        value: 1
+        name: "Minimal"
+      ,
+        value: 2
+        name: "Tidy"
+      ,
+        value: 3
+        name: "Average"
+      ,
+        value: 4
+        name: "Messy"
+      ,
+        value: 5
+        name: "Chaos"
+      ]
+
+    load: ->
+      dataLocation = @_dataLocation()
+      dataLocation()
+
+    save: (value) ->
+      dataLocation = @_dataLocation()
+      dataLocation parseInt value
+
+    _dataLocation: ->
+      @environmentComponent.part().properties.clutter.part.properties[@property].options.dataLocation
+
+  class @AverageClutter extends @Clutter
+    @register 'SanFrancisco.C3.Behavior.Terminal.Environment.AverageClutter'
+
+    constructor: ->
+      super
+
+      @property = 'average'
+
+  class @IdealClutter extends @Clutter
+    @register 'SanFrancisco.C3.Behavior.Terminal.Environment.IdealClutter'
+
+    constructor: ->
+      super
+
+      @property = 'ideal'

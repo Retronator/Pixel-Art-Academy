@@ -25,7 +25,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     # Get the people part from the character.
     @autorun (computation) =>
       behaviorPart = @terminal.screens.character.character()?.behavior.part
-      peopleProperty = behaviorPart.properties.people
+      peopleProperty = behaviorPart.properties.environment.part.properties.people
 
       @property peopleProperty
 
@@ -94,6 +94,9 @@ class C3.Behavior.Terminal.People extends AM.Component
       # We return back to the character screen.
       @terminal.switchToScreen @terminal.screens.environment
 
+  people: ->
+    @property()?.parts()
+
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
@@ -103,7 +106,7 @@ class C3.Behavior.Terminal.People extends AM.Component
       'click .custom-people-button': @onClickCustomPeopleButton
       'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
-      'click .new-person': @onClickNewPerson
+      'click .add-person-button': @onClickAddPersonButton
 
   onClickDoneButton: (event) ->
     @closeScreen()
@@ -142,7 +145,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     # Return to previous item where we will see the result of choosing this part.
     @closeScreen()
 
-  onClickNewPerson: (event) ->
+  onClickAddPersonButton: (event) ->
     personType = LOI.Character.Part.Types.Behavior.Environment.Person.options.type
     newPart = @property().newPart personType
     newPart.options.dataLocation {}

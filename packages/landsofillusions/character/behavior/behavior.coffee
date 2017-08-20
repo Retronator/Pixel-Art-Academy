@@ -17,7 +17,7 @@ LOI = LandsOfIllusions
 #   hoursPerWeek: average amount of hours spent per week
 # environment
 #   clutter
-#     average: integer 1-5 how much clutter is usually around the character (minimal/tidy/normal/messy/chaos)
+#     average: integer 1-5 how much clutter is usually around the character (minimal/tidy/average/messy/chaos)
 #     ideal: integer 1-5 what's the most productive level of clutter for the character
 #   people: array of
 #     relationshipType: enumeration how this person relates to the character (Dad/Mom/Brother/Sister/Sibling/Son/Daughter/Child/OtherFamily/Wife/Husband/Girlfriend/Boyfriend/SignificantOther/Friend)

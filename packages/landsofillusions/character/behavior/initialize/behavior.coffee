@@ -10,7 +10,7 @@ LOI.Character.Part.registerClasses
       activities: new LOI.Character.Behavior.Activities
         type: 'Behavior.Activity'
         templateType: 'Behavior.Activities'
-      environment: new LOI.Character.Part
+      environment: new LOI.Character.Part.Property.OneOf
         type: 'Behavior.Environment'
       perks: new LOI.Character.Behavior.Perks
         type: 'Behavior.Perk'

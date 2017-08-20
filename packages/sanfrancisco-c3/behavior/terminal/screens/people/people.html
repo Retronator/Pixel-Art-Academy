@@ -47,6 +47,16 @@
         <p class="main-text">
           Specify significant people in the agent's life.
         </p>
+        <ul class="people">
+          {{#each people}}
+            <li class="person">
+              X
+            </li>
+          {{/each}}
+        </ul>
+        <div class="actions">
+          <button class="action-button add-person-button">Add person</button>
+        </div>
       {{/if}}
     </div>
     <div class="main-actions">

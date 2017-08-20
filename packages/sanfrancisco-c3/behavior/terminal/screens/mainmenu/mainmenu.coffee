@@ -34,4 +34,4 @@ class C3.Behavior.Terminal.MainMenu extends AM.Component
     characterInstance = @currentData()
 
     @terminal.screens.character.setCharacterId characterInstance.id
-    @terminal.switchToScreen @terminal.screens.character
+    @terminal.switchToScreen @terminal.screens.people
