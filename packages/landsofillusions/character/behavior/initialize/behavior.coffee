@@ -30,12 +30,12 @@ LOI.Character.Part.registerClasses
         key: new LOI.Character.Part.Property.String
         hoursPerWeek: new LOI.Character.Part.Property.Integer
 
-    Environment: new LOI.Character.Part
+    Environment: new LOI.Character.Behavior.Environment
       type: 'Behavior.Environment'
       properties:
         clutter: new LOI.Character.Part.Property.OneOf
           type: 'Behavior.Environment.Clutter'
-        people: new LOI.Character.Part.Property.Array
+        people: new LOI.Character.Behavior.Environment.People
           type: 'Behavior.Environment.Person'
           templateType: 'Behavior.Environment.People'
 

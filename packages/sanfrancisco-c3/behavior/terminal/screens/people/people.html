@@ -50,7 +50,28 @@
         <ul class="people">
           {{#each people}}
             <li class="person">
-              X
+              <div class="property">
+                <div class="description">Relationship type:</div>
+                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.RelationshipType}}</div>
+              </div>
+              <div class="property">
+                <div class="description">How often do they stay in touch:</div>
+                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.RelationshipStrength}}</div>
+              </div>
+              <div class="property">
+                <div class="description">How close do they live:</div>
+                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.LivingProximity}}</div>
+              </div>
+              <div class="property">
+                <div class="description">How much do they support agent's art pursuits:</div>
+                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.ArtSupport}}</div>
+              </div>
+              <div class="property">
+                <label class="description">{{> SanFrancisco.C3.Behavior.Terminal.People.DoesArt}}<span class="label">This person does art as well.</span></label>
+              </div>
+              <div class="property">
+                <label class="description">{{> SanFrancisco.C3.Behavior.Terminal.People.Joins}}<span class="label">This person will join the agent when they move to the Academy.</span></label>
+              </div>
             </li>
           {{/each}}
         </ul>

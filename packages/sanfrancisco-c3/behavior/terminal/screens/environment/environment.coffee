@@ -52,15 +52,10 @@ class C3.Behavior.Terminal.Environment extends AM.Component
       # Override with property name.
       @property = null
 
-    onCreated: ->
-      super
-
-      @environmentComponent = @ancestorComponentOfType C3.Behavior.Terminal.Environment
-
     options: ->
       [
         value: null
-        name: ""
+        name: ''
       ,
         value: 1
         name: "Minimal"
@@ -87,7 +82,8 @@ class C3.Behavior.Terminal.Environment extends AM.Component
       dataLocation parseInt value
 
     _dataLocation: ->
-      @environmentComponent.part().properties.clutter.part.properties[@property].options.dataLocation
+      environmentComponent = @ancestorComponentOfType C3.Behavior.Terminal.Environment
+      environmentComponent.part().properties.clutter.part.properties[@property].options.dataLocation
 
   class @AverageClutter extends @Clutter
     @register 'SanFrancisco.C3.Behavior.Terminal.Environment.AverageClutter'

@@ -109,17 +109,18 @@ Package.onUse(function(api) {
   // Behavior parts
 
   api.addFile('character/behavior/behavior');
-
-  api.addFile('character/behavior/properties/properties');
-  api.addFile('character/behavior/properties/activities');
-  api.addFile('character/behavior/properties/perks');
-
+  
   api.addFile('character/behavior/parts/parts');
   api.addFile('character/behavior/parts/personality');
   api.addFile('character/behavior/parts/personality-factor');
   api.addFile('character/behavior/parts/trait');
   api.addFile('character/behavior/parts/activity');
+  api.addFile('character/behavior/parts/environment');
   api.addFile('character/behavior/parts/perk');
+
+  api.addFile('character/behavior/properties/activities');
+  api.addFile('character/behavior/properties/people');
+  api.addFile('character/behavior/properties/perks');
 
   // Perk definitions must come after properties/perks
   api.addFile('character/behavior/parts/perks/deadendjob');

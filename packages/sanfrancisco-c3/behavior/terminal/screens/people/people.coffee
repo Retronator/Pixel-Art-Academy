@@ -151,3 +151,170 @@ class C3.Behavior.Terminal.People extends AM.Component
     newPart.options.dataLocation {}
 
   # Components
+
+  class @EnumerationInputComponent extends AM.DataInputComponent
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      if @load()
+        options = []
+
+      else
+        options = [
+          value: null
+          name: ''
+        ]
+
+      for value, name of @enumeration
+        options.push {value, name}
+
+      options
+
+    load: ->
+      dataLocation = @_dataLocation()
+      dataLocation()
+
+    save: (value) ->
+      dataLocation = @_dataLocation()
+      dataLocation value
+
+    _dataLocation: ->
+      person = @data()
+      person.properties[@property].options.dataLocation
+
+  class @IntegerEnumerationInputComponent extends AM.DataInputComponent
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Select
+
+    options: (options) ->
+      unless @load()
+        options.unshift
+          value: null
+          name: ''
+
+      options
+
+    load: ->
+      dataLocation = @_dataLocation()
+      dataLocation()
+
+    save: (value) ->
+      dataLocation = @_dataLocation()
+      dataLocation parseInt value
+
+    _dataLocation: ->
+      person = @data()
+      person.properties[@property].options.dataLocation
+
+  class @RelationshipType extends @EnumerationInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.RelationshipType'
+
+    constructor: ->
+      super
+
+      @enumeration = LOI.Character.Behavior.Environment.People.RelationshipType
+      @property = 'relationshipType'
+
+  class @RelationshipStrength extends @IntegerEnumerationInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.RelationshipStrength'
+
+    constructor: ->
+      super
+
+      @property = 'relationshipStrength'
+
+    options: ->
+      super(
+        [
+          value: 1
+          name: "monthly"
+        ,
+          value: 2
+          name: "weekly"
+        ,
+          value: 3
+          name: "daily"
+        ]
+      )
+
+  class @LivingProximity extends @EnumerationInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.LivingProximity'
+
+    constructor: ->
+      super
+
+      @enumeration = LOI.Character.Behavior.Environment.People.LivingProximity
+      @property = 'livingProximity'
+
+  class @ArtSupport extends @IntegerEnumerationInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.ArtSupport'
+
+    constructor: ->
+      super
+
+      @property = 'artSupport'
+
+    options: ->
+      super (
+        [
+          value: -2
+          name: "hateful"
+        ,
+          value: -1
+          name: "unsupportive"
+        ,
+          value: 0
+          name: "neutral"
+        ,
+          value: 1
+          name: "supportive"
+        ,
+          value: 2
+          name: "sponsor"
+        ]
+      )
+
+  class @DoesArt extends AM.DataInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.DoesArt'
+
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Checkbox
+
+    load: ->
+      dataLocation = @_dataLocation()
+      dataLocation()
+
+    save: (value) ->
+      dataLocation = @_dataLocation()
+      dataLocation value
+
+    _dataLocation: ->
+      person = @data()
+      person.properties.doesArt.options.dataLocation
+
+  class @Joins extends AM.DataInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.Joins'
+
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Checkbox
+
+    load: ->
+      dataLocation = @_dataLocation()
+      dataLocation()
+
+    save: (value) ->
+      dataLocation = @_dataLocation()
+      dataLocation value
+
+    _dataLocation: ->
+      person = @data()
+      person.properties.joins.options.dataLocation
