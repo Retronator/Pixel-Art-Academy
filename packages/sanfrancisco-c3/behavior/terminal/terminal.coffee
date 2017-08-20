@@ -38,6 +38,8 @@ class C3.Behavior.Terminal extends C3.Items.Terminal
       personality: new @constructor.Personality @
       traits: new @constructor.Personality.Traits @
       activities: new @constructor.Activities @
+      environment: new @constructor.Environment @
+      people: new @constructor.People @
       perks: new @constructor.Perks @
 
     @switchToScreen @screens.mainMenu

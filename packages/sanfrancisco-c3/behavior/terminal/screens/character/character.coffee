@@ -77,6 +77,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
       'click .save-draft-button': @onClickSaveDraftButton
       'click .modify-personality-button': @onClickModifyPersonalityButton
       'click .modify-activities-button': @onClickModifyActivitiesButton
+      'click .modify-environment-button': @onClickModifyEnvironmentButton
       'click .modify-perks-button': @onClickModifyPerksButton
 
   onClickDoneButton: (event) ->
@@ -116,6 +117,9 @@ class C3.Behavior.Terminal.Character extends AM.Component
 
   onClickModifyActivitiesButton: (event) ->
     @terminal.switchToScreen @terminal.screens.activities
+
+  onClickModifyEnvironmentButton: (event) ->
+    @terminal.switchToScreen @terminal.screens.environment
 
   onClickModifyPerksButton: (event) ->
     @terminal.switchToScreen @terminal.screens.perks

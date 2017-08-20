@@ -4,11 +4,14 @@ LOI.Character.Part.registerClasses
   Behavior: new LOI.Character.Part
     type: 'Behavior'
     properties:
+      npc: new LOI.Character.Part.Property.Boolean
       personality: new LOI.Character.Part.Property.OneOf
         type: 'Behavior.Personality'
       activities: new LOI.Character.Behavior.Activities
         type: 'Behavior.Activity'
         templateType: 'Behavior.Activities'
+      environment: new LOI.Character.Part
+        type: 'Behavior.Environment'
       perks: new LOI.Character.Behavior.Perks
         type: 'Behavior.Perk'
 
@@ -26,6 +29,15 @@ LOI.Character.Part.registerClasses
       properties:
         key: new LOI.Character.Part.Property.String
         hoursPerWeek: new LOI.Character.Part.Property.Integer
+
+    Environment: new LOI.Character.Part
+      type: 'Behavior.Environment'
+      properties:
+        clutter: new LOI.Character.Part.Property.OneOf
+          type: 'Behavior.Environment.Clutter'
+        people: new LOI.Character.Part.Property.Array
+          type: 'Behavior.Environment.Person'
+          templateType: 'Behavior.Environment.People'
 
     Perk: new LOI.Character.Behavior.Perk
       type: 'Behavior.Perk'
@@ -49,3 +61,21 @@ LOI.Character.Part.registerClasses
         properties:
           key: new LOI.Character.Part.Property.String
           weight: new LOI.Character.Part.Property.Integer
+
+    Environment:
+      Clutter: new LOI.Character.Part
+        type: 'Behavior.Environment.Clutter'
+        properties:
+          average: new LOI.Character.Part.Property.Integer
+          ideal: new LOI.Character.Part.Property.Integer
+
+      Person: new LOI.Character.Part
+        type: 'Behavior.Environment.Person'
+        properties:
+          relationshipType: new LOI.Character.Part.Property.String
+          relationshipStrength: new LOI.Character.Part.Property.Integer
+          livingProximity: new LOI.Character.Part.Property.String
+          artSupport: new LOI.Character.Part.Property.Integer
+          doesArt: new LOI.Character.Part.Property.Boolean
+          joins: new LOI.Character.Part.Property.Boolean
+          characterId: new LOI.Character.Part.Property.String

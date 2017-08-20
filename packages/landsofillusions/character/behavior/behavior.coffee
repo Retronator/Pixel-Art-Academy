@@ -3,6 +3,7 @@ LOI = LandsOfIllusions
 
 # Behavior hierarchy
 #
+# npc: boolean whether this character isn't controlled by the player (but is fully autonomous)
 # personality
 #   factors: array of
 #     positivePoints: how many points the player has manually assigned to the positive side of the factor
@@ -14,6 +15,18 @@ LOI = LandsOfIllusions
 # activities: array of
 #   key: system name of the activity
 #   hoursPerWeek: average amount of hours spent per week
+# environment
+#   clutter
+#     average: integer 1-5 how much clutter is usually around the character (minimal/tidy/normal/messy/chaos)
+#     ideal: integer 1-5 what's the most productive level of clutter for the character
+#   people: array of
+#     relationshipType: enumeration how this person relates to the character (Dad/Mom/Brother/Sister/Sibling/Son/Daughter/Child/OtherFamily/Wife/Husband/Girlfriend/Boyfriend/SignificantOther/Friend)
+#     relationshipStrength: integer from 1 to 3, how much this person stays in touch (monthly/weekly/daily)
+#     livingProximity: enumeration where this person lives (Local/Housemate/Roommate/Internet)
+#     artSupport: integer from -2 to 2, how much this person supports the arts (hateful/unsupportive/neutral/supportive/sponsor)
+#     doesArt: boolean whether this person does art
+#     joins: boolean whether this person moves with the character to Retropolis
+#     characterId: optional id if you want this person to be a specific npc character
 # perks: array of
 #   key: system name of the perk
 class LOI.Character.Behavior

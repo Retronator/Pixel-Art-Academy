@@ -68,6 +68,15 @@ class C3.Behavior.Terminal.Perks extends AM.Component
 
     AB.translate(translation).text
     
+  backButtonCallback: ->
+    @closeScreen()
+
+    # Instruct the back button to cancel closing (so it doesn't disappear).
+    cancel: true
+
+  closeScreen: ->
+    @terminal.switchToScreen @terminal.screens.character
+
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
@@ -75,7 +84,7 @@ class C3.Behavior.Terminal.Perks extends AM.Component
       'mouseleave .perk': @onMouseLeavePerk
 
   onClickDoneButton: (event) ->
-    @terminal.switchToScreen @terminal.screens.character
+    @closeScreen()
 
   onMouseEnterPerk: (event) ->
     perk = @currentData()

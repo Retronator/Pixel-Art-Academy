@@ -40,6 +40,8 @@ Package.onUse(function(api) {
   api.addComponent('behavior/terminal/screens/personality/factor');
   api.addComponent('behavior/terminal/screens/personality/traits');
   api.addComponent('behavior/terminal/screens/activities/activities');
+  api.addComponent('behavior/terminal/screens/environment/environment');
+  api.addComponent('behavior/terminal/screens/people/people');
   api.addComponent('behavior/terminal/screens/perks/perks');
 
   api.addFile('behavior/terminal/components/components');
