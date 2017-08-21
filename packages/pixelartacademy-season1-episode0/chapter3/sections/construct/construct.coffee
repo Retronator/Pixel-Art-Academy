@@ -13,3 +13,22 @@ class C3.Construct extends LOI.Adventure.Section
   @timelineId: -> PAA.TimelineIds.Construct
 
   @initialize()
+
+  constructor: ->
+    super
+
+    # Subscribe to user's activated characters.
+    @_charactersSubscription = LOI.Character.activatedForCurrentUser.subscribe()
+
+  destroy: ->
+    super
+
+    @_charactersSubscription.stop()
+
+  finished: ->
+    # Construct section is over when the player has any activated characters.
+    activatedCharacter = LOI.Character.documents.findOne
+      'user._id': Meteor.userId()
+      activated: true
+
+    activatedCharacter?

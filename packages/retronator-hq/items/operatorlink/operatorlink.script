@@ -6,15 +6,16 @@ operator: Operator.
 
 * I need an exit. -> [Exit] `location.id is 'LandsOfIllusions.Construct.Loading'`
 * I'd like to enter the Construct. -> [Construct] `location.id isnt 'LandsOfIllusions.Construct.Loading'`
-* Nevermind. -> [End]
+
+## CharactersPlaceholder
 
 ## Exit
 
 operator: 
-    Got it.
-    Engaging disconnect procedure.
+  Got it.
+  Engaging disconnect procedure.
     
-> …
+pause
     
 ### Exit
 
@@ -23,12 +24,22 @@ operator:
 ## Construct
 
 operator: 
-    On it.
-    Starting loading program.
+  On it.
+  Starting loading program.
     
 > …
     
 ### Construct
+
+-> [End]
+
+## CharacterSync
+
+operator: Initiating link.
+
+pause
+
+### CharacterSync
 
 -> [End]
 

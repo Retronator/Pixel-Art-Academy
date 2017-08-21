@@ -60,3 +60,4 @@ class LOI.Character extends AM.Document
 
   @forId: @subscription 'forId'
   @forCurrentUser: @subscription 'forCurrentUser'
+  @activatedForCurrentUser: @subscription 'activatedForCurrentUser'

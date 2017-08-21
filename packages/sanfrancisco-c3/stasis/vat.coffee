@@ -21,7 +21,8 @@ class C3.Stasis.Vat extends LOI.Adventure.Item
     "vat holding #{@_characterFullName()}"
 
   description: ->
-    "#{@_characterFullName()} is suspended in the vat with their eyes closed, looking peaceful, given it's a piece of machinery."
+    "#{@_characterFullName()} is suspended in the vat with their eyes closed, looking peaceful, given they're a piece of machinery.
+    You can activate the agent by using the control panel."
 
   _characterFullName: ->
     @options.character.avatar.fullName()

@@ -10,7 +10,7 @@ class C3.Stasis.ControlPanel extends LOI.Adventure.Item
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
   @description: ->
     "
-      Each vat has a control panel in front of them.
+      Each vat has a control panel in front of it. You can use the panel to activate agents.
     "
 
   @initialize()

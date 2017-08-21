@@ -21,7 +21,9 @@
 > The eyes close and the control panel indicates that deployment has started.
  
 > Bubbles start forming in the vat and the body slowly ascends towards the ceiling.
- 
+
+### AgentActivation
+
 operator: Hey.
  
 * …
@@ -43,6 +45,21 @@ operator: I can see why.
  
 ## PanzerContinues
  
-operator: I just got confirmation of a new agent being linked to our system.
+operator:
+  I just got confirmation of a new agent being linked to our system.
+  It will take some time for us to set up the agent's environment the way you designed it.
+
+* No problem, I'm so excited!
+* Understood.
+
+operator:
+  Why don't you head back to Retronator HQ and meet me in the Lands of Illusions center.
+  We'll go over the details of what happens next.
+
+* Roger that.
+* See you soon!
+
+operator:
+  Good. Panzer out.
 
 ## End

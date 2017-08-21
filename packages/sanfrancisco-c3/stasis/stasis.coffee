@@ -86,6 +86,9 @@ class C3.Stasis extends LOI.Adventure.Location
     listener = @listeners[0]
 
     ephemeralState = listener.script.ephemeralState()
+
+    # Note that we can't store the full character into the state since it tries to be serialized.
+    ephemeralState.characterId = @_syncCharacter.id
     ephemeralState.characterFullName = @_syncCharacter.avatar.fullName()
 
     listener.startScript label: 'Sync'
@@ -99,7 +102,7 @@ class C3.Stasis extends LOI.Adventure.Location
     @setThings listener.avatars
 
     @setCallbacks
-      AgentSelection: (complete) ->
+      AgentSelection: (complete) =>
         # Immediately complete since we'll start a new script made of custom nodes.
         complete()
 
@@ -134,6 +137,12 @@ class C3.Stasis extends LOI.Adventure.Location
 
         agentChoiceNode = lastChoiceNode
         LOI.adventure.director.startNode agentChoiceNode
+        
+      AgentActivation: (complete) =>
+        ephemeralState = @ephemeralState()
+        LOI.Character.activate ephemeralState.characterId
+
+        complete()
 
   # Listener
 
