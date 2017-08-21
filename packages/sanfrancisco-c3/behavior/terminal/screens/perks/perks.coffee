@@ -28,15 +28,18 @@ class C3.Behavior.Terminal.Perks extends AM.Component
 
     @allPerkKeys = _.values LOI.Character.Behavior.Perk.Keys
 
-    @selectedPerks = new ReactiveField []
-    @availablePerks = new ReactiveField []
-    @unavailablePerks = new ReactiveField []
+    @activePerkKeys = new ReactiveField []
+    @availablePerkKeys = new ReactiveField []
+    @unavailablePerkKeys = new ReactiveField []
 
     # Sort out the perks.
     @autorun (computation) =>
-      selectedPerks = []
-      availablePerks = []
-      unavailablePerks = []
+      perksProperty = @property()
+      selectedPerkKeys = (perkPark.properties.key.options.dataLocation() for perkPark in perksProperty.parts())
+      
+      activePerkKeys = []
+      availablePerkKeys = []
+      unavailablePerkKeys = []
 
       behaviorPart = @behaviorPart()
 
@@ -44,21 +47,33 @@ class C3.Behavior.Terminal.Perks extends AM.Component
         perk = LOI.Character.Behavior.Perk[perkKey]
 
         if perk.satisfiesRequirements behaviorPart
-          availablePerks.push perkKey
+          if perkKey in selectedPerkKeys
+            activePerkKeys.push perkKey
+            
+          else
+            availablePerkKeys.push perkKey
 
         else
-          unavailablePerks.push perkKey
+          unavailablePerkKeys.push perkKey
 
-      @selectedPerks selectedPerks
-      @availablePerks availablePerks
-      @unavailablePerks unavailablePerks
+      @activePerkKeys activePerkKeys
+      @availablePerkKeys availablePerkKeys
+      @unavailablePerkKeys unavailablePerkKeys
 
-    @displayedPerk = new ReactiveField null
+    @displayedPerkKey = new ReactiveField null
+
+  onDestroyed: ->
+    super
+
+    @_translationSubscription.stop()
 
   name: -> @_translate 'name'
   description: -> @_translate 'description'
   requirements: -> @_translate 'requirements'
-  effects: -> @_translate 'effects'
+
+  effects: ->
+    # Split effects into an array of lines.
+    @_translate('effects').split '\n'
 
   _translate: (translationKey) ->
     perkKey = @currentData()
@@ -67,7 +82,14 @@ class C3.Behavior.Terminal.Perks extends AM.Component
     translation = AB.Translation.documents.findOne {namespace, key: translationKey}
 
     AB.translate(translation).text
-    
+
+  satisfiedClass: ->
+    perkKey = @currentData()
+    perk = LOI.Character.Behavior.Perk[perkKey]
+
+    behaviorPart = @behaviorPart()
+    'satisfied' if perk.satisfiesRequirements behaviorPart
+
   backButtonCallback: ->
     @closeScreen()
 
@@ -88,7 +110,61 @@ class C3.Behavior.Terminal.Perks extends AM.Component
 
   onMouseEnterPerk: (event) ->
     perk = @currentData()
-    @displayedPerk perk
+    @displayedPerkKey perk
 
   onMouseLeavePerk: (event) ->
-    @displayedPerk null
+    @displayedPerkKey null
+
+  class @Perk extends AM.Component
+    @register 'SanFrancisco.C3.Behavior.Terminal.Perks.Perk'
+
+    onCreated: ->
+      super
+
+      @perksComponent = @ancestorComponentOfType C3.Behavior.Terminal.Perks
+
+    available: ->
+      perkKey = @data()
+      perk = LOI.Character.Behavior.Perk[perkKey]
+
+      behaviorPart = @perksComponent.behaviorPart()
+      perk.satisfiesRequirements behaviorPart
+
+    name: ->
+      @perksComponent.name()
+
+    class @Selected extends AM.DataInputComponent
+      @register 'SanFrancisco.C3.Behavior.Terminal.Perks.Perk.Selected'
+
+      constructor: ->
+        super
+
+        @type = AM.DataInputComponent.Types.Checkbox
+
+      onCreated: ->
+        super
+
+        @perksComponent = @ancestorComponentOfType C3.Behavior.Terminal.Perks
+
+      load: ->
+        perksProperty = @perksComponent.property()
+        selectedPerkKeys = (perkPark.properties.key.options.dataLocation() for perkPark in perksProperty.parts())
+
+        perkKey = @data()
+        perkKey in selectedPerkKeys
+
+      save: (value) ->
+        perkKey = @data()
+        perksProperty = @perksComponent.property()
+
+        if value
+          # Add perk.
+          perkType = LOI.Character.Part.Types.Behavior.Perk[perkKey].options.type
+          newPart = perksProperty.newPart perkType
+          newPart.options.dataLocation
+            key: perkKey
+
+        else
+          # Remove perk.
+          perkPart = _.find perksProperty.parts(), (perkPart) => perkPart.properties.key.options.dataLocation() is perkKey
+          perkPart.options.dataLocation.remove()

@@ -122,15 +122,26 @@ Package.onUse(function(api) {
   api.addFile('character/behavior/properties/people');
   api.addFile('character/behavior/properties/perks');
 
-  // Perk definitions must come after properties/perks
-  api.addFile('character/behavior/parts/perks/deadendjob');
-  api.addFile('character/behavior/parts/perks/creativemess');
-
   api.addFile('character/behavior/initialize/behavior');
   api.addFile('character/behavior/initialize/personality');
   api.addFile('character/behavior/initialize/traits-data');
   api.addFile('character/behavior/initialize/traits');
   api.addFile('character/behavior/initialize/activities');
+
+  // Perk definitions must come after properties/perks and initialize/behavior.
+  api.addFile('character/behavior/parts/perks/deadendjob');
+  api.addFile('character/behavior/parts/perks/creativemess');
+  api.addFile('character/behavior/parts/perks/minimalist');
+  api.addFile('character/behavior/parts/perks/nothingtoclean');
+  api.addFile('character/behavior/parts/perks/nofreetime');
+  api.addFile('character/behavior/parts/perks/renaissancesoul');
+  api.addFile('character/behavior/parts/perks/focused');
+  api.addFile('character/behavior/parts/perks/spontaneous');
+  api.addFile('character/behavior/parts/perks/organized');
+  api.addFile('character/behavior/parts/perks/introvert');
+  api.addFile('character/behavior/parts/perks/socializer');
+  api.addFile('character/behavior/parts/perks/competitor');
+  api.addFile('character/behavior/parts/perks/teammate');
 
   // User
 

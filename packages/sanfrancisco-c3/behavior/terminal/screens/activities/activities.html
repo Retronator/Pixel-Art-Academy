@@ -78,29 +78,29 @@
               <td>Total number of hours in a week</td><td>168</td>
             </tr>
             <tr>
-              <td>Hours of sleep</td><td>-{{hoursSleep}}</td>
+              <td>Hours of sleep</td><td>-{{property.hoursSleep}}</td>
             </tr>
             <tr>
-              <td>Remaining hours</td><td>{{hoursAfterSleep}}</td>
+              <td>Remaining hours</td><td>{{property.hoursAfterSleep}}</td>
             </tr>
             <tr>
-              <td>Hours required by job/school</td><td>-{{hoursJobSchool}}</td>
+              <td>Hours required by job/school</td><td>-{{property.hoursJobSchool}}</td>
             </tr>
             <tr>
-              <td>Remaining hours</td><td>{{hoursAfterJobSchool}}</td>
+              <td>Remaining hours</td><td>{{property.hoursAfterJobSchool}}</td>
             </tr>
             <tr>
-              <td>Hours spent on activities</td><td>-{{hoursActivities}}</td>
+              <td>Hours spent on activities</td><td>-{{property.hoursActivities}}</td>
             </tr>
             <tr>
-              <td>Remaining hours</td><td>{{extraHoursPerWeek}}</td>
+              <td>Remaining hours</td><td>{{property.extraHoursPerWeek}}</td>
             </tr>
           </table>
-          <p>The agent has {{extraHoursPerWeek}} extra hours available in a week, or {{extraHoursPerDay}} per day.</p>
-          {{#if extraHoursTooLow}}
+          <p>The agent has {{property.extraHoursPerWeek}} extra hours available in a week, or {{property.extraHoursPerDay}} per day.</p>
+          {{#if property.extraHoursTooLow}}
             <p>This is probably too low to be able to deal with everything else in life. Consider adjusting your expectations.</p>
           {{else}}
-            {{#if extraHoursTooHigh}}
+            {{#if property.extraHoursTooHigh}}
               <p>This seems to be more than plenty for the agent to deal with everything else in life.
                 Consider adding more meaningful activities to their life.</p>
             {{else}}

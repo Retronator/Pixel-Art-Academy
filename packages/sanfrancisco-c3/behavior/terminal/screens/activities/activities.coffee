@@ -128,56 +128,6 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     for activityName, activity of activities
       _.extend {}, activity, key: activityName
 
-  hoursSleep: ->
-    # Find sleep focal point.
-    sleepActivity = _.find @property().parts(), (activityPart) =>
-      activityName = activityPart.properties.key.options.dataLocation()
-      activityName is Activity.Keys.Sleep
-
-    sleepActivity?.properties.hoursPerWeek.options.dataLocation() or 0
-
-  hoursAfterSleep: ->
-    24 * 7 - @hoursSleep()
-
-  hoursJobSchool: ->
-    total = 0
-
-    # Find job and sleep focal points.
-    for activityName in [Activity.Keys.Job, Activity.Keys.School]
-      activity = _.find @property().parts(), (activityPart) =>
-        activityPart.properties.key.options.dataLocation() is activityName
-
-      total += activity?.properties.hoursPerWeek.options.dataLocation() or 0
-
-    total
-
-  hoursAfterJobSchool: ->
-    @hoursAfterSleep() - @hoursJobSchool()
-
-  hoursActivities: ->
-    total = 0
-
-    for activityPart in @property().parts()
-      activityKey = activityPart.properties.key.options.dataLocation()
-
-      continue if activityKey in [Activity.Keys.Job, Activity.Keys.School, Activity.Keys.Sleep]
-
-      total += activityPart.properties.hoursPerWeek.options.dataLocation()
-
-    total
-
-  extraHoursPerWeek: ->
-    @hoursAfterJobSchool() - @hoursActivities()
-
-  extraHoursPerDay: ->
-    Math.round(@extraHoursPerWeek() / 0.7) / 10
-
-  extraHoursTooLow: ->
-    @extraHoursPerWeek() < 20
-
-  extraHoursTooHigh: ->
-    @extraHoursPerWeek() > 50
-
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton

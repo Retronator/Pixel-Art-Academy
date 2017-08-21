@@ -53,10 +53,7 @@ class C3.Behavior.Terminal.Environment extends AM.Component
       @property = null
 
     options: ->
-      [
-        value: null
-        name: ''
-      ,
+      options = [
         value: 1
         name: "Minimal"
       ,
@@ -72,6 +69,13 @@ class C3.Behavior.Terminal.Environment extends AM.Component
         value: 5
         name: "Chaos"
       ]
+
+      unless @load()
+        options.unshift
+          value: null
+          name: ''
+
+      options
 
     load: ->
       dataLocation = @_dataLocation()

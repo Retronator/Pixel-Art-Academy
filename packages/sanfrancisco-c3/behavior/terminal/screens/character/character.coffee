@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
@@ -20,6 +21,13 @@ class C3.Behavior.Terminal.Character extends AM.Component
 
   onCreated: ->
     super
+
+    @_perksRranslationSubscription = AB.subscribeNamespace 'LandsOfIllusions.Character.Behavior.Perk'
+
+  onDestroyed: ->
+    super
+
+    @_perksRranslationSubscription.stop()
 
   setCharacterId: (characterId) ->
     @characterId characterId
@@ -67,7 +75,13 @@ class C3.Behavior.Terminal.Character extends AM.Component
     perks = @character().behavior.part.properties.perks.activePerks()
 
     # TODO: Replace with translated names.
-    perkNames = (_.capitalize perk.properties.key.options.dataLocation() for perk in perks)
+    perkKeys = (perk.properties.key.options.dataLocation() for perk in perks)
+
+    perkNames = for perkKey in perkKeys
+      namespace = "LandsOfIllusions.Character.Behavior.Perk.#{perkKey}"
+      translation = AB.Translation.documents.findOne {namespace, key: 'name'}
+
+      AB.translate(translation).text
 
     perkNames.join ', '
 

@@ -88,6 +88,13 @@ class LOI.Character.Behavior.Personality extends LOI.Character.Part
       temperament
     ,
       true
+    
+  hasTrait: (traitKey) ->
+    for factorPart in @properties.factors.parts()
+      for traitsPart in factorPart.properties.traits.parts()
+        return true if traitsPart.properties.key.options.dataLocation() is traitKey
+
+    false
 
   destroy: ->
     super

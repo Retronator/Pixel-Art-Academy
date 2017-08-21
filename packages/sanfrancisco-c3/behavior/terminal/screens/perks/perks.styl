@@ -6,8 +6,66 @@
     overflow-y auto
     padding 10rem 90rem 10rem 10rem
 
+  .perks
+    list-style none
+    padding 0
+
+    .perk
+      padding-bottom 4rem
+
+      .available
+        cursor pointer
+
+        .label
+          &::before
+            margin-right 3rem
+
   .perk-info
     position absolute
     bottom 10rem
     right 10rem
-    width 100rem
+    width 110rem
+    padding 1rem
+    border 1rem solid atariGrey(2)
+
+    .name
+      acme-7()
+      border 1rem solid atariGrey(1)
+      text-align center
+      padding 2rem 0 3rem
+
+    .description
+    .requirements
+    .effects
+      padding 3rem
+
+    .description
+      color atariYellow(5)
+      border-bottom 1rem solid atariGrey(1)
+
+    .requirements
+      border-bottom 1rem solid atariGrey(1)
+      color atariRed(5)
+
+      .label
+        color atariRed(2)
+
+      &.satisfied
+        color atariGreen(5)
+
+        .label
+          color atariGreen(2)
+
+    .effects
+      color atariCyan(4)
+      list-style none
+      margin 0
+
+      .effect
+        margin-bottom 3rem
+
+        &:last-child
+          margin 0
+
+        &::before
+          content '→ '

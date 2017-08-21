@@ -4,12 +4,12 @@ class LOI.Character.Behavior.Perk.DeadEndJob extends LOI.Character.Behavior.Perk
   @register 'DeadEndJob'
   
   @displayName: "Dead-end job"
-  @description: "Your work makes you exhaustingly brain-dead, but gives you one more reason to change your life around."
-  @effects: """
-        Less energy points at start of the day. 
-        More motivation points at start of the day.
-      """
+  @description: "Your work is sucking your soul, but gives you one more reason to change your life around."
   @requirements: "Allocate time for a job."
+  @effects: """
+        Gain less energy points.
+        Gain more motivation points.
+      """
 
   @satisfiesRequirements: (behaviorPart) ->
     super

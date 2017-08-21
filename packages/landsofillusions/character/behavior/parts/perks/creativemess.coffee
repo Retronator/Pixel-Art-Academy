@@ -4,13 +4,14 @@ class LOI.Character.Behavior.Perk.CreativeMess extends LOI.Character.Behavior.Pe
   @register 'CreativeMess'
   
   @displayName: "Creative mess"
-  @description: "You like your table full of stuff and you wouldn't think about putting anything away."
+  @description: "A table full of things is a table full of ideas."
+  @requirements: "High ideal level of clutter."
   @effects: """
-        Physical items increase your happiness. 
-        Never have to clean.
+        Physical items increase your motivation points. 
       """
-  @requirements: "High desired level of clutter."
 
-  satisfiesRequirements: ->
+  @satisfiesRequirements: (behaviorPart) ->
     super
-    # Override this with custom logic that tests whether the character can have this perk.
+
+    idealClutter = behaviorPart.properties.environment.part.properties.clutter.part.properties.ideal.options.dataLocation()
+    idealClutter > 3
