@@ -21,12 +21,14 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-landingpage');
   api.use('retronator:pixelartacademy-items');
   api.use('retronator:pixelartacademy-season1-episode0');
+  api.use('retronator:pixelartacademy-season1-episode1');
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartdatabase');
   api.use('retronator:pixelartdatabase-pixeldailies');
   api.use('retronator:sanfrancisco-soma');
   api.use('retronator:sanfrancisco-c3');
+  api.use('retronator:sanfrancisco-apartment');
   api.use('retronator:retronator-hq');
   api.use('retronator:retronator-residence');
   api.use('retronator:retronator-landsofillusions');

@@ -38,6 +38,7 @@ Package.onUse(function(api) {
   api.addFile('c3/c3');
   api.addFile('missionbay/missionbay');
   api.addFile('missionrock/missionrock');
+  api.addFile('chinabasinpark/chinabasinpark');
   api.addThing('muni/muni');
   api.addThing('muni/scene');
 });

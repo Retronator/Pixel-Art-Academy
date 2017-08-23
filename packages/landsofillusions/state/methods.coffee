@@ -102,7 +102,7 @@ LOI.GameState.update.method (gameStateId, state) ->
   gameStateUser = gameState.user
 
   if gameState.character
-    character = LOI.Character.findOne gameState.character._id
+    character = LOI.Character.documents.findOne gameState.character._id
     gameStateUser = character.user
 
   throw new AE.UnauthorizedException "This game state does not belong to you." unless gameStateUser._id is user._id

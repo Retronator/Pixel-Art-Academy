@@ -219,8 +219,6 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/script/helpers/helpers.coffee');
   api.addFiles('adventure/script/helpers/iteminteraction.coffee');
-  api.addFiles('adventure/script/helpers/inventory.coffee');
-  api.addFiles('adventure/script/helpers/location.coffee');
 
   api.addFiles('adventure/script/node.coffee');
   api.addFiles('adventure/script/nodes/nodes.coffee');

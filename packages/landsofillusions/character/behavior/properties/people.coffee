@@ -20,7 +20,8 @@ class LOI.Character.Behavior.Environment.People extends LOI.Character.Part.Prope
     Friend: 'Friend'
 
   @LivingProximity:
+    # TODO: Add support for housemates.
+    # Roommate: 'Roommate'
+    # Housemate: 'Housemate'
     Local: 'Local'
-    Housemate: 'Housemate'
-    Roommate: 'Roommate'
     Internet: 'Internet'

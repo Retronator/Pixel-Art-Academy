@@ -29,3 +29,4 @@ class Soma.MissionRock extends LOI.Adventure.Location
   exits: ->
     "#{Vocabulary.Keys.Directions.Northwest}": Soma.FourthAndKing
     "#{Vocabulary.Keys.Directions.South}": Soma.MissionBay
+    "#{Vocabulary.Keys.Directions.East}": Soma.ChinaBasinPark

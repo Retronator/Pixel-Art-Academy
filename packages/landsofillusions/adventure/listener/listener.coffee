@@ -33,6 +33,11 @@ class LOI.Adventure.Listener
     # Handles for custom autorun routines.
     @_autorunHandles = []
 
+    # Create avatars prior to creating scripts, since some script initializations might need them.
+    @avatars = {}
+    for key, thingClass of @constructor.avatars()
+      @avatars[key] = new LOI.Adventure.Thing.Avatar thingClass
+
     # Create the scripts.
     @scripts = {}
     @scriptsReady = new ReactiveField false
@@ -47,7 +52,7 @@ class LOI.Adventure.Listener
           url = @options.parent.versionedUrl url
 
         else
-          console.warn "Scripts are beeing used without versioning. Url:", url
+          console.warn "Scripts are being used without versioning. Url:", url
 
         scriptFile = new LOI.Adventure.ScriptFile
           url: url
@@ -67,10 +72,6 @@ class LOI.Adventure.Listener
 
     else
       @scriptsReady true
-
-    @avatars = {}
-    for key, thingClass of @constructor.avatars()
-      @avatars[key] = new LOI.Adventure.Thing.Avatar thingClass
 
   destroy: ->
     @_scriptTranslationSubscription.stop()
