@@ -2,6 +2,24 @@
 
 ## Start
 
+> You activate your SYNC device and the ambient sounds get replaced with complete silence before you hear Panzer speak to you.
+
+## ActivateSync
+
+### ActivateSync
+
+## FirstSetupDone
+
+-> [Operator]
+
+## PluggedInStart
+
+### ActivateSync
+
+-> [Operator]
+
+## Operator
+
 operator: Operator.
 
 * I need an exit. -> [Exit] `location.id is 'LandsOfIllusions.Construct.Loading'`
@@ -11,24 +29,26 @@ operator: Operator.
 
 ## Exit
 
-operator: 
+operator:
   Got it.
   Engaging disconnect procedure.
-    
+
+### ActivateSync
+
 pause
-    
+
 ### Exit
 
 -> [End]
 
 ## Construct
 
-operator: 
+operator:
   On it.
   Starting loading program.
-    
-> …
-    
+
+pause
+
 ### Construct
 
 -> [End]
@@ -40,6 +60,14 @@ operator: Initiating link.
 pause
 
 ### CharacterSync
+
+-> [End]
+
+## DeactivateSync
+
+> You deactivate SYNC and the surrounding sounds enter your ears again.
+
+### DeactivateSync
 
 -> [End]
 

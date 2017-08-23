@@ -3,30 +3,8 @@
 ## SelfStart
 
 > You sit down and activate your SYNC device.
-> The sounds of manufacturing and servers get replaced with complete silence before you hear the intro sound.
 
-### ActivateHeadset
-
-* Panzer, I'm ready for immersion. -> [Confirm]
-* Just one more thing … -> [Cancel]
-
-## Confirm
-
-operator: You know the drill.
-
-pause
-
-### PlugIn
-
--> [End]
-
-## Cancel
-
-> You deactivate SYNC and ambient sounds of the Cyborg Construction Center fill your ears again.
-
-### DeactivateHeadset
-
-> You stand up from the recliner and are ready to go about your day.
+### ActivateSync
 
 -> [End]
 

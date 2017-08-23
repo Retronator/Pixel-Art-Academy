@@ -67,10 +67,12 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
           action: action
+          priority: -1
 
         commandResponse.onExactPhrase
           form: [directionKey]
           action: action
+          priority: -1
 
     # Next up wire going to the location by name.
     for locationId, locationClass of situation.exitsById() when locationClass

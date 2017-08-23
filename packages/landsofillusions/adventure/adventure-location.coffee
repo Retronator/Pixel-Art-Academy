@@ -133,6 +133,23 @@ class LOI.Adventure extends LOI.Adventure
 
             @locationOnEnterResponseResults responseResults
 
+    # We also need to store the location the user logged into Construct from, so we can take them back there.
+    @constructExitLocationId = new ReactiveField Retronator.HQ.LandsOfIllusions.Room.id()
+    Artificial.Mummification.PersistentStorage.persist
+      storageKey: 'LandsOfIllusions.Adventure.constructExitLocationId'
+      field: @constructExitLocationId
+      tracker: @
+      
+  saveConstructExitLocation: ->
+    # Save current location to local storage.
+    currentLocationId = @currentLocationId()
+    @constructExitLocationId currentLocationId
+
+    # Save current location to state. We don't really use it except until the next time we load the game.
+    if state = @gameState()
+      state.constructExitLocationId = currentLocationId
+      @gameState.updated()
+
   goToLocation: (locationClassOrId) ->
     currentLocationClass = _.thingClass @currentLocationId()
     destinationLocationClass = _.thingClass locationClassOrId

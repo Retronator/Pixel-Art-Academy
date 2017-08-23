@@ -8,6 +8,9 @@ Nodes = LOI.Adventure.Script.Nodes
 class HQ.Items.OperatorLink extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.Items.OperatorLink'
 
+  @register @id()
+  template: -> @constructor.id()
+
   @fullName: -> "operator neural link"
   @shortName: -> "operator"
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
@@ -23,8 +26,6 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
 
   constructor: ->
     super
-
-    @operator = new HQ.Actors.Operator
 
     # Subscribe to user's activated characters.
     @_charactersSubscription = LOI.Character.activatedForCurrentUser.subscribe()
@@ -48,13 +49,35 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
   destroy: ->
     super
 
-    @operator.destroy()
-
     @_charactersSubscription.stop()
     @activatedCharacters.stop()
     character.destroy() for character in @_characters if @_characters
 
+  onCreated: ->
+    super
+
+    @pluggedIn = new ReactiveField false
+    @fastTransition = new ReactiveField false
+
+  onActivate: (finishedActivatingCallback) ->
+    Meteor.setTimeout =>
+      finishedActivatingCallback()
+    ,
+      500
+
+  onDeactivate: (finishedDeactivatingCallback) ->
+    Meteor.setTimeout =>
+      finishedDeactivatingCallback()
+    ,
+      500
+
   isVisible: -> false
+
+  pluggedInClass: ->
+    'pluggedIn' if @pluggedIn()
+
+  fastTransitionClass: ->
+    'fast-transition' if @fastTransition()
 
   syncWithCharacter: (@_syncCharacter) ->
     listener = @listeners[0]
@@ -68,9 +91,16 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
     listener.startScript label: 'CharacterSync'
 
   prepareDialogOptions: ->
-    # Build all character selections. Last option of the selection is to not do anything.
+    listener = @listeners[0]
+
+    # Build all character selections. Last option of the selection is to not do anything and deactivate SYNC.
     cancelNode = new Nodes.CommandLine
       line: "Nevermind"
+      next: new Nodes.Callback
+        callback: (complete) =>
+          complete()
+
+          listener.startScript label: 'DeactivateSync'
 
     lastChoiceNode = new Nodes.Choice
       node: cancelNode
@@ -99,9 +129,6 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
 
     characterChoiceNode = lastChoiceNode
 
-    # Find the last of this script's questions.
-    listener = @listeners[0]
-
     for node in listener.script.nodes
       if node.next is listener.script.startNode.labels.CharactersPlaceholder or node.next is @_lastCharacterChoiceNode
         node.next = characterChoiceNode
@@ -109,21 +136,72 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
     # Save which node is in the location of the placeholder.
     @_lastCharacterChoiceNode = characterChoiceNode
 
+  start: ->
+    @_start true
+
+  startWithoutIntro: ->
+    @_start false
+
+  _start: (intro) ->
+    @prepareDialogOptions()
+
+    listener = @listeners[0]
+
+    if LOI.adventure.currentTimelineId() is PAA.TimelineIds.Construct
+      label = 'Operator'
+
+    else if intro
+      label = 'Start'
+
+    else
+      label = 'ActivateSync'
+
+    listener.startScript {label}
+
   # Script
 
   initializeScript: ->
+    operatorLink = @options.parent
+    operator = @options.listener.avatars.operator
+
     @setThings
-      operator: @options.parent.operator
+      operator: operator
 
     @setCallbacks
-      Exit: (complete) =>
-        LOI.adventure.goToLocation HQ.LandsOfIllusions.Room
-        LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
+      ActivateSync: (complete) =>
+        operatorLink.activate()
+        complete()
+
+      DeactivateSync: (complete) =>
+        operatorLink.deactivate()
         complete()
 
       Construct: (complete) =>
-        LOI.adventure.goToLocation LOI.Construct.Loading
-        LOI.adventure.goToTimeline PAA.TimelineIds.Construct
+        operatorLink.pluggedIn true
+
+        Meteor.setTimeout =>
+          LOI.adventure.saveConstructExitLocation()
+          LOI.adventure.goToLocation LOI.Construct.Loading
+          LOI.adventure.goToTimeline PAA.TimelineIds.Construct
+
+          operatorLink.deactivate()
+          complete()
+        ,
+          4000
+
+      Exit: (complete) =>
+        operatorLink.pluggedIn true
+        operatorLink.fastTransition true
+
+        Meteor.setTimeout =>
+          LOI.adventure.goToLocation LOI.adventure.constructExitLocationId()
+          LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
+
+          operatorLink.pluggedIn false
+          operatorLink.deactivate()
+        ,
+          500
+
         complete()
 
       CharacterSync: (complete) =>
@@ -134,13 +212,18 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
 
   # Listener
 
+  @avatars: ->
+    operator: HQ.Actors.Operator
+
   onCommand: (commandResponse) ->
     operatorLink = @options.parent
-    operator = operatorLink.operator
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, operator.avatar]]
+      form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, @avatars.operator]]
       priority: -1
-      action: =>
-        operatorLink.prepareDialogOptions()
-        @startScript()
+      action: => operatorLink.start()
+
+    if LOI.adventure.currentLocationId() is LOI.Construct.Loading.id()
+      commandResponse.onExactPhrase
+        form: [Vocabulary.Keys.Directions.Out]
+        action: => @startScript label: 'Exit'

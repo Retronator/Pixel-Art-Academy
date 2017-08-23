@@ -32,19 +32,12 @@ class C3.RemoteControl extends LOI.Adventure.Location
   # Script
 
   initializeScript: ->
-    listener = @options.listener
-
-    @setThings listener.avatars
-
     @setCallbacks
-      ActivateHeadset: (complete) => Retronator.HQ.Items.Sync.activateHeadsetCallback complete
-      PlugIn: (complete) => Retronator.HQ.Items.Sync.plugInCallback complete
-      DeactivateHeadset: (complete) => Retronator.HQ.Items.Sync.deactivateHeadsetCallback complete
+      ActivateSync: (complete) =>
+        LOI.adventure.getCurrentThing(Retronator.HQ.Items.OperatorLink).startWithoutIntro()
+        complete()
 
   # Listener
-
-  @avatars: ->
-    operator: Retronator.HQ.Actors.Operator
 
   onCommand: (commandResponse) ->
     return unless chair = LOI.adventure.getCurrentThing Retronator.HQ.LandsOfIllusions.Room.Chair

@@ -1,6 +1,6 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.retronator-hq-items-sync
+.retronator-hq-items-operator-link
   fixed-cover()
   // We need to use important to override the relative positioning for all items.
   position fixed !important
@@ -10,6 +10,9 @@
 
   &.pluggedIn
     background rgba(255,255,255,1)
+
+  &.fast-transition
+    transition background 0.5s
 
   .landsofillusions-components-overlay
     .crop-bar

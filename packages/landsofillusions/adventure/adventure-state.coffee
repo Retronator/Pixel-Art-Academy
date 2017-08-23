@@ -142,6 +142,7 @@ class LOI.Adventure extends LOI.Adventure
           # synced again on reload).
           LOI.adventure.currentLocationId databaseState.state.currentLocationId
           LOI.adventure.currentTimelineId databaseState.state.currentTimelineId
+          LOI.adventure.constructExitLocationId databaseState.state.constructExitLocationId
 
           LOI.adventure.menu.signIn.activatable.deactivate()
 
