@@ -44,6 +44,7 @@ Package.onUse(function(api) {
   api.addFiles('state/localsavegames.coffee');
 
   api.addServerFile('state/migrations/0000-immersionrevamp');
+  api.addServerFile('state/migrations/0001-renamecollection');
 
   // Avatar
 

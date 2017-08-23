@@ -37,7 +37,7 @@ class LOI.Adventure extends AM.Component
 
         # Now that there is no more user, wait until game state has returned to local storage.
         Tracker.autorun (computation) =>
-          return unless LOI.adventure.gameStateSource() is LOI.Adventure.GameStateSourceType.LocalStorage
+          return unless LOI.adventure.gameStateSource() is LOI.Adventure.GameStateSourceType.LocalStorageUser
           computation.stop()
 
           Tracker.nonreactive =>

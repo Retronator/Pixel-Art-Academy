@@ -159,4 +159,5 @@ LOI.Character.activate.method (characterId) ->
     $set:
       activated: true
 
-  # TODO: Create character state etc.
+  # Create new game state for the character.
+  LOI.GameState.insertForCharacter characterId
