@@ -18,6 +18,7 @@ class LOI.Character extends AM.Document
   #   shortName: how the character can be quickly referred to
   #     _id
   #     translations
+  #   pronouns: enumeration of the gender of pronouns used by the character (Feminine/Masculine/Neutral).
   #   color: character's favorite color as used in the world, for example, in dialogs
   #     hue: ramp index in the Atari 2600 palette
   #     shade: relative shade from -2 to +2

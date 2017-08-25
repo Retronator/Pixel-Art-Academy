@@ -17,6 +17,8 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
   @timelineId: -> # Override to set a default timeline for scenes.
   timelineId: -> @constructor.timelineId()
 
+  @scenes: -> [] # Override to provide any scenes for the whole episode.
+
   @startSection: -> throw new AE.NotImplementedException
 
   constructor: ->
@@ -37,10 +39,10 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
 
       chapter
 
-    @idd = Random.id()
+    @_scenes = for sceneClass in @constructor.scenes()
+      new sceneClass parent: @
 
-  currentChapters: ->
-    chapter for chapter in @chapters when chapter.active()
+    @idd = Random.id()
 
   destroy: ->
     super
@@ -49,7 +51,11 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
 
     @startSection.destroy()
 
-  scenes: -> # Override to provide any scenes for the whole episode.
+  scenes: ->
+    @_scenes
+
+  currentChapters: ->
+    chapter for chapter in @chapters when chapter.active()
 
   ready: ->
     # Episode is ready when its current chapters are ready.
@@ -61,3 +67,18 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     ]
 
     _.every conditions
+
+  showEpisodeTitle: (options = {}) ->
+    # Create new storyline title.
+    episodeTitle = new LOI.Components.StorylineTitle _.extend {}, options,
+      episode: @
+
+    LOI.adventure.showActivatableModalDialog
+      dialog: episodeTitle
+
+    # Wait till episode title gets activated.
+    @autorun (computation) =>
+      return unless episodeTitle.activatable.activated()
+      computation.stop()
+
+      options.onActivated?()

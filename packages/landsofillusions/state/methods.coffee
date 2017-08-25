@@ -96,6 +96,11 @@ LOI.GameState.update.method (gameStateId, state) ->
   throw new AE.UnauthorizedException "You must be logged in to update game state." unless user
 
   gameState = LOI.GameState.documents.findOne gameStateId
+
+  # On the client it's OK if the game state is not present anymore. It means this is a delayed update and the
+  # subscription to the game state document has already been released (to switch to another state).
+  return if Meteor.isClient and not gameState
+
   throw new AE.ArgumentNullException "Provided game state does not exist." unless gameState
 
   # See if this is a user or character state.

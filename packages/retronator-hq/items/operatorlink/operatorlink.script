@@ -12,7 +12,7 @@
 
 -> [Operator]
 
-## PluggedInStart
+## ImmersedStart
 
 ### ActivateSync
 
@@ -22,7 +22,7 @@
 
 operator: Operator.
 
-* I need an exit. -> [Exit] `location.id is 'LandsOfIllusions.Construct.Loading'`
+* I need an exit. -> [Exit] `location.id is 'LandsOfIllusions.Construct.Loading' or @character`
 * I'd like to enter the Construct. -> [Construct] `location.id isnt 'LandsOfIllusions.Construct.Loading'`
 
 ## CharactersPlaceholder

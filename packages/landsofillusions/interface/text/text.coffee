@@ -3,29 +3,10 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+Vocabulary = LOI.Parser.Vocabulary
+
 class LOI.Interface.Text extends LOI.Interface
   @register 'LandsOfIllusions.Adventure.Interface.Text'
-
-  introduction: ->
-    location = @location()
-    return unless location
-
-    if currentIntroductionFunction = @_currentIntroductionFunction()
-      introduction = currentIntroductionFunction()
-      return @_formatOutput introduction
-
-    if location.constructor.visited()
-      fullName = location.avatar.fullName()
-      return unless fullName
-
-      # We've already visited this location so simply return the full name.
-      "#{_.upperFirst fullName}."
-
-    else
-      # It's the first time we're visiting this location in this session so show the full description.
-      situation = LOI.adventure.currentSituation()
-
-      @_formatOutput situation.description.last()
 
   things: ->
     return [] unless things = LOI.adventure.currentLocationThings()
@@ -86,62 +67,6 @@ class LOI.Interface.Text extends LOI.Interface
 
   waitingKeypress: ->
     @_pausedNode() or @inIntro()
-
-  narrativeLine: ->
-    lineText = @currentData()
-
-    @_formatOutput lineText
-    
-  _formatOutput: (text) ->
-    return unless text
-
-    # WARNING: The output of this function should be HTML escaped
-    # since the results will be directly injected with triple braces.
-    text = AM.HtmlHelper.escapeText text
-
-    # Create color spans.
-    text = text.replace /%%c(\d+)-([-\d]+)%(.*?)c%%/g, (match, hue, shade, text) ->
-      hue = parseInt hue
-      shade = parseInt shade
-
-      colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade).getHexString()
-
-      "<span style='color: ##{colorHexString}' data-hue='#{hue}' data-shade='#{shade}'>#{text}</span>"
-
-    # Create text transform spans.
-    text = text.replace /%%t([L|U])(.*?)t%%/g, (match, transformType, text) =>
-      switch transformType
-        when 'L' then transform = 'lowercase'
-        when 'U' then transform = 'uppercase'
-
-      "<span style='text-transform: #{transform}'>#{text}</span>"
-
-    # Extract commands from image notation.
-    text = text.replace /!\[(.*?)]\((.*?)\)/g, (match, text, command) ->
-      command = text unless command.length
-      "<span class='command' title='#{command}'>#{text}<span class='underline'></span><span class='background'></span></span>"
-
-    Tracker.afterFlush =>
-      # Add colors to commands.
-      commands = @$('.narrative .command')
-      return unless commands
-
-      for element in commands
-        $command = $(element)
-        colorParent = $command.parent('*[data-hue]')
-
-        if colorParent.length
-          hue = colorParent.data 'hue'
-          shade = colorParent.data 'shade'
-          colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade + 1).getHexString()
-
-          $command.css color: "##{colorHexString}"
-
-          $command.find('.underline').css borderBottomColor: "##{colorHexString}"
-
-          $command.find('.background').css backgroundColor: "##{colorHexString}"
-
-    text
 
   # Query this to see if the interface is listening to user commands.
   active: ->

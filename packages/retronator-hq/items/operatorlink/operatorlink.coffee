@@ -105,8 +105,10 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
     lastChoiceNode = new Nodes.Choice
       node: cancelNode
 
+    currentCharacter = LOI.character()
+
     # For each agent, create a choice node. Reverse the nodes so they appear in the same order.
-    for character in @activatedCharacters()
+    for character in @activatedCharacters() when character.id isnt currentCharacter?.id
       do (character) =>
         callbackNode = new Nodes.Callback
           callback: (complete) =>
@@ -147,13 +149,17 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
 
     listener = @listeners[0]
 
-    if LOI.adventure.currentTimelineId() is PAA.TimelineIds.Construct
-      label = 'Operator'
+    # Check if the player is already immersed.
+    if LOI.adventure.currentTimelineId() is PAA.TimelineIds.Construct or LOI.characterId()
+      # Yeah, skip straight to the operator dialog.
+      label = 'ImmersedStart'
 
     else if intro
+      # No, show the full intro.
       label = 'Start'
 
     else
+      # No, and the intro was already provided by the caller.
       label = 'ActivateSync'
 
     listener.startScript {label}
@@ -180,12 +186,11 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
         operatorLink.pluggedIn true
 
         Meteor.setTimeout =>
-          LOI.adventure.saveConstructExitLocation()
-          LOI.adventure.goToLocation LOI.Construct.Loading
-          LOI.adventure.goToTimeline PAA.TimelineIds.Construct
+          complete()
+
+          LOI.adventure.loadConstruct()
 
           operatorLink.deactivate()
-          complete()
         ,
           4000
 
@@ -194,21 +199,31 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
         operatorLink.fastTransition true
 
         Meteor.setTimeout =>
-          LOI.adventure.goToLocation LOI.adventure.constructExitLocationId()
-          LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
+          complete()
+
+          # See if we're exiting from character's world of from the construct.
+          if LOI.characterId()
+            LOI.adventure.unloadCharacter()
+
+          else
+            LOI.adventure.unloadConstruct()
 
           operatorLink.pluggedIn false
           operatorLink.deactivate()
         ,
           500
 
-        complete()
-
       CharacterSync: (complete) =>
-        ephemeralState = @ephemeralState()
-        console.log "DODODODO", LOI.Character.documents.findOne ephemeralState.characterId
+        operatorLink.pluggedIn true
 
-        complete()
+        Meteor.setTimeout =>
+          complete()
+
+          LOI.adventure.loadCharacter @ephemeralState().characterId
+
+          operatorLink.deactivate()
+        ,
+          4000
 
   # Listener
 

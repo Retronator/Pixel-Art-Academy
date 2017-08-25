@@ -52,6 +52,11 @@ class Soma.Muni.Scene extends LOI.Adventure.Scene
             # Come to location in 3 seconds.
             @_scheduleArrival 3000
 
+  destroy: ->
+    super
+
+    Meteor.clearTimeout @_eventTimeout
+
   _scheduleArrival: (time) ->
     @_eventTimeout = Meteor.setTimeout =>
       @atLocation true

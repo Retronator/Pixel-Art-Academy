@@ -20,6 +20,7 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('episode1');
+  api.addFile('scenes/inventory');
 
   // Start
 

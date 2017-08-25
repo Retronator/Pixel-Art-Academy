@@ -47,8 +47,7 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
     return if @_chapterTitleShown
     @_chapterTitleShown = true
 
-    @section.chapter.showChapterTitle
-      toBeContinued: true
+    @section.chapter.showChapterTitle()
 
   # Listener
 

@@ -93,7 +93,7 @@ class LOI.Adventure extends LOI.Adventure
 
   resetEpisodes: ->
     console.log "Resetting episodes." if LOI.debug
-    @_resetEpisodesDependency.change()
+    @_resetEpisodesDependency.changed()
 
   episodesReady: ->
     return false unless LOI.adventureInitialized()

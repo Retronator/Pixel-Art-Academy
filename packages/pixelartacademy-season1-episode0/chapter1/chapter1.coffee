@@ -12,8 +12,6 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   @fullName: -> "Living the dream"
   @number: -> 1
 
-  @url: -> 'chapter1'
-
   @sections: -> [
     @Start
     @Immigration

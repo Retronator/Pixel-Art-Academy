@@ -60,6 +60,11 @@ If choice is taken, script continues to given `Label`. (see `Jump` node below).
     
 `Timeout` node that waits the provided number of milliseconds before continuing.
 
+#### Pause
+    `pause`
+    
+Instructs the interface to wait for user input (usually a key press) before continuing with the script.
+
 ### Modifiers
 
 #### Conditionals
@@ -92,6 +97,54 @@ the code snippet is not at the end though since it will be treated as a conditio
 
     Hello world, `user.profile.name`.
 
+### Text substitutions
+
+Dialog and narrative lines can be marked with extra meaning.
+
+#### Command hints
+
+    You should ![open the door](open door).
+    
+The interface will highlight the text "open the door" and display the command hint "open door".
+
+#### Character name and pronouns
+
+    _char_ tries to open the door, but _they_ fail. _Their_ strength is too low.
+    
+`_char_` will be substituted with character's short name.
+
+`_they_` will be substituted with character's subjective pronoun she/he/they.
+
+`_them_` will be substituted with character's objective pronoun her/him/them.
+
+`_their_` will be substituted with character's possessive adjective her/his/their.
+
+`_theirs_` will be substituted with character's possessive pronoun (for use without object) hers/his/theirs.
+
+`_char's_` will be substituted with possessive form of character's name.
+
+The case of the command (`_they_` vs `_They_`) is preserved (she/he/they and She/He/They).
+
+### Text formatting
+
+#### Colors
+
+    %%c(hue)-(shade)%(text)c%%
+    
+`(hue)` and `(shade)` should be numbers inside the avatar palette (shade 0 is shade 6 in Atari2600).
+
+`(text)` is the string being colored.
+
+#### Case transform
+
+    %%tU(text)t%%
+
+Transforms `(text)` to uppercase.
+
+    %%tL(text)t%%
+
+Transforms `(text)` to lowercase.
+
 ### Code variables
 
 #### Context
@@ -119,6 +172,7 @@ There are some special variables that provide other contexts:
 * `@user`: The logged in user's state. It's null when not logged in.
 * `@user.name`: A read-only variable with user's account name.
 * `@user.itemKeys`: A read-only map of catalog keys that this user has purchased.
+* `@character`: Read-only character instance.
 * `@player.inventory`: A map of items in your inventory.
 * `@scripts`: All script states, addressable by script ID.
 * `@things`: All thing states, addressable by thing ID.

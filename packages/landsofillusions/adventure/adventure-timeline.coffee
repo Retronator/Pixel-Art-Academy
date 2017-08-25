@@ -18,7 +18,12 @@ class LOI.Adventure extends LOI.Adventure
       Tracker.nonreactive =>
         # If we don't have a timeline set, start at the default timeline.
         unless currentTimelineId
-          currentTimelineId = PixelArtAcademy.TimelineIds.DareToDream
+          if LOI.characterId()
+            currentTimelineId = PixelArtAcademy.TimelineIds.Present
+
+          else
+            currentTimelineId = PixelArtAcademy.TimelineIds.DareToDream
+
           @currentTimelineId currentTimelineId
 
         # Save current timeline to state. We don't really use it except until the next time we load the game.

@@ -11,8 +11,6 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
   @fullName: -> "Retronator HQ"
   @number: -> 2
 
-  @url: -> 'chapter2'
-
   @sections: -> [
     C2.Intro
     C2.Registration

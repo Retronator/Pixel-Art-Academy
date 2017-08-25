@@ -113,6 +113,10 @@ class Script.Nodes.Code extends Script.Node
         itemKeys: {}
         characters: []
 
+    # Attach the character instance to global state.
+    if character = LOI.character()
+      _globalState.character = character
+
     # Attach player object to global state.
     _globalState.player =
       inventory: {}
@@ -194,6 +198,7 @@ class Script.Nodes.Code extends Script.Node
 
     # Delete read-only fields that should not be saved.
     delete _globalState.user
+    delete _globalState.character
     delete _globalState.player
 
     if _scriptStateWasNull

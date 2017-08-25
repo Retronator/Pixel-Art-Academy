@@ -37,6 +37,9 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
 
     character.avatar?.shortName?.translate().text or @fullName()
 
+  pronouns: ->
+    @character.document()?.avatar?.pronouns or super
+
   _loading: ->
     return if Meteor.isServer
 

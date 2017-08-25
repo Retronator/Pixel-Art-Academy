@@ -272,6 +272,7 @@ Package.onUse(function(api) {
   api.addFiles('interface/text/text.html');
   api.addFiles('interface/text/text.styl');
   api.addFiles('interface/text/text-initialization.coffee');
+  api.addFiles('interface/text/text-narrative.coffee');
   api.addFiles('interface/text/text-handlers.coffee');
   api.addFiles('interface/text/text-nodehandling.coffee');
   api.addFiles('interface/text/text-resizing.coffee');
@@ -294,7 +295,7 @@ Package.onUse(function(api) {
   api.addComponent('components/overlay/overlay');
   api.addComponent('components/backbutton/backbutton');
   api.addComponent('components/signin/signin');
-  api.addComponent('components/chaptertitle/chaptertitle');
+  api.addComponent('components/storylinetitle/storylinetitle');
 
   api.addComponent('components/menu/menu');
   api.addComponent('components/menu/items/items');

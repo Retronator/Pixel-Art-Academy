@@ -48,6 +48,24 @@ Document.startup ->
       WakeUp: ['wake up', 'awaken']
       Buy: ['buy', 'purchase']
 
+    Pronouns:
+      Subjective:
+        Feminine: ['she']
+        Masculine: ['he']
+        Neutral: ['they']
+      Objective:
+        Feminine: ['her']
+        Masculine: ['him']
+        Neutral: ['them']
+      Adjective:
+        Feminine: ['her']
+        Masculine: ['his']
+        Neutral: ['their']
+      Possessive:
+        Feminine: ['hers']
+        Masculine: ['his']
+        Neutral: ['theirs']
+
     IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up', 'down']
 
     Questions:

@@ -22,10 +22,16 @@ class LOI.Avatar
     Saying: 'Saying'
     Displaying: 'Displaying'
 
+  @Pronouns:
+    Feminine: 'Feminine'
+    Masculine: 'Masculine'
+    Neutral: 'Neutral'
+
   ready: -> true
 
   fullName: -> throw new AE.NotImplementedException "You must provide avatar's full name."
   shortName: -> null
+  pronouns: -> @constructor.Pronouns.Neutral
   description: -> null
   nameAutoCorrectStyle: -> @constructor.NameAutoCorrectStyle.Word
 
@@ -40,3 +46,6 @@ class LOI.Avatar
     hue = color?.hue or 0
     shade = color?.shade or 0
     LOI.palette()?.color hue, 6 + shade + relativeShade
+
+  dialogTextTransform: -> @constructor.DialogTextTransform.Auto
+  dialogDeliveryType: -> @constructor.DialogDeliveryType.Saying

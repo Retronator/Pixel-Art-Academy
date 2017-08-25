@@ -1,6 +1,6 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.landsofillusions-components-chaptertitle
+.landsofillusions-components-storylinetitle
   cursor pointer
   text-align center
 
@@ -14,7 +14,7 @@
         absolute-cover()
         background rgba(atariGrey(0), 0.2)
 
-  .episode-title
+  .storyline-header
   .call-to-action
     position absolute
     left 0
@@ -23,27 +23,30 @@
     color atariOrange(5)
     text-shadow 0 2rem 3rem rgba(atariGrey(0), 0.5)
 
-  .episode-title
+  .storyline-header
     bottom 150rem
+
+    .pixel-art-academy
+      acme-9()
 
     .to-be-continued
       display block
       margin 10rem 0 5rem
       text-transform uppercase
 
-  .chapter-title-area
+  .storyline-title-area
     position absolute
     top 60rem
     left 0
     width 100%
 
-    .chapter-title
+    .storyline-title
       display inline-block
       position relative
       height 120rem
       padding-top 37rem
       color atariOrange(6)
-      background-image image('/landsofillusions/components/chaptertitle/banner-middle.png')
+      background-image image('/landsofillusions/components/storylinetitle/banner-middle.png')
       background-repeat repeat-x
 
       &::before
@@ -58,11 +61,11 @@
 
       &::before
         right 100%
-        background-image image('/landsofillusions/components/chaptertitle/banner-left.png')
+        background-image image('/landsofillusions/components/storylinetitle/banner-left.png')
 
       &::after
         left 100%
-        background-image image('/landsofillusions/components/chaptertitle/banner-right.png')
+        background-image image('/landsofillusions/components/storylinetitle/banner-right.png')
 
       .heading
         display block
@@ -70,7 +73,7 @@
         adventure()
         pixel-text-outline atariRed(1)
 
-      .chapter-name
+      .title
         display block
         padding 0 3rem 0 4rem
         kyrou-9()
@@ -85,7 +88,7 @@
       text-transform uppercase
 
     .follow
-      .return
+      .patreon
         cursor pointer
         text-decoration none
         border-bottom 1rem solid atariOrange(5)

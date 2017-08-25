@@ -71,8 +71,8 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Section
     _.every conditions
 
   showChapterTitle: (options = {}) ->
-    # Create new chapter title.
-    chapterTitle = new LOI.Components.ChapterTitle _.extend {}, options,
+    # Create new storyline title.
+    chapterTitle = new LOI.Components.StorylineTitle _.extend {}, options,
       chapter: @
 
     LOI.adventure.showActivatableModalDialog
