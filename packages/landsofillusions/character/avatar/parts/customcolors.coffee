@@ -9,7 +9,8 @@ class LOI.Character.Avatar.Parts.CustomColors extends LOI.Character.Part
       # We have to clone existing material data because the parent sends the same object to multiple parts.
       materialsData = _.extend {}, existingMaterialData?()
 
-      customColorsProperty = _.find @properties, (property) => property.options.type is 'CustomColor'
+      customColorsType = LOI.Character.Part.Types.Avatar.Outfit.CustomColor.options.type
+      customColorsProperty = _.find @properties, (property) => property.options.type is customColorsType
 
       return unless customColorsFields = customColorsProperty.options.dataLocation()?.data()?.fields
 
@@ -20,8 +21,8 @@ class LOI.Character.Avatar.Parts.CustomColors extends LOI.Character.Part
         continue unless nameField?.value
 
         materialsData[nameField.value] =
-          ramp: colorField.node.fields.hue.value
-          shade: colorField.node.fields.shade.value
+          ramp: colorField.node.fields.hue?.value
+          shade: colorField.node.fields.shade?.value
 
       materialsData
 

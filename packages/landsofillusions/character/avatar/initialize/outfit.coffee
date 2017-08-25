@@ -8,13 +8,13 @@ LOI.Character.Part.registerClasses
       properties:
         articles: new LOI.Character.Part.Property.Array
           name: 'articles'
-          type: 'OutfitArticle'
+          type: 'Avatar.Outfit.Article'
 
 LOI.Character.Part.registerClasses
   Avatar:
     Outfit:
       Article: new LOI.Character.Avatar.Parts.CustomColors
-        type: 'Avatar.Outfit.OutfitArticle'
+        type: 'Avatar.Outfit.Article'
         name: 'article'
         properties:
           parts: new LOI.Character.Part.Property.Array

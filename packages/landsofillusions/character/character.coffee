@@ -48,6 +48,7 @@ class LOI.Character extends AM.Document
   @removeUser: @method 'removeUser'
 
   @updateName: @method 'updateName'
+  @updatePronouns: @method 'updatePronouns'
   @updateColor: @method 'updateColor'
   @updateAvatarBody: @method 'updateAvatarBody'
   @updateAvatarOutfit: @method 'updateAvatarOutfit'

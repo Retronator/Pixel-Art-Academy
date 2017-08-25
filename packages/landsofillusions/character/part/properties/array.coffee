@@ -46,6 +46,7 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
             if partClass = LOI.Character.Part.getClassForType partData.type
               part = partClass.create
                 dataLocation: partDataLocation
+                parent: @
 
           # Add the _id field so that foreach knows to reuse/recreate the field.
           part._id = Random.id() if part

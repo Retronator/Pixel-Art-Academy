@@ -25,9 +25,8 @@ LOI.Character.removeUser.method (characterId) ->
     $set:
       user: null
   
-LOI.Character.updateName.method (characterId, nameField, language, name) ->
+LOI.Character.updateName.method (characterId, language, name) ->
   check characterId, Match.DocumentId
-  check nameField, Match.OneOf 'fullName', 'shortName'
   check name, String
 
   LOI.Authorize.player()
@@ -37,18 +36,18 @@ LOI.Character.updateName.method (characterId, nameField, language, name) ->
   character = LOI.Character.documents.findOne characterId
 
   # If name is not present, but we're also trying to set an empty name, there's nothing to do.
-  return unless character.avatar?[nameField] or name
+  return unless character.avatar?.fullName or name
 
   # Create the translation if it's not.
-  if character.avatar?[nameField]
-    translationId = character.avatar[nameField]._id
+  if character.avatar?.fullName
+    translationId = character.avatar.fullName._id
 
   else
     translationId = AB.Translation.documents.insert {}
 
     LOI.Character.documents.update characterId,
       $set:
-        "avatar.#{nameField}._id": translationId
+        "avatar.fullName._id": translationId
 
   # If we have a name, update the translation, otherwise delete it (default will be used).
   if name
@@ -67,9 +66,20 @@ LOI.Character.updateName.method (characterId, nameField, language, name) ->
     unless translation.translations.best.text
       LOI.Character.documents.update characterId,
         $unset:
-          "avatar.#{nameField}": true
+          "avatar.fullName": true
 
       AB.Translation._remove translationId
+
+LOI.Character.updatePronouns.method (characterId, pronouns) ->
+  check characterId, Match.DocumentId
+  check pronouns, Match.Enumeration String, LOI.Avatar.Pronouns
+
+  LOI.Authorize.player()
+  LOI.Authorize.characterAction characterId
+
+  LOI.Character.documents.update characterId,
+    $set:
+      'avatar.pronouns': pronouns
 
 LOI.Character.updateColor.method (characterId, hue, shade) ->
   check characterId, Match.DocumentId

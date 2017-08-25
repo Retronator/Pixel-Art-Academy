@@ -9,24 +9,26 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
 
     @renderers = []
 
-    for property in @options.part.properties
+    bodyPartType = (partName) => LOI.Character.Part.Types.Avatar.Body[partName].options.type
+
+    for propertyName, property of @options.part.properties
       switch property.options.type
-        when 'Head'
+        when bodyPartType 'Head'
           @headRenderer = property.part.createRenderer @engineOptions
           @renderers.push @headRenderer
 
-        when 'Torso'
+        when bodyPartType 'Torso'
           @torsoRenderer = property.part.createRenderer @engineOptions
           @renderers.push @torsoRenderer
 
-        when 'Legs'
+        when bodyPartType 'Legs'
           @leftLegRenderer = property.part.createRenderer @engineOptions
           @rightLegRenderer = property.part.createRenderer @engineOptions, flippedHorizontal: true
           @rightLegRenderer._flipHorizontal = true
           @renderers.push @leftLegRenderer
           @renderers.push @rightLegRenderer
 
-        when 'Arms'
+        when bodyPartType 'Arms'
           @leftArmRenderer = property.part.createRenderer @engineOptions
           @rightArmRenderer = property.part.createRenderer @engineOptions, flippedHorizontal: true
           @rightArmRenderer._flipHorizontal = true

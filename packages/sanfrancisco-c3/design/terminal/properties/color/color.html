@@ -10,7 +10,9 @@
       <div class="name">
         shade
       </div>
-      {{> SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches shades}}
+      {{#if hueIsSelected}}
+        {{> SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches shades}}
+      {{/if}}
     </div>
   </div>
 </template>

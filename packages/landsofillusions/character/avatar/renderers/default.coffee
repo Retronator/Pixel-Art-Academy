@@ -16,7 +16,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     @renderers = new ComputedField =>
       renderers = []
 
-      for property in @options.part.properties
+      for propertyName, property of @options.part.properties
         if property instanceof LOI.Character.Part.Property.OneOf
           renderer = property.part.createRenderer @engineOptions, propertyRendererOptions
           renderers.push renderer if renderer

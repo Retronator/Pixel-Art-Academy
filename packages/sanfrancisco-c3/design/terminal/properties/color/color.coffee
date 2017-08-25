@@ -27,9 +27,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
         hues.purple
         hues.magenta
       ]
-      defaultHue: hues.grey
       shades: [1, 2, 3, 4, 5, 6, 7, 8]
-      defaultShade: 6
       huePreviewShade: 4
 
     Skin:
@@ -52,9 +50,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
         hues.magenta
         hues.grey
       ]
-      defaultHue: hues.peach
       shades: [2, 3, 4, 5, 6, 7, 8]
-      defaultShade: 4
       huePreviewShade: 4
 
   onCreated: ->
@@ -68,24 +64,10 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
     @colors ?= @constructor.Presets.Default
 
     @selectedHue = new ComputedField =>
-      # Try to load from property data.
-      colorNode = @property.options.dataLocation()
-      hue = colorNode? 'hue'
-
-      # Compare for existence since hue can be 0.
-      return hue if hue?
-
-      @colors.defaultHue or 0
+      @property.hue()
 
     @selectedShade = new ComputedField =>
-      # Try to load from property data.
-      colorNode = @property.options.dataLocation()
-      shade = colorNode? 'shade'
-
-      # Compare for existence since shade can be 0.
-      return shade if shade?
-
-      @colors.defaultShade or 0
+      @property.shade()
 
     @pageNumber = {}
     @pagesCount = {}
@@ -161,6 +143,9 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
       @property.options.dataLocation
         hue: selectedHue
         shade: value
+
+  hueIsSelected: ->
+    @selectedHue()?
 
   # Components
 

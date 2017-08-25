@@ -21,6 +21,9 @@ LOI.Character.Part.registerClasses
         skin: new LOI.Character.Avatar.Properties.Color
           name: 'skin'
           colorsPresetName: 'Skin'
+          defaults:
+            hue: 3
+            shade: 4
       renderer: new LOI.Character.Avatar.Renderers.Body
         origin:
           landmark: 'navel'

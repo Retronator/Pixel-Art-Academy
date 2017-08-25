@@ -28,21 +28,10 @@ class C3.Design.Terminal.Character extends AM.Component
       placeholderText: => LOI.Character.Avatar.noNameTranslation()
       placeholderInTargetLanguage: true
       onTranslationInserted: (languageRegion, value) =>
-        LOI.Character.updateName @characterId(), 'fullName', languageRegion, value
+        LOI.Character.updateName @characterId(), languageRegion, value
 
       onTranslationUpdated: (languageRegion, value) =>
-        LOI.Character.updateName @characterId(), 'fullName', languageRegion, value
-
-        # Return true to prevent the default update to be executed.
-        true
-
-    @shortNameInput = new LOI.Components.TranslationInput _.extend {}, nameInputOptions,
-      placeholderText: => @character().avatar.shortName()
-      onTranslationInserted: (languageRegion, value) =>
-        LOI.Character.updateName @characterId(), 'shortName', languageRegion, value
-
-      onTranslationUpdated: (languageRegion, value) =>
-        LOI.Character.updateName @characterId(), 'shortName', languageRegion, value
+        LOI.Character.updateName @characterId(), languageRegion, value
 
         # Return true to prevent the default update to be executed.
         true
@@ -52,9 +41,6 @@ class C3.Design.Terminal.Character extends AM.Component
 
   renderFullNameInput: ->
     @fullNameInput.renderComponent @currentComponent()
-
-  renderShortNameInput: ->
-    @shortNameInput.renderComponent @currentComponent()
 
   dialogPreviewStyle: ->
     # Set the color to character's color.
@@ -143,3 +129,28 @@ class C3.Design.Terminal.Character extends AM.Component
   onClickOutfitPart: (event) ->
     @terminal.screens.avatarPart.pushPart @character().avatar.outfit
     @terminal.switchToScreen @terminal.screens.avatarPart
+
+  # Components
+
+  class @Pronouns extends AM.DataInputComponent
+    @register 'SanFrancisco.C3.Design.Terminal.Character.Pronouns'
+
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      {value, name} for value, name of LOI.Avatar.Pronouns
+
+    load: ->
+      character = @data()
+      character.avatar.pronouns()
+
+    save: (value) ->
+      character = @data()
+      LOI.Character.updatePronouns character.id, value
+
+    _dataLocation: ->
+      person = @data()
+      person.properties[@property].options.dataLocation

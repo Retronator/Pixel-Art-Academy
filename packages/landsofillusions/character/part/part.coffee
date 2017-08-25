@@ -27,7 +27,7 @@ class LOI.Character.Part
       
       @properties[propertyName] = property.create
         dataLocation: propertyDataLocation
-        parentPart: @
+        parent: @
 
   destroy: ->
     property.destroy() for property in @properties
@@ -47,3 +47,13 @@ class LOI.Character.Part
     options = _.extend {}, options, part: @
     
     renderer.create options, engineOptions
+
+  ancestorPartOfType: (typeTemplate) ->
+    targetType = typeTemplate.options.type
+
+    parent = @options.parent
+
+    while parent and parent.options.type isnt targetType
+      parent = parent.options.parent
+
+    parent

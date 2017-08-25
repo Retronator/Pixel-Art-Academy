@@ -48,8 +48,8 @@
             <ul class="properties">
               {{#each partProperties}}
                 <li class="property">
-                  <p class="main-text avatar-item">
-                    <strong>{{capitalize options.name}}</strong>:
+                  <div class="avatar-item">
+                    {{capitalize options.name}}:
                     {{#if $is this.type 'oneOf'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.OneOf this}}
                     {{/if}}
@@ -65,7 +65,7 @@
                     {{#if $is this.type 'string'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.String this}}
                     {{/if}}
-                  </p>
+                  </div>
                 </li>
               {{/each}}
             </ul>
