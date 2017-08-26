@@ -21,7 +21,7 @@ LOI.Character.Part.registerClasses
         skin: new LOI.Character.Avatar.Properties.Color
           name: 'skin'
           colorsPresetName: 'Skin'
-          defaults:
+          default:
             hue: 3
             shade: 4
       renderer: new LOI.Character.Avatar.Renderers.Body
@@ -41,7 +41,10 @@ LOI.Character.Part.registerClasses
           shape: new LOI.Character.Part.Property.OneOf
             name: 'shape'
             type: 'Avatar.Body.HeadShape'
-        renderer: new LOI.Character.Avatar.Renderers.Default
+          eyes: new LOI.Character.Part.Property.OneOf
+            name: 'eyes'
+            type: 'Avatar.Body.Eyes'
+        renderer: new LOI.Character.Avatar.Renderers.Head
           origin:
             landmark: 'atlas'
     
@@ -54,7 +57,11 @@ LOI.Character.Part.registerClasses
         landmarks:
           atlas: new LOI.Character.Avatar.Landmark.Position
             name: 'atlas'
-    
+          eyeLeft: new LOI.Character.Avatar.Landmark.Position
+            name: 'eyeLeft'
+          eyeRight: new LOI.Character.Avatar.Landmark.Position
+            name: 'eyeRight'
+
       Neck: new LOI.Character.Part
         type: 'Avatar.Body.Neck'
         name: 'neck'
@@ -76,7 +83,38 @@ LOI.Character.Part.registerClasses
             name: 'atlas'
           suprasternalNotch: new LOI.Character.Avatar.Landmark.Position
             name: 'suprasternalNotch'
-    
+
+      Eyes: new LOI.Character.Part
+        type: 'Avatar.Body.Eyes'
+        name: 'eyes'
+        properties:
+          shape: new LOI.Character.Part.Property.OneOf
+            name: 'shape'
+            type: 'Avatar.Body.EyeShape'
+          iris: new LOI.Character.Avatar.Properties.Color
+            name: 'iris'
+            colorsPresetName: 'Default'
+            default:
+              hue: 0
+              shade: 4
+
+      EyeShape: new LOI.Character.Avatar.Parts.Shape
+        type: 'Avatar.Body.EyeShape'
+        name: 'eye shape'
+        renderer: new LOI.Character.Avatar.Renderers.Shape
+          origin:
+            landmark: 'eyeCenter'
+            x: 0
+            y: 0
+        materials:
+          iris: (part) ->
+            eyesPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Eyes
+            eyesPart.properties.iris
+
+        landmarks:
+          eyeCenter: new LOI.Character.Avatar.Landmark.Position
+            name: 'eyeCenter'
+
       Torso: new LOI.Character.Part
         type: 'Avatar.Body.Torso'
         name: 'torso'
@@ -84,16 +122,16 @@ LOI.Character.Part.registerClasses
           origin:
             landmark: 'navel'
         properties:
-          chest: new LOI.Character.Part.Property.OneOf
-            name: 'chest'
-            type: 'Avatar.Body.Chest'
-          abdomen: new LOI.Character.Part.Property.OneOf
-            name: 'abdomen'
-            type: 'Avatar.Body.Abdomen'
           groin: new LOI.Character.Part.Property.OneOf
             name: 'groin'
             type: 'Avatar.Body.Groin'
-    
+          abdomen: new LOI.Character.Part.Property.OneOf
+            name: 'abdomen'
+            type: 'Avatar.Body.Abdomen'
+          chest: new LOI.Character.Part.Property.OneOf
+            name: 'chest'
+            type: 'Avatar.Body.Chest'
+
       Chest: new LOI.Character.Part
         type: 'Avatar.Body.Chest'
         name: 'chest'
@@ -101,10 +139,17 @@ LOI.Character.Part.registerClasses
           shape: new LOI.Character.Part.Property.OneOf
             name: 'shape'
             type: 'Avatar.Body.ChestShape'
-          modifications: new LOI.Character.Part.Property.Array
-            name: 'additions'
-            types: ['Avatar.Body.ChestBodyFat', 'Avatar.Body.ChestMuscles', 'Avatar.Body.Breasts']
-    
+          breasts: new LOI.Character.Part.Property.OneOf
+            name: 'breasts'
+            type: 'Avatar.Body.Breasts'
+          breastsOffsetX: new LOI.Character.Part.Property.Integer
+            name: 'breasts horizontal offset'
+          breastsOffsetY: new LOI.Character.Part.Property.Integer
+            name: 'breasts vertical offset'
+        renderer: new LOI.Character.Avatar.Renderers.Chest
+          origin:
+            landmark: 'xiphoid'
+
       ChestShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.ChestShape'
         name: 'chest shape'
@@ -122,74 +167,59 @@ LOI.Character.Part.registerClasses
             name: 'shoulderLeft'
           shoulderRight: new LOI.Character.Avatar.Landmark.Position
             name: 'shoulderRight'
-    
-      ChestBodyFat: new LOI.Character.Avatar.Parts.SkinShape
-        type: 'Avatar.Body.ChestBodyFat'
-        name: 'chest body fat'
-    
-      ChestMuscles: new LOI.Character.Avatar.Parts.SkinShape
-        type: 'Avatar.Body.ChestMuscles'
-        name: 'chest muscles'
-    
+          breastLeft: new LOI.Character.Avatar.Landmark.Position
+            name: 'breastLeft'
+          breastRight: new LOI.Character.Avatar.Landmark.Position
+            name: 'breastRight'
+
       Breasts: new LOI.Character.Part
         type: 'Avatar.Body.Breasts'
         name: 'breasts'
         properties:
-          positionX: new LOI.Character.Part.Property.Integer
-            name: 'horizontal position'
-            min: -2
-            max: 2
-          positionY: new LOI.Character.Part.Property.Integer
-            name: 'vertical position'
-          scaleX: new LOI.Character.Part.Property.Integer
-            name: 'horizontal size'
-          scaleY: new LOI.Character.Part.Property.Integer
-            name: 'vertical size'
-          nippleX: new LOI.Character.Part.Property.Integer
-            name: 'horizontal position of nipples'
-          nippleY: new LOI.Character.Part.Property.Integer
-            name: 'vertical position of nipples'
+          nippleOffsetX: new LOI.Character.Part.Property.Integer
+            name: 'nipple horizontal offset'
+          nippleOffsetY: new LOI.Character.Part.Property.Integer
+            name: 'nipple vertical offset'
           nippleShade: new LOI.Character.Avatar.Properties.RelativeColorShade
-            name: 'shade of nipples'
-            baseColor: (hierarchy) ->
-              bodyNode = hierarchy.ancestorNodeWith (node) -> node.type is 'Body'
-              bodyNode.properties.skin
-          shape: new LOI.Character.Part.Property.OneOf
-            name: 'shape'
-            type: 'Avatar.Body.BreastsShape'
-        landmarks:
-          nipplePosition: new LOI.Character.Avatar.Landmark.Position
-          outerEdgePosition: new LOI.Character.Avatar.Landmark.Position
-          bottomEdgePosition: new LOI.Character.Avatar.Landmark.Position
-    
-      BreastsShape: new LOI.Character.Part
-        type: 'Avatar.Body.BreastsShape'
-        name: 'breasts shape'
-        properties:
+            name: 'nipple shade'
+            baseColor: (part) ->
+              bodyPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body
+              bodyPart.properties.skin
           topShape: new LOI.Character.Part.Property.OneOf
             name: 'top shape'
-            type: 'Avatar.Body.BreastsShapeTop'
+            type: 'Avatar.Body.BreastShapeTop'
           bottomShape: new LOI.Character.Part.Property.OneOf
             name: 'bottom shape'
-            type: 'Avatar.Body.BreastsShapeBottom'
-        landmarks:
-          centerPosition: new LOI.Character.Avatar.Landmark.Position
-          edgePosition: new LOI.Character.Avatar.Landmark.Position
-    
-      BreastsShapeTop: new LOI.Character.Avatar.Parts.SkinShape
-        type: 'Avatar.Body.BreastsShapeTop'
+            type: 'Avatar.Body.BreastShapeBottom'
+          nippleShape: new LOI.Character.Part.Property.OneOf
+            name: 'nipple shape'
+            type: 'Avatar.Body.NippleShape'
+
+      BreastShapeTop: new LOI.Character.Avatar.Parts.SkinShape
+        type: 'Avatar.Body.BreastShapeTop'
         name: 'breasts shape top'
         landmarks:
-          centerPosition: new LOI.Character.Avatar.Landmark.Position
-          edgePosition: new LOI.Character.Avatar.Landmark.Position
-    
-      BreastsShapeBottom: new LOI.Character.Avatar.Parts.SkinShape
-        type: 'Avatar.Body.BreastsShapeBottom'
+          breastCenter: new LOI.Character.Avatar.Landmark.Position
+            name: 'breastCenter'
+
+      BreastShapeBottom: new LOI.Character.Avatar.Parts.SkinShape
+        type: 'Avatar.Body.BreastShapeBottom'
         name: 'breasts shape bottom'
         landmarks:
-          centerPosition: new LOI.Character.Avatar.Landmark.Position
-          edgePosition: new LOI.Character.Avatar.Landmark.Position
-    
+          breastCenter: new LOI.Character.Avatar.Landmark.Position
+            name: 'breastCenter'
+
+      NippleShape: new LOI.Character.Avatar.Parts.Shape
+        type: 'Avatar.Body.NippleShape'
+        name: 'nipple shape'
+        landmarks:
+          breastCenter: new LOI.Character.Avatar.Landmark.Position
+            name: 'breastCenter'
+        materials:
+          nipple: (part) ->
+            breastsPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Breasts
+            breastsPart.properties.nippleShade
+
       Abdomen: new LOI.Character.Part
         type: 'Avatar.Body.Abdomen'
         name: 'abdomen'

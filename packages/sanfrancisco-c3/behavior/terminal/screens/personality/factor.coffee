@@ -33,6 +33,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
           factorPartClass = LOI.Character.Part.getClassForType factorsProperty.options.type
           factorPart = factorPartClass.create
             dataLocation: partDataLocation
+            parent: @
 
           # Set the factor index.
           factorPart.properties.index.options.dataLocation factor.options.type

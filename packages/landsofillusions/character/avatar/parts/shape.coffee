@@ -19,4 +19,20 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
       part: @
       frontSpriteId: @options.dataLocation.child('front.spriteId')
 
+    existingMaterialData = options.materialsData
+
+    # Add skin material.
+    for materialName, materialProvider of @options.materials
+      materialProperty = materialProvider @
+
+      do (materialName, materialProperty) ->
+        options.materialsData = new ComputedField =>
+          materialsData = existingMaterialData?() or {}
+
+          materialsData[materialName] =
+            ramp: materialProperty.hue()
+            shade: materialProperty.shade()
+
+          materialsData
+
     renderer.create options, engineOptions

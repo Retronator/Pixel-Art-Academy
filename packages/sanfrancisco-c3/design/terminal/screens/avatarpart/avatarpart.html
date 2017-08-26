@@ -59,6 +59,9 @@
                     {{#if $is this.type 'color'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.Color this}}
                     {{/if}}
+                    {{#if $is this.type 'relativeColorShade'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.RelativeColorShade this}}
+                    {{/if}}
                     {{#if $is this.type 'sprite'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.Sprite this}}
                     {{/if}}

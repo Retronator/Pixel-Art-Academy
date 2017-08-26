@@ -21,7 +21,7 @@ class LOI.Character.Avatar.Properties.Color extends LOI.Character.Part.Property
     # Compare for existence since hue can be 0.
     return hue if hue?
 
-    @options.defaults?.hue
+    @options.default?.hue
 
   shade: ->
     colorNode = @options.dataLocation()
@@ -30,4 +30,4 @@ class LOI.Character.Avatar.Properties.Color extends LOI.Character.Part.Property
     # Compare for existence since hue can be 0.
     return shade if shade?
 
-    @options.defaults?.shade
+    @options.default?.shade

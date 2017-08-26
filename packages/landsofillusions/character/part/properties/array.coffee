@@ -84,3 +84,4 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
     if partClass = LOI.Character.Part.getClassForType type
       partClass.create
         dataLocation: newDataLocation
+        parent: @

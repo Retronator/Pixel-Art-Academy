@@ -9,7 +9,7 @@ class AM.Hierarchy
     new @Field options
 
   @convertObjectToStoredValue: (value) ->
-    return unless value
+    return unless value?
 
     if value instanceof AM.Hierarchy.Template
       # We're converting a template and just store its ID.
