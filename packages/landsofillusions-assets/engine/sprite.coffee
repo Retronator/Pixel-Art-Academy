@@ -20,16 +20,16 @@ class LOI.Assets.Engine.Sprite
       @_canvas.width = spriteData.bounds.width unless @_canvas.width is spriteData.bounds.width
       @_canvas.height = spriteData.bounds.height unless @_canvas.height is spriteData.bounds.height
 
-      context = @_canvas.getContext '2d'
-      imageData = context.getImageData 0, 0, @_canvas.width, @_canvas.height
-      canvasPixelsCount = @_canvas.width * @_canvas.height
+      @_context = @_canvas.getContext '2d'
+      @_imageData = @_context.getImageData 0, 0, @_canvas.width, @_canvas.height
+      @_canvasPixelsCount = @_canvas.width * @_canvas.height
       
       # Clear the image buffer to transparent.
-      imageData.data.fill 0
+      @_imageData.data.fill 0
 
       # Build the depth buffer if needed.
-      unless @_depthBuffer?.length is canvasPixelsCount
-        @_depthBuffer = new Float32Array canvasPixelsCount
+      unless @_depthBuffer?.length is @_canvasPixelsCount
+        @_depthBuffer = new Float32Array @_canvasPixelsCount
 
       # Clear the depth buffer to smallest value.
       @_depthBuffer.fill Number.NEGATIVE_INFINITY
@@ -51,14 +51,15 @@ class LOI.Assets.Engine.Sprite
           # Find pixel index in the image buffer.
           x = pixel.x + layerOrigin.x - spriteData.bounds.x
           y = pixel.y + layerOrigin.y - spriteData.bounds.y
-          pixelIndex = (x + y * @_canvas.width) * 4
+          depthPixelIndex = x + y * @_canvas.width
+          pixelIndex = depthPixelIndex * 4
 
           # Cull by depth.
-          z = layerOrigin.z + pixel.z
-          continue if z < @_depthBuffer[pixelIndex]
+          z = layerOrigin.z + (pixel.z or 0)
+          continue if z < @_depthBuffer[depthPixelIndex]
           
           # Update depth buffer.
-          @_depthBuffer[pixelIndex] = z
+          @_depthBuffer[depthPixelIndex] = z
 
           # Determine the color.
           if visualizeNormals
@@ -170,12 +171,12 @@ class LOI.Assets.Engine.Sprite
             else
               destinationColor = sourceColor
 
-          imageData.data[pixelIndex] = destinationColor.r * 255
-          imageData.data[pixelIndex + 1] = destinationColor.g * 255
-          imageData.data[pixelIndex + 2] = destinationColor.b * 255
-          imageData.data[pixelIndex + 3] = 255
+          @_imageData.data[pixelIndex] = destinationColor.r * 255
+          @_imageData.data[pixelIndex + 1] = destinationColor.g * 255
+          @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
+          @_imageData.data[pixelIndex + 3] = 255
 
-          context.putImageData imageData, 0, 0
+          @_context.putImageData @_imageData, 0, 0
           @_imageCanvas @_canvas
 
   destroy: ->
@@ -189,5 +190,8 @@ class LOI.Assets.Engine.Sprite
     return unless imageCanvas = @_imageCanvas()
     return unless bounds = @options.spriteData()?.bounds
 
+    # Right now we're using canvas' drawing capabilities, without using our depth data. This is done for simplicity
+    # since we can let canvas' context deal with transformations and stuff. Eventually we'll want to move to either
+    # a custom drawing routine or upgrade to WebGL.
     context.imageSmoothingEnabled = false
     context.drawImage imageCanvas, bounds.x, bounds.y

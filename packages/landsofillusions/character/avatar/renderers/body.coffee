@@ -2,29 +2,14 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers.BodyPart
   _createRenderers: ->
-    for propertyName, property of @options.part.properties
-      switch property.options.type
-        when @_bodyPartType 'Head'
-          @headRenderer = property.part.createRenderer @engineOptions
-          @renderers.push @headRenderer
-
-        when @_bodyPartType 'Torso'
-          @torsoRenderer = property.part.createRenderer @engineOptions
-          @renderers.push @torsoRenderer
-
-        when @_bodyPartType 'Legs'
-          @leftLegRenderer = property.part.createRenderer @engineOptions
-          @rightLegRenderer = property.part.createRenderer @engineOptions, flippedHorizontal: true
-          @rightLegRenderer._flipHorizontal = true
-          @renderers.push @leftLegRenderer
-          @renderers.push @rightLegRenderer
-
-        when @_bodyPartType 'Arms'
-          @leftArmRenderer = property.part.createRenderer @engineOptions
-          @rightArmRenderer = property.part.createRenderer @engineOptions, flippedHorizontal: true
-          @rightArmRenderer._flipHorizontal = true
-          @renderers.push @leftArmRenderer
-          @renderers.push @rightArmRenderer
+    @leftArmRenderer = @_createRenderer 'arms'
+    @rightArmRenderer = @_createRenderer 'arms', flippedHorizontal: true
+    @rightArmRenderer._flipHorizontal = true
+    @torsoRenderer = @_createRenderer 'torso'
+    @headRenderer = @_createRenderer 'head'
+    @leftLegRenderer = @_createRenderer 'legs'
+    @rightLegRenderer = @_createRenderer 'legs', flippedHorizontal: true
+    @rightLegRenderer._flipHorizontal = true
 
   _placeRenderers: ->
     # Place the torso.
@@ -40,3 +25,21 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
     # Place the arms.
     @_placeRenderer @leftArmRenderer, 'shoulder', 'shoulderLeft'
     @_placeRenderer @rightArmRenderer, 'shoulder', 'shoulderRight'
+  
+  drawToContext: (context, options = {}) ->
+    # Draw the hair behind first.
+    context.save()
+
+    translation = _.defaults {}, @headRenderer._translation,
+      x: 0
+      y: 0
+
+    context.translate translation.x, translation.y
+
+    for renderer in @headRenderer.hairBehindRenderers
+      @headRenderer.drawRendererToContext renderer, context, options
+
+    context.restore()
+
+    # Draw the rest as usual.
+    super

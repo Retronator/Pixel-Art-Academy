@@ -44,9 +44,43 @@ LOI.Character.Part.registerClasses
           eyes: new LOI.Character.Part.Property.OneOf
             name: 'eyes'
             type: 'Avatar.Body.Eyes'
+          hair: new LOI.Character.Part.Property.Array
+            name: 'hair'
+            type: 'Avatar.Body.Hair'
+          hairBehind: new LOI.Character.Part.Property.Array
+            name: 'hair behind'
+            type: 'Avatar.Body.Hair'
         renderer: new LOI.Character.Avatar.Renderers.Head
           origin:
             landmark: 'atlas'
+
+      Hair: new LOI.Character.Part
+        type: 'Avatar.Body.Hair'
+        name: 'hair'
+        properties:
+          color: new LOI.Character.Avatar.Properties.Color
+            name: 'color'
+            colorsPresetName: 'Default'
+            default:
+              hue: 0
+              shade: 2
+          shapes: new LOI.Character.Part.Property.Array
+            name: 'shapes'
+            type: 'Avatar.Body.HairShape'
+
+      HairShape: new LOI.Character.Avatar.Parts.Shape
+        type: 'Avatar.Body.HairShape'
+        name: 'hair shape'
+        renderer: new LOI.Character.Avatar.Renderers.Shape
+          origin:
+            landmark: 'forehead'
+        materials:
+          hair: (part) ->
+            hairPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Hair
+            hairPart.properties.color
+        landmarks:
+          forehead: new LOI.Character.Avatar.Landmark.Position
+            name: 'forehead'
     
       HeadShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.HeadShape'
@@ -61,6 +95,8 @@ LOI.Character.Part.registerClasses
             name: 'eyeLeft'
           eyeRight: new LOI.Character.Avatar.Landmark.Position
             name: 'eyeRight'
+          forehead: new LOI.Character.Avatar.Landmark.Position
+            name: 'forehead'
 
       Neck: new LOI.Character.Part
         type: 'Avatar.Body.Neck'
@@ -110,7 +146,6 @@ LOI.Character.Part.registerClasses
           iris: (part) ->
             eyesPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Eyes
             eyesPart.properties.iris
-
         landmarks:
           eyeCenter: new LOI.Character.Avatar.Landmark.Position
             name: 'eyeCenter'

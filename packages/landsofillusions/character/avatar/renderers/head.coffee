@@ -2,23 +2,18 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers.BodyPart
   _createRenderers: ->
-    for propertyName, property of @options.part.properties
-      switch property.options.type
-        when @_bodyPartType 'Neck'
-          @neckRenderer = property.part.createRenderer @engineOptions
-          @renderers.push @neckRenderer
+    # We create hair-behind renderers separately, so they won't render together with the rest of the head.
+    @hairBehindRenderers = for part in @options.part.properties.hairBehind.parts()
+      part.createRenderer @engineOptions
 
-        when @_bodyPartType 'HeadShape'
-          @headShapeRenderer = property.part.createRenderer @engineOptions
-          @renderers.push @headShapeRenderer
+    # Create the rest of the renderers normally.
+    @neckRenderer = @_createRenderer 'neck'
+    @headShapeRenderer = @_createRenderer 'shape'
+    @leftEyeRenderer = @_createRenderer 'eyes'
+    @rightEyeRenderer = @_createRenderer 'eyes', flippedHorizontal: true
+    @rightEyeRenderer._flipHorizontal = true
+    @hairRenderers = @_createRenderer 'hair'
 
-        when @_bodyPartType 'Eyes'
-          @leftEyeRenderer = property.part.createRenderer @engineOptions
-          @rightEyeRenderer = property.part.createRenderer @engineOptions, flippedHorizontal: true
-          @rightEyeRenderer._flipHorizontal = true
-          @renderers.push @leftEyeRenderer
-          @renderers.push @rightEyeRenderer
-        
   _placeRenderers: ->
     # Place the neck.
     @_placeRenderer @neckRenderer, 'atlas', 'atlas'
@@ -29,3 +24,7 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     # Place the eyes.
     @_placeRenderer @leftEyeRenderer, 'eyeCenter', 'eyeLeft'
     @_placeRenderer @rightEyeRenderer, 'eyeCenter', 'eyeRight'
+
+    # Place the hair.
+    @_placeRenderer hairRenderer, 'forehead', 'forehead' for hairRenderer in @hairBehindRenderers
+    @_placeRenderer hairRenderer, 'forehead', 'forehead' for hairRenderer in @hairRenderers

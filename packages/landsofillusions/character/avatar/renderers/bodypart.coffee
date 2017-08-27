@@ -23,6 +23,22 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
 
       @_landmarks
 
+  _createRenderer: (propertyName, options) ->
+    property = @options.part.properties[propertyName]
+
+    if property.part
+      renderer = property.part.createRenderer @engineOptions, options
+      @renderers.push renderer
+
+      renderer
+
+    else if property.parts
+      for part in property.parts()
+        renderer = part.createRenderer @engineOptions, options
+        @renderers.push renderer
+
+        renderer
+
   _addLandmarks: (renderer) ->
     # Add all landmarks from this renderer.
     for rendererLandmarkName, rendererLandmark of renderer.landmarks()
@@ -50,17 +66,20 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     @landmarks()
 
     for renderer in @renderers
-      context.save()
+      @drawRendererToContext renderer, context, options
 
-      translation = _.defaults {}, renderer._translation,
-        x: 0
-        y: 0
+  drawRendererToContext: (renderer, context, options = {}) ->
+    context.save()
 
-      context.translate translation.x, translation.y
+    translation = _.defaults {}, renderer._translation,
+      x: 0
+      y: 0
 
-      if renderer._flipHorizontal
-        context.scale -1, 1
-        context.translate -1, 0
+    context.translate translation.x, translation.y
 
-      renderer.drawToContext context
-      context.restore()
+    if renderer._flipHorizontal
+      context.scale -1, 1
+      context.translate -1, 0
+
+    renderer.drawToContext context
+    context.restore()
