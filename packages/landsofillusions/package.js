@@ -318,8 +318,8 @@ Package.onUse(function(api) {
   api.addComponent('components/dialogs/dialog');
   
   api.addComponent('components/translationinput/translationinput');
-
   api.addUnstyledComponent('components/sprite/sprite');
+  api.addUnstyledComponent('components/computer/computer');
 
   // Typography
 

@@ -1,0 +1,30 @@
+<template name="LandsOfIllusions.Construct.Loading.TV.MainMenu">
+  <div class="landsofillusions-construct-loading-tv-mainmenu screen">
+    <h1 class="screen-title">Character Selection</h1>
+    <p class="main-text">
+      {{#if activatedCharacters}}
+        Select an existing character link or create a new one.
+      {{else}}
+        You control no characters yet. Create a new symbiotic link.
+      {{/if}}
+    </p>
+    <ul class="characters">
+      {{#each activatedCharacters}}
+        <li class="character">
+          <div class="avatar">
+            {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar}}
+          </div>
+          <div class="name">
+            {{avatar.fullName}}
+          </div>
+        </li>
+      {{/each}}
+      <li class="new-character">
+        <div class="name">
+          New character
+        </div>
+        <div class="plus">+</div>
+      </li>
+    </ul>
+  </div>
+</template>

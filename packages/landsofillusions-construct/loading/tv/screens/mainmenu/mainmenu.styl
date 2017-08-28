@@ -1,0 +1,42 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-construct-loading-tv-mainmenu
+  .characters
+    list-style none
+    padding 0
+    height 75rem
+    overflow-y auto
+
+    .character
+    .new-character
+      position relative
+      display inline-block
+      vertical-align top
+      width 75rem
+      height 75rem
+      margin-right 5rem
+      border 1rem solid atariGreen(4)
+      cursor pointer
+
+      .avatar
+        filter sepia(100%) saturate(200%) hue-rotate(80deg)
+
+      .name
+        padding 3rem
+        text-transform uppercase
+        text-align center
+
+      &:hover
+        border-color atariGreen(5)
+        color atariGreen(5)
+
+    .character
+      background image('/landsofillusions/construct/tv/preview-box.png') 0 0 / 100% 100%
+
+    .new-character
+      .plus
+        position absolute
+        top 35rem
+        left 0
+        right 0
+        text-align center

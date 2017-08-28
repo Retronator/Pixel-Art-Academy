@@ -1,23 +1,5 @@
 <template name="SanFrancisco.C3.Items.Terminal">
   <div class="sanfrancisco-c3-items-terminal">
-    {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
-    {{#LandsOfIllusions.Components.Overlay}}
-      <div class="display">
-        {{> Render currentScreen}}
-        {{#if activeDialog}}
-          {{#with activeDialog}}
-            <div class="dialog-area">
-              <div class="dialog">
-                <div class="message">{{message}}</div>
-                <div class="actions">
-                  <button class="action-button confirm-button {{confirmButtonClass}}">{{confirmButtonText}}</button>
-                  <button class="action-button cancel-button {{cancelButtonClass}}">{{cancelButtonText}}</button>
-                </div>
-              </div>
-            </div>
-          {{/with}}
-        {{/if}}
-      </div>
-    {{/LandsOfIllusions.Components.Overlay}}
+    {{> LandsOfIllusions.Components.Computer}}
   </div>
 </template>

@@ -23,12 +23,6 @@ class C3.Design.Terminal extends C3.Items.Terminal
 
   @initialize()
 
-  onDeactivate: (finishedDeactivatingCallback) ->
-    Meteor.setTimeout =>
-      finishedDeactivatingCallback()
-    ,
-      500
-
   onCreated: ->
     super
 

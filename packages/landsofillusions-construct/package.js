@@ -31,5 +31,8 @@ Package.onUse(function(api) {
 
   api.addFile('loading/loading');
   api.addStyle('loading/loading');
+
   api.addComponent('loading/tv/tv');
+  api.addComponent('loading/tv/screens/mainmenu/mainmenu');
+
 });

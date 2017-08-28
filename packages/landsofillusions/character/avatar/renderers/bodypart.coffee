@@ -53,8 +53,14 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     return unless @_landmarks[landmarkName] and rendererLandmarks?[rendererLandmarkName]
 
     renderer._translation =
-      x: @_landmarks[landmarkName].x - rendererLandmarks[rendererLandmarkName].x
+      x: @_landmarks[landmarkName].x
       y: @_landmarks[landmarkName].y - rendererLandmarks[rendererLandmarkName].y
+
+    if renderer._flipHorizontal
+      renderer._translation.x += rendererLandmarks[rendererLandmarkName].x + 1
+
+    else
+      renderer._translation.x -= rendererLandmarks[rendererLandmarkName].x
 
     @_addLandmarks renderer
 
@@ -79,7 +85,6 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
 
     if renderer._flipHorizontal
       context.scale -1, 1
-      context.translate -1, 0
 
     renderer.drawToContext context
     context.restore()

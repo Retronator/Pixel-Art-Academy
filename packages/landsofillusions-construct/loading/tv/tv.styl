@@ -3,3 +3,80 @@
 .landsofillusions-construct-loading-tv
   position fixed
   z-index 2
+
+  .display
+    position absolute
+    top 11rem
+    left 13rem
+    width 293rem
+    height 218rem
+    padding 20rem
+    color atariGreen(4)
+
+    &::after
+      content ''
+      absolute-cover()
+      z-index 1
+      background image('/interface/scanline/x2.png') 0 0
+      opacity 0.5
+      pointer-events none
+
+    .screen-title
+      margin 0 0 10rem 0
+      acme-9()
+      font-weight bold
+      color atariGreen(5)
+
+    .section-title
+      margin 4rem 0 6rem 0
+      acme-7()
+      font-weight normal
+      color atariGreen(5)
+
+    .main-text
+      margin 4rem 0
+
+      strong
+        font-weight normal
+        text-transform uppercase
+
+    .action-button
+      position relative
+      padding 2rem 4rem
+      border none
+      background atariGreen(3)
+      font inherit
+      color atariGrey(1)
+      text-transform uppercase
+      text-align center
+
+      &:hover
+      &:focus
+        background atariGreen(4)
+        outline none
+
+  .fade
+    fixed-cover()
+    z-index 1
+    transition background 4s
+    background rgba(255,255,255,0)
+    pointer-events none
+
+    &.visible
+      background rgba(255,255,255,1)
+
+  .landsofillusions-components-overlay
+    .background
+      background image('/landsofillusions/construct/tv/tv.png') 50% 50% / 480rem 360rem
+
+html.scale-3
+  .landsofillusions-construct-loading-tv
+    .display
+      &::after
+        background image('/interface/scanline/x3.png') 0 1px
+
+html.scale-4
+  .landsofillusions-construct-loading-tv
+    .display
+      &::after
+        background image('/interface/scanline/x4.png')
