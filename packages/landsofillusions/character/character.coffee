@@ -12,10 +12,7 @@ class LOI.Character extends AM.Document
   # ownerName: public name of the owner of this character
   # displayName: auto-generated best translation of the full name of this character for debugging (do not use in the game!).
   # avatar: information for the representation of the character
-  #   fullName: how the character is fully named
-  #     _id
-  #     translations
-  #   shortName: how the character can be quickly referred to
+  #   fullName: how the character is named
   #     _id
   #     translations
   #   pronouns: enumeration of the gender of pronouns used by the character (Feminine/Masculine/Neutral).

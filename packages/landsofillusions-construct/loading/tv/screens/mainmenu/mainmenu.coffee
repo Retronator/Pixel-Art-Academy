@@ -40,11 +40,5 @@ class LOI.Construct.Loading.TV.MainMenu extends AM.Component
     @tv.fadeDeactivate =>
       LOI.adventure.loadCharacter characterInstance.id
 
-  onClickNewCharacterButton: (event) ->
-    LOI.Character.insert (error, characterId) =>
-      if error
-        console.error error
-        return
-
-      @tv.screens.character.setCharacterId characterId
-      @tv.switchToScreen @tv.screens.character
+  onClickNewCharacter: (event) ->
+    @tv.switchToScreen @tv.screens.newLink

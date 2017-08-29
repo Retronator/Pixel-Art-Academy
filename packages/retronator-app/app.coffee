@@ -34,6 +34,7 @@ class Retronator.App extends Artificial.Base.App
     new PixelArtDatabase
     new PixelArtDatabase.PixelDailies
     new LOI.Assets
+    new LOI.Construct.Pages
 
     # Add Lands of Illusions last so it captures all remaining URLs.
     new LOI

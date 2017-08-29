@@ -6,6 +6,7 @@
     padding 0
     height 75rem
     overflow-y auto
+    animation 60s step-end infinite glitch-opacity
 
     .character
     .new-character
@@ -25,10 +26,22 @@
         padding 3rem
         text-transform uppercase
         text-align center
+        animation 60s infinite glitch-skew, 60s step-end infinite glitch-opacity
+        color atariGreen(4)
 
       &:hover
         border-color atariGreen(5)
         color atariGreen(5)
+
+        .name
+          color atariGreen(5)
+
+      &::after
+        content ''
+        absolute-cover()
+        z-index -1
+        animation 60s infinite glitch-characters
+        border 1rem solid atariGreen(2)
 
     .character
       background image('/landsofillusions/construct/tv/preview-box.png') 0 0 / 100% 100%
@@ -40,3 +53,22 @@
         left 0
         right 0
         text-align center
+        animation 60s infinite glitch-skew, 60s step-end infinite glitch-opacity
+
+@keyframes glitch-characters
+  time = 0
+  for i in 1..10
+    time += math(0, 'random') * 20
+    {1% * (time)}
+      transform translateX(0)
+      border-width 0
+      filter blur(0)
+    {1% * time + 0.2}
+      translate = math(0, 'random') - 0.5
+      transform translateX(1rem * translate)
+      border-width 0 1rem
+      filter blur(0.5rem)
+    {1% * (time + 0.4)}
+      transform translateX(0)
+      border-width 0
+      filter blur(0)

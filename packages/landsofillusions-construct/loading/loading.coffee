@@ -32,5 +32,3 @@ class LOI.Construct.Loading extends LOI.Adventure.Location
   things: -> [
     LOI.Construct.Loading.TV
   ]
-
-  exits: ->

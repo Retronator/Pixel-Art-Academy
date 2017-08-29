@@ -34,5 +34,17 @@ Package.onUse(function(api) {
 
   api.addComponent('loading/tv/tv');
   api.addComponent('loading/tv/screens/mainmenu/mainmenu');
+  api.addComponent('loading/tv/screens/newlink/newlink');
+  
+  // Pre-made character
+  
+  api.addFile('loading/premadecharacter/premadecharacter');
+  api.addFile('loading/premadecharacter/methods');
+  api.addServerFile('loading/premadecharacter/subscriptions');
+
+  api.addFile('pages/pages');
+  api.addUnstyledComponent('pages/admin/admin');
+  api.addUnstyledComponent('pages/admin/premadecharacters/premadecharacters');
+  api.addServerFile('pages/admin/premadecharacters/methods-server');
 
 });

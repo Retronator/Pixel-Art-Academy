@@ -11,7 +11,7 @@
     width 293rem
     height 218rem
     padding 20rem
-    color atariGreen(4)
+    color atariGreen(3)
 
     &::after
       content ''
@@ -20,6 +20,9 @@
       background image('/interface/scanline/x2.png') 0 0
       opacity 0.5
       pointer-events none
+
+    .screen
+      filter drop-shadow(0 0 2rem atariGreen(2))
 
     .screen-title
       margin 0 0 10rem 0
@@ -46,7 +49,7 @@
       border none
       background atariGreen(3)
       font inherit
-      color atariGrey(1)
+      color atariGreen(1)
       text-transform uppercase
       text-align center
 
@@ -54,6 +57,9 @@
       &:focus
         background atariGreen(4)
         outline none
+
+  .screen > *
+    animation 60s infinite glitch-skew, 60s step-end infinite glitch-opacity
 
   .fade
     fixed-cover()
@@ -80,3 +86,27 @@ html.scale-4
     .display
       &::after
         background image('/interface/scanline/x4.png')
+
+@keyframes glitch-skew
+  time = 0
+  for i in 1..10
+    time += math(0, 'random') * 20
+    {1% * (time)}
+      transform skew(0)
+      filter blur(0)
+    {1% * time + 0.2}
+      skewDegrees = floor(math(0, 'random') * 20 - 10)
+      transform skew(1deg * skewDegrees)
+      filter blur(0.5rem)
+    {1% * (time + 0.4)}
+      transform skew(0)
+      filter blur(0)
+
+@keyframes glitch-opacity
+  time = 0
+  for i in 1..10
+    time += math(0, 'random') * 20
+    {1% * (time)}
+      opacity 0.2 * (4 + math(0, 'random'))
+    {1% * time + 0.2}
+      opacity 1

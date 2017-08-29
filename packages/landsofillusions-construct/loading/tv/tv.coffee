@@ -28,6 +28,7 @@ class LOI.Construct.Loading.TV extends LOI.Components.Computer
 
     @screens =
       mainMenu: new @constructor.MainMenu @
+      newLink: new @constructor.NewLink @
 
     @switchToScreen @screens.mainMenu
 
@@ -40,8 +41,8 @@ class LOI.Construct.Loading.TV extends LOI.Components.Computer
     @_fade true
 
     Meteor.setTimeout =>
+      LOI.adventure.deactivateCurrentItem()
       onComplete?()
-      @deactivate()
     ,
       4000
 

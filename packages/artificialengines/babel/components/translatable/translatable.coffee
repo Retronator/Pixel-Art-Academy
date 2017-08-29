@@ -127,8 +127,10 @@ class AB.Components.Translatable extends AM.Component
         # Find translation document in the data context of the parent.
         @parentDataWith (data) => data instanceof AB.Translation
 
+      translatableComponent = @ancestorComponentOfType AB.Components.Translatable
+
       @translatableInput = new AB.Components.Translatable.Input
-        type: AB.Components.Translatable.Types.Text
+        type: translatableComponent.options.type
         translation: => @translation()
         languageRegion: => @languageRegion()
 
@@ -220,9 +222,11 @@ class AB.Components.Translatable extends AM.Component
         # Find translation document in the data context of the parent.
         @parentDataWith (data) => data instanceof AB.Translation
 
+      translatableComponent = @ancestorComponentOfType AB.Components.Translatable
+
       # Replace translatable input with one that will create the translation after first entry.
       @translatableInput = new AB.Components.Translatable.NewInput
-        type: AB.Components.Translatable.Types.Text
+        type: translatableComponent.options.type
         translation: => @translation()
         languageRegion: => @languageRegion()
 

@@ -1,0 +1,28 @@
+<template name="LandsOfIllusions.Construct.Loading.TV.NewLink">
+  <div class="landsofillusions-construct-loading-tv-newlink screen">
+    {{#with currentCharacter}}
+      <h1 class="screen-title name">
+        {{avatar.fullName}}
+      </h1>
+      <div class="avatar">
+        {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar}}
+      </div>
+    {{/with}}
+    <p class="bio">
+      {{#with currentPreMadeCharacter}}
+        {{> t9n bio}}
+      {{/with}}
+    </p>
+    <h2 class="section-title">Personality</h2>
+    <p class="personality">
+      Creative, Brisk, Intuitive, Organized,
+      Competitive, Advanced
+    </p>
+    <div class="controls">
+      <button class="clone-character-button action-button">Take</button>
+      <button class="cancel-button action-button">Back</button>
+      <button class="previous-button action-button">←</button>
+      <button class="next-button action-button">→</button>
+    </div>
+  </div>
+</template>

@@ -63,16 +63,16 @@ class LOI.Adventure extends LOI.Adventure
       true
 
     @currentRegionId = new ComputedField =>
-      @currentLocation().region().id()
+      @currentLocation()?.region()?.id()
     ,
       true
 
     @currentRegion = new ComputedField =>
       # Make sure the location actually matches the location ID (otherwise we might be in the middle of a change).
       # This function could hit first if player permissions are changing due to user/character change.
-      return unless @currentLocation().id() is @currentLocationId()
+      return unless @currentLocation()?.id() is @currentLocationId()
 
-      currentRegionClass = LOI.Adventure.Region.getClassForId @currentRegionId()
+      return unless currentRegionClass = LOI.Adventure.Region.getClassForId @currentRegionId()
 
       # Check that the player can be in this region.
       playerHasPermission = currentRegionClass.playerHasPermission()

@@ -15,19 +15,25 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   onCreated: ->
     super
 
-    LOI.Character.forCurrentUser.subscribe @
+    LOI.Character.activatedForCurrentUser.subscribe @
+
+    @selectedCharacterId = new ReactiveField null
+
+    @selectedCharacter = new ComputedField =>
+      LOI.Character.documents.findOne @selectedCharacterId()
 
   characters: ->
-    user = RA.User.documents.findOne Meteor.userId(),
-      fields:
-        characters: 1
+    user = Retronator.user()
+    return unless user?.characters
 
-    return unless characters = user?.characters
-    
-    for character in characters
+    activatedCharacters = _.filter user.characters, (character) =>
+      character = LOI.Character.documents.findOne character._id
+      character?.activated
+
+    for character in activatedCharacters
       character.refresh()
-      
-    characters
+
+    activatedCharacters
 
   emptyLines: ->
     charactersCount = @characters()?.length or 0
@@ -39,8 +45,9 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   dialogPreviewStyle: ->
     # Set the color to character's color.
     character = @currentData()
+    color = LOI.Avatar.colorObject character.avatar.color
 
-    color: "##{character.avatar.colorObject()?.getHexString()}"
+    color: "##{color.getHexString()}"
 
   showLoadButtonClass: ->
     character = @currentData()
@@ -61,10 +68,10 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
 
   onClickLoadCharacter: (event) ->
     characterId = @currentData()._id
-    LOI.switchCharacter characterId
+    @selectedCharacterId characterId
 
   onClickUnloadCharacter: (event) ->
-    LOI.switchCharacter null
+    @selectedCharacterId null
 
   class @CharacterColorHue extends AM.DataInputComponent
     @register 'LandsOfIllusions.Components.Account.Characters.CharacterColorHue'
@@ -80,11 +87,11 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       value: rampIndex, name: ramp.name for ramp, rampIndex in palette.ramps
 
     load: ->
-      @data()?.document()?.avatar?.color?.hue or 0
+      @data()?.avatar?.color?.hue or 0
 
     save: (value) ->
       # Change the hue part of color.
-      LOI.Character.updateColor @data().document()._id, parseInt value
+      LOI.Character.updateColor @data()._id, parseInt value
 
     placeholder: ->
       @data()?.displayName()
@@ -101,11 +108,11 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       value: shadeIndex - 2, name: name for name, shadeIndex in ['darkest', 'darker', 'normal', 'lighter', 'lightest']
 
     load: ->
-      @data()?.document()?.avatar?.color?.shade or 0
+      @data()?.avatar?.color?.shade or 0
 
     save: (value) ->
       # Change the shade part of color.
-      LOI.Character.updateColor @data().document()._id, null, parseInt value
+      LOI.Character.updateColor @data()._id, null, parseInt value
 
     placeholder: ->
       @data()?.displayName()
