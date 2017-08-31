@@ -1,6 +1,6 @@
 <template name="LandsOfIllusions.Components.Account">
   {{#unless deactivated}}
-    <div class="landsofillusions-components-account">
+    <div class="landsofillusions-components-account {{noBackgroundClass}}">
       {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
       {{#LandsOfIllusions.Components.Overlay}}
         <div class="account-file {{onCoverClass}}">

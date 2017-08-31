@@ -29,7 +29,9 @@ class LOI.Construct.Loading.TV.NewLink extends AM.Component
       return unless characterDocument = LOI.Character.documents.findOne characterId
       
       new LOI.Character.Instance characterDocument._id
-
+      
+    @cloningCharacter = new ReactiveField false
+    
   backButtonCallback: ->
     # We return to main menu.
     @_returnToMenu()
@@ -40,16 +42,28 @@ class LOI.Construct.Loading.TV.NewLink extends AM.Component
   _returnToMenu: ->
     @tv.switchToScreen @tv.screens.mainMenu
 
+  noName: ->
+    LOI.Character.Avatar.noNameTranslation()
+
   events: ->
     super.concat
       'click .clone-character-button': @onClickCloneCharacterButton
       'click .cancel-button': @onClickCancelButton
       'click .previous-button': @onClickPreviousButton
       'click .next-button': @onClickNextButton
+      'click .confirm-clone-button': @onClickConfirmCloneButton
+      'click .cancel-clone-button': @onClickCancelCloneButton
 
   onClickCloneCharacterButton: (event) ->
-    LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser @currentPreMadeCharacter()._id
+    @cloningCharacter true
+
+  onClickConfirmCloneButton: (event) ->
+    name = @$('.name-input').val()
+    LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser @currentPreMadeCharacter()._id, name
     @_returnToMenu()
+
+  onClickCancelCloneButton: (event) ->
+    @cloningCharacter false
 
   onClickCancelButton: (event) ->
     @_returnToMenu()

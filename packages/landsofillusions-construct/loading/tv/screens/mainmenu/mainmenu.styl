@@ -3,16 +3,17 @@
 .landsofillusions-construct-loading-tv-mainmenu
   .characters
     list-style none
+    display flex
     padding 0
     height 75rem
-    overflow-y auto
-    animation 60s step-end infinite glitch-opacity
+    overflow-x hidden
+    animation 60s step-end infinite glitch-opacity !important
 
     .character
     .new-character
       position relative
-      display inline-block
       vertical-align top
+      flex-shrink 0
       width 75rem
       height 75rem
       margin-right 5rem
@@ -46,6 +47,11 @@
     .character
       background image('/landsofillusions/construct/tv/preview-box.png') 0 0 / 100% 100%
 
+      &.selected
+        border-color atariGreen(3)
+        color atariGreen(3)
+        background-color atariGreen(1)
+
     .new-character
       .plus
         position absolute
@@ -55,6 +61,24 @@
         text-align center
         animation 60s infinite glitch-skew, 60s step-end infinite glitch-opacity
 
+  .controls
+    .sync-button
+      position absolute
+      right 0
+      top 0
+
+    .unlink-button
+      position absolute
+      left 0
+      top 0
+
+    .previous-button
+    .next-button
+      visibility hidden
+
+      &.visible
+        visibility visible
+
 @keyframes glitch-characters
   time = 0
   for i in 1..10
@@ -63,7 +87,7 @@
       transform translateX(0)
       border-width 0
       filter blur(0)
-    {1% * time + 0.2}
+    {1% * (time + 0.2)}
       translate = math(0, 'random') - 0.5
       transform translateX(1rem * translate)
       border-width 0 1rem

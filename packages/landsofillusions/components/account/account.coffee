@@ -37,14 +37,17 @@ class LOI.Components.Account extends AM.Component
       pageNumber: index
 
     LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>
+      console.log "url changed", @, @ in LOI.adventure.modalDialogs()
       # Show the dialog if we need to.
-      @show() if @activatable.deactivated()
+      @show() if @ in LOI.adventure.modalDialogs()
 
       return unless pageUrl = FlowRouter.getParam 'parameter2'
 
       for page, index in @pages
         if page.constructor.url() is pageUrl
           @currentPageNumber index + 1
+
+    @noBackground = new ReactiveField false
 
   onRendered: ->
     super
@@ -82,10 +85,25 @@ class LOI.Components.Account extends AM.Component
 
       @lastTurnedPageNumber = currentPageNumber
 
-  show: ->
+  show: (options = {}) ->
     LOI.adventure.showActivatableModalDialog
       dialog: @
       dontRender: true
+
+    console.log "showing", options, options.noBackground
+
+    @noBackground options.noBackground
+
+    console.log "no", @noBackground()
+
+    if options.page
+      @currentPageNumber _.findIndex(@pages, (page) => page instanceof options.page) + 1
+
+    if options.characterId
+      charactersPage = _.find @pages, (page) => page instanceof @constructor.Characters
+      console.log "charspage", charactersPage
+
+      charactersPage.selectedCharacterId options.characterId
 
   url: ->
     url = 'account'
@@ -97,6 +115,10 @@ class LOI.Components.Account extends AM.Component
     # Return the URL for the page.
     page = @pages[pageNumber - 1]
     "#{url}/#{page.constructor.url()}"
+
+  noBackgroundClass: ->
+    console.log "nbc", @noBackground()
+    'no-background' if @noBackground()
 
   onCoverClass: ->
     'on-cover' unless @currentPageNumber()

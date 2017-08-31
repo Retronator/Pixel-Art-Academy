@@ -12,12 +12,17 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     
   @initialize()
 
+  constructor: ->
+    super
+
+    # We want to be able to set the selected user even before the page gets rendered,
+    # so that it's already displaying it when the account is turned to the characters page.
+    @selectedCharacterId = new ReactiveField null
+
   onCreated: ->
     super
 
     LOI.Character.activatedForCurrentUser.subscribe @
-
-    @selectedCharacterId = new ReactiveField null
 
     @selectedCharacter = new ComputedField =>
       LOI.Character.documents.findOne @selectedCharacterId()

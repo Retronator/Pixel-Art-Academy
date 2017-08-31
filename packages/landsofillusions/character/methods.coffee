@@ -21,9 +21,12 @@ LOI.Character.removeUser.method (characterId) ->
   LOI.Authorize.player()
   LOI.Authorize.characterAction characterId
 
+  # Remove the active user link and archive it for possible use.
   LOI.Character.documents.update characterId,
     $set:
       user: null
+      archivedUser:
+        _id: Meteor.userId()
   
 LOI.Character.updateName.method (characterId, language, name) ->
   check characterId, Match.DocumentId

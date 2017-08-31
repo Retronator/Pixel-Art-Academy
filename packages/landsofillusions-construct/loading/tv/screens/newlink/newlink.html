@@ -19,10 +19,24 @@
       Competitive, Advanced
     </p>
     <div class="controls">
-      <button class="clone-character-button action-button">Take</button>
+      <button class="clone-character-button action-button">Link</button>
       <button class="cancel-button action-button">Back</button>
       <button class="previous-button action-button">←</button>
       <button class="next-button action-button">→</button>
     </div>
   </div>
+  {{#if cloningCharacter}}
+    <div class="dialog-area">
+      <div class="dialog">
+        <div class="message">
+          Character name:
+          <input class="name-input" placeholder="{{t7e noName}}" value="{{currentCharacter.avatar.fullName}}"/>
+        </div>
+        <div class="actions">
+          <button class="action-button cancel-clone-button">Cancel</button>
+          <button class="action-button confirm-clone-button">Link</button>
+        </div>
+      </div>
+    </div>
+  {{/if}}
 </template>

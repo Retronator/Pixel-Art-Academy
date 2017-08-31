@@ -10,6 +10,8 @@ class LOI.Character extends AM.Document
   #   displayName
   #   publicName
   # ownerName: public name of the owner of this character
+  # archivedUser: the owner, archived on retirement of the character
+  #   _id
   # displayName: auto-generated best translation of the full name of this character for debugging (do not use in the game!).
   # avatar: information for the representation of the character
   #   fullName: how the character is named

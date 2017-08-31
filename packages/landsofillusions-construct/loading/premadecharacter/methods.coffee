@@ -2,8 +2,9 @@ AB = Artificial.Babel
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser.method (preMadeCharacterId) ->
+LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser.method (preMadeCharacterId, name) ->
   check preMadeCharacterId, Match.DocumentId
+  check name, String
 
   user = Retronator.requireUser()
 
@@ -30,7 +31,8 @@ LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser.method (preMadeCharact
   # Clone name translation.
   nameTranslationId = AB.Translation.documents.insert
     ownerId: user._id
-    translations: character.avatar.fullName.translations
+
+  AB.Translation._update nameTranslationId, '', name
 
   characterData.avatar.fullName =
     _id: nameTranslationId
