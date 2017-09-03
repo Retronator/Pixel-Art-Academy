@@ -125,6 +125,7 @@ Package.onUse(function(api) {
   api.addFile('character/behavior/properties/activities');
   api.addFile('character/behavior/properties/people');
   api.addFile('character/behavior/properties/perks');
+  api.addFile('character/behavior/properties/traits');
 
   api.addFile('character/behavior/initialize/behavior');
   api.addFile('character/behavior/initialize/personality');

@@ -1,3 +1,10 @@
 <template name="SanFrancisco.C3.Behavior.Terminal.Components.PersonalityPartPreview">
-  Traits come here …
+  <div class="sanfrancisco-c3-behavior-terminal-components-personalitypartpreview">
+    {{#with options.template}}
+      <div class="name">{{> t9n name}}</div>
+    {{/with}}
+    <div class="traits">
+      {{traitsString}}
+    </div>
+  </div>
 </template>

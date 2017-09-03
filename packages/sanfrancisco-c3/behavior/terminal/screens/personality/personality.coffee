@@ -31,7 +31,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
       @part personalityPart
 
     @hasCustomData = new ComputedField =>
-      @part()?.options.dataLocation()?.data()
+      @part()?.hasData()
 
     @showTemplates = new ComputedField =>
       return true if @forceShowTemplates()
@@ -70,15 +70,21 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     part.create
       dataLocation: new AMu.Hierarchy.Location
         rootField: dataField
+      template: template
 
   # Note that we can't name this helper 'template' since that would override Blaze Component template method.
   partTemplate: ->
     @part()?.options.dataLocation()?.template
 
   isOwnPartTemplate: ->
+    return unless template = @partTemplate()
+
     userId = Meteor.userId()
-    template = @partTemplate()
     template.author._id is userId
+
+  isEditable: ->
+    # We can edit the template if it's not using a template, or if the template is our own.
+    not @partTemplate() or @isOwnPartTemplate()
 
   backButtonCallback: ->
     @closeScreen()
@@ -108,6 +114,10 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     @part().properties.autoTraits.options.dataLocation
 
   autoTraits: ->
+    # No support for auto-traits yet.
+    # TODO: Implement auto-traits and remove this.
+    return false
+    
     # Auto traits are on by default.
     autoTraitsDataLocation = @autoTraitsDataLocation()
     autoTraitsDataLocation() ? true
@@ -118,7 +128,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
       'click .replace-button': @onClickReplaceButton
       'click .save-as-template-button': @onClickSaveAsTemplateButton
       'click .unlink-template-button': @onClickUnlinkTemplateButton
-      'click .custom-personality-button': @onClickCustomPersonalityButton
+      'click .custom-personality': @onClickCustomPersonality
       'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
 
@@ -136,7 +146,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     @part()?.options.dataLocation.unlinkTemplate()
 
   onClickCustomPersonalityButton: (event) ->
-    # Delete current data at this node.
+    # Clear current data at this node.
     @part()?.options.dataLocation.clear()
 
     @forceShowEditor true
@@ -146,8 +156,8 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     # Delete current data at this node.
     @part()?.options.dataLocation.remove()
 
-    # Pop this part off the stack.
-    @popPart()
+    # Return to previous screen.
+    @closeScreen()
 
   onClickTemplate: (event) ->
     template = @currentData()
@@ -155,9 +165,6 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     @part()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
-
-    # Return to previous item where we will see the result of choosing this part.
-    @closeScreen()
 
   # Components
 

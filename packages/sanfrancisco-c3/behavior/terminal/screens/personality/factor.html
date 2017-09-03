@@ -3,11 +3,17 @@
     {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis}}
     <div class="information">
       <div class="factor-template">
-        <span class="label-name">Template:</span> {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.TemplateDropdown}}
+        <span class="label-name">Template:</span>
+        {{#if isOwnPartTemplate}}
+          {{> renderTemplateNameInput partTemplate.name}}
+        {{else}}
+          {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.TemplateDropdown}}
+        {{/if}}
       </div>
       <div class="menu">
         <div class="button">Menu</div>
         <div class="factor-actions">
+          <button class="factor-action-button factor-edit-traits-button">Edit traits</button>
           {{#if partTemplate}}
             {{#if isOwnPartTemplate}}
               <button class="factor-action-button factor-unlink-template-button">Unlink template</button>

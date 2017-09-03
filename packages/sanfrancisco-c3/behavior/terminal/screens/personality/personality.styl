@@ -6,20 +6,30 @@
     overflow-y auto
     padding 10rem 90rem 10rem 10rem
 
-  .templates-area
-    .new-part-button
-    .template
-      float left
-      margin-left -1rem
-      margin-top -1rem
+    .templates-area
+      .personality-part
+        position relative
+        margin-top -1rem
+        padding 4rem 6rem
+        border 1rem solid atariCyan(2)
+        color atariGrey(5)
+        background atariGrey(0)
+        cursor pointer
 
-    .new-part-button
-      text-transform uppercase
+        &:hover
+        &:focus
+          border-color atariCyan(3)
+          z-index 1
 
-    .templates
-      list-style none
-      margin 0
-      padding 0
+        .name
+          margin 3rem 0
+          kyrou-7()
+          color atariPeach(5)
+
+      .templates
+        list-style none
+        margin 0
+        padding 0
 
   .template-info
   .part

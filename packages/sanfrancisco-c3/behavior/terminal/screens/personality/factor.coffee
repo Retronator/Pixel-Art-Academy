@@ -20,14 +20,14 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
       
       personality = @ancestorComponentOfType C3.Behavior.Terminal.Personality
       factorsProperty = personality.part().properties.factors
-      factorPart = factorsProperty.partsByOrder[factor.options.type]
+      factorPart = factorsProperty.partsByOrder()[factor.options.type]
 
       unless factorPart
         # The factor part does not exist yet (since there is no data for it), so we create it.
         Tracker.nonreactive =>
           partDataLocation = factorsProperty.options.dataLocation.child factor.options.type
 
-          partDataLocation.setMetaData
+          partDataLocation.saveMetaData
             type: factorsProperty.options.type
 
           factorPartClass = LOI.Character.Part.getClassForType factorsProperty.options.type
@@ -44,23 +44,20 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
       @part()?.options.dataLocation()?.data()
 
     # Subscribe to factor templates.
-    LOI.Character.Part.Template.forType.subscribe @, 'Behavior.Personality.Factor'
+    LOI.Character.Part.Template.forType.subscribe @, LOI.Character.Part.Types.Behavior.Personality.Factor.options.type
 
     @templateNameInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Name the template"
 
-    @templateDescriptionInput = new LOI.Components.TranslationInput
-      placeholderText: => @translation "Describe the personality profile"
-
   renderTemplateNameInput: ->
     @templateNameInput.renderComponent @currentComponent()
 
-  renderTemplateDescriptionInput: ->
-    @templateDescriptionInput.renderComponent @currentComponent()
-
   templates: ->
+    factor = @data()
+
     LOI.Character.Part.Template.documents.find
-      type: LOI.Character.Part.Types.Behavior.Personality.options.type
+      type: LOI.Character.Part.Types.Behavior.Personality.Factor.options.type
+      'data.fields.index.value': factor.options.type
 
   templatePart: ->
     template = @currentData()
@@ -79,27 +76,25 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     @part()?.options.dataLocation()?.template
 
   isOwnPartTemplate: ->
+    return unless template = @partTemplate()
+
     userId = Meteor.userId()
-    template = @partTemplate()
     template.author._id is userId
 
   traits: ->
     factorPart = @part()
-    traits = factorPart.properties.traits.parts()
-    return unless traits.length
-
-    enabledTraits = _.filter traits, (trait) -> trait.properties.weight.options.dataLocation() > 0
-
-    traitNames = (_.capitalize trait.properties.key.options.dataLocation() for trait in enabledTraits)
-
-    traitNames.join ', '
+    factorPart.properties.traits.toString()
 
   events: ->
     super.concat
+      'click .factor-edit-traits-button': @onClickEditTraitsButton
       'click .factor-save-as-template-button': @onClickSaveAsTemplateButton
       'click .factor-unlink-template-button': @onClickUnlinkTemplateButton
       'click .factor-reset-button': @onClickResetButton
       'click .traits': @onClickTraits
+
+  onClickEditTraitsButton: (event) ->
+    @onClickTraits event
 
   onClickSaveAsTemplateButton: (event) ->
     @part()?.options.dataLocation.createTemplate()
@@ -110,9 +105,6 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
   onClickResetButton: (event) ->
     # Delete current data at this node.
     @part()?.options.dataLocation.remove()
-
-    # Pop this part off the stack.
-    @popPart()
 
   onClickTraits: (event) ->
     factor = @data()
@@ -125,10 +117,36 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
   # Components
 
   class @TemplateDropdown extends AM.DataInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.Personality.Factor.TemplateDropdown'
+
     constructor: ->
       super
 
       @type = AM.DataInputComponent.Types.Select
+
+    onCreated: ->
+      super
+
+      @factorComponent = @ancestorComponentOfType C3.Behavior.Terminal.Personality.Factor
+
+    options: ->
+      options = [
+        name: 'Custom'
+        value: null
+      ]
+
+      for template in @factorComponent.templates().fetch()
+        options.push
+          name: @translateTranslation template.name
+          value: template._id
+
+      options
+
+    load: ->
+      @factorComponent.partTemplate()?._id
+
+    save: (value) ->
+      @factorComponent.part().options.dataLocation.setTemplate value
 
   class @Axis extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis'

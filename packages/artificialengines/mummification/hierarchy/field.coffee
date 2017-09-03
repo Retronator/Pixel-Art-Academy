@@ -114,7 +114,12 @@ class AM.Hierarchy.Field
         # We should only get a node or undefined. If we're getting a value it's probably an addressing error.
         throw new AE.ArgumentException "The data at this address is a terminal value, not a node."
 
+    # Setting meta data ensures future saves will have the meta data fields present.
     field.setMetaData = (newMetaData) ->
+      metaData = newMetaData
+
+    # Saving meta data writes it immediately, modifying any data currently in the field.
+    field.saveMetaData = (newMetaData) ->
       return unless metaData = newMetaData
 
       data = options.load() or {}

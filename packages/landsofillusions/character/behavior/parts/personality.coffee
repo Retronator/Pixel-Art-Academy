@@ -7,7 +7,7 @@ class LOI.Character.Behavior.Personality extends LOI.Character.Part
     super
 
     return unless @options.dataLocation
-    
+
     @factorPowers = new ComputedField =>
       # Calculate factor values based on traits.
       factorPowers = {}
@@ -45,6 +45,13 @@ class LOI.Character.Behavior.Personality extends LOI.Character.Part
       factorPowers
     ,
       true
+
+    @hasData = new ComputedField =>
+      # Personality has data if at least one factor has a value.
+      for factorIndex, factorPower of @factorPowers()
+        return true if factorPower.positive or factorPower.negative
+
+      false
 
     @mbtiPowers = new ComputedField =>
       factorPowers = @factorPowers()
@@ -88,13 +95,6 @@ class LOI.Character.Behavior.Personality extends LOI.Character.Part
       temperament
     ,
       true
-    
-  hasTrait: (traitKey) ->
-    for factorPart in @properties.factors.parts()
-      for traitsPart in factorPart.properties.traits.parts()
-        return true if traitsPart.properties.key.options.dataLocation() is traitKey
-
-    false
 
   destroy: ->
     super
@@ -103,3 +103,21 @@ class LOI.Character.Behavior.Personality extends LOI.Character.Part
     @mbtiPowers?.stop()
     @mbti?.stop()
     @temperamentPowers?.stop()
+
+  hasTrait: (traitKey) ->
+    for factorPart in @properties.factors.parts()
+      for traitsPart in factorPart.properties.traits.parts()
+        return true if traitsPart.properties.key.options.dataLocation() is traitKey
+
+    false
+
+  traitsString: ->
+    traitsStrings = []
+
+    for factorIndex, factor of @constructor.Factors
+      continue unless factorPart = @properties.factors.partsByOrder()[factor.options.type]
+
+      traitsString = factorPart.properties.traits.toString()
+      traitsStrings = traitsStrings.concat traitsString if traitsString?.length
+
+    traitsStrings.join ', '

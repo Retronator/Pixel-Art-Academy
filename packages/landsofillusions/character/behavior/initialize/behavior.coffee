@@ -47,13 +47,13 @@ LOI.Character.Part.registerClasses
 LOI.Character.Part.registerClasses
   Behavior:
     Personality:
-      Factor: new LOI.Character.Part
+      Factor: new LOI.Character.Behavior.Personality.Factor
         type: 'Behavior.Personality.Factor'
         properties:
           index: new LOI.Character.Part.Property.Integer
           positivePoints: new LOI.Character.Part.Property.Integer
           negativePoints: new LOI.Character.Part.Property.Integer
-          traits: new LOI.Character.Part.Property.Array
+          traits: new LOI.Character.Behavior.Personality.Traits
             type: 'Behavior.Personality.Trait'
 
       Trait: new LOI.Character.Part

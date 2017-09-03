@@ -37,7 +37,6 @@ class LOI.Components.Account extends AM.Component
       pageNumber: index
 
     LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>
-      console.log "url changed", @, @ in LOI.adventure.modalDialogs()
       # Show the dialog if we need to.
       @show() if @ in LOI.adventure.modalDialogs()
 
@@ -90,18 +89,13 @@ class LOI.Components.Account extends AM.Component
       dialog: @
       dontRender: true
 
-    console.log "showing", options, options.noBackground
-
     @noBackground options.noBackground
-
-    console.log "no", @noBackground()
 
     if options.page
       @currentPageNumber _.findIndex(@pages, (page) => page instanceof options.page) + 1
 
     if options.characterId
       charactersPage = _.find @pages, (page) => page instanceof @constructor.Characters
-      console.log "charspage", charactersPage
 
       charactersPage.selectedCharacterId options.characterId
 
@@ -117,7 +111,6 @@ class LOI.Components.Account extends AM.Component
     "#{url}/#{page.constructor.url()}"
 
   noBackgroundClass: ->
-    console.log "nbc", @noBackground()
     'no-background' if @noBackground()
 
   onCoverClass: ->

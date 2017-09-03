@@ -4,7 +4,12 @@
       <h1 class="screen-title">Personality</h1>
       {{#if showTemplates}}
         <div class="templates-area">
-          <button class="custom-personality-button personality-part">Custom</button>
+          <div class="custom-personality personality-part">
+            <div class="name">Custom</div>
+            <div class="traits">
+              Select your own traits.
+            </div>
+          </div>
           <ul class="templates">
             {{#each templates}}
               <li class="template personality-part">
@@ -38,35 +43,39 @@
                   <span class="label">Designer</span>: {{authorName}}
                 </div>
                 <p>
-                  Click Customize to create your own design based on this template.
+                  Click Customize to create your own personality based on this template.
                 </p>
               {{/if}}
           </div>
           {{/with}}
         {{/if}}
-        <div class="auto-traits">
-          <label class="auto-traits">
-            {{> SanFrancisco.C3.Behavior.Terminal.Personality.AutoTraitsCheckbox autoTraitsDataLocation}}
-            <span class="label">Automatic traits selection</span>
-          </label>
-        </div>
-        {{#if autoTraits}}
-          <p class="main-text">
-            Adjust sliders to shape agent's personality. Multiple sliders need to be set for most traits.
-            Click on traits for granular control.
-          </p>
-        {{else}}
-          <p class="main-text">
-            Select traits under each of the five axes. Bars will indicate agent's personality signature.
-          </p>
+        {{#if isEditable}}
+          {{!
+          <div class="auto-traits">
+            <label class="auto-traits">
+              {{> SanFrancisco.C3.Behavior.Terminal.Personality.AutoTraitsCheckbox autoTraitsDataLocation} }
+              <span class="label">Automatic traits selection</span>
+            </label>
+          </div>
+          }}
+          {{#if autoTraits}}
+            <p class="main-text">
+              Adjust sliders to shape agent's personality. Multiple sliders need to be set for most traits.
+              Click on traits for granular control.
+            </p>
+          {{else}}
+            <p class="main-text">
+              Select traits under each of the five axes. Bars will indicate agent's personality signature.
+            </p>
+          {{/if}}
+          <div class="personality">
+            <ul class="factors">
+              {{#each factors}}
+                {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor}}
+              {{/each}}
+            </ul>
+          </div>
         {{/if}}
-        <div class="personality">
-          <ul class="factors">
-            {{#each factors}}
-              {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor}}
-            {{/each}}
-          </ul>
-        </div>
       {{/if}}
     </div>
     <div class="main-actions">

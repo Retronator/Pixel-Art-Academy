@@ -3,8 +3,6 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
-Factors = LOI.Character.Behavior.Personality.Factors
-
 class C3.Behavior.Terminal.Character extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Character'
 
@@ -40,25 +38,9 @@ class C3.Behavior.Terminal.Character extends AM.Component
     cancel: true
 
   personalityTraits: ->
-    traits = []
+    personality = @character().behavior.part.properties.personality.part
+    personality.traitsString()
 
-    personality = @character().behavior.part.properties.personality
-
-    for factorIndex, factor of Factors
-      factorsProperty = personality.part.properties.factors
-      continue unless factorPart = factorsProperty.partsByOrder[factor.options.type]
-
-      traitParts = factorPart.properties.traits.parts()
-      continue unless traitParts.length
-
-      enabledTraits = _.filter traitParts, (traitPart) -> traitPart.properties.weight.options.dataLocation() > 0
-      traits = traits.concat enabledTraits
-
-    # TODO: Replace with translated names.
-    traitNames = (_.capitalize trait.properties.key.options.dataLocation() for trait in traits)
-
-    traitNames.join ', '
-    
   activities: ->
     activities = []
 

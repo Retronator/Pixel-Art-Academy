@@ -68,9 +68,17 @@ class AM.Hierarchy.Location
     location.remove = ->
       location.field().remove()
 
-    # Ensure the field in this location has the extra meta data attached.
+    # Setting meta data ensures future saves will have the meta data fields present.
     location.setMetaData = (newMetaData) ->
       metaData = newMetaData
+
+    # Saving meta data writes it immediately, modifying any data currently in the field.
+    location.saveMetaData = (newMetaData) ->
+      metaData = newMetaData
+
+      # Immediately write this meta data to the field at this location.
+      field = getField()
+      field.saveMetaData metaData
 
     # Add extra information that is to be used to create a template out of this location.
     location.setTemplateMetaData = (newTemplateMetaData) ->
