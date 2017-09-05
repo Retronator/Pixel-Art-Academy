@@ -20,12 +20,8 @@ class C3.Behavior.Terminal.Character extends AM.Component
   onCreated: ->
     super
 
-    @_perksRranslationSubscription = AB.subscribeNamespace 'LandsOfIllusions.Character.Behavior.Perk'
-
-  onDestroyed: ->
-    super
-
-    @_perksRranslationSubscription.stop()
+    AB.subscribeNamespace 'LandsOfIllusions.Character.Behavior.Perk',
+      subscribeProvider: @
 
   setCharacterId: (characterId) ->
     @characterId characterId
@@ -37,35 +33,17 @@ class C3.Behavior.Terminal.Character extends AM.Component
     # Instruct the back button to cancel closing (so it doesn't disappear).
     cancel: true
 
-  personalityTraits: ->
-    personality = @character().behavior.part.properties.personality.part
-    personality.traitsString()
+  traits: ->
+    @character().behavior.part.properties.personality.part.traitsString()
 
   activities: ->
-    activities = []
+    @character().behavior.part.properties.activities.toString()
 
-    for activityPart in @character().behavior.part.properties.activities.parts()
-      activityHoursPerWeek = activityPart.properties.hoursPerWeek.options.dataLocation()
-      activities.push activityPart if activityHoursPerWeek > 0
-
-    # TODO: Replace with translated names.
-    activityNames = (_.capitalize activity.properties.key.options.dataLocation() for activity in activities)
-
-    activityNames.join ', '
+  environment: ->
+    @character().behavior.part.properties.environment.part
 
   perks: ->
-    perks = @character().behavior.part.properties.perks.activePerks()
-
-    # TODO: Replace with translated names.
-    perkKeys = (perk.properties.key.options.dataLocation() for perk in perks)
-
-    perkNames = for perkKey in perkKeys
-      namespace = "LandsOfIllusions.Character.Behavior.Perk.#{perkKey}"
-      translation = AB.Translation.documents.findOne {namespace, key: 'name'}
-
-      AB.translate(translation).text
-
-    perkNames.join ', '
+    @character().behavior.part.properties.perks.toString()
 
   events: ->
     super.concat

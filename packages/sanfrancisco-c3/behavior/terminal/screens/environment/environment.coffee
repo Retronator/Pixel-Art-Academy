@@ -56,7 +56,10 @@ class C3.Behavior.Terminal.Environment extends AM.Component
       @property = null
 
     options: ->
-      options = [
+      [
+        value: null
+        name: @_nullValue()
+      ,
         value: 1
         name: "Minimal"
       ,
@@ -73,20 +76,19 @@ class C3.Behavior.Terminal.Environment extends AM.Component
         name: "Chaos"
       ]
 
-      unless @load()
-        options.unshift
-          value: null
-          name: ''
-
-      options
-
     load: ->
       dataLocation = @_dataLocation()
       dataLocation()
 
     save: (value) ->
+      value = parseInt value
       dataLocation = @_dataLocation()
-      dataLocation parseInt value
+
+      if _.isNaN value
+        dataLocation.remove()
+
+      else
+        dataLocation value
 
     _dataLocation: ->
       environmentComponent = @ancestorComponentOfType C3.Behavior.Terminal.Environment
@@ -100,6 +102,8 @@ class C3.Behavior.Terminal.Environment extends AM.Component
 
       @property = 'average'
 
+    _nullValue: -> "Unknown"
+
   class @IdealClutter extends @Clutter
     @register 'SanFrancisco.C3.Behavior.Terminal.Environment.IdealClutter'
 
@@ -107,3 +111,5 @@ class C3.Behavior.Terminal.Environment extends AM.Component
       super
 
       @property = 'ideal'
+
+    _nullValue: -> "No preference"

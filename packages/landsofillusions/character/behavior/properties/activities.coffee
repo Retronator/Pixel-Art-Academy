@@ -66,3 +66,15 @@ class LOI.Character.Behavior.Activities extends LOI.Character.Part.Property.Arra
       activities.push activityPart if activityHours
 
     activities
+
+  toString: ->
+    activities = []
+
+    for activityPart in @parts()
+      activityHoursPerWeek = activityPart.properties.hoursPerWeek.options.dataLocation()
+      activities.push activityPart if activityHoursPerWeek > 0
+
+    # TODO: Replace with translated names.
+    activityNames = (_.capitalize activity.properties.key.options.dataLocation() for activity in activities)
+
+    activityNames.join ', '

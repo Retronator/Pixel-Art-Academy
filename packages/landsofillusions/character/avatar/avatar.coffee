@@ -64,4 +64,6 @@ if Meteor.isClient
     # Subscribe to the avatar namespace in all languages, so that we can show all translations of "No Name" in the
     # dialogs. We do this because of a limitation in Meteor, where we can't later on request to get all translations
     # (top field), if we subscribed just to some translations (subfields) earlier.
-    LOI.Character.Avatar._babelSubscription = AB.subscribeNamespace 'LandsOfIllusions.Character.Avatar', null
+    LOI.Character.Avatar._babelSubscription = AB.subscribeNamespace 'LandsOfIllusions.Character.Avatar',
+      # Null subscribes to all languages.
+      languages: null

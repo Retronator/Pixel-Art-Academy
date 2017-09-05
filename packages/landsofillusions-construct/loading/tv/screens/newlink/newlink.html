@@ -13,10 +13,17 @@
         {{> t9n bio}}
       {{/with}}
     </p>
-    <h2 class="section-title">Personality</h2>
-    <p class="personality">
-      Creative, Brisk, Intuitive, Organized,
-      Competitive, Advanced
+    <p class="traits">
+      <span class="category-name">Personality</span>: {{traits}}
+    </p>
+    <p class="activities">
+      <span class="category-name">Activities</span>: {{activities}}
+    </p>
+    <p class="clutter">
+      <span class="category-name">Environment</span>: {{environment.clutterString}} {{environment.peopleString}}
+    </p>
+    <p class="perks">
+      <span class="category-name">Perks</span>: {{perks}}
     </p>
     <div class="controls">
       <button class="clone-character-button action-button">Link</button>

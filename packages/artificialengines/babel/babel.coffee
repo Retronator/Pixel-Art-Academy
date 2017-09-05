@@ -35,16 +35,18 @@ class Artificial.Babel
       @_babelSubscriptionHandle.stop()
 
   # Subscribe to a namespace.
-  @subscribeNamespace: (namespace, languages) ->
+  @subscribeNamespace: (namespace, options = {}) ->
     subscriptionHandle = new @SubscriptionHandle namespace
 
     # Reactively subscribe to the translations so that we get updates when user's language preference changes.
     subscriptionHandle._babelSubscriptionAutorun = Tracker.autorun =>
       # We allow sending null as the languages if we want to subscribe to all languages.
-      languages = @userLanguagePreference() if languages is undefined
+      languages = options.languages ? @userLanguagePreference()
+
+      subscribeProvider = options.subscribeProvider or Meteor
 
       # Save the handle so we can check its ready state before trying to insert keys into the database.
-      subscriptionHandle._babelSubscriptionHandle = @Translation.forNamespace.subscribe namespace, null, languages
+      subscriptionHandle._babelSubscriptionHandle = @Translation.forNamespace.subscribe subscribeProvider, namespace, null, languages
 
     subscriptionHandle
 

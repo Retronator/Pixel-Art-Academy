@@ -1,19 +1,17 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .landsofillusions-construct-loading-tv-newlink
-  padding-right 85rem
-
   .name
     acme-7()
     margin 15rem 0 5rem
     color atariGreen(5)
 
   .avatar
-    position absolute
-    top 15rem
-    right 0
+    position relative
+    float right
     width 75rem
     height 75rem
+    margin 0 0 10rem 10rem
     border 1rem solid atariGreen(4)
     background image('/landsofillusions/construct/tv/preview-box.png') 0 0 / 100% 100%
     animation 60s step-end infinite glitch-opacity !important
@@ -27,6 +25,10 @@
       z-index -1
       animation 60s infinite glitch-characters
       border 1rem solid atariGreen(2)
+
+  .category-name
+    text-transform uppercase
+    color atariGreen(5)
 
   .controls
     .clone-character-button

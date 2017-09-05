@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
@@ -31,7 +32,10 @@ class LOI.Construct.Loading.TV.NewLink extends AM.Component
       new LOI.Character.Instance characterDocument._id
       
     @cloningCharacter = new ReactiveField false
-    
+
+    AB.subscribeNamespace 'LandsOfIllusions.Character.Behavior.Perk',
+      subscribeProvider: @
+
   backButtonCallback: ->
     # We return to main menu.
     @_returnToMenu()
@@ -44,6 +48,18 @@ class LOI.Construct.Loading.TV.NewLink extends AM.Component
 
   noName: ->
     LOI.Character.Avatar.noNameTranslation()
+
+  traits: ->
+    @currentCharacter()?.behavior.part.properties.personality.part.traitsString() or "None"
+
+  activities: ->
+    @currentCharacter()?.behavior.part.properties.activities.toString() or "None"
+
+  environment: ->
+    @currentCharacter()?.behavior.part.properties.environment.part
+
+  perks: ->
+    @currentCharacter()?.behavior.part.properties.perks.toString() or "None"
 
   events: ->
     super.concat
