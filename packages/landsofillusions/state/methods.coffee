@@ -93,6 +93,9 @@ LOI.GameState.update.method (gameStateId, state) ->
   console.log "Updating game state in the database." if LOI.debug
 
   user = Retronator.user()
+
+  # On the client, the user might have just logged out so this is fine. On the server it's an error.
+  return if Meteor.isClient and not user
   throw new AE.UnauthorizedException "You must be logged in to update game state." unless user
 
   gameState = LOI.GameState.documents.findOne gameStateId

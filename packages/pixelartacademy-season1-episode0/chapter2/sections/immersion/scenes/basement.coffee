@@ -16,16 +16,7 @@ class C2.Immersion.Basement extends LOI.Adventure.Scene
   constructor: ->
     super
 
-    # Elevator button
-    @elevatorButton = new HQ.Items.ElevatorButton
-      location: @
-      floor: -1
-
     @subscribe RA.User.registeredEmailsForCurrentUser
-
-  things: -> [
-    HQ.Actors.Operator unless C2.Immersion.state 'operatorState'
-  ]
 
   removeThings: ->
     # Because operator generally appears in the basement, we need to remove him when some of these scenes run.

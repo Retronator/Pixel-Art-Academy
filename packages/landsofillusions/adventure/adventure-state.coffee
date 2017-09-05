@@ -120,6 +120,11 @@ class LOI.Adventure extends LOI.Adventure
     _userGameStateUpdated = null
 
     _userGameStateProvider = new ComputedField =>
+      # Don't allow the use of user state unless the character is loaded.
+      unless LOI.characterId()
+        @userGameState?.updated = => # Dummy function.
+        return
+
       LOI.GameState.forCurrentUser.subscribe()
 
       userId = Meteor.userId()
@@ -146,7 +151,7 @@ class LOI.Adventure extends LOI.Adventure
     @userGameState.updated = _userGameStateUpdated
 
     # Flush the state updates to the database when the page is about to unload.
-    window.onbeforeunload = =>
+    window.addEventListener 'beforeunload', (event) =>
       @gameState?.updated flush: true
       @userGameState?.updated flush: true
 

@@ -121,4 +121,11 @@ Package.onUse(function(api) {
   api.addFile('chapter3/sections/construct/construct');
 
   api.addThing('chapter3/sections/construct/scenes/loading');
+
+  // Sync
+
+  api.addFile('chapter3/sections/sync/sync');
+
+  api.addThing('chapter3/sections/sync/scenes/basement');
+
 });

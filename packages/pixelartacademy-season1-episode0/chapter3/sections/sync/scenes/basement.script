@@ -1,0 +1,51 @@
+# PixelArtAcademy.Season1.Episode0.Chapter3.Sync.Basement
+
+## Start
+
+operator: 
+  Hey, nice to see you again. Pretty exciting, huh?
+  Let me know any questions you have.
+  
+## MainQuestions
+
+* What happens now? -> [WhatHappens] `not WhatHappens`
+* Where is my character again? -> [WhereCharacter] `WhatHappens`
+* How do I sync with my character? -> [HowToConnect]
+* Thanks, that's all. -> [Thanks]
+
+## WhatHappens
+
+operator: 
+  Our team received your agent from C3 and we're now loading up their back story into their memory.
+  It's all based on the behavior setup you did at the center.
+
+> Panzer looks over at his computer dashboard.
+
+operator: 
+  Actually, it looks like our team is just about finished with setting everything up.
+  They moved the agent into an apartment in Mission Rock where your character will wake up when you first sync in.
+
+-> [MainQuestions]
+
+## WhereCharacter
+
+operator: They are in an apartment in Mission Rock, south of the baseball stadium, waiting for you to sync with them.
+
+-> [MainQuestions]
+
+## HowToConnect
+
+operator: 
+  When you ![use the SYNC](use SYNC) device, I will ask what connection you want to make.
+  You can move to the construct like before and use the TV there, or I can also connect you to any of your characters directly.
+  Just ![talk to operator](talk to operator) from any location, or use the chair in the immersion room for maximum comfort.
+
+-> [MainQuestions]
+
+## Thanks
+
+operator: Alright, see you in AR soon!
+
+-> [End]
+
+## End

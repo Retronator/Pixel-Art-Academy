@@ -110,6 +110,9 @@ class LOI.Adventure.Thing extends AM.Component
     @stateAddress = new LOI.StateAddress "things.#{@id()}"
     @state = new LOI.StateObject address: @stateAddress
 
+    @scriptStateAddress = new LOI.StateAddress "scripts.#{@id()}"
+    @scriptState = new LOI.StateObject address: @scriptStateAddress
+
     # Create default listener.
     parent = @
 
@@ -181,6 +184,9 @@ class LOI.Adventure.Thing extends AM.Component
 
     @state = @constructor.state
     @stateAddress = @constructor.stateAddress
+
+    @scriptState = @constructor.scriptState
+    @scriptStateAddress = @constructor.scriptStateAddress
 
     # Provides support for autorun and subscribe calls even when component is not created.
     @_autorunHandles = []

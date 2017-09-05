@@ -12,6 +12,7 @@ class PAA.Season1.Episode0.Chapter3 extends LOI.Adventure.Chapter
 
   @sections: -> [
     C3.Construct
+    C3.Sync
   ]
 
   @scenes: -> [
