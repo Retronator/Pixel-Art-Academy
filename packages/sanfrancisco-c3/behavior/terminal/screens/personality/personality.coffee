@@ -145,7 +145,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
   onClickUnlinkTemplateButton: (event) ->
     @part()?.options.dataLocation.unlinkTemplate()
 
-  onClickCustomPersonalityButton: (event) ->
+  onClickCustomPersonality: (event) ->
     # Clear current data at this node.
     @part()?.options.dataLocation.clear()
 

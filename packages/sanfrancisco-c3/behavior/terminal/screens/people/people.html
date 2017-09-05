@@ -4,46 +4,49 @@
       <h1 class="screen-title">People</h1>
       {{#if showTemplates}}
         <div class="templates-area">
-          <button class="custom-people-button person-parts">Custom</button>
+          <div class="custom-people behavior-part">
+            <div class="name">Custom</div>
+            <div class="info">
+              Select your own people.
+            </div>
+          </div>
           <ul class="templates">
             {{#each templates}}
-              <li class="template person-parts">
-                {{> SanFrancisco.C3.Behavior.Terminal.Components.PersonPartsPreview templateParts}}
+              <li class="template behavior-part">
+                {{> SanFrancisco.C3.Behavior.Terminal.Components.PeoplePropertyPreview templateProperty}}
               </li>
             {{/each}}
           </ul>
         </div>
       {{else}}
-        {{#if partsTemplate}}
-          {{#with partsTemplate}}
-            <div class="template-info main-text">
-              {{#if isOwnPartsTemplate}}
-                <div class="name">
-                  <span class="label">Template</span>: {{> renderTemplateNameInput name}}
-                </div>
-                <div class="description">
-                  {{> renderTemplateDescriptionInput description}}
-                </div>
-                <p>
-                  You are the designer of this template and can edit it.
-                </p>
-              {{else}}
-                <div class="name">
-                  <span class="label">Template</span>: {{> t9n name}}
-                </div>
-                <div class="description">
-                  {{> t9n description}}
-                </div>
-                <div class="author">
-                  <span class="label">Designer</span>: {{authorName}}
-                </div>
-                <p>
-                  Click Customize to create your own design based on this template.
-                </p>
-              {{/if}}
-          </div>
-          {{/with}}
-        {{/if}}
+        {{#with propertyTemplate}}
+          <div class="template-info main-text">
+            {{#if isOwnPropertyTemplate}}
+              <div class="name">
+                <span class="label">Template</span>: {{> renderTemplateNameInput name}}
+              </div>
+              <div class="description">
+                {{> renderTemplateDescriptionInput description}}
+              </div>
+              <p>
+                You are the designer of this template and can edit it.
+              </p>
+            {{else}}
+              <div class="name">
+                <span class="label">Template</span>: {{> t9n name}}
+              </div>
+              <div class="description">
+                {{> t9n description}}
+              </div>
+              <div class="author">
+                <span class="label">Designer</span>: {{authorName}}
+              </div>
+              <p>
+                Click Customize to create your own people based on this template.
+              </p>
+            {{/if}}
+        </div>
+        {{/with}}
         <p class="main-text">
           Specify significant people in the agent's life.
         </p>
@@ -86,8 +89,8 @@
       {{else}}
         <button class="main-button action-button done-button">Done</button>
         <button class="action-button replace-button">Replace</button>
-        {{#if partTemplate}}
-          {{#if isOwnPartTemplate}}
+        {{#if propertyTemplate}}
+          {{#if isOwnPropertyTemplate}}
             <button class="action-button unlink-template-button">Unlink template</button>
           {{else}}
             <button class="action-button unlink-template-button">Customize</button>

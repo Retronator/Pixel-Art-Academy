@@ -47,6 +47,7 @@ Package.onUse(function(api) {
   api.addFile('behavior/terminal/components/components');
   api.addComponent('behavior/terminal/components/personalitypartpreview/personalitypartpreview');
   api.addComponent('behavior/terminal/components/activitypartspreview/activitypartspreview');
+  api.addComponent('behavior/terminal/components/peoplepropertypreview/peoplepropertypreview');
 
   api.addThing('design/design');
   api.addComponent('design/terminal/terminal');

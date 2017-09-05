@@ -21,6 +21,9 @@ class C3.Behavior.Terminal.Environment extends AM.Component
 
       environmentPart = behaviorPart.properties.environment.part
       @part environmentPart
+      
+  people: ->
+    @part().properties.people.toString()
 
   backButtonCallback: ->
     @closeScreen()

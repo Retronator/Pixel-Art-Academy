@@ -4,15 +4,15 @@
       <h1 class="screen-title">Personality</h1>
       {{#if showTemplates}}
         <div class="templates-area">
-          <div class="custom-personality personality-part">
+          <div class="custom-personality behavior-part">
             <div class="name">Custom</div>
-            <div class="traits">
+            <div class="info">
               Select your own traits.
             </div>
           </div>
           <ul class="templates">
             {{#each templates}}
-              <li class="template personality-part">
+              <li class="template behavior-part">
                 {{> SanFrancisco.C3.Behavior.Terminal.Components.PersonalityPartPreview templatePart}}
               </li>
             {{/each}}

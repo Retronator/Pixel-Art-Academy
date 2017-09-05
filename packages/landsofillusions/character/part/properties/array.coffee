@@ -22,9 +22,14 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
     # Instantiate array parts that are in the data.
     @_arrayAutorun = Tracker.autorun =>
       partsNode = @options.dataLocation()
-      return unless partsNode
+      fields = partsNode?.data()?.fields
 
-      return unless fields = partsNode.data()?.fields
+      unless fields
+        # Clean any previous parts.
+        @_partsByOrder = {}
+        @partsByOrder {}
+        @parts []
+        return
 
       orderedFieldKeys = _.sortBy _.keys(fields), (orderKey) -> parseFloat orderKey
       @_highestOrder = if orderedFieldKeys.length then parseFloat _.last orderedFieldKeys else null

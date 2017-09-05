@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mummification
 
 # This represents a location somewhere in the hierarchy and is used to get/set value at that location.

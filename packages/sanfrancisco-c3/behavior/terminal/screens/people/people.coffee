@@ -58,7 +58,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     LOI.Character.Part.Template.documents.find
       type: LOI.Character.Part.Types.Behavior.Environment.options.properties.people.options.templateType
 
-  templateParts: ->
+  templateProperty: ->
     template = @currentData()
     property = @property()
 
@@ -69,14 +69,15 @@ class C3.Behavior.Terminal.People extends AM.Component
     property.create
       dataLocation: new AMu.Hierarchy.Location
         rootField: dataField
+      template: template
 
   # Note that we can't name this helper 'template' since that would override Blaze Component template method.
-  partsTemplate: ->
+  propertyTemplate: ->
     @property()?.options.dataLocation()?.template
 
-  isOwnPartsTemplate: ->
+  isOwnPropertyTemplate: ->
     userId = Meteor.userId()
-    template = @partsTemplate()
+    template = @propertyTemplate()
     template.author._id is userId
 
   backButtonCallback: ->
@@ -103,7 +104,7 @@ class C3.Behavior.Terminal.People extends AM.Component
       'click .replace-button': @onClickReplaceButton
       'click .save-as-template-button': @onClickSaveAsTemplateButton
       'click .unlink-template-button': @onClickUnlinkTemplateButton
-      'click .custom-people-button': @onClickCustomPeopleButton
+      'click .custom-people': @onClickCustomPeople
       'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
       'click .add-person-button': @onClickAddPersonButton
@@ -121,7 +122,7 @@ class C3.Behavior.Terminal.People extends AM.Component
   onClickUnlinkTemplateButton: (event) ->
     @property()?.options.dataLocation.unlinkTemplate()
 
-  onClickCustomPeopleButton: (event) ->
+  onClickCustomPeople: (event) ->
     # Delete current data at this node.
     @property()?.options.dataLocation.clear()
 
@@ -132,8 +133,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     # Delete current data at this node.
     @property()?.options.dataLocation.remove()
 
-    # Pop this part off the stack.
-    @popPart()
+    @closeScreen()
 
   onClickTemplate: (event) ->
     template = @currentData()
@@ -141,9 +141,6 @@ class C3.Behavior.Terminal.People extends AM.Component
     @property()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
-
-    # Return to previous item where we will see the result of choosing this part.
-    @closeScreen()
 
   onClickAddPersonButton: (event) ->
     personType = LOI.Character.Part.Types.Behavior.Environment.Person.options.type

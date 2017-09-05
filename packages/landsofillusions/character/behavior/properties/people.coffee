@@ -25,3 +25,12 @@ class LOI.Character.Behavior.Environment.People extends LOI.Character.Part.Prope
     # Housemate: 'Housemate'
     Local: 'Local'
     Internet: 'Internet'
+
+  toString: ->
+    people = @parts()
+    return unless people.length
+
+    # TODO: Replace with translated relationship types.
+    peopleRelationshipNames = (person.properties.relationshipType.options.dataLocation() for person in people)
+
+    peopleRelationshipNames.join ', '
