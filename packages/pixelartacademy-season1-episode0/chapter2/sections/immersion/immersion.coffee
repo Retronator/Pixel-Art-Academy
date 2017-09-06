@@ -63,7 +63,7 @@ class C2.Immersion extends LOI.Adventure.Section
 
   initializeScript: ->
     @setThings
-      operator: @options.listener.avatars.operator
+      operator: @options.listener.avatars?.operator
 
     @setCallbacks
       ActivateHeadset: (complete) =>
