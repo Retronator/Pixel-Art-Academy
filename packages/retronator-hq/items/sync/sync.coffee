@@ -7,6 +7,9 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Items.Sync extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.Items.Sync'
 
+  @register @id()
+  template: -> @constructor.id()
+
   @fullName: -> "SYNC"
 
   @description: ->

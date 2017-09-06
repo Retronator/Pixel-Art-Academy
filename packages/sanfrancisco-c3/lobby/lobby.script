@@ -38,7 +38,7 @@ receptionist: Very well. Please scan your keycard.
 
 -> [Access] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 
-You press your keycard to the detector, but it beeps with a red light.
+> You press your keycard to the detector, but it beeps with a red light.
 
 receptionist: 
     I'm sorry, it seems that you do not have access to our facility.

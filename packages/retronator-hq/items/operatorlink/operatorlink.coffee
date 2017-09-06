@@ -79,6 +79,18 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
   fastTransitionClass: ->
     'fast-transition' if @fastTransition()
 
+  enterConstruct: (complete) ->
+    @pluggedIn true
+
+    Meteor.setTimeout =>
+      complete?()
+
+      LOI.adventure.loadConstruct()
+
+      @deactivate()
+    ,
+      4000
+
   syncWithCharacter: (@_syncCharacter) ->
     listener = @listeners[0]
 
@@ -183,16 +195,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
         complete()
 
       Construct: (complete) =>
-        operatorLink.pluggedIn true
-
-        Meteor.setTimeout =>
-          complete()
-
-          LOI.adventure.loadConstruct()
-
-          operatorLink.deactivate()
-        ,
-          4000
+        operatorLink.enterConstruct complete
 
       Exit: (complete) =>
         operatorLink.pluggedIn true

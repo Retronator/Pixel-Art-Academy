@@ -66,9 +66,16 @@ class C2.Immersion extends LOI.Adventure.Section
       operator: @options.listener.avatars.operator
 
     @setCallbacks
-      ActivateHeadset: (complete) => HQ.Items.Sync.activateHeadsetCallback complete
-      PlugIn: (complete) => HQ.Items.Sync.plugInCallback complete
-      DeactivateHeadset: (complete) => HQ.Items.Sync.deactivateHeadsetCallback complete
+      ActivateHeadset: (complete) =>
+        LOI.adventure.getCurrentThing(HQ.Items.OperatorLink).activate()
+        complete()
+              
+      DeactivateHeadset: (complete) =>
+        LOI.adventure.getCurrentThing(HQ.Items.OperatorLink).deactivate()
+        complete()
+
+      PlugIn: (complete) =>
+        LOI.adventure.getCurrentThing(HQ.Items.OperatorLink).enterConstruct complete
 
       AnalyzeAlarm: (complete) =>
         # Only start the alarm if you haven't already started the sync setup procedure.
@@ -112,10 +119,8 @@ class C2.Immersion extends LOI.Adventure.Section
             @startScript label: 'LookAtSyncTimeLeft'
 
     if section.state('operatorState') is C2.Immersion.OperatorStates.BackAtCounter and operatorLink = LOI.adventure.getCurrentThing HQ.Items.OperatorLink
-      operator = operatorLink.operator
-
       commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, operator.avatar]]
+        form: [Vocabulary.Keys.Verbs.TalkTo, [operatorLink.avatar, @avatars.operator]]
         priority: 0.5
         action: =>
           @startScript label: 'TalkToOperator'

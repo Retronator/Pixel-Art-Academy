@@ -17,6 +17,8 @@ captain: Welcome back.
 ## FirstTime
 
 captain: Welcome to Lands of Illusions!
+
+### ShowTitle
     
 * Where am I?
 
@@ -314,8 +316,6 @@ captain: Any more questions? `_MainQuestions`
 * Thank you, that's all for now.
 
 captain: Good luck.
-
-### ShowTitle
 
 -> [End]
 
