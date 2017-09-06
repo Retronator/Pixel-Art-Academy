@@ -19,7 +19,9 @@ class HQ.ArtStudio extends LOI.Adventure.Location
       Easels are spread throughout the space together with a drafting table by the wall.
       Stairs continue up into the residence part of the HQ, but it requires keycard access.
     "
-  
+
+  @defaultScriptUrl: -> 'retronator_retronator-hq/floor4/artstudio/artstudio.script'
+
   @initialize()
 
   constructor: ->
@@ -32,6 +34,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
 
   things: -> [
     @elevatorButton
+    HQ.Actors.Alexandra
   ]
 
   exits: ->
@@ -40,3 +43,8 @@ class HQ.ArtStudio extends LOI.Adventure.Location
     ,
       "#{Vocabulary.Keys.Directions.Down}": HQ.GalleryWest
       "#{Vocabulary.Keys.Directions.Up}": HQ.Residence.Hallway
+
+  onExitAttempt: (exitResponse) ->
+    if exitResponse.destinationLocationClass is HQ.Residence.Hallway
+      @startScript label: 'PreventGoingToApartment'
+      exitResponse.preventExit()

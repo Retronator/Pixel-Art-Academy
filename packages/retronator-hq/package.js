@@ -29,6 +29,7 @@ Package.onUse(function(api) {
   api.addFile('actors/corinne');
   api.addFile('actors/retro');
   api.addFile('actors/shelley');
+  api.addFile('actors/alexandra');
 
   // Items
 
@@ -80,7 +81,7 @@ Package.onUse(function(api) {
   api.addFile('floor3/gallery/galleryeast');
   api.addFile('floor3/gallery/gallerywest');
 
-  api.addFile('floor4/artstudio/artstudio');
+  api.addThing('floor4/artstudio/artstudio');
 
   /*
   api.addFiles('1stfloor/entrance/entrance.coffee');
