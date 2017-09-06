@@ -1,4 +1,4 @@
-# SanFrancisco.Soma.Muni
+# SanFrancisco.Soma.Items.Muni
 
 ## Start
 
@@ -14,51 +14,41 @@
 
 > You change your mind and quickly exit the train.
 
-pause
-
-### Exit
-
 -> [End]
 
 ##  MosconeStation
 
-`_nextStation = 'SanFrancisco.Soma.MosconeStation'`
+`_destinationId = 'SanFrancisco.Soma.MosconeStation'`
 
 -> [Travel]
 
 ##  FourthAndKing
 
-`_nextStation = 'SanFrancisco.Soma.FourthAndKing'`
+`_destinationId = 'SanFrancisco.Soma.FourthAndKing'`
 
 -> [Travel]
 
 ##  MissionRock
 
-`_nextStation = 'SanFrancisco.Soma.MissionRock'`
+`_destinationId = 'SanFrancisco.Soma.MissionRock'`
 
 -> [Travel]
 
 ##  MissionBay
 
-`_nextStation = 'SanFrancisco.Soma.MissionBay'`
+`_destinationId = 'SanFrancisco.Soma.MissionBay'`
 
 -> [Travel]
 
 ## Travel
 
--> [SameStation] `this.locationId is _nextStation`
+-> [SameStation] `location.id() is _destinationId`
 
 > The train doors close and you find a seat.
 
-`this.locationId = null`
+pause
 
-> As the train continues to your destination, you look out the window and think about life.
-
-wait 3000
-
-> The train reaches your stop.
-
-`this.locationId = _nextStation`
+### Travel
 
 -> [End]
 

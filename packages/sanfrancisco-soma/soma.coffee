@@ -7,7 +7,6 @@ class SanFrancisco.Soma extends LOI.Adventure.Region
   @initialize()
 
   @scenes: -> [
-    @Muni.Scene
   ]
 
   scenes: ->

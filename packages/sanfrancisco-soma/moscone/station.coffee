@@ -24,6 +24,7 @@ class Soma.MosconeStation extends LOI.Adventure.Location
     super
 
   things: -> [
+    Soma.Items.Muni
   ]
 
   exits: ->

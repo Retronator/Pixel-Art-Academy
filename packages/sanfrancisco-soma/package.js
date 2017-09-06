@@ -24,6 +24,7 @@ Package.onUse(function(api) {
   api.addFile('items/items');
 
   api.addComponent('items/map/map');
+  api.addThing('items/muni/muni');
 
   // Locations
 
@@ -39,6 +40,4 @@ Package.onUse(function(api) {
   api.addFile('missionbay/missionbay');
   api.addFile('missionrock/missionrock');
   api.addFile('chinabasinpark/chinabasinpark');
-  api.addThing('muni/muni');
-  api.addThing('muni/scene');
 });

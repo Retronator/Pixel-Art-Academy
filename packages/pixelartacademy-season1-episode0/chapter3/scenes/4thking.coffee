@@ -13,6 +13,10 @@ class C3.FourthAndKing extends LOI.Adventure.Scene
 
   @initialize()
 
+  things: -> [
+    Soma.Items.Muni
+  ]
+
   exits: ->
     "#{Vocabulary.Keys.Directions.Northeast}": Soma.SecondAndKing
     "#{Vocabulary.Keys.Directions.Southeast}": Soma.MissionRock
