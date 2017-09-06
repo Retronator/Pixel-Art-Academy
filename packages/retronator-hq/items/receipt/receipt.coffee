@@ -40,6 +40,8 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @scrolled = new ReactiveField false
     @scrolledToBottom = new ReactiveField false
 
+    @purchaseItems = new ReactiveField []
+
   onCreated: ->
     super
 
@@ -59,6 +61,18 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @subscribe RA.User.contactEmailForCurrentUser
 
     @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
+
+    @autorun (computation) =>
+      contents = HQ.Items.ShoppingCart.state 'contents'
+
+      purchaseItems = for receiptItem in contents
+        item = RS.Transactions.Item.documents.findOne catalogKey: receiptItem.item
+        continue unless item
+
+        item: item
+        isGift: receiptItem.isGift
+
+      @purchaseItems purchaseItems
 
   onRendered: ->
     super
@@ -108,16 +122,6 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
   anonymousNoAttributes: ->
     checked: true unless @showSupporterName()
 
-  purchaseItems: ->
-    contents = HQ.Items.ShoppingCart.state 'contents'
-
-    for receiptItem in contents
-      item = RS.Transactions.Item.documents.findOne catalogKey: receiptItem.item
-      continue unless item
-
-      item: item
-      isGift: receiptItem.isGift
-    
   itemsPrice: ->
     # The sum of all items to be purchased.
     _.sum (storeItem.item.price for storeItem in @purchaseItems())

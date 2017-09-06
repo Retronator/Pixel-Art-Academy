@@ -16,7 +16,7 @@ class AB.Components.Translation extends AM.Component
 
   showLoading: ->
     # We should show loading if translation has no data and the subscription isn't ready.
-    not @translation()?.translations and not translationSubscription?.ready()
+    not @translation()?.translations and not @translationSubscription?.ready()
 
   translation: ->
     translation = @data()
