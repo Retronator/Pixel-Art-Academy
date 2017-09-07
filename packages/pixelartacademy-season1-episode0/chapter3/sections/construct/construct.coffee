@@ -27,6 +27,9 @@ class C3.Construct extends LOI.Adventure.Section
 
   finished: ->
     # Construct section is over when the player has any activated characters.
+    # We should still force them to go through the dialog at least once first.
+    return false unless C3.Construct.Loading.scriptState('MainQuestions')
+
     activatedCharacter = LOI.Character.documents.findOne
       'user._id': Meteor.userId()
       activated: true

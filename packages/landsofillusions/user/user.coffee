@@ -8,3 +8,6 @@ class RA.User extends RA.User
     collection: Meteor.users
 
   @charactersFieldForCurrentUser: @subscription 'charactersFieldForCurrentUser'
+
+  activatedCharacters: ->
+    _.filter (@characters), (character) => character.activated

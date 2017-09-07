@@ -37,7 +37,7 @@ operator: They are in an apartment in Mission Rock, south of the baseball stadiu
 
 operator: 
   When you ![use the SYNC](use SYNC) device, I will ask what connection you want to make.
-  You can move to the construct like before and use the TV there, or I can also connect you to any of your characters directly.
+  You can move to the Loader like before and use the TV there, or I can connect you to any of your characters directly.
   Just ![talk to operator](talk to operator) from any location, or use the chair in the immersion room for maximum comfort.
 
 -> [MainQuestions]
