@@ -42,7 +42,7 @@
 
 ## Travel
 
--> [SameStation] `location.id() is _destinationId`
+-> [SameStation] `location.id is _destinationId`
 
 > The train doors close and you find a seat.
 

@@ -1,5 +1,5 @@
 <template name="SanFrancisco.C3.Design.Terminal.AvatarPart">
-  <div class="sanfrancisco-c3-design-terminal-avatarpart screen">
+  <div class="sanfrancisco-c3-design-terminal-avatarpart screen {{partClass}}">
       <h1 class="screen-title">{{titleCase part.options.name}} Design</h1>
       {{#if showTemplates}}
         <div class="templates-area">
@@ -20,36 +20,34 @@
                 <div class="name">
                   <span class="label">Template</span>: {{> renderTemplateNameInput name}}
                 </div>
-                <div class="description">
-                  {{> renderTemplateDescriptionInput description}}
-                </div>
                 <p>
                   You are the designer of this template and can edit it.
                 </p>
               {{else}}
                 <div class="name">
-                  <span class="label">Template</span>: {{> t9n name}}
-                </div>
-                <div class="description">
-                  {{> t9n description}}
+                  <span class="label">Model</span>: {{> t9n name}}
                 </div>
                 <div class="author">
                   <span class="label">Designer</span>: {{authorName}}
                 </div>
                 <p>
-                  Click Customize to create your own design based on this template.
+                  Click Modify to create your own design based on this template.
                 </p>
               {{/if}}
           </div>
           {{/with}}
+        {{else}}
+          <p class="main-text">
+            Choose individual parts to complete your design.
+          </p>
         {{/if}}
         {{#with part}}
-          <div class="part">
+          <div class="part {{editableClass}}">
             <ul class="properties">
               {{#each partProperties}}
-                <li class="property">
+                <li class="property {{propertyClass}}">
                   <div class="avatar-item">
-                    {{capitalize options.name}}:
+                    <div class="name">{{capitalize options.name}}</div>
                     {{#if $is this.type 'oneOf'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.OneOf this}}
                     {{/if}}
@@ -88,10 +86,12 @@
           {{#if isOwnPartTemplate}}
             <button class="action-button unlink-template-button">Unlink template</button>
           {{else}}
-            <button class="action-button unlink-template-button">Customize</button>
+            <button class="action-button unlink-template-button">Modify</button>
           {{/if}}
         {{else}}
-          <button class="action-button save-as-template-button">Save as template</button>
+          {{#if isAdmin}}
+            <button class="action-button save-as-template-button">Save as template</button>
+          {{/if}}
         {{/if}}
         <button class="action-button delete-button danger-button">Delete</button>
       {{/if}}

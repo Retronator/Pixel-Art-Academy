@@ -200,6 +200,7 @@ class Script.Nodes.Code extends Script.Node
     delete _globalState.user
     delete _globalState.character
     delete _globalState.player
+    delete _locationState?.id
 
     if _scriptStateWasNull
       # See if location state was modified and set it if needed.

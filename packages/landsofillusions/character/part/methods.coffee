@@ -1,11 +1,12 @@
 AB = Artificial.Babel
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 LOI.Character.Part.Template.insert.method (data, metaData) ->
   check data, Match.ObjectIncluding fields: Object
   check metaData, Match.ObjectIncluding type: String
 
-  LOI.Authorize.avatarEditor()
+  RA.authorizeAdmin()
 
   userId = Meteor.userId()
 
@@ -21,7 +22,7 @@ LOI.Character.Part.Template.updateData.method (templateId, address, value) ->
   check address, String
   check value, Match.Any
 
-  LOI.Authorize.avatarEditor()
+  RA.authorizeAdmin()
 
   template = LOI.Character.Part.Template.documents.findOne templateId
 

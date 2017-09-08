@@ -21,6 +21,10 @@ captain: Welcome to Lands of Illusions!
 pause
 
 ### ShowTitle
+
+wait 0
+
+pause
     
 * Where am I?
 
@@ -48,6 +52,8 @@ captain:
 * What kind of modifications do you do? -> [Modifications]
 
 ## Modifications
+
+> The Captain turns on the TV, showing a futuristic-looking city.
 
 captain: Do you know of the utopian city Retropolis?
 
@@ -337,12 +343,12 @@ captain: Very well.
 
 ## MainDialog
 
-captain: How can I help you? `not _MainQuestions`
+captain: Would you like to know anything else? `not _MainQuestions`
 captain: Any more questions? `_MainQuestions`
 
 ## MainQuestions
 
-* Where is the cyborg what-was-it center? -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and not C3`
+* Where is the cyborg … what-was-it center? -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and not C3`
 * Where is the Cyborg Construction Center again? -> [C3Short] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and C3`
 * How do I get out of here? -> [HowToExit]
 * Can I have multiple characters? -> [MultipleCharacters]

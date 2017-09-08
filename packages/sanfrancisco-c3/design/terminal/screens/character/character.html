@@ -14,12 +14,14 @@
           </label>
         </p>
         <p class="main-text">
-          <label class="dialog-color"><strong>Dialog color</strong>:
-            {{> LandsOfIllusions.Components.Account.Characters.CharacterColorHue}}
-          </label>
-          <label class="dialog-hue"><strong>hue</strong>:
-            {{> LandsOfIllusions.Components.Account.Characters.CharacterColorShade}}
-          </label>
+          {{#with document}}
+            <label class="dialog-color"><strong>Dialog color</strong>:
+              {{> LandsOfIllusions.Components.Account.Characters.CharacterColorHue}}
+            </label>
+            <label class="dialog-hue"><strong>hue</strong>:
+              {{> LandsOfIllusions.Components.Account.Characters.CharacterColorShade}}
+            </label>
+          {{/with}}
         </p>
         <p class="main-text">
           <strong>Preview</strong>:

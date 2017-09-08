@@ -28,7 +28,8 @@ class C3.Sync extends LOI.Adventure.Section
   active: ->
     # Sync section starts when Construct section completes, but Construct doesn't use the
     # static finished implementation, so we must pass the instance as a required section.
-    return unless constructSection = _.find @chapter.sections(), (section) => section instanceof C3.Construct
+    # HACK: chapter.sections are sometimes not set on loading, so we check for their presence.
+    return unless constructSection = _.find @chapter.sections?(), (section) => section instanceof C3.Construct
 
     @requireFinishedSections constructSection
 

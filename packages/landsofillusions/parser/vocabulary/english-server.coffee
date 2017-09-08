@@ -47,6 +47,7 @@ Document.startup ->
       LookIn: ['look in']
       WakeUp: ['wake up', 'awaken']
       Buy: ['buy', 'purchase']
+      Board: ['board', 'take']
 
     Pronouns:
       Subjective:

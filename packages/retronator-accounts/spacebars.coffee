@@ -7,3 +7,6 @@ Template.registerHelper 'loggingIn', ->
 
 Template.registerHelper 'hasItem', (key) ->
   Retronator.user()?.hasItem key
+
+Template.registerHelper 'isAdmin', (key) ->
+  Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin

@@ -8,8 +8,8 @@ class Soma.Items.Muni extends LOI.Adventure.Item
 
   @version: -> '0.0.1'
 
-  @fullName: -> "T Third Street Muni train"
-  @shortName: -> "Muni train"
+  @fullName: -> "Muni train"
+  @shortName: -> "train"
   @description: ->
     "
       It's the line T Muni train that rides north-south through SOMA. You can ![use](use muni) it to fast-travel.
@@ -23,8 +23,10 @@ class Soma.Items.Muni extends LOI.Adventure.Item
 
   initializeScript: ->
     @setCallbacks
-      Travel: (complete) ->
+      Travel: (complete) =>
         LOI.adventure.goToLocation @ephemeralState().destinationId
+
+        complete()
 
   # Listener
 
@@ -32,5 +34,5 @@ class Soma.Items.Muni extends LOI.Adventure.Item
     muni = @options.parent
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.Use, muni.avatar]
+      form: [[Vocabulary.Keys.Verbs.Board, Vocabulary.Keys.Verbs.Use], muni.avatar]
       action: => @startScript()

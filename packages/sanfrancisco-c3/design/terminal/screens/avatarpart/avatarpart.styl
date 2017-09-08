@@ -30,18 +30,48 @@
       .landsofillusions-components-translationinput
         display inline-block
 
+    .unlink-template-hint
+      color atariGrey(5)
+
   .part
     .properties
       margin 0
       padding 0
       list-style none
+      opacity 0.5
 
       .property
+        position relative
         display inline-block
         vertical-align top
         margin 0 4rem 4rem 0
-        text-transform uppercase
-        color atariRed(2)
+
+        &::after
+          content ''
+          absolute-cover()
+
+        .name
+          text-transform uppercase
+          color atariGrey(5)
+
+        .avatar-part
+          &::after
+            content ''
+            absolute-cover()
+            background atariGrey(1)
+            opacity 0.5
+
+    &.editable
+      .properties
+        opacity 1
+
+        .property
+          &::after
+            display none
+
+          .avatar-part
+            &::after
+              pointer-events none
 
     .preview
       position absolute
@@ -50,3 +80,49 @@
       width 89rem
       height 89rem
       background-image image('/sanfrancisco/c3/design/preview-cube.png')
+
+  &.avatar-body
+    .part
+      .properties
+        .property
+          position absolute
+
+          &.head
+          &.arms
+          &.legs
+          &.torso
+            .name
+              position absolute
+              bottom 50%
+              padding 0 2rem
+              border-bottom 1rem solid atariCyan(1)
+
+          &.head
+          &.arms
+          &.legs
+            .name
+              left 100%
+
+          &.torso
+            .name
+              right 100%
+
+          &.head
+            left 30rem
+            top 80rem
+
+          &.arms
+            left 15rem
+            top 120rem
+
+          &.legs
+            left 30rem
+            top 160rem
+
+          &.torso
+            left 270rem
+            top 120rem
+
+          &.skin
+            left 215rem
+            top 165rem

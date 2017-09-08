@@ -48,6 +48,13 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @templateDescriptionInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Describe your design"
 
+  isEditable: ->
+    # User can edit the part if it is not a template or if the template belongs to them.
+    not @partTemplate() or @isOwnPartTemplate()
+
+  editableClass: ->
+    'editable' if @isEditable()
+
   renderTemplateNameInput: ->
     @templateNameInput.renderComponent @currentComponent()
 
@@ -61,7 +68,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
   templatePart: ->
     template = @currentData()
-    part = @part()
+    return unless part = @part()
 
     dataField = AMu.Hierarchy.create
       templateClass: LOI.Character.Part.Template
@@ -119,6 +126,14 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       # We return back to the character screen if there's no more parts to show.
       @terminal.switchToScreen @terminal.screens.character unless @part()
 
+  partClass: ->
+    return unless part = @part()
+    _.kebabCase part.options.type
+
+  propertyClass: ->
+    property = @currentData()
+    _.kebabCase property.options.name
+
   events: ->
     super.concat
       'click .done-button': @onClickDoneButton
@@ -154,7 +169,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part()?.options.dataLocation.remove()
 
     # Pop this part off the stack.
-    @popPart()
+    @closePart()
 
   onClickTemplate: (event) ->
     template = @currentData()
@@ -162,6 +177,3 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
-
-    # Return to previous item where we will see the result of choosing this part.
-    @closePart()
