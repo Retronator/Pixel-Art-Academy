@@ -44,7 +44,14 @@ RS.Transactions.Transaction.emailCustomer = ({customer, payments, shoppingCart})
                       to join, just reply and let me know the email you use for Facebook
                       and I'll send you an invite. That way you can follow the development
                       as we go along. Hope to see you there."
-  
+
+  email.addParagraph "p.p.s. There is a lo-fi prototype of the drawing activities available
+                      in the form of articles in Retronator Magazine. Currently it's a hidden
+                      draft, but it already has a ton of knowledge and 50 tasks to complete.
+                      You can start learning at:"
+
+  email.addLinkParagraph 'https://medium.com/retronator-magazine/pixel-art-academy-study-guide-3ae5f772a83a', "Pixel Art Academy Study Guide"
+
   email.end()
   
   Email.send
