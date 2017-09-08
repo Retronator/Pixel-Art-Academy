@@ -4,7 +4,7 @@ class LOI.Character.Behavior.Perk.Socializer extends LOI.Character.Behavior.Perk
   @register 'Socializer'
   
   @displayName: "Socializer"
-  @description: "People are you energy source and can't pass an opportunity to hang out."
+  @description: "People are your energy source and you can't pass an opportunity to hang out."
   @requirements: "High Energy score."
   @effects: """
         Always attends social events.

@@ -41,15 +41,15 @@
         <div class="description">
           {{description}}
         </div>
-        <div class="requirements {{satisfiedClass}}">
-          <span class="label">REQ</span>
-          {{requirements}}
-        </div>
         <ul class="effects">
           {{#each effects}}
             <li class="effect">{{this}}</li>
           {{/each}}
         </ul>
+        <div class="requirements {{satisfiedClass}}">
+          <span class="label">REQ</span>
+          {{requirements}}
+        </div>
       </div>
     {{/with}}
     <div class="main-actions">
