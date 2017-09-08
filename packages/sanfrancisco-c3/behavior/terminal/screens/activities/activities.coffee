@@ -221,10 +221,10 @@ class C3.Behavior.Terminal.Activities extends AM.Component
         part.properties.hoursPerWeek.options.dataLocation value * @_saveFactor()
 
       else
-        characterComponent = @ancestorComponentOfType C3.Behavior.Terminal.Character
+        activitiesComponent = @ancestorComponentOfType C3.Behavior.Terminal.Activities
 
         activityType = LOI.Character.Part.Types.Behavior.Activity.options.type
-        newPart = characterComponent.character().behavior.part.properties.activities.newPart activityType
+        newPart = activitiesComponent.property().newPart activityType
 
         newPart.options.dataLocation
           key: activityInfo.key
