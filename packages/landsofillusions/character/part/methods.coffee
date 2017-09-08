@@ -1,6 +1,7 @@
 AB = Artificial.Babel
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
+RA = Retronator.Accounts
 
 LOI.Character.Part.Template.insert.method (data, metaData) ->
   check data, Match.ObjectIncluding fields: Object

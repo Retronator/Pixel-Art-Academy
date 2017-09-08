@@ -2,9 +2,15 @@
   <div class="sanfrancisco-c3-behavior-terminal-components-personalitypartpreview">
     {{#with options.template}}
       <div class="name">{{> t9n name}}</div>
+      <div class="description">{{> t9n description}}</div>
     {{/with}}
     <div class="traits info">
       {{traitsString}}
+    </div>
+    <div class="factors">
+      {{#each factors}}
+        {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis}}
+      {{/each}}
     </div>
   </div>
 </template>

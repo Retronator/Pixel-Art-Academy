@@ -8,7 +8,8 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
 
   constructor: ->
     super
-    
+
+    @personalityPart = new ReactiveField null
     @part = new ReactiveField null
 
   onCreated: ->
@@ -19,7 +20,11 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
       factor = @data()
       
       personality = @ancestorComponentOfType C3.Behavior.Terminal.Personality
-      factorsProperty = personality.part().properties.factors
+      
+      personalityPart = personality.part()
+      @personalityPart personalityPart
+      
+      factorsProperty = personalityPart.properties.factors
       factorPart = factorsProperty.partsByOrder()[factor.options.type]
 
       unless factorPart
@@ -81,6 +86,13 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     userId = Meteor.userId()
     template.author._id is userId
 
+  isEditable: ->
+    # We can edit the template if it's not using a template, or if the template is our own.
+    not @partTemplate() or @isOwnPartTemplate()
+
+  editableClass: ->
+    'editable' if @isEditable()
+
   traits: ->
     factorPart = @part()
     factorPart.properties.traits.toString()
@@ -111,7 +123,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
 
     terminal = @ancestorComponentOfType C3.Behavior.Terminal
 
-    terminal.screens.traits.setFactor factor, @part
+    terminal.screens.traits.setFactor factor, @part, @personalityPart
     terminal.switchToScreen terminal.screens.traits
 
   # Components
@@ -155,8 +167,11 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
       super
 
       @terminal = @ancestorComponentOfType C3.Behavior.Terminal
-      @behavior = @terminal.screens.character.character()?.behavior
-  
+
+    part: ->
+      partProvider = @ancestorComponentWith (component) -> component.personalityPart?
+      partProvider.personalityPart()
+
     leftFactorName: -> @_factorName false
     rightFactorName: -> @_factorName true
   
@@ -206,7 +221,8 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     _indicatorPositionPercentage: (right) ->
       factor = @data()
 
-      factorPower = @behavior.part.properties.personality.part.factorPowers()[factor.options.type]
+      return unless personality = @part()
+      factorPower = personality.factorPowers()[factor.options.type]
 
       power = if right is not factor.options.displayReversed then factorPower.positive else factorPower.negative
       Math.min 100, power * 10

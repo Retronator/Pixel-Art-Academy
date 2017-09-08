@@ -1,37 +1,17 @@
 <template name="SanFrancisco.C3.Behavior.Terminal.Personality.Traits">
   <div class="sanfrancisco-c3-behavior-terminal-personality-traits screen">
     <div class="main-content">
-      <p class="main-text">
-        For each personality trait, choose the side that represents the agent best, or leave it in balance.
-      </p>
+      {{#if isEditable}}
+        <p class="main-text">
+          For each personality trait, choose the side that represents the agent best, or leave it in balance.
+        </p>
+      {{/if}}
       <div class="factor">
         {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis factor}}
         <div class="traits-section">
-          <h3 class="title">Main traits</h3>
           <ul class="primary-traits traits">
-            {{#each mainTraits}}
-              <li class="trait">
-                <div class="selector">
-                  <button class="left-selector-button selector-button" {{style leftSelectorActiveStyle}}></button>
-                  <button class="middle-selector-button selector-button {{middleSelectorActiveClass}}"></button>
-                  <button class="right-selector-button selector-button" {{style rightSelectorActiveStyle}}></button>
-                  <div class="name" {{style traitNameStyle}}>{{capitalize key}}</div>
-                </div>
-                <div class="left-factors">
-                  <div class="primary-factor" {{style leftPrimaryFactorStyle}}>{{leftPrimaryFactorName}}</div>
-                  {{#if leftSecondaryFactorName}}
-                    <div class="plus-sign">+</div>
-                    <div class="secondary-factor" {{style leftSecondaryFactorStyle}}>{{leftSecondaryFactorName}}</div>
-                  {{/if}}
-                </div>
-                <div class="right-factors">
-                  <div class="primary-factor" {{style rightPrimaryFactorStyle}}>{{rightPrimaryFactorName}}</div>
-                  {{#if rightSecondaryFactorName}}
-                    <div class="plus-sign">+</div>
-                    <div class="secondary-factor" {{style rightSecondaryFactorStyle}}>{{rightSecondaryFactorName}}</div>
-                  {{/if}}
-                </div>
-              </li>
+            {{#each primaryTraits}}
+              {{> SanFrancisco.C3.Behavior.Terminal.Personality.Traits.Trait}}
             {{/each}}
           </ul>
         </div>
@@ -41,4 +21,29 @@
       <button class="main-button action-button done-button">Done</button>
     </div>
   </div>
+</template>
+
+<template name="SanFrancisco.C3.Behavior.Terminal.Personality.Traits.Trait">
+  <li class="trait">
+    <div class="selector">
+      <button class="left-selector-button selector-button" {{style leftSelectorActiveStyle}} {{selectorDisabledAttribute}}></button>
+      <button class="middle-selector-button selector-button {{middleSelectorActiveClass}}" {{selectorDisabledAttribute}}></button>
+      <button class="right-selector-button selector-button" {{style rightSelectorActiveStyle}} {{selectorDisabledAttribute}}></button>
+      <div class="name" {{style traitNameStyle}}>{{capitalize key}}</div>
+    </div>
+    <div class="left-factors">
+      <div class="primary-factor" {{style leftPrimaryFactorStyle}}>{{leftPrimaryFactorName}}</div>
+      {{#if leftSecondaryFactorName}}
+        <div class="plus-sign">+</div>
+        <div class="secondary-factor" {{style leftSecondaryFactorStyle}}>{{leftSecondaryFactorName}}</div>
+      {{/if}}
+    </div>
+    <div class="right-factors">
+      <div class="primary-factor" {{style rightPrimaryFactorStyle}}>{{rightPrimaryFactorName}}</div>
+      {{#if rightSecondaryFactorName}}
+        <div class="plus-sign">+</div>
+        <div class="secondary-factor" {{style rightSecondaryFactorStyle}}>{{rightSecondaryFactorName}}</div>
+      {{/if}}
+    </div>
+  </li>
 </template>

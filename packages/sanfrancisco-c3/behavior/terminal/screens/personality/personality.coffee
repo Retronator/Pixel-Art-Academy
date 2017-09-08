@@ -49,6 +49,10 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     @templateDescriptionInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Describe the personality profile"
 
+  # Provide personality part to the factor axis.
+  personalityPart: ->
+    @part()
+
   renderTemplateNameInput: ->
     @templateNameInput.renderComponent @currentComponent()
 
@@ -80,11 +84,14 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     return unless template = @partTemplate()
 
     userId = Meteor.userId()
-    template.author._id is userId
+    template.author?._id is userId
 
   isEditable: ->
     # We can edit the template if it's not using a template, or if the template is our own.
     not @partTemplate() or @isOwnPartTemplate()
+
+  editableClass: ->
+    'editable' if @isEditable()
 
   backButtonCallback: ->
     @closeScreen()

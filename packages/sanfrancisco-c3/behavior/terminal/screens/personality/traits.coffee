@@ -13,23 +13,50 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
     super
 
     @factor = new ReactiveField null
-    @partField = new ReactiveField null
+    @factorPartField = new ReactiveField null
+    @personalityPartField = new ReactiveField null
     
     @traitsProperty = new ComputedField =>
-      return unless factorPart = @partField()?()
+      factorPartField = @factorPartField()
+      return unless factorPart = factorPartField?()
 
       factorPart.properties.traits
 
   onCreated: ->
     super
+    
+  # Provide personality part to the factor axis.
+  personalityPart: ->
+    personalityPartField = @personalityPartField()
+    personalityPartField?()
 
-  setFactor: (factor, partField) ->
+  isEditable: ->
+    return unless partTemplate = @personalityPart()?.options.dataLocation()?.template
+
+    userId = Meteor.userId()
+    isOwnTemplate = partTemplate.author?._id is userId
+
+    # We can edit the template if it's not using a template, or if the template is our own.
+    not partTemplate or isOwnTemplate
+
+  editableClass: ->
+    'editable' if @isEditable()
+
+  selectorDisabledAttribute: ->
+    disabled: true unless @isEditable()
+
+  setFactor: (factor, partField, personalityPartField) ->
     @factor factor
-    @partField partField
+    @factorPartField partField
+    @personalityPartField personalityPartField
 
-  mainTraits: ->
+  primaryTraits: ->
     LOI.Character.Behavior.Personality.Trait.documents.find
       'primaryFactor.type': @factor().options.type
+
+  secondaryTraits: ->
+    LOI.Character.Behavior.Personality.Trait.documents.find
+      'secondaryFactor.type': @factor().options.type
 
   middleSelectorActiveClass: (weight) ->
     'active' if @_selectorActive 0

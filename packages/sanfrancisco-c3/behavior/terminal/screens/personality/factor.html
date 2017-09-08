@@ -1,31 +1,37 @@
 <template name="SanFrancisco.C3.Behavior.Terminal.Personality.Factor">
-  <li class="sanfrancisco-c3-behavior-terminal-personality-factor">
+  <li class="sanfrancisco-c3-behavior-terminal-personality-factor {{editableClass}}">
     {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis}}
     <div class="information">
       <div class="factor-template">
         <span class="label-name">Template:</span>
-        {{#if isOwnPartTemplate}}
-          {{> renderTemplateNameInput partTemplate.name}}
+        {{#if isEditable}}
+          {{#if isOwnPartTemplate}}
+            {{> renderTemplateNameInput partTemplate.name}}
+          {{else}}
+            {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.TemplateDropdown}}
+          {{/if}}
         {{else}}
-          {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.TemplateDropdown}}
+          {{> t9n partTemplate.name}}
         {{/if}}
       </div>
-      <div class="menu">
-        <div class="button">Menu</div>
-        <div class="factor-actions">
-          <button class="factor-action-button factor-edit-traits-button">Edit traits</button>
-          {{#if partTemplate}}
-            {{#if isOwnPartTemplate}}
-              <button class="factor-action-button factor-unlink-template-button">Unlink template</button>
+      {{#if isEditable}}
+        <div class="menu">
+          <div class="button">Menu</div>
+          <div class="factor-actions">
+            <button class="factor-action-button factor-edit-traits-button">Edit traits</button>
+            {{#if partTemplate}}
+              {{#if isOwnPartTemplate}}
+                <button class="factor-action-button factor-unlink-template-button">Unlink template</button>
+              {{else}}
+                <button class="factor-action-button factor-unlink-template-button">Modify</button>
+              {{/if}}
             {{else}}
-              <button class="factor-action-button factor-unlink-template-button">Customize</button>
+              <button class="factor-action-button factor-save-as-template-button">Save as template</button>
             {{/if}}
-          {{else}}
-            <button class="factor-action-button factor-save-as-template-button">Save as template</button>
-          {{/if}}
-          <button class="factor-action-button factor-reset-button danger-button">Reset</button>
+            <button class="factor-action-button factor-reset-button danger-button">Reset</button>
+          </div>
         </div>
-      </div>
+      {{/if}}
     </div>
     <div class="traits">
       <span class="title">Traits:</span>

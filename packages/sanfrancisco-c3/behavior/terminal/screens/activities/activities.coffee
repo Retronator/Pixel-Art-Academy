@@ -79,6 +79,13 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     template = @partsTemplate()
     template.author._id is userId
 
+  isEditable: ->
+    # We can edit the template if it's not using a template, or if the template is our own.
+    not @partsTemplate() or @isOwnPartsTemplate()
+
+  editableClass: ->
+    'editable' if @isEditable()
+
   backButtonCallback: ->
     @closeScreen()
 
@@ -163,8 +170,8 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     # Delete current data at this node.
     @property()?.options.dataLocation.remove()
 
-    # Pop this part off the stack.
-    @popPart()
+    # Return to previous screen.
+    @closeScreen()
 
   onClickTemplate: (event) ->
     template = @currentData()
@@ -172,9 +179,6 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     @property()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
-
-    # Return to previous item where we will see the result of choosing this part.
-    @closeScreen()
 
   onChangeNewActivity: (event) ->
     $input = $(event.target)
