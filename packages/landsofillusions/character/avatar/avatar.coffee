@@ -51,7 +51,10 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
     @constructor.noName()
 
   color: ->
-    @character.document()?.avatar?.color or super
+    return super unless color = @character.document()?.avatar?.color
+
+    hue: color?.hue or LOI.Assets.Palette.Atari2600.hues.grey
+    shade: color?.shade or LOI.Assets.Palette.Atari2600.characterShades.normal
 
   @noNameTranslation: ->
     AB.translation @_babelSubscription, 'No Name'
