@@ -23,9 +23,6 @@
             </label>
           {{/with}}
         </p>
-        <p class="main-text">
-          <strong>Preview</strong>:
-        </p>
         <div class="dialog-preview">
           {{avatar.shortName}} says:
           <span {{style dialogPreviewStyle}}>
@@ -33,13 +30,13 @@
           </span>
         </div>
         <p class="main-text avatar-item">
-          <strong>Body</strong>:
+          <div class="name">Body</div>
           <div class="avatar-part body-part">
             {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar.body}}
           </div>
         </p>
         <p class="main-text avatar-item">
-          <strong>Outfit</strong>:
+          <div class="name">Outfit</div>
           <div class="avatar-part outfit-part">
             {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar.outfit}}
           </div>

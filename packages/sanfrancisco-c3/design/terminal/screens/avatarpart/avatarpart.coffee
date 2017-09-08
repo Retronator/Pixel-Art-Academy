@@ -48,13 +48,6 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @templateDescriptionInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Describe your design"
 
-  isEditable: ->
-    # User can edit the part if it is not a template or if the template belongs to them.
-    not @partTemplate() or @isOwnPartTemplate()
-
-  editableClass: ->
-    'editable' if @isEditable()
-
   renderTemplateNameInput: ->
     @templateNameInput.renderComponent @currentComponent()
 
@@ -106,7 +99,20 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   isOwnPartTemplate: ->
     userId = Meteor.userId()
     template = @partTemplate()
-    template.author._id is userId
+    template.author?._id is userId
+
+  isEditable: ->
+    # User can edit the part if it is not a template or if the template belongs to them.
+    @canCreateNew() and (not @partTemplate() or @isOwnPartTemplate())
+
+  editableClass: ->
+    'editable' if @isEditable()
+
+  canCreateNew: ->
+    # Non-admin user can create all parts but shapes.
+    return true unless @part() instanceof LOI.Character.Avatar.Parts.Shape
+
+    Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
 
   backButtonCallback: ->
     @closePart()
