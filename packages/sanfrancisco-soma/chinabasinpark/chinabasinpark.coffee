@@ -27,4 +27,5 @@ class Soma.ChinaBasinPark extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.West}": Soma.MissionRock
+    "#{Vocabulary.Keys.Directions.Southwest}": Soma.MissionRock
+    "#{Vocabulary.Keys.Directions.Northwest}": Soma.SecondAndKing

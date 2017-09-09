@@ -5,8 +5,19 @@
     position absolute
     filter drop-shadow(0 10rem 20rem rgba(black, 0.8))
 
+    .notes-area
+    .notes
     .map
       width 100%
+
+    .notes-area
+      position absolute
+      height 0
+      overflow hidden
+      transition height 6s
+
+      &.visible
+        height 100%
 
     .hand
       position absolute

@@ -14,7 +14,7 @@ class Soma.Transbay extends LOI.Adventure.Location
   @shortName: -> "Transbay Center"
   @description: ->
     "
-      You are in the newly-built Transbay Transit Center in San Francisco, the new hub in the downtown.
+      You are in the newly-built Transbay Transit Center in San Francisco, the new hub in downtown.
       There are many ways out of here, but you're most interested in going southwest to Retronator HQ on 2nd Street.
     "
   

@@ -29,6 +29,9 @@ class Soma.Items.Map extends LOI.Adventure.Item
     ,
       500
 
+  notesVisibleClass: ->
+    'visible' if @state 'c3Highlighted'
+
   # Listener
 
   onCommand: (commandResponse) ->
