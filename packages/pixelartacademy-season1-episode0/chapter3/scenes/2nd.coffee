@@ -15,3 +15,4 @@ class C3.SecondStreet extends LOI.Adventure.Scene
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Southeast}": Soma.SecondAndKing
+    "#{Vocabulary.Keys.Directions.Southwest}": Soma.MosconeCenter

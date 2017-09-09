@@ -26,5 +26,5 @@ class Soma.Caltrain extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.Out}": Soma.FourthAndKing
-    "#{Vocabulary.Keys.Directions.East}": Soma.FourthAndKing
+    "#{Vocabulary.Keys.Directions.Out}": Soma.Transbay
+    "#{Vocabulary.Keys.Directions.North}": Soma.Transbay

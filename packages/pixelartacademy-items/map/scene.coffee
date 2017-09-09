@@ -11,10 +11,10 @@ class PAA.Items.Map.Scene extends LOI.Adventure.Scene
 
   things: ->
     # You have the map after you completed the script in Arrivals.
-    hasMap = true if _.nestedProperty LOI.adventure.gameState(), "scripts.#{PAA.Season1.Episode0.Chapter1.Airship.Arrivals.id()}.MentalMap"
+    hasMap = true if PAA.Season1.Episode0.Chapter1.Immigration.Concourse.scriptState 'MentalMap'
 
     # For existing players, also show the map after reaching chapter 2.
-    hasMap = true if _.nestedProperty LOI.adventure.gameState(), "things.#{PAA.Season1.Episode0.Chapter2.id()}"
+    hasMap = true if PAA.Season1.Episode0.state 'Chapter2'
 
     [
       PAA.Items.Map if hasMap

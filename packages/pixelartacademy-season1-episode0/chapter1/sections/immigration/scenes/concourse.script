@@ -18,9 +18,13 @@ alex: Immigration is this way.
 
 `scene.alexLeft = true`
 
--> [End] `alex.firstTalkDone`
+> All these directions … You make a mental map of where you are.
 
-> Something feels strange. You seem to know Alex, but you can't really tell from where.
+pause
+
+## MentalMap
+
+> You can now ![look at the map](look at map).
 
 `alex.firstTalkDone = true`
 

@@ -29,3 +29,4 @@ class Soma.SecondAndKing extends LOI.Adventure.Location
   exits: ->
     "#{Vocabulary.Keys.Directions.Northwest}": Soma.SecondStreet
     "#{Vocabulary.Keys.Directions.Southwest}": Soma.FourthAndKing
+    "#{Vocabulary.Keys.Directions.Southeast}": Soma.ChinaBasinPark

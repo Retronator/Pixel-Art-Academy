@@ -25,9 +25,10 @@ class Soma.FourthAndKing extends LOI.Adventure.Location
     super
 
   things: -> [
+    Soma.Items.Muni
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.In}": Soma.Caltrain
-    "#{Vocabulary.Keys.Directions.West}": Soma.Caltrain
     "#{Vocabulary.Keys.Directions.Northwest}": Soma.MosconeCenter
+    "#{Vocabulary.Keys.Directions.Northeast}": Soma.SecondAndKing
+    "#{Vocabulary.Keys.Directions.Southeast}": Soma.MissionRock

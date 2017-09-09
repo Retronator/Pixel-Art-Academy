@@ -18,8 +18,6 @@ class PAA.Season1.Episode0.Chapter3 extends LOI.Adventure.Chapter
   @scenes: -> [
     @Inventory
     @SecondStreet
-    @FourthAndKing
-    @MosconeCenter
   ]
 
   @initialize()

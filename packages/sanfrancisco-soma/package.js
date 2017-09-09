@@ -40,4 +40,5 @@ Package.onUse(function(api) {
   api.addFile('missionbay/missionbay');
   api.addFile('missionrock/missionrock');
   api.addFile('chinabasinpark/chinabasinpark');
+  api.addFile('transbay/transbay');
 });
