@@ -55,6 +55,3 @@ class C3.Behavior extends LOI.Adventure.Location
         priority: 1
         action: =>
           @startScript label: 'UseTerminal'
-
-  onEnter: ->
-    LOI.adventure.goToItem C3.Behavior.Terminal
