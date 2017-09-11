@@ -39,30 +39,36 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
 
         renderer
 
-  _addLandmarks: (renderer) ->
+  _addLandmarks: (renderer, options = {}) ->
+    offsetX = options.offsetX or 0
+    offsetY = options.offsetY or 0
+
     # Add all landmarks from this renderer.
     for rendererLandmarkName, rendererLandmark of renderer.landmarks()
       translatedLandmark = _.extend {}, rendererLandmark,
-        x: rendererLandmark.x + renderer._translation.x
-        y: rendererLandmark.y + renderer._translation.y
+        x: rendererLandmark.x + renderer._translation.x + offsetX
+        y: rendererLandmark.y + renderer._translation.y + offsetY
 
       @_landmarks[rendererLandmarkName] = translatedLandmark
 
-  _placeRenderer: (renderer, rendererLandmarkName, landmarkName) ->
+  _placeRenderer: (renderer, rendererLandmarkName, landmarkName, options = {}) ->
     rendererLandmarks = renderer.landmarks()
     return unless @_landmarks[landmarkName] and rendererLandmarks?[rendererLandmarkName]
 
+    offsetX = options.offsetX or 0
+    offsetY = options.offsetY or 0
+
     renderer._translation =
       x: @_landmarks[landmarkName].x
-      y: @_landmarks[landmarkName].y - rendererLandmarks[rendererLandmarkName].y
+      y: @_landmarks[landmarkName].y - rendererLandmarks[rendererLandmarkName].y + offsetY
 
     if renderer._flipHorizontal
-      renderer._translation.x += rendererLandmarks[rendererLandmarkName].x + 1
+      renderer._translation.x += rendererLandmarks[rendererLandmarkName].x + 1 - offsetX
 
     else
-      renderer._translation.x -= rendererLandmarks[rendererLandmarkName].x
+      renderer._translation.x -= rendererLandmarks[rendererLandmarkName].x - offsetX
 
-    @_addLandmarks renderer
+    @_addLandmarks renderer, options
 
   _bodyPartType: (partName) ->
     LOI.Character.Part.Types.Avatar.Body[partName].options.type

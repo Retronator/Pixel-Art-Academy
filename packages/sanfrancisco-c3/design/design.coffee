@@ -57,3 +57,6 @@ class C3.Design extends LOI.Adventure.Location
         priority: 1
         action: =>
           LOI.adventure.goToItem terminal
+
+  onEnter: ->
+    LOI.adventure.goToItem C3.Design.Terminal

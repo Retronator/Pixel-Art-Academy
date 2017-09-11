@@ -65,6 +65,7 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/properties/relativecolorshade/relativecolorshade');
   api.addComponent('design/terminal/properties/sprite/sprite');
   api.addComponent('design/terminal/properties/string/string');
+  api.addComponent('design/terminal/properties/integer/integer');
 
   api.addFile('hallway/hallway');
   api.addThing('lobby/lobby');

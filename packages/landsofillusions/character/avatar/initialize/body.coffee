@@ -284,7 +284,13 @@ LOI.Character.Part.registerClasses
           shape: new LOI.Character.Part.Property.OneOf
             name: 'shape'
             type: 'Avatar.Body.GroinShape'
-    
+          sexOrgan: new LOI.Character.Part.Property.OneOf
+            name: 'sex organ'
+            type: 'Avatar.Body.SexOrgan'
+          pubicHair: new LOI.Character.Part.Property.OneOf
+            name: 'pubic hair'
+            type: 'Avatar.Body.PubicHair'
+
       GroinShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.GroinShape'
         name: 'groin shape'
@@ -294,13 +300,61 @@ LOI.Character.Part.registerClasses
             x: 0
             y: -2.5
         landmarks:
-          navel: new LOI.Character.Avatar.Landmark.Position
-            name: 'navel'
+          hypogastrium: new LOI.Character.Avatar.Landmark.Position
+            name: 'hypogastrium'
           acetabulumLeft: new LOI.Character.Avatar.Landmark.Position
             name: 'acetabulumLeft'
           acetabulumRight: new LOI.Character.Avatar.Landmark.Position
             name: 'acetabulumRight'
-    
+          pubicSymphysis: new LOI.Character.Avatar.Landmark.Position
+            name: 'pubicSymphysis'
+
+      SexOrgan: new LOI.Character.Part
+        type: 'Avatar.Body.SexOrgan'
+        name: 'sex organ'
+        properties:
+          shape: new LOI.Character.Part.Property.OneOf
+            name: 'shape'
+            type: 'Avatar.Body.SexOrganShape'
+
+      SexOrganShape: new LOI.Character.Avatar.Parts.SkinShape
+        type: 'Avatar.Body.SexOrganShape'
+        name: 'sex organ shape'
+        renderer: new LOI.Character.Avatar.Renderers.Shape
+          origin:
+            landmark: 'pubicSymphysis'
+        landmarks:
+          pubicSymphysis: new LOI.Character.Avatar.Landmark.Position
+            name: 'pubicSymphysis'
+
+      PubicHair: new LOI.Character.Part
+        type: 'Avatar.Body.PubicHair'
+        name: 'pubic hair'
+        properties:
+          color: new LOI.Character.Avatar.Properties.Color
+            name: 'color'
+            colorsPresetName: 'Default'
+            default:
+              hue: 0
+              shade: 2
+          shape: new LOI.Character.Part.Property.OneOf
+            name: 'shape'
+            type: 'Avatar.Body.PubicHairShape'
+
+      PubicHairShape: new LOI.Character.Avatar.Parts.Shape
+        type: 'Avatar.Body.PubicHairShape'
+        name: 'pubic hair shape'
+        renderer: new LOI.Character.Avatar.Renderers.Shape
+          origin:
+            landmark: 'pubicSymphysis'
+        materials:
+          pubicHair: (part) ->
+            pubicHairPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.PubicHair
+            pubicHairPart.properties.color
+        landmarks:
+          pubicSymphysis: new LOI.Character.Avatar.Landmark.Position
+            name: 'pubicSymphysis'
+
       Arms: new LOI.Character.Part
         type: 'Avatar.Body.Arms'
         name: 'arms'
