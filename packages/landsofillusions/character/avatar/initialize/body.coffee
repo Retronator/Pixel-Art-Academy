@@ -50,6 +50,9 @@ LOI.Character.Part.registerClasses
           hairBehind: new LOI.Character.Part.Property.Array
             name: 'hair behind'
             type: 'Avatar.Body.Hair'
+          facialHair: new LOI.Character.Part.Property.Array
+            name: 'facial hair'
+            type: 'Avatar.Body.FacialHair'
         renderer: new LOI.Character.Avatar.Renderers.Head
           origin:
             landmark: 'atlas'
@@ -81,7 +84,35 @@ LOI.Character.Part.registerClasses
         landmarks:
           forehead: new LOI.Character.Avatar.Landmark.Position
             name: 'forehead'
-    
+
+      FacialHair: new LOI.Character.Part
+        type: 'Avatar.Body.FacialHair'
+        name: 'facial hair'
+        properties:
+          color: new LOI.Character.Avatar.Properties.Color
+            name: 'color'
+            colorsPresetName: 'Default'
+            default:
+              hue: 0
+              shade: 2
+          shapes: new LOI.Character.Part.Property.Array
+            name: 'shapes'
+            type: 'Avatar.Body.FacialHairShape'
+
+      FacialHairShape: new LOI.Character.Avatar.Parts.Shape
+        type: 'Avatar.Body.FacialHairShape'
+        name: 'facial hair shape'
+        renderer: new LOI.Character.Avatar.Renderers.Shape
+          origin:
+            landmark: 'mouth'
+        materials:
+          facialHair: (part) ->
+            facialHairPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.FacialHair
+            facialHairPart.properties.color
+        landmarks:
+          mouth: new LOI.Character.Avatar.Landmark.Position
+            name: 'mouth'
+
       HeadShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.HeadShape'
         name: 'head shape'
@@ -97,6 +128,8 @@ LOI.Character.Part.registerClasses
             name: 'eyeRight'
           forehead: new LOI.Character.Avatar.Landmark.Position
             name: 'forehead'
+          mouth: new LOI.Character.Avatar.Landmark.Position
+            name: 'mouth'
 
       Neck: new LOI.Character.Part
         type: 'Avatar.Body.Neck'
@@ -229,6 +262,9 @@ LOI.Character.Part.registerClasses
           nippleShape: new LOI.Character.Part.Property.OneOf
             name: 'nipple shape'
             type: 'Avatar.Body.NippleShape'
+        renderer: new LOI.Character.Avatar.Renderers.Breasts
+          origin:
+            landmark: 'breastCenter'
 
       BreastShapeTop: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.BreastShapeTop'

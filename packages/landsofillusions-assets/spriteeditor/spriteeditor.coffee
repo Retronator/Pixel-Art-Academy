@@ -24,6 +24,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, 0, -1).normalize()
     @paintNormals = new ReactiveField false
+    @symmetryXOrigin = new ReactiveField null
 
     @spriteId = new ComputedField =>
       FlowRouter.getParam 'spriteId'
@@ -61,6 +62,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
         @sprite()
         @landmarks()
       ]
+      symmetryXOrigin: @symmetryXOrigin
         
     setAssetId = (spriteId) =>
       FlowRouter.setParams {spriteId}
@@ -114,6 +116,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
       @constructor.Tools.ColorFill
       @constructor.Tools.ColorPicker
       @constructor.Tools.PaintNormals
+      @constructor.Tools.Symmetry
     ]
 
     tools = for toolClass in toolClasses

@@ -14,11 +14,11 @@ class LOI.Character.Avatar.Parts.CustomColors extends LOI.Character.Part
 
       return unless customColorsFields = customColorsProperty.options.dataLocation()?.data()?.fields
 
-      for customColorOrder, customColor of customColorsFields
+      for customColorOrder, customColor of customColorsFields when customColor.node
         nameField = customColor.node.fields.name
         colorField = customColor.node.fields.color
 
-        continue unless nameField?.value
+        continue unless nameField?.value and colorField
 
         materialsData[nameField.value] =
           ramp: colorField.node.fields.hue?.value

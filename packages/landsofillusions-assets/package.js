@@ -78,5 +78,6 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
   api.addFile('spriteeditor/tools/paintnormals');
+  api.addFile('spriteeditor/tools/symmetry');
 
 });

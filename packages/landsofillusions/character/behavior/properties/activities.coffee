@@ -75,6 +75,6 @@ class LOI.Character.Behavior.Activities extends LOI.Character.Part.Property.Arra
       activities.push activityPart if activityHoursPerWeek > 0
 
     # TODO: Replace with translated names.
-    activityNames = (_.capitalize activity.properties.key.options.dataLocation() for activity in activities)
+    activityNames = (_.upperFirst activity.properties.key.options.dataLocation() for activity in activities)
 
     activityNames.join ', '

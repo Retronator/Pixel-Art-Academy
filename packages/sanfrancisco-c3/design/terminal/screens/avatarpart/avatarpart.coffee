@@ -11,6 +11,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
     # We need these fields in the constructor, because they're being set right away.
     @part = new ReactiveField null
+    @previewPart = new ReactiveField null
 
     # We use this when the user wants to choose a different template (and templates wouldn't be shown by default).
     @forceShowTemplates = new ReactiveField false
@@ -71,13 +72,16 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       dataLocation: new AMu.Hierarchy.Location
         rootField: dataField
 
-  pushPart: (part) ->
+  pushPart: (part, previewPart) ->
     # Put current part on the stack
     currentPart = @part()
     @partStack.push currentPart if currentPart
 
     # Set new part as active.
     @part part
+
+    # Replace the preview part, if it's present.
+    @previewPart previewPart if previewPart
 
     # Reset force modes.
     @forceShowTemplates false

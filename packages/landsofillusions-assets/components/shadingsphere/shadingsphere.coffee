@@ -182,7 +182,11 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
     @angleSnapInput = new @constructor.AngleSnap @angleSnap
 
   setNormal: (normal) ->
-    @currentNormal normal
+    if normal
+      @currentNormal new THREE.Vector3 normal.x, normal.y, normal.z
+
+    else
+      @currentNormal new THREE.Vector3 0, 0, 1
 
   canvasCoordinateToNormal: (coordinate, angleSnap) ->
     radius = @options.radius()

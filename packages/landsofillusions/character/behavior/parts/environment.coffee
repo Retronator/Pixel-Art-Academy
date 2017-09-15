@@ -42,12 +42,12 @@ class LOI.Character.Behavior.Environment extends LOI.Character.Part
     people = @properties.people.parts()
     
     if people.length is 1
-      peopleString = "One person"
+      peopleString = "One significant person"
       
     else if people.length > 1
-      peopleString = "#{people.length} people"
+      peopleString = "#{people.length} significant people"
       
     else
       peopleString = "No people"
-    
+
     "#{peopleString} in life."

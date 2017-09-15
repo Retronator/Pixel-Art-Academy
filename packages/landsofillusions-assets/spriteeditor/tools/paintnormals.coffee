@@ -12,5 +12,5 @@ class LOI.Assets.SpriteEditor.Tools.PaintNormals extends LandsOfIllusions.Assets
     'enabled' if @options.editor().paintNormals()
 
   method: ->
-    paintNormals = @options.editor().paintNormals
-    paintNormals not paintNormals()
+    paintNormalsField = @options.editor().paintNormals
+    paintNormalsField not paintNormalsField()

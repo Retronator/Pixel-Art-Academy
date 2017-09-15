@@ -55,6 +55,9 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     # Provide active sprite's landmarks, but translate them to the origin.
     return unless spriteData = @activeSprite().options.spriteData()
 
+    # If there are no landmarks, there's nothing to do.
+    return unless spriteData.landmarks
+
     translation = @translation()
 
     landmarks = {}

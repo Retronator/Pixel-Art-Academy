@@ -24,15 +24,24 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LandsOfIllusions.Assets.Tools
     # Do we even need to remove this pixel? See if it is even there.
     spriteData = @options.editor().spriteData()
 
-    pixel =
-      x: @mouseState.x
-      y: @mouseState.y
+    xCoordinates = [@mouseState.x]
 
-    existing = LOI.Assets.Sprite.documents.findOne
-      _id: spriteData._id
-      "layers.#{0}.pixels":
-        $elemMatch: pixel
+    symmetryXOrigin = @options.editor().symmetryXOrigin()
 
-    return unless existing
+    if symmetryXOrigin?
+      mirroredX = -@mouseState.x + 2 * symmetryXOrigin
+      xCoordinates.push mirroredX
 
-    LOI.Assets.Sprite.removePixel spriteData._id, 0, pixel
+    for xCoordinate in xCoordinates
+      pixel =
+        x: xCoordinate
+        y: @mouseState.y
+
+      existing = LOI.Assets.Sprite.documents.findOne
+        _id: spriteData._id
+        "layers.#{0}.pixels":
+          $elemMatch: pixel
+
+      return unless existing
+
+      LOI.Assets.Sprite.removePixel spriteData._id, 0, pixel

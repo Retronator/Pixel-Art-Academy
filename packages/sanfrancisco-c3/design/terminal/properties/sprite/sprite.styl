@@ -5,6 +5,7 @@
     position relative
 
     .landsofillusions-assets-components-assetslist
+      display none
       position absolute
       z-index 1
       top calc(100% + 1rem)
@@ -52,6 +53,10 @@
             background-color atariGrey(1)
             color atariGrey(4)
             cursor default
+
+    &.visible
+      .landsofillusions-assets-components-assetslist
+        display block
 
   .sprite-preview
     position relative

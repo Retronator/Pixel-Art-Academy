@@ -35,6 +35,9 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
       spriteId: @spriteId
       lightDirection: @lightDirection
 
+  spriteListVisibleClass: ->
+    'visible' if @showSpriteList()
+
   showSpritePreview: ->
     @spriteId()
 

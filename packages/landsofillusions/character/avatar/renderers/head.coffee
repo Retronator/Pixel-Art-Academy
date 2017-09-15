@@ -13,6 +13,7 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     @rightEyeRenderer = @_createRenderer 'eyes', flippedHorizontal: true
     @rightEyeRenderer._flipHorizontal = true
     @hairRenderers = @_createRenderer 'hair'
+    @facialHairRenderers = @_createRenderer 'facialHair'
 
   _placeRenderers: ->
     # Place the neck.
@@ -28,3 +29,6 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     # Place the hair.
     @_placeRenderer hairRenderer, 'forehead', 'forehead' for hairRenderer in @hairBehindRenderers
     @_placeRenderer hairRenderer, 'forehead', 'forehead' for hairRenderer in @hairRenderers
+
+    # Place the facial hair.
+    @_placeRenderer facialHairRenderer, 'mouth', 'mouth' for facialHairRenderer in @facialHairRenderers

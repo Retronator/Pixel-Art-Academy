@@ -31,10 +31,10 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
     personalityPartField?()
 
   isEditable: ->
-    return unless partTemplate = @personalityPart()?.options.dataLocation()?.template
+    partTemplate = @personalityPart()?.options.dataLocation()?.template
 
     userId = Meteor.userId()
-    isOwnTemplate = partTemplate.author?._id is userId
+    isOwnTemplate = partTemplate?.author?._id is userId
 
     # We can edit the template if it's not using a template, or if the template is our own.
     not partTemplate or isOwnTemplate

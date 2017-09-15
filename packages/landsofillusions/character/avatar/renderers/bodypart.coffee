@@ -26,15 +26,23 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
   _createRenderer: (propertyName, options) ->
     property = @options.part.properties[propertyName]
 
+    # Add pass-through renderer options.
+    propertyRendererOptions = _.extend
+      flippedHorizontal: @options.flippedHorizontal
+      landmarksSource: @options.landmarksSource
+      materialsData: @options.materialsData
+    ,
+      options
+
     if property.part
-      renderer = property.part.createRenderer @engineOptions, options
+      renderer = property.part.createRenderer @engineOptions, propertyRendererOptions
       @renderers.push renderer
 
       renderer
 
     else if property.parts
       for part in property.parts()
-        renderer = part.createRenderer @engineOptions, options
+        renderer = part.createRenderer @engineOptions, propertyRendererOptions
         @renderers.push renderer
 
         renderer
@@ -68,7 +76,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     else
       renderer._translation.x -= rendererLandmarks[rendererLandmarkName].x - offsetX
 
-    @_addLandmarks renderer, options
+    @_addLandmarks renderer, options unless options.skipAddingLandmarks
 
   _bodyPartType: (partName) ->
     LOI.Character.Part.Types.Avatar.Body[partName].options.type

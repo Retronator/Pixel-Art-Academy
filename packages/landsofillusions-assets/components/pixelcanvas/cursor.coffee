@@ -31,3 +31,9 @@ class LOI.Assets.Components.PixelCanvas.Cursor
       context.setLineDash []
 
     context.strokeRect pixelPerfectCoordinate.x, pixelPerfectCoordinate.y, 1, 1
+
+    symmetryXOrigin = @pixelCanvas.options.symmetryXOrigin()
+
+    if symmetryXOrigin?
+      mirroredX = -pixelPerfectCoordinate.x + 2 * symmetryXOrigin
+      context.strokeRect mirroredX, pixelPerfectCoordinate.y, 1, 1
