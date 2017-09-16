@@ -12,6 +12,8 @@ LOI.Assets.Palette.insert.method (palette) ->
       ]
     ]
 
+  RA.authorizeAdmin()
+
   # Create an empty palette if no data is provided.
   palette ?= {}
 

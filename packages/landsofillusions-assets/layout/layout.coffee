@@ -15,5 +15,8 @@ class LOI.Assets.Layout extends BlazeLayoutComponent
       safeAreaHeight: 350
       minScale: 2
 
+  loading: ->
+    Meteor.loggingIn()
+
   renderPage: (parentComponent) ->
     @_renderRegion 'page', parentComponent

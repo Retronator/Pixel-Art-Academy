@@ -64,6 +64,8 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
       b: Number
     materialIndex: Match.Optional Match.Integer
 
+  RA.authorizeAdmin()
+
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
@@ -112,6 +114,8 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
   check pixel, Match.ObjectIncluding
     x: Match.Integer
     y: Match.Integer
+
+  RA.authorizeAdmin()
 
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
@@ -177,6 +181,8 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
       g: Number
       b: Number
     materialIndex: Match.Optional Match.Integer
+
+  RA.authorizeAdmin()
 
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
 

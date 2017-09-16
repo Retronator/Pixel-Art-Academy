@@ -1,6 +1,12 @@
+AE = Artificial.Everywhere
+
 # Add the user helper. We allow sending it a user ID to support calling this from subscriptions.
 Retronator.user = (options) ->
-  userId = options?.userId or Meteor.userId()
+  if options?.userId isnt undefined
+    userId = options?.userId
+
+  else
+    userId = Meteor.userId()
 
   Retronator.Accounts.User.documents.findOne userId, options
 

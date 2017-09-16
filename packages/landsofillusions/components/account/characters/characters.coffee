@@ -27,6 +27,26 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     @selectedCharacter = new ComputedField =>
       LOI.Character.documents.findOne @selectedCharacterId()
 
+    nameInputOptions =
+      addTranslationText: => @translation "Add language variant"
+      removeTranslationText: => @translation "Remove language variant"
+      newTranslationLanguage: ''
+
+    @fullNameInput = new LOI.Components.TranslationInput _.extend {}, nameInputOptions,
+      placeholderText: => LOI.Character.Avatar.noNameTranslation()
+      placeholderInTargetLanguage: true
+      onTranslationInserted: (languageRegion, value) =>
+        LOI.Character.updateName @selectedCharacterId(), languageRegion, value
+
+      onTranslationUpdated: (languageRegion, value) =>
+        LOI.Character.updateName @selectedCharacterId(), languageRegion, value
+
+        # Return true to prevent the default update to be executed.
+        true
+        
+  renderFullNameInput: ->
+    @fullNameInput.renderComponent @currentComponent()
+
   characters: ->
     user = Retronator.user()
     return unless user?.characters

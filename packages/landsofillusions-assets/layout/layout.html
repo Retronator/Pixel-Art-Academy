@@ -1,12 +1,20 @@
 <template name="LandsOfIllusions.Assets.Layout">
-  <style>
-    html {
-      font-size: {{display.scale}}px;
-      background: black;
-    }
-  </style>
-  {{> Render display}}
-  <div class="landsofillusions-assets-layout">
-    {{> renderPage}}
-  </div>
+  {{#if loading}}
+    Loading …
+  {{else}}
+    {{#if currentUser.hasItem 'Retronator.Admin'}}
+      <style>
+        html {
+          font-size: {{display.scale}}px;
+          background: black;
+        }
+      </style>
+      {{> Render display}}
+      <div class="landsofillusions-assets-layout">
+        {{> renderPage}}
+      </div>
+    {{else}}
+      <p>Restricted area. Please turn back.</p>
+    {{/if}}
+  {{/if}}
 </template>
