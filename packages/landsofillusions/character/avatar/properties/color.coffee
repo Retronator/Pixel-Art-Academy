@@ -27,7 +27,7 @@ class LOI.Character.Avatar.Properties.Color extends LOI.Character.Part.Property
     colorNode = @options.dataLocation()
     shade = colorNode? 'shade'
 
-    # Compare for existence since hue can be 0.
+    # Compare for existence since shade can be 0.
     return shade if shade?
 
     @options.default?.shade

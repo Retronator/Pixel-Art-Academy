@@ -57,6 +57,7 @@ Package.onUse(function(api) {
 
   api.addFile('design/terminal/components/components');
   api.addComponent('design/terminal/components/avatarpartpreview/avatarpartpreview');
+  api.addComponent('design/terminal/components/customcolorpreview/customcolorpreview');
 
   api.addFile('design/terminal/properties/properties');
   api.addComponent('design/terminal/properties/oneof/oneof');
