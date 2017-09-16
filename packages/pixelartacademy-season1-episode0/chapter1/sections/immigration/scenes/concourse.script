@@ -24,7 +24,7 @@ pause
 
 ## MentalMap
 
-> You can now ![look at the map](look at map).
+> You can now look at the ![map](map).
 
 `alex.firstTalkDone = true`
 
