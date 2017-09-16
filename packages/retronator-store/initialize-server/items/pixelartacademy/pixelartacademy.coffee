@@ -3,6 +3,8 @@ RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
 Document.startup ->
+  return if Meteor.settings.startEmpty
+
   # PIXEL ART ACADEMY ACCESS
 
   RS.Transactions.Item.create

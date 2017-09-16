@@ -68,5 +68,5 @@ class Retronator.App extends Artificial.Base.App
 
 # On the server, the component will not be created through rendering so we simply instantiate it here.
 if Meteor.isServer
-  Meteor.startup =>
+  Meteor.startup ->
     new Retronator.App()

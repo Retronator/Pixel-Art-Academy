@@ -3,6 +3,8 @@ AB = Artificial.Babel
 
 # On the server, create regions.
 Document.startup ->
+  return if Meteor.settings.startEmpty
+
   # Add the regions from the data string.
   dataRows = AE.CSVParser.parse AB.Region.data
 

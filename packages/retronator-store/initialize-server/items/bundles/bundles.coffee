@@ -3,6 +3,8 @@ RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
 Document.startup ->
+  return if Meteor.settings.startEmpty
+
   # Here we populate the store with all the items. Simple items are defined inline here, others
   # that have specific eligibility checking are their own classes that handle their creation.
 

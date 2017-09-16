@@ -83,6 +83,8 @@ class LOI.Adventure.Script
 
   setCurrentThings: (thingClasses) ->
     Tracker.autorun (computation) =>
+      return unless LOI.adventureInitialized()
+
       things = {}
       for key, thingClass of thingClasses
         return unless things[key] = LOI.adventure.getCurrentThing thingClass

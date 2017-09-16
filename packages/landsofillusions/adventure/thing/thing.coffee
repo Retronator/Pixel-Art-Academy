@@ -101,6 +101,8 @@ class LOI.Adventure.Thing extends AM.Component
     # On the server, prepare any extra translations.
     if Meteor.isServer
       Document.startup =>
+        return if Meteor.settings.startEmpty
+      
         translationNamespace = @id()
 
         for translationKey, defaultText of @_translations()

@@ -6,7 +6,7 @@ class Migration extends Document.MajorMigration
   forward: (document, collection, currentSchema, newSchema) =>
     count = 0
 
-    translationsCollection = new DirectCollection 'ArtificialBabelTranslations'
+    translationsCollection = new DirectCollection 'Artificial.Babel.Translations'
 
     collection.findEach
       _schema: currentSchema
@@ -51,7 +51,7 @@ class Migration extends Document.MajorMigration
   backward: (document, collection, currentSchema, oldSchema) =>
     count = 0
 
-    translationsCollection = new DirectCollection 'ArtificialBabelTranslation'
+    translationsCollection = new DirectCollection 'Artificial.Babel.Translation'
 
     collection.findEach
       _schema: currentSchema

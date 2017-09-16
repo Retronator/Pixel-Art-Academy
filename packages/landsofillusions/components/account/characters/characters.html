@@ -6,7 +6,10 @@
   <ul class="characters">
     {{#each characters}}
       <li class="character">
-        <button class="load-character">{{avatar.fullName.translate.text}}</button>
+        <button class="load-character">
+          {{avatar.fullName.translate.text}}
+          {{#unless activated}}(draft){{/unless}}
+        </button>
       </li>
     {{/each}}
     {{#each emptyLines}}

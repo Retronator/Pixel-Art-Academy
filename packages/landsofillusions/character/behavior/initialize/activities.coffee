@@ -2,7 +2,9 @@ LOI = LandsOfIllusions
 Behavior = LOI.Character.Behavior
 
 if Meteor.isServer
-  Document.startup =>
+  Document.startup ->
+    return if Meteor.settings.startEmpty
+
     Behavior.Activity.create
       key: Behavior.Activity.Keys.Sleep
       name: "Sleep"

@@ -1,6 +1,8 @@
 AB = Artificial.Babel
 
 Document.startup ->
+  return if Meteor.settings.startEmpty
+
   # Generate all default english vocabulary phrases
   phrases =
     Directions:

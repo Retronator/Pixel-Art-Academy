@@ -22,7 +22,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   onCreated: ->
     super
 
-    LOI.Character.activatedForCurrentUser.subscribe @
+    LOI.Character.forCurrentUser.subscribe @
 
     @selectedCharacter = new ComputedField =>
       LOI.Character.documents.findOne @selectedCharacterId()
@@ -31,14 +31,8 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     user = Retronator.user()
     return unless user?.characters
 
-    activatedCharacters = _.filter user.characters, (character) =>
-      character = LOI.Character.documents.findOne character._id
-      character?.activated
-
-    for character in activatedCharacters
-      character.refresh()
-
-    activatedCharacters
+    for character in user.characters
+      LOI.Character.documents.findOne character._id
 
   emptyLines: ->
     charactersCount = @characters()?.length or 0

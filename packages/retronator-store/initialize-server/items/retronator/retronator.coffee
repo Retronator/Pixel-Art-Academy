@@ -2,6 +2,8 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 
 Document.startup ->
+  return if Meteor.settings.startEmpty
+
   # RETRONATOR ITEMS
 
   RS.Transactions.Item.create

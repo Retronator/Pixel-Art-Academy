@@ -47,6 +47,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
 # Initialize on startup.
 Document.startup ->
   return unless AT.Twitter.initialized
+  return if Meteor.settings.startEmpty
 
   # Parse the full history of last 3200 tweets on startup.
   # EDIT: Our database is well populated now so there is no more need for this and we save on server resources.

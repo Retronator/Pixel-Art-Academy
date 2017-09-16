@@ -3,6 +3,8 @@ AE = Artificial.Everywhere
 
 # On the server, create languages.
 Document.startup ->
+  return if Meteor.settings.startEmpty
+
   # Add the languages from the data string.
   dataRows = AE.CSVParser.parse AB.Language.data
 

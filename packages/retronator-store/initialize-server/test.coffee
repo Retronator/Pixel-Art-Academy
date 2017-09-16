@@ -5,6 +5,7 @@ RS = Retronator.Store
 Document.startup ->
   # Don't do this on production server.
   return unless Meteor.settings.test
+  return if Meteor.settings.startEmpty
 
   # Kickstarter backers with normal tiers
   createKickstarterBacker 'basic@backer.com', 10, 10, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.BasicGame

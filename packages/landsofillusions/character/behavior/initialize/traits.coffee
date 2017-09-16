@@ -16,9 +16,12 @@ for line in lines
 
       # Prepare trait translations on the server.
       if Meteor.isServer
-        LOI.Character.Behavior.Personality.Trait.create
-          key: trait.key
-          name: trait.key
+        Document.startup ->
+          return if Meteor.settings.startEmpty
+
+          LOI.Character.Behavior.Personality.Trait.create
+            key: trait.key
+            name: trait.key
 
     else
       # We've reached the end of the category.

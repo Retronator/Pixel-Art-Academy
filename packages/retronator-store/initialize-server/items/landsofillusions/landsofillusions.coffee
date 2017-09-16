@@ -3,6 +3,8 @@ RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
 Document.startup ->
+  return if Meteor.settings.startEmpty
+
   # AVATARS
 
   RS.Transactions.Item.create

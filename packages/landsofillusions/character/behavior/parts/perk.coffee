@@ -10,6 +10,8 @@ class LOI.Character.Behavior.Perk extends LOI.Character.Part
   @register: (@key) ->
     if Meteor.isServer
       Document.startup =>
+        return if Meteor.settings.startEmpty
+
         @_createTranslation @key, 'name', @displayName
         @_createTranslation @key, 'description', @description
         @_createTranslation @key, 'effects', @effects
