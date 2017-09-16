@@ -10,7 +10,9 @@
               <div class="dialog">
                 <div class="message">{{message}}</div>
                 <div class="actions">
-                  <button class="action-button confirm-button {{confirmButtonClass}}">{{confirmButtonText}}</button>
+                  {{#if confirmButtonText}}
+                    <button class="action-button confirm-button {{confirmButtonClass}}">{{confirmButtonText}}</button>
+                  {{/if}}
                   <button class="action-button cancel-button {{cancelButtonClass}}">{{cancelButtonText}}</button>
                 </div>
               </div>

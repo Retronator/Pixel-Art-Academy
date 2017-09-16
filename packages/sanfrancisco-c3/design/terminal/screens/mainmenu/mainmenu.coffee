@@ -10,6 +10,14 @@ class C3.Design.Terminal.MainMenu extends AM.Component
   onCreated: ->
     super
 
+  onRendered: ->
+    super
+
+    # Show an alpha-state disclaimer.
+    @terminal.showDialog
+      message: "Agent design is in early prototype stage. Few avatar parts are available and things will change later on."
+      cancelButtonText: "Understood"
+
   character: ->
     character = @currentData()
 
