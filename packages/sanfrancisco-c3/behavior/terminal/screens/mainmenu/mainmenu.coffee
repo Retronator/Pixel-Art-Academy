@@ -26,14 +26,6 @@ class C3.Behavior.Terminal.MainMenu extends AM.Component
 
       @_characters
 
-  onRendered: ->
-    super
-
-    # Show an alpha-state disclaimer.
-    @terminal.showDialog
-      message: "Behavior setup is in early prototype stage. Selected attributes will not have effect on gameplay until later in development."
-      cancelButtonText: "Understood"
-
   events: ->
     super.concat
       'click .character-selection-button': @onClickCharacterSelectionButton

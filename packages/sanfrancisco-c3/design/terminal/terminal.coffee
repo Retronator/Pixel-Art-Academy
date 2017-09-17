@@ -32,3 +32,11 @@ class C3.Design.Terminal extends C3.Items.Terminal
       avatarPart: new @constructor.AvatarPart @
 
     @switchToScreen @screens.mainMenu
+
+  onRendered: ->
+    super
+
+    # Show an alpha-state disclaimer.
+    @showDialog
+      message: "Agent design is in early prototype stage. Few avatar parts are available and things will change later on."
+      cancelButtonText: "Understood"

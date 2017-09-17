@@ -15,6 +15,8 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
     @renderers = [bodyRenderer, outfitRenderer]
 
   drawToContext: (context, options = {}) ->
+    return unless _.every @renderers, (renderer) => renderer.ready()
+
     for renderer in @renderers
       context.save()
       renderer.drawToContext context

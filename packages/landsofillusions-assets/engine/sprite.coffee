@@ -186,6 +186,10 @@ class LOI.Assets.Engine.Sprite
   imageCanvas: ->
     @_imageCanvas()
 
+  ready: ->
+    # Sprite is ready when its canvas is ready.
+    @_imageCanvas()
+
   drawToContext: (context) ->
     return unless imageCanvas = @_imageCanvas()
     return unless bounds = @options.spriteData()?.bounds

@@ -46,3 +46,11 @@ class C3.Behavior.Terminal extends C3.Items.Terminal
 
     # Subscribe to all user's characters to see their designed status.
     LOI.Character.forCurrentUser.subscribe @
+
+  onRendered: ->
+    super
+
+    # Show an alpha-state disclaimer.
+    @showDialog
+      message: "Behavior setup is in early prototype stage. Selected attributes will not have effect on gameplay until later in development."
+      cancelButtonText: "Understood"

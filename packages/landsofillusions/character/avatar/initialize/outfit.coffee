@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 LOI.Character.Part.registerClasses
   Avatar:
     Outfit: new LOI.Character.Part
-      type: 'Outfit'
+      type: 'Avatar.Outfit'
       name: 'outfit'
       properties:
         articles: new LOI.Character.Part.Property.Array

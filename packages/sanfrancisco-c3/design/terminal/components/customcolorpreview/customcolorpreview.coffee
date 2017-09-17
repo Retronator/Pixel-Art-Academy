@@ -5,11 +5,6 @@ C3 = SanFrancisco.C3
 class C3.Design.Terminal.Components.CustomColorPreview extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Components.CustomColorPreview'
 
-  onCreated: ->
-    super
-
-    console.log "yay", @data()
-
   name: ->
     part = @data()
     part.properties.name.options.dataLocation()

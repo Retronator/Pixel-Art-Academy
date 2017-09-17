@@ -3,6 +3,10 @@ LOI = LandsOfIllusions
 class LOI.Character.Avatar.Renderers.Renderer
   constructor: (@options, @engineOptions) ->
 
+  ready: ->
+    # Override to delay rendering while not ready.
+    true
+
   landmarks: ->
     # Override to provide landmarks in this renderer's coordinate system.
 

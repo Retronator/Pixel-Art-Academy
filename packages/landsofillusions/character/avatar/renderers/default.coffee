@@ -32,13 +32,20 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
       # Create landmarks and update renderer translations.
       landmarks = {}
 
-      # We start with the origin landmark.
-      if @options.origin
-        landmarks[@options.origin.landmark] =
-          x: @options.origin.x or 0
-          y: @options.origin.y or 0
+      # If we have a landmarks source, we use it.
+      if @options.landmarksSource
+        _.extend landmarks, @options.landmarksSource.landmarks()
 
-        initialLandmark = true
+        initialLandmark = true if _.keys(landmarks).length
+
+      else
+        # We start with the origin landmark.
+        if @options.origin
+          landmarks[@options.origin.landmark] =
+            x: @options.origin.x or 0
+            y: @options.origin.y or 0
+
+          initialLandmark = true
 
       # Calculate translations of all renderers by matching the
       # landmarks until all renderers' translations have been determined.
@@ -81,6 +88,15 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
           undeterminedRenderers.push renderer
 
       landmarks
+
+    @_ready = new ComputedField =>
+      # Depend on landmarks since _translation isn't reactive, but gets recomputed when landmarks change.
+      @landmarks()
+
+      _.every @renderers(), (renderer) => renderer._translation and renderer.ready()
+
+  ready: ->
+    @_ready()
 
   getRendererForPartType: (type) ->
     _.find @renderers(), (renderer) -> renderer.options.part.options.type is type

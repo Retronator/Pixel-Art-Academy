@@ -51,6 +51,10 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       x: target.x - source.x
       y: target.y - source.y
 
+  ready: ->
+    # Shape is ready when the sprite is ready.
+    @activeSprite().ready()
+
   landmarks: ->
     # Provide active sprite's landmarks, but translate them to the origin.
     return unless spriteData = @activeSprite().options.spriteData()
