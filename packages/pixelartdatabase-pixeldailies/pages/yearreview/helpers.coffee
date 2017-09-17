@@ -64,13 +64,16 @@ class PADB.PixelDailies.Pages.YearReview.Helpers
 
       artwork
 
-  @artistUrl: (screenName) ->
+  @artistUrl: (screenName, year) ->
     FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
-      year: FlowRouter.getParam('year') or new Date().getFullYear()
+      year: year or FlowRouter.getParam('year') or new Date().getFullYear()
       screenName: screenName
 
-  Template.registerHelper 'pixelDailiesArtistUrl', (screenName) =>
-    @artistUrl screenName
+  Template.registerHelper 'pixelDailiesArtistUrl', (screenName, year) =>
+    # Make sure year is a number (if no year is passed, it will be the Kw hash).
+    year = null unless _.isNumber year
+
+    @artistUrl screenName, year
 
   @displayableSubmissionsCondition:
     $nin: [
