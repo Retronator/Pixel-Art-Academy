@@ -48,8 +48,8 @@ class Start.WakeUp extends LOI.Adventure.Scene
       @_hintIndex = Math.min (@_hintIndex or 0) + 1, 3
       listener.startScript label: "Try#{@_hintIndex}"
 
-      # If we haven't displayed all three hints, give another hint after 30 seconds.
-      @giveHint 30000 if @_hintIndex < 3
+      # If we haven't displayed all three hints, give another hint after 10 seconds.
+      @giveHint 10000 if @_hintIndex < 3
     ,
       delay
 
@@ -90,8 +90,8 @@ class Start.WakeUp extends LOI.Adventure.Scene
   onEnter: (enterResponse) ->
     scene = @options.parent
 
-    # Show the first hint after 30 seconds.
-    scene.giveHint 30000
+    # Show the first hint after 10 seconds.
+    scene.giveHint 10000
 
   onCommand: (commandResponse) ->
     scene = @options.parent
