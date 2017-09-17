@@ -101,7 +101,7 @@ class C3.Design.Terminal.Character extends AM.Component
       message = "Do you really want to retire this agent? You will lose control of them and you cannot undo this action."
 
     else
-      message = "Do you really want to delete this design? You cannot undo this action."
+      message = "Do you really want to delete the whole agent design? You cannot undo this action."
 
     # Double check that the user wants to be removed from their character.
     @terminal.showDialog
