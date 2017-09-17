@@ -8,8 +8,6 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.2.0.2');
-
   var packages = [
     // Meteor
     'coffeescript',
