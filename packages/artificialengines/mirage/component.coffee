@@ -199,3 +199,15 @@ class AM.Component extends CommonComponent
     else
       translationKey = translationOrKey
       @translate(translationKey).text
+
+  # Helper to get a translated text from code where we can't use
+  # the translation component. Meant to be called from a reactive context.
+  translateTranslation: (translation) ->
+    # First subscribe to the full data of the translation, since we could be passed just a nested document stub.
+    AB.Translation.forId.subscribe @, translation._id, AB.userLanguagePreference()
+
+    # Get the full translation.
+    translation = AB.Translation.documents.findOne translation._id
+    return "Loading …" unless translation
+
+    translation.translate().text

@@ -10,19 +10,17 @@ class PAA.Season1.Episode0.Chapter3 extends LOI.Adventure.Chapter
   @fullName: -> "Making of a Cyborg"
   @number: -> 3
 
-  @url: -> 'chapter3'
-
   @sections: -> [
     C3.Construct
+    C3.Sync
+  ]
+
+  @scenes: -> [
+    @Inventory
+    @SecondStreet
   ]
 
   @initialize()
 
   constructor: ->
     super
-
-    @inventory = new @constructor.Inventory parent: @
-
-  scenes: -> [
-    @inventory
-  ]

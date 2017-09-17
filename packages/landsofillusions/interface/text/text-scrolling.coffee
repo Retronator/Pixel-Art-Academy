@@ -79,7 +79,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @matchScrollbar position unless @wheelDetected
 
     # See if narrative is in view.
-    if @interfaceReady()
+    if @locationChangeReady()
       viewportBottom = -@scrollTop() + @$window.height()
       narrativeTop = @$ui.position().top
       @uiInView narrativeTop < viewportBottom

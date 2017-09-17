@@ -11,6 +11,8 @@ burra: `_End`
 
 ## MainQuestion
 
+* I'd like to register for an account. -> [Register] `not @player.inventory['Retronator.HQ.Items.Account']`
+* I'm looking for the Cyborg Construction Center. -> [C3] `@scripts.PixelArtAcademy.Season1.Episode0.Chapter3`
 * I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
 * Can you tell me about the HQ again? -> [RetronatorHQ] `RetronatorHQDepartments`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
@@ -111,6 +113,46 @@ burra:
 -> [MainQuestion]    
 
 <!-- OTHER -->
+
+## Register
+
+### Register
+
+-> [End]
+
+## C3
+`_answered = true`
+
+burra: 
+    Ready to create your character, huh?
+    Go southwest and down to Moscone Station. Take the Muni train south to Mission Bay. 
+    C3 is just southeast past the Chase Center.
+
+-> [C3HasMap] `@player.inventory['SanFrancisco.Soma.Items.Map']`
+
+> Burra gives you a map.
+
+### ReceiveMap
+
+burra: Here, I'll circle it for you.
+
+-> [C3End]
+
+## C3HasMap
+
+burra: Here, I'll circle it on your map.
+
+## C3End
+
+pause
+
+### C3Map
+
+burra: I'm sure your mental map can help as well.
+
+> Burra winks at you and points to the TAB key.
+
+-> [MainQuestion]
 
 ## Sandwich
 `_answered = true`

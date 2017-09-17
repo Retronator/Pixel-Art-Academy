@@ -116,7 +116,7 @@ class TopRecentTransactions
     for i in [0...@_sortedTransactions.length]
       @_sortedTransactions[i].index = i
 
-Meteor.publish RS.Transactions.Transaction.topRecent, (count) ->
+Meteor.publish RS.Transactions.Transaction.topRecent, (count = 10) ->
   # We are returning the list of top recent transactions with supporters' names, amounts and messages. We do this by
   # looking at last 50 transactions and only returning the top ones sorted by value. We return these using a special
   # collection TopRecentTransactions that only holds these results.

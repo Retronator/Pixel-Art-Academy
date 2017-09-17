@@ -39,6 +39,17 @@ class LOI.Adventure.Situation
 
     @_applyScene scene for scene in scenes
 
+    @exitsById = new ComputedField =>
+      # Generate a unique set of exit classes from all directions (some directions might lead to
+      # same location) so we don't have multiple avatar objects for the same location.
+      exitClasses = _.uniq _.values @exits()
+      exitClasses = _.without exitClasses, null
+
+      exitsById = {}
+      exitsById[exitClass.id()] = exitClass for exitClass in exitClasses
+
+      exitsById
+
   _applyScene: (scene) ->
     console.log "%cApplying scene", 'background: thistle', scene.id() if LOI.debug
     
@@ -49,15 +60,15 @@ class LOI.Adventure.Situation
         circumstance.add addValues
         console.log "Added", addValues, "to circumstance", circumstanceName if LOI.debug
 
-      if removeValues = scene["remove#{_.capitalize circumstanceName}"]?()
+      if removeValues = scene["remove#{_.upperFirst circumstanceName}"]?()
         circumstance.remove removeValues
         console.log "Removed", removeValues, "from circumstance", circumstanceName if LOI.debug
 
-      if clear = scene["clear#{_.capitalize circumstanceName}"]?()
+      if clear = scene["clear#{_.upperFirst circumstanceName}"]?()
         circumstance.clear()
         console.log "Cleared circumstance", circumstanceName if LOI.debug
 
-      if overrideValues = scene["override#{_.capitalize circumstanceName}"]?()
+      if overrideValues = scene["override#{_.upperFirst circumstanceName}"]?()
         circumstance.override overrideValues
         console.log "Overrode with", addValues, "in circumstance", circumstanceName if LOI.debug
 

@@ -29,3 +29,4 @@ class RS.AirportTerminal.Concourse extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.Out}": RS.AirportTerminal.Terrace
     "#{Vocabulary.Keys.Directions.East}": RS.AirportTerminal.Immigration
     "#{Vocabulary.Keys.Directions.Down}": RS.AirportTerminal.Gates
+    "#{Vocabulary.Keys.Directions.Southwest}": RS.AirportTerminal.Gates

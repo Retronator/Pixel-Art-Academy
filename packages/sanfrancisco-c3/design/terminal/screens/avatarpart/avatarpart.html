@@ -1,0 +1,110 @@
+<template name="SanFrancisco.C3.Design.Terminal.AvatarPart">
+  <div class="sanfrancisco-c3-design-terminal-avatarpart screen {{partClass}}">
+      <h1 class="screen-title">{{titleCase part.options.name}} Design</h1>
+      {{#if showTemplates}}
+        <div class="templates-area">
+          {{#if canCreateNew}}
+            <button class="new-part-button avatar-part">New</button>
+          {{/if}}
+          <ul class="templates">
+            {{#each templates}}
+              <li class="template avatar-part">
+                {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview templatePart}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{else}}
+        <div class="instructions">
+          {{#if partTemplate}}
+            {{#with partTemplate}}
+              <div class="template-info">
+                {{#if isOwnPartTemplate}}
+                  <div class="name">
+                    <span class="label">Template</span>: {{> renderTemplateNameInput name}}
+                  </div>
+                  <p class="main-text">
+                    You are the designer of this template and can edit it.
+                  </p>
+                {{else}}
+                  <div class="name">
+                    <span class="label">Model</span>: {{> t9n name}}
+                  </div>
+                  <p class="main-text">
+                    Click Modify to create your own design based on this template.
+                  </p>
+                {{/if}}
+              </div>
+            {{/with}}
+          {{else}}
+            <p class="main-text">
+              {{#if canCreateNew}}
+                Choose individual parts to complete your design.
+              {{else}}
+                You cannot edit this part. Click Replace if you want to choose a different design.
+              {{/if}}
+            </p>
+          {{/if}}
+        </div>
+        {{#with part}}
+          <div class="part {{editableClass}}">
+            <ul class="properties">
+              {{#each partProperties}}
+                <li class="property {{propertyClass}}">
+                  <div class="avatar-item">
+                    <div class="name">{{capitalize options.name}}</div>
+                    {{#if $is this.type 'oneOf'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.OneOf this}}
+                    {{/if}}
+                    {{#if $is this.type 'array'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Array this}}
+                    {{/if}}
+                    {{#if $is this.type 'color'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Color this}}
+                    {{/if}}
+                    {{#if $is this.type 'relativeColorShade'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.RelativeColorShade this}}
+                    {{/if}}
+                    {{#if $is this.type 'sprite'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Sprite this}}
+                    {{/if}}
+                    {{#if $is this.type 'string'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.String this}}
+                    {{/if}}
+                    {{#if $is this.type 'integer'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Integer this}}
+                    {{/if}}
+                  </div>
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+          <div class="preview">
+            {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview previewPart}}
+          </div>
+        {{/with}}
+      {{/if}}
+    <div class="main-actions">
+      {{#if showTemplates}}
+        <button class="main-button action-button done-button">Back</button>
+      {{else}}
+        <button class="main-button action-button done-button">Done</button>
+        <button class="action-button replace-button">Replace</button>
+        {{#if partTemplate}}
+          {{#if canCreateNew}}
+            {{#if isOwnPartTemplate}}
+              <button class="action-button unlink-template-button">Unlink template</button>
+            {{else}}
+              <button class="action-button unlink-template-button">Modify</button>
+            {{/if}}
+          {{/if}}
+        {{else}}
+          {{#if isAdmin}}
+            <button class="action-button save-as-template-button">Save as template</button>
+          {{/if}}
+        {{/if}}
+        <button class="action-button delete-button danger-button">Delete</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

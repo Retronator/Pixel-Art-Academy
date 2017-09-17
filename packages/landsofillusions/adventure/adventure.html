@@ -11,8 +11,8 @@
       {{/unless}}
     {{/each}}
   </div>
-  {{#unless ready}}
+  {{#if showLoading}}
     {{> LandsOfIllusions.Pages.Loading}}
-  {{/unless}}
+  {{/if}}
   <a class="build-version" href="https://github.com/retronator/pixel-art-academy" target="_blank">alpha build 0.15.0</a>
 </template>

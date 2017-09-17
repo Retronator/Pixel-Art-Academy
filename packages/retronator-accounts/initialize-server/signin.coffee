@@ -9,6 +9,7 @@ else
 # Facebook sign-in configuration
 Meteor.startup ->
   return unless Meteor.settings.facebook
+  return if Meteor.settings.startEmpty
 
   ServiceConfiguration.configurations.upsert
     service: "facebook"
@@ -20,6 +21,7 @@ Meteor.startup ->
 # Twitter sign-in configuration
 Meteor.startup ->
   return unless Meteor.settings.twitter
+  return if Meteor.settings.startEmpty
 
   ServiceConfiguration.configurations.upsert
     service: "twitter"
@@ -31,6 +33,7 @@ Meteor.startup ->
 # Google sign-in configuration
 Meteor.startup ->
   return unless Meteor.settings.google
+  return if Meteor.settings.startEmpty
 
   ServiceConfiguration.configurations.upsert
     service: "google"

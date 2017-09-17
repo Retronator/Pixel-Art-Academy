@@ -17,10 +17,18 @@ captain: Welcome back.
 ## FirstTime
 
 captain: Welcome to Lands of Illusions!
+
+pause
+
+### ShowTitle
+
+wait 0
+
+pause
     
 * Where am I?
 
-captain: Right now you are inside a loading program called the Construct.
+captain: Right now you are inside a special program called the Loader.
 
 ## Construct
 
@@ -37,13 +45,15 @@ captain: It's where we modify the alternate reality you experience in the real w
 
 captain: 
     The AR system operates at the neuron level so just like we can use it to augment your reality, we can completely take over your perception.
-    Your body is in Retronator HQ, but your mind is in the Construct.
+    Your body is in Retronator HQ, but your mind is in the Loader.
 
 -> [MainQuestions] `MainQuestions`
 
 * What kind of modifications do you do? -> [Modifications]
 
 ## Modifications
+
+> The Captain turns on the TV, showing a futuristic-looking city.
 
 captain: Do you know of the utopian city Retropolis?
 
@@ -71,7 +81,7 @@ captain: In the world you just left behind, yes.
 
 ## AlternateReality
 
-captain: Yet, when you exit the Construct, you will enter an alternate reality where Retropolis got formed in 1984 on an island next to the settlement Walden 14.
+captain: Yet, when you exit the Loader, you will enter an alternate reality where Retropolis got formed in 1984 on an island next to the settlement Walden 14.
 
 * I'm starting to get it. -> [GetIt]
 * Walden 14?
@@ -228,13 +238,49 @@ captain:
 
 -> [NoCharacters] `not @user.characters.length`
 
-captain: 
-    I see you already have a character ready to play with. 
-    You can ![use your SYNC](sync) device to select it and we'll establish a neural link with them.
+captain: I see you already made some characters to play with. 
+
+-> [NoActivatedCharacters] `not @user.activatedCharacters().length`
+
+captain: We established a neural link and you can ![use the tv](use tv) to sync with them.
+
+-> [SomeActivatedCharacters] `@user.activatedCharacters().length < @user.characters.length`
+
+-> [MainDialog]
+
+## NoActivatedCharacters
+
+-> [NoActivatedCharactersNoEditor] `not @user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
     
-captain: `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
-    Since you own the Avatar Editor you can also modify their design and attributes.
+captain:
+    You will need to finish their design and behavior attributes first though.
     The staff at the Cyborg Construction Center will help you with that.
+
+-> [MainDialog]
+
+## NoActivatedCharactersNoEditor
+
+captain:
+    Unfortunately you didn't purchase the avatar editor, so they can't be used in the game.
+    You can either purchase the upgrade or simply selecting another, existing character by ![using the tv](use tv).
+
+-> [MainDialog]
+
+## SomeActivatedCharacters
+
+-> [SomeActivatedCharactersNoEditor] `not @user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+    
+captain:
+    You also have a few unfinished characters that still need to be activated.
+    The staff at the Cyborg Construction Center will help you with that.
+
+-> [MainDialog]
+
+## SomeActivatedCharactersNoEditor
+
+captain:
+    You also have a few unfinished characters, but it doesn't seem you have access to the avatar editor to use them.
+    You can either purchase the upgrade or simply continue with your other activated character.
 
 -> [MainDialog]
 
@@ -274,7 +320,7 @@ captain: Great. The TV is there when you're ready.
 ## HasEditor
 
 captain:
-    Since you own the Avatar Editor you can also design a character on your own
+    Since you own the Avatar Editor you can also design a character on your own.
     The staff at the Cyborg Construction Center will help you with that.
      
 -> [MainQuestions] `MainQuestions`
@@ -297,25 +343,23 @@ captain: Very well.
 
 ## MainDialog
 
-captain: How can I help you? `not _MainQuestions`
+captain: Would you like to know anything else? `not _MainQuestions`
 captain: Any more questions? `_MainQuestions`
 
 ## MainQuestions
 
-* Where is the cyborg what-was-it center? -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and not C3`
+* Where is the cyborg … what-was-it center? -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and not C3`
 * Where is the Cyborg Construction Center again? -> [C3Short] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and C3`
 * How do I get out of here? -> [HowToExit]
 * Can I have multiple characters? -> [MultipleCharacters]
 * How do I select a character again? -> [SelectCharacter] `not @user.characters.length`
 * How do I play with my character? -> [LinkCharacter] `@user.characters.length`
-* Tell me about the Construct again. -> [Construct]
+* Tell me about the Loader again. -> [Construct]
 * Can you tell me more about Walden 14? -> [Walden14] `not Walden14`
 * Can you repeat the Walden part? -> [Walden14] `Walden14`
 * Thank you, that's all for now.
 
 captain: Good luck.
-
-### ShowTitle
 
 -> [End]
 
@@ -345,7 +389,7 @@ captain: It's in Mission Bay, south of SOMA. Ask at the reception in the HQ if y
 ## HowToExit
 
 captain: 
-    At any time you're in full immersion—either in the Construct or synced with your character—you can always ![talk to operator](talk to operator).
+    At any time you're in full immersion—either in the Loader or synced with your character—you can always ![talk to operator](talk to operator).
     He can take you back to the real world or help with switching characters.
 
 -> [MainQuestions]

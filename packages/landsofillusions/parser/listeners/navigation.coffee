@@ -7,8 +7,8 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
   onCommand: (commandResponse) ->
-    location = LOI.adventure.currentLocation()
-    exits = location.exits()
+    situation = LOI.adventure.currentSituation()
+    exits = situation.exits()
     return unless exits
 
     # Register possible direction phrases as phrase actions.
@@ -67,13 +67,18 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
           action: action
+          priority: -1
 
         commandResponse.onExactPhrase
           form: [directionKey]
           action: action
+          priority: -1
 
     # Next up wire going to the location by name.
-    for locationId, avatar of location.exitAvatarsByLocationId()
+    for locationId, locationClass of situation.exitsById() when locationClass
+      avatar = LOI.adventure.getAvatar locationClass
+      locationId = locationClass.id()
+
       do (locationId, avatar) =>
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.GoToLocationName, avatar]
@@ -90,6 +95,8 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
         form: [Vocabulary.Keys.Verbs.ExitLocation]
         action: action
         priority: 1
+
+      location = LOI.adventure.currentLocation()
 
       commandResponse.onPhrase
         form: [Vocabulary.Keys.Verbs.ExitLocation, location.avatar]

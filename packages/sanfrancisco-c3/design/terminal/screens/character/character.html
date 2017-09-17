@@ -1,0 +1,60 @@
+<template name="SanFrancisco.C3.Design.Terminal.Character">
+  <div class="sanfrancisco-c3-design-terminal-character screen">
+    <h1 class="screen-title">Agent Design</h1>
+    {{#with character}}
+      <div class="character">
+        <p class="main-text">
+          <label class="full-name"><strong>Code name</strong>:
+            {{> renderFullNameInput document.avatar.fullName}}
+          </label>
+        </p>
+        <p class="main-text">
+          <label class="pronouns"><strong>Pronouns</strong>:
+            {{> SanFrancisco.C3.Design.Terminal.Character.Pronouns}}
+          </label>
+        </p>
+        <p class="main-text">
+          {{#with document}}
+            <label class="dialog-color"><strong>Dialog color</strong>:
+              {{> LandsOfIllusions.Components.Account.Characters.CharacterColorHue}}
+            </label>
+            <label class="dialog-hue"><strong>hue</strong>:
+              {{> LandsOfIllusions.Components.Account.Characters.CharacterColorShade}}
+            </label>
+          {{/with}}
+        </p>
+        <div class="dialog-preview">
+          {{avatar.shortName}} says:
+          <span {{style dialogPreviewStyle}}>
+            "I'm not just saying this to be clever, I'm also saying it because it's true."
+          </span>
+        </div>
+        <p class="main-text avatar-item">
+          <div class="name">Body</div>
+          <div class="avatar-part body-part">
+            {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar.body}}
+          </div>
+        </p>
+        <p class="main-text avatar-item">
+          <div class="name">Outfit</div>
+          <div class="avatar-part outfit-part">
+            {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar.outfit}}
+          </div>
+        </p>
+        <div class="preview">
+          {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar}}
+        </div>
+      </div>
+      <div class="main-actions">
+        {{#if document.designApproved}}
+          <button class="main-button action-button done-button">Done</button>
+          <button class="action-button danger-button delete-button">Retire</button>
+        {{else}}
+          <button class="main-button action-button done-button">Create</button>
+          <button class="action-button save-draft-button">Save draft</button>
+          <button class="action-button danger-button delete-button">Delete</button>
+        {{/if}}
+      </div>
+    {{/with}}
+  </div>
+</template>

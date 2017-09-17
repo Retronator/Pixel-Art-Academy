@@ -13,6 +13,9 @@ class LOI.Adventure extends LOI.Adventure
 
     # Instantiate current location. It depends only on the ID.
     @currentLocation = new ComputedField =>
+      # Wait until the timeline ID is ready.
+      return unless currentTimelineId = @currentTimelineId()
+
       # React to location ID changes.
       currentLocationId = @currentLocationId()
 
@@ -28,7 +31,7 @@ class LOI.Adventure extends LOI.Adventure
         unless currentLocationClass
           console.warn "Location class not found, moving back to start.", currentLocationId if currentLocationId
 
-          switch @currentTimelineId()
+          switch currentTimelineId
             when PixelArtAcademy.TimelineIds.DareToDream
               currentLocationClass = Retropolis.Spaceport.AirportTerminal.Terrace
 
@@ -37,6 +40,9 @@ class LOI.Adventure extends LOI.Adventure
 
             when PixelArtAcademy.TimelineIds.Construct
               currentLocationClass = LandsOfIllusions.Construct.Loading
+
+            when PixelArtAcademy.TimelineIds.Present
+              currentLocationClass = SanFrancisco.Apartment.Studio
 
           currentLocationId = currentLocationClass.id()
           @currentLocationId currentLocationId
@@ -57,12 +63,16 @@ class LOI.Adventure extends LOI.Adventure
       true
 
     @currentRegionId = new ComputedField =>
-      @currentLocation().region().id()
+      @currentLocation()?.region()?.id()
     ,
       true
 
     @currentRegion = new ComputedField =>
-      currentRegionClass = LOI.Adventure.Region.getClassForId @currentRegionId()
+      # Make sure the location actually matches the location ID (otherwise we might be in the middle of a change).
+      # This function could hit first if player permissions are changing due to user/character change.
+      return unless @currentLocation()?.id() is @currentLocationId()
+
+      return unless currentRegionClass = LOI.Adventure.Region.getClassForId @currentRegionId()
 
       # Check that the player can be in this region.
       playerHasPermission = currentRegionClass.playerHasPermission()
@@ -78,6 +88,9 @@ class LOI.Adventure extends LOI.Adventure
 
       # Everything is OK, instantiate the region.
       Tracker.nonreactive =>
+        # Do we even need to create a new region or is this just a recompute to determine new permissions?
+        return @_currentRegion if @_currentRegion instanceof currentRegionClass
+
         @_currentRegion?.destroy()
         @_currentRegion = new currentRegionClass
         @_currentRegion
@@ -129,6 +142,23 @@ class LOI.Adventure extends LOI.Adventure
               {enterResponse, listener}
 
             @locationOnEnterResponseResults responseResults
+
+    # We also need to store the location the user logged into Construct from, so we can take them back there.
+    @immersionExitLocationId = new ReactiveField Retronator.HQ.LandsOfIllusions.Room.id()
+    Artificial.Mummification.PersistentStorage.persist
+      storageKey: 'LandsOfIllusions.Adventure.immersionExitLocationId'
+      field: @immersionExitLocationId
+      tracker: @
+      
+  saveImmersionExitLocation: ->
+    # Save current location to local storage.
+    currentLocationId = @currentLocationId()
+    @immersionExitLocationId currentLocationId
+
+    # Save current location to state. We don't really use it except until the next time we load the game.
+    if state = @gameState()
+      state.immersionExitLocationId = currentLocationId
+      @gameState.updated()
 
   goToLocation: (locationClassOrId) ->
     currentLocationClass = _.thingClass @currentLocationId()

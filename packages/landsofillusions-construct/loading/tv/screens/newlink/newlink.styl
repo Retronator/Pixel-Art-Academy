@@ -1,0 +1,52 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-construct-loading-tv-newlink
+  .name
+    acme-7()
+    margin 15rem 0 5rem
+    color atariGreen(5)
+
+  .avatar
+    position relative
+    float right
+    z-index 1
+    width 75rem
+    height 75rem
+    margin 0 0 10rem 10rem
+    border 1rem solid atariGreen(4)
+    background image('/landsofillusions/construct/tv/preview-box.png') 0 0 / 100% 100%
+    animation 60s step-end infinite glitch-opacity !important
+
+    .sanfrancisco-c3-design-terminal-components-avatarpartpreview
+      filter sepia(100%) saturate(200%) hue-rotate(80deg)
+
+    &::after
+      content ''
+      absolute-cover()
+      z-index -1
+      animation 60s infinite glitch-characters
+      border 1rem solid atariGreen(2)
+
+  .category-name
+    text-transform uppercase
+    color atariGreen(5)
+
+  .controls
+    .clone-character-button
+      position absolute
+      right 0
+      top 0
+
+    .cancel-button
+      position absolute
+      left 0
+      top 0
+
+.landsofillusions-construct-loading-tv
+  .name-input
+    display block
+    margin 0 auto
+    background none
+    border none
+    border-bottom 1rem solid atariGreen(4)
+    margin-top 5rem

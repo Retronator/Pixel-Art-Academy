@@ -47,7 +47,9 @@ conductor: How may I help you?
 * Do you know where Retronator is? They make this game, Pixel Art Academy.
 * Ah, nothing. -> [Nothing]
 
-conductor: Let me check my phone … Ah, yes, Retronator's headquarters are located right here in SOMA on 2nd street.
+conductor: 
+  This one is easy, it's right here in SOMA, just across 2nd street. 
+  You can see it from the park outside the Transbay Center.
 
 -> [ConductorQuestions]
 
@@ -55,7 +57,7 @@ conductor: Let me check my phone … Ah, yes, Retronator's headquarters are loca
 
 > The conductor looks at the prospectus.
 
-conductor: Oh, are you here to visit Retronator? I think their headquarters are located on 2nd street right here in SOMA.
+conductor: Oh, are you here to visit Retronator? Their headquarters are located on 2nd street right here in SOMA.
 
 ## ConductorQuestions
 
@@ -74,8 +76,8 @@ conductor:
 ## 2ndStreet
 
 conductor:
-    When you step ![out](out) to the train station, walk ![northwest](nw) up 4th until you get to the Moscone Center.
-    Turn right down Howard and go ![northeast](ne) to 2nd street. Retronator HQ will be on your left.
+    When you step ![out](out) into the Transbay Transit Center, walk ![southwest](sw) to reach 2nd Street.
+    Retronator HQ is right across.
     
 conductor: Oh, HQ … that's short for headquarters, hehehe. `SOMA`
 

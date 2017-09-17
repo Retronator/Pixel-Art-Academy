@@ -36,10 +36,12 @@ class HQ.Cafe extends LOI.Adventure.Location
   things: -> [
     @constructor.Artworks
     HQ.Actors.Burra
+    SanFrancisco.Soma.Items.Map unless SanFrancisco.Soma.Items.Map.state 'inInventory'
   ]
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Up}": HQ.Store
+    "#{Vocabulary.Keys.Directions.Northwest}": HQ.Store
     "#{Vocabulary.Keys.Directions.West}": HQ.Coworking
     "#{Vocabulary.Keys.Directions.East}": SanFrancisco.Soma.SecondStreet
     "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.SecondStreet
@@ -67,6 +69,34 @@ class HQ.Cafe extends LOI.Adventure.Location
             $(window).on 'focus.medium', =>
               complete()
               $(window).off '.medium'
+
+          Register: (complete) =>
+            # Hook back into the Chapter 2 registration script.
+            cafeScene = LOI.adventure.getCurrentThing PAA.Season1.Episode0.Chapter2.Registration.Cafe
+            cafeListener = cafeScene.listeners[0]
+
+            cafeListener.startScript label: 'PlayPixelArtAcademy'
+
+            complete()
+            
+          ReceiveMap: (complete) =>
+            SanFrancisco.Soma.Items.Map.state 'inInventory', true
+            
+            complete()
+
+          C3Map: (complete) =>
+            # To trigger the animation after multiple asks, first turn it off.
+            SanFrancisco.Soma.Items.Map.state 'c3Highlighted', false
+
+            # Highlight after half a second so that it animates after the map opens.
+            Meteor.setTimeout =>
+              SanFrancisco.Soma.Items.Map.state 'c3Highlighted', true
+            ,
+              500
+
+            LOI.adventure.scriptHelpers.itemInteraction
+              item: LOI.adventure.getCurrentThing SanFrancisco.Soma.Items.Map
+              callback: => complete()
 
     @initialize()
 

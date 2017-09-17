@@ -60,6 +60,11 @@ If choice is taken, script continues to given `Label`. (see `Jump` node below).
     
 `Timeout` node that waits the provided number of milliseconds before continuing.
 
+#### Pause
+    `pause`
+    
+Instructs the interface to wait for user input (usually a key press) before continuing with the script.
+
 ### Modifiers
 
 #### Conditionals
@@ -92,6 +97,54 @@ the code snippet is not at the end though since it will be treated as a conditio
 
     Hello world, `user.profile.name`.
 
+### Text substitutions
+
+Dialog and narrative lines can be marked with extra meaning.
+
+#### Command hints
+
+    You should ![open the door](open door).
+    
+The interface will highlight the text "open the door" and display the command hint "open door".
+
+#### Character name and pronouns
+
+    _char_ tries to open the door, but _they_ fail. _Their_ strength is too low.
+    
+`_char_` will be substituted with character's short name.
+
+`_they_` will be substituted with character's subjective pronoun she/he/they.
+
+`_them_` will be substituted with character's objective pronoun her/him/them.
+
+`_their_` will be substituted with character's possessive adjective her/his/their.
+
+`_theirs_` will be substituted with character's possessive pronoun (for use without object) hers/his/theirs.
+
+`_char's_` will be substituted with possessive form of character's name.
+
+The case of the command (`_they_` vs `_They_`) is preserved (she/he/they and She/He/They).
+
+### Text formatting
+
+#### Colors
+
+    %%c(hue)-(shade)%(text)c%%
+    
+`(hue)` and `(shade)` should be numbers inside the avatar palette (shade 0 is shade 6 in Atari2600).
+
+`(text)` is the string being colored.
+
+#### Case transform
+
+    %%tU(text)t%%
+
+Transforms `(text)` to uppercase.
+
+    %%tL(text)t%%
+
+Transforms `(text)` to lowercase.
+
 ### Code variables
 
 #### Context
@@ -100,24 +153,29 @@ The code gets executed in script's context. The variable values here are
 known as script state and each script has their own namespace (the name
 of the root Script node).
 
-If you want a variable to be available everywhere,
-use the `@` sign before variable names.
+If you want a variable to be available everywhere, you can store it in the global
+game state which can be accessed with the `@` sign.
 
     @happy = true
 
-This is also known as the global state. `@happy` will be `true` across
-scripts while `happy` would hold true only in this script's code.
+`@happy` will be `true` across scripts while `happy` would hold true only in this script's code.
+
+Note that you should use the namespace that's as restrictive as it can be to store the value.
+For example, a variable that needs to be the same across all scripts from episode 0 would have
+the address `@scripts.PixelArtAcademy.Season1.Episode0`.
 
 There are some special variables that provide other contexts:
 
 * `this`: Parent object of the script, usually a thing with same ID as the script.
 * `<thing shorthand>`: Thing objects provided with the `setThings` method on the script.
+* `location`: The state of the current location you're at.
 * `@user`: The logged in user's state. It's null when not logged in.
 * `@user.name`: A read-only variable with user's account name.
 * `@user.itemKeys`: A read-only map of catalog keys that this user has purchased.
-* `location`: The local state unique to the location you're at.
-* `@locations`: All location states, addressable by location ID.
+* `@character`: Read-only character instance.
 * `@player.inventory`: A map of items in your inventory.
+* `@scripts`: All script states, addressable by script ID.
+* `@things`: All thing states, addressable by thing ID.
 
 #### Persistence
 

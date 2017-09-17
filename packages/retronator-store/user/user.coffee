@@ -2,7 +2,7 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 
 # Override the user class with extra store functionality.
-class RetronatorAccountsUser extends RA.User
+class RA.User extends RA.User
   # profile: a custom object, writable by default by the client
   #   showSupporterName: boolean whether to show username in public displays
   #   supporterMessage: supporter message to show in public displays
@@ -15,7 +15,7 @@ class RetronatorAccountsUser extends RA.User
   #   _id
   #   catalogKey
   @Meta
-    name: 'RetronatorAccountsUser'
+    name: @id()
     replaceParent: true
     collection: Meteor.users
     fields: (fields) =>
@@ -125,5 +125,3 @@ class RetronatorAccountsUser extends RA.User
         store:
           balance: balance
           credit: credit
-
-RA.User = RetronatorAccountsUser

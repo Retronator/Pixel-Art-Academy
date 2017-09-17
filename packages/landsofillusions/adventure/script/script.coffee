@@ -32,13 +32,18 @@ class LOI.Adventure.Script
 
   _processOnClient: ->
     # On the client we need to load the translation documents.
-    
-    # Also replace jump nodes with actual label nodes they point to.
+    character = LOI.character()
+
+    # Process nodes.
     for node in @nodes
+      # Replace jump nodes with actual label nodes they point to.
       for property in ['node', 'next']
         if node[property] instanceof @constructor.Nodes.Jump
           jumpNode = node[property]
           node[property] = @startNode.labels[jumpNode.labelName]
+
+      # Replace char actor with character instance.
+      node.actor = character if node.actor is 'char'
 
     # Set the script reference to all nodes.
     node.script = @ for node in @nodes
@@ -78,6 +83,8 @@ class LOI.Adventure.Script
 
   setCurrentThings: (thingClasses) ->
     Tracker.autorun (computation) =>
+      return unless LOI.adventureInitialized()
+
       things = {}
       for key, thingClass of thingClasses
         return unless things[key] = LOI.adventure.getCurrentThing thingClass

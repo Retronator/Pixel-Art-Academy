@@ -14,7 +14,28 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/registration/scenes/cafe.script'
 
+  # Script
+
   initializeScript: ->
+    # Link the placeholder to the main script.
+    Tracker.autorun (computation) =>
+      return unless cafe = LOI.adventure.getCurrentThing HQ.Cafe
+
+      burraListener = cafe.getListener HQ.Cafe.BurraListener
+      return unless burraListener.scriptsReady()
+      computation.stop()
+
+      # Find the second of main scripts' questions. We skip the
+      # first one because it's the register fallback in the main script.
+      burraScript = burraListener.scripts[HQ.Cafe.BurraListener.Script.id()]
+      firstMainQuestion = burraScript.startNode.labels.MainQuestion.next.next
+
+      # Find the last of this script's questions.
+      lastQuestion = _.find @nodes, (node) => node.next is @startNode.labels.GeneralQuestionsPlaceholder
+
+      # Link them together.
+      lastQuestion.next = firstMainQuestion
+    
     @setCurrentThings burra: HQ.Actors.Burra
 
     @setCallbacks
@@ -38,6 +59,8 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
         HQ.Items.Keycard.state 'inInventory', true
 
         complete()
+
+  # Listener
 
   onCommand: (commandResponse) ->
     return unless burra = LOI.adventure.getCurrentThing HQ.Actors.Burra

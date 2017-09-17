@@ -17,8 +17,6 @@ class LOI.Components.Overlay extends AM.Component
 
     # Resize elements.
     @autorun (computation) =>
-      LOI.adventure = @ancestorComponent LOI.Adventure
-
       scale = LOI.adventure.interface.display.scale()
       viewport = LOI.adventure.interface.display.viewport()
 
@@ -40,9 +38,11 @@ class LOI.Components.Overlay extends AM.Component
       viewportAreaSize = viewport.viewportBounds.toDimensions()
       maxAreaSize = viewport.maxBounds.toDimensions()
 
-      for area in [viewportAreaSize, maxAreaSize]
-        area.top = Math.max area.top, cropBarHeight
-        area.height = Math.min area.height, maxOverlayHeight
+      viewportAreaSize.top = Math.max viewportAreaSize.top, cropBarHeight
+      viewportAreaSize.height = Math.min viewportAreaSize.height, maxOverlayHeight
+
+      maxAreaSize.height = maxOverlayHeight
+      maxAreaSize.top = viewportAreaSize.top + (viewportAreaSize.height - maxAreaSize.height) * 0.5
 
       @$('.viewport-area').css viewportAreaSize
       @$('.max-area').css maxAreaSize

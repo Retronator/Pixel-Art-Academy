@@ -11,7 +11,7 @@ class Soma.Caltrain extends LOI.Adventure.Location
   @version: -> '0.0.1'
 
   @fullName: -> "Caltrain carriage"
-  @shortName: -> "train"
+  @shortName: -> "caltrain"
   @description: ->
     "
       You are in a Caltrain carriage of a train running between San Francisco and San Jose.
@@ -26,4 +26,5 @@ class Soma.Caltrain extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.Out}": Soma.FourthAndKing
+    "#{Vocabulary.Keys.Directions.Out}": Soma.Transbay
+    "#{Vocabulary.Keys.Directions.North}": Soma.Transbay

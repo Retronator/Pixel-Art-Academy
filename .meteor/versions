@@ -112,9 +112,12 @@ rate-limit@1.0.8
 reactive-dict@1.1.8
 reactive-var@1.0.11
 reload@1.1.11
+retronator:api@1.0.0
 retronator:app@0.15.0
 retronator:artificialengines@1.0.0
+retronator:artificialengines-pages@1.0.0
 retronator:landsofillusions@0.1.0
+retronator:landsofillusions-assets@0.0.1
 retronator:landsofillusions-construct@0.0.1
 retronator:pixelartacademy@0.2.0
 retronator:pixelartacademy-cast@0.1.0
@@ -124,6 +127,7 @@ retronator:pixelartacademy-pixelboy@0.0.1
 retronator:pixelartacademy-practice@0.1.0
 retronator:pixelartacademy-season1@0.1.0
 retronator:pixelartacademy-season1-episode0@0.1.0
+retronator:pixelartacademy-season1-episode1@0.1.0
 retronator:pixelartdatabase@0.0.1
 retronator:pixelartdatabase-pixeldailies@0.2.0
 retronator:retronator@0.1.0
@@ -135,6 +139,8 @@ retronator:retronator-store@0.1.0
 retronator:retropolis@0.1.0
 retronator:retropolis-spaceport@0.0.1
 retronator:sanfrancisco@0.1.0
+retronator:sanfrancisco-apartment@0.0.1
+retronator:sanfrancisco-c3@0.0.1
 retronator:sanfrancisco-soma@0.0.1
 retry@1.0.9
 routepolicy@1.0.12

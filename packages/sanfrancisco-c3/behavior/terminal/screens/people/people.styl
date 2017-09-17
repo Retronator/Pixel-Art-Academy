@@ -1,0 +1,56 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.sanfrancisco-c3-behavior-terminal-people
+  .main-content
+    absolute-cover()
+    overflow-y auto
+    padding 10rem 90rem 10rem 10rem
+
+  .template-info
+  .part
+    width 220rem
+
+  .template-info
+    .label
+      text-transform uppercase
+
+    .name
+      margin-bottom 3rem
+
+      .landsofillusions-components-translationinput
+        display inline-block
+
+  .people
+    list-style none
+    counter-reset people
+    padding 0
+
+    .person
+      position relative
+      margin 0 0 10rem 20rem
+
+      &::before
+        content counter(people) ". "
+        position absolute
+        top 0
+        left -20rem
+        counter-increment people
+        kyrou-9()
+        line-height 12rem
+
+      .property
+        margin-bottom 5rem
+
+        .description
+          color atariGreen(4)
+          margin-bottom 1rem
+
+          .label
+            display block
+            position relative
+            margin-left 13rem
+
+            &::before
+              position absolute
+              top 0
+              left -13rem

@@ -17,6 +17,7 @@ class LOI.Adventure extends AM.Component
 
     conditions = [
       @parser.ready()
+      @interface.ready()
       if currentLocation? then currentLocation.ready() else false
       if currentRegion? then currentRegion.ready() else false
       @episodesReady()
@@ -25,6 +26,11 @@ class LOI.Adventure extends AM.Component
     console.log "Adventure ready?", conditions if LOI.debug
 
     _.every conditions
+
+  showLoading: ->
+    # Show the loading screen when we're not ready, except when other dialogs are already present
+    # (for example, the storyline title) and we want to prevent the black blink in that case.
+    not @ready() and not @modalDialogs().length
 
   logout: (options = {}) ->
     # Notify game state that it should flush any cached updates.
@@ -36,7 +42,7 @@ class LOI.Adventure extends AM.Component
 
         # Now that there is no more user, wait until game state has returned to local storage.
         Tracker.autorun (computation) =>
-          return unless LOI.adventure.gameStateSource() is LOI.Adventure.GameStateSourceType.LocalStorage
+          return unless LOI.adventure.gameStateSource() is LOI.Adventure.GameStateSourceType.LocalStorageUser
           computation.stop()
 
           Tracker.nonreactive =>

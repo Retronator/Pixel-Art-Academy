@@ -3,3 +3,175 @@
 .landsofillusions-construct-loading-tv
   position fixed
   z-index 2
+
+  .display
+    position absolute
+    top 10rem
+    left 13rem
+    width 294rem
+    height 220rem
+    padding 20rem
+    color atariGreen(3)
+
+    &::after
+      content ''
+      absolute-cover()
+      z-index 2
+      background image('/interface/scanline/x2.png') 0 0
+      opacity 0.5
+      pointer-events none
+
+    .screen
+      filter drop-shadow(0 0 2rem atariGreen(2))
+      position relative
+      height 100%
+
+      > *
+        animation 60s infinite glitch-skew, 60s step-end infinite glitch-opacity
+
+    .screen-title
+      margin 0 0 10rem 0
+      acme-9()
+      font-weight bold
+      color atariGreen(5)
+
+    .section-title
+      margin 4rem 0 6rem 0
+      acme-7()
+      font-weight normal
+      color atariGreen(5)
+
+    .main-text
+      margin 4rem 0
+
+      strong
+        font-weight normal
+        text-transform uppercase
+
+    .controls
+      position absolute
+      top 165rem
+      left 0
+      right 0
+      text-align center
+
+    .action-button
+      padding 2rem 4rem
+      border none
+      background atariGreen(3)
+      font inherit
+      color atariGreen(1)
+      text-transform uppercase
+      text-align center
+
+      &:hover
+      &:focus
+        background atariGreen(4)
+        outline none
+
+      &.danger-button
+        border 1rem solid atariGreen(3)
+        background none
+        color atariGreen(3)
+        padding 1rem 3rem
+
+        &:hover
+        &:focus
+          background none
+          border 1rem solid atariGreen(4)
+          color atariGreen(4)
+
+    .dialog-area
+      position absolute
+      left 10rem
+      top 10rem
+      right 10rem
+      bottom 10rem
+      z-index 1
+
+      .dialog
+        position absolute
+        width 200rem
+        top 50%
+        left 50%
+        transform translate(-50%, -50%)
+        text-align center
+        padding 10rem
+        border 1rem solid atariGreen(3)
+        background atariGrey(1)
+        animation 60s infinite glitch-dialog
+
+        .message
+          margin-bottom 10rem
+          animation 60s step-end infinite glitch-opacity
+
+        .action-button
+          min-width 50rem
+
+  .fade
+    fixed-cover()
+    z-index 1
+    transition background 4s
+    background rgba(255,255,255,0)
+    pointer-events none
+
+    &.visible
+      background rgba(255,255,255,1)
+
+  .landsofillusions-components-overlay
+    .background
+      background image('/landsofillusions/construct/tv/tv.png') 50% 50% / 480rem 360rem
+
+html.scale-3
+  .landsofillusions-construct-loading-tv
+    .display
+      &::after
+        background image('/interface/scanline/x3.png') 0 1px
+
+html.scale-4
+  .landsofillusions-construct-loading-tv
+    .display
+      &::after
+        background image('/interface/scanline/x4.png')
+
+@keyframes glitch-skew
+  time = 0
+  for i in 1..10
+    time += math(0, 'random') * 20
+    {1% * (time)}
+      transform skew(0)
+      filter blur(0)
+    {1% * time + 0.2}
+      skewDegrees = floor(math(0, 'random') * 20 - 10)
+      transform skew(1deg * skewDegrees)
+      filter blur(0.5rem)
+    {1% * (time + 0.4)}
+      transform skew(0)
+      filter blur(0)
+
+@keyframes glitch-opacity
+  time = 0
+  for i in 1..10
+    time += math(0, 'random') * 20
+    {1% * (time)}
+      opacity 0.2 * (4 + math(0, 'random'))
+    {1% * time + 0.2}
+      opacity 1
+
+@keyframes glitch-dialog
+  time = 0
+  for i in 1..10
+    time += math(0, 'random') * 20
+    {1% * (time)}
+      transform translate(-50%, -50%)
+      border-width 1rem
+      filter blur(0)
+    {1% * (time + 0.2)}
+      translate = math(0, 'random') - 0.5
+      transform translate(-50% + 1% * translate, -50%)
+      border-width 1rem 2rem
+      filter blur(0.5rem)
+    {1% * (time + 0.4)}
+      transform translate(-50%, -50%)
+      border-width 1rem
+      filter blur(0)

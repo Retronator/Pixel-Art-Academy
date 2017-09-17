@@ -306,7 +306,7 @@ retro:
     
 retro: You should register downstairs with Burra with your backer email. `not @user.signedIn`
 
-* My pleasure. -> [KickstarterPleasure]
+* I will do that. -> [KickstarterOK]  `not @user.signedIn`
 * How do I start playing?
 
 retro:
@@ -315,9 +315,9 @@ retro:
     
 -> [MainQuestion]
 
-## KickstarterPleasure
+## KickstarterOK
 
-retro: The pleasure is mine.
+retro: Awesome, can't wait for you to play what I made so far.
     
 -> [MainQuestion]
     

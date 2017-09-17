@@ -31,3 +31,5 @@ class Soma.MosconeCenter extends LOI.Adventure.Location
   exits: ->
     "#{Vocabulary.Keys.Directions.Southeast}": Soma.FourthAndKing
     "#{Vocabulary.Keys.Directions.Northeast}": Soma.SecondStreet
+    "#{Vocabulary.Keys.Directions.Down}": Soma.MosconeStation
+    "#{Vocabulary.Keys.Directions.Southwest}": Soma.MosconeStation

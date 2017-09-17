@@ -14,9 +14,8 @@ class Soma.FourthAndKing extends LOI.Adventure.Location
   @shortName: -> "4th and King"
   @description: ->
     "
-      You are at the San Francisco 4th and King Street Caltrain station.
-      There is not much to do in this part of the city. Downtown skyscrapers seem more enticing
-      and can be reached by traveling northwest on 4th street.
+      You are at 4th and King Street Muni station.
+      There is not much to do in this part of the city, but paths lead to downtown and and Mission Bay.
     "
   
   @initialize()
@@ -25,8 +24,10 @@ class Soma.FourthAndKing extends LOI.Adventure.Location
     super
 
   things: -> [
+    Soma.Items.Muni
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.In}": Soma.Caltrain
     "#{Vocabulary.Keys.Directions.Northwest}": Soma.MosconeCenter
+    "#{Vocabulary.Keys.Directions.Northeast}": Soma.SecondAndKing
+    "#{Vocabulary.Keys.Directions.Southeast}": Soma.MissionRock

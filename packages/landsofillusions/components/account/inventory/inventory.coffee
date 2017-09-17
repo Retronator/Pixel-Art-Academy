@@ -23,7 +23,7 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
     # Subscribe to item names.
     @autorun (computation) =>
       for item in @items() when item.name
-        @subscribe 'Artificial.Babel.Translation.withId', item.name._id, AB.userLanguagePreference()
+        AB.Translation.forId.subscribe @, item.name._id, AB.userLanguagePreference()
 
     @otherSide = new ReactiveField false
 

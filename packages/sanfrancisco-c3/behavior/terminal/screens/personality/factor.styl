@@ -1,0 +1,124 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.sanfrancisco-c3-behavior-terminal-personality-factor
+  margin-bottom 5rem
+
+  .information
+    display flex
+    color atariGrey(2)
+
+    .factor-template
+      flex-grow 1
+
+      .label-name
+        text-transform uppercase
+
+      select
+      input
+        background none
+        border none
+        color inherit
+        margin 0
+        padding 0
+
+      .landsofillusions-components-translationinput
+        display inline-block
+        width 100rem !important
+
+        input
+          color atariGrey(3)
+          border-bottom 1rem solid atariGrey(1)
+
+    .menu
+      position relative
+
+      .factor-actions
+        display none
+        position absolute
+        right 0
+        z-index 1
+        padding 1rem
+        border 1rem solid atariGrey(2)
+        background atariGrey(0)
+
+        .factor-action-button
+          display block
+          width 50rem
+          background atariGrey(1)
+          border none
+          font inherit
+          color atariGrey(3)
+          margin-bottom 1rem
+
+          &:last-child
+            margin-bottom 0
+
+          &:hover
+            background atariGrey(2)
+            color atariGrey(5)
+
+      &:hover
+        .factor-actions
+          display block
+
+  .traits
+    margin-top 2rem
+    color atariGrey(2)
+    cursor pointer
+
+    &:hover
+      color atariGrey(3)
+
+    .title
+      text-transform uppercase
+
+.sanfrancisco-c3-behavior-terminal-personality-factor-axis
+  .names
+    display flex
+    acme-7()
+
+    .left
+    .right
+      width 50%
+
+    .right
+      text-align right
+
+  .axis
+    position relative
+    margin 3rem 0
+    border 1rem solid atariGrey(2)
+    background atariGrey(1)
+    height 7rem
+
+    .left
+    .right
+      position absolute
+      top 0
+      bottom 0
+
+      .indicator
+        position absolute
+        top -1rem
+        width 7rem
+        height 7rem
+        border 1rem solid atariGrey(2)
+
+      .progress-bar
+        position absolute
+        top 0
+        bottom 0
+
+    .left
+      left 7rem
+      right 50%
+
+      .progress-bar
+        right 0
+
+    .right
+      left 50%
+      right 7rem
+
+      .progress-bar
+        left 0

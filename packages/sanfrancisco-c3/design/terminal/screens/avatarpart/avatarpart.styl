@@ -1,0 +1,126 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.sanfrancisco-c3-design-terminal-avatarpart
+  .templates-area
+    .new-part-button
+    .template
+      float left
+      margin-left -1rem
+      margin-top -1rem
+
+    .new-part-button
+      text-transform uppercase
+
+    .templates
+      list-style none
+      margin 0
+      padding 0
+
+  .instructions
+  .part
+    width 220rem
+
+  .template-info
+    .label
+      text-transform uppercase
+
+    .name
+      margin-bottom 3rem
+
+      .landsofillusions-components-translationinput
+        display inline-block
+
+    .unlink-template-hint
+      color atariGrey(5)
+
+  .part
+    .properties
+      margin 0
+      padding 0
+      list-style none
+      opacity 0.5
+
+      .property
+        position relative
+        display inline-block
+        vertical-align top
+        margin 0 4rem 4rem 0
+
+        &::after
+          content ''
+          absolute-cover()
+
+        > .name
+          text-transform uppercase
+          color atariGrey(5)
+
+        .avatar-part
+          &::after
+            content ''
+            absolute-cover()
+
+    &.editable
+      .properties
+        opacity 1
+
+        .property
+          &::after
+            display none
+
+          .avatar-part
+            &::after
+              pointer-events none
+
+  .preview
+    position absolute
+    bottom 1rem
+    left 115rem
+    width 89rem
+    height 89rem
+    background-image image('/sanfrancisco/c3/design/preview-cube.png')
+
+  &.avatar-body
+    .part
+      .properties
+        .property
+          position absolute
+
+          &.head
+          &.arms
+          &.legs
+          &.torso
+            .name
+              position absolute
+              bottom 50%
+              padding 0 2rem
+              border-bottom 1rem solid atariCyan(1)
+
+          &.head
+          &.arms
+          &.legs
+            .name
+              left 100%
+
+          &.torso
+            .name
+              right 100%
+
+          &.head
+            left 30rem
+            top 80rem
+
+          &.arms
+            left 15rem
+            top 120rem
+
+          &.legs
+            left 30rem
+            top 160rem
+
+          &.torso
+            left 270rem
+            top 120rem
+
+          &.skin
+            left 215rem
+            top 165rem

@@ -14,13 +14,39 @@ class LOI.Adventure extends LOI.Adventure
       new globalClass
 
     # Create episodes.
-    @episodeClasses = [
+    @userEpisodeClasses = [
       PAA.Season1.Episode0
     ]
 
-    @episodes = new ReactiveField []
+    @characterEpisodeClasses = [
+      PAA.Season1.Episode1
+    ]
+    
+    @_resetEpisodesDependency = new Tracker.Dependency
+    
+    @episodes = new ComputedField =>
+      console.log "Recomputing episodes." if LOI.debug
 
-    @resetEpisodes()
+      # Allow resetting of episodes.
+      @_resetEpisodesDependency.depend()
+
+      # Depend on character ID.
+      characterId = LOI.characterId()
+      
+      # Destroy previous episodes.
+      episode.destroy() for episode in @_episodes if @_episodes
+  
+      # Create new ones.
+      Tracker.nonreactive =>
+        if characterId
+          @_episodes = for episodeClass in @characterEpisodeClasses
+            new episodeClass
+
+        else
+          @_episodes = for episodeClass in @userEpisodeClasses
+            new episodeClass
+
+      @_episodes
 
     @currentChapters = new ComputedField =>
       chapters = _.flattenDeep (episode.currentChapters() for episode in @episodes())
@@ -66,15 +92,8 @@ class LOI.Adventure extends LOI.Adventure
       scenes
 
   resetEpisodes: ->
-    # Destroy previous episodes.
-    episode.destroy() for episode in @episodes()
-
-    # Create new ones.
-    episodes = for episodeClass in @episodeClasses
-      new episodeClass
-
-    # Update main episodes field to trigger reactive re-creation of all storylines.
-    @episodes episodes
+    console.log "Resetting episodes." if LOI.debug
+    @_resetEpisodesDependency.changed()
 
   episodesReady: ->
     return false unless LOI.adventureInitialized()

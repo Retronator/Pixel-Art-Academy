@@ -9,8 +9,8 @@ class LOI.Construct.Loading extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "The Construct loading program"
-  @shortName: -> "construct"
+  @fullName: -> "The Loader program"
+  @shortName: -> "Loader"
   @description: ->
     "
       You find yourself in an open white space, extending into infinity.
@@ -32,5 +32,3 @@ class LOI.Construct.Loading extends LOI.Adventure.Location
   things: -> [
     LOI.Construct.Loading.TV
   ]
-
-  exits: ->

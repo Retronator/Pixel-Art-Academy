@@ -83,7 +83,44 @@ class LOI.Parser extends LOI.Parser
           node: commandNodeSequence
           next: lastChoiceNode
 
+        # Save likely action so we can re-translate it in below steps.
+        choiceNode._likelyAction = likelyAction
+
         lastChoiceNode = choiceNode
+
+    # Analyze the generated actions to see if any of translated forms are duplicates.
+    translatedForms = []
+    duplicateForms = []
+
+    testChoiceNode = lastChoiceNode
+
+    loop
+      line = testChoiceNode.node.line
+
+      if line in translatedForms
+        duplicateForms.push line
+
+      else
+        translatedForms.push line
+
+      testChoiceNode = testChoiceNode.next
+      break if testChoiceNode.node is cancelNode
+
+    # Now go over again and re-translate the duplicates with more verbose versions.
+    testChoiceNode = lastChoiceNode
+
+    loop
+      line = testChoiceNode.node.line
+
+      # See if this line is in any of other's translated lines (it's a substring of another form).
+      lineIsSubstring = false
+      (lineIsSubstring = true if translatedForm.indexOf(line) > -1) for translatedForm in translatedForms when translatedForm isnt line
+
+      if lineIsSubstring or line in duplicateForms
+        testChoiceNode.node.line = _.upperFirst @_createIdealForm testChoiceNode._likelyAction, fullNames: true
+
+      testChoiceNode = testChoiceNode.next
+      break if testChoiceNode.node is cancelNode
 
     # The dialog starts with a question to the user.
     questionNode = new Nodes.InterfaceLine

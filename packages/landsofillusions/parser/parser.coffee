@@ -75,10 +75,10 @@ class LOI.Parser
   _createCommandNodeSequence: (likelyAction) ->
     new Nodes.CommandLine
       replaceLastCommand: true
-      line: _.capitalize @_createIdealForm likelyAction
+      line: _.upperFirst @_createIdealForm likelyAction
       next: @_createCallbackNode likelyAction.phraseAction
 
-  _createIdealForm: (likelyAction) ->
+  _createIdealForm: (likelyAction, options = {}) ->
     # See if phrase action provides a method to generate the ideal form.
     return likelyAction.phraseAction.idealForm likelyAction if likelyAction.phraseAction.idealForm?
 
@@ -88,19 +88,19 @@ class LOI.Parser
       if formPart instanceof LOI.Avatar
         avatar = formPart
 
-        switch avatar.nameAutoCorrectStyle()
-          when LOI.Avatar.NameAutoCorrectStyle.Name
-            # We need to auto-correct to at least short name, but full name if any of the non-short name words are used.
-            formWords = _.words likelyAction.translatedForm
-            shortNameWords = _.words avatar.shortName()
+        if avatar.nameAutoCorrectStyle() is LOI.Avatar.NameAutoCorrectStyle.Name or options.fullNames
+          # We need to auto-correct to at least short name, but full name if any of the non-short name words are used.
+          formWords = _.words likelyAction.translatedForm
+          shortNameWords = _.words _.toLower _.deburr avatar.shortName()
 
-            allFormWordsAreInShortName = _.difference(shortNameWords, formWords).length is 0
+          allFormWordsAreInShortName = _.difference(shortNameWords, formWords).length is 0
 
-            if allFormWordsAreInShortName
-              likelyAction.translatedForm[index] = avatar.shortName()
+          # TODO: Do not replace in translated form, because this messes up furhter calls if avatars use uppercase letters.
+          if allFormWordsAreInShortName and not options.fullNames
+            likelyAction.translatedForm[index] = avatar.shortName()
 
-            else
-              likelyAction.translatedForm[index] = avatar.fullName()
+          else
+            likelyAction.translatedForm[index] = avatar.fullName()
 
     # Add form parts together into the sentence, doing any word order substitutions if necessary.
     words = []

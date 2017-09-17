@@ -1,0 +1,25 @@
+<template name="LandsOfIllusions.Assets.Components.Landmarks">
+  <div class="landsofillusions-assets-components-landmarks">
+    <table class="landmarks-table">
+      <tr class="legend">
+        <th class="number"></th>
+        <th class="name">name</th>
+        <th class="coordinate-x">x</th>
+        <th class="coordinate-y">y</th>
+        <th class="coordinate-z">z</th>
+      </tr>
+      {{#each landmarks}}
+        <tr class="landmark">
+          <td class="number">{{number}}</td>
+          <td class="name"><input class="name-input" value="{{name}}"/></td>
+          <td class="coordinate-x"><input class="coordinate-input" type="number" step="0.5" value="{{x}}"/></td>
+          <td class="coordinate-y"><input class="coordinate-input" type="number" step="0.5" value="{{y}}"/></td>
+          <td class="coordinate-z"><input class="coordinate-input" type="number" step="0.5" value="{{z}}"/></td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="actions">
+      <button class="add-landmark-button">Add landmark</button>
+    </div>
+  </div>
+</template>

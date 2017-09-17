@@ -1,0 +1,1 @@
+class SanFrancisco.Soma.Items

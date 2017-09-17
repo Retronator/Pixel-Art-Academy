@@ -1,0 +1,49 @@
+<template name="LandsOfIllusions.Construct.Loading.TV.NewLink">
+  <div class="landsofillusions-construct-loading-tv-newlink screen">
+    {{#with currentCharacter}}
+      <h1 class="screen-title name">
+        {{avatar.fullName}}
+      </h1>
+      <div class="avatar">
+        {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar}}
+      </div>
+    {{/with}}
+    <p class="bio">
+      {{#with currentPreMadeCharacter}}
+        {{> t9n bio}}
+      {{/with}}
+    </p>
+    <p class="traits">
+      <span class="category-name">Personality</span>: {{traits}}
+    </p>
+    <p class="activities">
+      <span class="category-name">Activities</span>: {{activities}}
+    </p>
+    <p class="clutter">
+      <span class="category-name">Environment</span>: {{environment.clutterString}} {{environment.peopleString}}
+    </p>
+    <p class="perks">
+      <span class="category-name">Perks</span>: {{perks}}
+    </p>
+    <div class="controls">
+      <button class="clone-character-button action-button">Link</button>
+      <button class="cancel-button action-button">Back</button>
+      <button class="previous-button action-button">←</button>
+      <button class="next-button action-button">→</button>
+    </div>
+  </div>
+  {{#if cloningCharacter}}
+    <div class="dialog-area">
+      <div class="dialog">
+        <div class="message">
+          Character name:
+          <input class="name-input" placeholder="{{t7e noName}}" value="{{currentCharacter.avatar.fullName}}"/>
+        </div>
+        <div class="actions">
+          <button class="action-button cancel-clone-button">Cancel</button>
+          <button class="action-button confirm-clone-button">Link</button>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</template>

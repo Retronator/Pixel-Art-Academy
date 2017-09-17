@@ -12,13 +12,15 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   @fullName: -> "Living the dream"
   @number: -> 1
 
-  @url: -> 'chapter1'
-
   @sections: -> [
     @Start
     @Immigration
     @Airship
   ]
+    
+  @scenes: -> [
+    @Inventory
+  ] 
     
   @timelineId: -> PAA.TimelineIds.DareToDream
 
@@ -27,8 +29,6 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   constructor: ->
     super
     
-    @inventory = new @constructor.Inventory parent: @
-
     @inOutro = new ReactiveField false
 
     # Play outro animation when we finish the chapter.
@@ -58,15 +58,8 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
       ,
         6000
 
-  destroy: ->
-    @inventory.destroy()
-        
   finished: ->
     @state('playedOutro') is true
-    
-  scenes: -> [
-    @inventory
-  ]
 
   timeToAirshipDeparture: ->
     return unless time = LOI.adventure.time()

@@ -1,0 +1,317 @@
+AM = Artificial.Mirage
+AMu = Artificial.Mummification
+LOI = LandsOfIllusions
+C3 = SanFrancisco.C3
+
+Person = LOI.Character.Behavior.Person
+
+class C3.Behavior.Terminal.People extends AM.Component
+  @register 'SanFrancisco.C3.Behavior.Terminal.People'
+
+  constructor: (@terminal) ->
+    super
+
+    @property = new ReactiveField null
+
+    # We use this when the user wants to choose a different template (and templates wouldn't be shown by default).
+    @forceShowTemplates = new ReactiveField false
+
+    # We use this when the user wants to customize the options.
+    @forceShowEditor = new ReactiveField false
+
+  onCreated: ->
+    super
+
+    # Get the people part from the character.
+    @autorun (computation) =>
+      behaviorPart = @terminal.screens.character.character()?.behavior.part
+      peopleProperty = behaviorPart.properties.environment.part.properties.people
+
+      @property peopleProperty
+
+    @hasCustomData = new ComputedField =>
+      @property()?.options.dataLocation()?.data()
+
+    @showTemplates = new ComputedField =>
+      return true if @forceShowTemplates()
+      return false if @forceShowEditor()
+
+      # We default to showing available templates if the part hasn't been set yet.
+      not @hasCustomData()
+
+    # Subscribe to people templates.
+    LOI.Character.Part.Template.forType.subscribe @, LOI.Character.Part.Types.Behavior.Environment.options.properties.people.options.templateType
+
+    @templateNameInput = new LOI.Components.TranslationInput
+      placeholderText: => @translation "Name the people configuration"
+
+    @templateDescriptionInput = new LOI.Components.TranslationInput
+      placeholderText: => @translation "Describe what kind of people are in the configuration"
+
+  renderTemplateNameInput: ->
+    @templateNameInput.renderComponent @currentComponent()
+
+  renderTemplateDescriptionInput: ->
+    @templateDescriptionInput.renderComponent @currentComponent()
+
+  templates: ->
+    LOI.Character.Part.Template.documents.find
+      type: LOI.Character.Part.Types.Behavior.Environment.options.properties.people.options.templateType
+
+  templateProperty: ->
+    template = @currentData()
+    property = @property()
+
+    dataField = AMu.Hierarchy.create
+      templateClass: LOI.Character.Part.Template
+      load: => template
+
+    property.create
+      dataLocation: new AMu.Hierarchy.Location
+        rootField: dataField
+      template: template
+
+  # Note that we can't name this helper 'template' since that would override Blaze Component template method.
+  propertyTemplate: ->
+    @property()?.options.dataLocation()?.template
+
+  isOwnPropertyTemplate: ->
+    userId = Meteor.userId()
+    template = @propertyTemplate()
+    template.author._id is userId
+
+  backButtonCallback: ->
+    @closeScreen()
+
+    # Instruct the back button to cancel closing (so it doesn't disappear).
+    cancel: true
+
+  closeScreen: ->
+    if @forceShowTemplates()
+      # We only need to not show templates in this case.
+      @forceShowTemplates false
+
+    else
+      # We return back to the character screen.
+      @terminal.switchToScreen @terminal.screens.environment
+
+  people: ->
+    @property()?.parts()
+
+  events: ->
+    super.concat
+      'click .done-button': @onClickDoneButton
+      'click .replace-button': @onClickReplaceButton
+      'click .save-as-template-button': @onClickSaveAsTemplateButton
+      'click .unlink-template-button': @onClickUnlinkTemplateButton
+      'click .custom-people': @onClickCustomPeople
+      'click .delete-button': @onClickDeleteButton
+      'click .template': @onClickTemplate
+      'click .add-person-button': @onClickAddPersonButton
+
+  onClickDoneButton: (event) ->
+    @closeScreen()
+
+  onClickReplaceButton: (event) ->
+    @forceShowTemplates true
+    @forceShowEditor false
+
+  onClickSaveAsTemplateButton: (event) ->
+    @property()?.options.dataLocation.createTemplate()
+
+  onClickUnlinkTemplateButton: (event) ->
+    @property()?.options.dataLocation.unlinkTemplate()
+
+  onClickCustomPeople: (event) ->
+    # Delete current data at this node.
+    @property()?.options.dataLocation.clear()
+
+    @forceShowEditor true
+    @forceShowTemplates false
+
+  onClickDeleteButton: (event) ->
+    # Delete current data at this node.
+    @property()?.options.dataLocation.remove()
+
+    @closeScreen()
+
+  onClickTemplate: (event) ->
+    template = @currentData()
+
+    @property()?.options.dataLocation.setTemplate template._id
+
+    @forceShowTemplates false
+
+  onClickAddPersonButton: (event) ->
+    personType = LOI.Character.Part.Types.Behavior.Environment.Person.options.type
+    newPart = @property().newPart personType
+    newPart.options.dataLocation {}
+
+  # Components
+
+  class @EnumerationInputComponent extends AM.DataInputComponent
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      if @load()
+        options = []
+
+      else
+        options = [
+          value: null
+          name: ''
+        ]
+
+      for value, name of @enumeration
+        options.push {value, name}
+
+      options
+
+    load: ->
+      dataLocation = @_dataLocation()
+      dataLocation()
+
+    save: (value) ->
+      dataLocation = @_dataLocation()
+      dataLocation value
+
+    _dataLocation: ->
+      person = @data()
+      person.properties[@property].options.dataLocation
+
+  class @IntegerEnumerationInputComponent extends AM.DataInputComponent
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Select
+
+    options: (options) ->
+      unless @load()
+        options.unshift
+          value: null
+          name: ''
+
+      options
+
+    load: ->
+      dataLocation = @_dataLocation()
+      dataLocation()
+
+    save: (value) ->
+      dataLocation = @_dataLocation()
+      dataLocation parseInt value
+
+    _dataLocation: ->
+      person = @data()
+      person.properties[@property].options.dataLocation
+
+  class @RelationshipType extends @EnumerationInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.RelationshipType'
+
+    constructor: ->
+      super
+
+      @enumeration = LOI.Character.Behavior.Environment.People.RelationshipType
+      @property = 'relationshipType'
+
+  class @RelationshipStrength extends @IntegerEnumerationInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.RelationshipStrength'
+
+    constructor: ->
+      super
+
+      @property = 'relationshipStrength'
+
+    options: ->
+      super(
+        [
+          value: 1
+          name: "monthly"
+        ,
+          value: 2
+          name: "weekly"
+        ,
+          value: 3
+          name: "daily"
+        ]
+      )
+
+  class @LivingProximity extends @EnumerationInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.LivingProximity'
+
+    constructor: ->
+      super
+
+      @enumeration = LOI.Character.Behavior.Environment.People.LivingProximity
+      @property = 'livingProximity'
+
+  class @ArtSupport extends @IntegerEnumerationInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.ArtSupport'
+
+    constructor: ->
+      super
+
+      @property = 'artSupport'
+
+    options: ->
+      super (
+        [
+          value: -2
+          name: "hateful"
+        ,
+          value: -1
+          name: "unsupportive"
+        ,
+          value: 0
+          name: "neutral"
+        ,
+          value: 1
+          name: "supportive"
+        ,
+          value: 2
+          name: "sponsor"
+        ]
+      )
+
+  class @DoesArt extends AM.DataInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.DoesArt'
+
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Checkbox
+
+    load: ->
+      dataLocation = @_dataLocation()
+      dataLocation()
+
+    save: (value) ->
+      dataLocation = @_dataLocation()
+      dataLocation value
+
+    _dataLocation: ->
+      person = @data()
+      person.properties.doesArt.options.dataLocation
+
+  class @Joins extends AM.DataInputComponent
+    @register 'SanFrancisco.C3.Behavior.Terminal.People.Joins'
+
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Checkbox
+
+    load: ->
+      dataLocation = @_dataLocation()
+      dataLocation()
+
+    save: (value) ->
+      dataLocation = @_dataLocation()
+      dataLocation value
+
+    _dataLocation: ->
+      person = @data()
+      person.properties.joins.options.dataLocation

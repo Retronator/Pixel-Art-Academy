@@ -26,12 +26,15 @@ class Retronator.App extends Artificial.Base.App
     super
 
     # Instantiate all app packages, which register router URLs.
+    new Artificial.Pages
     new Retronator.Accounts
     new Retronator.Store
     new PixelArtAcademy
     new PixelArtAcademy.LandingPage
     new PixelArtDatabase
     new PixelArtDatabase.PixelDailies
+    new LOI.Assets
+    new LOI.Construct.Pages
 
     # Add Lands of Illusions last so it captures all remaining URLs.
     new LOI
@@ -65,5 +68,5 @@ class Retronator.App extends Artificial.Base.App
 
 # On the server, the component will not be created through rendering so we simply instantiate it here.
 if Meteor.isServer
-  Meteor.startup =>
+  Meteor.startup ->
     new Retronator.App()

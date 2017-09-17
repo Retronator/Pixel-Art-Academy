@@ -1,0 +1,101 @@
+<template name="SanFrancisco.C3.Behavior.Terminal.Personality">
+  <div class="sanfrancisco-c3-behavior-terminal-personality screen">
+    <div class="main-content">
+      <h1 class="screen-title">Personality</h1>
+      {{#if showTemplates}}
+        <div class="templates-area">
+          <div class="custom-personality behavior-part">
+            <div class="name">Custom</div>
+            <div class="info">
+              Select your own traits.
+            </div>
+          </div>
+          <ul class="templates">
+            {{#each templates}}
+              <li class="template behavior-part">
+                {{> SanFrancisco.C3.Behavior.Terminal.Components.PersonalityPartPreview templatePart}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{else}}
+        <div class="instructions">
+          {{#if partTemplate}}
+            {{#with partTemplate}}
+              <div class="template-info">
+                {{#if isOwnPartTemplate}}
+                  <div class="name">
+                    <span class="label">Profile</span>: {{> renderTemplateNameInput name}}
+                  </div>
+                  <div class="description">
+                    {{> renderTemplateDescriptionInput description}}
+                  </div>
+                  <p class="main-text">
+                    You are the designer of this template and can edit it.
+                  </p>
+                {{else}}
+                  <div class="name">
+                    <span class="label">Profile</span>: {{> t9n name}}
+                  </div>
+                  <div class="description">
+                    {{> t9n description}}
+                  </div>
+                  <p class="main-text">
+                    Click Modify to create your own personality based on this profile.
+                  </p>
+                {{/if}}
+            </div>
+            {{/with}}
+          {{/if}}
+          {{#if isEditable}}
+            {{!
+            <div class="auto-traits">
+              <label class="auto-traits">
+                {{> SanFrancisco.C3.Behavior.Terminal.Personality.AutoTraitsCheckbox autoTraitsDataLocation} }
+                <span class="label">Automatic traits selection</span>
+              </label>
+            </div>
+            }}
+            {{#if autoTraits}}
+              <p class="main-text">
+                Adjust sliders to shape agent's personality. Multiple sliders need to be set for most traits.
+                Click on traits for granular control.
+              </p>
+            {{else}}
+              <p class="main-text">
+                Select traits under each of the five axes. Bars will indicate agent's personality signature.
+              </p>
+            {{/if}}
+          {{/if}}
+        </div>
+        <div class="personality">
+          <ul class="factors">
+            {{#each factors}}
+              {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor}}
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+    </div>
+    <div class="main-actions">
+      {{#if showTemplates}}
+        <button class="main-button action-button done-button">Back</button>
+      {{else}}
+        <button class="main-button action-button done-button">Done</button>
+        <button class="action-button replace-button">Replace</button>
+        {{#if partTemplate}}
+          {{#if isOwnPartTemplate}}
+            <button class="action-button unlink-template-button">Unlink template</button>
+          {{else}}
+            <button class="action-button unlink-template-button">Modify</button>
+          {{/if}}
+        {{else}}
+          {{#if isAdmin}}
+            <button class="action-button save-as-template-button">Save as template</button>
+          {{/if}}
+        {{/if}}
+        <button class="action-button delete-button danger-button">Delete</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

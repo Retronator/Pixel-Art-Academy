@@ -28,5 +28,5 @@ class RS.AirportTerminal.Gates extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.East}": RS.AirportTerminal.Concourse
+    "#{Vocabulary.Keys.Directions.Northeast}": RS.AirportTerminal.Concourse
     "#{Vocabulary.Keys.Directions.Up}": RS.AirportTerminal.Concourse
