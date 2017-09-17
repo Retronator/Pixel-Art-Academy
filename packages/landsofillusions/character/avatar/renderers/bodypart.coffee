@@ -24,16 +24,8 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       @_landmarks
 
     @_ready = new ComputedField =>
-      # Depend on landmarks since _translation isn't reactive, but gets recomputed when landmarks change.
-      @landmarks()
-  
-      _.every @renderers, (renderer) =>
-        # Make sure there is an item set at this part.
-        return true unless renderer.options.part.options.dataLocation()
-  
-        # The part needs to be positioned and ready.
-        renderer._translation and renderer.ready()
-        
+      _.every @renderers, (renderer) => renderer.ready()
+
   ready: ->
     @_ready()
 
@@ -103,7 +95,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       @drawRendererToContext renderer, context, options
 
   drawRendererToContext: (renderer, context, options = {}) ->
-    return unless _.every @renderers, (renderer) => renderer.ready()
+    return unless @ready()
 
     context.save()
 

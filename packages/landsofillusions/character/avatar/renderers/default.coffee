@@ -90,10 +90,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
       landmarks
 
     @_ready = new ComputedField =>
-      # Depend on landmarks since _translation isn't reactive, but gets recomputed when landmarks change.
-      @landmarks()
-
-      _.every @renderers(), (renderer) => renderer._translation and renderer.ready()
+      _.every @renderers(), (renderer) => renderer.ready()
 
   ready: ->
     @_ready()
@@ -102,6 +99,8 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     _.find @renderers(), (renderer) -> renderer.options.part.options.type is type
 
   drawToContext: (context, options = {}) ->
+    return unless @ready()
+
     # Depend on landmarks to update when renderer translations change.
     @landmarks()
 

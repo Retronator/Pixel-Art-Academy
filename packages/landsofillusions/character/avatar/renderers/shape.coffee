@@ -40,6 +40,9 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
       y: target.y - source.y
       
   ready: ->
+    # If we have no data, in this part, there's nothing to do.
+    return true unless @options.part.options.dataLocation()
+    
     # Shape is ready when the sprite is ready.
     @activeSprite().ready()
 

@@ -27,7 +27,7 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
     @_placeRenderer @rightArmRenderer, 'shoulder', 'shoulderRight'
   
   drawToContext: (context, options = {}) ->
-    return unless _.every @renderers, (renderer) => renderer.ready()
+    return unless @ready()
 
     # Draw the hair behind first.
     context.save()
