@@ -4,7 +4,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class LOI.Construct.Loading extends LOI.Adventure.Location
   @id: -> 'LandsOfIllusions.Construct.Loading'
-  @url: -> 'construct'
+  @url: -> 'loader'
   @region: -> LOI.Construct
 
   @version: -> '0.0.1'
