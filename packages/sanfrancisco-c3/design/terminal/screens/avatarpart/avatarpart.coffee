@@ -159,6 +159,10 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       'mouseleave .template': @onMouseLeaveTemplate
 
   onClickDoneButton: (event) ->
+    # See if we've set any data to this part and delete it if not.
+    partDataLocation = @part()?.options.dataLocation
+    partDataLocation.remove() unless partDataLocation()
+
     @closePart()
 
   onClickReplaceButton: (event) ->
