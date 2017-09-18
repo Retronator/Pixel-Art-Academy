@@ -77,7 +77,7 @@ class LOI.Assets.Components.Materials extends AM.Component
         ramp: palette.currentRamp()
         shade: palette.currentShade()
 
-    LOI.Assets.VisualAsset.updateMaterial asset._id, @options.documentClass.name, newIndex, material
+    LOI.Assets.VisualAsset.updateMaterial asset._id, @options.documentClass.className, newIndex, material
 
     newIndex
 
@@ -130,7 +130,7 @@ class LOI.Assets.Components.Materials extends AM.Component
       shade: @_parseIntOrNull $material.find('.shade-input').val()
       dither: @_parseFloatOrNull $material.find('.dither-input').val()
 
-    LOI.Assets.VisualAsset.updateMaterial @assetData()._id, @options.documentClass.name, index, material
+    LOI.Assets.VisualAsset.updateMaterial @assetData()._id, @options.documentClass.className, index, material
 
   onClickAddMaterialButton: (event) ->
     @addNewIndex()

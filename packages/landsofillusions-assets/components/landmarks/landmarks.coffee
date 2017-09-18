@@ -105,12 +105,12 @@ class LOI.Assets.Components.Landmarks extends AM.Component
     for property in ['x', 'y', 'z']
       landmark[property] = @_parseFloatOrNull $landmark.find(".coordinate-#{property} .coordinate-input").val()
 
-    LOI.Assets.VisualAsset.updateLandmark @assetData()._id, @options.documentClass.name, index, landmark
+    LOI.Assets.VisualAsset.updateLandmark @assetData()._id, @options.documentClass.className, index, landmark
 
   onClickAddLandmarkButton: (event) ->
     assetData = @assetData()
     index = assetData.landmarks?.length or 0
-    LOI.Assets.VisualAsset.updateLandmark assetData._id, @options.documentClass.name, index, {}
+    LOI.Assets.VisualAsset.updateLandmark assetData._id, @options.documentClass.className, index, {}
 
   _parseFloatOrNull: (string) ->
     float = parseFloat string
