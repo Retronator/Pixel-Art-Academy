@@ -32,7 +32,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       source = x: 0, y: 0
       target = x: 0, y: 0
 
-      # Translation in a mapped sprite is calculated to so that sprite's landmarks map onto the provided ones.
+      # Translation in a mapped sprite is calculated so that sprite's landmarks map onto the provided ones.
       sprite = @activeSprite()
       spriteData = sprite.options.spriteData()
 

@@ -87,7 +87,7 @@ Package.onUse(function(api) {
   api.addFile('character/avatar/parts/parts');
   api.addFile('character/avatar/parts/shape');
   api.addFile('character/avatar/parts/skinshape');
-  api.addFile('character/avatar/parts/customcolors');
+  api.addFile('character/avatar/parts/partwithcustomcolors');
 
   api.addFile('character/avatar/properties/properties');
   api.addFile('character/avatar/properties/color');
