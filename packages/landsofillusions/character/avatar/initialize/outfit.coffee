@@ -13,7 +13,7 @@ LOI.Character.Part.registerClasses
 LOI.Character.Part.registerClasses
   Avatar:
     Outfit:
-      Article: new LOI.Character.Avatar.Parts.CustomColors
+      Article: new LOI.Character.Avatar.Parts.PartWithCustomColors
         type: 'Avatar.Outfit.Article'
         name: 'article'
         properties:

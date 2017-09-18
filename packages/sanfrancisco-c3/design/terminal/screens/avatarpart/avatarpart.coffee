@@ -49,6 +49,8 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @templateDescriptionInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Describe your design"
 
+    @hoveredTemplate = new ReactiveField null
+
   renderTemplateNameInput: ->
     @templateNameInput.renderComponent @currentComponent()
 
@@ -153,13 +155,20 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       'click .new-part-button': @onClickNewPartButton
       'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
+      'mouseenter .template': @onMouseEnterTemplate
+      'mouseleave .template': @onMouseLeaveTemplate
 
   onClickDoneButton: (event) ->
+    # See if we've set any data to this part and delete it if not.
+    partDataLocation = @part()?.options.dataLocation
+    partDataLocation.remove() unless partDataLocation()
+
     @closePart()
 
   onClickReplaceButton: (event) ->
     @forceShowTemplates true
     @forceShowEditor false
+    @hoveredTemplate null
 
   onClickSaveAsTemplateButton: (event) ->
     @part()?.options.dataLocation.createTemplate()
@@ -187,3 +196,11 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
+
+  onMouseEnterTemplate: (event) ->
+    template = @currentData()
+
+    @hoveredTemplate template
+
+  onMouseLeaveTemplate: (event) ->
+    @hoveredTemplate null

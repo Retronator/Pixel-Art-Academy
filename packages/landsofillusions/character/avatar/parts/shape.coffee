@@ -21,7 +21,7 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
 
     existingMaterialData = options.materialsData
 
-    # Add skin material.
+    # Add materials.
     for materialName, materialProvider of @options.materials
       materialProperty = materialProvider @
 
