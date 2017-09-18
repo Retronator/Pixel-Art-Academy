@@ -71,6 +71,8 @@ Package.onUse(function(api) {
   api.addFile('character/part/template');
   api.addFile('character/part/methods');
   api.addServerFile('character/part/subscriptions');
+  
+  api.addServerFile('character/part/migrations/0000-embeddedtranslations');
 
   api.addFile('character/part/property');
   api.addFile('character/part/properties/oneof');

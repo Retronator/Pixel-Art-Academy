@@ -12,8 +12,10 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
   # authorName: public name of the author
   # name: how this part was named by the author 
   #   _id
+  #   translations
   # description: how this part was described by the author
   #   _id
+  #   translations
   # type: type of this part
   # data: data of the template (root node), as inherited from hierarchy template
   @Meta
@@ -23,8 +25,8 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
       authorName: @GeneratedField 'self', ['author'], (part) ->
         authorName = part.author?.publicName or null
         [part._id, authorName]
-      name: @ReferenceField AB.Translation, [], false
-      description: @ReferenceField AB.Translation, [], false
+      name: @ReferenceField AB.Translation, ['translations'], false
+      description: @ReferenceField AB.Translation, ['translations'], false
 
   @forId: @subscription 'forId'
   @forType: @subscription 'forType'
