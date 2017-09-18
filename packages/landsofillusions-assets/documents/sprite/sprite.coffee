@@ -25,6 +25,10 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @Meta
     name: @id()
 
+  # Store the class name of the visual asset by which we can reach the class by querying LOI.Assets. We can't simply
+  # use the name parameter, because in production the name field has a minimized value.
+  @className: 'Sprite'
+
   @forId: @subscription 'forId'
   @all: @subscription 'all'
 

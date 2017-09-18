@@ -31,5 +31,9 @@ class LOI.Assets.Mesh extends AM.Document
     fields: =>
       palette: @ReferenceField LOI.Assets.Palette, ['name'], false
 
+  # Store the class name of the visual asset by which we can reach the class by querying LOI.Assets. We can't simply
+  # use the name parameter, because in production the name field has a minimized value.
+  @className: 'Mesh'
+
   constructor: ->
     super
