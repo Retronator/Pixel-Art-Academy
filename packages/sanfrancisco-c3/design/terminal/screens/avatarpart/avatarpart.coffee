@@ -13,8 +13,6 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part = new ReactiveField null
     @previewPart = new ReactiveField null
 
-    @hoveredTemplate = new ReactiveField null
-
     # We use this when the user wants to choose a different template (and templates wouldn't be shown by default).
     @forceShowTemplates = new ReactiveField false
 
@@ -50,6 +48,8 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
     @templateDescriptionInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Describe your design"
+
+    @hoveredTemplate = new ReactiveField null
 
   renderTemplateNameInput: ->
     @templateNameInput.renderComponent @currentComponent()
@@ -203,4 +203,4 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @hoveredTemplate template
 
   onMouseLeaveTemplate: (event) ->
-    #@hoveredTemplate null
+    @hoveredTemplate null
