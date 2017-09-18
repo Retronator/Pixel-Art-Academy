@@ -13,6 +13,8 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part = new ReactiveField null
     @previewPart = new ReactiveField null
 
+    @hoveredTemplate = new ReactiveField null
+
     # We use this when the user wants to choose a different template (and templates wouldn't be shown by default).
     @forceShowTemplates = new ReactiveField false
 
@@ -153,6 +155,8 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       'click .new-part-button': @onClickNewPartButton
       'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
+      'mouseenter .template': @onMouseEnterTemplate
+      'mouseleave .template': @onMouseLeaveTemplate
 
   onClickDoneButton: (event) ->
     @closePart()
@@ -160,6 +164,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   onClickReplaceButton: (event) ->
     @forceShowTemplates true
     @forceShowEditor false
+    @hoveredTemplate null
 
   onClickSaveAsTemplateButton: (event) ->
     @part()?.options.dataLocation.createTemplate()
@@ -187,3 +192,11 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
+
+  onMouseEnterTemplate: (event) ->
+    template = @currentData()
+
+    @hoveredTemplate template
+
+  onMouseLeaveTemplate: (event) ->
+    #@hoveredTemplate null
