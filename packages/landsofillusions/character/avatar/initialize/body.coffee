@@ -373,8 +373,8 @@ LOI.Character.Part.registerClasses
             default:
               hue: 0
               shade: 2
-          shape: new LOI.Character.Part.Property.OneOf
-            name: 'shape'
+          shapes: new LOI.Character.Part.Property.Array
+            name: 'shapes'
             type: 'Avatar.Body.PubicHairShape'
 
       PubicHairShape: new LOI.Character.Avatar.Parts.Shape
