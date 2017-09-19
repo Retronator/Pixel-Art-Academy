@@ -32,6 +32,9 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
     # Draw the hair behind first.
     context.save()
 
+    # Depend on landmarks to update when head renderer translations change.
+    @landmarks()
+
     translation = _.defaults {}, @headRenderer._translation,
       x: 0
       y: 0

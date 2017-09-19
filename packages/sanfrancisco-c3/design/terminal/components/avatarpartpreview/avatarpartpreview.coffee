@@ -44,7 +44,10 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         @context.clearRect 0, 0, @canvas.width, @canvas.height
 
         @context.save()
-        renderer.drawToContext @context
+        
+        # Draw and pass the root part in options so we can do different rendering paths based on it.
+        renderer.drawToContext @context, rootPart: renderer.options.part
+        
         @context.restore()
 
     events: ->

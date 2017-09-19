@@ -196,6 +196,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
+    @hoveredTemplate null
 
   onMouseEnterTemplate: (event) ->
     template = @currentData()
