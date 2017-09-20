@@ -17,10 +17,10 @@ class C3.Design.Terminal.Components.CustomColorPreview extends AM.Component
     shade = colorProperty.shade()
 
     palette = LOI.palette()
-    color = palette.color hue, shade
+    return unless color = palette.color hue, shade
 
     textShade = if shade < 4 then shade + 2 else shade - 2
-    textColor = palette.color(hue, textShade)
+    return unless textColor = palette.color(hue, textShade)
 
     color: "##{textColor.getHexString()}"
     backgroundColor: "##{color.getHexString()}"

@@ -60,8 +60,14 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     # Add all landmarks from this renderer.
     for rendererLandmarkName, rendererLandmark of renderer.landmarks()
       translatedLandmark = _.extend {}, rendererLandmark,
-        x: rendererLandmark.x + renderer._translation.x + offsetX
+        x: renderer._translation.x + offsetX
         y: rendererLandmark.y + renderer._translation.y + offsetY
+
+      if renderer._flipHorizontal
+        translatedLandmark.x -= rendererLandmark.x + 1
+
+      else
+        translatedLandmark.x += rendererLandmark.x
 
       @_landmarks[rendererLandmarkName] = translatedLandmark
 
