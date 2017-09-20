@@ -31,6 +31,8 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
 
   @forId: @subscription 'forId'
   @all: @subscription 'all'
+  @forCharacterPartTemplatesOfTypes: @subscription 'forCharacterPartTemplatesOfTypes'
+  @forCharacterPartTemplatesOfCurrentUser: @subscription 'forCharacterPartTemplatesOfCurrentUser'
 
   @insert: @method 'insert'
   @update: @method 'update'

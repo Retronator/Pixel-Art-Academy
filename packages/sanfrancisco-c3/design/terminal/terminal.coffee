@@ -33,6 +33,28 @@ class C3.Design.Terminal extends C3.Items.Terminal
 
     @switchToScreen @screens.mainMenu
 
+    # Subscribe to all sprites used in user's templates for the full duration of the terminal being open.
+    LOI.Assets.Sprite.forCharacterPartTemplatesOfCurrentUser.subscribe @
+
+    # Subscribe to all character part templates and the sprites that they use.
+    types = []
+
+    addTypes = (type) =>
+      # Go over all the properties of the type and add all sub-types.
+      typeClass = _.nestedProperty LOI.Character.Part.Types, type
+
+      for propertyName, property of typeClass.options.properties when property.options?.type?
+        type = property.options.type
+
+        types.push type
+        addTypes type
+
+    addTypes 'Avatar.Body'
+    addTypes 'Avatar.Outfit'
+
+    LOI.Character.Part.Template.forTypes.subscribe @, types
+    LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe @, types
+
   onRendered: ->
     super
 

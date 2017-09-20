@@ -17,6 +17,8 @@ class LOI.Adventure extends LOI.Adventure
     @scriptHelpers = new LOI.Adventure.Script.Helpers @
 
     @menu = new LOI.Components.Menu
+    
+    @loggingOut = new ReactiveField false
 
     @_modalDialogs = []
     @_modalDialogsDependency = new Tracker.Dependency

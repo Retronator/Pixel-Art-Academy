@@ -73,6 +73,7 @@ Package.onUse(function(api) {
   api.addServerFile('character/part/subscriptions');
   
   api.addServerFile('character/part/migrations/0000-embeddedtranslations');
+  api.addServerFile('character/part/migrations/0001-spriteids');
 
   api.addFile('character/part/property');
   api.addFile('character/part/properties/oneof');

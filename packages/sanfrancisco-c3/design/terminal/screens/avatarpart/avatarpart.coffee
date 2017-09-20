@@ -36,12 +36,6 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
     @type = new ComputedField =>
       @part()?.options.type
-      
-    # Subscribe to character part templates of the given type.
-    @autorun (computation) =>
-      return unless type = @type()
-
-      LOI.Character.Part.Template.forType.subscribe @, type
 
     @templateNameInput = new LOI.Components.TranslationInput
       placeholderText: => @translation "Name your template"

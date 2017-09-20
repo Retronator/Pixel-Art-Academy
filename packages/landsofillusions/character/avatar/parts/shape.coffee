@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
   constructor: (options) ->
     # We add default shape properties.
-    options.properties ?= []
+    options.properties ?= {}
 
     _.extend options.properties,
       front: new LOI.Character.Avatar.Properties.Sprite
