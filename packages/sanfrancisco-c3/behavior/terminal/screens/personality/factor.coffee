@@ -63,6 +63,9 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     LOI.Character.Part.Template.documents.find
       type: LOI.Character.Part.Types.Behavior.Personality.Factor.options.type
       'data.fields.index.value': factor.options.type
+    ,
+      sort:
+        'name.translations.best.text': 1
 
   templatePart: ->
     template = @currentData()

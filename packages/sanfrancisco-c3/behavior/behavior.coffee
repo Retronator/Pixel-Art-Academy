@@ -16,7 +16,7 @@ class C3.Behavior extends LOI.Adventure.Location
     "
       Behavior Setup is an isolated room at the east end of the manufacturing hall.
       Machine noises are replaced with hushing fans as supercomputers run machine learning algorithms and behavior
-      simulations. Several workstations are lined up at the wall.
+      simulations. Several workstations are lined up in the middle, with behavior assessment rooms in the background.
     "
 
   @defaultScriptUrl: -> 'retronator_sanfrancisco-c3/behavior/behavior.script'

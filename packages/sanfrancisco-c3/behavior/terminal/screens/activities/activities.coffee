@@ -57,6 +57,9 @@ class C3.Behavior.Terminal.Activities extends AM.Component
   templates: ->
     LOI.Character.Part.Template.documents.find
       type: LOI.Character.Part.Types.Behavior.options.properties.activities.options.templateType
+    ,
+      sort:
+        'name.translations.best.text': 1
 
   templateParts: ->
     template = @currentData()

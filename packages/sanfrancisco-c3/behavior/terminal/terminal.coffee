@@ -52,5 +52,5 @@ class C3.Behavior.Terminal extends C3.Items.Terminal
 
     # Show an alpha-state disclaimer.
     @showDialog
-      message: "Behavior setup is in early prototype stage. Selected attributes will not have effect on gameplay until later in development."
+      message: "Behavior setup is in early prototype stage. Most attributes will not have effect on gameplay until later in development."
       cancelButtonText: "Understood"

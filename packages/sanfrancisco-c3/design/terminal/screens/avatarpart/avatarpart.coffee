@@ -54,7 +54,9 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   templates: ->
     return unless type = @type()
 
-    LOI.Character.Part.Template.documents.find {type}
+    LOI.Character.Part.Template.documents.find {type},
+      sort:
+        'name.translations.best.text': 1
 
   templatePart: ->
     template = @currentData()

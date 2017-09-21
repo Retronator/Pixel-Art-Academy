@@ -31,7 +31,13 @@ class C3.Behavior.Terminal.Personality extends AM.Component
       @part personalityPart
 
     @hasCustomData = new ComputedField =>
-      @part()?.hasData()
+      return unless part = @part()
+
+      # We have the part set when we're using a template.
+      return true if part.options.dataLocation.field()?.isTemplate
+
+      # Otherwise we see if we've set any data in the part.
+      part.hasData()
 
     @showTemplates = new ComputedField =>
       return true if @forceShowTemplates()
@@ -62,6 +68,9 @@ class C3.Behavior.Terminal.Personality extends AM.Component
   templates: ->
     LOI.Character.Part.Template.documents.find
       type: LOI.Character.Part.Types.Behavior.Personality.options.type
+    ,
+      sort:
+        'name.translations.best.text': 1
 
   templatePart: ->
     template = @currentData()

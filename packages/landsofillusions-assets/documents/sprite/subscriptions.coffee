@@ -19,13 +19,16 @@ LOI.Assets.Sprite.all.publish ->
 LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.publish (types) ->
   check types, [String]
 
-  templates = LOI.Character.Part.Template._forTypes(types, @userId).fetch()
-  findSpritesInCharacterPartTemplates templates
+  # Run inside an autorun to dynamically get new templates when they are created.
+  @autorun (computation) =>
+    templates = LOI.Character.Part.Template._forTypes(types, @userId).fetch()
+    findSpritesInCharacterPartTemplates templates
 
 LOI.Assets.Sprite.forCharacterPartTemplatesOfCurrentUser.publish ->
-  templates = LOI.Character.Part.Template._forUserId(@userId).fetch()
-
-  findSpritesInCharacterPartTemplates templates
+  # Run inside an autorun to dynamically get new templates when they are created.
+  @autorun (computation) =>
+    templates = LOI.Character.Part.Template._forUserId(@userId).fetch()
+    findSpritesInCharacterPartTemplates templates
 
 findSpritesInCharacterPartTemplates = (templates) ->
   spriteIds = _.flatten (template.spriteIds for template in templates)

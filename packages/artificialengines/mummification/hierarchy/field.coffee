@@ -148,5 +148,8 @@ class AM.Hierarchy.Field
       cleanNode()
       placeholderNode?.destroy()
 
+    field.isTemplate = ->
+      options.load()?.templateId
+
     # Return the field getter/setter function (return must be explicit).
     return field

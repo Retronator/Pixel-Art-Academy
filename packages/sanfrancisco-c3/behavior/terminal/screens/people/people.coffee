@@ -57,6 +57,9 @@ class C3.Behavior.Terminal.People extends AM.Component
   templates: ->
     LOI.Character.Part.Template.documents.find
       type: LOI.Character.Part.Types.Behavior.Environment.options.properties.people.options.templateType
+    ,
+      sort:
+        'name.translations.best.text': 1
 
   templateProperty: ->
     template = @currentData()
