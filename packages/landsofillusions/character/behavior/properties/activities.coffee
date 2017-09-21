@@ -75,6 +75,15 @@ class LOI.Character.Behavior.Activities extends LOI.Character.Part.Property.Arra
       activities.push activityPart if activityHoursPerWeek > 0
 
     # TODO: Replace with translated names.
-    activityNames = (_.upperFirst activity.properties.key.options.dataLocation() for activity in activities)
+    activityNames = for activity in activities
+      name = activity.properties.key.options.dataLocation()
+      hoursPerWeek = activity.properties.hoursPerWeek.options.dataLocation()
 
-    activityNames.join ', '
+      # Add hours per week to drawing string.
+      if name is Activity.Keys.Drawing
+        "#{hoursPerWeek}h/week #{_.lowerFirst name}"
+
+      else
+        _.lowerFirst name
+
+    "#{_.upperFirst activityNames.join ', '}."

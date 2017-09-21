@@ -72,6 +72,7 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     property.create
       dataLocation: new AMu.Hierarchy.Location
         rootField: dataField
+      template: template
 
   # Note that we can't name this helper 'template' since that would override Blaze Component template method.
   partsTemplate: ->

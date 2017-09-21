@@ -14,15 +14,15 @@ class LOI.Character.Behavior.Environment.People extends LOI.Character.Part.Prope
     OtherFamily: 'OtherFamily'
     Wife: 'Wife'
     Husband: 'Husband'
+    Partner: 'Partner'
     Girlfriend: 'Girlfriend'
     Boyfriend: 'Boyfriend'
     SignificantOther: 'SignificantOther'
     Friend: 'Friend'
 
   @LivingProximity:
-    # TODO: Add support for housemates.
-    # Roommate: 'Roommate'
-    # Housemate: 'Housemate'
+    Roommate: 'Roommate'
+    Housemate: 'Housemate'
     Local: 'Local'
     Internet: 'Internet'
 
@@ -31,6 +31,6 @@ class LOI.Character.Behavior.Environment.People extends LOI.Character.Part.Prope
     return unless people.length
 
     # TODO: Replace with translated relationship types.
-    peopleRelationshipNames = (person.properties.relationshipType.options.dataLocation() for person in people)
+    peopleRelationshipNames = (_.lowerCase person.properties.relationshipType.options.dataLocation() for person in people)
 
-    peopleRelationshipNames.join ', '
+    "#{_.upperFirst peopleRelationshipNames.join ', '}."

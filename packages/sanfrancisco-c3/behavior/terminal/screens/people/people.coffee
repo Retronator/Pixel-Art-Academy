@@ -169,6 +169,7 @@ class C3.Behavior.Terminal.People extends AM.Component
         ]
 
       for value, name of @enumeration
+        name = _.upperFirst _.lowerCase name
         options.push {value, name}
 
       options
@@ -232,13 +233,13 @@ class C3.Behavior.Terminal.People extends AM.Component
       super(
         [
           value: 1
-          name: "monthly"
+          name: "Monthly"
         ,
           value: 2
-          name: "weekly"
+          name: "Weekly"
         ,
           value: 3
-          name: "daily"
+          name: "Daily"
         ]
       )
 
@@ -263,19 +264,19 @@ class C3.Behavior.Terminal.People extends AM.Component
       super (
         [
           value: -2
-          name: "hateful"
+          name: "Resentful"
         ,
           value: -1
-          name: "unsupportive"
+          name: "Unsupportive"
         ,
           value: 0
-          name: "neutral"
+          name: "Neutral"
         ,
           value: 1
-          name: "supportive"
+          name: "Supportive"
         ,
           value: 2
-          name: "sponsor"
+          name: "Sponsor"
         ]
       )
 
