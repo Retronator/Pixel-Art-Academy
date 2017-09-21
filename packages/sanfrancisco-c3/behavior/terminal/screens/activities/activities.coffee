@@ -55,11 +55,17 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     @templateDescriptionInput.renderComponent @currentComponent()
 
   templates: ->
-    LOI.Character.Part.Template.documents.find
+    templates = LOI.Character.Part.Template.documents.find(
       type: LOI.Character.Part.Types.Behavior.options.properties.activities.options.templateType
-    ,
-      sort:
-        'name.translations.best.text': 1
+    ).fetch()
+
+    # We sort activity templates by number of hours dedicated to drawing.
+    _.sortBy templates, (template) =>
+      # Get the key of the drawing activity.
+      fieldsKey = _.findKey template.data.fields, (field) => field.node.fields.key.value is Activity.Keys.Drawing
+
+      # Return hours per week value.
+      template.data.fields[fieldsKey].node.fields.hoursPerWeek.value
 
   templateParts: ->
     template = @currentData()
