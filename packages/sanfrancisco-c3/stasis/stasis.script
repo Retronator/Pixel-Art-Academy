@@ -29,6 +29,8 @@ operator: Hey.
 * …
  
 operator: Do you copy?
+
+> You realize Panzer is calling you over the neural link.
  
 * Yeah … Yes! -> [PanzerYes]
 * Just a bit taken aback. -> [PanzerAback]
@@ -49,7 +51,7 @@ operator:
   I just got confirmation of a new agent being linked to our system.
   It will take some time for us to set up the agent's environment the way you designed it.
 
-* No problem, I'm so excited!
+* No problem, I'm very excited though!
 * Understood.
 
 operator:

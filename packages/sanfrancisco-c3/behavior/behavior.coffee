@@ -42,9 +42,11 @@ class C3.Behavior extends LOI.Adventure.Location
 
   initializeScript: ->
     @setCallbacks
-      UseTerminal: ->
+      UseTerminal: (complete) ->
         terminal = LOI.adventure.getCurrentThing C3.Behavior.Terminal
         LOI.adventure.goToItem terminal
+
+        complete()
 
   # Listener
 
