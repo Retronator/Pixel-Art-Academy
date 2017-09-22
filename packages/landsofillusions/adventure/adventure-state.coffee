@@ -203,6 +203,18 @@ class LOI.Adventure extends LOI.Adventure
         databaseState = LOI.GameState.documents.findOne 'user._id': user._id
 
         if databaseState
+          # Reset the interface.
+          LOI.adventure.interface.resetInterface()
+
+          # Clear active item.
+          LOI.adventure.activeItemId null
+
+          # Cleanup storyline classes.
+          LOI.adventure.resetEpisodes()
+
+          # Cleanup running scripts.
+          LOI.adventure.director.stopAllScripts()
+
           # Move user to the last location and timeline saved to the state. We do this only on load so that multiple
           # players using the same account can move independently, at least inside the current session (they will get
           # synced again on reload).

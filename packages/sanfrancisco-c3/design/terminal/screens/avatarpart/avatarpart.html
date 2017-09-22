@@ -31,9 +31,11 @@
                   <div class="name">
                     <span class="label">Model</span>: {{> t9n name}}
                   </div>
-                  <p class="main-text">
-                    Click Modify to create your own design based on this template.
-                  </p>
+                  {{#if canCreateNew}}
+                    <p class="main-text">
+                      Click Modify to create your own design based on this template.
+                    </p>
+                  {{/if}}
                 {{/if}}
               </div>
             {{/with}}

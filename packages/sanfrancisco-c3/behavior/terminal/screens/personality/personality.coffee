@@ -14,14 +14,14 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     
     @part = new ReactiveField null
 
+  onCreated: ->
+    super
+
     # We use this when the user wants to choose a different template (and templates wouldn't be shown by default).
     @forceShowTemplates = new ReactiveField false
 
     # We use this when the user wants to customize the options.
     @forceShowEditor = new ReactiveField false
-
-  onCreated: ->
-    super
 
     # Get the personality part from the character.
     @autorun (computation) =>
@@ -34,7 +34,7 @@ class C3.Behavior.Terminal.Personality extends AM.Component
       return unless part = @part()
 
       # We have the part set when we're using a template.
-      return true if part.options.dataLocation.field()?.isTemplate
+      return true if part.options.dataLocation.field()?.isTemplate()
 
       # Otherwise we see if we've set any data in the part.
       part.hasData()
@@ -155,6 +155,8 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     @forceShowTemplates true
     @forceShowEditor false
 
+    @$('.main-content').scrollTop(0)
+
   onClickSaveAsTemplateButton: (event) ->
     @part()?.options.dataLocation.createTemplate()
 
@@ -181,6 +183,8 @@ class C3.Behavior.Terminal.Personality extends AM.Component
     @part()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
+
+    @$('.main-content').scrollTop(0)
 
   # Components
 

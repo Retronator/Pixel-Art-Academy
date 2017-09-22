@@ -87,11 +87,12 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     return unless template = @partTemplate()
 
     userId = Meteor.userId()
-    template.author._id is userId
+    template.author?._id is userId
 
   isEditable: ->
-    # We can edit the template if it's not using a template, or if the template is our own.
-    not @partTemplate() or @isOwnPartTemplate()
+    # We can edit this factor if the personality is editable.
+    personality = @ancestorComponentOfType C3.Behavior.Terminal.Personality
+    personality.isEditable()
 
   editableClass: ->
     'editable' if @isEditable()
@@ -99,6 +100,10 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
   traits: ->
     factorPart = @part()
     factorPart.properties.traits.toString()
+
+  areTraitsEditable: ->
+    # We can edit the factor's traits if it's not a template, or it's our own template.
+    not @partTemplate() or @isOwnPartTemplate()
 
   events: ->
     super.concat
@@ -147,7 +152,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     options: ->
       options = [
         name: 'Custom'
-        value: null
+        value: ''
       ]
 
       for template in @factorComponent.templates().fetch()
@@ -161,7 +166,13 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
       @factorComponent.partTemplate()?._id
 
     save: (value) ->
-      @factorComponent.part().options.dataLocation.setTemplate value
+      dataLocation = @factorComponent.part().options.dataLocation
+
+      if value isnt ''
+        dataLocation.setTemplate value
+
+      else
+        dataLocation.unlinkTemplate()
 
   class @Axis extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis'

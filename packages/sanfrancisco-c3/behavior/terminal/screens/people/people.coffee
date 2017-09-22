@@ -13,14 +13,14 @@ class C3.Behavior.Terminal.People extends AM.Component
 
     @property = new ReactiveField null
 
+  onCreated: ->
+    super
+
     # We use this when the user wants to choose a different template (and templates wouldn't be shown by default).
     @forceShowTemplates = new ReactiveField false
 
     # We use this when the user wants to customize the options.
     @forceShowEditor = new ReactiveField false
-
-  onCreated: ->
-    super
 
     # Get the people part from the character.
     @autorun (computation) =>
@@ -81,7 +81,7 @@ class C3.Behavior.Terminal.People extends AM.Component
   isOwnPropertyTemplate: ->
     userId = Meteor.userId()
     template = @propertyTemplate()
-    template.author._id is userId
+    template?.author?._id is userId
 
   backButtonCallback: ->
     @closeScreen()
@@ -119,6 +119,8 @@ class C3.Behavior.Terminal.People extends AM.Component
     @forceShowTemplates true
     @forceShowEditor false
 
+    @$('.main-content').scrollTop(0)
+
   onClickSaveAsTemplateButton: (event) ->
     @property()?.options.dataLocation.createTemplate()
 
@@ -144,6 +146,8 @@ class C3.Behavior.Terminal.People extends AM.Component
     @property()?.options.dataLocation.setTemplate template._id
 
     @forceShowTemplates false
+
+    @$('.main-content').scrollTop(0)
 
   onClickAddPersonButton: (event) ->
     personType = LOI.Character.Part.Types.Behavior.Environment.Person.options.type

@@ -15,7 +15,7 @@ class RS.AirportTerminal.Gates extends LOI.Adventure.Location
   @description: ->
     "
       You are at the airport gates that allow passengers to board the planes. All doors are closed as the
-      staff prepares for the upcoming flights. Escalators in the east can take you a few stories higher to the
+      staff prepares for the upcoming flights. Escalators northeast can take you up a few stories higher to the
       main concourse.
     "
   

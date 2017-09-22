@@ -114,7 +114,7 @@ class AM.Hierarchy.Location
         location.setTemplate templateId
 
     # Takes the data from the template and converts it into a node in this field.
-    location.unlinkTemplate = (templateId) ->
+    location.unlinkTemplate = ->
       field = location.field()
       node = field()
       throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
