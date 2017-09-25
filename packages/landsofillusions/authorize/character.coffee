@@ -5,8 +5,7 @@ LOI.Authorize.characterAction = (characterId) ->
   RS = Retronator.Store
   
   # You need to be logged-in to perform actions with the character.
-  user = Retronator.user()
-  throw new AE.UnauthorizedException "You must be logged in to perform actions with a character." unless user
+  user = Retronator.requireUser()
 
   # Character must exist.
   character = LOI.Character.documents.findOne characterId

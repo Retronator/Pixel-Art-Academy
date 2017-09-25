@@ -3,39 +3,15 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+Vocabulary = LOI.Parser.Vocabulary
+
 class LOI.Interface.Text extends LOI.Interface
   @register 'LandsOfIllusions.Adventure.Interface.Text'
 
-  introduction: ->
-    location = @location()
-    return unless location
-    
-    if location.constructor.visited()
-      fullName = location.avatar.fullName()
-      return unless fullName
-
-      # We've already visited this location so simply return the full name.
-      "#{_.upperFirst fullName}."
-
-    else
-      # It's the first time we're visiting this location in this session so show the full description.
-      @_formatOutput location.avatar.description()
-      
-  exitAvatars: ->
-    exitAvatarsByLocationId = @location()?.exitAvatarsByLocationId()
-    return [] unless exitAvatarsByLocationId
-
-    # Generate a unique set of IDs from all directions (some directions might lead to same location).
-    exitAvatars = _.values exitAvatarsByLocationId
-
-    console.log "Displaying exits", exitAvatars if LOI.debug
-
-    exitAvatars
-
   things: ->
-    location = @location()
+    return [] unless things = LOI.adventure.currentLocationThings()
 
-    location.thingInstances thingId for thingId in location.things()
+    thing for thing in things when thing.displayInLocation()
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
@@ -59,14 +35,11 @@ class LOI.Interface.Text extends LOI.Interface
     'active' if option is @dialogSelection.selectedDialogLine()
 
   showInventory: ->
-    not @inIntro()
+    not @inIntro() and @inventoryItems().length
 
   activeItems: ->
     # Active items render their UI and can be any non-deactivated item in the inventory or at the location.
-    items = _.flatten [
-      LOI.adventure.inventory.values()
-      _.filter LOI.adventure.currentLocation().thingInstances.values(), (thing) => thing instanceof LOI.Adventure.Item
-    ]
+    items = _.filter LOI.adventure.currentPhysicalThings(), (thing) => thing instanceof LOI.Adventure.Item
 
     activeItems = _.filter items, (item) => not item.deactivated()
 
@@ -78,14 +51,16 @@ class LOI.Interface.Text extends LOI.Interface
     activeItems
 
   inventoryItems: ->
-    items = _.filter LOI.adventure.inventory.values(), (item) -> not item.state().doNotDisplay
+    return [] unless items = LOI.adventure.currentInventoryThings()
+
+    items = (item for item in items when item.displayInInventory())
 
     console.log "Text interface is displaying inventory items", items if LOI.debug
 
     items
 
   showDescription: (thing) ->
-    @narrative.addText thing.avatar?.description()
+    @narrative.addText thing.description()
 
   caretIdleClass: ->
     'idle' if @commandInput.idle()
@@ -93,29 +68,13 @@ class LOI.Interface.Text extends LOI.Interface
   waitingKeypress: ->
     @_pausedNode() or @inIntro()
 
-  narrativeLine: ->
-    lineText = @currentData()
-
-    @_formatOutput lineText
-    
-  _formatOutput: (text) ->
-    return unless text
-
-    # WARNING: The output of this function should be HTML escaped
-    # since the results will be directly injected with triple braces.
-    text = AM.HtmlHelper.escapeText text
-
-    # Create color spans.
-    text = text.replace /%c#([\da-f]{6})(.*?)%%/g, '<span style="color: #$1">$2</span>'
-
-    # Extract commands between underscores.
-    text = text.replace /_(.*?)_/g, '<span class="command">$1</span>'
-
-    text
-
+  # Query this to see if the interface is listening to user commands.
   active: ->
     # The text interface is inactive when there are any modal dialogs.
     return if LOI.adventure.modalDialogs().length
+
+    # It's inactive when there is an item active.
+    return if LOI.adventure.activeItem()
 
     # It's also inactive when we're in any of the accounts-ui flows/dialogs.
     accountsUiSessionVariables = ['inChangePasswordFlow', 'inMessageOnlyFlow', 'resetPasswordToken', 'enrollAccountToken', 'justVerifiedEmail', 'justResetPassword', 'configureLoginServiceDialogVisible', 'configureOnDesktopVisible']
@@ -123,13 +82,29 @@ class LOI.Interface.Text extends LOI.Interface
       return if Accounts._loginButtonsSession.get variable
 
     true
+    
+  # Query this to see if the user is doing something with the interface.
+  busy: ->
+    busyConditions = [
+      not LOI.adventure.interface.active()
+      LOI.adventure.interface.waitingKeypress()
+      LOI.adventure.interface.commandInput.command().length
+      LOI.adventure.interface.showDialogSelection()
+    ]
 
+    _.some busyConditions
+    
   # Use to get back to the initial state with full location description.
   resetInterface: ->
+    @_lastNode null
+    @_pausedNode null
+
     @narrative?.clear()
 
     @location().constructor.visited false
     @inIntro true
+
+    @initializeIntroductionFunction()
 
     Tracker.afterFlush =>
       @narrative.scroll()
@@ -140,7 +115,7 @@ class LOI.Interface.Text extends LOI.Interface
     @inIntro false
 
     # Mark location as visited after the intro of the location is done.
-    @location().stateObject 'visited', true
+    @location().state 'visited', true
 
     Tracker.afterFlush =>
       @resize()
@@ -149,6 +124,13 @@ class LOI.Interface.Text extends LOI.Interface
         @scroll
           position: @maxScrollTop()
           animate: true
+
+  ready: ->
+    conditions = _.flattenDeep [
+      avatar.ready() for avatar in @exitAvatars()
+    ]
+
+    _.every conditions
 
   events: ->
     super.concat
@@ -164,22 +146,26 @@ class LOI.Interface.Text extends LOI.Interface
       'mouseleave .text-interface': @onMouseLeaveTextInterface
 
   onMouseEnterCommand: (event) ->
-    @hoveredCommand $(event.target).text()
+    @hoveredCommand $(event.target).attr 'title'
 
   onMouseLeaveCommand: (event) ->
     @hoveredCommand null
 
   onClickCommand: (event) ->
+    return if @waitingKeypress()
+
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
 
   onMouseEnterExit: (event) ->
-    @hoveredCommand "GO TO #{$(event.target).text()}"
+    @hoveredCommand "Go to #{$(event.target).text()}"
 
   onMouseLeaveExit: (event) ->
     @hoveredCommand null
 
   onClickExit: (event) ->
+    return if @waitingKeypress()
+
     @_executeCommand @hoveredCommand()
     @hoveredCommand null
 

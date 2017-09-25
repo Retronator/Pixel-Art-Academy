@@ -18,64 +18,115 @@ Package.onUse(function(api) {
 
   api.export('Retronator');
 
-  api.addFiles('hq.coffee');
-  api.addAssets('hq.script', ['client', 'server']);
+  api.addFile('hq');
 
   // Actors
-  api.addFiles('actors/actors.coffee');
 
-  api.addFiles('actors/elevatorbutton.coffee');
-  api.addAssets('actors/elevatorbutton.script', ['client', 'server']);
+  api.addFile('actors/actors');
+  api.addFile('actors/operator');
+  api.addFile('actors/aeronaut');
+  api.addFile('actors/burra');
+  api.addFile('actors/corinne');
+  api.addFile('actors/retro');
+  api.addFile('actors/shelley');
+  api.addFile('actors/alexandra');
 
-  api.addFiles('actors/operator.coffee');
+  // Items
+
+  api.addFile('items/items');
+
+  api.addFile('items/components/components');
+  api.addFile('items/components/stripe/stripe');
+
+  api.addThing('items/elevatorbutton/elevatorbutton');
+  api.addThingComponent('items/shoppingcart/shoppingcart');
+  api.addComponent('items/prospectus/prospectus');
+  api.addComponent('items/receipt/receipt');
+  
+  api.addFile('items/account/account');
+  api.addComponent('items/sync/sync');
+  api.addFile('items/keycard/keycard');
+
+  api.addThingComponent('items/operatorlink/operatorlink');
+
+  // Scenes
+  
+  api.addFile('scenes/scenes');
+  
+  api.addThing('scenes/intercom');
+  api.addThing('scenes/shelley');
 
   // Locations
 
-  api.addFiles('locations/locations.coffee');
+  api.addThing('basement1/basement/basement');
 
-  api.addFiles('locations/1stfloor/entrance/entrance.coffee');
-  api.addFiles('locations/1stfloor/entrance/sign.coffee');
+  api.addFile('elevator/elevator');
+  api.addThing('elevator/numberpad');
 
-  api.addFiles('locations/1stfloor/lobby/lobby.coffee');
-  api.addAssets('locations/1stfloor/lobby/tablet.script', ['client', 'server']);
+  api.addFile('floor1/cafe/cafe');
+  api.addFile('floor1/cafe/artworks');
+  api.addScript('floor1/cafe/burra');
 
-  api.addFiles('locations/1stfloor/lobby/display/display.coffee');
-  api.addFiles('locations/1stfloor/lobby/display/display.html');
-  api.addFiles('locations/1stfloor/lobby/display/display.styl');
+  api.addFile('floor1/coworking/coworking');
 
-  api.addFiles('locations/1stfloor/reception/reception.coffee');
-  api.addAssets('locations/1stfloor/reception/burra.script', ['client', 'server']);
+  api.addThing('floor2/store/store');
+  api.addComponent('floor2/store/display/display');
+  api.addComponent('floor2/store/shelf/shelf');
+  api.addFile('floor2/store/shelf/shelf-game');
+  api.addFile('floor2/store/shelf/shelf-upgrades');
+  api.addThing('floor2/store/shelf/shelves');
 
-  api.addFiles('locations/1stfloor/restroom/restroom.coffee');
+  api.addFile('floor2/bookshelves/bookshelves');
 
-  api.addFiles('locations/1stfloor/gallery/gallery.coffee');
+  api.addFile('floor3/gallery/galleryeast');
+  api.addFile('floor3/gallery/gallerywest');
 
-  api.addFiles('locations/elevator/elevator.coffee');
-  api.addFiles('locations/elevator/numberpad.coffee');
-  api.addAssets('locations/elevator/numberpad.script', ['client', 'server']);
+  api.addThing('floor4/artstudio/artstudio');
 
-  api.addFiles('locations/2ndfloor/steps/steps.coffee');
+  /*
+  api.addFiles('1stfloor/entrance/entrance.coffee');
+  api.addFiles('1stfloor/entrance/sign.coffee');
 
-  api.addFiles('locations/2ndfloor/store/store.coffee');
+  api.addFiles('1stfloor/lobby/lobby.coffee');
+  api.addAssets('1stfloor/lobby/tablet.script', ['client', 'server']);
 
-  api.addFiles('locations/2ndfloor/checkout/checkout.coffee');
-  api.addAssets('locations/2ndfloor/checkout/retro.script', ['client', 'server']);
+  api.addFiles('1stfloor/lobby/display/display.coffee');
+  api.addFiles('1stfloor/lobby/display/display.html');
+  api.addFiles('1stfloor/lobby/display/display.styl');
 
-  api.addFiles('locations/2ndfloor/checkout/display/display.coffee');
-  api.addFiles('locations/2ndfloor/checkout/display/display.html');
-  api.addFiles('locations/2ndfloor/checkout/display/display.styl');
+  api.addFiles('1stfloor/reception/reception.coffee');
+  api.addAssets('1stfloor/reception/burra.script', ['client', 'server']);
 
-  api.addFiles('locations/2ndfloor/store/shelf/shelf.coffee');
-  api.addFiles('locations/2ndfloor/store/shelf/shelf.html');
-  api.addFiles('locations/2ndfloor/store/shelf/shelf.styl');
-  api.addFiles('locations/2ndfloor/store/shelf/shelf-game.coffee');
-  api.addFiles('locations/2ndfloor/store/shelf/shelf-upgrades.coffee');
+  api.addFiles('1stfloor/restroom/restroom.coffee');
 
-  api.addFiles('locations/3rdfloor/chillout/chillout.coffee');
+  api.addFiles('1stfloor/gallery/gallery.coffee');
+
+  api.addFiles('elevator/elevator.coffee');
+  api.addFiles('elevator/numberpad.coffee');
+  api.addAssets('elevator/numberpad.script', ['client', 'server']);
+
+  api.addFiles('2ndfloor/steps/steps.coffee');
+
+  api.addFiles('2ndfloor/store/store.coffee');
+
+  api.addFiles('2ndfloor/checkout/checkout.coffee');
+  api.addAssets('2ndfloor/checkout/retro.script', ['client', 'server']);
+
+  api.addFiles('2ndfloor/checkout/display/display.coffee');
+  api.addFiles('2ndfloor/checkout/display/display.html');
+  api.addFiles('2ndfloor/checkout/display/display.styl');
+
+  api.addFiles('2ndfloor/store/shelf/shelf.coffee');
+  api.addFiles('2ndfloor/store/shelf/shelf.html');
+  api.addFiles('2ndfloor/store/shelf/shelf.styl');
+  api.addFiles('2ndfloor/store/shelf/shelf-game.coffee');
+  api.addFiles('2ndfloor/store/shelf/shelf-upgrades.coffee');
+
+  api.addFiles('3rdfloor/chillout/chillout.coffee');
   
-  api.addFiles('locations/3rdfloor/landsofillusions/landsofillusions.coffee');
-  api.addFiles('locations/3rdfloor/landsofillusions/methods-server.coffee', ['server']);
-  api.addAssets('locations/3rdfloor/landsofillusions/operator.script', ['client', 'server']);
+  api.addFiles('3rdfloor/landsofillusions/landsofillusions.coffee');
+  api.addFiles('3rdfloor/landsofillusions/methods-server.coffee', ['server']);
+  api.addAssets('3rdfloor/landsofillusions/operator.script', ['client', 'server']);
   
   // Items
 
@@ -129,5 +180,5 @@ Package.onUse(function(api) {
   api.addFiles('items/tablet/apps/shoppingcart/receipt/receipt.coffee');
   api.addFiles('items/tablet/apps/shoppingcart/receipt/receipt.html');
   api.addFiles('items/tablet/apps/shoppingcart/receipt/receipt.styl');
-
+*/
 });

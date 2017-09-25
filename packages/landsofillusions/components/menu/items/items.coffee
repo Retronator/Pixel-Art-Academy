@@ -65,6 +65,7 @@ class LOI.Components.Menu.Items extends AM.Component
       'click .continue': @onClickContinue
       'click .new': @onClickNew
       'click .load': @onClickLoad
+      'click .save': @onClickSave
       'click .account': @onClickAccount
       'click .fullscreen': @onClickFullscreen
       'click .settings': @onClickSettings
@@ -79,37 +80,27 @@ class LOI.Components.Menu.Items extends AM.Component
     LOI.adventure.interface.narrative.scroll()
 
   onClickLoad: (event) ->
-    # Wait until user is logged in.
-    userAutorun = Tracker.autorun (computation) =>
-      return unless user = Retronator.user()
-      computation.stop()
+    # If the player could save the game, warn them about losing progress.
+    if @saveVisible()
+      dialog = new LOI.Components.Dialog
+        message: "You will lose current game progress if you load another game."
+        buttons: [
+          text: "Continue"
+          value: true
+        ,
+          text: "Cancel"
+        ]
 
-      # Wait also until the game state has been loaded.
-      Tracker.autorun (computation) =>
-        return unless LOI.adventure.gameStateSubsription.ready()
-        computation.stop()
+      LOI.adventure.showActivatableModalDialog
+        dialog: dialog
+        callback: =>
+          LOI.adventure.loadGame() if dialog.result
 
-        databaseState = LOI.GameState.documents.findOne 'user._id': user._id
+    else
+      LOI.adventure.loadGame()
 
-        if databaseState
-          # Move user to the last location saved to the state. We do this only on load so that multiple players using
-          # the same account can move independently, at least inside the current session (they will get synced again on
-          # reload).
-          LOI.adventure.currentLocationId databaseState.state.currentLocationId
-
-        else
-          # TODO: Show dialog informing the user we're saving the local game state.
-          LOI.GameState.insertForCurrentUser LOI.adventure.localGameState.state(), =>
-            # Now that the local state has been transferred, clear it for next player.
-            LOI.adventure.clearLocalGameState()
-
-      LOI.adventure.menu.signIn.activatable.deactivate()
-
-    LOI.adventure.menu.showModalDialog
-      dialog: LOI.adventure.menu.signIn
-      callback: =>
-        # User has returned from the load screen.
-        userAutorun.stop()
+  onClickSave: (event) ->
+    LOI.adventure.saveGame()
 
   onClickAccount: (event) ->
     LOI.adventure.menu.account.show()
@@ -131,18 +122,61 @@ class LOI.Components.Menu.Items extends AM.Component
     @currentScreen @constructor.Screens.Settings
 
   onClickQuit: (event) ->
+    # If the player could save the game, warn them about losing progress.
+    if @saveVisible()
+      dialog = new LOI.Components.Dialog
+        message: "You will lose current game progress if you quit without saving. Proceed?"
+        buttons: [
+          text: "Quit"
+          value: true
+        ,
+          text: "Cancel"
+        ]
+
+      LOI.adventure.showActivatableModalDialog
+        dialog: dialog
+        callback: =>
+          @_quit() if dialog.result
+
+    else
+      @_quit()
+
+  _quit: ->
     # Close the menu.
     LOI.adventure.menu.hideMenu()
+
+    # Remove other modal menus.
+    LOI.adventure.removeModalDialog dialogOptions.dialog for dialogOptions in LOI.adventure.modalDialogs()
 
     # Reset the local game state, so when we logout it will kick in.
     LOI.adventure.clearLocalGameState()
 
     # Log out.
-    LOI.adventure.logout()
+    LOI.adventure.logout
+      callback: =>
+        # Reset the interface.
+        LOI.adventure.interface.resetInterface()
 
-    # Go to the terrace and scroll to top.
-    LOI.adventure.goToLocation Retropolis.Spaceport.AirportTerminal.Terrace
-    LOI.adventure.interface.scroll position: 0
+        # Clear active item.
+        LOI.adventure.activeItemId null
+
+        # Clear location to trigger location changes.
+        LOI.adventure.currentLocationId null
+
+        # Reset game time.
+        LOI.adventure.resetTime()
+
+        # Cleanup storyline classes.
+        LOI.adventure.resetEpisodes()
+
+        # Cleanup running scripts.
+        LOI.adventure.director.stopAllScripts()
+
+        # Go to the terrace and scroll to top.
+        LOI.adventure.currentLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
+        LOI.adventure.currentTimelineId PixelArtAcademy.TimelineIds.DareToDream
+
+        LOI.adventure.interface.scroll position: 0
 
   onClickBack: (event) ->
     @currentScreen @constructor.Screens.MainMenu

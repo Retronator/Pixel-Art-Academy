@@ -17,14 +17,28 @@ class LOI.Components.Account.Page extends AM.Component
 
     # On the server, create this avatar's translated names.
     if Meteor.isServer
-      for translationKey of @translationKeys
-        defaultText = _.propertyValue @, translationKey
-        AB.createTranslation translationNamespace, translationKey, defaultText
+      Document.startup =>
+        return if Meteor.settings.startEmpty
+
+        for translationKey of @translationKeys
+          defaultText = _.propertyValue @, translationKey
+          AB.createTranslation translationNamespace, translationKey, defaultText
+
+  constructor: ->
+    super
+
+    translationNamespace = @componentName()
+
+    # Subscribe to translation keys in advance to avoid loading on display.
+    Tracker.autorun (computation) =>
+      AB.Translation.forNamespace.subscribe translationNamespace, null, AB.userLanguagePreference()
 
   url: -> @constructor.url()
     
   displayNameTranslation: ->
-    # We need component translations, but they won't be subscribed to until the page component has finished creating.
-    return unless @isCreated()
+    translationNamespace = @componentName()
 
-    @translation @constructor.translationKeys.displayName
+    # We directly return the translation document instead of going through the component since we subscribed on our own.
+    AB.Translation.documents.findOne
+      namespace: translationNamespace
+      key: @constructor.translationKeys.displayName

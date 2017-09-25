@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-store');
+  api.use('retronator:retronator-hq');
 
   api.export('PixelArtAcademy');
 

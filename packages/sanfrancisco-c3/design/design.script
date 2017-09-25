@@ -1,0 +1,120 @@
+# SanFrancisco.C3.Design
+
+## ShelleyDialog
+
+drshelley: Hello.
+
+## MainQuestions
+
+* I was sent here from Retronator. -> [Retronator] `not Retronator`
+* How do I create a character? -> [Create] `not Create`
+* I'm so sorry, but could you repeat how to create characters? -> [CreateAgain] `Create`
+* Can you tell me about the cyborgs? -> [Cyborgs]
+* Thank you for your time. -> [EndDialog]
+
+## Retronator
+
+drshelley: Ugh, another gamer.
+
+> The doctor doesn't look pleased with you, but stops from making further comment.
+
+-> [MainQuestions]
+
+## Cyborgs
+
+drshelley: What would you like to know?
+
+## CyborgQuestions
+
+* What is it exactly? -> [MakeCyborgs]
+* How does Neurasync work with this? -> [Neurasync] `MakeCyborgs`
+* And how do you give AI to it? -> [AI] `MakeCyborgs`
+* How will I control the Avatar/Agent hybrid? -> [Control] `MakeCyborgs`
+* Thanks for the information. -> [EndDialog]
+
+## MakeCyborgs
+
+drshelley:
+    A cyborg is any human with robotic parts. Here at C3 we produce all parts a human might need: prosthetic limbs, internal organs, vision and hearing replacements.
+    Our latest advancement is a full prosthetic body, an Avatar. 
+    The brain is the only part necessary, but even that can be taken further with Neurasync BCI, or replaced altogether with StrongAI to make an Agent.
+
+-> [CyborgQuestions]
+
+## Neurasync
+
+drshelley:
+    With Neurasync's technology, the brain doesn't need to be directly installed in the cybernetic body. 
+    The pilot is connected remotely and their brain output kept in sync with the inputs of the Avatar's artificial neurons.
+
+-> [CyborgQuestions]
+
+## AI
+
+drshelley:
+    A massively-parallel multithreaded processor installed in an Avatar converts it into an AI agent.
+    We use StrongAI's machine learning algorithms on data collected with Neurasync from real people, creating a library of behaviors that are inherently human.
+    Our Agents were the first to break the Total Turing test earlier this year.
+
+-> [CyborgQuestions]
+
+## Control
+
+drshelley:
+    After you've designed the Avatar, we will use your SYNC device to read off your unique behavior signature.
+    This will create a symbiotic connection between yourself and the synthetic brain created by StrongAI. 
+    The Agent will essentially run on a copy of your brain's activity, possessing most of your strengths and weaknesses.
+    The similarity allows for the Agent to be very susceptible to your commands. You will become their inner voice.
+
+-> [CyborgQuestions]
+
+## Create
+
+-> [CreateMain] `Retronator`
+ 
+drshelley: A character? You must be one of those gamers, only they call them that.
+
+-> [CreateMain]
+
+## CreateAgain
+
+> Dr. Shelley looks at you with her eyebrows raised, but eventually gives in.
+
+drshelley: Pay attention this time.
+
+-> [CreateSteps]
+
+## CreateMain
+
+drshelley: I'll put it in simple terms for you.
+
+## CreateSteps
+
+drshelley:
+    1. Use this terminal to design the visual features. If you have any trouble, complain to the UX department, not to me.
+    2. Go east to Behavior Setup. The terminal there will sync with your brain (if there's anything in there) and you can adjust any situational aspects of your … 'character'.
+    3. Continue further east to the Stasis Chamber. That's where Avatars wait for deployment. Activate it with your SYNC device and our field team will deliver it to Retronator. 
+
+* OK, keep going east and do something in each room, got it.
+
+drshelley: Aren't you a smart cookie.
+
+> The doctor turns back to her computer and resumes working.
+
+-> [End]
+
+## EndDialog
+
+> The doctor nods and gets back to her work.
+
+-> [End]
+
+## MakingOfACyborg
+
+> You raise from the workstation and head out to the platform that overlooks the assembly line. 
+> You stare into the vast hall. The machines work tirelessly to create parts for new, more sophisticated machines. It's a new kind of life cycle.
+> You can now continue east to Behavior Setup to finish your character.
+
+-> [End]
+
+## End

@@ -1,0 +1,110 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-translationinput
+  position relative
+
+  .artificial-babel-components-translatable
+    display block
+    position relative
+
+    &:hover
+      .current-translation
+      .new-translation
+        .translation
+          .info
+            .text
+              input
+                padding-right 2em !important
+
+            .language
+              visibility visible
+
+    .current-translation
+    .translation-selector
+      display block
+      width 100%
+
+    .current-translation
+    .new-translation
+      .translation
+        .info
+          .language
+            visibility hidden
+
+    .translation-selector
+      position absolute
+      top 100%
+      left 0
+      right 0
+      z-index 1
+      background atariGrey(7)
+      visibility visible
+
+      .translations
+      .add-translation
+        display block
+        width 100%
+
+    .translation
+      display block
+      width 100%
+
+      .info
+        display block
+        position relative
+        width 100%
+
+        .text
+          input
+            width 100%
+
+        .language
+          display block
+          position absolute
+          z-index 1
+          right 0
+          top 50%
+          transform translateY(-50%)
+          checkout()
+
+      .language-selection
+        display block
+        z-index 2
+        left 0
+        right 0
+        top 100%
+        visibility visible
+        background atariGrey(7)
+
+        .artificial-babel-components-languageselection
+          display block
+          width 100%
+
+          .abcls-languages-area
+          .abcls-regions-area
+            display block
+            width 100%
+            position relative
+            z-index 2
+            padding 2rem
+
+            .abcls-current-language
+            .abcls-current-region
+              display block
+              width 100%
+
+            .abcls-languages
+            .abcls-regions
+              display block
+              position absolute
+              top 100%
+              left 0
+              right 0
+              z-index 1
+              background atariGrey(7)
+              max-height 10em
+              overflow-y auto
+
+              .abcls-language
+              .abcls-region
+                display block

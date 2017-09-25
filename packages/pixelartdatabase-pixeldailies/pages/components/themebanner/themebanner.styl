@@ -1,0 +1,53 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartdatabase-pixeldailies-pages-components-themebanner
+  display block
+  position relative
+  padding 20rem 10rem
+  overflow hidden
+
+  .theme
+    display block
+    position relative
+    z-index 2
+
+    .date
+      display block
+      kyrou-9()
+      margin 0
+      color atariGrey(6)
+      text-shadow 0 1rem 0 atariGrey(0), 0 2rem 5rem transparentify(atariGrey(0), 0.5)
+
+    .hashtags
+      display block
+      acme-9()
+      font-size 16rem
+      font-weight bold
+      margin 0
+      color atariGrey(7)
+      text-shadow 0 2rem 0 atariGrey(0), 0 4rem 10rem transparentify(atariGrey(0), 0.5)
+
+  .key-image-area
+    position absolute
+    left 30%
+    width 80%
+    top 0
+    bottom 0
+    z-index 1
+    mix-blend-mode screen
+
+    .key-image
+      absolute-cover-size()
+      object-fit cover
+      pixel-image-rendering()
+
+    &::after
+      content ''
+      absolute-cover()
+      background linear-gradient(to right, atariGrey(0) 0%, transparent 100%)
+
+  .background
+    absolute-cover-size()
+    z-index 0
+    object-fit cover
+    filter blur(100px)

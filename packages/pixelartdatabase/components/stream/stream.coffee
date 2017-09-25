@@ -11,7 +11,7 @@ class PADB.Components.Stream extends AM.Component
   onCreated: ->
     super
 
-    @animatedBackgrounds = new ReactiveField true
+    @lowPerformance = new ReactiveField false
     @playbackSkippedCount = 0
 
     @displayedArtworks = new ComputedField =>
@@ -31,135 +31,162 @@ class PADB.Components.Stream extends AM.Component
             displayedArtwork.videoUrl ?= representation.url
 
         displayedArtwork
-    
-    @_artworkAreas = []
-    @activeArtworkIndex = new ReactiveField null
-    @activeArtwork = new ReactiveField null, (a, b) -> a is b
+
+    @_artworksVisibilityData = []
 
   onRendered: ->
     super
-
     @_$window = $(window)
     @_$document = $(document)
     @_$app = $('.retronator-app')
 
     @_$window.on 'scroll.pixelartdatabase-components-stream', (event) => @onScroll()
-    @onScroll()
 
-    # Update active artwork on resizes and artworks updates.
+    # Update active artwork areas on resizes and artwork updates.
     @autorun (computation) =>
       AM.Window.clientBounds()
       @displayedArtworks()
 
-      # Reset active artwork index so that all areas get deactivated first.
-      @activeArtworkIndex null
-
       # Wait till the new artwork areas get rendered.
       Tracker.afterFlush =>
-        @measureArtworkAreas()
-        @updateActiveArtwork()
+        # Everything is deactivated when first rendered so make sure visibility data reflects that.
+        visibilityData.active = false for visibilityData in @_artworksVisibilityData
 
-    # React to active artwork changes.
-    @autorun (computation) =>
-      activeArtworkIndex = @activeArtworkIndex()
-
-      # Go over all the artworks and activate the one at the new index.
-      for artworkArea, index in @_artworkAreas
-        # We should make active also the two neighbors.
-        areaShouldBeActive = if activeArtworkIndex? then Math.abs(activeArtworkIndex - index) < 2 else false
-
-        # Activate or deactivate areas. Note that active is undefined at the start.
-        if areaShouldBeActive and artworkArea.active isnt true
-          # We must activate this area.
-          $artworkArea = $(artworkArea.element)
-
-          $artworkArea.css
-            visibility: 'visible'
-
-          for video in $artworkArea.find('video')
-            video.currentTime = 0
-            video.play()
-
-          $backgroundVideo = $artworkArea.find('video.background')
-          backgroundVideo = $backgroundVideo[0]
-
-          if backgroundVideo
-            $backgroundVideo.on 'timeupdate', =>
-              return unless backgroundVideo
-
-              newTime = backgroundVideo.currentTime
-              lastTime = $backgroundVideo._lastTime
-
-              if lastTime and newTime - lastTime > 0.55
-                @playbackSkippedCount++
-                @animatedBackgrounds false if @playbackSkippedCount > 2
-
-              $backgroundVideo._lastTime = newTime
-
-          artworkArea.active = true
-
-        else if not areaShouldBeActive and artworkArea.active isnt false
-          # We need to deactivate this area.
-          $artworkArea = $(artworkArea.element)
-
-          $(artworkArea.element).css
-            visibility: 'hidden'
-
-          for video in $artworkArea.find('video')
-            video.pause()
-
-          $backgroundVideo = $artworkArea.find('video.background')
-          $backgroundVideo.off 'timeupdate'
-
-          artworkArea.active = false
+        @_measureArtworkAreas()
+        @_updateArtworkAreasVisibility()
 
   onDestroyed: ->
     super
 
     @_$window.off '.pixelartdatabase-components-stream'
 
+  hasCaption: ->
+    @captionComponentClass?
+
   renderCaption: ->
     caption = new @captionComponentClass
     caption.renderComponent @currentComponent()
+    
+  lowPerformanceClass: ->
+    'low-performance' if @lowPerformance()
+
+  showVideoBackground: ->
+    artwork = @currentData()
+
+    # Show the video background if this is an animated artwork and we're not in low performance mode.
+    artwork.videoUrl and not @lowPerformance()
 
   onScroll: ->
     # Measure artwork areas every 2s when scrolling.
     @_throttledMeasureArtworkAreas ?= _.throttle =>
-      @measureArtworkAreas()
+      @_measureArtworkAreas()
+      @_updateArtworkAreasVisibility()
     ,
       2000
 
+    # Update visibility every 0.2s when scrolling.
+    @_throttledUpdateArtworkAreasVisibility ?= _.throttle =>
+      @_updateArtworkAreasVisibility()
+    ,
+      200
+    
     @_throttledMeasureArtworkAreas()
-    @updateActiveArtwork()
+    @_throttledUpdateArtworkAreasVisibility()
 
-  measureArtworkAreas: ->
-    # Get scroll top positions of all artworks.
+  _measureArtworkAreas: ->
+    # Get top and bottom positions of all artworks.
     $artworkAreas = @$('.artwork-area')
     return unless $artworkAreas
 
     for artworkAreaElement, index in $artworkAreas
-      @_artworkAreas[index] ?= {}
-      @_artworkAreas[index].element = artworkAreaElement
-      @_artworkAreas[index].top = $(artworkAreaElement).find('.artwork').offset().top
+      $artworkArea = $(artworkAreaElement)
+      top = $artworkArea.offset().top
+      bottom = top + $artworkArea.height()
+
+      @_artworksVisibilityData[index] ?= {}
+      @_artworksVisibilityData[index].element = artworkAreaElement
+      @_artworksVisibilityData[index].$artworkArea = $artworkArea
+      @_artworksVisibilityData[index].top = top
+      @_artworksVisibilityData[index].bottom = bottom
 
       displayedArtwork = Blaze.getData(artworkAreaElement)
-      @_artworkAreas[index].artwork = displayedArtwork.artwork
+      @_artworksVisibilityData[index].artwork = displayedArtwork.artwork
 
-  # Determines which artwork we're viewing.
-  updateActiveArtwork: (options) ->
-    newIndex = -1
-
-    scrollTop = @_$window.scrollTop()
-
+  _updateArtworkAreasVisibility: ->
+    viewportTop = @_$window.scrollTop()
     windowHeight = @_$window.height()
-    scrollBottom = scrollTop + windowHeight
+    viewportBottom = viewportTop + windowHeight
 
-    for artworkArea, index in @_artworkAreas
-      if artworkArea.top < scrollBottom
-        newIndex = index
+    # Expand one extra screen beyond the viewport
+    visibilityEdgeTop = viewportTop - windowHeight
+    visibilityEdgeBottom = viewportBottom + windowHeight
 
-      else
-        break
+    # Go over all the artworks and activate the ones
+    for visibilityData, index in @_artworksVisibilityData
+      # Artwork is visible if it is anywhere in between the visibility edges.
+      artworkShouldBeActive = visibilityData.bottom > visibilityEdgeTop and visibilityData.top < visibilityEdgeBottom
 
-    @activeArtworkIndex newIndex
-    @activeArtwork if newIndex > -1 then @_artworkAreas[newIndex].artwork else null
+      # Activate or deactivate artwork areas. Note that active is undefined at the start.
+      if artworkShouldBeActive and visibilityData.active isnt true
+        # We must activate this artwork area.
+        visibilityData.active = true
+
+        $artworkArea = visibilityData.$artworkArea
+
+        $artworkArea.css
+          visibility: 'visible'
+
+        $videos = $artworkArea.find('video')
+
+        playPromises = for video in $videos
+          promise = video.play()
+
+          do (video) =>
+            promise?.then =>
+              video.pause()
+
+          promise
+
+        do ($videos) =>
+          Promise.all(playPromises).then =>
+            Meteor.setTimeout =>
+              for video in $videos
+                video.currentTime = 0
+                video.play()
+            ,
+              500
+
+            # HACK: Safari sometimes hides the video after it starts playing, so we trigger it to be re-rendered.
+            $videos.css
+              display: 'inline-block'
+
+        $backgroundVideo = $artworkArea.find('video.background')
+        backgroundVideo = $backgroundVideo[0]
+
+        if backgroundVideo
+          $backgroundVideo.on 'timeupdate', =>
+            return unless backgroundVideo
+
+            newTime = backgroundVideo.currentTime
+            lastTime = $backgroundVideo._lastTime
+
+            if lastTime and newTime - lastTime > 0.55
+              @playbackSkippedCount++
+              @lowPerformance true if @playbackSkippedCount > 2
+
+            $backgroundVideo._lastTime = newTime
+
+      else if not artworkShouldBeActive and visibilityData.active isnt false
+        # We need to deactivate this artwork area.
+        visibilityData.active = false
+
+        $artworkArea = visibilityData.$artworkArea
+
+        $artworkArea.css
+          visibility: 'hidden'
+
+        for video in $artworkArea.find('video')
+          video.pause()
+
+        $backgroundVideo = $artworkArea.find('video.background')
+        $backgroundVideo.off 'timeupdate'

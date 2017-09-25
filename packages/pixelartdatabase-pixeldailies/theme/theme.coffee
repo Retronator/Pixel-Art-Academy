@@ -40,6 +40,7 @@ class PADB.PixelDailies.Theme extends AM.Document
 
     topSubmissions = PADB.PixelDailies.Submission.documents.find(
       'theme._id': themeId
+      processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
     ,
       sort:
         favoritesCount: -1

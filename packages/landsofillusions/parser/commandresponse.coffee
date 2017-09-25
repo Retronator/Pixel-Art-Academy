@@ -52,8 +52,10 @@ class LOI.Parser.CommandResponse
             avatar = alias
 
             # We create all possible name phrase sequences out of the short and full name.
-            shortNamePhrases = AB.Helpers.generatePhrases text: avatar.shortName()
-            fullNamePhrases = AB.Helpers.generatePhrases text: avatar.fullName()
+            normalizeAvatarName = (name) -> _.toLower _.deburr name
+
+            shortNamePhrases = AB.Helpers.generatePhrases text: normalizeAvatarName avatar.shortName()
+            fullNamePhrases = AB.Helpers.generatePhrases text: normalizeAvatarName avatar.fullName()
 
             _.union shortNamePhrases, fullNamePhrases
 
@@ -102,34 +104,57 @@ class LOI.Parser.CommandResponse
       console.log "Form combinations", (combination.join ' ' for combination in formCombinations) if LOI.debug
 
       likelihoodCache = {}
+      commandWords = _.words @options.command.normalizedCommand
 
       for combinationPhrases in formCombinations
+        # Calculate likelihood of desired phrases being present in the command.
         likelihood = 1
 
-        for translatedPhrase in combinationPhrases
-          phraseLikeliehood = 0
+        switch matchingMode
+          when @constructor.MatchingModes.Exact
+            translatedPhrase = combinationPhrases.join ' '
 
-          # See if we've already calculated this phrase's likelihood.
-          if likelihoodCache[translatedPhrase]
-            console.log "got cached"
-            phraseLikeliehood = likelihoodCache[translatedPhrase]
+            if likelihoodCache[translatedPhrase]
+              likelihood = likelihoodCache[translatedPhrase]
 
-          else
-            # Calculate how likely this phrase is in the command.
-            switch matchingMode
-              when @constructor.MatchingModes.Exact
-                phraseLikeliehood = @options.command.is translatedPhrase
+            else
+              likelihood = @options.command.is translatedPhrase
+              likelihoodCache[translatedPhrase] = likelihood
 
-              when @constructor.MatchingModes.Includes
-                phraseLikeliehood = @options.command.has translatedPhrase
+          when @constructor.MatchingModes.Includes
+            for translatedPhrase in combinationPhrases
+              phraseLikelihood = 0
 
-          likelihood *= phraseLikeliehood
+              # See if we've already calculated this phrase's likelihood.
+              if likelihoodCache[translatedPhrase]
+                phraseLikelihood = likelihoodCache[translatedPhrase]
+
+              else
+                # Calculate how likely this phrase is in the command.
+                phraseLikelihood = @options.command.has translatedPhrase
+                likelihoodCache[translatedPhrase] = phraseLikelihood
+
+              likelihood *= phraseLikelihood
 
         console.log "For phrase", combinationPhrases.join(' '), "likelihood in mode", matchingMode, "is", likelihood if LOI.debug
+
+        # We also calculate precision, how closely the phrase has matched the command.
+        targetWords = _.words combinationPhrases.join '_'
+
+        differenceA = _.difference targetWords, commandWords
+        differenceB = _.difference commandWords, targetWords
+
+        precision = 1 - (differenceA.length + differenceB.length) / commandWords.length
+
+        # Priority is another ordering mechanism, one provided by the listener,
+        # for example, when overriding a generic response with a custom one.
+        priority = phraseAction.priority or 0
 
         # Return an action with the likelihood that this is what the user wanted.
         phraseAction: phraseAction
         likelihood: likelihood
+        precision: precision
+        priority: priority
         translatedForm: combinationPhrases
 
     # Likely actions include nested arrays for all actions so we return a flattened version.

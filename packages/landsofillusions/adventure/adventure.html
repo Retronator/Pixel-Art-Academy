@@ -2,9 +2,17 @@
   <div class="adventure">
     {{> Render interface}}
     {{> Render menu}}
+    {{#each currentChapters}}
+      {{> Render this}}
+    {{/each}}
+    {{#each modalDialogs}}
+      {{#unless dontRender}}
+        {{> Render dialog}}
+      {{/unless}}
+    {{/each}}
   </div>
-  {{#unless ready}}
+  {{#if showLoading}}
     {{> LandsOfIllusions.Pages.Loading}}
-  {{/unless}}
-  <a class="build-version" href="https://github.com/retronator/pixel-art-academy" target="_blank">alpha build 0.7.4</a>
+  {{/if}}
+  <a class="build-version" href="https://github.com/retronator/pixel-art-academy" target="_blank">alpha build 0.16.14</a>
 </template>

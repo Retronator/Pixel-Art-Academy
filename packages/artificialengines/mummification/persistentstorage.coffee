@@ -12,7 +12,8 @@ class AM.PersistentStorage
 
     # Load the current state from local storage.
     storedState = options.storage.getItem options.storageKey
-    options.field EJSON.parse storedState if storedState
+
+    options.field EJSON.parse storedState if storedState and storedState isnt 'undefined'
 
     # Start listening for state changes. We are also returning the autorun handle, since this is the last line.
     options.tracker.autorun (computation) =>

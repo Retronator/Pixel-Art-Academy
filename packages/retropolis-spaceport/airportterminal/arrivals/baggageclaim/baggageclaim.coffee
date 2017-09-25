@@ -6,8 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class RS.AirportTerminal.BaggageClaim extends LOI.Adventure.Location
   @id: -> 'Retropolis.Spaceport.AirportTerminal.BaggageClaim'
   @url: -> 'spaceport/baggage-claim'
-  @scriptUrls: -> [
-  ]
+  @region: -> RS
 
   @version: -> '0.0.1'
 
@@ -15,18 +14,23 @@ class RS.AirportTerminal.BaggageClaim extends LOI.Adventure.Location
   @shortName: -> "baggage claim"
   @description: ->
     "
-      A single baggage carousel is bringing in luggage from the arrived flight. A way to pass the time while you wait
-      is to look at informational displays that are explaining the rules of posessing physical things in Retropolis.
-      After you've collected your suitcase, you can continue through the customs in the north.
+      In the baggage claim area, a single carousel is ready to deliver luggage from the next flight.
+      You can only continue north to the customs.
     "
   
   @initialize()
 
-  constructor: ->
-    super
+  @defaultScriptUrl: -> 'retronator_retropolis-spaceport/airportterminal/arrivals/baggageclaim/baggageclaim.script'
 
   things: -> [
+    @constructor.BaggageCarousel
   ]
 
   exits: ->
     "#{Vocabulary.Keys.Directions.North}": RS.AirportTerminal.Customs
+    "#{Vocabulary.Keys.Directions.West}": RS.AirportTerminal.Immigration
+
+  onExitAttempt: (exitResponse) ->
+    if exitResponse.destinationLocationClass is RS.AirportTerminal.Immigration
+      @startScript label: 'ExitToImmigration'
+      exitResponse.preventExit()

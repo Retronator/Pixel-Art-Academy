@@ -13,11 +13,32 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:sanfrancisco');
   api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartacademy');
 
   api.export('SanFrancisco');
 
+  api.addFile('soma');
+
+  // Items
+
+  api.addFile('items/items');
+
+  api.addComponent('items/map/map');
+  api.addThing('items/muni/muni');
+
   // Locations
 
-  api.addFiles('locations/locations.coffee');
-  
+  api.addFile('caltrain/caltrain');
+  api.addFile('4thking/4thking');
+  api.addFile('moscone/moscone');
+  api.addFile('moscone/station');
+  api.addFile('2nd/2nd');
+  api.addFile('2nd/retronatorhq');
+  api.addFile('2nd/artistsign');
+  api.addFile('2ndking/2ndking');
+  api.addFile('c3/c3');
+  api.addFile('missionbay/missionbay');
+  api.addFile('missionrock/missionrock');
+  api.addFile('chinabasinpark/chinabasinpark');
+  api.addFile('transbay/transbay');
 });

@@ -1,7 +1,9 @@
 RS = Retronator.Store
 
 # Admin creation
-Meteor.startup ->
+Document.startup ->
+  return if Meteor.settings.startEmpty
+
   unless Meteor.settings.admin
     console.warn "Set admin user info in the settings file if you want to have an admin user automatically created for you."
     return

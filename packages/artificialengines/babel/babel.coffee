@@ -9,6 +9,9 @@ class Artificial.Babel
   # User's current language preference setting.
   @_userLanguagePreference: new ReactiveField null
 
+  # Global toggle that turn translatables into editable inputs.
+  @inTranslationMode: new ReactiveField false
+
   @userLanguagePreference: (value) ->
     if value
       @_userLanguagePreference value
@@ -32,27 +35,24 @@ class Artificial.Babel
       @_babelSubscriptionHandle.stop()
 
   # Subscribe to a namespace.
-  @subscribeNamespace: (namespace) ->
+  @subscribeNamespace: (namespace, options = {}) ->
     subscriptionHandle = new @SubscriptionHandle namespace
 
     # Reactively subscribe to the translations so that we get updates when user's language preference changes.
     subscriptionHandle._babelSubscriptionAutorun = Tracker.autorun =>
-      # Namespace is the component name.
-      languages = @userLanguagePreference()
+      # We allow sending null as the languages if we want to subscribe to all languages.
+      languages = options.languages ? @userLanguagePreference()
+
+      subscribeProvider = options.subscribeProvider or Meteor
 
       # Save the handle so we can check its ready state before trying to insert keys into the database.
-      subscriptionHandle._babelSubscriptionHandle = Meteor.subscribe 'Artificial.Babel.Translation', namespace, null, languages
+      subscriptionHandle._babelSubscriptionHandle = @Translation.forNamespace.subscribe subscribeProvider, namespace, null, languages
 
     subscriptionHandle
 
   # Main translation entry point. It tries to find a translation and inserts it if it's not present.
   @translation: (handle, key) ->
-    throw new AE.ArgumentNullException "Subscription handle must be provided." unless handle?
-    throw new AE.ArgumentNullException "Key must be provided." unless key?
-
-    translation = @Translation.documents.findOne
-      namespace: handle.namespace
-      key: key
+    translation = @existingTranslation handle, key
 
     return translation if translation
 
@@ -60,7 +60,7 @@ class Artificial.Babel
     # translation, it must have not been added to the database yet.
     if handle._babelSubscriptionHandle.ready()
       # Looks like we'll need to insert it.
-      Meteor.call 'Artificial.Babel.translationInsert', handle.namespace, key
+      Artificial.Babel.Translation.insert handle.namespace, key
 
     # Return null, The method will then repeat when the query above returns a document from the database.
     null
@@ -73,15 +73,25 @@ class Artificial.Babel
       key: key
 
     if existing
-      Meteor.call 'Artificial.Babel.translationUpdate', existing._id, @defaultLanguage, defaultText
+      Artificial.Babel.Translation.update existing._id, @defaultLanguage, defaultText if defaultText
+
       existing._id
 
     else
-      Meteor.call 'Artificial.Babel.translationInsert', namespace, key, defaultText
+      Artificial.Babel.Translation.insert namespace, key, defaultText
+
+  # Returns a translation that has already been created.
+  @existingTranslation: (handle, key) ->
+    throw new AE.ArgumentNullException "Subscription handle must be provided." unless handle?
+    throw new AE.ArgumentNullException "Key must be provided." unless key?
+
+    @Translation.documents.findOne
+      namespace: handle.namespace
+      key: key
 
   @translate: (translationOrHandle, key) ->
     if translationOrHandle instanceof @SubscriptionHandle
-      translation = @translation translationOrHandle, key
+      translation = @existingTranslation translationOrHandle, key
 
     else
       translation = translationOrHandle
@@ -105,7 +115,7 @@ class Artificial.Babel
       languages = @userLanguagePreference()
 
       # Save the handle on component so we can check its ready state before trying to insert keys into the database.
-      component._babelSubscriptionHandle = Meteor.subscribe 'Artificial.Babel.Translation', namespace, null, languages
+      component._babelSubscriptionHandle = @Translation.forNamespace.subscribe namespace, null, languages
 
   # Cleans up the subscription to this component's namespace.
   @unsubscribeComponent: (component) ->
@@ -129,10 +139,10 @@ class Artificial.Babel
     # translation, it must have not been added to the database yet.
     if component._babelSubscriptionHandle.ready()
       # Looks like we'll need to insert it.
-      Meteor.call 'Artificial.Babel.translationInsert', namespace, key
+      Artificial.Babel.Translation.insert namespace, key
 
     # Return null, The method will then repeat when the query above returns a document from the database.
     null
 
   @translateForComponent: (component, key) ->
-    @translate @translationForComponent component, key
+    @translate @translationForComponent(component, key), key

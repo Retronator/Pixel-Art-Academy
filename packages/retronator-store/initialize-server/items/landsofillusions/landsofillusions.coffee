@@ -2,13 +2,15 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
-Meteor.startup ->
+Document.startup ->
+  return if Meteor.settings.startEmpty
+
   # AVATARS
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
     name: "Lands of Illusions — Character editor"
-    description: "Create your own character by customizing body and portrait parts. It's also great for social media profile pictures."
+    description: "Create your own character by customizing body and portrait parts. This feature will be developed later and will unlock when it's ready." # TODO: change to "It's also great for social media profile pictures."
 
   RS.Transactions.Item.create
     catalogKey: CatalogKeys.LandsOfIllusions.Character.Avatar.CustomItem

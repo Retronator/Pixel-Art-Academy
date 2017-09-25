@@ -1,0 +1,63 @@
+<template name="SanFrancisco.C3.Behavior.Terminal.Character">
+  <div class="sanfrancisco-c3-behavior-terminal-character screen">
+    {{#with character}}
+      <div class="main-content">
+        <h1 class="screen-title">Agent Behavior Profile</h1>
+        <div class="character">
+          <p class="main-text">
+            <div class="full-name"><strong>Agent</strong>:
+              {{t7e document.avatar.fullName}}
+            </div>
+          </p>
+          <h2 class="section-title">
+            Personality
+          </h2>
+          <p class="traits">
+            {{traits}}
+          </p>
+          <div class="actions">
+            <button class="action-button modify-personality-button">Modify</button>
+          </div>
+          <h2 class="section-title">
+            Activities
+          </h2>
+          <p class="activities">
+            {{activities}}
+          </p>
+          <div class="actions">
+            <button class="action-button modify-activities-button">Modify</button>
+          </div>
+          <h2 class="section-title">
+            Environment
+          </h2>
+          <p class="clutter">
+            {{environment.clutterString}}
+          </p>
+          <p class="people">
+            {{environment.peopleString}}
+          </p>
+          <div class="actions">
+            <button class="action-button modify-environment-button">Modify</button>
+          </div>
+          <h2 class="section-title">
+            Perks
+          </h2>
+          <p class="perks">
+            {{perks}}
+          </p>
+          <div class="actions">
+            <button class="action-button modify-perks-button">Modify</button>
+          </div>
+        </div>
+      </div>
+      <div class="main-actions">
+        {{#if document.behaviorApproved}}
+          <button class="main-button action-button done-button">Done</button>
+        {{else}}
+          <button class="main-button action-button done-button">Complete</button>
+          <button class="action-button save-draft-button">Save draft</button>
+        {{/if}}
+      </div>
+    {{/with}}
+  </div>
+</template>

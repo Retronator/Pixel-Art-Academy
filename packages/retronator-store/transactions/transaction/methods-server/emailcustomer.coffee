@@ -28,8 +28,8 @@ RS.Transactions.Transaction.emailCustomer = ({customer, payments, shoppingCart})
     switch payment.type
       when RS.Transactions.Payment.Types.StripePayment
         email.addParagraph "At this point your credit card was only authorized. We will
-                            collect the purchase price of $#{payment.amount} when the game's first public release
-                            happens at the end of this year. You will be emailed beforehand in case you need to cancel
+                            collect the purchase price of $#{payment.amount} when the game's first gameplay chapter
+                            releases later this year. You will be emailed beforehand in case you need to cancel
                             your purchase at that time."
 
       when RS.Transactions.Payment.Types.StoreCredit
@@ -42,9 +42,21 @@ RS.Transactions.Transaction.emailCustomer = ({customer, payments, shoppingCart})
   
   email.addParagraph "p.s. We have a secret Facebook group for the game. If you want
                       to join, just reply and let me know the email you use for Facebook
-                      and I'll send you an invite. That way you can follow the development
-                      as we go along. Hope to see you there."
-  
+                      and I'll send you an invite."
+
+  email.addParagraph "p.p.s. Development blog for the game is on Patreon. If you go to the
+                      overview page you can click Follow to get email updates (no pledge needed,
+                      it's all public)."
+
+  email.addLinkParagraph 'https://www.patreon.com/retro/posts?tag=Pixel%20Art%20Academy', "Patreon development blog"
+
+  email.addParagraph "p.p.p.s. There is a lo-fi prototype of the drawing activities available
+                      in the form of articles in Retronator Magazine. Currently it's a hidden
+                      draft, but it already has a ton of knowledge and 50 tasks to complete.
+                      You can start learning at:"
+
+  email.addLinkParagraph 'https://medium.com/retronator-magazine/pixel-art-academy-study-guide-3ae5f772a83a', "Pixel Art Academy Study Guide"
+
   email.end()
   
   Email.send

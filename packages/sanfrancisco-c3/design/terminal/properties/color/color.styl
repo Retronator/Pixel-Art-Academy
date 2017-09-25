@@ -1,0 +1,96 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.sanfrancisco-c3-design-terminal-properties-color
+  display table
+  border-collapse collapse
+  table-layout fixed
+
+  .swatches-area
+    display table-row
+
+    .name
+    .sanfrancisco-c3-design-terminal-properties-color-swatches
+      display table-cell
+      border 1rem solid atariCyan(1)
+
+    .name
+      color atariCyan(3)
+      height 9rem
+      padding 1rem
+      line-height 1rem
+      vertical-align middle
+
+    .page-button
+      background none
+      border none
+      padding 1.5rem
+      color atariCyan(3)
+      adventure()
+      line-height 1rem
+
+      &.previous-page-button
+        &:after
+          content '←'
+
+      &.next-page-button
+        &:after
+          content '→'
+
+      &:hover
+      &:focus
+        background atariCyan(0)
+        color atariCyan(4)
+        &::before
+          display none
+
+    .sanfrancisco-c3-design-terminal-properties-color-swatches
+      .swatches
+        display flex
+        padding 0
+        margin 0
+        list-style none
+
+    .page-button
+    .sanfrancisco-c3-design-terminal-properties-color-swatches .swatches
+      float left
+
+    .page-button
+    .sanfrancisco-c3-design-terminal-properties-color-swatches .swatches .swatch
+      position relative
+      width 9rem
+      height 8rem
+      border-right 1rem solid atariCyan(1)
+      cursor pointer
+
+      &:last-child
+        border-right none
+        width 8rem
+
+      &:hover
+      &:focus
+        &::before
+          content ''
+          position absolute
+          left -1rem
+          top -1rem
+          bottom -1rem
+          right -1rem
+          z-index 1
+          border 1rem solid atariCyan(3)
+
+      &.selected
+        cursor default
+
+        &::before
+          content ''
+          position absolute
+          left -1rem
+          top -1rem
+          bottom -1rem
+          right -1rem
+          z-index 1
+          border 1rem solid atariGrey(4)
+
+    .next-page-button
+      width 9rem !important
+      border-left 1rem solid atariCyan(1)

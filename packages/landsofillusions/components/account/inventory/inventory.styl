@@ -1,0 +1,186 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-components-account-inventory
+  absolute-cover()
+  padding 14rem
+
+  &.other-side
+    padding-left 20rem
+
+    .clamp
+      transform scaleX(-1)
+      right 0
+      left -4rem
+
+    .turn
+      left auto
+      right 0
+      text-align right
+
+    .selected-item
+      bottom 10rem
+      right 10rem
+
+  .turn
+    position absolute
+    bottom -10rem
+    left 0
+    width 70rem
+    padding 5rem
+    color atariGrey(4)
+    cursor pointer
+    border none
+    background none
+    adventure()
+    text-align left
+
+    &:hover
+    &:focus
+      color atariGrey(3)
+
+    .arrow
+      position relative
+      top 3rem
+      width 7rem
+      height 12rem
+      margin 0 2rem
+
+  .selected-item
+    position absolute
+    bottom -10rem
+    right 20rem
+    width 79rem
+    height 77rem
+    padding 5rem 12rem 0 6rem
+    background-image image('/landsofillusions/components/account/postit.png')
+    cursor pointer
+    text-transform initial
+
+    .content
+      transform rotate(-5deg)
+      checkout()
+      text-align center
+      color atariBlue(4)
+      line-height 6rem
+      height 66rem
+      overflow-x hidden
+      overflow-y auto
+
+      p
+        margin 0
+
+      .unload-info
+        float right
+        margin 0 -2rem 2rem 2rem
+        width 9rem
+        height 9rem
+        padding 1rem
+        line-height 5rem
+        text-align left
+        border none
+        background none
+        color atariYellow(4)
+        adventure()
+
+        &::before
+          content 'X'
+
+        &:hover
+        &:focus
+          outline none
+          color atariYellow(3)
+
+
+  .category
+    margin-bottom 0
+    checkout()
+    text-transform uppercase
+
+  .items
+    list-style square
+    margin-top 0
+    padding-left 7rem
+    checkout()
+
+    .item
+      margin 0
+
+      .name
+        cursor pointer
+
+        &:hover
+          background atariYellow(6)
+
+  .clamp
+    position absolute
+    z-index 2
+    top 75rem
+    right -4rem
+    width 15rem
+    height 22rem
+
+  .keycard
+    position absolute
+    z-index 1
+    top 70rem
+    right -1rem
+    width 65rem
+    height 40rem
+    filter drop-shadow(-1rem 1rem 0 transparentify(atariGrey(5), atariGrey(7)))
+
+    .card
+      width 100%
+
+    .name
+      position absolute
+      bottom 0
+      right 2rem
+      left 11rem
+      checkout()
+      text-transform uppercase
+      text-align right
+      white-space nowrap
+      overflow hidden
+
+    &::after
+      content ''
+      absolute-cover()
+      z-index 1
+      background image('/landsofillusions/components/account/inventory/keycards/shine.png')
+      background-size 100%
+      mix-blend-mode overlay
+
+    &.default .name
+      color atariGrey(6)
+
+    &.white .name
+      color atariGrey(5)
+
+    &.yellow .name
+      color atariOrange(7)
+
+    &.cyan .name
+      color atariCyan(5)
+
+    &.green .name
+      color atariGreen(3)
+
+    &.magenta .name
+      color atariMagenta(3)
+
+    &.red .name
+      color atariRed(5)
+
+    &.blue .name
+      color atariBlue(5)
+
+    &.black .name
+      color atariGrey(3)
+
+    &.zx .name
+      color atariGrey(3)
+
+    &.nes .name
+      color atariGrey(2)
+      bottom auto
+      top 4rem

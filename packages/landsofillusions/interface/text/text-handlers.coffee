@@ -13,6 +13,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @autorun (computation) =>
       @dialogSelection.paused @waitingKeypress()
 
+    @_currentIntroductionFunction = new ReactiveField null
+
   onLocationChanged: ->
     location = @location()
 
@@ -22,9 +24,12 @@ class LOI.Interface.Text extends LOI.Interface.Text
       return unless location.ready()
       computation.stop()
 
+      # Initialize introduction function after location has changed and new listeners have been created.
+      Tracker.nonreactive => @initializeIntroductionFunction()
+
       # If we've been here before, just start with a fresh narrative. This is the persistent visited, not the
       # per-session one, since we want to do the intro only when it's really the first time to see the location.
-      if location.stateObject 'visited'
+      if location.state 'visited'
         @narrative.clear()
 
       else
@@ -32,12 +37,12 @@ class LOI.Interface.Text extends LOI.Interface.Text
         @resetInterface()
 
       # We have cleared the interface so it can now start processing any scripts.
-      @interfaceReady true
+      @locationChangeReady true
 
       # Wait one frame so that any script nodes are processed. Then we can
       # see if the interface is empty, or it is already paused on something.
       Meteor.setTimeout =>
-        @narrative.addText "What do you want to do?", scroll: false unless @_pausedNode()
+        @narrative.addText "What do you want to do?", scroll: false unless @waitingKeypress()
   
         # All the texts have been loaded from the DB at this point.
         # Wait for all the reactivity to finish reflowing the page.
@@ -52,7 +57,19 @@ class LOI.Interface.Text extends LOI.Interface.Text
       ,
         0
 
+  initializeIntroductionFunction: ->
+    # Wait for new enter responses.
+    Tracker.autorun (computation) =>
+      return unless responseResults = LOI.adventure.locationOnEnterResponseResults()
+      computation.stop()
+      
+      # Set the new introduction function, if it was set by any of the listeners.
+      @_currentIntroductionFunction null
 
+      for result in responseResults
+        introductionFunction = result.enterResponse.introductionFunction()
+
+        @_currentIntroductionFunction introductionFunction if introductionFunction
 
   onCommandInputEnter: ->
     # Stop intro on enter.

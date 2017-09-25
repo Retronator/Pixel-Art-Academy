@@ -1,0 +1,425 @@
+# PixelArtAcademy.Season1.Episode0.Chapter3.Construct.Loading
+
+## Start
+
+> A man with sunglasses speaks.
+
+-> [FirstTime] `not GetStarted`
+
+captain: Welcome back.
+
+-> [GetStarted] `not MainQuestions`
+
+-> [End]
+
+<!-- INTRODUCTION DIALOG -->
+
+## FirstTime
+
+captain: Welcome to Lands of Illusions!
+
+pause
+
+### ShowTitle
+
+wait 0
+
+pause
+    
+* Where am I?
+
+captain: Right now you are inside a special program called the Loader.
+
+## Construct
+
+captain: It's where we modify the alternate reality you experience in the real world.
+
+-> [NeuronLevel] `MainQuestions`
+
+## WhereAmIQuestion
+
+* How did you change where I am?
+* What kind of modifications? -> [Modifications]
+
+## NeuronLevel
+
+captain: 
+    The AR system operates at the neuron level so just like we can use it to augment your reality, we can completely take over your perception.
+    Your body is in Retronator HQ, but your mind is in the Loader.
+
+-> [MainQuestions] `MainQuestions`
+
+* What kind of modifications do you do? -> [Modifications]
+
+## Modifications
+
+> The Captain turns on the TV, showing a futuristic-looking city.
+
+captain: Do you know of the utopian city Retropolis?
+
+* Not really. -> [RetropolisNo]
+* The place with the Academy of Art? -> [RetropolisPixelArtAcademy]
+* Yeah, but it's made up, right? -> [RetropolisMadeUp]
+
+## RetropolisNo
+
+captain: Neither does anyone in the real world.
+
+-> [AlternateReality]
+
+## RetropolisPixelArtAcademy
+
+captain: Yes indeed. So far it has existed only in the prospectus of Pixel Art Academy.
+
+-> [AlternateReality]
+
+## RetropolisMadeUp
+
+captain: In the world you just left behind, yes.
+
+-> [AlternateReality]
+
+## AlternateReality
+
+captain: Yet, when you exit the Loader, you will enter an alternate reality where Retropolis got formed in 1984 on an island next to the settlement Walden 14.
+
+* I'm starting to get it. -> [GetIt]
+* Walden 14?
+
+## Walden14
+
+-> [SkinnerRepeat] `HeardOfSkinner`
+
+## HeardOfSkinner
+
+captain: Tell me, have you heard of B.F. Skinner?
+
+* I'm afraid not. -> [SkinnerNo]
+* The behavioral psychologist? -> [SkinnerYes]
+* The famous producer of hides?
+
+captain: Yeah … no.
+
+## SkinnerNo
+
+> The Captain switches the TV to show a scientist working with pigeons.
+
+captain: 
+    Skinner was the most eminent psychologist of the 20th century, right in front of Jean Piaget and Sigmund Freud. 
+    You've heard of Freud, haven't you?
+
+* …
+
+captain: That was rhetorical. 
+    
+## SkinnerGames
+
+captain:
+    Thanks to Skinner, the very video games you play are designed to keep you glued to your screen.
+    Every time a monster drops some loot, it's Skinner's operant conditioning at work. But I digress. `not MainQuestions`
+    Every time a monster drops some loot, it's Skinner's operant conditioning at work. `MainQuestions`
+
+-> [SkinnerWalden2] `MainQuestions`
+
+* Fascinating! -> [SkinnerFascinating]
+* Gee, if I knew I was getting a lecture …
+
+captain: Well, you did ask about Walden 14 …
+
+* Yes, yes I did. -> [SkinnerFascinating]
+* I just wanted the very very short version.
+
+captain: 
+    Very well. Walden 14 is a settlement started in the 1950s in the middle of the Pacific Ocean. 
+    Skinner wrote about its predecessor, Walden Two. That's as short as it gets.
+
+* Perfect. Let's move on. -> [GetIt]
+* Actually, I'd like to hear the full story. -> [SkinnerFascinating]
+
+## SkinnerYes
+
+captain: The one and only.
+
+## SkinnerRepeat
+
+> The Captain switches the TV to show a scientist working with learning machines.
+
+-> [SkinnerWalden2]
+
+## SkinnerFascinating
+
+> The TV now shows Skinner working with learning machines.
+
+-> [SkinnerWalden2]
+
+## SkinnerWalden2
+
+captain: 
+    Skinner was obsessed with figuring out how to change human behavior, but not in a negative, controlling way.
+    At the end of 1940s he wrote about a settlement called Walden Two that was devoted to creating a better society through social engineering.
+    
+> A small village appears on the TV.
+
+captain: 
+    Over the years, the Walden community quickly expanded to new Walden settlements. 
+    In the 1950s they created Walden 14 on an island in the Pacific Ocean, with the goal to focus on radical automation.
+
+-> [MainQuestions] `MainQuestions`
+
+* This sounds familiar …
+* Go on.
+
+> The TV shows Retropolis again.
+
+## GetIt
+
+captain: You will travel to Walden 14 and the city of Retropolis soon enough …
+
+> The Captain looks as though he said something too quickly.
+
+captain: 
+    Well, unfortunately you cannot go there yourself.
+    While you may treat this as a video game experience that you can hop in and out of, such behavior would disrupt the alternate reality of people living in it.
+
+* So … how will this work?
+
+> The Captain switches the TV to show a robot being constructed.
+
+captain: 
+    You will create an alternate reality character. 
+    It will be a cybernetic organism with an artificial intelligence component—a cyborg hybrid. 
+
+## IntroQuestions
+
+* My character will be a cyborg? -> [Cyborg]
+* It will have free will? -> [FreeWill] `Cyborg`
+* Why can't I completely control my character? -> [Control] `FreeWill`
+* I could just create a character like myself. -> [Myself] `Control`
+* Alright, let's get this started. -> [GetStarted]
+
+## Cyborg
+
+captain: 
+    Yes. A cyborg is part human, part robot. 
+    Your neural connection will provide the human part, but as an AI hybrid it will also have free will of its own.
+
+-> [IntroQuestions]
+
+## FreeWill
+
+captain: 
+    Indeed. When you're not connected to the system, life goes on. 
+    Your character is quite capable to live on its own without you.
+    You have a symbiotic link with them so you can instruct them what to do, but in the end, it's their choice to listen to you or not.
+    Take good care of them and they will take good care of you.
+
+-> [IntroQuestions]
+
+## Control
+
+captain: 
+    There is good research out there that makes an intelligent agent a better choice than a mere avatar shell.
+    By interacting with an autonomous being you will form a social bond that will help your learning.
+    
+<!-- TODO: trigger Protege Effect Illustrapedia entry. -->
+
+-> [IntroQuestions]
+
+## Myself
+
+captain: 
+    That is good middle ground. 
+    But remember, they are still a separate entity.
+    They will live on their own while you're not there.
+
+-> [IntroQuestions]
+
+## GetStarted
+
+-> [NoCharacters] `not @user.characters.length`
+
+captain: I see you already made some characters to play with. 
+
+-> [NoActivatedCharacters] `not @user.activatedCharacters().length`
+
+captain: We established a neural link and you can ![use the tv](use tv) to sync with them.
+
+-> [SomeActivatedCharacters] `@user.activatedCharacters().length < @user.characters.length`
+
+-> [MainDialog]
+
+## NoActivatedCharacters
+
+-> [NoActivatedCharactersNoEditor] `not @user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+    
+captain:
+    You will need to finish their design and behavior attributes first though.
+    The staff at the Cyborg Construction Center will help you with that.
+
+-> [MainDialog]
+
+## NoActivatedCharactersNoEditor
+
+captain:
+    Unfortunately you didn't purchase the avatar editor, so they can't be used in the game.
+    You can either purchase the upgrade or simply selecting another, existing character by ![using the tv](use tv).
+
+-> [MainDialog]
+
+## SomeActivatedCharacters
+
+-> [SomeActivatedCharactersNoEditor] `not @user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+    
+captain:
+    You also have a few unfinished characters that still need to be activated.
+    The staff at the Cyborg Construction Center will help you with that.
+
+-> [MainDialog]
+
+## SomeActivatedCharactersNoEditor
+
+captain:
+    You also have a few unfinished characters, but it doesn't seem you have access to the avatar editor to use them.
+    You can either purchase the upgrade or simply continue with your other activated character.
+
+-> [MainDialog]
+
+## NoCharacters
+
+captain: 
+    To make your character selection, ![use the TV](use TV) and we'll setup a symbiotic link with them.
+
+-> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+-> [NoEditor]
+
+## NoEditor
+
+captain:
+    Since you only have the basic game, you can only select from existing characters.
+    If you wanted to create your own character, you can purchase the Avatar Editor upgrade in the Retronator HQ store.
+
+-> [MainQuestions] `MainQuestions`
+
+* That's OK. I'll choose one. -> [NoEditorEnd]
+* Oh, that would be sweet! Let me go to the store, I'll be back.
+
+captain:
+    A generous decision. Your purchase helps support the development of the game.
+    Let me disconnect you and I'll be here when you're ready.
+    
+* Sounds good to me!
+
+-> [Exit]
+
+## NoEditorEnd
+
+captain: Great. The TV is there when you're ready.
+    
+-> [MainDialog]
+
+## HasEditor
+
+captain:
+    Since you own the Avatar Editor you can also design a character on your own.
+    The staff at the Cyborg Construction Center will help you with that.
+     
+-> [MainQuestions] `MainQuestions`
+     
+* Where is this center? -> [C3]
+* I'll just select one on the TV. -> [TV]
+* One more thing … 
+
+captain: Of course, how can I help?
+
+-> [MainDialog]
+
+## TV
+
+captain: Very well.
+
+-> [MainQuestions]
+
+<!-- MAIN DIALOG -->
+
+## MainDialog
+
+captain: Would you like to know anything else? `not _MainQuestions`
+captain: Any more questions? `_MainQuestions`
+
+## MainQuestions
+
+* Where is the cyborg … what-was-it center? -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and not C3`
+* Where is the Cyborg Construction Center again? -> [C3Short] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and C3`
+* How do I get out of here? -> [HowToExit]
+* Can I have multiple characters? -> [MultipleCharacters]
+* How do I select a character again? -> [SelectCharacter] `not @user.characters.length`
+* How do I play with my character? -> [LinkCharacter] `@user.characters.length`
+* Tell me about the Loader again. -> [Construct]
+* Can you tell me more about Walden 14? -> [Walden14] `not Walden14`
+* Can you repeat the Walden part? -> [Walden14] `Walden14`
+* Thank you, that's all for now.
+
+captain: Good luck.
+
+-> [End]
+
+## SelectCharacter
+
+captain: To do that ![use the TV](use TV) to select somebody you like and we'll setup a symbiotic link with them.
+
+-> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+-> [NoEditor]
+
+## LinkCharacter
+
+captain: To do that ![use the TV](use TV) to select it and we'll establish a neural link with them.
+
+-> [MainQuestions]
+
+## C3
+
+captain: Cyborg Construction Center, or C3 for short, is a cyborg and android manufacturer in San Francisco.
+    
+## C3Short
+    
+captain: It's in Mission Bay, south of SOMA. Ask at the reception in the HQ if you have trouble finding it.
+
+-> [MainQuestions]
+
+## HowToExit
+
+captain: 
+    At any time you're in full immersion—either in the Loader or synced with your character—you can always ![talk to operator](talk to operator).
+    He can take you back to the real world or help with switching characters.
+
+-> [MainQuestions]
+
+## MultipleCharacters
+
+captain:
+    Indeed! Feel free to play with different characters.
+    You can even get a quick start with selecting a pre-existing character and later create one of your own. `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+
+-> [MainQuestions]
+
+## Exit
+
+captain: 
+    Alright. Operator, engage disconnect protocol.
+
+operator:
+    Roger that, unplugging now.
+    
+pause
+
+### Exit
+
+-> [End]
+
+## LookAtTV
+
+### ShowTitle
+
+-> [End]
+
+## End

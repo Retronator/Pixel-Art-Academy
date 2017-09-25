@@ -25,14 +25,14 @@ class PADB.PixelDailies.Submission extends AM.Document
     fields: =>
       theme: @ReferenceField PADB.PixelDailies.Theme, ['hashtags'], false
     triggers: =>
-      updateUserStatistics: @Trigger ['favoritesCount', 'user'], (submission, oldSubmission) =>
+      updateUserStatistics: @Trigger ['favoritesCount', 'user', 'processingError'], (submission, oldSubmission) =>
         # Update statistics of both users.
         screenNames = _.uniq [submission?.user?.screenName, oldSubmission?.user?.screenName]
         screenNames = _.without screenNames, undefined
 
         @updateUserStatistics screenName for screenName in screenNames
 
-      favoritesCountUpdated: @Trigger ['theme._id', 'favoritesCount'], (submission, oldSubmission) =>
+      favoritesCountUpdated: @Trigger ['theme._id', 'favoritesCount', 'processingError'], (submission, oldSubmission) =>
         # Update the themes of both submissions.
         themeIds = _.uniq [submission?.theme?._id, oldSubmission?.theme?._id]
         themeIds = _.without themeIds, undefined
@@ -42,6 +42,7 @@ class PADB.PixelDailies.Submission extends AM.Document
   @ProcessingError:
     NoThemeMatch: 'No theme match.'
     NoImages: 'No images.'
+    ImagesNotFound: 'Images not found.'
 
   # Subscriptions
 
@@ -55,6 +56,9 @@ class PADB.PixelDailies.Submission extends AM.Document
       'user.screenName': new RegExp screenName, 'i'
       processingError:
         $ne: PADB.PixelDailies.Submission.ProcessingError.NoImages
+    ,
+      fields:
+        tweetData: 0
     ).fetch()
 
     statisticsByYear = {}
@@ -62,24 +66,36 @@ class PADB.PixelDailies.Submission extends AM.Document
     for submission in submissions
       year = submission.time.getFullYear()
       statisticsByYear[year] ?= {}
-      statistics = statisticsByYear[year]
+      statistics = @_prepareCumulativeStatistics statisticsByYear[year]
 
-      statistics.submissionsCount ?= 0
       statistics.submissionsCount++
-
-      statistics.favoritesCount ?= 0
       statistics.favoritesCount += submission.favoritesCount
+      for image in submission.images when image.animated
+        statistics.animatedSubmissionsCount++
+        break
 
-    overallStatistics =
-      submissionsCount: 0
-      favoritesCount: 0
+      @_calculateDirectStatistics statistics
+
+    overallStatistics = @_prepareCumulativeStatistics()
 
     for year, statistics of statisticsByYear
-      overallStatistics.submissionsCount += statistics.submissionsCount
-      overallStatistics.favoritesCount += statistics.favoritesCount
+      for cumulativeProperty in ['submissionsCount', 'favoritesCount', 'animatedSubmissionsCount']
+        overallStatistics[cumulativeProperty] += statistics[cumulativeProperty]
+
+    @_calculateDirectStatistics overallStatistics
 
     PADB.Profile.documents.update profile._id,
       $set:
         pixelDailies:
           statisticsByYear: statisticsByYear
           statistics: overallStatistics
+
+  @_prepareCumulativeStatistics: (statistics = {}) ->
+    statistics.submissionsCount ?= 0
+    statistics.favoritesCount ?= 0
+    statistics.animatedSubmissionsCount ?= 0
+
+    statistics
+
+  @_calculateDirectStatistics: (statistics) ->
+    statistics.animatedSubmissionRatio = statistics.animatedSubmissionsCount / statistics.submissionsCount

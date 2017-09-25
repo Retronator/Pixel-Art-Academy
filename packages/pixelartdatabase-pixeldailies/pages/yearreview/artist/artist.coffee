@@ -6,6 +6,27 @@ PADB = PixelArtDatabase
 class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist'
 
+  @title: (options) ->
+    profile = @profile options.screenName
+    return unless profile
+    
+    "Retronator // Top Pixel Dailies #{options.year}: #{profile.displayName} (@#{profile.username})"
+      
+  @description: (options) ->
+    profile = @profile options.screenName
+    return unless profile
+
+    "The best Pixel Dailies submissions from #{profile.displayName} in #{options.year}."
+
+  @image: (options) ->
+    # Find the best submission for this artist.
+    [submissionsCursor, artworksCursor] = @mostPopular.query options.screenName, options.year, 1
+    submissionsCursor.fetch()[0]?.images[0].imageUrl
+
+  @profile: (screenName) ->
+    PADB.Profile.documents.findOne
+      username: new RegExp screenName, 'i'
+    
   # Subscriptions
   
   @mostPopular: new AB.Subscription
@@ -16,8 +37,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
       submissionsQuery =
         'user.screenName': new RegExp screenName, 'i'
-        processingError:
-          $ne: PADB.PixelDailies.Submission.ProcessingError.NoImages
+        processingError: PADB.PixelDailies.Pages.YearReview.Helpers.displayableSubmissionsCondition
 
       yearRange.addToMongoQuery submissionsQuery, 'time'
 
@@ -86,6 +106,8 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
   onRendered: ->
     super
 
+    @_$window = $(window)
+
     @_changeBackgroundInterval = Meteor.setInterval =>
       # Choose between one of the first 10 artworks that are always subscribed (but could be less than 10 total).
       artworksCount = @topArtworks()?.length or 1
@@ -120,13 +142,23 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     FlowRouter.getParam 'screenName'
 
   profile: ->
-    PADB.Profile.documents.findOne
-      username: new RegExp @screenName(), 'i'
+    @constructor.profile @screenName()
+
+  escapedDescription: ->
+    profile = @currentData()
+
+    # We need to escape the hashtag at the start of the description since it would be treated as a header.
+    # We need to use double \\ to escape it in the string as well and produce a literal \.
+    profile.description.replace /^#/, '\\#'
 
   statistics: ->
     @profile().pixelDailies.statisticsByYear[@year()] or
       favoritesCount: 0
       submissionsCount: 0
+
+  animatedPercentage: ->
+    statistics = @currentData()
+    Math.floor statistics.animatedSubmissionRatio * 100
 
   background: ->
     index = @currentBackgroundIndex()
@@ -196,6 +228,16 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     day = @currentData()
     @displayedSubmission day.submission
 
+    @_scrollTopBeforeDisplayingSubmissions = @_$window.scrollTop()
+
+    # Wait till the content reflows to avoid flickering when jumping up before the artworks have been rendered there.
+    Tracker.afterFlush =>
+      @_$window.scrollTop 0
+
   onClickDisplayedArtworks: (event) ->
     # Close displayed artworks.
     @displayedSubmission null
+
+    # Wait till the content reflows.
+    Tracker.afterFlush =>
+      @_$window.scrollTop @_scrollTopBeforeDisplayingSubmissions

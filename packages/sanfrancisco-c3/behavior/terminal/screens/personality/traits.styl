@@ -1,0 +1,91 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.sanfrancisco-c3-behavior-terminal-personality-traits
+  .main-content
+    absolute-cover()
+    overflow-y auto
+    padding 10rem 90rem 10rem 10rem
+    color atariGrey(3)
+
+    .factor
+      margin 0 15rem
+
+      .sanfrancisco-c3-behavior-terminal-personality-factor-axis
+        margin-top 15rem
+
+      .traits-section
+        margin-top 15rem
+
+        .title
+          text-align center
+          kyrou-7()
+          font-weight normal
+          color atariGrey(4)
+
+        .traits
+          list-style none
+          margin 0
+          padding 0
+
+          .trait
+            position relative
+
+            &:first-child
+              .selector
+                margin-top 30rem
+
+            .selector
+              position relative
+              width 50rem
+              height 1rem
+              margin 35rem auto
+              background atariGrey(2)
+
+              .selector-button
+                position absolute
+                top 0
+                transform translate(-50%, -50%)
+                width 7rem
+                height 7rem
+                padding 0
+                margin 0
+                border 1rem solid atariGrey(2)
+                background atariGrey(1)
+
+                &.left-selector-button
+                  left 0
+
+                &.middle-selector-button
+                  left 50%
+
+                &.right-selector-button
+                  left 100%
+
+                &.active
+                  border-color atariGrey(4)
+
+                &:disabled
+                  cursor default
+
+              .name
+                position absolute
+                top -16rem
+                transform translateX(-50%)
+                color atariGrey(5)
+                text-transform uppercase
+                white-space nowrap
+
+            .left-factors
+            .right-factors
+              position absolute
+              bottom -2rem
+              transform translateX(-50%)
+              text-align center
+              checkout()
+              line-height 6rem
+
+            .left-factors
+              left 15rem
+
+            .right-factors
+              left 175rem

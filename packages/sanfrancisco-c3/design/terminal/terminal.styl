@@ -1,0 +1,23 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.sanfrancisco-c3-design-terminal
+  .sanfrancisco-c3-items-terminal
+    .landsofillusions-components-overlay
+      > .background
+        background-image image('/sanfrancisco/c3/design/terminal-background.png')
+
+    .avatar-part
+      position relative
+      padding 2rem 4rem
+      border 1rem solid atariCyan(1)
+      font inherit
+      color atariGrey(5)
+      background rgba(atariGrey(1), 0.5)
+      width 34rem
+      height 34rem
+      cursor pointer
+
+      &:hover
+      &:focus
+        border-color atariCyan(2)
+        z-index 1

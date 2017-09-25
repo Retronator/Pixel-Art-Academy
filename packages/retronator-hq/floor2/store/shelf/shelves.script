@@ -1,0 +1,27 @@
+# Retronator.HQ.Store.Shelves
+
+## Start
+
+> Which shelf do you want to look at?
+
+* Main game bundles. -> [Game]
+* Game add-on upgrades. -> [Upgrades]
+* Nevermind -> [End]
+
+## Game
+
+`_shelf = 'Game'`
+
+-> [GoToShelf]
+
+## Upgrades
+
+`_shelf = 'Upgrades'`
+
+-> [GoToShelf]
+
+## GoToShelf
+
+### GoToShelf
+
+## End

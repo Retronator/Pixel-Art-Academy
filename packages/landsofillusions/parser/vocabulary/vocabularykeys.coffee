@@ -18,16 +18,53 @@ LOI.Parser.Vocabulary.Keys =
   Verbs:
     GoToLocationName: ''
     GoToDirection: ''
-    Talk: ''
+    ExitLocation: ''
+    TalkTo: ''
+    LookAt: ''
     Look: ''
     Use: ''
     Press: ''
     Read: ''
-    What: ''
+    WhatIs: ''
+    WhoIs: ''
     Get: ''
-    Sit: ''
+    SitDown: ''
+    SitIn: ''
     Stand: ''
-    
+    Open: ''
+    Close: ''
+    Drink: ''
+    DrinkFrom: ''
+    Return: ''
+    ReturnTo: ''
+    GiveTo: ''
+    UseIn: ''
+    UseWith: ''
+    ShowTo: ''
+    Show: ''
+    LookIn: ''
+    WakeUp: ''
+    Buy: ''
+    Board: ''
+
+  Pronouns:
+    Subjective:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
+    Objective:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
+    Adjective:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
+    Possessive:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
+
   IgnorePrepositions: ''
 
   Questions:
@@ -35,6 +72,9 @@ LOI.Parser.Vocabulary.Keys =
     WhichThing: ''
     WhichPerson: ''
     WhichVerb: ''
+
+  Debug:
+    ResetSections: ''
 
 # Generate vocabulary keys.
 transformVocabularyKey = (prefix, keys) ->

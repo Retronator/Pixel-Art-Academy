@@ -1,0 +1,40 @@
+<template name="SanFrancisco.C3.Design.Terminal.MainMenu">
+  <div class="sanfrancisco-c3-design-terminal-mainmenu screen">
+    <h1 class="screen-title">Cyborg Construction Center — Design Control</h1>
+    <p class="main-text">
+      <strong>User</strong>: {{currentUser.displayName}}
+    </p>
+    <p class="main-text">
+      Please select an agent to work on or create a new one.
+      {{! TODO: Uncomment when templates are back in: Advanced users can also create and modify individual body part templates.!}}
+    </p>
+    <div class="ai-agents section">
+      <h2 class="section-title">Agents</h2>
+      <ul class="document-selection">
+        {{#each currentUser.characters}}
+          {{#with character}}
+            <li class="document">
+              <button class="document-selection-button character-selection-button">
+                {{avatar.fullName}}
+                {{#unless document.designApproved}} (draft){{/unless}}
+              </button>
+            </li>
+          {{/with}}
+        {{/each}}
+      </ul>
+      <div class="actions">
+        <button class="action-button new-character-button">New</button>
+      </div>
+    </div>
+    {{! TODO: Finish template editing section
+    <div class="cyborg-parts section">
+      <h2 class="section-title">Cyborg Parts</h2>
+      <ul class="document-selection">
+      </ul>
+      <div class="actions">
+        <button class="action-button new-character-part-button">New</button>
+      </div>
+    </div>
+    }}
+  </div>
+</template>

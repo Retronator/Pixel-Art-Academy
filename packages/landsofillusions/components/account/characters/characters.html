@@ -6,7 +6,10 @@
   <ul class="characters">
     {{#each characters}}
       <li class="character">
-        <button class="load-character">{{displayName}}</button>
+        <button class="load-character">
+          {{avatar.fullName.translate.text}}
+          {{#unless activated}}(draft){{/unless}}
+        </button>
       </li>
     {{/each}}
     {{#each emptyLines}}
@@ -19,53 +22,42 @@
       Create them at Retronator HQ in the game.
     </p>
   {{/unless}}
-  {{#if currentCharacter}}
-    {{#with currentCharacter}}
-      <div class="character-sheet">
-        <img class="paperclip" src="{{image '/landsofillusions/components/account/paperclip-right.png'}}" />
-        <button class="unload-character"></button>
-        <h4 class="title">Character Sheet</h4>
-        <div class="properties">
-          <div class="property name">
-            <label class="label">
-              <span class="name">Name</span>
-              <span class="value">
-                {{> LandsOfIllusions.Components.Account.Characters.CharacterName}}
-              </span>
-            </label>
-          </div>
-          <div class="property dialog-color-hue">
-            <label class="label">
-              <span class="name">Dialog color</span>
-              <span class="value">
-                {{> LandsOfIllusions.Components.Account.Characters.CharacterColorHue}}
-              </span>
-            </label>
-          </div>
-          <div class="property dialog-color-shade">
-            <label class="label">
-              <span class="name">Shade</span>
-              <span class="value">
-                {{> LandsOfIllusions.Components.Account.Characters.CharacterColorShade}}
-              </span>
-            </label>
-          </div>
+  {{#with selectedCharacter}}
+    <div class="character-sheet">
+      <img class="paperclip" src="{{image '/landsofillusions/components/account/paperclip-right.png'}}" />
+      <button class="unload-character"></button>
+      <h4 class="title">Character Sheet</h4>
+      <div class="properties">
+        <div class="property name">
+          <label class="label">
+            <span class="name">Name</span>
+            <span class="value">
+              {{> renderFullNameInput avatar.fullName}}
+            </span>
+          </label>
         </div>
-        <p class="preview-caption">Preview</p>
-        <div class="dialog-preview" {{style dialogPreviewStyle}}>
-          I'm not just saying this to be clever, I'm also saying it because it's true.
+        <div class="property dialog-color-hue">
+          <label class="label">
+            <span class="name">Dialog color</span>
+            <span class="value">
+              {{> LandsOfIllusions.Components.Account.Characters.CharacterColorHue}}
+            </span>
+          </label>
         </div>
-        <p class="smallprint">
-          Close this sheet to unload the character in the game.
-        </p>
+        <div class="property dialog-color-shade">
+          <label class="label">
+            <span class="name">Shade</span>
+            <span class="value">
+              {{> LandsOfIllusions.Components.Account.Characters.CharacterColorShade}}
+            </span>
+          </label>
+        </div>
       </div>
-    {{/with}}
-  {{else}}
-    {{#if characters.length}}
-      <p class="smallprint">
-        Select a character to load them in the game.
-      </p>
-    {{/if}}
-  {{/if}}
+      <p class="preview-caption">Preview</p>
+      <div class="dialog-preview" {{style dialogPreviewStyle}}>
+        I'm not just saying this to be clever, I'm also saying it because it's true.
+      </div>
+    </div>
+  {{/with}}
 </div>
 </template>

@@ -6,10 +6,10 @@ PAA = PixelArtAcademy
 class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
   @register 'PixelArtAcademy.PixelBoy.Apps.Journal'
 
-  displayName: ->
+  @displayName: ->
     "Practice Journal"
 
-  urlName: ->
+  @urlName: ->
     'journal'
 
   onCreated: ->

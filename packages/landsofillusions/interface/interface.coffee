@@ -7,7 +7,7 @@ class LOI.Interface extends AM.Component
   constructor: (@options) ->
     super
 
-    @interfaceReady = new ReactiveField false
+    @locationChangeReady = new ReactiveField false
 
   onCreated: ->
     super
@@ -21,7 +21,7 @@ class LOI.Interface extends AM.Component
       # We only want to react to change of location.
       Tracker.nonreactive =>
         # Reset interface to not ready.
-        @interfaceReady false
+        @locationChangeReady false
 
         # Mark stored current (previous) location as visited when location changes (in this user session).
         unless location.constructor is @_previousLocationClass
@@ -35,8 +35,12 @@ class LOI.Interface extends AM.Component
 
     # Listen to the script.
     @autorun (computation) =>
-      # We want to wait until the inferface is ready after the location change has been initiated.
-      return unless @interfaceReady()
+      # We want to wait until the interface is ready after the location change has been initiated.
+      return unless @locationChangeReady()
+
+      # We also don't want to process new nodes while UI isn't active or it is waiting for user interaction.
+      return unless @active()
+      return if @waitingKeypress()
 
       scriptNodes = LOI.adventure.director.currentScriptNodes()
 
@@ -44,15 +48,20 @@ class LOI.Interface extends AM.Component
 
       # We handle scripts once per change.
       Tracker.nonreactive =>
-        @_handleNode node for node in scriptNodes
+        @_handleNode node for node in scriptNodes when not node.handled
 
   location: ->
     LOI.adventure.currentLocation()
 
   onLocationChanged: (location) ->
-    # Override to handle location changes. Call "@interfaceReady true" when ready to start handling nodes.
+    # Override to handle location changes. Call "@locationChangeReady true" when ready to start handling nodes.
+    
+  ready: -> true
 
   _handleNode: (node) ->
+    # Mark node as handled to avoid double handling.
+    node.handled = true
+
     @_handleEmpty node if node instanceof Nodes.Script
     @_handleEmpty node if node instanceof Nodes.Label
     @_handleDialogLine node if node instanceof Nodes.DialogLine

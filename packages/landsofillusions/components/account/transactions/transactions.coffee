@@ -5,8 +5,8 @@ LOI = LandsOfIllusions
 HQ = Retronator.HQ
 RA = Retronator.Accounts
 
-class LOI.Components.Account.General extends LOI.Components.Account.Page
-  @register 'LandsOfIllusions.Components.Account.General'
+class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
+  @register 'LandsOfIllusions.Components.Account.Transactions'
   @url: -> 'transactions'
   @displayName: -> 'Transactions'
 
@@ -15,34 +15,20 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
   onCreated: ->
     super
 
-    @subscribe Retronator.Accounts.User.loginServicesForCurrentUser
-    @subscribe Retronator.Accounts.User.registeredEmailsForCurrentUser
     @subscribe Retronator.Accounts.User.supportAmountForCurrentUser
     @subscribe Retronator.Accounts.User.storeDataForCurrentUser
     @subscribe Retronator.Store.Transactions.Item.all
     @subscribe Retronator.Store.Transactions.Transaction.forCurrentUser
 
-  loginServices: ->
-    [
-      'password'
-      'facebook'
-      'twitter'
-      'google'
-    ]
-
-  loginServiceEnabled: ->
-    serviceName = @currentData()
-    user = Meteor.user()
-
-    return unless user?.loginServices?
-
-    serviceName in user.loginServices
+    @showCreditInfo = new ReactiveField false
+    @showAuthorizedPaymentsInfo = new ReactiveField false
+    @currentTransaction = new ReactiveField null
 
   supportAmount: ->
-    Retronator.user().supportAmount
+    Retronator.user()?.supportAmount
 
   showSupporterName: ->
-    Retronator.user().profile?.showSupporterName
+    Retronator.user()?.profile?.showSupporterName
 
   anonymousCheckboxAttributes: ->
     checked: true unless @showSupporterName()
@@ -58,7 +44,21 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
       for item in transaction.items
         item.item.refresh()
 
-    transactions
+    _.sortBy transactions, 'time'
+
+  emptyLines: ->
+    transactionsCount = @transactions()?.length
+
+    if transactionsCount
+      maximumRows = Math.max 3, transactionsCount
+
+    else
+      maximumRows = 2
+
+    maximumRows++ if maximumRows % 2 is 1
+
+    # Return an array with enough elements to pad the transactions list to 5 rows.
+    '' for i in [transactionsCount...maximumRows]
 
   dateText: ->
     transaction = @currentData()
@@ -66,8 +66,13 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
 
     transaction.time.toLocaleDateString languagePreference,
       day: 'numeric'
-      month: 'long'
+      month: 'numeric'
       year: 'numeric'
+
+  authorizedOnlyClass: ->
+    transaction = @currentData()
+
+    'authorized-only' if _.find transaction.payments, (payment) => payment.authorizedOnly
 
   claimLink: ->
     item = @currentData()
@@ -78,73 +83,67 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
     payment.amount or payment.storeCreditAmount
 
   authorizedPaymentsAmount: ->
-    Retronator.user().authorizedPaymentsAmount()
+    Retronator.user()?.authorizedPaymentsAmount()
 
   # Events
 
   events: ->
     super.concat
-      'click .verify-email': @onClickVerifyEmail
-      'submit .add-email-form': @onSubmitAddEmailForm
-      'click .link-service': @onClickLinkService
       'change .anonymous-checkbox': @onChangeAnonymousCheckbox
-
-  onClickVerifyEmail: (event) ->
-    email = @currentData()
-
-    Meteor.call 'Retronator.Accounts.User.sendVerificationEmail', email.address
-
-  onSubmitAddEmailForm: (event) ->
-    event.preventDefault()
-
-    address = @$('.add-email-address').val()
-
-    Meteor.call 'Retronator.Accounts.User.addEmail', address
-
-  onClickLinkService: (event) ->
-    serviceName = @currentData()
-
-    Meteor["linkWith#{_.capitalize serviceName}"]()
+      'click .load-credit-info': @onClickLoadCreditInfo
+      'click .load-authorized-payments-info': @onClickLoadAuthorizedPaymentsInfo
+      'click .info-note': @onClickInfoNote
+      'click .load-transaction': @onClickLoadTransaction
+      'click': @onClick
 
   onChangeAnonymousCheckbox: (event) ->
     Meteor.call "Retronator.Accounts.User.setShowSupporterName", not event.target.checked
 
+  onClickLoadCreditInfo: (event) ->
+    @showCreditInfo true
+    @showAuthorizedPaymentsInfo false
+    @currentTransaction null
+
+  onClickLoadAuthorizedPaymentsInfo: (event) ->
+    @showCreditInfo false
+    @showAuthorizedPaymentsInfo true
+    @currentTransaction null
+
+  onClickInfoNote: (event) ->
+    @showCreditInfo false
+    @showAuthorizedPaymentsInfo false
+
+  onClickLoadTransaction: (event) ->
+    transaction = @currentData()
+    @currentTransaction transaction
+    
+    @showCreditInfo false
+    @showAuthorizedPaymentsInfo false
+
+  onClick: (event) ->
+    return if $(event.target).closest('.load-transaction').length
+
+    @currentTransaction null
+
   # Components
 
-  class @Username extends AM.DataInputComponent
-    @register 'LandsOfIllusions.Components.Account.General.Username'
+  class @SupporterMessage extends AM.DataInputComponent
+    @register 'LandsOfIllusions.Components.Account.Transactions.SupporterMessage'
 
-    load: ->
-      user = RA.User.documents.findOne Meteor.userId(),
-        fields:
-          'profile.name': 1
-
-      user?.profile?.name
-
-    save: (value) ->
-      Meteor.call "Retronator.Accounts.User.rename", value
-
-    placeholder: ->
-      user = RA.User.documents.findOne Meteor.userId(),
-        fields:
-          displayName: 1
-
-      user?.displayName
-
-  class @SupporterName extends AM.DataInputComponent
-    @register 'LandsOfIllusions.Components.Account.General.SupporterName'
-
-    onCreated: ->
+    constructor: ->
       super
 
-      @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
-      @_receiptBabelSubscription = AB.subscribeNamespace 'Retronator.HQ.Items.Tablet.Apps.ShoppingCart.Receipt'
+      @type = AM.DataInputComponent.Types.TextArea
 
     load: ->
-      Retronator.user()?.profile?.supporterName
+      user = RA.User.documents.findOne Meteor.userId(),
+        fields:
+          'profile.supporterMessage': 1
+
+      user?.profile?.supporterMessage
 
     save: (value) ->
-      Meteor.call "Retronator.Accounts.User.setSupporterName", value
+      Meteor.call "Retronator.Accounts.User.setSupporterMessage", value
 
     placeholder: ->
-      AB.translate(@_receiptBabelSubscription, 'Your name here').text
+      @translate('Add a message to supporters list').text

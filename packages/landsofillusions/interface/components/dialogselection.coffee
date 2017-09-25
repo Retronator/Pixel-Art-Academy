@@ -45,8 +45,9 @@ class LOI.Interface.Components.DialogSelection
           # We have a choice node inside a conditional, let's see if we should add it. We evaluate the
           # conditional, but we don't trigger reactive change to the state since we're doing this from a reactive
           # calculation itself (that might run many times). Thus dialog line conditionals are not a good place to put
-          # state changes.
-          result = scriptNode.evaluate triggerChange: false
+          # state changes. We also don't run this in reactive context, because we don't want the selection to
+          # recompute while we're showing it.
+          result = Tracker.nonreactive => scriptNode.evaluate triggerChange: false
 
           # Add the embedded choice node to our list.
           choiceNodes.push scriptNode.node if result

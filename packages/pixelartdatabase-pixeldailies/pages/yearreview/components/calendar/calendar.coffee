@@ -20,7 +20,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
       windowHeightCounts: 2
 
     # Indicates that the months are rendering.
-    @rendering = new ReactiveField true
+    @rendering = new ReactiveField false
 
     # Months is a skeleton structure that only provides the structure for html elements, but no real data.
     @months = new ReactiveField null
@@ -80,7 +80,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
               paddingDays: ('' for i in [0...firstDayDayOfWeek])
 
               # Create an array of days for this month. It needs to be an array so we can iterate over it with #each.
-              days: for dayNumber in [1..AE.DateHelper.daysInMonth(monthNumber, 2016)]
+              days: for dayNumber in [1..AE.DateHelper.daysInMonth(monthNumber, year)]
                 # We provide the _id so that #each does not trash existing days.
                 _id: Random.id()
                 number: dayNumber
@@ -152,8 +152,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
 
   submissionImage: ->
     day = @currentData()
-    console.log day unless day.submission.images[0]
-    day.submission.images[0]
+    day.submission.images?[0]
 
   loading: ->
     # We're loading if provider is not ready or we're still rendering the results.

@@ -3,9 +3,21 @@ LOI = LandsOfIllusions
 class LOI.Director
   constructor: (@options) ->
     @currentScriptNodes = new ReactiveField []
+    
+    # We queue scripts to be started here.
+    @queuedScriptNodes = new ReactiveField []
 
-  onCreated: ->
-    super
+    Tracker.autorun (computation) =>
+      # We don't start new scripts until the previous one has stopped running.
+      return if @currentScriptNodes().length
+      
+      queuedScriptNodes = @queuedScriptNodes()
+      
+      if queuedScriptNodes.length
+        nextScriptNode = queuedScriptNodes.shift()
+        @scriptTransition null, nextScriptNode
+
+        @queuedScriptNodes queuedScriptNodes
 
   startScript: (script, options = {}) ->
     if options.label
@@ -14,7 +26,13 @@ class LOI.Director
     else
       startNode = script.startNode
 
-    @scriptTransition null, startNode
+    queuedScriptNodes = @queuedScriptNodes()
+    queuedScriptNodes.push startNode
+    @queuedScriptNodes queuedScriptNodes
+    
+  stopAllScripts: ->
+    @queuedScriptNodes []
+    @currentScriptNodes []
 
   startNode: (scriptNode) ->
     @scriptTransition null, scriptNode
@@ -34,6 +52,9 @@ class LOI.Director
 
     # Add new script node.
     scriptNodes = _.union scriptNodes, [nextScriptNode] if nextScriptNode
+
+    # Mark the new node as not handled.
+    nextScriptNode?.handled = false
 
     # Trigger update of running scripts.
     @currentScriptNodes scriptNodes

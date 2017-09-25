@@ -62,9 +62,10 @@ class AM.Document extends Document
       fields: fields ? {}
       transform: null
 
-    # Return rather than throw an error so that refresh can be repeated if it's performed inside a
-    # reactive context. It might become later available if for example it's waiting on a subscription.
-    return unless rawDocument
+    # Return rather than throw an error so that refresh can be repeated if it's performed inside a reactive context.
+    # It might become later available if for example it's waiting on a subscription. We return the document to allow
+    # chaining.
+    return @ unless rawDocument
 
     # Make a list of all the fields that are present in the raw document,
     # to know which ones we want to copy from the constructed document.

@@ -1,0 +1,74 @@
+<template name="SanFrancisco.C3.Behavior.Terminal.Personality.Factor">
+  <li class="sanfrancisco-c3-behavior-terminal-personality-factor {{editableClass}}">
+    {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis}}
+    <div class="information">
+      <div class="factor-template">
+        <span class="label-name">Template:</span>
+        {{#if isEditable}}
+          {{#if isOwnPartTemplate}}
+            {{> renderTemplateNameInput partTemplate.name}}
+          {{else}}
+            {{> SanFrancisco.C3.Behavior.Terminal.Personality.Factor.TemplateDropdown}}
+          {{/if}}
+        {{else}}
+          {{#if partTemplate}}
+            {{> t9n partTemplate.name}}
+          {{else}}
+            Custom
+          {{/if}}
+        {{/if}}
+      </div>
+      {{#if isEditable}}
+        <div class="menu">
+          <div class="button">Menu</div>
+          <div class="factor-actions">
+            <button class="factor-action-button factor-edit-traits-button">
+              {{#if areTraitsEditable}}
+                Edit traits
+              {{else}}
+                View traits
+              {{/if}}
+            </button>
+            {{#if partTemplate}}
+              {{#if isOwnPartTemplate}}
+                <button class="factor-action-button factor-unlink-template-button">Unlink template</button>
+              {{else}}
+                <button class="factor-action-button factor-unlink-template-button">Modify</button>
+              {{/if}}
+            {{else}}
+              <button class="factor-action-button factor-save-as-template-button">Save as template</button>
+            {{/if}}
+            <button class="factor-action-button factor-reset-button danger-button">Reset</button>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+    <div class="traits">
+      <span class="title">Traits:</span>
+      {{#if traits}}
+        {{traits}}
+      {{else}}
+        None
+      {{/if}}
+    </div>
+  </li>
+</template>
+
+<template name="SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis">
+  <div class="sanfrancisco-c3-behavior-terminal-personality-factor-axis">
+    <div class="names">
+      <div class="left" {{style leftFactorStyle}}>{{leftFactorName}}</div>
+      <div class="right" {{style rightFactorStyle}}>{{rightFactorName}}</div>
+    </div>
+    <div class="axis">
+      <div class="left">
+        <div class="indicator" {{style leftIndicatorStyle}}></div>
+        <div class="progress-bar" {{style leftProgressBarStyle}}></div>
+      </div>
+      <div class="right">
+        <div class="indicator" {{style rightIndicatorStyle}}></div>
+        <div class="progress-bar" {{style rightProgressBarStyle}}></div>
+      </div>
+    </div>
+  </div>
+</template>

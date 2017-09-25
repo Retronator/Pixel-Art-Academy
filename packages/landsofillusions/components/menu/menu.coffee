@@ -5,6 +5,7 @@ LOI = LandsOfIllusions
 
 class LOI.Components.Menu extends AM.Component
   @register 'LandsOfIllusions.Components.Menu'
+  @url: -> 'menu'
 
   constructor: (@options) ->
     super
@@ -45,6 +46,11 @@ class LOI.Components.Menu extends AM.Component
     $(document).off '.menu'
 
   showMenu: ->
+    LOI.adventure.addModalDialog
+      dialog: @
+      # We already render the menu ourselves as it only becomes an active dialog when it's visible.
+      dontRender: true
+
     # Make menu visible and do the fade in.
     @menuVisible true
     @$('.menu-overlay').velocity('stop').velocity
@@ -53,6 +59,8 @@ class LOI.Components.Menu extends AM.Component
       duration: @_transitionDuration
 
   hideMenu: ->
+    LOI.adventure.removeModalDialog @
+
     # Fade out and then make menu not visible.
     @$('.menu-overlay').velocity('stop').velocity
       opacity: [0, 1]
@@ -66,24 +74,6 @@ class LOI.Components.Menu extends AM.Component
 
   menuButtonVisibleClass: ->
     'visible' unless @menuVisible()
-
-  # Activates an item and waits for the player to complete interacting with it.
-  showModalDialog: (options) ->
-    # Wait until dialog has been active and deactivated again.
-    dialogWasActivated = false
-
-    LOI.adventure.addModalDialog options.dialog
-    options.dialog.activatable.activate()
-
-    Tracker.autorun (computation) =>
-      if options.dialog.activatable.activated()
-        dialogWasActivated = true
-
-      else if options.dialog.activatable.deactivated() and dialogWasActivated
-        computation.stop()
-        LOI.adventure.removeModalDialog options.dialog
-    
-        options.callback?()
 
   events: ->
     super.concat

@@ -16,8 +16,9 @@ class AB.App extends AM.Component
       elapsedAppTime: 0
       totalAppTime: 0
 
-    AM.Window.initialize()
-    AC.Keyboard.initialize()
+    if Meteor.isClient
+      AM.Window.initialize()
+      AC.Keyboard.initialize()
 
   onCreated: ->
     super
@@ -37,6 +38,28 @@ class AB.App extends AM.Component
     # Listen for app unload.
     $(window).unload =>
       @endRun()
+
+    # Dynamically update window title based on the current route.
+    @autorun (computation) =>
+      route = FlowRouter.getRouteName()
+      routeData = AB.routes[route]
+
+      # Get parameters and register dependency on their changes.
+      routeParameters = FlowRouter.current().params
+
+      for parameterName, parameter of routeParameters
+        FlowRouter.getParam parameterName
+
+      # Determine the new title.
+      title = null
+
+      # Call layout first and component later so it can override the more general layout results.
+      for target in [routeData.layoutClass, routeData.componentClass]
+        # Only override the parameter if we get a result.
+        result = target.title? routeParameters
+        title = result if result
+
+      document.title = title if title
 
   tick: (currentFrameTime) ->
     @lastFrameTime ?= currentFrameTime

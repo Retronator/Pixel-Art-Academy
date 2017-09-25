@@ -7,32 +7,50 @@ class LOI.Parser extends LOI.Parser
     # Nodes are not yet available when parser is defined, so we need to access them here.
     Nodes = LOI.Adventure.Script.Nodes
 
-    # Sort all actions descending by likelihood.
-    likelyActions = _.reverse _.sortBy likelyActions, 'likelihood'
-
-    if LOI.debug
-      console.log "We're not sure what the user wanted ... top 10 possibilities:"
-      console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood for likelyAction in likelyActions[0...10]
-
-    # If the most likely action is below 0.5, we tell the user we don't understand.
-    bestLikelihood = likelyActions[0].likelihood
-
-    if bestLikelihood < 0.5
-      LOI.adventure.interface.narrative.addText "I don't know what you mean."
-      return
-
-    # If we're above, there might be more possibilities that are
-    # close together. We find all in the range of 0.2 from the best one, but still not below 0.5
-    likelyActions = _.filter likelyActions, (likelyAction) =>
-      (likelyAction.likelihood > bestLikelihood - 0.2) and (likelyAction.likelihood >= 0.5)
+    # Sort all actions descending by likelihood, precision and priority.
+    likelyActions = _.reverse _.sortBy likelyActions, 'likelihood', 'precision', 'priority'
 
     # Since each alias and translation variant creates its own likely action, multiple can be for the
     # same phrase action. In that case, only include the most likely one in the consideration.
 
-    # Go from start to end of likely actions, and delete all subsequent actions that have the same phrase action.
+    # Go from start to end of likely actions, and delete all subsequent actions that have the same action.
     likelyActions = _.uniqWith likelyActions, (a, b) =>
       # Consider likely actions with the same phrase action as equal.
-      a.phraseAction is b.phraseAction
+      a.phraseAction.action is b.phraseAction.action
+
+    if LOI.debug
+      console.log "We're not sure what the user wanted ... top 10 possibilities:"
+      console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision, likelyAction.priority for likelyAction in likelyActions[0...10]
+
+    # If the most likely action is not above 60%, we tell the user we don't understand.
+    bestLikelihood = likelyActions[0].likelihood
+
+    if bestLikelihood <= 0.6
+      LOI.adventure.interface.narrative.addText "I can't do that."
+      return
+
+    # If we're above, there might be more possibilities that are
+    # close together. We find all in the range of 0.2 from the best one, but still not below 0.6
+    likelyActions = _.filter likelyActions, (likelyAction) =>
+      (likelyAction.likelihood > bestLikelihood - 0.2) and (likelyAction.likelihood > 0.6)
+
+    # If all actions that are left have the same likelihood, take the most precise ones.
+    equalLikelihood = _.first(likelyActions).likelihood is _.last(likelyActions).likelihood
+
+    if equalLikelihood
+      bestPrecision = likelyActions[0].precision
+
+      likelyActions = _.filter likelyActions, (likelyAction) =>
+        likelyAction.precision is bestPrecision
+
+    # If all actions that are left have the same likelihood and precision, take the one with the highest priority
+    equalPrecision = _.first(likelyActions).precision is _.last(likelyActions).precision
+
+    if equalLikelihood and equalPrecision
+      bestPriority = likelyActions[0].priority
+
+      likelyActions = _.filter likelyActions, (likelyAction) =>
+        likelyAction.priority is bestPriority
 
     # If we have only one possibility left, just choose that one (autocorrect style).
     if likelyActions.length is 1
@@ -65,7 +83,44 @@ class LOI.Parser extends LOI.Parser
           node: commandNodeSequence
           next: lastChoiceNode
 
+        # Save likely action so we can re-translate it in below steps.
+        choiceNode._likelyAction = likelyAction
+
         lastChoiceNode = choiceNode
+
+    # Analyze the generated actions to see if any of translated forms are duplicates.
+    translatedForms = []
+    duplicateForms = []
+
+    testChoiceNode = lastChoiceNode
+
+    loop
+      line = testChoiceNode.node.line
+
+      if line in translatedForms
+        duplicateForms.push line
+
+      else
+        translatedForms.push line
+
+      testChoiceNode = testChoiceNode.next
+      break if testChoiceNode.node is cancelNode
+
+    # Now go over again and re-translate the duplicates with more verbose versions.
+    testChoiceNode = lastChoiceNode
+
+    loop
+      line = testChoiceNode.node.line
+
+      # See if this line is in any of other's translated lines (it's a substring of another form).
+      lineIsSubstring = false
+      (lineIsSubstring = true if translatedForm.indexOf(line) > -1) for translatedForm in translatedForms when translatedForm isnt line
+
+      if lineIsSubstring or line in duplicateForms
+        testChoiceNode.node.line = _.upperFirst @_createIdealForm testChoiceNode._likelyAction, fullNames: true
+
+      testChoiceNode = testChoiceNode.next
+      break if testChoiceNode.node is cancelNode
 
     # The dialog starts with a question to the user.
     questionNode = new Nodes.InterfaceLine

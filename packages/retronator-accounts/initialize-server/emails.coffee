@@ -7,7 +7,7 @@ Accounts.config
 Accounts.emailTemplates.siteName = "Retronator"
 Accounts.emailTemplates.from = "Retronator <hi@retronator.com>"
 
-Meteor.startup ->
+Document.startup ->
   # TODO: Get translatable email templates from the DB.
   Accounts.emailTemplates.verifyEmail.subject = (user) ->
     "Verify your Pixel Art Academy account email"

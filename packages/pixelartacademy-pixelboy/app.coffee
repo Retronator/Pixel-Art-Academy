@@ -4,8 +4,12 @@ PAA = PixelArtAcademy
 
 class PAA.PixelBoy.App extends AM.Component
 
-  displayName: ->
+  @displayName: ->
     throw new Meteor.Error 'unimplemented', "You must specify app's display name."
 
-  urlName: ->
+  displayName: -> @constructor.displayName()
+
+  @urlName: ->
     throw new Meteor.Error 'unimplemented', "You must specify app's url name."
+
+  urlName: -> @constructor.urlName()

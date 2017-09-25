@@ -2,7 +2,13 @@
 
 .landsofillusions-components-account
   fixed-cover()
+  z-index 5
   color atariGrey(5)
+
+  &.no-background
+    .landsofillusions-components-overlay
+      .background
+        background none
 
   .account-file
     .account-file-layer
@@ -36,6 +42,9 @@
       &.page-5
         z-index 4
 
+      &.page-6
+        z-index 3
+
       &.papers-bottom
         z-index 2
 
@@ -52,6 +61,18 @@
         &.visible
           visibility visible
 
+      &.flipped
+        transform translateX(160rem) scaleX(-1)
+
+        &.turned
+          pointer-events none
+
+        .page-content
+          transform scaleX(-1)
+
+        .page-number
+          display none
+
       > .page-number
         position absolute
         bottom 16rem
@@ -63,6 +84,6 @@
         left -90rem
 
     .pages
-      for pageNumber in (1..5)
+      for pageNumber in (1..6)
         .page-{pageNumber}
           background-image image('/landsofillusions/components/account/page-' + pageNumber + '.png')

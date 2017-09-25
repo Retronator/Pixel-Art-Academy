@@ -1,0 +1,37 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Start.Terrace
+
+## LeaveWithoutBackpack
+
+> Don't forget your backpack! ![Get backpack](get backpack) before you leave.
+
+-> [End]
+
+## AlexEnters
+
+> Alex enters.
+
+`scene.alexPresent = true`
+
+-> [End]
+
+## AlexIsPresent
+
+alex: There you are! Wow, look at that city. Isn't it wonderful?
+
+* It's even better than I imagined.
+* I always wanted to come here.
+
+alex: 
+    Well, you'll get to see it up-close soon enough.
+    We should hurry up though, the last airship leaves in 10 minutes.
+    
+> Alex leaves ![east](go east).
+
+`scene.alexPresent = false`
+`alex.firstTalkDone = true`
+
+> Something feels strange. You seem to know Alex, but you can't really tell from where.
+
+-> [End]
+
+## End

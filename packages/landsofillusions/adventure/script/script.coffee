@@ -32,26 +32,32 @@ class LOI.Adventure.Script
 
   _processOnClient: ->
     # On the client we need to load the translation documents.
-    
-    # Also replace jump nodes with actual label nodes they point to.
+    character = LOI.character()
+
+    # Process nodes.
     for node in @nodes
+      # Replace jump nodes with actual label nodes they point to.
       for property in ['node', 'next']
         if node[property] instanceof @constructor.Nodes.Jump
           jumpNode = node[property]
           node[property] = @startNode.labels[jumpNode.labelName]
 
+      # Replace char actor with character instance.
+      node.actor = character if node.actor is 'char'
+
     # Set the script reference to all nodes.
     node.script = @ for node in @nodes
 
     # Prepare the state objects.
-    @stateObject = new LOI.StateObject
-      address: new LOI.StateAddress "scripts.#{@id()}"
+    @stateAddress = new LOI.StateAddress "scripts.#{@id()}"
+    @state = new LOI.StateObject address: @stateAddress
 
-    @ephemeralState = new ReactiveField {}
+    @ephemeralState = new LOI.EphemeralStateObject
+
     @_stateChangeAutorun = AM.PersistentStorage.persist
-      storageKey: "#{@options.id}.state"
+      storageKey: "#{@id()}.state"
       storage: sessionStorage
-      field: @ephemeralState
+      field: @ephemeralState.field()
 
     # On the client, do any custom initialization logic.
     @initialize()
@@ -64,15 +70,28 @@ class LOI.Adventure.Script
 
   initialize: -> # Override to setup the script on the client.
 
-  setActors: (actors) ->
-    # Replace actor names with actual object instances.
+  # Sets things that have a shorthand name in the script (actors, thing variables in script context).
+  setThings: (things) ->
+    @things = things
+
+    # Replace actor names with actual thing instances.
     for node in @nodes
       if node.actor and _.isString node.actor
-        unless actors[node.actor]
-          console.warn "Unknown actor", node.actor
-          return
+        continue unless things[node.actor]
 
-        node.actor = actors[node.actor]
+        node.actor = things[node.actor]
+
+  setCurrentThings: (thingClasses) ->
+    Tracker.autorun (computation) =>
+      return unless LOI.adventureInitialized()
+
+      things = {}
+      for key, thingClass of thingClasses
+        return unless things[key] = LOI.adventure.getCurrentThing thingClass
+
+      computation.stop()
+
+      @setThings things
 
   setCallbacks: (callbacks) ->
     # Set callbacks to callback nodes

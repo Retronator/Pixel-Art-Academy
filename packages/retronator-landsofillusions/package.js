@@ -14,20 +14,18 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:retronator');
   api.use('retronator:retronator-store');
+  api.use('retronator:retronator-hq');
   api.use('retronator:pixelartacademy-cast');
 
   api.export('Retronator');
 
-  api.addFiles('landsofillusions.coffee');
+  api.addFile('landsofillusions');
 
   // Locations
 
-  api.addFiles('locations/locations.coffee');
+  api.addFile('hallway/hallway');
 
-  api.addFiles('locations/hallway/hallway.coffee');
-  api.addAssets('locations/hallway/operator.script', ['client', 'server']);
-
-  api.addFiles('locations/room/room.coffee');
-  api.addAssets('locations/room/operator.script', ['client', 'server']);
+  api.addThing('room/room');
+  api.addFile('room/chair/chair');
 
 });

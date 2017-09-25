@@ -3,11 +3,10 @@ RS = Retropolis.Spaceport
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class RS.AirportTerminal.Atrium2ndLevel extends LOI.Adventure.Location
-  @id: -> 'Retropolis.Spaceport.AirportTerminal.Atrium2ndFloor'
+class RS.Tower.Atrium2ndLevel extends LOI.Adventure.Location
+  @id: -> 'Retropolis.Spaceport.Tower.Atrium2ndFloor'
   @url: -> 'spaceport/atrium/2nd-level'
-  @scriptUrls: -> [
-  ]
+  @region: -> RS
 
   @version: -> '0.0.1'
 
@@ -16,7 +15,7 @@ class RS.AirportTerminal.Atrium2ndLevel extends LOI.Adventure.Location
   @description: ->
     "
       You are on the 2nd level of the atrium at the Retropolis International Spaceport. It's the main hub of the
-      tower that and its circular elevated pathway leads around the various departments. Escalators also lead up
+      tower and leads around various departments. Escalators lead up
       and down to 1st and 3rd level of the tower. It's all pretty overwhelming.
     "
   
@@ -31,3 +30,4 @@ class RS.AirportTerminal.Atrium2ndLevel extends LOI.Adventure.Location
   exits: ->
     "#{Vocabulary.Keys.Directions.Northwest}": RS.AirportTerminal.Arrivals
     "#{Vocabulary.Keys.Directions.Southwest}": RS.AirportTerminal.Departures
+    "#{Vocabulary.Keys.Directions.Southeast}": RS.AirshipTerminal.Terminal

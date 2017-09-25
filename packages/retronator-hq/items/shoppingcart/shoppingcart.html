@@ -1,0 +1,55 @@
+<template name="Retronator.HQ.Items.ShoppingCart">
+  <div class="retronator-hq-items-shopping-cart">
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#LandsOfIllusions.Components.Overlay}}
+    {{else}}
+      <div class="shopping-cart-area viewport-area {{receiptVisibleClass}}">
+        {{#if cartItems.length}}
+          <p>NOTE: To complete the purchase, talk to Retro at the checkout counter.</p>
+        {{/if}}
+        <p>Your shopping cart includes:</p>
+        <div class="shopping-cart">
+          {{#if cartItems.length}}
+            <ul class="shopping-cart-items">
+              {{#each cartItems}}
+                <li class="cart-item">
+                  <h2 class="name">{{> t9n item.name}}</h2>
+                  <div class="price-area">
+                    <div class="price">${{item.price}}</div>
+                    <button class="remove-from-cart-button">Remove from cart</button>
+                    {{#if item.isGiftable}}
+                      <label class="gift-label" title="You will receive a claim link to send to the recipient.">
+                        <input class="gift-checkbox" type="checkbox" {{giftCheckboxAttributes}}/> This is a gift
+                      </label>
+                      {{#if isGift}}
+                        <p>You will receive a claim link to send to the recipient.</p>
+                      {{/if}}
+                    {{/if}}
+                  </div>
+                  <p class="description">{{> t9n item.description}}</p>
+                  {{#if item.items}}
+                    <div class="bundle">
+                      <p>
+                        This bundle includes:
+                      </p>
+                      <ul class="bundle-items">
+                        {{#each item.items}}
+                          {{> Retronator.Store.Components.BundleItem}}
+                        {{/each}}
+                      </ul>
+                    </div>
+                  {{/if}}
+                </li>
+              {{/each}}
+            </ul>
+            <div class="total">
+              <div class="total-price">Total: ${{totalPrice}}</div>
+            </div>
+          {{else}}
+            <p>You do not have any items in your shopping cart.</p>
+          {{/if}}
+        </div>
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>

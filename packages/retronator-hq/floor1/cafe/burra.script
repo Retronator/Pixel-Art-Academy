@@ -1,0 +1,189 @@
+# Retronator.HQ.Cafe.Burra
+
+## Start     
+burra: `not _End`
+    Hey there, welcome to Retronator! 
+    How can I help you today?
+
+burra: `_End`
+    Anything else? `_answered`
+    Hi again! `not _answered`
+
+## MainQuestion
+
+* I'd like to register for an account. -> [Register] `not @player.inventory['Retronator.HQ.Items.Account']`
+* I'm looking for the Cyborg Construction Center. -> [C3] `@scripts.PixelArtAcademy.Season1.Episode0.Chapter3`
+* I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
+* Can you tell me about the HQ again? -> [RetronatorHQ] `RetronatorHQDepartments`
+* What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
+* Can I order a sandwich? -> [Sandwich]
+* How about coffee? -> [Coffee] `Sandwich`
+* I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQDepartments`
+* So is Pixel Art Academy like an online course? -> [PixelArtAcademyCourse] `PixelArtAcademy`
+* About that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQDepartments`
+* What exactly is Lands of Illusions? -> [LandsOfIllusions] `RetronatorHQDepartments`
+* Oh, just looking. -> [End] `not _answered and not _End`
+* Whoops, nevermind. -> [End] `not _answered and _End`
+* Thank you so much! `_answered`
+
+burra: My pleasure. Let me know if you need anything else. -> [End]
+
+<!-- QUESTIONS -->
+
+## RetronatorHQ
+`_answered = true`
+
+burra: This is Retronator Headquarters where Pixel Art Academy and Retronator Magazine get made. 
+
+-> [RetronatorHQDepartments]
+
+## RetronatorHQActivity
+`_answered = true`
+
+burra: It's mainly Retro working on Pixel Art Academy and Retronator Magazine. 
+
+-> [RetronatorHQDepartments]
+
+## RetronatorHQDepartments
+
+burra:
+    You can visit the store on the 2nd floor where you can buy the game.
+    Further upstairs is the gallery of Retro's artworks.
+    And if you bought Pixel Art Academy, head on downstairs to our alternate reality center Lands of Illusions.
+    
+-> [MainQuestion]
+
+## RetronatorMagazine
+`_answered = true`
+
+burra: Yes, it's a publication you can read on Medium, all about pixel art! Would you like to read it now?
+    
+* Sure, I'll take a look. -> [ReadRetronatorMagazine]
+* Maybe later.
+
+burra: Sounds good. It's available at medium.com/retronator-magazine. 
+
+-> [MainQuestion]
+
+## ReadRetronatorMagazine
+
+> Burra turns around her computer screen and shows you the website.
+
+pause
+
+### OpenRetronatorMagazine
+
+burra: I hope you liked it.
+
+-> [MainQuestion]
+
+## PixelArtAcademy
+
+burra: 
+    Pixel Art Academy is a video game that teaches you how to draw! 
+    Your character travels to Retropolis Academy of Art and lives out an adventure of becoming an artist.
+    
+* Can I play yet?
+
+burra:
+    The game is in development currently, but you can pre-order it in the store above if you want to support it.
+    Oh, and I see you have a school prospectus in your inventory. You can read it to get a taste.
+    
+-> [MainQuestion]
+
+-> [End]
+
+## PixelArtAcademyCourse
+
+burra:
+    Not really. Pixel Art Academy is first and foremost a video game, but what your character learns you learn with them.
+    It's not a course with an instructor that you have to follow at certain times.
+    You will get assignments in the game and you'll have to draw to complete them.
+    Characters in the game world will also point you to online learning materials based on your needs.
+    
+-> [MainQuestion]
+
+## LandsOfIllusions
+
+burra:
+    It's an alternate reality center where you can immerse into one of Retronator's video game worlds.
+    Go west to the coworking space and down one level to reach it.
+    Panzer will be able to tell you all about it.
+    
+-> [MainQuestion]    
+
+<!-- OTHER -->
+
+## Register
+
+### Register
+
+-> [End]
+
+## C3
+`_answered = true`
+
+burra: 
+    Ready to create your character, huh?
+    Go southwest and down to Moscone Station. Take the Muni train south to Mission Bay. 
+    C3 is just southeast past the Chase Center.
+
+-> [C3HasMap] `@player.inventory['SanFrancisco.Soma.Items.Map']`
+
+> Burra gives you a map.
+
+### ReceiveMap
+
+burra: Here, I'll circle it for you.
+
+-> [C3End]
+
+## C3HasMap
+
+burra: Here, I'll circle it on your map.
+
+## C3End
+
+pause
+
+### C3Map
+
+burra: I'm sure your mental map can help as well.
+
+> Burra winks at you and points to the TAB key.
+
+-> [MainQuestion]
+
+## Sandwich
+`_answered = true`
+
+burra: What? Make it yourself.
+
+* Oh, I thought this was a café. -> [ExplainCafe]
+* Sudo make me a sandwich. <!-- XKCD joke -->
+
+burra: 
+    Sudo make it yourself.
+    This isn't exactly your usual café—you're at Retronator HQ. 
+    
+-> [Cafe]
+
+## ExplainCafe
+
+burra: Yes, but you're not in a usual café—you're at Retronator HQ!
+    
+## Cafe
+
+burra:
+    The Café is part of our coworking space and the bar and kitchen are open to our members. So really, just help yourself to glorious tea.
+    
+-> [MainQuestion]
+
+## Coffee
+`_answered = true`
+
+burra: Sorry, coffee hasn't been coded into the game yet. <!-- joke from the prototype -->
+
+-> [MainQuestion]
+
+## End

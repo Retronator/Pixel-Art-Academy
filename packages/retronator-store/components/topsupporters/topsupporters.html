@@ -1,7 +1,7 @@
 <template name="Retronator.Store.Components.TopSupporters">
   <ol class="retronator-store-components-top-supporters">
     {{#each supporters}}
-      <li class="supporter {{supporterClass}}">
+      <li class="supporter {{supporterClass}}" {{valueAttribute}}>
         <div class="name-amount-area">
           <div class="name">{{name}}</div>
           <div class="amount">${{amount}}</div>

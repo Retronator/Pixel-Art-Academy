@@ -1,8 +1,13 @@
 @import "../../style/style.import"
 
-.lands-of-illusions-components-overlay
+.landsofillusions-components-overlay
   fixed-cover()
   z-index 1
+  opacity 0
+  transition opacity ease-in 0.5s
+
+  &.visible
+    opacity 1
 
   .transition-cover
     fixed-cover()
@@ -14,14 +19,6 @@
       visibility visible
 
   > .background
-  > .safe-area
-    opacity 0
-    transition opacity ease-in 0.5s
-
-    &.visible
-      opacity 1
-
-  > .background
     absolute-cover()
     z-index 0
     background black image('/items/backgrounds/black-gradient.png') 50% 50% / 480rem 360rem no-repeat
@@ -29,6 +26,9 @@
     > .viewport-area
     > .max-area
       position absolute
+
+      > .safe-area
+        position absolute
 
   > .crop-bar
     position absolute

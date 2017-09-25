@@ -1,0 +1,27 @@
+# Retronator.HQ.Items.ElevatorButton
+
+## Start
+
+-> [SameFloor] `@things.Retronator.HQ.Elevator.floor is _buttonFloor`
+
+> You press the button and it glows with a cool light …
+
+wait 1500
+
+`@things.Retronator.HQ.Elevator.floor = _buttonFloor`
+
+> After a short wait, the elevator arrives.
+
+-> [End]
+
+## SameFloor
+
+`_amountPressed = _amountPressed || 0`
+
+> You press the button but nothing happens. The elevator is already here. `_amountPressed is 0`
+
+> No matter how hard you press, nothing changes. The elevator is already here. `_amountPressed > 0`
+
+`_amountPressed++`
+
+## End

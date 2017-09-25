@@ -1,0 +1,17 @@
+# PixelArtAcademy.Items.Bottle
+
+## Drink
+
+> You drink the `thisInstance.drink().fullName()` and feel refreshed.
+
+### Drink
+
+-> [End]
+
+## DrinkFromEmpty
+
+> You can't. The bottle is empty.
+
+-> [End]
+
+## End

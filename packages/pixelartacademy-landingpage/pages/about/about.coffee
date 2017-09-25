@@ -6,6 +6,15 @@ class PixelArtAcademy.LandingPage.Pages.About extends AM.Component
     
   @version: -> '0.0.1'
 
+  @title: ->
+    "Pixel Art Academy // About"
+
+  @description: ->
+    "Pre-order Pixel Art Academy, an adventure game for learning how to draw."
+
+  @image: ->
+    Meteor.absoluteUrl "pixelartacademy/title.png"
+
   onCreated: ->
     super
 

@@ -7,6 +7,8 @@ class LOI.Adventure.Listener
 
   @scriptUrls: -> [] # Override to provide a list of script URLs to load.
 
+  @avatars: -> {} # Override with a map of shorthands and thing classes for the things the listener needs to respond to.
+
   @initialize: ->
     # On the server, compile the scripts.
     if Meteor.isServer
@@ -31,6 +33,11 @@ class LOI.Adventure.Listener
     # Handles for custom autorun routines.
     @_autorunHandles = []
 
+    # Create avatars prior to creating scripts, since some script initializations might need them.
+    @avatars = {}
+    for key, thingClass of @constructor.avatars()
+      @avatars[key] = new LOI.Adventure.Thing.Avatar thingClass
+
     # Create the scripts.
     @scripts = {}
     @scriptsReady = new ReactiveField false
@@ -45,7 +52,7 @@ class LOI.Adventure.Listener
           url = @options.parent.versionedUrl url
 
         else
-          console.warn "Scripts are beeing used without versioning. Url:", url
+          console.warn "Scripts are being used without versioning. Url:", url
 
         scriptFile = new LOI.Adventure.ScriptFile
           url: url
@@ -67,9 +74,16 @@ class LOI.Adventure.Listener
       @scriptsReady true
 
   destroy: ->
-    @exitsTranslationSubscriptions.stop()
     @_scriptTranslationSubscription.stop()
+
     handle.stop() for handle in @_autorunHandles
+
+    for key, avatar of @avatars
+      avatar.destroy()
+
+    @avatars = null
+
+    @cleanup()
 
   autorun: (handler) ->
     handle = Tracker.autorun handler
@@ -78,8 +92,25 @@ class LOI.Adventure.Listener
     handle
 
   ready: ->
+    for key, avatar of @avatars
+      return false unless avatar.ready()
+
     @scriptsReady()
 
   onScriptsLoaded: -> # Override to start reactive logic. Use @scripts to get access to script objects.
 
   onCommand: (commandResponse) -> # Override to listen to commands.
+
+  onEnter: (enterResponse) -> # Override to react to entering a location.
+
+  onExitAttempt: (exitResponse) -> # Override to react to location change attempts, potentially preventing the exit.
+
+  onExit: (exitResponse) ->
+    # Override to react to leaving a location.
+
+    @cleanup()
+
+  cleanup: ->
+    handle.stop() for handle in @_autorunHandles
+    
+    # Override to clean any timers or other autoruns that need to be cleaned when listener exits or is destroyed.

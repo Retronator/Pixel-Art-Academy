@@ -1,0 +1,59 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-items-tablet
+  &.overlaid
+    .lands-of-illusions-components-back-button
+      margin-top -6rem
+      margin-left 2rem
+
+      &:hover
+        margin-top -7rem
+
+      &:active
+        margin-top -5rem
+
+    .landsofillusions-components-overlay
+      .background
+        background rgba(0,0,0,0.5)
+
+    &.receipt-visible
+      .landsofillusions-components-overlay
+        .background
+          background rgba(0,0,0,0.1)
+
+  .tablet
+    position absolute
+    bottom -300rem
+    left 0
+    height 100%
+    transition bottom 1s
+
+    &.activated
+      bottom 0
+
+    .screen
+      position absolute
+      z-index 1
+      top 25rem
+      left 10rem
+      width 300rem
+      height 205rem
+      background black
+
+    .case
+      position absolute
+      z-index 2
+      top 1rem
+      left 10rem
+      width 300rem
+      height 238rem
+      pointer-events none
+
+    .hand
+      position absolute
+      z-index 3
+      top 104rem
+      left -42rem
+      width 85rem
+      height 196rem
+      pointer-events none

@@ -1,7 +1,62 @@
 <template name="Artificial.Babel.Components.Translatable">
-  <span title="{{translation.namespace}}.{{translation.key}} for {{translated.language}}">{{translated.text}}</span>
+  {{#if editable}}
+    <span class="artificial-babel-components-translatable">
+      {{#with currentTranslationInfo}}
+        {{#if translationData}}
+          <span class="current-translation">
+            {{> Artificial.Babel.Components.Translatable.Translation}}
+          </span>
+        {{else}}
+          <span class="new-translation">
+            {{> Artificial.Babel.Components.Translatable.NewTranslation}}
+          </span>
+        {{/if}}
+      {{/with}}
+      {{#if showTranslationSelector}}
+        <span class="translation-selector">
+          <span class="translations">
+            {{#each translations}}
+              {{> Artificial.Babel.Components.Translatable.Translation}}
+            {{/each}}
+            {{#if showNewTranslationInput}}
+              {{#with newTranslationInfo}}
+                {{> Artificial.Babel.Components.Translatable.NewTranslation}}
+              {{/with}}
+            {{/if}}
+          </span>
+          {{#unless showNewTranslationInput}}
+            <span class="add-translation">{{addTranslationText}}</span>
+          {{/unless}}
+        </span>
+      {{/if}}
+    </span>
+  {{else}}{{! We make sure no extra spaces are added for cases when the translatable is flush with other text.
+    }}{{translated.text}}{{!
+  }}{{/if}}
+</template>
+
+<template name="Artificial.Babel.Components.Translatable.Translation">
+  <span class="translation">
+    <span class="info">
+      <span class="text">{{> Render translatableInput}}</span>
+      <span class="language">
+        {{#if languageRegion.length}}
+            <span class="language-code {{languageRegionCodes.languageCode}}">{{languageRegionCodes.languageCode}}</span>{{#if languageRegionCodes.regionCode
+              }}<span class="dash">-</span><span class="region-code {{languageRegionCodes.regionCode}}">{{toUpper languageRegionCodes.regionCode}}</span>{{/if}}
+        {{else}}
+          <span class="global">{{t7e "Global"}}</span>
+        {{/if}}
+      </span>
+    </span>
+    {{#if showLanguageSelection}}
+      <span class="language-selection">
+        {{> Render languageSelection}}
+      </span>
+      <span class="remove-translation">{{removeTranslationText}}</span>
+    {{/if}}
+  </span>
 </template>
 
 <template name="t10e">
-  {{> Artificial.Babel.Components.Translatable args this}}
+  {{> Artificial.Babel.Components.Translatable}}
 </template>

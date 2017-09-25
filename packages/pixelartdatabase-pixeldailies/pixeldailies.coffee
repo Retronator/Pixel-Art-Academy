@@ -1,19 +1,20 @@
 AM = Artificial.Mirage
-AT = Artificial.Telepathy
+AB = Artificial.Base
 PADB = PixelArtDatabase
 
 class PADB.PixelDailies
   constructor: ->
-    Retronator.App.addPublicPage '/pixeldailies', 'PixelArtDatabase.PixelDailies.Pages.Home'
+    AB.addRoute '/pixeldailies', @constructor.Pages.Home.Layout, @constructor.Pages.Home
+    AB.addRoute '/pixeldailies/about', @constructor.Pages.Home.Layout, @constructor.Pages.About
 
-    @_addYearReviewPage '/pixeldailies/:year/artworks', 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artworks'
-    @_addYearReviewPage '/pixeldailies/:year/artists', 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artists'
-    @_addYearReviewPage '/pixeldailies/:year/about', 'PixelArtDatabase.PixelDailies.Pages.YearReview.About'
-    @_addYearReviewPage '/pixeldailies/:year/user/:screenName', 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist'
-    @_addYearReviewPage '/pixeldailies/:year/:month?/:day?', 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day'
+    @_addYearReviewPage '/pixeldailies/:year/artworks', @constructor.Pages.YearReview.Artworks
+    @_addYearReviewPage '/pixeldailies/:year/artists', @constructor.Pages.YearReview.Artists
+    @_addYearReviewPage '/pixeldailies/:year/about', @constructor.Pages.YearReview.About
+    @_addYearReviewPage '/pixeldailies/:year/user/:screenName', @constructor.Pages.YearReview.Artist
+    @_addYearReviewPage '/pixeldailies/:year/:month?/:day?', @constructor.Pages.YearReview.Day
 
-    Retronator.App.addAdminPage '/admin/pixeldailies', 'PixelArtDatabase.PixelDailies.Pages.Admin'
-    Retronator.App.addAdminPage '/admin/pixeldailies/scripts', 'PixelArtDatabase.PixelDailies.Pages.Admin.Scripts'
+    Retronator.App.addAdminPage '/admin/pixeldailies', @constructor.Pages.Admin
+    Retronator.App.addAdminPage '/admin/pixeldailies/scripts', @constructor.Pages.Admin.Scripts
 
-  _addYearReviewPage: (url, page) ->
-    AT.addRoute page, url, 'PixelArtDatabase.PixelDailies.Pages.YearReview.Layout', page
+  _addYearReviewPage: (url, pageClass) ->
+    AB.addRoute url, @constructor.Pages.YearReview.Layout, pageClass

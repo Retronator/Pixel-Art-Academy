@@ -16,12 +16,11 @@ Package.onUse(function(api) {
   api.use('oauth-encryption');
   api.use('email');
 
-  api.use('bozhao:link-accounts@1.2.9');
+  api.use('bozhao:link-accounts@1.2.10');
   api.use('splendido:accounts-meld@1.3.1');
   api.use('splendido:accounts-emails-field@1.2.0');
   api.use('benjick:stripe', 'server');
   api.use('jparker:crypto-aes');
-  api.use('peerlibrary:directcollection');
 
   api.imply('accounts-password');
   api.imply('service-configuration');
@@ -45,23 +44,11 @@ Package.onUse(function(api) {
 
   // User
   
-  api.addFiles('user/user.coffee');
-  api.addFiles('user/methods.coffee');
-  api.addFiles('user/methods-server.coffee', 'server');
-  api.addFiles('user/subscriptions.coffee', 'server');
-
-  // Layouts
-
-  api.addFiles('layouts/layouts.coffee');
-
-  api.addFiles('layouts/adminaccess/adminaccess.coffee');
-  api.addFiles('layouts/adminaccess/adminaccess.html');
-
-  api.addFiles('layouts/useraccess/useraccess.coffee');
-  api.addFiles('layouts/useraccess/useraccess.html');
-
-  api.addFiles('layouts/publicaccess/publicaccess.coffee');
-  api.addFiles('layouts/publicaccess/publicaccess.html');
+  api.addFile('user/user');
+  api.addFile('user/methods');
+  api.addServerFile('user/methods-server');
+  api.addServerFile('user/subscriptions');
+  api.addServerFile('user/migrations/0000-publicname');
 
   // Components
 

@@ -1,0 +1,74 @@
+# Retronator.HQ.Items.OperatorLink
+
+## Start
+
+> You activate your SYNC device and the ambient sounds get replaced with complete silence before you hear Panzer speak to you.
+
+## ActivateSync
+
+### ActivateSync
+
+## FirstSetupDone
+
+-> [Operator]
+
+## ImmersedStart
+
+### ActivateSync
+
+-> [Operator]
+
+## Operator
+
+operator: Operator.
+
+* I need an exit. -> [Exit] `location.id is 'LandsOfIllusions.Construct.Loading' or @character`
+* I'd like to enter the Loader. -> [Construct] `location.id isnt 'LandsOfIllusions.Construct.Loading'`
+
+## CharactersPlaceholder
+
+## Exit
+
+operator:
+  Got it.
+  Engaging disconnect procedure.
+
+### ActivateSync
+
+pause
+
+### Exit
+
+-> [End]
+
+## Construct
+
+operator:
+  On it.
+  Starting loading program.
+
+pause
+
+### Construct
+
+-> [End]
+
+## CharacterSync
+
+operator: Initiating link.
+
+pause
+
+### CharacterSync
+
+-> [End]
+
+## DeactivateSync
+
+> You deactivate SYNC and the surrounding sounds enter your ears again.
+
+### DeactivateSync
+
+-> [End]
+
+## End

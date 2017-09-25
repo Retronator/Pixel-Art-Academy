@@ -17,6 +17,8 @@ class LOI.Adventure extends LOI.Adventure
     @scriptHelpers = new LOI.Adventure.Script.Helpers @
 
     @menu = new LOI.Components.Menu
+    
+    @loggingOut = new ReactiveField false
 
     @_modalDialogs = []
     @_modalDialogsDependency = new Tracker.Dependency
@@ -35,9 +37,20 @@ class LOI.Adventure extends LOI.Adventure
     @director = new LOI.Director
 
     @_initializeState()
-    @_initializeCurrentLocation()
+
+    # Timeline needs to be initialized before location, because the logic
+    # for missing locations depends on the timeline to know where to move you.
+    @_initializeTimeline()
+    @_initializeLocation()
+
     @_initializeActiveItem()
+    @_initializeEpisodes()
     @_initializeInventory()
+    @_initializeThings()
+    @_initializeListeners()
+    @_initializeTime()
+
+    LOI.adventureInitialized true
 
   onRendered: ->
     super
@@ -50,6 +63,11 @@ class LOI.Adventure extends LOI.Adventure
 
   onDestroyed: ->
     super
+
+    Meteor.clearInterval @_gameTimeInterval
+
+    LOI.adventure = null
+    LOI.adventureInitialized false
 
     console.log "Adventure destroyed." if LOI.debug
 

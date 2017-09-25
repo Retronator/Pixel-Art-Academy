@@ -6,7 +6,7 @@ class LOI.Components.Account extends AM.Component
   @register 'LandsOfIllusions.Components.Account'
   @url: -> 'account'
 
-  @version: -> '0.0.4'
+  @version: -> '0.0.5'
 
   mixins: -> [@activatable]
 
@@ -23,22 +23,30 @@ class LOI.Components.Account extends AM.Component
       new @constructor.General
       new @constructor.Services
       new @constructor.Characters
+      new @constructor.Inventory
+      new @constructor.Transactions
     ]
 
-    page.pageNumber = index + 1 for page, index in @pages
+    for page, index in @pages
+      page.pageNumber = index + 1
 
-    @emptyPages = for index in [@pages.length + 1..5]
+      # Add ID to avoid re-creating the component in #each.
+      page._id = Random.id()
+
+    @emptyPages = for index in [@pages.length + 1...6]
       pageNumber: index
 
     LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>
       # Show the dialog if we need to.
-      @show() if @activatable.deactivated()
+      @show() if @ in LOI.adventure.modalDialogs()
 
       return unless pageUrl = FlowRouter.getParam 'parameter2'
 
       for page, index in @pages
         if page.constructor.url() is pageUrl
           @currentPageNumber index + 1
+
+    @noBackground = new ReactiveField false
 
   onRendered: ->
     super
@@ -76,8 +84,20 @@ class LOI.Components.Account extends AM.Component
 
       @lastTurnedPageNumber = currentPageNumber
 
-  show: ->
-    LOI.adventure.menu.showModalDialog dialog: @
+  show: (options = {}) ->
+    LOI.adventure.showActivatableModalDialog
+      dialog: @
+      dontRender: true
+
+    @noBackground options.noBackground
+
+    if options.page
+      @currentPageNumber _.findIndex(@pages, (page) => page instanceof options.page) + 1
+
+    if options.characterId
+      charactersPage = _.find @pages, (page) => page instanceof @constructor.Characters
+
+      charactersPage.selectedCharacterId options.characterId
 
   url: ->
     url = 'account'
@@ -89,6 +109,9 @@ class LOI.Components.Account extends AM.Component
     # Return the URL for the page.
     page = @pages[pageNumber - 1]
     "#{url}/#{page.constructor.url()}"
+
+  noBackgroundClass: ->
+    'no-background' if @noBackground()
 
   onCoverClass: ->
     'on-cover' unless @currentPageNumber()

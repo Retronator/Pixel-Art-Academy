@@ -45,11 +45,13 @@ class PADB.PixelDailies extends PADB.PixelDailies
       @processTweetHistory newOptions
 
 # Initialize on startup.
-Meteor.startup ->
+Document.startup ->
   return unless AT.Twitter.initialized
+  return if Meteor.settings.startEmpty
 
   # Parse the full history of last 3200 tweets on startup.
-  PADB.PixelDailies.processTweetHistory()
+  # EDIT: Our database is well populated now so there is no more need for this and we save on server resources.
+  # PADB.PixelDailies.processTweetHistory()
 
   # Gather new tweets every hour. Do it 10 minutes after so that the new theme is captured as soon as possible.
   new Cron =>

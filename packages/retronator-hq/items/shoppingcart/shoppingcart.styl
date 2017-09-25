@@ -1,0 +1,145 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-items-shopping-cart
+  absolute-cover()
+  background atariGrey(0)
+
+  .safe-area
+    display none
+
+  .shopping-cart-area
+    position absolute
+    overflow scroll
+    padding 10rem 30rem 20rem
+
+    &.receipt-visible
+      left -120rem
+      width 100%
+      right auto
+
+    h2
+      margin-top 0
+      kyrou-7()
+      color atariGrey(7)
+      font-weight normal
+
+    h3
+      kyrou-5()
+      color atariGrey(7)
+      font-weight normal
+
+    > .shopping-cart
+      padding 10rem
+      margin-bottom 7rem
+      background atariGrey(1)
+      border 1rem solid atariGrey(2)
+
+      .shopping-cart-items
+        list-style none
+        padding 0
+
+        .cart-item
+          position relative
+          margin-bottom 30rem
+
+          > .name
+            padding-right 105rem
+            min-height 35rem
+
+          .price-area
+            position absolute
+            top 0
+            right 0
+            width 180px
+
+            .price
+              acme-9()
+              text-align center
+              margin-bottom 5rem
+
+            .remove-from-cart-button
+              padding 3rem 5rem
+              width 100%
+
+            .gift-label
+              display block
+              text-align center
+              padding-right 5rem
+
+          .bundle
+            .bundle-items
+              list-style square
+
+      .total
+        text-align right
+
+        .total-price
+          display inline-block
+          top 0
+          right 0
+          width 90rem
+          acme-9()
+          text-align center
+
+    .navigation
+      position relative
+      display flex
+      margin 20rem 10rem
+      align-items center
+
+      a
+        text-decoration none
+
+      .item
+        width 50%
+
+      .continue
+        text-align left
+
+      .checkout
+        text-align right
+
+        .checkout-button
+          width 180px
+          padding 0.5em
+          acme-5()
+          text-transform uppercase
+
+    a
+      color atariGrey(7)
+      cursor pointer
+
+      &:hover
+        background-color atariGrey(7)
+        color atariGrey(0)
+
+    button
+    .button
+      position relative
+      top -4px
+      margin-top 4px
+      background #666
+      uni()
+      color atariGrey(0)
+      border none
+      border-bottom 4px solid #333
+      cursor pointer
+
+      &:focus
+        background: #777
+        outline none
+
+      &:hover
+        background: #888
+
+      &:active
+        border-bottom none
+        margin-bottom 4px
+        top 0
+
+      &:disabled
+        color #444
+        cursor default
+
+        &:hover
+          background #666

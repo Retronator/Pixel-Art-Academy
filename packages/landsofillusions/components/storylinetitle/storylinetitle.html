@@ -1,0 +1,44 @@
+<template name="LandsOfIllusions.Components.StorylineTitle">
+  {{#unless deactivated}}
+    <div class="landsofillusions-components-storylinetitle {{toBeContinuedClass}}">
+      {{#LandsOfIllusions.Components.Overlay}}
+        <h1 class="storyline-header">
+          {{#if chapter}}
+            {{> t10e "episode"}}: {{chapter.episode.fullName}}
+          {{/if}}
+          {{#if options.toBeContinued}}
+            {{#unless chapter}}
+              <span class="pixel-art-academy">Pixel Art Academy</span>
+            {{/unless}}
+            <span class="to-be-continued">
+              {{> t10e "to be continued in"}}
+            </span>
+          {{/if}}
+        </h1>
+        <div class="storyline-title-area">
+          <h2 class="storyline-title">
+            {{#with chapter}}
+              <span class="heading">{{> t10e "Chapter"}} {{number}}</span>
+              <span class="title">{{fullName}}</span>
+            {{/with}}
+            {{#with episode}}
+              <span class="heading">{{> t10e "Episode"}}</span>
+              <span class="title">{{fullName}}</span>
+            {{/with}}
+          </h2>
+        </div>
+        {{#if options.toBeContinued}}
+          <div class="call-to-action">
+            <div class="coming-soon">{{> t10e "coming soon"}}</div>
+            <div class="follow">
+              {{> t10e "Follow development on"}}<br/>
+              <a class="patreon" href="https://www.patreon.com/retro">
+                Patreon
+              </a>
+            </div>
+          </div>
+        {{/if}}
+      {{/LandsOfIllusions.Components.Overlay}}
+    </div>
+  {{/unless}}
+</template>

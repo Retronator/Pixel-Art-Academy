@@ -1,0 +1,22 @@
+<template name="SanFrancisco.C3.Design.Terminal.Properties.RelativeColorShade">
+  <div class="sanfrancisco-c3-design-terminal-properties-relativecolorshade">
+    <div class="shades swatches-area">
+      <div class="name">
+        shade
+      </div>
+      {{> SanFrancisco.C3.Design.Terminal.Properties.RelativeColorShade.Swatches shades}}
+    </div>
+  </div>
+</template>
+
+<template name="SanFrancisco.C3.Design.Terminal.Properties.RelativeColorShade.Swatches">
+  <div class="sanfrancisco-c3-design-terminal-properties-relativecolorshade-swatches">
+    <button class="previous-page-button page-button"></button>
+    <ul class="swatches">
+      {{#each swatches}}
+        <li class="swatch {{selectedClass}}" {{style swatchStyle}}></li>
+      {{/each}}
+    </ul>
+    <button class="next-page-button page-button"></button>
+  </div>
+</template>

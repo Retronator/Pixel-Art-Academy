@@ -17,8 +17,6 @@ Package.onUse(function(api) {
   api.export('LandsOfIllusions');
 
   api.addFiles('construct.coffee');
-  api.addFiles('location.coffee');
-  api.addAssets('operator.script', ['client', 'server']);
 
   // Actors
 
@@ -28,18 +26,25 @@ Package.onUse(function(api) {
   // Items
 
   api.addFiles('items/items.coffee');
-  api.addFiles('items/operatorlink.coffee');
 
   // Locations
 
-  api.addFiles('locations/locations.coffee');
-  
-  api.addFiles('locations/loading/loading.coffee');
-  api.addFiles('locations/loading/loading.styl');
-  api.addAssets('locations/loading/captain.script', ['client', 'server']);
+  api.addFile('loading/loading');
+  api.addStyle('loading/loading');
 
-  api.addFiles('locations/loading/tv/tv.coffee');
-  api.addFiles('locations/loading/tv/tv.html');
-  api.addFiles('locations/loading/tv/tv.styl');
+  api.addComponent('loading/tv/tv');
+  api.addComponent('loading/tv/screens/mainmenu/mainmenu');
+  api.addComponent('loading/tv/screens/newlink/newlink');
+  
+  // Pre-made character
+  
+  api.addFile('loading/premadecharacter/premadecharacter');
+  api.addFile('loading/premadecharacter/methods');
+  api.addServerFile('loading/premadecharacter/subscriptions');
+
+  api.addFile('pages/pages');
+  api.addUnstyledComponent('pages/admin/admin');
+  api.addUnstyledComponent('pages/admin/premadecharacters/premadecharacters');
+  api.addServerFile('pages/admin/premadecharacters/methods-server');
 
 });

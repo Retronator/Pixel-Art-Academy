@@ -6,10 +6,10 @@ PAA = PixelArtAcademy
 class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
   @register 'PixelArtAcademy.PixelBoy.Apps.Calendar'
 
-  displayName: ->
+  @displayName: ->
     "Pixel Art Calendar"
 
-  urlName: ->
+  @urlName: ->
     'calendar'
 
   onCreated: ->
@@ -17,8 +17,8 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
 
     # Create calendar providers.
     @providers = [
-      new PAA.PixelDailies.ThemesCalendarProvider()
-      new PAA.Practice.CheckInsCalendarProvider()
+      new @constructor.Providers.PixelDailies.ThemesProvider
+      new @constructor.Providers.Practice.CheckInsProvider
     ]
 
     today = new Date()

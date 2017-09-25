@@ -1,52 +1,51 @@
 AB = Artificial.Babel
 LOI = LandsOfIllusions
 
+# Data interface that provides the game representation of a thing.
 class LOI.Avatar
-  @translationKeys:
-    fullName: 'fullName'
-    shortName: 'shortName'
-    description: 'description'
+  # fullName: how the thing is fully named
+  # shortName: how the thing can be quickly referred to
+  # description: the description text shown when looking at this thing
+  # color: thing's color as used in dialogs
+  #   hue: ramp index in the Atari 2600 palette
+  #   shade: relative shade from -2 to +2
+  @NameAutoCorrectStyle:
+    Word: 'Word'
+    Name: 'Name'
 
-  # Initialize database parts of an NPC avatar.
-  @initialize: (options) ->
-    id = _.propertyValue options, 'id'
-    translationNamespace = "#{id}.Avatar"
+  @DialogTextTransform:
+    Auto: 'Auto'
+    Uppercase: 'Uppercase'
+    Lowercase: 'Lowercase'
 
-    # On the server, create this avatar's translated names.
-    if Meteor.isServer
-      for translationKey of @translationKeys
-        defaultText = _.propertyValue options, translationKey
-        AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
+  @DialogDeliveryType:
+    Saying: 'Saying'
+    Displaying: 'Displaying'
 
-  constructor: (@options) ->
-    id = _.propertyValue @options, 'id'
-    translationNamespace = "#{id}.Avatar"
+  @Pronouns:
+    Feminine: 'Feminine'
+    Masculine: 'Masculine'
+    Neutral: 'Neutral'
 
-    # Subscribe to this avatar's translations.
-    @_translationSubscription = AB.subscribeNamespace translationNamespace
+  ready: -> true
 
-  destroy: ->
-    @_translationSubscription.stop()
+  fullName: -> throw new AE.NotImplementedException "You must provide avatar's full name."
+  shortName: -> null
+  pronouns: -> @constructor.Pronouns.Neutral
+  description: -> null
+  nameAutoCorrectStyle: -> @constructor.NameAutoCorrectStyle.Word
 
-  ready: ->
-    @_translationSubscription.ready()
-
-  fullName: -> @_translateIfAvailable @constructor.translationKeys.fullName
-  shortName: -> @_translateIfAvailable @constructor.translationKeys.shortName
-  description: -> @_translateIfAvailable @constructor.translationKeys.description
-    
   color: ->
-    # Return the desired color or use default white.
-    color = _.propertyValue @options, 'color'
+    hue: LOI.Assets.Palette.Atari2600.hues.grey
+    shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
-    color or
-      hue: LOI.Assets.Palette.Atari2600.hues.grey
-      shade: LOI.Assets.Palette.Atari2600.characterShades.normal
+  colorObject: (relativeShade) ->
+    @constructor.colorObject @color(), relativeShade
 
-  colorObject: ->
-    color = @color()
-    LOI.palette()?.color color.hue, color.shade + 6
-      
-  _translateIfAvailable: (key) ->
-    translated = AB.translate @_translationSubscription, key
-    if translated.language then translated.text else null
+  @colorObject: (color, relativeShade = 0) ->
+    hue = color?.hue or 0
+    shade = color?.shade or 0
+    LOI.palette()?.color hue, 6 + shade + relativeShade
+
+  dialogTextTransform: -> @constructor.DialogTextTransform.Auto
+  dialogDeliveryType: -> @constructor.DialogDeliveryType.Saying

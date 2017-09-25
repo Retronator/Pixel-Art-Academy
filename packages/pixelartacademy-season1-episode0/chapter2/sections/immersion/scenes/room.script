@@ -1,0 +1,382 @@
+# PixelArtAcademy.Season1.Episode0.Chapter2.Immersion.Room
+
+## Start
+
+operator: 
+    Here we go! Just get yourself cozy and ![sit down](sit down). `not Sit`
+    Have a sit when you're ready to continue. `Sit`
+
+### WaitToSit
+
+-> [End]
+
+## Sit
+
+> You sit down and relax into the softness of the recliner.
+
+<!-- Switch to different stages in the procedure. Do it last to first so that we jump as far ahead as we can. -->
+-> [RedPillSitDown] `RedPillWaiting`
+-> [AugmentedDoneSitDown] `AugmentedDone`
+-> [ReadyToJump] `IntroDone`
+
+operator: 
+    You'll be able to play our games from anywhere at anytime, but feel free to use this room if you need a place to relax when you sync in.
+    Right now we'll get you set up with our alternate reality system.
+
+* Let's do this. -> [GiveSync]
+* Is that like augmented reality?
+
+operator: 
+    It's the next iteration of AR. With our system it's nearly impossible to distinguish between real and augmented.
+    Basically, it will seamlessly change the real world to fit with the game story you purchased, thus creating an alternate reality.
+
+## GiveSync
+
+> Panzer hands you a watch-like bracelet.
+
+`section.syncGiven = true`
+
+operator: This is SYNC, a wireless transmitter that will communicate between our system and your brain.
+
+* OK. -> [RedPill]
+* My brain? How will it talk to my brain?
+
+operator:
+    Ah, the tricky piece of the puzzle. 
+    The company Neurasync created a neurotransmitter that can create or block action potentials in ion channels of neurons.
+
+> Panzer opens up his palm with a red pill on it.
+
+operator: 
+    This pill includes a dose of their agents. Nothing permanent, they will wear off naturally.
+    The transmitters are mostly passive and send signals through without modification. 
+    But they multiplex an additional digital channel into your nervous system, which is used to control any additional firings.
+
+-> [SyncContinues]
+
+## RedPill
+
+> Panzer opens up his palm with a red pill on it.
+
+operator: 
+    You also need to take this pill. It includes a dose of special neurotransmitters. 
+    Nothing permanent, they will wear off naturally.
+
+## SyncContinues
+
+operator: Your wearable will transmit electromagnetic signals through them to augment your perception.
+
+* High tech!
+* A bit scary.
+
+operator: Haha, yes. 
+
+## ReadyToJump
+
+operator: Ready to jump down the rabbit hole?
+
+## IntroDone
+    
+* Let's go to wonderland! -> [Wonderland]
+* No, wait, I need some more time.
+
+operator: No sweat. Just return to the room and ![sit in chair](sit in chair) when you're ready to begin.
+
+## StandUpToPrepare
+
+> You stand up from the recliner to prepare yourself for the journey.
+
+-> [End]
+
+## Wonderland
+
+operator: Buckle your seatbelt, Dorothy, 'cause Kansas is going bye-bye.
+
+> Panzer gives you the pill and you drink it down with some water.
+
+### RedPillStart
+
+## RedPillWaiting
+
+operator:
+    It will take a few minutes for the transmitters to disperse throughout your body.
+    Why don't you kick back and relax with a video from our library.
+
+* Alright, what do you have? -> [VideoIntro]
+* A video? -> [VideoWhy]
+* I'll just wait.
+
+operator: 
+    No problem. You can look at your SYNC to see how much time there's left. 
+    Feel free to explore the HQ in the meantime. An alarm will go off when you should return.
+
+## StandUpKillTime
+
+> You stand up from the recliner to kill some time.
+    
+-> [End]
+
+## VideoWhy
+
+operator: 
+    Yeah, to get those creative juices flowing. You signed up for Pixel Art Academy, right?
+    I know you probably live a busy life, but it's good to slow down and take some time for yourself.
+    So just relax and enjoy a movie without looking at the clock.
+
+* Yeah, you're right. What do you have? -> [VideoIntro]
+* I'll just wait.
+
+operator: No problem.
+
+-> [StandUpKillTime]
+
+## RedPillSitDown
+
+### GetTimeToImmersion
+
+-> [TimeLeft] `_timeToImmersion > 0`
+
+operator: Good, it's time to begin!
+
+-> [SyncSetupProcedure]
+
+## TimeLeft
+
+operator: Looks like there's some more time left. Do you want to watch the videos?
+
+* What do you have? -> [VideoIntro]
+* The videos? -> [VideoWhy]
+* I'll just wait.
+
+operator: No problem.
+
+-> [StandUpKillTime]
+ 
+## VideoIntro
+
+operator: A whole lot of things! Let me find something you'd like.
+
+## VideoQuestions
+
+`videoGaming = 0; videoNonGaming = 0; videoPixelArt = 0; videoGameDev = 0; videoArt = 0; videoTech = 0; videoRelax = 0; videoThink = 0;`
+    
+operator: Do you prefer a video about gaming or other things?
+
+* Gaming sounds good. -> [VideoGaming]
+* Other things if possible. -> [VideoOther]
+* Either is fine. -> [VideoArtTechQuestion]
+
+## VideoGaming
+
+`videoGaming++; videoOther--;`
+
+-> [VideoGamingQuestion]
+
+## VideoOther
+
+`videoGaming--; videoOther++;`
+
+-> [VideoArtTechQuestion]
+
+## VideoGamingQuestion
+
+operator: Any special requests? Pixel art or game development?
+
+* I'd love something about pixel art. -> [VideoPixelArt]
+* Gamedev is my thing. -> [VideoGameDev]
+* Anything else is fine too. -> [VideoArtTechQuestion]
+
+## VideoPixelArt
+
+`videoPixelArt++; videoGameDev--;`
+
+-> [VideoArtTechQuestion]
+
+## VideoGameDev
+
+`videoPixelArt--; videoGameDev++;`
+
+-> [VideoArtTechQuestion]
+
+## VideoArtTechQuestion
+
+operator: Something on the art or the tech side?
+
+* Art or animation. -> [VideoArt]
+* Engineering or science fiction. -> [VideoTech]
+* It doesn't matter. -> [VideoRelaxThinkQuestion]
+
+## VideoArt
+
+`videoArt++; videoTech--;`
+
+-> [VideoRelaxThinkQuestion]
+
+## VideoTech
+
+`videoArt--; videoTech++;`
+
+-> [VideoRelaxThinkQuestion]
+
+## VideoRelaxThinkQuestion
+
+operator: Finally, I can try to find something more relaxing to watch or something to make you think.
+
+* Right now I'd love to just enjoy and watch. -> [VideoRelax]
+* I'm feeling a bit philosophical. -> [VideoThink]
+* Either works. -> [VideoEnd]
+
+## VideoRelax
+
+`videoRelax++; videoThink--;`
+
+-> [VideoEnd]
+
+## VideoThink
+
+`videoRelax--; videoThink++;`
+
+-> [VideoEnd]
+
+## VideoEnd
+
+> Panzer thinks for a few moments.
+
+operator: Alright, I think I have something for you.
+
+-> [HandOverTablet] `Perplexed`
+
+## Perplexed
+
+> Panzer pulls up a few videos on a tablet.
+
+operator: I hope you chose wisely, who knows what effect this decision will have down the line.
+
+> You look at Panzer a bit perplexed. 
+
+operator: Nah, just kidding. (Not kidding.)
+
+* Alright, let's take a look. -> [VideoDisplay]
+* I need to change my answers!
+
+operator: Hahaha, no problem. Don't be afraid though, nobody is judging you. Just trying to find what suits you best.
+
+-> [VideoQuestions]
+
+## VideoDisplay
+
+operator: Here you go. I think you'll like the first one the most, but I added a couple more just in case.
+
+## HandOverTablet
+
+> Panzer hands over the tablet and you look at the selection.
+
+pause
+
+### VideoDisplay
+
+operator: How was that? Did you like the choice?
+
+### GetTimeToImmersion
+
+`_timeLeft = _timeToImmersion > 0`
+
+* Great stuff! -> [VideoGreat]
+* It was good, yeah. -> [VideoGood]
+* Alright, I guess. -> [VideoAlright]
+* Sorry, I got bored and skipped it. -> [VideoAlright]
+
+## VideoGreat
+
+operator: Glad to hear that! I knew my YouTube skills wouldn't go to waste.
+    
+operator: Time flies when you're watching good videos, we're ready to continue with the procedure. -> [VideoTimeOver] `not _timeLeft`
+operator: There's actually more time left, do you want to see another one? -> [VideoTimeLeft] `_timeLeft`
+
+## VideoGood
+
+operator: Glad it helped pass the time. We're now ready to go on. -> [VideoTimeOver] `not _timeLeft`
+operator: Well, we have some more time left before we can continue. Want to see another one? -> [VideoTimeLeft] `_timeLeft`
+
+## VideoAlright
+
+operator: Well, at least the time is over now and we can continue with the procedure. -> [VideoTimeOver] `not _timeLeft`
+operator: Sorry I couldn't find a better one. There's still some time to kill. Do you want to try to find a better match? -> [VideoTimeLeft] `_timeLeft`
+
+## VideoTimeLeft
+
+* Sure thing. -> [VideoQuestions]
+* I'll just wait. -> [StandUpKillTime]
+
+## VideoTimeOver
+
+* Can't wait!
+* I'm ready.
+
+operator: Awesome. Let me set things up.
+
+## SyncSetupProcedure
+
+operator: 
+    There are two parts to this procedure. First, the neurotransmitters will be in training mode. 
+    Your SYNC device will record their alignment to a base set of impulses.
+
+> Panzer administers simple visual and motoric exercises until the readings stabilize.
+
+operator: 
+    Very good. The system is now fine-tuned to your unique responses.
+    The second part of the procedure will calibrate and test sending new impulses into your nervous system. 
+
+* Alright.
+* Let's get on with it.
+
+> Panzer types something into his tablet.
+
+operator: Tell me, what do you see in front of you?
+
+> A white rotating cube appears out of nowhere and floats in mid air.
+
+### ActivateHeadset
+
+* Whoa!
+* What the …
+* BEEP me!
+
+operator: Hey Mikey, I think they like it. How about some more?
+
+## AugmentedDone
+
+* Hell yes. -> [ImmersionPrep]
+* Oh yeah. -> [ImmersionPrep]
+* I need a moment to breathe.
+
+> You stand up from the recliner to contemplate what just happened.
+
+## ImmersionPrep
+
+operator: 
+    This is just the augmented reality part. Now you're ready for real immersion.
+
+> Panzer deactivates the test.
+    
+### DeactivateHeadset
+
+operator:
+    I'll monitor your state from my control station at the reception.
+    When you're ready, ![use SYNC](sync) device to initiate immersion.
+
+> Panzer opens the door and goes out.
+
+### Move
+
+-> [End]
+
+## SelfStart
+
+> You sit down and activate your SYNC device. Ambient sounds turn to complete silence.
+
+### FirstImmersion
+
+-> [End]
+
+## End

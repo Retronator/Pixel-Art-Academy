@@ -1,0 +1,26 @@
+# PixelArtAcademy.Season1.Episode0.Chapter1.Airship.Arrivals
+
+## AlexEnters
+
+> An announcement plays on the speakers.
+
+announcer: Last call for airship passengers to Retropolis.
+
+> Alex enters.
+
+`scene.alexPresent = true`
+
+-> [End]
+
+## AlexTalks
+
+alex: 
+    Finally. We need to get through the main tower.
+    The airship terminal should be just across the atrium.
+
+> Alex leaves ![southeast](se).
+
+`scene.alexPresent = false`
+`scene.alexLeft = true`
+
+## End

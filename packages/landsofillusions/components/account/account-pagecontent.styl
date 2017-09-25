@@ -4,7 +4,6 @@
   .account-file
     .page-content
       position absolute
-      z-index 9
       left 170rem
       width 158rem
       top 18rem
@@ -42,7 +41,7 @@
           outline none
 
       textarea
-        border 1rem solid atariAzure(2)
+        border 1rem solid atariGrey(5)
         height 3em
         padding 3rem
 
@@ -53,10 +52,19 @@
         display none
 
         & + .label::before
-          content '[ ] '
+          content ''
+          display inline-block
+          width 7rem
+          height 7rem
+          padding 0 0 1rem 1rem
+          margin-right 3rem
+          vertical-align bottom
+          border 1rem solid atariGrey(5)
+          text-align center
+          color atariBlue(4)
 
         &:checked + .label::before
-          content '[✔︎] '
+          content '✔︎'
 
       .smallprint
         position relative

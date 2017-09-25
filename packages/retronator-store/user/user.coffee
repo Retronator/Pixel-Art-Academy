@@ -2,12 +2,12 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 
 # Override the user class with extra store functionality.
-class RetronatorAccountsUser extends RA.User
+class RA.User extends RA.User
   # profile: a custom object, writable by default by the client
-  #   supporterName: the name the user wants to publicly display as a supporter
-  #   showSupporterName: boolean whether to use the supporter name or not
+  #   showSupporterName: boolean whether to show username in public displays
+  #   supporterMessage: supporter message to show in public displays
   # supporterName: auto-generated supporter name
-  # supportAmount: generated sum of all payments
+  # supportAmount: trigger-generated sum of all payments
   # store:
   #   balance: the sum of all payments minus sum of all purchases
   #   credit: positive part of balance
@@ -15,13 +15,13 @@ class RetronatorAccountsUser extends RA.User
   #   _id
   #   catalogKey
   @Meta
-    name: 'RetronatorAccountsUser'
+    name: @id()
     replaceParent: true
     collection: Meteor.users
     fields: (fields) =>
       _.extend fields,
         supporterName: @GeneratedField 'self', ['profile'], (user) ->
-          supporterName = if user.profile?.showSupporterName then user.profile?.supporterName else null
+          supporterName = if user.profile?.showSupporterName then user.profile?.name else null
           [user._id, supporterName]
 
         items: [@ReferenceField RS.Transactions.Item, ['catalogKey']]
@@ -37,6 +37,7 @@ class RetronatorAccountsUser extends RA.User
       triggers
 
   @topSupporters: 'Retronator.Accounts.User.topSupporters'
+  @topSupportersCurrentUser: 'Retronator.Accounts.User.topSupportersCurrentUser'
   @supportAmountForCurrentUser: 'Retronator.Accounts.User.supportAmountForCurrentUser'
   @storeDataForCurrentUser: 'Retronator.Accounts.User.storeDataForCurrentUser'
 
@@ -69,7 +70,7 @@ class RetronatorAccountsUser extends RA.User
 
     # Helper function that recursively adds items.
     addItem = (item) =>
-      item = RS.Transactions.Item.documents.findOne item._id
+      return unless item = RS.Transactions.Item.documents.findOne item?._id
 
       # Add the item to the ids.
       itemIds = _.union itemIds, [item._id]
@@ -124,5 +125,3 @@ class RetronatorAccountsUser extends RA.User
         store:
           balance: balance
           credit: credit
-
-RA.User = RetronatorAccountsUser

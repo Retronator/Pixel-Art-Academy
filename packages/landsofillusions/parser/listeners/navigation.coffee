@@ -7,26 +7,39 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
   onCommand: (commandResponse) ->
-    location = LOI.adventure.currentLocation()
-    exits = location.exits()
+    situation = LOI.adventure.currentSituation()
+    exits = situation.exits()
     return unless exits
 
     # Register possible direction phrases as phrase actions.
     presentDirectionKeys = []
 
+    directionActions = {}
+
     for directionKey, locationClass of exits when locationClass
       presentDirectionKeys.push directionKey
 
       do (directionKey, locationClass) =>
-        action = => LOI.adventure.goToLocation locationClass.id()
+        action = => LOI.adventure.goToLocation locationClass
+
+        # Store action so that other alternatives can use it. Our parser will remove options that use the same action.
+        directionActions[_.thingId locationClass] = action
 
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
           action: action
 
+        # Also do an exact phrase with the go verb to avoid ignoring
+        # direction keys that are also prepositions (such as 'in').
+        commandResponse.onExactPhrase
+          form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
+          action: action
+          priority: 1
+
         commandResponse.onExactPhrase
           form: [directionKey]
           action: action
+          priority: 1
 
     # Register the rest of the directions to give negative feedback.
     allDirectionKeys = _.values Vocabulary.Keys.Directions
@@ -54,14 +67,37 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.GoToDirection, directionKey]
           action: action
+          priority: -1
 
         commandResponse.onExactPhrase
           form: [directionKey]
           action: action
+          priority: -1
 
     # Next up wire going to the location by name.
-    for locationId, avatar of location.exitAvatarsByLocationId()
-      do (avatar) =>
+    for locationId, locationClass of situation.exitsById() when locationClass
+      avatar = LOI.adventure.getAvatar locationClass
+      locationId = locationClass.id()
+
+      do (locationId, avatar) =>
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.GoToLocationName, avatar]
-          action: => LOI.adventure.goToLocation locationId
+          action: directionActions[locationId]
+
+    # If there is only one way out of the location, wire exiting the location.
+    locationClasses = _.uniq _.map presentDirectionKeys, (directionKey) -> exits[directionKey]
+    onlyExitLocation = if locationClasses.length is 1 then locationClasses[0] else null
+
+    if onlyExitLocation
+      action = directionActions[_.thingId onlyExitLocation]
+
+      commandResponse.onExactPhrase
+        form: [Vocabulary.Keys.Verbs.ExitLocation]
+        action: action
+        priority: 1
+
+      location = LOI.adventure.currentLocation()
+
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.ExitLocation, location.avatar]
+        action: action

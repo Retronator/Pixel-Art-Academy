@@ -2,30 +2,61 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends AM.Component
+  @title: ->
+    "Pixel Art Academy // Adventure game for learning how to draw"
+    
+  @description: ->
+    "Become an art student in the text/point-and-click adventure by Retronator."
+
+  @image: ->
+    Meteor.absoluteUrl "pixelartacademy/title.png"
+
   ready: ->
-    console.log "Am I ready? Parser:", @parser.ready(), "Current location:", @currentLocation()?.ready() if LOI.debug
-    @parser.ready() and @currentLocation()?.ready()
+    currentLocation = @currentLocation()
+    currentRegion = @currentRegion()
 
-  logout: ->
+    conditions = [
+      @parser.ready()
+      @interface.ready()
+      if currentLocation? then currentLocation.ready() else false
+      if currentRegion? then currentRegion.ready() else false
+      @episodesReady()
+    ]
+
+    console.log "Adventure ready?", conditions if LOI.debug
+
+    _.every conditions
+
+  showLoading: ->
+    # Show the loading screen when we're logging out.
+    return true if @loggingOut()
+
+    # Show the loading screen when we're not ready, except when other dialogs are already present
+    # (for example, the storyline title) and we want to prevent the black blink in that case.
+    not @ready() and not @modalDialogs().length
+
+  logout: (options = {}) ->
+    # Indicate logout procedure.
+    @loggingOut true
+
     # Notify game state that it should flush any cached updates.
-    @gameState?.updated flush: true
+    @gameState?.updated
+      flush: true
+      callback: =>
+        # Log out the user.
+        Meteor.logout()
 
-    # Log out the user.
-    Meteor.logout()
+        # Now that there is no more user, wait until game state has returned to local storage.
+        Tracker.autorun (computation) =>
+          return unless LOI.adventure.gameStateSource() is LOI.Adventure.GameStateSourceType.LocalStorageUser
+          computation.stop()
+
+          Tracker.nonreactive =>
+            # Inform the caller that the log out procedure has completed.
+            options.callback?()
+
+            # Notify that we're done with logout procedure.
+            @loggingOut false
 
   showDescription: (thing) ->
     @interface.showDescription thing
-
-  # Tracking of modal dialogs, so that the interface can know when to listen for input events.
-
-  addModalDialog: (dialog) ->
-    @_modalDialogs.push dialog
-    @_modalDialogsDependency.changed()
-
-  removeModalDialog: (dialog) ->
-    @_modalDialogs.splice @_modalDialogs.indexOf(dialog), 1
-    @_modalDialogsDependency.changed()
-
-  modalDialogs: (dialog) ->
-    @_modalDialogsDependency.depend()
-    @_modalDialogs

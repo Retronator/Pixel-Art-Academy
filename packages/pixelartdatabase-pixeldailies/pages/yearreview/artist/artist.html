@@ -1,5 +1,10 @@
 <template name="PixelArtDatabase.PixelDailies.Pages.YearReview.Artist">
   <div class="pixelartdatabase-pixeldailies-pages-yearreview-artist">
+    {{#if displayedArtworks}}
+      <div class="displayed-artworks">
+        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream displayedArtworks}}
+      </div>
+    {{/if}}
     <header class="header">
       {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Header}}
       <div class="user-banner">
@@ -9,16 +14,19 @@
           </div>
           {{#with profile}}
             <h2 class="display-name">
-              {{displayName}}
+              {{deburr displayName}}
             </h2>
             <div class="information">
               <div class="description">
-                {{#markdown}}{{description}}{{/markdown}}
+                {{#markdown}}{{escapedDescription}}{{/markdown}}
               </div>
               <div class="statistics">
                 <h3 class="title">{{year}} stats</h3>
                 {{#with statistics}}
                   <div class="statistic">Submissions: {{submissionsCount}}</div>
+                  {{#if animatedSubmissionsCount}}
+                    <div class="statistic">Animated: {{animatedSubmissionsCount}}</div>
+                  {{/if}}
                   <div class="statistic">Total favorites: {{favoritesCount}}</div>
                 {{/with}}
               </div>
@@ -53,11 +61,5 @@
     <small class="disclaimer">
       Only images retweeted by <a href="https://twitter.com/Pixel_dailies" target="_blank">@Pixel_Dailies</a> are included.
     </small>
-    {{#if displayedArtworks}}
-      <style>html {overflow: hidden};</style>
-      <div class="displayed-artworks">
-        {{> PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream displayedArtworks}}
-      </div>
-    {{/if}}
   </div>
 </template>

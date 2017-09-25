@@ -1,5 +1,5 @@
 @import "{retronator:landsofillusions}/style/style.import"
-@import "../yearreview.import"
+@import "../../style/style.import"
 
 .pixelartdatabase-pixeldailies-pages-yearreview-artists
   .header
@@ -64,6 +64,7 @@
     list-style none
     padding 0
     margin 0
+    min-height 80rem
 
     .profile
       position relative
@@ -113,9 +114,6 @@
           absolute-cover()
           background linear-gradient(to right, transparentify(atariGrey(0), 0.6) 0%, transparentify(atariGrey(0), 0.4) 100%)
 
-        &.old
-          z-index 1
-
         &.transition
           transition opacity ease-in 1s
 
@@ -142,8 +140,12 @@
             background linear-gradient(to right, atariGrey(0) 0%, transparent 100%)
 
         .color
-          absolute-cover()
-          background-size cover
+          display none
+          absolute-cover-size()
           z-index 0
+          object-fit cover
           filter blur(100px)
 
+  .loading
+    padding 20rem
+    text-align center
