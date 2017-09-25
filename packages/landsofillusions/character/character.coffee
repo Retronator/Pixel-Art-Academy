@@ -62,3 +62,14 @@ class LOI.Character extends AM.Document
   @forId: @subscription 'forId'
   @forCurrentUser: @subscription 'forCurrentUser'
   @activatedForCurrentUser: @subscription 'activatedForCurrentUser'
+  
+  constructor: ->
+    super
+
+    # Create an avatar object so we can use its methods.
+    @_avatar = new @constructor.Avatar @
+
+  # Avatar pass-through methods
+
+  name: -> @_avatar.fullName()
+  colorObject: (relativeShade) -> @_avatar.colorObject relativeShade

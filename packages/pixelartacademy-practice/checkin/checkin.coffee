@@ -1,12 +1,15 @@
+AM = Artificial.Mummification
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
-class PixelArtAcademyPracticeCheckIn extends Document
+class PAA.Practice.CheckIn extends AM.Document
+  @id: -> 'PixelArtAcademy.Practice.CheckIn'
   # time: the time when post was published
   # character: character that published the post
   #   _id
-  #   name
-  #   color
+  #   avatar
+  #     fullName
+  #     color
   # post: (optional) the external post with the check-in data
   #   url
   # text: (optional) the text of the post
@@ -21,9 +24,27 @@ class PixelArtAcademyPracticeCheckIn extends Document
   # conversations: list of conversations revolving around this check-in
   #   _id
   @Meta
-    name: 'PixelArtAcademyPracticeCheckIn'
+    name: @id()
     fields: =>
-      character: @ReferenceField LOI.Character, ['name', 'color'], true
+      character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], true
       conversation: [@ReferenceField LOI.Conversations.Conversation]
 
-PAA.Practice.CheckIn = PixelArtAcademyPracticeCheckIn
+  # Methods
+
+  @insert: @method 'insert'
+  @remove: @method 'remove'
+  @updateTime: @method 'updateTime'
+  @updateText: @method 'updateText'
+  @updateUrl: @method 'updateUrl'
+  @newConversation: @method 'newConversation'
+
+  # Server methods
+
+  @getExternalUrlImage: @method 'getExternalUrlImage'
+  @extractImagesFromPosts: @method 'extractImagesFromPosts'
+  @import: @method 'import'
+
+  # Subscriptions
+  @forCharacter: @subscription 'forCharacter'
+  @forDateRange: @subscription 'forDateRange'
+  @conversationsForCheckInId: @subscription 'conversationsForCheckInId'

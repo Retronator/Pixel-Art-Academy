@@ -4,41 +4,52 @@ LOI = LandsOfIllusions
 
 # Character's implementation of the avatar that takes the data from the character document.
 class LOI.Character.Avatar extends LOI.HumanAvatar
-  constructor: (@character) ->
-    # Create the body and outfit data hierarchies first.
-    bodyDataField = AM.Hierarchy.create
-      templateClass: LOI.Character.Part.Template
-      # TODO: We need to set the type somehow different so it's dynamic in the location (test with create template).
-      type: LOI.Character.Part.Types.Avatar.Body.options.type
-      load: => @_avatar()?.body
-      save: (address, value) =>
-        LOI.Character.updateAvatarBody @character.id, address, value
-
-    outfitDataField = AM.Hierarchy.create
-      templateClass: LOI.Character.Part.Template
-      type: LOI.Character.Part.Types.Avatar.Outfit.options.type
-      load: => @_avatar()?.outfit
-      save: (address, value) =>
-        LOI.Character.updateAvatarOutfit @character.id, address, value
-
-    # Now we can call HumanAvatar's constructor which will turn this data into an actual part hierarchy.
-    super {bodyDataField, outfitDataField}
+  constructor: (characterInstanceOrDocument) ->
+    # We allow the avatar to be constructed for the character instance or directly for the document. If we're passing in
+    # an instance this creates a full avatar with body and outfit hierarchies. If we're passing the document, this
+    # becomes just a shell object for methods performed on the document.
+    if characterInstanceOrDocument instanceof LOI.Character.Instance
+      @character = characterInstanceOrDocument
+      @document = @character.document
+      
+      # Create the body and outfit data hierarchies first.
+      bodyDataField = AM.Hierarchy.create
+        templateClass: LOI.Character.Part.Template
+        # TODO: We need to set the type somehow different so it's dynamic in the location (test with create template).
+        type: LOI.Character.Part.Types.Avatar.Body.options.type
+        load: => @_avatar()?.body
+        save: (address, value) =>
+          LOI.Character.updateAvatarBody @character.id, address, value
+  
+      outfitDataField = AM.Hierarchy.create
+        templateClass: LOI.Character.Part.Template
+        type: LOI.Character.Part.Types.Avatar.Outfit.options.type
+        load: => @_avatar()?.outfit
+        save: (address, value) =>
+          LOI.Character.updateAvatarOutfit @character.id, address, value
+  
+      # Now we can call HumanAvatar's constructor which will turn this data into an actual part hierarchy.
+      super {bodyDataField, outfitDataField}
+      
+    else
+      @document = => characterInstanceOrDocument
+      
+      super {}
 
   _avatar: ->
-    @character.document()?.avatar
+    @document()?.avatar
 
   fullName: ->
-    return @_loading() unless character = @character.document()
+    return @_loading() unless avatar = @_avatar()
 
-    character.avatar?.fullName?.translate().text or @_noName()
+    avatar.fullName?.translate().text or @_noName()
 
   shortName: ->
-    return @_loading() unless character = @character.document()
-
-    character.avatar?.shortName?.translate().text or @fullName()
+    # Player characters only have one name.
+    @fullName()
 
   pronouns: ->
-    @character.document()?.avatar?.pronouns or super
+    @_avatar()?.pronouns or super
 
   _loading: ->
     return if Meteor.isServer
@@ -51,7 +62,7 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
     @constructor.noName()
 
   color: ->
-    return super unless color = @character.document()?.avatar?.color
+    return super unless color = @_avatar()?.color
 
     hue: color?.hue or LOI.Assets.Palette.Atari2600.hues.grey
     shade: color?.shade or LOI.Assets.Palette.Atari2600.characterShades.normal

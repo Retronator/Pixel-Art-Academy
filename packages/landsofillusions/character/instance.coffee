@@ -23,10 +23,6 @@ class LOI.Character.Instance
 
   # Avatar pass-through methods
 
-  fullName: -> @avatar.fullName()
-  shortName: -> @avatar.shortName()
-  nameAutoCorrectStyle: -> @avatar.nameAutoCorrectStyle()
-  description: -> @avatar.description()
+  name: -> @avatar.fullName()
   color: -> @avatar.color()
-  dialogTextTransform: -> @avatar.dialogTextTransform()
-  dialogDeliveryType: -> @avatar.dialogDeliveryType()
+  colorObject: (relativeShade) -> @avatar.colorObject relativeShade

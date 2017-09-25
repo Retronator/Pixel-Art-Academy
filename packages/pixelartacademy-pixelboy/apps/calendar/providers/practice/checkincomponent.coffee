@@ -7,6 +7,24 @@ Calendar = PAA.PixelBoy.Apps.Calendar
 class Calendar.Providers.Practice.CheckInComponent extends AM.Component
   template: ->
     'PixelArtAcademy.PixelBoy.Apps.Calendar.Providers.Practice.CheckInComponent'
+    
+  onCreated: ->
+    super
+    
+    @characterInstance = new ComputedField =>
+      @_character?.destroy()
+      @_character = null
+
+      checkIn = @currentData()
+      return unless checkIn.character
+
+      @_character = new LOI.Character.Instance checkIn.character._id
+      @_character
+      
+  onDestroyed: ->
+    super
+    
+    @_character?.destroy()
 
   checkIn: ->
     # Fetch full check-in data (we have a bare object with just the id).

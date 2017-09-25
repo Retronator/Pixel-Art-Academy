@@ -159,11 +159,18 @@ Package.onUse(function(api) {
 
   // Conversations
 
-  api.addFiles('conversations/conversations.coffee');
-  api.addFiles('conversations/conversation.coffee');
-  api.addFiles('conversations/line.coffee');
-  api.addFiles('conversations/methods.coffee');
-  api.addFiles('conversations/subscriptions.coffee', 'server');
+  api.addFile('conversations/conversations');
+
+  api.addFile('conversations/conversation/conversation');
+  api.addFile('conversations/conversation/methods');
+  api.addServerFile('conversations/conversation/subscriptions');
+  api.addServerFile('conversations/conversation/migrations/0000-renamecollection');
+
+  api.addFile('conversations/line/line');
+  api.addFile('conversations/line/methods');
+  api.addServerFile('conversations/line/subscriptions');
+  api.addServerFile('conversations/line/migrations/0000-renamecollection');
+  api.addServerFile('conversations/line/migrations/0001-characterreferencefieldsupdate');
 
   // Parser
 

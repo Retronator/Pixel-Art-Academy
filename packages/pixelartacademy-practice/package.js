@@ -20,26 +20,26 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
-  api.addFiles('practice.coffee');
-  api.addFiles('server.coffee', 'server');
-  api.addFiles('client.coffee', 'client');
+  api.addFile('practice');
+  api.addServerFile('server');
+  api.addClientFile('client');
 
-  api.addFiles('checkin/checkin.coffee');
-  api.addFiles('checkin/methods.coffee');
-  api.addFiles('checkin/methods-server.coffee', 'server');
-  api.addFiles('checkin/subscriptions.coffee', 'server');
+  api.addFile('checkin/checkin');
+  api.addFile('checkin/methods');
+  api.addServerFile('checkin/methods-server');
+  api.addServerFile('checkin/subscriptions');
+  api.addServerFile('checkin/migrations/0000-renamecollection');
 
-  api.addFiles('importeddata/importeddata.coffee');
-  api.addFiles('importeddata/checkin.coffee', 'server');
+  api.addFile('importeddata/importeddata');
+  api.addServerFile('importeddata/checkin-server/checkin');
+  api.addServerFile('importeddata/checkin-server/migrations/0000-renamecollection');
 
-  api.addFiles('pages/pages.coffee');
+  api.addFile('pages/pages');
 
-  api.addFiles('pages/extractimagesfromposts/extractimagesfromposts.coffee');
-  api.addFiles('pages/extractimagesfromposts/extractimagesfromposts.html');
+  api.addUnstyledComponent('pages/extractimagesfromposts/extractimagesfromposts');
+  api.addServerFile('pages/extractimagesfromposts/methods-server');
 
-  api.addFiles('pages/importcheckins/importcheckins.coffee');
-  api.addFiles('pages/importcheckins/importcheckins.html');
-  api.addFiles('pages/importcheckins/importcheckins.styl');
-  api.addFiles('pages/importcheckins/methods.coffee', 'server');
+  api.addComponent('pages/importcheckins/importcheckins');
+  api.addServerFile('pages/importcheckins/methods-server');
 
 });

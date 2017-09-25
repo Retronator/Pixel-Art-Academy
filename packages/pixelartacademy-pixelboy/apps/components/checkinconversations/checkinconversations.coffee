@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.Components.CheckInConversations extends AM.Component
     super
 
     checkIn = @data()
-    @subscribe 'PixelArtAcademy.Practice.CheckIn.conversations', checkIn._id
+    PAA.Practice.CheckIn.conversationsForCheckInId.subscribe @, checkIn._id
 
   conversations: ->
     checkIn = @data()
@@ -43,7 +43,7 @@ class PAA.PixelBoy.Apps.Components.CheckInConversations extends AM.Component
     $formControls = @$('.new-conversation-form :input')
     $formControls.prop('disabled', true)
 
-    Meteor.call 'PixelArtAcademy.Practice.CheckIn.newConversation', checkIn._id, LOI.characterId(), text, (error) =>
+    PAA.Practice.CheckIn.newConversation checkIn._id, LOI.characterId(), text, (error) =>
       #  Enable the form controls.
       $formControls.prop('disabled', false)
 

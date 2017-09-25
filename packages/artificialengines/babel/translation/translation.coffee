@@ -148,6 +148,8 @@ class AB.Translation extends AM.Document
 
   # Populates the translations with the best translations.
   generateBestTranslations: ->
+    return unless @translations
+
     @_generateBestTranslations @translations, ''
 
   _generateBestTranslations: (node, languageRegion) ->
