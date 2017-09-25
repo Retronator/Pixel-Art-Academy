@@ -24,5 +24,13 @@ class PAA.PixelBoy extends AM.Component
       appUrlName = FlowRouter.getParam 'app'
       appsNameMap[appUrlName]
 
+  onCreated: ->
+    super
+
+    @display = new AM.Display
+      safeAreaWidth: 350
+      safeAreaHeight: 350
+      minScale: 2
+
   renderCurrentApp: ->
     @currentApp()?.renderComponent(@currentComponent()) or null

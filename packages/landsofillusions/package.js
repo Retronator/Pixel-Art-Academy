@@ -171,6 +171,7 @@ Package.onUse(function(api) {
   api.addServerFile('conversations/line/subscriptions');
   api.addServerFile('conversations/line/migrations/0000-renamecollection');
   api.addServerFile('conversations/line/migrations/0001-characterreferencefieldsupdate');
+  api.addServerFile('conversations/line/migrations/0002-removecharacternamefield');
 
   // Parser
 

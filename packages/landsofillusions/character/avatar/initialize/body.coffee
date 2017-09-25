@@ -56,6 +56,8 @@ LOI.Character.Part.registerClasses
         renderer: new LOI.Character.Avatar.Renderers.Head
           origin:
             landmark: 'atlas'
+            x: 0
+            y: 2
 
       Hair: new LOI.Character.Part
         type: 'Avatar.Body.Hair'

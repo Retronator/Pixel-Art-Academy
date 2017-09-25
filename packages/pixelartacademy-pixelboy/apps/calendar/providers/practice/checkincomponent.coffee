@@ -15,12 +15,12 @@ class Calendar.Providers.Practice.CheckInComponent extends AM.Component
       @_character?.destroy()
       @_character = null
 
-      checkIn = @currentData()
-      return unless checkIn.character
+      checkIn = @checkIn()
+      return unless checkIn?.character
 
       @_character = new LOI.Character.Instance checkIn.character._id
       @_character
-      
+
   onDestroyed: ->
     super
     
@@ -41,6 +41,12 @@ class Calendar.Providers.Practice.CheckInComponent extends AM.Component
     checkIn = @currentData()
 
     checkIn.artwork or checkIn.image or checkIn.post
+
+  showAvatar: ->
+    return unless character = @characterInstance()
+
+    # We have avatar if the body field has any data.
+    character.document()?.avatar.body
 
   textStyle: ->
     checkIn = @currentData()

@@ -5,10 +5,11 @@
       height: 100%;
       padding: 0;
       margin: 0;
-      font-size: 2px;
+      font-size: {{display.scale}}px;
       background: black;
     }
   </style>
+  {{> Render display}}
   <div class="pixelartacademy-pixelboy">
     {{> PixelArtAcademy.PixelBoy.Components.AppSwitcher}}
     {{> renderCurrentApp}}

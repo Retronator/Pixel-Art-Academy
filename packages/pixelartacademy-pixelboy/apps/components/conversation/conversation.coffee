@@ -49,6 +49,17 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
     line = @currentData()
     @characters()[line.character._id]
 
+  showAvatar: ->
+    return unless character = @characterInstance()
+
+    # We have avatar if the body field has any data.
+    character.document()?.avatar.body
+
+  avatarHeadPart: ->
+    character = @characterInstance()
+
+    character.avatar.body.properties.head.part
+
   textStyle: ->
     line = @currentData()
 
