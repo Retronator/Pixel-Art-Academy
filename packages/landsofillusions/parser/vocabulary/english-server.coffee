@@ -31,7 +31,7 @@ Document.startup ->
       Read: ['read']
       WhatIs: ['what is']
       WhoIs: ['who is']
-      Get: ['get', 'take', 'pick up']
+      Get: ['get', 'take', 'pick up', 'grab']
       SitDown: ['sit down']
       SitIn: ['sit in']
       Stand: ['stand up']
