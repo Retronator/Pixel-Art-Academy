@@ -24,7 +24,10 @@ Package.onUse(function(api) {
 
   api.addFiles('layouts/alphaaccess/alphaaccess.coffee');
   api.addFiles('layouts/alphaaccess/alphaaccess.html');
-  
+
+  api.addFiles('layouts/playeraccess/playeraccess.coffee');
+  api.addFiles('layouts/playeraccess/playeraccess.html');
+
   api.addFiles('layouts/adminaccess/adminaccess.coffee');
 
   // Pages
