@@ -7,7 +7,10 @@ Calendar = PAA.PixelBoy.Apps.Calendar
 class Calendar.Providers.Practice.CheckInsProvider extends Calendar.Provider
   @calendarComponentClass: ->
     Calendar.Providers.Practice.CheckInComponent
-
+    
+  @id: -> 'Calendar.Providers.Practice.CheckInsProvider'
+  @displayName: -> "Practice check-ins"
+    
   constructor: ->
     super
 

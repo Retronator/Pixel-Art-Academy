@@ -3,8 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
-  @register 'PixelArtAcademy.PixelBoy.Apps.Journal.CheckIn'
+class PAA.PixelBoy.Apps.Journal.AddImage extends AM.Component
+  @register 'PixelArtAcademy.PixelBoy.Apps.Journal.AddImage'
 
   onCreated: ->
     super
@@ -30,43 +30,47 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
       'submit .check-in-form': @onSubmitCheckInForm
       'input .external-url': @onInputExternalUrl
       'change .image-file': @onChangeImageFile
+      'click .cancel': @onClickCancel
 
   onClick: (event) ->
     # If click happened outside the dialog, return to journal.
-    FlowRouter.go 'PixelArtAcademy.PixelBoy', app: 'journal' unless $(event.target).closest('.dialog').length
+    @_closeDialog() unless $(event.target).closest('.dialog').length
+
+  onClickCancel: (event) ->
+    @_closeDialog()
+
+  _closeDialog: ->
+    checkInComponent = @ancestorComponentOfType PAA.PixelBoy.Apps.Journal.CheckIn
+    checkInComponent?.showAddImage false
 
   onSubmitCheckInForm: (event) ->
     event.preventDefault()
 
     @submitting true
-
-    text = @$('.text').val()
+    
     imageFile = @$('.image-file')[0]?.files[0]
     externalUrl = @$('.external-url').val()
 
     if externalUrl
       # We are doing a check-in using an external url.
-      @_finishSubmitting text, externalUrl
+      @_finishSubmitting externalUrl
 
     else if imageFile
       # We are checking-in by uploading a local image file.
       PAA.Practice.upload imageFile, (imageUrl) =>
-        @_finishSubmitting text, imageUrl
+        @_finishSubmitting imageUrl
 
-    else
-      # This is a text-only check-in.
-      @_finishSubmitting text
+  _finishSubmitting: (url) ->
+    checkIn = @data()
 
-  _finishSubmitting: (text, url) ->
-    Meteor.call 'PixelArtAcademy.Practice.CheckIn.insert', LOI.characterId(), text, url, (error) =>
+    PAA.Practice.CheckIn.updateUrl checkIn._id, url, (error) =>
       @submitting false
 
       if error
         @errorMessage error.reason
         return
 
-      # Check-in succeeded, so return back to the journal.
-      FlowRouter.go 'PixelArtAcademy.PixelBoy', app: 'journal'
+      @_closeDialog()
 
   onInputExternalUrl: (event) ->
     @updatePreviewImage()
@@ -82,7 +86,7 @@ class PAA.PixelBoy.Apps.Journal.CheckIn extends AM.Component
     externalUrl = @$('.external-url').val()
 
     if externalUrl
-      Meteor.call 'PixelArtAcademy.Practice.CheckIn.getExternalUrlImage', externalUrl, (error, result) =>
+      PAA.Practice.CheckIn.getExternalUrlImage externalUrl, (error, result) =>
         if error
           @errorMessage error.reason
           return

@@ -41,6 +41,7 @@
   a
     color atariGrey(7)
     cursor pointer
+    text-decoration none
 
     &:hover
       background-color atariGrey(7)
@@ -114,13 +115,39 @@
 
   input
   textarea
-    uni()
+    font inherit
     background atariGrey(1)
     border 2px solid atariGrey(2)
-    padding 0 4px
     color atariGrey(6)
     input-placeholder atariGrey(2)
 
     &:focus
       outline none
       border-color atariGrey(3)
+
+  input
+    padding 0 4px
+
+  textarea
+    padding 0
+
+  input[type='checkbox']
+    display none
+
+    & + .label
+      cursor pointer
+
+    & + .label::before
+      content '✔'
+      display inline-block
+      width 7rem
+      height 7rem
+      padding 0 0 1rem 1rem
+      margin-right 5rem
+      vertical-align baseline
+      border 1rem solid atariGrey(2)
+      text-align center
+      color transparent
+
+    &:checked + .label::before
+      color atariGrey(5)

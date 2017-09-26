@@ -1,6 +1,8 @@
 LOI = LandsOfIllusions
 
 LOI.Character.forId.publish (characterId) ->
+  check characterId, Match.DocumentId
+
   LOI.Character.documents.find characterId
 
 LOI.Character.forCurrentUser.publish ->

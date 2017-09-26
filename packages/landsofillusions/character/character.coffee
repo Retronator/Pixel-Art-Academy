@@ -12,7 +12,7 @@ class LOI.Character extends AM.Document
   # ownerName: public name of the owner of this character
   # archivedUser: the owner, archived on retirement of the character
   #   _id
-  # displayName: auto-generated best translation of the full name of this character for debugging (do not use in the game!).
+  # debugName: auto-generated best translation of the full name of this character for debugging (do not use in the game!).
   # avatar: information for the representation of the character
   #   fullName: how the character is named
   #     _id
@@ -34,7 +34,7 @@ class LOI.Character extends AM.Document
       ownerName: @GeneratedField 'self', ['user'], (character) ->
         ownerName = character.user?.publicName or null
         [character._id, ownerName]
-      displayName: @GeneratedField 'self', ['avatar'], (character) ->
+      debugName: @GeneratedField 'self', ['avatar'], (character) ->
         displayName = character.avatar?.fullName?.translations?.best?.text or null
         [character._id, displayName]
       avatar:
@@ -62,3 +62,14 @@ class LOI.Character extends AM.Document
   @forId: @subscription 'forId'
   @forCurrentUser: @subscription 'forCurrentUser'
   @activatedForCurrentUser: @subscription 'activatedForCurrentUser'
+  
+  constructor: ->
+    super
+
+    # Create an avatar object so we can use its methods.
+    @_avatar = new @constructor.Avatar @
+
+  # Avatar pass-through methods
+
+  name: -> @_avatar.fullName()
+  colorObject: (relativeShade) -> @_avatar.colorObject relativeShade

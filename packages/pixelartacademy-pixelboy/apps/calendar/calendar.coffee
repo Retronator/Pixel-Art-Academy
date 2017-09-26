@@ -17,8 +17,8 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
 
     # Create calendar providers.
     @providers = [
-      new @constructor.Providers.PixelDailies.ThemesProvider
-      new @constructor.Providers.Practice.CheckInsProvider
+      new @constructor.Providers.PixelDailies.ThemesProvider @
+      new @constructor.Providers.Practice.CheckInsProvider @
     ]
 
     today = new Date()
@@ -32,7 +32,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
       Tracker.afterFlush =>
         for provider in @providers
           provider.subscribeToMonthOf date, @
-
+  
   # Helpers
   showNextMonthButton: ->
     # Only show next month button if selected date is less than today.
@@ -86,6 +86,26 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
     date = @displayedMonth()
     @displayedMonth new Date date.getFullYear(), date.getMonth() - 1, 1
 
+    $(window).scrollTop(0)
+
   onClickNextMonth: (event) ->
     date = @displayedMonth()
     @displayedMonth new Date date.getFullYear(), date.getMonth() + 1, 1
+
+    $(window).scrollTop(0)
+
+  class @ProviderEnabled extends AM.DataInputComponent
+    @register 'PixelArtAcademy.PixelBoy.Apps.Calendar.ProviderEnabled'
+
+    constructor: ->
+      super
+
+      @type = @constructor.Types.Checkbox
+
+    load: ->
+      provider = @data()
+      provider.enabled()
+
+    save: (value) ->
+      provider = @data()
+      provider.enabled value

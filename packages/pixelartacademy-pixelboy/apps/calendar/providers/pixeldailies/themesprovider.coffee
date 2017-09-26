@@ -9,6 +9,9 @@ class Calendar.Providers.PixelDailies.ThemesProvider extends Calendar.Provider
   @calendarComponentClass: ->
     Calendar.Providers.PixelDailies.ThemeComponent
 
+  @id: -> 'Calendar.Providers.PixelDailies.ThemesProvider'
+  @displayName: -> "Pixel Dailies"
+
   constructor: ->
     super
 

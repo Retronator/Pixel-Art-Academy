@@ -5,14 +5,16 @@ LOI = LandsOfIllusions
 class LOI.HumanAvatar extends LOI.Avatar
   constructor: (@options) ->
     super
-    
-    @body = LOI.Character.Part.Types.Avatar.Body.create
-      dataLocation: new AM.Hierarchy.Location
-        rootField: @options.bodyDataField
 
-    @outfit = LOI.Character.Part.Types.Avatar.Outfit.create
-      dataLocation: new AM.Hierarchy.Location
-        rootField: @options.outfitDataField
+    if @options.bodyDataField
+      @body = LOI.Character.Part.Types.Avatar.Body.create
+        dataLocation: new AM.Hierarchy.Location
+          rootField: @options.bodyDataField
+
+    if @options.outfitDataField
+      @outfit = LOI.Character.Part.Types.Avatar.Outfit.create
+        dataLocation: new AM.Hierarchy.Location
+          rootField: @options.outfitDataField
 
   createRenderer: (engineOptions, options = {}) ->
     renderer = new LOI.Character.Avatar.Renderers.HumanAvatar

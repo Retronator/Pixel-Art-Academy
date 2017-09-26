@@ -1,14 +1,25 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 # Abstract class for providing a set of items to display in the calendar app.
 class PAA.PixelBoy.Apps.Calendar.Provider
-  @calendarComponentClass: ->
-    throw new AE.NotImplementedException
+  @calendarComponentClass: -> throw new AE.NotImplementedException
 
-  constructor: ->
+  @id: -> throw new AE.NotImplementedException
+  @displayName: -> throw new AE.NotImplementedException
+  displayName: -> @constructor.displayName()
+
+  constructor: (calendarComponent) ->
     @_monthSubscriptions = {}
+
+    @enabled = new ReactiveField true
+
+    AM.PersistentStorage.persist
+      storageKey: "#{@constructor.id()}.enabled"
+      field: @enabled
+      tracker: calendarComponent
 
   # Returns an array of events for a specific day. Event is an object with
   # component: component instance that will render the event

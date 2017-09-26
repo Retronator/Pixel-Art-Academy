@@ -61,9 +61,9 @@ Package.onUse(function(api) {
   api.addFiles('apps/journal/journal.styl');
   api.addFiles('apps/journal/journal.coffee');
 
-  api.addFiles('apps/journal/checkin/checkin.html');
-  api.addFiles('apps/journal/checkin/checkin.styl');
-  api.addFiles('apps/journal/checkin/checkin.coffee');
+  api.addFiles('apps/journal/addimage/addimage.html');
+  api.addFiles('apps/journal/addimage/addimage.styl');
+  api.addFiles('apps/journal/addimage/addimage.coffee');
 
   api.addFiles('components/components.coffee');
 

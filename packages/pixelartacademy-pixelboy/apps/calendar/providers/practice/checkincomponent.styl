@@ -25,8 +25,20 @@
       margin 1em
       max-width 27.5em
 
+      .avatar
+        float left
+        position relative
+        top -10rem
+        width 30rem
+        height 70rem
+
+        & ~ .name
+        & ~ .text
+          margin-left 37rem
+
       .name
         pixel-text-outline black
+        margin-bottom 5rem
 
       .text
         white-space pre-wrap
@@ -38,3 +50,4 @@
           &:hover
             color black !important
             pixel-text-outline transparent
+

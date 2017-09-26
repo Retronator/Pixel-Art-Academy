@@ -9,7 +9,32 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
     super
 
     conversation = @data()
-    @subscribe 'LandsOfIllusions.Conversations.Line.linesForConversation', conversation._id
+    LOI.Conversations.Line.forConversation.subscribe @, conversation._id
+
+    @characterIds = new ComputedField =>
+      # Go over all lines and add character IDs.
+      ids = (line.character?._id for line in @lines().fetch())
+
+      _.without ids, undefined, null
+
+    @_characters = {}
+
+    # A map of character instances by ids.
+    @characters = new ComputedField =>
+      # Destroy previous instances.
+      character.destroy() for characterId, character of @_characters
+
+      @_characters = {}
+
+      for characterId in @characterIds()
+        @_characters[characterId] = new LOI.Character.Instance characterId
+
+      @_characters
+
+  onDestroyed: ->
+    super
+
+    character.destroy() for characterId, character of @_characters
 
   lines: ->
     conversation = @data()
@@ -19,6 +44,21 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
     ,
       sort:
         time: 1
+
+  characterInstance: ->
+    line = @currentData()
+    @characters()[line.character?._id]
+
+  showAvatar: ->
+    return unless character = @characterInstance()
+
+    # We have avatar if the body field has any data.
+    character.document()?.avatar.body
+
+  avatarHeadPart: ->
+    character = @characterInstance()
+
+    character.avatar.body.properties.head.part
 
   textStyle: ->
     line = @currentData()
@@ -46,7 +86,7 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
     conversation = @data()
     text = @$('.new-line-text').val()
 
-    Meteor.call 'LandsOfIllusions.Conversations.Line.insert', conversation._id, LOI.characterId(), text, (error) =>
+    LOI.Conversations.Line.insert conversation._id, LOI.characterId(), text, (error) =>
       if error
         console.error error
         return

@@ -6,13 +6,42 @@
         list-style none
 
         .line
-          margin-bottom 0.5em
+          margin-bottom 3rem
           word-wrap break-word
 
           a
             &:hover
               color black !important
 
+          .author
+            display flex
+            height 13rem
+            margin-bottom 2rem
+
+            .avatar
+              position relative
+              width 16rem
+              height 13rem
+              vertical-align middle
+              flex-shrink 0
+              align-self flex-end
+              overflow hidden
+
+              & ~ .name
+                margin-left 3rem
+
+              .sanfrancisco-c3-design-terminal-components-avatarpartpreview
+                position relative
+                width 16rem
+                height 42rem
+
+            .name
+              line-height 7rem
+              margin-bottom -1rem
+              align-self flex-end
+
       .new-line-form
+        margin-top 7rem
+
         .new-line-text
           width 12em
