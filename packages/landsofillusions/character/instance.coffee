@@ -26,3 +26,12 @@ class LOI.Character.Instance
   name: -> @avatar.fullName()
   color: -> @avatar.color()
   colorObject: (relativeShade) -> @avatar.colorObject relativeShade
+
+  # We need these next ones for compatibility of passing the character instance as a thing into adventure engine.
+
+  fullName: -> @avatar.fullName()
+  shortName: -> @avatar.shortName()
+  nameAutoCorrectStyle: -> @avatar.nameAutoCorrectStyle()
+  description: -> @avatar.description()
+  dialogTextTransform: -> @avatar.dialogTextTransform()
+  dialogDeliveryType: -> @avatar.dialogDeliveryType()
