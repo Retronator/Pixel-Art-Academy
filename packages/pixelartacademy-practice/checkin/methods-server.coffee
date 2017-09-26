@@ -65,7 +65,16 @@ PAA.Practice.CheckIn.import.method (characterId) ->
       console.log "Found", importedCheckIns.length, "check-ins for email", email.address
 
       for importedCheckIn in importedCheckIns
-        checkInId = PAA.Practice.CheckIn.insert characterId, importedCheckIn.timestamp
+        checkIn = PAA.Practice.CheckIn.documents.findOne
+          'character._id': characterId
+          time: importedCheckIn.timestamp
+
+        # Create the check-in if needed.
+        if checkIn
+          checkInId = checkIn._id
+
+        else
+          checkInId = PAA.Practice.CheckIn.insert characterId, importedCheckIn.timestamp
         
         PAA.Practice.CheckIn.updateText checkInId, importedCheckIn.text
         PAA.Practice.CheckIn.updateUrl checkInId, importedCheckIn.image

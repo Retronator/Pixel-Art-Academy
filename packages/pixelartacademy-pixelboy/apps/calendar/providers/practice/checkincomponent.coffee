@@ -16,7 +16,7 @@ class Calendar.Providers.Practice.CheckInComponent extends AM.Component
       @_character = null
 
       checkIn = @checkIn()
-      return unless checkIn?.character
+      return unless checkIn?.character?._id
 
       @_character = new LOI.Character.Instance checkIn.character._id
       @_character

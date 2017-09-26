@@ -15,7 +15,7 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
       # Go over all lines and add character IDs.
       ids = (line.character?._id for line in @lines().fetch())
 
-      _.without ids, undefined
+      _.without ids, undefined, null
 
     @_characters = {}
 
