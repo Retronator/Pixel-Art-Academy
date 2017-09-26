@@ -92,8 +92,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
         @type = 'textarea'
         @autoSelect = false
         @autoResizeTextarea = true
-        @realtime = false
-  
+
       load: ->
         checkIn = @currentData()
         checkIn?.text
