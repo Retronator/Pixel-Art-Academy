@@ -12,10 +12,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
     @characterId = new ReactiveField null
     
     @character = new ComputedField =>
-      characterId = @characterId()
-      
-      Tracker.nonreactive =>
-        new LOI.Character.Instance characterId
+      LOI.Character.getInstance @characterId()
 
   onCreated: ->
     super

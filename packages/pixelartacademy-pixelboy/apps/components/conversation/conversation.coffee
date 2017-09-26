@@ -17,25 +17,6 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
 
       _.without ids, undefined, null
 
-    @_characters = {}
-
-    # A map of character instances by ids.
-    @characters = new ComputedField =>
-      # Destroy previous instances.
-      character.destroy() for characterId, character of @_characters
-
-      @_characters = {}
-
-      for characterId in @characterIds()
-        @_characters[characterId] = new LOI.Character.Instance characterId
-
-      @_characters
-
-  onDestroyed: ->
-    super
-
-    character.destroy() for characterId, character of @_characters
-
   lines: ->
     conversation = @data()
 
@@ -47,7 +28,7 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
 
   characterInstance: ->
     line = @currentData()
-    @characters()[line.character?._id]
+    LOI.Character.getInstance line.character?._id
 
   showAvatar: ->
     return unless character = @characterInstance()

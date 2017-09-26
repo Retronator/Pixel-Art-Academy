@@ -16,22 +16,7 @@ class AM.Hierarchy.Field
       node?.destroy()
       node = null
 
-    # We want the hierarchy field to behave as a getter/setter.
-    field = (value) ->
-      # Is this a setter? We compare to undefined and not just use
-      # value? since we want to be able to set the value null to the field.
-      if value isnt undefined
-        storedValue = AM.Hierarchy.convertObjectToStoredValue value
-
-        # Add meta data if we have it set.
-        _.extend storedValue, metaData if metaData
-
-        # Send the new structure to the save function.
-        options.save options.address.string(), storedValue
-
-        return
-
-      # No, this is a getter, so load the data.
+    currentValue = new ComputedField =>
       return unless data = options.load()
 
       # We look if we have the value field (we can't do data.value?
@@ -40,13 +25,13 @@ class AM.Hierarchy.Field
         # This is a raw value, clean up if we previously had templates/nodes.
         cleanTemplate()
         cleanNode()
-        
+
         # Simply return the value.
         data.value
 
       else if data.templateId
         cleanNode()
-        
+
         # Subscribe to this template.
         templateSubscription = options.templateClass.forId.subscribe data.templateId
 
@@ -72,7 +57,7 @@ class AM.Hierarchy.Field
                 load: =>
                   # We dynamically load the value from the parent so that we
                   # don't have to keep re-creating nodes whenever data changes.
-                  options.load().node
+                  options.load()?.node
 
         # Return the node.
         node
@@ -85,6 +70,26 @@ class AM.Hierarchy.Field
         console.error "Data field", options.address.string(), "got value", data
         console.trace()
         throw new AE.InvalidOperationException "Data field is not in correct format."
+    ,
+      true
+
+    # We want the hierarchy field to behave as a getter/setter.
+    field = (value) ->
+      # Is this a setter? We compare to undefined and not just use
+      # value? since we want to be able to set the value null to the field.
+      if value isnt undefined
+        storedValue = AM.Hierarchy.convertObjectToStoredValue value
+
+        # Add meta data if we have it set.
+        _.extend storedValue, metaData if metaData
+
+        # Send the new structure to the save function.
+        options.save options.address.string(), storedValue
+
+        return
+
+      # No, this is a getter, so load the data.
+      currentValue()
 
     # Allow correct handling of instanceof operator.
     Object.setPrototypeOf field, @constructor.prototype
@@ -144,6 +149,7 @@ class AM.Hierarchy.Field
       options.save options.address.string(), null
 
     field.destroy = ->
+      currentValue.stop()
       cleanTemplate()
       cleanNode()
       placeholderNode?.destroy()

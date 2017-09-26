@@ -12,19 +12,10 @@ class Calendar.Providers.Practice.CheckInComponent extends AM.Component
     super
     
     @characterInstance = new ComputedField =>
-      @_character?.destroy()
-      @_character = null
-
       checkIn = @checkIn()
       return unless checkIn?.character?._id
 
-      @_character = new LOI.Character.Instance checkIn.character._id
-      @_character
-
-  onDestroyed: ->
-    super
-    
-    @_character?.destroy()
+      LOI.Character.getInstance checkIn.character._id
 
   checkIn: ->
     # Fetch full check-in data (we have a bare object with just the id).

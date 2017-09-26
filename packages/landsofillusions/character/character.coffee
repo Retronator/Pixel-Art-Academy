@@ -62,7 +62,20 @@ class LOI.Character extends AM.Document
   @forId: @subscription 'forId'
   @forCurrentUser: @subscription 'forCurrentUser'
   @activatedForCurrentUser: @subscription 'activatedForCurrentUser'
+
+  # Singletons
+
+  @instances = {}
   
+  @getInstance: (id) ->
+    return unless id
+
+    unless @instances[id]
+      Tracker.nonreactive =>
+        @instances[id] = new @Instance id
+
+    @instances[id]
+
   constructor: ->
     super
 

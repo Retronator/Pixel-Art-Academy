@@ -38,14 +38,17 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
 
       x: target.x - source.x
       y: target.y - source.y
-      
-  ready: ->
-    # If we have no data, in this part, there's nothing to do.
-    return true unless @options.part.options.dataLocation()
-    
-    # Shape is ready when the sprite is ready.
-    @activeSprite().ready()
 
+    @_ready = new ComputedField =>
+      # If we have no data, in this part, there's nothing to do.
+      return true unless @options.part.options.dataLocation()
+      
+      # Shape is ready when the sprite is ready.
+      @activeSprite().ready()
+
+  ready: ->
+    @_ready()
+    
   landmarks: ->
     # Provide active sprite's landmarks, but translate them to the origin.
     return unless spriteData = @activeSprite().options.spriteData()
