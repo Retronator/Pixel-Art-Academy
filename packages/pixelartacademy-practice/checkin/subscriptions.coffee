@@ -3,12 +3,13 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 # Get check-ins for a certain character.
-PAA.Practice.CheckIn.forCharacter.publish (characterId) ->
+PAA.Practice.CheckIn.forCharacterId.publish (characterId, limit) ->
   check characterId, Match.DocumentId
 
   PAA.Practice.CheckIn.documents.find
     'character._id': characterId
   ,
+    limit: limit
     sort:
       time: -1
 

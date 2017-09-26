@@ -15,11 +15,7 @@ PAA.Practice.CheckIn.insert.method (characterId, time) ->
     character:
       _id: characterId
 
-  PAA.Practice.CheckIn.documents.insert
-    time: checkIn.time
-    'character._id': checkIn.character._id
-  ,
-    checkIn
+  PAA.Practice.CheckIn.documents.insert checkIn
 
 PAA.Practice.CheckIn.remove.method (checkInId) ->
   check checkInId, Match.DocumentId
@@ -55,10 +51,10 @@ PAA.Practice.CheckIn.updateText.method (checkInId, text) ->
 
 PAA.Practice.CheckIn.updateUrl.method (checkInId, url) ->
   check checkInId, Match.DocumentId
-  check url, Match.OptionalOrNull String
+  check url, Match.OneOf String, null
 
-  # Make sure the user can perform this character action.
-  LOI.Authorize.characterAction characterId
+  # Make sure the check-in belongs to the current user.
+  authorizeCheckInAction checkInId
 
   update = {}
 
@@ -110,8 +106,8 @@ PAA.Practice.CheckIn.updateUrl.method (checkInId, url) ->
   PAA.Practice.CheckIn.documents.update checkInId, update
 
 PAA.Practice.CheckIn.newConversation.method (checkInId, characterId, firstLineText) ->
-  check checkInId Match.DocumentId
-  check characterId Match.DocumentId
+  check checkInId, Match.DocumentId
+  check characterId, Match.DocumentId
   check firstLineText, Match.Optional String
 
   # Make sure the check-in exists.

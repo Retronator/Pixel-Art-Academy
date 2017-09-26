@@ -47,7 +47,7 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
 
   characterInstance: ->
     line = @currentData()
-    @characters()[line.character._id]
+    @characters()[line.character?._id]
 
   showAvatar: ->
     return unless character = @characterInstance()

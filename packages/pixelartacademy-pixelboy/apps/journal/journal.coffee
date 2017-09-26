@@ -15,8 +15,10 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
   onCreated: ->
     super
 
+    @checkInsLimit = new ReactiveField 10
+
     @autorun =>
-      Meteor.subscribe 'PixelArtAcademy.Practice.CheckIn.forCharacter', LOI.characterId()
+      PAA.Practice.CheckIn.forCharacterId.subscribe @, LOI.characterId(), @checkInsLimit()
 
   # Helpers
 
@@ -29,53 +31,76 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
       sort:
         time: -1
 
-  dateText: ->
-    date = @currentData().time
-    languagePreference = AB.userLanguagePreference()
-    date.toLocaleDateString languagePreference,
-      day: 'numeric'
-      month: 'long'
-      year: 'numeric'
-
-  disableScrollingClass: ->
-    'disable-scrolling' if @showCheckInForm()
-
-  showCheckInForm: ->
-    FlowRouter.getParam('path') is 'check-in'
-
-  # Events
-
   events: ->
     super.concat
       'click button.check-in': @onClickCheckIn
       'click button.import-check-ins': @onClickImportCheckIns
-      'click .check-in .delete': @onClickDeleteCheckIn
+      'click .load-more-button': @onClickLoadMoreButton
 
   onClickCheckIn: (event) ->
-    FlowRouter.go 'PixelArtAcademy.PixelBoy',
-      app: 'journal'
-      path: 'check-in'
+    PAA.Practice.CheckIn.insert LOI.characterId()
 
   onClickImportCheckIns: (event) ->
-    Meteor.call 'PixelArtAcademy.Practice.CheckIn.import', LOI.characterId()
+    PAA.Practice.CheckIn.import LOI.characterId()
 
-  onClickDeleteCheckIn: (event) ->
-    Meteor.call 'PixelArtAcademy.Practice.CheckIn.remove', @currentData()._id
+  onClickLoadMoreButton: (event) ->
+    @checkInsLimit @checkInsLimit() + 20
 
-  # Components
-  
-  class @CheckInText extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Apps.Journal.CheckInText'
+  class @CheckIn extends PAA.PixelBoy.App
+    @register 'PixelArtAcademy.PixelBoy.Apps.Journal.CheckIn'
 
-    constructor: ->
+    onCreated: ->
       super
-      @type = 'textarea'
-      @autoSelect = false
-      @autoResizeTextarea = true
-
-    load: -> @currentData()?.text
-
-    save: (value) -> Meteor.call 'PixelArtAcademy.Practice.CheckIn.changeText', @currentData()._id, value
-
-    placeholder: ->
-      'Enter journal text here.'
+  
+      @showAddImage = new ReactiveField false
+          
+    dateText: ->
+      date = @currentData().time
+      languagePreference = AB.userLanguagePreference()
+      date.toLocaleDateString languagePreference,
+        day: 'numeric'
+        month: 'long'
+        year: 'numeric'
+  
+    # Events
+  
+    events: ->
+      super.concat
+        'click .delete-check-in-button': @onClickDeleteCheckInButton
+        'click .add-image-button': @onClickAddImageButton
+        'click .remove-image-button': @onClickRemoveImageButton
+        'click .load-more-button': @onClickLoadMoreButton
+  
+    onClickDeleteCheckInButton: (event) ->
+      checkIn = @currentData()
+      PAA.Practice.CheckIn.remove checkIn._id
+  
+    onClickAddImageButton: (event) ->
+      @showAddImage not @showAddImage()
+  
+    onClickRemoveImageButton: (event) ->
+      checkIn = @currentData()
+      PAA.Practice.CheckIn.updateUrl checkIn._id, null
+  
+    # Components
+    
+    class @Text extends AM.DataInputComponent
+      @register 'PixelArtAcademy.Apps.Journal.CheckIn.Text'
+  
+      constructor: ->
+        super
+        @type = 'textarea'
+        @autoSelect = false
+        @autoResizeTextarea = true
+        @realtime = false
+  
+      load: ->
+        checkIn = @currentData()
+        checkIn?.text
+  
+      save: (value) ->
+        checkIn = @currentData()
+        PAA.Practice.CheckIn.updateText checkIn._id, value
+  
+      placeholder: ->
+        'Enter journal text here.'

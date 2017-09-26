@@ -45,6 +45,6 @@ class PAA.Practice.CheckIn extends AM.Document
   @import: @method 'import'
 
   # Subscriptions
-  @forCharacter: @subscription 'forCharacter'
+  @forCharacterId: @subscription 'forCharacterId'
   @forDateRange: @subscription 'forDateRange'
   @conversationsForCheckInId: @subscription 'conversationsForCheckInId'
