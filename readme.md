@@ -12,18 +12,10 @@ Install [Meteor](https://www.meteor.com):
 curl https://install.meteor.com/ | sh
 ```
 
-Checkout and update:
+Checkout the repository and update npm dependecies:
 
 ```
-meteor update
-meteor update --all-packages
-```
-
-Install npm modules if needed, particularly `babel-runtime` and `bcrypt` might be missing. We've had that happen to some people.
-
-```
-npm install babel-runtime
-npm install bcrypt
+meteor npm install
 ```
 
 You're ready to go! Run with:
