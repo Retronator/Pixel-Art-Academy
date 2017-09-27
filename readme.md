@@ -19,7 +19,14 @@ meteor update
 meteor update --all-packages
 ```
 
-Run with:
+Install NPM updates if needed, particularly `babel-runtime` and `bcrypt` might be missing. We've had that happen to some people.
+
+```
+npm install babel-runtime
+npm install bcrypt
+```
+
+You're ready to go! Run with:
 
 ```
 meteor
