@@ -21,18 +21,9 @@ LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.publish (types) ->
 
   # Run inside an autorun to dynamically get new templates when they are created.
   @autorun (computation) =>
-    templates = LOI.Character.Part.Template._forTypes(types, @userId).fetch()
-    findSpritesInCharacterPartTemplates templates
-
-LOI.Assets.Sprite.forCharacterPartTemplatesOfCurrentUser.publish ->
-  # Run inside an autorun to dynamically get new templates when they are created.
-  @autorun (computation) =>
-    templates = LOI.Character.Part.Template._forUserId(@userId).fetch()
-    findSpritesInCharacterPartTemplates templates
-
-findSpritesInCharacterPartTemplates = (templates) ->
-  spriteIds = _.flatten (template.spriteIds for template in templates)
-
-  LOI.Assets.Sprite.documents.find
-    _id:
-      $in: spriteIds
+    templates = LOI.Character.Part.Template._forTypes(types, {}, @userId).fetch()
+    spriteIds = _.flatten (template.spriteIds for template in templates)
+  
+    LOI.Assets.Sprite.documents.find
+      _id:
+        $in: spriteIds

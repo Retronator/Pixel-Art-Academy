@@ -39,6 +39,10 @@ class LOI.Character.Part
 
     # We create a copy of ourselves with the instance options added.
     new @constructor _.extend {}, @options, options
+    
+  ready: ->
+    # Part is ready when its data location is ready.
+    @options.dataLocation.ready()
 
   createRenderer: (engineOptions, options = {}) ->
     # Override to provide this part's renderer.

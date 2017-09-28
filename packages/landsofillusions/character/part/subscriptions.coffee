@@ -5,33 +5,36 @@ LOI.Character.Part.Template.forId.publish (id) ->
 
   LOI.Character.Part.Template.documents.find id
 
-LOI.Character.Part.Template.forType.publish (type) ->
+LOI.Character.Part.Template.forType.publish (type, options) ->
   check type, String
 
-  LOI.Character.Part.Template._forTypes [type], @userId
+  LOI.Character.Part.Template._forTypes [type], options, @userId
 
-LOI.Character.Part.Template.forTypes.publish (types) ->
+LOI.Character.Part.Template.forTypes.publish (types, options) ->
   check types, [String]
 
-  LOI.Character.Part.Template._forTypes types, @userId
+  LOI.Character.Part.Template._forTypes types, options, @userId
 
 # We separate the method so that we can get just the cursor from other server methods.
-LOI.Character.Part.Template._forTypes = (types, userId) ->
-  # We do not return current user's templates since we assume those will come from the current user subscription.
-  # We do this separation because otherwise the same document might be sent from two subscriptions, making it
-  # unpredictable if the author field will be present (it needs to be for user's templates).
-  LOI.Character.Part.Template.documents.find
+LOI.Character.Part.Template._forTypes = (types, options = {}, userId) ->
+  check options,
+    skipCurrentUsersTemplates: Match.Optional Boolean
+
+  query =
     type:
       $in: types
-    'author._id':
+
+  # If the user is subscribed to templates for current user, we shouldn't return those, because otherwise the same
+  # document might be sent from two subscriptions, making it unpredictable if the author field will be present (it
+  # needs to be for user's templates).
+  if options.skipCurrentUsersTemplates
+    query['author._id'] =
       $ne: userId
-  ,
+
+  LOI.Character.Part.Template.documents.find query,
     fields:
       author: 0
 
 LOI.Character.Part.Template.forCurrentUser.publish ->
-  LOI.Character.Part.Template._forUserId @userId
-
-LOI.Character.Part.Template._forUserId = (userId) ->
   LOI.Character.Part.Template.documents.find
-    'author._id': userId
+    'author._id': @userId

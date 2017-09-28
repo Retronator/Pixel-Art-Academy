@@ -50,6 +50,11 @@ class AM.Hierarchy.Location
     # Store options on location.
     location.options = options
 
+    location.ready = ->
+      # Location is ready when its field is ready.
+      field = getField()
+      field.ready()
+
     # Creates a location with the given address below the current location.
     location.child = (address) ->
       prefix = if options.address then "#{options.address}." else ''

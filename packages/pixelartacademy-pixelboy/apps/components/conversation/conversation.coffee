@@ -33,8 +33,8 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
   showAvatar: ->
     return unless character = @characterInstance()
 
-    # We have avatar if the body field has any data.
-    character.document()?.avatar.body
+    # We have avatar if the body field has any data and the data is ready.
+    character.document()?.avatar.body and character.avatar.body.ready() and character.avatar.outfit.ready()
 
   avatarHeadPart: ->
     character = @characterInstance()

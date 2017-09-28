@@ -32,5 +32,11 @@ class PAA.PixelBoy extends AM.Component
       safeAreaHeight: 350
       minScale: 2
 
+    # Subscribe to all character part templates and the sprites that they use.
+    types = LOI.Character.Part.Types.Avatar.allPartTypeIds()
+
+    LOI.Character.Part.Template.forTypes.subscribe @, types
+    LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe @, types
+
   renderCurrentApp: ->
     @currentApp()?.renderComponent(@currentComponent()) or null

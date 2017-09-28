@@ -27,6 +27,24 @@ LOI.Character.Part.registerClasses
       renderer: new LOI.Character.Avatar.Renderers.Body
         origin:
           landmark: 'navel'
+            
+    allPartTypeIds: ->
+      types = []
+    
+      addTypes = (type) =>
+        # Go over all the properties of the type and add all sub-types.
+        typeClass = _.nestedProperty LOI.Character.Part.Types, type
+    
+        for propertyName, property of typeClass.options.properties when property.options?.type?
+          type = property.options.type
+    
+          types.push type
+          addTypes type
+    
+      addTypes 'Avatar.Body'
+      addTypes 'Avatar.Outfit'
+    
+      types
 
 LOI.Character.Part.registerClasses
   Avatar:

@@ -179,16 +179,22 @@ class LOI.Assets.Engine.Sprite
           @_context.putImageData @_imageData, 0, 0
           @_imageCanvas @_canvas
 
+    @_ready = new ComputedField =>
+      # Sprite is ready when its canvas is ready.
+      @_imageCanvas()
+    ,
+      true
+
   destroy: ->
     @_imageUpdateAutorun.stop()
     @_paletteSubscription.stop()
+    @_ready.stop()
 
   imageCanvas: ->
     @_imageCanvas()
 
   ready: ->
-    # Sprite is ready when its canvas is ready.
-    @_imageCanvas()
+    @_ready()
 
   drawToContext: (context) ->
     return unless imageCanvas = @_imageCanvas()

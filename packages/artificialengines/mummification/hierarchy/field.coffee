@@ -96,6 +96,20 @@ class AM.Hierarchy.Field
 
     # Store options on field.
     field.options = options
+    
+    # Reports if this field has done loading its data.
+    field.ready = ->
+      # Depend on value change.
+      value = currentValue()
+      
+      # If we have a node, make sure the node is ready.
+      return value.ready() if value instanceof AM.Hierarchy.Node
+      
+      # We're done loading if this is not a template.
+      return true unless templateSubscription
+      
+      # Otherwise wait till the template is loaded.
+      templateSubscription.ready()
 
     # Gets a node, even if the data for it does not exist yet.
     # This allows us to save at locations that haven't been set yet.
