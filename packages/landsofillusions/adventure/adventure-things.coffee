@@ -4,9 +4,13 @@ LOI = LandsOfIllusions
 class LOI.Adventure extends LOI.Adventure
   _initializeThings: ->
     @currentSituation = new ComputedField =>
-      new LOI.Adventure.Situation
-        location: @currentLocation()
+      options =
         timelineId: @currentTimelineId()
+        location: @currentLocation()
+
+      return unless options.timelineId and options.location
+
+      new LOI.Adventure.Situation options
 
     # We use caches to avoid reconstruction.
     @_things = {}

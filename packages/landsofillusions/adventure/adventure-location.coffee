@@ -5,11 +5,24 @@ class LOI.Adventure extends LOI.Adventure
   _initializeLocation: ->
     # We store player's current location locally so that multiple people
     # can use the same user account and walk around independently.
-    @currentLocationId = new ReactiveField null
+    @playerLocationId = new ReactiveField null
     Artificial.Mummification.PersistentStorage.persist
       storageKey: 'LandsOfIllusions.Adventure.currentLocationId'
-      field: @currentLocationId
+      field: @playerLocationId
       tracker: @
+
+    @currentLocationId = new ComputedField =>
+      console.log "Recomputing current location." if LOI.debug
+
+      # Player's location is always read from the state.
+      if LOI.characterId()
+        @gameState()?.currentLocationId
+
+      else
+        # Player's timeline is stored in local storage.
+        @playerLocationId()
+    ,
+      true
 
     # Instantiate current location. It depends only on the ID.
     @currentLocation = new ComputedField =>
@@ -45,12 +58,8 @@ class LOI.Adventure extends LOI.Adventure
               currentLocationClass = SanFrancisco.Apartment.Studio
 
           currentLocationId = currentLocationClass.id()
-          @currentLocationId currentLocationId
 
-        # Save current location to state. We don't really use it except until the next time we load the game.
-        if state = @gameState()
-          state.currentLocationId = currentLocationId
-          @gameState.updated()
+        @setLocationId currentLocationId
 
         console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug
 
@@ -83,7 +92,7 @@ class LOI.Adventure extends LOI.Adventure
       # If we don't have permission, redirect to region's exit location.
       unless playerHasPermission
         console.warn "Player does not have permission to be in the region", currentRegionClass
-        @currentLocationId _.thingId currentRegionClass.exitLocation()
+        @setLocationId currentRegionClass.exitLocation()
         return
 
       # Everything is OK, instantiate the region.
@@ -160,6 +169,18 @@ class LOI.Adventure extends LOI.Adventure
       state.immersionExitLocationId = currentLocationId
       @gameState.updated()
 
+  setLocationId: (locationClassOrId) ->
+    locationId =  _.thingId locationClassOrId
+
+    # Update locally stored player location if we're not synced to a character.
+    @playerLocationId locationId unless LOI.characterId()
+
+    # Save current location to state. For players we don't really
+    # use it except until the next time we load the game.
+    if state = @gameState()
+      state.currentLocationId = locationId
+      @gameState.updated()
+
   goToLocation: (locationClassOrId) ->
     currentLocationClass = _.thingClass @currentLocationId()
     destinationLocationClass = _.thingClass locationClassOrId
@@ -181,4 +202,4 @@ class LOI.Adventure extends LOI.Adventure
       result.listener.onExit result.exitResponse
 
     # Change location.
-    @currentLocationId _.thingId locationClassOrId
+    @setLocationId locationClassOrId

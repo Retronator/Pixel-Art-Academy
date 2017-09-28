@@ -160,8 +160,9 @@ class LOI.Components.Menu.Items extends AM.Component
         # Clear active item.
         LOI.adventure.activeItemId null
 
-        # Clear location to trigger location changes.
-        LOI.adventure.currentLocationId null
+        # Clear character and location to trigger location changes.
+        LOI.switchCharacter null
+        LOI.adventure.playerLocationId null
 
         # Reset game time.
         LOI.adventure.resetTime()
@@ -173,8 +174,8 @@ class LOI.Components.Menu.Items extends AM.Component
         LOI.adventure.director.stopAllScripts()
 
         # Go to the terrace and scroll to top.
-        LOI.adventure.currentLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
-        LOI.adventure.currentTimelineId PixelArtAcademy.TimelineIds.DareToDream
+        LOI.adventure.playerLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
+        LOI.adventure.playerTimelineId PixelArtAcademy.TimelineIds.DareToDream
 
         LOI.adventure.interface.scroll position: 0
 

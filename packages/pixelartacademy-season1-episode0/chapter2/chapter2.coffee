@@ -39,7 +39,7 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
       return if movedToCaltrain
 
       # Force the move so that exit responses are not called.
-      LOI.adventure.currentLocationId SanFrancisco.Soma.Caltrain.id()
+      LOI.adventure.setLocationId SanFrancisco.Soma.Caltrain.id()
       LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
       @state 'movedToCaltrain', true
 

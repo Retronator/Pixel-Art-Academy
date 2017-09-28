@@ -23,7 +23,7 @@ LOI.load = (slot) ->
   # Move user to the last location saved to the state. We do this only on load so that multiple players using
   # the same account can move independently, at least inside the current session (they will get synced again on
   # reload).
-  LOI.adventure.currentLocationId state.currentLocationId
-  LOI.adventure.currentTimelineId state.currentTimelineId
+  LOI.adventure.setLocationId state.currentLocationId
+  LOI.adventure.setTimelineId state.currentTimelineId
 
   return state

@@ -73,8 +73,8 @@ class LOI.Adventure extends LOI.Adventure
 
     # Active scenes are the ones at current location/time and contribute to current situation.
     @activeScenes = new ComputedField =>
-      currentLocation = @currentLocation()
-      currentTimelineId = @currentTimelineId()
+      return unless currentTimelineId = @currentTimelineId()
+      return unless currentLocation = @currentLocation()
 
       scenes = []
 

@@ -126,8 +126,10 @@ class LOI.Interface.Text extends LOI.Interface
           animate: true
 
   ready: ->
+    return unless exitAvatars = @exitAvatars()
+    
     conditions = _.flattenDeep [
-      avatar.ready() for avatar in @exitAvatars()
+      avatar.ready() for avatar in exitAvatars
     ]
 
     _.every conditions

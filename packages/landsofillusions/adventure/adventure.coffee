@@ -12,12 +12,14 @@ class LOI.Adventure extends AM.Component
     Meteor.absoluteUrl "pixelartacademy/title.png"
 
   ready: ->
+    currentTimelineId = @currentTimelineId()
     currentLocation = @currentLocation()
     currentRegion = @currentRegion()
 
     conditions = [
       @parser.ready()
       @interface.ready()
+      currentTimelineId
       if currentLocation? then currentLocation.ready() else false
       if currentRegion? then currentRegion.ready() else false
       @episodesReady()

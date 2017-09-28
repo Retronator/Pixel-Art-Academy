@@ -5,32 +5,41 @@ class LOI.Adventure extends LOI.Adventure
   _initializeTimeline: ->
     # We store player's current timeline locally so that multiple people
     # can use the same user account and walk around independently.
-    @currentTimelineId = new ReactiveField null
+    @playerTimelineId = new ReactiveField null
+
     Artificial.Mummification.PersistentStorage.persist
       storageKey: 'LandsOfIllusions.Adventure.currentTimelineId'
-      field: @currentTimelineId
+      field: @playerTimelineId
       tracker: @
 
-    # React to timeline changes.
-    @autorun (computation) =>
-      currentTimelineId = @currentTimelineId()
+    # Start at the default player timeline.
+    unless @playerTimelineId()
+      @playerTimelineId PixelArtAcademy.TimelineIds.DareToDream
 
-      Tracker.nonreactive =>
-        # If we don't have a timeline set, start at the default timeline.
-        unless currentTimelineId
-          if LOI.characterId()
-            currentTimelineId = PixelArtAcademy.TimelineIds.Present
+    @currentTimelineId = new ComputedField =>
+      console.log "Recomputing current timeline." if LOI.debug
 
-          else
-            currentTimelineId = PixelArtAcademy.TimelineIds.DareToDream
+      # Player's timeline is always read from the state.
+      if LOI.characterId()
+        @gameState()?.currentTimelineId
 
-          @currentTimelineId currentTimelineId
+      else
+        # Player's timeline is stored in local storage.
+        @playerTimelineId()
+    ,
+      true
 
-        # Save current timeline to state. We don't really use it except until the next time we load the game.
-        if state = @gameState()
-          state.currentTimelineId = currentTimelineId
-          @gameState.updated()
+  setTimelineId: (timelineEntity) ->
+    timelineId = _.thingId timelineEntity
+
+    # Set the player timeline if we're not playing as a character.
+    @playerTimelineId timelineId unless LOI.characterId()
+
+    # Save current timeline to state. It controls the character's timeline, but for
+    # players we don't really use it except until the next time we load the game.
+    if state = @gameState()
+      state.currentTimelineId = timelineId
+      @gameState.updated()
 
   goToTimeline: (timelineEntity) ->
-    # Change timeline.
-    @currentTimelineId _.thingId timelineEntity
+    @setTimelineId timelineEntity

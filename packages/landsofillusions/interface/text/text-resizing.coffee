@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 
 class LOI.Interface.Text extends LOI.Interface.Text
   resize: (options = {}) ->
+    return unless situation = LOI.adventure.currentSituation()
+
     viewport = @display.viewport()
     scale = @display.scale()
 
@@ -11,7 +13,6 @@ class LOI.Interface.Text extends LOI.Interface.Text
     sideMargin = gridSpacing
     lineHeight = gridSpacing
 
-    situation = LOI.adventure.currentSituation()
     illustrationHeight = (situation.illustrationHeight.last() or 0) * scale
 
     $textInterface = $('.adventure .text-interface')

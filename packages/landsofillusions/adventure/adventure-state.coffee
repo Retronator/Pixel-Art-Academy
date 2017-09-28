@@ -218,8 +218,8 @@ class LOI.Adventure extends LOI.Adventure
           # Move user to the last location and timeline saved to the state. We do this only on load so that multiple
           # players using the same account can move independently, at least inside the current session (they will get
           # synced again on reload).
-          LOI.adventure.currentLocationId databaseState.state.currentLocationId
-          LOI.adventure.currentTimelineId databaseState.state.currentTimelineId
+          LOI.adventure.playerLocationId databaseState.state.currentLocationId
+          LOI.adventure.playerTimelineId databaseState.state.currentTimelineId
           LOI.adventure.immersionExitLocationId databaseState.state.immersionExitLocationId
 
           LOI.adventure.menu.signIn.activatable.deactivate()
@@ -343,12 +343,7 @@ class LOI.Adventure extends LOI.Adventure
 
         databaseState = LOI.GameState.documents.findOne 'character._id': characterId
 
-        if databaseState
-          # Move player to the last location and timeline saved to the state.
-          LOI.adventure.currentLocationId databaseState.state.currentLocationId
-          LOI.adventure.currentTimelineId databaseState.state.currentTimelineId
-
-        else
+        unless databaseState
           console.error "Character game state is missing. Aborting."
           LOI.switchCharacter null
 
@@ -358,9 +353,14 @@ class LOI.Adventure extends LOI.Adventure
 
     # Give the system a chance to kick in the new game state subscription.
     Meteor.setTimeout =>
-      # Move player to the exit location in real life.
-      LOI.adventure.currentLocationId LOI.adventure.immersionExitLocationId()
-      LOI.adventure.currentTimelineId PixelArtAcademy.TimelineIds.RealLife
+      # Wait until user state has been loaded.
+      Tracker.autorun (computation) =>
+        return unless LOI.adventure.gameStateSubsription.ready()
+        computation.stop()
+
+        # Move player to the exit location in real life.
+        LOI.adventure.setLocationId LOI.adventure.immersionExitLocationId()
+        LOI.adventure.setTimelineId PixelArtAcademy.TimelineIds.RealLife
 
   loadConstruct: ->
     # Going to Construct differs if we're going there from the user's or character's world.
@@ -375,14 +375,19 @@ class LOI.Adventure extends LOI.Adventure
 
     # Give the system a chance to kick in the new game state subscription.
     Meteor.setTimeout =>
-      # Go to Construct.
-      LOI.adventure.goToLocation LOI.Construct.Loading
-      LOI.adventure.goToTimeline PixelArtAcademy.TimelineIds.Construct
+      # Wait until the user state has been loaded.
+      Tracker.autorun (computation) =>
+        return unless LOI.adventure.gameStateSubsription.ready()
+        computation.stop()
+
+        # Go to Construct.
+        LOI.adventure.goToLocation LOI.Construct.Loading
+        LOI.adventure.goToTimeline PixelArtAcademy.TimelineIds.Construct
 
   unloadConstruct: ->
     # Move player to the exit location in real life.
-    LOI.adventure.currentLocationId LOI.adventure.immersionExitLocationId()
-    LOI.adventure.currentTimelineId PixelArtAcademy.TimelineIds.RealLife
+    LOI.adventure.setLocationId LOI.adventure.immersionExitLocationId()
+    LOI.adventure.setTimelineId PixelArtAcademy.TimelineIds.RealLife
 
   _onSwitchingGameState: ->
     # Cleanup running scripts.
