@@ -46,6 +46,8 @@ class PADB.PixelDailies extends PADB.PixelDailies
 
 # Initialize on startup.
 Document.startup ->
+  return
+  
   return unless AT.Twitter.initialized
   return if Meteor.settings.startEmpty
 
