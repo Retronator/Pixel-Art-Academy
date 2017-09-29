@@ -90,7 +90,7 @@ LOI.GameState.update.method (gameStateId, state) ->
   check gameStateId, Match.DocumentId
   check state, Object
 
-  console.log "Updating game state in the database." if LOI.debug
+  console.log "Updating game state in the database.", gameStateId if LOI.debug
 
   user = Retronator.user()
 
@@ -103,7 +103,6 @@ LOI.GameState.update.method (gameStateId, state) ->
   # On the client it's OK if the game state is not present anymore. It means this is a delayed update and the
   # subscription to the game state document has already been released (to switch to another state).
   return if Meteor.isClient and not gameState
-
   throw new AE.ArgumentNullException "Provided game state does not exist." unless gameState
 
   # See if this is a user or character state.
