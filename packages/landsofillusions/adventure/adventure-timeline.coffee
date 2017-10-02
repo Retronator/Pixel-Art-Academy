@@ -21,7 +21,14 @@ class LOI.Adventure extends LOI.Adventure
 
       # Player's timeline is always read from the state.
       if LOI.characterId()
-        @gameState()?.currentTimelineId
+        return unless gameState = @gameState()
+
+        # For characters, start in the present.
+        unless gameState.currentTimelineId
+          gameState.currentTimelineId = PixelArtAcademy.TimelineIds.Present
+          @gameState.updated()
+        
+        gameState.currentTimelineId
 
       else
         # Player's timeline is stored in local storage.

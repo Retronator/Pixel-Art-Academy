@@ -1,5 +1,5 @@
 class LandsOfIllusions
-  @debug = true
+  @debug = false
 
   LOI = @
 
