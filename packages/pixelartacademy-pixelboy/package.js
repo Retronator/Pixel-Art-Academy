@@ -51,6 +51,12 @@ Package.onUse(function(api) {
   api.addFiles('apps/calendar/providers/pixeldailies/themecomponent.coffee');
   api.addFiles('apps/calendar/providers/pixeldailies/themecomponent.styl');
 
+  api.addFiles('apps/calendar/providers/octobit/octobit.coffee');
+  api.addFiles('apps/calendar/providers/octobit/themesprovider.coffee');
+  api.addFiles('apps/calendar/providers/octobit/themecomponent.html');
+  api.addFiles('apps/calendar/providers/octobit/themecomponent.coffee');
+  api.addFiles('apps/calendar/providers/octobit/themecomponent.styl');
+
   api.addFiles('apps/calendar/providers/practice/practice.coffee');
   api.addFiles('apps/calendar/providers/practice/checkinsprovider.coffee');
   api.addFiles('apps/calendar/providers/practice/checkincomponent.html');

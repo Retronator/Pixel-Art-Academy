@@ -31,6 +31,9 @@ class PAA.PixelBoy.Apps.Calendar.Provider
     throw new AE.NotImplementedException
 
   subscribeToMonthOf: (date, calendar) ->
+    # Make sure this provider requires a subscription.
+    return unless subscriptionName = @subscriptionName()
+
     # See if we're already subscribed to this month's date range.
     dateValue = date.valueOf()
     return if @_monthSubscriptions[dateValue]
@@ -39,4 +42,4 @@ class PAA.PixelBoy.Apps.Calendar.Provider
       year: date.getFullYear()
       month: date.getMonth()
 
-    @_monthSubscriptions[dateValue] = calendar.subscribe @subscriptionName(), dateRange
+    @_monthSubscriptions[dateValue] = calendar.subscribe subscriptionName, dateRange

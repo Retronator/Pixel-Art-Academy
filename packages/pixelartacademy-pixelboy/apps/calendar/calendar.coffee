@@ -18,6 +18,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
     # Create calendar providers.
     @providers = [
       new @constructor.Providers.PixelDailies.ThemesProvider @
+      new @constructor.Providers.Octobit.ThemesProvider @
       new @constructor.Providers.Practice.CheckInsProvider @
     ]
 
@@ -63,13 +64,10 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
 
     provider.getEvents date
 
-  renderEvent: ->
-    event = @parentDataWith 'component'
-
-    event.component.renderComponent @currentComponent()
-
   renderCalendarComponent: ->
-    calendarProvider = @parentDataWith (data) => data instanceof PAA.PixelBoy.Apps.Calendar.Provider
+    return unless calendarProvider = @parentDataWith (data) =>
+      data instanceof PAA.PixelBoy.Apps.Calendar.Provider
+
     calendarComponentClass = calendarProvider.constructor.calendarComponentClass()
 
     calendarComponent = new calendarComponentClass
