@@ -14,12 +14,12 @@ class LOI.Adventure extends LOI.Adventure
     @currentLocationId = new ComputedField =>
       console.log "Recomputing current location." if LOI.debug
 
-      # Player's location is always read from the state.
       if LOI.characterId()
+        # Character's location is always read from the state.
         @gameState()?.currentLocationId
 
       else
-        # Player's timeline is stored in local storage.
+        # Player's locations is stored in local storage.
         @playerLocationId()
     ,
       true

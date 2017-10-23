@@ -19,8 +19,8 @@ class LOI.Adventure extends LOI.Adventure
     @currentTimelineId = new ComputedField =>
       console.log "Recomputing current timeline." if LOI.debug
 
-      # Player's timeline is always read from the state.
       if LOI.characterId()
+        # Player's timeline is always read from the state.
         return unless gameState = @gameState()
 
         # For characters, start in the present.
