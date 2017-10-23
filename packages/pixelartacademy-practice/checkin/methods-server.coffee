@@ -24,7 +24,8 @@ PAA.Practice.CheckIn.getExternalUrlImage.method (url) ->
   if /twitter\.com/.test url
     tweetId = url.split('/status/')[1]
     apiUrl = 'statuses/show/' + tweetId
-    tweetData = AT.Twitter.get apiUrl
+    tweetData = AT.Twitter.get apiUrl,
+      tweet_mode: 'extended'
 
     throw new AE.InvalidOperationException "There was an error communicating with the server. Either the tweet doesn't exist, or the server is down - try again later!" unless tweetData
     throw new AE.ArgumentException "The tweet has no images associated with it." unless tweetData.entities?.media?[0]?.media_url_https
