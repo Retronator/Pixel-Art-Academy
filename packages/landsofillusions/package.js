@@ -326,6 +326,7 @@ Package.onUse(function(api) {
   api.addComponent('components/account/characters/characters');
   api.addComponent('components/account/inventory/inventory');
   api.addComponent('components/account/transactions/transactions');
+  api.addComponent('components/account/paymentmethods/paymentmethods');
 
   api.addStyle('components/dialogs/accounts');
   api.addComponent('components/dialogs/dialog');
