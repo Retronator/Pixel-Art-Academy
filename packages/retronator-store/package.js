@@ -40,6 +40,11 @@ Package.onUse(function(api) {
 
   api.addServerFile('payment/migrations/0000-renamecollection');
 
+  // Payment method
+
+  api.addFile('paymentmethod/paymentmethod');
+  api.addServerFile('paymentmethod/subscriptions');
+
   // Transaction
 
   api.addFile('transaction/transaction');

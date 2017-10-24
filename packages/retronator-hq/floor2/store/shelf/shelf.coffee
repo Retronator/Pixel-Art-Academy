@@ -22,7 +22,7 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
     # Get all user's transactions and payments so we can determine which store items they are
     # eligible for. Payments are needed to determine if the user has a kickstarter pledge.
     @subscribe RS.Transaction.forCurrentUser
-    @subscribe RS.Payment.forCurrentUser
+    RS.Payment.forCurrentUser.subscribe @
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>

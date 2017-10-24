@@ -6,6 +6,8 @@ class RS.Payment extends AM.Document
   @id: -> 'Retronator.Store.Payment'
   # type: what kind of payment this was
   # amount: USD value added to the balance with this payment
+  # paymentMethod:
+  #   _id
   #
   # KICKSTARTER PLEDGE
   # backerEmail: Kickstarter user's email who made the pledge
@@ -29,9 +31,10 @@ class RS.Payment extends AM.Document
   @Meta
     name: @id()
     fields: =>
+      paymentMethod: @ReferenceField RS.PaymentMethod, [], false
       referralUser: @ReferenceField RA.User, ['displayName'], false
       
-  @forCurrentUser: 'Retronator.Store.Payment.forCurrentUser'
+  @forCurrentUser: @subscription 'forCurrentUser'
 
   @Types:
     KickstarterPledge: 'KickstarterPledge'
