@@ -1,17 +1,11 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
+AT = Artificial.Telepathy
 RS = Retronator.Store
-
-if Meteor.settings.stripe?.secretKey
-  stripe = StripeAPI Meteor.settings.stripe.secretKey
-  customersCreateSync = Meteor.wrapAsync stripe.customers.create.bind stripe.customers
-
-else
-  console.warn "Set Stripe public and secret key in the settings file if you want to enable Stripe purchases."
 
 Meteor.methods
   'Retronator.Store.Transactions.Transaction.insertStripePurchase': (customer, creditCardToken, payAmount, shoppingCart) ->
-    throw new AE.InvalidOperationException "Stripe has not been configured." unless stripe
+    throw new AE.InvalidOperationException "Stripe has not been configured." unless AT.Stripe.initialized
 
     check customer, Match.OptionalOrNull Object
     check customer.email, String if customer?.email
@@ -50,16 +44,10 @@ Meteor.methods
     for cartItem, i in shoppingCart.items()
       metadata["item #{i}"] = "#{cartItem.item.catalogKey} — $#{cartItem.item.price}"
 
-    try
-      # Create the stripe customer using the credit card token and customer information.
-      stripeCustomer = customersCreateSync
-        source: creditCardToken
-        email: customer.email
-        metadata: metadata
-
-    catch error
-      # Stripe reported an error so relay the error message to the client.
-      throw new AE.ArgumentException error.message
+    stripeCustomer = AT.Stripe.customers.create
+      source: creditCardToken
+      email: customer.email
+      metadata: metadata
 
     # Double check that the stripe customer was created.
     throw new AE.InvalidOperationException "Stripe customer was not created successfully." unless stripeCustomer?.id

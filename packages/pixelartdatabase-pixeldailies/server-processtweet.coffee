@@ -23,7 +23,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
       if tweet.retweeted_status.truncated
         # The status might not exist anymore, which will throw an error from Twit, so we need to catch it.
         try
-          tweet.retweeted_status = AT.Twitter.statusesShow
+          tweet.retweeted_status = AT.Twitter.statuses.show
             id: tweet.retweeted_status.id_str
             tweet_mode: 'extended'
 

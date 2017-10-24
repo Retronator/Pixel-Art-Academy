@@ -28,7 +28,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
     params.max_id = options.maxId if options.maxId
 
     # Query the API.
-    AT.Twitter.userTimeline params, (data) =>
+    AT.Twitter.statuses.userTimeline params, (data) =>
       # Process tweets.
       @processTweet tweet for tweet in data
 

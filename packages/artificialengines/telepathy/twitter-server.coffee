@@ -13,9 +13,12 @@ class AT.Twitter
     @_twitGet = Meteor.wrapAsync @_twit.get.bind @_twit
     @initialized = true
 
-  @userTimeline: -> @get 'statuses/user_timeline', arguments...
-  @usersLookup: -> @get 'users/lookup', arguments...
-  @statusesShow: -> @get 'statuses/show', arguments...
+  @statuses:
+    userTimeline: -> AT.Twitter.get 'statuses/user_timeline', arguments...
+    show: -> AT.Twitter.get 'statuses/show', arguments...
+      
+  @users:
+    lookup: -> AT.Twitter.get 'users/lookup', arguments...
 
   @get: (url, params, callback) ->
     throw new AE.InvalidOperationException 'Twitter was not initialized.' unless @initialized
@@ -24,7 +27,7 @@ class AT.Twitter
       if callback
         @_twitGet url, params, (error, data, response) =>
           if error
-            @handleError error
+            @_handleError error
             return
 
           callback data
@@ -39,9 +42,9 @@ class AT.Twitter
         data
 
     catch error
-      @handleError error
+      @_handleError error
 
-  @handleError: (error) ->
+  @_handleError: (error) ->
     switch error.code
       when 88
         throw new AE.LimitExceededException "Twitter API rate limit exceeded."
