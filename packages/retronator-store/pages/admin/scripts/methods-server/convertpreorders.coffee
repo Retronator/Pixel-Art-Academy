@@ -43,7 +43,7 @@ Meteor.methods
       console.log "Converting pre-order", preOrder
 
       # Did we already convert this pre-order?
-      existingTransaction = RS.Transactions.Transaction.documents.findOne preOrder._id
+      existingTransaction = RS.Transaction.documents.findOne preOrder._id
 
       if existingTransaction
         # Now also find the existing payment.
@@ -62,23 +62,23 @@ Meteor.methods
           price = 20
 
       paymentData =
-        type: RS.Transactions.Payment.Types.StripePayment
+        type: RS.Payment.Types.StripePayment
         amount: price
         authorizedOnly: true
         stripeCustomerId: preOrder.stripeCustomerId
 
       if paymentId
-        result = RS.Transactions.Payment.documents.update paymentId, paymentData
+        result = RS.Payment.documents.update paymentId, paymentData
         console.log "Updating payment, result:", result
 
       else
-        paymentId = RS.Transactions.Payment.documents.insert paymentData
+        paymentId = RS.Payment.documents.insert paymentData
         console.log "Inserting payment, result:", paymentId
 
-      item = RS.Transactions.Item.documents.findOne catalogKey: itemCatalogKey
+      item = RS.Item.documents.findOne catalogKey: itemCatalogKey
       console.log "Item is", item
 
-      result = RS.Transactions.Transaction.documents.upsert preOrder._id,
+      result = RS.Transaction.documents.upsert preOrder._id,
         _id: preOrder._id
         time: preOrder.time
         email: preOrder.email

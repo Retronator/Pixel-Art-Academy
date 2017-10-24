@@ -2,7 +2,8 @@ AM = Artificial.Mummification
 RA = Retronator.Accounts
 RS = Retronator.Store
 
-class RetronatorStoreTransactionsPayment extends AM.Document
+class RS.Payment extends AM.Document
+  @id: -> 'Retronator.Store.Payment'
   # type: what kind of payment this was
   # amount: USD value added to the balance with this payment
   #
@@ -26,11 +27,11 @@ class RetronatorStoreTransactionsPayment extends AM.Document
   # STORE CREDIT
   # storeCreditAmount: USD value of store credit used
   @Meta
-    name: 'RetronatorStoreTransactionsPayment'
+    name: @id()
     fields: =>
       referralUser: @ReferenceField RA.User, ['displayName'], false
       
-  @forCurrentUser: 'Retronator.Store.Transactions.Payment.forCurrentUser'
+  @forCurrentUser: 'Retronator.Store.Payment.forCurrentUser'
 
   @Types:
     KickstarterPledge: 'KickstarterPledge'
@@ -40,5 +41,3 @@ class RetronatorStoreTransactionsPayment extends AM.Document
 
   @Projects:
     PixelArtAcademy: 'PixelArtAcademy'
-
-RS.Transactions.Payment = RetronatorStoreTransactionsPayment

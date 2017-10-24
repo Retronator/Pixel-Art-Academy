@@ -49,10 +49,10 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @scrolledToBottom false
 
     # Get all store items data.
-    @subscribe RS.Transactions.Item.all
+    @subscribe RS.Item.all
 
     # Get top recent transactions to display the supporters list.
-    @subscribe RS.Transactions.Transaction.topRecent
+    @subscribe RS.Transaction.topRecent
 
     # Get store balance and credit so we know if credit can be applied (and the user charged less).
     @subscribe RA.User.storeDataForCurrentUser
@@ -66,7 +66,7 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
       contents = HQ.Items.ShoppingCart.state 'contents'
 
       purchaseItems = for receiptItem in contents
-        item = RS.Transactions.Item.documents.findOne catalogKey: receiptItem.item
+        item = RS.Item.documents.findOne catalogKey: receiptItem.item
         continue unless item
 
         item: item

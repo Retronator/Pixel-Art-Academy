@@ -116,14 +116,14 @@ class TopRecentTransactions
     for i in [0...@_sortedTransactions.length]
       @_sortedTransactions[i].index = i
 
-Meteor.publish RS.Transactions.Transaction.topRecent, (count = 10) ->
+Meteor.publish RS.Transaction.topRecent, (count = 10) ->
   # We are returning the list of top recent transactions with supporters' names, amounts and messages. We do this by
   # looking at last 50 transactions and only returning the top ones sorted by value. We return these using a special
   # collection TopRecentTransactions that only holds these results.
   topRecentTransactions = new TopRecentTransactions @, count
 
   # Listen to last transactions (4 times as much as we'll send to the client) that have some value.
-  RS.Transactions.Transaction.documents.find(
+  RS.Transaction.documents.find(
     totalValue:
       $gt: 0
   ,
@@ -143,10 +143,10 @@ summarizeMessage = (document) ->
   summary = TopRecentTransactions.summarizeDocument document
   _.omit summary, 'amount'
 
-Meteor.publish RS.Transactions.Transaction.messages, (count) ->
+Meteor.publish RS.Transaction.messages, (count) ->
   check count, Match.PositiveInteger
 
-  RS.Transactions.Transaction.documents.find(
+  RS.Transaction.documents.find(
     totalValue:
       $gt: 0
     'tip.message':

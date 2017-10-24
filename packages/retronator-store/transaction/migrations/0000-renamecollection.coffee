@@ -1,0 +1,1 @@
+Retronator.Store.Transaction.renameCollectionMigration 'RetronatorStoreTransactionsTransactions', 'Retronator.Store.Transactions'

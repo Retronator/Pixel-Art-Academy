@@ -4,7 +4,7 @@ AT = Artificial.Telepathy
 RS = Retronator.Store
 
 Meteor.methods
-  'Retronator.Store.Transactions.Transaction.insertStripePurchase': (customer, creditCardToken, payAmount, shoppingCart) ->
+  'Retronator.Store.Transaction.insertStripePurchase': (customer, creditCardToken, payAmount, shoppingCart) ->
     throw new AE.InvalidOperationException "Stripe has not been configured." unless AT.Stripe.initialized
 
     check customer, Match.OptionalOrNull Object
@@ -14,7 +14,7 @@ Meteor.methods
     check shoppingCart, Match.ShoppingCart
 
     # Re-create the shopping cart from the plain object.
-    shoppingCart = RS.Transactions.ShoppingCart.fromDataObject shoppingCart
+    shoppingCart = RS.ShoppingCart.fromDataObject shoppingCart
 
     # Determine price of shopping cart items.
     totalPrice = shoppingCart.totalPrice()
@@ -55,31 +55,31 @@ Meteor.methods
     # Stripe customer is created so record the payment.
     payments = []
 
-    stripePaymentId = RS.Transactions.Payment.documents.insert
-      type: RS.Transactions.Payment.Types.StripePayment
+    stripePaymentId = RS.Payment.documents.insert
+      type: RS.Payment.Types.StripePayment
       stripeCustomerId: stripeCustomer.id
       amount: payAmount
       authorizedOnly: true
 
-    stripePayment = RS.Transactions.Payment.documents.findOne stripePaymentId
+    stripePayment = RS.Payment.documents.findOne stripePaymentId
     throw new AE.InvalidOperationException "Stripe payment was not created successfully." unless stripePayment
 
     payments.push stripePayment
 
     if usedCreditAmount
-      creditPaymentId = RS.Transactions.Payment.documents.insert
-        type: RS.Transactions.Payment.Types.StoreCredit
+      creditPaymentId = RS.Payment.documents.insert
+        type: RS.Payment.Types.StoreCredit
         amount: 0
         storeCreditAmount: usedCreditAmount
 
-      creditPayment = RS.Transactions.Payment.documents.findOne creditPaymentId
+      creditPayment = RS.Payment.documents.findOne creditPaymentId
       throw new AE.InvalidOperationException "Credit payment was not created successfully." unless creditPayment
 
       payments.push creditPayment
 
     # Finally try to complete the transaction.
     try
-      transactionId = RS.Transactions.Transaction.create
+      transactionId = RS.Transaction.create
         customer: customer
         payments: payments
         shoppingCart: shoppingCart

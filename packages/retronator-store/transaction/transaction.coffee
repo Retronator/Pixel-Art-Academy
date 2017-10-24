@@ -2,7 +2,8 @@ AM = Artificial.Mummification
 RA = Retronator.Accounts
 RS = Retronator.Store
 
-class RetronatorStoreTransactionsTransaction extends AM.Document
+class RS.Transaction extends AM.Document
+  @id: -> 'Retronator.Store.Transaction'
   # time: when the transaction was conducted
   # user: logged-in user that this transaction belongs to or null if the user was not logged in
   #   _id
@@ -38,17 +39,17 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
   #   message: the public message to show for this transaction
   # totalValue: auto-generated value of the transaction
   @Meta
-    name: 'RetronatorStoreTransactionsTransaction'
+    name: @id()
     fields: =>
       user: @ReferenceField RA.User, ['displayName', 'supporterName'], false
       items: [
-        item: @ReferenceField RS.Transactions.Item, ['catalogKey'], false
+        item: @ReferenceField RS.Item, ['catalogKey'], false
         receivedGift:
           transaction: @ReferenceField 'self', ['ownerDisplayName'], false
         givenGift:
           transaction: @ReferenceField 'self', ['ownerDisplayName'], false
       ]
-      payments: [@ReferenceField RS.Transactions.Payment, ['type', 'amount', 'authorizedOnly', 'storeCreditAmount']]
+      payments: [@ReferenceField RS.Payment, ['type', 'amount', 'authorizedOnly', 'storeCreditAmount']]
       ownerDisplayName: @GeneratedField 'self', ['user', 'email', 'twitter'], (fields) ->
         displayName = fields.user?.displayName
         displayName ?= "@#{fields.twitter}" if fields.twitter
@@ -72,14 +73,14 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
         @findUserForTransaction(transaction)?.onTransactionsUpdated()
 
   # Subscriptions
-  @topRecent: 'Retronator.Store.Transactions.Transaction.topRecent'
-  @messages: 'Retronator.Store.Transactions.Transaction.messages'
-  @forCurrentUser: 'Retronator.Store.Transactions.Transaction.forCurrentUser'
-  @forGivenGiftKeyCode: 'Retronator.Store.Transactions.Transaction.forGivenGiftKeyCode'
-  @forReceivedGiftKeyCode: 'Retronator.Store.Transactions.Transaction.forReceivedGiftKeyCode'
+  @topRecent: 'Retronator.Store.Transaction.topRecent'
+  @messages: 'Retronator.Store.Transaction.messages'
+  @forCurrentUser: 'Retronator.Store.Transaction.forCurrentUser'
+  @forGivenGiftKeyCode: 'Retronator.Store.Transaction.forGivenGiftKeyCode'
+  @forReceivedGiftKeyCode: 'Retronator.Store.Transaction.forReceivedGiftKeyCode'
 
   # Methods
-  @insertStripePurchase: 'Retronator.Store.Transactions.Transaction.insertStripePurchase'
+  @insertStripePurchase: 'Retronator.Store.Transaction.insertStripePurchase'
   
   @findUserForTransaction: (transaction) ->
     return unless transaction
@@ -123,6 +124,4 @@ class RetronatorStoreTransactionsTransaction extends AM.Document
       query.$or.push
         twitter: new RegExp user.services.twitter.screenName, 'i'
 
-    RS.Transactions.Transaction.documents.find query
-      
-RS.Transactions.Transaction = RetronatorStoreTransactionsTransaction
+    RS.Transaction.documents.find query

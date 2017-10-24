@@ -96,7 +96,7 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
 
     paymentAmount = @paymentAmount()
 
-    Meteor.call RS.Transactions.Transaction.insertStripePurchase, customer, creditCardToken, paymentAmount, shoppingCart, (error, data) =>
+    Meteor.call RS.Transaction.insertStripePurchase, customer, creditCardToken, paymentAmount, shoppingCart, (error, data) =>
       @submittingPayment false
 
       if error
@@ -126,7 +126,7 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
 
     shoppingCart = @_createShoppingCartObject()
 
-    Meteor.call 'Retronator.Store.Transactions.Transaction.insertConfirmationPurchase', shoppingCart, (error, data) =>
+    Meteor.call 'Retronator.Store.Transaction.insertConfirmationPurchase', shoppingCart, (error, data) =>
       @submittingPayment false
 
       if error

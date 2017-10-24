@@ -16,7 +16,7 @@ class RS.Pages.Inventory extends AM.Component
     return unless @_itemsHandle.ready()
 
     # Return an array of items with all fields.
-    items = _.map user.items, (item) -> RS.Transactions.Item.documents.findOne item._id
+    items = _.map user.items, (item) -> RS.Item.documents.findOne item._id
 
   events: ->
     super.concat

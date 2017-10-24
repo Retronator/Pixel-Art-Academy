@@ -1,6 +1,6 @@
 RS = Retronator.Store
 
-RS.Transactions.Transaction.create = (options) ->
+RS.Transaction.create = (options) ->
   {customer, payments, shoppingCart} = options
 
   transaction =
@@ -50,11 +50,11 @@ RS.Transactions.Transaction.create = (options) ->
     transaction.items.push item
 
   # Insert the purchase document for this transaction.
-  transactionId = RS.Transactions.Transaction.documents.insert transaction
+  transactionId = RS.Transaction.documents.insert transaction
 
   # Finally send an email confirmation to the customer.
   try
-    RS.Transactions.Transaction.emailCustomer options
+    RS.Transaction.emailCustomer options
 
   catch error
     # We don't really want to throw an exception if only the emailing part failed.

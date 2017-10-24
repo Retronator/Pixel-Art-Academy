@@ -3,7 +3,8 @@ AB = Artificial.Babel
 AM = Artificial.Mummification
 RS = Retronator.Store
 
-class RetronatorStoreTransactionsItem extends AM.Document
+class RS.Item extends AM.Document
+  @id: -> 'Retronator.Store.Item'
   # type: constructor type for inheritance
   # catalogKey: unique string for this item
   # name: translation document with the name
@@ -16,17 +17,17 @@ class RetronatorStoreTransactionsItem extends AM.Document
   #   catalogKey
   # isGiftable: can this item be purchased for someone else
   # {extraData}: any extra data set for the item
-  @type: 'Retronator.Store.Transactions.Item'
+  @type: @id()
   @register @type, @
 
   @Meta
-    name: 'RetronatorStoreTransactionsItem'
+    name: @id()
     fields: =>
       name: @ReferenceField AB.Translation, [], false
       description: @ReferenceField AB.Translation, [], false
       items: [@ReferenceField 'self', ['catalogKey']]
       
-  @all: 'Retronator.Store.Transactions.Item.all'
+  @all: 'Retronator.Store.Item.all'
 
   # Inserts an item into the database.
   @create: (documentData) ->
@@ -42,7 +43,7 @@ class RetronatorStoreTransactionsItem extends AM.Document
       items = []
 
       for itemCatalogKey in documentData.items
-        item = RS.Transactions.Item.documents.findOne catalogKey: itemCatalogKey
+        item = RS.Item.documents.findOne catalogKey: itemCatalogKey
         throw new AE.ArgumentException "The item with catalog key #{itemCatalogKey} does not exist." unless item
 
         items.push
@@ -54,14 +55,14 @@ class RetronatorStoreTransactionsItem extends AM.Document
     documentData.type = @type
     
     # Upsert the document with its catalog key.
-    RS.Transactions.Item.documents.upsert catalogKey: documentData.catalogKey, documentData
+    RS.Item.documents.upsert catalogKey: documentData.catalogKey, documentData
 
   # Inserts an item for an inherited item with metadata set on the class.
   @createSelf: ->
     @create @
     
   @_createTranslation: (catalogKey, key, defaultText) ->
-    namespace = "Retronator.Store.Transactions.Items.#{catalogKey}"
+    namespace = "Retronator.Store.Items.#{catalogKey}"
     AB.createTranslation namespace, key, defaultText
 
   validateEligibility: ->
@@ -78,5 +79,3 @@ class RetronatorStoreTransactionsItem extends AM.Document
 
     # Also refresh bundled items.
     item.refresh() for item in @items if @items
-
-RS.Transactions.Item = RetronatorStoreTransactionsItem

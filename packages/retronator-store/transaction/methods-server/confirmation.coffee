@@ -5,11 +5,11 @@ RS = Retronator.Store
 Meteor.methods
   # A purchase that only needed to be confirmed (called) by the
   # user. Any payment amount is provided by available store credit.
-  'Retronator.Store.Transactions.Transaction.insertConfirmationPurchase': (shoppingCart) ->
+  'Retronator.Store.Transaction.insertConfirmationPurchase': (shoppingCart) ->
     check shoppingCart, Match.ShoppingCart
 
     # Re-create the shopping cart from the plain object.
-    shoppingCart = RS.Transactions.ShoppingCart.fromDataObject shoppingCart
+    shoppingCart = RS.ShoppingCart.fromDataObject shoppingCart
 
     # Determine price of shopping cart items.
     totalPrice = shoppingCart.totalPrice()
@@ -33,19 +33,19 @@ Meteor.methods
     payments = []
 
     if usedCreditAmount
-      creditPaymentId = RS.Transactions.Payment.documents.insert
-        type: RS.Transactions.Payment.Types.StoreCredit
+      creditPaymentId = RS.Payment.documents.insert
+        type: RS.Payment.Types.StoreCredit
         amount: 0
         storeCreditAmount: usedCreditAmount
 
-      creditPayment = RS.Transactions.Payment.documents.findOne creditPaymentId
+      creditPayment = RS.Payment.documents.findOne creditPaymentId
       throw new AE.InvalidOperationException "Credit payment was not created successfully." unless creditPayment
 
       payments.push creditPayment
 
     # Finally try to complete the transaction.
     try
-      transactionId = RS.Transactions.Transaction.create
+      transactionId = RS.Transaction.create
         payments: payments
         shoppingCart: shoppingCart
 

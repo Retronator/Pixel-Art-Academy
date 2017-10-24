@@ -24,7 +24,7 @@ class RA.User extends RA.User
           supporterName = if user.profile?.showSupporterName then user.profile?.name else null
           [user._id, supporterName]
 
-        items: [@ReferenceField RS.Transactions.Item, ['catalogKey']]
+        items: [@ReferenceField RS.Item, ['catalogKey']]
 
       fields
 
@@ -43,7 +43,7 @@ class RA.User extends RA.User
 
   authorizedPaymentsAmount: ->
     # Authorized payments amount is the sum of all payments that were only authorized.
-    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
 
     authorizedPaymentsAmount = 0
 
@@ -66,11 +66,11 @@ class RA.User extends RA.User
   generateItemsArray: ->
     # Start by constructing an array of all item Ids.
     itemIds = []
-    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
 
     # Helper function that recursively adds items.
     addItem = (item) =>
-      return unless item = RS.Transactions.Item.documents.findOne item?._id
+      return unless item = RS.Item.documents.findOne item?._id
 
       # Add the item to the ids.
       itemIds = _.union itemIds, [item._id]
@@ -93,7 +93,7 @@ class RA.User extends RA.User
 
   generateSupportAmount: ->
     # Support amount is the sum of all payments.
-    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
 
     supportAmount = 0
 
@@ -106,7 +106,7 @@ class RA.User extends RA.User
 
   generateStoreData: ->
     # Store balance is the sum of all payments minus sum of all purchases.
-    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
 
     balance = 0
 

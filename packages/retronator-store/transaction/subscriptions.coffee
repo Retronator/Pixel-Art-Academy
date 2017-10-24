@@ -1,7 +1,7 @@
 RA = Retronator.Accounts
 RS = Retronator.Store
 
-Meteor.publish RS.Transactions.Transaction.forCurrentUser, ->
+Meteor.publish RS.Transaction.forCurrentUser, ->
   # We are doing this inside an autorun in case the user document gets updated and new transactions would get matched.
   @autorun =>
     return unless @userId
@@ -14,7 +14,7 @@ Meteor.publish RS.Transactions.Transaction.forCurrentUser, ->
         twitter:
           screenname: 1
 
-    transactions = RS.Transactions.Transaction.findTransactionsForUser user
+    transactions = RS.Transaction.findTransactionsForUser user
     
     # We also need to have user's login services and registered emails so we can match transactions on the client.
     users = RA.User.documents.find
@@ -27,24 +27,24 @@ Meteor.publish RS.Transactions.Transaction.forCurrentUser, ->
     # Return both cursors.
     [transactions, users]
 
-Meteor.publish RS.Transactions.Transaction.forGivenGiftKeyCode, (keyCode) ->
+Meteor.publish RS.Transaction.forGivenGiftKeyCode, (keyCode) ->
   check keyCode, Match.DocumentId
 
   # This returns the transaction where the key code was gifted. We just need to be able to
   # find it (include keyCode), know what item it is, and get the owner's name.
-  RS.Transactions.Transaction.documents.find
+  RS.Transaction.documents.find
     'items.givenGift.keyCode': keyCode
   ,
     fields:
       ownerDisplayName: 1
       items: 1
 
-Meteor.publish RS.Transactions.Transaction.forReceivedGiftKeyCode, (keyCode) ->
+Meteor.publish RS.Transaction.forReceivedGiftKeyCode, (keyCode) ->
   check keyCode, Match.DocumentId
 
   # This returns the transaction where the key code was received (claimed). We only
   # need to know of its existence, so we know if the key code has been claimed.
-  RS.Transactions.Transaction.documents.find
+  RS.Transaction.documents.find
     'items.receivedGift.keyCode': keyCode
   ,
     fields:

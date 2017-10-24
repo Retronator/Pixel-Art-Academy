@@ -57,7 +57,7 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
     super
 
     # Get all store items data.
-    @subscribe RS.Transactions.Item.all
+    @subscribe RS.Item.all
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -67,7 +67,7 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
 
   cartItems: ->
     items = for cartItem, i in @contents()
-      item = RS.Transactions.Item.documents.findOne catalogKey: cartItem.item
+      item = RS.Item.documents.findOne catalogKey: cartItem.item
       break unless item
 
       # Load bundle items as well.

@@ -3,7 +3,7 @@ AM = Artificial.Mummification
 RS = Retronator.Store
 
 Meteor.methods
-  'Retronator.Store.Transactions.Transaction.insertClaimedItem': (keyCode, claimEmail) ->
+  'Retronator.Store.Transaction.insertClaimedItem': (keyCode, claimEmail) ->
     console.log "claiming item", keyCode, claimEmail
 
     check keyCode, Match.DocumentId
@@ -13,12 +13,12 @@ Meteor.methods
     throw new AE.ArgumentNullException 'Claim email must be entered if the user is not logged in.' unless userId or claimEmail
 
     # Make sure this key code wasn't used yet.
-    claimedTransaction = RS.Transactions.Transaction.documents.findOne 'items.receivedGift.keyCode': keyCode
+    claimedTransaction = RS.Transaction.documents.findOne 'items.receivedGift.keyCode': keyCode
 
     throw new AE.ArgumentException 'Key code was already claimed.' if claimedTransaction
 
     # Find the transaction where this key code was generated.
-    giftingTransaction = RS.Transactions.Transaction.documents.findOne 'items.givenGift.keyCode': keyCode
+    giftingTransaction = RS.Transaction.documents.findOne 'items.givenGift.keyCode': keyCode
 
     throw new AE.ArgumentException 'Key code was not found.' unless giftingTransaction?.items?
 
@@ -50,11 +50,11 @@ Meteor.methods
       transaction.email = claimEmail
 
     # Insert the document for this transaction.
-    claimTransactionId = RS.Transactions.Transaction.documents.insert transaction
+    claimTransactionId = RS.Transaction.documents.insert transaction
 
     # Update the gifting transaction. Find which item index we're updating.
     itemIndex = giftingTransaction.items.indexOf giftedItem
 
-    RS.Transactions.Transaction.documents.update giftingTransaction._id,
+    RS.Transaction.documents.update giftingTransaction._id,
       $set:
         "items.#{itemIndex}.givenGift.transaction.id": claimTransactionId

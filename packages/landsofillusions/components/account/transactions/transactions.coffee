@@ -17,8 +17,8 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
 
     @subscribe Retronator.Accounts.User.supportAmountForCurrentUser
     @subscribe Retronator.Accounts.User.storeDataForCurrentUser
-    @subscribe Retronator.Store.Transactions.Item.all
-    @subscribe Retronator.Store.Transactions.Transaction.forCurrentUser
+    @subscribe Retronator.Store.Item.all
+    @subscribe Retronator.Store.Transaction.forCurrentUser
 
     @showCreditInfo = new ReactiveField false
     @showAuthorizedPaymentsInfo = new ReactiveField false
@@ -34,7 +34,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     checked: true unless @showSupporterName()
 
   transactions: ->
-    transactions = Retronator.Store.Transactions.Transaction.findTransactionsForUser Retronator.user()
+    transactions = Retronator.Store.Transaction.findTransactionsForUser Retronator.user()
     return unless transactions
 
     transactions = transactions.fetch()

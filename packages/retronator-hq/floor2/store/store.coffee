@@ -37,9 +37,9 @@ class HQ.Store extends LOI.Adventure.Location
 
     @shelves = new HQ.Store.Shelves
 
-    @subscribe RS.Transactions.Item.all
+    @subscribe RS.Item.all
     @subscribe RA.User.registeredEmailsForCurrentUser
-    @subscribe RS.Transactions.Transaction.forCurrentUser
+    @subscribe RS.Transaction.forCurrentUser
 
   destroy: ->
     super
@@ -94,7 +94,7 @@ class HQ.Store extends LOI.Adventure.Location
         kickstarterTierKeys = [KickstarterKeys.BasicGame, KickstarterKeys.FullGame, KickstarterKeys.AlphaAccess]
 
         for tierKey in kickstarterTierKeys
-          tier = RS.Transactions.Item.documents.findOne(catalogKey: tierKey)?.cast()
+          tier = RS.Item.documents.findOne(catalogKey: tierKey)?.cast()
 
           unless tier
             console.warn "Item for tier", tierKey, "not found."

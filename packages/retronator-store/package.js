@@ -17,89 +17,89 @@ Package.onUse(function(api) {
 
   api.export('Retronator');
 
-  api.addFiles('store.coffee');
-
-  // HACK: Add transactions namespace in advance so that PeerDB delayed initialization work correct.
-  api.addFiles('transactions/transactions.coffee');
+  api.addFile('store');
 
   // User
 
-  api.addFiles('user/user.coffee');
-  api.addFiles('user/methods.coffee');
-  api.addFiles('user/subscriptions.coffee', 'server');
-  api.addFiles('user/topsupporters.coffee', 'server');
+  api.addFile('user/user');
+  api.addFile('user/methods');
+  api.addServerFile('user/subscriptions');
+  api.addServerFile('user/topsupporters');
 
-  // Transactions
+  // Item
 
-  api.addFiles('transactions/item/item.coffee');
-  api.addFiles('transactions/item/subscriptions.coffee', 'server');
+  api.addFile('item/item');
+  api.addServerFile('item/subscriptions');
 
-  api.addFiles('transactions/payment/payment.coffee');
-  api.addFiles('transactions/payment/subscriptions.coffee', 'server');
+  api.addServerFile('item/migrations/0000-renamecollection');
 
-  api.addFiles('transactions/transaction/transaction.coffee');
-  api.addFiles('transactions/transaction/subscriptions.coffee', 'server');
-  api.addFiles('transactions/transaction/toprecent.coffee', 'server');
+  // Payment
 
-  api.addFiles('transactions/transaction/methods-server/claim.coffee', 'server');
-  api.addFiles('transactions/transaction/methods-server/createtransaction.coffee', 'server');
-  api.addFiles('transactions/transaction/methods-server/emailcustomer.coffee', 'server');
-  api.addFiles('transactions/transaction/methods-server/confirmation.coffee', 'server');
-  api.addFiles('transactions/transaction/methods-server/stripe.coffee', 'server');
+  api.addFile('payment/payment');
+  api.addServerFile('payment/subscriptions');
 
-  api.addFiles('transactions/shoppingcart/shoppingcart.coffee');
+  api.addServerFile('payment/migrations/0000-renamecollection');
+
+  // Transaction
+
+  api.addFile('transaction/transaction');
+  api.addServerFile('transaction/subscriptions');
+  api.addServerFile('transaction/toprecent');
+
+  api.addServerFile('transaction/methods-server/claim');
+  api.addServerFile('transaction/methods-server/createtransaction');
+  api.addServerFile('transaction/methods-server/emailcustomer');
+  api.addServerFile('transaction/methods-server/confirmation');
+  api.addServerFile('transaction/methods-server/stripe');
+
+  api.addServerFile('transaction/migrations/0000-renamecollection');
+
+  api.addFile('shoppingcart/shoppingcart');
 
   // Add item document types. They need to be available on server and client for casting purposes.
-  api.addFiles('items/items.coffee');
-  api.addFiles('items/catalogkeys.coffee');
-  api.addFiles('items/bundles/bundles.coffee');
+  api.addFile('items/items');
+  api.addFile('items/catalogkeys');
+  api.addFile('items/bundles/bundles');
 
-  api.addFiles('items/bundles/pixelartacademy/kickstarter/tier.coffee');
-  api.addFiles('items/bundles/pixelartacademy/kickstarter/alphaaccess.coffee');
-  api.addFiles('items/bundles/pixelartacademy/kickstarter/basicgame.coffee');
-  api.addFiles('items/bundles/pixelartacademy/kickstarter/fullgame.coffee');
+  api.addFile('items/bundles/pixelartacademy/kickstarter/tier');
+  api.addFile('items/bundles/pixelartacademy/kickstarter/alphaaccess');
+  api.addFile('items/bundles/pixelartacademy/kickstarter/basicgame');
+  api.addFile('items/bundles/pixelartacademy/kickstarter/fullgame');
 
-  api.addFiles('items/bundles/pixelartacademy/preorder/upgrade.coffee');
-  api.addFiles('items/bundles/pixelartacademy/preorder/avatareditor.coffee');
-  api.addFiles('items/bundles/pixelartacademy/preorder/alphaaccess.coffee');
+  api.addFile('items/bundles/pixelartacademy/preorder/upgrade');
+  api.addFile('items/bundles/pixelartacademy/preorder/avatareditor');
+  api.addFile('items/bundles/pixelartacademy/preorder/alphaaccess');
 
   // Initialization
 
   // First create all the items.
-  api.addFiles('initialize-server/items/retronator/retronator.coffee', 'server');
-  api.addFiles('initialize-server/items/landsofillusions/landsofillusions.coffee', 'server');
-  api.addFiles('initialize-server/items/retropolis/retropolis.coffee', 'server');
-  api.addFiles('initialize-server/items/pixelartacademy/pixelartacademy.coffee', 'server');
-  api.addFiles('initialize-server/items/pixelartacademy/kickstarter/keycards.coffee', 'server');
+  api.addServerFile('initialize-server/items/retronator/retronator');
+  api.addServerFile('initialize-server/items/landsofillusions/landsofillusions');
+  api.addServerFile('initialize-server/items/retropolis/retropolis');
+  api.addServerFile('initialize-server/items/pixelartacademy/pixelartacademy');
+  api.addServerFile('initialize-server/items/pixelartacademy/kickstarter/keycards');
 
   // Then create the bundles of items.
-  api.addFiles('initialize-server/items/bundles/bundles.coffee', 'server');
+  api.addServerFile('initialize-server/items/bundles/bundles');
 
   // Then finish with other initialization.
-  api.addFiles('initialize-server/admin.coffee', 'server');
-  api.addFiles('initialize-server/test.coffee', 'server');
+  api.addServerFile('initialize-server/admin');
+  api.addServerFile('initialize-server/test');
 
   // Components
 
-  api.addFiles('components/components.coffee');
+  api.addFile('components/components');
 
-  api.addFiles('components/bundleitem/bundleitem.coffee');
-  api.addFiles('components/bundleitem/bundleitem.html');
-  api.addFiles('components/bundleitem/bundleitem.styl');
-
-  api.addFiles('components/topsupporters/topsupporters.coffee');
-  api.addFiles('components/topsupporters/topsupporters.html');
-  api.addFiles('components/topsupporters/topsupporters.styl');
+  api.addComponent('components/bundleitem/bundleitem');
+  api.addComponent('components/topsupporters/topsupporters');
 
   // Pages
-  api.addFiles('pages/pages.coffee');
+  api.addFile('pages/pages');
 
-  api.addFiles('pages/admin/admin.html');
-  api.addFiles('pages/admin/admin.coffee');
+  api.addUnstyledComponent('pages/admin/admin');
 
-  api.addFiles('pages/admin/scripts/scripts.coffee');
-  api.addFiles('pages/admin/scripts/scripts.html');
-  api.addFiles('pages/admin/scripts/methods-server/convertpreorders.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/convertimportedusers.coffee', 'server');
-  api.addFiles('pages/admin/scripts/methods-server/user-ontransactionsupdated.coffee', 'server');
+  api.addUnstyledComponent('pages/admin/scripts/scripts');
+  api.addServerFile('pages/admin/scripts/methods-server/convertpreorders');
+  api.addServerFile('pages/admin/scripts/methods-server/convertimportedusers');
+  api.addServerFile('pages/admin/scripts/methods-server/user-ontransactionsupdated');
 });

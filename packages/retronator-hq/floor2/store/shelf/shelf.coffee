@@ -17,12 +17,12 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
     super
 
     # Get all store items data.
-    @_itemsSubscription = @subscribe RS.Transactions.Item.all
+    @_itemsSubscription = @subscribe RS.Item.all
 
     # Get all user's transactions and payments so we can determine which store items they are
     # eligible for. Payments are needed to determine if the user has a kickstarter pledge.
-    @subscribe RS.Transactions.Transaction.forCurrentUser
-    @subscribe RS.Transactions.Payment.forCurrentUser
+    @subscribe RS.Transaction.forCurrentUser
+    @subscribe RS.Payment.forCurrentUser
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -38,7 +38,7 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
   storeItems: ->
     return unless @_itemsSubscription.ready()
 
-    items = RS.Transactions.Item.documents.find
+    items = RS.Item.documents.find
       price:
         $exists: true
     ,
