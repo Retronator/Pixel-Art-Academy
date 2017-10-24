@@ -1,6 +1,16 @@
 <template name="LandsOfIllusions.Components.Account.PaymentMethods">
   <div class="landsofillusions-components-account-paymentmethods">
     <h2>Payment methods</h2>
-    <p>You have these payment methods stored for quick purchases:</p>
+    <p>You have these payment methods stored for purchases:</p>
+    {{#each paymentMethods}}
+
+    {{else}}
+      <p>None</p>
+    {{/each}}
+    {{#if stripeInitialized}}
+      <p>Add new payment method:</p>
+      <button class="add-stripe-button">Credit card</button>
+    {{/if}}
+    <script src="https://checkout.stripe.com/checkout.js"></script>
   </div>
 </template>

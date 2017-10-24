@@ -45,6 +45,8 @@ Package.onUse(function(api) {
   api.addFile('paymentmethod/paymentmethod');
   api.addServerFile('paymentmethod/subscriptions');
 
+  api.addServerFile('paymentmethod/methods-server/stripe');
+
   // Transaction
 
   api.addFile('transaction/transaction');

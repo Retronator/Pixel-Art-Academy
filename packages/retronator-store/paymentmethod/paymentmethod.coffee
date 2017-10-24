@@ -18,6 +18,7 @@ class RS.PaymentMethod extends AM.Document
       user: @ReferenceField RA.User, ['displayName'], false
 
   @forCurrentUser: @subscription 'forCurrentUser'
+  @addStripe: @method 'addStripe'
 
   @Types:
     Stripe: 'Stripe'
