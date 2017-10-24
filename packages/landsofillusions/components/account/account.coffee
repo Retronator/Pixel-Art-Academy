@@ -38,7 +38,7 @@ class LOI.Components.Account extends AM.Component
 
     LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>
       # Show the dialog if we need to.
-      @show() if @ in LOI.adventure.modalDialogs()
+      @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
 
       return unless pageUrl = FlowRouter.getParam 'parameter2'
 
