@@ -2,15 +2,52 @@
   <div class="landsofillusions-components-account-paymentmethods">
     <h2>Payment methods</h2>
     <p>You have these payment methods stored for purchases:</p>
-    {{#each paymentMethods}}
-
+    {{#if paymentMethods.count}}
+      <ul class="payment-methods {{moreThan2Class}}">
+        {{#each paymentMethods}}
+          <li class="payment-method">
+            {{#if $is type 'Stripe'}}
+              {{> LandsOfIllusions.Components.Account.PaymentMethods.Stripe}}
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
     {{else}}
       <p>None</p>
-    {{/each}}
+    {{/if}}
     {{#if stripeInitialized}}
-      <p>Add new payment method:</p>
-      <button class="add-stripe-button">Credit card</button>
+      <div class="add-sheet">
+        <p class="instructions">Add new payment method:</p>
+        <button class="add-payment-method-button add-stripe-button">Credit card</button>
+      </div>
     {{/if}}
     <script src="https://checkout.stripe.com/checkout.js"></script>
+  </div>
+</template>
+
+<template name="LandsOfIllusions.Components.Account.PaymentMethods.Stripe">
+  <div class="landsofillusions-components-account-paymentmethods-stripe">
+    <div class="case-area">
+      <div class="tape">
+        <button class="remove-button">Remove</button>
+      </div>
+      <div class="case {{loadingClass}} {{openedClass}}">
+        <div class="label stripe"></div>
+        <div class="card">
+          {{#with customerData}}
+            <div class="name">{{name}}</div>
+            <div class="number">XX-XX-XX-{{number}}</div>
+            <div class="expiration">{{expiration.month}}/{{expiration.year}}</div>
+            <div class="brand">{{brand}}</div>
+          {{else}}
+            {{#if loading}}
+                <div class="loading">Loading</div>
+              {{else}}
+                <div class="view-details">View details</div>
+              {{/if}}
+          {{/with}}
+        </div>
+      </div>
+    </div>
   </div>
 </template>

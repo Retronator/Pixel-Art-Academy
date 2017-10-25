@@ -1,4 +1,201 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .landsofillusions-components-account-paymentmethods
-  // TODO
+  h2
+    width 110%
+
+  .payment-methods
+    display flex
+    flex-direction column
+    flex-wrap wrap
+    position relative
+    height 110rem
+    left -4rem
+    list-style none
+    padding 0
+    margin 10rem 0 0
+
+    .payment-method
+      display inline-block
+      width 74rem
+      height 53rem
+
+      &:hover
+        z-index 4
+
+      .case-area
+        position relative
+
+        .tape
+          position absolute
+          z-index 3
+          left 12rem
+          top -5rem
+          width 46rem
+          height 13rem
+          background image('/landsofillusions/components/account/tape-top.png') 100% / 100%
+
+          .remove-button
+            display none
+            width 100%
+            height 100%
+            background none
+            border none
+            checkout()
+            color atariRed(4)
+            text-transform uppercase
+            cursor pointer
+
+          &:hover
+            .remove-button
+              display block
+
+        .case
+          position relative
+          width 68rem
+          height 44rem
+          cursor pointer
+
+          &::before
+          &::after
+            content ''
+            absolute-cover()
+            background-size 100%
+
+          &::before
+            z-index 2
+            background-image image('/landsofillusions/components/account/paymentmethods/case-top.png')
+            filter drop-shadow(-1rem 1rem 0 transparentify(atariGrey(5), atariGrey(7)))
+
+          &::after
+            z-index 0
+            background-image image('/landsofillusions/components/account/paymentmethods/case-bottom.png')
+
+          &:hover
+            .card
+              left 7rem
+
+          &.loading
+            .card
+              left 10rem
+
+          &.opened
+            .card
+              left 74rem
+
+          .card
+            position absolute
+            z-index 1
+            left 2rem
+            top 2rem
+            width 65rem
+            height 40rem
+            padding 4rem
+            background image('/landsofillusions/components/account/paymentmethods/card-stripe.png') 100% / 100%
+            filter drop-shadow(-1rem 1rem 0 transparentify(atariGrey(5), atariGrey(7)))
+            checkout()
+            color atariBlue(5)
+            text-transform uppercase
+            line-height 6rem
+            transition left 0.2s ease-out
+
+            &::after
+              content ''
+              absolute-cover()
+              z-index 1
+              background image('/landsofillusions/components/account/paymentmethods/card-shine.png') 100% / 100%
+              opacity 0.1
+              pointer-events none
+
+            .view-details
+              position absolute
+              top 22rem
+              left 17rem
+              width 30rem
+              text-align center
+
+            .loading
+              position absolute
+              top 25rem
+              left 9rem
+
+            .name
+              overflow hidden
+
+            .number
+              position absolute
+              left 5rem
+              bottom 9rem
+
+            .expiration
+              position absolute
+              left 5rem
+              bottom 2rem
+
+            .brand
+              position absolute
+              right 2rem
+              bottom 2rem
+
+          .label.stripe
+            position absolute
+            z-index 3
+            left 19rem
+            top 11rem
+            width 30rem
+            height 8rem
+            background image('/landsofillusions/components/account/paymentmethods/stripe.png') 100% / 100%
+
+    &.more-than-2
+      .payment-method
+        .case-area
+          .case.opened
+            .card
+              left 2rem
+              z-index 4
+
+  .add-sheet
+    position absolute
+    bottom -10rem
+    right 20rem
+    width 120rem
+    padding 5rem 5rem
+    z-index 1
+    background atariGrey(2)
+    border-bottom 1rem solid atariGrey(1)
+    box-shadow -1rem 2rem 0 transparentify(atariGrey(5), atariGrey(7))
+    color atariGrey(5)
+
+    &::after
+      content ''
+      position absolute
+      right 30rem
+      bottom -10rem
+      background image('/landsofillusions/components/account/paperclip-bottom.png') 100% / 100%
+      width 9rem
+      height 22rem
+
+    .instructions
+      margin 0 0 4rem
+
+    .add-payment-method-button
+      background none
+      border none
+      cursor pointer
+      font inherit
+      color inherit
+
+      &::before
+        content ''
+        display inline-block
+        width 7rem
+        height 7rem
+        padding 0 0 1rem 1rem
+        margin-right 3rem
+        vertical-align bottom
+        border 1rem solid atariGrey(4)
+        text-align center
+        color atariGrey(4)
+
+      &:hover::before
+        content '✔︎'

@@ -10,13 +10,17 @@ class AT.Stripe
     @_api =
       customers:
         create: Meteor.wrapAsync @_stripe.customers.create.bind @_stripe.customers
+        retrieve: Meteor.wrapAsync @_stripe.customers.retrieve.bind @_stripe.customers
+        del: Meteor.wrapAsync @_stripe.customers.del.bind @_stripe.customers
 
     @initialized = true
 
   @customers:
     # We need to use AT.Stripe, because @ refers to this intermediary object created by doing another level.
     create: -> AT.Stripe._call AT.Stripe._api.customers.create, arguments...
-      
+    retrieve: -> AT.Stripe._call AT.Stripe._api.customers.retrieve, arguments...
+    delete: -> AT.Stripe._call AT.Stripe._api.customers.del, arguments...
+
   @_call: (method, params, callback) ->
     try
       if callback
