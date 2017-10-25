@@ -3,14 +3,12 @@
     <form class="new-conversation-form">
       <input class="text" placeholder="Say something nice …"/>
     </form>
-    {{#if conversations.count}}
-      <ul class="conversations-list">
-        {{#each conversations}}
-          <li class="conversation-item">
-            {{> PixelArtAcademy.PixelBoy.Apps.Components.Conversation}}
-          </li>
-        {{/each}}
-      </ul>
-    {{/if}}
+    <ul class="conversations-list">
+      {{#each conversations}}
+        <li class="conversation-item">
+          {{> PixelArtAcademy.PixelBoy.Apps.Components.Conversation}}
+        </li>
+      {{/each}}
+    </ul>
   </div>
 </template>

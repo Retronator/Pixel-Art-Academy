@@ -34,6 +34,9 @@ class Calendar.Providers.Practice.CheckInComponent extends AM.Component
     checkIn.artwork or checkIn.image or checkIn.post
 
   showAvatar: ->
+    # Temporarily disabling avatars due to performance issues.
+    return false
+    
     return unless character = @characterInstance()
 
     # We have avatar if the body field has any data and the body part is ready.

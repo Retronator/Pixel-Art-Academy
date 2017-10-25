@@ -165,6 +165,7 @@ Package.onUse(function(api) {
   api.addFile('conversations/conversation/methods');
   api.addServerFile('conversations/conversation/subscriptions');
   api.addServerFile('conversations/conversation/migrations/0000-renamecollection');
+  api.addServerFile('conversations/conversation/migrations/0001-linesreversereferencefieldsupdate');
 
   api.addFile('conversations/line/line');
   api.addFile('conversations/line/methods');

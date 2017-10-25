@@ -15,7 +15,7 @@ class LOI.Conversations.Line extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      conversation: @ReferenceField LOI.Conversations.Conversation, [], true, 'lines', ['character']
+      conversation: @ReferenceField LOI.Conversations.Conversation, [], true, 'lines', ['character', 'text', 'time']
       character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
 
   # Methods
