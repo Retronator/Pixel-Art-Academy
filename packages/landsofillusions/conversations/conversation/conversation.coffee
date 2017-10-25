@@ -10,6 +10,7 @@ class LOI.Conversations.Conversation extends AM.Document
   #     avatar
   #       fullName
   #       color
+  #   text
   #   time
   # startTime: auto-generated time of the first line in this conversation
   # endTime: auto-generated time of the last line in this conversation

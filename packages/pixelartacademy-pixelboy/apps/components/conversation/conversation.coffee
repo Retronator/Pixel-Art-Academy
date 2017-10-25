@@ -8,29 +8,25 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
   onCreated: ->
     super
 
-    conversation = @data()
-    LOI.Conversations.Line.forConversation.subscribe @, conversation._id
+    # Subscribe to get full conversation data.
+    @autorun (computation) =>
+      return unless conversationId = @data()
 
-    @characterIds = new ComputedField =>
-      # Go over all lines and add character IDs.
-      ids = (line.character?._id for line in @lines().fetch())
+      LOI.Conversations.Conversation.forId.subscribe @, conversationId
 
-      _.without ids, undefined, null
-
-  lines: ->
-    conversation = @data()
-
-    LOI.Conversations.Line.documents.find
-      'conversation._id': conversation._id
-    ,
-      sort:
-        time: 1
+  # Returns fully populated conversation.
+  conversation: ->
+    conversationId = @data()
+    LOI.Conversations.Conversation.documents.findOne conversationId
 
   characterInstance: ->
     line = @currentData()
     LOI.Character.getInstance line.character?._id
 
   showAvatar: ->
+    # Temporarily disabling avatars due to performance issues.
+    return false
+    
     return unless character = @characterInstance()
 
     # We have avatar if the body field has any data and the data is ready.
@@ -64,10 +60,10 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
   submitNewLineForm: (event) ->
     event.preventDefault()
 
-    conversation = @data()
+    conversationId = @data()
     text = @$('.new-line-text').val()
 
-    LOI.Conversations.Line.insert conversation._id, LOI.characterId(), text, (error) =>
+    LOI.Conversations.Line.insert conversationId, LOI.characterId(), text, (error) =>
       if error
         console.error error
         return
