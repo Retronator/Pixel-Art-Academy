@@ -60,10 +60,10 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
   submitNewLineForm: (event) ->
     event.preventDefault()
 
-    conversation = @data()
+    conversationId = @data()
     text = @$('.new-line-text').val()
 
-    LOI.Conversations.Line.insert conversation._id, LOI.characterId(), text, (error) =>
+    LOI.Conversations.Line.insert conversationId, LOI.characterId(), text, (error) =>
       if error
         console.error error
         return
