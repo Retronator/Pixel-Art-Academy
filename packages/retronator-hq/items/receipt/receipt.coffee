@@ -77,21 +77,27 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
   onRendered: ->
     super
 
+    @display = LOI.adventure.getCurrentThing HQ.Store.Display
+
+    $displayScene = @display.$('.scene')
     $viewportArea = @$('.viewport-area')
+    $safeArea = @$('.safe-area')
+    $receipt = $safeArea.find('.receipt')
 
     $viewportArea.scroll (event) =>
       @scrolled true
 
+      # After we go pass the end of the receipt, move the display scene.
       scrollTop = $viewportArea.scrollTop()
-      viewportHeight = $viewportArea.height()
+      safeAreaHeight = $safeArea.height()
+      receiptBottom = $receipt.outerHeight()
 
-      totalHeight = $viewportArea[0].scrollHeight
-      maxScrollTop = totalHeight - viewportHeight
+      sceneOffset = Math.min 0, receiptBottom - safeAreaHeight - scrollTop
 
-      # We use greater or equal because elastic scrolling can overshoot the max number.
-      @scrolledToBottom scrollTop >= maxScrollTop
+      $displayScene.css
+        'transform': "translateY(#{sceneOffset}px)"
 
-    @display = LOI.adventure.getCurrentThing HQ.Store.Display
+      @scrolledToBottom sceneOffset < 0
 
     Meteor.setTimeout =>
       @_scrollToNewSupporter duration: 1000

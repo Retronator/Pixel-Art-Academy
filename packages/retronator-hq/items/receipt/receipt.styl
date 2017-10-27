@@ -27,7 +27,7 @@
           position relative
           z-index 1
           width 104rem
-          padding 8rem
+          padding 8rem 8rem 38rem
           checkout()
           color atariAzure(2)
           background image('/retronator/hq/items/receipt/top.png')
@@ -39,7 +39,18 @@
             absolute-cover()
             z-index -1
             top 13rem
+            bottom 43rem
             background atariGrey(5)
+
+          &::after
+            content ''
+            position absolute
+            bottom 30rem
+            left 0
+            right 0
+            height 13rem
+            background image('/retronator/hq/items/receipt/bottom.png') 100% / 100%
+            z-index -1
 
           h2
             margin 0
@@ -106,6 +117,9 @@
           .receipt-bottom
             text-transform uppercase
             text-align center
+
+        .payment
+          height 100rem
 
         input
         textarea

@@ -5,58 +5,6 @@
       {{#unless scrolledToBottom}}
         <div class="scroll-hint">Scroll down to purchase</div>
       {{/unless}}
-      <div class="message-area">
-        {{#if purchaseCompleted}}
-          <div class="purchase-completed message">
-            <p>Purchase completed successfully!</p>
-          </div>
-        {{else}}
-          {{#if purchaseError}}
-            <div class="purchase-error message">
-              <p>{{purchaseError}}</p>
-              <p>It looks like there was an error processing the purchase.</p>
-              <p>The payment might still have gone through, so please email
-                hi@retronator.com so we can double check your purchase status.</p>
-            </div>
-          {{else}}
-            {{#if scrolledToBottom}}
-              <div class="purchase-info message">
-                {{#if creditApplied}}
-                  {{#if paymentAmount}}
-                    <p>${{creditApplied}} will be used from your existing store balance.
-                      You can pay the remaining ${{paymentAmount}} with a credit card.</p>
-                  {{else}}
-                    <p>Your purchase will be covered with your existing store balance. Simply confirm the payment below.</p>
-                  {{/if}}
-                {{/if}}
-                {{#if paymentAmount}}
-                  <p>Your credit card won't be charged until the first episode of the game is released and you can start playing.</p>
-                  <p>You will be emailed beforehand in case you need to cancel your purchase at that time.</p>
-                {{/if}}
-                <div class="actions">
-                  <p>
-                    {{#if stripeInitialized}}
-                      <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
-                        {{#if submittingPayment}}
-                          Submitting …
-                        {{else}}
-                          {{#if paymentAmount}}
-                            Checkout with Stripe
-                          {{else}}
-                            Confirm purchase
-                          {{/if}}
-                        {{/if}}
-                      </button>
-                    {{else}}
-                      Please wait while Stripe Checkout initializes …
-                    {{/if}}
-                  </p>
-                </div>
-              </div>
-            {{/if}}
-          {{/if}}
-        {{/if}}
-      </div>
     {{else}}
       <div class="viewport-area">
         <div class="safe-area">
@@ -148,6 +96,56 @@
                 <div class="receipt-bottom">
                   <p>Thank you for your support!</p>
                 </div>
+              </div>
+              <div class="payment">
+                {{#if purchaseCompleted}}
+                  <div class="purchase-completed message">
+                    <p>Purchase completed successfully!</p>
+                  </div>
+                {{else}}
+                  {{#if purchaseError}}
+                    <div class="purchase-error message">
+                      <p>{{purchaseError}}</p>
+                      <p>It looks like there was an error processing the purchase.</p>
+                      <p>The payment might still have gone through, so please email
+                        hi@retronator.com so we can double check your purchase status.</p>
+                    </div>
+                  {{else}}
+                    <div class="purchase-info message">
+                      {{#if creditApplied}}
+                        {{#if paymentAmount}}
+                          <p>${{creditApplied}} will be used from your existing store balance.
+                            You can pay the remaining ${{paymentAmount}} with a credit card.</p>
+                        {{else}}
+                          <p>Your purchase will be covered with your existing store balance. Simply confirm the payment below.</p>
+                        {{/if}}
+                      {{/if}}
+                      {{#if paymentAmount}}
+                        <p>Your credit card won't be charged until the first episode of the game is released and you can start playing.</p>
+                        <p>You will be emailed beforehand in case you need to cancel your purchase at that time.</p>
+                      {{/if}}
+                      <div class="actions">
+                        <p>
+                          {{#if stripeInitialized}}
+                            <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
+                              {{#if submittingPayment}}
+                                Submitting …
+                              {{else}}
+                                {{#if paymentAmount}}
+                                  Checkout with Stripe
+                                {{else}}
+                                  Confirm purchase
+                                {{/if}}
+                              {{/if}}
+                            </button>
+                          {{else}}
+                            Please wait while Stripe Checkout initializes …
+                          {{/if}}
+                        </p>
+                      </div>
+                    </div>
+                  {{/if}}
+                {{/if}}
               </div>
             {{else}}
               <p>Cannot show receipt. You do not have any items in your shopping cart.</p>
