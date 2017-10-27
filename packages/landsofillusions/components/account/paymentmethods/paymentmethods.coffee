@@ -106,7 +106,7 @@ class LOI.Components.Account.PaymentMethods extends LOI.Components.Account.Page
       dialog = new LOI.Components.Dialog
         message: "Do you really want to remove this payment method?"
         buttons: [
-          text: "Yes"
+          text: "Remove"
           value: true
         ,
           text: "Cancel"
