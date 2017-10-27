@@ -39,6 +39,7 @@ Package.onUse(function(api) {
   api.addServerFile('payment/subscriptions');
 
   api.addServerFile('payment/migrations/0000-renamecollection');
+  api.addServerFile('payment/migrations/0001-migratestripecustomeridfield');
 
   // Payment method
 
