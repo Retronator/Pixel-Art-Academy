@@ -81,6 +81,10 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
       @_confirmationPurchaseHandler()
 
   _stripeResponseHandler: (token) ->
+    # Start payment submission to the server.
+    @submittingPayment true
+    @_onSubmittingPayment?()
+
     # Clear the error they may have accrued.
     @purchaseError null
 
@@ -123,6 +127,7 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
   _confirmationPurchaseHandler: ->
     # Create a transaction on the server.
     @submittingPayment true
+    @_onSubmittingPayment?()
 
     shoppingCart = @_createShoppingCartObject()
 

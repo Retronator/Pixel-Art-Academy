@@ -6,7 +6,7 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 HQ = Retronator.HQ
 
-class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
+class HQ.Items.Receipt extends HQ.Items.Components.Stripe
   @id: -> 'Retronator.HQ.Items.Receipt'
   @url: -> 'retronator/store/receipt'
 
@@ -47,6 +47,8 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
     @scrolled false
     @scrolledToBottom false
+    
+    @selectedPaymentMethod = new ReactiveField null
 
     # Get all store items data.
     @subscribe RS.Item.all
@@ -56,7 +58,10 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
     # Get store balance and credit so we know if credit can be applied (and the user charged less).
     @subscribe RA.User.storeDataForCurrentUser
-    
+
+    # Get stored payment methods.
+    RS.PaymentMethod.forCurrentUser.subscribe @
+
     # Get user's contact email so we can pre-fill it in Stripe Checkout.
     @subscribe RA.User.contactEmailForCurrentUser
 
@@ -80,6 +85,9 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @display = LOI.adventure.getCurrentThing HQ.Store.Display
 
     $displayScene = @display.$('.scene')
+    $messageArea = @$('.message-area')
+    $translateAreas = $displayScene.add($messageArea)
+
     $viewportArea = @$('.viewport-area')
     $safeArea = @$('.safe-area')
     $receipt = $safeArea.find('.receipt')
@@ -92,9 +100,14 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
       safeAreaHeight = $safeArea.height()
       receiptBottom = $receipt.outerHeight()
 
-      sceneOffset = Math.min 0, receiptBottom - safeAreaHeight - scrollTop
+      # Make sure there is a receipt at all. It will get removed when payment completes.
+      if receiptBottom
+        sceneOffset = Math.min 0, receiptBottom - safeAreaHeight - scrollTop
 
-      $displayScene.css
+      else
+        sceneOffset = 0
+
+      $translateAreas.css
         'transform': "translateY(#{sceneOffset}px)"
 
       @scrolledToBottom sceneOffset < 0
@@ -182,12 +195,23 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
     amount: @tipStateFields.amount()
     message: @tipStateFields.message()
 
+  paymentMethods: ->
+    RS.PaymentMethod.documents.find()
+
+  showNewPaymentMethod: ->
+    @stripeInitialized and @paymentAmount() and Meteor.userId()
+
+  oneTimeStripeSelected: ->
+    @selectedPaymentMethod()?.paymentMethod.type is 'OneTimeStripe'
+
   events: ->
     super.concat
       'change .anonymous-radio': @onChangeAnonymousRadio
       'input .supporter-name': @onInputSupporterName
       'input .tip-amount': @onInputTipAmount
       'input .tip-message': @onInputTipMessage
+      'click .one-time-payment .one-time-stripe': @onClickOneTimePaymentStripe
+      'click .deselect-payment-method-button': @onClickDeselectPaymentMethodButton
 
   onChangeAnonymousRadio: (event) ->
     showSupporterName = parseInt($(event.target).val()) is 1
@@ -248,6 +272,11 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
     message = $(event.target).val()
     @tipStateFields.message message
 
+  _onSubmittingPayment: ->
+    # Scroll to top.
+    @$('.viewport-area > .safe-area').velocity 'scroll',
+      container: @$('.viewport-area')
+
   _completePurchase: ->
     super
 
@@ -268,6 +297,14 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
     ,
       4000
 
+  onClickDeselectPaymentMethodButton: ->
+    @selectedPaymentMethod null
+
+  onClickOneTimePaymentStripe: ->
+    @selectedPaymentMethod
+      paymentMethod:
+        type: 'OneTimeStripe'
+
   # Components
 
   class @SupporterName extends AM.DataInputComponent
@@ -287,3 +324,44 @@ class Retronator.HQ.Items.Receipt extends HQ.Items.Components.Stripe
       # We display the same placeholder as with the custom input when we're not logged in.
       receipt = @parentComponent()
       AB.translateForComponent(receipt, 'Your name here').text
+
+  class @StripePaymentMethod extends AM.Component
+    @register 'Retronator.HQ.Items.Receipt.StripePaymentMethod'
+
+    onCreated: ->
+      super
+
+      @loading = new ReactiveField false
+      @receipt = @ancestorComponentOfType HQ.Items.Receipt
+
+      @selected = new ComputedField =>
+        paymentMethod = @data()
+        @receipt.selectedPaymentMethod()?.paymentMethod is paymentMethod
+
+    loadingClass: ->
+      'loading' if @loading()
+
+    events: ->
+      super.concat
+        'click .case': @onClickCase
+
+    onClickCase: (event) ->
+      # See if this payment method is already selected.
+      if @selected()
+        # Deselect it.
+        @receipt.selectedPaymentMethod null
+        return
+
+      # Load customer data.
+      @loading true
+
+      paymentMethod = @data()
+      RS.PaymentMethod.getStripeCustomerData paymentMethod._id, (error, customerData) =>
+        @loading false
+
+        if error
+          console.error error
+          return
+
+        # We have the data, select the payment method.
+        @receipt.selectedPaymentMethod {paymentMethod, customerData}
