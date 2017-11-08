@@ -18,7 +18,7 @@ class RS.Payment extends AM.Document
   #
   # STRIPE PAYMENT
   # authorizedOnly: true if the amount was not actually collected and this is just an intended payment
-  # stripeCustomerId: customer id returned from stripe API
+  # chargeId: charge id returned from stripe API
   #
   # REFERRAL CODE
   # referralCode: the code used for the referral

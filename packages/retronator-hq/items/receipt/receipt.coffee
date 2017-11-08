@@ -47,9 +47,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
     @scrolled false
     @scrolledToBottom false
-    
-    @selectedPaymentMethod = new ReactiveField null
-    
+        
     # Get all store items data.
     @subscribe RS.Item.all
 
@@ -203,7 +201,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @stripeInitialized() and @paymentAmount() and Meteor.userId()
 
   oneTimeStripeSelected: ->
-    @selectedPaymentMethod()?.paymentMethod.type is 'OneTimeStripe'
+    @selectedPaymentMethod()?.paymentMethod.type is HQ.Items.Components.Stripe.PaymentMethods.StripePayment
 
   showPaymentInfo: ->
     @selectedPaymentMethod() or not @paymentAmount()
@@ -315,7 +313,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
   onClickOneTimePaymentStripe: ->
     @selectedPaymentMethod
       paymentMethod:
-        type: 'OneTimeStripe'
+        type: HQ.Items.Components.Stripe.PaymentMethods.StripePayment
 
   # Components
 

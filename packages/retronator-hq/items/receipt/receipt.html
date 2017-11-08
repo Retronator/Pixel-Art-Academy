@@ -13,8 +13,7 @@
         {{else}}
           {{#if purchaseError}}
             <div class="purchase-error message">
-              <p>{{purchaseError}}</p>
-              <p>It looks like there was an error processing the purchase.</p>
+              <p>It looks like there was an error processing the purchase. {{purchaseError}}</p>
               <p>The payment might still have gone through, so please email
                 hi@retronator.com so we can double check your purchase status.</p>
             </div>
@@ -188,7 +187,7 @@
                     <div class="payment-type">
                       {{#if paymentAmount}}
                         {{#with selectedPaymentMethod}}
-                          {{#if $is paymentMethod.type 'OneTimeStripe'}}
+                          {{#if $is paymentMethod.type 'StripePayment'}}
                             <div class="card one-time-stripe">
                               <div class="checkout">Checkout with Stripe</div>
                             </div>
@@ -222,7 +221,7 @@
                           </li>
                           {{#if paymentAmount}}
                             {{#with selectedPaymentMethod}}
-                              {{#if $is paymentMethod.type 'OneTimeStripe'}}
+                              {{#if $is paymentMethod.type 'StripePayment'}}
                                 <li class="data-item">
                                   <span class="name">Pay Type</span>
                                   <span class="value">Stripe</span>
@@ -275,7 +274,7 @@
                             {{/if}}
                           </span>
                         </p>
-                        <p class="confirm-prompt">Click below to confirm</p>
+                        <p class="confirm-prompt">Click on the line below to confirm</p>
                         <div class="confirm">
                           <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
                             {{#if submittingPayment}}
@@ -289,7 +288,7 @@
                             {{/if}}
                           </button>
                         </div>
-                        <p>I confirm the purchase and agree to the terms of service.</p>
+                        <p class="agree-terms">I confirm the purchase and agree to the <a href="/terms-of-service">terms of service</a>.</p>
                       </div>
                     {{/if}}
                   </div>

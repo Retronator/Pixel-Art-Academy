@@ -27,7 +27,7 @@ RS.Transaction.create = (options) ->
     # Also prepare the customer object (if needed) with user info.
     options.customer ?= {}
     options.customer.name ?= user.displayName
-    options.customer.email ?= user.emails[0]?.address
+    options.customer.email ?= user.contactEmail
 
   else
     # The user is not logged in, so we expect to have the email ready.

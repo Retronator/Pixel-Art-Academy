@@ -203,12 +203,23 @@
                     padding 0 10rem
 
             .payment-methods
+              position relative
+              height 110rem
               list-style none
               padding 0
               margin 0
+              display flex
+              flex-direction column
+              flex-wrap wrap
 
               .case-area
                 position relative
+                width 76rem
+                height 53rem
+                z-index 1
+
+                &:hover
+                  z-index 3
 
                 .case
                   position relative
@@ -466,6 +477,7 @@
                 kyrou-7()
                 font-weight bold
                 text-align center
+                margin-bottom 0
 
               .total
               .balance
@@ -479,7 +491,8 @@
                 text-align right
 
               .confirm-prompt
-                margin 10rem 0 0
+                margin 6rem 0 0
+                text-align center
                 text-transform uppercase
 
               .confirm
@@ -497,12 +510,16 @@
                   border none
                   background none
                   width 100%
-                  padding 10rem 0 5rem 5rem
+                  padding 5rem 0 5rem 5rem
                   color transparent
                   cursor pointer
 
                   &:hover
                     color atariGrey(0)
+
+              .agree-terms
+                adventure()
+                margin-bottom 0
 
         input
         textarea
