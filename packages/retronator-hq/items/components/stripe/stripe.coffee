@@ -7,6 +7,13 @@ RS = Retronator.Store
 HQ = Retronator.HQ
 
 class HQ.Items.Components.Stripe extends LOI.Adventure.Item
+  constructor: ->
+    super
+
+    @_actionModes =
+      SaveCustomer: 'SaveCustomer'
+      OneTimePayment: 'OneTimePayment'
+
   onCreated: ->
     super
 
@@ -32,7 +39,7 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
         @_stripeCheckout = StripeCheckout.configure
           key: Meteor.settings.public.stripe.publishableKey
           token: (token) => @_stripeResponseHandler token
-          image: 'https://stripe.com/img/documentation/checkout/marketplace.png'
+          image: '/retronator/hq/items/receipt/stripe-marketplace-icon.png'
           name: 'Retronator'
           locale: 'auto'
 
@@ -61,10 +68,20 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
 
   events: ->
     super.concat
+      'click .save-customer-button': @onClickSaveCustomerButton
       'click .submit-payment-button': @onClickSubmitPaymentButton
+
+  onClickSaveCustomerButton: (event) ->
+    @_actionMode = @_actionModes.SaveCustomer
+
+    @_stripeCheckout.open
+      amount: null
+      panelLabel: 'Add card'
 
   onClickSubmitPaymentButton: (event) ->
     event.preventDefault()
+
+    @_actionMode = @_actionModes.OneTimePayment
 
     # See if we need to process the payment or it's simply a confirmation.
     paymentAmount = @paymentAmount()
@@ -75,12 +92,21 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
       # The user needs to make a payment, so open checkout.
       @_stripeCheckout.open
         amount: paymentAmount * 100
+        panelLabel: null
 
     else
       # The purchase does not need a payment, simply confirm the purchase.
       @_confirmationPurchaseHandler()
 
   _stripeResponseHandler: (token) ->
+    switch @_actionMode
+      when @_actionModes.SaveCustomer then @_saveCustomer token
+      when @_actionModes.OneTimePayment then @_oneTimePayment token
+
+  _saveCustomer: (token) ->
+    RS.PaymentMethod.insertStripe token.id, token.email
+
+  _oneTimePayment: (token) ->
     # Start payment submission to the server.
     @submittingPayment true
     @_onSubmittingPayment?()

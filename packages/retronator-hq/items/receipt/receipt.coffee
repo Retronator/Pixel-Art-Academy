@@ -49,7 +49,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @scrolledToBottom false
     
     @selectedPaymentMethod = new ReactiveField null
-
+    
     # Get all store items data.
     @subscribe RS.Item.all
 
@@ -149,11 +149,12 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     # Total is the items price with added tip.
     @itemsPrice() + (@tipStateFields.amount() or 0)
 
-  creditApplied: ->
-    storeCredit = Retronator.user()?.store?.credit or 0
+  storeCredit: ->
+    Retronator.user()?.store?.credit or 0
 
+  creditApplied: ->
     # Credit is applied up to the amount in the shopping cart.
-    Math.min storeCredit, @totalPrice()
+    Math.min @storeCredit(), @totalPrice()
 
   paymentAmount: ->
     # See how much the user will need to pay to complete this transaction, after the credit is applied.
@@ -199,10 +200,21 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     RS.PaymentMethod.documents.find()
 
   showNewPaymentMethod: ->
-    @stripeInitialized and @paymentAmount() and Meteor.userId()
+    @stripeInitialized() and @paymentAmount() and Meteor.userId()
 
   oneTimeStripeSelected: ->
     @selectedPaymentMethod()?.paymentMethod.type is 'OneTimeStripe'
+
+  showPaymentInfo: ->
+    @selectedPaymentMethod() or not @paymentAmount()
+
+  dateText: ->
+    languagePreference = AB.userLanguagePreference()
+
+    new Date().toLocaleDateString languagePreference,
+      day: 'numeric'
+      month: 'numeric'
+      year: 'numeric'
 
   events: ->
     super.concat

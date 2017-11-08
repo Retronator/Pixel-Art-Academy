@@ -147,19 +147,22 @@
             background image('/retronator/hq/items/receipt/presenter-right-corner.png') 100% / 100%
 
           .instructions
-            background atariGrey(4)
+            background atariGrey(5)
             color atariGrey(0)
             width 124rem
             height 269rem
             padding 6rem
 
+            p:first-child
+              margin-top 0
+
             h2
               acme-7()
-              margin-top 0
               font-weight normal
+              margin 10rem 0 8rem
 
             .one-time-payment
-              height 55rem
+              height 45rem
               text-align center
 
               .card
@@ -404,6 +407,17 @@
                     line-height 6rem
                     padding 25rem 10rem 0
 
+                &.store-balance
+                  background image('/retronator/hq/items/receipt/store-balance.png') 100% / 100%
+                  text-align center
+
+                  .pay
+                    color atariAqua(5)
+                    checkout()
+                    text-transform uppercase
+                    line-height 6rem
+                    padding 10rem 5rem 0
+
             .payment-info
               position absolute
               z-index 2
@@ -420,6 +434,75 @@
                 adventure()
                 color atariGrey(0)
                 cursor pointer
+
+              .data-items
+                list-style none
+                margin 0
+                padding 0
+
+                .data-item
+                  .name
+                    position relative
+                    display inline-block
+                    vertical-align bottom
+                    width 40rem
+                    text-transform uppercase
+
+                    &::after
+                      content ':'
+                      position absolute
+                      top 0
+                      right 0
+
+                  .value
+                    display inline-block
+                    vertical-align bottom
+                    width 44rem
+                    text-transform uppercase
+                    overflow hidden
+                    white-space nowrap
+
+              .sale
+                kyrou-7()
+                font-weight bold
+                text-align center
+
+              .total
+              .balance
+                display inline-block
+                vertical-align bottom
+                text-transform uppercase
+                width 42rem
+                adventure()
+
+              .balance
+                text-align right
+
+              .confirm-prompt
+                margin 10rem 0 0
+                text-transform uppercase
+
+              .confirm
+                position relative
+
+                &::after
+                  content 'X......................'
+                  position absolute
+                  z-index -1
+                  bottom 3rem
+                  left 0
+
+                .submit-payment-button
+                  freehand()
+                  border none
+                  background none
+                  width 100%
+                  padding 10rem 0 5rem 5rem
+                  color transparent
+                  cursor pointer
+
+                  &:hover
+                    color atariGrey(0)
 
         input
         textarea
@@ -464,7 +547,6 @@
   .message-area
     position absolute
     bottom 0
-    pointer-events initial
 
     .message
       position absolute

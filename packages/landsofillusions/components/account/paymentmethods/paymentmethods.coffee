@@ -35,7 +35,7 @@ class LOI.Components.Account.PaymentMethods extends LOI.Components.Account.Page
 
         @_stripeCheckout = StripeCheckout.configure
           key: Meteor.settings.public.stripe.publishableKey
-          image: 'https://stripe.com/img/documentation/checkout/marketplace.png'
+          image: '/retronator/hq/items/receipt/stripe-marketplace-icon.png'
           name: 'Retronator'
           panelLabel: 'Add card'
           locale: 'auto'

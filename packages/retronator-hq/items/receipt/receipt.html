@@ -24,16 +24,10 @@
                 <p>One moment, I'm processing the payment …</p>
               </div>
             {{else}}
-              {{#if scrolledToBottom}}
+              {{#if $and scrolledToBottom creditApplied paymentAmount}}
                 <div class="purchase-info message">
-                  {{#if creditApplied}}
-                    {{#if paymentAmount}}
-                      <p>${{creditApplied}} will be used from your existing store balance.
-                        You can pay the remaining ${{paymentAmount}} with a credit card below.</p>
-                    {{else}}
-                      <p>Your purchase will be covered with your existing store balance. Simply confirm the payment below.</p>
-                    {{/if}}
-                  {{/if}}
+                  <p>${{creditApplied}} will be used from your existing store balance.
+                    You can pay the remaining ${{paymentAmount}} with a credit card below.</p>
                 </div>
               {{/if}}
             {{/if}}
@@ -135,30 +129,32 @@
               {{#unless purchaseCompleted}}
                 <div class="payment-presenter">
                   <div class="instructions">
-                    <h2>Payment</h2>
                     {{#if currentUser}}
                       {{#if paymentAmount}}
                         <p>Choose a one-time payment or one of your saved payment methods.</p>
                       {{else}}
-                        <p>Your purchase will be covered with your existing store balance.
-                          Confirm the payment by clicking on the payment slip on the right.</p>
+                        <p>You have a store balance of ${{storeCredit}}. ${{creditApplied}} will be used to cover
+                          this purchase. Simply confirm the payment by clicking on the payment slip on the right.</p>
                       {{/if}}
                     {{else}}
                       <p>Choose a payment type.</p>
                     {{/if}}
                     {{#if paymentAmount}}
+                      <h2>One-time payment</h2>
                       <div class="one-time-payment">
                         {{#unless oneTimeStripeSelected}}
-                          <div class="card one-time-stripe">
-                            <div class="click">Click to</div>
-                            <div class="checkout">Checkout with Stripe</div>
-                          </div>
+                          {{#if stripeInitialized}}
+                            <div class="card one-time-stripe">
+                              <div class="click">Click to</div>
+                              <div class="checkout">Checkout with Stripe</div>
+                            </div>
+                          {{/if}}
                         {{/unless}}
                       </div>
                       <div class="payment-methods-area">
                         <h2>Saved payment methods</h2>
-                        <p>Click to choose desired payment method:</p>
                         {{#if paymentMethods.count}}
+                          <p>Choose a desired saved payment method:</p>
                           <ul class="payment-methods {{moreThan2Class}}">
                             {{#each paymentMethods}}
                               <li class="payment-method">
@@ -169,7 +165,7 @@
                             {{/each}}
                           </ul>
                         {{else}}
-                          <p>None saved. Use the form on the right to save a payment method to your account.</p>
+                          <p>You have no saved payment methods. Use the form on the right to save a new payment method to your account.</p>
                         {{/if}}
                       </div>
                     {{/if}}
@@ -178,7 +174,7 @@
                     <div class="new-payment-method">
                       <h2 class="title">Save payment method</h2>
                       <div class="payment-method-types">
-                        <button class="add-payment-method-button add-stripe-button">Credit card</button>
+                        <button class="add-payment-method-button add-stripe-button save-customer-button">Credit card</button>
                       </div>
                       <p class="smallprint">
                         Credit card<br/>
@@ -189,32 +185,97 @@
                     </div>
                   {{/if}}
                   <div class="selected-payment-method">
-                    {{#with selectedPaymentMethod}}
-                      <div class="payment-type">
-                        {{#if $is paymentMethod.type 'StoreBalance'}}
-                          <div class="card store-balance">
-                          </div>
-                        {{/if}}
-                        {{#if $is paymentMethod.type 'OneTimeStripe'}}
-                          <div class="card one-time-stripe">
-                            <div class="checkout">Checkout with Stripe</div>
-                          </div>
-                        {{/if}}
-                        {{#if $is paymentMethod.type 'Stripe'}}
-                          {{#with customerData}}
-                            <div class="card stripe">
-                              <div class="name">{{name}}</div>
-                              <div class="number">XX-XX-XX-{{number}}</div>
-                              <div class="expiration">{{expiration.month}}/{{expiration.year}}</div>
-                              <div class="brand">{{brand}}</div>
+                    <div class="payment-type">
+                      {{#if paymentAmount}}
+                        {{#with selectedPaymentMethod}}
+                          {{#if $is paymentMethod.type 'OneTimeStripe'}}
+                            <div class="card one-time-stripe">
+                              <div class="checkout">Checkout with Stripe</div>
                             </div>
-                          {{/with}}
-                        {{/if}}
-                      </div>
+                          {{/if}}
+                          {{#if $is paymentMethod.type 'Stripe'}}
+                            {{#with customerData}}
+                              <div class="card stripe">
+                                <div class="name">{{name}}</div>
+                                <div class="number">XX-XX-XX-{{number}}</div>
+                                <div class="expiration">{{expiration.month}}/{{expiration.year}}</div>
+                                <div class="brand">{{brand}}</div>
+                              </div>
+                            {{/with}}
+                          {{/if}}
+                        {{/with}}
+                      {{else}}
+                        <div class="card store-balance">
+                          <div class="pay">Pay with store balance</div>
+                        </div>
+                      {{/if}}
+                    </div>
+                    {{#if showPaymentInfo}}
                       <div class="payment-info receipt">
                         <button class="deselect-payment-method-button">X</button>
                         <h2>Retronator<br/>Store</h2>
                         <div>----------------------</div>
+                        <ul class="data-items">
+                          <li class="data-item">
+                            <span class="name">Date</span>
+                            <span class="value">{{dateText}}</span>
+                          </li>
+                          {{#if paymentAmount}}
+                            {{#with selectedPaymentMethod}}
+                              {{#if $is paymentMethod.type 'OneTimeStripe'}}
+                                <li class="data-item">
+                                  <span class="name">Pay Type</span>
+                                  <span class="value">Stripe</span>
+                                </li>
+                                <li class="data-item">
+                                  <span class="name">Card Num</span>
+                                  <span class="value">Prompt</span>
+                                </li>
+                              {{/if}}
+                              {{#if $is paymentMethod.type 'Stripe'}}
+                                <li class="data-item">
+                                  <span class="name">Pay Type</span>
+                                  <span class="value">Stripe</span>
+                                </li>
+                                {{#with customerData}}
+                                  <li class="data-item">
+                                    <span class="name">Card Num</span>
+                                    <span class="value">XXXXXX{{number}}</span>
+                                  </li>
+                                  <li class="data-item">
+                                    <span class="name">Card Name</span>
+                                    <span class="value">{{name}}</span>
+                                  </li>
+                                  <li class="data-item">
+                                    <span class="name">Expy Date</span>
+                                    <span class="value">{{expiration.month}}/{{expiration.year}}</span>
+                                  </li>
+                                  <li class="data-item">
+                                    <span class="name">Card Type</span>
+                                    <span class="value">{{brand}}</span>
+                                  </li>
+                                {{/with}}
+                              {{/if}}
+                            {{/with}}
+                          {{else}}
+                            <li class="data-item">
+                              <span class="name">Pay Type</span>
+                              <span class="value">Store balance</span>
+                            </li>
+                          {{/if}}
+                        </ul>
+                        <p class="sale">Sale</p>
+                        <p>
+                          <span class="total">Total</span>
+                          <span class="balance">
+                            {{#if paymentAmount}}
+                              ${{paymentAmount}}
+                            {{else}}
+                              ${{creditApplied}}
+                            {{/if}}
+                          </span>
+                        </p>
+                        <p class="confirm-prompt">Click below to confirm</p>
                         <div class="confirm">
                           <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
                             {{#if submittingPayment}}
@@ -230,7 +291,7 @@
                         </div>
                         <p>I confirm the purchase and agree to the terms of service.</p>
                       </div>
-                    {{/with}}
+                    {{/if}}
                   </div>
                 </div>
               {{/unless}}
