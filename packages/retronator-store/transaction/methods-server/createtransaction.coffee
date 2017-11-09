@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 RS = Retronator.Store
 
 RS.Transaction.create = (options) ->

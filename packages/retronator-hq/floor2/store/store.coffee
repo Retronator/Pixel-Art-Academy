@@ -184,7 +184,8 @@ class HQ.Store extends LOI.Adventure.Location
           computation.stop()
 
           # Let the script know if transaction succeeded or not.
-          @ephemeralState().transactionCanceled = not receipt.transactionCompleted
+          @ephemeralState().transactionCompleted = receipt.transactionCompleted
+          @ephemeralState().purchaseErrorAfterPurchase = receipt.purchaseErrorAfterCharge()
 
           # Return to location.
           display.view HQ.Store.Display.Views.Center

@@ -214,6 +214,22 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
       month: 'numeric'
       year: 'numeric'
 
+  purchaseErrorText: ->
+    return unless error = @purchaseError()
+
+    errorText = "#{error.reason}"
+    errorText = "#{errorText} #{error.details}" if error.details
+
+    errorText
+
+  purchaseErrorAfterCharge: ->
+    return unless error = @purchaseError()
+    error.error is RS.Transaction.serverErrorAfterPurchase
+
+  showingFinalMessage: ->
+    # We show only the dialog message (and hide the receipt and payment presenter) when the purchase has gone through.
+    @purchaseCompleted() or @purchaseErrorAfterCharge()
+
   events: ->
     super.concat
       'change .anonymous-radio': @onChangeAnonymousRadio
@@ -287,25 +303,35 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @$('.viewport-area > .safe-area').velocity 'scroll',
       container: @$('.viewport-area')
 
+  _displayError: (error) ->
+    super
+
+    # If the error has happened after purchase, we still want to clean up.
+    @_resetAfterPurchase() if @purchaseErrorAfterCharge()
+
   _completePurchase: ->
     super
 
+    # We set this to true because adventure script will use it to determine how to branch the dialog.
     @transactionCompleted = true
 
     @display.smile()
 
-    # Reset the shopping cart state.
-    HQ.Items.ShoppingCart.clearItems()
-
-    # Reset the tip
-    @tipStateFields.amount 0
-    @tipStateFields.message null
+    @_resetAfterPurchase()
 
     # deactivate receipt after 4 seconds.
     Meteor.setTimeout =>
       @deactivate()
     ,
       4000
+
+  _resetAfterPurchase: ->
+    # Reset the shopping cart state.
+    HQ.Items.ShoppingCart.clearItems()
+
+    # Reset the tip
+    @tipStateFields.amount 0
+    @tipStateFields.message null
 
   onClickDeselectPaymentMethodButton: ->
     @selectedPaymentMethod null

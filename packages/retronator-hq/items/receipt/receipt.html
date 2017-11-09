@@ -12,11 +12,20 @@
           </div>
         {{else}}
           {{#if purchaseError}}
-            <div class="purchase-error message">
-              <p>It looks like there was an error processing the purchase. {{purchaseError}}</p>
-              <p>The payment might still have gone through, so please email
-                hi@retronator.com so we can double check your purchase status.</p>
-            </div>
+            {{#if purchaseErrorAfterCharge}}
+              <div class="purchase-error message">
+                <p>The payment went through, however, we seem to have encountered some trouble on our server.</p>
+                <p>{{purchaseErrorText}}</p>
+                <p>I wrote it down, but in case I don't get back to you in a day, please
+                  email hi@retronator.com to make sure this is getting checked as soon as possible.</p>
+              </div>
+            {{else}}
+              <div class="purchase-error message">
+                <p>It looks like there was an error processing the purchase.</p>
+                <p>{{purchaseErrorText}}</p>
+                <p>Please email hi@retronator.com if you are having trouble with the system.</p>
+              </div>
+            {{/if}}
           {{else}}
             {{#if submittingPayment}}
               <div class="purchase-info message">
@@ -37,7 +46,7 @@
       <div class="viewport-area">
         <div class="safe-area">
           <script src="https://checkout.stripe.com/checkout.js"></script>
-          {{#unless purchaseCompleted}}
+          {{#unless showingFinalMessage}}
             {{#if purchaseItems.length}}
               <div class="receipt">
                 <h2>Retronator<br/>Store</h2>
@@ -125,7 +134,7 @@
                   <p>Thank you for your support!</p>
                 </div>
               </div>
-              {{#unless purchaseCompleted}}
+              {{#unless showingFinalMessage}}
                 <div class="payment-presenter">
                   <div class="instructions">
                     {{#if currentUser}}

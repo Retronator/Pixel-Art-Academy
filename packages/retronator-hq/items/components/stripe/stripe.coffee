@@ -181,7 +181,4 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
       @_completePurchase shoppingCart, 0
 
   _displayError: (error) ->
-    errorText = "#{error.reason}"
-    errorText = "#{errorText} #{error.details}" if error.details
-    @purchaseError errorText
-    console.error error
+    @purchaseError error

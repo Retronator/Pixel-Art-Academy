@@ -124,7 +124,8 @@ pause
   
 ### Checkout
 
--> [TransactionCanceled] `_transactionCanceled`
+-> [PurchaseError] `_purchaseErrorAfterPurchase`
+-> [TransactionCanceled] `not _transactionCompleted`
 
 ## TransactionComplete
 
@@ -151,6 +152,17 @@ retro:
     Don't forget to register for an account with Burra downstairs.
     You will need to enter the email you just used in order for the purchase to be applied properly. `not @user.signedIn`
     
+-> [RetroDialog]
+
+## PurchaseError
+
+### RemoveReceipt
+### ReturnShoppingCart
+
+retro: 
+  Sorry about that. I'll do my best to resolve it very soon.
+  I apologize for having to wait.
+
 -> [RetroDialog]
 
 ## TransactionCanceled

@@ -83,13 +83,16 @@ Meteor.methods
       stripeCharge = AT.Stripe.charges.create chargeData
 
     catch error
-      throw new AE.InvalidOperationException "Stripe charge did not succeed. #{error.message}"
+      throw new AE.InvalidOperationException "Stripe charge did not succeed.", error.message
 
     # Double check that the stripe charge was created.
     throw new AE.InvalidOperationException "Stripe charge was not created successfully." unless stripeCharge?.id
 
     # Double check that the charge succeeded.
-    throw new AE.InvalidOperationException "Stripe charge did not succeed. #{stripeCharge.failure_message}" unless stripeCharge.paid and stripeCharge.status is 'succeeded'
+    throw new AE.InvalidOperationException "Stripe charge did not succeed.", stripeCharge.failure_message unless stripeCharge.paid and stripeCharge.status is 'succeeded'
+
+    # IMPORTANT: At this point the stripe charge was created, so any future thrown
+    # errors need to have a special error code and be sent to the admin email.
 
     # Stripe charge was created so record the payment.
     payments = []
@@ -100,7 +103,11 @@ Meteor.methods
       amount: payment.amount
 
     stripePayment = RS.Payment.documents.findOne stripePaymentId
-    throw new AE.InvalidOperationException "Stripe payment was not created successfully." unless stripePayment
+
+    unless stripePayment
+      error = new Meteor.Error RS.Transaction.serverErrorAfterPurchase, "Stripe payment was not created successfully."
+      emailAdminAboutError error, stripeCharge, payment, user
+      throw error
 
     payments.push stripePayment
 
@@ -111,7 +118,11 @@ Meteor.methods
         storeCreditAmount: usedCreditAmount
 
       creditPayment = RS.Payment.documents.findOne creditPaymentId
-      throw new AE.InvalidOperationException "Credit payment was not created successfully." unless creditPayment
+
+      unless creditPayment
+        error = new Meteor.Error RS.Transaction.serverErrorAfterPurchase, "Credit payment was not created successfully."
+        emailAdminAboutError error, stripeCharge, payment, user
+        throw error
 
       payments.push creditPayment
 
@@ -126,9 +137,27 @@ Meteor.methods
       # Log the error since we'll probably need to resolve the stripe payment.
       console.error "Transaction was not completed successfully.", error
       console.error "The stripe charge affected has id:", stripeCharge.id
-      # TODO: Send an email.
 
-      throw new AE.InvalidOperationException "An error was encountered during creation of the transaction."
+      error = new Meteor.Error RS.Transaction.serverErrorAfterPurchase, "An error was encountered during creation of the transaction.", (error.reason or error.message or error)
+      emailAdminAboutError error, stripeCharge, payment, user
+      throw error
 
     # Return the transaction id if all went good.
     transactionId
+
+emailAdminAboutError = (error, stripeCharge, payment, user) ->
+  adminEmail = new AT.EmailComposer
+  adminEmail.addParagraph "Error was encountered during Stripe purchase, after a charge was made."
+  adminEmail.addParagraph "Error: #{error.reason} #{error.details}"
+  adminEmail.addParagraph "User ID: #{user._id}" if user
+  adminEmail.addParagraph "Charge ID: #{stripeCharge.id}" if user
+  adminEmail.addParagraph "Payment token email: #{payment.token.email}" if payment.token
+  adminEmail.addParagraph "Payment method: #{payment.paymentMethodId}" if payment.paymentMethodId
+  adminEmail.end()
+
+  Email.send
+    from: "hi@retronator.com"
+    to: "hi@retronator.com"
+    subject: "Store purchase error"
+    text: adminEmail.text
+    html: adminEmail.html
