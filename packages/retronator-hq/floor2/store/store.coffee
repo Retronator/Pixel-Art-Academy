@@ -41,6 +41,9 @@ class HQ.Store extends LOI.Adventure.Location
     @subscribe RA.User.registeredEmailsForCurrentUser
     @subscribe RS.Transaction.forCurrentUser
 
+    # We need payments to determine Kickstarter tier eligibility.
+    RS.Payment.forCurrentUser.subscribe @
+
   destroy: ->
     super
 
@@ -104,7 +107,7 @@ class HQ.Store extends LOI.Adventure.Location
           try
             tier.validateEligibility()
 
-          catch
+          catch error
             eligibleBackerTiers.push false
             continue
 

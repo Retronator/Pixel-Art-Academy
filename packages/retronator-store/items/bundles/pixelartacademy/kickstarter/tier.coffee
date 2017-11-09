@@ -6,7 +6,7 @@ CatalogKeys = RS.Items.CatalogKeys
 # These are tiers that you can purchase in the store if you were a backer that hasn't selected a reward.
 class RS.Items.Bundles.PixelArtAcademyKickstarterTier extends RS.Item
   validateEligibility: ->
-    user = Meteor.user()
+    user = Retronator.user()
     @_throwEligibilityException "You need to be logged in to select a Kickstarter tier." unless user
 
     # Find this user's kickstarter pledge.
