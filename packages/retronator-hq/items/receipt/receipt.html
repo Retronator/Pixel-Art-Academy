@@ -148,7 +148,9 @@
                       <p>Choose a payment type.</p>
                     {{/if}}
                     {{#if paymentAmount}}
-                      <h2>One-time payment</h2>
+                      {{#if currentUser}}
+                        <h2>One-time payment</h2>
+                      {{/if}}
                       <div class="one-time-payment">
                         {{#unless oneTimeStripeSelected}}
                           {{#if stripeInitialized}}
@@ -159,23 +161,25 @@
                           {{/if}}
                         {{/unless}}
                       </div>
-                      <div class="payment-methods-area">
-                        <h2>Saved payment methods</h2>
-                        {{#if paymentMethods.count}}
-                          <p>Choose a desired saved payment method:</p>
-                          <ul class="payment-methods {{moreThan2Class}}">
-                            {{#each paymentMethods}}
-                              <li class="payment-method">
-                                {{#if $is type 'Stripe'}}
-                                  {{> Retronator.HQ.Items.Receipt.StripePaymentMethod}}
-                                {{/if}}
-                              </li>
-                            {{/each}}
-                          </ul>
-                        {{else}}
-                          <p>You have no saved payment methods. Use the form on the right to save a new payment method to your account.</p>
-                        {{/if}}
-                      </div>
+                      {{#if currentUser}}
+                        <div class="payment-methods-area">
+                          <h2>Saved payment methods</h2>
+                          {{#if paymentMethods.count}}
+                            <p>Choose a desired saved payment method:</p>
+                            <ul class="payment-methods {{moreThan2Class}}">
+                              {{#each paymentMethods}}
+                                <li class="payment-method">
+                                  {{#if $is type 'Stripe'}}
+                                    {{> Retronator.HQ.Items.Receipt.StripePaymentMethod}}
+                                  {{/if}}
+                                </li>
+                              {{/each}}
+                            </ul>
+                          {{else}}
+                            <p>You have no saved payment methods. Use the form on the right to save a new payment method to your account.</p>
+                          {{/if}}
+                        </div>
+                      {{/if}}
                     {{/if}}
                   </div>
                   {{#if showNewPaymentMethod}}
