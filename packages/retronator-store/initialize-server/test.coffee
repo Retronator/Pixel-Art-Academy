@@ -45,17 +45,17 @@ createKickstarterBacker = (email, amount, price, tier) ->
   return if user
 
   # Get item to add.
-  kickstarterItem = RS.Transactions.Item.documents.findOne catalogKey: tier
+  kickstarterItem = RS.Item.documents.findOne catalogKey: tier
   console.log kickstarterItem, tier
 
   # Add a kickstarter payment.
-  paymentId = RS.Transactions.Payment.documents.insert
-    type: RS.Transactions.Payment.Types.KickstarterPledge
+  paymentId = RS.Payment.documents.insert
+    type: RS.Payment.Types.KickstarterPledge
     amount: amount
-    project: RS.Transactions.Payment.Projects.PixelArtAcademy
+    project: RS.Payment.Projects.PixelArtAcademy
 
   # Add a transaction for this user's item.
-  RS.Transactions.Transaction.documents.insert
+  RS.Transaction.documents.insert
     time: new Date()
     email: email
     items: [

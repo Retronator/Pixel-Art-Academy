@@ -18,9 +18,9 @@ Document.startup ->
   adminId = adminUser?._id or Accounts.createUser Meteor.settings.admin
 
   # Add admin item to admin user.
-  adminItem = RS.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Retronator.Admin
+  adminItem = RS.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Retronator.Admin
 
-  RS.Transactions.Transaction.documents.insert
+  RS.Transaction.documents.insert
     time: new Date()
     user:
       _id: adminId

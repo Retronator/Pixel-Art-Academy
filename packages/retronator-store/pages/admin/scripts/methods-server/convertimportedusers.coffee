@@ -59,7 +59,7 @@ Meteor.methods
       console.log "Converting imported user", importedDataUser if debug
 
       # Did we already convert this user?
-      existingTransaction = RS.Transactions.Transaction.documents.findOne importedDataUser._id
+      existingTransaction = RS.Transaction.documents.findOne importedDataUser._id
 
       if existingTransaction and existingTransaction.payments.length
         # Now also find the existing payment.
@@ -72,20 +72,20 @@ Meteor.methods
 
       if importedDataUser.pledge?.amount
         paymentData =
-          type: RS.Transactions.Payment.Types.KickstarterPledge
+          type: RS.Payment.Types.KickstarterPledge
           amount: importedDataUser.pledge.amount
           backerEmail: importedDataUser.email
-          project: RS.Transactions.Payment.Projects.PixelArtAcademy
+          project: RS.Payment.Projects.PixelArtAcademy
           backerNumber: importedDataUser.backerNumber
           backerId: importedDataUser.backerId
           backerName: importedDataUser.name
 
         if paymentId
-          result = RS.Transactions.Payment.documents.update paymentId, paymentData
+          result = RS.Payment.documents.update paymentId, paymentData
           console.log "Updating payment, result:", result if debug
 
         else
-          paymentId = RS.Transactions.Payment.documents.insert paymentData
+          paymentId = RS.Payment.documents.insert paymentData
           console.log "Inserting payment, result:", paymentId if debug
 
         payments = [
@@ -128,7 +128,7 @@ Meteor.methods
 
       console.log "Searching for catalog key", itemCatalogKey if debug
 
-      item = RS.Transactions.Item.documents.findOne catalogKey: itemCatalogKey
+      item = RS.Item.documents.findOne catalogKey: itemCatalogKey
 
       unless item
         console.error 'Item for key', itemCatalogKey, 'was not found.'
@@ -146,7 +146,7 @@ Meteor.methods
 
       # See if we have to add the shipping item.
       if importedDataUser.shipping?.amount
-        shippingItem = RS.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.PixelArtAcademy.Kickstarter.ArtworkShipping
+        shippingItem = RS.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.PixelArtAcademy.Kickstarter.ArtworkShipping
 
         transactionItems.push
           item:
@@ -166,7 +166,7 @@ Meteor.methods
 
       console.log "Upserting transaction", transaction if debug
 
-      result = RS.Transactions.Transaction.documents.upsert importedDataUser._id, transaction
+      result = RS.Transaction.documents.upsert importedDataUser._id, transaction
 
       console.log "Upserting transaction, result:", result if debug
 

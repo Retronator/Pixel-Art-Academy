@@ -23,8 +23,8 @@ PAA.Practice.CheckIn.getExternalUrlImage.method (url) ->
   # It is not, so let's parse the url to find what service it belongs to.
   if /twitter\.com/.test url
     tweetId = url.split('/status/')[1]
-    apiUrl = 'statuses/show/' + tweetId
-    tweetData = AT.Twitter.get apiUrl,
+    tweetData = AT.Twitter.statuses.show
+      id: tweetId
       tweet_mode: 'extended'
 
     throw new AE.InvalidOperationException "There was an error communicating with the server. Either the tweet doesn't exist, or the server is down - try again later!" unless tweetData

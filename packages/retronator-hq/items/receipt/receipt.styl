@@ -27,7 +27,7 @@
           position relative
           z-index 1
           width 104rem
-          padding 8rem
+          padding 8rem 8rem 38rem
           checkout()
           color atariAzure(2)
           background image('/retronator/hq/items/receipt/top.png')
@@ -39,7 +39,18 @@
             absolute-cover()
             z-index -1
             top 13rem
+            bottom 43rem
             background atariGrey(5)
+
+          &::after
+            content ''
+            position absolute
+            bottom 30rem
+            left 0
+            right 0
+            height 13rem
+            background image('/retronator/hq/items/receipt/bottom.png') 100% / 100%
+            z-index -1
 
           h2
             margin 0
@@ -107,6 +118,410 @@
             text-transform uppercase
             text-align center
 
+        .payment-presenter
+          position relative
+          width 301rem
+          height 286rem
+          margin 0 auto 20rem
+          padding 9rem
+          background image('/retronator/hq/items/receipt/presenter-background.png') 100% / 100%
+          filter drop-shadow(-4rem 3rem 0 transparentify(atariGrey(3), atariGrey(4)))
+
+          &::before
+          &::after
+            content ''
+            position absolute
+            z-index 1
+            bottom 0
+            width 108rem
+            pointer-events none
+
+          &::before
+            left 0
+            height 109rem
+            background image('/retronator/hq/items/receipt/presenter-left-corner.png') 100% / 100%
+
+          &::after
+            right 0
+            height 108rem
+            background image('/retronator/hq/items/receipt/presenter-right-corner.png') 100% / 100%
+
+          .instructions
+            background atariGrey(5)
+            color atariGrey(0)
+            width 124rem
+            height 269rem
+            padding 6rem
+
+            p:first-child
+              margin-top 0
+
+            h2
+              acme-7()
+              font-weight normal
+              margin 10rem 0 8rem
+
+            .one-time-payment
+              height 45rem
+              text-align center
+
+              .card
+                display inline-block
+                position relative
+                width 65rem
+                height 40rem
+                filter drop-shadow(-1rem 1rem 0 transparentify(atariGrey(5), atariGrey(7)))
+                transition all 0.1s ease-out
+                top 0
+                cursor pointer
+
+                &::after
+                  content ''
+                  absolute-cover()
+                  z-index 1
+                  background image('/landsofillusions/components/account/paymentmethods/card-shine.png') 100% / 100%
+                  opacity 0.1
+                  pointer-events none
+
+                &:hover
+                  top -1rem
+                  filter drop-shadow(-3rem 2rem 0 transparentify(atariGrey(5), atariGrey(7)))
+
+                &.one-time-stripe
+                  background image('/retronator/hq/items/receipt/one-time-stripe.png') 100% / 100%
+
+                  .click
+                    margin-top 15rem
+                    freehand()
+
+                  .checkout
+                    margin-top 2rem
+                    color atariBlue(6)
+                    checkout()
+                    text-transform uppercase
+                    line-height 6rem
+                    padding 0 10rem
+
+            .payment-methods
+              position relative
+              height 110rem
+              list-style none
+              padding 0
+              margin 0
+              display flex
+              flex-direction column
+              flex-wrap wrap
+
+              .case-area
+                position relative
+                width 76rem
+                height 53rem
+                z-index 1
+
+                &:hover
+                  z-index 3
+
+                .case
+                  position relative
+                  width 68rem
+                  height 44rem
+                  cursor pointer
+
+                  &::before
+                  &::after
+                    content ''
+                    absolute-cover()
+                    background-size 100%
+
+                  &::before
+                    z-index 2
+                    background-image image('/landsofillusions/components/account/paymentmethods/case-top.png')
+                    filter drop-shadow(-1rem 1rem 0 transparentify(atariGrey(5), atariGrey(7)))
+
+                  &::after
+                    z-index 0
+                    background-image image('/landsofillusions/components/account/paymentmethods/case-bottom.png')
+
+                  &:hover
+                    .card
+                      left 7rem
+
+                  &.loading
+                    .card
+                      left 10rem
+
+                  &.opened
+                    .card
+                      left 74rem
+
+                  .card
+                    position absolute
+                    z-index 1
+                    left 2rem
+                    top 2rem
+                    width 65rem
+                    height 40rem
+                    padding 4rem
+                    background image('/landsofillusions/components/account/paymentmethods/card-stripe.png') 100% / 100%
+                    filter drop-shadow(-1rem 1rem 0 transparentify(atariGrey(5), atariGrey(7)))
+                    checkout()
+                    color atariBlue(5)
+                    text-transform uppercase
+                    line-height 6rem
+                    transition left 0.2s ease-out
+
+                    &::after
+                      content ''
+                      absolute-cover()
+                      z-index 1
+                      background image('/landsofillusions/components/account/paymentmethods/card-shine.png') 100% / 100%
+                      opacity 0.1
+                      pointer-events none
+
+                    .view-details
+                      position absolute
+                      top 22rem
+                      left 17rem
+                      width 30rem
+                      text-align center
+
+                    .loading
+                      position absolute
+                      top 25rem
+                      left 9rem
+
+                  .label.stripe
+                    position absolute
+                    z-index 3
+                    left 19rem
+                    top 11rem
+                    width 30rem
+                    height 8rem
+                    background image('/landsofillusions/components/account/paymentmethods/stripe.png') 100% / 100%
+
+          .new-payment-method
+            position absolute
+            bottom 8rem
+            right 11rem
+            width 120rem
+            height 96rem
+            padding 5rem
+            background atariBlue(5)
+            border-bottom 1rem solid atariBlue(3)
+            color atariBlue(1)
+
+            .title
+              adventure()
+              font-weight normal
+              text-transform uppercase
+              margin 0
+              border 1rem solid atariBlue(1)
+              padding 4rem
+
+            .payment-method-types
+              margin-top -1rem
+              border 1rem solid atariBlue(1)
+              padding 2rem 0
+
+              .add-payment-method-button
+                background none
+                border none
+                cursor pointer
+                padding 2rem 4rem
+                font inherit
+                color inherit
+
+                &::before
+                  content ''
+                  display inline-block
+                  width 7rem
+                  height 7rem
+                  padding 0 0 1rem 1rem
+                  margin-right 3rem
+                  vertical-align bottom
+                  border 1rem solid atariBlue(1)
+                  text-align center
+                  color atariBlue(1)
+
+                &:hover::before
+                  content '✔︎'
+
+            .smallprint
+              checkout()
+
+          .selected-payment-method
+            &::after
+              content ''
+              position absolute
+              top 30rem
+              right 30rem
+              z-index 1
+              width 78rem
+              height 49rem
+              background image('/retronator/hq/items/receipt/presenter-card-holder.png') 100% / 100%
+              pointer-events none
+
+            .payment-type
+              position absolute
+              top 33rem
+              right 36rem
+
+              .card
+                width 65rem
+                height 40rem
+
+                &::after
+                  content ''
+                  absolute-cover()
+                  z-index 1
+                  background image('/landsofillusions/components/account/paymentmethods/card-shine.png') 100% / 100%
+                  opacity 0.1
+                  pointer-events none
+
+                &.stripe
+                  padding 4rem
+                  background image('/landsofillusions/components/account/paymentmethods/card-stripe.png') 100% / 100%
+                  checkout()
+                  color atariBlue(5)
+                  text-transform uppercase
+                  line-height 6rem
+
+                  .name
+                    overflow hidden
+
+                  .number
+                    position absolute
+                    left 5rem
+                    bottom 9rem
+
+                  .expiration
+                    position absolute
+                    left 5rem
+                    bottom 2rem
+
+                  .brand
+                    position absolute
+                    right 2rem
+                    bottom 2rem
+                    max-width 23rem
+                    white-space nowrap
+                    overflow hidden
+
+                &.one-time-stripe
+                  background image('/retronator/hq/items/receipt/one-time-stripe.png') 100% / 100%
+                  text-align center
+
+                  .checkout
+                    color atariBlue(6)
+                    checkout()
+                    text-transform uppercase
+                    line-height 6rem
+                    padding 25rem 10rem 0
+
+                &.store-balance
+                  background image('/retronator/hq/items/receipt/store-balance.png') 100% / 100%
+                  text-align center
+
+                  .pay
+                    color atariAqua(5)
+                    checkout()
+                    text-transform uppercase
+                    line-height 6rem
+                    padding 10rem 5rem 0
+
+            .payment-info
+              position absolute
+              z-index 2
+              top 90rem
+              right 18rem
+              filter drop-shadow(-20rem 10rem 10rem rgba(atariGrey(0), 0.5))
+
+              .deselect-payment-method-button
+                position absolute
+                top 0
+                right 3rem
+                border none
+                background none
+                padding 5rem
+                adventure()
+                color atariGrey(0)
+                cursor pointer
+
+              .data-items
+                list-style none
+                margin 0
+                padding 0
+
+                .data-item
+                  .name
+                    position relative
+                    display inline-block
+                    vertical-align bottom
+                    width 40rem
+                    text-transform uppercase
+
+                    &::after
+                      content ':'
+                      position absolute
+                      top 0
+                      right 0
+
+                  .value
+                    display inline-block
+                    vertical-align bottom
+                    width 44rem
+                    text-transform uppercase
+                    overflow hidden
+                    white-space nowrap
+
+              .sale
+                kyrou-7()
+                font-weight bold
+                text-align center
+                margin-bottom 0
+
+              .total
+              .balance
+                display inline-block
+                vertical-align bottom
+                text-transform uppercase
+                width 42rem
+                adventure()
+
+              .balance
+                text-align right
+
+              .confirm-prompt
+                margin 6rem 0 0
+                text-align center
+                text-transform uppercase
+
+              .confirm
+                position relative
+
+                &::after
+                  content 'X......................'
+                  position absolute
+                  z-index -1
+                  bottom 3rem
+                  left 0
+
+                .submit-payment-button
+                  freehand()
+                  border none
+                  background none
+                  width 100%
+                  padding 5rem 0 5rem 5rem
+                  color transparent
+                  cursor pointer
+
+                  &:hover
+                    color atariGrey(0)
+
+              .agree-terms
+                adventure()
+                margin-bottom 0
+
         input
         textarea
           width 100%
@@ -148,7 +563,8 @@
             content '[✕] '
 
   .message-area
-    pointer-events initial
+    position absolute
+    bottom 0
 
     .message
       position absolute

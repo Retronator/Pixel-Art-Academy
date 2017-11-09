@@ -112,7 +112,7 @@
 
     .info-note
       position absolute
-      top 10rem
+      top -20rem
       right -3rem
       width 132rem
       height 116rem
@@ -161,7 +161,17 @@
       absolute-cover()
       z-index -1
       top 13rem
+      bottom 13rem
       background atariGrey(5)
+
+    &::after
+      content ''
+      position absolute
+      bottom 0
+      left 0
+      right 0
+      height 13rem
+      background image('/retronator/hq/items/receipt/bottom.png') 100% / 100%
 
     h3.receipt-title
       margin 0

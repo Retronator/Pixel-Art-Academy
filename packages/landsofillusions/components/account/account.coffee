@@ -25,6 +25,7 @@ class LOI.Components.Account extends AM.Component
       new @constructor.Characters
       new @constructor.Inventory
       new @constructor.Transactions
+      new @constructor.PaymentMethods
     ]
 
     for page, index in @pages
@@ -33,12 +34,9 @@ class LOI.Components.Account extends AM.Component
       # Add ID to avoid re-creating the component in #each.
       page._id = Random.id()
 
-    @emptyPages = for index in [@pages.length + 1...6]
-      pageNumber: index
-
     LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>
       # Show the dialog if we need to.
-      @show() if @ in LOI.adventure.modalDialogs()
+      @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
 
       return unless pageUrl = FlowRouter.getParam 'parameter2'
 

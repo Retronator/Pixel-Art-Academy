@@ -2,7 +2,7 @@
   <div class="retronator-hq-items-receipt">
   {{> LandsOfIllusions.Components.BackButton}}
     {{#LandsOfIllusions.Components.Overlay}}
-      {{#unless scrolledToBottom}}
+      {{#unless $or scrolledToBottom purchaseCompleted}}
         <div class="scroll-hint">Scroll down to purchase</div>
       {{/unless}}
       <div class="message-area">
@@ -12,47 +12,32 @@
           </div>
         {{else}}
           {{#if purchaseError}}
-            <div class="purchase-error message">
-              <p>{{purchaseError}}</p>
-              <p>It looks like there was an error processing the purchase.</p>
-              <p>The payment might still have gone through, so please email
-                hi@retronator.com so we can double check your purchase status.</p>
-            </div>
-          {{else}}
-            {{#if scrolledToBottom}}
-              <div class="purchase-info message">
-                {{#if creditApplied}}
-                  {{#if paymentAmount}}
-                    <p>${{creditApplied}} will be used from your existing store balance.
-                      You can pay the remaining ${{paymentAmount}} with a credit card.</p>
-                  {{else}}
-                    <p>Your purchase will be covered with your existing store balance. Simply confirm the payment below.</p>
-                  {{/if}}
-                {{/if}}
-                {{#if paymentAmount}}
-                  <p>Your credit card won't be charged until the first episode of the game is released and you can start playing.</p>
-                  <p>You will be emailed beforehand in case you need to cancel your purchase at that time.</p>
-                {{/if}}
-                <div class="actions">
-                  <p>
-                    {{#if stripeInitialized}}
-                      <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
-                        {{#if submittingPayment}}
-                          Submitting …
-                        {{else}}
-                          {{#if paymentAmount}}
-                            Checkout with Stripe
-                          {{else}}
-                            Confirm purchase
-                          {{/if}}
-                        {{/if}}
-                      </button>
-                    {{else}}
-                      Please wait while Stripe Checkout initializes …
-                    {{/if}}
-                  </p>
-                </div>
+            {{#if purchaseErrorAfterCharge}}
+              <div class="purchase-error message">
+                <p>The payment went through, however, we seem to have encountered some trouble on our server.</p>
+                <p>{{purchaseErrorText}}</p>
+                <p>I wrote it down, but in case I don't get back to you in a day, please
+                  email hi@retronator.com to make sure this is getting checked as soon as possible.</p>
               </div>
+            {{else}}
+              <div class="purchase-error message">
+                <p>It looks like there was an error processing the purchase.</p>
+                <p>{{purchaseErrorText}}</p>
+                <p>Please email hi@retronator.com if you are having trouble with the system.</p>
+              </div>
+            {{/if}}
+          {{else}}
+            {{#if submittingPayment}}
+              <div class="purchase-info message">
+                <p>One moment, I'm processing the payment …</p>
+              </div>
+            {{else}}
+              {{#if $and scrolledToBottom creditApplied paymentAmount}}
+                <div class="purchase-info message">
+                  <p>${{creditApplied}} will be used from your existing store balance.
+                    You can pay the remaining ${{paymentAmount}} with a credit card below.</p>
+                </div>
+              {{/if}}
             {{/if}}
           {{/if}}
         {{/if}}
@@ -61,7 +46,7 @@
       <div class="viewport-area">
         <div class="safe-area">
           <script src="https://checkout.stripe.com/checkout.js"></script>
-          {{#unless purchaseCompleted}}
+          {{#unless showingFinalMessage}}
             {{#if purchaseItems.length}}
               <div class="receipt">
                 <h2>Retronator<br/>Store</h2>
@@ -149,6 +134,175 @@
                   <p>Thank you for your support!</p>
                 </div>
               </div>
+              {{#unless showingFinalMessage}}
+                <div class="payment-presenter">
+                  <div class="instructions">
+                    {{#if currentUser}}
+                      {{#if paymentAmount}}
+                        <p>Choose a one-time payment or one of your saved payment methods.</p>
+                      {{else}}
+                        <p>You have a store balance of ${{storeCredit}}. ${{creditApplied}} will be used to cover
+                          this purchase. Simply confirm the payment by clicking on the payment slip on the right.</p>
+                      {{/if}}
+                    {{else}}
+                      <p>Choose a payment type.</p>
+                    {{/if}}
+                    {{#if paymentAmount}}
+                      {{#if currentUser}}
+                        <h2>One-time payment</h2>
+                      {{/if}}
+                      <div class="one-time-payment">
+                        {{#unless oneTimeStripeSelected}}
+                          {{#if stripeInitialized}}
+                            <div class="card one-time-stripe">
+                              <div class="click">Click to</div>
+                              <div class="checkout">Checkout with Stripe</div>
+                            </div>
+                          {{/if}}
+                        {{/unless}}
+                      </div>
+                      {{#if currentUser}}
+                        <div class="payment-methods-area">
+                          <h2>Saved payment methods</h2>
+                          {{#if paymentMethods.count}}
+                            <p>Choose a desired saved payment method:</p>
+                            <ul class="payment-methods {{moreThan2Class}}">
+                              {{#each paymentMethods}}
+                                <li class="payment-method">
+                                  {{#if $is type 'Stripe'}}
+                                    {{> Retronator.HQ.Items.Receipt.StripePaymentMethod}}
+                                  {{/if}}
+                                </li>
+                              {{/each}}
+                            </ul>
+                          {{else}}
+                            <p>You have no saved payment methods. Use the form on the right to save a new payment method to your account.</p>
+                          {{/if}}
+                        </div>
+                      {{/if}}
+                    {{/if}}
+                  </div>
+                  {{#if showNewPaymentMethod}}
+                    <div class="new-payment-method">
+                      <h2 class="title">Save payment method</h2>
+                      <div class="payment-method-types">
+                        <button class="add-payment-method-button add-stripe-button save-customer-button">Credit card</button>
+                      </div>
+                      <p class="smallprint">
+                        Credit card<br/>
+                        information is<br/>
+                        stored by<br/>
+                        Stripe.
+                      </p>
+                    </div>
+                  {{/if}}
+                  <div class="selected-payment-method">
+                    <div class="payment-type">
+                      {{#if paymentAmount}}
+                        {{#with selectedPaymentMethod}}
+                          {{#if $is paymentMethod.type 'StripePayment'}}
+                            <div class="card one-time-stripe">
+                              <div class="checkout">Checkout with Stripe</div>
+                            </div>
+                          {{/if}}
+                          {{#if $is paymentMethod.type 'Stripe'}}
+                            {{#with customerData}}
+                              <div class="card stripe">
+                                <div class="name">{{name}}</div>
+                                <div class="number">XX-XX-XX-{{number}}</div>
+                                <div class="expiration">{{expiration.month}}/{{expiration.year}}</div>
+                                <div class="brand">{{brand}}</div>
+                              </div>
+                            {{/with}}
+                          {{/if}}
+                        {{/with}}
+                      {{else}}
+                        <div class="card store-balance">
+                          <div class="pay">Pay with store balance</div>
+                        </div>
+                      {{/if}}
+                    </div>
+                    {{#if showPaymentInfo}}
+                      <div class="payment-info receipt">
+                        <button class="deselect-payment-method-button">X</button>
+                        <h2>Retronator<br/>Store</h2>
+                        <div>----------------------</div>
+                        <ul class="data-items">
+                          <li class="data-item">
+                            <span class="name">Date</span>
+                            <span class="value">{{dateText}}</span>
+                          </li>
+                          {{#if paymentAmount}}
+                            {{#with selectedPaymentMethod}}
+                              {{#if $is paymentMethod.type 'StripePayment'}}
+                                <li class="data-item">
+                                  <span class="name">Pay Type</span>
+                                  <span class="value">Stripe</span>
+                                </li>
+                                <li class="data-item">
+                                  <span class="name">Card Num</span>
+                                  <span class="value">Prompt</span>
+                                </li>
+                              {{/if}}
+                              {{#if $is paymentMethod.type 'Stripe'}}
+                                <li class="data-item">
+                                  <span class="name">Pay Type</span>
+                                  <span class="value">Stripe</span>
+                                </li>
+                                {{#with customerData}}
+                                  <li class="data-item">
+                                    <span class="name">Card Num</span>
+                                    <span class="value">XXXXXX{{number}}</span>
+                                  </li>
+                                  <li class="data-item">
+                                    <span class="name">Expy Date</span>
+                                    <span class="value">{{expiration.month}}/{{expiration.year}}</span>
+                                  </li>
+                                  <li class="data-item">
+                                    <span class="name">Card Type</span>
+                                    <span class="value">{{brand}}</span>
+                                  </li>
+                                {{/with}}
+                              {{/if}}
+                            {{/with}}
+                          {{else}}
+                            <li class="data-item">
+                              <span class="name">Pay Type</span>
+                              <span class="value">Store balance</span>
+                            </li>
+                          {{/if}}
+                        </ul>
+                        <p class="sale">Sale</p>
+                        <p>
+                          <span class="total">Total</span>
+                          <span class="balance">
+                            {{#if paymentAmount}}
+                              ${{paymentAmount}}
+                            {{else}}
+                              ${{creditApplied}}
+                            {{/if}}
+                          </span>
+                        </p>
+                        <p class="confirm-prompt">Click on the line below to confirm</p>
+                        <div class="confirm">
+                          <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
+                            {{#if submittingPayment}}
+                              Submitting …
+                            {{else}}
+                              {{#if paymentAmount}}
+                                Pay with Stripe
+                              {{else}}
+                                Confirm purchase
+                              {{/if}}
+                            {{/if}}
+                          </button>
+                        </div>
+                        <p class="agree-terms">I confirm the purchase and agree to the <a href="/terms-of-service">terms of service</a>.</p>
+                      </div>
+                    {{/if}}
+                  </div>
+                </div>
+              {{/unless}}
             {{else}}
               <p>Cannot show receipt. You do not have any items in your shopping cart.</p>
             {{/if}}
@@ -156,5 +310,24 @@
         </div>
       </div>
     {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>
+
+<template name="Retronator.HQ.Items.Receipt.StripePaymentMethod">
+  <div class="landsofillusions-components-account-paymentmethods-stripe">
+    <div class="case-area">
+      <div class="case {{loadingClass}}">
+        <div class="label stripe"></div>
+        {{#unless selected}}
+          <div class="card">
+            {{#if loading}}
+              <div class="loading">Loading</div>
+            {{else}}
+              <div class="view-details">View details</div>
+            {{/if}}
+          </div>
+        {{/unless}}
+      </div>
+    </div>
   </div>
 </template>

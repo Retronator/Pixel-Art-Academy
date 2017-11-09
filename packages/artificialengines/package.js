@@ -4,7 +4,8 @@ Package.describe({
 });
 
 Npm.depends({
-  twit: '2.2.5'
+  twit: '2.2.9',
+  stripe: '5.1.1'
 });
 
 Package.onUse(function(api) {
@@ -155,11 +156,12 @@ Package.onUse(function(api) {
   api.addFile('mummification/hierarchy/location');
 
   // Artificial Telepathy
-  api.addFiles('telepathy/telepathy.coffee');
+  api.addFile('telepathy/telepathy');
 
-  api.addFiles('telepathy/emailcomposer.coffee');
+  api.addFile('telepathy/emailcomposer');
 
-  api.addFiles('telepathy/twitter.coffee', 'server');
+  api.addServerFile('telepathy/twitter-server');
+  api.addServerFile('telepathy/stripe-server');
 
   // Artificial Babel
   api.addFile('babel/babel');

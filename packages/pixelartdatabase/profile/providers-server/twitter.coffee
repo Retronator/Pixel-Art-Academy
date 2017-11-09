@@ -27,7 +27,7 @@ class PADB.Profile.Providers.Twitter
     unless options.sourceData
       # Query the API.
       try
-        data = AT.Twitter.usersLookup
+        data = AT.Twitter.users.lookup
           screen_name: options.username
           include_entities: true
 

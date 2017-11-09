@@ -45,14 +45,14 @@ class HQ.Items.Tablet.Apps.ShoppingCart extends HQ.Items.Tablet.OS.App
     super
 
     # Get all store items data.
-    @subscribe RS.Transactions.Item.all
+    @subscribe RS.Item.all
 
   showHomeScreenButton: ->
     not @receiptVisible()
 
   cartItems: ->
     items = for cartItem, i in @contents()
-      item = RS.Transactions.Item.documents.findOne catalogKey: cartItem.item
+      item = RS.Item.documents.findOne catalogKey: cartItem.item
       break unless item
 
       # Load bundle items as well.

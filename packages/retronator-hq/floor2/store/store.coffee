@@ -37,9 +37,12 @@ class HQ.Store extends LOI.Adventure.Location
 
     @shelves = new HQ.Store.Shelves
 
-    @subscribe RS.Transactions.Item.all
+    @subscribe RS.Item.all
     @subscribe RA.User.registeredEmailsForCurrentUser
-    @subscribe RS.Transactions.Transaction.forCurrentUser
+    @subscribe RS.Transaction.forCurrentUser
+
+    # We need payments to determine Kickstarter tier eligibility.
+    RS.Payment.forCurrentUser.subscribe @
 
   destroy: ->
     super
@@ -94,7 +97,7 @@ class HQ.Store extends LOI.Adventure.Location
         kickstarterTierKeys = [KickstarterKeys.BasicGame, KickstarterKeys.FullGame, KickstarterKeys.AlphaAccess]
 
         for tierKey in kickstarterTierKeys
-          tier = RS.Transactions.Item.documents.findOne(catalogKey: tierKey)?.cast()
+          tier = RS.Item.documents.findOne(catalogKey: tierKey)?.cast()
 
           unless tier
             console.warn "Item for tier", tierKey, "not found."
@@ -104,7 +107,7 @@ class HQ.Store extends LOI.Adventure.Location
           try
             tier.validateEligibility()
 
-          catch
+          catch error
             eligibleBackerTiers.push false
             continue
 
@@ -184,7 +187,8 @@ class HQ.Store extends LOI.Adventure.Location
           computation.stop()
 
           # Let the script know if transaction succeeded or not.
-          @ephemeralState().transactionCanceled = not receipt.transactionCompleted
+          @ephemeralState().transactionCompleted = receipt.transactionCompleted
+          @ephemeralState().purchaseErrorAfterPurchase = receipt.purchaseErrorAfterCharge()
 
           # Return to location.
           display.view HQ.Store.Display.Views.Center
@@ -192,6 +196,33 @@ class HQ.Store extends LOI.Adventure.Location
           LOI.adventure.deactivateCurrentItem()
 
           complete()
+
+      ReadPixelArtAcademyPosts: (complete) =>
+        patreon = window.open 'https://www.patreon.com/retro/posts?tag=Pixel%20Art%20Academy', '_blank'
+        patreon.focus()
+
+        # Wait for our window to get focus.
+        $(window).on 'focus.patreon', =>
+          complete()
+          $(window).off '.patreon'
+
+      VisitPatreon: (complete) =>
+        patreon = window.open 'https://www.patreon.com/retro', '_blank'
+        patreon.focus()
+
+        # Wait for our window to get focus.
+        $(window).on 'focus.patreon', =>
+          complete()
+          $(window).off '.patreon'
+
+      ReadStudyGuide: (complete) =>
+        medium = window.open 'https://medium.com/retronator-magazine/pixel-art-academy-study-guide-3ae5f772a83a', '_blank'
+        medium.focus()
+
+        # Wait for our window to get focus.
+        $(window).on 'focus.medium', =>
+          complete()
+          $(window).off '.medium'
 
   # Listener
 
