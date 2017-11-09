@@ -27,22 +27,22 @@ Document.startup ->
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.FreshmanYear
     name: "Pixel Art Academy - Freshman Year"
-    description: "Season one of Pixel Art Academy! You have access to game episodes that will be released throughout 2017."
+    description: "Season one of Pixel Art Academy! You have access to game episodes that will be released throughout 2018."
 
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.SophomoreYear
     name: "Pixel Art Academy - Sophomore Year"
-    description: "Access to second season episodes, if we can keep development sustainable in 2018."
+    description: "Access to second season episodes, if we can keep development sustainable in 2019."
 
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.JuniorYear
     name: "Pixel Art Academy - Junior Year"
-    description: "Third season episodes, if we're still alive and kicking for 2019."
+    description: "Third season episodes, if we're lucky enough to reach the end of the decade in 2020."
 
   RS.Item.create
     catalogKey: CatalogKeys.PixelArtAcademy.SeniorYear
     name: "Pixel Art Academy - Senior Year"
-    description: "Final season of Pixel Art Academy episodes, if we're lucky enough to reach the end of the decade in 2020."
+    description: "Final season of Pixel Art Academy episodes, if we're still alive and kicking for 2021."
     
   # CLASS HELP
 

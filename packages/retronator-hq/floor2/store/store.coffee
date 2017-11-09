@@ -194,6 +194,33 @@ class HQ.Store extends LOI.Adventure.Location
 
           complete()
 
+      ReadPixelArtAcademyPosts: (complete) =>
+        patreon = window.open 'https://www.patreon.com/retro/posts?tag=Pixel%20Art%20Academy', '_blank'
+        patreon.focus()
+
+        # Wait for our window to get focus.
+        $(window).on 'focus.patreon', =>
+          complete()
+          $(window).off '.patreon'
+
+      VisitPatreon: (complete) =>
+        patreon = window.open 'https://www.patreon.com/retro', '_blank'
+        patreon.focus()
+
+        # Wait for our window to get focus.
+        $(window).on 'focus.patreon', =>
+          complete()
+          $(window).off '.patreon'
+
+      ReadStudyGuide: (complete) =>
+        medium = window.open 'https://medium.com/retronator-magazine/pixel-art-academy-study-guide-3ae5f772a83a', '_blank'
+        medium.focus()
+
+        # Wait for our window to get focus.
+        $(window).on 'focus.medium', =>
+          complete()
+          $(window).off '.medium'
+
   # Listener
 
   onCommand: (commandResponse) ->
