@@ -135,3 +135,22 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
 
     placeholder: ->
       @data()?.displayName()
+
+  class @CharacterPronouns extends AM.DataInputComponent
+    @register 'LandsOfIllusions.Components.Account.Characters.CharacterPronouns'
+
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      {value, name} for value, name of LOI.Avatar.Pronouns
+
+    load: ->
+      character = @data()
+      character.avatar.pronouns
+
+    save: (value) ->
+      character = @data()
+      LOI.Character.updatePronouns character._id, value

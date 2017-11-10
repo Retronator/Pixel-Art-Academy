@@ -126,28 +126,3 @@ class C3.Design.Terminal.Character extends AM.Component
   onClickOutfitPart: (event) ->
     @terminal.screens.avatarPart.pushPart @character().avatar.outfit, @character().avatar
     @terminal.switchToScreen @terminal.screens.avatarPart
-
-  # Components
-
-  class @Pronouns extends AM.DataInputComponent
-    @register 'SanFrancisco.C3.Design.Terminal.Character.Pronouns'
-
-    constructor: ->
-      super
-
-      @type = AM.DataInputComponent.Types.Select
-
-    options: ->
-      {value, name} for value, name of LOI.Avatar.Pronouns
-
-    load: ->
-      character = @data()
-      character.avatar.pronouns()
-
-    save: (value) ->
-      character = @data()
-      LOI.Character.updatePronouns character.id, value
-
-    _dataLocation: ->
-      person = @data()
-      person.properties[@property].options.dataLocation

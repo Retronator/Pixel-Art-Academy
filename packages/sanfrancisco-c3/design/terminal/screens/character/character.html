@@ -8,21 +8,21 @@
             {{> renderFullNameInput document.avatar.fullName}}
           </label>
         </p>
-        <p class="main-text">
-          <label class="pronouns"><strong>Pronouns</strong>:
-            {{> SanFrancisco.C3.Design.Terminal.Character.Pronouns}}
-          </label>
-        </p>
-        <p class="main-text">
-          {{#with document}}
-            <label class="dialog-color"><strong>Dialog color</strong>:
-              {{> LandsOfIllusions.Components.Account.Characters.CharacterColorHue}}
+        {{#with document}}
+          <p class="main-text">
+            <label class="pronouns"><strong>Pronouns</strong>:
+              {{> LandsOfIllusions.Components.Account.Characters.CharacterPronouns}}
             </label>
-            <label class="dialog-hue"><strong>hue</strong>:
-              {{> LandsOfIllusions.Components.Account.Characters.CharacterColorShade}}
-            </label>
-          {{/with}}
-        </p>
+          </p>
+          <p class="main-text">
+              <label class="dialog-color"><strong>Dialog color</strong>:
+                {{> LandsOfIllusions.Components.Account.Characters.CharacterColorHue}}
+              </label>
+              <label class="dialog-hue"><strong>hue</strong>:
+                {{> LandsOfIllusions.Components.Account.Characters.CharacterColorShade}}
+              </label>
+          </p>
+        {{/with}}
         <div class="dialog-preview">
           {{avatar.shortName}} says:
           <span {{style dialogPreviewStyle}}>
