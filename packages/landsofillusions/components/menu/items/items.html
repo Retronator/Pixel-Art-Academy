@@ -41,6 +41,13 @@
           </a>
         </li>
       {{/if}}
+      {{#if smallprintVisible}}
+        <li class="menu-item">
+          <a class="smallprint actionable" href="{{flowRouterPath 'PixelArtAcademy.LandingPage.Pages.Smallprint'}}" target="_blank">
+            Smallprint
+          </a>
+        </li>
+      {{/if}}
       {{#if quitVisible}}
         <li class="menu-item"><span class="quit actionable">Quit game</span></li>
       {{/if}}

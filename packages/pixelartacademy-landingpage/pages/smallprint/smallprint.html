@@ -1,59 +1,166 @@
-<template name="LandsOfIllusions.Construct.Pages.Login">
-  <div class="login-page">
-    <h1>Welcome to Lands of Illusions!</h1>
-    <h2>Please Sign In.</h2>
-    {{> loginButtons}}
+<template name="PixelArtAcademy.LandingPage.Pages.Smallprint">
+<div class="pixelartacademy-landingpage-pages-smallprint">
+  {{#PixelArtAcademy.LandingPage.Pages.Components.Retropolis}}
+    <header class="header">
+      <h1 class="title">Retronator smallprint</h1>
+      <p class="tagline">
+        Things you need to know while you navigate around Pixel Art Academy and other Retronator projects.
+      </p>
+    </header>
 
-    <h2>Lands of Illusions what?</h2>
-    <p>Lands of Illusions is the overarching world in which you will find the city of Retropolis with the Retropolis Academy of
-    Art, the setting place of Pixel Art Academy. However, Pixel Art Academy is just the start. There will be new locations added
-    in the future and to give you one account for all the future locations, you login and create your characters in the central Lands of
-    Illusions entry area.</p>
-    <p>Think of it like the loading program of The Matrix. It's where you authenticate and set your character, your residual self image
-    and stuff.</p>
-    <p>To put it in yet another way, backing Pixel Art Academy gives you access to ALL my future games, for free. This is
-    my heartfelt thanks for being with me at the very beginning of the Retronator journey.</p>
-    <p>Things to keep in mind:</p>
+    <dl>
+      <dt>Service provider</dt>
+      <dd>
+        <div class="description">contact:<br/><a href="mailto:hi@retronator.com">hi@retronator.com</a></div>
+        <p>
+          Retronator LLC<br/>
+          Irvine, CA
+        </p>
+      </dd>
+      <dt>Applicable domains</dt>
+      <dd>
+        retronator.com<br/>
+        pixelart.academy<br/>
+        retropolis.city<br/>
+        landsofillusions.world
+      </dd>
+      <dt>Last policy update</dt><dd>November 10, 2017</dd>
+    </dl>
+
+    <p>By using our webpages and services (in the future 'service') you agree to the terms of service and the privacy
+      policy. 'We' and 'our' refers to Retronator, 'you', 'yours', and 'user' refers to you as the user of our service.</p>
+
+    <h2>Terms of service</h2>
+
+    <h3>Availability</h3>
+    <p>There is no guarantee for maintaining our service. Downtimes are likely and sometimes necessary (for example when
+      updating the servers).</p>
+    <p>Service can be discontinued if Retronator isn't able to sustain development and operation.
+      However, most of the projects are <a href="https://github.com/retronator" target="_blank">open source</a>
+      and can be taken over by the community.</p>
+
+    <h3>User data</h3>
+    <p>Saving your game through the game menus or creating an account through the game storyline creates a user account.</p>
+    <p>There is no guarantee for maintaining user data (e.g. user account information, game states, game characters).
+      Daily backups of the database are being created, but in the unlikely event that all data is lost, we are not
+      liable for this loss.</p>
+    <p>You can request to download your data and we will try to accommodate you.</p>
+    <p>If you make any purchases or pledges (through our websites or <a href="https://www.patreon.com/retro" target="_blank">Patreon</a>),
+      this data is made available through our public accounting documents and other financial displays
+      (e.g. supporters display in the Retronator Store game location). All users are anonymous by default, but you can
+      provide a name to be displayed if you wish so.</p>
+
+    <h3>User generated content</h3>
+    <p>By entering any kind of content (e.g. images, text) into our service (in this section 'content'), you allow us to store the content
+      and display it to other users of our service. You also allow us to include the content in screenshots or videos
+      taken of the service with the intent of documenting and promoting the development of the service.</p>
+    <p>We reserve the right to remove content at our discretion. This is mainly to
+      remove offensive and/or prohibited content.</p>
+    <p>The current guidelines for prohibited content include:</p>
     <ul>
-      <li><strong>Security</strong>: Webpage is for now running over an unsecure http protocol. I you are on a public network such as a cafe
-        or a dorm wi-fi,
-        someone could potentially listen and hijack the communication between your browser and the server. It's unlikely,
-        especially since there's no information to 'steal' yet, but I just wanted a disclaimer out there. So it's up to
-        you not to store any sensitive information in there until I upgrade to https. And you probably shouldn't even later on.
-      </li>
-      <li><strong>More security</strong>: Otherwise all the data is safely stored to the best of my knowledge (you are welcome to
-        analyze the
-        <a href="https://github.com/retronator" target="_blank">source
-          code</a>). No passwords are stored on the server, they don't even leave your browser except in hash form. The
-        hashes are stored.
-        oAuth tokens are stored with encryption.
-      </li>
-      <li><strong>User data</strong>: I don't guarantee that any user data won't get wiped at some point or another during the
-        alpha of Pixel Art Academy. It's a playground to see the tech while it's
-        being built, so don't spend too much time customizing everything. We're very early on and there will be many
-        breaking changes happening, which I won't always have time to address with migrating old data to new formats.
-      </li>
-      <li><strong>Personal information</strong>: If you're under 13 years old, you aren't allowed to create an account on the site. You can use whatever public information and
-        tools there are, but if you create an account, you are agreeing that you are 13 years old or older. You will need an email or an external service to log you in. I store
-        the emails I collect that way in the database. That's as much personal information I collect on my own. Everything else are things you
-        explicitly enter into the game when you're logged in.
-      </li>
-      <li><strong>Backer data</strong>: Backer data is stored on the server to give you the correct permissions when you create your
-        account and verify your backer email. The backer data is stored unencrypted, but is being transferred to the server in encrypted form
-        and the data never leaves the server thereafter. Only the server software ever accesses this data and the only thing that gets sent to your
-        browser is your own reward level, which is displayed in the accounts section. You can never see what level other players have backed at
-        (although you will be able to infer some information based on their actions) and others are also never explicitly told of your
-        backer level.
-      </li>
-      <li><strong>Cookies</strong>: I don't use cookies! I store your login info and character selection to local
-        storage (it stays on your computer) so you can continue without logging in again and reloading your character after you've left. I don't
-        have time (or desire, for now) to bother with analytics so there are no tracking cookies and collection of
-        that sort of information.
-      </li>
-      <li><strong>Graphics</strong>: There are no graphics! This is pure html/minimal css alpha to develop the functionality.
-        After the functionality is up, then I can be bothered with styling. Kind of like Dwarf Fortress.
-      </li>
+      <li>abusive content, harassment, hate speech, and other content we find is offensive to others,</li>
+      <li>sexually explicit content such as pornography,</li>
+      <li>content not owned by the user, unless it is made clear that it is not owned (or created) by the user.</li>
     </ul>
-    <p>By using Lands of Illusions you are agreeing to these terms. Savvy? Good.</p>
-  </div>
+    <p>Some of the content that is allowed will be filtered in the future so that users can opt-out of seeing it.
+      This content includes:</p>
+    <ul>
+      <li>sexual content such as nudity created with artistic or educational purpose,</li>
+      <li>profanity and vulgar language,</li>
+      <li>violence and other graphic imagery.</li>
+    </ul>
+    <p>Right now such filtering is not active and the use of filtering is not available to users.</p>
+    <p>We will remove content related to other users or their works when the related user finds it offensive.
+      The goal for the future is to give automated tools to users to block other users and moderate content posted around their work.</p>
+    <p>You are highly discouraged from posting negative opinions unless explicitly asked for (e.g. the author of a work requests a critique).</p>
+    <p>Finally, we are not responsible for the legality of user generated content.</p>
+
+    <h3>General content warning</h3>
+    <p>Pixel Art Academy contains pixelated nudity and like above there are currently no ways to
+      filter this content. Certain sections of the game will focus on human anatomy and will center around nudity.
+      Other adult themes may be explored throughout the game.</p>
+    <p>The goal for the future is to have a content warning system in place to inform users of such content.
+      Currently no such system is in place.</p>
+
+    <h3>Termination and refunds</h3>
+    <p>We reserve the right to terminate service based on violations of these terms (in current and future versions of the terms).</p>
+    <p>Some reasons for termination include:</p>
+    <ul>
+      <li>repeated posting of prohibited content,</li>
+      <li>repeated offenses towards other users.</li>
+    </ul>
+    <p>When a user account is terminated, a refund will be attempted to compensate for the services no longer
+      available to the user. The value at which the service was purchased or the current price of the service,
+      whichever is lower, will be made available to the user.</p>
+    <p>The user can also proactively request a refund. The value refunded will be calculated as in the previous paragraph.</p>
+
+    <h3>Age restriction</h3>
+    <p>You need to be 13 years old or older to create a user account. Doing so stores personal information as discussed
+      in the privacy policy below. We are not allowed and do not knowingly store personal information for people under 13 years old.</p>
+
+    <h3>Liability</h3>
+    <p>We are not liable for any damage caused by your use of the service. We protect your privacy and personal information
+      to the best of our knowledge and are not liable for third-party breaches or exposure of this information.</p>
+
+    <h3>Amendments</h3>
+    <p>We reserve the right to amend our terms of service and privacy policy.</p>
+    <p>Inevitably someone will do something stupid that we haven't though of and we'll have to become more strict
+      regarding our operation.
+      We will notify you of important policy changes (at our discretion), but it is your duty to read these documents
+      to be aware of currently active terms.</p>
+
+    <h2>Privacy Policy</h2>
+
+    <h3>General security</h3>
+    <p>User passwords are never collected in plain text. Only their hash form leaves your browser and gets stored on our servers.
+      Authentication tokens (oAuth) are stored with encryption.</p>
+
+    <h3>Payment information</h3>
+    <p>No direct credit card information is stored on our servers. <a href="https://stripe.com" target="_blank">Stripe</a>
+      is the provider that collects that information directly from you (in the browser), and stores it independently of us.
+      We receive and store a confirmation token that Stripe
+      recognizes to perform purchases with your information. We also receive and store the email used for your purchase.</p>
+    <p>We relay your credit card information to you from Stripe when explicitly requested (e.g. when viewing saved payment methods).
+      The server immediately discards this information after it sends it to you.</p>
+    <p>Kickstarter backers information is stored on the server for people that pledged through Kickstarter. This is used to provide
+      backers with correct game rewards.</p>
+    <p>All transactions (e.g. purchases, pledges) are documented and are included in various displays. Users appear
+      anonymously unless otherwise requested by the user.</p>
+
+    <h3>Personal information</h3>
+    <p>No storage of personally identifiable information is performed when you access our free and public services.</p>
+    <p>Some of our services require creation of a user account. Email or other authentication data (e.g. Twitter username)
+      is collected and stored to enable this.</p>
+    <p>Payment information is required for purchases and is stored as per above section.</p>
+    <p>All other personal data you provide is done under your discretion and responsibility. The characters you create
+      are assumed to be representations of fictional people. When the game is personalizing information for you, it is
+      doing so based on your character's fictional information. Any correlation between your characters and yourself is
+      created voluntarily.</p>
+    <p>No personal information for people under 13 is knowingly stored as per the terms of service.</p>
+
+    <h3>User tracking and gameplay information</h3>
+    <p>We use Google Analytics to track user activity.
+      In particular we track all commands entered into the system in order to analyze user actions and improve
+      gameplay.</p>
+    <p>We do not use cookies (other than what Google Analytics does). We use browser local storage to
+      save gameplay information (e.g. current player location, selected character, game state for users without a save
+      game). That information is stored on your computer and is not tracked across domains.</p>
+    <p>By saving the game you are creating a user account. At that point we start storing gameplay state for you on
+      the server.</p>
+
+    <h2>Copyright notice</h2>
+    <p>Most Retronator projects are open source. The source code and content created in their development is made
+      available under open source and creative commons licenses, as indicated in individual project repositories. By providing any
+      kind of help to the development (but not running) of these projects (e.g. writing source code, contributing art
+      that is used to present the game itself), you are releasing your contributions under those licenses.</p>
+    <p>We do not claim any copyright whatsoever to your content, made during development or entered into the system as
+      user generated content. You only allow us to transmit user generated content to others as per the terms of service.</p>
+    <p>We display other copyrighted works for educational purpose. We believe this is done
+      under fair use, however, it is not our intention to display work of authors that do not want to be featured in our
+      projects. If your work is being included and you want it removed, write to
+      <a href="mailto:hi@retronator.com">hi@retronator.com</a> and we will do so as soon as possible.</p>
+    <p>Savvy? Good.</p>
+
+  {{/PixelArtAcademy.LandingPage.Pages.Components.Retropolis}}
+</div>
 </template>

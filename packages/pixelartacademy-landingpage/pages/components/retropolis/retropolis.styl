@@ -1,0 +1,114 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-landingpage-pages-components-retropolis
+  position relative
+  z-index 1
+  padding 20rem
+  width 250rem
+  min-height 100%
+  margin 0 auto
+  background black
+  adventure()
+  color atariGrey(5)
+
+  *
+    pixel-image-rendering()
+
+  // Parallax elements
+  *[data-depth]
+    position absolute
+
+  .scene-area
+    position fixed
+    top 0
+
+    .scene
+      position absolute
+      width 720px
+      right 2em
+      top 0
+      height 100vh
+      z-index 0
+      background #a6e2fe
+      overflow hidden
+
+      .water
+        opacity 0.8
+
+      &::after
+        content ''
+        position absolute
+        top 650px
+        bottom 0
+        left 0
+        right 0
+        background atariGrey(0)
+        z-index 1
+
+  .header
+    margin-bottom 3em
+    color atariGrey(6)
+
+    .title
+      position relative
+      margin 0
+      acme-9()
+      font-weight bold
+      display inline-block
+
+  h2
+    acme-9()
+    font-weight bold
+    margin-top 2em
+    color atariGrey(6)
+
+  h3
+    adventure()
+    text-transform uppercase
+    color atariGrey(6)
+
+  // Link style
+  a
+    position relative
+    padding 0 0.1em 0 0.2em
+    margin 0 -0.1em 0 -0.2em
+    color atariGrey(7)
+    cursor pointer
+    text-decoration none
+
+    &:hover
+      background-color atariGrey(7)
+      color atariGrey(0)
+
+  ul
+    list-style square
+    color atariGrey(4)
+    padding-left 2em
+
+  dl
+    dt
+      color atariGrey(6)
+
+    dd
+      margin 0 0 1em 2em
+      color atariGrey(4)
+
+      p
+        margin-top 0
+
+      .small-gap
+        margin-bottom 0.2em
+
+      .description
+        position absolute
+        left 50%
+        width 50%
+        color atariGrey(4)
+
+  .images
+    a
+      &:hover
+        background none
+
+    img
+      width 100%

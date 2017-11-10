@@ -25,6 +25,10 @@ class LOI.Components.Menu.Items extends AM.Component
     # Same as about.
     @aboutVisible()
 
+  smallprintVisible: ->
+    # Always shown.
+    true
+
   newVisible: ->
     # New game is visible only on the landing page.
     @options.landingPage

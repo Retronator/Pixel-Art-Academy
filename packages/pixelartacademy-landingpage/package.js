@@ -18,17 +18,16 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
-  api.addFiles('landingpage.coffee');
+  api.addFile('landingpage');
 
   // Pages
 
-  api.addFiles('pages/pages.coffee');
+  api.addFile('pages/pages');
 
-  api.addFiles('pages/about/about.coffee');
-  api.addFiles('pages/about/about.styl');
-  api.addFiles('pages/about/about.html');
+  api.addFile('pages/components/components');
+  api.addComponent('pages/components/retropolis/retropolis');
 
-  api.addFiles('pages/press/press.coffee');
-  api.addFiles('pages/press/press.styl');
-  api.addFiles('pages/press/press.html');
+  api.addComponent('pages/about/about');
+  api.addComponent('pages/press/press');
+  api.addComponent('pages/smallprint/smallprint');
 });
