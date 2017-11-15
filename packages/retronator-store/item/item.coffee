@@ -67,6 +67,8 @@ class RS.Item extends AM.Document
 
   validateEligibility: ->
     # Override this with custom logic that tests whether the current user is eligible to buy this.
+    # By default only items with a price can be bought to prevent malicious purchases.
+    @_throwEligibilityException() unless @price > 0
 
   _throwEligibilityException: (details) ->
     throw new AE.ArgumentException "You are not eligible to purchase #{@debugName()}.", details

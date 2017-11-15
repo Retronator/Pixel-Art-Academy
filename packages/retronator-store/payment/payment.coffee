@@ -17,8 +17,11 @@ class RS.Payment extends AM.Document
   # backerName: kickstarter backer Name
   #
   # STRIPE PAYMENT
-  # authorizedOnly: true if the amount was not actually collected and this is just an intended payment
   # chargeId: charge id returned from stripe API
+  # authorizedOnly: true if the amount was not actually collected and this is just an intended payment
+  # chargeError: error that occurred while trying to charge this payment (after being only authorized)
+  #   failureCode: code returned directly from stripe
+  #   failureMessage: message returned directly from stripe
   #
   # REFERRAL CODE
   # referralCode: the code used for the referral

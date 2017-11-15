@@ -110,4 +110,8 @@ Package.onUse(function(api) {
   api.addServerFile('pages/admin/scripts/methods-server/convertpreorders');
   api.addServerFile('pages/admin/scripts/methods-server/convertimportedusers');
   api.addServerFile('pages/admin/scripts/methods-server/user-ontransactionsupdated');
+
+  api.addUnstyledComponent('pages/admin/authorizedpayments/authorizedpayments');
+  api.addServerFile('pages/admin/authorizedpayments/methods-server');
+
 });
