@@ -57,7 +57,7 @@ class RA.User extends AM.Document
         [user._id, publicName]
 
       loginServices: [@GeneratedField 'self', ['services'], (user) ->
-        availableServices = ['facebook', 'twitter', 'google']
+        availableServices = ['facebook', 'twitter', 'google', 'patreon']
         enabledServices = _.intersection _.keys(user.services), availableServices
 
         # Add password only if it has really been set (since the password key can also have just a reset token object).

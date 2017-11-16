@@ -1,7 +1,7 @@
 <template name="LandsOfIllusions.Components.Account.Services">
   <div class="landsofillusions-components-account-services">
-    <h2>Sign-in services</h2>
-    <h3>Approved methods</h3>
+    <h2>Linked services</h2>
+    <h3>Sign-in methods</h3>
     <ul class="services">
       {{#each loginServices}}
         <li class="service">
@@ -14,6 +14,19 @@
         </li>
       {{/each}}
     </ul>
-    <p class="smallprint">Place stamp to enable sign-in with the service.</p>
+    <h3>Other connections</h3>
+    <ul class="services">
+      {{#with 'Patreon'}}
+        <li class="service">
+          <span class="name">Patreon</span>
+          {{#if loginServiceEnabled}}
+            <img class="stamp patreon" src="{{image '/landsofillusions/components/account/services/patreon.png'}}" />
+          {{else}}
+            <button class="link-service-button patreon"></button>
+          {{/if}}
+        </li>
+      {{/with}}
+      <li class="service"></li>
+    </ul>
   </div>
 </template>
