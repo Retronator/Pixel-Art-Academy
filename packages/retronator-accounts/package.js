@@ -13,11 +13,9 @@ Package.onUse(function(api) {
   api.use('accounts-twitter');
   api.use('accounts-google');
   api.use('service-configuration');
-  api.use('oauth');
   api.use('oauth2');
   api.use('oauth-encryption');
   api.use('email');
-  api.use('http');
 
   api.use('bozhao:link-accounts@1.2.11');
   api.use('splendido:accounts-meld@1.3.1');
