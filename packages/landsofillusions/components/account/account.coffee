@@ -6,7 +6,7 @@ class LOI.Components.Account extends AM.Component
   @register 'LandsOfIllusions.Components.Account'
   @url: -> 'account'
 
-  @version: -> '0.0.5'
+  @version: -> '0.0.6'
 
   mixins: -> [@activatable]
 

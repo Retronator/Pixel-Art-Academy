@@ -12,6 +12,45 @@ RS.Pages.Admin.Patreon.refreshClient.method (refreshToken) ->
 
   AT.Patreon.refreshClient refreshToken
 
+RS.Pages.Admin.Patreon.grantEarlyKeycards.method ->
+  RA.authorizeAdmin()
+
+  earlyBirdKeycardId = RS.Item.documents.findOne(catalogKey: RS.Items.CatalogKeys.Retronator.Patreon.EarlyBirdKeycard)._id
+
+  updateCount = 0
+
+  RS.Transaction.documents.find(
+    payments:
+      $elemMatch:
+        type: RS.Payment.Types.PatreonPledge
+        authorizedOnly: $ne: true
+    time:
+      $lt: new Date(2017, 9, 5) # October 5, 2017
+  ).forEach (transaction) ->
+    # See if we have an earlier transaction from the same patron.
+    earlierTransaction = RS.Transaction.documents.findOne
+      email: transaction.email
+      payments:
+        $elemMatch:
+          type: RS.Payment.Types.PatreonPledge
+          authorizedOnly: $ne: true
+      time:
+        $lt: transaction.time
+
+    return if earlierTransaction
+
+    # This is the first transaction from this patron so grant them the early bird keycard.
+    updateCount += RS.Transaction.documents.update transaction._id,
+      $set:
+        items: [
+          item:
+            _id: earlyBirdKeycardId
+        ]
+
+    transaction.findUserForTransaction()?.onTransactionsUpdated()
+
+  console.log "Updated", updateCount, "transactions with early bird Patreon keycards."
+
 RS.Pages.Admin.Patreon.importPledges.method (date, csvData) ->
   check date, Date
   check csvData, String

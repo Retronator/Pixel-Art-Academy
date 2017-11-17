@@ -10,15 +10,20 @@ class RS.Pages.Admin.Patreon extends AM.Component
   @importPledges: new AB.Method name: "#{@id()}.importPledges"
   @updateCurrentPledges: new AB.Method name: "#{@id()}.updateCurrentPledges"
   @refreshClient: new AB.Method name: "#{@id()}.refreshClient"
+  @grantEarlyKeycards: new AB.Method name: "#{@id()}.grantEarlyKeycards"
 
   events: ->
     super.concat
       'click .update-current-pledges': @onClickUpdateCurrentPledges
       'submit .upload-form': @onSubmitUploadForm
       'submit .refresh-form': @onSubmitRefreshForm
+      'click .grant-early-keycards': @onClickGrantEarlyKeycards
 
   onClickUpdateCurrentPledges: (event) ->
     @constructor.updateCurrentPledges()
+
+  onClickGrantEarlyKeycards: (event) ->
+    @constructor.grantEarlyKeycards()
 
   onSubmitUploadForm: (event) ->
     event.preventDefault()

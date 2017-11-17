@@ -46,6 +46,9 @@ RS.Items.CatalogKeys =
         UniqueCustomAvatar: ''
   Retronator:
     Admin: ''
+    Patreon:
+      PatreonKeycard: ''
+      EarlyBirdKeycard: ''
 
   Bundles:
     PixelArtAcademy:
