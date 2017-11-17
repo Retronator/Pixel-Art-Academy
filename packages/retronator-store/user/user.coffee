@@ -45,10 +45,14 @@ class RA.User extends RA.User
     # Authorized payments amount is the sum of all payments that were only authorized.
     transactions = RS.Transaction.findTransactionsForUser(@).fetch()
 
-    authorizedPaymentsAmount = 0
+    authorizedPaymentsAmount =
+      total: 0
 
     for transaction in transactions when transaction.payments
-      authorizedPaymentsAmount += payment.amount for payment in transaction.payments when payment.authorizedOnly
+      for payment in transaction.payments when payment.authorizedOnly
+        authorizedPaymentsAmount[payment.type] ?= 0
+        authorizedPaymentsAmount[payment.type] += payment.amount
+        authorizedPaymentsAmount.total += payment.amount
 
     authorizedPaymentsAmount
 
@@ -80,7 +84,7 @@ class RA.User extends RA.User
         addItem bundleItem for bundleItem in item.items
 
     # Add the items from each transaction except those given away as gifts.
-    for transaction in transactions
+    for transaction in transactions when transaction.items
       for transactionItem in transaction.items
         addItem transactionItem.item unless transactionItem.givenGift
 
@@ -114,7 +118,9 @@ class RA.User extends RA.User
       if transaction.payments
         balance += payment.amount for payment in transaction.payments when not payment.authorizedOnly
 
-      balance -= transactionItem.price for transactionItem in transaction.items when transactionItem.price
+      if transaction.items
+        balance -= transactionItem.price for transactionItem in transaction.items when transactionItem.price
+
       balance -= transaction.tip.amount if transaction.tip
 
     # Credit is any positive balance that the user can spend towards new purchases.

@@ -1,6 +1,6 @@
 <template name="LandsOfIllusions.Components.Account.Transactions">
   <div class="landsofillusions-components-account-transactions">
-    <h2>Transactions</h2>
+    <h2>Purchases</h2>
     <h3>Your support</h3>
     <div class="support-area">
       <p>Total contribution: <span class="support-amount">${{supportAmount}}</span>.</p>
@@ -32,38 +32,47 @@
             </td>
           </tr>
         {{/each}}
-        {{#if currentUser.store.credit}}
+        {{#if showEndListing}}
           <tr class="transaction">
-            <td class="description">
-              <button class="action load-credit-info">
-                Positive balance
-              </button>
+            <td class="description" colspan="2">
+              end listing
             </td>
-            <td class="total {{authorizedOnlyClass}}">${{currentUser.store.credit}}</td>
           </tr>
         {{else}}
-          {{#if authorizedPaymentsAmount}}
+          {{#if authorizedPaymentsAmount.StripePayment}}
             <tr class="transaction">
               <td class="description">
                 <button class="action load-authorized-payments-info">
                   Total authorized
                 </button>
               </td>
-              <td class="total {{authorizedOnlyClass}}">${{authorizedPaymentsAmount}}</td>
+              <td class="total">${{authorizedPaymentsAmount.StripePayment}}</td>
             </tr>
-          {{else}}
-            {{#if transactions.length}}
-              <tr class="transaction">
-                <td class="description" colspan="2">
-                  end listing
-                </td>
-              </tr>
-            {{/if}}
+          {{/if}}
+          {{#if currentUser.store.credit}}
+            <tr class="transaction">
+              <td class="description">
+                <button class="action load-credit-info">
+                  Positive balance
+                </button>
+              </td>
+              <td class="total">${{currentUser.store.credit}}</td>
+            </tr>
+          {{/if}}
+          {{#if authorizedPaymentsAmount.PatreonPledge}}
+            <tr class="transaction">
+              <td class="description">
+                <button class="action load-patreon-info">
+                  Current Patreon pledge
+                </button>
+              </td>
+              <td class="total">${{authorizedPaymentsAmount.PatreonPledge}}</td>
+            </tr>
           {{/if}}
         {{/if}}
       </table>
       {{#if transactions.length}}
-        {{#if authorizedPaymentsAmount}}
+        {{#if authorizedPaymentsAmount.StripePayment}}
           <p class="smallprint">Authorized only</p>
         {{/if}}
       {{else}}
@@ -85,10 +94,19 @@
         <div class="info-note">
           <div class="content">
             <div class="unload-info"></div>
-            <p>You have authorized ${{authorizedPaymentsAmount}} of payments.</p>
+            <p>You have authorized ${{authorizedPaymentsAmount.StripePayment}} of payments.</p>
             <p>They will be collected when you get
             access to the first gameplay chapter in 2017. You will be emailed beforehand in case you need to cancel
             any purchase at that time.</p>
+          </div>
+        </div>
+      {{/if}}
+      {{#if showPatreonInfo}}
+        <div class="info-note">
+          <div class="content">
+            <div class="unload-info"></div>
+            <p>Your are currently pledging ${{authorizedPaymentsAmount.PatreonPledge}} on Patreon.</p>
+            <p>This will be converted into positive store balance at the end of the month when your pledge is processed.</p>
           </div>
         </div>
       {{/if}}
@@ -100,53 +118,57 @@
           <h3 class="receipt-title">Retronator<br/>Store</h3>
           <div class="date">{{dateText}}</div>
           <div>----------------------</div>
-          <ol class="shopping-cart-items">
-            {{#each items}}
-              <li class="cart-item">
-                <span class="name">
-                  {{> t9n item.name}}
-                </span>
-                <span class="price">${{price}}</span>
-                {{#if receivedGift}}
-                  <div class="gift">
-                    <p>Gift from {{receivedGift.transaction.ownerDisplayName}}</p>
-                  </div>
-                {{/if}}
-                {{#if givenGift}}
-                  <div class="gift">
-                    {{#if givenGift.transaction}}
-                      <p>Gift claimed by {{givenGift.transaction.ownerDisplayName}}.</p>
-                    {{else}}
-                      <p>This item is a gift. Give this link to the recipient so they can claim it:</p>
-                      <p>
-                        <div class="gift-link">
-                          <a href="{{claimLink}}" target="_blank">{{claimLink}}</a>
-                        </div>
-                      </p>
-                      <p>* You can click the link to see what they will see.</p>
-                    {{/if}}
-                  </div>
-                {{/if}}
-              </li>
-            {{/each}}
-            {{#if tip}}
-              {{# if tip.amount}}
+          {{#if items}}
+            <ol class="shopping-cart-items">
+              {{#each items}}
                 <li class="cart-item">
-                    <span class="name">
-                      {{t7e 'Tip'}}
-                    </span>
-                  <span class="price">${{tip.amount}}</span>
+                  <span class="name">
+                    {{> t9n item.name}}
+                  </span>
+                  {{#if price}}
+                    <span class="price">${{price}}</span>
+                  {{/if}}
+                  {{#if receivedGift}}
+                    <div class="gift">
+                      <p>Gift from {{receivedGift.transaction.ownerDisplayName}}</p>
+                    </div>
+                  {{/if}}
+                  {{#if givenGift}}
+                    <div class="gift">
+                      {{#if givenGift.transaction}}
+                        <p>Gift claimed by {{givenGift.transaction.ownerDisplayName}}.</p>
+                      {{else}}
+                        <p>This item is a gift. Give this link to the recipient so they can claim it:</p>
+                        <p>
+                          <div class="gift-link">
+                            <a href="{{claimLink}}" target="_blank">{{claimLink}}</a>
+                          </div>
+                        </p>
+                        <p>* You can click the link to see what they will see.</p>
+                      {{/if}}
+                    </div>
+                  {{/if}}
                 </li>
+              {{/each}}
+              {{#if tip}}
+                {{# if tip.amount}}
+                  <li class="cart-item">
+                      <span class="name">
+                        {{t7e 'Tip'}}
+                      </span>
+                    <span class="price">${{tip.amount}}</span>
+                  </li>
+                {{/if}}
               {{/if}}
-            {{/if}}
-          </ol>
-          <div>----------------------</div>
-          <ol class="receipt-items">
-            <li class="receipt-item">
-              <span class="name">Total</span>
-              <span class="price">${{totalValue}}</span>
-            </li>
-          </ol>
+            </ol>
+            <div>----------------------</div>
+            <ol class="receipt-items">
+              <li class="receipt-item">
+                <span class="name">Total</span>
+                <span class="price">${{totalValue}}</span>
+              </li>
+            </ol>
+          {{/if}}
           {{#if tip.message}}
             <div class="tip">
               <p class="title">Tip message</p>
