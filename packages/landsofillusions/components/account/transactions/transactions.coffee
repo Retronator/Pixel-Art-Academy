@@ -44,6 +44,10 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     # We only want to show transactions that were actual purchases (they have items).
     transactions = _.filter transactions, (transaction) => transaction.items
 
+    # Remove all patreon transactions.
+    transactions = _.filter transactions, (transaction) =>
+      not _.find transaction.payments, (payment) -> payment.type is RS.Payment.Types.PatreonPledge
+
     # Refresh all items to get their names.
     for transaction in transactions when transaction.items
       for item in transaction.items

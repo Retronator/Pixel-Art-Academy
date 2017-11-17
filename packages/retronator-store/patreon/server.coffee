@@ -16,6 +16,8 @@ class RA.Patreon extends RA.Patreon
               authorizedOnly: true
         ).fetch()
 
+        patreonKeycardId = RS.Item.documents.findOne(catalogKey: RS.Items.CatalogKeys.Retronator.Patreon.PatreonKeycard)._id
+
         for pledge in pledges
           patron = pledge.data.relationships.patron
           patronId = patron.data.id
@@ -42,7 +44,8 @@ class RA.Patreon extends RA.Patreon
 
             transactionId = RS.Transaction.documents.insert
               patreon: patronId
-              payments: [{_id: paymentId}]
+              payments: [_id: paymentId]
+              items: [item: _id: patreonKeycardId]
 
           # Update payment.
           RS.Payment.documents.update paymentId,
