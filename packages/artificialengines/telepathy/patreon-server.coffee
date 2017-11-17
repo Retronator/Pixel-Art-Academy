@@ -9,9 +9,6 @@ class AT.Patreon
   @initializeClient: ->
     if tokenData = @Token.documents.findOne()
       @_client = PatreonAPI.patreon tokenData.accessToken
-
-      console.log "Started Patreon API client from database."
-
       @initialized = true
 
   @refreshClient: (refreshToken) ->
