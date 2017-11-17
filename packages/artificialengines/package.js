@@ -24,6 +24,8 @@ Package.onUse(function(api) {
     'check',
     'ejson',
     'markdown',
+    'http',
+    'oauth',
 
     // 3rd party
     'peerlibrary:assert',

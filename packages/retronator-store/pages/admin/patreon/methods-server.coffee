@@ -1,9 +1,16 @@
+AT = Artificial.Telepathy
 RA = Retronator.Accounts
 RS = Retronator.Store
 
 RS.Pages.Admin.Patreon.updateCurrentPledges.method ->
   RA.authorizeAdmin()
   RA.Patreon.updateCurrentPledges()
+
+RS.Pages.Admin.Patreon.refreshClient.method (refreshToken) ->
+  check refreshToken, String
+  RA.authorizeAdmin()
+
+  AT.Patreon.refreshClient refreshToken
 
 RS.Pages.Admin.Patreon.importPledges.method (date, csvData) ->
   check date, Date

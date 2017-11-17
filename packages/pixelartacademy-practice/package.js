@@ -16,7 +16,6 @@ Package.onUse(function(api) {
 
   api.use('edgee:slingshot');
   api.use('jparker:crypto-aes');
-  api.use('http');
 
   api.export('PixelArtAcademy');
 

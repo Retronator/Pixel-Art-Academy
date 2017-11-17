@@ -9,11 +9,13 @@ class RS.Pages.Admin.Patreon extends AM.Component
 
   @importPledges: new AB.Method name: "#{@id()}.importPledges"
   @updateCurrentPledges: new AB.Method name: "#{@id()}.updateCurrentPledges"
+  @refreshClient: new AB.Method name: "#{@id()}.refreshClient"
 
   events: ->
     super.concat
       'click .update-current-pledges': @onClickUpdateCurrentPledges
       'submit .upload-form': @onSubmitUploadForm
+      'submit .refresh-form': @onSubmitRefreshForm
 
   onClickUpdateCurrentPledges: (event) ->
     @constructor.updateCurrentPledges()
@@ -39,3 +41,9 @@ class RS.Pages.Admin.Patreon extends AM.Component
         submitData event.target.result
 
       reader.readAsText csvFile
+
+  onSubmitRefreshForm: (event) ->
+    event.preventDefault()
+
+    refreshToken = @$('.refresh-token').val()
+    @constructor.refreshClient refreshToken
