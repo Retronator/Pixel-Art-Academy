@@ -50,5 +50,7 @@ OAuth.registerService 'patreon', 2, null, (query) ->
     accessToken: accessToken
     refreshToken: tokenResponse.data.refresh_token
     expiresAt: Date.now() + 1000 * tokenResponse.data.expires_in
+    # We add the email fields for accounts-emails-field and accounts-meld to work.
+    email: userProfile.attributes.email
   ,
     userProfile

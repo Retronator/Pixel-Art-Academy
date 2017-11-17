@@ -4,11 +4,12 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
 RA = Retronator.Accounts
+RS = Retronator.Store
 
 class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
   @register 'LandsOfIllusions.Components.Account.Transactions'
-  @url: -> 'transactions'
-  @displayName: -> 'Transactions'
+  @url: -> 'purchases'
+  @displayName: -> 'Purchases'
 
   @initialize()
 
@@ -22,6 +23,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
 
     @showCreditInfo = new ReactiveField false
     @showAuthorizedPaymentsInfo = new ReactiveField false
+    @showPatreonInfo = new ReactiveField false
     @currentTransaction = new ReactiveField null
 
   supportAmount: ->
@@ -39,26 +41,58 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
 
     transactions = transactions.fetch()
 
+    # We only want to show transactions that were actual purchases (they have items).
+    transactions = _.filter transactions, (transaction) => transaction.items
+
     # Refresh all items to get their names.
-    for transaction in transactions
+    for transaction in transactions when transaction.items
       for item in transaction.items
         item.item.refresh()
 
     _.sortBy transactions, 'time'
 
   emptyLines: ->
-    transactionsCount = @transactions()?.length
+    transactionsCount = @transactions()?.length or 0
 
-    if transactionsCount
-      maximumRows = Math.max 3, transactionsCount
+    endingMessages = [
+      @showCurrentPatreonPledge()
+      @showPositiveBalance()
+      @showAuthorizedOnly()
+    ]
 
-    else
-      maximumRows = 2
+    # See how many ending messages we have, otherwise set it to one since we'll generate one (end listing).
+    endingCount = Math.max 1, _.sumBy endingMessages, (messagePresent) -> if messagePresent then 1 else 0
 
-    maximumRows++ if maximumRows % 2 is 1
+    # If we don't have any transactions, the ending message is 5 lines long.
+    endingCount += 5 unless transactionsCount
 
-    # Return an array with enough elements to pad the transactions list to 5 rows.
-    '' for i in [transactionsCount...maximumRows]
+    linesCount = transactionsCount + endingCount
+
+    # There should be at least one empty line and the total should be at least 5
+    emptyLines = Math.max 1, 5 - linesCount
+
+    # Make sure we have an odd number of lines.
+    emptyLines++ if (linesCount + emptyLines) % 2 is 0
+
+    # Return an array with an element for every empty line.
+    '' for i in [0...emptyLines]
+
+  showCurrentPatreonPledge: ->
+    @authorizedPaymentsAmount().PatreonPledge
+
+  showPositiveBalance: ->
+    Retronator.user()?.store?.credit
+
+  showAuthorizedOnly: ->
+    @authorizedPaymentsAmount().StripePayment
+
+  showEndListing: ->
+    # Only show end listing if no other messages will be present.
+    not _.some [
+      @showCurrentPatreonPledge()
+      @showPositiveBalance()
+      @showAuthorizedOnly()
+    ]
 
   dateText: ->
     transaction = @currentData()
@@ -92,6 +126,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
       'change .anonymous-checkbox': @onChangeAnonymousCheckbox
       'click .load-credit-info': @onClickLoadCreditInfo
       'click .load-authorized-payments-info': @onClickLoadAuthorizedPaymentsInfo
+      'click .load-patreon-info': @onClickLoadPatreonInfo
       'click .info-note': @onClickInfoNote
       'click .load-transaction': @onClickLoadTransaction
       'click': @onClick
@@ -103,15 +138,24 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     @showCreditInfo true
     @showAuthorizedPaymentsInfo false
     @currentTransaction null
+    @showPatreonInfo false
+
+  onClickLoadPatreonInfo: (event) ->
+    @showPatreonInfo true
+    @showCreditInfo false
+    @showAuthorizedPaymentsInfo false
+    @currentTransaction null
 
   onClickLoadAuthorizedPaymentsInfo: (event) ->
     @showCreditInfo false
     @showAuthorizedPaymentsInfo true
     @currentTransaction null
+    @showPatreonInfo false
 
   onClickInfoNote: (event) ->
     @showCreditInfo false
     @showAuthorizedPaymentsInfo false
+    @showPatreonInfo false
 
   onClickLoadTransaction: (event) ->
     transaction = @currentData()
@@ -119,6 +163,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     
     @showCreditInfo false
     @showAuthorizedPaymentsInfo false
+    @showPatreonInfo false
 
   onClick: (event) ->
     return if $(event.target).closest('.load-transaction').length

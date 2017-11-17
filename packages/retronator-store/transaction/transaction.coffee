@@ -11,6 +11,7 @@ class RS.Transaction extends AM.Document
   #   supporterName
   # email: lowercase user email entered for this transaction if user was not logged in during payment
   # twitter: lowercase twitter handle for this transaction if it was given to a twitter user
+  # patreon: patron ID if this is a pledge created over Patreon
   # ownerDisplayName: auto-generated name used to display who initiated this transaction
   # items: array of items received in this transaction
   #   item: the item document
@@ -56,7 +57,7 @@ class RS.Transaction extends AM.Document
         displayName ?= fields.email or ''
         [fields._id, displayName]
       totalValue: @GeneratedField 'self', ['items', 'tip'], (fields) ->
-        return unless fields.items
+        return [fields._id, 0] unless fields.items
 
         # The total value of a transaction is the sum of all items' prices and the tip.
         value = fields.tip?.amount or 0

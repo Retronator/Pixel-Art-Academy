@@ -6,6 +6,7 @@ class RS.Payment extends AM.Document
   @id: -> 'Retronator.Store.Payment'
   # type: what kind of payment this was
   # amount: USD value added to the balance with this payment
+  # authorizedOnly: true if the amount was not actually collected and this is just an intended payment
   # paymentMethod:
   #   _id
   #
@@ -16,9 +17,12 @@ class RS.Payment extends AM.Document
   # backerId: kickstarter backer UID
   # backerName: kickstarter backer Name
   #
+  # PATREON PLEDGE
+  # patronEmail: Patreon user's email when processing the pledge
+  # patronId: Patreon user ID
+  #
   # STRIPE PAYMENT
   # chargeId: charge id returned from stripe API
-  # authorizedOnly: true if the amount was not actually collected and this is just an intended payment
   # chargeError: error that occurred while trying to charge this payment (after being only authorized)
   #   failureCode: code returned directly from stripe
   #   failureMessage: message returned directly from stripe
@@ -41,6 +45,7 @@ class RS.Payment extends AM.Document
 
   @Types:
     KickstarterPledge: 'KickstarterPledge'
+    PatreonPledge: 'PatreonPledge'
     StripePayment: 'StripePayment'
     ReferralCode: 'ReferralCode'
     StoreCredit: 'StoreCredit'

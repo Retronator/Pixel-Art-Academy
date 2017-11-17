@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
+  api.use('chfritz:easycron');
 
   api.export('Retronator');
 
@@ -94,6 +95,8 @@ Package.onUse(function(api) {
   api.addServerFile('initialize-server/admin');
   api.addServerFile('initialize-server/test');
 
+  api.addServerFile('patreon/server');
+
   // Components
 
   api.addFile('components/components');
@@ -113,5 +116,8 @@ Package.onUse(function(api) {
 
   api.addUnstyledComponent('pages/admin/authorizedpayments/authorizedpayments');
   api.addServerFile('pages/admin/authorizedpayments/methods-server');
+
+  api.addUnstyledComponent('pages/admin/patreon/patreon');
+  api.addServerFile('pages/admin/patreon/methods-server');
 
 });
