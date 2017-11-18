@@ -3,7 +3,7 @@ AB = Artificial.Base
 
 class PixelArtAcademy
   constructor: ->
-    AB.addRoute '/pixelboy/:app?/:path?', PixelArtAcademy.Layouts.AlphaAccess, PixelArtAcademy.PixelBoy
+    AB.addRoute '/pixelboy/:app?/:path?', PixelArtAcademy.Layouts.PlayerAccess, PixelArtAcademy.PixelBoy
 
   @TimelineIds:
     # Dream sequence from the intro episode.

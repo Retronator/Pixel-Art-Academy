@@ -25,10 +25,10 @@ class PAA.Items.Bottle extends LOI.Adventure.Item
       fullName: "water"
 
   for id, drink of @DrinkTypes
-    LOI.Avatar.initialize drink
+    LOI.Adventure.Thing.Avatar.initialize drink
 
   @createDrink: (drinkType) ->
-    new LOI.Avatar @DrinkTypes[drinkType]
+    new LOI.Adventure.Thing.Avatar @DrinkTypes[drinkType]
 
   @translations: ->
     fullName: "bottle of {{drinkName}}"

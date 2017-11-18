@@ -65,15 +65,15 @@
               <div class="dialog-selection">
                 <ul class="options">
                   {{#each dialogSelection.dialogLineOptions}}
-                    <li class="option {{activeDialogOptionClass}}">{{line}}</li>
+                    <li class="option {{activeDialogOptionClass}}">{{{dialogSelectionLine}}}</li>
                   {{/each}}
                 </ul>
               </div>
             {{/if}}
           </div>
         </div>
-        {{#if showInventory}}
-          <div class="inventory scrollable">
+        <div class="inventory scrollable">
+          {{#if showInventory}}
             <div class="inventory-content scrollable-content">
               <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
               <ul class="items">
@@ -84,8 +84,8 @@
                 {{/each}}
               </ul>
             </div>
-          </div>
-        {{/if}}
+          {{/if}}
+        </div>
       </div>
     </div>
   </div>

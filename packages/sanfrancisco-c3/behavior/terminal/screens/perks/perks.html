@@ -1,0 +1,72 @@
+<template name="SanFrancisco.C3.Behavior.Terminal.Perks">
+  <div class="sanfrancisco-c3-behavior-terminal-perks screen">
+    <div class="main-content">
+      <h1 class="screen-title">Perks</h1>
+      <h2 class="section-title">
+        Active
+      </h2>
+      <ul class="perks">
+        {{#each activePerkKeys}}
+          <li class="perk">
+            {{> SanFrancisco.C3.Behavior.Terminal.Perks.Perk}}
+          </li>
+        {{/each}}
+      </ul>
+      <h2 class="section-title">
+        Available
+      </h2>
+      <ul class="perks">
+        {{#each availablePerkKeys}}
+          <li class="perk">
+            {{> SanFrancisco.C3.Behavior.Terminal.Perks.Perk}}
+          </li>
+        {{/each}}
+      </ul>
+      <h2 class="section-title">
+        Unavailable
+      </h2>
+      <ul class="perks">
+        {{#each unavailablePerkKeys}}
+          <li class="perk">
+            {{> SanFrancisco.C3.Behavior.Terminal.Perks.Perk}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+    {{#with displayedPerkKey}}
+      <div class="perk-info">
+        <div class="name">
+          {{name}}
+        </div>
+        <div class="description">
+          {{description}}
+        </div>
+        <ul class="effects">
+          {{#each effects}}
+            <li class="effect">{{this}}</li>
+          {{/each}}
+        </ul>
+        <div class="requirements {{satisfiedClass}}">
+          <span class="label">REQ</span>
+          {{requirements}}
+        </div>
+      </div>
+    {{/with}}
+    <div class="main-actions">
+      <button class="main-button action-button done-button">Done</button>
+    </div>
+  </div>
+</template>
+
+<template name="SanFrancisco.C3.Behavior.Terminal.Perks.Perk">
+  <div class="sanfrancisco-c3-behavior-terminal-perks-perk">
+    {{#if available}}
+      <label class="available">
+        {{> SanFrancisco.C3.Behavior.Terminal.Perks.Perk.Selected}}
+        <span class="label">{{name}}</span>
+      </label>
+    {{else}}
+      {{name}}
+    {{/if}}
+  </div>
+</template>

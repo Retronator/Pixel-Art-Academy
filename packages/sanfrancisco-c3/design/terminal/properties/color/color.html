@@ -1,0 +1,34 @@
+<template name="SanFrancisco.C3.Design.Terminal.Properties.Color">
+  <div class="sanfrancisco-c3-design-terminal-properties-color">
+    <div class="hues swatches-area">
+      <div class="name">
+        color
+      </div>
+      {{> SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches hues}}
+    </div>
+    <div class="shades swatches-area">
+      <div class="name">
+        shade
+      </div>
+      {{#if hueIsSelected}}
+        {{> SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches shades}}
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="SanFrancisco.C3.Design.Terminal.Properties.Color.Swatches">
+  <div class="sanfrancisco-c3-design-terminal-properties-color-swatches">
+    {{#if hasPreviousPage}}
+      <button class="previous-page-button page-button"></button>
+    {{/if}}
+    <ul class="swatches">
+      {{#each swatches}}
+        <li class="swatch {{selectedClass}}" {{style swatchStyle}}></li>
+      {{/each}}
+    </ul>
+    {{#if hasNextPage}}
+      <button class="next-page-button page-button"></button>
+    {{/if}}
+  </div>
+</template>

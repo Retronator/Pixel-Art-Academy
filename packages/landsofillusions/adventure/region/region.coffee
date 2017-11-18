@@ -18,28 +18,33 @@ class LOI.Adventure.Region extends LOI.Adventure.Thing
   @validateUser: ->
     Meteor.userId()?
 
+  @userForItemChecking: ->
+    Retronator.user
+      fields:
+        items: 1
+
   @validatePlayerAccess: ->
     # UserId tells us if the user is signed in or not, however the user document might not be transferred to the client
-    # yet. In that case Retronator.user() will be null, so we'll evaluate to undefined, meaning we can't yet determine
+    # yet. In that case userForItemChecking() will be null, so we'll evaluate to undefined, meaning we can't yet determine
     # validation until the user document is there.
     return false unless Meteor.userId()
 
-    Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.PixelArtAcademy.PlayerAccess
+    @userForItemChecking()?.hasItem Retronator.Store.Items.CatalogKeys.PixelArtAcademy.PlayerAccess
 
   @validateAvatarEditor: ->
     return false unless Meteor.userId()
 
-    Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
+    @userForItemChecking()?.hasItem Retronator.Store.Items.CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
 
   @validateIdeaGardenAccess: ->
     return false unless Meteor.userId()
 
-    Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.Retropolis.IdeaGardenAccess
+    @userForItemChecking()?.hasItem Retronator.Store.Items.CatalogKeys.Retropolis.IdeaGardenAccess
 
   @validatePatronClubMember: ->
     return false unless Meteor.userId()
 
-    Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.Retropolis.PatronClubMember
+    @userForItemChecking()?.hasItem Retronator.Store.Items.CatalogKeys.Retropolis.PatronClubMember
 
   constructor: ->
     super

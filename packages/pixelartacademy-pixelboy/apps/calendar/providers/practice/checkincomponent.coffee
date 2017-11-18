@@ -7,6 +7,15 @@ Calendar = PAA.PixelBoy.Apps.Calendar
 class Calendar.Providers.Practice.CheckInComponent extends AM.Component
   template: ->
     'PixelArtAcademy.PixelBoy.Apps.Calendar.Providers.Practice.CheckInComponent'
+    
+  onCreated: ->
+    super
+    
+    @characterInstance = new ComputedField =>
+      checkIn = @checkIn()
+      return unless checkIn?.character?._id
+
+      LOI.Character.getInstance checkIn.character._id
 
   checkIn: ->
     # Fetch full check-in data (we have a bare object with just the id).
@@ -23,6 +32,15 @@ class Calendar.Providers.Practice.CheckInComponent extends AM.Component
     checkIn = @currentData()
 
     checkIn.artwork or checkIn.image or checkIn.post
+
+  showAvatar: ->
+    # Temporarily disabling avatars due to performance issues.
+    return false
+    
+    return unless character = @characterInstance()
+
+    # We have avatar if the body field has any data and the body part is ready.
+    character.document()?.avatar.body and character.avatar.body.ready() and character.avatar.outfit.ready()
 
   textStyle: ->
     checkIn = @currentData()

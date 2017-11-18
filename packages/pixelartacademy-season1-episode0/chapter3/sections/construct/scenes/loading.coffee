@@ -47,8 +47,7 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
     return if @_chapterTitleShown
     @_chapterTitleShown = true
 
-    @section.chapter.showChapterTitle
-      toBeContinued: true
+    @section.chapter.showChapterTitle()
 
   # Listener
 
@@ -74,8 +73,3 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, captain.avatar]
       action: => @startScript label: 'MainDialog'
-
-    commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], tv.avatar]
-      priority: 1
-      action: => @startScript label: 'LookAtTV'

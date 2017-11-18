@@ -16,7 +16,7 @@ class LOI.Adventure.ScriptFile.Parser
 
     @_parseLine line for line in lines by -1
 
-    console.log "Script parser has completed and created nodes", @scriptNodes if LOI.debug
+    console.log "Script parser has completed and created scripts", _.keys @scriptNodes if LOI.debug
 
     @scriptNodes
 

@@ -1,0 +1,104 @@
+<template name="SanFrancisco.C3.Behavior.Terminal.People">
+  <div class="sanfrancisco-c3-behavior-terminal-people screen">
+    <div class="main-content">
+      <h1 class="screen-title">People</h1>
+      {{#if showTemplates}}
+        <div class="templates-area">
+          <div class="custom-people behavior-part">
+            <div class="name">Custom</div>
+            <div class="info">
+              Select your own people.
+            </div>
+          </div>
+          <ul class="templates">
+            {{#each templates}}
+              <li class="template behavior-part">
+                {{> SanFrancisco.C3.Behavior.Terminal.Components.PeoplePropertyPreview templateProperty}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{else}}
+        {{#with propertyTemplate}}
+          <div class="template-info main-text">
+            {{#if isOwnPropertyTemplate}}
+              <div class="name">
+                <span class="label">Template</span>: {{> renderTemplateNameInput name}}
+              </div>
+              <div class="description">
+                {{> renderTemplateDescriptionInput description}}
+              </div>
+              <p>
+                You are the designer of this template and can edit it.
+              </p>
+            {{else}}
+              <div class="name">
+                <span class="label">Template</span>: {{> t9n name}}
+              </div>
+              <div class="description">
+                {{> t9n description}}
+              </div>
+              <p>
+                Click Customize to create your own people based on this template.
+              </p>
+            {{/if}}
+        </div>
+        {{/with}}
+        <p class="main-text">
+          Specify people that have a significant impact on agent's life.
+        </p>
+        <ul class="people">
+          {{#each people}}
+            <li class="person">
+              <div class="property">
+                <div class="description">Relationship type:</div>
+                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.RelationshipType}}</div>
+              </div>
+              <div class="property">
+                <div class="description">How often do they stay in touch:</div>
+                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.RelationshipStrength}}</div>
+              </div>
+              <div class="property">
+                <div class="description">How close do they live:</div>
+                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.LivingProximity}}</div>
+              </div>
+              <div class="property">
+                <div class="description">How much do they support agent's art pursuits:</div>
+                <div class="selection">{{> SanFrancisco.C3.Behavior.Terminal.People.ArtSupport}}</div>
+              </div>
+              <div class="property">
+                <label class="description">{{> SanFrancisco.C3.Behavior.Terminal.People.DoesArt}}<span class="label">This person does art as well.</span></label>
+              </div>
+              <div class="property">
+                <label class="description">{{> SanFrancisco.C3.Behavior.Terminal.People.Joins}}<span class="label">This person will join the agent when they move to the Academy.</span></label>
+              </div>
+            </li>
+          {{/each}}
+        </ul>
+        <div class="actions">
+          <button class="action-button add-person-button">Add person</button>
+        </div>
+      {{/if}}
+    </div>
+    <div class="main-actions">
+      {{#if showTemplates}}
+        <button class="main-button action-button done-button">Back</button>
+      {{else}}
+        <button class="main-button action-button done-button">Done</button>
+        <button class="action-button replace-button">Replace</button>
+        {{#if propertyTemplate}}
+          {{#if isOwnPropertyTemplate}}
+            <button class="action-button unlink-template-button">Unlink template</button>
+          {{else}}
+            <button class="action-button unlink-template-button">Modify</button>
+          {{/if}}
+        {{else}}
+          {{#if isAdmin}}
+            <button class="action-button save-as-template-button">Save as template</button>
+          {{/if}}
+        {{/if}}
+        <button class="action-button delete-button danger-button">Delete</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

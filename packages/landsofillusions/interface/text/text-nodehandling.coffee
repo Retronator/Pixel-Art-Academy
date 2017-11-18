@@ -90,7 +90,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # Add the intro line at the start.
     unless @_inMultilineDialog
       if dialogLine.actor.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
-        start = "#{_.capitalize dialogLine.actor.shortName()} says: #{start}\""
+        start = "#{_.upperFirst dialogLine.actor.shortName()} says: #{start}\""
 
     if dialogLine.next instanceof Nodes.DialogLine and dialogLine.next.actor is dialogLine.actor
       # Next line is by the same actor.

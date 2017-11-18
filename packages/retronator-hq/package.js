@@ -30,6 +30,7 @@ Package.onUse(function(api) {
   api.addFile('actors/corinne');
   api.addFile('actors/retro');
   api.addFile('actors/shelley');
+  api.addFile('actors/alexandra');
 
   // Items
 
@@ -44,10 +45,10 @@ Package.onUse(function(api) {
   api.addComponent('items/receipt/receipt');
   
   api.addFile('items/account/account');
-  api.addThingComponent('items/sync/sync');
+  api.addComponent('items/sync/sync');
   api.addFile('items/keycard/keycard');
 
-  api.addThing('items/operatorlink/operatorlink');
+  api.addThingComponent('items/operatorlink/operatorlink');
 
   // Scenes
   
@@ -93,7 +94,7 @@ Package.onUse(function(api) {
   api.addFile('floor3/gallery/galleryeast');
   api.addFile('floor3/gallery/gallerywest');
 
-  api.addFile('floor4/artstudio/artstudio');
+  api.addThing('floor4/artstudio/artstudio');
 
   /*
   api.addFiles('1stfloor/entrance/entrance.coffee');

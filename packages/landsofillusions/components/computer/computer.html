@@ -1,0 +1,25 @@
+<template name="LandsOfIllusions.Components.Computer">
+  <div class="landsofillusions-components-computer">
+    {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
+    {{#LandsOfIllusions.Components.Overlay}}
+      <div class="display">
+        {{> Render currentScreen}}
+        {{#if activeDialog}}
+          {{#with activeDialog}}
+            <div class="dialog-area">
+              <div class="dialog">
+                <div class="message">{{message}}</div>
+                <div class="actions">
+                  {{#if confirmButtonText}}
+                    <button class="action-button confirm-button {{confirmButtonClass}}">{{confirmButtonText}}</button>
+                  {{/if}}
+                  <button class="action-button cancel-button {{cancelButtonClass}}">{{cancelButtonText}}</button>
+                </div>
+              </div>
+            </div>
+          {{/with}}
+        {{/if}}
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>

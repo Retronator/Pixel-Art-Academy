@@ -73,8 +73,8 @@ class Retronator.HQ.Scenes.Shelley extends LOI.Adventure.Scene
 
   _doAction: ->
     return unless location = @location()
+    return unless listener = @listeners[0]
 
-    listener = @listeners[0]
     currentLocationId = @currentLocationId()
     playerLocationId = LOI.adventure.currentLocationId()
 

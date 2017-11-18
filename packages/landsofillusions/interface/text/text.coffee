@@ -3,41 +3,10 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
+Vocabulary = LOI.Parser.Vocabulary
+
 class LOI.Interface.Text extends LOI.Interface
   @register 'LandsOfIllusions.Adventure.Interface.Text'
-
-  introduction: ->
-    location = @location()
-    return unless location
-
-    if currentIntroductionFunction = @_currentIntroductionFunction()
-      introduction = currentIntroductionFunction()
-      return @_formatOutput introduction
-
-    if location.constructor.visited()
-      fullName = location.avatar.fullName()
-      return unless fullName
-
-      # We've already visited this location so simply return the full name.
-      "#{_.upperFirst fullName}."
-
-    else
-      # It's the first time we're visiting this location in this session so show the full description.
-      situation = LOI.adventure.currentSituation()
-
-      @_formatOutput situation.description.last()
-      
-  exitAvatars: ->
-    # TODO: Get exits from current situation so they can be dynamically modified.
-    exitAvatarsByLocationId = @location()?.exitAvatarsByLocationId()
-    return [] unless exitAvatarsByLocationId
-
-    # Generate a unique set of IDs from all directions (some directions might lead to same location).
-    exitAvatars = _.values exitAvatarsByLocationId
-
-    console.log "Displaying exits", exitAvatars if LOI.debug
-
-    exitAvatars
 
   exitAvatarName: ->
     exitAvatar = @currentData()
@@ -123,75 +92,6 @@ class LOI.Interface.Text extends LOI.Interface
   waitingKeypress: ->
     @_pausedNode() or @inIntro()
 
-  narrativeLine: ->
-    # WARNING: The output of this function should be HTML escaped
-    # since the results will be directly injected with triple braces.
-    lineText = @currentData()
-
-    @_formatOutput lineText
-    
-  _formatOutput: (text) ->
-    # NOTE: The output of this function is HTML escaped and can be used directly injected with triple braces.
-    return unless text
-
-    # We could have direct HTML in the text, so we need to collect it here, to replace it back instead of the escaped
-    # versions. We have to trust that the provided HTML is already escaped and malicious free.
-    htmlParts = text.match /%%html.*html%%/g
-
-    text = AM.HtmlHelper.escapeText text
-
-    # Replace back the html parts.
-    for htmlPart in htmlParts or []
-      # Extract the html content with a capture group.
-      html = htmlPart.match(/%%html(.*)html%%/)[1]
-
-      # Because we don't use global match flag, replacements will happen one by one in order.
-      text = text.replace /%%html.*html%%/, html
-
-    # Create color spans.
-    text = text.replace /%%c(\d+)-([-\d]+)%(.*?)c%%/g, (match, hue, shade, text) ->
-      hue = parseInt hue
-      shade = parseInt shade
-
-      colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade).getHexString()
-
-      "<span style='color: ##{colorHexString}' data-hue='#{hue}' data-shade='#{shade}'>#{text}</span>"
-
-    # Create text transform spans.
-    text = text.replace /%%t([L|U])(.*?)t%%/g, (match, transformType, text) =>
-      switch transformType
-        when 'L' then transform = 'lowercase'
-        when 'U' then transform = 'uppercase'
-
-      "<span style='text-transform: #{transform}'>#{text}</span>"
-
-    # Extract commands from image notation.
-    text = text.replace /!\[(.*?)]\((.*?)\)/g, (match, text, command) ->
-      command = text unless command.length
-      "<span class='command' title='#{command}'>#{text}<span class='underline'></span><span class='background'></span></span>"
-
-    Tracker.afterFlush =>
-      # Add colors to commands.
-      commands = @$('.narrative .command')
-      return unless commands
-
-      for element in commands
-        $command = $(element)
-        colorParent = $command.parent('*[data-hue]')
-
-        if colorParent.length
-          hue = colorParent.data 'hue'
-          shade = colorParent.data 'shade'
-          colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade + 1).getHexString()
-
-          $command.css color: "##{colorHexString}"
-
-          $command.find('.underline').css borderBottomColor: "##{colorHexString}"
-
-          $command.find('.background').css backgroundColor: "##{colorHexString}"
-
-    text
-
   # Query this to see if the interface is listening to user commands.
   active: ->
     # The text interface is inactive when there are any modal dialogs.
@@ -251,6 +151,15 @@ class LOI.Interface.Text extends LOI.Interface
         @scroll
           position: @maxScrollTop()
           animate: true
+
+  ready: ->
+    return unless exitAvatars = @exitAvatars()
+    
+    conditions = _.flattenDeep [
+      avatar.ready() for avatar in exitAvatars
+    ]
+
+    _.every conditions
 
   events: ->
     super.concat

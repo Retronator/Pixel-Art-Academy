@@ -22,11 +22,6 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
 
   @initialize()
 
-  constructor: ->
-    super
-    
-    @operator = new HQ.Actors.Operator
-
   things: -> [
     @constructor.Chair
   ]
@@ -38,15 +33,10 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
   # Script
 
   initializeScript: ->
-    operator = @options.parent.operator
-
-    @setThings
-      operator: operator
-      
     @setCallbacks
-      ActivateHeadset: (complete) => HQ.Items.Sync.activateHeadsetCallback complete
-      PlugIn: (complete) => HQ.Items.Sync.plugInCallback complete
-      DeactivateHeadset: (complete) => HQ.Items.Sync.deactivateHeadsetCallback complete
+      ActivateSync: (complete) =>
+        LOI.adventure.getCurrentThing(HQ.Items.OperatorLink).startWithoutIntro()
+        complete()
 
   # Listener
         

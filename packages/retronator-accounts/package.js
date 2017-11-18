@@ -13,15 +13,14 @@ Package.onUse(function(api) {
   api.use('accounts-twitter');
   api.use('accounts-google');
   api.use('service-configuration');
+  api.use('oauth2');
   api.use('oauth-encryption');
   api.use('email');
 
-  api.use('bozhao:link-accounts@1.2.10');
+  api.use('bozhao:link-accounts@1.2.11');
   api.use('splendido:accounts-meld@1.3.1');
   api.use('splendido:accounts-emails-field@1.2.0');
-  api.use('benjick:stripe', 'server');
   api.use('jparker:crypto-aes');
-  api.use('peerlibrary:directcollection');
 
   api.imply('accounts-password');
   api.imply('service-configuration');
@@ -45,10 +44,18 @@ Package.onUse(function(api) {
 
   // User
   
-  api.addFiles('user/user.coffee');
-  api.addFiles('user/methods.coffee');
-  api.addFiles('user/methods-server.coffee', 'server');
-  api.addFiles('user/subscriptions.coffee', 'server');
+  api.addFile('user/user');
+  api.addFile('user/methods');
+  api.addServerFile('user/methods-server');
+  api.addServerFile('user/subscriptions');
+  api.addServerFile('user/migrations/0000-publicname');
+  api.addServerFile('user/migrations/0001-patreonloginservice');
+
+  // Patreon
+
+  api.addFile('patreon/patreon');
+  api.addServerFile('patreon/server');
+  api.addClientFile('patreon/client');
 
   // Components
 

@@ -1,0 +1,1 @@
+LandsOfIllusions.GameState.renameCollectionMigration 'LandsOfIllusionsGameStates', 'LandsOfIllusions.GameStates'

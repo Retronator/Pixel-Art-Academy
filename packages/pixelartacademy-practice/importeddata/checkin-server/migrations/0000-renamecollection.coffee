@@ -1,0 +1,1 @@
+PixelArtAcademy.Practice.ImportedData.CheckIn.renameCollectionMigration 'PixelArtAcademyPracticeImportedDataCheckIns', 'PixelArtAcademy.Practice.ImportedData.CheckIns'

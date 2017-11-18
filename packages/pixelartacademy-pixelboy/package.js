@@ -51,6 +51,12 @@ Package.onUse(function(api) {
   api.addFiles('apps/calendar/providers/pixeldailies/themecomponent.coffee');
   api.addFiles('apps/calendar/providers/pixeldailies/themecomponent.styl');
 
+  api.addFiles('apps/calendar/providers/octobit/octobit.coffee');
+  api.addFiles('apps/calendar/providers/octobit/themesprovider.coffee');
+  api.addFiles('apps/calendar/providers/octobit/themecomponent.html');
+  api.addFiles('apps/calendar/providers/octobit/themecomponent.coffee');
+  api.addFiles('apps/calendar/providers/octobit/themecomponent.styl');
+
   api.addFiles('apps/calendar/providers/practice/practice.coffee');
   api.addFiles('apps/calendar/providers/practice/checkinsprovider.coffee');
   api.addFiles('apps/calendar/providers/practice/checkincomponent.html');
@@ -61,9 +67,9 @@ Package.onUse(function(api) {
   api.addFiles('apps/journal/journal.styl');
   api.addFiles('apps/journal/journal.coffee');
 
-  api.addFiles('apps/journal/checkin/checkin.html');
-  api.addFiles('apps/journal/checkin/checkin.styl');
-  api.addFiles('apps/journal/checkin/checkin.coffee');
+  api.addFiles('apps/journal/addimage/addimage.html');
+  api.addFiles('apps/journal/addimage/addimage.styl');
+  api.addFiles('apps/journal/addimage/addimage.coffee');
 
   api.addFiles('components/components.coffee');
 

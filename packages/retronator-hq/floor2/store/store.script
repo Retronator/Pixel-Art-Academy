@@ -24,6 +24,7 @@ retro: How can I help you today?
 * I'm one of the Kickstarter backers. -> [Kickstarter] `not _noRewardBacker`
 * How do I play the game? -> [PlayGame] `@user.itemKeys['PixelArtAcademy.PlayerAccess']`
 * Can I ask you about Pixel Art Academy? -> [PixelArtAcademy]
+* How can I follow your work? -> [Follow]
 * I would like to ask something else … -> [Contact] `PixelArtAcademy`
 * I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
 * That would be all, thank you. -> [EndHelped] `_helped`
@@ -124,7 +125,8 @@ pause
   
 ### Checkout
 
--> [TransactionCanceled] `_transactionCanceled`
+-> [PurchaseError] `_purchaseErrorAfterPurchase`
+-> [TransactionCanceled] `not _transactionCompleted`
 
 ## TransactionComplete
 
@@ -153,6 +155,17 @@ retro:
     
 -> [RetroDialog]
 
+## PurchaseError
+
+### RemoveReceipt
+### ReturnShoppingCart
+
+retro: 
+  Sorry about that. I'll do my best to resolve it very soon.
+  I apologize for having to wait.
+
+-> [RetroDialog]
+
 ## TransactionCanceled
 
 ### RemoveReceipt
@@ -166,7 +179,9 @@ retro: Anything I can help you with purchasing?
 
 ## TransactionCanceledQuestions
 
+* Whoops, I didn't want to close that. -> [CheckoutAgain] `not _afterTransactionQuestion`
 * Thanks for the info, let's see that receipt again. -> [CheckoutAgain] `_afterTransactionQuestion`
+* What do different payment options do? -> [PaymentOptions]
 * I need to change some items first. -> [Change]
 * Where does the purchase show up? -> [PurchaseDisplay]
 * What is the tip message for? -> [TipMessage]
@@ -182,6 +197,19 @@ retro: Anything I can help you with purchasing?
 pause
 
 -> [Checkout]
+
+## PaymentOptions
+
+`_afterTransactionQuestion = true`
+
+retro:
+  Currently we only support payment with a credit card. 
+  Stripe is the system that processes the payment and safely handles your credit card information.
+  The one-time stripe payment is the usual way to pay. 
+  If you want to store your card information for future purchases (for example for upgrades), you can also save your card.
+  You do that by adding a payment method to your account using the form on bottom-right.
+  
+-> [TransactionCanceledQuestions]
 
 ## Change
 
@@ -235,7 +263,7 @@ retro:
 * Uhm, what do you mean?
 
 retro:
-    I mean that you're pre-ordering a game that is mainly developed by one person (me).
+    You're pre-ordering a game that is mainly developed by one person (me).
     This means it will be in development for a long time.
     On the bright side, I will be releasing the episodes as we go along.
     And let's not forget, this is a game about actual drawing. 
@@ -306,7 +334,7 @@ retro:
     
 retro: You should register downstairs with Burra with your backer email. `not @user.signedIn`
 
-* My pleasure. -> [KickstarterPleasure]
+* I will do that. -> [KickstarterOK]  `not @user.signedIn`
 * How do I start playing?
 
 retro:
@@ -315,9 +343,9 @@ retro:
     
 -> [MainQuestion]
 
-## KickstarterPleasure
+## KickstarterOK
 
-retro: The pleasure is mine.
+retro: Awesome, can't wait for you to play what I made so far.
     
 -> [MainQuestion]
     
@@ -333,9 +361,11 @@ retro: Yes, please!
 
 * Is this an online course? -> [Course]
 * When will the game be released? -> [Release]
-* Can you explain how seasons and episodes work? -> [Seasons]
 * Where's development right now? -> [Development]
+* How can I start learning to draw? -> [LearnToDraw]
 * Why aren't there any pictures? -> [TextAdventure]
+* Can you explain how seasons and episodes work? -> [Seasons]
+* How can I follow development? -> [FollowDevelopment]
 * Actually, nevermind. -> [Nevermind] `not _answeredAboutPixelArtAcademy`
 * Thanks for the information. `_answeredAboutPixelArtAcademy`
 
@@ -350,7 +380,6 @@ retro:
     It is first and foremost a video game, just made to learn how to draw.
     You learn by playing through the game's storylines.
     As you complete drawing quests you are actually learning and drawing pixel art yourself!
-    But there is no traditional classroom or online course environment. 
 
 -> [PixelArtAcademyQuestions]
 
@@ -362,8 +391,8 @@ retro:
     Pixel Art Academy is not a typical game with a release date.
     Instead, it will be continuously in development.
     Over time I'll be adding more content and improving existing one.
-    The first episode will come out later in 2017.
     It's mainly just me working on it, so it'll take a while.
+    First gameplay episode will arrive around early 2018.
     
 -> [PixelArtAcademyQuestions]
     
@@ -373,8 +402,8 @@ retro:
 
 retro:
     Game's main storylines will be divided into seasons and episodes.
-    Each season's production will last a year.
-    The result will be a couple to a few episodes per year.
+    Each season's production will take about a year, maybe more.
+    The result will be a couple to a few episodes per season.
     It pretty much depends on how development goes in practice.
     
 ## SeasonsQuestions
@@ -408,11 +437,62 @@ retro:
 retro:
     So far I've been mostly building the adventure game engine.
     Only the intro episode you're playing right now is finished.
-    Well, not yet really, Chapter 1 and 2 are done and I'm working on Chapter 3 right now.
-    In Chapter 3 you'll be able to create a character and then the game will really begin.
-    But there's nothing more to play right now.
+    After you create a character in Chapter 3, the episode ends and you'll have to wait for next one to come out.
+    However, you can already start learning to draw with the lo-fi prototype.
 
 -> [PixelArtAcademyQuestions]
+
+## LearnToDraw
+
+retro:
+    The content for the game is first prototyped in form of articles with tasks to complete.
+    It's called the Pixel Art Academy Study Guide and it's a working draft right now.
+    Do you want to visit it?
+    
+* Yes, please. -> [ReadStudyGuide]
+* Maybe later.
+
+retro: No problem. It'll appear in Retronator Magazine once it's not a draft anymore.
+
+-> [PixelArtAcademyQuestions]
+
+## ReadStudyGuide
+
+> Retro turns around his computer screen and shows you the guide introduction.
+
+pause
+
+### ReadStudyGuide
+
+retro: There's a ton of content written already. Make sure to check out the Table of Contents at the end of the article.
+
+-> [PixelArtAcademyQuestions]    
+
+## FollowDevelopment
+
+retro:
+    The development blog for the game is on Patreon. All game posts are public so you can just click Follow to receive updates.
+    It has other Retronator posts, but you can also just look at the Pixel Art Academy tag if you want to see only game updates.
+    Do you want to go there now?
+    
+* That would be great. -> [ReadPixelArtAcademyPosts]
+* Maybe later.
+
+retro: Sounds good. It's available at patreon.com/retro. 
+
+-> [PixelArtAcademyQuestions]
+
+## ReadPixelArtAcademyPosts
+
+> Retro turns around his computer screen and shows you the website.
+
+pause
+
+### ReadPixelArtAcademyPosts
+
+retro: I hope it was informative.
+
+-> [PixelArtAcademyQuestions]    
 
 ## TextAdventure
 
@@ -440,6 +520,38 @@ retro:
     Talk to Panzer, he'll set things up for you.
     
 -> [MainQuestion]
+
+## Follow
+
+`_helped = true`
+
+retro:
+    The best way right now is to follow me on Patreon. 
+    You don't even have to pledge. Almost all posts are public so you can just click Follow to receive updates.
+    Do you want to check it out?
+    
+* That would be awesome. -> [VisitPatreon]
+* Maybe later.
+
+retro: Sounds good. It's available at patreon.com/retro. 
+
+-> [FollowOther]
+
+## VisitPatreon
+
+> Retro turns around his computer screen and shows you the website.
+
+pause
+
+### VisitPatreon
+
+## FollowOther
+
+retro: 
+  Other places you can follow me is Facebook, Twitter, Instagram …
+  Just search for Retronator; that's always my username. Except on YouTube. On YouTube I'm Retronator48k.
+
+-> [MainQuestion]    
 
 ## Contact
 

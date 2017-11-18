@@ -12,17 +12,47 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
     
   @initialize()
 
+  constructor: ->
+    super
+
+    # We want to be able to set the selected user even before the page gets rendered,
+    # so that it's already displaying it when the account is turned to the characters page.
+    @selectedCharacterId = new ReactiveField null
+
   onCreated: ->
     super
 
-    @subscribe 'Retronator.Accounts.User.charactersForCurrentUser'
+    LOI.Character.forCurrentUser.subscribe @
+
+    @selectedCharacter = new ComputedField =>
+      LOI.Character.documents.findOne @selectedCharacterId()
+
+    nameInputOptions =
+      addTranslationText: => @translation "Add language variant"
+      removeTranslationText: => @translation "Remove language variant"
+      newTranslationLanguage: ''
+
+    @fullNameInput = new LOI.Components.TranslationInput _.extend {}, nameInputOptions,
+      placeholderText: => LOI.Character.Avatar.noNameTranslation()
+      placeholderInTargetLanguage: true
+      onTranslationInserted: (languageRegion, value) =>
+        LOI.Character.updateName @selectedCharacterId(), languageRegion, value
+
+      onTranslationUpdated: (languageRegion, value) =>
+        LOI.Character.updateName @selectedCharacterId(), languageRegion, value
+
+        # Return true to prevent the default update to be executed.
+        true
+        
+  renderFullNameInput: ->
+    @fullNameInput.renderComponent @currentComponent()
 
   characters: ->
-    user = RA.User.documents.findOne Meteor.userId(),
-      fields:
-        characters: 1
+    user = Retronator.user()
+    return unless user?.characters
 
-    user?.characters
+    for character in user.characters
+      LOI.Character.documents.findOne character._id
 
   emptyLines: ->
     charactersCount = @characters()?.length or 0
@@ -34,8 +64,9 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
   dialogPreviewStyle: ->
     # Set the color to character's color.
     character = @currentData()
+    color = LOI.Avatar.colorObject character.avatar.color
 
-    color: "##{character.colorObject()?.getHexString()}"
+    color: "##{color.getHexString()}"
 
   showLoadButtonClass: ->
     character = @currentData()
@@ -56,22 +87,10 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
 
   onClickLoadCharacter: (event) ->
     characterId = @currentData()._id
-    LOI.switchCharacter characterId
+    @selectedCharacterId characterId
 
   onClickUnloadCharacter: (event) ->
-    LOI.switchCharacter null
-
-  class @CharacterName extends AM.DataInputComponent
-    @register 'LandsOfIllusions.Components.Account.Characters.CharacterName'
-
-    load: ->
-      @data()?.name
-
-    save: (value) ->
-      Meteor.call "LandsOfIllusions.Character.rename", @data()._id, value
-
-    placeholder: ->
-      @data()?.displayName()
+    @selectedCharacterId null
 
   class @CharacterColorHue extends AM.DataInputComponent
     @register 'LandsOfIllusions.Components.Account.Characters.CharacterColorHue'
@@ -82,17 +101,16 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       @type = 'select'
 
     options: ->
-      palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.systemPaletteNames.atari2600
-      return unless palette
+      return unless palette = LOI.palette()
 
-      value: i, name: ramp.name for ramp, i in palette.ramps
+      value: rampIndex, name: ramp.name for ramp, rampIndex in palette.ramps
 
     load: ->
-      @data()?.color?.hue or 0
+      @data()?.avatar?.color?.hue or 0
 
     save: (value) ->
       # Change the hue part of color.
-      Meteor.call "LandsOfIllusions.Character.changeColor", @data()._id, parseInt value
+      LOI.Character.updateColor @data()._id, parseInt value
 
     placeholder: ->
       @data()?.displayName()
@@ -106,14 +124,33 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
       @type = 'select'
 
     options: ->
-      value: i - 2, name: name for name, i in ['darkest', 'darker', 'normal', 'lighter', 'lightest']
+      value: shadeIndex - 2, name: name for name, shadeIndex in ['darkest', 'darker', 'normal', 'lighter', 'lightest']
 
     load: ->
-      @data()?.color?.shade or 0
+      @data()?.avatar?.color?.shade or 0
 
     save: (value) ->
       # Change the shade part of color.
-      Meteor.call "LandsOfIllusions.Character.changeColor", @data()._id, null, parseInt value
+      LOI.Character.updateColor @data()._id, null, parseInt value
 
     placeholder: ->
       @data()?.displayName()
+
+  class @CharacterPronouns extends AM.DataInputComponent
+    @register 'LandsOfIllusions.Components.Account.Characters.CharacterPronouns'
+
+    constructor: ->
+      super
+
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      {value, name} for value, name of LOI.Avatar.Pronouns
+
+    load: ->
+      character = @data()
+      character.avatar.pronouns
+
+    save: (value) ->
+      character = @data()
+      LOI.Character.updatePronouns character._id, value

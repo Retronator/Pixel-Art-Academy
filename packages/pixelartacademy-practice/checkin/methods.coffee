@@ -1,96 +1,135 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-Meteor.methods
-  'PixelArtAcademy.Practice.CheckIn.insert': (characterId, text, url, time) ->
-    check characterId, Match.DocumentId
-    check text, Match.OptionalOrNull String
-    check url, Match.OptionalOrNull String
-    check time, Match.OptionalOrNull Date
+PAA.Practice.CheckIn.insert.method (characterId, time) ->
+  check characterId, Match.DocumentId
+  check time, Match.OptionalOrNull Date
 
-    # Make sure the user can perform this character action.
-    LOI.Authorize.characterAction characterId
+  # Make sure the user can perform this character action.
+  LOI.Authorize.characterAction characterId
 
-    # We create a new check-in for the given character.
-    checkIn =
-      time: time or new Date()
-      character:
-        _id: characterId
+  # We create a new check-in for the given character.
+  checkIn =
+    time: time or new Date()
+    character:
+      _id: characterId
 
-    checkIn.text = text if text
+  PAA.Practice.CheckIn.documents.insert checkIn
 
-    if url
-      # See if url is already an image.
-      try
-        response = HTTP.get url
-        contentType = response.headers['content-type']
+PAA.Practice.CheckIn.remove.method (checkInId) ->
+  check checkInId, Match.DocumentId
 
-        # Check if the url is pointing directly to an image.
-        if /image/.test contentType
-          # Set the image directly as an image.
-          checkIn.image =
-            url: url
+  # Make sure the check-in belongs to the current user.
+  authorizeCheckInAction checkInId
 
-        else
-          # We have a post so save the post url for possible linking.
-          checkIn.post =
-            url: url
+  PAA.Practice.CheckIn.documents.remove checkInId
 
-          # Let's see if we can also extract an image from the url.
-          try
-            checkIn.image =
-              url: Meteor.call 'PixelArtAcademy.Practice.CheckIn.getExternalUrlImage', url
+PAA.Practice.CheckIn.updateTime.method (checkInId, time) ->
+  check checkInId, Match.DocumentId
+  check time, Date
 
-    PAA.Practice.CheckIn.documents.upsert
-      time: checkIn.time
-      'character._id': checkIn.character._id
-    ,
-      checkIn
+  # Make sure the check-in belongs to the current user.
+  authorizeCheckInAction checkInId
 
-  'PixelArtAcademy.Practice.CheckIn.changeText': (checkInId, newText) ->
-    check checkInId, Match.DocumentId
-    check newText, String
+  # Associate the artist with the character.
+  PAA.Practice.CheckIn.documents.update checkInId,
+    $set:
+      time: time
 
-    # Make sure the check-in belongs to the current user.
-    authorizeCheckInAction checkInId
+PAA.Practice.CheckIn.updateText.method (checkInId, text) ->
+  check checkInId, Match.DocumentId
+  check text, String
 
-    # Associate the artist with the character.
-    PAA.Practice.CheckIn.documents.update checkInId,
-      $set:
-        text: newText
+  # Make sure the check-in belongs to the current user.
+  authorizeCheckInAction checkInId
 
-  'PixelArtAcademy.Practice.CheckIn.remove': (checkInId) ->
-    check checkInId, Match.Optional Match.DocumentId
+  # Update the text.
+  PAA.Practice.CheckIn.documents.update checkInId,
+    $set:
+      text: text
 
-    # Make sure the check-in belongs to the current user.
-    authorizeCheckInAction checkInId
+PAA.Practice.CheckIn.updateUrl.method (checkInId, url) ->
+  check checkInId, Match.DocumentId
+  check url, Match.OneOf String, null
 
-    PAA.Practice.CheckIn.documents.remove checkInId
+  # Make sure the check-in belongs to the current user.
+  authorizeCheckInAction checkInId
 
-  'PixelArtAcademy.Practice.CheckIn.newConversation': (checkInId, characterId, firstLineText) ->
-    check checkInId, Match.Optional Match.DocumentId
+  update = {}
 
-    # Make sure the check-in exists.
-    checkIn = PAA.Practice.CheckIn.documents.findOne checkInId
-    throw new Meteor.Error 'not-found', "Check-in not found." unless checkIn
+  if url
+    # See if url is already an image.
+    try
+      response = HTTP.get url
+      contentType = response.headers['content-type']
 
-    # Make sure the user controls the character that's starting the conversation.
-    LOI.Authorize.characterAction characterId
+      # Check if the url is pointing directly to an image.
+      if /image/.test contentType
+        # Set the image directly as an image.
+        _.merge update,
+          $set:
+            image: {url}
+          $unset:
+            post: true
+            video: true
+            artwork: true
 
-    # Create a new conversation.
-    conversationId = Random.id()
-    Meteor.call 'LandsOfIllusions.Conversations.Conversation.insert', conversationId
+      else
+        # We have a post so save the post url for possible linking.
+        _.merge update,
+          $set:
+            post: {url}
+          $unset:
+            video: true
+            artwork: true
 
-    # Associate the conversation to this check-in.
-    PAA.Practice.CheckIn.documents.update checkInId,
-      $addToSet:
-        conversations: conversationId
+        # Let's see if we can also extract an image from the url.
+        try
+          _.merge update,
+            $set:
+              image:
+                url: PAA.Practice.CheckIn.getExternalUrlImage url
 
-    # Create the first line of conversation.
-    Meteor.call 'LandsOfIllusions.Conversations.Line.insert', conversationId, characterId, firstLineText
+        catch exception
+          _.merge update,
+            $unset:
+              image: true
+
+  else
+    update.$unset =
+      post: true
+      image: true
+      video: true
+      artwork: true
+
+  PAA.Practice.CheckIn.documents.update checkInId, update
+
+PAA.Practice.CheckIn.newConversation.method (checkInId, characterId, firstLineText) ->
+  check checkInId, Match.DocumentId
+  check characterId, Match.DocumentId
+  check firstLineText, Match.Optional String
+
+  # Make sure the check-in exists.
+  checkIn = PAA.Practice.CheckIn.documents.findOne checkInId
+  throw new AE.ArgumentException "Check-in not found." unless checkIn
+
+  # Make sure the user controls the character that's starting the conversation.
+  LOI.Authorize.characterAction characterId
+
+  # Create a new conversation.
+  conversationId = LOI.Conversations.Conversation.insert()
+
+  # Associate the conversation to this check-in.
+  PAA.Practice.CheckIn.documents.update checkInId,
+    $addToSet:
+      conversations: conversationId
+
+  # Create the first line of conversation.
+  LOI.Conversations.Line.insert conversationId, characterId, firstLineText
 
 authorizeCheckInAction = (checkInId) ->
   checkIn = PAA.Practice.CheckIn.documents.findOne checkInId
-  throw new Meteor.Error 'not-found', "Check-in not found." unless checkIn
+  throw new AE.ArgumentException "Check-in not found." unless checkIn
 
   LOI.Authorize.characterAction checkIn.character._id

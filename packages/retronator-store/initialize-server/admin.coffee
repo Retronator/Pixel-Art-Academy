@@ -1,7 +1,9 @@
 RS = Retronator.Store
 
 # Admin creation
-Meteor.startup ->
+Document.startup ->
+  return if Meteor.settings.startEmpty
+
   unless Meteor.settings.admin
     console.warn "Set admin user info in the settings file if you want to have an admin user automatically created for you."
     return
@@ -16,9 +18,9 @@ Meteor.startup ->
   adminId = adminUser?._id or Accounts.createUser Meteor.settings.admin
 
   # Add admin item to admin user.
-  adminItem = RS.Transactions.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Retronator.Admin
+  adminItem = RS.Item.documents.findOne catalogKey: RS.Items.CatalogKeys.Retronator.Admin
 
-  RS.Transactions.Transaction.documents.insert
+  RS.Transaction.documents.insert
     time: new Date()
     user:
       _id: adminId

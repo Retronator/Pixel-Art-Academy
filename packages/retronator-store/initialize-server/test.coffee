@@ -2,9 +2,10 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 
 # Debug users creation.
-Meteor.startup ->
+Document.startup ->
   # Don't do this on production server.
   return unless Meteor.settings.test
+  return if Meteor.settings.startEmpty
 
   # Kickstarter backers with normal tiers
   createKickstarterBacker 'basic@backer.com', 10, 10, RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.BasicGame
@@ -44,17 +45,17 @@ createKickstarterBacker = (email, amount, price, tier) ->
   return if user
 
   # Get item to add.
-  kickstarterItem = RS.Transactions.Item.documents.findOne catalogKey: tier
+  kickstarterItem = RS.Item.documents.findOne catalogKey: tier
   console.log kickstarterItem, tier
 
   # Add a kickstarter payment.
-  paymentId = RS.Transactions.Payment.documents.insert
-    type: RS.Transactions.Payment.Types.KickstarterPledge
+  paymentId = RS.Payment.documents.insert
+    type: RS.Payment.Types.KickstarterPledge
     amount: amount
-    project: RS.Transactions.Payment.Projects.PixelArtAcademy
+    project: RS.Payment.Projects.PixelArtAcademy
 
   # Add a transaction for this user's item.
-  RS.Transactions.Transaction.documents.insert
+  RS.Transaction.documents.insert
     time: new Date()
     email: email
     items: [

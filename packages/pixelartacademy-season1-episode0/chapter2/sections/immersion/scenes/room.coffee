@@ -61,8 +61,13 @@ class C2.Immersion.Room extends LOI.Adventure.Scene
 
         complete()
 
-      ActivateHeadset: (complete) => HQ.Items.Sync.activateHeadsetCallback complete
-      DeactivateHeadset: (complete) => HQ.Items.Sync.deactivateHeadsetCallback complete
+      ActivateHeadset: (complete) =>
+        LOI.adventure.getCurrentThing(HQ.Items.Sync).activate()
+        complete()
+
+      DeactivateHeadset: (complete) =>
+        LOI.adventure.getCurrentThing(HQ.Items.Sync).deactivate()
+        complete()
 
       FirstImmersion: (complete) =>
         scene = @options.parent

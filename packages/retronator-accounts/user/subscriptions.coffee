@@ -1,12 +1,13 @@
 RA = Retronator.Accounts
 
-# Always send current user's display name.
+# Always send current user's display and public name.
 Meteor.publish null, ->
   RA.User.documents.find
     _id: @userId
   ,
     fields:
       displayName: true
+      publicName: true
 
 # Current user's login services.
 Meteor.publish RA.User.loginServicesForCurrentUser, ->

@@ -1,23 +1,34 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Components.Conversation">
   <div class="conversation">
-    <ul class="lines">
-      {{#each lines}}
-        <li class="line">
-          <div class="author">
-            {{#if character}}
-              {{character.displayName}}:
-            {{else}}
-              {{> t10e "<Deleted user>"}}:
-            {{/if}}
-          </div>
-          <div class="text" {{style textStyle}}>{{> PixelArtAcademy.PixelBoy.Apps.Components.FormattedText args text linkColor}}</div>
-        </li>
-      {{/each}}
-    </ul>
-    {{#if currentCharacter}}
-      <form class="new-line-form">
-        <input class="new-line-text" placeholder="Type a reply …" />
-      </form>
+    {{#if conversation}}
+      <ul class="lines">
+        {{#each conversation.lines}}
+          <li class="line">
+            <div class="author">
+              {{#if showAvatar}}
+                <div class="avatar">
+                  {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview characterInstance.avatar}}
+                </div>
+              {{/if}}
+              <div class="name">
+                {{#if character}}
+                  {{character.name}}:
+                {{else}}
+                  {{> t10e "<Deleted character>"}}:
+                {{/if}}
+              </div>
+            </div>
+            <div class="text" {{style textStyle}}>{{> PixelArtAcademy.PixelBoy.Apps.Components.FormattedText args text linkColor}}</div>
+          </li>
+        {{/each}}
+      </ul>
+      {{#if currentCharacter}}
+        <form class="new-line-form">
+          <input class="new-line-text" placeholder="Type a reply …" />
+        </form>
+      {{/if}}
+    {{else}}
+      loading …
     {{/if}}
   </div>
 </template>

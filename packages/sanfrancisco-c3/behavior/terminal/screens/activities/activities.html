@@ -1,0 +1,148 @@
+<template name="SanFrancisco.C3.Behavior.Terminal.Activities">
+  <div class="sanfrancisco-c3-behavior-terminal-activities screen">
+    <div class="main-content">
+      <h1 class="screen-title">Activities</h1>
+      {{#if showTemplates}}
+        <div class="templates-area">
+          <div class="custom-activities-button behavior-part">
+            <div class="name">Custom</div>
+            <div class="info">
+              Select your own activities.
+            </div>
+          </div>
+          <ul class="templates">
+            {{#each templates}}
+              <li class="template behavior-part">
+                {{> SanFrancisco.C3.Behavior.Terminal.Components.ActivityPartsPreview templateParts}}
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{else}}
+        <div class="instructions">
+          {{#if partsTemplate}}
+            {{#with partsTemplate}}
+              <div class="template-info">
+                {{#if isOwnPartsTemplate}}
+                  <div class="name">
+                    <span class="label">Template</span>: {{> renderTemplateNameInput name}}
+                  </div>
+                  <div class="description">
+                    {{> renderTemplateDescriptionInput description}}
+                  </div>
+                  <p class="main-text">
+                    You are the designer of this template and can edit it.
+                  </p>
+                {{else}}
+                  <div class="name">
+                    <span class="label">Template</span>: {{> t9n name}}
+                  </div>
+                  <div class="description">
+                    {{> t9n description}}
+                  </div>
+                  <p class="main-text">
+                    Click Modify to define your own activities based on this template.
+                  </p>
+                {{/if}}
+            </div>
+            {{/with}}
+          {{/if}}
+          {{#if isEditable}}
+            <p class="main-text">
+              Add meaningful activities that the agent wants to focus on, and set desired time. Include commute time in amounts.
+            </p>
+          {{/if}}
+        </div>
+        <table class="activities">
+          {{#each activities}}
+            <tr class="activity">
+              <td class="name">
+                {{#if $and isEditable nameEditable}}
+                  {{> SanFrancisco.C3.Behavior.Terminal.Character.ActivityName}}
+                {{else}}
+                  {{key}}
+                {{/if}}
+              </td>
+              <td class="time">
+                {{#if isEditable}}
+                  {{> SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerWeek}} h/week or
+                  {{> SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerDay}} h/day
+                {{else}}
+                  {{hoursPerWeek}} h/week
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+          {{#if isEditable}}
+            <tr class="activity">
+              <td class="name">
+                <input class="new-activity" placeholder="New activity" type="text"/>
+              </td>
+            </tr>
+          {{/if}}
+        </table>
+        <p class="main-text">
+          Time allocation analysis:
+        </p>
+        <div class="time-analysis">
+          <table class="time-calculation">
+            <tr>
+              <td>Total number of hours in a week</td><td>168</td>
+            </tr>
+            <tr>
+              <td>Hours of sleep</td><td>-{{property.hoursSleep}}</td>
+            </tr>
+            <tr>
+              <td>Remaining hours</td><td>{{property.hoursAfterSleep}}</td>
+            </tr>
+            <tr>
+              <td>Hours required by job/school</td><td>-{{property.hoursJobSchool}}</td>
+            </tr>
+            <tr>
+              <td>Remaining hours</td><td>{{property.hoursAfterJobSchool}}</td>
+            </tr>
+            <tr>
+              <td>Hours spent on activities</td><td>-{{property.hoursActivities}}</td>
+            </tr>
+            <tr>
+              <td>Remaining hours</td><td>{{property.extraHoursPerWeek}}</td>
+            </tr>
+          </table>
+          <p>The agent has {{property.extraHoursPerWeek}} extra hours available in a week, or {{property.extraHoursPerDay}} per day.</p>
+          {{#if isEditable}}
+            {{#if property.extraHoursTooLow}}
+              <p>This is probably too low to be able to deal with everything else in life. Consider adjusting your expectations.</p>
+            {{else}}
+              {{#if property.extraHoursTooHigh}}
+                <p>This seems to be more than plenty for the agent to deal with everything else in life.
+                  Consider adding more meaningful activities to their life.</p>
+              {{else}}
+                <p>This looks like a manageable amount to deal with everything else in life. Good job!</p>
+              {{/if}}
+            {{/if}}
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+    <div class="main-actions">
+      {{#if showTemplates}}
+        <button class="main-button action-button done-button">Back</button>
+      {{else}}
+        <button class="main-button action-button done-button">Done</button>
+        <button class="action-button replace-button">Replace</button>
+        {{#if partsTemplate}}
+          {{#if isOwnPartsTemplate}}
+            <button class="action-button unlink-template-button">Unlink template</button>
+          {{else}}
+            <button class="action-button unlink-template-button">Modify</button>
+          {{/if}}
+        {{else}}
+          {{#if isAdmin}}
+            <button class="action-button save-as-template-button">Save as template</button>
+          {{/if}}
+        {{/if}}
+        <button class="action-button delete-button danger-button">Delete</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

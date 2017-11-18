@@ -4,12 +4,17 @@ LOI = LandsOfIllusions
 class LOI.Adventure extends LOI.Adventure
   _initializeThings: ->
     @currentSituation = new ComputedField =>
-      new LOI.Adventure.Situation
-        location: @currentLocation()
+      options =
         timelineId: @currentTimelineId()
+        location: @currentLocation()
+
+      return unless options.timelineId and options.location
+
+      new LOI.Adventure.Situation options
 
     # We use caches to avoid reconstruction.
     @_things = {}
+    @_avatarsByThingId = {}
 
     # Instantiates and returns all physical things (items, characters) that are available to listen to commands.
     @currentPhysicalThings = new ComputedField =>
@@ -67,3 +72,11 @@ class LOI.Adventure extends LOI.Adventure
     things = @currentThings()
 
     _.find things, (thing) -> thing.constructor is thingClass
+
+  getAvatar: (thingClass) ->
+    # Create the avatar if needed. It must be done in non-reactive
+    # context so that subscriptions inside the avatar don't get stopped.
+    Tracker.nonreactive =>
+      @_avatarsByThingId[thingClass.id()] ?= thingClass.createAvatar()
+
+    @_avatarsByThingId[thingClass.id()]

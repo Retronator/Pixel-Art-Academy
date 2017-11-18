@@ -2,7 +2,7 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 
 # Override the user class with extra store functionality.
-class RetronatorAccountsUser extends RA.User
+class RA.User extends RA.User
   # profile: a custom object, writable by default by the client
   #   showSupporterName: boolean whether to show username in public displays
   #   supporterMessage: supporter message to show in public displays
@@ -15,7 +15,7 @@ class RetronatorAccountsUser extends RA.User
   #   _id
   #   catalogKey
   @Meta
-    name: 'RetronatorAccountsUser'
+    name: @id()
     replaceParent: true
     collection: Meteor.users
     fields: (fields) =>
@@ -24,7 +24,7 @@ class RetronatorAccountsUser extends RA.User
           supporterName = if user.profile?.showSupporterName then user.profile?.name else null
           [user._id, supporterName]
 
-        items: [@ReferenceField RS.Transactions.Item, ['catalogKey']]
+        items: [@ReferenceField RS.Item, ['catalogKey']]
 
       fields
 
@@ -43,12 +43,16 @@ class RetronatorAccountsUser extends RA.User
 
   authorizedPaymentsAmount: ->
     # Authorized payments amount is the sum of all payments that were only authorized.
-    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
 
-    authorizedPaymentsAmount = 0
+    authorizedPaymentsAmount =
+      total: 0
 
     for transaction in transactions when transaction.payments
-      authorizedPaymentsAmount += payment.amount for payment in transaction.payments when payment.authorizedOnly
+      for payment in transaction.payments when payment.authorizedOnly
+        authorizedPaymentsAmount[payment.type] ?= 0
+        authorizedPaymentsAmount[payment.type] += payment.amount
+        authorizedPaymentsAmount.total += payment.amount
 
     authorizedPaymentsAmount
 
@@ -66,11 +70,11 @@ class RetronatorAccountsUser extends RA.User
   generateItemsArray: ->
     # Start by constructing an array of all item Ids.
     itemIds = []
-    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
 
     # Helper function that recursively adds items.
     addItem = (item) =>
-      return unless item = RS.Transactions.Item.documents.findOne item?._id
+      return unless item = RS.Item.documents.findOne item?._id
 
       # Add the item to the ids.
       itemIds = _.union itemIds, [item._id]
@@ -80,7 +84,7 @@ class RetronatorAccountsUser extends RA.User
         addItem bundleItem for bundleItem in item.items
 
     # Add the items from each transaction except those given away as gifts.
-    for transaction in transactions
+    for transaction in transactions when transaction.items
       for transactionItem in transaction.items
         addItem transactionItem.item unless transactionItem.givenGift
 
@@ -93,7 +97,7 @@ class RetronatorAccountsUser extends RA.User
 
   generateSupportAmount: ->
     # Support amount is the sum of all payments.
-    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
 
     supportAmount = 0
 
@@ -106,7 +110,7 @@ class RetronatorAccountsUser extends RA.User
 
   generateStoreData: ->
     # Store balance is the sum of all payments minus sum of all purchases.
-    transactions = RS.Transactions.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
 
     balance = 0
 
@@ -114,7 +118,9 @@ class RetronatorAccountsUser extends RA.User
       if transaction.payments
         balance += payment.amount for payment in transaction.payments when not payment.authorizedOnly
 
-      balance -= transactionItem.price for transactionItem in transaction.items when transactionItem.price
+      if transaction.items
+        balance -= transactionItem.price for transactionItem in transaction.items when transactionItem.price
+
       balance -= transaction.tip.amount if transaction.tip
 
     # Credit is any positive balance that the user can spend towards new purchases.
@@ -125,5 +131,3 @@ class RetronatorAccountsUser extends RA.User
         store:
           balance: balance
           credit: credit
-
-RA.User = RetronatorAccountsUser

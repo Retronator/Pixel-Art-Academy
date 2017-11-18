@@ -1,0 +1,32 @@
+<template name="SanFrancisco.C3.Behavior.Terminal.Environment">
+  <div class="sanfrancisco-c3-behavior-terminal-environment screen">
+    <div class="main-content">
+      <h1 class="screen-title">Environment</h1>
+      <h2 class="section-title">
+        Clutter
+      </h2>
+      <div class="clutter">
+        <p class="main-text">
+          How cluttered is the environment the agent lives in on average:
+        </p>
+        {{> SanFrancisco.C3.Behavior.Terminal.Environment.AverageClutter}}
+        <p class="main-text">
+          What is the ideal level for the productivity of the agent:
+        </p>
+        {{> SanFrancisco.C3.Behavior.Terminal.Environment.IdealClutter}}
+      </div>
+      <h2 class="section-title">
+        People
+      </h2>
+      <p class="people">
+        {{people}}
+      </p>
+      <div class="actions">
+        <button class="action-button modify-people-button">Modify</button>
+      </div>
+    </div>
+    <div class="main-actions">
+      <button class="main-button action-button done-button">Done</button>
+    </div>
+  </div>
+</template>

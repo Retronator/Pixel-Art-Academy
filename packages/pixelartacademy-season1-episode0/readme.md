@@ -4,5 +4,4 @@
 
 ### Episode 0 - Before it all began
 
-In the introductory episode 0, the player gets acquainted with the game interface and buys the game itself to be allowed to proceed to Episode 1.
-
+In the introductory Episode 0, the player gets acquainted with the game interface and buys the game itself to be allowed to proceed to Episode 1.

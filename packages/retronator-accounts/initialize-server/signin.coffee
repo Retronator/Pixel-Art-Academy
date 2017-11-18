@@ -9,6 +9,7 @@ else
 # Facebook sign-in configuration
 Meteor.startup ->
   return unless Meteor.settings.facebook
+  return if Meteor.settings.startEmpty
 
   ServiceConfiguration.configurations.upsert
     service: "facebook"
@@ -20,6 +21,7 @@ Meteor.startup ->
 # Twitter sign-in configuration
 Meteor.startup ->
   return unless Meteor.settings.twitter
+  return if Meteor.settings.startEmpty
 
   ServiceConfiguration.configurations.upsert
     service: "twitter"
@@ -31,6 +33,7 @@ Meteor.startup ->
 # Google sign-in configuration
 Meteor.startup ->
   return unless Meteor.settings.google
+  return if Meteor.settings.startEmpty
 
   ServiceConfiguration.configurations.upsert
     service: "google"
@@ -38,3 +41,15 @@ Meteor.startup ->
     $set:
       clientId: Meteor.settings.google.clientId,
       secret: Meteor.settings.google.secret
+
+# Patreon sign-in configuration
+Meteor.startup ->
+  return unless Meteor.settings.patreon
+  return if Meteor.settings.startEmpty
+
+  ServiceConfiguration.configurations.upsert
+    service: "patreon"
+  ,
+    $set:
+      clientId: Meteor.settings.patreon.clientId,
+      clientSecret: Meteor.settings.patreon.clientSecret

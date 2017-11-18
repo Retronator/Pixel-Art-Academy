@@ -37,7 +37,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
         @resetInterface()
 
       # We have cleared the interface so it can now start processing any scripts.
-      @interfaceReady true
+      @locationChangeReady true
 
       # Wait one frame so that any script nodes are processed. Then we can
       # see if the interface is empty, or it is already paused on something.

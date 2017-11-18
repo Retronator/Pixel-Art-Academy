@@ -7,6 +7,17 @@ RS = Retronator.Store
 HQ = Retronator.HQ
 
 class HQ.Items.Components.Stripe extends LOI.Adventure.Item
+  @PaymentMethods:
+    StripeCustomer: 'Stripe' # Matches save payment method type.
+    StripePayment: 'StripePayment'
+
+  constructor: ->
+    super
+
+    @_actionModes =
+      SaveCustomer: 'SaveCustomer'
+      Payment: 'Payment'
+
   onCreated: ->
     super
 
@@ -16,6 +27,8 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
     @purchaseError = new ReactiveField null
     @submittingPayment = new ReactiveField false
     @purchaseCompleted = new ReactiveField false
+
+    @selectedPaymentMethod = new ReactiveField null
 
   onRendered: ->
     super
@@ -32,7 +45,7 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
         @_stripeCheckout = StripeCheckout.configure
           key: Meteor.settings.public.stripe.publishableKey
           token: (token) => @_stripeResponseHandler token
-          image: 'https://stripe.com/img/documentation/checkout/marketplace.png'
+          image: '/retronator/hq/items/receipt/stripe-marketplace-icon.png'
           name: 'Retronator'
           locale: 'auto'
 
@@ -61,7 +74,15 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
 
   events: ->
     super.concat
+      'click .save-customer-button': @onClickSaveCustomerButton
       'click .submit-payment-button': @onClickSubmitPaymentButton
+
+  onClickSaveCustomerButton: (event) ->
+    @_actionMode = @_actionModes.SaveCustomer
+
+    @_stripeCheckout.open
+      amount: null
+      panelLabel: 'Add card'
 
   onClickSubmitPaymentButton: (event) ->
     event.preventDefault()
@@ -72,31 +93,50 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
     ga? 'send', 'event', 'Store Transaction', 'Initiated', 'Total', paymentAmount
 
     if paymentAmount
-      # The user needs to make a payment, so open checkout.
-      @_stripeCheckout.open
-        amount: paymentAmount * 100
+      return unless selectedPaymentMethod = @selectedPaymentMethod()
+
+      if selectedPaymentMethod.paymentMethod.type is @constructor.PaymentMethods.StripeCustomer
+        # We are using a stored payment method.
+        @_payment
+          paymentMethodId: selectedPaymentMethod.paymentMethod._id
+
+      else
+        # We are using a one-time payment, so process it with checkout.
+        @_actionMode = @_actionModes.Payment
+
+        @_stripeCheckout.open
+          amount: paymentAmount * 100
+          panelLabel: null
 
     else
       # The purchase does not need a payment, simply confirm the purchase.
       @_confirmationPurchaseHandler()
 
   _stripeResponseHandler: (token) ->
+    # Strip token to id and email.
+    token = _.pick token, ['id', 'email']
+
+    switch @_actionMode
+      when @_actionModes.SaveCustomer then @_saveCustomer token
+      when @_actionModes.Payment then @_payment {token}
+
+  _saveCustomer: (token) ->
+    RS.PaymentMethod.insertStripe token.id, token.email
+
+  _payment: (payment) ->
+    # Start payment submission to the server.
+    @submittingPayment true
+    @_onSubmittingPayment?()
+
     # Clear the error they may have accrued.
     @purchaseError null
-
-    # Get tokenized credit card info.
-    creditCardToken = token.id
-
-    # Get the customer details.
-    customer =
-      email: token.email
 
     # Create a payment on the server.
     shoppingCart = @_createShoppingCartObject()
 
-    paymentAmount = @paymentAmount()
+    payment.amount = @paymentAmount()
 
-    Meteor.call RS.Transactions.Transaction.insertStripePurchase, customer, creditCardToken, paymentAmount, shoppingCart, (error, data) =>
+    Meteor.call RS.Transaction.insertStripePurchase, payment, shoppingCart, (error, data) =>
       @submittingPayment false
 
       if error
@@ -104,7 +144,7 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
         return
 
       # Purchase is successfully completed.
-      @_completePurchase shoppingCart, paymentAmount
+      @_completePurchase shoppingCart, payment.amount
 
   _createShoppingCartObject: ->
     items: @purchaseItems()
@@ -123,10 +163,11 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
   _confirmationPurchaseHandler: ->
     # Create a transaction on the server.
     @submittingPayment true
+    @_onSubmittingPayment?()
 
     shoppingCart = @_createShoppingCartObject()
 
-    Meteor.call 'Retronator.Store.Transactions.Transaction.insertConfirmationPurchase', shoppingCart, (error, data) =>
+    Meteor.call 'Retronator.Store.Transaction.insertConfirmationPurchase', shoppingCart, (error, data) =>
       @submittingPayment false
 
       if error
@@ -140,7 +181,4 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
       @_completePurchase shoppingCart, 0
 
   _displayError: (error) ->
-    errorText = "Error: #{error.reason}"
-    errorText = "#{errorText} #{error.details}" if error.details
-    @purchaseError errorText
-    console.error error
+    @purchaseError error

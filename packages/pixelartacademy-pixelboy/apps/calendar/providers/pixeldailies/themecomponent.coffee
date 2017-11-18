@@ -16,7 +16,7 @@ class Calendar.Providers.PixelDailies.ThemeComponent extends AM.Component
 
     @showingTopOnly = new ReactiveField true
 
-    @subscribe 'PixelArtDatabase.PixelDailies.Submission.forTheme', theme._id
+    PADB.PixelDailies.Submission.forTheme.subscribe @, theme._id
 
   submissions: ->
     theme = @data()

@@ -46,6 +46,25 @@ LOI.Parser.Vocabulary.Keys =
     LookIn: ''
     WakeUp: ''
     Buy: ''
+    Board: ''
+
+  Pronouns:
+    Subjective:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
+    Objective:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
+    Adjective:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
+    Possessive:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
 
   IgnorePrepositions: ''
 
@@ -54,7 +73,7 @@ LOI.Parser.Vocabulary.Keys =
     WhichThing: ''
     WhichPerson: ''
     WhichVerb: ''
-    
+
   Debug:
     ResetSections: ''
 

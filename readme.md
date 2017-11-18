@@ -12,14 +12,13 @@ Install [Meteor](https://www.meteor.com):
 curl https://install.meteor.com/ | sh
 ```
 
-Checkout and update:
+Checkout the repository and update npm dependecies:
 
 ```
-meteor update
-meteor update --all-packages
+meteor npm install
 ```
 
-Run with:
+You're ready to go! Run with:
 
 ```
 meteor

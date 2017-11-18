@@ -1,0 +1,113 @@
+# PixelArtAcademy.Season1.Episode1.Start.WakeUp
+
+## Try1
+
+> You hear someone turning in bed.
+
+-> [End]
+
+## Try2
+
+> You hear an illegible utter. Could this be … _char_?
+
+-> [End]
+
+## Try3
+
+> Maybe you should try telling _them_ to ![wake up](wake up).
+
+-> [End]
+
+## WakeUp
+
+char: Hhmmhm.
+
+* Hellooo.
+* Time to wake up.
+
+char: One … more … minute …
+
+* Hey, wake up!
+* _char_!
+
+char: Mhm, alright, alright.
+
+> _char_ opens _their_ eyes and you can now look around.
+
+pause
+
+### OpenEyes
+
+-> [End]
+
+## Welcome
+
+> _char_ raises in _their_ bed.
+
+* Hey there.
+* Can you hear me?
+
+char: Wha … who is this?
+
+* I'm you. -> [Okaaay]
+* Your inner voice. -> [Okaaay]
+* God. -> [Where]
+* It's Joy from Inside Out! -> [Where]
+
+## Okaaay
+
+char: Okaaay …
+
+-> [Want]
+
+## Where
+
+char: Huh? Where are you?
+
+* In your head, silly!
+* I'm the fiction of your imagination.
+* I see everything.
+
+char: Whatever.
+
+## Want
+
+char: What do you want?
+
+* I'm here to play the game. -> [PlayGame]
+* It's time to get up. -> [GetUp]
+
+## PlayGame
+
+char: What? Life's not a game!
+
+* Hey, I paid good money for this! -> [Money]
+* Just follow my instructions. -> [DoWhat]
+
+## Money
+char: Fine, chill.
+
+## DoWhat
+
+char: Alright, what do you want me to do?
+
+* Let's start by getting out of bed. -> [GetUp]
+* Get off your butt and start the day.
+
+char: Jeez, don't be such a pain.
+
+-> [EndWakeUp]
+
+## GetUp
+
+char: OK.
+
+## EndWakeUp
+
+> _char_ pushes the covers aside and stands up.
+
+### StartDay
+
+-> [End]
+
+## End

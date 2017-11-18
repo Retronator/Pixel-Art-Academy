@@ -1,0 +1,21 @@
+# SanFrancisco.C3.Behavior
+
+## UseTerminal
+
+> You sit down at the terminal and log in.
+
+pause
+
+### UseTerminal
+
+-> [End]
+
+## CompleteCharacter
+
+> You feel a rush of excitement as you press the Complete button.
+> Did you make the right decisions? Where will this path take you?
+> The doors leading east will get you to the start of your journey.
+
+-> [End]
+
+## End

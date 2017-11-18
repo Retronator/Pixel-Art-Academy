@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 
 class LOI.Interface.Text extends LOI.Interface.Text
   resize: (options = {}) ->
+    return unless situation = LOI.adventure.currentSituation()
+
     viewport = @display.viewport()
     scale = @display.scale()
 
@@ -11,7 +13,6 @@ class LOI.Interface.Text extends LOI.Interface.Text
     sideMargin = gridSpacing
     lineHeight = gridSpacing
 
-    situation = LOI.adventure.currentSituation()
     illustrationHeight = (situation.illustrationHeight.last() or 0) * scale
 
     $textInterface = $('.adventure .text-interface')
@@ -25,7 +26,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       width: viewport.viewportBounds.width()
       height: illustrationHeight
 
-    $textInterface.find('.location').css(locationSize.toDimensions())
+    $textInterface.find('.location').eq(0).css(locationSize.toDimensions())
 
     # Resize user interface. We make sure the UI has at least the side margin, but make the inner content align with
     # location illustration if possible. We do that by seeing if we have empty room left/right from the viewport.
@@ -66,11 +67,19 @@ class LOI.Interface.Text extends LOI.Interface.Text
       width: (uiWidth - 4 * sideMargin) * 0.7
       height: uiHeight
 
+    sidebarWidth = (uiWidth - 4 * sideMargin) * 0.3
     inventorySize = new AE.Rectangle
       x: textDisplaySize.right() + 2 * sideMargin
       y: 0
-      width: (uiWidth - 4 * sideMargin) * 0.3
+      width: sidebarWidth
       height: uiHeight
+
+    # Calculate minimap size for use by the Map item. It's relative to the viewport, not the UI.
+    @minimapSize new AE.Rectangle
+      x: inventorySize.left() + uiSize.x()
+      y: viewport.viewportBounds.height() - sidebarWidth - 2 * lineHeight
+      width: sidebarWidth
+      height: sidebarWidth
 
     # Apply UI dimensions.
     $ui.css uiSize.toDimensions()

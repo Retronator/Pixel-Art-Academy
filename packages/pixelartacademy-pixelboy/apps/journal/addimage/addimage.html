@@ -1,0 +1,38 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Journal.AddImage">
+  <div class="pixelartacademy-pixelboy-apps-journal-addimage">
+    <div class="dialog">
+      <form class="check-in-form">
+        <label class="entry">
+          <h3>Image</h3>
+          <p>Upload an image that best illustrates what you did today. It can be the artwork you worked on today, a
+            practice sketch, a screenshot, a photo … it's up to you how you want to represent it.</p>
+            <input class="image-file" type="file"/>
+        </label>
+        <label class="entry">
+          <p>Alternatively paste a link to an image or public post. Tag it with #PixelArtAcademy (or @PixelArtAcademy on Twitter) for kudos points.</p>
+          <input class="external-url" type="text" placeholder="http://"/>
+        </label>
+        {{#if imagePreviewUrl}}
+          <p>
+            <img src="{{imagePreviewUrl}}" class="image-preview">
+          </p>
+        {{/if}}
+        {{#if errorMessage}}
+          <p class="error-message">{{errorMessage}}</p>
+        {{/if}}
+        <div class="submit-area">
+          <button class="submit">
+            {{#if submitting}}
+              {{t7e "Submitting …"}}
+            {{else}}
+              {{t7e "Submit"}}
+            {{/if}}
+          </button>
+          <button class="cancel">
+            {{t7e "Cancel"}}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

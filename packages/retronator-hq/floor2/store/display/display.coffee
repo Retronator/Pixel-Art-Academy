@@ -69,7 +69,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
   onCreated: ->
     super
 
-    @subscribe RS.Transactions.Transaction.topRecent, 15
+    @subscribe RS.Transaction.topRecent, 15
     @subscribe RA.User.topSupportersCurrentUser
 
     @_topSupportersCount = new ReactiveField 10
@@ -80,7 +80,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
     @_messagesCount = new ReactiveField 50
 
     @autorun (computation) =>
-      @subscribe RS.Transactions.Transaction.messages, @_messagesCount()
+      @subscribe RS.Transaction.messages, @_messagesCount()
 
   onRendered: ->
     super
@@ -102,10 +102,6 @@ class HQ.Store.Display extends LOI.Adventure.Item
       titleOffset = Math.min areaHeight - titleBottom, 0
 
       $supportersListTitles.css top: titleOffset
-
-    # HACK: For unknown reason, events method does not work?!?
-    @$('.top-supporters .show-more-button').click (event) =>
-      @_topSupportersCount @_topSupportersCount() + 40
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -148,3 +144,10 @@ class HQ.Store.Display extends LOI.Adventure.Item
     ,
       sort:
         time: -1
+
+  events: ->
+    super.concat
+      'click .top-supporters .show-more-button': @onClickTopSupportersShowMoreButton
+
+  onClickTopSupportersShowMoreButton: (event) ->
+    @_topSupportersCount @_topSupportersCount() + 40

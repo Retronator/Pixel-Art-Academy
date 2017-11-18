@@ -11,13 +11,16 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
   @fullName: -> "Retronator HQ"
   @number: -> 2
 
-  @url: -> 'chapter2'
-
   @sections: -> [
     C2.Intro
     C2.Registration
     C2.Shopping
     C2.Immersion
+  ]
+
+  @scenes: -> [
+    @Inventory
+    @Store
   ]
 
   @timelineId: -> PAA.TimelineIds.RealLife
@@ -26,9 +29,6 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
   constructor: ->
     super
-
-    @inventory = new @constructor.Inventory parent: @
-    @store = new @constructor.Store parent: @
 
     # Move the player to caltrain on start.
     @autorun (computation) =>
@@ -39,7 +39,7 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
       return if movedToCaltrain
 
       # Force the move so that exit responses are not called.
-      LOI.adventure.currentLocationId SanFrancisco.Soma.Caltrain.id()
+      LOI.adventure.setLocationId SanFrancisco.Soma.Caltrain.id()
       LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
       @state 'movedToCaltrain', true
 
@@ -58,17 +58,9 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
       ,
         1000
 
-  destroy: ->
-    super
-
   fadeVisibleClass: ->
     'visible' unless @state 'fadeOutDone'
 
   finished: ->
     # Chapter 2 ends when you finish immersion.
     C2.Immersion.finished()
-
-  scenes: -> [
-    @inventory
-    @store
-  ]

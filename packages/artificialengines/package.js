@@ -4,47 +4,13 @@ Package.describe({
 });
 
 Npm.depends({
-  twit: '2.2.5',
+  twit: '2.2.9',
+  stripe: '5.1.1',
+  patreon: '0.3.0',
   'tumblr.js': '1.1.1'
 });
 
 Package.onUse(function(api) {
-  // Extend API with helper functions.
-  api.constructor.prototype.addFile = function(path) {
-    this.addFiles(path + ".coffee");
-  };
-  api.constructor.prototype.addServerFile = function(path) {
-    this.addFiles(path + ".coffee", ['server']);
-  };
-  api.constructor.prototype.addHtml = function(path) {
-    this.addFiles(path + ".html");
-  };
-  api.constructor.prototype.addStyle = function(path) {
-    this.addFiles(path + ".styl");
-  };
-  api.constructor.prototype.addStyleImport = function(path) {
-    this.addFiles(path + ".import.styl", ['client'], {isImport: true});
-  };
-  api.constructor.prototype.addComponent = function(path) {
-    this.addFiles([path + ".coffee", path + ".html", path + ".styl"]);
-  };
-  api.constructor.prototype.addUnstyledComponent = function(path) {
-    this.addFiles([path + ".coffee", path + ".html"]);
-  };
-  api.constructor.prototype.addThing = function(path, architecture) {
-    this.addFiles(path + ".coffee", architecture);
-    this.addAssets(path + ".script", ['client', 'server']);
-  };
-  api.constructor.prototype.addThingComponent = function(path, architecture) {
-    this.addFiles([path + ".coffee", path + ".html", path + ".styl"]);
-    this.addAssets(path + ".script", ['client', 'server']);
-  };
-  api.constructor.prototype.addScript = function(path) {
-    this.addAssets(path + ".script", ['client', 'server']);
-  };
-
-  api.versionsFrom('1.2.0.2');
-
   var packages = [
     // Meteor
     'coffeescript',
@@ -59,6 +25,8 @@ Package.onUse(function(api) {
     'check',
     'ejson',
     'markdown',
+    'http',
+    'oauth',
 
     // 3rd party
     'peerlibrary:assert',
@@ -72,6 +40,7 @@ Package.onUse(function(api) {
     'peerlibrary:computed-field',
     'peerlibrary:check-extension',
     'peerlibrary:server-autorun',
+    'peerlibrary:directcollection',
     'limemakers:three',
     'kadira:flow-router',
     'kadira:blaze-layout',
@@ -93,26 +62,28 @@ Package.onUse(function(api) {
 	api.addFiles('everywhere/lodash/lodash.coffee');
 
 	// Artificial Everywhere
-  api.addFiles('everywhere/everywhere.coffee');
+  api.addFile('everywhere/everywhere');
 
-  api.addFiles('everywhere/jquery/positioncss.coffee', 'client');
+  api.addClientFile('everywhere/jquery/positioncss');
 
-  api.addFiles('everywhere/three/color.coffee');
+  api.addFile('everywhere/three/color');
+  api.addFile('everywhere/three/vectors');
 
-  api.addFiles('everywhere/lodash/lettercase.coffee');
-  api.addFiles('everywhere/lodash/nestedproperty.coffee');
-  api.addFiles('everywhere/lodash/urls.coffee');
-  api.addFiles('everywhere/lodash/math.coffee');
-  api.addFiles('everywhere/lodash/objects.coffee');
-  api.addFiles('everywhere/lodash/strings.coffee');
+  api.addFile('everywhere/lodash/lettercase');
+  api.addFile('everywhere/lodash/nestedproperty');
+  api.addFile('everywhere/lodash/urls');
+  api.addFile('everywhere/lodash/math');
+  api.addFile('everywhere/lodash/objects');
+  api.addFile('everywhere/lodash/strings');
 
-  api.addFiles('everywhere/date.coffee');
-  api.addFiles('everywhere/datehelper.coffee');
-  api.addFiles('everywhere/daterange.coffee');
-  api.addFiles('everywhere/exceptions.coffee');
-  api.addFiles('everywhere/match.coffee');
-  api.addFiles('everywhere/reactivewrapper.coffee');
-  api.addFiles('everywhere/rectangle.coffee');
+  api.addFile('everywhere/csvparser');
+  api.addFile('everywhere/date');
+  api.addFile('everywhere/datehelper');
+  api.addFile('everywhere/daterange');
+  api.addFile('everywhere/exceptions');
+  api.addFile('everywhere/match');
+  api.addFile('everywhere/reactivewrapper');
+  api.addFile('everywhere/rectangle');
 
   // Artificial Control
   api.addFiles('control/control.coffee');
@@ -176,33 +147,54 @@ Package.onUse(function(api) {
   api.addFiles('base/flowrouter/routelink.html');
 
   // Artificial Mummification
-  api.addFiles('mummification/mummification.coffee');
+  api.addFile('mummification/mummification');
 
-  api.addFiles('mummification/mongohelper.coffee');
-  api.addFiles('mummification/document.coffee');
-  api.addFiles('mummification/persistentstorage.coffee');
+  api.addFile('mummification/mongohelper');
+  api.addFile('mummification/document');
+  api.addFile('mummification/persistentstorage');
+
+  api.addFile('mummification/hierarchy/hierarchy');
+  api.addFile('mummification/hierarchy/address');
+  api.addFile('mummification/hierarchy/node');
+  api.addFile('mummification/hierarchy/field');
+  api.addFile('mummification/hierarchy/template');
+  api.addFile('mummification/hierarchy/location');
 
   // Artificial Telepathy
-  api.addFiles('telepathy/telepathy.coffee');
+  api.addFile('telepathy/telepathy');
 
-  api.addFiles('telepathy/emailcomposer.coffee');
+  api.addFile('telepathy/emailcomposer');
 
-  api.addFiles('telepathy/twitter.coffee', 'server');
-  api.addFiles('telepathy/tumblr.coffee', 'server');
+  api.addServerFile('telepathy/twitter-server');
+  api.addServerFile('telepathy/stripe-server');
+  api.addServerFile('telepathy/patreon-server');
+  api.addServerFile('telepathy/tumblr-server');
 
   // Artificial Babel
-  api.addFiles('babel/babel.coffee');
-  api.addFiles('babel/initialize.coffee');
-  api.addFiles('babel/helpers.coffee');
+  api.addFile('babel/babel');
+  api.addFile('babel/initialize');
+  api.addFile('babel/helpers');
 
-  api.addFiles('babel/translation/translation.coffee');
-  api.addFiles('babel/translation/subscriptions.coffee', 'server');
-  api.addFiles('babel/translation/methods.coffee');
+  api.addFile('babel/lodash/languageregion');
 
-  api.addFiles('babel/components/components.coffee');
+  api.addFile('babel/translation/translation');
+  api.addServerFile('babel/translation/subscriptions');
+  api.addFile('babel/translation/methods');
+  api.addServerFile('babel/translation/migrations/0000-renamecollection');
 
-  api.addFiles('babel/components/translatable/translatable.html');
-  api.addFiles('babel/components/translatable/translatable.coffee');
+  api.addFile('babel/language/language');
+  api.addServerFile('babel/language/subscriptions');
 
+  api.addFile('babel/region/region');
+  api.addServerFile('babel/region/subscriptions');
+
+  api.addServerFile('babel/initialize-server/languages-data');
+  api.addServerFile('babel/initialize-server/languages');
+  api.addServerFile('babel/initialize-server/regions-data');
+  api.addServerFile('babel/initialize-server/regions');
+
+  api.addFile('babel/components/components');
+  api.addUnstyledComponent('babel/components/languageselection/languageselection');
+  api.addUnstyledComponent('babel/components/translatable/translatable');
   api.addComponent('babel/components/translation/translation');
 });

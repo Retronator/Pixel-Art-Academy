@@ -1,0 +1,52 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.sanfrancisco-c3-behavior-terminal
+  .sanfrancisco-c3-items-terminal
+    .landsofillusions-components-overlay
+      > .background
+        background-image image('/sanfrancisco/c3/behavior/terminal-background.png')
+
+  .templates-area
+    .behavior-part
+      position relative
+      margin-top -1rem
+      padding 4rem 6rem
+      border 1rem solid atariCyan(2)
+      color atariGrey(5)
+      background atariGrey(0)
+      cursor pointer
+
+      &:hover
+      &:focus
+        border-color atariCyan(3)
+        z-index 1
+
+      .name
+        margin 3rem 0
+        kyrou-7()
+        color atariPeach(5)
+
+      .description
+        margin 3rem 0
+        color atariCyan(5)
+
+    .templates
+      list-style none
+      margin 0
+      padding 0
+
+  .template-info
+    color atariGrey(5)
+
+    .label
+      text-transform uppercase
+
+    .name
+      margin-bottom 3rem
+      color atariPeach(5)
+
+      .landsofillusions-components-translationinput
+        display inline-block
+
+    .description
+      color atariCyan(5)

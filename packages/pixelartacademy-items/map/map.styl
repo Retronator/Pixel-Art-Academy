@@ -1,0 +1,70 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-items-map
+  opacity 0
+  visibility hidden
+  transition opacity ease-out 200ms
+
+  &.visible
+    opacity 1
+    visibility visible
+
+  &.in-intro
+    transition none
+
+  .map-content
+    position fixed
+    z-index 2
+    transition all ease-out 0.5s
+    filter drop-shadow(0 5rem 0 rgba(black, 0.5))
+
+  .user-interface
+    position absolute
+    z-index 3
+    display none
+    color atariGrey(2)
+
+    &.visible
+      display block
+
+    .content
+      position absolute
+      bottom 0
+      left 0
+      right 0
+      padding 5rem
+
+      .hints
+        float left
+        display inline-block
+        vertical-align middle
+        margin-right 15rem
+
+        .hint
+          margin 2rem 0
+
+      .show-minimap
+        float right
+        display inline-block
+        vertical-align middle
+
+        .label
+          cursor pointer
+
+      input[type='checkbox']
+        display none
+
+        & + .label::before
+          content '✔'
+          display inline-block
+          width 7rem
+          height 7rem
+          padding 0 0 1rem 1rem
+          margin-right 6rem
+          vertical-align baseline
+          border 1rem solid atariGrey(2)
+          text-align center
+          color transparent
+
+        &:checked + .label::before
+          color atariGrey(2)

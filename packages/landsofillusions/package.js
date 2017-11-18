@@ -13,7 +13,6 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
-  api.use('http');
   api.use('promise');
   api.use('modules');
 
@@ -30,19 +29,6 @@ Package.onUse(function(api) {
   api.addFiles('authorize/user.coffee');
   api.addFiles('authorize/character.coffee');
 
-  // Assets
-
-  api.addFiles('assets/assets.coffee');
-  api.addFiles('assets/server.coffee');
-
-  api.addFiles('assets/palette/palette.coffee');
-  api.addFiles('assets/palette/atari2600.coffee');
-  api.addFiles('assets/palette/subscriptions.coffee', 'server');
-
-  api.addFiles('assets/sprite/sprite.coffee');
-
-  api.addFiles('assets/mesh/mesh.coffee');
-
   // Game state
 
   api.addFiles('state/gamestate.coffee');
@@ -57,25 +43,135 @@ Package.onUse(function(api) {
   api.addFiles('state/localsavegames.coffee');
 
   api.addServerFile('state/migrations/0000-immersionrevamp');
-
-  // Character
-
-  api.addFiles('character/spacebars.coffee', 'client');
-  api.addFiles('character/character.coffee');
-  api.addFiles('character/methods.coffee');
-  api.addFiles('character/subscriptions.coffee', 'server');
+  api.addServerFile('state/migrations/0001-renamecollection');
 
   // Avatar
 
-  api.addFiles('avatar/avatar.coffee');
+  api.addFile('avatar/avatar');
+  api.addFile('avatar/humanavatar');
+
+  // Character
+
+  api.addFile('character/character');
+  api.addFile('character/instance');
+  api.addFile('character/methods');
+  api.addServerFile('character/subscriptions');
+  api.addServerFile('character/migrations/0000-renamecollection');
+  api.addServerFile('character/migrations/0001-userpublicname');
+  api.addServerFile('character/migrations/0002-ownername');
+  api.addServerFile('character/migrations/0003-migrateavatarfields');
+  api.addServerFile('character/migrations/0004-displayname');
+  api.addServerFile('character/migrations/0005-usercharactersupdate');
+  api.addClientFile('character/spacebars');
+  
+  // Part system
+
+  api.addFile('character/part/part');
+  api.addFile('character/part/template');
+  api.addFile('character/part/methods');
+  api.addServerFile('character/part/subscriptions');
+  
+  api.addServerFile('character/part/migrations/0000-embeddedtranslations');
+  api.addServerFile('character/part/migrations/0001-spriteids');
+
+  api.addFile('character/part/property');
+  api.addFile('character/part/properties/oneof');
+  api.addFile('character/part/properties/array');
+  api.addFile('character/part/properties/integer');
+  api.addFile('character/part/properties/string');
+  api.addFile('character/part/properties/boolean');
+  
+  // Avatar parts
+
+  api.addFile('character/avatar/avatar');
+  api.addFile('character/avatar/landmark');
+
+  api.addFile('character/avatar/parts/parts');
+  api.addFile('character/avatar/parts/shape');
+  api.addFile('character/avatar/parts/skinshape');
+  api.addFile('character/avatar/parts/partwithcustomcolors');
+
+  api.addFile('character/avatar/properties/properties');
+  api.addFile('character/avatar/properties/color');
+  api.addFile('character/avatar/properties/relativecolorshade');
+  api.addFile('character/avatar/properties/sprite');
+
+  api.addFile('character/avatar/renderers/renderers');
+  api.addFile('character/avatar/renderers/renderer');
+  api.addFile('character/avatar/renderers/shape');
+  api.addFile('character/avatar/renderers/default');
+  api.addFile('character/avatar/renderers/humanavatar');
+  api.addFile('character/avatar/renderers/mappedshape');
+  api.addFile('character/avatar/renderers/bodypart');
+  api.addFile('character/avatar/renderers/body');
+  api.addFile('character/avatar/renderers/head');
+  api.addFile('character/avatar/renderers/chest');
+  api.addFile('character/avatar/renderers/breasts');
+
+  api.addFile('character/avatar/landmarks/position');
+
+  api.addFile('character/avatar/initialize/body');
+  api.addFile('character/avatar/initialize/outfit');
+
+  // Behavior parts
+
+  api.addFile('character/behavior/behavior');
+  
+  api.addFile('character/behavior/parts/parts');
+  api.addFile('character/behavior/parts/personality');
+  api.addFile('character/behavior/parts/personality-factor');
+  api.addFile('character/behavior/parts/trait');
+  api.addFile('character/behavior/parts/activity');
+  api.addFile('character/behavior/parts/environment');
+  api.addFile('character/behavior/parts/perk');
+
+  api.addFile('character/behavior/properties/activities');
+  api.addFile('character/behavior/properties/people');
+  api.addFile('character/behavior/properties/perks');
+  api.addFile('character/behavior/properties/traits');
+
+  api.addFile('character/behavior/initialize/behavior');
+  api.addFile('character/behavior/initialize/personality');
+  api.addFile('character/behavior/initialize/traits-data');
+  api.addFile('character/behavior/initialize/traits');
+  api.addFile('character/behavior/initialize/activities');
+
+  // Perk definitions must come after properties/perks and initialize/behavior.
+  api.addFile('character/behavior/parts/perks/deadendjob');
+  api.addFile('character/behavior/parts/perks/creativemess');
+  api.addFile('character/behavior/parts/perks/minimalist');
+  api.addFile('character/behavior/parts/perks/nothingtoclean');
+  api.addFile('character/behavior/parts/perks/nofreetime');
+  api.addFile('character/behavior/parts/perks/renaissancesoul');
+  api.addFile('character/behavior/parts/perks/focused');
+  api.addFile('character/behavior/parts/perks/spontaneous');
+  api.addFile('character/behavior/parts/perks/organized');
+  api.addFile('character/behavior/parts/perks/introvert');
+  api.addFile('character/behavior/parts/perks/socializer');
+  api.addFile('character/behavior/parts/perks/competitor');
+  api.addFile('character/behavior/parts/perks/teammate');
+
+  // User
+
+  api.addFile('user/user');
+  api.addServerFile('user/subscriptions');
 
   // Conversations
 
-  api.addFiles('conversations/conversations.coffee');
-  api.addFiles('conversations/conversation.coffee');
-  api.addFiles('conversations/line.coffee');
-  api.addFiles('conversations/methods.coffee');
-  api.addFiles('conversations/subscriptions.coffee', 'server');
+  api.addFile('conversations/conversations');
+
+  api.addFile('conversations/conversation/conversation');
+  api.addFile('conversations/conversation/methods');
+  api.addServerFile('conversations/conversation/subscriptions');
+  api.addServerFile('conversations/conversation/migrations/0000-renamecollection');
+  api.addServerFile('conversations/conversation/migrations/0001-linesreversereferencefieldsupdate');
+
+  api.addFile('conversations/line/line');
+  api.addFile('conversations/line/methods');
+  api.addServerFile('conversations/line/subscriptions');
+  api.addServerFile('conversations/line/migrations/0000-renamecollection');
+  api.addServerFile('conversations/line/migrations/0001-characterreferencefieldsupdate');
+  api.addServerFile('conversations/line/migrations/0002-removecharacternamefield');
 
   // Parser
 
@@ -123,12 +219,14 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/listener/listener.coffee');
   
-  // Things
+  // Thing
 
-  api.addFiles('adventure/thing/thing.coffee');
-  api.addFiles('adventure/thing/thing.html');
+  api.addUnstyledComponent('adventure/thing/thing');
+  api.addFile('adventure/thing/avatar');
 
-  api.addFiles('adventure/item/item.coffee');
+  // Item
+
+  api.addFile('adventure/item/item');
 
   // Script
 
@@ -137,8 +235,6 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/script/helpers/helpers.coffee');
   api.addFiles('adventure/script/helpers/iteminteraction.coffee');
-  api.addFiles('adventure/script/helpers/inventory.coffee');
-  api.addFiles('adventure/script/helpers/location.coffee');
 
   api.addFiles('adventure/script/node.coffee');
   api.addFiles('adventure/script/nodes/nodes.coffee');
@@ -162,8 +258,8 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/global/global.coffee');
   api.addFiles('adventure/episode/episode.coffee');
-  api.addComponent('adventure/chapter/chapter');
   api.addFiles('adventure/section/section.coffee');
+  api.addComponent('adventure/chapter/chapter');
   api.addFiles('adventure/scene/scene.coffee');
 
   // Locations and inventory
@@ -192,6 +288,7 @@ Package.onUse(function(api) {
   api.addFiles('interface/text/text.html');
   api.addFiles('interface/text/text.styl');
   api.addFiles('interface/text/text-initialization.coffee');
+  api.addFiles('interface/text/text-narrative.coffee');
   api.addFiles('interface/text/text-handlers.coffee');
   api.addFiles('interface/text/text-nodehandling.coffee');
   api.addFiles('interface/text/text-resizing.coffee');
@@ -214,7 +311,7 @@ Package.onUse(function(api) {
   api.addComponent('components/overlay/overlay');
   api.addComponent('components/backbutton/backbutton');
   api.addComponent('components/signin/signin');
-  api.addComponent('components/chaptertitle/chaptertitle');
+  api.addComponent('components/storylinetitle/storylinetitle');
 
   api.addComponent('components/menu/menu');
   api.addComponent('components/menu/items/items');
@@ -229,9 +326,14 @@ Package.onUse(function(api) {
   api.addComponent('components/account/characters/characters');
   api.addComponent('components/account/inventory/inventory');
   api.addComponent('components/account/transactions/transactions');
+  api.addComponent('components/account/paymentmethods/paymentmethods');
 
   api.addStyle('components/dialogs/accounts');
   api.addComponent('components/dialogs/dialog');
+  
+  api.addComponent('components/translationinput/translationinput');
+  api.addUnstyledComponent('components/sprite/sprite');
+  api.addUnstyledComponent('components/computer/computer');
 
   // Typography
 

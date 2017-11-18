@@ -24,5 +24,20 @@ class PAA.PixelBoy extends AM.Component
       appUrlName = FlowRouter.getParam 'app'
       appsNameMap[appUrlName]
 
+  onCreated: ->
+    super
+
+    @display = new AM.Display
+      safeAreaWidth: 350
+      safeAreaHeight: 350
+      minScale: 2
+
+    # Subscribe to all character part templates and the sprites that they use.
+    # HACK: Temporarily disabled due to performance issues.
+    # types = LOI.Character.Part.Types.Avatar.allPartTypeIds()
+    #
+    # LOI.Character.Part.Template.forTypes.subscribe @, types
+    # LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe @, types
+
   renderCurrentApp: ->
     @currentApp()?.renderComponent(@currentComponent()) or null

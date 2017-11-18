@@ -6,8 +6,8 @@ class Retronator.Accounts
     Retronator.App.addAdminPage '/admin/accounts/import-users', @constructor.Pages.Admin.ImportUsers
     Retronator.App.addAdminPage '/admin/accounts/scripts', @constructor.Pages.Admin.Scripts
 
-  @authorizeAdmin: ->
-    user = Retronator.user()
+  @authorizeAdmin: (options) ->
+    user = Retronator.requireUser options
 
     return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
 

@@ -1,7 +1,8 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
-class LandsOfIllusionsGameState extends AM.Document
+class LOI.GameState extends AM.Document
+  @id: -> 'LandsOfIllusions.GameState'
   # state: object that holds all game information
   #   things: a map of all things
   #     {thingId}: state of the thing
@@ -13,12 +14,25 @@ class LandsOfIllusionsGameState extends AM.Document
   # character: the character this state belongs to or null if it's a user state
   #   _id
   @Meta
-    name: 'LandsOfIllusionsGameState'
+    name: @id()
     fields: =>
       user: @ReferenceField Retronator.Accounts.User
       character: @ReferenceField LOI.Character
+
+  # We define these privately because we have custom public methods
+  # that transform the state localy before passing it on to the server.
+  @_insertForCurrentUser: @method 'insertForCurrentUser'
+  @_clearForCurrentUser: @method 'clearForCurrentUser'
+  @_replaceForCurrentUser: @method 'replaceForCurrentUser'
+
+  @_insertForCharacter: @method 'insertForCharacter'
+  @_clearForCharacter: @method 'clearForCharacter'
+  @_replaceForCharacter: @method 'replaceForCharacter'
+
+  @update: @method 'update'
       
-  @forCurrentUser = 'LandsOfIllusions.GameState.forCurrentUser'
+  @forCurrentUser: @subscription 'forCurrentUser'
+  @forCharacter: @subscription 'forCharacter'
 
   constructor: ->
     super
@@ -27,13 +41,22 @@ class LandsOfIllusionsGameState extends AM.Document
     @state = @constructor._transformStateFromDatabase @state if Meteor.isClient
 
   @insertForCurrentUser: (state, callback) ->
-    Meteor.call 'LandsOfIllusions.GameState.insertForCurrentUser', @_prepareStateForDatabase(state), callback
+    LOI.GameState._insertForCurrentUser @_prepareStateForDatabase(state), callback
 
-  @clearForCurrentUser: (state, callback) ->
-    Meteor.call 'LandsOfIllusions.GameState.clearForCurrentUser'
+  @clearForCurrentUser: (callback) ->
+    LOI.GameState._clearForCurrentUser callback
 
   @replaceForCurrentUser: (state, callback) ->
-    Meteor.call 'LandsOfIllusions.GameState.replaceForCurrentUser', @_prepareStateForDatabase(state), callback
+    LOI.GameState._replaceForCurrentUser @_prepareStateForDatabase(state), callback
+
+  @insertForCharacter: (characterId, callback) ->
+    LOI.GameState._insertForCharacter characterId, callback
+
+  @clearForCharacter: (characterId, callback) ->
+    LOI.GameState._clearForCharacter characterId, callback
+
+  @replaceForCharacter: (characterId, state, callback) ->
+    LOI.GameState._replaceForCharacter characterId, @_prepareStateForDatabase(state), callback
 
   updated: (options = {}) ->
     # Prepare the helper function that sends updates to the server only every 10 seconds.
@@ -81,7 +104,3 @@ class LandsOfIllusionsGameState extends AM.Document
       clone = entity
 
     clone
-
-
-
-LOI.GameState = LandsOfIllusionsGameState

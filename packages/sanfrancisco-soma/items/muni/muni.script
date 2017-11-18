@@ -1,0 +1,63 @@
+# SanFrancisco.Soma.Items.Muni
+
+## Start
+
+> Which station do you want to go off at?
+
+## Destinations
+
+* Yerba Buena/Moscone -> [MosconeStation]
+* 4th and King -> [FourthAndKing]
+* Mission Rock -> [MissionRock]
+* UCSF Mission Bay -> [MissionBay]
+* Nevermind
+
+> You change your mind and quickly exit the train.
+
+-> [End]
+
+##  MosconeStation
+
+`_destinationId = 'SanFrancisco.Soma.MosconeStation'`
+
+-> [Travel]
+
+##  FourthAndKing
+
+`_destinationId = 'SanFrancisco.Soma.FourthAndKing'`
+
+-> [Travel]
+
+##  MissionRock
+
+`_destinationId = 'SanFrancisco.Soma.MissionRock'`
+
+-> [Travel]
+
+##  MissionBay
+
+`_destinationId = 'SanFrancisco.Soma.MissionBay'`
+
+-> [Travel]
+
+## Travel
+
+-> [SameStation] `location.id is _destinationId`
+
+> The train doors close and you find a seat.
+
+pause
+
+### Travel
+
+-> [End]
+
+## SameStation
+
+> You realize you're already at this station and feel a bit silly.
+
+> Do you want to go somewhere else?
+
+-> [Destinations]
+
+## End

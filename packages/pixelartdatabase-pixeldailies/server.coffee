@@ -28,7 +28,7 @@ class PADB.PixelDailies extends PADB.PixelDailies
     params.max_id = options.maxId if options.maxId
 
     # Query the API.
-    AT.Twitter.userTimeline params, (data) =>
+    AT.Twitter.statuses.userTimeline params, (data) =>
       # Process tweets.
       @processTweet tweet for tweet in data
 
@@ -45,8 +45,9 @@ class PADB.PixelDailies extends PADB.PixelDailies
       @processTweetHistory newOptions
 
 # Initialize on startup.
-Meteor.startup ->
+Document.startup ->
   return unless AT.Twitter.initialized
+  return if Meteor.settings.startEmpty
 
   # Parse the full history of last 3200 tweets on startup.
   # EDIT: Our database is well populated now so there is no more need for this and we save on server resources.

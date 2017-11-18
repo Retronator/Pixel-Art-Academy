@@ -2,13 +2,15 @@ RA = Retronator.Accounts
 RS = Retronator.Store
 CatalogKeys = RS.Items.CatalogKeys
 
-Meteor.startup ->
+Document.startup ->
+  return if Meteor.settings.startEmpty
+
   # Here we populate the store with all the items. Simple items are defined inline here, others
   # that have specific eligibility checking are their own classes that handle their creation.
 
   # PRE-ORDERS
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.BasicGame
     price: 10
     discountedFrom: 15
@@ -19,7 +21,7 @@ Meteor.startup ->
       CatalogKeys.PixelArtAcademy.FreshmanYear
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.FullGame
     price: 20
     discountedFrom: 25
@@ -32,7 +34,7 @@ Meteor.startup ->
       CatalogKeys.Retropolis.DayPass
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccess
     price: 40
     discountedFrom: 45
@@ -53,7 +55,7 @@ Meteor.startup ->
 
   # KICKSTARTER TIERS
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.NoReward
     name: "Pixel Art Academy Kickstarter tier - No Reward"
     description: "You haven't chosen to receive a reward at the time of the Kickstarter. If you pledged enough to be able to get one of the three main tiers, you can use your store credit to purchase one now."
@@ -61,7 +63,7 @@ Meteor.startup ->
 
   RS.Items.Bundles.PixelArtAcademyKickstarterBasicGame.create()
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.EarlyFullGame
     rewardId: 4292193
     name: "Pixel Art Academy Kickstarter tier - Early bird: YOUR OWN CHARACTER!"
@@ -80,7 +82,7 @@ Meteor.startup ->
 
   RS.Items.Bundles.PixelArtAcademyKickstarterFullGame.create()
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.EarlyAlphaAccess
     rewardId: 4292194
     name: "Pixel Art Academy Kickstarter tier - Early bird: GAME ALPHA!"
@@ -91,7 +93,7 @@ Meteor.startup ->
 
   RS.Items.Bundles.PixelArtAcademyKickstarterAlphaAccess.create()
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.AvatarTrack.CustomItem
     rewardId: 4291886
     name: "Pixel Art Academy Kickstarter tier - Avatar track: CUSTOM ITEM!"
@@ -103,7 +105,7 @@ Meteor.startup ->
       CatalogKeys.LandsOfIllusions.Character.Avatar.CustomItem
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.AvatarTrack.UniqueItem
     rewardId: 4291887
     name: "Pixel Art Academy Kickstarter tier - Avatar track: UNIQUE ITEM!"
@@ -115,7 +117,7 @@ Meteor.startup ->
       CatalogKeys.LandsOfIllusions.Character.Avatar.UniqueItem
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.AvatarTrack.UniqueCustomAvatar
     rewardId: 4291888
     name: "Pixel Art Academy Kickstarter tier - Avatar track: UNIQUE CUSTOM AVATAR!"
@@ -127,7 +129,7 @@ Meteor.startup ->
       CatalogKeys.LandsOfIllusions.Character.Avatar.UniqueCustomAvatar
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtistTrack.ClassHelp
     rewardId: 4291889
     name: "Pixel Art Academy Kickstarter tier - Artist track: CLASS HELP!"
@@ -138,7 +140,7 @@ Meteor.startup ->
       CatalogKeys.PixelArtAcademy.Help.ClassHelp
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtistTrack.Paintover
     name: "Pixel Art Academy Kickstarter tier - Artist track: PAINTOVER!"
     rewardId: 4291890
@@ -149,7 +151,7 @@ Meteor.startup ->
       CatalogKeys.PixelArtAcademy.Help.Paintover
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtistTrack.PaintoverVideo
     rewardId: 4291891
     name: "Pixel Art Academy Kickstarter tier - Artist track: PAINTOVER VIDEO!"
@@ -160,7 +162,7 @@ Meteor.startup ->
       CatalogKeys.PixelArtAcademy.Help.PaintoverVideo
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtCollector.ZXCosmopolis
     rewardId: 4291892
     name: "Pixel Art Academy Kickstarter tier - Art collector: ZX COSMOPOLIS!"
@@ -174,7 +176,7 @@ Meteor.startup ->
       CatalogKeys.LandsOfIllusions.Character.Avatar.UniqueCustomAvatar
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Kickstarter.ArtCollector.PixelChinaMountains
     rewardId: 4292042
     name: "Pixel Art Academy Kickstarter tier - Art collector: PIXEL CHINA MOUNTAINS!"
@@ -192,7 +194,7 @@ Meteor.startup ->
 
   complimentaryDescription = "You must have done something nice as you have been awarded this complimentary game access!"
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Complimentary.BasicGame
     name: "Pixel Art Academy complimentary basic game access"
     description: complimentaryDescription
@@ -201,7 +203,7 @@ Meteor.startup ->
       CatalogKeys.PixelArtAcademy.FreshmanYear
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Complimentary.FullGame
     name: "Pixel Art Academy complimentary full game access"
     description: complimentaryDescription
@@ -212,43 +214,43 @@ Meteor.startup ->
       CatalogKeys.Retropolis.DayPass
     ]
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Complimentary.AlphaAccess
     name: "Pixel Art Academy complimentary alpha game access"
     description: complimentaryDescription
     items: complimentaryAlphaItemsWithRetropolisItems 5
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Complimentary.IdeaGarden
     name: "Pixel Art Academy complimentary Idea Garden game access"
     description: complimentaryDescription
     items: complimentaryAlphaItemsWithRetropolisItems 4
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Complimentary.SecretLab
     name: "Pixel Art Academy complimentary Secret Lab game access"
     description: complimentaryDescription
     items: complimentaryAlphaItemsWithRetropolisItems 3
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Complimentary.PatronClub
     name: "Pixel Art Academy complimentary Patron Club game access"
     description: complimentaryDescription
     items: complimentaryAlphaItemsWithRetropolisItems 2
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Complimentary.Investor
     name: "Pixel Art Academy complimentary Investor game access"
     description: complimentaryDescription
     items: complimentaryAlphaItemsWithRetropolisItems 1
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Complimentary.VIP
     name: "Pixel Art Academy complimentary V.I.P. game access"
     description: complimentaryDescription
     items: complimentaryAlphaItemsWithRetropolisItems 0
 
-  RS.Transactions.Item.create
+  RS.Item.create
     catalogKey: CatalogKeys.Bundles.PixelArtAcademy.Complimentary.Press
     name: "Pixel Art Academy complimentary press pass"
     description: "Thank you for taking the time to play Pixel Art Academy."

@@ -3,17 +3,18 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 # Get check-ins for a certain character.
-Meteor.publish 'PixelArtAcademy.Practice.CheckIn.forCharacter', (characterId) ->
+PAA.Practice.CheckIn.forCharacterId.publish (characterId, limit) ->
   check characterId, Match.DocumentId
 
   PAA.Practice.CheckIn.documents.find
     'character._id': characterId
   ,
+    limit: limit
     sort:
       time: -1
 
 # Get practice check-ins for a certain date range.
-Meteor.publish 'PixelArtAcademy.Practice.CheckIn.forDateRange', (dateRange) ->
+PAA.Practice.CheckIn.forDateRange.publish (dateRange) ->
   check dateRange, AE.DateRange
 
   query = {}
@@ -24,7 +25,7 @@ Meteor.publish 'PixelArtAcademy.Practice.CheckIn.forDateRange', (dateRange) ->
     sort:
       time: -1
 
-Meteor.publish 'PixelArtAcademy.Practice.CheckIn.conversations', (checkInId) ->
+PAA.Practice.CheckIn.conversationsForCheckInId.publish (checkInId) ->
   check checkInId, Match.DocumentId
 
   @autorun =>

@@ -24,7 +24,7 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
 
     PADB.PixelDailies.Pages.Home.themes.subscribe @, 2
 
-    @subscribe RS.Transactions.Transaction.messages, 20
+    @subscribe RS.Transaction.messages, 20
 
   destroy: ->
     super

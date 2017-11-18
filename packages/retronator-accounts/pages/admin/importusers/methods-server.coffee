@@ -54,7 +54,7 @@ Meteor.methods
 
       # See if the reward id is included in the data.
       #rewardId = if parts[columnIndices['Reward ID']] then parseInt parts[columnIndices['Reward ID']] else null
-      #dataRewardTierId = if rewardId then Retronator.Store.Transactions.Item.documents.findOne(rewardId: rewardId)._id else null
+      #dataRewardTierId = if rewardId then Retronator.Store.Item.documents.findOne(rewardId: rewardId)._id else null
 
       # If no default reward ID is passed to the method and the reward is not included in the data we can't do anything.
       #continue unless dataRewardTierId or rewardTierId

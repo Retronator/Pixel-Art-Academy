@@ -5,24 +5,15 @@ PAA = PixelArtAcademy
 class PAA.PixelBoy.Apps.Components.CheckInConversations extends AM.Component
   @register "PixelArtAcademy.PixelBoy.Apps.Components.CheckInConversations"
 
-  onCreated: ->
-    super
-
-    checkIn = @data()
-    @subscribe 'PixelArtAcademy.Practice.CheckIn.conversations', checkIn._id
-
   conversations: ->
     checkIn = @data()
-    return unless checkIn.conversations?.length
 
-    # Get conversation documents based on check-in's array of conversation ids.
-    LOI.Conversations.Conversation.documents.find
-      _id:
-        $in: checkIn.conversations
-    ,
-      sort:
-        startTime: -1
-  
+    # Check if we have any conversations already.
+    return [] unless checkIn.conversations
+
+    # Do not return any invalid conversations.
+    _.without checkIn.conversations, [null, undefined]
+
   events: ->
     super.concat
       'submit .new-conversation-form': @onSubmitNewConversationForm
@@ -43,7 +34,7 @@ class PAA.PixelBoy.Apps.Components.CheckInConversations extends AM.Component
     $formControls = @$('.new-conversation-form :input')
     $formControls.prop('disabled', true)
 
-    Meteor.call 'PixelArtAcademy.Practice.CheckIn.newConversation', checkIn._id, LOI.characterId(), text, (error) =>
+    PAA.Practice.CheckIn.newConversation checkIn._id, LOI.characterId(), text, (error) =>
       #  Enable the form controls.
       $formControls.prop('disabled', false)
 

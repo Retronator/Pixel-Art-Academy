@@ -13,12 +13,11 @@ class LOI.Pages.Loading extends AM.Component
       safeAreaHeight: 240
       minScale: 2
 
-    @visible = new ReactiveField false
-
   onRendered: ->
-    Meteor.setTimeout =>
-      @visible true
-    , 1000
+    super
 
-  visibleClass: ->
-    'visible' if @visible()
+    Meteor.setTimeout =>
+      return unless @isRendered()
+      @$('.loading').addClass 'visible'
+    ,
+      1000

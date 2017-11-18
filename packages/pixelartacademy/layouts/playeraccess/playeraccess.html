@@ -1,0 +1,33 @@
+<template name="PixelArtAcademy.Layouts.PlayerAccess">
+  {{> LandsOfIllusions.Styles.Console}}
+  {{#if loading}}
+    Loading …
+  {{else}}
+    {{#if currentUser}}
+      {{#if hasItem 'PixelArtAcademy.PlayerAccess'}}
+        {{#if currentCharacter}}
+          {{> renderPage}}
+        {{else}}
+          {{#if characters.length}}
+            <p>Please load one of the characters to start.</p>
+            <ul class="characters">
+              {{#each characters}}
+                <li class="character">
+                  {{displayName}}
+                  <button class="load-character">Load</button>
+                </li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <p>You need to create a character to play the game. Please create one in Chapter 3 of the intro episode of the game.</p>
+          {{/if}}
+        {{/if}}
+      {{else}}
+        <p>You need to have player access to use Pixel Art Academy prototype.</p>
+      {{/if}}
+    {{else}}
+      <p>Welcome to Pixel Art Academy! Please sign in so we can check if you have game access.</p>
+      {{> loginButtons}}
+    {{/if}}
+  {{/if}}
+</template>
