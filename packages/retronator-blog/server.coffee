@@ -1,6 +1,6 @@
 AT = Artificial.Telepathy
 
-# Prepare the server part of the PixelDailies class.
+# Prepare the server part of the Retronator Blog class.
 class Retronator.Blog extends Retronator.Blog
   @processPostHistory: (options = {}) ->
     options.processedCount ?= 0
@@ -45,6 +45,7 @@ Meteor.startup ->
     Retronator.Blog.processPostHistory()
   ,
     hour: 0
+    minute: 0
 
   # Look for new posts every hour and force reprocessing to catch any post edits.
   new Cron =>
