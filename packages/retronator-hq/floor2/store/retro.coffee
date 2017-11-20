@@ -34,4 +34,25 @@ class HQ.Store.Retro extends HQ.Actors.Retro
         else
           action = "browsing through some ![photos](look at photos)"
 
+      when Blog.Post.Types.Video
+        action = "watching a ![video](view video)"
+
+      when Blog.Post.Types.Article
+        action = "reading an ![article](read article)"
+
+      when Blog.Post.Types.Link
+        action = "surfing a ![webpage](look at webpage)"
+
+      when Blog.Post.Types.Quote
+        action = "reading a ![quote](read quote)"
+
+      when Blog.Post.Types.Audio
+        action = "listening to a ![cassette tape](listen to cassette tape)"
+
+      when Blog.Post.Types.Conversation
+        action = "having a ![conversation](listen to conversation)"
+
+      when Blog.Post.Types.Answer
+        action = "answering a ![question](see the answer)"
+
     "#{justName} He is #{action}."

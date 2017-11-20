@@ -25,7 +25,7 @@ Document.startup ->
       GoToDirection: ['go', 'towards', 'move', 'travel']
       ExitLocation: ['exit', 'leave']
       TalkTo: ['talk to', 'talk with', 'speak to', 'speak with', 'chat with']
-      LookAt: ['look at', 'examine', 'see']
+      LookAt: ['look at', 'examine', 'see', 'view', 'watch']
       Look: ['look', 'look around', 'description']
       Use: ['use']
       Press: ['press', 'push']

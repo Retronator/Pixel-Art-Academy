@@ -11,13 +11,17 @@ class Retronator.Blog extends Retronator.Blog
     # We can only get 20 posts with one API call.
     count = Math.min options.count ? 20, 20
 
-    # Get the desired amount of tweets.
+    # Get the desired amount of posts.
     params =
       reblog_info: true
       offset: options.offset or 0
 
     # Query the API.
     AT.Tumblr.blogPosts 'retronator.tumblr.com', params, (error, data) =>
+      if error
+        console.error error
+        return
+
       # Process posts.
       @processPost post, options for post in data.posts
 
@@ -36,7 +40,7 @@ class Retronator.Blog extends Retronator.Blog
       @processPostHistory newOptions
 
 # Initialize on startup.
-Meteor.startup ->
+Document.startup ->
   return unless AT.Tumblr.initialized
 
   # Update all posts every day to get updated notes counts.

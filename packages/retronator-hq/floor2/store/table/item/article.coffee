@@ -6,7 +6,6 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Store.Table.Item.Article extends HQ.Store.Table.Item
   @id: -> 'Retronator.HQ.Store.Table.Item.Article'
 
-  # We use both terms for matching in the parser.
   @fullName: -> "article"
 
   @initialize()

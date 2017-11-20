@@ -76,7 +76,7 @@ class PAA.Items.Map extends LOI.Adventure.Item
         # Mark any special locations that aren't being positioned in the normal 8 directions.
         specialLocations = {}
         northLocation = exits[Directions.North]?
-        southLocation = exits[Directions.South]?
+        southLocation = exits[Directions.South]? or exits[Directions.Back]?
         anyNorthLocation = exits[Directions.Northwest]? or exits[Directions.North]? or exits[Directions.Northeast]?
         anySouthLocation = exits[Directions.Southwest]? or exits[Directions.South]? or exits[Directions.Southeast]?
 

@@ -7,7 +7,9 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Store.Table.Item extends LOI.Adventure.Thing
   @_constructors: ->
     photo: @Photos
+    video: @Video
     text: @Article
+    link: @Link
 
   @createItem: (@options) ->
     constructor = @_constructors()[@options.post.type] or @Photos

@@ -59,7 +59,7 @@ class PAA.Items.Map.Node extends AM.Component
         when Directions.Northwest, Directions.North, Directions.Northeast
           top = center.top - height * 1.5 - nodeGap
 
-        when Directions.Southwest, Directions.South, Directions.Southeast
+        when Directions.Southwest, Directions.South, Directions.Southeast, Directions.Back
           top = center.top + height * 0.5 + nodeGap
 
       if location.specialDirection and not location.direction
