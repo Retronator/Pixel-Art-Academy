@@ -62,7 +62,7 @@ class RS.PaymentMethod extends AM.Document
   @findPaymentMethodsForUser: (user) ->
     return unless user
 
-    transactions = RS.Transaction.findTransactionsForUser(user).fetch()
+    transactions = RS.Transaction.getValidTransactionsForUser user
 
     # Get all payments from transactions.
     paymentIds = for transaction in transactions when transaction.payments
