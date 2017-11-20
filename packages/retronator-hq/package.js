@@ -90,6 +90,7 @@ Package.onUse(function(api) {
 
   api.addFile('floor2/store/table/interaction/interaction');
   api.addComponent('floor2/store/table/interaction/photos/photos');
+  api.addComponent('floor2/store/table/interaction/video/video');
 
   api.addFile('floor2/bookshelves/bookshelves');
 

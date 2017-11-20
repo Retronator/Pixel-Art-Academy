@@ -98,6 +98,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
     if activePostId
       "#{Vocabulary.Keys.Directions.Back}": HQ.Store.Table
       "#{Vocabulary.Keys.Directions.Out}": HQ.Store
+      "#{Vocabulary.Keys.Directions.West}": HQ.Store
 
     else
       "#{Vocabulary.Keys.Directions.Back}": HQ.Store

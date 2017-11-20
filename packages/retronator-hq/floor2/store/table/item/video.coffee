@@ -20,5 +20,4 @@ class HQ.Store.Table.Item.Video extends HQ.Store.Table.Item
     "You sit down and play the video."
 
   _createMainInteraction: ->
-    # The main interaction is to look at a set of photos in this post.
-    new HQ.Store.Table.Interaction.Photos @post.photos
+    new HQ.Store.Table.Interaction.Video @post.video.player
