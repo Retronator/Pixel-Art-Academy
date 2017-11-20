@@ -80,35 +80,21 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
   onRendered: ->
     super
 
+    @app = @ancestorComponent Retronator.App
+    @app.addComponent @
+
     @display = LOI.adventure.getCurrentThing HQ.Store.Display
 
     $displayScene = @display.$('.scene')
     $messageArea = @$('.message-area')
-    $translateAreas = $displayScene.add($messageArea)
+    @_$translateAreas = $displayScene.add($messageArea)
 
-    $viewportArea = @$('.viewport-area')
-    $safeArea = @$('.safe-area')
-    $receipt = $safeArea.find('.receipt')
+    @_$viewportArea = @$('.viewport-area')
+    @_$safeArea = @$('.safe-area')
+    @_$receipt = @_$safeArea.find('.receipt')
 
-    $viewportArea.scroll (event) =>
+    @_$viewportArea.scroll (event) =>
       @scrolled true
-
-      # After we go pass the end of the receipt, move the display scene.
-      scrollTop = $viewportArea.scrollTop()
-      safeAreaHeight = $safeArea.height()
-      receiptBottom = $receipt.outerHeight()
-
-      # Make sure there is a receipt at all. It will get removed when payment completes.
-      if receiptBottom
-        sceneOffset = Math.min 0, receiptBottom - safeAreaHeight - scrollTop
-
-      else
-        sceneOffset = 0
-
-      $translateAreas.css
-        'transform': "translateY(#{sceneOffset}px)"
-
-      @scrolledToBottom sceneOffset < 0
 
     Meteor.setTimeout =>
       @_scrollToNewSupporter duration: 1000
@@ -117,6 +103,30 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
   onDestroyed: ->
     super
+
+    @app?.removeComponent @
+
+  draw: ->
+    # After we go pass the end of the receipt, move the display scene.
+    scrollTop = @_$viewportArea.scrollTop()
+    return if scrollTop is @_lastScrollTop
+
+    safeAreaHeight = @_$safeArea.height()
+    receiptBottom = @_$receipt.outerHeight()
+
+    # Make sure there is a receipt at all. It will get removed when payment completes.
+    if receiptBottom
+      sceneOffset = Math.min 0, receiptBottom - safeAreaHeight - scrollTop
+
+    else
+      sceneOffset = 0
+
+    @_$translateAreas.css
+      'transform': "translateY(#{sceneOffset}px)"
+
+    @scrolledToBottom sceneOffset < 0
+
+    @_lastScrollTop = scrollTop
 
   showSupporterName: ->
     user = Retronator.user()

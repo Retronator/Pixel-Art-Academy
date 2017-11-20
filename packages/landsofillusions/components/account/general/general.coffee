@@ -91,6 +91,11 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
   class @Username extends AM.DataInputComponent
     @register 'LandsOfIllusions.Components.Account.General.Username'
 
+    onCreated: ->
+      super
+
+      @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
+
     load: ->
       user = RA.User.documents.findOne Meteor.userId(),
         fields:
@@ -102,8 +107,4 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
       Meteor.call "Retronator.Accounts.User.rename", value
 
     placeholder: ->
-      user = RA.User.documents.findOne Meteor.userId(),
-        fields:
-          displayName: 1
-
-      user?.displayName
+      AB.translate(@_userBabelSubscription, 'Anonymous').text

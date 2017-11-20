@@ -8,7 +8,7 @@ RA = Retronator.Accounts
 class LOI.Components.Account.Services extends LOI.Components.Account.Page
   @register 'LandsOfIllusions.Components.Account.Services'
   @url: -> 'services'
-  @displayName: -> 'Sign-in services'
+  @displayName: -> 'Linked services'
 
   @initialize()
 
@@ -47,11 +47,12 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
   onClickLinkService: (event) ->
     serviceName = @currentData()
     
-    if serviceName is 'Password'
-      Meteor.call RA.User.sendPasswordResetEmail, (error) ->
-        if error
-          console.error error.message
-          return
-      
-    else
-      Meteor["linkWith#{serviceName}"]()
+    switch serviceName
+      when 'Password'
+        Meteor.call RA.User.sendPasswordResetEmail, (error) ->
+          if error
+            console.error error.message
+            return
+            
+      else
+        Meteor["linkWith#{serviceName}"]()

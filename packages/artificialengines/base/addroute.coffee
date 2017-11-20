@@ -40,7 +40,8 @@ AB.addRoute = (url, layoutClass, componentClass) ->
       # Replace parameters in the url.
       canonicalUrl = url
 
-      for parameterName, parameter of routeParameters
+      # Go over the parameters, but watch out for the query field, which is an object of query parameters.
+      for parameterName, parameter of routeParameters when parameterName isnt 'query'
         # Parameter starts with a colon and could end with a question mark. Question mark literal needs to be escaped
         # in a regex, so we want to have \? in the regex, but to put a backslash in a javascript string, we need to
         # escape the backslash too, giving us \\?. The final regex questions mark matches the literal questions mark

@@ -13,7 +13,6 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
-  api.use('http');
   api.use('promise');
   api.use('modules');
 

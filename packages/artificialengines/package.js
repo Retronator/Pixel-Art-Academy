@@ -5,7 +5,8 @@ Package.describe({
 
 Npm.depends({
   twit: '2.2.9',
-  stripe: '5.1.1'
+  stripe: '5.1.1',
+  patreon: '0.3.0'
 });
 
 Package.onUse(function(api) {
@@ -23,6 +24,8 @@ Package.onUse(function(api) {
     'check',
     'ejson',
     'markdown',
+    'http',
+    'oauth',
 
     // 3rd party
     'peerlibrary:assert',
@@ -162,6 +165,7 @@ Package.onUse(function(api) {
 
   api.addServerFile('telepathy/twitter-server');
   api.addServerFile('telepathy/stripe-server');
+  api.addServerFile('telepathy/patreon-server');
 
   // Artificial Babel
   api.addFile('babel/babel');

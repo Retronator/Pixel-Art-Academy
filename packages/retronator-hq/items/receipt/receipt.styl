@@ -23,6 +23,11 @@
       color atariGrey(0)
 
       .safe-area
+        &::after
+          content ''
+          display block
+          height 20rem
+
         .receipt
           position relative
           z-index 1
@@ -122,7 +127,7 @@
           position relative
           width 301rem
           height 286rem
-          margin 0 auto 20rem
+          margin 0 auto
           padding 9rem
           background image('/retronator/hq/items/receipt/presenter-background.png') 100% / 100%
           filter drop-shadow(-4rem 3rem 0 transparentify(atariGrey(3), atariGrey(4)))

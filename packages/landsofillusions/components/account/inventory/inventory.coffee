@@ -100,8 +100,11 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
 
     # Add avatar keys.
     avatarKeys = RS.Items.CatalogKeys.LandsOfIllusions.Character.Avatar
-
     rewardKeys = rewardKeys.concat [avatarKeys.CustomItem, avatarKeys.UniqueItem, avatarKeys.UniqueCustomAvatar]
+
+    # Add Patreon keys.
+    patreonKeys = RS.Items.CatalogKeys.Retronator.Patreon
+    rewardKeys = rewardKeys.concat [patreonKeys.PatreonKeycard, patreonKeys.EarlyBirdKeycard]
 
     for item in items
       selectedItems.push item if item.catalogKey in rewardKeys
@@ -178,6 +181,10 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
 
     for keycardClass, keycardKey of keycards
       return keycardClass if user.hasItem keycardKey
+
+    patreonKeys = RS.Items.CatalogKeys.Retronator.Patreon
+    return 'patreon-early' if user.hasItem patreonKeys.EarlyBirdKeycard
+    return 'patreon' if user.hasItem patreonKeys.PatreonKeycard
 
     # Otherwise return the default player keycard.
     'default'
