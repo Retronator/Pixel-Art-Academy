@@ -20,6 +20,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     @subscribe Retronator.Accounts.User.storeDataForCurrentUser
     @subscribe Retronator.Store.Item.all
     @subscribe Retronator.Store.Transaction.forCurrentUser
+    Retronator.Store.Payment.forCurrentUser.subscribe @
 
     @showCreditInfo = new ReactiveField false
     @showAuthorizedPaymentsInfo = new ReactiveField false
@@ -54,6 +55,14 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
         item.item.refresh()
 
     _.sortBy transactions, 'time'
+
+  invalidClass: ->
+    transactionOrPayment = @currentData()
+    'invalid' if transactionOrPayment.invalid
+
+  payment: ->
+    embeddedPayment = @currentData()
+    RS.Payment.documents.findOne embeddedPayment._id
 
   emptyLines: ->
     transactionsCount = @transactions()?.length or 0

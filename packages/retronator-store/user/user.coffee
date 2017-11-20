@@ -43,7 +43,7 @@ class RA.User extends RA.User
 
   authorizedPaymentsAmount: ->
     # Authorized payments amount is the sum of all payments that were only authorized.
-    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.getValidTransactionsForUser @
 
     authorizedPaymentsAmount =
       total: 0
@@ -70,7 +70,7 @@ class RA.User extends RA.User
   generateItemsArray: ->
     # Start by constructing an array of all item Ids.
     itemIds = []
-    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.getValidTransactionsForUser @
 
     # Helper function that recursively adds items.
     addItem = (item) =>
@@ -97,7 +97,7 @@ class RA.User extends RA.User
 
   generateSupportAmount: ->
     # Support amount is the sum of all payments.
-    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.getValidTransactionsForUser @
 
     supportAmount = 0
 
@@ -110,7 +110,7 @@ class RA.User extends RA.User
 
   generateStoreData: ->
     # Store balance is the sum of all payments minus sum of all purchases.
-    transactions = RS.Transaction.findTransactionsForUser(@).fetch()
+    transactions = RS.Transaction.getValidTransactionsForUser @
 
     balance = 0
 

@@ -109,3 +109,157 @@ RS.Pages.Admin.AuthorizedPayments.sendReminderEmail.method (transactionId) ->
     html: email.html
 
   console.log "Retronator Store pre-order reminder email sent to", address
+
+RS.Pages.Admin.AuthorizedPayments.chargeAllPayments.method ->
+  RA.authorizeAdmin()
+
+  console.log "Charging payments for all stripe transactions with authorized-only payments."
+
+  transactions = RS.Transaction.documents.find(
+    payments:
+      $elemMatch:
+        type: RS.Payment.Types.StripePayment
+        authorizedOnly: true
+        invalid: $ne: true
+    invalid: $ne: true
+  ).fetch()
+
+  successCount = 0
+  failureCount = 0
+
+  for transaction in transactions
+    try
+      RS.Pages.Admin.AuthorizedPayments.chargePayment transaction._id
+      successCount++
+
+    catch error
+      console.error "Charging payment failed for transaction", transaction._id, error.message, error.details
+      failureCount++
+
+  console.log "Successfully processed #{successCount} payments, failed #{failureCount}."
+
+RS.Pages.Admin.AuthorizedPayments.chargePayment.method (transactionId) ->
+  check transactionId, Match.DocumentId
+  RA.authorizeAdmin()
+
+  # Find transaction and make sure it has an authorized-only payment.
+  transaction = RS.Transaction.documents.findOne
+    _id: transactionId
+    payments:
+      $elemMatch:
+        type: RS.Payment.Types.StripePayment
+        authorizedOnly: true
+        invalid: $ne: true
+    invalid: $ne: true
+
+  throw new AE.ArgumentException 'Valid transaction with a stripe payment that is authorized only does not exist.' unless transaction
+
+  # Find payment method.
+  for payment in transaction.payments when payment.type is RS.Payment.Types.StripePayment
+    payment = payment.refresh()
+    throw new AE.InvalidOperationException "Payment method not present on payment", payment._id unless payment.paymentMethod
+    throw new AE.InvalidOperationException "Payment amount not present on payment", payment._id unless payment.amount
+
+    paymentMethod = payment.paymentMethod.refresh()
+
+    # Make sure we don't charge twice.
+    if not payment.authorizedOnly or payment.chargeId or payment.chargeError or payment.invalid
+      console.log "Skipping payment", payment._id, "authorized", payment.authorizedOnly, "has id", payment.chargeId?, "has error", payment.chargeError?
+      continue
+
+    # Make sure we don't charge removed payment methods.
+    if paymentMethod.removed
+      console.log "Primary payment method was removed for transaction", transaction._id
+
+      updateRemovedPaymentMethodError = =>
+        RS.Payment.documents.update payment._id,
+          $set:
+            chargeError:
+              failureMessage: "Payment method was removed."
+              failureCode: null
+
+      # Try and find out another payment method for this user.
+      user = paymentMethod.findUserForPaymentMethod()
+
+      unless user
+        console.warn "No user was found, skipping charge of", payment.amount
+        updateRemovedPaymentMethodError()
+        continue
+
+      paymentMethod = RS.PaymentMethod.findPaymentMethodsForUser(user).fetch()[0]
+
+      unless paymentMethod
+        console.log "Replacement payment method was not found. Skipping charge of", payment.amount
+        updateRemovedPaymentMethodError()
+        continue
+
+      # Refresh the payment method if found, since find function only returns _id and type.
+      paymentMethod = paymentMethod.refresh()
+
+      # Update payment to point to new payment method.
+      RS.Payment.documents.update payment._id,
+        $set:
+          'paymentMethod._id': paymentMethod._id
+
+    throw new AE.InvalidOperationException "Stripe customer not available on payment method." unless paymentMethod.customerId
+
+    metadata =
+      paymentAmount: payment.amount
+      preAuthorizedPurchase: true
+      paymentId: payment._id
+      transactionId: transaction._id
+
+    chargeData =
+      amount: payment.amount * 100 # cents
+      currency: 'usd'
+      description: 'Retronator Store purchase'
+      statement_descriptor: 'Retronator'
+      metadata: metadata
+      customer: paymentMethod.customerId
+
+    # Set email for stripe's default receipt.
+    user = paymentMethod.findUserForPaymentMethod()
+
+    if user
+      chargeData.receipt_email = user.contactEmail
+
+    else
+      chargeData.receipt_email = transaction.email
+
+    # Make sure receipt email is set.
+    throw new AE.InvalidOperationException "Receipt email not found for payment", payment._id unless chargeData.receipt_email
+
+    # Prepare to record an error on the payment.
+    recordError = (error) =>
+      chargeError =
+        failureMessage: error?.failure_message or error?.message or "Unknown error"
+        failureCode: error?.failure_code or null
+
+      console.log "Stripe charge did not succeed.", chargeError
+
+      RS.Payment.documents.update payment._id,
+        $set: {chargeError}
+
+      throw new AE.InvalidOperationException "Stripe charge did not succeed.", chargeError.failureMessage
+
+    # Create a stripe charge.
+    console.log "Creating charge for payment", payment._id, "customer", chargeData.customer
+
+    try
+      stripeCharge = AT.Stripe.charges.create chargeData
+
+    catch error
+      recordError error
+
+    # Double check that the stripe charge was created.
+    recordError() unless stripeCharge?.id
+
+    # Double check that the charge succeeded.
+    recordError stripeCharge unless stripeCharge.paid and stripeCharge.status is 'succeeded'
+
+    # Record that the payment was charged.
+    RS.Payment.documents.update payment._id,
+      $set:
+        chargeId: stripeCharge.id
+      $unset:
+        authorizedOnly: true

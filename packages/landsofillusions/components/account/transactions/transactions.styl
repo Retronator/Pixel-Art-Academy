@@ -64,6 +64,16 @@
       .transaction
         height 9rem
 
+        &.invalid
+          color atariRed(2)
+          text-decoration line-through
+
+          .date
+            .action
+              color atariRed(2)
+              border-bottom-color atariRed(1)
+              text-decoration line-through
+
         .date
         .description
           padding 0 4rem
@@ -242,6 +252,10 @@
         list-style none
         margin-top 0
         padding 0
+
+        .payment
+          &.invalid
+            color atariRed(2)
 
     .receipt-bottom
       text-transform uppercase

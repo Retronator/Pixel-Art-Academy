@@ -10,7 +10,7 @@ class RS.Items.Bundles.PixelArtAcademyKickstarterTier extends RS.Item
     @_throwEligibilityException "You need to be logged in to select a Kickstarter tier." unless user
 
     # Find this user's kickstarter pledge.
-    transactions = RS.Transaction.findTransactionsForUser(user).fetch()
+    transactions = RS.Transaction.getValidTransactionsForUser user
 
     for transaction in transactions
       for payment in transaction.payments

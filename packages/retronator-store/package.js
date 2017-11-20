@@ -41,6 +41,7 @@ Package.onUse(function(api) {
 
   api.addServerFile('payment/migrations/0000-renamecollection');
   api.addServerFile('payment/migrations/0001-migratestripecustomeridfield');
+  api.addServerFile('payment/migrations/0002-invalid');
 
   // Payment method
 
@@ -62,6 +63,7 @@ Package.onUse(function(api) {
   api.addServerFile('transaction/methods-server/stripe');
 
   api.addServerFile('transaction/migrations/0000-renamecollection');
+  api.addServerFile('transaction/migrations/0001-invalid');
 
   api.addFile('shoppingcart/shoppingcart');
 

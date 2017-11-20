@@ -8,10 +8,17 @@ class RS.Pages.Admin.AuthorizedPayments extends AM.Component
 
   @sendReminderEmail: new AB.Method name: "#{@id()}.sendReminderEmail"
   @sendAllReminderEmails: new AB.Method name: "#{@id()}.sendAllReminderEmails"
- 
+
+  @chargePayment: new AB.Method name: "#{@id()}.chargePayment"
+  @chargeAllPayments: new AB.Method name: "#{@id()}.chargeAllPayments"
+
   events: ->
     super.concat
       'click .email-all': @onClickEmailAll
+      'click .charge-all': @onClickChargeAll
 
   onClickEmailAll: (event) ->
     @constructor.sendAllReminderEmails()
+
+  onClickChargeAll: (event) ->
+    @constructor.chargeAllPayments()

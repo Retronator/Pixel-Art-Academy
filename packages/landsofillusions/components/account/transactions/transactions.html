@@ -17,7 +17,7 @@
       <h3 class="title">Purchase history</h3>
       <table class="transactions">
         {{#each transactions}}
-          <tr class="transaction">
+          <tr class="transaction {{invalidClass}}">
             <td class="date">
               <button class="action load-transaction">
                 {{dateText}}
@@ -182,10 +182,19 @@
               <p class="title">Payment</p>
               <ul class="payments">
                 {{#each payments}}
-                  <li class="payment">
+                  <li class="payment {{invalidClass}}">
                     {{type}} - ${{paymentAmount}}
                     {{#if authorizedOnly}}
                       (authorized only)
+                    {{/if}}
+                    {{#if invalid}}
+                      {{#with payment}}
+                        {{#if chargeError.failureMessage}}
+                          <p>
+                            {{chargeError.failureMessage}}
+                          </p>
+                        {{/if}}
+                      {{/with}}
                     {{/if}}
                   </li>
                 {{/each}}
