@@ -33,12 +33,14 @@ class RS.Transaction extends AM.Document
   #   type
   #   amount
   #   authorizedOnly
+  #   invalid
   #   storeCreditAmount
   # supporterName: the public name to show for this transaction for logged-out users
   # tip:
   #   amount: how much money was tipped
   #   message: the public message to show for this transaction
   # totalValue: auto-generated value of the transaction
+  # invalid: auto-generated boolean that voids this transaction
   @Meta
     name: @id()
     fields: =>
@@ -50,7 +52,7 @@ class RS.Transaction extends AM.Document
         givenGift:
           transaction: @ReferenceField 'self', ['ownerDisplayName'], false
       ]
-      payments: [@ReferenceField RS.Payment, ['type', 'amount', 'authorizedOnly', 'storeCreditAmount']]
+      payments: [@ReferenceField RS.Payment, ['type', 'amount', 'authorizedOnly', 'invalid', 'storeCreditAmount']]
       ownerDisplayName: @GeneratedField 'self', ['user', 'email', 'twitter'], (fields) ->
         displayName = fields.user?.displayName
         displayName ?= "@#{fields.twitter}" if fields.twitter
@@ -63,8 +65,11 @@ class RS.Transaction extends AM.Document
         value = fields.tip?.amount or 0
         value += (transactionItem.price or 0) for transactionItem in fields.items
         [fields._id, value]
+      invalid: @GeneratedField 'self', ['payments'], (fields) ->
+        invalid = _.some fields.payments, 'invalid'
+        [fields._id, invalid]
     triggers: =>
-      transactionsUpdated: @Trigger ['user._id', 'twitter', 'email'], (transaction, oldTransaction) =>
+      transactionsUpdated: @Trigger ['user._id', 'twitter', 'email', 'invalid', 'items', 'totalValue'], (transaction, oldTransaction) =>
         console.log "transaction generate items triggered!", transaction, "old", oldTransaction
         # If the user of this transaction has changed, the old user
         # should lose an item so they need to be updated as well.
@@ -129,3 +134,6 @@ class RS.Transaction extends AM.Document
         twitter: new RegExp user.services.twitter.screenName, 'i'
 
     RS.Transaction.documents.find query
+
+  @getValidTransactionsForUser: (user) ->
+    _.filter @findTransactionsForUser(user).fetch(), (transaction) -> not transaction.invalid

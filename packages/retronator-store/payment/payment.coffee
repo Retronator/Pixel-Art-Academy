@@ -7,6 +7,7 @@ class RS.Payment extends AM.Document
   # type: what kind of payment this was
   # amount: USD value added to the balance with this payment
   # authorizedOnly: true if the amount was not actually collected and this is just an intended payment
+  # invalid: auto-generated boolean that voids this payment
   # paymentMethod:
   #   _id
   #
@@ -40,6 +41,10 @@ class RS.Payment extends AM.Document
     fields: =>
       paymentMethod: @ReferenceField RS.PaymentMethod, [], false
       referralUser: @ReferenceField RA.User, ['displayName'], false
+      invalid: @GeneratedField 'self', ['chargeError'], (fields) ->
+        invalid = false
+        invalid = true if fields.chargeError
+        [fields._id, invalid]
       
   @forCurrentUser: @subscription 'forCurrentUser'
 

@@ -14,6 +14,7 @@ RS.Payment.forCurrentUser.publish ->
         twitter:
           screenname: 1
 
+    # Return all transactions, not just valid one, so we can get access to all payments, including invalid ones.
     transactions = RS.Transaction.findTransactionsForUser(user).fetch()
     
     # Get all payments from transactions.

@@ -8,6 +8,8 @@ Meteor.methods
 
     count = 0
 
+    console.log "Processing transactions for all users."
+
     RA.User.documents.find().forEach (user) ->
       user.onTransactionsUpdated()
       count++
