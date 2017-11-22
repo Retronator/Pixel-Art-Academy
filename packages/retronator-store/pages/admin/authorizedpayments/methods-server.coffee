@@ -6,9 +6,15 @@ RS = Retronator.Store
 RS.Pages.Admin.AuthorizedPayments.sendAllReminderEmails.method ->
   RA.authorizeAdmin()
 
-  console.log "Sending reminder emails for all transactions with authorized-only payments."
+  console.log "Sending reminder emails for all failed transactions with authorized-only payments."
 
-  transactions = RS.Transaction.documents.find('payments.authorizedOnly': true).fetch()
+  transactions = RS.Transaction.documents.find(
+    invalid: true
+    payments:
+      $elemMatch:
+        type: RS.Payment.Types.StripePayment
+        authorizedOnly: true
+  ).fetch()
 
   successCount = 0
   failureCount = 0
@@ -29,10 +35,14 @@ RS.Pages.Admin.AuthorizedPayments.sendReminderEmail.method (transactionId) ->
   check transactionId, Match.DocumentId
   RA.authorizeAdmin()
 
-  # Find transaction and make sure it has an authorized-only payment.
+  # Find invalid transaction and make sure it has an authorized-only payment.
   transaction = RS.Transaction.documents.findOne
     _id: transactionId
-    'payments.authorizedOnly': true
+    invalid: true
+    payments:
+      $elemMatch:
+        type: RS.Payment.Types.StripePayment
+        authorizedOnly: true
 
   throw new AE.ArgumentException 'Transaction with a payment that is authorized only does not exist.' unless transaction
 
@@ -61,40 +71,41 @@ RS.Pages.Admin.AuthorizedPayments.sendReminderEmail.method (transactionId) ->
 
   itemNamesList = for item in transaction.items
     item = RS.Item.documents.findOne item.item._id
-    "#{item.name.refresh().translate().text} $#{item.price}"
+    item.name.refresh().translate().text
 
   date = transaction.time.toLocaleString 'en-US',
     day: 'numeric'
     month: 'long'
     year: 'numeric'
 
-  email.addParagraph "On #{date} you placed a purchase order for:\n
+  email.addParagraph "Recently I emailed you about the pre-order you placed on #{date} for:\n
                       #{itemNamesList.join '\n'}"
 
-  email.addParagraph "You also added a tip of $#{transaction.tip.amount}. Thank you!" if transaction.tip?.amount
+  email.addParagraph "I'm letting you know that your purchase was NOT processed successfully."
 
   for payment in transaction.payments
+    payment = payment.refresh()
     switch payment.type
       when RS.Payment.Types.StripePayment
-        email.addParagraph "At that time we only collected your credit card information.
-                          Your payment of $#{payment.amount} will now be processed, early next week."
+        # Make sure that the payment method hasn't been removed.
+        paymentMethod = RS.PaymentMethod.documents.findOne payment.paymentMethod._id
 
-  email.addParagraph "As promised, this acts as a reminder email, in case you want to cancel your pre-order.
-                      I wrote an explanation article that details where the development is right now.
-                      It has all the information you need as well as an extensive FAQ."
+        if paymentMethod.removed
+          console.warn "Skipping", payment._id, address, payment.chargeError.failureMessage
+          return
 
-  email.addLinkParagraph 'https://medium.com/@retronator/pixel-art-academy-pre-order-information-ef73d5b99ae7', "Pixel Art Academy pre-order information"
+        email.addParagraph "The error was: #{payment.chargeError.failureMessage}"
 
-  email.addParagraph "If you have any questions or you would like to cancel your pre-order, simply reply to this email.
-                      No reason needs to be given for cancellation—I appreciate your support as it is."
+  email.addParagraph "As a result, your pre-order has been canceled. If you would like to keep access to the game
+                      and the lower pre-order price, you can simply make a new purchase in the game store that
+                      you reach in 'Chapter 2: Retronator HQ' while playing the game at:"
 
-  email.addParagraph "If you decide to stay on board, thank you so much! No action needs to be taken on your part.
-                      After the payment is processed next week you will get a confirmation email from our credit card
-                      processor Stripe. Your information is safely stored with them."
+  email.addLinkParagraph 'https://pixelart.academy'
 
-  email.addParagraph "If you want to check the status of your credit card or change it, refer to the FAQ above."
+  email.addParagraph "The lower pre-order price will be available at least until the end of the year.
+                      If you have any questions, simply reply to this email."
 
-  email.addParagraph "Thank you again. I hope you will enjoy the game as it grows in the years to come."
+  email.addParagraph "Thank you for your intended support and happy holidays!"
 
   email.addParagraph "Best,\n
                       Matej 'Retro' Jan // Retronator"
@@ -104,11 +115,11 @@ RS.Pages.Admin.AuthorizedPayments.sendReminderEmail.method (transactionId) ->
   Email.send
     from: "hi@retronator.com"
     to: address
-    subject: "Retronator Store - Pixel Art Academy pre-order reminder"
+    subject: "Retronator Store - Pixel Art Academy pre-order canceled"
     text: email.text
     html: email.html
 
-  console.log "Retronator Store pre-order reminder email sent to", address
+  console.log "Retronator Store pre-order canceled email sent to", address
 
 RS.Pages.Admin.AuthorizedPayments.chargeAllPayments.method ->
   RA.authorizeAdmin()
