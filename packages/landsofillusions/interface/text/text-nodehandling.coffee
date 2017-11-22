@@ -117,7 +117,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # Simply output the line to the narrative.
     text = @_evaluateLine narrativeLine
 
-    @narrative.addText text
+    @narrative.addText text, scrollStyle: narrativeLine.scrollStyle
 
     # This is a line node so set that we displayed it.
     @_nodeDisplayed narrativeLine

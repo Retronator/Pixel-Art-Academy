@@ -41,8 +41,11 @@
                     <li class="thing">{{> t10e "Nothing"}}.</li>
                   {{/each}}
                 </ul>
+                {{#if postscript}}
+                  <p class="postscript">{{{postscript}}}</p>
+                {{/if}}
                 {{#each narrative.lines}}
-                  <p>{{{narrativeLine}}}</p>
+                  <p class="narrative-line">{{{narrativeLine}}}</p>
                 {{/each}}
               {{/unless}}
             </div>

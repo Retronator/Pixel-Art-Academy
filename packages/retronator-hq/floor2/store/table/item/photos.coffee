@@ -2,6 +2,7 @@ LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
+Nodes = LOI.Adventure.Script.Nodes
 
 class HQ.Store.Table.Item.Photos extends HQ.Store.Table.Item
   @id: -> 'Retronator.HQ.Store.Table.Item.Photos'
@@ -36,13 +37,26 @@ class HQ.Store.Table.Item.Photos extends HQ.Store.Table.Item
     else
       "It's a set of photos."
 
-  introduction: ->
+  _createIntroScript: ->
+    # Create the photos html.
+    $photos = $('<div class="retronator-hq-store-table-item-photos">')
+
+    for photo in @post.photos
+      $photo = $("<img class='photo' src='#{photo.original_size.url}'>")
+      $photos.append($photo)
+
+    # We inject the html with the photos.
+    photosNode = new Nodes.NarrativeLine
+      line: "%%html#{$photos[0].outerHTML}html%%"
+      scrollStyle: LOI.Interface.Components.Narrative.ScrollStyle.Top
+
+    # User looks at a set of photos in this post.
     if @post.photos.length is 1
-      "You look at the photo."
+      introduction = "You look at the photo:"
 
     else
-      "You look at the photos."
-
-  _createMainInteraction: ->
-    # The main interaction is to look at a set of photos in this post.
-    new HQ.Store.Table.Interaction.Photos @post.photos
+      introduction = "You look at the photos:"
+    
+    new Nodes.NarrativeLine
+      line: introduction
+      next: photosNode

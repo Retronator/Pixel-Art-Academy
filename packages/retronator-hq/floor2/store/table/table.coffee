@@ -11,9 +11,11 @@ class HQ.Store.Table extends LOI.Adventure.Location
   @region: -> HQ
 
   @register @id()
-  template: -> @constructor.id()
 
   @version: -> '0.0.1'
+
+  @translations: ->
+    openedDrawer: "You open a drawer and throw another bunch of things on the table."
 
   @fullName: -> "Retro's table"
   @shortName: -> "table"
@@ -23,61 +25,42 @@ class HQ.Store.Table extends LOI.Adventure.Location
       The big store desk is filled with the latest things Retro came across while living his digital life.
     "
 
+  description: ->
+    return @translations().openedDrawer if @openedDrawer()
+
+    super
+
+  postscript: ->
+    if @postsSkip() is 0
+      "![Older](look at older) items are stored in the drawers below."
+
+    else
+      "![Older](look at older) and ![newer](look at newer) items are stored in the drawers below."
+
+
   @initialize()
-
-  @showPost: (post) ->
-    @state 'activePostId', post._id
-
-    # Go to table if needed.
-    atTable = LOI.adventure.currentLocation() instanceof HQ.Store.Table
-    LOI.adventure.goToLocation HQ.Store.Table unless atTable
-
-    # Reset the interface to force showing the intro text.
-    #Tracker.afterFlush =>
-      #LOI.adventure.interface.resetInterface()
 
   constructor: ->
     super
     
     @postsSkip = new ReactiveField 0
+    @openedDrawer = new ReactiveField false
 
     retro = HQ.Actors.Retro.createAvatar()
 
     @currentInteraction = new ReactiveField null
 
     @autorun (computation) =>
-      activePostId = @state 'activePostId'
-      
-      if activePostId
-        Blog.Post.forId.subscribe activePostId
-
-      else
-        @currentInteraction null
-        Blog.Post.all.subscribe 5, @postsSkip()
+      Blog.Post.all.subscribe 5, @postsSkip()
       
     # Dynamically create the 5 things on the table.
     @_things = new ComputedField =>
-      activePostId = @state 'activePostId'
+      posts = Blog.Post.documents.find({}, sort: time: -1).fetch()
 
-      for post in Blog.Post.documents.find(activePostId or {}, sort: time: -1).fetch()
-        itemOptions =
-          post: post
-
-        if activePostId
-          _.extend itemOptions,
-            retro: retro
-            table: @
+      for post in posts
+        itemOptions = {post, retro}
 
         @constructor.Item.createItem itemOptions
-
-    @autorun (computation) =>
-      return unless activePostId = @state 'activePostId'
-      return unless item = @_things()?[0]
-      return unless item.post._id is activePostId
-      return if item.started()
-
-      # We made the item for the current active post.
-      item.start()
 
   onRendered: ->
     super
@@ -93,45 +76,55 @@ class HQ.Store.Table extends LOI.Adventure.Location
     ]
 
   exits: ->
-    activePostId = @state 'activePostId'
-
-    if activePostId
-      "#{Vocabulary.Keys.Directions.Back}": HQ.Store.Table
-      "#{Vocabulary.Keys.Directions.Out}": HQ.Store
-      "#{Vocabulary.Keys.Directions.West}": HQ.Store
-
-    else
-      "#{Vocabulary.Keys.Directions.Back}": HQ.Store
-
-  illustrationHeight: ->
-    @currentInteraction()?.illustrationHeight() or 0
-
-  description: ->
-    # Show the introduction text of the active item.
-    if @state 'activePostId'
-      item = @_things()?[0]
-      return item?.introduction()
-
-    super
-
-  onScroll: ->
-    scrollTop = -parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
-    @$table.css transform: "translate3d(0, #{-scrollTop}px, 0)"
+    "#{Vocabulary.Keys.Directions.Back}": HQ.Store
 
   startInteraction: (interaction) ->
     @currentInteraction interaction
 
+  olderItems: -> @_changeItems 5
+
+  newerItems: -> @_changeItems -5
+
+  _changeItems: (delta) ->
+    @openedDrawer true
+    @postsSkip Math.max 0, @postsSkip() + delta
+    LOI.adventure.interface.resetInterface resetIntroduction: false
+
   # Listener
 
-  onExitAttempt: (exitResponse) ->
+  @avatars: ->
+    olderItems: HQ.Store.Table.OlderItems
+    newerItems: HQ.Store.Table.NewerItems
+
+  onEnter: ->
     table = @options.parent
 
-    console.log "Exit", exitResponse
+    # Reset opened drawer.
+    table.openedDrawer false
 
-    if exitResponse.currentLocationClass is HQ.Store.Table
-      # On exit, clear active post.
-      table.state 'activePostId', null
+  onCommand: (commandResponse) ->
+    table = @options.parent
 
-      if exitResponse.destinationLocationClass is HQ.Store.Table
-        LOI.adventure.interface.resetInterface
-          resetIntroduction: false
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.LookAt, @avatars.olderItems]
+      action: => table.olderItems()
+      # We raise the priority so it doesn't collide with '(account) folder'.
+      priority: 1
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.LookAt, @avatars.newerItems]
+      action: => table.newerItems()
+
+  class @OlderItems extends LOI.Adventure.Thing.Avatar
+    @id: -> 'Retronator.HQ.Store.Table.OlderItems'
+    @fullName: -> "older items"
+    @shortName: -> "older"
+    @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
+    @initialize @
+
+  class @NewerItems extends LOI.Adventure.Thing.Avatar
+    @id: -> 'Retronator.HQ.Store.Table.NewerItems'
+    @fullName: -> "newer items"
+    @shortName: -> "newer"
+    @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
+    @initialize @

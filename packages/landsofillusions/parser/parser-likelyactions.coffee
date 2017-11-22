@@ -18,12 +18,25 @@ class LOI.Parser extends LOI.Parser
       # Consider likely actions with the same phrase action as equal.
       a.phraseAction.action is b.phraseAction.action
 
+    # Keep only the top priority actions of same phrases.
+    likelyActions = _.filter likelyActions, (likelyAction, index, collection) ->
+      # Remove this action if an earlier exists with the same translated form and higher priority.
+      return false if _.find collection[0...index], (earlierLikelyAction) ->
+        likelyAction.priority < earlierLikelyAction.priority and likelyAction.translatedForm.join(' ') is earlierLikelyAction.translatedForm.join(' ')
+
+      true
+
     if LOI.debug
       console.log "We're not sure what the user wanted ... top 10 possibilities:"
       console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision, likelyAction.priority for likelyAction in likelyActions[0...10]
 
     # If the most likely action is not above 60%, we tell the user we don't understand.
     bestLikelihood = likelyActions[0].likelihood
+    bestPrecision = likelyActions[0].precision
+
+    # If the top action is 100% likely and precise, just pick it.
+    if bestLikelihood is 1 and bestPrecision is 1
+      likelyActions = likelyActions[0..0]
 
     if bestLikelihood <= 0.6
       LOI.adventure.interface.narrative.addText "I can't do that."

@@ -24,6 +24,14 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
       @_formatOutput situation.description.last()
 
+  postscript: ->
+    location = @location()
+    return unless location
+
+    situation = LOI.adventure.currentSituation()
+
+    @_formatOutput situation.postscript.last()
+
   narrativeLine: ->
     # WARNING: The output of this function should be HTML escaped
     # since the results will be directly injected with triple braces.

@@ -79,18 +79,17 @@ Package.onUse(function(api) {
   api.addFile('floor2/store/shelf/shelf-upgrades');
   api.addThing('floor2/store/shelf/shelves');
 
-  api.addComponent('floor2/store/table/table');
+  api.addFile('floor2/store/table/table');
 
   api.addFile('floor2/store/table/item/item');
   api.addFile('floor2/store/table/item/item-createtextscript');
   api.addFile('floor2/store/table/item/photos');
+  api.addStyle('floor2/store/table/item/photos');
   api.addFile('floor2/store/table/item/article');
   api.addFile('floor2/store/table/item/video');
+  api.addStyle('floor2/store/table/item/video');
   api.addFile('floor2/store/table/item/link');
-
-  api.addFile('floor2/store/table/interaction/interaction');
-  api.addComponent('floor2/store/table/interaction/photos/photos');
-  api.addComponent('floor2/store/table/interaction/video/video');
+  api.addStyle('floor2/store/table/item/link');
 
   api.addFile('floor2/bookshelves/bookshelves');
 

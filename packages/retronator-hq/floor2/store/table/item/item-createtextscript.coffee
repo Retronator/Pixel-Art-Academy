@@ -8,7 +8,6 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
   _createTextScript: ->
     nodes = []
     retro = @options.retro
-    table = @options.table
 
     for postPart in $(@post.text)
       lastNode = _.last nodes
@@ -22,84 +21,76 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
 
       if tag.toLowerCase() is 'p' or tag.toLowerCase() is 'figure'
         $image = $postPart.find('img')
-        $youtube = $postPart.find('#youtube_iframe')
+
+        if $postPart.data('provider') is 'youtube'
+          $youtube = $postPart.find('iframe')
+
+        else
+          $youtube = null
 
         if $image.length > 0
-          createPhoto = =>
-            imageSource = $image.attr 'src'
-
-            imageWidth = $image.data 'orig-width'
-            imageHeight = $image.data 'orig-height'
-
-            if imageWidth is 540
-              imageSource = imageSource.replace '500.', '540.'
-
-            [
-              original_size:
-                url: imageSource
-                width: imageWidth
-                height: imageHeight
-            ]
-
           if lastNode instanceof Nodes.DialogLine
             # Previous node was Retro talking, so make the narration before showing the image.
             line = lastNode.line
 
-            # Replace colon with ellipsis.
-            if line.slice(-1) is ':'
-              line = line.slice(0, html.length - 1) + '…'
-
-            line += '"'
+            # Replace colon with ellipsis. Note that the line is ending with html%%.
+            line = line.replace ':html%%', ' …html%%'
 
             lastNode.line = line
 
             nodes.push new Nodes.NarrativeLine
               line: "Retro shows you an image:"
 
-          if lastNode.imageInteraction
-            # Previous node was the image interaction, so we should just append this photo to its photo array.
-            lastNode.imageInteraction.addPhoto createPhoto()
+          # Create the photos html.
+          imageSource = $image.attr('src')
+          $photo = $("<img class='photo' src='#{imageSource}'>")
 
-            # Also pluralize the narration text.
-            secondToLastNode = lastNode[lastNode.length - 2]
-            if secondToLastNode instanceof Nodes.DialogLine
-              secondToLastNode.line = "Retro shows you some images:"
+          if lastNode.$photos
+            # Previous node was the image interaction, so we should just append this photo to it.
+            lastNode.$photos.append($photo)
+            lastNode.line = "%%html#{lastNode.$photos[0].outerHTML}html%%"
+
+            # Pluralize the narration text.
+            secondToLastNode = nodes[nodes.length - 2]
+            secondToLastNode.line = "Retro shows you some images:" if secondToLastNode instanceof Nodes.NarrativeLine
 
           else
             # This is a new image interaction.
-            imageInteraction = new HQ.Store.Table.Interaction.Photos [
-              original_size:
-                url: $image.attr 'src'
-            ]
+            $photos = $('<div class="retronator-hq-store-table-item-photos">')
+            $photos.append($photo)
 
-            imageInteractionNode = new Nodes.Callback
-              callback: (complete) =>
-                table.startInteraction imageInteraction
-                complete()
+            # We inject the html with the photos.
+            photosNode = new Nodes.NarrativeLine
+              line: "%%html#{$photos[0].outerHTML}html%%"
+              scrollStyle: LOI.Interface.Components.Narrative.ScrollStyle.Top
 
-            imageInteractionNode.imageInteraction = imageInteraction
+            photosNode.$photos = $photos
 
-            nodes.push imageInteractionNode
+            nodes.push photosNode
 
-        else if $youtube.length > 0
-          ###
-          if lastParagraphType is 'text'
-            $last = $('#post p').last()
-            html = $last.html()
-            # Replace colon with ellipsis.
-            if html.slice(-1) is ':'
-              html = html.slice(0, html.length - 1) + '…'
-            html += '"'
-            $last.html html
-            $('#post').append '<p>Retro shows you a video:</p>'
-            lastParagraphType = 'video'
-          $youtube = $(this).find('#youtube_iframe')
-          youtubeSource = $youtube.attr('src')
-          $('#post').append '<div class="video-player-placeholder" src="' + youtubeSource + '"></div>'
-          ###
+        else if $youtube?.length > 0
+          if lastNode instanceof Nodes.DialogLine
+            # Previous node was Retro talking, so make the narration before showing the video.
+            line = lastNode.line
+
+            # Replace colon with ellipsis. Note that the line is ending with html%%.
+            line = line.replace ':html%%', ' …html%%'
+
+            lastNode.line = line
+
+            nodes.push new Nodes.NarrativeLine
+              line: "Retro shows you a video:"
+
+          $youtube.addClass('retronator-hq-store-table-item-video')
+          html = $postPart.html()
+
+          # Inject html directly into the dialog line.
+          nodes.push new Nodes.NarrativeLine
+            line: "%%html#{html}html%%"
+            scrollStyle: LOI.Interface.Components.Narrative.ScrollStyle.Top
 
         else
-          html = $postPart.html()
+          html = $postPart.html().replace(/&nbsp;/g, ' ').replace(/<br>/g, '').trim()
 
           # Filter empty paragraphs.
           continue unless html.length

@@ -27,22 +27,19 @@ class HQ.Store.Table.Item extends LOI.Adventure.Thing
     @started = new ReactiveField false
 
   _createInteractionScript: ->
-    # We start with the main interaction.
-    mainInteraction = @_createMainInteraction()
+    # We start with the intro.
+    intro = @_createIntroScript()
 
-    textNode = @_createTextScript() if @post.text
+    # If the post has text, we continue to its execution.
+    if @post.text
+      introEnd = intro
+      introEnd = introEnd.next while introEnd.next
+      introEnd.next = @_createTextScript()
 
-    mainInteractionNode = new LOI.Adventure.Script.Nodes.Callback
-      callback: (complete) =>
-        @options.table.startInteraction mainInteraction
-        complete()
+    intro
 
-      next: textNode
-
-    mainInteractionNode
-
-  _createMainInteraction: ->
-    throw new AE.NotImplementedException "You must provide a method to create the main interaction with this item type."
+  _createIntroScript: ->
+    throw new AE.NotImplementedException "You must provide a method to create the intro script for this item type."
 
   id: ->
     @_id
@@ -68,4 +65,4 @@ class HQ.Store.Table.Item extends LOI.Adventure.Thing
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.LookAt, item.avatar]
       priority: 1
-      action: => HQ.Store.Table.showPost item.post
+      action: => item.start()

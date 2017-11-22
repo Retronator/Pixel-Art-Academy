@@ -2,6 +2,7 @@ LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
+Nodes = LOI.Adventure.Script.Nodes
 
 class HQ.Store.Table.Item.Video extends HQ.Store.Table.Item
   @id: -> 'Retronator.HQ.Store.Table.Item.Video'
@@ -16,8 +17,18 @@ class HQ.Store.Table.Item.Video extends HQ.Store.Table.Item
   description: ->
     "It's a video playing on a tablet."
 
-  introduction: ->
-    "You sit down and play the video."
+  _createIntroScript: ->
+    # Create the iframe embed.
+    largePlayer = _.last _.sortBy @post.video.player, (player) -> player.width
+    $video = $(largePlayer.embed_code)
+    $video.addClass('retronator-hq-store-table-item-video')
 
-  _createMainInteraction: ->
-    new HQ.Store.Table.Interaction.Video @post.video.player
+    # We inject the html of the player.
+    photosNode = new Nodes.NarrativeLine
+      line: "%%html#{$video[0].outerHTML}html%%"
+      scrollStyle: LOI.Interface.Components.Narrative.ScrollStyle.Top
+
+    # User looks at the video in this post.
+    new Nodes.NarrativeLine
+      line: "You sit down and play the video:"
+      next: photosNode
