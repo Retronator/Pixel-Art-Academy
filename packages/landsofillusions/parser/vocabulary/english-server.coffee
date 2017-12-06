@@ -51,6 +51,7 @@ Document.startup ->
       WakeUp: ['wake up', 'awaken']
       Buy: ['buy', 'purchase']
       Board: ['board', 'take']
+      ListenTo: ['listen to', 'hear']
 
     Pronouns:
       Subjective:

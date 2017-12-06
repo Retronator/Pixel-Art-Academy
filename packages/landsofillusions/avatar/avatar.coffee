@@ -18,7 +18,7 @@ class LOI.Avatar
     Uppercase: 'Uppercase'
     Lowercase: 'Lowercase'
 
-  @DialogDeliveryType:
+  @DialogueDeliveryType:
     Saying: 'Saying'
     Displaying: 'Displaying'
 
@@ -49,4 +49,4 @@ class LOI.Avatar
     LOI.palette()?.color hue, 6 + shade + relativeShade
 
   dialogTextTransform: -> @constructor.DialogTextTransform.Auto
-  dialogDeliveryType: -> @constructor.DialogDeliveryType.Saying
+  dialogueDeliveryType: -> @constructor.DialogueDeliveryType.Saying

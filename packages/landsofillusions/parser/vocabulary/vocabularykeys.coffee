@@ -47,6 +47,7 @@ LOI.Parser.Vocabulary.Keys =
     WakeUp: ''
     Buy: ''
     Board: ''
+    ListenTo: ''
 
   Pronouns:
     Subjective:

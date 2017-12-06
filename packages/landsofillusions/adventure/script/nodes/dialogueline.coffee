@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 Script = LOI.Adventure.Script
 
-class Script.Nodes.DialogLine extends Script.Node
+class Script.Nodes.DialogueLine extends Script.Node
   constructor: (options) ->
     super
     

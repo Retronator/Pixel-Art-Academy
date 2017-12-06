@@ -6,10 +6,20 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class HQ.Store.Table.Item extends HQ.Store.Table.Item
   _createTextScript: ->
+    nodes = @_createInteractionScriptNodes @post.text
+    
+    # Link nodes to construct the script chain.
+    for node, index in nodes
+      node.next = nodes[index + 1]
+
+    # Return the start node.
+    _.first nodes
+
+  _createInteractionScriptNodes: (script) ->
     nodes = []
     retro = @options.retro
 
-    for postPart in $(@post.text)
+    for postPart in $(script)
       lastNode = _.last nodes
 
       tag = postPart.tagName
@@ -29,7 +39,7 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
           $youtube = null
 
         if $image.length > 0
-          if lastNode instanceof Nodes.DialogLine
+          if lastNode instanceof Nodes.DialogueLine
             # Previous node was Retro talking, so make the narration before showing the image.
             line = lastNode.line
 
@@ -69,7 +79,7 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
             nodes.push photosNode
 
         else if $youtube?.length > 0
-          if lastNode instanceof Nodes.DialogLine
+          if lastNode instanceof Nodes.DialogueLine
             # Previous node was Retro talking, so make the narration before showing the video.
             line = lastNode.line
 
@@ -96,23 +106,24 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
           continue unless html.length
 
           # Inject html directly into the dialog line.
-          nodes.push new Nodes.DialogLine
+          nodes.push new Nodes.DialogueLine
             actor: retro
             line: "%%html#{html}html%%"
 
       else if tag.toLowerCase() is 'ul'
         html = $postPart.html()
 
-        nodes.push new Nodes.DialogLine
+        nodes.push new Nodes.DialogueLine
           actor: retro
           line: "%%html#{html}html%%"
+
+      else if tag.toLowerCase() is 'blockquote'
+        nodes.push new Nodes.DialogueLine
+          actor: retro
+          line: "%%html#{$postPart[0].outerHTML}html%%"
 
       else
         console.warn "Not sure how to display post part", $postPart, "with tag", tag
 
-    # Link post nodes in reverse to construct the script chain.
-    for node, index in nodes[..-1]
-      node.next = nodes[index + 1]
-
-    # Return the start node.
-    _.first nodes
+    # Return the created nodes.
+    nodes

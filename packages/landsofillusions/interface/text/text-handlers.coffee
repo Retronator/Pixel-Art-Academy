@@ -11,7 +11,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Pause dialog selection when we're waiting for a key press ourselves.
     @autorun (computation) =>
-      @dialogSelection.paused @waitingKeypress()
+      @dialogueSelection.paused @waitingKeypress()
 
     @_currentIntroductionFunction = new ReactiveField null
 
@@ -104,9 +104,9 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # Scroll to bottom to reveal new command.
     @narrative.scroll()
     
-  onDialogSelectionEnter: ->
+  onDialogueSelectionEnter: ->
     # Continue with the selection.
-    @_dialogSelectionConfirm()
+    @_dialogueSelectionConfirm()
 
-  _dialogSelectionConfirm: ->
-    @dialogSelection.confirm()
+  _dialogueSelectionConfirm: ->
+    @dialogueSelection.confirm()

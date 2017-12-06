@@ -39,10 +39,10 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     @_formatOutput lineText
 
-  dialogSelectionLine: ->
-    dialogLineOption = @currentData()
+  dialogueSelectionLine: ->
+    dialogueLineOption = @currentData()
 
-    @_formatOutput dialogLineOption.line
+    @_formatOutput dialogueLineOption.line
 
   _formatOutput: (text) ->
     # NOTE: The output of this function is HTML escaped and can be used directly injected with triple braces.

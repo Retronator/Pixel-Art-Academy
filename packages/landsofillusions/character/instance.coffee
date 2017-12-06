@@ -34,4 +34,4 @@ class LOI.Character.Instance
   nameAutoCorrectStyle: -> @avatar.nameAutoCorrectStyle()
   description: -> @avatar.description()
   dialogTextTransform: -> @avatar.dialogTextTransform()
-  dialogDeliveryType: -> @avatar.dialogDeliveryType()
+  dialogueDeliveryType: -> @avatar.dialogueDeliveryType()

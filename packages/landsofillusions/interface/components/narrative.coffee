@@ -27,6 +27,9 @@ class LOI.Interface.Components.Narrative
     if text.length > 0
       text += "\n" if options.addNewLine
 
+    # Make sure new text doesn't have any new lines itself. We consider every call to add text to be one unit.
+    newText = newText.replace /[\n\r]+/mg, ''
+
     text += newText
     @text text
 

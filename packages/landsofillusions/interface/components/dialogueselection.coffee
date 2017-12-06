@@ -3,11 +3,11 @@ LOI = LandsOfIllusions
 
 Nodes = LOI.Adventure.Script.Nodes
 
-class LOI.Interface.Components.DialogSelection
+class LOI.Interface.Components.DialogueSelection
   constructor: (@options) ->
     @command = new ReactiveField ""
 
-    @selectedDialogLine = new ReactiveField null
+    @selectedDialogueLine = new ReactiveField null
 
     # Provide a list of options.
     @choiceNode = new ComputedField =>
@@ -20,12 +20,12 @@ class LOI.Interface.Components.DialogSelection
           return scriptNode if scriptNode instanceof Nodes.Choice
 
       # No choice node was found, so also reset our selected node.
-      @selectedDialogLine null
+      @selectedDialogueLine null
 
       null
 
     # Provide a list of dialog line options.
-    @dialogLineOptions = new ComputedField =>
+    @dialogueLineOptions = new ComputedField =>
       scriptNode = @choiceNode()
       return unless scriptNode
 
@@ -59,13 +59,13 @@ class LOI.Interface.Components.DialogSelection
       console.log "We have collected choice nodes", choiceNodes if LOI.debug
 
       # Alright, we found all the choices. Set the first node as the initial choice.
-      @selectedDialogLine choiceNodes[0].node
+      @selectedDialogueLine choiceNodes[0].node
 
       # Return the embedded dialog nodes as the selection.
       choiceNode.node for choiceNode in choiceNodes
 
     # Capture key events.
-    $(document).on 'keydown.dialogSelection', (event) =>
+    $(document).on 'keydown.dialogueSelection', (event) =>
       @onKeyDown event
       
     # Use this to pause dialog selection handling.
@@ -73,14 +73,14 @@ class LOI.Interface.Components.DialogSelection
 
   destroy: ->
     # Remove key events.
-    $(document).off('.dialogSelection')
+    $(document).off('.dialogueSelection')
 
   confirm: ->
-    selectedDialogLine = @selectedDialogLine()
-    return unless selectedDialogLine
+    selectedDialogueLine = @selectedDialogueLine()
+    return unless selectedDialogueLine
     
     # Confirms the current selection and transitions the script from the choice to the selected dialog line.
-    LOI.adventure.director.scriptTransition @choiceNode(), selectedDialogLine
+    LOI.adventure.director.scriptTransition @choiceNode(), selectedDialogueLine
 
   onKeyDown: (event) ->
     return unless @choiceNode() and not @paused()
@@ -103,9 +103,9 @@ class LOI.Interface.Components.DialogSelection
         @options?.onEnter?()
 
   _moveSelection: (offset) ->
-    choices = @dialogLineOptions()
+    choices = @dialogueLineOptions()
 
-    index = _.indexOf choices, @selectedDialogLine()
+    index = _.indexOf choices, @selectedDialogueLine()
 
     newIndex = _.clamp index + offset, 0, choices.length - 1
-    @selectedDialogLine choices[newIndex]
+    @selectedDialogueLine choices[newIndex]

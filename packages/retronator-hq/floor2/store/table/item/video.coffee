@@ -24,11 +24,11 @@ class HQ.Store.Table.Item.Video extends HQ.Store.Table.Item
     $video.addClass('retronator-hq-store-table-item-video')
 
     # We inject the html of the player.
-    photosNode = new Nodes.NarrativeLine
+    videoNode = new Nodes.NarrativeLine
       line: "%%html#{$video[0].outerHTML}html%%"
       scrollStyle: LOI.Interface.Components.Narrative.ScrollStyle.Top
 
     # User looks at the video in this post.
     new Nodes.NarrativeLine
       line: "You sit down and play the video:"
-      next: photosNode
+      next: videoNode

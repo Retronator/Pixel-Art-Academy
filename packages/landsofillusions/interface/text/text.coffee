@@ -39,14 +39,14 @@ class LOI.Interface.Text extends LOI.Interface
 
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
-    not @showDialogSelection()
+    not @showDialogueSelection()
 
-  showDialogSelection: ->
+  showDialogueSelection: ->
     # Wait if we're paused.
     return if @waitingKeypress()
 
     # Show the dialog selection when we have some choices available.
-    return unless options = @dialogSelection.dialogLineOptions()
+    return unless options = @dialogueSelection.dialogueLineOptions()
 
     # After the new choices are re-rendered, scroll down the narrative.
     Tracker.afterFlush => @narrative.scroll()
@@ -56,7 +56,7 @@ class LOI.Interface.Text extends LOI.Interface
   activeDialogOptionClass: ->
     option = @currentData()
 
-    'active' if option is @dialogSelection.selectedDialogLine()
+    'active' if option is @dialogueSelection.selectedDialogueLine()
 
   showInventory: ->
     not @inIntro() and @inventoryItems().length
@@ -113,7 +113,7 @@ class LOI.Interface.Text extends LOI.Interface
       not LOI.adventure.interface.active()
       LOI.adventure.interface.waitingKeypress()
       LOI.adventure.interface.commandInput.command().length
-      LOI.adventure.interface.showDialogSelection()
+      LOI.adventure.interface.showDialogueSelection()
     ]
 
     _.some busyConditions

@@ -26,9 +26,9 @@ class LOI.Interface.Text extends LOI.Interface.Text
       interface: @
       onEnter: => @onCommandInputEnter()
 
-    @dialogSelection = new LOI.Interface.Components.DialogSelection
+    @dialogueSelection = new LOI.Interface.Components.DialogueSelection
       interface: @
-      onEnter: => @onDialogSelectionEnter()
+      onEnter: => @onDialogueSelectionEnter()
 
     @hoveredCommand = new ReactiveField null
 
@@ -103,7 +103,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     console.log "Destroying text interface." if LOI.debug
 
     @commandInput.destroy()
-    @dialogSelection.destroy()
+    @dialogueSelection.destroy()
 
     $(window).off '.text-interface'
 

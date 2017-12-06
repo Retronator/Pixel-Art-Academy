@@ -130,13 +130,13 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
             # Start the sync script with this character as the active agent.
             @syncWithCharacter character
 
-        dialogLineNode =
-          new Nodes.DialogLine
+        dialogueLineNode =
+          new Nodes.DialogueLine
             line: "I want to sync with #{character.avatar.fullName()}."
             next: callbackNode
 
         choiceNode = new Nodes.Choice
-          node: dialogLineNode
+          node: dialogueLineNode
           next: lastChoiceNode
 
         lastChoiceNode = choiceNode

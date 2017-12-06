@@ -10,6 +10,10 @@ class HQ.Store.Table.Item extends LOI.Adventure.Thing
     video: @Video
     text: @Article
     link: @Link
+    answer: @Answer
+    audio: @Audio
+    chat: @Chat
+    quote: @Quote
 
   @createItem: (@options) ->
     constructor = @_constructors()[@options.post.type] or @Photos

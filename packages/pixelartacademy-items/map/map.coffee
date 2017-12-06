@@ -168,7 +168,7 @@ class PAA.Items.Map extends LOI.Adventure.Item
     busyConditions = [
       not LOI.adventure.interface.active()
       LOI.adventure.interface.waitingKeypress()
-      LOI.adventure.interface.showDialogSelection()
+      LOI.adventure.interface.showDialogueSelection()
     ]
 
     # Don't show the mini map if interface is busy.

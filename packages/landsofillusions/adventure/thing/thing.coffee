@@ -53,7 +53,7 @@ class LOI.Adventure.Thing extends AM.Component
   @dialogTextTransform: -> LOI.Avatar.DialogTextTransform.Auto
     
   # How this thing delivers dialog, used by the interface to format it appropriately.
-  @dialogDeliveryType: -> LOI.Avatar.DialogDeliveryType.Saying
+  @dialogueDeliveryType: -> LOI.Avatar.DialogueDeliveryType.Saying
 
   # Helper methods to access class constructors.
   @getClassForUrl: (url) ->
@@ -282,7 +282,7 @@ class LOI.Adventure.Thing extends AM.Component
   description: -> @avatar?.description()
   color: -> @avatar?.color()
   dialogTextTransform: -> @avatar?.dialogTextTransform()
-  dialogDeliveryType: -> @avatar?.dialogDeliveryType()
+  dialogueDeliveryType: -> @avatar?.dialogueDeliveryType()
 
   # Default listener handlers
 

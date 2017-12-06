@@ -52,7 +52,7 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
     color or super
 
   dialogTextTransform: -> _.propertyValue @options, 'dialogTextTransform'
-  dialogDeliveryType: -> _.propertyValue @options, 'dialogDeliveryType'
+  dialogueDeliveryType: -> _.propertyValue @options, 'dialogueDeliveryType'
 
   _translateIfAvailable: (key) ->
     translated = AB.translate @_translationSubscription, key

@@ -51,11 +51,15 @@ class HQ.Store.Table extends LOI.Adventure.Location
     @currentInteraction = new ReactiveField null
 
     @autorun (computation) =>
-      Blog.Post.all.subscribe 5, @postsSkip()
+      Blog.Post.all.subscribe @postsSkip() + 10
       
     # Dynamically create the 5 things on the table.
     @_things = new ComputedField =>
-      posts = Blog.Post.documents.find({}, sort: time: -1).fetch()
+      posts = Blog.Post.documents.find({},
+        sort: time: -1
+        skip: @postsSkip()
+        limit: 5
+      ).fetch()
 
       for post in posts
         itemOptions = {post, retro}

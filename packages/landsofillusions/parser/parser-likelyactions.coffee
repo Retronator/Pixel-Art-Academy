@@ -7,8 +7,9 @@ class LOI.Parser extends LOI.Parser
     # Nodes are not yet available when parser is defined, so we need to access them here.
     Nodes = LOI.Adventure.Script.Nodes
 
-    # Sort all actions descending by likelihood, precision and priority.
-    likelyActions = _.reverse _.sortBy likelyActions, 'likelihood', 'precision', 'priority'
+    # Sort all actions descending by likelihood, precision and priority. Do a preliminary
+    # reverse as well, so that the order inside equal ranks will be preserved.
+    likelyActions = _.reverse _.sortBy _.reverse(likelyActions), 'likelihood', 'precision', 'priority'
 
     # Since each alias and translation variant creates its own likely action, multiple can be for the
     # same phrase action. In that case, only include the most likely one in the consideration.
@@ -34,9 +35,10 @@ class LOI.Parser extends LOI.Parser
     bestLikelihood = likelyActions[0].likelihood
     bestPrecision = likelyActions[0].precision
 
-    # If the top action is 100% likely and precise, just pick it.
+    # If the top actions are 100% likely and precise, just filter down to only them.
     if bestLikelihood is 1 and bestPrecision is 1
-      likelyActions = likelyActions[0..0]
+      likelyActions = _.filter likelyActions, (likelyAction) ->
+        likelyAction.likelihood is 1 and likelyAction.precision is 1
 
     if bestLikelihood <= 0.6
       LOI.adventure.interface.narrative.addText "I can't do that."

@@ -64,7 +64,7 @@ class LOI.Interface extends AM.Component
 
     @_handleEmpty node if node instanceof Nodes.Script
     @_handleEmpty node if node instanceof Nodes.Label
-    @_handleDialogLine node if node instanceof Nodes.DialogLine
+    @_handleDialogueLine node if node instanceof Nodes.DialogueLine
     @_handleNarrativeLine node if node instanceof Nodes.NarrativeLine
     @_handleInterfaceLine node if node instanceof Nodes.InterfaceLine
     @_handleCommandLine node if node instanceof Nodes.CommandLine
@@ -79,8 +79,8 @@ class LOI.Interface extends AM.Component
     # Simply end the node.
     scriptNode.end()
 
-  _handleDialogLine: (dialogLine) ->
-    console.log "#{dialogLine.actor.name} says: \"#{dialogLine.line}\""
+  _handleDialogueLine: (dialogueLine) ->
+    console.log "#{dialogueLine.actor.name} says: \"#{dialogueLine.line}\""
 
   _handleNarrativeLine: (narrativeLine) ->
     console.log narrativeLine.line

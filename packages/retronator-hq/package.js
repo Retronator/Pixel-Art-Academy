@@ -80,16 +80,16 @@ Package.onUse(function(api) {
   api.addThing('floor2/store/shelf/shelves');
 
   api.addFile('floor2/store/table/table');
-
   api.addFile('floor2/store/table/item/item');
   api.addFile('floor2/store/table/item/item-createtextscript');
-  api.addFile('floor2/store/table/item/photos');
-  api.addStyle('floor2/store/table/item/photos');
-  api.addFile('floor2/store/table/item/article');
-  api.addFile('floor2/store/table/item/video');
-  api.addStyle('floor2/store/table/item/video');
-  api.addFile('floor2/store/table/item/link');
-  api.addStyle('floor2/store/table/item/link');
+  api.addStyledFile('floor2/store/table/item/photos');
+  api.addStyledFile('floor2/store/table/item/article');
+  api.addStyledFile('floor2/store/table/item/video');
+  api.addStyledFile('floor2/store/table/item/link');
+  api.addStyledFile('floor2/store/table/item/answer');
+  api.addStyledFile('floor2/store/table/item/audio');
+  api.addFile('floor2/store/table/item/chat');
+  api.addFile('floor2/store/table/item/quote');
 
   api.addFile('floor2/bookshelves/bookshelves');
 
