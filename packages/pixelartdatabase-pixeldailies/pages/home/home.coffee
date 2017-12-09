@@ -62,7 +62,7 @@ class PADB.PixelDailies.Pages.Home extends AM.Component
   todaysDate: ->
     theme = @currentData()
 
-    theme.time?.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US',
+    theme.time?.toLocaleString Artificial.Babel.currentLanguage(),
       weekday: 'long'
       month: 'long'
       day: 'numeric'

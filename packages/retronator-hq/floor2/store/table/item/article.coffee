@@ -45,7 +45,7 @@ class HQ.Store.Table.Item.Article extends HQ.Store.Table.Item
         attribution = "by"
         author = "Matej 'Retro' Jan"
 
-    date = @post.time.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US',
+    date = @post.time.toLocaleString Artificial.Babel.currentLanguage(),
       month: 'long'
       day: 'numeric'
       year: 'numeric'

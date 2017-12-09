@@ -39,7 +39,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
     dateFormat.weekday = 'long' if options.weekday
       
-    options.date.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US', dateFormat
+    options.date.toLocaleString Artificial.Babel.currentLanguage(), dateFormat
 
   # Subscriptions
   @themeSubmissions: new AB.Subscription

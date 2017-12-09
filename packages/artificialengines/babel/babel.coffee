@@ -22,6 +22,10 @@ class Artificial.Babel
         localStorage.setItem @LanguagePreferenceLocalStorageKey, encodedValue
 
     @_userLanguagePreference()
+    
+  # Useful for passing to other language conversion functions such as toLocaleString.
+  @currentLanguage: ->
+    @userLanguagePreference()?[0] or @defaultLanguage()
 
   # Handle for keeping tracks of individual translation subscriptions.
   class @SubscriptionHandle

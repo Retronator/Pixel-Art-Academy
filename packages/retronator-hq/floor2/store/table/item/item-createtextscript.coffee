@@ -22,14 +22,14 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
     for postPart in $(script)
       lastNode = _.last nodes
 
-      tag = postPart.tagName
+      tag = postPart.tagName.toLowerCase()
 
       # Skip comments (<!-- more --> and such).
       continue unless tag
 
       $postPart = $(postPart)
 
-      if tag.toLowerCase() is 'p' or tag.toLowerCase() is 'figure'
+      if tag is 'p' or tag is 'figure'
         $image = $postPart.find('img')
 
         if $postPart.data('provider') is 'youtube'
@@ -110,14 +110,14 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
             actor: retro
             line: "%%html#{html}html%%"
 
-      else if tag.toLowerCase() is 'ul'
+      else if tag is 'ul'
         html = $postPart.html()
 
         nodes.push new Nodes.DialogueLine
           actor: retro
           line: "%%html#{html}html%%"
 
-      else if tag.toLowerCase() is 'blockquote'
+      else if tag is 'blockquote'
         nodes.push new Nodes.DialogueLine
           actor: retro
           line: "%%html#{$postPart[0].outerHTML}html%%"

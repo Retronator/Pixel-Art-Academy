@@ -1,0 +1,150 @@
+<template name="Retronator.HQ.Items.Daily.Theme">
+  <div class="retronator-hq-items-daily-theme">
+    <div class="newspaper safe-area-content">
+      {{#if homePage}}{{! {block:HomePage} !}}
+        <div class="frontpage page">
+          <div class="header">
+            <h1 class="title">Retronator</h1>
+            <div class="slogan">Daily pixel art and gaming news</div>
+            <div class="support">Supported by backers and patrons</div>
+          </div>
+          <div class="folio">
+            <div class="retropolis">Retropolis</div>
+            <div class="date"></div>
+            <div class="page-2">About →</div>
+          </div>
+        </div>
+      {{/if}}{{! {/block:HomePage} !}}
+      <ol class="posts">
+        {{#each posts}}{{! {block:Posts} !}}
+          <li class="post page">
+            <div class="folio">
+              <div class="page-number"></div>
+              <div class="date">Retronator, {{date}}{{! {DayOfWeek}, {Month} {DayOfMonth}, {Year} !}}</div>
+            </div>
+            {{#if isPostText}}{{! {block:Text} !}}
+              {{#if title}}{{! {block:Title} !}}
+                <h1 class="title">
+                  {{title}}{{! {Title} !}}
+                </h1>
+              {{/if}}{{! {/block:Title} !}}
+              {{{text}}}{{! {Content} !}}
+            {{/if}}{{! {/block:Text} !}}
+
+            {{#if isPostPhoto}}{{! {block:Photo} !}}
+              {{#each photos}}{{! <!-- None needed --> !}}
+                <img src="{{original_size.url}}{{! {PhotoURL-HighRes} }}"/>
+              {{/each}}{{! <!-- None needed --> !}}
+              {{{text}}}{{! {Caption} !}}
+            {{/if}}{{! {/block:Photo} !}}
+
+            {{#if isPostPanorama}}{{! {block:Panorama} !}}
+              {{#each photos}}{{! <!-- None needed --> !}}
+                <img src="{{original_size.url}}{{! {PhotoURL-Panorama} }}"/>
+              {{/each}}{{! <!-- None needed --> !}}
+              {{{text}}}{{! {Caption} !}}
+            {{/if}}{{! {/block:Panorama} !}}
+
+            {{#if isPostPhotoset}}{{! {block:Photoset} !}}
+              {{#each photos}}{{! {block:Photos}  !}}
+                <img src="{{original_size.url}}{{! {PhotoURL-HighRes} !}}"/>
+              {{/each}}{{! {/block:Photos}  !}}
+              {{{text}}}{{! {Caption} !}}
+            {{/if}}{{! {/block:Photoset} !}}
+
+            {{#if isPostVideo}}{{! {block:Video} !}}
+              <figure>
+                {{{videoPlayer.embed_code}}}{{! {Video-700} !}}
+              </figure>
+              {{{text}}}{{! {Caption} !}}
+            {{/if}}{{! {/block:Video} !}}
+
+            {{#if isPostAudio}}{{! {block:Audio} !}}
+              <figure>
+                {{{audio.player}}}{{! {AudioEmbed-640} !}}
+              </figure>
+              {{{text}}}{{! {Caption} !}}
+            {{/if}}{{! {/block:Audio} !}}
+
+            {{#if isPostQuote}}{{! {block:Quote} !}}
+              <blockquote class="quote">
+                {{{quote.text}}}{{! {Quote} !}}
+              </blockquote>
+              {{#if quote.source}}{{! {block:Source} !}}
+                <div class="quote-source">
+                  {{{quote.source}}}{{! {Source} !}}
+                </div>
+              {{/if}}{{! {/block:Source} !}}
+            {{/if}}{{! {/block:Quote} !}}
+
+            {{#if isPostLink}}{{! {block:Link} !}}
+              <div class="link">
+                <h1 class="title">
+                  <a href="{{link.url}}{{! {URL} !}}" target="_blank">
+                    {{link.title}}{{! {Name} !}}
+                  </a>
+                </h1>
+                <a class="url" href="{{link.url}}{{! {URL} !}}" target="_blank">
+                  {{link.publisher}}{{! {Host} !}}
+                </a>
+                {{#each photos}}{{! {block:Thumbnail} !}}
+                  <a class="image-link" href="{{link.url}}{{! {URL} !}}" target="_blank">
+                    <img src="{{original_size.url}}{{! {Thumbnail-HighRes} !}}"/>
+                  </a>
+                {{/each}}{{! {/block:Thumbnail}  !}}
+                {{#if link.excerpt}}{{! {block:Excerpt} !}}
+                  <a class="excerpt" href="{{link.url}}{{! {URL} !}}" target="_blank">
+                    {{link.excerpt}}{{! {Excerpt} !}}
+                  </a>
+              {{/if}}{{! {/block:Excerpt} !}}
+              </div>
+              {{{text}}}{{! {Description} !}}
+            {{/if}}{{! {/block:Link} !}}
+
+            {{#if isPostAnswer}}{{! {block:Answer} !}}
+              <p class="question-asker">
+                {{#if question.askingUrl}}<a href="{{question.askingUrl}}">{{{question.askingName}}}</a>{{else}}{{{question.askingName}}}{{/if}}{{! {Asker} !}}
+                asks:
+              </p>
+              <blockquote class="question">
+                {{{question.question}}}{{! {Question} !}}
+              </blockquote>
+              {{{text}}}{{! {Answer} !}}
+            {{/if}}{{! {/block:Answer} !}}
+
+            {{#if isPostChat}}{{! {block:Chat} !}}
+              {{#if title}}{{! {block:Title} !}}
+                <h1 class="title">
+                  {{title}}{{! {Title} !}}
+                </h1>
+              {{/if}}{{! {/block:Title} !}}
+              {{#each dialogue}}{{! {block:Lines} !}}
+                <p>
+                  {{#if label}}{{! {block:Label} !}}
+                    {{label}}{{! {Label} !}}
+                  {{/if}}{{! {/block:Label} !}}
+                  {{{phrase}}}{{! {Line} !}}
+                </p>
+              {{/each}}{{! {/block:Lines} !}}
+            {{/if}}{{! {/block:Text} !}}
+          </li>
+        {{/each}}{{! {/block:Posts} !}}
+      </ol>
+      {{#if homePage}}{{! {block:HomePage} !}}
+        <div class="page">
+          <div class="folio">
+            <div class="page-number"></div>
+            <div class="date"></div>
+          </div>
+          <div class="masthead">
+            <div class="title">Retronator</div>
+            <div class="slogan">Daily pixel art and gaming news</div>
+            <div class="published-info">Published every day in the year by Retronator</div>
+            <div class="editor">Editor: Matej 'Retro' Jan</div>
+            <div class="circulation">Circulation: <span class="value"></span></div>
+          </div>
+        </div>
+      {{/if}}{{! {/block:HomePage} !}}
+    </div>
+  </div>
+</template>

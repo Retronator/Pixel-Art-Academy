@@ -33,10 +33,12 @@ class LOI.Components.Overlay extends AM.Component
       @$('.crop-bar').height cropBarHeight
       @$('.landsofillusions-components-overlay > .safe-area').css safeAreaSize
       
-      # Inside the background the template in the else block can add a .max-area and .viewport-area divs for us to position.
+      # Inside the background the template in the else block can add
+      # .max-area .viewport-area and .safe-area divs for us to position.
 
       viewportAreaSize = viewport.viewportBounds.toDimensions()
       maxAreaSize = viewport.maxBounds.toDimensions()
+      safeAreaSize = viewport.safeArea.toDimensions()
 
       viewportAreaSize.top = Math.max viewportAreaSize.top, cropBarHeight
       viewportAreaSize.height = Math.min viewportAreaSize.height, maxOverlayHeight
@@ -46,12 +48,21 @@ class LOI.Components.Overlay extends AM.Component
 
       @$('.viewport-area').css viewportAreaSize
       @$('.max-area').css maxAreaSize
+      @$('.safe-area').css safeAreaSize
 
-      # Safe area can also appear inside viewport area.
-      viewportAreaSafeAreaSize = viewport.safeArea.toDimensions()
-      viewportAreaSafeAreaSize.top -= viewportAreaSize.top
+      # Safe area content is not positioned absolutely so that it can grow container's content.
+      # We use margins instead of positions to place it.
+      @$('.safe-area-content').css
+        marginLeft: safeAreaSize.left
+        marginTop: safeAreaSize.top
+        width: safeAreaSize.width
+        minHeight: safeAreaSize.height
 
-      @$('.viewport-area .safe-area').css viewportAreaSafeAreaSize
+      # If the safe area appears inside the viewport area, we make it relative to the viewport.
+      safeAreaSize.top -= viewportAreaSize.top
+
+      @$('.viewport-area .safe-area').css top: safeAreaSize.top
+      @$('.viewport-area .safe-area-content').css marginTop: safeAreaSize.top
 
     @$('.landsofillusions-components-overlay').addClass('visible')
 

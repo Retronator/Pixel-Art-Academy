@@ -1,0 +1,232 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-items-daily-theme
+  .newspaper
+    counter-reset pages-counter
+    thintel()
+    line-height 10rem
+
+    .posts
+      list-style none
+      padding 0
+
+    .page
+      position relative
+      margin 20rem 0
+      padding 5rem 10rem
+      width 320rem
+      background image('/retronator/hq/items/daily/newspaper-back.png') 100% / 100%
+      color atariGrey(0)
+      counter-increment pages-counter
+
+      &::before
+      &::after
+        content ''
+        position absolute
+        left 0
+        width 100%
+
+      &::before
+        height 4rem
+        top -4rem
+        background image('/retronator/hq/items/daily/newspaper-top.png') 100% / 100%
+
+      &::after
+        bottom 0
+        height 3rem
+        bottom -3rem
+        background image('/retronator/hq/items/daily/newspaper-bottom.png') 100% / 100%
+
+      .folio
+        display flex
+        margin 1rem 0
+        border-bottom 1rem solid atariGrey(0)
+
+        .page-number
+          width 10%
+
+          &::after
+            content counter(pages-counter)
+
+        .date
+          width 80%
+          text-align center
+          text-transform uppercase
+
+      a
+        text-decoration none
+        color atariGrey(2)
+
+        &:hover
+          color atariGrey(6)
+          background atariGrey(1)
+
+        &.image-link
+          &:hover
+            background initial
+
+      h1
+        acme-9()
+        line-height 16rem
+
+      h2
+        acme-9()
+
+      p
+        margin 0 0 10rem
+
+        &:last-child
+          margin 0
+
+      img
+        width 100%
+        padding 1rem
+        border 1rem solid atariGrey(0)
+
+      figure
+        margin 0
+
+        iframe
+          display block
+          margin 0 auto
+          padding 1rem
+          border 1rem solid atariGrey(0)
+
+      blockquote
+        border-left 1rem solid atariGrey(2)
+        padding 4rem 10rem 2rem
+        margin 6rem 0 10rem
+
+      .quote
+        border-left none
+        line-height 14rem
+        padding 0
+        margin 20rem
+
+      .quote-source
+        text-align right
+        margin-top -10rem
+
+        &::before
+          content '—'
+
+      .question
+        color atariGrey(2)
+
+      .link
+        border 1rem solid atariGrey(0)
+        background atariGrey(2)
+        padding 0
+
+        &:hover
+          background atariGrey(1)
+
+        a
+          display inline-block
+          width 100%
+          color atariGrey(6)
+
+          &:hover
+            background none
+
+        .title
+          margin 0
+
+          a
+            padding 0 3rem 1rem
+            color atariGrey(7)
+
+        .url
+          display inline-block
+          margin 0
+          padding 2rem 3rem
+          color atariGrey(4)
+
+          &::before
+            content: '→'
+
+        .image-link
+          padding 0 3rem
+
+          img
+            padding 0
+            border none
+
+        .excerpt
+          display inline-block
+          margin 0
+          padding 2rem 3rem
+
+      .paragraphs-block
+        margin 7rem 0
+        column-count 2
+        column-gap 16rem
+        column-rule 1rem solid atariGrey(0)
+        text-align justify
+        hyphens auto
+
+    .frontpage
+      .header
+        position relative
+        padding-top 1rem
+        border-bottom 1rem solid atariGrey(0)
+
+        .title
+          retrotype()
+          font-size 36rem
+          line-height 32rem
+          text-align center
+          margin 10rem 0 0
+
+        .slogan
+        .support
+          position absolute
+          width 60rem
+          top 0
+
+        .slogan
+          left 0
+
+        .support
+          right 0
+          text-align right
+
+      .folio
+        border-top 1rem solid atariGrey(0)
+        padding-top 3rem
+
+        .retropolis
+        .page-2
+          width 25%
+          pixel-text-outline(atariGrey(6))
+
+        .date
+          width 50%
+
+        .page-2
+          text-align right
+
+    .masthead
+      width 33%
+      border 1rem solid atariGrey(0)
+      border-left none
+      border-right none
+      padding 2rem 0
+
+      .title
+        retrotype()
+        text-align center
+
+      .slogan
+        margin 5rem 0
+        text-align center
+
+        &::before
+        &::after
+          content '"'
+
+      .published-info
+        text-transform uppercase
+        line-height 7rem
+        text-align center
+        margin-bottom 3rem

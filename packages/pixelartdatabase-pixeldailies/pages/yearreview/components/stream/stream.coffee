@@ -78,7 +78,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
       _.trim "#{title} #{endingWords.join ' '}"
 
     date: ->
-      @submission()?.time.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US',
+      @submission()?.time.toLocaleString Artificial.Babel.currentLanguage(),
         month: 'long'
         day: 'numeric'
         year: 'numeric'

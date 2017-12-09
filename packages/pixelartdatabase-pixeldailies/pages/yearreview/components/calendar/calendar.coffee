@@ -132,7 +132,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
     month = @currentData()
     monthDate = new Date 2016, month.number
 
-    monthDate.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US',
+    monthDate.toLocaleString Artificial.Babel.currentLanguage(),
       month: 'long'
 
   dayData: ->

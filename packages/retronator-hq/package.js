@@ -50,6 +50,9 @@ Package.onUse(function(api) {
 
   api.addThingComponent('items/operatorlink/operatorlink');
 
+  api.addComponent('items/daily/daily');
+  api.addComponent('items/daily/theme');
+
   // Scenes
   
   api.addFile('scenes/scenes');
