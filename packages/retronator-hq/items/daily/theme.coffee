@@ -48,6 +48,14 @@ class HQ.Items.Daily.Theme
     # Trigger it for the first size to initialize.
     @onResize()
 
+    # Copy latest date to frontpage and about page.
+    $('.frontpage .date').text $('.post:first .date .value').text()
+    $('.about .date').text $('.post:first .date').text()
+
+    # Build the headlines.
+    @initializeHeadlineDesigns()
+    @layoutFrontpageHeadlines()
+
   onResize: ->
     @resizeIframes()
 

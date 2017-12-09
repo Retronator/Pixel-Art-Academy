@@ -53,6 +53,28 @@
           text-align center
           text-transform uppercase
 
+      .footer
+        display flex
+        margin 1rem 0
+
+        .tags
+          flex-grow 1
+          list-style none
+          padding 0
+          color atariGrey(3)
+
+          .tag
+            display inline-block
+            margin-right 3rem
+
+        .notes-count
+          width 20%
+          text-align right
+
+          &::before
+            content '♥'
+            adventure()
+
       a
         text-decoration none
         color atariGrey(2)
@@ -157,6 +179,9 @@
           margin 0
           padding 2rem 3rem
 
+      .player-thumbnail
+        display none
+
       .paragraphs-block
         margin 7rem 0
         column-count 2
@@ -196,14 +221,14 @@
         padding-top 3rem
 
         .retropolis
-        .page-2
+        .about
           width 25%
           pixel-text-outline(atariGrey(6))
 
         .date
           width 50%
 
-        .page-2
+        .about
           text-align right
 
     .masthead

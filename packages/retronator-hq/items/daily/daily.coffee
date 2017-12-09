@@ -57,7 +57,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       500
 
   firstPost: ->
-    Blog.Post.documents.findOne {}, sort: time: -1
+    _.first @posts().fetch()
 
   date: ->
     post = @currentData()
@@ -69,7 +69,10 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       weekday: 'long'
 
   posts: ->
-    Blog.Post.documents.find()
+    Blog.Post.documents.find {},
+      sort:
+        time: -1
+      limit: 15
 
   isPostText: ->
     post = @currentData()

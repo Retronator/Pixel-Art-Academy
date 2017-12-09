@@ -91,6 +91,11 @@ class Retronator.Blog extends Retronator.Blog
         post.text = postData.caption
         post.video =
           player: postData.player
+          type: postData.video_type
+          thumbnail:
+            url: postData.thumbnail_url
+            width: postData.thumbnail_width
+            height: postData.thumbnail_height
 
       when @Post.Types.Answer
         post.question =

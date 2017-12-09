@@ -11,8 +11,9 @@
           <div class="folio">
             <div class="retropolis">Retropolis</div>
             <div class="date"></div>
-            <div class="page-2">About →</div>
+            <div class="about">About →</div>
           </div>
+          <div class="headlines"></div>
         </div>
       {{/if}}{{! {/block:HomePage} !}}
       <ol class="posts">
@@ -20,8 +21,9 @@
           <li class="post page">
             <div class="folio">
               <div class="page-number"></div>
-              <div class="date">Retronator, {{date}}{{! {DayOfWeek}, {Month} {DayOfMonth}, {Year} !}}</div>
+              <div class="date">Retronator, <span class="value">{{date}}{{! {DayOfWeek}, {Month} {DayOfMonth}, {Year} !}}</span></div>
             </div>
+
             {{#if isPostText}}{{! {block:Text} !}}
               {{#if title}}{{! {block:Title} !}}
                 <h1 class="title">
@@ -56,6 +58,11 @@
               <figure>
                 {{{videoPlayer.embed_code}}}{{! {Video-700} !}}
               </figure>
+              {{#if video.thumbnail.url}}{{! {block:VideoThumbnail} }}
+                <div class="player-thumbnail">
+                  <img src="{{video.thumbnail.url}}{{! {VideoThumbnailURL} !}}"/>
+                </div>
+              {{/if}}{{! {/block:VideoThumbnail} }}
               {{{text}}}{{! {Caption} !}}
             {{/if}}{{! {/block:Video} !}}
 
@@ -63,6 +70,11 @@
               <figure>
                 {{{audio.player}}}{{! {AudioEmbed-640} !}}
               </figure>
+              {{#if audio.albumArt}}{{! {block:AlbumArt} }}
+                <div class="player-thumbnail">
+                  <img src="{{audio.albumArt}}{{! {AlbumArtURL} !}}"/>
+                </div>
+              {{/if}}{{! {/block:AlbumArt} }}
               {{{text}}}{{! {Caption} !}}
             {{/if}}{{! {/block:Audio} !}}
 
@@ -127,11 +139,24 @@
                 </p>
               {{/each}}{{! {/block:Lines} !}}
             {{/if}}{{! {/block:Text} !}}
+
+            <div class="footer">
+              {{#if tags}}{{! {block:HasTags} !}}
+                <ul class="tags">
+                  {{#each tags}}{{! {block:Tags} !}}
+                    <li class="tag">{{this}}{{! {Tag} !}}</li>
+                  {{/each}}{{! {/block:Tags} !}}
+                </ul>
+              {{/if}}{{! {/block:HasTags} !}}
+              <div class="notes-count">
+                {{notesCount}}{{! {NoteCount} !}}
+              </div>
+            </div>
           </li>
         {{/each}}{{! {/block:Posts} !}}
       </ol>
       {{#if homePage}}{{! {block:HomePage} !}}
-        <div class="page">
+        <div class="about page">
           <div class="folio">
             <div class="page-number"></div>
             <div class="date"></div>
