@@ -23,6 +23,10 @@ The project is using these fonts:
 - **Academy** by Matej Jan (www.retronator.com)
 
   Custom, headline font used by Retropolis Academy of Art
+  
+- **Daily** by Matej Jan (www.retronator.com)
+
+  Custom, body font of Retronator Daily blog
 
 - **Acme** and **Kyrou** by Nikos Giannakopoulos (www.grixel.gr)
 
