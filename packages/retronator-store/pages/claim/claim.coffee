@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 RA = Retronator.Accounts
 RS = Retronator.Store
@@ -13,7 +14,7 @@ class RS.Pages.Claim extends AM.Component
     @enteredKeyCode = new ReactiveField null
 
     @keyCode = new ComputedField =>
-      keyCode = FlowRouter.getParam('keyCode') or @enteredKeyCode()
+      keyCode = AB.Router.getParameter('keyCode') or @enteredKeyCode()
       
     @receivingTransaction = new ComputedField =>
       keyCode = @keyCode()

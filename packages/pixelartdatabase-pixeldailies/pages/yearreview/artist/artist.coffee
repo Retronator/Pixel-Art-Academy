@@ -136,10 +136,10 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     Meteor.clearInterval @_changeBackgroundInterval
 
   year: ->
-    parseInt FlowRouter.getParam 'year'
+    parseInt AB.Router.getParameter 'year'
 
   screenName: ->
-    FlowRouter.getParam 'screenName'
+    AB.Router.getParameter 'screenName'
 
   profile: ->
     @constructor.profile @screenName()

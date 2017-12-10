@@ -1,7 +1,5 @@
 RA = Retronator.App
 
-class RA.Layouts.PublicAccess extends BlazeLayoutComponent
+class RA.Layouts.PublicAccess extends BlazeComponent
   @register 'Retronator.App.Layouts.PublicAccess'
 
-  renderPage: (parentComponent) ->
-    @_renderRegion 'page', parentComponent

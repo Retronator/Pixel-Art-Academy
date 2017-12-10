@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
@@ -46,7 +47,7 @@ class HQ.Items.Tablet.OS.App extends AM.Component
     urlParameters
 
   @fullUrl: ->
-    FlowRouter.path 'LandsOfIllusions.Adventure', @urlParameters()
+    AB.Router.createPath 'LandsOfIllusions.Adventure', @urlParameters()
 
   @initialize: ->
     # Store thing class by ID and url.

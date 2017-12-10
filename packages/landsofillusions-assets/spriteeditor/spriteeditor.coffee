@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
@@ -27,7 +28,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @symmetryXOrigin = new ReactiveField null
 
     @spriteId = new ComputedField =>
-      FlowRouter.getParam 'spriteId'
+      AB.Router.getParameter 'spriteId'
 
     @spriteData = new ComputedField =>
       return unless spriteId = @spriteId()
@@ -65,7 +66,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
       symmetryXOrigin: @symmetryXOrigin
         
     setAssetId = (spriteId) =>
-      FlowRouter.setParams {spriteId}
+      AB.Router.setParameters {spriteId}
         
     @assetsList new LOI.Assets.Components.AssetsList
       documentClass: LOI.Assets.Sprite

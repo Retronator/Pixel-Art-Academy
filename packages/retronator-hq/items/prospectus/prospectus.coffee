@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -131,7 +132,7 @@ class HQ.Items.Prospectus extends LOI.Adventure.Item
       ga? 'send', 'event', 'Social Media Engagement', 'Click', socialNetwork if socialNetwork
 
     onClickPlayButton: (event) ->
-      FlowRouter.go 'LandsOfIllusions.Adventure'
+      AB.Router.goToRoute 'LandsOfIllusions.Adventure'
 
   class @Purchase extends HQ.Items.Components.Stripe
     @id: -> 'Retronator.HQ.Items.Prospectus.Purchase'

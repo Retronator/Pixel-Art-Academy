@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
@@ -55,9 +56,9 @@ class HQ.Items.Tablet.OS extends AM.Component
       if isMainActiveItem
         # Make sure we're still on the tablet URL.
         tabletUrl = HQ.Items.Tablet.urlParameters().parameter1
-        return unless tabletUrl is FlowRouter.getParam 'parameter1'
+        return unless tabletUrl is AB.Router.getParameter 'parameter1'
 
-        appUrl = FlowRouter.getParam 'parameter2'
+        appUrl = AB.Router.getParameter 'parameter2'
 
         console.log "OS is selecting the app from url", appUrl if HQ.debug
 
@@ -101,14 +102,14 @@ class HQ.Items.Tablet.OS extends AM.Component
         if appClassUrl is appUrl
           Tracker.nonreactive =>
             _.extend urlParameters,
-              parameter3: FlowRouter.getParam 'parameter3'
-              parameter4: FlowRouter.getParam 'parameter4'
+              parameter3: AB.Router.getParameter 'parameter3'
+              parameter4: AB.Router.getParameter 'parameter4'
 
         # HACK: We delay rewriting because it seems that adventure's routing (probably due to some
         # FlowRouter logic) overwrites this later on (even if we use afterFlush for example).
         Meteor.setTimeout =>
           console.log "Rewriting app url to", urlParameters if HQ.debug
-          FlowRouter.go 'LandsOfIllusions.Adventure', urlParameters
+          AB.Router.goToRoute 'LandsOfIllusions.Adventure', urlParameters
         ,
           0
 
@@ -144,7 +145,7 @@ class HQ.Items.Tablet.OS extends AM.Component
       @activeAppId appClass.id()
       
     # Route to correct URL.
-    FlowRouter.go 'LandsOfIllusions.Adventure', urlParameters
+    AB.Router.goToRoute 'LandsOfIllusions.Adventure', urlParameters
     
   menuApp: ->
     @options.tablet.apps HQ.Items.Tablet.Apps.Menu

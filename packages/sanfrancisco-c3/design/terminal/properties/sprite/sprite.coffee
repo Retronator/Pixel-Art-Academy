@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
@@ -52,7 +53,7 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
     @showSpriteList not @showSpriteList()
 
   onClickSpritePreview: (event) ->
-    window.open FlowRouter.path 'LandsOfIllusions.Assets.SpriteEditor', spriteId: @spriteId()
+    window.open AB.Router.createPath 'LandsOfIllusions.Assets.SpriteEditor', spriteId: @spriteId()
 
   onMouseMoveSpritePreview: (event) ->
     $spritePreview = @$('.sprite-preview')

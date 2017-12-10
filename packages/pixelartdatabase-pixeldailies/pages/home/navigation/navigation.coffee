@@ -6,4 +6,4 @@ class PADB.PixelDailies.Pages.Home.Navigation extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.Home.Navigation'
 
   routeParameters: ->
-    year: FlowRouter.getParam 'year'
+    year: AB.Router.getParameter 'year'

@@ -4,8 +4,8 @@ PADB = PixelArtDatabase
 
 class PADB.PixelDailies
   constructor: ->
-    AB.addRoute '/pixeldailies', @constructor.Pages.Home.Layout, @constructor.Pages.Home
-    AB.addRoute '/pixeldailies/about', @constructor.Pages.Home.Layout, @constructor.Pages.About
+    AB.Router.addRoute '/pixeldailies', @constructor.Pages.Home.Layout, @constructor.Pages.Home
+    AB.Router.addRoute '/pixeldailies/about', @constructor.Pages.Home.Layout, @constructor.Pages.About
 
     @_addYearReviewPage '/pixeldailies/:year/artworks', @constructor.Pages.YearReview.Artworks
     @_addYearReviewPage '/pixeldailies/:year/artists', @constructor.Pages.YearReview.Artists
@@ -17,4 +17,4 @@ class PADB.PixelDailies
     Retronator.App.addAdminPage '/admin/pixeldailies/scripts', @constructor.Pages.Admin.Scripts
 
   _addYearReviewPage: (url, pageClass) ->
-    AB.addRoute url, @constructor.Pages.YearReview.Layout, pageClass
+    AB.Router.addRoute url, @constructor.Pages.YearReview.Layout, pageClass

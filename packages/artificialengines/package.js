@@ -6,7 +6,9 @@ Package.describe({
 Npm.depends({
   twit: '2.2.9',
   stripe: '5.1.1',
-  patreon: '0.3.0'
+  patreon: '0.3.0',
+  'meteor-node-stubs': '0.3.2',
+  'path-to-regexp': '2.1.0'
 });
 
 Package.onUse(function(api) {
@@ -26,6 +28,7 @@ Package.onUse(function(api) {
     'markdown',
     'http',
     'oauth',
+    'modules',
 
     // 3rd party
     'peerlibrary:assert',
@@ -34,15 +37,12 @@ Package.onUse(function(api) {
     'peerlibrary:reactive-publish@0.3.0',
     'peerlibrary:blaze-components',
     'peerlibrary:blaze-common-component',
-    'peerlibrary:blaze-layout-component',
     'peerlibrary:reactive-field',
     'peerlibrary:computed-field',
     'peerlibrary:check-extension',
     'peerlibrary:server-autorun',
     'peerlibrary:directcollection',
     'limemakers:three',
-    'kadira:flow-router',
-    'kadira:blaze-layout',
     'okgrow:router-autoscroll',
     'stevezhu:lodash',
     'velocityjs:velocityjs',
@@ -126,23 +126,19 @@ Package.onUse(function(api) {
 
   // Artificial Base
   // Depends on Artificial Mirage.
-  api.addFiles('base/base.coffee');
+  api.addFile('base/base');
 
-  api.addFiles('base/app.coffee');
-  api.addFiles('base/app.html');
+  api.addUnstyledComponent('base/app');
 
-  api.addFiles('base/method.coffee');
-  api.addFiles('base/subscription.coffee');
+  api.addFile('base/method');
+  api.addFile('base/subscription');
 
-  api.addFiles('base/addroute.coffee');
-
-  api.addFiles('base/picker-server/addroute.coffee', 'server');
-
-  api.addFiles('base/flowrouter/addroute.coffee');
-  api.addFiles('base/flowrouter/spacebars.coffee');
-
-  api.addFiles('base/flowrouter/routelink.coffee');
-  api.addFiles('base/flowrouter/routelink.html');
+  api.addFile('base/router/router');
+  api.addServerFile('base/router/router-server');
+  api.addClientFile('base/router/router-client');
+  api.addFile('base/router/route');
+  api.addFile('base/router/spacebars');
+  api.addUnstyledComponent('base/router/routelink');
 
   // Artificial Mummification
   api.addFile('mummification/mummification');

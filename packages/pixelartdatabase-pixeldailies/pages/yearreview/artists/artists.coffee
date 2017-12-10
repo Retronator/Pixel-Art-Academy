@@ -122,7 +122,7 @@ class PADB.PixelDailies.Pages.YearReview.Artists extends AM.Component
     @_$window.off '.pixelartdatabase-pixeldailies-pages-yearreview-artists'
 
   year: ->
-    parseInt FlowRouter.getParam 'year'
+    parseInt AB.Router.getParameter 'year'
 
   favoritesButtonDisabledAttribute: ->
     disabled: true if @sortingParameter() is @constructor.SortingParameters.FavoritesCount

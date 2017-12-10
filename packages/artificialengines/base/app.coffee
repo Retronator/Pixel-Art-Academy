@@ -30,6 +30,9 @@ class AB.App extends AM.Component
 
     @endRun()
 
+  appRoot: ->
+    AB.Router.renderRoot @
+
   run: ->
     # Start update/draw loop.
     window.requestAnimationFrame (timestamp) =>
@@ -41,22 +44,16 @@ class AB.App extends AM.Component
 
     # Dynamically update window title based on the current route.
     @autorun (computation) =>
-      route = FlowRouter.getRouteName()
-      routeData = AB.routes[route]
-
-      # Get parameters and register dependency on their changes.
-      routeParameters = FlowRouter.current().params
-
-      for parameterName, parameter of routeParameters
-        FlowRouter.getParam parameterName
+      routeData = AB.Router.currentRouteData()
+      route = routeData.route
 
       # Determine the new title.
       title = null
 
       # Call layout first and component later so it can override the more general layout results.
-      for target in [routeData.layoutClass, routeData.componentClass]
+      for target in [route.layoutClass, route.componentClass]
         # Only override the parameter if we get a result.
-        result = target.title? routeParameters
+        result = target.title? routeData.parameters
         title = result if result
 
       document.title = title if title

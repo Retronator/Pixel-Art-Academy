@@ -2,7 +2,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.Layouts.PlayerAccess extends BlazeLayoutComponent
+class PAA.Layouts.PlayerAccess extends BlazeComponent
   @register 'PixelArtAcademy.Layouts.PlayerAccess'
 
   @title: ->
@@ -17,9 +17,6 @@ class PAA.Layouts.PlayerAccess extends BlazeLayoutComponent
         characters: 1
 
     user?.characters
-
-  renderPage: (parentComponent) ->
-    @_renderRegion 'page', parentComponent
 
   events: ->
     super.concat

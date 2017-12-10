@@ -1,20 +1,10 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
   currentUrl: ->
-    parameters = [
-      FlowRouter.getParam 'parameter1'
-      FlowRouter.getParam 'parameter2'
-      FlowRouter.getParam 'parameter3'
-      FlowRouter.getParam 'parameter4'
-    ]
-
-    # Remove unused parameters.
-    parameters = _.without parameters, undefined
-
-    # Create a path from parameters.
-    parameters.join '/'
+    AB.Router.currentRoutePath()
 
   @_directRouteHandlersByUrl = {}
   @_directRouteHandlersByWildcardUrl = {}
@@ -89,13 +79,15 @@ class LOI.Adventure extends LOI.Adventure
 
       console.log "%cRewriting URL to", 'background: NavajoWhite', desiredUrl if LOI.debug
 
-      urlParameters = desiredUrl.split '/'
       parametersObject = {}
 
-      for urlParameter, i in urlParameters
-        parametersObject["parameter#{i + 1}"] = urlParameter unless urlParameter is '*'
+      if desiredUrl.length
+        urlParameters = desiredUrl.split '/'
 
-      FlowRouter.go 'LandsOfIllusions.Adventure', parametersObject
+        for urlParameter, index in urlParameters
+          parametersObject["parameter#{index + 1}"] = urlParameter unless urlParameter is '*'
+
+      AB.Router.goToRoute 'LandsOfIllusions.Adventure', parametersObject
 
   goToItem: (itemClassOrId) ->
     @activeItemId _.thingId itemClassOrId

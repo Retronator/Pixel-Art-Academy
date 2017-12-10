@@ -110,9 +110,9 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
     @date = new ComputedField =>
       @constructor.date
-        year: FlowRouter.getParam 'year'
-        month: FlowRouter.getParam 'month'
-        day: FlowRouter.getParam 'day'
+        year: AB.Router.getParameter 'year'
+        month: AB.Router.getParameter 'month'
+        day: AB.Router.getParameter 'day'
 
     @infiniteScroll = new ReactiveField null
     @_themeSubmissionSubscriptionsHandle = new ReactiveField null
@@ -230,7 +230,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
     @_dateUrl new Date date.getFullYear(), date.getMonth(), date.getDate() + offset
 
   _dateUrl: (date) ->
-    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
+    AB.Router.createPath 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
       year: date.getFullYear()
       month: _.toLower date.toLocaleString 'en-US', month: 'long'
       day: date.getDate()

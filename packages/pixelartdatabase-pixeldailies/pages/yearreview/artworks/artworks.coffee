@@ -59,4 +59,4 @@ class PADB.PixelDailies.Pages.YearReview.Artworks extends AM.Component
     @stream @childComponents(PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream)[0]
 
   year: ->
-    parseInt FlowRouter.getParam 'year'
+    parseInt AB.Router.getParameter 'year'

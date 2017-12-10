@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -21,7 +22,7 @@ class PAA.PixelBoy extends AM.Component
     appsNameMap = _.fromPairs ([app.urlName(), app] for app in @apps)
 
     @currentApp = new ComputedField =>
-      appUrlName = FlowRouter.getParam 'app'
+      appUrlName = AB.Router.getParameter 'app'
       appsNameMap[appUrlName]
 
   onCreated: ->

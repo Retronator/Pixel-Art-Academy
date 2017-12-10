@@ -7,11 +7,11 @@ class PADB.PixelDailies.Pages.Home.Header extends AM.Component
   @register 'PixelArtDatabase.PixelDailies.Pages.Home.Header'
 
   year: ->
-    parseInt FlowRouter.getParam 'year'
+    parseInt AB.Router.getParameter 'year'
 
   isCurrentYear: ->
     currentYear = new Date().getFullYear()
     @year() is currentYear
 
   homePath: ->
-    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.Home'
+    AB.Router.createPath 'PixelArtDatabase.PixelDailies.Pages.Home'
