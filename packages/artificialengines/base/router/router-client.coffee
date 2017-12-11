@@ -110,14 +110,6 @@ class AB.Router extends AB.Router
       Blaze.With layoutData, =>
         currentRoute.layoutClass.renderComponent parentComponent
 
-  @findRoute: (host, path) ->
-    # Find the route that matches our location.
-    for name, route of @routes
-      matchData = route.match host, path
-      return {route, matchData} if matchData
-
-    null
-
   @onPathChange: ->
     host = location.hostname
     path = location.pathname
@@ -125,8 +117,8 @@ class AB.Router extends AB.Router
     {route, matchData} = @findRoute host, path
 
     if matchData
-      currentRoute = _.extend {route, path, host}, matchData
-      @currentRouteData currentRoute
+      currentRouteData = _.extend {route, path, host}, matchData
+      @currentRouteData currentRouteData
 
     else
       @currentRouteData null

@@ -53,6 +53,8 @@ Package.onUse(function(api) {
 	api.use(packages);
   api.imply(packages);
 
+  api.use('webapp', 'server');
+
   api.export('Artificial');
 
 	api.addFile('artificial');
