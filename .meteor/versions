@@ -120,6 +120,7 @@ retronator:artificialengines-pages@1.0.0
 retronator:landsofillusions@0.1.0
 retronator:landsofillusions-assets@0.0.1
 retronator:landsofillusions-construct@0.0.1
+retronator:landsofillusions-world@0.1.0
 retronator:pixelartacademy@0.2.0
 retronator:pixelartacademy-cast@0.1.0
 retronator:pixelartacademy-items@0.1.0
@@ -138,6 +139,7 @@ retronator:retronator-landsofillusions@0.0.1
 retronator:retronator-residence@0.0.1
 retronator:retronator-store@0.1.0
 retronator:retropolis@0.1.0
+retronator:retropolis-city@0.1.0
 retronator:retropolis-spaceport@0.0.1
 retronator:sanfrancisco@0.1.0
 retronator:sanfrancisco-apartment@0.0.1

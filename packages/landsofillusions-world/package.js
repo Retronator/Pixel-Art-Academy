@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'retronator:retropolis',
+  name: 'retronator:landsofillusions-world',
   version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
@@ -11,8 +11,17 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:artificialengines');
+  api.use('retronator:landsofillusions');
 
-  api.export('Retropolis');
-  api.addFile('retropolis');
+  api.export('LandsOfIllusions');
+
+  api.addFile('world');
+
+  // Layouts
+  api.addFile('layouts/layouts');
+  api.addComponent('layouts/center/center');
+
+  // Pages
+  api.addFile('pages/pages');
+  api.addComponent('pages/home/home');
 });

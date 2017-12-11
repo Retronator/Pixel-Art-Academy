@@ -34,6 +34,8 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-landsofillusions');
   api.use('retronator:landsofillusions-construct');
   api.use('retronator:landsofillusions-assets');
+  api.use('retronator:retropolis-city');
+  api.use('retronator:landsofillusions-world');
 
   // Routing portion, fork from force-ssl.
   api.use('webapp', 'server');
@@ -41,23 +43,16 @@ Package.onUse(function(api) {
   // Make sure we come after livedata, so we load after the sockjs server has been instantiated.
   api.use('ddp', 'server');
 
-  api.addFiles('routing-server.coffee', 'server');
+  api.addServerFile('routing-server');
 
   // Add other files.
-  api.addFiles('app.html');
-  api.addFiles('app.coffee');
+  api.addUnstyledComponent('app');
 
   // Layouts
 
-  api.addFiles('layouts/layouts.coffee');
-
-  api.addFiles('layouts/adminaccess/adminaccess.coffee');
-  api.addFiles('layouts/adminaccess/adminaccess.html');
-
-  api.addFiles('layouts/useraccess/useraccess.coffee');
-  api.addFiles('layouts/useraccess/useraccess.html');
-
-  api.addFiles('layouts/publicaccess/publicaccess.coffee');
-  api.addFiles('layouts/publicaccess/publicaccess.html');
+  api.addFile('layouts/layouts');
+  api.addUnstyledComponent('layouts/adminaccess/adminaccess');
+  api.addUnstyledComponent('layouts/useraccess/useraccess');
+  api.addUnstyledComponent('layouts/publicaccess/publicaccess');
 
 });

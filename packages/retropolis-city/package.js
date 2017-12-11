@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'retronator:retropolis',
+  name: 'retronator:retropolis-city',
   version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
@@ -11,8 +11,18 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.use('retronator:artificialengines');
+  api.use('retronator:landsofillusions');
+  api.use('retronator:retropolis');
 
   api.export('Retropolis');
-  api.addFile('retropolis');
+
+  api.addFile('city');
+
+  // Layouts
+  api.addFile('layouts/layouts');
+  api.addComponent('layouts/city/city');
+
+  // Pages
+  api.addFile('pages/pages');
+  api.addComponent('pages/home/home');
 });
