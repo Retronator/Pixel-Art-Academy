@@ -46,7 +46,7 @@ class PADB.PixelDailies.Pages.YearReview.ThemesCalendarProvider extends PADB.Pix
         topSubmission.theme = theme
 
         # Add theme url.
-        topSubmission.url = AB.Router.createPath 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
+        topSubmission.url = AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
           year: theme.time.getFullYear()
           month: _.toLower theme.time.toLocaleString 'en-US', month: 'long'
           day: theme.time.getDate()

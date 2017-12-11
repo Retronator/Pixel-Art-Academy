@@ -3,11 +3,22 @@ AB = Artificial.Base
 pathToRegExp = require 'path-to-regexp'
 
 class AB.Router.Route
-  constructor: (@url, @layoutClass, @componentClass) ->
-    @name = @componentClass.componentName()
+  constructor: (optionsOrUrl, @layoutClass, @pageClass) ->
+    if _.isObject optionsOrUrl
+      # We were passed an options object so destructure it.
+      {@url, @layoutClass, @pageClass, @statusCode} = optionsOrUrl
+
+    else
+      # We were passed an url. We expect the rest of the parameters to be set
+      @url = optionsOrUrl
+
+    # Default status code is 200. Send in a different value to serve, for example, a 404 page.
+    @statusCode ?= 200
+
+    @name = @pageClass.componentName()
 
     # Split the url into host and path parts
-    [_, @host, @path] = @url.match /(.*?)(\/.*)/
+    [match, @host, @path] = @url.match /(.*?)(\/.*)/
 
     @parameters = []
     @regExp = pathToRegExp @path, @parameters

@@ -230,7 +230,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
     @_dateUrl new Date date.getFullYear(), date.getMonth(), date.getDate() + offset
 
   _dateUrl: (date) ->
-    AB.Router.createPath 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
+    AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
       year: date.getFullYear()
       month: _.toLower date.toLocaleString 'en-US', month: 'long'
       day: date.getDate()

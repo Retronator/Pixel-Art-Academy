@@ -63,7 +63,7 @@ class PADB.PixelDailies.Pages.Home.ArtworkCaption extends AM.Component
     date = @submission()?.time
     return unless date
 
-    AB.Router.createPath 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
+    AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
       year: date.getFullYear()
       month: _.toLower date.toLocaleString 'en-US', month: 'long'
       day: date.getDate()

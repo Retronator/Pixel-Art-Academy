@@ -20,24 +20,57 @@ class AB.Router extends AB.Router
   @currentRoutePath = new ComputedField =>
     @currentRouteData()?.path
 
-  @createPath: (routeName, parameters) ->
-    return unless route = @routes[routeName]
-
-    try
-      route.createPath(parameters) or '/'
-
-    catch error
-      null
-
   @getParameter: (parameter) ->
     @currentParameters()[parameter]
 
   @setParameters: (parameters) ->
     @goToRoute @currentRouteName(), parameters
-    
+
+  @createUrl: (routeName, parameters) ->
+    return unless route = @routes[routeName]
+
+    try
+      path = route.createPath(parameters) or '/'
+
+    catch error
+      # Errors are common because we often have missing parameters when data is loading.
+      # We just return null as the function will re-run when new parameters get available.
+      return null
+
+    # See if we need to change hosts.
+    currentHost = @currentRoute().host
+
+    if route.host isnt currentHost
+      host = route.host
+
+      # Keep the current protocol and port.
+      protocol = location.protocol
+      port = ":#{location.port}" if location.port
+
+      # Keep the localhost prefix.
+      host = "localhost.#{host}" if _.startsWith location.hostname, 'localhost'
+
+      # No need for a slash if we're changing the host to its main page.
+      path = '' if path is '/'
+
+      path = "#{protocol}//#{host}#{port}#{path}"
+
+    # Return generated path.
+    path
+
   @goToRoute: (routeName, parameters) ->
-    return unless path = @createPath routeName, parameters
-    history.pushState {}, null, path
+    return unless url = @createUrl routeName, parameters
+
+    [match, host, path] = url.match /(.*?)(\/.*)/
+
+    if host
+      # Since the host changed, we can't use pushState. Do a hard redirect.
+      window.location = url
+
+    else
+      # We're staying on the current host, so we can do a soft change of url.
+      history.pushState {}, null, path
+
     @onHashChange()
 
   @initialize: ->
@@ -51,10 +84,8 @@ class AB.Router extends AB.Router
     $('body').on 'click', 'a', (event) =>
       link = event.target
 
-      {route} = @findRoute link.hostname, link.pathname
-
-      if route
-        # This link leads to one of our routes so go there manually.
+      # Only do soft link changes when we're staying within the same host.
+      if link.hostname is location.hostname
         event.preventDefault()
         history.pushState {}, null, link.pathname
         @onHashChange()
@@ -67,7 +98,7 @@ class AB.Router extends AB.Router
     # We instantiate the page so that we can send the instance to the Render component. If it was just a class, it
     # would treat it as a function and try to execute it instead of pass it as the context to the Render component.
     layoutData =
-      page: new currentRoute.componentClass
+      page: new currentRoute.pageClass
 
     new Blaze.Template =>
       Blaze.With layoutData, =>
@@ -90,14 +121,8 @@ class AB.Router extends AB.Router
     if matchData
       currentRoute = _.extend {route, path, host}, matchData
       @currentRouteData currentRoute
-      
-    else
-      # Try to find a 404 route for the host.
-      for name, route of @error404Routes
-        if route.match host
-          @currentRouteData {route, path, host, error404: true}
-          return
 
+    else
       @currentRouteData null
 
   # Dynamically update window title based on the current route.
@@ -106,7 +131,7 @@ class AB.Router extends AB.Router
     title = null
 
     # Call layout first and component later so it can override the more general layout results.
-    for target in [route.layoutClass, route.componentClass]
+    for target in [route.layoutClass, route.pageClass]
       result = target.title? routeParameters
 
       # Only override the parameter if we get a result.

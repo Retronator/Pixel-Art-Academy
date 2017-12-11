@@ -47,7 +47,7 @@ class HQ.Items.Tablet.OS.App extends AM.Component
     urlParameters
 
   @fullUrl: ->
-    AB.Router.createPath 'LandsOfIllusions.Adventure', @urlParameters()
+    AB.Router.createUrl 'LandsOfIllusions.Adventure', @urlParameters()
 
   @initialize: ->
     # Store thing class by ID and url.

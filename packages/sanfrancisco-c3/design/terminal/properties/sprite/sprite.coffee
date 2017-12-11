@@ -53,7 +53,7 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
     @showSpriteList not @showSpriteList()
 
   onClickSpritePreview: (event) ->
-    window.open AB.Router.createPath 'LandsOfIllusions.Assets.SpriteEditor', spriteId: @spriteId()
+    window.open AB.Router.createUrl 'LandsOfIllusions.Assets.SpriteEditor', spriteId: @spriteId()
 
   onMouseMoveSpritePreview: (event) ->
     $spritePreview = @$('.sprite-preview')

@@ -51,7 +51,7 @@ class AB.App extends AM.Component
       title = null
 
       # Call layout first and component later so it can override the more general layout results.
-      for target in [route.layoutClass, route.componentClass]
+      for target in [route.layoutClass, route.pageClass]
         # Only override the parameter if we get a result.
         result = target.title? routeData.parameters
         title = result if result

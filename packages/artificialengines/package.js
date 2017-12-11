@@ -55,10 +55,10 @@ Package.onUse(function(api) {
 
   api.export('Artificial');
 
-	api.addFiles('artificial.coffee');
+	api.addFile('artificial');
 
 	// Global initialization
-	api.addFiles('everywhere/lodash/lodash.coffee');
+	api.addFile('everywhere/lodash/lodash');
 
 	// Artificial Everywhere
   api.addFile('everywhere/everywhere');

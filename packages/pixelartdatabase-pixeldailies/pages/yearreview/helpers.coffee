@@ -66,7 +66,7 @@ class PADB.PixelDailies.Pages.YearReview.Helpers
       artwork
 
   @artistUrl: (screenName, year) ->
-    AB.Router.createPath 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
+    AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
       year: year or AB.Router.getParameter('year') or new Date().getFullYear()
       screenName: screenName
 

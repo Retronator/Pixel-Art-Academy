@@ -14,4 +14,4 @@ class PADB.PixelDailies.Pages.Home.Header extends AM.Component
     @year() is currentYear
 
   homePath: ->
-    AB.Router.createPath 'PixelArtDatabase.PixelDailies.Pages.Home'
+    AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.Home'
