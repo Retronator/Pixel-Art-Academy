@@ -58,27 +58,33 @@ class AB.Router extends AB.Router
     # Return generated path.
     path
 
-  @goToRoute: (routeName, parameters) ->
+  @goToRoute: (routeName, parameters, options = {}) ->
     return unless url = @createUrl routeName, parameters
+
+    # By default changing routes gets written to browser history.
+    options.createHistory ?= true
 
     [match, host, path] = url.match /(.*?)(\/.*)/
 
     if host
-      # Since the host changed, we can't use pushState. Do a hard redirect.
+      # Since the host changed, we can't use pushState. Do a hard url change.
       window.location = url
 
     else
-      # We're staying on the current host, so we can do a soft change of url.
-      history.pushState {}, null, path
+      # We're staying on the current host, so we can do a soft url change.
+      historyFunction = if options.createHistory then 'pushState' else 'replaceState'
 
-    @onHashChange()
+      history[historyFunction] {}, null, path
+      @onPathChange
 
   @initialize: ->
     # React to URL changes.
-    $(window).on 'hashchange', => @onHashChange()
+    $window = $(window)
+    $window.on 'hashchange', => @onPathChange()
+    $window.on 'popstate', => @onPathChange()
 
     # Process URL for the first time.
-    @onHashChange()
+    @onPathChange()
 
     # Hijack link clicks.
     $('body').on 'click', 'a', (event) =>
@@ -88,7 +94,7 @@ class AB.Router extends AB.Router
       if link.hostname is location.hostname
         event.preventDefault()
         history.pushState {}, null, link.pathname
-        @onHashChange()
+        @onPathChange()
 
   @renderRoot: (parentComponent) ->
     return null unless currentRoute = @currentRoute()
@@ -112,7 +118,7 @@ class AB.Router extends AB.Router
 
     null
 
-  @onHashChange: ->
+  @onPathChange: ->
     host = location.hostname
     path = location.pathname
 
