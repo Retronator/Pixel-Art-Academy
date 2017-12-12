@@ -6,36 +6,49 @@
     daily()
     line-height 10rem
 
-    .posts
-      list-style none
-      padding 0
+    .back-button
+      display block
+      position fixed
+      top 10rem
+      left 10rem
+      width 22rem
+      height 18rem
+      border none
+      z-index 1001
+      background image('/interface/back-arrow.png') 0 0 / 100% 100%
+      cursor pointer
+      opacity 1
+      transition opacity ease-out 0.5s
+
+      &:hover
+        margin-top -1rem
+
+      &:active
+        margin-top 1rem
+
+      &:focus
+        outline none
 
     .page
       position relative
-      margin 20rem 0
-      padding 5rem 10rem
+      margin 40rem 0
+      padding 3rem 10rem 5rem
       width 320rem
-      background image('/retronator/hq/items/daily/newspaper-back.png') 100% / 100%
+      background image('/retronator/hq/items/daily/newspaper-top.png') 100% / 100%, image('/retronator/hq/items/daily/newspaper-bottom.png') 100% / 100%
+      background-position center top, center bottom
+      background-repeat no-repeat, no-repeat
       color atariGrey(0)
       counter-increment pages-counter
 
       &::before
-      &::after
         content ''
         position absolute
+        top 1rem
+        bottom 3rem
+        z-index -1
         left 0
-        width 100%
-
-      &::before
-        height 4rem
-        top -4rem
-        background image('/retronator/hq/items/daily/newspaper-top.png') 100% / 100%
-
-      &::after
-        bottom 0
-        height 3rem
-        bottom -3rem
-        background image('/retronator/hq/items/daily/newspaper-bottom.png') 100% / 100%
+        right 0
+        background image('/retronator/hq/items/daily/newspaper-back.png') 100% / 100%
 
       .folio
         display flex
@@ -191,70 +204,121 @@
         text-align justify
         hyphens auto
 
-    .frontpage
-      .header
-        position relative
-        padding-top 1rem
-        border-bottom 1rem solid atariGrey(0)
+    .frontpage-area
+      fixed-cover()
+      width 100%
+      right auto
+      z-index 1
+      transition left 1s ease-out
 
-        .title
-          retrotype()
-          font-size 36rem
-          line-height 32rem
-          text-align center
-          margin 10rem 0 0
-
-        .slogan
-        .support
-          position absolute
-          width 60rem
-          top 0
-          line-height 9rem
-
-        .slogan
-          left 0
-
-        .support
-          right 0
-          text-align right
-
-      .folio
-        border-top 1rem solid atariGrey(0)
-        line-height 9rem
-        padding-bottom 1rem
-
-        .retropolis
-        .about
-          width 25%
-          pixel-text-outline(atariGrey(6))
-
-        .date
-          width 50%
-
-        .about
-          text-align right
-
-    .masthead
-      width 33%
-      border 1rem solid atariGrey(0)
-      border-left none
-      border-right none
-      padding 2rem 0
-
-      .title
-        retrotype()
-        text-align center
-
-      .slogan
-        margin 5rem 0
-        text-align center
+      .frontpage
+        background-image image('/retronator/hq/items/daily/newspaper-top-frontpage.png'), image('/retronator/hq/items/daily/newspaper-bottom-frontpage.png')
+        padding-bottom 10rem
 
         &::before
-        &::after
-          content '"'
+          top 4rem
+          bottom 8rem
 
-      .published-info
-        text-transform uppercase
-        line-height 7rem
-        text-align center
-        margin-bottom 3rem
+        .header
+          position relative
+          padding-top 1rem
+          margin-top 6rem
+          border-bottom 1rem solid atariGrey(0)
+
+          .title
+            retrotype()
+            font-size 36rem
+            line-height 32rem
+            text-align center
+            margin 10rem 0 0
+
+          .slogan
+          .support
+            position absolute
+            width 60rem
+            top 0
+            line-height 9rem
+
+          .slogan
+            left 0
+
+          .support
+            right 0
+            text-align right
+
+        .folio
+          border-top 1rem solid atariGrey(0)
+          line-height 9rem
+          padding-bottom 1rem
+
+          .retropolis
+          .about
+            width 25%
+            pixel-text-outline(atariGrey(6))
+
+          .date
+            width 50%
+
+          .about
+            text-align right
+
+    .inside-content-area
+      fixed-cover()
+
+      .scroll-content
+        right -100px
+        padding-right 100px
+
+      .inside-content
+        .posts
+          list-style none
+          padding 0
+          margin 0
+
+        .about
+          .masthead
+            width 33%
+            border 1rem solid atariGrey(0)
+            border-left none
+            border-right none
+            padding 2rem 0
+
+            .title
+              retrotype()
+              text-align center
+
+            .slogan
+              margin 5rem 0
+              text-align center
+
+              &::before
+              &::after
+                content '"'
+
+            .published-info
+              text-transform uppercase
+              line-height 7rem
+              text-align center
+              margin-bottom 3rem
+
+    .scroll-area
+      overflow hidden
+
+      .scroll-content
+        absolute-cover()
+        overflow-y auto
+
+    &.inside
+      .frontpage-area
+        left -100%
+
+    &.scroll-inside
+      .frontpage-area
+        .scroll-content
+          right -100px
+          padding-right 100px
+
+      .inside-content-area
+        .scroll-content
+          right 0
+          padding-right 0

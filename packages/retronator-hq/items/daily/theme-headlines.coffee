@@ -169,6 +169,8 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
       $post = $(posts[index])
       images = $post.find('img')
 
+      postElements = []
+
       for headlineImageIndex in [1..headlineImagesCount]
         if headlineImagesCount is 1
           imageIndex = 0
@@ -181,6 +183,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
         $image.append($sourceImage.clone())
         $image.css backgroundImage: "url('#{$sourceImage.attr('src')}')"
         $group.append($image)
+        postElements.push $image[0]
 
       $headline = $("<div class='headline headline-#{headlineLetter}'>")
 
@@ -194,5 +197,24 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
       $headline.append("<div class='title'>#{headlineTitle}</div>")
       $headline.append("<div class='tags'>#{headlineTags.join ', '}</div>")
       $group.append($headline)
+      postElements.push $headline[0]
+
+      do ($post) =>
+        $(postElements).click (event) =>
+          # Scroll to post.
+          $scrollContent = $('.inside-content-area .scroll-content')
+
+          currentScrollTop = $scrollContent.scrollTop()
+          postTop = $post.position().top + currentScrollTop
+          scrollTop = postTop
+
+          # Don't scroll past where the frontpage is so that the content doesn't appear through.
+          #frontpageTop = $('.frontpage').offset().top
+          #
+          #scrollTop = Math.min scrollTop, $('.frontpage-area .scroll-content').scrollTop() if frontpageTop > 0
+
+          $scrollContent.scrollTop scrollTop
+
+          @$newspaper.addClass('inside').addClass('scroll-inside')
 
     $('.headlines').append($group)

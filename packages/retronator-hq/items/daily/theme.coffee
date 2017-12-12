@@ -42,19 +42,57 @@ class HQ.Items.Daily.Theme
             $paragraphBlock.css columnCount: 1 if $paragraphBlock.width() / $paragraphBlock.height() > 5
 
     # Wire up changes that happen on resizes.
-    if @tumblr or true
+    if @tumblr
       $(window).resize => @onResize()
 
-    # Trigger it for the first size to initialize.
-    @onResize()
+      # Trigger it for the first size to initialize.
+      @onResize()
 
     # Copy latest date to frontpage and about page.
     $('.frontpage .date').text $('.post:first .date .value').text()
     $('.about .date').text $('.post:first .date').text()
 
+    @$newspaper = $('.newspaper')
+
     # Build the headlines.
     @initializeHeadlineDesigns()
     @layoutFrontpageHeadlines()
+
+    # Wire up back button, or remove it if using the one from adventure interface.
+    if @tumblr
+      $('.back-button').click (event) => @onBackButtonClick()
+
+    else
+      $('.back-button').remove()
+
+  onBackButtonClick: ->
+    if @$newspaper.hasClass('inside')
+      # Figure out which post we're on (the one in the upper half of the screen).
+      halfHeight = $(window).height() / 2
+      currentPostIndex = 0
+
+      for post, postIndex in $('.post')
+        currentPostIndex = postIndex if $(post).position().top < halfHeight
+
+      # Position frontpage so that the current post headline is in the middle.
+      $headline = $('.frontpage .headline').eq(currentPostIndex)
+
+      $frontpageScrollContent = $('.frontpage-area .scroll-content')
+      headlineTop = $headline.offset().top + $frontpageScrollContent.scrollTop()
+
+      $frontpageScrollContent.scrollTop headlineTop - halfHeight
+
+      # Start transition.
+      @$newspaper.removeClass('inside')
+
+      setTimeout =>
+        @$newspaper.removeClass('scroll-inside')
+      ,
+        1000
+      
+      return true
+      
+    false
 
   onResize: ->
     @resizeIframes()
