@@ -1,0 +1,10 @@
+{
+  "lockfileVersion": 1,
+  "dependencies": {
+    "color-thief-standalone": {
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/color-thief-standalone/-/color-thief-standalone-1.0.3.tgz",
+      "integrity": "sha1-JDVriOPryK3fEOIFntaaJgzLRkU="
+    }
+  }
+}

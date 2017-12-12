@@ -18,6 +18,12 @@
               </div>
               <div class="headlines"></div>
             </div>
+            {{#if previousPageUrl}}{{! {block:PreviousPage} !}}
+              <a href="{{previousPageUrl}}{{! {PreviousPage} !}}">Newer issue</a>
+            {{/if}}{{! {/block:PreviousPage} !}}
+            {{#if nextPageUrl}}{{! {block:NextPage} !}}
+              <a href="{{nextPageUrl}}{{! {NextPage} !}}">Older issue</a>
+            {{/if}}{{! {/block:NextPage} !}}
           </div>
         </div>
       {{/if}}{{! {/block:HomePage} !}}

@@ -93,6 +93,11 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     constructor: (@posts, @homePage) ->
       super
 
+    onCreated: ->
+      super
+
+      @daily = @ancestorComponentOfType HQ.Items.Daily
+
     onRendered: ->
       super
 
@@ -112,6 +117,18 @@ class HQ.Items.Daily extends LOI.Adventure.Item
 
     firstPost: ->
       _.first @posts
+
+    previousPageUrl: ->
+      page = @daily.page()
+      return if page < 2
+
+      "/daily/#{page - 1}"
+
+    nextPageUrl: ->
+      return if @posts.length < @daily.postsPerPage
+
+      page = @daily.page()
+      "/daily/#{page + 1}"
 
     date: ->
       post = @currentData()
@@ -173,3 +190,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       post = @currentData()
       players = _.sortBy post.video.player, (player) => player.width
       _.last players
+
+LOI.Adventure.registerDirectRoute "daily/*", =>
+  # Show the daily if we need to.
+  LOI.adventure.goToItem HQ.Items.Daily unless LOI.adventure.activeItemId() is HQ.Items.Daily.id()

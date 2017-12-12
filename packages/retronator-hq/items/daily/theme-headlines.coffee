@@ -1,5 +1,8 @@
 HQ = Retronator.HQ
 
+ColorThief = require 'color-thief-standalone'
+colorThief = new ColorThief
+
 class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
   initializeHeadlineDesigns: ->
     @headlineDesigns = []
@@ -187,7 +190,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
 
       $headline = $("<div class='headline headline-#{headlineLetter}'>")
 
-      headlineTitle = $post.find('b').eq(0).text()
+      headlineTitle = $post.find('h1, b').eq(0).text()
       $allTags = $post.find('.tag')
 
       # We don't want the common tags to appear in the headlines.
@@ -196,20 +199,46 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
 
       $headline.append("<div class='title'>#{headlineTitle}</div>")
       $headline.append("<div class='tags'>#{headlineTags.join ', '}</div>")
+
+      # Apply headline colors.
+      headlineImage = new Image
+      do (headlineImage, $headline) =>
+        headlineImage.crossOrigin = "Anonymous"
+        headlineImage.onload = =>
+          try
+            colors = colorThief.getPalette headlineImage, 2
+
+            # Make sure some color contrast is present.
+
+            colorDelta = (array1, array2) ->
+              Math.abs(array1[0] - array2[0]) + Math.abs(array1[1] - array2[1]) + Math.abs(array1[2] - array2[2])
+
+            return unless colorDelta(colors[0], colors[1]) > 50
+            return unless colorDelta(colors[0], colors[2]) > 50
+
+            createRGBColor = (array) => "rgb(#{array[0]},#{array[1]},#{array[2]})"
+
+            $headline.css backgroundColor: createRGBColor colors[0]
+            $headline.find('.title').css color: createRGBColor colors[1]
+            $headline.find('.tags').css color: createRGBColor colors[2]
+
+      headlineImage.src = images[0].src
+
       $group.append($headline)
       postElements.push $headline[0]
 
       do ($post) =>
-        $(postElements).click (event) =>
+        $postElements = $(postElements)
+
+        $postElements.mouseenter =>
+          $postElements.addClass('hover')
+
+        $postElements.mouseleave =>
+          $postElements.removeClass('hover')
+
+        $postElements.click (event) =>
           # Don't allow to click before the transition is over.
           return if @$newspaper.hasClass('scroll-inside')
-
-          # Scroll to post.
-          $scrollContent = $('.inside-content-area .scroll-content')
-
-          currentScrollTop = $scrollContent.scrollTop()
-          postTop = $post.position().top
-          scrollTop = postTop + currentScrollTop + 1
 
           # Start within the coverage of the frontpage.
           $frontpage = $('.frontpage')
@@ -225,6 +254,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
             # We need to maintain the top gap.
             frontpageScrollTop = $('.frontpage-area .scroll-content').scrollTop()
             scrollTop = Math.min scrollTop, frontpageScrollTop
+            fadeTransition = true
 
           else if frontpageBottom < windowHeight
             # We have the bottom gap, so fade the content.
@@ -236,8 +266,15 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
           else
             $insideContentArea.removeClass('fade-transition')
 
-          $scrollContent.scrollTop scrollTop
-
           @$newspaper.addClass('inside').addClass('scroll-inside')
+
+          # Scroll to post.
+          $scrollContent = $('.inside-content-area .scroll-content')
+
+          currentScrollTop = $scrollContent.scrollTop()
+          postTop = $post.position().top
+          scrollTop = postTop + currentScrollTop + 1
+
+          $scrollContent.scrollTop scrollTop
 
     $('.headlines').append($group)

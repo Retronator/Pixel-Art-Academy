@@ -10,6 +10,10 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'color-thief-standalone': '1.0.3'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:retronator');

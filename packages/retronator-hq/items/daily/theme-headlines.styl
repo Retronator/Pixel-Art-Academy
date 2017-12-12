@@ -16,6 +16,14 @@ line(name)
           grid-template-columns 20% 20% 20% 20% 20%
 
           .image
+          .headline
+            transition opacity ease-out 0.1s
+            cursor pointer
+
+            &.hover
+              opacity 0.95
+
+          .image
             background-size cover
             background-position center center
 
@@ -27,6 +35,7 @@ line(name)
               width 100%
 
           .headline
+            position relative
             padding 3rem
             background atariGrey(2)
             hyphens auto
