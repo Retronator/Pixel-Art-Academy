@@ -209,7 +209,7 @@
       width 100%
       right auto
       z-index 1
-      transition left 1s ease-out
+      transition left ease-out 1s
 
       .frontpage
         background-image image('/retronator/hq/items/daily/newspaper-top-frontpage.png'), image('/retronator/hq/items/daily/newspaper-bottom-frontpage.png')
@@ -264,6 +264,10 @@
 
     .inside-content-area
       fixed-cover()
+      opacity 0
+
+      &.fade-transition
+        transition opacity ease-in-out 0.5s
 
       .scroll-content
         right -100px
@@ -319,6 +323,8 @@
           padding-right 100px
 
       .inside-content-area
+        opacity 1
+
         .scroll-content
           right 0
           padding-right 0
