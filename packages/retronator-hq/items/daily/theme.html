@@ -18,12 +18,15 @@
               </div>
               <div class="headlines"></div>
             </div>
-            {{#if previousPageUrl}}{{! {block:PreviousPage} !}}
-              <a href="{{previousPageUrl}}{{! {PreviousPage} !}}">Newer issue</a>
-            {{/if}}{{! {/block:PreviousPage} !}}
-            {{#if nextPageUrl}}{{! {block:NextPage} !}}
-              <a href="{{nextPageUrl}}{{! {NextPage} !}}">Older issue</a>
-            {{/if}}{{! {/block:NextPage} !}}
+            <ol class="back-issues">
+              {{#each jumpPagination 5}}{{! {block:JumpPagination length="5"} !}}
+                <li class="back-issue" data-page="{{this}}{{! {PageNumber} !}}">
+                  {{#if jumpPage}}{{! {block:JumpPage} !}}
+                    <a class="link" href="{{jumpPageUrl}}{{! {Url} !}}"><span class="text"></span></a>
+                  {{/if}}{{! {/block:JumpPage} !}}
+                </li>
+              {{/each}}{{! {block:JumpPagination} !}}
+            </ol>
           </div>
         </div>
       {{/if}}{{! {/block:HomePage} !}}
@@ -184,6 +187,27 @@
                 </div>
               </div>
             {{/if}}{{! {/block:HomePage} !}}
+            <!-- ol class="back-issues">
+              {{#if previousPageUrl}}{{! {block:PreviousPage} !}}
+                <li class="back-issue">
+                  <a class="link" href="{{previousPageUrl}}{{! {PreviousPage} !}}"><span class="text">Newer issue</span></a>
+                </li>
+              {{/if}}{{! {/block:PreviousPage} !}}
+              {{#if nextPageUrl}}{{! {block:NextPage} !}}
+                <li class="back-issue" data-page="{{currentPage}}{{! {CurrentPage} !}}">
+                  <a class="link" href="{{nextPageUrl}}{{! {NextPage} !}}"><span class="text">Older issue</span></a>
+                </li>
+              {{/if}}{{! {/block:NextPage} !}}
+            </ol-->
+            <ol class="back-issues">
+              {{#each jumpPagination 5}}{{! {block:JumpPagination length="5"} !}}
+                <li class="back-issue" data-page="{{this}}{{! {PageNumber} !}}">
+                  {{#if jumpPage}}{{! {block:JumpPage} !}}
+                    <a class="link" href="{{jumpPageUrl}}{{! {Url} !}}"><span class="text"></span></a>
+                  {{/if}}{{! {/block:JumpPage} !}}
+                </li>
+              {{/each}}{{! {block:JumpPagination} !}}
+            </ol>
           </div>
         </div>
       </div>

@@ -65,6 +65,39 @@ class HQ.Items.Daily.Theme
     else
       $('.back-button').remove()
 
+    # Write back issue texts.
+    processBackIssues = ($backIssues) ->
+      $backIssues.each (index, backIssue) =>
+        $backIssue = $(backIssue)
+        page = parseInt $backIssue.data('page')
+
+        # Apply one of the four back-issue covers.
+        coverImage = (page - 1) % 4 + 1
+        $backIssue.addClass("cover-#{coverImage}")
+
+        # Nudge unless it's the last issue.
+        unless index is $backIssues.length - 1
+          $backIssue.css
+            left: "#{Math.floor Math.random() * 7 - 3}rem"
+
+        $text = $backIssue.find('.text')
+
+        unless $text.length
+          $backIssue.addClass('current')
+          return
+
+        text = page - 1
+
+        switch text
+          when 0 then text = "Latest issue"
+          when 1 then text = "1 issue ago"
+          else text = "#{text} issues ago"
+
+        $text.text(text)
+
+    processBackIssues $('.frontpage-area .back-issue')
+    processBackIssues $('.inside-content-area .back-issue')
+
   onBackButtonClick: ->
     if @$newspaper.hasClass('inside')
       # Figure out which post we're on (the one in the upper half of the screen).

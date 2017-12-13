@@ -29,7 +29,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     @page = new ComputedField =>
       page = parseInt FlowRouter.getParam 'parameter2'
 
-      page = 1 if _.isNaN page
+      page = 1 if _.isNaN(page) or page < 1
 
       page
 
@@ -41,7 +41,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     @autorun (computation) =>
       @_postsSubscription = Blog.Post.all.subscribe (@page() + 1) * @postsPerPage
 
-    @edition = new ComputedField =>
+    @issue = new ComputedField =>
       return null unless @_postsSubscription.ready()
 
       posts = Blog.Post.documents.find({},
@@ -51,7 +51,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
         skip: (@page() - 1) * @postsPerPage
       ).fetch()
 
-      new @constructor.Edition posts, true
+      new @constructor.Issue posts, true
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -67,7 +67,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
 
   backButtonCallback: ->
     =>
-      handled = @edition().theme.onBackButtonClick()
+      handled = @issue().theme.onBackButtonClick()
 
       if handled
         cancel: true
@@ -87,8 +87,8 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       action: =>
         LOI.adventure.goToItem daily
 
-  class @Edition extends AM.Component
-    @register 'Retronator.HQ.Items.Daily.Edition'
+  class @Issue extends AM.Component
+    @register 'Retronator.HQ.Items.Daily.Issue'
 
     constructor: (@posts, @homePage) ->
       super
@@ -118,17 +118,40 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     firstPost: ->
       _.first @posts
 
+    currentPage: ->
+      @daily.page()
+
     previousPageUrl: ->
       page = @daily.page()
       return if page < 2
 
-      "/daily/#{page - 1}"
+      @_pageUrl page - 1
 
     nextPageUrl: ->
       return if @posts.length < @daily.postsPerPage
 
+      @_pageUrl @daily.page() + 1
+
+    jumpPagination: (count) ->
       page = @daily.page()
-      "/daily/#{page + 1}"
+      min = Math.ceil page - count / 2
+      max = min + count - 1
+      min = Math.max 1, min
+      [min..max]
+
+    jumpCurrentPage: ->
+      page = @currentData()
+      page is @daily.page()
+
+    jumpPage: ->
+      not @jumpCurrentPage()
+
+    jumpPageUrl: ->
+      page = @currentData()
+      @_pageUrl page
+
+    _pageUrl: (page) ->
+      "/daily/#{page}"
 
     date: ->
       post = @currentData()

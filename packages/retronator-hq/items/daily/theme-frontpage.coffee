@@ -11,6 +11,9 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
       power: Math.pow(notesCount, 0.4) / 2.5
       imagesCount: $post.find('img').length
 
+    # TODO: Find a way to display posts without images. Right now we just remove them.
+    posts = _.filter posts, (post) -> post.imagesCount
+
     # Score them from 0-5.
     # 0: 0-10 (10)
     # 1: 10-40 (30)
@@ -93,6 +96,9 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
 
     # Apply designs in the layout sequence.
     $posts = $('.post')
+
+    # TODO: Find a way to display posts without images. Right now we just remove them.
+    $posts = $(_.filter $posts, (post) -> $(post).find('img').length)
 
     for designIndex in designIndices
       design = @headlineDesigns[designIndex]

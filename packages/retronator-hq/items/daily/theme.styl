@@ -329,3 +329,86 @@
         .scroll-content
           right 0
           padding-right 0
+
+    .back-issues
+      position relative
+      width 320rem
+      margin 50rem auto
+      list-style none
+      padding 0
+
+      &::after
+        content ''
+        position absolute
+        z-index -2
+        bottom -14rem
+        left -31rem
+        width 382rem
+        height 21rem
+        background image('/retronator/hq/items/daily/backissues-shelf.png') 100% / 100%
+        filter drop-shadow(0 10rem 10rem rgba(atariGrey(0), 0.5))
+
+      .back-issue
+        position relative
+        height 12rem
+        margin-top -3rem
+        text-align center
+        background-position center bottom
+        background-repeat no-repeat
+        transition all 0.1s
+
+        .link
+          display block
+          absolute-cover()
+          cursor pointer
+          text-decoration none
+
+          .text
+            display block
+            position absolute
+            bottom 0
+            left 0
+            right 0
+            adventure()
+            pixel-text-outline(atariGrey(1))
+            color atariGrey(5)
+            vertical-align bottom
+            transition all 0.1s
+
+        &:hover
+          top 1rem
+          transform scale(1.01)
+
+        for i in (1..4)
+          &.cover-{i}
+            background-image image('/retronator/hq/items/daily/backissues-' + i + '.png')
+
+        for i in (1..5)
+          &:nth-child({i})
+            z-index 5 - i
+
+        &:first-child
+          height 28rem
+          background-image image('/retronator/hq/items/daily/backissues-top.png')
+          background-position center top
+
+          &:hover
+            margin-top -6rem
+            top 0
+            transform none
+            height 31rem
+
+            .link
+              .text
+                bottom 3rem
+
+        &:nth-child(2)
+          top 0
+
+        &.current:hover
+          top 0
+          transform none
+
+        &.current:first-child:hover
+          margin-top -3rem
+          height 28rem
