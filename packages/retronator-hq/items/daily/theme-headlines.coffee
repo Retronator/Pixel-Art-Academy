@@ -237,44 +237,48 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
           $postElements.removeClass('hover')
 
         $postElements.click (event) =>
-          # Don't allow to click before the transition is over.
-          return if @$newspaper.hasClass('scroll-inside')
-
-          # Start within the coverage of the frontpage.
-          $frontpage = $('.frontpage')
-          frontpageTop = $frontpage.offset().top
-          frontpageBottom = frontpageTop + $frontpage.outerHeight()
-          windowHeight = $(window).height()
-
-          $insideContentArea = $('.inside-content-area')
-          fadeTransition = false
-
-          # Don't scroll past where the frontpage is so that the content doesn't appear through.
-          if frontpageTop > 0
-            # We need to maintain the top gap.
-            frontpageScrollTop = $('.frontpage-area .scroll-content').scrollTop()
-            scrollTop = Math.min scrollTop, frontpageScrollTop
-            fadeTransition = true
-
-          else if frontpageBottom < windowHeight
-            # We have the bottom gap, so fade the content.
-            fadeTransition = true
-
-          if fadeTransition
-            $insideContentArea.addClass('fade-transition')
-
-          else
-            $insideContentArea.removeClass('fade-transition')
-
-          @$newspaper.addClass('inside').addClass('scroll-inside')
-
-          # Scroll to post.
-          $scrollContent = $('.inside-content-area .scroll-content')
-
-          currentScrollTop = $scrollContent.scrollTop()
-          postTop = $post.position().top
-          scrollTop = postTop + currentScrollTop + 1
-
-          $scrollContent.scrollTop scrollTop
+          @goToInsideContent $post
 
     $('.headlines').append($group)
+
+  goToInsideContent: ($target) ->
+    # Don't allow to click before the transition is over.
+    return if @$newspaper.hasClass('scroll-inside')
+
+    # Start within the coverage of the frontpage.
+    $frontpage = $('.frontpage')
+    frontpageTop = $frontpage.offset().top
+    frontpageBottom = frontpageTop + $frontpage.outerHeight()
+    windowHeight = $(window).height()
+
+    $insideContentArea = $('.inside-content-area')
+    fadeTransition = false
+
+    # Don't scroll past where the frontpage is so that the content doesn't appear through.
+    if frontpageTop > 0
+      # We need to maintain the top gap.
+      frontpageScrollTop = $('.frontpage-area .scroll-content').scrollTop()
+      scrollTop = Math.min scrollTop, frontpageScrollTop
+      fadeTransition = true
+
+    else if frontpageBottom < windowHeight
+      # We have the bottom gap, so fade the content.
+      fadeTransition = true
+
+    if fadeTransition
+      $insideContentArea.addClass('fade-transition')
+
+    else
+      $insideContentArea.removeClass('fade-transition')
+
+    @$newspaper.addClass('inside').addClass('scroll-inside')
+
+    # Scroll to post.
+    $scrollContent = $('.inside-content-area .scroll-content')
+
+    currentScrollTop = $scrollContent.scrollTop()
+    postTop = $target.position().top
+    scrollTop = postTop + currentScrollTop + 1
+
+    $scrollContent.scrollTop scrollTop
+

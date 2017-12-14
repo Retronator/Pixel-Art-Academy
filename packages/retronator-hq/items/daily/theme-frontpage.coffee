@@ -66,6 +66,9 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
         designIndices = [designIndex]
         score = evaluateDesign designIndices, postPowers
 
+        # Give a bonus for covering the posts with a wholesome design.
+        score -= 1
+
         if score < bestDesignScore
           bestDesignScore = score
           bestDesignIndices = designIndices

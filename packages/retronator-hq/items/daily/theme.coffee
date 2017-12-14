@@ -67,6 +67,10 @@ class Retronator.HQ.Items.Daily.Theme
     else
       $('.back-button').remove()
 
+    # Wire the about link.
+    $('.folio .about').click (event) =>
+      @goToInsideContent $('.about.page')
+
     # Write back issue texts.
     processBackIssues = ($backIssues) ->
       $backIssues.each (index, backIssue) =>
@@ -102,20 +106,29 @@ class Retronator.HQ.Items.Daily.Theme
 
   onBackButtonClick: ->
     if @$newspaper.hasClass('inside')
-      # Figure out which post we're on (the one in the upper half of the screen).
-      halfHeight = $(window).height() / 2
-      currentPostIndex = 0
-
-      for post, postIndex in $('.post')
-        currentPostIndex = postIndex if $(post).position().top < halfHeight
-
-      # Position frontpage so that the current post headline is in the middle.
-      $headline = $('.frontpage .headline').eq(currentPostIndex)
-
+      # Scroll the frontpage to a point that matches where inside the content we reached.
       $frontpageScrollContent = $('.frontpage-area .scroll-content')
-      headlineTop = $headline.offset().top + $frontpageScrollContent.scrollTop()
 
-      $frontpageScrollContent.scrollTop headlineTop - halfHeight
+      # Figure out which page we're on (the one in the upper half of the screen).
+      halfHeight = $(window).height() / 2
+
+      if $('.about.page').position().top < halfHeight
+        # We reached the about page, so just scroll back to the top of the frontpage.
+        $frontpageScrollContent.scrollTop 0
+
+      else
+        # We're not that far so we must be on one of the posts. Figure out which.
+        currentPostIndex = 0
+
+        for post, postIndex in $('.post')
+          currentPostIndex = postIndex if $(post).position().top < halfHeight
+
+        # Position frontpage so that the current post headline is in the middle.
+        $headline = $('.frontpage .headline').eq(currentPostIndex)
+
+        headlineTop = $headline.offset().top + $frontpageScrollContent.scrollTop()
+
+        $frontpageScrollContent.scrollTop headlineTop - halfHeight
 
       # Start transition.
       @$newspaper.removeClass('inside')
