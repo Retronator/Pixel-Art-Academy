@@ -6,7 +6,7 @@ blogInfo =
   lastUpdated: 0
   data: null
 
-Blog.getInfo.method ->
+Blog.getData.method ->
   # Returned cached information if it's not older than one hour.
   return blogInfo.data if Date.now() - blogInfo.lastUpdated < 1000 * 60 * 60
 
@@ -17,29 +17,22 @@ Blog.getInfo.method ->
   blogInfo =
     lastUpdated: Date.now()
     data:
-      likes: info.user.likes
-      following: info.user.following
-      followers: followers.total_users
+      blogInfo:
+        likes: info.user.likes
+        following: info.user.following
+        followers: followers.total_users
+      supporterMessages: Retronator.Store.Transaction.getMessages()
+      supportersWithNames: Retronator.Accounts.User.getSupportersWithNames()
 
   # Return fresh information.
   blogInfo.data
 
-writeJsonData = (response, data) ->
+# Create an HTTP endpoint for retronator.com.
+AB.addPickerRoute '/daily/data.json', (routeParameters, request, response, next) =>
   response.writeHead 200,
     'Content-type': 'application/json'
     'Access-Control-Allow-Origin': 'http://www.retronator.com'
 
-  response.write JSON.stringify data
+    response.write JSON.stringify Blog.getData()
 
-# Also create an HTTP endpoint for retronator.com.
-AB.addPickerRoute '/daily/info.json', (routeParameters, request, response, next) =>
-  writeJsonData response, Blog.getInfo()
-  next()
-
-AB.addPickerRoute '/daily/supporter-messages.json', (routeParameters, request, response, next) =>
-  writeJsonData response, Retronator.Store.Transaction.getMessages()
-  next()
-
-AB.addPickerRoute '/daily/supporters-with-names.json', (routeParameters, request, response, next) =>
-  writeJsonData response, Retronator.Accounts.User.getSupportersWithNames()
   next()

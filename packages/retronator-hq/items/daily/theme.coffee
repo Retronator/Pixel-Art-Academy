@@ -5,36 +5,20 @@ class Retronator.HQ.Items.Daily.Theme
 
     # Get about page dynamic info.
     if @tumblr
-      $.getJSON 'https://hq.retronator.com/daily/info.json', (blogInfo) =>
-        @processBlogInfo blogInfo
-
-      $.getJSON 'https://hq.retronator.com/daily/supporter-messages.json', (messages) =>
-        @processSupporterMessages messages
-
-      $.getJSON 'https://hq.retronator.com/daily/suppoerts-with-names.json', (users) =>
-        @processSupportersWithNames users
+      $.getJSON 'https://hq.retronator.com/daily/data.json', (data) =>
+        @processBlogInfo data.blogInfo
+        @processSupporterMessages data.supporterMessages
+        @processSupportersWithNames data.supportersWithNames
 
     else
-      Retronator.Blog.getInfo (error, blogInfo) =>
+      Retronator.Blog.getData (error, data) =>
         if error
           console.error error
           return
 
-        @processBlogInfo blogInfo
-
-      Retronator.Store.Transaction.getMessages (error, messages) =>
-        if error
-          console.error error
-          return
-
-        @processSupporterMessages messages
-
-      Retronator.Accounts.User.getSupportersWithNames (error, users) =>
-        if error
-          console.error error
-          return
-
-        @processSupportersWithNames users
+        @processBlogInfo data.blogInfo
+        @processSupporterMessages data.supporterMessages
+        @processSupportersWithNames data.supportersWithNames
 
     # Wrap consecutive paragraphs into three-column format.
     $('.post').each (postIndex, element) =>

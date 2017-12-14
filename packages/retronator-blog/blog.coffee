@@ -3,7 +3,7 @@ AB = Artificial.Base
 
 class Retronator.Blog
   @id: -> 'Retronator.Blog'
-  @getInfo: new AB.Method name: "#{@id()}.getInfo"
+  @getData: new AB.Method name: "#{@id()}.getData"
 
   constructor: ->
     Retronator.App.addAdminPage '/admin/blog', @constructor.Pages.Admin
