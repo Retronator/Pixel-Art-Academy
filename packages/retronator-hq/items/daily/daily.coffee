@@ -211,8 +211,13 @@ class HQ.Items.Daily extends LOI.Adventure.Item
 
     videoPlayer: ->
       post = @currentData()
-      players = _.sortBy post.video.player, (player) => player.width
-      _.last players
+      
+      if post.video.url
+        "<video src='#{post.video.url}' controls preload='none' poster='#{post.video.thumbnail.url}'></video>"
+        
+      else
+        players = _.sortBy post.video.player, (player) => player.width
+        _.last(players).embed_code
 
 LOI.Adventure.registerDirectRoute "daily/*", =>
   # Show the daily if we need to.

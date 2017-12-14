@@ -97,6 +97,8 @@ class Retronator.Blog extends Retronator.Blog
             width: postData.thumbnail_width
             height: postData.thumbnail_height
 
+        post.video.url = postData.video_url if postData.video_url
+
       when @Post.Types.Answer
         post.question =
           askingName: postData.asking_name
