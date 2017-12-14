@@ -1,14 +1,18 @@
-HQ = Retronator.HQ
-
-class HQ.Items.Daily.Theme
+class Retronator.HQ.Items.Daily.Theme
   constructor: ->
     # Is the theme running on Tumblr?
     @tumblr = false
 
-    # Get blog info.
+    # Get about page dynamic info.
     if @tumblr
       $.getJSON 'https://hq.retronator.com/daily/info.json', (blogInfo) =>
         @processBlogInfo blogInfo
+
+      $.getJSON 'https://hq.retronator.com/daily/supporter-messages.json', (messages) =>
+        @processSupporterMessages messages
+
+      $.getJSON 'https://hq.retronator.com/daily/suppoerts-with-names.json', (users) =>
+        @processSupportersWithNames users
 
     else
       Retronator.Blog.getInfo (error, blogInfo) =>
@@ -17,6 +21,20 @@ class HQ.Items.Daily.Theme
           return
 
         @processBlogInfo blogInfo
+
+      Retronator.Store.Transaction.getMessages (error, messages) =>
+        if error
+          console.error error
+          return
+
+        @processSupporterMessages messages
+
+      Retronator.Accounts.User.getSupportersWithNames (error, users) =>
+        if error
+          console.error error
+          return
+
+        @processSupportersWithNames users
 
     # Wrap consecutive paragraphs into three-column format.
     $('.post').each (postIndex, element) =>
@@ -150,3 +168,21 @@ class HQ.Items.Daily.Theme
 
   processBlogInfo: (blogInfo) ->
     $('.circulation .value').text(blogInfo.followers.toLocaleString Artificial.Babel.currentLanguage())
+
+  processSupporterMessages: (messages) ->
+    messages = _.sortBy messages, (message) -> -message.priority
+    $messages = $('.supporters .messages')
+
+    for message in messages
+      $message = $("<li class='message'></li>")
+      $message.append("<blockquote class='text'>#{message.message}</blockquote>")
+      $message.append("<div class='name'>#{message.name}</div>") if message.name
+      $messages.append($message)
+
+  processSupportersWithNames: (users) ->
+    $supportersTable = $('.supporters .supporters-table')
+    for user in users
+      $supporter = $("<tr>")
+      $supporter.append("<td class='name'>#{user.name}</td>")
+      $supporter.append("<td class='amount'>#{user.amount}</td>")
+      $supportersTable.append($supporter)

@@ -161,3 +161,19 @@ Meteor.publish RS.Transaction.messages, (count) ->
     removed: (document) => @removed 'TransactionMessages', document._id, summarizeMessage document
 
   @ready()
+
+RS.Transaction.getMessages.method (count = 10) ->
+  check count, Match.PositiveInteger
+
+  transactions = RS.Transaction.documents.find(
+    totalValue:
+      $gt: 0
+    'tip.message':
+      $exists: true
+  ,
+    sort:
+      time: -1
+    limit: count
+  ).fetch()
+
+  summarizeMessage transaction for transaction in transactions

@@ -24,12 +24,22 @@ Blog.getInfo.method ->
   # Return fresh information.
   blogInfo.data
 
-# Also create an HTTP endpoint for retronator.com.
-AB.addPickerRoute '/daily/info.json', (routeParameters, request, response, next) =>
+writeJsonData = (response, data) ->
   response.writeHead 200,
     'Content-type': 'application/json'
     'Access-Control-Allow-Origin': 'http://www.retronator.com'
 
-  response.write JSON.stringify Blog.getInfo()
+  response.write JSON.stringify data
 
+# Also create an HTTP endpoint for retronator.com.
+AB.addPickerRoute '/daily/info.json', (routeParameters, request, response, next) =>
+  writeJsonData response, Blog.getInfo()
+  next()
+
+AB.addPickerRoute '/daily/supporter-messages.json', (routeParameters, request, response, next) =>
+  writeJsonData response, Retronator.Store.Transaction.getMessages()
+  next()
+
+AB.addPickerRoute '/daily/supporters-with-names.json', (routeParameters, request, response, next) =>
+  writeJsonData response, Retronator.Accounts.User.getSupportersWithNames()
   next()

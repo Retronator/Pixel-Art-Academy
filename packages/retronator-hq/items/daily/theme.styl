@@ -134,23 +134,23 @@
         padding 4rem 10rem 2rem
         margin 6rem 0 10rem
 
-      .quote
+      > .quote
         border-left none
         line-height 14rem
         padding 0
         margin 20rem
 
-      .quote-source
+      > .quote-source
         text-align right
         margin-top -10rem
 
         &::before
           content '—'
 
-      .question
+      > .question
         color atariGrey(2)
 
-      .link
+      > .link
         border 1rem solid atariGrey(0)
         background atariGrey(2)
         padding 0
@@ -281,30 +281,235 @@
           margin 0
 
         .about
-          .masthead
-            width 33%
-            border 1rem solid atariGrey(0)
-            border-left none
-            border-right none
-            padding 2rem 0
+          .content
+            border-top 1rem solid atariGrey(0)
+            padding 1rem 0
+            display flex
 
-            .title
-              retrotype()
-              text-align center
+            .history
+            .supporters
+              padding-left 4rem
+              margin-left 4rem
+              border-left 1rem solid atariGrey(0)
+              width 50%
 
-            .slogan
-              margin 5rem 0
-              text-align center
+            .masthead
+              width 76rem
+              flex-shrink 0
 
-              &::before
-              &::after
-                content '"'
+            .masthead
+              .title
+                retrotype()
+                text-align center
 
-            .published-info
-              text-transform uppercase
-              line-height 7rem
-              text-align center
-              margin-bottom 3rem
+              .slogan
+                margin 5rem 0
+                text-align center
+
+                &::before
+                &::after
+                  content '"'
+
+              .published-info
+                text-transform uppercase
+                line-height 7rem
+                text-align center
+                margin-bottom 3rem
+                border 1rem solid atariGrey(0)
+                border-left none
+                border-right none
+                padding-bottom 1rem
+
+              .contact
+                margin-bottom 5rem
+
+              .subscription-rates-table
+                adventure()
+                border-collapse collapse
+                margin 5rem 0
+                line-height 8rem
+
+                th
+                  text-transform uppercase
+                  line-height 6rem
+
+                .type
+                  text-align left
+                  width 100%
+
+                .rate
+                  text-align center
+
+                tr
+                  td
+                    border-bottom 1rem solid atariGrey(0)
+
+              .mailing-list-form
+                position relative
+                text-align center
+                border 1rem dotted atariGrey(0)
+                padding 3rem
+                padding-left 10rem
+                margin-left -9rem
+                margin-right -3rem
+
+                &::after
+                  content ''
+                  position absolute
+                  bottom -1rem
+                  left 2rem
+                  width 19rem
+                  height 11rem
+                  background image('/retronator/hq/items/daily/scissors-1.png') 100% / 100%
+
+                h2
+                  margin-top 2rem
+
+                p
+                  text-align left
+
+                .email-input
+                  width 100%
+                  border none
+                  border-bottom 1rem solid atariGrey(0)
+                  padding 1rem 2rem 0
+                  background none
+                  freehand()
+
+                .submit-button
+                  border-radius 0
+                  adventure()
+                  text-transform uppercase
+                  margin-top 5rem
+                  background atariGrey(7)
+                  border 1rem solid atariGrey(4)
+                  cursor pointer
+
+                  &:hover
+                    background atariGrey(5)
+
+              .social-links
+                margin-top -9rem
+                list-style none
+                padding 0
+
+              p
+                hyphens auto
+                line-height 8rem
+
+              h2
+                daily()
+                text-transform uppercase
+                font-weight normal
+                text-align center
+                line-height 7rem
+                margin-bottom 5rem
+
+            .history
+              h2
+                position relative
+                margin-top 0
+                text-transform uppercase
+                padding-bottom 10rem
+
+                .title-line
+                  display block
+
+                  &:nth-child(2)
+                    text-align right
+
+                &::after
+                  content ''
+                  position absolute
+                  bottom 0
+                  left 33%
+                  right 33%
+                  border-bottom 1rem solid atariGrey(0)
+
+              p
+                hyphens auto
+                text-align justify
+
+            .supporters
+              h2
+                margin-top 0
+                daily()
+                text-transform uppercase
+                font-weight normal
+                line-height 7rem
+                text-align center
+
+              p
+                margin-bottom 5rem
+
+              .messages-area
+              .supporters-table-area
+                border-bottom 1rem solid atariGrey(0)
+                margin-bottom 5rem
+
+              .messages-area
+                .messages
+                  list-style none
+                  padding 0
+                  adventure()
+                  line-height 6rem
+
+                  .message
+                    margin-bottom 5rem
+
+                    .text
+                      display inline
+                      border-left none
+                      margin 0
+                      padding 0
+
+                      &::before
+                      &::after
+                        content '"'
+
+                    .name
+                      display inline
+                      text-align right
+                      margin-left 3rem
+
+                      &::before
+                        content '—'
+
+              .supporters-table-area
+                .supporters-table
+                  adventure()
+                  line-height 6rem
+                  margin-bottom 5rem
+                  width 100%
+                  table-layout fixed
+
+                  th
+                    text-transform uppercase
+
+                    &.amount
+                      position relative
+
+                      .text
+                        position absolute
+                        top 0
+                        right 0
+
+                  .name
+                    text-align left
+                    hyphens auto
+
+                  .amount
+                    text-align right
+                    width 20rem
+
+              .become-a-supporter
+                h2
+                  margin-bottom 4rem
+
+                .support-options
+                  list-style none
+                  padding 0
+                  margin-bottom 3rem
 
     .scroll-area
       overflow hidden

@@ -54,7 +54,7 @@ Package.onUse(function(api) {
 
   api.addFile('transaction/transaction');
   api.addServerFile('transaction/subscriptions');
-  api.addServerFile('transaction/toprecent');
+  api.addServerFile('transaction/toprecent-server');
 
   api.addServerFile('transaction/methods-server/claim');
   api.addServerFile('transaction/methods-server/createtransaction');
