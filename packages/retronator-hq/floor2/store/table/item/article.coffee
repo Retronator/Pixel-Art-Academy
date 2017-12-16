@@ -33,13 +33,14 @@ class HQ.Store.Table.Item.Article extends HQ.Store.Table.Item
     # Figure out the author.
     if @post.reblog
       attribution = "reblogged from"
-      author = "<a href='#{@post.reblog.root.url}' target='_blank'>#{@post.reblog.root.title}</a>"
+      author = "<a href='#{@post.reblog.root.url}' target='_blank'>#{@post.reblog.root.title or @post.reblog.root.name}</a>"
 
     else
-      if 'Guest Blog' in @post.tags
+      guestBlogIndex = _.indexOf @post.tags, 'Guest Blog'
+
+      if guestBlogIndex > -1
         attribution = "guest blog by"
-        author = "Sarah 'Burra' Burrough" if 'Burra' in @post.tags
-        author = "Benjamin Asl" if 'Benjamin Asl' in @post.tags
+        author = @post.tags[guestBlogIndex + 1]
 
       else
         attribution = "by"

@@ -56,6 +56,17 @@ class Retronator.HQ.Items.Daily.Theme
         $directSource.append(" (via ").append($reblogLink).append(")")
         $post.find('.reblog.source').remove()
 
+      # Remove flavor text.
+      $post.find('> blockquote > p > b > i, > blockquote > p > i > b').closest('blockquote').remove()
+
+      # If this is a guest post, add author after the title.
+      tags = ($(tag).text() for tag in $post.find('.tags .tag'))
+      guestBlogIndex = _.indexOf tags, 'Guest Blog'
+
+      if guestBlogIndex > -1
+        author = tags[guestBlogIndex + 1]
+        $post.find('h1').after("<div class='guest-blog-attribution'>Guest blog by #{author}</div>")
+
     # Wire up changes that happen on resizes.
     if @tumblr
       $(window).resize => @onResize()
