@@ -188,7 +188,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
         $group.append($image)
         postElements.push $image[0]
 
-      $headline = $("<div class='headline headline-#{headlineLetter}'>")
+      $headline = $("<div class='headline headline-#{headlineLetter}' data-index='#{$post.index()}'>")
 
       headlineTitle = $post.find('h1, b').eq(0).text()
       $allTags = $post.find('.tag')

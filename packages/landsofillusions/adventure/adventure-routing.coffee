@@ -8,6 +8,7 @@ class LOI.Adventure extends LOI.Adventure
       FlowRouter.getParam 'parameter2'
       FlowRouter.getParam 'parameter3'
       FlowRouter.getParam 'parameter4'
+      FlowRouter.getParam 'parameter5'
     ]
 
     # Remove unused parameters.

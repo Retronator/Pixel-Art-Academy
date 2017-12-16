@@ -67,6 +67,10 @@
           text-align center
           text-transform uppercase
 
+          a
+            color atariGrey(0)
+            background none
+
       .footer
         display flex
         margin 1rem 0
@@ -135,6 +139,13 @@
         border-left 1rem solid atariGrey(2)
         padding 4rem 10rem 2rem
         margin 6rem 0 10rem
+
+      hr
+        margin 15rem auto
+        border 1rem solid atariGrey(0)
+        height 3rem
+        border-left none
+        border-right none
 
       > .quote
         border-left none
@@ -235,6 +246,10 @@
             text-align center
             margin 10rem 0 0
 
+            a
+              color atariGrey(0)
+              background none
+
           .slogan
           .support
             position absolute
@@ -248,6 +263,49 @@
           .support
             right 0
             text-align right
+
+          .tag-ear
+            position absolute
+            top 0
+            width 75rem
+            height 28rem
+            text-transform uppercase
+            text-align center
+            border 1rem solid atariGrey(0)
+            margin 0 5rem
+
+            .text
+              position absolute
+              width 100%
+              left 0
+              top 50%
+              transform translateY(-50%)
+              padding 3rem
+
+            &::after
+              content ''
+              position absolute
+              z-index -1
+              left 1rem
+              top 1rem
+              bottom 1rem
+              right 1rem
+              border 1rem solid atariGrey(0)
+
+            &:first-child
+              left 0
+
+            &:last-child
+              right 0
+
+            & ~ .slogan
+            & ~ .support
+              display none
+
+            & ~ .title
+              font-size 24rem
+              line-height 30rem
+              margin 0
 
         .folio
           border-top 1rem solid atariGrey(0)
@@ -542,6 +600,16 @@
         .scroll-content
           right 0
           padding-right 0
+
+    &.permalink
+      .posts
+        .post
+          .folio
+            .page-number
+              visibility hidden
+
+      .back-issues
+        display none
 
     .back-issues
       position relative

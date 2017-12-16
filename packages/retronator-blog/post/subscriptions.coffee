@@ -31,3 +31,13 @@ Blog.Post.forId.publish (id) ->
   Blog.Post.documents.find id,
     fields:
       data: 0
+
+# Get a specific blog post based on tumblr ID.
+Blog.Post.forTumblrId.publish (id) ->
+  check id, Match.Integer
+
+  Blog.Post.documents.find
+    'tumblr.id': id
+  ,
+    fields:
+      data: 0

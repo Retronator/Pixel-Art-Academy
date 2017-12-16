@@ -21,6 +21,7 @@ class Retronator.Blog extends Retronator.Blog
     post =
       type: postData.type
       tags: postData.tags
+      urlTags: _.map postData.tags, _.kebabCase
       time: new Date postData.timestamp * 1000
       notesCount: postData.note_count
       data: postData

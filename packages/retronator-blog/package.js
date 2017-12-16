@@ -25,6 +25,7 @@ Package.onUse(function(api) {
 
   api.addFile('post/post');
   api.addServerFile('post/subscriptions');
+  api.addServerFile('post/methods-server');
 
   api.addServerFile('methods-server');
 

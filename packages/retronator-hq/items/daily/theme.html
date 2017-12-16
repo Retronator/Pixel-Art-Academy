@@ -1,15 +1,32 @@
 <template name="Retronator.HQ.Items.Daily.Theme">
   <div class="retronator-hq-items-daily-theme">
-    <div class="newspaper">
+    <div class="newspaper {{#if homePage}}{{! {block:HomePage} !}}homepage{{/if}}{{! {/block:HomePage} !}}">
       <button class="back-button"></button>
-      {{#if homePage}}{{! {block:HomePage} !}}
+      <script>
+        Retronator.HQ.Items.Daily.BlogUrl = '{{blogUrl}}{{! {BlogURL} !}}';
+      </script>
+      {{#if indexPage}}{{! {block:IndexPage} !}}
         <div class="frontpage-area scroll-area">
           <div class="scroll-content">
             <div class="frontpage page safe-area-content">
               <div class="header">
-                <h1 class="title">Retronator</h1>
+                {{#if tagPage}}{{! {block:TagPage} !}}
+                  <div class="tag-ear">
+                    <div class="text">
+                      {{tag}}{{! {Tag} !}}
+                    </div>
+                  </div>
+                {{/if}}{{! {/block:TagPage} !}}
+                <h1 class="title"><a href="{{blogUrl}}{{! {BlogURL} !}}">Retronator</a></h1>
                 <div class="slogan">Daily pixel art and gaming news</div>
                 <div class="support">Supported by backers and patrons</div>
+                {{#if tagPage}}{{! {block:TagPage} !}}
+                  <div class="tag-ear">
+                    <div class="text">
+                      {{tag}}{{! {Tag} !}}
+                    </div>
+                  </div>
+                {{/if}}{{! {/block:TagPage} !}}
               </div>
               <div class="folio">
                 <div class="retropolis">Retropolis</div>
@@ -29,7 +46,7 @@
             </ol>
           </div>
         </div>
-      {{/if}}{{! {/block:HomePage} !}}
+      {{/if}}{{! {/block:IndexPage} !}}
       <div class="inside-content-area scroll-area">
         <div class="scroll-content">
           <div class="inside-content safe-area-content">
@@ -38,7 +55,11 @@
                 <li class="post page">
                   <div class="folio">
                     <div class="page-number"></div>
-                    <div class="date">Retronator, <span class="value">{{date}}{{! {DayOfWeek}, {Month} {DayOfMonth}, {Year} !}}</span></div>
+                    <div class="date">
+                      <a href="{{permalink}}{{! {Permalink} !}}">
+                        Retronator, <span class="value">{{date}}{{! {DayOfWeek}, {Month} {DayOfMonth}, {Year} !}}</span>
+                      </a>
+                    </div>
                   </div>
 
                   {{#if isPostText}}{{! {block:Text} !}}
@@ -161,7 +182,7 @@
                     {{#if tags}}{{! {block:HasTags} !}}
                       <ul class="tags">
                         {{#each tags}}{{! {block:Tags} !}}
-                          <li class="tag">{{this}}{{! {Tag} !}}</li>
+                          <li class="tag"><a href="{{tagUrl}}{{! {TagURL} !}}">{{this}}{{! {Tag} !}}</a></li>
                         {{/each}}{{! {/block:Tags} !}}
                       </ul>
                     {{/if}}{{! {/block:HasTags} !}}
@@ -172,7 +193,7 @@
                 </li>
               {{/each}}{{! {/block:Posts} !}}
             </ol>
-            {{#if homePage}}{{! {block:HomePage} !}}
+            {{#if indexPage}}{{! {block:IndexPage} !}}
               <div class="about page">
                 <div class="folio">
                   <div class="page-number"></div>
@@ -278,8 +299,6 @@
                         <th class="amount"><span class="text">$core</span></th>
                       </table>
                       <p>Other supporters chose to be anonymous.</p>
-                      <p>I am thankful to every one of you, including
-                      all the readers.</p>
                     </div>
                     <div class="become-a-supporter">
                       <h2>Become a supporter</h2>
@@ -291,7 +310,7 @@
                   </div>
                 </div>
               </div>
-            {{/if}}{{! {/block:HomePage} !}}
+            {{/if}}{{! {/block:IndexPage} !}}
             <!-- ol class="back-issues">
               {{#if previousPageUrl}}{{! {block:PreviousPage} !}}
                 <li class="back-issue">

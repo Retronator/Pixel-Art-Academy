@@ -23,35 +23,53 @@ class HQ.Items.Daily extends LOI.Adventure.Item
 
   @initialize()
 
-  constructor: ->
-    super
-    
-    @page = new ComputedField =>
-      page = parseInt FlowRouter.getParam 'parameter2'
-
-      page = 1 if _.isNaN(page) or page < 1
-
-      page
-
   onCreated: ->
     super
 
     @postsPerPage = 15
 
+    # Create URL state. Our options are:
+    # - index page        /page/x
+    # - index & tag page  /tagged/y/page/x
+    # - permalink page    /post/id/slug
+    @_urlState = null
+    @urlState = new ComputedField =>
+      # Preserve state when url doesn't address the daily (for example, if opening up the menu).
+      return @_urlState unless FlowRouter.getParam('parameter1') is 'daily'
+
+      switch FlowRouter.getParam 'parameter2'
+        when 'post'
+          @_urlState =
+            postId: parseInt FlowRouter.getParam 'parameter3'
+          
+        when 'tagged'
+          @_urlState =
+            tag: _.kebabCase FlowRouter.getParam 'parameter3'
+            page: FlowRouter.getParam 'parameter5'
+        
+        else
+          @_urlState =
+            page: FlowRouter.getParam 'parameter3'
+
+      # Make sure page is a valid integer.
+      @_urlState.page = parseInt @_urlState.page
+      @_urlState.page = 1 if _.isNaN(@_urlState.page) or @_urlState.page < 1
+
+      @_urlState
+    ,
+      EJSON.equals
+
+    # Create issue instance based on the URL state.
+    @issue = new ReactiveField null
     @autorun (computation) =>
-      @_postsSubscription = Blog.Post.all.subscribe (@page() + 1) * @postsPerPage
+      return unless urlState = @urlState()
 
-    @issue = new ComputedField =>
-      return null unless @_postsSubscription.ready()
+      Blog.Post.getIssueData urlState, (error, issueData) =>
+        return console.error error if error
+        
+        _.extend issueData, {urlState}
 
-      posts = Blog.Post.documents.find({},
-        sort:
-          time: -1
-        limit: @postsPerPage
-        skip: (@page() - 1) * @postsPerPage
-      ).fetch()
-
-      new @constructor.Issue posts, true
+        @issue new @constructor.Issue issueData
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
@@ -60,10 +78,27 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       500
 
   url: ->
-    page = @page()
-    return 'daily' if page is 1
+    # Return the wildcard URL so we don't rewrite it before we manage to parse parameters into our URL state.
+    return super unless @isCreated()
 
-    "daily/#{page}"
+    url = 'daily'
+
+    return url unless urlState = @urlState()
+
+    if urlState.postId
+      url = "#{url}/post/#{urlState.postId}"
+
+      # Try to load the slug as well.
+      if slug = @issue()?.posts()[0].tumblr.slug
+        url = "#{url}/#{slug}"
+
+    else if urlState.tag
+      url = "#{url}/tagged/#{urlState.tag}"
+
+    if urlState.page > 1
+      url = "#{url}/page/#{urlState.page}"
+
+    url
 
   backButtonCallback: ->
     =>
@@ -90,7 +125,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
   class @Issue extends AM.Component
     @register 'Retronator.HQ.Items.Daily.Issue'
 
-    constructor: (@posts, @homePage) ->
+    constructor: (@data) ->
       super
 
     onCreated: ->
@@ -115,33 +150,59 @@ class HQ.Items.Daily extends LOI.Adventure.Item
         # Resize the theme.
         @theme?.onResize()
 
+    posts: ->
+      @data.posts
+
+    permalinkPage: ->
+      @data.urlState.postId
+
+    tagPage: ->
+      @data.urlState.tag
+
+    tag: ->
+      @data.urlState.tag
+
+    urlSafeTag: ->
+      _.kebabCase @data.urlState.tag
+
+    indexPage: ->
+      not @permalinkPage()
+
+    homePage: ->
+      @indexPage() and @data.urlState.page is 1
+
     firstPost: ->
-      _.first @posts
+      _.first @data.posts
 
     currentPage: ->
-      @daily.page()
+      @data.urlState.page
+
+    blogUrl: -> '/daily'
 
     previousPageUrl: ->
-      page = @daily.page()
+      page = @data.urlState.page
       return if page < 2
 
       @_pageUrl page - 1
 
     nextPageUrl: ->
-      return if @posts.length < @daily.postsPerPage
+      return if @data.urlState.page < @data.pagesCount
 
-      @_pageUrl @daily.page() + 1
+      @_pageUrl @data.urlState.page + 1
 
     jumpPagination: (count) ->
-      page = @daily.page()
+      page = @data.urlState.page
       min = Math.ceil page - count / 2
       max = min + count - 1
-      min = Math.max 1, min
+
+      min = Math.max min, 1
+      max = Math.min max, @data.pagesCount
+
       [min..max]
 
     jumpCurrentPage: ->
       page = @currentData()
-      page is @daily.page()
+      page is @data.urlState.page
 
     jumpPage: ->
       not @jumpCurrentPage()
@@ -151,7 +212,11 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       @_pageUrl page
 
     _pageUrl: (page) ->
-      "/daily/#{page}"
+      url = '/daily'
+      url = "#{url}/tagged/#{@data.urlState.tag}" if @data.urlState.tag
+      return url if page is 1
+
+      "#{url}/page/#{page}"
 
     date: ->
       post = @currentData()
@@ -161,6 +226,15 @@ class HQ.Items.Daily extends LOI.Adventure.Item
         day: 'numeric'
         year: 'numeric'
         weekday: 'long'
+
+    permalink: ->
+      post = @currentData()
+
+      "/daily/post/#{post.tumblr.id}/#{post.tumblr.slug}"
+
+    tagUrl: ->
+      tag = @currentData()
+      "/daily/tagged/#{_.kebabCase tag}"
 
     isPostText: ->
       post = @currentData()

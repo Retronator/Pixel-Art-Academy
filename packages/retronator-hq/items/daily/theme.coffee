@@ -50,16 +50,6 @@ class Retronator.HQ.Items.Daily.Theme
       # Trigger it for the first size to initialize.
       @onResize()
 
-    # Copy latest date to frontpage and about page.
-    $('.frontpage .date').text $('.post:first .date .value').text()
-    $('.about .date').text $('.post:first .date').text()
-
-    @$newspaper = $('.newspaper')
-
-    # Build the headlines.
-    @initializeHeadlineDesigns()
-    @layoutFrontpageHeadlines()
-
     # Wire up back button, or remove it if using the one from adventure interface.
     if @tumblr
       $('.back-button').click (event) => @onBackButtonClick()
@@ -67,45 +57,87 @@ class Retronator.HQ.Items.Daily.Theme
     else
       $('.back-button').remove()
 
-    # Wire the about link.
-    $('.folio .about').click (event) =>
-      @goToInsideContent $('.about.page')
+    @$newspaper = $('.newspaper')
 
-    # Write back issue texts.
-    processBackIssues = ($backIssues) ->
-      $backIssues.each (index, backIssue) =>
-        $backIssue = $(backIssue)
-        page = parseInt $backIssue.data('page')
+    if $('.frontpage').length
+      # We're on an index page. Copy latest date to frontpage and about page.
+      $('.frontpage .date').text $('.post:first .date .value').text()
+      $('.about .date').text $('.post:first .date').text()
 
-        # Apply one of the four back-issue covers.
-        coverImage = (page - 1) % 4 + 1
-        $backIssue.addClass("cover-#{coverImage}")
+      # Build the headlines.
+      @initializeHeadlineDesigns()
+      @layoutFrontpageHeadlines()
 
-        # Nudge unless it's the last issue.
-        unless index is $backIssues.length - 1
-          $backIssue.css
-            left: "#{Math.floor Math.random() * 7 - 3}rem"
+      # Wire the about link.
+      $('.folio .about').click (event) =>
+        @goToInsideContent $('.about.page')
 
-        $text = $backIssue.find('.text')
+      # Write back issue texts.
+      processBackIssues = ($backIssues) ->
+        $backIssues.each (index, backIssue) =>
+          $backIssue = $(backIssue)
+          page = parseInt $backIssue.data('page')
 
-        unless $text.length
-          $backIssue.addClass('current')
-          return
+          # Apply one of the four back-issue covers.
+          coverImage = (page - 1) % 4 + 1
+          $backIssue.addClass("cover-#{coverImage}")
 
-        text = page - 1
+          # Nudge unless it's the last issue.
+          unless index is $backIssues.length - 1
+            $backIssue.css
+              left: "#{Math.floor Math.random() * 7 - 3}rem"
 
-        switch text
-          when 0 then text = "Latest issue"
-          when 1 then text = "1 issue ago"
-          else text = "#{text} issues ago"
+          $text = $backIssue.find('.text')
 
-        $text.text(text)
+          unless $text.length
+            $backIssue.addClass('current')
+            return
 
-    processBackIssues $('.frontpage-area .back-issue')
-    processBackIssues $('.inside-content-area .back-issue')
+          text = page - 1
+
+          switch text
+            when 0 then text = "Latest issue"
+            when 1 then text = "1 issue ago"
+            else text = "#{text} issues ago"
+
+          $text.text(text)
+
+      processBackIssues $('.frontpage-area .back-issue')
+      processBackIssues $('.inside-content-area .back-issue')
+
+      # Normalize case of tag pages.
+      targetTag = _.kebabCase $('.tag-ear').eq(0).text()
+
+      if targetTag
+        @isTagPage = true
+
+        tagsFrequency = {}
+        $('.tags .tag').each (index, tag) =>
+          tag = $(tag).text()
+          tagsFrequency[tag] ?= 0
+          tagsFrequency[tag]++
+
+        tags = ({tag, count} for tag, count of tagsFrequency)
+
+        # Filter down to only tags that vary only in case.
+        tags = _.filter tags, (tag) => targetTag is _.kebabCase tag.tag
+
+        # Find the most frequent variant of the tag.
+        tags = _.sortBy tags, 'count'
+        bestTag = _.last tags
+
+        $('.tag-ear .text').text(bestTag.tag)
+
+    else
+      # We're on a permalink page.
+      @isPermalinkPage = true
+      @$newspaper.addClass('permalink')
+
+      # Start on the inside.
+      @$newspaper.addClass('inside').addClass('scroll-inside')
 
   onBackButtonClick: ->
-    if @$newspaper.hasClass('inside')
+    if @$newspaper.hasClass('inside') and not @isPermalinkPage
       # Scroll the frontpage to a point that matches where inside the content we reached.
       $frontpageScrollContent = $('.frontpage-area .scroll-content')
 
@@ -124,7 +156,7 @@ class Retronator.HQ.Items.Daily.Theme
           currentPostIndex = postIndex if $(post).position().top < halfHeight
 
         # Position frontpage so that the current post headline is in the middle.
-        $headline = $('.frontpage .headline').eq(currentPostIndex)
+        $headline = $(".frontpage .headline[data-index='#{currentPostIndex}']")
 
         headlineTop = $headline.offset().top + $frontpageScrollContent.scrollTop()
 
@@ -139,7 +171,18 @@ class Retronator.HQ.Items.Daily.Theme
         1000
       
       return true
-      
+
+    # Check if we should get redirected to the main blog link.
+    if @isPermalinkPage or @isTagPage or not @$newspaper.hasClass('homepage')
+      if @tumblr
+        location.href = Retronator.HQ.Items.Daily.BlogUrl
+
+      else
+        FlowRouter.go '/daily'
+
+      return true
+
+    # We're already at the main link, so return back to HQ.
     false
 
   onResize: ->

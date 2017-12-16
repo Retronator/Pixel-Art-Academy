@@ -29,3 +29,7 @@ class Blog.Post extends AM.Document
   @all: @subscription 'all'
   @forDateRange: @subscription 'forDateRange'
   @forId: @subscription 'forId'
+  @forTumblrId: @subscription 'forTumblrId'
+
+  # Methods
+  @getIssueData: @method 'getIssueData'
