@@ -10,52 +10,75 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'webshot': '0.18.0',
+  's3-streaming-upload': '0.2.3'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartacademy');
 
   api.export('PixelArtDatabase');
 
-  api.addFiles('pixelartdatabase.coffee');
+  api.addFile('pixelartdatabase');
 
-  api.addFiles('artist/artist.coffee');
-  api.addFiles('artist/server.coffee', 'server');
-  api.addFiles('artist/methods.coffee');
-  api.addFiles('artist/subscriptions.coffee', 'server');
+  // Artist
 
-  api.addFiles('artwork/artwork.coffee');
-  api.addFiles('artwork/methods.coffee');
-  api.addFiles('artwork/subscriptions.coffee', 'server');
-  api.addFiles('artwork/migrations/0000-converttohttps.coffee', 'server');
+  api.addFile('artist/artist');
+  api.addServerFile('artist/server');
+  api.addFile('artist/methods');
+  api.addServerFile('artist/subscriptions');
 
-  api.addFiles('character/character.coffee');
+  // Artwork
 
-  api.addFiles('profile/profile.coffee');
-  api.addFiles('profile/server.coffee', 'server');
-  api.addFiles('profile/subscriptions.coffee', 'server');
+  api.addFile('artwork/artwork');
+  api.addFile('artwork/methods');
+  api.addServerFile('artwork/subscriptions');
+  api.addServerFile('artwork/migrations/0000-converttohttps');
 
-  api.addFiles('profile/providers-server/providers.coffee', 'server');
-  api.addFiles('profile/providers-server/twitter.coffee', 'server');
+  // Character
 
-  api.addFiles('components/components.coffee');
+  api.addFile('character/character');
 
-  api.addFiles('components/stream/stream.coffee');
-  api.addFiles('components/stream/stream.styl');
-  api.addFiles('components/stream/stream.html');
+  // Profile
 
-  /*
-  api.addFiles('components/uploader/uploader.html');
-  api.addFiles('components/uploader/uploader.coffee');
+  api.addFile('profile/profile');
+  api.addServerFile('profile/server');
+  api.addServerFile('profile/subscriptions');
 
-  api.addFiles('components/admin/admin.coffee');
+  api.addServerFile('profile/providers-server/providers');
+  api.addServerFile('profile/providers-server/twitter');
 
-  api.addFiles('components/admin/artist/artists.coffee');
-  api.addFiles('components/admin/artist/artist.coffee');
-  api.addFiles('components/admin/artist/artist.html');
+  // Website
 
-  api.addFiles('components/admin/artwork/artworks.coffee');
-  api.addFiles('components/admin/artwork/artwork.coffee');
-  api.addFiles('components/admin/artwork/artwork.html');
-  api.addFiles('components/admin/artwork/artwork.styl');
-  */
+  api.addFile('website/website');
+  api.addServerFile('website/methods-server');
+  api.addServerFile('website/renderpreview-server');
+  api.addServerFile('website/subscriptions');
 
+  // Components
+
+  api.addFile('components/components');
+
+  api.addUnstyledComponent('components/stream/stream');
+
+  // Pages
+
+  api.addFile('pages/pages');
+
+  // Admin
+
+  api.addUnstyledComponent('pages/admin/admin');
+
+  api.addFile('pages/admin/artists/artists');
+  api.addUnstyledComponent('pages/admin/artists/artist');
+
+  api.addFile('pages/admin/artworks/artworks');
+  api.addComponent('pages/admin/artworks/artwork');
+
+  api.addFile('pages/admin/websites/websites');
+  api.addUnstyledComponent('pages/admin/websites/website');
+
+  // api.addUnstyledComponent('components/uploader/uploader');
 });

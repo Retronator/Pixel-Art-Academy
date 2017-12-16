@@ -16,37 +16,27 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
-  api.addFiles('pixelartacademy.coffee');
+  api.addFile('pixelartacademy');
 
   // Layouts
 
-  api.addFiles('layouts/layouts.coffee');
+  api.addFile('layouts/layouts');
 
-  api.addFiles('layouts/alphaaccess/alphaaccess.coffee');
-  api.addFiles('layouts/alphaaccess/alphaaccess.html');
+  api.addUnstyledComponent('layouts/alphaaccess/alphaaccess');
 
-  api.addFiles('layouts/playeraccess/playeraccess.coffee');
-  api.addFiles('layouts/playeraccess/playeraccess.html');
+  api.addUnstyledComponent('layouts/playeraccess/playeraccess');
 
-  api.addFiles('layouts/adminaccess/adminaccess.coffee');
+  api.addFile('layouts/adminaccess/adminaccess');
 
   // Pages
 
-  api.addFiles('pages/pages.coffee');
+  api.addFile('pages/pages');
 
-  api.addFiles('pages/home/home.html');
-  api.addFiles('pages/home/home.coffee');
+  api.addFile('pages/admin/admin');
+  api.addFile('pages/admin/components/components');
+  api.addComponent('pages/admin/components/adminpage/adminpage');
+  api.addComponent('pages/admin/components/index/index');
+  api.addFile('pages/admin/components/document/document');
 
-  api.addFiles('pages/admin/admin.html');
-  api.addFiles('pages/admin/admin.coffee');
-  api.addFiles('pages/admin/components/components.coffee');
-  api.addFiles('pages/admin/components/adminpage/adminpage.coffee');
-  api.addFiles('pages/admin/components/adminpage/adminpage.html');
-  api.addFiles('pages/admin/components/adminpage/adminpage.styl');
-  api.addFiles('pages/admin/components/index/index.coffee');
-  api.addFiles('pages/admin/components/index/index.html');
-  api.addFiles('pages/admin/components/index/index.styl');
-  api.addFiles('pages/admin/components/document/document.coffee');
-
-  api.addFiles('character/methods.coffee', 'server');
+  api.addServerFile('character/methods');
 });

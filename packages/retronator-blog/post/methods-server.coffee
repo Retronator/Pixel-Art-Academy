@@ -7,7 +7,7 @@ Blog.Post.getIssueData.method (urlState) ->
     page: Match.OptionalOrNull Match.PositiveInteger
     tag: Match.OptionalOrNull String
     postId: Match.OptionalOrNull Number
-    postPerPage: Match.OptionalOrNull Match.PositiveInteger
+    postsPerPage: Match.OptionalOrNull Match.PositiveInteger
 
   query = {}
   queryOptions =

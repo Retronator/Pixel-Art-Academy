@@ -1,11 +1,13 @@
 AM = Artificial.Mirage
 PAA = PixelArtAcademy
+PADB = PixelArtDatabase
 
-class PAA.Artworks.Components.Admin.Artist extends PAA.Pages.Admin.Components.Document
-  @register 'PixelArtAcademy.Artworks.Components.Admin.Artist'
+class PADB.Pages.Admin.Artists.Artist extends PAA.Pages.Admin.Components.Document
+  @id: -> 'PixelArtDatabase.Pages.Admin.Artists.Artist'
+  @register @id()
 
   class @FirstName extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Artworks.Components.Admin.Artist.FirstName'
+    @register 'PixelArtDatabase.Pages.Admin.Artists.Artist.FirstName'
 
     load: -> @currentData()?.name?.first
 
@@ -14,7 +16,7 @@ class PAA.Artworks.Components.Admin.Artist extends PAA.Pages.Admin.Components.Do
         'name.first': value
 
   class @MiddleName extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Artworks.Components.Admin.Artist.MiddleName'
+    @register 'PixelArtDatabase.Pages.Admin.Artists.Artist.MiddleName'
 
     load: -> @currentData()?.name?.middle
 
@@ -23,7 +25,7 @@ class PAA.Artworks.Components.Admin.Artist extends PAA.Pages.Admin.Components.Do
         'name.middle': value
 
   class @LastName extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Artworks.Components.Admin.Artist.LastName'
+    @register 'PixelArtDatabase.Pages.Admin.Artists.Artist.LastName'
 
     load: -> @currentData()?.name?.last
 
@@ -32,7 +34,7 @@ class PAA.Artworks.Components.Admin.Artist extends PAA.Pages.Admin.Components.Do
         'name.last': value
 
   class @Nickname extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Artworks.Components.Admin.Artist.Nickname'
+    @register 'PixelArtDatabase.Pages.Admin.Artists.Artist.Nickname'
 
     load: -> @currentData()?.name?.nickname
 
@@ -41,7 +43,7 @@ class PAA.Artworks.Components.Admin.Artist extends PAA.Pages.Admin.Components.Do
         'name.nickname': value
 
   class @Pseudonym extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Artworks.Components.Admin.Artist.Pseudonym'
+    @register 'PixelArtDatabase.Pages.Admin.Artists.Artist.Pseudonym'
 
     load: -> @currentData()?.preudonym
 

@@ -13,8 +13,7 @@ class PAA.Pages.Admin.Components.Index extends AM.Component
   onCreated: ->
     super
 
-    @subscribe @options.subscriptionName, =>
-
+    @options.documentClass.all.subscribe @, =>
       # Always show the first document if none is displayed.
       @autorun (computation) =>
         documentId = FlowRouter.getParam 'documentId'
@@ -51,10 +50,11 @@ class PAA.Pages.Admin.Components.Index extends AM.Component
 
   onClickAddDocument: ->
     newId = Random.id()
-    Meteor.call @options.insertMethodName, newId
+    @options.documentClass.insert _id: newId, (error) =>
+      return console.error if error
 
-    # Switch to the new document.
-    FlowRouter.setParams documentId: newId
+      # Switch to the new document.
+      FlowRouter.setParams documentId: newId
 
   onClickDocument: ->
     FlowRouter.setParams documentId: @currentData()._id

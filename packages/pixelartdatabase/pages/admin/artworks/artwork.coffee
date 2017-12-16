@@ -1,8 +1,9 @@
 AM = Artificial.Mirage
 PAA = PixelArtAcademy
+PADB = PixelArtDatabase
 
-class PAA.Artworks.Components.Admin.Artwork extends PAA.Pages.Admin.Components.Document
-  @register 'PixelArtAcademy.Artworks.Components.Admin.Artwork'
+class PADB.Pages.Admin.Artworks.Artwork extends PAA.Pages.Admin.Components.Document
+  @register 'PixelArtDatabase.Pages.Admin.Artworks.Artwork'
 
   constructor: ->
     super
@@ -42,7 +43,7 @@ class PAA.Artworks.Components.Admin.Artwork extends PAA.Pages.Admin.Components.D
     height: "#{image.height * scale}px"
 
   class @Title extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Artworks.Components.Admin.Artwork.Title'
+    @register 'PixelArtDatabase.Artworks.Components.Admin.Artwork.Title'
 
     load: -> @currentData()?.title
 
@@ -51,7 +52,7 @@ class PAA.Artworks.Components.Admin.Artwork extends PAA.Pages.Admin.Components.D
         title: value
 
   class @PixelScale extends AM.DataInputComponent
-    @register 'PixelArtAcademy.Artworks.Components.Admin.Artwork.PixelScale'
+    @register 'PixelArtDatabase.Artworks.Components.Admin.Artwork.PixelScale'
 
     constructor: ->
       super

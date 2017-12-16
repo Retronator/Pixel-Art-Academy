@@ -3,7 +3,10 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.Pages.Admin.Components.AdminPage extends AM.Component
-  @register 'PixelArtAcademy.Pages.Admin.Components.AdminPage'
+  @id: -> 'PixelArtAcademy.Pages.Admin.Components.AdminPage'
+  @register @id()
+
+  template: -> @constructor.id()
 
   constructor: (@options) ->
     super
