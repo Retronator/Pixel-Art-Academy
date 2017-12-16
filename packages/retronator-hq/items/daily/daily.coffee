@@ -92,6 +92,10 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       if slug = @issue()?.posts()[0].tumblr.slug
         url = "#{url}/#{slug}"
 
+      else
+        # Preserve the current slug until a new one arrives.
+        url = "#{url}/*"
+
     else if urlState.tag
       url = "#{url}/tagged/#{urlState.tag}"
 

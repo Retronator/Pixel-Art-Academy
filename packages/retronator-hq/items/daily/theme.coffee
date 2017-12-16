@@ -20,11 +20,14 @@ class Retronator.HQ.Items.Daily.Theme
         @processSupporterMessages data.supporterMessages
         @processSupportersWithNames data.supportersWithNames
 
-    # Wrap consecutive paragraphs into three-column format.
-    $('.post').each (postIndex, element) =>
+    # Process each post.
+    $('.post').each (postIndex, post) =>
+      $post = $(post)
+      
+      # Wrap consecutive paragraphs into three-column format.
       paragraphs = []
 
-      children = $(element).children()
+      children = $post.children()
 
       for child, index in children
         if child.tagName.toLowerCase() is 'p'
@@ -42,6 +45,16 @@ class Retronator.HQ.Items.Daily.Theme
 
             # Prevent really short columns.
             $paragraphBlock.css columnCount: 1 if $paragraphBlock.width() / $paragraphBlock.height() > 5
+
+      # Process sources. Remove reblog root name if there is a title.
+      $reblogLink = $post.find('.reblog.source .link')
+      $reblogLink.find('.name').remove() if $reblogLink.find('.title').text()
+      
+      # If direct source is present, state reblog as via.
+      $directSource = $post.find('.direct.source')
+      if $directSource.length and $reblogLink.length
+        $directSource.append(" (via ").append($reblogLink).append(")")
+        $post.find('.reblog.source').remove()
 
     # Wire up changes that happen on resizes.
     if @tumblr

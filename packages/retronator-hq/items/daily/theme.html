@@ -178,6 +178,20 @@
                     {{/each}}{{! {/block:Lines} !}}
                   {{/if}}{{! {/block:Text} !}}
 
+                  {{#if reblog}}{{! {block:RebloggedFrom} !}}
+                    <div class="source reblog">
+                      Source:
+                      <a class="link" href="{{reblog.root.url}}{{! {ReblogRootURL} !}}"><span
+                        class="title">{{reblog.root.title}}{{! {ReblogRootTitle} !}}</span><span
+                        class="name">{{reblog.root.name}}{{! {ReblogRootName} !}}</span></a>
+                    </div>
+                  {{/if}}{{! {/block:RebloggedFrom} !}}
+                  {{#if source}}{{! {block:ContentSource} !}}
+                    <div class="source direct">
+                      Source: <a class="link" href="{{source.url}}{{! {SourceURL} !}}">{{source.title}}{{! {SourceTitle} !}}</a>
+                    </div>
+                  {{/if}}{{! {/block:ContentSource} !}}
+
                   <div class="footer">
                     {{#if tags}}{{! {block:HasTags} !}}
                       <ul class="tags">
