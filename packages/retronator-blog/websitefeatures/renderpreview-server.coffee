@@ -27,8 +27,8 @@ PADB.Website.renderRetronatorDailyFeaturePreview.method (id) ->
     defaultWhiteBackground: true
     customCSS: website.retronatorDailyFeature?.preview?.customCss
     windowSize:
-      width: 1024
-      height: 1024
+      width: website.retronatorDailyFeature?.preview?.width or 1024
+      height: website.retronatorDailyFeature?.preview?.height or 1024
 
   uploadingStarted = false
 
