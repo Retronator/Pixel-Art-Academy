@@ -8,11 +8,11 @@ class PADB.Pages.Admin.Websites.Website extends PAA.Pages.Admin.Components.Docum
 
   events: ->
     super.concat
-      'click .render-preview-button': @onClickRenderPreviewButton
+      'click .retronator-daily-feature .render-preview-button': @onClickRetronatorDailyFeatureRenderPreviewButton
 
-  onClickRenderPreviewButton: (event) ->
+  onClickRetronatorDailyFeatureRenderPreviewButton: (event) ->
     website = @currentData()
-    PADB.Website.renderPreview website._id
+    PADB.Website.renderRetronatorDailyFeaturePreview website._id
     
   class @Name extends AM.DataInputComponent
     @register 'PixelArtDatabase.Pages.Admin.Websites.Website.Name'
@@ -26,13 +26,24 @@ class PADB.Pages.Admin.Websites.Website extends PAA.Pages.Admin.Components.Docum
     load: -> @currentData()?.url
     save: (value) -> PADB.Website.update @currentData()._id, $set: url: value
 
-  class @FeaturedInRetronatorDaily extends AM.DataInputComponent
-    @register 'PixelArtDatabase.Pages.Admin.Websites.Website.FeaturedInRetronatorDaily'
+  class @RetronatorDailyFeature extends AM.DataInputComponent
+    @register 'PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature'
 
     constructor: ->
       super
 
       @type = AM.DataInputComponent.Types.Checkbox
 
-    load: -> @currentData()?.featuredInRetronatorDaily
-    save: (value) -> PADB.Website.update @currentData()._id, $set: featuredInRetronatorDaily: value
+    load: -> @currentData()?.retronatorDailyFeature?.enabled
+    save: (value) -> PADB.Website.update @currentData()._id, $set: 'retronatorDailyFeature.enabled': value
+
+    class @Order extends AM.DataInputComponent
+      @register 'PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature.Order'
+  
+      constructor: ->
+        super
+  
+        @type = AM.DataInputComponent.Types.Number
+  
+      load: -> @currentData()?.retronatorDailyFeature.order
+      save: (value) -> PADB.Website.update @currentData()._id, $set: 'retronatorDailyFeature.order': value

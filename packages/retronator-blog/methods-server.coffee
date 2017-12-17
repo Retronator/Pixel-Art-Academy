@@ -1,6 +1,7 @@
 AB = Artificial.Base
 AT = Artificial.Telepathy
 Blog = Retronator.Blog
+PADB = PixelArtDatabase
 
 blogInfo =
   lastUpdated: 0
@@ -13,6 +14,18 @@ Blog.getData.method ->
   # Grab new information from Tumblr.
   info = AT.Tumblr.userInfo()
   followers = AT.Tumblr.blogFollowers 'retronator.tumblr.com'
+  
+  # Get featured websites.
+  featuredWebsites = PADB.Website.documents.find(
+    'retronatorDailyFeature.enabled': true
+    'retronatorDailyFeature.preview.imageUrl': $exists: true
+  ,
+    sort:
+      'retronatorDailyFeature.order': 1
+  ).map (website) ->
+    name: website.name
+    url: website.url
+    previewImageUrl: website.retronatorDailyFeature.preview.imageUrl
 
   blogInfo =
     lastUpdated: Date.now()
@@ -23,6 +36,7 @@ Blog.getData.method ->
         followers: followers.total_users
       supporterMessages: Retronator.Store.Transaction.getMessages()
       supportersWithNames: Retronator.Accounts.User.getSupportersWithNames()
+      featuredWebsites: featuredWebsites
 
   # Return fresh information.
   blogInfo.data

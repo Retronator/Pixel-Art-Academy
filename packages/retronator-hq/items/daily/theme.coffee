@@ -6,9 +6,7 @@ class Retronator.HQ.Items.Daily.Theme
     # Get about page dynamic info.
     if @tumblr
       $.getJSON 'https://hq.retronator.com/daily/data.json', (data) =>
-        @processBlogInfo data.blogInfo
-        @processSupporterMessages data.supporterMessages
-        @processSupportersWithNames data.supportersWithNames
+        @processBlogData data
 
     else
       Retronator.Blog.getData (error, data) =>
@@ -16,9 +14,7 @@ class Retronator.HQ.Items.Daily.Theme
           console.error error
           return
 
-        @processBlogInfo data.blogInfo
-        @processSupporterMessages data.supporterMessages
-        @processSupportersWithNames data.supportersWithNames
+        @processBlogData data
 
     # Process each post.
     $('.post').each (postIndex, post) =>
@@ -230,11 +226,12 @@ class Retronator.HQ.Items.Daily.Theme
         width: targetWidth
         height: targetHeight
 
-  processBlogInfo: (blogInfo) ->
-    $('.circulation .value').text(blogInfo.followers.toLocaleString Artificial.Babel.currentLanguage())
+  processBlogData: (data) ->
+    # Process blog info.
+    $('.circulation .value').text(data.blogInfo.followers.toLocaleString Artificial.Babel.currentLanguage())
 
-  processSupporterMessages: (messages) ->
-    messages = _.sortBy messages, (message) -> -message.priority
+    # Process supporters messages.
+    messages = _.sortBy data.supporterMessages, (message) -> -message.priority
     $messages = $('.supporters .messages')
 
     for message in messages
@@ -243,10 +240,30 @@ class Retronator.HQ.Items.Daily.Theme
       $message.append("<div class='name'>#{message.name}</div>") if message.name
       $messages.append($message)
 
-  processSupportersWithNames: (users) ->
+    # Create supporters table.
     $supportersTable = $('.supporters .supporters-table')
-    for user in users
+    for supporter in data.supportersWithNames
       $supporter = $("<tr>")
-      $supporter.append("<td class='name'>#{user.name}</td>")
-      $supporter.append("<td class='amount'>#{user.amount}</td>")
+      $supporter.append("<td class='name'>#{supporter.name}</td>")
+      $supporter.append("<td class='amount'>#{supporter.amount}</td>")
       $supportersTable.append($supporter)
+
+    # Create featured websites.
+    $('.featured-websites-area').css
+      height: "#{data.featuredWebsites.length * 40 + 115}rem"
+
+    $featuredWebsites = $('.featured-websites')
+
+    for website, index in data.featuredWebsites
+      $website = $("<li class='website'></li>")
+      $website.css
+        top: "#{(index + 1) * 40}rem"
+
+      $preview = $("<a class='preview' href='#{website.url}' target='_blank'><img class='image' src='#{website.previewImageUrl}'/></a>")
+
+      # Displace the magazine a bit.
+      $preview.css
+        left: "#{Math.floor Math.random() * 7 - 3}rem"
+
+      $website.append($preview)
+      $featuredWebsites.append($website)

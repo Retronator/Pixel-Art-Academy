@@ -10,8 +10,14 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'webshot': '0.18.0',
+  's3-streaming-upload': '0.2.3'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartdatabase');
   api.use('chfritz:easycron');
   api.use('http');
 
@@ -28,6 +34,9 @@ Package.onUse(function(api) {
   api.addServerFile('post/methods-server');
 
   api.addServerFile('methods-server');
+
+  api.addFile('websitefeatures/website');
+  api.addServerFile('websitefeatures/renderpreview-server');
 
   // Pages
   api.addFile('pages/pages');

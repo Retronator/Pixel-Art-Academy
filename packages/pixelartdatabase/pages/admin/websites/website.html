@@ -3,12 +3,17 @@
     <h2>{{displayName}}</h2>
     <label class="name">Name: {{> PixelArtDatabase.Pages.Admin.Websites.Website.Name}}</label>
     <label class="url">Url: {{> PixelArtDatabase.Pages.Admin.Websites.Website.Url}}</label>
-    <label class="url">Featured in Retronator Daily: {{> PixelArtDatabase.Pages.Admin.Websites.Website.FeaturedInRetronatorDaily}}</label>
-    <label class="preview">Preview:
-      <button class="render-preview-button">Render</button>
-      {{#if preview.url}}
-        <img class="preview-image" src="{{preview.url}}"/>
+    <div class="retronator-daily-feature">
+      <label class="enabled">Featured in Retronator Daily: {{> PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature}}</label>
+      {{#if retronatorDailyFeature.enabled}}
+        <label class="order">Order: {{> PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature.Order}}</label>
+        <div class="preview">
+          Preview: <button class="render-preview-button">Render</button>
+          {{#if retronatorDailyFeature.preview.imageUrl}}
+            <img class="preview-image" src="{{retronatorDailyFeature.preview.imageUrl}}"/>
+          {{/if}}
+        </div>
       {{/if}}
-    </label>
+    </div>
   </div>
 </template>

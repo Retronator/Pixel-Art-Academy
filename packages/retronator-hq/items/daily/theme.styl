@@ -704,3 +704,75 @@
         &.current:first-child:hover
           margin-top -3rem
           height 28rem
+
+    .featured-websites-area
+      margin-top -20rem
+      overflow hidden
+
+      .featured-websites
+        position relative
+        width 320rem
+        margin 0 auto
+        padding 0
+        list-style none
+
+        .website
+          position absolute
+          margin 0 auto
+
+          &::before
+          &::after
+            content ''
+            position absolute
+            background-repeat no-repeat
+            background-size 100%
+
+          &::before
+            z-index -1
+            top 41rem
+            left -7rem
+            width 334rem
+            height 5rem
+            background-image image('/retronator/hq/items/daily/newsstand-back.png')
+
+          &::after
+            top 15rem
+            left -10rem
+            width 340rem
+            height 100rem
+            background-image image('/retronator/hq/items/daily/newsstand-front.png')
+            pointer-events none
+            filter drop-shadow(0 2rem 1rem rgba(atariGrey(0), 0.3))
+
+          .preview
+            display block
+            position relative
+            top 0
+            transition top 0.15s ease-in
+            filter drop-shadow(0 0 10rem rgba(atariGrey(0), 0.5))
+
+            &:hover
+              top -30rem
+              transition top 0.5s ease-out
+
+            .image
+              width 100%
+              background white
+              image-rendering initial
+
+            &::before
+              content ''
+              position absolute
+              left 0
+              right 0
+              top -4rem
+              height 4rem
+              background image('/retronator/hq/items/daily/magazine-top.png') 100% / 100%
+              background-repeat no-repeat
+
+            &::after
+              content ''
+              absolute-cover()
+              background image('/retronator/hq/items/daily/magazine-overlay.png') 100% / 100%
+              mix-blend-mode hard-light
+              opacity 0.5

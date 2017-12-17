@@ -5,7 +5,7 @@ Webshot = require 'webshot'
 Uploader = require('s3-streaming-upload').Uploader
 PassThrough = require('stream').PassThrough
 
-PADB.Website.renderPreview.method (id) ->
+PADB.Website.renderRetronatorDailyFeaturePreview.method (id) ->
   check id, Match.DocumentId
   RA.authorizeAdmin()
 
@@ -13,17 +13,18 @@ PADB.Website.renderPreview.method (id) ->
   throw new AE.ArgumentException "Website can't be found." unless website
 
   # Get image url.
-  url = website.preview?.url
+  imageUrl = website.retronatorDailyFeature?.preview?.imageUrl
 
-  if url
-    filename = url.match(/.*\/(websites.*)/)[1]
+  if imageUrl
+    filename = imageUrl.match(/.*\/(websites.*)/)[1]
 
   else
     filename = "websites/#{Random.id()}.png"
 
   console.log "Rendering website", website.url, "…"
 
-  renderStream = Webshot website.url
+  renderStream = Webshot website.url,
+    defaultWhiteBackground: true
 
   uploadingStarted = false
 
@@ -57,8 +58,6 @@ PADB.Website.renderPreview.method (id) ->
     console.log "Upload complete for", website.url
 
     # Update the url if needed.
-    unless url
+    unless imageUrl
       PADB.Website.documents.update id,
-        $set:
-          preview:
-            url: "https://pixelartacademy.s3.amazonaws.com/#{filename}"
+        $set: 'retronatorDailyFeature.preview.imageUrl': "https://pixelartacademy.s3.amazonaws.com/#{filename}"

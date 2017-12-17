@@ -2,9 +2,9 @@
   "lockfileVersion": 1,
   "dependencies": {
     "ajv": {
-      "version": "5.5.1",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.5.1.tgz",
-      "integrity": "sha1-s4u4h22ehr7plJVqBOch6IskjrI="
+      "version": "5.5.2",
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.5.2.tgz",
+      "integrity": "sha1-c7Xuyj+rZT49P5Qis0GtQiBdyWU="
     },
     "asn1": {
       "version": "0.2.3",

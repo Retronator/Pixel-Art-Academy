@@ -10,11 +10,6 @@ Package.describe({
   documentation: 'README.md'
 });
 
-Npm.depends({
-  'webshot': '0.18.0',
-  's3-streaming-upload': '0.2.3'
-});
-
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
@@ -54,7 +49,6 @@ Package.onUse(function(api) {
 
   api.addFile('website/website');
   api.addServerFile('website/methods-server');
-  api.addServerFile('website/renderpreview-server');
   api.addServerFile('website/subscriptions');
 
   // Components
