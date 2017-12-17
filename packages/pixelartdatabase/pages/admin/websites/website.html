@@ -7,10 +7,11 @@
       <label class="enabled">Featured in Retronator Daily: {{> PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature}}</label>
       {{#if retronatorDailyFeature.enabled}}
         <label class="order">Order: {{> PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature.Order}}</label>
+        <label class="order">Custom CSS: {{> PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature.CustomCss}}</label>
         <div class="preview">
           Preview: <button class="render-preview-button">Render</button>
           {{#if retronatorDailyFeature.preview.imageUrl}}
-            <img class="preview-image" src="{{retronatorDailyFeature.preview.imageUrl}}"/>
+            <img class="preview-image" src="{{uncached retronatorDailyFeature.preview.imageUrl}}"/>
           {{/if}}
         </div>
       {{/if}}

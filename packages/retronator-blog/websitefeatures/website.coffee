@@ -7,6 +7,7 @@ class PADB.Website extends PADB.Website
   #   order: number where along the features the website should appear, lower is sooner
   #   preview: preview of the website frontpage
   #     imageUrl: link to the rendered frontpage on our assets server
+  #     customCss: extra css to be used when rendering the preview
   @Meta
     name: @id()
     replaceParent: true

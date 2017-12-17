@@ -25,7 +25,8 @@ Blog.getData.method ->
   ).map (website) ->
     name: website.name
     url: website.url
-    previewImageUrl: website.retronatorDailyFeature.preview.imageUrl
+    # Add a random suffix so that the same image will refresh, but be cached for the duration of this blog info object.
+    previewImageUrl: "#{website.retronatorDailyFeature.preview.imageUrl}?#{Random.id()}"
 
   blogInfo =
     lastUpdated: Date.now()

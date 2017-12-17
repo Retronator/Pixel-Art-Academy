@@ -47,3 +47,14 @@ class PADB.Pages.Admin.Websites.Website extends PAA.Pages.Admin.Components.Docum
   
       load: -> @currentData()?.retronatorDailyFeature.order
       save: (value) -> PADB.Website.update @currentData()._id, $set: 'retronatorDailyFeature.order': value
+
+    class @CustomCss extends AM.DataInputComponent
+      @register 'PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature.CustomCss'
+
+      constructor: ->
+        super
+
+        @type = AM.DataInputComponent.Types.TextArea
+
+      load: -> @currentData()?.retronatorDailyFeature.preview.customCss
+      save: (value) -> PADB.Website.update @currentData()._id, $set: 'retronatorDailyFeature.preview.customCss': value

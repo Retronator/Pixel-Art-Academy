@@ -23,8 +23,12 @@ PADB.Website.renderRetronatorDailyFeaturePreview.method (id) ->
 
   console.log "Rendering website", website.url, "…"
 
-  renderStream = Webshot website.url,
+  renderStream = Webshot website.url, null,
     defaultWhiteBackground: true
+    customCSS: website.retronatorDailyFeature?.preview?.customCss
+    windowSize:
+      width: 1024
+      height: 1024
 
   uploadingStarted = false
 
@@ -46,6 +50,7 @@ PADB.Website.renderRetronatorDailyFeaturePreview.method (id) ->
     objectParams:
       ACL: 'public-read'
       Body: passthrough
+      ContentType: 'image/png'
 
   # Wrap in fiber so we can update the document on successful upload.
   send = Meteor.wrapAsync uploader.send.bind uploader
