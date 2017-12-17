@@ -717,6 +717,7 @@
         list-style none
 
         .website
+          width 100%
           position absolute
           margin 0 auto
 
@@ -729,33 +730,34 @@
 
           &::before
             z-index -1
-            top 41rem
+            top 51rem
             left -7rem
             width 334rem
             height 5rem
             background-image image('/retronator/hq/items/daily/newsstand-back.png')
 
           &::after
-            top 15rem
+            top 25rem
             left -10rem
             width 340rem
             height 150rem
             background-image image('/retronator/hq/items/daily/newsstand-front.png')
             pointer-events none
-            filter drop-shadow(0 2rem 1rem rgba(atariGrey(0), 0.3))
 
           .preview
             display block
+            width 100%
             position relative
             top 0
             transition top 0.15s ease-in
-            filter drop-shadow(0 0 10rem rgba(atariGrey(0), 0.5))
+            box-shadow 0 0 20rem rgba(atariGrey(0), 1)
 
             &:hover
-              top -50rem
+              top -40rem
               transition top 0.5s ease-out
 
             .image
+              display block
               width 100%
               background white
               image-rendering initial

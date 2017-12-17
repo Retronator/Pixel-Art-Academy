@@ -250,14 +250,14 @@ class Retronator.HQ.Items.Daily.Theme
 
     # Create featured websites.
     $('.featured-websites-area').css
-      height: "#{data.featuredWebsites.length * 60 + 140}rem"
+      height: "#{data.featuredWebsites.length * 50 + 140}rem"
 
     $featuredWebsites = $('.featured-websites')
 
     for website, index in data.featuredWebsites
       $website = $("<li class='website'></li>")
       $website.css
-        top: "#{(index + 1) * 60}rem"
+        top: "#{(index + 1) * 50}rem"
 
       $preview = $("<a class='preview' href='#{website.url}' target='_blank'><img class='image' src='#{website.previewImageUrl}'/></a>")
 
