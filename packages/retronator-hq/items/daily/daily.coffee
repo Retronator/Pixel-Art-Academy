@@ -26,8 +26,6 @@ class HQ.Items.Daily extends LOI.Adventure.Item
   onCreated: ->
     super
 
-    @postsPerPage = 15
-
     # Create URL state. Our options are:
     # - index page        /page/x
     # - index & tag page  /tagged/y/page/x

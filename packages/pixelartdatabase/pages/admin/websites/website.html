@@ -3,15 +3,19 @@
     <h2>{{displayName}}</h2>
     <label class="name">Name: {{> PixelArtDatabase.Pages.Admin.Websites.Website.Name}}</label>
     <label class="url">Url: {{> PixelArtDatabase.Pages.Admin.Websites.Website.Url}}</label>
-    <div class="retronator-daily-feature">
-      <label class="enabled">Featured in Retronator Daily: {{> PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature}}</label>
-      {{#if retronatorDailyFeature.enabled}}
-        <label class="order">Order: {{> PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature.Order}}</label>
-        <label class="order">Custom CSS: {{> PixelArtDatabase.Pages.Admin.Websites.Website.RetronatorDailyFeature.CustomCss}}</label>
+    <div class="blog-feature">
+      <label class="enabled">Featured in Retronator Daily: {{> PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature}}</label>
+      {{#if blogFeature.enabled}}
+        <label class="order">Order: {{> PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.Order}}</label>
         <div class="preview">
-          Preview: <button class="render-preview-button">Render</button>
-          {{#if retronatorDailyFeature.preview.imageUrl}}
-            <img class="preview-image" src="{{uncached retronatorDailyFeature.preview.imageUrl}}"/>
+          Preview:
+          <label class="order">Custom CSS: {{> PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.CustomCss}}</label>
+          <label class="width">Width: {{> PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.Width}}</label>
+          <label class="height">Height: {{> PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.Height}}</label>
+          <label class="height">Render delay: {{> PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.RenderDelay}}</label>
+          <button class="render-preview-button">Render</button>
+          {{#if blogFeature.preview.imageUrl}}
+            <img class="preview-image" src="{{uncached blogFeature.preview.imageUrl}}"/>
           {{/if}}
         </div>
       {{/if}}

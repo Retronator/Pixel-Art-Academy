@@ -1,4 +1,5 @@
 AT = Artificial.Telepathy
+PADB = PixelArtDatabase
 
 # Prepare the server part of the Retronator Blog class.
 class Retronator.Blog extends Retronator.Blog
@@ -39,6 +40,19 @@ class Retronator.Blog extends Retronator.Blog
 
       @processPostHistory newOptions
 
+  @updateFeaturedWebsitePreviews: ->
+    featuredWebsites = PADB.Website.documents.find(
+      'blogFeature.enabled': true
+    ).fetch()
+
+    # Render 1 website per minute.
+    for website, index in featuredWebsites
+      do (website) =>
+        Meteor.setTimeout =>
+          @renderWebsitePreview website._id
+        ,
+          index * 60 * 1000
+
 # Initialize on startup.
 Document.startup ->
   return unless AT.Tumblr.initialized
@@ -58,4 +72,12 @@ Document.startup ->
       count: 20
       reprocess: true
   ,
+    minute: 20
+
+  # Update featured website previews once per day.
+  new Cron =>
+    console.log "Updating featured website previews."
+    Retronator.Blog.updateFeaturedWebsitePreviews()
+  ,
+    hour: 2
     minute: 0

@@ -17,16 +17,16 @@ Blog.getData.method ->
   
   # Get featured websites.
   featuredWebsites = PADB.Website.documents.find(
-    'retronatorDailyFeature.enabled': true
-    'retronatorDailyFeature.preview.imageUrl': $exists: true
+    'blogFeature.enabled': true
+    'blogFeature.preview.imageUrl': $exists: true
   ,
     sort:
-      'retronatorDailyFeature.order': 1
+      'blogFeature.order': 1
   ).map (website) ->
     name: website.name
     url: website.url
     # Add a random suffix so that the same image will refresh, but be cached for the duration of this blog info object.
-    previewImageUrl: "#{website.retronatorDailyFeature.preview.imageUrl}?#{Random.id()}"
+    previewImageUrl: "#{website.blogFeature.preview.imageUrl}?#{Random.id()}"
 
   blogInfo =
     lastUpdated: Date.now()

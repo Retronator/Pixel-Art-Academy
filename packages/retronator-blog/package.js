@@ -28,15 +28,20 @@ Package.onUse(function(api) {
   // Immediately add the server file because it rewrites the Blog class.
   api.addServerFile('server');
   api.addServerFile('server-processpost');
+  api.addServerFile('server-renderwebsitepreview');
+  
+  // Post
 
   api.addFile('post/post');
   api.addServerFile('post/subscriptions');
   api.addServerFile('post/methods-server');
 
   api.addServerFile('methods-server');
+  
+  // Website
 
-  api.addFile('websitefeatures/website');
-  api.addServerFile('websitefeatures/renderpreview-server');
+  api.addFile('website/website');
+  api.addServerFile('website/methods-server');
 
   // Pages
   api.addFile('pages/pages');
