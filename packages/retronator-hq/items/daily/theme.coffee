@@ -60,6 +60,9 @@ class Retronator.HQ.Items.Daily.Theme
           images = images[rowImagesCount..]
           $photoset.append($group)
 
+        # Create fullscreen image stream.
+        @wireArtworkStream $photoset.find('img')
+
       # Wrap consecutive paragraphs into three-column format.
       paragraphs = []
 
@@ -73,7 +76,7 @@ class Retronator.HQ.Items.Daily.Theme
           nextChild = children[index + 1]
           if not nextChild or nextChild.tagName.toLowerCase() isnt 'p'
             # Wrap the paragraphs into a single block.
-            $(paragraphs).wrapAll('<div class="paragraphs-block"/>')
+            $(paragraphs).wrapAll('<div class="paragraphs-block">')
             $paragraphBlock = $(paragraphs[0]).parent()
 
             # Clean up the paragraphs.

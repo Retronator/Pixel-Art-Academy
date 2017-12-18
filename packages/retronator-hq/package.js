@@ -58,6 +58,7 @@ Package.onUse(function(api) {
   api.addComponent('items/daily/theme');
   api.addStyledFile('items/daily/theme-headlines');
   api.addFile('items/daily/theme-frontpage');
+  api.addFile('items/daily/theme-stream');
 
   // Scenes
   

@@ -173,6 +173,7 @@
 
             img
               width 100%
+              cursor pointer
 
             &:last-child
               margin-right 0
@@ -813,3 +814,9 @@
               background image('/retronator/hq/items/daily/magazine-overlay.png') 100% / 100%
               mix-blend-mode hard-light
               opacity 0.5
+
+.retronator-hq-items-daily-stream
+  fixed-cover()
+  z-index 4
+  overflow-y auto
+  cursor pointer

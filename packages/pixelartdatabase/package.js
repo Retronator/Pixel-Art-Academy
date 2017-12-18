@@ -54,8 +54,7 @@ Package.onUse(function(api) {
   // Components
 
   api.addFile('components/components');
-
-  api.addUnstyledComponent('components/stream/stream');
+  api.addComponent('components/stream/stream');
 
   // Pages
 
