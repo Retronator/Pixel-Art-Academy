@@ -158,6 +158,41 @@
         border-left none
         border-right none
 
+      > .photoset
+        border 1rem solid atariGrey(0)
+        padding 1rem
+
+        .group
+          margin-bottom 1rem
+          display flex
+
+          .image
+            margin-right 1rem
+            width 100%
+            overflow hidden
+
+            img
+              width 100%
+
+            &:last-child
+              margin-right 0
+
+          &.layout-2
+            .image
+              width 50%
+
+          &.layout-3
+            .image
+              width 33.3%
+
+          &:last-child
+            margin-bottom 0
+
+        img
+          display block
+          border none
+          padding 0
+
       > .quote
         border-left none
         line-height 14rem

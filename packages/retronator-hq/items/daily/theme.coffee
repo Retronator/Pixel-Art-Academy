@@ -19,7 +19,47 @@ class Retronator.HQ.Items.Daily.Theme
     # Process each post.
     $('.post').each (postIndex, post) =>
       $post = $(post)
-      
+
+      # Create photosets.
+      $photoset = $post.find('.photoset')
+      if $photoset.length
+        # Get layout and make sure it's a string so we can iterate over it.
+        layout = "#{$photoset.data('layout')}"
+        images = $photoset.find('img').toArray()
+
+        for layoutRow in layout
+          rowImagesCount = parseInt layoutRow
+          rowImages = images[0...rowImagesCount]
+
+          # We need to make the row as high as the smallest image (the one with smallest aspect ratio). We do this by
+          # adjusting margins on images with higher aspect ratio, so that we see the middle part of those images.
+          aspectRatios = for image in rowImages
+            $image = $(image)
+
+            # We have original image size stored in data attributes (so we don't have to wait for image to load).
+            width = $image.data('width')
+            height = $image.data('height')
+
+            height / width
+
+          minAspectRatio = _.min aspectRatios
+
+          $group = $("<div class='group layout-#{rowImagesCount}'></div>")
+          
+          for image, index in rowImages
+            $image = $("<div class='image'></div>")
+            $image.append(image)
+            aspectRatioDifference = aspectRatios[index] - minAspectRatio
+            marginPercentage = "-#{aspectRatioDifference * 50}%"
+            $(image).css
+              marginTop: marginPercentage
+              marginBottom: marginPercentage
+
+            $group.append($image)
+
+          images = images[rowImagesCount..]
+          $photoset.append($group)
+
       # Wrap consecutive paragraphs into three-column format.
       paragraphs = []
 

@@ -89,9 +89,11 @@
                   {{/if}}{{! {/block:Panorama} !}}
 
                   {{#if isPostPhotoset}}{{! {block:Photoset} !}}
-                    {{#each photos}}{{! {block:Photos}  !}}
-                      <img src="{{original_size.url}}{{! {PhotoURL-HighRes} !}}"/>
-                    {{/each}}{{! {/block:Photos}  !}}
+                    <div class="photoset" data-layout="{{layout}}{{! {PhotosetLayout} !}}">
+                      {{#each photos}}{{! {block:Photos}  !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-HighRes} !}}" data-width="{{original_size.width}}{{! {PhotoWidth-HighRes} !}}" data-height="{{original_size.height}}{{! {PhotoHeight-HighRes} !}}"/>
+                      {{/each}}{{! {/block:Photos}  !}}
+                    </div>
                     {{{text}}}{{! {Caption} !}}
                   {{/if}}{{! {/block:Photoset} !}}
 
