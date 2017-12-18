@@ -168,36 +168,57 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     $group = $("<div class='group #{design.name}'>")
 
     for headlineImagesCount, index in design.structure
-      headlineLetter = ['a', 'b', 'c'][index]
+      headlineStyleClassSuffix = ['a', 'b', 'c'][index]
+
       $post = $(posts[index])
-      images = $post.find('img')
+
+      tags = ($(tag).text() for tag in $post.find('.tag'))
+      titleModifierTag = _.find tags, (tag) => _.startsWith tag, 'title'
+      coverModifierTag = _.find tags, (tag) => _.startsWith tag, 'cover'
+
+      $images = $post.find('img')
+
+      if coverModifierTag
+        coverImageIndex = parseInt((coverModifierTag.match /cover(.*)/)[1]) - 1
+
+      else
+        coverImageIndex = 0
+
+      coverImage = $images[coverImageIndex]
+      restOfImages = _.without $images, coverImage
 
       postElements = []
 
       for headlineImageIndex in [1..headlineImagesCount]
-        if headlineImagesCount is 1
-          imageIndex = 0
+        if headlineImageIndex is 1
+          $sourceImage = $(coverImage)
 
         else
-          imageIndex = Math.round (headlineImageIndex - 1) / (headlineImagesCount - 1) * (images.length - 1)
+          imageIndex = Math.round (headlineImageIndex - 1) / (headlineImagesCount - 1) * (restOfImages.length - 1)
+          $sourceImage = $(restOfImages[imageIndex])
 
-        $image = $("<figure class='image image-#{headlineLetter}#{headlineImageIndex}'>")
-        $sourceImage = $(images[imageIndex])
+        $image = $("<figure class='image image-#{headlineStyleClassSuffix}#{headlineImageIndex}'>")
         $image.append($sourceImage.clone())
         $image.css backgroundImage: "url('#{$sourceImage.attr('src')}')"
         $group.append($image)
         postElements.push $image[0]
 
-      $headline = $("<div class='headline headline-#{headlineLetter}' data-index='#{$post.index()}'>")
+      $headline = $("<div class='headline headline-#{headlineStyleClassSuffix}' data-index='#{$post.index()}'>")
 
-      headlineTitle = $post.find('h1, b').eq(0).text()
-      $allTags = $post.find('.tag')
+      if titleModifierTag
+        titleElementIndex = parseInt((titleModifierTag.match /title(.*)/)[1]) - 1
 
-      # We don't want the common tags to appear in the headlines.
-      headlineTags = _.filter $allTags, (tag) => not ($(tag).text() in ['Feature', 'Pixel Art', 'Gaming', 'GIF'])
-      headlineTags = _.map headlineTags, (tag) => $(tag).text()
+      else
+        titleElementIndex = 0
 
+      headlineTitle = $post.find('h1, b').eq(titleElementIndex).text()
       $headline.append("<div class='title'>#{headlineTitle}</div>")
+
+
+      # We don't want the common and modifier tags to appear in the headlines.
+      headlineTags = _.filter tags, (tag) =>
+        not (tag in ['Feature', 'Pixel Art', 'Gaming', 'GIF'] or _.startsWith(tag, 'cover') or _.startsWith(tag, 'title'))
+
       $headline.append("<div class='tags'>#{headlineTags.join ', '}</div>")
 
       # Apply headline colors.
@@ -222,7 +243,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
             $headline.find('.title').css color: createRGBColor colors[1]
             $headline.find('.tags').css color: createRGBColor colors[2]
 
-      headlineImage.src = images[0].src
+      headlineImage.src = $images[0].src
 
       $group.append($headline)
       postElements.push $headline[0]

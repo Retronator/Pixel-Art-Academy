@@ -156,6 +156,14 @@ class Retronator.HQ.Items.Daily.Theme
       # Start on the inside.
       @$newspaper.addClass('inside').addClass('scroll-inside')
 
+    # Now that the frontpage has been built, remove modifier tags.
+    for tag in $('.post .tags .tag')
+      $tag = $(tag)
+      tagText = $tag.text()
+
+      for modifier in ['cover', 'title']
+        $tag.remove() if _.startsWith tagText, modifier
+
   onBackButtonClick: ->
     if @$newspaper.hasClass('inside') and not @isPermalinkPage
       # Scroll the frontpage to a point that matches where inside the content we reached.
