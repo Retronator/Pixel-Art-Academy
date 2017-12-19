@@ -8,24 +8,23 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
       notesCount = parseInt $post.find('.notes-count').text()
 
       notesCount: notesCount
-      power: Math.pow(notesCount, 0.4) / 2.5
+      # Calculate power from 0-5 (and more).
+      # 0: 0-25 (25)
+      # 1: 25-100 (75)
+      # 2: 100-220 (120)
+      # 3: 220-400 (180)
+      # 4: 400-620 (220)
+      # 5: 620+
+      #
+      #      x ^ 0.5
+      # y = ---------
+      #        5
+      power: Math.pow(notesCount, 0.5) / 5
       imagesCount: $post.find('img').length
 
     # TODO: Find a way to display posts without images. Right now we just remove them.
     posts = _.filter posts, (post) -> post.imagesCount
     return unless posts.length
-
-    # Score them from 0-5.
-    # 0: 0-10 (10)
-    # 1: 10-40 (30)
-    # 2: 40-100 (60)
-    # 3: 100-250 (150)
-    # 4: 250-500 (250)
-    # 5: 500+
-    #
-    #      x ^ 0.4
-    # y = ---------
-    #        2.5
 
     evaluateDesign = (designIndices, posts) =>
       # Create layout Powers.
@@ -104,8 +103,10 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     # TODO: Find a way to display posts without images. Right now we just remove them.
     $posts = $(_.filter $posts, (post) -> $(post).find('img').length)
 
+    usedDesigns = {}
+
     for designIndex in designIndices
       design = @headlineDesigns[designIndex]
       length = design.structure.length
-      @applyDesign design, $posts[0...length]
+      @applyDesign design, $posts[0...length], usedDesigns
       $posts = $posts[length..]

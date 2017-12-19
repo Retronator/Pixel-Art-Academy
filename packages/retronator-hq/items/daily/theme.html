@@ -75,16 +75,20 @@
                   {{/if}}{{! {/block:Text} !}}
 
                   {{#if isPostPhoto}}{{! {block:Photo} !}}
-                    {{#each photos}}{{! <!-- None needed --> !}}
-                      <img src="{{original_size.url}}{{! {PhotoURL-HighRes} }}"/>
-                    {{/each}}{{! <!-- None needed --> !}}
+                    <div class="photoset" data-layout="1">
+                      {{#each photos}}{{! <!-- None needed --> !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-HighRes} }}"/>
+                      {{/each}}{{! <!-- None needed --> !}}
+                    </div>
                     {{{text}}}{{! {Caption} !}}
                   {{/if}}{{! {/block:Photo} !}}
 
                   {{#if isPostPanorama}}{{! {block:Panorama} !}}
-                    {{#each photos}}{{! <!-- None needed --> !}}
-                      <img src="{{original_size.url}}{{! {PhotoURL-Panorama} }}"/>
-                    {{/each}}{{! <!-- None needed --> !}}
+                    <div class="photoset" data-layout="1">
+                      {{#each photos}}{{! <!-- None needed --> !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-Panorama} }}"/>
+                      {{/each}}{{! <!-- None needed --> !}}
+                    </div>
                     {{{text}}}{{! {Caption} !}}
                   {{/if}}{{! {/block:Panorama} !}}
 

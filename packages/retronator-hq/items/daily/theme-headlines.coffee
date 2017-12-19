@@ -19,6 +19,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'single-1'
+      alternatives: ['', 'v']
       structure: [1]
       powers: [3]
 
@@ -37,6 +38,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'single-2'
+      alternatives: ['', 'h', 'v', 'vh']
       structure: [2]
       powers: [4]
 
@@ -52,6 +54,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'single-3'
+      alternatives: ['', 'h', 'v', 'vh']
       structure: [3]
       powers: [2.9]
 
@@ -69,6 +72,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'double-1'
+      alternatives: ['', 'h']
       structure: [1, 1]
       powers: [3, 3]
 
@@ -84,6 +88,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'double-2'
+      alternatives: ['', 'h', 'v', 'vh']
       structure: [1, 1]
       powers: [3, 1.9]
 
@@ -100,6 +105,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'double-3'
+      alternatives: ['', 'h']
       structure: [1, 1]
       powers: [2, 2]
 
@@ -115,6 +121,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'double-4'
+      alternatives: ['', 'h', 'v', 'vh']
       structure: [1, 1]
       powers: [2.9, 2]
 
@@ -131,8 +138,9 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'triple-1'
+      alternatives: ['', 'h', 'v', 'vh']
       structure: [1, 1, 1]
-      powers: [1, 3, 1]
+      powers: [2, 3, 2]
 
     ###
     1     2     3       4 
@@ -146,6 +154,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'triple-2'
+      alternatives: ['', 'h', 'v', 'vh']
       structure: [1, 1, 1]
       powers: [1, 1, 2]
 
@@ -161,11 +170,28 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
     ###
     @headlineDesigns.push
       name: 'triple-3'
+      alternatives: ['', 'v']
       structure: [1, 1, 1]
       powers: [1, 2, 1]
 
-  applyDesign: (design, posts) ->
-    $group = $("<div class='group #{design.name}'>")
+  applyDesign: (design, posts, usedDesigns) ->
+    # Find an alternative to use.
+    usedAlternatives = usedDesigns[design.name]
+
+    # Reset alternatives if we don't have them yet or if all alternatives have been used.
+    unless usedAlternatives and usedAlternatives.length < design.alternatives.length
+      usedAlternatives = []
+      usedDesigns[design.name] = usedAlternatives
+      
+    possibleAlternatives = _.difference design.alternatives, usedAlternatives
+
+    # Choose one of the alternatives in a random, but deterministic way. We use the posts text length.
+    textLength = $(posts).text().length
+    alternativeIndex = textLength % possibleAlternatives.length
+    alternative = possibleAlternatives[alternativeIndex]
+    usedAlternatives.push alternative
+
+    $group = $("<div class='group #{design.name}#{alternative}'>")
 
     for headlineImagesCount, index in design.structure
       headlineStyleClassSuffix = ['a', 'b', 'c'][index]
@@ -211,7 +237,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
       else
         titleElementIndex = 0
 
-      headlineTitle = $post.find('h1, b').eq(titleElementIndex).text()
+      headlineTitle = $post.find('h1, b, h2').eq(titleElementIndex).text()
       $headline.append("<div class='title'>#{headlineTitle}</div>")
 
 

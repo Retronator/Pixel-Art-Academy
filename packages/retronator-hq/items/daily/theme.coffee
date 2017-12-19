@@ -310,13 +310,22 @@ class Retronator.HQ.Items.Daily.Theme
       $supporter.append("<td class='amount'>#{supporter.amount}</td>")
       $supportersTable.append($supporter)
 
-    # Create featured websites.
+    # Create featured websites. Grab two random featured websites, except
+    # the last one (Retronator Magazine, which should always be there).
+    featuredWebsites = _.initial data.featuredWebsites
+
+    while featuredWebsites.length > 2
+      randomWebsite = featuredWebsites[_.random featuredWebsites.length - 1]
+      featuredWebsites = _.without featuredWebsites, randomWebsite
+
+    featuredWebsites.push _.last data.featuredWebsites
+
     $('.featured-websites-area').css
-      height: "#{data.featuredWebsites.length * 50 + 140}rem"
+      height: "#{featuredWebsites.length * 50 + 140}rem"
 
     $featuredWebsites = $('.featured-websites')
 
-    for website, index in data.featuredWebsites
+    for website, index in featuredWebsites
       $website = $("<li class='website'></li>")
       $website.css
         top: "#{(index + 1) * 50}rem"
