@@ -135,6 +135,17 @@ class Retronator.HQ.Items.Daily.Theme
       $('.folio .about').click (event) =>
         @goToInsideContent $('.about.page')
 
+      # If there are no back issues, add the latest issue there.
+      unless $('.back-issue').length
+        $backIssue = $("""
+          <li class="back-issue" data-page="1">
+            <a class="link" href="#{Retronator.HQ.Items.Daily.BlogUrl}"><span class="text"></span></a>
+          </li>
+        """)
+
+        $('.back-issues').each (index, backIssue) =>
+          $(backIssue).append($backIssue.clone())
+
       # Write back issue texts.
       processBackIssues = ($backIssues) ->
         $backIssues.each (index, backIssue) =>
@@ -189,7 +200,7 @@ class Retronator.HQ.Items.Daily.Theme
         tags = _.sortBy tags, 'count'
         bestTag = _.last tags
 
-        $('.tag-ear .text').text(bestTag.tag)
+        $('.tag-ear .text').text(bestTag.tag) if bestTag
 
     else
       # We're on a permalink page.

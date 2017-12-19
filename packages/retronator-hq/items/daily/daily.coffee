@@ -193,6 +193,8 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       @_pageUrl @data.urlState.page + 1
 
     jumpPagination: (count) ->
+      return [] unless @data.pagesCount
+
       page = @data.urlState.page
       min = Math.ceil page - count / 2
       max = min + count - 1

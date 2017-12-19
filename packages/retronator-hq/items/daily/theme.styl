@@ -371,6 +371,60 @@
             text-align right
             cursor pointer
 
+        .headlines
+          position relative
+          border 1rem solid atariGrey(0)
+          min-height 160rem
+
+          &:empty::after
+            content "Doesn't look like anything to me."
+            position absolute
+            top 50%
+            left 50%
+            transform translate(-50%, -50%)
+
+          .group
+            margin 1rem
+            display grid
+            grid-template-columns 20% 20% 20% 20% 20%
+
+            .image
+            .headline
+              transition opacity ease-out 0.1s
+              cursor pointer
+
+              &.hover
+                opacity 0.95
+
+            .image
+              background-size cover
+              background-position center center
+
+              img
+                display block
+                opacity 0
+                border none
+                padding 0
+                width 100%
+
+            .headline
+              position relative
+              padding 3rem
+              background atariGrey(2)
+              hyphens auto
+
+              .title
+                acme-7()
+                margin-bottom 3rem
+                color atariGrey(5)
+
+              .tags
+                list-style none
+                padding 0
+                color atariGrey(0)
+                line-height 7rem
+                adventure()
+
     .inside-content-area
       fixed-cover()
       opacity 0

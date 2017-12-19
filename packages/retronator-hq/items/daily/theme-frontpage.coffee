@@ -13,6 +13,7 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
 
     # TODO: Find a way to display posts without images. Right now we just remove them.
     posts = _.filter posts, (post) -> post.imagesCount
+    return unless posts.length
 
     # Score them from 0-5.
     # 0: 0-10 (10)

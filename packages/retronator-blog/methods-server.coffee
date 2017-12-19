@@ -1,3 +1,4 @@
+RA = Retronator.Accounts
 AB = Artificial.Base
 AT = Artificial.Telepathy
 Blog = Retronator.Blog
@@ -6,6 +7,14 @@ PADB = PixelArtDatabase
 blogInfo =
   lastUpdated: 0
   data: null
+
+Blog.refreshData.method ->
+  RA.authorizeAdmin()
+
+  # Invalidate blog info by resetting its creation time.
+  blogInfo.lastUpdated = 0
+
+  console.log "Refreshed blog data."
 
 Blog.getData.method ->
   # Returned cached information if it's not older than one hour.
