@@ -60,8 +60,8 @@ class Retronator.HQ.Items.Daily.Theme
           images = images[rowImagesCount..]
           $photoset.append($group)
 
-        # Create fullscreen image stream.
-        @wireArtworkStream $photoset.find('img')
+      # Create fullscreen image streams.
+      @wireArtworkStreams $post
 
       # Wrap consecutive paragraphs into three-column format.
       paragraphs = []

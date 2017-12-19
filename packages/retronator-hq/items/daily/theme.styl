@@ -134,6 +134,7 @@
         width 100%
         padding 1rem
         border 1rem solid atariGrey(0)
+        cursor pointer
 
       figure
         margin 0
@@ -173,7 +174,6 @@
 
             img
               width 100%
-              cursor pointer
 
             &:last-child
               margin-right 0
@@ -874,3 +874,6 @@
   z-index 4
   overflow-y auto
   cursor pointer
+
+  &.no-cursor
+    cursor none
