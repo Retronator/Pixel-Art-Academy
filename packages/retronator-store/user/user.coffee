@@ -36,10 +36,16 @@ class RA.User extends RA.User
 
       triggers
 
+  # Subscriptions
+  
   @topSupporters: 'Retronator.Accounts.User.topSupporters'
   @topSupportersCurrentUser: 'Retronator.Accounts.User.topSupportersCurrentUser'
   @supportAmountForCurrentUser: 'Retronator.Accounts.User.supportAmountForCurrentUser'
   @storeDataForCurrentUser: 'Retronator.Accounts.User.storeDataForCurrentUser'
+  
+  # Methods
+  
+  @getSupportersWithNames: @method 'getSupportersWithNames'
 
   authorizedPaymentsAmount: ->
     # Authorized payments amount is the sum of all payments that were only authorized.

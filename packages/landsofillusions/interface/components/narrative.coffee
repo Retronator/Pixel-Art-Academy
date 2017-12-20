@@ -2,6 +2,11 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Interface.Components.Narrative
+  @ScrollStyle:
+    None: 'None'
+    Top: 'Top'
+    Bottom: 'Bottom'
+
   constructor: (@options) ->
     @text = new ReactiveField ""
 
@@ -22,18 +27,19 @@ class LOI.Interface.Components.Narrative
     if text.length > 0
       text += "\n" if options.addNewLine
 
+    # Make sure new text doesn't have any new lines itself. We consider every call to add text to be one unit.
+    newText = newText.replace /[\n\r]+/mg, ''
+
     text += newText
     @text text
 
     @onTextUpdated options
 
   onTextUpdated: (options = {}) ->
-    options.scroll ?= true
-
-    if options.scroll
+    unless options.scrollStyle is @constructor.ScrollStyle.None
       Tracker.afterFlush =>
         @options.textInterface.resize()
-        @scroll()
+        @scroll scrollStyle: options.scrollStyle
 
   removeLastCommand: ->
     lines = @lines()
@@ -53,6 +59,7 @@ class LOI.Interface.Components.Narrative
   scroll: (options = {}) ->
     options.animate ?= true
     options.scrollMain ?= true
+    options.scrollStyle ?= @constructor.ScrollStyle.Bottom
 
     $textInterface = $('.adventure .text-interface')
     return unless $textInterface.length
@@ -69,8 +76,16 @@ class LOI.Interface.Components.Narrative
 
     hiddenNarrative = Math.max 0, displayContentHeight - uiHeight
 
-    # Make sure the latest narrative is visible by scrolling text display content to the bottom.
-    newTextTop = -hiddenNarrative
+    switch options.scrollStyle
+      when @constructor.ScrollStyle.Bottom
+        # Make sure the latest narrative is visible by scrolling text display content to the bottom.
+        newTextTop = -hiddenNarrative
+
+      when @constructor.ScrollStyle.Top
+        # Make sure the latest narrative is visible by scrolling text display content to the top.
+        $lastNarrativeLine = $textDisplayContent.find('.narrative-line').last()
+        position = $lastNarrativeLine.position()
+        newTextTop = Math.max -position.top, -hiddenNarrative
 
     @options.textInterface.animateElement
       $element: $textDisplayContent

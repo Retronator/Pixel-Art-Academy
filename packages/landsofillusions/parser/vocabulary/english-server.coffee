@@ -18,13 +18,14 @@ Document.startup ->
       Out: ['out', 'exit', 'outside']
       Up: ['up', 'upstairs']
       Down: ['down', 'downstairs']
+      Back: ['back']
 
     Verbs:
       GoToLocationName: ['go to', 'travel to', 'enter', 'leave to']
       GoToDirection: ['go', 'towards', 'move', 'travel']
       ExitLocation: ['exit', 'leave']
       TalkTo: ['talk to', 'talk with', 'speak to', 'speak with', 'chat with']
-      LookAt: ['look at', 'examine', 'see']
+      LookAt: ['look at', 'examine', 'see', 'view', 'watch']
       Look: ['look', 'look around', 'description']
       Use: ['use']
       Press: ['press', 'push']
@@ -50,6 +51,7 @@ Document.startup ->
       WakeUp: ['wake up', 'awaken']
       Buy: ['buy', 'purchase']
       Board: ['board', 'take']
+      ListenTo: ['listen to', 'hear']
 
     Pronouns:
       Subjective:

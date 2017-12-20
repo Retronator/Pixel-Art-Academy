@@ -1,0 +1,366 @@
+<template name="Retronator.HQ.Items.Daily.Theme">
+  <div class="retronator-hq-items-daily-theme">
+    <div class="newspaper {{#if homePage}}{{! {block:HomePage} !}}homepage{{/if}}{{! {/block:HomePage} !}}">
+      <button class="back-button"></button>
+      <script>
+        Retronator.HQ.Items.Daily.BlogUrl = '{{blogUrl}}{{! {BlogURL} !}}';
+      </script>
+      {{#if indexPage}}{{! {block:IndexPage} !}}
+        <div class="frontpage-area scroll-area">
+          <div class="scroll-content">
+            <div class="frontpage page safe-area-content">
+              <div class="header">
+                {{#if tagPage}}{{! {block:TagPage} !}}
+                  <div class="tag-ear">
+                    <div class="text">
+                      {{tag}}{{! {Tag} !}}
+                    </div>
+                  </div>
+                {{/if}}{{! {/block:TagPage} !}}
+                <h1 class="title"><a href="{{blogUrl}}{{! {BlogURL} !}}">Retronator</a></h1>
+                <div class="slogan">Daily pixel art and gaming news</div>
+                <div class="support">Supported by backers and patrons</div>
+                {{#if tagPage}}{{! {block:TagPage} !}}
+                  <div class="tag-ear">
+                    <div class="text">
+                      {{tag}}{{! {Tag} !}}
+                    </div>
+                  </div>
+                {{/if}}{{! {/block:TagPage} !}}
+              </div>
+              <div class="folio">
+                <div class="retropolis">Retropolis</div>
+                <div class="date"></div>
+                <div class="about">About →</div>
+              </div>
+              <div class="headlines"></div>
+            </div>
+            <ol class="back-issues">
+              {{#each jumpPagination 5}}{{! {block:JumpPagination length="5"} !}}
+                <li class="back-issue" data-page="{{this}}{{! {PageNumber} !}}">
+                  {{#if jumpPage}}{{! {block:JumpPage} !}}
+                    <a class="link" href="{{jumpPageUrl}}{{! {Url} !}}"><span class="text"></span></a>
+                  {{/if}}{{! {/block:JumpPage} !}}
+                </li>
+              {{/each}}{{! {block:JumpPagination} !}}
+            </ol>
+            <div class="featured-websites-area">
+              <ol class="featured-websites"></ol>
+            </div>
+          </div>
+        </div>
+      {{/if}}{{! {/block:IndexPage} !}}
+      <div class="inside-content-area scroll-area">
+        <div class="scroll-content">
+          <div class="inside-content safe-area-content">
+            <ol class="posts">
+              {{#each posts}}{{! {block:Posts} !}}
+                <li class="post page">
+                  <div class="folio">
+                    <div class="page-number"></div>
+                    <div class="date">
+                      <a href="{{permalink}}{{! {Permalink} !}}">
+                        Retronator, <span class="value">{{date}}{{! {DayOfWeek}, {Month} {DayOfMonth}, {Year} !}}</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  {{#if isPostText}}{{! {block:Text} !}}
+                    {{#if title}}{{! {block:Title} !}}
+                      <h1 class="title">
+                        {{title}}{{! {Title} !}}
+                      </h1>
+                    {{/if}}{{! {/block:Title} !}}
+                    {{{text}}}{{! {Content} !}}
+                  {{/if}}{{! {/block:Text} !}}
+
+                  {{#if isPostPhoto}}{{! {block:Photo} !}}
+                    <div class="photoset" data-layout="1">
+                      {{#each photos}}{{! <!-- None needed --> !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-HighRes} }}"/>
+                      {{/each}}{{! <!-- None needed --> !}}
+                    </div>
+                    {{{text}}}{{! {Caption} !}}
+                  {{/if}}{{! {/block:Photo} !}}
+
+                  {{#if isPostPanorama}}{{! {block:Panorama} !}}
+                    <div class="photoset" data-layout="1">
+                      {{#each photos}}{{! <!-- None needed --> !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-Panorama} }}"/>
+                      {{/each}}{{! <!-- None needed --> !}}
+                    </div>
+                    {{{text}}}{{! {Caption} !}}
+                  {{/if}}{{! {/block:Panorama} !}}
+
+                  {{#if isPostPhotoset}}{{! {block:Photoset} !}}
+                    <div class="photoset" data-layout="{{layout}}{{! {PhotosetLayout} !}}">
+                      {{#each photos}}{{! {block:Photos}  !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-HighRes} !}}" data-width="{{original_size.width}}{{! {PhotoWidth-HighRes} !}}" data-height="{{original_size.height}}{{! {PhotoHeight-HighRes} !}}"/>
+                      {{/each}}{{! {/block:Photos}  !}}
+                    </div>
+                    {{{text}}}{{! {Caption} !}}
+                  {{/if}}{{! {/block:Photoset} !}}
+
+                  {{#if isPostVideo}}{{! {block:Video} !}}
+                    <figure>
+                      {{{videoPlayer}}}{{! {Video-700} !}}
+                    </figure>
+                    {{#if video.thumbnail.url}}{{! {block:VideoThumbnail} }}
+                      <div class="player-thumbnail">
+                        <img src="{{video.thumbnail.url}}{{! {VideoThumbnailURL} !}}"/>
+                      </div>
+                    {{/if}}{{! {/block:VideoThumbnail} }}
+                    {{{text}}}{{! {Caption} !}}
+                  {{/if}}{{! {/block:Video} !}}
+
+                  {{#if isPostAudio}}{{! {block:Audio} !}}
+                    <figure>
+                      {{{audio.player}}}{{! {AudioEmbed-640} !}}
+                    </figure>
+                    {{#if audio.albumArt}}{{! {block:AlbumArt} }}
+                      <div class="player-thumbnail">
+                        <img src="{{audio.albumArt}}{{! {AlbumArtURL} !}}"/>
+                      </div>
+                    {{/if}}{{! {/block:AlbumArt} }}
+                    {{{text}}}{{! {Caption} !}}
+                  {{/if}}{{! {/block:Audio} !}}
+
+                  {{#if isPostQuote}}{{! {block:Quote} !}}
+                    <blockquote class="quote">
+                      {{{quote.text}}}{{! {Quote} !}}
+                    </blockquote>
+                    {{#if quote.source}}{{! {block:Source} !}}
+                      <div class="quote-source">
+                        {{{quote.source}}}{{! {Source} !}}
+                      </div>
+                    {{/if}}{{! {/block:Source} !}}
+                  {{/if}}{{! {/block:Quote} !}}
+
+                  {{#if isPostLink}}{{! {block:Link} !}}
+                    <div class="link">
+                      <h1 class="title">
+                        <a href="{{link.url}}{{! {URL} !}}" target="_blank">
+                          {{link.title}}{{! {Name} !}}
+                        </a>
+                      </h1>
+                      <a class="url" href="{{link.url}}{{! {URL} !}}" target="_blank">
+                        {{link.publisher}}{{! {Host} !}}
+                      </a>
+                      {{#each photos}}{{! {block:Thumbnail} !}}
+                        <a class="image-link" href="{{../link.url}}{{! {URL} !}}" target="_blank">
+                          <img src="{{original_size.url}}{{! {Thumbnail-HighRes} !}}"/>
+                        </a>
+                      {{/each}}{{! {/block:Thumbnail}  !}}
+                      {{#if link.excerpt}}{{! {block:Excerpt} !}}
+                        <a class="excerpt" href="{{link.url}}{{! {URL} !}}" target="_blank">
+                          {{link.excerpt}}{{! {Excerpt} !}}
+                        </a>
+                    {{/if}}{{! {/block:Excerpt} !}}
+                    </div>
+                    {{{text}}}{{! {Description} !}}
+                  {{/if}}{{! {/block:Link} !}}
+
+                  {{#if isPostAnswer}}{{! {block:Answer} !}}
+                    <p class="question-asker">
+                      {{#if question.askingUrl}}<a href="{{question.askingUrl}}">{{{question.askingName}}}</a>{{else}}{{{question.askingName}}}{{/if}}{{! {Asker} !}}
+                      asks:
+                    </p>
+                    <blockquote class="question">
+                      {{{question.question}}}{{! {Question} !}}
+                    </blockquote>
+                    {{{text}}}{{! {Answer} !}}
+                  {{/if}}{{! {/block:Answer} !}}
+
+                  {{#if isPostChat}}{{! {block:Chat} !}}
+                    {{#if title}}{{! {block:Title} !}}
+                      <h1 class="title">
+                        {{title}}{{! {Title} !}}
+                      </h1>
+                    {{/if}}{{! {/block:Title} !}}
+                    {{#each dialogue}}{{! {block:Lines} !}}
+                      <p>
+                        {{#if label}}{{! {block:Label} !}}
+                          {{label}}{{! {Label} !}}
+                        {{/if}}{{! {/block:Label} !}}
+                        {{{phrase}}}{{! {Line} !}}
+                      </p>
+                    {{/each}}{{! {/block:Lines} !}}
+                  {{/if}}{{! {/block:Text} !}}
+
+                  {{#if reblog}}{{! {block:RebloggedFrom} !}}
+                    <div class="source reblog">
+                      Source:
+                      <a class="link" href="{{reblog.root.url}}{{! {ReblogRootURL} !}}"><span
+                        class="title">{{reblog.root.title}}{{! {ReblogRootTitle} !}}</span><span
+                        class="name">{{reblog.root.name}}{{! {ReblogRootName} !}}</span></a>
+                    </div>
+                  {{/if}}{{! {/block:RebloggedFrom} !}}
+                  {{#if source}}{{! {block:ContentSource} !}}
+                    <div class="source direct">
+                      Source: <a class="link" href="{{source.url}}{{! {SourceURL} !}}">{{source.title}}{{! {SourceTitle} !}}</a>
+                    </div>
+                  {{/if}}{{! {/block:ContentSource} !}}
+
+                  <div class="footer">
+                    {{#if tags}}{{! {block:HasTags} !}}
+                      <ul class="tags">
+                        {{#each tags}}{{! {block:Tags} !}}
+                          <li class="tag"><a href="{{tagUrl}}{{! {TagURL} !}}">{{this}}{{! {Tag} !}}</a></li>
+                        {{/each}}{{! {/block:Tags} !}}
+                      </ul>
+                    {{/if}}{{! {/block:HasTags} !}}
+                    <div class="notes-count">
+                      {{notesCount}}{{! {NoteCount} !}}
+                    </div>
+                  </div>
+                </li>
+              {{/each}}{{! {/block:Posts} !}}
+            </ol>
+            {{#if indexPage}}{{! {block:IndexPage} !}}
+              <div class="about page">
+                <div class="folio">
+                  <div class="page-number"></div>
+                  <div class="date"></div>
+                </div>
+                <div class="content">
+                  <div class="masthead">
+                    <div class="title">Retronator</div>
+                    <div class="slogan">Daily pixel art and gaming news</div>
+                    <div class="published-info">Published every day in the year by Retronator</div>
+                    <div class="editor">Editor: <a href="http://matejjan.com/about" target="_blank">Matej Jan</a></div>
+                    <div class="circulation">Circulation: <span class="value"></span></div>
+                    <div class="contact">Contact: <a href="mailto:hi@retronator.com">hi@retronator.com</a></div>
+                    <p>Press kits and Steam codes are welcome, but do not guarantee coverage.</p>
+                    <h2>Subscription rates</h2>
+                    <table class="subscription-rates-table">
+                      <tr>
+                        <th></th>
+                        <th>One month</th>
+                      </tr>
+                      <tr>
+                        <td class="type">Online</td>
+                        <td class="rate">Free</td>
+                      </tr>
+                      <tr>
+                        <td class="type">Email</td>
+                        <td class="rate">$1</td>
+                      </tr>
+                    </table>
+                    <p>Email delivery coming in the future. Sign up below to hear when it happens.</p>
+                    <form class="mailing-list-form" action="https://tinyletter.com/retronator" method="post" target="popupwindow" onsubmit="window.open('https://tinyletter.com/retronator', 'popupwindow', 'scrollbars=yes,width=800,height=600');return true">
+                      <h2>Announcements mailing list</h2>
+                      <p><label for="tlemail">Receive almost non-existent Retronator project updates.</label></p>
+                      <input class="email-input" type="text" name="email" id="tlemail" placeholder="Enter email" />
+                      <input type="hidden" value="1" name="embed"/>
+                      <input class="submit-button" type="submit" value="Sign up" />
+                    </form>
+                    <h2>Social Establishments</h2>
+                    <p>Retronator news is re-published daily in the following outlets:</p>
+                    <ul class="social-links">
+                      <li><a class="link" target="_blank" href="https://www.facebook.com/retronator">Facebook</a></li>
+                      <li><a class="link" target="_blank" href="https://twitter.com/retronator">Twitter</a></li>
+                      <li><a class="link" target="_blank" href="https://www.pinterest.com/retronator">Pinterest</a></li>
+                    </ul>
+                    <p>More original content on:</p>
+                    <ul class="social-links">
+                      <li><a class="link" target="_blank" href="https://www.youtube.com/retronator48k">YouTube</a></li>
+                      <li><a class="link" target="_blank" href="https://medium.com/retronator-magazine">Medium</a></li>
+                      <li><a class="link" target="_blank" href="https://www.patreon.com/retro">Patreon</a></li>
+                    </ul>
+                    <p>For personal updates see:</p>
+                    <ul class="social-links">
+                      <li><a class="link" target="_blank" href="https://www.instagram.com/retronator">Instagram</a></li>
+                      <li><a class="link" target="_blank" href="https://www.facebook.com/retronator">Facebook</a></li>
+                      <li><a class="link" target="_blank" href="https://www.snapchat.com/add/retronator">Snapchat</a></li>
+                    </ul>
+                    <p>Sometimes I try to pretend I speak Russian on:</p>
+                    <ul class="social-links">
+                      <li><a class="link" target="_blank" href="https://vk.com/retronator">VK</a></li>
+                    </ul>
+                    <h2>Reader questions and feedback</h2>
+                    <p>You can leave questions or comments in the <a href="http://www.retronator.com/ask">ask box</a>.
+                    They will be answered publicly unless asked otherwise.</p>
+                    <h2>Guest blogging</h2>
+                    <p>I welcome contributions from the community. See the
+                      <a href="http://www.retronator.com/post/146267860970/call-for-guest-bloggers">Call for guest bloggers</a>
+                      for details.</p>
+                    <h2>Smallprint</h2>
+                    <p>By using this website you agree to the
+                      <a href="https://pixelart.academy/smallprint" target="_blank">terms of service</a>.</p>
+                  </div>
+                  <div class="history">
+                    <h2>
+                      <span class="title-line">Message from</span>
+                      <span class="title-line">the editor</span>
+                    </h2>
+                    <p>Hello everyone, I am Matej Jan a.k.a. Retro. Welcome to Retronator—my blog and game development studio.</p>
+                    <p>I started Retronator in 2007 with the goal of making video games focused on
+                      creativity. Along the way I started writing about art and gaming, featuring artists and projects that
+                      caught my attention. Nowadays this mostly includes pixel art, with occasional diversions into voxels,
+                      low-poly 3D, low-res digital painting, and basically anything that makes me feel like a kid again
+                      (text adventures, chiptune, LEGO …).</p>
+                    <p>I'm also very nostalgic about 20th century games that didn't neglect their educational potential.
+                      I expected titles like Sim Ant, Caesar II, and Sim City to continue into the future, expanding their
+                      power to teach us something along the way. Games such as Kerbal Space Program and ECO continue to carry
+                      the torch, but are far in between in the current gaming landscape. Expect Retronator to cover more
+                      games like that in the future.</p>
+                    <p>Finally, on these pages I document my own journey as an illustrator and game developer. I'm working
+                      on an adventure game for learning how to draw called Pixel Art Academy. This newspaper lives
+                      in the game world and I'll make that quite obvious soon. Thanks to backers of the game and supporters
+                      on Patreon I can create this content full-time. Thank you for making this possible!</p>
+                    <p>It's been 10 years since I started this journey and there is no doubt the next 10 will be
+                      absolutely amazing. Stick around and I hope you will enjoy the ride.</p>
+                    <p>Happy pixeling,<br/>—Retro</p>
+                  </div>
+                  <div class="supporters">
+                    <div class="messages-area">
+                      <h2>Notes from Retronator Store customers</h2>
+                      <ul class="messages"></ul>
+                      <p>To leave a note, include a tip when checking out in the store.</p>
+                    </div>
+                    <div class="supporters-table-area">
+                      <h2>Hall of fame</h2>
+                      <table class="supporters-table">
+                        <th class="name">Name</th>
+                        <th class="amount"><span class="text">$core</span></th>
+                      </table>
+                      <p>Other supporters chose to be anonymous.</p>
+                    </div>
+                    <div class="become-a-supporter">
+                      <h2>Become a supporter</h2>
+                      <p>
+                        You can support Retronator on <a href="https://www.patreon.com/retro" target="_blank">Patreon</a>
+                        or by pre-ordering <a href="https://pixelart.academy" target="_blank">Pixel Art Academy</a>.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{/if}}{{! {/block:IndexPage} !}}
+            <!-- ol class="back-issues">
+              {{#if previousPageUrl}}{{! {block:PreviousPage} !}}
+                <li class="back-issue">
+                  <a class="link" href="{{previousPageUrl}}{{! {PreviousPage} !}}"><span class="text">Newer issue</span></a>
+                </li>
+              {{/if}}{{! {/block:PreviousPage} !}}
+              {{#if nextPageUrl}}{{! {block:NextPage} !}}
+                <li class="back-issue" data-page="{{currentPage}}{{! {CurrentPage} !}}">
+                  <a class="link" href="{{nextPageUrl}}{{! {NextPage} !}}"><span class="text">Older issue</span></a>
+                </li>
+              {{/if}}{{! {/block:NextPage} !}}
+            </ol-->
+            <ol class="back-issues">
+              {{#each jumpPagination 5}}{{! {block:JumpPagination length="5"} !}}
+                <li class="back-issue" data-page="{{this}}{{! {PageNumber} !}}">
+                  {{#if jumpPage}}{{! {block:JumpPage} !}}
+                    <a class="link" href="{{jumpPageUrl}}{{! {Url} !}}"><span class="text"></span></a>
+                  {{/if}}{{! {/block:JumpPage} !}}
+                </li>
+              {{/each}}{{! {block:JumpPagination} !}}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

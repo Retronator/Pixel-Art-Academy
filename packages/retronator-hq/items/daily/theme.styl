@@ -1,0 +1,889 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-items-daily-theme
+  .newspaper
+    counter-reset pages-counter
+    daily()
+    line-height 10rem
+
+    .back-button
+      display block
+      position fixed
+      top 10rem
+      left 10rem
+      width 22rem
+      height 18rem
+      border none
+      z-index 1001
+      background image('/interface/back-arrow.png') 0 0 / 100% 100%
+      cursor pointer
+      opacity 1
+      transition opacity ease-out 0.5s, visibility 0.5s
+
+      &:hover
+        margin-top -1rem
+
+      &:active
+        margin-top 1rem
+
+      &:focus
+        outline none
+
+    &.homepage
+      .back-button
+        opacity 0
+        visibility hidden
+
+      &.inside
+        .back-button
+          opacity 1
+          visibility visible
+
+    .page
+      position relative
+      margin 40rem 0
+      padding 3rem 10rem 5rem
+      width 320rem
+      background image('/retronator/hq/items/daily/newspaper-top.png') 100% / 100%, image('/retronator/hq/items/daily/newspaper-bottom.png') 100% / 100%
+      background-position center top, center bottom
+      background-repeat no-repeat, no-repeat
+      color atariGrey(0)
+      counter-increment pages-counter
+
+      &::before
+        content ''
+        position absolute
+        top 1rem
+        bottom 3rem
+        z-index -1
+        left 0
+        right 0
+        background image('/retronator/hq/items/daily/newspaper-back.png') 100% / 100%
+
+      .folio
+        display flex
+        margin 1rem 0
+        line-height 12rem
+        border-bottom 1rem solid atariGrey(0)
+
+        .page-number
+          width 10%
+
+          &::after
+            content counter(pages-counter)
+
+        .date
+          width 80%
+          text-align center
+          text-transform uppercase
+
+          a
+            color atariGrey(0)
+            background none
+
+      .guest-blog-attribution
+        margin-top -4rem
+        margin-bottom 8rem
+        text-transform uppercase
+
+      .source
+        margin 3rem 0
+
+      .footer
+        display flex
+        margin 1rem 0
+
+        .tags
+          flex-grow 1
+          list-style none
+          padding 0
+          color atariGrey(3)
+          adventure()
+
+          .tag
+            display inline-block
+            margin-right 3rem
+
+        .notes-count
+          width 20%
+          text-align right
+
+          &::before
+            content '♥'
+
+          &:first-child
+            width 100%
+
+      a
+        text-decoration none
+        color atariGrey(2)
+        cursor pointer
+
+        &:hover
+          color atariGrey(6)
+          background atariGrey(1)
+
+        &.image-link
+          &:hover
+            background initial
+
+      h1
+        acme-9()
+        line-height 16rem
+
+      h2
+        acme-9()
+
+      p
+        margin 0 0 10rem
+
+        &:last-child
+          margin 0
+
+      img
+        width 100%
+        padding 1rem
+        border 1rem solid atariGrey(0)
+        cursor pointer
+
+      figure
+        margin 0
+
+        iframe
+        video
+          display block
+          width 100%
+          margin 0 auto
+          padding 1rem
+          border 1rem solid atariGrey(0)
+
+      blockquote
+        border-left 1rem solid atariGrey(2)
+        padding 4rem 10rem 2rem
+        margin 6rem 0 10rem
+
+      hr
+        margin 15rem auto
+        border 1rem solid atariGrey(0)
+        height 3rem
+        border-left none
+        border-right none
+
+      > .photoset
+        border 1rem solid atariGrey(0)
+        padding 1rem
+
+        .group
+          margin-bottom 1rem
+          display flex
+
+          .image
+            margin-right 1rem
+            width 100%
+            overflow hidden
+
+            img
+              width 100%
+
+            &:last-child
+              margin-right 0
+
+          &.layout-2
+            .image
+              width 50%
+
+          &.layout-3
+            .image
+              width 33.3%
+
+          &:last-child
+            margin-bottom 0
+
+        img
+          display block
+          border none
+          padding 0
+
+      > .quote
+        border-left none
+        line-height 14rem
+        padding 0
+        margin 20rem
+
+      > .quote-source
+        text-align right
+        margin-top -10rem
+
+        &::before
+          content '—'
+
+      > .question
+        color atariGrey(2)
+
+      > .link
+        border 1rem solid atariGrey(0)
+        background atariGrey(2)
+        padding 0
+
+        &:hover
+          background atariGrey(1)
+
+        a
+          display inline-block
+          width 100%
+          color atariGrey(6)
+
+          &:hover
+            background none
+
+        .title
+          margin 0
+
+          a
+            padding 0 3rem 1rem
+            color atariGrey(7)
+
+        .url
+          display inline-block
+          margin 0
+          padding 2rem 3rem
+          color atariGrey(4)
+
+          &::before
+            content: '→'
+
+        .image-link
+          padding 0 3rem
+
+          img
+            padding 0
+            border none
+
+        .excerpt
+          display inline-block
+          margin 0
+          padding 2rem 3rem
+
+      .player-thumbnail
+        display none
+
+      .paragraphs-block
+        margin 7rem 0
+        column-count 2
+        column-gap 16rem
+        column-rule 1rem solid atariGrey(0)
+        text-align justify
+        hyphens auto
+
+    .frontpage-area
+      fixed-cover()
+      width 100%
+      right auto
+      z-index 1
+      transition left ease-out 1s
+
+      .frontpage
+        background-image image('/retronator/hq/items/daily/newspaper-top-frontpage.png'), image('/retronator/hq/items/daily/newspaper-bottom-frontpage.png')
+        padding-bottom 10rem
+
+        &::before
+          top 4rem
+          bottom 8rem
+
+        .header
+          position relative
+          padding-top 1rem
+          margin-top 6rem
+          border-bottom 1rem solid atariGrey(0)
+
+          .title
+            retrotype()
+            font-size 36rem
+            line-height 32rem
+            text-align center
+            margin 10rem 0 0
+
+            a
+              color atariGrey(0)
+              background none
+
+          .slogan
+          .support
+            position absolute
+            width 60rem
+            top 0
+            line-height 9rem
+
+          .slogan
+            left 0
+
+          .support
+            right 0
+            text-align right
+
+          .tag-ear
+            position absolute
+            top 0
+            width 75rem
+            height 28rem
+            text-transform uppercase
+            text-align center
+            border 1rem solid atariGrey(0)
+            margin 0 5rem
+
+            .text
+              position absolute
+              width 100%
+              left 0
+              top 50%
+              transform translateY(-50%)
+              padding 3rem
+
+            &::after
+              content ''
+              position absolute
+              z-index -1
+              left 1rem
+              top 1rem
+              bottom 1rem
+              right 1rem
+              border 1rem solid atariGrey(0)
+
+            &:first-child
+              left 0
+
+            &:last-child
+              right 0
+
+            & ~ .slogan
+            & ~ .support
+              display none
+
+            & ~ .title
+              font-size 24rem
+              line-height 30rem
+              margin 0
+
+        .folio
+          border-top 1rem solid atariGrey(0)
+          line-height 9rem
+          padding-bottom 1rem
+
+          .retropolis
+          .about
+            width 25%
+            pixel-text-outline(atariGrey(6))
+
+          .date
+            width 50%
+
+          .about
+            text-align right
+            cursor pointer
+
+        .headlines
+          position relative
+          border 1rem solid atariGrey(0)
+          min-height 160rem
+
+          &:empty::after
+            content "Doesn't look like anything to me."
+            position absolute
+            top 50%
+            left 50%
+            transform translate(-50%, -50%)
+
+          .group
+            margin 1rem
+            display grid
+            grid-template-columns 20% 20% 20% 20% 20%
+
+            .image
+            .headline
+              transition opacity ease-out 0.1s
+              cursor pointer
+
+              &.hover
+                opacity 0.95
+
+            .image
+              background-size cover
+              background-position center center
+
+              img
+                display block
+                opacity 0
+                border none
+                padding 0
+                width 100%
+
+            .headline
+              position relative
+              padding 3rem
+              background atariGrey(2)
+              hyphens auto
+
+              .title
+                acme-7()
+                margin-bottom 3rem
+                color atariGrey(5)
+
+              .tags
+                list-style none
+                padding 0
+                color atariGrey(0)
+                line-height 7rem
+                adventure()
+
+    .inside-content-area
+      fixed-cover()
+      opacity 0
+
+      &.fade-transition
+        transition opacity ease-in-out 0.5s
+
+      .scroll-content
+        right -100px
+        padding-right 100px
+
+      .inside-content
+        .posts
+          list-style none
+          padding 0
+          margin 0
+
+        .about
+          .content
+            border-top 1rem solid atariGrey(0)
+            padding 1rem 0
+            display flex
+
+            .history
+            .supporters
+            .masthead
+              padding-top 2rem
+
+            .history
+            .supporters
+              padding-left 4rem
+              margin-left 4rem
+              border-left 1rem solid atariGrey(0)
+              width 50%
+
+            .masthead
+              width 76rem
+              flex-shrink 0
+
+            .masthead
+              .title
+                retrotype()
+                text-align center
+
+              .slogan
+                margin 5rem 0
+                text-align center
+
+                &::before
+                &::after
+                  content '"'
+
+              .published-info
+                text-transform uppercase
+                line-height 7rem
+                text-align center
+                margin-bottom 3rem
+                border 1rem solid atariGrey(0)
+                border-left none
+                border-right none
+                padding-bottom 1rem
+
+              .contact
+                margin-bottom 5rem
+
+              .subscription-rates-table
+                adventure()
+                border-collapse collapse
+                margin 5rem 0
+                line-height 8rem
+
+                th
+                  text-transform uppercase
+                  line-height 6rem
+
+                .type
+                  text-align left
+                  width 100%
+
+                .rate
+                  text-align center
+
+                tr
+                  td
+                    border-bottom 1rem solid atariGrey(0)
+
+              .mailing-list-form
+                position relative
+                text-align center
+                border 1rem dotted atariGrey(0)
+                padding 3rem
+                padding-left 10rem
+                margin-left -9rem
+                margin-right -3rem
+
+                &::after
+                  content ''
+                  position absolute
+                  bottom -1rem
+                  left 2rem
+                  width 19rem
+                  height 11rem
+                  background image('/retronator/hq/items/daily/scissors-1.png') 100% / 100%
+
+                h2
+                  margin-top 2rem
+
+                p
+                  text-align left
+
+                .email-input
+                  width 100%
+                  border none
+                  border-bottom 1rem solid atariGrey(0)
+                  padding 1rem 2rem 0
+                  background none
+                  freehand()
+
+                .submit-button
+                  border-radius 0
+                  adventure()
+                  text-transform uppercase
+                  margin-top 5rem
+                  background atariGrey(7)
+                  border 1rem solid atariGrey(4)
+                  cursor pointer
+
+                  &:hover
+                    background atariGrey(5)
+
+              .social-links
+                margin-top -9rem
+                list-style none
+                padding 0
+
+              p
+                hyphens auto
+                line-height 8rem
+
+              h2
+                daily()
+                text-transform uppercase
+                font-weight normal
+                text-align center
+                line-height 7rem
+                margin-bottom 5rem
+
+            .history
+              h2
+                position relative
+                margin-top 0
+                text-transform uppercase
+                padding-bottom 10rem
+
+                .title-line
+                  display block
+
+                  &:nth-child(2)
+                    text-align right
+
+                &::after
+                  content ''
+                  position absolute
+                  bottom 0
+                  left 33%
+                  right 33%
+                  border-bottom 1rem solid atariGrey(0)
+
+              p
+                hyphens auto
+                text-align justify
+
+            .supporters
+              h2
+                margin-top 0
+                daily()
+                text-transform uppercase
+                font-weight normal
+                line-height 7rem
+                text-align center
+
+              p
+                margin-bottom 5rem
+
+              .messages-area
+              .supporters-table-area
+                border-bottom 1rem solid atariGrey(0)
+                margin-bottom 5rem
+
+              .messages-area
+                .messages
+                  list-style none
+                  padding 0
+                  adventure()
+                  line-height 6rem
+
+                  .message
+                    margin-bottom 5rem
+
+                    .text
+                      display inline
+                      border-left none
+                      margin 0
+                      padding 0
+
+                      &::before
+                      &::after
+                        content '"'
+
+                    .name
+                      display inline
+                      text-align right
+                      margin-left 3rem
+
+                      &::before
+                        content '—'
+
+              .supporters-table-area
+                .supporters-table
+                  adventure()
+                  line-height 6rem
+                  margin-bottom 5rem
+                  width 100%
+                  table-layout fixed
+
+                  th
+                    text-transform uppercase
+
+                    &.amount
+                      position relative
+
+                      .text
+                        position absolute
+                        top 0
+                        right 0
+
+                  .name
+                    text-align left
+                    hyphens auto
+
+                  .amount
+                    text-align right
+                    width 20rem
+
+              .become-a-supporter
+                h2
+                  margin-bottom 4rem
+
+                .support-options
+                  list-style none
+                  padding 0
+                  margin-bottom 3rem
+
+    .scroll-area
+      overflow hidden
+
+      .scroll-content
+        absolute-cover()
+        overflow-y auto
+
+    &.inside
+      .frontpage-area
+        left -100%
+
+    &.scroll-inside
+      .frontpage-area
+        .scroll-content
+          right -100px
+          padding-right 100px
+
+      .inside-content-area
+        opacity 1
+
+        .scroll-content
+          right 0
+          padding-right 0
+
+    &.permalink
+      .posts
+        .post
+          .folio
+            .page-number
+              visibility hidden
+
+      .back-issues
+        display none
+
+    .back-issues
+      position relative
+      width 320rem
+      margin 50rem auto
+      list-style none
+      padding 0
+
+      &::after
+        content ''
+        position absolute
+        z-index -2
+        bottom -14rem
+        left -31rem
+        width 382rem
+        height 21rem
+        background image('/retronator/hq/items/daily/backissues-shelf.png') 100% / 100%
+        filter drop-shadow(0 10rem 10rem rgba(atariGrey(0), 0.5))
+
+      .back-issue
+        position relative
+        height 12rem
+        margin-top -3rem
+        text-align center
+        background-position center bottom
+        background-repeat no-repeat
+        transition all 0.1s
+
+        .link
+          display block
+          absolute-cover()
+          cursor pointer
+          text-decoration none
+
+          .text
+            display block
+            position absolute
+            bottom 0
+            left 0
+            right 0
+            adventure()
+            pixel-text-outline(atariGrey(1))
+            color atariGrey(5)
+            vertical-align bottom
+            transition all 0.1s
+
+        &:hover
+          top 1rem
+          transform scale(1.01)
+
+        for i in (1..4)
+          &.cover-{i}
+            background-image image('/retronator/hq/items/daily/backissues-' + i + '.png')
+
+        for i in (1..5)
+          &:nth-child({i})
+            z-index 5 - i
+
+        &:first-child
+          height 28rem
+          background-image image('/retronator/hq/items/daily/backissues-top.png')
+          background-position center top
+
+          &:hover
+            margin-top -6rem
+            top 0
+            transform none
+            height 31rem
+
+            .link
+              .text
+                bottom 3rem
+
+        &:nth-child(2)
+          top 0
+
+        &.current:hover
+          top 0
+          transform none
+
+        &.current:first-child:hover
+          margin-top -3rem
+          height 28rem
+
+    .featured-websites-area
+      margin-top -20rem
+      overflow hidden
+
+      .featured-websites
+        position relative
+        width 320rem
+        margin 0 auto
+        padding 0
+        list-style none
+
+        .website
+          width 100%
+          position absolute
+          margin 0 auto
+
+          &::before
+          &::after
+            content ''
+            position absolute
+            background-repeat no-repeat
+            background-size 100%
+
+          &::before
+            z-index -1
+            top 51rem
+            left -7rem
+            width 334rem
+            height 5rem
+            background-image image('/retronator/hq/items/daily/newsstand-back.png')
+
+          &::after
+            top 25rem
+            left -10rem
+            width 340rem
+            height 150rem
+            background-image image('/retronator/hq/items/daily/newsstand-front.png')
+            pointer-events none
+
+          .preview
+            display block
+            width 100%
+            position relative
+            top 0
+            transition top 0.15s ease-in
+            box-shadow 0 0 20rem rgba(atariGrey(0), 1)
+
+            &:hover
+              top -40rem
+              transition top 0.5s ease-out
+
+            .image
+              display block
+              width 100%
+              background white
+              image-rendering initial
+
+            &::before
+              content ''
+              position absolute
+              left 0
+              right 0
+              top -4rem
+              height 4rem
+              background image('/retronator/hq/items/daily/magazine-top.png') 100% / 100%
+              background-repeat no-repeat
+
+            &::after
+              content ''
+              absolute-cover()
+              background image('/retronator/hq/items/daily/magazine-overlay.png') 100% / 100%
+              mix-blend-mode hard-light
+              opacity 0.5
+
+.retronator-hq-items-daily-stream
+  fixed-cover()
+  z-index 4
+  overflow-y auto
+  cursor pointer
+
+  &.no-cursor
+    cursor none

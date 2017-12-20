@@ -20,6 +20,9 @@ Package.onUse(function(api) {
   api.constructor.prototype.addStyle = function(path) {
     this.addFiles(path + ".styl");
   };
+  api.constructor.prototype.addStyledFile = function(path) {
+    this.addFiles([path + ".coffee", path + ".styl"]);
+  };
   api.constructor.prototype.addStyleImport = function(path) {
     this.addFiles(path + ".import.styl", ['client'], {isImport: true});
   };

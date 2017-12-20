@@ -1,0 +1,13 @@
+<template name="Retronator.HQ.Items.Daily">
+  <div class="retronator-hq-items-daily">
+    {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
+    {{#LandsOfIllusions.Components.Overlay}}
+    {{else}}
+      {{> Render issue}}
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>
+
+<template name="Retronator.HQ.Items.Daily.Issue">
+  {{> Retronator.HQ.Items.Daily.Theme}}
+</template>

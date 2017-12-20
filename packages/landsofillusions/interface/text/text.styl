@@ -60,6 +60,19 @@ hoverable()
           p
             margin 0 0 lineHeight
 
+          b
+          strong
+            font-weight normal
+
+          a
+            &:hover
+              color atariGrey(6)
+
+          blockquote
+            margin-left 0
+            padding-left 1em
+            border-left 1rem solid atariGrey(1)
+
           .command
             position relative
             white-space nowrap
@@ -115,6 +128,19 @@ hoverable()
 
               &::before
                 content: "— "
+
+              .command
+                hoverable()
+
+                .underline
+                  display none
+
+          .postscript
+            .command
+              hoverable()
+
+              .underline
+                display none
 
         .command-line
           position relative

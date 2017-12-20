@@ -14,6 +14,7 @@ LOI.Parser.Vocabulary.Keys =
     Out: ''
     Up: ''
     Down: ''
+    Back: ''
 
   Verbs:
     GoToLocationName: ''
@@ -46,6 +47,7 @@ LOI.Parser.Vocabulary.Keys =
     WakeUp: ''
     Buy: ''
     Board: ''
+    ListenTo: ''
 
   Pronouns:
     Subjective:

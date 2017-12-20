@@ -1,0 +1,17 @@
+<template name="PixelArtDatabase.Pages.Admin.Profiles.Profile">
+  <div class="pixelartdatabase-pages-admin-profiles-profile">
+    <h2>{{username}}</h2>
+    <label class="platform">Platform: {{platformType}}</label>
+    <label class="display-name">Display name: {{displayName}}</label>
+    <label class="url">Url: <a href="{{url}}" target="_blank">{{url}}</a></label>
+    <label class="image">Image:
+      {{#if imageUrl}}
+        <img src="{{imageUrl}}" />
+      {{/if}}
+    </label>
+    <label class="followers-count">Followers count: {{followersCount}}</label>
+    <label class="artist">Artist: {{artist.displayName}}</label>
+    <label class="last-updated">Last updated: {{lastUpdated}}</label>
+    <button class="refresh-button">Refresh</button>
+  </div>
+</template>

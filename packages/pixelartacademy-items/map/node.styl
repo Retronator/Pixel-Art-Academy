@@ -65,6 +65,7 @@
   &.south
   &.in.no-direction
   &.out.no-direction
+  &.back
     .direction
       left calc(50% + 3rem)
 
@@ -104,6 +105,7 @@
   &.southeast
   &.out.no-direction
   &.down
+  &.back
     .direction
       bottom calc(100% + 1rem)
 
@@ -119,6 +121,7 @@
   &.south::after
   &.in.no-direction::after
   &.out.no-direction::after
+  &.back::after
     background atariGrey(1)
 
   &.east::after
@@ -131,6 +134,7 @@
   &.south::after
   &.in.no-direction::after
   &.out.no-direction::after
+  &.back::after
     height 9rem
     width 1rem
     left calc(50% - 0.5rem)
@@ -150,6 +154,7 @@
   &.southeast::after
   &.down::after
   &.out.no-direction::after
+  &.back::after
     top -10rem
 
   &.northwest::after
@@ -352,6 +357,7 @@
         &.west::after
         &.north::after
         &.south::after
+        &.back::after
         &.in.no-direction::after
         &.out.no-direction::after
           background atariGrey(2)
@@ -362,6 +368,7 @@
 
         &.north::after
         &.south::after
+        &.back::after
         &.in.no-direction::after
         &.out.no-direction::after
           height 19rem
@@ -380,6 +387,7 @@
         &.south::after
         &.southeast::after
         &.down::after
+        &.back::after
         &.out.no-direction::after
           top -20rem
 

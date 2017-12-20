@@ -1,5 +1,5 @@
 AB = Artificial.Base
 
-# Add route to Picker using Blaze Layout.
+# Add route to Picker.
 AB.addPickerRoute = (url, handler) ->
   Picker.route url, handler

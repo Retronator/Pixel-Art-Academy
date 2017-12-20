@@ -8,21 +8,45 @@ Vocabulary = LOI.Parser.Vocabulary
 class LOI.Interface.Text extends LOI.Interface
   @register 'LandsOfIllusions.Adventure.Interface.Text'
 
+  exitAvatarName: ->
+    exitAvatar = @currentData()
+
+    # Show the text for back instead of location name for that direction.
+    Back = LOI.Parser.Vocabulary.Keys.Directions.Back
+    backExit = LOI.adventure.currentSituation().exits()[Back]
+
+    return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.options.id() is backExit?.id()
+
+    exitAvatar.shortName()
+
   things: ->
     return [] unless things = LOI.adventure.currentLocationThings()
 
     thing for thing in things when thing.displayInLocation()
 
+  thingDescription: ->
+    # WARNING: The output of this function should be HTML escaped
+    # since the results will be directly injected with triple braces.
+    thing = @currentData()
+
+    # Look for a special description.
+    description = thing.descriptiveName()
+
+    # If that's not available, just use the full name formatted as a sentence.
+    description ?= "#{_.upperFirst thing.fullName()}."
+
+    @_formatOutput description
+
   showCommandLine: ->
     # Show command line unless we're displaying a dialog.
-    not @showDialogSelection()
+    not @showDialogueSelection()
 
-  showDialogSelection: ->
+  showDialogueSelection: ->
     # Wait if we're paused.
     return if @waitingKeypress()
 
     # Show the dialog selection when we have some choices available.
-    return unless options = @dialogSelection.dialogLineOptions()
+    return unless options = @dialogueSelection.dialogueLineOptions()
 
     # After the new choices are re-rendered, scroll down the narrative.
     Tracker.afterFlush => @narrative.scroll()
@@ -32,7 +56,7 @@ class LOI.Interface.Text extends LOI.Interface
   activeDialogOptionClass: ->
     option = @currentData()
 
-    'active' if option is @dialogSelection.selectedDialogLine()
+    'active' if option is @dialogueSelection.selectedDialogueLine()
 
   showInventory: ->
     not @inIntro() and @inventoryItems().length
@@ -89,22 +113,25 @@ class LOI.Interface.Text extends LOI.Interface
       not LOI.adventure.interface.active()
       LOI.adventure.interface.waitingKeypress()
       LOI.adventure.interface.commandInput.command().length
-      LOI.adventure.interface.showDialogSelection()
+      LOI.adventure.interface.showDialogueSelection()
     ]
 
     _.some busyConditions
     
   # Use to get back to the initial state with full location description.
-  resetInterface: ->
+  resetInterface: (options = {}) ->
+    options.resetIntroduction ?= true
+
     @_lastNode null
     @_pausedNode null
 
     @narrative?.clear()
 
-    @location().constructor.visited false
-    @inIntro true
+    if options.resetIntroduction
+      @location().constructor.visited false
+      @inIntro true
 
-    @initializeIntroductionFunction()
+      @initializeIntroductionFunction()
 
     Tracker.afterFlush =>
       @narrative.scroll()
@@ -160,7 +187,19 @@ class LOI.Interface.Text extends LOI.Interface
     @hoveredCommand null
 
   onMouseEnterExit: (event) ->
-    @hoveredCommand "Go to #{$(event.target).text()}"
+    exitAvatar = @currentData()
+
+    # Show just "go back" instead of "go to back".
+    Back = LOI.Parser.Vocabulary.Keys.Directions.Back
+    backExit = LOI.adventure.currentSituation().exits()[Back]
+
+    if exitAvatar.options.id() is backExit?.id()
+      command = "Go #{$(event.target).text()}"
+      
+    else
+      command = "Go to #{$(event.target).text()}"
+
+    @hoveredCommand command
 
   onMouseLeaveExit: (event) ->
     @hoveredCommand null

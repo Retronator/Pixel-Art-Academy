@@ -74,5 +74,5 @@ Document.startup ->
     console.log "Updating current Patreon pledges."
     RA.Patreon.updateCurrentPledges()
   ,
-    hour: 0
+    hour: 1
     minute: 0

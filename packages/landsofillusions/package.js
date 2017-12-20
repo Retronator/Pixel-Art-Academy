@@ -241,7 +241,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/script.coffee');
   api.addFiles('adventure/script/nodes/label.coffee');
   api.addFiles('adventure/script/nodes/callback.coffee');
-  api.addFiles('adventure/script/nodes/dialogline.coffee');
+  api.addFiles('adventure/script/nodes/dialogueline.coffee');
   api.addFiles('adventure/script/nodes/narrativeline.coffee');
   api.addFiles('adventure/script/nodes/interfaceline.coffee');
   api.addFiles('adventure/script/nodes/commandline.coffee');
@@ -282,7 +282,7 @@ Package.onUse(function(api) {
   api.addFiles('interface/components/components.coffee');
   api.addFiles('interface/components/narrative.coffee');
   api.addFiles('interface/components/commandinput.coffee');
-  api.addFiles('interface/components/dialogselection.coffee');
+  api.addFiles('interface/components/dialogueselection.coffee');
 
   api.addFiles('interface/text/text.coffee');
   api.addFiles('interface/text/text.html');

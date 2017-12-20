@@ -41,7 +41,7 @@ class LOI.Interface.Components.CommandInput
     busyConditions = [
       not @options.interface.active()
       @options.interface.waitingKeypress()
-      @options.interface.showDialogSelection()
+      @options.interface.showDialogueSelection()
     ]
 
     return if _.some busyConditions

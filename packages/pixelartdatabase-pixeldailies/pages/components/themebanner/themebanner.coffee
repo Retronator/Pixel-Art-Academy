@@ -8,7 +8,7 @@ class PADB.PixelDailies.Pages.Components.ThemeBanner extends AM.Component
   dateTitle: ->
     theme = @data()
 
-    theme.time.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US',
+    theme.time.toLocaleString Artificial.Babel.currentLanguage(),
       weekday: 'long'
       month: 'long'
       day: 'numeric'
@@ -16,4 +16,4 @@ class PADB.PixelDailies.Pages.Components.ThemeBanner extends AM.Component
 
   themeImageUrl: ->
     theme = @data()
-    theme.topSubmissions?[0]?.images[0].imageUrl
+    theme.topSubmissions?[0]?.images?[0].imageUrl

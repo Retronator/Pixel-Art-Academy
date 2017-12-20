@@ -56,3 +56,21 @@ Meteor.publish RA.User.topSupportersCurrentUser, ->
     removed: (user) => @removed 'TopSupporters', user._id, summarizeUser user
 
   @ready()
+
+RA.User.getSupportersWithNames.method ->
+  users = RA.User.documents.find(
+    supportAmount:
+      $gt: 0
+    supporterName:
+      $ne: null
+  ,
+    sort:
+      [
+        ['supportAmount', 'desc']
+        ['supporterName', 'desc']
+        ['profile.supporterMessage', 'desc']
+        ['createdAt', 'desc']
+      ]
+  ).fetch()
+
+  summarizeUser user for user in users when user.supporterName.length

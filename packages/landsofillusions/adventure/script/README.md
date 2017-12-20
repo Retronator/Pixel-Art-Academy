@@ -40,13 +40,13 @@ or
         dialog line 1
         dialog line 2
 
-`DialogLine` node that an actor delivers.
+`DialogueLine` node that an actor delivers.
 
 #### Choice
 
     * dialog line -> [label name]
 
-`Choice` node with a `DialogLine` node that the player can decide between. 
+`Choice` node with a `DialogueLine` node that the player can decide between. 
 If choice is taken, script continues to given `Label`. (see `Jump` node below).
 
 #### Code

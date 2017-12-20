@@ -7,17 +7,38 @@ PADB.Profile.create = (options) ->
   if options.platformType and options.username
     switch options.platformType
       when PADB.Profile.PlatformTypes.Twitter
-        profile = PADB.Profile.Providers.Twitter.createProfileData username: options.username
+        profileData = PADB.Profile.Providers.Twitter.createProfileData username: options.username
 
-  throw new AE.ArgumentException 'Profile could not be created with provided options.' unless profile
+  throw new AE.ArgumentException "Profile could not be created with provided options." unless profileData
 
   # Create the artist if it was not provided.
-  options.artist ?= PADB.Artist.createFromProfile profile
+  options.artist ?= PADB.Artist.createFromProfile profileData
 
-  profile.artist =
+  profileData.artist =
     _id: options.artist._id
+    
+  profileData.lastUpdated = new Date()
 
-  profileId = PADB.Profile.documents.insert profile
+  profileId = PADB.Profile.documents.insert profileData
 
   # Return the new document.
   PADB.Profile.documents.findOne profileId
+
+PADB.Profile.refresh = (profileId, sourceData) ->
+  profile = PADB.Profile.documents.findOne profileId
+  throw new AE.ArgumentException "Profile does not exist." unless profile
+
+  # If we weren't passed in source data, refresh by username.
+  if sourceData
+    options = {sourceData}
+
+  else
+    options = username: profile.username
+
+  switch profile.platformType
+    when PADB.Profile.PlatformTypes.Twitter
+      profileData = PADB.Profile.Providers.Twitter.createProfileData options
+
+  profileData.lastUpdated = new Date()
+
+  PADB.Profile.documents.update profileId, $set: profileData
