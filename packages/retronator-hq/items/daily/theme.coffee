@@ -5,7 +5,7 @@ class Retronator.HQ.Items.Daily.Theme
 
     # Get about page dynamic info.
     if @tumblr
-      $.getJSON 'https://hq.retronator.com/daily/data.json', (data) =>
+      $.getJSON 'https://pixelart.academy/daily/data.json', (data) =>
         @processBlogData data
 
     else

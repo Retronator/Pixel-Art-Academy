@@ -20,6 +20,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartdatabase');
   api.use('chfritz:easycron');
   api.use('http');
+  api.use('webapp', 'server');
 
   api.export('Retronator');
 

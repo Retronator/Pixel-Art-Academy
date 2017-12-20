@@ -171,7 +171,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       not @permalinkPage()
 
     homePage: ->
-      @indexPage() and @data.urlState.page is 1
+      @indexPage() and not @tagPage() and @data.urlState.page is 1
 
     firstPost: ->
       _.first @data.posts

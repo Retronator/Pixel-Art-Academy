@@ -18,7 +18,7 @@
       background image('/interface/back-arrow.png') 0 0 / 100% 100%
       cursor pointer
       opacity 1
-      transition opacity ease-out 0.5s
+      transition opacity ease-out 0.5s, visibility 0.5s
 
       &:hover
         margin-top -1rem
@@ -28,6 +28,16 @@
 
       &:focus
         outline none
+
+    &.homepage
+      .back-button
+        opacity 0
+        visibility hidden
+
+      &.inside
+        .back-button
+          opacity 1
+          visibility visible
 
     .page
       position relative

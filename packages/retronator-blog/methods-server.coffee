@@ -52,11 +52,14 @@ Blog.getData.method ->
   blogInfo.data
 
 # Create an HTTP endpoint for retronator.com.
-AB.addPickerRoute '/daily/data.json', (routeParameters, request, response, next) =>
+WebApp.rawConnectHandlers.use (request, response, next) =>
+  unless request.url is '/daily/data.json'
+    next()
+    return
+
   response.writeHead 200,
     'Content-type': 'application/json'
     'Access-Control-Allow-Origin': 'http://www.retronator.com'
 
-    response.write JSON.stringify Blog.getData()
-
-  next()
+  response.write JSON.stringify Blog.getData()
+  response.end()
