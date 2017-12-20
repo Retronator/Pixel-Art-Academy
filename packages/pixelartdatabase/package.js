@@ -41,6 +41,7 @@ Package.onUse(function(api) {
   api.addFile('profile/profile');
   api.addServerFile('profile/server');
   api.addServerFile('profile/subscriptions');
+  api.addServerFile('profile/methods-server');
 
   api.addServerFile('profile/providers-server/providers');
   api.addServerFile('profile/providers-server/twitter');
@@ -72,6 +73,11 @@ Package.onUse(function(api) {
 
   api.addFile('pages/admin/websites/websites');
   api.addUnstyledComponent('pages/admin/websites/website');
+
+  api.addFile('pages/admin/profiles/profiles');
+  api.addUnstyledComponent('pages/admin/profiles/profile');
+  api.addUnstyledComponent('pages/admin/profiles/scripts');
+  api.addServerFile('pages/admin/profiles/scripts-server');
 
   // api.addUnstyledComponent('components/uploader/uploader');
 });

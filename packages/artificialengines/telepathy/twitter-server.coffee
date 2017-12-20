@@ -11,21 +11,35 @@ class AT.Twitter
       app_only_auth: true
 
     @_twitGet = Meteor.wrapAsync @_twit.get.bind @_twit
+    @_twitPost = Meteor.wrapAsync @_twit.post.bind @_twit
     @initialized = true
 
-  @statuses:
-    userTimeline: -> AT.Twitter.get 'statuses/user_timeline', arguments...
-    show: -> AT.Twitter.get 'statuses/show', arguments...
-      
-  @users:
-    lookup: -> AT.Twitter.get 'users/lookup', arguments...
+    urls = [
+      'statuses/user_timeline'
+      'statuses/show'
+      'users/lookup'
+    ]
 
-  @get: (url, params, callback) ->
+    for url in urls
+      do (url) =>
+        urlParts = url.split '/'
+        groupName = urlParts[0]
+        methodName = _.camelCase urlParts[1]
+
+        # Create get and post variants of the method.
+        @[groupName] ?= {}
+        @[groupName][methodName] = -> AT.Twitter.get url, arguments...
+        @[groupName]["#{methodName}Post"] = -> AT.Twitter.post url, arguments...
+
+  @get: -> @_call @_twitGet, arguments...
+  @post: -> @_call @_twitPost, arguments...
+
+  @_call: (method, url, params, callback) ->
     throw new AE.InvalidOperationException 'Twitter was not initialized.' unless @initialized
 
     try
       if callback
-        @_twitGet url, params, (error, data, response) =>
+        method url, params, (error, data, response) =>
           if error
             @_handleError error
             return
@@ -33,7 +47,7 @@ class AT.Twitter
           callback data
 
       else
-        data = @_twitGet url, params
+        data = method url, params
 
         unless data
           console.log "Error accessing Twitter API."

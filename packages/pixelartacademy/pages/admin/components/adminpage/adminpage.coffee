@@ -11,7 +11,8 @@ class PAA.Pages.Admin.Components.AdminPage extends AM.Component
   constructor: (@options) ->
     super
 
-    @_documentPage = new @options.adminComponentClass()
+    @scriptsComponent = new @options.scriptsComponentClass if @options.scriptsComponentClass
+    @_documentPage = new @options.adminComponentClass
 
   documentPage: ->
     @_documentPage.renderComponent?(@currentComponent()) or null

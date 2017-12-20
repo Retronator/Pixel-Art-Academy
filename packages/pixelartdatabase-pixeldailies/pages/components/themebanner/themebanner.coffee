@@ -16,4 +16,4 @@ class PADB.PixelDailies.Pages.Components.ThemeBanner extends AM.Component
 
   themeImageUrl: ->
     theme = @data()
-    theme.topSubmissions?[0]?.images[0].imageUrl
+    theme.topSubmissions?[0]?.images?[0].imageUrl
