@@ -27,6 +27,8 @@ class Retronator.Blog extends Retronator.Blog
         width: website.blogFeature?.preview?.width or 1024
         height: website.blogFeature?.preview?.height or 1536
       renderDelay: website.blogFeature?.preview?.renderDelay
+      phantomConfig:
+        'ignore-ssl-errors': 'true'
 
     uploadingStarted = false
 
