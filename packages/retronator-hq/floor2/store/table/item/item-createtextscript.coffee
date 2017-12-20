@@ -110,7 +110,7 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
             actor: retro
             line: "%%html#{html}html%%"
 
-      else if tag is 'ul'
+      else if tag is 'ul' or tag is 'ol'
         html = $postPart.html()
 
         nodes.push new Nodes.DialogueLine

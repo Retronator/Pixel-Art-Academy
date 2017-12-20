@@ -116,7 +116,6 @@ class HQ.Cafe extends LOI.Adventure.Location
         action: => LOI.adventure.director.startScript @script
 
     onEnter: (enterResponse) ->
-      LOI.adventure.goToItem HQ.Items.Daily
 
     onExitAttempt: (exitResponse) ->
       
