@@ -13,7 +13,7 @@ class LOI.Components.Overlay extends AM.Component
   onRendered: ->
     super
 
-    cropBarHeight = 0
+    @_cropBarHeight = 0
 
     # Resize elements.
     @autorun (computation) =>
@@ -29,7 +29,7 @@ class LOI.Components.Overlay extends AM.Component
     @$('.crop-bar').height 0
 
     @$('.crop-bar').velocity
-      height: [cropBarHeight, 0]
+      height: [@_cropBarHeight, 0]
     ,
       duration: 200
       easing: 'easeOutQuint'
@@ -65,13 +65,13 @@ class LOI.Components.Overlay extends AM.Component
     maxOverlayHeight = 360 * scale
     maxBoundsHeight = viewport.maxBounds.height()
     gapHeight = (maxBoundsHeight - maxOverlayHeight) / 2
-    cropBarHeight = Math.max 0, viewport.maxBounds.top() + gapHeight
+    @_cropBarHeight = Math.max 0, viewport.maxBounds.top() + gapHeight
 
     safeAreaSize = viewport.safeArea.toDimensions()
     safeAreaSize.left += viewport.viewportBounds.left()
     safeAreaSize.top += viewport.viewportBounds.top()
 
-    @$('.crop-bar').height cropBarHeight
+    @$('.crop-bar').height @_cropBarHeight
     @$('.landsofillusions-components-overlay > .safe-area').css safeAreaSize
 
     # Inside the background the template in the else block can add
@@ -80,7 +80,7 @@ class LOI.Components.Overlay extends AM.Component
     viewportAreaSize = viewport.viewportBounds.toDimensions()
     maxAreaSize = viewport.maxBounds.toDimensions()
 
-    viewportAreaSize.top = Math.max viewportAreaSize.top, cropBarHeight
+    viewportAreaSize.top = Math.max viewportAreaSize.top, @_cropBarHeight
     viewportAreaSize.height = Math.min viewportAreaSize.height, maxOverlayHeight
 
     maxAreaSize.height = maxOverlayHeight
