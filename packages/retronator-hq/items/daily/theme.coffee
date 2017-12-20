@@ -238,7 +238,15 @@ class Retronator.HQ.Items.Daily.Theme
           currentPostIndex = postIndex if $(post).position().top < halfHeight
 
         # Position frontpage so that the current post headline is in the middle.
-        $headline = $(".frontpage .headline[data-index='#{currentPostIndex}']")
+        # Because some posts don't have a headline, go to previous one if needed.
+        loop
+          $headline = $(".frontpage .headline[data-index='#{currentPostIndex}']")
+          break if $headline.length
+
+          currentPostIndex--
+          if currentPostIndex < 0
+            $headline = $(".frontpage")
+            break
 
         headlineTop = $headline.offset().top + $frontpageScrollContent.scrollTop()
 
