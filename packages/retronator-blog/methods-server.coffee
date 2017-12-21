@@ -59,7 +59,7 @@ WebApp.rawConnectHandlers.use (request, response, next) =>
 
   response.writeHead 200,
     'Content-type': 'application/json'
-    'Access-Control-Allow-Origin': 'http://www.retronator.com'
+    'Access-Control-Allow-Origin': 'https://www.retronator.com'
 
   response.write JSON.stringify Blog.getData()
   response.end()
