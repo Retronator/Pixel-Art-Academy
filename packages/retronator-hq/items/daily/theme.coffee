@@ -298,7 +298,7 @@ class Retronator.HQ.Items.Daily.Theme
 
   processBlogData: (data) ->
     # Process blog info.
-    $('.circulation .value').text(data.blogInfo.followers.toLocaleString Artificial.Babel.currentLanguage())
+    $('.circulation .value').text(data.blogInfo.followers.toLocaleString navigator.language or 'en-US')
 
     # Process supporters messages.
     messages = _.sortBy data.supporterMessages, (message) -> -message.priority
