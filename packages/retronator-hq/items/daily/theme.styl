@@ -142,6 +142,7 @@
 
       img
         width 100%
+        height auto
         padding 1rem
         border 1rem solid atariGrey(0)
         cursor pointer
@@ -881,7 +882,8 @@
 
 .retronator-hq-items-daily-stream
   fixed-cover()
-  z-index 4
+  // Position it higher than tumblr's follow button at 100.
+  z-index 101
   overflow-y auto
   cursor pointer
 

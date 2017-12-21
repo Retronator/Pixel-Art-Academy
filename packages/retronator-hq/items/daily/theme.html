@@ -37,12 +37,12 @@
             </div>
             <ol class="back-issues">
               {{#each jumpPagination 5}}{{! {block:JumpPagination length="5"} !}}
-                <li class="back-issue" data-page="{{this}}{{! {PageNumber} !}}">
+                <li class="back-issue" data-page="{{this}}{{! {block:JumpPage}{PageNumber}{/block:JumpPage}{block:CurrentPage}{PageNumber}{/block:CurrentPage} !}}">
                   {{#if jumpPage}}{{! {block:JumpPage} !}}
                     <a class="link" href="{{jumpPageUrl}}{{! {Url} !}}"><span class="text"></span></a>
                   {{/if}}{{! {/block:JumpPage} !}}
                 </li>
-              {{/each}}{{! {block:JumpPagination} !}}
+              {{/each}}{{! {/block:JumpPagination} !}}
             </ol>
             <div class="featured-websites-area">
               <ol class="featured-websites"></ol>
@@ -71,23 +71,23 @@
                         {{title}}{{! {Title} !}}
                       </h1>
                     {{/if}}{{! {/block:Title} !}}
-                    {{{text}}}{{! {Content} !}}
+                    {{{text}}}{{! {Body} !}}
                   {{/if}}{{! {/block:Text} !}}
 
                   {{#if isPostPhoto}}{{! {block:Photo} !}}
                     <div class="photoset" data-layout="1">
-                      {{#each photos}}{{! <!-- None needed --> !}}
-                        <img src="{{original_size.url}}{{! {PhotoURL-HighRes} }}"/>
-                      {{/each}}{{! <!-- None needed --> !}}
+                      {{#each photos}}{{! !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-HighRes} !}}"/>
+                      {{/each}}{{! !}}
                     </div>
                     {{{text}}}{{! {Caption} !}}
                   {{/if}}{{! {/block:Photo} !}}
 
                   {{#if isPostPanorama}}{{! {block:Panorama} !}}
                     <div class="photoset" data-layout="1">
-                      {{#each photos}}{{! <!-- None needed --> !}}
-                        <img src="{{original_size.url}}{{! {PhotoURL-Panorama} }}"/>
-                      {{/each}}{{! <!-- None needed --> !}}
+                      {{#each photos}}{{! !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-Panorama} !}}"/>
+                      {{/each}}{{! !}}
                     </div>
                     {{{text}}}{{! {Caption} !}}
                   {{/if}}{{! {/block:Panorama} !}}
@@ -105,11 +105,11 @@
                     <figure>
                       {{{videoPlayer}}}{{! {Video-700} !}}
                     </figure>
-                    {{#if video.thumbnail.url}}{{! {block:VideoThumbnail} }}
+                    {{#if video.thumbnail.url}}{{! {block:VideoThumbnail} !}}
                       <div class="player-thumbnail">
                         <img src="{{video.thumbnail.url}}{{! {VideoThumbnailURL} !}}"/>
                       </div>
-                    {{/if}}{{! {/block:VideoThumbnail} }}
+                    {{/if}}{{! {/block:VideoThumbnail} !}}
                     {{{text}}}{{! {Caption} !}}
                   {{/if}}{{! {/block:Video} !}}
 
@@ -117,11 +117,11 @@
                     <figure>
                       {{{audio.player}}}{{! {AudioEmbed-640} !}}
                     </figure>
-                    {{#if audio.albumArt}}{{! {block:AlbumArt} }}
+                    {{#if audio.albumArt}}{{! {block:AlbumArt} !}}
                       <div class="player-thumbnail">
                         <img src="{{audio.albumArt}}{{! {AlbumArtURL} !}}"/>
                       </div>
-                    {{/if}}{{! {/block:AlbumArt} }}
+                    {{/if}}{{! {/block:AlbumArt} !}}
                     {{{text}}}{{! {Caption} !}}
                   {{/if}}{{! {/block:Audio} !}}
 
@@ -185,7 +185,7 @@
                         {{{phrase}}}{{! {Line} !}}
                       </p>
                     {{/each}}{{! {/block:Lines} !}}
-                  {{/if}}{{! {/block:Text} !}}
+                  {{/if}}{{! {/block:Chat} !}}
 
                   {{#if reblog}}{{! {block:RebloggedFrom} !}}
                     <div class="source reblog">
@@ -273,7 +273,7 @@
                       <li><a class="link" target="_blank" href="https://www.facebook.com/retronator">Facebook</a></li>
                       <li><a class="link" target="_blank" href="https://www.snapchat.com/add/retronator">Snapchat</a></li>
                     </ul>
-                    <p>Sometimes I try to pretend I speak Russian on:</p>
+                    <p>Sometimes I pretend to speak Russian on:</p>
                     <ul class="social-links">
                       <li><a class="link" target="_blank" href="https://vk.com/retronator">VK</a></li>
                     </ul>
@@ -351,12 +351,12 @@
             </ol-->
             <ol class="back-issues">
               {{#each jumpPagination 5}}{{! {block:JumpPagination length="5"} !}}
-                <li class="back-issue" data-page="{{this}}{{! {PageNumber} !}}">
+                <li class="back-issue" data-page="{{this}}{{! {block:JumpPage}{PageNumber}{/block:JumpPage}{block:CurrentPage}{PageNumber}{/block:CurrentPage} !}}">
                   {{#if jumpPage}}{{! {block:JumpPage} !}}
                     <a class="link" href="{{jumpPageUrl}}{{! {Url} !}}"><span class="text"></span></a>
                   {{/if}}{{! {/block:JumpPage} !}}
                 </li>
-              {{/each}}{{! {block:JumpPagination} !}}
+              {{/each}}{{! {/block:JumpPagination} !}}
             </ol>
           </div>
         </div>
