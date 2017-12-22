@@ -8,7 +8,6 @@ Npm.depends({
   stripe: '5.1.1',
   patreon: '0.3.0',
   'tumblr.js': '1.1.1',
-  'meteor-node-stubs': '0.3.2',
   'path-to-regexp': '2.1.0'
 });
 
