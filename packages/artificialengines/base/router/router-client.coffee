@@ -60,7 +60,10 @@ class AB.Router extends AB.Router
 
   @goToRoute: (routeName, parameters, options = {}) ->
     return unless url = @createUrl routeName, parameters
-
+    
+    @goToUrl url, options
+    
+  @goToUrl: (url, options = {}) ->
     # By default changing routes gets written to browser history.
     options.createHistory ?= true
 

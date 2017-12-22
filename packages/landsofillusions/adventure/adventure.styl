@@ -1,12 +1,14 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 html.adventure
+  margin 0
+  padding 0
   background atariGrey(0)
   color atariGrey(7)
   pixel-image-rendering()
 
   *
-    background-size 100% 100%
+    background-size 100%
 
   input
   textarea
@@ -14,6 +16,9 @@ html.adventure
     color inherit
 
   body
+    width 100%
+    margin 0
+    padding 0
     adventure()
 
   .artificial-mirage-display

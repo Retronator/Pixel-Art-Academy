@@ -15,6 +15,7 @@ _.mixin
 
     return thingClassOrId if _.isFunction thingClassOrId
     return LOI.Adventure.Thing.getClassForId thingClassOrId if _.isString thingClassOrId
+    return thingClassOrId.constructor if thingClassOrId instanceof LOI.Adventure.Thing
 
     throw new AE.ArgumentException 'You must provide a thing class or id.'
 

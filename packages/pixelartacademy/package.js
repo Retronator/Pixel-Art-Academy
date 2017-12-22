@@ -16,19 +16,27 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
-  api.addFiles('pixelartacademy.coffee');
+  api.addFile('pixelartacademy');
 
   // Layouts
 
-  api.addFiles('layouts/layouts.coffee');
+  api.addFile('layouts/layouts');
 
-  api.addFiles('layouts/alphaaccess/alphaaccess.coffee');
-  api.addFiles('layouts/alphaaccess/alphaaccess.html');
+  api.addUnstyledComponent('layouts/alphaaccess/alphaaccess');
 
-  api.addFiles('layouts/playeraccess/playeraccess.coffee');
-  api.addFiles('layouts/playeraccess/playeraccess.html');
+  api.addUnstyledComponent('layouts/playeraccess/playeraccess');
 
-  api.addFiles('layouts/adminaccess/adminaccess.coffee');
+  api.addFile('layouts/adminaccess/adminaccess');
 
-  api.addFiles('character/methods.coffee', 'server');
+  // Pages
+
+  api.addFile('pages/pages');
+
+  api.addFile('pages/admin/admin');
+  api.addFile('pages/admin/components/components');
+  api.addComponent('pages/admin/components/adminpage/adminpage');
+  api.addComponent('pages/admin/components/index/index');
+  api.addFile('pages/admin/components/document/document');
+
+  api.addServerFile('character/methods');
 });

@@ -7,6 +7,7 @@ Npm.depends({
   twit: '2.2.9',
   stripe: '5.1.1',
   patreon: '0.3.0',
+  'tumblr.js': '1.1.1',
   'meteor-node-stubs': '0.3.2',
   'path-to-regexp': '2.1.0'
 });
@@ -110,6 +111,7 @@ Package.onUse(function(api) {
   api.addFiles('mirage/render.coffee');
   api.addFiles('mirage/render.html');
   api.addFiles('mirage/window.coffee', 'client');
+  api.addUnstyledComponent('mirage/pixelimage');
 
   api.addFiles('mirage/markdown/markdown.coffee');
   api.addFiles('mirage/markdown/markdown.html');
@@ -118,6 +120,7 @@ Package.onUse(function(api) {
   api.addFiles('mirage/spacebars/stringhelpers.coffee');
   api.addFiles('mirage/spacebars/htmlhelpers.coffee');
   api.addFiles('mirage/spacebars/image.coffee');
+  api.addFiles('mirage/spacebars/uncached.coffee');
 
   api.addFiles('mirage/mixins/autoresizetextarea.coffee');
   api.addFiles('mirage/mixins/autoselectinput.coffee');
@@ -164,6 +167,7 @@ Package.onUse(function(api) {
   api.addServerFile('telepathy/twitter-server');
   api.addServerFile('telepathy/stripe-server');
   api.addServerFile('telepathy/patreon-server');
+  api.addServerFile('telepathy/tumblr-server');
 
   // Artificial Babel
   api.addFile('babel/babel');

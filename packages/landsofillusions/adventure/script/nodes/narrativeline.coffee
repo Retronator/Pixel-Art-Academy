@@ -6,3 +6,4 @@ class Script.Nodes.NarrativeLine extends Script.Node
     super
 
     @line = options.line
+    @scrollStyle = options.scrollStyle

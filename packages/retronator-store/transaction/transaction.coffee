@@ -87,6 +87,7 @@ class RS.Transaction extends AM.Document
 
   # Methods
   @insertStripePurchase: 'Retronator.Store.Transaction.insertStripePurchase'
+  @getMessages: @method 'getMessages'
   
   # Errors
   @serverErrorAfterPurchase: 'server-error-after-purchase'

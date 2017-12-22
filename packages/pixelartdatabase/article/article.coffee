@@ -2,8 +2,8 @@ AM = Artificial.Mummification
 PADB = PixelArtDatabase
 
 class PADB.Article extends AM.Document
-  # url: link to the profile
-  # title: display name of the artist on the platform
+  # url: link to the article
+  # title: title of the article
   # author: the artist who wrote the article
   #   _id
   #   displayName
@@ -12,4 +12,4 @@ class PADB.Article extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      artist: @ReferenceField PADB.Artist, ['displayName'], false
+      author: @ReferenceField PADB.Artist, ['displayName'], false

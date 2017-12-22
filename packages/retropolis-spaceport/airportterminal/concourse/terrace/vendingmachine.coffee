@@ -17,7 +17,7 @@ class RS.AirportTerminal.Terrace.VendingMachine extends LOI.Adventure.Item
     hue: LOI.Assets.Palette.Atari2600.hues.cyan
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
-  @dialogDeliveryType: -> LOI.Avatar.DialogDeliveryType.Displaying
+  @dialogueDeliveryType: -> LOI.Avatar.DialogueDeliveryType.Displaying
   @dialogTextTransform: -> LOI.Avatar.DialogTextTransform.Uppercase
 
   @initialize()

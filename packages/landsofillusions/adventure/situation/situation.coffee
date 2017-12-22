@@ -13,7 +13,8 @@ class LOI.Adventure.Situation
       exits: CircumstanceTypes.Map
       description: CircumstanceTypes.Array
       illustrationHeight: CircumstanceTypes.Array
-    
+      postscript: CircumstanceTypes.Array
+
     # Create all the circumstances as properties of the situation.
     for circumstanceName, circumstanceType of @circumstanceNames
       @[circumstanceName] = new @constructor.Circumstance circumstanceType

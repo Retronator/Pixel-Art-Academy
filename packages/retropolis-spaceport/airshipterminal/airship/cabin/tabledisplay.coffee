@@ -11,6 +11,6 @@ class RS.AirshipTerminal.Airship.Cabin.TableDisplay extends LOI.Adventure.Thing
     hue: LOI.Assets.Palette.Atari2600.hues.aqua
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
 
-  @dialogDeliveryType: -> LOI.Avatar.DialogDeliveryType.Displaying
+  @dialogueDeliveryType: -> LOI.Avatar.DialogueDeliveryType.Displaying
 
   @initialize()

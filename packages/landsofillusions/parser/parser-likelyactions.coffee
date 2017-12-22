@@ -7,8 +7,9 @@ class LOI.Parser extends LOI.Parser
     # Nodes are not yet available when parser is defined, so we need to access them here.
     Nodes = LOI.Adventure.Script.Nodes
 
-    # Sort all actions descending by likelihood, precision and priority.
-    likelyActions = _.reverse _.sortBy likelyActions, 'likelihood', 'precision', 'priority'
+    # Sort all actions descending by likelihood, precision and priority. Do a preliminary
+    # reverse as well, so that the order inside equal ranks will be preserved.
+    likelyActions = _.reverse _.sortBy _.reverse(likelyActions), 'likelihood', 'precision', 'priority'
 
     # Since each alias and translation variant creates its own likely action, multiple can be for the
     # same phrase action. In that case, only include the most likely one in the consideration.
@@ -18,12 +19,26 @@ class LOI.Parser extends LOI.Parser
       # Consider likely actions with the same phrase action as equal.
       a.phraseAction.action is b.phraseAction.action
 
+    # Keep only the top priority actions of same phrases.
+    likelyActions = _.filter likelyActions, (likelyAction, index, collection) ->
+      # Remove this action if an earlier exists with the same translated form and higher priority.
+      return false if _.find collection[0...index], (earlierLikelyAction) ->
+        likelyAction.priority < earlierLikelyAction.priority and likelyAction.translatedForm.join(' ') is earlierLikelyAction.translatedForm.join(' ')
+
+      true
+
     if LOI.debug
       console.log "We're not sure what the user wanted ... top 10 possibilities:"
       console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision, likelyAction.priority for likelyAction in likelyActions[0...10]
 
     # If the most likely action is not above 60%, we tell the user we don't understand.
     bestLikelihood = likelyActions[0].likelihood
+    bestPrecision = likelyActions[0].precision
+
+    # If the top actions are 100% likely and precise, just filter down to only them.
+    if bestLikelihood is 1 and bestPrecision is 1
+      likelyActions = _.filter likelyActions, (likelyAction) ->
+        likelyAction.likelihood is 1 and likelyAction.precision is 1
 
     if bestLikelihood <= 0.6
       LOI.adventure.interface.narrative.addText "I can't do that."

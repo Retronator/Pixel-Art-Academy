@@ -178,7 +178,7 @@ class LOI.Adventure.ScriptFile.Parser
       line = line.trim()
       continue unless line.length
 
-      node = new Nodes.DialogLine
+      node = new Nodes.DialogueLine
         actor: actor
         line: line
         next: nextNode
@@ -267,7 +267,7 @@ class LOI.Adventure.ScriptFile.Parser
 
     # Create a dialog node without an actor (the player's character delivers it),
     # followed by the jump (or following to the last non-choice node if no jump is present).
-    dialogNode = new Nodes.DialogLine
+    dialogNode = new Nodes.DialogueLine
       line: choiceLine
       next: jumpNode or @lastNonChoiceNode
       

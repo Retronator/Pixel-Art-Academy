@@ -15,7 +15,7 @@ class RS.AirportTerminal.Immigration.Terminal extends LOI.Adventure.Thing
     hue: LOI.Assets.Palette.Atari2600.hues.yellow
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
-  @dialogDeliveryType: -> LOI.Avatar.DialogDeliveryType.Displaying
+  @dialogueDeliveryType: -> LOI.Avatar.DialogueDeliveryType.Displaying
   @dialogTextTransform: -> LOI.Avatar.DialogTextTransform.Uppercase
 
   @defaultScriptUrl: -> 'retronator_retropolis-spaceport/airportterminal/arrivals/immigration/terminal.script'

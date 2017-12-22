@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:app',
-  version: '0.24.1',
+  version: '0.25.2',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -30,6 +30,7 @@ Package.onUse(function(api) {
   api.use('retronator:sanfrancisco-c3');
   api.use('retronator:sanfrancisco-apartment');
   api.use('retronator:retronator-hq');
+  api.use('retronator:retronator-blog');
   api.use('retronator:retronator-residence');
   api.use('retronator:retronator-landsofillusions');
   api.use('retronator:landsofillusions-construct');

@@ -40,7 +40,7 @@ class LOI.Adventure extends LOI.Adventure
         # Find if this is an item or location.
         handler = @constructor.getDirectRouteHandlerForUrl url
 
-        console.log "Found a custom handler for this route." if LOI.debug and handler
+        console.log "Found a custom handler for this route." if handler and LOI.debug
 
         # If we got a handler, let it deal with the URL (get the game into the state it needs to be).
         handler?()
@@ -59,7 +59,12 @@ class LOI.Adventure extends LOI.Adventure
 
       unless desiredUrl?
         # We don't have any URLs in the dialogs, next try active item (first) and location (second).
+        activeItemId = @activeItemId()
         activeItem = @activeItem()
+
+        # Wait until desired active item is instantiated.
+        return if activeItemId and activeItemId isnt activeItem?.id()
+
         currentLocation = @currentLocation()
 
         thing = activeItem or currentLocation

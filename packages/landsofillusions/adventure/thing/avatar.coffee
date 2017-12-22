@@ -6,6 +6,7 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
   @translationKeys:
     fullName: 'fullName'
     shortName: 'shortName'
+    descriptiveName: 'descriptiveName'
     description: 'description'
 
   # Initialize database parts of an avatar.
@@ -39,6 +40,7 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
 
   fullName: -> @_translateIfAvailable @constructor.translationKeys.fullName
   shortName: -> @_translateIfAvailable @constructor.translationKeys.shortName
+  descriptiveName: -> @_translateIfAvailable @constructor.translationKeys.descriptiveName
   description: -> @_translateIfAvailable @constructor.translationKeys.description
     
   nameAutoCorrectStyle: -> _.propertyValue @options, 'nameAutoCorrectStyle'
@@ -50,7 +52,7 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
     color or super
 
   dialogTextTransform: -> _.propertyValue @options, 'dialogTextTransform'
-  dialogDeliveryType: -> _.propertyValue @options, 'dialogDeliveryType'
+  dialogueDeliveryType: -> _.propertyValue @options, 'dialogueDeliveryType'
 
   _translateIfAvailable: (key) ->
     translated = AB.translate @_translationSubscription, key

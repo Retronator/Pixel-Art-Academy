@@ -34,7 +34,8 @@ class HQ.Cafe extends LOI.Adventure.Location
     @loginButtonsSession = Accounts._loginButtonsSession
 
   things: -> [
-    @constructor.Artworks
+    HQ.Items.Daily
+    HQ.Cafe.Artworks
     HQ.Actors.Burra
     SanFrancisco.Soma.Items.Map unless SanFrancisco.Soma.Items.Map.state 'inInventory'
   ]

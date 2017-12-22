@@ -36,6 +36,7 @@ class HQ.Store extends LOI.Adventure.Location
       floor: 2
 
     @shelves = new HQ.Store.Shelves
+    @retro = new HQ.Store.Retro
 
     @subscribe RS.Item.all
     @subscribe RA.User.registeredEmailsForCurrentUser
@@ -47,28 +48,34 @@ class HQ.Store extends LOI.Adventure.Location
   destroy: ->
     super
 
-  things: -> [
-    HQ.Actors.Retro
-    HQ.Store.Display
-    HQ.Store.Shelf.Game
-    HQ.Store.Shelf.Upgrades
-    HQ.Store.Shelves
-    @elevatorButton
-  ]
+  things: ->
+    newestTableItem = @retro.newestTableItem()
+
+    _.flattenDeep [
+      @constructor.Table
+      @retro
+      newestTableItem
+      newestTableItem?.interactions
+      HQ.Store.Display
+      HQ.Store.Shelf.Game
+      HQ.Store.Shelf.Upgrades
+      HQ.Store.Shelves
+      @elevatorButton
+    ]
 
   exits: ->
     HQ.Elevator.addElevatorExit
       floor: 2
     ,
-      "#{Vocabulary.Keys.Directions.East}": @constructor.Bookshelves
       "#{Vocabulary.Keys.Directions.Up}": HQ.GalleryWest
+      "#{Vocabulary.Keys.Directions.East}": @constructor.Bookshelves
       "#{Vocabulary.Keys.Directions.Down}": HQ.Cafe
 
   # Script
 
   initializeScript: ->
     @setCurrentThings
-      retro: HQ.Actors.Retro
+      retro: HQ.Store.Retro
   
     @setCallbacks
       AnalyzeUser: (complete) =>
@@ -227,8 +234,15 @@ class HQ.Store extends LOI.Adventure.Location
   # Listener
 
   onCommand: (commandResponse) ->
-    return unless retro = LOI.adventure.getCurrentThing HQ.Actors.Retro
+    if retro = LOI.adventure.getCurrentThing HQ.Store.Retro
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]
+        action: => @startScript label: 'RetroDialog'
+      table = @options.parent
 
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]
-      action: => @startScript label: 'RetroDialog'
+    if table = LOI.adventure.getCurrentThing HQ.Store.Table
+      commandResponse.onPhrase
+        form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], table.avatar]
+        priority: 1
+        action: =>
+          LOI.adventure.goToLocation table

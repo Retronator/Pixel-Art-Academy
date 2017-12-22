@@ -58,41 +58,53 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     pause.end()
 
-  _handleDialogLine: (dialogLine) ->
-    return if @_waitForNode dialogLine
+  _handleDialogueLine: (dialogueLine) ->
+    return if @_waitForNode dialogueLine
 
-    unless dialogLine.actor
+    unless dialogueLine.actor
       # There is no actor, which means the player is saying this. Simply dump it into the narrative and finish.
-      text = @_evaluateLine dialogLine
+      text = @_evaluateLine dialogueLine
 
       @narrative.addText "> \"#{text.toUpperCase()}\""
 
-      dialogLine.end()
+      dialogueLine.end()
       return
 
-    # We have an actor that is saying this.
-    dialogColor = dialogLine.actor.color()
+    # If the actor is a string, we consider it as a straight-up name.
+    if _.isString dialogueLine.actor
+      start = ''
+      end = ''
 
-    # Add a new paragraph to the narrative
-    start = "%%c#{dialogColor.hue}-#{dialogColor.shade}%"
-    text = @_evaluateLine dialogLine
-    end = 'c%%'
+    else
+      # We have an actor that is saying this.
+      dialogueColor = dialogueLine.actor.color()
 
-    # Add text transformation.
-    switch dialogLine.actor.dialogTextTransform()
-      when LOI.Avatar.DialogTextTransform.Lowercase
-        start = "%%tL#{start}"
-        end = "t%%#{end}"
-      when LOI.Avatar.DialogTextTransform.Uppercase
-        start = "%%tU#{start}"
-        end = "t%%#{end}"
+      # Add a new paragraph to the narrative
+      start = "%%c#{dialogueColor.hue}-#{dialogueColor.shade}%"
+      end = 'c%%'
+
+      # Add text transformation.
+      switch dialogueLine.actor.dialogTextTransform()
+        when LOI.Avatar.DialogTextTransform.Lowercase
+          start = "%%tL#{start}"
+          end = "t%%#{end}"
+        when LOI.Avatar.DialogTextTransform.Uppercase
+          start = "%%tU#{start}"
+          end = "t%%#{end}"
+
+    text = @_evaluateLine dialogueLine
 
     # Add the intro line at the start.
     unless @_inMultilineDialog
-      if dialogLine.actor.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
-        start = "#{_.upperFirst dialogLine.actor.shortName()} says: #{start}\""
+      if _.isString dialogueLine.actor
+        actorName = dialogueLine.actor
 
-    if dialogLine.next instanceof Nodes.DialogLine and dialogLine.next.actor is dialogLine.actor
+      else if dialogueLine.actor.dialogueDeliveryType() is LOI.Avatar.DialogueDeliveryType.Saying
+        actorName = dialogueLine.actor.shortName()
+
+      start = "#{_.upperFirst actorName} says: #{start}\"" if actorName
+
+    if dialogueLine.next instanceof Nodes.DialogueLine and dialogueLine.next.actor is dialogueLine.actor
       # Next line is by the same actor.
       @_inMultilineDialog = true
 
@@ -100,16 +112,16 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @_inMultilineDialog = false
 
       # Add the closing quote at the end.
-      if dialogLine.actor.dialogDeliveryType() is LOI.Avatar.DialogDeliveryType.Saying
+      if _.isString(dialogueLine.actor) or dialogueLine.actor.dialogueDeliveryType() is LOI.Avatar.DialogueDeliveryType.Saying
         end = "\"#{end}"
 
     # Present the text to the player.
     @narrative.addText "#{start}#{text}#{end}"
 
     # This is a line node so set that we displayed it.
-    @_nodeDisplayed dialogLine
+    @_nodeDisplayed dialogueLine
 
-    dialogLine.end()
+    dialogueLine.end()
 
   _handleNarrativeLine: (narrativeLine) ->
     return if @_waitForNode narrativeLine
@@ -117,7 +129,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # Simply output the line to the narrative.
     text = @_evaluateLine narrativeLine
 
-    @narrative.addText text
+    @narrative.addText text, scrollStyle: narrativeLine.scrollStyle
 
     # This is a line node so set that we displayed it.
     @_nodeDisplayed narrativeLine

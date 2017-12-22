@@ -24,7 +24,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
     # Find the best submission for this day.
     [themesCursor, submissionsCursor, artworksCursor] = @themeSubmissions.query date, 1
-    submissionsCursor.fetch()[0].images[0].imageUrl
+    submissionsCursor.fetch()[0]?.images[0].imageUrl
 
   @date: (options) ->
     return unless options.year and options.month and options.day
@@ -39,7 +39,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
     dateFormat.weekday = 'long' if options.weekday
       
-    options.date.toLocaleString Artificial.Babel.userLanguagePreference()[0] or 'en-US', dateFormat
+    options.date.toLocaleString Artificial.Babel.currentLanguage(), dateFormat
 
   # Subscriptions
   @themeSubmissions: new AB.Subscription
@@ -180,7 +180,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
         # If we don't have the artworks loaded yet, use top submissions as placeholders. We pretty
         # much repeat the archive submission code to create a temporary artwork out of the submission.
-        unless artworks.length
+        if not artworks.length and theme.topSubmissions?.length
           artworks = for submission in theme.topSubmissions
             PADB.PixelDailies.Pages.YearReview.Helpers.convertSubmissionToArtworks submission
 

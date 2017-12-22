@@ -11,6 +11,6 @@ class RS.Items.Announcer extends LOI.Adventure.Thing
     hue: LOI.Assets.Palette.Atari2600.hues.green
     shade: LOI.Assets.Palette.Atari2600.characterShades.darker
 
-  @dialogDeliveryType: -> LOI.Avatar.DialogDeliveryType.Displaying
+  @dialogueDeliveryType: -> LOI.Avatar.DialogueDeliveryType.Displaying
 
   @initialize()

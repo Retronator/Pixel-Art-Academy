@@ -47,8 +47,8 @@ class LOI.Parser.CommandResponse
             phraseKey = alias
             @options.parser.vocabulary.getPhrases phraseKey
 
-          else if alias instanceof LOI.Avatar
-            # We have an avatar.
+          else if alias instanceof LOI.Avatar or alias instanceof LOI.Adventure.Thing
+            # We have an avatar (or a thing that has the same name methods as the avatar).
             avatar = alias
 
             # We create all possible name phrase sequences out of the short and full name.

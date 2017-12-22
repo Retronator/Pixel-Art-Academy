@@ -17,6 +17,7 @@ class PADB.Profile extends AM.Document
   #   _id
   #   displayName
   # sourceData: raw data returned by the platform API for this profile
+  # lastUpdated: time when the source data was retrieved
   @Meta
     name: @id()
     fields: =>
@@ -28,6 +29,11 @@ class PADB.Profile extends AM.Document
     FacebookProfile: 'FacebookProfile'
     Other: 'Other'
 
+  # Methods
+
+  @adminRefresh: @method 'adminRefresh'
+
   # Subscriptions
 
+  @all: @subscription 'all'
   @forUsername: @subscription 'forUsername'

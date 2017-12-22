@@ -1,0 +1,619 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+line(name)
+  unquote("[") + name + unquote("]")
+
+.retronator-hq-items-daily-theme
+  .newspaper
+    .frontpage-area
+      .frontpage
+        .headlines
+          /*
+          1   2   3   4   5   6
+           ___________________   1
+          |                   |
+          |                   |
+          |         A1        |
+          |   _____________   |  2
+          |___|/////A/////|___|  3
+
+          */
+          .single-1
+          .single-1v
+            .image-a1
+              grid-column 1 / 6
+              grid-row 1 / 3
+
+            .headline-a
+              grid-column 2 / 5
+              grid-row 2 / 3
+
+          .single-1v
+            .headline-a
+              grid-row 1 / 2
+
+          /*
+          1   2   3   4   5   6
+           ___________________   1
+          |                   |
+          |                   |
+          |        A1         |
+          |                   |
+          |...........________|  2
+          |           |///////|
+          |    A2     |///A///|
+          |___________|///////|  3
+
+          */
+          .single-2
+          .single-2h
+          .single-2v
+          .single-2vh
+            .image-a1
+              grid-column 1 / 6
+              grid-row 1 / 2
+
+            .image-a2
+              grid-column 1 / 4
+              grid-row 2 / 3
+
+            .headline-a
+              grid-column 4 / 6
+              grid-row 2 / 3
+
+          .single-2h
+          .single-2vh
+            .image-a2
+              grid-column 3 / 6
+
+            .headline-a
+              grid-column 1 / 3
+
+          .single-2v
+          .single-2vh
+            .image-a1
+              grid-row 2 / 3
+
+            .image-a2
+              grid-row 1 / 2
+
+            .headline-a
+              grid-row 1 / 2
+
+          /*
+          1   2   3   4   5   6
+           ___________________   1
+          |///////////|  A2   |  2
+          |           ........|  3
+          |     A1    .       |
+          |           .  A3   |
+          |___________._______|  4
+
+          */
+          .single-3
+          .single-3h
+          .single-3v
+          .single-3vh
+            .image-a1
+              grid-column 1 / 4
+              grid-row 2 / 4
+
+            .image-a2
+              grid-column 4 / 6
+              grid-row 1 / 3
+
+            .image-a3
+              grid-column 4 / 6
+              grid-row 3 / 4
+
+            .headline-a
+              grid-column 1 / 4
+              grid-row 1 / 2
+
+          .single-3h
+          .single-3vh
+            .image-a1
+              grid-column 3 / 6
+
+            .image-a2
+              grid-column 1 / 3
+
+            .image-a3
+              grid-column 1 / 3
+
+            .headline-a
+              grid-column 3 / 6
+
+          .single-3v
+          .single-3vh
+            .image-a1
+              grid-row 1 / 3
+
+            .image-a2
+              grid-row 2 / 4
+
+            .image-a3
+              grid-row 1 / 2
+
+            .headline-a
+              grid-row 3 / 4
+
+          /*
+          1         2         3
+           ___________________   1
+          |                   |
+          |         A1        |
+          |         __________|  2
+          |////A////|////B////|  3
+          |                   |
+          |         B1        |
+          |___________________|  4
+
+          */
+          .double-1
+          .double-1h
+            grid-template-columns 50% 50%
+
+            .image-a1
+              grid-column 1 / 3
+              grid-row 1 / 2
+
+            .headline-a
+              grid-column 1 / 2
+              grid-row 2 / 3
+              margin 0 1rem 1rem 0
+
+            .image-b1
+              grid-column 1 / 3
+              grid-row 3 / 4
+
+            .headline-b
+              grid-column 2 / 3
+              grid-row 2 / 3
+              text-align right
+              margin-top 1rem
+
+          .double-1h
+            .headline-a
+              grid-column 2 / 3
+              margin 0 0 1rem 1rem
+              text-align right
+
+            .headline-b
+              grid-column 1 / 2
+              text-align left
+
+          /*
+          1   2   3   4   5   6
+           ___________________   1
+          |           ////A///|  2
+          |           ////B///|  3
+          |     A1    .       |
+          |           .  B1   |
+          |___________._______|  4
+
+          */
+          .double-2
+          .double-2v
+            grid-template-columns calc(20% - 1rem) 20% 20% calc(20% + 1rem) 20%
+
+          .double-2
+          .double-2h
+          .double-2v
+          .double-2vh
+            .image-a1
+              grid-column 1 / 4
+              grid-row 1 / 4
+
+            .headline-a
+              grid-column 4 / 6
+              grid-row 1 / 2
+              margin-bottom 1rem
+
+            .image-b1
+              grid-column 4 / 6
+              grid-row 3 / 4
+              margin-left 1rem
+
+            .headline-b
+              grid-column 4 / 6
+              grid-row 2 / 3
+              text-align right
+              margin-left 1rem
+
+          .double-2h
+          .double-2vh
+            .image-a1
+              grid-column 3 / 6
+
+            .headline-a
+              grid-column 1 / 3
+              text-align right
+
+            .image-b1
+              grid-column 1 / 3
+              margin-left 0
+              margin-right 1rem
+
+            .headline-b
+              grid-column 1 / 3
+              text-align left
+              margin-left 0
+              margin-right 1rem
+
+          .double-2v
+          .double-2vh
+            .headline-a
+              grid-row 3 / 4
+              margin-bottom 0
+              margin-top 1rem
+
+            .image-b1
+              grid-row 1 / 2
+
+          /*
+          1   2   3   4   5   6
+           ___________________   1
+          |       ////|       |
+          |       /A//|       |
+          |   A   ////|   B   |  2
+          |   1   |////   1   |
+          |       |//B/       |
+          |_______|////_______|  3
+
+          */
+          .double-3
+            grid-template-columns calc(20% - 1rem) 20% calc(20% + 1rem) 20% 20%
+
+          .double-3
+          .double-3h
+            .image-a1
+              grid-column 1 / 3
+              grid-row 1 / 3
+
+            .headline-a
+              grid-column 3 / 4
+              grid-row 1 / 2
+              margin 0 1rem 1rem 0
+
+            .image-b1
+              grid-column 4 / 6
+              grid-row 1 / 3
+
+            .headline-b
+              grid-column 3 / 4
+              grid-row 2 / 3
+              text-align right
+              margin-left 1rem
+
+          .double-3h
+            grid-template-columns calc(20% - 1rem) 20% calc(20% + 1rem) 20% 20%
+
+            .image-a1
+              grid-column 4 / 6
+
+            .headline-a
+              margin 0 0 1rem 1rem
+              text-align right
+
+            .image-b1
+              grid-column 1 / 3
+
+            .headline-b
+              text-align left
+              margin-left 0
+              margin-right 1rem
+
+          /*
+          1   2   3   4   5   6
+           ___________________   1
+          |           |       |
+          |           |       |
+          |     A1    |   B1  |
+          |           |       |  2
+          |___////A///|///B///|  3
+
+          */
+          .double-4
+          .double-4h
+          .double-4v
+          .double-4vh
+            .image-a1
+              grid-column 1 / 4
+              grid-row 1 / 3
+              margin-right 1rem
+
+            .headline-a
+              grid-column 2 / 4
+              grid-row 2 / 3
+              margin-right 1rem
+
+            .image-b1
+              grid-column 4 / 6
+              grid-row 1 / 2
+
+            .headline-b
+              grid-column 4 / 6
+              grid-row 2 / 3
+              text-align right
+
+          .double-4h
+          .double-4vh
+            .image-a1
+              grid-column 3 / 6
+              margin-right 0
+
+            .headline-a
+              grid-column 3 / 5
+              margin-right 0
+              text-align right
+
+            .image-b1
+              grid-column 1 / 3
+              margin-right 1rem
+
+            .headline-b
+              grid-column 1 / 3
+              text-align left
+              margin-right 1rem
+
+          .double-4v
+          .double-4vh
+            .headline-a
+              grid-row 1 / 2
+
+            .image-b1
+              grid-row 2 / 3
+
+            .headline-b
+              grid-row 1 / 2
+
+          /*
+          1   2   3   4   5   6
+           ___________________   1
+          |   A1  |/////B/////|  2
+          |       |           |  3
+          |///A///|           |  4
+          |///C///|     B1    |  5
+          |       |           |
+          |___C1__|___________|  6
+
+          */
+          .triple-1
+          .triple-1h
+          .triple-1v
+          .triple-1vh
+            .image-a1
+              grid-column 1 / 3
+              grid-row 1 / 3
+              margin-right 1rem
+
+            .headline-a
+              grid-column 1 / 3
+              grid-row 3 / 4
+              margin 0 1rem 1rem 0
+
+            .image-b1
+              grid-column 3 / 6
+              grid-row 2 / 6
+
+            .headline-b
+              grid-column 3 / 6
+              grid-row 1 / 2
+              text-align right
+
+            .image-c1
+              grid-column 1 / 3
+              grid-row 5 / 6
+              margin-right 1rem
+
+            .headline-c
+              grid-column 1 / 3
+              grid-row 4 / 5
+              margin-right 1rem
+
+          .triple-1h
+          .triple-1vh
+            .image-a1
+              grid-column 4 / 6
+              margin-right 0
+
+            .headline-a
+              grid-column 4 / 6
+              margin 0 0 1rem 0
+              text-align right
+
+            .image-b1
+              grid-column 1 / 4
+              margin-right 1rem
+
+            .headline-b
+              grid-column 1 / 4
+              text-align left
+              margin-right 1rem
+
+            .image-c1
+              grid-column 4 / 6
+              margin-right 0
+
+            .headline-c
+              grid-column 4 / 6
+              margin-right 0
+              text-align right
+
+          .triple-1v
+          .triple-1vh
+            .image-a1
+              grid-row 4 / 6
+
+            .headline-a
+              grid-row 3 / 4
+              margin 1rem 1rem 0 0
+
+            .image-b1
+              grid-row 1 / 5
+
+            .headline-b
+              grid-row 5 / 6
+
+            .image-c1
+              grid-row 1 / 2
+
+            .headline-c
+              grid-row 2 / 3
+
+          /*
+          1     2     3       4
+           ___________________   1
+          |//A//|//B//|       |  2
+          |     |     |       |
+          |  A  |  B  |   C1  |
+          |  1  |  1  |       |  3
+          |_____|_____|///C///|  4
+
+          */
+          .triple-2
+          .triple-2h
+          .triple-2v
+          .triple-2vh
+            grid-template-columns 30% 30% 40%
+
+            .image-a1
+              grid-column 1 / 2
+              grid-row 2 / 4
+              margin-right 1rem
+
+            .headline-a
+              grid-column 1 / 2
+              grid-row 1 / 2
+              margin-right 1rem
+
+            .image-b1
+              grid-column 2 / 3
+              grid-row 2 / 4
+              margin-right 1rem
+
+            .headline-b
+              grid-column 2 / 3
+              grid-row 1 / 2
+              margin-right 1rem
+
+            .image-c1
+              grid-column 3 / 4
+              grid-row 1 / 3
+
+            .headline-c
+              grid-column 3 / 4
+              grid-row 3 / 4
+              text-align right
+
+          .triple-2h
+          .triple-2vh
+            grid-template-columns 40% 30% 30%
+
+            .image-a1
+              grid-column 3 / 4
+              margin-right 0
+
+            .headline-a
+              grid-column 3 / 4
+              margin-right 0
+              text-align right
+
+            .headline-b
+              text-align right
+
+            .image-c1
+              grid-column 1 / 2
+              margin-right 1rem
+
+            .headline-c
+              grid-column 1 / 2
+              margin-right 1rem
+              text-align left
+
+          .triple-2v
+          .triple-2vh
+            .image-a1
+              grid-row 1 / 3
+
+            .headline-a
+              grid-row 3 / 4
+
+            .image-b1
+              grid-row 1 / 3
+
+            .headline-b
+              grid-row 3 / 4
+
+            .image-c1
+              grid-row 2 / 4
+
+            .headline-c
+              grid-row 1 / 2
+
+          /*
+          1     2       3     4
+           ___________________   1
+          |//A//|       |//C//|  2
+          |     |       |     |
+          |  A  |   B1  |  C  |
+          |  1  |       |  1  |  3
+          |_____|///B///|_____|  4
+
+          */
+          .triple-3
+          .triple-3h
+          .triple-3v
+          .triple-3vh
+            grid-template-columns 30% 40% 30%
+
+            .image-a1
+              grid-column 1 / 2
+              grid-row 2 / 4
+              margin-right 1rem
+
+            .headline-a
+              grid-column 1 / 2
+              grid-row 1 / 2
+              margin-right 1rem
+
+            .image-b1
+              grid-column 2 / 3
+              grid-row 1 / 3
+              margin-right 1rem
+
+            .headline-b
+              grid-column 2 / 3
+              grid-row 3 / 4
+              margin-right 1rem
+
+            .image-c1
+              grid-column 3 / 4
+              grid-row 2 / 4
+
+            .headline-c
+              grid-column 3 / 4
+              grid-row 1 / 2
+              text-align right
+
+          .triple-3v
+            .image-a1
+              grid-row 1 / 3
+              text-align right
+
+            .headline-a
+              grid-row 3 / 4
+
+            .image-b1
+              grid-row 2 / 4
+
+            .headline-b
+              grid-row 1 / 2
+
+            .image-c1
+              grid-row 1 / 3
+
+            .headline-c
+              grid-row 3 / 4
+              text-align left

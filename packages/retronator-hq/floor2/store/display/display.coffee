@@ -20,6 +20,9 @@ class HQ.Store.Display extends LOI.Adventure.Item
   @shortName: -> "display"
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
+  @descriptiveName: ->
+    "A ![display](look at display) that shows supporters of Retronator."
+
   @description: ->
     "
       It's a big screen showing a list of people and their contributions.

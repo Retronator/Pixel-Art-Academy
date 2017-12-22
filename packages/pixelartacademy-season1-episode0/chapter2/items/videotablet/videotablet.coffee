@@ -79,6 +79,8 @@ class C2.Items.VideoTablet extends LOI.Adventure.Item
     @register 'PixelArtAcademy.Season1.Episode0.Chapter2.Items.VideoTablet.Video'
 
     onRendered: ->
+      super
+
       # Load the thumbnail
       video = @currentData()
 

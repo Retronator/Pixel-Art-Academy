@@ -18,7 +18,7 @@ class LOI.Avatar
     Uppercase: 'Uppercase'
     Lowercase: 'Lowercase'
 
-  @DialogDeliveryType:
+  @DialogueDeliveryType:
     Saying: 'Saying'
     Displaying: 'Displaying'
 
@@ -31,6 +31,7 @@ class LOI.Avatar
 
   fullName: -> throw new AE.NotImplementedException "You must provide avatar's full name."
   shortName: -> null
+  descriptiveName: -> null
   pronouns: -> @constructor.Pronouns.Neutral
   description: -> null
   nameAutoCorrectStyle: -> @constructor.NameAutoCorrectStyle.Word
@@ -48,4 +49,4 @@ class LOI.Avatar
     LOI.palette()?.color hue, 6 + shade + relativeShade
 
   dialogTextTransform: -> @constructor.DialogTextTransform.Auto
-  dialogDeliveryType: -> @constructor.DialogDeliveryType.Saying
+  dialogueDeliveryType: -> @constructor.DialogueDeliveryType.Saying

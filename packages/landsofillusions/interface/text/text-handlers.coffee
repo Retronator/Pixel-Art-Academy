@@ -11,7 +11,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Pause dialog selection when we're waiting for a key press ourselves.
     @autorun (computation) =>
-      @dialogSelection.paused @waitingKeypress()
+      @dialogueSelection.paused @waitingKeypress()
 
     @_currentIntroductionFunction = new ReactiveField null
 
@@ -42,7 +42,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       # Wait one frame so that any script nodes are processed. Then we can
       # see if the interface is empty, or it is already paused on something.
       Meteor.setTimeout =>
-        @narrative.addText "What do you want to do?", scroll: false unless @waitingKeypress()
+        @narrative.addText "What do you want to do?", scrollStyle: LOI.Interface.Components.Narrative.ScrollStyle.None unless @waitingKeypress()
   
         # All the texts have been loaded from the DB at this point.
         # Wait for all the reactivity to finish reflowing the page.
@@ -104,9 +104,9 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # Scroll to bottom to reveal new command.
     @narrative.scroll()
     
-  onDialogSelectionEnter: ->
+  onDialogueSelectionEnter: ->
     # Continue with the selection.
-    @_dialogSelectionConfirm()
+    @_dialogueSelectionConfirm()
 
-  _dialogSelectionConfirm: ->
-    @dialogSelection.confirm()
+  _dialogueSelectionConfirm: ->
+    @dialogueSelection.confirm()

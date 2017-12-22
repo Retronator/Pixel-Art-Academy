@@ -1,0 +1,17 @@
+<template name="PixelArtDatabase.Pages.Admin.Artists.Artist">
+  <div class="pixelartdatabase-pages-admin-artists-artist">
+    <h2>{{displayName}}</h2>
+    <div class="name">Name:
+      <label class="part first">First: {{> PixelArtDatabase.Pages.Admin.Artists.Artist.FirstName}}</label>
+      <label class="part middle">Middle: {{> PixelArtDatabase.Pages.Admin.Artists.Artist.MiddleName}}</label>
+      <label class="part last">Last: {{> PixelArtDatabase.Pages.Admin.Artists.Artist.LastName}}</label>
+      <label class="part nickname">Nickname: {{> PixelArtDatabase.Pages.Admin.Artists.Artist.Nickname}}</label>
+    </div>
+    <label class="pseudonym">Pseudonym: {{> PixelArtDatabase.Pages.Admin.Artists.Artist.Pseudonym}}</label>
+    <ul class="akas">
+      {{#each aka}}
+        <li class="aks">{{this}}</li>
+      {{/each}}
+    </ul>
+  </div>
+</template>
