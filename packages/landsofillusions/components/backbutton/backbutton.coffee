@@ -20,8 +20,6 @@ class LOI.Components.BackButton extends AM.Component
 
     # Resize elements.
     @autorun (computation) =>
-      LOI.adventure = @ancestorComponent LOI.Adventure
-
       scale = LOI.adventure.interface.display.scale()
       viewport = LOI.adventure.interface.display.viewport()
 

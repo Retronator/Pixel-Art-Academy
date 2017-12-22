@@ -78,7 +78,7 @@ class AB.Router extends AB.Router
       historyFunction = if options.createHistory then 'pushState' else 'replaceState'
 
       history[historyFunction] {}, null, path
-      @onPathChange
+      @onPathChange()
 
   @initialize: ->
     # React to URL changes.
