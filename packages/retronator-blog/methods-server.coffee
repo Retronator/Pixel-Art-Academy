@@ -3,6 +3,7 @@ AB = Artificial.Base
 AT = Artificial.Telepathy
 Blog = Retronator.Blog
 PADB = PixelArtDatabase
+Fiber = require 'fibers'
 
 blogInfo =
   lastUpdated: 0
@@ -53,13 +54,16 @@ Blog.getData.method ->
 
 # Create an HTTP endpoint for retronator.com.
 WebApp.rawConnectHandlers.use (request, response, next) =>
-  unless request.url is '/daily/data.json'
-    next()
-    return
+  # We must run this in a fiber since we're calling a Meteor method.
+  Fiber(->
+    unless request.url is '/daily/data.json'
+      next()
+      return
 
-  response.writeHead 200,
-    'Content-type': 'application/json'
-    'Access-Control-Allow-Origin': 'https://www.retronator.com'
+    response.writeHead 200,
+      'Content-type': 'application/json'
+      'Access-Control-Allow-Origin': 'https://www.retronator.com'
 
-  response.write JSON.stringify Blog.getData()
-  response.end()
+    response.write JSON.stringify Blog.getData()
+    response.end()
+  ).run()
