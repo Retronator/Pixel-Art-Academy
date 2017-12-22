@@ -81,6 +81,22 @@ class AB.Router extends AB.Router
       @onPathChange()
 
   @initialize: ->
+    # HACK: Override absolute URL function to use the browser origin as the root url.
+    _absoluteUrl = Meteor.absoluteUrl
+    Meteor.absoluteUrl = (path, options) ->
+      # Just in case, we only want to replace the origin if options didn't do any changes to it.
+      rootUrl = _absoluteUrl()
+      url = _absoluteUrl path, options
+
+      rootOrigin = rootUrl.match(/(.*:\/\/.*?)\//)[1]
+      urlOrigin = rootUrl.match(/(.*:\/\/.*?)\//)[1]
+
+      finalUrl = url.replace urlOrigin, location.origin if (rootOrigin is urlOrigin)
+      finalUrl
+    
+    # Also copy its extra data.
+    Meteor.absoluteUrl[key] = value for own key, value of _absoluteUrl
+      
     # React to URL changes.
     $window = $(window)
     $window.on 'hashchange', => @onPathChange()
