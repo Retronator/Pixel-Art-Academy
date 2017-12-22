@@ -8,17 +8,17 @@ class AB.RouteLink extends AM.Component
   constructor: (@text, @route, @parameters) ->
 
   isRouteActive: ->
-    routeName = FlowRouter.getRouteName()
-    return unless @route is routeName
+    return unless currentRouteData = AB.Router.currentRouteData()
+    return unless @route is currentRouteData.route.name
 
     # Parameters can be passed directly as an object, or constructed with Spacebars as kwargs.
     parameters = @parameters.hash or @parameters
 
     # All parameters need to match, both ways.
     for parameter, value of parameters
-      return unless FlowRouter.getParam(parameter) is value
+      return unless currentRouteData.parameters[parameter] is value
 
-    for parameter, value of FlowRouter.current().params
+    for parameter, value of currentRouteData.parameters
       return unless @parameters[parameter] is value
 
     true

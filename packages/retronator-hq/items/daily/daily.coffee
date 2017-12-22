@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
@@ -33,21 +34,21 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     @_urlState = null
     @urlState = new ComputedField =>
       # Preserve state when url doesn't address the daily (for example, if opening up the menu).
-      return @_urlState unless FlowRouter.getParam('parameter1') is 'daily'
+      return @_urlState unless AB.Router.getParameter('parameter1') is 'daily'
 
-      switch FlowRouter.getParam 'parameter2'
+      switch AB.Router.getParameter 'parameter2'
         when 'post'
           @_urlState =
-            postId: parseInt FlowRouter.getParam 'parameter3'
+            postId: parseInt AB.Router.getParameter 'parameter3'
           
         when 'tagged'
           @_urlState =
-            tag: _.kebabCase FlowRouter.getParam 'parameter3'
-            page: FlowRouter.getParam 'parameter5'
+            tag: _.kebabCase AB.Router.getParameter 'parameter3'
+            page: AB.Router.getParameter 'parameter5'
         
         else
           @_urlState =
-            page: FlowRouter.getParam 'parameter3'
+            page: AB.Router.getParameter 'parameter3'
 
       # Make sure page is a valid integer.
       @_urlState.page = parseInt @_urlState.page
@@ -297,6 +298,6 @@ class HQ.Items.Daily extends LOI.Adventure.Item
         players = _.sortBy post.video.player, (player) => player.width
         _.last(players).embed_code
 
-LOI.Adventure.registerDirectRoute "daily/*", =>
+LOI.Adventure.registerDirectRoute "/daily/*", =>
   # Show the daily if we need to.
   LOI.adventure.goToItem HQ.Items.Daily unless LOI.adventure.activeItemId() is HQ.Items.Daily.id()

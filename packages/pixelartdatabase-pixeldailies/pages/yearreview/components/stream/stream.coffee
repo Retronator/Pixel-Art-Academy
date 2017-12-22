@@ -87,7 +87,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
       date = @submission()?.time
       return unless date
 
-      FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
+      AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
         year: date.getFullYear()
         month: _.toLower date.toLocaleString 'en-US', month: 'long'
         day: date.getDate()

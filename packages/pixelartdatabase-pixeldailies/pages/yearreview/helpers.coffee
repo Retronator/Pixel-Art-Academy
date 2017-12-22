@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AE = Artificial.Everywhere
 PADB = PixelArtDatabase
 
@@ -65,8 +66,8 @@ class PADB.PixelDailies.Pages.YearReview.Helpers
       artwork
 
   @artistUrl: (screenName, year) ->
-    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
-      year: year or FlowRouter.getParam('year') or new Date().getFullYear()
+    AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.YearReview.Artist',
+      year: year or AB.Router.getParameter('year') or new Date().getFullYear()
       screenName: screenName
 
   Template.registerHelper 'pixelDailiesArtistUrl', (screenName, year) =>

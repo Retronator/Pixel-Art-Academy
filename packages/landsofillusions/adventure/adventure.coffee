@@ -2,6 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends AM.Component
+  @id: -> 'LandsOfIllusions.Adventure'
+
   @title: ->
     "Pixel Art Academy // Adventure game for learning how to draw"
     

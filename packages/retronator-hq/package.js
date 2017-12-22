@@ -25,6 +25,10 @@ Package.onUse(function(api) {
 
   api.addFile('hq');
 
+  // Adventure
+
+  api.addFile('adventure/adventure');
+
   // Actors
 
   api.addFile('actors/actors');
@@ -107,4 +111,8 @@ Package.onUse(function(api) {
   api.addFile('floor3/gallery/gallerywest');
 
   api.addThing('floor4/artstudio/artstudio');
+  
+  // Pages
+  
+  api.addFile('pages/pages');
 });

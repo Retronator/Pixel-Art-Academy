@@ -4,8 +4,6 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
-FlowRouter.wait()
-
 # This is the web app that runs all Retronator websites.
 class Retronator.App extends Artificial.Base.App
   @register 'Retronator.App'
@@ -14,13 +12,13 @@ class Retronator.App extends Artificial.Base.App
   # Routing helpers for default layouts
 
   @addPublicPage: (url, pageClass) ->
-    AB.addRoute url, @Layouts.PublicAccess, pageClass
+    AB.Router.addRoute url, @Layouts.PublicAccess, pageClass
 
   @addUserPage: (url, pageClass) ->
-    AB.addRoute url, @Layouts.UserAccess, pageClass
+    AB.Router.addRoute url, @Layouts.UserAccess, pageClass
 
   @addAdminPage: (url, pageClass) ->
-    AB.addRoute url, @Layouts.AdminAccess, pageClass
+    AB.Router.addRoute url, @Layouts.AdminAccess, pageClass
     
   constructor: ->
     super
@@ -36,22 +34,16 @@ class Retronator.App extends Artificial.Base.App
     new PixelArtDatabase.PixelDailies
     new LOI.Assets
     new LOI.Construct.Pages
+    new LOI.World
+    new Retropolis.City
+    new Retronator.HQ.Pages
 
     # Add Lands of Illusions last so it captures all remaining URLs.
     new LOI
 
-    if Meteor.isClient
-      BlazeLayout.setRoot '.retronator-app'
-
-      FlowRouter.initialize()
-      window.FlowRouter = FlowRouter
+    AB.Router.initialize()
 
     @components = {}
-
-  onRendered: ->
-    super
-
-    $('#__blaze-root').remove()
 
   addComponent: (component) ->
     @components[component.componentName()] = component

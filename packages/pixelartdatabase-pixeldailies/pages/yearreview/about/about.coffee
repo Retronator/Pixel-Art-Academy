@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 PADB = PixelArtDatabase
 
@@ -11,7 +12,7 @@ class PADB.PixelDailies.Pages.YearReview.About extends AM.Component
     "Learn about Retronator's Top Pixel Dailies Archive for #{options.year}."
 
   year: ->
-    FlowRouter.getParam 'year'
+    AB.Router.getParameter 'year'
 
   background: ->
     # The second artwork from the backgrounds array is used on the about page.

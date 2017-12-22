@@ -2,7 +2,7 @@
   <div class="pages-claim">
     {{#if claimCompleted}}
       <div class="claim-completed">
-        <p>Gift received successfully! See your new items in your <a href="{{flowRouterPath 'inventory'}}">inventory</a>.</p>
+        <p>Gift received successfully! See your new items in your <a href="{{routerPath 'inventory'}}">inventory</a>.</p>
       </div>
     {{else}}
       {{#if receivingTransaction}}

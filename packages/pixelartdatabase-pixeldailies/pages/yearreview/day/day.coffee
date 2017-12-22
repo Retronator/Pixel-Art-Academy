@@ -29,7 +29,7 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
   @date: (options) ->
     return unless options.year and options.month and options.day
 
-    new Date "#{options.day} #{options.month} #{options.year}"
+    new Date "#{options.day} #{options.month} #{options.year} UTC"
 
   @dateTitle: (options) ->
     dateFormat =
@@ -47,9 +47,9 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
     query: (date, limit) =>
       # Find the theme on the given day
       dayRange = new AE.DateRange
-        year: date.getFullYear()
-        month: date.getMonth()
-        day: date.getDate()
+        year: date.getUTCFullYear()
+        month: date.getUTCMonth()
+        day: date.getUTCDate()
 
       themeQuery =
         processingError:
@@ -110,9 +110,9 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
     @date = new ComputedField =>
       @constructor.date
-        year: FlowRouter.getParam 'year'
-        month: FlowRouter.getParam 'month'
-        day: FlowRouter.getParam 'day'
+        year: AB.Router.getParameter 'year'
+        month: AB.Router.getParameter 'month'
+        day: AB.Router.getParameter 'day'
 
     @infiniteScroll = new ReactiveField null
     @_themeSubmissionSubscriptionsHandle = new ReactiveField null
@@ -139,9 +139,9 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
       # Find the theme on the given day
       dayRange = new AE.DateRange
-        year: date.getFullYear()
-        month: date.getMonth()
-        day: date.getDate()
+        year: date.getUTCFullYear()
+        month: date.getUTCMonth()
+        day: date.getUTCDate()
 
       themeQuery =
         processingError:
@@ -227,10 +227,11 @@ class PADB.PixelDailies.Pages.YearReview.Day extends AM.Component
 
   _offsetDayUrl: (offset) ->
     date = @date()
-    @_dateUrl new Date date.getFullYear(), date.getMonth(), date.getDate() + offset
+    dateTime = Date.UTC date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + offset
+    @_dateUrl new Date dateTime
 
   _dateUrl: (date) ->
-    FlowRouter.path 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
-      year: date.getFullYear()
+    AB.Router.createUrl 'PixelArtDatabase.PixelDailies.Pages.YearReview.Day',
+      year: date.getUTCFullYear()
       month: _.toLower date.toLocaleString 'en-US', month: 'long'
-      day: date.getDate()
+      day: date.getUTCDate()

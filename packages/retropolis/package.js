@@ -14,5 +14,5 @@ Package.onUse(function(api) {
   api.use('retronator:artificialengines');
 
   api.export('Retropolis');
-  api.addFiles('retropolis.coffee');
+  api.addFile('retropolis');
 });

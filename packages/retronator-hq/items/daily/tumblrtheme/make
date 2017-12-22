@@ -16,7 +16,7 @@ cat ../../../.npm/package/node_modules/color-thief-standalone/src/color-thief.js
 tail -r main.html | tail -n +14 | tail -r > theme.html
 
 # Replacing spacebars with tumblr blocks in the body.
-sed "s/{{[^!]*!\([^!]*\)!}}/\1/g" ../theme.html | tail -n +2 | sed '$d' >> theme.html
+sed "s/{{[^!]*![[:space:]]\([^!]*\)!}}/\1/g" ../theme.html | tail -n +2 | sed '$d' >> theme.html
 
 # Add footer.
 tail -n +50 main.html >> theme.html

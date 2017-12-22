@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -18,5 +19,5 @@ class PAA.Pages.Admin.Components.AdminPage extends AM.Component
     @_documentPage.renderComponent?(@currentComponent()) or null
 
   document: ->
-    id = FlowRouter.getParam 'documentId'
+    id = AB.Router.getParameter 'documentId'
     @options.documentClass.documents.findOne id

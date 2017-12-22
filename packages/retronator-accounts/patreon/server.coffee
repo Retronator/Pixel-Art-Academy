@@ -22,7 +22,7 @@ OAuth.registerService 'patreon', 2, null, (query) ->
       client_id: config.clientId
       client_secret: OAuth.openSecret(config.clientSecret)
       grant_type: 'authorization_code'
-      redirect_uri: Meteor.absoluteUrl '_oauth/patreon?close'
+      redirect_uri: OAuth._redirectUri 'patreon', config
 
     accessToken = tokenResponse.data.access_token
 

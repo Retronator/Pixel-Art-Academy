@@ -149,7 +149,7 @@ class LOI.Components.Account.Characters extends LOI.Components.Account.Page
 
     load: ->
       character = @data()
-      character.avatar.pronouns
+      character.avatar?.pronouns or LOI.Avatar.Pronouns.Neutral
 
     save: (value) ->
       character = @data()

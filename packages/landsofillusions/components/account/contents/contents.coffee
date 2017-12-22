@@ -1,4 +1,4 @@
-AB = Artificial.Babel
+AB = Artificial.Base
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -28,4 +28,4 @@ class LOI.Components.Account.Contents extends LOI.Components.Account.Page
     page = @currentData()
 
     # This page is the current page if its URL is the second router parameter.
-    page.url() is FlowRouter.getParam 'parameter2'
+    page.url() is AB.Router.getParameter 'parameter2'

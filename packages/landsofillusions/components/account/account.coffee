@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -34,11 +35,11 @@ class LOI.Components.Account extends AM.Component
       # Add ID to avoid re-creating the component in #each.
       page._id = Random.id()
 
-    LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>
+    LOI.Adventure.registerDirectRoute "/#{@constructor.url()}/*", =>
       # Show the dialog if we need to.
       @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
 
-      return unless pageUrl = FlowRouter.getParam 'parameter2'
+      return unless pageUrl = AB.Router.getParameter 'parameter2'
 
       for page, index in @pages
         if page.constructor.url() is pageUrl

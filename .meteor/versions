@@ -54,8 +54,6 @@ jparker:crypto-md5@0.1.1
 jparker:crypto-mode@0.1.1
 jparker:crypto-padding@0.1.0
 jquery@1.11.10
-kadira:blaze-layout@2.3.0
-kadira:flow-router@2.12.1
 launch-screen@1.1.1
 less@2.7.11
 limemakers:three@0.75.0
@@ -92,7 +90,6 @@ peerlibrary:assert@0.2.5
 peerlibrary:base-component@0.16.0
 peerlibrary:blaze-common-component@0.4.1
 peerlibrary:blaze-components@0.22.0
-peerlibrary:blaze-layout-component@0.2.1
 peerlibrary:blocking@0.5.2
 peerlibrary:check-extension@0.3.0
 peerlibrary:computed-field@0.7.0
@@ -122,6 +119,7 @@ retronator:artificialengines-pages@1.0.0
 retronator:landsofillusions@0.1.0
 retronator:landsofillusions-assets@0.0.1
 retronator:landsofillusions-construct@0.0.1
+retronator:landsofillusions-world@0.1.0
 retronator:pixelartacademy@0.2.0
 retronator:pixelartacademy-cast@0.1.0
 retronator:pixelartacademy-items@0.1.0
@@ -141,6 +139,7 @@ retronator:retronator-landsofillusions@0.0.1
 retronator:retronator-residence@0.0.1
 retronator:retronator-store@0.1.0
 retronator:retropolis@0.1.0
+retronator:retropolis-city@0.1.0
 retronator:retropolis-spaceport@0.0.1
 retronator:sanfrancisco@0.1.0
 retronator:sanfrancisco-apartment@0.0.1

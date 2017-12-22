@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -16,7 +17,7 @@ class PAA.Pages.Admin.Components.Index extends AM.Component
     @options.documentClass.all.subscribe @, =>
       # Always show the first document if none is displayed.
       @autorun (computation) =>
-        documentId = FlowRouter.getParam 'documentId'
+        documentId = AB.Router.getParameter 'documentId'
 
         # Make sure the current document exists.
         return if documentId and @options.documentClass.documents.findOne documentId
@@ -24,7 +25,7 @@ class PAA.Pages.Admin.Components.Index extends AM.Component
         # Switch to the first document on the display list (or no document if we can't find it).
         firstDocument = @documents().fetch()[0]
 
-        FlowRouter.setParams documentId: firstDocument?._id or null
+        AB.Router.setParameters documentId: firstDocument?._id or null
 
   onDestroyed: ->
     super
@@ -41,7 +42,7 @@ class PAA.Pages.Admin.Components.Index extends AM.Component
     data[@options.nameField] or "#{data._id.substring 0, 5}…"
 
   activeClass: ->
-    'active' if @currentData()._id is FlowRouter.getParam 'documentId'
+    'active' if @currentData()._id is AB.Router.getParameters 'documentId'
 
   events: ->
     super.concat
@@ -54,7 +55,7 @@ class PAA.Pages.Admin.Components.Index extends AM.Component
       return console.error if error
 
       # Switch to the new document.
-      FlowRouter.setParams documentId: newId
+      AB.Router.setParameters documentId: newId
 
   onClickDocument: ->
-    FlowRouter.setParams documentId: @currentData()._id
+    AB.Router.setParameters documentId: @currentData()._id

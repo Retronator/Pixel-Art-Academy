@@ -1,32 +1,32 @@
 <template name="Retronator.HQ.Items.Daily.Theme">
   <div class="retronator-hq-items-daily-theme">
-    <div class="newspaper {{#if homePage}}{{!{block:HomePage}!}}homepage{{/if}}{{!{/block:HomePage}!}}">
+    <div class="newspaper {{#if homePage}}{{! {block:HomePage}!}}homepage{{/if}}{{! {/block:HomePage}!}}">
       <button class="back-button"></button>
       <script>
-        Retronator.HQ.Items.Daily.BlogUrl = '{{blogUrl}}{{!{BlogURL}!}}';
+        Retronator.HQ.Items.Daily.BlogUrl = '{{blogUrl}}{{! {BlogURL}!}}';
       </script>
-      {{#if indexPage}}{{!{block:IndexPage}!}}
+      {{#if indexPage}}{{! {block:IndexPage}!}}
         <div class="frontpage-area scroll-area">
           <div class="scroll-content">
             <div class="frontpage page safe-area-content">
               <div class="header">
-                {{#if tagPage}}{{!{block:TagPage}!}}
+                {{#if tagPage}}{{! {block:TagPage}!}}
                   <div class="tag-ear">
                     <div class="text">
-                      {{tag}}{{!{Tag}!}}
+                      {{tag}}{{! {Tag}!}}
                     </div>
                   </div>
-                {{/if}}{{!{/block:TagPage}!}}
-                <h1 class="title"><a href="{{blogUrl}}{{!{BlogURL}!}}">Retronator</a></h1>
+                {{/if}}{{! {/block:TagPage}!}}
+                <h1 class="title"><a href="{{blogUrl}}{{! {BlogURL}!}}">Retronator</a></h1>
                 <div class="slogan">Daily pixel art and gaming news</div>
                 <div class="support">Supported by backers and patrons</div>
-                {{#if tagPage}}{{!{block:TagPage}!}}
+                {{#if tagPage}}{{! {block:TagPage}!}}
                   <div class="tag-ear">
                     <div class="text">
-                      {{tag}}{{!{Tag}!}}
+                      {{tag}}{{! {Tag}!}}
                     </div>
                   </div>
-                {{/if}}{{!{/block:TagPage}!}}
+                {{/if}}{{! {/block:TagPage}!}}
               </div>
               <div class="folio">
                 <div class="retropolis">Retropolis</div>
@@ -36,187 +36,187 @@
               <div class="headlines"></div>
             </div>
             <ol class="back-issues">
-              {{#each jumpPagination 5}}{{!{block:JumpPagination length="5"}!}}
-                <li class="back-issue" data-page="{{this}}{{!{block:JumpPage}{PageNumber}{/block:JumpPage}{block:CurrentPage}{PageNumber}{/block:CurrentPage}!}}">
-                  {{#if jumpPage}}{{!{block:JumpPage}!}}
-                    <a class="link" href="{{jumpPageUrl}}{{!{Url}!}}"><span class="text"></span></a>
-                  {{/if}}{{!{/block:JumpPage}!}}
+              {{#each jumpPagination 5}}{{! {block:JumpPagination length="5"}!}}
+                <li class="back-issue" data-page="{{this}}{{! {block:JumpPage}{PageNumber}{/block:JumpPage}{block:CurrentPage}{PageNumber}{/block:CurrentPage}!}}">
+                  {{#if jumpPage}}{{! {block:JumpPage}!}}
+                    <a class="link" href="{{jumpPageUrl}}{{! {Url}!}}"><span class="text"></span></a>
+                  {{/if}}{{! {/block:JumpPage}!}}
                 </li>
-              {{/each}}{{!{/block:JumpPagination}!}}
+              {{/each}}{{! {/block:JumpPagination}!}}
             </ol>
             <div class="featured-websites-area">
               <ol class="featured-websites"></ol>
             </div>
           </div>
         </div>
-      {{/if}}{{!{/block:IndexPage}!}}
+      {{/if}}{{! {/block:IndexPage}!}}
       <div class="inside-content-area scroll-area">
         <div class="scroll-content">
           <div class="inside-content safe-area-content">
             <ol class="posts">
-              {{#each posts}}{{!{block:Posts}!}}
+              {{#each posts}}{{! {block:Posts}!}}
                 <li class="post page">
                   <div class="folio">
                     <div class="page-number"></div>
                     <div class="date">
-                      <a href="{{permalink}}{{!{Permalink}!}}">
-                        Retronator, <span class="value">{{date}}{{!{DayOfWeek}, {Month} {DayOfMonth}, {Year}!}}</span>
+                      <a href="{{permalink}}{{! {Permalink}!}}">
+                        Retronator, <span class="value">{{date}}{{! {DayOfWeek}, {Month} {DayOfMonth}, {Year}!}}</span>
                       </a>
                     </div>
                   </div>
 
-                  {{#if isPostText}}{{!{block:Text}!}}
-                    {{#if title}}{{!{block:Title}!}}
+                  {{#if isPostText}}{{! {block:Text}!}}
+                    {{#if title}}{{! {block:Title}!}}
                       <h1 class="title">
-                        {{title}}{{!{Title}!}}
+                        {{title}}{{! {Title}!}}
                       </h1>
-                    {{/if}}{{!{/block:Title}!}}
-                    {{{text}}}{{!{Body}!}}
-                  {{/if}}{{!{/block:Text}!}}
+                    {{/if}}{{! {/block:Title}!}}
+                    {{{text}}}{{! {Body}!}}
+                  {{/if}}{{! {/block:Text}!}}
 
-                  {{#if isPostPhoto}}{{!{block:Photo}!}}
+                  {{#if isPostPhoto}}{{! {block:Photo}!}}
                     <div class="photoset" data-layout="1">
-                      {{#each photos}}{{!!}}
-                        <img src="{{original_size.url}}{{!{PhotoURL-HighRes}!}}"/>
-                      {{/each}}{{!!}}
+                      {{#each photos}}{{! !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-HighRes}!}}"/>
+                      {{/each}}{{! !}}
                     </div>
-                    {{{text}}}{{!{Caption}!}}
-                  {{/if}}{{!{/block:Photo}!}}
+                    {{{text}}}{{! {Caption}!}}
+                  {{/if}}{{! {/block:Photo}!}}
 
-                  {{#if isPostPanorama}}{{!{block:Panorama}!}}
+                  {{#if isPostPanorama}}{{! {block:Panorama}!}}
                     <div class="photoset" data-layout="1">
-                      {{#each photos}}{{!!}}
-                        <img src="{{original_size.url}}{{!{PhotoURL-Panorama}!}}"/>
-                      {{/each}}{{!!}}
+                      {{#each photos}}{{! !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-Panorama}!}}"/>
+                      {{/each}}{{! !}}
                     </div>
-                    {{{text}}}{{!{Caption}!}}
-                  {{/if}}{{!{/block:Panorama}!}}
+                    {{{text}}}{{! {Caption}!}}
+                  {{/if}}{{! {/block:Panorama}!}}
 
-                  {{#if isPostPhotoset}}{{!{block:Photoset}!}}
-                    <div class="photoset" data-layout="{{layout}}{{!{PhotosetLayout}!}}">
-                      {{#each photos}}{{!{block:Photos} !}}
-                        <img src="{{original_size.url}}{{!{PhotoURL-HighRes}!}}" data-width="{{original_size.width}}{{!{PhotoWidth-HighRes}!}}" data-height="{{original_size.height}}{{!{PhotoHeight-HighRes}!}}"/>
-                      {{/each}}{{!{/block:Photos} !}}
+                  {{#if isPostPhotoset}}{{! {block:Photoset}!}}
+                    <div class="photoset" data-layout="{{layout}}{{! {PhotosetLayout}!}}">
+                      {{#each photos}}{{! {block:Photos} !}}
+                        <img src="{{original_size.url}}{{! {PhotoURL-HighRes}!}}" data-width="{{original_size.width}}{{! {PhotoWidth-HighRes}!}}" data-height="{{original_size.height}}{{! {PhotoHeight-HighRes}!}}"/>
+                      {{/each}}{{! {/block:Photos} !}}
                     </div>
-                    {{{text}}}{{!{Caption}!}}
-                  {{/if}}{{!{/block:Photoset}!}}
+                    {{{text}}}{{! {Caption}!}}
+                  {{/if}}{{! {/block:Photoset}!}}
 
-                  {{#if isPostVideo}}{{!{block:Video}!}}
+                  {{#if isPostVideo}}{{! {block:Video}!}}
                     <figure>
-                      {{{videoPlayer}}}{{!{Video-700}!}}
+                      {{{videoPlayer}}}{{! {Video-700}!}}
                     </figure>
-                    {{#if video.thumbnail.url}}{{!{block:VideoThumbnail}!}}
+                    {{#if video.thumbnail.url}}{{! {block:VideoThumbnail}!}}
                       <div class="player-thumbnail">
-                        <img src="{{video.thumbnail.url}}{{!{VideoThumbnailURL}!}}"/>
+                        <img src="{{video.thumbnail.url}}{{! {VideoThumbnailURL}!}}"/>
                       </div>
-                    {{/if}}{{!{/block:VideoThumbnail}!}}
-                    {{{text}}}{{!{Caption}!}}
-                  {{/if}}{{!{/block:Video}!}}
+                    {{/if}}{{! {/block:VideoThumbnail}!}}
+                    {{{text}}}{{! {Caption}!}}
+                  {{/if}}{{! {/block:Video}!}}
 
-                  {{#if isPostAudio}}{{!{block:Audio}!}}
+                  {{#if isPostAudio}}{{! {block:Audio}!}}
                     <figure>
-                      {{{audio.player}}}{{!{AudioEmbed-640}!}}
+                      {{{audio.player}}}{{! {AudioEmbed-640}!}}
                     </figure>
-                    {{#if audio.albumArt}}{{!{block:AlbumArt}!}}
+                    {{#if audio.albumArt}}{{! {block:AlbumArt}!}}
                       <div class="player-thumbnail">
-                        <img src="{{audio.albumArt}}{{!{AlbumArtURL}!}}"/>
+                        <img src="{{audio.albumArt}}{{! {AlbumArtURL}!}}"/>
                       </div>
-                    {{/if}}{{!{/block:AlbumArt}!}}
-                    {{{text}}}{{!{Caption}!}}
-                  {{/if}}{{!{/block:Audio}!}}
+                    {{/if}}{{! {/block:AlbumArt}!}}
+                    {{{text}}}{{! {Caption}!}}
+                  {{/if}}{{! {/block:Audio}!}}
 
-                  {{#if isPostQuote}}{{!{block:Quote}!}}
+                  {{#if isPostQuote}}{{! {block:Quote}!}}
                     <blockquote class="quote">
-                      {{{quote.text}}}{{!{Quote}!}}
+                      {{{quote.text}}}{{! {Quote}!}}
                     </blockquote>
-                    {{#if quote.source}}{{!{block:Source}!}}
+                    {{#if quote.source}}{{! {block:Source}!}}
                       <div class="quote-source">
-                        {{{quote.source}}}{{!{Source}!}}
+                        {{{quote.source}}}{{! {Source}!}}
                       </div>
-                    {{/if}}{{!{/block:Source}!}}
-                  {{/if}}{{!{/block:Quote}!}}
+                    {{/if}}{{! {/block:Source}!}}
+                  {{/if}}{{! {/block:Quote}!}}
 
-                  {{#if isPostLink}}{{!{block:Link}!}}
+                  {{#if isPostLink}}{{! {block:Link}!}}
                     <div class="link">
                       <h1 class="title">
-                        <a href="{{link.url}}{{!{URL}!}}" target="_blank">
-                          {{link.title}}{{!{Name}!}}
+                        <a href="{{link.url}}{{! {URL}!}}" target="_blank">
+                          {{link.title}}{{! {Name}!}}
                         </a>
                       </h1>
-                      <a class="url" href="{{link.url}}{{!{URL}!}}" target="_blank">
-                        {{link.publisher}}{{!{Host}!}}
+                      <a class="url" href="{{link.url}}{{! {URL}!}}" target="_blank">
+                        {{link.publisher}}{{! {Host}!}}
                       </a>
-                      {{#each photos}}{{!{block:Thumbnail}!}}
-                        <a class="image-link" href="{{../link.url}}{{!{URL}!}}" target="_blank">
-                          <img src="{{original_size.url}}{{!{Thumbnail-HighRes}!}}"/>
+                      {{#each photos}}{{! {block:Thumbnail}!}}
+                        <a class="image-link" href="{{../link.url}}{{! {URL}!}}" target="_blank">
+                          <img src="{{original_size.url}}{{! {Thumbnail-HighRes}!}}"/>
                         </a>
-                      {{/each}}{{!{/block:Thumbnail} !}}
-                      {{#if link.excerpt}}{{!{block:Excerpt}!}}
-                        <a class="excerpt" href="{{link.url}}{{!{URL}!}}" target="_blank">
-                          {{link.excerpt}}{{!{Excerpt}!}}
+                      {{/each}}{{! {/block:Thumbnail} !}}
+                      {{#if link.excerpt}}{{! {block:Excerpt}!}}
+                        <a class="excerpt" href="{{link.url}}{{! {URL}!}}" target="_blank">
+                          {{link.excerpt}}{{! {Excerpt}!}}
                         </a>
-                    {{/if}}{{!{/block:Excerpt}!}}
+                    {{/if}}{{! {/block:Excerpt}!}}
                     </div>
-                    {{{text}}}{{!{Description}!}}
-                  {{/if}}{{!{/block:Link}!}}
+                    {{{text}}}{{! {Description}!}}
+                  {{/if}}{{! {/block:Link}!}}
 
-                  {{#if isPostAnswer}}{{!{block:Answer}!}}
+                  {{#if isPostAnswer}}{{! {block:Answer}!}}
                     <p class="question-asker">
-                      {{#if question.askingUrl}}<a href="{{question.askingUrl}}">{{{question.askingName}}}</a>{{else}}{{{question.askingName}}}{{/if}}{{!{Asker}!}}
+                      {{#if question.askingUrl}}<a href="{{question.askingUrl}}">{{{question.askingName}}}</a>{{else}}{{{question.askingName}}}{{/if}}{{! {Asker}!}}
                       asks:
                     </p>
                     <blockquote class="question">
-                      {{{question.question}}}{{!{Question}!}}
+                      {{{question.question}}}{{! {Question}!}}
                     </blockquote>
-                    {{{text}}}{{!{Answer}!}}
-                  {{/if}}{{!{/block:Answer}!}}
+                    {{{text}}}{{! {Answer}!}}
+                  {{/if}}{{! {/block:Answer}!}}
 
-                  {{#if isPostChat}}{{!{block:Chat}!}}
-                    {{#if title}}{{!{block:Title}!}}
+                  {{#if isPostChat}}{{! {block:Chat}!}}
+                    {{#if title}}{{! {block:Title}!}}
                       <h1 class="title">
-                        {{title}}{{!{Title}!}}
+                        {{title}}{{! {Title}!}}
                       </h1>
-                    {{/if}}{{!{/block:Title}!}}
-                    {{#each dialogue}}{{!{block:Lines}!}}
+                    {{/if}}{{! {/block:Title}!}}
+                    {{#each dialogue}}{{! {block:Lines}!}}
                       <p>
-                        {{#if label}}{{!{block:Label}!}}
-                          {{label}}{{!{Label}!}}
-                        {{/if}}{{!{/block:Label}!}}
-                        {{{phrase}}}{{!{Line}!}}
+                        {{#if label}}{{! {block:Label}!}}
+                          {{label}}{{! {Label}!}}
+                        {{/if}}{{! {/block:Label}!}}
+                        {{{phrase}}}{{! {Line}!}}
                       </p>
-                    {{/each}}{{!{/block:Lines}!}}
-                  {{/if}}{{!{/block:Chat}!}}
+                    {{/each}}{{! {/block:Lines}!}}
+                  {{/if}}{{! {/block:Chat}!}}
 
-                  {{#if reblog}}{{!{block:RebloggedFrom}!}}
+                  {{#if reblog}}{{! {block:RebloggedFrom}!}}
                     <div class="source reblog">
                       Source:
-                      <a class="link" href="{{reblog.root.url}}{{!{ReblogRootURL}!}}"><span
-                        class="title">{{reblog.root.title}}{{!{ReblogRootTitle}!}}</span><span
-                        class="name">{{reblog.root.name}}{{!{ReblogRootName}!}}</span></a>
+                      <a class="link" href="{{reblog.root.url}}{{! {ReblogRootURL}!}}"><span
+                        class="title">{{reblog.root.title}}{{! {ReblogRootTitle}!}}</span><span
+                        class="name">{{reblog.root.name}}{{! {ReblogRootName}!}}</span></a>
                     </div>
-                  {{/if}}{{!{/block:RebloggedFrom}!}}
-                  {{#if source}}{{!{block:ContentSource}!}}
+                  {{/if}}{{! {/block:RebloggedFrom}!}}
+                  {{#if source}}{{! {block:ContentSource}!}}
                     <div class="source direct">
-                      Source: <a class="link" href="{{source.url}}{{!{SourceURL}!}}">{{source.title}}{{!{SourceTitle}!}}</a>
+                      Source: <a class="link" href="{{source.url}}{{! {SourceURL}!}}">{{source.title}}{{! {SourceTitle}!}}</a>
                     </div>
-                  {{/if}}{{!{/block:ContentSource}!}}
+                  {{/if}}{{! {/block:ContentSource}!}}
 
                   <div class="footer">
-                    {{#if tags}}{{!{block:HasTags}!}}
+                    {{#if tags}}{{! {block:HasTags}!}}
                       <ul class="tags">
-                        {{#each tags}}{{!{block:Tags}!}}
-                          <li class="tag"><a href="{{tagUrl}}{{!{TagURL}!}}">{{this}}{{!{Tag}!}}</a></li>
-                        {{/each}}{{!{/block:Tags}!}}
+                        {{#each tags}}{{! {block:Tags}!}}
+                          <li class="tag"><a href="{{tagUrl}}{{! {TagURL}!}}">{{this}}{{! {Tag}!}}</a></li>
+                        {{/each}}{{! {/block:Tags}!}}
                       </ul>
-                    {{/if}}{{!{/block:HasTags}!}}
+                    {{/if}}{{! {/block:HasTags}!}}
                     <div class="notes-count">
-                      {{notesCount}}{{!{NoteCount}!}}
+                      {{notesCount}}{{! {NoteCount}!}}
                     </div>
                   </div>
                 </li>
-              {{/each}}{{!{/block:Posts}!}}
+              {{/each}}{{! {/block:Posts}!}}
             </ol>
-            {{#if indexPage}}{{!{block:IndexPage}!}}
+            {{#if indexPage}}{{! {block:IndexPage}!}}
               <div class="about page">
                 <div class="folio">
                   <div class="page-number"></div>
@@ -336,27 +336,27 @@
                   </div>
                 </div>
               </div>
-            {{/if}}{{!{/block:IndexPage}!}}
+            {{/if}}{{! {/block:IndexPage}!}}
             <!-- ol class="back-issues">
-              {{#if previousPageUrl}}{{!{block:PreviousPage}!}}
+              {{#if previousPageUrl}}{{! {block:PreviousPage}!}}
                 <li class="back-issue">
-                  <a class="link" href="{{previousPageUrl}}{{!{PreviousPage}!}}"><span class="text">Newer issue</span></a>
+                  <a class="link" href="{{previousPageUrl}}{{! {PreviousPage}!}}"><span class="text">Newer issue</span></a>
                 </li>
-              {{/if}}{{!{/block:PreviousPage}!}}
-              {{#if nextPageUrl}}{{!{block:NextPage}!}}
-                <li class="back-issue" data-page="{{currentPage}}{{!{CurrentPage}!}}">
-                  <a class="link" href="{{nextPageUrl}}{{!{NextPage}!}}"><span class="text">Older issue</span></a>
+              {{/if}}{{! {/block:PreviousPage}!}}
+              {{#if nextPageUrl}}{{! {block:NextPage}!}}
+                <li class="back-issue" data-page="{{currentPage}}{{! {CurrentPage}!}}">
+                  <a class="link" href="{{nextPageUrl}}{{! {NextPage}!}}"><span class="text">Older issue</span></a>
                 </li>
-              {{/if}}{{!{/block:NextPage}!}}
+              {{/if}}{{! {/block:NextPage}!}}
             </ol-->
             <ol class="back-issues">
-              {{#each jumpPagination 5}}{{!{block:JumpPagination length="5"}!}}
-                <li class="back-issue" data-page="{{this}}{{!{block:JumpPage}{PageNumber}{/block:JumpPage}{block:CurrentPage}{PageNumber}{/block:CurrentPage}!}}">
-                  {{#if jumpPage}}{{!{block:JumpPage}!}}
-                    <a class="link" href="{{jumpPageUrl}}{{!{Url}!}}"><span class="text"></span></a>
-                  {{/if}}{{!{/block:JumpPage}!}}
+              {{#each jumpPagination 5}}{{! {block:JumpPagination length="5"}!}}
+                <li class="back-issue" data-page="{{this}}{{! {block:JumpPage}{PageNumber}{/block:JumpPage}{block:CurrentPage}{PageNumber}{/block:CurrentPage}!}}">
+                  {{#if jumpPage}}{{! {block:JumpPage}!}}
+                    <a class="link" href="{{jumpPageUrl}}{{! {Url}!}}"><span class="text"></span></a>
+                  {{/if}}{{! {/block:JumpPage}!}}
                 </li>
-              {{/each}}{{!{/block:JumpPagination}!}}
+              {{/each}}{{! {/block:JumpPagination}!}}
             </ol>
           </div>
         </div>

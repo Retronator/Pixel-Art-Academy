@@ -1,7 +1,7 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-class LOI.Assets.Layout extends BlazeLayoutComponent
+class LOI.Assets.Layout extends BlazeComponent
   @register 'LandsOfIllusions.Assets.Layout'
 
   @image: (parameters) ->
@@ -17,6 +17,3 @@ class LOI.Assets.Layout extends BlazeLayoutComponent
 
   loading: ->
     Meteor.loggingIn()
-
-  renderPage: (parentComponent) ->
-    @_renderRegion 'page', parentComponent

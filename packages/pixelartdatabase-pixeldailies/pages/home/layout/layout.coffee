@@ -1,7 +1,7 @@
 AM = Artificial.Mirage
 PADB = PixelArtDatabase
 
-class PADB.PixelDailies.Pages.Home.Layout extends BlazeLayoutComponent
+class PADB.PixelDailies.Pages.Home.Layout extends BlazeComponent
   @register 'PixelArtDatabase.PixelDailies.Pages.Home.Layout'
 
   @image: (parameters) ->
@@ -14,6 +14,3 @@ class PADB.PixelDailies.Pages.Home.Layout extends BlazeLayoutComponent
       safeAreaWidth: 350
       safeAreaHeight: 350
       minScale: 2
-
-  renderPage: (parentComponent) ->
-    @_renderRegion 'page', parentComponent

@@ -18,7 +18,7 @@ class RA.Patreon extends RA.Patreon
     loginStyle = OAuth._loginStyle('patreon', config, options)
     state = OAuth._stateParam(loginStyle, credentialToken)
 
-    redirectUrl = Meteor.absoluteUrl '_oauth/patreon?close'
+    redirectUrl = OAuth._redirectUri 'patreon', config
     loginUrl = "https://www.patreon.com/oauth2/authorize?response_type=code&client_id=#{config.clientId}&state=#{state}&redirect_uri=#{redirectUrl}"
 
     OAuth.launchLogin

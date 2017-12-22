@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 PADB = PixelArtDatabase
 
@@ -32,7 +33,7 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
 
       # See if this is a valid year.
       unless @yearClass
-        FlowRouter.go 'PixelArtDatabase.PixelDailies.Pages.Home'
+        AB.Router.goToRoute 'PixelArtDatabase.PixelDailies.Pages.Home'
         return
 
       @isValidYear true
@@ -69,7 +70,7 @@ class PADB.PixelDailies.Pages.YearReview extends AM.Component
     Meteor.clearInterval @_changeBackgroundInterval
 
   year: ->
-    parseInt FlowRouter.getParam 'year'
+    parseInt AB.Router.getParameter 'year'
 
   isCurrentYear: ->
     currentYear = new Date().getFullYear()
