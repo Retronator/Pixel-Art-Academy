@@ -92,7 +92,7 @@ class LOI.Adventure extends LOI.Adventure
         for urlParameter, index in urlParameters
           parametersObject["parameter#{index + 1}"] = urlParameter unless urlParameter is '*'
 
-      AB.Router.goToRoute 'LandsOfIllusions.Adventure', parametersObject, createHistory: false
+      AB.Router.goToRoute @constructor.id(), parametersObject, createHistory: false
 
   goToItem: (itemClassOrId) ->
     @activeItemId _.thingId itemClassOrId

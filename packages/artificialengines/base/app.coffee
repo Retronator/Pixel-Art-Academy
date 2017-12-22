@@ -44,7 +44,7 @@ class AB.App extends AM.Component
 
     # Dynamically update window title based on the current route.
     @autorun (computation) =>
-      routeData = AB.Router.currentRouteData()
+      return unless routeData = AB.Router.currentRouteData()
       route = routeData.route
 
       # Determine the new title.

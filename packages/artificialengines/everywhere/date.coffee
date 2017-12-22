@@ -43,9 +43,9 @@ Date.fromObject = (options) ->
         # Parameter in this place is missing and we should just use the default.
         parameters[i] = parameterDefaults[i]
 
-    # We can't use the ... operator to expand the parameters for
-    # the Date constructor, so we need to pass them explicitly.
-    date = new Date parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6]
+    # Create the date in UTC time.
+    dateTime = Date.UTC parameters...
+    date = new Date dateTime
 
     # One and two digit years need to be explicitly set via setFullYear since otherwise they get added to 1900.
     if 0 <= options.year < 100

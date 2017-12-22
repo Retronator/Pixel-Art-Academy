@@ -15,4 +15,6 @@ class AB.Router
       matchData = route.match host, path
       return {route, matchData} if matchData
 
-    null
+    # We couldn't find one, return null results.
+    route: null
+    matchData: null

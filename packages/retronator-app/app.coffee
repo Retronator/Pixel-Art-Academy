@@ -36,6 +36,7 @@ class Retronator.App extends Artificial.Base.App
     new LOI.Construct.Pages
     new LOI.World
     new Retropolis.City
+    new Retronator.HQ.Pages
 
     # Add Lands of Illusions last so it captures all remaining URLs.
     new LOI

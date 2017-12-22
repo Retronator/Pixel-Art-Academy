@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 class LOI.Adventure extends LOI.Adventure
   # We call register here because this is the last of the adventure
   # coffee files included (final child in the inheritance chain).
-  @register 'LandsOfIllusions.Adventure'
+  @register @id()
 
   constructor: ->
     super

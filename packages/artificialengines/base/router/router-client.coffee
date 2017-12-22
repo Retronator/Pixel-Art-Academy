@@ -91,13 +91,19 @@ class AB.Router extends AB.Router
 
     # Hijack link clicks.
     $('body').on 'click', 'a', (event) =>
-      link = event.target
+      # Do not react if modifier keys are present (the user might be trying to open the link in a new tab).
+      return if event.metaKey or event.ctrlKey or event.shiftKey
+
+      link = event.currentTarget
 
       # Only do soft link changes when we're staying within the same host.
       if link.hostname is location.hostname
         event.preventDefault()
         history.pushState {}, null, link.pathname
         @onPathChange()
+
+        # Scroll to top since we expect that to happen if this was a hard link.
+        $(document).scrollTop(0)
 
   @renderRoot: (parentComponent) ->
     return null unless currentRoute = @currentRoute()
