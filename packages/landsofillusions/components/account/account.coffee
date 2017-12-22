@@ -35,7 +35,7 @@ class LOI.Components.Account extends AM.Component
       # Add ID to avoid re-creating the component in #each.
       page._id = Random.id()
 
-    LOI.Adventure.registerDirectRoute "#{@constructor.url()}/*", =>
+    LOI.Adventure.registerDirectRoute "/#{@constructor.url()}/*", =>
       # Show the dialog if we need to.
       @show() unless _.find LOI.adventure.modalDialogs(), (modalDialog) => modalDialog.dialog is @
 

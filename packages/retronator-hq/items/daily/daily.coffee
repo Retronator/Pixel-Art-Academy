@@ -298,6 +298,6 @@ class HQ.Items.Daily extends LOI.Adventure.Item
         players = _.sortBy post.video.player, (player) => player.width
         _.last(players).embed_code
 
-LOI.Adventure.registerDirectRoute "daily/*", =>
+LOI.Adventure.registerDirectRoute "/daily/*", =>
   # Show the daily if we need to.
   LOI.adventure.goToItem HQ.Items.Daily unless LOI.adventure.activeItemId() is HQ.Items.Daily.id()
