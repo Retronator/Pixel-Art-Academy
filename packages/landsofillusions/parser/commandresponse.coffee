@@ -126,7 +126,8 @@ class LOI.Parser.CommandResponse
               phraseLikelihood = 0
 
               # See if we've already calculated this phrase's likelihood.
-              if likelihoodCache[translatedPhrase]
+              # HACK: Firefox implements a method 'watch' on all objects, so this would incorrectly return a function.
+              if likelihoodCache[translatedPhrase] and not _.isFunction likelihoodCache[translatedPhrase]
                 phraseLikelihood = likelihoodCache[translatedPhrase]
 
               else
