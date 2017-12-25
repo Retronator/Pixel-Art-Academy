@@ -77,10 +77,3 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Section
 
     LOI.adventure.showActivatableModalDialog
       dialog: chapterTitle
-
-    # Wait till chapter title gets activated.
-    @autorun (computation) =>
-      return unless chapterTitle.activatable.activated()
-      computation.stop()
-
-      options.onActivated?()

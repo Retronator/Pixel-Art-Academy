@@ -88,7 +88,7 @@ class C3.Stasis extends LOI.Adventure.Location
     ephemeralState = listener.script.ephemeralState()
 
     # Note that we can't store the full character into the state since it tries to be serialized.
-    ephemeralState.characterId = @_syncCharacter.id
+    ephemeralState.characterId = @_syncCharacter.id()
     ephemeralState.characterFullName = @_syncCharacter.avatar.fullName()
 
     listener.startScript label: 'Sync'

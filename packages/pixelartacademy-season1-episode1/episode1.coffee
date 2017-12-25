@@ -6,10 +6,13 @@ class PAA.Season1.Episode1 extends LOI.Adventure.Episode
 
   @fullName: -> "Back to school"
 
-  @chapters: -> []
-    
+  @chapters: -> [
+    @Chapter1
+  ]
+
   @scenes: -> [
     @Inventory
+    @Characters
   ]
     
   @startSection: -> @Start

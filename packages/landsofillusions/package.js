@@ -53,7 +53,6 @@ Package.onUse(function(api) {
   // Character
 
   api.addFile('character/character');
-  api.addFile('character/instance');
   api.addFile('character/methods');
   api.addServerFile('character/subscriptions');
   api.addServerFile('character/migrations/0000-renamecollection');
@@ -253,6 +252,10 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/pause.coffee');
 
   api.addFiles('adventure/script/parser/parser.coffee');
+
+  // Character instance (inherits from Thing and uses Script)
+
+  api.addFile('character/instance');
 
   // Storylines
 

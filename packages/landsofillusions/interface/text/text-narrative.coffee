@@ -97,6 +97,12 @@ class LOI.Interface.Text extends LOI.Interface.Text
       text = text.replace /_CHAR_/g, (match) ->
         _.toUpper character.avatar.shortName()
 
+      text = text.replace /_char's_/g, (match) ->
+        # TODO: Add a way to localize possession grammar.
+        name = character.avatar.shortName()
+        lastCharacter = _.last name
+        if lastCharacter is 's' then "#{name}'" else "#{name}'s"
+
       for pronounPair in [
         ['they', 'Subjective']
         ['them', 'Objective']

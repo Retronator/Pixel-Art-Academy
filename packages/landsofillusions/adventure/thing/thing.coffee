@@ -133,6 +133,7 @@ class LOI.Adventure.Thing extends AM.Component
         urls
 
       parentThing = parent
+
       class @Script extends LOI.Adventure.Script
         @id: -> parentThing.id()
         @initialize()
@@ -185,7 +186,7 @@ class LOI.Adventure.Thing extends AM.Component
     # To ease debugging, we save the ID value as a variable on the instance.
     @ID = @id()
 
-    @avatar = @constructor.createAvatar()
+    @avatar = @createAvatar()
 
     @state = @constructor.state
     @stateAddress = @constructor.stateAddress
@@ -239,6 +240,8 @@ class LOI.Adventure.Thing extends AM.Component
   # Convenience methods for static properties.
   id: -> @constructor.id()
   url: -> @constructor.url()
+
+  createAvatar: -> @constructor.createAvatar()
 
   # Override to control if the item appears in the interface.
   isVisible: -> true

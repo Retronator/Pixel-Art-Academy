@@ -37,7 +37,7 @@ class LOI.Character.Behavior
       type: LOI.Character.Part.Types.Avatar.Outfit.options.type
       load: => @character.document()?.behavior
       save: (address, value) =>
-        LOI.Character.updateBehavior @character.id, address, value
+        LOI.Character.updateBehavior @character.id(), address, value
 
     @part = LOI.Character.Part.Types.Behavior.create
       dataLocation: new AM.Hierarchy.Location

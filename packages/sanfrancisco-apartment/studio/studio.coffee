@@ -14,7 +14,7 @@ class Apartment.Studio extends LOI.Adventure.Location
   @shortName: -> "studio"
   @description: ->
     "
-      You are in your studio apartment in San Francisco. It's not much, and the rent is insanely high, but that's
+      You are in _char's_ studio apartment in San Francisco. It's not much, and the rent is insanely high, but that's
       the price you pay to be in the tech capital of the world.
     "
   

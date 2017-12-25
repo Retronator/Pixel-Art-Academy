@@ -21,10 +21,20 @@ Package.onUse(function(api) {
 
   api.addFile('episode1');
   api.addFile('scenes/inventory');
+  api.addFile('scenes/characters');
 
   // Start
 
   api.addFile('start/start');
   api.addThing('start/scenes/wakeup');
 
+  // Chapter 1
+
+  api.addFile('chapter1/chapter1');
+
+  // Intro
+
+  api.addFile('chapter1/sections/intro/intro');
+
+  api.addThing('chapter1/sections/intro/scenes/studio');
 });

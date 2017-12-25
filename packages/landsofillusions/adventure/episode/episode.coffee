@@ -42,8 +42,6 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     @_scenes = for sceneClass in @constructor.scenes()
       new sceneClass parent: @
 
-    @idd = Random.id()
-
   destroy: ->
     super
 
@@ -75,10 +73,3 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
 
     LOI.adventure.showActivatableModalDialog
       dialog: episodeTitle
-
-    # Wait till episode title gets activated.
-    @autorun (computation) =>
-      return unless episodeTitle.activatable.activated()
-      computation.stop()
-
-      options.onActivated?()
