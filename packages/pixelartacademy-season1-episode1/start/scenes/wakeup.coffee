@@ -32,6 +32,7 @@ class Start.WakeUp extends LOI.Adventure.Scene
     # Don't show things until they open their eyes.
     [
       LOI.character()
+      Apartment.Studio.Computer
     ]
 
   giveHint: (delay) ->

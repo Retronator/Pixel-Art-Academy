@@ -6,6 +6,7 @@ class C3.Design.Terminal.MainMenu extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.MainMenu'
 
   constructor: (@terminal) ->
+    super
 
   onCreated: ->
     super

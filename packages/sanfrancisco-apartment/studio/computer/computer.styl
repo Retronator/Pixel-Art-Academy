@@ -1,0 +1,212 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.sanfrancisco-apartment-studio-computer
+  .display
+    position relative
+    padding 10rem
+    margin 3rem
+    height 200rem
+
+    .dialog-area
+      position absolute
+      left 1rem
+      top 1rem
+      right 1rem
+      bottom 1rem
+      z-index 1
+      background rgba(atariGrey(0), 0.7)
+
+      .dialog
+        position absolute
+        width 200rem
+        top 50%
+        left 50%
+        transform translate(-50%, -50%)
+        text-align center
+        padding 10rem
+        border 1rem solid atariGrey(1)
+        background atariGrey(0)
+
+        .message
+          margin-bottom 10rem
+
+        .action-button
+          min-width 50rem
+
+          &.positive-button
+            color atariGrey(6)
+
+            &::after
+              background atariAqua(1)
+
+            &:hover
+            &:focus
+              color atariGrey(7)
+
+              &::after
+                background atariAqua(2)
+
+          &.danger-button
+            border-color atariRed(2)
+            color atariGrey(6)
+
+            &::after
+              background atariRed(2)
+
+            &:hover
+            &:focus
+              border-color atariRed(1)
+              color atariGrey(7)
+
+              &::after
+                background atariRed(1)
+
+    .screen-title
+      margin 0 0 10rem 0
+      acme-9()
+      font-weight normal
+      color atariYellow(7)
+
+    .section-title
+      margin 4rem 0 6rem 0
+      acme-7()
+      font-weight normal
+      color atariOrange(5)
+
+    .main-text
+      color atariRed(2)
+      margin 4rem 0
+
+      strong
+        font-weight normal
+        text-transform uppercase
+
+    .document-selection
+      position relative
+      width 100%
+      height 66rem
+      margin 6rem 0 4rem
+      padding 1rem 0 0
+      overflow-y auto
+      list-style none
+
+      &::after
+        content ''
+        absolute-cover()
+        border 1rem solid atariCyan(1)
+
+      .document
+        height 14rem
+        margin-top -1rem
+
+        .document-selection-button
+          position relative
+          z-index 1
+          width 100%
+          height 14rem
+          padding 2rem 4rem
+          border 1rem solid atariCyan(1)
+          background none
+          text-align left
+          font inherit
+          color atariCyan(3)
+          .document-selection-button
+
+          &:focus
+          &:hover
+            z-index 2
+            border-color atariCyan(3)
+            color atariCyan(4)
+            outline none
+
+    .action-button
+      position relative
+      padding 2rem 4rem
+      border 1rem solid atariAqua(2)
+      background none
+      font inherit
+      color atariAqua(3)
+      text-transform uppercase
+      text-align center
+
+      &::after
+        content ''
+        position absolute
+        z-index -1
+        top 1rem
+        bottom 1rem
+        left 1rem
+        right 1rem
+        background atariGrey(1)
+
+      &:hover
+      &:focus
+        z-index 1
+        border-color atariAqua(4)
+        color atariAqua(5)
+        outline none
+
+    .main-actions
+      position absolute
+      top 10rem
+      right 10rem
+      width 70rem
+
+      .action-button
+        width 100%
+        padding 3rem 4rem
+        margin-bottom 4rem
+        acme-5()
+
+        &.main-button
+          color atariGrey(6)
+
+          &::after
+            background atariAqua(1)
+
+          &:hover
+          &:focus
+            color atariGrey(7)
+
+            &::after
+              background atariAqua(2)
+
+        &.danger-button
+          border-color atariGrey(1)
+          color atariRed(3)
+
+          &:hover
+          &:focus
+            border-color atariRed(2)
+            color atariGrey(6)
+
+            &::after
+              background atariRed(2)
+
+    input[type='text']
+    input[type='number']
+    select
+      position relative
+      padding 2rem 4rem
+      border 1rem solid atariCyan(2)
+      font inherit
+      color atariGrey(5)
+      background atariGrey(0)
+
+    input[type='checkbox']
+      display none
+
+      & + .label::before
+        content '✔'
+        display inline-block
+        width 7rem
+        height 7rem
+        padding 0 0 1rem 1rem
+        margin-right 6rem
+        vertical-align baseline
+        border 1rem solid atariCyan(2)
+        text-align center
+        color transparent
+
+      &:checked + .label::before
+        color atariCyan(5)
