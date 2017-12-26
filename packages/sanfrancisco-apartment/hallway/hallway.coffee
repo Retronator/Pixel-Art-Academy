@@ -14,7 +14,7 @@ class Apartment.Hallway extends LOI.Adventure.Location
   @shortName: -> "hallway"
   @description: ->
     "
-      You are in the hallway in front of your apartment. You can go in or down the stairs to the lobby.
+      You are in the hallway in front of _char's_ apartment. You can go in or down the stairs to the lobby.
     "
   
   @initialize()

@@ -16,4 +16,5 @@ class E1.Inventory extends LOI.Adventure.Scene
   things: ->
     [
       HQ.Items.OperatorLink
+      
     ]

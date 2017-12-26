@@ -14,8 +14,8 @@ class Apartment.Entrance extends LOI.Adventure.Location
   @shortName: -> "entrance"
   @description: ->
     "
-      You are in your apartment building's entrance lobby.
-      Your floor is just up the stairs, while the way out leads into San Francisco.
+      You are in the entrance lobby of _char's_ apartment building.
+      _Their_ floor is just up the stairs, while the way out leads into San Francisco.
     "
   
   @initialize()
@@ -28,4 +28,6 @@ class Apartment.Entrance extends LOI.Adventure.Location
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.ChinaBasinPark
+    "#{Vocabulary.Keys.Directions.North}": SanFrancisco.Soma.ChinaBasinPark
     "#{Vocabulary.Keys.Directions.Up}": Apartment.Hallway
+    "#{Vocabulary.Keys.Directions.Northwest}": Apartment.Hallway

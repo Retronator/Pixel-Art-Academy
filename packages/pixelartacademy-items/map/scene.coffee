@@ -16,6 +16,9 @@ class PAA.Items.Map.Scene extends LOI.Adventure.Scene
     # For existing players, also show the map after reaching chapter 2.
     hasMap = true if PAA.Season1.Episode0.state 'Chapter2'
 
+    # For characters, always show the map.
+    hasMap = true if LOI.character()
+
     [
       PAA.Items.Map if hasMap
     ]
