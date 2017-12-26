@@ -10,7 +10,10 @@ class Studio.Computer.Desktop extends AM.Component
 
   events: ->
     super.concat
-      'click .browser-button': @onClickBrowserButton
+      'click .app-button': @onClickAppButton
 
-  onClickBrowserButton: (event) ->
-    @computer.switchToScreen @computer.screens.browser
+  onClickAppButton: (event) ->
+    $button = $(event.target)
+    screenName = $button.data('screen')
+    
+    @computer.switchToScreen @computer.screens[screenName]

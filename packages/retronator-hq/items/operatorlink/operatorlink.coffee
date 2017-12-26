@@ -97,7 +97,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
     ephemeralState = listener.script.ephemeralState()
 
     # Note that we can't store the full character into the state since it tries to be serialized.
-    ephemeralState.characterId = @_syncCharacter.id()
+    ephemeralState.characterId = @_syncCharacter._id
     ephemeralState.characterFullName = @_syncCharacter.avatar.fullName()
 
     listener.startScript label: 'CharacterSync'
@@ -120,7 +120,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
     currentCharacter = LOI.character()
 
     # For each agent, create a choice node. Reverse the nodes so they appear in the same order.
-    for character in @activatedCharacters() when character.id() isnt currentCharacter?.id()
+    for character in @activatedCharacters() when character._id isnt currentCharacter?_id
       do (character) =>
         callbackNode = new Nodes.Callback
           callback: (complete) =>
