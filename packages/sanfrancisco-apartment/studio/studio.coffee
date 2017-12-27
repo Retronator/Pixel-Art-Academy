@@ -29,3 +29,6 @@ class Apartment.Studio extends LOI.Adventure.Location
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Out}": Apartment.Hallway
+
+  onEnter: ->
+    LOI.adventure.goToItem Apartment.Studio.Computer

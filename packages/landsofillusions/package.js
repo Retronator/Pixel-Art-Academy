@@ -338,6 +338,8 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/sprite/sprite');
   api.addUnstyledComponent('components/computer/computer');
 
+  api.addUnstyledComponent('components/embeddedwebpage/embeddedwebpage');
+
   // Typography
 
   api.addFiles('typography/typography.css', 'client');

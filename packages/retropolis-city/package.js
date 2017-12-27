@@ -17,12 +17,14 @@ Package.onUse(function(api) {
   api.export('Retropolis');
 
   api.addFile('city');
-
-  // Layouts
-  api.addFile('layouts/layouts');
-  api.addComponent('layouts/city/city');
-
+  
   // Pages
   api.addFile('pages/pages');
+
+  api.addComponent('pages/layout/layout');
   api.addComponent('pages/home/home');
+
+  api.addFile('pages/academyofart/academyofart');
+  api.addComponent('pages/academyofart/layout/layout');
+  api.addComponent('pages/academyofart/home/home');
 });

@@ -1,6 +1,15 @@
 <template name="SanFrancisco.Apartment.Studio.Computer.Browser">
   <div class="sanfrancisco-apartment-studio-computer-browser screen">
-    BROWSER
-    <button class="close-button">Close</button>
+    <div class="navigation-bar">
+      <input class="url-input" value="{{url}}"/>
+      <button class="close-button">Close</button>
+    </div>
+    <div class="webpage webpage-embed-root">
+      {{#if currentRoute}}
+        {{> renderWebpage}}
+      {{else}}
+        NO WEBPAGE
+      {{/if}}
+    </div>
   </div>
 </template>

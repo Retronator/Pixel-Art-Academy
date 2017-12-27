@@ -1,0 +1,13 @@
+<template name="LandsOfIllusions.Components.EmbeddedWebpage">
+  {{#unless embedded}}
+    <style>
+      html {
+        font-size: {{display.scale}}px;
+      }
+    </style>
+    {{> Render display}}
+  {{/unless}}
+  <div class="landsofillusions-components-embeddedwebpage">
+    {{> Template.contentBlock}}
+  </div>
+</template>
