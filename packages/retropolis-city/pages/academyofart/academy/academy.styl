@@ -1,0 +1,68 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retropolis-city-pages-academyofart-academy
+  .key-image
+    background-image image('/retropolis/city/academyofart/quad.png')
+
+  .byline
+    kyrou-7()
+
+  .features
+    text-align center
+    display flex
+    padding 0
+    list-style none
+
+    .feature
+      width 33%
+
+      &:nth-child(2)
+        margin 0 10rem
+
+      .title
+        kyrou-7()
+        line-height 11rem
+
+      .description
+        margin 10rem
+
+      .icon-area
+        height 50rem
+        padding-top 15rem
+
+        .icon
+          &[src*="icon-character"]
+            height 21rem
+            margin-top 3rem
+
+          &[src*="icon-yearbook"]
+            height 22rem
+            margin-top 2rem
+
+          &[src*="icon-palette"]
+            height 24rem
+
+          &[src*="icon-book"]
+            height 24rem
+
+  .free-education
+    background atariPeach(3)
+    color atariGrey(6)
+    padding-bottom 10rem
+
+    .title
+      background atariGrey(0)
+      padding 1rem 0
+      line-height initial
+
+    .library
+      width 100%
+
+    a
+      display inline-block
+      text-decoration none
+      border-bottom 1rem solid atariGrey(6)
+
+      &:hover
+        color atariPeach(7)
+        border-bottom-color atariPeach(7)

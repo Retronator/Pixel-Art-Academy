@@ -1,7 +1,41 @@
 <template name="Retropolis.City.Pages.AcademyOfArt.Layout">
   {{#LandsOfIllusions.Components.EmbeddedWebpage}}
     <div class="retropolis-city-pages-academyofart-layout">
+      <h1 class="title">{{> Artificial.Base.RouteLink args 'Retropolis Academy of Art' 'Retropolis.City.Pages.AcademyOfArt.Academy'}}</h1>
+      <nav class="navigation">
+        <ul class="pages">
+          <li class="page">{{> Artificial.Base.RouteLink args 'Academy' 'Retropolis.City.Pages.AcademyOfArt.Academy'}}</li>
+          <li class="page">{{> Artificial.Base.RouteLink args 'Programs' 'Retropolis.City.Pages.AcademyOfArt.Programs'}}</li>
+          <li class="page">{{> Artificial.Base.RouteLink args 'Campus life' 'Retropolis.City.Pages.AcademyOfArt.CampusLife'}}</li>
+          <li class="page">{{> Artificial.Base.RouteLink args 'Admissions' 'Retropolis.City.Pages.AcademyOfArt.Admissions'}}</li>
+          <li class="page apply">{{> Artificial.Base.RouteLink args 'Apply' 'Retropolis.City.Pages.AcademyOfArt.Application'}}</li>
+        </ul>
+      </nav>
       {{> Render page}}
+      <footer class="footer">
+        <div class="main-area">
+          <div class="address">
+            <div class="name">Retropolis Academy of Art</div>
+            Sector 14, North Island<br/>
+            Retropolis
+          </div>
+          <div class="social-links-area">
+            <div class="prompt">Stay in touch</div>
+            <ul class="social-links">
+              <li class="social-link"><a href="https://www.facebook.com/retronator" class="icon facebook" target="_blank"></a></li>
+              <li class="social-link"><a href="https://twitter.com/pixelartacademy" class="icon twitter" target="_blank"></a></li>
+              <li class="social-link"><a href="https://www.retronator.com/" class="icon tumblr" target="_blank"></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="smallprint">
+          Retropolis Academy of Art website developed by
+          <a href="https://www.retronator.com" target="_blank">Retronator</a> and
+          <a href="https://objectsforheads.com" target="_blank">Objectsforheads</a>.<br/>
+          By using this website you agree to the
+          <a href="https://pixelart.academy/smallprint" target="_blank">terms of service</a>.
+        </div>
+      </footer>
     </div>
   {{/LandsOfIllusions.Components.EmbeddedWebpage}}
 </template>

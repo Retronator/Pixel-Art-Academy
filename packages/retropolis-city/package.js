@@ -19,12 +19,16 @@ Package.onUse(function(api) {
   api.addFile('city');
   
   // Pages
-  api.addFile('pages/pages');
+  api.addFile('pages..');
 
-  api.addComponent('pages/layout/layout');
-  api.addComponent('pages/home/home');
+  api.addComponent('pages/layout..');
+  api.addComponent('pages/home..');
 
-  api.addFile('pages/academyofart/academyofart');
-  api.addComponent('pages/academyofart/layout/layout');
-  api.addComponent('pages/academyofart/home/home');
+  api.addFile('pages/academyofart..');
+  api.addComponent('pages/academyofart/layout..');
+  api.addComponent('pages/academyofart/academy..');
+  api.addComponent('pages/academyofart/programs..');
+  api.addComponent('pages/academyofart/campuslife..');
+  api.addComponent('pages/academyofart/admissions..');
+  api.addComponent('pages/academyofart/application..');
 });
