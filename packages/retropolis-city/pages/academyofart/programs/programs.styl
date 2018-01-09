@@ -1,4 +1,87 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .retropolis-city-pages-academyofart-programs
-  // TODO
+  padding-top 1rem
+
+  .four-levels
+    display block
+    width 320rem
+    margin 0 auto
+
+  .learning-theory
+    display flex
+    width calc(100% - 20rem)
+    max-width 440rem
+    margin 10rem auto
+    padding 10rem
+    background atariAzure(2)
+    color atariGrey(6)
+
+    h2
+      margin-top 5rem
+
+    .coat-of-arms-area
+      width 120rem
+
+      .coat-of-arms
+        width 120rem
+
+    .text
+      margin 0
+
+  .draft-warning
+    background atariGrey(6)
+    padding 1rem 10rem
+    adventure()
+
+    h3
+      text-transform uppercase
+      font-weight normal
+
+  .programs-area
+    background atariAzure(2)
+    color atariGrey(6)
+    padding 10rem 0
+
+    .programs
+      display flex
+      list-style none
+      padding 0
+      width 80%
+      margin 0 auto
+
+      .program
+        width 50%
+
+        &:first-child
+          margin-right 10rem
+
+        &:last-child
+          margin-left 10rem
+
+        .title
+          kyrou-7()
+          line-height 11rem
+
+        .summary
+          text-transform uppercase
+          text-align center
+          margin 5rem 0
+
+        .icon
+          display block
+          width 50rem
+          margin 10rem auto
+
+        .get-started
+          padding 10rem
+          background atariAzure(1)
+
+          a
+            display inline-block
+            text-decoration none
+            border-bottom 1rem solid atariGrey(6)
+
+            &:hover
+              color atariPeach(7)
+              border-bottom-color atariPeach(7)

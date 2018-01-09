@@ -63,9 +63,12 @@
         <p>
           There is nothing like being at the Academy in person though. Studying
           <a href="{{routerPath 'Retropolis.City.Pages.AcademyOfArt.CampusLife'}}">on campus</a> is available to all citizens
-          of Retropolis, with limited spots for international students. Admissions are based on passion and commitment,
-          not experience or merit. Part-time attendance is also available with Retronator's Lands of Illusions alternate
-          reality system. Read the
+          of Retropolis, with upcoming spots for international students. Admissions are based on passion and commitment,
+          not experience or merit.
+          {{#unless currentCharacter}}
+            Part-time attendance is also available with Retronator's Lands of Illusions alternate reality system.
+          {{/unless}}
+          Read the
           <a href="{{routerPath 'Retropolis.City.Pages.AcademyOfArt.Admissions'}}">admissions page</a> to learn more.
         </p>
       </div>

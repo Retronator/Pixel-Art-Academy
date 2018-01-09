@@ -12,7 +12,7 @@ class Studio.Computer.Browser extends AM.Component
   onCreated: ->
     super
 
-    @url = new ReactiveField 'https://retropolis.city/academy-of-art/campus-life'
+    @url = new ReactiveField 'https://retropolis.city/academy-of-art/admissions'
     @currentRoute = new ReactiveField null
 
     @autorun (computation) =>
@@ -53,6 +53,7 @@ class Studio.Computer.Browser extends AM.Component
     super.concat
       'click .close-button': @onClickCloseButton
       'change .url-input': @onChangeUrlInput
+      'click a': @onClickAnchor
 
   onClickCloseButton: (event) ->
     @computer.switchToScreen @computer.screens.desktop
@@ -60,3 +61,16 @@ class Studio.Computer.Browser extends AM.Component
   onChangeUrlInput: (event) ->
     url = $(event.target).val()
     @url url
+
+  onClickAnchor: (event) ->
+    # Do not react if modifier keys are present (the user might be trying to open the link in a new tab).
+    return if event.metaKey or event.ctrlKey or event.shiftKey
+
+    link = event.currentTarget
+    location = $("<a href='#{@url()}'>")[0]
+
+    @url "#{location.protocol}//#{location.hostname}#{link.pathname}"
+    event.preventDefault()
+
+    # Browsers scroll to top on URL change.
+    @$('.webpage').scrollTop(0)

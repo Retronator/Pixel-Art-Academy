@@ -142,6 +142,22 @@ LOI.Character.updateBehavior.method (characterId, address, value) ->
 
   updateCharacterPart 'behavior', characterId, address, value
 
+LOI.Character.updateContactEmail.method (characterId, emailAddress) ->
+  check characterId, Match.DocumentId
+  check emailAddress, String
+
+  LOI.Authorize.player()
+  LOI.Authorize.characterAction characterId
+
+  user = Retronator.user()
+  emailIndex = _.findIndex user.registered_emails, (email) -> email.address is emailAddress and email.verified
+
+  throw new AE.ArgumentException "You must provide a verified email address." if emailIndex is -1
+
+  LOI.Character.documents.update characterId,
+    $set:
+      'contactEmail': emailAddress
+
 LOI.Character.approveDesign.method (characterId) ->
   check characterId, Match.DocumentId
 

@@ -7,11 +7,12 @@ class PAA.Season1.Episode1.Chapter1 extends LOI.Adventure.Chapter
 
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1'
 
-  @fullName: -> "Not just another day"
+  @fullName: -> "Admission Week"
   @number: -> 1
 
   @sections: -> [
     @Intro
+    @AdmissionWeek
   ]
 
   @scenes: -> [

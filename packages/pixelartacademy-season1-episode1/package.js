@@ -26,16 +26,19 @@ Package.onUse(function(api) {
 
   // Start
 
-  api.addFile('start/start');
+  api.addFile('start..');
   api.addThing('start/scenes/wakeup');
 
   // Chapter 1
 
-  api.addFile('chapter1/chapter1');
+  api.addFile('chapter1..');
 
   // Intro
 
-  api.addFile('chapter1/sections/intro/intro');
-
+  api.addFile('chapter1/sections/intro..');
   api.addThing('chapter1/sections/intro/scenes/studio');
+
+  // Admission Week
+  api.addFile('chapter1/sections/admissionweek..');
+  api.addServerFile('chapter1/sections/admissionweek/methods-server');
 });
