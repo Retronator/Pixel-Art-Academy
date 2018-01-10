@@ -80,7 +80,9 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     # Return the wildcard URL so we don't rewrite it before we manage to parse parameters into our URL state.
     return super unless @isCreated()
 
-    url = 'daily'
+    url = AB.Router.createUrl AB.Router.currentRouteName(), parameter1: 'daily'
+
+    console.log "start url", url
 
     return url unless urlState = @urlState()
 
@@ -180,7 +182,13 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     currentPage: ->
       @data.urlState.page
 
-    blogUrl: -> '/daily'
+    blogUrl: ->
+      AB.Router.createUrl AB.Router.currentRouteName(), parameter1: 'daily'
+
+    blogUrlWithSlash: ->
+      url = @blogUrl()
+      url = "#{url}/" unless _.endsWith url, '/'
+      url
 
     previousPageUrl: ->
       page = @data.urlState.page
@@ -217,11 +225,16 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       @_pageUrl page
 
     _pageUrl: (page) ->
-      url = '/daily'
-      url = "#{url}/tagged/#{@data.urlState.tag}" if @data.urlState.tag
+      url = @blogUrl()
+
+      if @data.urlState.tag
+        url = "#{url}/" unless _.endsWith url, '/'
+        url = "#{url}tagged/#{@data.urlState.tag}"
+
       return url if page is 1
 
-      "#{url}/page/#{page}"
+      url = "#{url}/" unless _.endsWith url, '/'
+      "#{url}page/#{page}"
 
     date: ->
       post = @currentData()
@@ -234,12 +247,11 @@ class HQ.Items.Daily extends LOI.Adventure.Item
 
     permalink: ->
       post = @currentData()
-
-      "/daily/post/#{post.tumblr.id}/#{post.tumblr.slug}"
+      "#{@blogUrlWithSlash()}post/#{post.tumblr.id}/#{post.tumblr.slug}"
 
     tagUrl: ->
       tag = @currentData()
-      "/daily/tagged/#{_.kebabCase tag}"
+      "#{@blogUrlWithSlash()}tagged/#{_.kebabCase tag}"
 
     isPostText: ->
       post = @currentData()
@@ -300,4 +312,14 @@ class HQ.Items.Daily extends LOI.Adventure.Item
 
 LOI.Adventure.registerDirectRoute "/daily/*", =>
   # Show the daily if we need to.
-  LOI.adventure.goToItem HQ.Items.Daily unless LOI.adventure.activeItemId() is HQ.Items.Daily.id()
+  unless LOI.adventure.activeItemId() is HQ.Items.Daily.id()
+    # Move to Retronator Cafe if necessary.
+    LOI.adventure.setLocationId HQ.Cafe unless LOI.adventure.currentLocationId() is HQ.Cafe.id()
+
+    Tracker.autorun (computation) =>
+      # Wait until Daily is available.
+      return unless LOI.adventure.getCurrentThing HQ.Items.Daily
+      computation.stop()
+
+      # Show the daily.
+      LOI.adventure.goToItem HQ.Items.Daily

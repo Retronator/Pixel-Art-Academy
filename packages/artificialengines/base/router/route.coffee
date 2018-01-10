@@ -6,7 +6,7 @@ class AB.Router.Route
   constructor: (optionsOrUrl, @layoutClass, @pageClass) ->
     if _.isObject optionsOrUrl
       # We were passed an options object so destructure it.
-      {@url, @layoutClass, @pageClass, @statusCode} = optionsOrUrl
+      {@url, @layoutClass, @pageClass, @statusCode, @parameterDefaults} = optionsOrUrl
 
     else
       # We were passed an url. We expect the rest of the parameters to be set
@@ -37,7 +37,7 @@ class AB.Router.Route
     parametersArray = match[1..]
 
     # We have a successful match. Build the parameters object.
-    parameters = {}
+    parameters = _.extend {}, @parameterDefaults
 
     for parameter, index in @parameters
       parameters[parameter.name] = parametersArray[index]

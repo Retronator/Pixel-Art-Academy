@@ -2,6 +2,6 @@ PAA = PixelArtAcademy
 
 class PAA.LandingPage
   constructor: ->
-    Retronator.App.addPublicPage '/about', @constructor.Pages.About
-    Retronator.App.addPublicPage '/press', @constructor.Pages.Press
-    Retronator.App.addPublicPage '/smallprint', @constructor.Pages.Smallprint
+    Retronator.App.addPublicPage 'pixelart.academy/about', @constructor.Pages.About
+    Retronator.App.addPublicPage 'pixelart.academy/press', @constructor.Pages.Press
+    Retronator.App.addPublicPage 'retronator.com/smallprint', @constructor.Pages.Smallprint
