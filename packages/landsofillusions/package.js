@@ -53,7 +53,6 @@ Package.onUse(function(api) {
   // Character
 
   api.addFile('character/character');
-  api.addFile('character/instance');
   api.addFile('character/methods');
   api.addServerFile('character/subscriptions');
   api.addServerFile('character/migrations/0000-renamecollection');
@@ -254,6 +253,10 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/script/parser/parser.coffee');
 
+  // Character instance (inherits from Thing and uses Script)
+
+  api.addFile('character/instance');
+
   // Storylines
 
   api.addFiles('adventure/global/global.coffee');
@@ -334,6 +337,8 @@ Package.onUse(function(api) {
   api.addComponent('components/translationinput/translationinput');
   api.addUnstyledComponent('components/sprite/sprite');
   api.addUnstyledComponent('components/computer/computer');
+
+  api.addUnstyledComponent('components/embeddedwebpage/embeddedwebpage');
 
   // Typography
 

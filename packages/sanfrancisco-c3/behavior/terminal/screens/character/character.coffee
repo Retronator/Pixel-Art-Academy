@@ -65,7 +65,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
       confirmButtonClass: "positive-button"
       cancelButtonText: "Cancel"
       confirmAction: =>
-        LOI.Character.approveBehavior character.id, (error) =>
+        LOI.Character.approveBehavior character._id, (error) =>
           if error
             console.error error
             return

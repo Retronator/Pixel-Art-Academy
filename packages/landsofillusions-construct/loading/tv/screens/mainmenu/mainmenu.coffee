@@ -93,7 +93,7 @@ class LOI.Construct.Loading.TV.MainMenu extends AM.Component
 
   onClickSyncButton: (event) ->
     @tv.fadeDeactivate =>
-      LOI.adventure.loadCharacter @selectedCharacter().id
+      LOI.adventure.loadCharacter @selectedCharacter()._id
 
   onClickUnlinkButton: (event) ->
     character = @selectedCharacter()
@@ -106,7 +106,7 @@ class LOI.Construct.Loading.TV.MainMenu extends AM.Component
       cancelButtonText: "Cancel"
       confirmAction: =>
         # Remove the user from the character.
-        LOI.Character.removeUser character.id, (error) =>
+        LOI.Character.removeUser character._id, (error) =>
           if error
             console.error error
             return

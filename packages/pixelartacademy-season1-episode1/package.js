@@ -21,10 +21,24 @@ Package.onUse(function(api) {
 
   api.addFile('episode1');
   api.addFile('scenes/inventory');
+  api.addFile('scenes/characters');
+  api.addFile('scenes/chinabasinpark');
 
   // Start
 
-  api.addFile('start/start');
+  api.addFile('start..');
   api.addThing('start/scenes/wakeup');
 
+  // Chapter 1
+
+  api.addFile('chapter1..');
+
+  // Intro
+
+  api.addFile('chapter1/sections/intro..');
+  api.addThing('chapter1/sections/intro/scenes/studio');
+
+  // Admission Week
+  api.addFile('chapter1/sections/admissionweek..');
+  api.addServerFile('chapter1/sections/admissionweek/methods-server');
 });

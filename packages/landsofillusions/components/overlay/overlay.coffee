@@ -58,8 +58,10 @@ class LOI.Components.Overlay extends AM.Component
     $('body').removeClass('overlay-disable-scrolling')
 
   onResize: ->
-    scale = LOI.adventure.interface.display.scale()
-    viewport = LOI.adventure.interface.display.viewport()
+    # We allow use outside of adventure as well, in which case we just find the parent that holds the display.
+    display = LOI.adventure?.interface.display or @callAncestorWith 'display'
+    scale = display.scale()
+    viewport = display.viewport()
 
     # Background can be at most 360px * scale high. Crop bars need to fill the rest when overlay is active.
     maxOverlayHeight = 360 * scale

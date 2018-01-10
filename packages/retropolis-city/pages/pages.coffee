@@ -1,3 +1,1 @@
-City = Retropolis.City
-
-class City.Pages
+class Retropolis.City.Pages

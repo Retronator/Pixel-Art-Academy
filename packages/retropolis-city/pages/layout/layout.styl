@@ -1,16 +1,28 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-html.retropolis-city
+.retropolis-city
   background atariCyan(5)
   pixel-image-rendering()
 
-  body
-    adventure()
+html.retropolis-city
+  height 100%
 
-.retropolis-city-layouts-city
+  body
+    height 100%
+
+    .retronator-app
+      height 100%
+
+      .landsofillusions-components-embeddedwebpage
+        height 100%
+
+.retropolis-city-pages-layout
   background-image image('/retropolis/city/home/background.png')
   background-size contain
   background-position center top
   background-repeat no-repeat
   padding 10rem
-  min-height 100vh
+  min-height 100%
+  adventure()
+  color atariGrey(0)
+  line-height initial

@@ -33,6 +33,8 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
   destroy: ->
+    super
+
     @_translationSubscription.stop()
 
   ready: ->

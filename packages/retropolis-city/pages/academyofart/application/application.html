@@ -1,0 +1,106 @@
+<template name="Retropolis.City.Pages.AcademyOfArt.Application">
+  <div class="retropolis-city-pages-academyofart-application content">
+    <div class="text">
+      {{#if applicationSuccessful}}
+        <div class="success">
+          <p>
+            You have successfully applied to our program. We will email you when it's time to take the next step.
+          </p>
+        </div>
+      {{else}}
+        <p>Thank you for your interest to join us at the Retropolis Academy of Art.</p>
+        {{#if currentCharacter}}
+          {{#with selectedCharacter}}
+            {{> Retropolis.City.Pages.AcademyOfArt.Application.Form}}
+          {{/with}}
+        {{else}}
+          {{#if currentUser}}
+            <p>
+              You are signed in as {{currentUser.displayName}}.
+              <button class="sign-out-button">Sign out</button>
+            </p>
+            <p>You are eligible for our part-time program only.</p>
+            {{#with selectedCharacter}}
+              <p>
+                The character joining the program is {{avatar.fullName.translate.text}}.
+                <button class="change-character-button">Change</button>
+              </p>
+              {{> Retropolis.City.Pages.AcademyOfArt.Application.Form}}
+            {{else}}
+              {{#if characters.length}}
+                <p>Please select one of your characters:</p>
+                <ul class="characters">
+                  {{#each characters}}
+                    <li class="character">
+                      <button class="load-character-button">
+                        {{avatar.fullName.translate.text}}
+                      </button>
+                    </li>
+                  {{/each}}
+                </ul>
+              {{else}}
+                <p>You currently do not have any activated characters. Visit the Lands of Illusions center at
+                  Retronator HQ for assistance.</p>
+              {{/if}}
+            {{/with}}
+          {{else}}
+            <p>Please sign in with your Retronator account to proceed.</p>
+            <div class="sign-in-area">
+              <button class="sign-in-button">Sign in</button>
+            </div>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+  {{#unless currentUser}}
+    {{> Render signIn}}
+  {{/unless}}
+</template>
+
+<template name="Retropolis.City.Pages.AcademyOfArt.Application.Form">
+  <div class="retropolis-city-pages-academyofart-application-form">
+    {{#if alreadyApplied}}
+      <p>
+        You have already applied to the program.
+      </p>
+    {{else}}
+      <p>Admissions are closed at the moment, but apply below and we will inform you when the next Admission Week starts.</p>
+      <form class="application-form">
+        <label class="label name">
+          <span class="name">Name:</span>
+          <span class="value">
+            {{> renderFullNameInput avatar.fullName}}
+          </span>
+        </label>
+        <label class="label email">
+          <span class="name">Email:</span>
+          <span class="value">
+            <select class="email-selection">
+              {{#each emails}}
+                <option value="{{this}}" {{emailSelectedAttribute}}>{{this}}</option>
+              {{/each}}
+            </select>
+          </span>
+        </label>
+        <p>
+          To add a different email, use your Retronator account (email must be verified).
+        </p>
+        <p>
+          We will use the selected email to communicate with you throughout your stay at the Academy.
+        </p>
+        {{#with applicationError}}
+          <div class="error">
+            <p>An error was encountered during the application process.</p>
+            <p>{{reason}}</p>
+          </div>
+        {{/with}}
+        {{#if submitting}}
+          <p>Applying …</p>
+        {{else}}
+          <button class="apply-button">Apply</button>
+        {{/if}}
+      </form>
+    {{/if}}
+  </div>
+</template>

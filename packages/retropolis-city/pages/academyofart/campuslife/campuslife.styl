@@ -1,0 +1,111 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retropolis-city-pages-academyofart-campuslife
+  .aspects
+    background atariGrey(0)
+
+    .aspect
+      max-width 500rem
+      margin 0 auto
+      display flex
+      color atariGrey(5)
+
+      h2
+        color atariGrey(6)
+        margin-top 10rem
+
+      p:last-child
+        margin-bottom 10rem
+
+      .key-image
+        max-width 300rem
+        overflow hidden
+        flex-grow 1
+        margin 0 auto
+
+        img
+          width auto
+          height 100%
+
+      .text
+        width 50%
+        max-width 200rem
+        margin 0 auto
+        padding 3rem 10rem
+
+      &.left
+        .key-image
+          margin-left 0
+
+        .text
+          padding-right 5rem
+          margin-right 0
+
+      &.right
+        .key-image
+          margin-right 0
+
+        .text
+          padding-left 5rem
+          margin-left 0
+
+      &.campus
+        background atariCyan(1)
+
+        .key-image
+          background image('/retropolis/city/academyofart/campus.png') right center / 239rem 200rem no-repeat atariCyan(0)
+
+      &.dorm
+        background atariCyan(0)
+
+        .key-image
+          background image('/retropolis/city/academyofart/dorm.png') left center / 297rem 105rem no-repeat
+
+      &.studio
+        background atariGrey(0)
+
+        .key-image
+          background image('/retropolis/city/academyofart/studio.png') right bottom / 314rem 180rem no-repeat
+
+      &.pixelboy
+        background atariCyan(2)
+
+        .key-image
+          background image('/retropolis/city/academyofart/pixelboy.png') left 5rem / 239rem 179rem no-repeat
+
+  .diversity
+    margin-top 15rem
+
+    .categories
+      display flex
+      padding 0
+      margin-top 20rem
+      list-style none
+      text-align center
+
+      .category
+        width 33%
+
+        &:nth-child(2)
+          margin 0 10rem
+
+        &:nth-child(3)
+          .chart-area
+            text-align right
+
+        .title
+          kyrou-7()
+          line-height 11rem
+          margin 10rem
+
+        .description
+          margin 10rem
+          hyphens auto
+
+        .chart-area
+          text-align center
+
+          .chart
+            width 75rem
+            height 75rem
+            margin 0 auto

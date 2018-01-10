@@ -17,12 +17,18 @@ Package.onUse(function(api) {
   api.export('Retropolis');
 
   api.addFile('city');
-
-  // Layouts
-  api.addFile('layouts/layouts');
-  api.addComponent('layouts/city/city');
-
+  
   // Pages
-  api.addFile('pages/pages');
-  api.addComponent('pages/home/home');
+  api.addFile('pages..');
+
+  api.addComponent('pages/layout..');
+  api.addComponent('pages/home..');
+
+  api.addFile('pages/academyofart..');
+  api.addComponent('pages/academyofart/layout..');
+  api.addComponent('pages/academyofart/academy..');
+  api.addComponent('pages/academyofart/programs..');
+  api.addComponent('pages/academyofart/campuslife..');
+  api.addComponent('pages/academyofart/admissions..');
+  api.addComponent('pages/academyofart/application..');
 });

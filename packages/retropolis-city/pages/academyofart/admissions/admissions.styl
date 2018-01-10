@@ -1,0 +1,108 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retropolis-city-pages-academyofart-admissions
+  padding-bottom 1rem
+  overflow hidden
+
+  a
+    display inline-block
+    text-decoration none
+    border-bottom 1rem solid atariGrey(0)
+
+    &:hover
+      color atariGrey(2)
+      border-bottom-color atariGrey(2)
+
+  .key-image
+    background-image image('/retropolis/city/academyofart/retropolis.png')
+
+  .requirements
+    .requirement
+      h3
+        text-transform uppercase
+        daily()
+        font-weight normal
+        text-align left
+        line-height 11rem
+        margin-top 15rem
+
+  .lands-of-illusions
+    display flex
+    width calc(100% - 20rem)
+    max-width 340rem
+    margin 10rem auto
+    padding 10rem
+    background atariAzure(3)
+    color atariGrey(7)
+
+    .logo-area
+      width 60rem
+
+      .logo
+        width 50rem
+
+    .text
+      margin 0
+
+      a
+        border-bottom 1rem solid atariGrey(6)
+
+        &:hover
+          color atariAzure(7)
+          border-bottom-color atariAzure(7)
+
+  .admission-week
+    display block
+    background image('/retropolis/city/academyofart/drawing-back.png') top left / 250rem 164rem
+    padding 10rem 0
+    margin 20rem 0
+    border-top 3rem solid atariOrange(7)
+    border-bottom 1rem solid atariOrange(4)
+    box-shadow 0 2rem atariGrey(5)
+    overflow hidden
+
+    .drawing
+      position absolute
+      width 100%
+      min-width 340rem
+      left 50%
+      transform translateX(-50%)
+
+      &::before
+      &::after
+        content ''
+        position absolute
+        background-size 100%
+
+      &::before
+        background-image image('/retropolis/city/academyofart/drawing-left.png')
+        width 50rem
+        height 99rem
+        left 0
+        top 50rem
+
+      &::after
+        background-image image('/retropolis/city/academyofart/drawing-right.png')
+        width 50rem
+        height 237rem
+        right 0
+        top -10rem
+
+    .steps
+      background image('/retropolis/city/academyofart/drawing-notebook.png') top left / 1rem 11rem
+      padding 11rem 25rem
+      margin 10rem 20rem
+      box-shadow 2rem 1rem transparentify(atariOrange(5), atariOrange(6))
+
+      .step
+        h3
+          text-transform uppercase
+          daily()
+          font-weight normal
+          text-align left
+          line-height 11rem
+          margin-top 0
+
+        p
+          margin 11rem 0
+          line-height 11rem

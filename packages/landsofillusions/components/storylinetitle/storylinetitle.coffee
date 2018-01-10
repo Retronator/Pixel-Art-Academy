@@ -16,6 +16,8 @@ class LOI.Components.StorylineTitle extends AM.Component
   mixins: -> [@activatable]
 
   onActivate: (finishedActivatingCallback) ->
+    @options.onActivate?()
+
     Meteor.setTimeout =>
       # unless this is a to-be-continued title, let the chapter title end.
       unless @options.toBeContinued
@@ -32,14 +34,17 @@ class LOI.Components.StorylineTitle extends AM.Component
         ,
           5000
 
+      @options.onActivated?()
       finishedActivatingCallback()
     ,
       500
 
   onDeactivate: (finishedDeactivatingCallback) ->
     $(document).off '.storylineTitle'
+    @options.onDeactivate?()
 
     Meteor.setTimeout =>
+      @options.onDeactivated?()
       finishedDeactivatingCallback()
     ,
       500

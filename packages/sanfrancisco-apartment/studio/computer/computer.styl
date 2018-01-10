@@ -1,0 +1,69 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.sanfrancisco-apartment-studio-computer
+  .landsofillusions-components-overlay
+    > .background
+      background-image image('/sanfrancisco/apartment/studio/computer/background.png')
+
+  .display
+    position relative
+    height 200rem
+
+    .screen
+      position relative
+      height 100%
+
+    .dialog-area
+      position absolute
+      left 1rem
+      top 1rem
+      right 1rem
+      bottom 1rem
+      z-index 1
+      background rgba(atariGrey(0), 0.7)
+
+      .dialog
+        position absolute
+        width 200rem
+        top 50%
+        left 50%
+        transform translate(-50%, -50%)
+        text-align center
+        padding 10rem
+        border 1rem solid atariGrey(1)
+        background atariGrey(0)
+
+        .message
+          margin-bottom 10rem
+
+        .action-button
+          min-width 50rem
+
+          &.positive-button
+            color atariGrey(6)
+
+            &::after
+              background atariAqua(1)
+
+            &:hover
+            &:focus
+              color atariGrey(7)
+
+              &::after
+                background atariAqua(2)
+
+          &.danger-button
+            border-color atariRed(2)
+            color atariGrey(6)
+
+            &::after
+              background atariRed(2)
+
+            &:hover
+            &:focus
+              border-color atariRed(1)
+              color atariGrey(7)
+
+              &::after
+                background atariRed(1)
+

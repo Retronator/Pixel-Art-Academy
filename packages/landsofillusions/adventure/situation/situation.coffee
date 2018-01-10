@@ -27,9 +27,9 @@ class LOI.Adventure.Situation
 
     for scene in LOI.adventure.currentScenes()
       # We compare IDs since we can get in a class or an instance.
-      locationClass = if location instanceof LOI.Adventure.Location then location.constructor else locationClass
-      sceneLocation = scene.location()
-      validLocation = not sceneLocation or (locationClass is sceneLocation) or (locationClass in sceneLocation)
+      locationClass = _.thingClass location
+      sceneLocationClass = _.thingClass scene.location()
+      validLocation = not sceneLocationClass or (locationClass is sceneLocationClass) or (locationClass in sceneLocationClass)
 
       sceneTimelineId = scene.timelineId()
       validTimeline = (not sceneTimelineId) or (timelineId is sceneTimelineId) or (timelineId in sceneTimelineId)

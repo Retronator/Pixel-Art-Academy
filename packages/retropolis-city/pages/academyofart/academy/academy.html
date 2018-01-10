@@ -1,0 +1,77 @@
+<template name="Retropolis.City.Pages.AcademyOfArt.Academy">
+  <article class="retropolis-city-pages-academyofart-academy content">
+    <div class="key-image">
+      <img src="{{image '/retropolis/city/academyofart/quad.png'}}"/>
+    </div>
+    <section>
+      <div class="text">
+        <p class="byline">
+          Hello,<br/>
+          You've taken the first step to becoming a better artist - congratulations!
+        </p>
+        <p>We're pleased you've considered attending Retropolis Academy of Art to further your art education.
+          At the academy, you'll find a home among like-minded peers and enjoy a collaborative experience in
+          committing to improving yourself, regardless of your experience level.</p>
+        <p>We look forward to welcoming you to the incoming class of 2018 and can't wait to see what you'll make. Happy drawing!</p>
+        <ul class="features">
+          <li class="feature">
+            <div class="icon-area">
+              <img class="icon" src="{{image '/retropolis/city/academyofart/icon-yearbook.png'}}">
+            </div>
+            <h3 class="title">It's dangerous out there! Don't go alone!</h3>
+            <p class="description">
+              Be part of a community of other artists, who'll help you be accountable for your success.
+              You and your cohort will learn together, with and from each other.
+            </p>
+          </li>
+          <li class="feature">
+            <div class="icon-area">
+              <img class="icon" src="{{image '/retropolis/city/academyofart/icon-palette.png'}}">
+            </div>
+            <h3 class="title">Being willing is not enough; we must do.</h3>
+            <p class="description">
+              Build the habits needed to become a better artist,
+              like practicing daily and critically, then see yourself improve.
+            </p>
+          </li>
+          <li class="feature">
+            <div class="icon-area">
+              <img class="icon" src="{{image '/retropolis/city/academyofart/icon-book.png'}}">
+            </div>
+            <h3 class="title">What will you do now?</h3>
+            <p class="description">
+              Learn the fundamentals of pixel art and art in general by taking
+              on quests and completing storylines designed to introduce you to these concepts as you need them and can apply them.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <section class="free-education">
+      <div class="title">
+        <div class="text">
+          <h2>Free education, for everyone</h2>
+        </div>
+      </div>
+      <img class="library" src="{{image '/retropolis/city/academyofart/library-thin.png'}}"/>
+      <div class="text">
+        <p>
+          We are committed to providing access to art knowledge to everyone, for free. No tuition, no fees. All the learning
+          materials created at the Academy are available online. See our
+          <a href="{{routerPath 'Retropolis.City.Pages.AcademyOfArt.Programs'}}">programs page</a> for details.
+        </p>
+        <p>
+          There is nothing like being at the Academy in person though. Studying
+          <a href="{{routerPath 'Retropolis.City.Pages.AcademyOfArt.CampusLife'}}">on campus</a> is available to all citizens
+          of Retropolis, with upcoming spots for international students. Admissions are based on passion and commitment,
+          not experience or merit.
+          {{#unless currentCharacter}}
+            Part-time attendance is also available with Retronator's Lands of Illusions alternate reality system.
+          {{/unless}}
+          Read the
+          <a href="{{routerPath 'Retropolis.City.Pages.AcademyOfArt.Admissions'}}">admissions page</a> to learn more.
+        </p>
+      </div>
+    </section>
+  </article>
+</template>

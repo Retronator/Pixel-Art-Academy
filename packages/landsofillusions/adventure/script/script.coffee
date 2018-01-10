@@ -71,7 +71,7 @@ class LOI.Adventure.Script
   initialize: -> # Override to setup the script on the client.
 
   # Sets things that have a shorthand name in the script (actors, thing variables in script context).
-  setThings: (things) ->
+  setThings: (things = {}) ->
     @things = things
 
     # Replace actor names with actual thing instances.

@@ -54,10 +54,10 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
     scene.destroy() for scene in @scenes()
 
   active: ->
+    # Override and add additional logic to create prerequisites for the section being started.
     @_activeUntilFinished()
 
   _activeUntilFinished: ->
-    # Override and add additional logic to create prerequisites for the section being started.
     finished = @finished()
 
     # Finished can return undefined, which means it is not ready to determine its state.

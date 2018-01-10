@@ -84,6 +84,8 @@ class LOI.Adventure.Thing extends AM.Component
 
     translations
 
+  @accessRequirement: -> # Override to set an access requirement to use this thing.
+
   @initialize: ->
     # Store thing class by ID and url.
     @_thingClassesById[@id()] = @
@@ -133,6 +135,7 @@ class LOI.Adventure.Thing extends AM.Component
         urls
 
       parentThing = parent
+
       class @Script extends LOI.Adventure.Script
         @id: -> parentThing.id()
         @initialize()
@@ -185,7 +188,7 @@ class LOI.Adventure.Thing extends AM.Component
     # To ease debugging, we save the ID value as a variable on the instance.
     @ID = @id()
 
-    @avatar = @constructor.createAvatar()
+    @avatar = @createAvatar()
 
     @state = @constructor.state
     @stateAddress = @constructor.stateAddress
@@ -240,6 +243,8 @@ class LOI.Adventure.Thing extends AM.Component
   id: -> @constructor.id()
   url: -> @constructor.url()
 
+  createAvatar: -> @constructor.createAvatar()
+
   # Override to control if the item appears in the interface.
   isVisible: -> true
   displayInLocation: -> @isVisible()
@@ -272,6 +277,17 @@ class LOI.Adventure.Thing extends AM.Component
 
   getListener: (listenerClass) ->
     _.find @listeners, (listener) -> listener instanceof listenerClass
+
+  accessRequirement: -> @constructor.accessRequirement()
+  meetsAccessRequirement: ->
+    # If there is no access requirement, the conditions are met.
+    return true unless accessRequirement = @accessRequirement()
+
+    # We have some condition, so we need a user to pass.
+    return false unless user = Retronator.user()
+
+    # The requirement is met if the user has the required item.
+    user.hasItem accessRequirement
 
   # Avatar pass-through methods
 

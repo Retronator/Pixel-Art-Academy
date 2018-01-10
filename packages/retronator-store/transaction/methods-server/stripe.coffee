@@ -52,16 +52,17 @@ Meteor.methods
       statement_descriptor: 'Retronator'
       metadata: metadata
 
-    # Set email for stripe's default receipt.
-    if user
+    # Set email for stripe's default receipt. Make sure the user even has a contact email,
+    # since it can be logged in from Twitter where we don't receive an email.
+    if user?.contactEmail
       chargeData.receipt_email = user.contactEmail
 
-    else
+    else if payment.token?.email
       chargeData.receipt_email = payment.token.email
 
     # Also create customer data for the transaction.
-    customer =
-      email: chargeData.receipt_email
+    customer = {}
+    customer.email = chargeData.receipt_email if chargeData.receipt_email
 
     # Set payment source.
     if payment.paymentMethodId

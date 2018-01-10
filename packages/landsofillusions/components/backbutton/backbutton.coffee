@@ -20,8 +20,10 @@ class LOI.Components.BackButton extends AM.Component
 
     # Resize elements.
     @autorun (computation) =>
-      scale = LOI.adventure.interface.display.scale()
-      viewport = LOI.adventure.interface.display.viewport()
+      # We allow use outside of adventure as well, in which case we just find the parent that holds the display.
+      display = LOI.adventure?.interface.display or @callAncestorWith 'display'
+      scale = display.scale()
+      viewport = display.viewport()
 
       if overlaid
         # Place back button inside viewport bounds.
@@ -54,7 +56,8 @@ class LOI.Components.BackButton extends AM.Component
       deactivatableParent = @ancestorComponentWith 'deactivate'
 
       # If the component is also the main active item, deactivate it at the adventure level (which changes the url).
-      if LOI.adventure.activeItemId() is deactivatableParent.id?()
+      # We allow used outside of adventure interface so we check for presence of adventure first.
+      if LOI.adventure and LOI.adventure.activeItemId() is deactivatableParent.id?()
         LOI.adventure.deactivateCurrentItem()
 
       else

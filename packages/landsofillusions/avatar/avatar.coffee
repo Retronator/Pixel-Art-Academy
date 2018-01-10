@@ -27,6 +27,8 @@ class LOI.Avatar
     Masculine: 'Masculine'
     Neutral: 'Neutral'
 
+  destroy: -> # Override to add any cleanup.
+
   ready: -> true
 
   fullName: -> throw new AE.NotImplementedException "You must provide avatar's full name."

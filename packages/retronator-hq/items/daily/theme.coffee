@@ -268,7 +268,7 @@ class Retronator.HQ.Items.Daily.Theme
         location.href = Retronator.HQ.Items.Daily.BlogUrl
 
       else
-        Artificial.Base.Router.goToUrl '/daily'
+        Artificial.Base.Router.goToRoute Artificial.Base.Router.currentRouteName(), parameter1: 'daily'
 
       return true
 

@@ -1,0 +1,177 @@
+<template name="Retropolis.City.Pages.AcademyOfArt.Admissions">
+  <div class="retropolis-city-pages-academyofart-admissions content">
+    <div class="key-image">
+      <img src="{{image '/retropolis/city/academyofart/retropolis.png'}}"/>
+    </div>
+    <section>
+      <div class="text">
+        <h2>Commitment-based admissions</h2>
+        <p>
+          You might be used to only top students getting accepted. But what is top anyway?
+          At Retropolis Academy of Art, eveyone has the same shot, regardless of experience level.
+        </p>
+        <p>
+          Applying to the Academy has two requirements:
+        </p>
+        <ol class="requirements">
+          <li class="requirement">
+            <h3 class="title">Identify with Retropolis Code of Behavior</h3>
+            <p>
+              Studying on campus means living in Retropolis, and living in Retropolis means sharing our values.
+              What comes as second nature to people born here might be foreign to you. By moving to Retropolis
+              you have to be prepared to change and live by the Code. We'll guide you along the way,
+              but it's a serious commitment.
+            </p>
+          </li>
+          <li class="requirement">
+            <h3 class="title">Commit to improve</h3>
+            <p>
+              Speaking of commitment, you have to know that learning to draw is really what you want.
+              Our learning experience is designed to change your behavior and build habits that will optimize your
+              learning. This literally means changing your life. If you are not committed to improve at drawing,
+              your time would be better spent elsewhere. We don't want to do the changes to your life if you don't
+              want them yourself.
+            </p>
+          </li>
+        </ol>
+      </div>
+      {{#unless currentCharacter}}
+        <div class="lands-of-illusions">
+          <div class="logo-area">
+            <img class="logo" src="{{image '/retropolis/city/academyofart/cube.gif'}}"/>
+          </div>
+          <div class="text">
+            <h2>
+              Part-time program
+            </h2>
+            <p>
+              For students who cannot fully commit to moving to Retropolis, we offer participation through
+              Retronator's Lands of Illusions alternate reality system.
+            </p>
+            <p>
+              Although it is not free, it is affordable and will allow you to experience everything we have to offer
+              while staying abroad. Prices start at $10—search for the Pixel Art Academy content module in
+              <a class="{{routerPath domain='retronator.com' parameter1='store'}}">Retronator Store</a>.
+            </p>
+            <p>
+              The system involves creating a character that moves to Retropolis instead of you.
+              With a fully immersive neural connection, you will be able to connect to them and
+              influence their actions. When you're offline though, the AI will take over, making the agent
+              indistinguishable from normal Retropolis visitors. As your character studies at Retropolis,
+              you will learn with them.
+            </p>
+          </div>
+        </div>
+      {{/unless}}
+      <div class="text">
+        <p>
+          When you've decided it's time to make a change in your life, you can start your admission week.
+        </p>
+      </div>
+    </section>
+    <section class="admission-week">
+      <div class="text">
+        <h2>Admission week</h2>
+        <p>
+          Applying to Retropolis Academy of Art might be unlike anything you've experienced before. It is a
+          test of commitment, but a test that teaches you how to pass it as well.
+        </p>
+      </div>
+      <div class="drawing"></div>
+      <div class="text">
+        <ol class="steps">
+          <li class="step">
+            <h3 class="title">Grab your PixelBoy</h3>
+            <p>
+              We've partnered with Retronator to distribute a PixelBoy 2000 to you for the duration of
+              your admission week. Good news: if you get accepted, you keep your PixelBoy!
+            </p>
+            <p>
+              You will use your device to check-in and report on your progress with the Daily Journal app.
+              Other organizational tools will help you achieve this task.
+            </p>
+          </li>
+          <li class="step">
+            <h3 class="title">Set your learning goals</h3>
+            <p>
+              Our program adapts to your particular wishes. During admission week you'll
+              explore your motivations to draw and define your learning path. Your goals might change over time, so this is
+              just somethings to start with.
+            </p>
+          </li>
+          <li class="step">
+            <h3 class="title">Learn the basics</h3>
+            <p>
+              If you are new to the world of art, you'll use the admission week to learn the ropes
+              of digital drawing in the style of pixel art.
+            </p>
+            <p>
+              You may submit your results in other
+              mediums as well—it's up to you—but you'll be responsible to adjust your learning materials
+              when needed.
+            </p>
+          </li>
+          <li class="step">
+            <h3 class="title">Meet your classmates</h3>
+            <p>
+              You are not the only one applying to the Academy. During admissions you will introduce yourself
+              and meet other applicants. Maybe you'll even make a lifelong friend.
+            </p>
+            <p>
+              Don't worry if you're shy. It's completely fine to just observe others. You can also adjust your privacy
+              settings if you'd rather others don't interact with you.
+            </p>
+          </li>
+          <li class="step">
+            <h3 class="title">Learn the Retropolis Code</h3>
+            <p>
+              We don't expect you to memorize anything by heart, but you'll come across various situations
+              that will assess if your values align with Retropolis Code of Behavior. If needed, you'll
+              learn how to adjust and why people of Retropolis chose these values.
+            </p>
+          </li>
+          <li class="step">
+            <h3 class="title">Final exam</h3>
+            <p>
+              Just kidding. We were serious that there are no grades and exams. What you will do instead is your
+              first drawing.
+            </p>
+            <p>
+              If you're completely new to this, it might be a bit stressful being thrown into
+              water without learning to swim yet. Don't worry, drawing is not life threatening.
+            </p>
+            <p>
+              Tracking your progress is an essential component of our program. Improvements are hard to see on a
+              day-to-day basis, but you might be amazed at how far you've come compared to
+              the start. Your first drawing will be something to look back to.
+            </p>
+          </li>
+        </ol>
+      </div>
+    </section>
+    <section>
+      <div class="text">
+        <h2>It's up to you</h2>
+        <p>
+          The Academy doesn't have an admissions committee. You will set your own commitment goal and it's
+          up to you to reach it. Everyone that reaches the end of admissions, passes. Your fate is really just in your hands.
+        </p>
+        <p>
+          We will help you get to the end—it's our purpose after all. We will give you tools to succeed, you just need
+          to take advantage of them. And if you still don't manage to make it all the way through,
+          you can always come back and give it another shot.
+        </p>
+        <p>
+          You will be expected to keep your commitment while at the Academy, so set realistic goals. We'll still be
+          here to help, but if you can't be an active member of our community, you will lose your spot. You're
+          always welcome to come back, but you'll have to go through admissions again and re-assess your goals.
+        </p>
+        <h2>Ready, set, go!</h2>
+        <p>
+          Continue to the <a href="{{routerPath 'Retropolis.City.Pages.AcademyOfArt.Application'}}">application page</a>
+          to register and get notified when next admission week starts.
+        </p>
+      </div>
+    </section>
+  </div>
+</template>

@@ -1,0 +1,178 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+html.retropolis-academyofart
+  margin 0
+  padding 0
+
+  body
+    width 100%
+    margin 0
+    padding 0
+
+.retropolis-academyofart
+  background atariGrey(0)
+  pixel-image-rendering()
+
+  *
+    background-size 100% 100%
+
+  input
+  textarea
+    font inherit
+    color inherit
+
+.retropolis-city-pages-academyofart-layout
+  daily()
+  line-height 10rem
+  color atariGrey(5)
+
+  a
+    &:hover
+      color atariPeach(2)
+
+  h2
+    academy()
+    margin 15rem 0 8rem
+
+  .header
+    margin 0
+
+  .title
+    academy()
+    text-align center
+    margin 0
+    line-height 24rem
+    margin-top 4rem
+
+    .route-link
+      display block
+      width 100%
+      text-decoration none
+
+  .navigation
+    position sticky
+    z-index 1
+    top -1rem
+    background atariGrey(0)
+
+    .pages
+      display flex
+      width 100%
+      max-width 300rem
+      margin 0 auto 5rem
+      padding 0
+      list-style none
+
+      .page
+        display block
+        flex-grow 1
+        text-align center
+        line-height 16rem
+
+        &.apply
+          text-transform uppercase
+
+        .route-link
+          display block
+          width 100%
+          text-decoration none
+
+          &.active
+            color atariPeach(2)
+
+  .content
+    background atariGrey(7)
+    color atariGrey(0)
+
+    .key-image
+      min-height 100rem
+      background-size cover
+      background-position center bottom
+      background-repeat no-repeat
+
+      img
+        width 100%
+        opacity 0
+
+    .text
+      width 80%
+      max-width 300rem
+      margin 0 auto
+
+  .footer
+    padding 10rem 0
+
+    .main-area
+      display flex
+      width 80%
+      max-width 300rem
+      margin 0 auto
+
+      .address
+        width 75%
+
+        .name
+          text-transform uppercase
+          margin-bottom 5rem
+
+        a
+          display inline-block
+          text-decoration none
+          border-bottom 1rem solid atariGrey(5)
+
+          &:hover
+            border-bottom-color atariPeach(2)
+
+      .social-links-area
+        text-align right
+
+        .prompt
+          text-transform uppercase
+          margin-bottom 5rem
+
+        .social-links
+          list-style none
+          padding 0
+
+          .social-link
+            display inline-block
+
+            .icon
+              display block
+              width 16rem
+              height 16rem
+              overflow hidden
+              text-decoration none
+              background image('/retropolis/city/academyofart/socialicons.png') 0 0 / 48rem 32rem
+
+              &:hover
+                background-position-y bottom
+
+              &.facebook
+                background-position-x left
+
+              &.twitter
+                background-position-x center
+
+              &.tumblr
+                background-position-x right
+
+    .smallprint
+      margin 10rem 0 5rem
+      checkout()
+      text-align center
+
+      a
+        display inline-block
+        text-decoration none
+        color atariPeach(4)
+
+        &:hover
+          color atariPeach(2)
+
+.landsofillusions-components-signin
+  .title
+    kyrou-9()
+    line-height 9rem
+    font-weight bold
+    margin-top 0

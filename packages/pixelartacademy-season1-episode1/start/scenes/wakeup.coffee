@@ -12,19 +12,12 @@ class Start.WakeUp extends LOI.Adventure.Scene
   @translations: ->
     intro: "You find yourself … nowhere. Everything is pitch black."
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/intro/scenes/caltrain.script'
-
   description: ->
-    @translations()?.intro unless @eyesOpened()
+    @translations()?.intro
 
   @initialize()
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/start/scenes/wakeup.script'
-
-  constructor: ->
-    super
-
-    @eyesOpened = new ReactiveField false
 
   destroy: ->
     super
@@ -33,9 +26,14 @@ class Start.WakeUp extends LOI.Adventure.Scene
 
   removeExits: ->
     # Don't show exits until they open their eyes.
-    return if @eyesOpened()
-
     "#{Vocabulary.Keys.Directions.Out}": Apartment.Hallway
+
+  removeThings: ->
+    # Don't show things until they open their eyes.
+    [
+      LOI.character()
+      Apartment.Studio.Computer
+    ]
 
   giveHint: (delay) ->
     # Cancel any previous timeout.
@@ -63,27 +61,30 @@ class Start.WakeUp extends LOI.Adventure.Scene
 
     @setCallbacks
       OpenEyes: (complete) =>
-        complete()
-
         section = scene.options.parent
         episode = section.options.parent
 
         episode.showEpisodeTitle
-          toBeContinued: true
+          onActivated: =>
+            # Don't finish unless the player has access.
+            unless episode.meetsAccessRequirement()
+              complete()
+              return
 
-        # TODO: Continue with the story.
-        return
+            scene.state 'finished', true
 
-        scene.eyesOpened true
-        
-        # Reset the interface to show the new intro.
-        LOI.adventure.interface.resetInterface?()
+            # Continue to the Chapter 1 intro script.
+            Tracker.autorun (computation) =>
+              return unless introStudioScene = LOI.adventure.getCurrentThing PixelArtAcademy.Season1.Episode1.Chapter1.Intro.Studio
+              return unless introStudioScene.ready()
+              computation.stop()
 
-        # Start the welcome script.
-        @options.listener.startScript label: 'Welcome'
+              introStudioScene.listeners[0].startScript()
 
-      StartDay: (complete) =>
-        # TODO: Show day 1 start.
+              # Reset the interface to start again from the new intro.
+              LOI.adventure.interface.resetInterface?()
+
+              complete()
 
   # Listener
 
