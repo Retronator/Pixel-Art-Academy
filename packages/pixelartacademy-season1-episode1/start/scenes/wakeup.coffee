@@ -66,6 +66,11 @@ class Start.WakeUp extends LOI.Adventure.Scene
 
         episode.showEpisodeTitle
           onActivated: =>
+            # Don't finish unless the player has access.
+            unless episode.meetsAccessRequirement()
+              complete()
+              return
+
             scene.state 'finished', true
 
             # Continue to the Chapter 1 intro script.

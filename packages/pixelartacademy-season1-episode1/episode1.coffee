@@ -1,5 +1,6 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+RS = Retronator.Store
 
 class PAA.Season1.Episode1 extends LOI.Adventure.Episode
   @id: -> 'PixelArtAcademy.Season1.Episode1'
@@ -21,6 +22,8 @@ class PAA.Season1.Episode1 extends LOI.Adventure.Episode
   # Whole Episode 1 happens in the present.
   @timelineId: -> PAA.TimelineIds.Present
 
+  @accessRequirement: -> RS.Items.CatalogKeys.PixelArtAcademy.AlphaAccess
+  
   @initialize()
 
 if Meteor.isServer

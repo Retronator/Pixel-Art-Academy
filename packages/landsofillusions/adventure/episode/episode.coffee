@@ -53,6 +53,9 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     @_scenes
 
   currentChapters: ->
+    # No chapters are active when the whole episode is not accessible.
+    return [] unless @meetsAccessRequirement()
+
     chapter for chapter in @chapters when chapter.active()
 
   ready: ->
@@ -67,9 +70,16 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
     _.every conditions
 
   showEpisodeTitle: (options = {}) ->
-    # Create new storyline title.
-    episodeTitle = new LOI.Components.StorylineTitle _.extend {}, options,
+    options = _.extend
       episode: @
+    ,
+      options
+      
+    # Show to be continued screen if the player doesn't have access yet (assuming in the future it will be available).
+    options.toBeContinued = true unless @meetsAccessRequirement()
+      
+    # Create new storyline title.
+    episodeTitle = new LOI.Components.StorylineTitle options
 
     LOI.adventure.showActivatableModalDialog
       dialog: episodeTitle

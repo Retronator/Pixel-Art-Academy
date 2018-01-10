@@ -13,7 +13,7 @@ class LOI.Interface.Text extends LOI.Interface
 
     # Show the text for back instead of location name for that direction.
     Back = LOI.Parser.Vocabulary.Keys.Directions.Back
-    backExit = LOI.adventure.currentSituation().exits()[Back]
+    backExit = LOI.adventure.currentSituation()?.exits()[Back]
 
     return LOI.adventure.parser.vocabulary.getPhrases(Back)?[0] if exitAvatar.options.id() is backExit?.id()
 
@@ -142,7 +142,7 @@ class LOI.Interface.Text extends LOI.Interface
     @inIntro false
 
     # Mark location as visited after the intro of the location is done.
-    @location().state 'visited', true
+    @location()?.state 'visited', true
 
     Tracker.afterFlush =>
       @resize()

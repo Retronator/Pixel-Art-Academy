@@ -93,7 +93,7 @@ class LOI.Construct.Loading.TV.MainMenu extends AM.Component
 
   onClickSyncButton: (event) ->
     @tv.fadeDeactivate =>
-      LOI.adventure.loadCharacter @selectedCharacter().id()
+      LOI.adventure.loadCharacter @selectedCharacter()._id
 
   onClickUnlinkButton: (event) ->
     character = @selectedCharacter()
