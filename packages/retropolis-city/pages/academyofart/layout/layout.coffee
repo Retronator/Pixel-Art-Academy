@@ -9,4 +9,7 @@ class AOA.Layout extends LOI.Components.EmbeddedWebpage
   @title: (options) ->
     "Retropolis Academy of Art"
 
+  @image: (parameters) ->
+    Meteor.absoluteUrl "retropolis/city/academyofart/link-image.png"
+
   rootClass: -> 'retropolis-academyofart'

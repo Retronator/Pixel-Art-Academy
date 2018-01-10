@@ -19,14 +19,14 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
         type: LOI.Character.Part.Types.Avatar.Body.options.type
         load: => @_avatar()?.body
         save: (address, value) =>
-          LOI.Character.updateAvatarBody @character.id(), address, value
+          LOI.Character.updateAvatarBody @character._id, address, value
   
       outfitDataField = AM.Hierarchy.create
         templateClass: LOI.Character.Part.Template
         type: LOI.Character.Part.Types.Avatar.Outfit.options.type
         load: => @_avatar()?.outfit
         save: (address, value) =>
-          LOI.Character.updateAvatarOutfit @character.id(), address, value
+          LOI.Character.updateAvatarOutfit @character._id, address, value
   
       # Now we can call HumanAvatar's constructor which will turn this data into an actual part hierarchy.
       super {bodyDataField, outfitDataField}
