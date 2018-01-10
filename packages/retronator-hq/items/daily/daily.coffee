@@ -81,8 +81,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     return super unless @isCreated()
 
     url = AB.Router.createUrl AB.Router.currentRouteName(), parameter1: 'daily'
-
-    console.log "start url", url
+    url = url[1..]
 
     return url unless urlState = @urlState()
 

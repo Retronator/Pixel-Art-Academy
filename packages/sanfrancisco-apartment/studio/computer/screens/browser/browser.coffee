@@ -12,7 +12,7 @@ class Studio.Computer.Browser extends AM.Component
   onCreated: ->
     super
 
-    @url = new ReactiveField 'https://retropolis.city/academy-of-art/admissions'
+    @url = new ReactiveField 'https://retropolis.city/academy-of-art'
     @currentRoute = new ReactiveField null
 
     @autorun (computation) =>

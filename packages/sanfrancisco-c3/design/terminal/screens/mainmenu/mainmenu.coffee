@@ -24,7 +24,7 @@ class C3.Design.Terminal.MainMenu extends AM.Component
   onClickCharacterSelectionButton: (event) ->
     characterInstance = @currentData()
 
-    @terminal.screens.character.setCharacterId characterInstance.id
+    @terminal.screens.character.setCharacterId characterInstance._id
     @terminal.switchToScreen @terminal.screens.character
 
   onClickNewCharacterButton: (event) ->

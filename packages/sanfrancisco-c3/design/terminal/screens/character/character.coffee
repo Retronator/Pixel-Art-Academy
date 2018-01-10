@@ -74,7 +74,7 @@ class C3.Design.Terminal.Character extends AM.Component
       confirmButtonClass: "positive-button"
       cancelButtonText: "Cancel"
       confirmAction: =>
-        LOI.Character.approveDesign character.id(), (error) =>
+        LOI.Character.approveDesign character._id, (error) =>
           if error
             console.error error
             return
@@ -108,7 +108,7 @@ class C3.Design.Terminal.Character extends AM.Component
       cancelButtonText: "Cancel"
       confirmAction: =>
         # Remove the user from the character.
-        LOI.Character.removeUser character.id(), (error) =>
+        LOI.Character.removeUser character._id, (error) =>
           if error
             console.error error
             return
