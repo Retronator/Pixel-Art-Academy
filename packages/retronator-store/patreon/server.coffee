@@ -17,6 +17,7 @@ class RA.Patreon extends RA.Patreon
         ).fetch()
 
         patreonKeycardId = RS.Item.documents.findOne(catalogKey: RS.Items.CatalogKeys.Retronator.Patreon.PatreonKeycard)._id
+        playerAccessId = RS.Item.documents.findOne(catalogKey: RS.Items.CatalogKeys.PixelArtAcademy.PlayerAccess)._id
 
         for pledge in pledges
           patron = pledge.data.relationships.patron
@@ -45,7 +46,6 @@ class RA.Patreon extends RA.Patreon
             transactionId = RS.Transaction.documents.insert
               patreon: patronId
               payments: [_id: paymentId]
-              items: [item: _id: patreonKeycardId]
 
           # Update payment.
           RS.Payment.documents.update paymentId,
@@ -53,11 +53,18 @@ class RA.Patreon extends RA.Patreon
               amount: pledgeAmount
               patronEmail: patronEmail
 
+          # Award the patron keycard to all.
+          items = [item: _id: patreonKeycardId]
+
+          # Give player access to pledge of $3 and above.
+          items.push item: _id: playerAccessId if pledgeAmount >= 3
+
           # Update transaction.
           RS.Transaction.documents.update transactionId,
             $set:
               time: pledgeDate
               email: patronEmail
+              items: items
 
         # If any pledges are left in existing pledges it means they are not active anymore and we should remove them.
         for transaction in existingPledgeTransactions
