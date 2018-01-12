@@ -45,7 +45,7 @@ class AB.Router extends AB.Router
 
       # Keep the current protocol and port.
       protocol = location.protocol
-      port = ":#{location.port}" if location.port
+      port = if location.port then ":#{location.port}" else ''
 
       # Keep the localhost prefix.
       host = "localhost.#{host}" if _.startsWith location.hostname, 'localhost'
