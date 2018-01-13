@@ -33,8 +33,8 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
     """
 
   @initialize()
-  
-  gameTime: ->
+
+  gameDate: ->
     return unless LOI.adventure.gameState()
 
     # The admission email should arrive at 9 AM after the day the character applies.

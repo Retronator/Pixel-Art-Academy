@@ -15,12 +15,22 @@ class C1.Inbox extends LOI.Adventure.Scene
 
     @admissionEmail = new C1.Items.AdmissionEmail
 
+    @admissionEmailArrived = new ComputedField =>
+      gameDate = LOI.adventure.gameDate()
+      emailDate = @admissionEmail.gameDate()
+
+      # Admission email has arrived if current game time is after the email was sent.
+      gameDate?.getTime() > emailDate?.getTime()
+
+  destroy: ->
+    super
+
+    @admissionEmailArrived.stop()
+
   things: ->
     things = []
     
-    # Add the admission email if current game time is after the email was sent.
-    if emailTime = @admissionEmail.gameTime()
-      things.push @admissionEmail if LOI.adventure.gameDate().getTime() > emailTime.getTime()
+    things.push @admissionEmail if @admissionEmailArrived()
 
     things
 

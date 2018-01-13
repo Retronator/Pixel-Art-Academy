@@ -28,5 +28,6 @@ Package.onUse(function(api) {
   api.addComponent('studio/computer/computer');
   api.addComponent('studio/computer/screens/desktop/desktop');
   api.addComponent('studio/computer/screens/browser/browser');
+  api.addComponent('studio/computer/screens/email/email');
   api.addComponent('studio/computer/screens/game/game');
 });

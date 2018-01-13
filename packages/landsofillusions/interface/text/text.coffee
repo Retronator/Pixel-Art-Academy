@@ -94,16 +94,11 @@ class LOI.Interface.Text extends LOI.Interface
 
   # Query this to see if the interface is listening to user commands.
   active: ->
-    # The text interface is inactive when there are any modal dialogs.
-    return if LOI.adventure.modalDialogs().length
+    # The text interface is inactive when adventure is paused.
+    return if LOI.adventure.paused()
 
     # It's inactive when there is an item active.
     return if LOI.adventure.activeItem()
-
-    # It's also inactive when we're in any of the accounts-ui flows/dialogs.
-    accountsUiSessionVariables = ['inChangePasswordFlow', 'inMessageOnlyFlow', 'resetPasswordToken', 'enrollAccountToken', 'justVerifiedEmail', 'justResetPassword', 'configureLoginServiceDialogVisible', 'configureOnDesktopVisible']
-    for variable in accountsUiSessionVariables
-      return if Accounts._loginButtonsSession.get variable
 
     true
     

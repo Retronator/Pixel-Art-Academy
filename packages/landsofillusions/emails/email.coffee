@@ -15,8 +15,8 @@ class LOI.Emails.Email extends LOI.Adventure.Thing
 
   isVisible: -> false
 
-  # Override to return the game time when the email was sent.
-  gameTime: ->
+  # Override to return the game date when the email was sent.
+  gameDate: ->
 
   # Get who sent this email. Returns:
   #   {character}: the character instance who sent this email or null if it was a direct email

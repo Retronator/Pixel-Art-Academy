@@ -25,10 +25,11 @@ class Studio.Computer extends LOI.Components.Computer
     @screens =
       desktop: new @constructor.Desktop @
       browser: new @constructor.Browser @
+      email: new @constructor.Email @
       #princeOfPersia: new @constructor.Game @, 'msdos_Prince_of_Persia_1990'
       #lotusTheUltimateChallenge: new @constructor.Game @, 'msdos_Lotus_-_The_Ultimate_Challenge_1993'
 
-    @switchToScreen @screens.desktop
+    @switchToScreen @screens.email
 
   # Listener
 

@@ -10,8 +10,8 @@ class LOI.Adventure extends LOI.Adventure
     @_gameDate = new ReactiveField null
 
     @_gameTimeInterval = Meteor.setInterval =>
-      # Only increase time when the page and interface is active.
-      return if document.hidden or not @interface.active()
+      # Only increase time when the page is active and we're not paused.
+      return if document.hidden or @paused()
 
       # Read last playtime from game state.
       return unless gameState = @gameState()
@@ -37,6 +37,18 @@ class LOI.Adventure extends LOI.Adventure
       console.log "Playtime:", newTime, "seconds, Game time:", newGameDate.toString() if LOI.debug
     ,
       1000
+
+  # Query this to see if adventure time is running or not.
+  paused: ->
+    # Game is paused when there are any modal dialogs.
+    return true if LOI.adventure.modalDialogs().length
+
+    # It's also paused when we're in any of the accounts-ui flows/dialogs.
+    accountsUiSessionVariables = ['inChangePasswordFlow', 'inMessageOnlyFlow', 'resetPasswordToken', 'enrollAccountToken', 'justVerifiedEmail', 'justResetPassword', 'configureLoginServiceDialogVisible', 'configureOnDesktopVisible']
+    for variable in accountsUiSessionVariables
+      return true if Accounts._loginButtonsSession.get variable
+
+    false
 
   time: ->
     console.log "Returned time", @_time() if LOI.debug
