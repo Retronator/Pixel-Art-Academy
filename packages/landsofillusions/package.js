@@ -342,20 +342,29 @@ Package.onUse(function(api) {
 
   // Typography
 
-  api.addFiles('typography/typography.css', 'client');
-  api.addFiles('typography/typography.import.styl', 'client', {isImport:true});
+  api.addCss('typography..');
+  api.addStyleImport('typography..');
 
   // Styles
 
-  api.addFiles('style/style.import.styl', 'client', {isImport:true});
-  api.addFiles('style/atari2600.import.styl', 'client', {isImport:true});
-  api.addFiles('style/cursors.import.styl', 'client', {isImport:true});
-  api.addFiles('style/cursors.styl');
-  api.addFiles('style/defaults.styl');
+  api.addStyleImport('style..');
+  api.addStyleImport('style/atari2600');
+  api.addStyleImport('style/cursors');
+  api.addStyle('style/cursors');
+  api.addStyle('style/defaults');
 
   // Helpers
 
-  api.addFiles('helpers/spacebars.coffee');
-  api.addFiles('helpers/lodash.coffee');
+  api.addFile('helpers/spacebars');
+  api.addFile('helpers/lodash');
+  
+  // Emails
 
+  api.addFile('emails..');
+  api.addFile('emails/email');
+  api.addFile('emails/inbox');
+
+  // Time
+
+  api.addFile('time/gamedate')
 });

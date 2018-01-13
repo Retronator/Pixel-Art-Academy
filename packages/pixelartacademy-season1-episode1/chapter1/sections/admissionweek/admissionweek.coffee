@@ -5,7 +5,8 @@ HQ = Retronator.HQ
 
 class C1.AdmissionWeek extends LOI.Adventure.Section
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionWeek'
-    
+  # applied: boolean if character has applied for admission week
+  # applicationTime: game time when character applied
   @applyCharacter: new AB.Method name: "#{@id()}.applyCharacter"
 
   @scenes: -> [

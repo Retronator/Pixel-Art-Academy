@@ -22,6 +22,8 @@ C1.AdmissionWeek.applyCharacter.method (characterId, contactEmail) ->
 
   # Set the applied field on the AdmissionWeek state.
   _.nestedProperty characterGameState.state, "things.#{C1.AdmissionWeek.id()}.applied", true
+  
+  # TODO: Add application time.
 
   LOI.GameState.documents.update characterGameState._id,
     $set:

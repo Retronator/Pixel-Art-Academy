@@ -37,6 +37,10 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addFiles(path + ".styl");
   };
+  api.constructor.prototype.addCss = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".css");
+  };
   api.constructor.prototype.addStyledFile = function(path) {
     path = expandPath(path);
     this.addFiles([path + ".coffee", path + ".styl"]);

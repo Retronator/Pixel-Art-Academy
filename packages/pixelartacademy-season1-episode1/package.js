@@ -29,12 +29,16 @@ Package.onUse(function(api) {
   api.addFile('start..');
   api.addThing('start/scenes/wakeup');
 
-  // Chapter 1
+  // Chapter 1: Admission Week
 
   api.addFile('chapter1..');
 
-  // Intro
+  api.addFile('chapter1/items..');
+  api.addFile('chapter1/items/admissionemail');
 
+  api.addFile('chapter1/scenes/inbox');
+
+  // Intro
   api.addFile('chapter1/sections/intro..');
   api.addThing('chapter1/sections/intro/scenes/studio');
 

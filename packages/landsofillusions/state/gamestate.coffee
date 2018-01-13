@@ -9,6 +9,9 @@ class LOI.GameState extends AM.Document
   #   scripts: a map of all scripts
   #     {scriptId}: state of the script
   #   currentLocationId: the last known location of the player
+  #   currentTimelineId: the last known timeline in which the player is
+  #   time: integer number of seconds the player has spent in the game
+  #   gameDateTime: fractional number of days passed in the game
   # user: the user this state belongs to or null if it's a character state
   #   _id
   # character: the character this state belongs to or null if it's a user state

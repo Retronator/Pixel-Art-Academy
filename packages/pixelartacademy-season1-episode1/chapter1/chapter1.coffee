@@ -16,6 +16,7 @@ class PAA.Season1.Episode1.Chapter1 extends LOI.Adventure.Chapter
   ]
 
   @scenes: -> [
+    @Inbox
   ]
 
   @initialize()
