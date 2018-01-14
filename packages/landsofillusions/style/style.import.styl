@@ -11,7 +11,7 @@ pixel-text-outline(color)
         push(value, "%srem %srem 0 %s" % (x y color))
       else
         unless x is 0 and y is 0
-          push(value, "%srem %srem 0 %s" % (x y rgba(color, 0.4)))
+          push(value, "%srem %srem 0 %s" % (x y rgba(color, alpha(color) * 0.4)))
 
   text-shadow unquote(join(',', value))
 

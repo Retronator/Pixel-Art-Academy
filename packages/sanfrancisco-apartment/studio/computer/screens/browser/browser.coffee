@@ -12,8 +12,10 @@ class Studio.Computer.Browser extends AM.Component
   onCreated: ->
     super
 
-    @url = new ReactiveField 'https://retropolis.city/academy-of-art'
     @currentRoute = new ReactiveField null
+
+    @history = new ReactiveField [{url: 'https://retropolis.city/academy-of-art', scrollTop: 0}]
+    @historyIndex = new ReactiveField 0
 
     @autorun (computation) =>
       return unless url = @url()
@@ -21,21 +23,50 @@ class Studio.Computer.Browser extends AM.Component
       match = url.match /^https?:\/\//
       unless match
         # We need to add the protocol.
-        @url "http://#{url}"
+        @setUrl "https://#{url}"
         return
 
-      # Determine if we can serve the webpage ourselves or we need an iframe. Also make sure this is a valid url.
-      match = url.match /^https?:\/\/(.*?)(\/.*)?$/
-      [match, host, path] = match
-
-      path ?= "/"
-
-      {route, matchData} = AB.Router.findRoute host, path
-
-      # We want to blacklist Adventure routes.
-      route = null if route?.pageClass is LOI.Adventure or route?.pageClass.prototype instanceof LOI.Adventure
-
+      route = @routeFromUrl url
       @currentRoute route
+
+  url: -> @history()[@historyIndex()].url
+
+  setUrl: (url) ->
+    # Make sure the url actually changed.
+    return if url is @url()
+
+    @_updateCurrentScrollTop()
+
+    historyIndex = @historyIndex()
+    history = @history()
+
+    # First shorten history to current index.
+    history = history.slice 0, historyIndex + 1
+    history.push {url}
+    historyIndex++
+
+    @history history
+    @historyIndex historyIndex
+
+  _updateCurrentScrollTop: ->
+    @history()[@historyIndex()].scrollTop = @$('.webpage').scrollTop()
+
+  appId: -> 'browser'
+  name: -> 'Web Surfer'
+
+  routeFromUrl: (url) ->
+    # Determine if we can serve the webpage ourselves. Also make sure this is a valid url.
+    link = $("<a href='#{url}'>")[0]
+
+    host = link.hostname
+    path = link.pathname
+
+    {route, matchData} = AB.Router.findRoute host, path
+
+    # We want to blacklist Adventure routes.
+    route = null if route?.pageClass is LOI.Adventure or route?.pageClass.prototype instanceof LOI.Adventure
+
+    route
 
   renderWebpage: ->
     return null unless currentRoute = @currentRoute()
@@ -45,32 +76,73 @@ class Studio.Computer.Browser extends AM.Component
     layoutData =
       page: new currentRoute.pageClass
 
+    # Update scroll top after the route is rendered.
+    Tracker.afterFlush =>
+      @$('.webpage')?.scrollTop(@history()[@historyIndex()].scrollTop or 0)
+
     new Blaze.Template =>
       Blaze.With layoutData, =>
         currentRoute.layoutClass.renderComponent @
+
+  previousPageDisabledAttribute: ->
+    'disabled' if @historyIndex() is 0
+
+  nextPageDisabledAttribute: ->
+    'disabled' if @historyIndex() is @history().length - 1
 
   events: ->
     super.concat
       'click .close-button': @onClickCloseButton
       'change .url-input': @onChangeUrlInput
       'click a': @onClickAnchor
+      'click .previous-page-button': @onClickPreviousPageButton
+      'click .next-page-button': @onClickNextPageButton
 
   onClickCloseButton: (event) ->
     @computer.switchToScreen @computer.screens.desktop
 
   onChangeUrlInput: (event) ->
     url = $(event.target).val()
-    @url url
+    @setUrl url
 
   onClickAnchor: (event) ->
     # Do not react if modifier keys are present (the user might be trying to open the link in a new tab).
     return if event.metaKey or event.ctrlKey or event.shiftKey
 
-    link = event.currentTarget
-    location = $("<a href='#{@url()}'>")[0]
-
-    @url "#{location.protocol}//#{location.hostname}#{link.pathname}"
+    # Do not redirect away from the current page.
     event.preventDefault()
 
-    # Browsers scroll to top on URL change.
-    @$('.webpage').scrollTop(0)
+    link = event.currentTarget
+    href = $(link).attr('href')
+
+    [match, origin, pathname] = href.match /^(.*?)(\/.*)?$/
+
+    pathname ?= "/"
+
+    # Fill the origin from the current url.
+    unless origin
+      location = $("<a href='#{@url()}'>")[0]
+      origin = location.origin
+
+    url = "#{origin}#{pathname}"
+
+    # Make sure we can serve the url.
+    route = @routeFromUrl url
+
+    unless route
+      # Open the link in a new tab.
+      window.open url, '_blank'
+      return
+
+    @setUrl url
+
+  onClickPreviousPageButton: (event) ->
+    @_updateCurrentScrollTop()
+    newIndex = Math.max 0, @historyIndex() - 1
+    @historyIndex newIndex
+
+  onClickNextPageButton: (event) ->
+    @_updateCurrentScrollTop()
+    maxIndex = @history().length
+    newIndex = Math.min maxIndex, @historyIndex() + 1
+    @historyIndex newIndex

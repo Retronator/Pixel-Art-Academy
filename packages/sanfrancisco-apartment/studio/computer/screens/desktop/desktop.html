@@ -1,8 +1,15 @@
 <template name="SanFrancisco.Apartment.Studio.Computer.Desktop">
   <div class="sanfrancisco-apartment-studio-computer-desktop screen">
-    Very high tech computer Desktop. Obviously alpha quality.
-    <button class="app-button" data-screen="browser">Browser</button>
-    <button class="app-button" data-screen="email">Email</button>
+    <ul class="apps">
+      {{#each apps}}
+        <li class="app {{appId}}">
+          <button class="app-button">
+            <img class="icon" src="{{image iconPath}}"/>
+            <span class="name">{{name}}</span>
+          </button>
+        </li>
+      {{/each}}
+    </ul>
     {{!
     <button class="app-button" data-screen="princeOfPersia">Prince of Persia</button>
     <button class="app-button" data-screen="lotusTheUltimateChallenge">Lotus: The Ultimate Challenge</button>

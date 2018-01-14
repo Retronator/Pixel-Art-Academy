@@ -7,13 +7,23 @@ class Studio.Computer.Desktop extends AM.Component
 
   constructor: (@computer) ->
     super
+    
+  apps: ->
+    [
+      @computer.screens.browser
+      @computer.screens.email
+    ]
+
+  iconPath: ->
+    app = @currentData()
+
+    "/sanfrancisco/apartment/studio/computer/icons/#{app.appId()}.png"
 
   events: ->
     super.concat
       'click .app-button': @onClickAppButton
 
   onClickAppButton: (event) ->
-    $button = $(event.target)
-    screenName = $button.data('screen')
-    
-    @computer.switchToScreen @computer.screens[screenName]
+    app = @currentData()
+
+    @computer.switchToScreen app

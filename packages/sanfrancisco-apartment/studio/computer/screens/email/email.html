@@ -1,28 +1,28 @@
 <template name="SanFrancisco.Apartment.Studio.Computer.Email">
-  <div class="sanfrancisco-apartment-studio-computer-email screen">
-    <button class="close-button">Close</button>
-    <div class="inbox">
-      <h2 class="name">Inbox</h2>
-      <ul class="emails">
-        {{#each emails}}
-          <li class="email {{selectedClass}}">
+  {{#SanFrancisco.Apartment.Studio.Computer.App}}
+    <div class="sanfrancisco-apartment-studio-computer-email">
+      <div class="inbox">
+        <ul class="emails">
+          {{#each emails}}
+            <li class="email {{selectedClass}}">
+              <div class="from">{{from}}</div>
+              <div class="subject">{{subject}}</div>
+              <div class="body-preview">{{body.text}}</div>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+      <div class="message">
+        {{#with selectedEmail}}
+          <div class="headers">
             <div class="from">{{from}}</div>
             <div class="subject">{{subject}}</div>
-            <div class="body-preview">{{body.text}}</div>
-          </li>
-        {{/each}}
-      </ul>
+          </div>
+          <div class="body">
+            {{{body.html}}}
+          </div>
+        {{/with}}
+      </div>
     </div>
-    <div class="message">
-      {{#with selectedEmail}}
-        <div class="headers">
-          <div class="from">{{from}}</div>
-          <div class="subject">{{subject}}</div>
-        </div>
-        <div class="body">
-          {{{body.html}}}
-        </div>
-      {{/with}}
-    </div>
-  </div>
+  {{/SanFrancisco.Apartment.Studio.Computer.App}}
 </template>

@@ -29,7 +29,7 @@ class Studio.Computer extends LOI.Components.Computer
       #princeOfPersia: new @constructor.Game @, 'msdos_Prince_of_Persia_1990'
       #lotusTheUltimateChallenge: new @constructor.Game @, 'msdos_Lotus_-_The_Ultimate_Challenge_1993'
 
-    @switchToScreen @screens.email
+    @switchToScreen @screens.desktop
 
   # Listener
 

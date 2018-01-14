@@ -21,6 +21,9 @@ class Studio.Computer.Email extends AM.Component
 
     @selectedEmail = new ReactiveField null
 
+  appId: -> 'email'
+  name: -> 'Inbox'
+
   emails: ->
     @currentInbox().things()
 
@@ -30,11 +33,7 @@ class Studio.Computer.Email extends AM.Component
 
   events: ->
     super.concat
-      'click .close-button': @onClickCloseButton
       'click .email': @onClickEmail
-
-  onClickCloseButton: (event) ->
-    @computer.switchToScreen @computer.screens.desktop
 
   onClickEmail: (event) ->
     email = @currentData()
