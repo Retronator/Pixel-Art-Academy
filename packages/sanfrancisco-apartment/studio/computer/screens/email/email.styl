@@ -1,10 +1,69 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .sanfrancisco-apartment-studio-computer-email
-  background yellow
+  background atariGrey(7)
+  color atariGrey(0)
+  display flex
 
   .close-button
     display block
     position absolute
     top 0
     right 0
+
+  .inbox
+    width 100rem
+    height 100%
+    border-right 1rem solid atariGrey(5)
+    display flex
+    flex-direction column
+
+    .name
+      margin 0
+      padding 2rem
+      border-bottom 1rem solid atariGrey(5)
+      kyrou-7()
+      background atariGrey(6)
+
+    .emails
+      list-style none
+      padding 0
+      margin 0
+      overflow-y auto
+
+      .email
+        border-bottom 1rem solid atariGrey(5)
+        padding 2rem
+        cursor pointer
+
+        &.selected
+          background atariGrey(2)
+          color atariGrey(7)
+
+        .from
+        .subject
+        .body-preview
+          overflow hidden
+          text-overflow ellipsis
+          white-space nowrap
+
+        .from
+          text-transform uppercase
+
+        .body-preview
+          opacity 0.5
+
+  .message
+    width auto
+    height auto
+    overflow-y scroll
+    padding 10rem
+    daily()
+
+    .headers
+      padding-bottom 5rem
+      border-bottom 1rem solid atariGrey(5)
+
+      .from
+        margin-bottom 5rem
+        font-weight bold

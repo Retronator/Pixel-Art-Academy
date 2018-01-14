@@ -19,12 +19,23 @@ class Studio.Computer.Email extends AM.Component
         location: @inboxLocation
         timelineId: LOI.adventure.currentTimelineId()
 
+    @selectedEmail = new ReactiveField null
+
   emails: ->
     @currentInbox().things()
+
+  selectedClass: ->
+    email = @currentData()
+    'selected' if email is @selectedEmail()
 
   events: ->
     super.concat
       'click .close-button': @onClickCloseButton
+      'click .email': @onClickEmail
 
   onClickCloseButton: (event) ->
     @computer.switchToScreen @computer.screens.desktop
+
+  onClickEmail: (event) ->
+    email = @currentData()
+    @selectedEmail email

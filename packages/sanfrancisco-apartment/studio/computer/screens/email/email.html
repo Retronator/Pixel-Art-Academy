@@ -2,12 +2,13 @@
   <div class="sanfrancisco-apartment-studio-computer-email screen">
     <button class="close-button">Close</button>
     <div class="inbox">
-      <h2>Inbox</h2>
+      <h2 class="name">Inbox</h2>
       <ul class="emails">
         {{#each emails}}
           <li class="email {{selectedClass}}">
-            <div class="subject">{{subject}}</div>
             <div class="from">{{from}}</div>
+            <div class="subject">{{subject}}</div>
+            <div class="body-preview">{{body.text}}</div>
           </li>
         {{/each}}
       </ul>
@@ -15,8 +16,8 @@
     <div class="message">
       {{#with selectedEmail}}
         <div class="headers">
-          <div class="subject">{{subject}}</div>
           <div class="from">{{from}}</div>
+          <div class="subject">{{subject}}</div>
         </div>
         <div class="body">
           {{{body.html}}}

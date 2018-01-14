@@ -8,7 +8,7 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
 
   @translations: ->
     from: "Retropolis Academy of Art"
-    subject: "Retropolis Academy of Art Admissions"
+    subject: "Admission to our program"
     text: """
       Dear _char_,
 
@@ -16,20 +16,20 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
 
       As explained in the admissions section on our website, your first step is to pick up a PixelBoy 2000 from your nearest Retronator store. Based on your location, this is:
 
-          Retronator Headquarters
-          176 2nd Street
-          San Francisco, CA
+      Retronator Headquarters<br/>
+      176 2nd Street<br/>
+      San Francisco, CA
 
       Your PixelBoy will include further instructions. Once you activate it, you will have 7 days to complete your assignments.
 
-      The admissions process is completely transparent. You will know how you're doing all along the way and we will do our best to help you succeed.
+      The admissions process is completely transparent. You will know how you're doing all along the way and we will be there to help you succeed.
 
-      We'd wish you good luck, but where you're going, luck has nothing to do with it. The final decision is automatic, based only on your commitment performance and completely dependent on your actions.
+      We'd wish you good luck, but where you're going, luck has nothing to do with it. The final decision is automatic, based only on your commitment performance, and completely dependent on your actions.
 
       Good work, and see you soon!
 
       Sincerely,<br/>
-      Retropolis Academy of Art Admissions Workgroup
+      Retropolis Academy of Art Admissions
     """
 
   @initialize()
@@ -42,18 +42,18 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
     applicationTime.next hours: 9
 
   sender: ->
-    name: @translations().from
+    name: @translations()?.from
     address: 'academy.of.art@retropolis.city'
 
   recipient: ->
     character: LOI.character()
 
-  subject: -> @translations().subject
+  subject: -> @translations()?.subject
 
   body: ->
     character = LOI.character()
 
-    text = @translations().text
+    text = @translations()?.text
 
     # Do variable substitution.
     text = text.replace /_char_/g, character.avatar.fullName()
