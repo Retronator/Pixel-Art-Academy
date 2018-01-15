@@ -71,6 +71,7 @@ Package.onUse(function(api) {
 
   api.addFile('chapter2/scenes/inventory');
   api.addFile('chapter2/scenes/store');
+  api.addFile('chapter2/scenes/2nd');
 
   api.addFile('chapter2/actors/actors');
   api.addFile('chapter2/actors/conductor');
@@ -110,7 +111,7 @@ Package.onUse(function(api) {
   api.addFile('chapter3/chapter3');
 
   api.addFile('chapter3/scenes/inventory');
-  api.addFile('chapter3/scenes/2nd');
+  api.addFile('chapter3/scenes/c3');
 
   api.addFile('chapter3/items/items');
 
