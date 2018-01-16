@@ -56,7 +56,7 @@ class LOI.Adventure extends AM.Component
 
   showLoading: ->
     # Show the loading screen when we're logging out.
-    return true if @loggingOut()
+    return true if @loggingOut() or @quitting()
 
     # Show the loading screen when we're not ready, except when other dialogs are already present
     # (for example, the storyline title) and we want to prevent the black blink in that case.

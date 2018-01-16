@@ -20,5 +20,6 @@ Package.onUse(function(api) {
   // Pages
   api.addFile('pages..');
   api.addComponent('pages/layout..');
+  api.addStyle('pages/layout/accounts');
   api.addComponent('pages/home..');
 });

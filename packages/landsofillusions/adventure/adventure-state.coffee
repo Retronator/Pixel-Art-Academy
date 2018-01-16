@@ -351,6 +351,8 @@ class LOI.Adventure extends LOI.Adventure
         callback?()
 
   quitGame: (options = {}) ->
+    @quitting true
+    
     # Reset the local game state, so when we refresh we'll start from scratch.
     @clearLocalGameState()
     

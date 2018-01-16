@@ -28,7 +28,6 @@ class Retronator.App extends Artificial.Base.App
     new Retronator.Accounts
     new Retronator.Store
     new Retronator.Blog
-    new PixelArtAcademy
     new PixelArtAcademy.LandingPage
     new PixelArtDatabase
     new PixelArtDatabase.PixelDailies
@@ -36,9 +35,10 @@ class Retronator.App extends Artificial.Base.App
     new LOI.Construct.Pages
     new LOI.World
     new Retropolis.City
-    new Retronator.HQ.Pages
 
-    # Add Lands of Illusions last so it captures all remaining URLs.
+    # Add adventure pages last so they capture all remaining URLs.
+    new PixelArtAcademy
+    new Retronator.HQ.Pages
     new LOI
 
     AB.Router.initialize()
