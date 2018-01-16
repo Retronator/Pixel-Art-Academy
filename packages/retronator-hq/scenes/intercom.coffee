@@ -7,7 +7,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class HQ.Scenes.Intercom extends LOI.Adventure.Scene
   @id: -> 'Retronator.HQ.Scenes.Intercom'
-  @timelineId: -> PAA.TimelineIds.RealLife
+  @timelineId: -> LOI.TimelineIds.RealLife
 
   @location: ->
     # Intercom is present everywhere the region includes it.

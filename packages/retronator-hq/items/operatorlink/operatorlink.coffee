@@ -162,7 +162,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
     listener = @listeners[0]
 
     # Check if the player is already immersed.
-    if LOI.adventure.currentTimelineId() is PAA.TimelineIds.Construct or LOI.characterId()
+    if LOI.adventure.currentTimelineId() is LOI.TimelineIds.Construct or LOI.characterId()
       # Yeah, skip straight to the operator dialog.
       label = 'ImmersedStart'
 

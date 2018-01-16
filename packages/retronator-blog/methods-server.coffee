@@ -22,8 +22,9 @@ Blog.getData.method ->
   return blogInfo.data if Date.now() - blogInfo.lastUpdated < 1000 * 60 * 60
 
   # Grab new information from Tumblr.
-  info = AT.Tumblr.userInfo()
-  followers = AT.Tumblr.blogFollowers 'retronator.tumblr.com'
+  if AT.Tumblr.initialized
+    info = AT.Tumblr.userInfo()
+    followers = AT.Tumblr.blogFollowers 'retronator.tumblr.com'
   
   # Get featured websites.
   featuredWebsites = PADB.Website.documents.find(
@@ -42,9 +43,9 @@ Blog.getData.method ->
     lastUpdated: Date.now()
     data:
       blogInfo:
-        likes: info.user.likes
-        following: info.user.following
-        followers: followers.total_users
+        likes: info?.user.likes
+        following: info?.user.following
+        followers: followers?.total_users
       supporterMessages: Retronator.Store.Transaction.getMessages()
       supportersWithNames: Retronator.Accounts.User.getSupportersWithNames()
       featuredWebsites: featuredWebsites

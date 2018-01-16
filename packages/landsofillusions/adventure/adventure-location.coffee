@@ -11,6 +11,10 @@ class LOI.Adventure extends LOI.Adventure
       field: @playerLocationId
       tracker: @
 
+    # Start at the default player location.
+    unless @playerLocationId()
+      @playerLocationId @startingPoint()?.locationId
+
     @currentLocationId = new ComputedField =>
       console.log "Recomputing current location." if LOI.debug
 
@@ -40,7 +44,7 @@ class LOI.Adventure extends LOI.Adventure
 
         currentLocationClass = LOI.Adventure.Location.getClassForId currentLocationId
 
-        # If we don't have a location set (or if it's not found), start at the default location.
+        # If the location is not found, start at the default location.
         unless currentLocationClass
           console.warn "Location class not found, moving back to start.", currentLocationId if currentLocationId
 
@@ -48,13 +52,13 @@ class LOI.Adventure extends LOI.Adventure
             when PixelArtAcademy.TimelineIds.DareToDream
               currentLocationClass = Retropolis.Spaceport.AirportTerminal.Terrace
 
-            when PixelArtAcademy.TimelineIds.RealLife
+            when LOI.TimelineIds.RealLife
               currentLocationClass = Retronator.HQ.Cafe
 
-            when PixelArtAcademy.TimelineIds.Construct
+            when LOI.TimelineIds.Construct
               currentLocationClass = LandsOfIllusions.Construct.Loading
 
-            when PixelArtAcademy.TimelineIds.Present
+            when LOI.TimelineIds.Present
               currentLocationClass = SanFrancisco.Apartment.Studio
 
           currentLocationId = currentLocationClass.id()

@@ -17,11 +17,8 @@ Package.onUse(function(api) {
 
   api.addFile('world');
 
-  // Layouts
-  api.addFile('layouts/layouts');
-  api.addComponent('layouts/center/center');
-
   // Pages
-  api.addFile('pages/pages');
-  api.addComponent('pages/home/home');
+  api.addFile('pages..');
+  api.addComponent('pages/layout..');
+  api.addComponent('pages/home..');
 });

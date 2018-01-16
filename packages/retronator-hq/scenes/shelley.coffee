@@ -7,7 +7,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class Retronator.HQ.Scenes.Shelley extends LOI.Adventure.Scene
   @id: -> 'Retronator.HQ.Scenes.Shelley'
 
-  @timelineId: -> PAA.TimelineIds.RealLife
+  @timelineId: -> LOI.TimelineIds.RealLife
 
   @initialize()
 

@@ -6,14 +6,11 @@ class AB.Router.Route
   constructor: (optionsOrUrl, @layoutClass, @pageClass) ->
     if _.isObject optionsOrUrl
       # We were passed an options object so destructure it.
-      {@url, @layoutClass, @pageClass, @statusCode, @parameterDefaults} = optionsOrUrl
+      {@url, @layoutClass, @pageClass, @parameterDefaults} = optionsOrUrl
 
     else
       # We were passed an url. We expect the rest of the parameters to be set
       @url = optionsOrUrl
-
-    # Default status code is 200. Send in a different value to serve, for example, a 404 page.
-    @statusCode ?= 200
 
     @name = @pageClass.componentName()
 
