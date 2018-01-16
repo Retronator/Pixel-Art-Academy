@@ -1,0 +1,19 @@
+<template name="LandsOfIllusions.World.Pages.Layout">
+  {{#LandsOfIllusions.Components.EmbeddedWebpage}}
+    <div class="landsofillusions-world-pages-layout">
+      <nav class="navigation">
+        <h1 class="title">{{> Artificial.Base.RouteLink args 'Lands of Illusions' 'LandsOfIllusions.World.Pages.Home'}}</h1>
+        <ul class="pages">
+          <li class="page">{{> Artificial.Base.RouteLink args 'Content modules' 'LandsOfIllusions.World.Pages.Modules'}}</li>
+          <li class="page">{{> Artificial.Base.RouteLink args 'Centers' 'LandsOfIllusions.World.Pages.Center'}}</li>
+          <li class="page">{{> Artificial.Base.RouteLink args 'Team' 'LandsOfIllusions.World.Pages.Team'}}</li>
+          <li class="page sign-in"><a href="{{routerPath 'LandsOfIllusions.Adventure' parameter1='signin'}}">Sign in</a></li>
+        </ul>
+      </nav>
+      {{> Render page}}
+      {{#unless currentUser}}
+        {{> Render signIn}}
+      {{/unless}}
+    </div>
+  {{/LandsOfIllusions.Components.EmbeddedWebpage}}
+</template>

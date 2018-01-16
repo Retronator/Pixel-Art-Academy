@@ -84,15 +84,21 @@ class LOI.Adventure extends LOI.Adventure
 
       console.log "%cRewriting URL to", 'background: NavajoWhite', desiredUrl if LOI.debug
 
-      parametersObject = {}
-
-      if desiredUrl.length
-        urlParameters = desiredUrl.split '/'
-
-        for urlParameter, index in urlParameters
-          parametersObject["parameter#{index + 1}"] = urlParameter unless urlParameter is '*'
+      parametersObject = @buildDesiredUrlParameters desiredUrl
 
       AB.Router.goToRoute @constructor.id(), parametersObject, createHistory: false
+
+  buildDesiredUrlParameters: (url) ->
+    # Override to provide different URL parameters.
+    parametersObject = {}
+
+    if url.length
+      urlParameters = url.split '/'
+
+      for urlParameter, index in urlParameters
+        parametersObject["parameter#{index + 1}"] = urlParameter unless urlParameter is '*'
+
+    parametersObject
 
   goToItem: (itemClassOrId) ->
     @activeItemId _.thingId itemClassOrId

@@ -61,6 +61,9 @@ class LOI.Adventure extends LOI.Adventure
     # (such as the menu) got rendered and had the chance to register their URL handlers.
     @_initializeRouting()
 
+    # Require the user to be signed in if local state is not allowed.
+    @loadGame() unless @usesLocalState()
+
   onDestroyed: ->
     super
 

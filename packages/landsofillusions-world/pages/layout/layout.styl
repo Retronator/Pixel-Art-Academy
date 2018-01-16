@@ -1,0 +1,57 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-world
+  background atariCyan(5)
+  pixel-image-rendering()
+
+html.landsofillusions-world
+  margin 0
+  padding 0
+
+  body
+    width 100%
+    margin 0
+    padding 0
+
+.landsofillusions-world
+  background atariGrey(0)
+  pixel-image-rendering()
+
+  *
+    background-size 100% 100%
+
+  input
+  textarea
+    font inherit
+    color inherit
+
+.landsofillusions-world-pages-layout
+  daily()
+  line-height 10rem
+  color atariGrey(5)
+
+  .navigation
+    display flex
+    margin 10rem
+    white-space nowrap
+
+    .title
+      retrotype()
+      font-weight normal
+      margin 0 10rem 0 0
+
+    .pages
+      list-style none
+      display flex
+      margin 0
+      padding 1.5rem 0 0
+      text-transform uppercase
+      adventure()
+
+      .page
+        align-items center
+        height auto
+        margin 0 5rem
+
+        a
+          text-decoration none

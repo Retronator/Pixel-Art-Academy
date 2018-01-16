@@ -1,15 +1,21 @@
 class LandsOfIllusions
-  @debug = false
-
   LOI = @
 
-  # Global Adventure instance.
-  LOI.adventure = null
-  LOI.adventureInitialized = new ReactiveField false
+  @debug = false
 
-  constructor: ->
-    # Create the main adventure engine url capture.
-    Retronator.App.addPublicPage 'pixelart.academy/:parameter1?/:parameter2?/:parameter3?/:parameter4?/:parameter5?', LOI.Adventure
+  @TimelineIds:
+    # Playing as yourself.
+    RealLife: 'RealLife'
+
+    # Lands of Illusions loading program.
+    Construct: 'Construct'
+
+    # Playing as your character in the main (non-time-traveling) game world.
+    Present: 'Present'
+
+  # Global Adventure instance.
+  @adventure = null
+  @adventureInitialized = new ReactiveField false
 
   # Character selection and persistence
 

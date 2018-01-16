@@ -33,7 +33,7 @@ class PAA.Layouts.PlayerAccess extends BlazeComponent
       tracker: @
 
     # Save where we're going to immersion from.
-    if playerTimelineId() is PixelArtAcademy.TimelineIds.RealLife
+    if playerTimelineId() is LOI.TimelineIds.RealLife
       playerLocationId = new ReactiveField null
       Artificial.Mummification.PersistentStorage.persist
         storageKey: 'LandsOfIllusions.Adventure.currentLocationId'

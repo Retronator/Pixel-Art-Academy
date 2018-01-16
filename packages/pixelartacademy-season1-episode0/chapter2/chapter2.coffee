@@ -23,7 +23,7 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
     @Store
   ]
 
-  @timelineId: -> PAA.TimelineIds.RealLife
+  @timelineId: -> LOI.TimelineIds.RealLife
 
   @initialize()
 
@@ -40,7 +40,7 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
       # Force the move so that exit responses are not called.
       LOI.adventure.setLocationId SanFrancisco.Soma.Caltrain.id()
-      LOI.adventure.goToTimeline PAA.TimelineIds.RealLife
+      LOI.adventure.goToTimeline LOI.TimelineIds.RealLife
       @state 'movedToCaltrain', true
 
   onRendered: ->

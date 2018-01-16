@@ -10,7 +10,7 @@ class C3.Construct extends LOI.Adventure.Section
     @Loading
   ]
 
-  @timelineId: -> PAA.TimelineIds.Construct
+  @timelineId: -> LOI.TimelineIds.Construct
 
   @initialize()
 

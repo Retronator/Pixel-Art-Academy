@@ -10,7 +10,7 @@ class C3.Sync extends LOI.Adventure.Section
     @Basement
   ]
 
-  @timelineId: -> PAA.TimelineIds.RealLife
+  @timelineId: -> LOI.TimelineIds.RealLife
 
   @initialize()
 

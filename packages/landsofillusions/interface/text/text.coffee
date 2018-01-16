@@ -128,7 +128,7 @@ class LOI.Interface.Text extends LOI.Interface
     @narrative?.clear()
 
     if options.resetIntroduction
-      @location().constructor.visited false
+      @location()?.constructor.visited false
       @inIntro true
 
       @initializeIntroductionFunction()

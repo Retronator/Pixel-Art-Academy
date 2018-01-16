@@ -1,5 +1,7 @@
 AB = Artificial.Base
 
+queryString = require 'querystring'
+
 class AB.Router extends AB.Router
   _requestHost = null
   _absoluteUrl = null
@@ -40,6 +42,45 @@ class AB.Router extends AB.Router
     Meteor.absoluteUrl[key] = value for own key, value of _absoluteUrl
 
     WebApp.connectHandlers.use (request, response, next) =>
+      if request.method is 'POST'
+        body = ''
+
+        # Receive the body of the post message.
+        request.on 'data', Meteor.bindEnvironment (data) =>
+          body += data
+
+          # Kill connection if the body becomes too big
+          if body.length > 1e6
+            body = null
+            response.writeHead(413, 'Content-Type': 'text/plain')
+            response.end()
+            request.connection.destroy()
+
+        request.on 'end', Meteor.bindEnvironment =>
+          # Cancel if body was not loaded.
+          return unless body
+
+          # Parse post data from the body.
+          switch request.headers['content-type']
+            when 'application/json'
+              try
+                postData = JSON.parse body
+
+            when 'application/x-www-form-urlencoded'
+              postData = queryString.parse body
+
+          # Attach post data to request for further processors.
+          request.postData = postData
+
+          # If login token was sent, include it in the head.
+          if postData?.loginToken
+            script = "<script>window._meteorLoginToken = '#{postData.loginToken}';</script>"
+            Inject.rawHead 'Artificial.Base.Router', script, response
+
+          next()
+
+        return
+
       path = request.url
 
       # Get the host without the port.
