@@ -30,4 +30,4 @@ class Apartment.Entrance extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.ChinaBasinPark
     "#{Vocabulary.Keys.Directions.North}": SanFrancisco.Soma.ChinaBasinPark
     "#{Vocabulary.Keys.Directions.Up}": Apartment.Hallway
-    "#{Vocabulary.Keys.Directions.Northwest}": Apartment.Hallway
+    "#{Vocabulary.Keys.Directions.Northeast}": Apartment.Hallway

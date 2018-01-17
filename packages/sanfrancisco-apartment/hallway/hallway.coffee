@@ -28,3 +28,4 @@ class Apartment.Hallway extends LOI.Adventure.Location
   exits: ->
     "#{Vocabulary.Keys.Directions.In}": Apartment.Studio
     "#{Vocabulary.Keys.Directions.Down}": Apartment.Entrance
+    "#{Vocabulary.Keys.Directions.Southwest}": Apartment.Entrance

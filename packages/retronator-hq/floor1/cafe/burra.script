@@ -11,8 +11,8 @@ burra: `_End`
 
 ## MainQuestion
 
-* I'd like to register for an account. -> [Register] `not @player.inventory['Retronator.HQ.Items.Account']`
-* I'm looking for the Cyborg Construction Center. -> [C3] `@scripts.PixelArtAcademy.Season1.Episode0.Chapter3`
+* I'd like to register for an account. -> [Register] `not @character and not @player.inventory['Retronator.HQ.Items.Account']`
+* I'm looking for the Cyborg Construction Center. -> [C3] `not @character and @scripts.PixelArtAcademy and @scripts.PixelArtAcademy.Season1.Episode0.Chapter3`
 * I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
 * Can you tell me about the HQ again? -> [RetronatorHQ] `RetronatorHQDepartments`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
