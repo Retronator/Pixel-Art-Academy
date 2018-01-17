@@ -45,7 +45,16 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
       # Looks OK, say something funny!
       @_playMessage()
 
-      @_scheduleNextMessage()
+      # Wait for message to play.
+      Meteor.setTimeout =>
+        Tracker.autorun (computation) =>
+          return if LOI.adventure.interface.busy()
+          computation.stop()
+
+          # Continue to next.
+          @_scheduleNextMessage()
+      ,
+        0
     ,
       options.delay
 
