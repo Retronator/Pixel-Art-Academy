@@ -59,7 +59,9 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
         6000
 
   finished: ->
-    @state('playedOutro') is true
+    # Chapter 1 is finished after the outro, or automatically when
+    # visiting Retronator HQ directly (any entry in HQ state).
+    @state('playedOutro') is true or Retronator.HQ.state()?
 
   timeToAirshipDeparture: ->
     return unless time = LOI.adventure.time()

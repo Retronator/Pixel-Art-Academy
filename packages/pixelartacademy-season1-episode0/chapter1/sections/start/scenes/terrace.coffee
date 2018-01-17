@@ -33,7 +33,7 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
       # Don't do the action if the user is busy doing something.
       if LOI.adventure.interface.busy()
         # Retry in 10 seconds.
-        @_scheduleAlex delay: 5000
+        @_scheduleAlex delay: 10000
         return
 
       # Looks OK, start interaction.

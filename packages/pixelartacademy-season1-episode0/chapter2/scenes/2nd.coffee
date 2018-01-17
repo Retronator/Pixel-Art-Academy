@@ -14,5 +14,8 @@ class C2.SecondStreet extends LOI.Adventure.Scene
   @initialize()
 
   removeExits: ->
+    # Don't prevent exit after Immersion is finished.
+    return if C2.Immersion.finished()
+    
     "#{Vocabulary.Keys.Directions.Southeast}": Soma.SecondAndKing
     "#{Vocabulary.Keys.Directions.Southwest}": Soma.MosconeCenter

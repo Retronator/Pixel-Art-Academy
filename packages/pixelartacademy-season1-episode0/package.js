@@ -72,6 +72,7 @@ Package.onUse(function(api) {
   api.addFile('chapter2/scenes/inventory');
   api.addFile('chapter2/scenes/store');
   api.addFile('chapter2/scenes/2nd');
+  api.addFile('chapter2/scenes/cafe');
 
   api.addFile('chapter2/actors/actors');
   api.addFile('chapter2/actors/conductor');
@@ -86,16 +87,13 @@ Package.onUse(function(api) {
 
   api.addThing('chapter2/sections/intro/scenes/caltrain');
   api.addFile('chapter2/sections/intro/scenes/2nd');
+  api.addFile('chapter2/sections/intro/scenes/transbay');
 
   // Registration
 
   api.addFile('chapter2/sections/registration/registration');
 
   api.addThing('chapter2/sections/registration/scenes/cafe');
-
-  // Shopping
-
-  api.addFile('chapter2/sections/shopping/shopping');
 
   // Immersion
 

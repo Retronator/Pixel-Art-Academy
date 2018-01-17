@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 C2 = PixelArtAcademy.Season1.Episode0.Chapter2
-SOMA = SanFrancisco.Soma
+Soma = SanFrancisco.Soma
 PAA = PixelArtAcademy
 HQ = Retronator.HQ
 
@@ -9,7 +9,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class C2.Intro.Caltrain extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter2.Intro.Caltrain'
 
-  @location: -> SOMA.Caltrain
+  @location: -> Soma.Caltrain
 
   @translations: ->
     intro: "You wake up inside the train carriage you were taking into the city."

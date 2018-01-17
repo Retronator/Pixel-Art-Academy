@@ -9,7 +9,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class C3.C3 extends LOI.Adventure.Scene
   @id: -> 'PixelArtAcademy.Season1.Episode0.Chapter3.C3'
 
-  @location: -> SF.Soma.C3
+  @location: -> Soma.C3
 
   @initialize()
 

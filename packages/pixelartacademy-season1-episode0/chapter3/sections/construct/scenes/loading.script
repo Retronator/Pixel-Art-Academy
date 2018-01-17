@@ -18,6 +18,13 @@ captain: Welcome back.
 
 captain: Welcome to Lands of Illusions!
 
+<!--
+  Only show the title if user played through DareToDream timeline, since otherwise they wouldn't
+  have seen Chapter 1 and 2 titles (for example, when starting directly in Retronator HQ).
+-->
+
+-> [WhereAmI] `not @things.PixelArtAcademy.Season1.Episode0.Chapter1`
+
 pause
 
 ### ShowTitle
@@ -25,6 +32,8 @@ pause
 wait 0
 
 pause
+
+## WhereAmI
     
 * Where am I?
 
