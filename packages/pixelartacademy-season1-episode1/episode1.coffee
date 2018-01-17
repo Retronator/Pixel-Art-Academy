@@ -20,7 +20,7 @@ class PAA.Season1.Episode1 extends LOI.Adventure.Episode
   @startSection: -> @Start
 
   # Whole Episode 1 happens in the present.
-  @timelineId: -> PAA.TimelineIds.Present
+  @timelineId: -> LOI.TimelineIds.Present
 
   @accessRequirement: -> RS.Items.CatalogKeys.PixelArtAcademy.AlphaAccess
   

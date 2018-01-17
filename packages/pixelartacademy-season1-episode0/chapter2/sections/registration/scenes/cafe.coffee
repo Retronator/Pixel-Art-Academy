@@ -41,12 +41,16 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
     @setCallbacks
       SignInActive: (complete) =>
         LOI.adventure.saveGame =>
-          # If user has signed in, wait until the game state has been loaded.
           Tracker.autorun (computation) =>
-            return if Meteor.userId() and not LOI.adventure.gameStateSubsription.ready()
+            # If user is logging out, wait until the userId becomes null (for example,
+            # they logged in, but cancelled overwriting the save state, if it was already present).
+            return if Meteor.loggingOut()
+
+            # If user has signed in, wait until the game state has been loaded.
+            return if Meteor.userId() and not LOI.adventure.gameStateSubscription().ready()
             computation.stop()
 
-            console.log "Save game dialog has deactivated. The user ID is now", Meteor.userId(), "The subscription for the game state is", LOI.adventure.gameStateSubsription if LOI.debug
+            console.log "Save game dialog has deactivated. The user ID is now", Meteor.userId(), "The subscription for the game state is", LOI.adventure.gameStateSubscription() if LOI.debug
 
             complete()
 

@@ -14,7 +14,7 @@ class LOI.Adventure extends LOI.Adventure
 
     # Start at the default player timeline.
     unless @playerTimelineId()
-      @playerTimelineId PixelArtAcademy.TimelineIds.DareToDream
+      @playerTimelineId @startingPoint()?.timelineId
 
     @currentTimelineId = new ComputedField =>
       console.log "Recomputing current timeline." if LOI.debug
@@ -25,7 +25,7 @@ class LOI.Adventure extends LOI.Adventure
 
         # For characters, start in the present.
         unless gameState.currentTimelineId
-          gameState.currentTimelineId = PixelArtAcademy.TimelineIds.Present
+          gameState.currentTimelineId = LOI.TimelineIds.Present
           @gameState.updated()
         
         gameState.currentTimelineId

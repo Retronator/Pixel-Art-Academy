@@ -27,6 +27,9 @@ class AB.Router extends AB.Router
     @goToRoute @currentRouteName(), parameters
 
   @createUrl: (routeName, parameters) ->
+    # Allow sending components directly.
+    routeName = routeName.componentName() if routeName.componentName
+
     return unless route = @routes[routeName]
 
     try
@@ -59,6 +62,7 @@ class AB.Router extends AB.Router
     path
 
   @goToRoute: (routeName, parameters, options = {}) ->
+    # Find the URL for this route.
     return unless url = @createUrl routeName, parameters
     
     @goToUrl url, options
@@ -80,7 +84,26 @@ class AB.Router extends AB.Router
       history[historyFunction] {}, null, path
       @onPathChange()
 
+  @postToUrl: (url, parameters) ->
+    $form = $("<form method='post' action='#{url}'>")
+
+    for name, value of parameters
+      $field = $("<input name='#{name}' value='#{value}'/>")
+      $form.append($field)
+
+    $('body').append($form)
+    $form.submit()
+
   @initialize: ->
+    # Log in user if token was sent using POST data.
+    Meteor.loginWithToken window._meteorLoginToken if window._meteorLoginToken
+
+    # Automatically instantiate the current page.
+    @currentPageComponent = new ComputedField =>
+      return null unless currentRoute = @currentRoute()
+
+      new currentRoute.pageClass
+
     # HACK: Override absolute URL function to use the browser origin as the root url.
     _absoluteUrl = Meteor.absoluteUrl
     Meteor.absoluteUrl = (path, options) ->
@@ -121,15 +144,12 @@ class AB.Router extends AB.Router
         # Scroll to top since we expect that to happen if this was a hard link.
         $(document).scrollTop(0)
 
-  @renderRoot: (parentComponent) ->
+  @renderPageComponent: (parentComponent) ->
     return null unless currentRoute = @currentRoute()
+    return null unless currentPageComponent = @currentPageComponent()
 
-    @_previousRoute = currentRoute
-
-    # We instantiate the page so that we can send the instance to the Render component. If it was just a class, it
-    # would treat it as a function and try to execute it instead of pass it as the context to the Render component.
     layoutData =
-      page: new currentRoute.pageClass
+      page: currentPageComponent
 
     new Blaze.Template =>
       Blaze.With layoutData, =>

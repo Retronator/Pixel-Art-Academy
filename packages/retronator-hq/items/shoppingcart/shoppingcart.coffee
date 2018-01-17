@@ -33,7 +33,7 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
 
   @initialize()
 
-  @defaultScriptUrl: -> 'retronator_retronator-hq/items/shoppingcart.script'
+  @defaultScriptUrl: -> 'retronator_retronator-hq/items/shoppingcart/shoppingcart.script'
 
   @addItem: (catalogKey) ->
     # Add the item's ID to the shopping cart state.

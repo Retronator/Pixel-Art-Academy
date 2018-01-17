@@ -19,6 +19,7 @@ class LOI.Adventure extends LOI.Adventure
     @menu = new LOI.Components.Menu
     
     @loggingOut = new ReactiveField false
+    @quitting = new ReactiveField false
 
     @_modalDialogs = []
     @_modalDialogsDependency = new Tracker.Dependency
@@ -60,6 +61,9 @@ class LOI.Adventure extends LOI.Adventure
     # Only initialize routing after we've rendered adventure so that the persistent components 
     # (such as the menu) got rendered and had the chance to register their URL handlers.
     @_initializeRouting()
+
+    # Require the user to be signed in if local state is not allowed.
+    @loadGame() unless @usesLocalState()
 
   onDestroyed: ->
     super

@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
@@ -11,12 +12,16 @@ class LOI.Adventure extends LOI.Adventure
     # Game state depends on whether the user is signed in or not and returns
     # the game state from database when signed in or from local storage otherwise.
     @localGameState = new LOI.LocalGameState
-    
+
+    @gameStateSubscription = new ReactiveField null
     @gameStateSource = new ReactiveField null
 
     _gameStateUpdatedDependency = new Tracker.Dependency
 
     _gameStateUpdated = null
+
+    # If the game doesn't use database state, log user out.
+    @quitGame() if Meteor.userId() and not @usesDatabaseState()
 
     _gameStateProvider = new ComputedField =>
       userId = Meteor.userId()
@@ -26,20 +31,23 @@ class LOI.Adventure extends LOI.Adventure
       if characterId
         # Subscribe to character's game state and store subscription
         # handle so we can know when the game state should be ready.
-        @gameStateSubsription = LOI.GameState.forCharacter.subscribe characterId
-        console.log "Subscribed to character game state from the database. Subscription:", @gameStateSubsription, "Is it ready?", @gameStateSubsription.ready() if LOI.debug
-          
+        gameStateSubscription = LOI.GameState.forCharacter.subscribe characterId
+        console.log "Subscribed to character game state from the database. Subscription:", gameStateSubscription, "Is it ready?", gameStateSubscription.ready() if LOI.debug
+
         # Find the state from the database. This creates a dependency on game state document updates.
         gameState = LOI.GameState.documents.findOne 'character._id': characterId
 
       else
         # Subscribe to user's game state and store subscription
         # handle so we can know when the game state should be ready.
-        @gameStateSubsription = LOI.GameState.forCurrentUser.subscribe()
-        console.log "Subscribed to user game state from the database. Subscription:", @gameStateSubsription, "Is it ready?", @gameStateSubsription.ready() if LOI.debug
-          
+        gameStateSubscription = LOI.GameState.forCurrentUser.subscribe()
+        console.log "Subscribed to user game state from the database. Subscription:", gameStateSubscription, "Is it ready?", gameStateSubscription.ready() if LOI.debug
+
         # Find the state from the database. This creates a dependency on game state document updates.
         gameState = LOI.GameState.documents.findOne 'user._id': userId
+
+      # Inform others of the new subscription.
+      @gameStateSubscription gameStateSubscription
 
       console.log "We currently have these game state documents:", LOI.GameState.documents.find().fetch() if LOI.debug
       console.log "Did we find a game state? We got", gameState if LOI.debug
@@ -66,7 +74,7 @@ class LOI.Adventure extends LOI.Adventure
           gameState.updated options
           _gameStateUpdatedDependency.changed()
 
-      else if userId and not @gameStateSubsription.ready()
+      else if userId and not gameStateSubscription.ready()
         # Looks like we're loading the state from the database during initial setup, so just wait.
         console.log "Waiting for game state subscription to complete." if LOI.debug
 
@@ -195,74 +203,90 @@ class LOI.Adventure extends LOI.Adventure
       return unless user = Retronator.user()
       computation.stop()
 
-      # Wait also until the game state has been loaded.
-      Tracker.autorun (computation) =>
-        return unless LOI.adventure.gameStateSubsription.ready()
-        computation.stop()
+      # If we aren't allowed to have database state, we need to redirect to the main URL.
+      unless @usesDatabaseState()
+        # Send the login token to the main adventure route where database state is allowed.
+        url = AB.Router.createUrl LOI.Adventure, parameter1: 'signin'
+        loginToken = localStorage.getItem 'Meteor.loginToken'
 
-        databaseState = LOI.GameState.documents.findOne 'user._id': user._id
+        AB.Router.postToUrl url, {loginToken}
 
-        if databaseState
-          # Reset the interface.
-          LOI.adventure.interface.resetInterface()
+        # End loading flow.
+        return
 
-          # Clear active item.
-          LOI.adventure.activeItemId null
+      # Wait also until the game state has been loaded. We need a
+      # nonreactive context in case we're loading from URL change.
+      Tracker.nonreactive =>
+        Tracker.autorun (computation) =>
+          return unless @gameStateSubscription().ready()
+          computation.stop()
 
-          # Cleanup storyline classes.
-          LOI.adventure.resetEpisodes()
+          databaseState = LOI.GameState.documents.findOne 'user._id': user._id
 
-          # Cleanup running scripts.
-          LOI.adventure.director.stopAllScripts()
+          if databaseState
+            # Reset the interface.
+            @interface.resetInterface()
 
-          # Move user to the last location and timeline saved to the state. We do this only on load so that multiple
-          # players using the same account can move independently, at least inside the current session (they will get
-          # synced again on reload).
-          LOI.adventure.playerLocationId databaseState.state.currentLocationId
-          LOI.adventure.playerTimelineId databaseState.state.currentTimelineId
-          LOI.adventure.immersionExitLocationId databaseState.state.immersionExitLocationId
+            # Clear active item.
+            @activeItemId null
 
-          LOI.adventure.menu.signIn.activatable.deactivate()
+            # Cleanup storyline classes.
+            @resetEpisodes()
 
-        else
-          # Show dialog informing the user we're saving the local game state.
-          dialog = new LOI.Components.Dialog
-            message: "
-              The account you loaded doesn't have a save game yet.
-              Do you want to save your current game position to it?
-            "
-            buttons: [
-              text: "Save game"
-              value: true
-            ,
-              text: "Cancel"
-            ]
+            # Cleanup running scripts.
+            @director.stopAllScripts()
 
-          LOI.adventure.showActivatableModalDialog
-            dialog: dialog
-            callback: =>
-              if dialog.result
-                # The player has confirmed to use the local state for the loaded account.
-                LOI.GameState.insertForCurrentUser LOI.adventure.localGameState.state(), =>
-                  # Now that the local state has been transferred, clear it for next player.
-                  LOI.adventure.clearLocalGameState()
+            # Move user to the last location and timeline saved to the state. We do this only on load so that multiple
+            # players using the same account can move independently, at least inside the current session (they will get
+            # synced again on reload).
+            @playerLocationId databaseState.state.currentLocationId
+            @playerTimelineId databaseState.state.currentTimelineId
+            @immersionExitLocationId databaseState.state.immersionExitLocationId
 
-              else
-                # The player canceled. Log them out since we shouldn't continue without a game state.
-                Meteor.logout()
+            @menu.signIn.activatable.deactivate()
 
-              LOI.adventure.menu.signIn.activatable.deactivate()
+            # Reset the local game state, so it doesn't exist if we come back and we're not logged in anymore.
+            @clearLocalGameState()
+
+          else
+            # State was not found. Inform the player to play until they register in-game, and log them out.
+            dialog = new LOI.Components.Dialog
+              message: "
+                The account you loaded doesn't have a save game.
+                Please use one of Lands of Illusions content modules to get started.
+              "
+              buttons: [
+                text: "OK"
+              ]
+
+            @showActivatableModalDialog
+              dialog: dialog
+              callback: =>
+                # If we can exist without a database state, just log back out.
+                if @usesLocalState()
+                  @logout callback: =>
+                    LOI.adventure.menu.signIn.activatable.deactivate()
+
+                else
+                  # Loading failed and we can't use local state so we have to quit.
+                  @quitGame()
+
+    # If user was already signed in, we don't have to show the dialog.
+    return if Meteor.userId()
 
     # Set sign in dialog to show sign in (and not create account) by default:
     Accounts._loginButtonsSession.set 'inSignupFlow', false
     Accounts._loginButtonsSession.set 'inForgotPasswordFlow', false
 
-    LOI.adventure.showActivatableModalDialog
-      dialog: LOI.adventure.menu.signIn
+    @showActivatableModalDialog
+      dialog: @menu.signIn
       dontRender: true
       callback: =>
         # User has returned from the load screen.
         userAutorun.stop()
+
+        # Quit if user wasn't loaded and we require loaded game state.
+        @quitGame() unless Meteor.userId() or @usesLocalState()
 
   saveGame: (callback) ->
     # Wait until user is logged in.
@@ -272,7 +296,7 @@ class LOI.Adventure extends LOI.Adventure
 
       # Wait also until the game state has been loaded.
       Tracker.autorun (computation) =>
-        return unless LOI.adventure.gameStateSubsription.ready()
+        return unless @gameStateSubscription().ready()
         computation.stop()
 
         databaseState = LOI.GameState.documents.findOne 'user._id': user._id
@@ -291,45 +315,65 @@ class LOI.Adventure extends LOI.Adventure
               text: "Cancel"
             ]
 
-          LOI.adventure.showActivatableModalDialog
+          @showActivatableModalDialog
             dialog: dialog
             callback: =>
               if dialog.result
                 # The player has confirmed to use the local state for the loaded account.
-                LOI.GameState.replaceForCurrentUser LOI.adventure.localGameState.state(), =>
+                LOI.GameState.replaceForCurrentUser @localGameState.state(), =>
                   # Now that the local state has been transferred, clear it for next player.
-                  LOI.adventure.clearLocalGameState()
+                  @clearLocalGameState()
 
               else
                 # The player canceled. Log them out since we shouldn't store our game state there.
                 Meteor.logout()
 
-              LOI.adventure.menu.signIn.activatable.deactivate()
+              @menu.signIn.activatable.deactivate()
 
         else
           # Insert the current local state as the state for this (new) user.
-          LOI.GameState.insertForCurrentUser LOI.adventure.localGameState.state(), =>
+          LOI.GameState.insertForCurrentUser @localGameState.state(), =>
             # Now that the local state has been transferred, clear it for next player.
-            LOI.adventure.clearLocalGameState()
+            @clearLocalGameState()
 
-          LOI.adventure.menu.signIn.activatable.deactivate()
+          @menu.signIn.activatable.deactivate()
 
     # Set sign in dialog to show create account (and not sign in) by default:
     Accounts._loginButtonsSession.set 'inSignupFlow', true
     Accounts._loginButtonsSession.set 'inForgotPasswordFlow', false
 
-    LOI.adventure.showActivatableModalDialog
-      dialog: LOI.adventure.menu.signIn
+    @showActivatableModalDialog
+      dialog: @menu.signIn
       dontRender: true
       callback: =>
         # User has returned from the load screen.
         userAutorun.stop()
         callback?()
 
+  quitGame: (options = {}) ->
+    @quitting true
+    
+    # Reset the local game state, so when we refresh we'll start from scratch.
+    @clearLocalGameState()
+    
+    @logout
+      callback: =>
+        # Clear character selection and situation.
+        LOI.switchCharacter null
+    
+        @playerLocationId null
+        @playerTimelineId null
+
+        # Execute the callback if present and end if it has handled the redirect.
+        return if options.callback?()
+
+        # Do a hard reload of the root URL.
+        window.location = '/'
+
   loadCharacter: (characterId) ->
     # Save where we're going to immersion from.
-    if LOI.adventure.currentTimelineId() is PixelArtAcademy.TimelineIds.RealLife
-      LOI.adventure.saveImmersionExitLocation()
+    if @currentTimelineId() is LOI.TimelineIds.RealLife
+      @saveImmersionExitLocation()
 
     LOI.switchCharacter characterId
     @_onSwitchingGameState()
@@ -338,7 +382,7 @@ class LOI.Adventure extends LOI.Adventure
     Meteor.setTimeout =>
       # Wait until the character's state has been loaded.
       Tracker.autorun (computation) =>
-        return unless LOI.adventure.gameStateSubsription.ready()
+        return unless @gameStateSubscription().ready()
         computation.stop()
 
         databaseState = LOI.GameState.documents.findOne 'character._id': characterId
@@ -355,12 +399,12 @@ class LOI.Adventure extends LOI.Adventure
     Meteor.setTimeout =>
       # Wait until user state has been loaded.
       Tracker.autorun (computation) =>
-        return unless LOI.adventure.gameStateSubsription.ready()
+        return unless @gameStateSubscription().ready()
         computation.stop()
 
         # Move player to the exit location in real life.
-        LOI.adventure.setLocationId LOI.adventure.immersionExitLocationId()
-        LOI.adventure.setTimelineId PixelArtAcademy.TimelineIds.RealLife
+        @setLocationId @immersionExitLocationId()
+        @setTimelineId LOI.TimelineIds.RealLife
 
   loadConstruct: ->
     # Going to Construct differs if we're going there from the user's or character's world.
@@ -371,24 +415,24 @@ class LOI.Adventure extends LOI.Adventure
 
     else
       # Save where we're going to Construct from.
-      LOI.adventure.saveImmersionExitLocation()
+      @saveImmersionExitLocation()
 
     # Give the system a chance to kick in the new game state subscription.
     Meteor.setTimeout =>
       # Wait until the user state has been loaded.
       Tracker.autorun (computation) =>
-        return unless LOI.adventure.gameStateSubsription.ready()
+        return unless @gameStateSubscription().ready()
         computation.stop()
 
         # Go to Construct.
-        LOI.adventure.goToLocation LOI.Construct.Loading
-        LOI.adventure.goToTimeline PixelArtAcademy.TimelineIds.Construct
+        @goToLocation LOI.Construct.Loading
+        @goToTimeline LOI.TimelineIds.Construct
 
   unloadConstruct: ->
     # Move player to the exit location in real life.
-    LOI.adventure.setLocationId LOI.adventure.immersionExitLocationId()
-    LOI.adventure.setTimelineId PixelArtAcademy.TimelineIds.RealLife
+    @setLocationId @immersionExitLocationId()
+    @setTimelineId LOI.TimelineIds.RealLife
 
   _onSwitchingGameState: ->
     # Cleanup running scripts.
-    LOI.adventure.director.stopAllScripts()
+    @director.stopAllScripts()

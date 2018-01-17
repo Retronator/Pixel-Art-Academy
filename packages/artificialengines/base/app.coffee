@@ -31,7 +31,7 @@ class AB.App extends AM.Component
     @endRun()
 
   appRoot: ->
-    AB.Router.renderRoot @
+    AB.Router.renderPageComponent @
 
   run: ->
     # Start update/draw loop.
@@ -51,9 +51,9 @@ class AB.App extends AM.Component
       title = null
 
       # Call layout first and component later so it can override the more general layout results.
-      for target in [route.layoutClass, route.pageClass]
+      for target in [route.layoutClass, route.pageClass, AB.Router.currentPageComponent()]
         # Only override the parameter if we get a result.
-        result = target.title? routeData.parameters
+        result = target?.title? routeData.parameters
         title = result if result
 
       document.title = title if title

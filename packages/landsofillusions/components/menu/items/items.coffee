@@ -42,7 +42,10 @@ class LOI.Components.Menu.Items extends AM.Component
     not Retronator.user()
 
   saveVisible: ->
-    # Save game is visible when a guest isn't on the landing page.
+    # Always hidden.
+    return false
+
+    # Legacy: Save game is visible when a guest isn't on the landing page.
     return if Retronator.user()
 
     not @options.landingPage
@@ -84,8 +87,12 @@ class LOI.Components.Menu.Items extends AM.Component
     LOI.adventure.interface.narrative.scroll()
 
   onClickLoad: (event) ->
-    # If the player could save the game, warn them about losing progress.
-    if @saveVisible()
+    if @options.landingPage
+      # On the landing page we can directly load.
+      LOI.adventure.loadGame()
+  
+    else
+      # Warn user they will lose progress.
       dialog = new LOI.Components.Dialog
         message: "You will lose current game progress if you load another game."
         buttons: [
@@ -99,9 +106,6 @@ class LOI.Components.Menu.Items extends AM.Component
         dialog: dialog
         callback: =>
           LOI.adventure.loadGame() if dialog.result
-
-    else
-      LOI.adventure.loadGame()
 
   onClickSave: (event) ->
     LOI.adventure.saveGame()
@@ -126,10 +130,13 @@ class LOI.Components.Menu.Items extends AM.Component
     @currentScreen @constructor.Screens.Settings
 
   onClickQuit: (event) ->
-    # If the player could save the game, warn them about losing progress.
-    if @saveVisible()
+    if Retronator.user()
+      LOI.adventure.quitGame()
+
+    else
+      # Notify the player that they will lose the current game state.
       dialog = new LOI.Components.Dialog
-        message: "You will lose current game progress if you quit without saving. Proceed?"
+        message: "You will lose current game progress if you quit."
         buttons: [
           text: "Quit"
           value: true
@@ -140,48 +147,7 @@ class LOI.Components.Menu.Items extends AM.Component
       LOI.adventure.showActivatableModalDialog
         dialog: dialog
         callback: =>
-          @_quit() if dialog.result
-
-    else
-      @_quit()
-
-  _quit: ->
-    # Close the menu.
-    LOI.adventure.menu.hideMenu()
-
-    # Remove other modal menus.
-    LOI.adventure.removeModalDialog dialogOptions.dialog for dialogOptions in LOI.adventure.modalDialogs()
-
-    # Reset the local game state, so when we logout it will kick in.
-    LOI.adventure.clearLocalGameState()
-
-    # Log out.
-    LOI.adventure.logout
-      callback: =>
-        # Reset the interface.
-        LOI.adventure.interface.resetInterface()
-
-        # Clear active item.
-        LOI.adventure.activeItemId null
-
-        # Clear character and location to trigger location changes.
-        LOI.switchCharacter null
-        LOI.adventure.playerLocationId null
-
-        # Reset game time.
-        LOI.adventure.resetTime()
-
-        # Cleanup storyline classes.
-        LOI.adventure.resetEpisodes()
-
-        # Cleanup running scripts.
-        LOI.adventure.director.stopAllScripts()
-
-        # Go to the terrace and scroll to top.
-        LOI.adventure.playerLocationId Retropolis.Spaceport.AirportTerminal.Terrace.id()
-        LOI.adventure.playerTimelineId PixelArtAcademy.TimelineIds.DareToDream
-
-        LOI.adventure.interface.scroll position: 0
-
+          LOI.adventure.quitGame() if dialog.result
+  
   onClickBack: (event) ->
     @currentScreen @constructor.Screens.MainMenu

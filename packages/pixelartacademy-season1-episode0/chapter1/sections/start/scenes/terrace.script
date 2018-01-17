@@ -22,7 +22,7 @@ alex: There you are! Wow, look at that city. Isn't it wonderful?
 * I always wanted to come here.
 
 alex: 
-    Well, you'll get to see it up-close soon enough.
+    Well, you'll see it close-up soon enough.
     We should hurry up though, the last airship leaves in 10 minutes.
     
 > Alex leaves ![east](go east).
