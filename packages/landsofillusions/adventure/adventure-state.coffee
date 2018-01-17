@@ -299,6 +299,13 @@ class LOI.Adventure extends LOI.Adventure
         return unless @gameStateSubscription().ready()
         computation.stop()
 
+        # Make sure location and timeline are being stored.
+        state = @localGameState.state()
+        state.currentTimelineId = @currentTimelineId()
+        state.currentLocationId = @currentLocationId()
+        @localGameState.updated()
+
+        # Get the existing game state, in case player would be overwriting it.
         databaseState = LOI.GameState.documents.findOne 'user._id': user._id
 
         if databaseState

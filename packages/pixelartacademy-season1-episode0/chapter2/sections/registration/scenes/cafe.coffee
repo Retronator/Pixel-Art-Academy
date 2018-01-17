@@ -1,3 +1,4 @@
+AB = Artificial.Base
 LOI = LandsOfIllusions
 C2 = PixelArtAcademy.Season1.Episode0.Chapter2
 HQ = Retronator.HQ
@@ -63,6 +64,31 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
         HQ.Items.Keycard.state 'inInventory', true
 
         complete()
+
+      End: (complete) =>
+        # Simply complete if this route can handle database states.
+        if LOI.adventure.usesDatabaseState()
+          complete()
+          return
+
+        # We want to show a dialog informing the user to play on the main URL.
+        dialog = new LOI.Components.Dialog
+          message: "
+                    You are now leaving #{location.host}. Your adventure will continue at
+                    #{AB.Router.routes[LOI.Adventure.id()].host}. Thank you for registering!
+                  "
+          buttons: [
+            text: "Continue"
+          ]
+
+        LOI.adventure.showActivatableModalDialog
+          dialog: dialog
+          callback: =>
+            # Send the login token to the main adventure route where database state is allowed.
+            url = AB.Router.createUrl LOI.Adventure, parameter1: 'signin'
+            loginToken = localStorage.getItem 'Meteor.loginToken'
+
+            AB.Router.postToUrl url, {loginToken}
 
   # Listener
 
