@@ -28,7 +28,7 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
 
       # Find the second of main scripts' questions. We skip the
       # first one because it's the register fallback in the main script.
-      burraScript = burraListener.scripts[HQ.Cafe.BurraListener.Script.id()]
+      burraScript = burraListener.scripts[HQ.Cafe.BurraListener.UserScript.id()]
       firstMainQuestion = burraScript.startNode.labels.MainQuestion.next.next
 
       # Find the last of this script's questions.

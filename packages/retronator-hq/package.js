@@ -81,6 +81,7 @@ Package.onUse(function(api) {
   api.addFile('floor1/cafe/cafe');
   api.addFile('floor1/cafe/artworks');
   api.addScript('floor1/cafe/burra');
+  api.addScript('floor1/cafe/burra-character');
 
   api.addFile('floor1/coworking/coworking');
 
