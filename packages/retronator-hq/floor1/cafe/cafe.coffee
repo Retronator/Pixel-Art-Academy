@@ -51,8 +51,8 @@ class HQ.Cafe extends LOI.Adventure.Location
     @id: -> "Retronator.HQ.Cafe.Burra"
 
     @scriptUrls: -> [
-      'retronator_retronator-hq/floor1/cafe/user.script'
-      'retronator_retronator-hq/floor1/cafe/character.script'
+      'retronator_retronator-hq/floor1/cafe/burra.script'
+      'retronator_retronator-hq/floor1/cafe/burra-character.script'
     ]
 
     class @UserScript extends LOI.Adventure.Script
