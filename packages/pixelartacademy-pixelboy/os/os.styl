@@ -1,0 +1,67 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+// When just OS is loaded directly to html.
+html.pixel-art-academy-style-pixelboy-os
+html.pixel-art-academy-style-pixelboy-os body
+  margin 0
+  padding 0
+  height 100%
+
+  #__blaze-root
+    height 100%
+
+html.lands-of-illusions-style-adventure
+  .pixelboy-os
+    cursor default
+
+    a
+      cursor pointer
+
+.pixel-art-academy-style-pixelboy-os
+  background atari2600colors[1][10]
+
+.pixelboy-os
+  color white
+  height 100%
+  uni()
+  cursor default
+
+  *
+    box-sizing border-box
+
+  a
+    cursor pointer
+
+  // Pixel art image scaling
+  img
+  canvas
+    image-rendering optimizeSpeed
+    image-rendering -moz-crisp-edges            // Firefox
+    image-rendering -o-crisp-edges              // Opera
+    image-rendering -webkit-optimize-contrast   // Chrome, Safari
+    image-rendering pixelated                   // Chrome
+    image-rendering optimize-contrast           // CSS3
+    -ms-interpolation-mode nearest-neighbor     // IE8+
+
+  .boot-loader
+    acme-7()
+
+  .homescreen-button-area
+    display none
+    position fixed
+    top 15rem
+    right 15rem
+    z-index 1
+
+    .homescreen-button
+      color atari2600colors[6][0]
+      text-decoration none
+      text-transform uppercase
+
+  .app-wrapper
+    opacity 0
+    display none
+    height 100%
+
+    .app
+      min-height 100%

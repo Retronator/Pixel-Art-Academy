@@ -32,6 +32,7 @@ Package.onUse(function(api) {
   // Chapter 1: Admission Week
 
   api.addFile('chapter1..');
+  api.addServerFile('chapter1/methods-server');
 
   api.addFile('chapter1/items..');
   api.addFile('chapter1/items/admissionemail');
@@ -42,7 +43,13 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/intro..');
   api.addThing('chapter1/sections/intro/scenes/studio');
 
-  // Admission Week
-  api.addFile('chapter1/sections/admissionweek..');
-  api.addServerFile('chapter1/sections/admissionweek/methods-server');
+  // Waiting
+  api.addFile('chapter1/sections/waiting..');
+
+  // Pre-PixelBoy
+  api.addFile('chapter1/sections/prepixelboy..');
+  api.addThing('chapter1/sections/prepixelboy/scenes/store');
+
+  // PixelBoy
+  api.addFile('chapter1/sections/pixelboy..');
 });

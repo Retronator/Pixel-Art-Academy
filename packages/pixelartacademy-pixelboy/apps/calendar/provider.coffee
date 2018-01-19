@@ -1,39 +1,21 @@
 AE = Artificial.Everywhere
-AM = Artificial.Mummification
-LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 # Abstract class for providing a set of items to display in the calendar app.
 class PAA.PixelBoy.Apps.Calendar.Provider
-  @calendarComponentClass: -> throw new AE.NotImplementedException
-
-  @id: -> throw new AE.NotImplementedException
-  @displayName: -> throw new AE.NotImplementedException
-  displayName: -> @constructor.displayName()
-
-  constructor: (calendarComponent) ->
+  constructor: ->
     @_monthSubscriptions = {}
-
-    @enabled = new ReactiveField true
-
-    AM.PersistentStorage.persist
-      storageKey: "#{@constructor.id()}.enabled"
-      field: @enabled
-      tracker: calendarComponent
 
   # Returns an array of events for a specific day. Event is an object with
   # component: component instance that will render the event
   # dataContext: the data context to be provided to the component
   getEvents: (dayDate) ->
-    throw new AE.NotImplementedException
+    # Not implemented.
 
   subscriptionName: ->
-    throw new AE.NotImplementedException
+    # Not implemented
 
   subscribeToMonthOf: (date, calendar) ->
-    # Make sure this provider requires a subscription.
-    return unless subscriptionName = @subscriptionName()
-
     # See if we're already subscribed to this month's date range.
     dateValue = date.valueOf()
     return if @_monthSubscriptions[dateValue]
@@ -42,4 +24,4 @@ class PAA.PixelBoy.Apps.Calendar.Provider
       year: date.getFullYear()
       month: date.getMonth()
 
-    @_monthSubscriptions[dateValue] = calendar.subscribe subscriptionName, dateRange
+    @_monthSubscriptions[dateValue] = calendar.subscribe @subscriptionName(), dateRange

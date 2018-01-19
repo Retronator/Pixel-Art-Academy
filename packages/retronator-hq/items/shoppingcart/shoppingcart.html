@@ -15,7 +15,9 @@
                 <li class="cart-item">
                   <h2 class="name">{{> t9n item.name}}</h2>
                   <div class="price-area">
-                    <div class="price">${{item.price}}</div>
+                    {{#if item.price}}
+                      <div class="price">${{item.price}}</div>
+                    {{/if}}
                     <button class="remove-from-cart-button">Remove from cart</button>
                     {{#if item.isGiftable}}
                       <label class="gift-label" title="You will receive a claim link to send to the recipient.">
@@ -42,9 +44,11 @@
                 </li>
               {{/each}}
             </ul>
-            <div class="total">
-              <div class="total-price">Total: ${{totalPrice}}</div>
-            </div>
+            {{#if totalPrice}}
+              <div class="total">
+                <div class="total-price">Total: ${{totalPrice}}</div>
+              </div>
+            {{/if}}
           {{else}}
             <p>You do not have any items in your shopping cart.</p>
           {{/if}}

@@ -1,0 +1,102 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+console-white = atari2600colors[7][0]
+console-lighter-grey = atari2600colors[6][0]
+console-light-grey = atari2600colors[5][0]
+console-grey = atari2600colors[4][0]
+console-dark-grey = atari2600colors[3][0]
+
+.pixel-art-academy-style-console-app
+  h1
+    kyrou-9()
+    color console-white
+    font-weight normal
+
+  h2
+    kyrou-7()
+    color console-white
+    font-weight normal
+
+  h3
+    kyrou-5()
+    color console-white
+    font-weight normal
+
+  ul
+    list-style square
+
+  ul, ol
+    li
+      margin-bottom 1em
+
+  strong
+    font-weight normal
+    color console-white
+
+  a
+    color console-white
+    cursor pointer
+
+    &:hover
+      background-color console-white
+      color black
+
+  hr
+    margin 2em 0
+    height 2rem
+    border none
+    background-color atari2600colors[1][0]
+
+  button
+  .button
+    display inline-block
+    position relative
+    top -4rem
+    margin-top 4rem
+    padding 5rem
+    background #666
+    uni()
+    text-decoration none
+    color black
+    border none
+    border-bottom 4rem solid atari2600colors[1][0]
+    cursor pointer
+
+    &:focus
+      background: atari2600colors[2][0]
+      outline none
+
+    &:hover
+      background: atari2600colors[3][0]
+
+    &:active
+      border-bottom none
+      margin-bottom 4rem
+      top 0
+
+    &.link-button
+      color console-white
+      cursor pointer
+      background none
+      padding 0
+      border none
+      top 0
+
+      &:hover
+        background-color console-white
+        color black
+
+      &:active
+        margin-bottom 0
+
+  input
+  textarea
+    uni()
+    background atari2600colors[1][0]
+    border 2rem solid atari2600colors[2][0]
+    padding 0 4rem
+    color console-lighter-grey
+
+    &:focus
+      outline none
+      border-color atari2600colors[3][0]

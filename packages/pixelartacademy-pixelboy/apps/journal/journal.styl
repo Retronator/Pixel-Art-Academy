@@ -1,7 +1,8 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.pixelartacademy-pixelboy-apps-journal
-  margin-left 10rem
+.apps-journal
+  background atari2600colors[0][0]
+  padding 10rem
 
   .check-ins
     list-style none
@@ -9,54 +10,50 @@
 
     .check-in
       position relative
-      margin-bottom 10rem
+      margin-bottom 20rem
 
       .image
         position relative
         float left
         width 200rem
+        max-width 100%
         min-height 1rem
-        margin 0 0 5rem 5rem
+        margin 0
+        word-break break-all
 
         img
           max-width 100%
-          margin-bottom 5rem
-
-        a
-          word-break break-all
 
         .actions
           display none
           position absolute
-          z-index 1
+          left 10rem
+          bottom 10rem
 
-      &:hover
-        .image
+        &:hover
           .actions
             display block
 
       .data
         float left
-        width 206rem
-        margin 0 10rem 5rem 0
+        width 200rem
+        max-width 100%
+        margin-right 20rem
 
         .date
-          margin-bottom 5rem
+          margin-bottom 10rem
 
-        .text-area
-          border 1rem solid atariGrey(1)
-          padding 2rem
+        .text
+          position relative
 
-          .text
-            position relative
+          textarea
             width 200rem
+            max-width 100%
+            background none
+            border none
+            resize none
 
-            textarea
-              width 200rem
-              min-height 5em
-              background none
-              border none
-              resize none
-
-      .comments
+      &::after
+        content ''
+        display block
         clear both

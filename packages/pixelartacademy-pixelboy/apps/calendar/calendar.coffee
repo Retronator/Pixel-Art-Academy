@@ -3,23 +3,27 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
+class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.OS.App
   @register 'PixelArtAcademy.PixelBoy.Apps.Calendar'
 
-  @displayName: ->
+  displayName: ->
     "Pixel Art Calendar"
 
-  @urlName: ->
+  keyName: ->
     'calendar'
+
+  constructor: ->
+    super
+
+    @useConsoleTheme = true
 
   onCreated: ->
     super
 
     # Create calendar providers.
     @providers = [
-      new @constructor.Providers.PixelDailies.ThemesProvider @
-      new @constructor.Providers.Octobit.ThemesProvider @
-      new @constructor.Providers.Practice.CheckInsProvider @
+      new PAA.PixelDailies.ThemesCalendarProvider()
+      new PAA.Practice.CheckInsCalendarProvider()
     ]
 
     today = new Date()
@@ -33,7 +37,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
       Tracker.afterFlush =>
         for provider in @providers
           provider.subscribeToMonthOf date, @
-  
+
   # Helpers
   showNextMonthButton: ->
     # Only show next month button if selected date is less than today.
@@ -59,19 +63,15 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
     new Date selectedDate.getFullYear(), selectedDate.getMonth(), day for day in [lastDay..1]
 
   calendarEvents: ->
-    date = @parentDataWith (data) => _.isDate data
+    date = @parentDataWith -> _.isDate @
     provider = @currentData()
 
     provider.getEvents date
 
-  renderCalendarComponent: ->
-    return unless calendarProvider = @parentDataWith (data) =>
-      data instanceof PAA.PixelBoy.Apps.Calendar.Provider
+  renderEvent: ->
+    event = @parentDataWith 'component'
 
-    calendarComponentClass = calendarProvider.constructor.calendarComponentClass()
-
-    calendarComponent = new calendarComponentClass
-    calendarComponent.renderComponent @currentComponent()
+    event.component.renderComponent @currentComponent()
 
   # Events
 
@@ -84,26 +84,6 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
     date = @displayedMonth()
     @displayedMonth new Date date.getFullYear(), date.getMonth() - 1, 1
 
-    $(window).scrollTop(0)
-
   onClickNextMonth: (event) ->
     date = @displayedMonth()
     @displayedMonth new Date date.getFullYear(), date.getMonth() + 1, 1
-
-    $(window).scrollTop(0)
-
-  class @ProviderEnabled extends AM.DataInputComponent
-    @register 'PixelArtAcademy.PixelBoy.Apps.Calendar.ProviderEnabled'
-
-    constructor: ->
-      super
-
-      @type = @constructor.Types.Checkbox
-
-    load: ->
-      provider = @data()
-      provider.enabled()
-
-    save: (value) ->
-      provider = @data()
-      provider.enabled value

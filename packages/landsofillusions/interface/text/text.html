@@ -78,7 +78,13 @@
         <div class="inventory scrollable">
           {{#if showInventory}}
             <div class="inventory-content scrollable-content">
-              <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
+              <p class="items-sentence">
+                {{#with currentCharacter}}
+                  {{avatar.fullName}} {{> t10e "is carrying:"}}
+                {{else}}
+                  {{> t10e "You are carrying:"}}
+                {{/with}}
+              </p>
               <ul class="items">
                 {{#each inventoryItems}}
                   <li class="item">{{fullName}}</li>

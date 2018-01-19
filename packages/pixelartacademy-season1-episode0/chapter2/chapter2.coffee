@@ -19,7 +19,6 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
 
   @scenes: -> [
     @Inventory
-    @Store
     @SecondStreet
     @Cafe
   ]

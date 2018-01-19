@@ -49,6 +49,8 @@ Package.onUse(function(api) {
 
   api.addThing('items/elevatorbutton/elevatorbutton');
   api.addThingComponent('items/shoppingcart/shoppingcart');
+  api.addFile('items/shoppingcart/shoppingcart-user');
+  api.addFile('items/shoppingcart/shoppingcart-character');
   api.addComponent('items/prospectus/prospectus');
   api.addComponent('items/receipt/receipt');
   
@@ -70,6 +72,7 @@ Package.onUse(function(api) {
   
   api.addThing('scenes/intercom');
   api.addThing('scenes/shelley');
+  api.addFile('scenes/inventory');
 
   // Locations
 
@@ -87,11 +90,13 @@ Package.onUse(function(api) {
 
   api.addThing('floor2/store/store');
   api.addFile('floor2/store/retro');
+  api.addScript('floor2/store/store-character');
 
   api.addComponent('floor2/store/display/display');
   api.addComponent('floor2/store/shelf/shelf');
   api.addFile('floor2/store/shelf/shelf-game');
   api.addFile('floor2/store/shelf/shelf-upgrades');
+  api.addFile('floor2/store/shelf/shelf-pixel');
   api.addThing('floor2/store/shelf/shelves');
 
   api.addFile('floor2/store/table/table');

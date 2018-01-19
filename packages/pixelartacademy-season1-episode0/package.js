@@ -70,7 +70,6 @@ Package.onUse(function(api) {
   api.addComponent('chapter2/chapter2');
 
   api.addFile('chapter2/scenes/inventory');
-  api.addFile('chapter2/scenes/store');
   api.addFile('chapter2/scenes/2nd');
   api.addFile('chapter2/scenes/cafe');
 

@@ -71,7 +71,7 @@ class LOI.Adventure extends LOI.Adventure
     thingClass = _.thingClass thingClassOrId
     things = @currentThings()
 
-    _.find things, (thing) -> thing.constructor is thingClass
+    _.find things, (thing) -> thing instanceof thingClass
 
   getAvatar: (thingClass) ->
     # Create the avatar if needed. It must be done in non-reactive

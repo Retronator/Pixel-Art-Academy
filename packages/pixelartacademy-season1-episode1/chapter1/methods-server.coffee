@@ -3,7 +3,7 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-C1.AdmissionWeek.applyCharacter.method (characterId, contactEmail) ->
+C1.applyCharacter.method (characterId, contactEmail) ->
   check characterId, Match.DocumentId
   check contactEmail, String
 
@@ -21,9 +21,11 @@ C1.AdmissionWeek.applyCharacter.method (characterId, contactEmail) ->
   LOI.Character.updateContactEmail characterId, contactEmail
 
   # Set the applied field on the AdmissionWeek state.
-  _.nestedProperty characterGameState.state, "things.#{C1.AdmissionWeek.id()}.applied", true
-  
-  # TODO: Add application time.
+  _.nestedProperty characterGameState.state, "things.#{C1.id()}.applied", true
+
+  # Set the date.
+  time = characterGameState.state.gameDateTime
+  _.nestedProperty characterGameState.state, "things.#{C1.id()}.applicationTime", time
 
   LOI.GameState.documents.update characterGameState._id,
     $set:

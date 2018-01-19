@@ -9,6 +9,7 @@ class Retronator.HQ extends LOI.Adventure.Region
   @scenes: -> [
     @Scenes.Intercom
     @Scenes.Shelley
+    @Scenes.Inventory
   ]
 
 if Meteor.isServer

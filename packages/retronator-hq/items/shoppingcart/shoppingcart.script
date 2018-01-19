@@ -6,4 +6,14 @@
 
 -> [End]
 
+## LeavingWithCart
+
+> You realize you still have the shopping cart, so you return it.
+
+### LeaveWithCart
+
+pause
+
+-> [End]
+
 ## End

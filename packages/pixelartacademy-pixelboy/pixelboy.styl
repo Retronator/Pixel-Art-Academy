@@ -1,153 +1,78 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
+.pixelartacademy-pixelboy-resizing
+.pixelartacademy-pixelboy-resizing *
+  cursor nesw-resize !important
+
 .pixelartacademy-pixelboy
-  color atariGrey(5)
-  adventure()
+  position fixed
+  z-index 1
+  bottom -100vh
+  left 50%
+  transform translateX(-50%)
+  transition bottom 1s, transform 1s
 
-  *
-    box-sizing border-box
+  .device
+    &.activated
+      &.screen-center
+        bottom 50%
+        transform translate(-50%, 50%)
 
-  // Pixel art image scaling
-  img
-  canvas
-    pixel-image-rendering()
+      &.screen-bottom
+        bottom 35rem
 
-  h1
-    kyrou-9()
-    color atariGrey(7)
-    font-weight normal
-
-  h2
-    kyrou-7()
-    color atariGrey(7)
-    font-weight normal
-
-  h3
-    kyrou-5()
-    color atariGrey(7)
-    font-weight normal
-
-  ul
-    list-style square
-
-  ul, ol
-    li
-      margin-bottom 1em
-
-  strong
-    font-weight normal
-    color atariGrey(7)
-
-  a
-    color atariGrey(7)
-    cursor pointer
-    text-decoration none
-
-    &:hover
-      background-color atariGrey(7)
-      color atariGrey(0)
-      text-shadow none !important
-
-  hr
-    margin 2em 0
-    height 1rem
-    border none
-    background-color atariGrey(3)
-
-  button
-    display inline-block
-    position relative
-    z-index 0
-    padding 4rem 8rem
-    adventure()
-    color black
-    border none
-    border-bottom 4rem solid transparent
-    cursor pointer
-    margin-bottom 10rem
-    background transparent
-    vertical-align top
-
-    &::after
-      content ''
+    // The hand holding the pixelboy.
+    .hand
+      display block
       position absolute
-      z-index -1
-      top 0
-      left 0
-      right 0
-      bottom -4rem
-      background #666
-      border-bottom 4rem solid #333
+      width 55rem
+      height 120rem
+      left -44rem
+      bottom -35rem
+      cursor s-resize
 
-    &:hover
-    &:focus
-      outline none
+      img
+        width 100%
+        height 100%
 
       &::after
-        background: #888
+        content ''
+        position absolute
+        right 0
+        bottom 30rem
+        width 3rem
+        height 3rem
+        z-index -1
+        background atari2600colors[4][3]
 
-    &:active
-      border-top 4rem solid transparent
-      border-bottom none
-
-      &::after
-        top 0
-        bottom 0
-        border-bottom none
-
-    &:disabled
-      color atariGrey(4)
-
-    &.link-button
-      color atariGrey(7)
-      cursor pointer
-      background none
-      padding 0
+    .os
+      // We can't use absolute-cover() because we're styling the width/height
+      // of a canvas which need to be overriden directly from css.
+      absolute-cover()
       border none
-      top 0
+      transform translateX(0)
+      overflow auto
 
-      &:hover
-        background-color atariGrey(7)
-        color atariGrey(0)
+    .screen
+      position absolute
+      left -1rem
+      top -1rem
+      right -1rem
+      bottom -1rem
+      border solid 1rem atari2600colors[1][0]
+      box-shadow:
+        0 2rem 0 -1rem atari2600colors[2][0],
+        -1rem 1rem atari2600colors[3][0]
 
-      &:active
-        margin-bottom 0
+    .glass
+      position absolute
+      left -4rem
+      top -4rem
+      right -4rem
+      bottom -4rem
+      border solid 1rem atari2600colors[7][0]
+      opacity 0.75
+      box-shadow -1rem 1rem atari2600colors[5][0]
 
-  input
-  textarea
-    font inherit
-    background atariGrey(1)
-    border 2px solid atariGrey(2)
-    color atariGrey(6)
-    input-placeholder atariGrey(2)
-
-    &:focus
-      outline none
-      border-color atariGrey(3)
-
-  input
-    padding 0 4px
-
-  textarea
-    padding 0
-
-  input[type='checkbox']
-    display none
-
-    & + .label
-      cursor pointer
-
-    & + .label::before
-      content '✔'
-      display inline-block
-      width 7rem
-      height 7rem
-      padding 0 0 1rem 1rem
-      margin-right 5rem
-      vertical-align baseline
-      border 1rem solid atariGrey(2)
-      text-align center
-      color transparent
-
-    &:checked + .label::before
-      color atariGrey(5)
+      &.resizable
+        cursor nesw-resize

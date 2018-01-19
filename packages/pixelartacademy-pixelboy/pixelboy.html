@@ -1,17 +1,18 @@
 <template name="PixelArtAcademy.PixelBoy">
-  <style>
-    html, body {
-      width: 100%;
-      height: 100%;
-      padding: 0;
-      margin: 0;
-      font-size: {{display.scale}}px;
-      background: black;
-    }
-  </style>
-  {{> Render display}}
   <div class="pixelartacademy-pixelboy">
-    {{> PixelArtAcademy.PixelBoy.Components.AppSwitcher}}
-    {{> renderCurrentApp}}
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#LandsOfIllusions.Components.Overlay}}
+    {{else}}
+      <div class="max-area">
+        <div class="device {{activatedClass}} {{positioningClass}}">
+          <div class="glass {{resizableClass}}"></div>
+          <div class="screen"></div>
+          <div class="os" {{style osStyle}}>
+            {{> Render os}}
+          </div>
+          <img class="hand" src="{{image '/retronator/hq/items/hand.png'}}" />
+        </div>
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
   </div>
 </template>

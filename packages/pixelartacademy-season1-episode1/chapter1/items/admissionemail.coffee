@@ -37,9 +37,8 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
   gameDate: ->
     return unless LOI.adventure.gameState()
 
-    # The admission email should arrive at 9 AM after the day the character applies.
-    applicationTime = new LOI.GameDate C1.AdmissionWeek.state('applicationTime') or 0
-    applicationTime.next hours: 9
+    # The admission email should arrive when the character was accepted.
+    new LOI.GameDate C1.state('acceptedTime')
 
   sender: ->
     name: @translations()?.from

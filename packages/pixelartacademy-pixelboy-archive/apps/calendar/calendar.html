@@ -1,0 +1,45 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Calendar">
+  <div class="app pixelartacademy-pixelboy-apps-calendar">
+    <h1>Pixel Art Community Calendar</h1>
+    <p>See what happened in the pixel art community this month.</p>
+    <ul class="providers">
+      {{#each providers}}
+        <li class="provider">
+          <label>{{> PixelArtAcademy.PixelBoy.Apps.Calendar.ProviderEnabled}}<span class="label">{{this.displayName}}</span></label>
+        </li>
+      {{/each}}
+    </ul>
+    <div class="navigator">
+      <div class="displayed-month-text">{{displayedMonthText}}</div>
+      <button class="previous-month">{{t7e "Previous"}}</button>
+      {{#if showNextMonthButton}}
+        <button class="next-month">{{t7e "Next"}}</button>
+      {{/if}}
+    </div>
+    <ol class="days">
+      {{#each days}}
+        <li class="day">
+          <div class="date-day">{{getDate}}</div>
+          <ul class="events">
+            {{#each providers}}
+              {{#if enabled}}
+                {{#each calendarEvents}}
+                  <li class="event">
+                    {{> renderCalendarComponent this}}
+                  </li>
+                {{/each}}
+              {{/if}}
+            {{/each}}
+          </ul>
+        </li>
+      {{/each}}
+    </ol>
+    <div class="navigator">
+      <div class="displayed-month-text">{{displayedMonthText}}</div>
+      <button class="previous-month">{{t7e "Previous"}}</button>
+      {{#if showNextMonthButton}}
+        <button class="next-month">{{t7e "Next"}}</button>
+      {{/if}}
+    </div>
+  </div>
+</template>

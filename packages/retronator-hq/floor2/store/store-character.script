@@ -1,0 +1,80 @@
+# Retronator.HQ.StoreCharacter
+
+## RetroDialog
+
+retro: Hi, welcome to Retronator Store. How are you? `not _IntroductionOver`
+retro: Can I help you with anything else? -> [MainQuestion] `_IntroductionOver`
+
+* Fine, thank you. -> [IntroductionOver]
+* Great, how are you?
+
+retro: Doing great as well!
+
+## IntroductionOver
+
+retro: How can I help you today?
+
+## MainQuestion
+
+### AnalyzeCharacter
+
+* I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
+* How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
+* I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
+* That would be all, thank you. -> [EndHelped] `_helped`
+
+<!-- PURCHASING -->
+
+## Purchase
+
+`_helped = true`
+
+retro: Certainly.
+
+> _char_ hands over the shopping cart to Retro.
+
+### CheckoutShoppingCart
+
+## ItemChecksPlaceholder
+
+## PurchaseConfirm
+
+> After entering the items into his computer, he lets _char_ know how much it is and _char_ pays with _their_ credit card.
+
+retro: Thank you so much for that. Here you go.
+
+### Checkout
+### RemoveShoppingCart
+
+> _char_ takes the new purchases.
+
+pause
+
+-> [RetroDialog]
+
+<!-- MAIN QUESTIONS -->
+
+## HowToBuy
+
+`_helped = true`
+
+retro: 
+    Pretty much anything you can find on the shelves around here you can add to your shopping cart.
+    Once you've got what you want, talk to me and I'll ring you up.
+    
+-> [MainQuestion]
+
+## EndHelped
+
+retro: Have a wonderful day!
+
+-> [End]
+
+## EndBrowsing
+
+retro: 
+    Feel free to do so. I'll be around if you need anything.
+
+-> [End]
+
+## End

@@ -100,7 +100,7 @@ class AOA.Application extends AM.Component
     alreadyApplied: ->
       return unless gameState = LOI.GameState.documents.findOne 'character._id': @applicationComponent.selectedCharacterId()
 
-      _.nestedProperty gameState, "state.things.#{PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionWeek.id()}.applied"
+      _.nestedProperty gameState, "state.things.#{PixelArtAcademy.Season1.Episode1.Chapter1.id()}.applied"
 
     renderFullNameInput: ->
       @fullNameInput.renderComponent @currentComponent()
@@ -137,7 +137,7 @@ class AOA.Application extends AM.Component
       @applicationError null
       @submitting true
 
-      PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionWeek.applyCharacter @applicationComponent.selectedCharacterId(), contactEmail, (error) =>
+      PixelArtAcademy.Season1.Episode1.Chapter1.applyCharacter @applicationComponent.selectedCharacterId(), contactEmail, (error) =>
         @submitting false
 
         if error

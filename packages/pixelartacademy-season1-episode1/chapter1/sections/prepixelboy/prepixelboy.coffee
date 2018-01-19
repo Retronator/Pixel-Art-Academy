@@ -1,0 +1,17 @@
+LOI = LandsOfIllusions
+C1 = PixelArtAcademy.Season1.Episode1.Chapter1
+HQ = Retronator.HQ
+
+class C1.PrePixelBoy extends LOI.Adventure.Section
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.PrePixelBoy'
+
+  @scenes: -> [
+    @Store
+  ]
+
+  @initialize()
+
+  @finished: ->
+    # This section is the same as waiting, but is active from
+    # the start form chapter 1, so here we reuse Waiting's finished.
+    C1.Waiting.finished()

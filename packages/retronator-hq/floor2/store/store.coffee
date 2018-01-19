@@ -23,7 +23,10 @@ class HQ.Store extends LOI.Adventure.Location
       you can see bookshelves further out to the east.
     "
 
-  @defaultScriptUrl: -> 'retronator_retronator-hq/floor2/store/store.script'
+  @listeners: ->
+    super.concat [
+      @RetroListener
+    ]
 
   @initialize()
 
@@ -51,6 +54,8 @@ class HQ.Store extends LOI.Adventure.Location
   things: ->
     newestTableItem = @retro.newestTableItem()
 
+    inventoryScene = _.find LOI.adventure.currentScenes(), (scene) -> scene instanceof HQ.Scenes.Inventory
+
     _.flattenDeep [
       @constructor.Table
       @retro
@@ -59,7 +64,9 @@ class HQ.Store extends LOI.Adventure.Location
       HQ.Store.Display
       HQ.Store.Shelf.Game
       HQ.Store.Shelf.Upgrades
+      HQ.Store.Shelf.Pixel
       HQ.Store.Shelves
+      inventoryScene?.cart() unless HQ.Items.ShoppingCart.state 'inInventory'
       @elevatorButton
     ]
 
@@ -72,178 +79,224 @@ class HQ.Store extends LOI.Adventure.Location
       "#{Vocabulary.Keys.Directions.Down}": HQ.Cafe
       "#{Vocabulary.Keys.Directions.Southeast}": HQ.Cafe
 
-  # Script
+  class @RetroListener extends LOI.Adventure.Listener
+    @id: -> "Retronator.HQ.Store.Retro"
 
-  initializeScript: ->
-    @setCurrentThings
-      retro: HQ.Store.Retro
-  
-    @setCallbacks
-      AnalyzeUser: (complete) =>
-        shoppingCart = HQ.Items.ShoppingCart.state()?.contents or []
+    @scriptUrls: -> [
+      'retronator_retronator-hq/floor2/store/store.script'
+      'retronator_retronator-hq/floor2/store/store-character.script'
+    ]
 
-        buyingBaseGame = false
-        buyingAlphaAccess = false
+    class @UserScript extends LOI.Adventure.Script
+      @id: -> "Retronator.HQ.Store"
+      @initialize()
 
-        console.log "Analyzing shopping cart", shoppingCart if HQ.debug
+      initialize: ->
+        @setCurrentThings
+          retro: HQ.Store.Retro
 
-        PreOrderKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder
+        @setCallbacks
+          AnalyzeUser: (complete) =>
+            shoppingCart = HQ.Items.ShoppingCart.state()?.contents or []
 
-        for cartItem in shoppingCart
-          switch cartItem.item
-            when PreOrderKeys.BasicGame, PreOrderKeys.FullGame, PreOrderKeys.AlphaAccess
-              buyingBaseGame = true
+            buyingBaseGame = false
+            buyingAlphaAccess = false
 
-          switch cartItem.item
-            when PreOrderKeys.AlphaAccessUpgrade, PreOrderKeys.AlphaAccess
-              buyingAlphaAccess = true
+            console.log "Analyzing shopping cart", shoppingCart if HQ.debug
 
-        KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
+            PreOrderKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder
 
-        eligibleBackerTiers = []
+            for cartItem in shoppingCart
+              switch cartItem.item
+                when PreOrderKeys.BasicGame, PreOrderKeys.FullGame, PreOrderKeys.AlphaAccess
+                  buyingBaseGame = true
 
-        kickstarterTierKeys = [KickstarterKeys.BasicGame, KickstarterKeys.FullGame, KickstarterKeys.AlphaAccess]
+              switch cartItem.item
+                when PreOrderKeys.AlphaAccessUpgrade, PreOrderKeys.AlphaAccess
+                  buyingAlphaAccess = true
 
-        for tierKey in kickstarterTierKeys
-          tier = RS.Item.documents.findOne(catalogKey: tierKey)?.cast()
+            KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
 
-          unless tier
-            console.warn "Item for tier", tierKey, "not found."
-            eligibleBackerTiers.push false
-            continue
+            eligibleBackerTiers = []
 
-          try
-            tier.validateEligibility()
+            kickstarterTierKeys = [KickstarterKeys.BasicGame, KickstarterKeys.FullGame, KickstarterKeys.AlphaAccess]
 
-          catch error
-            eligibleBackerTiers.push false
-            continue
+            for tierKey in kickstarterTierKeys
+              tier = RS.Item.documents.findOne(catalogKey: tierKey)?.cast()
 
-          # Make sure any kickstarter tier is not already in the shopping cart.
-          inCart = _.find shoppingCart, (cartItem) => cartItem.item in kickstarterTierKeys
+              unless tier
+                console.warn "Item for tier", tierKey, "not found."
+                eligibleBackerTiers.push false
+                continue
 
-          eligibleBackerTiers.push not inCart
+              try
+                tier.validateEligibility()
 
-        noRewardBacker = true in eligibleBackerTiers
+              catch error
+                eligibleBackerTiers.push false
+                continue
 
-        ephemeralState = @ephemeralState()
-        ephemeralState.hasShoppingCart = HQ.Items.ShoppingCart.state 'inInventory'
-        ephemeralState.shoppingCart = shoppingCart
-        ephemeralState.buyingBaseGame = buyingBaseGame
-        ephemeralState.buyingAlphaAccess = buyingAlphaAccess
-        ephemeralState.noRewardBacker = noRewardBacker
-        ephemeralState.eligibleBackerTiers = eligibleBackerTiers
+              # Make sure any kickstarter tier is not already in the shopping cart.
+              inCart = _.find shoppingCart, (cartItem) => cartItem.item in kickstarterTierKeys
 
-        console.log "Analyzed user and set ephemeral state to", ephemeralState if HQ.debug
+              eligibleBackerTiers.push not inCart
 
-        complete()
+            noRewardBacker = true in eligibleBackerTiers
 
-      AddTierToCart: (complete) =>
-        ephemeralState = @ephemeralState()
-        KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
+            ephemeralState = @ephemeralState()
+            ephemeralState.hasShoppingCart = HQ.Items.ShoppingCart.state 'inInventory'
+            ephemeralState.shoppingCart = shoppingCart
+            ephemeralState.buyingBaseGame = buyingBaseGame
+            ephemeralState.buyingAlphaAccess = buyingAlphaAccess
+            ephemeralState.noRewardBacker = noRewardBacker
+            ephemeralState.eligibleBackerTiers = eligibleBackerTiers
 
-        # We search from highest down to find the first available tier.
-        for tierKey, i in [KickstarterKeys.AlphaAccess, KickstarterKeys.FullGame, KickstarterKeys.BasicGame]
-          if ephemeralState.eligibleBackerTiers[2 - i]
-            HQ.Items.ShoppingCart.addItem tierKey
+            console.log "Analyzed user and set ephemeral state to", ephemeralState if HQ.debug
 
-            # We added the tier, don't add others.
-            break
+            complete()
 
-        complete()
-        
-      CheckoutShoppingCart: (complete) =>
-        HQ.Items.ShoppingCart.state 'atCheckout', true
-        complete()
+          AddTierToCart: (complete) =>
+            ephemeralState = @ephemeralState()
+            KickstarterKeys = RS.Items.CatalogKeys.Bundles.PixelArtAcademy.Kickstarter
 
-      ReturnShoppingCart: (complete) =>
-        HQ.Items.ShoppingCart.state 'atCheckout', false
-        complete()
+            # We search from highest down to find the first available tier.
+            for tierKey, i in [KickstarterKeys.AlphaAccess, KickstarterKeys.FullGame, KickstarterKeys.BasicGame]
+              if ephemeralState.eligibleBackerTiers[2 - i]
+                HQ.Items.ShoppingCart.addItem tierKey
 
-      RemoveShoppingCart: (complete) =>
-        HQ.Items.ShoppingCart.state 'atCheckout', false
-        HQ.Items.ShoppingCart.state 'inInventory', false
-        complete()
+                # We added the tier, don't add others.
+                break
 
-      AddReceipt: (complete) =>
-        HQ.Items.Receipt.state 'inInventory', true
-        complete()
-        
-      RemoveReceipt: (complete) =>
-        HQ.Items.Receipt.state 'inInventory', false
-        complete()
+            complete()
 
-      Checkout: (complete) =>
-        receipt = LOI.adventure.getCurrentThing HQ.Items.Receipt
-        
-        # Look at display.
-        display = LOI.adventure.getCurrentThing HQ.Store.Display
-        display.view HQ.Store.Display.Views.Left
-        display.showReceiptSupporters true
-        
-        LOI.adventure.goToItem display
+          CheckoutShoppingCart: (complete) =>
+            HQ.Items.ShoppingCart.state 'atCheckout', true
+            complete()
 
-        # Reset canceled status.
-        receipt.transactionCompleted = false
+          ReturnShoppingCart: (complete) =>
+            HQ.Items.ShoppingCart.state 'atCheckout', false
+            complete()
 
-        # Activate the receipt so it gets overlaid.
-        receipt.activate()
+          RemoveShoppingCart: (complete) =>
+            HQ.Items.ShoppingCart.state 'atCheckout', false
+            HQ.Items.ShoppingCart.state 'inInventory', false
+            complete()
 
-        # Wait until the receipt is deactivated
-        Tracker.autorun (computation) =>
-          return unless receipt.deactivated()
-          computation.stop()
+          AddReceipt: (complete) =>
+            HQ.Items.Receipt.state 'inInventory', true
+            complete()
 
-          # Let the script know if transaction succeeded or not.
-          @ephemeralState().transactionCompleted = receipt.transactionCompleted
-          @ephemeralState().purchaseErrorAfterPurchase = receipt.purchaseErrorAfterCharge()
+          RemoveReceipt: (complete) =>
+            HQ.Items.Receipt.state 'inInventory', false
+            complete()
 
-          # Return to location.
-          display.view HQ.Store.Display.Views.Center
-          display.showReceiptSupporters false
-          LOI.adventure.deactivateCurrentItem()
+          Checkout: (complete) =>
+            receipt = LOI.adventure.getCurrentThing HQ.Items.Receipt
 
-          complete()
+            # Look at display.
+            display = LOI.adventure.getCurrentThing HQ.Store.Display
+            display.view HQ.Store.Display.Views.Left
+            display.showReceiptSupporters true
 
-      ReadPixelArtAcademyPosts: (complete) =>
-        patreon = window.open 'https://www.patreon.com/retro/posts?tag=Pixel%20Art%20Academy', '_blank'
-        patreon.focus()
+            LOI.adventure.goToItem display
 
-        # Wait for our window to get focus.
-        $(window).on 'focus.patreon', =>
-          complete()
-          $(window).off '.patreon'
+            # Reset canceled status.
+            receipt.transactionCompleted = false
 
-      VisitPatreon: (complete) =>
-        patreon = window.open 'https://www.patreon.com/retro', '_blank'
-        patreon.focus()
+            # Activate the receipt so it gets overlaid.
+            receipt.activate()
 
-        # Wait for our window to get focus.
-        $(window).on 'focus.patreon', =>
-          complete()
-          $(window).off '.patreon'
+            # Wait until the receipt is deactivated
+            Tracker.autorun (computation) =>
+              return unless receipt.deactivated()
+              computation.stop()
 
-      ReadStudyGuide: (complete) =>
-        medium = window.open 'https://medium.com/retronator-magazine/pixel-art-academy-study-guide-3ae5f772a83a', '_blank'
-        medium.focus()
+              # Let the script know if transaction succeeded or not.
+              @ephemeralState().transactionCompleted = receipt.transactionCompleted
+              @ephemeralState().purchaseErrorAfterPurchase = receipt.purchaseErrorAfterCharge()
 
-        # Wait for our window to get focus.
-        $(window).on 'focus.medium', =>
-          complete()
-          $(window).off '.medium'
+              # Return to location.
+              display.view HQ.Store.Display.Views.Center
+              display.showReceiptSupporters false
+              LOI.adventure.deactivateCurrentItem()
 
-  # Listener
+              complete()
 
-  onCommand: (commandResponse) ->
-    if retro = LOI.adventure.getCurrentThing HQ.Store.Retro
-      commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]
-        action: => @startScript label: 'RetroDialog'
-      table = @options.parent
+          ReadPixelArtAcademyPosts: (complete) =>
+            patreon = window.open 'https://www.patreon.com/retro/posts?tag=Pixel%20Art%20Academy', '_blank'
+            patreon.focus()
 
-    if table = LOI.adventure.getCurrentThing HQ.Store.Table
-      commandResponse.onPhrase
-        form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], table.avatar]
-        priority: 1
-        action: =>
-          LOI.adventure.goToLocation table
+            # Wait for our window to get focus.
+            $(window).on 'focus.patreon', =>
+              complete()
+              $(window).off '.patreon'
+
+          VisitPatreon: (complete) =>
+            patreon = window.open 'https://www.patreon.com/retro', '_blank'
+            patreon.focus()
+
+            # Wait for our window to get focus.
+            $(window).on 'focus.patreon', =>
+              complete()
+              $(window).off '.patreon'
+
+          ReadStudyGuide: (complete) =>
+            medium = window.open 'https://medium.com/retronator-magazine/pixel-art-academy-study-guide-3ae5f772a83a', '_blank'
+            medium.focus()
+
+            # Wait for our window to get focus.
+            $(window).on 'focus.medium', =>
+              complete()
+              $(window).off '.medium'
+
+    class @CharacterScript extends LOI.Adventure.Script
+      @id: -> "Retronator.HQ.StoreCharacter"
+      @initialize()
+
+      initialize: ->
+        @setCurrentThings retro: HQ.Actors.Retro
+
+        @setCallbacks
+          AnalyzeCharacter: (complete) =>
+            shoppingCart = HQ.Items.ShoppingCart.state()?.contents or []
+
+            ephemeralState = @ephemeralState()
+            ephemeralState.hasShoppingCart = HQ.Items.ShoppingCart.state 'inInventory'
+            ephemeralState.shoppingCart = shoppingCart
+
+            console.log "Analyzed character and set ephemeral state to", ephemeralState if HQ.debug
+
+            complete()
+            
+          CheckoutShoppingCart: (complete) =>
+            HQ.Items.ShoppingCart.state 'atCheckout', true
+            complete()
+
+          RemoveShoppingCart: (complete) =>
+            HQ.Items.ShoppingCart.state 'atCheckout', false
+            HQ.Items.ShoppingCart.state 'inInventory', false
+            complete()
+
+          Checkout: (complete) =>
+            complete()
+
+    @initialize()
+
+    onScriptsLoaded: ->
+      @userScript = @scripts[@constructor.UserScript.id()]
+      @characterScript = @scripts[@constructor.CharacterScript.id()]
+
+    onCommand: (commandResponse) ->
+      if retro = LOI.adventure.getCurrentThing HQ.Store.Retro
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]
+          action: =>
+            script = if LOI.character() then @characterScript else @userScript
+            LOI.adventure.director.startScript script
+
+      if table = LOI.adventure.getCurrentThing HQ.Store.Table
+        commandResponse.onPhrase
+          form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], table.avatar]
+          priority: 1
+          action: =>
+            LOI.adventure.goToLocation table
