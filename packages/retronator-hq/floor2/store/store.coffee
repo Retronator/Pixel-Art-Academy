@@ -278,6 +278,20 @@ class HQ.Store extends LOI.Adventure.Location
             complete()
 
           Checkout: (complete) =>
+            # Move all things into inventory.
+            cartItems = HQ.Items.ShoppingCart.state()?.contents or []
+
+            for cartItem in cartItems
+              thingId = _.thingId cartItem.catalogKey
+              thingClass = LOI.Adventure.Thing.getClassForId thingId
+              continue unless thingClass
+
+              # Place the thing in the inventory.
+              thingClass.state 'inInventory', true
+
+            # Clear the shopping cart.
+            HQ.Items.ShoppingCart.clearItems()
+
             complete()
 
     @initialize()

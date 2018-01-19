@@ -24,25 +24,29 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
     @subscribe RS.Transaction.forCurrentUser
     RS.Payment.forCurrentUser.subscribe @
 
-    # Items in the character's cart are Things with their IDs as catalog keys.
     @_thingAvatars = []
     @_thingItems = new ComputedField =>
       # Destroy previous avatars.
       avatar.destroy() for avatar in @_thingAvatars
       @_thingAvatars = []
+      
+      thingItems = []
 
       for thing in @things()
         thingId = _.thingId thing
         thingClass = LOI.Adventure.Thing.getClassForId thingId
-        break unless thingClass
+        continue unless thingClass
 
         # Create the item's avatar to provide name and description translations.
         avatar = thingClass.createAvatar()
         @_thingAvatars.push avatar
 
-        name: avatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
-        description: avatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.storeDescription
-        catalogKey: thingId
+        thingItems.push
+          name: avatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
+          description: avatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.storeDescription
+          catalogKey: thingId
+
+      thingItems
 
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
