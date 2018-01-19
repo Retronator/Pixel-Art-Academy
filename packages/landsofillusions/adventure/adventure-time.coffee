@@ -16,22 +16,22 @@ class LOI.Adventure extends LOI.Adventure
       # Read last playtime from game state.
       return unless gameState = @gameState()
       lastTime = gameState.time or 0
-      lastGameDateTime = gameState.gameDateTime or 0
+      lastGameTime = gameState.gameTime or 0
 
       # Add one second.
       newTime = lastTime + 1
 
       speedFactor = gameState.gameTimeSpeedFactor or 1
-      newGameDateTime = lastGameDateTime + speedFactor / (60 * 60 * 24)
+      newGameTime = lastGameTime + speedFactor / (60 * 60 * 24)
 
       # Update time in game state, but don't trigger reactivity (no need to update the database just for time increase)/.
       gameState.time = newTime
-      gameState.gameDateTime = newGameDateTime
+      gameState.gameTime = newGameTime
 
       # Instead, if things need to be reactive to time, they will depend on the time reactive field.
       @_time newTime
 
-      newGameDate = new LOI.GameDate newGameDateTime
+      newGameDate = new LOI.GameDate newGameTime
       @_gameDate newGameDate
 
       console.log "Playtime:", newTime, "seconds, Game time:", newGameDate.toString() if LOI.debug

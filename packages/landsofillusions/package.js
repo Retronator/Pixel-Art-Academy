@@ -31,16 +31,17 @@ Package.onUse(function(api) {
 
   // Game state
 
-  api.addFiles('state/gamestate.coffee');
-  api.addFiles('state/localgamestate.coffee');
-  api.addFiles('state/methods.coffee');
-  api.addFiles('state/subscriptions.coffee', 'server');
-  api.addFiles('state/stateobject.coffee');
-  api.addFiles('state/statefield.coffee');
-  api.addFiles('state/stateaddress.coffee');
-  api.addFiles('state/stateinstances.coffee');
-  api.addFiles('state/ephemeralstateobject.coffee');
-  api.addFiles('state/localsavegames.coffee');
+  api.addFile('state/gamestate');
+  api.addServerFile('state/gamestate-events-server');
+  api.addFile('state/localgamestate');
+  api.addFile('state/methods');
+  api.addServerFile('state/subscriptions');
+  api.addFile('state/stateobject');
+  api.addFile('state/statefield');
+  api.addFile('state/stateaddress');
+  api.addFile('state/stateinstances');
+  api.addFile('state/ephemeralstateobject');
+  api.addFile('state/localsavegames');
 
   api.addServerFile('state/migrations/0000-immersionrevamp');
   api.addServerFile('state/migrations/0001-renamecollection');
@@ -270,6 +271,11 @@ Package.onUse(function(api) {
   api.addFiles('adventure/region/region.coffee');
   api.addFiles('adventure/location/location.coffee');
   api.addFiles('adventure/location/inventory.coffee');
+  
+  // Events
+  
+  api.addFile('adventure/event..');
+  api.addFile('adventure/event/stopevent');
 
   // Parser Listeners
 
@@ -366,5 +372,6 @@ Package.onUse(function(api) {
 
   // Time
 
-  api.addFile('time/gamedate')
+  api.addFile('time..');
+  api.addFile('time/gamedate');
 });

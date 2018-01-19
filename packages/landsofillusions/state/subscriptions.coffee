@@ -2,11 +2,18 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
+ignoreFields =
+  events: false
+  lastUpdated: false
+  nextSimulateTime: false
+
 LOI.GameState.forCurrentUser.publish ->
   return unless @userId
   
   LOI.GameState.documents.find
     'user._id': @userId
+  ,
+    fields: ignoreFields
 
 LOI.GameState.forCharacter.publish (characterId) ->
   check characterId, Match.DocumentId
@@ -20,3 +27,6 @@ LOI.GameState.forCharacter.publish (characterId) ->
 
   LOI.GameState.documents.find
     'character._id': characterId
+  ,
+    fields: ignoreFields
+

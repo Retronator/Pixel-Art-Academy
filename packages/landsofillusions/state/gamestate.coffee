@@ -11,19 +11,44 @@ class LOI.GameState extends AM.Document
   #   currentLocationId: the last known location of the player
   #   currentTimelineId: the last known timeline in which the player is
   #   time: integer number of seconds the player has spent in the game
-  #   gameDateTime: fractional number of days passed in the game
+  #   gameTime: fractional number of days passed in the game
+  # events: array of events that need to execute on the server
+  #   id: id of the event instance
+  #   type: type id of the event class that handles this event
+  #   gameTime: when the event happens in game time
+  #   ... any custom data of the event
+  # nextSimulateTime: auto-generated real life time when the next simulation should happen on the server
   # user: the user this state belongs to or null if it's a character state
   #   _id
+  #   displayName
   # character: the character this state belongs to or null if it's a user state
   #   _id
+  #   debugName
+  # lastUpdated: auto-updated time when game state was last written to
   @Meta
     name: @id()
     fields: =>
-      user: @ReferenceField Retronator.Accounts.User
-      character: @ReferenceField LOI.Character
+      user: @ReferenceField Retronator.Accounts.User, ['displayName']
+      character: @ReferenceField LOI.Character, ['debugName']
+      nextSimulateTime: @GeneratedField 'self', ['events'], (fields) ->
+        return [fields._id, null] unless fields.events?.length
+
+        earliestEvent = _.first _.sortBy fields.events, 'gameTime'
+        eventInstance = LOI.Adventure.Event.getEvent earliestEvent, LOI.GameState.documents.findOne(fields._id).state
+        
+        [fields._id, eventInstance.simulateAtTime()]
+
+    triggers: =>
+      updateLastUpdated: @Trigger ['state'], (newDocument, oldDocument) ->
+        # Don't do anything when document is removed.
+        return unless newDocument?._id
+
+        LOI.GameState.documents.update newDocument._id,
+          $set:
+            lastUpdated: new Date()
 
   # We define these privately because we have custom public methods
-  # that transform the state localy before passing it on to the server.
+  # that transform the state locally before passing it on to the server.
   @_insertForCurrentUser: @method 'insertForCurrentUser'
   @_clearForCurrentUser: @method 'clearForCurrentUser'
   @_replaceForCurrentUser: @method 'replaceForCurrentUser'
