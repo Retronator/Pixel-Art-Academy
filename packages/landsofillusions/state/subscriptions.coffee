@@ -9,6 +9,10 @@ ignoreFields =
 
 LOI.GameState.forCurrentUser.publish ->
   return unless @userId
+
+  # Before we send the document, simulate it to current time.
+  gameState = LOI.GameState.documents.findOne 'user._id': @userId
+  LOI.Simulation.Server.simulateGameState gameState
   
   LOI.GameState.documents.find
     'user._id': @userId
@@ -24,6 +28,10 @@ LOI.GameState.forCharacter.publish (characterId) ->
 
   unless character?.user._id is @userId
     throw new AE.UnauthorizedException "The character does not belong to the logged in user."
+
+  # Before we send the document, simulate it to current time.
+  gameState = LOI.GameState.documents.findOne 'character._id': characterId
+  LOI.Simulation.Server.simulateGameState gameState
 
   LOI.GameState.documents.find
     'character._id': characterId

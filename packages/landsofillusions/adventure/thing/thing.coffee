@@ -116,6 +116,7 @@ class LOI.Adventure.Thing extends AM.Component
     # Create static state field.
     @stateAddress = new LOI.StateAddress "things.#{@id()}"
     @state = new LOI.StateObject address: @stateAddress
+    @readOnlyState = new LOI.StateObject address: @stateAddress, stateType: LOI.GameState.Type.ReadOnly
 
     @scriptStateAddress = new LOI.StateAddress "scripts.#{@id()}"
     @scriptState = new LOI.StateObject address: @scriptStateAddress

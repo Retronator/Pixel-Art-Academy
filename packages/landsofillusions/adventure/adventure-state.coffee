@@ -158,6 +158,21 @@ class LOI.Adventure extends LOI.Adventure
     # Set the updated function for the first time.
     @userGameState.updated = _userGameStateUpdated
 
+    # Read-only game state only gets updated on the server, so its logic handling on the client is very simple. We 
+    # assume we're already subscribed to the game state document via the main game state so we simply just return the
+    # read-only part of the document.
+    @readOnlyGameState = new ComputedField =>
+      userId = Meteor.userId()
+      characterId = LOI.characterId()
+
+      if characterId
+        gameState = LOI.GameState.documents.findOne 'character._id': characterId
+
+      else
+        gameState = LOI.GameState.documents.findOne 'user._id': userId
+        
+      gameState?.readOnlyState
+    
     # Flush the state updates to the database when the page is about to unload.
     window.addEventListener 'beforeunload', (event) =>
       @gameState?.updated flush: true

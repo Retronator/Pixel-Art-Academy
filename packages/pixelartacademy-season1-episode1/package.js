@@ -32,7 +32,11 @@ Package.onUse(function(api) {
   // Chapter 1: Admission Week
 
   api.addFile('chapter1..');
+  api.addServerFile('chapter1/chapter1-server');
   api.addServerFile('chapter1/methods-server');
+
+  api.addFile('chapter1/events..');
+  api.addFile('chapter1/events/applicationaccepted');
 
   api.addFile('chapter1/items..');
   api.addFile('chapter1/items/admissionemail');

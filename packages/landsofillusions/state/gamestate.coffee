@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.GameState extends AM.Document
   @id: -> 'LandsOfIllusions.GameState'
-  # state: object that holds all game information
+  # state: object that holds editable game information
   #   things: a map of all things
   #     {thingId}: state of the thing
   #   scripts: a map of all scripts
@@ -12,10 +12,15 @@ class LOI.GameState extends AM.Document
   #   currentTimelineId: the last known timeline in which the player is
   #   time: integer number of seconds the player has spent in the game
   #   gameTime: fractional number of days passed in the game
+  # stateLastUpdatedAt: time when game state was last written to
+  # readOnlyState: object with game information that only server can write to
+  #   things: a map of all things
+  #     {thingId}: state of the thing
+  #   simulatedGameTime: how far the server has gotten with simulating game events
   # events: array of events that need to execute on the server
   #   id: id of the event instance
   #   type: type id of the event class that handles this event
-  #   gameTime: when the event happens in game time
+  #   gameTime: fractional number of days when the event happens in game time
   #   ... any custom data of the event
   # nextSimulateTime: auto-generated real life time when the next simulation should happen on the server
   # user: the user this state belongs to or null if it's a character state
@@ -24,28 +29,30 @@ class LOI.GameState extends AM.Document
   # character: the character this state belongs to or null if it's a user state
   #   _id
   #   debugName
-  # lastUpdated: auto-updated time when game state was last written to
   @Meta
     name: @id()
     fields: =>
       user: @ReferenceField Retronator.Accounts.User, ['displayName']
       character: @ReferenceField LOI.Character, ['debugName']
-      nextSimulateTime: @GeneratedField 'self', ['events'], (fields) ->
+      # Events and state both influence next simulation time (we need earliest event, 
+      # and latest game time as well as when that game time was written (last updated at)).
+      nextSimulateTime: @GeneratedField 'self', ['events', 'state', 'stateLastUpdatedAt'], (fields) ->
         return [fields._id, null] unless fields.events?.length
 
         earliestEvent = _.first _.sortBy fields.events, 'gameTime'
-        eventInstance = LOI.Adventure.Event.getEvent earliestEvent, LOI.GameState.documents.findOne(fields._id).state
-        
-        [fields._id, eventInstance.simulateAtTime()]
+        eventInstance = LOI.Adventure.Event.getEvent earliestEvent, LOI.GameState.documents.findOne fields._id
+
+        time = eventInstance.simulateAtTime()
+
+        [fields._id, time]
 
     triggers: =>
-      updateLastUpdated: @Trigger ['state'], (newDocument, oldDocument) ->
+      simulate: @Trigger ['nextSimulateTime'], (newDocument, oldDocument) ->
         # Don't do anything when document is removed.
         return unless newDocument?._id
 
-        LOI.GameState.documents.update newDocument._id,
-          $set:
-            lastUpdated: new Date()
+        # If current time is after the first event is scheduled, do the simulation now.
+        LOI.Simulation.Server.simulateGameState newDocument if new Date() > newDocument.nextSimulateTime
 
   # We define these privately because we have custom public methods
   # that transform the state locally before passing it on to the server.
@@ -61,6 +68,10 @@ class LOI.GameState extends AM.Document
       
   @forCurrentUser: @subscription 'forCurrentUser'
   @forCharacter: @subscription 'forCharacter'
+
+  @Type:
+    Editable: 'gameState'
+    ReadOnly: 'readOnlyGameState'
 
   constructor: ->
     super

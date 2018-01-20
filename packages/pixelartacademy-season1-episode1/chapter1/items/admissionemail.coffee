@@ -38,7 +38,7 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
     return unless LOI.adventure.gameState()
 
     # The admission email should arrive when the character was accepted.
-    return unless acceptedTime = C1.state('application')?.acceptedTime
+    return unless acceptedTime = C1.readOnlyState('application')?.acceptedTime
     
     new LOI.GameDate acceptedTime
 

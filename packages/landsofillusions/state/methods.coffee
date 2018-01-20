@@ -15,6 +15,9 @@ LOI.GameState._insertForCurrentUser.method (state) ->
     user:
       _id: user._id
     state: state
+    stateLastUpdatedAt: new Date()
+    readOnlyState: {}
+    events: []
 
 LOI.GameState._clearForCurrentUser.method ->
   user = Retronator.user()
@@ -27,6 +30,9 @@ LOI.GameState._clearForCurrentUser.method ->
   LOI.GameState.documents.update gameState._id,
     $set:
       state: {}
+      stateLastUpdatedAt: new Date()
+      readOnlyState: {}
+      events: []
 
 LOI.GameState._replaceForCurrentUser.method (state) ->
   check state, Object
@@ -37,10 +43,14 @@ LOI.GameState._replaceForCurrentUser.method (state) ->
   gameState = LOI.GameState.documents.findOne 'user._id': user._id
   throw new AE.ArgumentException "User does not have a game state." unless gameState
 
-  # Everything seems OK, replace the state.
+  # Everything seems OK, replace the state. This is considered the same as starting over (inserting)
+  # from the perspective of the server which starts with an empty read-only state again.
   LOI.GameState.documents.update gameState._id,
     $set:
       state: state
+      stateLastUpdatedAt: new Date()
+      readOnlyState: {}
+      events: []
 
 LOI.GameState._insertForCharacter.method (characterId) ->
   check characterId, Match.DocumentId
@@ -56,6 +66,9 @@ LOI.GameState._insertForCharacter.method (characterId) ->
     character:
       _id: characterId
     state: {}
+    stateLastUpdatedAt: new Date()
+    readOnlyState: {}
+    events: []
 
 LOI.GameState._clearForCharacter.method (characterId) ->
   check characterId, Match.DocumentId
@@ -70,6 +83,9 @@ LOI.GameState._clearForCharacter.method (characterId) ->
   LOI.GameState.documents.update gameState._id,
     $set:
       state: {}
+      stateLastUpdatedAt: new Date()
+      readOnlyState: {}
+      events: []
 
 LOI.GameState._replaceForCharacter.method (characterId, state) ->
   check characterId, Match.DocumentId
@@ -85,6 +101,9 @@ LOI.GameState._replaceForCharacter.method (characterId, state) ->
   LOI.GameState.documents.update gameState._id,
     $set:
       state: state
+      stateLastUpdatedAt: new Date()
+      readOnlyState: {}
+      events: []
 
 LOI.GameState.update.method (gameStateId, state) ->
   check gameStateId, Match.DocumentId
@@ -118,3 +137,6 @@ LOI.GameState.update.method (gameStateId, state) ->
   LOI.GameState.documents.update gameStateId,
     $set:
       state: state
+      # We manually update this field (instead of let's say with
+      # triggers), so that it atomically updates with the state.
+      stateLastUpdatedAt: new Date()

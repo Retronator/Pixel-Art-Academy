@@ -45,6 +45,7 @@ Package.onUse(function(api) {
 
   api.addServerFile('state/migrations/0000-immersionrevamp');
   api.addServerFile('state/migrations/0001-renamecollection');
+  api.addServerFile('state/migrations/0002-addinggamestatefields');
 
   // Avatar
 
@@ -374,4 +375,10 @@ Package.onUse(function(api) {
 
   api.addFile('time..');
   api.addFile('time/gamedate');
+
+  // Simulation
+
+  api.addFile('simulation..');
+  api.addServerFile('simulation/server');
+
 });

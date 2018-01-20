@@ -3,6 +3,8 @@ LOI = LandsOfIllusions
 
 class LOI.StateObject
   constructor: (options) ->
+    options.stateType ?= LOI.GameState.Type.Editable
+
     stateFields = {}
 
     fieldGetter = (fieldName, getterOptions = {}) ->
@@ -10,6 +12,7 @@ class LOI.StateObject
       unless stateFields[fieldName]
         stateFields[fieldName] = new LOI.StateField _.extend getterOptions,
           address: options.address.child fieldName
+          stateType: options.stateType
 
       stateFields[fieldName]
 

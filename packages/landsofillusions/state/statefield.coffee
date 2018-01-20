@@ -3,11 +3,13 @@ LOI = LandsOfIllusions
 
 class LOI.StateField
   constructor: (options) ->
+    options.stateType ?= LOI.GameState.Type.Editable
+    
     # We want to create an internal computed field that we'll depend upon to isolate reactivity.
     field = new ComputedField =>
       return unless LOI.adventureInitialized()
 
-      value = _.nestedProperty LOI.adventure.gameState(), options.address.string()
+      value = _.nestedProperty LOI.adventure[options.stateType](), options.address.string()
 
       # If we didn't find the value, see if we have a default value set.
       value ?= options.default
@@ -29,8 +31,8 @@ class LOI.StateField
         # we never know if they were internally changed, so we do it always).
         if value isnt oldValue or _.isObject(value)
           # We directly change the value of the field and trigger state update.
-          _.nestedProperty LOI.adventure.gameState(), options.address.string(), value
-          LOI.adventure.gameState.updated()
+          _.nestedProperty LOI.adventure[options.stateType](), options.address.string(), value
+          LOI.adventure[options.stateType].updated()
 
         return
 

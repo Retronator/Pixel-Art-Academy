@@ -20,7 +20,7 @@ C1.applyCharacter.method (characterId, contactEmail) ->
   # Change character's contact email.
   LOI.Character.updateContactEmail characterId, contactEmail
 
-  # Set the applied field on the AdmissionWeek state.
+  # Set the applied field on the application state.
   _.nestedProperty characterGameState.state, "things.#{C1.id()}.application.applied", true
 
   # Set the date.
@@ -31,3 +31,11 @@ C1.applyCharacter.method (characterId, contactEmail) ->
   LOI.GameState.documents.update characterGameState._id,
     $set:
       state: characterGameState.state
+      
+  # TODO: Add gating of applicants.
+  
+  # If applicants are automatically accepted, do it, if they meet chapter's requirement.
+  user = Retronator.user()
+  meetsRequirements = user.hasItem C1.accessRequirement()
+
+  C1.acceptCharacter characterId if meetsRequirements
