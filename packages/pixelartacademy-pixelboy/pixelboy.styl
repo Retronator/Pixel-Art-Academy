@@ -5,15 +5,24 @@
   cursor nesw-resize !important
 
 .pixelartacademy-pixelboy
-  position fixed
-  z-index 1
-  bottom -100vh
-  left 50%
-  transform translateX(-50%)
-  transition bottom 1s, transform 1s
+  visibility hidden
+
+  &.visible
+    visibility visible
+
+  .landsofillusions-components-overlay
+    > .safe-area
+      display none
 
   .device
-    &.activated
+    position absolute
+    z-index 1
+    bottom -100vh
+    left 50%
+    transform translateX(-50%)
+    transition bottom 1s, transform 1s
+
+    &.active
       &.screen-center
         bottom 50%
         transform translate(-50%, 50%)
@@ -21,15 +30,14 @@
       &.screen-bottom
         bottom 35rem
 
-    // The hand holding the pixelboy.
     .hand
       display block
       position absolute
-      width 55rem
-      height 120rem
-      left -44rem
-      bottom -35rem
-      cursor s-resize
+      width 85rem
+      height 196rem
+      pointer-events none
+      left -70rem
+      bottom -66rem
 
       img
         width 100%
@@ -59,10 +67,10 @@
       top -1rem
       right -1rem
       bottom -1rem
-      border solid 1rem atari2600colors[1][0]
+      border solid 1rem atariGrey(1)
       box-shadow:
-        0 2rem 0 -1rem atari2600colors[2][0],
-        -1rem 1rem atari2600colors[3][0]
+        0 2rem 0 -1rem atariGrey(2),
+        -1rem 1rem atariGrey(3)
 
     .glass
       position absolute
@@ -70,9 +78,9 @@
       top -4rem
       right -4rem
       bottom -4rem
-      border solid 1rem atari2600colors[7][0]
+      border solid 1rem atariGrey(7)
       opacity 0.75
-      box-shadow -1rem 1rem atari2600colors[5][0]
+      box-shadow -1rem 1rem atariGrey(5)
 
       &.resizable
         cursor nesw-resize

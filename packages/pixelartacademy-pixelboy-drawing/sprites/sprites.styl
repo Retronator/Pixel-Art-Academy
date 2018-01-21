@@ -1,0 +1,56 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.apps-drawing
+  .sprites
+    position absolute
+    width 122rem
+    height 180rem
+    left -85rem
+    top -150rem
+    z-index 1
+    color atari2600colors[1][0]
+    transition-delay 0s
+
+    .notebook-base
+      position absolute
+      width 100%
+      height 100%
+      top 0
+      left 0
+      z-index -1
+
+    .sprites-list
+      list-style none
+      margin 0
+      position absolute
+      top 28rem
+      left 3rem
+      right 8rem
+      padding 0 5rem
+
+      .sprite
+        cursor pointer
+        display block
+        width 100%
+
+        &:hover
+          background atari2600colors[6][0]
+
+        &.active
+          //background-color lightgrey
+
+    .display-button
+      position absolute
+      border 0 none
+      background transparent none repeat scroll 0% 0%
+      padding 0
+      margin 0
+      bottom 6rem
+      right 10rem
+
+  &.in-sprite-selection
+    .sprites
+      left 50%
+      top 50%
+      transform translate(-50%, -50%)
+      transition-delay 0.5s, 0.5s, 0.5s, 0.5s, 0.5s

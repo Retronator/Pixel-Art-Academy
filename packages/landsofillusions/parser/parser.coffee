@@ -95,7 +95,7 @@ class LOI.Parser
 
           allFormWordsAreInShortName = _.difference(shortNameWords, formWords).length is 0
 
-          # TODO: Do not replace in translated form, because this messes up furhter calls if avatars use uppercase letters.
+          # TODO: Do not replace in translated form, because this messes up further calls if avatars use uppercase letters.
           if allFormWordsAreInShortName and not options.fullNames
             likelyAction.translatedForm[index] = avatar.shortName()
 

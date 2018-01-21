@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mirage
 PAA = PixelArtAcademy
 
@@ -7,35 +8,35 @@ class PAA.PixelBoy.OS extends AM.Component
   constructor: (@pixelBoy) ->
     super
 
-  onCreated: ->
-    super
-
     @justOS = not @pixelBoy
 
     homeScreen = new PAA.PixelBoy.Apps.HomeScreen @
 
     @apps = [
       new PAA.PixelBoy.Apps.Drawing @
-      #new PAA.PixelBoy.Apps.Journal @
-      #new PAA.PixelBoy.Apps.Calendar @
+      new PAA.PixelBoy.Apps.Journal @
+      new PAA.PixelBoy.Apps.Calendar @
       new PAA.PixelBoy.Apps.Pico8 @
       new PAA.PixelBoy.Apps.JournalScene @
     ]
 
     # Create a map for fast retrieval of apps by their url name.
-    appsNameMap = _.object ([app.keyName(), app] for app in @apps)
+    appsNameMap = _.fromPairs ([app.keyName(), app] for app in @apps)
     @appsMap = appsNameMap
 
     @currentAppKeyName = ComputedField =>
-      FlowRouter.getParam('app') or FlowRouter.getParam('parameter2')
+      appKeyName = AB.Router.getParameter('app') or AB.Router.getParameter('parameter2')
+
+      # Make sure this app exists.
+      if appsNameMap[appKeyName] then appKeyName else null
 
     @currentAppPath = ComputedField =>
-      FlowRouter.getParam('path') or FlowRouter.getParam('parameter3')
+      AB.Router.getParameter('path') or AB.Router.getParameter('parameter3')
 
     @currentApp = new ReactiveField null
 
     # Set currentApp based on url.
-    @autorun =>
+    Tracker.autorun (computation) =>
       appKeyName = @currentAppKeyName()
 
       Tracker.nonreactive =>
@@ -66,7 +67,7 @@ class PAA.PixelBoy.OS extends AM.Component
 
     else
       # Just take adventure's display.
-      @display = @pixelBoy.adventure.display
+      @display = LOI.adventure.interface.display
 
   onRendered: ->
     super
@@ -95,19 +96,30 @@ class PAA.PixelBoy.OS extends AM.Component
 
     @$root.removeClass('pixel-art-academy-style-pixelboy-os')
 
+  url: ->
+    url = PAA.PixelBoy.url()
+
+    if appKeyName = @currentAppKeyName()
+      url = "#{url}/#{appKeyName}"
+
+      if currentAppPath = @currentAppPath()
+        url = "#{url}/#{currentAppPath}"
+
+    url
+
   appPath: (appKeyName, appPath) ->
     appPath = null if appPath instanceof Spacebars.kw
 
     if @justOS
-      FlowRouter.path 'pixelBoy',
+      AB.Router.createUrl 'pixelBoy',
         app: appKeyName
         path: appPath
 
     else
-      FlowRouter.path 'adventure',
-        parameter1: 'pixelboy'
+      AB.Router.createUrl LOI.adventure,
+        parameter1: PAA.PixelBoy.url()
         parameter2: appKeyName
         parameter3: appPath
 
   go: (appKeyName, appPath) ->
-    FlowRouter.go @appPath appKeyName, appPath
+    AB.Router.goToUrl @appPath appKeyName, appPath

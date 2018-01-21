@@ -1,8 +1,16 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Vocabulary = LOI.Parser.Vocabulary
+
 class PAA.PixelBoy extends LOI.Adventure.Item
   @id: -> 'PixelArtAcademy.PixelBoy'
+  @url: -> 'pixelboy'
+
+  @version: -> '0.2.0'
+
+  @register @id()
+  template: -> @constructor.id()
 
   @fullName: -> "PixelBoy 2000"
   @shortName: -> "PixelBoy"
@@ -22,8 +30,17 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
   @initialize()
 
+  @PositioningType:
+    ScreenCenter: 'screen-center'
+    ScreenBottom: 'screen-bottom'
+
   constructor: ->
     super
+
+    # PixelBoy is always active to keep running apps, but we can show it or hide it.
+    @activatedState LOI.Adventure.Item.activatedStates.Activated
+    @active = new ReactiveField false
+    @fullscreenOverlay = new ReactiveField false
 
     # We create the OS instance and send ourselves to it so it knows it's running embedded.
     @os = new @constructor.OS @
@@ -51,10 +68,19 @@ class PAA.PixelBoy extends LOI.Adventure.Item
   onRendered: ->
     super
 
+    @overlay = @childComponentsOfType(LOI.Components.Overlay)[0]
+    @backButton = @childComponentsOfType(LOI.Components.BackButton)[0]
+
+    # Since we start activated, overlay will also be already activated, but it shouldn't be, so we deactivate it here.
+    @overlay.onDeactivating()
+
     @$device = @$('.device')
 
     $(window).on('mousemove.pixelartacademy-pixelboy', (event) => @onMouseMove event)
     $(window).on('mouseup.pixelartacademy-pixelboy', (event) => @onMouseUp event)
+
+    # Reset scale to 0 to trigger direct setting of size.
+    @_lastScale = 0
 
     # Perform automatic resizing, based on current app desires.
     @autorun =>
@@ -82,10 +108,11 @@ class PAA.PixelBoy extends LOI.Adventure.Item
       return unless @resizing()
 
       scale = LOI.adventure.interface.display.scale()
+      heightFactor = if @positioningClass() is @constructor.PositioningType.ScreenBottom then 1 else 2
 
       # Calculate desired state based on dragging.
       newWidth = @startWidth() + (@endResizeX() - @startResizeX()) * 2 / scale
-      newHeight = @startHeight() - (@endResizeY() - @startResizeY()) / scale
+      newHeight = @startHeight() - (@endResizeY() - @startResizeY()) * heightFactor / scale
 
       # Set the new size values.
       @size
@@ -97,13 +124,13 @@ class PAA.PixelBoy extends LOI.Adventure.Item
       size = @size()
       scale = LOI.adventure.interface.display.scale()
 
-      # Don't animate, just set on first go.
-      unless @initialSizeSet
+      # If scale has changed, directly set the new size without animations.
+      unless scale is @_lastScale
         @$device.css
           width: size.width * scale
           height: size.height * scale
 
-        @initialSizeSet = true
+        @_lastScale = scale
         return
 
       @$device.velocity('stop', true).velocity
@@ -129,22 +156,59 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
       pixelBoyHeightRequirement = (size.height + 35 * 2) * scale
 
-      @positioningClass if clientHeight < pixelBoyHeightRequirement then 'screen-center' else 'screen-bottom'
+      @positioningClass if clientHeight < pixelBoyHeightRequirement then @constructor.PositioningType.ScreenCenter else @constructor.PositioningType.ScreenBottom
 
   onDestroyed: ->
     super
 
     $(window).off('.pixelartacademy-pixelboy')
     $('body').removeClass('pixelartacademy-pixelboy-resizing')
+    
+  url: -> @os.url()
+
+  open: ->
+    LOI.adventure.goToItem @
+    @fullscreenOverlay true
+
+    # Wait until we're rendered.
+    Tracker.nonreactive =>
+      Tracker.autorun (computation) =>
+        return unless @isRendered()
+        computation.stop()
+
+        # We manually trigger overlay's transition since our active state is already activated.
+        @overlay.onActivating()
+
+  onActivate: (finishedDeactivatingCallback) ->
+    # Bring in the device.
+    @active true
+    finishedDeactivatingCallback()
 
   onDeactivate: (finishedDeactivatingCallback) ->
+    # Start hiding the device.
+    @active false
+
     Meteor.setTimeout =>
-      finishedDeactivatingCallback()
+      # Hide the fullscreen overlay, but leave the device active.
+      @fullscreenOverlay false
+      @activatedState LOI.Adventure.Item.activatedStates.Activated
+
+      # We manually trigger overlay's transition since our active state is already activated.
+      @overlay.onDeactivated()
+
+      # We also reset the back button.
+      @backButton.closing false
     ,
       500
 
-  activatedClass: ->
-    'activated' if @activatable.activating() or @activatable.activated()
+  activeClass: ->
+    return unless @isRendered()
+
+    'active' if @active()
+
+  visibleClass: ->
+    # We need to show the content together with the fullscreen overlay.
+    'visible' if @fullscreenOverlay()
 
   osStyle: ->
     'pointer-events': if @resizing() then 'none' else 'initial'
@@ -186,3 +250,26 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
   onMouseUp: (event) ->
     @resizing false
+
+  # Listener
+
+  onCommand: (commandResponse) ->
+    pixelBoy = @options.parent
+
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], pixelBoy.avatar]
+      priority: 1
+      action: => pixelBoy.open()
+
+  # Routing
+
+  LOI.Adventure.registerDirectRoute "/#{@url()}/*", =>
+    # Show the item if we need to.
+    unless LOI.adventure.activeItemId() is @id()
+      Tracker.autorun (computation) =>
+        # Wait until the item is available.
+        return unless pixelBoy = LOI.adventure.getCurrentThing @
+        computation.stop()
+
+        # Show the item.
+        pixelBoy.open()

@@ -40,7 +40,7 @@ class PAA.PixelBoy.OS.App extends AM.Component
     @useConsoleTheme = false
 
   onRendered: ->
-    super 
+    super
     
     $appWrapper = $('.app-wrapper')
     $appWrapper.velocity('transition.slideUpIn', complete: ->

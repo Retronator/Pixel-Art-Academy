@@ -1,10 +1,10 @@
 <template name="PixelArtAcademy.PixelBoy">
-  <div class="pixelartacademy-pixelboy">
-    {{> LandsOfIllusions.Components.BackButton}}
+  <div class="pixelartacademy-pixelboy {{visibleClass}}">
+    {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
     {{#LandsOfIllusions.Components.Overlay}}
     {{else}}
-      <div class="max-area">
-        <div class="device {{activatedClass}} {{positioningClass}}">
+      <div class="viewport-area">
+        <div class="device {{activeClass}} {{positioningClass}}">
           <div class="glass {{resizableClass}}"></div>
           <div class="screen"></div>
           <div class="os" {{style osStyle}}>
