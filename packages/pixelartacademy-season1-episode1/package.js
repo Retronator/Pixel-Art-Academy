@@ -56,4 +56,9 @@ Package.onUse(function(api) {
 
   // PixelBoy
   api.addFile('chapter1/sections/pixelboy..');
+  api.addThing('chapter1/sections/pixelboy/scenes/store');
+
+  // Post-PixelBoy
+  api.addFile('chapter1/sections/postpixelboy..');
+  api.addThing('chapter1/sections/postpixelboy/scenes/store');
 });

@@ -161,7 +161,7 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
       action: =>
         LOI.adventure.goToItem shelf
 
-  # Exit response captures the listener's response for the attempt to exit a location.
+  # Add to cart response captures the listener's response for the attempt to add an item from the shelf.
   class @AddToCartResponse
     constructor: (@options) ->
       @catalogKey = @options.catalogKey

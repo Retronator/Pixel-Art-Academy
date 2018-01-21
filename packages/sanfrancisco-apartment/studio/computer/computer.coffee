@@ -38,5 +38,6 @@ class Studio.Computer extends LOI.Components.Computer
 
     commandResponse.onPhrase
       form: [[Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookAt], computer.avatar]
+      priority: 1
       action: =>
         LOI.adventure.goToItem computer

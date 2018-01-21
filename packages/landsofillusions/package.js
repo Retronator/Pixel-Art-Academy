@@ -250,6 +250,7 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/conditional.coffee');
   api.addFiles('adventure/script/nodes/jump.coffee');
   api.addFiles('adventure/script/nodes/choice.coffee');
+  api.addFiles('adventure/script/nodes/choiceplaceholder.coffee');
   api.addFiles('adventure/script/nodes/timeout.coffee');
   api.addFiles('adventure/script/nodes/pause.coffee');
 

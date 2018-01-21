@@ -68,6 +68,7 @@ class LOI.Interface extends AM.Component
     @_handleNarrativeLine node if node instanceof Nodes.NarrativeLine
     @_handleInterfaceLine node if node instanceof Nodes.InterfaceLine
     @_handleCommandLine node if node instanceof Nodes.CommandLine
+    @_handleEmpty node if node instanceof Nodes.ChoicePlaceholder
 
     # Handle Code nodes, which includes Conditional nodes since they inherit from Code.
     @_handleEmpty node if node instanceof Nodes.Code

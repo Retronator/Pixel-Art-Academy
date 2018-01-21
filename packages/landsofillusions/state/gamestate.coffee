@@ -52,7 +52,9 @@ class LOI.GameState extends AM.Document
         return unless newDocument?._id
 
         # If current time is after the first event is scheduled, do the simulation now.
-        LOI.Simulation.Server.simulateGameState newDocument if new Date() > newDocument.nextSimulateTime
+        if new Date() > newDocument.nextSimulateTime
+          # We need to fetch the full document since newDocument just gives us the nextSimulateTime field.
+          LOI.Simulation.Server.simulateGameState LOI.GameState.documents.findOne newDocument._id
 
   # We define these privately because we have custom public methods
   # that transform the state locally before passing it on to the server.

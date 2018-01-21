@@ -30,6 +30,7 @@ class LOI.Adventure.ScriptFile.Parser
       '_parseScript'
       '_parseTimeout'
       '_parsePause'
+      '_parseChoicePlaceholder'
       '_parseChoice'
       '_parseJump'
       '_parseNarrative'
@@ -248,6 +249,25 @@ class LOI.Adventure.ScriptFile.Parser
 
     nextNode
 
+
+  ###
+    * *id*
+  ###
+  _parseChoicePlaceholder: (line) ->
+    # Extract the potential conditional out of the line.
+    [line, ...] = @_parseConditional line
+
+    return unless match = line.match /\*\s*\*(.*?)\*/
+
+    id = match[1]
+
+    # Create a choice placeholder node that will insert other choices.
+    choicePlaceholderNode = new Nodes.ChoicePlaceholder
+      id: id
+      next: @nextNode
+
+    choicePlaceholderNode
+    
   ###
     * dialog line -> [label name]
     --or--

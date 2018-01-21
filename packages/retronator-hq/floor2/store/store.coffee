@@ -258,7 +258,7 @@ class HQ.Store extends LOI.Adventure.Location
 
         @setCallbacks
           AnalyzeCharacter: (complete) =>
-            shoppingCart = HQ.Items.ShoppingCart.state()?.contents or []
+            shoppingCart = HQ.Items.ShoppingCart.state 'contents' or []
 
             ephemeralState = @ephemeralState()
             ephemeralState.hasShoppingCart = HQ.Items.ShoppingCart.state 'inInventory'
@@ -267,7 +267,30 @@ class HQ.Store extends LOI.Adventure.Location
             console.log "Analyzed character and set ephemeral state to", ephemeralState if HQ.debug
 
             complete()
-            
+
+          DoCartCheck: (complete) =>
+            complete()
+
+            # See if any listener wants to handle anything before items are being bought.
+            listeners = _.clone LOI.adventure.currentListeners()
+
+            processListeners = =>
+              unless listeners.length
+                # We've processed all the listeners, resume the script.
+                LOI.adventure.director.startScript @, label: 'AfterCartCheck'
+                return
+
+              listener = listeners.shift()
+
+              if listener.onStoreCartCheck
+                listener.onStoreCartCheck new HQ.Store.StoreCartCheckResponse => processListeners()
+                  
+              else
+                processListeners()
+
+            # Start processing listeners.
+            processListeners()
+
           CheckoutShoppingCart: (complete) =>
             HQ.Items.ShoppingCart.state 'atCheckout', true
             complete()
@@ -282,9 +305,12 @@ class HQ.Store extends LOI.Adventure.Location
             cartItems = HQ.Items.ShoppingCart.state()?.contents or []
 
             for cartItem in cartItems
-              thingId = _.thingId cartItem.catalogKey
+              thingId = _.thingId cartItem.item
               thingClass = LOI.Adventure.Thing.getClassForId thingId
-              continue unless thingClass
+
+              unless thingClass
+                console.warn "Trying to buy", thingId, "which is not a Thing."
+                continue
 
               # Place the thing in the inventory.
               thingClass.state 'inInventory', true
@@ -314,3 +340,11 @@ class HQ.Store extends LOI.Adventure.Location
           priority: 1
           action: =>
             LOI.adventure.goToLocation table
+
+  # Cart check response notifies the listener that items are about to be purchased.
+  class @StoreCartCheckResponse
+    constructor: (@callback) ->
+
+    # Call to indicate it's time to continue with the checkout script.
+    continue: ->
+      @callback()

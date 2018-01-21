@@ -11,9 +11,9 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
 
   @location: -> HQ.Cafe
 
-  @initialize()
-
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/registration/scenes/cafe.script'
+
+  @initialize()
 
   # Script
 

@@ -18,6 +18,7 @@ retro: How can I help you today?
 
 ### AnalyzeCharacter
 
+* *MainQuestion*
 * I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
 * I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
@@ -34,8 +35,16 @@ retro: Certainly.
 > _char_ hands over the shopping cart to Retro.
 
 ### CheckoutShoppingCart
+### DoCartCheck
 
-## ItemChecksPlaceholder
+-> [End]
+
+## AfterCartCheck
+
+### AnalyzeCharacter
+
+<!-- If item checks emptied the cart assume they handled the ending and return -->
+-> [RetroDialog] `not _shoppingCart.length`
 
 ## PurchaseConfirm
 

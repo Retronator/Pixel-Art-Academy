@@ -49,6 +49,12 @@ or
 `Choice` node with a `DialogueLine` node that the player can decide between. 
 If choice is taken, script continues to given `Label`. (see `Jump` node below).
 
+#### ChoicePlaceholder
+
+    * *placeholderId*
+
+`ChoicePlaceholder` node will prompt all listeners to provide optional choices for that placeholder ID.
+
 #### Code
 
     `javascript expression`
