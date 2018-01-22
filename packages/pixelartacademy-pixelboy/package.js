@@ -20,15 +20,10 @@ Package.onUse(function(api) {
   api.addComponent('pixelboy');
 
   api.addComponent('os..');
-  api.addStyledFile('os/app');
+  api.addStyledFile('app..');
 
   api.addFile('apps..');
-
-  api.addFile('apps/homescreen..');
-  api.addFile('apps/calendar..');
-  api.addFile('apps/calendar/provider');
-  api.addFile('apps/journal..');
-  api.addFile('apps/journal/checkin..');
-  api.addFile('apps/journalscene..');
-  api.addFile('apps/pico8..');
+  api.addComponent('apps/homescreen..');
+  api.addComponent('apps/journal..');
+  api.addComponent('apps/pico8..');
 });

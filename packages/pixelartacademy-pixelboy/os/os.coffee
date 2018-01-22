@@ -10,25 +10,40 @@ class PAA.PixelBoy.OS extends AM.Component
 
     @justOS = not @pixelBoy
 
-    homeScreen = new PAA.PixelBoy.Apps.HomeScreen @
+    @appsLocation = new PAA.PixelBoy.Apps
 
-    @apps = [
-      new PAA.PixelBoy.Apps.Drawing @
-      new PAA.PixelBoy.Apps.Journal @
-      new PAA.PixelBoy.Apps.Calendar @
-      new PAA.PixelBoy.Apps.Pico8 @
-      new PAA.PixelBoy.Apps.JournalScene @
-    ]
+    @currentAppsSituation = new ComputedField =>
+      options =
+        timelineId: LOI.adventure.currentTimelineId()
+        location: @appsLocation
 
-    # Create a map for fast retrieval of apps by their url name.
-    appsNameMap = _.fromPairs ([app.keyName(), app] for app in @apps)
-    @appsMap = appsNameMap
+      return unless options.timelineId and options.location
 
-    @currentAppKeyName = ComputedField =>
-      appKeyName = AB.Router.getParameter('app') or AB.Router.getParameter('parameter2')
+      new LOI.Adventure.Situation options
+
+    # We use caches to avoid reconstruction.
+    @_apps = {}
+
+    # Instantiates and returns all apps that are available to listen to commands.
+    @currentApps = new ComputedField =>
+      return unless currentAppsSituation = @currentAppsSituation()
+
+      appClasses = currentAppsSituation.things()
+
+      for appClass in appClasses
+        # We create the instance in a non-reactive context so that
+        # reruns of this autorun don't invalidate instance's autoruns.
+        Tracker.nonreactive =>
+          @_apps[appClass.id()] ?= new appClass @
+
+        @_apps[appClass.id()]
+        
+    @currentAppUrl = ComputedField =>
+      appUrl = AB.Router.getParameter('app') or AB.Router.getParameter('parameter2')
+      appClass = PAA.PixelBoy.App.getClassForUrl appUrl
 
       # Make sure this app exists.
-      if appsNameMap[appKeyName] then appKeyName else null
+      if appClass then appUrl else null
 
     @currentAppPath = ComputedField =>
       AB.Router.getParameter('path') or AB.Router.getParameter('parameter3')
@@ -37,10 +52,11 @@ class PAA.PixelBoy.OS extends AM.Component
 
     # Set currentApp based on url.
     Tracker.autorun (computation) =>
-      appKeyName = @currentAppKeyName()
+      appUrl = @currentAppUrl()
+      appClass = PAA.PixelBoy.App.getClassForUrl(appUrl) or PAA.PixelBoy.Apps.HomeScreen
 
       Tracker.nonreactive =>
-        newApp = appsNameMap[appKeyName] or homeScreen
+        newApp = _.find @currentApps(), (app) => app instanceof appClass
         currentApp = @currentApp()
 
         return if newApp is currentApp
@@ -77,9 +93,11 @@ class PAA.PixelBoy.OS extends AM.Component
 
     # Animate home screen button.
     @autorun =>
+      return unless currentApp = @currentApp()
+
       # We show the home screen button if the current app wants it
       # to, but we always hide it when app starts deactivating.
-      show = @currentApp().showHomeScreenButton() and not @currentApp().deactivating()
+      show = currentApp.showHomeScreenButton() and not currentApp.deactivating()
 
       # Trigger velocity animation on change.
       if show and not @_homeScreenButtonShown
@@ -99,27 +117,27 @@ class PAA.PixelBoy.OS extends AM.Component
   url: ->
     url = PAA.PixelBoy.url()
 
-    if appKeyName = @currentAppKeyName()
-      url = "#{url}/#{appKeyName}"
+    if appUrl = @currentAppUrl()
+      url = "#{url}/#{appUrl}"
 
       if currentAppPath = @currentAppPath()
         url = "#{url}/#{currentAppPath}"
 
     url
 
-  appPath: (appKeyName, appPath) ->
+  appPath: (appUrl, appPath) ->
     appPath = null if appPath instanceof Spacebars.kw
 
     if @justOS
       AB.Router.createUrl 'pixelBoy',
-        app: appKeyName
+        app: appUrl
         path: appPath
 
     else
       AB.Router.createUrl LOI.adventure,
         parameter1: PAA.PixelBoy.url()
-        parameter2: appKeyName
+        parameter2: appUrl
         parameter3: appPath
 
-  go: (appKeyName, appPath) ->
-    AB.Router.goToUrl @appPath appKeyName, appPath
+  go: (appUrl, appPath) ->
+    AB.Router.goToUrl @appPath appUrl, appPath

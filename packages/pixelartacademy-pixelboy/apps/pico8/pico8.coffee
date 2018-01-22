@@ -3,14 +3,22 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.OS.App
-  @register 'PixelArtAcademy.PixelBoy.Apps.Pico8'
+class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Pico8'
+  @url: -> 'pico8'
 
-  displayName: ->
-    "Pico-8"
+  @version: -> '0.1.0'
 
-  keyName: ->
-    'pico8'
+  @register @id()
+  template: -> @constructor.id()
+
+  @fullName: -> "Pico-8"
+  @description: ->
+    "
+      It's Lexaloffle's fantasy console!
+    "
+
+  @initialize()
 
   constructor: ->
     super

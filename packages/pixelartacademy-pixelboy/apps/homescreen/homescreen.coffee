@@ -1,15 +1,24 @@
 PAA = PixelArtAcademy
 AM = Artificial.Mirage
 
-class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.OS.App
-  @register 'PixelArtAcademy.PixelBoy.Apps.HomeScreen'
+class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.App
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.HomeScreen'
 
-  displayName: ->
-    "Home Screen"
+  @version: -> '0.1.0'
 
-  keyName: ->
-    'homescreen'
-    
+  @register @id()
+  template: -> @constructor.id()
+
+  @fullName: -> "Home screen"
+  @description: ->
+    "
+      It's where you can launch apps on the PixelBoy.
+    "
+
+  @initialize()
+
+  template: -> @id()
+
   constructor: ->
     super
     
@@ -18,6 +27,8 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.OS.App
     @showHomeScreenButton false
 
   onRendered: ->
+    super
+    
     # Run intro animation.
     $('.app-wrapper').css
       display: 'block'
@@ -31,14 +42,6 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.OS.App
         finishedDeactivatingCallback()
       stagger: 150
 
-  appKeyName: ->
-    app = @currentData()
-    app.keyName()
-
-  appDisplayName: ->
-    app = @currentData()
-    app.displayName()
-
-  appIconName: ->
-    app = @currentData()
-    app.iconName()
+  apps: ->
+    # Show all apps except the home screen.
+    _.without @os.currentApps(), @

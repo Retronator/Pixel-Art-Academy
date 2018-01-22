@@ -84,7 +84,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
     # Perform automatic resizing, based on current app desires.
     @autorun =>
-      app = @os.currentApp()
+      return unless app = @os.currentApp()
 
       size = @size()
       newWidth = size.width
