@@ -218,7 +218,7 @@ class HQ.Store extends LOI.Adventure.Location
               # Return to location.
               display.view HQ.Store.Display.Views.Center
               display.showReceiptSupporters false
-              LOI.adventure.deactivateCurrentItem()
+              LOI.adventure.deactivateActiveItem()
 
               complete()
 

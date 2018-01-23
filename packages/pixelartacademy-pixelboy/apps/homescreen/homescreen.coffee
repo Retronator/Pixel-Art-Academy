@@ -24,8 +24,6 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.App
     
     @setDefaultPixelBoySize()
 
-    @showHomeScreenButton false
-
   onRendered: ->
     super
     

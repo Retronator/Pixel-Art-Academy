@@ -41,7 +41,7 @@ class LOI.Construct.Loading.TV extends LOI.Components.Computer
     @_fade true
 
     Meteor.setTimeout =>
-      LOI.adventure.deactivateCurrentItem()
+      LOI.adventure.deactivateActiveItem()
       onComplete?()
     ,
       4000

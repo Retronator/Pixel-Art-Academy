@@ -58,7 +58,7 @@ class LOI.Components.BackButton extends AM.Component
       # If the component is also the main active item, deactivate it at the adventure level (which changes the url).
       # We allow used outside of adventure interface so we check for presence of adventure first.
       if LOI.adventure and LOI.adventure.activeItemId() is deactivatableParent.id?()
-        LOI.adventure.deactivateCurrentItem()
+        LOI.adventure.deactivateActiveItem()
 
       else
         deactivatableParent?.callFirstWith null, 'deactivate'

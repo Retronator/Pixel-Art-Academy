@@ -197,7 +197,7 @@ class PAA.Items.Map extends LOI.Adventure.Item
 
     if @bigMap()
       # The map is visible, close it down.
-      LOI.adventure.deactivateCurrentItem()
+      LOI.adventure.deactivateActiveItem()
 
     else
       # The map is hidden, show it.

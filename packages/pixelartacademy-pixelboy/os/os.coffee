@@ -88,31 +88,13 @@ class PAA.PixelBoy.OS extends AM.Component
   onRendered: ->
     super
 
-    @$root = if @justOS then $('html') else @$('.pixelboy-os').closest('.os')
-    @$root.addClass('pixel-art-academy-style-pixelboy-os')
-
-    # Animate home screen button.
-    @autorun =>
-      return unless currentApp = @currentApp()
-
-      # We show the home screen button if the current app wants it
-      # to, but we always hide it when app starts deactivating.
-      show = currentApp.showHomeScreenButton() and not currentApp.deactivating()
-
-      # Trigger velocity animation on change.
-      if show and not @_homeScreenButtonShown
-        Tracker.afterFlush =>
-          $('.homescreen-button-area').velocity('transition.slideDownIn')
-
-      else if not show and @_homeScreenButtonShown
-        $('.homescreen-button-area').velocity('transition.slideUpOut')
-
-      @_homeScreenButtonShown = show
+    @$root = if @justOS then $('html') else @$('.pixelartacademy-pixelboy-os').closest('.os')
+    @$root.addClass('pixelartacademy-pixelboy-os-root')
 
   onDestroyed: ->
     super
 
-    @$root.removeClass('pixel-art-academy-style-pixelboy-os')
+    @$root.removeClass('pixelartacademy-pixelboy-os-root')
 
   url: ->
     url = PAA.PixelBoy.url()
@@ -141,3 +123,19 @@ class PAA.PixelBoy.OS extends AM.Component
 
   go: (appUrl, appPath) ->
     AB.Router.goToUrl @appPath appUrl, appPath
+
+  backButtonCallback: ->
+    # We return to main menu.
+    if @currentAppPath()
+      AB.Router.setParameters parameter3: null
+
+    else if @currentAppUrl()
+      AB.Router.setParameters parameter2: null
+
+    else
+      # No app is open, we should actually close PixelBoy.
+      LOI.adventure.deactivateActiveItem()
+      return
+
+    # Instruct the back button to cancel closing (so it doesn't disappear).
+    cancel: true

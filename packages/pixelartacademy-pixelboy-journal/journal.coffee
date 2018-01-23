@@ -20,6 +20,11 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
 
   @initialize()
 
+  constructor: ->
+    super
+
+    @setDefaultPixelBoySize()
+
   onCreated: ->
     super
 

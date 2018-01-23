@@ -2,6 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
+  @debugLocation = false
+  
   _initializeLocation: ->
     # We store player's current location locally so that multiple people
     # can use the same user account and walk around independently.
@@ -16,7 +18,7 @@ class LOI.Adventure extends LOI.Adventure
       @playerLocationId @startingPoint()?.locationId
 
     @currentLocationId = new ComputedField =>
-      console.log "Recomputing current location." if LOI.debug
+      console.log "Recomputing current location." if LOI.debug or LOI.Adventure.debugLocation
 
       if LOI.characterId()
         # Character's location is always read from the state.
@@ -65,7 +67,7 @@ class LOI.Adventure extends LOI.Adventure
 
         @setLocationId currentLocationId
 
-        console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug
+        console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug or LOI.Adventure.debugLocation
 
         # Create a non-reactive reference so we can refer to it later.
         @_currentLocation = new currentLocationClass

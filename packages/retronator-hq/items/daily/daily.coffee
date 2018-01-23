@@ -113,7 +113,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
 
       else
         # Theme did not handle the back button, so we need to close the Daily.
-        LOI.adventure.deactivateCurrentItem()
+        LOI.adventure.deactivateActiveItem()
 
   # Listener
 

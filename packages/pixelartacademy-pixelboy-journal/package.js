@@ -1,6 +1,6 @@
 Package.describe({
-  name: 'retronator:pixelartacademy-pixelboy',
-  version: '0.0.1',
+  name: 'retronator:pixelartacademy-pixelboy-journal',
+  version: '0.2.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -12,17 +12,9 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
-  api.use('retronator:pixelartacademy');
-  api.use('retronator:pixelartdatabase');
+  api.use('retronator:pixelartacademy-pixelboy');
 
   api.export('PixelArtAcademy');
 
-  api.addComponent('pixelboy');
-
-  api.addComponent('os..');
-  api.addStyledFile('app..');
-
-  api.addFile('apps..');
-  api.addComponent('apps/homescreen..');
-  api.addComponent('apps/pico8..');
+  api.addComponent('journal');
 });

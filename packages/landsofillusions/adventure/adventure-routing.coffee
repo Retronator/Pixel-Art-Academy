@@ -3,6 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
+  @debugRouting = false
+
   currentUrl: ->
     AB.Router.currentRoutePath()
 
@@ -33,14 +35,14 @@ class LOI.Adventure extends LOI.Adventure
     @autorun (computation) =>
       url = @currentUrl()
 
-      console.log "%cURL has changed to", 'background: PapayaWhip', url if LOI.debug
+      console.log "%cURL has changed to", 'background: PapayaWhip', url if LOI.debug or LOI.Adventure.debugRouting
 
       # We only want to react to router changes.
       Tracker.nonreactive =>
         # Find if this is an item or location.
         handler = @constructor.getDirectRouteHandlerForUrl url
 
-        console.log "Found a custom handler for this route." if handler and LOI.debug
+        console.log "Found a custom handler for this route." if handler and (LOI.debug or LOI.Adventure.debugRouting)
 
         # If we got a handler, let it deal with the URL (get the game into the state it needs to be).
         handler?()
@@ -82,7 +84,7 @@ class LOI.Adventure extends LOI.Adventure
       else
         return if desiredUrl is currentUrl
 
-      console.log "%cRewriting URL to", 'background: NavajoWhite', desiredUrl if LOI.debug
+      console.log "%cRewriting URL to", 'background: NavajoWhite', desiredUrl if LOI.debug or LOI.Adventure.debugRouting
 
       parametersObject = @buildDesiredUrlParameters desiredUrl
 

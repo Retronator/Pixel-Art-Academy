@@ -71,7 +71,7 @@ class C3.Behavior.Terminal.Character extends AM.Component
             return
 
           # Close the terminal and proceed with the story.
-          LOI.adventure.deactivateCurrentItem()
+          LOI.adventure.deactivateActiveItem()
 
           behaviorControl = LOI.adventure.currentLocation()
           behaviorControl.listeners[0].startScript label: 'CompleteCharacter'

@@ -7,7 +7,7 @@ class LOI.Adventure extends LOI.Adventure
     @_time = new ReactiveField null
 
     # The current game time from the character's perspective. Only the time number is stored here.
-    @_gameDate = new ReactiveField null
+    @_gameTime = new ReactiveField null
 
     @_gameTimeInterval = Meteor.setInterval =>
       # Only increase time when the page is active and we're not paused.
@@ -37,10 +37,10 @@ class LOI.Adventure extends LOI.Adventure
       # Instead, if things need to be reactive to time, they will depend on the time reactive field.
       @_time newTime
 
-      newGameDate = new LOI.GameDate newGameTime
-      @_gameDate newGameDate
+      newGameTimeDate = new LOI.GameDate newGameTime
+      @_gameTime newGameTimeDate
 
-      console.log "Playtime:", newTime, "seconds, Game time:", newGameDate.toString() if LOI.debug
+      console.log "Playtime:", newTime, "seconds, Game time:", newGameTimeDate.toString() if LOI.debug
     ,
       1000
 
@@ -63,5 +63,5 @@ class LOI.Adventure extends LOI.Adventure
   resetTime: ->
     @_time null
 
-  gameDate: ->
-    @_gameDate()
+  gameTime: ->
+    @_gameTime()

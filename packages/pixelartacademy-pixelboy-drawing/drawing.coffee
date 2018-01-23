@@ -26,8 +26,6 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
 
     @setDefaultPixelBoySize()
 
-    @showHomeScreenButton false
-
     @isInSpriteSelection = new ReactiveField true
 
     @spriteCanvas = new ReactiveField null

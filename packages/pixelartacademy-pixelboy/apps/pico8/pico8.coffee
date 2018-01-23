@@ -31,8 +31,6 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
 
     @resizable false
 
-    @showHomeScreenButton false
-
     @picoKeyIsPressed = new ReactiveField false
     @isPowerOn = new ReactiveField false
 

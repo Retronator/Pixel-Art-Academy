@@ -23,9 +23,6 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     # Does this app lets the device resize?
     @resizable = new ReactiveField true
 
-    # Should the home screen button be shown?
-    @showHomeScreenButton = new ReactiveField true
-
     # The minimum size the device should be let to resize.
     @minWidth = new ReactiveField null
     @minHeight = new ReactiveField null
@@ -40,15 +37,6 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     $appWrapper = $('.app-wrapper')
     $appWrapper.velocity 'transition.slideUpIn', complete: ->
       $appWrapper.css('transform', '')
-
-    # Wait for OS to determine its root.
-    Tracker.afterFlush =>
-      @os.$root.addClass('pixel-art-academy-style-console-app') if @useConsoleTheme
-    
-  onDestroyed: ->
-    super
-
-    @os.$root.removeClass('pixel-art-academy-style-console-app') if @useConsoleTheme
 
   setDefaultPixelBoySize: ->
     @minWidth 310

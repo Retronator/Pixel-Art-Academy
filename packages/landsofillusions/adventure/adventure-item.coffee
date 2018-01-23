@@ -2,6 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
+  @debugActiveItem = false
+
   _initializeActiveItem: ->
     # Similar to location, create the active item.
     @activeItemId = new ReactiveField null
@@ -16,9 +18,9 @@ class LOI.Adventure extends LOI.Adventure
       # Did the item even change?
       return @_activeItem if activeItemId is @_activeItem?.constructor.id()
 
-      console.log "Active item ID changed to", activeItemId if LOI.debug
+      console.log "Active item ID changed to", activeItemId if LOI.debug or LOI.Adventure.debugActiveItem
 
-      console.log "Do we have an active item to deactivate?", @_activeItem if LOI.debug
+      console.log "Do we have an active item to deactivate?", @_activeItem if LOI.debug or LOI.Adventure.debugActiveItem
       # Active item is not the same, so deactivate the current one if we have one.
       @_activeItem?.deactivate()
 
@@ -27,7 +29,7 @@ class LOI.Adventure extends LOI.Adventure
         # We do have an item, so find it in the inventory or at the location.
         @_activeItem = @getCurrentThing activeItemId
 
-        console.log "Did we find the new active item?", @_activeItem if LOI.debug
+        console.log "Did we find the new active item?", @_activeItem if LOI.debug or LOI.Adventure.debugActiveItem
 
         if @_activeItem
           @_activeItem.activate()
@@ -45,5 +47,5 @@ class LOI.Adventure extends LOI.Adventure
       # Make sure to keep this computed field running.
       true
 
-  deactivateCurrentItem: ->
+  deactivateActiveItem: ->
     @activeItemId null

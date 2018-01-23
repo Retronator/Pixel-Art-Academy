@@ -219,6 +219,10 @@ class PAA.PixelBoy extends LOI.Adventure.Item
   resizableClass: ->
     'resizable' if @resizable()
 
+  backButtonCallback: ->
+    # We must return the callback function.
+    => @os.backButtonCallback()
+
   events: ->
     super.concat
       'mousedown .glass': @onMouseDownGlass
