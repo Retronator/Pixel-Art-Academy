@@ -1,4 +1,25 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
+lineHeight = 10rem
+
 .pixelartacademy-pixelboy-apps-journal.app
-  background image('/pixelartacademy/pixelboy/apps/journal/journal.png') center center / 222rem 163rem no-repeat
+  background image('/pixelartacademy/pixelboy/apps/journal/journal.png') center center / 302rem 223rem no-repeat
+  padding 20rem
+  daily()
+  line-height lineHeight
+  color atariGrey(1)
+  cursor text
+
+  .pixelartacademy-pixelboy-apps-journal-checkin
+    width 275rem
+    height 180rem
+    overflow hidden
+    padding-left 1rem
+    hyphens auto
+    mix-blend-mode multiply
+    column-count 2
+    column-gap 25rem
+    column-fill auto
+
+    p
+      margin lineHeight 0

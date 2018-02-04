@@ -1,5 +1,16 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal">
   <div class="pixelartacademy-pixelboy-apps-journal app {{disableScrollingClass}}">
+    {{#with checkIn}}
+      {{> PixelArtAcademy.PixelBoy.Apps.Journal.CheckIn}}
+    {{/with}}
+  </div>
+</template>
 
+<template name="PixelArtAcademy.PixelBoy.Apps.Journal.CheckIn">
+  <div class="pixelartacademy-pixelboy-apps-journal-checkin">
+    <div class="page" contenteditable="true">
+      <div class="date">{{dateText}}</div>
+      <p class="text">{{text}}</p>
+    </div>
   </div>
 </template>

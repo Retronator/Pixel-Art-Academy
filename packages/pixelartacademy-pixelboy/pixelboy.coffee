@@ -1,3 +1,4 @@
+AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -268,6 +269,9 @@ class PAA.PixelBoy extends LOI.Adventure.Item
   # Routing
 
   LOI.Adventure.registerDirectRoute "/#{@url()}/*", =>
+    # HACK: Remember which app we're trying to open.
+    appUrl = AB.Router.getParameter('parameter2')
+
     # Show the item if we need to.
     unless LOI.adventure.activeItemId() is @id()
       Tracker.autorun (computation) =>
@@ -277,3 +281,6 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
         # Show the item.
         pixelBoy.open()
+        
+        # HACK: Force back the wanted app.
+        AB.Router.setParameter 'parameter2', appUrl

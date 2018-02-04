@@ -23,6 +23,11 @@ class AB.Router extends AB.Router
   @getParameter: (parameter) ->
     @currentParameters()[parameter]
 
+  @setParameter: (parameter, value) ->
+    parameters = @currentParameters()
+    parameters[parameter] = value
+    @setParameters parameters
+
   @setParameters: (parameters) ->
     @goToRoute @currentRouteName(), parameters
 

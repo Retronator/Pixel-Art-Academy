@@ -28,10 +28,15 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
   onCreated: ->
     super
 
-    @useConsoleTheme = true
+    @checkInsLimit = new ReactiveField 10
+    @checkInIndex = new ReactiveField 0
+    @checkInPageIndex = new ReactiveField 0
 
     @autorun =>
-      Meteor.subscribe 'characterCheckIns', LOI.characterId()
+      PAA.Practice.CheckIn.forCharacterId.subscribe @, LOI.characterId(), @checkInsLimit()
+
+    @checkIn = new ComputedField =>
+      @checkIns().fetch()[@checkInIndex()]
 
   # Helpers
 
