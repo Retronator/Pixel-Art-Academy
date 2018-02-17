@@ -9,6 +9,8 @@ class PAA.PixelBoy.Apps.StudyPlan.GoalSearch extends AM.Component
 
   onCreated: ->
     super
+    
+    @studyPlan = @ancestorComponentOfType PAA.PixelBoy.Apps.StudyPlan
 
     # Instantiate all goals.
     goalClasses = PAA.Learning.Goal.getClasses()
@@ -26,3 +28,15 @@ class PAA.PixelBoy.Apps.StudyPlan.GoalSearch extends AM.Component
 
   results: ->
     @goals()
+    
+  events: ->
+    super.concat
+      'mousedown .pixelartacademy-pixelboy-apps-studyplan-goal': @onMouseDownGoal
+
+  onMouseDownGoal: (event) ->
+    goal = @currentData()
+
+    # Add this goal to the canvas.
+    @studyPlan.addGoal
+      goal: goal
+      element: event.currentTarget

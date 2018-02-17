@@ -20,4 +20,8 @@ Package.onUse(function(api) {
 
   api.addComponent('goal..');
   api.addComponent('goalsearch..');
+
+  api.addComponent('canvas..');
+  api.addFile('canvas/camera');
+  api.addFile('canvas/mouse');
 });
