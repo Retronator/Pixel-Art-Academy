@@ -12,6 +12,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-season1');
+  api.use('retronator:pixelartacademy-learning');
   api.use('retronator:landsofillusions');
   api.use('retronator:retronator-hq');
   api.use('retronator:sanfrancisco-soma');
@@ -42,6 +43,10 @@ Package.onUse(function(api) {
   api.addFile('chapter1/items/admissionemail');
 
   api.addFile('chapter1/scenes/inbox');
+
+  api.addFile('chapter1/goals..');
+  api.addFile('chapter1/goals/tools..');
+  api.addFile('chapter1/goals/tools/software');
 
   // Intro
   api.addFile('chapter1/sections/intro..');

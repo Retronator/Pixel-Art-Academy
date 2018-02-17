@@ -1,0 +1,9 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal">
+  <div class="pixelartacademy-pixelboy-apps-studyplan-goal">
+    I am goal. My name is: {{> t10e displayNameTranslation}}.
+    My tasks are:
+    {{#each tasks}}
+      {{directive}} {{instructions}}
+    {{/each}}
+  </div>
+</template>

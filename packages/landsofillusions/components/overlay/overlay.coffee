@@ -69,6 +69,8 @@ class LOI.Components.Overlay extends AM.Component
       easing: 'easeOutQuint'
 
   onActivated: ->
+    return unless @isRendered()
+
     # Hide transition cover.
     @$('.transition-cover').removeClass('visible')
     @active true

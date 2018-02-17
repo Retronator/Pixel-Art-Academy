@@ -24,8 +24,10 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-season1-episode1');
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:pixelartacademy-practice');
+  api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartacademy-pixelboy-journal');
   api.use('retronator:pixelartacademy-pixelboy-drawing');
+  api.use('retronator:pixelartacademy-pixelboy-studyplan');
   api.use('retronator:pixelartdatabase');
   api.use('retronator:pixelartdatabase-pixeldailies');
   api.use('retronator:sanfrancisco-soma');
