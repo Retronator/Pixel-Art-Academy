@@ -237,13 +237,12 @@ class HQ.Items.Daily.Theme extends HQ.Items.Daily.Theme
       else
         titleElementIndex = 0
 
-      headlineTitle = $post.find('h1, b, h2').eq(titleElementIndex).text()
+      headlineTitle = $post.find('h1, b, strong, h2').eq(titleElementIndex).text()
       $headline.append("<div class='title'>#{headlineTitle}</div>")
-
 
       # We don't want the common and modifier tags to appear in the headlines.
       headlineTags = _.filter tags, (tag) =>
-        not (tag in ['Feature', 'Pixel Art', 'Gaming', 'GIF'] or _.startsWith(tag, 'cover') or _.startsWith(tag, 'title'))
+        not (tag in ['Feature', 'Pixel Art', 'Gaming', 'GIF', 'GIF Warning', 'Epilepsy Warning'] or _.startsWith(tag, 'cover') or _.startsWith(tag, 'title'))
 
       $headline.append("<div class='tags'>#{headlineTags.join ', '}</div>")
 
