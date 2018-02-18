@@ -36,6 +36,8 @@ class LOI.StateObject
     # Allow correct handling of instanceof operator.
     Object.setPrototypeOf stateObject, @constructor.prototype
 
+    stateObject.address = options.address
+
     stateObject.field = (fieldName, options) ->
       fieldGetter fieldName, options
 

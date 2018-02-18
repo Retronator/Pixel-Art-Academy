@@ -21,7 +21,8 @@ Package.onUse(function(api) {
   api.addComponent('goal..');
   api.addComponent('goalsearch..');
 
-  api.addComponent('canvas..');
-  api.addFile('canvas/camera');
-  api.addFile('canvas/mouse');
+  api.addComponent('blueprint..');
+  api.addFile('blueprint/camera');
+  api.addFile('blueprint/mouse');
+  api.addFile('blueprint/grid');
 });

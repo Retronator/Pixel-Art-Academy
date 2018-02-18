@@ -2,9 +2,9 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.StudyPlan.Canvas.Camera
-  constructor: (@canvas) ->
-    @state = new LOI.StateObject address: @canvas.studyPlan.stateAddress.child 'camera'
+class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Camera
+  constructor: (@blueprint) ->
+    @state = new LOI.StateObject address: @blueprint.studyPlan.stateAddress.child 'camera'
     
     # At camera scale 1, a canvas pixel matches a display pixel (and not window pixel).
     # Scale is used to go from canvas pixels to display pixels. We use lazy updates to minimize state reactivity.
@@ -17,7 +17,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Canvas.Camera
     # Effective scale includes the amount we're scaling our display pixels.
     # It is used to go from canvas pixels to window pixels.
     @effectiveScale = new ComputedField =>
-      displayScale = @canvas.display.scale()
+      displayScale = @blueprint.display.scale()
       @scale() * displayScale
 
     # Origin tells which coordinate is at the center of the canvas. We use lazy updates to minimize state reactivity.
@@ -30,13 +30,13 @@ class PAA.PixelBoy.Apps.StudyPlan.Canvas.Camera
     # Calculate viewport in canvas coordinates.
     @viewportBounds = new AE.Rectangle()
 
-    @canvas.autorun =>
+    @blueprint.autorun =>
       effectiveScale = @effectiveScale()
       origin = @origin()
 
       # Calculate which part of the canvas is visible. Canvas bounds is in window pixels.
-      width = @canvas.bounds.width() / effectiveScale
-      height = @canvas.bounds.height() / effectiveScale
+      width = @blueprint.bounds.width() / effectiveScale
+      height = @blueprint.bounds.height() / effectiveScale
 
       @viewportBounds.width width
       @viewportBounds.height height
@@ -46,12 +46,12 @@ class PAA.PixelBoy.Apps.StudyPlan.Canvas.Camera
     # Enable panning with scrolling.
 
     # Wire up mouse wheel event once the sprite editor is rendered.
-    @canvas.autorun (computation) =>
-      $canvas = @canvas.$canvas()
-      return unless $canvas
+    @blueprint.autorun (computation) =>
+      $blueprint = @blueprint.$blueprint()
+      return unless $blueprint
       computation.stop()
 
-      $canvas.on 'wheel', (event) =>
+      $blueprint.on 'wheel', (event) =>
         event.preventDefault()
 
         effectiveScale = @effectiveScale()
@@ -71,7 +71,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Canvas.Camera
           y: oldOrigin.y + canvasDelta.y
 
   applyTransformToCanvas: ->
-    context = @canvas.context()
+    context = @blueprint.context()
     effectiveScale = @effectiveScale()
     origin = @origin()
 
@@ -79,8 +79,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Canvas.Camera
     context.setTransform 1, 0, 0, 1, 0, 0
 
     # Move to center of screen.
-    width = @canvas.bounds.width()
-    height = @canvas.bounds.height()
+    width = @blueprint.bounds.width()
+    height = @blueprint.bounds.height()
     context.translate width / 2, height / 2
 
     # Scale the canvas around the origin.
@@ -95,15 +95,15 @@ class PAA.PixelBoy.Apps.StudyPlan.Canvas.Camera
 
     x = canvasCoordinate.x
     y = canvasCoordinate.y
-    width = @canvas.bounds.width()
-    height = @canvas.bounds.height()
+    width = @blueprint.bounds.width()
+    height = @blueprint.bounds.height()
 
     x: (x - origin.x) * effectiveScale + width / 2
     y: (y - origin.y) * effectiveScale + height / 2
 
   transformCanvasToDisplay: (canvasCoordinate) ->
     windowCoordinate = @transformCanvasToWindow canvasCoordinate
-    displayScale = @canvas.display.scale()
+    displayScale = @blueprint.display.scale()
 
     x: windowCoordinate.x / displayScale
     y: windowCoordinate.y / displayScale
@@ -114,14 +114,14 @@ class PAA.PixelBoy.Apps.StudyPlan.Canvas.Camera
 
     x = windowCoordinate.x
     y = windowCoordinate.y
-    width = @canvas.bounds.width()
-    height = @canvas.bounds.height()
+    width = @blueprint.bounds.width()
+    height = @blueprint.bounds.height()
 
     x: (x - width / 2) / effectiveScale + origin.x
     y: (y - height / 2) / effectiveScale + origin.y
 
   transformDisplayToCanvas: (displayCoordinate) ->
-    displayScale = @canvas.display.scale()
+    displayScale = @blueprint.display.scale()
 
     windowCoordinate =
       x: displayCoordinate.x * displayScale
@@ -129,10 +129,10 @@ class PAA.PixelBoy.Apps.StudyPlan.Canvas.Camera
 
     @transformWindowToCanvas windowCoordinate
 
-  roundCanvasToWindowPixel: (canvasCoordinate) ->
+  roundCanvasToWindowPixel: (canvasCoordinate, lineWidth = 1) ->
     windowCoordinate = @transformCanvasToWindow canvasCoordinate
     pixelPerfectWindowCoordinate =
-      x: Math.floor(windowCoordinate.x) + 0.5
-      y: Math.floor(windowCoordinate.y) + 0.5
+      x: Math.floor(windowCoordinate.x) + lineWidth / 2
+      y: Math.floor(windowCoordinate.y) + lineWidth / 2
 
     @transformWindowToCanvas pixelPerfectWindowCoordinate

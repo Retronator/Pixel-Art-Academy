@@ -35,36 +35,39 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
     super
 
     @setDefaultPixelBoySize()
-    @canvas = new ReactiveField null
+    @blueprint = new ReactiveField null
     
   onCreated: ->
     super
-    
-    @canvas new @constructor.Canvas @
+
+    @blueprint new @constructor.Blueprint @
     
   addGoal: (options) ->
-    console.log "adding goal", options
-
-    goals = {} #@state('goals') or {}
+    goals = @state('goals') or {}
     goalId = options.goal.id()
 
     # We can't add the goal that's already in the plan.
     return if goals[goalId]
 
-    # Calculate target element's position in canvas.
-    canvas = @canvas()
+    # Calculate target element's position in blueprint.
+    blueprint = @blueprint()
     elementOffset = $(options.element).offset()
-    canvasOffset = canvas.$canvas().offset()
+    blueprintOffset = blueprint.$blueprint().offset()
 
-    canvasCoordinate = canvas.camera().transformWindowToCanvas
-      x: elementOffset.left - canvasOffset.left
-      y: elementOffset.top - canvasOffset.top
+    canvasCoordinate = blueprint.camera().transformWindowToCanvas
+      x: elementOffset.left - blueprintOffset.left
+      y: elementOffset.top - blueprintOffset.top
 
     goals[goalId] =
       position: canvasCoordinate
       expanded: false
 
-    console.log "new goals", goals
-
     # Save state with new goal.
     @state 'goals', goals
+
+    blueprint.mouse().updateCoordinates options.event
+
+    blueprint.startDrag
+      goalPosition: canvasCoordinate
+      goalId: goalId
+      requireMove: true

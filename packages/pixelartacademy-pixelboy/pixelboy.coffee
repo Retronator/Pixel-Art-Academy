@@ -46,8 +46,15 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     # We create the OS instance and send ourselves to it so it knows it's running embedded.
     @os = new @constructor.OS @
 
-    # The actual current width and height of the physical device (measured as the inner screen/OS area).
+    # The desired current width and height of the physical device (measured as the inner screen/OS area).
     @size = new ReactiveField
+      width: 0
+      height: 0
+    ,
+      EJSON.equals
+
+    # The actual width and height as animated by velocity.
+    @animatingSize = new ReactiveField
       width: 0
       height: 0
     ,
@@ -131,15 +138,34 @@ class PAA.PixelBoy extends LOI.Adventure.Item
           width: size.width * scale
           height: size.height * scale
 
+        # Give DOM time to refresh before reporting the size.
+        Meteor.setTimeout =>
+          @animatingSize size
+        ,
+          0
+
+        @_lastSize = size
         @_lastScale = scale
         return
+
+      startSize =
+        width: @$device.width() / scale
+        height: @$device.height() / scale
 
       @$device.velocity('stop', true).velocity
         width: size.width * scale
         height: size.height * scale
+        tween: 1
       ,
         duration: if @resizing() then 100 else 1000
         easing: if @resizing() then 'easeOutCirc' else 'easeInOutQuint'
+        progress: (elements, complete, remaining, start, tweenValue) =>
+          @animatingSize
+            width: startSize.width + (size.width - startSize.width) * tweenValue
+            height: startSize.height + (size.height - startSize.height) * tweenValue
+
+        complete: =>
+          @animatingSize size
 
     # Add resizing class to body to force cursor change no matter where we move.
     @autorun =>

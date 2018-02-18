@@ -1,0 +1,19 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-studyplan-blueprint
+  absolute-cover()
+  background atariCyan(1)
+
+  &.dragging
+  &.dragging *
+    cursor grabbing
+
+  &.dragging ~ .pixelartacademy-pixelboy-apps-studyplan-goalsearch
+    pointer-events none
+    opacity 0.5
+
+  .origin
+  .canvas
+    position absolute
+    top 0
+    left 0

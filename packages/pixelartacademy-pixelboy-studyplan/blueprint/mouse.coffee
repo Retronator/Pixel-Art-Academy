@@ -1,8 +1,8 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.StudyPlan.Canvas.Mouse
-  constructor: (@canvas) ->
+class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Mouse
+  constructor: (@blueprint) ->
     # The mouse coordinate relative to sprite canvas in native window (browser) pixels.
     @windowCoordinate = new ReactiveField null, EJSON.equals
 
@@ -13,29 +13,31 @@ class PAA.PixelBoy.Apps.StudyPlan.Canvas.Mouse
     @canvasCoordinate = new ReactiveField null, EJSON.equals
 
     # Wire up mouse move and wheel events once the sprite editor is rendered.
-    @canvas.autorun (computation) =>
-      $canvas = @canvas.$canvas()
+    @blueprint.autorun (computation) =>
+      $blueprint = @blueprint.$blueprint()
 
-      return unless $canvas
+      return unless $blueprint
       computation.stop()
 
-      @$canvas = $canvas
+      @$blueprint = $blueprint
 
-      $canvas.mousemove (event) =>
-        @_lastPageX = event.pageX
-        @_lastPageY = event.pageY
-        @updateCoordinates()
+      $blueprint.mousemove (event) =>
+        @updateCoordinates event
 
       # Also react to viewport origin changes.
       Tracker.nonreactive =>
-        @canvas.autorun (computation) =>
-          @canvas.camera().origin()
+        @blueprint.autorun (computation) =>
+          @blueprint.camera().origin()
           @updateCoordinates()
 
-  updateCoordinates: ->
-    origin = @$canvas.offset()
-    displayScale = @canvas.display.scale()
-    camera = @canvas.camera()
+  updateCoordinates: (event) ->
+    if event
+      @_lastPageX = event.pageX
+      @_lastPageY = event.pageY
+
+    origin = @$blueprint.offset()
+    displayScale = @blueprint.display.scale()
+    camera = @blueprint.camera()
 
     windowCoordinate =
       x: @_lastPageX - origin.left

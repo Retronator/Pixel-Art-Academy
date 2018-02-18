@@ -1,0 +1,10 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.StudyPlan.Blueprint">
+  <div class="pixelartacademy-pixelboy-apps-studyplan-blueprint {{draggingClass}}">
+    <canvas class="canvas"></canvas>
+    <div class="origin" {{style originStyle}}>
+      {{#each goalComponents}}
+        {{> Render this}}
+      {{/each}}
+    </div>
+  </div>
+</template>

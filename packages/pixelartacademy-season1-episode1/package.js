@@ -45,8 +45,15 @@ Package.onUse(function(api) {
   api.addFile('chapter1/scenes/inbox');
 
   api.addFile('chapter1/goals..');
+
   api.addFile('chapter1/goals/tools..');
   api.addFile('chapter1/goals/tools/software');
+
+  api.addFile('chapter1/goals/commitment..');
+
+  api.addFile('chapter1/goals/classmates..');
+
+  api.addFile('chapter1/goals/studyplan..');
 
   // Intro
   api.addFile('chapter1/sections/intro..');

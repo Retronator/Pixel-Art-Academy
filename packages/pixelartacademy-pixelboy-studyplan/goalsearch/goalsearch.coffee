@@ -36,7 +36,11 @@ class PAA.PixelBoy.Apps.StudyPlan.GoalSearch extends AM.Component
   onMouseDownGoal: (event) ->
     goal = @currentData()
 
+    # Prevent browser select/dragging behavior
+    event.preventDefault()
+
     # Add this goal to the canvas.
     @studyPlan.addGoal
       goal: goal
       element: event.currentTarget
+      event: event
