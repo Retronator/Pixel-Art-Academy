@@ -71,3 +71,8 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
       goalPosition: canvasCoordinate
       goalId: goalId
       requireMove: true
+      
+  removeGoal: (goalId) ->
+    goals = @state('goals') or {}
+    delete goals[goalId]
+    @state 'goals', goals

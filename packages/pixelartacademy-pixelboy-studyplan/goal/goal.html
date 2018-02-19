@@ -1,5 +1,28 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal">
-  <div class="pixelartacademy-pixelboy-apps-studyplan-goal" {{style goalStyle}}>
-    {{> t10e goal.displayNameTranslation}}
+  <div class="pixelartacademy-pixelboy-apps-studyplan-goal {{expandedClass}}" {{style goalStyle}}>
+    <div class="name">
+      {{> t10e goal.displayNameTranslation}}
+    </div>
+    <ul class="tasks">
+      {{#each goalTasks}}
+        <li class="task">
+          {{#with task}}
+            <div class="info">
+              <div class="directive">
+                {{> t10e directiveTranslation}}
+              </div>
+              <div class="instructions">
+                {{> t10e instructionsTranslation}}
+              </div>
+            </div>
+          {{/with}}
+        </li>
+      {{/each}}
+    </ul>
+    <ul class="interests">
+      {{#each goal.interests}}
+        <li class="interest">{{this}}</li>
+      {{/each}}
+    </ul>
   </div>
 </template>

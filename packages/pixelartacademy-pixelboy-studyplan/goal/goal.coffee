@@ -17,7 +17,18 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       @position = @state.field 'position',
         equalityFunction: EJSON.equals
         lazyUpdates: true
-
+        
+      @expanded = @state.field 'expanded',
+        lazyUpdates: true
+  
+    @goalTasks = []
+    
+    for task in @goal.tasks
+      @goalTasks.push
+        task: task
+        
+    # TODO: Calculate positioning info.
+  
   goalStyle: ->
     return unless @state and @canvas
 
@@ -27,11 +38,16 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     scale = @canvas.camera().scale()
 
     position: 'absolute'
-    transform: "translate3d(#{position.x * scale}rem, #{position.y * scale}rem, 0)"
+    left: "#{position.x * scale}rem"
+    top: "#{position.y * scale}rem"
+
+  expandedClass: ->
+    'expanded' if @expanded?()
 
   events: ->
     super.concat
       'mousedown .pixelartacademy-pixelboy-apps-studyplan-goal': @onMouseDownGoal
+      'click .name': @onClickName
 
   onMouseDownGoal: (event) ->
     # We only deal with drag & drop for goals inside the canvas.
@@ -43,3 +59,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     @canvas.startDrag
       goalId: @goal.id()
       goalPosition: @position()
+
+  onClickName: (event) ->
+    return unless @expanded
+
+    @expanded not @expanded()

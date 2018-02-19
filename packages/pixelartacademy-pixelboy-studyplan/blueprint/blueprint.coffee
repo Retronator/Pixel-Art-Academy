@@ -18,6 +18,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @canvas = new ReactiveField null
     @context = new ReactiveField null
     @dragGoalId = new ReactiveField null
+    @dragRequireMove = new ReactiveField false
+    @dragHasMoved = new ReactiveField false
 
   onCreated: ->
     super
@@ -117,7 +119,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
         y: newCanvasCoordinate.y - @dragStartCanvasCoordinate.y
 
       # Notify that we moved.
-      @dragRequireMove = false if dragDelta.x or dragDelta.y
+      @dragHasMoved true if dragDelta.x or dragDelta.y
 
       goalComponent.position
         x: @dragStartGoalPosition.x + dragDelta.x
@@ -127,11 +129,20 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     super
 
     # DOM has been rendered, initialize.
-    @$blueprint @$('.pixelartacademy-pixelboy-apps-studyplan-blueprint')
+    $blueprint = @$('.pixelartacademy-pixelboy-apps-studyplan-blueprint')
+    @$blueprint $blueprint
 
     canvas = @$('.canvas')[0]
     @canvas canvas
     @context canvas.getContext '2d'
+
+    # Prevent click events from happening when dragging was active. We need to manually add this  event
+    # listener so that we can set setCapture to true and make this listener be called before child click events.
+    $blueprint[0].addEventListener 'click', =>
+      # If drag has happened, don't process other clicks.
+      event.stopImmediatePropagation() if @dragHasMoved()
+    ,
+      true
 
   onDestroyed: ->
     super
@@ -152,12 +163,16 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
   startDrag: (options) ->
     @dragStartCanvasCoordinate = @mouse().canvasCoordinate()
     @dragStartGoalPosition = options.goalPosition
-    @dragRequireMove = options.requireMove
+    @dragRequireMove options.requireMove
+    @dragHasMoved false
 
     # Wire end of dragging on mouse up anywhere in the window.
     $(window).on 'mouseup.pixelartacademy-pixelboy-apps-studyplan-canvas', =>
-      # If required, don't stop drag until we move.
-      return if @dragRequireMove
+      # If required to move, don't stop drag until we do so.
+      return if @dragRequireMove() and not @dragHasMoved()
+
+      # Delete goal if we're over trash.
+      @studyPlan.removeGoal @dragGoalId() if @mouseOverTrash()
 
       @dragGoalId null
       $(window).off '.pixelartacademy-pixelboy-apps-studyplan-canvas'
@@ -167,3 +182,33 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
   draggingClass: ->
     'dragging' if @dragGoalId()
+
+  dragged: ->
+    @dragGoalId() and (@dragHasMoved() or @dragRequireMove())
+
+  draggedClass: ->
+    'dragged' if @dragged()
+
+  mouseOverTrash: ->
+    # Trash is only visible when dragged.
+    return unless @dragged()
+
+    $trash = @$('.trash')
+
+    position = $trash.position()
+    width = $trash.outerWidth()
+    height = $trash.outerHeight()
+    mouse = @mouse().windowCoordinate()
+
+    (position.left < mouse.x < position.left + width) and (position.top < mouse.y < position.top + height)
+
+  trashActiveClass: ->
+    'active' if @mouseOverTrash()
+
+  events: ->
+    super.concat
+      'mousedown': @onMouseDown
+
+  onMouseDown: (event) ->
+    # Reset dragging on any start of clicks.
+    @dragHasMoved false

@@ -34,7 +34,7 @@ class PAA.Learning.Goal
 
     # Create a list of interests increased by completing this goal's tasks.
     @interests = []
-    for task in @tasks
+    for task in @tasks()
       @interests = _.union @interests, task.interests()
 
   constructor: ->
@@ -46,6 +46,8 @@ class PAA.Learning.Goal
     # Subscribe to this goal's translations.
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
+
+    @interests = @constructor.interests
 
   destroy: ->
     @_translationSubscription.stop()

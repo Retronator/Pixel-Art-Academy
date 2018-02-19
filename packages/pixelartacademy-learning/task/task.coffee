@@ -19,6 +19,9 @@ class PAA.Learning.Task
   # Override to list the interests this task increases.
   @interests: -> []
 
+  # Override to provide the classes of tasks leading to this task.
+  @predecessors: -> null
+
   @initialize: ->
     # Store task class by ID.
     @_taskClassesById[@id()] = @
@@ -40,8 +43,12 @@ class PAA.Learning.Task
     @_translationSubscription.stop()
 
   id: -> @constructor.id()
+
   directive: -> AB.translate(@_translationSubscription, 'directive').text
+  directiveTranslation: -> AB.translation @_translationSubscription, 'directive'
+
   instructions: -> AB.translate(@_translationSubscription, 'instructions').text
+  instructionsTranslation: -> AB.translation @_translationSubscription, 'instructions'
 
   completed: ->
     return unless characterId = LOI.characterId()

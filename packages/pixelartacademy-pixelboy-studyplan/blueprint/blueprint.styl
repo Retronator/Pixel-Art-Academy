@@ -8,7 +8,7 @@
   &.dragging *
     cursor grabbing
 
-  &.dragging ~ .pixelartacademy-pixelboy-apps-studyplan-goalsearch
+  &.dragged ~ .pixelartacademy-pixelboy-apps-studyplan-goalsearch
     pointer-events none
     opacity 0.5
 
@@ -17,3 +17,19 @@
     position absolute
     top 0
     left 0
+
+  .trash
+    display none
+    position absolute
+    bottom 5rem
+    right 5rem
+    padding 5rem
+    background atariCyan(2)
+    pointer-events none
+
+    &.active
+      background atariRed(3)
+
+  &.dragged
+    .trash
+      display block
