@@ -73,13 +73,13 @@ class AB.Translation extends AM.Document
       @translations
 
   # Returns an array with all translation data available.
-  allTranslationData: ->
+  @allTranslationData: (translation) ->
     translations = []
 
     # See if there is a global translation.
-    @_addTranslation translations, @translations
+    @_addTranslation translations, translation.translations
 
-    for languageCode, languageData of @translations when languageCode.length is 2
+    for languageCode, languageData of translation.translations when languageCode.length is 2
       # See if there is a translation on the language itself.
       @_addTranslation translations, languageData, languageCode
 
@@ -89,7 +89,10 @@ class AB.Translation extends AM.Document
 
     translations
 
-  _addTranslation: (translations, translationData, languageCode, regionCode) ->
+  allTranslationData: ->
+    @constructor.allTranslationData @
+
+  @_addTranslation: (translations, translationData, languageCode, regionCode) ->
     # Translation is present if it holds a text field.
     return unless translationData.text?
 

@@ -145,19 +145,26 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('base/router/routelink');
 
   // Artificial Mummification
-  api.addFile('mummification/mummification');
+  api.addFile('mummification..');
 
   api.addFile('mummification/mongohelper');
   api.addFile('mummification/document');
   api.addFile('mummification/persistentstorage');
 
-  api.addFile('mummification/hierarchy/hierarchy');
+  api.addFile('mummification/hierarchy..');
   api.addFile('mummification/hierarchy/address');
   api.addFile('mummification/hierarchy/node');
   api.addFile('mummification/hierarchy/field');
   api.addFile('mummification/hierarchy/template');
   api.addFile('mummification/hierarchy/location');
 
+  // Depends on Artificial Base.
+  api.addFile('mummification/admin..');
+  api.addFile('mummification/admin/components..');
+  api.addComponent('mummification/admin/components/adminpage..');
+  api.addComponent('mummification/admin/components/index..');
+  api.addFile('mummification/admin/components/document..');
+  
   // Artificial Telepathy
   api.addFile('telepathy/telepathy');
 

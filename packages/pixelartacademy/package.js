@@ -30,15 +30,5 @@ Package.onUse(function(api) {
 
   api.addFile('layouts/adminaccess/adminaccess');
 
-  // Pages
-
-  api.addFile('pages/pages');
-
-  api.addFile('pages/admin/admin');
-  api.addFile('pages/admin/components/components');
-  api.addComponent('pages/admin/components/adminpage/adminpage');
-  api.addComponent('pages/admin/components/index/index');
-  api.addFile('pages/admin/components/document/document');
-
   api.addServerFile('character/methods');
 });

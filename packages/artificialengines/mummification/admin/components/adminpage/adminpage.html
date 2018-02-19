@@ -1,10 +1,10 @@
-<template name="PixelArtAcademy.Pages.Admin.Components.AdminPage">
+<template name="Artificial.Mummification.Admin.Components.AdminPage">
   <div class="pixelartacademy-pages-admin-components-adminpage">
     <h3>{{capitalize options.pluralName}}</h3>
     {{# if scriptsComponent}}
       {{> Render scriptsComponent}}
     {{/if}}
-    {{> PixelArtAcademy.Pages.Admin.Components.Index args options}}
+    {{> Artificial.Mummification.Admin.Components.Index args options}}
     {{#if document}}
       <div class="document-area">
         {{> documentPage document}}

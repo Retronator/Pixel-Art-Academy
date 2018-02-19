@@ -1,8 +1,7 @@
 AM = Artificial.Mirage
-PAA = PixelArtAcademy
 PADB = PixelArtDatabase
 
-class PADB.Pages.Admin.Artists.Artist extends PAA.Pages.Admin.Components.Document
+class PADB.Pages.Admin.Artists.Artist extends Artificial.Mummification.Admin.Components.Document
   @id: -> 'PixelArtDatabase.Pages.Admin.Artists.Artist'
   @register @id()
 

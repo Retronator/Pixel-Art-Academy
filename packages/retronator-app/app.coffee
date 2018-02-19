@@ -28,6 +28,7 @@ class Retronator.App extends Artificial.Base.App
     new Retronator.Accounts
     new Retronator.Store
     new Retronator.Blog
+    new Illustrapedia
     new PixelArtAcademy.LandingPage
     new PixelArtDatabase
     new PixelArtDatabase.PixelDailies

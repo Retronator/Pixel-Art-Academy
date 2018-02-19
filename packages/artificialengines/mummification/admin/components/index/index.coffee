@@ -1,10 +1,8 @@
 AB = Artificial.Base
-AM = Artificial.Mirage
-LOI = LandsOfIllusions
-PAA = PixelArtAcademy
+AM = Artificial.Mummification
 
-class PAA.Pages.Admin.Components.Index extends AM.Component
-  @register 'PixelArtAcademy.Pages.Admin.Components.Index'
+class AM.Admin.Components.Index extends Artificial.Mirage.Component
+  @register 'Artificial.Mummification.Admin.Components.Index'
 
   constructor: (@options) ->
     super
@@ -39,10 +37,16 @@ class PAA.Pages.Admin.Components.Index extends AM.Component
 
   nameOrId: ->
     data = @currentData()
-    data[@options.nameField] or "#{data._id.substring 0, 5}…"
+    name = data[@options.nameField]
+
+    if name instanceof Artificial.Babel.Translation
+      translation = Artificial.Babel.translate name
+      name = translation.text if translation.language
+
+    name or "#{data._id.substring 0, 5}…"
 
   activeClass: ->
-    'active' if @currentData()._id is AB.Router.getParameters 'documentId'
+    'active' if @currentData()._id is AB.Router.getParameter 'documentId'
 
   events: ->
     super.concat

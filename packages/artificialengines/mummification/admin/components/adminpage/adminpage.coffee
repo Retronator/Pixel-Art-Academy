@@ -1,10 +1,8 @@
 AB = Artificial.Base
-AM = Artificial.Mirage
-LOI = LandsOfIllusions
-PAA = PixelArtAcademy
+AM = Artificial.Mummification
 
-class PAA.Pages.Admin.Components.AdminPage extends AM.Component
-  @id: -> 'PixelArtAcademy.Pages.Admin.Components.AdminPage'
+class AM.Admin.Components.AdminPage extends Artificial.Mirage.Component
+  @id: -> 'Artificial.Mummification.Admin.Components.AdminPage'
   @register @id()
 
   template: -> @constructor.id()

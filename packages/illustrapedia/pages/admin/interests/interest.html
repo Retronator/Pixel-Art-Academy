@@ -1,0 +1,13 @@
+<template name="Illustrapedia.Pages.Admin.Interests.Interest">
+  <div class="illustrapedia-pages-admin-interests-interest">
+    <h2>{{displayName}}</h2>
+    <label class="name">Name: {{#with name}}{{> Illustrapedia.Pages.Admin.Interests.Interest.Name}}{{/with}}</label>
+    <label class="synonyms">Synonyms: {{> Illustrapedia.Pages.Admin.Interests.Interest.Synonyms}}</label>
+  </div>
+</template>
+
+<template name="Illustrapedia.Pages.Admin.Interests.Interest.Name">
+  <div class="illustrapedia-pages-admin-interests-interest-name">
+    {{> renderTranslatable}}
+  </div>
+</template>
