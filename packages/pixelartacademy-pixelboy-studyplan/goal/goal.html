@@ -21,7 +21,9 @@
     </ul>
     <ul class="interests">
       {{#each goal.interests}}
-        <li class="interest">{{this}}</li>
+        {{#with interestDocument}}
+          <li class="interest">{{> t10e name}}</li>
+        {{/with}}
       {{/each}}
     </ul>
   </div>

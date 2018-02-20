@@ -88,7 +88,7 @@ class C1.Goals.Tools extends PAA.Learning.Goal
       but it's just to practice using the tools to make an actual image.
     """
       
-    @interests: -> ['pixel art software', 'drawing tools']
+    @interests: -> ['pixel art app', 'drawing tools']
 
     @predecessors: -> [Tools.Grid]
 

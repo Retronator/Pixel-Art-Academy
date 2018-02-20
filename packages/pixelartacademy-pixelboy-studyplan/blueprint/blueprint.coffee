@@ -147,7 +147,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
   onDestroyed: ->
     super
 
-    for goalId, goalComponent of @goalComponentsById
+    for goalId, goalComponent of @goalComponentsById()
       goalComponent.goal.destroy()
       goalComponent.state.destroy()
 
@@ -204,6 +204,12 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
   trashActiveClass: ->
     'active' if @mouseOverTrash()
+
+  focusGoal: (goalId) ->
+    return unless goalComponent = @goalComponentsById()[goalId]
+
+    camera = @camera()
+    camera.origin goalComponent.position()
 
   events: ->
     super.concat

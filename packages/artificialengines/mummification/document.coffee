@@ -13,8 +13,8 @@ class AM.Document extends Document
     return new AB.Method
       name: "#{@id()}.#{name}"
 
-  @subscription: (name) ->
-    return new AB.Subscription
+  @subscription: (name, options) ->
+    return new AB.Subscription _.extend {}, options,
       name: "#{@id()}.#{name}"
 
   @_documentClasses: {}

@@ -2,6 +2,7 @@ AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+IL = Illustrapedia
 
 class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal'
@@ -26,9 +27,17 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     for task in @goal.tasks
       @goalTasks.push
         task: task
-        
+
     # TODO: Calculate positioning info.
-  
+
+  onCreated: ->
+    super
+
+    # Subscribe to all interests of this goal.
+    @autorun (computation) =>
+      for interest in @goal.interests
+        IL.Interest.forSearchTerm.subscribe interest
+
   goalStyle: ->
     return unless @state and @canvas
 
@@ -43,6 +52,10 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
 
   expandedClass: ->
     'expanded' if @expanded?()
+
+  interestDocument: ->
+    interest = @currentData()
+    IL.Interest.find interest
 
   events: ->
     super.concat

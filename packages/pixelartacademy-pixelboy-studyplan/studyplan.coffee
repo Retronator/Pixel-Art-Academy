@@ -36,18 +36,25 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
 
     @setDefaultPixelBoySize()
     @blueprint = new ReactiveField null
+    @goalSearch = new ReactiveField null
     
   onCreated: ->
     super
 
     @blueprint new @constructor.Blueprint @
+    @goalSearch new @constructor.GoalSearch @
+    
+  hasGoal: (goalId) ->
+    @state('goals')?[goalId]
     
   addGoal: (options) ->
     goals = @state('goals') or {}
     goalId = options.goal.id()
 
-    # We can't add the goal that's already in the plan.
-    return if goals[goalId]
+    # We can't add the goal that's already in the plan. Focus it in the blueprint instead.
+    if goals[goalId]
+      @blueprint().focusGoal goalId
+      return
 
     # Calculate target element's position in blueprint.
     blueprint = @blueprint()
