@@ -33,7 +33,7 @@ class PAA.PixelBoy.Apps.StudyPlan.GoalSearch extends AM.Component
 
       _.filter @goals, (goal) =>
         # See if any of goal's interests matches the searched interest.
-        for interest in goal.interests
+        for interest in goal.interests()
           # Find the interest document and see if our search term matches its interests. If we can't find
           # the interest it's because the interest isn't matching the term so we're not subscribed to it.
           continue unless interestDocument = IL.Interest.find interest

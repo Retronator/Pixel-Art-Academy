@@ -12,6 +12,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
+  api.use('retronator:illustrapedia');
 
   api.export('PixelArtAcademy');
 

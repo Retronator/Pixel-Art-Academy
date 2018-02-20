@@ -19,6 +19,13 @@
         </li>
       {{/each}}
     </ul>
+    <ul class="required interests">
+      {{#each goal.requiredInterests}}
+        {{#with interestDocument}}
+          <li class="interest">{{> t10e name}}</li>
+        {{/with}}
+      {{/each}}
+    </ul>
     <ul class="interests">
       {{#each goal.interests}}
         {{#with interestDocument}}

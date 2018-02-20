@@ -19,6 +19,7 @@ Package.onUse(function(api) {
   api.addFile('illustrapedia');
 
   api.addFile('interest..');
+  api.addServerFile('interest/interest-server');
   api.addServerFile('interest/methods-server');
   api.addServerFile('interest/subscriptions');
 

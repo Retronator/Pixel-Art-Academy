@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 PAA = PixelArtAcademy
+IL = Illustrapedia
 
 class PAA.Learning.Goal
   @_goalClassesById = {}
@@ -19,6 +20,9 @@ class PAA.Learning.Goal
 
   # Override to provide task classes that are included in this goal.
   @tasks: -> []
+    
+  # Override to specify interests required to attempt this goal.
+  @requiredInterests: -> []
 
   @initialize: ->
     # Store goal class by ID.
@@ -33,9 +37,16 @@ class PAA.Learning.Goal
         AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName']
 
     # Create a list of interests increased by completing this goal's tasks.
-    @interests = []
+    @_interests = []
     for task in @tasks()
-      @interests = _.union @interests, task.interests()
+      @_interests = _.union @_interests, task.interests()
+            
+    # On the server, after document observers are started, also initialize interests.
+    if Meteor.isServer
+      Document.startup =>
+        IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
+
+  @interests: -> @_interests
 
   constructor: ->
     @tasks = []
@@ -47,16 +58,18 @@ class PAA.Learning.Goal
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
-    @interests = @constructor.interests
-
   destroy: ->
     @_translationSubscription.stop()
 
     task.destroy() for task in @tasks
 
   id: -> @constructor.id()
+
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
+
+  interests: -> @constructor.interests()
+  requiredInterests: -> @constructor.requiredInterests()
 
   # Override to define when the goal has been reached.
   completed: -> false

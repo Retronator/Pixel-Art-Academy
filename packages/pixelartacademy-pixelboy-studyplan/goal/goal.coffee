@@ -35,7 +35,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
 
     # Subscribe to all interests of this goal.
     @autorun (computation) =>
-      for interest in @goal.interests
+      for interest in _.union @goal.interests(), @goal.requiredInterests()
         IL.Interest.forSearchTerm.subscribe interest
 
   goalStyle: ->
