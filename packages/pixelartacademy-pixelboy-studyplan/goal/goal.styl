@@ -55,22 +55,34 @@
       &:last-child
         padding 0
 
-      &::before
-        content '→'
+      .name
+        display none
+
+      .connection-target
+        position absolute
+        z-index 1
+        left -20rem
+        top -2rem
+        right 0
+        bottom 0
+
+      .connector
         display block
         position absolute
+        top 0
         left -12rem
-        width 6rem
+        width 8rem
         height 8rem
         padding-left 2rem
         background atariCyan(5)
         color atariCyan(0)
 
-      &:hover::before
-        background atariCyan(7)
+        &::before
+          content '→'
 
-      .name
-        display none
+      &:hover
+        .connector
+          background atariCyan(7)
 
   &.expanded
     .tasks

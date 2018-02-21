@@ -29,7 +29,7 @@ class IL.Interest extends AM.Document
         
         [interest._id, searchTerms]
       ]
-
+      
   # Methods
 
   @insert: @method 'insert'
@@ -57,3 +57,7 @@ class IL.Interest extends AM.Document
   @find: (exactSearchTerm) ->
     exactSearchTerm = _.lowerCase exactSearchTerm
     @documents.findOne searchTerms: exactSearchTerm
+
+  # Convenience method to return the main string used to reference this interest.
+  referenceString: ->
+    @name.translations.best.text

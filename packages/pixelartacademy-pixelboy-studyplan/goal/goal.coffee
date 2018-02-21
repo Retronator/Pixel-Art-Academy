@@ -57,11 +57,26 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     interest = @currentData()
     IL.Interest.find interest
 
+  $getConnectorByRequiredInterestId: (id) ->
+    $interest = @$(".required-interests .interest[data-id='#{id}'] .connector")
+    return $interest if $interest.length
+
+    # HACK: Seems like the interest isn't rendered yet. Force a reactive recomputation after a delay.
+    dependency = new Tracker.Dependency
+    dependency.depend()
+
+    Meteor.setTimeout =>
+      dependency.changed()
+    ,
+      100
+
   events: ->
     super.concat
       'mousedown .pixelartacademy-pixelboy-apps-studyplan-goal': @onMouseDownGoal
       'click .pixelartacademy-pixelboy-apps-studyplan-goal > .name': @onClickName
       'click .required-interests .interest': @onClickRequiredInterest
+      'mousedown .required-interests .interest': @onMouseDownRequiredInterest
+      'mouseup .required-interests .interest': @onMouseUpRequiredInterest
       'mousedown .provided-interests': @onMouseDownProvidedInterests
 
   onMouseDownGoal: (event) ->
@@ -84,6 +99,26 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     interestDocument = @currentData()
 
     @blueprint.studyPlan.goalSearch().setInterest interestDocument
+
+  onMouseDownRequiredInterest: (event) ->
+    interestDocument = @currentData()
+
+    # Prevent selection.
+    event.preventDefault()
+
+    # Prevent goal drag.
+    event.stopPropagation()
+
+    @blueprint.modifyConnection
+      goalId: @goal.id()
+      interest: interestDocument.referenceString()
+
+  onMouseUpRequiredInterest: (event) ->
+    interestDocument = @currentData()
+
+    @blueprint.endConnection
+      goalId: @goal.id()
+      interest: interestDocument.referenceString()
 
   onMouseDownProvidedInterests: (event) ->
     # Prevent selection.

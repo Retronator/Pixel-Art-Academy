@@ -35,6 +35,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Mouse
       @_lastPageX = event.pageX
       @_lastPageY = event.pageY
 
+    return unless @_lastPageX and @_lastPageY
+
     origin = @$blueprint.offset()
     displayScale = @blueprint.display.scale()
     camera = @blueprint.camera()

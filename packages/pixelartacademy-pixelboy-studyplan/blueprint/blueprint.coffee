@@ -3,6 +3,7 @@ AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
+IL = Illustrapedia
 
 class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.StudyPlan.Blueprint'
@@ -85,11 +86,11 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
       for goalId, goalData of goalsData
         if goalData.connections
-          for connection of goalData.connections
+          for connection in goalData.connections
             goalConnections.push
               startGoalId: goalId
               endGoalId: connection.goalId
-              endInterest: connection.interest
+              interest: connection.interest
 
         goalComponent = @_goalComponentsById[goalId]
 
@@ -133,7 +134,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
       if draggedConnection = @draggedConnection()
         # See if dragged connection is one of the existing ones.
-        draggedGoalConnection = _.find connections, (connection) => EJSON.equals connection, draggedConnection
+        draggedGoalConnection = _.find connections, (connection) =>
+          connection.endGoalId is draggedConnection.endGoalId and connection.interest is draggedConnection.interest
 
         if draggedGoalConnection
           # Disconnect it so it will be moved with the mouse.
@@ -148,20 +150,39 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
       for connection in connections
         startGoalComponent = @_goalComponentsById[connection.startGoalId]
 
-        continue unless $providedInterests = startGoalComponent.$('.provided-interests')
-        startPosition = $providedInterests.position()
+        $providedInterests = startGoalComponent.$('.provided-interests')
+        continue unless $providedInterests?.length
+        providedInterestsPosition = $providedInterests.position()
 
         connection.start =
-          x: startGoalComponent.position().x + startPosition.left / scale
-          y: startGoalComponent.position().y + (startPosition.top + $providedInterests.outerHeight() / 2) / scale
+          x: startGoalComponent.position().x + providedInterestsPosition.left / scale
+          y: startGoalComponent.position().y + (providedInterestsPosition.top + $providedInterests.outerHeight() / 2) / scale
 
         if connection.endGoalId
-          endGoalComponent = @_goalComponentsById[connection.endGoalId]
+          continue unless interestDocument = IL.Interest.find connection.interest
+
+          continue unless endGoalComponent = @_goalComponentsById[connection.endGoalId]
+          $goal = endGoalComponent.$('.pixelartacademy-pixelboy-apps-studyplan-goal')
+          continue unless $goal?.length
+          goalOffset = $goal.offset()
+
+          $connector = endGoalComponent.$getConnectorByRequiredInterestId interestDocument._id
+          continue unless $connector?.length
+          connectorOffset = $connector.offset()
+
+          connectorPosition =
+            left: connectorOffset.left - goalOffset.left
+            top: connectorOffset.top - goalOffset.top
+
+          connection.end =
+            x: endGoalComponent.position().x + (connectorPosition.left + $connector.outerWidth()) / scale
+            y: endGoalComponent.position().y + (connectorPosition.top + $connector.outerHeight() / 2) / scale
 
         else
           connection.end = @mouse().canvasCoordinate()
 
-      connections
+      # Remove any connections that we couldn't determine.
+      _.filter connections, (connection) => connection.start and connection.end
 
     # Handle goal dragging.
     @autorun (computation) =>
@@ -273,6 +294,44 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
   startConnection: (startGoalId) ->
     @draggedConnection {startGoalId}
 
+  modifyConnection: (options) ->
+    # Go over all the goals and find the first connection that matches the goal and interest.
+    goals = @studyPlan.state 'goals'
+
+    for goalId, goalData of goals
+      continue unless goalData.connections
+
+      for connection in goalData.connections
+        if connection.goalId is options.goalId and connection.interest is options.interest
+          @draggedConnection
+            startGoalId: goalId
+            endGoalId: options.goalId
+            interest: options.interest
+
+          return
+
+  endConnection: (options) ->
+    return unless draggedConnection = @draggedConnection()
+
+    startGoalComponent = @_goalComponentsById[draggedConnection.startGoalId]
+    connections = startGoalComponent.state('connections') or []
+
+    # Remove the old data if this is an existing connection.
+    if draggedConnection.endGoalId
+      connections = _.reject connections, (connection) =>
+        connection.goalId is draggedConnection.endGoalId and connection.interest is draggedConnection.interest
+
+    # Add the new connection.
+    connections.push
+      goalId: options.goalId
+      interest: options.interest
+
+    # Update state with new connections.
+    startGoalComponent.state 'connections', connections
+
+    # End dragging.
+    @draggedConnection null
+
   events: ->
     super.concat
       'mousedown': @onMouseDown
@@ -283,5 +342,17 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @dragHasMoved false
 
   onMouseUp: (event) ->
+    return unless draggedConnection = @draggedConnection()
+
+    # If we were modifying an existing connection, remove it.
+    if draggedConnection.endGoalId
+      startGoalComponent = @_goalComponentsById[draggedConnection.startGoalId]
+      connections = startGoalComponent.state 'connections'
+
+      connections = _.reject connections, (connection) =>
+        connection.goalId is draggedConnection.endGoalId and connection.interest is draggedConnection.interest
+
+      startGoalComponent.state 'connections', connections
+
     # End connecting.
     @draggedConnection null

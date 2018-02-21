@@ -16,10 +16,12 @@
     <ul class="required-interests">
       {{#each goal.requiredInterests}}
         {{#with interestDocument}}
-          <li class="interest">
+          <li class="interest" data-id="{{_id}}">
             <div class="name">
               {{> t10e name}}
             </div>
+            <div class="connector"></div>
+            <div class="connection-target"></div>
           </li>
         {{/with}}
       {{/each}}
