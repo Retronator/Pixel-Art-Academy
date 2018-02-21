@@ -10,6 +10,9 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
   #       x
   #       y
   #     expanded: boolean if goal's tasks are displayed
+  #     connections: array of connections to required interests of other goals
+  #       goalId: target goal of this connection
+  #       interest: which of the required interests this connection ties into
   # camera:
   #   origin: the position the center of the canvas displays
   #     x

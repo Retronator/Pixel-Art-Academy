@@ -27,6 +27,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Camera
 
     @origin x: 0, y: 0 unless @origin()
 
+    @_preciseOrigin = @origin()
+
     # Calculate viewport in canvas coordinates.
     @viewportBounds = new AE.Rectangle()
 
@@ -64,11 +66,16 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Camera
           x: windowDelta.x / effectiveScale
           y: windowDelta.y / effectiveScale
 
-        oldOrigin = @origin()
+        @setOrigin
+          x: @_preciseOrigin.x + canvasDelta.x
+          y: @_preciseOrigin.y + canvasDelta.y
 
-        @origin
-          x: oldOrigin.x + canvasDelta.x
-          y: oldOrigin.y + canvasDelta.y
+  setOrigin: (origin) ->
+    @_preciseOrigin = origin
+
+    @origin
+      x: Math.floor @_preciseOrigin.x
+      y: Math.floor @_preciseOrigin.y
 
   applyTransformToCanvas: ->
     context = @blueprint.context()

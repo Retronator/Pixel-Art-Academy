@@ -13,6 +13,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @camera = new ReactiveField null
     @mouse = new ReactiveField null
     @grid = new ReactiveField null
+    @flowchart = new ReactiveField null
     @bounds = new AE.Rectangle()
     @$blueprint = new ReactiveField null
     @canvas = new ReactiveField null
@@ -30,6 +31,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @camera new @constructor.Camera @
     @mouse new @constructor.Mouse @
     @grid new @constructor.Grid @
+    @flowchart new @constructor.Flowchart @
 
     # Resize the canvas when app size changes.
     @autorun =>
@@ -38,6 +40,9 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
       # Depend on app's actual (animating) size.
       @studyPlan.os.pixelBoy.animatingSize()
+
+      # Depend on window size (scale changes).
+      AM.Window.clientBounds()
 
       # Resize the back buffer to canvas element size, if it actually changed.
       newSize =
@@ -61,21 +66,31 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
       camera.applyTransformToCanvas()
 
-      for component in [@grid()]
+      for component in [@grid(), @flowchart()]
         continue unless component
 
         context.save()
         component.drawToContext context
         context.restore()
 
-    # Create goal components.
+    # Create goal components and connections.
     @_goalComponentsById = {}
+    @goalConnections = new ReactiveField []
+
     @goalComponentsById = new ComputedField =>
       return unless goalsData = @studyPlan.state 'goals'
       
       previousGoalComponents = _.values @_goalComponentsById
+      goalConnections = []
 
       for goalId, goalData of goalsData
+        if goalData.connections
+          for connection of goalData.connections
+            goalConnections.push
+              startGoalId: goalId
+              endGoalId: connection.goalId
+              endInterest: connection.interest
+
         goalComponent = @_goalComponentsById[goalId]
 
         if goalComponent
@@ -96,6 +111,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
           @_goalComponentsById[goalId] = goalComponent
 
+      @goalConnections goalConnections
+
       # Destroy all components that aren't present any more.
       for unusedGoalComponent in previousGoalComponents
         goalId = unusedGoalComponent.goal.id()
@@ -106,6 +123,45 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
         delete @_goalComponentsById[goalId]
 
       @_goalComponentsById
+
+    # Handle connections.
+    @draggedConnection = new ReactiveField null
+
+    @connections = new ComputedField =>
+      # Create a deep clone of the connections so that we can manipulate them.
+      connections = _.cloneDeep @goalConnections()
+
+      if draggedConnection = @draggedConnection()
+        # See if dragged connection is one of the existing ones.
+        draggedGoalConnection = _.find connections, (connection) => EJSON.equals connection, draggedConnection
+
+        if draggedGoalConnection
+          # Disconnect it so it will be moved with the mouse.
+          draggedGoalConnection.endGoalId = null
+
+        else
+          # Add the dragged connection to connections.
+          connections.push draggedConnection
+
+      scale = @display.scale()
+
+      for connection in connections
+        startGoalComponent = @_goalComponentsById[connection.startGoalId]
+
+        continue unless $providedInterests = startGoalComponent.$('.provided-interests')
+        startPosition = $providedInterests.position()
+
+        connection.start =
+          x: startGoalComponent.position().x + startPosition.left / scale
+          y: startGoalComponent.position().y + (startPosition.top + $providedInterests.outerHeight() / 2) / scale
+
+        if connection.endGoalId
+          endGoalComponent = @_goalComponentsById[connection.endGoalId]
+
+        else
+          connection.end = @mouse().canvasCoordinate()
+
+      connections
 
     # Handle goal dragging.
     @autorun (computation) =>
@@ -189,6 +245,9 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
   draggedClass: ->
     'dragged' if @dragged()
 
+  connectingClass: ->
+    'connecting' if @draggedConnection()
+
   mouseOverTrash: ->
     # Trash is only visible when dragged.
     return unless @dragged()
@@ -209,12 +268,20 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     return unless goalComponent = @goalComponentsById()[goalId]
 
     camera = @camera()
-    camera.origin goalComponent.position()
+    camera.setOrigin goalComponent.position()
+
+  startConnection: (startGoalId) ->
+    @draggedConnection {startGoalId}
 
   events: ->
     super.concat
       'mousedown': @onMouseDown
+      'mouseup': @onMouseUp
 
   onMouseDown: (event) ->
     # Reset dragging on any start of clicks.
     @dragHasMoved false
+
+  onMouseUp: (event) ->
+    # End connecting.
+    @draggedConnection null

@@ -62,6 +62,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       'mousedown .pixelartacademy-pixelboy-apps-studyplan-goal': @onMouseDownGoal
       'click .pixelartacademy-pixelboy-apps-studyplan-goal > .name': @onClickName
       'click .required-interests .interest': @onClickRequiredInterest
+      'mousedown .provided-interests': @onMouseDownProvidedInterests
 
   onMouseDownGoal: (event) ->
     # We only deal with drag & drop for goals inside the canvas.
@@ -83,3 +84,12 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     interestDocument = @currentData()
 
     @blueprint.studyPlan.goalSearch().setInterest interestDocument
+
+  onMouseDownProvidedInterests: (event) ->
+    # Prevent selection.
+    event.preventDefault()
+    
+    # Prevent goal drag.
+    event.stopPropagation()
+
+    @blueprint.startConnection @goal.id()

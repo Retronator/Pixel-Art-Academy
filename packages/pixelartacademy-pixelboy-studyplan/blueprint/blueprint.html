@@ -1,6 +1,7 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.StudyPlan.Blueprint">
-  <div class="pixelartacademy-pixelboy-apps-studyplan-blueprint {{draggingClass}} {{draggedClass}}">
+  <div class="pixelartacademy-pixelboy-apps-studyplan-blueprint {{draggingClass}} {{draggedClass}} {{connectingClass}}">
     <canvas class="canvas"></canvas>
+    {{> Render flowchart}}
     <div class="origin" {{style originStyle}}>
       {{#each goalComponents}}
         {{> Render this}}
