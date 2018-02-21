@@ -49,7 +49,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/goals/commitment');
   api.addFile('chapter1/goals/classmates');
   api.addFile('chapter1/goals/studyplan');
-  api.addFile('chapter1/goals/finalproject');
+  api.addFile('chapter1/goals/admission');
   api.addFile('chapter1/goals/snake');
 
   // Intro

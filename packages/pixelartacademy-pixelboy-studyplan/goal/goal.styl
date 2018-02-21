@@ -2,13 +2,14 @@
 
 .pixelartacademy-pixelboy-apps-studyplan-goal
   display block
-  width 70rem
+  position relative
+  width 100rem
   padding 5rem
   border 1rem solid atariCyan(5)
   background atariCyan(0)
   cursor grab
 
-  .name
+  > .name
     text-align center
     cursor pointer
     text-transform uppercase
@@ -21,54 +22,68 @@
 
     .task
       display inline-block
-      position relative
-      width 8rem
-      height 8rem
-      border 1rem solid atariCyan(5)
-      cursor pointer
 
-      .info
-        display none
-        position absolute
-        z-index 1
-        top 12rem
-        left 50%
-        transform translateX(-50%)
-        width 100rem
-        padding 5rem
-        background atariCyan(2)
+  .provided-interests
+    position absolute
+    top 5rem
+    right -4rem
+    width 8rem
+    height 8rem
+    padding-left 2rem
+    background atariCyan(5)
+    color atariCyan(0)
+    cursor text
 
-        .directive
-          margin-bottom 5rem
-          text-transform uppercase
+    &:hover
+      background atariCyan(7)
 
-        .instructions
-          hyphens auto
+    &::before
+      content '+'
 
-      &:hover
-        border-color atariCyan(7)
-
-        .info
-          display block
-
-  .interests
-    display none
-    position relative
+  .required-interests
+    position absolute
+    top 0
     list-style none
-    padding-left 10rem
+    padding-left 2.5rem
     margin 5rem 0 0
 
     .interest
-      &::before
-        content '+'
-        position absolute
-        left 0
+      position absolute
+      padding-bottom 5rem
+      cursor pointer
 
-    &.required
-      .interest::before
+      &:last-child
+        padding 0
+
+      &::before
         content '→'
+        display block
+        position absolute
+        left -12rem
+        width 6rem
+        height 8rem
+        padding-left 2rem
+        background atariCyan(5)
+        color atariCyan(0)
+
+      &:hover::before
+        background atariCyan(7)
+
+      .name
+        display none
 
   &.expanded
     .tasks
-    .interests
       display block
+
+    .provided-interests
+      top 18rem
+
+    .required-interests
+      position relative
+
+      .interest
+        position relative
+
+        .name
+          display block

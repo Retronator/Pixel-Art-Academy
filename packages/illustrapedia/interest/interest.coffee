@@ -52,6 +52,8 @@ class IL.Interest extends AM.Document
 
       @documents.find $and: searchTerms
 
-  # Convenience method to return the first interest matching the search term.
-  @find: (searchTerm) ->
-    @forSearchTerm.query(searchTerm).fetch()[0]
+  # Convenience method to return the interest that matches the search term exactly. This is useful
+  # because interests are referenced by plain strings, which need to be matched to interest documents.
+  @find: (exactSearchTerm) ->
+    exactSearchTerm = _.lowerCase exactSearchTerm
+    @documents.findOne searchTerms: exactSearchTerm

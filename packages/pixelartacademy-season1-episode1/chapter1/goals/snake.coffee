@@ -1,12 +1,12 @@
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Goals.Snake extends C1.Goals.FinalProject
+class C1.Goals.Snake extends PAA.Learning.Goal
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake'
 
   @displayName: -> "Snake game"
 
-  @requiredInterests: -> super.concat ['pixel art software']
+  @requiredInterests: -> ['pixel art software']
 
   class @Play extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Play'
@@ -21,8 +21,34 @@ class C1.Goals.Snake extends C1.Goals.FinalProject
 
     @initialize()
 
+  class @Draw extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Draw'
+
+    @directive: -> "Draw Snake sprites"
+
+    @instructions: -> """
+      Go to the Drawing app and draw or upload new sprites for the snake body and food piece.
+    """
+
+    @initialize()
+
+  class @PlayAgain extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.PlayAgain'
+
+    @directive: -> "See sprites in action"
+
+    @instructions: -> """
+      Run Pico-8 again and see how your sprites look in the game.
+    """
+
+    @interests: -> ['academy of art admission project']
+
+    @initialize()
+
   @tasks: -> [
     @Play
+    @Draw
+    @PlayAgain
   ]
 
   @initialize()

@@ -13,7 +13,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       @goal = goalOrOptions
 
     else
-      {@goal, @state, @canvas} = goalOrOptions
+      {@goal, @state, @blueprint} = goalOrOptions
 
       @position = @state.field 'position',
         equalityFunction: EJSON.equals
@@ -39,12 +39,12 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
         IL.Interest.forSearchTerm.subscribe interest
 
   goalStyle: ->
-    return unless @state and @canvas
+    return unless @state and @blueprint
 
     # Make sure we have position present, as it will disappear when goal is being deleted.
     return unless position = @position()
 
-    scale = @canvas.camera().scale()
+    scale = @blueprint.camera().scale()
 
     position: 'absolute'
     left: "#{position.x * scale}rem"
@@ -60,16 +60,17 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
   events: ->
     super.concat
       'mousedown .pixelartacademy-pixelboy-apps-studyplan-goal': @onMouseDownGoal
-      'click .name': @onClickName
+      'click .pixelartacademy-pixelboy-apps-studyplan-goal > .name': @onClickName
+      'click .required-interests .interest': @onClickRequiredInterest
 
   onMouseDownGoal: (event) ->
     # We only deal with drag & drop for goals inside the canvas.
-    return unless @canvas
+    return unless @blueprint
     
     # Prevent browser select/dragging behavior
     event.preventDefault()
     
-    @canvas.startDrag
+    @blueprint.startDrag
       goalId: @goal.id()
       goalPosition: @position()
 
@@ -77,3 +78,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     return unless @expanded
 
     @expanded not @expanded()
+
+  onClickRequiredInterest: (event) ->
+    interestDocument = @currentData()
+
+    @blueprint.studyPlan.goalSearch().setInterest interestDocument

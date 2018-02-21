@@ -3,33 +3,24 @@
     <div class="name">
       {{> t10e goal.displayNameTranslation}}
     </div>
+    {{#if goal.interests.length}}
+      <div class="provided-interests"></div>
+    {{/if}}
     <ul class="tasks">
       {{#each goalTasks}}
         <li class="task">
-          {{#with task}}
-            <div class="info">
-              <div class="directive">
-                {{> t10e directiveTranslation}}
-              </div>
-              <div class="instructions">
-                {{> t10e instructionsTranslation}}
-              </div>
-            </div>
-          {{/with}}
+          {{> PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal.Task task}}
         </li>
       {{/each}}
     </ul>
-    <ul class="required interests">
+    <ul class="required-interests">
       {{#each goal.requiredInterests}}
         {{#with interestDocument}}
-          <li class="interest">{{> t10e name}}</li>
-        {{/with}}
-      {{/each}}
-    </ul>
-    <ul class="interests">
-      {{#each goal.interests}}
-        {{#with interestDocument}}
-          <li class="interest">{{> t10e name}}</li>
+          <li class="interest">
+            <div class="name">
+              {{> t10e name}}
+            </div>
+          </li>
         {{/with}}
       {{/each}}
     </ul>

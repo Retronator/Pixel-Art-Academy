@@ -20,6 +20,8 @@ Package.onUse(function(api) {
   api.addComponent('studyplan');
 
   api.addComponent('goal..');
+  api.addComponent('goal/task');
+  
   api.addComponent('goalsearch..');
 
   api.addComponent('blueprint..');

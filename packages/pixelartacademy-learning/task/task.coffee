@@ -50,6 +50,8 @@ class PAA.Learning.Task
   instructions: -> AB.translate(@_translationSubscription, 'instructions').text
   instructionsTranslation: -> AB.translation @_translationSubscription, 'instructions'
 
+  interests: -> @constructor.interests()
+
   completed: ->
     return unless characterId = LOI.characterId()
     

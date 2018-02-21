@@ -92,7 +92,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
           goalComponent = new PAA.PixelBoy.Apps.StudyPlan.Goal
             goal: goal
             state: state
-            canvas: @
+            blueprint: @
 
           @_goalComponentsById[goalId] = goalComponent
 
