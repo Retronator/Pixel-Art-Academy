@@ -5,7 +5,7 @@ Studio = SanFrancisco.Apartment.Studio
 class Studio.Computer.Game extends AM.Component
   @register 'SanFrancisco.Apartment.Studio.Computer.Game'
 
-  constructor: (@computer, @gameName) ->
+  constructor: (@computer, @gameId, @gameName, @embedName) ->
     super
 
   events: ->
@@ -14,3 +14,7 @@ class Studio.Computer.Game extends AM.Component
 
   onClickCloseButton: (event) ->
     @computer.switchToScreen @computer.screens.desktop
+
+  appId: -> @gameId
+
+  name: -> @gameName

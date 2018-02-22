@@ -12,6 +12,8 @@ class Studio.Computer.Desktop extends AM.Component
     [
       @computer.screens.browser
       @computer.screens.email
+      @computer.screens.princeOfPersia
+      @computer.screens.lotusTheUltimateChallenge
     ]
 
   iconPath: ->
