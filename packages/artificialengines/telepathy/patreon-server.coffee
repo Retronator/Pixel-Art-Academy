@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 AT = Artificial.Telepathy
 AM = Artificial.Mummification
 
-PatreonAPI = Npm.require 'patreon'
+PatreonAPI = require 'patreon'
 
 # Patreon API wrapper.
 class AT.Patreon

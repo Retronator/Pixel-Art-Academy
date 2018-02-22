@@ -138,12 +138,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
           width: size.width * scale
           height: size.height * scale
 
-        # Give DOM time to refresh before reporting the size.
-        Meteor.setTimeout =>
-          @animatingSize size
-        ,
-          0
-
+        @animatingSize size
         @_lastSize = size
         @_lastScale = scale
         return

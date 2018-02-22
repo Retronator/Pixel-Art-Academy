@@ -36,23 +36,21 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
     # Resize the canvas when app size changes.
     @autorun =>
-      return unless $blueprint = @$blueprint()
       return unless canvas = @canvas()
 
       # Depend on app's actual (animating) size.
-      @studyPlan.os.pixelBoy.animatingSize()
-
-      # Depend on window size (scale changes).
-      AM.Window.clientBounds()
+      pixelBoySize = @studyPlan.os.pixelBoy.animatingSize()
+      scale = @display.scale()
 
       # Resize the back buffer to canvas element size, if it actually changed.
       newSize =
-        width: $blueprint.width()
-        height: $blueprint.height()
+        width: pixelBoySize.width * scale
+        height: pixelBoySize.height * scale
 
       for key, value of newSize
         canvas[key] = value unless canvas[key] is value
 
+      # Bounds are reported in window pixels as well.
       @bounds.width newSize.width
       @bounds.height newSize.height
 

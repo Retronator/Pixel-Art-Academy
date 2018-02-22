@@ -10,6 +10,10 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'bresenham-zingl': '0.1.0'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelboy');
@@ -25,7 +29,7 @@ Package.onUse(function(api) {
   api.addComponent('goalsearch..');
 
   api.addComponent('blueprint..');
-  api.addComponent('blueprint/flowchart');
+  api.addFile('blueprint/flowchart');
   api.addFile('blueprint/camera');
   api.addFile('blueprint/mouse');
   api.addFile('blueprint/grid');
