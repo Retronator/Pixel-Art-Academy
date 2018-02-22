@@ -55,6 +55,10 @@
       &:last-child
         padding 0
 
+      &.valid-target
+        .connector
+          background atariGrey(7)
+
       .name
         display none
 
@@ -80,7 +84,7 @@
         &::before
           content '→'
 
-      &:hover
+      &:hover:not(.invalid-target):not(.valid-target)
         .connector
           background atariCyan(7)
 

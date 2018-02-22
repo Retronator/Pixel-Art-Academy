@@ -70,6 +70,14 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     ,
       100
 
+  validTargetClass: ->
+    interestDocument = @currentData()
+
+    draggedInterestIds = @blueprint.draggedInterestIds()
+    return unless draggedInterestIds.length
+
+    if interestDocument._id in @blueprint.draggedInterestIds() then 'valid-target' else 'invalid-target'
+
   events: ->
     super.concat
       'mousedown .pixelartacademy-pixelboy-apps-studyplan-goal': @onMouseDownGoal
@@ -77,6 +85,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       'click .required-interests .interest': @onClickRequiredInterest
       'mousedown .required-interests .interest': @onMouseDownRequiredInterest
       'mouseup .required-interests .interest': @onMouseUpRequiredInterest
+      'mouseenter .required-interests .interest': @onMouseEnterRequiredInterest
+      'mouseleave .required-interests .interest': @onMouseLeaveRequiredInterest
       'mousedown .provided-interests': @onMouseDownProvidedInterests
 
   onMouseDownGoal: (event) ->
@@ -119,6 +129,16 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     @blueprint.endConnection
       goalId: @goal.id()
       interest: interestDocument.referenceString()
+
+  onMouseEnterRequiredInterest: (event) ->
+    interestDocument = @currentData()
+
+    @blueprint.startHoverInterest
+      goalId: @goal.id()
+      interest: interestDocument.referenceString()
+
+  onMouseLeaveRequiredInterest: (event) ->
+    @blueprint.endHoverInterest()
 
   onMouseDownProvidedInterests: (event) ->
     # Prevent selection.

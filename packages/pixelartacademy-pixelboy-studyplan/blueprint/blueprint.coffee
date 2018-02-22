@@ -125,6 +125,14 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
     # Handle connections.
     @draggedConnection = new ReactiveField null
+    @hoveredInterest = new ReactiveField null
+
+    @draggedInterestIds = new ComputedField =>
+      return [] unless draggedConnection = @draggedConnection()
+
+      goalComponent = @_goalComponentsById[draggedConnection.startGoalId]
+
+      IL.Interest.find(interest)?._id for interest in goalComponent.goal.interests()
 
     @connections = new ComputedField =>
       # Create a deep clone of the connections so that we can manipulate them.
@@ -145,6 +153,13 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
       scale = @display.scale()
 
+      # See if we're hovering over a valid interest.
+      if hoveredInterest = @hoveredInterest()
+        draggedInterestIds = @draggedInterestIds()
+        hoveredInterestDocument = IL.Interest.find hoveredInterest.interest
+
+        hoveredInterest = null unless hoveredInterestDocument?._id in draggedInterestIds
+
       for connection in connections
         startGoalComponent = @_goalComponentsById[connection.startGoalId]
 
@@ -156,10 +171,10 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
           x: startGoalComponent.position().x + providedInterestsPosition.left / scale
           y: startGoalComponent.position().y + (providedInterestsPosition.top + $providedInterests.outerHeight() / 2) / scale
 
-        if connection.endGoalId
-          continue unless interestDocument = IL.Interest.find connection.interest
+        if connection.endGoalId or hoveredInterest
+          continue unless interestDocument = IL.Interest.find connection.interest or hoveredInterest.interest
 
-          continue unless endGoalComponent = @_goalComponentsById[connection.endGoalId]
+          continue unless endGoalComponent = @_goalComponentsById[connection.endGoalId or hoveredInterest.goalId]
           $goal = endGoalComponent.$('.pixelartacademy-pixelboy-apps-studyplan-goal')
           continue unless $goal?.length
           goalOffset = $goal.offset()
@@ -319,7 +334,11 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
       connections = _.reject connections, (connection) =>
         connection.goalId is draggedConnection.endGoalId and connection.interest is draggedConnection.interest
 
-    # Add the new connection.
+    # Add the new connection if it's valid.
+    draggedInterestIds = @draggedInterestIds()
+    interestDocument = IL.Interest.find options.interest
+    return unless interestDocument?._id in draggedInterestIds
+
     connections.push
       goalId: options.goalId
       interest: options.interest
@@ -329,6 +348,12 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
     # End dragging.
     @draggedConnection null
+
+  startHoverInterest: (options) ->
+    @hoveredInterest options
+
+  endHoverInterest: ->
+    @hoveredInterest null
 
   events: ->
     super.concat
