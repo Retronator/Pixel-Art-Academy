@@ -49,10 +49,10 @@ class PAA.Learning.Goal
   @interests: -> @_interests
 
   constructor: ->
-    @tasks = []
+    @_tasks = []
 
     for taskClass in @constructor.tasks()
-      @tasks.push new taskClass
+      @_tasks.push new taskClass
 
     # Subscribe to this goal's translations.
     translationNamespace = @id()
@@ -61,12 +61,14 @@ class PAA.Learning.Goal
   destroy: ->
     @_translationSubscription.stop()
 
-    task.destroy() for task in @tasks
+    task.destroy() for task in @_tasks
 
   id: -> @constructor.id()
 
   displayName: -> AB.translate(@_translationSubscription, 'displayName').text
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
+    
+  tasks: -> @_tasks
 
   interests: -> @constructor.interests()
   requiredInterests: -> @constructor.requiredInterests()

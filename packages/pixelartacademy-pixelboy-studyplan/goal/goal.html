@@ -6,13 +6,16 @@
     {{#if goal.interests.length}}
       <div class="provided-interests"></div>
     {{/if}}
-    <ul class="tasks">
-      {{#each goalTasks}}
-        <li class="task">
-          {{> PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal.Task task}}
-        </li>
-      {{/each}}
-    </ul>
+    <div class="tasks-map" {{style tasksMapStyle}}>
+      <canvas class="connections-canvas"></canvas>
+      <ul class="tasks">
+        {{#each goalTasks}}
+          <li class="task" {{style taskStyle}}>
+            {{> PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal.Task task}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
     <ul class="required-interests">
       {{#each goal.requiredInterests}}
         {{#with interestDocument}}

@@ -48,6 +48,8 @@ class C1.Goals.Tools extends PAA.Learning.Goal
 
     @predecessors: -> [Tools.Doodling]
 
+    @groupNumber: -> -1
+
     @initialize()
 
   class @Reference extends PAA.Learning.Task

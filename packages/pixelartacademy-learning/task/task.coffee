@@ -20,7 +20,11 @@ class PAA.Learning.Task
   @interests: -> []
 
   # Override to provide the classes of tasks leading to this task.
-  @predecessors: -> null
+  @predecessors: -> []
+
+  # Override to place the task in a different group. Tasks in the same group will be drawn
+  # together as a linear progression. Lower numbers indicate earlier appearance within the goal.
+  @groupNumber: -> 0
 
   @initialize: ->
     # Store task class by ID.
@@ -51,6 +55,8 @@ class PAA.Learning.Task
   instructionsTranslation: -> AB.translation @_translationSubscription, 'instructions'
 
   interests: -> @constructor.interests()
+  predecessors: -> @constructor.predecessors()
+  groupNumber: -> @constructor.groupNumber()
 
   completed: ->
     return unless characterId = LOI.characterId()

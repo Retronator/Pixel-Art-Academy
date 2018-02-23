@@ -3,7 +3,6 @@
 .pixelartacademy-pixelboy-apps-studyplan-goal
   display block
   position relative
-  width 100rem
   padding 5rem
   border 1rem solid atariCyan(5)
   background atariCyan(0)
@@ -14,14 +13,24 @@
     cursor pointer
     text-transform uppercase
 
-  .tasks
+  .tasks-map
+    position relative
     display none
-    padding 0
-    margin 5rem 0 0
+    margin 5rem 5rem 0
     cursor default
 
-    .task
-      display inline-block
+    .connections-canvas
+      position absolute
+      width 100%
+      height 100%
+
+    .tasks
+      list-style none
+      padding 0
+      margin 0
+
+      .task
+        position absolute
 
   .provided-interests
     position absolute
@@ -89,7 +98,7 @@
           background atariCyan(7)
 
   &.expanded
-    .tasks
+    .tasks-map
       display block
 
     .provided-interests

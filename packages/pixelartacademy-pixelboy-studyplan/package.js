@@ -25,7 +25,8 @@ Package.onUse(function(api) {
 
   api.addComponent('goal..');
   api.addComponent('goal/task');
-  
+  api.addFile('goal/tasksmapconnections');
+
   api.addComponent('goalsearch..');
 
   api.addComponent('blueprint..');

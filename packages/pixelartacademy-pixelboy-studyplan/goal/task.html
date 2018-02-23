@@ -9,9 +9,6 @@
       <div class="directive">
         {{> t10e directiveTranslation}}
       </div>
-      <div class="instructions">
-        {{> t10e instructionsTranslation}}
-      </div>
       <ul class="interests">
         {{#each interests}}
           {{#with interestDocument}}
@@ -19,6 +16,9 @@
           {{/with}}
         {{/each}}
       </ul>
+      <div class="instructions">
+        {{> t10e instructionsTranslation}}
+      </div>
     </div>
   </div>
 </template>
