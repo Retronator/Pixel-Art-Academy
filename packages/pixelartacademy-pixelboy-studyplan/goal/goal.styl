@@ -51,26 +51,19 @@
       content '+'
 
   .required-interests
-    position absolute
-    top 0
+    display none
     list-style none
-    padding-left 2.5rem
-    margin 5rem 0 0
 
     .interest
       position absolute
-      padding-bottom 5rem
+      left 9rem
+      right 6rem
       cursor pointer
-
-      &:last-child
-        padding 0
+      color atariGrey(6)
 
       &.valid-target
         .connector
           background atariGrey(7)
-
-      .name
-        display none
 
       .connection-target
         position absolute
@@ -84,7 +77,7 @@
         display block
         position absolute
         top 0
-        left -12rem
+        left -14rem
         width 9rem
         height 9rem
         padding 0.5rem 0 0 2.5rem
@@ -95,6 +88,8 @@
           content '→'
 
       &:hover:not(.invalid-target):not(.valid-target)
+        color atariGrey(7)
+
         .connector
           background atariCyan(7)
 

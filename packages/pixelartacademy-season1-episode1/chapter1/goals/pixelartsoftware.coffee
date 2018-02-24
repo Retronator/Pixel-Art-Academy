@@ -145,7 +145,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @instructions: -> """
         Using the software that you chose, doodle on the canvas to see how the basic tools behave.
-        Figure out how to zoom in and out too. Upload the image to complete the task.
+        Figure out how to zoom in and out too. Upload the image to your journal to complete the task.
       """
 
       @predecessors: -> [Goal.ChooseSoftware]
@@ -202,6 +202,22 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @initialize()
 
+    class @AdvancedSetup extends PAA.Learning.Task
+      @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.AdvancedSetup'
+
+      @directive: -> "Advanced setup"
+
+      @instructions: -> """
+        If you're using generic drawing software, there are many things besides the grid that can make working on pixel
+        art easier. If there is a tutorial for your software, use it to improve your workspace.
+      """
+
+      @predecessors: -> [Goal.DIY.Grid]
+
+      @groupNumber: -> 1
+
+      @initialize()
+
   class @CopyReference extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.CopyReference'
 
@@ -215,6 +231,23 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @interests: -> ['pixel art software', 'pixel art', 'drawing software']
 
     @predecessors: -> [Goal.Reference, Goal.DIY.Grid]
+
+    @initialize()
+
+  class @SharingOnline extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.SharingOnline'
+
+    @directive: -> "Sharing online"
+
+    @instructions: -> """
+      When you share pixel art online, you have to export it bigger and sometimes with extra space.
+      Figure out how to resize the image or apply scale when exporting if your software supports it.
+      Learn about best sizes and trick for posting to specific social networks.
+    """
+
+    @predecessors: -> [Goal.CopyReference]
+
+    @groupNumber: -> 1
 
     @initialize()
 
@@ -236,9 +269,11 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @DIY.AdvancedTools
     @DIY.Reference
     @DIY.Grid
+    @DIY.AdvancedSetup
 
     # End
     @CopyReference
+    @SharingOnline
   ]
 
   @finalTasks: -> [

@@ -8,6 +8,8 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
   @requiredInterests: -> ['pixel art software']
 
+  Goal = @
+
   class @Play extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Play'
 
@@ -30,6 +32,8 @@ class C1.Goals.Snake extends PAA.Learning.Goal
       Go to the Drawing app and draw or upload new sprites for the snake body and food piece.
     """
 
+    @predecessors: -> [Goal.Play]
+
     @initialize()
 
   class @PlayAgain extends PAA.Learning.Task
@@ -43,11 +47,17 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
     @interests: -> ['academy of art admission project']
 
+    @predecessors: -> [Goal.Draw]
+
     @initialize()
 
   @tasks: -> [
     @Play
     @Draw
+    @PlayAgain
+  ]
+
+  @finalTasks: -> [
     @PlayAgain
   ]
 

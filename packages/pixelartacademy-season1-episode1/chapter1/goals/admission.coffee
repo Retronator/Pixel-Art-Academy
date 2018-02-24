@@ -26,4 +26,8 @@ class C1.Goals.Admission extends PAA.Learning.Goal
     @Complete
   ]
 
+  @finalTasks: -> [
+    @Complete
+  ]
+
   @initialize()

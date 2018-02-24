@@ -21,7 +21,7 @@
     <ul class="required-interests">
       {{#each goal.requiredInterests}}
         {{#with interestDocument}}
-          <li class="interest {{validTargetClass}}" data-id="{{_id}}">
+          <li class="interest {{validTargetClass}}" data-id="{{_id}}" {{style requiredInterestStyle}}>
             <div class="name">
               {{> t10e name}}
             </div>

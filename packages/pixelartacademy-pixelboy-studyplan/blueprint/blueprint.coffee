@@ -177,21 +177,12 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
           continue unless interestDocument = IL.Interest.find connection.interest or hoveredInterest.interest
 
           continue unless endGoalComponent = @_goalComponentsById[connection.endGoalId or hoveredInterest.goalId]
-          $goal = endGoalComponent.$('.pixelartacademy-pixelboy-apps-studyplan-goal')
-          continue unless $goal?.length
-          goalOffset = $goal.offset()
-
-          $connector = endGoalComponent.$getConnectorByRequiredInterestId interestDocument._id
-          continue unless $connector?.length
-          connectorOffset = $connector.offset()
-
-          connectorPosition =
-            left: connectorOffset.left - goalOffset.left
-            top: connectorOffset.top - goalOffset.top
+          continue unless componentPosition = endGoalComponent.position()
+          continue unless requiredInterestEntryPoint = endGoalComponent.requiredInterestEntryPointById interestDocument._id
 
           connection.end =
-            x: endGoalComponent.position().x + (connectorPosition.left + $connector.outerWidth()) / scale
-            y: endGoalComponent.position().y + (connectorPosition.top + $connector.outerHeight() / 2) / scale
+            x: componentPosition.x + requiredInterestEntryPoint.x
+            y: componentPosition.y + requiredInterestEntryPoint.y
 
         else
           connection.end = @mouse().canvasCoordinate()

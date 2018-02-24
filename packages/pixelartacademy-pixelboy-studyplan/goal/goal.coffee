@@ -25,7 +25,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     @goalTasks = []
     @goalTasksByTaskId = {}
 
-    # Create goal tasks that we can attach extra info to.
+    # Create goal tasks so that we can attach extra info to them.
     for task in @goal.tasks()
       goalTask =
         task: task
@@ -90,7 +90,6 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     @levelsCount = @maxLevel + 1
     @groupsCount = @maxGroupNumber - @minGroupNumber + 1
 
-    @nameHeight = new ReactiveField 20
     @taskWidth = 9
     @taskHeight = 9
     @levelGap = 8
@@ -98,7 +97,9 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     @borderWidth = 1
     @padding =
       left: 6
-      bottom: 8
+      bottom: 6
+
+    @requiredInterestsMargin = 5
 
     # Calculate entry and exit points.
     for goalTask in @goalTasks
@@ -112,12 +113,14 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
         x: position.x + @taskWidth
         y: position.y + Math.floor @taskHeight / 2
 
-    console.log "MADE", @
-
   onCreated: ->
     super
 
     @display = LOI.adventure.interface.display
+
+    @nameHeight = new ReactiveField 20
+    @requiredInterestsPositionsById = new ReactiveField null
+    @requiredInterestsHeight = new ReactiveField null
 
     # Subscribe to all interests of this goal.
     @autorun (computation) =>
@@ -133,12 +136,45 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     # Update name height when in blueprint.
     @autorun (computation) =>
       # Depend on goal name and scale.
-      @goal.displayName()
       scale = @display.scale()
 
       # Measure name height after it had a chance to update.
       Meteor.setTimeout =>
-        @nameHeight @$('.pixelartacademy-pixelboy-apps-studyplan-goal > .name').outerHeight() / scale
+        # HACK: Also make sure the elements are being rendered since they will return 0 otherwise.
+        requestAnimationFrame =>
+          @nameHeight @$('.pixelartacademy-pixelboy-apps-studyplan-goal > .name').outerHeight() / scale
+      ,
+        0
+
+    # Update required interests positions.
+    @autorun (computation) =>
+      scale = @display.scale()
+
+      # Depend on names of interests.
+      for interest in @goal.requiredInterests()
+        continue unless interestDocument = IL.Interest.find interest
+
+        AB.translate interestDocument.name
+
+      # Measure name heights after they had a chance to update.
+      Meteor.setTimeout =>
+        requestAnimationFrame =>
+          positions = {}
+          top = 0
+
+          for interest in @$('.required-interests .interest')
+            $interest = $(interest)
+            id = $interest.data 'id'
+
+            top += @requiredInterestsMargin
+            positions[id] = top
+
+            # Move down by the title height.
+            height = $interest.outerHeight() / scale
+            top += height
+
+          @requiredInterestsPositionsById positions
+          @requiredInterestsHeight top
       ,
         0
 
@@ -164,9 +200,11 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     @padding.left + @tasksMapSize().width + 2 * @borderWidth
 
   goalHeight: ->
-    return @nameHeight() unless @expanded?()
+    height = @nameHeight() + 2 * @borderWidth
 
-    @nameHeight() + @tasksMapSize().height + @padding.bottom + 2 * @borderWidth
+    return height unless @expanded?()
+
+    height + @tasksMapSize().height + @requiredInterestsHeight() + @padding.bottom
 
   expandedClass: ->
     'expanded' if @expanded?()
@@ -175,29 +213,32 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     interest = @currentData()
     IL.Interest.find interest
 
-  $getConnectorByRequiredInterestId: (id) ->
-    $interest = @$(".required-interests .interest[data-id='#{id}'] .connector")
-    return $interest if $interest.length
+  requiredInterestEntryPointById: (interestId) ->
+    if @expanded()
+      return unless requiredInterestsPositionsById = @requiredInterestsPositionsById()
+      return unless taskMapSize = @tasksMapSize()
+      return unless requiredInterestsPosition = requiredInterestsPositionsById[interestId]
 
-    # HACK: Seems like the interest isn't rendered yet. Force a reactive recomputation after a delay.
-    dependency = new Tracker.Dependency
-    dependency.depend()
+      top = Math.ceil @nameHeight() + taskMapSize.height + requiredInterestsPosition
 
-    Meteor.setTimeout =>
-      dependency.changed()
-    ,
-      100
+      y = top + Math.ceil @taskHeight / 2
+
+    else
+      y = @nameHeight() / 2
+
+    x: -1
+    y: y
 
   validTargetClass: ->
     interestDocument = @currentData()
 
-    draggedInterestIds = @blueprint.draggedInterestIds()
+    draggedInterestIds = @blueprint?.draggedInterestIds()
     return unless draggedInterestIds.length
 
     if interestDocument._id in @blueprint.draggedInterestIds() then 'valid-target' else 'invalid-target'
 
   tasksMapSize: ->
-    minimumWidth = @levelsCount * @taskWidth + (@levelsCount - 1) * @levelGap
+    minimumWidth = @levelsCount * @taskWidth + (@levelsCount - 1) * @levelGap - Math.ceil @taskWidth / 2
 
     width: Math.max 100, minimumWidth
     height: @groupsCount * @taskHeight + (@groupsCount - 1) * @groupGap
@@ -242,6 +283,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     height: "#{@taskHeight}rem"
 
   providedInterestsExitPoint: ->
+    return unless @isCreated()
+
     if @expanded()
       y = @nameHeight() + @endGoalTask.exitPoint.y
 
@@ -249,7 +292,16 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       y = @nameHeight() / 2
 
     x: @goalWidth()
-    y: y
+    y: y + 1
+
+  requiredInterestStyle: ->
+    interestDocument = @currentData()
+    return unless requiredInterestsPositionsById = @requiredInterestsPositionsById()
+
+    requiredInterestsPosition = requiredInterestsPositionsById[interestDocument._id]
+    top = @nameHeight() + @tasksMapSize().height + requiredInterestsPosition
+
+    top: "#{top}rem"
 
   events: ->
     super.concat
