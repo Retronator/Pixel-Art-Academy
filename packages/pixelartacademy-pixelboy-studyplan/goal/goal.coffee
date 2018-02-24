@@ -55,6 +55,17 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
 
     calculateLevel goalTask for goalTask in @goalTasks
 
+    # Create the end node as the last level.
+    currentMaxLevel = _.max _.map @goalTasks, 'level'
+
+    @endGoalTask =
+      level: currentMaxLevel + 1
+      groupNumber: @goal.finalGroupNumber()
+      predecessors: @goalTasksByTaskId[task.id()] for task in @goal.finalTasks()
+      endTask: true
+
+    @goalTasks.push @endGoalTask
+
     # Create dummy goal tasks in missing levels.
     for goalTask in @goalTasks
       # Go over the predecessors, but clone them since we'll be mutating the array.
@@ -67,6 +78,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
             groupNumber: predecessor.groupNumber
             predecessors: [lastGoalTask]
 
+          @goalTasks.push lastGoalTask
+
         # Link this goalTask's predecessor to the missing level.
         _.pull goalTask.predecessors, predecessor
         goalTask.predecessors.push lastGoalTask
@@ -77,11 +90,16 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     @levelsCount = @maxLevel + 1
     @groupsCount = @maxGroupNumber - @minGroupNumber + 1
 
+    @nameHeight = new ReactiveField 20
     @taskWidth = 9
     @taskHeight = 9
-    @levelGap = 9
-    @groupGap = 7
-    
+    @levelGap = 8
+    @groupGap = 6
+    @borderWidth = 1
+    @padding =
+      left: 6
+      bottom: 8
+
     # Calculate entry and exit points.
     for goalTask in @goalTasks
       position = @_taskPosition goalTask
@@ -94,8 +112,12 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
         x: position.x + @taskWidth
         y: position.y + Math.floor @taskHeight / 2
 
+    console.log "MADE", @
+
   onCreated: ->
     super
+
+    @display = LOI.adventure.interface.display
 
     # Subscribe to all interests of this goal.
     @autorun (computation) =>
@@ -108,20 +130,43 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     # Draw tasks map connections.
     @constructor.TasksMapConnections.draw @
 
+    # Update name height when in blueprint.
+    @autorun (computation) =>
+      # Depend on goal name and scale.
+      @goal.displayName()
+      scale = @display.scale()
+
+      # Measure name height after it had a chance to update.
+      Meteor.setTimeout =>
+        @nameHeight @$('.pixelartacademy-pixelboy-apps-studyplan-goal > .name').outerHeight() / scale
+      ,
+        0
+
   goalStyle: ->
-    return unless @state and @blueprint
+    return @contractedGoalStyle() unless @state and @blueprint
 
     # Make sure we have position present, as it will disappear when goal is being deleted.
-    return unless position = @position()
+    return @contractedGoalStyle() unless position = @position()
 
     scale = @blueprint.camera().scale()
-
-    width = _.min 100, @tasksMapSize().width + 20
 
     position: 'absolute'
     left: "#{position.x * scale}rem"
     top: "#{position.y * scale}rem"
-    width: "#{width}rem"
+    width: "#{@goalWidth()}rem"
+    height: "#{@goalHeight()}rem"
+
+  contractedGoalStyle: ->
+    width: "#{@goalWidth()}rem"
+    height: "#{@goalHeight()}rem"
+
+  goalWidth: ->
+    @padding.left + @tasksMapSize().width + 2 * @borderWidth
+
+  goalHeight: ->
+    return @nameHeight() unless @expanded?()
+
+    @nameHeight() + @tasksMapSize().height + @padding.bottom + 2 * @borderWidth
 
   expandedClass: ->
     'expanded' if @expanded?()
@@ -152,14 +197,18 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     if interestDocument._id in @blueprint.draggedInterestIds() then 'valid-target' else 'invalid-target'
 
   tasksMapSize: ->
-    width: @levelsCount * @taskWidth + (@levelsCount - 1) * @levelGap
+    minimumWidth = @levelsCount * @taskWidth + (@levelsCount - 1) * @levelGap
+
+    width: Math.max 100, minimumWidth
     height: @groupsCount * @taskHeight + (@groupsCount - 1) * @groupGap
 
   tasksMapStyle: ->
-    tasksSize = @tasksMapSize()
+    tasksMapSize = @tasksMapSize()
 
-    width: "#{tasksSize.width}rem"
-    height: "#{tasksSize.height}rem"
+    top: "#{@nameHeight()}rem"
+    left: "#{@padding.left}rem"
+    width: "#{tasksMapSize.width}rem"
+    height: "#{tasksMapSize.height}rem"
 
   taskStyle: ->
     goalTask = @currentData()
@@ -173,6 +222,34 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
   _taskPosition: (goalTask) ->
     x: goalTask.level * (@taskWidth + @levelGap)
     y: (goalTask.groupNumber - @minGroupNumber) * (@taskHeight + @groupGap)
+
+  providedInterestsPosition: ->
+    if @expanded?()
+      y = @nameHeight() + @_taskPosition(@endGoalTask).y
+
+    else
+      y = @nameHeight() / 2 - @taskHeight / 2
+
+    x: @goalWidth() - @borderWidth - Math.ceil @taskWidth / 2
+    y: y
+
+  providedInterestsStyle: ->
+    position = @providedInterestsPosition()
+  
+    left: "#{position.x}rem"
+    top: "#{position.y}rem"
+    width: "#{@taskWidth}rem"
+    height: "#{@taskHeight}rem"
+
+  providedInterestsExitPoint: ->
+    if @expanded()
+      y = @nameHeight() + @endGoalTask.exitPoint.y
+
+    else
+      y = @nameHeight() / 2
+
+    x: @goalWidth()
+    y: y
 
   events: ->
     super.concat

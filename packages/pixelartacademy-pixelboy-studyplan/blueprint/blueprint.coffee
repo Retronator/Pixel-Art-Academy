@@ -97,7 +97,10 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
 
         else
           # Create an instance of this goal.
-          goalClass = PAA.Learning.Goal.getClassForId goalId
+          unless goalClass = PAA.Learning.Goal.getClassForId goalId
+            console.warn "Unrecognized goal present in study plan.", goalId
+            continue
+
           goal = new goalClass
 
           goalStateAddress = @studyPlan.stateAddress.child("goals.\"#{goalId}\"")
@@ -163,13 +166,12 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
       for connection in connections
         startGoalComponent = @_goalComponentsById[connection.startGoalId]
 
-        $providedInterests = startGoalComponent.$('.provided-interests')
-        continue unless $providedInterests?.length
-        providedInterestsPosition = $providedInterests.position()
+        continue unless componentPosition = startGoalComponent.position()
+        continue unless providedInterestsExitPoint = startGoalComponent.providedInterestsExitPoint()
 
         connection.start =
-          x: startGoalComponent.position().x + providedInterestsPosition.left / scale
-          y: startGoalComponent.position().y + (providedInterestsPosition.top + $providedInterests.outerHeight() / 2) / scale
+          x: componentPosition.x + providedInterestsExitPoint.x
+          y: componentPosition.y + providedInterestsExitPoint.y
 
         if connection.endGoalId or hoveredInterest
           continue unless interestDocument = IL.Interest.find connection.interest or hoveredInterest.interest

@@ -45,7 +45,10 @@ Package.onUse(function(api) {
   api.addFile('chapter1/scenes/inbox');
 
   api.addFile('chapter1/goals..');
-  api.addFile('chapter1/goals/tools');
+  api.addFile('chapter1/goals/drawingsoftware');
+  api.addFile('chapter1/goals/physicalpixelart');
+  api.addFile('chapter1/goals/pixelartsoftware');
+  api.addFile('chapter1/goals/traditionalarttools');
   api.addFile('chapter1/goals/commitment');
   api.addFile('chapter1/goals/classmates');
   api.addFile('chapter1/goals/studyplan');

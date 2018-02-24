@@ -231,12 +231,15 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal.TasksMapConnections
     # Draw a line across dummy tasks.
     unless goalTask.task
       y = goalTask.entryPoint.y
-      for x in [goalTask.entryPoint.x..goalTask.exitPoint.y]
+
+      endX = if goalTask.endTask then imageData.width - 1 else goalTask.exitPoint.x
+      
+      for x in [goalTask.entryPoint.x..endX]
         @_paintPixel imageData, x, y
 
     # Draw curves from all predecessors.
     for predecessor in goalTask.predecessors
-      bezierPoints = @_createBezierPoints predecessor.exitPoint, goalTask.entryPoint, goalComponent.levelGap * 1.5
+      bezierPoints = @_createBezierPoints predecessor.exitPoint, goalTask.entryPoint, goalComponent.levelGap
 
       bezierParameters = _.flatten _.map bezierPoints, (point) => [point.x, point.y]
 

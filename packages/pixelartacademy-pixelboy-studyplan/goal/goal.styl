@@ -3,20 +3,19 @@
 .pixelartacademy-pixelboy-apps-studyplan-goal
   display block
   position relative
-  padding 5rem
   border 1rem solid atariCyan(5)
   background atariCyan(0)
   cursor grab
 
   > .name
+    padding 5rem
     text-align center
     cursor pointer
     text-transform uppercase
 
   .tasks-map
-    position relative
+    position absolute
     display none
-    margin 5rem 5rem 0
     cursor default
 
     .connections-canvas
@@ -34,11 +33,13 @@
 
   .provided-interests
     position absolute
+    display none
+    z-index 1
     top 5rem
     right -4rem
-    width 8rem
-    height 8rem
-    padding-left 2rem
+    width 9rem
+    height 9rem
+    padding 0.5rem 0 0 2.5rem
     background atariCyan(5)
     color atariCyan(0)
     cursor text
@@ -84,9 +85,9 @@
         position absolute
         top 0
         left -12rem
-        width 8rem
-        height 8rem
-        padding-left 2rem
+        width 9rem
+        height 9rem
+        padding 0.5rem 0 0 2.5rem
         background atariCyan(5)
         color atariCyan(0)
 
@@ -99,16 +100,6 @@
 
   &.expanded
     .tasks-map
-      display block
-
     .provided-interests
-      top 18rem
-
     .required-interests
-      position relative
-
-      .interest
-        position relative
-
-        .name
-          display block
+      display block

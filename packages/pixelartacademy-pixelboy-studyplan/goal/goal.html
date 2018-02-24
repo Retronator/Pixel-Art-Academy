@@ -4,15 +4,17 @@
       {{> t10e goal.displayNameTranslation}}
     </div>
     {{#if goal.interests.length}}
-      <div class="provided-interests"></div>
+      <div class="provided-interests" {{style providedInterestsStyle}}></div>
     {{/if}}
     <div class="tasks-map" {{style tasksMapStyle}}>
       <canvas class="connections-canvas"></canvas>
       <ul class="tasks">
         {{#each goalTasks}}
-          <li class="task" {{style taskStyle}}>
-            {{> PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal.Task task}}
-          </li>
+          {{#if task}}
+            <li class="task" {{style taskStyle}}>
+              {{> PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal.Task task}}
+            </li>
+          {{/if}}
         {{/each}}
       </ul>
     </div>

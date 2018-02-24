@@ -20,7 +20,11 @@ class PAA.Learning.Goal
 
   # Override to provide task classes that are included in this goal.
   @tasks: -> []
-    
+
+  # Override to provide task classes that complete this goal.
+  @finalTasks: -> []
+  @finalGroupNumber: -> 0
+
   # Override to specify interests required to attempt this goal.
   @requiredInterests: -> []
 
@@ -50,9 +54,14 @@ class PAA.Learning.Goal
 
   constructor: ->
     @_tasks = []
+    @_finalTasks = []
+
+    finalTaskClasses = @constructor.finalTasks()
 
     for taskClass in @constructor.tasks()
-      @_tasks.push new taskClass
+      task = new taskClass
+      @_tasks.push task
+      @_finalTasks.push task if taskClass in finalTaskClasses
 
     # Subscribe to this goal's translations.
     translationNamespace = @id()
@@ -69,13 +78,12 @@ class PAA.Learning.Goal
   displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
     
   tasks: -> @_tasks
+  finalTasks: -> @_finalTasks
 
   interests: -> @constructor.interests()
   requiredInterests: -> @constructor.requiredInterests()
+  finalGroupNumber: -> @constructor.finalGroupNumber()
 
-  # Override to define when the goal has been reached.
-  completed: -> false
-
-  # Helper method that tells if all goal's tasks are completed.
-  allTasksCompleted: ->
-    _.every _.map @tasks, (task) -> task.completed()
+  # The goal is completed when at least one of the final tasks has been reached.
+  completed: ->
+    _.some _.map @finalTasks(), (task) -> task.completed()
