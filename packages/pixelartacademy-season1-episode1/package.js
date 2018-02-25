@@ -50,7 +50,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/goals/pixelartsoftware');
   api.addFile('chapter1/goals/traditionalarttools');
   api.addFile('chapter1/goals/time');
-  api.addFile('chapter1/goals/yearbook');
+  api.addFile('chapter1/goals/studygroup');
   api.addFile('chapter1/goals/studyplan');
   api.addFile('chapter1/goals/admission');
   api.addFile('chapter1/goals/snake');
