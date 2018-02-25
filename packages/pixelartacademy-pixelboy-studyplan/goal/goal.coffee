@@ -136,6 +136,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     # Update name height when in blueprint.
     @autorun (computation) =>
       # Depend on goal name and scale.
+      @goal.displayName()
       scale = @display.scale()
 
       # Measure name height after it had a chance to update.
@@ -233,14 +234,14 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     interestDocument = @currentData()
 
     draggedInterestIds = @blueprint?.draggedInterestIds()
-    return unless draggedInterestIds.length
+    return unless draggedInterestIds?.length
 
     if interestDocument._id in @blueprint.draggedInterestIds() then 'valid-target' else 'invalid-target'
 
   tasksMapSize: ->
     minimumWidth = @levelsCount * @taskWidth + (@levelsCount - 1) * @levelGap - Math.ceil @taskWidth / 2
 
-    width: Math.max 100, minimumWidth
+    width: Math.max 80, minimumWidth
     height: @groupsCount * @taskHeight + (@groupsCount - 1) * @groupGap
 
   tasksMapStyle: ->
@@ -308,7 +309,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       'mousedown .pixelartacademy-pixelboy-apps-studyplan-goal': @onMouseDownGoal
       'click .pixelartacademy-pixelboy-apps-studyplan-goal > .name': @onClickName
       'click .required-interests .interest': @onClickRequiredInterest
-      'mousedown .required-interests .interest': @onMouseDownRequiredInterest
+      'mousedown .required-interests .interest .connector': @onMouseDownRequiredInterestConnector
       'mouseup .required-interests .interest': @onMouseUpRequiredInterest
       'mouseenter .required-interests .interest': @onMouseEnterRequiredInterest
       'mouseleave .required-interests .interest': @onMouseLeaveRequiredInterest
@@ -335,7 +336,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
 
     @blueprint.studyPlan.goalSearch().setInterest interestDocument
 
-  onMouseDownRequiredInterest: (event) ->
+  onMouseDownRequiredInterestConnector: (event) ->
     interestDocument = @currentData()
 
     # Prevent selection.

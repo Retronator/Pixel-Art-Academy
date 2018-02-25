@@ -15,7 +15,8 @@
 
   .tasks-map
     position absolute
-    display none
+    z-index 2
+    visibility hidden
     cursor default
 
     .connections-canvas
@@ -33,7 +34,7 @@
 
   .provided-interests
     position absolute
-    display none
+    visibility hidden
     z-index 1
     top 5rem
     right -4rem
@@ -51,7 +52,7 @@
       content '+'
 
   .required-interests
-    display none
+    visibility hidden
     list-style none
 
     .interest
@@ -67,7 +68,6 @@
 
       .connection-target
         position absolute
-        z-index 1
         left -20rem
         top -2rem
         right 0
@@ -76,6 +76,7 @@
       .connector
         display block
         position absolute
+        z-index 1
         top 0
         left -14rem
         width 9rem
@@ -97,4 +98,4 @@
     .tasks-map
     .provided-interests
     .required-interests
-      display block
+      visibility visible

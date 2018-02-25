@@ -107,6 +107,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
           state = new LOI.StateObject address: goalStateAddress
 
           goalComponent = new PAA.PixelBoy.Apps.StudyPlan.Goal
+            _id: Random.id()
             goal: goal
             state: state
             blueprint: @
@@ -131,7 +132,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @hoveredInterest = new ReactiveField null
 
     @draggedInterestIds = new ComputedField =>
-      return [] unless draggedConnection = @draggedConnection()
+      return unless draggedConnection = @draggedConnection()
 
       goalComponent = @_goalComponentsById[draggedConnection.startGoalId]
 
@@ -154,11 +155,11 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
           # Add the dragged connection to connections.
           connections.push draggedConnection
 
-      scale = @display.scale()
-
       # See if we're hovering over a valid interest.
-      if hoveredInterest = @hoveredInterest()
-        draggedInterestIds = @draggedInterestIds()
+      hoveredInterest = @hoveredInterest()
+      draggedInterestIds = @draggedInterestIds()
+
+      if hoveredInterest and draggedInterestIds
         hoveredInterestDocument = IL.Interest.find hoveredInterest.interest
 
         hoveredInterest = null unless hoveredInterestDocument?._id in draggedInterestIds
@@ -219,11 +220,14 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @canvas canvas
     @context canvas.getContext '2d'
 
-    # Prevent click events from happening when dragging was active. We need to manually add this  event
+    # Prevent click events from happening when dragging was active. We need to manually add this event
     # listener so that we can set setCapture to true and make this listener be called before child click events.
     $blueprint[0].addEventListener 'click', =>
       # If drag has happened, don't process other clicks.
       event.stopImmediatePropagation() if @dragHasMoved()
+
+      # Reset drag has moved to allow further clicks.
+      @dragHasMoved false
     ,
       true
 

@@ -6,7 +6,7 @@ class C1.Goals.Admission extends PAA.Learning.Goal
 
   @displayName: -> "Get admitted"
 
-  @requiredInterests: -> ['commitment goal', 'retropolis profile', 'goal hierarchy', 'academy of art admission project']
+  @requiredInterests: -> ['desired drawing time', 'retropolis profile', 'goal hierarchy', 'academy of art admission project']
 
   class @Complete extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Admission.Complete'

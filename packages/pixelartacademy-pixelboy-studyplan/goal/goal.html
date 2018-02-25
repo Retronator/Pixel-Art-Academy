@@ -3,9 +3,6 @@
     <div class="name">
       {{> t10e goal.displayNameTranslation}}
     </div>
-    {{#if goal.interests.length}}
-      <div class="provided-interests" {{style providedInterestsStyle}}></div>
-    {{/if}}
     <div class="tasks-map" {{style tasksMapStyle}}>
       <canvas class="connections-canvas"></canvas>
       <ul class="tasks">
@@ -18,6 +15,9 @@
         {{/each}}
       </ul>
     </div>
+    {{#if goal.interests.length}}
+      <div class="provided-interests" {{style providedInterestsStyle}}></div>
+    {{/if}}
     <ul class="required-interests">
       {{#each goal.requiredInterests}}
         {{#with interestDocument}}

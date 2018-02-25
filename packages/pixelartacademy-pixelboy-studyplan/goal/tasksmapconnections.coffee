@@ -232,7 +232,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal.TasksMapConnections
     unless goalTask.task
       y = goalTask.entryPoint.y
 
-      endX = if goalTask.endTask then imageData.width - 1 else goalTask.exitPoint.x
+      endX = if goalTask.endTask then imageData.width - 4 else goalTask.exitPoint.x
       
       for x in [goalTask.entryPoint.x..endX]
         @_paintPixel imageData, x, y
