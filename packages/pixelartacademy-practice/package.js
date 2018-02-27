@@ -10,9 +10,14 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'quill-delta': '3.6.2'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
-  api.use('retronator:pixelartacademy-pixelboy');
+  api.use('retronator:pixelartacademy-learning');
+  api.use('retronator:pixelartdatabase');
 
   api.use('edgee:slingshot');
   api.use('jparker:crypto-aes');
@@ -22,6 +27,16 @@ Package.onUse(function(api) {
   api.addFile('practice');
   api.addServerFile('server');
   api.addClientFile('client');
+
+  // Journal
+
+  api.addFile('journal..');
+  api.addFile('journal/methods');
+  api.addServerFile('journal/subscriptions');
+
+  api.addFile('journal/entry..');
+  api.addFile('journal/entry/methods');
+  api.addServerFile('journal/entry/subscriptions');
 
   api.addFile('checkin/checkin');
   api.addFile('checkin/methods');
