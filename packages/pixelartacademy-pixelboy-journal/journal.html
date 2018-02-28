@@ -1,19 +1,5 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal">
   <div class="pixelartacademy-pixelboy-apps-journal app">
-    <div class="journals-area">
-      <button class="new-journal-button"></button>
-      <ul class="journals">
-        {{#each activeJournals}}
-          <li class="journal"></li>
-        {{/each}}
-      </ul>
-      <div class="archive">
-        <ul class="journals">
-          {{#each archivedJournals}}
-            <li class="journal"></li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
+    {{> Render journalsView}}
   </div>
 </template>

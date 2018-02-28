@@ -8,7 +8,8 @@ Npm.depends({
   stripe: '5.1.1',
   patreon: '0.3.0',
   'tumblr.js': '1.1.1',
-  'path-to-regexp': '2.1.0'
+  'path-to-regexp': '2.1.0',
+  three: '0.90.0'
 });
 
 Package.onUse(function(api) {
@@ -42,7 +43,6 @@ Package.onUse(function(api) {
     'peerlibrary:check-extension',
     'peerlibrary:server-autorun',
     'peerlibrary:directcollection',
-    'limemakers:three',
     'okgrow:router-autoscroll',
     'stevezhu:lodash',
     'velocityjs:velocityjs',
@@ -56,6 +56,7 @@ Package.onUse(function(api) {
   api.use('webapp', 'server');
 
   api.export('Artificial');
+  api.export('THREE');
 
 	api.addFile('artificial');
 
@@ -67,6 +68,7 @@ Package.onUse(function(api) {
 
   api.addClientFile('everywhere/jquery/positioncss');
 
+  api.addFile('everywhere/three..');
   api.addFile('everywhere/three/color');
   api.addFile('everywhere/three/vectors');
 

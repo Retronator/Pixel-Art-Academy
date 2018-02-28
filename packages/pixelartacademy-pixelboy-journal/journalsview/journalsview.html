@@ -1,0 +1,23 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalsView">
+  <div class="pixelartacademy-pixelboy-apps-journal-journalsview">
+    <div class="scene"></div>
+    <div class="overlay">
+      <div class="overlay-content">
+        <button class="new-journal-button"></button>
+        <ul class="journals">
+          {{#each activeJournals}}
+            <li class="journal"></li>
+          {{/each}}
+        </ul>
+        <div class="archive">
+          <ul class="journals">
+            {{#each archivedJournals}}
+              <li class="journal"></li>
+            {{/each}}
+          </ul>
+        </div>
+        <div class="end-placeholder"></div>
+      </div>
+    </div>
+  </div>
+</template>

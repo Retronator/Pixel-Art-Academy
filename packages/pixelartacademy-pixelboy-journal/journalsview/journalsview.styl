@@ -1,0 +1,41 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-journal-journalsview
+  absolute-cover()
+
+  .scene
+    absolute-cover()
+
+    canvas
+      position absolute
+      width 100% !important
+      height 100% !important
+
+  .overlay
+    absolute-cover()
+    z-index 1
+    overflow-x auto
+
+    .overlay-content
+      display flex
+      height 100%
+
+      .new-journal-button
+      .end-placeholder
+        display block
+        width 95rem
+        height 100%
+        background none
+        border none
+        flex-shrink 0
+
+      .journals
+        display flex
+        list-style none
+        padding 0
+        margin 0
+
+        .journal
+          width 120rem
+          height 100%
+          cursor pointer
