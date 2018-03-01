@@ -7,19 +7,19 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.JournalMesh extends THREE.Mesh
   constructor: (@sceneManager, @journal) ->
     switch @journal.design.size
       when PAA.Practice.Journal.Design.Size.Small
-        width = 20
-        height = 30
+        @width = 20
+        @height = 30
       when PAA.Practice.Journal.Design.Size.Medium
-        width = 30
-        height = 40
+        @width = 30
+        @height = 40
       when PAA.Practice.Journal.Design.Size.Large
-        width = 40
-        height = 60
+        @width = 40
+        @height = 60
 
     if @journal.design.orientation is PAA.Practice.Journal.Design.Orientation.Landscape
-      [width, height] = [height, width]
+      [@width, @height] = [@height, @width]
 
-    geometry = new THREE.BoxGeometry width, 2, height
+    geometry = new THREE.BoxGeometry @width, 2, @height
 
     material = new THREE.MeshPhongMaterial color: 0
 
@@ -33,7 +33,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.JournalMesh extends THREE.Mesh
     
     @position.y = 1
     @position.x = 0
-    @position.z = 0
+    @position.z = -@height / 2
     @castShadow = true
 
     # Dummy DOM element to run velocity on.
@@ -42,21 +42,14 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.JournalMesh extends THREE.Mesh
   destroy: ->
     @geometry.dispose()
     @material.dispose()
+    
+  hover: ->
+    @_moveYTo 2, 200
+    
+  unhover: ->
+    @_moveYTo 1, 200
 
-  moveTo: (targetPosition, duration) ->
-    @_startingPosition = @position.clone()
-    @_delta = targetPosition.clone().sub @_startingPosition
-
-    @$animate.velocity
-      tween: [1, 0]
-    ,
-      duration: duration
-      progress: (elements, complete, remaining, current, tweenValue) =>
-        newPosition = @_startingPosition.clone.add @_delta.clone().multiplyScalar tweenValue
-        @position.copy newPosition
-        @sceneManager.scene.updated()
-
-  moveYTo: (targetY, duration) ->
+  _moveYTo: (targetY, duration) ->
     @_startingY = @position.y
     @_deltaY = targetY - @_startingY
 
@@ -67,4 +60,23 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.JournalMesh extends THREE.Mesh
       easing: 'ease-out'
       progress: (elements, complete, remaining, current, tweenValue) =>
         @position.y = @_startingY + @_deltaY * tweenValue
+        @sceneManager.scene.updated()
+
+  activate: ->
+    @_moveZTo 30 + @height / 2, 500, 'ease-in'
+
+  deactivate: ->
+    @_moveZTo -@height / 2, 500, 'ease-out'
+
+  _moveZTo: (targetZ, duration, easing) ->
+    @_startingZ = @position.z
+    @_deltaZ = targetZ - @_startingZ
+
+    @$animate.velocity('stop').velocity
+      tween: [1, 0]
+    ,
+      duration: duration
+      easing: easing
+      progress: (elements, complete, remaining, current, tweenValue) =>
+        @position.z = @_startingZ + @_deltaZ * tweenValue
         @sceneManager.scene.updated()

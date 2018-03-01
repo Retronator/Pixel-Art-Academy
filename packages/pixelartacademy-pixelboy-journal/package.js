@@ -21,8 +21,13 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addComponent('journal');
+
   api.addComponent('journalsview..');
   api.addFile('journalsview/renderer');
   api.addFile('journalsview/scenemanager');
   api.addFile('journalsview/journalmesh');
+
+  api.addComponent('journalview..');
+  api.addFile('journalview/journaldesign');
+  api.addComponent('journalview/traditional..');
 });

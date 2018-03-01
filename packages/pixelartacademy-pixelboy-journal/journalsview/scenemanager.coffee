@@ -57,7 +57,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.SceneManager
     directionalLight = new THREE.DirectionalLight 0xffffdd, 0.8
     directionalLight.position.set -130, 80, -100
     directionalLight.castShadow = true
-    d = 50
+    d = 100
     directionalLight.shadow.camera.left = -d
     directionalLight.shadow.camera.right = d
     directionalLight.shadow.camera.top = d
@@ -81,10 +81,5 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.SceneManager
   destroy: ->
     journalMesh.destroy() for id, journalMesh of @_journalMeshesById
 
-  hoverJournal: (journalId) ->
-    journalMesh = @_journalMeshesById[journalId]
-    journalMesh.moveYTo 2, 200
-
-  leaveJournal: (journalId) ->
-    journalMesh = @_journalMeshesById[journalId]
-    journalMesh.moveYTo 1, 200
+  getJournalMeshForId: (journalId) ->
+    @_journalMeshesById[journalId]

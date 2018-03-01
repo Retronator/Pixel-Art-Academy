@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -28,7 +29,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
     @sceneManager new @constructor.SceneManager @
 
     camera = new THREE.PerspectiveCamera 90, 1, 0.001, 1000
-    camera.position.set 0, 30, 40
+    camera.position.set 0, 20, 20
     camera.rotation.x = -0.5
     camera.updateProjectionMatrix()
     @camera camera
@@ -127,9 +128,15 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
   onMouseEnterJournal: (event) ->
     journal = @currentData()
     
-    @sceneManager().hoverJournal journal._id
+    journalMesh = @sceneManager().getJournalMeshForId journal._id
+    journalMesh.hover()
 
   onMouseLeaveJournal: (event) ->
     journal = @currentData()
 
-    @sceneManager().leaveJournal journal._id
+    journalMesh = @sceneManager().getJournalMeshForId journal._id
+    journalMesh.unhover()
+
+  onClickJournal: (event) ->
+    journal = @currentData()
+    AB.Router.setParameter 'parameter3', journal._id

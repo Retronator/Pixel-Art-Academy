@@ -54,12 +54,10 @@
         background atari2600colors[4][3]
 
     .os
-      // We can't use absolute-cover() because we're styling the width/height
-      // of a canvas which need to be overriden directly from css.
       absolute-cover()
       border none
       transform translateX(0)
-      overflow auto
+      overflow hidden
 
     .screen
       position absolute

@@ -100,10 +100,7 @@ class PAA.PixelBoy.OS extends AM.Component
     url = PAA.PixelBoy.url()
 
     if appUrl = @currentAppUrl()
-      url = "#{url}/#{appUrl}"
-
-      if currentAppPath = @currentAppPath()
-        url = "#{url}/#{currentAppPath}"
+      url = "#{url}/#{appUrl}/*"
 
     url
 
@@ -127,10 +124,10 @@ class PAA.PixelBoy.OS extends AM.Component
   backButtonCallback: ->
     # We return to main menu.
     if @currentAppPath()
-      AB.Router.setParameters parameter3: null
+      AB.Router.setParameter 'parameter3', null
 
     else if @currentAppUrl()
-      AB.Router.setParameters parameter2: null
+      AB.Router.setParameter 'parameter2', null
 
     else
       # No app is open, we should actually close PixelBoy.
