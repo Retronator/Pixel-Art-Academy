@@ -19,8 +19,11 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
   onCreated: ->
     super
 
+    @display = LOI.adventure.interface.display
+
     @currentPageIndex = new ReactiveField 0
-  
+    @pagesCount = new ReactiveField 0
+
   onRendered: ->
     super
 
@@ -33,6 +36,30 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
     # Initialize quill.
     @quill = new Quill @$('.writing-area')[0]
 
+    @quill.on 'text-change', (delta, oldDelta, source) =>
+      # Update total pages count.
+      @updatePagesCount()
+
+  updatePagesCount: ->
+    # See how far the last item in the editor appears.
+    lastChild = @$('.ql-editor > *:last-child')
+
+    unless lastChild.length
+      # We have no elements yet.
+      @pagesCount 0
+      return
+
+    scale = @display.scale()
+    lastLeft = lastChild.position().left / scale
+
+    options = @journalDesign.writingAreaOptions()
+    pageWidth = options.width + options.gap
+
+    lastPageLocation = lastLeft / pageWidth
+    lastPageIndex = Math.floor lastPageLocation
+
+    @pagesCount lastPageIndex + 1
+
   previousPage: ->
     options = @journalDesign.writingAreaOptions()
     @currentPageIndex Math.max 0, @currentPageIndex() - options.pagesPerViewport
@@ -43,7 +70,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
 
   _updateEntryEditorScrollLeft: ->
     pageIndex = @currentPageIndex()
-    scale = LOI.adventure.interface.display.scale()
+    scale = @display.scale()
     options = @journalDesign.writingAreaOptions()
 
     viewportWidth = options.pagesPerViewport * (options.width + options.gap)
@@ -54,9 +81,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
   writingAreaStyle: ->
     options = @journalDesign.writingAreaOptions()
 
-    # Always show two additional viewport worth of pages, so that
-    # there is enough content for scrolling to reach its desired place.
-    displayedPages = @currentPageIndex() + 3 * options.pagesPerViewport
+    # Always show two additional viewport worth of pages, so that there is enough content for scrolling to reach its
+    # desired place, especially when browser automatically changes it on text cursor movement.
+    displayedPages = @pagesCount() + 2 * options.pagesPerViewport
     width = displayedPages * options.width + (displayedPages - 1) * options.gap
 
     left: "#{options.left}rem"
@@ -73,7 +100,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
   onScrollEntryEditor: (event) ->
     # Calculate which page we should be on.
     scrollLeft = event.target.scrollLeft
-    scale = LOI.adventure.interface.display.scale()
+    scale = @display.scale()
 
     options = @journalDesign.writingAreaOptions()
     viewportWidth = options.pagesPerViewport * (options.width + options.gap)
