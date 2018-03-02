@@ -36,6 +36,23 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
 
     @renderer new @constructor.Renderer @
 
+    # Animate journal meshes on selection.
+    @autorun (computation) =>
+      journalId = @journal.journalId()
+
+      # Make sure active journal changed.
+      return if @_activeJournalMesh?.journal._id is journalId
+
+      @_activeJournalMesh?.deactivate()
+      @_activeJournalMesh = null
+
+      if journalId = @journal.journalId()
+        @_activeJournalMesh = @sceneManager().getJournalMeshForId journalId
+
+        # Make sure the journal mesh was created before trying to activate it.
+        # The function will recompute when it becomes available.
+        @_activeJournalMesh?.activate()
+
   onRendered: ->
     super
 

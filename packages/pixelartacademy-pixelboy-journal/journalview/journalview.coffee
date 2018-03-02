@@ -27,19 +27,18 @@ class PAA.PixelBoy.Apps.Journal.JournalView extends AM.Component
         fields:
           'design.type': 1
 
-      console.log "got new doc design", journalId, journalDocument, computation
+      Tracker.nonreactive =>
+        if journalDocument
+          @journalDesign new @constructor.JournalDesign[journalDocument.design.type] @
+          @visible true
 
-      if journalDocument
-        @journalDesign new @constructor.JournalDesign[journalDocument.design.type] @
-        @visible true
+        else if @visible()
+          @visible false
 
-      else
-        @visible false
-
-        Meteor.setTimeout =>
-          @journalDesign null
-        ,
-          500
+          Meteor.setTimeout =>
+            @journalDesign null
+          ,
+            500
 
   visibleClass: ->
     'visible' if @visible()

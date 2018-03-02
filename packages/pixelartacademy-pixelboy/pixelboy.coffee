@@ -292,6 +292,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
   LOI.Adventure.registerDirectRoute "/#{@url()}/*", =>
     # HACK: Remember which app we're trying to open.
     appUrl = AB.Router.getParameter('parameter2')
+    appPath = AB.Router.getParameter('parameter3')
 
     # Show the item if we need to.
     unless LOI.adventure.activeItemId() is @id()
@@ -303,5 +304,8 @@ class PAA.PixelBoy extends LOI.Adventure.Item
         # Show the item.
         pixelBoy.open()
         
-        # HACK: Force back the wanted app.
-        AB.Router.setParameter 'parameter2', appUrl
+        # HACK: Force back the wanted app path.
+        AB.Router.setParameters
+          parameter1: @url()
+          parameter2: appUrl
+          parameter3: appPath

@@ -53,30 +53,40 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.JournalMesh extends THREE.Mesh
     @_startingY = @position.y
     @_deltaY = targetY - @_startingY
 
-    @$animate.velocity('stop').velocity
+    @$animate.velocity('stop', 'moveY').velocity
       tween: [1, 0]
     ,
       duration: duration
       easing: 'ease-out'
+      queue: 'moveY'
       progress: (elements, complete, remaining, current, tweenValue) =>
         @position.y = @_startingY + @_deltaY * tweenValue
         @sceneManager.scene.updated()
+
+    @$animate.dequeue('moveY')
 
   activate: ->
     @_moveZTo 30 + @height / 2, 500, 'ease-in'
 
   deactivate: ->
-    @_moveZTo -@height / 2, 500, 'ease-out'
+    # Wait until the journal view transitions out first.
+    Meteor.setTimeout =>
+      @_moveZTo -@height / 2, 500, 'ease-out'
+    ,
+      500
 
   _moveZTo: (targetZ, duration, easing) ->
     @_startingZ = @position.z
     @_deltaZ = targetZ - @_startingZ
 
-    @$animate.velocity('stop').velocity
+    @$animate.velocity('stop', 'moveZ').velocity
       tween: [1, 0]
     ,
       duration: duration
       easing: easing
+      queue: 'moveZ'
       progress: (elements, complete, remaining, current, tweenValue) =>
         @position.z = @_startingZ + @_deltaZ * tweenValue
         @sceneManager.scene.updated()
+
+    @$animate.dequeue('moveZ')

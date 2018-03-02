@@ -82,4 +82,4 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.SceneManager
     journalMesh.destroy() for id, journalMesh of @_journalMeshesById
 
   getJournalMeshForId: (journalId) ->
-    @_journalMeshesById[journalId]
+    @journalMeshesById()[journalId]
