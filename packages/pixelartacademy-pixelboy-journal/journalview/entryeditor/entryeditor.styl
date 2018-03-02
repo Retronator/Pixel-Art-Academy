@@ -1,8 +1,24 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-pixelboy-apps-journal-journalview-entryeditor
-  color atariGrey(0)
-  daily()
+  absolute-cover()
+  overflow hidden
 
-  .quill
+  .writing-area
+    position absolute
+    color atariGrey(1)
+    daily()
+    line-height 10rem
     cursor text
+    hyphens auto
+    column-fill auto
+
+    p
+      margin 10rem 0
+
+    .ql-editor
+      > *:first-child
+        margin-top 0
+
+    .ql-clipboard
+      display none

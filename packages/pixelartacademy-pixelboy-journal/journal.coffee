@@ -39,14 +39,13 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
 
     @autorun (computation) =>
       if journalDesign = @journalView().journalDesign()
-        width = journalDesign.width()
-        height = journalDesign.height()
+        pixelBoySize = journalDesign.pixelBoySize()
 
-        @minWidth width
-        @minHeight height
+        @minWidth pixelBoySize.width
+        @minHeight pixelBoySize.height
 
-        @maxWidth width
-        @maxHeight height
+        @maxWidth pixelBoySize.width
+        @maxHeight pixelBoySize.height
 
         @resizable false
 

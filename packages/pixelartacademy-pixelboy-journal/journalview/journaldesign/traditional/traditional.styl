@@ -2,5 +2,28 @@
 
 .pixelartacademy-pixelboy-apps-journal-journalview-journaldesign-traditional
   absolute-cover()
-  padding 20rem
   background image('/pixelartacademy/pixelboy/apps/journal/journal.png') center center / 302rem 223rem no-repeat
+
+  .page-button
+    position absolute
+    display none
+    bottom 5rem
+    border 0
+    background 0
+    padding 5rem
+    checkout()
+    color atariBrown(4)
+    cursor pointer
+
+    &:hover
+      color atariBrown(3)
+
+    &.previous
+      left 10rem
+
+    &.next
+      right 10rem
+
+  &:hover
+    .page-button
+      display block
