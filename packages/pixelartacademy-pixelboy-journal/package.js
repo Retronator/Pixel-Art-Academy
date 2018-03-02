@@ -28,6 +28,8 @@ Package.onUse(function(api) {
   api.addFile('journalsview/journalmesh');
 
   api.addComponent('journalview..');
-  api.addFile('journalview/journaldesign');
-  api.addComponent('journalview/traditional..');
+  api.addComponent('journalview/entryeditor..');
+
+  api.addFile('journalview/journaldesign..');
+  api.addComponent('journalview/journaldesign/traditional..');
 });
