@@ -28,6 +28,8 @@ class PAA.Practice.Journal extends AM.Document
   #       shade
   #     art
   # archived: boolean whether the journal is put away in the archive pile
+  # entries: reverse of entry.journal, mostly used to know how many entries there are in the journal
+  #   _id
   @Meta
     name: @id()
     fields: =>

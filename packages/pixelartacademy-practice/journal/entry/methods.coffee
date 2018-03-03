@@ -4,11 +4,13 @@ PAA = PixelArtAcademy
 
 Delta = require 'quill-delta'
 
-PAA.Practice.Journal.Entry.insert.method (journalId, time, timezoneOffset, language) ->
+PAA.Practice.Journal.Entry.insert.method (entryId, journalId, time, timezoneOffset, language, contentDeltaOperations) ->
+  check entryId, Match.DocumentId
   check journalId, Match.DocumentId
   check time, Date
   check timezoneOffset, Match.Integer
   check language, String
+  check contentDeltaOperations, Array
 
   # Find the journal.
   journal = PAA.Practice.Journal.documents.findOne journalId
@@ -17,13 +19,18 @@ PAA.Practice.Journal.Entry.insert.method (journalId, time, timezoneOffset, langu
   # Make sure the user can perform this character action.
   LOI.Authorize.characterAction journal.character._id
 
+  # Create a delta object to catch any potential errors with the operations array.
+  contentDelta = new Delta contentDeltaOperations
+
   # We create a new check-in for the given character.
   entry =
+    _id: entryId
     time: time
     timezoneOffset: timezoneOffset
     language: language
     journal:
       _id: journalId
+    content: contentDelta.ops
 
   PAA.Practice.Journal.Entry.documents.insert entry
 
@@ -56,20 +63,21 @@ PAA.Practice.Journal.Entry.updateLanguage.method (entryId, language) ->
   # Associate the artist with the character.
   PAA.Practice.Journal.Entry.documents.update entryId, $set: {language}
       
-PAA.Practice.Journal.Entry.updateContent.method (entryId, updateDelta) ->
+PAA.Practice.Journal.Entry.updateContent.method (entryId, updateDeltaOperations) ->
   check entryId, Match.DocumentId
-  check updateDelta, Array
+  check updateDeltaOperations, Array
 
   # Make sure the check-in belongs to the current user.
   entry = authorizeJournalAction entryId
 
-  content = new Delta entry.structure
-  newContent = content.compose updateDelta
+  contentDelta = new Delta entry.content
+  updateDelta = new Delta updateDeltaOperations
+  newContentDelta = contentDelta.compose updateDelta
 
   # Update the text.
   PAA.Practice.Journal.Entry.documents.update entryId,
     $set:
-      content: newContent
+      content: newContentDelta.ops
 
 PAA.Practice.Journal.Entry.newConversation.method (entryId, characterId, firstLineText) ->
   check entryId, Match.DocumentId

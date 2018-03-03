@@ -3,11 +3,12 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 # Get entries for a certain journal.
-PAA.Practice.Journal.Entry.forJournalId.publish (characterId, limit) ->
-  check characterId, Match.DocumentId
+PAA.Practice.Journal.Entry.forJournalId.publish (journalId, limit) ->
+  check journalId, Match.DocumentId
+  check limit, Match.Integer
 
   PAA.Practice.Journal.Entry.documents.find
-    'character._id': characterId
+    'journal._id': journalId
   ,
     limit: limit
     sort:

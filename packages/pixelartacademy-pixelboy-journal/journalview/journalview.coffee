@@ -29,7 +29,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView extends AM.Component
 
       Tracker.nonreactive =>
         if journalDocument
-          @journalDesign new @constructor.JournalDesign[journalDocument.design.type] @
+          @journalDesign new @constructor.JournalDesign[journalDocument.design.type] @, journalId
           @visible true
 
         else if @visible()

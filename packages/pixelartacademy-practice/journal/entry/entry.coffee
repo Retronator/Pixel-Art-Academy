@@ -42,7 +42,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      journal: @ReferenceField PAA.Practice.Journal, [], true
+      journal: @ReferenceField PAA.Practice.Journal, [], true, 'entries', []
       structure: [
         insert:
           artwork: @ReferenceField PADB.Artwork, ['image'], false

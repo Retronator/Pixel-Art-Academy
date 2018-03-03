@@ -1,0 +1,13 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entries">
+  <div class="pixelartacademy-pixelboy-apps-journal-journalview-entries">
+    <ol class="entries">
+    {{#each entryEditors}}
+      <li class="entry {{entryVisibleClass}}">
+        {{> Render this}}
+      </li>
+    {{/each}}
+    </ol>
+    <button class="previous page-button {{previousPageVisibleClass}}">← back</button>
+    <button class="next page-button {{nextPageVisibleClass}}">next →</button>
+  </div>
+</template>
