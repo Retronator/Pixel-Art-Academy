@@ -84,9 +84,9 @@ Package.onUse(function(api) {
   // Initialization
 
   // First create all the items.
-  api.addServerFile('initialize-server/items/retronator/retronator');
   api.addServerFile('initialize-server/items/landsofillusions/landsofillusions');
   api.addServerFile('initialize-server/items/retropolis/retropolis');
+  api.addServerFile('initialize-server/items/retronator/retronator');
   api.addServerFile('initialize-server/items/pixelartacademy/pixelartacademy');
   api.addServerFile('initialize-server/items/pixelartacademy/kickstarter/keycards');
 
