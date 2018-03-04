@@ -29,7 +29,13 @@ Package.onUse(function(api) {
 
   api.addComponent('journalview..');
   api.addComponent('journalview/entries..');
-  api.addComponent('journalview/entryeditor..');
+
+  // Entry is loaded only on the client since it uses Quill that is not available on the server.
+  api.addClientComponent('journalview/entry-client/entry');
+  api.addClientFile('journalview/entry-client/object..');
+  api.addClientComponent('journalview/entry-client/object/entrytime..');
+  api.addClientComponent('journalview/entry-client/object/artwork..');
+
   api.addFile('journalview/journaldesign..');
   api.addComponent('journalview/journaldesign/traditional..');
 });

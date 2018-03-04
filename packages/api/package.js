@@ -53,6 +53,10 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addFiles([path + ".coffee", path + ".html", path + ".styl"]);
   };
+  api.constructor.prototype.addClientComponent = function(path) {
+    path = expandPath(path);
+    this.addFiles([path + ".coffee", path + ".html", path + ".styl"], ['client']);
+  };
   api.constructor.prototype.addUnstyledComponent = function(path) {
     path = expandPath(path);
     this.addFiles([path + ".coffee", path + ".html"]);

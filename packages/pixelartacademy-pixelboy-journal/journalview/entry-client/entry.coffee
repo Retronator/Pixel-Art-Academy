@@ -1,13 +1,14 @@
+AB = Artificial.Babel
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-# Quill can only exists on the client.
-Quill = require 'quill' if Meteor.isClient
+Quill = require 'quill'
+Block = Quill.import 'blots/block'
 
-class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.EntryEditor'
+class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry'
   @version: -> '0.1.0'
 
   @register @id()
@@ -21,46 +22,58 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
   onCreated: ->
     super
 
+    @quill = new AE.ReactiveWrapper null
+
     @display = LOI.adventure.interface.display
 
     @currentPageIndex = new ReactiveField 0
     @pagesCount = new ReactiveField 0
+    
+    @entry = new ComputedField =>
+      PAA.Practice.Journal.Entry.documents.findOne @entryId
 
   onRendered: ->
     super
 
-    @$entryEditor = @$('.pixelartacademy-pixelboy-apps-journal-journalview-entryeditor')
+    @$entry = @$('.pixelartacademy-pixelboy-apps-journal-journalview-entry')
 
     # Reactively display the correct page.
     @autorun (computation) =>
-      @_updateEntryEditorScrollLeft()
+      @_updateEntryScrollLeft()
 
     # Initialize quill.
-    @quill = new Quill @$('.writing-area')[0]
+    quill = new Quill @$('.writing-area')[0]
+    @quill quill
 
-    @quill.on 'text-change', (delta, oldDelta, source) =>
+    # Insert the starting template on a new entry.
+    quill.insertEmbed 0, 'entryTime', {}, Quill.sources.API unless @entryId
+
+    quill.on 'text-change', (delta, oldDelta, source) =>
       # Update total pages count.
       @updatePagesCount()
 
       unless @entryId
         # This is an empty entry, so start it.
-        delta = @quill.getContents()
+        delta = @quill().getContents()
         @entries.startEntry delta
         return
 
       # Update the entry if this was a user update.
-      PAA.Practice.Journal.Entry.updateContent @entryId, delta.ops if source is 'user'
+      PAA.Practice.Journal.Entry.updateContent @entryId, delta.ops if source is Quill.sources.USER
+
+    # Trigger reactive updates.
+    quill.on 'editor-change', => @quill.updated()
 
     # Update quill content.
     @autorun (computation) =>
-      return unless entry = PAA.Practice.Journal.Entry.documents.findOne @entryId
+      return unless entry = @entry()
 
       # See if we already have the correct content.
-      currentContent = @quill.getContents().ops
+      currentContent = quill.getContents().ops
       return if EJSON.equals entry.content, currentContent
 
       # The content is new, update.
-      @quill.setContents entry.content, 'api'
+      quill.setContents entry.content, Quill.sources.API
 
       # Move the cursor to the end.
       @moveCursorToEnd()
@@ -124,13 +137,13 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
     @currentPageIndex pageIndex
 
   focus: ->
-    @quill.focus()
+    @quill().focus()
 
   moveCursorToEnd: ->
-    end = @quill.getLength()
-    @quill.setSelection end, 0
+    end = @quill().getLength()
+    @quill().setSelection end, 0
 
-  _updateEntryEditorScrollLeft: ->
+  _updateEntryScrollLeft: ->
     pageIndex = @currentPageIndex()
     scale = @display.scale()
     options = @journalDesign.writingAreaOptions()
@@ -138,7 +151,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
     viewportWidth = options.pagesPerViewport * (options.width + options.gap)
     viewportIndex = pageIndex / options.pagesPerViewport
 
-    @$entryEditor.scrollLeft viewportWidth * viewportIndex * scale
+    @$entry.scrollLeft viewportWidth * viewportIndex * scale
 
   writingAreaStyle: ->
     options = @journalDesign.writingAreaOptions()
@@ -154,13 +167,33 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
     height: "#{options.height}rem"
     columnCount: displayedPages
     columnGap: "#{options.gap}rem"
-    
+
+  objectsAreaStyle: ->
+    return unless quill = @quill.withUpdates()
+
+    # Objects interface is shown when the cursor is on an empty line.
+    return unless range = quill.getSelection()
+    return if range.length
+
+    [block, offset] = quill.scroll.descendant Block, range.index
+    return unless block?.domNode.firstChild instanceof HTMLBRElement
+
+    lineBounds = quill.getBounds range
+    scale = @display.scale()
+    options = @journalDesign.writingAreaOptions()
+    pinWidth = 35
+    pinHeight = 15
+
+    left: lineBounds.left + (options.left + options.width - pinWidth) * scale
+    top: lineBounds.top + lineBounds.height * 0.5 + (options.top - pinHeight * 0.5) * scale
+    display: 'block'
+
   events: ->
     super.concat
-      'scroll .pixelartacademy-pixelboy-apps-journal-journalview-entryeditor': @onScrollEntryEditor
+      'scroll .pixelartacademy-pixelboy-apps-journal-journalview-entry': @onScrollEntry
       'click .writing-area': @onClickWritingArea
 
-  onScrollEntryEditor: (event) ->
+  onScrollEntry: (event) ->
     # Calculate which page we should be on.
     scrollLeft = event.target.scrollLeft
     scale = @display.scale()
@@ -190,7 +223,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
     @currentPageIndex newViewportIndex * options.pagesPerViewport
 
     # Immediately update scroll left as well to prevent blinking.
-    @_updateEntryEditorScrollLeft()
+    @_updateEntryScrollLeft()
 
   onClickWritingArea: (event) ->
     # If we're clicking inside the editor, there's nothing to do.
@@ -200,4 +233,4 @@ class PAA.PixelBoy.Apps.Journal.JournalView.EntryEditor extends AM.Component
     @moveCursorToEnd()
 
     # HACK: moving the cursor resets scroll to 0 so we need to manually update it again.
-    @_updateEntryEditorScrollLeft()
+    @_updateEntryScrollLeft()
