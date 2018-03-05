@@ -26,32 +26,36 @@ class Entry.Object extends AM.Component
       
     @format format
 
-  @registerBlot: (blotName) ->
+  dataAttributes: ->
+    'data-value': EJSON.stringify @value()
+    'data-format': EJSON.stringify @format()
+
+  @registerBlot: (options) ->
     parent = @
   
     class @Blot extends BlockEmbed
-      @blotName = blotName
-  
+      @blotName = options.name
+      @tagName = options.tag
+      @className = options.class
+
       @create: (value) ->
         # Create a temporary node and render the component to it.
         $div = $('<div>')
-        Blaze.renderWithData parent.renderComponent(BlazeComponent.currentComponent()), value, $div[0]
+        Blaze.renderWithData parent.renderComponent(), value, $div[0]
 
         # Return the top component node.
-        $div.find('div')[0]
-  
+        $div.find('*')[0]
+
       @value: (node) ->
-        component = BlazeComponent.getComponentForElement node
-        
-        # Retrieve the current value object.
-        component.value()
-  
+        # We use attr instead of data so that we can stringify the object ourselves
+        # with EJSON instead of the default that would do it with JSON.
+        return unless valueString = $(node).attr('data-value')
+        EJSON.parse valueString
+
       @formats: (node) ->
-        component = BlazeComponent.getComponentForElement node
-        
-        # Retrieve the current format object.
-        component.format()
-  
+        return unless formatString = $(node).attr('data-format')
+        EJSON.parse formatString
+
       format: (name, value) ->
         component = BlazeComponent.getComponentForElement @domNode
         

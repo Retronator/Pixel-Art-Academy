@@ -1,8 +1,15 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry">
   <div class="pixelartacademy-pixelboy-apps-journal-journalview-entry">
     <div class="writing-area" {{style writingAreaStyle}}></div>
-    <div class="objects-area" {{style objectsAreaStyle}}>
-      <button class="show-objects-button"></button>
+    <div class="objects-area {{objectsAreaExpandedClass}}" {{style objectsAreaStyle}}>
+      <button class="toggle-objects-button"></button>
+      <ul class="objects">
+        {{#each objects}}
+          <li class="object {{type}}">
+            <button class="insert-object-button" title="{{name}}"></button>
+          </li>
+        {{/each}}
+      </ul>
     </div>
   </div>
 </template>

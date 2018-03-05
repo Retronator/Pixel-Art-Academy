@@ -17,6 +17,7 @@ Npm.depends({
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelboy');
+  api.use('retronator:pixelartacademy-practice');
 
   api.export('PixelArtAcademy');
 
@@ -33,8 +34,8 @@ Package.onUse(function(api) {
   // Entry is loaded only on the client since it uses Quill that is not available on the server.
   api.addClientComponent('journalview/entry-client/entry');
   api.addClientFile('journalview/entry-client/object..');
-  api.addClientComponent('journalview/entry-client/object/entrytime..');
-  api.addClientComponent('journalview/entry-client/object/artwork..');
+  api.addClientComponent('journalview/entry-client/object/timestamp..');
+  api.addClientComponent('journalview/entry-client/object/image..');
 
   api.addFile('journalview/journaldesign..');
   api.addComponent('journalview/journaldesign/traditional..');

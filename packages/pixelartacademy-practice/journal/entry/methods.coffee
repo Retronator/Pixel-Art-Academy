@@ -4,13 +4,11 @@ PAA = PixelArtAcademy
 
 Delta = require 'quill-delta'
 
-PAA.Practice.Journal.Entry.insert.method (entryId, journalId, time, timezoneOffset, language, contentDeltaOperations) ->
+PAA.Practice.Journal.Entry.insert.method (entryId, journalId, contentDeltaOperations, order) ->
   check entryId, Match.DocumentId
   check journalId, Match.DocumentId
-  check time, Date
-  check timezoneOffset, Match.Integer
-  check language, String
   check contentDeltaOperations, Array
+  check order, Match.OptionalOrNull Number
 
   # Find the journal.
   journal = PAA.Practice.Journal.documents.findOne journalId
@@ -21,15 +19,25 @@ PAA.Practice.Journal.Entry.insert.method (entryId, journalId, time, timezoneOffs
 
   # Create a delta object to catch any potential errors with the operations array.
   contentDelta = new Delta contentDeltaOperations
+  
+  # Place at the end of the journal if order is not specified.
+  unless order?
+    lastEntry = PAA.Practice.Journal.Entry.documents.findOne
+      'journal._id': journalId
+    ,
+      sort:
+        order: -1
+
+    # Place it after the last entry (or at the start if it's the first entry).
+    order = (lastEntry?.order + 1) or 0
 
   # We create a new check-in for the given character.
   entry =
     _id: entryId
-    time: time
-    timezoneOffset: timezoneOffset
-    language: language
     journal:
       _id: journalId
+    time: new Date()
+    order: order
     content: contentDelta.ops
 
   PAA.Practice.Journal.Entry.documents.insert entry
@@ -42,27 +50,16 @@ PAA.Practice.Journal.Entry.remove.method (entryId) ->
 
   PAA.Practice.Journal.Entry.documents.remove entryId
 
-PAA.Practice.Journal.Entry.updateTime.method (entryId, time, timezone) ->
+PAA.Practice.Journal.Entry.updateOrder.method (entryId, order) ->
   check entryId, Match.DocumentId
-  check time, Date
-  check timezoneOffset, Match.Integer
+  check order, Number
 
   # Make sure the check-in belongs to the current user.
   authorizeJournalAction entryId
 
   # Associate the artist with the character.
-  PAA.Practice.Journal.Entry.documents.update entryId, $set: {time, timezoneOffset}
+  PAA.Practice.Journal.Entry.documents.update entryId, $set: {order}
 
-PAA.Practice.Journal.Entry.updateLanguage.method (entryId, language) ->
-  check entryId, Match.DocumentId
-  check language, String
-
-  # Make sure the check-in belongs to the current user.
-  authorizeJournalAction entryId
-
-  # Associate the artist with the character.
-  PAA.Practice.Journal.Entry.documents.update entryId, $set: {language}
-      
 PAA.Practice.Journal.Entry.updateContent.method (entryId, updateDeltaOperations) ->
   check entryId, Match.DocumentId
   check updateDeltaOperations, Array
@@ -78,6 +75,21 @@ PAA.Practice.Journal.Entry.updateContent.method (entryId, updateDeltaOperations)
   PAA.Practice.Journal.Entry.documents.update entryId,
     $set:
       content: newContentDelta.ops
+
+PAA.Practice.Journal.Entry.replaceContent.method (entryId, contentDeltaOperations) ->
+  check entryId, Match.DocumentId
+  check contentDeltaOperations, Array
+
+  # Make sure the check-in belongs to the current user.
+  authorizeJournalAction entryId
+
+  # Create a delta object to catch any potential errors with the operations array.
+  contentDelta = new Delta contentDeltaOperations
+
+  # Update the text.
+  PAA.Practice.Journal.Entry.documents.update entryId,
+    $set:
+      content: contentDelta.ops
 
 PAA.Practice.Journal.Entry.newConversation.method (entryId, characterId, firstLineText) ->
   check entryId, Match.DocumentId

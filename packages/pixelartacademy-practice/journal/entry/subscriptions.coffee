@@ -12,7 +12,7 @@ PAA.Practice.Journal.Entry.forJournalId.publish (journalId, limit) ->
   ,
     limit: limit
     sort:
-      time: -1
+      order: -1
 
 PAA.Practice.Journal.Entry.conversationsForEntryId.publish (entryId) ->
   check entryId, Match.DocumentId

@@ -32,6 +32,10 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     @entry = new ComputedField =>
       PAA.Practice.Journal.Entry.documents.findOne @entryId
 
+    @objectsAreaExpanded = new ReactiveField false
+
+    $(window).on 'mouseup.pixelartacademy-pixelboy-apps-journal-journalview-entry', (event) => @onMouseUpWindow event
+
   onRendered: ->
     super
 
@@ -42,27 +46,42 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
       @_updateEntryScrollLeft()
 
     # Initialize quill.
-    quill = new Quill @$('.writing-area')[0]
+    quill = new Quill @$('.writing-area')[0],
+      formats: [
+        'bold'
+        'italic'
+        'link'
+        'strike'
+        'list'
+        'timestamp'
+        'image'
+      ]
+
     @quill quill
 
     # Insert the starting template on a new entry.
-    quill.insertEmbed 0, 'entryTime', {}, Quill.sources.API unless @entryId
+    quill.insertEmbed 0, 'timestamp', {}, Quill.sources.API unless @entryId
 
     quill.on 'text-change', (delta, oldDelta, source) =>
-      # Update total pages count.
-      @updatePagesCount()
-
       unless @entryId
-        # This is an empty entry, so start it.
+        # This is an empty entry, so start it, but not if we have any images still uploading.
         delta = @quill().getContents()
+
+        for operation in delta.ops
+          return if operation.insert?.image?.file
+
         @entries.startEntry delta
         return
 
       # Update the entry if this was a user update.
       PAA.Practice.Journal.Entry.updateContent @entryId, delta.ops if source is Quill.sources.USER
 
-    # Trigger reactive updates.
-    quill.on 'editor-change', => @quill.updated()
+    quill.on 'editor-change', =>
+      # Update total pages count.
+      @updatePagesCount()
+
+      # Trigger reactive updates.
+      @quill.updated()
 
     # Update quill content.
     @autorun (computation) =>
@@ -74,15 +93,27 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
       # The content is new, update.
       quill.setContents entry.content, Quill.sources.API
+      
+      # HACK: Make sure the new contents match what we set. If they're not, we have some unsupported formats included 
+      # in our content. In that case we should completely replace the saved content (instead of just passing the delta).
+      currentContent = quill.getContents().ops
+
+      unless EJSON.equals entry.content, currentContent
+        PAA.Practice.Journal.Entry.replaceContent @entryId, currentContent
 
       # Move the cursor to the end.
       @moveCursorToEnd()
+
+  onDestroyed: ->
+    super
+
+    $(window).off '.pixelartacademy-pixelboy-apps-journal-journalview-entry'
 
   updatePagesCount: ->
     # See how far the last item in the editor appears.
     lastChild = @$('.ql-editor > *:last-child')
 
-    unless lastChild.length
+    unless lastChild?.length
       # We have no elements yet.
       @pagesCount 0
       return
@@ -99,6 +130,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     @pagesCount lastPageIndex + 1
 
   previousPage: ->
+    # Deselect when changing pages.
+    @quill().setSelection null
+
     # We can't go back if we're at the first page.
     currentPageIndex = @currentPageIndex()
     return false if currentPageIndex is 0
@@ -109,6 +143,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     true
 
   nextPage: ->
+    # Deselect when changing pages.
+    @quill().setSelection null
+
     # We can't go forward if we're on the last viewport.
     options = @journalDesign.writingAreaOptions()
 
@@ -181,17 +218,31 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     lineBounds = quill.getBounds range
     scale = @display.scale()
     options = @journalDesign.writingAreaOptions()
-    pinWidth = 35
-    pinHeight = 15
 
-    left: lineBounds.left + (options.left + options.width - pinWidth) * scale
-    top: lineBounds.top + lineBounds.height * 0.5 + (options.top - pinHeight * 0.5) * scale
+    left: lineBounds.left + options.left * scale
+    width: options.width * scale
+    top: lineBounds.top + lineBounds.height * 0.5 + options.top * scale
     display: 'block'
+
+  objectsAreaExpandedClass: ->
+    'expanded' if @objectsAreaExpanded()
+
+  objects: ->
+    [
+      type: 'image'
+      name: "Image"
+    ,
+      type: 'todo'
+      name: "To-do task"
+    ]
 
   events: ->
     super.concat
       'scroll .pixelartacademy-pixelboy-apps-journal-journalview-entry': @onScrollEntry
       'click .writing-area': @onClickWritingArea
+      'click .toggle-objects-button': @onClickToggleObjectsButton
+      'click .image .insert-object-button': @onClickInsertObjectButtonImage
+      'click .todo .insert-object-button': @onClickInsertObjectButtonToDo
 
   onScrollEntry: (event) ->
     # Calculate which page we should be on.
@@ -234,3 +285,25 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
     # HACK: moving the cursor resets scroll to 0 so we need to manually update it again.
     @_updateEntryScrollLeft()
+
+  onClickToggleObjectsButton: (event) ->
+    @objectsAreaExpanded not @objectsAreaExpanded()
+
+  onMouseUpWindow: (event) ->
+    return if $(event.target).closest('.toggle-objects-button').length
+
+    @objectsAreaExpanded false
+
+  onClickInsertObjectButtonImage: (event) ->
+    quill = @quill()
+    range = quill.getSelection()
+
+    $fileInput = $('<input type="file"/>')
+
+    $fileInput.on 'change', (event) =>
+      return unless imageFile = $fileInput[0]?.files[0]
+
+      value = file: imageFile
+      quill.insertEmbed range.index, 'image', value, Quill.sources.USER
+
+    $fileInput.click()

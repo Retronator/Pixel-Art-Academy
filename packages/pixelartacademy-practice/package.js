@@ -19,14 +19,11 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartdatabase');
 
-  api.use('edgee:slingshot');
   api.use('jparker:crypto-aes');
 
   api.export('PixelArtAcademy');
 
   api.addFile('practice');
-  api.addServerFile('server');
-  api.addClientFile('client');
 
   // Journal
 

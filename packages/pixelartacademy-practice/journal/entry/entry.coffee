@@ -5,35 +5,31 @@ PADB = PixelArtDatabase
 
 class PAA.Practice.Journal.Entry extends AM.Document
   @id: -> 'PixelArtAcademy.Practice.Journal.Entry'
-  # time: the time when the entry was published
-  # timezoneOffset: the timezone the entry was made in, in minutes UTC is ahead of this timezone
-  # language: user's current language when the entry was made 
   # journal: the journal this entry appears in
   #   _id
+  # time: the time when the entry was created
+  # order: where this entry appears in the journal
   # [content]: array of delta operations
   #   insert: string or object to be inserted
-  #     TimeHeader
-  #     ----------
+  #     timestamp: a semantic time entry
+  #       time: the time to be displayed
+  #       timezoneOffset: the timezone used to display the time, in minutes UTC is ahead of this timezone
+  #       language: language the time is written in
   #
-  #     Text
-  #     ----
-  #     text: the text structure of the post
-  #
-  #     Media
-  #     -------
-  #     artwork: the artwork associated with the post
+  #     artwork: an artwork from the pixel art database
   #       _id
   #       image:
   #         url
-  #     image: the image associated with the post
-  #       url
-  #     video: the video associated with the post
+  #
+  #     image: an image without any semantic information
   #       url
   #
-  #     TaskEntry
-  #     ----
-  #     taskEntry: the entry that describes a task being completed
-  #       _id
+  #     video: a video without any semantic information
+  #       url
+  #
+  #     task: a learning task
+  #       entry: an entry created to complete the task
+  #         _id
   #
   #   attributes: object with formatting directives
   #
@@ -46,17 +42,28 @@ class PAA.Practice.Journal.Entry extends AM.Document
       structure: [
         insert:
           artwork: @ReferenceField PADB.Artwork, ['image'], false
-          taskEntry: @ReferenceField PAA.Learning.Task.Entry, [], false
+          task:
+            entry: @ReferenceField PAA.Learning.Task.Entry, [], false
       ]
       conversation: [@ReferenceField LOI.Conversations.Conversation]
+
+  @imageUploadContext = new PADB.Upload.Context
+    name: "#{@id()}.image"
+    folder: 'check-ins'
+    maxSize: 10 * 1024 * 1024 # 10 MB
+    fileTypes: [
+      'image/png'
+      'image/jpeg'
+      'image/gif'
+      ]
 
   # Methods
 
   @insert: @method 'insert'
   @remove: @method 'remove'
-  @updateTime: @method 'updateTime'
-  @updateLanguage: @method 'updateLanguage'
+  @updateOrder: @method 'updateOrder'
   @updateContent: @method 'updateContent'
+  @replaceContent: @method 'replaceContent'
 
   @newConversation: @method 'newConversation'
 

@@ -30,7 +30,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
         fields:
           _id: 1
         sort:
-          time: 1
+          order: 1
       ).fetch()
       
       entries = []
@@ -109,11 +109,8 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
   startEntry: (delta) ->
     entryId = Random.id()
     journalId = @journalDesign.journalId
-    time = new Date()
-    timezoneOffset = time.getTimezoneOffset()
-    language = AB.currentLanguage()
 
-    PAA.Practice.Journal.Entry.insert entryId, journalId, time, timezoneOffset, language, delta.ops
+    PAA.Practice.Journal.Entry.insert entryId, journalId, delta.ops
 
     @currentEntryId entryId
 
