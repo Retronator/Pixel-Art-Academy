@@ -3,7 +3,7 @@
     <div class="writing-area" {{style writingAreaStyle}}></div>
     <div class="objects-area {{objectsAreaExpandedClass}}" {{style objectsAreaStyle}}>
       <button class="toggle-objects-button"></button>
-      <ul class="objects">
+      <ul class="objects" {{style objectsStyle}}>
         {{#each objects}}
           <li class="object {{type}}">
             <button class="insert-object-button" title="{{name}}"></button>

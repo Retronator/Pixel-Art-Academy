@@ -21,7 +21,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
   #       image:
   #         url
   #
-  #     image: an image without any semantic information
+  #     picture: an image without any semantic information
   #       url
   #
   #     video: a video without any semantic information
@@ -47,8 +47,8 @@ class PAA.Practice.Journal.Entry extends AM.Document
       ]
       conversation: [@ReferenceField LOI.Conversations.Conversation]
 
-  @imageUploadContext = new PADB.Upload.Context
-    name: "#{@id()}.image"
+  @pictureUploadContext = new PADB.Upload.Context
+    name: "#{@id()}.picture"
     folder: 'check-ins'
     maxSize: 10 * 1024 * 1024 # 10 MB
     fileTypes: [

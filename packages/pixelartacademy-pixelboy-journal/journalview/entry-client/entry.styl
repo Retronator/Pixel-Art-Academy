@@ -16,6 +16,9 @@
     p
       margin 10rem 0
 
+    ul
+      list-style square
+
     .ql-editor
       > *:first-child
         margin-top 0
@@ -70,19 +73,25 @@
           right 5rem
 
     .objects
-      display none
+      display flex
       position absolute
-      left 0
-      right 0
+      width 0
+      right 10rem
       top -8rem
       height 17rem
+      overflow hidden
       list-style none
       padding 0
+      box-sizing border-box
       background atariGrey(7)
       border-left 1rem solid atariGrey(6)
       box-shadow -1rem 1rem 0 transparentify(atariBrown(6), atariBrown(7))
+      visibility hidden
+      transition all 0.4s ease-out
 
       .object
+        display inline-block
+
         .insert-object-button
           width 21rem
           height 17rem
@@ -92,13 +101,17 @@
           background-repeat no-repeat
           background-position center
 
-        &.image .insert-object-button
-          background-image image('/pixelartacademy/pixelboy/apps/journal/objects-image.png')
+        &.picture .insert-object-button
+          background-image image('/pixelartacademy/pixelboy/apps/journal/objects-picture.png')
           background-size 14rem 11rem
 
-        &.todo .insert-object-button
-          background-image image('/pixelartacademy/pixelboy/apps/journal/objects-todo.png')
+        &.task .insert-object-button
+          background-image image('/pixelartacademy/pixelboy/apps/journal/objects-task.png')
           background-size 11rem 8rem
+
+        &.timestamp .insert-object-button
+          background-image image('/pixelartacademy/pixelboy/apps/journal/objects-timestamp.png')
+          background-size 18rem 5rem
 
         &:hover
           .insert-object-button
@@ -130,4 +143,4 @@
             right 17rem
 
       .objects
-        display flex
+        visibility visible

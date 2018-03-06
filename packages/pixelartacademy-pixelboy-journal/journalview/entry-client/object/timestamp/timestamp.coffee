@@ -17,7 +17,7 @@ class Entry.Object.Timestamp extends Entry.Object
 
   @registerBlot
     name: 'timestamp'
-    tag: 'div'
+    tag: 'p'
     class: 'pixelartacademy-pixelboy-apps-journal-journalview-entry-object-timestamp'
 
   onCreated: ->

@@ -34,7 +34,8 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
     @objectsAreaExpanded = new ReactiveField false
 
-    $(window).on 'mouseup.pixelartacademy-pixelboy-apps-journal-journalview-entry', (event) => @onMouseUpWindow event
+    @_mouseUpWindowHandler = (event) => @onMouseUpWindow event
+    $(window).on 'mouseup', @_mouseUpWindowHandler
 
   onRendered: ->
     super
@@ -51,10 +52,10 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
         'bold'
         'italic'
         'link'
-        'strike'
         'list'
         'timestamp'
-        'image'
+        'picture'
+        'task'
       ]
 
     @quill quill
@@ -64,11 +65,11 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
     quill.on 'text-change', (delta, oldDelta, source) =>
       unless @entryId
-        # This is an empty entry, so start it, but not if we have any images still uploading.
+        # This is an empty entry, so start it, but not if we have any pictures still uploading.
         delta = @quill().getContents()
 
         for operation in delta.ops
-          return if operation.insert?.image?.file
+          return if operation.insert?.picture?.file
 
         @entries.startEntry delta
         return
@@ -107,7 +108,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
   onDestroyed: ->
     super
 
-    $(window).off '.pixelartacademy-pixelboy-apps-journal-journalview-entry'
+    $(window).off 'mouseup', @_mouseUpWindowHandler
 
   updatePagesCount: ->
     # See how far the last item in the editor appears.
@@ -227,22 +228,43 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
   objectsAreaExpandedClass: ->
     'expanded' if @objectsAreaExpanded()
 
+  objectsStyle: ->
+    objectsCount = @objects().length
+    width = if @objectsAreaExpanded() then objectsCount * 21 + 13 else 0
+
+    width: "#{width}rem"
+
   objects: ->
-    [
-      type: 'image'
-      name: "Image"
+    objects = [
+      type: 'picture'
+      name: "Picture"
     ,
-      type: 'todo'
-      name: "To-do task"
+      type: 'task'
+      name: "Learning task"
     ]
+
+    # Add timestamp if it's not already in the post.
+    if delta = @quill.withUpdates()?.getContents()
+      for operation in delta.ops
+        if operation.insert?.timestamp
+          timestampFound = true
+          break
+
+    unless timestampFound
+      objects.push
+        type: 'timestamp'
+        name: "Timestamp"
+
+    objects
 
   events: ->
     super.concat
       'scroll .pixelartacademy-pixelboy-apps-journal-journalview-entry': @onScrollEntry
       'click .writing-area': @onClickWritingArea
       'click .toggle-objects-button': @onClickToggleObjectsButton
-      'click .image .insert-object-button': @onClickInsertObjectButtonImage
-      'click .todo .insert-object-button': @onClickInsertObjectButtonToDo
+      'click .picture .insert-object-button': @onClickInsertObjectButtonPicture
+      'click .task .insert-object-button': @onClickInsertObjectButtonTask
+      'click .timestamp .insert-object-button': @onClickInsertObjectButtonTimestamp
 
   onScrollEntry: (event) ->
     # Calculate which page we should be on.
@@ -294,16 +316,29 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
     @objectsAreaExpanded false
 
-  onClickInsertObjectButtonImage: (event) ->
+  onClickInsertObjectButtonPicture: (event) ->
     quill = @quill()
     range = quill.getSelection()
 
     $fileInput = $('<input type="file"/>')
 
     $fileInput.on 'change', (event) =>
-      return unless imageFile = $fileInput[0]?.files[0]
+      return unless file = $fileInput[0]?.files[0]
 
-      value = file: imageFile
-      quill.insertEmbed range.index, 'image', value, Quill.sources.USER
+      value = {file}
+      quill.insertEmbed range.index, 'picture', value, Quill.sources.USER
 
     $fileInput.click()
+
+  onClickInsertObjectButtonTask: (event) ->
+    quill = @quill()
+    range = quill.getSelection()
+
+    quill.insertEmbed range.index, 'task', {}, Quill.sources.USER
+
+  onClickInsertObjectButtonTimestamp: (event) ->
+    quill = @quill()
+    range = quill.getSelection()
+
+    # Create an empty timestamp so it gets initialized with current time.
+    quill.insertEmbed range.index, 'timestamp', {}, Quill.sources.USER

@@ -35,7 +35,7 @@ Package.onUse(function(api) {
   api.addClientComponent('journalview/entry-client/entry');
   api.addClientFile('journalview/entry-client/object..');
   api.addClientComponent('journalview/entry-client/object/timestamp..');
-  api.addClientComponent('journalview/entry-client/object/image..');
+  api.addClientComponent('journalview/entry-client/object/picture..');
 
   api.addFile('journalview/journaldesign..');
   api.addComponent('journalview/journaldesign/traditional..');
