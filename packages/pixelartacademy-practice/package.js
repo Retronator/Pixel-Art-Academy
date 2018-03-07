@@ -35,6 +35,16 @@ Package.onUse(function(api) {
   api.addFile('journal/entry/methods');
   api.addServerFile('journal/entry/subscriptions');
 
+  // Pages
+
+  api.addFile('pages/pages');
+
+  api.addUnstyledComponent('pages/admin..');
+  api.addUnstyledComponent('pages/admin/scripts..');
+  api.addServerFile('pages/admin/scripts/methods-server/convertcheckins');
+
+  // Check-ins (legacy)
+
   api.addFile('checkin/checkin');
   api.addFile('checkin/methods');
   api.addServerFile('checkin/methods-server');
@@ -46,8 +56,6 @@ Package.onUse(function(api) {
   api.addFile('importeddata/importeddata');
   api.addServerFile('importeddata/checkin-server/checkin');
   api.addServerFile('importeddata/checkin-server/migrations/0000-renamecollection');
-
-  api.addFile('pages/pages');
 
   api.addUnstyledComponent('pages/extractimagesfromposts/extractimagesfromposts');
   api.addServerFile('pages/extractimagesfromposts/methods-server');

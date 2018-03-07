@@ -22,7 +22,8 @@ class PAA.Practice.Journal.Entry extends AM.Document
   #         url
   #
   #     picture: an image without any semantic information
-  #       url
+  #       url: the url of the image itself
+  #       sourceWebsiteUrl: optional url from which the image was extracted, if it wasn't uploaded
   #
   #     video: a video without any semantic information
   #       url

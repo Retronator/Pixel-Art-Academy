@@ -84,6 +84,7 @@ journalDesignPattern = Match.ObjectIncluding
   writingSides: Match.Optional Match.Where (value) => value in _.values PAA.Practice.Journal.Design.WritingSides
   paper: Match.Optional
     type: Match.Optional Match.Where (value) => value in _.values PAA.Practice.Journal.Design.PaperType
+    spacing: Match.Optional Match.PositiveInteger
     color: Match.Optional
       hue: Match.Optional Match.Where (value) => value in _.values LOI.Assets.Palette.Atari2600.hues
       shade: Match.IntegerRange 0, 7

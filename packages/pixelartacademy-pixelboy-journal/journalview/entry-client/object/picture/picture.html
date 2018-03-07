@@ -1,10 +1,8 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Picture">
-  <p class="pixelartacademy-pixelboy-apps-journal-journalview-entry-object-picture" contenteditable="false" {{dataAttributes}}>
-    {{#if pictureSource}}
-      <img class="picture" src="{{pictureSource}}">
-    {{/if}}
-    {{#if missingPictureSource}}
-      <div class="missing-picture">Missing picture</div>
-    {{/if}}
-  </p>
+  {{#if pictureSource}}
+    <img class="picture" src="{{pictureSource}}">
+  {{/if}}
+  {{#if missingPictureSource}}
+    <div class="missing-picture">Missing picture</div>
+  {{/if}}
 </template>

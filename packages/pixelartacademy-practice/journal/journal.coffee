@@ -19,6 +19,7 @@ class PAA.Practice.Journal extends AM.Document
   #   writingSide
   #   paper
   #     type
+  #     spacing
   #     color
   #       hue
   #       shade
@@ -73,7 +74,5 @@ class PAA.Practice.Journal extends AM.Document
 
     PaperType:
       Blank: 'Blank'
-      QuadSparse: 'QuadSparse'
-      QuadDense: 'QuadDense'
-      NarrowRule: 'NarrowRule'
-      WideRule: 'WideRule'
+      Quad: 'Quad'
+      Rule: 'Rule'

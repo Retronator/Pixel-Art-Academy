@@ -13,7 +13,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
   @register @id()
   template: -> @constructor.id()
-  
+
+  @debug = false
+
   constructor: (@entries, @entryId) ->
     super
 
@@ -26,6 +28,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
     @display = LOI.adventure.interface.display
 
+    # TODO: When page is being recreated, we should preserve page index instead of setting it to 0.
     @currentPageIndex = new ReactiveField 0
     @pagesCount = new ReactiveField 0
     
@@ -56,14 +59,17 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
         'timestamp'
         'picture'
         'task'
+        'language'
       ]
 
     @quill quill
 
     # Insert the starting template on a new entry.
-    quill.insertEmbed 0, 'timestamp', {}, Quill.sources.API unless @entryId
+    @insertTimestamp 0, Quill.sources.API unless @entryId
 
     quill.on 'text-change', (delta, oldDelta, source) =>
+      console.log "Text change", @entryId, delta, oldDelta, source if @constructor.debug
+
       unless @entryId
         # This is an empty entry, so start it, but not if we have any pictures still uploading.
         delta = @quill().getContents()
@@ -71,36 +77,41 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
         for operation in delta.ops
           return if operation.insert?.picture?.file
 
+        console.log "Starting entry.", @entryId if @constructor.debug
+
         @entries.startEntry delta
         return
 
       # Update the entry if this was a user update.
-      PAA.Practice.Journal.Entry.updateContent @entryId, delta.ops if source is Quill.sources.USER
+      if source is Quill.sources.USER
+        console.log "Updating entry", @entryId if @constructor.debug
+        PAA.Practice.Journal.Entry.updateContent @entryId, delta.ops
 
     quill.on 'editor-change', =>
-      # Update total pages count.
-      @updatePagesCount()
-
       # Trigger reactive updates.
       @quill.updated()
+
+    # Reactively update total pages count.
+    @autorun (computation) =>
+      @updatePagesCount()
 
     # Update quill content.
     @autorun (computation) =>
       return unless entry = @entry()
 
+      console.log "Updating entry from database", entry if @constructor.debug
+
       # See if we already have the correct content.
       currentContent = quill.getContents().ops
-      return if EJSON.equals entry.content, currentContent
+
+      if EJSON.equals entry.content, currentContent
+        console.log "Current content matches." if @constructor.debug
+        return
+
+      console.log "Updating content." if @constructor.debug
 
       # The content is new, update.
       quill.setContents entry.content, Quill.sources.API
-      
-      # HACK: Make sure the new contents match what we set. If they're not, we have some unsupported formats included 
-      # in our content. In that case we should completely replace the saved content (instead of just passing the delta).
-      currentContent = quill.getContents().ops
-
-      unless EJSON.equals entry.content, currentContent
-        PAA.Practice.Journal.Entry.replaceContent @entryId, currentContent
 
       # Move the cursor to the end.
       @moveCursorToEnd()
@@ -111,16 +122,14 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     $(window).off 'mouseup', @_mouseUpWindowHandler
 
   updatePagesCount: ->
-    # See how far the last item in the editor appears.
-    lastChild = @$('.ql-editor > *:last-child')
+    # See how far the last character in the editor appears.
+    quill = @quill.withUpdates()
 
-    unless lastChild?.length
-      # We have no elements yet.
-      @pagesCount 0
-      return
+    length = quill.getLength()
+    bounds = quill.getBounds length
 
     scale = @display.scale()
-    lastLeft = lastChild.position().left / scale
+    lastLeft = bounds.left / scale
 
     options = @journalDesign.writingAreaOptions()
     pageWidth = options.width + options.gap
@@ -180,6 +189,19 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
   moveCursorToEnd: ->
     end = @quill().getLength()
     @quill().setSelection end, 0
+
+  insertTimestamp: (index, source = Quill.sources.USER) ->
+    quill = @quill()
+
+    # Create an empty timestamp so it gets initialized with current time.
+    time = new Date()
+
+    value =
+      time: time
+      timezoneOffset: time.getTimezoneOffset()
+
+    quill.insertEmbed index, 'timestamp', value, source
+    quill.formatText index, 1, 'language', AB.currentLanguage(), source
 
   _updateEntryScrollLeft: ->
     pageIndex = @currentPageIndex()
@@ -340,5 +362,4 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     quill = @quill()
     range = quill.getSelection()
 
-    # Create an empty timestamp so it gets initialized with current time.
-    quill.insertEmbed range.index, 'timestamp', {}, Quill.sources.USER
+    @insertTimestamp range.index

@@ -19,7 +19,11 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
 
     @entriesLimit = new ReactiveField 0
 
+    # We delay loading journal entries until animations have done playing.
+    @startLoading = new ReactiveField false
+
     @autorun (computation) =>
+      return unless @startLoading()
       PAA.Practice.Journal.Entry.forJournalId.subscribe @journalDesign.journalId, @entriesLimit()
 
     @entries = new ComputedField =>
@@ -71,10 +75,19 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
             @entriesLimit Math.min entriesCount, entriesLimit + 10
 
       index
-      
+
+  onRendered: ->
+    super
+
+    Meteor.setTimeout =>
+      @startLoading true
+    ,
+      1000
+
   previousPage: ->
     # Make sure the entry editor has already been created.
-    return unless currentEntry = @currentEntry()
+    currentEntry = @currentEntry()
+    return unless currentEntry?.isCreated()
     
     # First see if the entry itself can turn the page.
     return if currentEntry.previousPage()
@@ -86,25 +99,42 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     # Update current entry ID.
     newEntryId = @entries()[newEntryIndex].entryId
     @currentEntryId newEntryId
-    
-    # We should now have a new current editor. Go to last page of it.
-    currentEntry = @currentEntry()
-    currentEntry.goToLastPage()
+
+    # Wait for the entry to be created.
+    Tracker.autorun (computation) =>
+      currentEntry = @currentEntry()
+      return unless currentEntry?.isCreated()
+      computation.stop()
+
+      # We should now have a new current editor. Go to last page of it.
+      currentEntry.goToLastPage()
 
   nextPage: ->
     # Make sure the entry editor has already been created.
-    return unless currentEntry = @currentEntry()
+    currentEntry = @currentEntry()
+    return unless currentEntry?.isCreated()
 
     # First see if the entry itself can turn the page.
     return if currentEntry.nextPage()
 
-    # We must be at the end of the entry, so we need to go to the start of the previous entry.
+    # We must be at the end of the entry, so we need to go to the start of the next entry.
     newEntryIndex = @currentEntryIndex() + 1
-    return if newEntryIndex < 0
+
+    entries = @entries()
+    return if newEntryIndex > entries.length - 1
 
     # Update current entry ID.
-    newEntryId = @entries()[newEntryIndex].entryId
+    newEntryId = entries[newEntryIndex].entryId
     @currentEntryId newEntryId
+
+    # Wait for the entry to be changed.
+    Tracker.autorun (computation) =>
+      currentEntry = @currentEntry()
+      return unless currentEntry?.isCreated()
+      computation.stop()
+
+      # We should now have a new current editor. Go to first page of it.
+      currentEntry.currentPageIndex 0
 
   startEntry: (delta) ->
     entryId = Random.id()
@@ -141,9 +171,31 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     super.concat
       'click .previous.page-button': @onClickPreviousPageButton
       'click .next.page-button': @onClickNextPageButton
+      'wheel': @onMouseWheel
 
   onClickPreviousPageButton: (event) ->
     @previousPage()
 
   onClickNextPageButton: (event) ->
     @nextPage()
+
+  onMouseWheel: (event) ->
+    event.preventDefault()
+
+    @_horizontalScroll ?= 0
+    @_horizontalScroll += event.originalEvent.deltaX
+    minimumHorizontalScroll = 20
+
+    @nextPage() if @_horizontalScroll > minimumHorizontalScroll
+    @previousPage() if @_horizontalScroll < -minimumHorizontalScroll
+
+    # Reset scroll after page was turned.
+    @_horizontalScroll = 0 if Math.abs(@_horizontalScroll) > minimumHorizontalScroll
+
+    # Also reset scroll after the user pauses scrolling.
+    @_debouncedReset ?= _.debounce =>
+      @_horizontalScroll = 0
+    ,
+      1000
+
+    @_debouncedReset()

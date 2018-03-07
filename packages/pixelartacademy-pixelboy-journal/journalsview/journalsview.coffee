@@ -119,14 +119,15 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
       orientation: PAA.Practice.Journal.Design.Orientation.Portrait
       bindingPosition: PAA.Practice.Journal.Design.BindingPosition.Left
       paper:
-        type: PAA.Practice.Journal.Design.PaperType.QuadDense
+        type: PAA.Practice.Journal.Design.PaperType.Quad
+        spacing: 5
         color:
           hue: LOI.Assets.Palette.Atari2600.hues.brown
           shade: 7
       cover:
         color:
           hue: LOI.Assets.Palette.Atari2600.hues.grey
-          shade: 1
+          shade: 2
 
   onScrollOverlay: (event) ->
     maxCameraPositionX = 50 * (@activeJournals().count() - 1)

@@ -20,30 +20,11 @@ class Entry.Object.Timestamp extends Entry.Object
     tag: 'p'
     class: 'pixelartacademy-pixelboy-apps-journal-journalview-entry-object-timestamp'
 
-  onCreated: ->
-    super
-
-    value = @value()
-
-    # Display current time if not specified.
-    unless value.time
-      time = new Date()
-      timezoneOffset = time.getTimezoneOffset()
-
-      @value {time, timezoneOffset}
-
-    format = @format()
-
-    # Use current language if not specified.
-    unless format.language
-      format.language = AB.currentLanguage()
-      @format format
-
   timestamp: ->
     return unless @isRendered()
     
     value = @value()
-    format = @format()
+    formats = @formats()
 
     # We want to show the same date/hour as it was visible for the author when they made the entry.
     # For that we need to offset the time by the difference between the current timezone and the original one.
@@ -52,7 +33,9 @@ class Entry.Object.Timestamp extends Entry.Object
 
     time = new Date value.time.getTime() + timezoneDifference * 60 * 1000
 
-    time.toLocaleString format.language,
+    language = formats.language or 'en-US'
+
+    time.toLocaleString language,
       month: 'long'
       day: 'numeric'
       year: 'numeric'
