@@ -89,7 +89,7 @@ class AE.DateRange
 
   @equals: (a, b) ->
     return false unless a and b
-    a.start?() is b.start?() and a.end?() is b.end?()
+    a.start?().getTime() is b.start?().getTime() and a.end?().getTime() is b.end?().getTime()
 
   equals: (other) ->
     @constructor.equals @, other

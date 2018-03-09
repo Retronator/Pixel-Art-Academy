@@ -57,7 +57,6 @@ jparker:crypto-padding@0.1.0
 jquery@1.11.10
 launch-screen@1.1.1
 less@2.7.11
-limemakers:three@0.75.0
 livedata@1.0.18
 localstorage@1.2.0
 logging@1.1.19
@@ -128,6 +127,7 @@ retronator:pixelartacademy-items@0.1.0
 retronator:pixelartacademy-landingpage@0.0.1
 retronator:pixelartacademy-learning@0.0.1
 retronator:pixelartacademy-pixelboy@0.0.1
+retronator:pixelartacademy-pixelboy-calendar@0.1.0
 retronator:pixelartacademy-pixelboy-drawing@0.1.0
 retronator:pixelartacademy-pixelboy-journal@0.2.0
 retronator:pixelartacademy-pixelboy-studyplan@0.2.0

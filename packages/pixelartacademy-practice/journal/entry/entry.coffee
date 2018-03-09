@@ -7,6 +7,8 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @id: -> 'PixelArtAcademy.Practice.Journal.Entry'
   # journal: the journal this entry appears in
   #   _id
+  #   character
+  #     _id
   # time: the time when the entry was created
   # order: where this entry appears in the journal
   # [content]: array of delta operations
@@ -39,7 +41,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      journal: @ReferenceField PAA.Practice.Journal, [], true, 'entries', []
+      journal: @ReferenceField PAA.Practice.Journal, ['character._id'], true, 'entries', []
       structure: [
         insert:
           artwork: @ReferenceField PADB.Artwork, ['image'], false
@@ -70,4 +72,5 @@ class PAA.Practice.Journal.Entry extends AM.Document
 
   # Subscriptions
   @forJournalId: @subscription 'forJournalId'
+  @activityForCharacter: @subscription 'activityForCharacter'
   @conversationsForEntryId: @subscription 'conversationsForEntryId'

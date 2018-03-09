@@ -1,0 +1,152 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-calendar-goalsettings
+  position absolute
+  z-index 2
+  top 100%
+  left calc(50% - 100rem)
+  width 200rem
+  height 240rem
+  padding 6rem 10rem
+  transition top 0.5s ease-in-out
+  background atariBrown(4)
+  color atariGrey(1)
+  adventure()
+  text-align center
+
+  &.visible
+    top 0
+
+  &::after
+    content ''
+    display block
+    position absolute
+    top 125rem
+    right 0
+    width 31rem
+    height 9rem
+    background-image image('/pixelartacademy/pixelboy/apps/calendar/goalsettings/pencil.png')
+
+  .question
+    margin 0 0 6rem
+    padding 0 20rem 6rem
+    font-weight bold
+    line-height 12rem
+    kyrou-9()
+    border-bottom 1rem solid atariGrey(1)
+
+  .goals
+    list-style upper-latin
+    daily()
+    font-weight bold
+    padding-left 20rem
+
+    .goal
+      .title
+        text-align left
+
+      .options
+        font-weight normal
+
+      &.days-per-week
+        .options
+          display flex
+          padding-right 20rem
+
+          .option
+            flex-grow 1
+            padding 3rem
+            cursor pointer
+
+            .label
+              padding-left 1rem
+
+            .option-input
+              display none
+
+              &:checked ~ .radio
+                background-image image('/pixelartacademy/pixelboy/apps/calendar/goalsettings/radio-full.png')
+
+            .radio
+              position relative
+              display block
+              width 9rem
+              height 9rem
+              margin 2rem auto 0
+              background-image image('/pixelartacademy/pixelboy/apps/calendar/goalsettings/radio-empty.png')
+
+              &::after
+                content ''
+                display block
+                position absolute
+                right -9rem
+                top 4rem
+                width 10rem
+                height 1rem
+                background atariGrey(1)
+
+            &:last-child
+            &:first-child
+              .radio
+                &::after
+                  display none
+
+      .approximate-time
+        margin-left -10rem
+        adventure()
+
+      .and-or
+        padding-right 20rem
+        margin 5rem 0 6rem
+        font-weight normal
+
+        &::before
+        &::after
+          content ' ~ '
+
+      &.hours-per-week
+        .options
+          text-align left
+
+          .option
+            position relative
+            display inline-block
+            vertical-align bottom
+
+            input
+              width 20rem
+              height 10rem
+              border none
+              background none
+              color atariGrey(2)
+              padding-bottom 1rem
+              text-align center
+              daily()
+
+            &::after
+              content ''
+              position absolute
+              display block
+              left 0
+              right 0
+              bottom 0
+              height 1rem
+              background atariGrey(1)
+
+  .result
+    margin-top 10rem
+    padding 6rem 20rem 0
+    border-top 1rem solid atariGrey(1)
+    daily()
+
+    p:first-child
+      margin-top 0
+
+  .actions
+    .confirm-button
+      padding 3rem 6rem
+      border none
+      border-bottom 1rem solid atariBrown(2)
+      font inherit
+      color inherit
+      background none

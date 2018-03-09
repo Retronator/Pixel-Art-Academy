@@ -122,11 +122,16 @@ class PAA.PixelBoy.OS extends AM.Component
     AB.Router.goToUrl @appPath appUrl, appPath
 
   backButtonCallback: ->
-    # We return to main menu.
-    if @currentAppPath()
+    # See if the app can handle it.
+    if @currentApp().onBackButton?()
+      # Nothing extra needed.
+
+    else if @currentAppPath()
+      # We return to main app screen.
       AB.Router.setParameter 'parameter3', null
 
     else if @currentAppUrl()
+      # We return to home screen.
       AB.Router.setParameter 'parameter2', null
 
     else

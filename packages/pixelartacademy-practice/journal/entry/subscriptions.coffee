@@ -14,6 +14,21 @@ PAA.Practice.Journal.Entry.forJournalId.publish (journalId, limit) ->
     sort:
       order: -1
 
+# Get practice check-ins for a certain date range.
+PAA.Practice.Journal.Entry.activityForCharacter.publish (characterId, dateRange) ->
+  check characterId, Match.DocumentId
+  check dateRange, AE.DateRange
+
+  query =
+    'journal.character._id': characterId
+
+  dateRange.addToMongoQuery query, 'time'
+
+  PAA.Practice.Journal.Entry.documents.find query,
+    fields:
+      journal: true
+      time: true
+
 PAA.Practice.Journal.Entry.conversationsForEntryId.publish (entryId) ->
   check entryId, Match.DocumentId
 
