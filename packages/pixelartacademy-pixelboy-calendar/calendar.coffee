@@ -29,6 +29,26 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
 
   @initialize()
 
+  @setDaysWithActivities: (value) -> @_setWeeklyGoal 'daysWithActivities', value
+  @setTotalHours: (value) -> @_setWeeklyGoal 'totalHours', value
+
+  @_setWeeklyGoal: (goal, value) ->
+    @state "weeklyGoals.#{goal}", value
+
+    archiveProperty = @archivePropertyForDate new Date()
+    @state "weeklyGoals.archive.#{archiveProperty}.#{goal}", value
+
+  @archivedWeeklyGoalsForDate: (date) ->
+    archiveProperty = @archivePropertyForDate date
+    @state "weeklyGoals.archive.#{archiveProperty}"
+
+  @archivePropertyForDate: (date) ->
+    dayOfWeek = date.getDay()
+    dayOfWeek = 7 if dayOfWeek is 0
+    monday = new Date date.getFullYear(), date.getMonth(), date.getDate() + 1 - dayOfWeek
+
+    "#{monday.getFullYear()}.#{monday.getMonth()}.#{monday.getDate()}"
+
   constructor: ->
     super
 
@@ -48,7 +68,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
 
       if goalSettings.isCreated() and goalSettings.visible()
         width = 200
-        height = 240
+        height = 230
 
       else
         width = 310
@@ -59,37 +79,6 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
 
       @maxWidth width
       @maxHeight height
-
-    # Automatically copy current weekly goals to the archive.
-    # TODO: Find a safer way to do this, since now updates from DB trigger weird cyclic updates.
-    return
-    
-    @autorun (computation) =>
-      daysWithActivities = @state 'weeklyGoals.daysWithActivities'
-      totalHours = @state 'weeklyGoals.totalHours'
-      return unless daysWithActivities or totalHours
-
-      console.log "updating", daysWithActivities, totalHours
-
-      Tracker.nonreactive =>
-        archiveProperty = @archivePropertyForDate new Date()
-
-        goals = {}
-        goals.daysWithActivities = daysWithActivities if daysWithActivities
-        goals.totalHours = totalHours if totalHours
-
-        @state "weeklyGoals.archive.#{archiveProperty}", goals
-
-  archivedWeeklyGoalsForDate: (date) ->
-    archiveProperty = @archivePropertyForDate date
-    @state "weeklyGoals.archive.#{archiveProperty}"
-
-  archivePropertyForDate: (date) ->
-    dayOfWeek = date.getDay()
-    dayOfWeek = 7 if dayOfWeek is 0
-    monday = new Date date.getFullYear(), date.getMonth(), date.getDate() + 1 - dayOfWeek
-
-    "#{monday.getFullYear()}.#{monday.getMonth()}.#{monday.getDate()}"
 
   onBackButton: ->
     goalSettings = @goalSettings()

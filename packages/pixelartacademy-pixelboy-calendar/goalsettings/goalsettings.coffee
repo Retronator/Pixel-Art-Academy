@@ -86,8 +86,8 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
   onChangeDaysPerWeekOptionInput: (event) ->
     # We convert 0 to null to disable this goal.
     daysPerWeek = parseInt($(event.target).val()) or null
-    
-    @calendar.state "weeklyGoals.daysWithActivities", daysPerWeek
+
+    PAA.PixelBoy.Apps.Calendar.setDaysWithActivities daysPerWeek
 
   onClickConfirmButton: (event) ->
     if @hasGoal()
@@ -119,7 +119,7 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
       else
         value = null
 
-      PAA.PixelBoy.Apps.Calendar.state 'weeklyGoals.totalHours', value
+      PAA.PixelBoy.Apps.Calendar.setTotalHours value
 
     _saveFactor: ->
       1

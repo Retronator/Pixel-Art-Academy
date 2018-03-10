@@ -121,7 +121,7 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
 
         week.daysWithActivities =
           count: _.sumBy week.days, (day) => if day.activities.length then 1 else 0
-          goal: @calendar.archivedWeeklyGoalsForDate(date)?.daysWithActivities
+          goal: PAA.PixelBoy.Apps.Calendar.archivedWeeklyGoalsForDate(date)?.daysWithActivities
 
         week.daysWithActivities.goalReached = week.daysWithActivities.count >= week.daysWithActivities.goal
 
@@ -235,7 +235,7 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
       'click .previous-month-button': @onClickPreviousMonthButton
       'click .next-month-button': @onClickNextMonthButton
       'wheel': @onMouseWheel
-      'click .goal-progress': @onClickGoalProgress
+      'click .active .weekly-goals': @onClickActiveWeeklyGoals
 
   onClickPreviousMonthButton: (event) ->
     @previousMonth()
@@ -264,5 +264,5 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
 
     @_debouncedReset()
 
-  onClickGoalProgress: (event) ->
+  onClickActiveWeeklyGoals: (event) ->
     @calendar.goalSettings().visible true

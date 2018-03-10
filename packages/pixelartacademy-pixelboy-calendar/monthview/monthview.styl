@@ -130,7 +130,7 @@
               .date
                 color atariGrey(2)
 
-        .days-with-activities
+        .weekly-goals
           position absolute
           top 0
           bottom 0
@@ -150,7 +150,6 @@
 
           .goal-progress
             absolute-cover()
-            cursor pointer
 
             .fraction
               position absolute
@@ -190,9 +189,15 @@
               color atariBlue(4)
 
         &.active
-          .days-with-activities
+          .weekly-goals
+            cursor pointer
+
             .goal-reached
               top calc(50% - 6rem)
+
+            &:hover
+              .goal-reached
+                color atariGreen(2)
 
     &.includes-today
       .weeks
