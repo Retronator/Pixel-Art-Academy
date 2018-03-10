@@ -1,15 +1,13 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.HomeScreen">
-  <div class="app apps-homescreen">
-    <ul class="apps-list">
+  <div class="pixelartacademy-pixelboy-apps-homescreen app">
+    <ul class="apps">
       {{#each apps}}
-        <li class="app-icon">
+        <li class="app">
           <a class="link" href="{{os.appPath this.url}}">
-            {{#if this.iconUrl}}
-              <img src="{{this.iconUrl}}" class="icon">
-            {{else}}
-              <span class="icon"></span>
-            {{/if}}
-            {{this.fullName}}
+            <img src="{{this.iconUrl}}" class="icon">
+            <span class="name">
+              {{this.fullName}}
+            </span>
           </a>
         </li>
       {{/each}}

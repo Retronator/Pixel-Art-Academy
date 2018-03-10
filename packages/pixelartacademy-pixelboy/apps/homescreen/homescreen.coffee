@@ -28,16 +28,16 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.App
     super
     
     # Run intro animation.
-    $('.app-wrapper').css
-      display: 'block'
+    @$('.pixelartacademy-pixelboy-apps-homescreen').css
       opacity: 1
       
-    $('.app-icon').velocity 'transition.slideUpIn', stagger: 150
+    @$('.apps .app').velocity 'transition.slideUpIn', stagger: 150
 
   onDeactivate: (finishedDeactivatingCallback) ->
-    $('.app-icon').velocity 'transition.fadeOut',
+    @$('.apps .app').velocity 'transition.fadeOut',
       complete: ->
         finishedDeactivatingCallback()
+        
       stagger: 150
 
   apps: ->

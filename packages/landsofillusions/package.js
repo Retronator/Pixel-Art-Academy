@@ -4,7 +4,7 @@ Package.describe({
   // Brief, one-line summary of the package.
   summary: 'Game engine for Pixel Art Academy, Retropolis and beyond.',
   // URL to the Git repository containing the source code for this package.
-  git: 'https://github.com/Retronator/Lands-of-Illusions.git',
+  git: 'https://github.com/Retronator/Landsofillusions.git',
   // By default, Meteor will default to using README.md for documentation.
   // To avoid submitting documentation, set this field to null.
   documentation: 'README.md'
@@ -314,39 +314,40 @@ Package.onUse(function(api) {
 
   // Components
 
-  api.addFiles('components/components.coffee');
+  api.addFile('components..');
 
-  api.addFile('components/mixins/mixins');
-  api.addFile('components/mixins/activatable/activatable');
+  api.addFile('components/mixins..');
+  api.addFile('components/mixins/activatable..');
 
-  api.addComponent('components/overlay/overlay');
-  api.addComponent('components/backbutton/backbutton');
-  api.addComponent('components/signin/signin');
-  api.addComponent('components/storylinetitle/storylinetitle');
+  api.addComponent('components/overlay..');
+  api.addComponent('components/backbutton..');
+  api.addComponent('components/signin..');
+  api.addComponent('components/storylinetitle..');
+  api.addComponent('components/hand..');
 
-  api.addComponent('components/menu/menu');
-  api.addComponent('components/menu/items/items');
+  api.addComponent('components/menu..');
+  api.addComponent('components/menu/items..');
 
-  api.addComponent('components/account/account');
+  api.addComponent('components/account..');
   api.addFile('components/account/account-page');
   api.addStyle('components/account/account-pagecontent');
 
-  api.addComponent('components/account/contents/contents');
-  api.addComponent('components/account/general/general');
-  api.addComponent('components/account/services/services');
-  api.addComponent('components/account/characters/characters');
-  api.addComponent('components/account/inventory/inventory');
-  api.addComponent('components/account/transactions/transactions');
-  api.addComponent('components/account/paymentmethods/paymentmethods');
+  api.addComponent('components/account/contents..');
+  api.addComponent('components/account/general..');
+  api.addComponent('components/account/services..');
+  api.addComponent('components/account/characters..');
+  api.addComponent('components/account/inventory..');
+  api.addComponent('components/account/transactions..');
+  api.addComponent('components/account/paymentmethods..');
 
   api.addStyle('components/dialogs/accounts');
   api.addComponent('components/dialogs/dialog');
   
-  api.addComponent('components/translationinput/translationinput');
-  api.addUnstyledComponent('components/sprite/sprite');
-  api.addUnstyledComponent('components/computer/computer');
+  api.addComponent('components/translationinput..');
+  api.addUnstyledComponent('components/sprite..');
+  api.addUnstyledComponent('components/computer..');
 
-  api.addUnstyledComponent('components/embeddedwebpage/embeddedwebpage');
+  api.addUnstyledComponent('components/embeddedwebpage..');
 
   // Typography
 
