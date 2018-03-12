@@ -24,9 +24,6 @@ class PAA.PixelBoy.Apps.Components.Conversation extends AM.Component
     LOI.Character.getInstance line.character?._id
 
   showAvatar: ->
-    # Temporarily disabling avatars due to performance issues.
-    return false
-    
     return unless character = @characterInstance()
 
     # We have avatar if the body field has any data and the data is ready.

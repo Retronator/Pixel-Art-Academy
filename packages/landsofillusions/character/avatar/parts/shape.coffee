@@ -5,6 +5,8 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
     # We add default shape properties.
     options.properties ?= {}
 
+    options.renderer ?= new LOI.Character.Avatar.Renderers.Shape
+
     _.extend options.properties,
       front: new LOI.Character.Avatar.Properties.Sprite
         name: 'front'
@@ -13,8 +15,6 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
 
   createRenderer: (engineOptions, options = {}) ->
     # Override to provide this part's renderer.
-    renderer = @options.renderer or new LOI.Character.Avatar.Renderers.Shape
-
     options = _.extend {}, options,
       part: @
       frontSpriteId: @options.dataLocation.child('front.spriteId')
@@ -35,4 +35,4 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
 
           materialsData
 
-    renderer.create options, engineOptions
+    @options.renderer.create options, engineOptions

@@ -19,6 +19,9 @@ class LOI.Character.Part
   constructor: (@options) ->
     return unless @options.dataLocation
 
+    # Use default renderer if not set.
+    @options.renderer ?= new LOI.Character.Avatar.Renderers.Default
+
     # Instantiate all the properties.
     @properties = {}
 
@@ -46,11 +49,9 @@ class LOI.Character.Part
 
   createRenderer: (engineOptions, options = {}) ->
     # Override to provide this part's renderer.
-    renderer = @options.renderer or new LOI.Character.Avatar.Renderers.Default
-
     options = _.extend {}, options, part: @
     
-    renderer.create options, engineOptions
+    @options.renderer.create options, engineOptions
 
   ancestorPartOfType: (typeTemplate) ->
     targetType = typeTemplate.options.type
