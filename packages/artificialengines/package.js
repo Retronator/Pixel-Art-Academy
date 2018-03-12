@@ -34,7 +34,7 @@ Package.onUse(function(api) {
     'peerlibrary:assert',
     'peerlibrary:peerdb',
     'peerlibrary:peerdb-migrations',
-    'peerlibrary:reactive-publish@0.3.0',
+    'peerlibrary:reactive-publish',
     'peerlibrary:blaze-components',
     'peerlibrary:blaze-common-component',
     'peerlibrary:reactive-field',
