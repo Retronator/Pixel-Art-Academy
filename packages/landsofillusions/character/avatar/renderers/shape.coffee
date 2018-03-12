@@ -7,11 +7,10 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
     # Prepare renderer only when it has been created with engine options passed in.
     return unless @engineOptions
 
-    # Shape renderer subscribes to all sprite directions and draws the one needed by the engine.
+    # Shape renderer prepares all sprite directions and draws the one needed by the engine.
     @frontSpriteData = new ComputedField =>
       return unless spriteId = @options.frontSpriteId()
 
-      LOI.Assets.Sprite.forId.subscribe spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
 
     @frontSprite = new LOI.Assets.Engine.Sprite
