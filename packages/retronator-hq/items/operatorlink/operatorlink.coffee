@@ -45,6 +45,8 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
         new LOI.Character.Instance characterDocument._id
 
       @_characters
+    ,
+      true
 
   destroy: ->
     super
