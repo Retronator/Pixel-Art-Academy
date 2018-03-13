@@ -37,4 +37,4 @@ class Migration extends Document.MajorMigration
     counts.all += count
     counts
 
-LOI.Conversations.Line.addMigration new Migration()
+LOI.Memory.Action.addMigration new Migration()

@@ -52,6 +52,7 @@ Package.onUse(function(api) {
   api.addServerFile('checkin/migrations/0000-renamecollection');
   api.addServerFile('checkin/migrations/0001-characterreferencefieldsupdate');
   api.addServerFile('checkin/migrations/0002-removecharacternamefield');
+  api.addServerFile('checkin/migrations/0003-changetomemories');
 
   api.addFile('importeddata/importeddata');
   api.addServerFile('importeddata/checkin-server/checkin');

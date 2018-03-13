@@ -21,13 +21,13 @@ class PAA.Practice.CheckIn extends AM.Document
   #   url
   # video: (optional) the video associated with the post
   #   url
-  # conversations: list of conversations revolving around this check-in
+  # memories: list of memories revolving around this check-in
   #   _id
   @Meta
     name: @id()
     fields: =>
       character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], true
-      conversation: [@ReferenceField LOI.Conversations.Conversation]
+      memories: [@ReferenceField LOI.Memory]
 
   # Methods
 
@@ -36,7 +36,7 @@ class PAA.Practice.CheckIn extends AM.Document
   @updateTime: @method 'updateTime'
   @updateText: @method 'updateText'
   @updateUrl: @method 'updateUrl'
-  @newConversation: @method 'newConversation'
+  @newMemory: @method 'newMemory'
 
   # Server methods
 
@@ -47,4 +47,4 @@ class PAA.Practice.CheckIn extends AM.Document
   # Subscriptions
   @forCharacterId: @subscription 'forCharacterId'
   @forDateRange: @subscription 'forDateRange'
-  @conversationsForCheckInId: @subscription 'conversationsForCheckInId'
+  @memoriesForCheckInId: @subscription 'memoriesForCheckInId'

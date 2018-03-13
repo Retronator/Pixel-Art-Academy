@@ -36,7 +36,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
   #
   #   attributes: object with formatting directives
   #
-  # conversations: list of conversations revolving around this entry
+  # memories: list of memories revolving around this entry
   #   _id
   @Meta
     name: @id()
@@ -48,7 +48,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
           task:
             entry: @ReferenceField PAA.Learning.Task.Entry, [], false
       ]
-      conversation: [@ReferenceField LOI.Conversations.Conversation]
+      memories: [@ReferenceField LOI.Memory]
 
   @pictureUploadContext = new PADB.Upload.Context
     name: "#{@id()}.picture"
@@ -68,9 +68,9 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @updateContent: @method 'updateContent'
   @replaceContent: @method 'replaceContent'
 
-  @newConversation: @method 'newConversation'
+  @newMemory: @method 'newMemory'
 
   # Subscriptions
   @forJournalId: @subscription 'forJournalId'
   @activityForCharacter: @subscription 'activityForCharacter'
-  @conversationsForEntryId: @subscription 'conversationsForEntryId'
+  @memoriesForEntryId: @subscription 'memoriesForEntryId'

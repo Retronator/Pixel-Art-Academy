@@ -1,1 +1,0 @@
-LandsOfIllusions.Conversations.Line.renameCollectionMigration 'LandsOfIllusionsConversationsLines', 'LandsOfIllusions.Conversations.Lines'

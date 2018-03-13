@@ -91,28 +91,25 @@ PAA.Practice.Journal.Entry.replaceContent.method (entryId, contentDeltaOperation
     $set:
       content: contentDelta.ops
 
-PAA.Practice.Journal.Entry.newConversation.method (entryId, characterId, firstLineText) ->
+PAA.Practice.Journal.Entry.newMemory.method (entryId, characterId) ->
   check entryId, Match.DocumentId
   check characterId, Match.DocumentId
-  check firstLineText, Match.Optional String
 
   # Make sure the entry exists.
   entry = PAA.Practice.Journal.Entry.documents.findOne entryId
   throw new AE.ArgumentException "Entry not found." unless entry
 
-  # Make sure the user controls the character that's starting the conversation.
+  # Make sure the user controls the character that's starting the memory.
   LOI.Authorize.characterAction characterId
 
-  # Create a new conversation.
-  conversationId = LOI.Conversations.Conversation.insert()
+  # Create a new memory.
+  memoryId = LOI.Memory.insert()
 
-  # Associate the conversation to this entry.
+  # Associate the memory to this entry.
   PAA.Practice.Journal.Entry.documents.update entryId,
     $addToSet:
-      conversations: conversationId
-
-  # Create the first line of conversation.
-  LOI.Conversations.Line.insert conversationId, characterId, firstLineText
+      memories:
+        _id: memoryId
 
 authorizeJournalAction = (entryId) ->
   entry = PAA.Practice.Journal.Entry.documents.findOne entryId

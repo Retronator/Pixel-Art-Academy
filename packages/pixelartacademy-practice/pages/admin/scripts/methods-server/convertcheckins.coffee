@@ -41,6 +41,8 @@ PAA.Practice.Pages.Admin.Scripts.convertCheckIns.method ->
           attributes:
             language: 'en-US'
         ]
+        
+      entry.memories = checkIn.memories if checkIn.memories
 
       if checkIn.image
         value =

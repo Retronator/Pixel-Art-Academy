@@ -105,7 +105,7 @@ PAA.Practice.CheckIn.updateUrl.method (checkInId, url) ->
 
   PAA.Practice.CheckIn.documents.update checkInId, update
 
-PAA.Practice.CheckIn.newConversation.method (checkInId, characterId, firstLineText) ->
+PAA.Practice.CheckIn.newMemory.method (checkInId, characterId, firstLineText) ->
   check checkInId, Match.DocumentId
   check characterId, Match.DocumentId
   check firstLineText, Match.Optional String
@@ -114,19 +114,20 @@ PAA.Practice.CheckIn.newConversation.method (checkInId, characterId, firstLineTe
   checkIn = PAA.Practice.CheckIn.documents.findOne checkInId
   throw new AE.ArgumentException "Check-in not found." unless checkIn
 
-  # Make sure the user controls the character that's starting the conversation.
+  # Make sure the user controls the character that's starting the memory.
   LOI.Authorize.characterAction characterId
 
-  # Create a new conversation.
-  conversationId = LOI.Conversations.Conversation.insert()
+  # Create a new memory.
+  memoryId = LOI.Memory.insert()
 
-  # Associate the conversation to this check-in.
+  # Associate the memory to this check-in.
   PAA.Practice.CheckIn.documents.update checkInId,
     $addToSet:
-      conversations: conversationId
+      memories:
+        _id: memoryId
 
-  # Create the first line of conversation.
-  LOI.Conversations.Line.insert conversationId, characterId, firstLineText
+  # Create the first action in memory.
+  LOI.Memory.Action.insert memoryId, characterId, LOI.Memory.Action.Types.Say, say: text: firstLineText
 
 authorizeCheckInAction = (checkInId) ->
   checkIn = PAA.Practice.CheckIn.documents.findOne checkInId

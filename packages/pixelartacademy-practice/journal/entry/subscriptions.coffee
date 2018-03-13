@@ -29,14 +29,14 @@ PAA.Practice.Journal.Entry.activityForCharacter.publish (characterId, dateRange)
       journal: true
       time: true
 
-PAA.Practice.Journal.Entry.conversationsForEntryId.publish (entryId) ->
+PAA.Practice.Journal.Entry.memoriesForEntryId.publish (entryId) ->
   check entryId, Match.DocumentId
 
   @autorun =>
     entry = PAA.Practice.Journal.Entry.documents.findOne entryId,
       fields:
-        conversations: 1
+        memories: 1
 
-    return LOI.Conversations.Conversation.documents.find
+    return LOI.Memory.documents.find
       _id:
-        $in: entry?.conversations or []
+        $in: entry?.memories or []

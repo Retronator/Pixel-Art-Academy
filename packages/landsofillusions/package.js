@@ -157,22 +157,25 @@ Package.onUse(function(api) {
   api.addFile('user/user');
   api.addServerFile('user/subscriptions');
 
-  // Conversations
+  // Memories
 
-  api.addFile('conversations/conversations');
+  api.addFile('memory..');
+  api.addFile('memory/methods');
+  api.addServerFile('memory/subscriptions');
+  api.addServerFile('memory/migrations/0000-renamecollection');
+  api.addServerFile('memory/migrations/0001-linesreversereferencefieldsupdate');
+  api.addServerFile('memory/migrations/0002-renamecollection');
+  api.addServerFile('memory/migrations/0003-changetomemories');
+  api.addServerFile('memory/migrations/0004-actionsreversereferencefieldadded');
 
-  api.addFile('conversations/conversation/conversation');
-  api.addFile('conversations/conversation/methods');
-  api.addServerFile('conversations/conversation/subscriptions');
-  api.addServerFile('conversations/conversation/migrations/0000-renamecollection');
-  api.addServerFile('conversations/conversation/migrations/0001-linesreversereferencefieldsupdate');
-
-  api.addFile('conversations/line/line');
-  api.addFile('conversations/line/methods');
-  api.addServerFile('conversations/line/subscriptions');
-  api.addServerFile('conversations/line/migrations/0000-renamecollection');
-  api.addServerFile('conversations/line/migrations/0001-characterreferencefieldsupdate');
-  api.addServerFile('conversations/line/migrations/0002-removecharacternamefield');
+  api.addFile('memory/action..');
+  api.addFile('memory/action/methods');
+  api.addServerFile('memory/action/subscriptions');
+  api.addServerFile('memory/action/migrations/0000-renamecollection');
+  api.addServerFile('memory/action/migrations/0001-characterreferencefieldsupdate');
+  api.addServerFile('memory/action/migrations/0002-removecharacternamefield');
+  api.addServerFile('memory/action/migrations/0003-renamecollection');
+  api.addServerFile('memory/action/migrations/0004-changetomemories');
 
   // Parser
 
