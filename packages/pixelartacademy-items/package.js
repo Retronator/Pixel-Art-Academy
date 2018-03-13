@@ -18,11 +18,13 @@ Package.onUse(function(api) {
 
   api.addFile('items');
 
-  api.addThing('bottle/bottle');
+  api.addFile('components..');
+  api.addComponent('components/map..');
+  api.addComponent('components/map/node');
+
+  api.addThing('bottle..');
   api.addFile('bottle/scene');
 
-  api.addComponent('map/map');
-  api.addComponent('map/node');
+  api.addComponent('map..');
   api.addFile('map/scene');
-
 });

@@ -1,6 +1,6 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.pixelartacademy-items-map-node
+.pixelartacademy-items-components-map-node
   position absolute
   border 1rem solid atariGrey(1)
   padding 1rem
@@ -27,6 +27,7 @@
       text-transform uppercase
       line-height 6rem
       text-align center
+      overflow hidden
 
   &.current
     background atariGrey(1)
@@ -304,16 +305,16 @@
   &.special-positioning.in::before
     left calc(20% - 2.5rem)
 
-.pixelartacademy-items-map
+.pixelartacademy-items-components-map
   .map-content
     &.mini-map
-      .pixelartacademy-items-map-node
+      .pixelartacademy-items-components-map-node
         .name-area
           .name
             checkout()
 
     &.big-map
-      .pixelartacademy-items-map-node
+      .pixelartacademy-items-components-map-node
         border 1rem solid atariGrey(2)
 
         .name-area

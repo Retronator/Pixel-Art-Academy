@@ -1,0 +1,21 @@
+<template name="PixelArtAcademy.Items.Components.Map">
+  <div class="pixelartacademy-items-components-map {{visibleClass}} {{inIntroClass}}">
+    <div class="user-interface {{userInterfaceVisibleClass}}">
+      <div class="content">
+        <div class="hints">
+          <p class="hint">{{> t10e "Map shortcut: TAB"}}</p>
+          <p class="hint">{{> t10e "Quick view: hold TAB"}}</p>
+        </div>
+        <label class="show-minimap">
+          {{> PixelArtAcademy.Items.Map.ShowMinimap}}
+          <span class="label">{{> t10e "Show minimap"}}</span>
+        </label>
+      </div>
+    </div>
+    <div class="map-content {{bigMapClass}} {{miniMapClass}}">
+      {{#each locations}}
+        {{> PixelArtAcademy.Items.Components.Map.Node}}
+      {{/each}}
+    </div>
+  </div>
+</template>

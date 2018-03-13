@@ -6,15 +6,15 @@ PAA = PixelArtAcademy
 Vocabulary = LOI.Parser.Vocabulary
 Directions = Vocabulary.Keys.Directions
 
-class PAA.Items.Map.Node extends AM.Component
-  @register 'PixelArtAcademy.Items.Map.Node'
+class PAA.Items.Components.Map.Node extends AM.Component
+  @register 'PixelArtAcademy.Items.Components.Map.Node'
   
   onCreated: ->
     super
 
     location = @data()
 
-    @map = @ancestorComponent PAA.Items.Map
+    @map = @ancestorComponent PAA.Items.Components.Map
 
     @size = new ComputedField =>
       location = @data()
@@ -107,7 +107,7 @@ class PAA.Items.Map.Node extends AM.Component
     super
 
     Meteor.setTimeout =>
-      @$('.pixelartacademy-items-map-node')?.addClass('visible')
+      @$('.pixelartacademy-items-components-map-node')?.addClass('visible')
     ,
       500
 
