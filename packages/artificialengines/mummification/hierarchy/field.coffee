@@ -32,9 +32,6 @@ class AM.Hierarchy.Field
       else if data.templateId
         cleanNode()
 
-        # Subscribe to this template.
-        templateSubscription = options.templateClass.forId.subscribe data.templateId
-
         # Return the template document's root node (it will be null until the subscription kicks in).
         options.templateClass.documents.findOne(data.templateId)?.node
 

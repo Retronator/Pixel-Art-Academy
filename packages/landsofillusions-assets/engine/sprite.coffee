@@ -7,13 +7,7 @@ class LOI.Assets.Engine.Sprite
     @_imageUpdateAutorun = Tracker.autorun =>
       return unless spriteData = @options.spriteData()
       return unless spriteData.layers?.length and spriteData.bounds
-
-      # Subscribe to this sprite's palette, if we have one.
-      if spriteData.palette?._id
-        @_paletteSubscription = LOI.Assets.Palette.forId.subscribe spriteData.palette._id
-
-        palette = LOI.Assets.Palette.documents.findOne spriteData.palette._id
-        return unless palette
+      return unless palette = LOI.Assets.Palette.documents.findOne spriteData.palette._id
 
       # Build a new canvas if needed.
       @_canvas ?= $('<canvas>')[0]
@@ -187,7 +181,6 @@ class LOI.Assets.Engine.Sprite
 
   destroy: ->
     @_imageUpdateAutorun.stop()
-    @_paletteSubscription.stop()
     @_ready.stop()
 
   imageCanvas: ->

@@ -67,6 +67,20 @@ class HQ.Adventure extends LOI.Adventure
           # Move to the location if necessary.
           LOI.adventure.setLocationId directLocation unless LOI.adventure.currentLocationId() is directLocation.id()
 
+  onCreated: ->
+    super
+
+    # Prepare Chapter 2 state.
+    C2 = PixelArtAcademy.Season1.Episode0.Chapter2
+    C2.state 'movedToCaltrain', true
+
+    # End Chapter 1 so that Chapter 2 starts.
+    C1 = PixelArtAcademy.Season1.Episode0.Chapter1
+    C1.state 'playedOutro', true
+    C1.Start.state 'leftTerrace', true
+    C1.Immigration.state 'leftCustoms', true
+    C1.Airship.state 'asleep', true
+    
   currentUrl: ->
     # HACK: Feed the 'daily' parameter into the URL so that adventure routing will trigger the daily direct route.
     prefix = 'retronator'

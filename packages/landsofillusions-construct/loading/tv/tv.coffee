@@ -34,6 +34,12 @@ class LOI.Construct.Loading.TV extends LOI.Components.Computer
 
     @_fade = new ReactiveField false
 
+    # Subscribe to all character part templates and the sprites that they use.
+    types = LOI.Character.Part.Types.Avatar.allPartTypeIds()
+
+    LOI.Character.Part.Template.forTypes.subscribe @, types
+    LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe @, types
+
   fadeVisibleClass: ->
     'visible' if @_fade()
 

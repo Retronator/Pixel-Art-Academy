@@ -132,7 +132,7 @@ class HQ.Items.Prospectus extends LOI.Adventure.Item
       ga? 'send', 'event', 'Social Media Engagement', 'Click', socialNetwork if socialNetwork
 
     onClickPlayButton: (event) ->
-      AB.Router.goToRoute 'LandsOfIllusions.Adventure'
+      AB.Router.goToRoute 'PixelArtAcademy.Adventure'
 
   class @Purchase extends HQ.Items.Components.Stripe
     @id: -> 'Retronator.HQ.Items.Prospectus.Purchase'

@@ -41,7 +41,6 @@ class Retronator.App extends Artificial.Base.App
     # Add adventure pages last so they capture all remaining URLs.
     new PixelArtAcademy
     new Retronator.HQ.Pages
-    new LOI
 
     AB.Router.initialize()
 
