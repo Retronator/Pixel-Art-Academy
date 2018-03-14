@@ -3,7 +3,7 @@
     <ul class="memories">
       {{#if currentCharacter}}
         {{#each memories}}
-          <li class="memory" {{style memoryStyle}}>
+          <li class="memory {{updatedClass}}" {{style memoryStyle}}>
             {{#with memory}}
               <div class="preview">
                 {{#if journalEntry}}

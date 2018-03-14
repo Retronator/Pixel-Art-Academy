@@ -24,7 +24,13 @@ class PAA.Items.Sync.Memories extends PAA.Items.Sync.Tab
           @limit @limit() + 10
 
     @autorun (computation) =>
-      LOI.Memory.forCharacter.subscribe LOI.characterId(), @limit()
+      return unless characterId = LOI.characterId()
+
+      # Subscribe to the memories of this character.
+      LOI.Memory.forCharacter.subscribe characterId, @limit()
+
+      # Get the document with memory progress.
+      LOI.Memory.Progress.forCharacter.subscribe characterId
 
   memories: ->
     skip = Math.max 0, Math.floor @currentOffset() - 5
@@ -64,9 +70,22 @@ class PAA.Items.Sync.Memories extends PAA.Items.Sync.Tab
       month: 'long'
       day: 'numeric'
 
+  updatedClass: ->
+    memoryInfo = @currentData()
+    memory = memoryInfo.memory
+    
+    return unless progress = LOI.Memory.Progress.documents.findOne 'character._id': LOI.characterId()
+    
+    observedMemory = _.find progress.observedMemories, (observedMemory) => observedMemory.memory._id is memory._id
+      
+    # Memory has new actions unless the last action (memory's end time) 
+    # is at the time the character last observed this memory (they have seen it through).
+    'updated' unless memory.endTime.getTime() <= observedMemory?.time.getTime()
+
   events: ->
     super.concat
       'wheel': @onMouseWheel
+      'click .memory .preview': @onClickMemoryPreview
 
   onMouseWheel: (event) ->
     event.preventDefault()
@@ -84,3 +103,9 @@ class PAA.Items.Sync.Memories extends PAA.Items.Sync.Tab
       500
 
     @_debouncedRound()
+
+  onClickMemoryPreview: (event) ->
+    memory = @currentData()
+
+    # Update progress on this memory to indicate it was observed.
+    LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, memory.endTime
