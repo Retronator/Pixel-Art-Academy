@@ -32,4 +32,5 @@ Package.onUse(function(api) {
   api.addFile('sync/sync-tab');
   api.addComponent('sync/map..');
   api.addComponent('sync/memories..');
+  api.addComponent('sync/memories/contexts/journalentry..');
 });

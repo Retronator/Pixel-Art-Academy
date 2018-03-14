@@ -6,7 +6,7 @@ PAA = PixelArtAcademy
 Vocabulary = LOI.Parser.Vocabulary
 
 class PAA.Items.Sync extends LOI.Adventure.Item
-  @id: -> 'Retronator.PAA.Items.Sync'
+  @id: -> 'PixelArtAcademy.Items.Sync'
   @url: -> 'sync'
 
   @register @id()

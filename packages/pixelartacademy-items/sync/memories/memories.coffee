@@ -3,10 +3,8 @@ AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-Vocabulary = LOI.Parser.Vocabulary
-
 class PAA.Items.Sync.Memories extends PAA.Items.Sync.Tab
-  @id: -> 'Retronator.PAA.Items.Sync.Memories'
+  @id: -> 'PixelArtAcademy.Items.Sync.Memories'
   @register @id()
 
   @url: -> 'memories'
@@ -29,12 +27,12 @@ class PAA.Items.Sync.Memories extends PAA.Items.Sync.Tab
       LOI.Memory.forCharacter.subscribe LOI.characterId(), @limit()
 
   memories: ->
-    skip = Math.max 0, Math.floor @currentOffset()
+    skip = Math.max 0, Math.floor @currentOffset() - 5
 
     memories = LOI.Memory.documents.find(
       'actions.character._id': LOI.characterId()
     ,
-      limit: 10
+      limit: 15
       skip: skip
       sort:
         endTime: -1
@@ -59,9 +57,9 @@ class PAA.Items.Sync.Memories extends PAA.Items.Sync.Tab
     opacity: opacity
 
   endDate: ->
-    memoryInfo = @currentData()
+    memory = @currentData()
 
-    memoryInfo.memory.endTime.toLocaleString AB.currentLanguage(),
+    memory.endTime.toLocaleString AB.currentLanguage(),
       year: 'numeric'
       month: 'long'
       day: 'numeric'

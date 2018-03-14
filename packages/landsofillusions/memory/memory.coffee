@@ -16,7 +16,7 @@ class LOI.Memory extends AM.Document
   # startTime: auto-generated time of the first action in this memory
   # endTime: auto-generated time of the last action in this memory
   #
-  # journalEntry: the journal entry this memory relates to, reverse of Journal.Entry.memories
+  # journalEntry: array with one journal entry this memory relates to, reverse of Journal.Entry.memories
   #   _id
   #   character
   #     _id

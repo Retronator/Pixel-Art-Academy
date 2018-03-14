@@ -5,7 +5,7 @@ PAA = PixelArtAcademy
 Vocabulary = LOI.Parser.Vocabulary
 
 class PAA.Items.Sync.Map extends PAA.Items.Sync.Tab
-  @id: -> 'Retronator.PAA.Items.Sync.Map'
+  @id: -> 'PixelArtAcademy.Items.Sync.Map'
   @register @id()
 
   @url: -> 'map'

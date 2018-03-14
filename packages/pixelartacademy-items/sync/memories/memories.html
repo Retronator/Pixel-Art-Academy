@@ -1,11 +1,17 @@
-<template name="Retronator.PAA.Items.Sync.Memories">
+<template name="PixelArtAcademy.Items.Sync.Memories">
   <div class="pixelartacademy-items-sync-memories">
     <ul class="memories">
       {{#if currentCharacter}}
         {{#each memories}}
           <li class="memory" {{style memoryStyle}}>
-            <div class="preview"></div>
-            <div class="end-date">{{endDate}}</div>
+            {{#with memory}}
+              <div class="preview">
+                {{#if journalEntry}}
+                  {{> PixelArtAcademy.Items.Sync.Memories.JournalEntry}}
+                {{/if}}
+              </div>
+              <div class="end-date">{{endDate}}</div>
+            {{/with}}
           </li>
         {{/each}}
       {{else}}
