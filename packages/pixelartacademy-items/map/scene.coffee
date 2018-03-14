@@ -19,8 +19,11 @@ class PAA.Items.Map.Scene extends LOI.Adventure.Scene
     # Also show map for players directly coming to Retronator HQ.
     hasMap = true if Retronator.HQ.state()?
 
-    # For characters, always show the map.
-    hasMap = true if LOI.character()
+    # You don't need the map once you have sync.
+    hasMap = false if PAA.Season1.Episode0.Chapter2.Immersion.state 'syncGiven'
+
+    # Characters don't have the map, as they have sync from the start.
+    hasMap = false if LOI.character()
 
     [
       PAA.Items.Map if hasMap

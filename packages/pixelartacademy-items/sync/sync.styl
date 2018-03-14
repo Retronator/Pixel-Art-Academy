@@ -1,0 +1,39 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-items-sync
+  .map-tab
+    display none
+
+    &.visible
+      display block
+
+  .landsofillusions-components-overlay
+    .navigation
+      text-align center
+      acme-7()
+
+      .tabs
+        list-style none
+        padding 0
+        margin 0
+
+        .tab
+          display inline-block
+          padding 5rem 8rem
+          margin 0 1rem
+          border 1rem solid atariAqua(6)
+          background black
+          cursor pointer
+          text-transform uppercase
+
+          &.active
+            color atariGrey(7)
+            background atariAqua(2)
+            cursor default
+
+          &:hover:not(.active)
+            border-color atariAqua(7)
+            color atariGrey(7)
+
+    .background
+      background-image image('/pixelartacademy/items/sync/background.gif')

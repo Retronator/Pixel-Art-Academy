@@ -13,7 +13,7 @@ class C2.Inventory extends LOI.Adventure.Scene
   things: ->
     items = [
       HQ.Items.Prospectus
-      HQ.Items.Sync if C2.Immersion.state 'syncGiven'
+      PAA.Items.Sync if C2.Immersion.state 'syncGiven'
       HQ.Items.OperatorLink if C2.Immersion.state('operatorState') is C2.Immersion.OperatorStates.BackAtCounter
       SanFrancisco.Soma.Items.Map if SanFrancisco.Soma.Items.Map.state 'inInventory'
     ]

@@ -27,4 +27,9 @@ Package.onUse(function(api) {
 
   api.addComponent('map..');
   api.addFile('map/scene');
+
+  api.addComponent('sync..');
+  api.addFile('sync/sync-tab');
+  api.addComponent('sync/map..');
+  api.addComponent('sync/memories..');
 });

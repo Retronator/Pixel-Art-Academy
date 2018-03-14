@@ -1,0 +1,26 @@
+<template name="Retronator.PAA.Items.Sync">
+  <div class="pixelartacademy-items-sync">
+    <div class="map-tab {{mapTabVisibleClass}}">
+      {{> Render mapTab}}
+    </div>
+    {{#if fullscreenOverlay}}
+      <div class="fullscreen">
+        {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
+        {{#LandsOfIllusions.Components.Overlay}}
+          <div class="navigation">
+            <ul class="tabs">
+            {{#each tabs}}
+              <li class="tab {{activeTabClass}}">{{> t9n displayNameTranslation}}</li>
+            {{/each}}
+            </ul>
+          </div>
+          {{#unless currentTabIsMap}}
+            <div class="current-tab">
+              {{> Render currentTab}}
+            </div>
+          {{/unless}}
+        {{/LandsOfIllusions.Components.Overlay}}
+      </div>
+    {{/if}}
+  </div>
+</template>

@@ -55,7 +55,6 @@ Package.onUse(function(api) {
   api.addComponent('items/receipt/receipt');
   
   api.addFile('items/account/account');
-  api.addComponent('items/sync/sync');
   api.addFile('items/keycard/keycard');
 
   api.addThingComponent('items/operatorlink/operatorlink');
