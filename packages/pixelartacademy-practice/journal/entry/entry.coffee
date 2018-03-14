@@ -9,6 +9,9 @@ class PAA.Practice.Journal.Entry extends AM.Document
   #   _id
   #   character
   #     _id
+  #     avatar
+  #       fullName
+  #       color
   # time: the time when the entry was created
   # order: where this entry appears in the journal
   # [content]: array of delta operations
@@ -41,14 +44,14 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      journal: @ReferenceField PAA.Practice.Journal, ['character._id'], true, 'entries', []
+      journal: @ReferenceField PAA.Practice.Journal, ['character'], true, 'entries', []
       structure: [
         insert:
           artwork: @ReferenceField PADB.Artwork, ['image'], false
           task:
             entry: @ReferenceField PAA.Learning.Task.Entry, [], false
       ]
-      memories: [@ReferenceField LOI.Memory]
+      memories: [@ReferenceField LOI.Memory, [], true, 'journalEntry', ['journal']]
 
   @pictureUploadContext = new PADB.Upload.Context
     name: "#{@id()}.picture"

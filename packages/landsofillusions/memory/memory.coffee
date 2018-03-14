@@ -15,6 +15,14 @@ class LOI.Memory extends AM.Document
   #   content
   # startTime: auto-generated time of the first action in this memory
   # endTime: auto-generated time of the last action in this memory
+  #
+  # journalEntry: the journal entry this memory relates to, reverse of Journal.Entry.memories
+  #   _id
+  #   character
+  #     _id
+  #     avatar
+  #       fullName
+  #       color
   @Meta
     name: @id()
     fields: =>
@@ -39,3 +47,4 @@ class LOI.Memory extends AM.Document
   # Subscriptions
 
   @forId: @subscription 'forId'
+  @forCharacter: @subscription 'forCharacter'

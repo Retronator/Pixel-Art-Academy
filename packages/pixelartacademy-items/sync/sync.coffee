@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
@@ -36,6 +37,9 @@ class PAA.Items.Sync extends LOI.Adventure.Item
       @mapTab
       @memoriesTab
     ]
+
+    @tabsByUrl = {}
+    @tabsByUrl[tab.url()] = tab for tab in @tabs
 
     @currentTab = new ReactiveField @mapTab
 
@@ -87,7 +91,7 @@ class PAA.Items.Sync extends LOI.Adventure.Item
 
   mapTabVisibleClass: ->
     # We need to render the map when we're on its tab or when we're not in overlay.
-    'visible' if (@currentTab() is @mapTab) or (not @fullscreenOverlay())
+    'visible' if @currentTab() is @mapTab or not @fullscreenOverlay()
 
   currentTabIsMap: ->
     @currentTab() is @mapTab
@@ -178,3 +182,23 @@ class PAA.Items.Sync extends LOI.Adventure.Item
     commandResponse.onExactPhrase
       form: [@avatars.map]
       action: mapAction
+
+  # Routing
+
+  LOI.Adventure.registerDirectRoute "/#{@url()}/*", =>
+    tabUrl = AB.Router.getParameter 'parameter2'
+
+    # Show the item if we need to.
+    unless LOI.adventure.activeItemId() is @id()
+      Tracker.autorun (computation) =>
+        # Wait until the item is available.
+        return unless sync = LOI.adventure.getCurrentThing @
+        return unless sync.isCreated()
+        computation.stop()
+
+        # Switch to correct tab.
+        tab = sync.tabsByUrl[tabUrl]
+        sync.currentTab sync.tabsByUrl[tabUrl] if tab
+
+        # Show the interface.
+        sync.open()
