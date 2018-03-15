@@ -183,49 +183,48 @@ Package.onUse(function(api) {
 
   // Parser
 
-  api.addFiles('parser/parser.coffee');
-  api.addFiles('parser/parser-likelyactions.coffee');
-  api.addFiles('parser/command.coffee');
-  api.addFiles('parser/commandresponse.coffee');
-  api.addFiles('parser/enterresponse.coffee');
-  api.addFiles('parser/exitresponse.coffee');
+  api.addFile('parser..');
+  api.addFile('parser/parser-likelyactions');
+  api.addFile('parser/command');
+  api.addFile('parser/commandresponse');
+  api.addFile('parser/enterresponse');
+  api.addFile('parser/exitresponse');
 
-  api.addFiles('parser/vocabulary/vocabulary.coffee');
-  api.addFiles('parser/vocabulary/vocabularykeys.coffee');
-  api.addFiles('parser/vocabulary/english-server.coffee', 'server');
+  api.addFile('parser/vocabulary/vocabulary');
+  api.addFile('parser/vocabulary/vocabularykeys');
+  api.addServerFile('parser/vocabulary/english-server');
 
   // Director
 
-  api.addFiles('director/director.coffee');
+  api.addFile('director..');
 
   // Adventure
 
-  api.addFiles('adventure/adventure.html');
-  api.addFiles('adventure/adventure.styl');
-  api.addFiles('adventure/adventure.coffee');
-  api.addFiles('adventure/adventure-routing.coffee');
-  api.addFiles('adventure/adventure-state.coffee');
-  api.addFiles('adventure/adventure-location.coffee');
-  api.addFiles('adventure/adventure-timeline.coffee');
-  api.addFiles('adventure/adventure-item.coffee');
-  api.addFiles('adventure/adventure-inventory.coffee');
-  api.addFiles('adventure/adventure-episodes.coffee');
-  api.addFiles('adventure/adventure-things.coffee');
-  api.addFiles('adventure/adventure-listeners.coffee');
-  api.addFiles('adventure/adventure-time.coffee');
-  api.addFiles('adventure/adventure-dialogs.coffee');
+  api.addComponent('adventure..');
+  api.addFile('adventure/adventure-routing');
+  api.addFile('adventure/adventure-state');
+  api.addFile('adventure/adventure-memories');
+  api.addFile('adventure/adventure-location');
+  api.addFile('adventure/adventure-timeline');
+  api.addFile('adventure/adventure-item');
+  api.addFile('adventure/adventure-inventory');
+  api.addFile('adventure/adventure-episodes');
+  api.addFile('adventure/adventure-things');
+  api.addFile('adventure/adventure-listeners');
+  api.addFile('adventure/adventure-time');
+  api.addFile('adventure/adventure-dialogs');
 
   // Initalization gets included last because it does component registering as the last child in the chain.
-  api.addFiles('adventure/adventure-initialization.coffee');
+  api.addFile('adventure/adventure-initialization');
 
   // Situations
 
-  api.addFiles('adventure/situation/situation.coffee');
-  api.addFiles('adventure/situation/circumstance.coffee');
+  api.addFile('adventure/situation..');
+  api.addFile('adventure/situation/circumstance');
 
   // Listener
 
-  api.addFiles('adventure/listener/listener.coffee');
+  api.addFile('adventure/listener..');
   
   // Thing
 

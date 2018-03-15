@@ -13,6 +13,9 @@ class LandsOfIllusions
     # Playing as your character in the main (non-time-traveling) game world.
     Present: 'Present'
 
+    # Reliving a memory.
+    Memory: 'Memory'
+
   # Global Adventure instance.
   @adventure = null
   @adventureInitialized = new ReactiveField false

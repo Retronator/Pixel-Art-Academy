@@ -20,6 +20,9 @@ class LOI.Adventure extends LOI.Adventure
     @currentLocationId = new ComputedField =>
       console.log "Recomputing current location." if LOI.debug or LOI.Adventure.debugLocation
 
+      # Memory provides its own location.
+      return memory.locationId if memory = @currentMemory()
+
       if LOI.characterId()
         # Character's location is always read from the state.
         @gameState()?.currentLocationId
@@ -62,10 +65,16 @@ class LOI.Adventure extends LOI.Adventure
 
             when LOI.TimelineIds.Present
               currentLocationClass = SanFrancisco.Apartment.Studio
+              
+            when LOI.TimelineIds.Memory
+              # This is a stale memory (one where the location where it was made is not 
+              # available anymore). Cancel the memory so the normal location returns.
+              # TODO: We would probably want to give some indication to the player the memory didn't work.
+              @exitMemory()
+              return
 
-          currentLocationId = currentLocationClass.id()
-
-        @setLocationId currentLocationId
+          # Set the new location
+          @setLocationId currentLocationClass.id()
 
         console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug or LOI.Adventure.debugLocation
 

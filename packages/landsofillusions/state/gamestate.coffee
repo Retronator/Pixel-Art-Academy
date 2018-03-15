@@ -10,6 +10,7 @@ class LOI.GameState extends AM.Document
   #     {scriptId}: state of the script
   #   currentLocationId: the last known location of the player
   #   currentTimelineId: the last known timeline in which the player is
+  #   immersionExitLocationId: the last know location of the player outside immersion
   #   time: integer number of seconds the player has spent in the game
   #   gameTime: fractional number of days passed in the game
   # stateLastUpdatedAt: time when game state was last written to

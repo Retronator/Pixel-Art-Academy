@@ -19,6 +19,9 @@ class LOI.Adventure extends LOI.Adventure
     @currentTimelineId = new ComputedField =>
       console.log "Recomputing current timeline." if LOI.debug
 
+      # Memory overrides other timelines.
+      return LOI.TimelineIds.Memory if @currentMemory()
+
       if LOI.characterId()
         # Player's timeline is always read from the state.
         return unless gameState = @gameState()
