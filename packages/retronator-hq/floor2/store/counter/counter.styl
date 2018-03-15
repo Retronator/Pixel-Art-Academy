@@ -1,26 +1,21 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.retronator-hq-store-display
-  .landsofillusions-components-overlay
-    z-index 1
-    background atariOrange(7)
-    overflow hidden
-
-    .background
-      background none
+.retronator-hq-store-counter
+  absolute-cover()
+  background atariOrange(7)
+  overflow hidden
 
   .scene
-    absolute-cover()
-    transition left ease-in-out 2s
-
-    &.center
-      left -150rem
+    position absolute
+    top 0
+    width 320rem
+    height 240rem
 
     .retro-shadow
       position absolute
       z-index 1
       top 104rem
-      left 84rem
+      left 40rem
       width 87rem
       height 129rem
 
@@ -28,23 +23,28 @@
       position absolute
       z-index 2
       top 88rem
-      left 84rem
-      width 95rem
-      height 130rem
-      pointer-events none
+      left 40rem
 
-    .smile
-      position absolute
-      z-index 3
-      top 88rem
-      left 114rem
-      width 35rem
-      height 50rem
-      pointer-events none
+      .body
+        position absolute
+        top 0
+        left 0
+        width 95rem
+        height 130rem
+        pointer-events none
+
+      .smile
+        position absolute
+        z-index 1
+        top 0
+        left 75rem
+        width 35rem
+        height 50rem
+        pointer-events none
 
     .table
       position absolute
-      z-index 4
+      z-index 2
       top 218rem
       left -80rem
       right -80rem

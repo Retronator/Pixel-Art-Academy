@@ -7,6 +7,7 @@ class LOI.Adventure extends LOI.Adventure
       options =
         timelineId: @currentTimelineId()
         location: @currentLocation()
+        context: @currentContext()
 
       return unless options.timelineId and options.location
 

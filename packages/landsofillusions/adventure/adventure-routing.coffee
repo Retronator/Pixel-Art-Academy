@@ -101,6 +101,3 @@ class LOI.Adventure extends LOI.Adventure
         parametersObject["parameter#{index + 1}"] = urlParameter unless urlParameter is '*'
 
     parametersObject
-
-  goToItem: (itemClassOrId) ->
-    @activeItemId _.thingId itemClassOrId

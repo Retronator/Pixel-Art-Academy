@@ -30,6 +30,9 @@ class LOI.Interface extends AM.Component
           # Now store the new location as the
           @_previousLocationClass = location.constructor
 
+        # Clear the current context.
+        LOI.adventure.exitContext()
+
         # Do any initialization needed after location change.
         @onLocationChanged()
 
@@ -52,6 +55,9 @@ class LOI.Interface extends AM.Component
 
   location: ->
     LOI.adventure.currentLocation()
+
+  context: ->
+    LOI.adventure.currentContext()
 
   onLocationChanged: (location) ->
     # Override to handle location changes. Call "@locationChangeReady true" when ready to start handling nodes.

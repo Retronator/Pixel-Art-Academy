@@ -72,8 +72,12 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @onScroll options.position
       
   onScroll: (position) ->
-    # Let the location know we're scrolling so that it can do any super-smooth scrolling animations.
-    LOI.adventure.currentLocation()?.onScroll?()
+    # Let the location or context know we're scrolling so that it can do any super-smooth scrolling animations.
+    if context = LOI.adventure.currentContext()
+      context.onScroll?()
+
+    else
+      LOI.adventure.currentLocation()?.onScroll?()
 
     # Also scroll the main slider.
     @matchScrollbar position unless @wheelDetected

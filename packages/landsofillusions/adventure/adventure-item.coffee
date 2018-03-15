@@ -47,5 +47,8 @@ class LOI.Adventure extends LOI.Adventure
       # Make sure to keep this computed field running.
       true
 
+  goToItem: (itemClassOrId) ->
+    @activeItemId _.thingId itemClassOrId
+
   deactivateActiveItem: ->
     @activeItemId null

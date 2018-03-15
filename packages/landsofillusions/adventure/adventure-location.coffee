@@ -197,6 +197,9 @@ class LOI.Adventure extends LOI.Adventure
       @gameState.updated()
 
   goToLocation: (locationClassOrId) ->
+    # Don't allow location changes when in a memory (since it's defined by the memory document).
+    return if @currentMemory()
+    
     currentLocationClass = _.thingClass @currentLocationId()
     destinationLocationClass = _.thingClass locationClassOrId
     

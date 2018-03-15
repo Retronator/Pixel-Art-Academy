@@ -75,31 +75,33 @@ Package.onUse(function(api) {
 
   // Locations
 
-  api.addThing('basement1/basement/basement');
+  api.addThing('basement1/basement..');
 
-  api.addFile('elevator/elevator');
+  api.addFile('elevator..');
   api.addThing('elevator/numberpad');
 
-  api.addFile('floor1/cafe/cafe');
+  api.addFile('floor1/cafe..');
   api.addFile('floor1/cafe/artworks');
   api.addScript('floor1/cafe/burra');
   api.addScript('floor1/cafe/burra-character');
 
-  api.addFile('floor1/coworking/coworking');
+  api.addFile('floor1/coworking..');
 
-  api.addThing('floor2/store/store');
+  api.addThing('floor2/store..');
   api.addFile('floor2/store/retro');
   api.addScript('floor2/store/store-character');
 
-  api.addComponent('floor2/store/display/display');
-  api.addComponent('floor2/store/shelf/shelf');
+  api.addComponent('floor2/store/counter..');
+
+  api.addComponent('floor2/store/display..');
+  api.addComponent('floor2/store/shelf..');
   api.addFile('floor2/store/shelf/shelf-game');
   api.addFile('floor2/store/shelf/shelf-upgrades');
   api.addFile('floor2/store/shelf/shelf-pixel');
   api.addThing('floor2/store/shelf/shelves');
 
-  api.addFile('floor2/store/table/table');
-  api.addFile('floor2/store/table/item/item');
+  api.addFile('floor2/store/table..');
+  api.addFile('floor2/store/table/item..');
   api.addFile('floor2/store/table/item/item-createtextscript');
   api.addStyledFile('floor2/store/table/item/photos');
   api.addStyledFile('floor2/store/table/item/article');
@@ -110,14 +112,14 @@ Package.onUse(function(api) {
   api.addFile('floor2/store/table/item/chat');
   api.addFile('floor2/store/table/item/quote');
 
-  api.addFile('floor2/bookshelves/bookshelves');
+  api.addFile('floor2/bookshelves..');
 
   api.addFile('floor3/gallery/galleryeast');
   api.addFile('floor3/gallery/gallerywest');
 
-  api.addThing('floor4/artstudio/artstudio');
+  api.addThing('floor4/artstudio..');
   
   // Pages
   
-  api.addFile('pages/pages');
+  api.addFile('pages..');
 });

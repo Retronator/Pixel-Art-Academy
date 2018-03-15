@@ -331,6 +331,7 @@ class HQ.Store extends LOI.Adventure.Location
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.TalkTo, retro.avatar]
           action: =>
+            LOI.adventure.enterContext HQ.Store.Counter
             script = if LOI.character() then @characterScript else @userScript
             LOI.adventure.director.startScript script
 

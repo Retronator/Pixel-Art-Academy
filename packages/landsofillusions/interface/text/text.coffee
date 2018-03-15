@@ -117,6 +117,9 @@ class LOI.Interface.Text extends LOI.Interface
   resetInterface: (options = {}) ->
     options.resetIntroduction ?= true
 
+    # Clear the current context.
+    LOI.adventure.exitContext()
+
     @_lastNode null
     @_pausedNode null
 

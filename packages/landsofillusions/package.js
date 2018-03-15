@@ -205,6 +205,7 @@ Package.onUse(function(api) {
   api.addFile('adventure/adventure-state');
   api.addFile('adventure/adventure-memories');
   api.addFile('adventure/adventure-location');
+  api.addFile('adventure/adventure-context');
   api.addFile('adventure/adventure-timeline');
   api.addFile('adventure/adventure-item');
   api.addFile('adventure/adventure-inventory');
@@ -268,18 +269,22 @@ Package.onUse(function(api) {
 
   // Storylines
 
-  api.addFiles('adventure/global/global.coffee');
-  api.addFiles('adventure/episode/episode.coffee');
-  api.addFiles('adventure/section/section.coffee');
-  api.addComponent('adventure/chapter/chapter');
-  api.addFiles('adventure/scene/scene.coffee');
+  api.addFile('adventure/global..');
+  api.addFile('adventure/episode..');
+  api.addFile('adventure/section..');
+  api.addComponent('adventure/chapter..');
+  api.addFile('adventure/scene..');
 
   // Locations and inventory
 
-  api.addFiles('adventure/region/region.coffee');
-  api.addFiles('adventure/location/location.coffee');
-  api.addFiles('adventure/location/inventory.coffee');
-  
+  api.addFile('adventure/region..');
+  api.addFile('adventure/location..');
+  api.addFile('adventure/location/inventory');
+
+  // Context
+
+  api.addFile('adventure/context..');
+
   // Events
   
   api.addFile('adventure/event..');

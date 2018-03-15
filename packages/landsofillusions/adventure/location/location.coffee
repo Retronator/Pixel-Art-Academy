@@ -14,7 +14,6 @@ class LOI.Adventure.Location extends LOI.Adventure.Scene
   region: -> @constructor.region()
 
   # The maximum height of location's illustration. By default there is no illustration (height 0).
-  # The maximum height of location's illustration. By default there is no illustration (height 0).
   @illustrationHeight: -> 0
   illustrationHeight: -> @constructor.illustrationHeight()
 

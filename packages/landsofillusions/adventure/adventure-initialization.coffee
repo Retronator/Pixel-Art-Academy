@@ -46,6 +46,7 @@ class LOI.Adventure extends LOI.Adventure
     # for missing locations depends on the timeline to know where to move you.
     @_initializeTimeline()
     @_initializeLocation()
+    @_initializeContext()
 
     @_initializeActiveItem()
     @_initializeEpisodes()

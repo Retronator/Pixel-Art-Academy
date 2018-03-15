@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 class LOI.Adventure.Situation
   constructor: (@options) ->
-    {location, timelineId} = @options
+    {location, timelineId, context} = @options
 
     console.log "%cCreating situation for", 'background: plum', location.id(), timelineId if LOI.debug
 
@@ -39,6 +39,9 @@ class LOI.Adventure.Situation
     console.log "Filtered current scenes", LOI.adventure.currentScenes(), "to relevant ones", scenes if LOI.debug
 
     @_applyScene scene for scene in scenes
+
+    # Finally apply the context, which can override other things.
+    @_applyScene context if context
 
     @exitsById = new ComputedField =>
       # Generate a unique set of exit classes from all directions (some directions might lead to
