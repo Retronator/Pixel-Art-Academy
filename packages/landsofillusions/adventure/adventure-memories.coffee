@@ -19,5 +19,17 @@ class LOI.Adventure extends LOI.Adventure
     memoryId = memoryOrMemoryId._id or memoryOrMemoryId
     @currentMemoryId memoryId
 
+    # Start memory context after we've reached the new location.
+    @autorun (computation) =>
+      return unless memory = @currentMemory()
+      return unless memory.locationId is @currentLocationId()
+      computation.stop()
+
+      # Give the interface time to react to location change and clear the context, before we set the new one.
+      Meteor.setTimeout => @enterContext LOI.Memory.Context
+
   exitMemory: ->
+    # End memory context.
+    @exitContext()
+
     @currentMemoryId null

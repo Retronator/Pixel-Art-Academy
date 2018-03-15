@@ -285,6 +285,8 @@ Package.onUse(function(api) {
 
   api.addFile('adventure/context..');
 
+  api.addFile('memory/context');
+
   // Events
   
   api.addFile('adventure/event..');
