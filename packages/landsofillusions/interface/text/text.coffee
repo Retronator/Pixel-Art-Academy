@@ -114,7 +114,7 @@ class LOI.Interface.Text extends LOI.Interface
     _.some busyConditions
     
   # Use to get back to the initial state with full location description.
-  resetInterface: (options = {}) ->
+  reset: (options = {}) ->
     options.resetIntroduction ?= true
 
     # Clear the current context.

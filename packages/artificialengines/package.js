@@ -182,6 +182,9 @@ Package.onUse(function(api) {
   api.addFile('babel/initialize');
   api.addFile('babel/helpers');
 
+  api.addFile('babel/rules..');
+  api.addFile('babel/rules/english');
+
   api.addFile('babel/lodash/languageregion');
 
   api.addFile('babel/translation/translation');

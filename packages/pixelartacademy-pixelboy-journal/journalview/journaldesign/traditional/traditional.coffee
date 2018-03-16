@@ -13,7 +13,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.JournalDesign.Traditional extends PA
   constructor: (@journal) ->
     super
 
-  pixelBoySize: ->
+  size: ->
     width: 302
     height: 223
 

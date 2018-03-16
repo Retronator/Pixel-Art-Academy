@@ -74,6 +74,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @newMemory: @method 'newMemory'
 
   # Subscriptions
+  @forId: @subscription 'forId'
   @forJournalId: @subscription 'forJournalId'
   @activityForCharacter: @subscription 'activityForCharacter'
   @memoriesForEntryId: @subscription 'memoriesForEntryId'

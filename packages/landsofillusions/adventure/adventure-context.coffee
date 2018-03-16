@@ -6,18 +6,26 @@ class LOI.Adventure extends LOI.Adventure
     @currentContext = new ReactiveField null
 
   enterContext: (contextClassOrId) ->
-    contextClass = LOI.Adventure.Context.getClassForId _.thingId contextClassOrId
+    # Allow sending instantiated context.
+    if contextClassOrId instanceof LOI.Adventure.Context
+      context = contextClassOrId
 
-    contextClass = contextClassOrId if _.isFunction contextClassOrId
-    contextClass = LOI.Adventure.Context.getClassForId contextClassOrId if _.isString contextClassOrId
+    else
+      contextClass = LOI.Adventure.Context.getClassForId _.thingId contextClassOrId
 
-    unless contextClass
-      console.error "Requested context", contextClassOrId, "does not exist."
-      return
+      contextClass = contextClassOrId if _.isFunction contextClassOrId
+      contextClass = LOI.Adventure.Context.getClassForId contextClassOrId if _.isString contextClassOrId
 
-    Tracker.nonreactive =>
-      # Instantiate a new context and set it as current.
-      @currentContext new contextClass
+      unless contextClass
+        console.error "Requested context", contextClassOrId, "does not exist."
+        return
+
+      # Instantiate the new context.
+      Tracker.nonreactive =>
+        context = new contextClass
+
+    # Set context as current to activate it.
+    @currentContext context
 
   exitContext: ->
     @currentContext null

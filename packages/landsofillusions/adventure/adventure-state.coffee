@@ -240,7 +240,7 @@ class LOI.Adventure extends LOI.Adventure
 
           if databaseState
             # Reset the interface.
-            @interface.resetInterface()
+            @interface.reset()
 
             # Clear active item.
             @activeItemId null

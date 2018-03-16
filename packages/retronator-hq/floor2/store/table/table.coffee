@@ -92,7 +92,7 @@ class HQ.Store.Table extends LOI.Adventure.Location
   _changeItems: (delta) ->
     @openedDrawer true
     @postsSkip Math.max 0, @postsSkip() + delta
-    LOI.adventure.interface.resetInterface resetIntroduction: false
+    LOI.adventure.interface.reset resetIntroduction: false
 
   # Listener
 

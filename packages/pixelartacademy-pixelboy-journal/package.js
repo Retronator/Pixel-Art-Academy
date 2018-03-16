@@ -33,9 +33,12 @@ Package.onUse(function(api) {
 
   // Entry is loaded only on the client since it uses Quill that is not available on the server.
   api.addClientComponent('journalview/entry-client/entry');
+
   api.addClientFile('journalview/entry-client/object..');
   api.addClientComponent('journalview/entry-client/object/timestamp..');
   api.addClientComponent('journalview/entry-client/object/picture..');
+
+  api.addClientComponent('journalview/entry-client/context..');
 
   api.addFile('journalview/journaldesign..');
   api.addComponent('journalview/journaldesign/traditional..');

@@ -107,5 +107,8 @@ class PAA.Items.Sync.Memories extends PAA.Items.Sync.Tab
   onClickMemoryPreview: (event) ->
     memory = @currentData()
 
+    LOI.adventure.enterMemory memory
+    @sync.close()
+
     # Update progress on this memory to indicate it was observed.
-    LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, memory.endTime
+    #LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, memory.endTime

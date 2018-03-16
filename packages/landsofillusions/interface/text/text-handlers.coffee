@@ -34,7 +34,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
       else
         # We haven't been here yet, so completely reset the interface into intro mode.
-        @resetInterface()
+        @reset()
 
       # We have cleared the interface so it can now start processing any scripts.
       @locationChangeReady true

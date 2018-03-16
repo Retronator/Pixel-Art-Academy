@@ -24,13 +24,22 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
 
     @autorun (computation) =>
       return unless @startLoading()
-      PAA.Practice.Journal.Entry.forJournalId.subscribe @journalDesign.journalId, @entriesLimit()
+
+      # Subscribe to all entries of the journal, if we're displaying a journal and not just one entry.
+      if @journalDesign.options.journalId
+        PAA.Practice.Journal.Entry.forJournalId.subscribe @, @journalDesign.options.journalId, @entriesLimit()
 
     @entries = new ComputedField =>
-      # Get all the entries and only depend on their ID to minimize updates when data inside an entry changes.
-      entryDocuments = PAA.Practice.Journal.Entry.documents.find(
-        'journal._id': @journalDesign.journalId
-      ,
+      if @journalDesign.options.entryId
+        # Get just the one entry.
+        query = @journalDesign.options.entryId
+
+      else
+        # Get all the entries.
+        query = 'journal._id': @journalDesign.options.journalId
+
+      # Only depend on the entry IDs to minimize updates when data inside an entry changes.
+      entryDocuments = PAA.Practice.Journal.Entry.documents.find(query,
         fields:
           _id: 1
         sort:
@@ -43,13 +52,22 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
         entry = new PAA.PixelBoy.Apps.Journal.JournalView.Entry @, entryDocument._id
         entries.push entry
           
-      # Add the new (empty) entry.
-      entries.push new PAA.PixelBoy.Apps.Journal.JournalView.Entry @, null
+      # Add the new (empty) entry if this is a journal and it is not read-only.
+      if @journalDesign.options.journalId and not @journalDesign.options.readOnly
+        entries.push new PAA.PixelBoy.Apps.Journal.JournalView.Entry @, null
 
       entries
 
-    # Start on the new entry.
-    @currentEntryId = new ReactiveField null
+    # Start on the requested entry or default to the new entry.
+    @currentEntryId = new ReactiveField @journalDesign.options.entryId or null
+
+    # If this is a read-only journal, go to last page if it is not set yet.
+    if @journalDesign.options.readOnly and not @currentEntryId()
+      @autorun (computation) =>
+        return unless entries = @entries()
+        computation.stop()
+
+        @currentEntryId _.last(entries)._id
 
     @currentEntry = new ComputedField =>
       currentEntryId = @currentEntryId()
@@ -164,8 +182,15 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     'visible' unless @currentEntryIndex() is 0 and currentEntry.currentPageIndex() is 0
 
   nextPageVisibleClass: ->
-    # We can always go forward except when we're on the new entry page.
-    'visible' if @currentEntryId()
+    # We can go forward until we're on the last page of the last entry.
+    return unless currentEntry = @currentEntry()
+    return unless currentEntry.isCreated()
+    return unless entries = @entries()
+
+    # We need to see if the viewport includes the end of the entry.
+    lastPageVisibleIndex = currentEntry.currentPageIndex() - 1 + @journalDesign.writingAreaOptions().pagesPerViewport
+
+    'visible' unless @currentEntryIndex() >= entries.length - 1 and lastPageVisibleIndex >= currentEntry.pagesCount() - 1
 
   events: ->
     super.concat

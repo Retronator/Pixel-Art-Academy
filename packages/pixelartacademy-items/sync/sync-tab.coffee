@@ -23,7 +23,7 @@ class PAA.Items.Sync.Tab extends AM.Component
           defaultText = _.propertyValue @, translationKey
           AB.createTranslation translationNamespace, translationKey, defaultText
 
-  constructor: ->
+  constructor: (@sync) ->
     super
 
     translationNamespace = @componentName()

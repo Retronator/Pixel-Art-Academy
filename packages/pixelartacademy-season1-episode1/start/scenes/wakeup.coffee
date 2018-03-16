@@ -82,7 +82,7 @@ class Start.WakeUp extends LOI.Adventure.Scene
               introStudioScene.listeners[0].startScript()
 
               # Reset the interface to start again from the new intro.
-              LOI.adventure.interface.resetInterface?()
+              LOI.adventure.interface.reset?()
 
               complete()
 

@@ -6,13 +6,31 @@ Nodes = LOI.Adventure.Script.Nodes
 class LOI.Memory.Context extends LOI.Adventure.Context
   @id: -> 'LandsOfIllusions.Memory.Context'
 
-  @initialize()
+  @classes = []
 
+  @initialize: ->
+    super
+
+    @classes.push @
+    
+  @initialize()
+    
+  # Override to tell if a memory is from this context.
+  @isOwnMemory: (memory) -> false
+    
+  constructor: (@memoryId) ->
+    super
+  
   onCreated: ->
     super
 
+    @memory = new ComputedField =>
+      # Subscribe and retrieve the memory.
+      LOI.Memory.forId.subscribe @memoryId
+      LOI.Memory.documents.findOne @memoryId
+
     @characters = new ComputedField =>
-      return unless memory = LOI.adventure.currentMemory()
+      return unless memory = @memory()
 
       # Get all present character IDs.
       characterIds = _.uniq _.map memory.actions, (action) => action.character._id
@@ -45,3 +63,13 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     return [] unless @isCreated()
 
     @characters()
+
+  overrideExits: -> {}
+
+  deactivate: ->
+    # If we're in a memory, deactivate the memory itself which will also deactivate the context.
+    if LOI.adventure.currentMemoryId()
+      LOI.adventure.exitMemory()
+
+    else
+      LOI.adventure.exitContext()

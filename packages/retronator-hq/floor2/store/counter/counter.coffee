@@ -63,7 +63,6 @@ class HQ.Store.Counter extends LOI.Adventure.Context
 
       $supportersListTitles.css top: titleOffset
 
-    @$uiArea = $('.ui-area')
     @$scene = @$('.scene')
     @$display = @$('.display')
     @$retro = @$('.retro')
@@ -126,10 +125,8 @@ class HQ.Store.Counter extends LOI.Adventure.Context
   onClickTopSupportersShowMoreButton: (event) ->
     @_topSupportersCount @_topSupportersCount() + 40
 
-  onScroll: ->
+  onScroll: (scrollTop) ->
     return unless @isRendered()
-
-    scrollTop = -parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
 
     @$scene.css transform: "translate3d(0, #{-scrollTop}px, 0)"
 

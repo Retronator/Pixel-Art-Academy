@@ -11,7 +11,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       introduction = currentIntroductionFunction()
       return @_formatOutput introduction
 
-    if location.constructor.visited()
+    if location.constructor.visited() and not LOI.adventure.currentContext()
       fullName = location.avatar.fullName()
       return unless fullName
 
@@ -19,7 +19,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
       "#{_.upperFirst fullName}."
 
     else
-      # It's the first time we're visiting this location in this session so show the full description.
+      # It's the first time we're visiting this location in this session,
+      # or we're in a context, so show the full description.
       situation = LOI.adventure.currentSituation()
 
       @_formatOutput situation.description.last()

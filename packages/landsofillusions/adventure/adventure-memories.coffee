@@ -26,9 +26,27 @@ class LOI.Adventure extends LOI.Adventure
       computation.stop()
 
       # Give the interface time to react to location change and clear the context, before we set the new one.
-      Meteor.setTimeout => @enterContext LOI.Memory.Context
+      Meteor.setTimeout =>
+        # Find which context class this memory belongs to.
+        for contextClass in LOI.Memory.Context.classes
+          if contextClass.isOwnMemory memory
+            # We've reached the correct context class.
+            break
+
+        # Fallback to plain memory context if none other can handle it (usually indicates a direct conversation).
+        contextClass = LOI.Memory.Context unless contextClass
+        
+        # Create the context based on the memory.
+        context = new contextClass memoryId
+
+        @enterContext context
 
   exitMemory: ->
+    # Stop all scripts and reset the interface to clean up current interactions.
+    @director.stopAllScripts()
+    @interface.reset()
+    @interface.stopIntro()
+
     # End memory context.
     @exitContext()
 

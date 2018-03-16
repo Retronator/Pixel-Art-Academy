@@ -9,4 +9,4 @@ class LOI.Parser.LookLocationListener extends LOI.Adventure.Listener
     commandResponse.onExactPhrase
       form: [Vocabulary.Keys.Verbs.Look]
       action: =>
-        LOI.adventure.interface.resetInterface?()
+        LOI.adventure.interface.reset?()

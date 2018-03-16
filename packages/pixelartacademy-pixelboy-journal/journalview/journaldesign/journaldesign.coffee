@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.PixelBoy.Apps.Journal.JournalView.JournalDesign extends AM.Component
-  constructor: (@journalView, @journalId) ->
+  constructor: (@options) ->
     super
 
     @entries = new ReactiveField null
@@ -13,12 +13,19 @@ class PAA.PixelBoy.Apps.Journal.JournalView.JournalDesign extends AM.Component
     super
     
     @journalDocument = new ComputedField =>
-      PAA.Practice.Journal.documents.findOne @journalId
+      if @options.journalId
+        journalId = @options.journalId
+        
+      else
+        entry = PAA.Practice.Journal.Entry.documents.findOne @options.entryId
+        journalId = entry?.journal._id
+        
+      PAA.Practice.Journal.documents.findOne journalId
 
     @entries new PAA.PixelBoy.Apps.Journal.JournalView.Entries @
 
-  # Override to provide desired PixelBoy size.
-  pixelBoySize: -> throw new AE.NotImplementedException "You must provide PixelBoy size."
+  # Override to provide the size of this design.
+  size: -> throw new AE.NotImplementedException "You must provide the size of the journal."
 
   # Override to provide where the user should be able to write on the page.
   writingAreaOptions: -> throw new AE.NotImplementedException "You must provide writing area options."

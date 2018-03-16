@@ -1,6 +1,6 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry">
   <div class="pixelartacademy-pixelboy-apps-journal-journalview-entry">
-    <div class="writing-area" {{style writingAreaStyle}}></div>
+    <div class="writing-area {{readOnlyClass}}" {{style writingAreaStyle}}></div>
     <div class="objects-area {{objectsAreaExpandedClass}}" {{style objectsAreaStyle}}>
       <button class="toggle-objects-button"></button>
       <ul class="objects" {{style objectsStyle}}>

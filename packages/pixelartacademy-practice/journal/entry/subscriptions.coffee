@@ -2,6 +2,22 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+# Subscribe to an entry and its journal
+PAA.Practice.Journal.Entry.forId.publish (entryId) ->
+  check entryId, Match.DocumentId
+
+  entryCursor = PAA.Practice.Journal.Entry.documents.find
+    _id: entryId
+
+  entry = entryCursor.fetch()[0]
+  return unless entry
+
+  # Return both the entry and its journal since we almost always need them together.
+  [
+    entryCursor
+    PAA.Practice.Journal.documents.find _id: entry.journal._id
+  ]
+
 # Get entries for a certain journal.
 PAA.Practice.Journal.Entry.forJournalId.publish (journalId, limit) ->
   check journalId, Match.DocumentId

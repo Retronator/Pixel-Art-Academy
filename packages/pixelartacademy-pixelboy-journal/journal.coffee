@@ -39,7 +39,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
 
     @autorun (computation) =>
       if journalDesign = @journalView().journalDesign()
-        pixelBoySize = journalDesign.pixelBoySize()
+        pixelBoySize = journalDesign.size()
 
         @minWidth pixelBoySize.width
         @minHeight pixelBoySize.height

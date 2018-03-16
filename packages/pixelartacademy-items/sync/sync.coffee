@@ -30,8 +30,8 @@ class PAA.Items.Sync extends LOI.Adventure.Item
   onCreated: ->
     super
 
-    @mapTab = new PAA.Items.Sync.Map
-    @memoriesTab = new PAA.Items.Sync.Memories
+    @mapTab = new PAA.Items.Sync.Map @
+    @memoriesTab = new PAA.Items.Sync.Memories @
 
     @tabs = [
       @mapTab
@@ -71,6 +71,9 @@ class PAA.Items.Sync extends LOI.Adventure.Item
     LOI.adventure.goToItem @
     @fullscreenOverlay true
     @mapTab.map.showUserInterface true
+    
+  close: ->
+    LOI.adventure.deactivateActiveItem()
 
   onActivate: (finishedDeactivatingCallback) ->
     # Start enlarging the map.

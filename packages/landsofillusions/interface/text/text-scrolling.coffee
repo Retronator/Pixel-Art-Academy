@@ -44,13 +44,13 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
   # Returns the current scroll position of the text interface.
   scrollTop: ->
-    parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
+    -parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
 
   # Scroll the UI to put the position at the top of the viewport.
   scroll: (options) ->
     options.animate ?= false
 
-    currentTop = @scrollTop()
+    currentTop = -@scrollTop()
     
     newTop = -options.position
 
@@ -74,7 +74,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
   onScroll: (position) ->
     # Let the location or context know we're scrolling so that it can do any super-smooth scrolling animations.
     if context = LOI.adventure.currentContext()
-      context.onScroll?()
+      context.onScroll? @scrollTop()
 
     else
       LOI.adventure.currentLocation()?.onScroll?()
@@ -84,7 +84,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # See if narrative is in view.
     if @locationChangeReady()
-      viewportBottom = -@scrollTop() + @$window.height()
+      viewportBottom = @scrollTop() + @$window.height()
       narrativeTop = @$ui.position().top
       @uiInView narrativeTop < viewportBottom
 

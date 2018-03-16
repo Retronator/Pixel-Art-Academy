@@ -9,10 +9,9 @@ Block = Quill.import 'blots/block'
 
 class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry'
-  @version: -> '0.1.0'
-
   @register @id()
-  template: -> @constructor.id()
+
+  @version: -> '0.1.0'
 
   @debug = false
 
@@ -61,6 +60,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
         'task'
         'language'
       ]
+      readOnly: @journalDesign.options.readOnly
 
     @quill quill
 
@@ -79,7 +79,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
         console.log "Starting entry.", @entryId if @constructor.debug
 
-        @entries.startEntry delta
+        @options.startEntry delta
         return
 
       # Update the entry if this was a user update.
@@ -278,6 +278,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
         name: "Timestamp"
 
     objects
+    
+  readOnlyClass: ->
+    'read-only' if @journalDesign.options.readOnly
 
   events: ->
     super.concat
