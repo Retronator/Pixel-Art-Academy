@@ -75,10 +75,10 @@ class PAA.Items.Sync extends LOI.Adventure.Item
   close: ->
     LOI.adventure.deactivateActiveItem()
 
-  onActivate: (finishedDeactivatingCallback) ->
+  onActivate: (finishedActivatingCallback) ->
     # Start enlarging the map.
     @mapTab.map.bigMap true
-    finishedDeactivatingCallback()
+    finishedActivatingCallback()
 
   onDeactivate: (finishedDeactivatingCallback) ->
     # Start minifying the map right away.
@@ -128,7 +128,7 @@ class PAA.Items.Sync extends LOI.Adventure.Item
 
     if @fullscreenOverlay()
       # SYNC is open, close it down.
-      LOI.adventure.deactivateActiveItem()
+      @close()
 
     else
       # SYNC is hidden, start showing the map.
@@ -174,7 +174,7 @@ class PAA.Items.Sync extends LOI.Adventure.Item
       action: => sync.open()
 
     mapAction = =>
-      # TODO: Open sync in map mode.
+      sync.currentTab @mapTab
       sync.open()
 
     commandResponse.onPhrase

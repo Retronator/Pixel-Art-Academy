@@ -18,10 +18,15 @@ class PAA.Items.Sync.Memories extends PAA.Items.Sync.Tab
     @limit = new ReactiveField 20
     @currentOffset = new ReactiveField 0
 
+    # Automatically increase the limit.
     @autorun (computation) =>
-      if @currentOffset() > @limit() - 10
-        Tracker.nonreactive =>
-          @limit @limit() + 10
+      currentOffset = @currentOffset()
+      limit = @limit()
+
+      # Go 10 beyond the current offset.
+      limit += 10 while limit < currentOffset + 10
+
+      @limit limit
 
     @autorun (computation) =>
       return unless characterId = LOI.characterId()
@@ -107,8 +112,44 @@ class PAA.Items.Sync.Memories extends PAA.Items.Sync.Tab
   onClickMemoryPreview: (event) ->
     memory = @currentData()
 
+    # Remember the offset used.
+    lastOffset = @currentOffset()
+
     LOI.adventure.enterMemory memory
     @sync.close()
+
+    # Start listening for the tab command.
+    onKeyDownHandler = (event) =>
+      keyCode = event.which
+      return unless keyCode is AC.Keys.tab
+
+      LOI.adventure.exitMemory()
+
+    $(document).on 'keydown', onKeyDownHandler
+
+    # Start waiting for the memory to be exited.
+    Tracker.autorun (computation) =>
+      return if LOI.adventure.currentMemoryId()
+
+      # Wait also until sync is created again.
+      return unless sync = LOI.adventure.getCurrentThing PAA.Items.Sync
+      return unless sync.isCreated()
+      computation.stop()
+
+      # Stop listening for the tab command.
+      $(document).off 'keydown', onKeyDownHandler
+
+      # Re-open sync to show the memory we exited.
+      sync.currentTab sync.memoriesTab
+      sync.open()
+
+      # We need a nonreactive block to run an autorun inside a stopped autorun.
+      Tracker.nonreactive =>
+        Tracker.autorun (computation) =>
+          return unless sync.memoriesTab.isCreated()
+          computation.stop()
+
+          sync.memoriesTab.currentOffset lastOffset
 
     # Update progress on this memory to indicate it was observed.
     #LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, memory.endTime
