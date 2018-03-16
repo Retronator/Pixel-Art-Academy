@@ -52,6 +52,7 @@ Document.startup ->
       Buy: ['buy', 'purchase']
       Board: ['board', 'take']
       ListenTo: ['listen to', 'hear']
+      Say: ['say']
 
     Pronouns:
       Subjective:

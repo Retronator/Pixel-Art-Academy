@@ -42,7 +42,11 @@ class LOI.Parser.CommandResponse
       # Expand keys and avatars into translated strings.
       for formPart, i in form
         translatedStrings = for alias in formPart
-          if _.isString alias
+          if alias is '""'
+            # We have a quotation, so find them in the command itself.
+            @options.command.command.match(/"[^"]+"/g) or []
+
+          else if _.isString alias
             # We have a phrase key.
             phraseKey = alias
             @options.parser.vocabulary.getPhrases phraseKey

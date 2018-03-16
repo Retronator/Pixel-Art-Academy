@@ -48,6 +48,7 @@ LOI.Parser.Vocabulary.Keys =
     Buy: ''
     Board: ''
     ListenTo: ''
+    Say: ''
 
   Pronouns:
     Subjective:

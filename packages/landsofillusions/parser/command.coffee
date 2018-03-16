@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 
 # Command represents the words and phrases in a user command.
 class LOI.Parser.Command
+  @phrasePattern: /(?:"[^"]+"|\S+)/g
+
   constructor: (@command) ->
     # Make lowercase and normalize (deburr) to basic latin letter.
     @normalizedCommand = @_normalize @command
@@ -11,6 +13,8 @@ class LOI.Parser.Command
     # We generate all possible multiple-word phrases out of the command.
     @phrases = AB.Helpers.generatePhrases
       text: @normalizedCommand
+      # We want to match "strings in quotes" as one word.
+      pattern: @constructor.phrasePattern
 
     console.log "Command has possible phrases", @phrases if LOI.debug
 
@@ -60,7 +64,7 @@ class LOI.Parser.Command
 
     # Remove all prepositions.
     for phrase, i in phrases
-      phraseWords = _.words phrase
+      phraseWords = _.words phrase, @constructor.phrasePattern
       phraseWordsWithoutPrepositions = _.difference phraseWords, @ignorePrepositions
       phrases[i] = phraseWordsWithoutPrepositions.join ' '
 

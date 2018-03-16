@@ -98,3 +98,10 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.ExitLocation, @avatars.memory]
       action: exitAction
+
+    # Create a quoted phrase to catch anything included with the say command.
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.Say, '""']
+      action: (likelyAction) =>
+        console.log "SAY", _.trim likelyAction.translatedForm[1], '"'
+        true
