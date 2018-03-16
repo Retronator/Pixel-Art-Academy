@@ -5,6 +5,7 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Memory.Context extends LOI.Adventure.Context
   @id: -> 'LandsOfIllusions.Memory.Context'
+  @fullName: -> 'memory'
 
   @classes = []
 
@@ -73,3 +74,27 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
     else
       LOI.adventure.exitContext()
+      
+  # Listener
+
+  @avatars: ->
+    # We need to provide the memory avatar since this class could be
+    # inherited from and options.parent will not have the correct avatar.
+    memory: LOI.Memory.Context
+
+  onCommand: (commandResponse) ->
+    return unless LOI.adventure.currentMemoryId()
+
+    exitAction = => LOI.adventure.exitMemory()
+
+    commandResponse.onExactPhrase
+      form: [Vocabulary.Keys.Directions.Back]
+      action: exitAction
+
+    commandResponse.onExactPhrase
+      form: [Vocabulary.Keys.Directions.Out]
+      action: exitAction
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.ExitLocation, @avatars.memory]
+      action: exitAction

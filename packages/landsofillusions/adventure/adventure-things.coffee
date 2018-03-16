@@ -46,10 +46,11 @@ class LOI.Adventure extends LOI.Adventure
         @currentSections()
         @activeScenes()
         @currentLocation()
+        @currentContext()
         @currentPhysicalThings()
       ]
 
-      _.without things, undefined
+      _.without things, undefined, null
 
     @currentInventoryThings = new ComputedField =>
       return unless currentPhysicalThings = @currentPhysicalThings()
