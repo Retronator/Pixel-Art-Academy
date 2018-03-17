@@ -118,8 +118,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # Present the text to the player.
     @narrative.addText "#{start}#{text}#{end}"
 
-    # This is a line node so set that we displayed it.
-    @_nodeDisplayed dialogueLine
+    # This is a line node so set that we displayed it, unless we request immediate continuation without pause.
+    @_nodeDisplayed dialogueLine unless dialogueLine.immediate
 
     dialogueLine.end()
 

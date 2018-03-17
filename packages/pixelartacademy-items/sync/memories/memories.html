@@ -1,7 +1,7 @@
 <template name="PixelArtAcademy.Items.Sync.Memories">
   <div class="pixelartacademy-items-sync-memories">
-    <ul class="memories">
-      {{#if currentCharacter}}
+    {{#if currentCharacter}}
+      <ul class="memories">
         {{#each memories}}
           <li class="memory {{updatedClass}}" {{style memoryStyle}}>
             {{#with memory}}
@@ -14,9 +14,11 @@
             {{/with}}
           </li>
         {{/each}}
-      {{else}}
+      </ul>
+    {{else}}
+      <div class="sync-hint">
         Sync with a character to view their memories.
-      {{/if}}
-    </ul>
+      </div>
+    {{/if}}
   </div>
 </template>

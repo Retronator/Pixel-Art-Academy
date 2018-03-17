@@ -159,6 +159,51 @@ class LOI.Interface.Text extends LOI.Interface
 
     _.every conditions
 
+  commandBeforeCaret: ->
+    # WARNING: The output of this function should be HTML escaped
+    # since the results will be directly injected with triple braces.
+    commandBeforeCaret = @commandInput.commandBeforeCaret()
+
+    @_insertQuotedStringSpans commandBeforeCaret
+
+  commandAfterCaret: ->
+    # WARNING: The output of this function should be HTML escaped
+    # since the results will be directly injected with triple braces.
+    commandBeforeCaret = @commandInput.commandBeforeCaret()
+    commandAfterCaret = @commandInput.commandAfterCaret()
+
+    # See if we have an odd number of quotes in the before part.
+    numberOfQuotesBefore = _.sumBy commandBeforeCaret, (character) => if character is '"' then 1 else 0
+    hangingQuote = numberOfQuotesBefore % 2
+
+    # Close the quotes if all together there are an odd number of quotes.
+    numberOfQuotesAfter = _.sumBy commandAfterCaret, (character) => if character is '"' then 1 else 0
+    if (numberOfQuotesBefore + numberOfQuotesAfter) % 2
+      commandAfterCaret += '"'
+
+    @_insertQuotedStringSpans commandAfterCaret, hangingQuote
+
+  _insertQuotedStringSpans: (string, hangingQuote) ->
+    # NOTE: The output of this function is HTML escaped and can be used directly injected with triple braces.
+    result = ''
+
+    for character in string
+      if character is '"'
+        if hangingQuote
+          # Close the hanging quote.
+          result += "</span>&quot;"
+
+        else
+          # Open the quote span.
+          result += "&quot;<span class='quoted-string'>"
+
+        hangingQuote = not hangingQuote
+
+      else
+        result += AM.HtmlHelper.escapeText character
+
+    result
+
   events: ->
     super.concat
       'wheel': @onWheel

@@ -96,9 +96,13 @@ class LOI.Interface.Text extends LOI.Interface.Text
   _executeCommand: (command) ->
     return unless command.length
 
+    # Add closing quote if needed.
+    numberOfQuotes = _.sumBy command, (character) => if character is '"' then 1 else 0
+    command += '"' if numberOfQuotes % 2
+
     @narrative.addText "> #{command.toUpperCase()}"
     LOI.adventure.parser.parse command
-    @commandInput.clear()
+    @commandInput.confirm()
 
   onCommandInputChanged: ->
     # Scroll to bottom to reveal new command.

@@ -62,7 +62,7 @@
                   {{#if hoveredCommand}}
                     {{hoveredCommand}}
                   {{else}}
-                   {{commandInput.command}}<span class="caret {{caretIdleClass}}">■</span>
+                    {{{commandBeforeCaret}}}<span class="caret {{caretIdleClass}}">■</span>{{{commandAfterCaret}}}
                  {{/if}}
                 {{/if}}
                 <input class="dummy-input" type="text"/>

@@ -24,3 +24,8 @@ class LOI.Memory.Progress extends AM.Document
   # Subscriptions
 
   @forCharacter: @subscription 'forCharacter'
+
+  getTimeForMemoryId: (memoryId) ->
+    observedMemory = _.find @observedMemories, (observedMemory) -> observedMemory.memory._id is memoryId
+
+    observedMemory?.time

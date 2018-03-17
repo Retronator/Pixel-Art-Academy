@@ -19,9 +19,13 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry.Context extends LOI.Memory.Con
   onCreated: ->
     super
 
-    @entry = new ComputedField =>
+    # Isolate entry ID so that when memory changes, we don't recompute it.
+    @entryId = new ComputedField =>
       return unless memory = LOI.adventure.currentMemory()
-      entryId = memory.journalEntry[0]._id
+      memory.journalEntry[0]._id
+
+    @entry = new ComputedField =>
+      return unless entryId = @entryId()
 
       # Subscribe and retrieve the entry .
       PAA.Practice.Journal.Entry.forId.subscribe @, entryId

@@ -7,3 +7,4 @@ class Script.Nodes.DialogueLine extends Script.Node
     
     @actor = options.actor
     @line = options.line
+    @immediate = options.immediate

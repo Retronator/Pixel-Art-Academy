@@ -1,10 +1,32 @@
 AC = Artificial.Control
-AM = Artificial.Mirage
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Interface.Components.CommandInput
   constructor: (@options) ->
     @command = new ReactiveField ""
+
+    # How long is the string before the caret position.
+    @caretPosition = new ReactiveField 0
+
+    @storedCommandHistory = new ReactiveField []
+    @persistHistoryAutorun = AM.PersistentStorage.persist
+      storageKey: 'LandsOfIllusions.Interface.Components.CommandInput.commandHistory'
+      field: @storedCommandHistory
+
+    # Start with the stored history, but at a new index.
+    @commandHistory = @storedCommandHistory()
+    @commandHistoryIndex = @commandHistory.length
+    @confirmedHistoryLength = @commandHistory.length
+
+    @updateHistoryAutorun = Tracker.autorun (computation) =>
+      # React to command changes.
+      command = @command()
+
+      # Only ever update the command after confirmed commands.
+      return if @commandHistoryIndex < @confirmedHistoryLength
+
+      @commandHistory[@commandHistoryIndex] = command
 
     # Capture key events.
     $(document).on 'keypress.commandInput', (event) =>
@@ -28,8 +50,34 @@ class LOI.Interface.Components.CommandInput
     # Remove key events.
     $(document).off('.commandInput')
 
+    @updateHistoryAutorun.stop()
+    @persistHistoryAutorun.stop()
+
+  commandBeforeCaret: ->
+    @command().substring 0, @caretPosition()
+
+  commandAfterCaret: ->
+    @command().substring @caretPosition()
+
   clear: ->
     @command ""
+    @caretPosition 0
+
+  confirm: ->
+    # Make sure the command to be stored into history matches what is in the command.
+    @commandHistoryIndex = @confirmedHistoryLength
+    @commandHistory[@commandHistoryIndex] = @command()
+
+    # Update store history.
+    @confirmedHistoryLength++
+    confirmedHistory = @commandHistory[...@confirmedHistoryLength]
+
+    # Store only the last 10 commands.
+    @storedCommandHistory confirmedHistory[-10..]
+
+    # Start new history entry.
+    @commandHistoryIndex++
+    @clear()
 
   _notIdle: ->
     @idle false
@@ -52,15 +100,20 @@ class LOI.Interface.Components.CommandInput
 
     character = String.fromCharCode charCode
 
-    command = @command()
-    newCommand = "#{command}#{character}"
+    newCommand = "#{@commandBeforeCaret()}#{character}#{@commandAfterCaret()}"
 
-    @command newCommand
-
-    @_notIdle()
+    @_updateCommand newCommand
+    @caretPosition @caretPosition() + 1
 
     # Don't let space scroll.
     return false if event.which is AC.Keys.space
+
+  _updateCommand: (newCommand) ->
+    # Always update the new command.
+    @commandHistoryIndex = @confirmedHistoryLength
+    @command newCommand
+
+    @_notIdle()
 
   onKeyDown: (event) ->
     interfaceActive = @options.interface.active()
@@ -76,16 +129,42 @@ class LOI.Interface.Components.CommandInput
       when AC.Keys.backspace
         event.preventDefault()
 
-        command = @command()
-        return unless command.length
+        commandBeforeCaret = @commandBeforeCaret()
+        return unless commandBeforeCaret.length
 
-        newCommand = command.substring 0, command.length - 1
-        @command newCommand
+        newCommand = "#{commandBeforeCaret.substring 0, commandBeforeCaret.length - 1}#{@commandAfterCaret()}"
 
-        @_notIdle()
+        @_updateCommand newCommand
+        @caretPosition @caretPosition() - 1
 
       when AC.Keys.enter
         @options?.onEnter?()
 
+      when AC.Keys.left
+        @caretPosition Math.max 0, @caretPosition() - 1
+        @_notIdle()
+
+      when AC.Keys.right
+        @caretPosition Math.min @command().length, @caretPosition() + 1
+        @_notIdle()
+
+      when AC.Keys.up
+        @_changeHistoryIndex Math.max 0, @commandHistoryIndex - 1
+
+      when AC.Keys.down
+        # Don't allow to go further down than an empty string.
+        @_changeHistoryIndex @commandHistoryIndex + 1 if @command().length
+
     # Trigger event for any key down.
     @options?.onKeyDown?()
+
+  _changeHistoryIndex: (newIndex) ->
+    return if @commandHistoryIndex is newIndex
+
+    @commandHistoryIndex = newIndex
+    newCommand = @commandHistory[@commandHistoryIndex] or ""
+
+    @command newCommand
+    @caretPosition newCommand.length
+
+    @_notIdle()

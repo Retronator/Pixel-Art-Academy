@@ -36,8 +36,15 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
     options.delay ?= (1 + Math.random()) * 60 * 1000
 
     @_nextMessageTimeout = Meteor.setTimeout =>
-      # Don't play the message if the user is busy doing something.
-      if LOI.adventure.interface.busy()
+      skipPlayConditions = [
+        # Don't play the message if the user is busy doing something.
+        LOI.adventure.interface.busy()
+
+        # Don't play the message if we're in a memory.
+        LOI.adventure.currentMemoryId()
+      ]
+      
+      if _.some skipPlayConditions
         # Retry in 10 seconds.
         @_scheduleNextMessage delay: 10000
         return
