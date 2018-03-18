@@ -47,11 +47,20 @@ class LOI.Character.Part
     # Part is ready when its data location is ready.
     @options.dataLocation.ready()
 
-  createRenderer: (engineOptions, options = {}) ->
+  # Returns a renderer singleton that can be used to render this part.
+  getRenderer: ->
+    # Instantiate the renderer on first call.
+    @_rendererSingleton ?= @createRenderer()
+
+    # Simply return the renderer.
+    @_rendererSingleton
+
+  # Creates a new renderer hierarchy with given modifier options.
+  createRenderer: (options = {}) ->
     # Override to provide this part's renderer.
     options = _.extend {}, options, part: @
-    
-    @options.renderer.create options, engineOptions
+
+    @options.renderer.create options
 
   ancestorPartOfType: (typeTemplate) ->
     targetType = typeTemplate.options.type

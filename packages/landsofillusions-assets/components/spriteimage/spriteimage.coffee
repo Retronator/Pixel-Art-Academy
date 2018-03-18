@@ -20,7 +20,6 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
 
     @sprite = new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
-      lightDirection: @options.lightDirection
 
   onRendered: ->
     super
@@ -45,7 +44,7 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
       context.clearRect 0, 0, canvas.width, canvas.height
 
       context.save()
-      @sprite.drawToContext context
+      @sprite.drawToContext context, lightDirection: @options.lightDirection
       context.restore()
 
   canvasStyle: ->

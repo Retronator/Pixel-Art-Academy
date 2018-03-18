@@ -2,11 +2,11 @@ LOI = LandsOfIllusions
 
 # This is a default renderer that simply renders all the parts found in the properties.
 class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Renderers.Renderer
-  constructor: ->
+  constructor: (@options, initialize) ->
     super
 
-    # Prepare renderer only when it has been created with engine options passed in.
-    return unless @engineOptions
+    # Prepare renderer only when it has been asked to initialize.
+    return unless initialize
 
     propertyRendererOptions =
       flippedHorizontal: @options.flippedHorizontal
@@ -18,12 +18,12 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
 
       for propertyName, property of @options.part.properties
         if property instanceof LOI.Character.Part.Property.OneOf
-          renderer = property.part.createRenderer @engineOptions, propertyRendererOptions
+          renderer = property.part.createRenderer propertyRendererOptions
           renderers.push renderer if renderer
 
         else if property instanceof LOI.Character.Part.Property.Array
           for part in property.parts()
-            renderer = part.createRenderer @engineOptions, propertyRendererOptions
+            renderer = part.createRenderer propertyRendererOptions
             renderers.push renderer if renderer
 
       renderers

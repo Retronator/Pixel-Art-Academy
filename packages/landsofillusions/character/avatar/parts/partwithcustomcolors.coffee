@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Parts.PartWithCustomColors extends LOI.Character.Part
-  createRenderer: (engineOptions, options = {}) ->
+  createRenderer: (options = {}) ->
     # We have to clone the options because the parent sends the same object to multiple parts.
     options = _.clone options
 
@@ -33,4 +33,4 @@ class LOI.Character.Avatar.Parts.PartWithCustomColors extends LOI.Character.Part
 
       materialsData
 
-    super engineOptions, options
+    super options

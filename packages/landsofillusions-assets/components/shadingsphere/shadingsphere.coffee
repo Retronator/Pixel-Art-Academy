@@ -173,6 +173,7 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
       grid: false
       cursor: false
       initialCameraScale: @options.initialCameraScale
+      lightDirection: @options.lightDirection
       drawComponents: => [
         sphereSprite
         circleSprite

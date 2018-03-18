@@ -1,15 +1,15 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Renderers.Renderer
-  constructor: ->
+  constructor: (@options, initialize) ->
     super
 
-    # Prepare renderer only when it has been created with engine options passed in.
-    return unless @engineOptions
-    
-    bodyRenderer = @options.humanAvatar.body.createRenderer @engineOptions
+    # Prepare renderer only when it has been asked to initialize.
+    return unless initialize
 
-    outfitRenderer = @options.humanAvatar.outfit.createRenderer @engineOptions,
+    bodyRenderer = @options.humanAvatar.body.createRenderer()
+
+    outfitRenderer = @options.humanAvatar.outfit.createRenderer
       landmarksSource: bodyRenderer
 
     @renderers = [bodyRenderer, outfitRenderer]
@@ -23,5 +23,5 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
 
     for renderer in @renderers
       context.save()
-      renderer.drawToContext context
+      renderer.drawToContext context, options
       context.restore()

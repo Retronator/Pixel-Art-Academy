@@ -4,7 +4,7 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
   _createRenderers: ->
     # We create hair-behind renderers separately, so they won't render together with the rest of the head.
     @hairBehindRenderers = for part in @options.part.properties.hairBehind.parts()
-      part.createRenderer @engineOptions
+      part.createRenderer()
 
     # Create the rest of the renderers normally.
     @neckRenderer = @_createRenderer 'neck'

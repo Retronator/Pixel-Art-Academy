@@ -13,7 +13,7 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
 
     super options
 
-  createRenderer: (engineOptions, options = {}) ->
+  createRenderer: (options = {}) ->
     # Override to provide this part's renderer.
     options = _.extend {}, options,
       part: @
@@ -35,4 +35,4 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
 
           materialsData
 
-    @options.renderer.create options, engineOptions
+    @options.renderer.create options
