@@ -1,11 +1,11 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Renderers.Renderer
-  constructor: ->
+  constructor: (@options, initialize) ->
     super
 
-    # Prepare renderer only when it has been created with engine options passed in.
-    return unless @engineOptions
+    # Prepare renderer only when it has been asked to initialize.
+    return unless initialize
 
     @renderers = []
     @_createRenderers()
@@ -41,14 +41,14 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       options
 
     if property.part
-      renderer = property.part.createRenderer @engineOptions, propertyRendererOptions
+      renderer = property.part.createRenderer propertyRendererOptions
       @renderers.push renderer
 
       renderer
 
     else if property.parts
       for part in property.parts()
-        renderer = part.createRenderer @engineOptions, propertyRendererOptions
+        renderer = part.createRenderer propertyRendererOptions
         @renderers.push renderer
 
         renderer
@@ -114,5 +114,5 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     if renderer._flipHorizontal
       context.scale -1, 1
 
-    renderer.drawToContext context
+    renderer.drawToContext context, options
     context.restore()

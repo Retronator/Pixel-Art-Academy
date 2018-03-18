@@ -13,23 +13,40 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
       @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
 
-      @renderOptions =
-        lightDirection: @lightDirection
-
-      @renderer = new ComputedField =>
-        return unless part = @data()
-
-        part.createRenderer @renderOptions
-
       @display = @callAncestorWith 'display'
 
       @$canvas = @$('canvas')
       @canvas = @$canvas[0]
 
+      @$window = $(window)
+
       @context = @canvas.getContext '2d'
 
-      @autorun =>
-        unless renderer = @renderer()
+      @inViewport = new ReactiveField false
+
+      @updateInViewport = =>
+        viewport = @display.viewport()
+
+        canvasDimensions = @$canvas.offset()
+        canvasDimensions.top -= @$window.scrollTop()
+        canvasDimensions.bottom = canvasDimensions.top + @$canvas.height()
+
+        # See if the canvas is anywhere in the viewport + one viewport height before/after.
+        viewportHeight = viewport.viewportBounds.height()
+
+        @inViewport canvasDimensions.top < viewport.viewportBounds.bottom() + viewportHeight and canvasDimensions.bottom > viewport.viewportBounds.top() - viewportHeight
+
+      @autorun (computation) =>
+        @updateInViewport()
+
+      $(window).on 'scroll', @updateInViewport
+
+      @autorun (computation) =>
+        return unless @inViewport()
+
+        part = @data()
+        
+        unless renderer = part?.getRenderer()
           # There's no renderer so just clear whatever is drawn.
           @context.setTransform 1, 0, 0, 1, 0, 0
           @context.clearRect 0, 0, @canvas.width, @canvas.height
@@ -46,9 +63,16 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         @context.save()
         
         # Draw and pass the root part in options so we can do different rendering paths based on it.
-        renderer.drawToContext @context, rootPart: renderer.options.part
-        
+        renderer.drawToContext @context,
+          rootPart: renderer.options.part
+          lightDirection: @lightDirection
+
         @context.restore()
+
+    onDestroyed: ->
+      super
+
+      $(window).off 'scroll', @updateInViewport
 
     events: ->
       super.concat
