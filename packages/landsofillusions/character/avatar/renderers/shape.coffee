@@ -1,11 +1,11 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderers.Renderer
-  constructor: ->
+  constructor: (@options, initialize) ->
     super
 
-    # Prepare renderer only when it has been created with engine options passed in.
-    return unless @engineOptions
+    # Prepare renderer only when it has been asked to initialize.
+    return unless initialize
 
     # Shape renderer prepares all sprite directions and draws the one needed by the engine.
     @frontSpriteData = new ComputedField =>
@@ -15,7 +15,6 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
 
     @frontSprite = new LOI.Assets.Engine.Sprite
       spriteData: @frontSpriteData
-      lightDirection: @engineOptions.lightDirection
       materialsData: @options.materialsData
       flippedHorizontal: @options.flippedHorizontal
 

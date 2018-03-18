@@ -53,12 +53,12 @@ class LOI.Assets.SpriteEditor extends AM.Component
     # Initialize components.
     @sprite new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
-      lightDirection: @lightDirection
       visualizeNormals: @paintNormals
 
     @pixelCanvas new LOI.Assets.Components.PixelCanvas
       initialCameraScale: 8
       activeTool: @activeTool
+      lightDirection: @lightDirection
       drawComponents: => [
         @sprite()
         @landmarks()
