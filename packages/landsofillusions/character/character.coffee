@@ -69,7 +69,8 @@ class LOI.Character extends AM.Document
 
   @instances = {}
   
-  @getInstance: (id) ->
+  @getInstance: (idOrDocument) ->
+    id = idOrDocument?._id or idOrDocument
     return unless id
 
     unless @instances[id]
@@ -77,14 +78,3 @@ class LOI.Character extends AM.Document
         @instances[id] = new @Instance id
 
     @instances[id]
-
-  constructor: ->
-    super
-
-    # Create an avatar object so we can use its methods.
-    @_avatar = new @constructor.Avatar @
-
-  # Avatar pass-through methods
-
-  name: -> @_avatar.fullName()
-  colorObject: (relativeShade) -> @_avatar.colorObject relativeShade

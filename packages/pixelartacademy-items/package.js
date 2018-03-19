@@ -30,7 +30,11 @@ Package.onUse(function(api) {
 
   api.addComponent('sync..');
   api.addFile('sync/sync-tab');
+
   api.addComponent('sync/map..');
+
   api.addComponent('sync/memories..');
   api.addComponent('sync/memories/contexts/journalentry..');
+
+  api.addComponent('sync/immersion..');
 });

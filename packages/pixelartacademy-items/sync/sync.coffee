@@ -32,10 +32,12 @@ class PAA.Items.Sync extends LOI.Adventure.Item
 
     @mapTab = new PAA.Items.Sync.Map @
     @memoriesTab = new PAA.Items.Sync.Memories @
+    @immersionTab = new PAA.Items.Sync.Immersion @
 
     @tabs = [
       @mapTab
       @memoriesTab
+      @immersionTab
     ]
 
     @tabsByUrl = {}

@@ -17,4 +17,5 @@ class C3.Inventory extends LOI.Adventure.Scene
   things: ->
     [
       HQ.Items.OperatorLink
+      PAA.Items.Sync
     ]

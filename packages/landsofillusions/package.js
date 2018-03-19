@@ -214,6 +214,7 @@ Package.onUse(function(api) {
   api.addFile('adventure/adventure-listeners');
   api.addFile('adventure/adventure-time');
   api.addFile('adventure/adventure-dialogs');
+  api.addFile('adventure/adventure-assets');
 
   // Initalization gets included last because it does component registering as the last child in the chain.
   api.addFile('adventure/adventure-initialization');
