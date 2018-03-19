@@ -10,7 +10,7 @@ class C3.RemoteControl extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Character Construction Center Remote Control"
+  @fullName: -> "Cyborg Construction Center Remote Control"
   @shortName: -> "remote control"
   @description: ->
     "

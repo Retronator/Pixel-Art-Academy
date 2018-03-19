@@ -10,7 +10,7 @@ class C3.Behavior extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Character Construction Center Behavior Setup"
+  @fullName: -> "Cyborg Construction Center Behavior Setup"
   @shortName: -> "Behavior"
   @description: ->
     "

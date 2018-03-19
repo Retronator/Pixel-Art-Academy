@@ -11,7 +11,7 @@ class C3.Stasis extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Character Construction Center Stasis Chamber"
+  @fullName: -> "Cyborg Construction Center Stasis Chamber"
   @shortName: -> "Stasis"
   @description: ->
     "

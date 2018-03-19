@@ -28,7 +28,3 @@ class LOI.Construct.Loading extends LOI.Adventure.Location
     super
 
     $('body').removeClass('construct')
-
-  things: -> [
-    LOI.Construct.Loading.TV
-  ]

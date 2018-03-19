@@ -68,6 +68,12 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/properties/string/string');
   api.addComponent('design/terminal/properties/integer/integer');
 
+  api.addThing('service..');
+  api.addComponent('service/terminal..');
+  api.addComponent('service/terminal/screens/mainmenu..');
+  api.addComponent('service/terminal/screens/character..');
+  api.addComponent('service/terminal/screens/modelselection..');
+
   api.addFile('hallway/hallway');
   api.addThing('lobby/lobby');
 

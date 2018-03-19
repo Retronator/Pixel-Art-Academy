@@ -10,7 +10,7 @@ class C3.Design extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Character Construction Center Design Control"
+  @fullName: -> "Cyborg Construction Center Design Control"
   @shortName: -> "Design"
   @description: ->
     "

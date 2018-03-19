@@ -10,14 +10,15 @@ class C3.Lobby extends LOI.Adventure.Location
 
   @version: -> '0.0.1'
 
-  @fullName: -> "Character Construction Center lobby"
+  @fullName: -> "Cyborg Construction Center lobby"
   @shortName: -> "lobby"
   @description: ->
     "
       The lobby of the Cyborg Construction Center, or C3 for short, is spacious and emits a high-tech vibe.
-      Scientists in their white coats walk around with determination.
-      Design Control with Manufacturing lies in the north.
-      A hallway to the east can take you to Behavior Setup and the Stasis Chamber.
+      Scientists in their white coats walk around with determination. 
+      Customer service area continues to the east.
+      Behind the receptionist on the north side lies a restricted area with Design Control and Manufacturing,
+      as well a hallway that leads further into the facility northeast.
     "
 
   @defaultScriptUrl: -> 'retronator_sanfrancisco-c3/lobby/lobby.script'
@@ -32,7 +33,8 @@ class C3.Lobby extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.West}": SanFrancisco.Soma.C3
     "#{Vocabulary.Keys.Directions.Out}": SanFrancisco.Soma.C3
     "#{Vocabulary.Keys.Directions.North}": C3.Design
-    "#{Vocabulary.Keys.Directions.East}": C3.Hallway
+    "#{Vocabulary.Keys.Directions.Northeast}": C3.Hallway
+    "#{Vocabulary.Keys.Directions.East}": C3.Service
 
   # Script
   

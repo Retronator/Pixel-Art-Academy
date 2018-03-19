@@ -1,0 +1,34 @@
+# SanFrancisco.C3.Service
+
+## Sync
+
+> Moments after you placed your order, Panzer calls you over the neural link.
+ 
+operator: Hey, it's Panzer.
+
+* Hey! -> [Confirmation]
+* I was about to call you.
+
+operator:
+  Yes, I can see why.
+
+## Confirmation
+
+operator:
+  I just got confirmation of a new agent being linked to our system.
+  It will take some time for us to set up the agent's environment.
+
+* No problem, I'm very excited though!
+* Understood.
+
+operator:
+  Why don't you head back to Retronator HQ and meet me in the Lands of Illusions center.
+  We'll go over the details of what happens next.
+
+* Roger that.
+* See you soon!
+
+operator:
+  Good. Panzer out.
+
+## End
