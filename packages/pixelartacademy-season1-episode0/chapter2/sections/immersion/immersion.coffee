@@ -89,7 +89,7 @@ class C2.Immersion extends LOI.Adventure.Section
   onCommand: (commandResponse) ->
     section = @options.parent
 
-    sync = LOI.adventure.getCurrentThing PAA.Items.Sync
+    sync = LOI.adventure.getCurrentThing LOI.Items.Sync
     timeToImmersion = section.timeToImmersion()
 
     if sync and timeToImmersion

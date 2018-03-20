@@ -1,0 +1,12 @@
+<template name="LandsOfIllusions.Items.Map">
+  <div class="landsofillusions-items-map">
+    {{> Render map}}
+    {{#if fullscreenOverlay}}
+      <div class="fullscreen">
+        {{> LandsOfIllusions.Components.BackButton args backButtonCallback}}
+        {{#LandsOfIllusions.Components.Overlay}}
+        {{/LandsOfIllusions.Components.Overlay}}
+      </div>
+    {{/if}}
+  </div>
+</template>

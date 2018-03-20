@@ -21,7 +21,11 @@ Package.onUse(function(api) {
 
   api.addFile('episode0');
 
-  // Start
+  // Scenes
+
+  api.addFile('scenes/map');
+
+  // Start section
 
   api.addFile('start/start');
 

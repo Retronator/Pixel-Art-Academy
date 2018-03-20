@@ -16,7 +16,7 @@ class E1.Inventory extends LOI.Adventure.Scene
   things: ->
     items = [
       HQ.Items.OperatorLink
-      PAA.Items.Sync
+      LOI.Items.Sync
     ]
 
     for itemClass in [PixelArtAcademy.PixelBoy]

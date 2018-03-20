@@ -17,24 +17,7 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('items');
-
-  api.addFile('components..');
-  api.addComponent('components/map..');
-  api.addComponent('components/map/node');
-
+  
   api.addThing('bottle..');
   api.addFile('bottle/scene');
-
-  api.addComponent('map..');
-  api.addFile('map/scene');
-
-  api.addComponent('sync..');
-  api.addFile('sync/sync-tab');
-
-  api.addComponent('sync/map..');
-
-  api.addComponent('sync/memories..');
-  api.addComponent('sync/memories/contexts/journalentry..');
-
-  api.addComponent('sync/immersion..');
 });

@@ -1,0 +1,45 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-items-sync-memories
+  .sync-hint
+    position absolute
+    top calc(50% - 0.5em)
+    left 0
+    right 0
+    text-align center
+
+  .memories
+    absolute-cover()
+    list-style none
+    padding 0
+    perspective 20rem
+
+    .memory
+      absolute-cover()
+      top 50rem
+      transition transform 0.2s
+
+      .preview
+        position absolute
+        left 0
+        bottom 10rem
+        width 120rem
+        height 160rem
+        border 1rem solid atariCyan(4)
+        background atariGrey(0)
+        cursor pointer
+
+        &:hover
+          border-color atariCyan(6)
+          background atariCyan(0)
+
+      .end-date
+        position absolute
+        bottom 10rem
+        left 170rem
+        daily()
+
+      &.updated
+        .preview
+          border-color atariAqua(7)
+          box-shadow 0 0 30rem rgba(atariGrey(7), 0.5)
