@@ -1,5 +1,5 @@
 <template name="LandsOfIllusions.Items.Sync">
-  <div class="landsofillusions-items-sync">
+  <div class="landsofillusions-items-sync {{visibleClass}}">
     <div class="map-tab {{mapTabVisibleClass}}">
       {{> Render mapTab}}
     </div>
@@ -23,4 +23,8 @@
       </div>
     {{/if}}
   </div>
+</template>
+
+<template name="LandsOfIllusions.Items.Sync.FadeCover">
+  <div class="landsofillusions-items-sync-fadecover {{visibleClass}}"></div>
 </template>

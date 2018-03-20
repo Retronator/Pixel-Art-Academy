@@ -1,4 +1,5 @@
 AB = Artificial.Base
+AM = Artificial.Mirage
 AC = Artificial.Control
 LOI = LandsOfIllusions
 
@@ -28,6 +29,8 @@ class LOI.Items.Sync extends LOI.Adventure.Item
 
   onCreated: ->
     super
+
+    @fadeOut = new ReactiveField false
 
     @mapTab = new LOI.Items.Sync.Map @
     @memoriesTab = new LOI.Items.Sync.Memories @
@@ -85,13 +88,28 @@ class LOI.Items.Sync extends LOI.Adventure.Item
     # Start minifying the map right away.
     @mapTab.map.bigMap false
 
+    if @_fadeCover
+      @fadeOut true
+      @_fadeCover.visible false
+
     Meteor.setTimeout =>
       # We only need to jump out of fullscreen and leave the map active.
       @fullscreenOverlay false
       @mapTab.map.showUserInterface false
       @activatedState LOI.Adventure.Item.activatedStates.Activated
+
+      if @_fadeCover
+        LOI.adventure.removeModalDialog @_fadeCover
+        @_fadeCover = null
+        @fadeOut false
     ,
       500
+
+  fadeToWhite: ->
+    @_fadeCover = new @constructor.FadeCover
+
+    LOI.adventure.addModalDialog
+      dialog: @_fadeCover
 
   mapTabVisibleClass: ->
     # We need to render the map when we're on its tab or when we're not in overlay.
@@ -104,6 +122,10 @@ class LOI.Items.Sync extends LOI.Adventure.Item
     tab = @currentData()
 
     'active' if @currentTab() is tab
+
+  visibleClass: ->
+    # The whole sync interface is always visible unless we're fading out the white cover.
+    'visible' unless @fadeOut()
 
   events: ->
     super.concat
@@ -186,6 +208,26 @@ class LOI.Items.Sync extends LOI.Adventure.Item
     commandResponse.onExactPhrase
       form: [@avatars.map]
       action: mapAction
+
+  class @FadeCover extends AM.Component
+    @id: -> 'LandsOfIllusions.Items.Sync.FadeCover'
+    @register @id()
+
+    onCreated: ->
+      super
+
+      @visible = new ReactiveField false
+
+    onRendered: ->
+      super
+
+      Meteor.setTimeout =>
+        @visible true
+      ,
+        100
+
+    visibleClass: ->
+      'visible' if @visible()
 
   # Routing
 

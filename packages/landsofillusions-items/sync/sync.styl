@@ -2,6 +2,10 @@
 
 .landsofillusions-items-sync
   color atariGrey(5)
+  visibility hidden
+
+  &.visible
+    visibility visible
 
   .map-tab
     display none
@@ -44,3 +48,13 @@
 
     .background
       background-image image('/pixelartacademy/items/sync/background.gif')
+
+.landsofillusions-items-sync-fadecover
+  fixed-cover()
+  background rgba(255, 255, 255, 0)
+  transition background 0.5s
+  pointer-events none
+
+  &.visible
+    background rgba(255, 255, 255, 1)
+    transition background 0.9s

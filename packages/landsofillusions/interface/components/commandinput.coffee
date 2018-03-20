@@ -79,6 +79,12 @@ class LOI.Interface.Components.CommandInput
     @commandHistoryIndex++
     @clear()
 
+  addText: (text) ->
+    newCommand = "#{@commandBeforeCaret()}#{text}#{@commandAfterCaret()}"
+
+    @_updateCommand newCommand
+    @caretPosition @caretPosition() + text.length
+
   _notIdle: ->
     @idle false
     @_resumeIdle()
@@ -97,6 +103,9 @@ class LOI.Interface.Components.CommandInput
     # Ignore control characters.
     charCode = event.which
     return if charCode <= AC.Keys.lastControlCharacter
+
+    # Ignore keyboard shortcuts.
+    return if event.metaKey or event.ctrlKey
 
     character = String.fromCharCode charCode
 
@@ -154,6 +163,11 @@ class LOI.Interface.Components.CommandInput
       when AC.Keys.down
         # Don't allow to go further down than an empty string.
         @_changeHistoryIndex @commandHistoryIndex + 1 if @command().length
+
+      when AC.Keys.v
+        if event.metaKey or event.ctrlKey
+          # This is a paste operation.
+          @options.interface.capturePaste (text) => @addText text
 
     # Trigger event for any key down.
     @options?.onKeyDown?()

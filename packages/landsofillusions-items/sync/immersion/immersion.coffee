@@ -15,8 +15,6 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
   onCreated: ->
     super
 
-    @fadeVisible = new ReactiveField false
-  
     # Subscribe to user's activated characters.
     @_charactersSubscription = LOI.Character.activatedForCurrentUser.subscribe()
   
@@ -67,9 +65,6 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
   showDisconnect: ->
     LOI.characterId() or LOI.adventure.currentLocationId() is LOI.Construct.Loading.id()
 
-  fadeVisibleClass: ->
-    'visible' if @fadeVisible()
-
   events: ->
     super.concat
       'click .character': @onClickCharacter
@@ -81,25 +76,27 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
   onClickCharacter: (event) ->
     characterInstance = @currentData()
 
-    @fadeVisible true
+    @sync.fadeToWhite()
 
     Meteor.setTimeout =>
       LOI.adventure.loadCharacter characterInstance._id
+
       @sync.close()
     ,
       1000
     
   onClickLandsOfIllusions: (event) ->
-    @fadeVisible true
+    @sync.fadeToWhite()
 
     Meteor.setTimeout =>
       LOI.adventure.loadConstruct()
+
       @sync.close()
     ,
       1000
 
   onClickDisconnect: (event) ->
-    @fadeVisible true
+    @sync.fadeToWhite()
 
     Meteor.setTimeout =>
       if LOI.characterId()

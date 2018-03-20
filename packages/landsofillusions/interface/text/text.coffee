@@ -187,6 +187,9 @@ class LOI.Interface.Text extends LOI.Interface
     # NOTE: The output of this function is HTML escaped and can be used directly injected with triple braces.
     result = ''
 
+    # Open span at the start since we need to return self-contained valid html.
+    result += "<span class='quoted-string'>" if hangingQuote
+
     for character in string
       if character is '"'
         if hangingQuote
@@ -202,7 +205,20 @@ class LOI.Interface.Text extends LOI.Interface
       else
         result += AM.HtmlHelper.escapeText character
 
+    # Close span at the end since we need to return self-contained valid html.
+    result += "</span>" if hangingQuote
+
     result
+
+  capturePaste: (handler) ->
+    @_pasteCaptureHandler = handler
+    @$('.dummy-input').focus()
+
+    # Remove it if it doesn't get immediately handled (for example, if dummy input was not focused).
+    Meteor.setTimeout =>
+      @_pasteCaptureHandler = null
+    ,
+      100
 
   events: ->
     super.concat
@@ -216,6 +232,7 @@ class LOI.Interface.Text extends LOI.Interface
       'click .exits .exit .name': @onClickExit
       'mouseenter .text-interface': @onMouseEnterTextInterface
       'mouseleave .text-interface': @onMouseLeaveTextInterface
+      'input .dummy-input': @onInputDummyInput
 
   onMouseEnterCommand: (event) ->
     @hoveredCommand $(event.target).attr 'title'
@@ -280,3 +297,15 @@ class LOI.Interface.Text extends LOI.Interface
 
   onMouseLeaveTextInterface: (event) ->
     Meteor.clearInterval @_crossHairAnimation
+
+  onInputDummyInput: (event) ->
+    $dummyInput = $(event.target)
+    value = $dummyInput.val()
+
+    if @_pasteCaptureHandler
+      # Report the pasted text to the caller.
+      @_pasteCaptureHandler value
+      @_pasteCaptureHandler = null
+
+    # Clear the content so we don't contaminate further pastes.
+    $dummyInput.val ''

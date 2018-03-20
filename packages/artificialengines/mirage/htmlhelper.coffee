@@ -7,3 +7,7 @@ class AM.HtmlHelper
     div = document.createElement 'div'
     div.appendChild document.createTextNode text
     div.innerHTML
+
+  @unescapeText: (text) ->
+    document = new DOMParser().parseFromString text, 'text/html'
+    document.documentElement.textContent
