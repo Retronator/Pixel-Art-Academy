@@ -1,0 +1,82 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-yearbook-front
+  position absolute
+  top 5rem
+  right 5rem
+  width 361rem
+  height 264rem
+  visibility hidden
+  background-image image('/pixelartacademy/pixelboy/apps/yearbook/book-front.png')
+
+  &.visible
+    visibility visible
+
+  .page
+    position absolute
+    left 200rem
+    top 13rem
+    width 131rem
+    height 214rem
+    color atariGrey(1)
+    transform skew(0, 0.5deg)
+
+    .header
+      academy()
+      text-align center
+      line-height 11rem
+
+      .title
+        margin-top 12rem
+        text-transform uppercase
+
+    .contents
+      list-style none
+      padding 0
+      margin-top 18rem
+
+      .section
+        margin-bottom 10rem
+        cursor pointer
+
+        .main
+          academy()
+          display flex
+
+          .leader
+            position relative
+            top -1rem
+            flex-grow 1
+            border-bottom 1rem dotted atariGrey(1)
+
+          .page-number
+            margin-left 3rem
+
+        .extra
+          margin-top 3rem
+
+  .edit-profile
+    position absolute
+    top 30rem
+    right 339rem
+    width 10rem
+    height 160rem
+    border-left 1rem solid atariGrey(3)
+    background atariGrey(5)
+    border-right 1rem solid atariGrey(4)
+    box-shadow -2rem 1rem 0 rgba(atariGrey(0), 0.1)
+    cursor pointer
+    transition width 0.1s
+
+    .caption
+      position absolute
+      top 5rem
+      right 100%
+      width 100rem
+      transform rotate(-90deg)
+      transform-origin top right
+      text-align right
+      color atariGrey(3)
+
+    &:hover
+      width 12rem

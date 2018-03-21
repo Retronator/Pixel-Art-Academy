@@ -46,3 +46,12 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     @maxHeight null
 
     @resizable true
+    
+  setFixedPixelBoySize: (width, height) ->
+    @minWidth width
+    @minHeight height
+
+    @maxWidth width
+    @maxHeight height
+
+    @resizable false
