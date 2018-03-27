@@ -192,4 +192,4 @@ class LOI.Assets.Engine.Sprite
         @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
         @_imageData.data[pixelIndex + 3] = 255
 
-        @_context.putImageData @_imageData, 0, 0
+    @_context.putImageData @_imageData, 0, 0
