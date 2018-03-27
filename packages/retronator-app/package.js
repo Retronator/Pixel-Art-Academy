@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:app',
-  version: '0.29.3',
+  version: '0.29.4',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
