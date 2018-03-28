@@ -1,8 +1,8 @@
 <template name="Retronator.HQ.Items.Receipt">
   <div class="retronator-hq-items-receipt">
-  {{> LandsOfIllusions.Components.BackButton}}
+    {{> LandsOfIllusions.Components.BackButton}}
     {{#LandsOfIllusions.Components.Overlay}}
-      {{#unless $or scrolledToBottom purchaseCompleted}}
+      {{#unless $or scrolled purchaseCompleted}}
         <div class="scroll-hint">Scroll down to purchase</div>
       {{/unless}}
       <div class="message-area">
@@ -43,271 +43,338 @@
         {{/if}}
       </div>
     {{else}}
-      <div class="viewport-area">
-        <div class="safe-area">
-          <script src="https://checkout.stripe.com/checkout.js"></script>
-          {{#unless showingFinalMessage}}
-            {{#if purchaseItems.length}}
-              <div class="receipt">
-                <h2>Retronator<br/>Store</h2>
-                <div>----------------------</div>
-                <ol class="shopping-cart-items">
-                  {{#each purchaseItems}}
-                    <li class="cart-item">
-                      <span class="name">
-                        {{> t9n item.name}}
-                        {{#if isGift}}
-                          (gift)
-                        {{/if}}
-                      </span>
-                      <span class="price">${{item.price}}</span>
-                    </li>
-                  {{/each}}
-                </ol>
-                <div>----------------------</div>
-                <ol class="receipt-items">
-                  <li class="receipt-item">
-                    <span class="name">Subtotal</span>
-                    <span class="price">${{itemsPrice}}</span>
-                  </li>
-                </ol>
-                <div class="support-area">
-                  <p>Show your name<br/>among supporters:</p>
-                  <p>
-                    <label class="anonymous-option">
-                      <input class="anonymous-radio" type="radio" name="anonymous" value="1" {{anonymousYesAttributes}}/>
-                      <span class="label">yes</span>
-                    </label>
-                    <label class="anonymous-option">
-                      <input class="anonymous-radio" type="radio" name="anonymous" value="0" {{anonymousNoAttributes}}/>
-                      <span class="label">no</span>
-                    </label>
-                  </p>
-                  <p>
-                    {{#if showSupporterName}}
-                      {{#if currentUser}}
-                        {{> Retronator.HQ.Items.Receipt.SupporterName}}
-                      {{else}}
-                        <input class="supporter-name" placeholder="{{t7e 'Your name here'}}" value="{{supporterName}}"/>
+      <div class="safe-area-content">
+        <script src="https://checkout.stripe.com/checkout.js"></script>
+        {{#unless showingFinalMessage}}
+          {{#if purchaseItems.length}}
+            <div class="receipt">
+              <h2>Retronator<br/>Store</h2>
+              <div>----------------------</div>
+              <ol class="shopping-cart-items">
+                {{#each purchaseItems}}
+                  <li class="cart-item">
+                    <span class="name">
+                      {{> t9n item.name}}
+                      {{#if isGift}}
+                        (gift)
                       {{/if}}
-                    {{else}}
-                      <input class="supporter-name" placeholder="{{anonymousPlaceholder}}" disabled />
-                    {{/if}}
-                  </p>
-                  <p>Add an optional tip:<br/>
-                    <span class="tip-amount-area"><input class="tip-amount" type="number" step="5" min="0" max="1000" value="{{tip.amount}}"/></span>
-                  </p>
-                  <p>
-                    Include a message with your tip:
-                  </p>
-                  {{#if tip.amount}}
-                    <textarea class="tip-message" placeholder="{{t7e 'Write your message here'}}" maxlength="100">{{tip.message}}</textarea>
-                  {{else}}
-                    <textarea class="tip-message" placeholder="{{t7e 'Add a tip to include a message'}}" disabled></textarea>
-                  {{/if}}
-                  <p>
-                    * It will appear in the recent purchases list.
-                  </p>
-                </div>
-                <ol class="receipt-items">
-                  <li class="receipt-item">
-                    <span class="name">Subtotal</span>
-                    <span class="price">${{itemsPrice}}</span>
+                    </span>
+                    <span class="price">${{item.price}}</span>
                   </li>
-                  <li class="receipt-item">
-                    <span class="name">Tip</span>
-                    <span class="price">${{tip.amount}}</span>
-                  </li>
-                  {{#if creditApplied}}
-                    <li class="receipt-item">
-                      <span class="name">Store credit</span>
-                      <span class="price">-${{creditApplied}}</span>
-                    </li>
-                  {{/if}}
-                  <li class="receipt-item total">
-                    <span class="name">Total</span>
-                    <span class="price">${{paymentAmount}}</span>
-                  </li>
-                </ol>
-                <p>======================</p>
-                <div class="receipt-bottom">
-                  <p>Thank you for your support!</p>
-                </div>
+                {{/each}}
+              </ol>
+              <div>----------------------</div>
+              <ol class="receipt-items">
+                <li class="receipt-item">
+                  <span class="name">Subtotal</span>
+                  <span class="price">${{itemsPrice}}</span>
+                </li>
+              </ol>
+              <p>For billing purposes you are in:</p>
+              <p>
+                <label class="european-union-option">
+                  <input class="european-union-radio" type="radio" name="europeanunion" value="1" {{europeanUnionYesAttributes}}/>
+                  <span class="label">European Union</span>
+                </label>
+                <label class="european-union-option">
+                  <input class="european-union-radio" type="radio" name="europeanunion" value="0" {{europeanUnionNoAttributes}}/>
+                  <span class="label">Other country</span>
+                </label>
+              </p>
+              <div class="european-union-area {{europeanUnionAreaVisibleClass}}">
+                <p>Which country?<br/>
+                  <span class="tip-amount-area">{{> Retronator.HQ.Items.Receipt.EuropeanCountrySelection}}</span>
+                </p>
+                <p>And you are a:</p>
+                <p>
+                  <label class="european-union-entity-option">
+                    <input class="european-union-entity-radio" type="radio" name="europeanunionentity" value="0" {{europeanUnionConsumerAttributes}}/>
+                    <span class="label">Consumer</span>
+                  </label>
+                  <label class="european-union-entity-option">
+                    <input class="european-union-entity-radio" type="radio" name="europeanunionentity" value="1" {{europeanUnionBusinessAttributes}}/>
+                    <span class="label">Business</span>
+                  </label>
+                </p>
+                {{#if isBusiness}}
+                  <input class="vat-id" placeholder="{{t7e 'Enter VAT ID'}}" value="{{vatIdEntry}}"/>
+                {{/if}}
               </div>
-              {{#unless showingFinalMessage}}
-                <div class="payment-presenter">
-                  <div class="instructions">
+              <div class="support-area">
+                <p>Show your name<br/>among supporters:</p>
+                <p>
+                  <label class="anonymous-option">
+                    <input class="anonymous-radio" type="radio" name="anonymous" value="1" {{anonymousYesAttributes}}/>
+                    <span class="label">yes</span>
+                  </label>
+                  <label class="anonymous-option">
+                    <input class="anonymous-radio" type="radio" name="anonymous" value="0" {{anonymousNoAttributes}}/>
+                    <span class="label">no</span>
+                  </label>
+                </p>
+                <p>
+                  {{#if showSupporterName}}
                     {{#if currentUser}}
-                      {{#if paymentAmount}}
-                        <p>Choose a one-time payment or one of your saved payment methods.</p>
-                      {{else}}
-                        <p>You have a store balance of ${{storeCredit}}. ${{creditApplied}} will be used to cover
-                          this purchase. Simply confirm the payment by clicking on the payment slip on the right.</p>
-                      {{/if}}
+                      {{> Retronator.HQ.Items.Receipt.SupporterName}}
                     {{else}}
-                      <p>Choose a payment type.</p>
+                      <input class="supporter-name" placeholder="{{t7e 'Your name here'}}" value="{{supporterName}}"/>
                     {{/if}}
+                  {{else}}
+                    <input class="supporter-name" placeholder="{{anonymousPlaceholder}}" disabled />
+                  {{/if}}
+                </p>
+                <p>Add an optional tip:<br/>
+                  <span class="tip-amount-area"><input class="tip-amount" type="number" step="1" min="0" max="1000" value="{{tip.amount}}"/></span>
+                </p>
+                <p>
+                  Include a message with your tip:
+                </p>
+                {{#if tip.amount}}
+                  <textarea class="tip-message" placeholder="{{t7e 'Write your message here'}}" maxlength="100">{{tip.message}}</textarea>
+                {{else}}
+                  <textarea class="tip-message" placeholder="{{t7e 'Add a tip to include a message'}}" disabled></textarea>
+                {{/if}}
+                <p>
+                  * The message will appear in the recent purchases list.
+                </p>
+              </div>
+              <ol class="receipt-items">
+                <li class="receipt-item">
+                  <span class="name">Subtotal</span>
+                  <span class="price">${{itemsPrice}}</span>
+                </li>
+                <li class="receipt-item">
+                  <span class="name">Tip</span>
+                  <span class="price">${{tip.amount}}</span>
+                </li>
+                {{#if creditApplied}}
+                  <li class="receipt-item">
+                    <span class="name">Store credit</span>
+                    <span class="price">-${{creditApplied}}</span>
+                  </li>
+                {{/if}}
+                <li class="receipt-item total">
+                  <span class="name">Total</span>
+                  <span class="price">${{paymentAmount}}</span>
+                </li>
+              </ol>
+              {{#if isEuropeanUnion}}
+                <div class="vat-summary">
+                <p>----------------------</p>
+                <p class="title">VAT Summary</p>
+                  {{#if vatCountry}}
+                    {{#if vatCharged}}
+                      <ol class="receipt-items">
+                        <li class="receipt-item">
+                          <span class="name">Rate (<span class="vat-country">{{vatCountry}}</span>)</span>
+                          <span class="price">{{vatRatePercentage}}%</span>
+                        </li>
+                        <li class="receipt-item">
+                          <span class="name">Net</span>
+                          <span class="price">€{{fixedDecimals paymentAmountWithoutVatEur 2}}</span>
+                        </li>
+                        <li class="receipt-item">
+                          <span class="name">VAT</span>
+                          <span class="price">€{{fixedDecimals vatAmountEur 2}}</span>
+                        </li>
+                        <li class="receipt-item">
+                          <span class="name">Total</span>
+                          <span class="price">€{{fixedDecimals paymentAmountEur 2}}</span>
+                        </li>
+                      </ol>
+                    {{else}}
+                      {{#if vatIdEntry}}
+                        <p>Reverse Charge - VAT exempt under Article 44 Directive 2006/112/ES</p>
+                      {{/if}}
+                    {{/if}}
+                    {{#if isBusiness}}
+                      {{#unless vatIdEntry}}
+                        <p>You need to enter your VAT ID above, otherwise choose consumer.</p>
+                      {{/unless}}
+                    {{/if}}
+                  {{else}}
+                    You need to enter your billing country above to calculate VAT.
+                  {{/if}}
+                </div>
+              {{/if}}
+              <p>======================</p>
+              <div class="receipt-bottom">
+                <p>Thank you for your support!</p>
+              </div>
+            </div>
+            {{#unless showingFinalMessage}}
+              <div class="payment-presenter">
+                <div class="instructions">
+                  {{#if currentUser}}
                     {{#if paymentAmount}}
-                      {{#if currentUser}}
-                        <h2>One-time payment</h2>
-                      {{/if}}
-                      <div class="one-time-payment">
-                        {{#unless oneTimeStripeSelected}}
-                          {{#if stripeInitialized}}
-                            <div class="card one-time-stripe">
-                              <div class="click">Click to</div>
-                              <div class="checkout">Checkout with Stripe</div>
-                            </div>
-                          {{/if}}
-                        {{/unless}}
+                      <p>Choose a one-time payment or one of your saved payment methods.</p>
+                    {{else}}
+                      <p>You have a store balance of ${{storeCredit}}. ${{creditApplied}} will be used to cover
+                        this purchase. Simply confirm the payment by clicking on the payment slip on the right.</p>
+                    {{/if}}
+                  {{else}}
+                    <p>Choose a payment type.</p>
+                  {{/if}}
+                  {{#if paymentAmount}}
+                    {{#if currentUser}}
+                      <h2>One-time payment</h2>
+                    {{/if}}
+                    <div class="one-time-payment">
+                      {{#unless oneTimeStripeSelected}}
+                        {{#if stripeInitialized}}
+                          <div class="card one-time-stripe">
+                            <div class="click">Click to</div>
+                            <div class="checkout">Checkout with Stripe</div>
+                          </div>
+                        {{/if}}
+                      {{/unless}}
+                    </div>
+                    {{#if currentUser}}
+                      <div class="payment-methods-area">
+                        <h2>Saved payment methods</h2>
+                        {{#if paymentMethods.count}}
+                          <p>Choose a desired saved payment method:</p>
+                          <ul class="payment-methods {{moreThan2Class}}">
+                            {{#each paymentMethods}}
+                              <li class="payment-method">
+                                {{#if $is type 'Stripe'}}
+                                  {{> Retronator.HQ.Items.Receipt.StripePaymentMethod}}
+                                {{/if}}
+                              </li>
+                            {{/each}}
+                          </ul>
+                        {{else}}
+                          <p>You have no saved payment methods. Use the form on the right to save a new payment method to your account.</p>
+                        {{/if}}
                       </div>
-                      {{#if currentUser}}
-                        <div class="payment-methods-area">
-                          <h2>Saved payment methods</h2>
-                          {{#if paymentMethods.count}}
-                            <p>Choose a desired saved payment method:</p>
-                            <ul class="payment-methods {{moreThan2Class}}">
-                              {{#each paymentMethods}}
-                                <li class="payment-method">
-                                  {{#if $is type 'Stripe'}}
-                                    {{> Retronator.HQ.Items.Receipt.StripePaymentMethod}}
-                                  {{/if}}
-                                </li>
-                              {{/each}}
-                            </ul>
-                          {{else}}
-                            <p>You have no saved payment methods. Use the form on the right to save a new payment method to your account.</p>
-                          {{/if}}
-                        </div>
-                      {{/if}}
+                    {{/if}}
+                  {{/if}}
+                </div>
+                {{#if showNewPaymentMethod}}
+                  <div class="new-payment-method">
+                    <h2 class="title">Save payment method</h2>
+                    <div class="payment-method-types">
+                      <button class="add-payment-method-button add-stripe-button save-customer-button">Credit card</button>
+                    </div>
+                    <p class="smallprint">
+                      Credit card<br/>
+                      information is<br/>
+                      stored by<br/>
+                      Stripe.
+                    </p>
+                  </div>
+                {{/if}}
+                <div class="selected-payment-method">
+                  <div class="payment-type">
+                    {{#if paymentAmount}}
+                      {{#with selectedPaymentMethod}}
+                        {{#if $is paymentMethod.type 'StripePayment'}}
+                          <div class="card one-time-stripe">
+                            <div class="checkout">Checkout with Stripe</div>
+                          </div>
+                        {{/if}}
+                        {{#if $is paymentMethod.type 'Stripe'}}
+                          {{#with customerData}}
+                            <div class="card stripe">
+                              <div class="name">{{name}}</div>
+                              <div class="number">XX-XX-XX-{{number}}</div>
+                              <div class="expiration">{{expiration.month}}/{{expiration.year}}</div>
+                              <div class="brand">{{brand}}</div>
+                            </div>
+                          {{/with}}
+                        {{/if}}
+                      {{/with}}
+                    {{else}}
+                      <div class="card store-balance">
+                        <div class="pay">Pay with store balance</div>
+                      </div>
                     {{/if}}
                   </div>
-                  {{#if showNewPaymentMethod}}
-                    <div class="new-payment-method">
-                      <h2 class="title">Save payment method</h2>
-                      <div class="payment-method-types">
-                        <button class="add-payment-method-button add-stripe-button save-customer-button">Credit card</button>
-                      </div>
-                      <p class="smallprint">
-                        Credit card<br/>
-                        information is<br/>
-                        stored by<br/>
-                        Stripe.
-                      </p>
-                    </div>
-                  {{/if}}
-                  <div class="selected-payment-method">
-                    <div class="payment-type">
-                      {{#if paymentAmount}}
-                        {{#with selectedPaymentMethod}}
-                          {{#if $is paymentMethod.type 'StripePayment'}}
-                            <div class="card one-time-stripe">
-                              <div class="checkout">Checkout with Stripe</div>
-                            </div>
-                          {{/if}}
-                          {{#if $is paymentMethod.type 'Stripe'}}
-                            {{#with customerData}}
-                              <div class="card stripe">
-                                <div class="name">{{name}}</div>
-                                <div class="number">XX-XX-XX-{{number}}</div>
-                                <div class="expiration">{{expiration.month}}/{{expiration.year}}</div>
-                                <div class="brand">{{brand}}</div>
-                              </div>
-                            {{/with}}
-                          {{/if}}
-                        {{/with}}
-                      {{else}}
-                        <div class="card store-balance">
-                          <div class="pay">Pay with store balance</div>
-                        </div>
-                      {{/if}}
-                    </div>
-                    {{#if showPaymentInfo}}
-                      <div class="payment-info receipt">
-                        <button class="deselect-payment-method-button">X</button>
-                        <h2>Retronator<br/>Store</h2>
-                        <div>----------------------</div>
-                        <ul class="data-items">
-                          <li class="data-item">
-                            <span class="name">Date</span>
-                            <span class="value">{{dateText}}</span>
-                          </li>
-                          {{#if paymentAmount}}
-                            {{#with selectedPaymentMethod}}
-                              {{#if $is paymentMethod.type 'StripePayment'}}
-                                <li class="data-item">
-                                  <span class="name">Pay Type</span>
-                                  <span class="value">Stripe</span>
-                                </li>
+                  {{#if showPaymentInfo}}
+                    <div class="payment-info receipt">
+                      <button class="deselect-payment-method-button">X</button>
+                      <h2>Retronator<br/>Store</h2>
+                      <div>----------------------</div>
+                      <ul class="data-items">
+                        <li class="data-item">
+                          <span class="name">Date</span>
+                          <span class="value">{{dateText}}</span>
+                        </li>
+                        {{#if paymentAmount}}
+                          {{#with selectedPaymentMethod}}
+                            {{#if $is paymentMethod.type 'StripePayment'}}
+                              <li class="data-item">
+                                <span class="name">Pay Type</span>
+                                <span class="value">Stripe</span>
+                              </li>
+                              <li class="data-item">
+                                <span class="name">Card Num</span>
+                                <span class="value">Prompt</span>
+                              </li>
+                            {{/if}}
+                            {{#if $is paymentMethod.type 'Stripe'}}
+                              <li class="data-item">
+                                <span class="name">Pay Type</span>
+                                <span class="value">Stripe</span>
+                              </li>
+                              {{#with customerData}}
                                 <li class="data-item">
                                   <span class="name">Card Num</span>
-                                  <span class="value">Prompt</span>
+                                  <span class="value">XXXXXX{{number}}</span>
                                 </li>
-                              {{/if}}
-                              {{#if $is paymentMethod.type 'Stripe'}}
                                 <li class="data-item">
-                                  <span class="name">Pay Type</span>
-                                  <span class="value">Stripe</span>
+                                  <span class="name">Expy Date</span>
+                                  <span class="value">{{expiration.month}}/{{expiration.year}}</span>
                                 </li>
-                                {{#with customerData}}
-                                  <li class="data-item">
-                                    <span class="name">Card Num</span>
-                                    <span class="value">XXXXXX{{number}}</span>
-                                  </li>
-                                  <li class="data-item">
-                                    <span class="name">Expy Date</span>
-                                    <span class="value">{{expiration.month}}/{{expiration.year}}</span>
-                                  </li>
-                                  <li class="data-item">
-                                    <span class="name">Card Type</span>
-                                    <span class="value">{{brand}}</span>
-                                  </li>
-                                {{/with}}
-                              {{/if}}
-                            {{/with}}
+                                <li class="data-item">
+                                  <span class="name">Card Type</span>
+                                  <span class="value">{{brand}}</span>
+                                </li>
+                              {{/with}}
+                            {{/if}}
+                          {{/with}}
+                        {{else}}
+                          <li class="data-item">
+                            <span class="name">Pay Type</span>
+                            <span class="value">Store balance</span>
+                          </li>
+                        {{/if}}
+                      </ul>
+                      <p class="sale">Sale</p>
+                      <p>
+                        <span class="total">Total</span>
+                        <span class="balance">
+                          {{#if paymentAmount}}
+                            ${{paymentAmount}}
                           {{else}}
-                            <li class="data-item">
-                              <span class="name">Pay Type</span>
-                              <span class="value">Store balance</span>
-                            </li>
+                            ${{creditApplied}}
                           {{/if}}
-                        </ul>
-                        <p class="sale">Sale</p>
-                        <p>
-                          <span class="total">Total</span>
-                          <span class="balance">
+                        </span>
+                      </p>
+                      <p class="confirm-prompt">Click on the line below to confirm</p>
+                      <div class="confirm">
+                        <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
+                          {{#if submittingPayment}}
+                            Submitting …
+                          {{else}}
                             {{#if paymentAmount}}
-                              ${{paymentAmount}}
+                              Pay with Stripe
                             {{else}}
-                              ${{creditApplied}}
+                              Confirm purchase
                             {{/if}}
-                          </span>
-                        </p>
-                        <p class="confirm-prompt">Click on the line below to confirm</p>
-                        <div class="confirm">
-                          <button class="submit-payment-button" {{submitPaymentButtonAttributes}}>
-                            {{#if submittingPayment}}
-                              Submitting …
-                            {{else}}
-                              {{#if paymentAmount}}
-                                Pay with Stripe
-                              {{else}}
-                                Confirm purchase
-                              {{/if}}
-                            {{/if}}
-                          </button>
-                        </div>
-                        <p class="agree-terms">I confirm the purchase and agree to the <a href="{{routerPath 'PixelArtAcademy.LandingPage.Pages.Smallprint'}}" target="_blank">terms of service and privacy policy</a>.</p>
+                          {{/if}}
+                        </button>
                       </div>
-                    {{/if}}
-                  </div>
+                      <p class="agree-terms">I confirm the purchase and agree to the <a href="{{routerPath 'PixelArtAcademy.LandingPage.Pages.Smallprint'}}" target="_blank">terms of service and privacy policy</a>.</p>
+                    </div>
+                  {{/if}}
                 </div>
-              {{/unless}}
-            {{else}}
-              <p>Cannot show receipt. You do not have any items in your shopping cart.</p>
-            {{/if}}
-          {{/unless}}
-        </div>
+              </div>
+            {{/unless}}
+          {{else}}
+            <p>Cannot show receipt. You do not have any items in your shopping cart.</p>
+          {{/if}}
+        {{/unless}}
       </div>
     {{/LandsOfIllusions.Components.Overlay}}
   </div>

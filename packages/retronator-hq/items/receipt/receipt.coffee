@@ -38,16 +38,21 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
       message: @state.field 'tip.message'
 
     @scrolled = new ReactiveField false
-    @scrolledToBottom = new ReactiveField false
+
+    @europeanUnion = @state.field 'europeanUnion', default: false
+    @country = @state.field 'country'
+    @business = @state.field 'business', default: false
+    @vatId = @state.field 'vatId'
 
     @purchaseItems = new ReactiveField []
+
+    @usdToEurExchangeRate = new ReactiveField null
 
   onCreated: ->
     super
 
     @scrolled false
-    @scrolledToBottom false
-        
+
     # Get all store items data.
     @subscribe RS.Item.all
 
@@ -77,11 +82,15 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
       @purchaseItems purchaseItems
 
+    RS.Vat.ExchangeRate.getUsdToEur (error, value) =>
+      if error
+        console.error error
+        return
+
+      @usdToEurExchangeRate value
+
   onRendered: ->
     super
-
-    @app = @ancestorComponent Retronator.App
-    @app.addComponent @
 
     @display = LOI.adventure.getCurrentThing HQ.Store.Display
 
@@ -89,44 +98,17 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     $messageArea = @$('.message-area')
     @_$translateAreas = $displayScene.add($messageArea)
 
-    @_$viewportArea = @$('.viewport-area')
-    @_$safeArea = @$('.safe-area')
-    @_$receipt = @_$safeArea.find('.receipt')
+    @_$background = @$('.background')
+    @_$safeAreaContent = @$('.safe-area-content')
+    @_$receipt = @_$safeAreaContent.find('.receipt')
 
-    @_$viewportArea.scroll (event) =>
-      @scrolled true
+    @_$background.scroll (event) =>
+      @scrolled @_$background.scrollTop() > 0
 
     Meteor.setTimeout =>
       @_scrollToNewSupporter duration: 1000
     ,
       1000
-
-  onDestroyed: ->
-    super
-
-    @app?.removeComponent @
-
-  draw: ->
-    # After we go pass the end of the receipt, move the display scene.
-    scrollTop = @_$viewportArea.scrollTop()
-    return if scrollTop is @_lastScrollTop
-
-    safeAreaHeight = @_$safeArea.height()
-    receiptBottom = @_$receipt.outerHeight()
-
-    # Make sure there is a receipt at all. It will get removed when payment completes.
-    if receiptBottom
-      sceneOffset = Math.min 0, receiptBottom - safeAreaHeight - scrollTop
-
-    else
-      sceneOffset = 0
-
-    @_$translateAreas.css
-      'transform': "translateY(#{sceneOffset}px)"
-
-    @scrolledToBottom sceneOffset < 0
-
-    @_lastScrollTop = scrollTop
 
   showSupporterName: ->
     user = Retronator.user()
@@ -148,6 +130,27 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
   anonymousNoAttributes: ->
     checked: true unless @showSupporterName()
+
+  europeanUnionYesAttributes: ->
+    checked: true if @europeanUnion()
+
+  europeanUnionNoAttributes: ->
+    checked: true unless @europeanUnion()
+
+  europeanUnionAreaVisibleClass: ->
+    'visible' if @europeanUnion()
+
+  europeanUnionConsumerAttributes: ->
+    checked: true unless @business()
+
+  europeanUnionBusinessAttributes: ->
+    checked: true if @business()
+
+  # HACK: For whatever reason we can't use the fields directly.
+  isEuropeanUnion: -> @europeanUnion()
+  isBusiness: -> @business()
+  vatIdEntry: -> @vatId()
+  vatCountry: -> @country()
 
   itemsPrice: ->
     # The sum of all items to be purchased.
@@ -240,14 +243,61 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     # We show only the dialog message (and hide the receipt and payment presenter) when the purchase has gone through.
     @purchaseCompleted() or @purchaseErrorAfterCharge()
 
+  vatCharged: ->
+    # VAT is always charged in Slovenia and for consumers outside Slovenia.
+    @country() is 'si' or not @business()
+
+  vatRate: ->
+    RS.Vat.Rates.Standard[@country()]
+
+  vatRatePercentage: ->
+    @vatRate() * 100
+
+  paymentAmountEur: ->
+    return unless usdToEurExchangeRate = @usdToEurExchangeRate()
+
+    paymentAmountEur = @paymentAmount() * usdToEurExchangeRate
+
+    # Amount needs to be reported with 2 decimal digits.
+    Math.round(paymentAmountEur * 100) / 100
+
+  vatAmountEur: ->
+    return unless paymentAmountEur = @paymentAmountEur()
+
+    vatRate = @vatRate()
+    vatRatio = vatRate / (1 + vatRate)
+
+    vatEur = paymentAmountEur * vatRatio
+
+    # VAT needs to be reported with 2 decimal digits.
+    Math.round(vatEur * 100) / 100
+
+  paymentAmountWithoutVatEur: ->
+    return unless paymentAmountEur = @paymentAmountEur()
+    return unless vatAmountEur = @vatAmountEur()
+
+    paymentAmountEur - vatAmountEur
+
   events: ->
     super.concat
+      'change .european-union-radio': @onChangeEuropeanUnionRadio
+      'change .european-union-entity-radio': @onChangeEuropeanUnionEntityRadio
+      'input .vat-id': @onInputVatId
       'change .anonymous-radio': @onChangeAnonymousRadio
       'input .supporter-name': @onInputSupporterName
       'input .tip-amount': @onInputTipAmount
       'input .tip-message': @onInputTipMessage
       'click .one-time-payment .one-time-stripe': @onClickOneTimePaymentStripe
       'click .deselect-payment-method-button': @onClickDeselectPaymentMethodButton
+
+  onChangeEuropeanUnionRadio: (event) ->
+    @europeanUnion parseInt($(event.target).val()) is 1
+
+  onChangeEuropeanUnionEntityRadio: (event) ->
+    @business parseInt($(event.target).val()) is 1
+
+  onInputVatId: (event) ->
+    @vatId $(event.target).val()
 
   onChangeAnonymousRadio: (event) ->
     showSupporterName = parseInt($(event.target).val()) is 1
@@ -352,6 +402,25 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
         type: HQ.Items.Components.Stripe.PaymentMethods.StripePayment
 
   # Components
+
+  class @EuropeanCountrySelection extends AB.Components.RegionSelection
+    @register 'Retronator.HQ.Items.Receipt.EuropeanCountrySelection'
+
+    constructor: ->
+      super
+
+      @regionList = AB.Region.Lists.EuropeanUnion
+
+    onCreated: ->
+      super
+
+      @receipt = @ancestorComponentOfType HQ.Items.Receipt
+
+    load: ->
+      @receipt.country() or ''
+
+    save: (value) ->
+      @receipt.country value
 
   class @SupporterName extends AM.DataInputComponent
     @register 'Retronator.HQ.Items.Receipt.SupporterName'

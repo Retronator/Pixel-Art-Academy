@@ -15,6 +15,7 @@ These get executed on the hour.
 * **12 AM**: Retronator Blog all posts update.
 * **1 AM**: Patreon pledges update.
 * **2 AM**: Featured website previews updates (rendering).
+* **3 AM**: Euro exchange rates.
 
 ### Hourly
 

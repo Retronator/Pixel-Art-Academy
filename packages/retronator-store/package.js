@@ -15,6 +15,7 @@ Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
   api.use('chfritz:easycron');
+  api.use('peerlibrary:xml2js');
 
   api.export('Retronator');
 
@@ -33,6 +34,14 @@ Package.onUse(function(api) {
   api.addServerFile('item/subscriptions');
 
   api.addServerFile('item/migrations/0000-renamecollection');
+
+  // VAT
+
+  api.addFile('vat..');
+  api.addFile('vat/rates');
+  api.addFile('vat/exchangerate..');
+  api.addServerFile('vat/exchangerate/server');
+  api.addServerFile('vat/exchangerate/methods-server');
 
   // Payment
 
