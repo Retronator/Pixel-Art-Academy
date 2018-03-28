@@ -2,7 +2,7 @@
   <div class="retronator-hq-items-receipt">
     {{> LandsOfIllusions.Components.BackButton}}
     {{#LandsOfIllusions.Components.Overlay}}
-      {{#unless $or scrolled purchaseCompleted}}
+      {{#unless $or scrolledToBottom purchaseCompleted}}
         <div class="scroll-hint">Scroll down to purchase</div>
       {{/unless}}
       <div class="message-area">
@@ -32,11 +32,32 @@
                 <p>One moment, I'm processing the payment …</p>
               </div>
             {{else}}
-              {{#if $and scrolledToBottom creditApplied paymentAmount}}
-                <div class="purchase-info message">
-                  <p>${{creditApplied}} will be used from your existing store balance.
-                    You can pay the remaining ${{paymentAmount}} with a credit card below.</p>
+              {{#if vatIdError}}
+                <div class="purchase-error message">
+                  <p>There seems to be a problem with the VAT ID.</p>
+                  <p>{{vatIdErrorText}}</p>
                 </div>
+              {{else}}
+                {{#if scrolledToBottom}}
+                  {{#if vatSummaryError}}
+                    <div class="purchase-error message">
+                      <p>{{vatSummaryError}}</p>
+                    </div>
+                  {{else}}
+                    {{#if $and creditApplied paymentAmount}}
+                      <div class="purchase-info message">
+                        <p>${{creditApplied}} will be used from your existing store balance.
+                          You can pay the remaining ${{paymentAmount}} with a credit card below.</p>
+                      </div>
+                    {{/if}}
+                  {{/if}}
+                {{else}}
+                  {{#if vatIdName}}
+                    <div class="purchase-info message">
+                      <p>It looks like you're from {{vatIdName}}.</p>
+                    </div>
+                  {{/if}}
+                {{/if}}
               {{/if}}
             {{/if}}
           {{/if}}
@@ -85,19 +106,23 @@
                 <p>Which country?<br/>
                   <span class="tip-amount-area">{{> Retronator.HQ.Items.Receipt.EuropeanCountrySelection}}</span>
                 </p>
-                <p>And you are a:</p>
-                <p>
-                  <label class="european-union-entity-option">
-                    <input class="european-union-entity-radio" type="radio" name="europeanunionentity" value="0" {{europeanUnionConsumerAttributes}}/>
-                    <span class="label">Consumer</span>
-                  </label>
-                  <label class="european-union-entity-option">
-                    <input class="european-union-entity-radio" type="radio" name="europeanunionentity" value="1" {{europeanUnionBusinessAttributes}}/>
-                    <span class="label">Business</span>
-                  </label>
-                </p>
-                {{#if isBusiness}}
-                  <input class="vat-id" placeholder="{{t7e 'Enter VAT ID'}}" value="{{vatIdEntry}}"/>
+                {{#if vatCountry}}
+                  <p>And you are a:</p>
+                    <p>
+                      <label class="european-union-entity-option">
+                        <input class="european-union-entity-radio" type="radio" name="europeanunionentity" value="0" {{europeanUnionConsumerAttributes}}/>
+                        <span class="label">Consumer</span>
+                      </label>
+                      <label class="european-union-entity-option">
+                        <input class="european-union-entity-radio" type="radio" name="europeanunionentity" value="1" {{europeanUnionBusinessAttributes}}/>
+                        <span class="label">Business</span>
+                      </label>
+                    </p>
+                  {{#if isBusiness}}
+                    <p>
+                      <input class="vat-id" placeholder="{{t7e 'Enter VAT ID'}}" value="{{vatIdEntry}}"/>
+                    </p>
+                  {{/if}}
                 {{/if}}
               </div>
               <div class="support-area">
@@ -159,10 +184,10 @@
                 </li>
               </ol>
               {{#if isEuropeanUnion}}
-                <div class="vat-summary">
-                <p>----------------------</p>
-                <p class="title">VAT Summary</p>
-                  {{#if vatCountry}}
+                {{#unless vatSummaryError}}
+                  <div class="vat-summary">
+                  <p>----------------------</p>
+                  <p class="title">VAT Summary</p>
                     {{#if vatCharged}}
                       <ol class="receipt-items">
                         <li class="receipt-item">
@@ -183,19 +208,10 @@
                         </li>
                       </ol>
                     {{else}}
-                      {{#if vatIdEntry}}
-                        <p>Reverse Charge - VAT exempt under Article 44 Directive 2006/112/ES</p>
-                      {{/if}}
+                      <p>Reverse Charge - VAT exempt under Article 44 Directive 2006/112/ES</p>
                     {{/if}}
-                    {{#if isBusiness}}
-                      {{#unless vatIdEntry}}
-                        <p>You need to enter your VAT ID above, otherwise choose consumer.</p>
-                      {{/unless}}
-                    {{/if}}
-                  {{else}}
-                    You need to enter your billing country above to calculate VAT.
-                  {{/if}}
-                </div>
+                  </div>
+                {{/unless}}
               {{/if}}
               <p>======================</p>
               <div class="receipt-bottom">

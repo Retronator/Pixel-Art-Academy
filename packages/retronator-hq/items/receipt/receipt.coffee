@@ -38,11 +38,15 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
       message: @state.field 'tip.message'
 
     @scrolled = new ReactiveField false
+    @scrolledToBottom = new ReactiveField false
 
     @europeanUnion = @state.field 'europeanUnion', default: false
     @country = @state.field 'country'
     @business = @state.field 'business', default: false
     @vatId = @state.field 'vatId'
+
+    @vatIdError = new ReactiveField null
+    @vatIdName = new ReactiveField null
 
     @purchaseItems = new ReactiveField []
 
@@ -51,7 +55,13 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
   onCreated: ->
     super
 
+    @vatSummaryError = new ComputedField =>
+      return "You need to enter your billing country to calculate VAT." unless @country()
+      return "You need to enter your VAT ID, otherwise choose consumer." if @business() and not @vatId()
+      null
+
     @scrolled false
+    @scrolledToBottom false
 
     # Get all store items data.
     @subscribe RS.Item.all
@@ -82,6 +92,40 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
       @purchaseItems purchaseItems
 
+    # Validate VAT ID.
+    @autorun (computation) =>
+      # Reset the error as we will display a new one after validation, if necessary.
+      @vatIdError null
+
+      # VAT ID is only needed for EU businesses.
+      return unless @europeanUnion() and @business()
+
+      # React to VAT ID and country changes.
+      return unless vatId = @vatId()
+      return unless country = @country()
+
+      # Make sure the country matches.
+      vatIdCountry = vatId[0..1].toLowerCase()
+      vatIdCountry = 'gr' if vatIdCountry is 'el'
+
+      unless country is vatIdCountry
+        @vatIdError reason: "VAT ID doesn't match your country selection."
+        return
+
+      # Also validate ID to notify the user in advance if there will be any errors.
+      RS.Vat.validateVatId vatId, (error, result) =>
+        if error
+          @vatIdError error
+          return
+
+        # Show the company name for 8 seconds.
+        @vatIdName result.name
+
+        Meteor.setTimeout =>
+          @vatIdName null
+        ,
+          8000
+
     RS.Vat.ExchangeRate.getUsdToEur (error, value) =>
       if error
         console.error error
@@ -92,6 +136,9 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
   onRendered: ->
     super
 
+    @app = @ancestorComponent Retronator.App
+    @app.addComponent @
+
     @display = LOI.adventure.getCurrentThing HQ.Store.Display
 
     $displayScene = @display.$('.scene')
@@ -99,6 +146,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @_$translateAreas = $displayScene.add($messageArea)
 
     @_$background = @$('.background')
+    @_$safeArea = @$('.safe-area')
     @_$safeAreaContent = @$('.safe-area-content')
     @_$receipt = @_$safeAreaContent.find('.receipt')
 
@@ -109,6 +157,30 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
       @_scrollToNewSupporter duration: 1000
     ,
       1000
+
+  onDestroyed: ->
+    super
+
+    @app?.removeComponent @
+
+  draw: ->
+    # After we go pass the end of the receipt, move the display scene.
+    scrollTop = @_$background.scrollTop()
+    return if scrollTop is @_lastScrollTop
+
+    safeAreaHeight = @_$safeArea.height()
+    receiptBottom = @_$receipt.outerHeight()
+
+    # Make sure there is a receipt at all. It will get removed when payment completes.
+    if receiptBottom
+      sceneOffset = Math.min 0, receiptBottom - safeAreaHeight - scrollTop
+
+    else
+      sceneOffset = 0
+
+    @scrolledToBottom sceneOffset < 0
+
+    @_lastScrollTop = scrollTop
 
   showSupporterName: ->
     user = Retronator.user()
@@ -239,6 +311,14 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     return unless error = @purchaseError()
     error.error is RS.Transaction.serverErrorAfterPurchase
 
+  vatIdErrorText: ->
+    return unless error = @vatIdError()
+
+    errorText = "#{error.reason}"
+    errorText = "#{errorText} #{error.details}" if error.details
+
+    errorText
+
   showingFinalMessage: ->
     # We show only the dialog message (and hide the receipt and payment presenter) when the purchase has gone through.
     @purchaseCompleted() or @purchaseErrorAfterCharge()
@@ -282,7 +362,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     super.concat
       'change .european-union-radio': @onChangeEuropeanUnionRadio
       'change .european-union-entity-radio': @onChangeEuropeanUnionEntityRadio
-      'input .vat-id': @onInputVatId
+      'change .vat-id': @onChangeVatId
       'change .anonymous-radio': @onChangeAnonymousRadio
       'input .supporter-name': @onInputSupporterName
       'input .tip-amount': @onInputTipAmount
@@ -296,7 +376,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
   onChangeEuropeanUnionEntityRadio: (event) ->
     @business parseInt($(event.target).val()) is 1
 
-  onInputVatId: (event) ->
+  onChangeVatId: (event) ->
     @vatId $(event.target).val()
 
   onChangeAnonymousRadio: (event) ->
@@ -360,8 +440,8 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
   _onSubmittingPayment: ->
     # Scroll to top.
-    @$('.viewport-area > .safe-area').velocity 'scroll',
-      container: @$('.viewport-area')
+    @$('.safe-area-content').velocity 'scroll',
+      container: @$('.background')
 
   _displayError: (error) ->
     super

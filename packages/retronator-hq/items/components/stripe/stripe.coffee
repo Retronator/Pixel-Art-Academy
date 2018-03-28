@@ -136,6 +136,11 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
 
     payment.amount = @paymentAmount()
 
+    payment.europeanUnion = @country()
+    payment.country = @country()
+    payment.business = @business()
+    payment.vatId = @vatId()
+    
     Meteor.call RS.Transaction.insertStripePurchase, payment, shoppingCart, (error, data) =>
       @submittingPayment false
 

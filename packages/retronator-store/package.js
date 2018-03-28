@@ -10,6 +10,10 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'validate-vat': '0.5.1'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:artificialengines');
@@ -38,6 +42,7 @@ Package.onUse(function(api) {
   // VAT
 
   api.addFile('vat..');
+  api.addServerFile('vat/methods-server');
   api.addFile('vat/rates');
   api.addFile('vat/exchangerate..');
   api.addServerFile('vat/exchangerate/server');

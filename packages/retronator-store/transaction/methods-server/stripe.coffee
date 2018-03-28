@@ -12,6 +12,10 @@ Meteor.methods
         email: String
       paymentMethodId: Match.Optional Match.DocumentId
       amount: Number
+      europeanUnion: Boolean
+      country: Match.Optional String
+      business: Match.Optional Boolean
+      vatId: Match.Optional String
     check shoppingCart, Match.ShoppingCart
 
     # Re-create the shopping cart from the plain object.
