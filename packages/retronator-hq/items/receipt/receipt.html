@@ -183,7 +183,7 @@
                   <span class="price">${{paymentAmount}}</span>
                 </li>
               </ol>
-              {{#if isEuropeanUnion}}
+              {{#if $and isEuropeanUnion paymentAmount}}
                 {{#unless vatSummaryError}}
                   <div class="vat-summary">
                   <p>----------------------</p>
@@ -201,10 +201,6 @@
                         <li class="receipt-item">
                           <span class="name">VAT</span>
                           <span class="price">€{{fixedDecimals vatAmountEur 2}}</span>
-                        </li>
-                        <li class="receipt-item">
-                          <span class="name">Total</span>
-                          <span class="price">€{{fixedDecimals paymentAmountEur 2}}</span>
                         </li>
                       </ol>
                     {{else}}

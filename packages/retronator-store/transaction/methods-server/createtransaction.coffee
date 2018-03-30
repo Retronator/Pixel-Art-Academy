@@ -2,12 +2,28 @@ AE = Artificial.Everywhere
 RS = Retronator.Store
 
 RS.Transaction.create = (options) ->
-  {customer, payments, shoppingCart} = options
+  {customer, payments, shoppingCart, taxInfo} = options
 
   transaction =
     time: new Date()
     items: []
     payments: _.pick payment, '_id' for payment in payments
+
+  if taxInfo
+    transaction.taxInfo = taxInfo
+
+    # Generate the next sequential invoice ID.
+    invoiceYear = transaction.time.getUTCFullYear()
+    lastVatTransaction = RS.Transaction.documents.findOne
+      'taxInfo.invoiceId.year': invoiceYear
+    ,
+      sort:
+        'taxInfo.invoiceId.number': -1
+        
+    lastInvoiceNumber = lastVatTransaction?.taxInfo.invoiceId.number or 0
+    transaction.taxInfo.invoiceId =
+      year: invoiceYear
+      number: lastInvoiceNumber + 1
 
   if shoppingCart.tipAmount()
     transaction.tip =

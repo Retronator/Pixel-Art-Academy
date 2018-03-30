@@ -253,7 +253,7 @@ class LOI.Adventure extends LOI.Adventure
             dialog = new LOI.Components.Dialog
               message: "
                 The account you loaded doesn't have a save game.
-                Please use one of Lands of Illusions content modules to get started.
+                Please continue playing until you reach Retronator HQ where you will save your game to your account.
               "
               buttons: [
                 text: "OK"

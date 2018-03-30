@@ -56,6 +56,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     super
 
     @vatSummaryError = new ComputedField =>
+      return unless @europeanUnion()
       return "You need to enter your billing country to calculate VAT." unless @country()
       return "You need to enter your VAT ID, otherwise choose consumer." if @business() and not @vatId()
       null
@@ -94,8 +95,9 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
     # Validate VAT ID.
     @autorun (computation) =>
-      # Reset the error as we will display a new one after validation, if necessary.
+      # Reset the errors as we will display a new one after validation, if necessary.
       @vatIdError null
+      @purchaseError null
 
       # VAT ID is only needed for EU businesses.
       return unless @europeanUnion() and @business()
@@ -332,31 +334,23 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
   vatRatePercentage: ->
     @vatRate() * 100
+    
+  vatPayment: ->
+    return unless usdToEurExchangeRate = @usdToEurExchangeRate()
+  
+    RS.Vat.calculateVat
+      desiredTotalAmountUsd: @paymentAmount()
+      usdToEurExchangeRate: usdToEurExchangeRate
+      vatRate: @vatRate()
 
   paymentAmountEur: ->
-    return unless usdToEurExchangeRate = @usdToEurExchangeRate()
-
-    paymentAmountEur = @paymentAmount() * usdToEurExchangeRate
-
-    # Amount needs to be reported with 2 decimal digits.
-    Math.round(paymentAmountEur * 100) / 100
+    @vatPayment()?.totalAmountEur
 
   vatAmountEur: ->
-    return unless paymentAmountEur = @paymentAmountEur()
-
-    vatRate = @vatRate()
-    vatRatio = vatRate / (1 + vatRate)
-
-    vatEur = paymentAmountEur * vatRatio
-
-    # VAT needs to be reported with 2 decimal digits.
-    Math.round(vatEur * 100) / 100
+    @vatPayment()?.vatAmountEur
 
   paymentAmountWithoutVatEur: ->
-    return unless paymentAmountEur = @paymentAmountEur()
-    return unless vatAmountEur = @vatAmountEur()
-
-    paymentAmountEur - vatAmountEur
+    @vatPayment()?.netAmountEur
 
   events: ->
     super.concat

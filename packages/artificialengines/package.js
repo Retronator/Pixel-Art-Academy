@@ -168,6 +168,7 @@ Package.onUse(function(api) {
   api.addServerFile('telepathy/stripe-server');
   api.addServerFile('telepathy/patreon-server');
   api.addServerFile('telepathy/tumblr-server');
+  api.addServerFile('telepathy/maxmind-server');
 
   // Artificial Babel
   api.addFile('babel/babel');

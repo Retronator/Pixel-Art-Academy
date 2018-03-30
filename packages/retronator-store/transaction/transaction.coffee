@@ -35,6 +35,24 @@ class RS.Transaction extends AM.Document
   #   authorizedOnly
   #   invalid
   #   storeCreditAmount
+  # taxInfo: extra information for VAT and income tax reporting, when this is a taxable transaction
+  #   country:
+  #     billing: billing address country as provided by the user
+  #     payment: country of payment method as provided by the payment provider
+  #     access: country where the payment was made as determined from the IP address
+  #   accessIp: IP address of the client accessing the system
+  #   invoiceId: invoice ID, if this transaction includes any monetary payments
+  #     year: the UTC year of the transaction time
+  #     number: a sequential integer
+  #   vatRate: VAT rate of the billing country in effect at the time of transaction
+  #   amountEur:
+  #     net: EUR value of the payment without VAT
+  #     vat: EUR value of VAT collected
+  #   usdToEurExchangeRate: the reference exchange rate used in conversions
+  #   business: information of the buyer, if it's a business in the EU
+  #     vatId: VAT ID of the buyer
+  #     name: name of the business, reported from VIES
+  #     address: address of the business, reported from VIES
   # supporterName: the public name to show for this transaction for logged-out users
   # tip:
   #   amount: how much money was tipped
@@ -70,7 +88,7 @@ class RS.Transaction extends AM.Document
         [fields._id, invalid]
     triggers: =>
       transactionsUpdated: @Trigger ['user._id', 'twitter', 'email', 'invalid', 'items', 'totalValue'], (transaction, oldTransaction) =>
-        console.log "transaction generate items triggered!", transaction, "old", oldTransaction
+        console.log "transaction generate items triggered!", transaction?.email or transaction?.user?._id or oldTransaction?.email or oldTransaction?.user?._id
         # If the user of this transaction has changed, the old user
         # should lose an item so they need to be updated as well.
         @findUserForTransaction(oldTransaction)?.onTransactionsUpdated()

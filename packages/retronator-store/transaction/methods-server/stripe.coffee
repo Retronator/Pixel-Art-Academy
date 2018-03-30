@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
 AT = Artificial.Telepathy
@@ -83,6 +84,75 @@ Meteor.methods
     else
       throw new AE.ArgumentNullException "You must provide either a payment method id or a stripe token."
 
+    # Collect evidence of customer's country.
+    if payment.europeanUnion
+      throw new AE.ArgumentOutOfRangeException "You must provide a country if you are in the EU." unless _.isString payment.country
+
+      country = payment.country.toLowerCase()
+
+      unless country in AB.Region.Lists.EuropeanUnion
+        throw new AE.ArgumentOutOfRangeException "The provided country '#{country}' is not a member of the EU."
+
+    else
+      country = RS.Payment.NonEUCountryCode
+
+    # Evidence #2 is the country of the payment method.
+    if chargeData.source
+      tokenEvidence = AT.Stripe.tokens.retrieve chargeData.source
+      country2 = tokenEvidence.card.country.toLowerCase()
+
+    else
+      customerEvidence = AT.Stripe.customers.retrieve chargeData.customer
+      country2 = customerEvidence.sources.data[0].country.toLowerCase()
+
+    normalizeCountryCode = (countryCode) =>
+      if countryCode in AB.Region.Lists.EuropeanUnion then countryCode else RS.Payment.NonEUCountryCode
+
+    # Normalize non-EU countries.
+    normalizedCountry2 = normalizeCountryCode country2
+
+    unless country is normalizedCountry2
+      # The countries do not match, so we need to collect third piece of evidence, which is the location of the IP.
+      ip = tokenEvidence?.client_ip or @connection.clientAddress
+
+      try
+        country3 = AT.MaxMind.countryForIp ip
+
+      catch error
+        console.error "MaxMind error", error.message
+        throw new AE.ArgumentException "Your chosen country does not match your credit card (#{country2.toUpperCase()})
+                                        and we aren't able to check if the country based on your IP address matches instead."
+
+      normalizedCountry3 = normalizeCountryCode country3
+
+      unless country is normalizedCountry3
+        throw new AE.ArgumentException "Your chosen country does not match your credit card (#{country2.toUpperCase()})
+                                        or IP address (#{country3.toUpperCase()})."
+
+    # European business needs a valid VAT ID.
+    if payment.europeanUnion and payment.business
+      vatIdCountry = payment.vatId[0..1].toLowerCase()
+      vatIdCountry = 'gr' if vatIdCountry is 'el'
+
+      throw new AE.ArgumentException "VAT ID doesn't match your country selection." unless vatIdCountry is country
+
+      businessInfo = RS.Vat.validateVatId payment.vatId
+
+    # Add VAT amounts to metadata. VAT is always charged in Slovenia and for EU consumers outside Slovenia.
+    chargeVat = country is 'si' or payment.europeanUnion and not payment.business
+
+    desiredVatPayment =
+      usdToEurExchangeRate: RS.Vat.ExchangeRate.getUsdToEur()
+      desiredTotalAmountUsd: payment.amount
+      # We still do the VAT calculation, even if we don't charge VAT, so we get the
+      # taxable amount calculated in EUR as needed for reporting to EU and SI.
+      vatRate: if chargeVat then RS.Vat.Rates.Standard[country] else 0
+
+    vatPayment = RS.Vat.calculateVat desiredVatPayment
+
+    # Add all VAT fields to metadata.
+    _.extend chargeData.metadata, vatPayment
+
     # Create a stripe charge.
     try
       stripeCharge = AT.Stripe.charges.create chargeData
@@ -102,6 +172,7 @@ Meteor.methods
     # Stripe charge was created so record the payment.
     payments = []
 
+    # Create the Stripe payment.
     stripePaymentId = RS.Payment.documents.insert
       type: RS.Payment.Types.StripePayment
       chargeId: stripeCharge.id
@@ -116,6 +187,7 @@ Meteor.methods
 
     payments.push stripePayment
 
+    # Create the store credit payment.
     if usedCreditAmount
       creditPaymentId = RS.Payment.documents.insert
         type: RS.Payment.Types.StoreCredit
@@ -130,13 +202,37 @@ Meteor.methods
         throw error
 
       payments.push creditPayment
+      
+    # Build the tax info field.
+    taxInfo =
+      country:
+        billing: country
+        payment: country2
 
-    # Finally try to complete the transaction.
+    if country3
+      taxInfo.country.access = country3
+      taxInfo.accessIp = ip
+
+    if vatPayment
+      taxInfo.rate = vatPayment.vatRate
+      taxInfo.usdToEurExchangeRate = vatPayment.usdToEurExchangeRate
+      taxInfo.amountEur =
+        net: vatPayment.netAmountEur
+        vat: vatPayment.vatAmountEur
+
+    if businessInfo
+      taxInfo.business =
+        vatId: "#{businessInfo.countryCode}#{businessInfo.vatNumber}"
+        name: businessInfo.name
+        address: businessInfo.address
+
+    # Try to complete the transaction.
     try
       transactionId = RS.Transaction.create
         customer: customer
         payments: payments
         shoppingCart: shoppingCart
+        taxInfo: taxInfo
 
     catch error
       # Log the error since we'll probably need to resolve the stripe payment.
