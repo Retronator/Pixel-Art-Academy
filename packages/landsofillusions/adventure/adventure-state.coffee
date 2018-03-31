@@ -320,6 +320,10 @@ class LOI.Adventure extends LOI.Adventure
             callback: =>
               if dialog.result
                 # The player has confirmed to use the local state for the loaded account.
+                # Make sure location and timeline are written to the state, by overwriting them.
+                @setLocationId @currentLocationId()
+                @setTimelineId @currentTimelineId()
+
                 LOI.GameState.replaceForCurrentUser @localGameState.state(), =>
                   # Now that the local state has been transferred, clear it for next player.
                   @clearLocalGameState()

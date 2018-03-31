@@ -33,12 +33,12 @@ class Retronator.App extends Artificial.Base.App
     new PixelArtDatabase.PixelDailies
     new LOI.Assets
     new LOI.Construct.Pages
-    new LOI.World
     new Retropolis.City
 
     # Add adventure pages last so they capture all remaining URLs.
     new PixelArtAcademy
     new Retronator.HQ.Pages
+    new LOI.World
 
     AB.Router.initialize()
 
