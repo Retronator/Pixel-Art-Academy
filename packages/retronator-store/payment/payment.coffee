@@ -57,3 +57,5 @@ class RS.Payment extends AM.Document
 
   @Projects:
     PixelArtAcademy: 'PixelArtAcademy'
+
+  @NonEUCountryCode: 'non-eu'

@@ -1,0 +1,10 @@
+{
+  "lockfileVersion": 1,
+  "dependencies": {
+    "validate-vat": {
+      "version": "0.5.1",
+      "resolved": "https://registry.npmjs.org/validate-vat/-/validate-vat-0.5.1.tgz",
+      "integrity": "sha512-PImcAtFhLvEf+SEK/YIT0/bLFzAyEbsmBuAkWslOARba4F/JcLEgNWdl1pG+IcR1QHApdf6VeKv4AIBiefZitg=="
+    }
+  }
+}

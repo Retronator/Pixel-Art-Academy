@@ -1,5 +1,6 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
+RA = Retronator.Accounts
 
 class LOI.GameState extends AM.Document
   @id: -> 'LandsOfIllusions.GameState'
@@ -16,7 +17,7 @@ class LOI.GameState extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: @ReferenceField Retronator.Accounts.User
+      user: @ReferenceField RA.User
       character: @ReferenceField LOI.Character
 
   # We define these privately because we have custom public methods

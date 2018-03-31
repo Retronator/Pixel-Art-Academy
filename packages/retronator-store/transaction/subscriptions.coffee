@@ -49,3 +49,13 @@ Meteor.publish RS.Transaction.forReceivedGiftKeyCode, (keyCode) ->
   ,
     fields:
       "items.receivedGift.keyCode": 1
+
+RS.Transaction.forAccessSecret.publish (accessSecret) ->
+  check accessSecret, Match.DocumentId
+
+  RS.Transaction.documents.find {accessSecret}
+
+RS.Transaction.withTaxInfo.publish ->
+  RA.authorizeAdmin()
+
+  RS.Transaction.documents.find taxInfo: $exists: true

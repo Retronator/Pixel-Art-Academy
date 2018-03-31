@@ -1,0 +1,99 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-store-components-top-invoice
+  white-space pre
+  zx-spectrum()
+  font-size 8px
+  width 96em
+
+  .dates
+    margin 0 1em
+    text-align right
+
+    .name
+      display inline-block
+      width 16em
+      text-align left
+
+    .value
+      display inline-block
+
+  .items
+    border-collapse collapse
+    margin 3px
+    width calc(100% - 8px)
+
+    tr
+      th
+        font-weight normal
+        vertical-align bottom
+
+      td
+      th
+        border 1px solid black
+        padding 4px
+        text-align right
+
+    .name
+      text-align left
+      white-space normal
+      padding-left 12px
+
+    .unit-price
+      white-space normal
+      width calc(12em + 10px)
+
+    .vat-rate
+      white-space normal
+      width calc(5em + 10px)
+
+  .summary
+    display flex
+    width 100%
+
+    .vat
+      flex-grow 1
+
+      .vat-summary
+        border-collapse collapse
+        margin 3px
+
+        tr
+          th
+            font-weight normal
+            vertical-align bottom
+
+          td
+          th
+            border 1px solid black
+            padding 4px
+            text-align right
+
+        .rate
+          .country
+            text-transform uppercase
+
+      .notice
+        white-space normal
+        margin-left 1em
+
+    .payment
+      text-align right
+      white-space pre-line
+      margin-left 5em
+
+      .name
+        display inline-block
+        width 18em
+        text-align left
+
+      .value
+        display inline-block
+        margin-right 1em
+        width 15em
+
+      .payment-amount
+        text-transform uppercase
+
+      .divider
+        margin-right 1em

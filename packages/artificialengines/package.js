@@ -117,6 +117,7 @@ Package.onUse(function(api) {
 
   api.addFiles('mirage/spacebars/meteorhelpers.coffee');
   api.addFiles('mirage/spacebars/stringhelpers.coffee');
+  api.addFiles('mirage/spacebars/numberhelpers.coffee');
   api.addFiles('mirage/spacebars/htmlhelpers.coffee');
   api.addFiles('mirage/spacebars/image.coffee');
   api.addFiles('mirage/spacebars/uncached.coffee');
@@ -167,6 +168,7 @@ Package.onUse(function(api) {
   api.addServerFile('telepathy/stripe-server');
   api.addServerFile('telepathy/patreon-server');
   api.addServerFile('telepathy/tumblr-server');
+  api.addServerFile('telepathy/maxmind-server');
 
   // Artificial Babel
   api.addFile('babel/babel');
@@ -183,7 +185,8 @@ Package.onUse(function(api) {
   api.addFile('babel/language/language');
   api.addServerFile('babel/language/subscriptions');
 
-  api.addFile('babel/region/region');
+  api.addFile('babel/region..');
+  api.addFile('babel/region/lists');
   api.addServerFile('babel/region/subscriptions');
 
   api.addServerFile('babel/initialize-server/languages-data');
@@ -191,8 +194,9 @@ Package.onUse(function(api) {
   api.addServerFile('babel/initialize-server/regions-data');
   api.addServerFile('babel/initialize-server/regions');
 
-  api.addFile('babel/components/components');
-  api.addUnstyledComponent('babel/components/languageselection/languageselection');
-  api.addUnstyledComponent('babel/components/translatable/translatable');
-  api.addComponent('babel/components/translation/translation');
+  api.addFile('babel/components..');
+  api.addUnstyledComponent('babel/components/languageselection..');
+  api.addUnstyledComponent('babel/components/translatable..');
+  api.addComponent('babel/components/translation..');
+  api.addFile('babel/components/regionselection..');
 });
