@@ -1,0 +1,114 @@
+<template name="Retronator.Store.Components.Invoice">
+  <div class="retronator-store-components-top-invoice">
+     _______            ___             __________         _______   ___             ___ ____
+    /` ___  \_______   /` /\   ___ ____/` ____   /\       /_____  \ /` /\  _________/` //` _/\
+   /  /\_/  /` ___  \ /  /_/_ /` //` _/  /\__/  / /____  _`____/  /\  /_/_/` ____  /    __/`_/
+  /  __    /  /\_/  /\  ____/\    __//  /_/_/  / / __  \/  ___   / / ____/\ /\__/ /  __/`__/
+ /  /\_\   \  .____/ / /\___\/ __/`_/_________/ / /\_\ /  /\_/  / / /\___\//_/_/ /__/`__/
+/__/ /  \__/\_____/ / /_/_ /__/`__/ \_________\/ / / //________/ / /_/_/_________\__\/
+\__\/    \_\/\____\/_____/\\__\/             /__/ / /_\________\/_____/\_________\/
+                   \______\/                  \__\/  \__\/     \_______\/
+
+
+
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                              │
+│                 RETRONATOR, interactive content development, Matej Jan, s.p.                 │
+│                                                                                              │
+│                    POSTAJA 6, 5216 MOST NA SOČI, SLOVENIA, EUROPEAN UNION                    │
+│                                                                                              │
+├───────────────────────────────────────────────┬──────────────────────────────────────────────┤
+│VAT ID: SI77072251                             │email: hi@retronator.com                      │
+│                                               │web:   www.retronator.com                     │
+└───────────────────────────────────────────────┴──────────────────────────────────────────────┘
+
+
+
+{{#if taxInfo.business}}
+ Customer:
+
+ {{taxInfo.business.name}}
+ {{taxInfo.business.address}}
+
+ VAT ID: {{taxInfo.business.vatId}}
+{{/if}}
+
+
+
+ Invoice no.: {{taxInfo.invoiceId.year}}-{{taxInfo.invoiceId.number}}
+ ══════════════════════════════════════════════════════════════════════════════════════════════
+<div class="dates">
+  <span class="name">Date of issue:</span><span class="value">{{formatDate time}}</span>
+</div>
+
+<table class="items">
+  <tr class="header">
+    <th class="index">   </th>
+    <th class="name">{{t7e 'Description'}}</th>
+    <th class="quantity">{{t7e 'Quantity'}}</th>
+    <th class="unit-price">{{t7e 'Unit price without VAT'}}</th>
+    <th class="vat-rate">{{t7e 'VAT rate'}}</th>
+    <th class="value">{{t7e 'Value'}}</th>
+  </tr>
+  {{#each items}}
+    <tr class="item">
+      <td class="index">{{index}}.</td>
+      <td class="name">{{name}}</td>
+      <th class="quantity">1</th>
+      <th class="unit-price">${{fixedDecimals unitPrice 5}}</th>
+      <th class="vat-rate">{{vatRatePercentage}}%</th>
+      <td class="value">${{fixedDecimals value 2}}</td>
+    </tr>
+  {{/each}}
+</table>
+
+<div class="summary">
+  <div class="vat">
+ VAT SUMMARY
+    <table class="vat-summary">
+      <tr class="header">
+        <th class="rate">{{t7e 'VAT rate'}}{{#unless reverseCharge}} <span class="country">({{taxInfo.country.billing}})</span>{{/unless}}</th>
+        <th class="taxable-amount">{{t7e 'Taxable amount'}}</th>
+        <th class="vat-amount">{{t7e 'VAT amount'}}</th>
+      </tr>
+      <tr class="values">
+        <th class="rate">{{vatRatePercentage}}%</th>
+        <th class="taxable-amount">€{{fixedDecimals taxInfo.amountEur.net 2}}</th>
+        <th class="vat-amount">€{{fixedDecimals taxInfo.amountEur.vat 2}}</th>
+      </tr>
+    </table>
+
+ USD to EUR exchange rate: {{fixedDecimals taxInfo.usdToEurExchangeRate 4}}
+
+    <div class="notice">
+      {{#if reverseCharge}}
+        Reverse Charge - VAT exempt under Article 44 Directive 2006/112/ES
+      {{/if}}
+      {{#if electronicPurchase}}
+        Electronic service supply - customer is taxed in country of residence under Article 58 Directive 2006/112/ES
+      {{/if}}
+    </div>
+  </div>
+  <div class="payment">
+    {{#if storeCredit}}
+      <span class="name">Subtotal without VAT:</span><span class="value">${{fixedDecimals subtotal 5}}</span>
+
+      <span class="name">Discount<br/>(value of ${{storeCredit}}):</span><span class="value">- ${{fixedDecimals discount 5}}</span>
+
+    {{/if}}
+    <span class="name">Total without VAT:</span><span class="value">${{fixedDecimals totalWithoutVat 5}}</span>
+
+    <span class="divider">═════════════════════════════════</span>
+    <span class="name payment-amount">Payment amount:</span><span class="value">${{fixedDecimals total 2}}</span>
+    <span class="divider">═════════════════════════════════</span>
+  </div>
+</div>
+
+
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════
+Legal name: Retronator, razvoj interaktivnih vsebin, Matej Jan, s.p.
+Address: Postaja 6, 5216 Most na Soči, Slovenia
+  </div>
+</template>

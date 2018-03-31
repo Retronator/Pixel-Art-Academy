@@ -214,7 +214,7 @@ Meteor.methods
       taxInfo.accessIp = ip
 
     if vatPayment
-      taxInfo.rate = vatPayment.vatRate
+      taxInfo.vatRate = vatPayment.vatRate
       taxInfo.usdToEurExchangeRate = vatPayment.usdToEurExchangeRate
       taxInfo.amountEur =
         net: vatPayment.netAmountEur

@@ -41,7 +41,7 @@ class RS.Transaction extends AM.Document
   #     payment: country of payment method as provided by the payment provider
   #     access: country where the payment was made as determined from the IP address
   #   accessIp: IP address of the client accessing the system
-  #   invoiceId: invoice ID, if this transaction includes any monetary payments
+  #   invoiceId: invoice ID as needed for tax reporting
   #     year: the UTC year of the transaction time
   #     number: a sequential integer
   #   vatRate: VAT rate of the billing country in effect at the time of transaction
@@ -53,6 +53,7 @@ class RS.Transaction extends AM.Document
   #     vatId: VAT ID of the buyer
   #     name: name of the business, reported from VIES
   #     address: address of the business, reported from VIES
+  # accessSecret: a random ID that can be used to directly access this transaction for invoice accessing purposes
   # supporterName: the public name to show for this transaction for logged-out users
   # tip:
   #   amount: how much money was tipped
@@ -102,6 +103,7 @@ class RS.Transaction extends AM.Document
   @forCurrentUser: 'Retronator.Store.Transaction.forCurrentUser'
   @forGivenGiftKeyCode: 'Retronator.Store.Transaction.forGivenGiftKeyCode'
   @forReceivedGiftKeyCode: 'Retronator.Store.Transaction.forReceivedGiftKeyCode'
+  @forAccessSecret: @subscription 'forAccessSecret'
 
   # Methods
   @insertStripePurchase: 'Retronator.Store.Transaction.insertStripePurchase'

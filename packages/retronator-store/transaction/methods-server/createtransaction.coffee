@@ -8,6 +8,7 @@ RS.Transaction.create = (options) ->
     time: new Date()
     items: []
     payments: _.pick payment, '_id' for payment in payments
+    accessSecret: Random.id()
 
   if taxInfo
     transaction.taxInfo = taxInfo

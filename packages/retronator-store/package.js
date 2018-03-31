@@ -115,13 +115,15 @@ Package.onUse(function(api) {
 
   // Components
 
-  api.addFile('components/components');
+  api.addFile('components..');
 
-  api.addComponent('components/bundleitem/bundleitem');
-  api.addComponent('components/topsupporters/topsupporters');
+  api.addComponent('components/bundleitem..');
+  api.addComponent('components/topsupporters..');
+  api.addComponent('components/invoice..');
 
   // Pages
-  api.addFile('pages/pages');
+  api.addFile('pages..');
+  api.addComponent('pages/invoice..');
 
   api.addUnstyledComponent('pages/admin/admin');
 
