@@ -125,17 +125,19 @@ Package.onUse(function(api) {
   api.addFile('pages..');
   api.addComponent('pages/invoice..');
 
-  api.addUnstyledComponent('pages/admin/admin');
+  api.addUnstyledComponent('pages/admin..');
 
-  api.addUnstyledComponent('pages/admin/scripts/scripts');
+  api.addUnstyledComponent('pages/admin/scripts..');
   api.addServerFile('pages/admin/scripts/methods-server/convertpreorders');
   api.addServerFile('pages/admin/scripts/methods-server/convertimportedusers');
   api.addServerFile('pages/admin/scripts/methods-server/user-ontransactionsupdated');
 
-  api.addUnstyledComponent('pages/admin/authorizedpayments/authorizedpayments');
+  api.addUnstyledComponent('pages/admin/authorizedpayments..');
   api.addServerFile('pages/admin/authorizedpayments/methods-server');
 
-  api.addUnstyledComponent('pages/admin/patreon/patreon');
+  api.addUnstyledComponent('pages/admin/patreon..');
   api.addServerFile('pages/admin/patreon/methods-server');
+
+  api.addComponent('pages/admin/vat..');
 
 });

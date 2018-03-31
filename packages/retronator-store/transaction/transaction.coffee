@@ -104,6 +104,7 @@ class RS.Transaction extends AM.Document
   @forGivenGiftKeyCode: 'Retronator.Store.Transaction.forGivenGiftKeyCode'
   @forReceivedGiftKeyCode: 'Retronator.Store.Transaction.forReceivedGiftKeyCode'
   @forAccessSecret: @subscription 'forAccessSecret'
+  @withTaxInfo: @subscription 'withTaxInfo'
 
   # Methods
   @insertStripePurchase: 'Retronator.Store.Transaction.insertStripePurchase'
