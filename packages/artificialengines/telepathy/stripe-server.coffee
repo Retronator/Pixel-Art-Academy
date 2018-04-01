@@ -15,19 +15,23 @@ class AT.Stripe
       charges:
         create: Meteor.wrapAsync @_stripe.charges.create.bind @_stripe.charges
         retrieve: Meteor.wrapAsync @_stripe.charges.retrieve.bind @_stripe.charges
+      tokens:
+        retrieve: Meteor.wrapAsync @_stripe.tokens.retrieve.bind @_stripe.tokens
 
     @initialized = true
 
+  # Note: We need to use AT.Stripe below, because @ refers to the intermediary object created by doing another level.
   @customers:
-    # We need to use AT.Stripe, because @ refers to this intermediary object created by doing another level.
     create: -> AT.Stripe._call AT.Stripe._api.customers.create, arguments...
     retrieve: -> AT.Stripe._call AT.Stripe._api.customers.retrieve, arguments...
     delete: -> AT.Stripe._call AT.Stripe._api.customers.del, arguments...
 
   @charges:
-    # We need to use AT.Stripe, because @ refers to this intermediary object created by doing another level.
     create: -> AT.Stripe._call AT.Stripe._api.charges.create, arguments...
     retrieve: -> AT.Stripe._call AT.Stripe._api.charges.retrieve, arguments...
+
+  @tokens:
+    retrieve: -> AT.Stripe._call AT.Stripe._api.tokens.retrieve, arguments...
 
   @_call: (method, params, callback) ->
     try

@@ -1,0 +1,30 @@
+Retronator.Store.Vat.Rates =
+  Standard:
+    be: 0.21
+    bg: 0.20
+    cz: 0.21
+    dk: 0.25
+    de: 0.19
+    ee: 0.20
+    ie: 0.23
+    gr: 0.24
+    es: 0.21
+    fr: 0.20
+    hr: 0.25
+    it: 0.22
+    cy: 0.19
+    lv: 0.21
+    lt: 0.21
+    lu: 0.17
+    hu: 0.27
+    mt: 0.18
+    nl: 0.21
+    at: 0.20
+    pl: 0.23
+    pt: 0.23
+    ro: 0.19
+    si: 0.22
+    sk: 0.20
+    fi: 0.24
+    se: 0.25
+    gb: 0.20

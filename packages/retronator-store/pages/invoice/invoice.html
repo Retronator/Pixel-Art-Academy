@@ -1,0 +1,15 @@
+<template name="Retronator.Store.Pages.Invoice">
+  <div class="retronator-store-pages-invoice">
+    {{#if subscribed}}
+      {{#if transaction}}
+        <div class="invoice">
+          {{> Retronator.Store.Components.Invoice transaction}}
+        </div>
+      {{else}}
+        Invalid invoice request.
+      {{/if}}
+    {{else}}
+      Loading …
+    {{/if}}
+  </div>
+</template>

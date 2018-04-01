@@ -1,5 +1,6 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
+RA = Retronator.Accounts
 
 class LOI.GameState extends AM.Document
   @id: -> 'LandsOfIllusions.GameState'
@@ -33,7 +34,7 @@ class LOI.GameState extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: @ReferenceField Retronator.Accounts.User, ['displayName']
+      user: @ReferenceField RA.User, ['displayName']
       character: @ReferenceField LOI.Character, ['debugName']
       # Events and state both influence next simulation time (we need earliest event, 
       # and latest game time as well as when that game time was written (last updated at)).

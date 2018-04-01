@@ -40,14 +40,30 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @scrolled = new ReactiveField false
     @scrolledToBottom = new ReactiveField false
 
+    @europeanUnion = @state.field 'europeanUnion', default: false
+    @country = @state.field 'country'
+    @business = @state.field 'business', default: false
+    @vatId = @state.field 'vatId'
+
+    @vatIdError = new ReactiveField null
+    @vatIdName = new ReactiveField null
+
     @purchaseItems = new ReactiveField []
+
+    @usdToEurExchangeRate = new ReactiveField null
 
   onCreated: ->
     super
 
+    @vatSummaryError = new ComputedField =>
+      return unless @europeanUnion()
+      return "You need to enter your billing country to calculate VAT." unless @country()
+      return "You need to enter your VAT ID, otherwise choose consumer." if @business() and not @vatId()
+      null
+
     @scrolled false
     @scrolledToBottom false
-        
+
     # Get all store items data.
     @subscribe RS.Item.all
 
@@ -77,6 +93,48 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
       @purchaseItems purchaseItems
 
+    # Validate VAT ID.
+    @autorun (computation) =>
+      # Reset the errors as we will display a new one after validation, if necessary.
+      @vatIdError null
+      @purchaseError null
+
+      # VAT ID is only needed for EU businesses.
+      return unless @europeanUnion() and @business()
+
+      # React to VAT ID and country changes.
+      return unless vatId = @vatId()
+      return unless country = @country()
+
+      # Make sure the country matches.
+      vatIdCountry = vatId[0..1].toLowerCase()
+      vatIdCountry = 'gr' if vatIdCountry is 'el'
+
+      unless country is vatIdCountry
+        @vatIdError reason: "VAT ID doesn't match your country selection."
+        return
+
+      # Also validate ID to notify the user in advance if there will be any errors.
+      RS.Vat.validateVatId vatId, (error, result) =>
+        if error
+          @vatIdError error
+          return
+
+        # Show the company name for 8 seconds.
+        @vatIdName result.name
+
+        Meteor.setTimeout =>
+          @vatIdName null
+        ,
+          8000
+
+    RS.Vat.ExchangeRate.getUsdToEur (error, value) =>
+      if error
+        console.error error
+        return
+
+      @usdToEurExchangeRate value
+
   onRendered: ->
     super
 
@@ -89,12 +147,13 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     $messageArea = @$('.message-area')
     @_$translateAreas = $displayScene.add($messageArea)
 
-    @_$viewportArea = @$('.viewport-area')
+    @_$background = @$('.background')
     @_$safeArea = @$('.safe-area')
-    @_$receipt = @_$safeArea.find('.receipt')
+    @_$safeAreaContent = @$('.safe-area-content')
+    @_$receipt = @_$safeAreaContent.find('.receipt')
 
-    @_$viewportArea.scroll (event) =>
-      @scrolled true
+    @_$background.scroll (event) =>
+      @scrolled @_$background.scrollTop() > 0
 
     Meteor.setTimeout =>
       @_scrollToNewSupporter duration: 1000
@@ -108,7 +167,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
   draw: ->
     # After we go pass the end of the receipt, move the display scene.
-    scrollTop = @_$viewportArea.scrollTop()
+    scrollTop = @_$background.scrollTop()
     return if scrollTop is @_lastScrollTop
 
     safeAreaHeight = @_$safeArea.height()
@@ -120,9 +179,6 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
     else
       sceneOffset = 0
-
-    @_$translateAreas.css
-      'transform': "translateY(#{sceneOffset}px)"
 
     @scrolledToBottom sceneOffset < 0
 
@@ -148,6 +204,27 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
   anonymousNoAttributes: ->
     checked: true unless @showSupporterName()
+
+  europeanUnionYesAttributes: ->
+    checked: true if @europeanUnion()
+
+  europeanUnionNoAttributes: ->
+    checked: true unless @europeanUnion()
+
+  europeanUnionAreaVisibleClass: ->
+    'visible' if @europeanUnion()
+
+  europeanUnionConsumerAttributes: ->
+    checked: true unless @business()
+
+  europeanUnionBusinessAttributes: ->
+    checked: true if @business()
+
+  # HACK: For whatever reason we can't use the fields directly.
+  isEuropeanUnion: -> @europeanUnion()
+  isBusiness: -> @business()
+  vatIdEntry: -> @vatId()
+  vatCountry: -> @country()
 
   itemsPrice: ->
     # The sum of all items to be purchased.
@@ -236,18 +313,65 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     return unless error = @purchaseError()
     error.error is RS.Transaction.serverErrorAfterPurchase
 
+  vatIdErrorText: ->
+    return unless error = @vatIdError()
+
+    errorText = "#{error.reason}"
+    errorText = "#{errorText} #{error.details}" if error.details
+
+    errorText
+
   showingFinalMessage: ->
     # We show only the dialog message (and hide the receipt and payment presenter) when the purchase has gone through.
     @purchaseCompleted() or @purchaseErrorAfterCharge()
 
+  vatCharged: ->
+    # VAT is always charged in Slovenia and for consumers outside Slovenia.
+    @country() is 'si' or not @business()
+
+  vatRate: ->
+    RS.Vat.Rates.Standard[@country()]
+
+  vatRatePercentage: ->
+    @vatRate() * 100
+    
+  vatPayment: ->
+    return unless usdToEurExchangeRate = @usdToEurExchangeRate()
+  
+    RS.Vat.calculateVat
+      desiredTotalAmountUsd: @paymentAmount()
+      usdToEurExchangeRate: usdToEurExchangeRate
+      vatRate: @vatRate()
+
+  paymentAmountEur: ->
+    @vatPayment()?.totalAmountEur
+
+  vatAmountEur: ->
+    @vatPayment()?.vatAmountEur
+
+  paymentAmountWithoutVatEur: ->
+    @vatPayment()?.netAmountEur
+
   events: ->
     super.concat
+      'change .european-union-radio': @onChangeEuropeanUnionRadio
+      'change .european-union-entity-radio': @onChangeEuropeanUnionEntityRadio
+      'change .vat-id': @onChangeVatId
       'change .anonymous-radio': @onChangeAnonymousRadio
       'input .supporter-name': @onInputSupporterName
       'input .tip-amount': @onInputTipAmount
       'input .tip-message': @onInputTipMessage
       'click .one-time-payment .one-time-stripe': @onClickOneTimePaymentStripe
       'click .deselect-payment-method-button': @onClickDeselectPaymentMethodButton
+
+  onChangeEuropeanUnionRadio: (event) ->
+    @europeanUnion parseInt($(event.target).val()) is 1
+
+  onChangeEuropeanUnionEntityRadio: (event) ->
+    @business parseInt($(event.target).val()) is 1
+
+  onChangeVatId: (event) ->
+    @vatId $(event.target).val()
 
   onChangeAnonymousRadio: (event) ->
     showSupporterName = parseInt($(event.target).val()) is 1
@@ -310,8 +434,8 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
 
   _onSubmittingPayment: ->
     # Scroll to top.
-    @$('.viewport-area > .safe-area').velocity 'scroll',
-      container: @$('.viewport-area')
+    @$('.safe-area-content').velocity 'scroll',
+      container: @$('.background')
 
   _displayError: (error) ->
     super
@@ -352,6 +476,25 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
         type: HQ.Items.Components.Stripe.PaymentMethods.StripePayment
 
   # Components
+
+  class @EuropeanCountrySelection extends AB.Components.RegionSelection
+    @register 'Retronator.HQ.Items.Receipt.EuropeanCountrySelection'
+
+    constructor: ->
+      super
+
+      @regionList = AB.Region.Lists.EuropeanUnion
+
+    onCreated: ->
+      super
+
+      @receipt = @ancestorComponentOfType HQ.Items.Receipt
+
+    load: ->
+      @receipt.country() or ''
+
+    save: (value) ->
+      @receipt.country value
 
   class @SupporterName extends AM.DataInputComponent
     @register 'Retronator.HQ.Items.Receipt.SupporterName'

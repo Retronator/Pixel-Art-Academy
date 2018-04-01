@@ -268,7 +268,7 @@ class LOI.Adventure extends LOI.Adventure
             dialog = new LOI.Components.Dialog
               message: "
                 The account you loaded doesn't have a save game.
-                Please use one of Lands of Illusions content modules to get started.
+                Please continue playing until you reach Retronator HQ where you will save your game to your account.
               "
               buttons: [
                 text: "OK"
@@ -342,6 +342,10 @@ class LOI.Adventure extends LOI.Adventure
             callback: =>
               if dialog.result
                 # The player has confirmed to use the local state for the loaded account.
+                # Make sure location and timeline are written to the state, by overwriting them.
+                @setLocationId @currentLocationId()
+                @setTimelineId @currentTimelineId()
+
                 LOI.GameState.replaceForCurrentUser @localGameState.state(), =>
                   # Now that the local state has been transferred, clear it for next player.
                   @clearLocalGameState()
