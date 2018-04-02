@@ -149,7 +149,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
 
     # We need to escape the hashtag at the start of the description since it would be treated as a header.
     # We need to use double \\ to escape it in the string as well and produce a literal \.
-    profile.description.replace /^#/, '\\#'
+    profile.description.replace /#/g, '\\#'
 
   statistics: ->
     @profile().pixelDailies.statisticsByYear[@year()] or
