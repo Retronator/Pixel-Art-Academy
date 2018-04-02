@@ -76,7 +76,21 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
     newAddress = @$(event.target).val()
 
     Meteor.call RA.User.removeEmail, oldAddress if oldAddress
-    Meteor.call RA.User.addEmail, newAddress if newAddress.length
+
+    if newAddress.length
+      Meteor.call RA.User.addEmail, newAddress, (error) =>
+        if error
+          message = "Something went wrong with adding the email. #{error.message}"
+
+        else
+          message = "Email added. Please verify it by clicking the red verified field next to it."
+
+        LOI.adventure.showActivatableModalDialog
+          dialog: new LOI.Components.Dialog
+            message: message
+            buttons: [
+              text: "OK"
+            ]
 
     # Also clear new address input, since we've processed it (or it was already empty, so this is a nop).
     @$('.new-address-input').val('')

@@ -39,8 +39,8 @@ Package.onUse(function(api) {
 
   // Initialization
 
-  api.addFiles('initialize-server/signin.coffee', 'server');
-  api.addFiles('initialize-server/emails.coffee', 'server');
+  api.addServerFile('initialize-server/signin');
+  api.addServerFile('initialize-server/emails');
 
   // User
   

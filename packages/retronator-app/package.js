@@ -46,6 +46,10 @@ Package.onUse(function(api) {
 
   api.addServerFile('routing-server');
 
+  // Add global user meld (it needs to be in top-level package to have access to all documents).
+  api.use('splendido:accounts-meld@1.3.1');
+  api.addServerFile('accountsmeld-server');
+
   // Add other files.
   api.addUnstyledComponent('app');
 

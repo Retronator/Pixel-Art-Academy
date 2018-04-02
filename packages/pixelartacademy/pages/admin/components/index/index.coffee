@@ -42,7 +42,7 @@ class PAA.Pages.Admin.Components.Index extends AM.Component
     data[@options.nameField] or "#{data._id.substring 0, 5}…"
 
   activeClass: ->
-    'active' if @currentData()._id is AB.Router.getParameters 'documentId'
+    'active' if @currentData()._id is AB.Router.getParameter 'documentId'
 
   events: ->
     super.concat

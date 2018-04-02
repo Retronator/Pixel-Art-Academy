@@ -55,7 +55,7 @@ class AM.Document extends Document
       ,
         multi: true
 
-      console.log "Substituted", referrer.sourceDocument.name, referrer.sourcePath, sourceId, "with", updatePath, targetId, count, "times" if count
+      console.log "Substituted", referrer.sourceDocument.name, referrer.sourcePath, sourceId, "with", updatePath, targetId, count, "times"
 
   @Meta
     abstract: true
