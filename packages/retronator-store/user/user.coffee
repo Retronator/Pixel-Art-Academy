@@ -11,7 +11,7 @@ class RA.User extends RA.User
   # store:
   #   balance: the sum of all payments minus sum of all purchases
   #   credit: positive part of balance
-  # items: generated array of items owned by this user
+  # items: trigger-generated array of items owned by this user
   #   _id
   #   catalogKey
   @Meta
