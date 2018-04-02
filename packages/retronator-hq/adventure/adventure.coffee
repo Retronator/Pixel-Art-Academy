@@ -25,12 +25,52 @@ class HQ.Adventure extends LOI.Adventure
     locationId: HQ.Cafe.id()
     timelineId: LOI.TimelineIds.RealLife
 
+  constructor: ->
+    super
+
+    # Enable directly linking to some items.
+    directItems = [
+      item: HQ.Store.Display
+      location: HQ.Store
+    ]
+
+    for directItem in directItems
+      do (directItem) =>
+        LOI.Adventure.registerDirectRoute "/#{directItem.item.url()}", =>
+          # Show the item if we need to.
+          unless LOI.adventure.activeItemId() is directItem.item.id()
+            # Move to the location if necessary.
+            LOI.adventure.setLocationId directItem.location unless LOI.adventure.currentLocationId() is directItem.location.id()
+
+            Tracker.autorun (computation) =>
+              # Wait until the item is available.
+              return unless LOI.adventure.getCurrentThing directItem.item
+              computation.stop()
+
+              # Show the item.
+              LOI.adventure.goToItem directItem.item
+
+    # Enable directly linking to some locations.
+    directLocations = [
+      HQ.Cafe
+      HQ.Store
+      HQ.GalleryEast
+      HQ.GalleryWest
+    ]
+
+    for directLocation in directLocations
+      do (directLocation) =>
+        LOI.Adventure.registerDirectRoute "/#{directLocation.url()}", =>
+          # Move to the location if necessary.
+          LOI.adventure.setLocationId directLocation unless LOI.adventure.currentLocationId() is directLocation.id()
+
   onCreated: ->
     super
 
     # Prepare Chapter 2 state.
     C2 = PixelArtAcademy.Season1.Episode0.Chapter2
     C2.state 'movedToCaltrain', true
+    C2.state 'fadeOutDone', true
 
     # End Chapter 1 so that Chapter 2 starts.
     C1 = PixelArtAcademy.Season1.Episode0.Chapter1

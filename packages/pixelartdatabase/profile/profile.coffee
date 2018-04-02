@@ -3,7 +3,6 @@ PADB = PixelArtDatabase
 
 class PADB.Profile extends AM.Document
   @id: -> 'PixelArtDatabase.Profile'
-
   # platformType: what platform this profile is on
   # platformName: the name of the platform if type is Other
   # url: link to the profile

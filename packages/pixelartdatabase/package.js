@@ -79,5 +79,8 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('pages/admin/profiles/scripts');
   api.addServerFile('pages/admin/profiles/scripts-server');
 
+  api.addUnstyledComponent('pages/admin/scripts..');
+  api.addServerFile('pages/admin/scripts/methods-server/removeduplicatetwitterprofiles');
+
   // api.addUnstyledComponent('components/uploader/uploader');
 });
