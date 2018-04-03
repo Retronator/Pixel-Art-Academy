@@ -54,6 +54,12 @@ class Studio.Computer.Browser extends AM.Component
   appId: -> 'browser'
   name: -> 'Web Surfer'
 
+  backButtonCallback: ->
+    @computer.switchToScreen @computer.screens.desktop
+
+    # Instruct the back button to cancel closing (so it doesn't disappear).
+    cancel: true
+
   routeFromUrl: (url) ->
     # Determine if we can serve the webpage ourselves. Also make sure this is a valid url.
     link = $("<a href='#{url}'>")[0]

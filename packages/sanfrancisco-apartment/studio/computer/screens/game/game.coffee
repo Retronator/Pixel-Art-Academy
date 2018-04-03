@@ -8,13 +8,11 @@ class Studio.Computer.Game extends AM.Component
   constructor: (@computer, @gameId, @gameName, @embedName) ->
     super
 
-  events: ->
-    super.concat
-      'click .close-button': @onClickCloseButton
+  appId: -> @gameId
+  name: -> @gameName
 
-  onClickCloseButton: (event) ->
+  backButtonCallback: ->
     @computer.switchToScreen @computer.screens.desktop
 
-  appId: -> @gameId
-
-  name: -> @gameName
+    # Instruct the back button to cancel closing (so it doesn't disappear).
+    cancel: true

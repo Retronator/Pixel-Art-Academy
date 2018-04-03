@@ -22,7 +22,7 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
       return [] unless user = Retronator.user()
       return [] unless user.characters
 
-      LOI.Character.getInstance character for character in user.characters
+      LOI.Character.getInstance character for character in user.characters when character.activated
 
     # Which character is shown left-most. Allows to scroll through options.
     @firstCharacterOffset = new ReactiveField 0
@@ -57,7 +57,9 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
     'active' if LOI.adventure.currentLocationId() is LOI.Construct.Loading.id()
 
   nextButtonVisibleClass: ->
-    'visible' if @firstCharacterOffset() < @activatedCharacters().length - 2
+    # We need to accommodate Lands of Illusions and Disconnect links.
+    extraOptionsCount = if @showDisconnect() then 1 else 2
+    'visible' if @firstCharacterOffset() < @activatedCharacters().length - 1 - extraOptionsCount
 
   previousButtonVisibleClass: ->
     'visible' if @firstCharacterOffset() > 0

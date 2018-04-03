@@ -23,6 +23,12 @@ class Studio.Computer.Email extends AM.Component
 
   appId: -> 'email'
   name: -> 'Inbox'
+    
+  backButtonCallback: ->
+    @computer.switchToScreen @computer.screens.desktop
+
+    # Instruct the back button to cancel closing (so it doesn't disappear).
+    cancel: true
 
   emails: ->
     @currentInbox().things()
