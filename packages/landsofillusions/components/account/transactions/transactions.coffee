@@ -91,13 +91,13 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
     '' for i in [0...emptyLines]
 
   showCurrentPatreonPledge: ->
-    @authorizedPaymentsAmount().PatreonPledge
+    @authorizedPaymentsAmount()?.PatreonPledge
 
   showPositiveBalance: ->
     Retronator.user()?.store?.credit
 
   showAuthorizedOnly: ->
-    @authorizedPaymentsAmount().StripePayment
+    @authorizedPaymentsAmount()?.StripePayment
 
   showEndListing: ->
     # Only show end listing if no other messages will be present.

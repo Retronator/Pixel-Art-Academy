@@ -30,9 +30,6 @@ class HQ.Adventure extends LOI.Adventure
 
     # Enable directly linking to some items.
     directItems = [
-      item: HQ.Items.Daily
-      location: HQ.Cafe
-    ,
       item: HQ.Store.Display
       location: HQ.Store
     ]
@@ -73,6 +70,7 @@ class HQ.Adventure extends LOI.Adventure
     # Prepare Chapter 2 state.
     C2 = PixelArtAcademy.Season1.Episode0.Chapter2
     C2.state 'movedToCaltrain', true
+    C2.state 'fadeOutDone', true
 
     # End Chapter 1 so that Chapter 2 starts.
     C1 = PixelArtAcademy.Season1.Episode0.Chapter1

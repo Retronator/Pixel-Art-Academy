@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:app',
-  version: '0.30.0',
+  version: '0.31.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -53,6 +53,10 @@ Package.onUse(function(api) {
   api.use('ddp', 'server');
 
   api.addServerFile('routing-server');
+
+  // Add global user meld (it needs to be in top-level package to have access to all documents).
+  api.use('splendido:accounts-meld@1.3.1');
+  api.addServerFile('accountsmeld-server');
 
   // Add other files.
   api.addUnstyledComponent('app');

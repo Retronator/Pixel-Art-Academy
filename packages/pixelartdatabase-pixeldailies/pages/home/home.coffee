@@ -69,8 +69,8 @@ class PADB.PixelDailies.Pages.Home extends AM.Component
       year: 'numeric'
 
   background: ->
-    url: 'https://pbs.twimg.com/media/C1XpVnQXEAAiNuD.png'
-    author: 'vierbit'
+    url: 'https://pbs.twimg.com/media/DSq0PJeVAAE55Ml.png'
+    author: 'LumpyTouch'
 
   class @Theme extends AM.Component
     @register 'PixelArtDatabase.PixelDailies.Pages.Home.Theme'

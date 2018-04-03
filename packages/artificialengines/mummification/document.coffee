@@ -4,6 +4,59 @@ AM = Artificial.Mummification
 
 # Extended PeerDB document with common operations.
 class AM.Document extends Document
+  @Meta: (meta) ->
+    super
+
+    return if meta.abstract
+
+    # Referrers are incoming references from other documents.
+    @referrers = []
+
+    # Analyze field references to add the referrers, after all documents have been defined.
+    Document.prepare => @_analyzeFields @Meta.fields, ''
+
+  @_analyzeFields: (source, path) ->
+    for fieldName, field of source
+      prefix = if path.length then "#{path}." else ''
+      fieldPath = "#{prefix}#{fieldName}"
+
+      if field instanceof Document._ReferenceField
+        # Skip reverse fields.
+        continue if _.find @Meta._reverseFields, (reverseField) => reverseField.reverseName is fieldPath
+
+        # Inform the target document of the reference.
+        field.targetDocument.addReferrer field
+
+      else if field.constructor is Object
+        @_analyzeFields field, fieldPath
+
+  @addReferrer: (referenceField) ->
+    @referrers.push referenceField
+
+  # Replaces all references to the document with sourceId to point to targetId instead.
+  @substituteDocument: (sourceId, targetId) ->
+    for referrer in @referrers
+      updatePath = referrer.sourcePath
+
+      if referrer.inArray
+        # In arrays, we need to place the positioning operator after the name of the array.
+        pathParts = updatePath.split '.'
+
+        ancestorArrayIndex = pathParts.indexOf referrer.ancestorArray
+        pathParts[ancestorArrayIndex] += '.$'
+
+        updatePath = pathParts.join '.'
+
+      count = referrer.sourceDocument.documents.update
+        "#{referrer.sourcePath}._id": sourceId
+      ,
+        $set:
+          "#{updatePath}._id": targetId
+      ,
+        multi: true
+
+      console.log "Substituted", referrer.sourceDocument.name, referrer.sourcePath, sourceId, "with", updatePath, targetId, count, "times"
+
   @Meta
     abstract: true
 
