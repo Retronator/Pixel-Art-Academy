@@ -1,7 +1,5 @@
 RA = Retronator.Accounts
 
-topSupporters = new Meteor.Collection 'TopSupporters'
-
 summarizeUser = (user) ->
   # Calculate user's supporter rank. It is the number of other users with higher support amount plus one.
   higherRankingUsersCount = RA.User.documents.find(

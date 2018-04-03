@@ -11,3 +11,79 @@
 
   &.visible
     visibility visible
+
+  .students
+    display flex
+    position absolute
+    left 36rem
+    top 16rem
+    width 300rem
+    height 192rem
+    list-style none
+    margin 0
+    padding 0
+    align-content space-between
+    flex-direction column
+    flex-wrap wrap
+
+    .student
+      width 130rem
+      height 16rem
+      display flex
+
+      .avatar
+        position relative
+        width 20rem
+        height 15rem
+        overflow hidden
+
+        .sanfrancisco-c3-design-terminal-components-avatarpartpreview
+          position relative
+          width 16rem
+          height 42rem
+
+      .name
+        position relative
+        top 2rem
+        width 100rem
+        height 12rem
+        align-self flex-end
+        academy()
+        line-height 12rem
+        overflow hidden
+        white-space nowrap
+
+  .page-button
+    position absolute
+    display none
+    bottom 27rem
+    border 0
+    background 0
+    padding 5rem
+    checkout()
+    color atariGrey(4)
+    cursor pointer
+
+    &:hover
+      color atariGrey(3)
+
+    &.previous
+      left 29rem
+
+    &.next
+      right 29rem
+
+  &:hover
+    .page-button.visible
+      display block
+
+  .page-number
+    position absolute
+    bottom 32rem
+    checkout()
+
+    &.left
+      left 100rem
+
+    &.right
+      right 100rem

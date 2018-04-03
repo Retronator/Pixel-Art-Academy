@@ -17,6 +17,7 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addComponent('yearbook');
+  api.addServerFile('subscriptions');
 
   api.addComponent('front..');
 

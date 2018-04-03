@@ -20,6 +20,21 @@ class PAA.PixelBoy.Apps.Yearbook extends PAA.PixelBoy.App
 
   @initialize()
 
+  # Subscriptions
+
+  @classOf2016: new AB.Subscription name: "#{@id()}.classOf2016"
+  @classOf2016CharactersCollectionName: "#{@id()}.classOf2016Characters"
+
+  if Meteor.isClient
+    Yearbook = @
+
+    class @ClassOf2016Character extends LOI.Character
+      @id: -> 'PixelArtAcademy.PixelBoy.Apps.Yearbook.Middle.ClassOf2016Character'
+
+      @Meta
+        name: @id()
+        collection: new Meteor.Collection Yearbook.classOf2016CharactersCollectionName
+  
   constructor: ->
     super
 
