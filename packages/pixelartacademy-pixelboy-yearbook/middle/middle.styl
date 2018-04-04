@@ -12,66 +12,98 @@
   &.visible
     visibility visible
 
-  .students
-    display flex
+  .spread
     position absolute
     left 36rem
     top 16rem
-    width 300rem
+    width 305rem
     height 192rem
-    list-style none
-    margin 0
-    padding 0
-    align-content space-between
-    flex-direction column
-    flex-wrap wrap
 
-    .student
+    .title
+      position absolute
+      top 0
+      left 0
       width 130rem
-      height 16rem
+      height 32rem
+      academy()
+      font-weight normal
+      text-align center
+      text-transform uppercase
+
+      & ~ .students .student:first-child
+        margin-top 32rem
+
+    .students
+      absolute-cover()
       display flex
+      align-content space-between
+      flex-direction column
+      flex-wrap wrap
+      list-style none
+      margin 0
+      padding 0
 
-      .avatar
-        position relative
-        width 20rem
-        height 15rem
-        overflow hidden
+      .student
+        width 135rem
+        height 16rem
+        display flex
 
-        .sanfrancisco-c3-design-terminal-components-avatarpartpreview
+        .avatar
           position relative
-          width 16rem
-          height 42rem
+          width 20rem
+          height 15rem
+          overflow hidden
 
-      .name
-        position relative
-        top 2rem
-        width 100rem
-        height 12rem
-        align-self flex-end
-        academy()
-        line-height 12rem
-        overflow hidden
-        white-space nowrap
+          .sanfrancisco-c3-design-terminal-components-avatarpartpreview
+            position relative
+            width 16rem
+            height 42rem
+
+        .name
+          position relative
+          top 2rem
+          width 115rem
+          height 12rem
+          align-self flex-end
+          academy()
+          line-height 12rem
+          overflow hidden
+          white-space nowrap
+          text-overflow ellipsis
+
+          .badges
+            display none
+            padding 0
+            margin 0
+            list-style none
+
+            .badge
+              margin-right 1rem
+
+              .icon
+                height 5rem
+
+              &.kickstarter
+                margin-right 2rem
+
+          &:hover
+            .badges
+              display inline-flex
 
   .page-button
-    position absolute
-    display none
     bottom 27rem
-    border 0
-    background 0
-    padding 5rem
-    checkout()
-    color atariGrey(4)
-    cursor pointer
-
-    &:hover
-      color atariGrey(3)
 
     &.previous
       left 29rem
 
     &.next
       right 29rem
+
+    &.front
+      left 155rem
+      width 25rem
+      height 40rem
+      bottom -10rem
 
   &:hover
     .page-button.visible

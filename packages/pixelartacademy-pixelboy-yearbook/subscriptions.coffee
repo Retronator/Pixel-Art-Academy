@@ -5,23 +5,16 @@ LOI = LandsOfIllusions
 
 Yearbook = PAA.PixelBoy.Apps.Yearbook
 
-Yearbook.classOf2016.publish ->
-  collectionName = Yearbook.classOf2016CharactersCollectionName
+Yearbook.students.publish ->
+  collectionName = Yearbook.studentsCollectionName
   
-  # Class of 2016 are all who users with class of 2016 artwork, and users created before 2017 that also own alpha
-  # access. This allows a user to become class of 2016 even if they later-on purchase alpha access, but they already
-  # registered in 2016. It's a small trade-off so that we don't have to query individual transactions.
   RA.User.documents.find(
-    $or: [
-      'items.catalogKey': RS.Items.CatalogKeys.PixelArtAcademy.Kickstarter.ClassOf2016Artwork
-    ,
-      createdAt: $lt: new Date(2017, 0, 1)
-      'items.catalogKey': RS.Items.CatalogKeys.PixelArtAcademy.AlphaAccess
-    ]
+    characters: $exists: true
   ,
     fields:
-      # We only need to get a list of characters.
+      createdAt: true
       characters: true
+      items: true
   ).observe
     added: (user) => processCharacters user, (character) => @added collectionName, character._id, character
     changed: (user) => processCharacters user, (character) => @changed collectionName, character._id, character
@@ -31,6 +24,37 @@ Yearbook.classOf2016.publish ->
 
 processCharacters = (user, callback) ->
   return unless user.characters
+
+  userFlags = {}
+
+  # Class of 2016 are all who users with class of 2016 artwork, and users created before 2017 that also own alpha
+  # access. This allows a user to become class of 2016 even if they later-on purchase alpha access, but they already
+  # registered in 2016. It's a small trade-off so that we don't have to query individual transactions.
+  hasClassOf2016Artwork = user.hasItem RS.Items.CatalogKeys.PixelArtAcademy.Kickstarter.ClassOf2016Artwork
+
+  userFlags.hasAlphaAccess = user.hasItem RS.Items.CatalogKeys.PixelArtAcademy.AlphaAccess
+
+  # Class of 2017 are all other backers () and players registered before 2018.
+  userFlags.isBacker = false
+
+  for key, backerItem of RS.Items.CatalogKeys.PixelArtAcademy.Kickstarter when user.hasItem backerItem
+    userFlags.isBacker = true
+
+  # Determine class year.
+  if hasClassOf2016Artwork or user.createdAt < new Date(2017, 0, 1) and userFlags.hasAlphaAccess
+    userFlags.classYear = 2016
+
+  else if userFlags.isBacker or user.createdAt < new Date(2018, 0, 1)
+    userFlags.classYear = 2017
+
+  else
+    userFlags.classYear = 2018
+
+  # Determine if user is a patron.
+  userFlags.isPatron = user.hasItem RS.Items.CatalogKeys.Retronator.Patreon.PatreonKeycard
+
+  # We should show the portrait only if the user can edit avatars.
+  userFlags.hasAvatarEditor = user.hasItem RS.Items.CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
 
   for character in user.characters
     character = LOI.Character.documents.findOne
@@ -42,5 +66,10 @@ processCharacters = (user, callback) ->
         # We only need the avatar to display in the Yearbook.
         avatar: true
 
-    # Process the character, but make sure the character link is not stale.
-    callback character if character
+    # Make sure the character isn't a bad reference.
+    continue unless character
+
+    _.extend character, userFlags
+
+    # Process the character.
+    callback character

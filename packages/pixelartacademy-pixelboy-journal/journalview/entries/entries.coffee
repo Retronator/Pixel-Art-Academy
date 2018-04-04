@@ -13,7 +13,11 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
   
   constructor: (@journalDesign) ->
     super
-
+    
+  mixins: -> [
+    PAA.PixelBoy.Components.Mixins.PageTurner
+  ]
+    
   onCreated: ->
     super
 
@@ -196,31 +200,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     super.concat
       'click .previous.page-button': @onClickPreviousPageButton
       'click .next.page-button': @onClickNextPageButton
-      'wheel': @onMouseWheel
 
   onClickPreviousPageButton: (event) ->
     @previousPage()
 
   onClickNextPageButton: (event) ->
     @nextPage()
-
-  onMouseWheel: (event) ->
-    event.preventDefault()
-
-    @_horizontalScroll ?= 0
-    @_horizontalScroll += event.originalEvent.deltaX
-    minimumHorizontalScroll = 20
-
-    @nextPage() if @_horizontalScroll > minimumHorizontalScroll
-    @previousPage() if @_horizontalScroll < -minimumHorizontalScroll
-
-    # Reset scroll after page was turned.
-    @_horizontalScroll = 0 if Math.abs(@_horizontalScroll) > minimumHorizontalScroll
-
-    # Also reset scroll after the user pauses scrolling.
-    @_debouncedReset ?= _.debounce =>
-      @_horizontalScroll = 0
-    ,
-      1000
-
-    @_debouncedReset()

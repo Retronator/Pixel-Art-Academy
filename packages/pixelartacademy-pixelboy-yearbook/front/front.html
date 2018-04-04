@@ -11,40 +11,20 @@
         </div>
       </h1>
       <ol class="contents">
-        <li class="section">
-          <div class="main">
-            <div class="name">Class of 2016</div>
-            <div class="leader"></div>
-            <div class="page-number">1</div>
-          </div>
-          <div class="extra">
-            Alpha backers<br/>
-            Alpha pre-orders
-          </div>
-        </li>
-        <li class="section">
-          <div class="main">
-            <div class="name">Class of 2017</div>
-            <div class="leader"></div>
-            <div class="page-number">35</div>
-          </div>
-          <div class="extra">
-            Regular backers<br/>
-            Pre-orders<br/>
-            Patrons
-          </div>
-        </li>
-        <li class="section">
-          <div class="main">
-            <div class="name">Class of 2018</div>
-            <div class="leader"></div>
-            <div class="page-number">88</div>
-          </div>
-          <div class="extra">
-            Pre-orders<br/>
-            Patrons
-          </div>
-        </li>
+        {{#each sections}}
+          <li class="section">
+            <div class="main">
+              <div class="name">Class of {{year}}</div>
+              <div class="leader"></div>
+              <div class="page-number">{{startingPage}}</div>
+            </div>
+            <ul class="categories">
+              {{#each categories}}
+                <li class="category">{{this}}</li>
+              {{/each}}
+            </ul>
+          </li>
+        {{/each}}
       </ol>
     </div>
     <div class="edit-profile">
@@ -52,5 +32,6 @@
         Personal profile
       </div>
     </div>
+    <button class="next page-button visible">next →</button>
   </div>
 </template>

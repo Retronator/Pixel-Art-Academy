@@ -19,6 +19,10 @@ Package.onUse(function(api) {
 
   api.addComponent('pixelboy');
 
+  api.addFile('components..');
+  api.addFile('components/mixins..');
+  api.addFile('components/mixins/pageturner');
+
   api.addComponent('os..');
   api.addStyledFile('app..');
 

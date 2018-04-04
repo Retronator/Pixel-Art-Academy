@@ -1,22 +1,37 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Yearbook.Middle">
   <div class="pixelartacademy-pixelboy-apps-yearbook-middle {{visibleClass}}">
-    <ol class="students">
-      {{#each currentPageStudents}}
-        <li class="student">
-          <div class="avatar">
-            {{#if avatar.renderer.ready}}
-              {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar}}
-            {{/if}}
-          </div>
-          <div class="name">
-            {{name}}
-          </div>
-        </li>
-      {{/each}}
-    </ol>
+    <div class="spread">
+      {{#unless currentSpreadIndexInYear}}
+        <h2 class="title">Class of {{currentYear}}</h2>
+      {{/unless}}
+      <ol class="students">
+        {{#each currentSpreadStudents}}
+          <li class="student">
+            <div class="avatar">
+              {{#if hasAvatarEditor}}
+                {{#if avatar.renderer.ready}}
+                  {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar}}
+                {{/if}}
+              {{/if}}
+            </div>
+            <div class="name">
+              {{name}}
+              {{#if badges}}
+                <ul class="badges">
+                  {{#each badges}}
+                    <li class="badge {{this.class}}"><img class="icon" title="{{description}}" src="{{iconPath}}"/></li>
+                  {{/each}}
+                </ul>
+              {{/if}}
+            </div>
+          </li>
+        {{/each}}
+      </ol>
+    </div>
     <div class="page-number left">{{leftPageNumber}}</div>
     <div class="page-number right">{{rightPageNumber}}</div>
-    <button class="previous page-button {{previousPageVisibleClass}}">← back</button>
+    <button class="previous page-button visible">← back</button>
     <button class="next page-button {{nextPageVisibleClass}}">next →</button>
+    <button class="front page-button visible"></button>
   </div>
 </template>

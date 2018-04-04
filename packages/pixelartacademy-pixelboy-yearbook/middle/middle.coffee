@@ -15,48 +15,116 @@ class Yearbook.Middle extends AM.Component
   onCreated: ->
     super
 
-    Yearbook.classOf2016.subscribe @
-    
-    @students = new ComputedField =>
-      characters = Yearbook.ClassOf2016Character.documents.find().fetch()
-
-      # Name can't be empty for a student to display.
-      students = for character in characters when character.avatar.fullName.translate().text
-        character: character
-        name: character.avatar.fullName.translate().text
-        hasPortrait: character.avatar.body?
-
-      _.sortBy students, (student) -> student.name.toLowerCase()
-
     @currentSpreadIndex = new ReactiveField 0
-    @studentsPerSpread = 24
 
     @_avatars = {}
 
-    @currentPageStudents = new ComputedField =>
-      students = @students()
+    @currentYear = new ComputedField =>
+      # Determine which year we're on.
+      studentsByYear = @yearbook.studentsByYear()
+      currentSpreadIndex = @currentSpreadIndex()
+      currentPage = currentSpreadIndex * 2 + 1
 
-      currentSpread = @currentSpreadIndex()
-      startStudentIndex = currentSpread * @studentsPerSpread
+      for year, studentsInYear of studentsByYear
+        currentYear = year if studentsInYear.startingPage <= currentPage
 
-      students[startStudentIndex...startStudentIndex + @studentsPerSpread]
+      # Since year was an object key, we need to convert it from a string to an integer.
+      parseInt currentYear
+
+    @currentSpreadIndexInYear = new ComputedField =>
+      # Determine which year we're on.
+      studentsByYear = @yearbook.studentsByYear()
+      currentSpreadIndex = @currentSpreadIndex()
+      return unless currentYear = @currentYear()
+
+      studentsInYear = studentsByYear[currentYear]
+      previousSpreadsCount = (studentsInYear.startingPage - 1) / 2
+
+      currentSpreadIndex - previousSpreadsCount
+
+    @currentSpreadStudents = new ComputedField =>
+      studentsByYear = @yearbook.studentsByYear()
+      currentYear = @currentYear()
+      currentSpreadIndexInYear = @currentSpreadIndexInYear()
+      return unless currentSpreadIndexInYear?
+
+      studentsByYear[currentYear].spreads[currentSpreadIndexInYear]
 
   onDestroyed: ->
     super
 
     # Clean up character instances.
-    avatar.destroy() for characterId, avatar of @_avatars
+    avatar().destroy() for characterId, avatar of @_avatars
+
+  previousPage: ->
+    currentSpreadIndex = @currentSpreadIndex()
+
+    if currentSpreadIndex
+      @currentSpreadIndex @currentSpreadIndex() - 1
+
+    else
+      @yearbook.showFront true
+
+  nextPage: ->
+    return unless @nextPageExists()
+    @currentSpreadIndex @currentSpreadIndex() + 1
+
+  nextPageExists: ->
+    studentsByYear = @yearbook.studentsByYear()
+    return unless currentYear = @currentYear()
+
+    # You can go forward if we're not on the last year.
+    return 'visible' if studentsByYear[currentYear + 1]
+
+    currentSpreadIndexInYear = @currentSpreadIndexInYear()
+
+    # You can go forward if there is another spread left.
+    studentsByYear[currentYear].spreads[currentSpreadIndexInYear + 1]
 
   avatar: ->
+    # Don't start rendering avatars when on the front page.
+    return if @yearbook.showFront()
+
     student = @currentData()
     return unless student.hasPortrait
 
-    @_getAvatarForCharacter student.character
+    # Create the instance if needed, but do it with a delay.
+    unless @_avatars[student._id]
+      @_avatars[student._id] = new ReactiveField null
 
-  _getAvatarForCharacter: (character) ->
-    # Create the instance if needed.
-    @_avatars[character._id] ?= new LOI.Character.Avatar character
-    @_avatars[character._id]
+      Meteor.setTimeout =>
+        return if @isDestroyed()
+        @_avatars[student._id] new LOI.Character.Avatar student
+
+    @_avatars[student._id]()
+
+  name: ->
+    student = @currentData()
+    student.avatar.fullName.translate().text
+
+  badges: ->
+    student = @currentData()
+    badges = []
+    
+    if student.isBacker
+      badges.push
+        class: 'kickstarter'
+        description: "Kickstarter backer"
+        
+    if student.isPatron
+      badges.push
+        class: 'patreon'
+        description: "Patreon patron"
+    
+    if student.hasAlphaAccess
+      badges.push
+        class: 'alpha'
+        description: "Alpha access"
+
+    for badge in badges
+      badge.iconPath = @yearbook.versionedUrl "/pixelartacademy/pixelboy/apps/yearbook/badges/#{badge.class}.png"
+      
+    badges
 
   leftPageNumber: ->
     @currentSpreadIndex() * 2 + 1
@@ -67,19 +135,20 @@ class Yearbook.Middle extends AM.Component
   visibleClass: ->
     'visible' unless @yearbook.showFront()
 
-  previousPageVisibleClass: ->
-    'visible' if @currentSpreadIndex() > 0
-
   nextPageVisibleClass: ->
-    'visible' if @currentSpreadIndex() + 1 < @students().length / @studentsPerSpread
+    'visible' if @nextPageExists()
 
   events: ->
     super.concat
       'click .previous.page-button': @onClickPreviousPageButton
       'click .next.page-button': @onClickNextPageButton
+      'click .front.page-button': @onClickFrontPageButton
 
   onClickPreviousPageButton: (event) ->
-    @currentSpreadIndex @currentSpreadIndex() - 1
+    @previousPage()
 
   onClickNextPageButton: (event) ->
-    @currentSpreadIndex @currentSpreadIndex() + 1
+    @nextPage()
+
+  onClickFrontPageButton: (event) ->
+    @yearbook.showFront true

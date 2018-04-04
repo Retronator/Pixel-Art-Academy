@@ -17,6 +17,10 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
   constructor: (@calendar) ->
     super
 
+  mixins: -> [
+    PAA.PixelBoy.Components.Mixins.PageTurner
+  ]
+
   onCreated: ->
     super
 
@@ -134,7 +138,7 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
 
       weeks
 
-  previousMonth: ->
+  previousPage: ->
     newMonth = @month() - 1
 
     if newMonth is -1
@@ -143,7 +147,7 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
 
     @month newMonth
 
-  nextMonth: ->
+  nextPage: ->
     newMonth = @month() + 1
 
     if newMonth is 12
@@ -234,35 +238,13 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
     super.concat
       'click .previous-month-button': @onClickPreviousMonthButton
       'click .next-month-button': @onClickNextMonthButton
-      'wheel': @onMouseWheel
       'click .active .weekly-goals': @onClickActiveWeeklyGoals
 
   onClickPreviousMonthButton: (event) ->
-    @previousMonth()
+    @previousPage()
 
   onClickNextMonthButton: (event) ->
-    @nextMonth()
-
-  onMouseWheel: (event) ->
-    event.preventDefault()
-
-    @_horizontalScroll ?= 0
-    @_horizontalScroll += event.originalEvent.deltaX
-    minimumHorizontalScroll = 20
-
-    @nextMonth() if @_horizontalScroll > minimumHorizontalScroll
-    @previousMonth() if @_horizontalScroll < -minimumHorizontalScroll
-
-    # Reset scroll after page was turned.
-    @_horizontalScroll = 0 if Math.abs(@_horizontalScroll) > minimumHorizontalScroll
-
-    # Also reset scroll after the user pauses scrolling.
-    @_debouncedReset ?= _.debounce =>
-      @_horizontalScroll = 0
-    ,
-      1000
-
-    @_debouncedReset()
+    @nextPage()
 
   onClickActiveWeeklyGoals: (event) ->
     @calendar.goalSettings().visible true

@@ -12,10 +12,37 @@ class PAA.PixelBoy.Apps.Yearbook.Front extends AM.Component
 
   onCreated: ->
     super
-    
+
+  nextPage: ->
+    @yearbook.middle().currentSpreadIndex 0
+    @yearbook.showFront false
+
   visibleClass: ->
     'visible' if @yearbook.showFront()
-    
+
+  sections: ->
+    studentsByYear = @yearbook.studentsByYear()
+   
+    for year in [2016..2018] when studentsByYear[year]
+      switch year
+        when 2016 then categories = ["Alpha backers", "Alpha pre-orders"]
+        when 2017 then categories = ["Regular backers", "Pre-orders", "Patrons"]
+        when 2018 then categories = ["Pre-orders", "Patrons"]
+
+      year: year
+      categories: categories
+      startingPage: studentsByYear[year].startingPage
+
   events: ->
     super.concat
-      'click': => @yearbook.showFront false
+      'click .next.page-button': @onClickNextPageButton
+      'click .section': @onClickSection
+
+  onClickNextPageButton: (event) ->
+    @nextPage()
+
+  onClickSection: (event) ->
+    section = @currentData()
+
+    @yearbook.middle().currentSpreadIndex (section.startingPage - 1) / 2
+    @yearbook.showFront false
