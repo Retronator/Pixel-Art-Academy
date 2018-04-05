@@ -6,7 +6,7 @@
       {{/unless}}
       <ol class="students">
         {{#each currentSpreadStudents}}
-          <li class="student">
+          <li class="student {{highlightedPlayerCharacterClass}}">
             <div class="avatar">
               {{#if hasAvatarEditor}}
                 {{#if avatar.renderer.ready}}
@@ -30,7 +30,7 @@
     </div>
     <div class="page-number left">{{leftPageNumber}}</div>
     <div class="page-number right">{{rightPageNumber}}</div>
-    <button class="previous page-button visible">← back</button>
+    <button class="previous page-button {{previousPageVisibleClass}}">← back</button>
     <button class="next page-button {{nextPageVisibleClass}}">next →</button>
     <button class="front page-button visible"></button>
   </div>

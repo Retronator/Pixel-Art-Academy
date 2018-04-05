@@ -25,6 +25,11 @@ class LOI.Character extends AM.Document
   #   body: avatar data for character's body representation
   #   outfit: avatar data for character's current clothes/accessories
   # behavior: avatar data for character's behavior design
+  # profile: miscellaneous information that the user is free to edit as they please
+  #   age: integer, 13 to 150
+  #   country: ISO region code
+  #   aspiration: any string
+  #   favorites: an object of strings for various categories
   # designApproved: whether the character has finished the design stage
   # behaviorApproved: whether the character has finished the behavior stage
   # activated: whether the character has been deployed in the world
@@ -53,6 +58,7 @@ class LOI.Character extends AM.Document
   @updateAvatarBody: @method 'updateAvatarBody'
   @updateAvatarOutfit: @method 'updateAvatarOutfit'
   @updateBehavior: @method 'updateBehavior'
+  @updateProfile: @method 'updateProfile'
   @updateContactEmail: @method 'updateContactEmail'
 
   @approveDesign: @method 'approveDesign'

@@ -37,6 +37,7 @@ class PAA.PixelBoy.Apps.Yearbook.Front extends AM.Component
     super.concat
       'click .next.page-button': @onClickNextPageButton
       'click .section': @onClickSection
+      'click .pixelartacademy-pixelboy-apps-yearbook-profileform': @onClickEditProfile
 
   onClickNextPageButton: (event) ->
     @nextPage()
@@ -46,3 +47,7 @@ class PAA.PixelBoy.Apps.Yearbook.Front extends AM.Component
 
     @yearbook.middle().currentSpreadIndex (section.startingPage - 1) / 2
     @yearbook.showFront false
+
+  onClickEditProfile: (event) ->
+    @yearbook.showFront false
+    @yearbook.showProfileForm true

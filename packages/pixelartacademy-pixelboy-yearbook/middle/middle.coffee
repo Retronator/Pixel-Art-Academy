@@ -17,6 +17,13 @@ class Yearbook.Middle extends AM.Component
 
     @currentSpreadIndex = new ReactiveField 0
 
+    @autorun (computation) =>
+      return unless @yearbook.showProfileForm()
+
+      playerCharacterPage = @yearbook.playerCharacterPage()
+
+      @currentSpreadIndex Math.floor (playerCharacterPage - 1) / 2
+
     @_avatars = {}
 
     @currentYear = new ComputedField =>
@@ -134,9 +141,25 @@ class Yearbook.Middle extends AM.Component
 
   visibleClass: ->
     'visible' unless @yearbook.showFront()
+    
+  previousPageVisibleClass: ->
+    # Don't allow to change pages when profile form is shown.
+    return if @yearbook.showProfileForm()
 
+    'visible'
+    
   nextPageVisibleClass: ->
+    # Don't allow to change pages when profile form is shown.
+    return if @yearbook.showProfileForm()
+
     'visible' if @nextPageExists()
+
+  highlightedPlayerCharacterClass: ->
+    # Highlight the player character when we're editing the form.
+    return unless @yearbook.showProfileForm()
+
+    student = @currentData()
+    'highlighted' if student.isPlayerCharacter
 
   events: ->
     super.concat
@@ -151,4 +174,4 @@ class Yearbook.Middle extends AM.Component
     @nextPage()
 
   onClickFrontPageButton: (event) ->
-    @yearbook.showFront true
+    @yearbook.goToFront()

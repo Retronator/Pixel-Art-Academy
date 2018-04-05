@@ -44,9 +44,16 @@
       padding 0
 
       .student
+        position relative
+        z-index 1
         width 135rem
         height 16rem
         display flex
+
+        &.highlighted
+          .name::after
+            content '←'
+            daily()
 
         .avatar
           position relative
@@ -61,9 +68,9 @@
 
         .name
           position relative
-          top 2rem
+          top 3rem
           width 115rem
-          height 12rem
+          height 13rem
           align-self flex-end
           academy()
           line-height 12rem
@@ -104,10 +111,6 @@
       width 25rem
       height 40rem
       bottom -10rem
-
-  &:hover
-    .page-button.visible
-      display block
 
   .page-number
     position absolute

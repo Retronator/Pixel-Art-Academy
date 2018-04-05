@@ -20,6 +20,9 @@ Package.onUse(function(api) {
   api.addServerFile('subscriptions');
 
   api.addComponent('front..');
-
   api.addComponent('middle..');
+
+  api.addComponent('profileform..');
+  api.addComponent('profileform/general..');
+  api.addComponent('profileform/favorites..');
 });

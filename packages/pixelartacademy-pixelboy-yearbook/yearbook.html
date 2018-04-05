@@ -2,5 +2,8 @@
   <div class="pixelartacademy-pixelboy-apps-yearbook app">
     {{> Render front}}
     {{> Render middle}}
+    {{#if showProfileForm}}
+      {{> Render profileForm}}
+    {{/if}}
   </div>
 </template>
