@@ -14,10 +14,13 @@ class Migration extends Document.MajorMigration
           $set:
             memory:
               _id: document.conversation._id
-            type: LOI.Memory.Action.Types.Say
+            type: LOI.Memory.Actions.Say.type
             content:
               say:
                 text: document.text
+            # Set that all existing conversations happened at the HQ Cafe in the present.
+            timelineId: LandsOfIllusions.TimelineIds.Present
+            locationId: Retronator.HQ.Cafe.id()
           $unset:
             conversation: true
             text: true
@@ -43,6 +46,8 @@ class Migration extends Document.MajorMigration
             memory: true
             type: true
             content: true
+            timelineId: true
+            locationId: true
 
     counts = super
     counts.migrated += count

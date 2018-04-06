@@ -1,35 +1,52 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Memory.Action.insert.method (memoryId, characterId, type, content) ->
-  check memoryId, Match.DocumentId
-  check characterId, Match.DocumentId
+LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
   check type, typePattern
-  check content, actionContentPattern
+  check characterId, Match.DocumentId
+  check situation,
+    timelineId: String
+    locationId: String
+    contextId: Match.Optional String
+  check content, LOI.Memory.Action.contentPatterns[type] if LOI.Memory.Action.contentPatterns[type]
+  check memoryId, Match.Optional Match.DocumentId
 
   LOI.Authorize.characterAction characterId
 
-  # Memory must exist.
-  memory = LOI.Memory.documents.findOne memoryId
-  throw new AE.ArgumentException "Memory not found." unless memory
-
-  LOI.Memory.Action.documents.insert
+  action =
+    type: type
     time: new Date()
-    memory:
-      _id: memoryId
+    timelineId: situation.timelineId
+    locationId: situation.locationId
     character:
       _id: characterId
-      # Insert name as well, to prevent "No Name" before de-normalization happens.
-      avatar:
-        fullName: LOI.Character.documents.findOne(characterId).avatar.fullName
-    type: type
-    content: content
+
+  action.contextId = situation.contextId if situation.contextId
+  action.content = content if content
+
+  if memoryId
+    # Memory must exist.
+    memory = LOI.Memory.documents.findOne memoryId
+    throw new AE.ArgumentException "Memory not found." unless memory
+
+    # Within memories, we insert this as a new action.
+    action.memory = _id: memoryId
+
+    LOI.Memory.Action.documents.insert action
+
+  else
+    # Outside of memories, this replaces this character's last action.
+    LOI.Memory.Action.documents.upsert
+      'character._id': characterId
+      memoryId: $exists: false
+    ,
+      action
 
 LOI.Memory.Action.changeContent.method (memoryId, content) ->
   check memoryId, Match.DocumentId
   check content, actionContentPattern
 
-  # Make sure the user can change this line.
+  # Make sure the user can change this action.
   authorizeMemoryAction memoryId
 
   LOI.Memory.Action.documents.update
@@ -46,8 +63,4 @@ authorizeMemoryAction = (memoryId) ->
 typePattern = Match.Where (value) ->
   check value, String
   
-  value in _.values LOI.Memory.Action.Types
-
-actionContentPattern = Match.ObjectIncluding
-  say: Match.Optional
-    text: String
+  value in _.values LOI.Memory.Action.getTypes()

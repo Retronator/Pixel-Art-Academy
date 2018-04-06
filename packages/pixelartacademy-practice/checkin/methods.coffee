@@ -127,7 +127,13 @@ PAA.Practice.CheckIn.newMemory.method (checkInId, characterId, firstLineText) ->
         _id: memoryId
 
   # Create the first action in memory.
-  LOI.Memory.Action.insert memoryId, characterId, LOI.Memory.Action.Types.Say, say: text: firstLineText
+  LOI.Memory.Action.insert LOI.Memory.Actions.Say.type, characterId,
+    timelineId: LandsOfIllusions.TimelineIds.Present
+    locationId: Retronator.HQ.Cafe.id()
+  ,
+    say: text: firstLineText
+  ,
+    memoryId
 
 authorizeCheckInAction = (checkInId) ->
   checkIn = PAA.Practice.CheckIn.documents.findOne checkInId

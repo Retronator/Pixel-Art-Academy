@@ -12,7 +12,8 @@ class Migration extends Document.MajorMigration
       (document) =>
         count += collection.update _id: document._id,
           $set:
-            # Set that all existing conversations happened at the HQ Cafe.
+            # Set that all existing conversations happened at the HQ Cafe in the present.
+            timelineId: LandsOfIllusions.TimelineIds.Present
             locationId: Retronator.HQ.Cafe.id()
           $unset:
             lines: true

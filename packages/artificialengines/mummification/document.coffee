@@ -103,6 +103,10 @@ class AM.Document extends Document
   @getClass: (typeName) ->
     # Retrieve the document class from the map.
     @_documentClasses[typeName]
+    
+  # Returns all registered type names.
+  @getTypes: ->
+    _.keys @_documentClasses
 
   # Refresh functionality based on implementation by @mitar.
   refresh: (fields) ->

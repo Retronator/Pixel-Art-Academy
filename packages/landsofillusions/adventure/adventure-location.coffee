@@ -186,16 +186,23 @@ class LOI.Adventure extends LOI.Adventure
 
   setLocationId: (locationClassOrId) ->
     locationId =  _.thingId locationClassOrId
+    characterId = LOI.characterId()
 
     # Update locally stored player location if we're not synced to a character.
-    @playerLocationId locationId unless LOI.characterId()
+    @playerLocationId locationId unless characterId
 
     # Save current location to state. For players we don't really
     # use it except until the next time we load the game.
     if state = @gameState()
       state.currentLocationId = locationId
       @gameState.updated()
-
+      
+    # Create a move action for characters.
+    if characterId
+      LOI.Memory.Action.do LOI.Memory.Actions.Move.type, characterId,
+        timelineId: @currentTimelineId()
+        locationId: locationId
+      
   goToLocation: (locationClassOrId) ->
     # Don't allow location changes when in a memory (since it's defined by the memory document).
     return if @currentMemory()

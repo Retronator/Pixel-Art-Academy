@@ -177,6 +177,10 @@ Package.onUse(function(api) {
   api.addServerFile('memory/action/migrations/0003-renamecollection');
   api.addServerFile('memory/action/migrations/0004-changetomemories');
 
+  api.addFile('memory/actions..');
+  api.addFile('memory/actions/move');
+  api.addFile('memory/actions/say');
+
   api.addFile('memory/progress..');
   api.addFile('memory/progress/methods');
   api.addServerFile('memory/progress/subscriptions');
