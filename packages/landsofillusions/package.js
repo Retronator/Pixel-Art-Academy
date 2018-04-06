@@ -268,9 +268,10 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/script/parser/parser.coffee');
 
-  // Character instance (inherits from Thing and uses Script)
+  // Character instance (inherits from Thing and uses Script) and derivatives
 
   api.addFile('character/instance');
+  api.addFile('character/person');
 
   // Storylines
 

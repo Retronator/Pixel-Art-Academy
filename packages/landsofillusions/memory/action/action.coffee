@@ -39,3 +39,4 @@ class LOI.Memory.Action extends AM.Document
   # Subscriptions
 
   @forMemory: @subscription 'forMemory'
+  @recentForLocation: @subscription 'recentForLocation'
