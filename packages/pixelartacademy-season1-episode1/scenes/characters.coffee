@@ -25,26 +25,63 @@ class E1.Characters extends LOI.Adventure.Scene
 
     # People are other players' characters.
     @people = new ComputedField =>
+
+      # See if we've changed location.
+      currentLocation = LOI.adventure.currentLocationId()
+
+      if currentLocation isnt @_oldLocation
+        @_oldLocation = currentLocation
+
+        # Mark arrival time so we know which actions to treat as realtime.
+        @_locationArrivalTime = new Date()
+
+        # Clear the people cache.
+        @_peopleById = {}
+
       # Filter all actions to unique characters. We don't care about reactivity
       # of time since we're only show too many actions and not miss any.
       earliestTime = new Date Date.now() - durationInSeconds * 1000
 
       actions = LOI.Memory.Action.documents.fetch
-        'locationId': LOI.adventure.currentLocationId()
+        'locationId': currentLocation
         time: $gt: earliestTime
 
-      characterIds = _.uniq (action.character._id for action in actions)
+      oldPeople = _.values @_peopleById
 
-      # Don't include player's character (it will be added separately).
-      characterIds = _.without characterIds, LOI.characterId()
-      
-      # Return a list of characters initialized with their actions.
-      for characterId in characterIds
-        lastAction = _.last _.filter actions, (action) -> action.character._id is characterId
-          
-        new LOI.Character.Person
-          instance: LOI.Character.getInstance characterId
-          action: lastAction
+      # React only to location and action changes.
+      Tracker.nonreactive =>
+        characterIds = _.uniq (action.character._id for action in actions)
+
+        # Don't include player's character (it will be added separately).
+        characterIds = _.without characterIds, LOI.characterId()
+
+        # Return a list of characters initialized with their actions.
+        for characterId in characterIds
+          lastAction = _.last _.filter actions, (action) -> action.character._id is characterId
+
+          # Convert to correct class.
+          lastAction = lastAction.cast()
+
+          # Create the person, if it's new.
+          @_peopleById[characterId] ?= new LOI.Character.Person characterId
+
+          if lastAction.time < @_locationArrivalTime
+            # Actions happened before we arrived here, so no need for a transition.
+            @_peopleById[characterId].setAction lastAction
+
+          else
+            @_peopleById[characterId].transitionToAction lastAction
+
+          # Remove from old people.
+          _.pull oldPeople, @_peopleById[characterId]
+
+        # Notify old people that they are not at the location any more and remove them.
+        for oldPerson in oldPeople
+          oldPerson.transitionToAction null
+
+          delete @_peopleById[oldPerson.instance._id]
+
+        _.values @_peopleById
 
   destroy: ->
     @actionsSubscriptionAutorun.stop()

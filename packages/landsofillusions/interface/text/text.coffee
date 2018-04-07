@@ -155,6 +155,7 @@ class LOI.Interface.Text extends LOI.Interface
     
     conditions = _.flattenDeep [
       avatar.ready() for avatar in exitAvatars
+      subscription.ready() for subscription in @_actionTranslationSubscriptions
     ]
 
     _.every conditions

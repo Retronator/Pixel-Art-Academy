@@ -91,36 +91,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Replace character pronouns.
     if character = LOI.character()
-      pronouns = character.avatar.pronouns()
-
-      getPronoun = (key) =>
-        LOI.adventure.parser.vocabulary.getPhrases("Pronouns.#{key}.#{pronouns}")?[0]
-
-      text = text.replace /_char_/g, (match) ->
-        character.avatar.shortName()
-
-      text = text.replace /_CHAR_/g, (match) ->
-        _.toUpper character.avatar.shortName()
-
-      text = text.replace /_char's_/g, (match) ->
-        # TODO: Add a way to localize possession grammar.
-        name = character.avatar.shortName()
-        lastCharacter = _.last name
-        if lastCharacter is 's' then "#{name}'" else "#{name}'s"
-
-      for pronounPair in [
-        ['they', 'Subjective']
-        ['them', 'Objective']
-        ['their', 'Adjective']
-        ['theirs', 'Possessive']
-      ]
-        text = text.replace new RegExp("_(t|T)#{pronounPair[0].substring(1)}_", 'g'), (match, pronounCase) ->
-          pronoun = getPronoun pronounPair[1]
-
-          if pronounCase is 'T' then pronoun = _.upperFirst pronoun
-
-          pronoun
-
+      text = LOI.Character.formatText text, 'char', character
+    
     Tracker.afterFlush =>
       # Add colors to commands.
       commands = @$('.narrative .command')

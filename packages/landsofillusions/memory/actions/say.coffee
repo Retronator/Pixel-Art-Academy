@@ -11,3 +11,14 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
   @registerContentPattern @type,
     say:
       text: String
+
+  @activeDescription: ->
+    "_person_ is talking."
+
+  start: (person) ->
+    # Create a dialog node.
+    dialogueLine = LOI.Adventure.Script.Nodes.DialogueLine
+      line: content.say.text
+      actor: person
+
+    LOI.adventure.director.startNode dialogueLine

@@ -179,6 +179,7 @@ Package.onUse(function(api) {
 
   api.addFile('memory/actions..');
   api.addFile('memory/actions/move');
+  api.addFile('memory/actions/leave');
   api.addFile('memory/actions/say');
 
   api.addFile('memory/progress..');

@@ -7,6 +7,9 @@ class AM.Document extends Document
   @Meta: (meta) ->
     super
 
+    # This stores registered subclasses for this Document class.
+    @_documentClasses = {}
+
     return if meta.abstract
 
     # Referrers are incoming references from other documents.
@@ -74,8 +77,6 @@ class AM.Document extends Document
   @subscription: (name, options) ->
     return new AB.Subscription _.extend {}, options,
       name: "#{@id()}.#{name}"
-
-  @_documentClasses: {}
 
   @register: (typeName, documentClass) ->
     throw new AE.ArgumentNullException "You must specify a document class." unless documentClass
