@@ -47,12 +47,13 @@ class LOI.Character.Person extends LOI.Adventure.Thing
     @action action
 
   transitionToAction: (action) ->
-    # Make sure we have a new action to begin with.
+    # Make sure we have a new action to begin with. We allow time to differ since the server will set a different time
+    # than what will happen in the simulation. If everything else is the same, there's little need to report anything
+    # to the player anyway.
     actionData = (action) =>
       return unless action
 
       type: action.type
-      time: action.time.getTime()
       characterId: action.character._id
       timelineId: action.timelineId
       locationId: action.locationId

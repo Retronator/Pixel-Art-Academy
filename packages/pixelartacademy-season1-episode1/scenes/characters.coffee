@@ -52,9 +52,6 @@ class E1.Characters extends LOI.Adventure.Scene
       Tracker.nonreactive =>
         characterIds = _.uniq (action.character._id for action in actions)
 
-        # Don't include player's character (it will be added separately).
-        characterIds = _.without characterIds, LOI.characterId()
-
         # Return a list of characters initialized with their actions.
         for characterId in characterIds
           lastAction = _.last _.filter actions, (action) -> action.character._id is characterId
@@ -88,16 +85,4 @@ class E1.Characters extends LOI.Adventure.Scene
     @people.stop()
 
   things: ->
-    characters = []
-    locationId = _.thingId @location()
-
-    character = LOI.character()
-    characterLocationId = LOI.adventure.gameState()?.currentLocationId
-
-    # If the player's character is at this location, add it to the scene.
-    characters.push character if locationId is characterLocationId
-
-    # Add all the people.
-    characters.push @people()...
-
-    characters
+    @people()

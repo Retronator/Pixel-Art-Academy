@@ -20,6 +20,7 @@ class LOI.Parser
       new @constructor.NavigationListener
       new @constructor.DescriptionListener
       new @constructor.LookLocationListener
+      new @constructor.ConversationListener
     ]
 
   destroy: ->

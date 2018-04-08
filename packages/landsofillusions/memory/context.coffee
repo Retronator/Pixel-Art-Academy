@@ -19,27 +19,24 @@ class LOI.Memory.Context extends LOI.Adventure.Context
   # Override to tell if a memory is from this context.
   @isOwnMemory: (memory) -> false
     
-  constructor: (@initialMemoryId) ->
+  constructor: (@memoryId) ->
     super
   
   onCreated: ->
     super
 
+    LOI.Memory.forId.subscribe @, @memoryId
+
+    # Subscribe to character's memory progress.
     @autorun (computation) =>
       return unless characterId = LOI.characterId()
 
-      # Subscribe to character's memory progress.
       LOI.Memory.Progress.forCharacter.subscribe characterId
 
-    @memoryId = new ReactiveField @initialMemoryId
-
     @memory = new ComputedField =>
-      return unless memoryId = @memoryId()
+      LOI.Memory.documents.findOne @memoryId
 
-      # Subscribe and retrieve the memory.
-      LOI.Memory.forId.subscribe memoryId
-      LOI.Memory.documents.findOne memoryId
-
+    # Generate all characters that need to be present when in this memory.
     @characters = new ComputedField =>
       return unless memory = @memory()
 
@@ -98,12 +95,17 @@ class LOI.Memory.Context extends LOI.Adventure.Context
       LOI.adventure.director.startNode lastNode
 
   overrideThings: ->
-    # Memory context shows only characters in involved in the actions.
+    # When inside a memory, context shows only characters in involved in the actions.
+    return unless LOI.adventure.currentMemoryId()
     return [] unless @isCreated()
 
     @characters()
 
-  overrideExits: -> {}
+  overrideExits: ->
+    # Only remove exits when in a memory.
+    return unless LOI.adventure.currentMemoryId()
+
+    {}
 
   deactivate: ->
     # If we're in a memory, deactivate the memory itself which will also deactivate the context.
@@ -138,31 +140,3 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.ExitLocation, @avatars.memory]
       action: exitAction
-
-    sayAction = (likelyAction) =>
-      # Remove text from narrative since it will be displayed from the script.
-      LOI.adventure.interface.narrative.removeLastCommand()
-
-      message = _.trim _.last(likelyAction.translatedForm), '"'
-
-      unless memoryId = context.memoryId()
-        # We don't have a memory yet, first create it.
-        memoryId = Random.id()
-        LOI.Memory.insert memoryId, LOI.currentLocationId()
-
-      # Add the Say action.
-      content =
-        say:
-          text: message
-
-      LOI.Memory.Action.insert memoryId, LOI.characterId(), LOI.Memory.Action.Types.Say, content
-
-    # Create a quoted phrase to catch anything included with the say command.
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.Say, '""']
-      action: sayAction
-
-    # Allow also just quotes.
-    commandResponse.onPhrase
-      form: ['""']
-      action: sayAction

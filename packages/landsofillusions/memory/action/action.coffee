@@ -2,6 +2,8 @@ AB = Artificial.Babel
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
+Nodes = LOI.Adventure.Script.Nodes
+
 class LOI.Memory.Action extends AM.Document
   @id: -> 'LandsOfIllusions.Memory.Action'
   # type: constructor type for inheritance
@@ -95,7 +97,7 @@ class LOI.Memory.Action extends AM.Document
     # Format person into the description.
     description = LOI.Character.formatText description, 'person', person
 
-    narrativeLine = new LOI.Adventure.Script.Nodes.NarrativeLine
+    narrativeLine = new Nodes.NarrativeLine
       line: description
 
     LOI.adventure.director.startNode narrativeLine

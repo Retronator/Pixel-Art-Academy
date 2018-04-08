@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 LOI.Memory.insert.method (memoryId, timelineId, locationId) ->
-  check memoryId, Match.documentId
+  check memoryId, Match.DocumentId
   check timelineId, String
   check locationId, String
   

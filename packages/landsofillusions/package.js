@@ -157,35 +157,6 @@ Package.onUse(function(api) {
   api.addFile('user/user');
   api.addServerFile('user/subscriptions');
 
-  // Memories
-
-  api.addFile('memory..');
-  api.addFile('memory/methods');
-  api.addServerFile('memory/subscriptions');
-  api.addServerFile('memory/migrations/0000-renamecollection');
-  api.addServerFile('memory/migrations/0001-linesreversereferencefieldsupdate');
-  api.addServerFile('memory/migrations/0002-renamecollection');
-  api.addServerFile('memory/migrations/0003-changetomemories');
-  api.addServerFile('memory/migrations/0004-actionsreversereferencefieldadded');
-
-  api.addFile('memory/action..');
-  api.addFile('memory/action/methods');
-  api.addServerFile('memory/action/subscriptions');
-  api.addServerFile('memory/action/migrations/0000-renamecollection');
-  api.addServerFile('memory/action/migrations/0001-characterreferencefieldsupdate');
-  api.addServerFile('memory/action/migrations/0002-removecharacternamefield');
-  api.addServerFile('memory/action/migrations/0003-renamecollection');
-  api.addServerFile('memory/action/migrations/0004-changetomemories');
-
-  api.addFile('memory/actions..');
-  api.addFile('memory/actions/move');
-  api.addFile('memory/actions/leave');
-  api.addFile('memory/actions/say');
-
-  api.addFile('memory/progress..');
-  api.addFile('memory/progress/methods');
-  api.addServerFile('memory/progress/subscriptions');
-
   // Parser
 
   api.addFile('parser..');
@@ -288,23 +259,53 @@ Package.onUse(function(api) {
   api.addFile('adventure/location..');
   api.addFile('adventure/location/inventory');
 
-  // Context
-
-  api.addFile('adventure/context..');
-
-  api.addFile('memory/context');
-
   // Events
   
   api.addFile('adventure/event..');
   api.addFile('adventure/event/stopevent');
 
+  // Context
+
+  api.addFile('adventure/context..');
+
+  // Memories (requires adventure context and script nodes)
+
+  api.addFile('memory..');
+  api.addFile('memory/methods');
+  api.addServerFile('memory/subscriptions');
+  api.addServerFile('memory/migrations/0000-renamecollection');
+  api.addServerFile('memory/migrations/0001-linesreversereferencefieldsupdate');
+  api.addServerFile('memory/migrations/0002-renamecollection');
+  api.addServerFile('memory/migrations/0003-changetomemories');
+  api.addServerFile('memory/migrations/0004-actionsreversereferencefieldadded');
+
+  api.addFile('memory/context');
+
+  api.addFile('memory/action..');
+  api.addFile('memory/action/methods');
+  api.addServerFile('memory/action/subscriptions');
+  api.addServerFile('memory/action/migrations/0000-renamecollection');
+  api.addServerFile('memory/action/migrations/0001-characterreferencefieldsupdate');
+  api.addServerFile('memory/action/migrations/0002-removecharacternamefield');
+  api.addServerFile('memory/action/migrations/0003-renamecollection');
+  api.addServerFile('memory/action/migrations/0004-changetomemories');
+
+  api.addFile('memory/actions..');
+  api.addFile('memory/actions/move');
+  api.addFile('memory/actions/leave');
+  api.addFile('memory/actions/say');
+
+  api.addFile('memory/progress..');
+  api.addFile('memory/progress/methods');
+  api.addServerFile('memory/progress/subscriptions');
+
   // Parser Listeners
 
-  api.addFiles('parser/listeners/debug.coffee');
-  api.addFiles('parser/listeners/navigation.coffee');
-  api.addFiles('parser/listeners/description.coffee');
-  api.addFiles('parser/listeners/looklocation.coffee');
+  api.addFile('parser/listeners/debug');
+  api.addFile('parser/listeners/navigation');
+  api.addFile('parser/listeners/description');
+  api.addFile('parser/listeners/looklocation');
+  api.addFile('parser/listeners/conversation');
 
   // Interface
 

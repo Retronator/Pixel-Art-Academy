@@ -1,6 +1,8 @@
 LOI = LandsOfIllusions
 AM = Artificial.Mummification
 
+Nodes = LOI.Adventure.Script.Nodes
+
 class LOI.Memory.Actions.Say extends LOI.Memory.Action
   # content:
   #   say: character says something
@@ -17,8 +19,8 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
 
   start: (person) ->
     # Create a dialog node.
-    dialogueLine = LOI.Adventure.Script.Nodes.DialogueLine
-      line: content.say.text
+    dialogueLine = new Nodes.DialogueLine
+      line: @content.say.text
       actor: person
 
     LOI.adventure.director.startNode dialogueLine
