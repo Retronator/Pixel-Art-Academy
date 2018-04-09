@@ -27,56 +27,51 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
     LOI.Memory.forId.subscribe @, @memoryId
 
-    # Subscribe to character's memory progress.
-    @autorun (computation) =>
-      return unless characterId = LOI.characterId()
-
-      LOI.Memory.Progress.forCharacter.subscribe characterId
-
     @memory = new ComputedField =>
       LOI.Memory.documents.findOne @memoryId
 
     # Generate all characters that need to be present when in this memory.
-    @characters = new ComputedField =>
+    @people = new ComputedField =>
       return unless memory = @memory()
 
       # Get all present character IDs.
       characterIds = _.uniq _.map memory.actions, (action) => action.character._id
 
-      # Convert them into character instances.
-      LOI.Character.getInstance characterId for characterId in characterIds
+      # Convert them into people.
+      LOI.adventure.getCurrentPerson characterId for characterId in characterIds
 
     # Create the script based on memory actions.
     @autorun (computation) =>
-      # Wait for memory to be loaded.
-      return unless memory = LOI.adventure.currentMemory()
-      return unless characters = @characters()
-      return unless _.every _.map characters, (character) => character.ready()
+      # Wait for everything to be loaded.
+      return unless memory = @memory()
+      return unless people = @people()
+      return unless _.every _.map people, (person) => person?.ready()
       return unless progress = LOI.Memory.Progress.documents.findOne 'character._id': LOI.characterId()
 
-      lastNode = null
+      # We only do this once, since after this, people will be reporting their actions on their own.
+      computation.stop()
 
       actions = _.sortBy memory.actions, (action) => action.time.getTime()
 
-      # We only need to create a script for the actions we haven't displayed yet.
-      if @lastDisplayedActionTime
-        actions = _.filter actions, (action) => action.time.getTime() > @lastDisplayedActionTime
+      # Cast actions and inject the memoryId since it's not present as one of the reverse fields.
+      actions = for action in actions
+        action = action.cast()
+        action.memory = _id: @memoryId
+        action
 
-      # Do we have anything we haven't displayed yet even?
-      return unless actions.length
-
-      @lastDisplayedActionTime = _.last(actions).time.getTime()
+      lastNode = null
 
       # See if the player already observed some of the actions before.
       observedTime = progress.getTimeForMemoryId memory._id
 
       for action in actions by -1
-        # After we've seen the line, report it to the server with a callback node.
         actionTime = action.time
         observed = actionTime.getTime() <= observedTime?.getTime()
+        person = _.find people, (person) => person._id is action.character._id
 
+        # After we've seen the line, report it to the server with a callback node.
         unless observed
-          updateObservedTimeNode = do (actionTime) =>
+          lastNode = do (actionTime) =>
             new Nodes.Callback
               next: lastNode
               callback: (complete) =>
@@ -84,14 +79,15 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
                 LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, actionTime
 
-        # Show the say action.
-        lastNode = new Nodes.DialogueLine
-          line: action.content.say.text
-          actor: _.find characters, (character) => character._id is action.character._id
-          next: if observed then lastNode else updateObservedTimeNode
-          # Immediately show already observed actions.
-          immediate: observed
+        # Start and end the action (in reverse order).
+        actionEndScript = action.createEndScript person, lastNode, immediate: observed
+        lastNode = actionEndScript if actionEndScript
 
+        actionStartScript = action.createStartScript person, lastNode, immediate: observed
+        lastNode = actionStartScript if actionStartScript
+
+      # Display the current conversation into a clear narrative.
+      LOI.adventure.interface.narrative.clear()
       LOI.adventure.director.startNode lastNode
 
   overrideThings: ->

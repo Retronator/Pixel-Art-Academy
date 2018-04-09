@@ -25,14 +25,23 @@ LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
   action.content = content if content
 
   if memoryId
-    # Memory must exist.
     memory = LOI.Memory.documents.findOne memoryId
-    throw new AE.ArgumentException "Memory not found." unless memory
+
+    # Memory must exist.
+    unless memory
+      # On the client it could not be loaded yet, so just quit in that case.
+      # It'll get processed on the server and sent to the client eventually
+      return if Meteor.isClient
+
+      throw new AE.ArgumentException "Memory not found."
 
     # Within memories, we insert this as a new action.
     action.memory = _id: memoryId
 
     LOI.Memory.Action.documents.insert action
+    
+    # Also automatically progress this memory to the end for this character.
+    LOI.Memory.Progress.updateProgress characterId, memoryId, action.time
 
   else
     # Outside of memories, this replaces this character's last action.

@@ -22,7 +22,6 @@ Package.onUse(function(api) {
 
   api.addFile('episode1');
   api.addFile('scenes/inventory');
-  api.addFile('scenes/characters');
   api.addFile('scenes/chinabasinpark');
 
   // Start

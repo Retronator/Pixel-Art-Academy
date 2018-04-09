@@ -10,9 +10,6 @@ class LOI.Character.Person extends LOI.Adventure.Thing
   @fullName: -> "Person"
   @description: -> "It's a person."
 
-  # We don't use the default listener.
-  @listeners: -> []
-
   @initialize()
 
   constructor: (@_id) ->
@@ -23,20 +20,21 @@ class LOI.Character.Person extends LOI.Adventure.Thing
     super
 
   createAvatar: ->
-    # We send our own (character) avatar as the main avatar.
-    @instance.createAvatar()
+    # We send instance's avatar as the main avatar.
+    @instance.avatar
 
-  # Avatar pass-through methods
+  descriptiveName: ->
+    text = "_person_."
+    
+    if actionDescription = @action()?.activeDescription()
+      text = "#{text} #{actionDescription}"
 
-  name: -> @instance.avatar.fullName()
-  color: -> @instance.avatar.color()
-  colorObject: (relativeShade) -> @instance.avatar.colorObject relativeShade
+    LOI.Character.formatText text, 'person', @instance
 
-  # We need these next ones for compatibility of passing the character instance as a thing into adventure engine.
+  # We pass avatar methods through to instance's avatar.
   fullName: -> @instance.avatar.fullName()
   shortName: -> @instance.avatar.shortName()
   nameAutoCorrectStyle: -> @instance.avatar.nameAutoCorrectStyle()
-  description: -> @instance.thingAvatar.description()
   dialogTextTransform: -> @instance.avatar.dialogTextTransform()
   dialogueDeliveryType: -> @instance.avatar.dialogueDeliveryType()
 
@@ -76,3 +74,11 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       # No action means the person left the location, so we create a dummy move action that is ending.
       action = new LOI.Memory.Actions.Leave
       action.start @
+
+  # Listener
+
+  onCommand: (commandResponse) ->
+    person = @options.parent
+
+    # Allow action to listen to commands.
+    person.action()?.onCommand person, commandResponse

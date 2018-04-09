@@ -1,55 +1,56 @@
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
-E1 = PixelArtAcademy.Season1.Episode1
-HQ = Retronator.HQ
 
-class E1.Characters extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Characters'
-
-  @location: ->
-    # We are calculating the characters at the current location.
-    LOI.adventure.currentLocationId()
-
-  @initialize()
-
-  constructor: ->
-    super
-
+class LOI.Adventure extends LOI.Adventure
+  _initializePeople: ->
     # Show characters that have been at the location in the last 15 minutes.
     durationInSeconds = 15 * 60
 
-    @actionsSubscriptionAutorun = Tracker.autorun (computation) =>
-      return unless locationId = LOI.adventure.currentLocationId()
+    @autorun (computation) =>
+      return unless locationId = @currentLocationId()
 
-      LOI.Memory.Action.recentForLocation.subscribe locationId, durationInSeconds
+      @_recentActionsSubscription = LOI.Memory.Action.recentForLocation.subscribe @, locationId, durationInSeconds
 
-    # People are other players' characters.
-    @people = new ComputedField =>
-
+    @currentPeople = new ComputedField =>
       # See if we've changed location.
-      currentLocation = LOI.adventure.currentLocationId()
+      return [] unless currentLocation = @currentLocationId()
 
-      if currentLocation isnt @_oldLocation
-        @_oldLocation = currentLocation
+      # Don't process people until the actions subscription has kicked in,
+      # to avoid observing removing and re-adding of actions.
+      return [] unless @_recentActionsSubscription.ready()
+
+      if currentLocation isnt @_peopleOldLocation
+        @_peopleOldLocation = currentLocation
 
         # Mark arrival time so we know which actions to treat as realtime.
-        @_locationArrivalTime = new Date()
+        @_peopleLocationArrivalTime = new Date()
 
         # Clear the people cache.
         @_peopleById = {}
 
       # Filter all actions to unique characters. We don't care about reactivity
-      # of time since we're only show too many actions and not miss any.
+      # of time since we'll only get too many actions and not miss any.
       earliestTime = new Date Date.now() - durationInSeconds * 1000
 
       actions = LOI.Memory.Action.documents.fetch
         'locationId': currentLocation
         time: $gt: earliestTime
 
-      oldPeople = _.values @_peopleById
+      # If our current context has an associated memory, also add all memory actions.
+      context = @currentContext()
+
+      if context instanceof LOI.Memory.Context and context.isCreated()
+        if memoryActions = context.memory()?.actions
+          # Refresh memory actions and add them to actions.
+          actions.push action.refresh() for action in memoryActions
 
       # React only to location and action changes.
       Tracker.nonreactive =>
+        # Sort actions by time.
+        actions = _.sortBy actions, (action) => action.time.getTime()
+
+        oldPeople = _.values @_peopleById
+
         characterIds = _.uniq (action.character._id for action in actions)
 
         # Return a list of characters initialized with their actions.
@@ -62,7 +63,7 @@ class E1.Characters extends LOI.Adventure.Scene
           # Create the person, if it's new.
           @_peopleById[characterId] ?= new LOI.Character.Person characterId
 
-          if lastAction.time < @_locationArrivalTime
+          if lastAction.time < @_peopleLocationArrivalTime
             # Actions happened before we arrived here, so no need for a transition.
             @_peopleById[characterId].setAction lastAction
 
@@ -79,10 +80,9 @@ class E1.Characters extends LOI.Adventure.Scene
           delete @_peopleById[oldPerson.instance._id]
 
         _.values @_peopleById
+    ,
+      true
 
-  destroy: ->
-    @actionsSubscriptionAutorun.stop()
-    @people.stop()
-
-  things: ->
-    @people()
+  getCurrentPerson: (characterId) ->
+    # Note: we don't use @_peopleById directly so we are reactive.
+    _.find @currentPeople(), (person) -> person._id is characterId

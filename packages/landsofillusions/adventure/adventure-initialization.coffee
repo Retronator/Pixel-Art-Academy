@@ -51,6 +51,7 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeActiveItem()
     @_initializeEpisodes()
     @_initializeInventory()
+    @_initializePeople()
     @_initializeThings()
     @_initializeListeners()
     @_initializeTime()

@@ -179,7 +179,7 @@ class LOI.Adventure.Thing extends AM.Component
           Tracker.nonreactive => callback?()
 
   @createAvatar: ->
-    # We fully qualify Avatar (instead of @Avatar) because this gets called from classes that inherit from Thing.
+    # Note: We fully qualify Avatar (instead of @Avatar) because this gets called from classes that inherit from Thing.
     new LOI.Adventure.Thing.Avatar @
 
   # Thing instance

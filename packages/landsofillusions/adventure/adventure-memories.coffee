@@ -15,6 +15,12 @@ class LOI.Adventure extends LOI.Adventure
       LOI.Memory.forId.subscribe memoryId
       LOI.Memory.documents.findOne memoryId
 
+    # Subscribe to character's memory progress.
+    @autorun (computation) =>
+      return unless characterId = LOI.characterId()
+
+      LOI.Memory.Progress.forCharacter.subscribe characterId
+
   enterMemory: (memoryOrMemoryId) ->
     memoryId = memoryOrMemoryId._id or memoryOrMemoryId
     @currentMemoryId memoryId
@@ -28,16 +34,19 @@ class LOI.Adventure extends LOI.Adventure
       # Give the interface time to react to location change and clear the context, before we set the new one.
       Meteor.setTimeout =>
         # Find which context class this memory belongs to.
+        memoryContextClass = null
+
         for contextClass in LOI.Memory.Context.classes
           if contextClass.isOwnMemory memory
             # We've reached the correct context class.
+            memoryContextClass = contextClass
             break
 
-        # Fallback to plain memory context if none other can handle it (usually indicates a direct conversation).
-        contextClass = LOI.Memory.Context unless contextClass
-        
+        # Fallback to a plain conversation memory context if none other can handle it.
+        memoryContextClass = LOI.Memory.Contexts.Conversation unless memoryContextClass
+
         # Create the context based on the memory.
-        context = new contextClass memoryId
+        context = new memoryContextClass memoryId
 
         @enterContext context
 

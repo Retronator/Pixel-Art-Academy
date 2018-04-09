@@ -116,4 +116,10 @@ class LOI.Character extends AM.Document
 
         pronoun
 
+    text = text.replace /_are_/g, (match) ->
+      # We assume neutral pronouns use plural verbs.
+      # TODO: Can we make this assumption? Probably depends on language's properties.
+      numberCategory = if pronouns is LOI.Avatar.Pronouns.Neutral then 'Plural' else 'Singular'
+      LOI.adventure.parser.vocabulary.getPhrases("Verbs.Be.Present.3rdPerson.#{numberCategory}")?[0]
+
     text

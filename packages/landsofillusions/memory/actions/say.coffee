@@ -2,6 +2,7 @@ LOI = LandsOfIllusions
 AM = Artificial.Mummification
 
 Nodes = LOI.Adventure.Script.Nodes
+Vocabulary = LOI.Parser.Vocabulary
 
 class LOI.Memory.Actions.Say extends LOI.Memory.Action
   # content:
@@ -15,12 +16,33 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
       text: String
 
   @activeDescription: ->
-    "_person_ is talking."
+    "_They_ _are_ talking."
 
-  start: (person) ->
-    # Create a dialog node.
-    dialogueLine = new Nodes.DialogueLine
+  createStartScript: (person, nextNode, nodeOptions) ->
+    # After the text is delivered, advertise this context.
+    callbackNode = new Nodes.Callback
+      next: nextNode
+      callback: (complete) =>
+        complete()
+
+        context = new LOI.Memory.Contexts.Conversation @memory._id
+
+        LOI.adventure.advertiseContext context
+
+    options = _.extend {}, nodeOptions,
       line: @content.say.text
       actor: person
+      next: callbackNode
+      immediate: true
 
-    LOI.adventure.director.startNode dialogueLine
+    # Return the main dialog node.
+    new Nodes.DialogueLine options
+
+  onCommand: (person, commandResponse) ->
+    # Listening enters you into the context of this conversation.
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.ListenTo, person.avatar]
+      action: =>
+        context = new LOI.Memory.Contexts.Conversation @memory._id
+
+        LOI.adventure.enterContext context

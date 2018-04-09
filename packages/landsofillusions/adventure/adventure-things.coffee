@@ -21,8 +21,9 @@ class LOI.Adventure extends LOI.Adventure
     @currentPhysicalThings = new ComputedField =>
       return unless currentSituation = @currentSituation()
       return unless currentInventory = @currentInventory()
+      return unless currentPeople = @currentPeople()
 
-      thingClasses = _.union currentSituation.things(), currentInventory.things()
+      thingClasses = _.union currentSituation.things(), currentInventory.things(), currentPeople
 
       for thingClass in thingClasses
         # Create the thing if needed. We allow passing thing instances as well, so no need to instantiate those.
@@ -63,8 +64,9 @@ class LOI.Adventure extends LOI.Adventure
     @currentLocationThings = new ComputedField =>
       return unless currentSituation = @currentSituation()
       return unless currentPhysicalThings = @currentPhysicalThings()
+      return unless currentPeople = @currentPeople()
 
-      locationThingClasses = currentSituation.things()
+      locationThingClasses = _.union currentSituation.things(), currentPeople
 
       # Note: thing classes can also hold instances, if they were created manually by locations.
       thing for thing in currentPhysicalThings when thing.constructor in locationThingClasses or thing in locationThingClasses

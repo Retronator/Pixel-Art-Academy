@@ -51,8 +51,21 @@ Document.startup ->
       WakeUp: ['wake up', 'awaken']
       Buy: ['buy', 'purchase']
       Board: ['board', 'take']
+      Listen: ['listen']
       ListenTo: ['listen to', 'hear']
       Say: ['say']
+
+      Be:
+        Present:
+          "1stPerson":
+            Singular: ['am']
+            Plural: ['are']
+          "2ndPerson":
+            Singular: ['are']
+            Plural: ['are']
+          "3rdPerson":
+            Singular: ['is']
+            Plural: ['are']
 
     Pronouns:
       Subjective:

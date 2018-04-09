@@ -13,7 +13,6 @@ class PAA.Season1.Episode1 extends LOI.Adventure.Episode
 
   @scenes: -> [
     @Inventory
-    @Characters
     @ChinaBasinPark
   ]
     

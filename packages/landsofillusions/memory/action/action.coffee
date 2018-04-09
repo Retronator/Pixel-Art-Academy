@@ -84,20 +84,30 @@ class LOI.Memory.Action extends AM.Document
 
     if translated.language then translated.text else null
 
+  start: (person) -> @_runScript @createStartScript person
+  end: (person) -> @_runScript @createEndScript person
+
+  _runScript: (script) ->
+    LOI.adventure.director.startNode script if script
+
+  # Override to provide what happens when an action is started or ends. 
   # By default, start and end actions output the description to the narrative.
-  start: (person) ->
-    @_writeDescription @startDescription(), person
+  createStartScript: (person, nextNode, nodeOptions) ->
+    @_createDescriptionScript person, @startDescription(), nextNode, nodeOptions
 
-  end: (person) ->
-    @_writeDescription @endDescription(), person
+  createEndScript: (person, nextNode, nodeOptions) ->
+    @_createDescriptionScript person, @endDescription(), nextNode, nodeOptions
 
-  _writeDescription: (description, person) ->
+  _createDescriptionScript: (person, description, nextNode, nodeOptions) ->
     return unless description
 
     # Format person into the description.
     description = LOI.Character.formatText description, 'person', person
-
-    narrativeLine = new Nodes.NarrativeLine
+    
+    options = _.extend {}, nodeOptions,
       line: description
+      next: nextNode
 
-    LOI.adventure.director.startNode narrativeLine
+    new Nodes.NarrativeLine options
+
+  onCommand: (person, commandResponse) -> # Override to listen to commands.

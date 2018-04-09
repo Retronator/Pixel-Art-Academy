@@ -47,8 +47,21 @@ LOI.Parser.Vocabulary.Keys =
     WakeUp: ''
     Buy: ''
     Board: ''
+    Listen: ''
     ListenTo: ''
     Say: ''
+
+    Be:
+      Present:
+        "1stPerson":
+          Singular: ''
+          Plural: ''
+        "2ndPerson":
+          Singular: ''
+          Plural: ''
+        "3rdPerson":
+          Singular: ''
+          Plural: ''
 
   Pronouns:
     Subjective:

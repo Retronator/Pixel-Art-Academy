@@ -30,8 +30,9 @@ class LOI.Interface extends AM.Component
           # Now store the new location as the
           @_previousLocationClass = location.constructor
 
-        # Clear the current context.
+        # Clear the current contexts.
         LOI.adventure.exitContext()
+        LOI.adventure.clearAdvertisedContext()
 
         # Do any initialization needed after location change.
         @onLocationChanged()

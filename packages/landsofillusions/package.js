@@ -191,6 +191,7 @@ Package.onUse(function(api) {
   api.addFile('adventure/adventure-time');
   api.addFile('adventure/adventure-dialogs');
   api.addFile('adventure/adventure-assets');
+  api.addFile('adventure/adventure-people');
 
   // Initalization gets included last because it does component registering as the last child in the chain.
   api.addFile('adventure/adventure-initialization');
@@ -280,6 +281,8 @@ Package.onUse(function(api) {
   api.addServerFile('memory/migrations/0004-actionsreversereferencefieldadded');
 
   api.addFile('memory/context');
+  api.addFile('memory/contexts..');
+  api.addFile('memory/contexts/conversation');
 
   api.addFile('memory/action..');
   api.addFile('memory/action/methods');
