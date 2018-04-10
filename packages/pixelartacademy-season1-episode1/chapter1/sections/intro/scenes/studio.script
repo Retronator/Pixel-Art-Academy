@@ -4,15 +4,15 @@
 
 > _char_ raises in _their_ bed.
 
-* Hey there.
-* Can you hear me?
+* @Hey there.
+* @Can you hear me?
 
 char: Wha … who is this?
 
-* I'm you. -> [Okaaay]
-* Your inner voice. -> [Okaaay]
-* God. -> [Where]
-* It's Joy from Inside Out! -> [Where]
+* @I'm you. -> [Okaaay]
+* @Your inner voice. -> [Okaaay]
+* @God. -> [Where]
+* @It's Joy from Inside Out! -> [Where]
 
 ## Okaaay
 
@@ -24,9 +24,9 @@ char: Okaaay …
 
 char: Huh? Where are you?
 
-* In your head, silly!
-* I'm the fiction of your imagination.
-* I see everything.
+* @In your head, silly!
+* @I'm the fiction of your imagination.
+* @I see everything.
 
 char: What the fff…udge?
 
@@ -36,15 +36,15 @@ char: What the fff…udge?
 
 char: I knew last night was a bad idea, but I don't remember hitting my head.
 
-* Hello!
+* @Hello!
 
 char:
   Jeez, would you stop doing that!
   Uhm … 
   What do you want … I guess?
 
-* I'm here to play the game. -> [PlayGame]
-* It's time to get up. 
+* @I'm here to play the game. -> [PlayGame]
+* @It's time to get up. 
 
 char: 
   Well, we agree on that one.
@@ -57,8 +57,8 @@ char:
 
 char: What? What game?
 
-* Pixel Art Academy. -> [PAA]
-* Don't worry about it. Just follow my instructions. -> [GoingNuts]
+* @Pixel Art Academy. -> [PAA]
+* @Don't worry about it. Just follow my instructions. -> [GoingNuts]
 
 ## PAA
 
@@ -66,8 +66,8 @@ char:
   This is not making any sense.
   I should really stop watching bad sci-fi movies.
   
-* Alright, alright, don't worry about the game.
-* I'm not going anywhere until you listen to me. -> [GoingNuts]
+* @Alright, alright, don't worry about the game.
+* @I'm not going anywhere until you listen to me. -> [GoingNuts]
 
 char: Like that makes it any better.
 
@@ -79,20 +79,20 @@ char: I must be going nuts …
 
 ## HereToHelp
   
-* Look, I'm here to help.
+* @Look, I'm here to help.
   
 char: Oh yeah? Help with what?
 
-* I dunno, life? -> [Life]
-* I'll help you follow your dreams. -> [Dreams]
-* We'll learn art together. -> [Art]
+* @I dunno, life? -> [Life]
+* @I'll help you follow your dreams. -> [Dreams]
+* @We'll learn art together. -> [Art]
 
 ## Life
 
 char: I didn't know I need help with life.
 
-* Uhm … suuure. -> [Alright]
-* You're obviously talking to yourself.
+* @Uhm … suuure. -> [Alright]
+* @You're obviously talking to yourself.
 
 char: Hmm … I guess you're right about that one.
 
@@ -102,8 +102,8 @@ char: Hmm … I guess you're right about that one.
 
 char: Like a guide or something?
 
-* Yeah, you could say that. -> [Alright]
-* I'm a certified life coach. -> [LifeCoach]
+* @Yeah, you could say that. -> [Alright]
+* @I'm a certified life coach. -> [LifeCoach]
 
 ## LifeCoach
 
@@ -123,16 +123,16 @@ char:
   Alright, whatever.
   As long as I don't start talking to myself in public it can't get much worse.
   
-* Yay!
-* That's the spirit.
-* Well, I can't promise you that …
+* @Yay!
+* @That's the spirit.
+* @Well, I can't promise you that …
 
 char: 
   Oh, shut up.
   Alright, what do you want me to do?
 
-* Let's start by getting out of bed. -> [GetUp]
-* Get off your butt and start the day.
+* @Let's start by getting out of bed. -> [GetUp]
+* @Get off your butt and start the day.
 
 char: Jeez, don't be such a pain already.
 

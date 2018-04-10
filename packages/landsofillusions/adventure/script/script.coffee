@@ -41,9 +41,18 @@ class LOI.Adventure.Script
         if node[property] instanceof @constructor.Nodes.Jump
           jumpNode = node[property]
           node[property] = @startNode.labels[jumpNode.labelName]
+      
+      # Replace char actor with character instance's avatar.
+      node.actor = character.avatar if node.actorName is 'char'
 
-      # Replace char actor with character instance.
-      node.actor = character if node.actor is 'char'
+      if node instanceof @constructor.Nodes.Choice
+        if node.node.actorName is 'player'
+          # We want to force the player to say this, so don't set the actor.
+          node.node.actor = null
+          
+        else if character
+          # When synced with the character, character delivers choice node dialog.
+          node.node.actor = character.avatar
 
     # Set the script reference to all nodes.
     node.script = @ for node in @nodes
@@ -74,12 +83,12 @@ class LOI.Adventure.Script
   setThings: (things = {}) ->
     @things = things
 
-    # Replace actor names with actual thing instances.
+    # Set actors to thing instances, based on actor names.
     for node in @nodes
-      if node.actor and _.isString node.actor
-        continue unless things[node.actor]
+      if node.actorName
+        continue unless things[node.actorName]
 
-        node.actor = things[node.actor]
+        node.actor = things[node.actorName]
 
   setCurrentThings: (thingClasses) ->
     Tracker.autorun (computation) =>

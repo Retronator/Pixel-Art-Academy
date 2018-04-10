@@ -29,9 +29,11 @@ class Start.WakeUp extends LOI.Adventure.Scene
     "#{Vocabulary.Keys.Directions.Out}": Apartment.Hallway
 
   removeThings: ->
+    characterPerson = LOI.adventure.getCurrentPerson LOI.characterId()
+
     # Don't show things until they open their eyes.
     [
-      LOI.character()
+      characterPerson
       Apartment.Studio.Computer
     ]
 

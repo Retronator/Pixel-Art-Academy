@@ -53,22 +53,27 @@ class LOI.Adventure extends LOI.Adventure
 
         characterIds = _.uniq (action.character._id for action in actions)
 
+        # Always include player's character.
+        playerCharacterId = LOI.characterId()
+        characterIds.push playerCharacterId if playerCharacterId and playerCharacterId not in characterIds
+
         # Return a list of characters initialized with their actions.
         for characterId in characterIds
-          lastAction = _.last _.filter actions, (action) -> action.character._id is characterId
-
-          # Convert to correct class.
-          lastAction = lastAction.cast()
-
           # Create the person, if it's new.
           @_peopleById[characterId] ?= new LOI.Character.Person characterId
 
-          if lastAction.time < @_peopleLocationArrivalTime
-            # Actions happened before we arrived here, so no need for a transition.
-            @_peopleById[characterId].setAction lastAction
+          lastAction = _.last _.filter actions, (action) -> action.character._id is characterId
 
-          else
-            @_peopleById[characterId].transitionToAction lastAction
+          if lastAction
+            # Convert to correct class.
+            lastAction = lastAction.cast()
+
+            if lastAction.time < @_peopleLocationArrivalTime
+              # Actions happened before we arrived here, so no need for a transition.
+              @_peopleById[characterId].setAction lastAction
+
+            else
+              @_peopleById[characterId].transitionToAction lastAction
 
           # Remove from old people.
           _.pull oldPeople, @_peopleById[characterId]

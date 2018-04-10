@@ -163,7 +163,7 @@ class LOI.Adventure.ScriptFile.Parser
     return unless match = line.match /^(\S.*?):((?:.|\n)*)/
 
     # We have a dialog line and we know who the actor is.
-    actor = match[1]
+    actorName = match[1]
     dialog = match[2]
 
     # Now match all the separate dialog lines. Note that we also want to match the potentially empty first line.
@@ -180,7 +180,7 @@ class LOI.Adventure.ScriptFile.Parser
       continue unless line.length
 
       node = new Nodes.DialogueLine
-        actor: actor
+        actorName: actorName
         line: line
         next: nextNode
 
@@ -272,6 +272,8 @@ class LOI.Adventure.ScriptFile.Parser
     * dialog line -> [label name]
     --or--
     * dialog line
+    --or--
+    * @dialog line ...
   ###
   _parseChoice: (line) ->
     # Extract the potential conditional out of the line.
@@ -284,12 +286,22 @@ class LOI.Adventure.ScriptFile.Parser
     # Get the jump part out of the line.
     result = @_parseJump line
     [..., jumpNode] = result if result
+    
+    if choiceLine[0] is '@'
+      choiceLine = choiceLine[1..]
+      
+      # Force the player to be the actor, even when synced to the character.
+      actorName = 'player'
+      
+    else
+      # Don't determine an actor (the player or the player's character will deliver it).
+      actorName = null
 
-    # Create a dialog node without an actor (the player's character delivers it),
-    # followed by the jump (or following to the last non-choice node if no jump is present).
+    # Create a dialog node followed by the jump (or following to the last non-choice node if no jump is present).
     dialogNode = new Nodes.DialogueLine
       line: choiceLine
       next: jumpNode or @lastNonChoiceNode
+      actorName: actorName
       
     # Create a choice node that delivers the line if chosen.
     choiceNode = new Nodes.Choice

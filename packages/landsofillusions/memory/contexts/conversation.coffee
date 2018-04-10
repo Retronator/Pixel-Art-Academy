@@ -5,3 +5,5 @@ class LOI.Memory.Contexts.Conversation extends LOI.Memory.Context
   @id: -> 'LandsOfIllusions.Memory.Contexts.Conversation'
 
   @initialize()
+
+  @description: -> "You engage in a conversation."

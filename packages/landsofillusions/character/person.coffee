@@ -10,6 +10,9 @@ class LOI.Character.Person extends LOI.Adventure.Thing
   @fullName: -> "Person"
   @description: -> "It's a person."
 
+  @translations: ->
+    yourCharacter: "It's your character."
+
   @initialize()
 
   constructor: (@_id) ->
@@ -18,6 +21,8 @@ class LOI.Character.Person extends LOI.Adventure.Thing
 
     # We let Thing construct itself last since it'll need the character avatar (via the instance) ready.
     super
+
+    @thingAvatar = new LOI.Adventure.Thing.Avatar @
 
   createAvatar: ->
     # We send instance's avatar as the main avatar.
@@ -39,6 +44,13 @@ class LOI.Character.Person extends LOI.Adventure.Thing
   dialogueDeliveryType: -> @instance.avatar.dialogueDeliveryType()
 
   # Person methods
+
+  description: ->
+    if @_id is LOI.characterId()
+      @translations().yourCharacter
+
+    else
+      @thingAvatar.description()
 
   setAction: (action) ->
     # Just record the action so it's ready for upcoming transitions.
