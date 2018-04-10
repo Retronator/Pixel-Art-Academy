@@ -12,7 +12,7 @@ LOI.GameState.forCurrentUser.publish ->
 
   # Before we send the document, simulate it to current time.
   gameState = LOI.GameState.documents.findOne 'user._id': @userId
-  LOI.Simulation.Server.simulateGameState gameState
+  LOI.Simulation.Server.simulateGameState gameState if gameState
   
   LOI.GameState.documents.find
     'user._id': @userId

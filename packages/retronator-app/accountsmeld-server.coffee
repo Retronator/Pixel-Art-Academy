@@ -9,8 +9,8 @@ Document.startup ->
     meldUserCallback: (sourceUser, targetUser) ->
       console.log "Melding user", sourceUser._id, "into", targetUser._id
 
-      # Delete source user's game state, so we don't have multiple states per user.
-      LOI.GameState.documents.remove 'user._id': sourceUser._id
+      # If the target user has a game state, delete source user's state, so we don't have multiple states per user.
+      LOI.GameState.documents.remove 'user._id': sourceUser._id if LOI.GameState.documents.findOne 'user._id': targetUser._id
 
       # Point all the references from the source user to the target.
       RA.User.substituteDocument sourceUser._id, targetUser._id
@@ -19,3 +19,8 @@ Document.startup ->
       createdAt: if sourceUser.createdAt < targetUser.createdAt then sourceUser.createdAt else targetUser.createdAt
       # Give priority to the target user's profile settings.
       profile: _.defaults {}, targetUser.profile, sourceUser.profile
+
+    meldDBCallback: (sourceUserId, targetUserId) ->
+      # Re-run transactions on the target user.
+      user = RA.User.documents.findOne targetUserId
+      user.onTransactionsUpdated()
