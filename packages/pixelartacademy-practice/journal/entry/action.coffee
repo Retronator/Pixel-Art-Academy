@@ -17,3 +17,7 @@ class PAA.Practice.Journal.Entry.Action extends LOI.Memory.Action
 
   @activeDescription: ->
     "_They_ _are_ writing in _their_ journal."
+
+  shouldSkipTransition: (oldAction) ->
+    # Skip if we're transitioning from another entry action.
+    oldAction.type is @type

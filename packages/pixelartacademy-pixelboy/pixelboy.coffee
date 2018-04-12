@@ -1,4 +1,5 @@
 AB = Artificial.Base
+AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -84,8 +85,9 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
     @$device = @$('.device')
 
-    $(window).on('mousemove.pixelartacademy-pixelboy', (event) => @onMouseMove event)
-    $(window).on('mouseup.pixelartacademy-pixelboy', (event) => @onMouseUp event)
+    $(document).on 'mousemove.pixelartacademy-pixelboy', (event) => @onMouseMove event
+    $(document).on 'mouseup.pixelartacademy-pixelboy', (event) => @onMouseUp event
+    $(document).on 'keydown.landsofillusions-items-sync', (event) => @onKeyDown event
 
     # Reset scale to 0 to trigger direct setting of size.
     @_lastScale = 0
@@ -183,7 +185,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
   onDestroyed: ->
     super
 
-    $(window).off('.pixelartacademy-pixelboy')
+    $(document).off('.pixelartacademy-pixelboy')
     $('body').removeClass('pixelartacademy-pixelboy-resizing')
     
   url: -> @os.url()
@@ -276,6 +278,20 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
   onMouseUp: (event) ->
     @resizing false
+
+  onKeyDown: (event) ->
+    # Don't capture events when interface is not active, unless we're the reason for it.
+    pixelBoyIsActive = LOI.adventure.activeItem() is @
+    return unless LOI.adventure.interface.active() or pixelBoyIsActive
+
+    keyCode = event.which
+    return unless keyCode is AC.Keys.alt
+
+    if pixelBoyIsActive
+      LOI.adventure.deactivateActiveItem()
+
+    else
+      @open()
 
   # Listener
 

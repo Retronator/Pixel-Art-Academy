@@ -85,6 +85,15 @@ class LOI.Character extends AM.Document
 
     @instances[id]
 
+  @people = {}
+
+  @getPerson: (id) ->
+    unless @people[id]
+      Tracker.nonreactive =>
+        @people[id] = new @Person id
+
+    @people[id]
+    
   @formatText: (text, keyword, character) ->
     pronouns = character.avatar.pronouns()
 

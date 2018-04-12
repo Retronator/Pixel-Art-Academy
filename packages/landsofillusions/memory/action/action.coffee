@@ -119,4 +119,8 @@ class LOI.Memory.Action extends AM.Document
 
     new Nodes.NarrativeLine options
 
+  shouldSkipTransition: (oldAction) ->
+    # Override to determine when transitions between distinct actions are not necessary.
+    false
+
   onCommand: (person, commandResponse) -> # Override to listen to commands.

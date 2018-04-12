@@ -65,7 +65,7 @@ LOI.Memory.Action.updateTimeAndSituation.method (actionId, time, situation) ->
   time ?= new Date()
   
   setModifier = {time}
-  setModifier.situation = situation if situation
+  _.extend setModifier, situation if situation
 
   LOI.Memory.Action.documents.update actionId,
     $set: setModifier

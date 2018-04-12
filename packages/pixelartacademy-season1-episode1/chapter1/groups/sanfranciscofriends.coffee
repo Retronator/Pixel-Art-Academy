@@ -24,8 +24,7 @@ class C1.Groups.SanFranciscoFriends extends LOI.Adventure.Group
       member._id for member in group.members
       
     @members = new ComputedField =>
-      for memberId in @memberIds()
-        new LOI.Character.Person memberId
+      LOI.Character.getPerson memberId for memberId in @memberIds()
 
   @isCharacterMember: (characterIdOrInstance) ->
     LOI.Character.Group.isCharacterMember @id(), characterIdOrInstance

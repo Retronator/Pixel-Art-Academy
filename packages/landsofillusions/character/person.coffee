@@ -72,18 +72,21 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       content: action.content
 
     return if EJSON.equals actionData(@action()), actionData(action)
-
-    # If we had a previous action, transition out of it.
+    # See if we need to do the transition.
     oldAction = @action()
-    oldAction.end @ if oldAction
+    skipTransition = action?.shouldSkipTransition oldAction
+
+    # Transition out of the old action.
+    oldAction?.end @ unless skipTransition
 
     @action action
     
     if action
-      action.start @
+      # Transition into the new action.
+      action.start @ unless skipTransition
       
     else
-      # No action means the person left the location, so we create a dummy move action that is ending.
+      # No action means the person left the location, so we start an ad-hoc leave action.
       action = new LOI.Memory.Actions.Leave
       action.start @
 

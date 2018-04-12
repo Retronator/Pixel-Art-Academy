@@ -60,7 +60,7 @@ class LOI.Adventure extends LOI.Adventure
         # Return a list of characters initialized with their actions.
         for characterId in characterIds
           # Create the person, if it's new.
-          @_peopleById[characterId] ?= new LOI.Character.Person characterId
+          @_peopleById[characterId] ?= LOI.Character.getPerson characterId
 
           lastAction = _.last _.filter actions, (action) -> action.character._id is characterId
 
