@@ -194,6 +194,7 @@ class LOI.Adventure.Thing extends AM.Component
 
     @state = @constructor.state
     @stateAddress = @constructor.stateAddress
+    @readOnlyState = @constructor.readOnlyState
 
     @scriptState = @constructor.scriptState
     @scriptStateAddress = @constructor.scriptStateAddress

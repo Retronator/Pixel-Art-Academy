@@ -54,6 +54,7 @@ Document.startup ->
       Listen: ['listen']
       ListenTo: ['listen to', 'hear']
       Say: ['say']
+      HangOut: ['hang out']
 
       Be:
         Present:
@@ -85,7 +86,7 @@ Document.startup ->
         Masculine: ['his']
         Neutral: ['theirs']
 
-    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up', 'down']
+    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up', 'down', 'out']
 
     Questions:
       WhichPlace: ['where']

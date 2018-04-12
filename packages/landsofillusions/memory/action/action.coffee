@@ -16,9 +16,15 @@ class LOI.Memory.Action extends AM.Document
   #   avatar
   #     fullName
   #     color
-  # memory: optional memory this action belongs to.
+  # memory: optional memory this action belongs to
   #   _id
-  # content: extra information defining what was done in this action
+  # isMemorable: boolean weather this action is being memorized even without a memory
+  # content: extra information defining what was done in this action, specified in inherited actions
+  #
+  #   content reverse fields
+  #
+  #   journalEntry: array with one journal entry this action created, reverse of Journal.Entry.action
+  #     _id
   @type: @id()
 
   # Override register to do action initialization as well.
@@ -50,10 +56,13 @@ class LOI.Memory.Action extends AM.Document
   @registerContentPattern: (type, pattern) ->
     @contentPatterns[type] = pattern
 
+  @isMemorable: -> false # Override to persist actions of this type even when used outside of memories.
+
   # Methods
 
   @do: @method 'do'
-  @changeContent: @method 'changeContent'
+  @updateTimeAndSituation: @method 'updateTimeAndSituation'
+  @updateContent: @method 'updateContent'
 
   # Subscriptions
 

@@ -152,6 +152,16 @@ Package.onUse(function(api) {
   api.addFile('character/behavior/parts/perks/competitor');
   api.addFile('character/behavior/parts/perks/teammate');
 
+  // Group
+
+  api.addFile('character/group..');
+  api.addFile('character/group/methods');
+  api.addServerFile('character/group/subscriptions');
+
+  // Membership
+
+  api.addFile('character/membership..');
+
   // User
 
   api.addFile('user/user');
@@ -192,6 +202,7 @@ Package.onUse(function(api) {
   api.addFile('adventure/adventure-dialogs');
   api.addFile('adventure/adventure-assets');
   api.addFile('adventure/adventure-people');
+  api.addFile('adventure/adventure-groups');
 
   // Initalization gets included last because it does component registering as the last child in the chain.
   api.addFile('adventure/adventure-initialization');
@@ -259,6 +270,10 @@ Package.onUse(function(api) {
   api.addFile('adventure/region..');
   api.addFile('adventure/location..');
   api.addFile('adventure/location/inventory');
+
+  // Groups
+
+  api.addFile('adventure/group..');
 
   // Events
   

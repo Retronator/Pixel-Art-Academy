@@ -20,11 +20,13 @@ class LOI.Memory extends AM.Document
   #
   # journalEntry: array with one journal entry this memory relates to, reverse of Journal.Entry.memories
   #   _id
-  #   character
+  #   journal
   #     _id
-  #     avatar
-  #       fullName
-  #       color
+  #     character
+  #       _id
+  #       avatar
+  #         fullName
+  #         color
   @Meta
     name: @id()
     fields: =>

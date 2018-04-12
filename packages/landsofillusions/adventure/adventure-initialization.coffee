@@ -56,6 +56,7 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeListeners()
     @_initializeTime()
     @_initializeAssets()
+    @_initializeGroups()
 
     LOI.adventureInitialized true
 

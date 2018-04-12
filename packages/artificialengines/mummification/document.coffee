@@ -87,7 +87,7 @@ class AM.Document extends Document
     # Save the document class to our map.
     @_documentClasses[typeName] = documentClass
 
-  @getClass: (typeName) ->
+  @getClassForType: (typeName) ->
     # Retrieve the document class from the map.
     @_documentClasses[typeName]
 
@@ -100,7 +100,7 @@ class AM.Document extends Document
     throw new AE.InvalidOperationException "Document doesn't have the type field '#{typeFieldName}'." unless @[typeFieldName]
 
     # Get the constructor for the specified type.
-    documentConstructor = @constructor.getClass @[typeFieldName]
+    documentConstructor = @constructor.getClassForType @[typeFieldName]
     return null unless documentConstructor
 
     # We don't have to do anything if we're already created with the target constructor.

@@ -160,9 +160,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
 
   startEntry: (delta) ->
     entryId = Random.id()
-    journalId = @journalDesign.journalId
+    journalId = @journalDesign.options.journalId
 
-    PAA.Practice.Journal.Entry.insert entryId, journalId, delta.ops
+    PAA.Practice.Journal.Entry.insert entryId, journalId, delta.ops, null, LOI.adventure.currentSituationParameters()
 
     @currentEntryId entryId
 

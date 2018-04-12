@@ -50,6 +50,7 @@ LOI.Parser.Vocabulary.Keys =
     Listen: ''
     ListenTo: ''
     Say: ''
+    HangOut: ''
 
     Be:
       Present:

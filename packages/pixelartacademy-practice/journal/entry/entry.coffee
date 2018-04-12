@@ -39,6 +39,8 @@ class PAA.Practice.Journal.Entry extends AM.Document
   #
   #   attributes: object with formatting directives
   #
+  # action: the action representing editing of this entry (timed at last edit)
+  #   _id
   # memories: list of memories revolving around this entry
   #   _id
   @Meta
@@ -51,6 +53,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
           task:
             entry: @ReferenceField PAA.Learning.Task.Entry, [], false
       ]
+      action: @ReferenceField LOI.Memory.Action, [], true, 'content.journalEntry', []
       memories: [@ReferenceField LOI.Memory, [], true, 'journalEntry', ['journal']]
 
   @pictureUploadContext = new PADB.Upload.Context

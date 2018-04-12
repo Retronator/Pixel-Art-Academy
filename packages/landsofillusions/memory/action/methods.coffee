@@ -4,10 +4,7 @@ LOI = LandsOfIllusions
 LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
   check type, typePattern
   check characterId, Match.DocumentId
-  check situation,
-    timelineId: String
-    locationId: String
-    contextId: Match.Optional String
+  check situation, situationPattern
   check content, LOI.Memory.Action.contentPatterns[type] if LOI.Memory.Action.contentPatterns[type]
   check memoryId, Match.Optional Match.DocumentId
 
@@ -23,6 +20,9 @@ LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
 
   action.contextId = situation.contextId if situation.contextId
   action.content = content if content
+
+  actionClass = LOI.Memory.Action.getClassForType type
+  action.isMemorable = true if actionClass.isMemorable()
 
   if memoryId
     memory = LOI.Memory.documents.findOne memoryId
@@ -43,28 +43,51 @@ LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
     # Also automatically progress this memory to the end for this character.
     LOI.Memory.Progress.updateProgress characterId, memoryId, action.time
 
+  else if action.isMemorable
+    # Memorable actions need to be normally inserted.
+    LOI.Memory.Action.documents.insert action
+
   else
-    # Outside of memories, this replaces this character's last action.
+    # Outside of memories and memorable actions, we replace this character's last action.
     LOI.Memory.Action.documents.upsert
       'character._id': characterId
       memoryId: $exists: false
+      isMemorable: $ne: true
     ,
       action
 
-LOI.Memory.Action.changeContent.method (memoryId, content) ->
-  check memoryId, Match.DocumentId
-  check content, actionContentPattern
+LOI.Memory.Action.updateTimeAndSituation.method (actionId, time, situation) ->
+  check actionId, Match.DocumentId
+  check time, Match.OptionalOrNull Date
+  check situation, Match.OptionalOrNull situationPattern
+  
+  # Update to current time unless specified.
+  time ?= new Date()
+  
+  setModifier = {time}
+  setModifier.situation = situation if situation
+
+  LOI.Memory.Action.documents.update actionId,
+    $set: setModifier
+
+LOI.Memory.Action.updateContent.method (actionId, content) ->
+  check actionId, Match.DocumentId
 
   # Make sure the user can change this action.
-  authorizeMemoryAction memoryId
+  authorizeMemoryAction actionId
 
-  LOI.Memory.Action.documents.update
+  action = LOI.Memory.Action.documents.findOne actionId
+  actionContentPattern = LOI.Memory.Action.contentPatterns[action.type]
+
+  check content, actionContentPattern if actionContentPattern
+
+  LOI.Memory.Action.documents.update actionId,
     $set: {content}
 
-authorizeMemoryAction = (memoryId) ->
+authorizeMemoryAction = (actionId) ->
   # Action must exist.
-  action = LOI.Memory.Action.documents.findOne memoryId
-  throw new AE.ArgumentException "Line not found." unless action
+  action = LOI.Memory.Action.documents.findOne actionId
+  throw new AE.ArgumentException "Action not found." unless action
 
   # Make sure the user controls the character of this line.
   LOI.Authorize.characterAction action.character._id
@@ -73,3 +96,8 @@ typePattern = Match.Where (value) ->
   check value, String
   
   value in _.values LOI.Memory.Action.getTypes()
+
+situationPattern =
+  timelineId: String
+  locationId: String
+  contextId: Match.OptionalOrNull String

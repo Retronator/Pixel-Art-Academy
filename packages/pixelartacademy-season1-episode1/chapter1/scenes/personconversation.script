@@ -1,0 +1,20 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.PersonConversation
+
+## Start
+
+char: Uhm … hi!
+person: Hi there!
+
+* Let's hang out sometimes. -> [HangOut] `not _personInGroup`
+* Bye now! -> [End]
+
+## HangOut
+
+person: Sounds good! I'll see you at Retronator HQ?
+char: it's a deal.
+
+### HangOut
+
+-> [End]
+
+## End

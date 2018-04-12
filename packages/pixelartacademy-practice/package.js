@@ -34,6 +34,7 @@ Package.onUse(function(api) {
   api.addFile('journal/entry..');
   api.addFile('journal/entry/methods');
   api.addServerFile('journal/entry/subscriptions');
+  api.addFile('journal/entry/action');
 
   // Pages
 

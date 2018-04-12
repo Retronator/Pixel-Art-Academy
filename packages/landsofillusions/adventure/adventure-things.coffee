@@ -12,6 +12,11 @@ class LOI.Adventure extends LOI.Adventure
       return unless options.timelineId and options.location
 
       new LOI.Adventure.Situation options
+      
+    @currentSituationParameters = new ComputedField =>
+      timelineId: @currentTimelineId()
+      locationId: @currentLocationId()
+      contextId: @currentContext()?.id()
 
     # We use caches to avoid reconstruction.
     @_things = {}

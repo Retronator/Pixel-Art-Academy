@@ -23,7 +23,6 @@ Package.onUse(function(api) {
   api.addFile('episode1');
   api.addFile('scenes/inventory');
   api.addFile('scenes/chinabasinpark');
-  api.addThing('scenes/personconversation');
 
   // Start
 
@@ -43,6 +42,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/items/admissionemail');
 
   api.addFile('chapter1/scenes/inbox');
+  api.addThing('chapter1/scenes/personconversation');
 
   api.addFile('chapter1/goals..');
   api.addFile('chapter1/goals/drawingsoftware');
@@ -54,6 +54,13 @@ Package.onUse(function(api) {
   api.addFile('chapter1/goals/studyplan');
   api.addFile('chapter1/goals/admission');
   api.addFile('chapter1/goals/snake');
+
+  api.addFile('chapter1/groups..');
+  api.addFile('chapter1/groups/sanfranciscofriends');
+  api.addFile('chapter1/groups/family');
+
+  api.addFile('chapter1/groups/admissionsstudygroup..');
+  api.addFile('chapter1/groups/admissionsstudygroup/coworking');
 
   // Intro
   api.addFile('chapter1/sections/intro..');

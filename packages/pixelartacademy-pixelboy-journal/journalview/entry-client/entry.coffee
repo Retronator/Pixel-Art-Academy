@@ -79,13 +79,13 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
         console.log "Starting entry.", @entryId if @constructor.debug
 
-        @options.startEntry delta
+        @entries.startEntry delta
         return
 
       # Update the entry if this was a user update.
       if source is Quill.sources.USER
         console.log "Updating entry", @entryId if @constructor.debug
-        PAA.Practice.Journal.Entry.updateContent @entryId, delta.ops
+        PAA.Practice.Journal.Entry.updateContent @entryId, delta.ops, LOI.adventure.currentSituationParameters()
 
     quill.on 'editor-change', =>
       # Trigger reactive updates.
