@@ -201,7 +201,6 @@ Package.onUse(function(api) {
   api.addFile('adventure/adventure-time');
   api.addFile('adventure/adventure-dialogs');
   api.addFile('adventure/adventure-assets');
-  api.addFile('adventure/adventure-people');
   api.addFile('adventure/adventure-groups');
 
   // Initalization gets included last because it does component registering as the last child in the chain.
@@ -283,6 +282,10 @@ Package.onUse(function(api) {
   // Context
 
   api.addFile('adventure/context..');
+
+  // People (requires adventure global)
+
+  api.addFile('character/people');
 
   // Memories (requires adventure context and script nodes)
 

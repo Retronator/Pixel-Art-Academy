@@ -15,41 +15,104 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     @classes.push @
     
   @initialize()
-    
-  # Override to tell if a memory is from this context.
-  @isOwnMemory: (memory) -> false
-    
-  constructor: (@memoryId) ->
+        
+  @createContext: (memory) ->
+    # Here we query all inherited classes to get one that creates the context.
+    for contextClass in LOI.Memory.Context.classes when contextClass isnt LOI.Memory.Context
+      if context = contextClass.tryCreateContext memory
+        # We've reached the correct context class.
+        break
+
+    # Fallback to a plain conversation memory context if none other can handle it.
+    unless context
+      context = new LOI.Memory.Contexts.Conversation.tryCreateContext memory
+
+    context
+
+  # Override to create a context if the memory document matches this context.
+  @tryCreateContext: (memory) ->
+    # Create the context for this entry.
+    context = new @
+
+    # Start in the provided memory.
+    context.displayMemory memory._id
+
+    # Return the context.
+    context
+
+  constructor: ->
     super
+
+    @memoryId = new ReactiveField null
   
   onCreated: ->
     super
 
-    LOI.Memory.forId.subscribe @, @memoryId
+    # Subscribe to all the memories.
+    @_memorySubscriptionAutorun = Tracker.autorun (computation) =>
+      return unless @isCreated()
+      return unless memoryIds = @memoryIds()
+
+      LOI.Memory.forIds.subscribe @, memoryIds
+
+    @memories = new ComputedField =>
+      return unless memoryIds = @memoryIds()
+
+      # Get memories that happened at the same situation.
+      LOI.Memory.documents.fetch
+        _id: $in: memoryIds
+        timelineId: LOI.adventure.currentTimelineId()
+        locationId: LOI.adventure.currentLocationId()
+    ,
+      true
 
     @memory = new ComputedField =>
-      LOI.Memory.documents.findOne @memoryId
+      LOI.Memory.documents.findOne @memoryId()
+    ,
+      true
 
-    # Generate all characters that need to be present when in this memory.
+    # Generate all people that need to be present in this context.
     @people = new ComputedField =>
-      return unless memory = @memory()
+      # Get the first person of every memory.
+      memories = @memories() or []
 
-      # Get all present character IDs.
-      characterIds = _.uniq _.map memory.actions, (action) => action.character._id
+      # Get only the latest memory per person.
+      memories = _.reverse _.sortBy memories, (memory) => memory.endTime
+      memories = _.uniqBy memories, (memory) => memory.actions[0]?.character._id
+      _.pull memories, undefined
 
-      # Convert them into people.
-      LOI.adventure.getCurrentPerson characterId for characterId in characterIds
+      people = for memory in memories
+        action = memory.actions[0].cast()
+        characterId = action.character._id
+
+        # Convert the character into a person, performing the starting action.
+        person = new LOI.Character.Person characterId
+        person.setAction action
+
+        person
+
+      if memory = @memory()
+        # Add all characters that have actions in the currently focused memory.
+        characterIds = _.uniq _.map memory.actions, (action) => action.character._id
+
+        for characterId in characterIds
+          characterPresent = _.find people, (person) => person._id is characterId
+
+          # Create a person without an action set.
+          people.push new LOI.Character.Person characterId unless characterPresent
+
+      people
+    ,
+      true
 
     # Create the script based on memory actions.
-    @autorun (computation) =>
+    Tracker.autorun (computation) =>
       # Wait for everything to be loaded.
+      return unless @isCreated()
       return unless memory = @memory()
       return unless people = @people()
       return unless _.every _.map people, (person) => person?.ready()
       return unless progress = LOI.Memory.Progress.documents.findOne 'character._id': LOI.characterId()
-
-      # We only do this once, since after this, people will be reporting their actions on their own.
-      computation.stop()
 
       actions = _.sortBy memory.actions, (action) => action.time.getTime()
 
@@ -60,6 +123,26 @@ class LOI.Memory.Context extends LOI.Adventure.Context
         action
 
       lastNode = null
+
+      # React to memory changes.
+      unless memory._id is @_currentMemoryId
+        # Display the conversation into a clear narrative.
+        LOI.adventure.interface.narrative.clear()
+
+        # Reset last display time so we start at the beginning of the actions.
+        @lastDisplayedActionTime = null
+
+        # Save new memory ID.
+        @_currentMemoryId = memory._id
+
+      # We only need to create a script for the actions we haven't displayed yet.
+      if @lastDisplayedActionTime
+        actions = _.filter actions, (action) => action.time.getTime() > @lastDisplayedActionTime
+
+      # Do we have anything we haven't displayed yet even?
+      return unless actions.length
+
+      @lastDisplayedActionTime = _.last(actions).time.getTime()
 
       # See if the player already observed some of the actions before.
       observedTime = progress.getTimeForMemoryId memory._id
@@ -86,16 +169,43 @@ class LOI.Memory.Context extends LOI.Adventure.Context
         actionStartScript = action.createStartScript person, lastNode, immediate: observed
         lastNode = actionStartScript if actionStartScript
 
-      # Display the current conversation into a clear narrative.
-      LOI.adventure.interface.narrative.clear()
       LOI.adventure.director.startNode lastNode
 
+  onDestroyed: ->
+    super
+
+    @_memorySubscriptionAutorun.stop()
+    @memories.stop()
+    @memory.stop()
+    @people.stop()
+
+  memoryIds: -> # Override to provide available memories to choose between.
+
+  createNewMemory: ->
+    memoryId = Random.id()
+    timelineId = LOI.adventure.currentTimelineId()
+    locationId = LOI.adventure.currentLocationId()
+
+    LOI.Memory.insert memoryId, timelineId, locationId
+
+    # Return the memory ID so the caller can add actions to it.
+    memoryId
+    
+  displayNewMemory: ->
+    memoryId = @createNewMemory()
+    @displayMemory memoryId
+
+    # Return the memory ID so the caller can add actions to it.
+    memoryId
+
+  displayMemory: (memoryId) ->
+    # Set the new memory ID which will update the people.
+    @memoryId memoryId
+
   overrideThings: ->
-    # When inside a memory, context shows only characters in involved in the actions.
-    return unless LOI.adventure.currentMemoryId()
     return [] unless @isCreated()
 
-    @characters()
+    @people()
 
   overrideExits: ->
     # Only remove exits when in a memory.
@@ -119,8 +229,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     memory: LOI.Memory.Context
 
   onCommand: (commandResponse) ->
-    context = @options.parent
-
+    # We allow to exit memories.
     return unless LOI.adventure.currentMemoryId()
 
     exitAction = => LOI.adventure.exitMemory()

@@ -158,7 +158,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # If the command line is a silent one, it doesn't appear in the narrative.
     unless commandLine.silent
       # We act as if the user entered this as a command.
-      @narrative.addText "> #{_.upperCase commandLine.line}"
+      @narrative.addText "> #{_.toUpper commandLine.line}"
 
     # Command nodes don't stop the narrative and just end.
     commandLine.end()

@@ -53,7 +53,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
           task:
             entry: @ReferenceField PAA.Learning.Task.Entry, [], false
       ]
-      action: @ReferenceField LOI.Memory.Action, [], true, 'content.journalEntry', []
+      action: @ReferenceField LOI.Memory.Action, [], true, 'content.journalEntry', ['journal']
       memories: [@ReferenceField LOI.Memory, [], true, 'journalEntry', ['journal']]
 
   @pictureUploadContext = new PADB.Upload.Context
@@ -74,7 +74,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
   @updateContent: @method 'updateContent'
   @replaceContent: @method 'replaceContent'
 
-  @newMemory: @method 'newMemory'
+  @addMemory: @method 'addMemory'
 
   # Subscriptions
   @forId: @subscription 'forId'

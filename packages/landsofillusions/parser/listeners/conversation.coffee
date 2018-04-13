@@ -24,25 +24,27 @@ class LOI.Parser.ConversationListener extends LOI.Adventure.Listener
 
       if context instanceof LOI.Memory.Context
         # Place action into the context's memory.
-        memoryId = context.memoryId
         contextId = context.id()
+        memoryId = context.memoryId()
+
+        unless memoryId
+          # We need to create the memory for this context.
+          memoryId = context.displayNewMemory()
 
       else if advertisedContext instanceof LOI.Memory.Context
         # Place action into advertised context's memory.
-        memoryId = advertisedContext.memoryId
+        memoryId = advertisedContext.memoryId()
         contextId = advertisedContext.id()
 
-        # Enter advertised context as well.
-        LOI.adventure.enterContext advertisedContext
+        context = advertisedContext
+        enterContext = true
 
       else
-        # We're not in a memory context yet. Create a new memory and enter its context.
-        memoryId = Random.id()
-        LOI.Memory.insert memoryId, timelineId, locationId
-
-        context = new LOI.Memory.Contexts.Conversation memoryId
+        # We're not in a memory context yet. Create a new conversation and enter its context.
+        context = new LOI.Memory.Contexts.Conversation()
+        memoryId = context.displayNewMemory()
         contextId = context.id()
-        LOI.adventure.enterContext context
+        enterContext = true
 
       # Add the Say action.
       situation = {timelineId, locationId, contextId}
@@ -52,6 +54,9 @@ class LOI.Parser.ConversationListener extends LOI.Adventure.Listener
           text: message
           
       LOI.Memory.Action.do LOI.Memory.Actions.Say.type, characterId, situation, content, memoryId
+
+      # If we created a new context, we need to enter it now that the message has been inserted.
+      LOI.adventure.enterContext context if enterContext
 
     # Create a quoted phrase to catch anything included with the say command.
     commandResponse.onPhrase

@@ -12,6 +12,8 @@ class LOI.Memory extends AM.Document
   #       fullName
   #       color
   #   type
+  #   memory
+  #     _id
   #   content
   # startTime: auto-generated time of the first action in this memory
   # endTime: auto-generated time of the last action in this memory
@@ -51,4 +53,10 @@ class LOI.Memory extends AM.Document
   # Subscriptions
 
   @forId: @subscription 'forId'
+  @forIds: @subscription 'forIds'
   @forCharacter: @subscription 'forCharacter'
+
+  display: ->
+    # Create the context for this memory document and enter it. The context will already be displaying this memory.
+    context = LOI.Memory.Context.createContext @
+    LOI.adventure.enterContext context

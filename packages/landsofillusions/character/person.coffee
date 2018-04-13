@@ -23,6 +23,14 @@ class LOI.Character.Person extends LOI.Adventure.Thing
     super
 
     @thingAvatar = new LOI.Adventure.Thing.Avatar @
+    
+    # Subscribe to the memory of the action the person is performing.
+    @_actionSubscription = Tracker.autorun (computation) =>
+      # See if this action even is inside a memory.
+      return unless action = @action()
+      return unless action.memory
+      
+      LOI.Memory.forId.subscribe action.memory._id
 
   createAvatar: ->
     # We send instance's avatar as the main avatar.

@@ -115,14 +115,23 @@ class LOI.Items.Components.Map extends AM.Component
     'big-map' if @bigMap() or not @miniMap()
 
   visibleClass: ->
+    # We're displaying the minimap when the mini map is on, but the big map isn't.
+    displayingMiniMap = @miniMap() and not @bigMap()
+
+    # Don't show the mini-map when we have an illustration.
+    return if displayingMiniMap and LOI.adventure.currentSituation()?.illustrationHeight.last()
+
+    # Don't show the mini map if interface is busy.
     busyConditions = [
       not LOI.adventure.interface.active()
       LOI.adventure.interface.waitingKeypress()
       LOI.adventure.interface.showDialogueSelection()
     ]
 
-    # Don't show the mini map if interface is busy.
-    'visible' if @bigMap() or @miniMap() and not _.some busyConditions
+    return if displayingMiniMap and _.some busyConditions
+
+    # Normally display if either the big or mini map is on.
+    'visible' if @bigMap() or @miniMap()
 
   inIntroClass: ->
     'in-intro' if LOI.adventure.interface.inIntro()

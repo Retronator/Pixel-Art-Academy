@@ -40,8 +40,8 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
         # Don't play the message if the user is busy doing something.
         LOI.adventure.interface.busy()
 
-        # Don't play the message if we're in a memory.
-        LOI.adventure.currentMemoryId()
+        # Don't play the message if we're in a context.
+        LOI.adventure.currentContext()
       ]
       
       if _.some skipPlayConditions

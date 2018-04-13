@@ -7,6 +7,16 @@ Nodes = LOI.Adventure.Script.Nodes
 Vocabulary = LOI.Parser.Vocabulary
 
 class PAA.Practice.Journal.Entry.Action extends LOI.Memory.Action
+  # content: extra information defining what was done in this action, specified in inherited actions
+  #   journalEntry: array with one journal entry this action created, reverse of Journal.Entry.action
+  #     _id
+  #     journal
+  #       _id
+  #       character
+  #         _id
+  #         avatar
+  #           fullName
+  #           color
   @type: 'PixelArtAcademy.Practice.Journal.Entry.Action'
   @register @type, @
 
@@ -20,4 +30,4 @@ class PAA.Practice.Journal.Entry.Action extends LOI.Memory.Action
 
   shouldSkipTransition: (oldAction) ->
     # Skip if we're transitioning from another entry action.
-    oldAction.type is @type
+    oldAction?.type is @type

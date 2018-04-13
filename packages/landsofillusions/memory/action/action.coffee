@@ -20,11 +20,6 @@ class LOI.Memory.Action extends AM.Document
   #   _id
   # isMemorable: boolean weather this action is being memorized even without a memory
   # content: extra information defining what was done in this action, specified in inherited actions
-  #
-  #   content reverse fields
-  #
-  #   journalEntry: array with one journal entry this action created, reverse of Journal.Entry.action
-  #     _id
   @type: @id()
 
   # Override register to do action initialization as well.
@@ -47,7 +42,7 @@ class LOI.Memory.Action extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      memory: @ReferenceField LOI.Memory, [], true, 'actions', ['time', 'character', 'type', 'content']
+      memory: @ReferenceField LOI.Memory, [], true, 'actions', ['time', 'character', 'type', 'content', 'memory']
       character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
 
   # A place for actions to add their content patterns.
@@ -67,7 +62,7 @@ class LOI.Memory.Action extends AM.Document
   # Subscriptions
 
   @forMemory: @subscription 'forMemory'
-  @recentForLocation: @subscription 'recentForLocation'
+  @recentForTimelineLocation: @subscription 'recentForTimelineLocation'
 
   @translationKeys:
     startDescription: 'startDescription'

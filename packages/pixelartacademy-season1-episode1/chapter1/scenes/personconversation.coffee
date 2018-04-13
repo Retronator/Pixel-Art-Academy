@@ -32,7 +32,7 @@ class C1.PersonConversation extends LOI.Adventure.Scene
   # Listener
 
   onCommand: (commandResponse) ->
-    people = LOI.adventure.currentPeople()
+    people = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
     characterId = LOI.characterId()
 
     for person in people when person._id isnt characterId

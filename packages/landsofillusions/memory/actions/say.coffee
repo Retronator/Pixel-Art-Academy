@@ -25,9 +25,16 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
       callback: (complete) =>
         complete()
 
-        context = new LOI.Memory.Contexts.Conversation @memory._id
+        # Advertise this action's memory context.
+        Tracker.autorun (computation) =>
+          # Wait for memory to be loaded through the person. It might not be loaded when
+          # person immediately executes this action upon being added to the people.
+          return unless memory = LOI.Memory.documents.findOne @memory._id
+          computation.stop()
 
-        LOI.adventure.advertiseContext context
+          Tracker.nonreactive =>
+            context = LOI.Memory.Context.createContext memory
+            LOI.adventure.advertiseContext context
 
     options = _.extend {}, nodeOptions,
       line: @content.say.text
@@ -43,6 +50,14 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.ListenTo, person.avatar]
       action: =>
-        context = new LOI.Memory.Contexts.Conversation @memory._id
+        # See if we're already in a context.
+        context = LOI.adventure.currentContext()
 
-        LOI.adventure.enterContext context
+        if context
+          # Set the focused memory of the context.
+          context.displayMemory @memory._id
+
+        else
+          # Display the memory in its context.
+          memory = LOI.Memory.documents.findOne @memory._id
+          memory.display()

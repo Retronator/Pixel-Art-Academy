@@ -82,7 +82,7 @@ PAA.Practice.Journal.Entry.updateContent.method (entryId, updateDeltaOperations,
 
   else
     # Create the action of writing in this journal entry.
-    actionId = createAction journal.character._id, situation
+    actionId = createAction entry.journal.character._id, situation
 
     setModifier.action = _id: actionId
 
@@ -111,19 +111,16 @@ PAA.Practice.Journal.Entry.replaceContent.method (entryId, contentDeltaOperation
     $set:
       content: contentDelta.ops
 
-PAA.Practice.Journal.Entry.newMemory.method (entryId, characterId) ->
+PAA.Practice.Journal.Entry.addMemory.method (entryId, memoryId) ->
   check entryId, Match.DocumentId
-  check characterId, Match.DocumentId
+  check memoryId, Match.DocumentId
 
   # Make sure the entry exists.
   entry = PAA.Practice.Journal.Entry.documents.findOne entryId
   throw new AE.ArgumentException "Entry not found." unless entry
 
-  # Make sure the user controls the character that's starting the memory.
-  LOI.Authorize.characterAction characterId
-
-  # Create a new memory.
-  memoryId = LOI.Memory.insert()
+  # Make sure the user controls the character that owns this journal.
+  LOI.Authorize.characterAction entry.journal.character._id
 
   # Associate the memory to this entry.
   PAA.Practice.Journal.Entry.documents.update entryId,
