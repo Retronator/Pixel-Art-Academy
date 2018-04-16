@@ -34,13 +34,14 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
         PAA.Practice.Journal.Entry.forJournalId.subscribe @, @journalDesign.options.journalId, @entriesLimit()
 
     @entries = new ComputedField =>
-      if @journalDesign.options.entryId
-        # Get just the one entry.
-        query = @journalDesign.options.entryId
-
-      else
+      # If we have a journal ID, we load the whole journal, even if we also have a specific entry to show first.
+      if @journalDesign.options.journalId
         # Get all the entries.
         query = 'journal._id': @journalDesign.options.journalId
+
+      else
+        # Get just the one entry.
+        query = @journalDesign.options.entryId
 
       # Only depend on the entry IDs to minimize updates when data inside an entry changes.
       entryDocuments = PAA.Practice.Journal.Entry.documents.find(query,

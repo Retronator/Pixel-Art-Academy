@@ -2,11 +2,57 @@
 
 ## Start
 
+-> [SaidHi] `_person.saidHi`
+
+`_person.saidHi = true`
+
+-> [InGroupGreeting] `_person.inGroup`
+-> [AlreadyMetGreeting] `person.alreadyMet`
+
 char: Uhm … hi!
 person: Hi there!
 
-* Let's hang out sometimes. -> [HangOut] `not _personInGroup`
+`person.alreadyMet = true`
+
+-> [MainQuestions]
+
+## InGroupGreeting
+
+char: Hey hey!
+person: What's up, what's up!
+
+-> [MainQuestions]
+
+## AlreadyMetGreeting
+
+char: Hi!
+person: Hey, nice to see you again.
+
+-> [MainQuestions]
+
+## SaidHi
+
+person: What's up?
+
+-> [MainQuestions]
+
+## MainQuestions
+
+* What's your name? -> [YourName] `not person.introduced`
+* Let's hang out sometimes. -> [HangOut] `not _person.inGroup`
 * Bye now! -> [End]
+
+## YourName
+
+person: I'm `_person.name`.
+
+> _char_ extends _their_ hand.
+
+char: Nice to meet you. I'm `@character.name()`.
+
+`person.introduced = true`
+
+-> [MainQuestions]
 
 ## HangOut
 

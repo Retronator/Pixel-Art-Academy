@@ -32,10 +32,10 @@ class C1.PersonConversation extends LOI.Adventure.Scene
   # Listener
 
   onCommand: (commandResponse) ->
-    people = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
+    peopleState = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
     characterId = LOI.characterId()
 
-    for person in people when person._id isnt characterId
+    for person in peopleState when person._id isnt characterId
       do (person) =>
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.TalkTo, person.avatar]
@@ -43,7 +43,27 @@ class C1.PersonConversation extends LOI.Adventure.Scene
             # Replace the person with target character.
             @script.setThings {person}
 
-            @script.ephemeralState 'personId', person._id
-            @script.ephemeralState 'personInGroup', C1.Groups.SanFranciscoFriends.isCharacterMember person._id
+            # Prepare a permanent state object for this person.
+            peopleState = @script.state('people') or {}
+            peopleState[person._id] ?= {}
+
+            personState = peopleState[person._id]
+
+            @script.state 'people', peopleState
+            @script.state 'person', personState
+
+            # Prepare an ephemeral object for this person.
+            ephemeralPeople = @script.ephemeralState('people') or {}
+            ephemeralPeople[person._id] ?= {}
+
+            ephemeralPerson = ephemeralPeople[person._id]
+
+            _.extend ephemeralPerson,
+              _id: person._id
+              inGroup: C1.Groups.SanFranciscoFriends.isCharacterMember person._id
+              name: person.fullName()
+
+            @script.ephemeralState 'people', ephemeralPeople
+            @script.ephemeralState 'person', ephemeralPerson
 
             @startScript()
