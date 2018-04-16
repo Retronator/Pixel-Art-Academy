@@ -17,8 +17,11 @@ class LOI.Memory.Context extends LOI.Adventure.Context
   @initialize()
         
   @createContext: (memory) ->
-    # Here we query all inherited classes to get one that creates the context.
-    for contextClass in LOI.Memory.Context.classes when contextClass isnt LOI.Memory.Context
+    # Here we query all inherited classes (except Conversation,
+    # which is a fallback) to get one that creates the context.
+    customContextClasses = _.without LOI.Memory.Context.classes, LOI.Memory.Context, LOI.Memory.Contexts.Conversation
+
+    for contextClass in customContextClasses
       if context = contextClass.tryCreateContext memory
         # We've reached the correct context class.
         break
@@ -78,7 +81,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
       # Get only the latest memory per person.
       memories = _.reverse _.sortBy memories, (memory) => memory.endTime
-      memories = _.uniqBy memories, (memory) => memory.actions[0]?.character._id
+      memories = _.uniqBy memories, (memory) => memory.actions?[0]?.character._id
       _.pull memories, undefined
 
       people = for memory in memories
