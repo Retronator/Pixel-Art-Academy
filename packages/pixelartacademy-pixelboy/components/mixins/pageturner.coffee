@@ -11,21 +11,30 @@ class PAA.PixelBoy.Components.Mixins.PageTurner
   onMouseWheel: (event) ->
     event.preventDefault()
 
-    @_scroll ?= 0
-    @_scroll += event.originalEvent.deltaX
-    @_scroll += event.originalEvent.deltaY
-    minimumHorizontalScroll = 20
+    @_resetScroll() unless @_scroll?
 
-    @parent.nextPage?() if @_scroll > minimumHorizontalScroll
-    @parent.previousPage?() if @_scroll < -minimumHorizontalScroll
+    @_scroll += event.originalEvent.deltaX
+    @_verticalScroll += event.originalEvent.deltaY
+
+    minimumScroll = 20
+
+    # Make sure we didn't move more vertically than horizontally, by resetting horizontal scroll when we do.
+    @_resetScroll() if Math.abs(@_verticalScroll) > minimumScroll
+
+    @parent.nextPage?() if @_scroll > minimumScroll
+    @parent.previousPage?() if @_scroll < -minimumScroll
 
     # Reset scroll after page was turned.
-    @_scroll = 0 if Math.abs(@_scroll) > minimumHorizontalScroll
+    @_resetScroll() if Math.abs(@_scroll) > minimumScroll
 
     # Also reset scroll after the user pauses scrolling.
     @_debouncedReset ?= _.debounce =>
-      @_scroll = 0
+      @_resetScroll()
     ,
       1000
 
     @_debouncedReset()
+
+  _resetScroll: ->
+    @_scroll = 0
+    @_verticalScroll = 0

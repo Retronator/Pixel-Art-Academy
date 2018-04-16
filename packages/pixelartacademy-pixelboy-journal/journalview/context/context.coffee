@@ -63,6 +63,19 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
       return unless entries = journalDesign.entries()
       entries.currentEntryId()
 
+    # Reset displayed memory on entry change.
+    @autorun (computation) =>
+      # Depend on entry ID changes.
+      return unless @entryId()
+
+      # Don't reset memory on initial run.
+      unless @_entryIdInitialized
+        @_entryIdInitialized = true
+        return
+
+      @displayMemory null
+      LOI.adventure.interface.narrative.clear scrollStyle: LOI.Interface.Components.Narrative.ScrollStyle.None
+
     # Provide available memories to the memory context.
     @memoryIds = new ComputedField =>
       return unless entryId = @entryId()
@@ -102,7 +115,11 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     # TODO: Localize possessive form.
     possessiveName = AB.Rules.English.createPossessive fullNameTranslation.text
 
-    "You look at #{possessiveName} journal entry."
+    if @options.entryId
+      "You look at #{possessiveName} journal entry."
+
+    else
+      "You look at #{possessiveName} journal."
 
   illustrationHeight: ->
     return unless @isCreated()

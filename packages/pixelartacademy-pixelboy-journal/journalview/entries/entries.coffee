@@ -70,9 +70,10 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     if @journalDesign.options.readOnly and not @currentEntryId()
       @autorun (computation) =>
         return unless entries = @entries()
+        return unless entries.length
         computation.stop()
 
-        @currentEntryId _.last(entries)._id
+        @currentEntryId _.last(entries).entryId
 
     @currentEntry = new ComputedField =>
       currentEntryId = @currentEntryId()
@@ -86,10 +87,14 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
       # As a side effect of reaching a very low index, load earlier entries.
       if index < 5
         entriesLimit = @entriesLimit()
-        displayedEntriesCount = entries.length - 1
+        displayedEntriesCount = entries.length
 
-        # If all entries have been loaded, see if we should display some more.
-        if displayedEntriesCount is entriesLimit
+        # Also account for the empty entry.
+        displayedEntriesCount-- unless @journalDesign.options.readOnly
+
+        # If all entries have been loaded, see if we should display some more. Note that we might be above
+        # the entries limit if a specific journal entry is requested and comes from its own subscription.
+        if displayedEntriesCount >= entriesLimit
           entriesCount = @journalDesign.journalDocument().entries?.length or 0
 
           if entriesCount > displayedEntriesCount

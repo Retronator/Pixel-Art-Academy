@@ -49,6 +49,7 @@ class PAA.Practice.Journal extends AM.Document
 
   @forId: @subscription 'forId'
   @forCharacterId: @subscription 'forCharacterId'
+  @forCharacterIds: @subscription 'forCharacterIds'
 
   # Design enumerations
 

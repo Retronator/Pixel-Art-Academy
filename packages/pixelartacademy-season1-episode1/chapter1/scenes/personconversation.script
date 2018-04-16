@@ -40,6 +40,7 @@ person: What's up?
 
 * What's your name? -> [YourName] `not person.introduced`
 * Let's hang out sometimes. -> [HangOut] `not _person.inGroup`
+* Can I see your study journal? -> [Journal]
 * Bye now! -> [End]
 
 ## YourName
@@ -60,6 +61,24 @@ person: Sounds good! I'll see you at Retronator HQ?
 char: it's a deal.
 
 ### HangOut
+
+## Journal
+
+-> [NoJournals] `not _person.journalIds.length`
+
+person: Off course! Let me know what you think.
+
+pause
+
+### Journal
+
+-> [End]
+
+## NoJournals
+
+person: Oh, I don't actually have one.
+
+-> [MainQuestions]
 
 -> [End]
 

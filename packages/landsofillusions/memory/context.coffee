@@ -28,7 +28,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
     # Fallback to a plain conversation memory context if none other can handle it.
     unless context
-      context = new LOI.Memory.Contexts.Conversation.tryCreateContext memory
+      context = LOI.Memory.Contexts.Conversation.tryCreateContext memory
 
     context
 
@@ -84,7 +84,9 @@ class LOI.Memory.Context extends LOI.Adventure.Context
       memories = _.uniqBy memories, (memory) => memory.actions?[0]?.character._id
       _.pull memories, undefined
 
-      people = for memory in memories
+      # Go over all memories but make sure actions are present
+      # since they will be updated with delay as a recursive field.
+      people = for memory in memories when memory.actions?[0]
         action = memory.actions[0].cast()
         characterId = action.character._id
 
@@ -130,7 +132,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
       # React to memory changes.
       unless memory._id is @_currentMemoryId
         # Display the conversation into a clear narrative.
-        LOI.adventure.interface.narrative.clear()
+        LOI.adventure.interface.narrative.clear scrollStyle: LOI.Interface.Components.Narrative.ScrollStyle.None
 
         # Reset last display time so we start at the beginning of the actions.
         @lastDisplayedActionTime = null
@@ -202,6 +204,12 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     memoryId
 
   displayMemory: (memoryId) ->
+    # Allow reshowing the same memory by temporarily cleaning out memory.
+    @memoryId null if @_currentMemoryId is memoryId
+
+    # Reset which memory we were showing to restart script generation.
+    @_currentMemoryId = null
+
     # Set the new memory ID which will update the people.
     @memoryId memoryId
 

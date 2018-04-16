@@ -140,8 +140,11 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     @pagesCount lastPageIndex + 1
 
   previousPage: ->
+    return unless @isCreated()
+    return unless quill = @quill()
+
     # Deselect when changing pages.
-    @quill().setSelection null
+    quill.setSelection null
 
     # We can't go back if we're at the first page.
     currentPageIndex = @currentPageIndex()
@@ -153,8 +156,11 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     true
 
   nextPage: ->
+    return unless @isCreated()
+    return unless quill = @quill()
+
     # Deselect when changing pages.
-    @quill().setSelection null
+    quill.setSelection null
 
     # We can't go forward if we're on the last viewport.
     options = @journalDesign.writingAreaOptions()

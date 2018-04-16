@@ -16,6 +16,21 @@ class C1.PersonConversation extends LOI.Adventure.Scene
   @initialize()
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/scenes/personconversation.script'
+
+  constructor: ->
+    super
+
+    # Subscribe to everyone's journals.
+    @_journalSubscriptions = Tracker.autorun =>
+      people = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
+      characterIds = (person._id for person in people)
+
+      PAA.Practice.Journal.forCharacterIds.subscribe characterIds
+
+  destroy: ->
+    super
+
+    @_journalSubscriptions.stop()
     
   # Script
 
@@ -23,19 +38,30 @@ class C1.PersonConversation extends LOI.Adventure.Scene
     @setCallbacks
       HangOut: (complete) =>
         # Add person we're talking to as a member to the SF friends group.
-        memberId = @ephemeralState 'personId'
-        
+        person = @ephemeralState 'person'
+        memberId = person._id
+
         LOI.Character.Group.addMember LOI.characterId(), C1.Groups.SanFranciscoFriends.id(), memberId
 
         complete()
 
+      Journal: (complete) =>
+        complete()
+
+        person = @ephemeralState 'person'
+        journalId = person.journalIds[0]
+
+        # Create the journal view context and enter it.
+        context = new PAA.PixelBoy.Apps.Journal.JournalView.Context {journalId}
+        LOI.adventure.enterContext context
+
   # Listener
 
   onCommand: (commandResponse) ->
-    peopleState = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
+    people = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
     characterId = LOI.characterId()
 
-    for person in peopleState when person._id isnt characterId
+    for person in people when person._id isnt characterId
       do (person) =>
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.TalkTo, person.avatar]
@@ -58,10 +84,13 @@ class C1.PersonConversation extends LOI.Adventure.Scene
 
             ephemeralPerson = ephemeralPeople[person._id]
 
+            journals = PAA.Practice.Journal.documents.fetch 'character._id': person._id
+
             _.extend ephemeralPerson,
               _id: person._id
               inGroup: C1.Groups.SanFranciscoFriends.isCharacterMember person._id
               name: person.fullName()
+              journalIds: (journal._id for journal in journals)
 
             @script.ephemeralState 'people', ephemeralPeople
             @script.ephemeralState 'person', ephemeralPerson

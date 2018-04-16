@@ -14,3 +14,10 @@ PAA.Practice.Journal.forCharacterId.publish (characterId) ->
 
   PAA.Practice.Journal.documents.find
     'character._id': characterId
+
+# Get journals for a list of characters.
+PAA.Practice.Journal.forCharacterIds.publish (characterIds) ->
+  check characterIds, [Match.DocumentId]
+
+  PAA.Practice.Journal.documents.find
+    'character._id': $in: characterIds
