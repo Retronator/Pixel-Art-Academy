@@ -89,8 +89,8 @@ class LOI.Interface.Components.CommandInput
     @idle false
     @_resumeIdle()
 
-  onKeyPress: (event) ->
-    # Don't capture events when interface is not active (some other dialog
+  _interfaceBusy: ->
+    # Don't process events when interface is not active (some other dialog
     # is blocking it) or when the interface itself is doing something else.
     busyConditions = [
       not @options.interface.active()
@@ -98,7 +98,10 @@ class LOI.Interface.Components.CommandInput
       @options.interface.showDialogueSelection()
     ]
 
-    return if _.some busyConditions
+    _.some busyConditions
+
+  onKeyPress: (event) ->
+    return if @_interfaceBusy()
 
     # Ignore control characters.
     charCode = event.which
@@ -134,40 +137,44 @@ class LOI.Interface.Components.CommandInput
 
     keyCode = event.which
 
+    # We process some keys in any case.
     switch keyCode
-      when AC.Keys.backspace
-        event.preventDefault()
-
-        commandBeforeCaret = @commandBeforeCaret()
-        return unless commandBeforeCaret.length
-
-        newCommand = "#{commandBeforeCaret.substring 0, commandBeforeCaret.length - 1}#{@commandAfterCaret()}"
-
-        @_updateCommand newCommand
-        @caretPosition @caretPosition() - 1
-
       when AC.Keys.enter
         @options?.onEnter?()
 
-      when AC.Keys.left
-        @caretPosition Math.max 0, @caretPosition() - 1
-        @_notIdle()
+    # History is processed only when no other part of the interface is active.
+    unless @_interfaceBusy()
+      switch keyCode
+        when AC.Keys.backspace
+          event.preventDefault()
 
-      when AC.Keys.right
-        @caretPosition Math.min @command().length, @caretPosition() + 1
-        @_notIdle()
+          commandBeforeCaret = @commandBeforeCaret()
+          return unless commandBeforeCaret.length
 
-      when AC.Keys.up
-        @_changeHistoryIndex Math.max 0, @commandHistoryIndex - 1
+          newCommand = "#{commandBeforeCaret.substring 0, commandBeforeCaret.length - 1}#{@commandAfterCaret()}"
 
-      when AC.Keys.down
-        # Don't allow to go further down than an empty string.
-        @_changeHistoryIndex @commandHistoryIndex + 1 if @command().length
+          @_updateCommand newCommand
+          @caretPosition @caretPosition() - 1
 
-      when AC.Keys.v
-        if event.metaKey or event.ctrlKey
-          # This is a paste operation.
-          @options.interface.capturePaste (text) => @addText text
+        when AC.Keys.left
+          @caretPosition Math.max 0, @caretPosition() - 1
+          @_notIdle()
+
+        when AC.Keys.right
+          @caretPosition Math.min @command().length, @caretPosition() + 1
+          @_notIdle()
+
+        when AC.Keys.up
+          @_changeHistoryIndex Math.max 0, @commandHistoryIndex - 1
+
+        when AC.Keys.down
+          # Don't allow to go further down than an empty string.
+          @_changeHistoryIndex @commandHistoryIndex + 1 if @command().length
+
+        when AC.Keys.v
+          if event.metaKey or event.ctrlKey
+            # This is a paste operation.
+            @options.interface.capturePaste (text) => @addText text
 
     # Trigger event for any key down.
     @options?.onKeyDown?()
