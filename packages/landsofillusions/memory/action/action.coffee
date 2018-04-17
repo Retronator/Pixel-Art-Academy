@@ -42,7 +42,7 @@ class LOI.Memory.Action extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      memory: @ReferenceField LOI.Memory, [], true, 'actions', ['time', 'character', 'type', 'content', 'memory']
+      memory: @ReferenceField LOI.Memory, [], false, 'actions', ['time', 'character', 'type', 'content', 'memory']
       character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
 
   # A place for actions to add their content patterns.

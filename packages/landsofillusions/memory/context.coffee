@@ -155,6 +155,10 @@ class LOI.Memory.Context extends LOI.Adventure.Context
       for action in actions by -1
         actionTime = action.time
         observed = actionTime.getTime() <= observedTime?.getTime()
+
+        # Outside of memories, dialogue always write it immediately in full.
+        immediate = if LOI.adventure.currentMemory() then observed else true
+
         person = _.find people, (person) => person._id is action.character._id
 
         # After we've seen the line, report it to the server with a callback node.
@@ -168,10 +172,10 @@ class LOI.Memory.Context extends LOI.Adventure.Context
                 LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, actionTime
 
         # Start and end the action (in reverse order).
-        actionEndScript = action.createEndScript person, lastNode, immediate: observed
+        actionEndScript = action.createEndScript person, lastNode, immediate: immediate
         lastNode = actionEndScript if actionEndScript
 
-        actionStartScript = action.createStartScript person, lastNode, immediate: observed
+        actionStartScript = action.createStartScript person, lastNode, immediate: immediate
         lastNode = actionStartScript if actionStartScript
 
       LOI.adventure.director.startNode lastNode

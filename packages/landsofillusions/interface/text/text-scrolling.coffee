@@ -21,9 +21,6 @@ class LOI.Interface.Text extends LOI.Interface.Text
       scrollTop = @$window.scrollTop()
       $.Velocity.hook @$uiArea, 'translateY', "#{-scrollTop}px"
 
-      # Stop intro mode on scroll, but we don't want it to automatically scroll to bottom.
-      @stopIntro scroll: false if @inIntro()
-
     # HACK: For some reason, we need at least around 200ms delay in changing the main slider, otherwise, even if we
     # pass in the correct position, the window just scrolls to 0. Could it have something to do with animateElement
     # routine that animates things in 150ms?
@@ -138,11 +135,6 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # When scrolling the main text LOI.adventure also trigger onScroll.
     if event.currentTarget is @textInterfaceElement
-      # Stop intro mode on scroll, but we don't want it to automatically scroll to bottom. We also don't want to do
-      # this in onScroll, since that one fires on any kind of scroll request (even from code), but we want to cancel
-      # intro only on explicit wheel action from the user.
-      @stopIntro scroll: false if @inIntro()
-
       @onScroll -newTop
 
   onWheelEvent: ->

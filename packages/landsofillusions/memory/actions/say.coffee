@@ -25,7 +25,9 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
       callback: (complete) =>
         complete()
 
-        # Advertise this action's memory context.
+        # Advertise this action's memory context, unless we're already in a context.
+        return if LOI.adventure.currentContext()
+
         Tracker.autorun (computation) =>
           # Wait for memory to be loaded through the person. It might not be loaded when
           # person immediately executes this action upon being added to the people.
@@ -36,11 +38,15 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
             context = LOI.Memory.Context.createContext memory
             LOI.adventure.advertiseContext context
 
-    options = _.extend {}, nodeOptions,
+    options = _.extend
+      # Say the line immediately by default.
+      immediate: true
+    ,
+      nodeOptions
+    ,
       line: @content.say.text
       actor: person
       next: callbackNode
-      immediate: true
 
     # Return the main dialog node.
     new Nodes.DialogueLine options

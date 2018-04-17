@@ -191,9 +191,6 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
 
           sync.memoriesTab.currentOffset lastOffset
 
-    # Update progress on this memory to indicate it was observed.
-    # TODO: LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, memory.endTime
-
   class @Preview extends AM.Component
     @register 'LandsOfIllusions.Items.Sync.Memories.Preview'
 

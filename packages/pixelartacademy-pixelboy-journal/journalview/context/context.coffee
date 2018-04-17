@@ -18,10 +18,13 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     return unless memory.journalEntry
 
     # Create the context for this entry.
-    context = new @
-      journalId: memory.journalEntry[0].journal._id
-      entryId: memory.journalEntry[0]._id
-    
+    options = entryId: memory.journalEntry[0]._id
+
+    # Show the whole journal unless we're in a memory.
+    options.journalId = memory.journalEntry[0].journal._id unless LOI.adventure.currentMemory()
+
+    context = new @ options
+
     # Start in the provided memory.
     context.displayMemory memory._id
 
@@ -38,12 +41,27 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     # Subscribe to the selected entry so it loads up quicker.
     PAA.Practice.Journal.Entry.forId.subscribe @options.entryId if @options.entryId
 
+    # Get journal ID from the entry if necessary.
+    @journalId = new ComputedField =>
+      journalId = @options.journalId
+
+      unless journalId
+        return unless entry = PAA.Practice.Journal.Entry.documents.findOne @options.entryId
+
+        journalId = entry.journal._id
+
+      journalId
+
     # Subscribe to the journal.
-    PAA.Practice.Journal.forId.subscribe @options.journalId
+    @autorun (computation) =>
+      return unless journalId = @journalId()
+
+      PAA.Practice.Journal.forId.subscribe journalId
 
     @journalDesign = new ComputedField =>
-      # React only to id and type changes.
-      journalDocument = PAA.Practice.Journal.documents.findOne @options.journalId,
+      return unless journalId = @journalId()
+
+      journalDocument = PAA.Practice.Journal.documents.findOne journalId,
         fields:
           'design.type': true
 
@@ -108,7 +126,8 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     memoryId
 
   description: ->
-    return '' unless journal = PAA.Practice.Journal.documents.findOne @options.journalId
+    return '' unless @isCreated()
+    return '' unless journal = PAA.Practice.Journal.documents.findOne @journalId()
 
     fullNameTranslation = AB.translate journal.character.avatar.fullName
 
