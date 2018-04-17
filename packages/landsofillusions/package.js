@@ -300,7 +300,8 @@ Package.onUse(function(api) {
 
   api.addFile('memory/context');
   api.addFile('memory/contexts..');
-  api.addFile('memory/contexts/conversation');
+  api.addFile('memory/contexts/conversation..');
+  api.addComponent('memory/contexts/conversation/memorypreview..');
 
   api.addFile('memory/action..');
   api.addFile('memory/action/methods');

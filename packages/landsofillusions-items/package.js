@@ -29,7 +29,9 @@ Package.onUse(function(api) {
   api.addComponent('sync/map..');
 
   api.addComponent('sync/memories..');
-  api.addComponent('sync/memories/contexts/journalentry..');
+
+  api.addFile('sync/memories/components..');
+  api.addComponent('sync/memories/components/actionspreview..');
 
   api.addComponent('sync/immersion..');
 });

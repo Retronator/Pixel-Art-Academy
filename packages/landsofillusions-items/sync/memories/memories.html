@@ -6,9 +6,7 @@
           <li class="memory {{updatedClass}}" {{style memoryStyle}}>
             {{#with memory}}
               <div class="preview">
-                {{#if journalEntry}}
-                  {{> LandsOfIllusions.Items.Sync.Memories.JournalEntry}}
-                {{/if}}
+                {{> LandsOfIllusions.Items.Sync.Memories.Preview}}
               </div>
               <div class="end-date">{{endDate}}</div>
             {{/with}}
@@ -21,4 +19,8 @@
       </div>
     {{/if}}
   </div>
+</template>
+
+<template name="LandsOfIllusions.Items.Sync.Memories.Preview">
+  {{> renderPreview}}
 </template>

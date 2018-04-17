@@ -34,6 +34,7 @@ Package.onUse(function(api) {
 
   api.addComponent('journalview/context..');
   api.addFile('journalview/context/entryaction');
+  api.addComponent('journalview/context/memorypreview..');
 
   // Entry is loaded only on the client since it uses Quill that is not available on the server.
   api.addClientComponent('journalview/entry-client/entry');

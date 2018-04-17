@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AC = Artificial.Control
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
@@ -10,6 +11,11 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
   @displayName: -> 'Memories'
 
   @initialize()
+
+  @previewComponents = {}
+
+  @registerPreviewComponent: (contextId, component) ->
+    @previewComponents[contextId] = component
 
   onCreated: ->
     super
@@ -36,17 +42,52 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
       # Get the document with memory progress.
       LOI.Memory.Progress.forCharacter.subscribe characterId
 
+    @characterImages = {}
+    @_characterImagesDependency = new Tracker.Dependency
+
+  onDestroyed: ->
+    super
+
+    characterImage.updateAutorun.stop() for characterId, characterImage of @characterImages
+
+  getCharacterImage: (characterId) ->
+    # Start rendering this avatar if we haven't yet.
+    @characterImages[characterId] ?=
+      image: new ReactiveField null
+      updateAutorun: Tracker.autorun (computation) =>
+        # Render avatar to image.
+        character = LOI.Character.getInstance characterId
+        renderer = character.avatar.renderer()
+
+        # Wait until character has loaded and renderer is ready.
+        return unless character.document()
+        return unless renderer.ready()
+
+        canvas = $('<canvas>')[0]
+        canvas.width = 16
+        canvas.height = 64
+
+        context = canvas.getContext '2d'
+
+        context.setTransform 1, 0, 0, 1, Math.floor(canvas.width / 2), Math.floor(canvas.height / 2)
+        context.clearRect 0, 0, canvas.width, canvas.height
+
+        # Draw and pass the root part in options so we can do different rendering paths based on it.
+        renderer.drawToContext context,
+          rootPart: character.avatar
+          lightDirection: => new THREE.Vector3(0, -1, -1).normalize()
+
+        canvas.toBlob (blob) =>
+          # Update the image.
+          @characterImages[characterId].image URL.createObjectURL blob
+
+    # Return the image.
+    @characterImages[characterId].image()
+
   memories: ->
     skip = Math.max 0, Math.floor @currentOffset() - 5
 
-    memories = LOI.Memory.documents.find(
-      'actions.character._id': LOI.characterId()
-    ,
-      limit: 15
-      skip: skip
-      sort:
-        endTime: -1
-    ).fetch()
+    memories = LOI.Memory.forCharacter.query(LOI.characterId(), 15, skip).fetch()
 
     for memory, index in memories
       _id: memory._id
@@ -151,4 +192,20 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
           sync.memoriesTab.currentOffset lastOffset
 
     # Update progress on this memory to indicate it was observed.
-    #LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, memory.endTime
+    # TODO: LOI.Memory.Progress.updateProgress LOI.characterId(), memory._id, memory.endTime
+
+  class @Preview extends AM.Component
+    @register 'LandsOfIllusions.Items.Sync.Memories.Preview'
+
+    onCreated: ->
+      super
+
+      memory = @data()
+
+      context = LOI.Memory.Context.createContext memory
+      previewComponent = LOI.Items.Sync.Memories.previewComponents[context.id()]
+
+      @preview = new previewComponent()
+
+    renderPreview: ->
+      @preview.renderComponent @

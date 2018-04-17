@@ -54,7 +54,20 @@ class LOI.Memory extends AM.Document
 
   @forId: @subscription 'forId'
   @forIds: @subscription 'forIds'
-  @forCharacter: @subscription 'forCharacter'
+  
+  @forCharacter: @subscription 'forCharacter',
+    query: (characterId, limit, skip) =>
+      LOI.Memory.documents.find
+        $or: [
+          'actions.character._id': characterId
+        ,
+          'journalEntry.journal.character._id': characterId
+        ]
+      ,
+        limit: limit
+        skip: skip
+        sort:
+          endTime: -1
 
   display: ->
     # Create the context for this memory document and enter it. The context will already be displaying this memory.
