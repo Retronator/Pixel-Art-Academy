@@ -32,9 +32,15 @@ C1.applyCharacter.method (characterId, contactEmail) ->
     $set:
       readOnlyState: characterGameState.readOnlyState
       
-  # TODO: Add gating of applicants.
-  
-  # If applicants are automatically accepted, do it, if they meet chapter's requirement.
+  # Fetch the character again to get their contact email.
+  character = LOI.Character.documents.findOne characterId
+
+  # TODO: Add support for gating of applicants. Currently anyone with alpha access gets accepted.
+
+  # Send application email. Contents will depend on whether user meets Chapter 1 access requirements.
+  C1.Items.ApplicationEmail.send character
+
+  # Accept applications that meet chapter requirement.
   user = Retronator.user()
   meetsRequirements = user.hasItem C1.accessRequirement()
 

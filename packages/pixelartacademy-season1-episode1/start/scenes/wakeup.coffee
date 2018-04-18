@@ -35,6 +35,7 @@ class Start.WakeUp extends LOI.Adventure.Scene
     [
       characterPerson
       Apartment.Studio.Computer
+      Apartment.Studio.Bed
     ]
 
   giveHint: (delay) ->

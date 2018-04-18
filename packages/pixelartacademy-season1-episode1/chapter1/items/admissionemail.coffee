@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+RA = Retronator.Accounts
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
 Vocabulary = LOI.Parser.Vocabulary
@@ -32,6 +33,33 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
 
   @initialize()
 
+  @senderAddress: -> 'academyofart@retropolis.city'
+
+  @sender: ->
+    name: @getServerTranslations().from
+    address: @senderAddress()
+
+  @subject: -> @getServerTranslations().subject
+
+  @body: (character) ->
+    user = RA.User.documents.findOne character.user._id
+    @_createBody user, character, @getServerTranslations()
+
+  @_createBody: (user, character, translations) ->
+    text = translations.text
+
+    # Do variable substitution.
+    text = text.replace /_char_/g, character.avatar.fullName.translate().text
+
+    # Create the html version by treating it as markdown.
+    converter = new Showdown.converter()
+    html = converter.makeHtml text
+
+    # Remove HTML from text.
+    text = text.replace /<br\/>/g, ''
+
+    {text, html}
+
   gameTime: ->
     return unless LOI.adventure.readOnlyGameState()
 
@@ -42,7 +70,7 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
 
   sender: ->
     name: @translations()?.from
-    address: 'academyofart@retropolis.city'
+    address: @constructor.senderAddress()
 
   recipient: ->
     character: LOI.character()
@@ -50,18 +78,4 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
   subject: -> @translations()?.subject
 
   body: ->
-    character = LOI.character()
-
-    text = @translations()?.text
-
-    # Do variable substitution.
-    text = text.replace /_char_/g, character.avatar.fullName()
-
-    # Create the html version by treating it as markdown.
-    converter = new Showdown.converter()
-    html = converter.makeHtml text
-
-    # Remove HTML from text.
-    text = text.replace /<br\/>/g, ''
-
-    {text, html}
+    @constructor._createBody Retronator.user(), LOI.character().document(), @translations()

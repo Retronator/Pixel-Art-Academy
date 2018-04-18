@@ -11,3 +11,6 @@ class C1.Events.ApplicationAccepted extends LOI.Adventure.Event
 
     # Set the date.
     _.nestedProperty @readOnlyGameState, "things.#{C1.id()}.application.acceptedTime", @gameTime
+    
+    character = LOI.Character.documents.findOne @gameStateDocument.character._id
+    C1.Items.AdmissionEmail.send character

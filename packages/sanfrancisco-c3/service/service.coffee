@@ -6,7 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class C3.Service extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.C3.Service'
   @url: -> 'c3/customer-service'
-  @region: -> C3
+  @region: -> SanFrancisco.Soma
 
   @version: -> '0.0.1'
 

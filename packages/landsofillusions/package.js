@@ -414,6 +414,7 @@ Package.onUse(function(api) {
 
   api.addFile('emails..');
   api.addFile('emails/email');
+  api.addServerFile('emails/email-server');
   api.addFile('emails/inbox');
 
   // Time

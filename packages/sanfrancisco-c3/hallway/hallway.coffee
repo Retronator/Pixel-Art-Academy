@@ -6,7 +6,7 @@ Vocabulary = LOI.Parser.Vocabulary
 class C3.Hallway extends LOI.Adventure.Location
   @id: -> 'SanFrancisco.C3.Hallway'
   @url: -> 'c3/hallway'
-  @region: -> SanFrancisco.Soma
+  @region: -> C3
 
   @version: -> '0.0.1'
 

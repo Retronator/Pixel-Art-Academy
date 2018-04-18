@@ -84,6 +84,20 @@ class LOI.Adventure.Thing extends AM.Component
 
     translations
 
+  @getServerTranslations: (languagePreference) ->
+    translationNamespace = @id()
+
+    translations = {}
+
+    for translationKey, defaultText of @_translations()
+      translation = AB.Translation.documents.findOne
+        namespace: translationNamespace
+        key: translationKey
+
+      translations[translationKey] = translation.translate(languagePreference).text
+
+    translations
+
   @accessRequirement: -> # Override to set an access requirement to use this thing.
 
   @initialize: ->

@@ -9,6 +9,10 @@ class LOI.Emails.Email extends LOI.Adventure.Thing
       It's an email.
     "
 
+  @sender: -> # Override to provide name and address for user on the server.
+  @subject: -> # Override to provide the subject for use on the server.
+  @body: (character) -> # Override to provide the body for use on the server.
+
   constructor: (data) ->
     super
 
