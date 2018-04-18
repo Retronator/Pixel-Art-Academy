@@ -23,6 +23,8 @@ Package.onUse(function(api) {
 
   api.addComponent('map..');
 
+  api.addThing('time..');
+
   api.addComponent('sync..');
   api.addFile('sync/sync-tab');
 

@@ -86,7 +86,7 @@ class LOI.Parser
     # Otherwise we use the default which is just all form parts joined in order.
     # But we should auto-correct avatars if they require it.
     for formPart, index in likelyAction.phraseAction.form
-      if formPart instanceof LOI.Avatar
+      if formPart instanceof LOI.Avatar or formPart instanceof LOI.Adventure.Thing
         avatar = formPart
 
         if avatar.nameAutoCorrectStyle() is LOI.Avatar.NameAutoCorrectStyle.Name or options.fullNames

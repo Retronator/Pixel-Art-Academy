@@ -6,7 +6,7 @@ class LOI.Adventure extends LOI.Adventure
     # The amount of seconds of playtime that happened.
     @_time = new ReactiveField null
 
-    # The current game time from the character's perspective. Only the time number is stored here.
+    # The current game time from the character's perspective.
     @_gameTime = new ReactiveField null
 
     @_gameTimeInterval = Meteor.setInterval =>
@@ -65,3 +65,12 @@ class LOI.Adventure extends LOI.Adventure
 
   gameTime: ->
     @_gameTime()
+
+  endDay: ->
+    # Fast forward until 9 AM next day.
+    gameState = @gameState()
+    day = Math.floor gameState.gameTime
+
+    gameState.gameTime = day + 1 + 9 / 24
+
+    @gameState.updated()

@@ -45,6 +45,8 @@ LOI.Parser.Vocabulary.Keys =
     Show: ''
     LookIn: ''
     WakeUp: ''
+    Sleep: ''
+    EndDay: ''
     Buy: ''
     Board: ''
     Listen: ''

@@ -30,8 +30,8 @@ Document.startup ->
       Use: ['use']
       Press: ['press', 'push']
       Read: ['read']
-      WhatIs: ['what is']
-      WhoIs: ['who is']
+      WhatIs: ['what is', 'what\'s']
+      WhoIs: ['who is', 'who\'s']
       Get: ['get', 'take', 'pick up', 'grab']
       SitDown: ['sit down']
       SitIn: ['sit in']
@@ -49,6 +49,8 @@ Document.startup ->
       Show: ['show', 'present']
       LookIn: ['look in']
       WakeUp: ['wake up', 'awaken']
+      Sleep: ['sleep']
+      EndDay: ['end day']
       Buy: ['buy', 'purchase']
       Board: ['board', 'take']
       Listen: ['listen']
@@ -86,7 +88,7 @@ Document.startup ->
         Masculine: ['his']
         Neutral: ['theirs']
 
-    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up', 'down', 'out']
+    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up', 'down', 'out', 'the']
 
     Questions:
       WhichPlace: ['where']

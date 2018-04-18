@@ -25,10 +25,13 @@ Package.onUse(function(api) {
   api.addFile('hallway..');
 
   api.addFile('studio..');
+
   api.addComponent('studio/computer..');
   api.addComponent('studio/computer/app..');
   api.addComponent('studio/computer/screens/desktop..');
   api.addComponent('studio/computer/screens/browser..');
   api.addComponent('studio/computer/screens/email..');
   api.addComponent('studio/computer/screens/game..');
+
+  api.addThing('studio/bed');
 });

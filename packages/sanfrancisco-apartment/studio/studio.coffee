@@ -25,6 +25,7 @@ class Apartment.Studio extends LOI.Adventure.Location
 
   things: -> [
     @constructor.Computer
+    @constructor.Bed
   ]
 
   exits: ->
