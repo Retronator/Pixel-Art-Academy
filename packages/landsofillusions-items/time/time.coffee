@@ -13,6 +13,10 @@ class LOI.Items.Time extends LOI.Adventure.Item
 
   @defaultScriptUrl: -> 'retronator_landsofillusions-items/time/time.script'
 
+  isVisible: -> false
+
+  # Listener
+
   onCommand: (commandResponse) ->
     time = @options.parent
   

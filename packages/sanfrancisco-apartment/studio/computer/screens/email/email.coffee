@@ -36,6 +36,10 @@ class Studio.Computer.Email extends AM.Component
   selectedClass: ->
     email = @currentData()
     'selected' if email is @selectedEmail()
+    
+  readClass: ->
+    email = @currentData()
+    'read' if email.wasRead()
 
   events: ->
     super.concat
@@ -44,3 +48,4 @@ class Studio.Computer.Email extends AM.Component
   onClickEmail: (event) ->
     email = @currentData()
     @selectedEmail email
+    email.markAsRead()

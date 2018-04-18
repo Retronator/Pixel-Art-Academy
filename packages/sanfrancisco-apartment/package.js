@@ -25,6 +25,8 @@ Package.onUse(function(api) {
   api.addFile('hallway..');
 
   api.addFile('studio..');
+  api.addThing('studio/bed');
+  api.addThing('studio/emailnotification');
 
   api.addComponent('studio/computer..');
   api.addComponent('studio/computer/app..');
@@ -33,5 +35,4 @@ Package.onUse(function(api) {
   api.addComponent('studio/computer/screens/email..');
   api.addComponent('studio/computer/screens/game..');
 
-  api.addThing('studio/bed');
 });

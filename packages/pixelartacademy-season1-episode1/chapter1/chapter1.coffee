@@ -5,13 +5,11 @@ HQ = Retronator.HQ
 RS = Retronator.Store
 
 class PAA.Season1.Episode1.Chapter1 extends LOI.Adventure.Chapter
+  # READ-ONLY
   # application:
   #   applied: boolean if character has applied for admission week
   #   applicationTime: game date when character applied
   #   applicationRealTime: real date of application, so that applications can be accepted in order
-  #
-  # READ-ONLY
-  # application:
   #   accepted: boolean if accepted event has happened
   #   acceptedTime: time when accepted event has happened
   C1 = @

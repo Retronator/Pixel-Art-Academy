@@ -13,31 +13,22 @@ class C1.Inbox extends LOI.Adventure.Scene
   constructor: ->
     super
 
-    @admissionEmail = new C1.Items.AdmissionEmail
-
-    @admissionEmailArrived = new ComputedField =>
-      gameTime = LOI.adventure.gameTime()
-      emailTime = @admissionEmail.gameTime()
-
-      # Admission email has arrived if current game time is after the email was sent.
-      gameTime?.getTime() > emailTime?.getTime()
-
-  destroy: ->
-    super
-
-    @admissionEmailArrived.stop()
+    @emails = [
+      new C1.Items.ApplicationEmail
+      new C1.Items.AdmissionEmail
+    ]
 
   things: ->
     things = []
-    
-    things.push @admissionEmail if @admissionEmailArrived()
+
+    things.push email for email in @emails when email.arrived()
 
     things
 
   ready: ->
     conditions = [
       super
-      @admissionEmail.ready()
+      email.ready() for email in @emails
     ]
 
-    _.every conditions
+    _.every _.flatten conditions

@@ -12,7 +12,7 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
     text: """
       Dear _char_,
 
-      We were delighted to receive your application to participate in our on-campus program at the Retropolis Academy of Art. We are happy to inform you that admission week has now started.
+      We were delighted to receive your application to participate in our on-campus program at the Retropolis Academy of Art. We are happy to inform you that you can now begin your admission week.
 
       As explained in the admissions section on our website, your first step is to pick up a PixelBoy 2000 from your nearest Retronator store. Based on your location, this is:
 
@@ -24,9 +24,7 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
 
       The admissions process is completely transparent. You will know how you're doing all along the way and we will be there to help you succeed.
 
-      We'd wish you good luck, but where you're going, luck has nothing to do with it. The final decision is automatic, based only on your commitment performance, and completely dependent on your actions.
-
-      Good work, and see you soon!
+      We'd wish you good luck, but you don't need it. So we'll say: good work, and see you soon!
 
       Sincerely,<br/>
       Retropolis Academy of Art Admissions
@@ -44,7 +42,7 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
 
   sender: ->
     name: @translations()?.from
-    address: 'academy.of.art@retropolis.city'
+    address: 'academyofart@retropolis.city'
 
   recipient: ->
     character: LOI.character()

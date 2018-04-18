@@ -4,7 +4,7 @@
       <div class="inbox">
         <ul class="emails">
           {{#each emails}}
-            <li class="email {{selectedClass}}">
+            <li class="email {{selectedClass}} {{readClass}}">
               <div class="from">{{from}}</div>
               <div class="subject">{{subject}}</div>
               <div class="body-preview">{{body.text}}</div>

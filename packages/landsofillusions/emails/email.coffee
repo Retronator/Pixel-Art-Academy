@@ -12,6 +12,20 @@ class LOI.Emails.Email extends LOI.Adventure.Thing
   constructor: (data) ->
     super
 
+    @arrived = new ComputedField =>
+      gameTime = LOI.adventure.gameTime()
+      emailTime = @gameTime()
+
+      # Admission email has arrived if current game time is after the email was sent.
+      gameTime?.getTime() > emailTime?.getTime()
+    ,
+      true
+
+  destroy: ->
+    super
+
+    @arrived.stop()
+
   isVisible: -> false
 
   # Override to return the game date when the email was sent.
@@ -42,3 +56,18 @@ class LOI.Emails.Email extends LOI.Adventure.Thing
 
   _getName: (info) ->
     info?.name or info?.character?.avatar.fullName()
+
+  wasRead: ->
+    @state 'read'
+    
+  markAsRead: (value = true) ->
+    @state 'read', value
+
+    # Also disable notifications for this email.
+    @markAsNotified() if value
+
+  wasNotified: ->
+    @state 'notified'
+
+  markAsNotified: ->
+    @state 'notified', true
