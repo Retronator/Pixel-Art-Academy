@@ -20,6 +20,14 @@ class AM.PersistentStorage
       # Register dependency.
       state = options.field()
 
-      # Store the new state into storage.
-      encodedValue = EJSON.stringify state
-      options.storage.setItem options.storageKey, encodedValue
+      # If we provide a consent field, query it to see if we allow storage.
+      state = undefined if options.consentField and not options.consentField()
+
+      if state is undefined
+        # Remove the state from storage.
+        options.storage.removeItem options.storageKey
+
+      else
+        # Store the new state into storage.
+        encodedValue = EJSON.stringify state
+        options.storage.setItem options.storageKey, encodedValue

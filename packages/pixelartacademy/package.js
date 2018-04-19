@@ -22,13 +22,8 @@ Package.onUse(function(api) {
 
   // Layouts
 
-  api.addFile('layouts/layouts');
-
-  api.addUnstyledComponent('layouts/alphaaccess/alphaaccess');
-
-  api.addUnstyledComponent('layouts/playeraccess/playeraccess');
-
-  api.addFile('layouts/adminaccess/adminaccess');
+  api.addFile('layouts..');
+  api.addFile('layouts/adminaccess..');
 
   api.addServerFile('character/methods');
 });

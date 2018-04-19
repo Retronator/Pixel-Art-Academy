@@ -13,6 +13,7 @@ class LOI.Interface.Components.CommandInput
     @persistHistoryAutorun = AM.PersistentStorage.persist
       storageKey: 'LandsOfIllusions.Interface.Components.CommandInput.commandHistory'
       field: @storedCommandHistory
+      consentField: LOI.settings.persistCommandHistory.allowed
 
     # Start with the stored history, but at a new index.
     @commandHistory = @storedCommandHistory()

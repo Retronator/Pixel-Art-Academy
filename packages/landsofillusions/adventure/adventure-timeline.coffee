@@ -11,6 +11,7 @@ class LOI.Adventure extends LOI.Adventure
       storageKey: 'LandsOfIllusions.Adventure.currentTimelineId'
       field: @playerTimelineId
       tracker: @
+      consentField: LOI.settings.persistGameState.allowed
 
     # Start at the default player timeline.
     unless @playerTimelineId()
@@ -22,13 +23,13 @@ class LOI.Adventure extends LOI.Adventure
       # Memory overrides other timelines.
       return LOI.TimelineIds.Memory if @currentMemory()
 
-      if LOI.characterId()
-        # Player's timeline is always read from the state.
+      if LOI.characterId() or not LOI.settings.persistGameState.allowed()
+        # Player's timeline is always read from the state. Also use when storing game state is not allowed.
         return unless gameState = @gameState()
 
         # For characters, start in the present.
         unless gameState.currentTimelineId
-          gameState.currentTimelineId = LOI.TimelineIds.Present
+          gameState.currentTimelineId = if LOI.characterId() then LOI.TimelineIds.Present else @startingPoint()?.timelineId
           @gameState.updated()
         
         gameState.currentTimelineId
@@ -45,8 +46,7 @@ class LOI.Adventure extends LOI.Adventure
     # Set the player timeline if we're not playing as a character.
     @playerTimelineId timelineId unless LOI.characterId()
 
-    # Save current timeline to state. It controls the character's timeline, but for
-    # players we don't really use it except until the next time we load the game.
+    # Save current timeline to state.
     if state = @gameState()
       state.currentTimelineId = timelineId
       @gameState.updated()

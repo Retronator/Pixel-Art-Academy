@@ -15,7 +15,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
       safeAreaHeight: 240
       maxDisplayWidth: 480
       maxDisplayHeight: 640
-      minScale: 2
+      minScale: LOI.settings.graphics.minimumScale.value
+      maxScale: LOI.settings.graphics.maximumScale.value
       minAspectRatio: 1 / 2
       maxAspectRatio: 2
       debug: false

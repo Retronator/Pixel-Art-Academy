@@ -218,6 +218,8 @@ class LOI.Adventure extends LOI.Adventure
       return unless user = Retronator.user()
       computation.stop()
 
+      @_handleLoginPersistance()
+
       # If we aren't allowed to have database state, we need to redirect to the main URL.
       unless @usesDatabaseState()
         # Send the login token to the main adventure route where database state is allowed.
@@ -256,7 +258,7 @@ class LOI.Adventure extends LOI.Adventure
             # synced again on reload).
             @playerLocationId databaseState.state.currentLocationId
             @playerTimelineId databaseState.state.currentTimelineId
-            @immersionExitLocationId databaseState.state.immersionExitLocationId
+            @_immersionExitLocationId databaseState.state.immersionExitLocationId
 
             @menu.signIn.activatable.deactivate()
 
@@ -308,6 +310,8 @@ class LOI.Adventure extends LOI.Adventure
     userAutorun = Tracker.autorun (computation) =>
       return unless user = Retronator.user()
       computation.stop()
+
+      @_handleLoginPersistance()
 
       # Wait also until the game state has been loaded.
       Tracker.autorun (computation) =>
@@ -375,6 +379,12 @@ class LOI.Adventure extends LOI.Adventure
         # User has returned from the load screen.
         userAutorun.stop()
         callback?()
+
+  _handleLoginPersistance: ->
+    unless LOI.settings.persistLogin.allowed()
+      # Prevent automatic sign-in.
+      Accounts._autoLoginEnabled = false
+      Accounts._unstoreLoginToken()
 
   quitGame: (options = {}) ->
     @quitting true

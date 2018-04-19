@@ -21,13 +21,22 @@ Package.onUse(function(api) {
 
   api.export('LandsOfIllusions');
 
-  api.addFiles('landsofillusions.coffee');
+  api.addFile('landsofillusions');
 
   // Authorize
 
-  api.addFiles('authorize/authorize.coffee');
-  api.addFiles('authorize/user.coffee');
-  api.addFiles('authorize/character.coffee');
+  api.addFile('authorize/authorize');
+  api.addFile('authorize/user');
+  api.addFile('authorize/character');
+
+  // Settings
+
+  api.addFile('settings..');
+  api.addFile('settings/field');
+  api.addFile('settings/consentfield');
+
+  // Initialize client after settings have been defined.
+  api.addClientFile('initialize-client');
 
   // Game state
 

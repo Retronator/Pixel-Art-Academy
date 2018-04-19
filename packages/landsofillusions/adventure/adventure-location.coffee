@@ -12,6 +12,7 @@ class LOI.Adventure extends LOI.Adventure
       storageKey: 'LandsOfIllusions.Adventure.currentLocationId'
       field: @playerLocationId
       tracker: @
+      consentField: LOI.settings.persistGameState.allowed
 
     # Start at the default player location.
     unless @playerLocationId()
@@ -23,12 +24,12 @@ class LOI.Adventure extends LOI.Adventure
       # Memory provides its own location.
       return memory.locationId if memory = @currentMemory()
 
-      if LOI.characterId()
-        # Character's location is always read from the state.
+      if LOI.characterId() or not LOI.settings.persistGameState.allowed()
+        # Character's location is always read from the state. Also used when saving game state is not allowed.
         @gameState()?.currentLocationId
 
       else
-        # Player's locations is stored in local storage.
+        # Local storage is allowed so load player's location from there.
         @playerLocationId()
     ,
       true
@@ -168,18 +169,26 @@ class LOI.Adventure extends LOI.Adventure
             @locationOnEnterResponseResults responseResults
 
     # We also need to store the location the user logged into Construct from, so we can take them back there.
-    @immersionExitLocationId = new ReactiveField Retronator.HQ.LandsOfIllusions.Room.id()
+    @_immersionExitLocationId = new ReactiveField Retronator.HQ.LandsOfIllusions.Room.id()
     Artificial.Mummification.PersistentStorage.persist
       storageKey: 'LandsOfIllusions.Adventure.immersionExitLocationId'
-      field: @immersionExitLocationId
+      field: @_immersionExitLocationId
       tracker: @
-      
+      consentField: LOI.settings.persistGameState.allowed
+
+    @immersionExitLocationId = new ComputedField =>
+      if LOI.settings.persistGameState.allowed()
+        @_immersionExitLocationId()
+        
+      else
+        @gameState()?.immersionExitLocationId
+        
   saveImmersionExitLocation: ->
     # Save current location to local storage.
     currentLocationId = @currentLocationId()
-    @immersionExitLocationId currentLocationId
+    @_immersionExitLocationId currentLocationId
 
-    # Save current location to state. We don't really use it except until the next time we load the game.
+    # Save immersion location to state.
     if state = @gameState()
       state.immersionExitLocationId = currentLocationId
       @gameState.updated()
@@ -191,8 +200,7 @@ class LOI.Adventure extends LOI.Adventure
     # Update locally stored player location if we're not synced to a character.
     @playerLocationId locationId unless characterId
 
-    # Save current location to state. For players we don't really
-    # use it except until the next time we load the game.
+    # Save current location to state.
     if state = @gameState()
       state.currentLocationId = locationId
       @gameState.updated()

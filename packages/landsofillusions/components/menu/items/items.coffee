@@ -8,6 +8,7 @@ class LOI.Components.Menu.Items extends AM.Component
   @Screens:
     MainMenu: 'MainMenu'
     Settings: 'Settings'
+    Permissions: 'Permissions'
 
   constructor: (@options = {}) ->
     super
@@ -66,9 +67,31 @@ class LOI.Components.Menu.Items extends AM.Component
 
   isFullscreen: ->
     AM.Window.isFullscreen()
+    
+  graphicsMaximumScale: ->
+    LOI.settings.graphics.maximumScale.value()
+
+  inPermissions: ->
+    @currentScreen() is @constructor.Screens.Permissions
+
+  permissionsPersistSettings: ->
+    @_permissionsValue LOI.settings.persistSettings
+
+  permissionsPersistGameState: ->
+    @_permissionsValue LOI.settings.persistGameState
+
+  permissionsPersistCommandHistory: ->
+    @_permissionsValue LOI.settings.persistCommandHistory
+
+  permissionsPersistLogin: ->
+    @_permissionsValue LOI.settings.persistLogin
+
+  _permissionsValue: (consentField) ->
+    if consentField.decided() then consentField.allowed() else null
 
   events: ->
     super.concat
+      # Main menu
       'click .continue': @onClickContinue
       'click .new': @onClickNew
       'click .load': @onClickLoad
@@ -77,7 +100,15 @@ class LOI.Components.Menu.Items extends AM.Component
       'click .fullscreen': @onClickFullscreen
       'click .settings': @onClickSettings
       'click .quit': @onClickQuit
-      'click .back': @onClickBack
+
+      # Settings
+      'click .graphics-scale .previous-button': @onClickGraphicsScalePreviousButton
+      'click .graphics-scale .next-button': @onClickGraphicsScaleNextButton
+      'click .permissions': @onClickPermissions
+      'click .back-to-menu': @onClickBackToMenu
+
+      # Permissions
+      'click .back-to-settings': @onClickBackToSettings
 
   onClickContinue: (event) ->
     LOI.adventure.menu.hideMenu()
@@ -148,6 +179,27 @@ class LOI.Components.Menu.Items extends AM.Component
         dialog: dialog
         callback: =>
           LOI.adventure.quitGame() if dialog.result
-  
-  onClickBack: (event) ->
+
+  onClickGraphicsScalePreviousButton: (event) ->
+    currentValue = LOI.settings.graphics.maximumScale.value()
+    currentValue--
+    currentValue = null if currentValue < 2
+
+    LOI.settings.graphics.minimumScale.value currentValue or 2
+    LOI.settings.graphics.maximumScale.value currentValue
+
+  onClickGraphicsScaleNextButton: (event) ->
+    currentValue = LOI.settings.graphics.maximumScale.value() or 1
+    currentValue++
+
+    LOI.settings.graphics.minimumScale.value currentValue
+    LOI.settings.graphics.maximumScale.value currentValue
+
+  onClickPermissions: (event) ->
+    @currentScreen @constructor.Screens.Permissions
+
+  onClickBackToMenu: (event) ->
     @currentScreen @constructor.Screens.MainMenu
+
+  onClickBackToSettings: (event) ->
+    @currentScreen @constructor.Screens.Settings
