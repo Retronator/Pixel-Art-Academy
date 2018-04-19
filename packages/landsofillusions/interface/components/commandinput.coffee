@@ -22,7 +22,7 @@ class LOI.Interface.Components.CommandInput
 
     @updateHistoryAutorun = Tracker.autorun (computation) =>
       # React to command changes.
-      command = @command()
+      return unless command = @command()
 
       # Only ever update the command after confirmed commands.
       return if @commandHistoryIndex < @confirmedHistoryLength

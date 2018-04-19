@@ -175,8 +175,13 @@ class LOI.Adventure extends LOI.Adventure
     
     # Flush the state updates to the database when the page is about to unload.
     window.addEventListener 'beforeunload', (event) =>
-      @gameState?.updated flush: true
-      @userGameState?.updated flush: true
+      @gameState?.updated? flush: true
+      @userGameState?.updated? flush: true
+
+      # If we're signed in, but aren't saving login information, quit game to remove all local data.
+      if Meteor.userId() and not LOI.settings.persistLogin.allowed()
+        @clearLocalGameState()
+        @clearLocalStorageGameStateParts()
 
   replaceGameState: (newState) ->
     switch @gameStateSource()
@@ -204,7 +209,7 @@ class LOI.Adventure extends LOI.Adventure
         @clearLocalGameState()
 
   clearLocalGameState: ->
-    @localGameState.state {}
+    @localGameState.state undefined
 
   isGameStateEmpty: ->
     # Save game is empty when the game isn't marked as started.
@@ -394,17 +399,21 @@ class LOI.Adventure extends LOI.Adventure
     
     @logout
       callback: =>
-        # Clear character selection and situation.
-        LOI.switchCharacter null
-    
-        @playerLocationId null
-        @playerTimelineId null
+        @clearLocalStorageGameStateParts()
 
         # Execute the callback if present and end if it has handled the redirect.
         return if options.callback?()
 
         # Do a hard reload of the root URL.
         window.location = '/'
+
+  clearLocalStorageGameStateParts: ->
+    # Clear character selection and situation. We use undefined to remove the fields from local storage.
+    LOI.switchCharacter undefined
+
+    @playerLocationId undefined
+    @playerTimelineId undefined
+    @_immersionExitLocationId undefined
 
   loadCharacter: (characterId) ->
     # Save where we're going to immersion from.

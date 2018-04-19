@@ -108,6 +108,10 @@ class LOI.Components.Menu.Items extends AM.Component
       'click .back-to-menu': @onClickBackToMenu
 
       # Permissions
+      'click .permissions-persist-settings': @onClickPermissionsPersistSettings
+      'click .permissions-persist-game-state': @onClickPermissionsPersistGameState
+      'click .permissions-persist-command-history': @onClickPermissionsPersistCommandHistory
+      'click .permissions-persist-login': @onClickPermissionsPersistLogin
       'click .back-to-settings': @onClickBackToSettings
 
   onClickContinue: (event) ->
@@ -160,6 +164,9 @@ class LOI.Components.Menu.Items extends AM.Component
   onClickSettings: (event) ->
     @currentScreen @constructor.Screens.Settings
 
+    # Store current state of settings.
+    @_oldSettings = LOI.settings.toObject()
+
   onClickQuit: (event) ->
     if Retronator.user()
       LOI.adventure.quitGame()
@@ -199,7 +206,54 @@ class LOI.Components.Menu.Items extends AM.Component
     @currentScreen @constructor.Screens.Permissions
 
   onClickBackToMenu: (event) ->
-    @currentScreen @constructor.Screens.MainMenu
+    returnToMenu = => @currentScreen @constructor.Screens.MainMenu
+
+    if LOI.settings.persistSettings.decided()
+      # User already decided if they want to save settings so just return to menu.
+      returnToMenu()
+
+    else
+      # See if settings have changed and ask to save.
+      newSettings = LOI.settings.toObject()
+
+      if EJSON.equals @_oldSettings, newSettings
+        # Settings haven't changed, so no need to save.
+        returnToMenu()
+
+      else
+        # Settings have changed. Ask to save and return to menu when answered.
+        LOI.settings.persistSettings.showDialog =>
+          @currentScreen @constructor.Screens.MainMenu
+
+  onClickPermissionsPersistSettings: (event) ->
+    @_onClickPermissions LOI.settings.persistSettings
+
+  onClickPermissionsPersistGameState: (event) ->
+    @_onClickPermissions LOI.settings.persistGameState
+
+  onClickPermissionsPersistCommandHistory: (event) ->
+    @_onClickPermissions LOI.settings.persistCommandHistory
+
+  onClickPermissionsPersistLogin: (event) ->
+    if LOI.settings.persistLogin.allowed()
+      LOI.settings.persistLogin.disallow()
+
+      # Also delete any login info.
+      Accounts._autoLoginEnabled = false
+      Accounts._unstoreLoginToken()
+      localStorage.removeItem 'Meteor.loginToken'
+      localStorage.removeItem 'Meteor.loginTokenExpires'
+
+    else
+      LOI.settings.persistLogin.showDialog (value) =>
+        Accounts._autoLoginEnabled = value
+
+  _onClickPermissions: (consentField) ->
+    if consentField.allowed()
+      consentField.disallow()
+
+    else
+      consentField.showDialog()
 
   onClickBackToSettings: (event) ->
     @currentScreen @constructor.Screens.Settings
