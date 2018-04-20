@@ -15,12 +15,12 @@ class LOI.Adventure extends LOI.Adventure
 
       # Read last playtime from game state.
       return unless gameState = @gameState()
-      return unless readOnlyGameState = @readOnlyGameState()
+      readOnlyGameState = @readOnlyGameState()
       lastTime = gameState.time or 0
       
       # Game time gets pushed forward on the client (game time) as well as the server (simulated game time).
       lastGameTime = gameState.gameTime or 0
-      lastSimulatedGameTime = readOnlyGameState.simulatedGameTime or 0
+      lastSimulatedGameTime = readOnlyGameState?.simulatedGameTime or 0
 
       lastGameTime = Math.max lastGameTime, lastSimulatedGameTime
 

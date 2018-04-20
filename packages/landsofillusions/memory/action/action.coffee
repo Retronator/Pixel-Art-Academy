@@ -20,7 +20,6 @@ class LOI.Memory.Action extends AM.Document
   #   _id
   # isMemorable: boolean weather this action is being memorized even without a memory
   # content: extra information defining what was done in this action, specified in inherited actions
-  @type: @id()
 
   # Override register to do action initialization as well.
   @register: ->
@@ -36,14 +35,15 @@ class LOI.Memory.Action extends AM.Document
         for translationKey of @translationKeys
           defaultText = _.propertyValue @, translationKey
           AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
-
-  @register @type, @
   
   @Meta
     name: @id()
     fields: =>
       memory: @ReferenceField LOI.Memory, [], false, 'actions', ['time', 'character', 'type', 'content', 'memory']
       character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
+
+  @type: @id()
+  @register @type, @
 
   # A place for actions to add their content patterns.
   @contentPatterns = {}

@@ -80,8 +80,9 @@ Package.onUse(function(api) {
   api.addFile('chapter2/actors/actors');
   api.addFile('chapter2/actors/conductor');
 
-  api.addFile('chapter2/items/items');
-  api.addComponent('chapter2/items/videotablet/videotablet');
+  api.addFile('chapter2/items..');
+  api.addFile('chapter2/items/sync');
+  api.addComponent('chapter2/items/videotablet..');
   api.addFile('chapter2/items/videotablet/videos');
 
   // Intro

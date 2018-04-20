@@ -182,6 +182,7 @@ class LOI.Adventure extends LOI.Adventure
       if Meteor.userId() and not LOI.settings.persistLogin.allowed()
         @clearLocalGameState()
         @clearLocalStorageGameStateParts()
+        @clearLoginInformation()
 
   replaceGameState: (newState) ->
     switch @gameStateSource()
@@ -223,8 +224,6 @@ class LOI.Adventure extends LOI.Adventure
       return unless user = Retronator.user()
       computation.stop()
 
-      @_handleLoginPersistance()
-
       # If we aren't allowed to have database state, we need to redirect to the main URL.
       unless @usesDatabaseState()
         # Send the login token to the main adventure route where database state is allowed.
@@ -233,8 +232,14 @@ class LOI.Adventure extends LOI.Adventure
 
         AB.Router.postToUrl url, {loginToken}
 
+        # Clear login information if needed.
+        @_handleLoginPersistance()
+
         # End loading flow.
         return
+
+      # Clear login information if needed.
+      @_handleLoginPersistance()
 
       # Wait also until the game state has been loaded. We need a
       # nonreactive context in case we're loading from URL change.
@@ -388,8 +393,7 @@ class LOI.Adventure extends LOI.Adventure
   _handleLoginPersistance: ->
     unless LOI.settings.persistLogin.allowed()
       # Prevent automatic sign-in.
-      Accounts._autoLoginEnabled = false
-      Accounts._unstoreLoginToken()
+      @clearLoginInformation()
 
   quitGame: (options = {}) ->
     @quitting true
@@ -414,6 +418,11 @@ class LOI.Adventure extends LOI.Adventure
     @playerLocationId undefined
     @playerTimelineId undefined
     @_immersionExitLocationId undefined
+
+  clearLoginInformation: ->
+    Accounts._unstoreLoginToken()
+    localStorage.removeItem 'Meteor.loginToken'
+    localStorage.removeItem 'Meteor.loginTokenExpires'
 
   loadCharacter: (characterId) ->
     # Save where we're going to immersion from.

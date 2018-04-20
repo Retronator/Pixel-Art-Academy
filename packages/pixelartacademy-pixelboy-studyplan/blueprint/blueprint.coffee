@@ -194,7 +194,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     # Handle goal dragging.
     @autorun (computation) =>
       return unless goalId = @dragGoalId()
-      return unless goalComponent = @goalComponentsById()[goalId]
+      return unless goalComponent = @goalComponentsById()?[goalId]
       
       newCanvasCoordinate = @mouse().canvasCoordinate()
 
@@ -254,7 +254,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @dragHasMoved false
 
     # Wire end of dragging on mouse up anywhere in the window.
-    $(window).on 'mouseup.pixelartacademy-pixelboy-apps-studyplan-canvas', =>
+    $(document).on 'mouseup.pixelartacademy-pixelboy-apps-studyplan-blueprint', =>
       # If required to move, don't stop drag until we do so.
       return if @dragRequireMove() and not @dragHasMoved()
 
@@ -262,7 +262,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
       @studyPlan.removeGoal @dragGoalId() if @mouseOverTrash()
 
       @dragGoalId null
-      $(window).off '.pixelartacademy-pixelboy-apps-studyplan-canvas'
+      $(document).off '.pixelartacademy-pixelboy-apps-studyplan-blueprint'
 
     # Set goal component last since it triggers reactivity.
     @dragGoalId options.goalId

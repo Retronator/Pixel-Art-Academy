@@ -81,6 +81,7 @@ Package.onUse(function(api) {
   api.addThing('elevator/numberpad');
 
   api.addFile('floor1/cafe..');
+  api.addFile('floor1/cafe/burra');
   api.addFile('floor1/cafe/artworks');
   api.addScript('floor1/cafe/burra');
   api.addScript('floor1/cafe/burra-character');

@@ -13,12 +13,16 @@ class C2.Inventory extends LOI.Adventure.Scene
   things: ->
     items = [
       HQ.Items.Prospectus
-      LOI.Items.Sync if C2.Immersion.state 'syncGiven'
-      HQ.Items.OperatorLink if C2.Immersion.state('operatorState') is C2.Immersion.OperatorStates.BackAtCounter
+
+      # Get the dummy SYNC until the end of Immersion and the real one afterwards.
+      C2.Items.Sync if C2.Immersion.state('syncGiven') and not C2.Immersion.finished()
+      LOI.Items.Sync if C2.Immersion.state('syncGiven') and C2.Immersion.finished()
+
+      HQ.Items.OperatorLink if C2.Immersion.Room.scriptState 'SyncSetupProcedure'
       SanFrancisco.Soma.Items.Map if SanFrancisco.Soma.Items.Map.state 'inInventory'
     ]
     
-    for itemClassName in ['ShoppingCart', 'Account', 'Receipt', 'Keycard']
+    for itemClassName in ['Account', 'Receipt', 'Keycard']
       hasItem = HQ.Items[itemClassName].state 'inInventory'
       items.push HQ.Items[itemClassName] if hasItem
 

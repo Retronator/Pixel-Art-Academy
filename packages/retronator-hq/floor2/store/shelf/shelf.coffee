@@ -82,8 +82,7 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
       item.catalogKey in @catalogKeys()
 
     # Cast the items to enable any extra functionality.
-    items = for item in items
-      item.cast()
+    items = (item.cast() for item in items)
 
     # Refresh all the items to populate bundle sub-items.
     item.refresh() for item in items
@@ -92,8 +91,12 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
 
     items
 
+  canBuyFromShelf: -> true # Override to apply shelf-wide buying limit.
+
   canBuy: ->
     item = @currentData()
+
+    return unless @canBuyFromShelf()
 
     # You can always buy things without eligibility function.
     return true unless item.validateEligibility

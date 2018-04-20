@@ -11,6 +11,9 @@ class LOI.Adventure.Script
     # Store script class by ID.
     @_scriptClassesById[@id()] = @
 
+    @stateAddress = new LOI.StateAddress "scripts.#{@id()}"
+    @state = new LOI.StateObject address: @stateAddress
+    
   constructor: (@options) ->
     @startNode = @options.startNode
 
@@ -43,7 +46,7 @@ class LOI.Adventure.Script
           node[property] = @startNode.labels[jumpNode.labelName]
       
       # Replace char actor with character instance's avatar.
-      node.actor = character.avatar if node.actorName is 'char'
+      node.actor = character?.avatar if node.actorName is 'char'
 
       if node instanceof @constructor.Nodes.Choice
         if node.node.actorName is 'player'
@@ -58,8 +61,8 @@ class LOI.Adventure.Script
     node.script = @ for node in @nodes
 
     # Prepare the state objects.
-    @stateAddress = new LOI.StateAddress "scripts.#{@id()}"
-    @state = new LOI.StateObject address: @stateAddress
+    @stateAddress = @constructor.stateAddress
+    @state = @constructor.state
 
     @ephemeralState = new LOI.EphemeralStateObject
 

@@ -26,3 +26,5 @@ class HQ.Store.Shelf.Pixel extends HQ.Store.Shelf
   things: -> [
     PixelArtAcademy.PixelBoy
   ]
+
+  canBuyFromShelf: -> LOI.characterId()

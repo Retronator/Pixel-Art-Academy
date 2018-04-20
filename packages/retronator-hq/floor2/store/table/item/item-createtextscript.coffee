@@ -15,14 +15,14 @@ class HQ.Store.Table.Item extends HQ.Store.Table.Item
     # Return the start node.
     _.first nodes
 
-  _createInteractionScriptNodes: (script) ->
+  _createInteractionScriptNodes: (postText) ->
     nodes = []
     retro = @options.retro
 
-    for postPart in $(script)
+    for postPart in $(postText)
       lastNode = _.last nodes
 
-      tag = postPart.tagName.toLowerCase()
+      tag = postPart.tagName?.toLowerCase()
 
       # Skip comments (<!-- more --> and such).
       continue unless tag

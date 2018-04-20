@@ -1,5 +1,6 @@
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
+RS = Retronator.Store
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -52,10 +53,19 @@ class C3.Lobby extends LOI.Adventure.Location
       action: => @startScript label: 'ReceptionistDialog'
 
   onExitAttempt: (exitResponse) ->
-    return unless exitResponse.destinationLocationClass in [C3.Hallway, C3.Design]
+    # Only prevent going further into the center.
+    return unless exitResponse.destinationLocationClass in [C3.Hallway, C3.Design, C3.Service]
 
     entryApproved = C3.Lobby.state 'entryApproved'
-    return if entryApproved
 
+    # Only let the player proceed with an approved entry.
+    if entryApproved
+      # Once approved, you can always go to the service center.
+      return if exitResponse.destinationLocationClass in [C3.Service]
+
+      # To go elsewhere, we also need the avatar editor.
+      return if Retronator.user().hasItem RS.Items.CatalogKeys.LandsOfIllusions.Character.Avatar.AvatarEditor
+
+    # Conditions to enter were not met so start the 'sneak by' script.
     @startScript label: 'SneakBy'
     exitResponse.preventExit()

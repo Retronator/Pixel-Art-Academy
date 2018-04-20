@@ -10,10 +10,10 @@ class LOI.Settings
     @persistGameState = new @constructor.ConsentField
       name: 'persistGameState'
       persistDecision: @persistSettings
-      question: "Do you want to save game-related state?"
-      moreInfo: "This will use your browser's local storage to save your progress in the game until you sign-in.
-                 It will also keep you synced with your game character between play sessions, and enable multiple
-                 players to use the same user account."
+      question: "Do you want to save your game?"
+      moreInfo: "This will use your browser's local storage to save your progress in the game until you sign in.
+                 After you're signed in, it will also keep you synced with your game character between play sessions,
+                 and enable multiple players to use the same user account."
 
     @persistCommandHistory = new @constructor.ConsentField
       name: 'persistCommandHistory'

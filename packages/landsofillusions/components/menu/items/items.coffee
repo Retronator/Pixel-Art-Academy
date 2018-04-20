@@ -240,13 +240,13 @@ class LOI.Components.Menu.Items extends AM.Component
 
       # Also delete any login info.
       Accounts._autoLoginEnabled = false
-      Accounts._unstoreLoginToken()
-      localStorage.removeItem 'Meteor.loginToken'
-      localStorage.removeItem 'Meteor.loginTokenExpires'
+      
+      LOI.adventure.clearLoginInformation()
 
     else
       LOI.settings.persistLogin.showDialog (value) =>
         Accounts._autoLoginEnabled = value
+        Accounts._enableAutoLogin() if value
 
   _onClickPermissions: (consentField) ->
     if consentField.allowed()

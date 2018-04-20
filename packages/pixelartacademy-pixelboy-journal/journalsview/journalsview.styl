@@ -18,7 +18,9 @@
 
     .overlay-content
       display flex
-      height 100%
+      position relative
+      top 40%
+      height 30%
 
       .new-journal-button
       .end-placeholder
@@ -28,6 +30,13 @@
         background none
         border none
         flex-shrink 0
+
+      .new-journal-button
+        daily()
+        padding 10rem
+
+        &:hover
+          color atariAzure(1)
 
       .journals
         display flex

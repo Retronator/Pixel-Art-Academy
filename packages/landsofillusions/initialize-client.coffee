@@ -49,7 +49,7 @@ Meteor.startup ->
     characterId = LOI.characterId()
 
     if characterId and LOI.settings.persistGameState.allowed()
-      localStorage.setItem LOI.characterIdLocalStorageKey, value
+      localStorage.setItem LOI.characterIdLocalStorageKey, characterId
 
     else
       localStorage.removeItem LOI.characterIdLocalStorageKey

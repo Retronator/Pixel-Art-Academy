@@ -32,16 +32,6 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
     @setThings
       operator: @options.parent.operator
 
-    @setCallbacks
-      ShowTitle: (complete) =>
-        @options.parent._showChapterTitle()
-        complete()
-
-      Exit: (complete) =>
-        LOI.adventure.goToLocation Retronator.HQ.LandsOfIllusions.Room
-        LOI.adventure.goToTimeline LOI.TimelineIds.RealLife
-        complete()
-
   _showChapterTitle: ->
     # Only allow one call to this.
     return if @_chapterTitleShown
@@ -68,7 +58,6 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
 
   onCommand: (commandResponse) ->
     return unless captain = LOI.adventure.getCurrentThing LOI.Construct.Actors.Captain
-    return unless tv = LOI.adventure.getCurrentThing LOI.Construct.Loading.TV
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, captain.avatar]

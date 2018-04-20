@@ -11,7 +11,5 @@ class PAA.PixelBoy.Apps extends LOI.Adventure.Location
     @constructor.StudyPlan
     @constructor.Journal
     @constructor.Calendar
-    @constructor.Pico8
-    @constructor.Drawing
     @constructor.Yearbook
   ]
