@@ -55,7 +55,8 @@ Package.onUse(function(api) {
 
   api.addServerFile('state/migrations/0000-immersionrevamp');
   api.addServerFile('state/migrations/0001-renamecollection');
-  api.addServerFile('state/migrations/0002-addinggamestatefields');
+  api.addServerFile('state/migrations/0002-gametime');
+  api.addServerFile('state/migrations/0003-addinggamestatefields');
 
   // Avatar
 

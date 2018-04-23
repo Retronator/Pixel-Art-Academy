@@ -61,8 +61,10 @@ class C1.Items.ApplicationEmail extends LOI.Emails.Email
     return unless LOI.adventure.readOnlyGameState()
 
     # The application email should arrive when the character has applied.
-    return unless applicationTime = C1.readOnlyState('application')?.applicationTime
-    
+    # Note: application time can be zero (from migrations) so we test existence separately.
+    applicationTime = C1.readOnlyState('application')?.applicationTime
+    return unless applicationTime?
+
     new LOI.GameDate applicationTime
 
   sender: ->

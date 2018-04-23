@@ -35,6 +35,8 @@ Package.onUse(function(api) {
   api.addServerFile('chapter1/chapter1-server');
   api.addServerFile('chapter1/methods-server');
 
+  api.addServerFile('chapter1/migrations/0000-admissionapplication');
+
   api.addFile('chapter1/events..');
   api.addFile('chapter1/events/applicationaccepted');
 

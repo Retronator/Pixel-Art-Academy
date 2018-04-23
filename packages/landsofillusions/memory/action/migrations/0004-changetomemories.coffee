@@ -21,6 +21,7 @@ class Migration extends Document.MajorMigration
             # Set that all existing conversations happened at the HQ Cafe in the present.
             timelineId: LandsOfIllusions.TimelineIds.Present
             locationId: Retronator.HQ.Cafe.id()
+            _schema: newSchema
           $unset:
             conversation: true
             text: true
@@ -42,6 +43,7 @@ class Migration extends Document.MajorMigration
             text: document.content.say.text
             conversation:
               _id: document.memory._id
+            _schema: oldSchema
           $unset:
             memory: true
             type: true
