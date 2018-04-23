@@ -30,6 +30,8 @@ class HQ.LandsOfIllusions.Room extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.South}": HQ.LandsOfIllusions.Hallway
     "#{Vocabulary.Keys.Directions.Out}": HQ.LandsOfIllusions.Hallway
 
+  isPrivate: -> true
+  
   # Script
 
   initializeScript: ->

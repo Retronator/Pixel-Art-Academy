@@ -70,7 +70,10 @@ class LOI.Character.People extends LOI.Adventure.Global
           oldPeople = _.values @_peopleById
   
           characterIds = _.uniq (action.character._id for action in actions)
-  
+
+          # Don't include other characters on private locations.
+          characterIds = [] if LOI.adventure.currentLocation().isPrivate()
+
           # Always include player's character.
           playerCharacterId = LOI.characterId()
           characterIds.push playerCharacterId if playerCharacterId and playerCharacterId not in characterIds

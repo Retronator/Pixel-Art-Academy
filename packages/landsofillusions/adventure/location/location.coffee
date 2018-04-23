@@ -30,3 +30,5 @@ class LOI.Adventure.Location extends LOI.Adventure.Scene
     super @options
 
   exits: -> # Override to provide location exits in {direction: location class} format
+
+  isPrivate: -> false # Override if other people shouldn't show up at this location.

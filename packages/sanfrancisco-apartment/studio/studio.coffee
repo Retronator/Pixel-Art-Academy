@@ -37,3 +37,5 @@ class Apartment.Studio extends LOI.Adventure.Location
 
   exits: ->
     "#{Vocabulary.Keys.Directions.Out}": Apartment.Hallway
+
+  isPrivate: -> true
