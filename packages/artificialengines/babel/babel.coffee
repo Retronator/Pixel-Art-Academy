@@ -4,8 +4,6 @@ class Artificial.Babel
   # Default language when new translations are inserted.
   @defaultLanguage: 'en-US'
 
-  @LanguagePreferenceLocalStorageKey: "Artificial.Babel.languagePreference"
-
   # User's current language preference setting.
   @_userLanguagePreference: new ReactiveField null
 
@@ -15,11 +13,6 @@ class Artificial.Babel
   @userLanguagePreference: (value) ->
     if value
       @_userLanguagePreference value
-
-      # Also write it to local storage.
-      if Meteor.isClient
-        encodedValue = EJSON.stringify value
-        localStorage.setItem @LanguagePreferenceLocalStorageKey, encodedValue
 
     @_userLanguagePreference()
     

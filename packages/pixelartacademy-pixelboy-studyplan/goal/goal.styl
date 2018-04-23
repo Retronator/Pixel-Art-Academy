@@ -1,0 +1,105 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-studyplan-goal
+  display block
+  position relative
+  z-index 0
+  border 1rem solid atariCyan(5)
+  background atariCyan(0)
+  cursor grab
+
+  &:hover
+    z-index 1
+
+  > .name
+    padding 5rem
+    text-align center
+    cursor pointer
+    text-transform uppercase
+
+  .tasks-map
+    position absolute
+    z-index 2
+    visibility hidden
+    cursor default
+
+    .connections-canvas
+      position absolute
+      width 100%
+      height 100%
+
+    .tasks
+      list-style none
+      padding 0
+      margin 0
+
+      .task
+        position absolute
+
+  .provided-interests
+    position absolute
+    visibility hidden
+    z-index 1
+    top 5rem
+    right -4rem
+    width 9rem
+    height 9rem
+    padding 0.5rem 0 0 2.5rem
+    background atariCyan(5)
+    color atariCyan(0)
+    cursor text
+
+    &:hover
+      background atariCyan(7)
+
+    &::before
+      content '+'
+
+  .required-interests
+    visibility hidden
+    list-style none
+
+    .interest
+      position absolute
+      left 9rem
+      right 6rem
+      cursor pointer
+      color atariGrey(6)
+
+      &.valid-target
+        .connector
+          background atariGrey(7)
+
+      .connection-target
+        position absolute
+        left -20rem
+        top -2rem
+        right 0
+        bottom 0
+
+      .connector
+        display block
+        position absolute
+        z-index 1
+        top 0
+        left -14rem
+        width 9rem
+        height 9rem
+        padding 0.5rem 0 0 2.5rem
+        background atariCyan(5)
+        color atariCyan(0)
+
+        &::before
+          content '→'
+
+      &:hover:not(.invalid-target):not(.valid-target)
+        color atariGrey(7)
+
+        .connector
+          background atariCyan(7)
+
+  &.expanded
+    .tasks-map
+    .provided-interests
+    .required-interests
+      visibility visible

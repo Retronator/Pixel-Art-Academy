@@ -61,10 +61,9 @@ drshelley:
 ## Control
 
 drshelley:
-    After you've designed the Avatar, we will use your SYNC device to read off your unique behavior signature.
-    This will create a symbiotic connection between yourself and the synthetic brain created by StrongAI. 
-    The Agent will essentially run on a copy of your brain's activity, possessing most of your strengths and weaknesses.
-    The similarity allows for the Agent to be very susceptible to your commands. You will become their inner voice.
+    After we've built the Avatar, your will use your SYNC device to create a symbiotic connection between yourself and the synthetic brain created by StrongAI. 
+    You will essentially become the agent's inner voice. 
+    This doesn't give you direct control over them, but they will be very susceptible to your commands.
 
 -> [CyborgQuestions]
 
@@ -92,8 +91,8 @@ drshelley: I'll put it in simple terms for you.
 
 drshelley:
     1. Use this terminal to design the visual features. If you have any trouble, complain to the UX department, not to me.
-    2. Go east to Behavior Setup. The terminal there will sync with your brain (if there's anything in there) and you can adjust any situational aspects of your … 'character'.
-    3. Continue further east to the Stasis Chamber. That's where Avatars wait for deployment. Activate it with your SYNC device and our field team will deliver it to Retronator. 
+    2. Go east to Behavior Setup. The terminal there controls personality and situational aspects of your … 'character'.
+    3. Continue further east to the Stasis Chamber. That's where Avatars await deployment. Activate it with your SYNC device and our field team will deliver it to Retronator. 
 
 * OK, keep going east and do something in each room, got it.
 

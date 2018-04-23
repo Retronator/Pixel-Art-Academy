@@ -1,0 +1,23 @@
+<template name="LandsOfIllusions.Items.Sync.Memories.Components.ActionsPreview">
+  <div class="landsofillusions-items-sync-memories-components-actionspreview">
+    <ul class="characters">
+      {{#each characters}}
+        {{#if characterImageUrl}}
+          <li class="character">
+            <img class="image" src="{{characterImageUrl}}"/>
+          </li>
+        {{/if}}
+      {{/each}}
+    </ul>
+    <div class="actions-area">
+      <ol class="actions">
+        {{#each actions}}
+          <li class="action">
+            <div class="name">{{> t9n character.avatar.fullName}}:</div>
+            <div class="text" {{style textStyle}}>"{{content.say.text}}"</div>
+          </li>
+        {{/each}}
+      </ol>
+    </div>
+  </div>
+</template>

@@ -158,10 +158,31 @@ class LOI.Adventure extends LOI.Adventure
     # Set the updated function for the first time.
     @userGameState.updated = _userGameStateUpdated
 
+    # Read-only game state only gets updated on the server, so its logic handling on the client is very simple. We 
+    # assume we're already subscribed to the game state document via the main game state so we simply just return the
+    # read-only part of the document.
+    @readOnlyGameState = new ComputedField =>
+      userId = Meteor.userId()
+      characterId = LOI.characterId()
+
+      if characterId
+        gameState = LOI.GameState.documents.findOne 'character._id': characterId
+
+      else
+        gameState = LOI.GameState.documents.findOne 'user._id': userId
+        
+      gameState?.readOnlyState
+    
     # Flush the state updates to the database when the page is about to unload.
     window.addEventListener 'beforeunload', (event) =>
-      @gameState?.updated flush: true
-      @userGameState?.updated flush: true
+      @gameState?.updated? flush: true
+      @userGameState?.updated? flush: true
+
+      # If we're signed in, but aren't saving login information, quit game to remove all local data.
+      if Meteor.userId() and not LOI.settings.persistLogin.allowed()
+        @clearLocalGameState()
+        @clearLocalStorageGameStateParts()
+        @clearLoginInformation()
 
   replaceGameState: (newState) ->
     switch @gameStateSource()
@@ -189,7 +210,7 @@ class LOI.Adventure extends LOI.Adventure
         @clearLocalGameState()
 
   clearLocalGameState: ->
-    @localGameState.state {}
+    @localGameState.state undefined
 
   isGameStateEmpty: ->
     # Save game is empty when the game isn't marked as started.
@@ -211,8 +232,14 @@ class LOI.Adventure extends LOI.Adventure
 
         AB.Router.postToUrl url, {loginToken}
 
+        # Clear login information if needed.
+        @_handleLoginPersistance()
+
         # End loading flow.
         return
+
+      # Clear login information if needed.
+      @_handleLoginPersistance()
 
       # Wait also until the game state has been loaded. We need a
       # nonreactive context in case we're loading from URL change.
@@ -225,7 +252,7 @@ class LOI.Adventure extends LOI.Adventure
 
           if databaseState
             # Reset the interface.
-            @interface.resetInterface()
+            @interface.reset()
 
             # Clear active item.
             @activeItemId null
@@ -241,7 +268,7 @@ class LOI.Adventure extends LOI.Adventure
             # synced again on reload).
             @playerLocationId databaseState.state.currentLocationId
             @playerTimelineId databaseState.state.currentTimelineId
-            @immersionExitLocationId databaseState.state.immersionExitLocationId
+            @_immersionExitLocationId databaseState.state.immersionExitLocationId
 
             @menu.signIn.activatable.deactivate()
 
@@ -294,11 +321,20 @@ class LOI.Adventure extends LOI.Adventure
       return unless user = Retronator.user()
       computation.stop()
 
+      @_handleLoginPersistance()
+
       # Wait also until the game state has been loaded.
       Tracker.autorun (computation) =>
         return unless @gameStateSubscription().ready()
         computation.stop()
 
+        # Make sure location and timeline are being stored.
+        state = @localGameState.state()
+        state.currentTimelineId = @currentTimelineId()
+        state.currentLocationId = @currentLocationId()
+        @localGameState.updated()
+
+        # Get the existing game state, in case player would be overwriting it.
         databaseState = LOI.GameState.documents.findOne 'user._id': user._id
 
         if databaseState
@@ -354,6 +390,11 @@ class LOI.Adventure extends LOI.Adventure
         userAutorun.stop()
         callback?()
 
+  _handleLoginPersistance: ->
+    unless LOI.settings.persistLogin.allowed()
+      # Prevent automatic sign-in.
+      @clearLoginInformation()
+
   quitGame: (options = {}) ->
     @quitting true
     
@@ -362,17 +403,26 @@ class LOI.Adventure extends LOI.Adventure
     
     @logout
       callback: =>
-        # Clear character selection and situation.
-        LOI.switchCharacter null
-    
-        @playerLocationId null
-        @playerTimelineId null
+        @clearLocalStorageGameStateParts()
 
         # Execute the callback if present and end if it has handled the redirect.
         return if options.callback?()
 
         # Do a hard reload of the root URL.
         window.location = '/'
+
+  clearLocalStorageGameStateParts: ->
+    # Clear character selection and situation. We use undefined to remove the fields from local storage.
+    LOI.switchCharacter undefined
+
+    @playerLocationId undefined
+    @playerTimelineId undefined
+    @_immersionExitLocationId undefined
+
+  clearLoginInformation: ->
+    Accounts._unstoreLoginToken()
+    localStorage.removeItem 'Meteor.loginToken'
+    localStorage.removeItem 'Meteor.loginTokenExpires'
 
   loadCharacter: (characterId) ->
     # Save where we're going to immersion from.

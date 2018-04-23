@@ -23,6 +23,13 @@ class AB.Router extends AB.Router
   @getParameter: (parameter) ->
     @currentParameters()[parameter]
 
+  @setParameter: (parameter, value) ->
+    # We need to clone the parameters before we change them, since otherwise we'd be 
+    # changing the original with which  the computed field will compare the new array.
+    parameters = _.clone @currentParameters()
+    parameters[parameter] = value
+    @setParameters parameters
+
   @setParameters: (parameters) ->
     @goToRoute @currentRouteName(), parameters
 

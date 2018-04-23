@@ -37,6 +37,10 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addFiles(path + ".styl");
   };
+  api.constructor.prototype.addCss = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".css");
+  };
   api.constructor.prototype.addStyledFile = function(path) {
     path = expandPath(path);
     this.addFiles([path + ".coffee", path + ".styl"]);
@@ -48,6 +52,10 @@ Package.onUse(function(api) {
   api.constructor.prototype.addComponent = function(path) {
     path = expandPath(path);
     this.addFiles([path + ".coffee", path + ".html", path + ".styl"]);
+  };
+  api.constructor.prototype.addClientComponent = function(path) {
+    path = expandPath(path);
+    this.addFiles([path + ".coffee", path + ".html", path + ".styl"], ['client']);
   };
   api.constructor.prototype.addUnstyledComponent = function(path) {
     path = expandPath(path);

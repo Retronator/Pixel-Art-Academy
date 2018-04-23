@@ -9,9 +9,6 @@ class LOI.Assets.Engine.Sprite
 
       true
 
-  destroy: ->
-    @ready.stop()
-
   drawToContext: (context, renderOptions = {}) ->
     return unless @ready()
 

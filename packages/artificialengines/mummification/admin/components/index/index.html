@@ -1,0 +1,12 @@
+<template name="Artificial.Mummification.Admin.Components.Index">
+  <div class="pixelartacademy-pages-admin-components-index">
+    <div class="actions">
+      <button class="add-document borderless">Add {{documentTypeName}}</button>
+    </div>
+    <ul class="documents-list">
+      {{#each documents}}
+        <li class="document {{activeClass}}">{{nameOrId}}</li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

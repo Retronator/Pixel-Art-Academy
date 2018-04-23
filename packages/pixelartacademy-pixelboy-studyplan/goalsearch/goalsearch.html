@@ -1,0 +1,28 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.StudyPlan.GoalSearch">
+  <div class="pixelartacademy-pixelboy-apps-studyplan-goalsearch">
+    <div class="interests">
+      <div class="search">
+        <input class="input" placeholder="search interests" value="{{interestSearchTerm}}"/>
+        {{#if interestSearchTerm.length}}
+          <button class="clear-input-button"></button>
+        {{/if}}
+        {{#if showAutocompleteInterests}}
+          <ul class="autocomplete">
+            {{#each autocompleteInterests}}
+              <li class="interest {{autocompleteInterestActiveClass}}">{{> t9n name}}</li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </div>
+    </div>
+    {{#if goalsWithInterest.length}}
+      <ul class="goals">
+        {{#each goalsWithInterest}}
+          <li class="goal {{goalExistingClass}}">
+            {{> PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal args this}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+  </div>
+</template>

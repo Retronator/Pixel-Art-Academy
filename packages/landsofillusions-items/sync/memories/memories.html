@@ -1,0 +1,26 @@
+<template name="LandsOfIllusions.Items.Sync.Memories">
+  <div class="landsofillusions-items-sync-memories">
+    {{#if currentCharacter}}
+      <ul class="memories">
+        {{#each memories}}
+          <li class="memory {{updatedClass}}" {{style memoryStyle}}>
+            {{#with memory}}
+              <div class="preview">
+                {{> LandsOfIllusions.Items.Sync.Memories.Preview}}
+              </div>
+              <div class="end-date">{{endDate}}</div>
+            {{/with}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <div class="sync-hint">
+        Sync with a character to view their memories.
+      </div>
+    {{/if}}
+  </div>
+</template>
+
+<template name="LandsOfIllusions.Items.Sync.Memories.Preview">
+  {{> renderPreview}}
+</template>

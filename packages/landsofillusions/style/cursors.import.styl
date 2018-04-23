@@ -41,5 +41,15 @@ cursor(type)
     html.scale-3-or-up &
       cursor url('/interface/cursors/3x/wait.png') 36 20, text
 
+  else if type is grab
+    cursor grab
+    cursor -webkit-grab
+    cursor -moz-grab
+
+  else if type is grabbing
+    cursor grabbing
+    cursor -webkit-grabbing
+    cursor -moz-grabbing
+
   else
     cursor arguments

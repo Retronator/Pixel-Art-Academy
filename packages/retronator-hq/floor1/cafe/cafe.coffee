@@ -36,7 +36,7 @@ class HQ.Cafe extends LOI.Adventure.Location
   things: -> [
     HQ.Items.Daily
     HQ.Cafe.Artworks
-    HQ.Actors.Burra
+    HQ.Cafe.Burra
     SanFrancisco.Soma.Items.Map unless SanFrancisco.Soma.Items.Map.state 'inInventory'
   ]
 
@@ -52,9 +52,10 @@ class HQ.Cafe extends LOI.Adventure.Location
 
     @scriptUrls: -> [
       'retronator_retronator-hq/floor1/cafe/burra.script'
+      'retronator_retronator-hq/floor1/cafe/burra-character.script'
     ]
 
-    class @Script extends LOI.Adventure.Script
+    class @UserScript extends LOI.Adventure.Script
       @id: -> "Retronator.HQ.Cafe.Burra"
       @initialize()
 
@@ -62,14 +63,10 @@ class HQ.Cafe extends LOI.Adventure.Location
         @setCurrentThings burra: HQ.Actors.Burra
 
         @setCallbacks
-          OpenRetronatorMagazine: (complete) =>
-            medium = window.open 'https://medium.com/retronator-magazine', '_blank'
-            medium.focus()
-
-            # Wait for our window to get focus.
-            $(window).on 'focus.medium', =>
-              complete()
-              $(window).off '.medium'
+          OpenRetronatorMagazine: (complete) => @openWebsite 'https://medium.com/retronator-magazine', complete
+          OpenPixelDailiesArchive: (complete) => @openWebsite 'https://retronator.com/pixeldailies', complete
+          OpenPracticalPixels: (complete) => @openWebsite 'https://medium.com/practical-pixels', complete
+          OpenYouTube: (complete) => @openWebsite 'https://www.youtube.com/retronator48k', complete
 
           Register: (complete) =>
             # Hook back into the Chapter 2 registration script.
@@ -99,26 +96,32 @@ class HQ.Cafe extends LOI.Adventure.Location
               item: LOI.adventure.getCurrentThing SanFrancisco.Soma.Items.Map
               callback: => complete()
 
+      openWebsite: (url, complete) =>
+        website = window.open url, '_blank'
+        website.focus()
+
+        # Wait for our window to get focus.
+        $(window).on 'focus.openWebsite', =>
+          complete()
+          $(window).off '.openWebsite'
+
+    class @CharacterScript extends LOI.Adventure.Script
+      @id: -> "Retronator.HQ.Cafe.BurraCharacter"
+      @initialize()
+
+      initialize: ->
+        @setCurrentThings burra: HQ.Actors.Burra
+
     @initialize()
 
-    startScript: (options) ->
-      LOI.adventure.director.startScript @script, options
-
     onScriptsLoaded: ->
-      @script = @scripts[@constructor.Script.id()]
+      @userScript = @scripts[@constructor.UserScript.id()]
+      @characterScript = @scripts[@constructor.CharacterScript.id()]
 
     onCommand: (commandResponse) ->
       return unless burra = LOI.adventure.getCurrentThing HQ.Actors.Burra
-      @script.setThings {burra}
 
       commandResponse.onPhrase
         form: [Vocabulary.Keys.Verbs.TalkTo, burra.avatar]
-        action: => LOI.adventure.director.startScript @script
-
-    onEnter: (enterResponse) ->
-
-    onExitAttempt: (exitResponse) ->
-      
-    onExit: (exitResponse) ->
-      
-    cleanup: ->
+        action: =>
+          LOI.adventure.director.startScript if LOI.character() then @characterScript else @userScript

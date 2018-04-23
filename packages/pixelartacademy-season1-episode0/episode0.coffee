@@ -1,6 +1,7 @@
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 
-class PixelArtAcademy.Season1.Episode0 extends LOI.Adventure.Episode
+class PAA.Season1.Episode0 extends LOI.Adventure.Episode
   @id: -> 'PixelArtAcademy.Season1.Episode0'
 
   @fullName: -> "Before it all began"
@@ -9,6 +10,10 @@ class PixelArtAcademy.Season1.Episode0 extends LOI.Adventure.Episode
     @Chapter1
     @Chapter2
     @Chapter3
+  ]
+
+  @scenes: -> [
+    @Map
   ]
     
   @startSection: -> @Start

@@ -18,6 +18,13 @@ captain: Welcome back.
 
 captain: Welcome to Lands of Illusions!
 
+<!--
+  Only show the title if user played through DareToDream timeline, since otherwise they wouldn't
+  have seen Chapter 1 and 2 titles (for example, when starting directly in Retronator HQ).
+-->
+
+-> [WhereAmI] `not @things.PixelArtAcademy.Season1.Episode0.Chapter1`
+
 pause
 
 ### ShowTitle
@@ -25,6 +32,8 @@ pause
 wait 0
 
 pause
+
+## WhereAmI
     
 * Where am I?
 
@@ -53,7 +62,9 @@ captain:
 
 ## Modifications
 
-> The Captain turns on the TV, showing a futuristic-looking city.
+> The space around you changes and you are now overlooking a futuristic-looking city.
+
+> It takes you a moment to recollect yourself.
 
 captain: Do you know of the utopian city Retropolis?
 
@@ -102,7 +113,7 @@ captain: Yeah … no.
 
 ## SkinnerNo
 
-> The Captain switches the TV to show a scientist working with pigeons.
+> The scene changes again and you now see a scientist working with pigeons.
 
 captain: 
     Skinner was the most eminent psychologist of the 20th century, right in front of Jean Piaget and Sigmund Freud. 
@@ -142,13 +153,13 @@ captain: The one and only.
 
 ## SkinnerRepeat
 
-> The Captain switches the TV to show a scientist working with learning machines.
+> The scene changes to show a scientist working with learning machines.
 
 -> [SkinnerWalden2]
 
 ## SkinnerFascinating
 
-> The TV now shows Skinner working with learning machines.
+> The scene changes to show Skinner working with learning machines.
 
 -> [SkinnerWalden2]
 
@@ -158,7 +169,7 @@ captain:
     Skinner was obsessed with figuring out how to change human behavior, but not in a negative, controlling way.
     At the end of 1940s he wrote about a settlement called Walden Two that was devoted to creating a better society through social engineering.
     
-> A small village appears on the TV.
+> Suddenly you find yourself on a hill above a small village.
 
 captain: 
     Over the years, the Walden community quickly expanded to new Walden settlements. 
@@ -169,7 +180,7 @@ captain:
 * This sounds familiar …
 * Go on.
 
-> The TV shows Retropolis again.
+> The Earth beneath you suddenly moves away and you travel across the Pacific back to Retropolis.
 
 ## GetIt
 
@@ -183,7 +194,7 @@ captain:
 
 * So … how will this work?
 
-> The Captain switches the TV to show a robot being constructed.
+> The Captain takes you to a factory where a robot is being constructed.
 
 captain: 
     You will create an alternate reality character. 
@@ -242,7 +253,7 @@ captain: I see you already made some characters to play with.
 
 -> [NoActivatedCharacters] `not @user.activatedCharacters().length`
 
-captain: We established a neural link and you can ![use the tv](use tv) to sync with them.
+captain: We established a neural link and you can use your sync device to connect with them.
 
 -> [SomeActivatedCharacters] `@user.activatedCharacters().length < @user.characters.length`
 
@@ -262,7 +273,7 @@ captain:
 
 captain:
     Unfortunately you didn't purchase the avatar editor, so they can't be used in the game.
-    You can either purchase the upgrade or simply selecting another, existing character by ![using the tv](use tv).
+    You can either purchase the upgrade or simply choose from one of the existing character at the Cyborg Construction Center.
 
 -> [MainDialog]
 
@@ -287,7 +298,7 @@ captain:
 ## NoCharacters
 
 captain: 
-    To make your character selection, ![use the TV](use TV) and we'll setup a symbiotic link with them.
+    You will create your character at the Cyborg Construction Center.
 
 -> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 -> [NoEditor]
@@ -295,49 +306,33 @@ captain:
 ## NoEditor
 
 captain:
-    Since you only have the basic game, you can only select from existing characters.
+    Since you only have the basic game, you will only be able to select from existing characters.
     If you wanted to create your own character, you can purchase the Avatar Editor upgrade in the Retronator HQ store.
 
 -> [MainQuestions] `MainQuestions`
 
 * That's OK. I'll choose one. -> [NoEditorEnd]
-* Oh, that would be sweet! Let me go to the store, I'll be back.
+* Oh, that would be sweet! I'll stop by the store on my way to the center.
 
 captain:
     A generous decision. Your purchase helps support the development of the game.
-    Let me disconnect you and I'll be here when you're ready.
-    
-* Sounds good to me!
 
--> [Exit]
+-> [MainDialog]
 
 ## NoEditorEnd
 
-captain: Great. The TV is there when you're ready.
+captain: Great. You can always change your mind later.
     
 -> [MainDialog]
 
 ## HasEditor
 
 captain:
-    Since you own the Avatar Editor you can also design a character on your own.
-    The staff at the Cyborg Construction Center will help you with that.
+    Since you own the Avatar Editor you will be able to use their design and behavior terminals to create whatever character you want.
      
 -> [MainQuestions] `MainQuestions`
      
-* Where is this center? -> [C3]
-* I'll just select one on the TV. -> [TV]
-* One more thing … 
-
-captain: Of course, how can I help?
-
 -> [MainDialog]
-
-## TV
-
-captain: Very well.
-
--> [MainQuestions]
 
 <!-- MAIN DIALOG -->
 
@@ -352,8 +347,8 @@ captain: Any more questions? `_MainQuestions`
 * Where is the Cyborg Construction Center again? -> [C3Short] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and C3`
 * How do I get out of here? -> [HowToExit]
 * Can I have multiple characters? -> [MultipleCharacters]
-* How do I select a character again? -> [SelectCharacter] `not @user.characters.length`
-* How do I play with my character? -> [LinkCharacter] `@user.characters.length`
+* How do I create a character again? -> [SelectCharacter] `not @user.characters.length`
+* How do I sync with my character? -> [LinkCharacter] `@user.characters.length`
 * Tell me about the Loader again. -> [Construct]
 * Can you tell me more about Walden 14? -> [Walden14] `not Walden14`
 * Can you repeat the Walden part? -> [Walden14] `Walden14`
@@ -365,14 +360,16 @@ captain: Good luck.
 
 ## SelectCharacter
 
-captain: To do that ![use the TV](use TV) to select somebody you like and we'll setup a symbiotic link with them.
+captain: You need to go to the Cyborg Construction Center.
 
 -> [HasEditor] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 -> [NoEditor]
 
 ## LinkCharacter
 
-captain: To do that ![use the TV](use TV) to select it and we'll establish a neural link with them.
+captain: 
+  To do that ![use SYNC](use sync) and choose your character from the immersion section.
+  You can also ![talk to operator](talk to operator) and he can help you as well.
 
 -> [MainQuestions]
 
@@ -389,8 +386,8 @@ captain: It's in Mission Bay, south of SOMA. Ask at the reception in the HQ if y
 ## HowToExit
 
 captain: 
-    At any time you're in full immersion—either in the Loader or synced with your character—you can always ![talk to operator](talk to operator).
-    He can take you back to the real world or help with switching characters.
+    At any time you're in full immersion—either in the Loader or synced with your character—you can always ![use sync](use sync) or ![talk to operator](talk to operator).
+    Both ways can be used to take you back to the real world or switch characters.
 
 -> [MainQuestions]
 
@@ -401,25 +398,5 @@ captain:
     You can even get a quick start with selecting a pre-existing character and later create one of your own. `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 
 -> [MainQuestions]
-
-## Exit
-
-captain: 
-    Alright. Operator, engage disconnect protocol.
-
-operator:
-    Roger that, unplugging now.
-    
-pause
-
-### Exit
-
--> [End]
-
-## LookAtTV
-
-### ShowTitle
-
--> [End]
 
 ## End

@@ -28,3 +28,5 @@ class HQ.Store.Shelf.Upgrades extends HQ.Store.Shelf
       RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AvatarEditorUpgrade
       RS.Items.CatalogKeys.Bundles.PixelArtAcademy.PreOrder.AlphaAccessUpgrade
     ]
+
+  canBuyFromShelf: -> not LOI.characterId()

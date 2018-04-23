@@ -30,6 +30,9 @@ class HQ.Adventure extends LOI.Adventure
 
     # Enable directly linking to some items.
     directItems = [
+      item: HQ.Items.Daily
+      location: HQ.Cafe
+    ,
       item: HQ.Store.Display
       location: HQ.Store
     ]

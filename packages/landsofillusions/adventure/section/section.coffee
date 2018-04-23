@@ -53,6 +53,9 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
 
     scene.destroy() for scene in @scenes()
 
+  # Because active relies on finished, which can be set on the object, not just on the class, we can only allow active
+  # to be defined as an object method. We can think of active as the current state of the section object, whereas 
+  # finished is more of a general condition, usually set on the class, if possible.
   active: ->
     # Override and add additional logic to create prerequisites for the section being started.
     @_activeUntilFinished()

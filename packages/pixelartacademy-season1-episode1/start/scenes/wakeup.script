@@ -22,13 +22,13 @@
 
 char: Hhmmhm.
 
-* Hellooo.
-* Time to wake up.
+* @Hellooo.
+* @Time to wake up.
 
 char: One … more … minute …
 
-* Hey, wake up!
-* _char_!
+* @Hey, wake up!
+* @_char_!
 
 char: Mhm, alright, alright.
 

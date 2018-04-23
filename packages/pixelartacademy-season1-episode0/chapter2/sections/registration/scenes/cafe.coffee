@@ -1,3 +1,4 @@
+AB = Artificial.Base
 LOI = LandsOfIllusions
 C2 = PixelArtAcademy.Season1.Episode0.Chapter2
 HQ = Retronator.HQ
@@ -10,9 +11,9 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
 
   @location: -> HQ.Cafe
 
-  @initialize()
-
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/registration/scenes/cafe.script'
+
+  @initialize()
 
   # Script
 
@@ -27,7 +28,7 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
 
       # Find the second of main scripts' questions. We skip the
       # first one because it's the register fallback in the main script.
-      burraScript = burraListener.scripts[HQ.Cafe.BurraListener.Script.id()]
+      burraScript = burraListener.scripts[HQ.Cafe.BurraListener.UserScript.id()]
       firstMainQuestion = burraScript.startNode.labels.MainQuestion.next.next
 
       # Find the last of this script's questions.
@@ -63,6 +64,31 @@ class C2.Registration.Cafe extends LOI.Adventure.Scene
         HQ.Items.Keycard.state 'inInventory', true
 
         complete()
+
+      End: (complete) =>
+        # Simply complete if this route can handle database states.
+        if LOI.adventure.usesDatabaseState()
+          complete()
+          return
+
+        # We want to show a dialog informing the user to play on the main URL.
+        dialog = new LOI.Components.Dialog
+          message: "
+                    You are now leaving #{location.host}. Your adventure will continue at
+                    #{AB.Router.routes[LOI.Adventure.id()].host}. Thank you for registering!
+                  "
+          buttons: [
+            text: "Continue"
+          ]
+
+        LOI.adventure.showActivatableModalDialog
+          dialog: dialog
+          callback: =>
+            # Send the login token to the main adventure route where database state is allowed.
+            url = AB.Router.createUrl LOI.Adventure, parameter1: 'signin'
+            loginToken = localStorage.getItem 'Meteor.loginToken'
+
+            AB.Router.postToUrl url, {loginToken}
 
   # Listener
 

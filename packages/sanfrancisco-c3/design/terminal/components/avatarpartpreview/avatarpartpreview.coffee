@@ -46,7 +46,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
         part = @data()
         
-        unless renderer = part?.getRenderer()
+        unless renderer = part?.renderer()
           # There's no renderer so just clear whatever is drawn.
           @context.setTransform 1, 0, 0, 1, 0, 0
           @context.clearRect 0, 0, @canvas.width, @canvas.height

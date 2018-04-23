@@ -16,10 +16,13 @@ class LOI.HumanAvatar extends LOI.Avatar
         dataLocation: new AM.Hierarchy.Location
           rootField: @options.outfitDataField
 
-  getRenderer: ->
-    # Instantiate the renderer on first call.
-    unless @_rendererSingleton
-      @_rendererSingleton = new LOI.Character.Avatar.Renderers.HumanAvatar humanAvatar: @, true
+    # Create renderer for drawing this part's hierarchy.
+    @renderer = new ComputedField =>
+      new LOI.Character.Avatar.Renderers.HumanAvatar humanAvatar: @, true
+    ,
+      true
 
-    # Simply return the renderer.
-    @_rendererSingleton
+  destroy: ->
+    super
+
+    @renderer.stop()

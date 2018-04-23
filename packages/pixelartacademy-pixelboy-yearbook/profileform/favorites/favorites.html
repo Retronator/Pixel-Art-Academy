@@ -1,0 +1,17 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Yearbook.ProfileForm.Favorites">
+  <div class="pixelartacademy-pixelboy-apps-yearbook-profileform-favorites">
+    <div class="caption">Favorites</div>
+    <div class="content">
+      {{#each categories}}
+        <div class="property pronouns">
+          <label class="label">
+            <span class="name">{{name}}</span>
+            <span class="value">
+              {{> PixelArtAcademy.PixelBoy.Apps.Yearbook.ProfileForm.Favorites.Favorite field}}
+            </span>
+          </label>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</template>

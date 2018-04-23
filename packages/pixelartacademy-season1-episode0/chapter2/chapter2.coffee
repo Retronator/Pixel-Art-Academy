@@ -14,13 +14,13 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
   @sections: -> [
     C2.Intro
     C2.Registration
-    C2.Shopping
     C2.Immersion
   ]
 
   @scenes: -> [
     @Inventory
-    @Store
+    @SecondStreet
+    @Cafe
   ]
 
   @timelineId: -> LOI.TimelineIds.RealLife
@@ -30,18 +30,14 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
   constructor: ->
     super
 
-    # Move the player to caltrain on start.
+    # Move the player to Caltrain on start if coming from Dare to Dream intro.
     @autorun (computation) =>
       return unless @active() and not @finished()
-
-      movedToCaltrain = @state 'movedToCaltrain'
-
-      return if movedToCaltrain
+      return unless LOI.adventure.currentTimelineId() is PAA.TimelineIds.DareToDream
 
       # Force the move so that exit responses are not called.
       LOI.adventure.setLocationId SanFrancisco.Soma.Caltrain.id()
       LOI.adventure.goToTimeline LOI.TimelineIds.RealLife
-      @state 'movedToCaltrain', true
 
   onRendered: ->
     super
@@ -49,17 +45,19 @@ class PAA.Season1.Episode0.Chapter2 extends LOI.Adventure.Chapter
     # Finish intro.
     @autorun (computation) =>
       return unless @active() and not @finished()
-
-      fadeOutDone = @state 'fadeOutDone'
-      return if fadeOutDone
+      return unless @fadeOutNeeded()
 
       Meteor.setTimeout =>
         @state 'fadeOutDone', true
       ,
         1000
 
+  fadeOutNeeded: ->
+    # Intro is needed just at the Caltrain location (those coming directly to Retronator HQ should not be included).
+    LOI.adventure.currentLocationId() is SanFrancisco.Soma.Caltrain.id() and not @state 'fadeOutDone'
+
   fadeVisibleClass: ->
-    'visible' unless @state 'fadeOutDone'
+    'visible' if @fadeOutNeeded()
 
   finished: ->
     # Chapter 2 ends when you finish immersion.

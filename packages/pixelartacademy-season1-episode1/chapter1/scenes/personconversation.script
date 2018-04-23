@@ -1,0 +1,87 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.PersonConversation
+
+## Start
+
+-> [SaidHi] `_person.saidHi`
+
+`_person.saidHi = true`
+
+-> [InGroupGreeting] `_person.inGroup`
+-> [AlreadyMetGreeting] `person.alreadyMet`
+
+char: Uhm … hi!
+person: Hi there!
+
+`person.alreadyMet = true`
+
+-> [MainQuestions]
+
+## InGroupGreeting
+
+char: Hey hey!
+person: What's up, what's up!
+
+-> [MainQuestions]
+
+## AlreadyMetGreeting
+
+char: Hi!
+person: Hey, nice to see you again.
+
+-> [MainQuestions]
+
+## SaidHi
+
+person: What's up?
+
+-> [MainQuestions]
+
+## MainQuestions
+
+* What's your name? -> [YourName] `not person.introduced`
+* Let's hang out sometimes. -> [HangOut] `not _person.inGroup`
+* Can I see your study journal? -> [Journal]
+* Bye now! -> [End]
+
+## YourName
+
+person: I'm `_person.name`.
+
+> _char_ extends _their_ hand.
+
+char: Nice to meet you. I'm `@character.name()`.
+
+`person.introduced = true`
+
+-> [MainQuestions]
+
+## HangOut
+
+person: Sounds good! I'll see you at Retronator Café?
+char: it's a deal.
+
+### HangOut
+
+-> [MainQuestions]
+
+## Journal
+
+-> [NoJournals] `not _person.journalIds.length`
+
+person: Off course! Let me know what you think.
+
+pause
+
+### Journal
+
+-> [End]
+
+## NoJournals
+
+person: Oh, I don't actually have one.
+
+-> [MainQuestions]
+
+-> [End]
+
+## End

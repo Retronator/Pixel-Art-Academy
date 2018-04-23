@@ -7,13 +7,14 @@ class AB.Components.RegionSelection extends AM.DataInputComponent
     super
 
     @type = AM.DataInputComponent.Types.Select
+    @allowDeselection = false
 
   onCreated: ->
     super
 
     # Subscribe to all regions and the translations of their names.
     AB.Region.all.subscribe @
-    AB.Translation.forNamespace.subscribe 'Artificial.Babel.Region.Names'
+    AB.Translation.forNamespace.subscribe @, 'Artificial.Babel.Region.Names'
 
     # Cache regions with their translations pulled in.
     @regions = new ComputedField =>
@@ -41,8 +42,8 @@ class AB.Components.RegionSelection extends AM.DataInputComponent
       value: regionName.region.code
       name: regionName.name
 
-    # Add an empty option if we don't have a match.
-    unless @load() in values
+    # Add an empty option if we don't have a match, or if we allow deselection.
+    if @allowDeselection or @load() not in values
       options.unshift
         value: ''
         name: ''

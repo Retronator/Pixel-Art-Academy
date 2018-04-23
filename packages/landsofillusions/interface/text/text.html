@@ -7,7 +7,11 @@
   {{> Render display}}
   <div class="text-interface scrollable">
     <div class="location">
-      {{> Render location}}
+      {{#if context}}
+        {{> Render context}}
+      {{else}}
+        {{> Render location}}
+      {{/if}}
     </div>
     <div class="items">
       {{#each activeItems}}
@@ -58,7 +62,7 @@
                   {{#if hoveredCommand}}
                     {{hoveredCommand}}
                   {{else}}
-                   {{commandInput.command}}<span class="caret {{caretIdleClass}}">■</span>
+                    {{{commandBeforeCaret}}}<span class="caret {{caretIdleClass}}">■</span>{{{commandAfterCaret}}}
                  {{/if}}
                 {{/if}}
                 <input class="dummy-input" type="text"/>
@@ -78,7 +82,13 @@
         <div class="inventory scrollable">
           {{#if showInventory}}
             <div class="inventory-content scrollable-content">
-              <p class="items-sentence">{{> t10e "You are carrying:"}}</p>
+              <p class="items-sentence">
+                {{#with currentCharacter}}
+                  {{avatar.fullName}} {{> t10e "is carrying:"}}
+                {{else}}
+                  {{> t10e "You are carrying:"}}
+                {{/with}}
+              </p>
               <ul class="items">
                 {{#each inventoryItems}}
                   <li class="item">{{fullName}}</li>

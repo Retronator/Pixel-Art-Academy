@@ -7,6 +7,9 @@ class AM.Document extends Document
   @Meta: (meta) ->
     super
 
+    # This stores registered subclasses for this Document class.
+    @_documentClasses = {}
+
     return if meta.abstract
 
     # Referrers are incoming references from other documents.
@@ -14,6 +17,11 @@ class AM.Document extends Document
 
     # Analyze field references to add the referrers, after all documents have been defined.
     Document.prepare => @_analyzeFields @Meta.fields, ''
+
+    # Add convenience method to find and fetch documents with one call.
+    @documents.fetch = =>
+      cursor = @documents.find arguments...
+      cursor.fetch()
 
   @_analyzeFields: (source, path) ->
     for fieldName, field of source
@@ -66,18 +74,33 @@ class AM.Document extends Document
     return new AB.Method
       name: "#{@id()}.#{name}"
 
-  @subscription: (name) ->
-    return new AB.Subscription
+  @subscription: (name, options) ->
+    return new AB.Subscription _.extend {}, options,
       name: "#{@id()}.#{name}"
 
-  @_documentClasses: {}
+  @register: (typeName, documentClass) ->
+    throw new AE.ArgumentNullException "You must specify a document class." unless documentClass
+
+    # Make sure the document class inherits from Document.
+    throw new AE.ArgumentException "Provided document class is not a Document." unless documentClass.prototype instanceof Document
+
+    # Save the document class to our map.
+    @_documentClasses[typeName] = documentClass
+
+  @getClassForType: (typeName) ->
+    # Retrieve the document class from the map.
+    @_documentClasses[typeName]
+
+  # Returns all registered type names.
+  @getTypes: ->
+    _.keys @_documentClasses
 
   # Casting functionality based on implementation by @mitar.
   cast: (typeFieldName = 'type') ->
     throw new AE.InvalidOperationException "Document doesn't have the type field '#{typeFieldName}'." unless @[typeFieldName]
 
     # Get the constructor for the specified type.
-    documentConstructor = @constructor.getClass @[typeFieldName]
+    documentConstructor = @constructor.getClassForType @[typeFieldName]
     return null unless documentConstructor
 
     # We don't have to do anything if we're already created with the target constructor.
@@ -90,19 +113,6 @@ class AM.Document extends Document
 
     # Return the document with the correct class.
     new documentConstructor documentData
-
-  @register: (typeName, documentClass) ->
-    throw new AE.ArgumentNullException "You must specify a document class." unless documentClass
-
-    # Make sure the document class inherits from Document.
-    throw new AE.ArgumentException "Provided document class is not a Document." unless documentClass.prototype instanceof Document
-
-    # Save the document class to our map.
-    @_documentClasses[typeName] = documentClass
-
-  @getClass: (typeName) ->
-    # Retrieve the document class from the map.
-    @_documentClasses[typeName]
 
   # Refresh functionality based on implementation by @mitar.
   refresh: (fields) ->

@@ -42,14 +42,20 @@ class LOI.Parser.CommandResponse
       # Expand keys and avatars into translated strings.
       for formPart, i in form
         translatedStrings = for alias in formPart
-          if _.isString alias
+          if alias is '""'
+            # We have a quotation, so find them in the command itself.
+            @options.command.command.match(/"[^"]+"/g) or []
+
+          else if _.isString alias
             # We have a phrase key.
             phraseKey = alias
             @options.parser.vocabulary.getPhrases phraseKey
 
-          else if alias instanceof LOI.Avatar or alias instanceof LOI.Adventure.Thing
-            # We have an avatar (or a thing that has the same name methods as the avatar).
-            avatar = alias
+          else if alias instanceof LOI.Avatar or alias instanceof LOI.Adventure.Thing or alias.possessive
+            # We have an avatar (or a thing that has the same name methods as the avatar). We also allow sending the
+            # avatar in an object with a possessive field, which indicates we need to create possessive forms of the
+            # phrases.
+            avatar = alias.possessive or alias
 
             # We create all possible name phrase sequences out of the short and full name.
             normalizeAvatarName = (name) -> _.toLower _.deburr name
@@ -57,7 +63,12 @@ class LOI.Parser.CommandResponse
             shortNamePhrases = AB.Helpers.generatePhrases text: normalizeAvatarName avatar.shortName()
             fullNamePhrases = AB.Helpers.generatePhrases text: normalizeAvatarName avatar.fullName()
 
-            _.union shortNamePhrases, fullNamePhrases
+            phrases = _.union shortNamePhrases, fullNamePhrases
+
+            # TODO: Localize for other than English.
+            phrases = (AB.Rules.English.createPossessive phrase for phrase in phrases) if alias.possessive
+
+            phrases
 
           else
             console.error "Unknown phrase form part.", alias

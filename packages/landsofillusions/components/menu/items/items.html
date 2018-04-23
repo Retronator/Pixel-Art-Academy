@@ -1,5 +1,5 @@
 <template name="LandsOfIllusions.Components.Menu.Items">
-  <ul class="lands-of-illusions-components-menu-items">
+  <ul class="landsofillusions-components-menu-items">
     {{#if inMainMenu}}
       {{#if aboutVisible}}
         <li class="menu-item">
@@ -31,9 +31,7 @@
           off
         {{/if}}
       </span></li>
-      {{#if settingsVisible}}
-        <li class="menu-item"><span class="settings actionable">Settings</span></li>
-      {{/if}}
+      <li class="menu-item"><span class="settings actionable">Settings</span></li>
       {{#if pressVisible}}
         <li class="menu-item">
           <a class="press actionable" href="{{routerPath 'PixelArtAcademy.LandingPage.Pages.Press'}}" target="_blank">
@@ -53,9 +51,25 @@
       {{/if}}
     {{/if}}
     {{#if inSettings}}
+      {{!
       <li class="language menu-item">
         Language: English
       </li>
+      }}
+      <li class="graphics-scale menu-item">
+        Pixel scale:
+        {{#if graphicsMaximumScale}}
+          <button class="previous-button">◀</button>
+        {{/if}}
+        {{#if graphicsMaximumScale}}
+          {{graphicsMaximumScale}}x
+        {{else}}
+          Auto
+        {{/if}}
+        <button class="next-button">▶</button>
+      </li>
+      <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
+      {{!--
       <li class="menu-item"><span class="audio actionable">
         Audio:
         {{#if audioOn}}on{{/if}}
@@ -68,7 +82,37 @@
       <li class="music menu-item">
         Music: <input type="range" min="0" max="100" step="10" value="{{musicLevel}}"/>
       </li>
-      <li class="menu-item"><span class="back actionable">Back</span></li>
+      --}}
+      <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
+    {{/if}}
+    {{#if inPermissions}}
+      <li class="menu-item"><span class="permissions-persist-settings actionable">
+        Save settings: {{> LandsOfIllusions.Components.Menu.Items.Permission permissionsPersistSettings}}
+      </span></li>
+      <li class="menu-item"><span class="permissions-persist-game-state actionable">
+        Save game state: {{> LandsOfIllusions.Components.Menu.Items.Permission permissionsPersistGameState}}
+      </span></li>
+      <li class="menu-item"><span class="permissions-persist-command-history actionable">
+        Save command history: {{> LandsOfIllusions.Components.Menu.Items.Permission permissionsPersistCommandHistory}}
+      </span></li>
+      <li class="menu-item"><span class="permissions-persist-login actionable">
+        Remember signed-in user: {{> LandsOfIllusions.Components.Menu.Items.Permission permissionsPersistLogin}}
+      </span></li>
+      <li class="menu-item"><span class="back-to-settings actionable">Back</span></li>
     {{/if}}
   </ul>
+</template>
+
+<template name="LandsOfIllusions.Components.Menu.Items.Permission">
+  <span class="landsofillusions-components-menu-items-permission">
+    {{#if $is this true}}
+      yes
+    {{else}}
+      {{#if $is this false}}
+        no
+      {{else}}
+        ask
+      {{/if}}
+    {{/if}}
+  </span>
 </template>

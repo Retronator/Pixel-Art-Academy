@@ -1,6 +1,6 @@
 AE = Artificial.Everywhere
 AT = Artificial.Telepathy
-StripeAPI = Npm.require 'stripe'
+StripeAPI = require 'stripe'
 
 # Stripe API wrapper.
 class AT.Stripe

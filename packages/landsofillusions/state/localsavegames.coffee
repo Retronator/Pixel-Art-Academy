@@ -18,7 +18,11 @@ LOI.load = (slot) ->
     return
 
   state = EJSON.parse encodedValue
-  LOI.adventure.replaceGameState state
+
+  # Replace the game state locally. Do not use replaceGameState because that one starts a new game essentially
+  # (destroys read-only state) and is meant to be used when the user wants to really overwrite their save state.
+  _.extend LOI.adventure.gameState(), state
+  LOI.adventure.gameState.updated()
 
   # Move user to the last location saved to the state. We do this only on load so that multiple players using
   # the same account can move independently, at least inside the current session (they will get synced again on

@@ -94,16 +94,11 @@ class LOI.Interface.Text extends LOI.Interface
 
   # Query this to see if the interface is listening to user commands.
   active: ->
-    # The text interface is inactive when there are any modal dialogs.
-    return if LOI.adventure.modalDialogs().length
+    # The text interface is inactive when adventure is paused.
+    return if LOI.adventure.paused()
 
     # It's inactive when there is an item active.
     return if LOI.adventure.activeItem()
-
-    # It's also inactive when we're in any of the accounts-ui flows/dialogs.
-    accountsUiSessionVariables = ['inChangePasswordFlow', 'inMessageOnlyFlow', 'resetPasswordToken', 'enrollAccountToken', 'justVerifiedEmail', 'justResetPassword', 'configureLoginServiceDialogVisible', 'configureOnDesktopVisible']
-    for variable in accountsUiSessionVariables
-      return if Accounts._loginButtonsSession.get variable
 
     true
     
@@ -119,8 +114,11 @@ class LOI.Interface.Text extends LOI.Interface
     _.some busyConditions
     
   # Use to get back to the initial state with full location description.
-  resetInterface: (options = {}) ->
+  reset: (options = {}) ->
     options.resetIntroduction ?= true
+
+    # Clear the current context.
+    LOI.adventure.exitContext()
 
     @_lastNode null
     @_pausedNode null
@@ -157,9 +155,71 @@ class LOI.Interface.Text extends LOI.Interface
     
     conditions = _.flattenDeep [
       avatar.ready() for avatar in exitAvatars
+      subscription.ready() for subscription in @_actionTranslationSubscriptions
     ]
 
     _.every conditions
+
+  commandBeforeCaret: ->
+    # WARNING: The output of this function should be HTML escaped
+    # since the results will be directly injected with triple braces.
+    commandBeforeCaret = @commandInput.commandBeforeCaret()
+
+    @_insertQuotedStringSpans commandBeforeCaret
+
+  commandAfterCaret: ->
+    # WARNING: The output of this function should be HTML escaped
+    # since the results will be directly injected with triple braces.
+    commandBeforeCaret = @commandInput.commandBeforeCaret()
+    commandAfterCaret = @commandInput.commandAfterCaret()
+
+    # See if we have an odd number of quotes in the before part.
+    numberOfQuotesBefore = _.sumBy commandBeforeCaret, (character) => if character is '"' then 1 else 0
+    hangingQuote = numberOfQuotesBefore % 2
+
+    # Close the quotes if all together there are an odd number of quotes.
+    numberOfQuotesAfter = _.sumBy commandAfterCaret, (character) => if character is '"' then 1 else 0
+    if (numberOfQuotesBefore + numberOfQuotesAfter) % 2
+      commandAfterCaret += '"'
+
+    @_insertQuotedStringSpans commandAfterCaret, hangingQuote
+
+  _insertQuotedStringSpans: (string, hangingQuote) ->
+    # NOTE: The output of this function is HTML escaped and can be used directly injected with triple braces.
+    result = ''
+
+    # Open span at the start since we need to return self-contained valid html.
+    result += "<span class='quoted-string'>" if hangingQuote
+
+    for character in string
+      if character is '"'
+        if hangingQuote
+          # Close the hanging quote.
+          result += "</span>&quot;"
+
+        else
+          # Open the quote span.
+          result += "&quot;<span class='quoted-string'>"
+
+        hangingQuote = not hangingQuote
+
+      else
+        result += AM.HtmlHelper.escapeText character
+
+    # Close span at the end since we need to return self-contained valid html.
+    result += "</span>" if hangingQuote
+
+    result
+
+  capturePaste: (handler) ->
+    @_pasteCaptureHandler = handler
+    @$('.dummy-input').focus()
+
+    # Remove it if it doesn't get immediately handled (for example, if dummy input was not focused).
+    Meteor.setTimeout =>
+      @_pasteCaptureHandler = null
+    ,
+      100
 
   events: ->
     super.concat
@@ -173,6 +233,7 @@ class LOI.Interface.Text extends LOI.Interface
       'click .exits .exit .name': @onClickExit
       'mouseenter .text-interface': @onMouseEnterTextInterface
       'mouseleave .text-interface': @onMouseLeaveTextInterface
+      'input .dummy-input': @onInputDummyInput
 
   onMouseEnterCommand: (event) ->
     @hoveredCommand $(event.target).attr 'title'
@@ -237,3 +298,15 @@ class LOI.Interface.Text extends LOI.Interface
 
   onMouseLeaveTextInterface: (event) ->
     Meteor.clearInterval @_crossHairAnimation
+
+  onInputDummyInput: (event) ->
+    $dummyInput = $(event.target)
+    value = $dummyInput.val()
+
+    if @_pasteCaptureHandler
+      # Report the pasted text to the caller.
+      @_pasteCaptureHandler value
+      @_pasteCaptureHandler = null
+
+    # Clear the content so we don't contaminate further pastes.
+    $dummyInput.val ''

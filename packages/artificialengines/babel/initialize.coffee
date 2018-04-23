@@ -5,11 +5,7 @@ setLanguagePreference = ->
   languagePreference = null
   
   if Meteor.isClient
-    # On the client, try to load the language preference from local storage.
-    storedLanguagePreference = localStorage.getItem AB.LanguagePreferenceLocalStorageKey
-    languagePreference = EJSON.parse storedLanguagePreference if storedLanguagePreference
-
-    # If we didn't have it stored yet, we can look at the navigator properties.
+    # On the client, we can initialize with the navigator properties.
     languagePreference ?= navigator.languages
     languagePreference ?= [navigator.language] if navigator.language
   

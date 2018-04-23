@@ -21,12 +21,18 @@ Package.onUse(function(api) {
 
   // Locations
 
-  api.addFile('entrance/entrance');
-  api.addFile('hallway/hallway');
+  api.addFile('entrance..');
+  api.addFile('hallway..');
 
-  api.addFile('studio/studio');
-  api.addComponent('studio/computer/computer');
-  api.addComponent('studio/computer/screens/desktop/desktop');
-  api.addComponent('studio/computer/screens/browser/browser');
-  api.addComponent('studio/computer/screens/game/game');
+  api.addFile('studio..');
+  api.addThing('studio/bed');
+  api.addThing('studio/emailnotification');
+
+  api.addComponent('studio/computer..');
+  api.addComponent('studio/computer/app..');
+  api.addComponent('studio/computer/screens/desktop..');
+  api.addComponent('studio/computer/screens/browser..');
+  api.addComponent('studio/computer/screens/email..');
+  api.addComponent('studio/computer/screens/game..');
+
 });

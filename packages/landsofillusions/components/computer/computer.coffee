@@ -34,7 +34,7 @@ class LOI.Components.Computer extends LOI.Adventure.Item
 
       else
         # None of the special cases occurred, close the terminal as usual.
-        LOI.adventure.deactivateCurrentItem()
+        LOI.adventure.deactivateActiveItem()
 
   events: ->
     super.concat

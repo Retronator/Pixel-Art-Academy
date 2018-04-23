@@ -4,7 +4,7 @@ Package.describe({
   // Brief, one-line summary of the package.
   summary: 'Game engine for Pixel Art Academy, Retropolis and beyond.',
   // URL to the Git repository containing the source code for this package.
-  git: 'https://github.com/Retronator/Lands-of-Illusions.git',
+  git: 'https://github.com/Retronator/Landsofillusions.git',
   // By default, Meteor will default to using README.md for documentation.
   // To avoid submitting documentation, set this field to null.
   documentation: 'README.md'
@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
+  api.use('chfritz:easycron');
   api.use('promise');
   api.use('modules');
 
@@ -21,29 +22,41 @@ Package.onUse(function(api) {
 
   api.export('LandsOfIllusions');
 
-  api.addFiles('landsofillusions.coffee');
+  api.addFile('landsofillusions');
 
   // Authorize
 
-  api.addFiles('authorize/authorize.coffee');
-  api.addFiles('authorize/user.coffee');
-  api.addFiles('authorize/character.coffee');
+  api.addFile('authorize/authorize');
+  api.addFile('authorize/user');
+  api.addFile('authorize/character');
+
+  // Settings
+
+  api.addFile('settings..');
+  api.addFile('settings/field');
+  api.addFile('settings/consentfield');
+
+  // Initialize client after settings have been defined.
+  api.addClientFile('initialize-client');
 
   // Game state
 
-  api.addFiles('state/gamestate.coffee');
-  api.addFiles('state/localgamestate.coffee');
-  api.addFiles('state/methods.coffee');
-  api.addFiles('state/subscriptions.coffee', 'server');
-  api.addFiles('state/stateobject.coffee');
-  api.addFiles('state/statefield.coffee');
-  api.addFiles('state/stateaddress.coffee');
-  api.addFiles('state/stateinstances.coffee');
-  api.addFiles('state/ephemeralstateobject.coffee');
-  api.addFiles('state/localsavegames.coffee');
+  api.addFile('state/gamestate');
+  api.addServerFile('state/gamestate-events-server');
+  api.addFile('state/localgamestate');
+  api.addFile('state/methods');
+  api.addServerFile('state/subscriptions');
+  api.addFile('state/stateobject');
+  api.addFile('state/statefield');
+  api.addFile('state/stateaddress');
+  api.addFile('state/stateinstances');
+  api.addFile('state/ephemeralstateobject');
+  api.addFile('state/localsavegames');
 
   api.addServerFile('state/migrations/0000-immersionrevamp');
   api.addServerFile('state/migrations/0001-renamecollection');
+  api.addServerFile('state/migrations/0002-gametime');
+  api.addServerFile('state/migrations/0003-addinggamestatefields');
 
   // Avatar
 
@@ -150,73 +163,68 @@ Package.onUse(function(api) {
   api.addFile('character/behavior/parts/perks/competitor');
   api.addFile('character/behavior/parts/perks/teammate');
 
+  // Group
+
+  api.addFile('character/group..');
+  api.addFile('character/group/methods');
+  api.addServerFile('character/group/subscriptions');
+
+  // Membership
+
+  api.addFile('character/membership..');
+
   // User
 
   api.addFile('user/user');
   api.addServerFile('user/subscriptions');
 
-  // Conversations
-
-  api.addFile('conversations/conversations');
-
-  api.addFile('conversations/conversation/conversation');
-  api.addFile('conversations/conversation/methods');
-  api.addServerFile('conversations/conversation/subscriptions');
-  api.addServerFile('conversations/conversation/migrations/0000-renamecollection');
-  api.addServerFile('conversations/conversation/migrations/0001-linesreversereferencefieldsupdate');
-
-  api.addFile('conversations/line/line');
-  api.addFile('conversations/line/methods');
-  api.addServerFile('conversations/line/subscriptions');
-  api.addServerFile('conversations/line/migrations/0000-renamecollection');
-  api.addServerFile('conversations/line/migrations/0001-characterreferencefieldsupdate');
-  api.addServerFile('conversations/line/migrations/0002-removecharacternamefield');
-
   // Parser
 
-  api.addFiles('parser/parser.coffee');
-  api.addFiles('parser/parser-likelyactions.coffee');
-  api.addFiles('parser/command.coffee');
-  api.addFiles('parser/commandresponse.coffee');
-  api.addFiles('parser/enterresponse.coffee');
-  api.addFiles('parser/exitresponse.coffee');
+  api.addFile('parser..');
+  api.addFile('parser/parser-likelyactions');
+  api.addFile('parser/command');
+  api.addFile('parser/commandresponse');
+  api.addFile('parser/enterresponse');
+  api.addFile('parser/exitresponse');
 
-  api.addFiles('parser/vocabulary/vocabulary.coffee');
-  api.addFiles('parser/vocabulary/vocabularykeys.coffee');
-  api.addFiles('parser/vocabulary/english-server.coffee', 'server');
+  api.addFile('parser/vocabulary/vocabulary');
+  api.addFile('parser/vocabulary/vocabularykeys');
+  api.addServerFile('parser/vocabulary/english-server');
 
   // Director
 
-  api.addFiles('director/director.coffee');
+  api.addFile('director..');
 
   // Adventure
 
-  api.addFiles('adventure/adventure.html');
-  api.addFiles('adventure/adventure.styl');
-  api.addFiles('adventure/adventure.coffee');
-  api.addFiles('adventure/adventure-routing.coffee');
-  api.addFiles('adventure/adventure-state.coffee');
-  api.addFiles('adventure/adventure-location.coffee');
-  api.addFiles('adventure/adventure-timeline.coffee');
-  api.addFiles('adventure/adventure-item.coffee');
-  api.addFiles('adventure/adventure-inventory.coffee');
-  api.addFiles('adventure/adventure-episodes.coffee');
-  api.addFiles('adventure/adventure-things.coffee');
-  api.addFiles('adventure/adventure-listeners.coffee');
-  api.addFiles('adventure/adventure-time.coffee');
-  api.addFiles('adventure/adventure-dialogs.coffee');
+  api.addComponent('adventure..');
+  api.addFile('adventure/adventure-routing');
+  api.addFile('adventure/adventure-state');
+  api.addFile('adventure/adventure-memories');
+  api.addFile('adventure/adventure-location');
+  api.addFile('adventure/adventure-context');
+  api.addFile('adventure/adventure-timeline');
+  api.addFile('adventure/adventure-item');
+  api.addFile('adventure/adventure-inventory');
+  api.addFile('adventure/adventure-episodes');
+  api.addFile('adventure/adventure-things');
+  api.addFile('adventure/adventure-listeners');
+  api.addFile('adventure/adventure-time');
+  api.addFile('adventure/adventure-dialogs');
+  api.addFile('adventure/adventure-assets');
+  api.addFile('adventure/adventure-groups');
 
   // Initalization gets included last because it does component registering as the last child in the chain.
-  api.addFiles('adventure/adventure-initialization.coffee');
+  api.addFile('adventure/adventure-initialization');
 
   // Situations
 
-  api.addFiles('adventure/situation/situation.coffee');
-  api.addFiles('adventure/situation/circumstance.coffee');
+  api.addFile('adventure/situation..');
+  api.addFile('adventure/situation/circumstance');
 
   // Listener
 
-  api.addFiles('adventure/listener/listener.coffee');
+  api.addFile('adventure/listener..');
   
   // Thing
 
@@ -248,35 +256,89 @@ Package.onUse(function(api) {
   api.addFiles('adventure/script/nodes/conditional.coffee');
   api.addFiles('adventure/script/nodes/jump.coffee');
   api.addFiles('adventure/script/nodes/choice.coffee');
+  api.addFiles('adventure/script/nodes/choiceplaceholder.coffee');
   api.addFiles('adventure/script/nodes/timeout.coffee');
   api.addFiles('adventure/script/nodes/pause.coffee');
 
   api.addFiles('adventure/script/parser/parser.coffee');
 
-  // Character instance (inherits from Thing and uses Script)
+  // Character instance (inherits from Thing and uses Script) and derivatives
 
   api.addFile('character/instance');
+  api.addFile('character/person');
 
   // Storylines
 
-  api.addFiles('adventure/global/global.coffee');
-  api.addFiles('adventure/episode/episode.coffee');
-  api.addFiles('adventure/section/section.coffee');
-  api.addComponent('adventure/chapter/chapter');
-  api.addFiles('adventure/scene/scene.coffee');
+  api.addFile('adventure/global..');
+  api.addFile('adventure/episode..');
+  api.addFile('adventure/section..');
+  api.addComponent('adventure/chapter..');
+  api.addFile('adventure/scene..');
 
   // Locations and inventory
 
-  api.addFiles('adventure/region/region.coffee');
-  api.addFiles('adventure/location/location.coffee');
-  api.addFiles('adventure/location/inventory.coffee');
+  api.addFile('adventure/region..');
+  api.addFile('adventure/location..');
+  api.addFile('adventure/location/inventory');
+
+  // Groups
+
+  api.addFile('adventure/group..');
+
+  // Events
+  
+  api.addFile('adventure/event..');
+  api.addFile('adventure/event/stopevent');
+
+  // Context
+
+  api.addFile('adventure/context..');
+
+  // People (requires adventure global)
+
+  api.addFile('character/people');
+
+  // Memories (requires adventure context and script nodes)
+
+  api.addFile('memory..');
+  api.addFile('memory/methods');
+  api.addServerFile('memory/subscriptions');
+  api.addServerFile('memory/migrations/0000-renamecollection');
+  api.addServerFile('memory/migrations/0001-linesreversereferencefieldsupdate');
+  api.addServerFile('memory/migrations/0002-renamecollection');
+  api.addServerFile('memory/migrations/0003-changetomemories');
+  api.addServerFile('memory/migrations/0004-actionsreversereferencefieldadded');
+
+  api.addFile('memory/context');
+  api.addFile('memory/contexts..');
+  api.addFile('memory/contexts/conversation..');
+  api.addComponent('memory/contexts/conversation/memorypreview..');
+
+  api.addFile('memory/action..');
+  api.addFile('memory/action/methods');
+  api.addServerFile('memory/action/subscriptions');
+  api.addServerFile('memory/action/migrations/0000-renamecollection');
+  api.addServerFile('memory/action/migrations/0001-characterreferencefieldsupdate');
+  api.addServerFile('memory/action/migrations/0002-removecharacternamefield');
+  api.addServerFile('memory/action/migrations/0003-renamecollection');
+  api.addServerFile('memory/action/migrations/0004-changetomemories');
+
+  api.addFile('memory/actions..');
+  api.addFile('memory/actions/move');
+  api.addFile('memory/actions/leave');
+  api.addFile('memory/actions/say');
+
+  api.addFile('memory/progress..');
+  api.addFile('memory/progress/methods');
+  api.addServerFile('memory/progress/subscriptions');
 
   // Parser Listeners
 
-  api.addFiles('parser/listeners/debug.coffee');
-  api.addFiles('parser/listeners/navigation.coffee');
-  api.addFiles('parser/listeners/description.coffee');
-  api.addFiles('parser/listeners/looklocation.coffee');
+  api.addFile('parser/listeners/debug');
+  api.addFile('parser/listeners/navigation');
+  api.addFile('parser/listeners/description');
+  api.addFile('parser/listeners/looklocation');
+  api.addFile('parser/listeners/conversation');
 
   // Interface
 
@@ -306,56 +368,74 @@ Package.onUse(function(api) {
 
   // Components
 
-  api.addFiles('components/components.coffee');
+  api.addFile('components..');
 
-  api.addFile('components/mixins/mixins');
-  api.addFile('components/mixins/activatable/activatable');
+  api.addFile('components/mixins..');
+  api.addFile('components/mixins/activatable..');
 
-  api.addComponent('components/overlay/overlay');
-  api.addComponent('components/backbutton/backbutton');
-  api.addComponent('components/signin/signin');
-  api.addComponent('components/storylinetitle/storylinetitle');
+  api.addComponent('components/overlay..');
+  api.addComponent('components/backbutton..');
+  api.addComponent('components/signin..');
+  api.addComponent('components/storylinetitle..');
+  api.addComponent('components/hand..');
 
-  api.addComponent('components/menu/menu');
-  api.addComponent('components/menu/items/items');
+  api.addComponent('components/menu..');
+  api.addComponent('components/menu/items..');
 
-  api.addComponent('components/account/account');
+  api.addComponent('components/account..');
   api.addFile('components/account/account-page');
   api.addStyle('components/account/account-pagecontent');
 
-  api.addComponent('components/account/contents/contents');
-  api.addComponent('components/account/general/general');
-  api.addComponent('components/account/services/services');
-  api.addComponent('components/account/characters/characters');
-  api.addComponent('components/account/inventory/inventory');
-  api.addComponent('components/account/transactions/transactions');
-  api.addComponent('components/account/paymentmethods/paymentmethods');
+  api.addComponent('components/account/contents..');
+  api.addComponent('components/account/general..');
+  api.addComponent('components/account/services..');
+  api.addComponent('components/account/characters..');
+  api.addComponent('components/account/inventory..');
+  api.addComponent('components/account/transactions..');
+  api.addComponent('components/account/paymentmethods..');
 
   api.addStyle('components/dialogs/accounts');
   api.addComponent('components/dialogs/dialog');
   
-  api.addComponent('components/translationinput/translationinput');
-  api.addUnstyledComponent('components/sprite/sprite');
-  api.addUnstyledComponent('components/computer/computer');
+  api.addComponent('components/translationinput..');
+  api.addUnstyledComponent('components/sprite..');
+  api.addUnstyledComponent('components/computer..');
 
-  api.addUnstyledComponent('components/embeddedwebpage/embeddedwebpage');
+  api.addUnstyledComponent('components/embeddedwebpage..');
 
   // Typography
 
-  api.addFiles('typography/typography.css', 'client');
-  api.addFiles('typography/typography.import.styl', 'client', {isImport:true});
+  api.addCss('typography..');
+  api.addStyleImport('typography..');
 
   // Styles
 
-  api.addFiles('style/style.import.styl', 'client', {isImport:true});
-  api.addFiles('style/atari2600.import.styl', 'client', {isImport:true});
-  api.addFiles('style/cursors.import.styl', 'client', {isImport:true});
-  api.addFiles('style/cursors.styl');
-  api.addFiles('style/defaults.styl');
+  api.addStyleImport('style..');
+  api.addStyleImport('style/atari2600');
+  api.addStyleImport('style/cursors');
+  api.addStyle('style/cursors');
+  api.addStyle('style/defaults');
 
   // Helpers
 
-  api.addFiles('helpers/spacebars.coffee');
-  api.addFiles('helpers/lodash.coffee');
+  api.addFile('helpers/spacebars');
+  api.addFile('helpers/lodash');
+  
+  // Emails
+
+  api.addFile('emails..');
+  api.addFile('emails/email');
+  api.addServerFile('emails/email-server');
+  api.addFile('emails/inbox');
+
+  // Time
+
+  api.addFile('time..');
+  api.addFile('time/gamedate');
+
+  // Simulation
+
+  api.addFile('simulation..');
+  api.addServerFile('simulation/server');
 
 });

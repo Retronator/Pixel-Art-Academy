@@ -39,10 +39,14 @@ class LOI.Adventure extends LOI.Adventure
 
     @_initializeState()
 
+    # Memories need to be initialized first because timeline and location depends on the display of a memory.
+    @_initializeMemories()
+
     # Timeline needs to be initialized before location, because the logic
     # for missing locations depends on the timeline to know where to move you.
     @_initializeTimeline()
     @_initializeLocation()
+    @_initializeContext()
 
     @_initializeActiveItem()
     @_initializeEpisodes()
@@ -50,6 +54,8 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeThings()
     @_initializeListeners()
     @_initializeTime()
+    @_initializeAssets()
+    @_initializeGroups()
 
     LOI.adventureInitialized true
 

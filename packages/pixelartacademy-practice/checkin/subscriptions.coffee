@@ -25,14 +25,14 @@ PAA.Practice.CheckIn.forDateRange.publish (dateRange) ->
     sort:
       time: -1
 
-PAA.Practice.CheckIn.conversationsForCheckInId.publish (checkInId) ->
+PAA.Practice.CheckIn.memoriesForCheckInId.publish (checkInId) ->
   check checkInId, Match.DocumentId
 
   @autorun =>
     checkIn = PAA.Practice.CheckIn.documents.findOne checkInId,
       fields:
-        conversations: 1
+        memories: 1
 
-    return LOI.Conversations.Conversation.documents.find
+    return LOI.Memory.documents.find
       _id:
-        $in: checkIn?.conversations or []
+        $in: checkIn?.memories or []

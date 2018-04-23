@@ -1,0 +1,37 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-items-sync-memories-components-actionspreview
+  .characters
+    list-style none
+    padding 0
+
+    .character
+      .image
+        position relative
+        width 16rem
+        height 64rem
+
+  .actions-area
+    &::after
+      content ''
+      absolute-cover()
+      background linear-gradient(to bottom, atariGrey(0) 0%, transparent 50%)
+
+    .actions
+      list-style none
+      padding 0
+
+.memory.updated
+  .landsofillusions-items-sync-memories-components-actionspreview
+    .actions-area::after
+      background linear-gradient(to bottom, atariAqua(0) 0%, transparent 50%)
+
+  .preview:hover
+    .landsofillusions-items-sync-memories-components-actionspreview
+      .actions-area::after
+        background linear-gradient(to bottom, atariAqua(1) 0%, transparent 50%)
+
+.preview:hover
+  .landsofillusions-items-sync-memories-components-actionspreview
+    .actions-area::after
+      background linear-gradient(to bottom, atariCyan(0) 0%, transparent 50%)

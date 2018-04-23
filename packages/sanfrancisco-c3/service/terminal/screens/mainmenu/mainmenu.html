@@ -1,0 +1,25 @@
+<template name="SanFrancisco.C3.Service.Terminal.MainMenu">
+  <div class="sanfrancisco-c3-service-terminal-mainmenu screen">
+    <h1 class="screen-title">Welcome to the Cyborg Construction Center</h1>
+    <p class="main-text">
+      This terminal allows you to manage your agents and add new ones from our
+      pre-made models. To design your own agents, talk to the receptionist and visit Design Control.
+    </p>
+    <div class="ai-agents section">
+      <h2 class="section-title">Your agents</h2>
+      <ul class="document-selection">
+        {{#each characters}}
+          <li class="document">
+            <button class="document-selection-button character-selection-button">
+              {{avatar.fullName}}
+              {{#unless document.activated}} (draft){{/unless}}
+            </button>
+          </li>
+        {{/each}}
+      </ul>
+      <div class="actions">
+        <button class="action-button new-character-button">Add agent</button>
+      </div>
+    </div>
+  </div>
+</template>

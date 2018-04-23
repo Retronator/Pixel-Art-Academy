@@ -8,6 +8,7 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
     shortName: 'shortName'
     descriptiveName: 'descriptiveName'
     description: 'description'
+    storeDescription: 'storeDescription'
 
   # Initialize database parts of an avatar.
   @initialize: (options) ->
@@ -59,3 +60,6 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
   _translateIfAvailable: (key) ->
     translated = AB.translate @_translationSubscription, key
     if translated.language then translated.text else null
+
+  getTranslation: (key) ->
+    AB.existingTranslation @_translationSubscription, key

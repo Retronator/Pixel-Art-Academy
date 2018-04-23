@@ -62,11 +62,11 @@ class C2.Immersion.Room extends LOI.Adventure.Scene
         complete()
 
       ActivateHeadset: (complete) =>
-        LOI.adventure.getCurrentThing(HQ.Items.Sync).activate()
+        LOI.adventure.getCurrentThing(HQ.Items.OperatorLink).activate()
         complete()
 
       DeactivateHeadset: (complete) =>
-        LOI.adventure.getCurrentThing(HQ.Items.Sync).deactivate()
+        LOI.adventure.getCurrentThing(HQ.Items.OperatorLink).deactivate()
         complete()
 
       FirstImmersion: (complete) =>

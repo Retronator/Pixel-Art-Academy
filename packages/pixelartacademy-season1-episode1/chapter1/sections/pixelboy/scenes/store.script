@@ -1,0 +1,96 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.PixelBoy.Store
+
+## PickUpPixelBoyChoice
+
+* I came to pick up a PixelBoy.
+
+-> [GetOne] `IntroductionDone`
+
+## IntroductionDone
+
+retro: Ah, yeah, I was expecting you. _char_, right?
+
+-> [AreYouChar]
+
+## HereIsThePixelBoyChoice
+
+* Here is the PixelBoy.
+
+retro: Alright, let me link it with the Academy …
+
+-> [EnterDevice]
+
+## GetPixelBoyFree
+
+retro: Alright, let me link the PixelBoy with the Academy …
+  
+-> [EnterDevice]
+
+## GetPixelBoyFreeNotIntroduced
+
+retro: 
+  Ah, I see you're getting the new PixelBoy.
+  You wouldn't be _char_ by any chance?
+  
+## AreYouChar
+  
+* Yeah, that's me! -> [Yeah]
+* How did you know? -> [How]
+
+## Yeah
+
+retro:
+  Hey, nice to meet you. 
+  I saw you got accepted to start admission week for Retropolis Academy of Art.
+  
+-> [Free]
+
+## How
+
+retro:
+  Well, I saw your name added to the list of people accepted to admission week for Retropolis Academy of Art, so it was worth a guess.
+  
+-> [Free]
+
+## Free
+
+retro: This means the PixelBoy is yours for the week, on the house!
+
+-> [GetOne] `not _pixelBoyInCart`
+  
+retro: Let me just scan the serial number …
+  
+## EnterDevice
+
+> Retro enters the device information into his computer.
+
+pause
+
+### GivePixelBoy
+
+retro:
+  There you go, I've matched it to your student account so it'll be personalized to you as soon as it boots up.
+  Just activate it when you're ready, and admission week will start counting.
+  
+* That's awesome, thanks!
+* Thank you very much.
+
+retro: Of course!
+
+-> [CartCheckContinue] `not _shoppingCart.length`
+
+retro: Alright, let me get to the rest of your shopping cart.
+
+## CartCheckContinue
+
+### CartCheckContinue
+
+-> [End]
+
+## GetOne
+
+retro: Just pick one from the shelf over there and bring it to me.
+
+-> [End]
+
+## End

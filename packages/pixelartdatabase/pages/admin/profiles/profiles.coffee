@@ -1,9 +1,8 @@
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
 PADB = PixelArtDatabase
 
-class PADB.Pages.Admin.Profiles extends PAA.Pages.Admin.Components.AdminPage
+class PADB.Pages.Admin.Profiles extends Artificial.Mummification.Admin.Components.AdminPage
   @register 'PixelArtDatabase.Pages.Admin.Profiles'
 
   constructor: ->

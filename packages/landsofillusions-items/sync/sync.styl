@@ -1,0 +1,60 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-items-sync
+  color atariGrey(5)
+  visibility hidden
+
+  &.visible
+    visibility visible
+
+  .map-tab
+    display none
+
+    &.visible
+      display block
+
+  .landsofillusions-components-overlay
+    .navigation
+      position absolute
+      left 0
+      right 0
+      top 10rem
+      z-index 1
+      text-align center
+      acme-7()
+
+      .tabs
+        list-style none
+        padding 0
+        margin 0
+
+        .tab
+          display inline-block
+          padding 5rem 8rem
+          margin 0 1rem
+          border 1rem solid atariAqua(6)
+          background black
+          cursor pointer
+          text-transform uppercase
+
+          &.active
+            color atariGrey(7)
+            background atariAqua(2)
+            cursor default
+
+          &:hover:not(.active)
+            border-color atariAqua(7)
+            color atariGrey(7)
+
+    .background
+      background-image image('/pixelartacademy/items/sync/background.gif')
+
+.landsofillusions-items-sync-fadecover
+  fixed-cover()
+  background rgba(255, 255, 255, 0)
+  transition background 0.5s
+  pointer-events none
+
+  &.visible
+    background rgba(255, 255, 255, 1)
+    transition background 0.9s

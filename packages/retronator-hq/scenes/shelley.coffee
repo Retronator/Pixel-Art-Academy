@@ -4,10 +4,10 @@ PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class Retronator.HQ.Scenes.Shelley extends LOI.Adventure.Scene
+class HQ.Scenes.Shelley extends LOI.Adventure.Scene
   @id: -> 'Retronator.HQ.Scenes.Shelley'
 
-  @timelineId: -> LOI.TimelineIds.RealLife
+  @timelineId: -> [LOI.TimelineIds.RealLife, LOI.TimelineIds.Present]
 
   @initialize()
 

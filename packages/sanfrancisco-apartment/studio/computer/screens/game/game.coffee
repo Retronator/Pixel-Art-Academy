@@ -5,12 +5,14 @@ Studio = SanFrancisco.Apartment.Studio
 class Studio.Computer.Game extends AM.Component
   @register 'SanFrancisco.Apartment.Studio.Computer.Game'
 
-  constructor: (@computer, @gameName) ->
+  constructor: (@computer, @gameId, @gameName, @embedName) ->
     super
 
-  events: ->
-    super.concat
-      'click .close-button': @onClickCloseButton
+  appId: -> @gameId
+  name: -> @gameName
 
-  onClickCloseButton: (event) ->
+  backButtonCallback: ->
     @computer.switchToScreen @computer.screens.desktop
+
+    # Instruct the back button to cancel closing (so it doesn't disappear).
+    cancel: true

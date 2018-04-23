@@ -32,3 +32,5 @@ class Soma.SecondStreet extends LOI.Adventure.Location
     "#{Vocabulary.Keys.Directions.In}": Retronator.HQ.Cafe
     "#{Vocabulary.Keys.Directions.West}": Retronator.HQ.Cafe
     "#{Vocabulary.Keys.Directions.Northeast}": Soma.Transbay
+    "#{Vocabulary.Keys.Directions.Southeast}": Soma.SecondAndKing
+    "#{Vocabulary.Keys.Directions.Southwest}": Soma.MosconeCenter

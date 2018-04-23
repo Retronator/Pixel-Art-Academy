@@ -1,8 +1,6 @@
 RS = Retronator.Store
 
 class TopRecentTransactions
-  @documents: new Meteor.Collection 'TopRecentTransactions'
-
   constructor: (@publish, @count) ->
     @_sortedTransactions = []
 

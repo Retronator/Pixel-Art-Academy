@@ -14,6 +14,14 @@ class E1.Inventory extends LOI.Adventure.Scene
     super
 
   things: ->
-    [
+    items = [
       HQ.Items.OperatorLink
+      LOI.Items.Sync
+      LOI.Items.Time
     ]
+
+    for itemClass in [PixelArtAcademy.PixelBoy]
+      hasItem = itemClass.state 'inInventory'
+      items.push itemClass if hasItem
+
+    items

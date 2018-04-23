@@ -1,0 +1,19 @@
+<template name="PixelArtAcademy.Practice.Journal.Entry.MemoryPreview">
+  <div class="pixelartacademy-practice-journal-entry-memorypreview">
+    {{#if authorImageUrl}}
+      <img class="author-image" src="{{authorImageUrl}}"/>
+    {{/if}}
+    {{#if imagePreviewUrl}}
+      <div class="image-preview">
+        <img class="image" src="{{imagePreviewUrl}}"/>
+      </div>
+    {{/if}}
+    <div class="icon"></div>
+    <div class="title">
+      Journal entry by {{> t9n journalEntry.journal.character.avatar.fullName}}
+    </div>
+    <div class="actions-preview">
+      {{> LandsOfIllusions.Items.Sync.Memories.Components.ActionsPreview}}
+    </div>
+  </div>
+</template>

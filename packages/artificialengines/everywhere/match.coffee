@@ -8,7 +8,7 @@ Match.Range = (min, max) ->
 
   Match.Where (value) ->
     check value, Number
-    min < value < max
+    min <= value <= max
 
 Match.IntegerRange = (min, max) ->
   check min, Match.Integer
@@ -16,7 +16,7 @@ Match.IntegerRange = (min, max) ->
 
   Match.Where (value) ->
     check value, Match.Integer
-    min < value < max
+    min <= value <= max
 
 Match.NonNegativeNumber = Match.Where (value) ->
   check value, Number

@@ -25,6 +25,11 @@ class LOI.Character extends AM.Document
   #   body: avatar data for character's body representation
   #   outfit: avatar data for character's current clothes/accessories
   # behavior: avatar data for character's behavior design
+  # profile: miscellaneous information that the user is free to edit as they please
+  #   age: integer, 13 to 150
+  #   country: ISO region code
+  #   aspiration: any string
+  #   favorites: an object of strings for various categories
   # designApproved: whether the character has finished the design stage
   # behaviorApproved: whether the character has finished the behavior stage
   # activated: whether the character has been deployed in the world
@@ -53,6 +58,7 @@ class LOI.Character extends AM.Document
   @updateAvatarBody: @method 'updateAvatarBody'
   @updateAvatarOutfit: @method 'updateAvatarOutfit'
   @updateBehavior: @method 'updateBehavior'
+  @updateProfile: @method 'updateProfile'
   @updateContactEmail: @method 'updateContactEmail'
 
   @approveDesign: @method 'approveDesign'
@@ -69,7 +75,8 @@ class LOI.Character extends AM.Document
 
   @instances = {}
   
-  @getInstance: (id) ->
+  @getInstance: (idOrDocument) ->
+    id = idOrDocument?._id or idOrDocument
     return unless id
 
     unless @instances[id]
@@ -78,13 +85,50 @@ class LOI.Character extends AM.Document
 
     @instances[id]
 
-  constructor: ->
-    super
+  @people = {}
 
-    # Create an avatar object so we can use its methods.
-    @_avatar = new @constructor.Avatar @
+  @getPerson: (id) ->
+    unless @people[id]
+      Tracker.nonreactive =>
+        @people[id] = new @Person id
 
-  # Avatar pass-through methods
+    @people[id]
+    
+  @formatText: (text, keyword, character) ->
+    pronouns = character.avatar.pronouns()
 
-  name: -> @_avatar.fullName()
-  colorObject: (relativeShade) -> @_avatar.colorObject relativeShade
+    getPronoun = (key) =>
+      LOI.adventure.parser.vocabulary.getPhrases("Pronouns.#{key}.#{pronouns}")?[0]
+
+    text = text.replace new RegExp("_#{keyword}_", 'g'), (match) ->
+      character.avatar.shortName()
+
+    text = text.replace new RegExp("_#{_.toUpper keyword}_", 'g'), (match) ->
+      _.toUpper character.avatar.shortName()
+
+    text = text.replace new RegExp("_#{keyword}'s_", 'g'), (match) ->
+      # TODO: Add a way to localize possession grammar.
+      name = character.avatar.shortName()
+      lastLetter = _.last name
+      if lastLetter is 's' then "#{name}'" else "#{name}'s"
+
+    for pronounPair in [
+      ['they', 'Subjective']
+      ['them', 'Objective']
+      ['their', 'Adjective']
+      ['theirs', 'Possessive']
+    ]
+      text = text.replace new RegExp("_(t|T)#{pronounPair[0].substring(1)}_", 'g'), (match, pronounCase) ->
+        pronoun = getPronoun pronounPair[1]
+
+        if pronounCase is 'T' then pronoun = _.upperFirst pronoun
+
+        pronoun
+
+    text = text.replace /_are_/g, (match) ->
+      # We assume neutral pronouns use plural verbs.
+      # TODO: Can we make this assumption? Probably depends on language's properties.
+      numberCategory = if pronouns is LOI.Avatar.Pronouns.Neutral then 'Plural' else 'Singular'
+      LOI.adventure.parser.vocabulary.getPhrases("Verbs.Be.Present.3rdPerson.#{numberCategory}")?[0]
+
+    text

@@ -4,7 +4,8 @@ _.mixin
   # Gets or sets a property that can be on a nested object, specified with the dot notation.
   nestedProperty: (object, property, value) ->
     nestedObject = object
-    parts = property.split '.'
+    # We want to split by dots, except those inside quotes (so we can address properties with dots in them).
+    parts = property.match /(?:[^".]+(?=(?:[^"]|"[^"]*")*$)|[^"]+(?!(?:[^"]|"[^"]*")*$))/g
 
     # Is this a setter? We compare to undefined and not just use
     # value? since we want to be able to set the value null to the property.

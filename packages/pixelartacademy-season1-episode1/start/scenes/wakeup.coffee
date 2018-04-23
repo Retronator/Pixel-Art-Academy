@@ -29,10 +29,13 @@ class Start.WakeUp extends LOI.Adventure.Scene
     "#{Vocabulary.Keys.Directions.Out}": Apartment.Hallway
 
   removeThings: ->
+    characterPerson = LOI.Character.getPerson LOI.characterId()
+
     # Don't show things until they open their eyes.
     [
-      LOI.character()
+      characterPerson
       Apartment.Studio.Computer
+      Apartment.Studio.Bed
     ]
 
   giveHint: (delay) ->
@@ -82,7 +85,7 @@ class Start.WakeUp extends LOI.Adventure.Scene
               introStudioScene.listeners[0].startScript()
 
               # Reset the interface to start again from the new intro.
-              LOI.adventure.interface.resetInterface?()
+              LOI.adventure.interface.reset?()
 
               complete()
 

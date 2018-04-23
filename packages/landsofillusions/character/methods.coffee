@@ -142,6 +142,23 @@ LOI.Character.updateBehavior.method (characterId, address, value) ->
 
   updateCharacterPart 'behavior', characterId, address, value
 
+LOI.Character.updateProfile.method (characterId, address, value) ->
+  check characterId, Match.DocumentId
+  check address, String
+  check value, Match.Any
+
+  # Treat empty strings are deletion of value.
+  value = null if value is ''
+
+  if value
+    switch address
+      when 'age' then check value, Match.IntegerRange 13, 150
+      when 'country' then check value, Match.Where (value) -> value in AB.Region.documents.find().map (region) -> region.code
+
+  LOI.Authorize.characterAction characterId
+
+  updateCharacterPart 'profile', characterId, address, value
+  
 LOI.Character.updateContactEmail.method (characterId, emailAddress) ->
   check characterId, Match.DocumentId
   check emailAddress, String

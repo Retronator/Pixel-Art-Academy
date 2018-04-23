@@ -8,6 +8,7 @@ class LOI.Components.Menu.Items extends AM.Component
   @Screens:
     MainMenu: 'MainMenu'
     Settings: 'Settings'
+    Permissions: 'Permissions'
 
   constructor: (@options = {}) ->
     super
@@ -66,9 +67,31 @@ class LOI.Components.Menu.Items extends AM.Component
 
   isFullscreen: ->
     AM.Window.isFullscreen()
+    
+  graphicsMaximumScale: ->
+    LOI.settings.graphics.maximumScale.value()
+
+  inPermissions: ->
+    @currentScreen() is @constructor.Screens.Permissions
+
+  permissionsPersistSettings: ->
+    @_permissionsValue LOI.settings.persistSettings
+
+  permissionsPersistGameState: ->
+    @_permissionsValue LOI.settings.persistGameState
+
+  permissionsPersistCommandHistory: ->
+    @_permissionsValue LOI.settings.persistCommandHistory
+
+  permissionsPersistLogin: ->
+    @_permissionsValue LOI.settings.persistLogin
+
+  _permissionsValue: (consentField) ->
+    if consentField.decided() then consentField.allowed() else null
 
   events: ->
     super.concat
+      # Main menu
       'click .continue': @onClickContinue
       'click .new': @onClickNew
       'click .load': @onClickLoad
@@ -77,7 +100,19 @@ class LOI.Components.Menu.Items extends AM.Component
       'click .fullscreen': @onClickFullscreen
       'click .settings': @onClickSettings
       'click .quit': @onClickQuit
-      'click .back': @onClickBack
+
+      # Settings
+      'click .graphics-scale .previous-button': @onClickGraphicsScalePreviousButton
+      'click .graphics-scale .next-button': @onClickGraphicsScaleNextButton
+      'click .permissions': @onClickPermissions
+      'click .back-to-menu': @onClickBackToMenu
+
+      # Permissions
+      'click .permissions-persist-settings': @onClickPermissionsPersistSettings
+      'click .permissions-persist-game-state': @onClickPermissionsPersistGameState
+      'click .permissions-persist-command-history': @onClickPermissionsPersistCommandHistory
+      'click .permissions-persist-login': @onClickPermissionsPersistLogin
+      'click .back-to-settings': @onClickBackToSettings
 
   onClickContinue: (event) ->
     LOI.adventure.menu.hideMenu()
@@ -129,6 +164,9 @@ class LOI.Components.Menu.Items extends AM.Component
   onClickSettings: (event) ->
     @currentScreen @constructor.Screens.Settings
 
+    # Store current state of settings.
+    @_oldSettings = LOI.settings.toObject()
+
   onClickQuit: (event) ->
     if Retronator.user()
       LOI.adventure.quitGame()
@@ -148,6 +186,74 @@ class LOI.Components.Menu.Items extends AM.Component
         dialog: dialog
         callback: =>
           LOI.adventure.quitGame() if dialog.result
-  
-  onClickBack: (event) ->
-    @currentScreen @constructor.Screens.MainMenu
+
+  onClickGraphicsScalePreviousButton: (event) ->
+    currentValue = LOI.settings.graphics.maximumScale.value()
+    currentValue--
+    currentValue = null if currentValue < 2
+
+    LOI.settings.graphics.minimumScale.value currentValue or 2
+    LOI.settings.graphics.maximumScale.value currentValue
+
+  onClickGraphicsScaleNextButton: (event) ->
+    currentValue = LOI.settings.graphics.maximumScale.value() or 1
+    currentValue++
+
+    LOI.settings.graphics.minimumScale.value currentValue
+    LOI.settings.graphics.maximumScale.value currentValue
+
+  onClickPermissions: (event) ->
+    @currentScreen @constructor.Screens.Permissions
+
+  onClickBackToMenu: (event) ->
+    returnToMenu = => @currentScreen @constructor.Screens.MainMenu
+
+    if LOI.settings.persistSettings.decided()
+      # User already decided if they want to save settings so just return to menu.
+      returnToMenu()
+
+    else
+      # See if settings have changed and ask to save.
+      newSettings = LOI.settings.toObject()
+
+      if EJSON.equals @_oldSettings, newSettings
+        # Settings haven't changed, so no need to save.
+        returnToMenu()
+
+      else
+        # Settings have changed. Ask to save and return to menu when answered.
+        LOI.settings.persistSettings.showDialog =>
+          @currentScreen @constructor.Screens.MainMenu
+
+  onClickPermissionsPersistSettings: (event) ->
+    @_onClickPermissions LOI.settings.persistSettings
+
+  onClickPermissionsPersistGameState: (event) ->
+    @_onClickPermissions LOI.settings.persistGameState
+
+  onClickPermissionsPersistCommandHistory: (event) ->
+    @_onClickPermissions LOI.settings.persistCommandHistory
+
+  onClickPermissionsPersistLogin: (event) ->
+    if LOI.settings.persistLogin.allowed()
+      LOI.settings.persistLogin.disallow()
+
+      # Also delete any login info.
+      Accounts._autoLoginEnabled = false
+      
+      LOI.adventure.clearLoginInformation()
+
+    else
+      LOI.settings.persistLogin.showDialog (value) =>
+        Accounts._autoLoginEnabled = value
+        Accounts._enableAutoLogin() if value
+
+  _onClickPermissions: (consentField) ->
+    if consentField.allowed()
+      consentField.disallow()
+
+    else
+      consentField.showDialog()
+
+  onClickBackToSettings: (event) ->
+    @currentScreen @constructor.Screens.Settings

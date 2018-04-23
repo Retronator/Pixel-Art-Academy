@@ -12,19 +12,21 @@
                 <h2 class="name">{{> t9n name}}</h2>
                 <p class="description">{{> t9n this.description}}</p>
                 <div class="buy-area">
-                  <div class="price">
-                    ${{price}}
-                    {{#if discountedFrom}}
-                      <del class="discounter-from">${{discountedFrom}}</del>
-                    {{/if}}
-                  </div>
+                  {{#if price}}
+                    <div class="price">
+                      ${{price}}
+                      {{#if discountedFrom}}
+                        <del class="discounter-from">${{discountedFrom}}</del>
+                      {{/if}}
+                    </div>
+                  {{/if}}
                   {{#if canBuy}}
                     <button class="add-to-cart-button">Add to cart</button>
                   {{else}}
                     {{#if currentUser}}
                       <p class="hint not-eligible">You are not eligible to buy this item.</p>
                     {{else}}
-                    <p class="hint">You need to be signed in to check eligibility for this item.</p>
+                      <p class="hint">You need to be signed in to check eligibility for this item.</p>
                     {{/if}}
                   {{/if}}
                 </div>

@@ -8,6 +8,7 @@ class LOI.LocalGameState
     @_stateAutorun = AM.PersistentStorage.persist
       storageKey: "LandsOfIllusions.Adventure.state"
       field: @state
+      consentField: LOI.settings.persistGameState.allowed
 
   destroy: ->
     @_stateAutorun.stop()

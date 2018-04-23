@@ -84,6 +84,20 @@ class LOI.Adventure.Thing extends AM.Component
 
     translations
 
+  @getServerTranslations: (languagePreference) ->
+    translationNamespace = @id()
+
+    translations = {}
+
+    for translationKey, defaultText of @_translations()
+      translation = AB.Translation.documents.findOne
+        namespace: translationNamespace
+        key: translationKey
+
+      translations[translationKey] = translation.translate(languagePreference).text
+
+    translations
+
   @accessRequirement: -> # Override to set an access requirement to use this thing.
 
   @initialize: ->
@@ -116,6 +130,7 @@ class LOI.Adventure.Thing extends AM.Component
     # Create static state field.
     @stateAddress = new LOI.StateAddress "things.#{@id()}"
     @state = new LOI.StateObject address: @stateAddress
+    @readOnlyState = new LOI.StateObject address: @stateAddress, stateType: LOI.GameState.Type.ReadOnly
 
     @scriptStateAddress = new LOI.StateAddress "scripts.#{@id()}"
     @scriptState = new LOI.StateObject address: @scriptStateAddress
@@ -178,7 +193,8 @@ class LOI.Adventure.Thing extends AM.Component
           Tracker.nonreactive => callback?()
 
   @createAvatar: ->
-    new @Avatar @
+    # Note: We fully qualify Avatar (instead of @Avatar) because this gets called from classes that inherit from Thing.
+    new LOI.Adventure.Thing.Avatar @
 
   # Thing instance
 
@@ -192,6 +208,7 @@ class LOI.Adventure.Thing extends AM.Component
 
     @state = @constructor.state
     @stateAddress = @constructor.stateAddress
+    @readOnlyState = @constructor.readOnlyState
 
     @scriptState = @constructor.scriptState
     @scriptStateAddress = @constructor.scriptStateAddress

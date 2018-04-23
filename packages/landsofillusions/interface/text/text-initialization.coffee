@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -14,7 +15,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
       safeAreaHeight: 240
       maxDisplayWidth: 480
       maxDisplayHeight: 640
-      minScale: 2
+      minScale: LOI.settings.graphics.minimumScale.value
+      maxScale: LOI.settings.graphics.maximumScale.value
       minAspectRatio: 1 / 2
       maxAspectRatio: 2
       debug: false
@@ -42,7 +44,13 @@ class LOI.Interface.Text extends LOI.Interface.Text
       return unless currentSituation = LOI.adventure.currentSituation()
 
       LOI.adventure.getAvatar exit for exitId, exit of currentSituation.exitsById()
-  
+        
+    # Subscribe to all action translations.
+    actionTypes = LOI.Memory.Action.getTypes()
+    
+    @_actionTranslationSubscriptions = for actionType in actionTypes
+      AB.subscribeNamespace actionType
+
     # Node handling must get initialized before handlers, since the latter depends on it.
     @initializeNodeHandling()
     @initializeHandlers()
@@ -55,10 +63,10 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @initializeScrolling()
 
     # Resize on viewport, fullscreen, and illustration height changes.
-    @autorun =>
+    @autorun (computation) =>
       @display.viewport()
       AM.Window.isFullscreen()
-      LOI.adventure.currentLocation()?.illustrationHeight?()
+      LOI.adventure.currentSituation()?.illustrationHeight()
 
       Tracker.afterFlush =>
         @resize()
@@ -112,3 +120,5 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Clean up overflow hidden on html from scrolling wheel detection.
     $('html').css overflow: ''
+
+    subscription.stop() for subscription in @_actionTranslationSubscriptions

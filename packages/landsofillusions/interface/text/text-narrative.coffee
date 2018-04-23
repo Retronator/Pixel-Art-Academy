@@ -11,7 +11,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       introduction = currentIntroductionFunction()
       return @_formatOutput introduction
 
-    if location.constructor.visited()
+    if location.constructor.visited() and not LOI.adventure.currentContext()
       fullName = location.avatar.fullName()
       return unless fullName
 
@@ -19,7 +19,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
       "#{_.upperFirst fullName}."
 
     else
-      # It's the first time we're visiting this location in this session so show the full description.
+      # It's the first time we're visiting this location in this session,
+      # or we're in a context, so show the full description.
       situation = LOI.adventure.currentSituation()
 
       @_formatOutput situation.description.last()
@@ -63,13 +64,17 @@ class LOI.Interface.Text extends LOI.Interface.Text
       text = text.replace /%%html.*html%%/, html
 
     # Create color spans.
-    text = text.replace /%%c(\d+)-([-\d]+)%(.*?)c%%/g, (match, hue, shade, text) ->
+    text = text.replace /%%c(\d+)-([-\d]+)%(.*?)c%%/g, (match, hue, shade, text) =>
       hue = parseInt hue
       shade = parseInt shade
 
       colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade).getHexString()
 
-      "<span style='color: ##{colorHexString}' data-hue='#{hue}' data-shade='#{shade}'>#{text}</span>"
+      # Link should be 2 shades lighter than the text.
+      linkColor = LOI.Avatar.colorObject(hue: hue, shade: shade + 2)
+      text = @_formatLinks text, linkColor
+
+      "<span style='color: \##{colorHexString}' data-hue='#{hue}' data-shade='#{shade}'>#{text}</span>"
 
     # Create text transform spans.
     text = text.replace /%%t([L|U])(.*?)t%%/g, (match, transformType, text) =>
@@ -86,36 +91,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Replace character pronouns.
     if character = LOI.character()
-      pronouns = character.avatar.pronouns()
-
-      getPronoun = (key) =>
-        LOI.adventure.parser.vocabulary.getPhrases("Pronouns.#{key}.#{pronouns}")?[0]
-
-      text = text.replace /_char_/g, (match) ->
-        character.avatar.shortName()
-
-      text = text.replace /_CHAR_/g, (match) ->
-        _.toUpper character.avatar.shortName()
-
-      text = text.replace /_char's_/g, (match) ->
-        # TODO: Add a way to localize possession grammar.
-        name = character.avatar.shortName()
-        lastCharacter = _.last name
-        if lastCharacter is 's' then "#{name}'" else "#{name}'s"
-
-      for pronounPair in [
-        ['they', 'Subjective']
-        ['them', 'Objective']
-        ['their', 'Adjective']
-        ['theirs', 'Possessive']
-      ]
-        text = text.replace new RegExp("_(t|T)#{pronounPair[0].substring(1)}_", 'g'), (match, pronounCase) ->
-          pronoun = getPronoun pronounPair[1]
-
-          if pronounCase is 'T' then pronoun = _.upperFirst pronoun
-
-          pronoun
-
+      text = LOI.Character.formatText text, 'char', character
+    
     Tracker.afterFlush =>
       # Add colors to commands.
       commands = @$('.narrative .command')
@@ -137,3 +114,26 @@ class LOI.Interface.Text extends LOI.Interface.Text
           $command.find('.background').css backgroundColor: "##{colorHexString}"
 
     text
+
+  _formatLinks: (escapedText, linkColor) ->
+    # Replace urls with links.
+    urlRegex = /(https?):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-;]*[\w@?^=%&\/~+#-;])?/g
+
+    formattedText = escapedText.replace urlRegex, (url, protocol, domain, path) =>
+      urlText = domain
+
+      if path
+        # Make sure the path is not longer than 10 characters.
+        path = "/…#{path.substring(path.length-8)}" if path.length > 10
+
+        # Add it to the domain.
+        urlText = "#{urlText}#{path}"
+
+      styleTag = if linkColor then "style='color:##{linkColor.getHexString()};'" else ''
+
+      # We must unescape the URL that is used as the attribute.
+      url = AM.HtmlHelper.unescapeText url
+
+      "<a href='#{url}' target='_blank' #{styleTag}>#{urlText}</a>"
+
+    formattedText

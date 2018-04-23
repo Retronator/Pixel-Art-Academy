@@ -20,6 +20,7 @@ class LOI.Parser
       new @constructor.NavigationListener
       new @constructor.DescriptionListener
       new @constructor.LookLocationListener
+      new @constructor.ConversationListener
     ]
 
   destroy: ->
@@ -59,14 +60,14 @@ class LOI.Parser
     @chooseLikelyAction likelyActions
 
   # Creates a node that performs the action of the likely command
-  _createCallbackNode: (phraseAction) ->
+  _createCallbackNode: (likelyAction) ->
     new Nodes.Callback
       callback: (complete) =>
         # First complete the callback so that it doesn't get handled again while action is running.
         complete()
 
         # Start the chosen action.
-        result = phraseAction.action()
+        result = likelyAction.phraseAction.action likelyAction
 
         if result is true
           LOI.adventure.interface.narrative.addText "OK."
@@ -76,7 +77,7 @@ class LOI.Parser
     new Nodes.CommandLine
       replaceLastCommand: true
       line: _.upperFirst @_createIdealForm likelyAction
-      next: @_createCallbackNode likelyAction.phraseAction
+      next: @_createCallbackNode likelyAction
 
   _createIdealForm: (likelyAction, options = {}) ->
     # See if phrase action provides a method to generate the ideal form.
@@ -85,7 +86,7 @@ class LOI.Parser
     # Otherwise we use the default which is just all form parts joined in order.
     # But we should auto-correct avatars if they require it.
     for formPart, index in likelyAction.phraseAction.form
-      if formPart instanceof LOI.Avatar
+      if formPart instanceof LOI.Avatar or formPart instanceof LOI.Adventure.Thing
         avatar = formPart
 
         if avatar.nameAutoCorrectStyle() is LOI.Avatar.NameAutoCorrectStyle.Name or options.fullNames
@@ -95,7 +96,7 @@ class LOI.Parser
 
           allFormWordsAreInShortName = _.difference(shortNameWords, formWords).length is 0
 
-          # TODO: Do not replace in translated form, because this messes up furhter calls if avatars use uppercase letters.
+          # TODO: Do not replace in translated form, because this messes up further calls if avatars use uppercase letters.
           if allFormWordsAreInShortName and not options.fullNames
             likelyAction.translatedForm[index] = avatar.shortName()
 

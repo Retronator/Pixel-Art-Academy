@@ -27,6 +27,4 @@ class Soma.Transbay extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.In}": Soma.Caltrain
-    "#{Vocabulary.Keys.Directions.South}": Soma.Caltrain
     "#{Vocabulary.Keys.Directions.Southwest}": Soma.SecondStreet

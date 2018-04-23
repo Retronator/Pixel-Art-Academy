@@ -32,8 +32,15 @@ class LOI.Character.Part
         dataLocation: propertyDataLocation
         parent: @
 
+    # Create renderer for drawing this part's hierarchy.
+    @renderer = new ComputedField =>
+      @createRenderer()
+    ,
+      true
+
   destroy: ->
     property.destroy() for property in @properties
+    @renderer.stop()
 
   create: (options) ->
     # Set this part's type as template meta data.
@@ -46,14 +53,6 @@ class LOI.Character.Part
   ready: ->
     # Part is ready when its data location is ready.
     @options.dataLocation.ready()
-
-  # Returns a renderer singleton that can be used to render this part.
-  getRenderer: ->
-    # Instantiate the renderer on first call.
-    @_rendererSingleton ?= @createRenderer()
-
-    # Simply return the renderer.
-    @_rendererSingleton
 
   # Creates a new renderer hierarchy with given modifier options.
   createRenderer: (options = {}) ->

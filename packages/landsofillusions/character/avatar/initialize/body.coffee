@@ -6,6 +6,13 @@ LOI.Character.Part.registerClasses
       type: 'Avatar.Body'
       name: 'body'
       properties:
+        # Skin must be created first because other renderers depend on it.
+        skin: new LOI.Character.Avatar.Properties.Color
+          name: 'skin'
+          colorsPresetName: 'Skin'
+          default:
+            hue: 3
+            shade: 4
         arms: new LOI.Character.Part.Property.OneOf
           name: 'arms'
           type: 'Avatar.Body.Arms'
@@ -18,12 +25,6 @@ LOI.Character.Part.registerClasses
         legs: new LOI.Character.Part.Property.OneOf
           name: 'legs'
           type: 'Avatar.Body.Legs'
-        skin: new LOI.Character.Avatar.Properties.Color
-          name: 'skin'
-          colorsPresetName: 'Skin'
-          default:
-            hue: 3
-            shade: 4
       renderer: new LOI.Character.Avatar.Renderers.Body
         origin:
           landmark: 'navel'
@@ -177,15 +178,16 @@ LOI.Character.Part.registerClasses
         type: 'Avatar.Body.Eyes'
         name: 'eyes'
         properties:
-          shape: new LOI.Character.Part.Property.OneOf
-            name: 'shape'
-            type: 'Avatar.Body.EyeShape'
+          # Iris must be defined first since shape depends on it.
           iris: new LOI.Character.Avatar.Properties.Color
             name: 'iris'
             colorsPresetName: 'Default'
             default:
               hue: 0
               shade: 4
+          shape: new LOI.Character.Part.Property.OneOf
+            name: 'shape'
+            type: 'Avatar.Body.EyeShape'
 
       EyeShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Body.EyeShape'

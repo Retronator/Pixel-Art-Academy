@@ -1,0 +1,32 @@
+<template name="LandsOfIllusions.Items.Sync.Immersion">
+  <div class="landsofillusions-items-sync-immersion">
+    <ul class="links" {{style linksStyle}}>
+      {{#each activatedCharacters}}
+        <li class="link character {{characterActiveClass}}">
+          <div class="avatar">
+            {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar}}
+          </div>
+          <div class="name">
+            {{avatar.fullName}}
+          </div>
+        </li>
+      {{/each}}
+      <li class="link lands-of-illusions {{landsOfIllusionsActiveClass}}">
+        <div class="name">
+          Loader
+        </div>
+      </li>
+      {{#if showDisconnect}}
+        <li class="link disconnect">
+          <div class="name">
+            Disconnect
+          </div>
+        </li>
+      {{/if}}
+    </ul>
+    <div class="controls">
+      <button class="previous-button action-button {{previousButtonVisibleClass}}">←</button>
+      <button class="next-button action-button {{nextButtonVisibleClass}}">→</button>
+    </div>
+  </div>
+</template>

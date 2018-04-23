@@ -27,6 +27,4 @@ class Soma.C3 extends LOI.Adventure.Location
   ]
 
   exits: ->
-    "#{Vocabulary.Keys.Directions.In}": SanFrancisco.C3.Lobby
-    "#{Vocabulary.Keys.Directions.East}": SanFrancisco.C3.Lobby
     "#{Vocabulary.Keys.Directions.Northwest}": Soma.MissionBay

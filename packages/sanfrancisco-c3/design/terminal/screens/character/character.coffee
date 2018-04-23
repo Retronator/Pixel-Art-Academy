@@ -81,7 +81,7 @@ class C3.Design.Terminal.Character extends AM.Component
 
           # Close the terminal and proceed with the story.
           # TODO: Homage cinematic to Ghost in the Shell.
-          LOI.adventure.deactivateCurrentItem()
+          LOI.adventure.deactivateActiveItem()
 
           designControl = LOI.adventure.currentLocation()
           designControl.listeners[0].startScript label: 'MakingOfACyborg'

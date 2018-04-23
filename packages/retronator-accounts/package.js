@@ -28,16 +28,18 @@ Package.onUse(function(api) {
 
   api.export('Retronator');
 
-  api.addFiles('retronator.coffee');
-  api.addFiles('accounts.coffee');
+  api.addFile('retronator');
+  api.addFile('accounts');
 
-  api.addFiles('main.import.styl', 'client', {isImport: true});
+  api.addStyleImport('main');
 
   // Helpers
 
-  api.addFiles('spacebars.coffee', 'client');
+  api.addClientFile('spacebars');
 
   // Initialization
+
+  api.addClientFile('initialize-client/signin');
 
   api.addServerFile('initialize-server/signin');
   api.addServerFile('initialize-server/emails');

@@ -30,6 +30,10 @@ class LOI.Interface extends AM.Component
           # Now store the new location as the
           @_previousLocationClass = location.constructor
 
+        # Clear the current contexts.
+        LOI.adventure.exitContext()
+        LOI.adventure.clearAdvertisedContext()
+
         # Do any initialization needed after location change.
         @onLocationChanged()
 
@@ -53,6 +57,9 @@ class LOI.Interface extends AM.Component
   location: ->
     LOI.adventure.currentLocation()
 
+  context: ->
+    LOI.adventure.currentContext()
+
   onLocationChanged: (location) ->
     # Override to handle location changes. Call "@locationChangeReady true" when ready to start handling nodes.
     
@@ -68,6 +75,7 @@ class LOI.Interface extends AM.Component
     @_handleNarrativeLine node if node instanceof Nodes.NarrativeLine
     @_handleInterfaceLine node if node instanceof Nodes.InterfaceLine
     @_handleCommandLine node if node instanceof Nodes.CommandLine
+    @_handleEmpty node if node instanceof Nodes.ChoicePlaceholder
 
     # Handle Code nodes, which includes Conditional nodes since they inherit from Code.
     @_handleEmpty node if node instanceof Nodes.Code

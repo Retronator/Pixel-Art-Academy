@@ -52,9 +52,9 @@ class LOI.Interface.Components.Narrative
 
     @text newText
 
-  clear: ->
+  clear: (options = {}) ->
     @text ""
-    @onTextUpdated()
+    @onTextUpdated options
 
   scroll: (options = {}) ->
     options.animate ?= true

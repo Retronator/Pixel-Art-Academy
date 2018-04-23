@@ -118,8 +118,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # Present the text to the player.
     @narrative.addText "#{start}#{text}#{end}"
 
-    # This is a line node so set that we displayed it.
-    @_nodeDisplayed dialogueLine
+    # This is a line node so set that we displayed it, unless we request immediate continuation without pause.
+    @_nodeDisplayed dialogueLine unless dialogueLine.immediate
 
     dialogueLine.end()
 
@@ -158,7 +158,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # If the command line is a silent one, it doesn't appear in the narrative.
     unless commandLine.silent
       # We act as if the user entered this as a command.
-      @narrative.addText "> #{_.upperCase commandLine.line}"
+      @narrative.addText "> #{_.toUpper commandLine.line}"
 
     # Command nodes don't stop the narrative and just end.
     commandLine.end()

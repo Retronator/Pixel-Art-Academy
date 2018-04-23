@@ -1,29 +1,40 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .sanfrancisco-apartment-studio-computer-browser
-  background red
-
   .navigation-bar
+    display flex
     position relative
-    height 12rem
+    height 10rem
+    color atariGrey(5)
+    background atariGrey(2)
+
+    .page-button
+      display block
+      width 10rem
+      height 10rem
+      background none
+      border none
+      color inherit
+      font inherit
+
+      &:hover
+        color atariGrey(7)
+
+      &:disabled
+        color atariGrey(3)
+        pointer default
 
     .url-input
       display block
-      height 100%
-      width 280rem
-      color black
-
-    .close-button
-      display block
-      position absolute
-      width 40rem
-      height 100%
-      top 0
-      right 0
+      padding 0 2rem
+      margin 0
+      border 1rem solid atariGrey(2)
+      background atariGrey(1)
+      flex-grow 1
 
   .webpage
     absolute-cover()
-    top 12rem
+    top 10rem
     overflow-y scroll
     transform translateZ(0)
 

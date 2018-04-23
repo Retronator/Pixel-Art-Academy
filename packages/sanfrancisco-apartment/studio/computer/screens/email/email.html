@@ -1,0 +1,28 @@
+<template name="SanFrancisco.Apartment.Studio.Computer.Email">
+  {{#SanFrancisco.Apartment.Studio.Computer.App}}
+    <div class="sanfrancisco-apartment-studio-computer-email">
+      <div class="inbox">
+        <ul class="emails">
+          {{#each emails}}
+            <li class="email {{selectedClass}} {{readClass}}">
+              <div class="from">{{from}}</div>
+              <div class="subject">{{subject}}</div>
+              <div class="body-preview">{{body.text}}</div>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+      <div class="message">
+        {{#with selectedEmail}}
+          <div class="headers">
+            <div class="from">{{from}}</div>
+            <div class="subject">{{subject}}</div>
+          </div>
+          <div class="body">
+            {{{body.html}}}
+          </div>
+        {{/with}}
+      </div>
+    </div>
+  {{/SanFrancisco.Apartment.Studio.Computer.App}}
+</template>

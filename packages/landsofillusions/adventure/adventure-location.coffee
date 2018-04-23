@@ -2,6 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
+  @debugLocation = false
+  
   _initializeLocation: ->
     # We store player's current location locally so that multiple people
     # can use the same user account and walk around independently.
@@ -10,20 +12,24 @@ class LOI.Adventure extends LOI.Adventure
       storageKey: 'LandsOfIllusions.Adventure.currentLocationId'
       field: @playerLocationId
       tracker: @
+      consentField: LOI.settings.persistGameState.allowed
 
     # Start at the default player location.
     unless @playerLocationId()
       @playerLocationId @startingPoint()?.locationId
 
     @currentLocationId = new ComputedField =>
-      console.log "Recomputing current location." if LOI.debug
+      console.log "Recomputing current location." if LOI.debug or LOI.Adventure.debugLocation
 
-      if LOI.characterId()
-        # Character's location is always read from the state.
+      # Memory provides its own location.
+      return memory.locationId if memory = @currentMemory()
+
+      if LOI.characterId() or not LOI.settings.persistGameState.allowed()
+        # Character's location is always read from the state. Also used when saving game state is not allowed.
         @gameState()?.currentLocationId
 
       else
-        # Player's locations is stored in local storage.
+        # Local storage is allowed so load player's location from there.
         @playerLocationId()
     ,
       true
@@ -60,12 +66,18 @@ class LOI.Adventure extends LOI.Adventure
 
             when LOI.TimelineIds.Present
               currentLocationClass = SanFrancisco.Apartment.Studio
+              
+            when LOI.TimelineIds.Memory
+              # This is a stale memory (one where the location where it was made is not 
+              # available anymore). Cancel the memory so the normal location returns.
+              # TODO: We would probably want to give some indication to the player the memory didn't work.
+              @exitMemory()
+              return
 
-          currentLocationId = currentLocationClass.id()
+          # Set the new location
+          @setLocationId currentLocationClass.id()
 
-        @setLocationId currentLocationId
-
-        console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug
+        console.log "Creating new location with ID", currentLocationClass.id() if LOI.debug or LOI.Adventure.debugLocation
 
         # Create a non-reactive reference so we can refer to it later.
         @_currentLocation = new currentLocationClass
@@ -157,35 +169,52 @@ class LOI.Adventure extends LOI.Adventure
             @locationOnEnterResponseResults responseResults
 
     # We also need to store the location the user logged into Construct from, so we can take them back there.
-    @immersionExitLocationId = new ReactiveField Retronator.HQ.LandsOfIllusions.Room.id()
+    @_immersionExitLocationId = new ReactiveField Retronator.HQ.LandsOfIllusions.Room.id()
     Artificial.Mummification.PersistentStorage.persist
       storageKey: 'LandsOfIllusions.Adventure.immersionExitLocationId'
-      field: @immersionExitLocationId
+      field: @_immersionExitLocationId
       tracker: @
-      
+      consentField: LOI.settings.persistGameState.allowed
+
+    @immersionExitLocationId = new ComputedField =>
+      if LOI.settings.persistGameState.allowed()
+        @_immersionExitLocationId()
+        
+      else
+        @gameState()?.immersionExitLocationId
+        
   saveImmersionExitLocation: ->
     # Save current location to local storage.
     currentLocationId = @currentLocationId()
-    @immersionExitLocationId currentLocationId
+    @_immersionExitLocationId currentLocationId
 
-    # Save current location to state. We don't really use it except until the next time we load the game.
+    # Save immersion location to state.
     if state = @gameState()
       state.immersionExitLocationId = currentLocationId
       @gameState.updated()
 
   setLocationId: (locationClassOrId) ->
     locationId =  _.thingId locationClassOrId
+    characterId = LOI.characterId()
 
     # Update locally stored player location if we're not synced to a character.
-    @playerLocationId locationId unless LOI.characterId()
+    @playerLocationId locationId unless characterId
 
-    # Save current location to state. For players we don't really
-    # use it except until the next time we load the game.
+    # Save current location to state.
     if state = @gameState()
       state.currentLocationId = locationId
       @gameState.updated()
-
+      
+    # Create a move action for characters.
+    if characterId
+      LOI.Memory.Action.do LOI.Memory.Actions.Move.type, characterId,
+        timelineId: @currentTimelineId()
+        locationId: locationId
+      
   goToLocation: (locationClassOrId) ->
+    # Don't allow location changes when in a memory (since it's defined by the memory document).
+    return if @currentMemory()
+    
     currentLocationClass = _.thingClass @currentLocationId()
     destinationLocationClass = _.thingClass locationClassOrId
     

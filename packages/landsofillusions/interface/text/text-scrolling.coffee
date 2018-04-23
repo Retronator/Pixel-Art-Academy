@@ -21,9 +21,6 @@ class LOI.Interface.Text extends LOI.Interface.Text
       scrollTop = @$window.scrollTop()
       $.Velocity.hook @$uiArea, 'translateY', "#{-scrollTop}px"
 
-      # Stop intro mode on scroll, but we don't want it to automatically scroll to bottom.
-      @stopIntro scroll: false if @inIntro()
-
     # HACK: For some reason, we need at least around 200ms delay in changing the main slider, otherwise, even if we
     # pass in the correct position, the window just scrolls to 0. Could it have something to do with animateElement
     # routine that animates things in 150ms?
@@ -44,13 +41,13 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
   # Returns the current scroll position of the text interface.
   scrollTop: ->
-    parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
+    -parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
 
   # Scroll the UI to put the position at the top of the viewport.
   scroll: (options) ->
     options.animate ?= false
 
-    currentTop = @scrollTop()
+    currentTop = -@scrollTop()
     
     newTop = -options.position
 
@@ -72,15 +69,19 @@ class LOI.Interface.Text extends LOI.Interface.Text
       @onScroll options.position
       
   onScroll: (position) ->
-    # Let the location know we're scrolling so that it can do any super-smooth scrolling animations.
-    LOI.adventure.currentLocation()?.onScroll?()
+    # Let the location or context know we're scrolling so that it can do any super-smooth scrolling animations.
+    if context = LOI.adventure.currentContext()
+      context.onScroll? @scrollTop()
+
+    else
+      LOI.adventure.currentLocation()?.onScroll?()
 
     # Also scroll the main slider.
     @matchScrollbar position unless @wheelDetected
 
     # See if narrative is in view.
     if @locationChangeReady()
-      viewportBottom = -@scrollTop() + @$window.height()
+      viewportBottom = @scrollTop() + @$window.height()
       narrativeTop = @$ui.position().top
       @uiInView narrativeTop < viewportBottom
 
@@ -134,11 +135,6 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # When scrolling the main text LOI.adventure also trigger onScroll.
     if event.currentTarget is @textInterfaceElement
-      # Stop intro mode on scroll, but we don't want it to automatically scroll to bottom. We also don't want to do
-      # this in onScroll, since that one fires on any kind of scroll request (even from code), but we want to cancel
-      # intro only on explicit wheel action from the user.
-      @stopIntro scroll: false if @inIntro()
-
       @onScroll -newTop
 
   onWheelEvent: ->

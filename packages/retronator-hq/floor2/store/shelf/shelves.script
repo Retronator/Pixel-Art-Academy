@@ -6,6 +6,7 @@
 
 * Main game bundles. -> [Game]
 * Game add-on upgrades. -> [Upgrades]
+* Devices from Pixel. -> [Pixel]
 * Nevermind -> [End]
 
 ## Game
@@ -17,6 +18,12 @@
 ## Upgrades
 
 `_shelf = 'Upgrades'`
+
+-> [GoToShelf]
+
+## Pixel
+
+`_shelf = 'Pixel'`
 
 -> [GoToShelf]
 

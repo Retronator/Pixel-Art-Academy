@@ -15,9 +15,7 @@ operator:
 
 ## WhatHappens
 
-operator: 
-  Our team received your agent from C3 and we're now loading up their back story into their memory.
-  It's all based on the behavior setup you did at the center.
+operator: Our team received your agent from C3 and we're now loading up their back story into their memory.
 
 > Panzer looks over at his computer dashboard.
 
@@ -29,16 +27,17 @@ operator:
 
 ## WhereCharacter
 
-operator: They are in an apartment in Mission Rock, south of the baseball stadium, waiting for you to sync with them.
+operator: 
+  They are in an apartment in Mission Rock, south of the baseball stadium, waiting for you to sync with them.
+  But you don't need to go there yourself. You sync with your device from anywhere you want.
 
 -> [MainQuestions]
 
 ## HowToConnect
 
 operator: 
-  When you ![use the SYNC](use SYNC) device, I will ask what connection you want to make.
-  You can move to the Loader like before and use the TV there, or I can connect you to any of your characters directly.
-  Just ![talk to operator](talk to operator) from any location, or use the chair in the immersion room for maximum comfort.
+  When you ![use the SYNC](use SYNC) device, look for the Immersion section. Choose the character you want to sync with.
+  You can also ![talk to operator](talk to operator) from any location, or use the chair in the immersion room for maximum comfort.
 
 -> [MainQuestions]
 

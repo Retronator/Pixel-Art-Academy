@@ -4,7 +4,7 @@ RS = Retronator.Store
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
+class HQ.Items.ShoppingCart extends LOI.Adventure.Item
   # STATE
   # contents: list of cart items
   #   item: store item object
@@ -53,32 +53,11 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
 
     @contents = @state.field 'contents', default: []
 
-  onCreated: ->
-    super
-
-    # Get all store items data.
-    @subscribe RS.Item.all
-
   onDeactivate: (finishedDeactivatingCallback) ->
     Meteor.setTimeout =>
       finishedDeactivatingCallback()
     ,
       500
-
-  cartItems: ->
-    items = for cartItem, i in @contents()
-      item = RS.Item.documents.findOne catalogKey: cartItem.item
-      break unless item
-
-      # Load bundle items as well.
-      for bundleItem in item.items
-        bundleItem.refresh()
-
-      item: item
-      isGift: cartItem.isGift
-      cartIndex: i
-
-    items
 
   giftCheckboxAttributes: ->
     item = @currentData()
@@ -111,6 +90,21 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
 
     RS.shoppingCart.setItemIsGift item, event.target.checked
 
+  # Script
+
+  initializeScript: ->
+    @setCallbacks
+      LeaveWithCart: (complete) =>
+        complete()
+
+        # Drop the cart.
+        HQ.Items.ShoppingCart.state 'inInventory', false
+
+        # Move the user outside.
+        LOI.adventure.goToLocation SanFrancisco.Soma.SecondStreet
+
+  # Listener
+
   onCommand: (commandResponse) ->
     shoppingCart = @options.parent
 
@@ -130,3 +124,13 @@ class Retronator.HQ.Items.ShoppingCart extends LOI.Adventure.Item
       priority: 1
       action: =>
         LOI.adventure.goToItem shoppingCart
+
+  onExitAttempt: (exitResponse) ->
+    hasCart = HQ.Items.ShoppingCart.state 'inInventory'
+    return unless hasCart
+
+    # Leaving counts as exiting to 2nd Street.
+    return unless exitResponse.destinationLocationClass is SanFrancisco.Soma.SecondStreet
+
+    @startScript label: 'LeavingWithCart'
+    exitResponse.preventExit()

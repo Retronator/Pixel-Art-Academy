@@ -113,7 +113,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
 
       else
         # Theme did not handle the back button, so we need to close the Daily.
-        LOI.adventure.deactivateCurrentItem()
+        LOI.adventure.deactivateActiveItem()
 
   # Listener
 
@@ -308,17 +308,3 @@ class HQ.Items.Daily extends LOI.Adventure.Item
       else
         players = _.sortBy post.video.player, (player) => player.width
         _.last(players).embed_code
-
-LOI.Adventure.registerDirectRoute "/daily/*", =>
-  # Show the daily if we need to.
-  unless LOI.adventure.activeItemId() is HQ.Items.Daily.id()
-    # Move to Retronator Cafe if necessary.
-    LOI.adventure.setLocationId HQ.Cafe unless LOI.adventure.currentLocationId() is HQ.Cafe.id()
-
-    Tracker.autorun (computation) =>
-      # Wait until Daily is available.
-      return unless LOI.adventure.getCurrentThing HQ.Items.Daily
-      computation.stop()
-
-      # Show the daily.
-      LOI.adventure.goToItem HQ.Items.Daily

@@ -21,7 +21,11 @@ Package.onUse(function(api) {
 
   api.addFile('episode0');
 
-  // Start
+  // Scenes
+
+  api.addFile('scenes/map');
+
+  // Start section
 
   api.addFile('start/start');
 
@@ -70,13 +74,15 @@ Package.onUse(function(api) {
   api.addComponent('chapter2/chapter2');
 
   api.addFile('chapter2/scenes/inventory');
-  api.addFile('chapter2/scenes/store');
+  api.addFile('chapter2/scenes/2nd');
+  api.addFile('chapter2/scenes/cafe');
 
   api.addFile('chapter2/actors/actors');
   api.addFile('chapter2/actors/conductor');
 
-  api.addFile('chapter2/items/items');
-  api.addComponent('chapter2/items/videotablet/videotablet');
+  api.addFile('chapter2/items..');
+  api.addFile('chapter2/items/sync');
+  api.addComponent('chapter2/items/videotablet..');
   api.addFile('chapter2/items/videotablet/videos');
 
   // Intro
@@ -85,16 +91,13 @@ Package.onUse(function(api) {
 
   api.addThing('chapter2/sections/intro/scenes/caltrain');
   api.addFile('chapter2/sections/intro/scenes/2nd');
+  api.addFile('chapter2/sections/intro/scenes/transbay');
 
   // Registration
 
   api.addFile('chapter2/sections/registration/registration');
 
   api.addThing('chapter2/sections/registration/scenes/cafe');
-
-  // Shopping
-
-  api.addFile('chapter2/sections/shopping/shopping');
 
   // Immersion
 
@@ -110,7 +113,7 @@ Package.onUse(function(api) {
   api.addFile('chapter3/chapter3');
 
   api.addFile('chapter3/scenes/inventory');
-  api.addFile('chapter3/scenes/2nd');
+  api.addFile('chapter3/scenes/c3');
 
   api.addFile('chapter3/items/items');
 

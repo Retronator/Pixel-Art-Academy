@@ -46,7 +46,6 @@ createKickstarterBacker = (email, amount, price, tier) ->
 
   # Get item to add.
   kickstarterItem = RS.Item.documents.findOne catalogKey: tier
-  console.log kickstarterItem, tier
 
   # Add a kickstarter payment.
   paymentId = RS.Payment.documents.insert

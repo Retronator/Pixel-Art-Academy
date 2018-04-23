@@ -8,7 +8,8 @@ Npm.depends({
   stripe: '5.1.1',
   patreon: '0.3.0',
   'tumblr.js': '1.1.1',
-  'path-to-regexp': '2.1.0'
+  'path-to-regexp': '2.1.0',
+  three: '0.90.0'
 });
 
 Package.onUse(function(api) {
@@ -42,7 +43,6 @@ Package.onUse(function(api) {
     'peerlibrary:check-extension',
     'peerlibrary:server-autorun',
     'peerlibrary:directcollection',
-    'limemakers:three',
     'okgrow:router-autoscroll',
     'stevezhu:lodash',
     'velocityjs:velocityjs',
@@ -56,6 +56,7 @@ Package.onUse(function(api) {
   api.use('webapp', 'server');
 
   api.export('Artificial');
+  api.export('THREE');
 
 	api.addFile('artificial');
 
@@ -67,6 +68,7 @@ Package.onUse(function(api) {
 
   api.addClientFile('everywhere/jquery/positioncss');
 
+  api.addFile('everywhere/three..');
   api.addFile('everywhere/three/color');
   api.addFile('everywhere/three/vectors');
 
@@ -146,19 +148,26 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('base/router/routelink');
 
   // Artificial Mummification
-  api.addFile('mummification/mummification');
+  api.addFile('mummification..');
 
   api.addFile('mummification/mongohelper');
   api.addFile('mummification/document');
   api.addFile('mummification/persistentstorage');
 
-  api.addFile('mummification/hierarchy/hierarchy');
+  api.addFile('mummification/hierarchy..');
   api.addFile('mummification/hierarchy/address');
   api.addFile('mummification/hierarchy/node');
   api.addFile('mummification/hierarchy/field');
   api.addFile('mummification/hierarchy/template');
   api.addFile('mummification/hierarchy/location');
 
+  // Depends on Artificial Base.
+  api.addFile('mummification/admin..');
+  api.addFile('mummification/admin/components..');
+  api.addComponent('mummification/admin/components/adminpage..');
+  api.addComponent('mummification/admin/components/index..');
+  api.addFile('mummification/admin/components/document..');
+  
   // Artificial Telepathy
   api.addFile('telepathy/telepathy');
 
@@ -174,6 +183,9 @@ Package.onUse(function(api) {
   api.addFile('babel/babel');
   api.addFile('babel/initialize');
   api.addFile('babel/helpers');
+
+  api.addFile('babel/rules..');
+  api.addFile('babel/rules/english');
 
   api.addFile('babel/lodash/languageregion');
 

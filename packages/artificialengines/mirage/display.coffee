@@ -7,26 +7,30 @@ class AM.Display extends AM.Component
 
   constructor: (options) ->
     super
+    
+    # We allow sending in our own reactive functions, but if they are not present, we create our own field.
+    createField = (name) ->
+      if _.isFunction options[name] then options[name] else new ReactiveField options[name]
 
     # The size at which to start calculating at x1 scale.
-    @safeAreaWidth = new ReactiveField options.safeAreaWidth
-    @safeAreaHeight = new ReactiveField options.safeAreaHeight
+    @safeAreaWidth = createField 'safeAreaWidth'
+    @safeAreaHeight = createField 'safeAreaHeight'
 
     # The scales at which to start and end calculating.
-    @minScale = new ReactiveField options.minScale
-    @maxScale = new ReactiveField options.maxScale
+    @minScale = createField 'minScale'
+    @maxScale = createField 'maxScale'
 
     # The aspect ratio to maintain with the final image.
-    @minAspectRatio = new ReactiveField options.minAspectRatio
-    @maxAspectRatio = new ReactiveField options.maxAspectRatio
+    @minAspectRatio = createField 'minAspectRatio'
+    @maxAspectRatio = createField 'maxAspectRatio'
 
     # The maximum displayed size at x1 scale. The viewport can be anywhere between safe area size and max display size.
-    @maxDisplayWidth = new ReactiveField options.maxDisplayWidth
-    @maxDisplayHeight = new ReactiveField options.maxDisplayHeight
+    @maxDisplayWidth = createField 'maxDisplayWidth'
+    @maxDisplayHeight = createField 'maxDisplayHeight'
 
     # The maximum scaled displayed size. It's as if the client size couldn't go over this size.
-    @maxClientWidth = new ReactiveField options.maxClientWidth
-    @maxClientHeight = new ReactiveField options.maxClientHeight
+    @maxClientWidth = createField 'maxClientWidth'
+    @maxClientHeight = createField 'maxClientHeight'
 
     @scale = new ReactiveField 1
     @viewport = new ReactiveField

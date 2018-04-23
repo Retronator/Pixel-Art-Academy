@@ -1,0 +1,48 @@
+# Retronator.HQ.Cafe.BurraCharacter
+
+## Start     
+burra: `not _End`
+    Hey there, welcome to Retronator! 
+    How can I help you today?
+
+burra: `_End`
+    Anything else? `_answered`
+    Hi again! `not _answered`
+
+## MainQuestion
+
+* I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQ`
+* Can you tell me about the HQ again? -> [RetronatorHQ] `RetronatorHQ`
+* What all can you do here? -> [RetronatorHQDepartments] `RetronatorHQ`
+* Oh, just looking. -> [End] `not _answered and not _End`
+* Whoops, nevermind. -> [End] `not _answered and _End`
+* Thank you so much! `_answered`
+
+burra: My pleasure. Let me know if you need anything else. -> [End]
+
+<!-- QUESTIONS -->
+
+## RetronatorHQ
+`_answered = true`
+
+burra: 
+  This is Retronator Headquarters—we like to call it the home of pixel art!
+  It's a multi-use space, so you'll see people visiting, hanging around, creating things and such.
+  Look at this cap I'm knitting!
+  
+> Burra shows you a marvelous piece of wearable pixel art. You stand impressed.
+
+-> [MainQuestion]
+
+## RetronatorHQDepartments
+`_answered = true`
+
+burra:
+  This floor has the coworking space to the west and this café where you can take a break and chat.
+  Above us is the store and our modest library with books and articles on all things drawing and games. 
+  Further upstairs is the gallery of Retro's artworks and an art studio. Retro's apartment is even above that.
+  Finally, our alternate reality center Lands of Illusions is in the basement.
+    
+-> [MainQuestion]
+
+## End

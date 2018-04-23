@@ -12,7 +12,7 @@ burra: `_End`
 ## MainQuestion
 
 * I'd like to register for an account. -> [Register] `not @player.inventory['Retronator.HQ.Items.Account']`
-* I'm looking for the Cyborg Construction Center. -> [C3] `@scripts.PixelArtAcademy.Season1.Episode0.Chapter3`
+* I'm looking for the Cyborg Construction Center. -> [C3] `_.nestedProperty(@scripts, 'PixelArtAcademy.Season1.Episode0.Chapter3')`
 * I'd like to know more about this place. -> [RetronatorHQ] `not RetronatorHQDepartments and not ExplainCafe`
 * Can you tell me about the HQ again? -> [RetronatorHQ] `RetronatorHQDepartments`
 * What is going on at Retronator HQ? -> [RetronatorHQActivity] `ExplainCafe and not RetronatorHQActivity`
@@ -20,7 +20,11 @@ burra: `_End`
 * How about coffee? -> [Coffee] `Sandwich`
 * I'd like to know more about Pixel Art Academy. -> [PixelArtAcademy] `RetronatorHQDepartments`
 * So is Pixel Art Academy like an online course? -> [PixelArtAcademyCourse] `PixelArtAcademy`
-* About that Retronator Magazine … -> [RetronatorMagazine] `RetronatorHQDepartments`
+* What kind of other projects? -> [OtherProjects] `RetronatorHQDepartments`
+* About that Retronator Magazine … -> [RetronatorMagazine] `OtherProjects`
+* What is the Pixel Dailies archive? -> [PixelDailiesArchive] `OtherProjects`
+* You mentioned Practical Pixels? -> [PracticalPixels] `OtherProjects`
+* I love YouTube. Tell me about your channel. -> [YouTube] `OtherProjects`
 * What exactly is Lands of Illusions? -> [LandsOfIllusions] `RetronatorHQDepartments`
 * Oh, just looking. -> [End] `not _answered and not _End`
 * Whoops, nevermind. -> [End] `not _answered and _End`
@@ -33,14 +37,14 @@ burra: My pleasure. Let me know if you need anything else. -> [End]
 ## RetronatorHQ
 `_answered = true`
 
-burra: This is Retronator Headquarters where Pixel Art Academy and Retronator Magazine get made. 
+burra: This is Retronator Headquarters where Pixel Art Academy and other projects get made. 
 
 -> [RetronatorHQDepartments]
 
 ## RetronatorHQActivity
 `_answered = true`
 
-burra: It's mainly Retro working on Pixel Art Academy and Retronator Magazine. 
+burra: It's mainly Retro working on Pixel Art Academy and other projects. 
 
 -> [RetronatorHQDepartments]
 
@@ -51,6 +55,17 @@ burra:
     Further upstairs is the gallery of Retro's artworks.
     And if you bought Pixel Art Academy, head on downstairs to our alternate reality center Lands of Illusions.
     
+-> [MainQuestion]
+
+## OtherProjects
+`_answered = true`
+
+burra: 
+  The main thing is the pixel art newspaper Retronator Daily.
+  You can read it here in the Café. Look right behind you on the newspaper rack.
+  Then there's also Retronator Magazine, Pixel Dailies archive, Practical Pixels … 
+  Sometimes Retro even goes down to the recording studio to make vlogs and tutorials for the YouTube channel.
+  
 -> [MainQuestion]
 
 ## RetronatorMagazine
@@ -67,13 +82,64 @@ burra: Sounds good. It's available at medium.com/retronator-magazine.
 
 ## ReadRetronatorMagazine
 
-> Burra turns around her computer screen and shows you the website.
+> Burra grabs a copy and hands it over the counter.
 
 pause
 
 ### OpenRetronatorMagazine
 
 burra: I hope you liked it.
+
+-> [MainQuestion]
+
+## PixelDailiesArchive
+`_answered = true`
+
+burra: 
+  You can see daily pixel art posted by the Pixel Dailies community to Twitter.
+  But without all the twitter, if you know what I mean.
+
+> Burra turns around her computer screen and shows you how it looks.
+
+pause
+
+### OpenPixelDailiesArchive
+
+burra: I hope you found some cool art.
+
+-> [MainQuestion]
+
+## PracticalPixels
+`_answered = true`
+
+burra: 
+  It's another publication on Medium, like Retronator Magazine, but more about 'things learned' from development of Pixel Art Academy.
+  Topics are all over the place, from how Retro uses his iPad, to his feelings about Kickstarter.
+
+> Burra hands you the magazine.
+
+pause
+
+### OpenPracticalPixels
+
+burra: There'll be more articles in the future, as development goes by.
+
+-> [MainQuestion]
+
+## YouTube
+`_answered = true`
+
+burra: 
+  We have drawing tutorials there, videos about Pixel Art Academy …
+  There was even a news show, but I hear Retro got a bit self-conscious about how much time it took, so now he just focuses on the game.
+
+> Burra shows you the YouTube channel.
+
+pause
+
+### OpenYouTube
+
+burra: Don't watch all the videos at once!
 
 -> [MainQuestion]
 

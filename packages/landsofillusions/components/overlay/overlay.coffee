@@ -8,6 +8,8 @@ class LOI.Components.Overlay extends AM.Component
   onCreated: ->
     super
 
+    @active = new ReactiveField false
+
     $('body').addClass('overlay-disable-scrolling')
 
   onRendered: ->
@@ -15,14 +17,46 @@ class LOI.Components.Overlay extends AM.Component
 
     @_cropBarHeight = 0
 
-    # Resize elements.
-    @autorun (computation) =>
-      @onResize()
+    # Reactively resize elements.
+    @autorun (computation) => @onResize()
 
+    # See if we're inside of a component with activatable state - if yes, we can listen to know when to deactivate.
+    activatableParent = @ancestorComponentWith 'activatedState'
+
+    if activatableParent
+      @autorun (computation) =>
+        activatedState = activatableParent.callFirstWith(null, 'activatedState')
+
+        switch activatedState
+          when LOI.Adventure.Item.activatedStates.Activating
+            @onActivating()
+
+          when LOI.Adventure.Item.activatedStates.Deactivating
+            @onDeactivating()
+
+          when LOI.Adventure.Item.activatedStates.Deactivated
+            @onDeactivated()
+
+    @onActivating()
+
+  onDestroyed: ->
+    super
+
+    $('body').removeClass('overlay-disable-scrolling')
+
+  onActivating: ->
+    @_cropBarHeight = 0
+
+    @onResize force: true
+
+    # Show transition cover.
+    @$('.transition-cover').addClass('visible')
+
+    # Fade in.
     @$('.landsofillusions-components-overlay').addClass('visible')
 
     Meteor.setTimeout =>
-      @$('.transition-cover')?.removeClass('visible')
+      @onActivated()
     ,
       600
 
@@ -34,30 +68,35 @@ class LOI.Components.Overlay extends AM.Component
       duration: 200
       easing: 'easeOutQuint'
 
-    # See if we're inside of a component with activatable state - if yes, we can listen to know when to deactivate.
-    activatableParent = @ancestorComponentWith 'activatedState'
+  onActivated: ->
+    return unless @isRendered()
 
-    if activatableParent
-      @autorun (computation) =>
-        activatedState = activatableParent.callFirstWith(null, 'activatedState')
-        if activatedState is LOI.Adventure.Item.activatedStates.Deactivating
-          # Animate out.
-          @$('.landsofillusions-components-overlay').removeClass('visible')
-          @$('.transition-cover').addClass('visible')
+    # Hide transition cover.
+    @$('.transition-cover').removeClass('visible')
+    @active true
 
-          @$('.crop-bar').velocity
-            height: 0
-          ,
-            duration: 200
-            delay: 300
-            easing: 'easeInQuint'
+  onDeactivating: ->
+    @active false
 
-  onDestroyed: ->
-    super
+    # Animate out.
+    @$('.landsofillusions-components-overlay').removeClass('visible')
+    @$('.transition-cover').addClass('visible')
 
-    $('body').removeClass('overlay-disable-scrolling')
+    @$('.crop-bar').velocity
+      height: 0
+    ,
+      duration: 200
+      delay: 300
+      easing: 'easeInQuint'
 
-  onResize: ->
+  onDeactivated: ->
+    # Hide transition cover.
+    @$('.transition-cover').removeClass('visible')
+
+  onResize: (options) ->
+    # Don't resize during animations. The function will re-run when active changes at the end.
+    return unless @active() or options?.force
+
     # We allow use outside of adventure as well, in which case we just find the parent that holds the display.
     display = LOI.adventure?.interface.display or @callAncestorWith 'display'
     scale = display.scale()

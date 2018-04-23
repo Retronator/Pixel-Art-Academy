@@ -58,6 +58,10 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Section
     # gets activated when episode's starting section gets completed.
     if @previousChapter then @previousChapter.finished() else @episode.startSection.finished()
 
+  accessRequirement: ->
+    # By default, chapters share the access requirement of the episode.
+    @episode.accessRequirement()
+
   currentSections: ->
     section for section in @sections() when section.active()
 

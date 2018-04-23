@@ -45,9 +45,22 @@ or
 #### Choice
 
     * dialog line -> [label name]
+    
+or
+
+    * @dialog line -> [label name]
 
 `Choice` node with a `DialogueLine` node that the player can decide between. 
 If choice is taken, script continues to given `Label`. (see `Jump` node below).
+
+The `@` in front of the dialog line indicates that the player (the user) is speaking this, even if the script is 
+executed while synced with a character. This is used for conversation with the player and their character.
+
+#### ChoicePlaceholder
+
+    * *placeholderId*
+
+`ChoicePlaceholder` node will prompt all listeners to provide optional choices for that placeholder ID.
 
 #### Code
 

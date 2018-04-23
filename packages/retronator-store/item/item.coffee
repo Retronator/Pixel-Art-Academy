@@ -17,16 +17,16 @@ class RS.Item extends AM.Document
   #   catalogKey
   # isGiftable: can this item be purchased for someone else
   # {extraData}: any extra data set for the item
-  @type: @id()
-  @register @type, @
-
   @Meta
     name: @id()
     fields: =>
       name: @ReferenceField AB.Translation, [], false
       description: @ReferenceField AB.Translation, [], false
       items: [@ReferenceField 'self', ['catalogKey']]
-      
+
+  @type: @id()
+  @register @type, @
+
   @all: 'Retronator.Store.Item.all'
 
   # Inserts an item into the database.

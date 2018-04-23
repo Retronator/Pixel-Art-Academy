@@ -6,7 +6,8 @@
 
 ## ReceptionistDialog
 
--> [AnythingElse] `_helped or this.entryApproved`
+-> [AnythingElse] `_helped`
+-> [NoFullAccess] `this.entryApproved`
 
 receptionist: Hi there, would you like to check in?
 
@@ -22,6 +23,9 @@ receptionist: Can I help you with anything else?
 
 * Yes, I'm here to create a character. -> [Create] `not this.entryApproved`
 * I must be in the wrong place. `not _helped and not this.entryApproved`
+* Where can I find existing characters? -> [CustomerService] `this.entryApproved`
+* How do I design my own characters? -> [DesignControl] `this.entryApproved and @user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+* What do I need to design my own characters? -> [Design] `this.entryApproved and not @user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 * All good, thank you. `_helped or this.entryApproved`
 
 ## GoodDay
@@ -36,21 +40,6 @@ receptionist: Good day.
 
 receptionist: Very well. Please scan your keycard.
 
--> [Access] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
-
-> You press your keycard to the detector, but it beeps with a red light.
-
-receptionist: 
-    I'm sorry, it seems that you do not have access to our facility.
-    By the looks of your keycard you're coming here from Retronator. 
-    Their store sells an upgrade that includes our services.
-
-* Thank you, I will look into that.
-
--> [GoodDay]
-
-## Access
-
 > You press your keycard to the detector, and it gives a happy beep.
 
 `this.entryApproved = true`
@@ -58,11 +47,65 @@ receptionist:
 receptionist: 
     Welcome, `@user.name`. `@user.name`
     Welcome! `not @user.name`
-    You will first want to head over to Design Control. 
-    Talk to Dr. Shelley there if you have any questions.
+    
+-> [FullAccess] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 
-* Perfect, I will do that.
+receptionist: 
+  I see you're coming here from Retronator and have only basic services enabled on your account.
+  You will be able to choose a character from our existing agent designs.
+  
+## CustomerService
+
+receptionist:
+  Head over to the customer service area in the east and use the terminal there.
+
+* Perfect, I will do that. -> [GoodDay]
+* And if I wanted to design my own characters? -> [Design] `not @user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 
 -> [GoodDay]
+
+## FullAccess
+    
+receptionist:
+  Since you have full access to our facilities, I recommend designing your own character.
+  
+## DesignControl
+
+receptionist:
+  You will want to head over to Design Control to the north. 
+  Talk to Dr. Shelley there if you have any questions.
+
+* Perfect, I will do that. -> [GoodDay]
+* Can I still choose from pre-existing characters? -> [PreExisting]
+
+## PreExisting
+
+receptionist: Certainly. You can do that in the main customer service area in the east.
+
+* Thank you, that's all.
+
+-> [GoodDay]
+
+## Design
+
+receptionist:
+  At Retronator they sell an Avatar Editor upgrade option.
+  When you've purchased it, you can come back and use our Design Control and Behavior Setup terminals to create new or modify existing characters.
+
+* Thank you, I might do that.
+
+-> [GoodDay]
+
+## NoFullAccess
+
+receptionist:
+  Unfortunately you don't have access to our full facilities so you can only go to the customer service area.
+
+* Oh, apologies.
+* How can I get access to other parts? -> [Design]
+
+receptionist: No problem at all.
+
+-> [End]
 
 ## End

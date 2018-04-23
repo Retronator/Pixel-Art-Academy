@@ -17,12 +17,7 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('items');
-
-  api.addThing('bottle/bottle');
+  
+  api.addThing('bottle..');
   api.addFile('bottle/scene');
-
-  api.addComponent('map/map');
-  api.addComponent('map/node');
-  api.addFile('map/scene');
-
 });

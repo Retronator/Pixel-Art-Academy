@@ -7,10 +7,16 @@ class LOI.Adventure extends LOI.Adventure
       options =
         timelineId: @currentTimelineId()
         location: @currentLocation()
+        context: @currentContext()
 
       return unless options.timelineId and options.location
 
       new LOI.Adventure.Situation options
+      
+    @currentSituationParameters = new ComputedField =>
+      timelineId: @currentTimelineId()
+      locationId: @currentLocationId()
+      contextId: @currentContext()?.id()
 
     # We use caches to avoid reconstruction.
     @_things = {}
@@ -45,10 +51,11 @@ class LOI.Adventure extends LOI.Adventure
         @currentSections()
         @activeScenes()
         @currentLocation()
+        @currentContext()
         @currentPhysicalThings()
       ]
 
-      _.without things, undefined
+      _.without things, undefined, null
 
     @currentInventoryThings = new ComputedField =>
       return unless currentPhysicalThings = @currentPhysicalThings()
@@ -62,7 +69,7 @@ class LOI.Adventure extends LOI.Adventure
       return unless currentSituation = @currentSituation()
       return unless currentPhysicalThings = @currentPhysicalThings()
 
-      locationThingClasses = currentSituation.things()
+      locationThingClasses = _.union currentSituation.things()
 
       # Note: thing classes can also hold instances, if they were created manually by locations.
       thing for thing in currentPhysicalThings when thing.constructor in locationThingClasses or thing in locationThingClasses
@@ -71,7 +78,7 @@ class LOI.Adventure extends LOI.Adventure
     thingClass = _.thingClass thingClassOrId
     things = @currentThings()
 
-    _.find things, (thing) -> thing.constructor is thingClass
+    _.find things, (thing) -> thing instanceof thingClass
 
   getAvatar: (thingClass) ->
     # Create the avatar if needed. It must be done in non-reactive

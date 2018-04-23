@@ -1,6 +1,6 @@
 AE = Artificial.Everywhere
 AT = Artificial.Telepathy
-Twit = Npm.require 'twit'
+Twit = require 'twit'
 
 # Twitter API wrapper.
 class AT.Twitter

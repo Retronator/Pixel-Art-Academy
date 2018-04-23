@@ -6,7 +6,7 @@ class AB.Helpers
   # - words: alternative to text, provide the array of words directly.
   # - maxWordsInPhrase: how many words can generated phrases have at most
   @generatePhrases: (options) ->
-    words = options.words or _.words(options.text)
+    words = options.words or _.words options.text, options.pattern
 
     # We generate all possible multiple-word phrases.
     phrases = []

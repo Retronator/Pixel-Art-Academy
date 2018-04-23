@@ -16,16 +16,16 @@ Package.onUse(function(api) {
 
   api.export('LandsOfIllusions');
 
-  api.addFiles('construct.coffee');
+  api.addFile('construct');
 
   // Actors
 
-  api.addFiles('actors/actors.coffee');
-  api.addFiles('actors/captain.coffee');
+  api.addFile('actors..');
+  api.addFile('actors/captain');
 
   // Items
 
-  api.addFiles('items/items.coffee');
+  api.addFile('items..');
 
   // Locations
 

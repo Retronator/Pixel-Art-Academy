@@ -1,0 +1,63 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-homescreen.app
+  padding 10rem
+  uni()
+  margin 0
+  opacity 0
+
+  &::after
+    content ''
+    display block
+    position absolute
+    bottom 0
+    left calc(50% - 46.5rem)
+    width 93rem
+    height 35rem
+    background-image image('/pixelartacademy/pixelboy/table.png')
+
+  .apps
+    list-style none
+    padding 0
+
+    .app
+      display inline-block !important // Forcing inline-block because velocity is not registering it.
+      opacity 0
+      vertical-align top
+      padding 5rem
+      width 70rem
+      text-transform uppercase
+      text-align center
+      cursor pointer
+
+      .link
+        text-decoration none
+        color atari2600colors[6][0]
+
+        .icon
+          position relative
+          display block
+          width 50rem
+          height 50rem
+          margin 0 auto 5rem auto
+
+        .name
+          display block
+          padding 0 5rem
+
+      &:hover
+        cursor pointer
+        background transparent
+        font-weight bold
+
+        .link
+          background-color transparent
+          color atari2600colors[7][0]
+
+          .icon
+            animation bounce 1s step-start 0s infinite
+            -webkit-animation bounce 1s step-start 0s infinite
+
+@keyframes bounce
+  50%
+    top -5rem
