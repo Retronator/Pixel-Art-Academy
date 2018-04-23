@@ -9,7 +9,7 @@ class C1.Items.AdmissionEmail extends LOI.Emails.Email
 
   @translations: ->
     from: "Retropolis Academy of Art"
-    subject: "Admission to our program"
+    subject: "Admission to Retropolis Academy of Art"
     text: """
       Dear _char_,
 
