@@ -9,9 +9,19 @@ PAA.Practice.Journal.insert.method (characterId, design) ->
   # Make sure the user can perform this character action.
   LOI.Authorize.characterAction characterId
 
+  lastJournal = PAA.Practice.Journal.documents.findOne
+    'character._id': characterId
+  ,
+    sort:
+      order: -1
+
+  # Place it after the last entry (or at the start if it's the first entry).
+  order = (lastJournal?.order + 1) or 0
+
   # We create a new check-in for the given character.
   journal =
     design: design
+    order: order
     character:
       _id: characterId
 
@@ -33,8 +43,7 @@ PAA.Practice.Journal.updateTitle.method (journalId, title) ->
   authorizeJournalAction journalId
 
   # Associate the artist with the character.
-  PAA.Practice.Journal.documents.update journalId,
-    $set: {title}
+  PAA.Practice.Journal.documents.update journalId, $set: {title}
 
 PAA.Practice.Journal.updateDefaultFont.method (journalId, defaultFont) ->
   check journalId, Match.DocumentId
@@ -44,8 +53,7 @@ PAA.Practice.Journal.updateDefaultFont.method (journalId, defaultFont) ->
   authorizeJournalAction journalId
 
   # Associate the artist with the character.
-  PAA.Practice.Journal.documents.update journalId,
-    $set: {defaultFont}
+  PAA.Practice.Journal.documents.update journalId, $set: {defaultFont}
 
 PAA.Practice.Journal.updateDesign.method (journalId, design) ->
   check journalId, Match.DocumentId
@@ -55,8 +63,7 @@ PAA.Practice.Journal.updateDesign.method (journalId, design) ->
   authorizeJournalAction journalId
 
   # Associate the artist with the character.
-  PAA.Practice.Journal.documents.update journalId,
-    $set: {design}
+  PAA.Practice.Journal.documents.update journalId, $set: {design}
 
 PAA.Practice.Journal.updateArchived.method (journalId, archived) ->
   check journalId, Match.DocumentId
@@ -66,8 +73,17 @@ PAA.Practice.Journal.updateArchived.method (journalId, archived) ->
   authorizeJournalAction journalId
 
   # Associate the artist with the character.
-  PAA.Practice.Journal.documents.update journalId,
-    $set: {archived}
+  PAA.Practice.Journal.documents.update journalId, $set: {archived}
+
+PAA.Practice.Journal.updateOrder.method (journalId, order) ->
+  check journalId, Match.DocumentId
+  check order, Number
+
+  # Make sure the check-in belongs to the current user.
+  authorizeJournalAction journalId
+
+  # Associate the artist with the character.
+  PAA.Practice.Journal.documents.update journalId, $set: {order}
 
 authorizeJournalAction = (journalId) ->
   journal = PAA.Practice.Journal.documents.findOne journalId

@@ -73,7 +73,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
     @autorun (computation) =>
       # Depend on PixelBoy size and number of journals.
       width = @journal.os.pixelBoy.animatingSize().width
-      count = @activeJournals().count()
+      count = @activeJournals().count() + 1
       scale = LOI.adventure.interface.display.scale()
       contentWidth = 2 * 95 + 120 * count
 
@@ -130,7 +130,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
           shade: 2
 
   onScrollOverlay: (event) ->
-    maxCameraPositionX = 50 * (@activeJournals().count() - 1)
+    maxCameraPositionX = 50 * @activeJournals().count()
 
     if @maxOverlayScrollLeft
       cameraPositionX = @$overlay.scrollLeft() / @maxOverlayScrollLeft * maxCameraPositionX

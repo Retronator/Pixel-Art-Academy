@@ -44,6 +44,7 @@ class PAA.Practice.Journal extends AM.Document
   @updateDefaultFont: @method 'updateDefaultFont'
   @updateDesign: @method 'updateDesign'
   @updateArchived: @method 'updateArchived'
+  @updateOrder: @method 'updateOrder'
 
   # Subscriptions
 

@@ -37,7 +37,7 @@ class LOI.GameState extends AM.Document
       user: @ReferenceField RA.User, ['displayName']
       character: @ReferenceField LOI.Character, ['debugName']
       # Events and state both influence next simulation time (we need earliest event, 
-      # and latest game time as well as when that game time was written (last updated at)).
+      # and latest game time, as well as when that game time was written (last updated at)).
       nextSimulateTime: @GeneratedField 'self', ['events', 'state', 'stateLastUpdatedAt'], (fields) ->
         return [fields._id, null] unless fields.events?.length
 

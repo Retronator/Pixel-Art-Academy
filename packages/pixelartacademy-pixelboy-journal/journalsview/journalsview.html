@@ -3,12 +3,13 @@
     <div class="scene"></div>
     <div class="overlay">
       <div class="overlay-content">
-        <button class="new-journal-button">Create new journal</button>
+        <div class="padding-placeholder"></div>
         <ul class="journals">
           {{#each activeJournals}}
             <li class="journal"></li>
           {{/each}}
         </ul>
+        <button class="new-journal-button">Create new journal</button>
         <div class="archive">
           <ul class="journals">
             {{#each archivedJournals}}
@@ -16,7 +17,7 @@
             {{/each}}
           </ul>
         </div>
-        <div class="end-placeholder"></div>
+        <div class="padding-placeholder"></div>
       </div>
     </div>
   </div>

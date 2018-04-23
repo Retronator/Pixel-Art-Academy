@@ -84,7 +84,11 @@ class C1.PersonConversation extends LOI.Adventure.Scene
 
             ephemeralPerson = ephemeralPeople[person._id]
 
-            journals = PAA.Practice.Journal.documents.fetch 'character._id': person._id
+            journals = PAA.Practice.Journal.documents.fetch
+              'character._id': person._id
+            ,
+              sort:
+                order: 1
 
             _.extend ephemeralPerson,
               _id: person._id
