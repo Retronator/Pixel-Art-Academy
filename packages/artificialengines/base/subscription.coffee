@@ -18,4 +18,12 @@ class AB.Subscription
 
   # Method that publishes the handler.
   publish: (handler) ->
+    if Artificial.debug
+      originalHandler = handler
+      name = @options.name
+
+      handler = ->
+        console.log "Publishing", name, arguments
+        originalHandler.call @, arguments...
+
     Meteor.publish @options.name, handler

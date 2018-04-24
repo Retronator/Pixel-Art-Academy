@@ -180,9 +180,12 @@ Package.onUse(function(api) {
   api.addServerFile('telepathy/maxmind-server');
 
   // Artificial Babel
-  api.addFile('babel/babel');
-  api.addFile('babel/initialize');
+  api.addFile('babel..');
+  api.addServerFile('babel/babel-server');
+  api.addClientFile('babel/babel-client');
+  api.addClientFile('babel/initialize-client');
   api.addFile('babel/helpers');
+  api.addServerFile('babel/cache-server');
 
   api.addFile('babel/rules..');
   api.addFile('babel/rules/english');

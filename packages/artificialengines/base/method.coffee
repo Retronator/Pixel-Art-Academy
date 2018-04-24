@@ -8,6 +8,13 @@ class AB.Method
 
     # Method that registers the handler.
     method.method = (handler) ->
+      if Artificial.debug
+        originalHandler = handler
+
+        handler = ->
+          console.log "Executing method", options.name, arguments
+          originalHandler.call @, arguments...
+
       Meteor.methods
         "#{options.name}": handler
 

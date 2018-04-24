@@ -14,7 +14,7 @@ class LOI.Character.Behavior.Perks extends LOI.Character.Part.Property.Array
 
     perkNames = for perkKey in perkKeys
       namespace = "LandsOfIllusions.Character.Behavior.Perk.#{perkKey}"
-      translation = AB.Translation.documents.findOne {namespace, key: 'name'}
+      translation = AB.existingTranslation namespace, 'name'
 
       AB.translate(translation).text
 

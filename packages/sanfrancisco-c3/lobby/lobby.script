@@ -4,10 +4,11 @@
 
 > Before you can walk by, the receptionist calls after you.
 
+-> [NoFullAccess] `this.entryApproved`
+
 ## ReceptionistDialog
 
 -> [AnythingElse] `_helped`
--> [NoFullAccess] `this.entryApproved`
 
 receptionist: Hi there, would you like to check in?
 

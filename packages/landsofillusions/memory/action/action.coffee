@@ -78,9 +78,8 @@ class LOI.Memory.Action extends AM.Document
     return unless @constructor[key]
 
     # We assume the translation is already subscribed from the text interface.
-    translation = AB.Translation.documents.findOne
-      namespace: @constructor.type
-      key: key
+    namespace = @constructor.type
+    translation = AB.existingTranslation namespace, key
 
     return unless translation
 

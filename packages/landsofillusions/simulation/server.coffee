@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 class LOI.Simulation.Server
   # Call to simulate all game states that have events pending for simulation.
   @simulateAllEvents: ->
+    console.log "Simulating all events." if LOI.debug
+
     gameStates = LOI.GameState.documents.fetch
       nextSimulateTime: $lt: new Date()
 
@@ -13,6 +15,8 @@ class LOI.Simulation.Server
     gameStates.length
 
   @simulateGameState: (gameStateDocument) ->
+    console.log "Simulating game state", gameStateDocument?._id if LOI.debug
+
     # Nothing to do if no events are pending.
     return unless gameStateDocument.events.length
 
@@ -85,6 +89,6 @@ Document.startup ->
   for minute in [5, 15, 25, 35, 45, 55]
     new Cron =>
       simulatedCount = LOI.Simulation.Server.simulateAllEvents()
-      console.log "Scheduled simulation of events. #{simulatedCount} game states updated." if simulatedCount
+      console.log "Scheduled simulation of events. #{simulatedCount} game states updated." if simulatedCount or LOI.debug
     ,
       minute: minute

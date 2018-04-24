@@ -79,7 +79,7 @@ class C3.Behavior.Terminal.Perks extends AM.Component
     perkKey = @currentData()
 
     namespace = "LandsOfIllusions.Character.Behavior.Perk.#{perkKey}"
-    translation = AB.Translation.documents.findOne {namespace, key: translationKey}
+    translation = AB.existingTranslation namespace, translationKey
 
     AB.translate(translation).text
 
