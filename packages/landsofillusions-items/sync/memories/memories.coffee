@@ -52,34 +52,36 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
 
   getCharacterImage: (characterId) ->
     # Start rendering this avatar if we haven't yet.
-    @characterImages[characterId] ?=
-      image: new ReactiveField null
-      updateAutorun: Tracker.autorun (computation) =>
-        # Render avatar to image.
-        character = LOI.Character.getInstance characterId
-        renderer = character.avatar.renderer()
+    unless @characterImages[characterId]
+      Tracker.nonreactive =>
+        @characterImages[characterId] =
+          image: new ReactiveField null
+          updateAutorun: Tracker.autorun (computation) =>
+            # Render avatar to image.
+            character = LOI.Character.getInstance characterId
+            renderer = character.avatar.renderer()
 
-        # Wait until character has loaded and renderer is ready.
-        return unless character.document()
-        return unless renderer.ready()
+            # Wait until character has loaded and renderer is ready.
+            return unless character.document()
+            return unless renderer.ready()
 
-        canvas = $('<canvas>')[0]
-        canvas.width = 16
-        canvas.height = 64
+            canvas = $('<canvas>')[0]
+            canvas.width = 16
+            canvas.height = 64
 
-        context = canvas.getContext '2d'
+            context = canvas.getContext '2d'
 
-        context.setTransform 1, 0, 0, 1, Math.floor(canvas.width / 2), Math.floor(canvas.height / 2)
-        context.clearRect 0, 0, canvas.width, canvas.height
+            context.setTransform 1, 0, 0, 1, Math.floor(canvas.width / 2), Math.floor(canvas.height / 2)
+            context.clearRect 0, 0, canvas.width, canvas.height
 
-        # Draw and pass the root part in options so we can do different rendering paths based on it.
-        renderer.drawToContext context,
-          rootPart: character.avatar
-          lightDirection: => new THREE.Vector3(0, -1, -1).normalize()
+            # Draw and pass the root part in options so we can do different rendering paths based on it.
+            renderer.drawToContext context,
+              rootPart: character.avatar
+              lightDirection: => new THREE.Vector3(0, -1, -1).normalize()
 
-        canvas.toBlob (blob) =>
-          # Update the image.
-          @characterImages[characterId].image URL.createObjectURL blob
+            canvas.toBlob (blob) =>
+              # Update the image.
+              @characterImages[characterId].image URL.createObjectURL blob
 
     # Return the image.
     @characterImages[characterId].image()

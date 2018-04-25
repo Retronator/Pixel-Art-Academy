@@ -9,10 +9,10 @@ class HQ.Cafe.Burra extends HQ.Actors.Burra
 
     # See if we've talked to her already.
     if LOI.character()
-      talked = HQ.Cafe.BurraListener.UserScript.state 'MainQuestion'
+      talked = HQ.Cafe.BurraListener.CharacterScript.state 'MainQuestion'
 
     else
-      talked = HQ.Cafe.BurraListener.CharacterScript.state 'MainQuestion'
+      talked = HQ.Cafe.BurraListener.UserScript.state 'MainQuestion'
 
     return justName if talked
 
