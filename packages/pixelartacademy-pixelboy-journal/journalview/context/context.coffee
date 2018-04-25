@@ -39,10 +39,14 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     LOI.adventure.interface.narrative.clear()
 
     # Subscribe to the selected entry so it loads up quicker.
-    PAA.Practice.Journal.Entry.forId.subscribe @options.entryId if @options.entryId
+    @_entrySubscription = PAA.Practice.Journal.Entry.forId.subscribe @options.entryId if @options.entryId
 
     # Get journal ID from the entry if necessary.
     @journalId = new ComputedField =>
+      # To prevent flicker, wait until our own subscription has kicked in,
+      # since entry from outside subscriptions might get lost before we get it back.
+      return if @_entrySubscription? and not @_entrySubscription.ready()
+
       journalId = @options.journalId
 
       unless journalId
@@ -116,6 +120,15 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     @journalDesign.stop()
     @entryId.stop()
     @memoryIds.stop()
+
+  ready: ->
+    conditions = [
+      super
+      @memoryIds()
+      @description()
+    ]
+
+    _.every conditions
 
   createNewMemory: ->
     memoryId = super

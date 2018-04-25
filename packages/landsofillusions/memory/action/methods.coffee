@@ -43,18 +43,21 @@ LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
     # Also automatically progress this memory to the end for this character.
     LOI.Memory.Progress.updateProgress characterId, memoryId, action.time
 
-  else if action.isMemorable
-    # Memorable actions need to be normally inserted.
-    LOI.Memory.Action.documents.insert action
-
   else
-    # Outside of memories and memorable actions, we replace this character's last action.
-    LOI.Memory.Action.documents.upsert
-      'character._id': characterId
-      memoryId: $exists: false
-      isMemorable: $ne: true
-    ,
-      action
+    action.memory = null
+
+    if action.isMemorable
+      # Memorable actions need to be normally inserted.
+      LOI.Memory.Action.documents.insert action
+
+    else
+      # Outside of memories and memorable actions, we replace this character's last action.
+      LOI.Memory.Action.documents.upsert
+        'character._id': characterId
+        memory: null
+        isMemorable: $ne: true
+      ,
+        action
 
 LOI.Memory.Action.updateTimeAndSituation.method (actionId, time, situation) ->
   check actionId, Match.DocumentId

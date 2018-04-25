@@ -38,6 +38,7 @@ class LOI.Adventure extends AM.Component
 
   ready: ->
     currentTimelineId = @currentTimelineId()
+    currentContext = @currentContext()
     currentLocation = @currentLocation()
     currentRegion = @currentRegion()
 
@@ -45,8 +46,10 @@ class LOI.Adventure extends AM.Component
       @parser.ready()
       @interface.ready()
       currentTimelineId
+      if currentContext? then currentContext.ready() else true
       if currentLocation? then currentLocation.ready() else false
       if currentRegion? then currentRegion.ready() else false
+      if @currentMemoryId() then @currentMemory()? else true
       @episodesReady()
     ]
 
