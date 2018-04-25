@@ -7,15 +7,12 @@ class Artificial.Babel extends Artificial.Babel
   # Global toggle that turns translatables into editable inputs.
   @inTranslationMode: new ReactiveField false
 
-  @userLanguagePreference: (value) ->
+  @languagePreference: (value) ->
     if value
       @_userLanguagePreference value
 
     @_userLanguagePreference()
     
-  # Useful for passing to other language conversion functions such as toLocaleString.
-  @currentLanguage: -> @userLanguagePreference()?[0]
-
   # Load cache.
   @_cache = new ReactiveField null
 
@@ -47,7 +44,7 @@ class Artificial.Babel extends Artificial.Babel
       return unless @inTranslationMode()
 
       # We allow sending null as the languages if we want to subscribe to all languages.
-      languages = options.languages ? @userLanguagePreference()
+      languages = options.languages ? @languagePreference()
 
       subscribeProvider = options.subscribeProvider or Meteor
 
@@ -124,7 +121,7 @@ class Artificial.Babel extends Artificial.Babel
     else
       translation = translationOrHandle
 
-    return translation.translate @userLanguagePreference() if translation
+    return translation.translate @languagePreference() if translation
 
     # If we don't have a translation for this yet, just return the key.
     text: key
@@ -143,7 +140,7 @@ class Artificial.Babel extends Artificial.Babel
       namespace = component.babelNamespace or component.componentName()
       return unless namespace
 
-      languages = @userLanguagePreference()
+      languages = @languagePreference()
 
       # Save the handle on component so we can check its ready state before trying to insert keys into the database.
       component._babelSubscriptionHandle = @Translation.forNamespace.subscribe namespace, null, languages

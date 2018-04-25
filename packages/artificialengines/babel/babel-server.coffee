@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 
 class Artificial.Babel extends Artificial.Babel
   # Useful for passing to language conversion functions such as toLocaleString.
-  @currentLanguage: -> @defaultLanguage()
+  @languagePreference: -> [@defaultLanguage]
 
   # Creates a new translation with the default text or updates it if it
   # already exists. It returns the id of the new or existing translation.

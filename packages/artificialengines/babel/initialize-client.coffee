@@ -7,4 +7,4 @@ languagePreference ?= [navigator.language] if navigator.language
 # Fallback to the hardcoded value.
 languagePreference ?= ['en-US', 'en']
 
-AB.userLanguagePreference languagePreference
+AB.languagePreference languagePreference

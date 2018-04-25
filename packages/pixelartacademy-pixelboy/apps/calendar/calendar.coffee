@@ -47,7 +47,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.OS.App
 
   displayedMonthText: ->
     date = @displayedMonth()
-    languagePreference = AB.userLanguagePreference()
+    languagePreference = AB.languagePreference()
     date.toLocaleDateString languagePreference,
       month: 'long'
       year: 'numeric'

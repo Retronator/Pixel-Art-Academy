@@ -101,7 +101,7 @@ class AB.Translation extends AM.Document
     translations.push {languageRegion, translationData}
 
   # Finds the best translation in order of preferred languages.
-  translate: (languagePreference = AB.userLanguagePreference()) ->
+  translate: (languagePreference = AB.languagePreference()) ->
     for languageRegion in languagePreference
       translation = @_findTranslation languageRegion
       return translation if translation

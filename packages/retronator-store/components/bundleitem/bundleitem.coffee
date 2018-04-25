@@ -10,7 +10,7 @@ class RS.Components.BundleItem extends AM.Component
     super
 
     item = @data()
-    AB.Translation.forId.subscribe @, item.description._id, AB.userLanguagePreference()
+    AB.Translation.forId.subscribe @, item.description._id, AB.languagePreference()
 
   ownedClass: ->
     item = @data()

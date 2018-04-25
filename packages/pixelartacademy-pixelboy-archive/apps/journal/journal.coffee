@@ -56,7 +56,7 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
           
     dateText: ->
       date = @currentData().time
-      languagePreference = AB.userLanguagePreference()
+      languagePreference = AB.languagePreference()
       date.toLocaleDateString languagePreference,
         day: 'numeric'
         month: 'long'

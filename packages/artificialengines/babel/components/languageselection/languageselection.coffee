@@ -49,14 +49,14 @@ class AB.Components.LanguageSelection extends AM.Component
     @languageNames = new ComputedField =>
       for language in @languages()
         language: language
-        name: language.name.translate(AB.userLanguagePreference())?.text
+        name: language.name.translate(AB.languagePreference())?.text
         nativeName: language.name.translationData(language.code)?.text
 
     # Cache language and region name translations.
     @regionNames = new ComputedField =>
       for region in @regions()
         region: region
-        name: region.name.translate(AB.userLanguagePreference())?.text
+        name: region.name.translate(AB.languagePreference())?.text
 
   currentLanguage: ->
     AB.Language.documents.findOne
