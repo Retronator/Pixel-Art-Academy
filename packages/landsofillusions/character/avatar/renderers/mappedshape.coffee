@@ -11,7 +11,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     @frontSpriteData = new ComputedField =>
       return unless spriteId = @options.frontSpriteId()
 
-      LOI.Assets.Sprite.documents.findOne spriteId
+      LOI.Assets.Sprite.getFromCache spriteId
 
     @frontSprite = new LOI.Assets.Engine.Sprite
       spriteData: @frontSpriteData

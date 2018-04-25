@@ -12,6 +12,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('webapp', 'server');
 
   api.export('LandsOfIllusions');
 
@@ -31,8 +32,10 @@ Package.onUse(function(api) {
   api.addFile('documents/visualasset/methods');
 
   api.addFile('documents/sprite/sprite');
+  api.addClientFile('documents/sprite/sprite-client');
   api.addFile('documents/sprite/methods');
   api.addServerFile('documents/sprite/subscriptions');
+  api.addServerFile('documents/sprite/cache-server');
 
   api.addFile('documents/mesh/mesh');
 

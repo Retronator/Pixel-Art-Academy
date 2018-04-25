@@ -17,10 +17,10 @@ class Artificial.Babel extends Artificial.Babel
   @currentLanguage: -> @userLanguagePreference()?[0]
 
   # Load cache.
-  @cache = new ReactiveField null
+  @_cache = new ReactiveField null
 
   HTTP.get @cacheUrl, (error, response) =>
-    @cache JSON.parse response.content
+    @_cache JSON.parse response.content
 
   # Handle for keeping tracks of individual translation subscriptions.
   class @SubscriptionHandle
@@ -31,7 +31,7 @@ class Artificial.Babel extends Artificial.Babel
         @_babelSubscriptionHandle.ready()
 
       else
-        Artificial.Babel.cache()?
+        Artificial.Babel._cache()?
 
     stop: ->
       @_babelSubscriptionAutorun.stop()
@@ -84,7 +84,7 @@ class Artificial.Babel extends Artificial.Babel
         key: key
 
     else
-      return unless cachedTranslation = @cache()?[namespace]?[key]
+      return unless cachedTranslation = @_cache()?[namespace]?[key]
 
       # Get translation from cache.
       new @Translation
@@ -107,7 +107,7 @@ class Artificial.Babel extends Artificial.Babel
           $regex: keyRegex
 
     else
-      return [] unless cache = @cache()
+      return [] unless cache = @_cache()
       return [] unless cache[namespace]
 
       for key, translations of cache[namespace] when keyRegex.test key
@@ -167,7 +167,7 @@ class Artificial.Babel extends Artificial.Babel
 
     else
       # Get translation from cache.
-      cache = @cache()
+      cache = @_cache()
 
       return unless cachedTranslation = cache?[namespace]?[key]
 
