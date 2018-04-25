@@ -24,6 +24,13 @@ Package.onUse(function(api) {
   api.addFile('scenes/inventory');
   api.addFile('scenes/chinabasinpark');
 
+  // Admin
+
+  api.addFile('pages..');
+  api.addUnstyledComponent('pages/admin..');
+  api.addUnstyledComponent('pages/admin/admissions..');
+  api.addServerFile('pages/admin/admissions/methods-server/processapplied');
+
   // Start
 
   api.addFile('start..');

@@ -102,7 +102,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     @memoryIds = new ComputedField =>
       return unless entryId = @entryId()
       return unless entry = PAA.Practice.Journal.Entry.documents.findOne entryId
-      return unless entry.memories
+
+      # Return an empty array to indicate that we've created memory IDs and not just waiting on the entry.
+      return [] unless entry.memories
 
       memory._id for memory in entry.memories
 
