@@ -34,14 +34,12 @@ class LOI.Parser.Vocabulary
           # follows this will come down to \. which will match a literal dot.
           keyPattern = keyPattern.replace /\./g, '\\.'
 
-          keyRegex = new RegExp keyPattern, 'g'
+          # Note: we don't use the global flag because that creates inconsistent
+          # behavior when calling test on the regex inside existingTranslations.
+          keyRegex = new RegExp keyPattern
 
           # Find all the translations that use this vocabulary key.
-          translations = Artificial.Babel.Translation.documents.find(
-            namespace: @_translationSubscription.namespace
-            key:
-              $regex: keyRegex
-          ).fetch()
+          translations = Artificial.Babel.existingTranslations @_translationSubscription.namespace, keyRegex
 
           # Translate all phrases and add them to this location.
           vocabularyLocation[phrase] = []

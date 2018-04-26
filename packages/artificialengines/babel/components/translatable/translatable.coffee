@@ -55,7 +55,7 @@ class AB.Components.Translatable extends AM.Component
 
       # We don't have a translation (or the translation has no translations)
       # and will need to create it if the user types in something.
-      languageRegion: @options.newTranslationLanguage ? AB.userLanguagePreference()[0]
+      languageRegion: @options.newTranslationLanguage ? AB.languagePreference()[0]
 
     @showTranslationSelector = new ReactiveField false
 
@@ -195,7 +195,7 @@ class AB.Components.Translatable extends AM.Component
       placeholderTextComponent = @ancestorComponentWith (component) => component.options?.placeholderText
 
       if placeholderTextComponent
-        translationLanguage = if placeholderTextComponent.options.placeholderInTargetLanguage then [@options.languageRegion()] else AB.userLanguagePreference()
+        translationLanguage = if placeholderTextComponent.options.placeholderInTargetLanguage then [@options.languageRegion()] else AB.languagePreference()
 
         # Get the placeholder text (or translation).
         placeholder = placeholderTextComponent.options.placeholderText()

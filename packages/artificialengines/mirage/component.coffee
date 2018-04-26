@@ -204,7 +204,7 @@ class AM.Component extends CommonComponent
   # the translation component. Meant to be called from a reactive context.
   translateTranslation: (translation) ->
     # First subscribe to the full data of the translation, since we could be passed just a nested document stub.
-    AB.Translation.forId.subscribe @, translation._id, AB.userLanguagePreference()
+    AB.Translation.forId.subscribe @, translation._id, AB.languagePreference()
 
     # Get the full translation.
     translation = AB.Translation.documents.findOne translation._id

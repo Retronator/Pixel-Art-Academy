@@ -263,6 +263,9 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
     LOI.adventure.menu.customShowMenu null
 
   onScroll: ->
+    # Stop intro mode on scroll, but we don't want it to automatically scroll to bottom.
+    LOI.adventure.interface.stopIntro scroll: false if LOI.adventure.interface.inIntro()
+
     @draw()
 
   draw: (appTime) ->

@@ -42,6 +42,9 @@ class Soma.Items.Map extends LOI.Adventure.Item
       action: =>
         map.state 'inInventory', true
 
+        # Report OK to the user.
+        true
+
     commandResponse.onPhrase
       form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], map.avatar]
       priority: 1

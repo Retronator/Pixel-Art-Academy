@@ -60,8 +60,7 @@ class PAA.PixelBoy.Apps.Yearbook extends PAA.PixelBoy.App
 
     # Subscribe to all regions and the translations of their names.
     Artificial.Babel.Region.all.subscribe @
-    Artificial.Babel.Translation.forNamespace.subscribe @, 'Artificial.Babel.Region.Names'
-    
+
     @constructor.students.subscribe @
 
     @studentsPerSpread = 24

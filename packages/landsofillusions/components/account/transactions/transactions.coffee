@@ -109,7 +109,7 @@ class LOI.Components.Account.Transactions extends LOI.Components.Account.Page
 
   dateText: ->
     transaction = @currentData()
-    languagePreference = AB.userLanguagePreference()
+    languagePreference = AB.languagePreference()
 
     transaction.time.toLocaleDateString languagePreference,
       day: 'numeric'

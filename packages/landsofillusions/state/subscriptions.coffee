@@ -31,6 +31,8 @@ LOI.GameState.forCharacter.publish (characterId) ->
 
   # Before we send the document, simulate it to current time.
   gameState = LOI.GameState.documents.findOne 'character._id': characterId
+  throw new AE.InvalidOperationException "Character does not have a game state." unless gameState
+
   LOI.Simulation.Server.simulateGameState gameState
 
   LOI.GameState.documents.find

@@ -26,7 +26,7 @@ class AB.Components.RegionSelection extends AM.DataInputComponent
     @regionNames = new ComputedField =>
       for region in @regions()
         region: region
-        name: region.name.translate(AB.userLanguagePreference())?.text
+        name: region.name.translate(AB.languagePreference())?.text
 
   options: ->
     regionNames = _.sortBy @regionNames(), (regionName) => regionName.name

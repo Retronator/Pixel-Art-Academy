@@ -294,7 +294,7 @@ class HQ.Items.Receipt extends HQ.Items.Components.Stripe
     @selectedPaymentMethod() or not @paymentAmount()
 
   dateText: ->
-    languagePreference = AB.userLanguagePreference()
+    languagePreference = AB.languagePreference()
 
     new Date().toLocaleDateString languagePreference,
       day: 'numeric'

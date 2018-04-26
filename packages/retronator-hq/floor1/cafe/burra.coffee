@@ -8,7 +8,11 @@ class HQ.Cafe.Burra extends HQ.Actors.Burra
     justName = "Sarah '![Burra](talk to Burra)' Burrough."
 
     # See if we've talked to her already.
-    talked = HQ.Cafe.BurraListener.UserScript.state 'MainQuestion'
+    if LOI.character()
+      talked = HQ.Cafe.BurraListener.CharacterScript.state 'MainQuestion'
+
+    else
+      talked = HQ.Cafe.BurraListener.UserScript.state 'MainQuestion'
 
     return justName if talked
 

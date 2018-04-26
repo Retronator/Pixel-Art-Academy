@@ -461,6 +461,11 @@ class LOI.Adventure extends LOI.Adventure
         @setTimelineId LOI.TimelineIds.RealLife
 
   loadConstruct: ->
+    # Make sure the user is not already in construct.
+    if @currentTimelineId() is LOI.TimelineIds.Construct
+      console.warn "User is already in the Construct."
+      return
+
     # Going to Construct differs if we're going there from the user's or character's world.
     if LOI.characterId()
       # Unload the character to get back to user state.

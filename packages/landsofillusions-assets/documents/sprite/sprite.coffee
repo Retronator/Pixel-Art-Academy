@@ -29,10 +29,16 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   # use the name parameter, because in production the name field has a minimized value.
   @className: 'Sprite'
 
+  @cacheUrl = '/landsofillusions/assets/sprite/cache.json'
+
+  # Subscriptions
+  
   @forId: @subscription 'forId'
   @all: @subscription 'all'
   @forCharacterPartTemplatesOfTypes: @subscription 'forCharacterPartTemplatesOfTypes'
 
+  # Methods
+  
   @insert: @method 'insert'
   @update: @method 'update'
   @clear: @method 'clear'

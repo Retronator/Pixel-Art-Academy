@@ -14,6 +14,9 @@ class LOI.Interface extends AM.Component
 
     # React to location changes.
     @autorun (computation) =>
+      # Wait to run until interface is fully operational.
+      return unless @isRendered()
+
       # Find the location we're at.
       location = @location()
       return unless location

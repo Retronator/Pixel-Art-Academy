@@ -280,18 +280,13 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     @resizing false
 
   onKeyDown: (event) ->
-    # Don't capture events when interface is not active, unless we're the reason for it.
-    pixelBoyIsActive = LOI.adventure.activeItem() is @
-    return unless LOI.adventure.interface.active() or pixelBoyIsActive
+    # Don't capture events when interface is not active.
+    return unless LOI.adventure.interface.active()
 
     keyCode = event.which
     return unless keyCode is AC.Keys.alt
 
-    if pixelBoyIsActive
-      LOI.adventure.deactivateActiveItem()
-
-    else
-      @open()
+    @open()
 
   # Listener
 

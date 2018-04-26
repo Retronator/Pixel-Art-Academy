@@ -12,7 +12,7 @@ class AB.Components.Translation extends AM.Component
       translation = @data()
       return unless translation
 
-      @translationSubscription = AB.Translation.forId.subscribe @, translation._id, AB.userLanguagePreference()
+      @translationSubscription = AB.Translation.forId.subscribe @, translation._id, AB.languagePreference()
 
   showLoading: ->
     # We should show loading if translation has no data and the subscription isn't ready.

@@ -24,21 +24,7 @@ class LOI.Components.Account.Page extends AM.Component
           defaultText = _.propertyValue @, translationKey
           AB.createTranslation translationNamespace, translationKey, defaultText
 
-  constructor: ->
-    super
-
-    translationNamespace = @componentName()
-
-    # Subscribe to translation keys in advance to avoid loading on display.
-    Tracker.autorun (computation) =>
-      AB.Translation.forNamespace.subscribe translationNamespace, null, AB.userLanguagePreference()
-
   url: -> @constructor.url()
-    
-  displayNameTranslation: ->
-    translationNamespace = @componentName()
 
-    # We directly return the translation document instead of going through the component since we subscribed on our own.
-    AB.Translation.documents.findOne
-      namespace: translationNamespace
-      key: @constructor.translationKeys.displayName
+  displayNameTranslation: ->
+    @translation @constructor.translationKeys.displayName

@@ -15,8 +15,7 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
     @spriteData = new ComputedField =>
       return unless spriteId = @options.spriteId()
 
-      LOI.Assets.Sprite.forId.subscribe spriteId
-      LOI.Assets.Sprite.documents.findOne spriteId
+      LOI.Assets.Sprite.getFromCache spriteId
 
     @sprite = new LOI.Assets.Engine.Sprite
       spriteData: @spriteData

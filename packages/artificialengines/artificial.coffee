@@ -1,4 +1,5 @@
 class Artificial
+  @debug = false
 
 if Meteor.isClient
   window.Artificial = Artificial

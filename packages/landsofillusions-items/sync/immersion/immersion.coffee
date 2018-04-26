@@ -54,7 +54,7 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
     'active' if LOI.characterId() is characterInstance._id
 
   landsOfIllusionsActiveClass: ->
-    'active' if LOI.adventure.currentLocationId() is LOI.Construct.Loading.id()
+    'active' if LOI.adventure.currentTimelineId() is LOI.TimelineIds.Construct
 
   nextButtonVisibleClass: ->
     # We need to accommodate Lands of Illusions and Disconnect links.
@@ -88,6 +88,9 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
       1000
     
   onClickLandsOfIllusions: (event) ->
+    # Don't go into construct if already there.
+    return if @landsOfIllusionsActiveClass()
+    
     @sync.fadeToWhite()
 
     Meteor.setTimeout =>
