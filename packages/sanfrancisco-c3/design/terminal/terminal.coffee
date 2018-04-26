@@ -44,5 +44,5 @@ class C3.Design.Terminal extends C3.Items.Terminal
 
     # Show an alpha-state disclaimer.
     @showDialog
-      message: "Agent design is in early prototype stage. Few avatar parts are available and things will change later on."
+      message: "Agent design is in early prototype stage. Few avatar parts are available and things will change later on. Note that the editor includes pixel nudity."
       cancelButtonText: "Understood"

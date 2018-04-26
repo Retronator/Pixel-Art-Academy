@@ -12,8 +12,6 @@ class C1.Groups.SanFranciscoFriends extends LOI.Adventure.Group
   @initialize()
 
   constructor: ->
-    super
-
     @memberIds = new ComputedField =>
       group = LOI.Character.Group.documents.findOne
         'character._id': LOI.characterId()
@@ -22,9 +20,9 @@ class C1.Groups.SanFranciscoFriends extends LOI.Adventure.Group
       return [] unless group
 
       member._id for member in group.members
-      
-    @members = new ComputedField =>
-      LOI.Character.getPerson memberId for memberId in @memberIds()
+
+    # Call super last because member ids need to be prepared.
+    super
 
   @isCharacterMember: (characterIdOrInstance) ->
     LOI.Character.Group.isCharacterMember @id(), characterIdOrInstance

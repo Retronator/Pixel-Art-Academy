@@ -27,13 +27,13 @@ class AB.Components.Translatable extends AM.Component
       @translationSubscription = AB.Translation.forId.subscribe @, translation._id
 
     @translation = new ComputedField =>
-      return unless @translationOrKey = @data()
+      return unless translationOrKey = @data()
 
       # Return refreshed translation if it was passed directly.
-      return @translationOrKey.refresh() if @translationOrKey instanceof AB.Translation
+      return translationOrKey.refresh() if translationOrKey instanceof AB.Translation
 
       # Fetch translation for the parent component using the provided key.
-      translationKey = @translationOrKey
+      translationKey = translationOrKey
       parentComponent = @parentComponent()
       return unless parentComponent
 
@@ -80,6 +80,10 @@ class AB.Components.Translatable extends AM.Component
   removeTranslationText: ->
     removeTranslationText = @options.removeTranslationText?()?.translate().text
     removeTranslationText or @translate("Remove translation").text
+    
+  text: ->
+    translationOrKey = @data()
+    @translated()?.text or translationOrKey
 
   events: ->
     super.concat

@@ -49,7 +49,7 @@ class C2.Immersion extends LOI.Adventure.Section
   timeToImmersion: ->
     # We require real life minutes to pass (and not game time, since
     # we want to allow the user to do other things on the internet).
-    return unless redPillTime = @state('redPillTime')
+    return unless redPillTime = @state 'redPillTime'
     elapsedMilliseconds = Date.now() - redPillTime
 
     # You can immerse after 6 minutes. It's 6 and not 5 so that when you look at the watch
@@ -114,6 +114,14 @@ class C2.Immersion extends LOI.Adventure.Section
 
             @script.ephemeralState 'timeToImmersion', timeToImmersion
             @startScript label: 'LookAtSyncTimeLeft'
+
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.Cheat, sync.avatar]
+        action: =>
+          secondsLeft = section.timeToImmersion()
+          section.state 'redPillTime', section.state('redPillTime') - secondsLeft * 1000
+
+          true
 
     if section.state('operatorState') is C2.Immersion.OperatorStates.BackAtCounter and operatorLink = LOI.adventure.getCurrentThing HQ.Items.OperatorLink
       commandResponse.onPhrase

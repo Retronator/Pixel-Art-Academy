@@ -63,6 +63,8 @@ class LOI.Memory.Action extends AM.Document
 
   @forMemory: @subscription 'forMemory'
   @recentForTimelineLocation: @subscription 'recentForTimelineLocation'
+  @recentForCharacter: @subscription 'recentForCharacter'
+  @recentForCharacters: @subscription 'recentForCharacters'
 
   @translationKeys:
     startDescription: 'startDescription'

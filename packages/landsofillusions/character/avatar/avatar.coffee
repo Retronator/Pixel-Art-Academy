@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 
 # Character's implementation of the avatar that takes the data from the character document.
 class LOI.Character.Avatar extends LOI.HumanAvatar
+  @id: -> 'LOI.Character.Avatar'
+
   constructor: (characterInstanceOrDocument) ->
     # We allow the avatar to be constructed for the character instance or directly for the document.
     if characterInstanceOrDocument instanceof LOI.Character.Instance
@@ -64,8 +66,10 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
     hue: color?.hue or LOI.Assets.Palette.Atari2600.hues.grey
     shade: color?.shade or LOI.Assets.Palette.Atari2600.characterShades.normal
 
+  @noNameTranslationKey = 'NoName'
+
   @noNameTranslation: ->
-    AB.translation @_babelSubscription, 'No Name'
+    AB.translation @_babelSubscription, @noNameTranslationKey
 
   @noName: ->
     @noNameTranslation().translate().text
@@ -74,6 +78,9 @@ if Meteor.isClient
   # Subscribe to the avatar namespace in all languages, so that we can show all translations of "No Name" in the
   # dialogs. We do this because of a limitation in Meteor, where we can't later on request to get all translations
   # (top field), if we subscribed just to some translations (subfields) earlier.
-  LOI.Character.Avatar._babelSubscription = AB.subscribeNamespace 'LandsOfIllusions.Character.Avatar',
+  LOI.Character.Avatar._babelSubscription = AB.subscribeNamespace LOI.Character.Avatar.id(),
     # Null subscribes to all languages.
     languages: null
+
+if Meteor.isServer
+  AB.createTranslation LOI.Character.Avatar.id(), LOI.Character.Avatar.noNameTranslationKey, 'No Name'
