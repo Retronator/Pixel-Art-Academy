@@ -17,9 +17,6 @@ class LOI.Simulation.Server
   @simulateGameState: (gameStateDocument) ->
     console.log "Simulating game state", gameStateDocument?._id if LOI.debug
 
-    # Nothing to do if no events are pending.
-    return unless gameStateDocument.events.length
-
     # Calculate how much time has passed since game state was updated.
     elapsedRealTime = Date.now() - gameStateDocument.stateLastUpdatedAt.getTime()
     
@@ -28,7 +25,12 @@ class LOI.Simulation.Server
     
     # What would be the game time now if we simulated for this duration?
     simulationEndGameTime = gameStateDocument.state.gameTime + elapsedGameTime
-    
+
+    # Just update game time if no events are pending.
+    unless gameStateDocument.events.length
+      @_updateGameTime gameStateDocument, simulationEndGameTime
+      return
+
     # Keep processing events that happen before the end time.
     eventsProcessedCount = 0
 
@@ -63,8 +65,10 @@ class LOI.Simulation.Server
         # Event was not processed so we stop here.
         break
 
-    # No need to update game state if no events were processed.
-    return unless eventsProcessedCount
+    # Just update game time if no events were processed.
+    unless eventsProcessedCount
+      @_updateGameTime gameStateDocument, simulationEndGameTime
+      return
 
     # Move game time to end time, unless the blocking event was earlier.
     gameStateDocument.state.gameTime = simulationEndGameTime unless earliestEvent.gameTime < simulationEndGameTime
@@ -82,6 +86,15 @@ class LOI.Simulation.Server
         stateLastUpdatedAt: new Date()
         readOnlyState: gameStateDocument.readOnlyState
         events: gameStateDocument.events
+
+  @_updateGameTime: (gameStateDocument, gameTime) ->
+    console.log "Pushing game time forward.", gameTime, gameStateDocument?._id if LOI.debug
+    
+    LOI.GameState.documents.update gameStateDocument._id,
+      $set:
+        'state.gameTime': gameTime
+        'readOnlyState.simulatedGametime': gameTime
+        stateLastUpdatedAt: new Date()
 
 # Initialize on startup.
 Document.startup ->
