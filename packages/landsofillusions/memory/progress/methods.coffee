@@ -18,7 +18,10 @@ LOI.Memory.Progress.updateProgress.method (characterId, memoryId, time) ->
   existingObservedMemory = _.find progress.observedMemories, (observedMemory) -> observedMemory.memory._id is memoryId
 
   if existingObservedMemory
-    throw new AE.ArgumentException "Time can only be increased." unless time > existingObservedMemory.time
+    throw new AE.ArgumentException "Time can't be decreased." if time < existingObservedMemory.time
+
+    # Nothing to do if we're not increasing it.
+    return if time.getTime() is existingObservedMemory.time.getTime()
 
     LOI.Memory.Progress.documents.update
       _id: progress._id
