@@ -18,6 +18,7 @@ class E1.Inventory extends LOI.Adventure.Scene
       HQ.Items.OperatorLink
       LOI.Items.Sync
       LOI.Items.Time
+      SanFrancisco.Soma.Items.Map if SanFrancisco.Soma.Items.Map.state 'inInventory'
     ]
 
     for itemClass in [PixelArtAcademy.PixelBoy]
