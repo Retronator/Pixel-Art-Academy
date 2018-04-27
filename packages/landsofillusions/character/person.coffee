@@ -44,6 +44,15 @@ class LOI.Character.Person extends LOI.Adventure.Thing
 
     LOI.Character.formatText text, 'person', @instance
 
+  ready: ->
+    conditions = [
+      super
+      @thingAvatar.ready()
+      @instance.ready()
+    ]
+
+    _.every conditions
+
   # We pass avatar methods through to instance's avatar.
   fullName: -> @instance.avatar.fullName()
   shortName: -> @instance.avatar.shortName()
