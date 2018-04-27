@@ -1,8 +1,9 @@
 LOI = LandsOfIllusions
-C1 = PixelArtAcademy.Season1.Episode1.Chapter1
+PAA = PixelArtAcademy
+C1 = PAA.Season1.Episode1.Chapter1
 HQ = Retronator.HQ
 
-class C1.Groups.SanFranciscoFriends extends LOI.Adventure.Group
+class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
   # Uses character groups to allow player to add their own characters to friends.
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Groups.SanFranciscoFriends'
 
@@ -20,6 +21,9 @@ class C1.Groups.SanFranciscoFriends extends LOI.Adventure.Group
       return [] unless group
 
       member._id for member in group.members
+
+    @members = new ComputedField =>
+      LOI.Character.getPerson memberId for memberId in @memberIds()
 
     # Call super last because member ids need to be prepared.
     super

@@ -97,6 +97,11 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       # No action means the person left the location, so we start an ad-hoc leave action.
       action = new LOI.Memory.Actions.Leave
       action.start @
+      
+  recentActions: (earliestTime) ->
+    LOI.Memory.Action.documents.fetch
+      'character._id': @_id
+      time: $gte: earliestTime
 
   # Listener
 

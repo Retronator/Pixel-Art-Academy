@@ -1,0 +1,82 @@
+LOI = LandsOfIllusions
+PAA = PixelArtAcademy
+
+Vocabulary = LOI.Parser.Vocabulary
+
+class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
+  # lastHangoutTime: the time when player last hanged out with this group
+  #   time: real-world time of the hangout
+  #   gameTime: fractional time in game days
+  constructor: ->
+    super
+
+    @earliestTime = new ComputedField =>
+      # Take the last hangout time, but not earlier than 1 month.
+      # Note: we must use constructor state because the instance shortcut hasn't been assigned yet.
+      lastHangoutTime = @state('lastHangoutTime')?.time.getTime() or 0
+      earliestTime = Math.max lastHangoutTime, Date.now() - 30 * 24 * 60 * 60 * 1000
+
+      lastHangoutGameTime = @state('lastHangoutTime')?.gameTime.getTime() or 0
+      
+      time: new Date earliestTime
+      gameTime: new LOI.GameDate lastHangoutGameTime
+
+    # Subscribe to actions of people members (non-NPCs).
+    Tracker.autorun (computation) =>
+      peopleMembers = _.filter @members(), (member) -> member instanceof LOI.Character.Person
+      peopleMemberIds = (member._id for member in peopleMembers)
+
+      LOI.Memory.Action.recentForCharacters.subscribe peopleMemberIds, @earliestTime().time
+
+    # Active members are the ones that have done any memorable actions since last hangout.
+    @presentMembers = new ComputedField =>
+      earliestTime = @earliestTime()
+      
+      _.filter @members(), (member) =>
+        # Find any actions this member has performed.
+        recentActions = member.recentActions earliestTime.time, earliestTime.gameTime
+
+        # See if any of them are memorable
+        _.find recentActions, (action) => action.isMemorable or action.memory
+
+  members: ->
+    # Override to provide things that are members of this group. Each thing must 
+    # be able to provide a list of actions that happened since the last hangout time.
+    []
+
+  @listeners: ->
+    super.concat [
+      @GroupListener
+    ]
+
+  class @GroupListener extends LOI.Adventure.Listener
+    @id: -> "PixelArtAcademy.Groups.HangoutGroup"
+
+    @scriptUrls: -> [
+      'retronator_pixelartacademy/groups/hangoutgroup.script'
+    ]
+
+    class @GroupScript extends LOI.Adventure.Script
+      @id: -> "PixelArtAcademy.Groups.HangoutGroup"
+      @initialize()
+
+      initialize: ->
+        return
+
+        @setCallbacks
+          Dummy: (complete) =>
+            complete()
+
+    @initialize()
+
+    onScriptsLoaded: ->
+      @groupScript = @scripts[@constructor.GroupScript.id()]
+
+    onCommand: (commandResponse) ->
+      scene = @options.parent
+
+      commandResponse.onPhrase
+        form: [[Vocabulary.Keys.Verbs.HangOut, Vocabulary.Keys.Verbs.SitDown]]
+        action: =>
+          LOI.adventure.director.startScript @groupScript,
+            label: if scene.presentMembers().length then 'Start' else 'NoOne'

@@ -1,5 +1,6 @@
 AT = Artificial.Telepathy
 AB = Artificial.Base
+LOI = LandsOfIllusions
 
 class PixelArtAcademy
   constructor: ->
@@ -12,3 +13,8 @@ class PixelArtAcademy
 
 if Meteor.isClient
   window.PixelArtAcademy = PixelArtAcademy
+  
+if Meteor.isServer
+  LOI.initializePackage
+    id: 'retronator_pixelartacademy'
+    assets: Assets

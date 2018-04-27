@@ -26,4 +26,7 @@ Package.onUse(function(api) {
   api.addFile('layouts/adminaccess..');
 
   api.addServerFile('character/methods');
+  
+  api.addFile('groups..');
+  api.addThing('groups/hangoutgroup');
 });
