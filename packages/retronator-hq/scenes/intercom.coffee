@@ -90,7 +90,7 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
         [themesCursor, submissionsCursor] = PADB.PixelDailies.Pages.Home.themes.query 2
 
         yesterdayTheme = themesCursor.fetch()[1]
-        return unless yesterdayTheme.hashtags?.length and yesterdayTheme.topSubmissions?.length
+        return unless yesterdayTheme?.hashtags?.length and yesterdayTheme.topSubmissions?.length
 
         topSubmission = yesterdayTheme.topSubmissions[0]
 
