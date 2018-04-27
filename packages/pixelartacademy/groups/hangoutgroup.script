@@ -2,7 +2,58 @@
 
 ## Start
 
+> _char_ sits down and greets _their_ friends.
+
 char: Hey gang!
+
+person1: Hey _char_! `_person1`
+person2: Hey! `_person2`
+person3: Hi! `_person3`
+
+* What's new? -> [WhatsNew]
+* See you around. -> [Leave]
+
+## WhatsNew
+
+### WhatsNew
+
+-> End
+
+## Leave
+
+### Leave
+
+-> [End]
+
+## JustOne
+
+> _char_ sits down next to one of _their_ friends.
+
+char: Hey `_person1`.
+
+person1: Hey!
+
+char: Where is everybody?
+
+person1: Looks like it's just you and me today.
+
+char: The best ones around.
+
+> _char_ and `_person1` fist bump.
+
+### JustOne
+
+-> [End]
+
+## OnlyOne
+
+> _char_ sees _their_ friend `_person1` and sits down.
+
+person1: Hey, nice to see you!
+
+char: You too!
+
+### JustOne
 
 -> [End]
 

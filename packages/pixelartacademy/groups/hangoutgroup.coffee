@@ -78,5 +78,39 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
       commandResponse.onPhrase
         form: [[Vocabulary.Keys.Verbs.HangOut, Vocabulary.Keys.Verbs.SitDown]]
         action: =>
-          LOI.adventure.director.startScript @groupScript,
-            label: if scene.presentMembers().length then 'Start' else 'NoOne'
+          presentMembers = scene.presentMembers()
+          switch presentMembers.length
+            when 0 then label = 'NoOne'
+            when 1
+              @groupScript.setThings person1: presentMembers[0]
+              @groupScript.ephemeralState 'person1', presentMembers[0].fullName()
+
+              # See if this group has more members otherwise.
+              label = if scene.members().length is 1 then 'OnlyOne' else 'JustOne'
+
+            else
+              label = 'Start'
+
+              # Randomly assign members to person 1-3.
+              persons = []
+              freeIndices = [1..3]
+              leftMembers = _.clone presentMembers
+
+              while leftMembers.length and freeIndices.length
+                member = Random.choice leftMembers
+                freeIndex = Random.choice freeIndices
+
+                persons[freeIndex] = member
+
+                _.pull leftMembers, member
+                _.pull freeIndices, freeIndex
+
+              things = {}
+
+              for personIndex in [1..3]
+                things["person#{personIndex}"] = persons[personIndex]
+                @groupScript.ephemeralState "person#{personIndex}", persons[personIndex]?
+
+              @groupScript.setThings things
+
+          LOI.adventure.director.startScript @groupScript, {label}
