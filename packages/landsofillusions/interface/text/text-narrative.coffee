@@ -87,6 +87,10 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # Extract commands from image notation.
     text = text.replace /!\[(.*?)]\((.*?)\)/g, (match, text, command) ->
       command = text unless command.length
+
+      # Escape single quotes.
+      command = command.replace /'/g, '&#39;'
+
       "<span class='command' title='#{command}'>#{text}<span class='underline'></span><span class='background'></span></span>"
 
     # Replace character pronouns.
