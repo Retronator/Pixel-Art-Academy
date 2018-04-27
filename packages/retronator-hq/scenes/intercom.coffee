@@ -77,7 +77,7 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
         [themesCursor, submissionsCursor] = PADB.PixelDailies.Pages.Home.themes.query 1
 
         latestTheme = themesCursor.fetch()[0]
-        return unless latestTheme.hashtags?.length
+        return unless latestTheme?.hashtags?.length
 
         script.ephemeralState().pixelDailiesHashtag = latestTheme.hashtags[0]
 
