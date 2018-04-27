@@ -40,6 +40,7 @@ person: What's up?
 
 * What's your name? -> [YourName] `not person.introduced`
 * Let's hang out sometimes. -> [HangOut] `not _person.inGroup`
+* What's new? -> [WhatsNew] `_person.inGroup`
 * Can I see your study journal? -> [Journal]
 * Bye now! -> [End]
 
@@ -63,6 +64,12 @@ char: it's a deal.
 ### HangOut
 
 -> [MainQuestions]
+
+## WhatsNew
+
+### WhatsNew
+
+-> [End]
 
 ## Journal
 
