@@ -26,7 +26,7 @@ class PAA.Practice.Journal.Entry.Action extends LOI.Memory.Action
     "_person_ starts writing in _their_ journal."
 
   @activeDescription: ->
-    "_They_ _are_ writing in _their_ journal."
+    "_They_ _are_ writing in _their_ ![journal](read _person_'s journal)."
 
   shouldSkipTransition: (oldAction) ->
     # Skip if we're transitioning from another entry action.

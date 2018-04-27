@@ -16,7 +16,7 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
       text: String
 
   @activeDescription: ->
-    "_They_ _are_ talking."
+    "_They_ _are_ ![talking](listen to _person_)."
 
   createStartScript: (person, nextNode, nodeOptions) ->
     # After the text is delivered, advertise this context.

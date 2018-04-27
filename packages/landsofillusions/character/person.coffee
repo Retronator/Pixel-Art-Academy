@@ -37,7 +37,7 @@ class LOI.Character.Person extends LOI.Adventure.Thing
     @instance.avatar
 
   descriptiveName: ->
-    text = "_person_."
+    text = "![_person_](talk to _person_)."
     
     if actionDescription = @action()?.activeDescription()
       text = "#{text} #{actionDescription}"

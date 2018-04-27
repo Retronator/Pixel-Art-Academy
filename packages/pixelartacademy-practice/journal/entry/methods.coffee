@@ -115,12 +115,12 @@ PAA.Practice.Journal.Entry.addMemory.method (entryId, memoryId) ->
   check entryId, Match.DocumentId
   check memoryId, Match.DocumentId
 
+  # Only players can add memories.
+  LOI.Authorize.player()
+
   # Make sure the entry exists.
   entry = PAA.Practice.Journal.Entry.documents.findOne entryId
   throw new AE.ArgumentException "Entry not found." unless entry
-
-  # Make sure the user controls the character that owns this journal.
-  LOI.Authorize.characterAction entry.journal.character._id
 
   # Associate the memory to this entry.
   PAA.Practice.Journal.Entry.documents.update entryId,
