@@ -56,7 +56,7 @@ class LOI.Parser
     # Pull all actions into one array.
     likelyActions = _.flatten likelyActions
 
-    # We only have uncertain possibilities.
+    # Determine which action to perform.
     @chooseLikelyAction likelyActions
 
   # Creates a node that performs the action of the likely command

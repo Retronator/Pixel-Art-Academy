@@ -180,7 +180,8 @@ the address `@scripts.PixelArtAcademy.Season1.Episode0`.
 There are some special variables that provide other contexts:
 
 * `this`: Parent object of the script, usually a thing with same ID as the script.
-* `<thing shorthand>`: Thing objects provided with the `setThings` method on the script.
+* `<thing shorthand>`: State of thing objects provided with the `setThings` method on the script.
+* `<thing shorthand>Instance`: Same as above, but gives the read-only thing instance itself.
 * `location`: The state of the current location you're at.
 * `@user`: The logged in user's state. It's null when not logged in.
 * `@user.name`: A read-only variable with user's account name.

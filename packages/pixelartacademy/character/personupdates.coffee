@@ -22,6 +22,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             # We've now got all documents we need to carry out this conversation.
             # Find the actions this person made since earliest time.
             actions = @_options.person.recentActions @_options.earliestTime
+            actions = _.sortBy actions, (action) => action.time.getTime()
             actions = (action.cast() for action in actions)
 
             relevantActionsCount = 0
@@ -37,7 +38,8 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
               relevantActionsCount++
               
               journalEntries.entries.push
-                entry: action.content.journalEntry
+                # Note: journalEntry is wrapped in an array since it's a reverse field.
+                entry: action.content.journalEntry[0]
 
             # Conversations
             createConversations = => conversations: []
@@ -103,7 +105,28 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             @ephemeralState 'knownActionsCount', knownActionsCount
 
             complete()
-          
+
+        ReadFirstJournalEntry: (complete) =>
+          journalEntries = @ephemeralState 'journalEntries'
+
+          journalEntry = journalEntries.entries[0].entry
+
+          console.log "je", journalEntries
+
+          # Create the journal view context for this entry's journal
+          context = new PAA.PixelBoy.Apps.Journal.JournalView.Context
+            journalId: journalEntry.journal._id
+            entryId: journalEntry._id
+
+          LOI.adventure.enterContext context
+
+          # Wait until the context is closed.
+          Tracker.autorun (computation) =>
+            return if LOI.adventure.currentContext()
+            computation.stop()
+
+            complete()
+
   @initialize()
 
   onScriptsLoaded: ->
