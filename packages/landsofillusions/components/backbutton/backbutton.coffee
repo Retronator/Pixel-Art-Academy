@@ -1,11 +1,12 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+AC = Artificial.Control
 LOI = LandsOfIllusions
 
 class LOI.Components.BackButton extends AM.Component
   @register 'LandsOfIllusions.Components.BackButton'
 
-  constructor: (@onClickCallback) ->
+  constructor: (@onCloseCallback) ->
     super
 
     @closing = new ReactiveField false
@@ -36,6 +37,16 @@ class LOI.Components.BackButton extends AM.Component
           top: viewport.viewportBounds.top() + 10 * scale
           left: viewport.viewportBounds.left() + 10 * scale
 
+    $(document).on 'keydown.landsofillusions-components-backbutton', (event) =>
+      return unless event.which is AC.Keys.escape
+
+      @onClose event
+
+  onDestroyed: ->
+    super
+
+    $(document).off '.landsofillusions-components-backbutton'
+
   closingClass: ->
     'closing' if @closing()
 
@@ -44,8 +55,11 @@ class LOI.Components.BackButton extends AM.Component
       'click .landsofillusions-components-back-button': @onClick
 
   onClick: (event) ->
-    if @onClickCallback
-      result = @onClickCallback event
+    @onClose event
+
+  onClose: (event) ->
+    if @onCloseCallback
+      result = @onCloseCallback event
 
       @closing true unless result?.cancel
 
