@@ -110,7 +110,7 @@ class LOI.Character.Person extends LOI.Adventure.Thing
   recentActions: (earliestTime) ->
     LOI.Memory.Action.documents.fetch
       'character._id': @_id
-      time: $gte: earliestTime
+      time: $gte: earliestTime.time
 
   # Listener
 

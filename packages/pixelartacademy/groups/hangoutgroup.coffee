@@ -34,7 +34,7 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
       
       _.filter @members(), (member) =>
         # Find any actions this member has performed.
-        recentActions = member.recentActions earliestTime.time, earliestTime.gameTime
+        recentActions = member.recentActions earliestTime
 
         # See if any of them are memorable
         _.find recentActions, (action) => action.isMemorable or action.memory

@@ -39,7 +39,7 @@ person: What's up?
 ## MainQuestions
 
 * What's your name? -> [YourName] `not person.introduced`
-* Let's hang out sometimes. -> [HangOut] `not _person.inGroup`
+* Let's hang out sometimes. -> [HangOut] `person.introduced and not _person.inGroup`
 * What's new? -> [WhatsNew] `_person.inGroup`
 * Can I see your study journal? -> [Journal]
 * Bye now! -> [End]

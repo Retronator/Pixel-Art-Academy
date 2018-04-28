@@ -4,22 +4,53 @@
 
 person: Hmmm, let's see …
 
+pause
+
 ### WaitToLoad
 
-person: I wrote a new journal entry.
+-> [NothingNew] `_relevantActionsCount is 0`
+-> [NothingUnknown] `_relevantActionsCount is _knownActionsCount`
 
-person: I wrote some new entries in my study journal.
+## JournalEntries
 
-person: I was talking to X about their journal entry.
+person: I wrote a new journal entry. `_journalEntries.entries.length is 1`
 
-person: I had a conversation with X the other day.
+person: I wrote some new entries in my journal. `_journalEntries.entries.length > 1`
 
-person: X, Y, and I had a conversation the other day.
+## CommentsOnJournalEntries
 
-person: There was a group conversation.
+person: I was talking to `_journalEntryConversations.conversations[0].journalEntry.author.name` about their journal entry. `_journalEntryConversations.conversations.length is 1 and not _journalEntryConversations.conversations[0].journalEntry.own`
 
-person: Check out this Daily article.
+person: I was talking with `_journalEntryConversations.conversations[0].participants[0].name` about one of my journal entries. `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own`
 
-person: I've been reading some cool Daily articles.
+## Conversations
+
+person: I had a conversation with `_plainConversations.conversations[0].participants[0].name` the other day. `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 1`
+
+person: `_plainConversations.conversations[0].participants[0].name`, `_plainConversations.conversations[0].participants[1].name`, and I had a conversation the other day. `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 2`
+
+person: There was a group conversation we had. `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length > 2`
+
+person: I had some conversations with people around here. `_plainConversations.conversations.length > 2`
+
+## CommentsOnRetronatorDailyArticles
+
+person: Check out this Daily article about `_dailyConversations.conversations[0].article.title`. `_dailyConversations.conversations.length is 1`
+
+person: I've been reading some cool Daily articles. `_dailyConversations.conversations.length > 1`
+
+-> [End]
+
+## NothingNew
+
+person: Nope, nothing really.
+
+-> [End]
+
+## NothingUnknown
+
+person: Not much, I think you've been there for all of it.
+
+-> [End]
 
 ## End

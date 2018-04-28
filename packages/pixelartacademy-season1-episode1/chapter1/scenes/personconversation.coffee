@@ -57,6 +57,15 @@ class C1.PersonConversation extends LOI.Adventure.Scene
 
       LOI.Memory.Action.recentForCharacter.subscribe person._id, earliestTime.time
 
+    @memoriesSubscription = new ComputedField =>
+      return unless person = @currentPerson()
+      return unless earliestTime = @earliestTimeForCurrentPerson()
+
+      actions = person.recentActions earliestTime
+      memoryIds = _.uniq (action.memory._id for action in actions when action.memory)
+
+      LOI.Memory.forIds.subscribe memoryIds
+
   destroy: ->
     super
 
@@ -85,8 +94,9 @@ class C1.PersonConversation extends LOI.Adventure.Scene
         script = personUpdates.getScript
           person: scene.currentPerson()
           nextNode: @startNode.labels.MainQuestions
-          actionsSubscription: scene.actionsSubscription()
           earliestTime: scene.earliestTimeForCurrentPerson()
+          ready: ->
+            scene.actionsSubscription()?.ready() and scene.memoriesSubscription()?.ready()
 
         LOI.adventure.director.startScript script
 
