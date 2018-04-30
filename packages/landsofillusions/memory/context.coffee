@@ -244,6 +244,8 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     memory: LOI.Memory.Context
 
   onCommand: (commandResponse) ->
+    super
+
     # We allow to exit memories.
     return unless LOI.adventure.currentMemoryId()
 
@@ -251,6 +253,8 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
     commandResponse.onExactPhrase
       form: [Vocabulary.Keys.Directions.Back]
+      # We want to override the back command that just exits the context.
+      priority: 1
       action: exitAction
 
     commandResponse.onExactPhrase

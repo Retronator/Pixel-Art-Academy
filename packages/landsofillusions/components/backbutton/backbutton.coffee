@@ -37,7 +37,15 @@ class LOI.Components.BackButton extends AM.Component
           top: viewport.viewportBounds.top() + 10 * scale
           left: viewport.viewportBounds.left() + 10 * scale
 
-    LOI.adventure.menu.customShowMenu => @onClose event
+    $(document).on 'keydown.landsofillusions-components-backbutton', (event) =>
+      return unless event.which is AC.Keys.escape
+
+      @onClose event
+
+  onDestroyed: ->
+    super
+
+    $(document).off '.landsofillusions-components-backbutton'
 
   closingClass: ->
     'closing' if @closing()
@@ -50,8 +58,6 @@ class LOI.Components.BackButton extends AM.Component
     @onClose event
 
   onClose: (event) ->
-    LOI.adventure.menu.customShowMenu null
-
     if @onCloseCallback
       result = @onCloseCallback event
 
