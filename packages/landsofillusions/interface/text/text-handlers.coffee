@@ -79,9 +79,9 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # After intro is stopped, enter resumes dialogs.
     if pausedLineNode = @_pausedNode()
-      # Clear the paused node and handle it.
+      # Clear the paused node and handle it. Use the force flag since the node has already been marked as handled.
       @_pausedNode null
-      @_handleNode pausedLineNode
+      @_handleNode pausedLineNode, force: true
 
       # Clear the command input in case it accumulated any text in the mean time.
       @commandInput.clear()

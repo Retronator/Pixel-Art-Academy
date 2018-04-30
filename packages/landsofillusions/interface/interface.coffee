@@ -40,22 +40,34 @@ class LOI.Interface extends AM.Component
         # Do any initialization needed after location change.
         @onLocationChanged()
 
-    # Listen to the script.
+    # Listen to the foreground script.
     @autorun (computation) =>
-      # We want to wait until the interface is ready after the location change has been initiated.
-      return unless @locationChangeReady()
+      return unless @_readyToProcessScriptNodes()
+      return unless scriptNode = LOI.adventure.director.currentScriptNode()
 
-      # We also don't want to process new nodes while UI isn't active or it is waiting for user interaction.
-      return unless @active()
-      return if @waitingKeypress()
+      console.log "Interface has detected a new foreground script node:", scriptNode if LOI.debug
 
-      scriptNodes = LOI.adventure.director.currentScriptNodes()
+      Tracker.nonreactive => @_handleNode scriptNode
 
-      console.log "Interface has detected new script nodes:", scriptNodes if LOI.debug
+    # Listen to the background scripts.
+    @autorun (computation) =>
+      return unless @_readyToProcessScriptNodes()
+      scriptNodes = LOI.adventure.director.backgroundScriptNodes()
 
-      # We handle scripts once per change.
+      console.log "Interface has detected new background script nodes:", scriptNodes if LOI.debug
+
       Tracker.nonreactive =>
-        @_handleNode node for node in scriptNodes when not node.handled
+        @_handleNode node, background: true for node in scriptNodes
+
+  _readyToProcessScriptNodes: ->
+    # We want to wait until the interface is ready after the location change has been initiated.
+    return unless @locationChangeReady()
+
+    # We also don't want to process new nodes while UI isn't active or it is waiting for user interaction.
+    return unless @active()
+    return if @waitingKeypress()
+
+    true
 
   location: ->
     LOI.adventure.currentLocation()
@@ -68,23 +80,25 @@ class LOI.Interface extends AM.Component
     
   ready: -> true
 
-  _handleNode: (node) ->
+  _handleNode: (node, options = {}) ->
+    return if node.handled unless options.force
+
     # Mark node as handled to avoid double handling.
     node.handled = true
 
-    @_handleEmpty node if node instanceof Nodes.Script
-    @_handleEmpty node if node instanceof Nodes.Label
-    @_handleDialogueLine node if node instanceof Nodes.DialogueLine
-    @_handleNarrativeLine node if node instanceof Nodes.NarrativeLine
-    @_handleInterfaceLine node if node instanceof Nodes.InterfaceLine
-    @_handleCommandLine node if node instanceof Nodes.CommandLine
-    @_handleEmpty node if node instanceof Nodes.ChoicePlaceholder
+    @_handleEmpty node, options if node instanceof Nodes.Script
+    @_handleEmpty node, options if node instanceof Nodes.Label
+    @_handleDialogueLine node, options if node instanceof Nodes.DialogueLine
+    @_handleNarrativeLine node, options if node instanceof Nodes.NarrativeLine
+    @_handleInterfaceLine node, options if node instanceof Nodes.InterfaceLine
+    @_handleCommandLine node, options if node instanceof Nodes.CommandLine
+    @_handleEmpty node, options if node instanceof Nodes.ChoicePlaceholder
 
     # Handle Code nodes, which includes Conditional nodes since they inherit from Code.
-    @_handleEmpty node if node instanceof Nodes.Code
+    @_handleEmpty node, options if node instanceof Nodes.Code
 
-    @_handleCallback node if node instanceof Nodes.Callback
-    @_handleTimeout node if node instanceof Nodes.Timeout
+    @_handleCallback node, options if node instanceof Nodes.Callback
+    @_handleTimeout node, options if node instanceof Nodes.Timeout
 
   _handleEmpty: (scriptNode) ->
     # Simply end the node.
@@ -103,9 +117,11 @@ class LOI.Interface extends AM.Component
       callback.end()
       return
 
-    # Call the callback and pass it the completion function.
+    # Call the callback and pass it the completion function and the callback node itself.
     callback.callback =>
       callback.end()
+    ,
+      callback
 
   _handleTimeout: (timeout) ->
     Meteor.setTimeout =>

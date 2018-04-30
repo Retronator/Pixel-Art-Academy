@@ -2,22 +2,33 @@ LOI = LandsOfIllusions
 
 class LOI.Director
   constructor: (@options) ->
-    @currentScriptNodes = new ReactiveField []
-    
-    # We queue scripts to be started here.
+    # Current foreground script.
+    @currentScriptNode = new ReactiveField null
+
+    # We queue foreground scripts to be started here.
     @queuedScriptNodes = new ReactiveField []
 
+    # Foreground scripts can be paused and will transition into the queue when completed.
+    @pausedScriptNodes = new ReactiveField []
+
+    # Continuously pick scripts from the queue.
     Tracker.autorun (computation) =>
-      # We don't start new scripts until the previous one has stopped running.
-      return if @currentScriptNodes().length
+      # We don't start a new script until the previous one has stopped running.
+      return if @currentScriptNode()
       
       queuedScriptNodes = @queuedScriptNodes()
-      
-      if queuedScriptNodes.length
-        nextScriptNode = queuedScriptNodes.shift()
-        @scriptTransition null, nextScriptNode
+      return unless queuedScriptNodes.length
 
-        @queuedScriptNodes queuedScriptNodes
+      # Take the first node out of the queue and transition to it.
+      nextScriptNode = queuedScriptNodes.shift()
+      nextScriptNode.handled = false
+      @currentScriptNode nextScriptNode
+
+      # Update queued nodes.
+      @queuedScriptNodes queuedScriptNodes
+
+    # Current background scripts. These are handled continuously regardless of the foreground script.
+    @backgroundScriptNodes = new ReactiveField []
 
   startScript: (script, options = {}) ->
     if options.label
@@ -26,32 +37,82 @@ class LOI.Director
     else
       startNode = script.startNode
 
-    @startNode startNode
+    if options.background
+      @startBackgroundNode startNode
 
-  stopAllScripts: ->
-    @queuedScriptNodes []
-    @currentScriptNodes []
+    else
+      @startNode startNode
+
+  startBackgroundScript: (script, options = {}) ->
+    options.background = true
+    @startScript script, options
 
   startNode: (scriptNode) ->
     queuedScriptNodes = @queuedScriptNodes()
     queuedScriptNodes.push scriptNode
     @queuedScriptNodes queuedScriptNodes
 
-  scriptTransition: (currentScriptNode, nextScriptNode) ->
-    scriptNodes = @currentScriptNodes()
+  startBackgroundNode: (scriptNode) ->
+    scriptNode.handled = false
+    backgroundScriptNodes = @backgroundScriptNodes()
+    backgroundScriptNodes.push scriptNode
+
+    @backgroundScriptNodes backgroundScriptNodes
+
+  scriptTransition: (endingScriptNode, nextScriptNode) ->
+    currentScriptNode = @currentScriptNode()
+    pausedScriptNodes = @pausedScriptNodes()
+    backgroundScriptNodes = @backgroundScriptNodes()
+
+    isForeground = endingScriptNode is currentScriptNode
+    isPaused = endingScriptNode in pausedScriptNodes
+    isBackground = endingScriptNode in backgroundScriptNodes
+
+    console.log "Transitioning from", endingScriptNode, "to", nextScriptNode, isForeground, isPaused, isBackground if LOI.debug
 
     # Give out warnings if nodes don't exist or are already present.
-    console.warn "Node to be transitioned from is not active.", currentScriptNode if currentScriptNode and not (currentScriptNode in scriptNodes)
-    console.warn "Node to be transitioned to is already active.", nextScriptNode if nextScriptNode in scriptNodes
-
-    # Remove current script node.
-    scriptNodes = _.without scriptNodes, currentScriptNode if currentScriptNode
-
-    # Add new script node.
-    scriptNodes = _.union scriptNodes, [nextScriptNode] if nextScriptNode
+    console.warn "Node to be transitioned from is not active.", endingScriptNode if endingScriptNode and not (isForeground or isPaused or isBackground)
+    console.warn "Node to be transitioned to is already active.", nextScriptNode if nextScriptNode and nextScriptNode is currentScriptNode or nextScriptNode in pausedScriptNodes or nextScriptNode in backgroundScriptNodes
 
     # Mark the new node as not handled.
     nextScriptNode?.handled = false
 
-    # Trigger update of running scripts.
-    @currentScriptNodes scriptNodes
+    if isForeground
+      # Trigger update of current script.
+      @currentScriptNode nextScriptNode
+
+    else if isPaused
+      # Remove ending script node.
+      _.pull pausedScriptNodes, endingScriptNode
+
+      @startNode nextScriptNode if nextScriptNode
+
+      # Trigger update of paused scripts.
+      @pausedScriptNodes pausedScriptNodes
+
+    else if isBackground
+      # Remove ending script node.
+      _.pull backgroundScriptNodes, endingScriptNode
+
+      # Add new script node.
+      backgroundScriptNodes = _.union backgroundScriptNodes, [nextScriptNode] if nextScriptNode
+
+      # Trigger update of running scripts.
+      @backgroundScriptNodes backgroundScriptNodes
+
+  pauseCurrentNode: ->
+    currentScriptNode = @currentScriptNode()
+
+    # End current node to continue executing foreground scripts.
+    @scriptTransition currentScriptNode, null
+
+    # Put the node in paused nodes, so when transition comes, it will continue into queued nodes.
+    pausedScriptNodes = @pausedScriptNodes()
+    pausedScriptNodes.push currentScriptNode
+    @pausedScriptNodes pausedScriptNodes
+
+  stopAllScripts: ->
+    @backgroundScriptNodes []
+    @pausedScriptNodes []
+    @queuedScriptNodes []
+    @currentScriptNode null

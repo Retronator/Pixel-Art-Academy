@@ -106,12 +106,10 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
             complete()
 
-        ReadFirstJournalEntry: (complete) =>
+        ReadFirstJournalEntry: (complete, callbackNode) =>
           journalEntries = @ephemeralState 'journalEntries'
 
           journalEntry = journalEntries.entries[0].entry
-
-          console.log "je", journalEntries
 
           # Create the journal view context for this entry's journal
           context = new PAA.PixelBoy.Apps.Journal.JournalView.Context
@@ -119,6 +117,9 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             entryId: journalEntry._id
 
           LOI.adventure.enterContext context
+
+          # Pause current callback node so context interactions can execute.
+          LOI.adventure.director.pauseCurrentNode()
 
           # Wait until the context is closed.
           Tracker.autorun (computation) =>

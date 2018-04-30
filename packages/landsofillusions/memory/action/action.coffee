@@ -99,7 +99,7 @@ class LOI.Memory.Action extends AM.Document
       computation.stop()
 
       script = createScriptFunction.call @, person
-      LOI.adventure.director.startNode script if script
+      LOI.adventure.director.startBackgroundNode script if script
 
   # Override to provide what happens when an action is started or ends. 
   # By default, start and end actions output the description to the narrative.

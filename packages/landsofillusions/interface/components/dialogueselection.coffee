@@ -14,10 +14,9 @@ class LOI.Interface.Components.DialogueSelection
       console.log "Dialog selection detected new script nodes." if LOI.debug
 
       # Listen to current scripts until we find a choice node.
-      location = LOI.adventure.currentLocation()
-      if location
-        for scriptNode in LOI.adventure.director.currentScriptNodes()
-          return scriptNode if scriptNode instanceof Nodes.Choice
+      if LOI.adventure.currentLocation()
+        scriptNode = LOI.adventure.director.currentScriptNode()
+        return scriptNode if scriptNode instanceof Nodes.Choice
 
       # No choice node was found, so also reset our selected node.
       @selectedDialogueLine null

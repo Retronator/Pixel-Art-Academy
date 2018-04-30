@@ -162,6 +162,9 @@ class LOI.Adventure.Thing extends AM.Component
       startScript: (options) ->
         LOI.adventure.director.startScript @script, options
 
+      startBackgroundScript: (options) ->
+        LOI.adventure.director.startBackgroundScript @script, options
+
       onScriptsLoaded: ->
         @script = @scripts[@options.parent.id()]
         @options.parent.onScriptsLoaded.call @

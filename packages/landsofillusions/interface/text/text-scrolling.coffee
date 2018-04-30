@@ -43,7 +43,17 @@ class LOI.Interface.Text extends LOI.Interface.Text
   scrollTop: ->
     -parseInt $.Velocity.hook(@$uiArea, 'translateY') or 0
 
-  # Scroll the UI to put the position at the top of the viewport.
+  isNarrativeScrolledToBottom: ->
+    $scrollable = @$('.text-display')
+    $scrollableContent = $scrollable.find('.scrollable-content').eq(0)
+
+    amountHidden = Math.max 0, $scrollableContent.height() - $scrollable.height()
+    top = parseInt $.Velocity.hook($scrollableContent, 'translateY') or 0
+
+    # We're at the bottom if the amount hidden is all above the top.
+    amountHidden is -top
+
+# Scroll the UI to put the position at the top of the viewport.
   scroll: (options) ->
     options.animate ?= false
 
