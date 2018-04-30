@@ -4,9 +4,9 @@
 
 person: Hmmm, let's see …
 
-pause
-
 ### WaitToLoad
+
+pause
 
 -> [NothingNew] `_relevantActionsCount is 0`
 -> [NothingUnknown] `_relevantActionsCount is _knownActionsCount`
@@ -37,7 +37,7 @@ person: `_plainConversations.conversations[0].participants[0].name`, `_plainConv
 
 person: There was a group conversation we had. `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length > 2`
 
-person: I had some conversations with people around here. `_plainConversations.conversations.length > 2`
+person: I had some conversations with people around here. `_plainConversations.conversations.length > 1`
 
 ## CommentsOnRetronatorDailyArticles
 
@@ -65,7 +65,7 @@ person: I've been reading some Daily articles. `_dailyConversations.conversation
 * What did you talk about with `_plainConversations.conversations[0].participants[0].name`? `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 1`
 * What did you talk about with `_plainConversations.conversations[0].participants[0].name` and `_plainConversations.conversations[0].participants[1].name`? `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 2`
 * What did you talk about? `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length > 2`
-* What things were you discussing? `_plainConversations.conversations.length > 2`
+* What things were you discussing? `_plainConversations.conversations.length > 1`
 
 <!-- Comments on Retronator Daily articles -->
 

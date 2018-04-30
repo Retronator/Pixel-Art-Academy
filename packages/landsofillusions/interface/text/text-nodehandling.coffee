@@ -59,9 +59,14 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
   _handlePause: (pause) ->
     # Just force a wait before going on.
-    return if @_waitForNode pause
+    if pause._activated
+      pause._activated = false
+      pause.end()
 
-    pause.end()
+    else
+      pause._activated = true
+      @_lastNode null
+      @_pausedNode pause
 
   _handleDialogueLine: (dialogueLine, options) ->
     return if not options.background and @_waitForNode dialogueLine
