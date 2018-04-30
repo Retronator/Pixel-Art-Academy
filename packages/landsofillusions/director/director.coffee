@@ -111,8 +111,8 @@ class LOI.Director
     pausedScriptNodes.push currentScriptNode
     @pausedScriptNodes pausedScriptNodes
 
-  stopAllScripts: ->
+  stopAllScripts: (options = {}) ->
     @backgroundScriptNodes []
-    @pausedScriptNodes []
+    @pausedScriptNodes [] unless options.paused is false
     @queuedScriptNodes []
     @currentScriptNode null

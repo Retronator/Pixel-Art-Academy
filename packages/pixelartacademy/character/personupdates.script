@@ -54,18 +54,18 @@ person: I've been reading some Daily articles. `_dailyConversations.conversation
 
 <!-- Comments on journal entries -->
 
-* What journal entry from `_journalEntryConversations.conversations[0].journalEntry.author.name` was that? `_journalEntryConversations.conversations.length is 1 and not _journalEntryConversations.conversations[0].journalEntry.own`
-* Which journal entry did `_journalEntryConversations.conversations[0].participants[0].name` comment on? `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 1`
-* Which journal entry did `_journalEntryConversations.conversations[0].participants[0].name` and `_journalEntryConversations.conversations[0].participants[1].name` talk about? `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 2`
-* Which journal entry did you talk about? `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length > 2`
-* Can I see the journal entries you talked about? `_journalEntryConversations.conversations.length > 1`
+* What journal entry from `_journalEntryConversations.conversations[0].journalEntry.author.name` was that? -> [JournalEntryConversationNotOwn] `_journalEntryConversations.conversations.length is 1 and not _journalEntryConversations.conversations[0].journalEntry.own`
+* Which journal entry did `_journalEntryConversations.conversations[0].participants[0].name` comment on? -> [JournalEntryConversationOwnSingle] `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 1`
+* Which journal entry did `_journalEntryConversations.conversations[0].participants[0].name` and `_journalEntryConversations.conversations[0].participants[1].name` talk about? -> [JournalEntryConversationOwnSingle] `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 2`
+* Which journal entry did you talk about? -> [JournalEntryConversationOwnSingle] `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length > 2`
+* Can I see the journal entries you talked about? -> [JournalEntryConversationOwnMultiple] `_journalEntryConversations.conversations.length > 1`
 
 <!-- Conversations -->
 
-* What did you talk about with `_plainConversations.conversations[0].participants[0].name`? `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 1`
-* What did you talk about with `_plainConversations.conversations[0].participants[0].name` and `_plainConversations.conversations[0].participants[1].name`? `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 2`
-* What did you talk about? `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length > 2`
-* What things were you discussing? `_plainConversations.conversations.length > 1`
+* What did you talk about with `_plainConversations.conversations[0].participants[0].name`? -> [ConversationSingle] `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 1`
+* What did you talk about with `_plainConversations.conversations[0].participants[0].name` and `_plainConversations.conversations[0].participants[1].name`? -> [ConversationSingle] `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 2`
+* What did you talk about? -> [ConversationSingle] `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length > 2`
+* What things were you discussing? -> [ConversationMultiple] `_plainConversations.conversations.length > 1`
 
 <!-- Comments on Retronator Daily articles -->
 
@@ -75,6 +75,8 @@ person: I've been reading some Daily articles. `_dailyConversations.conversation
 * Oh, that's cool. -> [End]
 
 -> [End]
+
+<!-- Journal entries -->
 
 ## JournalEntrySingle
 
@@ -95,9 +97,66 @@ pause
 
 -> [Return]
 
+<!-- Journal entry conversations -->
+
+## JournalEntryConversationNotOwn
+
+person: It was …
+
+-> [GoOverJournalEntryConversations]
+
+## JournalEntryConversationOwnSingle
+
+person: Let me show you …
+
+-> [GoOverJournalEntryConversations]
+
+## JournalEntryConversationOwnMultiple
+
+person: Yeah, they're somewhere around here …
+
+-> [GoOverJournalEntryConversations]
+
+## GoOverJournalEntryConversations
+
+pause
+### GoOverJournalEntryConversations
+
+-> [Return]
+
+<!-- Conversations -->
+
+## ConversationSingle
+
+person: It was something about …
+
+-> [GoOverConversations]
+
+## ConversationMultiple
+
+person: I'll tell you all about it …
+
+-> [GoOverConversations]
+
+## GoOverConversations
+
+pause
+### GoOverConversations
+
+-> [Return]
+
+## NextConversation
+
+person: … and then there was …
+
+pause
+### NextConversation
+
+-> [End]
+
 ## Return
 
-> You return back to the conversation with `personInstance.fullName()`.
+> You return to the conversation with `personInstance.fullName()`.
 
 -> [FollowUp]
 

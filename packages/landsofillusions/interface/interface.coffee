@@ -117,11 +117,9 @@ class LOI.Interface extends AM.Component
       callback.end()
       return
 
-    # Call the callback and pass it the completion function and the callback node itself.
+    # Call the callback and pass it the completion function.
     callback.callback =>
       callback.end()
-    ,
-      callback
 
   _handleTimeout: (timeout) ->
     Meteor.setTimeout =>

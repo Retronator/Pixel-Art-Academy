@@ -80,6 +80,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
               conversation =
                 participants: participants
+                memoryId: memory._id
 
               # See what this conversation is about.
               if memory.journalEntry
@@ -98,7 +99,12 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
                 journalEntryConversations.conversations.push conversation
 
               else
-                # This is a plain conversation.
+                # This is a plain conversation. In these skip the ones where the person was the only participant.
+                unless characters.length
+                  # Don't even count such conversations.
+                  relevantActionsCount--
+                  continue
+
                 plainConversations.conversations.push conversation
 
             @ephemeralState 'relevantActionsCount', relevantActionsCount
@@ -106,7 +112,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
             complete()
 
-        ReadFirstJournalEntry: (complete, callbackNode) =>
+        ReadFirstJournalEntry: (complete) =>
           journalEntries = @ephemeralState 'journalEntries'
 
           journalEntry = journalEntries.entries[0].entry
@@ -127,6 +133,51 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             computation.stop()
 
             complete()
+
+        GoOverJournalEntryConversations: (complete) =>
+          @options.listener._goOverConversations complete, 'journalEntryConversations'
+
+        GoOverConversations: (complete) =>
+          @options.listener._goOverConversations complete, 'plainConversations'
+
+        NextConversation: => # Dummy callback as it will be set from GoOverConversations.
+
+  _goOverConversations: (complete, conversationsFieldName) ->
+    conversationsToGoOver = _.clone @script.ephemeralState(conversationsFieldName).conversations
+
+    # Pause current callback node so context interactions can execute.
+    LOI.adventure.director.pauseCurrentNode()
+
+    handleNextConversation = =>
+      # Enter the next conversation.
+      conversation = conversationsToGoOver.shift()
+      LOI.adventure.enterMemory conversation.memoryId
+
+      # Wait until the context is closed.
+      Tracker.autorun (computation) =>
+        return if LOI.adventure.currentMemoryId()
+        computation.stop()
+
+        # Give adventure the chance to recompute timeline and location (since those will clean up script nodes).
+        Tracker.afterFlush =>
+          # See if we have any conversations left.
+          if conversationsToGoOver.length
+            LOI.adventure.director.startScript @script, label: 'NextConversation'
+
+          else
+            # We're done!
+            complete()
+
+    # Set next conversation callback.
+    @script.setCallbacks
+      NextConversation: (complete) =>
+        complete()
+
+        # Handle remaining conversations.
+        handleNextConversation()
+
+    # Start the handling.
+    handleNextConversation()
 
   @initialize()
 

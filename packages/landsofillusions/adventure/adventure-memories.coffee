@@ -35,8 +35,9 @@ class LOI.Adventure extends LOI.Adventure
       Meteor.setTimeout => memory.display()
 
   exitMemory: ->
-    # Stop all scripts and reset the interface to clean up current interactions.
-    @director.stopAllScripts()
+    # Stop all scripts (except paused, since those need to persist across contexts)
+    # and reset the interface to clean up current interactions.
+    @director.stopAllScripts paused: false
     @interface.reset()
     @interface.stopIntro()
 
