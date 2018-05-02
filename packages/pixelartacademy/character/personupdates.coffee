@@ -16,7 +16,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
       @setCallbacks
         WaitToLoad: (complete) =>
           Tracker.autorun (computation) =>
-            return if @_options.ready and not @_options.ready()
+            return if @_options.readyField and not @_options.readyField()
             computation.stop()
 
             # We've now got all documents we need to carry out this conversation.

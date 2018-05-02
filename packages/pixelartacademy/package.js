@@ -28,6 +28,7 @@ Package.onUse(function(api) {
   api.addServerFile('character/methods');
 
   api.addThing('character/personupdates');
+  api.addFile('character/characterupdateshelper');
   
   api.addFile('groups..');
   api.addThing('groups/hangoutgroup');

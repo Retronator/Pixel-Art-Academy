@@ -17,6 +17,7 @@ class LOI.Interface.Components.DialogueSelection
       if LOI.adventure.currentLocation()
         scriptNode = LOI.adventure.director.currentScriptNode()
         return scriptNode if scriptNode instanceof Nodes.Choice
+        return scriptNode if scriptNode instanceof Nodes.ChoicePlaceholder
 
       # No choice node was found, so also reset our selected node.
       @selectedDialogueLine null
@@ -28,13 +29,13 @@ class LOI.Interface.Components.DialogueSelection
       scriptNode = @choiceNode()
       return unless scriptNode
 
-      console.log "Dialog selection is generating dialog line options." if LOI.debug
+      console.log "Dialog selection is generating dialog line options.", scriptNode if LOI.debug
 
-      choiceNodes = [scriptNode]
+      choiceNodes = []
 
       # Follow the next chain and collect choice nodes until you find a
       # non-choice node. Note that choice nodes can be wrapped in conditionals.
-      while scriptNode = scriptNode.next
+      loop
         # Let's see if we have another choice node.
         if scriptNode instanceof Nodes.Choice
           # Looks like we have a choice! Add it to our choices.
@@ -51,9 +52,15 @@ class LOI.Interface.Components.DialogueSelection
           # Add the embedded choice node to our list.
           choiceNodes.push scriptNode.node if result
 
+        else if scriptNode instanceof Nodes.ChoicePlaceholder
+          # We have a choice placeholder. We need to update it so it will point its next node to any new nodes.
+          scriptNode.update()
+
         else
           # We have gone over all the choice nodes in the line so we're done.
           break
+
+        break unless scriptNode = scriptNode.next
 
       console.log "We have collected choice nodes", choiceNodes if LOI.debug
 

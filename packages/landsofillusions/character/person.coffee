@@ -5,6 +5,12 @@ RA = Retronator.Accounts
 
 # A wrapper around a character instance that represents a character from another player.
 class LOI.Character.Person extends LOI.Adventure.Thing
+  # PERSON STATE (part of main game state, mapped by character ID)
+  # alreadyMet: boolean whether the player had any interactions with this person
+  # introduced: boolean whether the player introduced themselves to the person
+  # lastHangout: info when player last hanged out with this person
+  #   time: real-world time of the hangout
+  #   gameTime: fractional time in game days
   @id: -> 'LandsOfIllusions.Character.Person'
 
   @fullName: -> "Person"
@@ -31,6 +37,9 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       return unless action.memory
       
       LOI.Memory.forId.subscribe action.memory._id
+
+    @personStateAddress = new LOI.StateAddress "people.#{@_id}"
+    @personState = new LOI.StateObject address: @personStateAddress
 
   createAvatar: ->
     # We send instance's avatar as the main avatar.

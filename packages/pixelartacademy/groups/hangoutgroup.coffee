@@ -1,12 +1,10 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
 class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
-  # lastHangoutTime: the time when player last hanged out with this group
-  #   time: real-world time of the hangout
-  #   gameTime: fractional time in game days
   constructor: ->
     super
 

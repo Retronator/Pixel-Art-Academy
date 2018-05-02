@@ -4,7 +4,10 @@ C1 = PAA.Season1.Episode1.Chapter1
 HQ = Retronator.HQ
 
 class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
-  # Uses character groups to allow player to add their own characters to friends.
+  # members: map of all friends (active and inactive)
+  #   {characterId}
+  #     _id
+  #     active: boolean if this is a current friend
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Groups.SanFranciscoFriends'
 
   @fullName: -> "San Francisco friends"
@@ -13,20 +16,23 @@ class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
   @initialize()
 
   constructor: ->
-    @memberIds = new ComputedField =>
-      group = LOI.Character.Group.documents.findOne
-        'character._id': LOI.characterId()
-        groupId: @id()
+    @members = new ReactiveField []
 
-      return [] unless group
-
-      member._id for member in group.members
-
-    @members = new ComputedField =>
-      LOI.Character.getPerson memberId for memberId in @memberIds()
-
-    # Call super last because member ids need to be prepared.
+    # Call super after because members need to be prepared.
     super
 
-  @isCharacterMember: (characterIdOrInstance) ->
-    LOI.Character.Group.isCharacterMember @id(), characterIdOrInstance
+    # Update members when the state of members changes.
+    membersField = @state.field 'members'
+
+    @_membersAutorun = Tracker.autorun =>
+      members = membersField() or []
+      memberIds = (memberId for memberId, member of members when member.active)
+
+      # React only to changes in member IDs.
+      Tracker.nonreactive =>
+        @members (LOI.Character.getPerson memberId for memberId in memberIds)
+
+  destroy: ->
+    super
+
+    @_membersAutorun.stop()

@@ -6,14 +6,16 @@ class LOI.Character.Group extends AM.Document
   @id: -> 'LandsOfIllusions.Character.Group'
   # character: the character
   #   _id
+  #   debugName
   # groupId: group ID as used in Adventure Group
   # members: array of characters in this group
   #   _id
+  #   debugName
   @Meta
     name: @id()
     fields: =>
-      character: @ReferenceField LOI.Character
-      members: [@ReferenceField LOI.Character]
+      character: @ReferenceField LOI.Character, ['debugName']
+      members: [@ReferenceField LOI.Character, ['debugName']]
 
   # Methods
   

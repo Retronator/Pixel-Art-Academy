@@ -8,12 +8,11 @@ class Script.Nodes.ChoicePlaceholder extends Script.Node
     @id = options.id
     @originalNext = options.next
     
-  end: ->
+  update: ->
     # Query all the listeners if they want to insert any choices.
-    
     responses = for listener in LOI.adventure.currentListeners() when listener.onChoicePlaceholder
       response = new Script.Nodes.ChoicePlaceholder.Response
-        scriptId: @script.id()
+        script: @script
         placeholderId: @id
 
       listener.onChoicePlaceholder response
@@ -32,13 +31,17 @@ class Script.Nodes.ChoicePlaceholder extends Script.Node
     # Link the last node to the original next node.
     lastNode.next = @originalNext
 
+  end: ->
+    @update()
+
     # Finish transition.
     super
 
   #  Choice placeholder response collects any dialog choices to add at the placeholder location.
   class @Response
     constructor: (@options) ->
-      @scriptId = @options.scriptId
+      @script = @options.script
+      @scriptId = @options.script.id()
       @placeholderId = @options.placeholderId
 
       @_nodes = []

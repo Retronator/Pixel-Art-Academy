@@ -1,0 +1,26 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.Groups.SanFranciscoFriends.Conversation
+
+## MainQuestionsNonMember
+
+* Let's hang out sometimes. -> [HangOut] `personInstance.personState('introduced')`
+
+## MainQuestionsMember
+
+* What's new? -> [WhatsNew]
+
+## HangOut
+
+person: Sounds good! I'll see you at Retronator Café?
+char: it's a deal.
+
+### AddAsMember
+
+-> [End]
+
+## WhatsNew
+
+### WhatsNew
+
+-> [End]
+
+## End

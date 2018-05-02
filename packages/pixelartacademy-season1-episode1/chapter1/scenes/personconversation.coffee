@@ -36,42 +36,11 @@ class C1.PersonConversation extends LOI.Adventure.Scene
 
       PAA.Practice.Journal.forCharacterIds.subscribe characterIds
 
-    @currentPerson = new ReactiveField null
-
-    @earliestTimeForCurrentPerson = new ComputedField =>
-      return unless person = @currentPerson()
-      personData = @state('lastHangoutTime')?[person._id]
-
-      # Take the last hangout time, but not earlier than 1 month.
-      lastHangoutTime = personData?.time.getTime() or 0
-      earliestTime = Math.max lastHangoutTime, Date.now() - 30 * 24 * 60 * 60 * 1000
-
-      lastHangoutGameTime = personData?.gameTime.getTime() or 0
-
-      time: new Date earliestTime
-      gameTime: new LOI.GameDate lastHangoutGameTime
-
-    @actionsSubscription = new ComputedField =>
-      return unless person = @currentPerson()
-      return unless earliestTime = @earliestTimeForCurrentPerson()
-
-      LOI.Memory.Action.recentForCharacter.subscribe person._id, earliestTime.time
-
-    @memoriesSubscription = new ComputedField =>
-      return unless person = @currentPerson()
-      return unless earliestTime = @earliestTimeForCurrentPerson()
-
-      actions = person.recentActions earliestTime
-      memoryIds = _.uniq (action.memory._id for action in actions when action.memory)
-
-      LOI.Memory.forIds.subscribe memoryIds
 
   destroy: ->
     super
 
     @_journalsSubscriptionAutorun.stop()
-    @earliestTimeForCurrentPerson.stop()
-    @actionsSubscription.stop()
     
   # Script
 
