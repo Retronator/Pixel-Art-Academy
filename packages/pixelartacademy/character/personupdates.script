@@ -4,12 +4,18 @@
 
 person: Hmmm, let's see …
 
+## JustUpdateStart
+
 ### WaitToLoad
+
+-> [Update] `_justUpdate`
 
 pause
 
 -> [NothingNew] `_relevantActionsCount is 0`
 -> [NothingUnknown] `_relevantActionsCount is _knownActionsCount`
+
+## Update
 
 ## JournalEntries
 
@@ -44,6 +50,8 @@ person: I had some conversations with people around here. `_plainConversations.c
 person: I found this Daily article about `_dailyConversations.conversations[0].article.title`. `_dailyConversations.conversations.length is 1`
 
 person: I've been reading some Daily articles. `_dailyConversations.conversations.length > 1`
+
+-> [EndUpdate] `_justUpdate`
 
 ## FollowUp
 
@@ -169,6 +177,14 @@ person: Nope, nothing really.
 ## NothingUnknown
 
 person: Not much, I think you've been there for all of it.
+
+-> [End]
+
+## EndUpdate
+
+pause
+
+### EndUpdate
 
 -> [End]
 

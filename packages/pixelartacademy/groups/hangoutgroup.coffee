@@ -3,8 +3,14 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
+Nodes = LOI.Adventure.Script.Nodes
 
 class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
+  @listeners: ->
+    super.concat [
+      PAA.PersonUpdates
+    ]
+
   constructor: ->
     super
 
@@ -16,6 +22,13 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
 
         # See if any of them are memorable
         _.find recentActions, (action) => action.isMemorable or action.memory
+
+    @characterUpdatesHelper = new PAA.CharacterUpdatesHelper
+
+  destroy: ->
+    super
+
+    @characterUpdatesHelper.destroy()
 
   members: ->
     # Override to provide things that are members of this group.
@@ -32,6 +45,63 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
 
         @setCallbacks
           WhatsNew: (complete) =>
+            remainingMembers = _.clone group.presentMembers()
+
+            # Pause current callback node so dialogues can execute.
+            LOI.adventure.director.pauseCurrentNode()
+
+            handleNextMember = =>
+              # Start next person's update.
+              person = remainingMembers.shift()
+              person.recordHangout()
+              group.characterUpdatesHelper.person person
+
+              personUpdates = _.find group.listeners, (listener) -> listener instanceof PAA.PersonUpdates
+
+              script = personUpdates.getScript
+                person: person
+                justUpdate: true
+                readyField: group.characterUpdatesHelper.ready
+                nextNode: null
+                endUpdateCallback: =>
+                  # See if we have any members left.
+                  if remainingMembers.length
+                    handleNextMember()
+
+                  else
+                    # We're done!
+                    complete()
+
+              LOI.adventure.director.startScript script, label: 'JustUpdateStart'
+
+            # Start the handling.
+            handleNextMember()
+
+          FollowUp: (complete) =>
+            # Last choice is to end the interaction.
+            nextNode = @startNode.labels.FollowUpEnd.next
+
+            # Daisy chain people choices.
+            for person in group.presentMembers() by -1
+              # Create a dialog node followed by the jump (or following to the last non-choice node if no jump is present).
+              dialogNode = new Nodes.DialogueLine
+                line: "#{person.fullName()} …"
+                next: new Nodes.Callback
+                  callback: (complete) =>
+                    complete()
+
+                    console.log "I WAS ASKED", person
+
+                actor: LOI.character().avatar
+
+              # Create a choice node that delivers the line if chosen.
+              choiceNode = new Nodes.Choice
+                node: dialogNode
+                next: nextNode
+
+              nextNode = choiceNode
+
+            LOI.adventure.director.startNode nextNode
             complete()
 
           JustOne: (complete) =>

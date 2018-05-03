@@ -142,6 +142,11 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
         NextConversation: => # Dummy callback as it will be set from GoOverConversations.
 
+        EndUpdate: (complete) =>
+          @_options.endUpdateCallback?()
+
+          complete()
+
   _goOverConversations: (complete, conversationsFieldName) ->
     conversationsToGoOver = _.clone @script.ephemeralState(conversationsFieldName).conversations
 
@@ -193,5 +198,8 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
     # Save the options to script as we need them when constructing the data once the documents are ready.
     @script._options = options
+    
+    # Set if we're doing just the update without follow up.
+    @script.ephemeralState 'justUpdate', options.justUpdate is true
 
     @script

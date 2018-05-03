@@ -10,14 +10,26 @@ person1: Hey _char_! `_person1`
 person2: Hey! `_person2`
 person3: Hi! `_person3`
 
+## MainQuestions
+
 * What's new? -> [WhatsNew]
 * See you around. -> [End]
 
 ## WhatsNew
 
+pause
+
 ### WhatsNew
 
--> End
+## FollowUp
+
+### FollowUp
+
+-> [End]
+
+## FollowUpEnd
+
+* Oh, that's cool. -> [MainQuestions]
 
 ## JustOne
 
