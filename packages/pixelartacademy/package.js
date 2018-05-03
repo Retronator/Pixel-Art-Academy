@@ -31,5 +31,5 @@ Package.onUse(function(api) {
   api.addFile('character/characterupdateshelper');
   
   api.addFile('groups..');
-  api.addThing('groups/hangoutgroup');
+  api.addFile('groups/hangoutgroup');
 });

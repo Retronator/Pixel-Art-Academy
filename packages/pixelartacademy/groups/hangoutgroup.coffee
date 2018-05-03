@@ -22,33 +22,26 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
     # Each thing must be able to provide a list of their recent actions.
     []
 
-  @listeners: ->
-    super.concat [
-      @GroupListener
-    ]
+  startMainQuestionsWithPerson: ->
+    throw new AE.NotImplementedException "You must provide a way to start a default conversation with a group member."
 
   class @GroupListener extends LOI.Adventure.Listener
-    @id: -> "PixelArtAcademy.Groups.HangoutGroup"
-
-    @scriptUrls: -> [
-      'retronator_pixelartacademy/groups/hangoutgroup.script'
-    ]
-
-    class @GroupScript extends LOI.Adventure.Script
-      @id: -> "PixelArtAcademy.Groups.HangoutGroup"
-      @initialize()
-
+    class @Script extends LOI.Adventure.Script
       initialize: ->
-        return
+        group = @options.parent
 
         @setCallbacks
-          Dummy: (complete) =>
+          WhatsNew: (complete) =>
             complete()
 
-    @initialize()
+          JustOne: (complete) =>
+            # Start direct one-on-one dialog 
+            group.startMainQuestionsWithPerson @things.person1
+            
+            complete()
 
     onScriptsLoaded: ->
-      @groupScript = @scripts[@constructor.GroupScript.id()]
+      @groupScript = @scripts[@constructor.Script.id()]
 
     onCommand: (commandResponse) ->
       scene = @options.parent

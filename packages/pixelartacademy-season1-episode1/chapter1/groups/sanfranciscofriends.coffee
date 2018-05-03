@@ -13,6 +13,11 @@ class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
   @fullName: -> "San Francisco friends"
   @location: -> HQ.Cafe
 
+  @listeners: ->
+    super.concat [
+      @HangoutGroupListener
+    ]
+
   @initialize()
 
   constructor: ->
@@ -36,3 +41,23 @@ class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
     super
 
     @_membersAutorun.stop()
+
+  startMainQuestionsWithPerson: (person) ->
+    # Start a default SF conversation.
+    conversation = LOI.adventure.getCurrentThing C1.SanFranciscoConversation
+    conversation.startMainQuestionsWithPerson person
+
+  # Hangout group parts
+
+  class @HangoutGroupListener extends PAA.Groups.HangoutGroup.GroupListener
+    @id: -> "PixelArtAcademy.Season1.Episode1.Chapter1.Groups.SanFranciscoFriends.HangoutGroupListener"
+
+    @scriptUrls: -> [
+      'retronator_pixelartacademy-season1-episode1/chapter1/groups/sanfranciscofriends.script'
+    ]
+
+    class @Script extends PAA.Groups.HangoutGroup.GroupListener.Script
+      @id: -> "PixelArtAcademy.Season1.Episode1.Chapter1.Groups.SanFranciscoFriends"
+      @initialize()
+
+    @initialize()
