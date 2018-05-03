@@ -55,6 +55,8 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
         complete()
         
       WhatsNew: (complete) =>
+        scene.characterUpdatesHelper.recordHangout()
+        
         personUpdates = _.find scene.listeners, (listener) -> listener instanceof PAA.PersonUpdates
           
         script = personUpdates.getScript

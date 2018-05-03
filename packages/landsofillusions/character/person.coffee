@@ -9,7 +9,10 @@ class LOI.Character.Person extends LOI.Adventure.Thing
   # alreadyMet: boolean whether the player had any interactions with this person
   # introduced: boolean whether the player introduced themselves to the person
   # lastHangout: info when player last hanged out with this person
-  #   time: real-world time of the hangout
+  #   time: real-world time of the hangout in milliseconds
+  #   gameTime: fractional time in game days
+  # previousHangout: information about the hangout prior to last hangout
+  #   time: real-world time of the hangout in milliseconds
   #   gameTime: fractional time in game days
   @id: -> 'LandsOfIllusions.Character.Person'
 

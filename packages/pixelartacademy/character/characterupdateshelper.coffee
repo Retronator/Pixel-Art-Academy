@@ -7,16 +7,16 @@ class PAA.CharacterUpdatesHelper
   
     @earliestTime = new ComputedField =>
       return unless person = @person()
-      lastHangout = person.personState('lastHangout')
+      previousHangout = person.personState('previousHangout')
   
       # Take the last hangout time, but not earlier than 1 month.
-      lastHangoutTime = lastHangout?.time.getTime() or 0
-      earliestTime = Math.max lastHangoutTime, Date.now() - 30 * 24 * 60 * 60 * 1000
+      previousHangoutTime = previousHangout?.time or 0
+      earliestTime = Math.max previousHangoutTime, Date.now() - 30 * 24 * 60 * 60 * 1000
   
-      lastHangoutGameTime = lastHangout?.gameTime.getTime() or 0
+      previousHangoutGameTime = previousHangout?.gameTime or 0
   
       time: new Date earliestTime
-      gameTime: new LOI.GameDate lastHangoutGameTime
+      gameTime: new LOI.GameDate previousHangoutGameTime
   
     @actionsSubscription = new ComputedField =>
       return unless person = @person()
@@ -35,6 +35,26 @@ class PAA.CharacterUpdatesHelper
 
     @ready = new ComputedField =>
       @actionsSubscription()?.ready() and @memoriesSubscription()?.ready()
+
+  recordHangout: ->
+    person = @person()
+    lastHangout = person.personState('lastHangout')
+    lastHangoutTime = lastHangout?.time or 0
+
+    # If this hangout is happening more than 15 minutes after the last hangout, record it as an actual new hangout.
+    time = Date.now()
+    timeSinceLastHangout = time - lastHangoutTime
+
+    if timeSinceLastHangout > 15 * 60 * 1000
+      # Store last hangout as the previous hangout so that we can calculate updates since then.
+      person.personState 'previousHangout', _.cloneDeep lastHangout
+
+    # Update last hangout to now.
+    lastHangout =
+      time: Date.now()
+      gameTime: LOI.adventure.gameTime().getTime()
+
+    person.personState 'lastHangout', lastHangout
 
   destroy: ->
     @earliestTime.stop()
