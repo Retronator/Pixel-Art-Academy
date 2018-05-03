@@ -80,9 +80,18 @@ person: I've been reading some Daily articles. `_dailyConversations.conversation
 * Can I share the article? `_dailyConversations.conversations.length is 1`
 * What articles were they? `_dailyConversations.conversations.length > 1`
 
-* Oh, that's cool. -> [End]
+* Oh, that's cool. -> [End] `not _justFollowUp or _followedUp`
+* Actually … -> [End] `_justFollowUp and not _followedUp`
 
 -> [End]
+
+## JustFollowUpStart
+
+`_followedUp = false`
+
+### WaitToLoad
+
+-> [FollowUp]
 
 <!-- Journal entries -->
 
@@ -99,6 +108,8 @@ person: Of course!
 -> [ReadFirstJournalEntry]
 
 ## ReadFirstJournalEntry
+
+`_followedUp = true`
 
 pause
 ### ReadFirstJournalEntry
@@ -127,6 +138,8 @@ person: Yeah, they're somewhere around here …
 
 ## GoOverJournalEntryConversations
 
+`_followedUp = true`
+
 pause
 ### GoOverJournalEntryConversations
 
@@ -147,6 +160,8 @@ person: I'll tell you all about it …
 -> [GoOverConversations]
 
 ## GoOverConversations
+
+`_followedUp = true`
 
 pause
 ### GoOverConversations

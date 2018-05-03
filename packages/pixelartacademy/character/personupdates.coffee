@@ -199,7 +199,8 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
     # Save the options to script as we need them when constructing the data once the documents are ready.
     @script._options = options
     
-    # Set if we're doing just the update without follow up.
+    # Set if we're doing just the update or just follow up.
     @script.ephemeralState 'justUpdate', options.justUpdate is true
+    @script.ephemeralState 'justFollowUp', options.justFollowUp is true
 
     @script

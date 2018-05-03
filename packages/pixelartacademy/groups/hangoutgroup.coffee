@@ -25,6 +25,8 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
 
     @characterUpdatesHelper = new PAA.CharacterUpdatesHelper
 
+    @personUpdates = _.find @listeners, (listener) -> listener instanceof PAA.PersonUpdates
+
   destroy: ->
     super
 
@@ -56,9 +58,7 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
               person.recordHangout()
               group.characterUpdatesHelper.person person
 
-              personUpdates = _.find group.listeners, (listener) -> listener instanceof PAA.PersonUpdates
-
-              script = personUpdates.getScript
+              script = group.personUpdates.getScript
                 person: person
                 justUpdate: true
                 readyField: group.characterUpdatesHelper.ready
@@ -81,27 +81,44 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
             # Last choice is to end the interaction.
             nextNode = @startNode.labels.FollowUpEnd.next
 
+            # We prepare a placeholder for the node that starts the follow up choices, so we can return to it.
+            followUpRoot = null
+
             # Daisy chain people choices.
             for person in group.presentMembers() by -1
-              # Create a dialog node followed by the jump (or following to the last non-choice node if no jump is present).
-              dialogNode = new Nodes.DialogueLine
-                line: "#{person.fullName()} …"
-                next: new Nodes.Callback
-                  callback: (complete) =>
-                    complete()
+              do (person) =>
+                # Create a dialog node followed by the jump (or following
+                # to the last non-choice node if no jump is present).
+                dialogNode = new Nodes.DialogueLine
+                  line: "#{person.fullName()} …"
+                  next: new Nodes.Callback
+                    callback: (complete) =>
+                      # Load actions/memories of the selected person.
+                      group.characterUpdatesHelper.person person
 
-                    console.log "I WAS ASKED", person
+                      # Get the update script for this person and make it continues back to group's main questions.
+                      script = group.personUpdates.getScript
+                        person: person
+                        justFollowUp: true
+                        readyField: group.characterUpdatesHelper.ready
+                        nextNode: followUpRoot
 
-                actor: LOI.character().avatar
+                      # Start the person update from the follow up questions.
+                      LOI.adventure.director.startScript script, label: 'JustFollowUpStart'
+                      complete()
 
-              # Create a choice node that delivers the line if chosen.
-              choiceNode = new Nodes.Choice
-                node: dialogNode
-                next: nextNode
+                  actor: LOI.character().avatar
 
-              nextNode = choiceNode
+                # Create a choice node that delivers the line if chosen.
+                choiceNode = new Nodes.Choice
+                  node: dialogNode
+                  next: nextNode
 
-            LOI.adventure.director.startNode nextNode
+                nextNode = choiceNode
+
+            followUpRoot = nextNode
+
+            LOI.adventure.director.startNode followUpRoot
             complete()
 
           JustOne: (complete) =>
