@@ -55,14 +55,13 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
         complete()
         
       WhatsNew: (complete) =>
-        scene.characterUpdatesHelper.recordHangout()
+        @things.person.recordHangout()
         
         personUpdates = _.find scene.listeners, (listener) -> listener instanceof PAA.PersonUpdates
           
         script = personUpdates.getScript
           person: @things.person
           nextNode: @_returnScript.startNode.labels.MainQuestions
-          earliestTime: scene.characterUpdatesHelper.earliestTime()
           readyField: scene.characterUpdatesHelper.ready
 
         LOI.adventure.director.startScript script

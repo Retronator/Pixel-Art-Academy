@@ -118,11 +118,72 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       # No action means the person left the location, so we start an ad-hoc leave action.
       action = new LOI.Memory.Actions.Leave
       action.start @
-      
-  recentActions: (earliestTime) ->
+
+  # The time after start of hangout that we're showing events since previous hangout.
+  @preserveHangoutDuration = 10 * 60 * 1000 # 10 minutes
+
+  # The maximum duration we're showing recent actions for.
+  @recentActionsEarliestTimeMaxDuration = 30 * 24 * 60 * 60 * 1000 # 30 days
+
+  recentActionsEarliestTime: ->
+    lastHangout = @personState 'lastHangout'
+    lastHangoutTime = lastHangout?.time or 0
+
+    # Within 10 minutes of the last hangout we still show all events since previous hangout so that you can quickly
+    # ask the person what's new again and get the same results (and that people don't just disappear immediately after
+    # hanging out with them.
+    time = Date.now()
+    timeSinceLastHangout = time - lastHangoutTime
+
+    if timeSinceLastHangout < @constructor.preserveHangoutDuration
+      lastHangout = @personState 'previousHangout'
+      lastHangoutTime = lastHangout?.time or 0
+
+    # Take the last hangout time, but not earlier than 1 month.
+    earliestTime = Math.max lastHangoutTime, Date.now() - @constructor.recentActionsEarliestTimeMaxDuration
+
+    new Date earliestTime
+
+  subscribeRecentActions: ->
+    LOI.Memory.Action.recentForCharacter.subscribe @_id, @recentActionsEarliestTime()
+
+  subscribeRecentMemories: ->
+    actions = @_recentActions()
+    memoryIds = _.uniq (action.memory._id for action in actions when action.memory)
+
+    LOI.Memory.forIds.subscribe memoryIds
+
+  recentActions: ->
+    # Automatically subscribe to actions. We assume this is asked from a reactive 
+    # computation so the subscription will stop when computation ends.
+    @subscribeRecentActions()
+    
+    # Return the actions.
+    @_recentActions()
+    
+  _recentActions: ->
     LOI.Memory.Action.documents.fetch
       'character._id': @_id
-      time: $gte: earliestTime.time
+      time: $gte: @recentActionsEarliestTime()
+
+  recordHangout: ->
+    lastHangout = @personState('lastHangout')
+    lastHangoutTime = lastHangout?.time or 0
+
+    # If this hangout is happening more than 10 minutes after the last hangout, record it as an actual new hangout.
+    time = Date.now()
+    timeSinceLastHangout = time - lastHangoutTime
+
+    if timeSinceLastHangout > @constructor.preserveHangoutDuration
+      # Store last hangout as the previous hangout so that we can calculate updates since then.
+      @personState 'previousHangout', _.cloneDeep lastHangout
+
+    # Update last hangout to now.
+    lastHangout =
+      time: Date.now()
+      gameTime: LOI.adventure.gameTime().getTime()
+
+    @personState 'lastHangout', lastHangout
 
   # Listener
 

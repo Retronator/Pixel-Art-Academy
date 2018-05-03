@@ -8,38 +8,18 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
   constructor: ->
     super
 
-    @earliestTime = new ComputedField =>
-      # Take the last hangout time, but not earlier than 1 month.
-      # Note: we must use constructor state because the instance shortcut hasn't been assigned yet.
-      lastHangoutTime = @state('lastHangoutTime')?.time.getTime() or 0
-      earliestTime = Math.max lastHangoutTime, Date.now() - 30 * 24 * 60 * 60 * 1000
-
-      lastHangoutGameTime = @state('lastHangoutTime')?.gameTime.getTime() or 0
-      
-      time: new Date earliestTime
-      gameTime: new LOI.GameDate lastHangoutGameTime
-
-    # Subscribe to actions of people members (non-NPCs).
-    Tracker.autorun (computation) =>
-      peopleMembers = _.filter @members(), (member) -> member instanceof LOI.Character.Person
-      peopleMemberIds = (member._id for member in peopleMembers)
-
-      LOI.Memory.Action.recentForCharacters.subscribe peopleMemberIds, @earliestTime().time
-
-    # Active members are the ones that have done any memorable actions since last hangout.
+    # Active members are the ones that have done any memorable recent actions.
     @presentMembers = new ComputedField =>
-      earliestTime = @earliestTime()
-      
       _.filter @members(), (member) =>
         # Find any actions this member has performed.
-        recentActions = member.recentActions earliestTime
+        recentActions = member.recentActions()
 
         # See if any of them are memorable
         _.find recentActions, (action) => action.isMemorable or action.memory
 
   members: ->
-    # Override to provide things that are members of this group. Each thing must 
-    # be able to provide a list of actions that happened since the last hangout time.
+    # Override to provide things that are members of this group.
+    # Each thing must be able to provide a list of their recent actions.
     []
 
   @listeners: ->
