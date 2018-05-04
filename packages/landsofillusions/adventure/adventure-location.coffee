@@ -22,15 +22,21 @@ class LOI.Adventure extends LOI.Adventure
       console.log "Recomputing current location." if LOI.debug or LOI.Adventure.debugLocation
 
       # Memory provides its own location.
-      return memory.locationId if memory = @currentMemory()
-
-      if LOI.characterId() or not LOI.settings.persistGameState.allowed()
-        # Character's location is always read from the state. Also used when saving game state is not allowed.
-        @gameState()?.currentLocationId
-
+      if memory = @currentMemory()
+        locationId = memory.locationId
+        
       else
-        # Local storage is allowed so load player's location from there.
-        @playerLocationId()
+        if LOI.characterId() or not LOI.settings.persistGameState.allowed()
+          # Character's location is always read from the state. Also used when saving game state is not allowed.
+          locationId = @gameState()?.currentLocationId
+  
+        else
+          # Local storage is allowed so load player's location from there.
+          locationId = @playerLocationId()
+
+      console.log "Current location ID is", locationId if LOI.debug or LOI.Adventure.debugLocation
+
+      locationId
     ,
       true
 
@@ -196,6 +202,8 @@ class LOI.Adventure extends LOI.Adventure
   setLocationId: (locationClassOrId) ->
     locationId =  _.thingId locationClassOrId
     characterId = LOI.characterId()
+
+    console.log "Setting location ID to", locationId if LOI.debug
 
     # Update locally stored player location if we're not synced to a character.
     @playerLocationId locationId unless characterId
