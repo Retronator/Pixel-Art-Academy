@@ -8,6 +8,26 @@ class LOI.Character.Part
 
   @registerClasses: (classes) ->
     _.merge @Types, classes
+          
+  @allPartTypeIds: ->
+    types = []
+  
+    addTypes = (type) =>
+      # Go over all the properties of the type and add all sub-types.
+      typeClass = _.nestedProperty LOI.Character.Part.Types, type
+  
+      for propertyName, property of typeClass.options.properties when property.options?.type?
+        templateType = property.options.templateType or property.options.type
+        type = property.options.type
+  
+        types.push templateType
+        addTypes type
+  
+    addTypes 'Avatar.Body'
+    addTypes 'Avatar.Outfit'
+    addTypes 'Behavior'
+  
+    types
 
   # Helper to access Types with a nested string.
   @getClassForType: (type) ->

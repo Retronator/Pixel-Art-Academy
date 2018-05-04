@@ -34,7 +34,7 @@ class C3.Design.Terminal extends C3.Items.Terminal
     @switchToScreen @screens.mainMenu
 
     # Subscribe to all character part templates and the sprites that they use.
-    types = LOI.Character.Part.Types.Avatar.allPartTypeIds()
+    types = LOI.Character.Part.allPartTypeIds()
 
     # We already get all the templates for the current user, so we shouldn't return those.
     LOI.Character.Part.Template.forTypes.subscribe @, types, skipCurrentUsersTemplates: true

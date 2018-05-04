@@ -62,7 +62,7 @@ captain:
 
 ## Modifications
 
-> The space around you changes and you are now overlooking a futuristic-looking city.
+> The space around you changes and you are now overlooking a futuristic city.
 
 > It takes you a moment to recollect yourself.
 
@@ -194,7 +194,7 @@ captain:
 
 * So … how will this work?
 
-> The Captain takes you to a factory where a robot is being constructed.
+> You are suddenly back in San Francisco and the Captain takes you to a factory where a robot is being constructed.
 
 captain: 
     You will create an alternate reality character. 
@@ -343,7 +343,7 @@ captain: Any more questions? `_MainQuestions`
 
 ## MainQuestions
 
-* Where is the cyborg … what-was-it center? -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and not C3`
+* Where is this Cyborg … What-was-it Center? -> [C3] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and not C3`
 * Where is the Cyborg Construction Center again? -> [C3Short] `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor'] and C3`
 * How do I get out of here? -> [HowToExit]
 * Can I have multiple characters? -> [MultipleCharacters]

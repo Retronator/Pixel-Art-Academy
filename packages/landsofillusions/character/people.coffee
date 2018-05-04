@@ -23,7 +23,8 @@ class LOI.Character.People extends LOI.Adventure.Global
       super
 
       # Show characters that have been at the location in the last 15 minutes.
-      durationInMilliseconds = 15 * 60 * 1000
+      # TODO: Currently set to 15 hours. Remove when memory playback is added.
+      durationInMilliseconds = 15 * 60 * 60 * 1000
 
       @recentActionsSubscription = new ComputedField =>
         return unless timelineId = LOI.adventure.currentTimelineId()

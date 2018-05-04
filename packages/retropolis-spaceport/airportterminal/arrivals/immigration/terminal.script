@@ -10,9 +10,9 @@
 
 terminal: Welcome to Retropolis immigration procedure. Papers, please.
 
-> You remember you have your passport in ![your backpack](open backpack). `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
+> You remember you have your passport in ![your backpack](use backpack). `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
-> Papers? I guess it wants you to ![show your passport](show passport to terminal). `@player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
+> Papers? I guess it wants you to ![show your passport](use passport). `@player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
 -> [End]
 
@@ -56,19 +56,19 @@ terminal:
 
 terminal:
     Thank you. Your letter indicates you're here to study at the Retropolis Academy of Art. We're excited to have you. 
-    Please also present your ![passport](show passport to terminal).
+    Please also present your ![passport](use passport).
     
 -> [End]
 
 ## NoPassport
 
-> I don't see your passport. Maybe ![look in your backpack](open backpack)?
+> I don't see your passport. Maybe ![look in your backpack](use backpack)?
 
 -> [End]
 
 ## NoLetter
 
-> I don't see your acceptance letter. Maybe ![look in your backpack](open backpack)?
+> I don't see your acceptance letter. Maybe ![look in your backpack](use backpack)?
 
 -> [End]
 
