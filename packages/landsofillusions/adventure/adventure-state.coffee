@@ -218,7 +218,7 @@ class LOI.Adventure extends LOI.Adventure
 
     not gameState?.gameStarted
 
-  loadGame: ->
+  loadGame: (options = {}) ->
     # Wait until user is logged in.
     userAutorun = Tracker.autorun (computation) =>
       return unless user = Retronator.user()
@@ -255,7 +255,7 @@ class LOI.Adventure extends LOI.Adventure
             @interface.reset()
 
             # Clear active item.
-            @activeItemId null
+            @activeItemId null unless options.preserveActiveItem
 
             # Cleanup storyline classes.
             @resetEpisodes()

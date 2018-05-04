@@ -69,7 +69,9 @@ class LOI.Adventure extends LOI.Adventure
     @_initializeRouting()
 
     # Require the user to be signed in if local state is not allowed.
-    @loadGame() unless @usesLocalState()
+    unless @usesLocalState()
+      # Because direct URL routing might have changed the active item, we need to preserve it during this initial load.
+      @loadGame preserveActiveItem: true
 
   onDestroyed: ->
     super

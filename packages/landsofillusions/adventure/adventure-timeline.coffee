@@ -30,13 +30,19 @@ class LOI.Adventure extends LOI.Adventure
         # For characters, start in the present.
         unless gameState.currentTimelineId
           gameState.currentTimelineId = if LOI.characterId() then LOI.TimelineIds.Present else @startingPoint()?.timelineId
-          @gameState.updated()
-        
-        gameState.currentTimelineId
+
+          # Only signal the change if we actually changed it (starting point might not provide a timeline).
+          @gameState.updated() if gameState.currentTimelineId
+
+        timelineId = gameState.currentTimelineId
 
       else
         # Player's timeline is stored in local storage.
-        @playerTimelineId()
+        timelineId = @playerTimelineId()
+
+      console.log "Current timeline ID is", timelineId if LOI.debug or LOI.Adventure.debugLocation
+
+      timelineId
     ,
       true
 
