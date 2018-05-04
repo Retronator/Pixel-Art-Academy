@@ -46,6 +46,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.SceneManager
     # Reposition meshes in order.
     @journalsView.autorun (computation) =>
       journalMeshes = _.values @journalMeshesById()
+      journalMeshes = _.sortBy journalMeshes, 'journal.order'
 
       for journalMesh, index in journalMeshes
         journalMesh.position.x = index * 50

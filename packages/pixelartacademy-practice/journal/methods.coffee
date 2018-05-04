@@ -15,7 +15,7 @@ PAA.Practice.Journal.insert.method (characterId, design) ->
     sort:
       order: -1
 
-  # Place it after the last entry (or at the start if it's the first entry).
+  # Place it after the last entry (or at the start if it's the first journal).
   order = (lastJournal?.order + 1) or 0
 
   # We create a new check-in for the given character.

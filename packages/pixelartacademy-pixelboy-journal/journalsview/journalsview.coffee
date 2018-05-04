@@ -81,6 +81,9 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
 
     # Start rendering after the canvas has been flushed to the DOM.
     Tracker.afterFlush =>
+      # Make sure the component didn't get destroyed in the mean time.
+      return if @isDestroyed()
+
       @renderer().start()
 
   onDestroyed: ->
@@ -101,6 +104,9 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
     PAA.Practice.Journal.documents.find
       'character._id': LOI.characterId()
       archived: archived
+    ,
+      sort:
+        order: 1
 
   # Events
 

@@ -28,6 +28,7 @@ class LOI.Components.Menu extends AM.Component
 
     $(document).on 'keydown.menu', (event) =>
       return unless LOI.adventure.interface.active() or @menuVisible()
+      return if LOI.adventure.currentContext()
 
       # Toggle menu on escape.
       if event.which is AC.Keys.escape

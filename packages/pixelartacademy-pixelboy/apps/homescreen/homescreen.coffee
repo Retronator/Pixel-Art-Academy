@@ -34,7 +34,7 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.App
     @$('.apps .app').velocity 'transition.slideUpIn', stagger: 150
 
   onDeactivate: (finishedDeactivatingCallback) ->
-    @$('.apps .app').velocity 'transition.fadeOut',
+    @$('.apps .app')?.velocity 'transition.fadeOut',
       complete: ->
         finishedDeactivatingCallback()
         
