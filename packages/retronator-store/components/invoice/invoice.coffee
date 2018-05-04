@@ -43,7 +43,7 @@ class RS.Components.Invoice extends AM.Component
     if transaction.tip
       items.push
         index: items.length + 1
-        name: AB.translationForComponent(@, 'Tip')?.translate(language).text
+        name: "Tip"
         value: transaction.tip.amount
 
     for item in items

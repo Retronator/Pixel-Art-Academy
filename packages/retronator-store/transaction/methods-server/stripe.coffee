@@ -6,8 +6,6 @@ RS = Retronator.Store
 
 Meteor.methods
   'Retronator.Store.Transaction.insertStripePurchase': (payment, shoppingCart) ->
-    throw new AE.InvalidOperationException "The store is closed while we're getting registered with the tax authorities."
-
     throw new AE.InvalidOperationException "Stripe has not been configured." unless AT.Stripe.initialized
     check payment, Match.ObjectIncluding
       token: Match.Optional

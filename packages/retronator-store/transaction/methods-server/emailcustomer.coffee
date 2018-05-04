@@ -1,7 +1,8 @@
 RS = Retronator.Store
+AB = Artificial.Base
 AT = Artificial.Telepathy
 
-RS.Transaction.emailCustomer = ({customer, payments, shoppingCart}) ->
+RS.Transaction.emailCustomer = ({customer, payments, shoppingCart, taxInfo, invoice}) ->
   unless customer.email
     # We don't have user's email, so we can't send them the email (for example, if they logged in with Twitter only).
     # Exception is not thrown so that the method completes, but we can't continue with emailing.
@@ -28,6 +29,11 @@ RS.Transaction.emailCustomer = ({customer, payments, shoppingCart}) ->
     switch payment.type
       when RS.Payment.Types.StripePayment
         email.addParagraph "You should receive a separate email from Stripe that confirms your payment of $#{payment.amount}."
+
+        email.addParagraph "We generated an invoice with full VAT (value-added tax) information, which you can access at:"
+
+        invoiceUrl = AB.Router.createUrl RS.Pages.Invoice, accessSecret: invoice.accessSecret
+        email.addLinkParagraph invoiceUrl, "Invoice"
 
       when RS.Payment.Types.StoreCredit
         email.addParagraph "We #{if payments.length > 1 then "also " else ""}applied your store credit of $#{payment.storeCreditAmount} towards the purchase."

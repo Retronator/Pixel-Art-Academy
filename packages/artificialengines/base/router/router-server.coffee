@@ -151,3 +151,25 @@ class AB.Router extends AB.Router
       Inject.rawHead 'Artificial.Base.Router', headHtml, response
 
       next()
+
+  @createUrl: (routeName, parameters) ->
+    # Allow sending components directly.
+    routeName = routeName.componentName() if routeName.componentName
+
+    return unless route = @routes[routeName]
+
+    try
+      path = route.createPath(parameters) or '/'
+
+    catch error
+      # Errors are common because we often have missing parameters when data is loading.
+      # We just return null as the function will re-run when new parameters get available.
+      return null
+
+    host = route.host
+
+    # No need for a slash if we're changing the host to its main page.
+    path = '' if path is '/'
+
+    # We always assume https on the server and return the full URL with host.
+    "https://#{host}#{path}"
