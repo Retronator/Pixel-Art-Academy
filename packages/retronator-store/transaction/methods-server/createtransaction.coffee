@@ -10,6 +10,9 @@ RS.Transaction.create = (options) ->
     payments: _.pick payment, '_id' for payment in payments
     accessSecret: Random.id()
 
+  options.invoice =
+    accessSecret: transaction.accessSecret
+
   if taxInfo
     transaction.taxInfo = taxInfo
 

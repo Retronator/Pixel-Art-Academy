@@ -13,7 +13,7 @@
       </tr>
       {{#each transactions}}
         <tr class="{{transactionClass}}">
-          <td>{{taxInfo.invoiceId.year}}-{{taxInfo.invoiceId.number}}</td>
+          <td><a href="{{routerPath 'Retronator.Store.Pages.Invoice' accessSecret=accessSecret}}" target="_blank">{{taxInfo.invoiceId.year}}-{{taxInfo.invoiceId.number}}</a></td>
           <td>{{formatDate time}}</td>
           <td>{{taxInfo.country.billing}}</td>
           <td>{{taxInfo.country.payment}}</td>

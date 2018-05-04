@@ -47,48 +47,50 @@ class LOI.Adventure extends LOI.Adventure
         # If we got a handler, let it deal with the URL (get the game into the state it needs to be).
         handler?()
 
-    # Rewrite url to match the top-most dialog, active item or current location.
-    @autorun (computation) =>
-      # Find the first dialog in the stack that has a url.
-      for dialogOptions in @modalDialogs()
-        dialog = dialogOptions.dialog
-        
-        # See if the instance or constructor can provide the url.
-        if dialog.url or dialog.constructor.url
-          desiredUrl = dialog.url?()
-          desiredUrl ?= dialog.constructor.url()
-          break
+    # On the first run, give location a chance to recompute if one of the custom handlers changed it.
+    Tracker.afterFlush =>
+      # Rewrite url to match the top-most dialog, active item or current location.
+      @autorun (computation) =>
+        # Find the first dialog in the stack that has a url.
+        for dialogOptions in @modalDialogs()
+          dialog = dialogOptions.dialog
 
-      unless desiredUrl?
-        # We don't have any URLs in the dialogs, next try active item (first) and location (second).
-        activeItemId = @activeItemId()
-        activeItem = @activeItem()
+          # See if the instance or constructor can provide the url.
+          if dialog.url or dialog.constructor.url
+            desiredUrl = dialog.url?()
+            desiredUrl ?= dialog.constructor.url()
+            break
 
-        # Wait until desired active item is instantiated.
-        return if activeItemId and activeItemId isnt activeItem?.id()
+        unless desiredUrl?
+          # We don't have any URLs in the dialogs, next try active item (first) and location (second).
+          activeItemId = @activeItemId()
+          activeItem = @activeItem()
 
-        currentLocation = @currentLocation()
+          # Wait until desired active item is instantiated.
+          return if activeItemId and activeItemId isnt activeItem?.id()
 
-        thing = activeItem or currentLocation
-        desiredUrl = thing?.url?()
-        desiredUrl ?= thing?.constructor.url()
+          currentLocation = @currentLocation()
 
-      return unless desiredUrl?
+          thing = activeItem or currentLocation
+          desiredUrl = thing?.url?()
+          desiredUrl ?= thing?.constructor.url()
 
-      currentUrl = @currentUrl()
+        return unless desiredUrl?
 
-      if _.endsWith desiredUrl, '/*'
-        urlPrefix = desiredUrl.substring 0, desiredUrl.length - 2
-        return if currentUrl.indexOf urlPrefix is 0
+        currentUrl = @currentUrl()
 
-      else
-        return if desiredUrl is currentUrl
+        if _.endsWith desiredUrl, '/*'
+          urlPrefix = desiredUrl.substring 0, desiredUrl.length - 2
+          return if currentUrl.indexOf urlPrefix is 0
 
-      console.log "%cRewriting URL to", 'background: NavajoWhite', desiredUrl if LOI.debug or LOI.Adventure.debugRouting
+        else
+          return if desiredUrl is currentUrl
 
-      parametersObject = @buildDesiredUrlParameters desiredUrl
+        console.log "%cRewriting URL to", 'background: NavajoWhite', desiredUrl if LOI.debug or LOI.Adventure.debugRouting
 
-      AB.Router.goToRoute @constructor.id(), parametersObject, createHistory: false
+        parametersObject = @buildDesiredUrlParameters desiredUrl
+
+        AB.Router.goToRoute @constructor.id(), parametersObject, createHistory: false
 
   buildDesiredUrlParameters: (url) ->
     # Override to provide different URL parameters.
