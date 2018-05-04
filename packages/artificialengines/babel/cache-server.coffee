@@ -15,6 +15,7 @@ Meteor.startup ->
 
 WebApp.connectHandlers.use AB.cacheUrl, (request, response, next) ->
   unless cache
+    console.log "Recomputing Artificial Babel Translations cache." if Artificial.debug
     # Get all translations with a namespace and a key.
     translations = AB.Translation.documents.fetch
       namespace: $exists: true

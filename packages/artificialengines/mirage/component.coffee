@@ -25,13 +25,12 @@ class AM.Component extends CommonComponent
   onCreated: ->
     super
 
-    # Artificial Babel
-    AB.subscribeComponent? @
+    AB.subscribeComponent @ if Meteor.isClient
 
   onDestroyed: ->
     super
 
-    AB.unsubscribeComponent? @
+    AB.unsubscribeComponent @ if Meteor.isClient
 
   # Modified firstNode and lastNode helpers that skip over text nodes. Useful if the component doesn't have
   # persistent first and last nodes, since the original helpers will point to surrounding text elements.
