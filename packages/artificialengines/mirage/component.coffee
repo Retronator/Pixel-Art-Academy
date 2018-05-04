@@ -6,6 +6,16 @@ AB = null
 
 # Extension of BlazeComponent with custom functionality.
 class AM.Component extends CommonComponent
+  @_componentClassesByName = {}
+
+  @register: (componentName) ->
+    super
+
+    @_componentClassesByName[componentName] = @
+
+  @getClasses: ->
+    _.values @_componentClassesByName
+
   constructor: ->
     super
 
@@ -16,12 +26,12 @@ class AM.Component extends CommonComponent
     super
 
     # Artificial Babel
-    AB.subscribeComponent @
+    AB.subscribeComponent? @
 
   onDestroyed: ->
     super
 
-    AB.unsubscribeComponent @
+    AB.unsubscribeComponent? @
 
   # Modified firstNode and lastNode helpers that skip over text nodes. Useful if the component doesn't have
   # persistent first and last nodes, since the original helpers will point to surrounding text elements.

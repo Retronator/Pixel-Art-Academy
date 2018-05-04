@@ -26,11 +26,18 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
   # Script
 
   initializeScript: ->
+    scene = @options.parent
+
     @setCurrentThings
       captain: LOI.Construct.Actors.Captain
 
     @setThings
-      operator: @options.parent.operator
+      operator: scene.operator
+
+    @setCallbacks
+      ShowTitle: (complete) =>
+        scene._showChapterTitle()
+        complete()
 
   _showChapterTitle: ->
     # Only allow one call to this.

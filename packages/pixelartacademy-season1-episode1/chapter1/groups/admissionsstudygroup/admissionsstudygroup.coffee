@@ -1,6 +1,7 @@
 LOI = LandsOfIllusions
-C1 = PixelArtAcademy.Season1.Episode1.Chapter1
+PAA = PixelArtAcademy
+C1 = PAA.Season1.Episode1.Chapter1
 
-class C1.Groups.AdmissionsStudyGroup extends LOI.Adventure.Group
+class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
   # Uses membership to determine its members for the current character.
   @fullName: -> "admissions study group"

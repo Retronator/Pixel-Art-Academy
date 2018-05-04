@@ -1,0 +1,51 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.SanFranciscoConversation
+
+## Start
+
+-> [SaidHi] `_person.saidHi`
+
+`_person.saidHi = true`
+
+-> [AlreadyMetGreeting] `personInstance.personState('alreadyMet')`
+
+char: Uhm … hi!
+
+person: Hi there!
+
+`personInstance.personState('alreadyMet', true)`
+
+-> [MainQuestions]
+
+## AlreadyMetGreeting
+
+char: Hi!
+
+person: Hey, nice to see you again.
+
+-> [MainQuestions]
+
+## SaidHi
+
+person: What's up?
+
+-> [MainQuestions]
+
+## MainQuestions
+
+* What's your name? -> [YourName] `not personInstance.personState('introduced')`
+* *PersonConversationMainQuestions*
+* Bye now! -> [End]
+
+## YourName
+
+person: I'm `personInstance.fullName()`.
+
+> _char_ extends _their_ hand.
+
+char: Nice to meet you. I'm `@character.name()`.
+
+`personInstance.personState('introduced', true)`
+
+-> [MainQuestions]
+
+## End

@@ -57,6 +57,7 @@ Document.startup ->
       ListenTo: ['listen to', 'hear']
       Say: ['say']
       HangOut: ['hang out']
+      Cheat: ['cheat']
 
       Be:
         Present:

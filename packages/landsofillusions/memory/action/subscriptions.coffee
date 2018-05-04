@@ -7,14 +7,30 @@ LOI.Memory.Action.forMemory.publish (memoryId) ->
     'memory._id': memoryId
 
 # Returns actions at a location within the duration.
-LOI.Memory.Action.recentForTimelineLocation.publish (timelineId, locationId, durationInSeconds) ->
+LOI.Memory.Action.recentForTimelineLocation.publish (timelineId, locationId, earliestTime) ->
   check timelineId, String
   check locationId, String
-  check durationInSeconds, Number
-  
-  earliestTime = new Date Date.now() - durationInSeconds * 1000
+  check earliestTime, Date
 
   LOI.Memory.Action.documents.find
     timelineId: timelineId
     locationId: locationId
+    time: $gt: earliestTime
+
+# Returns actions at a location within the duration.
+LOI.Memory.Action.recentForCharacter.publish (characterId, earliestTime) ->
+  check characterId, Match.DocumentId
+  check earliestTime, Date
+
+  LOI.Memory.Action.documents.find
+    'character._id': characterId
+    time: $gt: earliestTime
+
+# Returns actions at a location within the duration.
+LOI.Memory.Action.recentForCharacters.publish (characterIds, earliestTime) ->
+  check characterIds, [Match.DocumentId]
+  check earliestTime, Date
+
+  LOI.Memory.Action.documents.find
+    'character._id': $in: characterIds
     time: $gt: earliestTime

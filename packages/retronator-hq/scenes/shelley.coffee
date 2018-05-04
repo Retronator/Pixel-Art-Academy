@@ -99,7 +99,7 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
 
       label = Random.choice choices
 
-      listener.startScript label: label
+      listener.startBackgroundScript label: label
 
     else
       # Move.
@@ -111,8 +111,8 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
 
       nextLocationId = Random.choice(choices).id()
 
-      listener.startScript label: 'Leave' if playerLocationId is currentLocationId
-      listener.startScript label: 'Enter' if playerLocationId is nextLocationId
+      listener.startBackgroundScript label: 'Leave' if playerLocationId is currentLocationId
+      listener.startBackgroundScript label: 'Enter' if playerLocationId is nextLocationId
 
       @state 'currentLocation', nextLocationId
 

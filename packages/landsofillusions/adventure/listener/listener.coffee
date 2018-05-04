@@ -101,6 +101,8 @@ class LOI.Adventure.Listener
 
   onCommand: (commandResponse) -> # Override to listen to commands.
 
+  onChoicePlaceholder: (choicePlaceholderResponse) -> # Override to insert choice nodes at the placeholder.
+
   onEnter: (enterResponse) -> # Override to react to entering a location.
 
   onExitAttempt: (exitResponse) -> # Override to react to location change attempts, potentially preventing the exit.

@@ -43,7 +43,12 @@ class LOI.Interface.Text extends LOI.Interface.Text
     Tracker.afterFlush =>
       @_lastNode null
 
-  _handleNode: (node) ->
+  _handleNode: (node, options = {}) ->
+    # Text interface doesn't narrate background actions when the interface is busy.
+    if options.background and @busy()
+      node.cancel()
+      return
+
     super
 
     # We don't really have to handle choice node, because the dialog selection
@@ -54,12 +59,17 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
   _handlePause: (pause) ->
     # Just force a wait before going on.
-    return if @_waitForNode pause
+    if pause._activated
+      pause._activated = false
+      pause.end()
 
-    pause.end()
+    else
+      pause._activated = true
+      @_lastNode null
+      @_pausedNode pause
 
-  _handleDialogueLine: (dialogueLine) ->
-    return if @_waitForNode dialogueLine
+  _handleDialogueLine: (dialogueLine, options) ->
+    return if not options.background and @_waitForNode dialogueLine
 
     unless dialogueLine.actor
       # There is no actor, which means the player is saying this. Simply dump it into the narrative and finish.
@@ -116,25 +126,35 @@ class LOI.Interface.Text extends LOI.Interface.Text
         end = "\"#{end}"
 
     # Present the text to the player.
-    @narrative.addText "#{start}#{text}#{end}"
+    @narrative.addText "#{start}#{text}#{end}", options
 
     # This is a line node so set that we displayed it, unless we request immediate continuation without pause.
     @_nodeDisplayed dialogueLine unless dialogueLine.immediate
 
-    dialogueLine.end()
+    if options.background
+      @_endAfterTextDelay text, dialogueLine
 
-  _handleNarrativeLine: (narrativeLine) ->
-    return if @_waitForNode narrativeLine
+    else
+      dialogueLine.end()
+
+  _handleNarrativeLine: (narrativeLine, options) ->
+    return if not options.background and @_waitForNode narrativeLine
 
     # Simply output the line to the narrative.
     text = @_evaluateLine narrativeLine
+    
+    options.scrollStyle = narrativeLine.scrollStyle
 
-    @narrative.addText text, scrollStyle: narrativeLine.scrollStyle
+    @narrative.addText text, options
 
     # This is a line node so set that we displayed it.
     @_nodeDisplayed narrativeLine
 
-    narrativeLine.end()
+    if options.background
+      @_endAfterTextDelay text, narrativeLine
+
+    else
+      narrativeLine.end()
 
   _handleInterfaceLine: (interfaceLine) ->
     return if @_waitForNode interfaceLine
@@ -177,3 +197,12 @@ class LOI.Interface.Text extends LOI.Interface.Text
       # Evaluate the expression, but we don't allow (or at least react to) state changes within the expression.
       codeNode.evaluate
         triggerChange: false
+
+  _endAfterTextDelay: (text, node) ->
+    # We read 10 characters/second
+    delay = text.length * 100
+
+    Meteor.setTimeout =>
+      node.end()
+    ,
+      delay

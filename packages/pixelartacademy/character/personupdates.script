@@ -1,0 +1,206 @@
+# PixelArtAcademy.PersonUpdates
+
+## Start
+
+person: Hmmm, let's see …
+
+## JustUpdateStart
+
+### WaitToLoad
+
+-> [Update] `_justUpdate`
+
+pause
+
+-> [NothingNew] `_relevantActionsCount is 0`
+-> [NothingUnknown] `_relevantActionsCount is _knownActionsCount`
+
+## Update
+
+## JournalEntries
+
+person: I wrote a new journal entry. `_journalEntries.entries.length is 1`
+
+person: I wrote some new entries in my journal. `_journalEntries.entries.length > 1`
+
+## CommentsOnJournalEntries
+
+person: I was talking to `_journalEntryConversations.conversations[0].journalEntry.author.name` about their journal entry. `_journalEntryConversations.conversations.length is 1 and not _journalEntryConversations.conversations[0].journalEntry.own`
+
+person: I was talking with `_journalEntryConversations.conversations[0].participants[0].name` about one of my journal entries. `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 1`
+
+person: I was talking with `_journalEntryConversations.conversations[0].participants[0].name` and `_journalEntryConversations.conversations[0].participants[1].name` about one of my journal entries. `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 2`
+
+person: I was talking about one of my journal entries with others. `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length > 2`
+
+person: I was talking about my journal entries with others. `_journalEntryConversations.conversations.length > 1`
+
+## Conversations
+
+person: I had a conversation with `_plainConversations.conversations[0].participants[0].name` the other day. `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 1`
+
+person: `_plainConversations.conversations[0].participants[0].name`, `_plainConversations.conversations[0].participants[1].name`, and I had a conversation the other day. `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 2`
+
+person: There was a group conversation we had. `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length > 2`
+
+person: I had some conversations with people around here. `_plainConversations.conversations.length > 1`
+
+## CommentsOnRetronatorDailyArticles
+
+person: I found this Daily article about `_dailyConversations.conversations[0].article.title`. `_dailyConversations.conversations.length is 1`
+
+person: I've been reading some Daily articles. `_dailyConversations.conversations.length > 1`
+
+-> [EndUpdate] `_justUpdate`
+
+## FollowUp
+
+<!-- Journal entries -->
+
+* What journal entry? -> [JournalEntrySingle] `_journalEntries.entries.length is 1`
+* Can I see the journal entries? -> [JournalEntryMultiple] `_journalEntries.entries.length > 1`
+
+<!-- Comments on journal entries -->
+
+* What journal entry from `_journalEntryConversations.conversations[0].journalEntry.author.name` was that? -> [JournalEntryConversationNotOwn] `_journalEntryConversations.conversations.length is 1 and not _journalEntryConversations.conversations[0].journalEntry.own`
+* Which journal entry did `_journalEntryConversations.conversations[0].participants[0].name` comment on? -> [JournalEntryConversationOwnSingle] `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 1`
+* Which journal entry did `_journalEntryConversations.conversations[0].participants[0].name` and `_journalEntryConversations.conversations[0].participants[1].name` talk about? -> [JournalEntryConversationOwnSingle] `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length is 2`
+* Which journal entry did you talk about? -> [JournalEntryConversationOwnSingle] `_journalEntryConversations.conversations.length is 1 and _journalEntryConversations.conversations[0].journalEntry.own and _journalEntryConversations.conversations[0].participants.length > 2`
+* Can I see the journal entries you talked about? -> [JournalEntryConversationOwnMultiple] `_journalEntryConversations.conversations.length > 1`
+
+<!-- Conversations -->
+
+* What did you talk about with `_plainConversations.conversations[0].participants[0].name`? -> [ConversationSingle] `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 1`
+* What did you talk about with `_plainConversations.conversations[0].participants[0].name` and `_plainConversations.conversations[0].participants[1].name`? -> [ConversationSingle] `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length is 2`
+* What did you talk about? -> [ConversationSingle] `_plainConversations.conversations.length is 1 and _plainConversations.conversations[0].participants.length > 2`
+* What things were you discussing? -> [ConversationMultiple] `_plainConversations.conversations.length > 1`
+
+<!-- Comments on Retronator Daily articles -->
+
+* Can I share the article? `_dailyConversations.conversations.length is 1`
+* What articles were they? `_dailyConversations.conversations.length > 1`
+
+* Oh, that's cool. -> [End] `not _justFollowUp or _followedUp`
+* Actually … -> [End] `_justFollowUp and not _followedUp`
+
+-> [End]
+
+## JustFollowUpStart
+
+`_followedUp = false`
+
+### WaitToLoad
+
+-> [FollowUp]
+
+<!-- Journal entries -->
+
+## JournalEntrySingle
+
+person: This one …
+
+-> [ReadFirstJournalEntry]
+
+## JournalEntryMultiple
+
+person: Of course!
+
+-> [ReadFirstJournalEntry]
+
+## ReadFirstJournalEntry
+
+`_followedUp = true`
+
+pause
+### ReadFirstJournalEntry
+
+-> [Return]
+
+<!-- Journal entry conversations -->
+
+## JournalEntryConversationNotOwn
+
+person: It was …
+
+-> [GoOverJournalEntryConversations]
+
+## JournalEntryConversationOwnSingle
+
+person: Let me show you …
+
+-> [GoOverJournalEntryConversations]
+
+## JournalEntryConversationOwnMultiple
+
+person: Yeah, they're somewhere around here …
+
+-> [GoOverJournalEntryConversations]
+
+## GoOverJournalEntryConversations
+
+`_followedUp = true`
+
+pause
+### GoOverJournalEntryConversations
+
+-> [Return]
+
+<!-- Conversations -->
+
+## ConversationSingle
+
+person: It was something about …
+
+-> [GoOverConversations]
+
+## ConversationMultiple
+
+person: I'll tell you all about it …
+
+-> [GoOverConversations]
+
+## GoOverConversations
+
+`_followedUp = true`
+
+pause
+### GoOverConversations
+
+-> [Return]
+
+## NextConversation
+
+person: … and then there was …
+
+pause
+### NextConversation
+
+-> [End]
+
+## Return
+
+> You return to the conversation with `personInstance.fullName()`.
+
+-> [FollowUp]
+
+## NothingNew
+
+person: Nope, nothing really.
+
+-> [End]
+
+## NothingUnknown
+
+person: Not much, I think you've been there for all of it.
+
+-> [End]
+
+## EndUpdate
+
+pause
+
+### EndUpdate
+
+-> [End]
+
+## End

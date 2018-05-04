@@ -23,13 +23,15 @@ class LOI.Character.People extends LOI.Adventure.Global
       super
 
       # Show characters that have been at the location in the last 15 minutes.
-      durationInSeconds = 15 * 60
+      durationInMilliseconds = 15 * 60 * 1000
 
       @recentActionsSubscription = new ComputedField =>
         return unless timelineId = LOI.adventure.currentTimelineId()
         return unless locationId = LOI.adventure.currentLocationId()
 
-        LOI.Memory.Action.recentForTimelineLocation.subscribe timelineId, locationId, durationInSeconds
+        earliestTime = new Date Date.now() - durationInMilliseconds
+
+        LOI.Memory.Action.recentForTimelineLocation.subscribe timelineId, locationId, earliestTime
 
       @currentPeople = new ComputedField =>
         # See if we've changed location.
@@ -52,7 +54,7 @@ class LOI.Character.People extends LOI.Adventure.Global
   
         # Filter all actions to unique characters. We don't care about reactivity
         # of time since we'll only get too many actions and not miss any.
-        earliestTime = new Date Date.now() - durationInSeconds * 1000
+        earliestTime = new Date Date.now() - durationInMilliseconds
   
         actions = LOI.Memory.Action.documents.fetch
           timelineId: currentTimelineId

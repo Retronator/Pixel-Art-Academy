@@ -22,6 +22,14 @@ class LOI.Character.Instance
 
   destroy: ->
     @_documentSubscription.stop()
+    
+  ready: ->
+    conditions = [
+      @document()?
+      @avatar.ready()
+    ]
+    
+    _.every conditions
 
   # Avatar pass-through methods
 

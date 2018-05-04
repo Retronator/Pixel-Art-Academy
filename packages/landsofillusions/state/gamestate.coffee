@@ -9,6 +9,8 @@ class LOI.GameState extends AM.Document
   #     {thingId}: state of the thing
   #   scripts: a map of all scripts
   #     {scriptId}: state of the script
+  #   people: a map of all other players' characters
+  #     {characterId}: state of the person
   #   currentLocationId: the last known location of the player
   #   currentTimelineId: the last known timeline in which the player is
   #   immersionExitLocationId: the last know location of the player outside immersion

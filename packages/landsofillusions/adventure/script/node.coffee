@@ -7,5 +7,8 @@ class LOI.Adventure.Script.Node
   end: ->
     @transition @next
 
+  cancel: ->
+    @transition null
+
   transition: (nextNode) ->
     LOI.adventure.director.scriptTransition @, nextNode

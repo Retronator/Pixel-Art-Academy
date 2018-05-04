@@ -162,11 +162,15 @@ class LOI.Adventure.Thing extends AM.Component
       startScript: (options) ->
         LOI.adventure.director.startScript @script, options
 
+      startBackgroundScript: (options) ->
+        LOI.adventure.director.startBackgroundScript @script, options
+
       onScriptsLoaded: ->
         @script = @scripts[@options.parent.id()]
         @options.parent.onScriptsLoaded.call @
 
       onCommand: (commandResponse) -> @options.parent.onCommand.call @, commandResponse
+      onChoicePlaceholder: (choicePlaceholderResponse) -> @options.parent.onChoicePlaceholder.call @, choicePlaceholderResponse
       onEnter: (enterResponse) ->
         if @options.parent.constructor.intro
           enterResponse.overrideIntroduction =>
@@ -324,6 +328,7 @@ class LOI.Adventure.Thing extends AM.Component
 
   onScriptsLoaded: -> # Override to start reactive logic. Use @scripts to get access to script objects.
   onCommand: (commandResponse) -> # Override to listen to commands.
+  onChoicePlaceholder: (choicePlaceholderResponse) -> # Override to insert choice nodes at the placeholder.
   onEnter: (enterResponse) -> # Override to react to entering a location.
   onExitAttempt: (exitResponse) -> # Override to react to location change attempts, potentially preventing the exit.
   onExit: (exitResponse) ->

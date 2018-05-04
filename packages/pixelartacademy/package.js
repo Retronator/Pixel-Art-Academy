@@ -26,4 +26,10 @@ Package.onUse(function(api) {
   api.addFile('layouts/adminaccess..');
 
   api.addServerFile('character/methods');
+
+  api.addThing('character/personupdates');
+  api.addFile('character/characterupdateshelper');
+  
+  api.addFile('groups..');
+  api.addFile('groups/hangoutgroup');
 });

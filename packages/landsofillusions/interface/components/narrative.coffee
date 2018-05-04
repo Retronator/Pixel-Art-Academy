@@ -6,6 +6,7 @@ class LOI.Interface.Components.Narrative
     None: 'None'
     Top: 'Top'
     Bottom: 'Bottom'
+    RetainBottom: 'RetainBottom'
 
   constructor: (@options) ->
     @text = new ReactiveField ""
@@ -30,6 +31,11 @@ class LOI.Interface.Components.Narrative
     # Make sure new text doesn't have any new lines itself. We consider every call to add text to be one unit.
     newText = newText.replace /[\n\r]+/mg, ''
 
+    # If the text is a background action, wrap it in the background class and don't scroll.
+    if options.background
+      newText = "%%html<div class='in-background'>#{newText}</div>html%%"
+      options.scrollStyle = @constructor.ScrollStyle.RetainBottom
+
     text += newText
     @text text
 
@@ -37,6 +43,11 @@ class LOI.Interface.Components.Narrative
 
   onTextUpdated: (options = {}) ->
     unless options.scrollStyle is @constructor.ScrollStyle.None
+      # Handle the style where we scroll to bottom only if we're already on bottom.
+      if options.scrollStyle is @constructor.ScrollStyle.RetainBottom
+        # Quit, so we don't scroll if we're not at bottom.
+        return unless @options.textInterface.isNarrativeScrolledToBottom()
+        
       Tracker.afterFlush =>
         @options.textInterface.resize()
         @scroll scrollStyle: options.scrollStyle
@@ -77,7 +88,7 @@ class LOI.Interface.Components.Narrative
     hiddenNarrative = Math.max 0, displayContentHeight - uiHeight
 
     switch options.scrollStyle
-      when @constructor.ScrollStyle.Bottom
+      when @constructor.ScrollStyle.Bottom, @constructor.ScrollStyle.RetainBottom
         # Make sure the latest narrative is visible by scrolling text display content to the bottom.
         newTextTop = -hiddenNarrative
 

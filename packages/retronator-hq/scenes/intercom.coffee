@@ -37,9 +37,6 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
 
     @_nextMessageTimeout = Meteor.setTimeout =>
       skipPlayConditions = [
-        # Don't play the message if the user is busy doing something.
-        LOI.adventure.interface.busy()
-
         # Don't play the message if we're in a context.
         LOI.adventure.currentContext()
       ]
@@ -90,7 +87,7 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
         [themesCursor, submissionsCursor] = PADB.PixelDailies.Pages.Home.themes.query 2
 
         yesterdayTheme = themesCursor.fetch()[1]
-        return unless yesterdayTheme.hashtags?.length and yesterdayTheme.topSubmissions?.length
+        return unless yesterdayTheme?.hashtags?.length and yesterdayTheme.topSubmissions?.length
 
         topSubmission = yesterdayTheme.topSubmissions[0]
 
@@ -179,7 +176,7 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
     introDialogNode = script.startNode.labels.Intro.next
     introDialogNode.next = scriptNode
 
-    LOI.adventure.director.startNode introDialogNode
+    LOI.adventure.director.startBackgroundNode introDialogNode
 
   # Script
 

@@ -63,6 +63,8 @@ class LOI.Memory.Action extends AM.Document
 
   @forMemory: @subscription 'forMemory'
   @recentForTimelineLocation: @subscription 'recentForTimelineLocation'
+  @recentForCharacter: @subscription 'recentForCharacter'
+  @recentForCharacters: @subscription 'recentForCharacters'
 
   @translationKeys:
     startDescription: 'startDescription'
@@ -87,11 +89,17 @@ class LOI.Memory.Action extends AM.Document
 
     if translated.language then translated.text else null
 
-  start: (person) -> @_runScript @createStartScript person
-  end: (person) -> @_runScript @createEndScript person
+  start: (person) -> @_runScript person, @createStartScript
+  end: (person) -> @_runScript person, @createEndScript
 
-  _runScript: (script) ->
-    LOI.adventure.director.startNode script if script
+  _runScript: (person, createScriptFunction) ->
+    Tracker.autorun (computation) =>
+      # Wait until person is ready.
+      return unless person.ready()
+      computation.stop()
+
+      script = createScriptFunction.call @, person
+      LOI.adventure.director.startBackgroundNode script if script
 
   # Override to provide what happens when an action is started or ends. 
   # By default, start and end actions output the description to the narrative.
