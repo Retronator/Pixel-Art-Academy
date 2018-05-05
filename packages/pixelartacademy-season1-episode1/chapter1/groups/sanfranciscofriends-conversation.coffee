@@ -42,7 +42,7 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
 
         # Prepare the whole member state if needed.
         memberState ?=
-          _id: @things.person._id
+          id: @things.person._id
 
         # Set the character as active.
         memberState.active = true

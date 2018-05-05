@@ -6,7 +6,7 @@ HQ = Retronator.HQ
 class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
   # members: map of all friends (active and inactive)
   #   {characterId}
-  #     _id
+  #     id
   #     active: boolean if this is a current friend
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Groups.SanFranciscoFriends'
 
