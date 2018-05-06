@@ -147,7 +147,7 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
           # Fetch a memory if we haven't done it yet.
           not flashbackState
           # Also do it if it's been already played more than 10 minutes ago.
-          Date.now() > flashbackState?.playStart + 1 * 60 * 1000
+          Date.now() > flashbackState?.playStart + 10 * 60 * 1000
         ]
 
         return unless fetchNewMemory
