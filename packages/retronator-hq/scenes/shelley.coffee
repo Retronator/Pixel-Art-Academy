@@ -59,7 +59,7 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
 
     @_nextActionTimeout = Meteor.setTimeout =>
       # Don't do the action if the user is busy doing something.
-      if LOI.adventure.interface.busy()
+      if LOI.adventure.interface.busy() or LOI.adventure.currentContext()
         # Retry in 10 seconds.
         @_scheduleNextAction delay: 10000
         return

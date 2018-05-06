@@ -9,6 +9,7 @@ class LOI.Memory.Progress extends AM.Document
   #   memory: the memory being tracked
   #     _id
   #   time: the time of the last action already observed by the character
+  #   discovered: boolean indicating if the game already advertised this memory to the player
   @Meta
     name: @id()
     fields: =>
@@ -20,6 +21,7 @@ class LOI.Memory.Progress extends AM.Document
   # Methods
 
   @updateProgress: @method 'updateProgress'
+  @discoverMemory: @method 'discoverMemory'
 
   # Subscriptions
 

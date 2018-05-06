@@ -15,7 +15,7 @@ class LOI.Interface.Components.DialogueSelection
 
       # Listen to current scripts until we find a choice node.
       if LOI.adventure.currentLocation()
-        scriptNode = LOI.adventure.director.currentScriptNode()
+        scriptNode = LOI.adventure.director.foregroundScriptQueue.currentScriptNode()
         return scriptNode if scriptNode instanceof Nodes.Choice
         return scriptNode if scriptNode instanceof Nodes.ChoicePlaceholder
 

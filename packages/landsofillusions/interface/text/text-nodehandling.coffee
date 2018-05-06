@@ -112,7 +112,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       else if dialogueLine.actor.dialogueDeliveryType() is LOI.Avatar.DialogueDeliveryType.Saying
         actorName = dialogueLine.actor.shortName()
 
-      start = "#{_.upperFirst actorName} says: #{start}\"" if actorName
+      start = "#{actorName} says: #{start}\"" if actorName
 
     if dialogueLine.next instanceof Nodes.DialogueLine and dialogueLine.next.actor is dialogueLine.actor
       # Next line is by the same actor.
@@ -199,8 +199,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
         triggerChange: false
 
   _endAfterTextDelay: (text, node) ->
-    # We read 10 characters/second
-    delay = text.length * 100
+    # We assume reading at ~14 characters/second and include a 3 second buffer.
+    delay = 3000 + text.length * 70
 
     Meteor.setTimeout =>
       node.end()

@@ -3,6 +3,8 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+Vocabulary = LOI.Parser.Vocabulary
+
 class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Context'
   @version: -> '0.1.0'
@@ -14,8 +16,11 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
   
   @illustrationHeight: -> 240
 
+  @canHandleMemory: (memory) ->
+    memory.journalEntry?
+
   @tryCreateContext: (memory) ->
-    return unless memory.journalEntry
+    return unless @canHandleMemory memory
 
     # Create the context for this entry.
     options = entryId: memory.journalEntry[0]._id
@@ -31,9 +36,46 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     # Return the context.
     context
 
+  @translations: ->
+    introDescription: "_people_ _are_ talking to _author_ about _their_ journal entry."
+    introDescriptionJustAuthor: "_author_ is commenting on _their_ journal entry."
+
+  @createIntroDescriptionScript: (memory, people, nextNode, nodeOptions) ->
+    # Don't include the author in people since they will already be mentioned.
+    author = LOI.Character.getPerson memory.journalEntry[0].journal.character._id
+    people = _.without people, author
+
+    translationKey = if people.length then 'introDescription' else 'introDescriptionJustAuthor'
+    description = AB.translate(@translationHandle, translationKey).text
+
+    # Format people into the description. We need to do it here first (instead of letting
+    # createDescriptionScript do it) because _are_ should refer to people, not the author.
+    description = LOI.Character.People.formatText description, 'people', people if people.length
+
+    # Format entry author into the description.
+    description = LOI.Character.formatText description, 'author', author
+
+    @_createDescriptionScript people, description, nextNode, nodeOptions
+
+  @getPeopleForMemory: (memory) ->
+    people = super
+
+    # Add the author if not already part of the conversation.
+    author = LOI.Character.getPerson memory.journalEntry[0].journal.character._id
+    people.push author unless author in people
+
+    people
+
   constructor: (@options) ->
     super
+
+    @journalEntryAvatar = new LOI.Adventure.Thing.Avatar PAA.Practice.Journal.Entry.Avatar
     
+  destroy: ->
+    super
+
+    @journalEntryAvatar.destroy()
+
   onCreated: ->
     # Start with a clear interface when viewing a journal.
     LOI.adventure.interface.narrative.clear()
@@ -166,3 +208,19 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     return unless @isRendered()
 
     @$context.css transform: "translate3d(0, #{-scrollTop}px, 0)"
+
+  onCommandWhileAdvertised: (commandResponse) ->
+    return unless memory = LOI.Memory.documents.findOne @memoryId()
+    author = LOI.Character.getPerson memory.journalEntry[0].journal.character._id
+    
+    # Looking at the entry enters into the context of the entry.
+    action = => LOI.adventure.enterContext @
+
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Read], possessive: author.avatar, @journalEntryAvatar]
+      action: action
+
+    # Allow the form without author's name.
+    commandResponse.onPhrase
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Read], @journalEntryAvatar]
+      action: action

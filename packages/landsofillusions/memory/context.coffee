@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 LOI = LandsOfIllusions
 
 Vocabulary = LOI.Parser.Vocabulary
@@ -11,10 +12,25 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
   @initialize: ->
     super
+    
+    # Subscribe to context's namespace.
+    if Meteor.isClient
+      namespace = @id()
+      @translationHandle = AB.subscribeNamespace namespace
 
     @classes.push @
     
   @initialize()
+
+  @findContextClassForMemory: (memory) ->
+    # Here we query all inherited classes (except Conversation,
+    # which is a fallback) to get one that creates the context.
+    customContextClasses = _.without LOI.Memory.Context.classes, LOI.Memory.Context, LOI.Memory.Contexts.Conversation
+
+    return contextClass for contextClass in customContextClasses when contextClass.canHandleMemory memory
+       
+    # Fallback to a plain conversation memory context if none other can handle it.
+    LOI.Memory.Contexts.Conversation
         
   @createContext: (memory) ->
     # Here we query all inherited classes (except Conversation,
@@ -32,6 +48,9 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
     context
 
+  # Override to say if the memory document matches this context.
+  @canHandleMemory: (memory) -> false
+
   # Override to create a context if the memory document matches this context.
   @tryCreateContext: (memory) ->
     # Create the context for this entry.
@@ -42,6 +61,28 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
     # Return the context.
     context
+    
+  # Override to provide an intro describing what is going on at the start of this memory.
+  # By default, it outputs the intro description to the narrative.
+  @createIntroDescriptionScript: (memory, people, nextNode, nodeOptions) -> null
+
+  @_createDescriptionScript: (people, description, nextNode, nodeOptions) ->
+    return unless description
+
+    # Format people into the description.
+    description = LOI.Character.People.formatText description, 'people', people
+
+    options = _.extend {}, nodeOptions,
+      line: description
+      next: nextNode
+
+    new Nodes.NarrativeLine options
+    
+  @getPeopleForMemory: (memory) ->
+    # Add all characters that have actions in the memory.
+    characterIds = _.uniq _.map memory.actions, (action) => action.character._id
+
+    LOI.Character.getPerson characterId for characterId in characterIds
 
   constructor: ->
     super
@@ -52,7 +93,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     super
 
     # Subscribe to all the memories.
-    @_memorySubscriptionAutorun = Tracker.autorun (computation) =>
+    @autorun (computation) =>
       return unless @isCreated()
       return unless memoryIds = @memoryIds()
 
@@ -111,7 +152,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
       true
 
     # Create the script based on memory actions.
-    Tracker.autorun (computation) =>
+    @autorun (computation) =>
       # Wait for everything to be loaded.
       return unless @isCreated()
       return unless memory = @memory()
@@ -119,13 +160,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
       return unless _.every _.map people, (person) => person?.ready()
       return unless progress = LOI.Memory.Progress.documents.findOne 'character._id': LOI.characterId()
 
-      actions = _.sortBy memory.actions, (action) => action.time.getTime()
-
-      # Cast actions and inject the memoryId since it's not present as one of the reverse fields.
-      actions = for action in actions
-        action = action.cast()
-        action.memory = _id: @memoryId
-        action
+      actions = memory.actions
 
       lastNode = null
 
@@ -179,14 +214,6 @@ class LOI.Memory.Context extends LOI.Adventure.Context
         lastNode = actionStartScript if actionStartScript
 
       LOI.adventure.director.startNode lastNode
-
-  onDestroyed: ->
-    super
-
-    @_memorySubscriptionAutorun.stop()
-    @memories.stop()
-    @memory.stop()
-    @people.stop()
 
   memoryIds: -> # Override to provide available memories to choose between.
 
@@ -242,6 +269,9 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     # We need to provide the memory avatar since this class could be
     # inherited from and options.parent will not have the correct avatar.
     memory: LOI.Memory.Context
+
+  # Override to listen to commands while this is the advertised context.
+  onCommandWhileAdvertised: (commandResponse) ->
 
   onCommand: (commandResponse) ->
     super

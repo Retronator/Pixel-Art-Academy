@@ -18,10 +18,30 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
   @activeDescription: ->
     "_They_ _are_ ![talking](listen to _person_)."
 
-  createStartScript: (person, nextNode, nodeOptions) ->
+  createStartScript: (person, nextNode, nodeOptions = {}) ->
+    text = @content.say.text
+
+    if nodeOptions.background and text.length > 100
+      # Shorten the text under 100 characters.
+      text = text[..100]
+      lastSpace = text.lastIndexOf ' '
+      text = "#{text[..lastSpace]}…"
+
+    options = _.extend
+      # Say the line immediately by default.
+      immediate: true
+    ,
+      nodeOptions
+    ,
+      line: text
+      actor: person
+      next: nextNode
+
+    dialogueNode = new Nodes.DialogueLine options
+
     # After the text is delivered, advertise this context.
     callbackNode = new Nodes.Callback
-      next: nextNode
+      next: dialogueNode
       callback: (complete) =>
         complete()
 
@@ -38,18 +58,8 @@ class LOI.Memory.Actions.Say extends LOI.Memory.Action
             context = LOI.Memory.Context.createContext memory
             LOI.adventure.advertiseContext context
 
-    options = _.extend
-      # Say the line immediately by default.
-      immediate: true
-    ,
-      nodeOptions
-    ,
-      line: @content.say.text
-      actor: person
-      next: callbackNode
-
-    # Return the main dialog node.
-    new Nodes.DialogueLine options
+    # Return the starting callback node.
+    callbackNode
 
   onCommand: (person, commandResponse) ->
     # Listening enters you into the context of this conversation.

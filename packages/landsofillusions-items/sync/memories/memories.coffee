@@ -127,7 +127,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
       
     # Memory has new actions unless the last action (memory's end time) 
     # is at the time the character last observed this memory (they have seen it through).
-    'updated' unless memory.endTime.getTime() <= observedMemory?.time.getTime()
+    'updated' unless memory.endTime.getTime() <= observedMemory?.time?.getTime()
 
   events: ->
     super.concat

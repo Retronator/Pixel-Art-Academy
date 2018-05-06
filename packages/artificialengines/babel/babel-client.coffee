@@ -90,7 +90,7 @@ class Artificial.Babel extends Artificial.Babel
         key: key
         translations: cachedTranslation[1]
 
-  # Returns a translation that has already been created.
+  # Returns translations that have already been created.
   @existingTranslations: (handleOrNamespace, keyRegex) ->
     throw new AE.ArgumentNullException "Subscription handle or namespace must be provided." unless handleOrNamespace?
     keyRegex ?= /.*/

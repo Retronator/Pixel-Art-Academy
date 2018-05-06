@@ -43,7 +43,7 @@ class LOI.Interface extends AM.Component
     # Listen to the foreground script.
     @autorun (computation) =>
       return unless @_readyToProcessScriptNodes()
-      return unless scriptNode = LOI.adventure.director.currentScriptNode()
+      return unless scriptNode = LOI.adventure.director.foregroundScriptQueue.currentScriptNode()
 
       console.log "Interface has detected a new foreground script node:", scriptNode if LOI.debug
 
@@ -52,12 +52,11 @@ class LOI.Interface extends AM.Component
     # Listen to the background scripts.
     @autorun (computation) =>
       return unless @_readyToProcessScriptNodes()
-      scriptNodes = LOI.adventure.director.backgroundScriptNodes()
+      return unless scriptNode = LOI.adventure.director.backgroundScriptQueue.currentScriptNode()
 
-      console.log "Interface has detected new background script nodes:", scriptNodes if LOI.debug
+      console.log "Interface has detected new background script node:", scriptNode if LOI.debug
 
-      Tracker.nonreactive =>
-        @_handleNode node, background: true for node in scriptNodes
+      Tracker.nonreactive => @_handleNode scriptNode, background: true
 
   _readyToProcessScriptNodes: ->
     # We want to wait until the interface is ready after the location change has been initiated.
