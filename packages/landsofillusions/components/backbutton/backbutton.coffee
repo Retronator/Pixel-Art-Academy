@@ -19,6 +19,9 @@ class LOI.Components.BackButton extends AM.Component
     # Positioning depends on whether this is inside an overlaid (2nd layer) item or not (1st layer).
     overlaid = @$backButton.closest('.overlaid').length
 
+    # Button inside location is already in the context of the safe area.
+    location = @$backButton.closest('.location').length
+
     # Resize elements.
     @autorun (computation) =>
       # We allow use outside of adventure as well, in which case we just find the parent that holds the display.
@@ -31,6 +34,11 @@ class LOI.Components.BackButton extends AM.Component
         @$backButton.css
           top: viewport.safeArea.top()
           left: viewport.safeArea.left()
+
+      else if location
+        @$backButton.css
+          top: 10 * scale
+          left: 10 * scale
 
       else
         @$backButton.css

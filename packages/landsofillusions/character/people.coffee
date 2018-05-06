@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 LOI = LandsOfIllusions
 
 class LOI.Character.People extends LOI.Adventure.Global
@@ -8,6 +9,20 @@ class LOI.Character.People extends LOI.Adventure.Global
   ]
 
   @initialize()
+
+  @formatText: (text, keyword, people) ->
+    names = (person.fullName() for person in people)
+
+    # TODO: Support languages other then English.
+    peopleText = AB.Rules.English.createNounSeries names
+
+    text = text.replace new RegExp("_#{keyword}_", 'g'), (match) -> peopleText
+
+    text = text.replace /_are_/g, (match) ->
+      # TODO: Support languages other then English.
+      if names.length > 1 then "are" else "is"
+
+    text
   
   class @Scene extends LOI.Adventure.Scene
     @id: -> 'LandsOfIllusions.Character.People.Scene'
@@ -23,8 +38,7 @@ class LOI.Character.People extends LOI.Adventure.Global
       super
 
       # Show characters that have been at the location in the last 15 minutes.
-      # TODO: Currently set to 15 hours. Remove when memory playback is added.
-      durationInMilliseconds = 15 * 60 * 60 * 1000
+      durationInMilliseconds = 15 * 60 * 1000
 
       @recentActionsSubscription = new ComputedField =>
         return unless timelineId = LOI.adventure.currentTimelineId()

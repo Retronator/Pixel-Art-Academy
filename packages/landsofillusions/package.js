@@ -194,6 +194,7 @@ Package.onUse(function(api) {
   // Director
 
   api.addFile('director..');
+  api.addFile('director/scriptqueue');
 
   // Adventure
 
@@ -302,6 +303,7 @@ Package.onUse(function(api) {
 
   api.addFile('memory..');
   api.addFile('memory/methods');
+  api.addServerFile('memory/methods-server');
   api.addServerFile('memory/subscriptions');
   api.addServerFile('memory/migrations/0000-renamecollection');
   api.addServerFile('memory/migrations/0001-linesreversereferencefieldsupdate');
@@ -313,6 +315,8 @@ Package.onUse(function(api) {
   api.addFile('memory/contexts..');
   api.addFile('memory/contexts/conversation..');
   api.addComponent('memory/contexts/conversation/memorypreview..');
+
+  api.addFile('memory/flashback');
 
   api.addFile('memory/action..');
   api.addFile('memory/action/methods');
@@ -339,6 +343,7 @@ Package.onUse(function(api) {
   api.addFile('parser/listeners/description');
   api.addFile('parser/listeners/looklocation');
   api.addFile('parser/listeners/conversation');
+  api.addFile('parser/listeners/advertisedcontext');
 
   // Interface
 

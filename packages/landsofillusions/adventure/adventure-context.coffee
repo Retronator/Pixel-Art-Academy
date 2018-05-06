@@ -25,6 +25,9 @@ class LOI.Adventure extends LOI.Adventure
       Tracker.nonreactive =>
         context = new contextClass
 
+    # Clear any running scripts (except paused which need to persist across context changes).
+    LOI.adventure.director.stopAllScripts paused: false
+
     # Set context as current to activate it.
     @currentContext context
     
@@ -32,13 +35,18 @@ class LOI.Adventure extends LOI.Adventure
     @clearAdvertisedContext()
 
   exitContext: ->
+    # Clear any running scripts (except paused which need to persist across context changes).
+    LOI.adventure.director.stopAllScripts paused: false
+
     @currentContext null
     
   advertiseContext: (context) ->
     # You can only advertise a context if we're not already in a context.
     return if @currentContext()
-    
+
+    console.log "Advertising context", context if LOI.debug
     @advertisedContext context
 
   clearAdvertisedContext: ->
+    console.log "Clearing advertised context." if LOI.debug
     @advertisedContext null

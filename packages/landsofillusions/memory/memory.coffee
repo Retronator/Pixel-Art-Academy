@@ -3,7 +3,7 @@ AM = Artificial.Mummification
 
 class LOI.Memory extends AM.Document
   @id: -> 'LandsOfIllusions.Memory'
-  # actions: list of actions in this memory, reverse of action.memory
+  # actions: list of actions in this memory, reverse of action.memory (note: they are not automatically sorted by time)
   #   _id
   #   time
   #   character
@@ -49,6 +49,7 @@ class LOI.Memory extends AM.Document
   # Methods
 
   @insert: @method 'insert'
+  @getLastUndiscovered: @method 'getLastUndiscovered'
 
   # Subscriptions
 
@@ -68,6 +69,13 @@ class LOI.Memory extends AM.Document
         skip: skip
         sort:
           endTime: -1
+
+  constructor: ->
+    super
+
+    # Sort and cast actions, to get them in the form we'd expect.
+    @actions = _.sortBy @actions, (action) => action.time.getTime()
+    @actions = (action.cast() for action in @actions)
 
   display: ->
     # Create the context for this memory document and enter it. The context will already be displaying this memory.

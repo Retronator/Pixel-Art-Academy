@@ -19,4 +19,3 @@ class LOI.Adventure.Context extends LOI.Adventure.Thing
       form: [Vocabulary.Keys.Directions.Back]
       action: =>
         LOI.adventure.exitContext()
-        true

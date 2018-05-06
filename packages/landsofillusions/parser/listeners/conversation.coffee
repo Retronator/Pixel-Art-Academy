@@ -69,14 +69,10 @@ class LOI.Parser.ConversationListener extends LOI.Adventure.Listener
       action: sayAction
 
     # Listening enters you into the currently advertised context.
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.Listen]
-      action: =>
-        # See if a memory context is advertised and enter it.
-        advertisedContext = LOI.adventure.advertisedContext()
+    advertisedContext = LOI.adventure.advertisedContext()
 
-        if advertisedContext instanceof LOI.Memory.Context
+    if advertisedContext instanceof LOI.Memory.Context
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.Listen]
+        action: =>
           LOI.adventure.enterContext advertisedContext
-
-        else
-          LOI.adventure.interface.narrative.addText "Listen to who?"
