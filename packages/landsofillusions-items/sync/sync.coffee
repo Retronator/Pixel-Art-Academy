@@ -197,7 +197,7 @@ class LOI.Items.Sync extends LOI.Adventure.Item
       action: => sync.open()
 
     mapAction = =>
-      sync.currentTab @mapTab
+      sync.currentTab sync.mapTab
       sync.open()
 
     commandResponse.onPhrase

@@ -50,11 +50,11 @@ class RS.AirportTerminal.Immigration.Terminal extends LOI.Adventure.Thing
     showLetter = => @startScript label: 'ShowLetter'
 
     commandResponse.onPhrase
-      form: [[Verbs.UseWith, Verbs.ShowTo, Verbs.GiveTo], @avatars.passport, terminal.avatar]
+      form: [[Verbs.ShowTo, Verbs.UseWith, Verbs.GiveTo], @avatars.passport, terminal.avatar]
       action: => showPassport()
 
     commandResponse.onPhrase
-      form: [[Verbs.UseWith, Verbs.ShowTo, Verbs.GiveTo], @avatars.letter, terminal.avatar]
+      form: [[Verbs.ShowTo, Verbs.UseWith, Verbs.GiveTo], @avatars.letter, terminal.avatar]
       action: => showLetter()
 
     commandResponse.onPhrase

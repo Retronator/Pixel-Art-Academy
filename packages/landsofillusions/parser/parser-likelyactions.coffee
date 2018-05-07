@@ -41,8 +41,7 @@ class LOI.Parser extends LOI.Parser
         likelyAction.likelihood is 1 and likelyAction.precision is 1
 
     if bestLikelihood <= 0.6
-      LOI.adventure.interface.narrative.addText "I can't do that."
-      return
+      return false
 
     # If we're above, there might be more possibilities that are
     # close together. We find all in the range of 0.2 from the best one, but still not below 0.6
@@ -73,7 +72,7 @@ class LOI.Parser extends LOI.Parser
 
       commandNodeSequence = @_createCommandNodeSequence likelyAction
       LOI.adventure.director.startNode commandNodeSequence
-      return
+      return true
 
     # We still have multiple likely actions. Show a selection of choices for the user to choose from.
 
@@ -144,3 +143,6 @@ class LOI.Parser extends LOI.Parser
 
     # Start the created interaction script.
     LOI.adventure.director.startNode questionNode
+
+    # Signal that we've generated a response to the command.
+    true
