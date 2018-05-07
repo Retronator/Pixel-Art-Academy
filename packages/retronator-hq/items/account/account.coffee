@@ -20,7 +20,7 @@ class HQ.Items.Account extends LOI.Adventure.Item
     account = @options.parent
 
     commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.LookIn], account.avatar]
+      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookIn], account.avatar]
       priority: 1
       action: =>
         LOI.adventure.menu.account.show()

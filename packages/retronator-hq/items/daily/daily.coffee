@@ -121,7 +121,7 @@ class HQ.Items.Daily extends LOI.Adventure.Item
     daily = @options.parent
 
     commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Read, Vocabulary.Keys.Verbs.Use], daily.avatar]
+      form: [[Vocabulary.Keys.Verbs.Read, Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use], daily.avatar]
       priority: 1
       action: =>
         LOI.adventure.goToItem daily

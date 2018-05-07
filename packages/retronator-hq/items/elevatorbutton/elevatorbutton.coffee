@@ -27,6 +27,6 @@ class HQ.Items.ElevatorButton extends LOI.Adventure.Thing
     button = @options.parent
 
     commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.Press], button.avatar]
+      form: [[Vocabulary.Keys.Verbs.Press, Vocabulary.Keys.Verbs.Use], button.avatar]
       action: =>
         @startScript()

@@ -42,8 +42,8 @@ class LOI.Parser
 
     ga? 'send', 'event', eventCategory, eventAction, eventLabel
     
-    # Get all possible likely actions from all the listeners.
-    likelyActions = for listener in LOI.adventure.currentListeners()
+    # Get all command responses from all the listeners.
+    commandResponses = for listener in LOI.adventure.currentListeners()
       # Create the command response object.
       commandResponse = new @constructor.CommandResponse
         command: command
@@ -52,14 +52,31 @@ class LOI.Parser
       # Ask the listener to set its response.
       listener.onCommand commandResponse
 
-      # Process the response and command so that it creates possible candidate
+      commandResponse
+
+    # Get all possible likely actions from all the listeners.
+    likelyActions = for commandResponse in commandResponses
+      # Process the response and command so that it creates possible candidate actions.
       commandResponse.generateActions()
 
     # Pull all actions into one array.
     likelyActions = _.flatten likelyActions
 
     # Determine which action to perform.
-    @chooseLikelyAction likelyActions
+    return if @chooseLikelyAction likelyActions
+
+    # Seems we couldn't find a likely action. Try to see if we have an avatar match at least.
+    likelyActions = for commandResponse in commandResponses
+      # Process the response and command so that it creates possible candidate actions.
+      commandResponse.generateAvatarActions()
+
+    # Pull all actions into one array.
+    likelyActions = _.flatten likelyActions
+
+    # Determine which action to perform.
+    return if @chooseLikelyAction likelyActions
+
+    LOI.adventure.interface.narrative.addText "I can't do that."
 
   # Creates a node that performs the action of the likely command
   _createCallbackNode: (likelyAction) ->

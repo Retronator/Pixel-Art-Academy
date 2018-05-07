@@ -82,10 +82,11 @@ class Start.WakeUp extends LOI.Adventure.Scene
               return unless introStudioScene.ready()
               computation.stop()
 
-              introStudioScene.listeners[0].startScript()
-
               # Reset the interface to start again from the new intro.
               LOI.adventure.interface.reset?()
+
+              # Start the script after we've reset the interface (resetting has cleared the scripts).
+              introStudioScene.listeners[0].startScript()
 
               complete()
 

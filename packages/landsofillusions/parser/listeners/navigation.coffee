@@ -84,10 +84,6 @@ class LOI.Parser.NavigationListener extends LOI.Adventure.Listener
           form: [Vocabulary.Keys.Verbs.GoToLocationName, avatar]
           action: directionActions[locationId]
 
-        commandResponse.onExactPhrase
-          form: [avatar]
-          action: directionActions[locationId]
-
     # If there is only one way out of the location, wire exiting the location.
     locationClasses = _.uniq _.map presentDirectionKeys, (directionKey) -> exits[directionKey]
     onlyExitLocation = if locationClasses.length is 1 then locationClasses[0] else null

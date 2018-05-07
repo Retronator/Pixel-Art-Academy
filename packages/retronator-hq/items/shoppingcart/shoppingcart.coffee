@@ -120,7 +120,7 @@ class HQ.Items.ShoppingCart extends LOI.Adventure.Item
         true
 
     commandResponse.onPhrase
-      form: [[Vocabulary.Keys.Verbs.LookAt, Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookIn], shoppingCart.avatar]
+      form: [[Vocabulary.Keys.Verbs.LookIn, Vocabulary.Keys.Verbs.Use, Vocabulary.Keys.Verbs.LookAt], shoppingCart.avatar]
       priority: 1
       action: =>
         LOI.adventure.goToItem shoppingCart
