@@ -1,0 +1,44 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-landingpage-pages-help
+  .command
+    text-transform uppercase
+    color atariAzure(6)
+
+  dl
+    position relative
+
+    &::after
+      content ''
+      display block
+      clear both
+
+    dt
+      float left
+      clear both
+      width 50rem
+      margin-bottom 10rem
+      text-transform uppercase
+      color atariAzure(6)
+
+      .avatar
+        text-transform none
+
+        &::before
+          content '<'
+
+        &::after
+          content '>'
+
+      .text
+        text-transform none
+
+        &::before
+        &::after
+          content '"'
+
+    dd
+      float left
+      width 150rem
+      margin 0 0 10rem 10rem
+      color atariGrey(4)

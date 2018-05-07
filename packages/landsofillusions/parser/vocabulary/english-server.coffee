@@ -58,6 +58,7 @@ Document.startup ->
       Say: ['say']
       HangOut: ['hang out']
       Cheat: ['cheat']
+      Help: ['help']
 
       Be:
         Present:

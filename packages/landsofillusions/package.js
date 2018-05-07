@@ -344,6 +344,7 @@ Package.onUse(function(api) {
   api.addFile('parser/listeners/looklocation');
   api.addFile('parser/listeners/conversation');
   api.addFile('parser/listeners/advertisedcontext');
+  api.addFile('parser/listeners/help');
 
   // Interface
 
