@@ -47,26 +47,26 @@ class AB.Router extends AB.Router
       # We just return null as the function will re-run when new parameters get available.
       return null
 
-    # See if we need to change hosts.
-    currentHost = @currentRoute().host
+    # See if we need to change hosts. If route host is not defined, it will work with any host.
+    return path unless route.host
 
-    if route.host isnt currentHost
-      host = route.host
+    # If we're already at the correct host, we also just need to change path.
+    return path if route.host is @currentRoute().host
 
-      # Keep the current protocol and port.
-      protocol = location.protocol
-      port = if location.port then ":#{location.port}" else ''
+    # Build a full URL.
+    host = route.host
 
-      # Keep the localhost prefix.
-      host = "localhost.#{host}" if _.startsWith location.hostname, 'localhost'
+    # Keep the current protocol and port.
+    protocol = location.protocol
+    port = if location.port then ":#{location.port}" else ''
 
-      # No need for a slash if we're changing the host to its main page.
-      path = '' if path is '/'
+    # Keep the localhost prefix.
+    host = "localhost.#{host}" if _.startsWith location.hostname, 'localhost'
 
-      path = "#{protocol}//#{host}#{port}#{path}"
+    # No need for a slash if we're changing the host to its main page.
+    path = '' if path is '/'
 
-    # Return generated path.
-    path
+    "#{protocol}//#{host}#{port}#{path}"
 
   @goToRoute: (routeName, parameters, options = {}) ->
     # Find the URL for this route.
