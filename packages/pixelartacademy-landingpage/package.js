@@ -29,5 +29,6 @@ Package.onUse(function(api) {
 
   api.addComponent('pages/about/about');
   api.addComponent('pages/press/press');
+  api.addComponent('pages/help/help');
   api.addComponent('pages/smallprint/smallprint');
 });

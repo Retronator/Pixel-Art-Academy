@@ -1,0 +1,148 @@
+<template name="PixelArtAcademy.LandingPage.Pages.Help">
+<div class="pixelartacademy-landingpage-pages-help">
+  {{#PixelArtAcademy.LandingPage.Pages.Components.Retropolis}}
+    <header class="header">
+      <h1 class="title">Help</h1>
+      <p class="tagline">
+        A very preliminary guide to text adventuring.
+      </p>
+    </header>
+    {{#Markdown}}
+
+    ## Basics
+
+    You can get by with just a handful of commands.
+
+    <dl>
+      <dt>Look at <span class="avatar">something</span></dt>
+      <dd>Get a description of something you see in the scene.</dd>
+
+      <dt>Use <span class="avatar">item</span></dt>
+      <dd>Perform an action with the item.</dd>
+
+      <dt>Get <span class="avatar">item</span></dt>
+      <dd>Add an item to your inventory.</dd>
+
+      <dt>Talk to <span class="avatar">Person</span></dt>
+      <dd>Start a conversation with a person.</dd>
+
+      <dt>N, NE, E, SE, S, SW, W, NW</dt>
+      <dd>Move to the location at that cardinal direction.</dd>
+
+      <dt>In, Out, Up, Down</dt>
+      <dd>Additional navigational directions.</dd>
+    </dl>
+
+    ## Useful commands
+
+    <dl>
+      <dt>Look</dt><dd>Displays the location description again (clears command history).</dd>
+      <dt>Map</dt><dd>Displays the map.</dd>
+      <dt>Help</dt><dd>You're reading it right now.</dd>
+    </dl>
+
+    ## Keyboard shortcuts
+
+    <dl>
+      <dt>Escape</dt><dd>Back/open menu.</dd>
+      <dt>Tab</dt><dd>Open map.</dd>
+      <dt>Alt</dt><dd>Open PixelBoy.</dd>
+      <dt>Up/Down</dt><dd>See previously typed commands.</dd>
+    </dl>
+
+    ## Multiplayer commands
+
+    When interacting with other players, you have to know some extra commands.
+
+    <dl>
+      <dt>Listen</dt>
+      <dd>Enter the conversation people are having at a location.</dd>
+
+      <dt>Listen to <span class="avatar">Person</span></dt>
+      <dd>Enter a conversation a specific person is having, if their description says they are talking.</dd>
+
+      <dt>Say <span class="text">Something.</span></dt>
+      <dd>
+        Start a new conversation or reply to a conversation that is currently taking place.
+        You can omit SAY and just type your reply in quotes.
+      </dd>
+
+      <dt>Back, Look</dt>
+      <dd>Exit the conversation.</dd>
+
+      <dt>Back, Exit memory</dt>
+      <dd>Exit a memory (when using SYNC).</dd>
+
+      <dt>Talk to <span class="avatar">Person</span></dt>
+      <dd>
+        Initiate a scripted dialogue with other players' characters. That way you can ask them to hang out,
+        after which they will appear in the Café whenever they've done something new in the game. Use the "What's
+        new?" dialog option to find out what it was.
+      </dd>
+
+      <dt>Hang out</dt>
+      <dd>When you're in the Café, you can hang out with PCs you've invited previously.</dd>
+    </dl>
+
+    ## Full vocabulary
+
+    Unlike some old-school text adventures, the point of Pixel Art Academy is not in guessing the right text commands.
+    The text interface is merely a way to get things done until the game gets fully illustrated and point-and-click
+    interface can be applied for navigating the world as well.
+
+    That's why most everything can be done simply with <span class="command">use</span> and
+    <span class="command">talk to</span> commands. However, there are occasional extra commands that need to be used to
+    proceed (like <span class="command">sit</span> or <span class="command">wake up</span>), and many others that are
+    simply there to make the range of verbs you can use more natural.
+
+    Here they are listed all.
+
+    <dl>
+      <dt>go to, travel to, enter, leave to <span class="avatar">Location</span></dt><dd>Move to the specific neighbouring location.</dd>
+      <dt>go, towards, move, travel <span class="avatar">Cardinal direction</span></dt><dd>Move to the location in that direction.</dd>
+      <dt>North, Northeast, East, Southeast, South, Southwest, West, Northwest</dt><dd>Move to the location in that direction.</dd>
+      <dt>N, NE, E, SE, S, SW, W, NW</dt><dd>Shortcut for moving to the location in that direction.</dd>
+      <dt>In, Out, Up, Down</dt><dd>Additional navigational directions.</dd>
+      <dt>exit, leave</dt><dd>Exit a location, if there's just one way out. Also used to exit memories.</dd>
+      <dt>talk to, talk with, speak to, speak with, chat with <span class="avatar">Person</span></dt><dd>Start a conversation with a person.</dd>
+      <dt>look at, examine, see, view, watch <span class="avatar">Something</span></dt><dd>Get a description of something, or use it if it's interactive.</dd>
+      <dt>look, look around, description</dt><dd>Displays the location description.</dd>
+      <dt>use <span class="avatar">Item</span></dt><dd>General verb to perform an action with the item.</dd>
+      <dt>press, push <span class="avatar">Item</span></dt><dd>Press buttons, for example, to call an elevator.</dd>
+      <dt>read <span class="avatar">Item</span></dt><dd>Use something that can be read.</dd>
+      <dt>read <span class="avatar">Person</span>'s <span class="avatar">Item</span></dt><dd>Used to read someone's journal, if they are currently writing in it.</dd>
+      <dt>what is, what's <span class="avatar">Something</span></dt><dd>Get a description of something.</dd>
+      <dt>who is, who's <span class="avatar">Person</span></dt><dd>Get a description of a person.</dd>
+      <dt>get, take, pick up, grab <span class="avatar">Item</span></dt><dd>Add an item to your inventory.</dd>
+      <dt>sit down</dt><dd>Used with immersion chairs, or to start hanging out.</dd>
+      <dt>sit in <span class="avatar">Item</span></dt><dd>Sit in a chair.</dd>
+      <dt>stand up</dt><dd>Stand up from a chair.</dd>
+      <dt>open <span class="avatar">Item</span></dt><dd>Used to open your backpack.</dd>
+      <dt>close <span class="avatar">Item</span></dt><dd>Used to close your backpack.</dd>
+      <dt>drink <span class="avatar">Item</span></dt><dd>Drink a beverage.</dd>
+      <dt>drink from <span class="avatar">Item</span></dt><dd>Drink from an item.</dd>
+      <dt>return <span class="avatar">Item</span></dt><dd>Used to return the recyclable bottle.</dd>
+      <dt>return <span class="avatar">Item</span> to <span class="avatar">Something</span></dt><dd>A more specific way to return the bottle to the machine.</dd>
+      <dt>give <span class="avatar">Item</span> to <span class="avatar">Something</span></dt><dd>Use to give or show something.</dd>
+      <dt>use <span class="avatar">Item</span> in <span class="avatar">Item</span></dt><dd>General action to use an item in another.</dd>
+      <dt>use <span class="avatar">Item</span> with <span class="avatar">Item</span></dt><dd>General action to use an item with another.</dd>
+      <dt>show to, present <span class="avatar">Item</span> to <span class="avatar">Something</span></dt><dd>Used to show things at immigration.</dd>
+      <dt>show, present <span class="avatar">Item</span></dt><dd>Same as above.</dd>
+      <dt>look in <span class="avatar">Item</span></dt><dd>Another way to open your backpack.</dd>
+      <dt>wake up, awaken</dt><dd>Wake up a sleeping character.</dd>
+      <dt>sleep</dt><dd>Use next to a bed to end the day.</dd>
+      <dt>end day</dt><dd>Use anywhere to end the day.</dd>
+      <dt>buy, purchase <span class="avatar">Item</span></dt><dd>Used to buy things at the store.</dd>
+      <dt>board, take <span class="avatar">Vehicle</span></dt><dd>Get on the MUNI train.</dd>
+      <dt>listen</dt><dd>Enter the conversation people are having.</dd>
+      <dt>listen to, hear <span class="avatar">Person</span></dt><dd>Listen to a specific person, when it says they are talking.</dd>
+      <dt>say <span class="text">Something</span></dt><dd>Start or reply to a conversation.</dd>
+      <dt>hang out</dt><dd>Start a group dialogue with PCs you invited to hang out.</dd>
+      <dt>cheat</dt><dd>Used when testing.</dd>
+      <dt>help</dt><dd>Opens this page.</dd>
+    </dl>
+
+    {{/Markdown}}
+  {{/PixelArtAcademy.LandingPage.Pages.Components.Retropolis}}
+</div>
+</template>
