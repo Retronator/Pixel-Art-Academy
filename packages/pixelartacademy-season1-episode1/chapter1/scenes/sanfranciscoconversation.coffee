@@ -17,6 +17,21 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/scenes/sanfranciscoconversation.script'
 
+  constructor: ->
+    super
+
+    # Subscribe to everyone's journals.
+    @_journalsSubscriptionAutorun = Tracker.autorun =>
+      people = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
+      characterIds = (person._id for person in people)
+
+      PAA.Practice.Journal.forCharacterIds.subscribe characterIds
+
+  destroy: ->
+    super
+
+    @_journalsSubscriptionAutorun.stop()
+
   startMainQuestionsWithPerson: (person) ->
     @_prepareScriptForPerson person
 
@@ -34,8 +49,31 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
     ephemeralPeople[person._id] ?= {}
     ephemeralPerson = ephemeralPeople[person._id]
 
+    journals = PAA.Practice.Journal.documents.fetch
+      'character._id': person._id
+    ,
+      sort:
+        order: 1
+
+    _.extend ephemeralPerson,
+      journalIds: (journal._id for journal in journals)
+
     script.ephemeralState 'people', ephemeralPeople
     script.ephemeralState 'person', ephemeralPerson
+
+  # Script
+
+  initializeScript: ->
+    @setCallbacks
+      Journal: (complete) =>
+        complete()
+
+        person = @ephemeralState 'person'
+        journalId = person.journalIds[0]
+
+        # Create the journal view context and enter it.
+        context = new PAA.PixelBoy.Apps.Journal.JournalView.Context {journalId}
+        LOI.adventure.enterContext context
 
   # Listener
 

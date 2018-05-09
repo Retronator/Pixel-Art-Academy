@@ -53,7 +53,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # We don't really have to handle choice node, because the dialog selection
     # module does that, but we still want to pause before we display it.
-    @_waitForNode node if node instanceof Nodes.Choice
+    @_waitForNode node if node instanceof Nodes.Choice or node instanceof Nodes.ChoicePlaceholder
 
     @_handlePause node if node instanceof Nodes.Pause
 
