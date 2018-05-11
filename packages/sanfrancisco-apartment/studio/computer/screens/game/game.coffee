@@ -10,6 +10,17 @@ class Studio.Computer.Game extends AM.Component
 
   appId: -> @gameId
   name: -> @gameName
+    
+  onRendered: ->
+    super
+
+    @autorun (computation) =>
+      display = @callAncestorWith 'display'
+
+      scale = display.scale() / 2
+
+      @$('.embed').css
+        transform: "scale(#{scale})"
 
   backButtonCallback: ->
     @computer.switchToScreen @computer.screens.desktop
