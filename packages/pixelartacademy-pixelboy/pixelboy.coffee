@@ -280,8 +280,8 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     @resizing false
 
   onKeyDown: (event) ->
-    # Don't capture events when interface is not active.
-    return unless LOI.adventure.interface.active()
+    # Don't capture events when the interface is busy.
+    return if LOI.adventure.interface.busy()
 
     keyCode = event.which
     return unless keyCode is AC.Keys.alt
