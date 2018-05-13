@@ -55,7 +55,13 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             @ephemeralState 'plainConversations', plainConversations
             @ephemeralState 'dailyConversations', dailyConversations
 
+            # We only need to add each conversation once so we keep track of processed memories.
+            processedMemoryIds = []
+
             for action in actions when action instanceof LOI.Memory.Actions.Say
+              continue if action.memory._id in processedMemoryIds
+              processedMemoryIds.push action.memory._id
+
               relevantActionsCount++
 
               # Figure out the participants.
