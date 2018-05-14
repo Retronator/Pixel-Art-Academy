@@ -56,29 +56,34 @@ class LOI.Adventure extends LOI.Adventure
 
         currentLocationClass = LOI.Adventure.Location.getClassForId currentLocationId
 
-        # If the location is not found, start at the default location.
+        # If the location is not found, see if we have one stored in the state.
         unless currentLocationClass
-          console.warn "Location class not found, moving back to start.", currentLocationId if currentLocationId
+          stateLocationId = @gameState()?.currentLocationId
+          currentLocationClass = LOI.Adventure.Location.getClassForId stateLocationId
 
-          switch currentTimelineId
-            when PixelArtAcademy.TimelineIds.DareToDream
-              currentLocationClass = Retropolis.Spaceport.AirportTerminal.Terrace
-
-            when LOI.TimelineIds.RealLife
-              currentLocationClass = Retronator.HQ.Cafe
-
-            when LOI.TimelineIds.Construct
-              currentLocationClass = LandsOfIllusions.Construct.Loading
-
-            when LOI.TimelineIds.Present
-              currentLocationClass = SanFrancisco.Apartment.Studio
-              
-            when LOI.TimelineIds.Memory
-              # This is a stale memory (one where the location where it was made is not 
-              # available anymore). Cancel the memory so the normal location returns.
-              # TODO: We would probably want to give some indication to the player the memory didn't work.
-              @exitMemory()
-              return
+          # If the location is still not found, start at the default location.
+          unless currentLocationClass
+            console.warn "Location class not found, moving back to start.", currentLocationId if currentLocationId
+  
+            switch currentTimelineId
+              when PixelArtAcademy.TimelineIds.DareToDream
+                currentLocationClass = Retropolis.Spaceport.AirportTerminal.Terrace
+  
+              when LOI.TimelineIds.RealLife
+                currentLocationClass = Retronator.HQ.Cafe
+  
+              when LOI.TimelineIds.Construct
+                currentLocationClass = LandsOfIllusions.Construct.Loading
+  
+              when LOI.TimelineIds.Present
+                currentLocationClass = SanFrancisco.Apartment.Studio
+                
+              when LOI.TimelineIds.Memory
+                # This is a stale memory (one where the location where it was made is not 
+                # available anymore). Cancel the memory so the normal location returns.
+                # TODO: We would probably want to give some indication to the player the memory didn't work.
+                @exitMemory()
+                return
 
           # Set the new location
           @setLocationId currentLocationClass.id()

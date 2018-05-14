@@ -13,10 +13,6 @@ class LOI.Adventure extends LOI.Adventure
       tracker: @
       consentField: LOI.settings.persistGameState.allowed
 
-    # Start at the default player timeline.
-    unless @playerTimelineId()
-      @playerTimelineId @startingPoint()?.timelineId
-
     @currentTimelineId = new ComputedField =>
       console.log "Recomputing current timeline." if LOI.debug
 
@@ -39,6 +35,16 @@ class LOI.Adventure extends LOI.Adventure
       else
         # Player's timeline is stored in local storage.
         timelineId = @playerTimelineId()
+
+        # If the timeline is not found, see if we have one stored in the state.
+        unless timelineId
+          timelineId = @gameState()?.currentTimelineId
+
+          # If we still don't have the timeline start at the default player timeline.
+          unless timelineId
+            timelineId = @startingPoint()?.timelineId
+
+          @playerTimelineId timelineId
 
       console.log "Current timeline ID is", timelineId if LOI.debug or LOI.Adventure.debugLocation
 
