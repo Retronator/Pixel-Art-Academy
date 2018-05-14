@@ -57,6 +57,39 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
     @monthView = new ReactiveField null
     @goalSettings = new ReactiveField null
 
+    # Copy current weekly goals to archive, from the last set archive date forward.
+    archive = @state "weeklyGoals.archive"
+
+    if archive
+      years = _.sortBy _.map(_.keys(archive), (year) => parseInt year), (year) -> year
+
+      if years.length
+        year = _.last years
+        yearData = archive[year]
+        months = _.sortBy _.map(_.keys(yearData), (month) => parseInt month), (month) -> month
+
+        if months.length
+          month = _.last months
+          monthData = yearData[month]
+          days = _.sortBy _.map(_.keys(monthData), (day) => parseInt day), (day) -> day
+
+          if days.length
+            day = _.last days
+
+            # Start on the last archive date.
+            date = new Date year, month, day
+            now = new Date
+            currentGoals = _.cloneDeep _.omit @state('weeklyGoals'), 'archive'
+
+            loop
+              # Advance one week.
+              date = new Date date.getTime() + 7 * 24 * 60 * 60 * 1000 # 7 days
+              break if date > now
+
+              # Archive current weekly goals to that date.
+              archiveProperty = @constructor.archivePropertyForDate date
+              @state "weeklyGoals.archive.#{archiveProperty}", currentGoals
+
   onCreated: ->
     super
     

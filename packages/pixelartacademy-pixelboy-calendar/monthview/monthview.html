@@ -35,18 +35,22 @@
               {{/each}}
             </ol>
             <div class="weekly-goals">
-              {{#if daysWithActivities.goalReached}}
-                <div class="goal-reached"></div>
-              {{else}}
-                {{#if active}}
-                  <div class="goal-progress">
+              {{#if active}}
+                <div class="goal-progress">
+                  {{#if daysWithActivities.goalReached}}
+                      <div class="goal-reached"></div>
+                  {{else}}
                     <div class="fraction">
                       {{daysWithActivities.count}}/{{daysWithActivities.goal}}
                     </div>
-                    <div class="percentage">
-                      {{progressBarPercentage}}%
-                    </div>
+                  {{/if}}
+                  <div class="percentage">
+                    {{progressBarPercentage}}%
                   </div>
+                </div>
+              {{else}}
+                {{#if daysWithActivities.goalReached}}
+                  <div class="goal-reached"></div>
                 {{/if}}
               {{/if}}
             </div>

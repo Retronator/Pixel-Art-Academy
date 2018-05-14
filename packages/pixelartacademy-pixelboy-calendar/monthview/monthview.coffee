@@ -223,6 +223,9 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
   progressBarPercentage: ->
     week = @currentData()
 
+    # If we don't have a goal, consider it done.
+    return 100 unless week.daysWithActivities.goal
+
     Math.round week.daysWithActivities.count / week.daysWithActivities.goal * 100
 
   progressBarStyle: ->
