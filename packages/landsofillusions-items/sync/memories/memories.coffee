@@ -140,8 +140,11 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
     offset = @currentOffset()
     offset -= event.originalEvent.deltaY * 0.01
 
-    limit = @limit()
-    @currentOffset _.clamp offset, -0.5, limit
+    # We let the scroll go up to the last memory.
+    memoriesCount = LOI.Memory.forCharacter.query(LOI.characterId()).count()
+
+    newOffset = _.clamp offset, -0.5, memoriesCount - 0.9
+    @currentOffset newOffset
 
     # Round to integer after the user pauses scrolling.
     @_debouncedRound ?= _.debounce =>
