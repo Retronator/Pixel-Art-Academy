@@ -1,25 +1,25 @@
 <template name="SpriteCanvas.Pencil">
   <div class="pencil tool {{activeClass}}">
-    <img src="/assets/apps-drawing/drawing-pencil.png" alt="">
+    <img src="{{image "/pixelartacademy/pixelboy/apps/drawing/drawing-pencil.png"}}" alt="">
   </div>
 </template>
 
 <template name="SpriteCanvas.Eraser">
   <div class="eraser tool {{activeClass}}">
-    <img src="/assets/apps-drawing/drawing-eraser.png" alt="">
+    <img src="{{image "/pixelartacademy/pixelboy/apps/drawing/drawing-eraser.png"}}" alt="">
   </div>
 </template>
 
 <template name="SpriteCanvas.ColorPicker">
   <div class="color-picker tool {{activeClass}}">
-    <img src="/assets/apps-drawing/eyedropper.png" alt="">
+    <img src="{{image "/pixelartacademy/pixelboy/apps/drawing/eyedropper.png"}}" alt="">
   </div>
 </template>
 
 <template name="SpriteCanvas.ColorFill">
   <div class="color-fill-wrapper">
-    <img src="/assets/apps-drawing/glass-bottom.png" class="glass-bottom" alt="">
+    <img src="{{image "/pixelartacademy/pixelboy/apps/drawing/glass-bottom.png"}}" class="glass-bottom" alt="">
     <div class="color-fill tool {{activeClass}}" {{style colorFillStyle}}></div>
-    <img src="/assets/apps-drawing/glass-top.png" class="glass-top" alt="">
+    <img src="{{image "/pixelartacademy/pixelboy/apps/drawing/glass-top.png"}}" class="glass-top" alt="">
   </div>
 </template>

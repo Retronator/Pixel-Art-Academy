@@ -1,8 +1,0 @@
-<template name="PixelArtAcademy.PixelBoy.Components.AppSwitcher">
-  <ul class="app-switcher">
-    <li><a href="{{routerPath 'PixelArtAcademy.PixelBoy'}}">Home</a></li>
-    {{#each parentComponent.apps}}
-      <li><a href="{{routerPath 'PixelArtAcademy.PixelBoy' app=urlName}}">{{displayName}}</a></li>
-    {{/each}}
-  </ul>
-</template>

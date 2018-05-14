@@ -27,11 +27,14 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartacademy-learning');
+  api.use('retronator:pixelartacademy-pico8');
   api.use('retronator:pixelartacademy-pixelboy-journal');
   api.use('retronator:pixelartacademy-pixelboy-drawing');
   api.use('retronator:pixelartacademy-pixelboy-studyplan');
   api.use('retronator:pixelartacademy-pixelboy-calendar');
   api.use('retronator:pixelartacademy-pixelboy-yearbook');
+  api.use('retronator:pixelartacademy-pixelboy-drawing');
+  api.use('retronator:pixelartacademy-pixelboy-pico8');
   api.use('retronator:pixelartdatabase');
   api.use('retronator:pixelartdatabase-pixeldailies');
   api.use('retronator:sanfrancisco-soma');

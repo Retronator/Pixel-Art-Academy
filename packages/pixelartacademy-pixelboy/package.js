@@ -13,7 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
-  api.use('retronator:pixelartdatabase');
+  api.use('retronator:pixelartacademy-pico8');
 
   api.export('PixelArtAcademy');
 
@@ -28,5 +28,4 @@ Package.onUse(function(api) {
 
   api.addFile('apps..');
   api.addComponent('apps/homescreen..');
-  api.addComponent('apps/pico8..');
 });

@@ -176,9 +176,10 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     @autorun =>
       size = @size()
       scale = LOI.adventure.interface.display.scale()
-      clientHeight = @$('.max-area').height()
+      viewport = LOI.adventure.interface.display.viewport()
+      clientHeight = viewport.viewportBounds.height()
 
-      pixelBoyHeightRequirement = (size.height + 35 * 2) * scale
+      pixelBoyHeightRequirement = (size.height + 65 * 2) * scale
 
       @positioningClass if clientHeight < pixelBoyHeightRequirement then @constructor.PositioningType.ScreenCenter else @constructor.PositioningType.ScreenBottom
 

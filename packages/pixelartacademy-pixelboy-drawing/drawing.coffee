@@ -54,10 +54,6 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
             palette: 1
         )?.palette._id
 
-    # Show home screen button when in sprite selection.
-    @autorun =>
-      @showHomeScreenButton @isInSpriteSelection()
-
   onRendered: ->
     super
 
