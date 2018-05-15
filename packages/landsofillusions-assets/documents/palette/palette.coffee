@@ -20,12 +20,12 @@ class LOI.Assets.Palette extends AM.Document
   @insert: @method 'insert'
 
   # Enumeration of palette names provided by the system.
-  @systemPaletteNames:
+  @SystemPaletteNames:
     atari2600: "Atari 2600"
     pico8: "PICO-8"
 
   # Default palette is the Atari 2600
-  @defaultPaletteName: @systemPaletteNames.atari2600
+  @defaultPaletteName = @SystemPaletteNames.atari2600
 
   @defaultPalette: ->
     @documents.findOne name: @defaultPaletteName

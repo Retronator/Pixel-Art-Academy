@@ -16,13 +16,18 @@ class LOI.Assets.VisualAsset extends AM.Document
   # landmarks: array of named locations
   #   name: name of the landmark
   #   x, y, z: floating point location of the landmark
-  # history: list of operations that produce this image
+  # history: array of operations that produce this image
   #   forward: update delta that creates the result of the operation
   #   backward: update delta that undoes the operation from the resulting state
+  # authors: array of characters that are allowed to edit this asset or null if this is a system asset
+  #   _id
+  #   avatar
+  #     fullName
   @Meta
     abstract: true
     fields: =>
       palette: @ReferenceField LOI.Assets.Palette, ['name'], false
+      authors: [@ReferenceField LOI.Character, ['avatar.fullName']]
 
   @updatePalette: @method 'updatePalette'
   @updateMaterial: @method 'updateMaterial'

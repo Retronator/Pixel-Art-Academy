@@ -31,7 +31,7 @@ if Meteor.isServer
   Document.startup ->
     return if Meteor.settings.startEmpty
   
-    atari2600PaletteName = LOI.Assets.Palette.systemPaletteNames.atari2600
+    atari2600PaletteName = LOI.Assets.Palette.SystemPaletteNames.atari2600
 
     atari2600HueNames = (name for name of LOI.Assets.Palette.Atari2600.hues)
 

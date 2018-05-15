@@ -61,7 +61,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Sprites extends AM.Component
     # Create a 16x16 sprite.
     Meteor.call 'spriteInsert', newId, 
       palette:
-        name: LOI.Assets.Palette.systemPaletteNames.pico8
+        name: LOI.Assets.Palette.SystemPaletteNames.pico8
       bounds:
         left: 0
         right: 15

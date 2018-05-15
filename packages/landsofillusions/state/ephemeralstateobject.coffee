@@ -16,7 +16,7 @@ class LOI.EphemeralStateObject
           true
 
         fieldGetters[fieldName] = (value) =>
-          if value?
+          if value isnt undefined
             currentState = state()
             currentState[fieldName] = value
             Tracker.nonreactive =>

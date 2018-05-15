@@ -15,6 +15,7 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:landsofillusions-assets');
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartdatabase');
@@ -65,5 +66,14 @@ Package.onUse(function(api) {
 
   api.addComponent('pages/importcheckins/importcheckins');
   api.addServerFile('pages/importcheckins/methods-server');
+
+  // Project
+
+  api.addFile('project..');
+  api.addFile('project/thing');
+  api.addFile('project/workbench');
+  api.addFile('project/asset');
+
+  api.addFile('project/assets/sprite');
 
 });
