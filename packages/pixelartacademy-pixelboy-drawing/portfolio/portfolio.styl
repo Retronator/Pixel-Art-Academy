@@ -1,0 +1,113 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-portfolio
+  position absolute
+  left 5rem
+  top 0
+  width 322rem
+  height 241rem
+  background-image image('/pixelartacademy/pixelboy/apps/drawing/portfolio/back.png')
+
+  .cover
+    position absolute
+    z-index 1
+    bottom 2rem
+    left -5rem
+    right -5rem
+    background image('/pixelartacademy/pixelboy/apps/drawing/portfolio/front.png') center center / 100% 180%
+    transition all 0.2s
+
+    &::before
+    &::after
+      content ''
+      position absolute
+      left 0
+      right 0
+      height 2rem
+      background image('/pixelartacademy/pixelboy/apps/drawing/portfolio/front.png') center center / 100% 9rem
+
+    &::before
+      background-position-y top
+      top -2rem
+
+    &::after
+      background-position-y bottom
+      bottom -2rem
+
+    .handle
+      position absolute
+      z-index 1
+      top 8%
+      left 114rem
+      width 104rem
+      height 60rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/portfolio/handle.png')
+
+    .handle-shadow
+      content ''
+      position absolute
+      z-index -1
+      top calc(8% + 1rem)
+      left 106rem
+      width 110rem
+      height 64rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/portfolio/handle-shadow.png')
+      mix-blend-mode darken
+
+  .sections
+    list-style none
+    margin-top 13rem
+    padding 0
+
+    .section
+      position relative
+      background-color atariGrey(5)
+      box-shadow 0 0 10rem rgba(atariGrey(0), 0.25)
+      margin 0 auto
+      height 21rem
+      overflow  hidden
+      transition all 0.2s
+      cursor pointer
+
+      &:not(.active):hover
+        height 38rem
+        margin-top -5rem
+
+      &.active
+        cursor default
+
+        .groups
+          .group
+            &:not(.active):hover
+              height 19rem
+              margin-top -1rem
+
+            &.active
+              cursor default
+
+      .section-name
+        height 21rem
+        padding 7rem
+        acme-7()
+        color atariCyan(1)
+
+      .groups
+        list-style none
+        margin 0
+        padding 0
+
+        .group
+          position relative
+          background-color atariBrown(4)
+          margin 0 auto
+          height 17rem
+          box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
+          overflow  hidden
+          transition all 0.2s
+          cursor pointer
+
+          .group-name
+            height 17rem
+            padding 5rem
+            adventure()
+            color atariGrey(1)
