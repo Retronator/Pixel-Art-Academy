@@ -70,6 +70,8 @@ Package.onUse(function(api) {
   // Project
 
   api.addFile('project..');
+  api.addServerFile('project/subscriptions');
+
   api.addFile('project/thing');
   api.addFile('project/workbench');
   api.addFile('project/asset');

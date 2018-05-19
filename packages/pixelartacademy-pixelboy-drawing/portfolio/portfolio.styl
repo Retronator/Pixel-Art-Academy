@@ -10,7 +10,7 @@
 
   .cover
     position absolute
-    z-index 1
+    z-index 101
     bottom 2rem
     left -5rem
     right -5rem
@@ -61,6 +61,7 @@
 
     .section
       position relative
+      z-index 100
       background-color atariGrey(5)
       box-shadow 0 0 10rem rgba(atariGrey(0), 0.25)
       margin 0 auto
@@ -85,6 +86,15 @@
             &.active
               cursor default
 
+      &.group-in-section-active
+        .groups
+          .group
+            height 3rem
+
+            &:not(.active):hover
+              height 15rem
+              margin-top -1rem
+
       .section-name
         height 21rem
         padding 7rem
@@ -106,8 +116,86 @@
           transition all 0.2s
           cursor pointer
 
+          &.active
+            height 150rem
+
           .group-name
             height 17rem
             padding 5rem
             adventure()
             color atariGrey(1)
+
+          .briefs
+            position absolute
+            z-index 0
+            left 0
+            right 0
+            top 20rem
+            margin 0
+            padding 0
+            list-style none
+            text-align center
+
+            .brief
+              position relative
+              display inline-block
+              width 120rem
+              height 150rem
+              margin-left -120rem
+              padding 8rem
+              vertical-align top
+              background atariGrey(7)
+              color atariGrey(2)
+              box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
+              text-align left
+
+              &:first-child
+                margin-left 0
+
+              .asset-name
+                margin-bottom 4.5rem
+                daily()
+                text-transform uppercase
+
+              .description
+                daily()
+
+          .assets
+            position absolute
+            z-index 1
+            display flex
+            justify-content space-around
+            top 54rem
+            left 10rem
+            right 10rem
+            height 100rem
+            margin 0
+            padding 0
+            list-style none
+
+            .asset
+              position relative
+              height 100rem
+              transition 0.2s all
+
+              &:hover
+                flex-shrink 0.2
+
+              &:first-child
+                flex-shrink 0
+
+              .sprite
+                position absolute
+                bottom 0
+                right 0
+                border 6rem solid atariGrey(6)
+                box-sizing content-box
+                background atariCyan(2)
+                box-shadow 0 0 5rem rgba(atariGrey(0), 0.2)
+
+                .landsofillusions-assets-components-spriteimage
+                  absolute-cover()
+
+                  .canvas
+                    width 100% !important
+                    height 100% !important

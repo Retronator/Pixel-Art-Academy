@@ -6,12 +6,31 @@
     </div>
     <ul class="sections">
       {{#each sections}}
-        <li class="section {{sectionActiveClass}}" {{style sectionStyle}}>
+        <li class="section {{sectionActiveClass}} {{groupInSectionActiveClass}}" {{style sectionStyle}}>
           <div class="section-name">{{> t10e nameKey}}</div>
           <ul class="groups">
             {{#each groups}}
-              <li class="group" {{style groupStyle}}>
+              <li class="group {{groupActiveClass}}" {{style groupStyle}}>
                 <div class="group-name">{{name}}</div>
+                {{#if project}}
+                  <ul class="briefs">
+                    {{#each assets}}
+                      <li class="brief" {{style briefStyle}}>
+                        <div class="asset-name">{{> t10e asset.displayNameTranslation}}</div>
+                        <div class="description">{{> t10e asset.descriptionTranslation}}</div>
+                      </li>
+                    {{/each}}
+                  </ul>
+                  <ul class="assets">
+                    {{#each assets}}
+                      <li class="asset" {{style assetStyle}}>
+                        <div class="sprite" {{style spriteStyle}}>
+                          {{> Render spriteImage}}
+                        </div>
+                      </li>
+                    {{/each}}
+                  </ul>
+                {{/if}}
               </li>
             {{/each}}
           </ul>

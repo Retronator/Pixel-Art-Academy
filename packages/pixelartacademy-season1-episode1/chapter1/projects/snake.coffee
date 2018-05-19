@@ -12,7 +12,7 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
   class @Body extends PAA.Practice.Project.Asset.Sprite
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Projects.Snake.Body'
       
-    @displayName: -> "Body"
+    @displayName: -> "Snake body"
 
     @description: -> """
       One unit of the snake body. Each food piece the snake eats will add one of these units to the snake to make it longer.
@@ -43,9 +43,15 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
   
   @start: new AB.Method name: "#{@id()}.start"
   @end: new AB.Method name: "#{@id()}.end"
-  
-  assets: ->
-    [
-      new @constructor.Body
-      new @constructor.Food
-    ]
+
+  constructor: ->
+    super
+
+    @assets = new ComputedField =>
+      [
+        new @constructor.Body @
+        new @constructor.Food @
+      ]
+
+  destroy: ->
+    @assets.stop()

@@ -46,7 +46,9 @@ Snake.start.method (characterId) ->
 
   bodySpriteData = _.extend createCommonSpriteData(),
     name: Snake.Body.displayName()
-    pixels: snakePixels
+    layers: [
+      pixels: snakePixels
+    ]
 
   bodySpriteId = LOI.Assets.Sprite.documents.insert bodySpriteData
 
@@ -62,8 +64,10 @@ Snake.start.method (characterId) ->
           shade: 0
 
   foodSpriteData = _.extend createCommonSpriteData(),
-    name: Snake.Body.displayName()
-    pixels: foodPixels
+    name: Snake.Food.displayName()
+    layers: [
+      pixels: foodPixels
+    ]
 
   foodSpriteId = LOI.Assets.Sprite.documents.insert foodSpriteData
   

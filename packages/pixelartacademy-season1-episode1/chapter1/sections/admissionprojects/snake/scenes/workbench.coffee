@@ -12,6 +12,9 @@ class C1.AdmissionProjects.Snake.Workbench extends LOI.Adventure.Scene
   @initialize()
 
   things: ->
-    [
-      C1.Projects.Snake
-    ]
+    things = []
+
+    if projectId = C1.Projects.Snake.readOnlyState 'activeProjectId'
+      things.push new C1.Projects.Snake projectId
+
+    things

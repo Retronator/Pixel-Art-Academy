@@ -15,16 +15,28 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
     @spriteData = new ComputedField =>
       return unless spriteId = @options.spriteId()
 
-      LOI.Assets.Sprite.getFromCache spriteId
+      # Try to get the data from cache first.
+      spriteData = LOI.Assets.Sprite.getFromCache spriteId
+      
+      # See if we're directly subscribed to this sprite.
+      spriteData ?= LOI.Assets.Sprite.documents.findOne spriteId
+
+      spriteData
 
     @sprite = new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
+      
+    if @options.loadPalette
+      @autorun (computation) =>
+        return unless spriteData = @spriteData()
+        
+        LOI.Assets.Palette.forId.subscribe @, spriteData.palette._id
 
   onRendered: ->
     super
 
     @autorun =>
-      canvas = $('.canvas')[0]
+      canvas = @$('.canvas')[0]
       context = canvas.getContext '2d'
 
       # Update canvas when sprite changes.

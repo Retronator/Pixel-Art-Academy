@@ -14,7 +14,9 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     super
 
     @sectionHeight = 21
-    @groupHeight = 17
+    @initialGroupHeight = 17
+    @inactiveGroupHeight = 3
+    @activeGroupHeight = 150
 
   onCreated: ->
     super
@@ -27,25 +29,25 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
         timelineId: LOI.adventure.currentTimelineId()
 
     @currentSection = new ReactiveField null, (a, b) => a is b
+    @currentGroup = new ReactiveField null, (a, b) => a is b
+      
+    # Subscribe to character's projects.
+    PAA.Practice.Project.forCharacterId.subscribe @, LOI.characterId()
 
   sections: ->
-    # Get projects from the workbench.
+    # Get projects from the workbench. Note: we expect things to be instances, so
+    # they have to be added as instances in the workbench scene, and not as classes.
     projects = @currentProjects().things()
 
     projectGroups = for project, index in projects
+      assets = for asset, assetIndex in project.assets()
+        asset: asset
+        index: assetIndex
+
       index: index
       name: project.fullName()
-
-    projectGroups = [
-      index: 0
-      name: "Snake game"
-    ,
-      index: 1
-      name: "Fake assignment"
-    ,
-      index: 2
-      name: "Secret project"
-    ]
+      project: project
+      assets: assets
 
     projectsSection =
       index: 0
@@ -55,22 +57,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     artworksSection =
       index: 1
       nameKey: @constructor.Sections.Artworks
-      groups: [
-        index: 0
-        name: "Daily practice"
-      ,
-        index: 1
-        name: "Isometric"
-      ,
-        index: 3
-        name: "Pixel Computers"
-      ,
-        index: 4
-        name: "ZX Spectrum"
-      ,
-        index: 5
-        name: "Pixel Art Academy"
-      ]
+      groups: []
 
     [projectsSection, artworksSection]
 
@@ -79,17 +66,27 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     'active' if @currentSection() is section
 
+  groupInSectionActiveClass: ->
+    section = @currentData()
+
+    'group-in-section-active' if  @currentSection() is section and @currentGroup()
+
   sectionStyle: ->
     section = @currentData()
     active = @currentSection() is section
 
-    width = 292 - 2 * (1 - section.index)
+    width = 292 - 4 * (1 - section.index)
 
     style =
       width: "#{width}rem"
 
     if active
-      height = @sectionHeight + section.groups.length * @groupHeight
+      if @currentGroup()
+        height = @sectionHeight + (section.groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+
+      else
+        height = @sectionHeight + section.groups.length * @initialGroupHeight
+
       style.height = "#{height}rem"
 
     style
@@ -98,20 +95,93 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     group = @currentData()
     section = @parentDataWith 'groups'
 
-    width: "#{250 - 4 * (section.groups.length - group.index - 1)}rem"
+    width: "#{270 - 3 * (section.groups.length - group.index - 1)}rem"
+
+  groupActiveClass: ->
+    group = @currentData()
+
+    'active' if @currentGroup() is group
+
+  briefStyle: ->
+    asset = @currentData()
+    project = @parentDataWith 'assets'
+
+    zIndex = project.assets.length - asset.index
+
+    zIndex: zIndex
+
+  assetStyle: ->
+    assetData = @currentData()
+    project = @parentDataWith 'assets'
+    zoom = @_assetZoom assetData.asset
+
+    zIndex = project.assets.length - assetData.index
+
+    zIndex: zIndex
+    width: "#{assetData.asset.width() * zoom + 12}rem"
+
+  spriteStyle: ->
+    assetData = @currentData()
+    zoom = @_assetZoom assetData.asset
+
+    width: "#{assetData.asset.width() * zoom}rem"
+    height: "#{assetData.asset.height() * zoom}rem"
+
+  _assetZoom: (asset) ->
+    # Zoom the sprite as much as possible while remaining under 88px.
+    zoom = 1
+    maxSize = Math.max asset.width(), asset.height()
+
+    zoom++ while (zoom + 1) * maxSize < 88
+
+    zoom
+
+  spriteImage: ->
+    assetData = @currentData()
+    return unless spriteId = assetData.asset.spriteId()
+
+    new LOI.Assets.Components.SpriteImage
+      spriteId: => spriteId
+      loadPalette: true
 
   coverStyle: ->
     top = 56
 
     if section = @currentSection()
-      top += section.groups.length * @groupHeight - 2
+      if @currentGroup()
+        top += (section.groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+
+      else
+        top += section.groups.length * @initialGroupHeight
 
     top: "#{top}rem"
 
   events: ->
     super.concat
       'click .section': @onClickSection
+      'click .group': @onClickGroup
+      'click': @onClick
 
-  onClickSection: ->
+  onClickSection: (event) ->
     section = @currentData()
+    return if section is @currentSection()
+
     @currentSection section
+
+    # Reset group if we click on the name, but not one of the inner groups.
+    # In that case the group handler will activate a new group in this new section.
+    @currentGroup null unless $(event.target).closest('.group').length
+
+  onClickGroup: (event) ->
+    group = @currentData()
+    @currentGroup group
+
+  onClick: (event) ->
+    # If we click outside a group, close current group.
+    if @currentGroup() and not $(event.target).closest('.group').length
+      @currentGroup null
+      return
+
+    # If we click outside a section, close current section.
+    @currentSection null if @currentSection() and not $(event.target).closest('.section').length
+

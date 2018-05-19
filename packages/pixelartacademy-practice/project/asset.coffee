@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
@@ -39,3 +40,19 @@ class PAA.Practice.Project.Asset
 
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['displayName', 'description']
+
+  constructor: (@project) ->
+    # Subscribe to this goal's translations.
+    translationNamespace = @id()
+    @_translationSubscription = AB.subscribeNamespace translationNamespace
+
+  destroy: ->
+    @_translationSubscription.stop()
+
+  id: -> @constructor.id()
+
+  displayName: -> AB.translate(@_translationSubscription, 'displayName').text
+  displayNameTranslation: -> AB.translation @_translationSubscription, 'displayName'
+
+  description: -> AB.translate(@_translationSubscription, 'description').text
+  descriptionTranslation: -> AB.translation @_translationSubscription, 'description'
