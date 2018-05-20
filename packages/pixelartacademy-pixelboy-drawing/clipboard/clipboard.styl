@@ -7,9 +7,64 @@
   top -260rem
   width 200rem
   height 260rem
-  transition top 0.4s
+  transition all 0.4s
   background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/clipboard.png')
 
   &.active-asset
     top calc(50% - 130rem)
-    transition top 0.6s 0.2s
+    transition all 0.6s 0.2s
+
+  &.editor-active
+    top -210rem
+    left -145rem
+
+  .brief
+    position absolute
+    top 10rem
+    left 11rem
+    width 178rem
+    height 240rem
+    padding 14rem 12rem
+    color atariGrey(1)
+    daily()
+
+    .asset-name
+      text-transform uppercase
+
+    .description
+      margin 8rem 0
+
+    .properties
+      list-style none
+      padding 0
+
+      .property
+        margin-bottom 4rem
+
+        .property-name
+          text-transform uppercase
+
+    .actions
+      list-style none
+      width 100%
+      padding 0
+      display table
+      border-collapse collapse
+
+      .action
+        display table-cell
+        position relative
+        border 1rem solid atariGrey(4)
+        width 33.3%
+        height 10rem
+
+        .button
+          absolute-cover-size()
+          border none
+          background none
+          checkout()
+          text-transform uppercase
+          color atariGrey(2)
+
+          &:hover
+            background atariGrey(6)

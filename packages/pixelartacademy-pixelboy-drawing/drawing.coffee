@@ -36,20 +36,14 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
 
     @autorun (computation) =>
       portfolio = @portfolio()
-      
+      clipboard = @clipboard()
+
       if portfolio.isCreated() and portfolio.activeAsset()
-        @setFixedPixelBoySize 200, 260
+        if clipboard.editorActive()
+          @setMaximumPixelBoySize()
+
+        else
+          @setFixedPixelBoySize 200, 260
 
       else
         @setFixedPixelBoySize 332, 241
-
-  onBackButton: ->
-    portfolio = @portfolio()
-
-    # Normally quit if we don't have an active asset.
-    return unless portfolio.activeAsset()
-
-    portfolio.activeAsset null
-
-    # Inform that we've handled the back button.
-    true

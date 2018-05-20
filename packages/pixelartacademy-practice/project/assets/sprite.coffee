@@ -44,3 +44,9 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
 
   width: -> @sprite()?.bounds.width
   height: -> @sprite()?.bounds.height
+
+  fixedDimensions: -> @constructor.fixedDimensions()
+
+  restrictedPalette: ->
+    LOI.Assets.Palette.documents.findOne
+      name: @constructor.restrictedPaletteName()

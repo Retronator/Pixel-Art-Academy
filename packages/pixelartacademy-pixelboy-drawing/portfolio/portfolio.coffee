@@ -1,5 +1,6 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -28,40 +29,51 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
         location: @workbenchLocation
         timelineId: LOI.adventure.currentTimelineId()
 
+    @sections = new ComputedField =>
+      # Get projects from the workbench. Note: we expect things to be instances, so
+      # they have to be added as instances in the workbench scene, and not as classes.
+      projects = @currentProjects().things()
+
+      projectGroups = for project, index in projects
+        assets = for asset, assetIndex in project.assets()
+          asset: asset
+          index: assetIndex
+
+        index: index
+        name: project.fullName()
+        project: project
+        assets: assets
+
+      projectsSection =
+        index: 0
+        nameKey: @constructor.Sections.Projects
+        groups: projectGroups
+
+      artworksSection =
+        index: 1
+        nameKey: @constructor.Sections.Artworks
+        groups: []
+
+      [projectsSection, artworksSection]
+
     @activeSection = new ReactiveField null, (a, b) => a is b
     @activeGroup = new ReactiveField null, (a, b) => a is b
     @hoveredAsset = new ReactiveField null, (a, b) => a is b
-    @activeAsset = new ReactiveField null, (a, b) => a is b
-      
+
+    @activeAsset = new ComputedField =>
+      return unless spriteId = AB.Router.getParameter 'parameter3'
+
+      # Find the asset that uses this sprite.
+      for section in @sections()
+        for group in section.groups
+          for assetData in group.assets
+            if assetData.asset.spriteId() is spriteId
+              @activeSection section
+              @activeGroup group
+              return assetData
+
     # Subscribe to character's projects.
     PAA.Practice.Project.forCharacterId.subscribe @, LOI.characterId()
-
-  sections: ->
-    # Get projects from the workbench. Note: we expect things to be instances, so
-    # they have to be added as instances in the workbench scene, and not as classes.
-    projects = @currentProjects().things()
-
-    projectGroups = for project, index in projects
-      assets = for asset, assetIndex in project.assets()
-        asset: asset
-        index: assetIndex
-
-      index: index
-      name: project.fullName()
-      project: project
-      assets: assets
-
-    projectsSection =
-      index: 0
-      nameKey: @constructor.Sections.Projects
-      groups: projectGroups
-
-    artworksSection =
-      index: 1
-      nameKey: @constructor.Sections.Artworks
-      groups: []
-
-    [projectsSection, artworksSection]
 
   sectionActiveClass: ->
     section = @currentData()
@@ -217,4 +229,6 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
   onClickAsset: (event) ->
     assetData = @currentData()
-    @activeAsset assetData
+
+    # Set active sprite ID.
+    AB.Router.setParameter 'parameter3', assetData.asset.spriteId()
