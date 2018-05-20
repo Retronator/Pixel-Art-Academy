@@ -15,7 +15,7 @@
                 {{#if project}}
                   <ul class="briefs">
                     {{#each assets}}
-                      <li class="brief" {{style briefStyle}}>
+                      <li class="brief {{assetHoveredClass}}" {{style briefStyle}}>
                         <div class="asset-name">{{> t10e asset.displayNameTranslation}}</div>
                         <div class="description">{{> t10e asset.descriptionTranslation}}</div>
                       </li>

@@ -28,8 +28,10 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
         location: @workbenchLocation
         timelineId: LOI.adventure.currentTimelineId()
 
-    @currentSection = new ReactiveField null, (a, b) => a is b
-    @currentGroup = new ReactiveField null, (a, b) => a is b
+    @activeSection = new ReactiveField null, (a, b) => a is b
+    @activeGroup = new ReactiveField null, (a, b) => a is b
+    @hoveredAsset = new ReactiveField null, (a, b) => a is b
+    @activeAsset = new ReactiveField null, (a, b) => a is b
       
     # Subscribe to character's projects.
     PAA.Practice.Project.forCharacterId.subscribe @, LOI.characterId()
@@ -64,16 +66,16 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   sectionActiveClass: ->
     section = @currentData()
 
-    'active' if @currentSection() is section
+    'active' if @activeSection() is section
 
   groupInSectionActiveClass: ->
     section = @currentData()
 
-    'group-in-section-active' if  @currentSection() is section and @currentGroup()
+    'group-in-section-active' if  @activeSection() is section and @activeGroup()
 
   sectionStyle: ->
     section = @currentData()
-    active = @currentSection() is section
+    active = @activeSection() is section
 
     width = 292 - 4 * (1 - section.index)
 
@@ -81,7 +83,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
       width: "#{width}rem"
 
     if active
-      if @currentGroup()
+      if @activeGroup()
         height = @sectionHeight + (section.groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
 
       else
@@ -100,7 +102,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   groupActiveClass: ->
     group = @currentData()
 
-    'active' if @currentGroup() is group
+    'active' if @activeGroup() is group
 
   briefStyle: ->
     asset = @currentData()
@@ -132,7 +134,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     zoom = 1
     maxSize = Math.max asset.width(), asset.height()
 
-    zoom++ while (zoom + 1) * maxSize < 88
+    zoom++ while zoom < 7 and (zoom + 1) * maxSize < 88
 
     zoom
 
@@ -147,8 +149,8 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   coverStyle: ->
     top = 56
 
-    if section = @currentSection()
-      if @currentGroup()
+    if section = @activeSection()
+      if @activeGroup()
         top += (section.groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
 
       else
@@ -156,32 +158,45 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     top: "#{top}rem"
 
+  assetHoveredClass: ->
+    assetData = @currentData()
+
+    'hovered' if assetData is @hoveredAsset()
+
   events: ->
     super.concat
       'click .section': @onClickSection
       'click .group': @onClickGroup
       'click': @onClick
+      'mouseenter .asset': @onMouseEnterAsset
+      'mouseleave .asset': @onMouseLeaveAsset
 
   onClickSection: (event) ->
     section = @currentData()
-    return if section is @currentSection()
+    return if section is @activeSection()
 
-    @currentSection section
+    @activeSection section
 
     # Reset group if we click on the name, but not one of the inner groups.
     # In that case the group handler will activate a new group in this new section.
-    @currentGroup null unless $(event.target).closest('.group').length
+    @activeGroup null unless $(event.target).closest('.group').length
 
   onClickGroup: (event) ->
     group = @currentData()
-    @currentGroup group
+    @activeGroup group
 
   onClick: (event) ->
     # If we click outside a group, close current group.
-    if @currentGroup() and not $(event.target).closest('.group').length
-      @currentGroup null
+    if @activeGroup() and not $(event.target).closest('.group').length
+      @activeGroup null
       return
 
     # If we click outside a section, close current section.
-    @currentSection null if @currentSection() and not $(event.target).closest('.section').length
+    @activeSection null if @activeSection() and not $(event.target).closest('.section').length
 
+  onMouseEnterAsset: (event) ->
+    assetData = @currentData()
+    @hoveredAsset assetData
+
+  onMouseLeaveAsset: (event) ->
+    @hoveredAsset null
