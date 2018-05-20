@@ -2,15 +2,13 @@
 
 .pixelartacademy-pixelboy-apps-drawing-portfolio
   position absolute
-  left 5rem
-  top 0
+  z-index 0
+  left calc(50% - 161rem)
+  top calc(50% - 120rem)
   width 322rem
   height 241rem
   background-image image('/pixelartacademy/pixelboy/apps/drawing/portfolio/back.png')
   transition top 0.5s
-
-  &.active-asset
-    top 100%
 
   .cover
     position absolute
@@ -165,7 +163,7 @@
                 transition top 0.2s
 
               &.active
-                top -480rem
+                top -240rem
                 transition top 0.5s
 
               .asset-name
@@ -212,7 +210,7 @@
                 flex-shrink 0
 
               &.active
-                top -480rem
+                top -240rem
                 transition all 0.2s, top 0.5s
 
               .sprite

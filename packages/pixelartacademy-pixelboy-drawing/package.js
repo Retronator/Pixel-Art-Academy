@@ -20,4 +20,5 @@ Package.onUse(function(api) {
   api.addComponent('drawing');
 
   api.addComponent('portfolio..');
+  api.addComponent('clipboard..');
 });

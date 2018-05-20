@@ -55,3 +55,14 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     @maxHeight height
 
     @resizable false
+
+  setMaximumPixelBoySize: ->
+    display = LOI.adventure.interface.display
+
+    viewport = display.viewport()
+    scale = display.scale()
+
+    width = viewport.viewportBounds.width() / scale
+    height = viewport.viewportBounds.height() / scale
+
+    @setFixedPixelBoySize width, height

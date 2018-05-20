@@ -24,15 +24,24 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
   constructor: ->
     super
 
-    @setFixedPixelBoySize 332, 241
-
     @portfolio = new ReactiveField null
+    @clipboard = new ReactiveField null
 
   onCreated: ->
     super
 
     # Initialize components.
     @portfolio new @constructor.Portfolio @
+    @clipboard new @constructor.Clipboard @
+
+    @autorun (computation) =>
+      portfolio = @portfolio()
+      
+      if portfolio.isCreated() and portfolio.activeAsset()
+        @setFixedPixelBoySize 200, 260
+
+      else
+        @setFixedPixelBoySize 332, 241
 
   onBackButton: ->
     portfolio = @portfolio()
