@@ -146,6 +146,9 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
       spriteId: => spriteId
       loadPalette: true
 
+  activeAssetClass: ->
+    'active-asset' if @activeAsset()
+
   coverStyle: ->
     top = 56
 
@@ -163,6 +166,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     'hovered' if assetData is @hoveredAsset()
 
+  assetActiveClass: ->
+    assetData = @currentData()
+
+    'active' if assetData is @activeAsset()
+
   events: ->
     super.concat
       'click .section': @onClickSection
@@ -170,6 +178,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
       'click': @onClick
       'mouseenter .asset': @onMouseEnterAsset
       'mouseleave .asset': @onMouseLeaveAsset
+      'click .asset': @onClickAsset
 
   onClickSection: (event) ->
     section = @currentData()
@@ -186,6 +195,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     @activeGroup group
 
   onClick: (event) ->
+    # If we click outside the clipboard, close current asset.
+    if @activeAsset() and not $(event.target).closest('.clipboard').length
+      @activeAsset null
+      return
+
     # If we click outside a group, close current group.
     if @activeGroup() and not $(event.target).closest('.group').length
       @activeGroup null
@@ -200,3 +214,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
   onMouseLeaveAsset: (event) ->
     @hoveredAsset null
+
+  onClickAsset: (event) ->
+    assetData = @currentData()
+    @activeAsset assetData

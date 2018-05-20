@@ -33,3 +33,14 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
 
     # Initialize components.
     @portfolio new @constructor.Portfolio @
+
+  onBackButton: ->
+    portfolio = @portfolio()
+
+    # Normally quit if we don't have an active asset.
+    return unless portfolio.activeAsset()
+
+    portfolio.activeAsset null
+
+    # Inform that we've handled the back button.
+    true

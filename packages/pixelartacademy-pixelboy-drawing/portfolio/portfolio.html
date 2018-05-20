@@ -1,5 +1,5 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio">
-  <div class="pixelartacademy-pixelboy-apps-drawing-portfolio">
+  <div class="pixelartacademy-pixelboy-apps-drawing-portfolio {{activeAssetClass}}">
     <div class="cover" {{style coverStyle}}>
       <div class="handle"></div>
       <div class="handle-shadow"></div>
@@ -15,7 +15,7 @@
                 {{#if project}}
                   <ul class="briefs">
                     {{#each assets}}
-                      <li class="brief {{assetHoveredClass}}" {{style briefStyle}}>
+                      <li class="brief {{assetHoveredClass}} {{assetActiveClass}}" {{style briefStyle}}>
                         <div class="asset-name">{{> t10e asset.displayNameTranslation}}</div>
                         <div class="description">{{> t10e asset.descriptionTranslation}}</div>
                       </li>
@@ -23,7 +23,7 @@
                   </ul>
                   <ul class="assets">
                     {{#each assets}}
-                      <li class="asset" {{style assetStyle}}>
+                      <li class="asset {{assetActiveClass}}" {{style assetStyle}}>
                         <div class="sprite" {{style spriteStyle}}>
                           {{> Render spriteImage}}
                         </div>

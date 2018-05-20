@@ -7,6 +7,10 @@
   width 322rem
   height 241rem
   background-image image('/pixelartacademy/pixelboy/apps/drawing/portfolio/back.png')
+  transition top 0.5s
+
+  &.active-asset
+    top 100%
 
   .cover
     position absolute
@@ -66,7 +70,6 @@
       box-shadow 0 0 10rem rgba(atariGrey(0), 0.25)
       margin 0 auto
       height 21rem
-      overflow  hidden
       transition all 0.2s
       cursor pointer
 
@@ -112,7 +115,6 @@
           margin 0 auto
           height 17rem
           box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
-          overflow  hidden
           transition all 0.2s
           cursor pointer
 
@@ -149,22 +151,30 @@
               color atariGrey(2)
               box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
               text-align left
-              transition top 0.2s
+              transition top 0.5s
 
               &:first-child
                 margin-left 0
 
               &.hovered
+              &.active
                 z-index 99 !important
+
+              &.hovered
                 top -4rem
+                transition top 0.2s
+
+              &.active
+                top -480rem
+                transition top 0.5s
 
               .asset-name
                 margin-bottom 4.5rem
-                daily()
+                checkout()
                 text-transform uppercase
 
               .description
-                daily()
+                checkout()
 
           .assets
             position absolute
@@ -188,16 +198,22 @@
 
             .asset
               position relative
+              top 0
               height 100rem
-              transition 0.2s all
+              transition all 0.2s, top 0.5s
               cursor pointer
               pointer-events none
 
               &:hover
                 flex-shrink 0.2
+                transition all 0.2s
 
               &:first-child
                 flex-shrink 0
+
+              &.active
+                top -480rem
+                transition all 0.2s, top 0.5s
 
               .sprite
                 position absolute
