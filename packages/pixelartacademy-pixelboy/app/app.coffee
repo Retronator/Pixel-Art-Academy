@@ -39,11 +39,10 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
       $appWrapper.css('transform', '')
 
   setDefaultPixelBoySize: ->
+    @setMaximumPixelBoySize()
+
     @minWidth 310
     @minHeight 230
-
-    @maxWidth null
-    @maxHeight null
 
     @resizable true
     
@@ -56,13 +55,20 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
 
     @resizable false
 
-  setMaximumPixelBoySize: ->
+  setMaximumPixelBoySize: (options = {}) ->
     display = LOI.adventure.interface.display
 
     viewport = display.viewport()
     scale = display.scale()
 
+    maxOverlayHeight = display.safeAreaHeight() * 1.5
+
     width = viewport.viewportBounds.width() / scale
-    height = viewport.viewportBounds.height() / scale
+    height = Math.min maxOverlayHeight, viewport.viewportBounds.height() / scale
+
+    unless options.fullscreen
+      # Add gaps for the back button and top border
+      width -= 100
+      height -= 20
 
     @setFixedPixelBoySize width, height

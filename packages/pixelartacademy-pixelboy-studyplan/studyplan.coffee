@@ -37,7 +37,6 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
   constructor: ->
     super
 
-    @setDefaultPixelBoySize()
     @blueprint = new ReactiveField null
     @goalSearch = new ReactiveField null
     
@@ -46,7 +45,10 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
 
     @blueprint new @constructor.Blueprint @
     @goalSearch new @constructor.GoalSearch @
-    
+
+    # We set size in an autorun so that it adapts to window resizes.
+    @autorun (computation) => @setMaximumPixelBoySize()
+
   hasGoal: (goalId) ->
     @state('goals')?[goalId]
     

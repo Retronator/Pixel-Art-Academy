@@ -40,7 +40,7 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
 
       if portfolio.isCreated() and portfolio.activeAsset()
         if clipboard.editorActive()
-          @setMaximumPixelBoySize()
+          @setMaximumPixelBoySize fullscreen: true
 
         else
           @setFixedPixelBoySize 200, 260

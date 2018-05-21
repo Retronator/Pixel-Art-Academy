@@ -54,6 +54,8 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     ,
       EJSON.equals
 
+    @fullscreen = new ReactiveField false
+
     # The actual width and height as animated by velocity.
     @animatingSize = new ReactiveField
       width: 0
@@ -172,16 +174,20 @@ class PAA.PixelBoy extends LOI.Adventure.Item
       else
         $('body').removeClass('pixelartacademy-pixelboy-resizing')
 
-    # Decide whether to center PixelBoy or fix it to the bottom.
     @autorun =>
       size = @size()
       scale = LOI.adventure.interface.display.scale()
       viewport = LOI.adventure.interface.display.viewport()
+      clientWidth = viewport.viewportBounds.width()
       clientHeight = viewport.viewportBounds.height()
 
+      # Decide whether to center PixelBoy or fix it to the bottom.
       pixelBoyHeightRequirement = (size.height + 65 * 2) * scale
 
       @positioningClass if clientHeight < pixelBoyHeightRequirement then @constructor.PositioningType.ScreenCenter else @constructor.PositioningType.ScreenBottom
+
+      # Detect if size is covering the whole viewport width.
+      @fullscreen size.width * scale >= clientWidth
 
   onDestroyed: ->
     super
@@ -244,6 +250,9 @@ class PAA.PixelBoy extends LOI.Adventure.Item
   resizableClass: ->
     'resizable' if @resizable()
 
+  fullscreenClass: ->
+    'fullscreen' if @fullscreen()
+
   backButtonCallback: ->
     # We must return the callback function.
     => @os.backButtonCallback()
@@ -305,6 +314,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     # HACK: Remember which app we're trying to open.
     appUrl = AB.Router.getParameter('parameter2')
     appPath = AB.Router.getParameter('parameter3')
+    appParameter = AB.Router.getParameter('parameter4')
 
     # Show the item if we need to.
     unless LOI.adventure.activeItemId() is @id()
@@ -321,3 +331,4 @@ class PAA.PixelBoy extends LOI.Adventure.Item
           parameter1: @url()
           parameter2: appUrl
           parameter3: appPath
+          parameter4: appParameter
