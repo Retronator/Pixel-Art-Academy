@@ -2,21 +2,16 @@
 
 .pixelartacademy-pixelboy-apps-drawing-clipboard
   position absolute
-  z-index 1
   left calc(50% - 100rem)
-  top -260rem
+  top -265rem
   width 200rem
   height 260rem
   transition all 0.4s
-  background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/clipboard.png')
 
-  &.active-asset
-    top calc(50% - 130rem)
-    transition all 0.6s 0.2s
-
-  &.editor-active
-    top -210rem
-    left -145rem
+  .panel
+    absolute-cover()
+    z-index 1
+    background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/clipboard.png')
 
   .brief
     position absolute
@@ -68,3 +63,8 @@
 
           &:hover
             background atariGrey(6)
+
+.pixelartacademy-pixelboy-apps-drawing.active-asset:not(.editor-active)
+  .pixelartacademy-pixelboy-apps-drawing-clipboard
+    top calc(50% - 130rem)
+    transition all 0.6s 0.2s

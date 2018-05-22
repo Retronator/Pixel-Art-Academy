@@ -10,14 +10,8 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
   constructor: (@drawing) ->
     super
 
-  activeAssetClass: ->
-    'active-asset' if @asset() and not @editorActive()
-
-  editorActiveClass: ->
-    'editor-active' if @editorActive()
-
   editorActive: ->
-    AB.Router.getParameter('parameter4') is 'edit'
+    @drawing.editor().active()
 
   asset: ->
     @drawing.portfolio().activeAsset()?.asset

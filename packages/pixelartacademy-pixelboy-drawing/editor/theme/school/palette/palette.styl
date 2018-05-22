@@ -1,0 +1,62 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-palette
+  position absolute
+  width 48rem
+  height 139rem
+
+  &::before
+    content ''
+    position absolute
+    z-index 1
+    top 0
+    right 0
+    width 58rem
+    height 142rem
+    background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette-shadow.png')
+    mix-blend-mode multiply
+
+  &::after
+    content ''
+    absolute-cover()
+    z-index 1
+    pointer-events none
+    background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette.png')
+
+  .colors
+    display flex
+    position absolute
+    width 46rem
+    bottom 10rem
+    left 2rem
+    flex-direction row
+    flex-wrap wrap-reverse
+
+    .ramp
+      width 15rem
+      height 15rem
+      margin 1rem 8rem 0 0
+
+      .shade
+        width 100%
+        height 100%
+        position relative
+        cursor pointer
+
+        &::after
+          content ''
+          display none
+          position absolute
+          z-index 2
+          top -2rem
+          bottom -2rem
+          left -3rem
+          right -3rem
+          border 1rem dotted lightgrey
+
+        &.active::after
+          display block
+
+        .color
+          absolute-cover()
+          z-index 1

@@ -23,7 +23,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LandsOfIllusions.Assets.Tools
 
     xCoordinates = [[@mouseState.x, 1]]
 
-    symmetryXOrigin = @options.editor().symmetryXOrigin()
+    symmetryXOrigin = @options.editor().symmetryXOrigin?()
 
     if symmetryXOrigin?
       mirroredX = -@mouseState.x + 2 * symmetryXOrigin
@@ -34,9 +34,12 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LandsOfIllusions.Assets.Tools
       pixel =
         x: xCoordinate
         y: @mouseState.y
-        normal: @options.editor().shadingSphere().currentNormal().clone()
 
-      pixel.normal.x *= xNormalFactor
+      normal = @options.editor().shadingSphere?().currentNormal().clone()
+
+      if normal
+        pixel.normal = normal
+        pixel.normal.x *= xNormalFactor
   
       # See if we're setting a palette color.
       palette = @options.editor().palette()
@@ -47,7 +50,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LandsOfIllusions.Assets.Tools
         pixel.paletteColor = {ramp, shade}
   
       # See if we're setting a named color.
-      materialIndex = @options.editor().materials().currentIndex()
+      materialIndex = @options.editor().materials?().currentIndex()
       pixel.materialIndex = materialIndex if materialIndex?
   
       # See if we're painting a normal.

@@ -1,8 +1,13 @@
-<template name="PixelArtAcademy.PixelBoy.Apps.Drawing">
-  <div class="pixelartacademy-pixelboy-apps-drawing app">
-    {{> Render spriteCanvas}}
-    {{> Render sprites}}
-    {{> Render navigator}}
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Theme.School">
+  <div class="pixelartacademy-pixelboy-apps-drawing-editor-theme-school">
+    {{> Render toolbox}}
+    {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Theme.School.ColorFill}}
     {{> Render palette}}
+    {{> Render navigator}}
+    <div class="sprite" {{style spriteStyle}}>
+      {{> Render pixelCanvas}}
+    </div>
+    <div class="test-paper table-item"></div>
+    <div class="background"></div>
   </div>
 </template>

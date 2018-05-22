@@ -10,7 +10,7 @@ class LOI.Assets.Components.Palette extends AM.Component
     @paletteData = new ComputedField =>
       paletteId = @options.paletteId()
 
-      LOI.Assets.Palette.forId.subscribe @, paletteId if paletteId
+      LOI.Assets.Palette.forId.subscribe paletteId if paletteId
 
       LOI.Assets.Palette.documents.findOne paletteId
     
@@ -53,7 +53,7 @@ class LOI.Assets.Components.Palette extends AM.Component
     @currentShade shade
 
     # Deselect the material.
-    if materials = @options.materials()
+    if materials = @options.materials?()
       materials.setIndex null
 
   activeColorClass: ->

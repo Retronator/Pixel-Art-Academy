@@ -27,6 +27,8 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @canvasBounds = new AE.Rectangle()
     @context = new ReactiveField null
 
+    @forceResizeDependency = new Tracker.Dependency
+
   onCreated: ->
     super
 
@@ -35,6 +37,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     # Initialize components.
     @camera new @constructor.Camera @,
       initialScale: @options.initialCameraScale
+      initialOrigin: @options.initialCameraOrigin
       enableInput: @options.cameraInput
 
     if @options.grid
@@ -53,6 +56,9 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       
       # Depend on window size.
       AM.Window.clientBounds()
+
+      # Allow resizes to be forced when we manually change canvas size.
+      @forceResizeDependency.depend()
 
       # Resize the back buffer to canvas element size, if it actually changed. If the pixel
       # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
@@ -105,6 +111,9 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     super
 
     $(window).off '.landsofillusions-assets-components-pixelcanvas'
+
+  forceResize: ->
+    @forceResizeDependency.changed()
 
   # Events
 

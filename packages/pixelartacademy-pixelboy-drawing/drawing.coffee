@@ -26,6 +26,7 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
 
     @portfolio = new ReactiveField null
     @clipboard = new ReactiveField null
+    @editor = new ReactiveField null
 
   onCreated: ->
     super
@@ -33,13 +34,14 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
     # Initialize components.
     @portfolio new @constructor.Portfolio @
     @clipboard new @constructor.Clipboard @
+    @editor new @constructor.Editor @
 
     @autorun (computation) =>
       portfolio = @portfolio()
-      clipboard = @clipboard()
+      editor = @editor()
 
       if portfolio.isCreated() and portfolio.activeAsset()
-        if clipboard.editorActive()
+        if editor.active()
           @setMaximumPixelBoySize fullscreen: true
 
         else
@@ -47,3 +49,14 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
 
       else
         @setFixedPixelBoySize 332, 241
+
+  activeAssetClass: ->
+    portfolio = @portfolio()
+
+    'active-asset' if portfolio.isCreated() and portfolio.activeAsset()
+
+  editorActiveClass: ->
+    'editor-active' if @editor().active()
+    
+  themeClass: ->
+    @editor()?.theme()?.constructor.styleClass()

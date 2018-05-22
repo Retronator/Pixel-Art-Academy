@@ -158,9 +158,6 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
       spriteId: => spriteId
       loadPalette: true
 
-  activeAssetClass: ->
-    'active-asset' if @activeAsset()
-
   coverStyle: ->
     top = 56
 

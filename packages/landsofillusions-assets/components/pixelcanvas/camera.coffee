@@ -17,8 +17,8 @@ class LOI.Assets.Components.PixelCanvas.Camera
       @scale() * displayScale
 
     @origin = new ReactiveField
-      x: @options.originX or 0
-      y: @options.originY or 0
+      x: @options.initialOrigin?.x or 0
+      y: @options.initialOrigin?.y or 0
     , EJSON.equals
 
     # Calculate viewport in canvas coordinates.

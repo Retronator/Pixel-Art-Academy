@@ -1,6 +1,7 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Drawing">
-  <div class="pixelartacademy-pixelboy-apps-drawing app">
+  <div class="pixelartacademy-pixelboy-apps-drawing app {{activeAssetClass}} {{editorActiveClass}} {{themeClass}}">
     {{> Render portfolio}}
     {{> Render clipboard}}
+    {{> Render editor}}
   </div>
 </template>

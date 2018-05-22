@@ -10,9 +10,6 @@ class PAA.PixelBoy.Apps.Journal.JournalView.JournalDesign.Traditional extends PA
   @register @id()
   template: -> @constructor.id()
 
-  constructor: (@journal) ->
-    super
-
   size: ->
     width: 302
     height: 223

@@ -20,5 +20,12 @@ Package.onUse(function(api) {
   api.addComponent('drawing');
 
   api.addComponent('portfolio..');
+  
   api.addComponent('clipboard..');
+
+  api.addComponent('editor..');
+  api.addFile('editor/theme..');
+  api.addComponent('editor/theme/school..');
+  api.addComponent('editor/theme/school/colorfill..');
+  api.addComponent('editor/theme/school/palette..');
 });
