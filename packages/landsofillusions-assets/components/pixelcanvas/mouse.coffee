@@ -34,6 +34,13 @@ class LOI.Assets.Components.PixelCanvas.Mouse
           @pixelCanvas.camera().origin()
           @updateCoordinates()
 
+      # Remove coordinates when mouse leaves the canvas.
+      $pixelCanvas.mouseleave (event) =>
+        @windowCoordinate null
+        @displayCoordinate null
+        @canvasCoordinate null
+        @pixelCoordinate null
+
   updateCoordinates: ->
     origin = @$canvas.offset()
     displayScale = @pixelCanvas.display.scale()

@@ -5,13 +5,13 @@ LOI = LandsOfIllusions
 class LOI.Assets.Components.Navigator extends AM.Component
   @register "LandsOfIllusions.Assets.Components.Navigator"
 
-  @zoomLevels: [12.5, 25, 50, 66.6, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]
-
   constructor: (@options) ->
     super
 
+    @zoomLevels = @options.zoomLevels or [12.5, 25, 50, 66.6, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]
+
     @zoomPercentage = new ComputedField =>
-      @options.camera()?.scale() * 100
+      @options.camera()?.targetScale() * 100
 
   onRendered: ->
     super
@@ -34,7 +34,7 @@ class LOI.Assets.Components.Navigator extends AM.Component
   zoomIn: ->
     percentage = @zoomPercentage()
 
-    for zoomLevel in @constructor.zoomLevels
+    for zoomLevel in @zoomLevels
       if zoomLevel > percentage
         percentage = zoomLevel
         break
@@ -44,7 +44,7 @@ class LOI.Assets.Components.Navigator extends AM.Component
   zoomOut: ->
     percentage = @zoomPercentage()
 
-    for zoomLevel in @constructor.zoomLevels by -1
+    for zoomLevel in @zoomLevels by -1
       if zoomLevel < percentage
         percentage = zoomLevel
         break
@@ -52,7 +52,7 @@ class LOI.Assets.Components.Navigator extends AM.Component
     @setZoom percentage
 
   setZoom: (percentage) ->
-    @options.camera()?.scale percentage / 100
+    @options.camera()?.setScale percentage / 100
 
   # Helpers
 

@@ -2,7 +2,6 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Components.PixelCanvas.Cursor
   constructor: (@pixelCanvas) ->
-    
     @pixelPerfectCoordinate = new ComputedField =>
       pixelCoordinate = @pixelCanvas.mouse()?.pixelCoordinate()
       return unless pixelCoordinate

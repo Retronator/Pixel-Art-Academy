@@ -38,6 +38,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
         assets = for asset, assetIndex in project.assets()
           asset: asset
           index: assetIndex
+          scale: @_assetScale asset
 
         index: index
         name: project.fullName()
@@ -134,28 +135,27 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   assetStyle: ->
     assetData = @currentData()
     project = @parentDataWith 'assets'
-    zoom = @_assetZoom assetData.asset
 
     zIndex = project.assets.length - assetData.index
 
     zIndex: zIndex
-    width: "#{assetData.asset.width() * zoom + 12}rem"
+    width: "#{assetData.asset.width() *  assetData.scale + 12}rem"
 
   spriteStyle: ->
     assetData = @currentData()
-    zoom = @_assetZoom assetData.asset
+    scale = assetData.scale
 
-    width: "#{assetData.asset.width() * zoom}rem"
-    height: "#{assetData.asset.height() * zoom}rem"
+    width: "#{assetData.asset.width() * scale}rem"
+    height: "#{assetData.asset.height() * scale}rem"
 
-  _assetZoom: (asset) ->
-    # Zoom the sprite as much as possible while remaining under 88px.
-    zoom = 1
+  _assetScale: (asset) ->
+    # Scale the sprite as much as possible while remaining under 88px.
+    scale = 1
     maxSize = Math.max asset.width(), asset.height()
 
-    zoom++ while zoom < 7 and (zoom + 1) * maxSize < 88
+    scale++ while scale < 7 and (scale + 1) * maxSize < 88
 
-    zoom
+    scale
 
   spriteImage: ->
     assetData = @currentData()

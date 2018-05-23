@@ -40,17 +40,20 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       spriteData: @editor.spriteData
 
     @pixelCanvas new LOI.Assets.Components.PixelCanvas
-      initialCameraScale: 8
+      initialCameraScale: 0
       activeTool: @activeTool
       cameraInput: false
       grid: => @drawingActive()
       cursor: => @drawingActive()
+      cameraScaleDelay: 410
+      resizeOnScale: true
       drawComponents: => [
         @sprite()
       ]
 
     @navigator new LOI.Assets.Components.Navigator
       camera: @pixelCanvas().camera
+      zoomLevels: [100, 200, 300, 400, 600, 800, 1200, 1600]
 
     @palette new @constructor.Palette
       paletteId: @paletteId
@@ -86,14 +89,33 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
         x: spriteData.bounds.width / 2
         y: spriteData.bounds.height / 2
 
-    # Trigger sprite style change when asset changes.
+    # Allow triggering sprite style change.
     @spriteStyleChangeDependency = new Tracker.Dependency
 
+    # Do updates when asset changes.
     @autorun (computation) =>
       @editor.drawing.portfolio().displayedAsset()
 
-      # Give the asset time to update before matching sprite to it.
+      # Trigger sprite style change.
       Meteor.setTimeout => @spriteStyleChangeDependency.changed()
+
+    # Update sprite scale.
+    @autorun (computation) =>
+      return unless camera = @pixelCanvas().camera()
+      return unless asset = @editor.drawing.portfolio().displayedAsset()
+
+      # Update transition delay.
+      editorActive = @editor.active()
+      camera.options.scaleDelay = if editorActive then 410 else 810
+
+      # Dictate sprite scale when asset is on clipboard and when setting for the first time.
+      unless editorActive and asset is @_previousDisplayedAsset
+        # Clipboard is about 120% bigger than portfolio.
+        scale = Math.floor asset.scale * 1.2
+
+        camera.setScale scale
+
+      @_previousDisplayedAsset = asset
 
   onRendered: ->
     super
@@ -121,7 +143,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     return unless @editor.drawing.clipboard().isRendered()
 
     spriteData = @editor.spriteData()
-    scale = @pixelCanvas()?.camera()?.scale() or 0
+    scale = @pixelCanvas()?.camera()?.targetScale() or 0
 
     width = spriteData?.bounds.width * scale or 0
     height = spriteData?.bounds.height * scale or 0
@@ -129,10 +151,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     # Add one pixel to the size for outer grid line.
     displayScale = LOI.adventure.interface.display.scale()
     pixelInRem = 1 / displayScale
-
-    # After sprite has updated, also resize the pixel canvas.
-    Meteor.setTimeout =>
-      @pixelCanvas().forceResize()
 
     if @editor.active()
       # We need to be in the middle of the table.

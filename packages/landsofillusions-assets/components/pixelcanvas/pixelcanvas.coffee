@@ -27,8 +27,6 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @canvasBounds = new AE.Rectangle()
     @context = new ReactiveField null
 
-    @forceResizeDependency = new Tracker.Dependency
-
   onCreated: ->
     super
 
@@ -39,6 +37,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       initialScale: @options.initialCameraScale
       initialOrigin: @options.initialCameraOrigin
       enableInput: @options.cameraInput
+      scaleDelay: @options.cameraScaleDelay
 
     if @options.grid
       @grid new @constructor.Grid @
@@ -49,7 +48,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     if @options.cursor
       @cursor new @constructor.Cursor @
 
-    # Resize the canvas when browser window changes.
+    # Resize the canvas when browser window and zoom changes.
     @autorun =>
       canvas = @canvas()
       return unless canvas
@@ -57,8 +56,8 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       # Depend on window size.
       AM.Window.clientBounds()
 
-      # Allow resizes to be forced when we manually change canvas size.
-      @forceResizeDependency.depend()
+      # Depend on camera scale if enabled.
+      @camera().scale() if @options.resizeOnScale
 
       # Resize the back buffer to canvas element size, if it actually changed. If the pixel
       # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.

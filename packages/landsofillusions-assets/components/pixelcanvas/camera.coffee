@@ -10,6 +10,10 @@ class LOI.Assets.Components.PixelCanvas.Camera
     # Scale is used to go from canvas pixels to display pixels.
     @scale = new ReactiveField (@options.initialScale or 1), EJSON.equals
 
+    # We support adding delay to change in scale. In that case target scale
+    # changes immediately and scale only after the delay has passed.
+    @targetScale = new ReactiveField @scale()
+
     # Effective scale includes the amount we're scaling our display pixels.
     # It is used to go from canvas pixels to window pixels.
     @effectiveScale = new ComputedField =>
@@ -65,6 +69,26 @@ class LOI.Assets.Components.PixelCanvas.Camera
           @origin
             x: oldOrigin.x + canvasDelta.x
             y: oldOrigin.y + canvasDelta.y
+
+  setScale: (scale) ->
+    # Notify to which scale we're going.
+    @targetScale scale
+
+    # Cancel any previous scale update, so the new scale will go into effect.
+    Meteor.clearTimeout @_scaleUpdateTimeout if @_scaleUpdateTimeout
+
+    if @options.scaleDelay
+      @_scaleUpdateTimeout = Meteor.setTimeout =>
+        # Trigger main scale update.
+        @scale scale
+
+        # Mark the timeout as handled.
+        @_scaleUpdateTimeout = null
+      ,
+        @options.scaleDelay
+
+    else
+      @scale scale
 
   applyTransformToCanvas: ->
     context = @pixelCanvas.context()
