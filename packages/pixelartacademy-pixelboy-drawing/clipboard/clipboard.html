@@ -1,8 +1,8 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard">
   <div class="pixelartacademy-pixelboy-apps-drawing-clipboard {{activeAssetClass}} {{editorActiveClass}}">
-    <div class="panel">
+    <div class="brief">
       {{#with asset}}
-        <div class="brief">
+        <div class="asset">
           <div class="asset-name">{{> t10e displayNameTranslation}}</div>
           <div class="description">{{> t10e descriptionTranslation}}</div>
           <ul class="properties">
@@ -26,6 +26,7 @@
           </ul>
         </div>
       {{/with}}
+      <div class="sprite-placeholder"></div>
     </div>
   </div>
 </template>

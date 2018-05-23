@@ -83,9 +83,16 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
 
       camera.applyTransformToCanvas()
 
-      parentDrawComponents = @options.drawComponents?() or []
+      components = []
 
-      for component in [parentDrawComponents..., @grid(), @cursor()]
+      if drawComponents = @options.drawComponents?()
+        components = components.concat drawComponents
+
+      for componentName in ['grid', 'cursor']
+        if @options[componentName] is true or _.isFunction(@options[componentName]) and @options[componentName]()
+          components.push @[componentName]()
+
+      for component in components
         continue unless component
 
         context.save()

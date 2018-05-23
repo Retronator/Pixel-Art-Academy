@@ -14,7 +14,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
     @drawing.editor().active()
 
   asset: ->
-    @drawing.portfolio().activeAsset()?.asset
+    @drawing.portfolio().displayedAsset()?.asset
 
   events: ->
     super.concat

@@ -72,6 +72,13 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
               @activeGroup group
               return assetData
 
+    # Displayed asset retains its value until another asset gets activated
+    @displayedAsset = new ReactiveField null
+
+    @autorun (computation) =>
+      return unless activeAsset = @activeAsset()
+      @displayedAsset activeAsset
+
     # Subscribe to character's projects.
     PAA.Practice.Project.forCharacterId.subscribe @, LOI.characterId()
 

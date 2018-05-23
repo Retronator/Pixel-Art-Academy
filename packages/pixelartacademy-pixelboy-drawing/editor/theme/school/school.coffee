@@ -30,6 +30,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     @activeTool = new ReactiveField null
 
+    @drawingActive = new ReactiveField false
+
   onCreated: ->
     super
 
@@ -41,9 +43,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       initialCameraScale: 8
       activeTool: @activeTool
       cameraInput: false
-      grid: true
-      mouse: true
-      cursor: true
+      grid: => @drawingActive()
+      cursor: => @drawingActive()
       drawComponents: => [
         @sprite()
       ]
@@ -85,6 +86,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
         x: spriteData.bounds.width / 2
         y: spriteData.bounds.height / 2
 
+    # Trigger sprite style change when asset changes.
+    @spriteStyleChangeDependency = new Tracker.Dependency
+
+    @autorun (computation) =>
+      @editor.drawing.portfolio().displayedAsset()
+
+      # Give the asset time to update before matching sprite to it.
+      Meteor.setTimeout => @spriteStyleChangeDependency.changed()
+
   onRendered: ->
     super
 
@@ -92,21 +102,29 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       if @editor.active()
         # Add the drawing active class with delay so that the initial transitions still happen slowly.
         Meteor.setTimeout =>
-          @$('.pixelartacademy-pixelboy-apps-drawing-editor-theme-school').addClass('drawing-active')
+          @drawingActive true
         ,
           1000
 
       else
         # Immediately remove the drawing active class so that the slow transitions kick in.
-        @$('.pixelartacademy-pixelboy-apps-drawing-editor-theme-school').removeClass('drawing-active')
+        @drawingActive false
+        
+  drawingActiveClass: ->
+    'drawing-active' if @drawingActive()
 
   spriteStyle: ->
-    return unless spriteData = @editor.spriteData()
+    # Allow to be updated externally.
+    @spriteStyleChangeDependency.depend()
+    
+    # Wait for clipboard to be rendered.
+    return unless @editor.drawing.clipboard().isRendered()
 
-    scale = @pixelCanvas().camera().scale()
+    spriteData = @editor.spriteData()
+    scale = @pixelCanvas()?.camera()?.scale() or 0
 
-    width = spriteData.bounds.width * scale
-    height = spriteData.bounds.height * scale
+    width = spriteData?.bounds.width * scale or 0
+    height = spriteData?.bounds.height * scale or 0
 
     # Add one pixel to the size for outer grid line.
     displayScale = LOI.adventure.interface.display.scale()
@@ -116,8 +134,38 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     Meteor.setTimeout =>
       @pixelCanvas().forceResize()
 
+    if @editor.active()
+      # We need to be in the middle of the table.
+      top = "calc(50% - #{width / 2 + scale}rem)"
+      left = "calc(50% - #{height / 2 + scale}rem)"
+
+    else
+      $spritePlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .sprite-placeholder')
+      spriteOffset = $spritePlaceholder.offset()
+
+      $clipboard = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')
+      clipboardOffset = $clipboard.offset()
+
+      # Make these measurements relative to clipboard center.
+      clipboardOffset.left += $clipboard.width() / 2
+      left = spriteOffset.left - clipboardOffset.left
+      left = "calc(50% + #{left}px)"
+
+      # Top is relative to center only when we have an active asset.
+      activeAsset = @editor.drawing.portfolio().activeAsset()
+
+      clipboardOffset.top += $clipboard.height() / 2 if activeAsset
+      top = spriteOffset.top - clipboardOffset.top
+
+      if activeAsset
+        top = "calc(50% + #{top}px)"
+
+      else
+        # Clipboard is hidden up, so move the sprite up and relative to top.
+        top -= 265 * displayScale
+
     width: "#{width + pixelInRem}rem"
     height: "#{height + pixelInRem}rem"
-    top: "calc(50% - #{width / 2 + scale}rem)"
-    left: "calc(50% - #{height / 2 + scale}rem)"
+    top: top
+    left: left
     borderWidth: "#{scale}rem"

@@ -16,8 +16,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends AM.Component
 
     @theme = new ReactiveField null
 
-    @spriteId = new ComputedField =>
-      AB.Router.getParameter 'parameter3'
+    @spriteId = new ReactiveField null
 
     @spriteData = new ComputedField =>
       spriteId = @spriteId()
@@ -26,13 +25,18 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends AM.Component
   destroy: ->
     super
 
-    @spriteId.stop()
     @spriteData.stop()
 
   onCreated: ->
     super
 
     @theme new @constructor.Theme.School @
+
+    # Only update spriteId when it has a value, to prevent from destroying the sprite during transitions.
+    @autorun (computation) =>
+      return unless spriteId = AB.Router.getParameter 'parameter3'
+
+      @spriteId spriteId
 
   active: ->
     AB.Router.getParameter('parameter4') is 'edit'

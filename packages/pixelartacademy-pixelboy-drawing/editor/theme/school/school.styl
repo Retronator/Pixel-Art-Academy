@@ -7,6 +7,8 @@
         absolute-cover()
         z-index 0
         background image('/pixelartacademy/pixelboy/apps/drawing/editor/school/woodgrain.png') center center / 250rem 164rem
+        opacity 0
+        transition all 0.2s 1s
 
       .table-item
       .landsofillusions-assets-components-toolbox .tools .tool
@@ -154,6 +156,7 @@
         box-sizing content-box
         border solid atariGrey(6)
         box-shadow -1rem 1rem 0 transparentify(atariOrange(4), atariOrange(5))
+        transition top 0.4s, left 0.4s
 
         .landsofillusions-assets-components-pixelcanvas
           canvas
@@ -163,6 +166,12 @@
         .landsofillusions-assets-components-toolbox .tools .tool
           transition-duration 0.2s
 
+  &.active-asset:not(.editor-active)
+    .pixelartacademy-pixelboy-apps-drawing-editor
+      .pixelartacademy-pixelboy-apps-drawing-editor-theme-school
+        .sprite
+          transition top 0.6s 0.2s, left 0.6s 0.2s
+
   &.editor-active
     .pixelartacademy-pixelboy-apps-drawing-clipboard
       top -210rem
@@ -170,6 +179,10 @@
 
     .pixelartacademy-pixelboy-apps-drawing-editor
       .pixelartacademy-pixelboy-apps-drawing-editor-theme-school
+        .background
+          opacity 1
+          transition all 0s
+
         .test-paper
           left -5rem
 
@@ -210,7 +223,7 @@
             transition-delay 0.5s
 
   .pixelartacademy-pixelboy-apps-drawing-clipboard
-    &::before
+    &::after
       content ''
       position absolute
       z-index 1

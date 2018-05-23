@@ -8,7 +8,8 @@
   height 260rem
   transition all 0.4s
 
-  .panel
+  &::before
+    content ''
     absolute-cover()
     z-index 1
     background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/clipboard.png')
@@ -23,46 +24,64 @@
     color atariGrey(1)
     daily()
 
-    .asset-name
-      text-transform uppercase
+    .asset
+      position relative
+      z-index 2
 
-    .description
-      margin 8rem 0
+      .asset-name
+        text-transform uppercase
 
-    .properties
-      list-style none
-      padding 0
+      .description
+        margin 8rem 0
 
-      .property
-        margin-bottom 4rem
+      .properties
+        list-style none
+        padding 0
 
-        .property-name
-          text-transform uppercase
+        .property
+          margin-bottom 4rem
 
-    .actions
-      list-style none
-      width 100%
-      padding 0
-      display table
-      border-collapse collapse
+          .property-name
+            text-transform uppercase
 
-      .action
-        display table-cell
-        position relative
-        border 1rem solid atariGrey(4)
-        width 33.3%
-        height 10rem
+      .actions
+        list-style none
+        width 100%
+        padding 0
+        display table
+        border-collapse collapse
 
-        .button
-          absolute-cover-size()
-          border none
-          background none
-          checkout()
-          text-transform uppercase
-          color atariGrey(2)
+        .action
+          display table-cell
+          position relative
+          border 1rem solid atariGrey(4)
+          width 33.3%
+          height 10rem
 
-          &:hover
-            background atariGrey(6)
+          .button
+            absolute-cover-size()
+            border none
+            background none
+            checkout()
+            text-transform uppercase
+            color atariGrey(2)
+
+            &:hover
+              background atariGrey(6)
+
+    .sprite-placeholder
+      position relative
+      left -10rem
+
+      &::after
+        content ''
+        position absolute
+        z-index 3
+        top 15rem
+        left -6rem
+        width 23rem
+        height 9rem
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/paperclip.png')
 
 .pixelartacademy-pixelboy-apps-drawing.active-asset:not(.editor-active)
   .pixelartacademy-pixelboy-apps-drawing-clipboard
