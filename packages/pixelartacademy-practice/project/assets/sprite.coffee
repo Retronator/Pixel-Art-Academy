@@ -24,7 +24,7 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     super
 
     @spriteId = new ComputedField =>
-      return unless assets = @project.data()?.assets
+      return unless assets = @project.assetsData()
       return unless asset = _.find assets, (asset) => asset.id is @id()
 
       asset.sprite._id

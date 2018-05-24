@@ -20,7 +20,8 @@ Package.onUse(function(api) {
   api.addComponent('drawing');
 
   api.addComponent('portfolio..');
-  
+  api.addFile('portfolio/portfolio-initialize');
+
   api.addComponent('clipboard..');
 
   api.addComponent('editor..');

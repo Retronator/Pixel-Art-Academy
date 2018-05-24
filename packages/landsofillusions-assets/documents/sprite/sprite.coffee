@@ -49,6 +49,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @addPixel: @method 'addPixel'
   @removePixel: @method 'removePixel'
   @colorFill: @method 'colorFill'
+  @replacePixels: @method 'replacePixels'
 
   constructor: ->
     super

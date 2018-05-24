@@ -27,6 +27,10 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @canvasBounds = new AE.Rectangle()
     @context = new ReactiveField null
 
+    # Allow forcing redraws and resizes.
+    @forceResizeDependency = new Tracker.Dependency
+    @forceRedrawDependency = new Tracker.Dependency
+
   onCreated: ->
     super
 
@@ -50,6 +54,8 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
 
     # Resize the canvas when browser window and zoom changes.
     @autorun =>
+      @forceResizeDependency.depend()
+
       canvas = @canvas()
       return unless canvas
       
@@ -73,6 +79,8 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
 
     # Redraw canvas routine.
     @autorun =>
+      @forceRedrawDependency.depend()
+
       camera = @camera()
       context = @context()
       return unless context
@@ -122,6 +130,9 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
 
   forceResize: ->
     @forceResizeDependency.changed()
+
+  forceRedraw: ->
+    @forceRedrawDependency.changed()
 
   # Events
 

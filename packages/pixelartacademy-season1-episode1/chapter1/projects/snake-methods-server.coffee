@@ -20,8 +20,7 @@ Snake.start.method (characterId) ->
   pico8Palette = LOI.Assets.Palette.documents.findOne name: LOI.Assets.Palette.SystemPaletteNames.pico8
 
   # Create two pre-made sprites.
-  createCommonSpriteData = (name) ->
-    name: name
+  createCommonSpriteData = ->
     palette:
       _id: pico8Palette._id
     bounds:

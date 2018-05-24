@@ -98,6 +98,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
       # Trigger sprite style change.
       Meteor.setTimeout => @spriteStyleChangeDependency.changed()
+      
+      # After the scale delay, also trigger sprite resize.
+      pixelCanvas = @pixelCanvas()
+      return unless camera = pixelCanvas.camera()
+
+      Meteor.setTimeout =>
+        pixelCanvas.forceResize()
+      ,
+        camera.options.scaleDelay
 
     # Update sprite scale.
     @autorun (computation) =>

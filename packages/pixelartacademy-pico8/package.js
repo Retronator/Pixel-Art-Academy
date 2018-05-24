@@ -23,11 +23,9 @@ Package.onUse(function(api) {
 
   api.export('Pico');
 
-  api.addServerFile('palette');
-
-  api.addFiles('picoloader.js', 'client');
+  api.addFiles('runtime/picoloader.js', 'client');
   api.addServerFile('server');
 
-  //api.addAssets('pico8.js', 'client');
-  api.addAssets('pico8.min.js', 'client');
+  //api.addAssets('runtime/pico8.js', 'client');
+  api.addAssets('runtime/pico8.min.js', 'client');
 });

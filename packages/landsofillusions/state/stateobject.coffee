@@ -26,7 +26,7 @@ class LOI.StateObject
         # is that this returns an editable, actual game state. This is for example used from script nodes to write to
         # location state.
         return unless LOI.adventureInitialized()
-        return _.nestedProperty LOI.adventure.gameState(), options.address.string()
+        return _.nestedProperty LOI.adventure[options.stateType](), options.address.string()
 
       field = fieldGetter fieldName
 

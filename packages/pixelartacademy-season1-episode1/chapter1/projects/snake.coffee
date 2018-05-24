@@ -9,6 +9,29 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
     
   @fullName: -> "Snake game"
 
+  @initialize()
+
+  # Methods
+  
+  @start: new AB.Method name: "#{@id()}.start"
+  @end: new AB.Method name: "#{@id()}.end"
+
+  constructor: ->
+    super
+
+    @assets = new ComputedField =>
+      [
+        new @constructor.Body @
+        new @constructor.Food @
+      ]
+    ,
+      true
+
+  destroy: ->
+    @assets.stop()
+
+  # Assets
+
   class @Body extends PAA.Practice.Project.Asset.Sprite
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Projects.Snake.Body'
       
@@ -36,24 +59,3 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
 
     @initialize()
-
-  @initialize()
-  
-  # Methods
-  
-  @start: new AB.Method name: "#{@id()}.start"
-  @end: new AB.Method name: "#{@id()}.end"
-
-  constructor: ->
-    super
-
-    @assets = new ComputedField =>
-      [
-        new @constructor.Body @
-        new @constructor.Food @
-      ]
-    ,
-      true
-
-  destroy: ->
-    @assets.stop()

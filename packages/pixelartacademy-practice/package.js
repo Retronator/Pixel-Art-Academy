@@ -78,4 +78,12 @@ Package.onUse(function(api) {
 
   api.addFile('project/assets/sprite');
 
+  // Challenges
+
+  api.addFile('challenges..');
+  api.addFile('challenges/drawing..');
+  api.addFile('challenges/drawing/assets/tutorialsprite..');
+  api.addServerFile('challenges/drawing/assets/tutorialsprite/server');
+  api.addFile('challenges/drawing/assets/tutorialsprite/methods');
+  api.addServerFile('challenges/drawing/assets/tutorialsprite/methods-server');
 });

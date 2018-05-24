@@ -5,88 +5,12 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
-  @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio'
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio'
   
   @Sections:
+    Challenges: 'Challenges'
     Projects: 'Projects'
     Artworks: 'Artworks'
-
-  constructor: (@drawing) ->
-    super
-
-    @sectionHeight = 21
-    @initialGroupHeight = 17
-    @inactiveGroupHeight = 3
-    @activeGroupHeight = 150
-
-  onCreated: ->
-    super
-
-    @workbenchLocation = new PAA.Practice.Project.Workbench
-
-    @currentProjects = new ComputedField =>
-      new LOI.Adventure.Situation
-        location: @workbenchLocation
-        timelineId: LOI.adventure.currentTimelineId()
-
-    @sections = new ComputedField =>
-      # Clear opened items when recomputing.
-      @activeSection? null
-      @activeGroup? null
-      @hoveredAsset? null
-
-      # Get projects from the workbench. Note: we expect things to be instances, so
-      # they have to be added as instances in the workbench scene, and not as classes.
-      projects = @currentProjects().things()
-
-      projectGroups = for project, index in projects
-        assets = for asset, assetIndex in project.assets()
-          asset: asset
-          index: assetIndex
-          scale: => @_assetScale asset
-
-        index: index
-        name: project.fullName()
-        project: project
-        assets: assets
-
-      projectsSection =
-        index: 0
-        nameKey: @constructor.Sections.Projects
-        groups: projectGroups
-
-      artworksSection =
-        index: 1
-        nameKey: @constructor.Sections.Artworks
-        groups: []
-
-      [projectsSection, artworksSection]
-
-    @activeSection = new ReactiveField null, (a, b) => a is b
-    @activeGroup = new ReactiveField null, (a, b) => a is b
-    @hoveredAsset = new ReactiveField null, (a, b) => a is b
-
-    @activeAsset = new ComputedField =>
-      return unless spriteId = AB.Router.getParameter 'parameter3'
-
-      # Find the asset that uses this sprite.
-      for section in @sections()
-        for group in section.groups
-          for assetData in group.assets
-            if assetData.asset.spriteId() is spriteId
-              @activeSection section
-              @activeGroup group
-              return assetData
-
-    # Displayed asset retains its value until another asset gets activated
-    @displayedAsset = new ReactiveField null
-
-    @autorun (computation) =>
-      return unless activeAsset = @activeAsset()
-      @displayedAsset activeAsset
-
-    # Subscribe to character's projects.
-    PAA.Practice.Project.forCharacterId.subscribe @, LOI.characterId()
 
   sectionActiveClass: ->
     section = @currentData()
@@ -100,6 +24,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
   sectionStyle: ->
     section = @currentData()
+    groups = section.groups()
     active = @activeSection() is section
 
     width = 292 - 4 * (1 - section.index)
@@ -109,10 +34,10 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     if active
       if @activeGroup()
-        height = @sectionHeight + (section.groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        height = @sectionHeight + (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
 
       else
-        height = @sectionHeight + section.groups.length * @initialGroupHeight
+        height = @sectionHeight + groups.length * @initialGroupHeight
 
       style.height = "#{height}rem"
 
@@ -122,7 +47,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     group = @currentData()
     section = @parentDataWith 'groups'
 
-    width: "#{270 - 3 * (section.groups.length - group.index - 1)}rem"
+    width: "#{270 - 3 * (section.groups().length - group.index - 1)}rem"
 
   groupActiveClass: ->
     group = @currentData()
@@ -131,17 +56,17 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
   briefStyle: ->
     asset = @currentData()
-    project = @parentDataWith 'assets'
+    group = @parentDataWith 'assets'
 
-    zIndex = project.assets.length - asset.index
+    zIndex = group.assets().length - asset.index
 
     zIndex: zIndex
 
   assetStyle: ->
     assetData = @currentData()
-    project = @parentDataWith 'assets'
+    group = @parentDataWith 'assets'
 
-    zIndex = project.assets.length - assetData.index
+    zIndex = group.assets().length - assetData.index
 
     zIndex: zIndex
     width: "#{assetData.asset.width() *  assetData.scale() + 12}rem"
@@ -171,14 +96,18 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
       loadPalette: true
 
   coverStyle: ->
-    top = 56
+    sections = @sections()
+
+    top = 14 + sections.length * @sectionHeight
 
     if section = @activeSection()
+      groups = section.groups()
+
       if @activeGroup()
-        top += (section.groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
 
       else
-        top += section.groups.length * @initialGroupHeight
+        top += groups.length * @initialGroupHeight
 
     top: "#{top}rem"
 

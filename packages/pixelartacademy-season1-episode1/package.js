@@ -57,6 +57,7 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/scenes/inbox');
   api.addThing('chapter1/scenes/sanfranciscoconversation');
+  api.addFile('chapter1/scenes/drawingtutorial');
 
   api.addFile('chapter1/goals..');
   api.addFile('chapter1/goals/drawingsoftware');
@@ -80,6 +81,10 @@ Package.onUse(function(api) {
   api.addFile('chapter1/projects..');
   api.addFile('chapter1/projects/snake');
   api.addServerFile('chapter1/projects/snake-methods-server');
+
+  api.addFile('chapter1/challenges..');
+  api.addFile('chapter1/challenges/drawing..');
+  api.addFile('chapter1/challenges/drawing/tutorial..');
 
   // Intro
   api.addFile('chapter1/sections/intro..');
