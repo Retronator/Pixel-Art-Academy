@@ -29,6 +29,7 @@ Snake.start.method (characterId) ->
       right: 7
       top: 0
       bottom: 7
+      fixed: true
     authors: [
       _id: characterId
     ]

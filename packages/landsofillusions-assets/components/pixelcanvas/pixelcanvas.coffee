@@ -110,13 +110,15 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @context canvas.getContext '2d'
 
     if @options.activeTool
-      $(window).on 'keydown.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyDown? event
-      $(window).on 'keyup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyUp? event
+      $(document).on 'keydown.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyDown? event
+      $(document).on 'keyup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyUp? event
+      $(document).on 'mouseup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onMouseUp? event
+      $(document).on 'mouseleave.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onMouseLeaveWindow? event
 
   onDestroyed: ->
     super
 
-    $(window).off '.landsofillusions-assets-components-pixelcanvas'
+    $(document).off '.landsofillusions-assets-components-pixelcanvas'
 
   forceResize: ->
     @forceResizeDependency.changed()
@@ -130,16 +132,24 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     if @options.activeTool
       events = events.concat
         'mousedown .canvas': @onMouseDownCanvas
-        'mouseup .canvas': @onMouseUpCanvas
         'mousemove .canvas': @onMouseMoveCanvas
+        'mouseenter .canvas': @onMouseEnterCanvas
+        'mouseleave .canvas': @onMouseLeaveCanvas
+        'dragstart .canvas': @onDragStartCanvas
 
     events
 
   onMouseDownCanvas: (event) ->
     @options.activeTool()?.onMouseDown? event
 
-  onMouseUpCanvas: (event) ->
-    @options.activeTool()?.onMouseUp? event
-
   onMouseMoveCanvas: (event) ->
     @options.activeTool()?.onMouseMove? event
+
+  onMouseEnterCanvas: (event) ->
+    @options.activeTool()?.onMouseEnter? event
+
+  onMouseLeaveCanvas: (event) ->
+    @options.activeTool()?.onMouseLeave? event
+
+  onDragStartCanvas: (event) ->
+    @options.activeTool()?.onDragStart? event

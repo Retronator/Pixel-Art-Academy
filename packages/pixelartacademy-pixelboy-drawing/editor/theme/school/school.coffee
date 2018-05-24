@@ -135,6 +135,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
   drawingActiveClass: ->
     'drawing-active' if @drawingActive()
 
+  toolClass: ->
+    return unless tool = @activeTool()
+
+    toolClass = _.kebabCase tool.name
+    extraToolClass = tool.toolClass?()
+
+    [toolClass, extraToolClass].join ' '
+
   spriteStyle: ->
     # Allow to be updated externally.
     @spriteStyleChangeDependency.depend()

@@ -26,3 +26,10 @@ class LandsOfIllusions.Assets.Tools.Tool
 
     @mouseState.x = pixelCoordinate.x
     @mouseState.y = pixelCoordinate.y
+
+  onMouseLeaveWindow: (event) ->
+    # Just in case we clean up button state when leaving. Nowadays browsers
+    # don't fire mouse leave when a button is pressed so it's not really necessary.
+    @mouseState.leftButton = false
+    @mouseState.middleButton = false
+    @mouseState.rightButton = false
