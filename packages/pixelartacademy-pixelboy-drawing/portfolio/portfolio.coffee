@@ -30,6 +30,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
         timelineId: LOI.adventure.currentTimelineId()
 
     @sections = new ComputedField =>
+      # Clear opened items when recomputing.
+      @activeSection? null
+      @activeGroup? null
+      @hoveredAsset? null
+
       # Get projects from the workbench. Note: we expect things to be instances, so
       # they have to be added as instances in the workbench scene, and not as classes.
       projects = @currentProjects().things()
@@ -38,7 +43,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
         assets = for asset, assetIndex in project.assets()
           asset: asset
           index: assetIndex
-          scale: @_assetScale asset
+          scale: => @_assetScale asset
 
         index: index
         name: project.fullName()
@@ -139,11 +144,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     zIndex = project.assets.length - assetData.index
 
     zIndex: zIndex
-    width: "#{assetData.asset.width() *  assetData.scale + 12}rem"
+    width: "#{assetData.asset.width() *  assetData.scale() + 12}rem"
 
   spriteStyle: ->
     assetData = @currentData()
-    scale = assetData.scale
+    scale = assetData.scale()
 
     width: "#{assetData.asset.width() * scale}rem"
     height: "#{assetData.asset.height() * scale}rem"

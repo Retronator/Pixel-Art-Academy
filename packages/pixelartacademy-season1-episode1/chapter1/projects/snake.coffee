@@ -52,6 +52,8 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
         new @constructor.Body @
         new @constructor.Food @
       ]
+    ,
+      true
 
   destroy: ->
     @assets.stop()

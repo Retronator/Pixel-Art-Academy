@@ -109,13 +109,16 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       camera.options.scaleDelay = if editorActive then 410 else 810
 
       # Dictate sprite scale when asset is on clipboard and when setting for the first time.
-      unless editorActive and asset is @_previousDisplayedAsset
+      defaultScale = asset.scale()
+
+      unless editorActive and asset is @_previousDisplayedAsset and defaultScale is @_previousDefaultScale
         # Clipboard is about 120% bigger than portfolio.
-        scale = Math.floor asset.scale * 1.2
+        scale = Math.floor asset.scale() * 1.2
 
         camera.setScale scale
 
       @_previousDisplayedAsset = asset
+      @_previousDefaultScale = defaultScale
 
   onRendered: ->
     super

@@ -11,10 +11,18 @@ class C1.AdmissionProjects.Snake.Workbench extends LOI.Adventure.Scene
 
   @initialize()
 
+  destroy: ->
+    super
+
+    @_snake?.destroy()
+
   things: ->
     things = []
 
     if projectId = C1.Projects.Snake.readOnlyState 'activeProjectId'
-      things.push new C1.Projects.Snake projectId
+      @_snake?.destroy()
+      @_snake = new C1.Projects.Snake projectId
+
+      things.push @_snake
 
     things

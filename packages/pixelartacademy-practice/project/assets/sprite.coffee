@@ -28,6 +28,8 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
       return unless asset = _.find assets, (asset) => asset.id is @id()
 
       asset.sprite._id
+    ,
+      true
 
     # Subscribe and find the sprite.
     @sprite = new ComputedField =>
@@ -35,6 +37,8 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
 
       LOI.Assets.Sprite.forId.subscribe spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
+    ,
+      true
 
   destroy: ->
     super
