@@ -10,10 +10,6 @@ class LOI.Assets.Components.PixelCanvas.Camera
     # Scale is used to go from canvas pixels to display pixels.
     @scale = new ReactiveField (@options.initialScale or 1), EJSON.equals
 
-    # We support adding delay to change in scale. In that case target scale
-    # changes immediately and scale only after the delay has passed.
-    @targetScale = new ReactiveField @scale()
-
     # Effective scale includes the amount we're scaling our display pixels.
     # It is used to go from canvas pixels to window pixels.
     @effectiveScale = new ComputedField =>
@@ -29,13 +25,13 @@ class LOI.Assets.Components.PixelCanvas.Camera
     @viewportBounds = new AE.Rectangle()
 
     @pixelCanvas.autorun =>
-      canvasBounds = @pixelCanvas.canvasBounds
+      canvasPixelSize = @pixelCanvas.canvasPixelSize()
       effectiveScale = @effectiveScale()
       origin = @origin()
 
-      # Calculate which part of the canvas is visible. Canvas bounds is in window pixels.
-      width = canvasBounds.width() / effectiveScale
-      height = canvasBounds.height() / effectiveScale
+      # Calculate which part of the canvas is visible.
+      width = canvasPixelSize.width / effectiveScale
+      height = canvasPixelSize.height / effectiveScale
 
       @viewportBounds.width width
       @viewportBounds.height height
@@ -71,28 +67,11 @@ class LOI.Assets.Components.PixelCanvas.Camera
             y: oldOrigin.y + canvasDelta.y
 
   setScale: (scale) ->
-    # Notify to which scale we're going.
-    @targetScale scale
-
-    # Cancel any previous scale update, so the new scale will go into effect.
-    Meteor.clearTimeout @_scaleUpdateTimeout if @_scaleUpdateTimeout
-
-    if @options.scaleDelay
-      @_scaleUpdateTimeout = Meteor.setTimeout =>
-        # Trigger main scale update.
-        @scale scale
-
-        # Mark the timeout as handled.
-        @_scaleUpdateTimeout = null
-      ,
-        @options.scaleDelay
-
-    else
-      @scale scale
+    @scale scale
 
   applyTransformToCanvas: ->
     context = @pixelCanvas.context()
-    canvasBounds = @pixelCanvas.canvasBounds
+    canvasPixelSize = @pixelCanvas.canvasPixelSize()
     effectiveScale = @effectiveScale()
     origin = @origin()
 
@@ -100,8 +79,8 @@ class LOI.Assets.Components.PixelCanvas.Camera
     context.setTransform 1, 0, 0, 1, 0, 0
 
     # Move to center of screen.
-    width = canvasBounds.width()
-    height = canvasBounds.height()
+    width = canvasPixelSize.width
+    height = canvasPixelSize.height
     context.translate width / 2, height / 2
 
     # Scale the canvas around the origin.
@@ -111,14 +90,14 @@ class LOI.Assets.Components.PixelCanvas.Camera
     context.translate -origin.x, -origin.y
 
   transformCanvasToWindow: (canvasCoordinate) ->
-    canvasBounds = @pixelCanvas.canvasBounds
+    canvasPixelSize = @pixelCanvas.canvasPixelSize()
     effectiveScale = @effectiveScale()
     origin = @origin()
 
     x = canvasCoordinate.x
     y = canvasCoordinate.y
-    width = canvasBounds.width()
-    height = canvasBounds.height()
+    width = canvasPixelSize.width
+    height = canvasPixelSize.height
 
     x: (x - origin.x) * effectiveScale + width / 2
     y: (y - origin.y) * effectiveScale + height / 2
@@ -131,14 +110,14 @@ class LOI.Assets.Components.PixelCanvas.Camera
     y: windowCoordinate.y / displayScale
 
   transformWindowToCanvas: (windowCoordinate) ->
-    canvasBounds = @pixelCanvas.canvasBounds
+    canvasPixelSize = @pixelCanvas.canvasPixelSize()
     effectiveScale = @effectiveScale()
     origin = @origin()
 
     x = windowCoordinate.x
     y = windowCoordinate.y
-    width = canvasBounds.width()
-    height = canvasBounds.height()
+    width = canvasPixelSize.width
+    height = canvasPixelSize.height
 
     x: (x - width / 2) / effectiveScale + origin.x
     y: (y - height / 2) / effectiveScale + origin.y

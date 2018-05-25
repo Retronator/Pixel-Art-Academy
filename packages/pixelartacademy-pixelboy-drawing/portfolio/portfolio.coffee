@@ -79,7 +79,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     height: "#{assetData.asset.height() * scale}rem"
 
   _assetScale: (asset) ->
-    # Scale the sprite as much as possible while remaining under 88px.
+    # Scale the sprite as much as possible (up to 8) while remaining under 88px.
     scale = 1
     maxSize = Math.max asset.width(), asset.height()
 

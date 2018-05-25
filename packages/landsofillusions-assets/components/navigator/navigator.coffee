@@ -11,7 +11,7 @@ class LOI.Assets.Components.Navigator extends AM.Component
     @zoomLevels = @options.zoomLevels or [12.5, 25, 50, 66.6, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]
 
     @zoomPercentage = new ComputedField =>
-      @options.camera()?.targetScale() * 100
+      @options.camera()?.scale() * 100
 
   onRendered: ->
     super

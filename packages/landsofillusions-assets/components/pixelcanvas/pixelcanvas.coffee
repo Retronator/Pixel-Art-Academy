@@ -24,12 +24,8 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null
-    @canvasBounds = new AE.Rectangle()
+    @canvasPixelSize = new ReactiveField width: 0, height: 0
     @context = new ReactiveField null
-
-    # Allow forcing redraws and resizes.
-    @forceResizeDependency = new Tracker.Dependency
-    @forceRedrawDependency = new Tracker.Dependency
 
   onCreated: ->
     super
@@ -41,7 +37,6 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       initialScale: @options.initialCameraScale
       initialOrigin: @options.initialCameraOrigin
       enableInput: @options.cameraInput
-      scaleDelay: @options.cameraScaleDelay
 
     if @options.grid
       @grid new @constructor.Grid @
@@ -54,39 +49,50 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
 
     # Resize the canvas when browser window and zoom changes.
     @autorun =>
-      @forceResizeDependency.depend()
-
       canvas = @canvas()
       return unless canvas
       
-      # Depend on window size.
-      AM.Window.clientBounds()
+      if @options.canvasSize
+        # Resize based on provided canvas size.
+        size = @options.canvasSize()
+        scale = @camera().effectiveScale()
+        
+        newSize =
+          width: (size?.width or 0) * scale
+          height: (size?.height or 0) * scale
 
-      # Depend on camera scale if enabled.
-      @camera().scale() if @options.resizeOnScale
+        gridEnabled = if _.isFunction(@options.grid) then @options.grid() else @options.grid
 
-      # Resize the back buffer to canvas element size, if it actually changed. If the pixel
-      # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
-      newSize =
-        width: $(canvas).width()
-        height: $(canvas).height()
+        if gridEnabled
+          # Add 1px extra for outer grid.
+          newSize.width++
+          newSize.height++
+        
+      else
+        # Depend on window size.
+        AM.Window.clientBounds()
 
+        # Resize the back buffer to canvas element size, if it actually changed. If the pixel
+        # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
+        newSize =
+          width: $(canvas).width()
+          height: $(canvas).height()
+  
       for key, value of newSize
         canvas[key] = value unless canvas[key] is value
 
-      @canvasBounds.width canvas.width
-      @canvasBounds.height canvas.height
+      @canvasPixelSize newSize
 
     # Redraw canvas routine.
     @autorun =>
-      @forceRedrawDependency.depend()
-
       camera = @camera()
       context = @context()
       return unless context
 
+      canvasPixelSize = @canvasPixelSize()
+
       context.setTransform 1, 0, 0, 1, 0, 0
-      context.clearRect 0, 0, @canvasBounds.width(), @canvasBounds.height()
+      context.clearRect 0, 0, canvasPixelSize.width, canvasPixelSize.height
 
       camera.applyTransformToCanvas()
 

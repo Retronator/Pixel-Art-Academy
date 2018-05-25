@@ -45,8 +45,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       cameraInput: false
       grid: => @drawingActive()
       cursor: => @drawingActive()
-      cameraScaleDelay: 410
-      resizeOnScale: true
+      canvasSize: => @editor.spriteData()?.bounds
       drawComponents: => [
         @sprite()
       ]
@@ -96,33 +95,21 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     @autorun (computation) =>
       @editor.drawing.portfolio().displayedAsset()
 
-      # Trigger sprite style change.
+      # Trigger sprite style change after delay. We need this delay to allow for asset data in the
+      # clipboard to update, which will change the position of the sprite when attached to the clipboard.
       Meteor.setTimeout => @spriteStyleChangeDependency.changed()
-      
-      # After the scale delay, also trigger sprite resize.
-      pixelCanvas = @pixelCanvas()
-      return unless camera = pixelCanvas.camera()
-
-      Meteor.setTimeout =>
-        pixelCanvas.forceResize()
-      ,
-        camera.options.scaleDelay
 
     # Update sprite scale.
     @autorun (computation) =>
       return unless camera = @pixelCanvas().camera()
       return unless assetData = @editor.drawing.portfolio().displayedAsset()
 
-      # Update transition delay.
-      editorActive = @editor.active()
-      camera.options.scaleDelay = if editorActive then 410 else 810
-
       # Dictate sprite scale when asset is on clipboard and when setting for the first time.
       defaultScale = assetData.scale()
 
-      unless editorActive and assetData.asset is @_previousDisplayedAsset and defaultScale is @_previousDefaultScale
-        # Clipboard is about 120% bigger than portfolio.
-        scale = Math.floor assetData.scale() * 1.2
+      unless @editor.active() and assetData.asset is @_previousDisplayedAsset and defaultScale is @_previousDefaultScale
+        # Asset in the clipboard should be about 150% bigger than portfolio.
+        scale = Math.floor assetData.scale() * 1.5
 
         camera.setScale scale
 
@@ -158,15 +145,19 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
   spriteStyle: ->
     # Allow to be updated externally.
     @spriteStyleChangeDependency.depend()
-    
+
+    # If nothing else, we should move the sprite off screen.
+    offScreenStyle = top: '-150rem'
+
     # Wait for clipboard to be rendered.
-    return unless @editor.drawing.clipboard().isRendered()
+    return offScreenStyle unless @editor.drawing.clipboard().isRendered()
 
-    spriteData = @editor.spriteData()
-    scale = @pixelCanvas()?.camera()?.targetScale() or 0
+    # If we don't have size data, don't return anything so transition will start form first value.
+    return offScreenStyle unless spriteData = @editor.spriteData()
+    return offScreenStyle unless scale = @pixelCanvas()?.camera()?.scale()
 
-    width = spriteData?.bounds.width * scale or 0
-    height = spriteData?.bounds.height * scale or 0
+    width = spriteData.bounds.width * scale
+    height = spriteData.bounds.height * scale
 
     # Add one pixel to the size for outer grid line.
     displayScale = LOI.adventure.interface.display.scale()

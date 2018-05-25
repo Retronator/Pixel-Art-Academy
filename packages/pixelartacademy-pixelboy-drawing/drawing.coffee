@@ -50,6 +50,18 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
       else
         @setFixedPixelBoySize 332, 241
 
+  onBackButton: ->
+    portfolio = @portfolio()
+
+    # We only need to handle closing groups when not on an asset.
+    return unless portfolio.activeGroup() and not portfolio.activeAsset()
+
+    # Close the group.
+    portfolio.activeGroup null
+
+    # Inform that we've handled the back button.
+    true
+
   activeAssetClass: ->
     portfolio = @portfolio()
 
