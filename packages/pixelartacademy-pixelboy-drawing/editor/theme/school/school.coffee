@@ -62,6 +62,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
           if assetComponents = assetData?.asset.editorDrawComponents?()
             components.push assetComponents...
 
+        # Set extra info to components
+        backgroundColor = LOI.Assets.Palette.defaultPalette().ramps[LOI.Assets.Palette.Atari2600.hues.grey].shades[7]
+
+        for component in components
+          component.options.backgroundColor = backgroundColor
+
         components
 
     @navigator new LOI.Assets.Components.Navigator
