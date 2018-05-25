@@ -35,6 +35,15 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
 
       assets
     ,
+      # We consider our content has changed only when the array values differ.
+      (a, b) =>
+        return unless a.length is b.length
+
+        for asset, index in a
+          return unless asset is b[index]
+
+        true
+    ,
       true
 
   destroy: ->

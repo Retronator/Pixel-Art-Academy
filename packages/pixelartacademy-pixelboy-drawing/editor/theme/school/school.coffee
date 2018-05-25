@@ -111,22 +111,22 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     # Update sprite scale.
     @autorun (computation) =>
       return unless camera = @pixelCanvas().camera()
-      return unless asset = @editor.drawing.portfolio().displayedAsset()
+      return unless assetData = @editor.drawing.portfolio().displayedAsset()
 
       # Update transition delay.
       editorActive = @editor.active()
       camera.options.scaleDelay = if editorActive then 410 else 810
 
       # Dictate sprite scale when asset is on clipboard and when setting for the first time.
-      defaultScale = asset.scale()
+      defaultScale = assetData.scale()
 
-      unless editorActive and asset is @_previousDisplayedAsset and defaultScale is @_previousDefaultScale
+      unless editorActive and assetData.asset is @_previousDisplayedAsset and defaultScale is @_previousDefaultScale
         # Clipboard is about 120% bigger than portfolio.
-        scale = Math.floor asset.scale() * 1.2
+        scale = Math.floor assetData.scale() * 1.2
 
         camera.setScale scale
 
-      @_previousDisplayedAsset = asset
+      @_previousDisplayedAsset = assetData.asset
       @_previousDefaultScale = defaultScale
 
   onRendered: ->
@@ -174,26 +174,26 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     if @editor.active()
       # We need to be in the middle of the table.
-      top = "calc(50% - #{width / 2 + scale}rem)"
-      left = "calc(50% - #{height / 2 + scale}rem)"
+      left = "calc(50% - #{width / 2 + scale}rem)"
+      top = "calc(50% - #{height / 2 + scale}rem)"
 
     else
       $spritePlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .sprite-placeholder')
       spriteOffset = $spritePlaceholder.offset()
 
       $clipboard = $('.pixelartacademy-pixelboy-apps-drawing-clipboard')
-      clipboardOffset = $clipboard.offset()
+      positionOrigin = $clipboard.offset()
 
       # Make these measurements relative to clipboard center.
-      clipboardOffset.left += $clipboard.width() / 2
-      left = spriteOffset.left - clipboardOffset.left
+      positionOrigin.left += $clipboard.width() / 2
+      left = spriteOffset.left - positionOrigin.left
       left = "calc(50% + #{left}px)"
 
       # Top is relative to center only when we have an active asset.
       activeAsset = @editor.drawing.portfolio().activeAsset()
 
-      clipboardOffset.top += $clipboard.height() / 2 if activeAsset
-      top = spriteOffset.top - clipboardOffset.top
+      positionOrigin.top += $clipboard.height() / 2 if activeAsset
+      top = spriteOffset.top - positionOrigin.top
 
       if activeAsset
         top = "calc(50% + #{top}px)"
@@ -204,6 +204,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     width: "#{width + pixelInRem}rem"
     height: "#{height + pixelInRem}rem"
-    top: top
     left: left
+    top: top
     borderWidth: "#{scale}rem"
