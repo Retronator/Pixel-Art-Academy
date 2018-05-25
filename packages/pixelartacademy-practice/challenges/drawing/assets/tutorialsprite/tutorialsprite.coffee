@@ -11,7 +11,12 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
   @reset: new AB.Method name: "#{@id()}.reset"
 
   @createPixelsFromBitmap: (bitmap) ->
-    lines = bitmap.match /^\|?(.*)/gm
+    # We need to quit if we get an empty string since the regex would never quit on it.
+    return [] unless bitmap?.length
+
+    regExp = /^\|?(.*)/gm
+    lines = (match[1] while match = regExp.exec bitmap)
+
     pixels = []
 
     for line, y in lines
@@ -49,6 +54,22 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
     @goalPixels = @constructor.createPixelsFromBitmap @constructor.goalBitmap()
 
+    @engineComponent = new @constructor.EngineComponent
+      spriteData: =>
+        return unless spriteId = @spriteId()
+
+        # Take same overall sprite data (bounds, palette) as sprite used for drawing, but exclude the pixels.
+        spriteData = LOI.Assets.Sprite.documents.findOne spriteId,
+          fields:
+            'layers': false
+
+        return unless spriteData
+
+        # Replace pixels with the goal state.
+        spriteData.layers = [pixels: @goalPixels]
+
+        spriteData
+    
   completed: ->
     # Compare goal pixels with current sprite pixels.
     return unless spritePixels = @sprite()?.layers[0].pixels
@@ -59,3 +80,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       return unless _.find spritePixels, (spritePixel) => EJSON.equals goalPixel, spritePixel
 
     true
+
+  editorDrawComponents: -> [
+    @engineComponent
+  ]

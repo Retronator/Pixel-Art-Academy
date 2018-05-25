@@ -69,7 +69,7 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
       Click start when you're ready. If you make a mistake, come back and reset the challenge.
     """
 
-    @fixedDimensions: -> width: 11, height: 8
+    @fixedDimensions: -> width: 12, height: 8
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
       
     @bitmap: -> "" # Empty sprite

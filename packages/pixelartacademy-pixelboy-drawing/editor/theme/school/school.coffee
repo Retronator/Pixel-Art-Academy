@@ -46,9 +46,23 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       grid: => @drawingActive()
       cursor: => @drawingActive()
       canvasSize: => @editor.spriteData()?.bounds
-      drawComponents: => [
-        @sprite()
-      ]
+      drawComponents: =>
+        components = [
+          @sprite()
+        ]
+
+        assetData = @editor.drawing.portfolio().displayedAsset()
+
+        # Add any custom components that are visible all the time.
+        if assetComponents = assetData?.asset.drawComponents?()
+          components.push assetComponents...
+          
+        # Add components visible only in the editor.
+        if @editor.active()
+          if assetComponents = assetData?.asset.editorDrawComponents?()
+            components.push assetComponents...
+
+        components
 
     @navigator new LOI.Assets.Components.Navigator
       camera: @pixelCanvas().camera
