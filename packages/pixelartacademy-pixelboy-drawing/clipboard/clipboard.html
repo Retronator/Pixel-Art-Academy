@@ -5,25 +5,7 @@
         <div class="asset">
           <div class="asset-name">{{> t10e displayNameTranslation}}</div>
           <div class="description">{{> t10e descriptionTranslation}}</div>
-          <ul class="properties">
-            <li class="property fixed-dimensions">
-              <span class="property-name">Size</span>:
-              {{fixedDimensions.width}}×{{fixedDimensions.height}}</li>
-            <li class="property restricted-palette">
-              <span class="property-name">Palette</span>:
-              {{restrictedPalette.name}}</li>
-          </ul>
-          <ul class="actions">
-            <li class="action">
-              <button class="button edit-button">Edit</button>
-            </li>
-            <li class="action">
-              <button class="button download-button">Download</button>
-            </li>
-            <li class="action">
-              <button class="button import-button">Import</button>
-            </li>
-          </ul>
+          {{> Render briefComponent}}
         </div>
       {{/with}}
       <div class="sprite-placeholder"></div>

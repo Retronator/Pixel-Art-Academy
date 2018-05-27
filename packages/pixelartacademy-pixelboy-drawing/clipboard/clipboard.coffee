@@ -16,9 +16,5 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
   asset: ->
     @drawing.portfolio().displayedAsset()?.asset
 
-  events: ->
-    super.concat
-      'click .edit-button': @onClickEditButton
-
-  onClickEditButton: (event) ->
+  editAsset: ->
     AB.Router.setParameter 'parameter4', 'edit'

@@ -40,6 +40,8 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     ,
       true
 
+    @briefComponent = new @constructor.BriefComponent @
+
   destroy: ->
     super
 

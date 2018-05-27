@@ -76,7 +76,8 @@ Package.onUse(function(api) {
   api.addFile('project/workbench');
   api.addFile('project/asset');
 
-  api.addFile('project/assets/sprite');
+  api.addFile('project/assets/sprite..');
+  api.addUnstyledComponent('project/assets/sprite/briefcomponent..');
 
   // Challenges
 
@@ -88,4 +89,5 @@ Package.onUse(function(api) {
   api.addFile('challenges/drawing/assets/tutorialsprite/methods');
   api.addServerFile('challenges/drawing/assets/tutorialsprite/methods-server');
   api.addFile('challenges/drawing/assets/tutorialsprite/enginecomponent');
+  api.addUnstyledComponent('challenges/drawing/assets/tutorialsprite/briefcomponent..');
 });

@@ -69,7 +69,9 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
         spriteData.layers = [pixels: @goalPixels]
 
         spriteData
-    
+
+    @briefComponent = new @constructor.BriefComponent @
+
   completed: ->
     # Compare goal pixels with current sprite pixels.
     return unless spritePixels = @sprite()?.layers[0].pixels
