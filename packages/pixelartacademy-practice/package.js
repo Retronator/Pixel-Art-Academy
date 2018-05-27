@@ -90,4 +90,8 @@ Package.onUse(function(api) {
   api.addServerFile('challenges/drawing/assets/tutorialsprite/methods-server');
   api.addFile('challenges/drawing/assets/tutorialsprite/enginecomponent');
   api.addUnstyledComponent('challenges/drawing/assets/tutorialsprite/briefcomponent..');
+
+  // Software
+  api.addFile('software..');
+  api.addFile('software/tools');
 });

@@ -84,21 +84,49 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       actions: @actions
       
     # Create tools.
-    toolClasses = [
-      LOI.Assets.SpriteEditor.Tools.Pencil
-      LOI.Assets.SpriteEditor.Tools.Eraser
-      LOI.Assets.SpriteEditor.Tools.ColorFill
-      LOI.Assets.SpriteEditor.Tools.ColorPicker
-    ]
+    @toolClasses =
+      "#{PAA.Practice.Software.Tools.ToolKeys.Pencil}": LOI.Assets.SpriteEditor.Tools.Pencil
+      "#{PAA.Practice.Software.Tools.ToolKeys.Eraser}": LOI.Assets.SpriteEditor.Tools.Eraser
+      "#{PAA.Practice.Software.Tools.ToolKeys.ColorFill}": LOI.Assets.SpriteEditor.Tools.ColorFill
+      "#{PAA.Practice.Software.Tools.ToolKeys.ColorPicker}": LOI.Assets.SpriteEditor.Tools.ColorPicker
 
-    # We need to forward editor's sprite data as the tools will expect it.
+    # We need to provide (editor's) sprite data as the tools will expect it (since they think we are the editor class).
     @spriteData = @editor.spriteData
 
-    tools = for toolClass in toolClasses
-      new toolClass
+    @toolInstances = {}
+    
+    for toolKey, toolClass of @toolClasses
+      @toolInstances[toolKey] = new toolClass
         editor: => @
-          
-    @tools tools
+
+    # Allow the asset to control which tools are available.
+    @autorun (computation) =>
+      activeAssetData = @editor.drawing.portfolio().activeAsset()
+
+      if availableToolKeys = activeAssetData?.asset.availableToolKeys?()
+        @tools _.at @toolInstances, availableToolKeys
+
+      else
+        @tools _.values @toolInstances
+
+    # Deactivate active tool when closing the editor.
+    @autorun (computation) =>
+      if @editor.active()
+        unless @activeTool()
+          # Make sure the last active tool is still allowed.
+          if @_lastActiveTool in @tools()
+            @activeTool @_lastActiveTool
+
+      else
+        if activeTool = @activeTool()
+          @_lastActiveTool = activeTool
+          @activeTool null
+
+    # Select first color if no color is set.
+    @autorun (computation) =>
+      palette = @palette()
+
+      palette.setColor 0, 0 unless palette.currentColor()
 
     # Keep pixel canvas centered on the sprite.
     @autorun (computation) =>
@@ -218,3 +246,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     left: left
     top: top
     borderWidth: "#{scale}rem"
+
+  eraserEnabledClass: ->
+    'eraser-enabled' if @toolInstances[PAA.Practice.Software.Tools.ToolKeys.Eraser] in @tools()

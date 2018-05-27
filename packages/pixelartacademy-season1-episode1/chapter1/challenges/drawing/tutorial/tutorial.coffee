@@ -85,6 +85,10 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
       |   00  00
     """
 
+    availableToolKeys: -> [
+      PAA.Practice.Software.Tools.ToolKeys.Pencil
+    ]
+
     @initialize()
 
   class @Eraser extends PAA.Practice.Challenges.Drawing.TutorialSprite
@@ -121,5 +125,10 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
       | 0 00 0
       |0 0  0 0
     """
+
+    availableToolKeys: -> [
+      PAA.Practice.Software.Tools.ToolKeys.Pencil
+      PAA.Practice.Software.Tools.ToolKeys.Eraser
+    ]
 
     @initialize()
