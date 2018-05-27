@@ -84,7 +84,12 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/challenges..');
   api.addFile('chapter1/challenges/drawing..');
+
   api.addFile('chapter1/challenges/drawing/tutorial..');
+  api.addFile('chapter1/challenges/drawing/tutorial/pencil');
+  api.addFile('chapter1/challenges/drawing/tutorial/eraser');
+  api.addFile('chapter1/challenges/drawing/tutorial/colorfill');
+  api.addFile('chapter1/challenges/drawing/tutorial/blackandwhite');
 
   // Intro
   api.addFile('chapter1/sections/intro..');

@@ -33,6 +33,18 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
         @eraser ?= new @constructor.Eraser @
         assets.push @eraser
 
+      if @eraser in assets and @eraser.completed()
+        @colorFill ?= new @constructor.ColorFill @
+        assets.push @colorFill
+
+      if @colorFill in assets and @colorFill.completed()
+        @colorFill2 ?= new @constructor.ColorFill2 @
+        assets.push @colorFill2
+
+      if @colorFill2 in assets and @colorFill2.completed()
+        @blackAndWhite ?= new @constructor.BlackAndWhite @
+        assets.push @blackAndWhite
+
       assets
     ,
       # We consider our content has changed only when the array values differ.
@@ -56,79 +68,3 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
     # We need to mimic a project, so we need to provide the data. If no state is 
     # set, we send a dummy object to let the sprite know we've loaded the state.
     @readOnlyState('assets') or []
-    
-  # Assets
-
-  class @Pencil extends PAA.Practice.Challenges.Drawing.TutorialSprite
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Pencil'
-
-    @displayName: -> "Pencil"
-
-    @description: -> """
-      Using the pencil, fill the pixels with the dot in the middle.
-      Click start when you're ready. If you make a mistake, come back and reset the challenge.
-    """
-
-    @fixedDimensions: -> width: 12, height: 8
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
-      
-    @bitmap: -> "" # Empty sprite
-
-    @goalBitmap: -> """
-      |  0      0
-      |   0    0
-      |  00000000
-      | 00 0000 00
-      |000000000000
-      |0 00000000 0
-      |0 0      0 0
-      |   00  00
-    """
-
-    availableToolKeys: -> [
-      PAA.Practice.Software.Tools.ToolKeys.Pencil
-    ]
-
-    @initialize()
-
-  class @Eraser extends PAA.Practice.Challenges.Drawing.TutorialSprite
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Eraser'
-
-    @displayName: -> "Eraser"
-
-    @description: -> """
-      Using the eraser, remove the pixels with the dot in the middle.
-      If you delete too much, simply use the pencil to draw things back in.
-    """
-
-    @fixedDimensions: -> width: 8, height: 8
-    @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
-
-    @bitmap: -> """
-      00000000
-      00000000
-      00000000
-      00000000
-      00000000
-      00000000
-      00000000
-      00000000
-    """
-
-    @goalBitmap: -> """
-      |   00
-      |  0000
-      | 000000
-      |00 00 00
-      |00000000
-      |  0  0
-      | 0 00 0
-      |0 0  0 0
-    """
-
-    availableToolKeys: -> [
-      PAA.Practice.Software.Tools.ToolKeys.Pencil
-      PAA.Practice.Software.Tools.ToolKeys.Eraser
-    ]
-
-    @initialize()

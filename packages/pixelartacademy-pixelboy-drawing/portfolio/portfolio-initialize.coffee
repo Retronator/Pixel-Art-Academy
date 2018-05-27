@@ -37,9 +37,10 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
             do (sectionThing, index) =>
               assets = new ComputedField =>
                 for asset, assetIndex in sectionThing.assets()
-                  index: assetIndex
-                  asset: asset
-                  scale: => @_assetScale asset
+                  do (asset, assetIndex) =>
+                    index: assetIndex
+                    asset: asset
+                    scale: => @_assetScale asset
 
               index: index
               name: => sectionThing.fullName()

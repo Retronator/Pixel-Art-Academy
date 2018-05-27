@@ -247,5 +247,17 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     top: top
     borderWidth: "#{scale}rem"
 
+  testPaperEnabled: ->
+    @pencilEnabled() or @eraserEnabled()
+
+  pencilEnabled: ->
+    @toolInstances[PAA.Practice.Software.Tools.ToolKeys.Pencil] in @tools()
+
+  eraserEnabled: ->
+    @toolInstances[PAA.Practice.Software.Tools.ToolKeys.Eraser] in @tools()
+
   eraserEnabledClass: ->
-    'eraser-enabled' if @toolInstances[PAA.Practice.Software.Tools.ToolKeys.Eraser] in @tools()
+    'eraser-enabled' if @eraserEnabled()
+
+  colorFillEnabled: ->
+    @toolInstances[PAA.Practice.Software.Tools.ToolKeys.ColorFill] in @tools()

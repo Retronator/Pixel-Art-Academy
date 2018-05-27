@@ -13,7 +13,9 @@
     <div class="sprite" {{style spriteStyle}}>
       {{> Render pixelCanvas}}
     </div>
-    <div class="test-paper table-item {{eraserEnabledClass}}"></div>
+    {{#if testPaperEnabled}}
+      <div class="test-paper table-item {{eraserEnabledClass}}"></div>
+    {{/if}}
     <div class="background"></div>
   </div>
 </template>

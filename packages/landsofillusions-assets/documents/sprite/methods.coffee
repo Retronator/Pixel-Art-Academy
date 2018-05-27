@@ -262,6 +262,7 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
         return if pixel
 
         # Found an empty spot. Has it been added already?
+        return if _.find fringe, (pixel) -> pixel.x is x and pixel.y is y
         return if _.find created, (pixel) -> pixel.x is x and pixel.y is y
           
         # Is it out of bounds?

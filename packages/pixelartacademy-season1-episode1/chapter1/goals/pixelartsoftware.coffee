@@ -47,13 +47,14 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @initialize()
 
-  class @BucketFill extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.BucketFill'
+  class @ColorFill extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.ColorFill'
 
-    @directive: -> "Bucket fill"
+    @directive: -> "Color fill"
 
     @instructions: -> """
-      Speed up coloring by using the bucket tool. Now you have the essential tools to do black and white pixel art.
+      Speed up coloring by using the color fill tool. Now you have the essential tools to do black and white pixel art.
+      Complete all color fill challenges to complete this task.
     """
 
     @predecessors: -> [Goal.Pencil]
@@ -257,7 +258,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     # Main path
     @Pencil
     @Eraser
-    @BucketFill
+    @ColorFill
     @Colors
     @ColorPicking
     @Shortcuts
