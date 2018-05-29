@@ -2,13 +2,13 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Challenges.Drawing.Tutorial.BlackAndWhite extends PAA.Practice.Challenges.Drawing.TutorialSprite
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.BlackAndWhite'
+class C1.Challenges.Drawing.Tutorial.EssentialTools.Final extends PAA.Practice.Challenges.Drawing.TutorialSprite
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.EssentialTools.Final'
 
-  @displayName: -> "Black & White essentials"
+  @displayName: -> "Basic tools"
 
   @description: -> """
-      Use the pencil, color fill, and eraser to demonstate your use of essential black & white drawing tools.
+      Use the pencil, color fill, and eraser to demonstate your use of basic drawing tools.
     """
 
   @fixedDimensions: -> width: 16, height: 7

@@ -25,12 +25,12 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
     
     for sectionThingName, sectionLocation of sectionLocations
       do (sectionThingName, sectionLocation) =>
-        currentSituation = new LOI.Adventure.Situation
-          location: sectionLocation
-
         groups = new ComputedField =>
-          # Get projects from the workbench. Note: we expect things to be instances, so
+          # Get groups from the section location. Note: we expect things to be instances, so
           # they have to be added as instances in the workbench scene, and not as classes.
+          currentSituation = new LOI.Adventure.Situation
+            location: sectionLocation
+
           sectionThings = currentSituation.things()
 
           for sectionThing, index in sectionThings

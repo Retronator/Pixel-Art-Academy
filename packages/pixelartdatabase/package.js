@@ -14,19 +14,10 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
 
-  api.use('edgee:slingshot');
-
   api.export('PixelArtDatabase');
 
   api.addFile('pixelartdatabase');
   
-  // Upload
-
-  api.addFile('upload..');
-  api.addFile('upload/context..');
-  api.addServerFile('upload/context/server');
-  api.addClientFile('upload/context/client');
-
   // Artist
 
   api.addFile('artist/artist');

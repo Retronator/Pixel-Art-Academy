@@ -44,7 +44,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite.EngineComponent
 
     # Draw background dots to all pixels.
     for x in [0...spriteData.bounds.width]
-      for y in [0...spriteData.bounds.width]
+      for y in [0...spriteData.bounds.height]
         @_paintPixel spriteData, x, y, @options.backgroundColor
 
     for layer in spriteData.layers

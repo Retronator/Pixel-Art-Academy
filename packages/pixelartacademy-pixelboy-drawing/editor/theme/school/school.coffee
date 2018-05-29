@@ -19,6 +19,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     @palette = new ReactiveField null
     @tools = new ReactiveField null
     @actions = new ReactiveField null
+    @references = new ReactiveField null
     @toolbox = new ReactiveField null
 
     @paletteId = new ComputedField =>
@@ -34,6 +35,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
   onCreated: ->
     super
+
+    @activeAsset = new ComputedField =>
+      @editor.drawing.portfolio().activeAsset()?.asset
+
+    @displayedAsset = new ComputedField =>
+      @editor.drawing.portfolio().displayedAsset()?.asset
 
     # Initialize components.
     @sprite new LOI.Assets.Engine.Sprite
@@ -51,15 +58,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
           @sprite()
         ]
 
-        assetData = @editor.drawing.portfolio().displayedAsset()
-
         # Add any custom components that are visible all the time.
-        if assetComponents = assetData?.asset.drawComponents?()
+        displayedAsset = @displayedAsset()
+
+        if assetComponents = displayedAsset?.drawComponents?()
           components.push assetComponents...
           
         # Add components visible only in the editor.
         if @editor.active()
-          if assetComponents = assetData?.asset.editorDrawComponents?()
+          if assetComponents = displayedAsset?.editorDrawComponents?()
             components.push assetComponents...
 
         # Set extra info to components
@@ -77,6 +84,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     @palette new @constructor.Palette
       paletteId: @paletteId
       theme: @
+
+    @references new @constructor.References
+      assetId: @editor.spriteId
+      documentClass: LOI.Assets.Sprite
 
     @toolbox new LOI.Assets.Components.Toolbox
       tools: @tools
@@ -101,10 +112,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     # Allow the asset to control which tools are available.
     @autorun (computation) =>
-      activeAssetData = @editor.drawing.portfolio().activeAsset()
+      activeAsset = @activeAsset()
 
-      if availableToolKeys = activeAssetData?.asset.availableToolKeys?()
-        @tools _.at @toolInstances, availableToolKeys
+      if availableToolKeys = activeAsset?.availableToolKeys?()
+        tools = _.at @toolInstances, availableToolKeys
+        @tools _.without tools, undefined
 
       else
         @tools _.values @toolInstances
@@ -156,8 +168,16 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       defaultScale = assetData.scale()
 
       unless @editor.active() and assetData.asset is @_previousDisplayedAsset and defaultScale is @_previousDefaultScale
-        # Asset in the clipboard should be about 150% bigger than portfolio.
-        scale = Math.floor assetData.scale() * 1.5
+        # Asset in the clipboard should be bigger than in the portfolio.
+        # 1 -> 2
+        # 2 -> 3
+        # 3 -> 4
+        # 4 -> 6
+        # 5 -> 6
+        # 6 -> 8
+        # 7 -> 9
+        # 8 -> 10
+        scale = Math.ceil assetData.scale() * 1.2
 
         camera.setScale scale
 
@@ -245,7 +265,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     height: "#{height + pixelInRem}rem"
     left: left
     top: top
-    borderWidth: "#{scale}rem"
 
   testPaperEnabled: ->
     @pencilEnabled() or @eraserEnabled()
@@ -261,3 +280,13 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
   colorFillEnabled: ->
     @toolInstances[PAA.Practice.Software.Tools.ToolKeys.ColorFill] in @tools()
+
+  paletteEnabled: -> @_toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
+
+  navigatorEnabled: -> @_toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.Zoom
+
+  referencesEnabled: -> @_toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.References
+
+  _toolIsAvailable: (toolKey) ->
+    return true unless availableKeys = @editor.drawing.portfolio().activeAsset()?.asset.availableToolKeys?()
+    toolKey in availableKeys

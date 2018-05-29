@@ -56,7 +56,7 @@ class PAA.Practice.Journal.Entry extends AM.Document
       action: @ReferenceField LOI.Memory.Action, [], true, 'content.journalEntry', ['journal']
       memories: [@ReferenceField LOI.Memory, [], true, 'journalEntry', ['journal']]
 
-  @pictureUploadContext = new PADB.Upload.Context
+  @pictureUploadContext = new LOI.Assets.Upload.Context
     name: "#{@id()}.picture"
     folder: 'check-ins'
     maxSize: 10 * 1024 * 1024 # 10 MB

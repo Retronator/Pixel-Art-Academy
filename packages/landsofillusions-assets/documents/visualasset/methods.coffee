@@ -98,3 +98,24 @@ LOI.Assets.VisualAsset.updateLandmark.method (assetId, assetClassName, index, la
   assetClass.documents.update assetId,
     $set:
       "landmarks.#{index}": landmark
+      
+LOI.Assets.VisualAsset.addReferenceByUrl.method (assetId, assetClassName, characterId, url) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+  check characterId, Match.DocumentId
+  check url, String
+
+  # Authorize action.
+  asset = requireAsset assetId
+  LOI.Assets.VisualAsset._authorizeAssetAction asset
+
+  # Create the image document.
+  imageId = LOI.Assets.Image.insert characterId, url
+
+  # Add the reference.
+  assetClass = requireAssetClass assetClassName
+
+  assetClass.update assetId,
+    $push:
+      image:
+        _id: imageId

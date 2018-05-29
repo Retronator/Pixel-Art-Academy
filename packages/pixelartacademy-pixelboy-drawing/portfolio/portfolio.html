@@ -15,7 +15,7 @@
                 {{#if assets}}
                   <ul class="briefs">
                     {{#each assets}}
-                      <li class="brief {{assetHoveredClass}} {{assetActiveClass}}" {{style briefStyle}}>
+                      <li class="brief {{assetHoveredClass}} {{assetActiveClass}} {{asset.styleClasses}}" {{style briefStyle}}>
                         <div class="asset-name">{{> t10e asset.displayNameTranslation}}</div>
                         <div class="description">{{> t10e asset.descriptionTranslation}}</div>
                       </li>
@@ -23,7 +23,7 @@
                   </ul>
                   <ul class="assets">
                     {{#each assets}}
-                      <li class="asset {{assetActiveClass}}" {{style assetStyle}}>
+                      <li class="asset {{assetActiveClass}} {{asset.styleClasses}}" {{style assetStyle}}>
                         <div class="sprite" {{style spriteStyle}}>
                           {{> Render spriteImage}}
                         </div>

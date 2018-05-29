@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Challenges.Drawing.Tutorial.Eraser extends PAA.Practice.Challenges.Drawing.TutorialSprite
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Eraser'
+class C1.Challenges.Drawing.Tutorial.EssentialTools.Eraser extends PAA.Practice.Challenges.Drawing.TutorialSprite
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.EssentialTools.Eraser'
 
   @displayName: -> "Eraser"
 

@@ -2,9 +2,11 @@
   <div class="pixelartacademy-pixelboy-apps-drawing-clipboard {{activeAssetClass}} {{editorActiveClass}}">
     <div class="brief">
       {{#with asset}}
-        <div class="asset">
+        <div class="asset {{styleClasses}}">
           <div class="asset-name">{{> t10e displayNameTranslation}}</div>
-          <div class="description">{{> t10e descriptionTranslation}}</div>
+          <div class="description">
+            {{#Markdown}}{{> t10e descriptionTranslation}}{{/Markdown}}
+          </div>
           {{> Render briefComponent}}
         </div>
       {{/with}}

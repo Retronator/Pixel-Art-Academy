@@ -1,6 +1,6 @@
-PADB = PixelArtDatabase
+LOI = LandsOfIllusions
 
-class PADB.Upload.Context extends PADB.Upload.Context
+class LOI.Assets.Upload.Context extends LOI.Assets.Upload.Context
   constructor: ->
     super
     

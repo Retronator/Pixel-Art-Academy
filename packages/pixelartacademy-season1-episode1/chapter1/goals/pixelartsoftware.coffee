@@ -63,13 +63,13 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @initialize()
 
-  class @Colors extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Colors'
+  class @ColorSwatches extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.ColorSwatches'
 
-    @directive: -> "Colors"
+    @directive: -> "Color swatches"
 
     @instructions: -> """
-      Learn how to use the color palette.
+      Learn how to change between predefined colors.
     """
 
     @predecessors: -> [Goal.Pencil]
@@ -87,7 +87,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       Use color picking to speed up changing colors.
     """
 
-    @predecessors: -> [Goal.Colors, Goal.Shortcuts]
+    @predecessors: -> [Goal.ColorSwatches, Goal.Shortcuts]
 
     @groupNumber: -> -2
 
@@ -102,7 +102,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       Use the shortcuts menu to see or reassign keyboard shortcuts and increase your drawing efficiency.
     """
 
-    @predecessors: -> [Goal.Eraser, Goal.BucketFill]
+    @predecessors: -> [Goal.Eraser, Goal.ColorFill]
 
     @groupNumber: -> -1
 
@@ -259,7 +259,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @Pencil
     @Eraser
     @ColorFill
-    @Colors
+    @ColorSwatches
     @ColorPicking
     @Shortcuts
     @Lines

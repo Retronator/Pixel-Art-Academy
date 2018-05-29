@@ -1,0 +1,36 @@
+<template name="LandsOfIllusions.Assets.Components.References">
+  <div class="landsofillusions-assets-components-references {{styleClasses}}">
+    <div class="stored-references">
+      <ul class="references">
+        {{#each storedReferences}}
+          <li class="reference">
+            {{> LandsOfIllusions.Assets.Components.References.Reference}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+    <div class="displayed-references">
+      <ul class="references">
+        {{#each displayedReferences}}
+          <li class="reference">
+            {{> LandsOfIllusions.Assets.Components.References.Reference}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+    <div class="actions">
+      <div class="upload action">
+        <button class="upload-button button">Upload</button>
+      </div>
+      <div class="storage action">
+        <button class="storage-button button">Storage</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="LandsOfIllusions.Assets.Components.References.Reference">
+  <div class="landsofillusions-assets-components-references-reference">
+    <img src="{{imageSource}}">
+  </div>
+</template>

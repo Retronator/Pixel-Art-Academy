@@ -57,7 +57,7 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  authorizeSpriteAction sprite
+  LOI.Assets.VisualAsset._authorizeAssetAction sprite
 
   x = pixel.x
   y = pixel.y
@@ -117,7 +117,7 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  authorizeSpriteAction sprite
+  LOI.Assets.VisualAsset._authorizeAssetAction sprite
 
   throw new AE.ArgumentOutOfRangeException "There are no pixels on this layer." unless sprite.layers?[layerIndex].pixels
 
@@ -192,7 +192,7 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  authorizeSpriteAction sprite
+  LOI.Assets.VisualAsset._authorizeAssetAction sprite
 
   # Make sure the location is within the bounds.
   unless sprite.bounds.left <= newTargetPixel.x <= sprite.bounds.right and sprite.bounds.top <= newTargetPixel.y <= sprite.bounds.bottom
@@ -294,7 +294,7 @@ LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  authorizeSpriteAction sprite
+  LOI.Assets.VisualAsset._authorizeAssetAction sprite
 
   modifier = {}
 
@@ -329,24 +329,6 @@ LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
   modifier.$set["layers.#{layerIndex}.pixels"] = pixels
 
   LOI.Assets.Sprite.documents.update spriteId, modifier
-
-authorizeSpriteAction = (sprite) ->
-  # See if user controls one of the author characters.
-  authors = sprite.authors or []
-
-  for author in authors
-    try
-      LOI.Authorize.characterAction author._id
-
-      # If error was not thrown, this author is controlled by the user and action is approved.
-      return
-
-    catch
-      # This author is not controlled by the user.
-      continue
-
-  # No author was authorized. Only allow editing if the user is an admin.
-  RA.authorizeAdmin()
 
 pixelPattern = Match.ObjectIncluding
   x: Match.Integer

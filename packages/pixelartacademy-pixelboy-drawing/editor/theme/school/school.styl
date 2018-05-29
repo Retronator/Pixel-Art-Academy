@@ -3,6 +3,12 @@
 .pixelartacademy-pixelboy-apps-drawing.theme-school
   .pixelartacademy-pixelboy-apps-drawing-editor
     .pixelartacademy-pixelboy-apps-drawing-editor-theme-school
+      &.hidden-tools
+        .landsofillusions-assets-components-toolbox
+        .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-color-fill
+        .test-paper
+          visibility hidden
+
       .background
         absolute-cover()
         z-index 0
@@ -164,9 +170,20 @@
         z-index 1
         background atariGrey(6)
         box-sizing content-box
-        border solid atariGrey(6)
+        border 10rem solid atariGrey(6)
         box-shadow -1rem 1rem 0 transparentify(atariOrange(4), atariOrange(5))
         transition all 0.6s
+
+        &.completed
+          &::before
+            content '︎'
+            position absolute
+            z-index 1
+            top -2rem
+            right -2rem
+            width 10rem
+            height 8rem
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/completedcheckmark.png')
 
         .landsofillusions-assets-components-pixelcanvas
           canvas

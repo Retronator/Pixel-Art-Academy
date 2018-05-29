@@ -1,0 +1,30 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Theme.School.References">
+  <div class="landsofillusions-assets-components-references {{styleClasses}}">
+    <div class="stored-references">
+      <ul class="references">
+        {{#each storedReferences}}
+          <li class="reference">
+            {{> LandsOfIllusions.Assets.Components.References.Reference}}
+          </li>
+        {{/each}}
+      </ul>
+      <div class="actions">
+        <div class="upload action">
+          <button class="upload-button button">Upload</button>
+        </div>
+        <div class="storage action">
+          <button class="storage-button button">Storage</button>
+        </div>
+      </div>
+    </div>
+    <div class="displayed-references">
+      <ul class="references">
+        {{#each displayedReferences}}
+          <li class="reference">
+            {{> LandsOfIllusions.Assets.Components.References.Reference}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</template>

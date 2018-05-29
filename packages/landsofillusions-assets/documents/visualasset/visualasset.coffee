@@ -1,7 +1,6 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
-# A 2D image asset.
 class LOI.Assets.VisualAsset extends AM.Document
   @id: -> 'LandsOfIllusions.Assets.VisualAsset'
   # name: text identifier for the sprite
@@ -23,15 +22,27 @@ class LOI.Assets.VisualAsset extends AM.Document
   #   _id
   #   avatar
   #     fullName
+  # references: array of images used as references
+  #   image: image document
+  #     _id
+  #     url
+  #   displayed: boolean if the reference is currently displayed
+  #   position: data for where to display the reference
+  #     x, y: floating point position values
+  #   scale: data for how big to display the reference
   @Meta
     abstract: true
     fields: =>
       palette: @ReferenceField LOI.Assets.Palette, ['name'], false
       authors: [@ReferenceField LOI.Character, ['avatar.fullName']]
+      references: [
+        image: @ReferenceField LOI.Assets.Image, ['url']
+      ]
 
   @updatePalette: @method 'updatePalette'
   @updateMaterial: @method 'updateMaterial'
   @updateLandmark: @method 'updateLandmark'
+  @addReferenceByUrl: @method 'addReferenceByUrl'
 
   # Child documents should implement these.
   @forId: null
@@ -42,6 +53,24 @@ class LOI.Assets.VisualAsset extends AM.Document
   @clear: null
   @remove: null
   @duplicate: null
+  
+  @_authorizeAssetAction: (asset) ->
+    # See if user controls one of the author characters.
+    authors = asset.authors or []
+  
+    for author in authors
+      try
+        LOI.Authorize.characterAction author._id
+  
+        # If error was not thrown, this author is controlled by the user and action is approved.
+        return
+  
+      catch
+        # This author is not controlled by the user.
+        continue
+  
+    # No author was authorized. Only allow editing if the user is an admin.
+    RA.authorizeAdmin()
 
   constructor: ->
     super

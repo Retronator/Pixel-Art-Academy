@@ -34,6 +34,9 @@
       .description
         margin 8rem 0
 
+        ul
+          list-style square
+
       .properties
         list-style none
         padding 0
@@ -57,14 +60,21 @@
           border 1rem solid atariGrey(4)
           width 33.3%
           height 10rem
+          text-transform uppercase
+          checkout()
+          text-align center
+
+          &.completed
+            background atariGreen(5)
+            padding 1rem
 
           .button
             absolute-cover-size()
             border none
             background none
-            checkout()
-            text-transform uppercase
             color atariGrey(2)
+            font inherit
+            text-transform inherit
 
             &:hover
               background atariGrey(6)

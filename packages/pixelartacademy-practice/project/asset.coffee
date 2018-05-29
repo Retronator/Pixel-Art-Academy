@@ -56,3 +56,7 @@ class PAA.Practice.Project.Asset
 
   description: -> AB.translate(@_translationSubscription, 'description').text
   descriptionTranslation: -> AB.translation @_translationSubscription, 'description'
+
+  styleClasses: -> '' # Override to provide a string with class names for styling the asset.
+
+  editorStyleClasses: -> '' # Override to provide a string with class names for styling the surrounding editor.

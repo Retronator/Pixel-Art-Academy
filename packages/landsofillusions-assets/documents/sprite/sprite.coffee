@@ -1,7 +1,7 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
-# A 2D image asset.
+# A 2D pixel art asset.
 class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Sprite'
   # layers: array of

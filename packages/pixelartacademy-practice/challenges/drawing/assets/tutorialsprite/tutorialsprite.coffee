@@ -72,17 +72,51 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
     @briefComponent = new @constructor.BriefComponent @
 
-  completed: ->
-    # Compare goal pixels with current sprite pixels.
-    return unless spritePixels = @sprite()?.layers[0].pixels
+    @completed = new ComputedField =>
+      # Compare goal pixels with current sprite pixels.
+      return unless spritePixels = @sprite()?.layers[0].pixels
 
-    return unless @goalPixels.length is spritePixels.length
+      return false unless @goalPixels.length is spritePixels.length
 
-    for goalPixel in @goalPixels
-      return unless _.find spritePixels, (spritePixel) => EJSON.equals goalPixel, spritePixel
+      for goalPixel in @goalPixels
+        return false unless _.find spritePixels, (spritePixel) => EJSON.equals goalPixel, spritePixel
 
-    true
+      true
+
+    # Save completed value to tutorial state.
+    Tracker.autorun (computation) =>
+      # We expect completed to return true or false, and undefined if can't yet determine (loading).
+      completed = @completed()
+      return unless completed?
+
+      assets = @tutorial.state 'assets'
+
+      unless assets
+        assets = []
+        updated = true
+
+      asset = _.find assets, (asset) => asset.id is @id()
+
+      unless asset
+        asset = id: @id()
+        assets.push asset
+        updated = true
+
+      unless asset.completed is completed
+        asset.completed = completed
+        updated = true
+
+      @tutorial.state 'assets', assets if updated
+
+  destroy: ->
 
   editorDrawComponents: -> [
     @engineComponent
   ]
+
+  styleClasses: ->
+    classes = [
+      'completed' if @completed()
+    ]
+
+    _.without(classes, undefined).join ' '

@@ -84,12 +84,21 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/challenges..');
   api.addFile('chapter1/challenges/drawing..');
-
   api.addFile('chapter1/challenges/drawing/tutorial..');
-  api.addFile('chapter1/challenges/drawing/tutorial/pencil');
-  api.addFile('chapter1/challenges/drawing/tutorial/eraser');
-  api.addFile('chapter1/challenges/drawing/tutorial/colorfill');
-  api.addFile('chapter1/challenges/drawing/tutorial/blackandwhite');
+
+  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools..');
+  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/pencil');
+  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/eraser');
+  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/colorfill');
+  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/final');
+  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/shortcuts');
+
+  api.addFile('chapter1/challenges/drawing/tutorial/colortools..');
+  api.addFile('chapter1/challenges/drawing/tutorial/colortools/colorswatches');
+  api.addFile('chapter1/challenges/drawing/tutorial/colortools/colorpicking');
+
+  api.addFile('chapter1/challenges/drawing/tutorial/helpers..');
+  api.addFile('chapter1/challenges/drawing/tutorial/helpers/zoom');
 
   // Intro
   api.addFile('chapter1/sections/intro..');

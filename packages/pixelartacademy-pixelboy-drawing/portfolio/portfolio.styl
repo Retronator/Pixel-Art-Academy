@@ -108,9 +108,10 @@
 
         .group
           position relative
-          background-color atariBrown(4)
-          margin 0 auto
+          z-index 0
           height 17rem
+          margin 0 auto
+          background-color atariBrown(4)
           box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
           transition all 0.2s
           cursor pointer
@@ -211,6 +212,17 @@
               &.active
                 top -240rem
                 transition all 0.2s, top 0.5s
+
+              &.completed
+                .sprite
+                  &::before
+                    content '✔︎'
+                    position absolute
+                    z-index 1
+                    top -4rem
+                    right -4rem
+                    color atariGreen(3)
+                    adventure()
 
               .sprite
                 position absolute
