@@ -42,7 +42,10 @@ class LOI.Assets.VisualAsset extends AM.Document
   @updatePalette: @method 'updatePalette'
   @updateMaterial: @method 'updateMaterial'
   @updateLandmark: @method 'updateLandmark'
+
   @addReferenceByUrl: @method 'addReferenceByUrl'
+  @updateReferenceScale: @method 'updateReferenceScale'
+  @updateReferencePosition: @method 'updateReferencePosition'
 
   # Child documents should implement these.
   @forId: null

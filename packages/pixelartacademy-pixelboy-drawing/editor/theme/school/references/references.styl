@@ -8,8 +8,6 @@
     width 165rem
     height 190rem
     transition all 0.2s
-
-  .stored-references
     cursor pointer
 
     &::before
@@ -20,14 +18,6 @@
       bottom -5rem
       background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/tray-shadow.png')
       mix-blend-mode multiply
-
-    .references
-      absolute-cover()
-      z-index 1
-      list-style none
-      margin 0
-      padding 0
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/tray.png')
 
     &::after
       content ''
@@ -40,6 +30,47 @@
       pointer-events none
       background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/tray-innershadow.png')
       mix-blend-mode multiply
+
+    .references
+      &::after
+        content ''
+        absolute-cover()
+        z-index 1
+        list-style none
+        margin 0
+        padding 0
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/tray.png')
+
+      .reference
+        position absolute
+        top 82rem
+        left 82rem
+
+        .landsofillusions-assets-components-references-reference
+          position absolute
+          z-index 4
+          border 4rem solid atariGrey(6)
+          box-shadow -1rem 1rem 0 rgba(atariGrey(0), 0.2)
+          transform translate(-50%, -50%)
+          cursor grab
+
+          &.dragging
+            position fixed
+            transform translate(-50%, -51%)
+            box-shadow -12rem 4rem 20rem rgba(atariGrey(0), 0.2)
+            z-index 11
+
+          .pixelartacademy-pixelboy-apps-drawing-editor-theme-school:not(.dragging) &
+            transition transform 0.2s, box-shadow 0.2s
+
+            &:hover
+              transform translate(-50%, -51%)
+              box-shadow -4rem 2rem 0 rgba(atariGrey(0), 0.2)
+
+          .image
+            display block
+            width 100%
+            height 100%
 
     .actions
       pointer-events none
@@ -62,6 +93,11 @@
           width 80rem
           height 80rem
           background atariGrey(2)
+
+        .pixelartacademy-pixelboy-apps-drawing-editor-theme-school:not(.dragging) &
+          &:hover
+            transform translateY(-1rem)
+            box-shadow -4rem 2rem 0 rgba(atariGrey(0), 0.2)
 
         &.upload
           z-index 3
@@ -92,8 +128,3 @@
       .stored-references
       .stored-references:hover
         top calc(50% - 95rem)
-
-      .actions
-        .action
-          &:hover
-            transform translateX(-2rem)

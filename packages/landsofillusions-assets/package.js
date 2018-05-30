@@ -72,7 +72,9 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/landmarks..');
   api.addUnstyledComponent('components/toolbox..');
   api.addUnstyledComponent('components/spriteimage..');
+
   api.addUnstyledComponent('components/references..');
+  api.addUnstyledComponent('components/references/reference..');
 
   api.addUnstyledComponent('components/shadingsphere..');
   api.addFile('components/shadingsphere/normalpicker');

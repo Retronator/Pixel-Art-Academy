@@ -210,6 +210,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     [toolClass, extraToolClass].join ' '
 
+  draggingClass: ->
+    'dragging' if @references().dragging()
+
   spriteStyle: ->
     # Allow to be updated externally.
     @spriteStyleChangeDependency.depend()

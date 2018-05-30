@@ -106,16 +106,47 @@ LOI.Assets.VisualAsset.addReferenceByUrl.method (assetId, assetClassName, charac
   check url, String
 
   # Authorize action.
-  asset = requireAsset assetId
+  assetClass = requireAssetClass assetClassName
+  asset = requireAsset assetId, assetClass
   LOI.Assets.VisualAsset._authorizeAssetAction asset
 
   # Create the image document.
   imageId = LOI.Assets.Image.insert characterId, url
 
   # Add the reference.
-  assetClass = requireAssetClass assetClassName
-
-  assetClass.update assetId,
+  assetClass.documents.update assetId,
     $push:
-      image:
-        _id: imageId
+      references:
+        image:
+          _id: imageId
+          # Also inject the URL so we don't have to wait for reference to kick in.
+          url: url
+
+LOI.Assets.VisualAsset.updateReferenceScale.method (assetId, assetClassName, imageId, scale) ->
+  check scale, Number
+
+  updateReference assetId, assetClassName, imageId, 'scale', scale
+
+LOI.Assets.VisualAsset.updateReferencePosition.method (assetId, assetClassName, imageId, position) ->
+  check position,
+    x: Number
+    y: Number
+
+  updateReference assetId, assetClassName, imageId, 'position', position
+
+updateReference = (assetId, assetClassName, imageId, key, value) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+  check imageId, Match.DocumentId
+
+  # Authorize action.
+  assetClass = requireAssetClass assetClassName
+  asset = requireAsset assetId, assetClass
+  LOI.Assets.VisualAsset._authorizeAssetAction asset
+
+  referenceIndex = _.findIndex asset.references, (asset) -> asset.image._id is imageId
+  throw new AE.ArgumentException "Image is not one of the references." if referenceIndex is -1
+
+  assetClass.documents.update assetId,
+    $set:
+      "references.#{referenceIndex}.#{key}": value
