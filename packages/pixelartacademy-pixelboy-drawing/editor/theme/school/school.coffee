@@ -261,10 +261,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
         # Clipboard is hidden up, so move the sprite up and relative to top.
         top -= 265 * displayScale
 
+    # Border should be 6rem when camera scale matches the default sprite scale.
+    assetData = @editor.drawing.portfolio().displayedAsset()
+    borderWidth = 6 / assetData.scale() * scale
+
     width: "#{width + pixelInRem}rem"
     height: "#{height + pixelInRem}rem"
     left: left
     top: top
+    borderWidth: "#{borderWidth}rem"
 
   testPaperEnabled: ->
     @pencilEnabled() or @eraserEnabled()
