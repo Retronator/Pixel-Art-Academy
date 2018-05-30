@@ -49,20 +49,23 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
   endDrag: (dragDelta) ->
     reference = @data()
-    position = @position() or reference.position or x: 0, y: 0
+    position = @draggingPosition()
 
-    newPosition =
-      x: position.x + dragDelta.x
-      y: position.y + dragDelta.y
+    opened = @references.opened()
+    displayed = not opened
 
     # Update position.
     if reference.image
-      unless EJSON.equals reference.position, newPosition
-        LOI.Assets.VisualAsset.updateReferencePosition @references.options.assetId(), @references.options.documentClass.className, reference.image._id, newPosition
+      unless EJSON.equals reference.position, position
+        LOI.Assets.VisualAsset.updateReferencePosition @references.options.assetId(), @references.options.documentClass.className, reference.image._id, position
+
+      unless reference.displayed is displayed
+        LOI.Assets.VisualAsset.updateReferenceDisplayed @references.options.assetId(), @references.options.documentClass.className, reference.image._id, displayed
 
     else
       # This is an image that is still uploading so set the position directly to data as it will be uploaded later.
-      @position newPosition
+      @position position
+      @displayed displayed
 
     @draggingPosition null
 
@@ -71,12 +74,18 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     reference.image?.url or @preview()
 
   referenceStyle: ->
-    reference = @data()
-
     return display: 'none' unless size = @size()
 
-    scale = @scale() or reference.scale or 1
+    scale = @currentScale()
     position = @currentPosition()
+
+    if @draggingPosition()
+      # Add parent offset since we expect positioned fixed.
+      displayScale = @display.scale()
+
+      position =
+        x: @parentOffset.left / displayScale + position.x
+        y: @parentOffset.top / displayScale + position.y
 
     left: "#{position.x}rem"
     top: "#{position.y}rem"
@@ -86,6 +95,14 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   currentPosition: ->
     reference = @data()
     @draggingPosition() or @position() or reference.position or x: 0, y: 0
+
+  currentScale: ->
+    reference = @data()
+    @scale() or reference.scale or 1
+
+  currentDisplayed: ->
+    reference = @data()
+    @displayed() or reference.displayed or false
 
   draggingClass: ->
     'dragging' if @references.draggingReference() is @
@@ -103,10 +120,12 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   onMouseDown: (event) ->
     return unless event.which is 1
 
-    reference = @data()
-
     # Prevent browser select/dragging behavior
     event.preventDefault()
+
+    # Save parent offset at start of dragging.
+    $reference = @$('div').eq(0)
+    @parentOffset = $reference.parent().offset()
 
     @references.startDrag
       reference: @

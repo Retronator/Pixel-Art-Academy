@@ -23,18 +23,25 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
       'click .stored-references': @onClickStoredReferences
 
   onClickStoredReferences: (event) ->
+    $target = $(event.target)
     opened = @opened()
+
+    # Don't react to clicks on references to prevent opening on drag end.
+    return if $target.closest('.reference').length
 
     if opened
       # Only react to clicks directly on the stored references.
-      $target = $(event.target)
-      return if $target.closest('.reference').length
       return if $target.closest('.actions').length
 
     @opened not opened
 
   class @Reference extends LOI.Assets.Components.References.Reference
     @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference'
+
+    constructor: ->
+      super
+
+      @trayWidth = 165
 
     onCreated: ->
       super
@@ -57,3 +64,13 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
         else
           # This is an image that is still uploading so set the scale directly to data as it will be uploaded later.
           @scale scale
+
+      # Close references when moving outside the tray.
+      @autorun (computation) =>
+        return unless @references.opened()
+        return unless draggingPosition = @draggingPosition()
+        return unless size = @size()
+        scale = @currentScale()
+
+        if Math.abs(draggingPosition.x) + size.width * scale / 2 > @trayWidth / 2
+          @references.opened false

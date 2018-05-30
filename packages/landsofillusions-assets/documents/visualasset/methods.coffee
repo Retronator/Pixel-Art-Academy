@@ -134,6 +134,11 @@ LOI.Assets.VisualAsset.updateReferencePosition.method (assetId, assetClassName, 
 
   updateReference assetId, assetClassName, imageId, 'position', position
 
+LOI.Assets.VisualAsset.updateReferenceDisplayed.method (assetId, assetClassName, imageId, displayed) ->
+  check displayed, Boolean
+
+  updateReference assetId, assetClassName, imageId, 'displayed', displayed
+
 updateReference = (assetId, assetClassName, imageId, key, value) ->
   check assetId, Match.DocumentId
   check assetClassName, String

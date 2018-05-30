@@ -55,17 +55,7 @@ class LOI.Assets.Components.References extends AM.Component
       
   startDrag: (options) ->
     @dragStartMousePosition = options.mouseCoordinate
-
-    # Measure where the reference is positioned currently in fixed coordinates.
-    $reference = options.reference.$('div').eq(0)
-    parentOffset = $reference.parent().offset()
-    referencePosition = options.reference.currentPosition()
-
-    scale = @display.scale()
-
-    @dragStartReferencePosition =
-      x: parentOffset.left / scale + referencePosition.x
-      y: parentOffset.top / scale + referencePosition.y
+    @dragStartReferencePosition = options.referencePosition
 
     @dragDelta =
       x: 0

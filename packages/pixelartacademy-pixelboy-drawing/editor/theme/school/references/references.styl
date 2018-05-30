@@ -13,7 +13,7 @@
     &::before
       content ''
       absolute-cover()
-      z-index 1
+      z-index 2
       left -20rem
       bottom -5rem
       background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/tray-shadow.png')
@@ -26,19 +26,20 @@
       right 4rem
       width 157rem
       height 182rem
-      z-index 10
+      z-index 100
       pointer-events none
       background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/tray-innershadow.png')
       mix-blend-mode multiply
 
     .references
+      list-style none
+      margin 0
+      padding 0
+
       &::after
         content ''
         absolute-cover()
-        z-index 1
-        list-style none
-        margin 0
-        padding 0
+        z-index 2
         background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/tray.png')
 
       .reference
@@ -47,36 +48,14 @@
         left 82rem
 
         .landsofillusions-assets-components-references-reference
-          position absolute
-          z-index 4
-          border 4rem solid atariGrey(6)
-          box-shadow -1rem 1rem 0 rgba(atariGrey(0), 0.2)
-          transform translate(-50%, -50%)
-          cursor grab
-
-          &.dragging
-            position fixed
-            transform translate(-52%, -52%)
-            box-shadow -12rem 4rem 20rem rgba(atariGrey(0), 0.2)
-            z-index 11
-
-          .pixelartacademy-pixelboy-apps-drawing-editor-theme-school:not(.dragging) &
-            transition transform 0.2s, box-shadow 0.2s
-
-            &:hover
-              transform translate(-52%, -50%)
-
-          .image
-            display block
-            width 100%
-            height 100%
+          z-index 5
 
     .actions
       pointer-events none
 
       .action
         position absolute
-        z-index 2
+        z-index 3
         width 88rem
         height 96rem
         background atariGrey(6)
@@ -94,7 +73,7 @@
           background atariGrey(2)
 
         &.upload
-          z-index 3
+          z-index 4
           left 64rem
           bottom 25rem
 
@@ -110,6 +89,44 @@
           border none
           background none
           padding-top 85rem
+
+  .displayed-references
+    position absolute
+    top 50%
+    left 50%
+
+    .references
+      list-style none
+      margin 0
+      padding 0
+
+      .reference
+        .landsofillusions-assets-components-references-reference
+          z-index 1
+
+  .landsofillusions-assets-components-references-reference
+    position absolute
+    border 4rem solid atariGrey(6)
+    box-shadow -1rem 1rem 0 rgba(atariGrey(0), 0.2)
+    transform translate(-50%, -50%)
+    cursor grab
+
+    &.dragging
+      position fixed
+      transform translate(-52%, -52%)
+      box-shadow -12rem 4rem 20rem rgba(atariGrey(0), 0.2)
+      z-index 101 !important
+
+    .image
+      display block
+      width 100%
+      height 100%
+
+    .pixelartacademy-pixelboy-apps-drawing-editor-theme-school:not(.dragging) &
+      transition transform 0.2s, box-shadow 0.2s
+
+      &:hover
+        transform translate(-52%, -50%)
 
   .pixelartacademy-pixelboy-apps-drawing-editor-theme-school.drawing-active &
     .stored-references
