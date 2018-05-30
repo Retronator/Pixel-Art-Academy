@@ -58,13 +58,14 @@ class LOI.Assets.Components.References extends AM.Component
 
     # Measure where the reference is positioned currently in fixed coordinates.
     $reference = options.reference.$('div').eq(0)
-    referenceOffset = $reference.offset()
+    parentOffset = $reference.parent().offset()
+    referencePosition = options.reference.currentPosition()
 
     scale = @display.scale()
 
     @dragStartReferencePosition =
-      x: (referenceOffset.left + $reference.outerWidth() / 2) / scale
-      y: (referenceOffset.top + $reference.outerHeight() / 2) / scale
+      x: parentOffset.left / scale + referencePosition.x
+      y: parentOffset.top / scale + referencePosition.y
 
     @dragDelta =
       x: 0
