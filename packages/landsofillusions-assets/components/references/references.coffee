@@ -45,8 +45,12 @@ class LOI.Assets.Components.References extends AM.Component
 
       uploadingReferences = @uploadingReferences()
 
-      # Merge existing and uploading references.
-      [assetReferences..., uploadingReferences...]
+      # Merge existing and uploading references and sort by order.
+      _.sortBy [assetReferences..., uploadingReferences...], (reference) => _.propertyValue(reference, 'order') or 0
+
+    @highestOrder = new ComputedField =>
+      return unless highestReference = _.last @references()
+      _.propertyValue(highestReference, 'order') or 0
 
   removeUploadingReference: (referenceId, imageId) ->
     # Wait until references have updated and we have the new one with created image ID.
@@ -128,6 +132,7 @@ class LOI.Assets.Components.References extends AM.Component
         scale: new ReactiveField null
         displayed: new ReactiveField false
         preview: new ReactiveField null
+        order: new ReactiveField @highestOrder() + 0.1
 
       @uploadingReferences uploadingReferences
 

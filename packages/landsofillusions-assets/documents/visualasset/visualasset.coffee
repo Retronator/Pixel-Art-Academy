@@ -30,6 +30,7 @@ class LOI.Assets.VisualAsset extends AM.Document
   #   position: data for where to display the reference
   #     x, y: floating point position values
   #   scale: data for how big to display the reference
+  #   order: integer value for sorting references
   @Meta
     abstract: true
     fields: =>
@@ -47,6 +48,7 @@ class LOI.Assets.VisualAsset extends AM.Document
   @updateReferenceScale: @method 'updateReferenceScale'
   @updateReferencePosition: @method 'updateReferencePosition'
   @updateReferenceDisplayed: @method 'updateReferenceDisplayed'
+  @reorderReferenceToTop: @method 'reorderReferenceToTop'
 
   # Child documents should implement these.
   @forId: null

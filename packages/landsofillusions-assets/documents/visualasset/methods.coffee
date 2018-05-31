@@ -167,3 +167,23 @@ updateReference = (assetId, assetClassName, imageId, key, value) ->
   assetClass.documents.update assetId,
     $set:
       "references.#{referenceIndex}.#{key}": value
+
+LOI.Assets.VisualAsset.reorderReferenceToTop.method (assetId, assetClassName, imageId) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+  check imageId, Match.DocumentId
+
+  # Authorize action.
+  assetClass = requireAssetClass assetClassName
+  asset = requireAsset assetId, assetClass
+  LOI.Assets.VisualAsset._authorizeAssetAction asset
+
+  referenceIndex = _.findIndex asset.references, (reference) -> reference.image._id is imageId
+  throw new AE.ArgumentException "Image is not one of the references." if referenceIndex is -1
+
+  # Find current highest order.
+  highestOrder = _.max _.map asset.references, (reference) -> reference.order or 0
+
+  assetClass.documents.update assetId,
+    $set:
+      "references.#{referenceIndex}.order": highestOrder + 1

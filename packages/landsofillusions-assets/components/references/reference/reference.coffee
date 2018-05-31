@@ -49,6 +49,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   endDrag: ->
     @setPosition @draggingPosition()
     @setDisplayed @references.draggingDisplayed()
+    @reorderToTop() unless @currentOrder() is @references.highestOrder()
 
     @draggingPosition null
 
@@ -89,6 +90,10 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     return unless reference = @data()
     _.propertyValue(reference, 'displayed') or false
 
+  currentOrder: ->
+    return unless reference = @data()
+    _.propertyValue(reference, 'order') or 0
+
   setPosition: (position) ->
     @_setReferenceProperty 'position', position
 
@@ -109,7 +114,17 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
     else
       reference[name] value
-      
+
+  reorderToTop: ->
+    return unless reference = @data()
+
+    if reference.image
+      LOI.Assets.VisualAsset.reorderReferenceToTop  @references.options.assetId(), @references.options.documentClass.className, reference.image._id
+
+    else
+      # We increase order only by .1 to allow other references to get higher via database calls.
+      reference.order @references.highestOrder() + 0.1
+
   draggingClass: ->
     'dragging' if @references.draggingReference() is @
 
