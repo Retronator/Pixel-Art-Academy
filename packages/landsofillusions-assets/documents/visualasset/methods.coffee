@@ -124,12 +124,15 @@ LOI.Assets.VisualAsset.addReferenceByUrl.method (assetId, assetClassName, charac
       # Also inject the URL so we don't have to wait for reference to kick in.
       url: url
 
-  reference[key] = value for key, value of {position, scale, displayed} when value
+  reference[key] = value for key, value of {position, scale, displayed} when value?
 
   # Add the reference.
   assetClass.documents.update assetId,
     $push:
       references: reference
+      
+  # Return created image ID.
+  imageId
 
 LOI.Assets.VisualAsset.updateReferenceScale.method (assetId, assetClassName, imageId, scale) ->
   check scale, Number

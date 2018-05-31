@@ -13,7 +13,6 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     @references = @ancestorComponentOfType LOI.Assets.Components.References
     @display = @callAncestorWith 'display'
 
-    @preview = new ReactiveField null
     @size = new ReactiveField null
 
     # Dragging position is the local override while the reference is actively dragged.
@@ -24,24 +23,28 @@ class LOI.Assets.Components.References.Reference extends AM.Component
       reference = @data()
 
       if reference.file
-        @_loadFilePreview reference.file
-        @_uploadFile reference.file
+        @_loadFilePreview reference
+        @_uploadFile reference
 
-  _loadFilePreview: (file) ->
+        # Remove the file attribute to prevent re-uploading if data context changes.
+        reference.file = null
+
+  _loadFilePreview: (reference) ->
     reader = new FileReader()
-    reader.onload = (event) => @preview event.target.result
+    reader.onload = (event) => reference.preview event.target.result
 
-    reader.readAsDataURL file
+    reader.readAsDataURL reference.file
 
-  _uploadFile: (file) ->
-    return unless reference = @data()
-
-    LOI.Assets.Components.References.referenceUploadContext.upload file, (url) =>
+  _uploadFile: (reference) ->
+    LOI.Assets.Components.References.referenceUploadContext.upload reference.file, (url) =>
       # Add reference to asset.
-      LOI.Assets.VisualAsset.addReferenceByUrl @references.options.assetId(), @references.options.documentClass.className, LOI.characterId(), url, @currentPosition(), @currentScale(), @currentDisplayed()
+      LOI.Assets.VisualAsset.addReferenceByUrl @references.options.assetId(), @references.options.documentClass.className, LOI.characterId(), url, reference.position(), reference.scale(), reference.displayed(), (error, imageId) =>
+        if error
+          console.error error
+          return
 
-      # Remove uploading reference.
-      @references.removeUploadingReference reference._id
+        # Remove uploading reference.
+        @references.removeUploadingReference reference._id, imageId
 
   endDrag: ->
     @setPosition @draggingPosition()
@@ -51,7 +54,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
   imageSource: ->
     reference = @data()
-    reference.image?.url or @preview()
+    reference.image?.url or reference.preview()
 
   referenceStyle: ->
     return display: 'none' unless size = @size()
@@ -96,7 +99,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     @_setReferenceProperty 'displayed', displayed
     
   _setReferenceProperty: (name, value) ->
-    reference = @data()
+    return unless reference = @data()
     upperName = _.upperFirst name
     
     return if EJSON.equals @["current#{upperName}"](), value

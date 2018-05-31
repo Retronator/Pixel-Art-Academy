@@ -39,20 +39,29 @@ class LOI.Assets.Components.References extends AM.Component
     @references = new ComputedField =>
       return [] unless assetData = @assetData()
 
-      assetReferences = assetData.references or []
-
       # Reuse image ID on asset to minimize reactivity.
+      assetReferences = _.cloneDeep(assetData.references) or []
       assetReference._id = assetReference.image._id for assetReference in assetReferences
 
+      uploadingReferences = @uploadingReferences()
+
       # Merge existing and uploading references.
-      [assetReferences..., @uploadingReferences()...]
+      [assetReferences..., uploadingReferences...]
 
-  removeUploadingReference: (referenceId) ->
-    uploadingReferences = @uploadingReferences()
+  removeUploadingReference: (referenceId, imageId) ->
+    # Wait until references have updated and we have the new one with created image ID.
+    @autorun (computation) =>
+      # Make sure the component has finished loading the image, to prevent flickering.
+      loadedComponents = @childComponentsWith (component) =>
+        component.data().image?._id is imageId and component.size()
 
-    _.remove uploadingReferences, (uploadingReference) => uploadingReference._id is referenceId
+      return unless loadedComponents.length
+      computation.stop()
 
-    @uploadingReferences uploadingReferences
+      uploadingReferences = @uploadingReferences()
+      _.remove uploadingReferences, (uploadingReference) => uploadingReference._id is referenceId
+
+      @uploadingReferences uploadingReferences
       
   startDrag: (options) ->
     @dragStartMousePosition = options.mouseCoordinate
@@ -66,11 +75,13 @@ class LOI.Assets.Components.References extends AM.Component
 
     # Wire end of dragging on mouse up anywhere in the window.
     $(document).on "mouseup.landsofillusions-assets-components-references", (event) =>
-      draggingReference = @draggingReference()
+      $(document).off '.landsofillusions-assets-components-references'
+
+      # Make sure we still have the reference in case of recomputation during drag.
+      return unless draggingReference = @draggingReference()
       draggingReference.endDrag()
 
       @draggingReference null
-      $(document).off '.landsofillusions-assets-components-references'
 
     $(document).on "mousemove.landsofillusions-assets-components-references", (event) =>
       draggingReference = @draggingReference()
@@ -116,6 +127,7 @@ class LOI.Assets.Components.References extends AM.Component
         position: new ReactiveField x: 0, y: 0
         scale: new ReactiveField null
         displayed: new ReactiveField false
+        preview: new ReactiveField null
 
       @uploadingReferences uploadingReferences
 
