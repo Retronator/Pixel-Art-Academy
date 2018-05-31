@@ -106,3 +106,13 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
 
         # Activate hide mode when nearing tray.
         @references.hideActive not @references.opened() and Math.abs(draggingPosition.x) < @trayWidth / 2 and draggingPosition.y + @parentOffset.top / displayScale - halfHeight < @trayHideActiveHeight
+    
+    onMouseDown: (event) ->
+      super
+      
+      # Parent offset will be relative to PixelBoy viewport so we need to remove it.
+      $pixelBoy = $('.pixelartacademy-pixelboy-os').eq(0)
+      pixelBoyOffset = $pixelBoy.offset()
+
+      @parentOffset.left -= pixelBoyOffset.left
+      @parentOffset.top -= pixelBoyOffset.top
