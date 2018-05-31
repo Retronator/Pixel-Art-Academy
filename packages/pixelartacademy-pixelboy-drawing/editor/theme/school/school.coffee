@@ -88,6 +88,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     @references new @constructor.References
       assetId: @editor.spriteId
       documentClass: LOI.Assets.Sprite
+      editorActive: @editor.active
 
     @toolbox new LOI.Assets.Components.Toolbox
       tools: @tools

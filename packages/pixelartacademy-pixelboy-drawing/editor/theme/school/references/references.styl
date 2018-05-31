@@ -121,6 +121,7 @@
     border 4rem solid atariGrey(6)
     box-shadow -1rem 1rem 0 rgba(atariGrey(0), 0.2)
     transform translate(-50%, -50%)
+    transition all 1s
     cursor grab
 
     &.dragging
@@ -149,6 +150,9 @@
          .action
             &:hover
               transform translateX(-2rem)
+
+    .landsofillusions-assets-components-references-reference
+      transition none
 
   .pixelartacademy-pixelboy-apps-drawing-editor-theme-school.drawing-active.dragging &
     .stored-references.hide-active

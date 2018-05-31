@@ -116,3 +116,26 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
 
       @parentOffset.left -= pixelBoyOffset.left
       @parentOffset.top -= pixelBoyOffset.top
+
+    referenceStyle: ->
+      style = super
+
+      # Push assets apart when we're not editing an asset.
+      if @currentDisplayed() and not @references.options.editorActive()
+        position = new THREE.Vector2 parseFloat(style.left), (parseFloat style.top)
+
+        distance = new THREE.Vector2(240, 180).length()
+
+        if size = @size()
+          scale = @currentScale()
+          halfWidth = size.width * scale / 2
+          halfHeight = size.height * scale / 2
+
+          distance += new THREE.Vector2(halfWidth, halfHeight).length()
+
+        position.normalize().multiplyScalar(distance)
+
+        style.left = "#{position.x}rem"
+        style.top = "#{position.y}rem"
+
+      style
