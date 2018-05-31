@@ -21,6 +21,7 @@ class LOI.Assets.Components.References extends AM.Component
     super
 
     @draggingReference = new ReactiveField null
+    @draggingDisplayed = new ReactiveField false
 
   onCreated: ->
     super
@@ -66,7 +67,7 @@ class LOI.Assets.Components.References extends AM.Component
     # Wire end of dragging on mouse up anywhere in the window.
     $(document).on "mouseup.landsofillusions-assets-components-references", (event) =>
       draggingReference = @draggingReference()
-      draggingReference.endDrag @dragDelta
+      draggingReference.endDrag()
 
       @draggingReference null
       $(document).off '.landsofillusions-assets-components-references'
@@ -87,8 +88,8 @@ class LOI.Assets.Components.References extends AM.Component
     # Set goal component last since it triggers reactivity.
     @draggingReference options.reference
 
-  storedReferences: -> _.filter @references(), (reference) => not reference.displayed
-  displayedReferences: -> _.filter @references(), (reference) => reference.displayed
+  storedReferences: -> _.filter @references(), (reference) => not _.propertyValue reference, 'displayed'
+  displayedReferences: -> _.filter @references(), (reference) => _.propertyValue reference, 'displayed'
 
   styleClasses: -> '' # Overrdide to provide custom style classes
   
@@ -111,6 +112,10 @@ class LOI.Assets.Components.References extends AM.Component
       uploadingReferences.push
         _id: Random.id()
         file: file
+        # We create reactive values for uploading references so they can be updated reactively.
+        position: new ReactiveField x: 0, y: 0
+        scale: new ReactiveField null
+        displayed: new ReactiveField false
 
       @uploadingReferences uploadingReferences
 

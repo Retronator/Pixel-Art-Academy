@@ -10,6 +10,20 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
     super
 
     @opened = new ReactiveField false
+    @hideActive = new ReactiveField false
+
+    # The dragging reference should end up displayed if our tray is closed and hide is not active.
+    @autorun (computation) =>
+      @draggingDisplayed not @opened() and not @hideActive()
+
+    # Close the tray when clicking outside of it.
+    $(document).on 'click.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references', (event) =>
+      return if $(event.target).closest('.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references').length
+
+      @opened false
+
+  onDestroyed: ->
+    $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references'
 
   styleClasses: ->
     classes = [
@@ -17,6 +31,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
     ]
 
     _.without(classes, undefined).join ' '
+
+  hideActiveClass: ->
+    'hide-active' if @hideActive()
     
   events: ->
     super.concat
@@ -42,35 +59,50 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
       super
 
       @trayWidth = 165
+      @trayHeight = 190
+      @trayHideActiveHeight = 10
+      @trayBorder = 8
 
     onCreated: ->
       super
 
-      # Automatically scale the image when not displayed.
+      # Automatically scale and position the image when not displayed.
       @autorun (computation) =>
         reference = @data()
-
         return unless size = @size()
+        return if @currentDisplayed()
 
         # Scale should be such that 100^2 pixels are covered, but any side is not larger than 150 pixels.
         scale = Math.min 100 / Math.sqrt(size.width * size.height), Math.min 150 / size.width, 150 / size.height
+        @setScale scale
 
-        return if reference.scale is scale
+        # Make sure reference is within the tray.
+        halfWidth = size.width * scale / 2
+        halfHeight = size.height * scale / 2
 
-        # Update scale.
-        if reference.image
-          LOI.Assets.VisualAsset.updateReferenceScale @references.options.assetId(), @references.options.documentClass.className, reference.image._id, scale
+        position = @currentPosition()
 
-        else
-          # This is an image that is still uploading so set the scale directly to data as it will be uploaded later.
-          @scale scale
+        maxX = @trayWidth / 2 - halfWidth - @trayBorder
+        maxY = @trayHeight / 2 - halfHeight - @trayBorder
 
-      # Close references when moving outside the tray.
+        position =
+          x: _.clamp position.x, -maxX, maxX
+          y: _.clamp position.y, -maxY, maxY
+
+        @setPosition position
+
       @autorun (computation) =>
-        return unless @references.opened()
         return unless draggingPosition = @draggingPosition()
         return unless size = @size()
         scale = @currentScale()
+        displayScale = @display.scale()
 
-        if Math.abs(draggingPosition.x) + size.width * scale / 2 > @trayWidth / 2
+        halfWidth = size.width * scale / 2
+        halfHeight = size.height * scale / 2
+
+        # Close references when moving outside the tray.
+        if @references.opened() and Math.abs(draggingPosition.x) + halfWidth > @trayWidth / 2 or Math.abs(draggingPosition.y) + halfHeight > @trayHeight / 2
           @references.opened false
+
+        # Activate hide mode when nearing tray.
+        @references.hideActive not @references.opened() and Math.abs(draggingPosition.x) < @trayWidth / 2 and draggingPosition.y + @parentOffset.top / displayScale - halfHeight < @trayHideActiveHeight

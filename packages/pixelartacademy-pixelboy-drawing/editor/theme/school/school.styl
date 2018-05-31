@@ -80,7 +80,7 @@
           .eraser
           .pencil
             left -40rem
-            height 9rem
+            height 7rem
 
           .pencil
             top calc(50% - 9rem)
@@ -89,12 +89,26 @@
             &::after
               background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/pencil.png')
 
+            &::before
+              background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/pencil-shadow.png')
+              top 5rem
+              left 0
+              width 23rem
+              height 4rem
+
           .eraser
             top calc(50% + 6rem)
             width 26rem
 
             &::after
               background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eraser.png')
+
+            &::before
+              background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eraser-shadow.png')
+              top 7rem
+              left 0
+              width 24rem
+              height 2rem
 
           .color-picker
             right -65rem
@@ -129,7 +143,7 @@
         left -78rem
         width 85rem
         height 62rem
-        z-index 2
+        z-index 3
         background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/calculator.png')
         box-shadow 1rem 3rem 0 transparentify(atariOrange(4), atariOrange(5))
 

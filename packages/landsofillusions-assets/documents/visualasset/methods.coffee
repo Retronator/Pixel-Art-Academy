@@ -99,11 +99,16 @@ LOI.Assets.VisualAsset.updateLandmark.method (assetId, assetClassName, index, la
     $set:
       "landmarks.#{index}": landmark
       
-LOI.Assets.VisualAsset.addReferenceByUrl.method (assetId, assetClassName, characterId, url) ->
+LOI.Assets.VisualAsset.addReferenceByUrl.method (assetId, assetClassName, characterId, url, position, scale, displayed) ->
   check assetId, Match.DocumentId
   check assetClassName, String
   check characterId, Match.DocumentId
   check url, String
+  check position, Match.OptionalOrNull
+    x: Number
+    y: Number
+  check scale, Match.OptionalOrNull Number
+  check displayed, Match.OptionalOrNull Boolean
 
   # Authorize action.
   assetClass = requireAssetClass assetClassName
@@ -113,14 +118,18 @@ LOI.Assets.VisualAsset.addReferenceByUrl.method (assetId, assetClassName, charac
   # Create the image document.
   imageId = LOI.Assets.Image.insert characterId, url
 
+  reference =
+    image:
+      _id: imageId
+      # Also inject the URL so we don't have to wait for reference to kick in.
+      url: url
+
+  reference[key] = value for key, value of {position, scale, displayed} when value
+
   # Add the reference.
   assetClass.documents.update assetId,
     $push:
-      references:
-        image:
-          _id: imageId
-          # Also inject the URL so we don't have to wait for reference to kick in.
-          url: url
+      references: reference
 
 LOI.Assets.VisualAsset.updateReferenceScale.method (assetId, assetClassName, imageId, scale) ->
   check scale, Number
