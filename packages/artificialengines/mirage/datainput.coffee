@@ -9,6 +9,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     Select: 'select'
     Number: 'number'
     Checkbox: 'checkbox'
+    Date: 'date'
 
   template: ->
     'Artificial.Mirage.DataInputComponent'
