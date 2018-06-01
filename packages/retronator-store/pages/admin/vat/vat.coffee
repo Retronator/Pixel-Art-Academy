@@ -72,6 +72,30 @@ class RS.Pages.Admin.Vat extends AM.Component
 
     totalAmount
 
+  csvExport: ->
+    lines = for transaction in @transactions().fetch()
+      taxInfo = transaction.taxInfo
+
+      values = [
+        "#{taxInfo.invoiceId.year}-#{taxInfo.invoiceId.number}"
+        transaction.time.toLocaleString 'sl',
+          year: 'numeric'
+          month: 'numeric'
+          day: 'numeric'
+          timeZone: 'UTC'
+        taxInfo.business?.name or "fizična oseba"
+        taxInfo.country.access or taxInfo.country.payment
+        taxInfo.vatRate.toLocaleString 'sl'
+        taxInfo.amountEur.net.toLocaleString 'sl'
+        taxInfo.amountEur.vat?.toLocaleString 'sl'
+      ]
+
+      values = ("\"#{value}\"" for value in values)
+
+      values.join ', '
+
+    lines.join '\n'
+
   transactionClass: ->
     transaction = @currentData()
 
