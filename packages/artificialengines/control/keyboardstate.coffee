@@ -13,3 +13,6 @@ class AC.KeyboardState
 
   isCommandDown: ->
     @[AC.Keys.leftCommand] or @[AC.Keys.rightCommand]
+
+  isCommandOrCtrlDown: ->
+    @isCommandDown() or @isKeyDown AC.Keys.ctrl

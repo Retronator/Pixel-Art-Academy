@@ -17,7 +17,8 @@ class LOI.Assets.Components.Navigator extends AM.Component
     super
 
     $(window).on 'keydown.landsofillusions-assets-components-navigator', (event) =>
-      return unless AC.Keyboard.getState().isCommandDown()
+      keyboardState = AC.Keyboard.getState()
+      return unless keyboardState.isCommandOrCtrlDown()
 
       switch event.keyCode
         when AC.Keys.equalSign

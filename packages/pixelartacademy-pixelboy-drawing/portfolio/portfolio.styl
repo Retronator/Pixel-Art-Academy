@@ -68,23 +68,18 @@
       margin 0 auto
       height 21rem
       transition all 0.2s
-      cursor pointer
+      overflow hidden
 
       &:not(.active):hover
         height 38rem
         margin-top -5rem
 
       &.active
-        cursor default
-
         .groups
           .group
             &:not(.active):hover
               height 19rem
               margin-top -1rem
-
-            &.active
-              cursor default
 
       &.group-in-section-active
         .groups
@@ -100,6 +95,7 @@
         padding 7rem
         acme-7()
         color atariCyan(1)
+        cursor pointer
 
       .groups
         list-style none
@@ -114,7 +110,6 @@
           background-color atariBrown(4)
           box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
           transition all 0.2s
-          cursor pointer
 
           &.active
             height 150rem
@@ -124,6 +119,7 @@
             padding 5rem
             adventure()
             color atariGrey(1)
+            cursor pointer
 
           .briefs
             position absolute

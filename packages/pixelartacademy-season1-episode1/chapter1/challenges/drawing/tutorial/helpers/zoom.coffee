@@ -9,6 +9,11 @@ class C1.Challenges.Drawing.Tutorial.Helpers.Zoom extends PAA.Practice.Challenge
 
   @description: -> """
       Use the plus and minus signs on the calculator to zoom in and out to make drawing easier.
+
+      Shortcuts:
+
+      - ⌘/ctrl+: zoom in
+      - ⌘/ctrl-: zoom out
     """
 
   @fixedDimensions: -> width: 64, height: 40

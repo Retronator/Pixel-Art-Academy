@@ -3,8 +3,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Challenges.Drawing.Tutorial.EssentialTools extends C1.Challenges.Drawing.Tutorial
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.EssentialTools'
+class C1.Challenges.Drawing.Tutorial.Basics extends C1.Challenges.Drawing.Tutorial
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Basics'
 
   @fullName: -> "Tutorial: Basics"
 
@@ -25,18 +25,19 @@ class C1.Challenges.Drawing.Tutorial.EssentialTools extends C1.Challenges.Drawin
         @eraser ?= Tracker.nonreactive => new @constructor.Eraser @
         assets.push @eraser
 
+      if @_assetsCompleted @eraser
         @colorFill ?= Tracker.nonreactive => new @constructor.ColorFill @
         assets.push @colorFill
 
-      if @_assetsCompleted @pencil, @eraser, @colorFill
+      if @_assetsCompleted @colorFill
         @colorFill2 ?= Tracker.nonreactive => new @constructor.ColorFill2 @
         assets.push @colorFill2
 
       if @_assetsCompleted @colorFill2
-        @final ?= Tracker.nonreactive => new @constructor.Final @
-        assets.push @final
+        @basicTools ?= Tracker.nonreactive => new @constructor.BasicTools @
+        assets.push @basicTools
 
-      if @_assetsCompleted @final
+      if @_assetsCompleted @basicTools
         @shortcuts ?= Tracker.nonreactive => new @constructor.Shortcuts @
         assets.push @shortcuts
 
@@ -51,7 +52,7 @@ class C1.Challenges.Drawing.Tutorial.EssentialTools extends C1.Challenges.Drawin
     @eraser?.destroy()
     @colorFill?.destroy()
     @colorFill2?.destroy()
-    @final?.destroy()
+    @basicTools?.destroy()
     @shortcuts?.destroy()
     
     @assets.stop()

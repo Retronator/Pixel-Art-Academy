@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Challenges.Drawing.Tutorial.EssentialTools.ColorFill extends PAA.Practice.Challenges.Drawing.TutorialSprite
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.EssentialTools.ColorFill'
+class C1.Challenges.Drawing.Tutorial.Basics.ColorFill extends PAA.Practice.Challenges.Drawing.TutorialSprite
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Basics.ColorFill'
 
   @displayName: -> "Color fill"
 
@@ -46,8 +46,8 @@ class C1.Challenges.Drawing.Tutorial.EssentialTools.ColorFill extends PAA.Practi
   @initialize()
 
 
-class C1.Challenges.Drawing.Tutorial.EssentialTools.ColorFill2 extends PAA.Practice.Challenges.Drawing.TutorialSprite
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.EssentialTools.ColorFill2'
+class C1.Challenges.Drawing.Tutorial.Basics.ColorFill2 extends PAA.Practice.Challenges.Drawing.TutorialSprite
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Basics.ColorFill2'
 
   @displayName: -> "Color fill 2"
 

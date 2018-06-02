@@ -124,7 +124,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   events: ->
     super.concat
       'click .section': @onClickSection
-      'click .group': @onClickGroup
+      'click .group-name': @onClickGroupName
       'click': @onClick
       'mouseenter .asset': @onMouseEnterAsset
       'mouseleave .asset': @onMouseLeaveAsset
@@ -132,17 +132,27 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
   onClickSection: (event) ->
     section = @currentData()
-    return if section is @activeSection()
 
-    @activeSection section
+    clickInsideGroup = $(event.target).closest('.group').length > 0
 
-    # Reset group if we click on the name, but not one of the inner groups.
-    # In that case the group handler will activate a new group in this new section.
-    @activeGroup null unless $(event.target).closest('.group').length
+    if section is @activeSection()
+      @activeSection null unless clickInsideGroup
 
-  onClickGroup: (event) ->
+    else
+      @activeSection section
+
+      # Reset group if we click on the name, but not one of the inner groups.
+      # In that case the group handler will activate a new group in this new section.
+      @activeGroup null unless clickInsideGroup
+
+  onClickGroupName: (event) ->
     group = @currentData()
-    @activeGroup group
+
+    if group is @activeGroup()
+      @activeGroup null
+
+    else
+      @activeGroup group
 
   onClick: (event) ->
     # If we click outside the clipboard, close current asset.

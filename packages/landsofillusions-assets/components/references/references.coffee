@@ -131,7 +131,7 @@ class LOI.Assets.Components.References extends AM.Component
   storedReferences: -> _.filter @references(), (reference) => not _.propertyValue reference, 'displayed'
   displayedReferences: -> _.filter @references(), (reference) => _.propertyValue reference, 'displayed'
 
-  styleClasses: -> '' # Overrdide to provide custom style classes
+  styleClasses: -> '' # Override to provide custom style classes
   
   dragging: ->
     @draggingReference()?

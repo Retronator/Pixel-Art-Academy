@@ -86,16 +86,17 @@ Package.onUse(function(api) {
   api.addFile('chapter1/challenges/drawing..');
   api.addFile('chapter1/challenges/drawing/tutorial..');
 
-  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools..');
-  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/pencil');
-  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/eraser');
-  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/colorfill');
-  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/final');
-  api.addFile('chapter1/challenges/drawing/tutorial/essentialtools/shortcuts');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics..');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/pencil');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/eraser');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/colorfill');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/basictools');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/shortcuts');
 
   api.addFile('chapter1/challenges/drawing/tutorial/colortools..');
   api.addFile('chapter1/challenges/drawing/tutorial/colortools/colorswatches');
   api.addFile('chapter1/challenges/drawing/tutorial/colortools/colorpicking');
+  api.addFile('chapter1/challenges/drawing/tutorial/colortools/colorpickingshortcuts');
 
   api.addFile('chapter1/challenges/drawing/tutorial/helpers..');
   api.addFile('chapter1/challenges/drawing/tutorial/helpers/zoom');

@@ -25,9 +25,7 @@ class C1.Challenges.Drawing.Tutorial.ColorTools extends C1.Challenges.Drawing.Tu
         @colorPicking ?= Tracker.nonreactive => new @constructor.ColorPicking @
         assets.push @colorPicking
 
-      pencilCompleted = C1.Challenges.Drawing.Tutorial.EssentialTools.isAssetCompleted C1.Challenges.Drawing.Tutorial.EssentialTools.Pencil
-
-      if pencilCompleted and @_assetsCompleted @colorPicking
+      if @_assetsCompleted @colorPicking
         @colorPickingShortcuts ?= Tracker.nonreactive => new @constructor.ColorPickingShortcuts @
         assets.push @colorPickingShortcuts
 

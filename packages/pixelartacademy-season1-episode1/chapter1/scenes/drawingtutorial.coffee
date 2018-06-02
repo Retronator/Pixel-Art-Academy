@@ -14,21 +14,21 @@ class C1.DrawingTutorial extends LOI.Adventure.Scene
   constructor: ->
     super
 
-    @essentialTools = new ReactiveField null
+    @basics = new ReactiveField null
     @colorTools = new ReactiveField null
     @helpers = new ReactiveField null
 
-    @essentialTools new C1.Challenges.Drawing.Tutorial.EssentialTools
+    @basics new C1.Challenges.Drawing.Tutorial.Basics
     @colorTools new C1.Challenges.Drawing.Tutorial.ColorTools
     @helpers new C1.Challenges.Drawing.Tutorial.Helpers
 
   things: ->
     things = [
-      @essentialTools()
+      @basics()
     ]
 
-    pencil = _.find @essentialTools().assets(), (asset) -> asset instanceof C1.Challenges.Drawing.Tutorial.EssentialTools.Pencil
+    basicsShortcuts = _.find @basics().assets(), (asset) -> asset instanceof C1.Challenges.Drawing.Tutorial.Basics.Shortcuts
 
-    things.push @colorTools(), @helpers() if pencil?.completed()
+    things.push @colorTools(), @helpers() if basicsShortcuts?.completed()
 
     things
