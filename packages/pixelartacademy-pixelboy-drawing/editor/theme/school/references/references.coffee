@@ -63,6 +63,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
       @trayHideActiveHeight = 10
       @trayBorder = 8
 
+      @resizingBorder = 4
+
     onCreated: ->
       super
 
@@ -110,12 +112,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
     onMouseDown: (event) ->
       super
       
-      # Parent offset will be relative to PixelBoy viewport so we need to remove it.
-      $pixelBoy = $('.pixelartacademy-pixelboy-os').eq(0)
-      pixelBoyOffset = $pixelBoy.offset()
+      return unless event.which is 1
 
-      @parentOffset.left -= pixelBoyOffset.left
-      @parentOffset.top -= pixelBoyOffset.top
+      unless @resizingDirection()
+        # Parent offset will be relative to PixelBoy viewport so we need to remove it.
+        $pixelBoy = $('.pixelartacademy-pixelboy-os').eq(0)
+        pixelBoyOffset = $pixelBoy.offset()
+
+        @parentOffset.left -= pixelBoyOffset.left
+        @parentOffset.top -= pixelBoyOffset.top
 
     referenceStyle: ->
       style = super

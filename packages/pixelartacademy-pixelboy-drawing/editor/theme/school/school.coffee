@@ -214,6 +214,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
   draggingClass: ->
     'dragging' if @references().dragging()
 
+  resizingDirectionClass: ->
+    @references().resizingReference()?.resizingDirectionClass()
+
   spriteStyle: ->
     # Allow to be updated externally.
     @spriteStyleChangeDependency.depend()

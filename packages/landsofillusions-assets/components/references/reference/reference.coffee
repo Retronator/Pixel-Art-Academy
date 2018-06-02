@@ -7,6 +7,22 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   template: -> @constructor.id()
   @register @id()
 
+  @ResizingDirections:
+    North: 'n'
+    South: 's'
+    East: 'e'
+    West: 'w'
+    Northeast: 'ne'
+    Northwest: 'nw'
+    Southeast: 'se'
+    Southwest: 'sw'
+
+  constructor: ->
+    super
+
+    # Overwrite to define the border width withing which resizing should be active.
+    @resizingBorder = 0
+
   onCreated: ->
     super
 
@@ -15,8 +31,11 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
     @size = new ReactiveField null
 
-    # Dragging position is the local override while the reference is actively dragged.
+    # Dragging position hold the temporary position when the reference is actively dragged.
     @draggingPosition = new ReactiveField null
+
+    @resizingDirection = new ReactiveField null
+    @resizingScale = new ReactiveField null
 
     # Handle preview and uploading.
     @autorun (computation) =>
@@ -53,6 +72,10 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
     @draggingPosition null
 
+  endResizing: ->
+    @setScale @resizingScale()
+    @resizingScale null
+
   imageSource: ->
     reference = @data()
     reference.image?.url or reference.preview()
@@ -61,6 +84,9 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     return display: 'none' unless size = @size()
 
     scale = @currentScale()
+
+    resizingScale = @resizingScale()
+    scale = resizingScale if resizingScale?
 
     if position = @draggingPosition()
       # Add parent offset since we expect positioned fixed.
@@ -77,6 +103,10 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     top: "#{position.y}rem"
     width: "#{size.width * scale}rem"
     height: "#{size.height * scale}rem"
+
+  resizingDirectionClass: ->
+    resizingDirection = @resizingDirection()
+    "resizing-#{resizingDirection}" if resizingDirection
 
   currentPosition: ->
     return unless reference = @data()
@@ -132,6 +162,8 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     super.concat
       'load .image': @onLoadImage
       'mousedown': @onMouseDown
+      'mousemove': @onMouseMove
+      'mouseleave': @onMouseLeave
 
   onLoadImage: (event) ->
     @size
@@ -144,14 +176,58 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     # Prevent browser select/dragging behavior
     event.preventDefault()
 
-    # Save parent offset at start of dragging.
     $reference = @$('div').eq(0)
-    $parent = $reference.offsetParent()
-    @parentOffset = $parent.offset()
 
-    @references.startDrag
-      reference: @
-      referencePosition: @currentPosition()
-      mouseCoordinate:
-        x: event.pageX
-        y: event.pageY
+    if @resizingDirection()
+      # Resizing. Calculate reference center.
+      offset = $reference.offset()
+
+      @references.startResizing
+        reference: @
+        referenceScale: @currentScale()
+        referenceCenter:
+          x: offset.left + $reference.outerWidth() / 2
+          y: offset.top + $reference.outerHeight() / 2
+        mouseCoordinate:
+          x: event.clientX
+          y: event.clientY
+    else
+      # Dragging. Save parent offset at start of dragging.
+      $parent = $reference.offsetParent()
+      @parentOffset = $parent.offset()
+
+      @references.startDrag
+        reference: @
+        referencePosition: @currentPosition()
+        mouseCoordinate:
+          x: event.clientX
+          y: event.clientY
+
+  onMouseMove: (event) ->
+    return if @resizingScale()?
+
+    size = @size()
+    scale = @currentScale()
+    displayScale = @display.scale()
+
+    width = size.width * scale
+    height = size.height * scale
+
+    offset = $(event.target).offset()
+
+    x = (event.clientX - offset.left) / displayScale
+    y = (event.clientY - offset.top) / displayScale
+
+    direction = ''
+
+    direction += 'n' if y < @resizingBorder
+    direction += 's' if y > height - @resizingBorder
+    direction += 'w' if x < @resizingBorder
+    direction += 'e' if x > width - @resizingBorder
+
+    @resizingDirection direction
+
+  onMouseLeave: (event) ->
+    return if @resizingScale()?
+
+    @resizingDirection null

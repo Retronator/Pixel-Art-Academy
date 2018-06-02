@@ -13,6 +13,30 @@
       &.dragging *
         cursor grabbing
 
+      &.resizing-n
+      &.resizing-s
+      &.resizing-n *
+      &.resizing-s *
+        cursor ns-resize
+
+      &.resizing-e
+      &.resizing-w
+      &.resizing-e *
+      &.resizing-w *
+        cursor ew-resize
+
+      &.resizing-nw
+      &.resizing-se
+      &.resizing-nw *
+      &.resizing-se *
+        cursor nwse-resize
+
+      &.resizing-ne
+      &.resizing-sw
+      &.resizing-ne *
+      &.resizing-sw *
+        cursor nesw-resize
+
       .background
         absolute-cover()
         z-index 0

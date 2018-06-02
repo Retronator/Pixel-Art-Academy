@@ -23,6 +23,8 @@ class LOI.Assets.Components.References extends AM.Component
     @draggingReference = new ReactiveField null
     @draggingDisplayed = new ReactiveField false
 
+    @resizingReference = new ReactiveField null
+
   onCreated: ->
     super
 
@@ -68,14 +70,10 @@ class LOI.Assets.Components.References extends AM.Component
       @uploadingReferences uploadingReferences
       
   startDrag: (options) ->
-    @dragStartMousePosition = options.mouseCoordinate
-    @dragStartReferencePosition = options.referencePosition
+    @_dragStartMousePosition = options.mouseCoordinate
+    @_dragStartReferencePosition = options.referencePosition
 
-    @dragDelta =
-      x: 0
-      y: 0
-
-    options.reference.draggingPosition @dragStartReferencePosition
+    options.reference.draggingPosition @_dragStartReferencePosition
 
     # Wire end of dragging on mouse up anywhere in the window.
     $(document).on "mouseup.landsofillusions-assets-components-references", (event) =>
@@ -88,21 +86,48 @@ class LOI.Assets.Components.References extends AM.Component
       @draggingReference null
 
     $(document).on "mousemove.landsofillusions-assets-components-references", (event) =>
-      draggingReference = @draggingReference()
-
       scale = @display.scale()
 
-      @dragDelta =
-        x: (event.pageX - @dragStartMousePosition.x) / scale
-        y: (event.pageY - @dragStartMousePosition.y) / scale
+      dragDelta =
+        x: (event.pageX - @_dragStartMousePosition.x) / scale
+        y: (event.pageY - @_dragStartMousePosition.y) / scale
 
-      draggingReference.draggingPosition
-        x: @dragStartReferencePosition.x + @dragDelta.x
-        y: @dragStartReferencePosition.y + @dragDelta.y
+      @draggingReference().draggingPosition
+        x: @_dragStartReferencePosition.x + dragDelta.x
+        y: @_dragStartReferencePosition.y + dragDelta.y
 
     # Set goal component last since it triggers reactivity.
     @draggingReference options.reference
+    
+  startResizing: (options) ->
+    @_resizingReferenceCenter = options.referenceCenter
+    @_resizingStartReferenceScale = options.referenceScale
 
+    @_resizingVector = new THREE.Vector2 options.mouseCoordinate.x - @_resizingReferenceCenter.x, options.mouseCoordinate.y - @_resizingReferenceCenter.y
+    @_resizingStartDistance = @_resizingVector.length()
+
+    options.reference.resizingScale @_resizingStartReferenceScale
+
+    # Wire end of resizing on mouse up anywhere in the window.
+    $(document).on "mouseup.landsofillusions-assets-components-references", (event) =>
+      $(document).off '.landsofillusions-assets-components-references'
+
+      # Make sure we still have the reference in case of recomputation during resizing.
+      return unless resizingReference = @resizingReference()
+      resizingReference.endResizing()
+
+      @resizingReference null
+
+    $(document).on "mousemove.landsofillusions-assets-components-references", (event) =>
+      @_resizingVector.x = event.clientX - @_resizingReferenceCenter.x
+      @_resizingVector.y = event.clientY - @_resizingReferenceCenter.y
+      resizingDistance = @_resizingVector.length()
+
+      @resizingReference().resizingScale @_resizingStartReferenceScale * resizingDistance / @_resizingStartDistance
+
+    # Set goal component last since it triggers reactivity.
+    @resizingReference options.reference
+    
   storedReferences: -> _.filter @references(), (reference) => not _.propertyValue reference, 'displayed'
   displayedReferences: -> _.filter @references(), (reference) => _.propertyValue reference, 'displayed'
 
