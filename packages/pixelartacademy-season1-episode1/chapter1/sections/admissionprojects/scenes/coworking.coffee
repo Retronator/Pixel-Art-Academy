@@ -31,10 +31,6 @@ class C1.AdmissionProjects.Coworking extends LOI.Adventure.Scene
             console.error error
             @ephemeralState 'startError', error
 
-          else
-            # Start Snake section.
-            C1.AdmissionProjects.Snake.state 'started', true
-
           complete()
 
   # Listener

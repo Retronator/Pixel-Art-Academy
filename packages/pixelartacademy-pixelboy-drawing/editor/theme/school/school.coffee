@@ -235,10 +235,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     displayScale = LOI.adventure.interface.display.scale()
     pixelInRem = 1 / displayScale
 
+    # Border should be 6rem when camera scale matches the default sprite scale.
+    assetData = @editor.drawing.portfolio().displayedAsset()
+    borderWidth = 6 / assetData.scale() * scale
+
     if @editor.active()
       # We need to be in the middle of the table.
-      left = "calc(50% - #{width / 2 + scale}rem)"
-      top = "calc(50% - #{height / 2 + scale}rem)"
+      left = "calc(50% - #{width / 2 + borderWidth}rem)"
+      top = "calc(50% - #{height / 2 + borderWidth}rem)"
 
     else
       $spritePlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .sprite-placeholder')
@@ -264,10 +268,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       else
         # Clipboard is hidden up, so move the sprite up and relative to top.
         top -= 265 * displayScale
-
-    # Border should be 6rem when camera scale matches the default sprite scale.
-    assetData = @editor.drawing.portfolio().displayedAsset()
-    borderWidth = 6 / assetData.scale() * scale
 
     width: "#{width + pixelInRem}rem"
     height: "#{height + pixelInRem}rem"

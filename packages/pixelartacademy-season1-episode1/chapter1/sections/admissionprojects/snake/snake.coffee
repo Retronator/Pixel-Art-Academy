@@ -16,7 +16,7 @@ class C1.AdmissionProjects.Snake extends LOI.Adventure.Section
   @finished: -> false
 
   active: ->
-    return false unless @state('started') is true
+    return false unless C1.Projects.Snake.readOnlyState 'activeProjectId'
 
     # Stop being active after we're finished (default).
     super

@@ -20,7 +20,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   groupInSectionActiveClass: ->
     section = @currentData()
 
-    'group-in-section-active' if  @activeSection() is section and @activeGroup()
+    'group-in-section-active' if @activeSection() is section and @activeGroup()
 
   sectionStyle: ->
     section = @currentData()

@@ -76,8 +76,17 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
 
     @activeSection = new ReactiveField null, (a, b) => a is b
     @activeGroup = new ReactiveField null, (a, b) => a is b
-    @hoveredAsset = new ReactiveField null, (a, b) => a is b
 
+    # Clear stale active groups.
+    @autorun (computation) =>
+      return unless activeSection = @activeSection()
+      return unless activeGroup = @activeGroup()
+      return if activeGroup in activeSection.groups()
+
+      # Seems like the active group is not valid anymore.
+      @activeGroup null
+
+    @hoveredAsset = new ReactiveField null, (a, b) => a is b
     @activeAsset = new ComputedField =>
       return unless spriteId = AB.Router.getParameter 'parameter3'
 
