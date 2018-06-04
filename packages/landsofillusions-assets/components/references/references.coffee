@@ -20,6 +20,14 @@ class LOI.Assets.Components.References extends AM.Component
   constructor: (@options) ->
     super
 
+    console.log "got op", @options
+
+    _.defaultsDeep @options,
+      upload:
+        enabled: true
+      storage:
+        enabled: true
+
     @draggingReference = new ReactiveField null
     @draggingDisplayed = new ReactiveField false
 

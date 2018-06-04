@@ -10,7 +10,8 @@
           {{> Render briefComponent}}
         </div>
       {{/with}}
-      <div class="sprite-placeholder"></div>
+      <div class="sprite-placeholder" {{style spritePlaceholderStyle}}></div>
+      <div class="sprite-info">{{#Markdown}}{{> t10e asset.spriteInfoTranslation}}{{/Markdown}}</div>
     </div>
   </div>
 </template>

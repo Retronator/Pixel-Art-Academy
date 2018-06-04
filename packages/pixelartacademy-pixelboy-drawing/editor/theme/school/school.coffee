@@ -85,7 +85,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       paletteId: @paletteId
       theme: @
 
-    @references new @constructor.References
+    @references new @constructor.References _.extend {}, @displayedAsset()?.editorOptions()?.references,
       assetId: @editor.spriteId
       documentClass: LOI.Assets.Sprite
       editorActive: @editor.active
@@ -230,6 +230,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     # If we don't have size data, don't return anything so transition will start form first value.
     return offScreenStyle unless spriteData = @editor.spriteData()
     return offScreenStyle unless scale = @pixelCanvas()?.camera()?.scale()
+    return offScreenStyle unless assetData = @editor.drawing.portfolio().displayedAsset()
 
     width = spriteData.bounds.width * scale
     height = spriteData.bounds.height * scale
@@ -239,7 +240,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     pixelInRem = 1 / displayScale
 
     # Border should be 6rem when camera scale matches the default sprite scale.
-    assetData = @editor.drawing.portfolio().displayedAsset()
     borderWidth = 6 / assetData.scale() * scale
 
     if @editor.active()

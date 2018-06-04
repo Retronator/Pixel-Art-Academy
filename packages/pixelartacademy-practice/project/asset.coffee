@@ -60,3 +60,5 @@ class PAA.Practice.Project.Asset
   styleClasses: -> '' # Override to provide a string with class names for styling the asset.
 
   editorStyleClasses: -> '' # Override to provide a string with class names for styling the surrounding editor.
+
+  editorOptions: -> null # Override to provide an object that is sent to the editor and relevant components.

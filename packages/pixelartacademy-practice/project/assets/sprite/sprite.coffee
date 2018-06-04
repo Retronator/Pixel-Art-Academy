@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 
@@ -19,6 +20,23 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
 
   # Override to restrict the total number of colors used.
   @maxColorCount: -> null
+
+  # Override to provide a string with more information related to the sprite (e.g. author info in challenges).
+  @spriteInfo: -> null
+
+  @initialize: ->
+    super
+
+    # On the server, create this assets's translated names.
+    if Meteor.isServer
+      Document.startup =>
+        return if Meteor.settings.startEmpty
+
+        translationNamespace = @id()
+
+        for property in ['spriteInfo']
+          if value = @[property]?()
+            AB.createTranslation translationNamespace, property, value
 
   constructor: ->
     super
@@ -56,3 +74,8 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
   restrictedPalette: ->
     LOI.Assets.Palette.documents.findOne
       name: @constructor.restrictedPaletteName()
+
+  spriteInfo: -> AB.translate(@_translationSubscription, 'spriteInfo').text
+  spriteInfoTranslation: ->
+    console.log "ask", AB.translation @_translationSubscription, 'spriteInfo'
+    AB.translation @_translationSubscription, 'spriteInfo'

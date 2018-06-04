@@ -21,6 +21,10 @@ class C1.Challenges.Drawing.Tutorial.Helpers extends C1.Challenges.Drawing.Tutor
       @zoom ?= Tracker.nonreactive => new @constructor.Zoom @
       assets.push @zoom
 
+      if @_assetsCompleted @zoom
+        @references ?= Tracker.nonreactive => new @constructor.References @
+        assets.push @references
+
       assets
     ,
       @_assetsComparison
@@ -29,5 +33,6 @@ class C1.Challenges.Drawing.Tutorial.Helpers extends C1.Challenges.Drawing.Tutor
 
   destroy: ->
     @zoom?.destroy()
+    @references?.destroy()
 
     @assets.stop()
