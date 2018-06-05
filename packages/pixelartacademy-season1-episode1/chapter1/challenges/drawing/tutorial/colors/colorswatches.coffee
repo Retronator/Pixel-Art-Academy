@@ -2,8 +2,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Challenges.Drawing.Tutorial.ColorTools.ColorSwatches extends PAA.Practice.Challenges.Drawing.TutorialSprite
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.ColorTools.ColorSwatches'
+class C1.Challenges.Drawing.Tutorial.Colors.ColorSwatches extends PAA.Practice.Challenges.Drawing.TutorialSprite
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Colors.ColorSwatches'
 
   @displayName: -> "Color swatches"
 
@@ -33,11 +33,14 @@ class C1.Challenges.Drawing.Tutorial.ColorTools.ColorSwatches extends PAA.Practi
       | cc   cc   cc
     """
 
+  @spriteInfo: -> "Artwork from PAC-MAN, Namco, 1980"
+
   availableToolKeys: -> [
     PAA.Practice.Software.Tools.ToolKeys.Pencil
     PAA.Practice.Software.Tools.ToolKeys.Eraser
     PAA.Practice.Software.Tools.ToolKeys.ColorFill
     PAA.Practice.Software.Tools.ToolKeys.ColorSwatches
+    PAA.Practice.Software.Tools.ToolKeys.Zoom if C1.Challenges.Drawing.Tutorial.Helpers.isAssetCompleted C1.Challenges.Drawing.Tutorial.Helpers.Zoom
   ]
 
   @initialize()

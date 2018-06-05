@@ -2,16 +2,13 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Challenges.Drawing.Tutorial.ColorTools.ColorPickingShortcuts extends PAA.Practice.Challenges.Drawing.TutorialSprite
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.ColorTools.ColorPickingShortcuts'
+class C1.Challenges.Drawing.Tutorial.Colors.QuickColorPicking extends PAA.Practice.Challenges.Drawing.TutorialSprite
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Colors.QuickColorPicking'
 
-  @displayName: -> "Color picking shortcuts"
+  @displayName: -> "Quick color picking"
 
   @description: -> """
-      There are two shortcuts for activating the color picker:
-
-      - I: color picker (eye dropper)
-      - ALT: temporarily switch to color picker until released
+      When drawing with the pencil, hold down ALT to temporarily switch to color picker until ALT is released.
 
       ALT+click is one of the most used shortcuts in pixel art. Learn it well.
     """
@@ -48,11 +45,14 @@ class C1.Challenges.Drawing.Tutorial.ColorTools.ColorPickingShortcuts extends PA
       |     8
     """
 
+  @spriteInfo: -> "Artwork from PAC-MAN, Namco, 1980"
+
   availableToolKeys: -> [
     PAA.Practice.Software.Tools.ToolKeys.Pencil
     PAA.Practice.Software.Tools.ToolKeys.Eraser
     PAA.Practice.Software.Tools.ToolKeys.ColorFill
     PAA.Practice.Software.Tools.ToolKeys.ColorPicker
+    PAA.Practice.Software.Tools.ToolKeys.Zoom if C1.Challenges.Drawing.Tutorial.Helpers.isAssetCompleted C1.Challenges.Drawing.Tutorial.Helpers.Zoom
   ]
 
   @initialize()

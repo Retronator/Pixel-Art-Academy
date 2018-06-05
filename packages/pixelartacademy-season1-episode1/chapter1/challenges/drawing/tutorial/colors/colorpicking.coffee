@@ -2,13 +2,15 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Challenges.Drawing.Tutorial.ColorTools.ColorPicking extends PAA.Practice.Challenges.Drawing.TutorialSprite
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.ColorTools.ColorPicking'
+class C1.Challenges.Drawing.Tutorial.Colors.ColorPicking extends PAA.Practice.Challenges.Drawing.TutorialSprite
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Colors.ColorPicking'
 
   @displayName: -> "Color picking"
 
   @description: -> """
       Click on the eyedropper and then somewhere on the drawing to pick that color.
+
+      Shortcut: I (eye)
     """
 
   @fixedDimensions: -> width: 12, height: 12
@@ -44,11 +46,14 @@ class C1.Challenges.Drawing.Tutorial.ColorTools.ColorPicking extends PAA.Practic
       |      8888
     """
 
+  @spriteInfo: -> "Artwork from PAC-MAN, Namco, 1980"
+
   availableToolKeys: -> [
     PAA.Practice.Software.Tools.ToolKeys.Pencil
     PAA.Practice.Software.Tools.ToolKeys.Eraser
     PAA.Practice.Software.Tools.ToolKeys.ColorFill
     PAA.Practice.Software.Tools.ToolKeys.ColorPicker
+    PAA.Practice.Software.Tools.ToolKeys.Zoom if C1.Challenges.Drawing.Tutorial.Helpers.isAssetCompleted C1.Challenges.Drawing.Tutorial.Helpers.Zoom
   ]
 
   @initialize()

@@ -15,11 +15,11 @@ class C1.DrawingTutorial extends LOI.Adventure.Scene
     super
 
     @basics = new ReactiveField null
-    @colorTools = new ReactiveField null
+    @colors = new ReactiveField null
     @helpers = new ReactiveField null
 
     @basics new C1.Challenges.Drawing.Tutorial.Basics
-    @colorTools new C1.Challenges.Drawing.Tutorial.ColorTools
+    @colors new C1.Challenges.Drawing.Tutorial.Colors
     @helpers new C1.Challenges.Drawing.Tutorial.Helpers
 
   things: ->
@@ -29,6 +29,6 @@ class C1.DrawingTutorial extends LOI.Adventure.Scene
 
     basicsShortcuts = _.find @basics().assets(), (asset) -> asset instanceof C1.Challenges.Drawing.Tutorial.Basics.Shortcuts
 
-    things.push @colorTools(), @helpers() if basicsShortcuts?.completed()
+    things.push @colors(), @helpers() if basicsShortcuts?.completed()
 
     things

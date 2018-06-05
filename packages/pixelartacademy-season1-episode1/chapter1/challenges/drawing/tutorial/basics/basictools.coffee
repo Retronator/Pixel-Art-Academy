@@ -32,6 +32,8 @@ class C1.Challenges.Drawing.Tutorial.Basics.BasicTools extends PAA.Practice.Chal
       |   0        0
     """
 
+  @spriteInfo: -> "Artwork from Space Invaders, Taito, 1978"
+
   availableToolKeys: -> [
     PAA.Practice.Software.Tools.ToolKeys.Pencil
     PAA.Practice.Software.Tools.ToolKeys.Eraser

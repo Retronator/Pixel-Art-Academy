@@ -26,14 +26,13 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
       # 5 -> 6
       # 6 -> 8
       # 7 -> 9
-      # 8 -> 10
       assetScale = assetData.scale()
       scale = Math.ceil assetScale * 1.2
 
       contentWidth = spriteData.bounds.width * scale
       contentHeight = spriteData.bounds.height * scale
 
-      borderWidth = 8
+      borderWidth = 7
 
       {contentWidth, contentHeight, borderWidth, scale}
 

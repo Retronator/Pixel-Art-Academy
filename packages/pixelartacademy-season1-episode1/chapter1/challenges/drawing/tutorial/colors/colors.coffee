@@ -3,10 +3,10 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Challenges.Drawing.Tutorial.ColorTools extends C1.Challenges.Drawing.Tutorial
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.ColorTools'
+class C1.Challenges.Drawing.Tutorial.Colors extends C1.Challenges.Drawing.Tutorial
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Colors'
 
-  @fullName: -> "Tutorial: Color tools"
+  @fullName: -> "Tutorial: Colors"
 
   @initialize()
 
@@ -26,8 +26,8 @@ class C1.Challenges.Drawing.Tutorial.ColorTools extends C1.Challenges.Drawing.Tu
         assets.push @colorPicking
 
       if @_assetsCompleted @colorPicking
-        @colorPickingShortcuts ?= Tracker.nonreactive => new @constructor.ColorPickingShortcuts @
-        assets.push @colorPickingShortcuts
+        @quickColorPicking ?= Tracker.nonreactive => new @constructor.QuickColorPicking @
+        assets.push @quickColorPicking
 
       assets
     ,
@@ -38,6 +38,6 @@ class C1.Challenges.Drawing.Tutorial.ColorTools extends C1.Challenges.Drawing.Tu
   destroy: ->
     @colorSwatches?.destroy()
     @colorPicking?.destroy()
-    @colorPickingShortcuts?.destroy()
+    @quickColorPicking?.destroy()
 
     @assets.stop()

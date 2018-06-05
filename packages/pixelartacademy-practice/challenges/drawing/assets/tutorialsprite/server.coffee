@@ -23,7 +23,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Challe
         pixels: []
       ]
 
-    if references = @references()
+    if references = @references?()
       spriteData.references = []
   
       for imageUrl in references
