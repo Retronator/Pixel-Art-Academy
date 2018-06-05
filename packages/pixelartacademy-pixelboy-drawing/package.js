@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:pixelartacademy-practice');
+  api.use('retronator:pixelartdatabase');
 
   api.export('PixelArtAcademy');
 
@@ -30,4 +31,5 @@ Package.onUse(function(api) {
   api.addComponent('editor/theme/school/colorfill..');
   api.addComponent('editor/theme/school/palette..');
   api.addComponent('editor/theme/school/references..');
+  api.addComponent('editor/theme/school/references/reference..');
 });

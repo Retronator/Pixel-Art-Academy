@@ -76,6 +76,4 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
       name: @constructor.restrictedPaletteName()
 
   spriteInfo: -> AB.translate(@_translationSubscription, 'spriteInfo').text
-  spriteInfoTranslation: ->
-    console.log "ask", AB.translation @_translationSubscription, 'spriteInfo'
-    AB.translation @_translationSubscription, 'spriteInfo'
+  spriteInfoTranslation: -> AB.translation @_translationSubscription, 'spriteInfo'

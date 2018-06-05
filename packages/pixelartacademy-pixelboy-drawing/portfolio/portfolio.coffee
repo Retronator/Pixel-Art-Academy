@@ -164,8 +164,8 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     if @activeGroup() and not $(event.target).closest('.group').length
       @activeGroup null
 
-      # Don't let section close as well.
-      event.stopPropagation()
+      # Don't let section close as well, if we were clicking inside the current section.
+      event.stopPropagation() if @currentData() is @activeSection()
       return
 
     # If we click outside a section, close current section.

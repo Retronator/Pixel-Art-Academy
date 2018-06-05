@@ -164,26 +164,16 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     @autorun (computation) =>
       return unless camera = @pixelCanvas().camera()
       return unless assetData = @editor.drawing.portfolio().displayedAsset()
+      return unless clipboardSpriteSize = @editor.drawing.clipboard().spriteSize()
 
       # Dictate sprite scale when asset is on clipboard and when setting for the first time.
-      defaultScale = assetData.scale()
+      clipboardSpriteScale = clipboardSpriteSize.scale
 
-      unless @editor.active() and assetData.asset is @_previousDisplayedAsset and defaultScale is @_previousDefaultScale
-        # Asset in the clipboard should be bigger than in the portfolio.
-        # 1 -> 2
-        # 2 -> 3
-        # 3 -> 4
-        # 4 -> 6
-        # 5 -> 6
-        # 6 -> 8
-        # 7 -> 9
-        # 8 -> 10
-        scale = Math.ceil assetData.scale() * 1.2
-
-        camera.setScale scale
+      unless @editor.active() and assetData.asset is @_previousDisplayedAsset and clipboardSpriteScale is @_previousClipboardSpriteScale
+        camera.setScale clipboardSpriteScale
 
       @_previousDisplayedAsset = assetData.asset
-      @_previousDefaultScale = defaultScale
+      @_previousClipboardSpriteScale = clipboardSpriteScale
 
   onRendered: ->
     super
@@ -230,7 +220,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     # If we don't have size data, don't return anything so transition will start form first value.
     return offScreenStyle unless spriteData = @editor.spriteData()
     return offScreenStyle unless scale = @pixelCanvas()?.camera()?.scale()
-    return offScreenStyle unless assetData = @editor.drawing.portfolio().displayedAsset()
+    return offScreenStyle unless clipboardSpriteSize = @editor.drawing.clipboard().spriteSize()
 
     width = spriteData.bounds.width * scale
     height = spriteData.bounds.height * scale
@@ -239,8 +229,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     displayScale = LOI.adventure.interface.display.scale()
     pixelInRem = 1 / displayScale
 
-    # Border should be 6rem when camera scale matches the default sprite scale.
-    borderWidth = 6 / assetData.scale() * scale
+    # Resize the border proportionally to its clipboard size
+    borderWidth = clipboardSpriteSize.borderWidth / clipboardSpriteSize.scale * scale
 
     if @editor.active()
       # We need to be in the middle of the table.

@@ -13,24 +13,39 @@ class LOI.Assets.Components.Navigator extends AM.Component
     @zoomPercentage = new ComputedField =>
       @options.camera()?.scale() * 100
 
+    @zoomInPressed = new ReactiveField false
+    @zoomOutPressed = new ReactiveField false
+
   onRendered: ->
     super
 
-    $(window).on 'keydown.landsofillusions-assets-components-navigator', (event) =>
-      keyboardState = AC.Keyboard.getState()
-      return unless keyboardState.isCommandOrCtrlDown()
-
+    $(document).on 'keydown.landsofillusions-assets-components-navigator', (event) =>
       switch event.keyCode
         when AC.Keys.equalSign
-          event.preventDefault()
           @zoomIn()
+          @zoomInPressed true
 
         when AC.Keys.dash
-          event.preventDefault()
           @zoomOut()
+          @zoomOutPressed true
+
+        else
+          return
+
+      # Also allow for cmd/ctrl combination.
+      keyboardState = AC.Keyboard.getState()
+      event.preventDefault() if keyboardState.isCommandOrCtrlDown()
+
+    $(document).on 'keyup.landsofillusions-assets-components-navigator', (event) =>
+      switch event.keyCode
+        when AC.Keys.equalSign
+          @zoomInPressed false
+
+        when AC.Keys.dash
+          @zoomOutPressed false
 
   onDestroyed: ->
-    $(window).off('.landsofillusions-assets-components-navigator')
+    $(document).off('.landsofillusions-assets-components-navigator')
 
   zoomIn: ->
     percentage = @zoomPercentage()
@@ -59,6 +74,12 @@ class LOI.Assets.Components.Navigator extends AM.Component
 
   zoomPercentageValue: ->
     Math.round(@zoomPercentage() * 10, 2) / 10
+
+  zoomInPressedClass: ->
+    'pressed' if @zoomInPressed()
+
+  zoomOutPressedClass: ->
+    'pressed' if @zoomOutPressed()
 
   # Events
 

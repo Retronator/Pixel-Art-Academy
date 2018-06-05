@@ -65,6 +65,8 @@ class LOI.Assets.Components.References.Reference extends AM.Component
         # Remove uploading reference.
         @references.removeUploadingReference reference._id, imageId
 
+  captionHeight: -> 0 # Override to provide the caption height in REM units if the reference has a caption.
+
   endDrag: ->
     @setPosition @draggingPosition()
     @setDisplayed @references.draggingDisplayed()
@@ -102,7 +104,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     left: "#{position.x}rem"
     top: "#{position.y}rem"
     width: "#{size.width * scale}rem"
-    height: "#{size.height * scale}rem"
+    height: "#{size.height * scale + @captionHeight()}rem"
 
   resizingDirectionClass: ->
     resizingDirection = @resizingDirection()
@@ -176,7 +178,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     # Prevent browser select/dragging behavior
     event.preventDefault()
 
-    $reference = @$('div').eq(0)
+    $reference = $(@firstNode())
 
     if @resizingDirection()
       # Resizing. Calculate reference center.
@@ -211,7 +213,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     displayScale = @display.scale()
 
     width = size.width * scale
-    height = size.height * scale
+    height = size.height * scale + @captionHeight()
 
     offset = $(event.target).offset()
 

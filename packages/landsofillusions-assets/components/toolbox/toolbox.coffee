@@ -14,13 +14,13 @@ class LOI.Assets.Components.Toolbox extends AM.Component
   onRendered: ->
     super
 
-    $(window).on 'keydown.landsofillusions-assets-components-toolbox', (event) => @onKeyDown event
-    $(window).on 'keyup.landsofillusions-assets-components-toolbox', (event) => @onKeyUp event
+    $(document).on 'keydown.landsofillusions-assets-components-toolbox', (event) => @onKeyDown event
+    $(document).on 'keyup.landsofillusions-assets-components-toolbox', (event) => @onKeyUp event
 
   onDestroyed: ->
     super
 
-    $(window).off '.landsofillusions-assets-components-toolbox'
+    $(document).off '.landsofillusions-assets-components-toolbox'
 
   toolClass: ->
     tool = @currentData()

@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mummification
 PADB = PixelArtDatabase
 
@@ -5,8 +6,14 @@ class PADB.Artwork extends AM.Document
   @id: -> 'PixelArtDatabase.Artwork'
   # type: type of this artwork
   # title: the (working) title of the artwork
-  # completionDate: completion date of this artwork
-  # startDate: start date of this artwork
+  # completionDate: completion date of this artwork or object when exact date is not known
+  #   year: year of completion, if known
+  #   month: month of completion, if known (1-based)
+  #   day: day of completion, if known
+  # startDate: start date of this artwork or object when exact date is not known
+  #   year: year of start, if known
+  #   month: month of start, if known (1-based)
+  #   day: day of start, if known
   # wip: boolean whether this is an unfinished snapshot
   # authors: array of artists that created this artwork
   #   _id
@@ -29,6 +36,8 @@ class PADB.Artwork extends AM.Document
     AnimatedImage: 'AnimatedImage'
     # Longer animated work, such as a music video
     Video: 'Video'
+    # Physical 2D artwork
+    Physical: 'Physical'
 
   @RepresentationTypes:
     # Resource of MIME type image
@@ -47,6 +56,16 @@ class PADB.Artwork extends AM.Document
   # Subscriptions
 
   @all: @subscription 'all'
+  @forUrl: new AB.Subscription
+    name: "#{@id()}.forUrl"
+    query: (url) =>
+      # Match artworks both by image and representation urls.
+      @documents.find
+        $or: [
+          'image.url': url
+        ,
+          'representations.url': url
+        ]
 
   # Returns the first image representation.
   firstImageRepresentation: ->
