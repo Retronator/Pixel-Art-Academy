@@ -10,7 +10,7 @@ class C1.Challenges.Drawing.Tutorial.Colors.ColorPicking extends PAA.Practice.Ch
   @description: -> """
       Click on the eyedropper and then somewhere on the drawing to pick that color.
 
-      Shortcut: I (eye)
+      Shortcut: I (eyedropper)
     """
 
   @fixedDimensions: -> width: 12, height: 12

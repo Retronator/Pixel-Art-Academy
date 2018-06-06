@@ -29,7 +29,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     @references = @ancestorComponentOfType LOI.Assets.Components.References
     @display = @callAncestorWith 'display'
 
-    @size = new ReactiveField null
+    @imageSize = new ReactiveField null
 
     # Dragging position hold the temporary position when the reference is actively dragged.
     @draggingPosition = new ReactiveField null
@@ -64,8 +64,13 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
         # Remove uploading reference.
         @references.removeUploadingReference reference._id, imageId
+        
+  displaySize: (scale) ->
+    imageSize = @imageSize()
+    scale ?= @currentScale()
 
-  captionHeight: -> 0 # Override to provide the caption height in REM units if the reference has a caption.
+    width: imageSize.width * scale
+    height: imageSize.height * scale
 
   endDrag: ->
     @setPosition @draggingPosition()
@@ -83,12 +88,13 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     reference.image?.url or reference.preview()
 
   referenceStyle: ->
-    return display: 'none' unless size = @size()
-
     scale = @currentScale()
 
     resizingScale = @resizingScale()
     scale = resizingScale if resizingScale?
+
+    # We calculate the display size using the potentially resizing scale.
+    return display: 'none' unless displaySize = @displaySize scale
 
     if position = @draggingPosition()
       # Add parent offset since we expect positioned fixed.
@@ -103,8 +109,8 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
     left: "#{position.x}rem"
     top: "#{position.y}rem"
-    width: "#{size.width * scale}rem"
-    height: "#{size.height * scale + @captionHeight()}rem"
+    width: "#{displaySize.width}rem"
+    height: "#{displaySize.height}rem"
 
   resizingDirectionClass: ->
     resizingDirection = @resizingDirection()
@@ -168,7 +174,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
       'mouseleave': @onMouseLeave
 
   onLoadImage: (event) ->
-    @size
+    @imageSize
       width: event.target.width
       height: event.target.height
 
@@ -208,24 +214,20 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   onMouseMove: (event) ->
     return if @resizingScale()?
 
-    size = @size()
-    scale = @currentScale()
     displayScale = @display.scale()
 
-    width = size.width * scale
-    height = size.height * scale + @captionHeight()
-
-    offset = $(event.target).offset()
+    offset = $(@firstNode()).offset()
 
     x = (event.clientX - offset.left) / displayScale
     y = (event.clientY - offset.top) / displayScale
 
-    direction = ''
+    displaySize = @displaySize()
 
+    direction = ''
     direction += 'n' if y < @resizingBorder
-    direction += 's' if y > height - @resizingBorder
+    direction += 's' if y > displaySize.height - @resizingBorder
     direction += 'w' if x < @resizingBorder
-    direction += 'e' if x > width - @resizingBorder
+    direction += 'e' if x > displaySize.width - @resizingBorder
 
     @resizingDirection direction
 

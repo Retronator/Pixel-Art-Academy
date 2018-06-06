@@ -19,13 +19,7 @@ class LOI.Assets.Components.References extends AM.Component
     
   constructor: (@options) ->
     super
-
-    _.defaultsDeep @options,
-      upload:
-        enabled: true
-      storage:
-        enabled: true
-
+        
     @draggingReference = new ReactiveField null
     @draggingDisplayed = new ReactiveField false
 
@@ -41,6 +35,13 @@ class LOI.Assets.Components.References extends AM.Component
       @options.documentClass.documents.findOne assetId,
         fields:
           references: 1
+          
+    @assetOptions = new ComputedField =>
+      _.defaultsDeep {}, @options.assetOptions(),
+        upload:
+          enabled: true
+        storage:
+          enabled: true
           
     @uploadingReferences = new ReactiveField []
     
@@ -65,7 +66,7 @@ class LOI.Assets.Components.References extends AM.Component
     @autorun (computation) =>
       # Make sure the component has finished loading the image, to prevent flickering.
       loadedComponents = @childComponentsWith (component) =>
-        component.data().image?._id is imageId and component.size()
+        component.data().image?._id is imageId and component.imageSize()
 
       return unless loadedComponents.length
       computation.stop()

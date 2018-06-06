@@ -5,13 +5,13 @@
         <div class="asset {{styleClasses}}">
           <div class="asset-name">{{> t10e displayNameTranslation}}</div>
           <div class="description">
-            {{#Markdown}}{{> t10e descriptionTranslation}}{{/Markdown}}
+            {{#Markdown}}{{description}}{{/Markdown}}
           </div>
           {{> Render briefComponent}}
         </div>
       {{/with}}
       <div class="sprite-placeholder" {{style spritePlaceholderStyle}}></div>
-      <div class="sprite-info">{{#Markdown}}{{> t10e asset.spriteInfoTranslation}}{{/Markdown}}</div>
+      <div class="sprite-info">{{#Markdown}}{{asset.spriteInfo}}{{/Markdown}}</div>
     </div>
   </div>
 </template>

@@ -9,12 +9,16 @@
         {{/each}}
       </ul>
       <div class="actions">
-        <div class="upload action">
-          <button class="upload-button button">Upload</button>
-        </div>
-        <div class="storage action">
-          <button class="storage-button button">Storage</button>
-        </div>
+        {{#if assetOptions.upload.enabled}}
+          <div class="upload action">
+            <button class="upload-button button">Upload</button>
+          </div>
+        {{/if}}
+        {{#if assetOptions.storage.enabled}}
+          <div class="storage action">
+            <button class="storage-button button">Storage</button>
+          </div>
+        {{/if}}
       </div>
     </div>
     <div class="displayed-references">

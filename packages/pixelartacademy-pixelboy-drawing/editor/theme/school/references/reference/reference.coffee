@@ -30,17 +30,17 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
 
     # Automatically scale and position the image when not displayed.
     @autorun (computation) =>
-      reference = @data()
-      return unless size = @size()
+      return unless imageSize = @imageSize()
+      return unless displaySize = @displaySize()
       return if @currentDisplayed()
 
       # Scale should be such that 100^2 pixels are covered, but any side is not larger than 150 pixels.
-      scale = Math.min 100 / Math.sqrt(size.width * size.height), Math.min 150 / size.width, 150 / size.height
+      scale = Math.min 100 / Math.sqrt(imageSize.width * imageSize.height), Math.min 150 / imageSize.width, 150 / imageSize.height
       @setScale scale
 
       # Make sure reference is within the tray.
-      halfWidth = size.width * scale / 2
-      halfHeight = size.height * scale / 2
+      halfWidth = displaySize.width / 2
+      halfHeight = displaySize.height / 2
 
       position = @currentPosition()
 
@@ -55,12 +55,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
 
     @autorun (computation) =>
       return unless draggingPosition = @draggingPosition()
-      return unless size = @size()
-      scale = @currentScale()
+      return unless displaySize = @displaySize()
       displayScale = @display.scale()
 
-      halfWidth = size.width * scale / 2
-      halfHeight = size.height * scale / 2
+      halfWidth = displaySize.width / 2
+      halfHeight = displaySize.height / 2
 
       # Close references when moving outside the tray.
       if @references.opened() and Math.abs(draggingPosition.x) + halfWidth > @trayWidth / 2 or Math.abs(draggingPosition.y) + halfHeight > @trayHeight / 2
@@ -68,7 +67,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
 
       # Activate hide mode when nearing tray.
       @references.hideActive not @references.opened() and Math.abs(draggingPosition.x) < @trayWidth / 2 and draggingPosition.y + @parentOffset.top / displayScale - halfHeight < @trayHideActiveHeight
-      reference = @data()
 
     @caption = new ComputedField =>
       reference = @data()
@@ -93,6 +91,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
       elements.push year if year
 
       elements.join ', '
+
+  displaySize: (scale) ->
+    return unless imageSize = @imageSize()
+
+    scale ?= @currentScale()
+    captionHeight = if @isRendered() and @caption() then 10 else 0
+
+    width: imageSize.width * scale
+    height: imageSize.height * scale + captionHeight
 
   onMouseDown: (event) ->
     super
@@ -122,10 +129,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
 
       distance = new THREE.Vector2(240, 180).length()
 
-      if size = @size()
-        scale = @currentScale()
-        halfWidth = size.width * scale / 2
-        halfHeight = size.height * scale / 2
+      if displaySize = @size()
+        halfWidth = displaySize.width / 2
+        halfHeight = displaySize.height / 2
 
         distance += new THREE.Vector2(halfWidth, halfHeight).length()
 
@@ -135,5 +141,3 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
       style.top = "#{position.y}rem"
 
     style
-
-  captionHeight: -> if @caption() then 10 else 0
