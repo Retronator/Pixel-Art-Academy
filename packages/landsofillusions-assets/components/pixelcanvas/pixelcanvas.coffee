@@ -24,7 +24,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null
-    @canvasBounds = new AE.Rectangle()
+    @canvasPixelSize = new ReactiveField width: 0, height: 0
     @context = new ReactiveField null
 
   onCreated: ->
@@ -35,6 +35,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     # Initialize components.
     @camera new @constructor.Camera @,
       initialScale: @options.initialCameraScale
+      initialOrigin: @options.initialCameraOrigin
       enableInput: @options.cameraInput
 
     if @options.grid
@@ -46,25 +47,41 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     if @options.cursor
       @cursor new @constructor.Cursor @
 
-    # Resize the canvas when browser window changes.
+    # Resize the canvas when browser window and zoom changes.
     @autorun =>
       canvas = @canvas()
       return unless canvas
       
-      # Depend on window size.
-      AM.Window.clientBounds()
+      if @options.canvasSize
+        # Resize based on provided canvas size.
+        size = @options.canvasSize()
+        scale = @camera().effectiveScale()
+        
+        newSize =
+          width: (size?.width or 0) * scale
+          height: (size?.height or 0) * scale
 
-      # Resize the back buffer to canvas element size, if it actually changed. If the pixel
-      # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
-      newSize =
-        width: $(canvas).width()
-        height: $(canvas).height()
+        gridEnabled = if _.isFunction(@options.grid) then @options.grid() else @options.grid
 
+        if gridEnabled
+          # Add 1px extra for outer grid.
+          newSize.width++
+          newSize.height++
+        
+      else
+        # Depend on window size.
+        AM.Window.clientBounds()
+
+        # Resize the back buffer to canvas element size, if it actually changed. If the pixel
+        # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
+        newSize =
+          width: $(canvas).width()
+          height: $(canvas).height()
+  
       for key, value of newSize
         canvas[key] = value unless canvas[key] is value
 
-      @canvasBounds.width canvas.width
-      @canvasBounds.height canvas.height
+      @canvasPixelSize newSize
 
     # Redraw canvas routine.
     @autorun =>
@@ -72,14 +89,23 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       context = @context()
       return unless context
 
+      canvasPixelSize = @canvasPixelSize()
+
       context.setTransform 1, 0, 0, 1, 0, 0
-      context.clearRect 0, 0, @canvasBounds.width(), @canvasBounds.height()
+      context.clearRect 0, 0, canvasPixelSize.width, canvasPixelSize.height
 
       camera.applyTransformToCanvas()
 
-      parentDrawComponents = @options.drawComponents?() or []
+      components = []
 
-      for component in [parentDrawComponents..., @grid(), @cursor()]
+      if drawComponents = @options.drawComponents?()
+        components = components.concat drawComponents
+
+      for componentName in ['grid', 'cursor']
+        if @options[componentName] is true or _.isFunction(@options[componentName]) and @options[componentName]()
+          components.push @[componentName]()
+
+      for component in components
         continue unless component
 
         context.save()
@@ -98,13 +124,21 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @context canvas.getContext '2d'
 
     if @options.activeTool
-      $(window).on 'keydown.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyDown? event
-      $(window).on 'keyup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyUp? event
+      $(document).on 'keydown.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyDown? event
+      $(document).on 'keyup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyUp? event
+      $(document).on 'mouseup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onMouseUp? event
+      $(document).on 'mouseleave.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onMouseLeaveWindow? event
 
   onDestroyed: ->
     super
 
-    $(window).off '.landsofillusions-assets-components-pixelcanvas'
+    $(document).off '.landsofillusions-assets-components-pixelcanvas'
+
+  forceResize: ->
+    @forceResizeDependency.changed()
+
+  forceRedraw: ->
+    @forceRedrawDependency.changed()
 
   # Events
 
@@ -115,16 +149,24 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     if @options.activeTool
       events = events.concat
         'mousedown .canvas': @onMouseDownCanvas
-        'mouseup .canvas': @onMouseUpCanvas
         'mousemove .canvas': @onMouseMoveCanvas
+        'mouseenter .canvas': @onMouseEnterCanvas
+        'mouseleave .canvas': @onMouseLeaveCanvas
+        'dragstart .canvas': @onDragStartCanvas
 
     events
 
   onMouseDownCanvas: (event) ->
     @options.activeTool()?.onMouseDown? event
 
-  onMouseUpCanvas: (event) ->
-    @options.activeTool()?.onMouseUp? event
-
   onMouseMoveCanvas: (event) ->
     @options.activeTool()?.onMouseMove? event
+
+  onMouseEnterCanvas: (event) ->
+    @options.activeTool()?.onMouseEnter? event
+
+  onMouseLeaveCanvas: (event) ->
+    @options.activeTool()?.onMouseLeave? event
+
+  onDragStartCanvas: (event) ->
+    @options.activeTool()?.onDragStart? event

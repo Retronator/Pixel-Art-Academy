@@ -39,14 +39,17 @@ class PAA.PixelBoy.OS extends AM.Component
         @_apps[appClass.id()]
         
     @currentAppUrl = ComputedField =>
-      appUrl = AB.Router.getParameter('app') or AB.Router.getParameter('parameter2')
+      appUrl = AB.Router.getParameter('parameter2')
       appClass = PAA.PixelBoy.App.getClassForUrl appUrl
 
       # Make sure this app exists.
       if appClass then appUrl else null
 
     @currentAppPath = ComputedField =>
-      AB.Router.getParameter('path') or AB.Router.getParameter('parameter3')
+      AB.Router.getParameter('parameter3')
+
+    @currentAppParameter = ComputedField =>
+      AB.Router.getParameter('parameter4')
 
     @currentApp = new ReactiveField null
 
@@ -125,6 +128,10 @@ class PAA.PixelBoy.OS extends AM.Component
     # See if the app can handle it.
     if @currentApp().onBackButton?()
       # Nothing extra needed.
+
+    else if @currentAppParameter()
+      # We clear the parameter.
+      AB.Router.setParameter 'parameter4', null
 
     else if @currentAppPath()
       # We return to main app screen.

@@ -24,54 +24,51 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
   constructor: ->
     super
 
-    @setDefaultPixelBoySize()
-
-    @isInSpriteSelection = new ReactiveField true
-
-    @spriteCanvas = new ReactiveField null
-    @navigator = new ReactiveField null
-    @palette = new ReactiveField null
-    @sprites = new ReactiveField null
-
-    @spriteId = new ComputedField =>
-      @sprites()?.spriteId()
-
-    @spriteData = new ComputedField =>
-      spriteId = @spriteId()
-      LOI.Assets.Sprite.documents.findOne spriteId
+    @portfolio = new ReactiveField null
+    @clipboard = new ReactiveField null
+    @editor = new ReactiveField null
 
   onCreated: ->
-    # Initialize components.
-    @spriteCanvas new @constructor.SpriteCanvas @
-    @navigator new @constructor.Components.Navigator
-      viewport: @spriteCanvas().camera
-
-    @sprites new @constructor.Sprites @
-    @palette new @constructor.Components.Palette
-      paletteId: new ComputedField =>
-        LOI.Assets.Sprite.documents.findOne(@spriteId(),
-          fields:
-            palette: 1
-        )?.palette._id
-
-    # Show home screen button when in sprite selection.
-    @autorun =>
-      @showHomeScreenButton @isInSpriteSelection()
-
-  onRendered: ->
     super
 
-    @autorun =>
-      if @isInSpriteSelection()
-        # Immediately remove the drawing active class so that the slow transitions kick in.
-        @$('.apps-drawing').removeClass('drawing-active')
+    # Initialize components.
+    @portfolio new @constructor.Portfolio @
+    @clipboard new @constructor.Clipboard @
+    @editor new @constructor.Editor @
+
+    @autorun (computation) =>
+      portfolio = @portfolio()
+      editor = @editor()
+
+      if portfolio.isCreated() and portfolio.activeAsset()
+        if editor.active()
+          @setMaximumPixelBoySize fullscreen: true
+
+        else
+          @setFixedPixelBoySize 200, 260
 
       else
-        # Add the drawing active class with delay so that the initial transitions still happen slowly.
-        Meteor.setTimeout =>
-          @$('.apps-drawing').addClass('drawing-active')
-        ,
-          1000
+        @setFixedPixelBoySize 332, 241
 
-  inSpriteSelectionClass: ->
-    'in-sprite-selection' if @isInSpriteSelection()
+  onBackButton: ->
+    portfolio = @portfolio()
+
+    # We only need to handle closing groups when not on an asset.
+    return unless portfolio.activeGroup() and not portfolio.activeAsset()
+
+    # Close the group.
+    portfolio.activeGroup null
+
+    # Inform that we've handled the back button.
+    true
+
+  activeAssetClass: ->
+    portfolio = @portfolio()
+
+    'active-asset' if portfolio.isCreated() and portfolio.activeAsset()
+
+  editorActiveClass: ->
+    'editor-active' if @editor().active()
+    
+  themeClass: ->
+    @editor()?.theme()?.constructor.styleClass()

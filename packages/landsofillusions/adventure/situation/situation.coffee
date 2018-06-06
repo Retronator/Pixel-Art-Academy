@@ -32,7 +32,7 @@ class LOI.Adventure.Situation
       validLocation = not sceneLocationClass or (locationClass is sceneLocationClass) or (locationClass in sceneLocationClass)
 
       sceneTimelineId = scene.timelineId()
-      validTimeline = (not sceneTimelineId) or (timelineId is sceneTimelineId) or (timelineId in sceneTimelineId)
+      validTimeline = (not sceneTimelineId) or (not timelineId) or (timelineId is sceneTimelineId) or (timelineId in sceneTimelineId)
 
       scenes.push scene if validLocation and validTimeline
 

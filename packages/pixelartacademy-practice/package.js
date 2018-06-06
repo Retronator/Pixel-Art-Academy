@@ -15,6 +15,7 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:landsofillusions-assets');
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartdatabase');
@@ -66,4 +67,31 @@ Package.onUse(function(api) {
   api.addComponent('pages/importcheckins/importcheckins');
   api.addServerFile('pages/importcheckins/methods-server');
 
+  // Project
+
+  api.addFile('project..');
+  api.addServerFile('project/subscriptions');
+
+  api.addFile('project/thing');
+  api.addFile('project/workbench');
+  api.addFile('project/asset');
+
+  api.addFile('project/assets/sprite..');
+  api.addUnstyledComponent('project/assets/sprite/briefcomponent..');
+
+  // Challenges
+
+  api.addFile('challenges..');
+  api.addFile('challenges/drawing..');
+
+  api.addFile('challenges/drawing/assets/tutorialsprite..');
+  api.addServerFile('challenges/drawing/assets/tutorialsprite/server');
+  api.addFile('challenges/drawing/assets/tutorialsprite/methods');
+  api.addServerFile('challenges/drawing/assets/tutorialsprite/methods-server');
+  api.addFile('challenges/drawing/assets/tutorialsprite/enginecomponent');
+  api.addUnstyledComponent('challenges/drawing/assets/tutorialsprite/briefcomponent..');
+
+  // Software
+  api.addFile('software..');
+  api.addFile('software/tools');
 });

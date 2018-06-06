@@ -5,36 +5,52 @@ LOI = LandsOfIllusions
 class LOI.Assets.Components.Navigator extends AM.Component
   @register "LandsOfIllusions.Assets.Components.Navigator"
 
-  @zoomLevels: [12.5, 25, 50, 66.6, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]
-
   constructor: (@options) ->
     super
+
+    @zoomLevels = @options.zoomLevels or [12.5, 25, 50, 66.6, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]
 
     @zoomPercentage = new ComputedField =>
       @options.camera()?.scale() * 100
 
+    @zoomInPressed = new ReactiveField false
+    @zoomOutPressed = new ReactiveField false
+
   onRendered: ->
     super
 
-    $(window).on 'keydown.landsofillusions-assets-components-navigator', (event) =>
-      return unless AC.Keyboard.getState().isCommandDown()
-
+    $(document).on 'keydown.landsofillusions-assets-components-navigator', (event) =>
       switch event.keyCode
         when AC.Keys.equalSign
-          event.preventDefault()
           @zoomIn()
+          @zoomInPressed true
 
         when AC.Keys.dash
-          event.preventDefault()
           @zoomOut()
+          @zoomOutPressed true
+
+        else
+          return
+
+      # Also allow for cmd/ctrl combination.
+      keyboardState = AC.Keyboard.getState()
+      event.preventDefault() if keyboardState.isCommandOrCtrlDown()
+
+    $(document).on 'keyup.landsofillusions-assets-components-navigator', (event) =>
+      switch event.keyCode
+        when AC.Keys.equalSign
+          @zoomInPressed false
+
+        when AC.Keys.dash
+          @zoomOutPressed false
 
   onDestroyed: ->
-    $(window).off('.landsofillusions-assets-components-navigator')
+    $(document).off('.landsofillusions-assets-components-navigator')
 
   zoomIn: ->
     percentage = @zoomPercentage()
 
-    for zoomLevel in @constructor.zoomLevels
+    for zoomLevel in @zoomLevels
       if zoomLevel > percentage
         percentage = zoomLevel
         break
@@ -44,7 +60,7 @@ class LOI.Assets.Components.Navigator extends AM.Component
   zoomOut: ->
     percentage = @zoomPercentage()
 
-    for zoomLevel in @constructor.zoomLevels by -1
+    for zoomLevel in @zoomLevels by -1
       if zoomLevel < percentage
         percentage = zoomLevel
         break
@@ -52,12 +68,18 @@ class LOI.Assets.Components.Navigator extends AM.Component
     @setZoom percentage
 
   setZoom: (percentage) ->
-    @options.camera()?.scale percentage / 100
+    @options.camera()?.setScale percentage / 100
 
   # Helpers
 
   zoomPercentageValue: ->
     Math.round(@zoomPercentage() * 10, 2) / 10
+
+  zoomInPressedClass: ->
+    'pressed' if @zoomInPressed()
+
+  zoomOutPressedClass: ->
+    'pressed' if @zoomOutPressed()
 
   # Events
 

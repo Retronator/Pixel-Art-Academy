@@ -61,7 +61,7 @@ class Artificial.Babel extends Artificial.Babel
 
     # If the subscription is ready and we haven't received a
     # translation, it must have not been added to the database yet.
-    if handle._babelSubscriptionHandle.ready()
+    if @inTranslationMode() and handle._babelSubscriptionHandle.ready()
       # Looks like we'll need to insert it.
       Artificial.Babel.Translation.insert handle.namespace, key
 

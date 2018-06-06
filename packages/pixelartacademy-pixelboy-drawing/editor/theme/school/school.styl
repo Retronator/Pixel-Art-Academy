@@ -1,0 +1,332 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing.theme-school
+  .pixelartacademy-pixelboy-apps-drawing-editor
+    .pixelartacademy-pixelboy-apps-drawing-editor-theme-school
+      &.hidden-tools
+        .landsofillusions-assets-components-toolbox
+        .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-color-fill
+        .test-paper
+          visibility hidden
+
+      &.dragging
+      &.dragging *
+        cursor grabbing
+
+      &.resizing-n
+      &.resizing-s
+      &.resizing-n *
+      &.resizing-s *
+        cursor ns-resize
+
+      &.resizing-e
+      &.resizing-w
+      &.resizing-e *
+      &.resizing-w *
+        cursor ew-resize
+
+      &.resizing-nw
+      &.resizing-se
+      &.resizing-nw *
+      &.resizing-se *
+        cursor nwse-resize
+
+      &.resizing-ne
+      &.resizing-sw
+      &.resizing-ne *
+      &.resizing-sw *
+        cursor nesw-resize
+
+      .background
+        absolute-cover()
+        z-index 0
+        background image('/pixelartacademy/pixelboy/apps/drawing/editor/school/woodgrain.png') center center / 250rem 164rem
+        opacity 0
+        transition all 0.2s 1s
+
+      .table-item
+      .landsofillusions-assets-components-toolbox .tools .tool
+      .landsofillusions-assets-components-navigator
+        transition all 1s
+
+      .test-paper
+        position absolute
+        z-index 1
+        width 60rem
+        height 89rem
+        left -80rem
+        top calc(50% - 44rem)
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/testpaper.png')
+        box-shadow -2rem 1rem 0 transparentify(atariOrange(4), atariOrange(5))
+
+        &.eraser-enabled
+          &::before
+            content ''
+            position absolute
+            top 50rem
+            left 0
+            right 0
+            height 7rem
+            background atariGrey(5)
+
+      .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-color-fill
+        position absolute
+        top -102rem
+        right -86rem
+
+      .landsofillusions-assets-components-toolbox
+        .tools
+          list-style none
+          padding 0
+          margin 0
+
+          .tool
+            position absolute
+            cursor pointer
+
+            &::before
+            &::after
+              content ''
+              z-index 3
+
+            &::before
+              position absolute
+              mix-blend-mode multiply
+
+            &::after
+              absolute-cover()
+
+            .tool-button
+              absolute-cover-size()
+              opacity 0
+              z-index 4
+
+          .eraser
+          .pencil
+            left -40rem
+            height 7rem
+
+          .pencil
+            top calc(50% - 9rem)
+            width 28rem
+
+            &::after
+              background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/pencil.png')
+
+            &::before
+              background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/pencil-shadow.png')
+              top 5rem
+              left 0
+              width 23rem
+              height 4rem
+
+          .eraser
+            top calc(50% + 6rem)
+            width 26rem
+
+            &::after
+              background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eraser.png')
+
+            &::before
+              background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eraser-shadow.png')
+              top 7rem
+              left 0
+              width 24rem
+              height 2rem
+
+          .color-picker
+            right -65rem
+            width 55rem
+            height 11rem
+            top calc(50% - 60rem)
+
+            &::after
+              background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eyedropper.png')
+
+            &::before
+              background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eyedropper-shadow.png')
+              top 6rem
+              right 3rem
+              width 56rem
+              height 6rem
+
+          .color-fill
+            position absolute
+            top -102rem
+            right -86rem
+            width 72rem
+            height 72rem
+
+      .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-palette
+        top calc(50% - 40rem)
+        right -70rem
+
+      .landsofillusions-assets-components-navigator
+        position absolute
+        bottom -62rem
+        left -78rem
+        width 85rem
+        height 62rem
+        z-index 3
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/calculator.png')
+        box-shadow 1rem 3rem 0 transparentify(atariOrange(4), atariOrange(5))
+
+        .zoom-display
+          retrotype()
+          position absolute
+          right 15rem
+          top 12rem
+          color atariAqua(0)
+
+          .zoom-percentage-input
+            width 50rem
+            text-align right
+            padding 0
+            border none
+            background transparent
+
+        .zoom-button
+          position absolute
+          top 43rem
+          width 17rem
+          height 11rem
+          border none
+          background image('/pixelartacademy/pixelboy/apps/drawing/editor/school/calculator-button.png') center center / 13rem 9rem no-repeat
+          acme-5()
+          padding 0 0 1rem 1rem
+          line-height 9rem
+          color atariGrey(5)
+
+          &:active
+          &.pressed
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/calculator-button-pressed.png')
+            color atariGrey(4)
+
+          &.zoom-in-button
+            right 7rem
+
+          &.zoom-out-button
+            right 25rem
+
+      .sprite
+        position absolute
+        z-index 1
+        background atariGrey(6)
+        box-sizing content-box
+        border solid atariGrey(6)
+        box-shadow -1rem 1rem 0 transparentify(atariOrange(4), atariOrange(5))
+        transition all 0.6s
+
+        &.completed
+          &::before
+            content '︎'
+            position absolute
+            z-index 1
+            top -2rem
+            right -2rem
+            width 10rem
+            height 8rem
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/completedcheckmark.png')
+
+        .landsofillusions-assets-components-pixelcanvas
+          canvas
+            absolute-cover-size()
+
+      &.drawing-active
+        .sprite
+          transition all 0.2s
+
+        .landsofillusions-assets-components-toolbox .tools .tool
+          transition-duration 0.2s
+
+  &.active-asset:not(.editor-active)
+    .pixelartacademy-pixelboy-apps-drawing-editor
+      .pixelartacademy-pixelboy-apps-drawing-editor-theme-school
+        .sprite
+          transition top 0.6s 0.2s, left 0.6s 0.2s, width 0.2s, height 0.2s
+
+  &.editor-active
+    .pixelartacademy-pixelboy-apps-drawing-clipboard
+      top -210rem
+      left -145rem
+
+    .pixelartacademy-pixelboy-apps-drawing-editor
+      .pixelartacademy-pixelboy-apps-drawing-editor-theme-school
+        &.pencil
+          cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/pencil.png?0.1.0') 2 0, default
+
+          html.scale-3-or-up &
+            cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/pencil.png?0.1.0') 3 0, default
+
+        &.eraser
+          cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/eraser.png?0.1.0') 4 2, default
+
+          html.scale-3-or-up &
+            cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/eraser.png?0.1.0') 6 3, default
+
+        &.color-picker
+          cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/eyedropper.png?0.1.0') 2 0, default
+
+          html.scale-3-or-up &
+            cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/eyedropper.png?0.1.0') 3 0, default
+
+        &.color-fill
+          cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/colorfill.png?0.1.0') 5 30, default
+
+          html.scale-3-or-up &
+            cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/colorfill.png?0.1.0') 7 45, default
+
+        .background
+          opacity 1
+          transition all 0s
+
+        .test-paper
+          left -5rem
+
+        .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-color-fill
+          top -22rem
+          right -6rem
+
+        .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-palette
+          right 0
+
+        .landsofillusions-assets-components-navigator
+          bottom 0
+          left -29rem
+
+        .landsofillusions-assets-components-toolbox
+          .tools
+            .eraser
+            .pencil
+              left -10rem
+
+              &.active
+                left 0
+
+            .color-picker
+              right -8rem
+
+              &.active
+                right 2rem
+
+            .color-fill
+              top -22rem
+              right -6rem
+
+        &:not(.drawing-active)
+          .table-item
+          .landsofillusions-assets-components-toolbox .tools .tool
+          .landsofillusions-assets-components-navigator
+            transition-delay 0.5s
+
+  .pixelartacademy-pixelboy-apps-drawing-clipboard
+    &::after
+      content ''
+      position absolute
+      z-index 1
+      right 4rem
+      top 0
+      width 199rem
+      height 262rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/clipboard-shadow.png')
+      mix-blend-mode multiply

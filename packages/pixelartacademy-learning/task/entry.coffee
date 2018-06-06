@@ -5,7 +5,7 @@ PAA = PixelArtAcademy
 # An entry that is created when a character completes a task. 
 class PAA.Learning.Task.Entry extends AM.Document
   @id: -> 'PixelArtAcademy.Learning.Task.Entry'
-  # taskType: task ID of the task this is an entry for
+  # taskId: task ID of the task this is an entry for
   # time: the time when task was completed
   # character: character that completed the task
   #   _id

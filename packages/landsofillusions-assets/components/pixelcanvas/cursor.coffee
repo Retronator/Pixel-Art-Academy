@@ -2,7 +2,6 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Components.PixelCanvas.Cursor
   constructor: (@pixelCanvas) ->
-    
     @pixelPerfectCoordinate = new ComputedField =>
       pixelCoordinate = @pixelCanvas.mouse()?.pixelCoordinate()
       return unless pixelCoordinate
@@ -32,7 +31,7 @@ class LOI.Assets.Components.PixelCanvas.Cursor
 
     context.strokeRect pixelPerfectCoordinate.x, pixelPerfectCoordinate.y, 1, 1
 
-    symmetryXOrigin = @pixelCanvas.options.symmetryXOrigin()
+    symmetryXOrigin = @pixelCanvas.options.symmetryXOrigin?()
 
     if symmetryXOrigin?
       mirroredX = -pixelPerfectCoordinate.x + 2 * symmetryXOrigin

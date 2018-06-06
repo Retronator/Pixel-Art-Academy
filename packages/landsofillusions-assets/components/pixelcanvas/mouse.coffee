@@ -14,7 +14,7 @@ class LOI.Assets.Components.PixelCanvas.Mouse
     # The integer value of sprite's pixel the mouse is hovering over.
     @pixelCoordinate = new ReactiveField null, EJSON.equals
 
-    # Wire up mouse move and wheel events once the sprite editor is rendered.
+    # Wire up mouse move event once the sprite editor is rendered.
     @pixelCanvas.autorun (computation) =>
       $pixelCanvas = @pixelCanvas.$pixelCanvas()
 
@@ -33,6 +33,13 @@ class LOI.Assets.Components.PixelCanvas.Mouse
         @pixelCanvas.autorun (computation) =>
           @pixelCanvas.camera().origin()
           @updateCoordinates()
+
+      # Remove coordinates when mouse leaves the canvas.
+      $pixelCanvas.mouseleave (event) =>
+        @windowCoordinate null
+        @displayCoordinate null
+        @canvasCoordinate null
+        @pixelCoordinate null
 
   updateCoordinates: ->
     origin = @$canvas.offset()

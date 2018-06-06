@@ -52,38 +52,39 @@ LOI.Assets.Sprite.duplicate.method (spriteId) ->
 LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
   check spriteId, Match.DocumentId
   check layerIndex, Match.Integer
-  check pixel, Match.ObjectIncluding
-    x: Match.Integer
-    y: Match.Integer
-    paletteColor: Match.Optional Match.ObjectIncluding
-      ramp: Match.Integer
-      shade: Match.Integer
-    directColor: Match.Optional Match.ObjectIncluding
-      r: Number
-      g: Number
-      b: Number
-    materialIndex: Match.Optional Match.Integer
-
-  RA.authorizeAdmin()
+  check pixel, pixelPattern
 
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  # Update bounds. They might be null (empty image) so account for that.
-  bounds = sprite.bounds
+  LOI.Assets.VisualAsset._authorizeAssetAction sprite
 
   x = pixel.x
   y = pixel.y
 
-  if bounds
-    bounds =
-      left: Math.min bounds.left, x
-      right: Math.max bounds.right, x
-      top: Math.min bounds.top, y
-      bottom: Math.max bounds.bottom, y
+  modifier = {}
+
+  if sprite.bounds.fixed
+    # Make sure pixel is inside bounds.
+    unless sprite.bounds.left <= pixel.x <= sprite.bounds.right and sprite.bounds.top <= pixel.y <= sprite.bounds.bottom
+      throw new AE.ArgumentOutOfRangeException "Pixel must be added inside of fixed bounds."
 
   else
-    bounds = left: x, right: x, top: y, bottom: y
+    # Update bounds. They might be null (empty image) so account for that.
+    bounds = sprite.bounds
+
+    if bounds
+      bounds =
+        left: Math.min bounds.left, x
+        right: Math.max bounds.right, x
+        top: Math.min bounds.top, y
+        bottom: Math.max bounds.bottom, y
+
+    else
+      bounds = left: x, right: x, top: y, bottom: y
+
+    modifier.$set ?= {}
+    modifier.$set.bounds = bounds
 
   if sprite.layers
     if sprite.layers[layerIndex]
@@ -101,12 +102,10 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
         layers: []
 
   # Add the new pixel and update bounds.
-  LOI.Assets.Sprite.documents.update spriteId,
-    $addToSet:
-      "layers.#{layerIndex}.pixels": pixel
+  modifier.$addToSet ?= {}
+  modifier.$addToSet["layers.#{layerIndex}.pixels"] = pixel
 
-    $set:
-      bounds: bounds
+  LOI.Assets.Sprite.documents.update spriteId, modifier
 
 LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
   check spriteId, Match.DocumentId
@@ -115,57 +114,65 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
     x: Match.Integer
     y: Match.Integer
 
-  RA.authorizeAdmin()
-
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  return unless sprite.layers?[layerIndex].pixels
+  LOI.Assets.VisualAsset._authorizeAssetAction sprite
 
-  update =
-    $pull:
-      "layers.#{layerIndex}.pixels": pixel
+  throw new AE.ArgumentOutOfRangeException "There are no pixels on this layer." unless sprite.layers?[layerIndex].pixels
 
-  # Update bounds. They might be null (empty image) so account for that.
-  bounds = sprite.bounds
   pixels = sprite.layers[layerIndex].pixels
   x = pixel.x
   y = pixel.y
 
-  pixelsCount = _.sumBy sprite.layers, (layer) => layer.pixels?.length or 0
+  unless _.find(pixels, (pixel) -> pixel.x is x and pixel.y is y)
+    throw new AE.ArgumentOutOfRangeException "The pixel to be deleted is not there."
 
-  # We only need to update bounds if the pixel we're removing is on the edge.
-  if bounds and (x is bounds.left or x is bounds.right or y is bounds.top or y is bounds.y)
-    # Clear bounds if we're removing the last pixel.
-    if pixelsCount is 1
-      # But make sure we're actually removing the last pixel (we could be executing remove on empty space).
-      if pixels[0]?.x is x and pixels[0]?.y is y
-        update.$unset ?= {}
-        update.$unset.bounds = true
+  modifier =
+    $pull:
+      "layers.#{layerIndex}.pixels": pixel
 
-    else
-      # Recalculate bounds completely.
-      bounds = null
+  if sprite.bounds.fixed
+    # Make sure pixel is inside bounds.
+    unless sprite.bounds.left <= pixel.x <= sprite.bounds.right and sprite.bounds.top <= pixel.y <= sprite.bounds.bottom
+      throw new AE.ArgumentOutOfRangeException "Pixel must be added inside of fixed bounds."
 
-      for layer, index in sprite.layers
-        for pixel in layer.pixels
-          # Skip the pixel we're removing
-          continue if index is layerIndex and pixel.x is x and pixel.y is y
+  else
+    # Update bounds. They might be null (empty image) so account for that.
+    bounds = sprite.bounds
 
-          if bounds
-            bounds =
-              left: Math.min bounds.left, pixel.x
-              right: Math.max bounds.right, pixel.x
-              top: Math.min bounds.top, pixel.y
-              bottom: Math.max bounds.bottom, pixel.y
+    pixelsCount = _.sumBy sprite.layers, (layer) => layer.pixels?.length or 0
 
-          else
-            bounds = left: pixel.x, right: pixel.x, top: pixel.y, bottom: pixel.y
+    # We only need to update bounds if the pixel we're removing is on the edge.
+    if bounds and (x is bounds.left or x is bounds.right or y is bounds.top or y is bounds.y)
+      # Clear bounds if we're removing the last pixel.
+      if pixelsCount is 1
+        modifier.$unset ?= {}
+        modifier.$unset.bounds = true
 
-      update.$set ?= {}
-      update.$set.bounds = bounds
+      else
+        # Recalculate bounds completely.
+        bounds = null
 
-  LOI.Assets.Sprite.documents.update spriteId, update
+        for layer, index in sprite.layers
+          for pixel in layer.pixels
+            # Skip the pixel we're removing
+            continue if index is layerIndex and pixel.x is x and pixel.y is y
+
+            if bounds
+              bounds =
+                left: Math.min bounds.left, pixel.x
+                right: Math.max bounds.right, pixel.x
+                top: Math.min bounds.top, pixel.y
+                bottom: Math.max bounds.bottom, pixel.y
+
+            else
+              bounds = left: pixel.x, right: pixel.x, top: pixel.y, bottom: pixel.y
+
+        modifier.$set ?= {}
+        modifier.$set.bounds = bounds
+
+  LOI.Assets.Sprite.documents.update spriteId, modifier
 
 LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
   check spriteId, Match.DocumentId
@@ -182,12 +189,14 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
       b: Number
     materialIndex: Match.Optional Match.Integer
 
-  RA.authorizeAdmin()
-
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
+  throw new AE.ArgumentException "Sprite does not exist." unless sprite
+
+  LOI.Assets.VisualAsset._authorizeAssetAction sprite
 
   # Make sure the location is within the bounds.
-  return unless sprite.bounds.left <= newTargetPixel.x <= sprite.bounds.right and sprite.bounds.top <= newTargetPixel.y <= sprite.bounds.bottom
+  unless sprite.bounds.left <= newTargetPixel.x <= sprite.bounds.right and sprite.bounds.top <= newTargetPixel.y <= sprite.bounds.bottom
+    throw new AE.ArgumentOutOfRangeException "Pixel to be filled must be inside of bounds."
 
   # Create a map for fast pixel retrieval. Start will all empty objects.
   pixelMap = []
@@ -200,43 +209,135 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
     pixelMap[pixel.x][pixel.y] = pixel
 
   # Find current target pixel.
-  currentTargetPixel = pixelMap[newTargetPixel.x][newTargetPixel.y]
+  currentTargetPixel = pixelMap[newTargetPixel.x]?[newTargetPixel.y]
+  
+  if currentTargetPixel
+    # We are filling an area with existing color. Add the pixel to the fringe list.
+    fringe = [currentTargetPixel]
+    visited = []
+  
+    while fringe.length
+      testPixel = fringe.pop()
+  
+      # Find 4 neighbours and add them if not already visited.
+      tryAdd = (x, y) ->
+        pixel = pixelMap[x]?[y]
+        return unless pixel
+  
+        # Found it. Has it been added already?
+        return if pixel in visited
+  
+        # Is it the right color?
+        return unless EJSON.equals(pixel.paletteColor, currentTargetPixel.paletteColor) and pixel.materialIndex is currentTargetPixel.materialIndex
+  
+        # It seems legit, add it.
+        fringe.push pixel
+  
+      tryAdd testPixel.x + 1, testPixel.y
+      tryAdd testPixel.x - 1, testPixel.y
+      tryAdd testPixel.x, testPixel.y + 1
+      tryAdd testPixel.x, testPixel.y - 1
+  
+      visited.push testPixel
+  
+    # All the visited pixels are of correct color and should be filled!
+    for pixel in visited
+      for key in ['paletteColor', 'materialIndex']
+        pixel[key] = newTargetPixel[key]
+        delete pixel[key] unless pixel[key]?
+        
+  else
+    # We are filling a transparent area.
+    createPixel = (x, y) -> _.extend _.cloneDeep(newTargetPixel), {x, y}
+    
+    fringe = [newTargetPixel]
+    created = []
 
-  # Add the pixel to the fringe list.
-  fringe = [currentTargetPixel]
-  visited = []
+    while fringe.length
+      testPixel = fringe.pop()
 
-  while fringe.length
-    testPixel = fringe.pop()
+      # Find 4 neighbours and add them if not already visited.
+      tryAdd = (x, y) ->
+        pixel = pixelMap[x]?[y]
+        return if pixel
 
-    # Find 4 neighbours and add them if not already visited.
-    tryAdd = (x, y) ->
-      pixel = pixelMap[x]?[y]
-      return unless pixel
+        # Found an empty spot. Has it been added already?
+        return if _.find fringe, (pixel) -> pixel.x is x and pixel.y is y
+        return if _.find created, (pixel) -> pixel.x is x and pixel.y is y
+          
+        # Is it out of bounds?
+        return unless sprite.bounds.left <= x <= sprite.bounds.right and sprite.bounds.top <= y <= sprite.bounds.bottom
 
-      # Found it. Has it been added already?
-      return if visited.indexOf(pixel) > -1
+        # It seems legit, add it.
+        fringe.push createPixel x, y
 
-      # Is it the right color?
-      return unless EJSON.equals(pixel.paletteColor, currentTargetPixel.paletteColor) and pixel.materialIndex is currentTargetPixel.materialIndex
+      tryAdd testPixel.x + 1, testPixel.y
+      tryAdd testPixel.x - 1, testPixel.y
+      tryAdd testPixel.x, testPixel.y + 1
+      tryAdd testPixel.x, testPixel.y - 1
 
-      # It seems legit, add it.
-      fringe.push pixel
+      created.push testPixel
 
-    tryAdd testPixel.x + 1, testPixel.y
-    tryAdd testPixel.x - 1, testPixel.y
-    tryAdd testPixel.x, testPixel.y + 1
-    tryAdd testPixel.x, testPixel.y - 1
-
-    visited.push testPixel
-
-  # All the visited pixels are of correct color and should be filled!
-  for pixel in visited
-    for key in ['paletteColor', 'materialIndex']
-      pixel[key] = newTargetPixel[key]
-      delete pixel[key] unless pixel[key]?
+    # All the created pixels should be added!
+    layerPixels = layerPixels.concat created
 
   # Replace the whole pixels array.
   LOI.Assets.Sprite.documents.update spriteId,
     $set:
       "layers.#{layer}.pixels": layerPixels
+
+LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
+  check spriteId, Match.DocumentId
+  check layerIndex, Match.Integer
+  check pixels, [pixelPattern]
+
+  sprite = LOI.Assets.Sprite.documents.findOne spriteId
+  throw new AE.ArgumentException "Sprite does not exist." unless sprite
+
+  LOI.Assets.VisualAsset._authorizeAssetAction sprite
+
+  modifier = {}
+
+  if sprite.bounds.fixed
+    # Make sure pixels are inside bounds.
+    for pixel in pixels
+      unless sprite.bounds.left <= pixel.x <= sprite.bounds.right and sprite.bounds.top <= pixel.y <= sprite.bounds.bottom
+        throw new AE.ArgumentOutOfRangeException "Pixels must fit inside of fixed bounds."
+    
+  else
+    # Recalculate bounds completely.
+    bounds = null
+    
+    sprite.layers[layerIndex] = pixels
+
+    for layer, index in sprite.layers
+      for pixel in layer.pixels
+        if bounds
+          bounds =
+            left: Math.min bounds.left, pixel.x
+            right: Math.max bounds.right, pixel.x
+            top: Math.min bounds.top, pixel.y
+            bottom: Math.max bounds.bottom, pixel.y
+
+        else
+          bounds = left: pixel.x, right: pixel.x, top: pixel.y, bottom: pixel.y
+
+    modifier.$set ?= {}
+    modifier.$set.bounds = bounds
+
+  modifier.$set ?= {}
+  modifier.$set["layers.#{layerIndex}.pixels"] = pixels
+
+  LOI.Assets.Sprite.documents.update spriteId, modifier
+
+pixelPattern = Match.ObjectIncluding
+  x: Match.Integer
+  y: Match.Integer
+  paletteColor: Match.Optional Match.ObjectIncluding
+    ramp: Match.Integer
+    shade: Match.Integer
+  directColor: Match.Optional Match.ObjectIncluding
+    r: Number
+    g: Number
+    b: Number
+  materialIndex: Match.Optional Match.Integer

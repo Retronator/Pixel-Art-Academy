@@ -39,6 +39,7 @@ ejson@1.1.0
 email@1.2.3
 es5-shim@4.6.15
 facebook-oauth@1.4.0
+froatsnook:request@2.40.5
 geojson-utils@1.0.10
 google-oauth@1.2.5
 hot-code-push@1.0.4
@@ -128,10 +129,12 @@ retronator:pixelartacademy-cast@0.1.0
 retronator:pixelartacademy-items@0.1.0
 retronator:pixelartacademy-landingpage@0.0.1
 retronator:pixelartacademy-learning@0.0.1
+retronator:pixelartacademy-pico8@0.2.0
 retronator:pixelartacademy-pixelboy@0.0.1
 retronator:pixelartacademy-pixelboy-calendar@0.1.0
 retronator:pixelartacademy-pixelboy-drawing@0.1.0
 retronator:pixelartacademy-pixelboy-journal@0.2.0
+retronator:pixelartacademy-pixelboy-pico8@0.2.0
 retronator:pixelartacademy-pixelboy-studyplan@0.2.0
 retronator:pixelartacademy-pixelboy-yearbook@0.1.0
 retronator:pixelartacademy-practice@0.1.0

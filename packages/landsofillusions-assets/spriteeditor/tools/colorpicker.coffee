@@ -6,7 +6,7 @@ class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LandsOfIllusions.Assets.
     super
 
     @name = "Color picker"
-    @shortcut = AC.Keys.c
+    @shortcut = AC.Keys.i
     @holdShortcut = AC.Keys.alt
 
   onMouseDown: (event) ->

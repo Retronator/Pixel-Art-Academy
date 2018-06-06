@@ -26,7 +26,7 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LandsOfIllusions.Assets.Tools
 
     xCoordinates = [@mouseState.x]
 
-    symmetryXOrigin = @options.editor().symmetryXOrigin()
+    symmetryXOrigin = @options.editor().symmetryXOrigin?()
 
     if symmetryXOrigin?
       mirroredX = -@mouseState.x + 2 * symmetryXOrigin

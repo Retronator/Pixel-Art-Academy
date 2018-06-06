@@ -100,18 +100,10 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
       goalSettings = @goalSettings()
 
       if goalSettings.isCreated() and goalSettings.visible()
-        width = 200
-        height = 230
+        @setFixedPixelBoySize 200, 230
 
       else
-        width = 310
-        height = 230
-
-      @minWidth width
-      @minHeight height
-
-      @maxWidth width
-      @maxHeight height
+        @setFixedPixelBoySize 310, 230
 
   onBackButton: ->
     goalSettings = @goalSettings()

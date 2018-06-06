@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.Practice.Challenges.Drawing.TutorialSprite.BriefComponent">
+  {{#with sprite}}
+    <ul class="actions">
+      {{#if completed}}
+        <li class="action completed">
+          Done!
+        </li>
+      {{else}}
+        <li class="action">
+          <button class="button start-button">Start</button>
+        </li>
+      {{/if}}
+      <li class="action">
+        <button class="button reset-button">Reset</button>
+      </li>
+    </ul>
+  {{/with}}
+</template>

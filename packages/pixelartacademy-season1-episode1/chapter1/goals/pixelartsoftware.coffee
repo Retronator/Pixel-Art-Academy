@@ -14,124 +14,54 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Choose pixel art software"
   
     @instructions: -> """
-      With the Drawing app on PixelBoy, choose which pixel art software you want to use to complete drawing assignments.
+      Talk to Retro to get the Drawing app for PixelBoy.
+      Decide between using the built-in editor or using other software to complete drawing assignments.
     """
 
     @initialize()
 
   # Main path
 
-  class @Pencil extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Pencil'
+  class @Basics extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Basics'
 
-    @directive: -> "Pencil"
+    @directive: -> "Basics"
 
     @instructions: -> """
-      Try your first tool in the Drawing app: the pencil!
+      Learn how to use essential drawing tools (pencil, eraser, color fill)
+      by completing the Basics tutorial under Challenges in the Drawing app.
     """
 
     @predecessors: -> [Goal.ChooseSoftware]
 
     @initialize()
 
-  class @Eraser extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Eraser'
+  class @Helpers extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Helpers'
 
-    @directive: -> "Eraser"
+    @directive: -> "Helpers"
 
     @instructions: -> """
-      Delete pixels with the eraser.
+      Get used to extra tools such as zooming and displaying references in the Helpers tutorial.
     """
 
-    @predecessors: -> [Goal.Pencil]
+    @predecessors: -> [Goal.Basics]
+
 
     @initialize()
 
-  class @BucketFill extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.BucketFill'
+  class @ColorTools extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.ColorTools'
 
-    @directive: -> "Bucket fill"
+    @directive: -> "Color tools"
 
     @instructions: -> """
-      Speed up coloring by using the bucket tool. Now you have the essential tools to do black and white pixel art.
+      Learn how to change colors in the Color tools tutorial.
     """
 
-    @predecessors: -> [Goal.Pencil]
+    @predecessors: -> [Goal.Basics]
 
     @groupNumber: -> -1
-
-    @initialize()
-
-  class @Colors extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Colors'
-
-    @directive: -> "Colors"
-
-    @instructions: -> """
-      Learn how to use the color palette.
-    """
-
-    @predecessors: -> [Goal.Pencil]
-
-    @groupNumber: -> -2
-
-    @initialize()
-
-  class @ColorPicking extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.ColorPicking'
-
-    @directive: -> "Color picking"
-
-    @instructions: -> """
-      Use color picking to speed up changing colors.
-    """
-
-    @predecessors: -> [Goal.Colors, Goal.Shortcuts]
-
-    @groupNumber: -> -2
-
-    @initialize()
-
-  class @Shortcuts extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Shortcuts'
-
-    @directive: -> "Learn shortcuts"
-
-    @instructions: -> """
-      Use the shortcuts menu to see or reassign keyboard shortcuts and increase your drawing efficiency.
-    """
-
-    @predecessors: -> [Goal.Eraser, Goal.BucketFill]
-
-    @groupNumber: -> -1
-
-    @initialize()
-
-  class @Lines extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Lines'
-
-    @directive: -> "Lines"
-
-    @instructions: -> """
-      Quickly draw lines with the pencil by shift-clicking.
-    """
-
-    @predecessors: -> [Goal.Shortcuts]
-
-    @groupNumber: -> -1
-
-    @initialize()
-
-  class @Reference extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Reference'
-
-    @directive: -> "Display a reference"
-
-    @instructions: -> """
-      Learn how to display your own references.
-    """
-
-    @predecessors: -> [Goal.Eraser]
 
     @initialize()
 
@@ -144,7 +74,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @directive: -> "Doodling (own software)"
 
       @instructions: -> """
-        Using the software that you chose, doodle on the canvas to see how the basic tools behave.
+        Using the software of your choice, doodle on the canvas to see how the basic tools behave.
         Figure out how to zoom in and out too. Upload the image to your journal to complete the task.
       """
 
@@ -177,7 +107,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @directive: -> "Display a reference"
 
       @instructions: -> """
-        Figure out how you’ll look at a reference image when drawing in your tool of choice.
+        Talk to Alex in the Art Studio to learn different ways to set up reference images when drawing.
       """
 
       @predecessors: -> [Goal.DIY.Doodling]
@@ -224,13 +154,14 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Copy the reference"
 
     @instructions: -> """
-      Pick one of the sprites from the reference. Black and white is easiest, but if you’ve played with colors already,
-      feel free to choose those too.
+      Talk to Corinne in the Gallery to get some references. Choose one (black and white is easiest,
+      but if you’ve played with colors already, go for that too) and re-create it in the Drawing app or
+      your software of choice. Upload it to your journal and this goal is complete.
     """
 
     @interests: -> ['pixel art software', 'pixel art', 'drawing software']
 
-    @predecessors: -> [Goal.Reference, Goal.DIY.Grid]
+    @predecessors: -> [Goal.Helpers, Goal.DIY.Grid]
 
     @initialize()
 
@@ -242,7 +173,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @instructions: -> """
       When you share pixel art online, you have to export it bigger and sometimes with extra space.
       Figure out how to resize the image or apply scale when exporting if your software supports it.
-      Learn about best sizes and trick for posting to specific social networks.
+      Talk to Retro to learn about best sizes and tricks for posting to specific social networks.
     """
 
     @predecessors: -> [Goal.CopyReference]
@@ -255,14 +186,9 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @ChooseSoftware
 
     # Main path
-    @Pencil
-    @Eraser
-    @BucketFill
-    @Colors
-    @ColorPicking
-    @Shortcuts
-    @Lines
-    @Reference
+    @Basics
+    @Helpers
+    @ColorTools
 
     # DIY
     @DIY.Doodling

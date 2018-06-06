@@ -10,6 +10,14 @@
   &.visible
     visibility visible
 
+  &.fullscreen
+    .landsofillusions-components-hand
+      left -78rem !important
+      transition-delay 0.5s
+
+  .landsofillusions-components-hand
+    transition all 0.5s
+
   .landsofillusions-components-overlay
     > .safe-area
       display none
@@ -28,7 +36,7 @@
         transform translate(-50%, 50%)
 
       &.screen-bottom
-        bottom 35rem
+        bottom 65rem
 
     .landsofillusions-components-hand
       position absolute
@@ -41,18 +49,17 @@
       transform translateX(0)
       overflow hidden
 
-    .screen
+    > .screen
       position absolute
       left -1rem
       top -1rem
       right -1rem
       bottom -1rem
       border solid 1rem atariGrey(1)
-      box-shadow:
-        0 2rem 0 -1rem atariGrey(2),
-        -1rem 1rem atariGrey(3)
+      box-shadow 0 2rem 0 -1rem atariGrey(2),
+                 -1rem 1rem atariGrey(3)
 
-    .glass
+    > .glass
       position absolute
       left -4rem
       top -4rem

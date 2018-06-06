@@ -103,7 +103,7 @@ class LOI.Components.Overlay extends AM.Component
     viewport = display.viewport()
 
     # Background can be at most 360px * scale high. Crop bars need to fill the rest when overlay is active.
-    maxOverlayHeight = 360 * scale
+    maxOverlayHeight = display.safeAreaHeight() * 1.5 * scale
     maxBoundsHeight = viewport.maxBounds.height()
     gapHeight = (maxBoundsHeight - maxOverlayHeight) / 2
     @_cropBarHeight = Math.max 0, viewport.maxBounds.top() + gapHeight

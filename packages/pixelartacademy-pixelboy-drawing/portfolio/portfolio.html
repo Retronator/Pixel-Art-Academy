@@ -1,0 +1,41 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio">
+  <div class="pixelartacademy-pixelboy-apps-drawing-portfolio">
+    <div class="cover" {{style coverStyle}}>
+      <div class="handle"></div>
+      <div class="handle-shadow"></div>
+    </div>
+    <ul class="sections">
+      {{#each sections}}
+        <li class="section {{sectionActiveClass}} {{groupInSectionActiveClass}}" {{style sectionStyle}}>
+          <div class="section-name">{{> t10e nameKey}}</div>
+          <ul class="groups">
+            {{#each groups}}
+              <li class="group {{groupActiveClass}}" {{style groupStyle}}>
+                <div class="group-name">{{name}}</div>
+                {{#if assets}}
+                  <ul class="briefs">
+                    {{#each assets}}
+                      <li class="brief {{assetHoveredClass}} {{assetActiveClass}} {{asset.styleClasses}}" {{style briefStyle}}>
+                        <div class="asset-name">{{> t10e asset.displayNameTranslation}}</div>
+                        <div class="description">{{> t10e asset.descriptionTranslation}}</div>
+                      </li>
+                    {{/each}}
+                  </ul>
+                  <ul class="assets">
+                    {{#each assets}}
+                      <li class="asset {{assetActiveClass}} {{asset.styleClasses}}" {{style assetStyle}}>
+                        <div class="sprite" {{style spriteStyle}}>
+                          {{> Render spriteImage}}
+                        </div>
+                      </li>
+                    {{/each}}
+                  </ul>
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

@@ -14,6 +14,8 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('webapp', 'server');
 
+  api.use('edgee:slingshot');
+
   api.export('LandsOfIllusions');
 
   api.addFile('assets');
@@ -22,23 +24,37 @@ Package.onUse(function(api) {
   api.addComponent('layout/layout');
 
   // Documents
+  
+  api.addFile('documents/image..');
+  api.addFile('documents/image/methods');
 
-  api.addFile('documents/palette/palette');
+  api.addFile('documents/palette..');
   api.addFile('documents/palette/methods');
   api.addFile('documents/palette/atari2600');
   api.addServerFile('documents/palette/subscriptions');
 
-  api.addFile('documents/visualasset/visualasset');
+  api.addServerFile('documents/palette/palettes/atari2600');
+  api.addServerFile('documents/palette/palettes/pico8');
+  api.addServerFile('documents/palette/palettes/black');
+
+  api.addFile('documents/visualasset..');
   api.addFile('documents/visualasset/methods');
 
-  api.addFile('documents/sprite/sprite');
+  api.addFile('documents/sprite..');
   api.addClientFile('documents/sprite/sprite-client');
   api.addFile('documents/sprite/methods');
   api.addServerFile('documents/sprite/subscriptions');
   api.addServerFile('documents/sprite/cache-server');
 
-  api.addFile('documents/mesh/mesh');
+  api.addFile('documents/mesh..');
 
+  // Upload
+
+  api.addFile('upload..');
+  api.addFile('upload/context..');
+  api.addServerFile('upload/context/server');
+  api.addClientFile('upload/context/client');
+  
   // Tools
 
   api.addFile('tools/tools');
@@ -48,24 +64,26 @@ Package.onUse(function(api) {
 
   api.addFile('components/components');
 
-  api.addUnstyledComponent('components/assetslist/assetslist');
-  api.addUnstyledComponent('components/assetinfo/assetinfo');
-  api.addUnstyledComponent('components/navigator/navigator');
-  api.addUnstyledComponent('components/palette/palette');
-  api.addUnstyledComponent('components/materials/materials');
-  api.addUnstyledComponent('components/landmarks/landmarks');
-  api.addUnstyledComponent('components/toolbox/toolbox');
+  api.addUnstyledComponent('components/assetslist..');
+  api.addUnstyledComponent('components/assetinfo..');
+  api.addUnstyledComponent('components/navigator..');
+  api.addUnstyledComponent('components/palette..');
+  api.addUnstyledComponent('components/materials..');
+  api.addUnstyledComponent('components/landmarks..');
+  api.addUnstyledComponent('components/toolbox..');
+  api.addUnstyledComponent('components/spriteimage..');
 
-  api.addUnstyledComponent('components/shadingsphere/shadingsphere');
+  api.addUnstyledComponent('components/references..');
+  api.addUnstyledComponent('components/references/reference..');
+
+  api.addUnstyledComponent('components/shadingsphere..');
   api.addFile('components/shadingsphere/normalpicker');
 
-  api.addUnstyledComponent('components/pixelcanvas/pixelcanvas');
+  api.addUnstyledComponent('components/pixelcanvas..');
   api.addFile('components/pixelcanvas/mouse');
   api.addFile('components/pixelcanvas/grid');
   api.addFile('components/pixelcanvas/cursor');
   api.addFile('components/pixelcanvas/camera');
-
-  api.addUnstyledComponent('components/spriteimage/spriteimage');
 
   // Engine
 

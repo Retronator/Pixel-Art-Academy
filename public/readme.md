@@ -2,4 +2,4 @@
 
 Art, sound, music and other global, static assets.
 
-Note that this whole folder is licensed under CC-SA as per the LICENSE document.
+Note that this folder is licensed under CC-SA as per the license document, except when stated otherwise in the subfolders.

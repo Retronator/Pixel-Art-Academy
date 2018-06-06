@@ -1,7 +1,7 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
-# A 2D image asset.
+# A 2D pixel art asset.
 class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Sprite'
   # layers: array of
@@ -20,8 +20,9 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   #     materialIndex: the index of the named color of the pixel
   #     normal: the direction of the surface that this pixel represents in right-handed 3D coordinates
   #       x, y, z
-  # bounds: image bounds in pixels (or null if no pixels)
+  # bounds: image bounds in pixels (or null if no pixels and not fixed bounds)
   #   left, right, top, bottom
+  #   fixed: boolean whether to preserve the set bounds
   @Meta
     name: @id()
 
@@ -48,6 +49,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @addPixel: @method 'addPixel'
   @removePixel: @method 'removePixel'
   @colorFill: @method 'colorFill'
+  @replacePixels: @method 'replacePixels'
 
   constructor: ->
     super

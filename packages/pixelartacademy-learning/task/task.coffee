@@ -63,5 +63,5 @@ class PAA.Learning.Task
     
     # Find a task entry made by this character.
     @constructor.Entry.documents.findOne
-      taskType: @id()
+      taskId: @id()
       'character._id': characterId

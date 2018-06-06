@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.use('retronator:pixelartacademy-season1');
   api.use('retronator:pixelartacademy-learning');
+  api.use('retronator:pixelartacademy-practice');
   api.use('retronator:landsofillusions');
   api.use('retronator:retronator-hq');
   api.use('retronator:retronator-landsofillusions');
@@ -56,6 +57,7 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/scenes/inbox');
   api.addThing('chapter1/scenes/sanfranciscoconversation');
+  api.addFile('chapter1/scenes/drawingtutorial');
 
   api.addFile('chapter1/goals..');
   api.addFile('chapter1/goals/drawingsoftware');
@@ -76,6 +78,31 @@ Package.onUse(function(api) {
   api.addThing('chapter1/groups/admissionsstudygroup..');
   api.addFile('chapter1/groups/admissionsstudygroup/coworking');
 
+  api.addFile('chapter1/projects..');
+  api.addFile('chapter1/projects/snake');
+  api.addServerFile('chapter1/projects/snake-methods-server');
+
+  api.addFile('chapter1/challenges..');
+  api.addFile('chapter1/challenges/drawing..');
+  api.addFile('chapter1/challenges/drawing/tutorial..');
+
+  api.addFile('chapter1/challenges/drawing/tutorial/basics..');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/pencil');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/eraser');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/colorfill');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/colorfill2');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/basictools');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/shortcuts');
+
+  api.addFile('chapter1/challenges/drawing/tutorial/colors..');
+  api.addFile('chapter1/challenges/drawing/tutorial/colors/colorswatches');
+  api.addFile('chapter1/challenges/drawing/tutorial/colors/colorpicking');
+  api.addFile('chapter1/challenges/drawing/tutorial/colors/quickcolorpicking');
+
+  api.addFile('chapter1/challenges/drawing/tutorial/helpers..');
+  api.addFile('chapter1/challenges/drawing/tutorial/helpers/zoom');
+  api.addFile('chapter1/challenges/drawing/tutorial/helpers/references');
+
   // Intro
   api.addFile('chapter1/sections/intro..');
   api.addThing('chapter1/sections/intro/scenes/studio');
@@ -94,4 +121,11 @@ Package.onUse(function(api) {
   // Post-PixelBoy
   api.addFile('chapter1/sections/postpixelboy..');
   api.addThing('chapter1/sections/postpixelboy/scenes/store');
+
+  // Admission projects
+  api.addFile('chapter1/sections/admissionprojects..');
+  api.addThing('chapter1/sections/admissionprojects/scenes/coworking');
+
+  api.addFile('chapter1/sections/admissionprojects/snake..');
+  api.addFile('chapter1/sections/admissionprojects/snake/scenes/workbench');
 });

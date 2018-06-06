@@ -1,0 +1,107 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-clipboard
+  position absolute
+  left calc(50% - 100rem)
+  top -265rem
+  width 200rem
+  height 260rem
+  transition all 0.4s
+
+  &::before
+    content ''
+    absolute-cover()
+    z-index 1
+    background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/clipboard.png')
+
+  .brief
+    position absolute
+    top 10rem
+    left 11rem
+    width 178rem
+    height 240rem
+    padding 14rem 12rem
+    color atariGrey(1)
+    daily()
+
+    .asset
+      position relative
+      z-index 2
+
+      .asset-name
+        text-transform uppercase
+
+      .description
+        margin 8rem 0
+
+        ul
+          list-style square
+
+      .properties
+        list-style none
+        padding 0
+
+        .property
+          margin-bottom 4rem
+
+          .property-name
+            text-transform uppercase
+
+      .actions
+        list-style none
+        width 100%
+        padding 0
+        display table
+        border-collapse collapse
+
+        .action
+          display table-cell
+          position relative
+          border 1rem solid atariGrey(4)
+          width 33.3%
+          height 10rem
+          text-transform uppercase
+          checkout()
+          text-align center
+
+          &.completed
+            background atariGreen(5)
+            padding 1rem
+
+          .button
+            absolute-cover-size()
+            border none
+            background none
+            color atariGrey(2)
+            font inherit
+            text-transform inherit
+
+            &:hover
+              background atariGrey(6)
+
+    .sprite-placeholder
+      position relative
+      left -10rem
+
+      &::after
+        content ''
+        position absolute
+        z-index 3
+        top 15rem
+        left -6rem
+        width 23rem
+        height 9rem
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/paperclip.png')
+
+    .sprite-info
+      position relative
+      z-index 2
+      margin 7rem 0
+
+      p
+        margin 0
+
+.pixelartacademy-pixelboy-apps-drawing.active-asset:not(.editor-active)
+  .pixelartacademy-pixelboy-apps-drawing-clipboard
+    top calc(50% - 130rem)
+    transition all 0.6s 0.2s
