@@ -81,10 +81,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
     @autorun (computation) =>
       return unless activeSection = @activeSection()
       return unless activeGroup = @activeGroup()
-      return if activeGroup in activeSection.groups()
+      groups = activeSection.groups()
+      return if activeGroup in groups
 
-      # Seems like the active group is not valid anymore.
-      @activeGroup null
+      # Seems like the active group is not valid anymore. Reinstate the new group at the same index.
+      @activeGroup groups[activeGroup.index]
 
     @hoveredAsset = new ReactiveField null, (a, b) => a is b
     @activeAsset = new ComputedField =>

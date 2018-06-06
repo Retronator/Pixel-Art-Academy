@@ -23,6 +23,9 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
 
     asset.completed
 
+  isAssetCompleted: (assetClassOrId) ->
+    @constructor.isAssetCompleted assetClassOrId
+
   assetsData: ->
     return unless LOI.adventure.readOnlyGameState()
 

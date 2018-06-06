@@ -19,16 +19,21 @@ class C1.DrawingTutorial extends LOI.Adventure.Scene
     @helpers = new ReactiveField null
 
     @basics new C1.Challenges.Drawing.Tutorial.Basics
-    @colors new C1.Challenges.Drawing.Tutorial.Colors
-    @helpers new C1.Challenges.Drawing.Tutorial.Helpers
 
   things: ->
     things = [
       @basics()
     ]
 
-    basicsShortcuts = _.find @basics().assets(), (asset) -> asset instanceof C1.Challenges.Drawing.Tutorial.Basics.Shortcuts
+    if @basics().isAssetCompleted C1.Challenges.Drawing.Tutorial.Basics.Shortcuts
+      unless colors = @colors()
+        colors = new C1.Challenges.Drawing.Tutorial.Colors
+        @colors colors
 
-    things.push @colors(), @helpers() if basicsShortcuts?.completed()
+      unless helpers = @helpers()
+        helpers = new C1.Challenges.Drawing.Tutorial.Helpers
+        @helpers helpers
+
+      things.push colors, helpers
 
     things

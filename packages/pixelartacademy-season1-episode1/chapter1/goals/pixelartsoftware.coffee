@@ -53,10 +53,10 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
   class @ColorTools extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.ColorTools'
 
-    @directive: -> "Color tools"
+    @directive: -> "Colors"
 
     @instructions: -> """
-      Learn how to change colors in the Color tools tutorial.
+      Learn how to change colors in the Colors tutorial.
     """
 
     @predecessors: -> [Goal.Basics]
