@@ -16,7 +16,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
     @trayHideActiveHeight = 10
     @trayBorder = 8
 
-    @resizingBorder = 4
+    @resizingBorder = 6
 
   onCreated: ->
     super
@@ -129,7 +129,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
 
       distance = new THREE.Vector2(240, 180).length()
 
-      if displaySize = @size()
+      if displaySize = @displaySize()
         halfWidth = displaySize.width / 2
         halfHeight = displaySize.height / 2
 
