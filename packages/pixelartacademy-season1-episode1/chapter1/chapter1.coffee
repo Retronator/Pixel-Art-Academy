@@ -25,8 +25,8 @@ class PAA.Season1.Episode1.Chapter1 extends LOI.Adventure.Chapter
     @PrePixelBoy
     @PixelBoy
     @PostPixelBoy
-    #@AdmissionProjects
-    #@AdmissionProjects.Snake
+    @AdmissionProjects
+    @AdmissionProjects.Snake
   ]
 
   @scenes: -> [

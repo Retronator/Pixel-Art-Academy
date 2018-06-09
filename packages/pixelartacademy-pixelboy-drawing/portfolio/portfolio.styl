@@ -75,6 +75,8 @@
         margin-top -5rem
 
       &.active
+        overflow initial
+
         .groups
           .group
             &:not(.active):hover
@@ -110,9 +112,11 @@
           background-color atariBrown(4)
           box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
           transition all 0.2s
+          overflow hidden
 
           &.active
             height 150rem
+            overflow initial
 
           .group-name
             height 17rem

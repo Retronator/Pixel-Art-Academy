@@ -75,5 +75,8 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     LOI.Assets.Palette.documents.findOne
       name: @constructor.restrictedPaletteName()
 
-  spriteInfo: -> AB.translate(@_translationSubscription, 'spriteInfo').text
+  spriteInfo: ->
+    translation = AB.translate @_translationSubscription, 'spriteInfo'
+    if translation.language then translation.text else null
+
   spriteInfoTranslation: -> AB.translation @_translationSubscription, 'spriteInfo'

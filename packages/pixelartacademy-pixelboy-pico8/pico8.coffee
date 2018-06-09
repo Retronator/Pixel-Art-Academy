@@ -69,7 +69,6 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
 
       if keypress isnt null
         $('.pico-button[value="' + keypress + '"]').addClass 'pressed'
-        Pico.press keypress, 0
         @picoKeyIsPressed true
 
     $(document).keyup (event) =>
@@ -89,7 +88,6 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
 
       if keypress isnt null
         $('.pico-button[value="' + keypress + '"]').removeClass 'pressed'
-        Pico.release keypress, 0
         @picoKeyIsPressed false
 
   powerOnClass: ->

@@ -20,6 +20,8 @@ Package.onUse(function(api) {
   api.use('http');
   api.use('froatsnook:request');
   api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartacademy');
+  api.use('retronator:pixelartacademy-practice');
 
   api.export('Pico');
 

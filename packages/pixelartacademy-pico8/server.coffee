@@ -1,4 +1,5 @@
 LOI = LandsOfIllusions
+PAA = PixelArtAcademy
 PNG = Npm.require('pngjs').PNG
 Request = request
 
@@ -57,8 +58,6 @@ WebApp.connectHandlers.use '/pico8.png', (request, response, next) ->
   if query.characterId
     characterId = query.characterId
 
-    character = LOI.Character.documents.findOne characterId
-
     replaceSprite = (spriteIndex, spriteId) ->
       originX = spriteIndex * 8
       # Recolor into yellow.
@@ -67,13 +66,21 @@ WebApp.connectHandlers.use '/pico8.png', (request, response, next) ->
           spriteSheet[originX + x][y] = 10
 
       sprite = LOI.Assets.Sprite.documents.findOne spriteId
-      for pixel in sprite.pixels
-        color = sprite.colorMap[pixel.colorIndex].ramp
-        spriteSheet[originX + pixel.x][pixel.y] = color
 
-    if character.gameSprites
-      replaceSprite 0, character.gameSprites[0][0]
-      replaceSprite 1, character.gameSprites[0][1]
+      for pixel in sprite.layers[0].pixels
+        spriteSheet[originX + pixel.x][pixel.y] = pixel.paletteColor.ramp
+
+    gameState = LOI.GameState.documents.findOne 'character._id': characterId
+
+    projectId = gameState.readOnlyState.things.PixelArtAcademy.Season1.Episode1.Chapter1.Projects.Snake.activeProjectId
+
+    project = PAA.Practice.Project.documents.findOne projectId
+
+    bodyAsset = _.find project.assets, (asset) -> asset.id is PAA.Season1.Episode1.Chapter1.Projects.Snake.Body.id()
+    foodAsset = _.find project.assets, (asset) -> asset.id is PAA.Season1.Episode1.Chapter1.Projects.Snake.Food.id()
+
+    replaceSprite 0, bodyAsset.sprite._id
+    replaceSprite 1, foodAsset.sprite._id
 
   ### Rewrite the sprites with random colors.
   for x in [0...128]

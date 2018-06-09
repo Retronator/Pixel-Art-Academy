@@ -31,20 +31,26 @@ Pico.load = function (element, cart) {
   // load pico8 library
   var head = document.getElementsByTagName('head')[0];
   var js = document.createElement('script');
-  js.src = '/packages/retronator_pixelartacademy-pico8/pico8.min.js';
+  js.src = '/packages/retronator_pixelartacademy-pico8/runtime/pico8.min.js';
   head.appendChild(js);
 };
 
 // press button
 Pico.press = function (k, p) {
   var kc = pico8keys[p][k];
-  Pico._press({type: 'keydown', keyCode: kc});
+  Pico.Module.SDL.events.push({
+    type: 'keydown',
+    keyCode: kc
+  });
 };
 
 // release button
 Pico.release = function (k, p) {
   var kc = pico8keys[p][k];
-  Pico._press({type: 'keyup', keyCode: kc});
+  Pico.Module.SDL.events.push({
+    type: 'keyup',
+    keyCode: kc
+  });
 };
 
 // set volume (0 - 256)
