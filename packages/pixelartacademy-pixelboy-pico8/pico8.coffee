@@ -23,8 +23,8 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
   constructor: ->
     super
 
-    @minWidth 118
-    @minHeight 152
+    @minWidth 320
+    @minHeight 157
 
     @maxWidth @minWidth()
     @maxHeight @minHeight()
