@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.Pico8.Device.Handheld">
+  <div class="pixelartacademy-pico8-device-handheld {{powerOnClass}} {{reversedControlsClass}}">
+    <div class="buttons">
+      <div class="button z-button {{zButtonPressedClass}}"></div>
+      <div class="button x-button {{xButtonPressedClass}}"></div>
+    </div>
+    <div class="d-pad {{dPadDirectionClass}}"></div>
+    <div class="small-buttons">
+      <button class="small-button menu-button"></button>
+    </div>
+    <button class="power-toggle-button"></button>
+    <div class="power-switch"></div>
+    <div class="screen">
+      <div class="power-indicator"></div>
+      <canvas class="canvas"></canvas>
+    </div>
+  </div>
+</template>

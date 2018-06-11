@@ -3,7 +3,7 @@ PAA = PixelArtAcademy
 PNG = Npm.require('pngjs').PNG
 Request = request
 
-WebApp.connectHandlers.use '/pico8.png', (request, response, next) ->
+WebApp.connectHandlers.use '/pico8/cartridge.png', (request, response, next) ->
   query = request.query
   cartridgeUrl = query.cartridge
 

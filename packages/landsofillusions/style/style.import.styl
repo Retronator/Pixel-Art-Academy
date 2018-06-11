@@ -33,8 +33,8 @@ pixel-image-rendering()
   image-rendering crisp-edges                 // CSS3
   -ms-interpolation-mode nearest-neighbor
 
-image(url)
-  url(url + '?' + random())
+image(url, version = random())
+  url(url + '?' + version)
 
 hyphens()
   hyphens arguments

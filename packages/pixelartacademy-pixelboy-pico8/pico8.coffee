@@ -43,7 +43,8 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
       @isPowerOn true
 
       cartridgeUrl = Meteor.absoluteUrl("pico8.png?cartridge=pixelartacademy/pixelboy/apps/pico8/snake.p8.png&characterId=#{LOI.characterId()}")
-      Pico.load $('.pico-container')[0], cartridgeUrl
+      console.log "p", window.Pico8
+      window.Pico8.load $('.pico-container')[0], cartridgeUrl
     ,
       1000
     
@@ -103,14 +104,14 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
     # Get input value.
     keypress = $(event.currentTarget).attr 'value'
     # Send value to pico-8.
-    Pico.press keypress, 0
+    Pico8.press keypress, 0
     @picoKeyIsPressed true
 
   onReleasePicoButton: (event) ->
     if @picoKeyIsPressed()
       keypress = event.currentTarget.value
       # Send value to pico-8.
-      Pico.release keypress, 0
+      Pico8.release keypress, 0
       @picoKeyIsPressed false
 
   onChangePowerToggleController: (event) ->

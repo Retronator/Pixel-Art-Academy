@@ -1,6 +1,6 @@
 Package.describe({
   name: 'retronator:pixelartacademy-pico8',
-  version: '0.2.0',
+  version: '0.3.0',
   // Brief, one-line summary of the package.
   summary: '',
   // URL to the Git repository containing the source code for this package.
@@ -22,12 +22,20 @@ Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-practice');
+  api.use('retronator:pixelartdatabase');
 
-  api.export('Pico');
+  api.export('PixelArtAcademy');
 
-  api.addFiles('runtime/picoloader.js', 'client');
+  api.addFile('pico8');
   api.addServerFile('server');
 
-  //api.addAssets('runtime/pico8.js', 'client');
-  api.addAssets('runtime/pico8.min.js', 'client');
+  api.addFile('game..');
+  api.addServerFile('game/subscriptions');
+
+  api.addFile('device..');
+  api.addAssets('device/runtime/pico8.min.js', 'client');
+  api.addComponent('device/handheld..');
+
+  api.addFile('pages..');
+  api.addComponent('pages/pico8..');
 });

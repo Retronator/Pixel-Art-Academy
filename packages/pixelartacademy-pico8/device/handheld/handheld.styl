@@ -1,0 +1,204 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+version = '0.2.0'
+
+.pixelartacademy-pico8-device-handheld
+  position relative
+  width 320rem
+  height 155rem
+  background-image image('/pixelartacademy/pixelboy/apps/pico8/case.png', version)
+
+  &.reversed-controls
+    .buttons
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/buttons-inset-right.png', version)
+      right 4rem
+      left auto
+
+      .button
+        &.z-button
+          bottom 17rem
+          top auto
+
+        &.x-button
+          top 17rem
+          bottom auto
+
+    .d-pad
+      left 4rem
+      right auto
+
+    .small-buttons
+      left auto
+      right 32rem
+
+      .small-button
+        &::before
+          left 2rem
+          right auto
+
+        &::after
+          left 13rem
+          right auto
+
+  &.power-on
+    .power-switch
+      left 221rem
+
+    .screen
+      &::after
+        opacity 0.1
+        transition opacity 0.2s 0.5s
+
+      .power-indicator
+        background-image image('/pixelartacademy/pixelboy/apps/pico8/powerindicator-on.png', version)
+
+  .buttons
+    position absolute
+    left 4rem
+    top 27rem
+    width 76rem
+    height 60rem
+    background image('/pixelartacademy/pixelboy/apps/pico8/buttons-inset-left.png', version) center / 56rem 40rem no-repeat
+    cursor pointer
+
+    .button
+      position absolute
+      width 21rem
+      height 18rem
+      cursor pointer
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/button.png', version)
+
+      &.z-button
+        top 17rem
+        left 14rem
+
+      &.x-button
+        bottom 17rem
+        right 17rem
+
+      &.pressed
+        background-image image('/pixelartacademy/pixelboy/apps/pico8/button-pressed.png', version)
+
+  .d-pad
+    position absolute
+    right 4rem
+    top 19rem
+    width 74rem
+    height 74rem
+    background image('/pixelartacademy/pixelboy/apps/pico8/dpad-inset.png', version) center / 54rem 54rem no-repeat
+    cursor pointer
+
+    &::after
+      content ''
+      position absolute
+      top 13rem
+      left 13rem
+      width 48rem
+      height 48rem
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad.png', version)
+
+    &.left::after
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad-left.png', version)
+
+    &.right::after
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad-right.png', version)
+
+    &.up::after
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad-up.png', version)
+
+    &.down::after
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad-down.png', version)
+
+  .small-buttons
+    position absolute
+    left 30rem
+    bottom 30rem
+
+    .small-button
+      width 29rem
+      height 11rem
+      cursor pointer
+      background transparent
+      border 0
+      margin 0
+      padding 0
+
+      &::before
+        content ''
+        position absolute
+        right 2rem
+        top 2rem
+        width 9rem
+        height 7rem
+        background-image image('/pixelartacademy/pixelboy/apps/pico8/smallbutton.png', version)
+
+      &::after
+        content ''
+        position absolute
+        right 13rem
+        top 4rem
+        height 3rem
+
+      &.menu-button
+        &::after
+          width 14rem
+          background-image image('/pixelartacademy/pixelboy/apps/pico8/smallbutton-caption-menu.png', version)
+
+      &:active
+        &::before
+          background-image image('/pixelartacademy/pixelboy/apps/pico8/smallbutton-pressed.png', version)
+
+  .power-toggle-button
+    position absolute
+    width 26rem
+    height 26rem
+    opacity 0.5
+    right 75rem
+    top -7rem
+    z-index 1
+    cursor pointer
+    background none
+    border none
+
+  .power-switch
+    position absolute
+    left 226rem
+    top -2rem
+    width 19rem
+    height 2rem
+    background-image image('/pixelartacademy/pixelboy/apps/pico8/powerswitch.png', version)
+    transition left 100ms
+
+    img
+      display block
+      width 100%
+      height 100%
+
+  .screen
+    width 156rem
+    height 146rem
+    position absolute
+    top 4rem
+    left 82rem
+
+    .canvas
+    &::after
+      position absolute
+      top 5rem
+      left 14rem
+      width 128rem
+      height 128rem
+
+    &::after
+      content ''
+      background atariGrey(7)
+      transition opacity 0.2s
+      opacity 0
+
+    .power-indicator
+      position absolute
+      width 4rem
+      height 4rem
+      top 6rem
+      right 5rem
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/powerindicator-off.png', version)
