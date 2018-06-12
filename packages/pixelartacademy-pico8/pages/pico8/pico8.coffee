@@ -9,7 +9,7 @@ class PAA.Pico8.Pages.Pico8 extends AM.Component
   @title: -> "PICO-8"
   @webApp: -> true
   @viewport: -> 'user-scalable=no, width=640'
-  @touchIcon: -> Meteor.absoluteUrl "pixelartacademy/pico8/pages/pico8/touch-icon.png"
+  @touchIcon: -> '/pixelartacademy/pico8/pages/pico8/apple-touch-icon.png'
 
   onCreated: ->
     super

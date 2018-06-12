@@ -1,16 +1,14 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-version = '0.2.0'
-
 .pixelartacademy-pico8-device-handheld
   position relative
   width 320rem
   height 155rem
-  background-image image('/pixelartacademy/pixelboy/apps/pico8/case.png', version)
+  background-image image('/pixelartacademy/pico8/device/handheld/case.png')
 
   &.reversed-controls
     .buttons
-      background-image image('/pixelartacademy/pixelboy/apps/pico8/buttons-inset-right.png', version)
+      background-image image('/pixelartacademy/pico8/device/handheld/buttons-inset-right.png')
       right 4rem
       left auto
 
@@ -50,7 +48,7 @@ version = '0.2.0'
         transition opacity 0.2s 0.5s
 
       .power-indicator
-        background-image image('/pixelartacademy/pixelboy/apps/pico8/powerindicator-on.png', version)
+        background-position -100% 0
 
   .buttons
     position absolute
@@ -58,7 +56,7 @@ version = '0.2.0'
     top 27rem
     width 76rem
     height 60rem
-    background image('/pixelartacademy/pixelboy/apps/pico8/buttons-inset-left.png', version) center / 56rem 40rem no-repeat
+    background image('/pixelartacademy/pico8/device/handheld/buttons-inset-left.png') center / 56rem 40rem no-repeat
     cursor pointer
 
     .button
@@ -66,7 +64,7 @@ version = '0.2.0'
       width 21rem
       height 18rem
       cursor pointer
-      background-image image('/pixelartacademy/pixelboy/apps/pico8/button.png', version)
+      background image('/pixelartacademy/pico8/device/handheld/button.png') 0 / 200% 100%
 
       &.z-button
         top 17rem
@@ -77,7 +75,7 @@ version = '0.2.0'
         right 17rem
 
       &.pressed
-        background-image image('/pixelartacademy/pixelboy/apps/pico8/button-pressed.png', version)
+        background-position -100% 0
 
   .d-pad
     position absolute
@@ -85,7 +83,7 @@ version = '0.2.0'
     top 19rem
     width 74rem
     height 74rem
-    background image('/pixelartacademy/pixelboy/apps/pico8/dpad-inset.png', version) center / 54rem 54rem no-repeat
+    background image('/pixelartacademy/pico8/device/handheld/dpad-inset.png') center / 54rem 54rem no-repeat
     cursor pointer
 
     &::after
@@ -95,19 +93,19 @@ version = '0.2.0'
       left 13rem
       width 48rem
       height 48rem
-      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad.png', version)
+      background image('/pixelartacademy/pico8/device/handheld/dpad.png') 0 / 500% 100%
 
     &.left::after
-      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad-left.png', version)
+      background-position -100% 0
 
     &.right::after
-      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad-right.png', version)
+      background-position -200% 0
 
     &.up::after
-      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad-up.png', version)
+      background-position -300% 0
 
     &.down::after
-      background-image image('/pixelartacademy/pixelboy/apps/pico8/dpad-down.png', version)
+      background-position -400% 0
 
   .small-buttons
     position absolute
@@ -130,7 +128,7 @@ version = '0.2.0'
         top 2rem
         width 9rem
         height 7rem
-        background-image image('/pixelartacademy/pixelboy/apps/pico8/smallbutton.png', version)
+        background image('/pixelartacademy/pico8/device/handheld/smallbutton.png') 0 / 200% 100%
 
       &::after
         content ''
@@ -142,11 +140,11 @@ version = '0.2.0'
       &.menu-button
         &::after
           width 14rem
-          background-image image('/pixelartacademy/pixelboy/apps/pico8/smallbutton-caption-menu.png', version)
+          background-image image('/pixelartacademy/pico8/device/handheld/smallbutton-caption-menu.png')
 
       &:active
         &::before
-          background-image image('/pixelartacademy/pixelboy/apps/pico8/smallbutton-pressed.png', version)
+          background-position -100% 0
 
   .power-toggle-button
     position absolute
@@ -166,7 +164,7 @@ version = '0.2.0'
     top -2rem
     width 19rem
     height 2rem
-    background-image image('/pixelartacademy/pixelboy/apps/pico8/powerswitch.png', version)
+    background-image image('/pixelartacademy/pico8/device/handheld/powerswitch.png')
     transition left 100ms
 
     img
@@ -201,4 +199,4 @@ version = '0.2.0'
       height 4rem
       top 6rem
       right 5rem
-      background-image image('/pixelartacademy/pixelboy/apps/pico8/powerindicator-off.png', version)
+      background image('/pixelartacademy/pico8/device/handheld/powerindicator.png') 0 / 200% 100%

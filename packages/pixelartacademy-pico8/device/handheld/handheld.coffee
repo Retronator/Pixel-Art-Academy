@@ -160,8 +160,8 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
   onTouchDPad: (event) ->
     event.preventDefault()
 
-    # Touch uses a big dead zone.
-    deadZone = 0.4
+    # Touch uses a bigger dead zone.
+    deadZone = 0.3
 
     directions = {}
 
