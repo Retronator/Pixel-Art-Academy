@@ -15,19 +15,18 @@ Npm.depends({
 });
 
 Package.onUse(function(api) {
-  api.use('coffeescript');
-  api.use('webapp');
-  api.use('http');
-  api.use('froatsnook:request');
-  api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-practice');
   api.use('retronator:pixelartdatabase');
+  api.use('froatsnook:request');
+
+  api.use('webapp');
+  api.use('http');
 
   api.export('PixelArtAcademy');
 
   api.addFile('pico8');
-  api.addServerFile('server');
+  api.addServerFile('cartridge-server');
 
   api.addFile('game..');
   api.addServerFile('game/subscriptions');

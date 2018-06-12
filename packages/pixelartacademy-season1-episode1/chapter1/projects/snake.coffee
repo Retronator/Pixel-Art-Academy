@@ -43,6 +43,10 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
 
     @fixedDimensions: -> width: 8, height: 8
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    @backgroundColor: ->
+      paletteColor:
+        ramp: 10
+        shade: 0
 
     @initialize()
 
@@ -57,5 +61,9 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
 
     @fixedDimensions: -> width: 8, height: 8
     @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    @backgroundColor: ->
+      paletteColor:
+        ramp: 10
+        shade: 0
 
     @initialize()

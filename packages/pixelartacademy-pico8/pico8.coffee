@@ -2,4 +2,4 @@ PAA = PixelArtAcademy
 
 class PAA.Pico8
   constructor: ->
-    Retronator.App.addPublicPage '/pico8/:game?/:project?', @constructor.Pages.Pico8
+    Retronator.App.addPublicPage '/pico8/:gameSlug?/:projectId?', @constructor.Pages.Pico8

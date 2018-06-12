@@ -25,5 +25,5 @@ class PAA.Pico8.Pages.Pico8 extends AM.Component
     @device = new PAA.Pico8.Device.Handheld
     
     @game = new ComputedField =>
-      return unless slug = AB.Router.getParameter 'game'
+      return unless slug = AB.Router.getParameter 'gameSlug'
       PAA.Pico8.Game.documents.findOne {slug}

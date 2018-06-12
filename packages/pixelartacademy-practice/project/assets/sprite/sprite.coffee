@@ -18,6 +18,9 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
   # Override to provide the name of the palette this sprite must be created with.
   @restrictedPaletteName: -> null
 
+  # Override to set which background color is used.
+  @backgroundColor: -> null
+
   # Override to restrict the total number of colors used.
   @maxColorCount: -> null
 

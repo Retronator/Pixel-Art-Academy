@@ -16,10 +16,10 @@ class PAA.Pico8.Device extends AM.Component
   canvasElement: ->
     throw new AE.NotImplementedException "You must return the canvas element to be used for PICO-8 screen."
 
-  startGame: (game, project) ->
-    if project
+  startGame: (game, projectId) ->
+    if projectId
       # We need to create a modified cartridge PNG with the project's assets.
-      cartridgeUrl = Meteor.absoluteUrl "pico8/cartridge.png?game=#{game._id}&project=#{project._id}"
+      cartridgeUrl = Meteor.absoluteUrl "pico8/cartridge.png?gameId=#{game._id}&projectId=#{projectId}"
 
     else
       # We can use the cartridge PNG directly.

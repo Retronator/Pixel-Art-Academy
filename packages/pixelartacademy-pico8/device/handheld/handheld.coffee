@@ -1,4 +1,4 @@
-AB = Artificial.Babel
+AB = Artificial.Base
 AM = Artificial.Mirage
 AC = Artificial.Control
 LOI = LandsOfIllusions
@@ -88,9 +88,10 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
     if @powerOn()
       Meteor.setTimeout =>
-        @startGame
-          cartridge:
-            url: '/pixelartacademy/pixelboy/apps/pico8/snake.p8.png'
+        game = PAA.Pico8.Game.documents.findOne slug: AB.Router.getParameter 'gameSlug'
+        projectId = AB.Router.getParameter 'projectId'
+
+        @startGame game, projectId
       ,
         200
 
