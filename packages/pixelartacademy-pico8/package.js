@@ -32,6 +32,7 @@ Package.onUse(function(api) {
   api.addServerFile('game/subscriptions');
 
   api.addFile('device..');
+  api.addFile('device/device-spritereplacement');
   api.addAssets('device/runtime/pico8.min.js', 'client');
   api.addComponent('device/handheld..');
 

@@ -2,9 +2,14 @@ cls()
 color(10)
 rectfill(0,0,128,128)
 color(0)
-print("snake",54,50)
-print("press button to start",22,70)
 waittostart=true
+
+-- yellow is transparent.
+palt(10,true)
+palt(0,false)
+
+--reset sprite changes to zero.
+poke(0x5f80, 0)
 
 function _init()
 	timetomove=5
@@ -14,8 +19,10 @@ function _init()
 	tail=1
 	movex=1
 	movey=0
+  direction=1
 	eatingleft=0
 	score=0
+  dead = false
 	newfood()
 end
 
@@ -32,7 +39,6 @@ function wait()
 end
 
 function movesnake()
-
 	--update snake
 	timeleft-=1
 	if timeleft==0 then
@@ -65,64 +71,99 @@ function movesnake()
 
 		if eatingleft>0 then
 			eatingleft-=1
-		else
-			tail+=1
+    else
+      if not dead then
+			  tail+=1
+      end
 		end
 	end
 end
 
 function die()
- dead=true
+  dead=true
 	waittostart=true
-	if dead then
-		print("score:",50,50)
-		print(score,75,50)
-		print("press button to start",22,70)
-	end
 end
 
 function changedirection()
-	if btn(0) then
+  newdirection=direction
+	if btnp(0) and direction!=0 then
 		movex=-1
 		movey=0
+    newdirection=0
 	end
-	if btn(1) then
+	if btnp(1) and direction!=1 then
 		movex=1
 		movey=0
+    newdirection=1
 	end
-	if btn(2) then
+	if btnp(2) and direction!=2 then
 		movex=0
 		movey=-1
-	end
-	if btn(3) then
+    newdirection=2
+  end
+	if btnp(3) and direction!=3 then
 		movex=0
 		movey=1
-	end
+    newdirection=3
+  end
+
+  if direction!=newdirection then
+    direction=newdirection
+    timeleft=1
+    movesnake()
+  end
 end
 
 function _update()
+  --sprite update routine
+  local updated_pixels_count = peek(0x5f80)
+  for i=0,updated_pixels_count-1 do
+    local x =peek(0x5f81 + i * 3)
+    local y =peek(0x5f81 + i * 3 + 1)
+    local color =peek(0x5f81 + i * 3 + 2)
+    sset(x, y, color)
+  end
+
 	if (waittostart) then
 		wait()
-	else
+  else
+    changedirection()
 		movesnake()
-		changedirection()
 	end
 end
 
 function _draw()
-	if (waittostart) return
-
 	--clear
-	rectfill(0,0,128,128,10)
+	cls(10)
 	color(0)
 
-	--draw snake
-	for i=tail,head do
-		x=snake[i][1]*8
-		y=snake[i][2]*8
-		spr(0,x,y)
-	end
+  if dead or not waittostart then
+    --draw snake
+    for i=tail,head do
+      x=snake[i][1]*8
+      y=snake[i][2]*8
+      spr(0,x,y)
+    end
 
-	--draw food
-	spr(1,foodx*8,foody*8)
+    --draw food
+    spr(1,foodx*8,foody*8)
+  end
+
+  --draw score
+  if waittostart then
+    if dead then
+      print("score:",50,50)
+      print(score,75,50)
+      print("press button to start",22,70)
+    else
+      print("snake",54,40)
+      print("press button to start",22,60)
+      for x=5,7 do
+        spr(0,x*8,84)
+      end
+      spr(1,80,84)
+    end
+  else
+
+  end
 end

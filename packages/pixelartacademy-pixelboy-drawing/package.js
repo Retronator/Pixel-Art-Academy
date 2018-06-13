@@ -32,4 +32,5 @@ Package.onUse(function(api) {
   api.addComponent('editor/theme/school/palette..');
   api.addComponent('editor/theme/school/references..');
   api.addComponent('editor/theme/school/references/reference..');
+  api.addComponent('editor/theme/school/pico8..');
 });

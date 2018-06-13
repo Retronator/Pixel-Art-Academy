@@ -51,9 +51,6 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
     @powerOn true
 
-  canvasElement: ->
-    @$('.canvas')[0]
-
   reversedControlsClass: ->
     'reversed-controls' if @reversedControls()
 
@@ -86,15 +83,15 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
   onClickPowerToggleButton: (event) ->
     @powerOn not @powerOn()
 
-    if @powerOn()
-      Meteor.setTimeout =>
-        game = PAA.Pico8.Game.documents.findOne slug: AB.Router.getParameter 'gameSlug'
-        projectId = AB.Router.getParameter 'projectId'
-
-        @startGame game, projectId
-      ,
-        200
-
+    Meteor.setTimeout =>
+      if @powerOn()
+        @start()
+        
+      else
+        @stop()
+    ,
+      200
+  
   onClickMenuButton: (event) ->
     @reversedControls not @reversedControls()
 

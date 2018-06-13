@@ -13,30 +13,63 @@ class PAA.Pico8.Device extends AM.Component
     Z: 4
     X: 5
 
-  canvasElement: ->
-    throw new AE.NotImplementedException "You must return the canvas element to be used for PICO-8 screen."
+  onCreated: ->
+    super
 
-  startGame: (game, projectId) ->
+    @game = new ReactiveField null
+    @projectId = new ReactiveField null
+
+    @project = new ComputedField =>
+      return unless projectId = @projectId()
+      PAA.Practice.Project.forId.subscribe @, projectId
+      PAA.Practice.Project.documents.findOne projectId
+
+  loadGame: (game, projectId) ->
+    @game game
+    @projectId projectId
+
     if projectId
       # We need to create a modified cartridge PNG with the project's assets.
-      cartridgeUrl = Meteor.absoluteUrl "pico8/cartridge.png?gameId=#{game._id}&projectId=#{projectId}"
+      @cartridgeUrl = Meteor.absoluteUrl "pico8/cartridge.png?gameId=#{game._id}&projectId=#{projectId}"
 
     else
       # We can use the cartridge PNG directly.
-      cartridgeUrl = game.cartridge.url
+      @cartridgeUrl = game.cartridge.url
 
-    canvas = document.createElement('canvas')
-    $('.screen')[0].appendChild(canvas)
+  start: ->
+    # Create the canvas for PICO-8 display.
+    @_$canvas = $('<canvas>')
+    @$('.screen').append(@_$canvas)
 
-    # Setup the singleton Module to be used by the runtime. Note that we have to use full name since
-    # the class will get inherited and @constructor would not point to this singleton class.
+    # Prepare buffer for IO transfers.
+    io = []
+
     PAA.Pico8.Device.Module =
-      arguments: [cartridgeUrl]
-      canvas: @canvasElement()
+      arguments: [@cartridgeUrl]
+      canvas: @_$canvas[0]
+      postRun: [
+          =>
+            # Enable PICO-8 runtime to exit normally. We need to do this in postRun since it gets set to true on run.
+            PAA.Pico8.Device.Module.noExitRuntime = false
+        ]
+      gpio: (address, value) =>
+        @handleSpriteReplacementIO address, value
 
     # Start PICO-8 runtime.
     runtimeUrl = '/packages/retronator_pixelartacademy-pico8/device/runtime/pico8.min.js'
     $('head').append("<script src='#{runtimeUrl}'>")
+    
+  stop: ->
+    # Remove the display.
+    @_$canvas.remove()
+
+    # Clean up audio context.
+    PAA.Pico8.Device.Module.audioContext.close()
+
+    try
+      PAA.Pico8.Device.Module.exit(0)
+
+    catch error
 
   pressButton: (buttonIndex) ->
     PAA.Pico8.Device.Module?.SDL.events.push

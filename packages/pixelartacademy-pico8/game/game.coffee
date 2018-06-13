@@ -21,3 +21,4 @@ class PAA.Pico8.Game extends AM.Document
   # Subscriptions
 
   @all: @subscription 'all'
+  @forSlug: @subscription 'forSlug'

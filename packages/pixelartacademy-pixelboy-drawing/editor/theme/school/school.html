@@ -16,6 +16,9 @@
     {{#if referencesEnabled}}
       {{> Render references}}
     {{/if}}
+    {{#if pico8Enabled}}
+      {{> Render pico8}}
+    {{/if}}
     {{#if testPaperEnabled}}
       <div class="test-paper table-item {{eraserEnabledClass}}"></div>
     {{/if}}

@@ -20,6 +20,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     @tools = new ReactiveField null
     @actions = new ReactiveField null
     @references = new ReactiveField null
+    @pico8 = new ReactiveField null
     @toolbox = new ReactiveField null
 
     @paletteId = new ComputedField =>
@@ -91,6 +92,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       editorActive: @editor.active
       assetOptions: =>
         @displayedAsset()?.editorOptions()?.references
+
+    @pico8 new @constructor.Pico8
+      asset: @activeAsset
 
     @toolbox new LOI.Assets.Components.Toolbox
       tools: @tools
@@ -292,5 +296,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
   referencesEnabled: -> @_toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.References
 
   _toolIsAvailable: (toolKey) ->
-    return true unless availableKeys = @editor.drawing.portfolio().activeAsset()?.asset.availableToolKeys?()
+    return true unless availableKeys = @activeAsset()?.availableToolKeys?()
     toolKey in availableKeys
+
+  pico8Enabled: ->
+    @activeAsset()?.project.constructor.pico8GameSlug

@@ -8,6 +8,7 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Projects.Snake'
     
   @fullName: -> "Snake game"
+  @pico8GameSlug: -> 'snake'
 
   @initialize()
 

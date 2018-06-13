@@ -23,7 +23,11 @@ class PAA.Pico8.Pages.Pico8 extends AM.Component
     PAA.Pico8.Game.all.subscribe @
 
     @device = new PAA.Pico8.Device.Handheld
-    
-    @game = new ComputedField =>
+
+    @autorun (computation) =>
       return unless slug = AB.Router.getParameter 'gameSlug'
-      PAA.Pico8.Game.documents.findOne {slug}
+      return unless game = PAA.Pico8.Game.documents.findOne {slug}
+
+      projectId = AB.Router.getParameter 'projectId'
+
+      @device.loadGame game, projectId
