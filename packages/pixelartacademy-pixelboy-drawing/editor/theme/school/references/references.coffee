@@ -25,12 +25,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
   onDestroyed: ->
     $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references'
 
-  styleClasses: ->
-    classes = [
-      'opened' if @opened()
-    ]
-
-    _.without(classes, undefined).join ' '
+  openedClass: ->
+    'opened' if @opened()
 
   hideActiveClass: ->
     'hide-active' if @hideActive()

@@ -39,8 +39,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
       @setScale scale
 
       # Make sure reference is within the tray.
-      halfWidth = displaySize.width / 2
-      halfHeight = displaySize.height / 2
+      halfWidth = displaySize.width / 2 + @resizingBorder
+      halfHeight = displaySize.height / 2 + @resizingBorder
 
       position = @currentPosition()
 
@@ -100,6 +100,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends
 
     width: imageSize.width * scale
     height: imageSize.height * scale + captionHeight
+
+  endDrag: ->
+    super
+
+    @references.hideActive false
 
   onMouseDown: (event) ->
     super

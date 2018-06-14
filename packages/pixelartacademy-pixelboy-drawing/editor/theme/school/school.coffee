@@ -33,6 +33,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     @activeTool = new ReactiveField null
 
     @drawingActive = new ReactiveField false
+    @focusedMode = new ReactiveField false
+
+    @spritePositionOffset = new ReactiveField x: 0, y: 0
 
   onCreated: ->
     super
@@ -96,6 +99,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     @pico8 new @constructor.Pico8
       asset: @activeAsset
 
+    # Automatically enter focused mode when PICO-8 is active.
+    @autorun (computation) =>
+      @focusedMode @pico8().active()
+
+    # Automatically deactivate PICO-8 when exiting focused mode.
+    @autorun (computation) =>
+      @pico8().active false unless @focusedMode()
+
     @toolbox new LOI.Assets.Components.Toolbox
       tools: @tools
       activeTool: @activeTool
@@ -107,6 +118,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       "#{PAA.Practice.Software.Tools.ToolKeys.Eraser}": LOI.Assets.SpriteEditor.Tools.Eraser
       "#{PAA.Practice.Software.Tools.ToolKeys.ColorFill}": LOI.Assets.SpriteEditor.Tools.ColorFill
       "#{PAA.Practice.Software.Tools.ToolKeys.ColorPicker}": LOI.Assets.SpriteEditor.Tools.ColorPicker
+      "#{PAA.Practice.Software.Tools.ToolKeys.MoveCanvas}": @constructor.Tools.MoveCanvas
 
     # We need to provide (editor's) sprite data as the tools will expect it (since they think we are the editor class).
     @spriteData = @editor.spriteData
@@ -181,6 +193,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       @_previousDisplayedAsset = assetData.asset
       @_previousClipboardSpriteScale = clipboardSpriteScale
 
+    # Dragging mode is active when drawing is active and space is held down.
+    @draggingMode = new ComputedField =>
+      return unless @drawingActive()
+
+      AC.Keyboard.getState().isKeyDown AC.Keys.space
+
   onRendered: ->
     super
 
@@ -195,9 +213,36 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       else
         # Immediately remove the drawing active class so that the slow transitions kick in.
         @drawingActive false
-        
+
+    $(document).on 'keydown.pixelartacademy-pixelboy-apps-drawing-editor-theme-school', (event) =>
+      switch event.which
+        when AC.Keys.f
+          # Toggle focused mode.
+          @focusedMode not @focusedMode()
+
+        else
+          return
+
+  onDestroyed: ->
+    super
+
+    $(document).off('.pixelartacademy-pixelboy-apps-drawing-editor-theme-school')
+    
+    @pico8().device.stop()
+
+  onBackButton: ->
+    # Turn off focused mode on back button.
+    return unless @focusedMode()
+    @focusedMode false
+
+    # Inform that we've handled the back button.
+    true
+
   drawingActiveClass: ->
     'drawing-active' if @drawingActive()
+
+  focusedModeClass: ->
+    'focused-mode' if @focusedMode()
 
   toolClass: ->
     return unless tool = @activeTool()
@@ -207,8 +252,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     [toolClass, extraToolClass].join ' '
 
+  draggingModeClass: ->
+    'dragging-mode' if @draggingMode()
+
   draggingClass: ->
-    'dragging' if @references().dragging()
+    'dragging' if _.some [
+      @toolInstances[PAA.Practice.Software.Tools.ToolKeys.MoveCanvas].moving()
+      @references().dragging()
+      @pico8().dragging()
+    ]
 
   resizingDirectionClass: ->
     @references().resizingReference()?.resizingDirectionClass()
@@ -239,9 +291,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     borderWidth = clipboardSpriteSize.borderWidth / clipboardSpriteSize.scale * scale
 
     if @editor.active()
-      # We need to be in the middle of the table.
-      left = "calc(50% - #{width / 2 + borderWidth}rem)"
-      top = "calc(50% - #{height / 2 + borderWidth}rem)"
+      # We need to be in the middle of the table, but allowing for custom offset with dragging.
+      offset = @spritePositionOffset()
+
+      left = "calc(50% - #{width / 2 + borderWidth - offset.x}rem)"
+      top = "calc(50% - #{height / 2 + borderWidth - offset.y}rem)"
 
     else
       $spritePlaceholder = $('.pixelartacademy-pixelboy-apps-drawing-clipboard .sprite-placeholder')
@@ -296,8 +350,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
   referencesEnabled: -> @_toolIsAvailable PAA.Practice.Software.Tools.ToolKeys.References
 
   _toolIsAvailable: (toolKey) ->
-    return true unless availableKeys = @activeAsset()?.availableToolKeys?()
+    return true unless availableKeys = @displayedAsset()?.availableToolKeys?()
     toolKey in availableKeys
 
   pico8Enabled: ->
-    @activeAsset()?.project.constructor.pico8GameSlug
+    @displayedAsset()?.project.constructor.pico8GameSlug

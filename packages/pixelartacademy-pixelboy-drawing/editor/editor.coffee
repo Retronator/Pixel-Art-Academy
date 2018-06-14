@@ -38,5 +38,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends AM.Component
 
       @spriteId spriteId
 
+  onBackButton: ->
+    # Relay to theme.
+    @theme().onBackButton?()
+
   active: ->
     AB.Router.getParameter('parameter4') is 'edit'
+
+  focusedMode: ->
+    @theme()?.focusedMode?()

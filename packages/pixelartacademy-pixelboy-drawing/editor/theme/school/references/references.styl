@@ -2,12 +2,18 @@
 
 .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references
   .stored-references
+  .displayed-references
+    .references
+      .reference
+        .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references-reference
+          box-sizing content-box
+
+  .stored-references
     position absolute
     top -210rem
     left calc(50% - 82rem)
     width 165rem
     height 190rem
-    transition all 0.2s
     cursor pointer
 
     &::before
@@ -118,6 +124,13 @@
 
   .pixelartacademy-pixelboy-apps-drawing-editor-theme-school.drawing-active &
     .stored-references
+      transition all 0.2s !important
+
+    .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references-reference
+      transition none
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-theme-school.drawing-active:not(.focused-mode) &
+    .stored-references
       top -181rem
 
       &:hover
@@ -128,13 +141,10 @@
       .stored-references:hover
         top calc(50% - 95rem)
 
-       .actions
-         .action
-            &:hover
-              transform translateX(-2rem)
-
-    .pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references-reference
-      transition none
+      .actions
+        .action
+          &:hover
+            transform translateX(-2rem)
 
   .pixelartacademy-pixelboy-apps-drawing-editor-theme-school.drawing-active.dragging &
     .stored-references.hide-active

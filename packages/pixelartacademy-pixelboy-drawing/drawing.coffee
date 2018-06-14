@@ -51,6 +51,11 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
         @setFixedPixelBoySize 332, 241
 
   onBackButton: ->
+    # Relay to editor.
+    editor = @editor()
+    editorResult = editor.onBackButton?()
+    return editorResult if editorResult?
+
     portfolio = @portfolio()
 
     # We only need to handle closing groups when not on an asset.
@@ -69,6 +74,9 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
 
   editorActiveClass: ->
     'editor-active' if @editor().active()
-    
+
+  editorFocusedModeClass: ->
+    'editor-focused-mode' if @editor().focusedMode?()
+
   themeClass: ->
     @editor()?.theme()?.constructor.styleClass()

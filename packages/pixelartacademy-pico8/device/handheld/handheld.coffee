@@ -46,10 +46,15 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
     $(document).off '.pixelartacademy-pico8-device-handheld'
 
-  startGame: (game, project) ->
+  start: ->
     super
 
     @powerOn true
+
+  stop: ->
+    super
+
+    @powerOn false
 
   reversedControlsClass: ->
     'reversed-controls' if @reversedControls()
@@ -81,8 +86,10 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
       'touchstart .d-pad, touchmove .d-pad, touchcancel .d-pad, touchend .d-pad': @onTouchDPad
 
   onClickPowerToggleButton: (event) ->
+    # Toggle power in advance so the switch animates.
     @powerOn not @powerOn()
 
+    # Actually start/stop with the delay after the switch has animated.
     Meteor.setTimeout =>
       if @powerOn()
         @start()

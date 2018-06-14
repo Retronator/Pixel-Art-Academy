@@ -33,4 +33,6 @@ Package.onUse(function(api) {
   api.addComponent('editor/theme/school/references..');
   api.addComponent('editor/theme/school/references/reference..');
   api.addComponent('editor/theme/school/pico8..');
+  api.addFile('editor/theme/school/tools..');
+  api.addFile('editor/theme/school/tools/movecanvas');
 });

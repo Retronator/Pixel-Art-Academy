@@ -37,7 +37,7 @@ class LOI.Assets.Components.Navigator extends AM.Component
       event.preventDefault() if keyboardState.isCommandOrCtrlDown()
 
     $(document).on 'keyup.landsofillusions-assets-components-navigator', (event) =>
-      switch event.keyCode
+      switch event.which
         when AC.Keys.equalSign
           @zoomInPressed false
 
@@ -45,6 +45,8 @@ class LOI.Assets.Components.Navigator extends AM.Component
           @zoomOutPressed false
 
   onDestroyed: ->
+    super
+    
     $(document).off('.landsofillusions-assets-components-navigator')
 
   zoomIn: ->
