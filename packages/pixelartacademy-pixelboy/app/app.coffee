@@ -55,6 +55,9 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
 
     @resizable false
 
+  setMinimumPixelBoySize: ->
+    @setFixedPixelBoySize 310, 230
+
   setMaximumPixelBoySize: (options = {}) ->
     display = LOI.adventure.interface.display
 
@@ -72,3 +75,8 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
       height -= 20
 
     @setFixedPixelBoySize width, height
+
+  maximize: ->
+    @os.pixelBoy.size
+      width: @maxWidth()
+      height: @maxHeight()

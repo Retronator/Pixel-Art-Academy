@@ -47,7 +47,10 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
     @goalSearch new @constructor.GoalSearch @
 
     # We set size in an autorun so that it adapts to window resizes.
-    @autorun (computation) => @setMaximumPixelBoySize()
+    @autorun (computation) => @setDefaultPixelBoySize()
+
+    # Maximize on run.
+    @maximize()
 
   hasGoal: (goalId) ->
     @state('goals')?[goalId]

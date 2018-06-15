@@ -22,7 +22,7 @@ class PAA.PixelBoy.Apps.HomeScreen extends PAA.PixelBoy.App
   constructor: ->
     super
     
-    @setDefaultPixelBoySize()
+    @setMinimumPixelBoySize()
 
   onRendered: ->
     super

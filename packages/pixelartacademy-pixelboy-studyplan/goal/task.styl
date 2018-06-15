@@ -12,9 +12,9 @@
     border 1rem solid atariCyan(5)
     cursor pointer
 
-    .interests
+    .completed
       &::before
-        content '+'
+        content '✔︎'
         position absolute
         top -0.5rem
         left 1.5rem
@@ -49,6 +49,9 @@
           position absolute
           left 0
 
+        &.required
+          &::before
+            content '→'
   &:hover
     border-color atariCyan(7)
     z-index 4

@@ -61,13 +61,13 @@ class PAA.Pico8.Device extends AM.Component
     
   stop: ->
     # Remove the display.
-    @_$canvas.remove()
+    @_$canvas?.remove()
 
     # Clean up audio context.
-    PAA.Pico8.Device.Module.audioContext.close()
+    PAA.Pico8.Device.Module?.audioContext.close()
 
     try
-      PAA.Pico8.Device.Module.exit(0)
+      PAA.Pico8.Device.Module?.exit(0)
 
     catch error
 

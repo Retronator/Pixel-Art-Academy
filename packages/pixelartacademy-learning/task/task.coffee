@@ -19,6 +19,9 @@ class PAA.Learning.Task
   # Override to list the interests this task increases.
   @interests: -> []
 
+  # Override to specify interests required to attempt this task.
+  @requiredInterests: -> []
+
   # Override to provide the classes of tasks leading to this task.
   @predecessors: -> []
 
@@ -55,6 +58,7 @@ class PAA.Learning.Task
   instructionsTranslation: -> AB.translation @_translationSubscription, 'instructions'
 
   interests: -> @constructor.interests()
+  requiredInterests: -> @constructor.requiredInterests()
   predecessors: -> @constructor.predecessors()
   groupNumber: -> @constructor.groupNumber()
 

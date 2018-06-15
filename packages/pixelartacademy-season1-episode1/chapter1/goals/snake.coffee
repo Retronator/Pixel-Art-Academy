@@ -6,9 +6,20 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
   @displayName: -> "Snake game"
 
-  @requiredInterests: -> ['pixel art software']
-
   Goal = @
+
+  class @Talk extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Talk'
+
+    @directive: -> "Talk to Reuben"
+
+    @instructions: -> """
+      Go to Retronator HQ coworking space and talk to Reuben about working on the Snake game.
+    """
+
+    @interests: -> ['video game', 'arcade game']
+
+    @initialize()
 
   class @Play extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Play'
@@ -16,10 +27,13 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @directive: -> "Play the game"
 
     @instructions: -> """
-      Run Pico-8 and try out the game Snake. Notice the art assets included (green snake and brown food).
+      Get PICO-8 and try out the game Snake. Notice the art assets included (green snake and brown food).
+      Score at least 5 points to continue.
     """
 
-    @interests: -> ['video game', 'arcade game', 'snake', 'food', 'pico-8']
+    @interests: -> ['pico-8']
+
+    @predecessors: -> [Goal.Talk]
 
     @initialize()
 
@@ -29,10 +43,15 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @directive: -> "Draw Snake sprites"
 
     @instructions: -> """
-      Go to the Drawing app and draw or upload new sprites for the snake body and food piece.
+      Talk to Reuben about drawing the game sprites. After you get familiar with pixel art software, draw new sprites
+      for the snake body and food piece in the Projects section of the Drawing app.
     """
 
+    @interests: -> ['snake', 'food']
+
     @predecessors: -> [Goal.Play]
+
+    @requiredInterests: -> ['pixel art software']
 
     @initialize()
 
@@ -42,7 +61,8 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @directive: -> "See sprites in action"
 
     @instructions: -> """
-      Run Pico-8 again and see how your sprites look in the game.
+      With the game sprites replaced, run Pico-8 again and see how your art looks in the game. Do any updates until
+      you're happy. Score at least 10 points and talk to Reuben to complete the project.
     """
 
     @interests: -> ['academy of art admission project']
@@ -52,6 +72,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @initialize()
 
   @tasks: -> [
+    @Talk
     @Play
     @Draw
     @PlayAgain

@@ -25,9 +25,6 @@ class PAA.Learning.Goal
   @finalTasks: -> []
   @finalGroupNumber: -> 0
 
-  # Override to specify interests required to attempt this goal.
-  @requiredInterests: -> []
-
   @initialize: ->
     # Store goal class by ID.
     @_goalClassesById[@id()] = @
@@ -50,7 +47,13 @@ class PAA.Learning.Goal
       Document.startup =>
         IL.Interest.initialize interest for interest in _.union @interests(), @requiredInterests()
 
+    # Create a list of interests required before attempting this goal and its tasks.
+    @_requiredInterests = @requiredInterests()
+    for task in @tasks()
+      @_requiredInterests = _.union @_requiredInterests, task.requiredInterests()
+
   @interests: -> @_interests
+  @requiredInterests: -> @_requiredInterests
 
   constructor: ->
     @_tasks = []
