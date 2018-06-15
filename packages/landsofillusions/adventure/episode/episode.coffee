@@ -30,6 +30,7 @@ class LOI.Adventure.Episode extends LOI.Adventure.Thing
 
     previousChapter = null
 
+    # TODO: Add support for non-linear chapters by sending a hierarchy object from the chapters function.
     @chapters = for chapterClass in @constructor.chapters()
       chapter = new chapterClass
         parent: @

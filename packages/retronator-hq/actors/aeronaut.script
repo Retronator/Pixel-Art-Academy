@@ -1,0 +1,28 @@
+# Retronator.HQ.Actors.Aeronaut
+
+## Start
+
+aeronaut: Hi there! `not _IntroductionOver`
+aeronaut: What's up? `_IntroductionOver`
+
+## IntroductionOver
+
+## MainQuestions
+
+* *MainQuestions*
+* What are you up to? -> [UpTo]
+* See you around
+
+aeronaut: Sure thing!
+
+-> [End]
+
+## UpTo
+
+aeronaut: 
+  Working on a PICO-8 game. 
+  I have it running, but still need to get some graphics going.
+
+-> [MainQuestions]
+
+## End

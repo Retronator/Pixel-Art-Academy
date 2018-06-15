@@ -12,6 +12,8 @@ class C2.Intro extends LOI.Adventure.Section
   ]
 
   @initialize()
+  
+  @started: -> true
 
   @finished: ->
     # Intro section is over when the player reaches Retronator HQ (or automatically if starting directly there). We

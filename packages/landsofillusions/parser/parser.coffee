@@ -40,8 +40,6 @@ class LOI.Parser
     eventAction = command.normalizedCommand
     eventLabel = LOI.adventure.currentLocationId()
 
-    ga? 'send', 'event', eventCategory, eventAction, eventLabel
-    
     # Get all command responses from all the listeners.
     commandResponses = for listener in LOI.adventure.currentListeners()
       # Create the command response object.

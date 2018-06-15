@@ -30,6 +30,8 @@ class LOI.Adventure.ScriptFile
 
     for id, node of parser.scriptNodes
       constructor = LOI.Adventure.Script.getClassForId id
+      console.error "Script", id, "missing." unless constructor
+
       @scripts[id] = new constructor
         startNode: node
         listener: @options.listener

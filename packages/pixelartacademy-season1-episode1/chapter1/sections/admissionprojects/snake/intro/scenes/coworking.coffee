@@ -5,12 +5,12 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C1.AdmissionProjects.Coworking extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionProjects.Coworking'
+class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionProjects.Snake.Intro.Coworking'
 
   @location: -> HQ.Coworking
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/admissionprojects/scenes/coworking.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/admissionprojects/snake/intro/scenes/coworking.script'
 
   @initialize()
 

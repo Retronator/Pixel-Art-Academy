@@ -34,6 +34,10 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
 
   @initialize()
 
+  @hasGoal: (goalId) ->
+    # Note: we return a boolean so we can use this from functions where undefined means 'not ready'.
+    @state('goals')?[goalId] is true
+
   constructor: ->
     super
 
@@ -52,8 +56,7 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
     # Maximize on run.
     @maximize()
 
-  hasGoal: (goalId) ->
-    @state('goals')?[goalId]
+  hasGoal: (goalId) -> @constructor.hasGoal goalId
     
   addGoal: (options) ->
     goals = @state('goals') or {}

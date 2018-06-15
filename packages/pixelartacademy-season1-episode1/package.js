@@ -124,8 +124,13 @@ Package.onUse(function(api) {
 
   // Admission projects
   api.addFile('chapter1/sections/admissionprojects..');
-  api.addThing('chapter1/sections/admissionprojects/scenes/coworking');
 
+  // Snake
   api.addFile('chapter1/sections/admissionprojects/snake..');
-  api.addFile('chapter1/sections/admissionprojects/snake/scenes/workbench');
+
+  api.addFile('chapter1/sections/admissionprojects/snake/intro..');
+  api.addThing('chapter1/sections/admissionprojects/snake/intro/scenes/coworking');
+
+  api.addFile('chapter1/sections/admissionprojects/snake/drawing..');
+  api.addFile('chapter1/sections/admissionprojects/snake/drawing/scenes/workbench');
 });

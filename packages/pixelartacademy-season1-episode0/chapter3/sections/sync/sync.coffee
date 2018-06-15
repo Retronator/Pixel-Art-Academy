@@ -14,6 +14,15 @@ class C3.Sync extends LOI.Adventure.Section
 
   @initialize()
 
+  @started: ->
+    # Sync section starts when Construct section completes.
+    @requireFinishedSections C3.Construct
+
+  @finished: ->
+    # Sync section is over when the player has synced with a character
+    # from the operator dialog. Make sure we don't return undefined.
+    HQ.Items.OperatorLink.scriptState('CharacterSync') is true
+
   constructor: ->
     super
 
@@ -24,16 +33,3 @@ class C3.Sync extends LOI.Adventure.Section
     super
 
     @_charactersSubscription.stop()
-
-  active: ->
-    # Sync section starts when Construct section completes, but Construct doesn't use the
-    # static finished implementation, so we must pass the instance as a required section.
-    # HACK: chapter.sections are sometimes not set on loading, so we check for their presence.
-    return unless constructSection = _.find @chapter.sections?(), (section) => section instanceof C3.Construct
-
-    @requireFinishedSections constructSection
-
-  @finished: ->
-    # Sync section is over when the player has synced with a character
-    # from the operator dialog. Make sure we don't return undefined.
-    HQ.Items.OperatorLink.scriptState('CharacterSync') is true

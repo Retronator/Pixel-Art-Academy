@@ -10,6 +10,8 @@ class C2.Registration extends LOI.Adventure.Section
   ]
 
   @initialize()
+  
+  @started: -> true
 
   @finished: ->
     # Registration section is over when the player gets the keycard.

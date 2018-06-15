@@ -25,6 +25,11 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
   @timelineId: -> PAA.TimelineIds.DareToDream
 
   @initialize()
+
+  @finished: ->
+    # Chapter 1 is finished after the outro, or automatically when
+    # visiting Retronator HQ directly (any entry in HQ state).
+    @state('playedOutro') is true or Retronator.HQ.state()?
   
   constructor: ->
     super
@@ -57,11 +62,6 @@ class PAA.Season1.Episode0.Chapter1 extends LOI.Adventure.Chapter
         @state 'playedOutro', true
       ,
         6000
-
-  finished: ->
-    # Chapter 1 is finished after the outro, or automatically when
-    # visiting Retronator HQ directly (any entry in HQ state).
-    @state('playedOutro') is true or Retronator.HQ.state()?
 
   timeToAirshipDeparture: ->
     return unless time = LOI.adventure.time()

@@ -4,8 +4,8 @@ C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C1.AdmissionProjects.Snake.Workbench extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionProjects.Snake.Workbench'
+class C1.AdmissionProjects.Snake.Drawing.Workbench extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionProjects.Snake.Drawing.Workbench'
 
   @location: -> PAA.Practice.Project.Workbench
 

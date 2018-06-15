@@ -15,9 +15,9 @@ class C1.Airship extends LOI.Adventure.Section
 
   @initialize()
 
-  active: ->
+  @started: ->
     @requireFinishedSections C1.Immigration
 
-  finished: ->
+  @finished: ->
     # Airship section is over together with chapter 1.
-    @chapter.finished()
+    C1.finished()

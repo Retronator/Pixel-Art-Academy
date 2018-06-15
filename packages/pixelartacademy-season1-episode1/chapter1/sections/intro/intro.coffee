@@ -10,6 +10,8 @@ class C1.Intro extends LOI.Adventure.Section
   ]
 
   @initialize()
+  
+  @started: -> true
 
   @finished: ->
     # Intro section is over when the studio scene finishes.

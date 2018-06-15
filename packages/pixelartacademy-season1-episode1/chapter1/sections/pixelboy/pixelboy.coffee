@@ -11,11 +11,11 @@ class C1.PixelBoy extends LOI.Adventure.Section
   ]
 
   @initialize()
+  
+  @started: ->
+    # Admission week starts when the character finished waiting for the acceptance letter.
+    @requireFinishedSections C1.Waiting
 
   @finished: ->
     # PixelBoy section is over when the user gets the PixelBoy.
     PAA.PixelBoy.state('inInventory') is true
-
-  active: ->
-    # Admission week starts when the character finished waiting for the acceptance letter.
-    @requireFinishedSections C1.Waiting
