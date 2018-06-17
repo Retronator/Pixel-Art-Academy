@@ -1,29 +1,90 @@
 # PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionProjects.Snake.Intro.Coworking
 
-## Start
+## OfferHelp
 
-aeronaut: Hey there!
-
-aeronaut: Alright, let me register you for the project.
-
-> Reuben types something into his computer.
-
-pause
-
-### StartProject
-
--> [Error] `_startError`
-
-aeronaut: Awesome!
-
--> [End]
-
-## Error
+* Hey, maybe I could help with the art!
 
 aeronaut: 
-  Hmmm … looks like something went wrong.
-  The system says: `_startError.reason` `true` <!-- HACK: Added true so that the previous code block is not treated as a conditional. -->
+  That would be awesome! 
+  It even counts as your admission project.
   
+-> [HasSnakeGoal] `_hasSnakeGoal`
+
+## AddToStudyPlan
+
+* Great, how do I start?
+
+aeronaut:
+  First of all you should add the Snake game project to your study plan.
+  Search for admission projects in the Study Plan app and it should come up.
+  The Snake entry will show all the tasks you need to complete this goal.
+  
+* Alright, I'll add the goal and report back.
+
+aeronaut: I'll be here.
+
 -> [End]
+
+## AddedSnakeGoal
+
+* I added the Snake goal!
+
+-> [HasPico8] `_hasPico8`
+
+aeronaut: Did you check out the tasks?
+
+* Oh, wait, let me go read them. -> [End]
+* The second task says something about getting PICO-8.
+
+aeronaut: Yes, it's the console I'm making the game for.
+
+## Pico8Questions
+
+* What is PICO-8? -> [WhatIsPico8]
+* Where can I get PICO-8? -> [GetPico8]
+* How do you make PICO-8 games? -> [HowToMakePico8Games]
+* Alright, I'll go grab the app. `GetPico8 or HowToMakePico8Games`
+
+aeronaut: Yup, it's just upstairs.
+
+-> [End]
+
+## WhatIsPico8
+
+aeronaut:
+  It's a fantasy console from Lexaloffle. Very old school, 128 by 128 pixels display, 16 colors.
+  It's made by Joseph White in a place called Pico Pico Cafe. You can visit it in Retropolis.
+
+-> [Pico8Questions]
+
+## GetPico8
+
+aeronaut: 
+  To play my game, you'll want to get the app for your PixelBoy.
+  You can get it in Retronator Store right here in the HQ.
+  
+-> [Pico8Questions]
+
+## HowToMakePico8Games
+
+aeronaut:
+  If you want to code your own games, you need the PICO-8 devkit.
+  It's $15 and runs on your PC or Raspberry Pi.
+  You can buy it from Lexaloffle's website, and there's a link from Retronator Store as well.
+  To draw art for my game though, all you need is the free PixelBoy app.
+  
+-> [Pico8Questions]
+
+## Pico8Choice
+
+* Can you tell me about PICO-8 again? 
+
+aeronaut: Of course!
+
+-> [Pico8Questions]
+
+## HasSnakeGoal
+
+## HasPico8
 
 ## End

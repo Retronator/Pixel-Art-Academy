@@ -15,29 +15,19 @@ class HQ.Actors.Aeronaut extends LOI.Adventure.Thing
 
   @initialize()
 
-  class @Listener extends LOI.Adventure.Listener
-    @id: -> "Retronator.HQ.Actors.Aeronaut"
+  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/aeronaut.script'
 
-    @scriptUrls: -> [
-      'retronator_retronator-hq/actors/aeronaut.script'
-    ]
+  initializeScript: ->
+    @setCurrentThings
+      aeronaut: HQ.Actors.Aeronaut
 
-    class @Script extends LOI.Adventure.Script
-      @id: -> "Retronator.HQ.Actors.Aeronaut"
-      @initialize()
+  onScriptsLoaded: ->
+    @script = @scripts[@constructor.Script.id()]
 
-      initialize: ->
-        @setCurrentThings aeronaut: HQ.Actors.Aeronaut
+  onCommand: (commandResponse) ->
+    return unless aeronaut = LOI.adventure.getCurrentThing HQ.Actors.Aeronaut
 
-    @initialize()
-
-    onScriptsLoaded: ->
-      @script = @scripts[@constructor.Script.id()]
-
-    onCommand: (commandResponse) ->
-      return unless aeronaut = LOI.adventure.getCurrentThing HQ.Actors.Aeronaut
-
-      commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.TalkTo, aeronaut]
-        action: =>
-          LOI.adventure.director.startScript @script
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.TalkTo, aeronaut]
+      action: =>
+        LOI.adventure.director.startScript @script

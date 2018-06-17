@@ -35,8 +35,10 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
   @initialize()
 
   @hasGoal: (goalId) ->
-    # Note: we return a boolean so we can use this from functions where undefined means 'not ready'.
-    @state('goals')?[goalId] is true
+    goalId = _.thingId goalId
+
+    # Note: We return a boolean so we can use this from functions where undefined means 'not ready'.
+    @state('goals')?[goalId]?
 
   constructor: ->
     super

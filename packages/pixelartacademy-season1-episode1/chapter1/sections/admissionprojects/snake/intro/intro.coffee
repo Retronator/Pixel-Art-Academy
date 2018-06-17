@@ -13,9 +13,8 @@ class C1.AdmissionProjects.Snake.Intro extends LOI.Adventure.Section
   @initialize()
   
   @started: ->
-    # Snake storyline starts when the admission projects get activated
-    # and the user has added the snake project to their study plan.
-    C1.AdmissionProjects.started() and PAA.PixelBoy.Apps.StudyPlan.hasGoal C1.Goals.Snake
+    # Snake storyline starts when the admission projects get activated.
+    C1.AdmissionProjects.started()
 
   @finished: ->
     # TODO: Intro section ends when the player has played Snake and got a score of at least 5.
