@@ -7,6 +7,7 @@
 * Main game bundles. -> [Game]
 * Game add-on upgrades. -> [Upgrades]
 * Devices from Pixel. -> [Pixel]
+* PICO-8 fantasy console. -> [Pico8]
 * Nevermind -> [End]
 
 ## Game
@@ -24,6 +25,12 @@
 ## Pixel
 
 `_shelf = 'Pixel'`
+
+-> [GoToShelf]
+
+## Pico8
+
+`_shelf = 'Pico8'`
 
 -> [GoToShelf]
 

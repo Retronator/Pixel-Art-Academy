@@ -41,10 +41,14 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
         avatar = thingClass.createAvatar()
         @_thingAvatars.push avatar
 
+        translationKeys = LOI.Adventure.Thing.Avatar.translationKeys
+
         thingItems.push
-          name: avatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
-          description: avatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.storeDescription
+          name: avatar.getTranslation(translationKeys.storeName) or avatar.getTranslation(translationKeys.fullName)
+          description: avatar.getTranslation translationKeys.storeDescription
           catalogKey: thingId
+          storeSeller: thingClass.storeSeller?()
+          storeUrl: thingClass.storeUrl?()
 
       thingItems
 

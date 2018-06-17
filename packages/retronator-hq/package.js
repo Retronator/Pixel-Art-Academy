@@ -99,6 +99,7 @@ Package.onUse(function(api) {
   api.addFile('floor2/store/shelf/shelf-game');
   api.addFile('floor2/store/shelf/shelf-upgrades');
   api.addFile('floor2/store/shelf/shelf-pixel');
+  api.addFile('floor2/store/shelf/shelf-pico8');
   api.addThing('floor2/store/shelf/shelves');
 
   api.addFile('floor2/store/table..');

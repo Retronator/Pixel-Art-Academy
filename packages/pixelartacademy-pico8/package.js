@@ -28,6 +28,9 @@ Package.onUse(function(api) {
   api.addFile('pico8');
   api.addServerFile('cartridge-server');
 
+  api.addFile('devkit');
+  api.addFile('fanzine');
+
   api.addFile('game..');
   api.addServerFile('game/subscriptions');
 

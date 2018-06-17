@@ -12,11 +12,18 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
   @register @id()
   template: -> @constructor.id()
 
-  @fullName: -> "Pico-8"
+  @fullName: -> "PICO-8"
   @description: ->
     "
       It's Lexaloffle's fantasy console!
     "
+
+  @storeName: -> "PICO-8 for PixelBoy"
+
+  @storeDescription: -> "
+    Retronator brings Lexallofle's fantasy console right to your fingertips with the app for PixelBoy.
+    The bright pink case complements the playfulness of PICO-8 games and makes sure the fantasy becomes a reality.
+  "
 
   @initialize()
 
