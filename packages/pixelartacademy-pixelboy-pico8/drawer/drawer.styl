@@ -11,13 +11,31 @@
     .drawer
       top -50rem
 
+  &.covered
+    .table-top
+    .drawer
+      transition top 1s, opacity 1s 0.5s
+
+    .table-top
+      top -50rem
+      opacity 0
+
+    .drawer
+      top 240rem
+      opacity 0
+
+    .selected-cartridge
+      top -200rem
+      transform scale(0.5)
+      transition all 0.5s
+
   .table-top
   .drawer
     position absolute
     left -50rem
     width 420rem
     height 340rem
-    transition top 1s
+    transition top 1s, opacity 0.5s
 
   .table-top
     background-image image('/pixelartacademy/pixelboy/apps/pico8/tabletop.png')
@@ -46,12 +64,18 @@
           width 37rem
           height 47rem
           transition all 0.1s
+          transform-origin 0 0
           filter drop-shadow(-3rem 1rem 0 transparentify(atariOrange(2), atariOrange(4)))
           cursor pointer
 
           &:hover
             top -1rem
             filter drop-shadow(-6rem 2rem 0 transparentify(atariOrange(2), atariOrange(4)))
+
+          &.selected
+            opacity 0
+            transform scale(1.5)
+            pointer-events none
 
           &::after
             content ''
@@ -79,3 +103,27 @@
           freehand()
           line-height 10rem
           text-align center
+
+  .selected-cartridge
+    position absolute
+    top 17.5rem
+    left 80rem
+    width 160rem
+    height 205rem
+    cursor pointer
+    opacity 0
+
+    &.active
+      opacity 1
+      transition all 0.2s
+
+    &::after
+      content ''
+      absolute-cover()
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/cartridge-big-overlay.png')
+      mix-blend-mode overlay
+      pointer-events none
+
+    .image
+      width 100%
+      height 100%

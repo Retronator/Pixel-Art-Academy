@@ -33,16 +33,54 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
     @resizable false
 
     @drawer = new ReactiveField null
-    @cart = new ReactiveField null
+    @device = new ReactiveField null
+
+    @cartridge = new ReactiveField null
 
   onCreated: ->
     super
 
     @drawer new @constructor.Drawer @
+    @device new PAA.Pico8.Device.Handheld
 
     @autorun (computation) =>
-      if @cart()
-        @setFixedPixelBoySize 320, 155
+      if @cartridge()
+        @setFixedPixelBoySize 320, 157
 
       else
         @setFixedPixelBoySize 380, 300
+
+    @autorun (computation) =>
+      return unless cartridge = @cartridge()
+
+      device = @device()
+      device.loadGame cartridge.game(), cartridge.projectId()
+
+      Meteor.setTimeout =>
+        device.start()
+      ,
+        1500
+
+  onBackButton: ->
+    drawer = @drawer()
+
+    if @cartridge()
+      @device().stop()
+
+      Meteor.setTimeout =>
+        @cartridge null
+        drawer.selectedCartridge null
+      ,
+        500
+
+    else if drawer.selectedCartridge()
+      drawer.selectedCartridge null
+
+    else
+      return
+
+    # Inform that we've handled the back button.
+    true
+
+  cartridgeActiveClass: ->
+    'cartridge-active' if @cartridge()

@@ -11,6 +11,7 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
     super
 
     @opened = new ReactiveField false
+    @selectedCartridge = new ReactiveField null
 
   onCreated: ->
     super
@@ -59,3 +60,33 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
 
   openedClass: ->
     'opened' if @opened()
+
+  coveredClass: ->
+    'covered' if @pico8.cartridge()
+
+  activeClass: ->
+    'active' if @selectedCartridge()
+
+  selectedClass: ->
+    cartridge = @currentData()
+
+    'selected' if cartridge is @selectedCartridge()
+
+  events: ->
+    super.concat
+      'click': @onClick
+      'click .cartridge': @onClickCartridge
+      'click .selected-cartridge': @onClickSelectedCartridge
+
+  onClick: (event) ->
+    return unless @selectedCartridge()
+    return if $(event.target).closest('.selected-cartridge').length
+
+    @selectedCartridge null
+
+  onClickCartridge: (event) ->
+    cartridge = @currentData()
+    @selectedCartridge cartridge
+
+  onClickSelectedCartridge: (event) ->
+    @pico8.cartridge @selectedCartridge()

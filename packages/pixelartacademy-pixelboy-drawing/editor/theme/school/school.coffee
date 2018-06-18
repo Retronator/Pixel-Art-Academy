@@ -228,7 +228,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     $(document).off('.pixelartacademy-pixelboy-apps-drawing-editor-theme-school')
     
-    @pico8().device.stop()
+    @pico8().device?.stop()
 
   onBackButton: ->
     # Turn off focused mode on back button.
