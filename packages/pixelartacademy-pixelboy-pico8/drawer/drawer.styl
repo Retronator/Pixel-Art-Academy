@@ -1,0 +1,52 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-pico-8-drawer
+  position absolute
+  width 320rem
+  height 240rem
+  left calc(50% - 160rem)
+  top calc(50% - 120rem)
+
+  &.opened
+    .drawer
+      top -50rem
+
+  .table-top
+  .drawer
+    position absolute
+    left -50rem
+    width 420rem
+    height 340rem
+    transition top 1s
+
+  .table-top
+    background-image image('/pixelartacademy/pixelboy/apps/pico8/tabletop.png')
+    top -340rem
+
+  .drawer
+    background-image image('/pixelartacademy/pixelboy/apps/pico8/drawer.png')
+    top -320rem
+
+    .contents
+      position absolute
+      left 70rem
+      top 80rem
+      width 110rem
+      padding 10rem
+      color black
+
+      .no-cartridges
+        position absolute
+        top 14rem
+        left 19rem
+        width 79rem
+        height 77rem
+        padding 21rem 11rem 0 8rem
+        background-image image('/pixelartacademy/pixelboy/apps/pico8/postit.png')
+
+        .message
+          transform rotate(-7deg)
+          color atariMagenta(3)
+          freehand()
+          line-height 10rem
+          text-align center

@@ -44,11 +44,11 @@ retro: Certainly.
 ### AnalyzeCharacter
 
 <!-- If item checks emptied the cart assume they handled the ending and return -->
--> [RetroDialog] `not _shoppingCart.length`
+-> [EndCheckoutEmptyCart] `not _shoppingCart.length`
 
 ## PurchaseConfirm
 
-> After entering the items into his computer, he lets _char_ know how much it is and _char_ pays with _their_ credit card.
+> After entering the items into his computer, Retro lets _char_ know how much it is and _char_ pays with _their_ credit card.
 
 retro: Thank you so much for that. Here you go.
 
@@ -58,6 +58,12 @@ retro: Thank you so much for that. Here you go.
 > _char_ takes the new purchases.
 
 pause
+
+-> [RetroDialog]
+
+## EndCheckoutEmptyCart
+
+### RemoveShoppingCart
 
 -> [RetroDialog]
 
