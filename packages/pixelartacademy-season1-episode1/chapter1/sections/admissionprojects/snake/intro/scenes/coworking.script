@@ -8,11 +8,11 @@ aeronaut:
   That would be awesome! 
   It even counts as your admission project.
   
+* Great, how do I start?
+
 -> [HasSnakeGoal] `_hasSnakeGoal`
 
 ## AddToStudyPlan
-
-* Great, how do I start?
 
 aeronaut:
   First of all you should add the Snake game project to your study plan.
@@ -85,6 +85,55 @@ aeronaut: Of course!
 
 ## HasSnakeGoal
 
+-> [HasPico8] `_hasPico8`
+
+aeronaut:
+  I'm making the game for the PICO-8 platform, so first you'll need to get the PICO-8 app.
+  
+-> [Pico8Questions]
+
+## GotPico8
+
+* I got the PICO-8 app!
+
+aeronaut: Alright, let's begin!
+
 ## HasPico8
+
+aeronaut: 
+  First, let me get you the game Cartridge.
+  It will appear in your PICO-8 app.
+  
+> Reuben gestures something on his PixelBoy and transfers the virtual cart to your device.
+
+## ReceiveCartridge
+
+aeronaut:
+  It has 'programer art' for now, a bunch of squares instead of sprites basically.
+  That's where you come in. But before we go on, give the game a try.
+  Score at least 5 points and we'll get going.
+    
+-> [End]
+
+## HaventScored5PointsYet
+
+* Oh, yeah, I was supposed to play your game.
+
+aeronaut: Take your time. Once you get at least 5 points, let me know.
+  
+-> [End]
+
+aeronaut:
+  Next, here are the project files.
+  They describe what sprites are included in the game and their specs.
+  
+> He again transmits some data to your PixelBoy.
+
+aeronaut:
+  If you go to the Drawing app now, my Snake game should appear in the Projects section.
+  
+* 
+  You can use any software you want to draw the sprites and upload them into the Drawing app.
+  The easiest way, however, is to just edit them right there in the app.
 
 ## End

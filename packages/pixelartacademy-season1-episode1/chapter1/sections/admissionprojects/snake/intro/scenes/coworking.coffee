@@ -31,25 +31,35 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
     # Prerequisite is to ask what Reuben's working on.
     return unless Retronator.HQ.Actors.Aeronaut.Listener.Script.state 'UpTo'
 
-    # Store in state if the character has the Snake project added to the Study Plan.
-    hasSnakeGoal = PAA.PixelBoy.Apps.StudyPlan.hasGoal C1.Goals.Snake
-    Tracker.nonreactive => @script.ephemeralState 'hasSnakeGoal', hasSnakeGoal
+    # If the player got the cartridge, wait on the player to score 5 points
+    if @script.state 'ReceiveCartridge'
+      choicePlaceholderResponse.addChoice @script.startNode.labels.HaventScored5PointsYet.next
+      return
 
     # Store in state if the character has the PICO-8 app.
     pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
     hasPico8 = PAA.PixelBoy.Apps.Pico8 in pixelBoy.os.currentAppsSituation().things()
     Tracker.nonreactive => @script.ephemeralState 'hasPico8', hasPico8
 
+    # If the player has seen PICO-8 questions and has acquired the app, allow to report this.
+    if @script.state('Pico8Questions') and hasPico8
+      choicePlaceholderResponse.addChoice @script.startNode.labels.GotPico8.next
+      return
+
     # If the player has seen PICO-8 questions, allow to ask them again until PICO-8 is acquired.
     if @script.state('Pico8Questions') and not hasPico8
       choicePlaceholderResponse.addChoice @script.startNode.labels.Pico8Choice.next
+      return
+
+    # Store in state if the character has the Snake project added to the Study Plan.
+    hasSnakeGoal = PAA.PixelBoy.Apps.StudyPlan.hasGoal C1.Goals.Snake
+    Tracker.nonreactive => @script.ephemeralState 'hasSnakeGoal', hasSnakeGoal
 
     # If player has the snake goal and didn't before, let them report it.
-    else if @script.state('AddToStudyPlan') and hasSnakeGoal
+    if @script.state('AddToStudyPlan') and hasSnakeGoal
       console.log "adding"
       choicePlaceholderResponse.addChoice @script.startNode.labels.AddedSnakeGoal.next
+      return
 
-    else
-      # Show the offer to help.
-      choicePlaceholderResponse.addChoice @script.startNode.labels.OfferHelp.next
-
+    # Looks like we haven't done any interactions yet. Show the offer to help.
+    choicePlaceholderResponse.addChoice @script.startNode.labels.OfferHelp.next
