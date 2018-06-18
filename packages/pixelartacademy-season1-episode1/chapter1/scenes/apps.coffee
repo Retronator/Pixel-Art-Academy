@@ -1,10 +1,10 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
-E1 = PixelArtAcademy.Season1.Episode1
+C1 = PAA.Season1.Episode1.Chapter1
 HQ = Retronator.HQ
 
-class E1.Apps extends LOI.Adventure.Scene
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Apps'
+class C1.Apps extends LOI.Adventure.Scene
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Apps'
 
   @location: -> PAA.PixelBoy.Apps
 

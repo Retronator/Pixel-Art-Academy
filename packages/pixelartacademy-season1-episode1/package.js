@@ -26,7 +26,6 @@ Package.onUse(function(api) {
 
   api.addFile('episode1');
   api.addFile('scenes/inventory');
-  api.addFile('scenes/apps');
   api.addFile('scenes/chinabasinpark');
 
   // Admin
@@ -56,7 +55,10 @@ Package.onUse(function(api) {
   api.addFile('chapter1/items/applicationemail');
   api.addFile('chapter1/items/admissionemail');
 
+  api.addFile('chapter1/scenes/inventory');
   api.addFile('chapter1/scenes/inbox');
+  api.addFile('chapter1/scenes/apps');
+  api.addFile('chapter1/scenes/pico8cartridges');
   api.addThing('chapter1/scenes/sanfranciscoconversation');
   api.addFile('chapter1/scenes/drawingtutorial');
 

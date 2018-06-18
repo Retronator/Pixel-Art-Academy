@@ -12,6 +12,37 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
 
     @opened = new ReactiveField false
 
+  onCreated: ->
+    super
+
+    @cartridgesLocation = new PAA.Pico8.Cartridges
+
+    @cartridgesSituation = new ComputedField =>
+      options =
+        timelineId: LOI.adventure.currentTimelineId()
+        location: @cartridgesLocation
+
+      return unless options.timelineId
+
+      new LOI.Adventure.Situation options
+
+    # We use a cache to avoid reconstruction.
+    @_cartridges = {}
+
+    # Instantiates and returns all apps that are available to listen to commands.
+    @cartridges = new ComputedField =>
+      return unless cartridgesSituation = @cartridgesSituation()
+
+      cartridgeClasses = cartridgesSituation.things()
+
+      for cartridgeClass in cartridgeClasses
+        # We create the instance in a non-reactive context so that
+        # reruns of this autorun don't invalidate instance's autoruns.
+        Tracker.nonreactive =>
+          @_cartridges[cartridgeClass.id()] ?= new cartridgeClass
+
+        @_cartridges[cartridgeClass.id()]
+
   onRendered: ->
     super
 
@@ -20,6 +51,11 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
       @opened true
     ,
       500
+
+  onDestroyed: ->
+    super
+
+    cartridge.destroy() for id, cartridge of @_cartridges
 
   openedClass: ->
     'opened' if @opened()

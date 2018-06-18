@@ -26,10 +26,12 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addFile('pico8');
-  api.addServerFile('cartridge-server');
-
   api.addFile('devkit');
   api.addFile('fanzine');
+
+  api.addFile('cartridges..');
+  api.addFile('cartridges/cartridge');
+  api.addServerFile('cartridges/server');
 
   api.addFile('game..');
   api.addServerFile('game/subscriptions');

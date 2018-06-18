@@ -17,6 +17,8 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
+  api.addFile('snake');
   api.addServerFile('server');
+
   api.addAssets('snake.p8.png', 'client');
 });

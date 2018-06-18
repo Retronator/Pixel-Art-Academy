@@ -35,6 +35,35 @@
       padding 10rem
       color black
 
+      .cartridges
+        list-style none
+        padding 0
+        margin 0
+
+        .cartridge
+          position relative
+          top 0
+          width 37rem
+          height 47rem
+          transition all 0.1s
+          filter drop-shadow(-3rem 1rem 0 transparentify(atariOrange(2), atariOrange(4)))
+          cursor pointer
+
+          &:hover
+            top -1rem
+            filter drop-shadow(-6rem 2rem 0 transparentify(atariOrange(2), atariOrange(4)))
+
+          &::after
+            content ''
+            absolute-cover()
+            background-image image('/pixelartacademy/pixelboy/apps/pico8/cartridge-overlay.png')
+            mix-blend-mode overlay
+            pointer-events none
+
+          .image
+            width 100%
+            height 100%
+
       .no-cartridges
         position absolute
         top 18rem

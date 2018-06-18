@@ -4,9 +4,11 @@
       <div class="contents">
         {{#if cartridges.length}}
           <ul class="cartridges">
-            {{#with cartridges}}
-              <li class="cartridge"></li>
-            {{/with}}
+            {{#each cartridges}}
+              <li class="cartridge">
+                <img class="image" src="{{cartridgeUrl}}"/>
+              </li>
+            {{/each}}
           </ul>
         {{else}}
           <div class="no-cartridges">
