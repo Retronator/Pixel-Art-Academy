@@ -123,17 +123,47 @@ aeronaut: Take your time. Once you get at least 5 points, let me know.
   
 -> [End]
 
-aeronaut:
-  Next, here are the project files.
-  They describe what sprites are included in the game and their specs.
-  
-> He again transmits some data to your PixelBoy.
+## Scored5OrMore
+
+* I got `highScore` points!
 
 aeronaut:
-  If you go to the Drawing app now, my Snake game should appear in the Projects section.
+  Nice! 
+  Seems like you got the game chops. Now let's get to drawing.
   
-* 
-  You can use any software you want to draw the sprites and upload them into the Drawing app.
-  The easiest way, however, is to just edit them right there in the app.
+* Can't wait!
+* Let's do this.
+
+aeronaut:
+  Alright, let me get you the Snake project files.
+  These include the sprites, together with their specs.
+  
+pause
+  
+### ReceiveProject
+
+-> [StartError] `_startError`
+
+> Reuben transmits the files to your PixelBoy.
+
+aeronaut:
+  If you go to the Drawing app now, the Snake game should appear in the Projects section.
+  I can also help you get set up to make pixel art. Just ask.
+  
+* Sounds good!
+* Thanks, I'll talk to you later.
+  
+-> [End]
+
+## StartError
+
+> Reuben tries to transmit the files to your PixelBoy, but something goes wrong.
+
+aeronaut: 
+  Hmmm … 
+  When I try to send you the files I get the error: `_startError.reason` `true` <!-- HACK: Added true so that the previous code block is not treated as a conditional. -->
+  You should probably let Retro know about it. Message him or email to hi@retronator.com.
+  
+-> [End]
 
 ## End

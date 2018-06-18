@@ -42,6 +42,9 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
 
     @drawer new @constructor.Drawer @
     @device new PAA.Pico8.Device.Handheld
+      # Relay input/output calls to the cartridge.
+      onInputOutput: (address, value) =>
+        @cartridge().onInputOutput? address, value
 
     @autorun (computation) =>
       if @cartridge()

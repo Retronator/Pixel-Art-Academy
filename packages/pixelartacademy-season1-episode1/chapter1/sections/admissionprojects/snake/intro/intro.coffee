@@ -17,5 +17,5 @@ class C1.AdmissionProjects.Snake.Intro extends LOI.Adventure.Section
     C1.AdmissionProjects.started()
 
   @finished: ->
-    # TODO: Intro section ends when the player has played Snake and got a score of at least 5.
-    false
+    # Intro section ends when the player has an active Snake project.
+    C1.Projects.Snake.readOnlyState('activeProjectId')?

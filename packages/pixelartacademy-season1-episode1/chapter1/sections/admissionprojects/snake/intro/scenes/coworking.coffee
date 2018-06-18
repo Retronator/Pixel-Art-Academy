@@ -22,6 +22,17 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
     @setCurrentThings
       aeronaut: HQ.Actors.Aeronaut
 
+    @setCallbacks
+      ReceiveProject: (complete) =>
+        @ephemeralState 'startError', null
+
+        C1.Projects.Snake.start LOI.characterId(), (error) =>
+          if error
+            console.error error
+            @ephemeralState 'startError', error
+
+          complete()
+
   # Listener
 
   onChoicePlaceholder: (choicePlaceholderResponse) ->
@@ -33,7 +44,15 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
 
     # If the player got the cartridge, wait on the player to score 5 points
     if @script.state 'ReceiveCartridge'
-      choicePlaceholderResponse.addChoice @script.startNode.labels.HaventScored5PointsYet.next
+      highScore = PAA.Pico8.Cartridges.Snake.state 'highScore'
+      if highScore >= 5
+        # Store high score to script.
+        @script.state 'highScore', highScore
+        choicePlaceholderResponse.addChoice @script.startNode.labels.Scored5OrMore.next
+
+      else
+        choicePlaceholderResponse.addChoice @script.startNode.labels.HaventScored5PointsYet.next
+
       return
 
     # Store in state if the character has the PICO-8 app.

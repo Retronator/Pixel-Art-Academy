@@ -67,6 +67,9 @@ class PAA.Pico8.Device extends PAA.Pico8.Device
     @_updatedPixels.push {x, y, color}
 
   handleSpriteReplacementIO: (address, value) ->
+    # Ignore write calls.
+    return if value?
+    
     if address is 0
       # PICO-8 is waiting for sprite updates. We can update up to 42 sprites at once.
       transferredPixels = @_updatedPixels.splice 0, 42

@@ -45,7 +45,7 @@ class PAA.Pico8.Cartridges.Cartridge extends LOI.Adventure.Thing
   cartridgeUrl: ->
     return unless game = @game()
 
-    if @projectId()
+    if projectId = @projectId()
       # We need to create a modified cartridge PNG with the project's assets.
       Meteor.absoluteUrl "pico8/cartridge.png?gameId=#{game._id}&projectId=#{projectId}"
 

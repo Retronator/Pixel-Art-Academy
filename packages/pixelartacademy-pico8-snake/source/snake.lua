@@ -1,3 +1,5 @@
+-- snake
+-- work in progress build
 cls()
 color(10)
 rectfill(0,0,128,128)
@@ -82,6 +84,8 @@ end
 function die()
   dead=true
 	waittostart=true
+  --report the score to the cartridge
+  poke(0x5f81,score)
 end
 
 function changedirection()

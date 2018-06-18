@@ -13,6 +13,9 @@ class PAA.Pico8.Device extends AM.Component
     Z: 4
     X: 5
 
+  constructor: (@options = {}) ->
+    super
+
   onCreated: ->
     super
 
@@ -53,6 +56,7 @@ class PAA.Pico8.Device extends AM.Component
             PAA.Pico8.Device.Module.noExitRuntime = false
         ]
       gpio: (address, value) =>
+        @options.onInputOutput? address, value
         @handleSpriteReplacementIO address, value
 
     # Start PICO-8 runtime.
