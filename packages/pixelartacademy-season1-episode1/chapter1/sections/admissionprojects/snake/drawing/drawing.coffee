@@ -8,6 +8,7 @@ class C1.AdmissionProjects.Snake.Drawing extends LOI.Adventure.Section
 
   @scenes: -> [
     @Workbench
+    @Coworking
   ]
 
   @initialize()

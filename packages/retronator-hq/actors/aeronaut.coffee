@@ -21,13 +21,9 @@ class HQ.Actors.Aeronaut extends LOI.Adventure.Thing
     @setCurrentThings
       aeronaut: HQ.Actors.Aeronaut
 
-  onScriptsLoaded: ->
-    @script = @scripts[@constructor.Script.id()]
-
   onCommand: (commandResponse) ->
     return unless aeronaut = LOI.adventure.getCurrentThing HQ.Actors.Aeronaut
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, aeronaut]
-      action: =>
-        LOI.adventure.director.startScript @script
+      action: => @startScript()

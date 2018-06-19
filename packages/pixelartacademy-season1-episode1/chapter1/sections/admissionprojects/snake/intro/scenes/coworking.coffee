@@ -31,6 +31,12 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
             console.error error
             @ephemeralState 'startError', error
 
+          else
+            # Store if the player has the drawing app.
+            pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
+            hasDrawingApp = _.find pixelBoy.os.currentApps, (app) => app instanceof PAA.PixelBoy.Apps.Drawing
+            @ephemeralState 'hasDrawingApp', hasDrawingApp
+
           complete()
 
   # Listener

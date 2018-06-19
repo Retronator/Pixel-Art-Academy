@@ -4,6 +4,8 @@
 
 * Hey, maybe I could help with the art!
 
+## OfferedHelp
+
 aeronaut: 
   That would be awesome! 
   It even counts as your admission project.
@@ -142,13 +144,26 @@ pause
   
 ### ReceiveProject
 
+pause
+
 -> [StartError] `_startError`
 
 > Reuben transmits the files to your PixelBoy.
 
 aeronaut:
-  If you go to the Drawing app now, the Snake game should appear in the Projects section.
+  If you go to the Drawing app, the Snake game should appear in the Projects section.
   I can also help you get set up to make pixel art. Just ask.
+  
+-> [EndConfirmation] `_hasDrawingApp`
+  
+* Hmm … I don't have the Drawing app yet.
+
+aeronaut:
+  That's OK.
+  Just wait for the next day and choose it in the Admission Week app. 
+  When you get it, the Snake project will already be in there.
+
+## EndConfirmation
   
 * Sounds good!
 * Thanks, I'll talk to you later.

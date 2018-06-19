@@ -1,0 +1,27 @@
+# Retronator.HQ.Actors.Alexandra
+
+## Start
+
+alexandra: Hi! `not _IntroductionOver`
+alexandra: How else can I help? `_IntroductionOver`
+
+## IntroductionOver
+
+## MainQuestions
+
+* Is that your painting? -> [YourPainting]
+* *MainQuestions*
+* Thank you, bye!
+
+alexandra: Bye!
+
+-> [End]
+
+## YourPainting
+
+alexandra: 
+  Yes, it's the next in my Money series.
+
+-> [MainQuestions]
+
+## End

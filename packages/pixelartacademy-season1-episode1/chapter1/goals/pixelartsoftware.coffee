@@ -8,19 +8,36 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
   Goal = @
 
-  class @ChooseSoftware extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.ChooseSoftware'
+  class @DrawingApp extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DrawingApp'
   
-    @directive: -> "Choose pixel art software"
+    @directive: -> "Get the Drawing app"
   
     @instructions: -> """
-      Talk to Retro to get the Drawing app for PixelBoy.
-      Decide between using the built-in editor or using other software to complete drawing assignments.
+      In the Admission Week app, choose to receive the Drawing app for PixelBoy.
+      Going forward you will decide between using the in-app editor or
+      external software to complete drawing assignments.
+      Talk to Alexandra in the art studio if you need help deciding which route to take.
     """
 
     @initialize()
 
   # Main path
+  class @Editor extends PAA.Learning.Task
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Editor'
+
+    @directive: -> "Get the drawing editor"
+
+    @instructions: -> """
+      Ask Alexandra for the basic editor for PixelBoy and select it on the Settings page in the Drawing app.
+      This will give you the ability to edit sprites right in the app.
+    """
+
+    @predecessors: -> [Goal.DrawingApp]
+
+    @groupNumber: -> -1
+
+    @initialize()
 
   class @Basics extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Basics'
@@ -32,7 +49,9 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       by completing the Basics tutorial under Challenges in the Drawing app.
     """
 
-    @predecessors: -> [Goal.ChooseSoftware]
+    @predecessors: -> [Goal.Editor]
+
+    @groupNumber: -> -1
 
     @initialize()
 
@@ -47,6 +66,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @predecessors: -> [Goal.Basics]
 
+    @groupNumber: -> -1
 
     @initialize()
 
@@ -61,13 +81,29 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @predecessors: -> [Goal.Basics]
 
-    @groupNumber: -> -1
+    @groupNumber: -> -2
 
     @initialize()
 
   # DIY path
 
   class @DIY
+    class @ChooseSoftware extends PAA.Learning.Task
+      @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.ChooseSoftware'
+
+      @directive: -> "Choose pixel art software"
+
+      @instructions: -> """
+        On the Settings page of the Drawing app, choose to use external drawing software for editing pixel art assets.
+        This will give you the ability to download and upload sprites in the app.
+      """
+
+      @predecessors: -> [Goal.DrawingApp]
+
+      @groupNumber: -> 1
+
+      @initialize()
+
     class @Doodling extends PAA.Learning.Task
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Doodling'
 
@@ -78,7 +114,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
         Figure out how to zoom in and out too. Upload the image to your journal to complete the task.
       """
 
-      @predecessors: -> [Goal.ChooseSoftware]
+      @predecessors: -> [Goal.DIY.ChooseSoftware]
 
       @groupNumber: -> 1
 
@@ -107,7 +143,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @directive: -> "Display a reference"
 
       @instructions: -> """
-        Talk to Alex in the Art Studio to learn different ways to set up reference images when drawing.
+        Talk to Alexandra in the Art Studio to learn different ways to set up reference images when drawing.
       """
 
       @predecessors: -> [Goal.DIY.Doodling]
@@ -154,43 +190,27 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Copy the reference"
 
     @instructions: -> """
-      Talk to Corinne in the Gallery to get some references. Choose one (black and white is easiest,
-      but if you’ve played with colors already, go for that too) and re-create it in the Drawing app or
-      your software of choice. Upload it to your journal and this goal is complete.
+      Talk to Corinne in the Gallery and get a reference to copy. It will appear under Challenges in the
+      Drawing app. Use the editor or software of your choice to re-create the reference.
     """
 
     @interests: -> ['pixel art software', 'pixel art', 'drawing software']
 
-    @predecessors: -> [Goal.Helpers, Goal.DIY.Grid]
-
-    @initialize()
-
-  class @SharingOnline extends PAA.Learning.Task
-    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.SharingOnline'
-
-    @directive: -> "Sharing online"
-
-    @instructions: -> """
-      When you share pixel art online, you have to export it bigger and sometimes with extra space.
-      Figure out how to resize the image or apply scale when exporting if your software supports it.
-      Talk to Retro to learn about best sizes and tricks for posting to specific social networks.
-    """
-
-    @predecessors: -> [Goal.CopyReference]
-
-    @groupNumber: -> 1
+    @predecessors: -> [Goal.Editor, Goal.DIY.ChooseSoftware]
 
     @initialize()
 
   @tasks: -> [
-    @ChooseSoftware
+    @DrawingApp
 
     # Main path
+    @Editor
     @Basics
     @Helpers
     @ColorTools
 
     # DIY
+    @DIY.ChooseSoftware
     @DIY.Doodling
     @DIY.AdvancedTools
     @DIY.Reference
@@ -199,7 +219,6 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     # End
     @CopyReference
-    @SharingOnline
   ]
 
   @finalTasks: -> [

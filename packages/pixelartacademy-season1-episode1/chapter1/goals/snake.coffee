@@ -20,6 +20,9 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @interests: -> ['video game', 'arcade game']
 
     @initialize()
+    
+    @completed: ->
+      C1.AdmissionProjects.Snake.Intro.Coworking.Listener.Script.state 'OfferedHelp'
 
   class @Play extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Play'
@@ -31,11 +34,18 @@ class C1.Goals.Snake extends PAA.Learning.Goal
       Score at least 5 points to continue.
     """
 
-    @interests: -> ['pico-8']
+    @interests: -> ['pico-8', 'gaming']
 
     @predecessors: -> [Goal.Talk]
 
     @initialize()
+
+    @completed: ->
+      # Make sure the player has the Snake cartridge.
+      return unless C1.AdmissionProjects.Snake.Intro.Coworking.Listener.Script.state 'ReceiveCartridge'
+
+      # Require score of 5 or higher.
+      PAA.Pico8.Cartridges.Snake.state('highScore') >= 5
 
   class @Draw extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Draw'
