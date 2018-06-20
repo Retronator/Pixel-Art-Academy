@@ -66,11 +66,12 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
 
       sections
 
-    @settingsSection = new ComputedField =>
-      sections = @sections()
-
+    @settingsSection =
       nameKey: @constructor.Sections.Settings
-      index: sections.length
+
+    @autorun (computation) =>
+      sections = @sections()
+      @settingsSection.index = sections.length
 
     @activeSection = new ReactiveField null, (a, b) => a is b
     @activeGroup = new ReactiveField null, (a, b) => a is b
@@ -106,3 +107,49 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
 
     # Subscribe to character's projects.
     PAA.Practice.Project.forCharacterId.subscribe @, LOI.characterId()
+
+    @programs = _.sortBy [
+      value: 'aseprite'
+      fullName: 'Aseprite'
+    ,
+      value: 'pyxeledit'
+      fullName: 'PyxelEdit'
+    ,
+      value: 'graphicgale'
+      fullName: 'Graphics Gale'
+    ,
+      value: 'promotion'
+      fullName: 'Pro Motion'
+    ,
+      value: 'grafx2'
+      fullName: 'GRAFX2'
+    ,
+      value: 'photoshop'
+      fullName: 'Photoshop'
+    ,
+      value: 'gimp'
+      fullName: 'GIMP'
+    ,
+      value: 'krita'
+      fullName: 'Krita'
+    ,
+      value: 'pixaki'
+      fullName: 'Pixaki'
+    ,
+      value: 'dottable'
+      fullName: 'Dottable'
+    ,
+      value: 'pixly'
+      fullName: 'Pixly'
+    ,
+      value: 'pixelartstudio'
+      fullName: 'Pixel Art Studio'
+    ], 'fullName'
+
+    @programs.unshift
+      value: null
+      fullName: 'None'
+
+    @programs.push
+      value: 'other'
+      fullName: 'Other software'

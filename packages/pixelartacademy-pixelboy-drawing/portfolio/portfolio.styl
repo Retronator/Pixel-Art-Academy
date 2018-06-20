@@ -96,10 +96,53 @@
         width 292rem
 
         &.active
-          height 121rem
+          height 139rem
 
         .content
           height 100rem
+          padding 3rem 11rem
+          color atariGrey(1)
+
+          .instructions
+            margin-bottom 6rem
+
+          .settings-sections
+            display flex
+            justify-content space-between
+
+            .settings-section
+              width 130rem
+
+              .title
+                daily()
+                text-transform uppercase
+                margin-bottom 2rem
+
+              .editors
+              .no-editors
+                border 1rem solid atariCyan(2)
+                height 80rem
+
+              .editors
+                list-style none
+                padding 0
+                overflow auto
+
+                .editor
+                  height 14rem
+                  padding 2rem 4rem
+                  cursor pointer
+
+                  &:hover
+                    background atariGrey(4)
+
+                  &.selected
+                    background atariGrey(4)
+                    cursor default
+
+              .no-editors
+                padding 10rem 8rem
+                text-align center
 
       .section-name
         height 21rem

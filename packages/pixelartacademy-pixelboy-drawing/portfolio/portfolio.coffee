@@ -20,7 +20,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     @initialGroupHeight = 17
     @inactiveGroupHeight = 3
     @activeGroupHeight = 150
-    @settingsHeight = 100
+    @settingsHeight = 118
 
   sectionActiveClass: ->
     section = @currentData()
@@ -134,6 +134,12 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     'active' if assetData is @activeAsset()
 
+  selectedProgramClass: ->
+    program = @currentData()
+    selectedProgram = @drawing.state('externalSoftware') or null
+
+    'selected' if selectedProgram is program.value
+
   events: ->
     super.concat
       'click .section': @onClickSection
@@ -142,21 +148,22 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
       'mouseenter .asset': @onMouseEnterAsset
       'mouseleave .asset': @onMouseLeaveAsset
       'click .asset': @onClickAsset
+      'click .external .editor': @onClickExternalEditor
 
   onClickSection: (event) ->
     section = @currentData()
 
-    clickInsideGroup = $(event.target).closest('.group').length > 0
+    clickInsideContent = $(event.target).closest('.content').length > 0
 
     if section is @activeSection()
-      @activeSection null unless clickInsideGroup
+      @activeSection null unless clickInsideContent
 
     else
       @activeSection section
 
       # Reset group if we click on the name, but not one of the inner groups.
       # In that case the group handler will activate a new group in this new section.
-      @activeGroup null unless clickInsideGroup
+      @activeGroup null unless clickInsideContent
 
   onClickGroupName: (event) ->
     group = @currentData()
@@ -196,3 +203,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     # Set active sprite ID.
     AB.Router.setParameter 'parameter3', assetData.asset.spriteId()
+
+  onClickExternalEditor: (event) ->
+    program = @currentData()
+    @drawing.state 'externalSoftware', program.value

@@ -10,7 +10,7 @@
           <div class="section-name">{{> t10e nameKey}}</div>
           <ul class="groups">
             {{#each groups}}
-              <li class="group {{groupActiveClass}}" {{style groupStyle}}>
+              <li class="group content {{groupActiveClass}}" {{style groupStyle}}>
                 <div class="group-name">{{name}}</div>
                 {{#if assets}}
                   <ul class="briefs">
@@ -40,7 +40,34 @@
         <li class="section settings {{sectionActiveClass}}">
           <div class="section-name">{{> t10e nameKey}}</div>
           <div class="content">
-
+            <div class="instructions">
+              Select how you want to edit artworks.
+            </div>
+            <div class="settings-sections">
+              <div class="settings-section">
+                <div class="title">Built-in editor</div>
+                {{#if editors.length}}
+                  <ul class="pixel-boy editors">
+                    {{#each editors}}
+                      <li class="editor {{selectedEditorClass}}">{{fullName}}</li>
+                    {{/each}}
+                  </ul>
+                {{else}}
+                  <div class="no-editors">
+                    <p>You don't have any PixelBoy editors yet.</p>
+                    <p>Talk to Alexandra in the art studio to get started.</p>
+                  </div>
+                {{/if}}
+              </div>
+              <div class="settings-section">
+                <div class="title">External software</div>
+                  <ul class="external editors">
+                    {{#each programs}}
+                      <li class="editor {{selectedProgramClass}}">{{fullName}}</li>
+                    {{/each}}
+                  </ul>
+              </div>
+            </div>
           </div>
         </li>
       {{/with}}
