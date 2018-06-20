@@ -11,6 +11,16 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     Challenges: 'Challenges'
     Projects: 'Projects'
     Artworks: 'Artworks'
+    Settings: 'Settings'
+
+  constructor: (@drawing) ->
+    super
+
+    @sectionHeight = 21
+    @initialGroupHeight = 17
+    @inactiveGroupHeight = 3
+    @activeGroupHeight = 150
+    @settingsHeight = 100
 
   sectionActiveClass: ->
     section = @currentData()
@@ -26,8 +36,9 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     section = @currentData()
     groups = section.groups()
     active = @activeSection() is section
+    sections = @sections()
 
-    width = 292 - 4 * (1 - section.index)
+    width = 292 - 4 * (sections.length - section.index)
 
     style =
       width: "#{width}rem"
@@ -98,16 +109,18 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   coverStyle: ->
     sections = @sections()
 
-    top = 14 + sections.length * @sectionHeight
+    top = 14 + (sections.length + 1) * @sectionHeight
 
     if section = @activeSection()
-      groups = section.groups()
+      if groups = section.groups?()
+        if @activeGroup()
+          top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
 
-      if @activeGroup()
-        top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        else
+          top += groups.length * @initialGroupHeight
 
       else
-        top += groups.length * @initialGroupHeight
+        top += @settingsHeight
 
     top: "#{top}rem"
 

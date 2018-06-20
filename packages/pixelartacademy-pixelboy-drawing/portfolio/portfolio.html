@@ -36,6 +36,14 @@
           </ul>
         </li>
       {{/each}}
+      {{#with settingsSection}}
+        <li class="section settings {{sectionActiveClass}}">
+          <div class="section-name">{{> t10e nameKey}}</div>
+          <div class="content">
+
+          </div>
+        </li>
+      {{/with}}
     </ul>
   </div>
 </template>

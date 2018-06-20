@@ -8,14 +8,6 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
   # We call register here because it is the last in the inheritance chain.
   @register @id()
 
-  constructor: (@drawing) ->
-    super
-
-    @sectionHeight = 21
-    @initialGroupHeight = 17
-    @inactiveGroupHeight = 3
-    @activeGroupHeight = 150
-
   onCreated: ->
     super
 
@@ -73,6 +65,12 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
       section.index = index for section, index in sections
 
       sections
+
+    @settingsSection = new ComputedField =>
+      sections = @sections()
+
+      nameKey: @constructor.Sections.Settings
+      index: sections.length
 
     @activeSection = new ReactiveField null, (a, b) => a is b
     @activeGroup = new ReactiveField null, (a, b) => a is b

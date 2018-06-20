@@ -6,7 +6,13 @@ PAA = PixelArtAcademy
 
 class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Drawing.Editor.Theme
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Theme.School'
+
   @register @id()
+  template: -> @constructor.id()
+
+  @fullName: -> "Basic"
+  
+  @initialize()
 
   @styleClass: -> 'theme-school'
 

@@ -95,7 +95,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @instructions: -> """
         On the Settings page of the Drawing app, choose to use external drawing software for editing pixel art assets.
-        This will give you the ability to download and upload sprites in the app.
+        This will give you the ability to download and upload sprites once you complete your competency test.
       """
 
       @predecessors: -> [Goal.DrawingApp]
@@ -107,7 +107,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     class @Doodling extends PAA.Learning.Task
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Doodling'
 
-      @directive: -> "Doodling (own software)"
+      @directive: -> "Doodling"
 
       @instructions: -> """
         Using the software of your choice, doodle on the canvas to see how the basic tools behave.
