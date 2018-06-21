@@ -108,6 +108,24 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
     # Subscribe to character's projects.
     PAA.Practice.Project.forCharacterId.subscribe @, LOI.characterId()
 
+    # Prepare settings.
+    editors = new PAA.PixelBoy.Apps.Drawing.Editors
+    
+    currentEditorsSituation = new LOI.Adventure.Situation
+      location: editors
+
+    @_editors = {}
+
+    @editors = new ComputedField =>
+      editorClasses = currentEditorsSituation.things()
+      editors = []
+
+      for editorClass in editorClasses
+        @_editors[editorClass.id()] ?= new editorClass
+        editors.push @_editors[editorClass.id()]
+
+      editors
+
     @programs = _.sortBy [
       value: 'aseprite'
       fullName: 'Aseprite'
@@ -153,3 +171,8 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
     @programs.push
       value: 'other'
       fullName: 'Other software'
+
+  onDestroyed: ->
+    super
+    
+    editor.destroy() for editor in @_editors

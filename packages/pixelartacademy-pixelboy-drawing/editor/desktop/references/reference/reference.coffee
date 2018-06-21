@@ -4,8 +4,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PADB = PixelArtDatabase
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference extends LOI.Assets.Components.References.Reference
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Theme.School.References.Reference'
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.Assets.Components.References.Reference
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference'
   @register @id()
 
   constructor: ->

@@ -2,7 +2,7 @@ AC = Artificial.Control
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.Tools.MoveCanvas extends LandsOfIllusions.Assets.Tools.Tool
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
     super
 
@@ -16,7 +16,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.Tools.MoveCanvas extends Lan
 
   onActivated: ->
     # Listen for mouse down.
-    $(document).on "mousedown.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-tools-move", (event) =>
+    $(document).on "mousedown.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move", (event) =>
       $target = $(event.target)
 
       # Only activate when we're moving from the sprite or the background.
@@ -29,11 +29,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.Tools.MoveCanvas extends Lan
         y: event.clientY
 
       # Wire end of dragging on mouse up.
-      $(document).on "mouseup.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-tools-move-dragging", (event) =>
-        $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-tools-move-dragging'
+      $(document).on "mouseup.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move-dragging", (event) =>
+        $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move-dragging'
         @moving false
 
-      $(document).on "mousemove.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-tools-move-dragging", (event) =>
+      $(document).on "mousemove.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move-dragging", (event) =>
         scale = @display.scale()
 
         dragDelta =
@@ -51,4 +51,4 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.Tools.MoveCanvas extends Lan
           y: event.clientY
 
   onDeactivated: ->
-    $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-tools-move'
+    $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-desktop-tools-move'

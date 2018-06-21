@@ -2,8 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.Pico8 extends AM.Component
-  @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Theme.School.Pico8'
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8 extends AM.Component
+  @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8'
 
   constructor: (@options) ->
     super
@@ -78,8 +78,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.Pico8 extends AM.Component
       y: event.clientY
 
     # Wire end of dragging on mouse up anywhere in the window.
-    $(document).on "mouseup.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-pico8", (event) =>
-      $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-pico8'
+    $(document).on "mouseup.pixelartacademy-pixelboy-apps-drawing-editor-desktop-pico8", (event) =>
+      $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-desktop-pico8'
 
       @dragging false
 
@@ -88,7 +88,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.Pico8 extends AM.Component
         @_draggingDeactivated = true
         @active false
 
-    $(document).on "mousemove.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-pico8", (event) =>
+    $(document).on "mousemove.pixelartacademy-pixelboy-apps-drawing-editor-desktop-pico8", (event) =>
       @_moved = true
       scale = @display.scale()
 

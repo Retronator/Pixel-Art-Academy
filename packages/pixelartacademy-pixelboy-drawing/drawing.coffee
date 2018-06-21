@@ -36,7 +36,7 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
     # Initialize components.
     @portfolio new @constructor.Portfolio @
     @clipboard new @constructor.Clipboard @
-    @editor new @constructor.Editor @
+    @editor new @constructor.Editor.Desktop @
 
     @autorun (computation) =>
       portfolio = @portfolio()
@@ -51,6 +51,9 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
 
       else
         @setFixedPixelBoySize 332, 241
+
+  onDestroyed: ->
+    @editor().destroy()
 
   onBackButton: ->
     # Relay to editor.
@@ -80,5 +83,5 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
   editorFocusedModeClass: ->
     'editor-focused-mode' if @editor().focusedMode?()
 
-  themeClass: ->
-    @editor()?.theme()?.constructor.styleClass()
+  editorClass: ->
+    @editor()?.constructor.styleClass()

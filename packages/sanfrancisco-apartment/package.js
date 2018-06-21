@@ -30,9 +30,9 @@ Package.onUse(function(api) {
 
   api.addComponent('studio/computer..');
   api.addComponent('studio/computer/app..');
-  api.addComponent('studio/computer/screens/desktop..');
-  api.addComponent('studio/computer/screens/browser..');
-  api.addComponent('studio/computer/screens/email..');
-  api.addComponent('studio/computer/screens/game..');
+  api.addComponent('studio/computer/apps/desktop..');
+  api.addComponent('studio/computer/apps/browser..');
+  api.addComponent('studio/computer/apps/email..');
+  api.addComponent('studio/computer/apps/game..');
 
 });

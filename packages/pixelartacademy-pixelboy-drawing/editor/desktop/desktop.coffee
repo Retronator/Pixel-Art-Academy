@@ -4,17 +4,18 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Drawing.Editor.Theme
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Theme.School'
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing.Editor
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop'
+  @version: -> '0.1.0'
 
   @register @id()
   template: -> @constructor.id()
 
-  @fullName: -> "Basic"
-  
-  @initialize()
+  @fullName: -> "Desktop"
 
-  @styleClass: -> 'theme-school'
+  @styleClass: -> 'editor-desktop'
+
+  @initialize()
 
   constructor: ->
     super
@@ -31,7 +32,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     @paletteId = new ComputedField =>
       # Minimize reactivity to only palette changes.
-      LOI.Assets.Sprite.documents.findOne(@editor.spriteId(),
+      LOI.Assets.Sprite.documents.findOne(@spriteId(),
         fields:
           palette: 1
       )?.palette?._id
@@ -47,14 +48,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     super
 
     @activeAsset = new ComputedField =>
-      @editor.drawing.portfolio().activeAsset()?.asset
+      @drawing.portfolio().activeAsset()?.asset
 
     @displayedAsset = new ComputedField =>
-      @editor.drawing.portfolio().displayedAsset()?.asset
+      @drawing.portfolio().displayedAsset()?.asset
 
     # Initialize components.
     @sprite new LOI.Assets.Engine.Sprite
-      spriteData: @editor.spriteData
+      spriteData: @spriteData
 
     @pixelCanvas new LOI.Assets.Components.PixelCanvas
       initialCameraScale: 0
@@ -62,7 +63,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       cameraInput: false
       grid: => @drawingActive()
       cursor: => @drawingActive()
-      canvasSize: => @editor.spriteData()?.bounds
+      canvasSize: => @spriteData()?.bounds
       drawComponents: =>
         components = [
           @sprite()
@@ -75,7 +76,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
           components.push assetComponents...
           
         # Add components visible only in the editor.
-        if @editor.active()
+        if @active()
           if assetComponents = displayedAsset?.editorDrawComponents?()
             components.push assetComponents...
 
@@ -96,9 +97,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       theme: @
 
     @references new @constructor.References
-      assetId: @editor.spriteId
+      assetId: @spriteId
       documentClass: LOI.Assets.Sprite
-      editorActive: @editor.active
+      editorActive: @active
       assetOptions: =>
         @displayedAsset()?.editorOptions()?.references
 
@@ -127,7 +128,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       "#{PAA.Practice.Software.Tools.ToolKeys.MoveCanvas}": @constructor.Tools.MoveCanvas
 
     # We need to provide (editor's) sprite data as the tools will expect it (since they think we are the editor class).
-    @spriteData = @editor.spriteData
+    @spriteData = @spriteData
 
     @toolInstances = {}
     
@@ -148,7 +149,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     # Deactivate active tool when closing the editor.
     @autorun (computation) =>
-      if @editor.active()
+      if @active()
         unless @activeTool()
           # Make sure the last active tool is still allowed.
           if @_lastActiveTool in @tools()
@@ -167,7 +168,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     # Keep pixel canvas centered on the sprite.
     @autorun (computation) =>
-      return unless spriteData = @editor.spriteData()
+      return unless spriteData = @spriteData()
 
       @pixelCanvas().camera().origin
         x: spriteData.bounds.width / 2
@@ -178,7 +179,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
 
     # Do updates when asset changes.
     @autorun (computation) =>
-      @editor.drawing.portfolio().displayedAsset()
+      @drawing.portfolio().displayedAsset()
 
       # Trigger sprite style change after delay. We need this delay to allow for asset data in the
       # clipboard to update, which will change the position of the sprite when attached to the clipboard.
@@ -187,13 +188,13 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     # Update sprite scale.
     @autorun (computation) =>
       return unless camera = @pixelCanvas().camera()
-      return unless assetData = @editor.drawing.portfolio().displayedAsset()
-      return unless clipboardSpriteSize = @editor.drawing.clipboard().spriteSize()
+      return unless assetData = @drawing.portfolio().displayedAsset()
+      return unless clipboardSpriteSize = @drawing.clipboard().spriteSize()
 
       # Dictate sprite scale when asset is on clipboard and when setting for the first time.
       clipboardSpriteScale = clipboardSpriteSize.scale
 
-      unless @editor.active() and assetData.asset is @_previousDisplayedAsset and clipboardSpriteScale is @_previousClipboardSpriteScale
+      unless @active() and assetData.asset is @_previousDisplayedAsset and clipboardSpriteScale is @_previousClipboardSpriteScale
         camera.setScale clipboardSpriteScale
 
       @_previousDisplayedAsset = assetData.asset
@@ -209,7 +210,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     super
 
     @autorun =>
-      if @editor.active()
+      if @active()
         # Add the drawing active class with delay so that the initial transitions still happen slowly.
         Meteor.setTimeout =>
           @drawingActive true
@@ -220,7 +221,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
         # Immediately remove the drawing active class so that the slow transitions kick in.
         @drawingActive false
 
-    $(document).on 'keydown.pixelartacademy-pixelboy-apps-drawing-editor-theme-school', (event) =>
+    $(document).on 'keydown.pixelartacademy-pixelboy-apps-drawing-editor-desktop', (event) =>
       switch event.which
         when AC.Keys.f
           # Toggle focused mode.
@@ -232,7 +233,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
   onDestroyed: ->
     super
 
-    $(document).off('.pixelartacademy-pixelboy-apps-drawing-editor-theme-school')
+    $(document).off('.pixelartacademy-pixelboy-apps-drawing-editor-desktop')
     
     @pico8().device?.stop()
 
@@ -279,12 +280,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     offScreenStyle = top: '-150rem'
 
     # Wait for clipboard to be rendered.
-    return offScreenStyle unless @editor.drawing.clipboard().isRendered()
+    return offScreenStyle unless @drawing.clipboard().isRendered()
 
     # If we don't have size data, don't return anything so transition will start form first value.
-    return offScreenStyle unless spriteData = @editor.spriteData()
+    return offScreenStyle unless spriteData = @spriteData()
     return offScreenStyle unless scale = @pixelCanvas()?.camera()?.scale()
-    return offScreenStyle unless clipboardSpriteSize = @editor.drawing.clipboard().spriteSize()
+    return offScreenStyle unless clipboardSpriteSize = @drawing.clipboard().spriteSize()
 
     width = spriteData.bounds.width * scale
     height = spriteData.bounds.height * scale
@@ -296,7 +297,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
     # Resize the border proportionally to its clipboard size
     borderWidth = clipboardSpriteSize.borderWidth / clipboardSpriteSize.scale * scale
 
-    if @editor.active()
+    if @active()
       # We need to be in the middle of the table, but allowing for custom offset with dragging.
       offset = @spritePositionOffset()
 
@@ -316,7 +317,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School extends PAA.PixelBoy.Apps.Dr
       left = "calc(50% + #{left}px)"
 
       # Top is relative to center only when we have an active asset.
-      activeAsset = @editor.drawing.portfolio().activeAsset()
+      activeAsset = @drawing.portfolio().activeAsset()
 
       positionOrigin.top += $clipboard.height() / 2 if activeAsset
       top = spriteOffset.top - positionOrigin.top

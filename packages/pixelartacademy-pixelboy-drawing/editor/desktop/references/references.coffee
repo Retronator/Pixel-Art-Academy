@@ -2,8 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Assets.Components.References
-  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Theme.School.References'
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References extends LOI.Assets.Components.References
+  @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.References'
   @register @id()
 
   onCreated: ->
@@ -17,13 +17,13 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Theme.School.References extends LOI.Asset
       @draggingDisplayed not @opened() and not @hideActive()
 
     # Close the tray when clicking outside of it.
-    $(document).on 'click.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references', (event) =>
-      return if $(event.target).closest('.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references').length
+    $(document).on 'click.pixelartacademy-pixelboy-apps-drawing-editor-desktop-references', (event) =>
+      return if $(event.target).closest('.pixelartacademy-pixelboy-apps-drawing-editor-desktop-references').length
 
       @opened false
 
   onDestroyed: ->
-    $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-theme-school-references'
+    $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-desktop-references'
 
   openedClass: ->
     'opened' if @opened()
