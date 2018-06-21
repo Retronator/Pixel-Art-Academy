@@ -10,7 +10,7 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
   @shortName: -> "Alexandra"
   @description: -> "It's Alexandra Hood, resident artist and coffee drinker at Retronator."
   @color: ->
-    hue: LOI.Assets.Palette.Atari2600.hues.red
+    hue: LOI.Assets.Palette.Atari2600.hues.olive
     shade: LOI.Assets.Palette.Atari2600.characterShades.darker
 
   @initialize()

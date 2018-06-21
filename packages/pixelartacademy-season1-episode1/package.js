@@ -58,6 +58,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/scenes/inventory');
   api.addFile('chapter1/scenes/inbox');
   api.addFile('chapter1/scenes/apps');
+  api.addFile('chapter1/scenes/editors');
   api.addFile('chapter1/scenes/pico8cartridges');
   api.addThing('chapter1/scenes/sanfranciscoconversation');
   api.addFile('chapter1/scenes/drawingtutorial');
@@ -124,6 +125,7 @@ Package.onUse(function(api) {
   // Post-PixelBoy
   api.addFile('chapter1/sections/postpixelboy..');
   api.addThing('chapter1/sections/postpixelboy/scenes/store');
+  api.addThing('chapter1/sections/postpixelboy/scenes/artstudio');
 
   // Admission projects
   api.addFile('chapter1/sections/admissionprojects..');

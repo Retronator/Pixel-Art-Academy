@@ -118,14 +118,13 @@ class Script.Nodes.Code extends Script.Node
       _globalState.character = character
 
     # Attach player object to global state.
-    _globalState.player =
-      inventory: {}
+    _globalState.inventory = {}
 
     # Create a map of inventory items
     currentInventoryThings = LOI.adventure.currentInventoryThings()
 
     for thing in currentInventoryThings
-      transferThingToState thing, _globalState.player.inventory, thing.id()
+      transferThingToState thing, _globalState.inventory, thing.id()
 
     # Add script parent as this.
     transferThingToState @script.options.parent, _scriptState, 'this'

@@ -34,6 +34,7 @@ class PAA.Season1.Episode1.Chapter1 extends LOI.Adventure.Chapter
     @Inventory
     @Inbox
     @Apps
+    @Editors
     @Pico8Cartridges
     @DrawingTutorial
     @SanFranciscoConversation

@@ -1,0 +1,71 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.PostPixelBoy.ArtStudio
+
+## UsePixelBoyEditorChoice
+
+* I've decided, I want to use the PixelBoy editor.
+
+## UsePixelBoyEditor
+
+alexandra:
+  Great! You will find many different editors once you get to the Academy.
+  But to start you out, here's the Desktop editor that looks much like drawing in real life.
+
+> Alexandra gets her PixelBoy and initiates the transfer.
+
+## ReceiveDesktopEditor
+
+alexandra: There you go. 
+
+-> [NoDrawingApp] `not _hasDrawingApp`
+
+alexandra:
+  Now all you have to do is go to your Drawing app and select it on the Settings page.
+  A new section will also show up, called Challenges.
+  You'll find a tutorial in there to teach you all about how the editor works.
+
+-> [Tutorial]
+
+## NoDrawingApp
+
+alexandra:
+  You'll also need to get the Drawing app where the editor will appear.
+  Select it in the Admission Week app when you can.
+  Once you choose the Desktop editor in the Drawing app, you'll see a tutorial that will guide you through.
+
+## Tutorial
+
+* Can I skip the tutorial? -> [SkipTutorial]
+* What do I do after the tutorial?
+
+alexandra:
+  You'll do a simple drawing task to double check you have the basics down.
+  
+-> [AfterTutorial]
+
+## SkipTutorial
+
+alexandra:
+  Hate tutorials, huh?
+  All you really need is to complete a competency test.
+
+## AfterTutorial
+
+alexandra:
+  Talk to Corinne downstairs to get you a reference to copy.
+  Do that and the editor is yours to use for all drawing projects.
+
+### BackToMainQuestions
+
+-> [End]
+
+## UseExternalSoftwareChoice
+
+* I think I want to use external software.
+
+## UseExternalSoftware
+
+### BackToMainQuestions
+
+-> [End]
+
+## End

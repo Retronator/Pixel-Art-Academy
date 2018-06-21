@@ -124,6 +124,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
         @_editors[editorClass.id()] ?= new editorClass
         editors.push @_editors[editorClass.id()]
 
+      if editors.length
+        editors.unshift
+          id: => null
+          fullName: 'None'
+
       editors
 
     @programs = _.sortBy [
@@ -175,4 +180,4 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
   onDestroyed: ->
     super
     
-    editor.destroy() for editor in @_editors
+    editor.destroy?() for editor in @_editors

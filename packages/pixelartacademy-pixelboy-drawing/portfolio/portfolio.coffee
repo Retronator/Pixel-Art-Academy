@@ -134,6 +134,12 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     'active' if assetData is @activeAsset()
 
+  selectedEditorClass: ->
+    editor = @currentData()
+    selectedEditorId = @drawing.state('editorId') or null
+
+    'selected' if selectedEditorId is editor.id()
+
   selectedProgramClass: ->
     program = @currentData()
     selectedProgram = @drawing.state('externalSoftware') or null
@@ -148,6 +154,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
       'mouseenter .asset': @onMouseEnterAsset
       'mouseleave .asset': @onMouseLeaveAsset
       'click .asset': @onClickAsset
+      'click .pixel-boy .editor': @onClickPixelBoyEditor
       'click .external .editor': @onClickExternalEditor
 
   onClickSection: (event) ->
@@ -203,6 +210,10 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     # Set active sprite ID.
     AB.Router.setParameter 'parameter3', assetData.asset.spriteId()
+
+  onClickPixelBoyEditor: (event) ->
+    editor = @currentData()
+    @drawing.state 'editorId', editor.id()
 
   onClickExternalEditor: (event) ->
     program = @currentData()

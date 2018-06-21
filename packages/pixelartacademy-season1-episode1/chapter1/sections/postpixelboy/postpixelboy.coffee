@@ -7,6 +7,7 @@ class C1.PostPixelBoy extends LOI.Adventure.Section
 
   @scenes: -> [
     @Store
+    @ArtStudio
   ]
 
   @initialize()
