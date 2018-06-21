@@ -10,6 +10,7 @@ alexandra: How else can I help? `_IntroductionOver`
 ## MainQuestions
 
 * Is that your painting? -> [YourPainting]
+* Can I ask you questions about art? -> [ArtQuestionsOfCourse] `YourPainting`
 * *MainQuestions*
 * Thank you, bye!
 
@@ -21,6 +22,26 @@ alexandra: Bye!
 
 alexandra: 
   Yes, it's the next in my Money series.
+
+-> [MainQuestions]
+
+## ArtQuestionsOfCourse
+
+alexandra: Of course! How can I help?
+
+## ArtQuestions
+
+* What kind of art can I do at the Academy?
+* Is there an advantage to learning pixel art?
+* Is it good to practice other mediums besides pixel art?
+* Can I do pixel art, but not on the computer?
+* What choices do I have if I want to do other styles than pixel art?
+* I want to know more about different mediums.
+* What are some of the differences between traditional and digital?
+* I want to do pixel art. What do I need?
+* Thanks, I'll let you know what I'm interested in.
+
+alexandra: Alright.
 
 -> [MainQuestions]
 
