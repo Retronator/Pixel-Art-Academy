@@ -1,0 +1,31 @@
+# Retronator.HQ.Actors.Corinne
+
+## Start
+
+corinne: Hello! `not _IntroductionOver`
+corinne: Anything else? `_IntroductionOver`
+
+## IntroductionOver
+
+## MainQuestions
+
+* Are you the curator? -> [Curator]
+* What's going on in the gallery? -> [Gallery]
+* *MainQuestions*
+* Thank you.
+
+corinne: Let me know if you need anything else.
+
+-> [End]
+
+## Curator
+
+corinne: 
+  That would be me!
+  Can I answer any of your questions?
+
+-> [MainQuestions]
+
+## Gallery
+
+## End
