@@ -30,6 +30,12 @@
                       </li>
                     {{/each}}
                   </ul>
+                {{else}}
+                  {{#if noAssetsInstructions}}
+                    <div class="no-assets-instructions">
+                      {{noAssetsInstructions}}
+                    </div>
+                  {{/if}}
                 {{/if}}
               </li>
             {{/each}}

@@ -36,6 +36,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
 
               index: index
               name: => sectionThing.fullName()
+              noAssetsInstructions: => sectionThing.noAssetsInstructions?()
               assets: assets
 
         section =
