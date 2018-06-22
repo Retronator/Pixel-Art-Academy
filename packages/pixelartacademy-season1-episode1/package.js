@@ -59,7 +59,6 @@ Package.onUse(function(api) {
   api.addFile('chapter1/scenes/editors');
   api.addFile('chapter1/scenes/pico8cartridges');
   api.addThing('chapter1/scenes/sanfranciscoconversation');
-  api.addFile('chapter1/scenes/drawingtutorial');
 
   api.addFile('chapter1/goals..');
   api.addFile('chapter1/goals/drawingsoftware');
@@ -86,6 +85,9 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/challenges..');
   api.addFile('chapter1/challenges/drawing..');
+
+  api.addFile('chapter1/challenges/drawing/pixelartsoftware..');
+
   api.addFile('chapter1/challenges/drawing/tutorial..');
 
   api.addFile('chapter1/challenges/drawing/tutorial/basics..');
@@ -124,6 +126,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/postpixelboy..');
   api.addThing('chapter1/sections/postpixelboy/scenes/store');
   api.addThing('chapter1/sections/postpixelboy/scenes/artstudio');
+  api.addFile('chapter1/sections/postpixelboy/scenes/drawingchallenges');
 
   // Admission projects
   api.addFile('chapter1/sections/admissionprojects..');

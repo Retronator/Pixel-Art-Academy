@@ -36,7 +36,6 @@ class PAA.Season1.Episode1.Chapter1 extends LOI.Adventure.Chapter
     @Apps
     @Editors
     @Pico8Cartridges
-    @DrawingTutorial
     @SanFranciscoConversation
     @Groups.SanFranciscoFriends
     @Groups.SanFranciscoFriends.Conversation

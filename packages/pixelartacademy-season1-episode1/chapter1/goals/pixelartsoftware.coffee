@@ -63,7 +63,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
     
     @completed: ->
-      return unless tutorialScene = _.find LOI.adventure.currentScenes(), (scene) => scene instanceof C1.DrawingTutorial
+      return unless tutorialScene = _.find LOI.adventure.currentScenes(), (scene) => scene instanceof C1.PostPixelBoy.DrawingChallenges
       return unless tutorial = _.find tutorialScene.things(), (thing) => thing instanceof C1.Challenges.Drawing.Tutorial.Basics
       tutorial.completed()
 
@@ -83,7 +83,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     @completed: ->
-      return unless tutorialScene = _.find LOI.adventure.currentScenes(), (scene) => scene instanceof C1.DrawingTutorial
+      return unless tutorialScene = _.find LOI.adventure.currentScenes(), (scene) => scene instanceof C1.PostPixelBoy.DrawingChallenges
       return unless tutorial = _.find tutorialScene.things(), (thing) => thing instanceof C1.Challenges.Drawing.Tutorial.Helpers
       tutorial.completed()
 
@@ -103,7 +103,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     @completed: ->
-      return unless tutorialScene = _.find LOI.adventure.currentScenes(), (scene) => scene instanceof C1.DrawingTutorial
+      return unless tutorialScene = _.find LOI.adventure.currentScenes(), (scene) => scene instanceof C1.PostPixelBoy.DrawingChallenges
       return unless tutorial = _.find tutorialScene.things(), (thing) => thing instanceof C1.Challenges.Drawing.Tutorial.Colors
       tutorial.completed()
 

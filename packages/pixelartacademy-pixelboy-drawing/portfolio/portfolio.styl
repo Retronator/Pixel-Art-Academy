@@ -70,7 +70,7 @@
       transition all 0.2s
       overflow hidden
 
-      &:not(.active):hover
+      &:hover:not(.active)
         height 38rem
         margin-top -5rem
 
@@ -79,7 +79,10 @@
 
         .groups
           .group
-            &:not(.active):hover
+            height 17rem
+            margin-top 0
+
+            &:hover:not(.active)
               height 19rem
               margin-top -1rem
 
@@ -88,7 +91,10 @@
           .group
             height 3rem
 
-            &:not(.active):hover
+            &:first-child:not(.active)
+              height 3rem
+
+            &:hover:not(.active)
               height 15rem
               margin-top -1rem
 
@@ -159,12 +165,16 @@
         .group
           position relative
           z-index 0
-          height 17rem
-          margin 0 auto
+          height 6rem
+          margin -4rem auto 0
           background-color atariBrown(4)
           box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
           transition all 0.2s
           overflow hidden
+
+          &:first-child
+            height 17rem
+            margin-top 0
 
           &.active
             height 150rem
