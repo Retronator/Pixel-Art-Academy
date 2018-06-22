@@ -124,9 +124,10 @@ Package.onUse(function(api) {
 
   // Post-PixelBoy
   api.addFile('chapter1/sections/postpixelboy..');
+  api.addFile('chapter1/sections/postpixelboy/scenes/drawingchallenges');
   api.addThing('chapter1/sections/postpixelboy/scenes/store');
   api.addThing('chapter1/sections/postpixelboy/scenes/artstudio');
-  api.addFile('chapter1/sections/postpixelboy/scenes/drawingchallenges');
+  api.addThing('chapter1/sections/postpixelboy/scenes/galleryeast');
 
   // Admission projects
   api.addFile('chapter1/sections/admissionprojects..');

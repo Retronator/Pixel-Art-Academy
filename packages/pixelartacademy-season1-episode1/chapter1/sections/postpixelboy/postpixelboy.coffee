@@ -6,9 +6,10 @@ class C1.PostPixelBoy extends LOI.Adventure.Section
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.PostPixelBoy'
 
   @scenes: -> [
+    @DrawingChallenges
     @Store
     @ArtStudio
-    @DrawingChallenges
+    @GalleryEast
   ]
 
   @initialize()
