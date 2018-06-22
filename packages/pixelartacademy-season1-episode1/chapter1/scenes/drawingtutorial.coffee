@@ -11,24 +11,27 @@ class C1.DrawingTutorial extends LOI.Adventure.Scene
 
   @initialize()
 
-  constructor: ->
+  destroy: ->
     super
 
-    @basics = new ReactiveField null
-    @colors = new ReactiveField null
-    @helpers = new ReactiveField null
-
-    @basics new C1.Challenges.Drawing.Tutorial.Basics
-    @colors new C1.Challenges.Drawing.Tutorial.Colors
-    @helpers new C1.Challenges.Drawing.Tutorial.Helpers
+    @_basics?.destroy()
+    @_colors?.destroy()
+    @_helpers?.destroy()
 
   things: ->
+    # Player needs the Desktop editor selected for the tutorial to display.
+    return [] unless PAA.PixelBoy.Apps.Drawing.state('editorId') is PAA.PixelBoy.Apps.Drawing.Editor.Desktop.id()
+
+    @_basics ?= new C1.Challenges.Drawing.Tutorial.Basics
+
     things = [
-      @basics()
+      @_basics
     ]
 
-    basicsShortcuts = _.find @basics().assets(), (asset) -> asset instanceof C1.Challenges.Drawing.Tutorial.Basics.Shortcuts
+    if @_basics.completed()
+      @_colors ?= new C1.Challenges.Drawing.Tutorial.Colors
+      @_helpers ?= new C1.Challenges.Drawing.Tutorial.Helpers
 
-    things.push @colors(), @helpers() if basicsShortcuts?.completed()
+      things.push @_colors, @_helpers
 
     things

@@ -49,7 +49,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       # All is good if we have the asset.
       return if _.find assets, (asset) => asset.id is @id()
 
-      # We need to create the sprite by calling reset.
+      # We need to create the asset with the sprite.
       @constructor.create LOI.characterId(), @tutorial.id(), @id()
 
     @goalPixels = @constructor.createPixelsFromBitmap @constructor.goalBitmap()

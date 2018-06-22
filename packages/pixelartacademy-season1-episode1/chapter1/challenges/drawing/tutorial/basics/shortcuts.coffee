@@ -24,18 +24,18 @@ class C1.Challenges.Drawing.Tutorial.Basics.Shortcuts extends PAA.Practice.Chall
       |  00000000
       | 0        0
       |0          0
-      | 0000000000
+      |000000000000
     """
 
   @goalBitmap: -> """
       |  0      0
-      |0  0    0  0
-      |0 00000000 0
-      |000 0000 000
+      |   0    0
+      |  00000000
+      | 00 0000 00
       |000000000000
-      | 0000000000
-      |  0      0
-      | 0        0
+      |0 00000000 0
+      |0 0      0 0
+      |   00  00
     """
 
   @spriteInfo: -> "Artwork from Space Invaders, Taito, 1978"

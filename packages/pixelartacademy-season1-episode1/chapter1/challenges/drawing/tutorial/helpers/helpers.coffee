@@ -36,3 +36,7 @@ class C1.Challenges.Drawing.Tutorial.Helpers extends C1.Challenges.Drawing.Tutor
     @references?.destroy()
 
     @assets.stop()
+
+  completed: ->
+    finalAsset = _.find @assets(), (asset) => asset instanceof @constructor.References
+    finalAsset?.completed()

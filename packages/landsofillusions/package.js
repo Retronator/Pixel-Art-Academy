@@ -57,6 +57,8 @@ Package.onUse(function(api) {
   api.addServerFile('state/migrations/0001-renamecollection');
   api.addServerFile('state/migrations/0002-gametime');
   api.addServerFile('state/migrations/0003-addinggamestatefields');
+  api.addServerFile('state/migrations/0004-admissionapplication');
+  api.addServerFile('state/migrations/0005-tutorialspritesremove');
 
   // Avatar
 

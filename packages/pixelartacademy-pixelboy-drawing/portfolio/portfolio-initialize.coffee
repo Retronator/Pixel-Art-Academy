@@ -52,7 +52,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
       sections = []
 
       sections.push @projectsSection if @projectsSection.groups().length
-      sections.push @challengesSection
+      sections.push @challengesSection if @challengesSection.groups().length
       sections.push @artworksSection if @artworksSection.groups().length
 
       # If the active section is not present anymore, close the section.

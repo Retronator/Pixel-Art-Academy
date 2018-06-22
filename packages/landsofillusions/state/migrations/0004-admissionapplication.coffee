@@ -1,5 +1,4 @@
 LOI = LandsOfIllusions
-C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
 class Migration extends Document.MinorMigration
   name: "Move admission application to read-only state and schedule admission email."
@@ -18,11 +17,11 @@ class Migration extends Document.MinorMigration
         readOnlyState = document.readOnlyState or {}
 
         # Set the applied field on the application state.
-        _.nestedProperty readOnlyState, "things.#{C1.id()}.application.applied", true
+        _.nestedProperty readOnlyState, "things.PixelArtAcademy.Season1.Episode1.Chapter1.application.applied", true
       
         # Set the date.
-        _.nestedProperty readOnlyState, "things.#{C1.id()}.application.applicationTime", 0
-        _.nestedProperty readOnlyState, "things.#{C1.id()}.application.applicationRealTime", Date.now()
+        _.nestedProperty readOnlyState, "things.PixelArtAcademy.Season1.Episode1.Chapter1.application.applicationTime", 0
+        _.nestedProperty readOnlyState, "things.PixelArtAcademy.Season1.Episode1.Chapter1.application.applicationRealTime", Date.now()
         
         events = document.events or []
 
@@ -43,14 +42,14 @@ class Migration extends Document.MinorMigration
             'items.catalogKey': 'PixelArtAcademy.AlphaAccess'
 
         if user
-          event = _.find events, (event) -> event.type is "#{C1.id()}.Events.ApplicationAccepted"
+          event = _.find events, (event) -> event.type is "PixelArtAcademy.Season1.Episode1.Chapter1.Events.ApplicationAccepted"
 
           if event
             console.warn "Game state #{document._id} already has the application accepted event."
 
           else
             events.push
-              type: "#{C1.id()}.Events.ApplicationAccepted"
+              type: "PixelArtAcademy.Season1.Episode1.Chapter1.Events.ApplicationAccepted"
               gameTime: 0.375
               id: Random.id()
 
