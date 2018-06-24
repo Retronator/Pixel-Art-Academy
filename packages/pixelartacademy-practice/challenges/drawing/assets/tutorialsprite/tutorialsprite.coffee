@@ -36,6 +36,38 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
     pixels
 
+  @createPixelsFromImage: (image) ->
+    canvas = $('<canvas>')[0]
+    canvas.width = image.width
+    canvas.height = image.height
+
+    context = canvas.getContext '2d'
+    context.drawImage image, 0, 0
+    imageData = context.getImageData 0, 0, image.width, image.height
+
+    pixels = []
+
+    for x in [0...image.width]
+      for y in [0...image.height]
+        pixelOffset = (x + y * image.width) * 4
+
+        # Skip transparent pixels.
+        continue unless imageData.data[pixelOffset + 3]
+
+        pixels.push
+          x: x
+          y: y
+          directColor:
+            r: imageData.data[pixelOffset] / 255
+            g: imageData.data[pixelOffset + 1] / 255
+            b: imageData.data[pixelOffset + 2] / 255
+
+    pixels
+
+  @briefComponentClass: ->
+    # Override to provide a different brief component.
+    @BriefComponent
+
   constructor: ->
     super
     
@@ -52,10 +84,19 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       # We need to create the asset with the sprite.
       @constructor.create LOI.characterId(), @tutorial.id(), @id()
 
-    @goalPixels = @constructor.createPixelsFromBitmap @constructor.goalBitmap()
+    # Fetch palette.
+    @palette = new ComputedField =>
+      return unless spriteData = @sprite()
+      spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
+
+    # Allow to override how we initialize goal pixels.
+    @goalPixels = new ReactiveField null
+    @goalPixelsMap = new ReactiveField null
+    @initializeGoalPixels()
 
     @engineComponent = new @constructor.EngineComponent
       spriteData: =>
+        return unless goalPixels = @goalPixels()
         return unless spriteId = @spriteId()
 
         # Take same overall sprite data (bounds, palette) as sprite used for drawing, but exclude the pixels.
@@ -66,25 +107,37 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
         return unless spriteData
 
         # Replace pixels with the goal state.
-        spriteData.layers = [pixels: @goalPixels]
+        spriteData.layers = [pixels: goalPixels]
 
         spriteData
 
-    @briefComponent = new @constructor.BriefComponent @
+    briefComponentClass = @constructor.briefComponentClass()
+    @briefComponent = new briefComponentClass @
 
     @completed = new ComputedField =>
       # Compare goal pixels with current sprite pixels.
       return unless spritePixels = @sprite()?.layers[0].pixels
+      return unless goalPixels = @goalPixels()
+      return unless goalPixelsMap = @goalPixelsMap()
+      return unless @palette()
 
-      return false unless @goalPixels.length is spritePixels.length
+      return false unless goalPixels.length is spritePixels.length
 
-      for goalPixel in @goalPixels
-        return false unless _.find spritePixels, (spritePixel) => EJSON.equals goalPixel, spritePixel
+      for pixel in spritePixels
+        return false unless goalPixel = goalPixelsMap[pixel.x]?[pixel.y]
+
+        # If any of the pixels has a direct color, we need to translate the other one too.
+        if pixel.paletteColor and goalPixel.paletteColor
+          EJSON.equals pixel.paletteColor, goalPixel.paletteColor
+
+        else
+          pixelDirectColor = @_paletteToDirectColor pixel.paletteColor
+          EJSON.equals pixelDirectColor, goalPixel.directColor
 
       true
 
     # Save completed value to tutorial state.
-    Tracker.autorun (computation) =>
+    @_completedAutorun = Tracker.autorun (computation) =>
       # We expect completed to return true or false, and undefined if can't yet determine (loading).
       completed = @completed()
       return unless completed?
@@ -109,6 +162,33 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       @tutorial.state 'assets', assets if updated
 
   destroy: ->
+    super
+
+    @_completedAutorun.stop()
+
+  initializeGoalPixels: ->
+    @setGoalPixels @constructor.createPixelsFromBitmap @constructor.goalBitmap()
+
+  setGoalPixels: (goalPixels) ->
+    @goalPixels goalPixels
+
+    Tracker.autorun (computation) =>
+      return unless @palette()
+      computation.stop()
+
+      # We create a map representation for fast retrieval as well.
+      map = {}
+
+      for pixel in goalPixels
+        map[pixel.x] ?= {}
+        map[pixel.x][pixel.y] = pixel
+        pixel.directColor ?= @_paletteToDirectColor pixel.paletteColor
+
+      @goalPixelsMap map
+
+  _paletteToDirectColor: (paletteColor) ->
+    palette = @palette()
+    palette.ramps[paletteColor.ramp].shades[paletteColor.shade]
 
   editorDrawComponents: -> [
     @engineComponent

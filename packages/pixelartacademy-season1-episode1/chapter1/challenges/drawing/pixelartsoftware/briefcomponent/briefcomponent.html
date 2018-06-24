@@ -1,0 +1,18 @@
+<template name="PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent">
+  {{#with sprite}}
+    <ul class="actions">
+      {{#if completed}}
+        <li class="action completed">
+          Done!
+        </li>
+      {{else}}
+        <li class="action">
+          <button class="button edit-button">Edit</button>
+        </li>
+      {{/if}}
+      <li class="action">
+        <button class="button reset-button">Reset</button>
+      </li>
+    </ul>
+  {{/with}}
+</template>

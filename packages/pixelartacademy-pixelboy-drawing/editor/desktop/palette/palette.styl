@@ -7,61 +7,131 @@
   width 48rem
   height 139rem
 
-  &::before
-    content ''
-    position absolute
-    z-index 3
-    top 0
-    right 0
-    width 58rem
-    height 142rem
-    background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette-shadow.png')
-    mix-blend-mode multiply
+  &.swatches
+    &::before
+      content ''
+      position absolute
+      z-index 3
+      top 0
+      right 0
+      width 58rem
+      height 142rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette-shadow.png')
+      mix-blend-mode multiply
 
-  &::after
-    content ''
-    absolute-cover()
-    z-index 3
-    pointer-events none
-    background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette.png')
+    &::after
+      content ''
+      absolute-cover()
+      z-index 3
+      pointer-events none
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette.png')
 
-  .colors
-    display flex
-    position absolute
-    width 46rem
-    bottom 10rem
-    left 2rem
-    flex-direction row
-    flex-wrap wrap-reverse
+    .colors
+      display flex
+      position absolute
+      width 46rem
+      bottom 10rem
+      left 2rem
+      flex-direction row
+      flex-wrap wrap-reverse
 
-    .ramp
-      width 15rem
-      height 15rem
-      margin 1rem 8rem 0 0
+      .ramp
+        width 15rem
+        height 15rem
+        margin 1rem 8rem 0 0
 
-      .shade
-        width 100%
-        height 100%
+        .shade
+          width 100%
+          height 100%
+          position relative
+          cursor pointer
+
+          &::after
+            content ''
+            display none
+            position absolute
+            z-index 4
+            top -2rem
+            bottom -2rem
+            left -3rem
+            right -3rem
+            border 1rem dotted atariGrey(5)
+
+          &.active::after
+            display block
+
+          .color
+            absolute-cover()
+            z-index 3
+
+  &.tray
+    &::before
+      content ''
+      position absolute
+      z-index 3
+      top 2rem
+      right 0
+      width 56rem
+      height 139rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette-tray-shadow.png')
+      mix-blend-mode multiply
+
+    &::after
+      content ''
+      absolute-cover()
+      z-index 3
+      pointer-events none
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette-tray.png')
+
+    .colors
+      display flex
+      position absolute
+      z-index 4
+      top 13rem
+      left 11rem
+      width 32rem
+      height 120rem
+      flex-direction column
+      flex-wrap wrap
+
+      .ramp
         position relative
-        cursor pointer
+        width 15rem
+        margin 0 3rem 6rem 0
 
-        &::after
-          content ''
-          display none
-          position absolute
-          z-index 4
-          top -2rem
-          bottom -2rem
-          left -3rem
-          right -3rem
-          border 1rem dotted lightgrey
+        .shade
+          width 13rem
+          height 13rem
+          margin-top -2rem
+          position relative
+          cursor pointer
 
-        &.active::after
-          display block
+          &::after
+            content ''
+            display none
+            position absolute
+            z-index 4
+            top -2rem
+            bottom -2rem
+            left -2rem
+            right -2rem
+            border 1rem dotted atariGrey(3)
+            pointer-events none
 
-        .color
-          absolute-cover()
-          z-index 3
+          &.active::after
+            display block
+
+          .color
+            absolute-cover()
+            z-index 3
 
   .pixelartacademy-pixelboy-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
     right 0
+
+.pixelartacademy-pixelboy-apps-drawing-editor-desktop-palette-trayramp
+  absolute-cover()
+  top -2rem
+  z-index 3
+
+  .canvas
+    absolute-cover-size()

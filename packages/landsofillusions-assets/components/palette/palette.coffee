@@ -8,11 +8,14 @@ class LOI.Assets.Components.Palette extends AM.Component
     super
 
     @paletteData = new ComputedField =>
-      paletteId = @options.paletteId()
+      if paletteData = @options.paletteData?()
+        return paletteData
+      
+      if paletteId = @options.paletteId?()
+        LOI.Assets.Palette.forId.subscribe paletteId if paletteId
+        return LOI.Assets.Palette.documents.findOne paletteId
 
-      LOI.Assets.Palette.forId.subscribe paletteId if paletteId
-
-      LOI.Assets.Palette.documents.findOne paletteId
+      null
     
     @currentRamp = new ReactiveField null
     @currentShade = new ReactiveField null
@@ -21,27 +24,17 @@ class LOI.Assets.Components.Palette extends AM.Component
       @paletteData()?.ramps[@currentRamp()]?.shades[@currentShade()]
       
   palette: ->
-    # Prepare ramps and shades with extra information. First deep copy the data.
-    data = @paletteData()
-    return unless data
-
-    palette = $.extend true, {}, data
+    return unless paletteData = @paletteData()
 
     # Go over all shades of all ramps.
-    rampIndex = 0
-    for ramp in palette.ramps
-      shadeIndex = 0
-      for shade in ramp.shades
-        # Replace the data in this place with extra information.
-        palette.ramps[rampIndex].shades[shadeIndex] =
-          ramp: rampIndex
-          shade: shadeIndex
-          color: THREE.Color.fromObject shade
+    ramps = for ramp, rampIndex in paletteData.ramps
+      shades = for shade, shadeIndex in ramp.shades
+        ramp: rampIndex
+        shade: shadeIndex
+        color: THREE.Color.fromObject shade
 
-        shadeIndex++
-      rampIndex++
-
-    palette
+      {shades}
+    {ramps}
 
   colorStyle: ->
     color = @currentData().color

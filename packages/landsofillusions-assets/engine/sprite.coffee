@@ -5,7 +5,7 @@ class LOI.Assets.Engine.Sprite
     @ready = new ComputedField =>
       return unless spriteData = @options.spriteData()
       return unless spriteData.layers?.length and spriteData.bounds
-      return unless LOI.Assets.Palette.documents.findOne spriteData.palette._id
+      return unless spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
 
       true
 
@@ -24,7 +24,7 @@ class LOI.Assets.Engine.Sprite
 
   _render: (renderOptions) ->
     spriteData = @options.spriteData()
-    palette = LOI.Assets.Palette.documents.findOne spriteData.palette._id
+    palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
 
     # Build a new canvas if needed.
     @_canvas ?= $('<canvas>')[0]

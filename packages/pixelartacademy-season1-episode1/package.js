@@ -11,10 +11,11 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-season1');
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartacademy-practice');
-  api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartdatabase');
   api.use('retronator:retronator-hq');
   api.use('retronator:retronator-landsofillusions');
   api.use('retronator:retronator-residence');
@@ -87,6 +88,9 @@ Package.onUse(function(api) {
   api.addFile('chapter1/challenges/drawing..');
 
   api.addFile('chapter1/challenges/drawing/pixelartsoftware..');
+  api.addFile('chapter1/challenges/drawing/pixelartsoftware/copyreference');
+  api.addFile('chapter1/challenges/drawing/pixelartsoftware/assets');
+  api.addUnstyledComponent('chapter1/challenges/drawing/pixelartsoftware/briefcomponent..');
 
   api.addFile('chapter1/challenges/drawing/tutorial..');
 

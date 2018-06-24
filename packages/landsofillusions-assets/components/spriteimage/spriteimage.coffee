@@ -29,6 +29,7 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
     if @options.loadPalette
       @autorun (computation) =>
         return unless spriteData = @spriteData()
+        return if spriteData.customPalette
         
         LOI.Assets.Palette.forId.subscribe @, spriteData.palette._id
 

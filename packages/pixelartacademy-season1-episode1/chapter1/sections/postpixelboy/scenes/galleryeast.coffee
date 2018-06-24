@@ -24,7 +24,15 @@ class C1.PostPixelBoy.GalleryEast extends LOI.Adventure.Scene
 
     @setCallbacks
       ReceiveChallengeAsset: (complete) =>
-        console.log "adding asset"
+        assetId = @ephemeralState 'assetId'
+
+        challengeAssets = C1.Challenges.Drawing.PixelArtSoftware.state 'assets'
+        challengeAssets ?= []
+        challengeAssets.push
+          id: "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
+
+        C1.Challenges.Drawing.PixelArtSoftware.state 'assets', challengeAssets
+
         complete()
 
       BackToMainQuestions: (complete) =>

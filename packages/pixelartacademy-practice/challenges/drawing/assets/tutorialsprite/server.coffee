@@ -1,14 +1,13 @@
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
+PNG = Npm.require('pngjs').PNG
+Request = request
 
 class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Challenges.Drawing.TutorialSprite
   @createSprite: (characterId) ->
-    palette = LOI.Assets.Palette.documents.findOne name: @restrictedPaletteName()
-    
     size = @fixedDimensions()
     
     spriteData =
-      palette: _.pick palette, '_id'
       bounds:
         left: 0
         right: size.width - 1
@@ -22,6 +21,41 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Challe
       layers: [
         pixels: []
       ]
+
+    if paletteName = @restrictedPaletteName?()
+      palette = LOI.Assets.Palette.documents.findOne name: paletteName
+      spriteData.palette = _.pick palette, '_id'
+
+    else if paletteImageUrl = @customPaletteImageUrl()
+      paletteImageResponse = Request.getSync Meteor.absoluteUrl(paletteImageUrl), encoding: null
+
+      png = PNG.sync.read paletteImageResponse.body
+      ramps = []
+
+      for y in [0...png.height]
+        rampOffset = y * png.width * 4
+
+        # We have a ramp if the first pixel is not transparent.
+        continue unless png.data[rampOffset + 3]
+
+        shades = []
+
+        for x in [0...png.width]
+          shadeOffset = rampOffset + x * 4
+
+          # We have no more shades after we reach a transparent pixel.
+          break unless png.data[shadeOffset + 3]
+
+          shades.push
+            r: png.data[shadeOffset] / 255
+            g: png.data[shadeOffset + 1] / 255
+            b: png.data[shadeOffset + 2] / 255
+
+        ramps.push
+          shades: shades
+
+      spriteData.customPalette =
+        ramps: ramps
 
     if references = @references?()
       spriteData.references = []

@@ -7,6 +7,7 @@ class LOI.Assets.VisualAsset extends AM.Document
   # palette: the color palette that this sprite uses (or null if only direct colors are used)
   #   _id
   #   name
+  # customPalette: optional embedded palette object with the same structure as a palette document
   # materials: map of named colors
   #   (materialIndex):
   #     name: what the color represents

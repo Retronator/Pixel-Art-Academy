@@ -11,7 +11,8 @@ Package.describe({
 });
 
 Npm.depends({
-  'quill-delta': '3.6.2'
+  'quill-delta': '3.6.2',
+  'pngjs': '2.3.0'
 });
 
 Package.onUse(function(api) {
@@ -19,6 +20,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartdatabase');
+  api.use('froatsnook:request');
 
   api.use('jparker:crypto-aes');
 

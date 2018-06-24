@@ -36,6 +36,13 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
         fields:
           palette: 1
       )?.palette?._id
+      
+    @paletteData = new ComputedField =>
+      # Minimize reactivity to only custom palette changes.
+      LOI.Assets.Sprite.documents.findOne(@spriteId(),
+        fields:
+          customPalette: 1
+      )?.customPalette
 
     @activeTool = new ReactiveField null
 
@@ -94,6 +101,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
     @palette new @constructor.Palette
       paletteId: @paletteId
+      paletteData: @paletteData
       theme: @
 
     @references new @constructor.References

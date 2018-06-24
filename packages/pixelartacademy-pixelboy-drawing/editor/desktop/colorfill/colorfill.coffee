@@ -19,4 +19,4 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.ColorFill extends AM.Component
     active = @editor.activeTool() instanceof LOI.Assets.SpriteEditor.Tools.ColorFill
 
     backgroundColor: "##{color.getHexString()}"
-    opacity: if active then 0.9 else 0.7
+    opacity: if active then 1 else 0.9
