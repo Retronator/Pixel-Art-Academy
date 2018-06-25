@@ -22,7 +22,7 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
   ]
 
   @customPaletteImageUrl: ->
-    return null if @restrictedPaletteName?()
+    return null if @restrictedPaletteName()
 
     "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@image()}-template.png"
 
@@ -54,3 +54,6 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
   editorDrawComponents: ->
     # We send an empty array so we don't show the on-canvas reference.
     []
+
+  maxClipboardScale: ->
+    @constructor.maxClipboardScale?()

@@ -28,6 +28,10 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
       # 7 -> 9
       assetScale = assetData.scale()
       scale = Math.ceil assetScale * 1.2
+      
+      # Check if the asset provides a maximum scale.
+      if maxScale = assetData.asset.maxClipboardScale?()
+        scale = Math.min scale, maxScale
 
       contentWidth = spriteData.bounds.width * scale
       contentHeight = spriteData.bounds.height * scale

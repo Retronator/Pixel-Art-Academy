@@ -22,7 +22,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Challe
         pixels: []
       ]
 
-    if paletteName = @restrictedPaletteName?()
+    if paletteName = @restrictedPaletteName()
       palette = LOI.Assets.Palette.documents.findOne name: paletteName
       spriteData.palette = _.pick palette, '_id'
 

@@ -75,8 +75,10 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
   fixedDimensions: -> @constructor.fixedDimensions()
 
   restrictedPalette: ->
+    return unless restrictedPaletteName = @constructor.restrictedPaletteName()
+
     LOI.Assets.Palette.documents.findOne
-      name: @constructor.restrictedPaletteName()
+      name: restrictedPaletteName
 
   spriteInfo: ->
     translation = AB.translate @_translationSubscription, 'spriteInfo'

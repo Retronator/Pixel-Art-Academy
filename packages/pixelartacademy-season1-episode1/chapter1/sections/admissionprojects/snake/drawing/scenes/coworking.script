@@ -6,10 +6,13 @@
 
 ## HowToDraw
 
-aeronaut: 
-  You'll need some sort of drawing software that can handle pixel art.
-  You have two options. One is to edit the sprites directly in the Drawing app.
-  The other is to download the sprites and use any software you want to modify the art.
+aeronaut:
+  You use the Drawing app on your PixelBoy.
+  You can find the Snake sprites in the Projects section.
+  
+<!--   You'll need some sort of drawing software that can handle pixel art. -->
+<!--   You have two options. One is to edit the sprites directly in the Drawing app. -->
+<!--   The other is to download the sprites and use any software you want to modify the art. -->
   
 ### BackToMainQuestions
 
@@ -22,8 +25,11 @@ aeronaut:
 ## HowToEditInApp
 
 aeronaut:
-  You'll need to get an editor first.
-  Talk to Alexandra all the way upstairs in the art studio. She can get you set up.
+  First you'll need to select the Desktop editor in the Settings.
+  Then the Edit option will appear when you look at the Snake project sprites.
+  Tutorials will also appear in the Challenges section if you need more help.
+<!--  You'll need to get an editor first. -->
+<!--  Talk to Alexandra all the way upstairs in the art studio. She can get you set up. -->
   
 ### BackToMainQuestions
 

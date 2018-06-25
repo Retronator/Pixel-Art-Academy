@@ -22,6 +22,9 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References extends LOI.Assets.Com
 
       @opened false
 
+      # Return true so we don't interfere with other click events.
+      true
+
   onDestroyed: ->
     $(document).off '.pixelartacademy-pixelboy-apps-drawing-editor-desktop-references'
 

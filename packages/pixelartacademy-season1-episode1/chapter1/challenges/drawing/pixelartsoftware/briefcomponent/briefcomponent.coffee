@@ -6,6 +6,9 @@ C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extends AM.Component
   @register 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent'
 
+  @restrictedPaletteName: ->
+    @paletteName?()
+
   constructor: (@sprite) ->
     super
     
@@ -13,6 +16,12 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
     super
     
     @parent = @ancestorComponentWith 'editAsset'
+
+  canEdit: ->
+    PAA.PixelBoy.Apps.Drawing.state('editorId')?
+
+  canDownloadAndUpload: ->
+    PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
 
   events: ->
     super.concat

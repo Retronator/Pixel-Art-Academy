@@ -22,6 +22,9 @@ class HQ.Actors.Corinne extends LOI.Adventure.Thing
       corinne: HQ.Actors.Corinne
 
   onCommand: (commandResponse) ->
+    return
+    
+    # TODO: Enable Corinne's conversation.
     return unless corinne = LOI.adventure.getCurrentThing HQ.Actors.Corinne
 
     commandResponse.onPhrase

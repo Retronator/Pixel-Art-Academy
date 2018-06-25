@@ -30,6 +30,7 @@ assets =
 
       Artist: Weston Tracy
     """
+    maxClipboardScale: -> 2.5
     artist:
       name:
         first: 'Weston'
@@ -43,9 +44,11 @@ for assetId, asset of assets
     class CopyReference[assetId] extends CopyReference
       @id: -> "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
       @fixedDimensions: asset.dimensions
-      @restrictedPaletteName: asset.paletteName
+      # Note: we don't override restrictedPaletteName since we expect the function to exist.
+      @paletteName: asset.paletteName
       @image: asset.image
       @spriteInfo: asset.spriteInfo
+      @maxClipboardScale: asset.maxClipboardScale
       @initialize()
 
     # On the server also create PADB entries.

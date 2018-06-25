@@ -10,18 +10,16 @@ alexandra: How else can I help? `_IntroductionOver`
 ## MainQuestions
 
 * Is that your painting? -> [YourPainting]
-* Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting`
-* *MainQuestions*
+<!-- * Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting` -->
+<!-- * *MainQuestions* -->
 * Thank you, bye!
-
-alexandra: Bye!
 
 -> [End]
 
 ## YourPainting
 
 alexandra: 
-  Yes, it's the next in my Money series.
+  Yes! It's the next in my Money Flower series.
 
 -> [MainQuestions]
 
