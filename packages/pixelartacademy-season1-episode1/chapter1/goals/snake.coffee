@@ -61,9 +61,11 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
     @predecessors: -> [Goal.Play]
 
-    @requiredInterests: -> ['pixel art software']
+    # TODO: @requiredInterests: -> ['pixel art software']
 
     @initialize()
+    
+    @completed: ->
 
   class @PlayAgain extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.PlayAgain'

@@ -46,8 +46,15 @@ class PAA.Practice.Project.Asset
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
+    @data = new ComputedField =>
+      return unless assets = @project.assetsData()
+      _.find assets, (asset) => asset.id is @id()
+    ,
+      true
+
   destroy: ->
     @_translationSubscription.stop()
+    @data.stop()
 
   id: -> @constructor.id()
 
