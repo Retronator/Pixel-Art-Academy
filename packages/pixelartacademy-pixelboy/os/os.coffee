@@ -55,11 +55,14 @@ class PAA.PixelBoy.OS extends AM.Component
 
     # Set currentApp based on url.
     Tracker.autorun (computation) =>
+      # Don't route until apps are created.
+      return unless currentApps = @currentApps()
+
       appUrl = @currentAppUrl()
       appClass = PAA.PixelBoy.App.getClassForUrl(appUrl) or PAA.PixelBoy.Apps.HomeScreen
 
       Tracker.nonreactive =>
-        newApp = _.find @currentApps(), (app) => app instanceof appClass
+        newApp = _.find currentApps, (app) => app instanceof appClass
         currentApp = @currentApp()
 
         return if newApp is currentApp

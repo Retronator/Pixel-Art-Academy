@@ -61,18 +61,30 @@ class LOI.Assets.Components.Toolbox extends AM.Component
   onKeyDown: (event) ->
     key = event.which
 
-    # Prevent key repeating.
-    return if key is @_activeKey
+    # TODO: Figure out when to prevent key repeating. It's not always desirable (undo/redo).
+    # return if key is @_activeKey
 
     # Find if the pressed key matches any of the tools' shortcuts.
-    if targetTool = _.find(@options.tools(), (tool) => key is tool.shortcut)
+    keyboardState = AC.Keyboard.getState()
+    commandOrCtrlDown = keyboardState.isCommandOrCtrlDown()
+    shiftDown = keyboardState.isKeyDown AC.Keys.shift
+
+    targetTool = _.find @options.tools(), (tool) =>
+      return unless key is tool.shortcut
+      return if shiftDown and not tool.shortcutShift
+      return if commandOrCtrlDown and not tool.shortcutCommandOrCtrl
+      true
+
+    if targetTool
       @activateTool targetTool
+      event.preventDefault()
 
     # Look if it matches the hold shortcut.
     if targetTool = _.find(@options.tools(), (tool) => key is tool.holdShortcut)
       # Store currently active tool before switching the tools.
       @_storedTool @options.activeTool()
       @activateTool targetTool
+      event.preventDefault()
 
     @_activeKey = key
 

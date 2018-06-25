@@ -134,9 +134,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       "#{PAA.Practice.Software.Tools.ToolKeys.ColorFill}": LOI.Assets.SpriteEditor.Tools.ColorFill
       "#{PAA.Practice.Software.Tools.ToolKeys.ColorPicker}": LOI.Assets.SpriteEditor.Tools.ColorPicker
       "#{PAA.Practice.Software.Tools.ToolKeys.MoveCanvas}": @constructor.Tools.MoveCanvas
-
-    # We need to provide (editor's) sprite data as the tools will expect it (since they think we are the editor class).
-    @spriteData = @spriteData
+      "#{PAA.Practice.Software.Tools.ToolKeys.Undo}": LOI.Assets.SpriteEditor.Tools.Undo
+      "#{PAA.Practice.Software.Tools.ToolKeys.Redo}": LOI.Assets.SpriteEditor.Tools.Redo
 
     @toolInstances = {}
     

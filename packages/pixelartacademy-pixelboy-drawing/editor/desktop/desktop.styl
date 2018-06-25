@@ -160,6 +160,32 @@
           width 72rem
           height 72rem
 
+        .undo
+        .redo
+          top calc(50% + 33rem)
+          width 25rem
+          height 10rem
+
+          &.disabled
+            display none
+
+          .tool-button
+            opacity 1
+            padding 0
+            border none
+            background none
+            freehand()
+            color atariGrey(3)
+
+            &:hover
+              color atariGrey(2)
+
+        .undo
+          left -72rem
+
+        .redo
+          left -47rem
+
     .landsofillusions-assets-components-navigator
       position absolute
       bottom -62rem
@@ -324,6 +350,12 @@
             .color-fill
               top -22rem
               right -6rem
+
+            .undo
+              left 3rem
+
+            .redo
+              left 28rem
 
       &:not(.drawing-active)
         .table-item

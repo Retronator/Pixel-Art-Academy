@@ -10,3 +10,5 @@ class PAA.Practice.Software.Tools
     MoveCanvas: 'MoveCanvas'
     Zoom: 'Zoom'
     References: 'References'
+    Undo: 'Undo'
+    Redo: 'Redo'
