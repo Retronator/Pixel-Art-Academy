@@ -132,15 +132,15 @@ class LOI.Assets.VisualAsset extends AM.Document
     modifier = _.cloneDeep forward
 
     # Add history step.
+    historyPosition = @historyPosition or 0
+
     modifier.$push ?= {}
     modifier.$push.history =
-      $position: @historyPosition
+      $position: historyPosition
       $each: [EJSON.stringify {forward, backward}]
-      $slice: @historyPosition + 1
+      $slice: historyPosition + 1
 
     modifier.$set ?= {}
-    modifier.$set.historyPosition = (@historyPosition or 0) + 1
-
-    console.log "modifier", modifier
+    modifier.$set.historyPosition = historyPosition + 1
 
     @constructor.documents.update @_id, modifier

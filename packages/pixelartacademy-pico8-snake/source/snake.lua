@@ -121,10 +121,10 @@ end
 function _update()
   --sprite update routine
   local updated_pixels_count = peek(0x5f80)
-  for i=0,updated_pixels_count-1 do
-    local x =peek(0x5f81 + i * 3)
-    local y =peek(0x5f81 + i * 3 + 1)
-    local color =peek(0x5f81 + i * 3 + 2)
+  for i = 0, updated_pixels_count - 1 do
+    local x = peek(0x5f81 + i * 3)
+    local y = peek(0x5f81 + i * 3 + 1)
+    local color = peek(0x5f81 + i * 3 + 2)
     sset(x, y, color)
   end
 

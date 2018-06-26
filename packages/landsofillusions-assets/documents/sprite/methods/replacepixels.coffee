@@ -11,7 +11,29 @@ LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
 
   LOI.Assets.VisualAsset._authorizeAssetAction sprite
 
-  modifier = {}
+  layerPixels = sprite.layers[layerIndex]?.pixels
+
+  forward =
+    $set:
+      "layers.#{layerIndex}.pixels": pixels
+
+  if layerPixels
+    # Replace the old pixels.
+    backward =
+      $set:
+        "layers.#{layerIndex}.pixels": layerPixels
+
+  else if sprite.layers[layerIndex]
+    # Delete the pixels property.
+    backward =
+      $unset:
+        "layers.#{layerIndex}.pixels"
+
+  else
+    # Delete the whole layer. Since we can't pull by index, the best we can do is set it to null with unset.
+    backward =
+      $unset:
+        "layers.#{layerIndex}"
 
   if sprite.bounds.fixed
     # Make sure pixels are inside bounds.
@@ -23,7 +45,8 @@ LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
     # Recalculate bounds completely.
     bounds = null
 
-    sprite.layers[layerIndex] = pixels
+    sprite.layers[layerIndex] ?= {}
+    sprite.layers[layerIndex].pixels = pixels
 
     for layer, index in sprite.layers
       for pixel in layer.pixels
@@ -37,10 +60,6 @@ LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
         else
           bounds = left: pixel.x, right: pixel.x, top: pixel.y, bottom: pixel.y
 
-    modifier.$set ?= {}
-    modifier.$set.bounds = bounds
+    forward.$set.bounds = bounds
 
-  modifier.$set ?= {}
-  modifier.$set["layers.#{layerIndex}.pixels"] = pixels
-
-  LOI.Assets.Sprite.documents.update spriteId, modifier
+  sprite._applyOperation forward, backward

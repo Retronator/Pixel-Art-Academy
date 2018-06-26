@@ -70,14 +70,20 @@ class LOI.Assets.Components.Toolbox extends AM.Component
     shiftDown = keyboardState.isKeyDown AC.Keys.shift
 
     targetTool = _.find @options.tools(), (tool) =>
-      return unless key is tool.shortcut
-      return if shiftDown and not tool.shortcutShift
-      return if commandOrCtrlDown and not tool.shortcutCommandOrCtrl
-      true
+      _.every [
+        key is tool.shortcut
+        shiftDown is tool.shortcutShift
+        commandOrCtrlDown is tool.shortcutCommandOrCtrl
+      ]
 
     if targetTool
       @activateTool targetTool
+
+      # Prevent browser shortcuts from firing.
       event.preventDefault()
+      
+      # Prevent other in-game key listeners to also fire.
+      event.stopImmediatePropagation()
 
     # Look if it matches the hold shortcut.
     if targetTool = _.find(@options.tools(), (tool) => key is tool.holdShortcut)

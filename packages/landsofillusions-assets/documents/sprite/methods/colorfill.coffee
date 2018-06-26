@@ -1,9 +1,9 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
+LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
   check spriteId, Match.DocumentId
-  check layer, Match.Integer
+  check layerIndex, Match.Integer
   check newTargetPixel, Match.ObjectIncluding
     x: Match.Integer
     y: Match.Integer
@@ -25,10 +25,13 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
   unless sprite.bounds.left <= newTargetPixel.x <= sprite.bounds.right and sprite.bounds.top <= newTargetPixel.y <= sprite.bounds.bottom
     throw new AE.ArgumentOutOfRangeException "Pixel to be filled must be inside of bounds."
 
+  forward = {}
+  backward = {}
+
   # Create a map for fast pixel retrieval. Start will all empty objects.
   pixelMap = []
 
-  layerPixels = sprite.layers[layer].pixels
+  layerPixels = sprite.layers[layerIndex].pixels
 
   # Fill occupied spots with pixels.
   for pixel in layerPixels
@@ -69,10 +72,28 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
   
     # All the visited pixels are of correct color and should be filled!
     for pixel in visited
-      for key in ['paletteColor', 'materialIndex']
-        pixel[key] = newTargetPixel[key]
-        delete pixel[key] unless pixel[key]?
-        
+      pixelIndex = layerPixels.indexOf pixel
+      for key in ['paletteColor', 'directColor', 'materialIndex']
+        if newTargetPixel[key]
+          # Set new or existing property.
+          forward.$set ?= {}
+          forward.$set["layers.#{layerIndex}.pixels.#{pixelIndex}.#{key}"] = newTargetPixel[key]
+
+        else if pixel[key]
+          # Unset existing property.
+          forward.$unset ?= {}
+          forward.$unset["layers.#{layerIndex}.pixels.#{pixelIndex}.#{key}"] = true
+
+        if pixel[key]
+          # Reset the old property.
+          backward.$set ?= {}
+          backward.$set["layers.#{layerIndex}.pixels.#{pixelIndex}.#{key}"] = pixel[key]
+
+        else if newTargetPixel[key]
+          # The property was not set previously, so we remove it.
+          backward.$unset ?= {}
+          backward.$unset["layers.#{layerIndex}.pixels.#{pixelIndex}.#{key}"] = true
+
   else
     # We are filling a transparent area.
     createPixel = (x, y) -> _.extend _.cloneDeep(newTargetPixel), {x, y}
@@ -105,10 +126,14 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layer, newTargetPixel) ->
 
       created.push testPixel
 
-    # All the created pixels should be added!
-    layerPixels = layerPixels.concat created
+    # All the created pixels should be added.
+    forward.$push ?= {}
+    forward.$push["layers.#{layerIndex}.pixels"] = $each: created
 
-  # Replace the whole pixels array.
-  LOI.Assets.Sprite.documents.update spriteId,
-    $set:
-      "layers.#{layer}.pixels": layerPixels
+    # Going back, restore previous amount of pixels.
+    backward.$push ?= {}
+    backward.$push["layers.#{layerIndex}.pixels"] =
+      $each: []
+      $slice: layerPixels.length
+
+  sprite._applyOperation forward, backward
