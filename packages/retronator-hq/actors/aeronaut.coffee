@@ -24,6 +24,8 @@ class HQ.Actors.Aeronaut extends LOI.Adventure.Thing
   onCommand: (commandResponse) ->
     return unless aeronaut = LOI.adventure.getCurrentThing HQ.Actors.Aeronaut
 
+    @script.ephemeralState 'gameFinished', PAA.Season1.Episode1.Chapter1.AdmissionProjects.Snake.Drawing.finished()
+
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, aeronaut]
       action: => @startScript()

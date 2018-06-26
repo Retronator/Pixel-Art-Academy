@@ -65,4 +65,62 @@ aeronaut:
 
 -> [End]
 
+## CompletedDrawingChoice
+
+* I finished drawing the sprites!
+
+## CompletedDrawing
+
+-> [HaventScored10PointsYet] `_highScore < 10`
+
+aeronaut:
+  Alright, let's take a look!
+  
+> _char_ sends the updated assets to Reuben.
+
+aeronaut: PICO-8 … launching …
+
+> You hear the familiar blip as the console boots.
+
+aeronaut: YES! Look at this splash screen.
+
+> Reuben continues to play the game.
+
+aeronaut: 
+  Ah, this is great.
+  Thank you _char_, I really appreciate it.
+  
+* I'm glad you like it. -> [Glad]
+* Thank you! I liked working on this a lot.
+
+aeronaut: 
+  That's awesome!
+  Yeah, making games is great.
+
+-> [FinalTalk]
+
+## Glad
+
+aeronaut: Yes! I'm glad you helped with the art.
+
+## FinalTalk
+
+> Reuben sets the console aside and looks at _char_ with a big smile.
+
+aeronaut:
+  Well, seems like your admission project is complete!
+  When you have all other admission requisites done, talk to Shelley to finalize your admission.
+  Thanks again!
+
+## AdmissionProjectCompleted
+
+-> [End]
+
+## HaventScored10PointsYet
+
+aeronaut:
+  Did you test the game yet? Score at least 10 points to give it a good playthrough.
+
+-> [End]
+
 ## End

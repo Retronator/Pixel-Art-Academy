@@ -37,6 +37,9 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
             hasDrawingApp = _.find pixelBoy.os.currentApps, (app) => app instanceof PAA.PixelBoy.Apps.Drawing
             @ephemeralState 'hasDrawingApp', hasDrawingApp
 
+            # Reset high score to force replay.
+            PAA.Pico8.Cartridges.Snake.state 'highScore', 0
+
           complete()
 
   # Listener
@@ -53,7 +56,7 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
       highScore = PAA.Pico8.Cartridges.Snake.state 'highScore'
       if highScore >= 5
         # Store high score to script.
-        @script.state 'highScore', highScore
+        @script.ephemeralState 'highScore', highScore
         choicePlaceholderResponse.addChoice @script.startNode.labels.Scored5OrMore.next
 
       else

@@ -127,7 +127,7 @@ aeronaut: Take your time. Once you get at least 5 points, let me know.
 
 ## Scored5OrMore
 
-* I got `highScore` points!
+* I got `_highScore` points!
 
 aeronaut:
   Nice! 

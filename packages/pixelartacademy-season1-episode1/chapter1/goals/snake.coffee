@@ -66,6 +66,19 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @initialize()
     
     @completed: ->
+      return unless projectId = C1.Projects.Snake.readOnlyState 'activeProjectId'
+
+      PAA.Practice.Project.forId.subscribe projectId
+      return unless project = PAA.Practice.Project.documents.findOne projectId
+
+      for asset in project.assets
+        LOI.Assets.Sprite.forId.subscribe asset.sprite._id
+        return unless sprite = LOI.Assets.Sprite.documents.findOne asset.sprite._id
+
+        # We know the player has changed the sprite if the history position is not zero.
+        return unless sprite.historyPosition
+
+      true
 
   class @PlayAgain extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.PlayAgain'
@@ -82,6 +95,9 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @predecessors: -> [Goal.Draw]
 
     @initialize()
+
+    @completed: ->
+      C1.AdmissionProjects.Snake.Drawing.Coworking.Listener.Script.state 'AdmissionProjectCompleted'
 
   @tasks: -> [
     @Talk

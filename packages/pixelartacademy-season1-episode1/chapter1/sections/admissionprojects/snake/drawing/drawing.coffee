@@ -16,4 +16,5 @@ class C1.AdmissionProjects.Snake.Drawing extends LOI.Adventure.Section
   @started: ->
     @requireFinishedSections C1.AdmissionProjects.Snake.Intro
     
-  # TODO: End the section when the user has reported the project to Reuben.
+  @finished: ->
+    @Coworking.Listener.Script.state 'AdmissionProjectCompleted'

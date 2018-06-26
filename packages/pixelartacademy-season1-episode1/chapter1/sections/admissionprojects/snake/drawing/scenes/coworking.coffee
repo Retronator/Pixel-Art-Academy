@@ -13,7 +13,21 @@ class C1.AdmissionProjects.Snake.Drawing.Coworking extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/admissionprojects/snake/drawing/scenes/coworking.script'
 
   @initialize()
+  
+  constructor: ->
+    super
 
+    # Wait for the drawing task to be completed. We do this reactively since querying wires subscribes internally.
+    @completedDrawing = new ComputedField =>
+      C1.Goals.Snake.Draw.completed()
+    ,
+      true
+
+  destroy: ->
+    super
+
+    @completedDrawing.stop()
+    
   # Script
 
   initializeScript: ->
@@ -33,9 +47,20 @@ class C1.AdmissionProjects.Snake.Drawing.Coworking extends LOI.Adventure.Scene
   # Listener
 
   onChoicePlaceholder: (choicePlaceholderResponse) ->
+    coworking = @options.parent
+    
     return unless choicePlaceholderResponse.scriptId is HQ.Actors.Aeronaut.id()
     return unless choicePlaceholderResponse.placeholderId is 'MainQuestions'
 
+    if coworking.completedDrawing()
+      Tracker.nonreactive =>
+        # Store high score to script.
+        highScore = PAA.Pico8.Cartridges.Snake.state 'highScore'
+        @script.ephemeralState 'highScore', highScore
+
+      choicePlaceholderResponse.addChoice @script.startNode.labels.CompletedDrawingChoice.next
+      return
+    
     labels = [
       'HowToDrawChoice'
       'HowToEditInAppChoice'
