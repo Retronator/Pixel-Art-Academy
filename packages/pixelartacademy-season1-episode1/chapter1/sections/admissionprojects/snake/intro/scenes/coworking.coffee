@@ -34,8 +34,8 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
           else
             # Store if the player has the drawing app.
             pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
-            hasDrawingApp = _.find pixelBoy.os.currentApps, (app) => app instanceof PAA.PixelBoy.Apps.Drawing
-            @ephemeralState 'hasDrawingApp', hasDrawingApp
+            drawingApp = _.find pixelBoy.os.currentApps(), (app) => app instanceof PAA.PixelBoy.Apps.Drawing
+            @ephemeralState 'hasDrawingApp', drawingApp?
 
             # Reset high score to force replay.
             PAA.Pico8.Cartridges.Snake.state 'highScore', 0
@@ -54,9 +54,11 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
     # If the player got the cartridge, wait on the player to score 5 points
     if @script.state 'ReceiveCartridge'
       highScore = PAA.Pico8.Cartridges.Snake.state 'highScore'
+
       if highScore >= 5
         # Store high score to script.
-        @script.ephemeralState 'highScore', highScore
+        Tracker.nonreactive => @script.ephemeralState 'highScore', highScore
+
         choicePlaceholderResponse.addChoice @script.startNode.labels.Scored5OrMore.next
 
       else
@@ -85,7 +87,6 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
 
     # If player has the snake goal and didn't before, let them report it.
     if @script.state('AddToStudyPlan') and hasSnakeGoal
-      console.log "adding"
       choicePlaceholderResponse.addChoice @script.startNode.labels.AddedSnakeGoal.next
       return
 

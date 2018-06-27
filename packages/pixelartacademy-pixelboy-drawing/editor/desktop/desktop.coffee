@@ -97,7 +97,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
     @navigator new LOI.Assets.Components.Navigator
       camera: @pixelCanvas().camera
-      zoomLevels: [100, 200, 300, 400, 600, 800, 1200, 1600]
+      zoomLevels: [50, 100, 200, 300, 400, 600, 800, 1200, 1600]
 
     @palette new @constructor.Palette
       paletteId: @paletteId
@@ -373,4 +373,4 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     toolKey in availableKeys
 
   pico8Enabled: ->
-    @displayedAsset()?.project.constructor.pico8GameSlug
+    @displayedAsset()?.project.pico8Cartridge?

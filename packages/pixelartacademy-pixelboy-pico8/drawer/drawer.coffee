@@ -30,7 +30,6 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
     # We use a cache to avoid reconstruction.
     @_cartridges = {}
 
-    # Instantiates and returns all apps that are available to listen to commands.
     @cartridges = new ComputedField =>
       return unless cartridgesSituation = @cartridgesSituation()
 

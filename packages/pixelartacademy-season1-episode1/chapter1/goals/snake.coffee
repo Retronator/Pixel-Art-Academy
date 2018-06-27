@@ -44,8 +44,9 @@ class C1.Goals.Snake extends PAA.Learning.Goal
       # Make sure the player has the Snake cartridge.
       return unless C1.AdmissionProjects.Snake.Intro.Coworking.Listener.Script.state 'ReceiveCartridge'
 
-      # Require score of 5 or higher.
-      PAA.Pico8.Cartridges.Snake.state('highScore') >= 5
+      # Require score of 5 or higher. Since we reset the high score when the
+      # intro section is finished, we also keep this task completed based on that.
+      PAA.Pico8.Cartridges.Snake.state('highScore') >= 5 or C1.AdmissionProjects.Snake.Intro.finished()
 
   class @Draw extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Draw'

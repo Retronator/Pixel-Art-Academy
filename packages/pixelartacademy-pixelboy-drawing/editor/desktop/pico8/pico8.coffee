@@ -18,20 +18,20 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8 extends AM.Component
 
     @display = @callAncestorWith 'display'
 
-    @device = new PAA.Pico8.Device.Handheld
+    @cartridge = new ComputedField =>
+      return unless asset = @options.asset()
+      asset.project.pico8Cartridge
 
-    # Get all the games.
-    PAA.Pico8.Game.all.subscribe @
+    @device = new PAA.Pico8.Device.Handheld
+      # Relay input/output calls to the cartridge.
+      onInputOutput: (address, value) =>
+        @cartridge()?.onInputOutput? address, value
 
     @autorun (computation) =>
-      return unless asset = @options.asset()
-      return unless slug = asset.project.constructor.pico8GameSlug?()
-      
-      PAA.Pico8.Game.forSlug.subscribe slug
-      
-      return unless game = PAA.Pico8.Game.documents.findOne {slug}
+      return unless cartridge = @cartridge()
+      return unless game = cartridge.game()
 
-      @device.loadGame game, asset.project.projectId
+      @device.loadGame game, @options.asset().project.projectId
 
   activeClass: ->
     'active' if @active()

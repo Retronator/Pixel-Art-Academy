@@ -8,7 +8,6 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Projects.Snake'
     
   @fullName: -> "Snake game"
-  @pico8GameSlug: -> 'snake'
 
   @initialize()
 
@@ -27,9 +26,12 @@ class C1.Projects.Snake extends PAA.Practice.Project.Thing
       ]
     ,
       true
+    
+    @pico8Cartridge = new PAA.Pico8.Cartridges.Snake
 
   destroy: ->
     @assets.stop()
+    @pico8Cartridge.destroy()
 
   # Assets
 
