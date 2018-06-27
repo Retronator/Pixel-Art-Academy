@@ -10,6 +10,9 @@ class C1.Challenges.Drawing.Tutorial.Basics extends C1.Challenges.Drawing.Tutori
 
   @initialize()
 
+  @completed: ->
+    @isAssetCompleted @Shortcuts
+
   # Methods
 
   constructor: ->

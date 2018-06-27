@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PAA.Season1.Episode1.Chapter1
@@ -15,6 +16,8 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
   #   SPRITE
   #   sprite: reference to a sprite
   #     _id
+  @completed: -> throw new AE.NotImplementedException "You must determine when a tutorial is completed."
+
   @isAssetCompleted: (assetClassOrId) ->
     return unless assets = @state 'assets'
 
@@ -44,3 +47,6 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
       return unless asset is b[index]
 
     true
+
+  completed: ->
+    @constructor.completed()
