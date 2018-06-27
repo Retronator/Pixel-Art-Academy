@@ -58,6 +58,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/scenes/inbox');
   api.addFile('chapter1/scenes/apps');
   api.addFile('chapter1/scenes/editors');
+  api.addFile('chapter1/scenes/workbench');
   api.addFile('chapter1/scenes/pico8cartridges');
   api.addThing('chapter1/scenes/sanfranciscoconversation');
 
@@ -145,6 +146,5 @@ Package.onUse(function(api) {
   api.addThing('chapter1/sections/admissionprojects/snake/intro/scenes/coworking');
 
   api.addFile('chapter1/sections/admissionprojects/snake/drawing..');
-  api.addFile('chapter1/sections/admissionprojects/snake/drawing/scenes/workbench');
   api.addThing('chapter1/sections/admissionprojects/snake/drawing/scenes/coworking');
 });

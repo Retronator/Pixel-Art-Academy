@@ -7,7 +7,6 @@ class C1.AdmissionProjects.Snake.Drawing extends LOI.Adventure.Section
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionProjects.Snake.Drawing'
 
   @scenes: -> [
-    @Workbench
     @Coworking
   ]
 

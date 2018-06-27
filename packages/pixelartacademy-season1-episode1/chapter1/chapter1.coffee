@@ -35,6 +35,7 @@ class PAA.Season1.Episode1.Chapter1 extends LOI.Adventure.Chapter
     @Inbox
     @Apps
     @Editors
+    @Workbench
     @Pico8Cartridges
     @SanFranciscoConversation
     @Groups.SanFranciscoFriends
