@@ -297,9 +297,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     width = spriteData.bounds.width * scale
     height = spriteData.bounds.height * scale
 
-    # Add one pixel to the size for outer grid line.
     displayScale = LOI.adventure.interface.display.scale()
-    pixelInRem = 1 / displayScale
+
+    if @drawingActive()
+      # Add one pixel to the size for outer grid line.
+      pixelInRem = 1 / displayScale
+
+      width += pixelInRem
+      height += pixelInRem
 
     # Resize the border proportionally to its clipboard size
     borderWidth = clipboardSpriteSize.borderWidth / clipboardSpriteSize.scale * scale
@@ -336,8 +341,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
         # Clipboard is hidden up, so move the sprite up and relative to top.
         top -= 265 * displayScale
 
-    width: "#{width + pixelInRem}rem"
-    height: "#{height + pixelInRem}rem"
+    width: "#{width}rem"
+    height: "#{height}rem"
     left: left
     top: top
     borderWidth: "#{borderWidth}rem"

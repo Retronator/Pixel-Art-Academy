@@ -81,7 +81,17 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
     @autorun (computation) =>
       return unless activeSection = @activeSection()
       return unless activeGroup = @activeGroup()
-      return if activeGroup in activeSection.groups()
+      newGroups = activeSection.groups()
+      return if activeGroup in newGroups
+
+      # See if we can find a group with the same name.
+      name = activeGroup.name()
+      sameNamedGroup = _.find newGroups, (group) => group.name() is name
+
+      if sameNamedGroup
+        # We found the same group so it must have just re-created.
+        @activeGroup sameNamedGroup
+        return
 
       # Seems like the active group is not valid anymore.
       @activeGroup null

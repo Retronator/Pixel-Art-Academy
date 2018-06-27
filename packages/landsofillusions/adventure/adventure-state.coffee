@@ -19,6 +19,7 @@ class LOI.Adventure extends LOI.Adventure
     _gameStateUpdatedDependency = new Tracker.Dependency
 
     _gameStateUpdated = null
+    _gameStateResetNamespaces = null
 
     # If the game doesn't use database state, log user out.
     @quitGame() if Meteor.userId() and not @usesDatabaseState()
@@ -74,6 +75,9 @@ class LOI.Adventure extends LOI.Adventure
           gameState.updated options
           _gameStateUpdatedDependency.changed()
 
+        _gameStateResetNamespaces = (namespaces) =>
+          gameState.resetNamespaces namespaces
+          
       else if userId and not gameStateSubscription.ready()
         # Looks like we're loading the state from the database during initial setup, so just wait.
         console.log "Waiting for game state subscription to complete." if LOI.debug
@@ -82,6 +86,7 @@ class LOI.Adventure extends LOI.Adventure
 
         state = null
         _gameStateUpdated = => # Dummy function.
+        _gameStateResetNamespaces = => # Dummy function.
 
       else if characterId
         # We were waiting for a character state, but it is not present. Unload the character.
@@ -100,8 +105,12 @@ class LOI.Adventure extends LOI.Adventure
           @localGameState.updated options
           _gameStateUpdatedDependency.changed()
 
-      # Set the new updated function.
+        _gameStateResetNamespaces = (namespaces) =>
+          @localGameState.resetNamespaces namespaces
+
+      # Set the new updated and reset functions.
       @gameState?.updated = _gameStateUpdated
+      @gameState?.resetNamespaces = _gameStateResetNamespaces
 
       console.log "%cNew game state has been set.", 'background: SlateGrey; color: white', state if LOI.debug
 
@@ -118,8 +127,9 @@ class LOI.Adventure extends LOI.Adventure
       _gameStateUpdatedDependency.depend()
       _gameStateProvider()
 
-    # Set the updated function for the first time.
+    # Set the updated and reset functions for the first time.
     @gameState.updated = _gameStateUpdated
+    @gameState.resetNamespaces = _gameStateResetNamespaces
 
     # User game state always points to the database game state for the user. It's used when the game state points to
     # a character game state instead, but is a much simpler version that doesn't support all the features of a normal

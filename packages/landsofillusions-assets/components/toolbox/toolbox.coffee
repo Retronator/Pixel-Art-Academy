@@ -35,13 +35,15 @@ class LOI.Assets.Components.Toolbox extends AM.Component
 
     'active' if tool is @options.activeTool()
 
-  activateTool: (tool) ->
+  activateTool: (tool, storePreviousTool) ->
     if tool.method
       tool.method()
 
     else
       previousActiveTool = @options.activeTool()
       return if tool is previousActiveTool
+
+      @_storedTool previousActiveTool if storePreviousTool
 
       # Set tool as active.
       @options.activeTool tool
@@ -88,8 +90,7 @@ class LOI.Assets.Components.Toolbox extends AM.Component
     # Look if it matches the hold shortcut.
     if targetTool = _.find(@options.tools(), (tool) => key is tool.holdShortcut)
       # Store currently active tool before switching the tools.
-      @_storedTool @options.activeTool()
-      @activateTool targetTool
+      @activateTool targetTool, true
       event.preventDefault()
 
     @_activeKey = key

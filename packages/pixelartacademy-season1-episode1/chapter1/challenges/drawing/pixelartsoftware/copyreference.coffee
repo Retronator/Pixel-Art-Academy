@@ -33,17 +33,6 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
 
   @initialize()
 
-  initializeGoalPixels: ->
-    # Load pixels directly from the source image.
-    image = new Image
-    image.addEventListener 'load', =>
-      @setGoalPixels @constructor.createPixelsFromImage image
-    ,
-      false
-
-    # Initiate the loading.
-    image.src = "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@constructor.image()}.png"
-
   editorOptions: ->
     references:
       upload:

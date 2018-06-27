@@ -1,11 +1,9 @@
-Artworks in this folder are NOT covered by CC-SA. Copyright belongs to their respective authors. 
-
-Sprites used with permission from the authors:
-
-- Brush by Susan Kare, 1982
+Artworks embedded in the code files are NOT covered by AGPL or CC-SA. Copyright belongs to their respective authors. 
 
 Sprites used under fair use:
 
+- Space Invaders by Taito, 1978
+- PAC-MAN by Namco, 1980
 - Out Run (ZX Spectrum) by Probe Software, 1987
 
 The artworks are chosen based on their historical and educational relevance. The purpose is for students to

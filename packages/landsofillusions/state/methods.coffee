@@ -105,7 +105,7 @@ LOI.GameState._replaceForCharacter.method (characterId, state) ->
       readOnlyState: {}
       events: []
 
-LOI.GameState.update.method (gameStateId, state) ->
+LOI.GameState._update.method (gameStateId, state) ->
   check gameStateId, Match.DocumentId
   check state, Object
 
@@ -137,6 +137,42 @@ LOI.GameState.update.method (gameStateId, state) ->
   LOI.GameState.documents.update gameStateId,
     $set:
       state: state
+      # We manually update this field (instead of let's say with
+      # triggers), so that it atomically updates with the state.
+      stateLastUpdatedAt: new Date()
+
+LOI.GameState._resetNamespaces.method (gameStateId, namespaces) ->
+  check gameStateId, Match.DocumentId
+  check namespaces, [String]
+
+  console.log "Resetting namespaces", namespaces, "in state", gameStateId if LOI.debug
+
+  user = Retronator.user()
+  throw new AE.UnauthorizedException "You must be logged in to reset game state." unless user
+
+  gameState = LOI.GameState.documents.findOne gameStateId
+  throw new AE.ArgumentNullException "Provided game state does not exist." unless gameState
+
+  # See if this is a user or character state.
+  gameStateUser = gameState.user
+
+  if gameState.character
+    character = LOI.Character.documents.findOne gameState.character._id
+    gameStateUser = character.user
+
+  throw new AE.UnauthorizedException "This game state does not belong to you." unless gameStateUser._id is user._id
+
+  # Delete everything in the namespace of things and scripts in the state and read-only state.
+  for namespace in namespaces
+    _.nestedProperty gameState.state.things, namespace, {}
+    _.nestedProperty gameState.state.scripts, namespace, {}
+    _.nestedProperty gameState.readOnlyState.things, namespace, {}
+
+  # Everything seems OK, update the states.
+  LOI.GameState.documents.update gameStateId,
+    $set:
+      state: gameState.state
+      readOnlyState: gameState.readOnlyState
       # We manually update this field (instead of let's say with
       # triggers), so that it atomically updates with the state.
       stateLastUpdatedAt: new Date()

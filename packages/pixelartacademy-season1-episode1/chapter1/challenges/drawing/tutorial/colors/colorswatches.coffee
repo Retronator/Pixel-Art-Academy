@@ -14,9 +14,9 @@ class C1.Challenges.Drawing.Tutorial.Colors.ColorSwatches extends PAA.Practice.C
   @fixedDimensions: -> width: 14, height: 14
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
 
-  @bitmap: -> "" # Empty sprite
+  @bitmapString: -> "" # Empty sprite
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |     cccc
       |   cccccccc
       |  cccccccccc

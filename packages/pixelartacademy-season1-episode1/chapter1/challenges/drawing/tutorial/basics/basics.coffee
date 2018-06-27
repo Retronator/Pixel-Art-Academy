@@ -34,6 +34,10 @@ class C1.Challenges.Drawing.Tutorial.Basics extends C1.Challenges.Drawing.Tutori
         assets.push @colorFill2
 
       if @_assetsCompleted @colorFill2
+        @colorFill3 ?= Tracker.nonreactive => new @constructor.ColorFill3 @
+        assets.push @colorFill3
+
+      if @_assetsCompleted @colorFill3
         @basicTools ?= Tracker.nonreactive => new @constructor.BasicTools @
         assets.push @basicTools
 
@@ -52,6 +56,7 @@ class C1.Challenges.Drawing.Tutorial.Basics extends C1.Challenges.Drawing.Tutori
     @eraser?.destroy()
     @colorFill?.destroy()
     @colorFill2?.destroy()
+    @colorFill3?.destroy()
     @basicTools?.destroy()
     @shortcuts?.destroy()
     

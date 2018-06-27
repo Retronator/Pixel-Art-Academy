@@ -94,6 +94,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     scale = 1
     maxSize = Math.max asset.width(), asset.height()
 
+    if maxSize > 84
+      # Scale downwards while interpreting scale as the denominator.
+      scale++ while maxSize / scale > 84
+      return 1 / scale
+
     scale++ while scale < 6 and (scale + 1) * maxSize < 84
 
     scale

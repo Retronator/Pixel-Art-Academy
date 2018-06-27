@@ -18,7 +18,7 @@ class C1.Challenges.Drawing.Tutorial.Basics.Shortcuts extends PAA.Practice.Chall
   @fixedDimensions: -> width: 12, height: 8
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
-  @bitmap: -> """
+  @bitmapString: -> """
       |
       |
       |  00000000
@@ -27,7 +27,7 @@ class C1.Challenges.Drawing.Tutorial.Basics.Shortcuts extends PAA.Practice.Chall
       |000000000000
     """
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |  0      0
       |   0    0
       |  00000000

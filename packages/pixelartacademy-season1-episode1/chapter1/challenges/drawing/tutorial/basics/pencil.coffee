@@ -15,9 +15,9 @@ class C1.Challenges.Drawing.Tutorial.Basics.Pencil extends PAA.Practice.Challeng
   @fixedDimensions: -> width: 8, height: 8
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
-  @bitmap: -> "" # Empty sprite
+  @bitmapString: -> "" # Empty sprite
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |   00
       |  0000
       | 000000

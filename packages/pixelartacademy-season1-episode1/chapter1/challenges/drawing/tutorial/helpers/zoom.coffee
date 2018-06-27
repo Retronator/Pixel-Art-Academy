@@ -16,7 +16,7 @@ class C1.Challenges.Drawing.Tutorial.Helpers.Zoom extends PAA.Practice.Challenge
   @fixedDimensions: -> width: 64, height: 40
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
-  @bitmap: -> """
+  @bitmapString: -> """
       |                    0000
       |                   000 000 0 000000000000000000
       |                 000 00 0000000000000    00000000
@@ -59,7 +59,7 @@ class C1.Challenges.Drawing.Tutorial.Helpers.Zoom extends PAA.Practice.Challenge
       |  00000000000                                     000000000000
     """
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |                    0000
       |                   000 000 0 000000000000000000
       |                 000 00 0000000000000    00000000

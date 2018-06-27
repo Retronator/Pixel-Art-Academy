@@ -4,18 +4,26 @@ LOI = LandsOfIllusions
 
 class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Project.Asset.Sprite
   @id: -> 'PixelArtAcademy.Practice.Challenges.Drawing.TutorialSprite'
+    
+  # Override to provide a bitmap string describing the sprite.
+  @bitmapString: -> null
+  @goalBitmapString: -> null
+
+  # Override to provide an image URL to describing the sprite.
+  @imageUrl: -> null
+  @goalImageUrl: -> null
 
   # Methods
 
   @create: new AB.Method name: "#{@id()}.create"
   @reset: new AB.Method name: "#{@id()}.reset"
 
-  @createPixelsFromBitmap: (bitmap) ->
+  @createPixelsfromBitmapString: (bitmapString) ->
     # We need to quit if we get an empty string since the regex would never quit on it.
-    return [] unless bitmap?.length
+    return [] unless bitmapString?.length
 
     regExp = /^\|?(.*)/gm
-    lines = (match[1] while match = regExp.exec bitmap)
+    lines = (match[1] while match = regExp.exec bitmapString)
 
     pixels = []
 
@@ -36,20 +44,12 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
     pixels
 
-  @createPixelsFromImage: (image) ->
-    canvas = $('<canvas>')[0]
-    canvas.width = image.width
-    canvas.height = image.height
-
-    context = canvas.getContext '2d'
-    context.drawImage image, 0, 0
-    imageData = context.getImageData 0, 0, image.width, image.height
-
+  @createPixelsFromImageData: (imageData) ->
     pixels = []
 
-    for x in [0...image.width]
-      for y in [0...image.height]
-        pixelOffset = (x + y * image.width) * 4
+    for x in [0...imageData.width]
+      for y in [0...imageData.height]
+        pixelOffset = (x + y * imageData.width) * 4
 
         # Skip transparent pixels.
         continue unless imageData.data[pixelOffset + 3]
@@ -89,11 +89,26 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       return unless spriteData = @sprite()
       spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
 
-    # Allow to override how we initialize goal pixels.
+    # Load goal pixels.
     @goalPixels = new ReactiveField null
     @goalPixelsMap = new ReactiveField null
-    @initializeGoalPixels()
 
+    if goalBitmapString = @constructor.goalBitmapString()
+      # Load pixels from the bitmapString string.
+      @setGoalPixels @constructor.createPixelsfromBitmapString goalBitmapString
+
+    else if goalImageUrl = @constructor.goalImageUrl()
+      # Load pixels from the source image.
+      image = new Image
+      image.addEventListener 'load', =>
+        @setGoalPixels @constructor.createPixelsFromImage image
+      ,
+        false
+
+      # Initiate the loading.
+      image.src = goalImageUrl
+
+    # Create the component that will show the goal state.
     @engineComponent = new @constructor.EngineComponent
       spriteData: =>
         return unless goalPixels = @goalPixels()
@@ -128,11 +143,11 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
         # If any of the pixels has a direct color, we need to translate the other one too.
         if pixel.paletteColor and goalPixel.paletteColor
-          EJSON.equals pixel.paletteColor, goalPixel.paletteColor
+          return false unless EJSON.equals pixel.paletteColor, goalPixel.paletteColor
 
         else
-          pixelDirectColor = @_paletteToDirectColor pixel.paletteColor
-          EJSON.equals pixelDirectColor, goalPixel.directColor
+          pixelDirectColor = if pixel.paletteColor then @_paletteToDirectColor(pixel.paletteColor) else pixel.directColor
+          return false unless EJSON.equals pixelDirectColor, goalPixel.directColor
 
       true
 
@@ -166,9 +181,6 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
     @_completedAutorun.stop()
 
-  initializeGoalPixels: ->
-    @setGoalPixels @constructor.createPixelsFromBitmap @constructor.goalBitmap()
-
   setGoalPixels: (goalPixels) ->
     @goalPixels goalPixels
 
@@ -188,7 +200,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
   _paletteToDirectColor: (paletteColor) ->
     palette = @palette()
-    palette.ramps[paletteColor.ramp].shades[paletteColor.shade]
+    palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
 
   editorDrawComponents: -> [
     @engineComponent

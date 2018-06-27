@@ -16,7 +16,7 @@ class C1.Challenges.Drawing.Tutorial.Colors.QuickColorPicking extends PAA.Practi
   @fixedDimensions: -> width: 11, height: 12
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
 
-  @bitmap: -> """
+  @bitmapString: -> """
       |
       |  333
       | 8833
@@ -30,7 +30,7 @@ class C1.Challenges.Drawing.Tutorial.Colors.QuickColorPicking extends PAA.Practi
       |   88
     """
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |     7
       |  3337333
       | 883333388

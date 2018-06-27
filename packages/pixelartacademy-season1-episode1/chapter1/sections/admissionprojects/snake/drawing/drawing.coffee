@@ -17,4 +17,5 @@ class C1.AdmissionProjects.Snake.Drawing extends LOI.Adventure.Section
     @requireFinishedSections C1.AdmissionProjects.Snake.Intro
     
   @finished: ->
-    @Coworking.Listener.Script.state 'AdmissionProjectCompleted'
+    # Note: Make sure not to return undefined.
+    @Coworking.Listener.Script.state('AdmissionProjectCompleted') is true

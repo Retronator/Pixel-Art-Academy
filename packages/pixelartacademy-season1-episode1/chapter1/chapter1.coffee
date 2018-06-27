@@ -53,5 +53,11 @@ class PAA.Season1.Episode1.Chapter1 extends LOI.Adventure.Chapter
 
   @applyCharacter: new AB.Method name: "#{@id()}.applyCharacter"
 
-  constructor: ->
-    super
+  @reset: ->
+    # Move character back to the studio.
+    LOI.adventure.gameState().currentLocationId = SanFrancisco.Apartment.Studio.id()
+    LOI.adventure.gameState().currentTimelineId = LandsOfIllusions.TimelineIds.Present
+    LOI.adventure.gameState.updated()
+
+    # Since this is the very first chapter, reset all main namespaces to start completely fresh.
+    LOI.adventure.gameState.resetNamespaces ['LandsOfIllusions', 'Retronator', 'SanFrancisco', 'PixelArtAcademy']

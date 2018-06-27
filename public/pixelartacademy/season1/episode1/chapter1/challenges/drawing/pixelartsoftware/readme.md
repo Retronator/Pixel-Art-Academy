@@ -1,4 +1,4 @@
-Artworks in this folder NOT covered by CC-SA. Copyright belongs to their respective authors. 
+Artworks in this folder are NOT covered by CC-SA. Copyright belongs to their respective authors. 
 
 Sprites used with permission from the authors:
 

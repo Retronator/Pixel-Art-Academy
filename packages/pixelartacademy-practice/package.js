@@ -87,8 +87,9 @@ Package.onUse(function(api) {
   api.addFile('challenges/drawing..');
 
   api.addFile('challenges/drawing/assets/tutorialsprite..');
-  api.addServerFile('challenges/drawing/assets/tutorialsprite/server');
-  api.addFile('challenges/drawing/assets/tutorialsprite/methods');
+  api.addClientFile('challenges/drawing/assets/tutorialsprite/tutorialsprite-client');
+  api.addServerFile('challenges/drawing/assets/tutorialsprite/tutorialsprite-server');
+  api.addClientFile('challenges/drawing/assets/tutorialsprite/methods-client');
   api.addServerFile('challenges/drawing/assets/tutorialsprite/methods-server');
   api.addFile('challenges/drawing/assets/tutorialsprite/enginecomponent');
   api.addUnstyledComponent('challenges/drawing/assets/tutorialsprite/briefcomponent..');

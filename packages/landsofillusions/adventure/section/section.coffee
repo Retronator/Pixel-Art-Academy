@@ -107,6 +107,3 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
     console.log "Section ready?", @id(), conditions if LOI.debug
 
     _.every conditions
-
-  reset: ->
-    @state.set {}
