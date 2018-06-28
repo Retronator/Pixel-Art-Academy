@@ -7,6 +7,7 @@ Sprites used with permission from the authors:
 Sprites used under fair use:
 
 - Out Run (ZX Spectrum) by Probe Software, 1987
+- CodeMasters logo (from the loading screen of Fast Food) by Neil Adamson, 1989
 
 The artworks are chosen based on their historical and educational relevance. The purpose is for students to
 get familiar with early computer graphics from an art history standpoint and study the techniques developed

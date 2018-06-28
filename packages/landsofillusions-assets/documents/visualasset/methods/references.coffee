@@ -1,7 +1,7 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Assets.VisualAsset.addReferenceByUrl.method (assetId, assetClassName, characterId, url, position, scale, displayed) ->
+LOI.Assets.VisualAsset.addReferenceByUrl.method (assetClassName, assetId, characterId, url, position, scale, displayed) ->
   check assetId, Match.DocumentId
   check assetClassName, String
   check characterId, Match.DocumentId
@@ -29,37 +29,31 @@ LOI.Assets.VisualAsset.addReferenceByUrl.method (assetId, assetClassName, charac
   reference[key] = value for key, value of {position, scale, displayed} when value?
 
   # Add the reference.
-  forward =
+  assetClass.documents.update assetId,
     $push:
       references: reference
-
-  backward =
-    $pop:
-      references: 1
-
-  asset.applyOperation forward, backward
 
   # Return created image ID.
   imageId
 
-LOI.Assets.VisualAsset.updateReferenceScale.method (assetId, assetClassName, imageId, scale) ->
+LOI.Assets.VisualAsset.updateReferenceScale.method (assetClassName, assetId, imageId, scale) ->
   check scale, Number
 
-  updateReference assetId, assetClassName, imageId, 'scale', scale
+  updateReference assetClassName, assetId, imageId, 'scale', scale
 
-LOI.Assets.VisualAsset.updateReferencePosition.method (assetId, assetClassName, imageId, position) ->
+LOI.Assets.VisualAsset.updateReferencePosition.method (assetClassName, assetId, imageId, position) ->
   check position,
     x: Number
     y: Number
 
-  updateReference assetId, assetClassName, imageId, 'position', position
+  updateReference assetClassName, assetId, imageId, 'position', position
 
-LOI.Assets.VisualAsset.updateReferenceDisplayed.method (assetId, assetClassName, imageId, displayed) ->
+LOI.Assets.VisualAsset.updateReferenceDisplayed.method (assetClassName, assetId, imageId, displayed) ->
   check displayed, Boolean
 
-  updateReference assetId, assetClassName, imageId, 'displayed', displayed
+  updateReference assetClassName, assetId, imageId, 'displayed', displayed
 
-updateReference = (assetId, assetClassName, imageId, key, value) ->
+updateReference = (assetClassName, assetId, imageId, key, value) ->
   check assetId, Match.DocumentId
   check assetClassName, String
   check imageId, Match.DocumentId
@@ -76,7 +70,7 @@ updateReference = (assetId, assetClassName, imageId, key, value) ->
     $set:
       "references.#{referenceIndex}.#{key}": value
 
-LOI.Assets.VisualAsset.reorderReferenceToTop.method (assetId, assetClassName, imageId) ->
+LOI.Assets.VisualAsset.reorderReferenceToTop.method (assetClassName, assetId, imageId) ->
   check assetId, Match.DocumentId
   check assetClassName, String
   check imageId, Match.DocumentId

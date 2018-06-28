@@ -13,6 +13,10 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
   @imageUrl: -> null
   @goalImageUrl: -> null
 
+  # Override to limit the scale at which the sprite appears in the clipboard.
+  @minClipboardScale: -> null
+  @maxClipboardScale: -> null
+
   # Methods
 
   @create: new AB.Method name: "#{@id()}.create"
@@ -212,3 +216,6 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
     ]
 
     _.without(classes, undefined).join ' '
+
+  minClipboardScale: -> @constructor.minClipboardScale()
+  maxClipboardScale: -> @constructor.maxClipboardScale()

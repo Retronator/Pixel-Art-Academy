@@ -11,10 +11,10 @@ class LOI.Assets.SpriteEditor.Tools.Undo extends LandsOfIllusions.Assets.Tools.T
 
   toolClass: ->
     return unless spriteData = @options.editor().spriteData()
-    'disabled' unless spriteData.historyPosition
+    'enabled' if spriteData.historyPosition
 
   method: ->
     spriteData = @options.editor().spriteData()
     return unless spriteData.historyPosition
 
-    LOI.Assets.Sprite.undo spriteData._id, 'Sprite'
+    LOI.Assets.VisualAsset.undo 'Sprite', spriteData._id

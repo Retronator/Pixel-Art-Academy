@@ -2,7 +2,7 @@ AE = Artificial.Everywhere
 RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
-LOI.Assets.VisualAsset.updatePalette.method (assetId, assetClassName, paletteId) ->
+LOI.Assets.VisualAsset.updatePalette.method (assetClassName, assetId, paletteId) ->
   check assetId, Match.DocumentId
   check assetClassName, String
   check paletteId, Match.DocumentId
@@ -20,7 +20,7 @@ LOI.Assets.VisualAsset.updatePalette.method (assetId, assetClassName, paletteId)
     $set:
       "palette._id": paletteId
 
-LOI.Assets.VisualAsset.updateMaterial.method (assetId, assetClassName, index, materialUpdate) ->
+LOI.Assets.VisualAsset.updateMaterial.method (assetClassName, assetId, index, materialUpdate) ->
   check assetId, Match.DocumentId
   check assetClassName, String
   check index, Match.Integer
@@ -50,7 +50,7 @@ LOI.Assets.VisualAsset.updateMaterial.method (assetId, assetClassName, index, ma
     $set:
       "materials.#{index}": material
 
-LOI.Assets.VisualAsset.updateLandmark.method (assetId, assetClassName, index, landmarkUpdate) ->
+LOI.Assets.VisualAsset.updateLandmark.method (assetClassName, assetId, index, landmarkUpdate) ->
   check assetId, Match.DocumentId
   check assetClassName, String
   check index, Match.Integer

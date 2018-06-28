@@ -1,7 +1,7 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Assets.VisualAsset.undo.method (assetId, assetClassName) ->
+LOI.Assets.VisualAsset.undo.method (assetClassName, assetId) ->
   check assetId, Match.DocumentId
   check assetClassName, String
 
@@ -25,7 +25,7 @@ LOI.Assets.VisualAsset.undo.method (assetId, assetClassName) ->
 
   assetClass.documents.update assetId, modifier
 
-LOI.Assets.VisualAsset.redo.method (assetId, assetClassName) ->
+LOI.Assets.VisualAsset.redo.method (assetClassName, assetId) ->
   check assetId, Match.DocumentId
   check assetClassName, String
 
@@ -48,3 +48,17 @@ LOI.Assets.VisualAsset.redo.method (assetId, assetClassName) ->
   modifier.$set.historyPosition = asset.historyPosition + 1
 
   assetClass.documents.update assetId, modifier
+
+LOI.Assets.VisualAsset.clearHistory.method (assetClassName, assetId) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+
+  # Authorize action.
+  assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
+  asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
+  LOI.Assets.VisualAsset._authorizeAssetAction asset
+
+  assetClass.documents.update assetId,
+    $set:
+      history: []
+      historyPosition: 0

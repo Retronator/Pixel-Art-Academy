@@ -58,3 +58,6 @@ PAA.Practice.Challenges.Drawing.TutorialSprite.reset.method (assetId, spriteId) 
 
   # Replace pixels in this sprite.
   LOI.Assets.Sprite.replacePixels spriteId, 0, pixels
+
+  # Clear the history.
+  LOI.Assets.VisualAsset.clearHistory 'Sprite', spriteId

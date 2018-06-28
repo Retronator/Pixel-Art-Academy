@@ -1,6 +1,7 @@
 AE = Artificial.Everywhere
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
+RA = Retronator.Accounts
 
 class LOI.Assets.VisualAsset extends AM.Document
   @id: -> 'LandsOfIllusions.Assets.VisualAsset'
@@ -51,6 +52,7 @@ class LOI.Assets.VisualAsset extends AM.Document
 
   @undo: @method 'undo'
   @redo: @method 'redo'
+  @clearHistory: @method 'clearHistory'
 
   @addReferenceByUrl: @method 'addReferenceByUrl'
   @updateReferenceScale: @method 'updateReferenceScale'

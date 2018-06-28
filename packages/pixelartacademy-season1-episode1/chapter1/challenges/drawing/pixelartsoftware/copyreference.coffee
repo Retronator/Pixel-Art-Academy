@@ -43,6 +43,3 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
   editorDrawComponents: ->
     # We send an empty array so we don't show the on-canvas reference.
     []
-
-  maxClipboardScale: ->
-    @constructor.maxClipboardScale?()

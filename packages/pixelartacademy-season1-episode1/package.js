@@ -112,6 +112,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/challenges/drawing/tutorial/helpers..');
   api.addFile('chapter1/challenges/drawing/tutorial/helpers/zoom');
   api.addFile('chapter1/challenges/drawing/tutorial/helpers/movecanvas');
+  api.addFile('chapter1/challenges/drawing/tutorial/helpers/undoredo');
   api.addFile('chapter1/challenges/drawing/tutorial/helpers/references');
 
   // Intro

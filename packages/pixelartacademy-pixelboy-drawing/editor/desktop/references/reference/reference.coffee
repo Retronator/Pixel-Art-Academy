@@ -72,7 +72,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.
       reference = @data()
 
       # Find an artwork that matches this reference.
-      return unless artwork = PADB.Artwork.forUrl.query(reference.image.url).fetch()[0]
+      return unless image = reference.image
+      return unless artwork = PADB.Artwork.forUrl.query(image.url).fetch()[0]
 
       # Format as Title, Authors, Year.
       elements = []
