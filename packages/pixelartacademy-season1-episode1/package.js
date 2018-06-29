@@ -108,6 +108,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/challenges/drawing/tutorial/colors/colorswatches');
   api.addFile('chapter1/challenges/drawing/tutorial/colors/colorpicking');
   api.addFile('chapter1/challenges/drawing/tutorial/colors/quickcolorpicking');
+  api.addServerFile('chapter1/challenges/drawing/tutorial/colors/palette-server');
 
   api.addFile('chapter1/challenges/drawing/tutorial/helpers..');
   api.addFile('chapter1/challenges/drawing/tutorial/helpers/zoom');

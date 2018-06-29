@@ -110,7 +110,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
               return assetData
 
     # Displayed asset retains its value until another asset gets activated
-    @displayedAsset = new ReactiveField null
+    @displayedAsset = new ReactiveField null, (a, b) => a is b
 
     @autorun (computation) =>
       return unless activeAsset = @activeAsset()

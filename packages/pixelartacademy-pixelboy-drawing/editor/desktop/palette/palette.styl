@@ -16,7 +16,7 @@
       right 0
       width 58rem
       height 142rem
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette-shadow.png')
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/palette-shadow.png')
       mix-blend-mode multiply
 
     &::after
@@ -24,7 +24,7 @@
       absolute-cover()
       z-index 3
       pointer-events none
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette.png')
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/palette.png')
 
     .colors
       display flex
@@ -34,6 +34,15 @@
       left 2rem
       flex-direction row
       flex-wrap wrap-reverse
+
+      &::before
+        content ''
+        absolute-cover()
+        top auto
+        height 129rem
+        z-index 3
+        pointer-events none
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/palette-empty.png')
 
       .ramp
         width 15rem
@@ -73,7 +82,7 @@
       right 0
       width 56rem
       height 139rem
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette-tray-shadow.png')
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/palette-tray-shadow.png')
       mix-blend-mode multiply
 
     &::after
@@ -81,7 +90,7 @@
       absolute-cover()
       z-index 3
       pointer-events none
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/palette-tray.png')
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/palette-tray.png')
 
     .colors
       display flex

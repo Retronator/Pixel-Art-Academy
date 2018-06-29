@@ -136,6 +136,9 @@ class LOI.Assets.VisualAsset extends AM.Document
     # Add history step.
     historyPosition = @historyPosition or 0
 
+    # Allow up to 2,000 history steps.
+    throw new AE.ArgumentOutOfRangeException "Up to 2,000 history steps are allowed." if historyPosition > 2000
+
     modifier.$push ?= {}
     modifier.$push.history =
       $position: historyPosition

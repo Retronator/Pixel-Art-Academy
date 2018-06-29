@@ -63,8 +63,6 @@ for assetId, asset of assets
           for key, value of asset.artist.name
             artistQuery["name.#{key}"] = value
 
-          console.log "q", artistQuery
-
           if artist = PADB.Artist.documents.findOne artistQuery
             artistId = artist._id
 

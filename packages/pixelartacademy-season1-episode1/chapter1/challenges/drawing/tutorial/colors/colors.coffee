@@ -9,6 +9,8 @@ class C1.Challenges.Drawing.Tutorial.Colors extends C1.Challenges.Drawing.Tutori
   @fullName: -> "Tutorial: Colors"
 
   @initialize()
+  
+  @pacManPaletteName: 'PAC-MAN'
 
   @completed: ->
     @isAssetCompleted @QuickColorPicking

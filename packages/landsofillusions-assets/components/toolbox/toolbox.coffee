@@ -52,6 +52,11 @@ class LOI.Assets.Components.Toolbox extends AM.Component
       previousActiveTool?.onDeactivated?()
       tool.onActivated?()
 
+  deactivateTool: ->
+    return unless activeTool = @options.activeTool()
+    @options.activeTool null
+    activeTool.onDeactivated?()
+
   events: ->
     super.concat
       'click .tool-button': @onClickToolButton
@@ -61,6 +66,9 @@ class LOI.Assets.Components.Toolbox extends AM.Component
     @activateTool tool
 
   onKeyDown: (event) ->
+    # Check if the toolbox is enabled.
+    return if @options.enabled? and not @options.enabled()
+
     key = event.which
 
     # TODO: Figure out when to prevent key repeating. It's not always desirable (undo/redo).
@@ -96,6 +104,9 @@ class LOI.Assets.Components.Toolbox extends AM.Component
     @_activeKey = key
 
   onKeyUp: (event) ->
+    # Check if the toolbox is enabled.
+    return if @options.enabled? and not @options.enabled()
+
     # Restore the stored tool.
     if storedTool = @_storedTool()
       @activateTool storedTool

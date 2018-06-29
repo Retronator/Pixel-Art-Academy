@@ -88,7 +88,8 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
             components.push assetComponents...
 
         # Set extra info to components
-        backgroundColor = LOI.Assets.Palette.defaultPalette().ramps[LOI.Assets.Palette.Atari2600.hues.grey].shades[7]
+        backgroundColor = displayedAsset?.backgroundColor()
+        backgroundColor ?= LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.grey, 7
 
         for component in components
           component.options.backgroundColor = backgroundColor
@@ -126,6 +127,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       tools: @tools
       activeTool: @activeTool
       actions: @actions
+      enabled: @active
       
     # Create tools.
     @toolClasses =
@@ -160,12 +162,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
         unless @activeTool()
           # Make sure the last active tool is still allowed.
           if @_lastActiveTool in @tools()
-            @activeTool @_lastActiveTool
+            @toolbox().activateTool @_lastActiveTool
 
       else
         if activeTool = @activeTool()
           @_lastActiveTool = activeTool
-          @activeTool null
+          @toolbox().deactivateTool()
 
     # Select first color if no color is set.
     @autorun (computation) =>
@@ -192,6 +194,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       # clipboard to update, which will change the position of the sprite when attached to the clipboard.
       Meteor.setTimeout => @spriteStyleChangeDependency.changed()
 
+    # Reset sprite offset when entering the editor
+    @autorun (computation) =>
+      return unless @active()
+      
+      @spritePositionOffset x: 0, y: 0
+
     # Update sprite scale.
     @autorun (computation) =>
       return unless camera = @pixelCanvas().camera()
@@ -206,12 +214,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
       @_previousDisplayedAsset = assetData.asset
       @_previousClipboardSpriteScale = clipboardSpriteScale
-
-    # Dragging mode is active when drawing is active and space is held down.
-    @draggingMode = new ComputedField =>
-      return unless @drawingActive()
-
-      AC.Keyboard.getState().isKeyDown AC.Keys.space
 
   onRendered: ->
     super
@@ -266,9 +268,6 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
     [toolClass, extraToolClass].join ' '
 
-  draggingModeClass: ->
-    'dragging-mode' if @draggingMode()
-
   draggingClass: ->
     'dragging' if _.some [
       @toolInstances[PAA.Practice.Software.Tools.ToolKeys.MoveCanvas].moving()
@@ -313,6 +312,16 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       # We need to be in the middle of the table, but allowing for custom offset with dragging.
       offset = @spritePositionOffset()
 
+      # Update offset when scale changes, so that the same pixel will appear in the center.
+      if @_previousScale and @_previousScale isnt scale
+        offset =
+          x: offset.x / @_previousScale * scale
+          y: offset.y / @_previousScale * scale
+
+        Tracker.nonreactive => @spritePositionOffset offset
+
+      @_previousScale = scale
+
       left = "calc(50% - #{width / 2 + borderWidth - offset.x}rem)"
       top = "calc(50% - #{height / 2 + borderWidth - offset.y}rem)"
 
@@ -329,7 +338,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       left = "calc(50% + #{left}px)"
 
       # Top is relative to center only when we have an active asset.
-      activeAsset = @drawing.portfolio().activeAsset()
+      activeAsset = @activeAsset()
 
       positionOrigin.top += $clipboard.height() / 2 if activeAsset
       top = spriteOffset.top - positionOrigin.top
@@ -341,11 +350,18 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
         # Clipboard is hidden up, so move the sprite up and relative to top.
         top -= 265 * displayScale
 
-    width: "#{width}rem"
-    height: "#{height}rem"
-    left: left
-    top: top
-    borderWidth: "#{borderWidth}rem"
+    style =
+      width: "#{width}rem"
+      height: "#{height}rem"
+      left: left
+      top: top
+      borderWidth: "#{borderWidth}rem"
+
+    if backgroundColor = @displayedAsset()?.backgroundColor()
+      style.backgroundColor = "##{backgroundColor.getHexString()}"
+      style.borderColor = style.backgroundColor
+
+    style
 
   testPaperEnabled: ->
     @pencilEnabled() or @eraserEnabled()

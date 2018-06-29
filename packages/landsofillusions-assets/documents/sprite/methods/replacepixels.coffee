@@ -6,6 +6,9 @@ LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
   check layerIndex, Match.Integer
   check pixels, [LOI.Assets.Sprite.pixelPattern]
 
+  # Allow up to 2,000 pixels per layer.
+  throw new AE.ArgumentOutOfRangeException "Up to 2,000 pixels per layer are allowed." if pixels.length > 2000
+
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 

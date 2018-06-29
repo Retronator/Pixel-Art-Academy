@@ -43,7 +43,7 @@
     .background
       absolute-cover()
       z-index 0
-      background image('/pixelartacademy/pixelboy/apps/drawing/editor/school/woodgrain.png') center center / 250rem 164rem
+      background image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/woodgrain.png') center center / 250rem 164rem
       opacity 0
       transition all 0.2s 1s
 
@@ -59,7 +59,7 @@
       height 89rem
       left -80rem
       top calc(50% - 44rem)
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/testpaper.png')
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/testpaper.png')
       box-shadow -2rem 1rem 0 transparentify(atariOrange(4), atariOrange(5))
 
       &.eraser-enabled
@@ -114,10 +114,10 @@
           width 28rem
 
           &::after
-            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/pencil.png')
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/pencil.png')
 
           &::before
-            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/pencil-shadow.png')
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/pencil-shadow.png')
             top 5rem
             left 0
             width 23rem
@@ -128,10 +128,10 @@
           width 26rem
 
           &::after
-            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eraser.png')
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/eraser.png')
 
           &::before
-            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eraser-shadow.png')
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/eraser-shadow.png')
             top 7rem
             left 0
             width 24rem
@@ -144,10 +144,10 @@
           top calc(50% - 60rem)
 
           &::after
-            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eyedropper.png')
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/eyedropper.png')
 
           &::before
-            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/eyedropper-shadow.png')
+            background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/eyedropper-shadow.png')
             top 6rem
             right 3rem
             width 56rem
@@ -194,7 +194,7 @@
       width 85rem
       height 62rem
       z-index 3
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/calculator.png')
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/calculator.png')
       box-shadow 1rem 3rem 0 transparentify(atariOrange(4), atariOrange(5))
 
       .zoom-display
@@ -217,7 +217,7 @@
         width 17rem
         height 11rem
         border none
-        background image('/pixelartacademy/pixelboy/apps/drawing/editor/school/calculator-button.png') center center / 13rem 9rem no-repeat
+        background image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/calculator-button.png') center center / 13rem 9rem no-repeat
         acme-5()
         padding 0 0 1rem 1rem
         line-height 9rem
@@ -225,7 +225,7 @@
 
         &:active
         &.pressed
-          background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/calculator-button-pressed.png')
+          background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/calculator-button-pressed.png')
           color atariGrey(4)
 
         &.zoom-in-button
@@ -318,8 +318,9 @@
       &.move-canvas
         cursor grab
 
-        .sprite
-          transition none !important
+        &.dragging
+          .sprite
+            transition none !important
 
       &:not(.focused-mode)
         .test-paper
@@ -373,6 +374,6 @@
       top 0
       width 199rem
       height 262rem
-      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/school/clipboard-shadow.png')
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/clipboard-shadow.png')
       mix-blend-mode multiply
       pointer-events none

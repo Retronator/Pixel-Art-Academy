@@ -57,6 +57,9 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
         backward.$set["layers.#{layerIndex}.pixels.#{existingPixelIndex}"] = existingPixel
 
       else
+        # Allow up to 2,000 pixels per layer.
+        throw new AE.ArgumentOutOfRangeException "Up to 2,000 pixels per layer are allowed." unless pixels.length < 2000
+        
         # Add the new pixel to existing layer.
         forward.$push ?= {}
         forward.$push["layers.#{layerIndex}.pixels"] = pixel

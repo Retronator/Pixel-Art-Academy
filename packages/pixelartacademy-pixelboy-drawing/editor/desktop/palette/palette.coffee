@@ -24,6 +24,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Compon
     'swatches' if @options.paletteId?()
 
   shadeStyle: ->
+    return unless @options.paletteData?()
     shade = @currentData()
 
     marginLeft: "#{shade.offset}rem"

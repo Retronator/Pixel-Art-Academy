@@ -66,10 +66,10 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     'active' if @activeGroup() is group
 
   briefStyle: ->
-    asset = @currentData()
+    assetData = @currentData()
     group = @parentDataWith 'assets'
 
-    zIndex = group.assets().length - asset.index
+    zIndex = group.assets().length - assetData.index
 
     zIndex: zIndex
 
@@ -86,8 +86,15 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     assetData = @currentData()
     scale = assetData.scale()
 
-    width: "#{assetData.asset.width() * scale}rem"
-    height: "#{assetData.asset.height() * scale}rem"
+    style =
+      width: "#{assetData.asset.width() * scale}rem"
+      height: "#{assetData.asset.height() * scale}rem"
+
+    if backgroundColor = assetData.asset.backgroundColor()
+      style.backgroundColor = "##{backgroundColor.getHexString()}"
+      style.borderColor = style.backgroundColor
+
+    style
 
   _assetScale: (asset) ->
     # Scale the sprite as much as possible (up to 7) while remaining under 84px.
@@ -179,6 +186,10 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
   onClickGroupName: (event) ->
     group = @currentData()
+    section = @parentDataWith 'groups'
+    
+    # Only open the group if we have an active section or if the group is the only one in the section.
+    return unless @activeSection() is section or section.groups().length is 1
 
     if group is @activeGroup()
       @activeGroup null

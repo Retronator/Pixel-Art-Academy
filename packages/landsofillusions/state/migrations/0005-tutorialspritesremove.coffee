@@ -3,21 +3,24 @@ LOI = LandsOfIllusions
 class Migration extends Document.PatchMigration
   name: "Remove tutorial assets where sprite changed to force replay."
 
-  forward: (document, collection, currentSchema, newSchema) =>
+  forward: (document, collection, currentSchema, newSchema) ->
     count = 0
 
-    assetsAddress = 'readOnlyState.things.PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Basics.assets'
+    assetsAddress = 'readOnlyState.things.PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial'
 
     collection.findEach
       _schema: currentSchema
       "#{assetsAddress}": $exists: true
     ,
       (document) =>
-        assets = _.nestedProperty document, assetsAddress
+        # Remove changed Basics assets.
+        basicsAssets = _.nestedProperty document, "#{assetsAddress}.Basics.assets"
 
-        # Remove changed tutorial assets.
         for tutorial in ['Pencil', 'Shortcuts']
-          _.remove assets, (asset) => asset.id is "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Basics.#{tutorial}"
+          _.remove basicsAssets, (asset) => asset.id is "#{assetsAddress}.Basics.#{tutorial}"
+
+        # Remove all Colors assets.
+        _.nestedProperty document, "#{assetsAddress}.Colors.assets", []
 
         updated = collection.update
           _id: document._id

@@ -56,6 +56,10 @@ PAA.Practice.Challenges.Drawing.TutorialSprite.reset.method (assetId, spriteId) 
     
     pixels = assetClass.createPixelsFromImageData png
 
+  else
+    # No data was provided so we assume the starting image should be empty.
+    pixels = []
+
   # Replace pixels in this sprite.
   LOI.Assets.Sprite.replacePixels spriteId, 0, pixels
 

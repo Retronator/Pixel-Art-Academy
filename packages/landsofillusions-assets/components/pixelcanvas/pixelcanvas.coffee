@@ -20,7 +20,6 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @grid = new ReactiveField null
     @mouse = new ReactiveField null
     @cursor = new ReactiveField null
-    @sprite = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null

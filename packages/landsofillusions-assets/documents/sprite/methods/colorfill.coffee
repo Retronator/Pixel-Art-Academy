@@ -126,6 +126,9 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
 
       created.push testPixel
 
+    # Allow up to 2,000 pixels per layer.
+    throw new AE.ArgumentOutOfRangeException "Up to 2,000 pixels per layer are allowed." if layerPixels.length + created.length > 2000
+
     # All the created pixels should be added.
     forward.$push ?= {}
     forward.$push["layers.#{layerIndex}.pixels"] = $each: created

@@ -77,6 +77,17 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     LOI.Assets.Palette.documents.findOne
       name: restrictedPaletteName
 
+  backgroundColor: ->
+    return unless backgroundColor = @constructor.backgroundColor()
+
+    if paletteColor = backgroundColor.paletteColor
+      return unless palette = @restrictedPalette()
+      palette.color paletteColor.ramp, paletteColor.shade
+
+    else
+      # We assume the color is already a color instance.
+      backgroundColor
+
   spriteInfo: ->
     translation = AB.translate @_translationSubscription, 'spriteInfo'
     if translation.language then translation.text else null

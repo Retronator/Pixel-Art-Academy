@@ -16,7 +16,7 @@ class C1.Challenges.Drawing.Tutorial.Helpers.MoveCanvas extends PAA.Practice.Cha
       Quick shortcut: space
     """
 
-  @fixedDimensions: -> width: 256, height: 64
+  @fixedDimensions: -> width: 256, height: 32
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
   @imageUrl: ->
@@ -32,7 +32,6 @@ class C1.Challenges.Drawing.Tutorial.Helpers.MoveCanvas extends PAA.Practice.Cha
   availableToolKeys: -> [
     PAA.Practice.Software.Tools.ToolKeys.Pencil
     PAA.Practice.Software.Tools.ToolKeys.Eraser
-    PAA.Practice.Software.Tools.ToolKeys.ColorFill
     PAA.Practice.Software.Tools.ToolKeys.Zoom
     PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
   ]
