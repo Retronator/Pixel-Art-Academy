@@ -25,7 +25,7 @@
       opacity 0
 
     .selected-cartridge
-      top -200rem
+      top -200rem !important
       transform scale(0.5)
       transition all 0.5s
 
@@ -118,6 +118,9 @@
       opacity 1
       transition all 0.2s
       visibility visible
+
+    &:hover
+      top 15.5rem
 
     &::after
       content ''

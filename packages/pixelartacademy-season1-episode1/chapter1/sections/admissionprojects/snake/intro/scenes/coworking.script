@@ -98,12 +98,12 @@ aeronaut:
 
 * I got the PICO-8 app!
 
-aeronaut: Alright, let's begin!
+aeronaut: Great! Let's begin.
 
 ## HasPico8
 
 aeronaut: 
-  First, let me get you the game Cartridge.
+  First, let me get you the game cartridge.
   It will appear in your PICO-8 app.
   
 > Reuben gestures something on his PixelBoy and transfers the virtual cart to your device.
@@ -127,7 +127,7 @@ aeronaut: Take your time. Once you get at least 5 points, let me know.
 
 ## Scored5OrMore
 
-* I got `_highScore` points!
+* I scored `_highScore` points!
 
 aeronaut:
   Nice! 
@@ -168,7 +168,7 @@ aeronaut:
 * Sounds good!
 * Thanks, I'll talk to you later.
 
-aeronaut: See you.
+aeronaut: See you soon!
   
 -> [End]
 
