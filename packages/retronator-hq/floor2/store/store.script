@@ -132,7 +132,7 @@ pause
 
 retro: Thank you so much for that.
 
--> [NoAccountPurchase] `not @player.inventory['Retronator.HQ.Items.Account']`
+-> [NoAccountPurchase] `not @inventory['Retronator.HQ.Items.Account']`
 
 > You store the receipt into your account folder.
 

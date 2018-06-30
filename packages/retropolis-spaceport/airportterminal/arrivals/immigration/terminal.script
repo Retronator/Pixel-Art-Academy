@@ -10,9 +10,9 @@
 
 terminal: Welcome to Retropolis immigration procedure. Papers, please.
 
-> You remember you have your passport in ![your backpack](use backpack). `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
+> You remember you have your passport in ![your backpack](use backpack). `not @inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
-> Papers? I guess it wants you to ![show your passport](use passport). `@player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
+> Papers? I guess it wants you to ![show your passport](use passport). `@inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
 -> [End]
 
@@ -34,7 +34,7 @@ terminal:
 
 ## ShowPassport
 
--> [NoPassport] `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
+-> [NoPassport] `not @inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
 `passportShown = true`
 
@@ -48,7 +48,7 @@ terminal:
 
 ## ShowLetter
 
--> [NoLetter] `not @player.inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
+-> [NoLetter] `not @inventory['PixelArtAcademy.Season1.Episode0.Chapter1.Items.Passport']`
 
 `letterShown = true`
 

@@ -44,7 +44,7 @@ operator: Can I help you with anything else?
 
 operator: Great! If you would please scan your keycard …
 
--> [NoKeycard] `not @user.signedIn or not @player.inventory['Retronator.HQ.Items.Keycard']`
+-> [NoKeycard] `not @user.signedIn or not @inventory['Retronator.HQ.Items.Keycard']`
 
 > Panzer points to the reader on the counter and you press your wallet to it.
 

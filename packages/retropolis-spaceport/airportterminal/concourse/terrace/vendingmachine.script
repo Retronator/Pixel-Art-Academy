@@ -4,7 +4,7 @@
 
 > The vending machine displays a message:
 
-`_hasBottle = !!@player.inventory['PixelArtAcademy.Items.Bottle']`
+`_hasBottle = !!@inventory['PixelArtAcademy.Items.Bottle']`
 
 -> [AlreadyHasBottle] `_hasBottle`
     
@@ -68,7 +68,7 @@ machine:
 
 ## AlreadyHasBottle
 
--> [BottleIsFull] `@player.inventory['PixelArtAcademy.Items.Bottle'].drinkType`
+-> [BottleIsFull] `@inventory['PixelArtAcademy.Items.Bottle'].drinkType`
 
 machine: I see you already have a bottle. Would you like a refill?
     
@@ -82,7 +82,7 @@ machine: I see you already have a bottle. Please ![drink the contents](drink fro
 
 ## ReturnBottle
 
--> [NoBottle] `not @player.inventory['PixelArtAcademy.Items.Bottle']`
+-> [NoBottle] `not @inventory['PixelArtAcademy.Items.Bottle']`
 
 > You push the bottle into a collection slot.
 
