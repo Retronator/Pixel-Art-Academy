@@ -16,6 +16,10 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
   onCreated: ->
     super
 
+    # Create a random ID to prevent caching carts. We assume the art won't
+    # change while in the app, to prevent constant calls to the server.
+    @_runId = Random.id()
+
     @cartridgesLocation = new PAA.Pico8.Cartridges
 
     @cartridgesSituation = new ComputedField =>
@@ -56,6 +60,17 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
     super
 
     cartridge.destroy() for id, cartridge of @_cartridges
+
+  cartridgeUrl: ->
+    cartridge = @currentData()
+
+    url = cartridge.cartridgeUrl()
+
+    # Don't cache local carts.
+    if url.indexOf('pico8/cartridge.png') > 0
+      url += "&runId=#{@_runId}"
+
+    url
 
   openedClass: ->
     'opened' if @opened()
