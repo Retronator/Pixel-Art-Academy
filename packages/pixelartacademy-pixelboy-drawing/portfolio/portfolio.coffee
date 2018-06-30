@@ -11,6 +11,16 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     Challenges: 'Challenges'
     Projects: 'Projects'
     Artworks: 'Artworks'
+    Settings: 'Settings'
+
+  constructor: (@drawing) ->
+    super
+
+    @sectionHeight = 21
+    @initialGroupHeight = 17
+    @inactiveGroupHeight = 3
+    @activeGroupHeight = 150
+    @settingsHeight = 118
 
   sectionActiveClass: ->
     section = @currentData()
@@ -26,8 +36,9 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     section = @currentData()
     groups = section.groups()
     active = @activeSection() is section
+    sections = @sections()
 
-    width = 292 - 4 * (1 - section.index)
+    width = 292 - 4 * (sections.length - section.index)
 
     style =
       width: "#{width}rem"
@@ -55,10 +66,10 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     'active' if @activeGroup() is group
 
   briefStyle: ->
-    asset = @currentData()
+    assetData = @currentData()
     group = @parentDataWith 'assets'
 
-    zIndex = group.assets().length - asset.index
+    zIndex = group.assets().length - assetData.index
 
     zIndex: zIndex
 
@@ -75,13 +86,25 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     assetData = @currentData()
     scale = assetData.scale()
 
-    width: "#{assetData.asset.width() * scale}rem"
-    height: "#{assetData.asset.height() * scale}rem"
+    style =
+      width: "#{assetData.asset.width() * scale}rem"
+      height: "#{assetData.asset.height() * scale}rem"
+
+    if backgroundColor = assetData.asset.backgroundColor()
+      style.backgroundColor = "##{backgroundColor.getHexString()}"
+      style.borderColor = style.backgroundColor
+
+    style
 
   _assetScale: (asset) ->
     # Scale the sprite as much as possible (up to 7) while remaining under 84px.
     scale = 1
     maxSize = Math.max asset.width(), asset.height()
+
+    if maxSize > 84
+      # Scale downwards while interpreting scale as the denominator.
+      scale++ while maxSize / scale > 84
+      return 1 / scale
 
     scale++ while scale < 6 and (scale + 1) * maxSize < 84
 
@@ -98,16 +121,18 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   coverStyle: ->
     sections = @sections()
 
-    top = 14 + sections.length * @sectionHeight
+    top = 14 + (sections.length + 1) * @sectionHeight
 
     if section = @activeSection()
-      groups = section.groups()
+      if groups = section.groups?()
+        if @activeGroup()
+          top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
 
-      if @activeGroup()
-        top += (groups.length - 1) * @inactiveGroupHeight + @activeGroupHeight
+        else
+          top += groups.length * @initialGroupHeight
 
       else
-        top += groups.length * @initialGroupHeight
+        top += @settingsHeight
 
     top: "#{top}rem"
 
@@ -121,6 +146,18 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     'active' if assetData is @activeAsset()
 
+  selectedEditorClass: ->
+    editor = @currentData()
+    selectedEditorId = @drawing.state('editorId') or null
+
+    'selected' if selectedEditorId is editor.id()
+
+  selectedProgramClass: ->
+    program = @currentData()
+    selectedProgram = @drawing.state('externalSoftware') or null
+
+    'selected' if selectedProgram is program.value
+
   events: ->
     super.concat
       'click .section': @onClickSection
@@ -129,24 +166,30 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
       'mouseenter .asset': @onMouseEnterAsset
       'mouseleave .asset': @onMouseLeaveAsset
       'click .asset': @onClickAsset
+      'click .pixel-boy .editor': @onClickPixelBoyEditor
+      'click .external .editor': @onClickExternalEditor
 
   onClickSection: (event) ->
     section = @currentData()
 
-    clickInsideGroup = $(event.target).closest('.group').length > 0
+    clickInsideContent = $(event.target).closest('.content').length > 0
 
     if section is @activeSection()
-      @activeSection null unless clickInsideGroup
+      @activeSection null unless clickInsideContent
 
     else
       @activeSection section
 
       # Reset group if we click on the name, but not one of the inner groups.
       # In that case the group handler will activate a new group in this new section.
-      @activeGroup null unless clickInsideGroup
+      @activeGroup null unless clickInsideContent
 
   onClickGroupName: (event) ->
     group = @currentData()
+    section = @parentDataWith 'groups'
+    
+    # Only open the group if we have an active section or if the group is the only one in the section.
+    return unless @activeSection() is section or section.groups().length is 1
 
     if group is @activeGroup()
       @activeGroup null
@@ -183,3 +226,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     # Set active sprite ID.
     AB.Router.setParameter 'parameter3', assetData.asset.spriteId()
+
+  onClickPixelBoyEditor: (event) ->
+    editor = @currentData()
+    @drawing.state 'editorId', editor.id()
+
+  onClickExternalEditor: (event) ->
+    program = @currentData()
+    @drawing.state 'externalSoftware', program.value

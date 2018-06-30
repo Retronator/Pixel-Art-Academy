@@ -200,6 +200,10 @@ class LOI.Adventure.Thing extends AM.Component
     # Note: We fully qualify Avatar (instead of @Avatar) because this gets called from classes that inherit from Thing.
     new LOI.Adventure.Thing.Avatar @
 
+  @reset: ->
+    # Reset this thing's namespace.
+    LOI.adventure.gameState.resetNamespaces [@id()]
+
   # Thing instance
 
   constructor: (@options) ->
@@ -309,6 +313,9 @@ class LOI.Adventure.Thing extends AM.Component
 
     # The requirement is met if the user has the required item.
     user.hasItem accessRequirement
+
+  reset: ->
+    @constructor.reset()
 
   # Avatar pass-through methods
 

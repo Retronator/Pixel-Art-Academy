@@ -1,0 +1,151 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-editor-desktop-references
+  .stored-references
+  .displayed-references
+    .references
+      .reference
+        .pixelartacademy-pixelboy-apps-drawing-editor-desktop-references-reference
+          box-sizing content-box
+
+  .stored-references
+    position absolute
+    top -210rem
+    left calc(50% - 82rem)
+    width 165rem
+    height 190rem
+    cursor pointer
+
+    &::before
+      content ''
+      absolute-cover()
+      z-index 3
+      left -20rem
+      bottom -5rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/tray-shadow.png')
+      mix-blend-mode multiply
+
+    &::after
+      content ''
+      position absolute
+      top 4rem
+      right 4rem
+      width 157rem
+      height 182rem
+      z-index 100
+      pointer-events none
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/tray-innershadow.png')
+      mix-blend-mode multiply
+
+    .references
+      list-style none
+      margin 0
+      padding 0
+
+      &::after
+        content ''
+        absolute-cover()
+        z-index 3
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/tray.png')
+
+      .reference
+        position absolute
+        left 82rem
+        top 95rem
+
+        .pixelartacademy-pixelboy-apps-drawing-editor-desktop-references-reference
+          z-index 6
+
+          &.dragging
+            transform translate(-52%, -52%)
+
+          .pixelartacademy-pixelboy-apps-drawing-editor-desktop:not(.dragging) &
+            transition transform 0.2s, box-shadow 0.2s
+
+            &:hover
+              transform translate(-52%, -50%)
+
+    .actions
+      pointer-events none
+
+      .action
+        position absolute
+        z-index 4
+        width 88rem
+        height 96rem
+        background atariGrey(6)
+        pointer-events initial
+        box-shadow -1rem 1rem 0 rgba(atariGrey(0), 0.2)
+        transition all 0.2s
+
+        &::after
+          content ''
+          position absolute
+          left 4rem
+          top 4rem
+          width 80rem
+          height 80rem
+          background atariGrey(2)
+
+        &.upload
+          z-index 5
+          left 64rem
+          bottom 25rem
+
+        &.storage
+          left 19rem
+          bottom 10rem
+
+        .button
+          absolute-cover-size()
+          z-index 1
+          freehand()
+          color atariPurple(3)
+          border none
+          background none
+          padding-top 85rem
+
+  .displayed-references
+    position absolute
+    top 50%
+    left 50%
+
+    .references
+      list-style none
+      margin 0
+      padding 0
+
+      .reference
+        .pixelartacademy-pixelboy-apps-drawing-editor-desktop-references-reference
+          z-index 2
+
+          &.dragging
+            transform translate(-50%, -52%)
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-desktop.drawing-active &
+    .stored-references
+      transition all 0.2s !important
+
+    .pixelartacademy-pixelboy-apps-drawing-editor-desktop-references-reference
+      transition none
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-desktop.drawing-active:not(.focused-mode) &
+    .stored-references
+      top -181rem
+
+      &:hover
+        top -177rem
+
+    &.opened
+      .stored-references
+      .stored-references:hover
+        top calc(50% - 95rem)
+
+      .actions
+        .action
+          &:hover
+            transform translateX(-2rem)
+
+  .pixelartacademy-pixelboy-apps-drawing-editor-desktop.drawing-active.dragging &
+    .stored-references.hide-active
+      top -150rem

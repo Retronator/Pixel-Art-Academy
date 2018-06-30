@@ -35,12 +35,27 @@ class LOI.Assets.Components.Toolbox extends AM.Component
 
     'active' if tool is @options.activeTool()
 
-  _activateTool: (tool) ->
+  activateTool: (tool, storePreviousTool) ->
     if tool.method
       tool.method()
 
     else
+      previousActiveTool = @options.activeTool()
+      return if tool is previousActiveTool
+
+      @_storedTool previousActiveTool if storePreviousTool
+
+      # Set tool as active.
       @options.activeTool tool
+
+      # Inform the tools that they (de)activated.
+      previousActiveTool?.onDeactivated?()
+      tool.onActivated?()
+
+  deactivateTool: ->
+    return unless activeTool = @options.activeTool()
+    @options.activeTool null
+    activeTool.onDeactivated?()
 
   events: ->
     super.concat
@@ -48,23 +63,53 @@ class LOI.Assets.Components.Toolbox extends AM.Component
 
   onClickToolButton: (event) ->
     tool = @currentData()
-    @_activateTool tool
+    @activateTool tool
 
   onKeyDown: (event) ->
+    # Check if the toolbox is enabled.
+    return if @options.enabled? and not @options.enabled()
+
     key = event.which
 
+    # TODO: Figure out when to prevent key repeating. It's not always desirable (undo/redo).
+    # return if key is @_activeKey
+
     # Find if the pressed key matches any of the tools' shortcuts.
-    if targetTool = _.find(@options.tools(), (tool) => key is tool.shortcut)
-      @_activateTool targetTool
+    keyboardState = AC.Keyboard.getState()
+    commandOrCtrlDown = keyboardState.isCommandOrCtrlDown()
+    shiftDown = keyboardState.isKeyDown AC.Keys.shift
+
+    targetTool = _.find @options.tools(), (tool) =>
+      _.every [
+        key is tool.shortcut
+        shiftDown is tool.shortcutShift
+        commandOrCtrlDown is tool.shortcutCommandOrCtrl
+      ]
+
+    if targetTool
+      @activateTool targetTool
+
+      # Prevent browser shortcuts from firing.
+      event.preventDefault()
+      
+      # Prevent other in-game key listeners to also fire.
+      event.stopImmediatePropagation()
 
     # Look if it matches the hold shortcut.
     if targetTool = _.find(@options.tools(), (tool) => key is tool.holdShortcut)
       # Store currently active tool before switching the tools.
-      @_storedTool @options.activeTool()
-      @options.activeTool targetTool
+      @activateTool targetTool, true
+      event.preventDefault()
+
+    @_activeKey = key
 
   onKeyUp: (event) ->
+    # Check if the toolbox is enabled.
+    return if @options.enabled? and not @options.enabled()
+
     # Restore the stored tool.
     if storedTool = @_storedTool()
-      @options.activeTool storedTool
+      @activateTool storedTool
       @_storedTool null
+
+    @_activeKey = null

@@ -5,6 +5,24 @@
   width 100%
   height 100%
 
+  &:hover
+    z-index 4
+
+    .icon
+      border-color atariCyan(7)
+
+    .info
+      display block
+
+  &.active
+    .icon
+      border-color atariCyan(7)
+      background-color atariCyan(3)
+
+    &:hover
+      .icon
+        border-color atariGrey(7)
+
   .icon
     position relative
     width 100%
@@ -12,12 +30,13 @@
     border 1rem solid atariCyan(5)
     cursor pointer
 
-    .interests
+    .completed
       &::before
-        content '+'
+        content '✓'
         position absolute
         top -0.5rem
         left 1.5rem
+        adventure()
 
   .info
     display none
@@ -49,9 +68,6 @@
           position absolute
           left 0
 
-  &:hover
-    border-color atariCyan(7)
-    z-index 4
-
-    .info
-      display block
+        &.required
+          &::before
+            content '→'

@@ -11,7 +11,8 @@ Package.describe({
 });
 
 Npm.depends({
-  'quill-delta': '3.6.2'
+  'quill-delta': '3.6.2',
+  'pngjs': '2.3.0'
 });
 
 Package.onUse(function(api) {
@@ -19,6 +20,7 @@ Package.onUse(function(api) {
   api.use('retronator:pixelartacademy');
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartdatabase');
+  api.use('froatsnook:request');
 
   api.use('jparker:crypto-aes');
 
@@ -85,8 +87,9 @@ Package.onUse(function(api) {
   api.addFile('challenges/drawing..');
 
   api.addFile('challenges/drawing/assets/tutorialsprite..');
-  api.addServerFile('challenges/drawing/assets/tutorialsprite/server');
-  api.addFile('challenges/drawing/assets/tutorialsprite/methods');
+  api.addClientFile('challenges/drawing/assets/tutorialsprite/tutorialsprite-client');
+  api.addServerFile('challenges/drawing/assets/tutorialsprite/tutorialsprite-server');
+  api.addClientFile('challenges/drawing/assets/tutorialsprite/methods-client');
   api.addServerFile('challenges/drawing/assets/tutorialsprite/methods-server');
   api.addFile('challenges/drawing/assets/tutorialsprite/enginecomponent');
   api.addUnstyledComponent('challenges/drawing/assets/tutorialsprite/briefcomponent..');

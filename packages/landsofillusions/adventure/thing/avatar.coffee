@@ -8,6 +8,7 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
     shortName: 'shortName'
     descriptiveName: 'descriptiveName'
     description: 'description'
+    storeName: 'storeName'
     storeDescription: 'storeDescription'
 
   # Initialize database parts of an avatar.

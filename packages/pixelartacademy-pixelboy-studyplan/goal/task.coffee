@@ -10,7 +10,14 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal.Task extends AM.Component
   
   onCreated: ->
     super
+
+    @goalComponent = @ancestorComponentOfType PAA.PixelBoy.Apps.StudyPlan.Goal
     
   interestDocument: ->
     interest = @currentData()
     IL.Interest.find interest
+
+  activeClass: ->
+    task = @data()
+
+    'active' if task.active @goalComponent.goal.tasks()

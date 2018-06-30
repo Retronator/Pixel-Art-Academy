@@ -19,15 +19,28 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
       return unless assetData = @drawing.portfolio().displayedAsset()
 
       # Asset in the clipboard should be bigger than in the portfolio.
-      # 1 -> 2
-      # 2 -> 3
-      # 3 -> 4
-      # 4 -> 6
-      # 5 -> 6
-      # 6 -> 8
-      # 7 -> 9
       assetScale = assetData.scale()
-      scale = Math.ceil assetScale * 1.2
+
+      if assetScale < 1
+        # Scale up to 0.5 to show pixel perfect at least on retina screens.
+        scale = 0.5
+
+      else
+        # 1 -> 2
+        # 2 -> 3
+        # 3 -> 4
+        # 4 -> 5
+        # 5 -> 6
+        # 6 -> 8
+        # 7 -> 9
+        scale = Math.ceil assetScale * 1.2
+
+      # Check if the asset provides a minimum or maximum scale.
+      if minScale = assetData.asset.minClipboardScale?()
+        scale = Math.max scale, minScale
+
+      if maxScale = assetData.asset.maxClipboardScale?()
+        scale = Math.min scale, maxScale
 
       contentWidth = spriteData.bounds.width * scale
       contentHeight = spriteData.bounds.height * scale

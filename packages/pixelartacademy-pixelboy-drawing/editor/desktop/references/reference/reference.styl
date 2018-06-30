@@ -1,0 +1,46 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-editor-desktop-references-reference
+  position absolute
+  margin 0
+  border 4rem solid atariGrey(6)
+  background atariGrey(6)
+  box-shadow -1rem 1rem 0 rgba(atariGrey(0), 0.2)
+  transform translate(-50%, -50%)
+  transition all 1s
+  cursor grab
+
+  &.dragging
+    position fixed
+    box-shadow -12rem 4rem 20rem rgba(atariGrey(0), 0.2)
+    z-index 101 !important
+
+  &.resizing-n
+  &.resizing-s
+    cursor ns-resize
+
+  &.resizing-e
+  &.resizing-w
+    cursor ew-resize
+
+  &.resizing-nw
+  &.resizing-se
+    cursor nwse-resize
+
+  &.resizing-ne
+  &.resizing-sw
+    cursor nesw-resize
+
+  .image
+    display block
+    width 100%
+
+  .caption
+    height 14rem
+    padding-top 3rem
+    freehand()
+    color atariPurple(3)
+    text-align center
+    white-space nowrap
+    text-overflow ellipsis
+    overflow hidden

@@ -50,6 +50,18 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @removePixel: @method 'removePixel'
   @colorFill: @method 'colorFill'
   @replacePixels: @method 'replacePixels'
+  
+  @pixelPattern = Match.ObjectIncluding
+    x: Match.Integer
+    y: Match.Integer
+    paletteColor: Match.Optional Match.ObjectIncluding
+      ramp: Match.Integer
+      shade: Match.Integer
+    directColor: Match.Optional Match.ObjectIncluding
+      r: Number
+      g: Number
+      b: Number
+    materialIndex: Match.Optional Match.Integer
 
   constructor: ->
     super
@@ -60,3 +72,22 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
+
+  _applyOperation: (forward, backward) ->
+    # See if we're updating bounds.
+    if forward.$set?.bounds
+      if @bounds
+        # Replace current bounds going backward.
+        backward.$set ?= {}
+        backward.$set.bounds = @bounds
+
+      else
+        # Remove bounds.
+        backward.$unset ?= {}
+        backward.$unset.bounds = true
+
+    if forward.$unset?.bounds
+      backward.$set ?= {}
+      backward.$set.bounds = @bounds
+
+    super forward, backward

@@ -1,0 +1,30 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Pico8.Drawer">
+  <div class="pixelartacademy-pixelboy-apps-pico-8-drawer {{openedClass}} {{coveredClass}}">
+    <div class="drawer">
+      <div class="contents">
+        {{#if cartridges.length}}
+          <ul class="cartridges">
+            {{#each cartridges}}
+              <li class="cartridge {{selectedClass}}">
+                <img class="image" src="{{cartridgeUrl}}"/>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class="no-cartridges">
+            <div class="message">
+              To do:<br/>
+              Get some Pico-8 carts.
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+    <div class="table-top"></div>
+    <div class="selected-cartridge {{activeClass}}">
+      {{#with selectedCartridge}}
+        <img class="image" src="{{cartridgeUrl}}"/>
+      {{/with}}
+    </div>
+  </div>
+</template>

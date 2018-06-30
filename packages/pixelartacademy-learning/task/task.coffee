@@ -4,6 +4,10 @@ PAA = PixelArtAcademy
 class PAA.Learning.Task
   @_taskClassesById = {}
 
+  @PredecessorsCompleteType:
+    All: 'All'
+    Any: 'Any'
+
   @getClassForId: (id) ->
     @_taskClassesById[id]
 
@@ -19,8 +23,12 @@ class PAA.Learning.Task
   # Override to list the interests this task increases.
   @interests: -> []
 
+  # Override to specify interests required to attempt this task.
+  @requiredInterests: -> []
+
   # Override to provide the classes of tasks leading to this task.
   @predecessors: -> []
+  @predecessorsCompleteType: -> @PredecessorsCompleteType.All
 
   # Override to place the task in a different group. Tasks in the same group will be drawn
   # together as a linear progression. Lower numbers indicate earlier appearance within the goal.
@@ -37,6 +45,9 @@ class PAA.Learning.Task
 
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
+
+  # Override if the task can be automatically determined if it was completed.
+  @completed: -> null
 
   constructor: ->
     # Subscribe to this goal's translations.
@@ -55,13 +66,42 @@ class PAA.Learning.Task
   instructionsTranslation: -> AB.translation @_translationSubscription, 'instructions'
 
   interests: -> @constructor.interests()
+  requiredInterests: -> @constructor.requiredInterests()
   predecessors: -> @constructor.predecessors()
   groupNumber: -> @constructor.groupNumber()
 
   completed: ->
+    # See if this task is automatically determined to be completed.
+    completed = @constructor.completed()
+    return completed if completed?
+
+    # We need an entry made by this character.
     return unless characterId = LOI.characterId()
     
-    # Find a task entry made by this character.
     @constructor.Entry.documents.findOne
       taskId: @id()
       'character._id': characterId
+
+  active: (otherTasks) ->
+    # Predecessors need to be completed for the task to be active.
+    predecessors = @predecessors()
+
+    if predecessors.length
+      # Count how many predecessors are completed.
+      predecessorsCompletedCount = 0
+
+      for predecessorClass in predecessors
+        continue unless task = _.find otherTasks, (task) => task instanceof predecessorClass
+        predecessorsCompletedCount++ if task.completed()
+
+      switch @constructor.predecessorsCompleteType()
+        when @constructor.PredecessorsCompleteType.All
+          return false unless predecessorsCompletedCount is predecessors.length
+
+        when @constructor.PredecessorsCompleteType.Any
+          return false if predecessorsCompletedCount is 0
+
+    # TODO: Check that the character has all required interests.
+
+    # Task is active until completed.
+    not @completed()

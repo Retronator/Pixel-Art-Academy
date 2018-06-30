@@ -8,14 +8,6 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
   # We call register here because it is the last in the inheritance chain.
   @register @id()
 
-  constructor: (@drawing) ->
-    super
-
-    @sectionHeight = 21
-    @initialGroupHeight = 17
-    @inactiveGroupHeight = 3
-    @activeGroupHeight = 150
-
   onCreated: ->
     super
 
@@ -44,6 +36,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
 
               index: index
               name: => sectionThing.fullName()
+              noAssetsInstructions: => sectionThing.noAssetsInstructions?()
               assets: assets
 
         section =
@@ -60,7 +53,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
       sections = []
 
       sections.push @projectsSection if @projectsSection.groups().length
-      sections.push @challengesSection
+      sections.push @challengesSection if @challengesSection.groups().length
       sections.push @artworksSection if @artworksSection.groups().length
 
       # If the active section is not present anymore, close the section.
@@ -74,6 +67,13 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
 
       sections
 
+    @settingsSection =
+      nameKey: @constructor.Sections.Settings
+
+    @autorun (computation) =>
+      sections = @sections()
+      @settingsSection.index = sections.length
+
     @activeSection = new ReactiveField null, (a, b) => a is b
     @activeGroup = new ReactiveField null, (a, b) => a is b
 
@@ -81,11 +81,20 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
     @autorun (computation) =>
       return unless activeSection = @activeSection()
       return unless activeGroup = @activeGroup()
-      groups = activeSection.groups()
-      return if activeGroup in groups
+      newGroups = activeSection.groups()
+      return if activeGroup in newGroups
 
-      # Seems like the active group is not valid anymore. Reinstate the new group at the same index.
-      @activeGroup groups[activeGroup.index]
+      # See if we can find a group with the same name.
+      name = activeGroup.name()
+      sameNamedGroup = _.find newGroups, (group) => group.name() is name
+
+      if sameNamedGroup
+        # We found the same group so it must have just re-created.
+        @activeGroup sameNamedGroup
+        return
+
+      # Seems like the active group is not valid anymore.
+      @activeGroup null
 
     @hoveredAsset = new ReactiveField null, (a, b) => a is b
     @activeAsset = new ComputedField =>
@@ -101,7 +110,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
               return assetData
 
     # Displayed asset retains its value until another asset gets activated
-    @displayedAsset = new ReactiveField null
+    @displayedAsset = new ReactiveField null, (a, b) => a is b
 
     @autorun (computation) =>
       return unless activeAsset = @activeAsset()
@@ -109,3 +118,77 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
 
     # Subscribe to character's projects.
     PAA.Practice.Project.forCharacterId.subscribe @, LOI.characterId()
+
+    # Prepare settings.
+    editors = new PAA.PixelBoy.Apps.Drawing.Editors
+    
+    currentEditorsSituation = new LOI.Adventure.Situation
+      location: editors
+
+    @_editors = {}
+
+    @editors = new ComputedField =>
+      editorClasses = currentEditorsSituation.things()
+      editors = []
+
+      for editorClass in editorClasses
+        @_editors[editorClass.id()] ?= new editorClass
+        editors.push @_editors[editorClass.id()]
+
+      if editors.length
+        editors.unshift
+          id: => null
+          fullName: 'None'
+
+      editors
+
+    @programs = _.sortBy [
+      value: 'aseprite'
+      fullName: 'Aseprite'
+    ,
+      value: 'pyxeledit'
+      fullName: 'PyxelEdit'
+    ,
+      value: 'graphicgale'
+      fullName: 'Graphics Gale'
+    ,
+      value: 'promotion'
+      fullName: 'Pro Motion'
+    ,
+      value: 'grafx2'
+      fullName: 'GRAFX2'
+    ,
+      value: 'photoshop'
+      fullName: 'Photoshop'
+    ,
+      value: 'gimp'
+      fullName: 'GIMP'
+    ,
+      value: 'krita'
+      fullName: 'Krita'
+    ,
+      value: 'pixaki'
+      fullName: 'Pixaki'
+    ,
+      value: 'dottable'
+      fullName: 'Dottable'
+    ,
+      value: 'pixly'
+      fullName: 'Pixly'
+    ,
+      value: 'pixelartstudio'
+      fullName: 'Pixel Art Studio'
+    ], 'fullName'
+
+    @programs.unshift
+      value: null
+      fullName: 'None'
+
+    @programs.push
+      value: 'other'
+      fullName: 'Other software'
+
+  onDestroyed: ->
+    super
+    
+    editor.destroy?() for editor in @_editors

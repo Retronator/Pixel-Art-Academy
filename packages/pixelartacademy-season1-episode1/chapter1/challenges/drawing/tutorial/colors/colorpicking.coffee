@@ -14,46 +14,53 @@ class C1.Challenges.Drawing.Tutorial.Colors.ColorPicking extends PAA.Practice.Ch
     """
 
   @fixedDimensions: -> width: 12, height: 12
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+  @restrictedPaletteName: -> C1.Challenges.Drawing.Tutorial.Colors.pacManPaletteName
+  @backgroundColor: -> LOI.Assets.Palette.defaultPalette().color LOI.Assets.Palette.Atari2600.hues.grey, 2
 
-  @bitmap: -> """
+  @bitmapString: -> """
       |
       |
       |
       |
-      | 8884
-      |888488
-      |88888
-      |8788
-      |8878
-      | 888
+      | 1112
+      |111211
+      |11111
+      |1c11
+      |11c1
+      | 111
       |
       |
     """
 
-  @goalBitmap: -> """
-      |          44
-      |        4444
-      |      44 4
-      |     4   4
-      | 8884   4
-      |888488 4
-      |88888 8488
-      |8788 884888
-      |8878 888888
-      | 888 878888
-      |     887888
-      |      8888
+  @goalBitmapString: -> """
+      |          22
+      |        2222
+      |      22 2
+      |     2   2
+      | 1112   2
+      |111211 2
+      |11111 1211
+      |1c11 112111
+      |11c1 111111
+      | 111 1c1111
+      |     11c111
+      |      1111
     """
 
   @spriteInfo: -> "Artwork from PAC-MAN, Namco, 1980"
 
-  availableToolKeys: -> [
-    PAA.Practice.Software.Tools.ToolKeys.Pencil
-    PAA.Practice.Software.Tools.ToolKeys.Eraser
-    PAA.Practice.Software.Tools.ToolKeys.ColorFill
-    PAA.Practice.Software.Tools.ToolKeys.ColorPicker
-    PAA.Practice.Software.Tools.ToolKeys.Zoom if C1.Challenges.Drawing.Tutorial.Helpers.isAssetCompleted C1.Challenges.Drawing.Tutorial.Helpers.Zoom
-  ]
+  availableToolKeys: ->
+    Helpers = C1.Challenges.Drawing.Tutorial.Helpers
+    
+    [
+      PAA.Practice.Software.Tools.ToolKeys.Pencil
+      PAA.Practice.Software.Tools.ToolKeys.Eraser
+      PAA.Practice.Software.Tools.ToolKeys.ColorFill
+      PAA.Practice.Software.Tools.ToolKeys.ColorPicker
+      PAA.Practice.Software.Tools.ToolKeys.Zoom if Helpers.isAssetCompleted Helpers.Zoom
+      PAA.Practice.Software.Tools.ToolKeys.MoveCanvas if Helpers.isAssetCompleted Helpers.MoveCanvas
+      PAA.Practice.Software.Tools.ToolKeys.Undo if Helpers.isAssetCompleted Helpers.UndoRedo
+      PAA.Practice.Software.Tools.ToolKeys.Redo if Helpers.isAssetCompleted Helpers.UndoRedo
+    ]
 
   @initialize()

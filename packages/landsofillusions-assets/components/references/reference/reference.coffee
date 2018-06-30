@@ -57,7 +57,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   _uploadFile: (reference) ->
     LOI.Assets.Components.References.referenceUploadContext.upload reference.file, (url) =>
       # Add reference to asset.
-      LOI.Assets.VisualAsset.addReferenceByUrl @references.options.assetId(), @references.options.documentClass.className, LOI.characterId(), url, reference.position(), reference.scale(), reference.displayed(), (error, imageId) =>
+      LOI.Assets.VisualAsset.addReferenceByUrl @references.options.documentClass.className, @references.options.assetId(), LOI.characterId(), url, reference.position(), reference.scale(), reference.displayed(), (error, imageId) =>
         if error
           console.error error
           return
@@ -148,7 +148,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     return if EJSON.equals @["current#{upperName}"](), value
 
     if reference.image
-      LOI.Assets.VisualAsset["updateReference#{upperName}"] @references.options.assetId(), @references.options.documentClass.className, reference.image._id, value
+      LOI.Assets.VisualAsset["updateReference#{upperName}"] @references.options.documentClass.className, @references.options.assetId(), reference.image._id, value
 
     else
       reference[name] value
@@ -157,7 +157,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     return unless reference = @data()
 
     if reference.image
-      LOI.Assets.VisualAsset.reorderReferenceToTop  @references.options.assetId(), @references.options.documentClass.className, reference.image._id
+      LOI.Assets.VisualAsset.reorderReferenceToTop @references.options.documentClass.className, @references.options.assetId(), reference.image._id
 
     else
       # We increase order only by .1 to allow other references to get higher via database calls.

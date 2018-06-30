@@ -7,5 +7,8 @@ class PAA.Practice.Software.Tools
     ColorFill: 'ColorFill'
     ColorPicker: 'ColorPicker'
     ColorSwatches: 'ColorSwatches'
+    MoveCanvas: 'MoveCanvas'
     Zoom: 'Zoom'
     References: 'References'
+    Undo: 'Undo'
+    Redo: 'Redo'

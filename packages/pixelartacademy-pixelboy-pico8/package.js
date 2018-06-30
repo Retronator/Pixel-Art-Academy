@@ -18,4 +18,5 @@ Package.onUse(function(api) {
   api.export('PixelArtAcademy');
 
   api.addComponent('pico8');
+  api.addComponent('drawer..');
 });

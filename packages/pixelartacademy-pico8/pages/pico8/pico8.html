@@ -1,0 +1,21 @@
+<template name="PixelArtAcademy.Pico8.Pages.Pico8">
+  <style>
+    html {
+      background: black;
+      font-size: {{display.scale}}px;
+    }
+  </style>
+  {{> Render display}}
+  <div class="pixelartacademy-pico8-pages-pico8">
+    {{#LandsOfIllusions.Components.Overlay}}
+      {{#if game}}
+        <div class="cartridge">
+          <img class="image" src="{{game.cartridge.url}}"/>
+        </div>
+      {{/if}}
+      <div class="device">
+        {{> Render device}}
+      </div>
+    {{/LandsOfIllusions.Components.Overlay}}
+  </div>
+</template>

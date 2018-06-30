@@ -129,8 +129,6 @@ class HQ.Items.Prospectus extends LOI.Adventure.Item
       socialNetwork = 'Twitter' if $icon.hasClass('twitter')
       socialNetwork = 'Tumblr' if $icon.hasClass('tumblr')
 
-      ga? 'send', 'event', 'Social Media Engagement', 'Click', socialNetwork if socialNetwork
-
     onClickPlayButton: (event) ->
       AB.Router.goToRoute 'PixelArtAcademy.Adventure'
 

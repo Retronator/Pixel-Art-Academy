@@ -1,0 +1,49 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-drawing-editor-desktop-color-fill
+  position absolute
+  width 72rem
+  height 72rem
+
+  &::before
+    content ''
+    position absolute
+    z-index 3
+    top 8rem
+    left -28rem
+    width 91rem
+    height 72rem
+    background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/glass-shadow.png')
+    mix-blend-mode multiply
+
+  .glass
+    absolute-cover()
+    z-index 3
+
+    &::before
+    &::after
+      content ''
+      position absolute
+
+    &::before
+      absolute-cover()
+      z-index 0
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/glass-bottom.png')
+
+    &::after
+      z-index 5
+      top 8rem
+      left 3rem
+      width 61rem
+      height 57rem
+      background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/glass-top.png')
+
+    .color
+      position absolute
+      z-index 4
+      top 9rem
+      left 9rem
+      width 54rem
+      height 54rem
+      border-radius 50%
+      transition all 0.2s

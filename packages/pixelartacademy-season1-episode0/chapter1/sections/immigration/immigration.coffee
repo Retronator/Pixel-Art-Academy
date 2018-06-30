@@ -12,14 +12,14 @@ class C1.Immigration extends LOI.Adventure.Section
     @Customs
   ]
 
+  @initialize()
+
+  @started: ->
+    @requireFinishedSections C1.Start
+
   @finished: ->
     # Immigration section is over when the player has left the customs. Make sure we don't return undefined though.
     @state('leftCustoms') is true
-
-  @initialize()
-
-  active: ->
-    @requireFinishedSections C1.Start
 
   onExit: (exitResponse) ->
     return unless exitResponse.currentLocationClass is RS.AirportTerminal.Customs

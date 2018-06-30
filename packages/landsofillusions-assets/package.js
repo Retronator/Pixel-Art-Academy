@@ -33,18 +33,24 @@ Package.onUse(function(api) {
   api.addFile('documents/palette/atari2600');
   api.addServerFile('documents/palette/subscriptions');
 
-  api.addServerFile('documents/palette/palettes/atari2600');
-  api.addServerFile('documents/palette/palettes/pico8');
-  api.addServerFile('documents/palette/palettes/black');
+  api.addServerFile('documents/palette/palettes-server/atari2600');
+  api.addServerFile('documents/palette/palettes-server/pico8');
+  api.addServerFile('documents/palette/palettes-server/black');
 
   api.addFile('documents/visualasset..');
-  api.addFile('documents/visualasset/methods');
+  api.addFile('documents/visualasset/methods..');
+  api.addFile('documents/visualasset/methods/references');
+  api.addFile('documents/visualasset/methods/history');
 
   api.addFile('documents/sprite..');
   api.addClientFile('documents/sprite/sprite-client');
-  api.addFile('documents/sprite/methods');
   api.addServerFile('documents/sprite/subscriptions');
   api.addServerFile('documents/sprite/cache-server');
+  api.addFile('documents/sprite/methods..');
+  api.addFile('documents/sprite/methods/addpixel');
+  api.addFile('documents/sprite/methods/removepixel');
+  api.addFile('documents/sprite/methods/colorfill');
+  api.addFile('documents/sprite/methods/replacepixels');
 
   api.addFile('documents/mesh..');
 
@@ -100,5 +106,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/colorfill');
   api.addFile('spriteeditor/tools/paintnormals');
   api.addFile('spriteeditor/tools/symmetry');
+  api.addFile('spriteeditor/tools/undo');
+  api.addFile('spriteeditor/tools/redo');
 
 });

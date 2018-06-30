@@ -100,12 +100,18 @@ class AB.Router extends AB.Router
 
       # Call layout first and component later so it can override the more general layout results.
       for target in [route.layoutClass, route.pageClass]
-        for headParameter in ['title', 'description', 'image']
+        # Go over values that need escaping.
+        for headParameter in ['title', 'description', 'image', 'viewport', 'touchIcon']
           # Only override the parameter if we get a result.
           result = target[headParameter]? routeParameters
 
           # We need to escape the string since we'll be inserting it into html response.
           head[headParameter] = _.escape result if result
+
+        # Gather the rest of the values without escaping.
+        for headParameter in ['webApp']
+          result = target[headParameter]? routeParameters
+          head[headParameter] = result if result?
 
       # Set the head.
       headHtml = ""
@@ -115,11 +121,20 @@ class AB.Router extends AB.Router
         headHtml += "<meta property='og:title' content='#{head.title}' />\n"
 
       if head.description
-        headHtml += "<meta name='description' content='#{head.description}'>\n"
+        headHtml += "<meta name='description' content='#{head.description}' />\n"
         headHtml += "<meta property='og:description' content='#{head.description}' />\n"
 
       if head.image
         headHtml += "<meta property='og:image' content='#{head.image}' />\n"
+
+      if head.viewport
+        headHtml += "<meta name='viewport' content='#{head.viewport}' />\n"
+
+      if head.touchIcon
+        headHtml += "<link rel='apple-touch-icon' href='#{head.touchIcon}' />\n"
+        
+      if head.webApp
+        headHtml += "<meta name='apple-mobile-web-app-capable' content='yes' />\n"
 
       # Build a canonical URL by replacing parameters in the url.
       canonicalUrl = route.path

@@ -10,6 +10,9 @@ class C1.Challenges.Drawing.Tutorial.Helpers extends C1.Challenges.Drawing.Tutor
 
   @initialize()
 
+  @completed: ->
+    @isAssetCompleted @References
+
   # Methods
 
   constructor: ->
@@ -22,6 +25,14 @@ class C1.Challenges.Drawing.Tutorial.Helpers extends C1.Challenges.Drawing.Tutor
       assets.push @zoom
 
       if @_assetsCompleted @zoom
+        @moveCanvas ?= Tracker.nonreactive => new @constructor.MoveCanvas @
+        assets.push @moveCanvas
+
+      if @_assetsCompleted @moveCanvas
+        @undoRedo ?= Tracker.nonreactive => new @constructor.UndoRedo @
+        assets.push @undoRedo
+
+      if @_assetsCompleted @undoRedo
         @references ?= Tracker.nonreactive => new @constructor.References @
         assets.push @references
 
@@ -33,6 +44,8 @@ class C1.Challenges.Drawing.Tutorial.Helpers extends C1.Challenges.Drawing.Tutor
 
   destroy: ->
     @zoom?.destroy()
+    @moveCanvas?.destroy()
+    @undoRedo?.destroy()
     @references?.destroy()
 
     @assets.stop()

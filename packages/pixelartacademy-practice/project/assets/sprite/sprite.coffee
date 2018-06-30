@@ -18,6 +18,9 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
   # Override to provide the name of the palette this sprite must be created with.
   @restrictedPaletteName: -> null
 
+  # Override to set which background color is used.
+  @backgroundColor: -> null
+
   # Override to restrict the total number of colors used.
   @maxColorCount: -> null
 
@@ -42,10 +45,7 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     super
 
     @spriteId = new ComputedField =>
-      return unless assets = @project.assetsData()
-      return unless asset = _.find assets, (asset) => asset.id is @id()
-
-      asset.sprite._id
+      @data()?.sprite._id
     ,
       true
 
@@ -72,8 +72,24 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
   fixedDimensions: -> @constructor.fixedDimensions()
 
   restrictedPalette: ->
-    LOI.Assets.Palette.documents.findOne
-      name: @constructor.restrictedPaletteName()
+    return unless restrictedPaletteName = @constructor.restrictedPaletteName()
 
-  spriteInfo: -> AB.translate(@_translationSubscription, 'spriteInfo').text
+    LOI.Assets.Palette.documents.findOne
+      name: restrictedPaletteName
+
+  backgroundColor: ->
+    return unless backgroundColor = @constructor.backgroundColor()
+
+    if paletteColor = backgroundColor.paletteColor
+      return unless palette = @restrictedPalette()
+      palette.color paletteColor.ramp, paletteColor.shade
+
+    else
+      # We assume the color is already a color instance.
+      backgroundColor
+
+  spriteInfo: ->
+    translation = AB.translate @_translationSubscription, 'spriteInfo'
+    if translation.language then translation.text else null
+
   spriteInfoTranslation: -> AB.translation @_translationSubscription, 'spriteInfo'

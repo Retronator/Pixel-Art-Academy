@@ -8,16 +8,32 @@
         <span class="property-name">Palette</span>:
         {{restrictedPalette.name}}</li>
     </ul>
-    <ul class="actions">
-      <li class="action">
-        <button class="button edit-button">Edit</button>
-      </li>
-      <li class="action">
-        <button class="button download-button">Download</button>
-      </li>
-      <li class="action">
-        <button class="button import-button">Import</button>
-      </li>
-    </ul>
+    {{#if noActions}}
+      <div class="no-actions">
+        {{#if needsSettingsSelection}}
+          Select an editor <!-- TODO: or external software --> in Settings to edit assets.
+        {{else}}
+          {{#if needsToolsChallenge}}
+            Complete the Pixel Art Software challenge to be able to edit assets.
+          {{/if}}
+        {{/if}}
+      </div>
+    {{else}}
+      <ul class="actions">
+        {{#if canEdit}}
+          <li class="action">
+            <button class="button edit-button">Edit</button>
+          </li>
+        {{/if}}
+        {{#if canDownloadAndUpload}}
+          <li class="action">
+            <button class="button download-button">Download</button>
+          </li>
+          <li class="action">
+            <button class="button upload-button">Upload</button>
+          </li>
+        {{/if}}
+      </ul>
+    {{/if}}
   {{/with}}
 </template>

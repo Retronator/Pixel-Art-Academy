@@ -1,0 +1,21 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pico8-pages-pico8
+  pixel-image-rendering()
+  user-select none
+  adventure()
+  color atariGrey(7)
+
+  *
+  *::before
+  *::after
+    background-size 100% 100%
+
+  .cartridge
+    display none
+
+@media screen and (max-width: 640px)
+  .pixelartacademy-pico8-pages-pico8
+    .landsofillusions-components-overlay
+      > .background
+        background none

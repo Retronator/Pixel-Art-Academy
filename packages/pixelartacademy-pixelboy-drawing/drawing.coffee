@@ -5,6 +5,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
+  # editorId: which editor component to use for editing sprites in the app
+  # externalSoftware: which external software the player is using to edit sprites
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Drawing'
   @url: -> 'drawing'
 
@@ -34,7 +36,7 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
     # Initialize components.
     @portfolio new @constructor.Portfolio @
     @clipboard new @constructor.Clipboard @
-    @editor new @constructor.Editor @
+    @editor new @constructor.Editor.Desktop @
 
     @autorun (computation) =>
       portfolio = @portfolio()
@@ -50,7 +52,15 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
       else
         @setFixedPixelBoySize 332, 241
 
+  onDestroyed: ->
+    @editor().destroy()
+
   onBackButton: ->
+    # Relay to editor.
+    editor = @editor()
+    editorResult = editor.onBackButton?()
+    return editorResult if editorResult?
+
     portfolio = @portfolio()
 
     # We only need to handle closing groups when not on an asset.
@@ -69,6 +79,9 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
 
   editorActiveClass: ->
     'editor-active' if @editor().active()
-    
-  themeClass: ->
-    @editor()?.theme()?.constructor.styleClass()
+
+  editorFocusedModeClass: ->
+    'editor-focused-mode' if @editor().focusedMode?()
+
+  editorClass: ->
+    @editor()?.constructor.styleClass()

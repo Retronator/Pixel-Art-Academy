@@ -15,9 +15,9 @@ class C1.Challenges.Drawing.Tutorial.Helpers.References extends PAA.Practice.Cha
   @fixedDimensions: -> width: 7, height: 16
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
-  @bitmap: -> "" # Empty sprite
+  @bitmapString: -> "" # Empty sprite
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |   0
       |  0 0
       |  0 0
@@ -53,7 +53,10 @@ class C1.Challenges.Drawing.Tutorial.Helpers.References extends PAA.Practice.Cha
     PAA.Practice.Software.Tools.ToolKeys.Eraser
     PAA.Practice.Software.Tools.ToolKeys.ColorFill
     PAA.Practice.Software.Tools.ToolKeys.Zoom
+    PAA.Practice.Software.Tools.ToolKeys.MoveCanvas
     PAA.Practice.Software.Tools.ToolKeys.References
+    PAA.Practice.Software.Tools.ToolKeys.Undo
+    PAA.Practice.Software.Tools.ToolKeys.Redo
   ]
 
   editorOptions: ->

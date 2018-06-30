@@ -10,18 +10,11 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Section
 
   @scenes: -> [] # Override to provide any scenes that are always active in a chapter.
 
-  @number: -> throw new AE.NotImplementedException
-  number: -> @constructor.number()
-
   @sections: -> throw new AE.NotImplementedException
 
-  @timelineId: -> # Override to set a default timeline for scenes.
   timelineId: ->
     # By default we use the timeline of the episode.
     @constructor.timelineId() or @episode.timelineId()
-
-  @finished: -> false # Override to set goal state conditions.
-  finished: -> @constructor.finished()
 
   constructor: (@options) ->
     # Set the episode and chapter before calling super, because super executes active, which needs these fields.
@@ -51,13 +44,17 @@ class LOI.Adventure.Chapter extends LOI.Adventure.Section
     sectionId = _.thingId sectionClassOrId
 
     _.find @sections(), (section) => section.id() is sectionId
-      
-  active: ->
-    # Chapter starts being active when the previous chapter gets finished. It stays active forever to preserve 
-    # inventory and other permanent changes, as well as access to unfinished sections. First chapter is special and
-    # gets activated when episode's starting section gets completed.
+
+  started: ->
+    # We use a convention of sending in a previous chapter which is used as a trigger for this chapter to start. When
+    # no previous chapter is set, the chapter automatically starts when the start section of the episode is finished.
     if @previousChapter then @previousChapter.finished() else @episode.startSection.finished()
 
+  active: ->
+    # Unlike a section, a chapter stays active forever to preserve inventory
+    # and other permanent changes, as well as access to unfinished sections.
+    @_activeAfterStarted()
+    
   accessRequirement: ->
     # By default, chapters share the access requirement of the episode.
     @episode.accessRequirement()

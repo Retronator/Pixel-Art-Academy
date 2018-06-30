@@ -25,11 +25,14 @@ Package.onUse(function(api) {
 
   api.addComponent('clipboard..');
 
-  api.addComponent('editor..');
-  api.addFile('editor/theme..');
-  api.addComponent('editor/theme/school..');
-  api.addComponent('editor/theme/school/colorfill..');
-  api.addComponent('editor/theme/school/palette..');
-  api.addComponent('editor/theme/school/references..');
-  api.addComponent('editor/theme/school/references/reference..');
+  api.addFile('editor..');
+  api.addFile('editor/editors');
+  api.addComponent('editor/desktop..');
+  api.addComponent('editor/desktop/colorfill..');
+  api.addComponent('editor/desktop/palette..');
+  api.addComponent('editor/desktop/references..');
+  api.addComponent('editor/desktop/references/reference..');
+  api.addComponent('editor/desktop/pico8..');
+  api.addFile('editor/desktop/tools..');
+  api.addFile('editor/desktop/tools/movecanvas');
 });

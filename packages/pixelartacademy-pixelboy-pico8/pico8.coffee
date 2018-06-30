@@ -12,114 +12,78 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
   @register @id()
   template: -> @constructor.id()
 
-  @fullName: -> "Pico-8"
+  @fullName: -> "PICO-8"
   @description: ->
     "
       It's Lexaloffle's fantasy console!
     "
+
+  @storeName: -> "PICO-8 for PixelBoy"
+
+  @storeDescription: -> "
+    Retronator brings Lexallofle's fantasy console right to your fingertips with the app for PixelBoy.
+    The bright magenta case complements the playfulness of PICO-8 games and makes sure the fantasy becomes a reality.
+  "
 
   @initialize()
 
   constructor: ->
     super
 
-    @minWidth 118
-    @minHeight 152
-
-    @maxWidth @minWidth()
-    @maxHeight @minHeight()
-
     @resizable false
 
-    @picoKeyIsPressed = new ReactiveField false
-    @isPowerOn = new ReactiveField false
+    @drawer = new ReactiveField null
+    @device = new ReactiveField null
 
-  onActivate: (finishedActivatingCallback) ->
-    # Override to perform any logic when item is activated. Report that you've done the necessary
-    # steps by calling the provided callback. By default we just call the callback straight away.
-    setTimeout =>
-      # Power on the pico-8 console, but wait for the resize to finish first.
-      $('.power-toggle-controller').attr('checked', false)
-      @isPowerOn true
+    @cartridge = new ReactiveField null
 
-      cartridgeUrl = Meteor.absoluteUrl("pico8.png?cartridge=pixelartacademy/pixelboy/apps/pico8/snake.p8.png&characterId=#{LOI.characterId()}")
-      Pico.load $('.pico-container')[0], cartridgeUrl
-    ,
-      1000
-    
-    finishedActivatingCallback()
-
-  onRendered: ->
+  onCreated: ->
     super
 
-    $(document).keydown (event) =>
-      keycode = event.keyCode
-      if keycode is 88 or keycode is 86
-        keypress = 4
-      if keycode is 90 or keycode is 67
-        keypress = 5
-      if keycode is 38
-        keypress = 2
-      if keycode is 39
-        keypress = 1
-      if keycode is 40
-        keypress = 3
-      if keycode is 37
-        keypress = 0
+    @drawer new @constructor.Drawer @
+    @device new PAA.Pico8.Device.Handheld
+      # Relay input/output calls to the cartridge.
+      onInputOutput: (address, value) =>
+        @cartridge().onInputOutput? address, value
 
-      if keypress isnt null
-        $('.pico-button[value="' + keypress + '"]').addClass 'pressed'
-        Pico.press keypress, 0
-        @picoKeyIsPressed true
+    @autorun (computation) =>
+      if @cartridge()
+        @setFixedPixelBoySize 320, 157
 
-    $(document).keyup (event) =>
-      keycode = event.keyCode
-      if keycode is 88 or keycode is 86
-        keypress = 4
-      if keycode is 90 or keycode is 67
-        keypress = 5
-      if keycode is 38
-        keypress = 2
-      if keycode is 39
-        keypress = 1
-      if keycode is 40
-        keypress = 3
-      if keycode is 37
-        keypress = 0
+      else
+        @setFixedPixelBoySize 380, 300
 
-      if keypress isnt null
-        $('.pico-button[value="' + keypress + '"]').removeClass 'pressed'
-        Pico.release keypress, 0
-        @picoKeyIsPressed false
+    @autorun (computation) =>
+      return unless cartridge = @cartridge()
 
-  powerOnClass: ->
-    'power-on' if @isPowerOn()
+      device = @device()
+      device.loadGame cartridge.game(), cartridge.projectId()
 
-  events: ->
-    super.concat
-      'mousedown .pico-button': @onPressPicoButton
-      'mouseup .pico-button, mouseout .pico-button': @onReleasePicoButton
-      'change .power-toggle-controller': @onChangePowerToggleController
-
-  onPressPicoButton: (event) ->
-    # Get input value.
-    keypress = $(event.currentTarget).attr 'value'
-    # Send value to pico-8.
-    Pico.press keypress, 0
-    @picoKeyIsPressed true
-
-  onReleasePicoButton: (event) ->
-    if @picoKeyIsPressed()
-      keypress = event.currentTarget.value
-      # Send value to pico-8.
-      Pico.release keypress, 0
-      @picoKeyIsPressed false
-
-  onChangePowerToggleController: (event) ->
-    powerOn = not @$('.power-toggle-controller')[0].checked
-    @isPowerOn powerOn
-
-    if not powerOn
       Meteor.setTimeout =>
-        @os.go()
-      , 1000
+        device.start()
+      ,
+        1500
+
+  onBackButton: ->
+    drawer = @drawer()
+
+    if @cartridge()
+      @device().stop()
+
+      Meteor.setTimeout =>
+        @cartridge null
+        drawer.selectedCartridge null
+      ,
+        500
+
+    else if drawer.selectedCartridge()
+      drawer.selectedCartridge null
+
+    else
+      return
+
+    # Inform that we've handled the back button.
+    true
+
+  cartridgeActiveClass: ->
+    'cartridge-active' if @cartridge()

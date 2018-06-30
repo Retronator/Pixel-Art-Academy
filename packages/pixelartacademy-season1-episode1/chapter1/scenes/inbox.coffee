@@ -18,6 +18,11 @@ class C1.Inbox extends LOI.Adventure.Scene
       new C1.Items.AdmissionEmail
     ]
 
+  destroy: ->
+    super
+
+    email.destroy() for email in @emails
+
   things: ->
     things = []
 

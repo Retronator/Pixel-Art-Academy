@@ -8,13 +8,13 @@ class C1.Challenges.Drawing.Tutorial.Basics.BasicTools extends PAA.Practice.Chal
   @displayName: -> "Basic tools"
 
   @description: -> """
-      Use the pencil, color fill, and eraser to demonstate your use of basic drawing tools.
+      Use the pencil, color fill, and eraser to demonstate your use of all 3 basic drawing tools.
     """
 
   @fixedDimensions: -> width: 16, height: 7
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
-  @bitmap: -> """
+  @bitmapString: -> """
       |     000000
       |   00      00
       |  0          0
@@ -22,7 +22,7 @@ class C1.Challenges.Drawing.Tutorial.Basics.BasicTools extends PAA.Practice.Chal
       |0000000000000000
     """
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |     000000
       |   0000000000
       |  000000000000

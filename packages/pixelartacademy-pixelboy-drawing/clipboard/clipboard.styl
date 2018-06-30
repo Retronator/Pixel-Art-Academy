@@ -3,7 +3,7 @@
 .pixelartacademy-pixelboy-apps-drawing-clipboard
   position absolute
   left calc(50% - 100rem)
-  top -265rem
+  top -275rem
   width 200rem
   height 260rem
   transition all 0.4s
@@ -47,6 +47,12 @@
           .property-name
             text-transform uppercase
 
+      .no-actions
+        margin 8rem 0
+        padding 4rem
+        border 1rem solid atariGrey(4)
+        text-align center
+
       .actions
         list-style none
         width 100%
@@ -67,6 +73,10 @@
           &.completed
             background atariGreen(5)
             padding 1rem
+
+            .button
+              &:hover
+                background atariGreen(6)
 
           .button
             absolute-cover-size()
@@ -99,7 +109,7 @@
       margin 7rem 0
 
       p
-        margin 0
+        margin 4rem 0
 
 .pixelartacademy-pixelboy-apps-drawing.active-asset:not(.editor-active)
   .pixelartacademy-pixelboy-apps-drawing-clipboard

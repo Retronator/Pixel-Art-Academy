@@ -11,10 +11,11 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-season1');
   api.use('retronator:pixelartacademy-learning');
   api.use('retronator:pixelartacademy-practice');
-  api.use('retronator:landsofillusions');
+  api.use('retronator:pixelartdatabase');
   api.use('retronator:retronator-hq');
   api.use('retronator:retronator-landsofillusions');
   api.use('retronator:retronator-residence');
@@ -46,8 +47,6 @@ Package.onUse(function(api) {
   api.addServerFile('chapter1/chapter1-server');
   api.addServerFile('chapter1/methods-server');
 
-  api.addServerFile('chapter1/migrations/0000-admissionapplication');
-
   api.addFile('chapter1/events..');
   api.addFile('chapter1/events/applicationaccepted');
 
@@ -55,9 +54,13 @@ Package.onUse(function(api) {
   api.addFile('chapter1/items/applicationemail');
   api.addFile('chapter1/items/admissionemail');
 
+  api.addFile('chapter1/scenes/inventory');
   api.addFile('chapter1/scenes/inbox');
+  api.addFile('chapter1/scenes/apps');
+  api.addFile('chapter1/scenes/editors');
+  api.addFile('chapter1/scenes/workbench');
+  api.addFile('chapter1/scenes/pico8cartridges');
   api.addThing('chapter1/scenes/sanfranciscoconversation');
-  api.addFile('chapter1/scenes/drawingtutorial');
 
   api.addFile('chapter1/goals..');
   api.addFile('chapter1/goals/drawingsoftware');
@@ -84,6 +87,12 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/challenges..');
   api.addFile('chapter1/challenges/drawing..');
+
+  api.addFile('chapter1/challenges/drawing/pixelartsoftware..');
+  api.addFile('chapter1/challenges/drawing/pixelartsoftware/copyreference');
+  api.addFile('chapter1/challenges/drawing/pixelartsoftware/assets');
+  api.addUnstyledComponent('chapter1/challenges/drawing/pixelartsoftware/briefcomponent..');
+
   api.addFile('chapter1/challenges/drawing/tutorial..');
 
   api.addFile('chapter1/challenges/drawing/tutorial/basics..');
@@ -91,6 +100,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/challenges/drawing/tutorial/basics/eraser');
   api.addFile('chapter1/challenges/drawing/tutorial/basics/colorfill');
   api.addFile('chapter1/challenges/drawing/tutorial/basics/colorfill2');
+  api.addFile('chapter1/challenges/drawing/tutorial/basics/colorfill3');
   api.addFile('chapter1/challenges/drawing/tutorial/basics/basictools');
   api.addFile('chapter1/challenges/drawing/tutorial/basics/shortcuts');
 
@@ -98,9 +108,12 @@ Package.onUse(function(api) {
   api.addFile('chapter1/challenges/drawing/tutorial/colors/colorswatches');
   api.addFile('chapter1/challenges/drawing/tutorial/colors/colorpicking');
   api.addFile('chapter1/challenges/drawing/tutorial/colors/quickcolorpicking');
+  api.addServerFile('chapter1/challenges/drawing/tutorial/colors/palette-server');
 
   api.addFile('chapter1/challenges/drawing/tutorial/helpers..');
   api.addFile('chapter1/challenges/drawing/tutorial/helpers/zoom');
+  api.addFile('chapter1/challenges/drawing/tutorial/helpers/movecanvas');
+  api.addFile('chapter1/challenges/drawing/tutorial/helpers/undoredo');
   api.addFile('chapter1/challenges/drawing/tutorial/helpers/references');
 
   // Intro
@@ -120,12 +133,20 @@ Package.onUse(function(api) {
 
   // Post-PixelBoy
   api.addFile('chapter1/sections/postpixelboy..');
+  api.addFile('chapter1/sections/postpixelboy/scenes/drawingchallenges');
   api.addThing('chapter1/sections/postpixelboy/scenes/store');
+  api.addThing('chapter1/sections/postpixelboy/scenes/artstudio');
+  api.addThing('chapter1/sections/postpixelboy/scenes/galleryeast');
 
   // Admission projects
   api.addFile('chapter1/sections/admissionprojects..');
-  api.addThing('chapter1/sections/admissionprojects/scenes/coworking');
 
+  // Snake
   api.addFile('chapter1/sections/admissionprojects/snake..');
-  api.addFile('chapter1/sections/admissionprojects/snake/scenes/workbench');
+
+  api.addFile('chapter1/sections/admissionprojects/snake/intro..');
+  api.addThing('chapter1/sections/admissionprojects/snake/intro/scenes/coworking');
+
+  api.addFile('chapter1/sections/admissionprojects/snake/drawing..');
+  api.addThing('chapter1/sections/admissionprojects/snake/drawing/scenes/coworking');
 });

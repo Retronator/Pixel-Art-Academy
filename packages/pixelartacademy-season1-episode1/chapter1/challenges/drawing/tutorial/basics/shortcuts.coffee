@@ -18,24 +18,24 @@ class C1.Challenges.Drawing.Tutorial.Basics.Shortcuts extends PAA.Practice.Chall
   @fixedDimensions: -> width: 12, height: 8
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
-  @bitmap: -> """
+  @bitmapString: -> """
       |
       |
       |  00000000
       | 0        0
       |0          0
-      | 0000000000
+      |000000000000
     """
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |  0      0
-      |0  0    0  0
-      |0 00000000 0
-      |000 0000 000
+      |   0    0
+      |  00000000
+      | 00 0000 00
       |000000000000
-      | 0000000000
-      |  0      0
-      | 0        0
+      |0 00000000 0
+      |0 0      0 0
+      |   00  00
     """
 
   @spriteInfo: -> "Artwork from Space Invaders, Taito, 1978"

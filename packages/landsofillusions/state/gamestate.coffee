@@ -70,7 +70,8 @@ class LOI.GameState extends AM.Document
   @_clearForCharacter: @method 'clearForCharacter'
   @_replaceForCharacter: @method 'replaceForCharacter'
 
-  @update: @method 'update'
+  @_update: @method 'update'
+  @_resetNamespaces: @method 'resetNamespaces'
       
   @forCurrentUser: @subscription 'forCurrentUser'
   @forCharacter: @subscription 'forCharacter'
@@ -103,29 +104,6 @@ class LOI.GameState extends AM.Document
   @replaceForCharacter: (characterId, state, callback) ->
     LOI.GameState._replaceForCharacter characterId, @_prepareStateForDatabase(state), callback
 
-  updated: (options = {}) ->
-    # Prepare the helper function that sends updates to the server only every 10 seconds.
-    unless @_throttledUpdate
-      @_throttledUpdate = _.throttle (options) =>
-        @_update options
-      ,
-        10000
-      ,
-        leading: false
-
-    # Call the throttled update.
-    @_throttledUpdate options
-
-    if options.flush
-      # Flush to force immediate execution.
-      @_throttledUpdate.flush()
-
-  _update: (options) ->
-    # Update the whole state on the server.
-    # TODO: Probably we could update only changed objects.
-    Meteor.call 'LandsOfIllusions.GameState.update', @_id, @constructor._prepareStateForDatabase(@state), (error, result) =>
-      options.callback? error, result
-
   @_prepareStateForDatabase: (state) ->
     @_renameKeys state, /\./g, '_'
 
@@ -149,3 +127,33 @@ class LOI.GameState extends AM.Document
       clone = entity
 
     clone
+
+  updated: (options = {}) ->
+    # Prepare the helper function that sends updates to the server only every 10 seconds.
+    unless @_throttledUpdate
+      @_throttledUpdate = _.throttle (options) =>
+        @_update options
+      ,
+        10000
+      ,
+        leading: false
+
+    # Call the throttled update.
+    @_throttledUpdate options
+
+    if options.flush
+      # Flush to force immediate execution.
+      @_throttledUpdate.flush()
+
+  _update: (options) ->
+    # Update the whole state on the server.
+    # TODO: Probably we could update only changed objects.
+    @constructor._update @_id, @constructor._prepareStateForDatabase(@state), (error, result) =>
+      options.callback? error, result
+
+  resetNamespaces: (namespaces) ->
+    # First flush current changes.
+    @updated flush: true
+    
+    # Now clean up the state.
+    @constructor._resetNamespaces @_id, namespaces

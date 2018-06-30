@@ -22,6 +22,12 @@ class C2.Immersion extends LOI.Adventure.Section
 
   @initialize()
 
+  @started: -> true
+
+  @finished: ->
+    # Immersion section ends when you complete the immersion script. Make sure you don't return undefined.
+    @state('completed') is true
+
   @userProblemMessage = 'Retronator.HQ.LandsOfIllusions.userProblemMessage'
 
   constructor: ->
@@ -40,10 +46,6 @@ class C2.Immersion extends LOI.Adventure.Section
         @listeners[0].startScript label: 'Alarm'
       ,
         timeToImmersion * 1000
-
-  @finished: ->
-    # Immersion section ends when you complete the immersion script. Make sure you don't return undefined.
-    @state('completed') is true
 
   # The time, in seconds, until the user can start immersion.
   timeToImmersion: ->

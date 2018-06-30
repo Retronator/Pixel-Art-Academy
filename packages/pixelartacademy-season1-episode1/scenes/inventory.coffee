@@ -13,16 +13,10 @@ class E1.Inventory extends LOI.Adventure.Scene
   constructor: ->
     super
 
-  things: ->
-    items = [
-      HQ.Items.OperatorLink
-      LOI.Items.Sync
-      LOI.Items.Time
-      SanFrancisco.Soma.Items.Map if SanFrancisco.Soma.Items.Map.state 'inInventory'
-    ]
-
-    for itemClass in [PixelArtAcademy.PixelBoy]
-      hasItem = itemClass.state 'inInventory'
-      items.push itemClass if hasItem
-
-    items
+  # These are global things required in any character's inventory. 
+  # Storyline inventory items are defined in the chapter they first appear. 
+  things: -> [
+    HQ.Items.OperatorLink
+    LOI.Items.Sync
+    LOI.Items.Time
+  ]

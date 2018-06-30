@@ -1,0 +1,134 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-pico-8-drawer
+  position absolute
+  width 320rem
+  height 240rem
+  left calc(50% - 160rem)
+  top calc(50% - 120rem)
+
+  &.opened
+    .drawer
+      top -50rem
+
+  &.covered
+    .table-top
+    .drawer
+      transition top 1s, opacity 1s 0.5s
+
+    .table-top
+      top -50rem
+      opacity 0
+
+    .drawer
+      top 240rem
+      opacity 0
+
+    .selected-cartridge
+      top -200rem !important
+      transform scale(0.5)
+      transition all 0.5s
+
+  .table-top
+  .drawer
+    position absolute
+    left -50rem
+    width 420rem
+    height 340rem
+    transition top 1s, opacity 0.5s
+
+  .table-top
+    background-image image('/pixelartacademy/pixelboy/apps/pico8/tabletop.png')
+    top -340rem
+
+  .drawer
+    background-image image('/pixelartacademy/pixelboy/apps/pico8/drawer.png')
+    top -320rem
+
+    .contents
+      position absolute
+      left 70rem
+      top 80rem
+      width 110rem
+      padding 10rem
+      color black
+
+      .cartridges
+        list-style none
+        padding 0
+        margin 0
+
+        .cartridge
+          position relative
+          top 0
+          width 37rem
+          height 47rem
+          transition all 0.1s
+          transform-origin 0 0
+          filter drop-shadow(-3rem 1rem 0 transparentify(atariOrange(2), atariOrange(4)))
+          cursor pointer
+
+          &:hover
+            top -1rem
+            filter drop-shadow(-6rem 2rem 0 transparentify(atariOrange(2), atariOrange(4)))
+
+          &.selected
+            opacity 0
+            transform scale(1.5)
+            pointer-events none
+
+          &::after
+            content ''
+            absolute-cover()
+            background-image image('/pixelartacademy/pixelboy/apps/pico8/cartridge-overlay.png')
+            mix-blend-mode overlay
+            pointer-events none
+
+          .image
+            width 100%
+            height 100%
+
+      .no-cartridges
+        position absolute
+        top 18rem
+        left 10rem
+        width 79rem
+        height 77rem
+        padding 21rem 11rem 0 8rem
+        background-image image('/pixelartacademy/pixelboy/apps/pico8/postit.png')
+
+        .message
+          transform rotate(-7deg)
+          color atariMagenta(3)
+          freehand()
+          line-height 10rem
+          text-align center
+
+  .selected-cartridge
+    position absolute
+    top 17.5rem
+    left 80rem
+    width 160rem
+    height 205rem
+    cursor pointer
+    opacity 0
+    visibility hidden
+
+    &.active
+      opacity 1
+      transition all 0.2s
+      visibility visible
+
+    &:hover
+      top 15.5rem
+
+    &::after
+      content ''
+      absolute-cover()
+      background-image image('/pixelartacademy/pixelboy/apps/pico8/cartridge-big-overlay.png')
+      mix-blend-mode overlay
+      pointer-events none
+
+    .image
+      width 100%
+      height 100%

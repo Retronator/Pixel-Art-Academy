@@ -187,7 +187,7 @@ There are some special variables that provide other contexts:
 * `@user.name`: A read-only variable with user's account name.
 * `@user.itemKeys`: A read-only map of catalog keys that this user has purchased.
 * `@character`: Read-only character instance.
-* `@player.inventory`: A map of items in your inventory.
+* `@inventory`: A map of items in your inventory. State addressable by thing ID, with Instance suffix for instance itself.
 * `@scripts`: All script states, addressable by script ID.
 * `@things`: All thing states, addressable by thing ID.
 

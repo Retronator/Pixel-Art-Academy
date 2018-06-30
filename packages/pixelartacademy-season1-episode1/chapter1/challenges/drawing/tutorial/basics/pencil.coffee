@@ -12,20 +12,18 @@ class C1.Challenges.Drawing.Tutorial.Basics.Pencil extends PAA.Practice.Challeng
       Click start when you're ready. If you make a mistake, come back and reset the challenge.
     """
 
-  @fixedDimensions: -> width: 12, height: 8
+  @fixedDimensions: -> width: 8, height: 8
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
-  @bitmap: -> "" # Empty sprite
-
-  @goalBitmap: -> """
-      |  0      0
-      |   0    0
-      |  00000000
-      | 00 0000 00
-      |000000000000
-      |0 00000000 0
-      |0 0      0 0
-      |   00  00
+  @goalBitmapString: -> """
+      |   00
+      |  0000
+      | 000000
+      |00 00 00
+      |00000000
+      | 0 00 0
+      |0      0
+      | 0    0
     """
 
   @spriteInfo: -> "Artwork from Space Invaders, Taito, 1978"

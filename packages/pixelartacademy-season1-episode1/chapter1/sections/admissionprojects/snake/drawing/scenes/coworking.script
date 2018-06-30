@@ -1,0 +1,127 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.AdmissionProjects.Snake.Drawing.Coworking
+
+## HowToDrawChoice
+
+* How do I draw the game sprites?
+
+## HowToDraw
+
+aeronaut:
+  You use the Drawing app on your PixelBoy.
+  You can find the Snake sprites in the Projects section.
+  
+<!--   You'll need some sort of drawing software that can handle pixel art. -->
+<!--   You have two options. One is to edit the sprites directly in the Drawing app. -->
+<!--   The other is to download the sprites and use any software you want to modify the art. -->
+  
+### BackToMainQuestions
+
+-> [End]
+
+## HowToEditInAppChoice
+
+* How do you edit the sprites in the Drawing app? `HowToDraw`
+
+## HowToEditInApp
+
+aeronaut:
+  First you'll need to select the Desktop editor in the Settings.
+  Then the Edit option will appear when you look at the Snake project sprites.
+  Tutorials will also appear in the Challenges section if you need more help.
+<!--  You'll need to get an editor first. -->
+<!--  Talk to Alexandra all the way upstairs in the art studio. She can get you set up. -->
+  
+### BackToMainQuestions
+
+-> [End]
+  
+## HowToDownloadChoice
+
+* I can download the sprites? `HowToDraw`
+
+## HowToDownload
+
+aeronaut:
+  Yeah, that way you can open them up in any software you want.
+  First you'll need to show you're comfortable on your own though.
+  Talk to Corinne in the Gallery to get a simple test to prove yourself.
+  This should enable the options to download and upload the sprite when you look at a specific asset in the Drawing app.
+  
+### BackToMainQuestions
+
+-> [End]
+  
+## HelpWithSoftwareChoice
+
+* Can I get some help using other software? `HowToDownload`
+
+## HelpWithSoftware
+
+aeronaut:
+  Of course! Head up to the art studio on the 4th floor. 
+  Ask Alexandra to give you a rundown of software choices and other things that go with it.
+  
+### BackToMainQuestions
+
+-> [End]
+
+## CompletedDrawingChoice
+
+* I finished drawing the sprites!
+
+## CompletedDrawing
+
+-> [HaventScored10PointsYet] `_highScore < 10`
+
+aeronaut:
+  Alright, let's take a look!
+  
+> _char_ sends the updated assets to Reuben.
+
+aeronaut: PICO-8 … launching …
+
+> You hear the familiar blip as the console boots.
+
+aeronaut: YES! Look at this splash screen.
+
+> Reuben continues to play the game.
+
+aeronaut: 
+  Ah, this is great.
+  Thank you _char_, I really appreciate it.
+  
+* I'm glad you like it. -> [Glad]
+* Thank you! I liked working on this a lot.
+
+aeronaut: Yeah, making games is great.
+
+-> [FinalTalk]
+
+## Glad
+
+aeronaut: Yes! I'm glad you helped with the art.
+
+## FinalTalk
+
+> Reuben sets the console aside and looks at _char_ with a big smile.
+
+aeronaut:
+  Well, seems like your admission project is complete!
+  When you have all other admission requisites done, talk to Shelley to finalize your admission.
+  Thanks again!
+
+## AdmissionProjectCompleted
+
+-> [End]
+
+## HaventScored10PointsYet
+
+aeronaut:
+  Did you test the game yet? Score at least 10 points to give it a good playthrough.
+  
+* Yes, sir!
+* Ah yes, will go game hard.
+
+-> [End]
+
+## End

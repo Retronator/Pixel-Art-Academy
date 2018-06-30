@@ -18,7 +18,11 @@ class HQ.Coworking extends LOI.Adventure.Location
       The passageway opens to a dimly-lit room with a cyberpunk hacker vibe to it.
       Tables fill the space, together with workstations for the permanent residents of the coworking space.
     "
-  
+
+  @listeners: ->
+    super.concat [
+    ]
+
   @initialize()
 
   constructor: ->

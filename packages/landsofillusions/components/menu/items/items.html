@@ -12,7 +12,12 @@
         <li class="menu-item"><span class="continue actionable">Continue</span></li>
       {{/if}}
       {{#if newVisible}}
-        <li class="menu-item"><span class="new actionable">Start new game</span></li>
+        <li class="menu-item"><span class="new actionable">Play intro</span></li>
+        <li class="menu-item">
+          <a class="buy actionable" href="{{routerPath 'Retronator.HQ.Adventure' parameter2='store'}}" target="_blank">
+            Buy game
+          </a>
+        </li>
       {{/if}}
       {{#if loadVisible}}
         <li class="menu-item"><span class="load actionable">Load game</span></li>

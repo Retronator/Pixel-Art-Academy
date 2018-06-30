@@ -1,14 +1,21 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.StudyPlan.Goal.Task">
-  <div class="pixelartacademy-pixelboy-apps-studyplan-goal-task">
+  <div class="pixelartacademy-pixelboy-apps-studyplan-goal-task {{activeClass}}">
     <div class="icon">
-      {{#if interests.length}}
-        <div class="interests"></div>
+      {{#if completed}}
+        <div class="completed"></div>
       {{/if}}
     </div>
     <div class="info">
       <div class="directive">
         {{> t10e directiveTranslation}}
       </div>
+      <ul class="interests">
+        {{#each requiredInterests}}
+          {{#with interestDocument}}
+            <li class="required interest">{{> t10e name}}</li>
+          {{/with}}
+        {{/each}}
+      </ul>
       <ul class="interests">
         {{#each interests}}
           {{#with interestDocument}}

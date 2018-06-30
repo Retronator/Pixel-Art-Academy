@@ -1,0 +1,33 @@
+<template name="PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent">
+  {{#with sprite}}
+    <ul class="properties">
+      <li class="property fixed-dimensions">
+        <span class="property-name">Size</span>:
+        {{fixedDimensions.width}}×{{fixedDimensions.height}}
+      </li>
+      <li class="property restricted-palette">
+        <span class="property-name">Palette</span>:
+        {{#if restrictedPalette}}
+          {{restrictedPalette.name}}
+        {{else}}
+          Custom
+        {{/if}}
+      </li>
+    </ul>
+    <ul class="actions">
+      {{#if canEdit}}
+        <li class="action">
+          <button class="button edit-button">Edit</button>
+        </li>
+      {{/if}}
+      {{#if canDownloadAndUpload}}
+        <li class="action">
+          <button class="button download-button">Download</button>
+        </li>
+        <li class="action">
+          <button class="button upload-button">Upload</button>
+        </li>
+      {{/if}}
+    </ul>
+  {{/with}}
+</template>

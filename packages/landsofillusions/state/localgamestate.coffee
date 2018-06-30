@@ -18,3 +18,12 @@ class LOI.LocalGameState
     @state @state()
 
     options.callback?()
+
+  resetNamespaces: (namespaces) ->
+    state = @state()
+
+    for namespace in namespaces
+      _.nestedProperty state.things, namespace, {}
+      _.nestedProperty state.scripts, namespace, {}
+
+    @state state

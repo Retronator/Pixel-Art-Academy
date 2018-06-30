@@ -34,6 +34,12 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
 
   @initialize()
 
+  @hasGoal: (goalId) ->
+    goalId = _.thingId goalId
+
+    # Note: We return a boolean so we can use this from functions where undefined means 'not ready'.
+    @state('goals')?[goalId]?
+
   constructor: ->
     super
 
@@ -47,10 +53,12 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
     @goalSearch new @constructor.GoalSearch @
 
     # We set size in an autorun so that it adapts to window resizes.
-    @autorun (computation) => @setMaximumPixelBoySize()
+    @autorun (computation) => @setDefaultPixelBoySize()
 
-  hasGoal: (goalId) ->
-    @state('goals')?[goalId]
+    # Maximize on run.
+    @maximize()
+
+  hasGoal: (goalId) -> @constructor.hasGoal goalId
     
   addGoal: (options) ->
     goals = @state('goals') or {}

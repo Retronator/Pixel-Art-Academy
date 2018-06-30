@@ -55,11 +55,14 @@ class PAA.PixelBoy.OS extends AM.Component
 
     # Set currentApp based on url.
     Tracker.autorun (computation) =>
+      # Don't route until apps are created.
+      return unless currentApps = @currentApps()
+
       appUrl = @currentAppUrl()
       appClass = PAA.PixelBoy.App.getClassForUrl(appUrl) or PAA.PixelBoy.Apps.HomeScreen
 
       Tracker.nonreactive =>
-        newApp = _.find @currentApps(), (app) => app instanceof appClass
+        newApp = _.find currentApps, (app) => app instanceof appClass
         currentApp = @currentApp()
 
         return if newApp is currentApp
@@ -107,22 +110,24 @@ class PAA.PixelBoy.OS extends AM.Component
 
     url
 
-  appPath: (appUrl, appPath) ->
+  appPath: (appUrl, appPath, appParameter) ->
     appPath = null if appPath instanceof Spacebars.kw
 
     if @justOS
       AB.Router.createUrl 'pixelBoy',
         app: appUrl
         path: appPath
+        parameter: appParameter
 
     else
       AB.Router.createUrl LOI.adventure,
         parameter1: PAA.PixelBoy.url()
         parameter2: appUrl
         parameter3: appPath
+        parameter4: appParameter
 
-  go: (appUrl, appPath) ->
-    AB.Router.goToUrl @appPath appUrl, appPath
+  go: (appUrl, appPath, appParameter) ->
+    AB.Router.goToUrl @appPath appUrl, appPath, appParameter
 
   backButtonCallback: ->
     # See if the app can handle it.

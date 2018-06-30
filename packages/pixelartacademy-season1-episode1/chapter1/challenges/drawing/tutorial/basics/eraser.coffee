@@ -15,7 +15,7 @@ class C1.Challenges.Drawing.Tutorial.Basics.Eraser extends PAA.Practice.Challeng
   @fixedDimensions: -> width: 8, height: 8
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
-  @bitmap: -> """
+  @bitmapString: -> """
       00000000
       00000000
       00000000
@@ -26,7 +26,7 @@ class C1.Challenges.Drawing.Tutorial.Basics.Eraser extends PAA.Practice.Challeng
       00000000
     """
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |   00
       |  0000
       | 000000

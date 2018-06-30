@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cat header snake.lua memory > snake.p8

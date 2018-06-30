@@ -70,14 +70,19 @@
       transition all 0.2s
       overflow hidden
 
-      &:not(.active):hover
+      &:hover:not(.active)
         height 38rem
         margin-top -5rem
 
       &.active
+        overflow initial
+
         .groups
           .group
-            &:not(.active):hover
+            height 17rem
+            margin-top 0
+
+            &:hover:not(.active)
               height 19rem
               margin-top -1rem
 
@@ -86,9 +91,64 @@
           .group
             height 3rem
 
-            &:not(.active):hover
+            &:first-child:not(.active)
+              height 3rem
+
+            &:hover:not(.active)
               height 15rem
               margin-top -1rem
+
+      &.settings
+        width 292rem
+
+        &.active
+          height 139rem
+
+        .content
+          height 100rem
+          padding 3rem 11rem
+          color atariGrey(1)
+
+          .instructions
+            margin-bottom 6rem
+
+          .settings-sections
+            display flex
+            justify-content space-between
+
+            .settings-section
+              width 130rem
+
+              .title
+                daily()
+                text-transform uppercase
+                margin-bottom 2rem
+
+              .editors
+              .no-editors
+                border 1rem solid atariCyan(2)
+                height 80rem
+
+              .editors
+                list-style none
+                padding 0
+                overflow auto
+
+                .editor
+                  height 14rem
+                  padding 2rem 4rem
+                  cursor pointer
+
+                  &:hover
+                    background atariGrey(4)
+
+                  &.selected
+                    background atariGrey(4)
+                    cursor default
+
+              .no-editors
+                padding 10rem 8rem
+                text-align center
 
       .section-name
         height 21rem
@@ -105,14 +165,19 @@
         .group
           position relative
           z-index 0
-          height 17rem
+          height 4rem
           margin 0 auto
           background-color atariBrown(4)
           box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
           transition all 0.2s
+          overflow hidden
+
+          &:last-child
+            height 17rem
 
           &.active
             height 150rem
+            overflow initial
 
           .group-name
             height 17rem
@@ -236,3 +301,13 @@
                   .canvas
                     width 100% !important
                     height 100% !important
+
+          .no-assets-instructions
+            width 120rem
+            height 150rem
+            margin 0 auto
+            padding 8rem
+            background atariGrey(7)
+            color atariGrey(2)
+            box-shadow 0 0 5rem rgba(atariGrey(0), 0.1)
+            hyphens auto

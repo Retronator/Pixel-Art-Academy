@@ -90,8 +90,6 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
     # See if we need to process the payment or it's simply a confirmation.
     paymentAmount = @paymentAmount()
 
-    ga? 'send', 'event', 'Store Transaction', 'Initiated', 'Total', paymentAmount
-
     if paymentAmount
       return unless selectedPaymentMethod = @selectedPaymentMethod()
 
@@ -159,12 +157,6 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
   _completePurchase: (shoppingCart, paymentAmount) ->
     @purchaseCompleted true
 
-    # Generate analytics events.
-    ga? 'send', 'event', 'Store Transaction', 'Complete', 'Total', paymentAmount
-
-    for cartItem in shoppingCart.items
-      ga? 'send', 'event', 'Store Transaction', 'Item Purchased', cartItem.item.catalogKey, cartItem.item.price
-
   _confirmationPurchaseHandler: ->
     # Create a transaction on the server.
     @submittingPayment true
@@ -180,9 +172,6 @@ class HQ.Items.Components.Stripe extends LOI.Adventure.Item
         return
 
       # Purchase is successfully completed.
-      console.log "ga", shoppingCart
-      ga? 'send', 'event', 'Game Purchased', 'Click', shoppingCart.items[0].item.catalogKey, 0
-
       @_completePurchase shoppingCart, 0
 
   _displayError: (error) ->

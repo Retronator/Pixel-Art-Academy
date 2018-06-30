@@ -15,7 +15,7 @@ class C1.Challenges.Drawing.Tutorial.Basics.ColorFill extends PAA.Practice.Chall
   @fixedDimensions: -> width: 13, height: 9
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
-  @bitmap: -> """
+  @bitmapString: -> """
       |      0
       |     0 0
       |     0 0
@@ -27,7 +27,7 @@ class C1.Challenges.Drawing.Tutorial.Basics.ColorFill extends PAA.Practice.Chall
       |0000000000000
     """
 
-  @goalBitmap: -> """
+  @goalBitmapString: -> """
       |      0
       |     000
       |     000

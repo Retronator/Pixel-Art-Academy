@@ -6,6 +6,9 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
 
   @fullName: -> null # Sections don't need to be named.
 
+  @started: -> false # Override to set start state conditions.
+  started: -> @constructor.started()
+
   @finished: -> false # Override to set goal state conditions.
   finished: -> @constructor.finished()
 
@@ -13,7 +16,20 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
   timelineId: ->
     # By default we use the timeline of the chapter.
     @constructor.timelineId() or @options?.parent?.timelineId()
-  
+
+  @requireFinishedSections: (sections) ->
+    # Allow for passing of a single section.
+    sections = [sections] unless _.isArray sections
+
+    # See if sections are finished.
+    sectionsFinished = (section.finished() for section in sections)
+
+    # If any of the sections returns undefined, we're not yet ready to determine our active state.
+    return if undefined in sectionsFinished
+
+    # We're not active unless all required sections are finished.
+    _.every sectionsFinished
+
   constructor: (@options) ->
     super
 
@@ -53,12 +69,21 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
 
     scene.destroy() for scene in @scenes()
 
-  # Because active relies on finished, which can be set on the object, not just on the class, we can only allow active
-  # to be defined as an object method. We can think of active as the current state of the section object, whereas 
-  # finished is more of a general condition, usually set on the class, if possible.
+  # Because active relies on started and finished, which can be set on the object, not just on the class, we can only
+  # allow active to be defined as an object method. We can think of active as the current state of the section object,
+  # whereas started and finished are more of a general condition, usually set on the class, if possible.
   active: ->
-    # Override and add additional logic to create prerequisites for the section being started.
-    @_activeUntilFinished()
+    # By default the section is active after started condition is met and ends when finished condition is met.
+    # Note that if any of these functions returns undefined, the result of the and operation is also undefined.
+    @_activeAfterStarted() and @_activeUntilFinished()
+
+  _activeAfterStarted: ->
+    started = @started()
+
+    # Started can return undefined, which means it is not ready to determine its state.
+    return unless started?
+
+    started
 
   _activeUntilFinished: ->
     finished = @finished()
@@ -66,24 +91,9 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
     # Finished can return undefined, which means it is not ready to determine its state.
     return unless finished?
 
-    # By default the section is active until it is finished.
     not finished
 
-  requireFinishedSections: (sections) ->
-    # Allow for passing of a single section.
-    sections = [sections] unless _.isArray sections
-
-    # See if sections are finished.
-    sectionsFinished = (section.finished() for section in sections)
-
-    # If any of the sections returns undefined, we're not yet ready to determine our active state.
-    return if sectionsFinished.indexOf(undefined) > -1
-
-    # We're not active if all required sections are not finished.
-    return false unless _.every sectionsFinished
-
-    # Section has the prerequisites. Now check that it hasn't finished yet.
-    @_activeUntilFinished()
+  requireFinishedSections: (sections) -> @constructor.requireFinishedSections sections
 
   ready: ->
     activeWasDetermined = @active()?
@@ -97,6 +107,3 @@ class LOI.Adventure.Section extends LOI.Adventure.Thing
     console.log "Section ready?", @id(), conditions if LOI.debug
 
     _.every conditions
-
-  reset: ->
-    @state.set {}

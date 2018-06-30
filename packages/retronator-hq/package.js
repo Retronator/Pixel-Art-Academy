@@ -33,12 +33,12 @@ Package.onUse(function(api) {
 
   api.addFile('actors/actors');
   api.addFile('actors/operator');
-  api.addFile('actors/aeronaut');
+  api.addThing('actors/aeronaut');
   api.addFile('actors/burra');
-  api.addFile('actors/corinne');
+  api.addThing('actors/corinne');
   api.addFile('actors/retro');
   api.addFile('actors/shelley');
-  api.addFile('actors/alexandra');
+  api.addThing('actors/alexandra');
 
   // Items
 
@@ -99,6 +99,7 @@ Package.onUse(function(api) {
   api.addFile('floor2/store/shelf/shelf-game');
   api.addFile('floor2/store/shelf/shelf-upgrades');
   api.addFile('floor2/store/shelf/shelf-pixel');
+  api.addFile('floor2/store/shelf/shelf-pico8');
   api.addThing('floor2/store/shelf/shelves');
 
   api.addFile('floor2/store/table..');

@@ -2,6 +2,8 @@ AE = Artificial.Everywhere
 AB = Artificial.Base
 PAA = PixelArtAcademy
 LOI = LandsOfIllusions
+PNG = Npm.require('pngjs').PNG
+Request = request
 
 PAA.Practice.Challenges.Drawing.TutorialSprite.create.method (characterId, tutorialId, assetId) ->
   check characterId, Match.DocumentId
@@ -36,3 +38,30 @@ PAA.Practice.Challenges.Drawing.TutorialSprite.create.method (characterId, tutor
   LOI.GameState.documents.update gameState._id,
     $set:
       "readOnlyState.things.#{tutorialId}.assets": assets
+      
+PAA.Practice.Challenges.Drawing.TutorialSprite.reset.method (assetId, spriteId) ->
+  check assetId, String
+  check spriteId, Match.DocumentId
+
+  # Build the original state.
+  assetClass = PAA.Practice.Project.Asset.getClassForId assetId
+
+  if bitmapString = assetClass.bitmapString()
+    pixels = assetClass.createPixelsfromBitmapString bitmapString
+
+  else if imageUrl = assetClass.imageUrl()
+    # Load the image data via a synchronous HTTP request.
+    paletteImageResponse = Request.getSync Meteor.absoluteUrl(imageUrl), encoding: null
+    png = PNG.sync.read paletteImageResponse.body
+    
+    pixels = assetClass.createPixelsFromImageData png
+
+  else
+    # No data was provided so we assume the starting image should be empty.
+    pixels = []
+
+  # Replace pixels in this sprite.
+  LOI.Assets.Sprite.replacePixels spriteId, 0, pixels
+
+  # Clear the history.
+  LOI.Assets.VisualAsset.clearHistory 'Sprite', spriteId
