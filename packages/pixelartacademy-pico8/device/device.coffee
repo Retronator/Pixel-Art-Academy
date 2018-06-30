@@ -47,6 +47,9 @@ class PAA.Pico8.Device extends AM.Component
     # Prepare buffer for IO transfers.
     io = []
 
+    # Clear the pixel replacement cache since changes up to now will be already included in the cartridge itself.
+    @_updatedPixels = []
+
     PAA.Pico8.Device.Module =
       arguments: [@cartridgeUrl]
       canvas: @_$canvas[0]
