@@ -1,8 +1,8 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop">
   <div class="pixelartacademy-pixelboy-apps-drawing-editor-desktop {{drawingActiveClass}} {{focusedModeClass}} {{toolClass}} {{displayedAsset.editorStyleClasses}} {{draggingClass}} {{resizingDirectionClass}}">
-    <div class="sprite {{displayedAsset.styleClasses}}" {{style spriteStyle}}>
-      {{> Render pixelCanvas}}
-    </div>
+    {{#if testPaperEnabled}}
+      <div class="test-paper table-item {{eraserEnabledClass}}"></div>
+    {{/if}}
     {{> Render toolbox}}
     {{#if colorFillEnabled}}
       {{> PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.ColorFill}}
@@ -19,10 +19,10 @@
     {{#if pico8Enabled}}
       {{> Render pico8}}
     {{/if}}
-    {{#if testPaperEnabled}}
-      <div class="test-paper table-item {{eraserEnabledClass}}"></div>
-    {{/if}}
     <div class="background"></div>
+    <div class="sprite {{displayedAsset.styleClasses}}" {{style spriteStyle}}>
+      {{> Render pixelCanvas}}
+    </div>
     {{#if drawingActive}}
       <style>
         .landsofillusions-components-menu .menu-button, html.adventure .build-version {

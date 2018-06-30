@@ -157,6 +157,9 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
     # Save completed value to tutorial state.
     @_completedAutorun = Tracker.autorun (computation) =>
+      # Make sure we have the game state loaded. This can become null when switching between characters.
+      return unless LOI.adventure.gameState()
+
       # We expect completed to return true or false, and undefined if can't yet determine (loading).
       completed = @completed()
       return unless completed?
