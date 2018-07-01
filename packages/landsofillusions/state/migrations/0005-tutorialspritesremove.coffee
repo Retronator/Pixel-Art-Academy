@@ -6,21 +6,21 @@ class Migration extends Document.PatchMigration
   forward: (document, collection, currentSchema, newSchema) ->
     count = 0
 
-    assetsAddress = 'readOnlyState.things.PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial'
+    tutorialAddress = 'readOnlyState.things.PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial'
 
     collection.findEach
       _schema: currentSchema
-      "#{assetsAddress}": $exists: true
+      "#{tutorialAddress}": $exists: true
     ,
       (document) =>
         # Remove changed Basics assets.
-        basicsAssets = _.nestedProperty document, "#{assetsAddress}.Basics.assets"
+        basicsAssets = _.nestedProperty document, "#{tutorialAddress}.Basics.assets"
 
-        for tutorial in ['Pencil', 'Shortcuts']
-          _.remove basicsAssets, (asset) => asset.id is "#{assetsAddress}.Basics.#{tutorial}"
+        for tutorialAddress in ['Pencil', 'Shortcuts']
+          _.remove basicsAssets, (asset) => asset.id is "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.Tutorial.Basics.#{tutorialAddress}"
 
         # Remove all Colors assets.
-        _.nestedProperty document, "#{assetsAddress}.Colors.assets", []
+        _.nestedProperty document, "#{tutorialAddress}.Colors.assets", []
 
         updated = collection.update
           _id: document._id

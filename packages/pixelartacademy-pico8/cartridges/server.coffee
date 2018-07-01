@@ -19,8 +19,8 @@ WebApp.connectHandlers.use '/pico8/cartridge.png', (request, response, next) ->
   cartridgeUrl = Meteor.absoluteUrl cartridgeUrl unless cartridgeUrl.indexOf('http') > -1
 
   # Get the cartridge url
-  cartrigeResponse = Request.getSync cartridgeUrl, encoding: null
-  png = PNG.sync.read cartrigeResponse.body
+  cartridgeResponse = Request.getSync cartridgeUrl, encoding: null
+  png = PNG.sync.read cartridgeResponse.body
 
   # Prepare helper methods.
   replaceSpriteSheetColor = (x, y, colorIndex) ->

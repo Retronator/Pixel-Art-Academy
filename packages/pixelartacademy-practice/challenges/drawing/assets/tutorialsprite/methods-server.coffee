@@ -51,8 +51,8 @@ PAA.Practice.Challenges.Drawing.TutorialSprite.reset.method (assetId, spriteId) 
 
   else if imageUrl = assetClass.imageUrl()
     # Load the image data via a synchronous HTTP request.
-    paletteImageResponse = Request.getSync Meteor.absoluteUrl(imageUrl), encoding: null
-    png = PNG.sync.read paletteImageResponse.body
+    imageResponse = Request.getSync Meteor.absoluteUrl(imageUrl), encoding: null
+    png = PNG.sync.read imageResponse.body
     
     pixels = assetClass.createPixelsFromImageData png
 

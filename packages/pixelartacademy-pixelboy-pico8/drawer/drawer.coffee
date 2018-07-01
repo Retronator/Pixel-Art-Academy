@@ -64,7 +64,7 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
   cartridgeUrl: ->
     cartridge = @currentData()
 
-    url = cartridge.cartridgeUrl()
+    return unless url = cartridge.cartridgeUrl()
 
     # Don't cache local carts.
     if url.indexOf('pico8/cartridge.png') > 0

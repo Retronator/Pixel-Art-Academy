@@ -12,7 +12,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Challe
       false
 
     # Initiate the loading.
-    image.src = url
+    image.src = Meteor.absoluteUrl url
     
   @createPixelsFromImage: (image) ->
     canvas = $('<canvas>')[0]

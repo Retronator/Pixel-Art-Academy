@@ -110,7 +110,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
         false
 
       # Initiate the loading.
-      image.src = goalImageUrl
+      image.src = Meteor.absoluteUrl goalImageUrl
 
     # Create the component that will show the goal state.
     @engineComponent = new @constructor.EngineComponent
