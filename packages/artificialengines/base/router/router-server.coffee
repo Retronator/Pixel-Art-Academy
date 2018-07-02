@@ -27,6 +27,9 @@ class AB.Router extends AB.Router
     # HACK: Override absolute URL function to use the request host as the root url.
     _absoluteUrl = Meteor.absoluteUrl
     Meteor.absoluteUrl = (path, options) ->
+      # Absolute URL doesn't remove the leading slash, so we do it to allow both relative and server-relative URLs.
+      path = path.substring 1 if path?[0] is '/'
+      
       if _requestHost
         # We reuse the protocol from the root url.
         rootUrl = _absoluteUrl()

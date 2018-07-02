@@ -42,7 +42,7 @@ class PAA.Pico8.Cartridges.Cartridge extends LOI.Adventure.Thing
   fullName: ->
     @artwork()?.title
 
-  cartridgeUrl: ->
+  cartridgeImageUrl: ->
     return unless game = @game()
 
     if projectId = @projectId()

@@ -6,7 +6,7 @@
           <ul class="cartridges">
             {{#each cartridges}}
               <li class="cartridge {{selectedClass}}">
-                <img class="image" src="{{cartridgeUrl}}"/>
+                <img class="image" src="{{cartridgeImageUrl}}"/>
               </li>
             {{/each}}
           </ul>
@@ -23,7 +23,7 @@
     <div class="table-top"></div>
     <div class="selected-cartridge {{activeClass}}">
       {{#with selectedCartridge}}
-        <img class="image" src="{{cartridgeUrl}}"/>
+        <img class="image" src="{{cartridgeImageUrl}}"/>
       {{/with}}
     </div>
   </div>

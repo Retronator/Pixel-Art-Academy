@@ -20,10 +20,10 @@ class C1.Challenges.Drawing.Tutorial.Helpers.MoveCanvas extends PAA.Practice.Cha
   @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
 
   @imageUrl: ->
-    "pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/outrun-hills.png"
+    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/outrun-hills.png"
 
   @goalImageUrl: ->
-    "pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/outrun-hills-goal.png"
+    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/outrun-hills-goal.png"
 
   @spriteInfo: -> "Artwork from Out Run (ZX Spectrum), Probe Software, 1987"
 

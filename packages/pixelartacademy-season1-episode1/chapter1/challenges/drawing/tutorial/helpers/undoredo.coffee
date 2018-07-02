@@ -20,10 +20,10 @@ class C1.Challenges.Drawing.Tutorial.Helpers.UndoRedo extends PAA.Practice.Chall
   @maxClipboardScale: -> 1
 
   @imageUrl: ->
-    "pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/codemasters.png"
+    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/codemasters.png"
 
   @goalImageUrl: ->
-    "pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/codemasters-goal.png"
+    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/codemasters-goal.png"
 
   @spriteInfo: -> "CodeMasters logo from the loading screen of Fast Food (ZX Spectrum), 1989"
 
