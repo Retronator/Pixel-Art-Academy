@@ -109,7 +109,7 @@ LOI.GameState._update.method (gameStateId, state) ->
   check gameStateId, Match.DocumentId
   check state, Object
 
-  console.log "Updating game state in the database.", gameStateId if LOI.debug
+  console.log "Updating game state in the database.", gameStateId if LOI.debug or LOI.Adventure.debugState
 
   user = Retronator.user()
 
@@ -145,7 +145,7 @@ LOI.GameState._resetNamespaces.method (gameStateId, namespaces) ->
   check gameStateId, Match.DocumentId
   check namespaces, [String]
 
-  console.log "Resetting namespaces", namespaces, "in state", gameStateId if LOI.debug
+  console.log "Resetting namespaces", namespaces, "in state", gameStateId if LOI.debug or LOI.Adventure.debugState
 
   user = Retronator.user()
   throw new AE.UnauthorizedException "You must be logged in to reset game state." unless user

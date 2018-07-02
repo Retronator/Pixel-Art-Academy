@@ -3,6 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Adventure extends LOI.Adventure
+  @debugState = false
+
   @GameStateSourceType:
     LocalStorageUser: 'LocalStorageUser'
     DatabaseUser: 'DatabaseUser'
@@ -27,13 +29,13 @@ class LOI.Adventure extends LOI.Adventure
     _gameStateProvider = new ComputedField =>
       userId = Meteor.userId()
       characterId = LOI.characterId()
-      console.log "Game state provider is recomputing. User ID is", userId, "Character ID is", characterId if LOI.debug
+      console.log "Game state provider is recomputing. User ID is", userId, "Character ID is", characterId if LOI.debug or LOI.Adventure.debugState
 
       if characterId
         # Subscribe to character's game state and store subscription
         # handle so we can know when the game state should be ready.
         gameStateSubscription = LOI.GameState.forCharacter.subscribe characterId
-        console.log "Subscribed to character game state from the database. Subscription:", gameStateSubscription, "Is it ready?", gameStateSubscription.ready() if LOI.debug
+        console.log "Subscribed to character game state from the database. Subscription:", gameStateSubscription, "Is it ready?", gameStateSubscription.ready() if LOI.debug or LOI.Adventure.debugState
 
         # Find the state from the database. This creates a dependency on game state document updates.
         gameState = LOI.GameState.documents.findOne 'character._id': characterId
@@ -42,7 +44,7 @@ class LOI.Adventure extends LOI.Adventure
         # Subscribe to user's game state and store subscription
         # handle so we can know when the game state should be ready.
         gameStateSubscription = LOI.GameState.forCurrentUser.subscribe()
-        console.log "Subscribed to user game state from the database. Subscription:", gameStateSubscription, "Is it ready?", gameStateSubscription.ready() if LOI.debug
+        console.log "Subscribed to user game state from the database. Subscription:", gameStateSubscription, "Is it ready?", gameStateSubscription.ready() if LOI.debug or LOI.Adventure.debugState
 
         # Find the state from the database. This creates a dependency on game state document updates.
         gameState = LOI.GameState.documents.findOne 'user._id': userId
@@ -50,8 +52,8 @@ class LOI.Adventure extends LOI.Adventure
       # Inform others of the new subscription.
       @gameStateSubscription gameStateSubscription
 
-      console.log "We currently have these game state documents:", LOI.GameState.documents.find().fetch() if LOI.debug
-      console.log "Did we find a game state? We got", gameState if LOI.debug
+      console.log "We currently have these game state documents:", LOI.GameState.documents.find().fetch() if LOI.debug or LOI.Adventure.debugState
+      console.log "Did we find a game state? We got", gameState if LOI.debug or LOI.Adventure.debugState
 
       # Here we decide which provider of the game state we'll use, the database or local storage. In general this is
       # determined by whether the user is logged in, but we also want to use local storage while user is registering.
@@ -80,7 +82,7 @@ class LOI.Adventure extends LOI.Adventure
           
       else if userId and not gameStateSubscription.ready()
         # Looks like we're loading the state from the database during initial setup, so just wait.
-        console.log "Waiting for game state subscription to complete." if LOI.debug
+        console.log "Waiting for game state subscription to complete." if LOI.debug or LOI.Adventure.debugState
 
         @gameStateSource null
 
@@ -90,7 +92,7 @@ class LOI.Adventure extends LOI.Adventure
 
       else if characterId
         # We were waiting for a character state, but it is not present. Unload the character.
-        console.log "No character state found. Unloading character." if LOI.debug
+        console.log "No character state found. Unloading character." if LOI.debug or LOI.Adventure.debugState
 
         LOI.switchCharacter null
 
@@ -112,7 +114,7 @@ class LOI.Adventure extends LOI.Adventure
       @gameState?.updated = _gameStateUpdated
       @gameState?.resetNamespaces = _gameStateResetNamespaces
 
-      console.log "%cNew game state has been set.", 'background: SlateGrey; color: white', state if LOI.debug
+      console.log "%cNew game state has been set.", 'background: SlateGrey; color: white', state if LOI.debug or LOI.Adventure.debugState
 
       state
       
@@ -193,6 +195,13 @@ class LOI.Adventure extends LOI.Adventure
         @clearLocalGameState()
         @clearLocalStorageGameStateParts()
         @clearLoginInformation()
+
+    if LOI.Adventure.debugState
+      @autorun (computation) =>
+        console.log "Game state updated.", @gameState()
+
+      @autorun (computation) =>
+        console.log "Read-only game state updated.", @readOnlyGameState()
 
   replaceGameState: (newState) ->
     switch @gameStateSource()
