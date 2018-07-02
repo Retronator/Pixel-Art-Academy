@@ -38,7 +38,8 @@ class C1.Challenges.Drawing.Tutorial extends LOI.Adventure.Thing
 
   _assetsCompleted: (assets...) ->
     for asset in assets
-      return unless asset?.completed()
+      return unless asset
+      return unless @isAssetCompleted asset
 
     true
 

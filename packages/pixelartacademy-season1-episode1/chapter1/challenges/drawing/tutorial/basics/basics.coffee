@@ -64,7 +64,3 @@ class C1.Challenges.Drawing.Tutorial.Basics extends C1.Challenges.Drawing.Tutori
     @shortcuts?.destroy()
     
     @assets.stop()
-
-  completed: ->
-    finalAsset = _.find @assets(), (asset) => asset instanceof @constructor.Shortcuts
-    finalAsset?.completed()
