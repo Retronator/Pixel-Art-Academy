@@ -30,12 +30,12 @@ class C1.PostPixelBoy.DrawingChallenges extends LOI.Adventure.Scene
 
     # Player needs the Desktop editor selected for the tutorial to display.
     if DrawingApp.state('editorId') is PAA.PixelBoy.Apps.Drawing.Editor.Desktop.id()
-      @_tutorialBasics ?= new C1.Challenges.Drawing.Tutorial.Basics
+      @_tutorialBasics ?= Tracker.nonreactive => new C1.Challenges.Drawing.Tutorial.Basics
       things.push @_tutorialBasics
 
       if @_tutorialBasics.completed()
-        @_tutorialColors ?= new C1.Challenges.Drawing.Tutorial.Colors
-        @_tutorialHelpers ?= new C1.Challenges.Drawing.Tutorial.Helpers
+        @_tutorialColors ?= Tracker.nonreactive => new C1.Challenges.Drawing.Tutorial.Colors
+        @_tutorialHelpers ?= Tracker.nonreactive => new C1.Challenges.Drawing.Tutorial.Helpers
 
         things.push @_tutorialColors, @_tutorialHelpers
 

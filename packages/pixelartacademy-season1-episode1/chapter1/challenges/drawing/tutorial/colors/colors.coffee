@@ -46,4 +46,3 @@ class C1.Challenges.Drawing.Tutorial.Colors extends C1.Challenges.Drawing.Tutori
     @quickColorPicking?.destroy()
 
     @assets.stop()
-    
