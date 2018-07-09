@@ -120,7 +120,9 @@ Package.onUse(function(api) {
   api.addFile('floor3/gallery/gallerywest');
 
   api.addThing('floor4/artstudio..');
-  
+
+  api.addComponent('floor4/artstudio/drawings..');
+
   // Pages
   
   api.addFile('pages..');

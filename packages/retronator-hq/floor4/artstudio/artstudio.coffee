@@ -16,7 +16,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
   @description: ->
     "
       Fourth floor of the headquarters holds a painting studio.
-      Easels are spread throughout the space together with a drafting table by the wall.
+      Easels are spread throughout the space together with drafting tables surrounding a stand in the middle.
       Stairs continue up into the residence part of the HQ, but it requires keycard access.
     "
 
@@ -35,6 +35,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
   things: -> [
     @elevatorButton
     HQ.Actors.Alexandra
+    @constructor.Drawings
   ]
 
   exits: ->
