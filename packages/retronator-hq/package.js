@@ -20,6 +20,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-blog');
   api.use('retronator:pixelartacademy-cast');
+  api.use('retronator:pixelartdatabase');
 
   api.export('Retronator');
 
@@ -122,6 +123,7 @@ Package.onUse(function(api) {
   api.addThing('floor4/artstudio..');
 
   api.addComponent('floor4/artstudio/drawings..');
+  api.addServerFile('floor4/artstudio/initialize-server');
 
   // Pages
   

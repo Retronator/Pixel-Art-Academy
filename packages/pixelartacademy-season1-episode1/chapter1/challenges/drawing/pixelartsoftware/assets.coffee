@@ -57,26 +57,15 @@ for assetId, asset of assets
         referenceUrl = "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{asset.imageName()}-reference.png"
 
         unless PADB.Artwork.forUrl.query(referenceUrl).count()
-          # Find or create the artist.
-          artistQuery = {}
-
-          for key, value of asset.artist.name
-            artistQuery["name.#{key}"] = value
-
-          if artist = PADB.Artist.documents.findOne artistQuery
-            artistId = artist._id
-
-          else
-            artistId = PADB.Artist.documents.insert asset.artist
-
-          PADB.Artwork.documents.insert _.extend {}, asset.artwork,
+          artwork = _.extend {}, asset.artwork,
             type: PADB.Artwork.Types.Image
             image:
               url: "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{asset.imageName()}.png"
             representations: [
-                type: PADB.Artwork.RepresentationTypes.Image
-                url: referenceUrl
-              ]
-            authors: [
-                _id: artistId
-              ]
+              type: PADB.Artwork.RepresentationTypes.Image
+              url: referenceUrl
+            ]
+            
+          PADB.create
+            artist: asset.artist
+            artworks: [artwork]
