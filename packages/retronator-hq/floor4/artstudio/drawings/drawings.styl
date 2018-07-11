@@ -17,72 +17,72 @@
       absolute-cover()
       background-image image('/retronator/hq/locations/artstudio/drawings/background.png')
 
-      .skull
+      .evil-is-love-spelled-backwards
         left 314rem
         top 135rem
         width 42rem
         height 47rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/charcoal-skull.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/charcoal-evil-is-love-spelled-backwards.png')
 
-      .dog
-      .soft
-      .couple
-      .alexandra
-      .gramma
+      .black-lab
+      .a-brutally-soft-woman
+      .alex-kaylynn
+      .self-portrait-with-hair
+      .withers-family
       .skogsra
         width 15rem
         height 20rem
 
-      .dog
+      .black-lab
         left 378rem
         top 137rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-dog.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-black-lab.png')
 
-      .soft
+      .a-brutally-soft-woman
         left 397rem
         top 137rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-soft.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-a-brutally-soft-woman.png')
 
-      .couple
+      .alex-kaylynn
         left 416rem
         top 128rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-couple.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-alex-kaylynn.png')
 
-      .alexandra
+      .self-portrait-with-hair
         left 416rem
         top 151rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-alexandra.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-self-portrait-with-hair.png')
 
-      .gramma
+      .withers-family
         left 435rem
         top 164rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-gramma.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-withers-family.png')
 
       .skogsra
         left 454rem
         top 164rem
         background-image image('/retronator/hq/locations/artstudio/drawings/pencils-skogsra.png')
 
-      .edgeshading
+      .night-21
         left 435rem
         top 128rem
         width 23rem
         height 32rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-edgeshading.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-night-21.png')
 
-      .colored
+      .kaley
         left 462rem
         top 141rem
         width 14rem
         height 19rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-colored.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-kaley.png')
 
-      .aquatic
+      .aquatic-botanical
         left 503rem
         top 113rem
         width 59rem
         height 37rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pens-aquatic.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pens-aquatic-botanical.png')
 
     .easel-right
       position absolute
@@ -100,33 +100,42 @@
       bottom 0
       background-image image('/retronator/hq/locations/artstudio/drawings/foreground.png')
 
-      .heads
+      .human-anatomy-studies
         right 150rem
         bottom 67rem
         width 80rem
         height 27rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-heads.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-human-anatomy-studies.png')
 
-      .hands
+      .hand-study
         right 20rem
         bottom 42rem
         width 128rem
         height 38rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-hands.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-hand-study.png')
 
       .hillary
-        right 74rem
+        right 94rem
         bottom 40rem
-        width 104rem
+        width 84rem
         height 26rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-hillary.png')
 
-      .blueprint
+        &::before
+          content ''
+          position absolute
+          top 0
+          left 0
+          width 104rem
+          height 26rem
+          background-image image('/retronator/hq/locations/artstudio/drawings/pencils-hillary.png')
+          pointer-events none
+
+      .retropolis-international-spacestation-main-tower
         right 0
         bottom 0
         width 140rem
         height 40rem
-        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-blueprint.png')
+        background-image image('/retronator/hq/locations/artstudio/drawings/pencils-retropolis-international-spacestation-main-tower.png')
 
 .retronator-hq-artstudio-drawings-stream
   fixed-cover()
@@ -139,8 +148,15 @@
   text-align center
   color atariGrey(7)
   kyrou-9()
-  text-shadow 0 2rem 4rem rgba(atariGrey(0), 0.5)
-  line-height 15rem
 
-  .title
-    font-weight bold
+  .main-info
+    text-shadow 0 2rem 4rem rgba(atariGrey(0), 0.5)
+    line-height 15rem
+
+    .title
+      font-weight bold
+
+  .extra-info
+    daily()
+    margin-top 10rem
+    text-shadow 0 1rem 2rem rgba(atariGrey(0), 0.5)

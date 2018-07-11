@@ -123,7 +123,7 @@ Package.onUse(function(api) {
   api.addThing('floor4/artstudio..');
 
   api.addComponent('floor4/artstudio/drawings..');
-  api.addServerFile('floor4/artstudio/initialize-server');
+  api.addServerFile('floor4/artstudio/drawings/initialize-server');
 
   // Pages
   

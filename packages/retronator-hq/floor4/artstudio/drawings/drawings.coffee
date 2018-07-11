@@ -38,15 +38,101 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     @_scrollTop = 0
     
     @artistsInfo =
-      matejJan:
-        name:
-          first: 'Matej'
-          last: 'Jan'
-    
+      matejJan: name: first: 'Matej', last: 'Jan'
+      alexandraHood: name: first: 'Alexandra', last: 'Hood'
+
     @artworksInfo =
+      # Alexandra Hood
+      aBrutallySoftWoman:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'A Brutally Soft Woman'
+        caption: "Graphite on cartridge paper, 11.5 × 16.5 inches"
+      alexKaylynn:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Alex + Kaylynn'
+        caption: "Graphite on Bristol paper, 9 × 12 inches"
+      aquaticII:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Aquatic II'
+        caption: "Micron pen on brown cotton rag paper, 5 × 5 inches (deckle edge unfeatured)"
+      aquaticIII:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Aquatic III'
+        caption: "Micron pen on brown cotton rag paper, 5 × 5 inches (deckle edge unfeatured)"
+      aquaticV:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Aquatic V'
+        caption: "Micron pen on brown cotton rag paper, 5 × 5 inches (deckle edge unfeatured)"
+      blackLab:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Black Lab'
+        caption: "Graphite on Bristol paper, 9 × 12 inches"
+      botanicalIII:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Botanical III'
+        caption: "Micron pen on cotton rag paper (light green), 5 × 5 inches"
+      botanicalIX:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Botanical IX'
+        caption: "Micron pen on 100% Cotton Rag Paper, 5 × 5 inches"
+      botanicalV:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Botanical V'
+        caption: "Micron pen on cotton rag paper (light green), 5 × 5 inches"
+      evilIsLoveSpelledBackwards:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Evil Is Love Spelled Backwards'
+        caption: "Charcoal on paper, 16 × 20 inches"
+      humanAnatomyStudies:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Human Anatomy Studies'
+        caption: "Pencil in sketchbook"
+      selfPortraitWithHair:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Self Portrait With Hair'
+        caption: "Graphite on Bristol board, 16 × 20 inches"
+      withersFamily:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Withers Family'
+        caption: "Graphite on Bristol paper, 6 × 9 inches"
+
+      # Matej Jan
+      cardinalCity:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Cardinal City'
+        caption: """
+          Mixed media on tan paper panel
+          (Paper Mate Flair felt tip pen, Prismacolor warm grey markers, red and white chalk pencils, Gelly Roll white gel pen, Molotov white acrylic pen),
+          40 × 32 inches
+        """
+      handStudy:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Hand Study'
+        caption: "Graphite and white chalk on Toned Tan paper, 9 × 12 inches"
+      hillary:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Hillary'
+        caption: "Graphite on paper, 6 × 8 inches"
+      kaley:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Kaley'
+        caption: "Colored pencils on paper, 8.27 × 11.69 inches"
+      night21:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Night 21'
+        caption: "Digital (Classic Pencil on Paper Grain, Linea Sketch, iPad Pro, Apple Pencil), 2048 × 2732 pixels"
+      retropolisInternationalSpacestationMainTower:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Retropolis International Spacestation: Main Tower'
+        caption: "Digital (white Classic Pencil on Blueprint, Linea Sketch, iPad Pro, Apple Pencil), 2732 × 2048 pixels"
+      rodin:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Rodin'
+        caption: "Charcoal on mix media paper (pencils and sticks), 18 × 24 inches"
       skogsra:
         artistInfo: @artistsInfo.matejJan
         title: 'Skogsra'
+        caption: "Graphite on Bristol vellum paper (mechanical pencils, Pentel 0.5mm 3H & 4B lead), 9 × 12 inches"
         
     # Subscribe to artists and artworks.
     for artistField, artistInfo of @artistsInfo
@@ -71,6 +157,9 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
         artworks[artworkField] = PADB.Artwork.documents.findOne
           'authors._id': artist._id
           title: artworkInfo.title
+
+        # Also forward the caption.
+        artworks[artworkField].caption = artworkInfo.caption
 
       artworks
 
@@ -181,10 +270,27 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
 
   events: ->
     super.concat
-      'click .skogsra': @onClickSkogsra
+      'click .artwork': @onClickArtwork
 
-  onClickSkogsra: (event) ->
-    @displayArtworks ['skogsra']
+  onClickArtwork: (event) ->
+    styleClasses = $(event.target).attr('class').split(' ')
+
+    if 'aquatic-botanical' in styleClasses
+      artworkFields = [
+        'aquaticII'
+        'aquaticIII'
+        'aquaticV'
+        'botanicalIII'
+        'botanicalIX'
+        'botanicalV'
+      ]
+
+    else
+      artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
+
+    console.log "s", styleClasses, artworkFields
+
+    @displayArtworks artworkFields
 
   class @Stream extends AM.Component
     @register 'Retronator.HQ.ArtStudio.Drawings.Stream'
