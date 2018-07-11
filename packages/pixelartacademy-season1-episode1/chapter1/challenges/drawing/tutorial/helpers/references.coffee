@@ -71,19 +71,20 @@ class C1.Challenges.Drawing.Tutorial.Helpers.References extends PAA.Practice.Cha
     # We send an empty array so we don't show the on-canvas reference.
     []
 
-Document.startup ->
-  return if Meteor.settings.startEmpty
+if Meteor.isServer
+  Document.startup ->
+    return if Meteor.settings.startEmpty
 
-  PADB.create
-    artist:
-      name:
-        first: 'Susan'
-        last: 'Kare'
-    artworks: [
-      type: PADB.Artwork.Types.Physical
-      name: 'Brush'
-      completionDate:
-        year: 1982
-      image:
-        url: '/pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/susankare-brush.jpg'
-    ]
+    PADB.create
+      artist:
+        name:
+          first: 'Susan'
+          last: 'Kare'
+      artworks: [
+        type: PADB.Artwork.Types.Physical
+        name: 'Brush'
+        completionDate:
+          year: 1982
+        image:
+          url: '/pixelartacademy/season1/episode1/chapter1/challenges/drawing/tutorial/helpers/susankare-brush.jpg'
+      ]

@@ -22,13 +22,17 @@ class PADB.Components.Stream extends AM.Component
       for artwork in artworks
         displayedArtwork =
           artwork: artwork
-          
-        for representation in artwork.representations
-          if representation.type is PADB.Artwork.RepresentationTypes.Image
-            displayedArtwork.imageUrl ?= representation.url
 
-          if representation.type is PADB.Artwork.RepresentationTypes.Video
-            displayedArtwork.videoUrl ?= representation.url
+        if artwork.image
+          displayedArtwork.imageUrl ?= artwork.image.url
+
+        if artwork.representations
+          for representation in artwork.representations
+            if representation.type is PADB.Artwork.RepresentationTypes.Image
+              displayedArtwork.imageUrl ?= representation.url
+
+            if representation.type is PADB.Artwork.RepresentationTypes.Video
+              displayedArtwork.videoUrl ?= representation.url
 
         displayedArtwork
 
@@ -59,6 +63,15 @@ class PADB.Components.Stream extends AM.Component
     super
 
     @_$window.off '.pixelartdatabase-components-stream'
+
+  artworkStyle: ->
+    displayedArtwork = @currentData()
+    
+    # Physical artworks should not be upscaled.
+    return unless displayedArtwork.artwork.type is PADB.Artwork.Types.Physical
+    
+    width: 'auto'
+    maxWidth: '100%'
 
   hasCaption: ->
     @captionComponentClass?

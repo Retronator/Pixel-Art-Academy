@@ -23,3 +23,20 @@
     </div>
   </div>
 </template>
+
+<template name="Retronator.HQ.ArtStudio.Drawings.Stream">
+  <div class="retronator-hq-artstudio-drawings-stream">
+    {{> LandsOfIllusions.Components.BackButton}}
+    {{#with artworks}}
+      {{> PixelArtDatabase.Components.Stream args artworkCaptionClass}}
+    {{/with}}
+  </div>
+</template>
+
+<template name="Retronator.HQ.ArtStudio.Drawings.Stream.ArtworkCaption">
+  <div class="retronator-hq-artstudio-drawings-stream-artworkcaption">
+    <span class="title">{{title}}</span>,
+    <span class="authors">{{authors}}</span>,
+    <span class="year">{{year}}</span>
+  </div>
+</template>

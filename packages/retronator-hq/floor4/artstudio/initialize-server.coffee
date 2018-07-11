@@ -11,7 +11,7 @@ Document.startup ->
         
     artworks: [
       type: PADB.Artwork.Types.Physical
-      name: 'In a Feeling'
+      title: 'In a Feeling'
       completionDate:
         year: 2014
         month: 4
@@ -20,7 +20,7 @@ Document.startup ->
         url: '/retronator/hq/locations/artstudio/drawings/artworks/gabrielle-brickey-in-a-feeling.jpg'
     ,
       type: PADB.Artwork.Types.Physical
-      name: 'In a Moment'
+      title: 'In a Moment'
       completionDate:
         year: 2015
         month: 2
@@ -34,7 +34,19 @@ Document.startup ->
       first: 'Alexandra'
       last: 'Hood'
 
-  PADB.Artist.create
-    name:
-      first: 'Matej'
-      last: 'Jan'
+  PADB.create
+    artist:
+      name:
+        first: 'Matej'
+        last: 'Jan'
+
+    artworks: [
+      type: PADB.Artwork.Types.Physical
+      title: 'Skogsra'
+      completionDate:
+        year: 2015
+        month: 4
+        day: 23
+      image:
+        url: '/retronator/hq/locations/artstudio/drawings/artworks/matej-jan-skogsra.jpg'
+    ]

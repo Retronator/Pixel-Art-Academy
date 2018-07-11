@@ -9,3 +9,11 @@ PADB.Artwork.forUrl.publish (url) ->
   check url, String
 
   PADB.Artwork.forUrl.query url
+
+PADB.Artwork.forArtistName.publish (name) ->
+  check name, PADB.Artist.namePattern
+
+  artistIds = PADB.Artist.forName.query(name).map (artist) -> artist._id
+
+  PADB.Artwork.documents.find
+    'authors._id': $in: artistIds

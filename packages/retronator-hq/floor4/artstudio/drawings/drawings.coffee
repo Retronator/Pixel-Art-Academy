@@ -36,6 +36,51 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
 
     @_focusPoint = @targetFocusPoint
     @_scrollTop = 0
+    
+    @artistsInfo =
+      matejJan:
+        name:
+          first: 'Matej'
+          last: 'Jan'
+    
+    @artworksInfo =
+      skogsra:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Skogsra'
+        
+    # Subscribe to artists and artworks.
+    for artistField, artistInfo of @artistsInfo
+      PADB.Artist.forName.subscribe @, artistInfo.name
+      PADB.Artwork.forArtistName.subscribe @, artistInfo.name
+
+    @artists = new ComputedField =>
+      artists = {}
+
+      for artistField, artistInfo of @artistsInfo
+        artists[artistField] = PADB.Artist.forName.query(artistInfo.name).fetch()[0]
+
+      artists
+
+    @artworks = new ComputedField =>
+      artworks = {}
+
+      for artworkField, artworkInfo of @artworksInfo
+        artist = PADB.Artist.forName.query(artworkInfo.artistInfo.name).fetch()[0]
+        continue unless artist
+
+        artworks[artworkField] = PADB.Artwork.documents.findOne
+          'authors._id': artist._id
+          title: artworkInfo.title
+
+      artworks
+
+    @displayedArtworksFields = new ReactiveField null
+
+    @displayedArtworks = new ComputedField =>
+      return unless fields = @displayedArtworksFields()
+
+      artworks = @artworks()
+      artworks[field] for field in fields when artworks[field]
 
   onRendered: ->
     super
@@ -57,6 +102,15 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     # Update scene style when viewport changes.
     @autorun (computation) =>
       @_updateSceneStyle()
+
+  displayArtworks: (artworkFields) ->
+    @displayedArtworksFields artworkFields
+
+    # Create the stream component.
+    stream = new @constructor.Stream @displayedArtworks
+
+    LOI.adventure.showActivatableModalDialog
+      dialog: stream
 
   moveFocusTo: (@targetFocusPoint, duration) ->
     @_startingFocusPoint = @_focusPoint
@@ -124,3 +178,35 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
       priority: 1
       action: =>
         LOI.adventure.enterContext drawings
+
+  events: ->
+    super.concat
+      'click .skogsra': @onClickSkogsra
+
+  onClickSkogsra: (event) ->
+    @displayArtworks ['skogsra']
+
+  class @Stream extends AM.Component
+    @register 'Retronator.HQ.ArtStudio.Drawings.Stream'
+
+    constructor: (@artworks) ->
+      super
+
+      @activatable = new LOI.Components.Mixins.Activatable()
+
+    mixins: -> [@activatable]
+
+    artworkCaptionClass: ->
+      @constructor.ArtworkCaption
+
+    class @ArtworkCaption extends AM.Component
+      @register 'Retronator.HQ.ArtStudio.Drawings.Stream.ArtworkCaption'
+
+      authors: ->
+        artwork = @data()
+        authors = _.map artwork.authors, 'displayName'
+        authors.join ' & '
+
+      year: ->
+        artwork = @data()
+        artwork.completionDate.year or artwork.completionDate.getFullYear()
