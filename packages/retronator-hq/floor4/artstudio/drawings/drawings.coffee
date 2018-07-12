@@ -94,7 +94,7 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
       withersFamily:
         artistInfo: @artistsInfo.alexandraHood
         title: 'Withers Family'
-        caption: "Graphite on Bristol paper, 6 × 9 inches"
+        caption: "Graphite on Bristol paper (mechanical pencils), 6 × 9 inches"
 
       # Matej Jan
       cardinalCity:
