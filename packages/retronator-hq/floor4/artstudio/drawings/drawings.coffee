@@ -23,23 +23,33 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
 
   @initialize()
 
-  onCreated: ->
+  @FocusPoints:
+    Sketches:
+      x: 1
+      y: 1
+    Realistic:
+      x: 0.6
+      y: 0.42
+    Charcoal:
+      x: 0.4
+      y: 0.42
+
+  constructor: ->
     super
+
+    @dialogueMode = new ReactiveField false
 
     @sceneSize =
       width: 720
       height: 360
 
-    @targetFocusPoint =
-      x: 1
-      y: 1
-
-    @_focusPoint = @targetFocusPoint
+    @_focusPoint = @constructor.FocusPoints.Sketches
     @_scrollTop = 0
-    
+
     @artistsInfo =
-      matejJan: name: first: 'Matej', last: 'Jan'
       alexandraHood: name: first: 'Alexandra', last: 'Hood'
+      gabrielleBrickey: name: first: 'Gabrielle', last: 'Brickey'
+      matejJan: name: first: 'Matej', last: 'Jan'
 
     @artworksInfo =
       # Alexandra Hood
@@ -96,7 +106,17 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
         title: 'Withers Family'
         caption: "Graphite on Bristol paper (mechanical pencils), 6 × 9 inches"
 
-      # Matej Jan
+      # Gabrielle Brickey
+      inAFeeling:
+        artistInfo: @artistsInfo.gabrielleBrickey
+        title: 'In a Feeling'
+        caption: "Charcoal on grey paper, 9 × 12 inches"
+      inAMoment:
+        artistInfo: @artistsInfo.gabrielleBrickey
+        title: 'In a Moment'
+        caption: "Charcoal on grey paper, 9 × 12 inches"
+
+    # Matej Jan
       cardinalCity:
         artistInfo: @artistsInfo.matejJan
         title: 'Cardinal City'
@@ -128,12 +148,15 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
       rodin:
         artistInfo: @artistsInfo.matejJan
         title: 'Rodin'
-        caption: "Charcoal on mix media paper (pencils and sticks), 18 × 24 inches"
+        caption: "Charcoal on paper (pencils and sticks), 18 × 24 inches"
       skogsra:
         artistInfo: @artistsInfo.matejJan
         title: 'Skogsra'
         caption: "Graphite on Bristol vellum paper (mechanical pencils, Pentel 0.5mm 3H & 4B lead), 9 × 12 inches"
-        
+
+  onCreated: ->
+    super
+
     # Subscribe to artists and artworks.
     for artistField, artistInfo of @artistsInfo
       PADB.Artist.forName.subscribe @, artistInfo.name
@@ -201,11 +224,25 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     LOI.adventure.showActivatableModalDialog
       dialog: stream
 
-  moveFocusTo: (@targetFocusPoint, duration) ->
-    @_startingFocusPoint = @_focusPoint
+  setFocus: (targetFocusPoint) ->
+    @_focusPoint = targetFocusPoint
+    return unless @isRendered()
+
+    @$animate.velocity('stop', 'moveFocus')
+    @_updateSceneStyle()
+
+  moveFocus: (targetFocusPoint, duration = 5000) ->
+    # We clamp the focus point so that it won't get clamped later.
+    console.log "moving from", @_focusPoint, "to", targetFocusPoint
+
+    @_startingFocusPoint = @_clampFocusPoint @_focusPoint
+    targetFocusPoint = @_clampFocusPoint targetFocusPoint
+
+    console.log "clamped from", @_startingFocusPoint, "to", targetFocusPoint
+
     @_moveFocusDelta =
-      x: @targetFocusPoint.x - @_startingFocusPoint.x
-      y: @targetFocusPoint.y - @_startingFocusPoint.y
+      x: targetFocusPoint.x - @_startingFocusPoint.x
+      y: targetFocusPoint.y - @_startingFocusPoint.y
 
     @$animate.velocity('stop', 'moveFocus').velocity
       tween: [1, 0]
@@ -222,11 +259,28 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
 
     @$animate.dequeue('moveFocus')
 
+  _clampFocusPoint: (focusPoint) ->
+    viewport = LOI.adventure.interface.display.viewport()
+    scale = LOI.adventure.interface.display.scale()
+
+    halfWidth = viewport.viewportBounds.width() / scale / 2
+    halfHeight = @illustrationHeight() / 2
+
+    x: _.clamp focusPoint.x, halfWidth / @sceneSize.width, (@sceneSize.width - halfWidth) / @sceneSize.width
+    y: _.clamp focusPoint.y, halfHeight / @sceneSize.height, (@sceneSize.height - halfHeight) / @sceneSize.height
+
   illustrationHeight: ->
     viewport = LOI.adventure.interface.display.viewport()
     scale = LOI.adventure.interface.display.scale()
 
-    Math.min 360, viewport.viewportBounds.height() / scale
+    if @dialogueMode()
+      # In dialogue mode we only fill half the screen minus one line (8rem).
+      illustrationHeight = viewport.viewportBounds.height() / scale / 2 - 8
+
+    else
+      illustrationHeight = viewport.viewportBounds.height() / scale
+
+    Math.min 360, illustrationHeight
 
   onScroll: (scrollTop) ->
     return unless @isRendered()
@@ -248,14 +302,18 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     # there is. Finally we need to account for the amount of parallax offset we can introduce from scrolling.
     reducedScrollableHeight = scrollableHeight + @_scrollTop - scrollParallaxOffset
 
-    left = -scrollableWidth * @_focusPoint.x
-    top = -reducedScrollableHeight * @_focusPoint.y
+    focusFactor =
+      x: _.clamp (@_focusPoint.x * @sceneSize.width * scale - viewport.viewportBounds.width() / 2) / scrollableWidth, 0, 1
+      y: _.clamp (@_focusPoint.y * @sceneSize.height * scale - @illustrationHeight() * scale / 2) / scrollableHeight, 0, 1
+
+    left = -scrollableWidth * focusFactor.x
+    top = -reducedScrollableHeight * focusFactor.y
 
     @$scene.css transform: "translate3d(#{left}px, #{top}px, 0)"
 
     for parallaxItem in @_parallaxItems
-      left = (parallaxItem.origin.x - @_focusPoint.x) * parallaxItem.depth * scrollableWidth / 10
-      top = (parallaxItem.origin.y - @_focusPoint.y) * parallaxItem.depth * scrollableHeight / 5 - parallaxItem.depth * scrollParallaxOffset
+      left = (parallaxItem.origin.x - focusFactor.x) * parallaxItem.depth * scrollableWidth / 10
+      top = (parallaxItem.origin.y - focusFactor.y) * parallaxItem.depth * scrollableHeight / 5 - parallaxItem.depth * scrollParallaxOffset
 
       parallaxItem.$element.css transform: "translate3d(#{left}px, #{top}px, 0)"
 

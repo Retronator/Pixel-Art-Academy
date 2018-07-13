@@ -20,6 +20,36 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
   initializeScript: ->
     @setCurrentThings
       alexandra: HQ.Actors.Alexandra
+      
+    @setCallbacks
+      QuickSketches: (complete) =>
+        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+
+        if LOI.adventure.currentContext() is drawings
+          drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Sketches
+
+        else
+          # We enable dialogue mode so scrolling is disabled.
+          drawings.dialogueMode true
+
+          drawings.setFocus HQ.ArtStudio.Drawings.FocusPoints.Sketches
+
+          # Pause current node so we can enter the context.
+          LOI.adventure.director.pauseCurrentNode()
+          LOI.adventure.enterContext drawings
+
+        # Continue the script in the context.
+        complete()
+
+      PencilsRealistic: (complete) =>
+        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+        drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Realistic
+        complete()
+
+      PencilsCharcoal: (complete) =>
+        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+        drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Charcoal
+        complete()
 
   onCommand: (commandResponse) ->
     return unless alexandra = LOI.adventure.getCurrentThing HQ.Actors.Alexandra
