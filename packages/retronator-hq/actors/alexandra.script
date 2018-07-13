@@ -15,7 +15,7 @@ alexandra: How else can I help? `_IntroductionOver`
 
 * Is that your painting? -> [YourPainting]
 * I thought Retronator was just about pixel art. -> [RetronatorJustPixelArt]
-* Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting or RetronatorJustPixelArt`
+* Can I ask you questions about art? -> [MoreAboutMediums] `YourPainting or RetronatorJustPixelArt`
 * What are you drinking? -> [Drinking]
 * What are you listening to? -> [Listening]
 * Sorry, nevermind. `not _MainQuestions`
@@ -153,7 +153,7 @@ alexandra: Yeah, it's a lot to soak in.
 
 ## ThatsAll
 
-alexandra: No problem.
+alexandra: No problem. Any other questions about different art approaches?
 
 -> [OtherStylesQuestions]
 
@@ -270,9 +270,175 @@ alexandra:
 
 -> [PencilsQuestions]
 
+<!-- PENS -->
 
+## Pens
 
+### Pens
 
+alexandra:
+  Pens are great!
+  They force you to commit. When you put your pen down on the paper it leaves a mark.
+  With pencils you can be very carefree with your lines.
+  Pens help you be bold and think ahead to your end result.
+
+*	Gosh, that sounds stressful. -> [PensStressful]
+*	Can I combine pens with pencils? -> [PensCombine]
+
+## PensStressful
+
+alexandra:
+	No, don't worry. It's actually really great to help build confidence with your line work.
+	If a mistake happens, you can be creative about it and turn it into a happy accident.
+
+-> [MediumsQuestions]
+
+## PensCombine
+
+### PensCombine
+
+alexandra:
+  Yes, that's how you can get most of the stress out.
+  Drawing with pencils as the first step is quite common, especially in comics. 
+  First a drawing is done with pencils and then the lineart is drawn over with pens or inks.
+
+-> [MediumsQuestions]
+
+<!-- MARKERS -->
+
+## Markers
+
+### Markers
+
+alexandra:
+  Haha, no. We usually mean art markers.
+  There are colored ones, but a lot of people just use a set of grey shades from light to dark.
+  They are mostly used for shading and combine with other mediums.
+  
+-> [MediumsQuestions]
+
+<!-- PASTELS -->
+
+## Pastels
+
+### Pastels
+
+alexandra:
+  They come in a wide range of vibrant colors like colored pencils, but they have a very different texture.
+
+### PastelsWall
+
+alexandra:
+  There are also different types: soft, hard, oil pastels, pastel pencils.
+  And similar mediums like chalk, crayons, conte crayons …
+
+-> [MediumsQuestions]
+
+<!-- PAINTING -->
+
+## Painting
+
+alexandra: Ah, my favorite!
+
+### PaintingOils
+  
+alexandra: If you go to an art gallery, chances are you'll be looking at oil paintings.
+
+### PaintingAcrylics
+
+alexandra: A modern version also emerged in 1950s called acrylic paint.
+
+### PaintingWatercolors
+
+alexandra: And the third very popular way to paint is with watercolors.
+
+## PaintingQuestions
+
+* I want to do oil painting like the masters! -> [PaintingOils]
+* What's up with acrylics? -> [PaintingAcrylics]
+* So why even use oils then? -> [PaintingWhyOils] `PaintingAcrylics`
+* Can you tell me about watercolors? -> [PaintingWatercolors]
+* I also hear a lot about digital painting. -> [PaintingDigital]
+* Good to know.
+
+alexandra: Any more questions about drawing?
+
+-> [MediumsQuestions]
+
+## PaintingOils
+
+alexandra:
+  Yeah, all famous artworks like the Mona Lisa or Van Gogh's Sunflowers are oil paintings.
+  It's also the most complicated of painting mediums.
+
+### PaintingOilsSupplies
+
+alexandra:
+  You have to choose the paints, the oils, mediums, solvents … 
+  Even mixing colors with the palette knife feels like an art in itself.
+
+* I see …
+* That does sound complicated.
+
+alexandra:
+  But you know, where there's will, there's a way!
+  For beginners it's best to learn in a real class with a teacher.
+
+### PaintingOilsDigital
+
+alexandra:
+  Except, if you're using digital software, just go for it. 
+  That's a good way to get a similar look without all the mess.
+
+-> [PaintingQuestions]
+
+## PaintingAcrylics
+
+### PaintingAcrylics2
+
+alexandra:
+  They're generally easier to deal with than oil paints. You just mix them with water for one thing.
+  They dry fast, they don't need toxic solvents, you can use them on most any surface, even shoes!
+
+-> [PaintingQuestions]
+
+## PaintingWhyOils
+
+alexandra:
+  Well, the reason some people love acrylics is also the reason that other people dislike them.
+  Because acrylics dry faster they also don't mix easily, so it's harder to do techniques like wet-on-wet …
+
+* Wet on wet?
+* Uhm, what?
+
+alexandra:
+  It's a technique …
+  Ah, I see I'm getting ahead of myself.
+  For now, don't worry about it. Just try any medium that looks cool to you.
+
+-> [PaintingQuestions]
+
+## PaintingWatercolors
+
+### PaintingWatercolors2
+
+alexandra:
+  Watercolors are really unique.
+  Like oils, they take a lot of practice and experimentation to get things right.
+  But the result is unlike anything else … Except I guess acrylics mixed with a lot of water haha.
+
+-> [PaintingQuestions]
+
+## PaintingDigital
+
+### PaintingDigital
+
+alexandra:
+  Yes, it's especially popular in the entertainment industry because of its efficiency.
+  Some drawing software tries to emulate traditional mediums, but most often the look of digital paintings has its own quality to them.
+  You can treat it as an additional medium with its own variations in style.
+  
+-> [PaintingQuestions]
 
 
 
