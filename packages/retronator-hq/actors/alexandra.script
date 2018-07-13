@@ -15,7 +15,7 @@ alexandra: How else can I help? `_IntroductionOver`
 
 * Is that your painting? -> [YourPainting]
 * I thought Retronator was just about pixel art. -> [RetronatorJustPixelArt]
-* Can I ask you questions about art? -> [MoreAboutMediums] `YourPainting or RetronatorJustPixelArt`
+* Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting or RetronatorJustPixelArt`
 * What are you drinking? -> [Drinking]
 * What are you listening to? -> [Listening]
 * Sorry, nevermind. `not _MainQuestions`
@@ -52,7 +52,7 @@ alexandra: Of course! How can I help?
 * Is it good to practice other mediums besides pixel art? -> [PracticeOtherMediums]
 * What choices do I have if I want to do other styles than pixel art? -> [OtherStyles] `not OtherStylesQuestions`
 * I have more questions about other styles. -> [OtherStylesMore] `OtherStylesQuestions`
-* I want to do pixel art. What do I need? -> [PixelArtQuestions]
+* I want to do pixel art. What do I need? -> [PixelArt]
 * Can I do pixel art, but not on the computer? -> [PixelArtNotComputer]
 * Actually, I want to ask something else. -> [SomethingElse] `not _ArtQuestions`
 * Thanks, this was helpful. `_ArtQuestions`
@@ -93,6 +93,12 @@ alexandra:
 
 -> [ArtQuestions]
 
+## PixelArt
+
+alexandra: It's best if you go ask Matej downstairs, he's the one dealing with pixels.
+
+-> [ArtQuestions]
+
 ## PixelArtNotComputer
 
 alexandra: 
@@ -120,12 +126,61 @@ alexandra: Go ahead.
 * What kind of art styles are there? -> [ArtStyles] `MediumsOutro`
 * What are some of the differences between traditional and digital? -> [TraditionalVsDigital]
 * What's the upside of digital? -> [UpsideDigital] `TraditionalVsDigital`
-* So how about traditional stuff? -> [UpsideTraditional] `TraditionalVsDigital`
+* Why did you choose traditional art? -> [UpsideTraditional] `TraditionalVsDigital and not UpsideDigital`
+* So how about traditional stuff? -> [UpsideTraditional] `TraditionalVsDigital and UpsideDigital`
+* Can you tell me more about software? -> [Software] `TraditionalVsDigital`
 * Thanks, that's all I wanted to know.
 
 alexandra: Happy to help.
 
 -> [ArtQuestions]
+
+## ArtStyles
+
+alexandra:
+  Uf, if we wanted to get into that we could be here all week.
+  Better wait till you get to the Academy and take their art history class.
+  
+-> [OtherStylesQuestions]
+
+## TraditionalVsDigital
+
+alexandra:
+  Good question.
+  Digital requires a bigger financial investment.
+
+### DigitalEquipment
+
+alexandra:
+  You'll need a graphic tablet. Or you can just get a stylus if you have a tablet computer.
+  Then you'll also need to get software.
+
+-> [OtherStylesQuestions]
+
+## UpsideDigital
+
+alexandra:
+  Hm, let's see … 
+  You get to undo without an eraser. There is never any clean up.
+  And all the different tools are literally at your fingertips. I'm sure there's more.
+
+-> [OtherStylesQuestions]
+
+## UpsideTraditional
+
+alexandra:
+  If you ask me, there's nothing like feeling a real brush on canvas or pencil against paper.
+  The result is physical, you can hold it in your hands or hang it on a wall without printing.
+  It's really down to personal preference in the end.
+
+-> [OtherStylesQuestions]
+
+## Software
+
+alexandra:
+  It's better to ask Matej, he uses a lot of different programs.
+  
+-> [OtherStylesQuestions]  
 
 ## MoreAboutMediums
 
@@ -144,8 +199,9 @@ alexandra:
 * When you said markers … You mean those fluorescent highlighters? -> [Markers]
 * What exactly are pastels? -> [Pastels]
 * How about painting? -> [Painting]
-* Thanks, that's all. -> [ThatsAll] `not _MediumsQuestions or _OtherStylesQuestions`
-* I think that gives me an idea about different mediums. `_MediumsQuestions and not _OtherStylesQuestions`
+* Actually, nevermind. -> [ThatsAll] `not _MediumsQuestions`
+* This was plenty of info. `_MediumsQuestions and MediumsOutro`
+* I think that gives me an idea about different mediums. `_MediumsQuestions and not MediumsOutro`
 
 alexandra: Yeah, it's a lot to soak in.
 
@@ -439,7 +495,6 @@ alexandra:
   You can treat it as an additional medium with its own variations in style.
   
 -> [PaintingQuestions]
-
 
 
 
