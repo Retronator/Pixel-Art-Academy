@@ -40,7 +40,7 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
   @HighlightGroups:
     Sketches: ['handStudy', 'hillary', 'retropolisInternationalSpacestationMainTower', 'humanAnatomyStudies']
     PencilsPortraits: ['blackLab', 'aBrutallySoftWoman', 'alexKaylynn', 'selfPortraitWithHair', 'night21', 'skogsra', 'withersFamily', 'kaley']
-    PencilsRealistc: ['blackLab', 'aBrutallySoftWoman', 'alexKaylynn', 'selfPortraitWithHair', 'skogsra', 'withersFamily']
+    PencilsRealistc: ['blackLab', 'aBrutallySoftWoman', 'alexKaylynn', 'selfPortraitWithHair', 'withersFamily']
     PencilsMechanical: ['skogsra', 'withersFamily']
     PencilsColored: ['kaley']
     PencilsEdgeShading: ['night21']
@@ -346,6 +346,8 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     focusFactor =
       x: _.clamp (@_focusPoint.x * @sceneSize.width * scale - viewport.viewportBounds.width() / 2) / scrollableWidth, 0, 1
       y: _.clamp (@_focusPoint.y * @sceneSize.height * scale - @illustrationHeight() * scale / 2) / scrollableHeight, 0, 1
+
+    focusFactor.y = @_focusPoint.y if _.isNaN focusFactor.y
 
     left = -scrollableWidth * focusFactor.x
     top = -reducedScrollableHeight * focusFactor.y

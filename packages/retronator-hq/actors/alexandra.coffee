@@ -25,13 +25,13 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
       Sketches: (complete) =>
         drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
 
+        # We enable dialogue mode so scrolling is disabled.
+        drawings.dialogueMode true
+
         if LOI.adventure.currentContext() is drawings
           drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Sketches
 
         else
-          # We enable dialogue mode so scrolling is disabled.
-          drawings.dialogueMode true
-
           drawings.setFocus HQ.ArtStudio.Drawings.FocusPoints.Sketches
 
           # Pause current node so we can enter the context.
@@ -48,7 +48,17 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
 
       PencilsPortraits: (complete) =>
         drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Realistic
+
+        if LOI.adventure.currentContext() is drawings
+          drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Realistic
+
+        else
+          drawings.setFocus HQ.ArtStudio.Drawings.FocusPoints.Realistic
+
+          # Pause current node so we can enter the context.
+          LOI.adventure.director.pauseCurrentNode()
+          LOI.adventure.enterContext drawings
+
         complete()
 
       PencilsPortraitsHighlight: (complete) =>
@@ -58,9 +68,10 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
 
         complete()
 
-      PencilsRealistic: (complete) =>
-        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsRealistc
+      Pencils: (complete) =>
+        # Pause current node so we can enter the context.
+        LOI.adventure.director.pauseCurrentNode()
+        LOI.adventure.enterContext HQ.ArtStudio.Pencils
         complete()
 
       PencilsMechanical: (complete) =>
@@ -80,9 +91,23 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
 
       PencilsCharcoal: (complete) =>
         drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Charcoal, =>
-          drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Charcoal
-          
+
+        if LOI.adventure.currentContext() is drawings
+          drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Charcoal, =>
+            drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Charcoal
+
+        else
+          drawings.setFocus HQ.ArtStudio.Drawings.FocusPoints.Charcoal
+
+          Meteor.setTimeout =>
+            drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Charcoal
+          ,
+            2000
+
+          # Pause current node so we can enter the context.
+          LOI.adventure.director.pauseCurrentNode()
+          LOI.adventure.enterContext drawings
+
         complete()
 
   onCommand: (commandResponse) ->

@@ -125,6 +125,8 @@ Package.onUse(function(api) {
   api.addComponent('floor4/artstudio/drawings..');
   api.addServerFile('floor4/artstudio/drawings/initialize-server');
 
+  api.addComponent('floor4/artstudio/pencils..');
+
   // Pages
   
   api.addFile('pages..');
