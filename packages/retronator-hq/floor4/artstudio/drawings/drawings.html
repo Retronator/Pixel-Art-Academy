@@ -1,27 +1,35 @@
 <template name="Retronator.HQ.ArtStudio.Drawings">
   <div class="retronator-hq-artstudio-drawings">
-    <div class="scene">
+    <div class="scene {{highlightingActiveClass}}">
+      <div class="studio"></div>
       <div class="background" data-origin-x="0" data-origin-y="0" data-depth="0">
-        <div class="rodin artwork"></div>
-        <div class="in-a-feeling artwork"></div>
-        <div class="in-a-moment artwork"></div>
-        <div class="evil-is-love-spelled-backwards artwork"></div>
-        <div class="black-lab artwork"></div>
-        <div class="a-brutally-soft-woman artwork"></div>
-        <div class="alex-kaylynn artwork"></div>
-        <div class="self-portrait-with-hair artwork"></div>
-        <div class="night-21 artwork"></div>
-        <div class="withers-family artwork"></div>
-        <div class="skogsra artwork"></div>
-        <div class="kaley artwork"></div>
-        <div class="aquatic-botanical aquatic-ii aquatic-iii aquatic-v botanical-iii botanical-ix botanical-v artwork"></div>
+        <div class="{{artworkClasses 'giveMeTheSky'}}"></div>
+        <div class="{{artworkClasses 'bust'}}"></div>
+        <div class="{{artworkClasses 'blueBottle'}}"></div>
+        <div class="{{artworkClasses 'lotusEspritTurbo'}}"></div>
+        <div class="{{artworkClasses 'bouguereauStudy'}}"></div>
+        <div class="{{artworkClasses 'rodin'}}"></div>
+        <div class="{{artworkClasses 'inAFeeling'}}"></div>
+        <div class="{{artworkClasses 'inAMoment'}}"></div>
+        <div class="{{artworkClasses 'evilIsLoveSpelledBackwards'}}"></div>
+        <div class="drawing-board-clamps"></div>
+        <div class="{{artworkClasses 'blackLab'}}"></div>
+        <div class="{{artworkClasses 'aBrutallySoftWoman'}}"></div>
+        <div class="{{artworkClasses 'alexKaylynn'}}"></div>
+        <div class="{{artworkClasses 'selfPortraitWithHair'}}"></div>
+        <div class="{{artworkClasses 'night21'}}"></div>
+        <div class="{{artworkClasses 'withersFamily'}}"></div>
+        <div class="{{artworkClasses 'skogsra'}}"></div>
+        <div class="{{artworkClasses 'kaley'}}"></div>
+        <div class="{{artworkClasses 'aquaticBotanical'}} aquatic-ii aquatic-iii aquatic-v botanical-iii botanical-ix botanical-v"></div>
       </div>
       <div class="easel-right" data-origin-x="1" data-origin-y="1" data-depth="0.8"></div>
+      <div class="table"></div>
       <div class="foreground" data-origin-x="1" data-origin-y="1" data-depth="1">
-        <div class="human-anatomy-studies artwork"></div>
-        <div class="hand-study artwork"></div>
-        <div class="hillary artwork"></div>
-        <div class="retropolis-international-spacestation-main-tower artwork"></div>
+        <div class="{{artworkClasses 'humanAnatomyStudies'}}"></div>
+        <div class="{{artworkClasses 'handStudy'}}"></div>
+        <div class="{{artworkClasses 'hillary'}}"></div>
+        <div class="{{artworkClasses 'retropolisInternationalSpacestationMainTower'}}"></div>
       </div>
     </div>
   </div>

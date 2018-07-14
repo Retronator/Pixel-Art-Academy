@@ -33,18 +33,33 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     Charcoal:
       x: 0.4
       y: 0.42
+    Pastels:
+      x: 0.08
+      y: 0.44
+
+  @HighlightGroups:
+    Sketches: ['handStudy', 'hillary', 'retropolisInternationalSpacestationMainTower', 'humanAnatomyStudies']
+    PencilsPortraits: ['blackLab', 'aBrutallySoftWoman', 'alexKaylynn', 'selfPortraitWithHair', 'night21', 'skogsra', 'withersFamily', 'kaley']
+    PencilsRealistc: ['blackLab', 'aBrutallySoftWoman', 'alexKaylynn', 'selfPortraitWithHair', 'skogsra', 'withersFamily']
+    PencilsMechanical: ['skogsra', 'withersFamily']
+    PencilsColored: ['kaley']
+    PencilsEdgeShading: ['night21']
+    Charcoal: ['evilIsLoveSpelledBackwards', 'inAFeeling', 'inAMoment', 'rodin']
 
   constructor: ->
     super
 
     @dialogueMode = new ReactiveField false
 
+    @displayedArtworksFields = new ReactiveField null
+    @highlightedArtworksFields = new ReactiveField []
+
+    @_focusPoint = x: 0.5, y: 0.5
+    @_scrollTop = 0
+
     @sceneSize =
       width: 720
       height: 360
-
-    @_focusPoint = @constructor.FocusPoints.Sketches
-    @_scrollTop = 0
 
     @artistsInfo =
       alexandraHood: name: first: 'Alexandra', last: 'Hood'
@@ -186,8 +201,6 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
 
       artworks
 
-    @displayedArtworksFields = new ReactiveField null
-
     @displayedArtworks = new ComputedField =>
       return unless fields = @displayedArtworksFields()
 
@@ -231,18 +244,16 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     @$animate.velocity('stop', 'moveFocus')
     @_updateSceneStyle()
 
-  moveFocus: (targetFocusPoint, duration = 5000) ->
+  moveFocus: (targetFocusPoint, completeCallback) ->
     # We clamp the focus point so that it won't get clamped later.
-    console.log "moving from", @_focusPoint, "to", targetFocusPoint
-
     @_startingFocusPoint = @_clampFocusPoint @_focusPoint
     targetFocusPoint = @_clampFocusPoint targetFocusPoint
-
-    console.log "clamped from", @_startingFocusPoint, "to", targetFocusPoint
 
     @_moveFocusDelta =
       x: targetFocusPoint.x - @_startingFocusPoint.x
       y: targetFocusPoint.y - @_startingFocusPoint.y
+
+    duration = 30 * Math.sqrt(Math.pow(@_moveFocusDelta.x * @sceneSize.width, 2) + Math.pow(@_moveFocusDelta.y * @sceneSize.height, 2))
 
     @$animate.velocity('stop', 'moveFocus').velocity
       tween: [1, 0]
@@ -256,6 +267,7 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
           y: @_startingFocusPoint.y + @_moveFocusDelta.y * tweenValue
 
         @_updateSceneStyle()
+      complete: completeCallback
 
     @$animate.dequeue('moveFocus')
 
@@ -269,6 +281,22 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     x: _.clamp focusPoint.x, halfWidth / @sceneSize.width, (@sceneSize.width - halfWidth) / @sceneSize.width
     y: _.clamp focusPoint.y, halfHeight / @sceneSize.height, (@sceneSize.height - halfHeight) / @sceneSize.height
 
+  highlight: (artworkFields) ->
+    if @highlightedArtworksFields().length
+      # We need to first cancel highlighting for a frame.
+      Meteor.clearTimeout @_highlightEndTimeout
+      @highlightedArtworksFields []
+
+      Tracker.afterFlush => @highlight artworkFields
+
+    else
+      @highlightedArtworksFields artworkFields or []
+
+      @_highlightEndTimeout = Meteor.setTimeout =>
+        @highlightedArtworksFields []
+      ,
+        5000
+
   illustrationHeight: ->
     viewport = LOI.adventure.interface.display.viewport()
     scale = LOI.adventure.interface.display.scale()
@@ -281,6 +309,19 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
       illustrationHeight = viewport.viewportBounds.height() / scale
 
     Math.min 360, illustrationHeight
+
+  highlightingActiveClass: ->
+    'highlighting-active' if @highlightedArtworksFields().length
+
+  artworkClasses: (artworkField) ->
+    classes = [
+      _.kebabCase artworkField
+      'artwork'
+    ]
+
+    classes.push 'highlighted' if artworkField in @highlightedArtworksFields()
+
+    classes.join ' '
 
   onScroll: (scrollTop) ->
     return unless @isRendered()
@@ -345,8 +386,6 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
 
     else
       artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
-
-    console.log "s", styleClasses, artworkFields
 
     @displayArtworks artworkFields
 

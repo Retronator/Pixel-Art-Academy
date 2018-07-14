@@ -22,7 +22,7 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
       alexandra: HQ.Actors.Alexandra
       
     @setCallbacks
-      QuickSketches: (complete) =>
+      Sketches: (complete) =>
         drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
 
         if LOI.adventure.currentContext() is drawings
@@ -41,14 +41,48 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
         # Continue the script in the context.
         complete()
 
-      PencilsRealistic: (complete) =>
+      SketchesHighlight: (complete) =>
+        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Sketches
+        complete()
+
+      PencilsPortraits: (complete) =>
         drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
         drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Realistic
         complete()
 
+      PencilsPortraitsHighlight: (complete) =>
+        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+        drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Realistic, =>
+          drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsPortraits
+
+        complete()
+
+      PencilsRealistic: (complete) =>
+        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsRealistc
+        complete()
+
+      PencilsMechanical: (complete) =>
+        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsMechanical
+        complete()
+
+      PencilsEdgeShading: (complete) =>
+        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsEdgeShading
+        complete()
+
+      PencilsColored: (complete) =>
+        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsColored
+        complete()
+
       PencilsCharcoal: (complete) =>
         drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Charcoal
+        drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Charcoal, =>
+          drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Charcoal
+          
         complete()
 
   onCommand: (commandResponse) ->

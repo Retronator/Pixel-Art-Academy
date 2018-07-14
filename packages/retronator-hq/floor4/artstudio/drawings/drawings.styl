@@ -9,13 +9,31 @@
     width 720rem
     height 360rem
 
+    &.highlighting-active
+      *
+        animation darken 10s infinite
+
+      .foreground
+      .background
+        animation none
+
+      .highlighted
+        animation highlight 10s infinite
+
+    .studio
+      absolute-cover()
+      background-image image('/retronator/hq/locations/artstudio/drawings/background.png')
+
     .artwork
       position absolute
       cursor zoom-in
+      transition all 0.2s
+
+      &:hover
+        filter drop-shadow(0 0 3rem white)
 
     .background
       absolute-cover()
-      background-image image('/retronator/hq/locations/artstudio/drawings/background.png')
 
       .in-a-feeling
       .in-a-moment
@@ -27,6 +45,41 @@
       .skogsra
         width 15rem
         height 20rem
+
+      .give-me-the-sky
+        left 11rem
+        top 167rem
+        width 34rem
+        height 30rem
+        background-image image('/retronator/hq/locations/artstudio/drawings/pastels-give-me-the-sky.png')
+
+      .bust
+        left 20rem
+        top 126rem
+        width 25rem
+        height 38rem
+        background-image image('/retronator/hq/locations/artstudio/drawings/pastels-bust.png')
+
+      .blue-bottle
+        left 48rem
+        top 146rem
+        width 22rem
+        height 40rem
+        background-image image('/retronator/hq/locations/artstudio/drawings/pastels-blue-bottle.png')
+
+      .lotus-esprit-turbo
+        left 48rem
+        top 117rem
+        width 32rem
+        height 29rem
+        background-image image('/retronator/hq/locations/artstudio/drawings/pastels-lotus-esprit-turbo.png')
+
+      .bouguereau-study
+        left 73rem
+        top 149rem
+        width 16rem
+        height 25rem
+        background-image image('/retronator/hq/locations/artstudio/drawings/pastels-bouguereau-study.png')
 
       .rodin
         left 233rem
@@ -46,11 +99,20 @@
         background-image image('/retronator/hq/locations/artstudio/drawings/charcoal-in-a-moment.png')
 
       .evil-is-love-spelled-backwards
-        left 314rem
-        top 135rem
-        width 42rem
-        height 47rem
+        left 320rem
+        top 137rem
+        width 29rem
+        height 39rem
         background-image image('/retronator/hq/locations/artstudio/drawings/charcoal-evil-is-love-spelled-backwards.png')
+
+      .drawing-board-clamps
+        position absolute
+        left 321rem
+        top 135rem
+        width 27rem
+        height 3rem
+        background-image image('/retronator/hq/locations/artstudio/drawings/drawingboardclamps.png')
+        pointer-events none
 
       .black-lab
         left 378rem
@@ -111,14 +173,18 @@
       bottom 60rem
       background-image image('/retronator/hq/locations/artstudio/drawings/easel-right.png')
 
+    .table
     .foreground
       position absolute
       width 425rem
       height 109rem
       right 0
       bottom 0
+
+    .table
       background-image image('/retronator/hq/locations/artstudio/drawings/foreground.png')
 
+    .foreground
       .human-anatomy-studies
         right 150rem
         bottom 67rem
@@ -179,3 +245,19 @@
     daily()
     margin-top 10rem
     text-shadow 0 1rem 2rem rgba(atariGrey(0), 0.5)
+
+@keyframes highlight
+  10%
+  40%
+    filter drop-shadow(0 0 10rem white)
+
+  50%
+    filter none
+
+@keyframes darken
+  10%
+  40%
+    filter brightness(50%)
+
+  50%
+    filter none

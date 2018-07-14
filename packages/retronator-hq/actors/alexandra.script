@@ -15,7 +15,7 @@ alexandra: How else can I help? `_IntroductionOver`
 
 * Is that your painting? -> [YourPainting]
 * I thought Retronator was just about pixel art. -> [RetronatorJustPixelArt]
-* Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting or RetronatorJustPixelArt`
+* Can I ask you questions about art? -> [Pencils] `YourPainting or RetronatorJustPixelArt`
 * What are you drinking? -> [Drinking]
 * What are you listening to? -> [Listening]
 * Sorry, nevermind. `not _MainQuestions`
@@ -229,16 +229,18 @@ alexandra:
 
 > You look at a table with different sketchbooks.
 
-### QuickSketches
+### Sketches
 
 > You can now click on the artworks to see them up close.
+
+### SketchesHighlight
 
 alexandra:
   Besides sketches, you can create very detailed and realistic drawings with them too.
   
 > She points to portraits on the back wall.
 
-### PencilsRealistic
+### PencilsPortraitsHighlight
 
 pause
 
@@ -265,10 +267,14 @@ alexandra:
 
 ## PencilsRealistic
 
-### PencilsRealistic
+### PencilsPortraits
 
 alexandra:
   You learn how to render with light and dark shades. 
+
+### PencilsRealistic
+
+alexandra:
   To render, artists usually use different pencils from soft to hard.
 
 > Alexandra grabs a few pencils from the tool stand.
@@ -287,29 +293,31 @@ alexandra:
 
 ## PencilsMechanical
 
-### PencilsMechanical
+### PencilsPortraits
 
 alexandra:
   Not really, they are both helpful for different techniques.
   Mechanical pencils are more precise and of course you don't need to sharpen them.
 
-### PencilsEdgeShading
+### PencilsMechanical
 
 alexandra:
   Traditional pencils can be used for different effects, like at an angle for wider lines or unsharpened for textured marks.
+
+### PencilsEdgeShading
 
 -> [PencilsQuestions]
 
 ## PencilsColored
 
+### PencilsPortraits
+
 alexandra:
   We're all used to them from kindergarten, right?
-
-### PencilsColored
-
-alexandra:
   They can be used for some seriously cool artworks.
   The style is usually a bit more cartoony than realistic, but that gives them their charm.
+
+### PencilsColored
 
 -> [PencilsQuestions]
 
