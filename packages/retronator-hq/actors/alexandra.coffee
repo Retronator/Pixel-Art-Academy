@@ -72,6 +72,22 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
         # Pause current node so we can enter the context.
         LOI.adventure.director.pauseCurrentNode()
         LOI.adventure.enterContext HQ.ArtStudio.Pencils
+
+        Tracker.autorun (computation) =>
+          context = LOI.adventure.currentContext()
+          return unless context instanceof HQ.ArtStudio.Pencils
+          computation.stop()
+
+          Meteor.setTimeout =>
+            context.showHand()
+          ,
+            1000
+
+        complete()
+
+      PencilsHighlight: (complete) =>
+        pencils = LOI.adventure.currentContext()
+        pencils.highlight HQ.ArtStudio.Pencils.HighlightGroups.Inventory
         complete()
 
       PencilsMechanical: (complete) =>

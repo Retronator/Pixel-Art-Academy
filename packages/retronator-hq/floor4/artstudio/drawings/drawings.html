@@ -1,5 +1,5 @@
 <template name="Retronator.HQ.ArtStudio.Drawings">
-  <div class="retronator-hq-artstudio-drawings">
+  <div class="retronator-hq-artstudio-drawings retronator-hq-artstudio-contextwithartworks">
     <div class="scene {{highlightingActiveClass}}">
       <div class="studio" data-origin-x="0" data-origin-y="0" data-depth="0"></div>
       <div class="background" data-origin-x="0" data-origin-y="0" data-depth="0">
@@ -31,28 +31,6 @@
         <div class="{{artworkClasses 'hillary'}}"></div>
         <div class="{{artworkClasses 'retropolisInternationalSpacestationMainTower'}}"></div>
       </div>
-    </div>
-  </div>
-</template>
-
-<template name="Retronator.HQ.ArtStudio.Drawings.Stream">
-  <div class="retronator-hq-artstudio-drawings-stream">
-    {{> LandsOfIllusions.Components.BackButton}}
-    {{#with artworks}}
-      {{> PixelArtDatabase.Components.Stream args artworkCaptionClass}}
-    {{/with}}
-  </div>
-</template>
-
-<template name="Retronator.HQ.ArtStudio.Drawings.Stream.ArtworkCaption">
-  <div class="retronator-hq-artstudio-drawings-stream-artworkcaption">
-    <div class="main-info">
-      <span class="title">{{title}}</span>,
-      <span class="authors">{{authors}}</span>,
-      <span class="year">{{year}}</span>
-    </div>
-    <div class="extra-info">
-      {{caption}}
     </div>
   </div>
 </template>

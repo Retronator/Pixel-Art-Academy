@@ -1,0 +1,57 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.retronator-hq-artstudio-contextwithartworks
+  .highlighting-active
+    *
+      animation retronator-hq-artstudio-contextwithartworks-darken 10s infinite
+
+    .highlighted
+      animation retronator-hq-artstudio-contextwithartworks-highlight 10s infinite
+
+  .artwork
+    position absolute
+    cursor zoom-in
+    transition all 0.2s
+
+    &:hover
+      filter drop-shadow(0 0 3rem white)
+
+.retronator-hq-artstudio-contextwithartworks-stream
+  fixed-cover()
+  z-index 1
+  overflow-y auto
+
+.retronator-hq-artstudio-contextwithartworks-stream-artworkcaption
+  position relative
+  padding 30rem 10rem
+  text-align center
+  color atariGrey(7)
+  kyrou-9()
+
+  .main-info
+    text-shadow 0 2rem 4rem rgba(atariGrey(0), 0.5)
+    line-height 15rem
+
+    .title
+      font-weight bold
+
+  .extra-info
+    daily()
+    margin-top 10rem
+    text-shadow 0 1rem 2rem rgba(atariGrey(0), 0.5)
+
+@keyframes retronator-hq-artstudio-contextwithartworks-highlight
+  10%
+  40%
+    filter drop-shadow(0 0 10rem white)
+
+  50%
+    filter none
+
+@keyframes retronator-hq-artstudio-contextwithartworks-darken
+  10%
+  40%
+    filter brightness(50%)
+
+  50%
+    filter none

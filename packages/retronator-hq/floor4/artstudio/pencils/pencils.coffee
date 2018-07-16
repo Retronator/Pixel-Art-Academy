@@ -7,7 +7,7 @@ RS = Retronator.Store
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.ArtStudio.Pencils extends LOI.Adventure.Context
+class HQ.ArtStudio.Pencils extends HQ.ArtStudio.ContextWithArtworks
   @id: -> 'Retronator.HQ.ArtStudio.Pencils'
 
   @register @id()
@@ -17,6 +17,29 @@ class HQ.ArtStudio.Pencils extends LOI.Adventure.Context
 
   @initialize()
 
+  @HighlightGroups:
+    Inventory: ['inventory']
+
+  constructor: ->
+    super
+
+    @artistsInfo =
+      matejJan: name: first: 'Matej', last: 'Jan'
+
+    @artworksInfo =
+      inventory:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Inventory'
+        caption: "Drawing tools test sheet, 9 × 12 inches (crop)"
+
+  onCreated: ->
+    super
+
+    @handVisible = new ReactiveField false
+
+  showHand: ->
+    @handVisible true
+
   illustrationHeight: ->
     viewport = LOI.adventure.interface.display.viewport()
     scale = LOI.adventure.interface.display.scale()
@@ -25,3 +48,11 @@ class HQ.ArtStudio.Pencils extends LOI.Adventure.Context
     illustrationHeight = viewport.viewportBounds.height() / scale / 2 - 8
 
     Math.min 240, illustrationHeight
+
+  sceneStyle: ->
+    hiddenHeight = 240 - @illustrationHeight()
+
+    top: "-#{hiddenHeight * 0.6}rem"
+
+  handVisibleClass: ->
+    'visible' if @handVisible()

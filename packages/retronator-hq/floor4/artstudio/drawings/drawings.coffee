@@ -7,7 +7,7 @@ RS = Retronator.Store
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
+class HQ.ArtStudio.Drawings extends HQ.ArtStudio.ContextWithArtworks
   @id: -> 'Retronator.HQ.ArtStudio.Drawings'
 
   @register @id()
@@ -50,9 +50,6 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     super
 
     @dialogueMode = new ReactiveField false
-
-    @displayedArtworksFields = new ReactiveField null
-    @highlightedArtworksFields = new ReactiveField []
 
     @_focusPoint = x: 0.5, y: 0.5
     @_scrollTop = 0
@@ -169,44 +166,6 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
         title: 'Skogsra'
         caption: "Graphite on Bristol vellum paper (mechanical pencils, Pentel 0.5mm 3H & 4B lead), 9 × 12 inches"
 
-  onCreated: ->
-    super
-
-    # Subscribe to artists and artworks.
-    for artistField, artistInfo of @artistsInfo
-      PADB.Artist.forName.subscribe @, artistInfo.name
-      PADB.Artwork.forArtistName.subscribe @, artistInfo.name
-
-    @artists = new ComputedField =>
-      artists = {}
-
-      for artistField, artistInfo of @artistsInfo
-        artists[artistField] = PADB.Artist.forName.query(artistInfo.name).fetch()[0]
-
-      artists
-
-    @artworks = new ComputedField =>
-      artworks = {}
-
-      for artworkField, artworkInfo of @artworksInfo
-        artist = PADB.Artist.forName.query(artworkInfo.artistInfo.name).fetch()[0]
-        continue unless artist
-
-        artworks[artworkField] = PADB.Artwork.documents.findOne
-          'authors._id': artist._id
-          title: artworkInfo.title
-
-        # Also forward the caption.
-        artworks[artworkField].caption = artworkInfo.caption
-
-      artworks
-
-    @displayedArtworks = new ComputedField =>
-      return unless fields = @displayedArtworksFields()
-
-      artworks = @artworks()
-      artworks[field] for field in fields when artworks[field]
-
   onRendered: ->
     super
 
@@ -227,15 +186,6 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     # Update scene style when viewport changes.
     @autorun (computation) =>
       @_updateSceneStyle()
-
-  displayArtworks: (artworkFields) ->
-    @displayedArtworksFields artworkFields
-
-    # Create the stream component.
-    stream = new @constructor.Stream @displayedArtworks
-
-    LOI.adventure.showActivatableModalDialog
-      dialog: stream
 
   setFocus: (targetFocusPoint) ->
     @_focusPoint = targetFocusPoint
@@ -281,22 +231,6 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
     x: _.clamp focusPoint.x, halfWidth / @sceneSize.width, (@sceneSize.width - halfWidth) / @sceneSize.width
     y: _.clamp focusPoint.y, halfHeight / @sceneSize.height, (@sceneSize.height - halfHeight) / @sceneSize.height
 
-  highlight: (artworkFields) ->
-    if @highlightedArtworksFields().length
-      # We need to first cancel highlighting for a frame.
-      Meteor.clearTimeout @_highlightEndTimeout
-      @highlightedArtworksFields []
-
-      Tracker.afterFlush => @highlight artworkFields
-
-    else
-      @highlightedArtworksFields artworkFields or []
-
-      @_highlightEndTimeout = Meteor.setTimeout =>
-        @highlightedArtworksFields []
-      ,
-        5000
-
   illustrationHeight: ->
     viewport = LOI.adventure.interface.display.viewport()
     scale = LOI.adventure.interface.display.scale()
@@ -309,19 +243,6 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
       illustrationHeight = viewport.viewportBounds.height() / scale
 
     Math.min 360, illustrationHeight
-
-  highlightingActiveClass: ->
-    'highlighting-active' if @highlightedArtworksFields().length
-
-  artworkClasses: (artworkField) ->
-    classes = [
-      _.kebabCase artworkField
-      'artwork'
-    ]
-
-    classes.push 'highlighted' if artworkField in @highlightedArtworksFields()
-
-    classes.join ' '
 
   onScroll: (scrollTop) ->
     return unless @isRendered()
@@ -369,10 +290,6 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
       action: =>
         LOI.adventure.enterContext drawings
 
-  events: ->
-    super.concat
-      'click .artwork': @onClickArtwork
-
   onClickArtwork: (event) ->
     styleClasses = $(event.target).attr('class').split(' ')
 
@@ -390,28 +307,3 @@ class HQ.ArtStudio.Drawings extends LOI.Adventure.Context
       artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
 
     @displayArtworks artworkFields
-
-  class @Stream extends AM.Component
-    @register 'Retronator.HQ.ArtStudio.Drawings.Stream'
-
-    constructor: (@artworks) ->
-      super
-
-      @activatable = new LOI.Components.Mixins.Activatable()
-
-    mixins: -> [@activatable]
-
-    artworkCaptionClass: ->
-      @constructor.ArtworkCaption
-
-    class @ArtworkCaption extends AM.Component
-      @register 'Retronator.HQ.ArtStudio.Drawings.Stream.ArtworkCaption'
-
-      authors: ->
-        artwork = @data()
-        authors = _.map artwork.authors, 'displayName'
-        authors.join ' & '
-
-      year: ->
-        artwork = @data()
-        artwork.completionDate.year or artwork.completionDate.getFullYear()

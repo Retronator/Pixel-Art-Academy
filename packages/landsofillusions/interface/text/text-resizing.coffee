@@ -88,11 +88,11 @@ class LOI.Interface.Text extends LOI.Interface.Text
     uiBackgroundSize = uiSize.extrude lineHeight
     $uiBackground.css(uiBackgroundSize.toDimensions())
 
-    $textInterface.find('.text-display').css(textDisplaySize.toDimensions()).height('100%')
-    $textInterface.find('.text-display-content').width(textDisplaySize.width())
+    $ui.find('.text-display').css(textDisplaySize.toDimensions()).height('100%')
+    $ui.find('.text-display-content').width(textDisplaySize.width())
 
-    $textInterface.find('.inventory').css(inventorySize.toDimensions()).height('100%')
-    $textInterface.find('.inventory-content').width(inventorySize.width())
+    $ui.find('.inventory').css(inventorySize.toDimensions()).height('100%')
+    $ui.find('.inventory-content').width(inventorySize.width())
 
     # Set total interface height so that scrolling can use it in its calculations.
     $textInterface.find('.ui-area').add('body').height uiSize.bottom()

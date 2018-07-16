@@ -10,15 +10,9 @@
     height 360rem
 
     &.highlighting-active
-      *
-        animation darken 10s infinite
-
       .foreground
       .background
         animation none
-
-      .highlighted
-        animation highlight 10s infinite
 
     .studio
       absolute-cover()
@@ -26,11 +20,6 @@
 
     .artwork
       position absolute
-      cursor zoom-in
-      transition all 0.2s
-
-      &:hover
-        filter drop-shadow(0 0 3rem white)
 
     .background
       absolute-cover()
@@ -221,43 +210,3 @@
         width 140rem
         height 40rem
         background-image image('/retronator/hq/locations/artstudio/drawings/pencils-retropolis-international-spacestation-main-tower.png')
-
-.retronator-hq-artstudio-drawings-stream
-  fixed-cover()
-  z-index 1
-  overflow-y auto
-
-.retronator-hq-artstudio-drawings-stream-artworkcaption
-  position relative
-  padding 30rem 10rem
-  text-align center
-  color atariGrey(7)
-  kyrou-9()
-
-  .main-info
-    text-shadow 0 2rem 4rem rgba(atariGrey(0), 0.5)
-    line-height 15rem
-
-    .title
-      font-weight bold
-
-  .extra-info
-    daily()
-    margin-top 10rem
-    text-shadow 0 1rem 2rem rgba(atariGrey(0), 0.5)
-
-@keyframes highlight
-  10%
-  40%
-    filter drop-shadow(0 0 10rem white)
-
-  50%
-    filter none
-
-@keyframes darken
-  10%
-  40%
-    filter brightness(50%)
-
-  50%
-    filter none

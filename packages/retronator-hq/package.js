@@ -122,10 +122,13 @@ Package.onUse(function(api) {
 
   api.addThing('floor4/artstudio..');
 
+  api.addComponent('floor4/artstudio/contextwithartworks');
+
   api.addComponent('floor4/artstudio/drawings..');
   api.addServerFile('floor4/artstudio/drawings/initialize-server');
 
   api.addComponent('floor4/artstudio/pencils..');
+  api.addServerFile('floor4/artstudio/pencils/initialize-server');
 
   // Pages
   
