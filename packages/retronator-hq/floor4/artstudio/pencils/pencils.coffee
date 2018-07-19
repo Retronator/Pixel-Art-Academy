@@ -22,15 +22,15 @@ class HQ.ArtStudio.Pencils extends HQ.ArtStudio.ContextWithArtworks
 
   constructor: ->
     super
+    
+    # Pencils context only appears in dialogue mode.
+    @dialogueMode true
+    
+    @sceneSize =
+      width: 480
+      height: 240
 
-    @artistsInfo =
-      matejJan: name: first: 'Matej', last: 'Jan'
-
-    @artworksInfo =
-      inventory:
-        artistInfo: @artistsInfo.matejJan
-        title: 'Inventory'
-        caption: "Drawing tools test sheet, 9 × 12 inches (crop)"
+    @_focusPoint = x: 0.5, y: 0.6
 
   onCreated: ->
     super
@@ -40,19 +40,12 @@ class HQ.ArtStudio.Pencils extends HQ.ArtStudio.ContextWithArtworks
   showHand: ->
     @handVisible true
 
-  illustrationHeight: ->
-    viewport = LOI.adventure.interface.display.viewport()
-    scale = LOI.adventure.interface.display.scale()
-
-    # We show this context during dialogue so we only fill half the screen minus one line (8rem).
-    illustrationHeight = viewport.viewportBounds.height() / scale / 2 - 8
-
-    Math.min 240, illustrationHeight
-
   sceneStyle: ->
-    hiddenHeight = 240 - @illustrationHeight()
+    hiddenHeight = @sceneSize.height - @illustrationHeight()
 
     top: "-#{hiddenHeight * 0.6}rem"
+
+  _updateSceneStyle: -> # Override to do nothing since we position via the style helper.
 
   handVisibleClass: ->
     'visible' if @handVisible()

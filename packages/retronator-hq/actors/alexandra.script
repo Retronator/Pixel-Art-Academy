@@ -15,7 +15,7 @@ alexandra: How else can I help? `_IntroductionOver`
 
 * Is that your painting? -> [YourPainting]
 * I thought Retronator was just about pixel art. -> [RetronatorJustPixelArt]
-* Can I ask you questions about art? -> [Pencils] `YourPainting or RetronatorJustPixelArt`
+* Can I ask you questions about art? -> [MoreAboutMediums] `YourPainting or RetronatorJustPixelArt`
 * What are you drinking? -> [Drinking]
 * What are you listening to? -> [Listening]
 * Sorry, nevermind. `not _MainQuestions`
@@ -375,8 +375,12 @@ alexandra:
 alexandra:
   Haha, no. We usually mean art markers.
   There are colored ones, but a lot of people just use a set of grey shades from light to dark.
+    
+### MarkersCombine
+
+alexandra:
   They are mostly used for shading and combine with other mediums.
-  
+
 -> [MediumsQuestions]
 
 <!-- PASTELS -->

@@ -36,6 +36,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
     @elevatorButton
     HQ.Actors.Alexandra
     @constructor.Drawings
+    @constructor.MoreDrawings
   ]
 
   exits: ->

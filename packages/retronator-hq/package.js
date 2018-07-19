@@ -121,14 +121,13 @@ Package.onUse(function(api) {
   api.addFile('floor3/gallery/gallerywest');
 
   api.addThing('floor4/artstudio..');
+  api.addServerFile('floor4/artstudio/initialize-server');
 
   api.addComponent('floor4/artstudio/contextwithartworks');
-
+  api.addFile('floor4/artstudio/contextwithartworks-artworksinfo');
   api.addComponent('floor4/artstudio/drawings..');
-  api.addServerFile('floor4/artstudio/drawings/initialize-server');
-
   api.addComponent('floor4/artstudio/pencils..');
-  api.addServerFile('floor4/artstudio/pencils/initialize-server');
+  api.addComponent('floor4/artstudio/moredrawings..');
 
   // Pages
   
