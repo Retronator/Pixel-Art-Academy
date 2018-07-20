@@ -195,6 +195,10 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
     focusFactor.x = @_focusPoint.x if _.isNaN focusFactor.x
     focusFactor.y = @_focusPoint.y if _.isNaN focusFactor.y
 
+    # Outside of dialogue we always show the whole scene so we need to
+    # focus on the bottom to show the whole scene as we scroll by.
+    focusFactor.y = 1 unless @dialogueMode()
+
     left = -scrollableWidth * focusFactor.x
     top = -reducedScrollableHeight * focusFactor.y
 

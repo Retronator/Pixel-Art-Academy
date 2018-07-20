@@ -49,8 +49,6 @@ class HQ.ArtStudio.Drawings extends HQ.ArtStudio.ContextWithArtworks
   constructor: ->
     super
 
-    @_focusPoint = x: 0.08, y: 1
-
     @sceneSize =
       width: 720
       height: 360
