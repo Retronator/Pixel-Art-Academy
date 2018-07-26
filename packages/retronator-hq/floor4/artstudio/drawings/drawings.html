@@ -31,6 +31,13 @@
         <div class="{{artworkClasses 'hillary'}}"></div>
         <div class="{{artworkClasses 'retropolisInternationalSpacestationMainTower'}}"></div>
       </div>
+      <div class="railing" data-origin-x="0" data-origin-y="1" data-depth="2"></div>
     </div>
+    {{#if canMoveLeft}}
+      <button class="move-button left"></button>
+    {{/if}}
+    {{#if canMoveRight}}
+      <button class="move-button right"></button>
+    {{/if}}
   </div>
 </template>

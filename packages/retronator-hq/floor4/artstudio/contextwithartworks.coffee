@@ -11,14 +11,16 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
   constructor: ->
     super
 
-    @parallaxFactor = 1
+    @verticalParallaxFactor = 1
+    @horizontalParallaxFactor = 1
 
     @displayedArtworksFields = new ReactiveField null
     @highlightedArtworksFields = new ReactiveField []
 
     @dialogueMode = new ReactiveField false
 
-    @_focusPoint = x: 0.5, y: 0.5
+    @targetFocusPoint = new ReactiveField x: 0.5, y: 0.5
+    @_focusPoint = @targetFocusPoint()
     @_scrollTop = 0
 
   onCreated: ->
@@ -115,21 +117,32 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
 
   setFocus: (targetFocusPoint) ->
     @_focusPoint = targetFocusPoint
+    @targetFocusPoint targetFocusPoint
     return unless @isRendered()
 
     @$animate.velocity('stop', 'moveFocus')
     @_updateSceneStyle()
 
-  moveFocus: (targetFocusPoint, completeCallback) ->
+  moveFocus: (targetFocusPointOrOptions) ->
+    if targetFocusPointOrOptions.focusPoint
+      targetFocusPoint = targetFocusPointOrOptions.focusPoint
+      speedFactor = targetFocusPointOrOptions.speedFactor or 1
+      completeCallback = targetFocusPointOrOptions.completeCallback
+      
+    else
+      targetFocusPoint = targetFocusPointOrOptions
+      speedFactor = 1
+      
     # We clamp the focus point so that it won't get clamped later.
     @_startingFocusPoint = @_clampFocusPoint @_focusPoint
+    @targetFocusPoint targetFocusPoint
     targetFocusPoint = @_clampFocusPoint targetFocusPoint
 
     @_moveFocusDelta =
       x: targetFocusPoint.x - @_startingFocusPoint.x
       y: targetFocusPoint.y - @_startingFocusPoint.y
 
-    duration = 30 * Math.sqrt(Math.pow(@_moveFocusDelta.x * @sceneSize.width, 2) + Math.pow(@_moveFocusDelta.y * @sceneSize.height, 2))
+    duration = 30 / speedFactor * Math.sqrt(Math.pow(@_moveFocusDelta.x * @sceneSize.width, 2) + Math.pow(@_moveFocusDelta.y * @sceneSize.height, 2))
 
     @$animate.velocity('stop', 'moveFocus').velocity
       tween: [1, 0]
@@ -175,7 +188,7 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
     @_updateSceneStyle()
 
   _updateSceneStyle: ->
-    scrollParallaxOffset = @_scrollTop / 20 * @parallaxFactor
+    scrollParallaxOffset = @_scrollTop / 20 * @verticalParallaxFactor
 
     viewport = LOI.adventure.interface.display.viewport()
     scale = LOI.adventure.interface.display.scale()
@@ -205,7 +218,7 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
     @$scene.css transform: "translate3d(#{left}px, #{top}px, 0)"
 
     for parallaxItem in @_parallaxItems
-      left = (parallaxItem.origin.x - focusFactor.x) * parallaxItem.depth * scrollableWidth / 10
+      left = (parallaxItem.origin.x - focusFactor.x) * parallaxItem.depth * scrollableWidth / 10 * @horizontalParallaxFactor
       top = (parallaxItem.origin.y - focusFactor.y) * parallaxItem.depth * scrollableHeight / 5 - parallaxItem.depth * scrollParallaxOffset
 
       parallaxItem.$element.css transform: "translate3d(#{left}px, #{top}px, 0)"

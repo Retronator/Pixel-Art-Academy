@@ -49,19 +49,40 @@ class HQ.ArtStudio.Drawings extends HQ.ArtStudio.ContextWithArtworks
   constructor: ->
     super
 
+    @horizontalParallaxFactor = 2
+
     @sceneSize =
       width: 720
       height: 360
 
-  onCommand: (commandResponse) ->
-    drawings = @options.parent
+  canMoveLeft: ->
+    return if @dialogueMode()
 
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.LookAt, drawings]
-      priority: 1
-      action: =>
-        drawings.dialogueMode false
-        drawings.enterContext()
+    @targetFocusPoint().x > 0
+
+  canMoveRight: ->
+    return if @dialogueMode()
+
+    @targetFocusPoint().x < 1
+
+  events: ->
+    super.concat
+      'click .move-button.left': @onClickMoveButtonLeft
+      'click .move-button.right': @onClickMoveButtonRight
+
+  onClickMoveButtonLeft: ->
+    @moveFocus
+      focusPoint:
+        x: if @targetFocusPoint().x > 0.5 then 0.5 else 0
+        y: 0.5
+      speedFactor: 2
+
+  onClickMoveButtonRight: ->
+    @moveFocus
+      focusPoint:
+        x: if @targetFocusPoint().x < 0.5 then 0.5 else 1
+        y: 0.5
+      speedFactor: 2
 
   onClickArtwork: (event) ->
     styleClasses = $(event.target).attr('class').split(' ')
@@ -80,3 +101,15 @@ class HQ.ArtStudio.Drawings extends HQ.ArtStudio.ContextWithArtworks
       artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
 
     @displayArtworks artworkFields
+
+  # Listener
+
+  onCommand: (commandResponse) ->
+    drawings = @options.parent
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.LookAt, drawings]
+      priority: 1
+      action: =>
+        drawings.dialogueMode false
+        drawings.enterContext()

@@ -148,7 +148,7 @@
         background-image image('/retronator/hq/locations/artstudio/drawings/pencils-kaley.png')
 
       .aquatic-botanical
-        left 503rem
+        left 497rem
         top 113rem
         width 59rem
         height 37rem
@@ -156,16 +156,16 @@
 
     .easel-right
       position absolute
-      width 76rem
-      height 285rem
-      right 38rem
-      bottom 60rem
+      width 82rem
+      height 325rem
+      right 10rem
+      top 15rem
       background-image image('/retronator/hq/locations/artstudio/drawings/easel-right.png')
 
     .table
     .foreground
       position absolute
-      width 425rem
+      width 405rem
       height 109rem
       right 0
       bottom 0
@@ -210,3 +210,31 @@
         width 140rem
         height 40rem
         background-image image('/retronator/hq/locations/artstudio/drawings/pencils-retropolis-international-spacestation-main-tower.png')
+
+    .railing
+      position absolute
+      width 56rem
+      height 105rem
+      left 0
+      bottom -30rem
+      background-image image('/retronator/hq/locations/artstudio/drawings/railing.png')
+
+  .move-button
+    position absolute
+    top 0
+    height 100%
+    width 30rem
+    background none
+    border none
+    transition background 0.2s
+
+    &:hover
+      background rgba(atariGrey(3), 0.1)
+
+    &.left
+      left 0
+      cursor w-resize
+
+    &.right
+      right 0
+      cursor e-resize

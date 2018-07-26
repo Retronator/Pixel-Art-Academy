@@ -63,8 +63,10 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
 
       PencilsPortraitsHighlight: (complete) =>
         drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Realistic, =>
-          drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsPortraits
+        drawings.moveFocus
+          focusPoint: HQ.ArtStudio.Drawings.FocusPoints.Realistic
+          completeCallback: =>
+            drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsPortraits
 
         complete()
 
@@ -109,8 +111,10 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
         drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
 
         if LOI.adventure.currentContext() is drawings
-          drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Charcoal, =>
-            drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Charcoal
+          drawings.moveFocus
+            focusPoint: HQ.ArtStudio.Drawings.FocusPoints.Charcoal
+            completeCallback: =>
+              drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Charcoal
 
         else
           drawings.setFocus HQ.ArtStudio.Drawings.FocusPoints.Charcoal

@@ -123,7 +123,7 @@ alexandra: Go ahead.
 ## OtherStylesQuestions
 
 * I want to know more about different mediums. -> [MoreAboutMediums]
-* What kind of art styles are there? -> [ArtStyles] `MediumsOutro`
+* What kind of art styles are there? -> [ArtStyles] `MediumsPlenty`
 * What are some of the differences between traditional and digital? -> [TraditionalVsDigital]
 * What's the upside of digital? -> [UpsideDigital] `TraditionalVsDigital`
 * Why did you choose traditional art? -> [UpsideTraditional] `TraditionalVsDigital and not UpsideDigital`
@@ -199,23 +199,27 @@ alexandra:
 * When you said markers … You mean those fluorescent highlighters? -> [Markers]
 * What exactly are pastels? -> [Pastels]
 * How about painting? -> [Painting]
-* Actually, nevermind. -> [ThatsAll] `not _MediumsQuestions`
-* This was plenty of info. `_MediumsQuestions and MediumsOutro`
-* I think that gives me an idea about different mediums. `_MediumsQuestions and not MediumsOutro`
+* Actually, nevermind. -> [MediumsNevermind] `not _MediumsQuestions`
+* This was plenty of info. -> [MediumsPlenty] `_MediumsQuestions and not MediumsPlenty`
+* I think that gives me an idea about different mediums. -> [MediumsReturn] `_MediumsQuestions and MediumsPlenty`
 
-alexandra: Yeah, it's a lot to soak in.
+## MediumsNevermind
 
--> [OtherStylesQuestions] `MediumsOutro`
+alexandra: No problem. 
 
-## ThatsAll
+-> [MediumsReturn]
 
-alexandra: No problem. Any other questions about different art approaches?
+## MediumsPlenty
 
--> [OtherStylesQuestions]
+alexandra: 
+  Yeah, it's a lot to soak in.
+  Even more, each medium has its own nature, but allows for many different art styles.
 
-## MediumsOutro
+-> [MediumsReturn]
 
-alexandra: Even more, each medium has its own nature, but allows for many different art styles.
+## MediumsReturn
+
+alexandra: Any other questions about different art approaches?
 
 -> [OtherStylesQuestions]
 
@@ -356,7 +360,6 @@ alexandra:
 ## PensCombine
 
 ### PensCombine
-### PensCombine
 
 alexandra:
   Yes, that's how you can get most of the stress out.
@@ -407,15 +410,10 @@ alexandra: Ah, my favorite!
 
 ### PaintingOils
   
-alexandra: If you go to an art gallery, chances are you'll be looking at oil paintings.
-
-### PaintingAcrylics
-
-alexandra: A modern version also emerged in 1950s called acrylic paint.
-
-### PaintingWatercolors
-
-alexandra: And the third very popular way to paint is with watercolors.
+alexandra: 
+  If you go to an art gallery, chances are you'll be looking at oil paintings.
+  A modern version also emerged in 1950s called acrylic paint.
+  And the third very popular way to paint is with watercolors.
 
 ## PaintingQuestions
 
@@ -431,6 +429,8 @@ alexandra: Any more questions about drawing?
 -> [MediumsQuestions]
 
 ## PaintingOils
+
+### PaintingOils
 
 alexandra:
   Yeah, all famous artworks like the Mona Lisa or Van Gogh's Sunflowers are oil paintings.
@@ -459,7 +459,7 @@ alexandra:
 
 ## PaintingAcrylics
 
-### PaintingAcrylics2
+### PaintingAcrylics
 
 alexandra:
   They're generally easier to deal with than oil paints. You just mix them with water for one thing.
@@ -485,7 +485,7 @@ alexandra:
 
 ## PaintingWatercolors
 
-### PaintingWatercolors2
+### PaintingWatercolors
 
 alexandra:
   Watercolors are really unique.
