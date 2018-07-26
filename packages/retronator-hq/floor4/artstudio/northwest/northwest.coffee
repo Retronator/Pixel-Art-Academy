@@ -83,21 +83,3 @@ class HQ.ArtStudio.Northwest extends HQ.ArtStudio.ContextWithArtworks
         x: if @targetFocusPoint().x < 0.5 then 0.5 else 1
         y: 0.5
       speedFactor: 2
-
-  onClickArtwork: (event) ->
-    styleClasses = $(event.target).attr('class').split(' ')
-
-    if 'aquatic-botanical' in styleClasses
-      artworkFields = [
-        'aquaticII'
-        'aquaticIII'
-        'aquaticV'
-        'botanicalIII'
-        'botanicalIX'
-        'botanicalV'
-      ]
-
-    else
-      artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
-
-    @displayArtworks artworkFields

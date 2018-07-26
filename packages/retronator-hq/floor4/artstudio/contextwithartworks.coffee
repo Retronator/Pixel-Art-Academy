@@ -235,7 +235,18 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
   onClickArtwork: (event) ->
     styleClasses = $(event.target).attr('class').split(' ')
 
-    artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
+    if 'aquatic-botanical' in styleClasses
+      artworkFields = [
+        'aquaticII'
+        'aquaticIII'
+        'aquaticV'
+        'botanicalIII'
+        'botanicalIX'
+        'botanicalV'
+      ]
+
+    else
+      artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
 
     @displayArtworks artworkFields
 
