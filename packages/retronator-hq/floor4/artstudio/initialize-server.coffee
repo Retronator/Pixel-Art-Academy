@@ -112,12 +112,12 @@ Document.startup ->
       type: PADB.Artwork.Types.Physical
       title: 'Desert'
       completionDate: year: 2018, month: 4, day: 24
-      image: url: '/retronator/hq/locations/artstudio/artworks/hendry-roesly-desert.jpg'
+      image: url: '/retronator/hq/locations/artstudio/artworks/hendry-roesly-desert.png'
     ,
       type: PADB.Artwork.Types.Physical
       title: 'Kuria'
       completionDate: year: 2018, month: 4, day: 16
-      image: url: '/retronator/hq/locations/artstudio/artworks/hendry-roesly-kuria.jpg'
+      image: url: '/retronator/hq/locations/artstudio/artworks/hendry-roesly-kuria.png'
     ,
       type: PADB.Artwork.Types.Physical
       title: 'Survivor'
@@ -145,6 +145,11 @@ Document.startup ->
       completionDate: year: 2016, month: 9, day: 25
       startDate: year: 2016, month: 2, day: 4
       image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-cardinal-city.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: 'Cardinal City tools'
+      completionDate: year: 2016, month: 2, day: 4
+      image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-cardinal-city-tools.jpg'
     ,
       type: PADB.Artwork.Types.Image
       title: 'Give me the Sky'

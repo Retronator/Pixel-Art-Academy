@@ -29,11 +29,11 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.alexandraHood
         title: 'Alex + Kaylynn'
         caption: "Graphite on Bristol paper, 9 × 12 inches"
-      aquaticII:
+      aquaticIi:
         artistInfo: @artistsInfo.alexandraHood
         title: 'Aquatic II'
         caption: "Micron pen on brown cotton rag paper, 5 × 5 inches (deckle edge unfeatured)"
-      aquaticIII:
+      aquaticIii:
         artistInfo: @artistsInfo.alexandraHood
         title: 'Aquatic III'
         caption: "Micron pen on brown cotton rag paper, 5 × 5 inches (deckle edge unfeatured)"
@@ -45,11 +45,11 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.alexandraHood
         title: 'Black Lab'
         caption: "Graphite on Bristol paper, 9 × 12 inches"
-      botanicalIII:
+      botanicalIii:
         artistInfo: @artistsInfo.alexandraHood
         title: 'Botanical III'
         caption: "Micron pen on cotton rag paper (light green), 5 × 5 inches"
-      botanicalIX:
+      botanicalIx:
         artistInfo: @artistsInfo.alexandraHood
         title: 'Botanical IX'
         caption: "Micron pen on 100% Cotton Rag Paper, 5 × 5 inches"
@@ -92,7 +92,24 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.gabrielleBrickey
         title: 'In a Moment'
         caption: "Charcoal on grey paper, 9 × 12 inches"
-  
+
+      day9:
+        artistInfo: @artistsInfo.hendryRoesly
+        title: 'Day 9'
+        caption: "Pen, graphite, and markers on paper"
+      desert:
+        artistInfo: @artistsInfo.hendryRoesly
+        title: 'Desert'
+        caption: "Pen and graphite on paper"
+      kuria:
+        artistInfo: @artistsInfo.hendryRoesly
+        title: 'Kuria'
+        caption: "Pen and graphite on paper"
+      survivor:
+        artistInfo: @artistsInfo.hendryRoesly
+        title: 'Survivor'
+        caption: "Pen and markers on paper"
+
       # Matej Jan
     
       blueBottle:
@@ -110,6 +127,13 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
           Mixed media on tan paper panel
           (Paper Mate Flair felt tip pen, Prismacolor warm grey markers, red and white chalk pencils, Gelly Roll white gel pen, Molotov white acrylic pen),
           40 × 32 inches
+        """
+      cardinalCityTools:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Cardinal City tools'
+        caption: """
+          Tools used for Cardinal City
+          (Paper Mate Flair felt tip pen, Prismacolor warm grey markers, white chalk pencil, Molotov white acrylic pen, Gelly Roll white gel pen, not pictured: red chalk pencil)
         """
       giveMeTheSky:
         artistInfo: @artistsInfo.matejJan
@@ -139,17 +163,17 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.matejJan
         title: 'Neukom'
         url: '/retronator/hq/locations/artstudio/artworks/matej-jan-neukom-wip-1.jpg'
-        caption: "Graphite on paper, 18 × 24 inches"
+        caption: "1st step: pencil base"
       neukomWip2:
         artistInfo: @artistsInfo.matejJan
         title: 'Neukom'
         url: '/retronator/hq/locations/artstudio/artworks/matej-jan-neukom-wip-2.jpg'
-        caption: "Graphite and pen on paper, 18 × 24 inches"
+        caption: "2nd step: pen lineart"
       neukomWip3:
         artistInfo: @artistsInfo.matejJan
         title: 'Neukom'
         url: '/retronator/hq/locations/artstudio/artworks/matej-jan-neukom-wip-3.jpg'
-        caption: "Graphite and pen on paper, 18 × 24 inches"
+        caption: "3rd step: pencil cast shadows"
       neukom:
         artistInfo: @artistsInfo.matejJan
         title: 'Neukom'

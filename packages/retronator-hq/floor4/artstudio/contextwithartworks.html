@@ -2,7 +2,7 @@
   <div class="retronator-hq-artstudio-contextwithartworks-stream">
     {{> LandsOfIllusions.Components.BackButton}}
     {{#with artworks}}
-      {{> PixelArtDatabase.Components.Stream args artworkCaptionClass}}
+      {{> PixelArtDatabase.Components.Stream args streamOptions}}
     {{/with}}
   </div>
 </template>
@@ -10,7 +10,7 @@
 <template name="Retronator.HQ.ArtStudio.ContextWithArtworks.Stream.ArtworkCaption">
   <div class="retronator-hq-artstudio-contextwithartworks-stream-artworkcaption">
     <div class="main-info">
-      <span class="title">{{title}}</span>,
+      <span class="title">{{title}}{{#if wip}} (WIP){{/if}}</span>,
       <span class="authors">{{authors}}</span>,
       <span class="year">{{year}}</span>
     </div>

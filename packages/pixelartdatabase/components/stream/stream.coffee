@@ -5,8 +5,15 @@ PADB = PixelArtDatabase
 class PADB.Components.Stream extends AM.Component
   @register 'PixelArtDatabase.Components.Stream'
 
-  constructor: (@captionComponentClass) ->
+  constructor: (captionComponentClassOrOptions) ->
     super
+
+    if captionComponentClassOrOptions.captionComponentClass
+      @options = captionComponentClassOrOptions
+
+    else
+      @options =
+        captionComponentClass: captionComponentClassOrOptions
 
   onCreated: ->
     super
@@ -40,11 +47,17 @@ class PADB.Components.Stream extends AM.Component
 
   onRendered: ->
     super
-    @_$window = $(window)
+    
     @_$document = $(document)
     @_$app = $('.retronator-app')
 
-    @_$window.on 'scroll.pixelartdatabase-components-stream', (event) => @onScroll()
+    if @options.scrollParentSelector
+      @_$scrollParent = $(@options.scrollParentSelector)
+
+    else
+      @_$scrollParent = $(window)
+
+    @_$scrollParent.on 'scroll.pixelartdatabase-components-stream', (event) => @onScroll()
 
     # Update active artwork areas on resizes and artwork updates.
     @autorun (computation) =>
@@ -62,7 +75,7 @@ class PADB.Components.Stream extends AM.Component
   onDestroyed: ->
     super
 
-    @_$window.off '.pixelartdatabase-components-stream'
+    @_$scrollParent.off '.pixelartdatabase-components-stream'
 
   artworkStyle: ->
     displayedArtwork = @currentData()
@@ -74,10 +87,10 @@ class PADB.Components.Stream extends AM.Component
     maxWidth: '100%'
 
   hasCaption: ->
-    @captionComponentClass?
+    @options.captionComponentClass?
 
   renderCaption: ->
-    caption = new @captionComponentClass
+    caption = new @options.captionComponentClass
     caption.renderComponent @currentComponent()
     
   lowPerformanceClass: ->
@@ -114,6 +127,11 @@ class PADB.Components.Stream extends AM.Component
     for artworkAreaElement, index in $artworkAreas
       $artworkArea = $(artworkAreaElement)
       top = $artworkArea.offset().top
+
+      # When we're scrolling inside a fixed parent, the offset needs to be adjusted by the
+      # scroll amount so that we get the position relative to the scrolling parent.
+      top += @_$scrollParent.scrollTop() if @options.scrollParentSelector
+
       bottom = top + $artworkArea.height()
 
       @_artworksVisibilityData[index] ?= {}
@@ -126,13 +144,14 @@ class PADB.Components.Stream extends AM.Component
       @_artworksVisibilityData[index].artwork = displayedArtwork.artwork
 
   _updateArtworkAreasVisibility: ->
-    viewportTop = @_$window.scrollTop()
-    windowHeight = @_$window.height()
-    viewportBottom = viewportTop + windowHeight
+    scrollParentTop = @_$scrollParent.offset()?.top or 0
+    viewportTop = scrollParentTop + @_$scrollParent.scrollTop()
+    scrollParentHeight = @_$scrollParent.height()
+    viewportBottom = viewportTop + scrollParentHeight
 
     # Expand one extra screen beyond the viewport
-    visibilityEdgeTop = viewportTop - windowHeight
-    visibilityEdgeBottom = viewportBottom + windowHeight
+    visibilityEdgeTop = viewportTop - scrollParentHeight
+    visibilityEdgeBottom = viewportBottom + scrollParentHeight
 
     # Go over all the artworks and activate the ones
     for visibilityData, index in @_artworksVisibilityData

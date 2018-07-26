@@ -46,9 +46,17 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
         artist = PADB.Artist.forName.query(artworkInfo.artistInfo.name).fetch()[0]
         continue unless artist
 
-        artworks[artworkField] = PADB.Artwork.documents.findOne
-          'authors._id': artist._id
-          title: artworkInfo.title
+        if artworkInfo.url
+          # Search by URL.
+          artwork = PADB.Artwork.forUrl.query(artworkInfo.url).fetch()[0]
+
+        else
+          # Search by title.
+          artwork = PADB.Artwork.documents.findOne
+            'authors._id': artist._id
+            title: artworkInfo.title
+
+        artworks[artworkField] = artwork
 
         # Also forward the caption.
         artworks[artworkField].caption = artworkInfo.caption
@@ -234,19 +242,7 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
 
   onClickArtwork: (event) ->
     styleClasses = $(event.target).attr('class').split(' ')
-
-    if 'aquatic-botanical' in styleClasses
-      artworkFields = [
-        'aquaticII'
-        'aquaticIII'
-        'aquaticV'
-        'botanicalIII'
-        'botanicalIX'
-        'botanicalV'
-      ]
-
-    else
-      artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
+    artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
 
     @displayArtworks artworkFields
 
@@ -260,8 +256,9 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
 
     mixins: -> [@activatable]
 
-    artworkCaptionClass: ->
-      @constructor.ArtworkCaption
+    streamOptions: ->
+      captionComponentClass: @constructor.ArtworkCaption
+      scrollParentSelector: '.retronator-hq-artstudio-contextwithartworks-stream'
 
     class @ArtworkCaption extends AM.Component
       @register 'Retronator.HQ.ArtStudio.ContextWithArtworks.Stream.ArtworkCaption'
