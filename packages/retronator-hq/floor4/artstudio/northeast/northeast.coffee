@@ -7,18 +7,18 @@ RS = Retronator.Store
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.ArtStudio.MoreDrawings extends HQ.ArtStudio.ContextWithArtworks
-  @id: -> 'Retronator.HQ.ArtStudio.MoreDrawings'
+class HQ.ArtStudio.Northeast extends HQ.ArtStudio.ContextWithArtworks
+  @id: -> 'Retronator.HQ.ArtStudio.Northeast'
 
   @register @id()
   template: -> @constructor.id()
 
   @version: -> '0.0.1'
 
-  @fullName: -> "more drawings"
+  @fullName: -> "more northwest"
   @description: ->
     "
-      More drawings are found in the east part of the studio.
+      More northwest are found in the east part of the studio.
     "
 
   @initialize()
@@ -48,11 +48,11 @@ class HQ.ArtStudio.MoreDrawings extends HQ.ArtStudio.ContextWithArtworks
       height: 400
 
   onCommand: (commandResponse) ->
-    moreDrawings = @options.parent
+    northeast = @options.parent
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.LookAt, moreDrawings]
+      form: [Vocabulary.Keys.Verbs.LookAt, northeast]
       priority: 1
       action: =>
-        moreDrawings.dialogueMode false
-        moreDrawings.enterContext()
+        northeast.dialogueMode false
+        northeast.enterContext()

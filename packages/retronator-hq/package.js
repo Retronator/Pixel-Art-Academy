@@ -125,9 +125,9 @@ Package.onUse(function(api) {
 
   api.addComponent('floor4/artstudio/contextwithartworks');
   api.addFile('floor4/artstudio/contextwithartworks-artworksinfo');
-  api.addComponent('floor4/artstudio/drawings..');
+  api.addComponent('floor4/artstudio/northwest..');
+  api.addComponent('floor4/artstudio/northeast..');
   api.addComponent('floor4/artstudio/pencils..');
-  api.addComponent('floor4/artstudio/moredrawings..');
 
   // Pages
   
