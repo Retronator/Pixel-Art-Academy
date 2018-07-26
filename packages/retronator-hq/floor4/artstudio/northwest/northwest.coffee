@@ -101,15 +101,3 @@ class HQ.ArtStudio.Northwest extends HQ.ArtStudio.ContextWithArtworks
       artworkFields = (_.camelCase styleClass for styleClass in styleClasses)
 
     @displayArtworks artworkFields
-
-  # Listener
-
-  onCommand: (commandResponse) ->
-    northwest = @options.parent
-
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.LookAt, northwest]
-      priority: 1
-      action: =>
-        northwest.dialogueMode false
-        northwest.enterContext()

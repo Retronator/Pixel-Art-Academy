@@ -82,14 +82,6 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
     @autorun (computation) =>
       @_updateSceneStyle()
 
-  enterContext: ->
-    LOI.adventure.enterContext @
-
-    Meteor.setTimeout =>
-      LOI.adventure.interface.scroll
-        position: 0
-        animate: true
-
   displayArtworks: (artworkFields) ->
     @displayedArtworksFields artworkFields
 

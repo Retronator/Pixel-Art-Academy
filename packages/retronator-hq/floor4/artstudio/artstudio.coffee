@@ -35,8 +35,7 @@ class HQ.ArtStudio extends LOI.Adventure.Location
   things: -> [
     @elevatorButton
     HQ.Actors.Alexandra
-    @constructor.Northwest
-    @constructor.Northeast
+    @constructor.Artworks
   ]
 
   exits: ->
@@ -45,6 +44,33 @@ class HQ.ArtStudio extends LOI.Adventure.Location
     ,
       "#{Vocabulary.Keys.Directions.Down}": HQ.GalleryWest
       "#{Vocabulary.Keys.Directions.Up}": HQ.Residence.Hallway
+
+  # Script
+
+  initializeScript: ->
+    @setCallbacks
+      EnterContext: (complete) =>
+        contextClassName = @ephemeralState 'context'
+
+        LOI.adventure.enterContext HQ.ArtStudio[contextClassName]
+
+        Meteor.setTimeout =>
+          LOI.adventure.interface.scroll
+            position: 0
+            animate: true
+
+        # Note: We don't need to call complete since entering a context will stop this script.
+
+  # Listener
+
+  onCommand: (commandResponse) ->
+    return unless artworks = LOI.adventure.getCurrentThing HQ.ArtStudio.Artworks
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.LookAt, artworks]
+      priority: 1
+      action: =>
+        @startScript label: 'LookAtArtworks'
 
   onExitAttempt: (exitResponse) ->
     if exitResponse.destinationLocationClass is HQ.Residence.Hallway

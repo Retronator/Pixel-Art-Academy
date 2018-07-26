@@ -46,13 +46,3 @@ class HQ.ArtStudio.Northeast extends HQ.ArtStudio.ContextWithArtworks
     @sceneSize =
       width: 480
       height: 400
-
-  onCommand: (commandResponse) ->
-    northeast = @options.parent
-
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.LookAt, northeast]
-      priority: 1
-      action: =>
-        northeast.dialogueMode false
-        northeast.enterContext()

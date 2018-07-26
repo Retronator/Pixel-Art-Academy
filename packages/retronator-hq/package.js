@@ -123,6 +123,8 @@ Package.onUse(function(api) {
   api.addThing('floor4/artstudio..');
   api.addServerFile('floor4/artstudio/initialize-server');
 
+  api.addFile('floor4/artstudio/artworks');
+
   api.addComponent('floor4/artstudio/contextwithartworks');
   api.addFile('floor4/artstudio/contextwithartworks-artworksinfo');
   api.addComponent('floor4/artstudio/northwest..');
