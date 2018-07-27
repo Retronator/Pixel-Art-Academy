@@ -9,6 +9,12 @@
     width 480rem
     height 400rem
 
+    &.highlighting-active
+      .furniture-middle-artworks
+      .tables-front-artworks
+      .background
+        animation none
+
     .studio
       absolute-cover()
       background-image image('/retronator/hq/locations/artstudio/northeast/background.png')
@@ -137,13 +143,17 @@
       background-image image('/retronator/hq/locations/artstudio/northeast/stands.png')
 
     .furniture-middle
+    .furniture-middle-artworks
       position absolute
       width 162rem
       height 135rem
       left 308rem
       top 167rem
+
+    .furniture-middle
       background-image image('/retronator/hq/locations/artstudio/northeast/furniture-middle.png')
 
+    .furniture-middle-artworks
       .inventory
         left 14rem
         top 14rem
@@ -173,13 +183,17 @@
         background-image image('/retronator/hq/locations/artstudio/northeast/markers-angel.png')
 
     .tables-front
+    .tables-front-artworks
       position absolute
       width 326rem
       height 171rem
       left 0
       bottom 0
+
+    .tables-front
       background-image image('/retronator/hq/locations/artstudio/northeast/tables-front.png')
 
+    .tables-front-artworks
       .kuria
         left 259rem
         top 12rem

@@ -214,17 +214,17 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.matejJan
         title: 'Neukom'
         url: '/retronator/hq/locations/artstudio/artworks/matej-jan-neukom-wip-1.jpg'
-        caption: "1st step: pencil base"
+        caption: "Step 1: pencil base"
       neukomWip2:
         artistInfo: @artistsInfo.matejJan
         title: 'Neukom'
         url: '/retronator/hq/locations/artstudio/artworks/matej-jan-neukom-wip-2.jpg'
-        caption: "2nd step: pen lineart"
+        caption: "Step 2: pen lineart"
       neukomWip3:
         artistInfo: @artistsInfo.matejJan
         title: 'Neukom'
         url: '/retronator/hq/locations/artstudio/artworks/matej-jan-neukom-wip-3.jpg'
-        caption: "3rd step: pencil cast shadows"
+        caption: "Step 3: pencil cast shadows"
       neukom:
         artistInfo: @artistsInfo.matejJan
         title: 'Neukom'

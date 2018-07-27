@@ -18,21 +18,12 @@ class HQ.ArtStudio.Southwest extends HQ.ArtStudio.ContextWithArtworks
   @initialize()
 
   @FocusPoints:
-    BackWall:
-      x: 0.4
-      y: 0.2
-    Pens:
-      x: 0.46
-      y: 0.68
-    Markers:
-      x: 0.74
-      y: 0.5
+    Pastels:
+      x: 0.85
+      y: 0.66
 
   @HighlightGroups:
-    Pens: []
-    PensCombine: []
-    Markers: []
-    MarkersCombine: []
+    Pastels: ['africa', 'weCaughtOnFire']
 
   constructor: ->
     super

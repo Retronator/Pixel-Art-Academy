@@ -9,6 +9,12 @@
     width 480rem
     height 330rem
 
+    &.highlighting-active
+      .foreground
+      .table-left-artworks
+      .table-right-artworks
+        animation none
+
     .studio
       absolute-cover()
       background-image image('/retronator/hq/locations/artstudio/southwest/background.png')
@@ -131,13 +137,17 @@
       background-image image('/retronator/hq/locations/artstudio/southwest/chair-right.png')
 
     .table-right
+    .table-right-artworks
       position absolute
       width 193rem
       height 127rem
       right 0
       top 195rem
+
+    .table-right
       background-image image('/retronator/hq/locations/artstudio/southwest/table-right.png')
 
+    .table-right-artworks
       .we-caught-on-fire
         left 144rem
         top 25rem
@@ -161,13 +171,17 @@
       background-image image('/retronator/hq/locations/artstudio/southwest/chair-left.png')
 
     .table-left
+    .table-left-artworks
       position absolute
       width 232rem
       height 113rem
       left 66rem
       bottom 0
+
+    .table-left
       background-image image('/retronator/hq/locations/artstudio/southwest/table-left.png')
 
+    .table-left-artworks
       .memchu
         left 84rem
         top 10rem

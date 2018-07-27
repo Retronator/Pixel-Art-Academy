@@ -280,7 +280,6 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
 
       authors: ->
         artwork = @data()
-        console.log "ar", artwork
         authors = (artist.displayName for artist in artwork.authors)
         authors.join ' & '
 

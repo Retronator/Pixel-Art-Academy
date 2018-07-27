@@ -39,6 +39,7 @@ class HQ.ArtStudio.Northwest extends HQ.ArtStudio.ContextWithArtworks
     PencilsColored: ['kaley']
     PencilsEdgeShading: ['night21']
     Charcoal: ['evilIsLoveSpelledBackwards', 'inAFeeling', 'inAMoment', 'rodin']
+    Pastels: ['giveMeTheSky', 'bust', 'blueBottle', 'lotusEspritTurbo', 'bouguereauStudy']
 
   constructor: ->
     super

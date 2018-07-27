@@ -338,11 +338,15 @@ alexandra:
 
 ## Pens
 
+alexandra: Pens are great!
+
 ### Pens
 
+alexandra: They force you to commit. When you put your pen down on the paper it leaves a mark.
+
+### PensHighlight
+
 alexandra:
-  Pens are great!
-  They force you to commit. When you put your pen down on the paper it leaves a mark.
   With pencils you can be very carefree with your lines.
   Pens help you be bold and think ahead to your end result.
 
@@ -355,16 +359,19 @@ alexandra:
 	No, don't worry. It's actually really great to help build confidence with your line work.
 	If a mistake happens, you can be creative about it and turn it into a happy accident.
 
--> [MediumsQuestions]
+*	Can I combine pens with pencils?
+
+alexandra: Yes, that's how you can get most of the stress out.
 
 ## PensCombine
 
 ### PensCombine
 
 alexandra:
-  Yes, that's how you can get most of the stress out.
   Drawing with pencils as the first step is quite common, especially in comics. 
-  First a drawing is done with pencils and then the lineart is drawn over with pens or inks.
+  First a drawing is done with pencils and then the lineart is drawn over with pens or ink.
+
+### PensCombineHighlight
 
 -> [MediumsQuestions]
 
@@ -372,16 +379,17 @@ alexandra:
 
 ## Markers
 
+alexandra: Haha, no. We usually mean art markers.
+  
 ### Markers
 
-alexandra:
-  Haha, no. We usually mean art markers.
-  There are colored ones, but a lot of people just use a set of grey shades from light to dark.
-    
-### MarkersCombine
+alexandra: There are colored ones, but a lot of people just use a set of grey shades from light to dark.
 
-alexandra:
-  They are mostly used for shading and combine with other mediums.
+### MarkersHighlight
+
+alexandra: They are mostly used for shading and combine with other mediums.
+
+### MarkersCombine
 
 -> [MediumsQuestions]
 
@@ -389,16 +397,20 @@ alexandra:
 
 ## Pastels
 
-### Pastels
-
 alexandra:
   They come in a wide range of vibrant colors like colored pencils, but they have a very different texture.
+
+### Pastels
+
+pause
 
 ### PastelsWall
 
 alexandra:
   There are also different types: soft, hard, oil pastels, pastel pencils.
   And similar mediums like chalk, crayons, conte crayons …
+
+### PastelsWallHighlight
 
 -> [MediumsQuestions]
 

@@ -20,19 +20,22 @@ class HQ.ArtStudio.Northeast extends HQ.ArtStudio.ContextWithArtworks
   @FocusPoints:
     BackWall:
       x: 0.4
+      y: 0.15
+    CardinalCity:
+      x: 0.4
       y: 0.2
     Pens:
       x: 0.46
       y: 0.68
     Markers:
       x: 0.74
-      y: 0.5
+      y: 0.47
 
   @HighlightGroups:
-    Pens: []
-    PensCombine: []
-    Markers: []
-    MarkersCombine: []
+    Pens: ['aquaticBotanical', 'desert']
+    PensCombine: ['kuria', 'neukom']
+    Markers: ['day9', 'angel', 'survivor']
+    MarkersCombine: ['cardinalCity']
 
   constructor: ->
     super

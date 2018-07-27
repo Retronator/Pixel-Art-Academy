@@ -18,55 +18,58 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
   @defaultScriptUrl: -> 'retronator_retronator-hq/actors/alexandra.script'
 
   initializeScript: ->
+    focus = (contextClass, focusPoint, completeCallback, completeCallbackDelayIfNoMove) =>
+      context = LOI.adventure.currentContext()
+
+      if context instanceof contextClass
+        context.moveFocus
+          focusPoint: focusPoint
+          completeCallback: => completeCallback? context
+
+      else
+        context = new contextClass
+
+        # We enable dialogue mode so scrolling is disabled.
+        context.dialogueMode true
+
+        context.setFocus focusPoint
+
+        # Pause current node so we can enter the context.
+        LOI.adventure.director.pauseCurrentNode()
+        LOI.adventure.enterContext context
+
+        if completeCallback
+          Meteor.setTimeout =>
+            completeCallback context
+          ,
+            completeCallbackDelayIfNoMove
+
+      # Return context.
+      context
+
     @setCurrentThings
       alexandra: HQ.Actors.Alexandra
       
     @setCallbacks
       Sketches: (complete) =>
-        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-
-        # We enable dialogue mode so scrolling is disabled.
-        drawings.dialogueMode true
-
-        if LOI.adventure.currentContext() is drawings
-          drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Sketches
-
-        else
-          drawings.setFocus HQ.ArtStudio.Drawings.FocusPoints.Sketches
-
-          # Pause current node so we can enter the context.
-          LOI.adventure.director.pauseCurrentNode()
-          LOI.adventure.enterContext drawings
-
-        # Continue the script in the context.
+        focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Sketches
         complete()
 
       SketchesHighlight: (complete) =>
-        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Sketches
+        northwest = LOI.adventure.currentContext()
+        northwest.highlight HQ.ArtStudio.Northwest.HighlightGroups.Sketches
         complete()
 
       PencilsPortraits: (complete) =>
-        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-
-        if LOI.adventure.currentContext() is drawings
-          drawings.moveFocus HQ.ArtStudio.Drawings.FocusPoints.Realistic
-
-        else
-          drawings.setFocus HQ.ArtStudio.Drawings.FocusPoints.Realistic
-
-          # Pause current node so we can enter the context.
-          LOI.adventure.director.pauseCurrentNode()
-          LOI.adventure.enterContext drawings
-
+        focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Realistic
         complete()
 
       PencilsPortraitsHighlight: (complete) =>
-        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.moveFocus
-          focusPoint: HQ.ArtStudio.Drawings.FocusPoints.Realistic
+        northwest = LOI.adventure.currentContext()
+        northwest.moveFocus
+          focusPoint: HQ.ArtStudio.Northwest.FocusPoints.Realistic
           completeCallback: =>
-            drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsPortraits
+            northwest.highlight HQ.ArtStudio.Northwest.HighlightGroups.PencilsPortraits
 
         complete()
 
@@ -93,41 +96,76 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
         complete()
 
       PencilsMechanical: (complete) =>
-        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsMechanical
+        northwest = focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Realistic
+        northwest.highlight HQ.ArtStudio.Northwest.HighlightGroups.PencilsMechanical
         complete()
 
       PencilsEdgeShading: (complete) =>
-        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsEdgeShading
+        northwest = LOI.adventure.currentContext()
+        northwest.highlight HQ.ArtStudio.Northwest.HighlightGroups.PencilsEdgeShading
         complete()
 
       PencilsColored: (complete) =>
-        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
-        drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.PencilsColored
+        northwest = focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Realistic
+        northwest.highlight HQ.ArtStudio.Northwest.HighlightGroups.PencilsColored
         complete()
 
       PencilsCharcoal: (complete) =>
-        drawings = LOI.adventure.getCurrentThing HQ.ArtStudio.Drawings
+        focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Charcoal, (context) =>
+          context.highlight HQ.ArtStudio.Northwest.HighlightGroups.Charcoal
+        ,
+          2000
 
-        if LOI.adventure.currentContext() is drawings
-          drawings.moveFocus
-            focusPoint: HQ.ArtStudio.Drawings.FocusPoints.Charcoal
-            completeCallback: =>
-              drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Charcoal
+        complete()
 
-        else
-          drawings.setFocus HQ.ArtStudio.Drawings.FocusPoints.Charcoal
+      Pens: (complete) =>
+        focus HQ.ArtStudio.Northeast, HQ.ArtStudio.Northeast.FocusPoints.BackWall
+        complete()
 
-          Meteor.setTimeout =>
-            drawings.highlight HQ.ArtStudio.Drawings.HighlightGroups.Charcoal
-          ,
-            2000
+      PensHighlight: (complete) =>
+        northeast = LOI.adventure.currentContext()
+        northeast.highlight HQ.ArtStudio.Northeast.HighlightGroups.Pens
+        complete()
 
-          # Pause current node so we can enter the context.
-          LOI.adventure.director.pauseCurrentNode()
-          LOI.adventure.enterContext drawings
+      PensCombine: (complete) =>
+        focus HQ.ArtStudio.Northeast, HQ.ArtStudio.Northeast.FocusPoints.Pens
+        complete()
 
+      PensCombineHighlight: (complete) =>
+        northeast = LOI.adventure.currentContext()
+        northeast.highlight HQ.ArtStudio.Northeast.HighlightGroups.PensCombine
+        complete()
+
+      Markers: (complete) =>
+        focus HQ.ArtStudio.Northeast, HQ.ArtStudio.Northeast.FocusPoints.Markers
+        complete()
+
+      MarkersHighlight: (complete) =>
+        northeast = LOI.adventure.currentContext()
+        northeast.highlight HQ.ArtStudio.Northeast.HighlightGroups.Markers
+        complete()
+
+      MarkersCombine: (complete) =>
+        focus HQ.ArtStudio.Northeast, HQ.ArtStudio.Northeast.FocusPoints.CardinalCity, (context) =>
+          context.highlight HQ.ArtStudio.Northeast.HighlightGroups.MarkersCombine
+        ,
+          0
+        complete()
+
+      Pastels: (complete) =>
+        focus HQ.ArtStudio.Southwest, HQ.ArtStudio.Southwest.FocusPoints.Pastels, (context) =>
+          context.highlight HQ.ArtStudio.Southwest.HighlightGroups.Pastels
+        ,
+          2000
+        complete()
+
+      PastelsWall: (complete) =>
+        focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Pastels
+        complete()
+
+      PastelsWallHighlight: (complete) =>
+        northwest = LOI.adventure.currentContext()
+        northwest.highlight HQ.ArtStudio.Northwest.HighlightGroups.Pastels
         complete()
 
   onCommand: (commandResponse) ->
