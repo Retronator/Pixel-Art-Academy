@@ -3,17 +3,22 @@ AE = Artificial.Everywhere
 PADB = PixelArtDatabase
 
 PADB.Artist.create = (documentData) ->
-  # We use the name field as the signature to fully identify the artist.
   artistQuery = {}
 
-  for key, value of documentData.name
-    artistQuery["name.#{key}"] = value
+  if documentData.name
+    # We use the name field as the signature to fully identify the artist.
+    for key, value of documentData.name
+      artistQuery["name.#{key}"] = value
+
+  else if documentData.pseudonym
+    # Some artists are only known under their pseudonym
+    artistQuery.pseudonym = documentData.pseudonym
 
   artists = PADB.Artist.documents.fetch artistQuery
 
-  # TODO: If we have multiple artists that match the name, we'll need to resolve this in another way.
+  # TODO: If we have multiple artists that match the query, we'll need to resolve this in another way.
   if artists.length > 1
-    console.error "Multiple artists were found with this name.", documentData.name
+    console.error "Multiple artists were found with this query.", artistQuery
     return
 
   if artists.length is 1

@@ -16,7 +16,8 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
       gabrielleBrickey: name: first: 'Gabrielle', last: 'Brickey'
       hendryRoesly: name: first: 'Hendry', last: 'Roesly'
       matejJan: name: first: 'Matej', last: 'Jan'
-  
+      mayaPixelskaya: pseudonym: 'Maya Pixelskaya'
+
     @artworksInfo =
     
       # Alexandra Hood
@@ -45,6 +46,14 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.alexandraHood
         title: 'Black Lab'
         caption: "Graphite on Bristol paper, 9 × 12 inches"
+      blueLandscape:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Blue Landscape'
+        caption: "Oil on canvas, 18 × 24 inches"
+      concreteFeet:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Concrete Feet'
+        caption: "Oil on canvas, 18 × 24 inches"
       botanicalIii:
         artistInfo: @artistsInfo.alexandraHood
         title: 'Botanical III'
@@ -57,6 +66,10 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.alexandraHood
         title: 'Botanical V'
         caption: "Micron pen on cotton rag paper (light green), 5 × 5 inches"
+      everybodyWantsToRuleTheWorld:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Everybody Wants to Rule the World'
+        caption: "Oil on canvas, 30 × 40 inches"
       evilIsLoveSpelledBackwards:
         artistInfo: @artistsInfo.alexandraHood
         title: 'Evil Is Love Spelled Backwards'
@@ -65,6 +78,14 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.alexandraHood
         title: 'Human Anatomy Studies'
         caption: "Pencil in sketchbook"
+      nineToFive:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Nine to Five'
+        caption: "Oil on canvas, 20 × 20 inches"
+      pop:
+        artistInfo: @artistsInfo.alexandraHood
+        title: 'Pop!'
+        caption: "Oil on canvas, 18 × 24 inches"
       selfPortraitWithHair:
         artistInfo: @artistsInfo.alexandraHood
         title: 'Self Portrait With Hair'
@@ -92,6 +113,16 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.gabrielleBrickey
         title: 'In a Moment'
         caption: "Charcoal on grey paper, 9 × 12 inches"
+      oilPainting:
+        artistInfo: @artistsInfo.gabrielleBrickey
+        title: 'Oil Painting'
+        caption: "Oil on linen, 8 × 12 inches"
+      weCaughtOnFire:
+        artistInfo: @artistsInfo.gabrielleBrickey
+        title: ':we caught on fire:'
+        caption: "Pastels on light tan paper, 9 × 12 inches"
+
+      # Hendry Roesly
 
       day9:
         artistInfo: @artistsInfo.hendryRoesly
@@ -111,7 +142,15 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         caption: "Pen and markers on paper"
 
       # Matej Jan
-    
+
+      africa:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Africa'
+        caption: "Soft pastels on velour paper, 8.3 × 11.7 inches"
+      blonde:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Blonde'
+        caption: "Digital (Watercolor on WaterColor Paper, ArtRage 3 Studio Pro, Wacom Intuos 2), 1080 × 1620 pixels"
       blueBottle:
         artistInfo: @artistsInfo.matejJan
         title: 'Blue Bottle'
@@ -135,6 +174,14 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
           Tools used for Cardinal City
           (Paper Mate Flair felt tip pen, Prismacolor warm grey markers, white chalk pencil, Molotov white acrylic pen, Gelly Roll white gel pen, not pictured: red chalk pencil)
         """
+      dayAtTheBeach:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Day at the Beach'
+        caption: "Watercolors on paper, 24 × 18 inches"
+      desolation:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Desolation'
+        caption: "Oil on canvas (cold wax medium, palette knife application), 36 × 24 inches"
       giveMeTheSky:
         artistInfo: @artistsInfo.matejJan
         title: 'Give me the Sky'
@@ -159,6 +206,10 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.matejJan
         title: 'Kaley'
         caption: "Colored pencils on paper, 8.3 × 11.7 inches"
+      memchu:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Memchu'
+        caption: "Watercolors and graphite on paper, 24 × 18 inches"
       neukomWip1:
         artistInfo: @artistsInfo.matejJan
         title: 'Neukom'
@@ -195,3 +246,10 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.matejJan
         title: 'Skogsra'
         caption: "Graphite on Bristol vellum paper (mechanical pencils, Pentel 0.5mm 3H & 4B lead), 9 × 12 inches"
+
+      # Maya Pixelskaya
+
+      streetFighterIiTriptych:
+        artistInfo: @artistsInfo.mayaPixelskaya
+        title: 'Street Fighter II triptych'
+        caption: "Acrylic on canvas, 11.8 × 11.8 inches (each canvas)"

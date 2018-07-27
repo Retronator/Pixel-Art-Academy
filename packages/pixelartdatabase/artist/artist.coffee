@@ -90,6 +90,7 @@ class PADB.Artist extends AM.Document
         query["name.#{key}"] = value
     
       @documents.find query
+  @forPseudonym: @subscription 'forPseudonym'
   
   @namePattern:
     first: Match.Optional String

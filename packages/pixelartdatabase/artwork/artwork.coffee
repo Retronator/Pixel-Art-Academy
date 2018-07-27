@@ -67,6 +67,7 @@ class PADB.Artwork extends AM.Document
           'representations.url': url
         ]
   @forArtistName: @subscription 'forArtistName'
+  @forArtistPseudonym: @subscription 'forArtistPseudonym'
 
   # Returns the first image representation.
   firstImageRepresentation: ->

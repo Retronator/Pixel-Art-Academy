@@ -28,14 +28,23 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
 
     # Subscribe to artists and artworks.
     for artistField, artistInfo of @artistsInfo
-      PADB.Artist.forName.subscribe @, artistInfo.name
-      PADB.Artwork.forArtistName.subscribe @, artistInfo.name
+      if artistInfo.name
+        PADB.Artist.forName.subscribe @, artistInfo.name
+        PADB.Artwork.forArtistName.subscribe @, artistInfo.name
+        
+      else if artistInfo.pseudonym
+        PADB.Artist.forPseudonym.subscribe @, artistInfo.pseudonym
+        PADB.Artwork.forArtistPseudonym.subscribe @, artistInfo.pseudonym
 
     @artists = new ComputedField =>
       artists = {}
 
       for artistField, artistInfo of @artistsInfo
-        artists[artistField] = PADB.Artist.forName.query(artistInfo.name).fetch()[0]
+        if artistInfo.name
+          artists[artistField] = PADB.Artist.forName.query(artistInfo.name).fetch()[0]
+
+        else if artistInfo.pseudonym
+          artists[artistField] = PADB.Artist.documents.findOne pseudonym: artistInfo.pseudonym
 
       artists
 
@@ -43,7 +52,12 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
       artworks = {}
 
       for artworkField, artworkInfo of @artworksInfo
-        artist = PADB.Artist.forName.query(artworkInfo.artistInfo.name).fetch()[0]
+        if artworkInfo.artistInfo.name
+          artist = PADB.Artist.forName.query(artworkInfo.artistInfo.name).fetch()[0]
+
+        else if artworkInfo.artistInfo.pseudonym
+          artist = PADB.Artist.documents.findOne pseudonym: artworkInfo.artistInfo.pseudonym
+
         continue unless artist
 
         if artworkInfo.url
@@ -56,10 +70,11 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
             'authors._id': artist._id
             title: artworkInfo.title
 
-        artworks[artworkField] = artwork
+        if artwork
+          artworks[artworkField] = artwork
 
-        # Also forward the caption.
-        artworks[artworkField].caption = artworkInfo.caption
+          # Also forward the caption.
+          artworks[artworkField].caption = artworkInfo.caption
 
       artworks
 
@@ -265,7 +280,8 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
 
       authors: ->
         artwork = @data()
-        authors = _.map artwork.authors, 'displayName'
+        console.log "ar", artwork
+        authors = (artist.displayName for artist in artwork.authors)
         authors.join ' & '
 
       year: ->

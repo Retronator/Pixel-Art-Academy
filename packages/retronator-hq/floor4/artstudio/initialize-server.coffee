@@ -39,6 +39,11 @@ Document.startup ->
       image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-black-lab.jpg'
     ,
       type: PADB.Artwork.Types.Physical
+      title: 'Blue Landscape'
+      completionDate: year: 2015
+      image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-blue-landscape.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
       title: 'Botanical III'
       completionDate: year: 2017
       image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-botanical-iii.jpg'
@@ -54,6 +59,16 @@ Document.startup ->
       image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-botanical-v.jpg'
     ,
       type: PADB.Artwork.Types.Physical
+      title: 'Concrete Feet'
+      completionDate: year: 2014
+      image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-concrete-feet.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: 'Everybody Wants to Rule the World'
+      completionDate: year: 2014
+      image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-everybody-wants-to-rule-the-world.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
       title: 'Evil Is Love Spelled Backwards'
       completionDate: year: 2013
       image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-evil-is-love-spelled-backwards.jpg'
@@ -62,6 +77,16 @@ Document.startup ->
       title: 'Human Anatomy Studies'
       completionDate: year: 2014
       image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-human-anatomy-studies.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: 'Nine to Five'
+      completionDate: year: 2014
+      image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-nine-to-five.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: 'Pop!'
+      completionDate: year: 2012
+      image: url: '/retronator/hq/locations/artstudio/artworks/alexandra-hood-pop.jpg'
     ,
       type: PADB.Artwork.Types.Physical
       title: 'Self Portrait With Hair'
@@ -85,6 +110,11 @@ Document.startup ->
       image: url: '/retronator/hq/locations/artstudio/artworks/gabrielle-brickey-angel.jpg'
     ,
       type: PADB.Artwork.Types.Physical
+      title: 'Bouguereau Study'
+      completionDate: year: 2013, month: 2, day: 15
+      image: url: '/retronator/hq/locations/artstudio/artworks/gabrielle-brickey-bouguereau-study.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
       title: 'In a Feeling'
       completionDate: year: 2014, month: 4, day: 23
       image: url: '/retronator/hq/locations/artstudio/artworks/gabrielle-brickey-in-a-feeling.jpg'
@@ -95,12 +125,18 @@ Document.startup ->
       image: url: '/retronator/hq/locations/artstudio/artworks/gabrielle-brickey-in-a-moment.jpg'
     ,
       type: PADB.Artwork.Types.Physical
-      title: 'Bouguereau Study'
-      completionDate: year: 2013, month: 2, day: 15
-      image: url: '/retronator/hq/locations/artstudio/artworks/gabrielle-brickey-bouguereau-study.jpg'
+      title: 'Oil Painting'
+      completionDate: year: 2015, month: 10, day: 22
+      image: url: '/retronator/hq/locations/artstudio/artworks/gabrielle-brickey-oil-painting.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: ':we caught on fire:'
+      completionDate: year: 2009, month: 10, day: 3
+      image: url: '/retronator/hq/locations/artstudio/artworks/gabrielle-brickey-we-caught-on-fire.jpg'
     ]
 
   # Hendry Roesly
+  
   PADB.create
     artist: name: first: 'Hendry', last: 'Roesly'
     artworks: [
@@ -131,6 +167,19 @@ Document.startup ->
     artist: name: first: 'Matej', last: 'Jan'
     artworks: [
       type: PADB.Artwork.Types.Physical
+      title: 'Africa'
+      completionDate: year: 2012, month: 5, day: 14
+      representations: [
+        type: PADB.Artwork.RepresentationTypes.Image
+        url: '/retronator/hq/locations/artstudio/artworks/matej-jan-africa.jpg'
+      ]
+    ,
+      type: PADB.Artwork.Types.Image
+      title: 'Blonde'
+      completionDate: year: 2015, month: 2, day: 19
+      image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-blonde.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
       title: 'Blue Bottle'
       completionDate: year: 2016, month: 7, day: 17
       image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-blue-bottle.jpg'
@@ -150,6 +199,16 @@ Document.startup ->
       title: 'Cardinal City tools'
       completionDate: year: 2016, month: 2, day: 4
       image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-cardinal-city-tools.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: 'Day at the Beach'
+      completionDate: year: 2016, month: 8, day: 10
+      image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-day-at-the-beach.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: 'Desolation'
+      completionDate: year: 2016, month: 8, day: 7
+      image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-desolation.jpg'
     ,
       type: PADB.Artwork.Types.Image
       title: 'Give me the Sky'
@@ -188,6 +247,12 @@ Document.startup ->
       image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-lotus-esprit-turbo.jpg'
     ,
       type: PADB.Artwork.Types.Physical
+      title: 'Memchu'
+      completionDate: year: 2016, month: 7, day: 4
+      startDate: year: 2016, month: 6, day: 29
+      image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-memchu.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
       title: 'Neukom'
       completionDate: year: 2017, month: 7, day: 11
       wip: true
@@ -208,6 +273,7 @@ Document.startup ->
       type: PADB.Artwork.Types.Physical
       title: 'Neukom'
       completionDate: year: 2017, month: 7, day: 16
+      startDate: year: 2017, month: 7, day: 11
       image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-neukom.jpg'
     ,
       type: PADB.Artwork.Types.Image
@@ -235,4 +301,18 @@ Document.startup ->
       title: 'Skogsra'
       completionDate: year: 2015, month: 4, day: 23
       image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-skogsra.jpg'
+    ]
+
+  # Maya Pixelskaya
+  
+  PADB.create
+    artist: pseudonym: 'Maya Pixelskaya'
+    artworks: [
+      type: PADB.Artwork.Types.Physical
+      title: 'Street Fighter II triptych'
+      completionDate: year: 2013, month: 4, day: 10
+      representations: [
+        type: PADB.Artwork.RepresentationTypes.Image
+        url: '/retronator/hq/locations/artstudio/artworks/maya-pixelskaya-street-fighter-ii-triptych.jpg'
+      ]
     ]

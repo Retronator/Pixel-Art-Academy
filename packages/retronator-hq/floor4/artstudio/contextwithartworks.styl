@@ -16,6 +16,26 @@
     &:hover
       filter drop-shadow(0 0 3rem white)
 
+  .move-button
+    position absolute
+    top 0
+    height 100%
+    width 30rem
+    background none
+    border none
+    transition background 0.2s
+
+    &:hover
+      background rgba(atariGrey(3), 0.3)
+
+    &.left
+      left 0
+      cursor w-resize
+
+    &.right
+      right 0
+      cursor e-resize
+
 .retronator-hq-artstudio-contextwithartworks-stream
   fixed-cover()
   z-index 1

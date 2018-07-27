@@ -15,12 +15,6 @@ class HQ.ArtStudio.Northwest extends HQ.ArtStudio.ContextWithArtworks
 
   @version: -> '0.0.1'
 
-  @fullName: -> "northwest"
-  @description: ->
-    "
-      Various northwest are found in the north-west part of the studio.
-    "
-
   @initialize()
 
   @FocusPoints:

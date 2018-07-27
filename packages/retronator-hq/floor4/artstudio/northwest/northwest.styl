@@ -18,9 +18,6 @@
       absolute-cover()
       background-image image('/retronator/hq/locations/artstudio/northwest/background.png')
 
-    .artwork
-      position absolute
-
     .background
       absolute-cover()
 
@@ -225,23 +222,3 @@
       left 0
       bottom -30rem
       background-image image('/retronator/hq/locations/artstudio/northwest/railing.png')
-
-  .move-button
-    position absolute
-    top 0
-    height 100%
-    width 30rem
-    background none
-    border none
-    transition background 0.2s
-
-    &:hover
-      background rgba(atariGrey(3), 0.3)
-
-    &.left
-      left 0
-      cursor w-resize
-
-    &.right
-      right 0
-      cursor e-resize
