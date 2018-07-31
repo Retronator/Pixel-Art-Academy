@@ -161,6 +161,27 @@ Document.startup ->
       image: url: '/retronator/hq/locations/artstudio/artworks/hendry-roesly-survivor.jpg'
     ]
 
+  # Jorge Monreal
+
+  PADB.create
+    artist: name: first: 'Jorge', last: 'Monreal'
+    artworks: [
+      type: PADB.Artwork.Types.Physical
+      title: 'Adventure time'
+      completionDate: year: 2012, month: 12, day: 27
+      image: url: '/retronator/hq/locations/artstudio/artworks/jorge-monreal-adventure-time.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: 'Blue girl 2'
+      completionDate: year: 2013, month: 4, day: 24
+      image: url: '/retronator/hq/locations/artstudio/artworks/jorge-monreal-blue-girl-2.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: 'Skull girl 3'
+      completionDate: year: 2011, month: 6, day: 19
+      image: url: '/retronator/hq/locations/artstudio/artworks/jorge-monreal-skull-girl-3.jpg'
+    ]
+
   # Matej Jan
     
   PADB.create
@@ -205,6 +226,11 @@ Document.startup ->
       completionDate: year: 2016, month: 8, day: 10
       image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-day-at-the-beach.jpg'
     ,
+      type: PADB.Artwork.Types.Image
+      title: 'Desert'
+      completionDate: year: 2014, month: 11, day: 13
+      image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-desert.jpg'
+    ,
       type: PADB.Artwork.Types.Physical
       title: 'Desolation'
       completionDate: year: 2016, month: 8, day: 7
@@ -240,6 +266,11 @@ Document.startup ->
       title: 'Kaley'
       completionDate: year: 2012, month: 5, day: 7
       image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-kaley.jpg'
+    ,
+      type: PADB.Artwork.Types.Image
+      title: 'Lioness'
+      completionDate: year: 2012, month: 8, day: 9
+      image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-lioness.jpg'
     ,
       type: PADB.Artwork.Types.Physical
       title: 'Lotus Esprit Turbo'
@@ -285,6 +316,16 @@ Document.startup ->
       ]
     ,
       type: PADB.Artwork.Types.Image
+      title: 'Octobit day 2: Astronaut'
+      completionDate: year: 2017, month: 10, day: 2
+      image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-octobit-day-2-astronaut.png'
+    ,
+      type: PADB.Artwork.Types.Image
+      title: 'Reignite 6'
+      completionDate: year: 2017, month: 3, day: 31
+      image: url: '/retronator/hq/locations/artstudio/artworks/matej-jan-reignite-6.jpg'
+    ,
+      type: PADB.Artwork.Types.Image
       title: 'Retropolis International Spacestation: Main Tower'
       completionDate: year: 2017, month: 2, day: 21
       representations: [
@@ -309,10 +350,60 @@ Document.startup ->
     artist: pseudonym: 'Maya Pixelskaya'
     artworks: [
       type: PADB.Artwork.Types.Physical
+      title: 'Street Fighter Converse chucks'
+      completionDate: year: 2011, month: 10, day: 4
+      representations: [
+        type: PADB.Artwork.RepresentationTypes.Image
+        url: '/retronator/hq/locations/artstudio/artworks/maya-pixelskaya-street-fighter-converse-chucks.jpg'
+      ]
+    ,
+      type: PADB.Artwork.Types.Physical
       title: 'Street Fighter II triptych'
       completionDate: year: 2013, month: 4, day: 10
       representations: [
         type: PADB.Artwork.RepresentationTypes.Image
         url: '/retronator/hq/locations/artstudio/artworks/maya-pixelskaya-street-fighter-ii-triptych.jpg'
       ]
+    ]
+
+  # Octavi Navarro
+
+  PADB.create
+    artist: name: first: 'Octavi', last: 'Navarro'
+    artworks: [
+      type: PADB.Artwork.Types.Physical
+      title: 'Escape'
+      completionDate: year: 2013
+      image: url: '/retronator/hq/locations/artstudio/artworks/octavi-navarro-escape.jpg'
+    ,
+      type: PADB.Artwork.Types.Physical
+      title: 'Pumpkin Road'
+      completionDate: year: 2013
+      image: url: '/retronator/hq/locations/artstudio/artworks/octavi-navarro-pumpkin-road.jpg'
+    ]
+
+  # Sylvain Sarrailh
+
+  PADB.create
+    artist: name: first: 'Sylvain', last: 'Sarrailh'
+    artworks: [
+      type: PADB.Artwork.Types.Image
+      title: 'Amazing'
+      completionDate: year: 2017, month: 5, day: 18
+      image: url: '/retronator/hq/locations/artstudio/artworks/sylvain-sarrailh-amazing.jpg'
+    ,
+      type: PADB.Artwork.Types.Image
+      title: 'Forest of Liars: Sunset on the wood bridge'
+      completionDate: year: 2018, month: 4, day: 30
+      image: url: '/retronator/hq/locations/artstudio/artworks/sylvain-sarrailh-forest-of-liars-sunset-on-the-wood-bridge.jpg'
+    ,
+      type: PADB.Artwork.Types.Image
+      title: 'The Forgotten Empire'
+      completionDate: year: 2017, month: 2, day: 8
+      image: url: '/retronator/hq/locations/artstudio/artworks/sylvain-sarrailh-the-forgotten-empire.jpg'
+    ,
+      type: PADB.Artwork.Types.Image
+      title: 'Uncharted Book Cover'
+      completionDate: year: 2018, month: 2, day: 15
+      image: url: '/retronator/hq/locations/artstudio/artworks/sylvain-sarrailh-uncharted-book-cover.jpg'
     ]

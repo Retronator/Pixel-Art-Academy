@@ -79,9 +79,9 @@ class PADB.Components.Stream extends AM.Component
 
   artworkStyle: ->
     displayedArtwork = @currentData()
-    
-    # Physical artworks should not be upscaled.
-    return unless displayedArtwork.artwork.type is PADB.Artwork.Types.Physical
+
+    # We want to prevent upscaling non-pixel art artworks.
+    return unless displayedArtwork.artwork.nonPixelArt
     
     width: 'auto'
     maxWidth: '100%'

@@ -37,6 +37,12 @@ Artworks used with permission from [Hendry Roesly](https://www.artstation.com/he
 - Kuria
 - Survivor
 
+Artworks used with permission from [Jorge Monreal](https://www.deviantart.com/cocoaspen):
+
+- Adventure time
+- Blue girl 2
+- Skull girl 3
+
 Artworks used with permission from [Matej Jan](https://matejjan.com):
 
 - Africa
@@ -45,20 +51,37 @@ Artworks used with permission from [Matej Jan](https://matejjan.com):
 - Bust
 - Cardinal City
 - Day at the Beach
+- Desert
 - Desolation
 - Hand Study
 - Give me the Sky
 - Hillary
 - Inventory
 - Kaley
+- Lioness
 - Lotus Esprit Turbo
 - Memchu
 - Neukom
 - Night 21
+- Octobit day 2: Astronaut
+- Reignite 6
 - Retropolis International Spacestation: Main Tower
 - Rodin
 - Skogsra
 
 Artworks used with permission from [Maya Pixelskaya](http://mayapixelskaya.com):
 
+- Street Fighter Converse chucks
 - Street Fighter II triptych
+
+Artworks used with permission from [Octavi Navarro](https://www.pixelshuh.com):
+
+- Escape
+- Pumpkin Road
+
+Artworks used with permission from [Sylvain Sarrailh](https://www.artstation.com/tohad):
+
+- Amazing
+- Forest of Liars: Sunset on the wood bridge
+- The Forgotten Empire
+- Uncharted Book Cover

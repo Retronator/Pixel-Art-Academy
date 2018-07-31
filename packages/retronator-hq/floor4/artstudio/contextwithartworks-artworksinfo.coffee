@@ -15,8 +15,11 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
       alexandraHood: name: first: 'Alexandra', last: 'Hood'
       gabrielleBrickey: name: first: 'Gabrielle', last: 'Brickey'
       hendryRoesly: name: first: 'Hendry', last: 'Roesly'
+      jorgeMonreal: name: first: 'Jorge', last: 'Monreal'
       matejJan: name: first: 'Matej', last: 'Jan'
       mayaPixelskaya: pseudonym: 'Maya Pixelskaya'
+      octaviNavarro: name: first: 'Octavi', last: 'Navarro'
+      sylvainSarrailh: name: first: 'Sylvain', last: 'Sarrailh'
 
     @artworksInfo =
     
@@ -141,6 +144,21 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         title: 'Survivor'
         caption: "Pen and markers on paper"
 
+      # Jorge Monreal
+
+      adventureTime:
+        artistInfo: @artistsInfo.jorgeMonreal
+        title: 'Adventure time'
+        caption: "Acrylic on canvas, 19.7 × 15.7 inches"
+      blueGirl2:
+        artistInfo: @artistsInfo.jorgeMonreal
+        title: 'Blue girl 2'
+        caption: "Acrylic on canvas, 19.7 × 15.7 inches"
+      skullGirl3:
+        artistInfo: @artistsInfo.jorgeMonreal
+        title: 'Skull girl 3'
+        caption: "Acrylic on canvas, 31.5 × 23.6 inches"
+
       # Matej Jan
 
       africa:
@@ -151,6 +169,7 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.matejJan
         title: 'Blonde'
         caption: "Digital (Watercolor on WaterColor Paper, ArtRage 3 Studio Pro, Wacom Intuos 2), 1080 × 1620 pixels"
+        nonPixelArt: true
       blueBottle:
         artistInfo: @artistsInfo.matejJan
         title: 'Blue Bottle'
@@ -178,6 +197,11 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.matejJan
         title: 'Day at the Beach'
         caption: "Watercolors on paper, 24 × 18 inches"
+      desertMatejJan:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Desert'
+        caption: "Digital (Oil Brush on Smooth Canvas, ArtRage 3 Studio Pro, Wacom Intuos 2), 1600 × 900 pixels"
+        nonPixelArt: true
       desolation:
         artistInfo: @artistsInfo.matejJan
         title: 'Desolation'
@@ -186,6 +210,7 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.matejJan
         title: 'Give me the Sky'
         caption: "Digital (Chalk on Sketch Paper, ArtRage 3 Studio Pro, Wacom Intuos 2), 3000 × 2000 pixels"
+        nonPixelArt: true
       lotusEspritTurbo:
         artistInfo: @artistsInfo.matejJan
         title: 'Lotus Esprit Turbo'
@@ -206,6 +231,11 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.matejJan
         title: 'Kaley'
         caption: "Colored pencils on paper, 8.3 × 11.7 inches"
+      lioness:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Lioness'
+        caption: "Digital (Acrylic brush, GIMP, Wacom Intuos 2), 2343 × 2343 pixels"
+        nonPixelArt: true
       memchu:
         artistInfo: @artistsInfo.matejJan
         title: 'Memchu'
@@ -234,10 +264,21 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
         artistInfo: @artistsInfo.matejJan
         title: 'Night 21'
         caption: "Digital (Classic Pencil on Paper Grain, Linea Sketch, iPad Pro, Apple Pencil), 2048 × 2732 pixels"
+        nonPixelArt: true
+      reignite6:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Reignite 6'
+        caption: "Digital (Oil Brush on Canvas, ArtRage for iOS, iPad Pro, Apple Pencil), 1152 × 2048 pixels"
+        nonPixelArt: true
+      octobitDay2Astronaut:
+        artistInfo: @artistsInfo.matejJan
+        title: 'Octobit day 2: Astronaut'
+        caption: "Digital (HD Index Painting technique, Photoshop, Astropad, Apple Pencil), 340 × 192 pixels"
       retropolisInternationalSpacestationMainTower:
         artistInfo: @artistsInfo.matejJan
         title: 'Retropolis International Spacestation: Main Tower'
         caption: "Digital (white Classic Pencil on Blueprint, Linea Sketch, iPad Pro, Apple Pencil), 2732 × 2048 pixels"
+        nonPixelArt: true
       rodin:
         artistInfo: @artistsInfo.matejJan
         title: 'Rodin'
@@ -249,7 +290,45 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
 
       # Maya Pixelskaya
 
+      streetFighterConverseChucks:
+        artistInfo: @artistsInfo.mayaPixelskaya
+        title: 'Street Fighter Converse chucks'
+        caption: "Acrylic on fabric"
       streetFighterIiTriptych:
         artistInfo: @artistsInfo.mayaPixelskaya
         title: 'Street Fighter II triptych'
         caption: "Acrylic on canvas, 11.8 × 11.8 inches (each canvas)"
+
+      # Octavi Navarro
+
+      escape:
+        artistInfo: @artistsInfo.octaviNavarro
+        title: 'Escape'
+        caption: "Acrylic on board, 23.6 × 15.7 inches"
+      pumpkinRoad:
+        artistInfo: @artistsInfo.octaviNavarro
+        title: 'Pumpkin Road'
+        caption: "Acrylic on board, 15.7 × 23.6 inches"
+
+      # Sylvain Sarrailh
+
+      amazing:
+        artistInfo: @artistsInfo.sylvainSarrailh
+        title: 'Amazing'
+        caption: "Digital (Photoshop), 1728 × 972 pixels"
+        nonPixelArt: true
+      forestOfLiarsSunsetOnTheWoodBridge:
+        artistInfo: @artistsInfo.sylvainSarrailh
+        title: 'Forest of Liars: Sunset on the wood bridge'
+        caption: "Digital (Photoshop), 1000 × 1483 pixels"
+        nonPixelArt: true
+      theForgottenEmpire:
+        artistInfo: @artistsInfo.sylvainSarrailh
+        title: 'The Forgotten Empire'
+        caption: "Digital (Photoshop), 1536 × 864 pixels"
+        nonPixelArt: true
+      unchartedBookCover:
+        artistInfo: @artistsInfo.sylvainSarrailh
+        title: 'Uncharted Book Cover'
+        caption: "Digital (Photoshop), 1004 × 1418 pixels"
+        nonPixelArt: true

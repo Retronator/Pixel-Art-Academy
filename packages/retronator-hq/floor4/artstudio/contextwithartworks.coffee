@@ -73,8 +73,11 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
         if artwork
           artworks[artworkField] = artwork
 
-          # Also forward the caption.
-          artworks[artworkField].caption = artworkInfo.caption
+          # Forward the caption.
+          artwork.caption = artworkInfo.caption
+          
+          # Set if it's non-pixel art (true for all physical artworks).
+          artwork.nonPixelArt = artworkInfo.nonPixelArt or artwork.type is PADB.Artwork.Types.Physical
 
       artworks
 
