@@ -64,10 +64,11 @@ class LOI.Interface.Components.CommandInput
     @command ""
     @caretPosition 0
 
-  confirm: ->
-    # Make sure the command to be stored into history matches what is in the command.
+  confirm: (command) ->
+    # Make sure the command to be stored into history matches what is in the command. 
+    # It can be different if command is being set from hovering instead of typing.
     @commandHistoryIndex = @confirmedHistoryLength
-    @commandHistory[@commandHistoryIndex] = @command()
+    @commandHistory[@commandHistoryIndex] = command
 
     # Update store history.
     @confirmedHistoryLength++

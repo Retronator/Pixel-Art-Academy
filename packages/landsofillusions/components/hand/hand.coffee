@@ -8,13 +8,17 @@ class LOI.Components.Hand extends AM.Component
 
   @version: -> '0.1.0'
 
+  showHand: ->
+    # Only show hand for characters since we don't want to assume skin color.
+    LOI.characterId()
+
   handStyle: ->
-    if character = LOI.character()
-      shade = _.clamp character.avatar.body.properties.skin.shade(), 3, 8
+    data = @data()
+    style = if _.isString data then data else 'normal'
 
-    else
-      shade = 5
+    character = LOI.character()
+    shade = _.clamp character.avatar.body.properties.skin.shade(), 3, 8
 
-    url = "/landsofillusions/components/hand/hand-shade#{shade}.png"
+    url = "/landsofillusions/components/hand/#{style}/shade#{shade}.png"
 
-    backgroundImage: "url(#{@versionedUrl url})"
+    backgroundImage: "url('#{@versionedUrl url}')"
