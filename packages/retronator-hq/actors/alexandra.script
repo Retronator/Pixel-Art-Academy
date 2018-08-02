@@ -2,10 +2,18 @@
 
 ## Start
 
-alexandra: Hi! `not _IntroductionOver`
-alexandra: How else can I help? `_IntroductionOver`
+-> [IntroductionOver] `_MainQuestionsFirstTime`
+
+> You walk up to an artist sipping a drink next to a half-finished oil painting.
+> As you approach, she takes her earbuds out.
+
+alexandra: Hi!
+
+-> [MainQuestionsFirstTime]
 
 ## IntroductionOver
+
+alexandra: How else can I help?
 
 -> [MainQuestionsFirstTime]
 
@@ -14,7 +22,7 @@ alexandra: How else can I help? `_IntroductionOver`
 ## MainQuestionsFirstTime
 
 * Is that your painting? -> [YourPainting]
-* I thought Retronator was just about pixel art. -> [RetronatorJustPixelArt]
+* I'm surprised to find non-pixel art at Retronator. -> [RetronatorJustPixelArt]
 * Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting or RetronatorJustPixelArt`
 * What are you drinking? -> [Drinking]
 * What are you listening to? -> [Listening]
@@ -147,12 +155,12 @@ alexandra:
 
 alexandra:
   Good question.
-  Digital requires a bigger financial investment.
+  For starters, digital requires a bigger financial investment.
 
 ### DigitalEquipment
 
 alexandra:
-  You'll need a graphic tablet. Or you can just get a stylus if you have a tablet computer.
+  You'll need a graphic tablet or at least a stylus if you have a tablet computer.
   Then you'll also need to get software.
 
 -> [OtherStylesQuestions]
@@ -415,7 +423,7 @@ alexandra:
 
 ### Pastels
 
-> There is a box of soft pastels on the table and some artworks.
+> There is a box of soft pastels on the table and a couple of artworks.
 
 ### PastelsHighlight
 
@@ -424,8 +432,6 @@ pause
 ### PastelsWall
 
 > More drawings hang on the wall.
-
-### PastelsWallHighlight
 
 alexandra:
   There are different types of pastels: soft, hard, oil pastels, pastel pencils.
@@ -517,13 +523,13 @@ alexandra: Well, the reason some people love acrylics is also the reason that ot
 
 ### PaintingWhyOils
 
-alexandra: Because acrylics dry faster they also don't mix easily, so it's harder for other artists that do techniques like wet-on-wet …
+alexandra: Because acrylics dry faster they also don't mix easily, so it's harder to do wet-on-wet …
 
 * Wet on wet?
 * Uhm, what?
 
 alexandra:
-  It's a …
+  It's a technique …
   Ah, I see I'm getting ahead of myself.
   For now, don't worry about it. Just try any medium that looks cool to you.
 

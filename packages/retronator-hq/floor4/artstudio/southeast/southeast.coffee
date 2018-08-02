@@ -18,6 +18,9 @@ class HQ.ArtStudio.Southeast extends HQ.ArtStudio.ContextWithArtworks
   @initialize()
 
   @FocusPoints:
+    DigitalEquipment:
+      x: 0.43
+      y: 0.72
     Digital:
       x: 0.43
       y: 0.62

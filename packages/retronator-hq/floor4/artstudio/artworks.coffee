@@ -6,9 +6,10 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.ArtStudio.Artworks extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.ArtStudio.Artworks'
   @fullName: -> "artworks"
+  @descriptiveName: -> "Various traditional ![artworks](look at artworks)."
   @description: ->
     "
-      There are various traditional artworks and prints all over the studio.
+      Drawings, paintings, and prints of all kinds are found all around the studio.
     "
 
   @initialize()

@@ -33,9 +33,9 @@ class HQ.ArtStudio extends LOI.Adventure.Location
       floor: 4
 
   things: -> [
-    @elevatorButton
     HQ.Actors.Alexandra
     @constructor.Artworks
+    @elevatorButton
   ]
 
   exits: ->

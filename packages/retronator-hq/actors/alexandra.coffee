@@ -8,6 +8,7 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
   @id: -> 'Retronator.HQ.Actors.Alexandra'
   @fullName: -> "Alexandra Hood"
   @shortName: -> "Alexandra"
+  @descriptiveName: -> "![Alexandra](talk to Alexandra) Hood."
   @description: -> "It's Alexandra Hood, resident artist and coffee drinker at Retronator."
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.olive
@@ -51,6 +52,10 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
       alexandra: HQ.Actors.Alexandra
       
     @setCallbacks
+      DigitalEquipment: (complete) =>
+        focus HQ.ArtStudio.Southeast, HQ.ArtStudio.Southeast.FocusPoints.DigitalEquipment
+        complete()
+
       Sketches: (complete) =>
         focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Sketches
         complete()
@@ -164,11 +169,10 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
         complete()
 
       PastelsWall: (complete) =>
-        focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Pastels
-        complete()
-
-      PastelsWallHighlight: (complete) =>
-        LOI.adventure.currentContext().highlight HQ.ArtStudio.Northwest.HighlightGroups.Pastels
+        focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Pastels, (context) =>
+          context.highlight HQ.ArtStudio.Northwest.HighlightGroups.Pastels
+        ,
+          1000
         complete()
 
       Painting: (complete) =>
