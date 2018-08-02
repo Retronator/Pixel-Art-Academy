@@ -18,12 +18,32 @@ class HQ.ArtStudio.Southwest extends HQ.ArtStudio.ContextWithArtworks
   @initialize()
 
   @FocusPoints:
+    All:
+      x: 0.57
+      y: 0.32
     Pastels:
       x: 0.85
       y: 0.66
+    Acrylics:
+      x: 0.84
+      y: 0.23
+    WatercolorsWall:
+      x: 0.42
+      y: 0.21
+    WatercolorsTable:
+      x: 0.42
+      y: 0.8
+    Oils:
+      x: 0.27
+      y: 0.39
 
   @HighlightGroups:
     Pastels: ['africa', 'weCaughtOnFire']
+    Acrylics: ['streetFighterIiTriptych']
+    WatercolorsWall: ['blonde', 'dayAtTheBeach']
+    WatercolorsTable: ['memchu']
+    OilsWall: ['everybodyWantsToRuleTheWorld', 'desolation', 'oilPainting']
+    OilsStorage: ['pop', 'nineToFive', 'concreteFeet', 'blueLandscape']
 
   constructor: ->
     super

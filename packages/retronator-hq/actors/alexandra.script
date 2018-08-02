@@ -15,7 +15,7 @@ alexandra: How else can I help? `_IntroductionOver`
 
 * Is that your painting? -> [YourPainting]
 * I thought Retronator was just about pixel art. -> [RetronatorJustPixelArt]
-* Can I ask you questions about art? -> [MoreAboutMediums] `YourPainting or RetronatorJustPixelArt`
+* Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting or RetronatorJustPixelArt`
 * What are you drinking? -> [Drinking]
 * What are you listening to? -> [Listening]
 * Sorry, nevermind. `not _MainQuestions`
@@ -51,7 +51,7 @@ alexandra: Of course! How can I help?
 * Is there an advantage to learning pixel art? -> [AdvantagePixelArt]
 * Is it good to practice other mediums besides pixel art? -> [PracticeOtherMediums]
 * What choices do I have if I want to do other styles than pixel art? -> [OtherStyles] `not OtherStylesQuestions`
-* I have more questions about other styles. -> [OtherStylesMore] `OtherStylesQuestions`
+* I have more questions about non-pixel art styles. -> [OtherStylesMore] `OtherStylesQuestions`
 * I want to do pixel art. What do I need? -> [PixelArt]
 * Can I do pixel art, but not on the computer? -> [PixelArtNotComputer]
 * Actually, I want to ask something else. -> [SomethingElse] `not _ArtQuestions`
@@ -139,7 +139,7 @@ alexandra: Happy to help. Do you have any other art questions?
 
 alexandra:
   Uf, if we wanted to get into that we could be here all week.
-  Better wait till you get to the Academy and take their art history class.
+  Better wait till you get to the Academy and take their Art History class.
   
 -> [OtherStylesQuestions]
 
@@ -323,14 +323,15 @@ alexandra:
 
 ## PencilsCharcoal
 
-alexandra:
-  Yes, graphite has a shine if you look at it at an angle where the light hits. 
+alexandra: Yes, graphite has a shine if you look at it at an angle where the light hits. 
 
 ### PencilsCharcoal
 
-alexandra:
-  Charcoal can give you much darker shades and doesn't have this glare.
-  You can also use big sticks of it for quick and interesting shading or mark making.
+alexandra: Charcoal can give you much darker shades and doesn't have this glare.
+
+### PencilsCharcoalHighlight
+
+alexandra: You can also use big sticks of it for quick and interesting shading or mark making.
 
 -> [PencilsQuestions]
 
@@ -342,9 +343,15 @@ alexandra: Pens are great!
 
 ### Pens
 
+> She shows you her Aquatic and Botanical series of drawings.
+
+### PensHighlightAquaticBotanical
+
 alexandra: They force you to commit. When you put your pen down on the paper it leaves a mark.
 
-### PensHighlight
+> You notice a drawing with both pencil and ink parts.
+
+### PensHighlightInking
 
 alexandra:
   With pencils you can be very carefree with your lines.
@@ -364,6 +371,8 @@ alexandra:
 alexandra: Yes, that's how you can get most of the stress out.
 
 ## PensCombine
+
+> You look at the table with more artworks that use pens.
 
 ### PensCombine
 
@@ -385,9 +394,13 @@ alexandra: Haha, no. We usually mean art markers.
 
 alexandra: There are colored ones, but a lot of people just use a set of grey shades from light to dark.
 
+> You notice some examples on the table.
+
 ### MarkersHighlight
 
-alexandra: They are mostly used for shading and combine with other mediums.
+alexandra: Markers are mostly used for shading and combine with other mediums.
+
+> She points to a huge isometric piece by the wall.
 
 ### MarkersCombine
 
@@ -402,15 +415,21 @@ alexandra:
 
 ### Pastels
 
+> There is a box of soft pastels on the table and some artworks.
+
+### PastelsHighlight
+
 pause
 
 ### PastelsWall
 
-alexandra:
-  There are also different types: soft, hard, oil pastels, pastel pencils.
-  And similar mediums like chalk, crayons, conte crayons …
+> More drawings hang on the wall.
 
 ### PastelsWallHighlight
+
+alexandra:
+  There are different types of pastels: soft, hard, oil pastels, pastel pencils.
+  And similar mediums like chalk, crayons, conte crayons …
 
 -> [MediumsQuestions]
 
@@ -420,12 +439,19 @@ alexandra:
 
 alexandra: Ah, my favorite!
 
-### PaintingOils
+### Painting
   
-alexandra: 
-  If you go to an art gallery, chances are you'll be looking at oil paintings.
-  A modern version also emerged in 1950s called acrylic paint.
-  And the third very popular way to paint is with watercolors.
+alexandra: If you go to an art gallery, chances are you'll be looking at oil paintings.
+
+### PaintingHighlightOils
+
+alexandra: A modern version also emerged in 1950s called acrylic paint.
+
+### PaintingHighlightAcrylic
+
+alexandra: And the third very popular way to paint is with watercolors.
+
+### PaintingHighlightWatercolors
 
 ## PaintingQuestions
 
@@ -471,25 +497,33 @@ alexandra:
 
 ## PaintingAcrylics
 
+> Alexandra walks to a canvas storage unit in the back.
+
 ### PaintingAcrylics
 
-alexandra:
+alexandra: 
   They're generally easier to deal with than oil paints. You just mix them with water for one thing.
   They dry fast, they don't need toxic solvents, you can use them on most any surface, even shoes!
+
+> You notice a pair of All-stars on the floor.
+ 
+### PaintingAcrylicsShoes
 
 -> [PaintingQuestions]
 
 ## PaintingWhyOils
 
-alexandra:
-  Well, the reason some people love acrylics is also the reason that other people dislike them.
-  Because acrylics dry faster they also don't mix easily, so it's harder to do techniques like wet-on-wet …
+alexandra: Well, the reason some people love acrylics is also the reason that other people dislike them.
+
+### PaintingWhyOils
+
+alexandra: Because acrylics dry faster they also don't mix easily, so it's harder for other artists that do techniques like wet-on-wet …
 
 * Wet on wet?
 * Uhm, what?
 
 alexandra:
-  It's a technique …
+  It's a …
   Ah, I see I'm getting ahead of myself.
   For now, don't worry about it. Just try any medium that looks cool to you.
 
@@ -497,23 +531,42 @@ alexandra:
 
 ## PaintingWatercolors
 
+alexandra: Watercolors are quite unique.
+
 ### PaintingWatercolors
 
+> You see Matej's painting of a church.
+
+### PaintingWatercolorsHighlight
+
 alexandra:
-  Watercolors are really unique.
   Like oils, they take a lot of practice and experimentation to get things right.
-  But the result is unlike anything else … Except I guess acrylics mixed with a lot of water haha.
+  But the result is unlike anything else … Except I guess acrylics mixed with a lot of water.
 
 -> [PaintingQuestions]
 
 ## PaintingDigital
 
+alexandra: Yes, it's especially popular in the entertainment industry because of its efficiency.
+
 ### PaintingDigital
 
 alexandra:
-  Yes, it's especially popular in the entertainment industry because of its efficiency.
-  Some drawing software tries to emulate traditional mediums, but most often the look of digital paintings has its own quality to them.
-  You can treat it as an additional medium with its own variations in style.
+  Some drawing software tries to emulate traditional mediums.
+  
+> She points to artworks painted with a program called ArtRage.
+  
+### PaintingDigitalHighlightEmulation
+
+alexandra:
+  Most often the look of digital paintings has its own quality to them.
+
+> You look at the rest of digital artworks.
+
+### PaintingDigitalHighlightUnique
+
+alexandra:
+  You can treat digital painting as an additional medium with many variations in style.
   
 -> [PaintingQuestions]
 

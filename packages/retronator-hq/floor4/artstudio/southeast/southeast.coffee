@@ -18,12 +18,18 @@ class HQ.ArtStudio.Southeast extends HQ.ArtStudio.ContextWithArtworks
   @initialize()
 
   @FocusPoints:
-    Pastels:
-      x: 0.85
-      y: 0.66
+    Digital:
+      x: 0.43
+      y: 0.62
+    Acrylics:
+      x: 0.82
+      y: 0.56
 
   @HighlightGroups:
-    Pastels: ['africa', 'weCaughtOnFire']
+    DigitalEmulation: ['desertMatejJan', 'reignite6']
+    DigitalUnique: ['amazing', 'forestOfLiarsSunsetOnTheWoodBridge', 'theForgottenEmpire', 'unchartedBookCover', 'lioness', 'octobitDay2Astronaut']
+    Acrylics: ['skullGirl3', 'blueGirl2', 'adventureTime', 'pumpkinRoad', 'escape']
+    AcrylicsShoes: ['streetFighterConverseChucks']
 
   constructor: ->
     super
@@ -51,7 +57,7 @@ class HQ.ArtStudio.Southeast extends HQ.ArtStudio.ContextWithArtworks
     scale = LOI.adventure.interface.display.scale()
 
     visibleSceneWidth = viewport.width() / scale
-    visibleSceneWidth < 400
+    visibleSceneWidth < 350
 
   events: ->
     super.concat

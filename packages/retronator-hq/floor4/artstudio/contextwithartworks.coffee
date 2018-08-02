@@ -278,6 +278,13 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
       captionComponentClass: @constructor.ArtworkCaption
       scrollParentSelector: '.retronator-hq-artstudio-contextwithartworks-stream'
 
+    events: ->
+      super.concat
+        'click': @onClick
+
+    onClick: (event) ->
+      @activatable.deactivate()
+
     class @ArtworkCaption extends AM.Component
       @register 'Retronator.HQ.ArtStudio.ContextWithArtworks.Stream.ArtworkCaption'
 

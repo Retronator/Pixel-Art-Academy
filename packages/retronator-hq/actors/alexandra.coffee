@@ -111,20 +111,23 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
         complete()
 
       PencilsCharcoal: (complete) =>
-        focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Charcoal, (context) =>
-          context.highlight HQ.ArtStudio.Northwest.HighlightGroups.Charcoal
-        ,
-          2000
+        focus HQ.ArtStudio.Northwest, HQ.ArtStudio.Northwest.FocusPoints.Charcoal
+        complete()
 
+      PencilsCharcoalHighlight: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Northwest.HighlightGroups.Charcoal
         complete()
 
       Pens: (complete) =>
         focus HQ.ArtStudio.Northeast, HQ.ArtStudio.Northeast.FocusPoints.BackWall
         complete()
 
-      PensHighlight: (complete) =>
-        northeast = LOI.adventure.currentContext()
-        northeast.highlight HQ.ArtStudio.Northeast.HighlightGroups.Pens
+      PensHighlightAquaticBotanical: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Northeast.HighlightGroups.PensAquaticBotanical
+        complete()
+
+      PensHighlightInking: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Northeast.HighlightGroups.PensInk
         complete()
 
       PensCombine: (complete) =>
@@ -153,10 +156,11 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
         complete()
 
       Pastels: (complete) =>
-        focus HQ.ArtStudio.Southwest, HQ.ArtStudio.Southwest.FocusPoints.Pastels, (context) =>
-          context.highlight HQ.ArtStudio.Southwest.HighlightGroups.Pastels
-        ,
-          2000
+        focus HQ.ArtStudio.Southwest, HQ.ArtStudio.Southwest.FocusPoints.Pastels
+        complete()
+
+      PastelsHighlight: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Southwest.HighlightGroups.Pastels
         complete()
 
       PastelsWall: (complete) =>
@@ -164,8 +168,70 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
         complete()
 
       PastelsWallHighlight: (complete) =>
-        northwest = LOI.adventure.currentContext()
-        northwest.highlight HQ.ArtStudio.Northwest.HighlightGroups.Pastels
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Northwest.HighlightGroups.Pastels
+        complete()
+
+      Painting: (complete) =>
+        focus HQ.ArtStudio.Southwest, HQ.ArtStudio.Southwest.FocusPoints.All
+        complete()
+
+      PaintingHighlightOils: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Southwest.HighlightGroups.OilsWall
+        complete()
+
+      PaintingHighlightAcrylic: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Southwest.HighlightGroups.Acrylics
+        complete()
+
+      PaintingHighlightWatercolors: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Southwest.HighlightGroups.WatercolorsWall
+        complete()
+
+      PaintingWhyOils: (complete) =>
+        focus HQ.ArtStudio.Southwest, HQ.ArtStudio.Southwest.FocusPoints.Oils
+        complete()
+
+      PaintingOils: (complete) =>
+        # TODO: Back to Alexandra.
+        complete()
+
+      PaintingOilsSupplies: (complete) =>
+        # TODO: Pan to supplies rack.
+        complete()
+
+      PaintingOilsDigital: (complete) =>
+        # TODO: Pan to iPad.
+        complete()
+
+      PaintingAcrylics: (complete) =>
+        focus HQ.ArtStudio.Southeast, HQ.ArtStudio.Southeast.FocusPoints.Acrylics, (context) =>
+          context.highlight HQ.ArtStudio.Southeast.HighlightGroups.Acrylics
+        ,
+          2000
+        complete()
+
+      PaintingAcrylicsShoes: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Southeast.HighlightGroups.AcrylicsShoes
+        complete()
+
+      PaintingWatercolors: (complete) =>
+        focus HQ.ArtStudio.Southwest, HQ.ArtStudio.Southwest.FocusPoints.WatercolorsTable
+        complete()
+
+      PaintingWatercolorsHighlight: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Southwest.HighlightGroups.WatercolorsTable
+        complete()
+
+      PaintingDigital: (complete) =>
+        focus HQ.ArtStudio.Southeast, HQ.ArtStudio.Southeast.FocusPoints.Digital
+        complete()
+
+      PaintingDigitalHighlightEmulation: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Southeast.HighlightGroups.DigitalEmulation
+        complete()
+
+      PaintingDigitalHighlightUnique: (complete) =>
+        LOI.adventure.currentContext().highlight HQ.ArtStudio.Southeast.HighlightGroups.DigitalUnique
         complete()
 
   onCommand: (commandResponse) ->

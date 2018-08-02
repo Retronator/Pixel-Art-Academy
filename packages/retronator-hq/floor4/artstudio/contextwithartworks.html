@@ -4,6 +4,12 @@
     {{#with artworks}}
       {{> PixelArtDatabase.Components.Stream args streamOptions}}
     {{/with}}
+    <style>
+      .landsofillusions-components-menu .menu-button, html.adventure .build-version {
+        opacity: 0 !important;
+        pointer-events: none;
+      }
+    </style>
   </div>
 </template>
 

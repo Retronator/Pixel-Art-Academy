@@ -32,10 +32,11 @@ class HQ.ArtStudio.Northeast extends HQ.ArtStudio.ContextWithArtworks
       y: 0.47
 
   @HighlightGroups:
-    Pens: ['aquaticBotanical', 'desert']
+    PensAquaticBotanical: ['aquaticBotanical']
+    PensInk: ['desert']
     PensCombine: ['kuria', 'neukom']
     Markers: ['day9', 'angel', 'survivor']
-    MarkersCombine: ['cardinalCity']
+    MarkersCombine: ['cardinalCity', 'cardinalCityTools']
 
   constructor: ->
     super
