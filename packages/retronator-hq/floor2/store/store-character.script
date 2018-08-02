@@ -14,21 +14,24 @@ retro: Doing great as well!
 
 retro: How can I help you today?
 
+-> [MainQuestionStart]
+
 ## MainQuestion
+
+## MainQuestionStart
 
 ### AnalyzeCharacter
 
 * *MainQuestion*
 * I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
-* I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
-* That would be all, thank you. -> [EndHelped] `_helped`
+* I want to get started with pixel art. -> [PixelArt]
+* I'm just browsing, thanks. -> [EndBrowsing] `not MainQuestion`
+* That would be all, thank you. -> [EndHelped] `MainQuestion`
 
 <!-- PURCHASING -->
 
 ## Purchase
-
-`_helped = true`
 
 retro: Certainly.
 
@@ -71,13 +74,17 @@ pause
 
 ## HowToBuy
 
-`_helped = true`
-
 retro: 
     Pretty much anything you can find on the shelves around here you can add to your shopping cart.
     Once you've got what you want, talk to me and I'll ring you up.
     
 -> [MainQuestion]
+
+## PixelArt
+
+### PixelArt
+
+-> [End]
 
 ## EndHelped
 

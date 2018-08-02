@@ -1,0 +1,78 @@
+# Retronator.HQ.Actors.Retro
+
+## PixelArt
+
+## PixelArtQuestionsIntro
+
+retro: Two things: hardware and software.
+
+-> [PixelArtQuestions]
+
+## PixelArtQuestionsMore
+
+retro: What would you like to know?
+
+## PixelArtQuestions
+
+* What kind of hardware? -> [HardwareQuestionsIntro] `not (PixelArtQuestionsMore or SoftwareQuestionsIntro)`
+* I'd like to know about hardware. -> [HardwareQuestionsIntro] `PixelArtQuestionsMore or SoftwareQuestionsIntro`
+* Let's talk about software. -> [SoftwareQuestionsIntro]
+* That'll be all about pixel art for now.
+
+retro: Glad I could help.
+
+-> [MainQuestions]
+
+## SoftwareQuestionsIntro
+
+-> [SoftwareQuestionsAgain] `SoftwareQuestions`
+-> [HavePixelBoy] `@inventory['PixelArtAcademy.PixelBoy']`
+-> [DontHavePixelBoy]
+
+## HavePixelBoy
+
+retro:
+  I see you have a PixelBoy with you, so you have one main decision:
+  Do you want to use the drawing tools for the PixelBoy or use other software on your computer?
+
+-> [SoftwareQuestions]
+
+## DontHavePixelBoy
+
+retro: The main question is, are you already used to some drawing software?
+
+* Yeah, I'm already used to something. -> [SoftwareAlready] `not HavePixelBoy`
+* No, I'm just starting out. [SoftwareStartingOut] `not HavePixelBoy`
+
+## SoftwareAlready
+
+-> [SoftwareQuestions]
+
+## SoftwareStartingOut
+
+-> [SoftwareQuestions]
+
+## SoftwareQuestionsAgain
+
+retro: Anything specific?
+
+## SoftwareQuestions
+
+* What's the easiest? -> [SoftwareEasiest] `HavePixelBoy and not SoftwareEasiest`
+* Are there any specific pixel art programs?
+* Why would I want to use other software? `HavePixelBoy`
+* When would I choose more generic drawing software? `not HavePixelBoy`
+* I want to do both pixel and non-pixel art, but I can't afford Photoshop.
+* Can I use both PixelBoy and other software? `HavePixelBoy`
+* I want to find an app for my tablet or phone.
+* I'll think about it.
+
+retro: Take your time.
+
+-> [PixelArtQuestions]
+
+## SoftwareEasiest
+
+-> [SoftwareQuestions]
+
+## End
