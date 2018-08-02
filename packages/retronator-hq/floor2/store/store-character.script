@@ -25,7 +25,8 @@ retro: How can I help you today?
 * *MainQuestion*
 * I would like to purchase these items. -> [Purchase] `_shoppingCart.length`
 * How can I buy things? -> [HowToBuy] `not _shoppingCart.length`
-* I want to get started with pixel art. -> [PixelArt]
+* I want to get started with pixel art. What do I need? -> [PixelArt] `not PixelArt`
+* I have more questions about pixel art. -> [PixelArt] `PixelArt`
 * I'm just browsing, thanks. -> [EndBrowsing] `not MainQuestion`
 * That would be all, thank you. -> [EndHelped] `MainQuestion`
 

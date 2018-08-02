@@ -2,9 +2,11 @@
 
 ## PixelArt
 
+-> [PixelArtQuestionsMore] `PixelArtQuestionsIntro`
+
 ## PixelArtQuestionsIntro
 
-retro: Two things: hardware and software.
+retro: As far as the tools go, you'll need two things: hardware and software.
 
 -> [PixelArtQuestions]
 
@@ -17,11 +19,71 @@ retro: What would you like to know?
 * What kind of hardware? -> [HardwareQuestionsIntro] `not (PixelArtQuestionsMore or SoftwareQuestionsIntro)`
 * I'd like to know about hardware. -> [HardwareQuestionsIntro] `PixelArtQuestionsMore or SoftwareQuestionsIntro`
 * Let's talk about software. -> [SoftwareQuestionsIntro]
-* That'll be all about pixel art for now.
+* I think I know enough for now.
 
 retro: Glad I could help.
 
--> [MainQuestions]
+-> [End]
+
+<!-- HARDWARE -->
+
+## HardwareQuestionsIntro
+
+retro:
+  Assuming you already have a computer, you need to decide on the input method.
+  Unlike other digital painting, you can do pixel art quite comfortably with the mouse.
+  Many artists do. And just as many, if not many more, use a stylus.
+
+## HardwareQuestions
+
+* What kind of styluses are there? -> [Styluses]
+* What if I already have a tablet computer? -> [TabletComputer]
+* Any brands you recommend? -> [Brands]
+* So how do I choose? -> [HowChoose]
+* Thank you for the info.
+
+retro: You're welcome.
+
+-> [PixelArtQuestions]
+
+## Styluses
+
+retro:
+  The biggest difference is not in the stylus, but actually in the drawing surface.
+  Two styles exist: In one you draw directly on a display. 
+  The other way is drawing on a graphic tablet while looking at your computer monitor.
+  
+-> [HardwareQuestions]
+
+## HowChoose
+
+retro:
+  It mainly comes down to your finances. 
+  Almost everyone already has a mouse so that's the most affordable way to start.
+  If you go for a graphic tablet, those without a display are generally much cheaper. 
+  It will just take some time to get used to since you're not looking at your hand while drawing.
+
+-> [HardwareQuestions]
+
+## TabletComputer
+
+retro:
+  That's a good way to go.
+  If you can get a stylus for it, that's perfect.
+  But fingers also work to get started.
+
+-> [HardwareQuestions]
+
+## Brands
+
+retro:
+  For graphic tablets, Wacom is the universally loved company among professionals.
+  For tablet computers, many of them go with an iPad Pro.
+  But to start out, just about anything you have available will work. Including a mouse.
+
+-> [HardwareQuestions]
+
+<!-- SOFTWARE -->
 
 ## SoftwareQuestionsIntro
 
@@ -39,39 +101,172 @@ retro:
 
 ## DontHavePixelBoy
 
-retro: The main question is, are you already used to some drawing software?
+retro: Alright. So, are you already used to some drawing software?
 
 * Yeah, I'm already used to something. -> [SoftwareAlready] `not HavePixelBoy`
-* No, I'm just starting out. [SoftwareStartingOut] `not HavePixelBoy`
+* No, I'm just starting out. -> [SoftwareStartingOut] `not HavePixelBoy`
 
 ## SoftwareAlready
 
+retro:
+  Then you're more than welcome to just use that, as long as you can place down individual pixels.
+  That way you can just focus on learning pixel art instead of trying to learn the software as well.
+
+* Sounds good. -> [SoftwareAlreadySoundsGood]
+* I still want to explore what other options there are.
+
+retro: No problem, I can recommend things for you.
+
 -> [SoftwareQuestions]
 
+## SoftwareAlreadySoundsGood
+
+retro: Yup, you can go straight to learning pixel art like that.
+
+-> [PixelArtQuestions]
+
 ## SoftwareStartingOut
+
+retro:
+  If you want to get started as easy as possible, just use an online editor that works directly in your browser.
+  Otherwise you can choose a desktop program.
 
 -> [SoftwareQuestions]
 
 ## SoftwareQuestionsAgain
 
-retro: Anything specific?
+retro: Anything in particular?
 
 ## SoftwareQuestions
 
 * What's the easiest? -> [SoftwareEasiest] `HavePixelBoy and not SoftwareEasiest`
-* Are there any specific pixel art programs?
-* Why would I want to use other software? `HavePixelBoy`
-* When would I choose more generic drawing software? `not HavePixelBoy`
-* I want to do both pixel and non-pixel art, but I can't afford Photoshop.
-* Can I use both PixelBoy and other software? `HavePixelBoy`
-* I want to find an app for my tablet or phone.
-* I'll think about it.
+* Do you recommend any online editors? -> [SoftwareOnline] `SoftwareStartingOut`
+* Are there any specific pixel art programs? -> [SoftwareSpecific]
+* Tell me about old-school drawing software. -> [SoftwareSpecificOldSchool]
+* What are some modern programs for pixel art? -> [SoftwareSpecificModern]
+* Why would I want to use generic software? -> [SoftwareGeneric] `HavePixelBoy`
+* When would I choose more generic drawing software? -> [SoftwareGeneric] `not HavePixelBoy`
+* I want to do both pixel and non-pixel art, but I can't afford Photoshop. -> [SoftwareGenericFree] `SoftwareGeneric`
+* Can I use both PixelBoy and other software? -> [SoftwareBoth] `HavePixelBoy`
+* I want to find an app for my tablet or phone. -> [SoftwareMobile]
+* That was useful.
 
-retro: Take your time.
+retro: Awesome! Any other questions?
 
 -> [PixelArtQuestions]
 
 ## SoftwareEasiest
+
+retro:
+  That would be the PixelBoy editor. 
+  You'll get drawing as fast as possible and you'll have all the tools right there next to your project tasks.
+
+-> [SoftwareQuestions]
+
+## SoftwareOnline
+
+retro: Piskel is the starting point for many and also the most feature-full. I'd just stick to that.
+
+-> [SoftwareQuestions]
+
+## SoftwareSpecific
+
+retro:
+  Yeah, quite many. 
+  There's a set of old-school ones that many pixel art veterans use.
+  And then lately we got some new popular contenders.
+  
+-> [SoftwareQuestions]
+
+## SoftwareSpecificOldSchool
+
+retro:
+  Graphics Gale is really popular and recently became freeware.
+  And then you have a couple that are inspired by Deluxe Paint from Amiga.
+  Pro Motion is a very professional one, but costs $40.
+  GRAFX2 on the other hand is free and also available for all operating systems.
+
+-> [SoftwareQuestions]
+
+## SoftwareSpecificModern
+
+retro:
+  It comes down to two very popular choices, Aseprite and PyxelEdit.
+  Both are great but have a different style when it comes to animations.
+  I'd say Aseprite is more versatile in that regard, but PyxelEdit is still very good, with a different approach.
+  What PyxelEdit is really good at is working with tile sets, in case you want to focus on game environments done that way.
+
+-> [SoftwareQuestions]
+
+## SoftwareGeneric
+
+retro:
+  Especially if you want to try other art styles as well. 
+  Or maybe you're after getting a job in the design field.
+  It's good to have a widely recognized skill such as using Photoshop on your resume, so you might want to spend as much time with it as possible.
+
+-> [SoftwareQuestions]
+
+## SoftwareGenericFree
+
+retro:
+  There are some great free alternatives.
+  A lot of old-schoolers use GIMP, although it has a bit of a steep learning curve.
+  There's also a newer contender called Krita that has a more modern and intuitive interface.
+
+-> [SoftwareQuestions]
+
+## SoftwareBoth
+
+retro:
+  Of course. The editors in the PixelBoy are designed in a way that help you with the transition.
+  All the shortcuts work as they do in popular software such as Photoshop or Aseprite.
+
+-> [SoftwareQuestions]
+
+## SoftwareMobile
+
+retro: For which system?
+
+* I'm on iOS. -> [SoftwareMobileIOS]
+* I have android. -> [SoftwareMobileAndroid]
+* Is there anything for Windows? -> [SoftwareMobileWindows]
+
+## SoftwareMobileIOS
+
+retro: Do you have an iPad and some extra money?
+
+* Yeah. -> [SoftwareMobileIOSPaid]
+* I'd rather something free. -> [SoftwareMobileIOSFree]
+
+## SoftwareMobileIOSPaid
+
+retro:
+  Then Pixaki is a great choice. It costs $25, but it's worth it if you ask me.
+  The interface works really smooth, it's obvious it's designed specifically for a mobile device.
+
+-> [SoftwareQuestions]
+
+## SoftwareMobileIOSFree
+
+retro:
+  The app store is full of these, but most are useless for serious work.
+  Dottable is one that is quite decent though.
+
+-> [SoftwareQuestions]
+
+## SoftwareMobileAndroid
+
+retro:
+  Gosh, there are so many. I'd try Pixly.
+  It seems to have the most features you'd need.
+
+-> [SoftwareQuestions]
+
+## SoftwareMobileWindows
+
+retro:
+  Yeah, there's a free app simply called Pixel Art Studio.
 
 -> [SoftwareQuestions]
 

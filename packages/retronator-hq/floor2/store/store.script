@@ -24,7 +24,8 @@ retro: How can I help you today?
 * I'm one of the Kickstarter backers. -> [Kickstarter] `not _noRewardBacker`
 * How do I play the game? -> [PlayGame] `@user.itemKeys['PixelArtAcademy.PlayerAccess']`
 * Can I ask you about Pixel Art Academy? -> [PixelArtAcademy]
-* I want to get started with pixel art. -> [PixelArt]
+* I want to get started with pixel art. What do I need? -> [PixelArt] `not PixelArt`
+* I have more questions about pixel art. -> [PixelArt] `PixelArt`
 * How can I follow your work? -> [Follow]
 * I would like to ask something else … -> [Contact] `PixelArtAcademy`
 * I'm just browsing, thanks. -> [EndBrowsing] `not _helped`
