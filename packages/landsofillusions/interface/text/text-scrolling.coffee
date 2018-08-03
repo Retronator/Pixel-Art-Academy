@@ -7,14 +7,14 @@ class LOI.Interface.Text extends LOI.Interface.Text
     # We try to detect scrolling with the wheel so that we can hide scroll bars (for example, when not on mobile).
     @wheelDetected = false
 
-    @$textInterface = $('.text-interface')
+    @$textInterface = $('.landsofillusions-interface-text')
     @textInterfaceElement = @$textInterface[0]
     @$window = $(window)
     @$uiArea = $('.ui-area')
     @$ui = @$textInterface.find('.ui')
 
     # Listen to scroll events so that we can sync transform-based scrolling to it.
-    @$window.on 'scroll.text-interface', =>
+    @$window.on 'scroll.landsofillusions-interface-text', =>
       return if @wheelDetected
       return unless @active()
 

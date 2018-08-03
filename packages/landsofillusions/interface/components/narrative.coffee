@@ -72,7 +72,7 @@ class LOI.Interface.Components.Narrative
     options.scrollMain ?= true
     options.scrollStyle ?= @constructor.ScrollStyle.Bottom
 
-    $textInterface = $('.adventure .text-interface')
+    $textInterface = $('.landsofillusions-adventure .landsofillusions-interface-text')
     return unless $textInterface.length
 
     $textDisplayContent = $textInterface.find('.text-display-content')
