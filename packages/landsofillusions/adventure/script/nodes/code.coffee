@@ -25,10 +25,6 @@ class Script.Nodes.Code extends Script.Node
     ' or ': ' || '
     'not ': '!'
 
-  # This allows us to get values of script variables also from ephemeral variables.
-  # Should only be used in conditionals where assignments shouldn't occur.
-  @scriptVariablesAlsoCheckEphemeralState = false
-
   constructor: (options) ->
     super
 
@@ -59,15 +55,7 @@ class Script.Nodes.Code extends Script.Node
         "_locationState.#{identifier.substring 9}"
 
       else
-        if @constructor.scriptVariablesAlsoCheckEphemeralState
-          # We check things that are supposed to be in the persistent script state also against ephemeral state, because
-          # if state is not being saved, ephemeral state will still survive between reloads during the same session.
-          # Since visited labels get stored in both script and ephemeral state, we use this to maintain conversation
-          # consistency since most scripts rely on persistent script labels.
-          "(_scriptState.#{identifier} || _ephemeralState.#{identifier})"
-
-        else
-          "_scriptState.#{identifier}"
+        "_scriptState.#{identifier}"
 
   end: ->
     @evaluate()
