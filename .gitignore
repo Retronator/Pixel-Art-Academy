@@ -2,5 +2,6 @@
 .idea/
 node_modules
 run
+build
 deploy
 .DS_Store
