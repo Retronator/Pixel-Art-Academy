@@ -139,12 +139,12 @@ retro: Anything in particular?
 
 ## SoftwareQuestions
 
-* What's the easiest? -> [SoftwareEasiest] `HavePixelBoy and not SoftwareEasiest`
+* What's the easiest? -> [SoftwareEasiest] `HavePixelBoy`
 * Do you recommend any online editors? -> [SoftwareOnline] `SoftwareStartingOut`
 * Are there any specific pixel art programs? -> [SoftwareSpecific]
-* Tell me about old-school drawing software. -> [SoftwareSpecificOldSchool]
-* What are some modern programs for pixel art? -> [SoftwareSpecificModern]
-* Why would I want to use generic software? -> [SoftwareGeneric] `HavePixelBoy`
+* Tell me about old-school drawing software. -> [SoftwareSpecificOldSchool] `SoftwareSpecific`
+* What are some modern programs for pixel art? -> [SoftwareSpecificModern] `SoftwareSpecific`
+* Why would I want to use other software? -> [SoftwareGeneric] `HavePixelBoy`
 * When would I choose more generic drawing software? -> [SoftwareGeneric] `not HavePixelBoy`
 * I want to do both pixel and non-pixel art, but I can't afford Photoshop. -> [SoftwareGenericFree] `SoftwareGeneric`
 * Can I use both PixelBoy and other software? -> [SoftwareBoth] `HavePixelBoy`
