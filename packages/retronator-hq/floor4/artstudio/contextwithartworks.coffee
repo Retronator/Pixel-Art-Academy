@@ -274,6 +274,11 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
 
     mixins: -> [@activatable]
 
+    onRendered: ->
+      super
+
+      $(window).scrollTop 0
+
     streamOptions: ->
       captionComponentClass: @constructor.ArtworkCaption
       scrollParentSelector: '.retronator-hq-artstudio-contextwithartworks-stream'
