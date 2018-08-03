@@ -102,7 +102,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     @narrative.addText "> #{command.toUpperCase()}"
     LOI.adventure.parser.parse command
-    @commandInput.confirm()
+    @commandInput.confirm command
 
   onCommandInputChanged: ->
     # Scroll to bottom to reveal new command.

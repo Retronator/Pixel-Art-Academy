@@ -20,6 +20,7 @@ Package.onUse(function(api) {
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-blog');
   api.use('retronator:pixelartacademy-cast');
+  api.use('retronator:pixelartdatabase');
 
   api.export('Retronator');
 
@@ -36,7 +37,7 @@ Package.onUse(function(api) {
   api.addThing('actors/aeronaut');
   api.addFile('actors/burra');
   api.addThing('actors/corinne');
-  api.addFile('actors/retro');
+  api.addThing('actors/retro');
   api.addFile('actors/shelley');
   api.addThing('actors/alexandra');
 
@@ -120,7 +121,18 @@ Package.onUse(function(api) {
   api.addFile('floor3/gallery/gallerywest');
 
   api.addThing('floor4/artstudio..');
-  
+  api.addServerFile('floor4/artstudio/initialize-server');
+
+  api.addFile('floor4/artstudio/artworks');
+
+  api.addComponent('floor4/artstudio/contextwithartworks');
+  api.addFile('floor4/artstudio/contextwithartworks-artworksinfo');
+  api.addComponent('floor4/artstudio/northwest..');
+  api.addComponent('floor4/artstudio/northeast..');
+  api.addComponent('floor4/artstudio/southwest..');
+  api.addComponent('floor4/artstudio/southeast..');
+  api.addComponent('floor4/artstudio/pencils..');
+
   // Pages
   
   api.addFile('pages..');

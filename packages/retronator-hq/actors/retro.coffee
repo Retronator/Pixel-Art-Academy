@@ -12,3 +12,9 @@ class HQ.Actors.Retro extends LOI.Adventure.Thing
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
   @initialize()
+
+  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/retro.script'
+
+  initializeScript: ->
+    @setCurrentThings
+      retro: HQ.Actors.Retro

@@ -1,0 +1,34 @@
+<template name="Retronator.HQ.ArtStudio.Southeast">
+  <div class="retronator-hq-artstudio-southeast retronator-hq-artstudio-contextwithartworks">
+    <div class="scene {{highlightingActiveClass}}">
+      <div class="studio" data-origin-x="0" data-origin-y="0" data-depth="0"></div>
+      <div class="background" data-origin-x="0" data-origin-y="0" data-depth="0">
+        <div class="{{artworkClasses 'amazing'}}"></div>
+        <div class="{{artworkClasses 'forestOfLiarsSunsetOnTheWoodBridge'}}"></div>
+        <div class="{{artworkClasses 'theForgottenEmpire'}}"></div>
+        <div class="{{artworkClasses 'unchartedBookCover'}}"></div>
+        <div class="{{artworkClasses 'desertMatejJan'}}"></div>
+        <div class="{{artworkClasses 'lioness'}}"></div>
+        <div class="{{artworkClasses 'reignite6'}}"></div>
+        <div class="{{artworkClasses 'octobitDay2Astronaut'}}"></div>
+        <div class="{{artworkClasses 'streetFighterConverseChucks'}}"></div>
+        <div class="{{artworkClasses 'skullGirl3'}}"></div>
+        <div class="storage-cover-1"></div>
+        <div class="{{artworkClasses 'blueGirl2'}}"></div>
+        <div class="storage-cover-2"></div>
+        <div class="{{artworkClasses 'adventureTime'}}"></div>
+        <div class="{{artworkClasses 'pumpkinRoad'}}"></div>
+        <div class="storage-cover-3"></div>
+        <div class="{{artworkClasses 'escape'}}"></div>
+        <div class="storage-cover-4"></div>
+      </div>
+      <div class="railing" data-origin-x="1" data-origin-y="1" data-depth="1.5"></div>
+    </div>
+    {{#if canMoveLeft}}
+      <button class="move-button left"></button>
+    {{/if}}
+    {{#if canMoveRight}}
+      <button class="move-button right"></button>
+    {{/if}}
+  </div>
+</template>

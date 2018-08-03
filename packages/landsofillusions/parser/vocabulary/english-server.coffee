@@ -30,8 +30,8 @@ Document.startup ->
       Use: ['use']
       Press: ['press', 'push']
       Read: ['read']
-      WhatIs: ['what is', 'what\'s']
-      WhoIs: ['who is', 'who\'s']
+      WhatIs: ['what is', 'what\'s', 'what are', 'what\'re']
+      WhoIs: ['who is', 'who\'s', 'who are', 'who\'re']
       Get: ['get', 'take', 'pick up', 'grab']
       SitDown: ['sit down']
       SitIn: ['sit in']
@@ -90,7 +90,7 @@ Document.startup ->
         Masculine: ['his']
         Neutral: ['theirs']
 
-    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'at', 'in', 'up', 'down', 'out', 'the']
+    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'are', 'at', 'in', 'up', 'down', 'out', 'the']
 
     Questions:
       WhichPlace: ['where']

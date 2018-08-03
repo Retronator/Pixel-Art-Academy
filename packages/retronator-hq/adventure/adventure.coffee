@@ -59,6 +59,8 @@ class HQ.Adventure extends LOI.Adventure
       HQ.Store
       HQ.GalleryEast
       HQ.GalleryWest
+      HQ.ArtStudio
+      HQ.Coworking
     ]
 
     for directLocation in directLocations

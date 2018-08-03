@@ -2,119 +2,596 @@
 
 ## Start
 
-alexandra: Hi! `not _IntroductionOver`
-alexandra: How else can I help? `_IntroductionOver`
+-> [IntroductionOver] `_MainQuestionsFirstTime`
+
+> You walk up to an artist sipping a drink next to a half-finished oil painting.
+> As you approach, she takes her earbuds out.
+
+alexandra: Hi!
+
+-> [MainQuestionsFirstTime]
 
 ## IntroductionOver
 
+alexandra: How else can I help?
+
+-> [MainQuestionsFirstTime]
+
 ## MainQuestions
 
+## MainQuestionsFirstTime
+
 * Is that your painting? -> [YourPainting]
-<!-- * Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting` -->
-<!-- * *MainQuestions* -->
-* Thank you, bye!
+* I'm surprised to find non-pixel art at Retronator. -> [RetronatorJustPixelArt]
+* Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting or RetronatorJustPixelArt`
+* What are you drinking? -> [Drinking]
+* What are you listening to? -> [Listening]
+* Sorry, nevermind. `not _MainQuestions`
+* Thank you, bye! `_MainQuestions`
 
 -> [End]
 
 ## YourPainting
 
-alexandra: 
-  Yes! It's the next in my Money Flower series.
+alexandra: Yes! It's the next in my Money Flower series.
 
 -> [MainQuestions]
+
+## RetronatorJustPixelArt
+
+alexandra:
+  Matej writes mostly about pixel art, yes, but he works in other mediums too.
+  Here in the art studio we create all kinds of artworks.
+
+-> [MainQuestions]
+
+<!-- ART QUESTIONS -->
 
 ## ArtQuestionsIntro
 
 alexandra: Of course! How can I help?
 
+-> [ArtQuestionsFirstTime]
+
 ## ArtQuestions
 
-* What kind of art can I do at the Academy?
-* Is there an advantage to learning pixel art?
-* Is it good to practice other mediums besides pixel art?
-* Can I do pixel art, but not on the computer?
-* What choices do I have if I want to do other styles than pixel art?
-* I want to know more about different mediums.
-* What are some of the differences between traditional and digital?
-* I want to do pixel art. What do I need? -> [PixelArtQuestionsIntro] `not PixelArtQuestions`
-* I have more questions about pixel art tools. -> [PixelArtQuestionsMore] `PixelArtQuestions`
-* Thanks, I'll let you know what I'm interested in.
+## ArtQuestionsFirstTime
 
-alexandra: Alright.
+* What kind of art can I do at the Retropolis Academy of Art? -> [ArtAtAcademy]
+* Is there an advantage to learning pixel art? -> [AdvantagePixelArt]
+* Is it good to practice other mediums besides pixel art? -> [PracticeOtherMediums]
+* What choices do I have if I want to do other styles than pixel art? -> [OtherStyles] `not OtherStylesQuestions`
+* I have more questions about non-pixel art styles. -> [OtherStylesMore] `OtherStylesQuestions`
+* I want to do pixel art. What do I need? -> [PixelArt]
+* Can I do pixel art, but not on the computer? -> [PixelArtNotComputer]
+* Actually, I want to ask something else. -> [SomethingElse] `not _ArtQuestions`
+* Thanks, this was helpful. `_ArtQuestions`
 
--> [MainQuestions]
-
-## PixelArtQuestionsIntro
-
-alexandra: Two things: hardware and software.
-
--> [PixelArtQuestions]
-
-## PixelArtQuestionsMore
-
-alexandra: What would you like to know?
-
-## PixelArtQuestions
-
-* What kind of hardware? -> [HardwareQuestionsIntro] `not (PixelArtQuestionsMore or SoftwareQuestionsIntro)`
-* I'd like to know about hardware. -> [HardwareQuestionsIntro] `PixelArtQuestionsMore or SoftwareQuestionsIntro`
-* Let's talk about software. -> [SoftwareQuestionsIntro]
-* That'll be all about pixel art for now.
-
-alexandra: Glad I could help.
+alexandra: You're welcome!
 
 -> [MainQuestions]
 
-## SoftwareQuestionsIntro
+## SomethingElse
 
--> [SoftwareQuestionsAgain] `SoftwareQuestions`
--> [HavePixelBoy] `@inventory['PixelArtAcademy.PixelBoy']`
--> [DontHavePixelBoy]
+alexandra: Of course.
 
-## HavePixelBoy
+-> [MainQuestions]
+
+## ArtAtAcademy
 
 alexandra:
-  I see you have a PixelBoy with you, so you have one main decision:
-  Do you want to use the drawing tools for the PixelBoy or use other software on your computer?
+  It's really up to you! 
+  There is a lot of emphasis on pixel art, but all digital and traditional mediums are welcome.
 
--> [SoftwareQuestions]
+-> [ArtQuestions]
 
-## DontHavePixelBoy
+## AdvantagePixelArt
 
-alexandra: The main question is, are you already used to some drawing software?
+alexandra:
+  You have to learn art fundamentals just like any other medium if you want to make good pixel art.
+  But starting out is easier because you don't have to practice physical techniques like how to apply pressure, handle brushes, mix colors …
+  When a beginner and a master place down a pixel they both get exactly the same result.
 
-* Yeah, I'm already used to something. -> [SoftwareAlready] `not HavePixelBoy`
-* No, I'm just starting out. [SoftwareStartingOut] `not HavePixelBoy`
+-> [ArtQuestions]
 
-## SoftwareAlready
+## PracticeOtherMediums
 
--> [SoftwareQuestions]
+alexandra:
+  Yes! Even if you want to learn pixel art, it's great to practice with other tools too.
+  Pixels have a certain style to them, just like pencils or oils or markers do.
+  Learning how to use pencils is helpful for pixel art, since you don't have to worry about low resolution when you're just sketching ideas.
 
-## SoftwareStartingOut
+-> [ArtQuestions]
 
--> [SoftwareQuestions]
+## PixelArt
 
-## SoftwareQuestionsAgain
+alexandra: It's best if you go ask Matej downstairs, he's the one dealing with pixels.
 
-alexandra: Anything specific?
+-> [ArtQuestions]
 
-## SoftwareQuestions
+## PixelArtNotComputer
 
-* What's the easiest? -> [SoftwareEasiest] `HavePixelBoy and not SoftwareEasiest`
-* Are there any specific pixel art programs?
-* Why would I want to use other software? `HavePixelBoy`
-* When would I choose more generic drawing software? `not HavePixelBoy`
-* I want to do both pixel and non-pixel art, but I can't afford Photoshop.
-* Can I use both PixelBoy and other software? `HavePixelBoy`
-* I want to find an app for my tablet or phone.
-* I'll think about it.
+alexandra: 
+  You can try pixel art with physical mediums. 
+  Talk to Sarah downstairs, she's all about knitting and everything real life pixel art.
 
-alexandra: Take your time.
+-> [ArtQuestions]
 
--> [PixelArtQuestions]
+## OtherStyles
 
-## SoftwareEasiest
+alexandra:
+  There are two decisions to make.
+  One is to decide on the medium. Pencils, pens, markers, pastels, different paints … Each has their own style.
+  But you can do these the traditional way or with digital tools, so that's your second decision.
+  
+-> [OtherStylesQuestions]
 
--> [SoftwareQuestions]
+## OtherStylesMore
+
+alexandra: Go ahead.
+
+## OtherStylesQuestions
+
+* I want to know more about different mediums. -> [MoreAboutMediums]
+* What kind of art styles are there? -> [ArtStyles] `MediumsPlenty`
+* What are some of the differences between traditional and digital? -> [TraditionalVsDigital]
+* What's the upside of digital? -> [UpsideDigital] `TraditionalVsDigital`
+* Why did you choose traditional art? -> [UpsideTraditional] `TraditionalVsDigital and not UpsideDigital`
+* So how about traditional stuff? -> [UpsideTraditional] `TraditionalVsDigital and UpsideDigital`
+* Can you tell me more about software? -> [Software] `TraditionalVsDigital`
+* Thanks, that's all I wanted to know.
+
+alexandra: Happy to help. Do you have any other art questions?
+
+-> [ArtQuestions]
+
+## ArtStyles
+
+alexandra:
+  Uf, if we wanted to get into that we could be here all week.
+  Better wait till you get to the Academy and take their Art History class.
+  
+-> [OtherStylesQuestions]
+
+## TraditionalVsDigital
+
+alexandra:
+  Good question.
+  For starters, digital requires a bigger financial investment.
+
+### DigitalEquipment
+
+alexandra:
+  You'll need a graphic tablet or at least a stylus if you have a tablet computer.
+  Then you'll also need to get software.
+
+-> [OtherStylesQuestions]
+
+## UpsideDigital
+
+alexandra:
+  Hm, let's see … 
+  You get to undo without an eraser. There is never any clean up.
+  And all the different tools are literally at your fingertips. I'm sure there's more.
+
+-> [OtherStylesQuestions]
+
+## UpsideTraditional
+
+alexandra:
+  If you ask me, there's nothing like feeling a real brush on canvas or pencil against paper.
+  The result is physical, you can hold it in your hands or hang it on a wall without printing.
+  It's really down to personal preference in the end.
+
+-> [OtherStylesQuestions]
+
+## Software
+
+alexandra:
+  It's better to ask Matej, he uses a lot of different programs.
+  
+-> [OtherStylesQuestions]  
+
+## MoreAboutMediums
+
+alexandra: 
+  OK, which one are you interested in? 
+  And remember, this applies to both traditional and digital.
+
+-> [MediumsQuestionsFirstTime]
+
+## MediumsQuestions
+
+## MediumsQuestionsFirstTime
+
+* Pencils seem to be where everyone starts. -> [Pencils]
+* Can you tell me about pens? -> [Pens]
+* When you said markers … You mean those fluorescent highlighters? -> [Markers]
+* What exactly are pastels? -> [Pastels]
+* How about painting? -> [Painting]
+* Actually, nevermind. -> [MediumsNevermind] `not _MediumsQuestions`
+* This was plenty of info. -> [MediumsPlenty] `_MediumsQuestions and not MediumsPlenty`
+* I think that gives me an idea about different mediums. -> [MediumsReturn] `_MediumsQuestions and MediumsPlenty`
+
+## MediumsNevermind
+
+alexandra: No problem. 
+
+-> [MediumsReturn]
+
+## MediumsPlenty
+
+alexandra: 
+  Yeah, it's a lot to soak in.
+  Even more, each medium has its own nature, but allows for many different art styles.
+
+-> [MediumsReturn]
+
+## MediumsReturn
+
+alexandra: Any other questions about different art approaches?
+
+-> [OtherStylesQuestions]
+
+<!-- PENCILS -->
+
+## Pencils
+
+alexandra: 
+  Yes, almost everyone owns a pencil, so it's very easy to get started.
+  All kinds of artists use them to do quick sketches.
+
+> You look at a table with different sketchbooks.
+
+### Sketches
+
+> You can now click on the artworks to see them up close.
+
+### SketchesHighlight
+
+alexandra:
+  Besides sketches, you can create very detailed and realistic drawings with them too.
+  
+> She points to portraits on the back wall.
+
+### PencilsPortraitsHighlight
+
+pause
+
+## PencilsQuestions
+
+* I'm interested in the sketching aspect. -> [PencilsSketching]
+* How do you create realistic stuff? -> [PencilsRealistic]
+* Does it matter if I use normal or mechanical pencils? -> [PencilsMechanical]
+* What about colored pencils? -> [PencilsColored]
+* Instead of graphite in pencils you can also have charcoal, right? -> [PencilsCharcoal]
+* Alright, thanks.
+
+alexandra: Any other mediums you're interested in?
+
+-> [MediumsQuestions]
+
+## PencilsSketching
+
+alexandra:
+  You can talk to Matej downstairs about his Sketch5 course. 
+  It'll give you a quick introduction to drawing environments with pencils.
+  
+-> [PencilsQuestions]
+
+## PencilsRealistic
+
+alexandra:
+  You learn how to render with light and dark shades. 
+  To render, artists usually use different pencils from soft to hard.
+
+pause
+
+### Pencils
+
+> Alexandra grabs a few pencils from the tool stand.
+
+alexandra:
+  See? They're marked H for hard and B for soft. The larger the number, the harder or softer the lead. 
+  Hard leads are light, soft leads are dark. So I'd use 2H for light values and 4B for darker tones.
+
+> You notice a test sheet on the table that demonstrates this.
+
+### PencilsHighlight
+
+-> [PencilsQuestions]
+
+## PencilsMechanical
+
+### PencilsPortraits
+
+alexandra:
+  Not really, they are both helpful for different techniques.
+  Mechanical pencils are more precise and of course you don't need to sharpen them.
+
+### PencilsMechanical
+
+alexandra:
+  Traditional pencils can be used for different effects, like at an angle for wider lines or unsharpened for textured marks.
+
+### PencilsEdgeShading
+
+-> [PencilsQuestions]
+
+## PencilsColored
+
+### PencilsPortraits
+
+alexandra:
+  We're all used to them from kindergarten, right?
+  They can be used for some seriously cool artworks.
+  The style is usually a bit more cartoony than realistic, but that gives them their charm.
+
+### PencilsColored
+
+-> [PencilsQuestions]
+
+## PencilsCharcoal
+
+alexandra: Yes, graphite has a shine if you look at it at an angle where the light hits. 
+
+### PencilsCharcoal
+
+alexandra: Charcoal can give you much darker shades and doesn't have this glare.
+
+### PencilsCharcoalHighlight
+
+alexandra: You can also use big sticks of it for quick and interesting shading or mark making.
+
+-> [PencilsQuestions]
+
+<!-- PENS -->
+
+## Pens
+
+alexandra: Pens are great!
+
+### Pens
+
+> She shows you her Aquatic and Botanical series of drawings.
+
+### PensHighlightAquaticBotanical
+
+alexandra: They force you to commit. When you put your pen down on the paper it leaves a mark.
+
+> You notice a drawing with both pencil and ink parts.
+
+### PensHighlightInking
+
+alexandra:
+  With pencils you can be very carefree with your lines.
+  Pens help you be bold and think ahead to your end result.
+
+*	Gosh, that sounds stressful. -> [PensStressful]
+*	Can I combine pens with pencils? -> [PensCombine]
+
+## PensStressful
+
+alexandra:
+	No, don't worry. It's actually really great to help build confidence with your line work.
+	If a mistake happens, you can be creative about it and turn it into a happy accident.
+
+*	Can I combine pens with pencils?
+
+alexandra: Yes, that's how you can get most of the stress out.
+
+## PensCombine
+
+> You look at the table with more artworks that use pens.
+
+### PensCombine
+
+alexandra:
+  Drawing with pencils as the first step is quite common, especially in comics. 
+  First a drawing is done with pencils and then the lineart is drawn over with pens or ink.
+
+### PensCombineHighlight
+
+-> [MediumsQuestions]
+
+<!-- MARKERS -->
+
+## Markers
+
+alexandra: Haha, no. We usually mean art markers.
+  
+### Markers
+
+alexandra: There are colored ones, but a lot of people just use a set of grey shades from light to dark.
+
+> You notice some examples on the table.
+
+### MarkersHighlight
+
+alexandra: Markers are mostly used for shading and combine with other mediums.
+
+> She points to a huge isometric piece by the wall.
+
+### MarkersCombine
+
+-> [MediumsQuestions]
+
+<!-- PASTELS -->
+
+## Pastels
+
+alexandra:
+  They come in a wide range of vibrant colors like colored pencils, but they have a very different texture.
+
+### Pastels
+
+> There is a box of soft pastels on the table and a couple of artworks.
+
+### PastelsHighlight
+
+pause
+
+### PastelsWall
+
+> More drawings hang on the wall.
+
+alexandra:
+  There are different types of pastels: soft, hard, oil pastels, pastel pencils.
+  And similar mediums like chalk, crayons, conte crayons …
+
+-> [MediumsQuestions]
+
+<!-- PAINTING -->
+
+## Painting
+
+alexandra: Ah, my favorite!
+
+### Painting
+  
+alexandra: If you go to an art gallery, chances are you'll be looking at oil paintings.
+
+### PaintingHighlightOils
+
+alexandra: A modern version also emerged in 1950s called acrylic paint.
+
+### PaintingHighlightAcrylic
+
+alexandra: And the third very popular way to paint is with watercolors.
+
+### PaintingHighlightWatercolors
+
+## PaintingQuestions
+
+* I want to do oil painting like the masters! -> [PaintingOils]
+* What's up with acrylics? -> [PaintingAcrylics]
+* So why even use oils then? -> [PaintingWhyOils] `PaintingAcrylics`
+* Can you tell me about watercolors? -> [PaintingWatercolors]
+* I also hear a lot about digital painting. -> [PaintingDigital]
+* Good to know.
+
+alexandra: Any more questions about drawing?
+
+-> [MediumsQuestions]
+
+## PaintingOils
+
+### PaintingOils
+
+alexandra:
+  Yeah, all famous artworks like the Mona Lisa or Van Gogh's Sunflowers are oil paintings.
+  It's also the most complicated of painting mediums.
+
+### PaintingOilsSupplies
+
+alexandra:
+  You have to choose the paints, the oils, mediums, solvents … 
+  Even mixing colors with the palette knife feels like an art in itself.
+
+* I see …
+* That does sound complicated.
+
+alexandra:
+  But you know, where there's will, there's a way!
+  For beginners it's best to learn in a real class with a teacher.
+
+### PaintingOilsDigital
+
+alexandra:
+  Except, if you're using digital software, just go for it. 
+  That's a good way to get a similar look without all the mess.
+
+-> [PaintingQuestions]
+
+## PaintingAcrylics
+
+> Alexandra walks to a canvas storage unit in the back.
+
+### PaintingAcrylics
+
+alexandra: 
+  They're generally easier to deal with than oil paints. You just mix them with water for one thing.
+  They dry fast, they don't need toxic solvents, you can use them on most any surface, even shoes!
+
+> You notice a pair of All-stars on the floor.
+ 
+### PaintingAcrylicsShoes
+
+-> [PaintingQuestions]
+
+## PaintingWhyOils
+
+alexandra: Well, the reason some people love acrylics is also the reason that other people dislike them.
+
+### PaintingWhyOils
+
+alexandra: Because acrylics dry faster they also don't mix easily, so it's harder to do wet-on-wet …
+
+* Wet on wet?
+* Uhm, what?
+
+alexandra:
+  It's a technique …
+  Ah, I see I'm getting ahead of myself.
+  For now, don't worry about it. Just try any medium that looks cool to you.
+
+-> [PaintingQuestions]
+
+## PaintingWatercolors
+
+alexandra: Watercolors are quite unique.
+
+### PaintingWatercolors
+
+> You see Matej's painting of a church.
+
+### PaintingWatercolorsHighlight
+
+alexandra:
+  Like oils, they take a lot of practice and experimentation to get things right.
+  But the result is unlike anything else … Except I guess acrylics mixed with a lot of water.
+
+-> [PaintingQuestions]
+
+## PaintingDigital
+
+alexandra: Yes, it's especially popular in the entertainment industry because of its efficiency.
+
+### PaintingDigital
+
+alexandra:
+  Some drawing software tries to emulate traditional mediums.
+  
+> She points to artworks painted with a program called ArtRage.
+  
+### PaintingDigitalHighlightEmulation
+
+alexandra:
+  Most often the look of digital paintings has its own quality to them.
+
+> You look at the rest of digital artworks.
+
+### PaintingDigitalHighlightUnique
+
+alexandra:
+  You can treat digital painting as an additional medium with many variations in style.
+  
+-> [PaintingQuestions]
+
+<!-- REST OF QUESTIONS -->
+
+## Drinking
+
+alexandra: Coffee! It keeps me focused when I’m painting detailed work. I like it black!
+
+-> [MainQuestions]
+
+## Listening
+
+alexandra: 
+  I paint to lots of different music depending on my mood. Today I’m listening to Max Richter.
+  Podcasts keep me entertained during long studio sessions too!
+
+-> [MainQuestions]
 
 ## End

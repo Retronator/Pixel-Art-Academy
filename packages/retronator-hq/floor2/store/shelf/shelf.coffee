@@ -10,6 +10,9 @@ Vocabulary = LOI.Parser.Vocabulary
 class HQ.Store.Shelf extends LOI.Adventure.Item
   template: -> 'Retronator.HQ.Store.Shelf'
 
+  # This is a listener-only object.
+  isVisible: -> false
+
   constructor: ->
     super
 

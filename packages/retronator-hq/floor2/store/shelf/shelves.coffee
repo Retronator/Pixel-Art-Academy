@@ -9,7 +9,14 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class HQ.Store.Shelves extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.Store.Shelves'
-  @fullName: -> "shelves"
+  @fullName: -> "store shelves"
+  @shortName: -> "shelves"
+  @descriptiveName: -> "Store ![shelves](look at shelves)."
+
+  @description: ->
+    "
+      The shelf dedicated to PICO-8.
+    "
 
   @defaultScriptUrl: -> 'retronator_retronator-hq/floor2/store/shelf/shelves.script'
 
@@ -17,9 +24,6 @@ class HQ.Store.Shelves extends LOI.Adventure.Item
 
   constructor: ->
     super
-
-  # This is a listener-only object.
-  isVisible: -> false
 
   # Script
   

@@ -1,3 +1,4 @@
+AB = Artificial.Base
 AM = Artificial.Mummification
 RA = Retronator.Accounts
 PADB = PixelArtDatabase
@@ -80,3 +81,19 @@ class PADB.Artist extends AM.Document
   # Subscriptions
 
   @all: @subscription 'all'
+  @forName: new AB.Subscription
+    name: "#{@id()}.forName"
+    query: (name) =>
+      query = {}
+
+      for key, value of name
+        query["name.#{key}"] = value
+    
+      @documents.find query
+  @forPseudonym: @subscription 'forPseudonym'
+  
+  @namePattern:
+    first: Match.Optional String
+    middle: Match.Optional String
+    last: Match.Optional String
+    nickname: Match.Optional String

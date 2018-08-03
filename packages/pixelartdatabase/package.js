@@ -17,28 +17,30 @@ Package.onUse(function(api) {
   api.export('PixelArtDatabase');
 
   api.addFile('pixelartdatabase');
+  api.addServerFile('server');
   
   // Artist
 
-  api.addFile('artist/artist');
+  api.addFile('artist..');
   api.addServerFile('artist/server');
   api.addFile('artist/methods');
   api.addServerFile('artist/subscriptions');
 
   // Artwork
 
-  api.addFile('artwork/artwork');
+  api.addFile('artwork..');
+  api.addServerFile('artwork/server');
   api.addFile('artwork/methods');
   api.addServerFile('artwork/subscriptions');
   api.addServerFile('artwork/migrations/0000-converttohttps');
 
   // Character
 
-  api.addFile('character/character');
+  api.addFile('character..');
 
   // Profile
 
-  api.addFile('profile/profile');
+  api.addFile('profile..');
   api.addServerFile('profile/server');
   api.addServerFile('profile/subscriptions');
   api.addServerFile('profile/methods-server');
@@ -48,33 +50,33 @@ Package.onUse(function(api) {
 
   // Website
 
-  api.addFile('website/website');
+  api.addFile('website..');
   api.addServerFile('website/methods-server');
   api.addServerFile('website/subscriptions');
 
   // Components
 
-  api.addFile('components/components');
-  api.addComponent('components/stream/stream');
+  api.addFile('components..');
+  api.addComponent('components/stream..');
 
   // Pages
 
-  api.addFile('pages/pages');
+  api.addFile('pages..');
 
   // Admin
 
-  api.addUnstyledComponent('pages/admin/admin');
+  api.addUnstyledComponent('pages/admin..');
 
-  api.addFile('pages/admin/artists/artists');
+  api.addFile('pages/admin/artists..');
   api.addUnstyledComponent('pages/admin/artists/artist');
 
-  api.addFile('pages/admin/artworks/artworks');
+  api.addFile('pages/admin/artworks..');
   api.addComponent('pages/admin/artworks/artwork');
 
-  api.addFile('pages/admin/websites/websites');
+  api.addFile('pages/admin/websites..');
   api.addUnstyledComponent('pages/admin/websites/website');
 
-  api.addFile('pages/admin/profiles/profiles');
+  api.addFile('pages/admin/profiles..');
   api.addUnstyledComponent('pages/admin/profiles/profile');
   api.addUnstyledComponent('pages/admin/profiles/scripts');
   api.addServerFile('pages/admin/profiles/scripts-server');

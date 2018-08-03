@@ -1,0 +1,42 @@
+<template name="Retronator.HQ.ArtStudio.Southwest">
+  <div class="retronator-hq-artstudio-southwest retronator-hq-artstudio-contextwithartworks">
+    <div class="scene {{highlightingActiveClass}}">
+      <div class="studio" data-origin-x="0" data-origin-y="0" data-depth="0"></div>
+      <div class="background" data-origin-x="0" data-origin-y="0" data-depth="0">
+        <div class="{{artworkClasses 'streetFighterIiTriptych'}}"></div>
+        <div class="{{artworkClasses 'blonde'}}"></div>
+        <div class="{{artworkClasses 'dayAtTheBeach'}}"></div>
+        <div class="{{artworkClasses 'everybodyWantsToRuleTheWorld'}}"></div>
+        <div class="{{artworkClasses 'desolation'}}"></div>
+        <div class="turned-canvas"></div>
+        <div class="{{artworkClasses 'oilPainting'}}"></div>
+        <div class="{{artworkClasses 'pop'}}"></div>
+        <div class="storage-cover-1"></div>
+        <div class="{{artworkClasses 'nineToFive'}}"></div>
+        <div class="{{artworkClasses 'concreteFeet'}}"></div>
+        <div class="storage-cover-2"></div>
+        <div class="{{artworkClasses 'blueLandscape'}}"></div>
+        <div class="storage-cover-3"></div>
+      </div>
+      <div class="chair-right" data-origin-x="1" data-origin-y="1" data-depth="0.5"></div>
+      <div class="table-right" data-origin-x="1" data-origin-y="1" data-depth="0.8"></div>
+      <div class="table-right-artworks" data-origin-x="1" data-origin-y="1" data-depth="0.8">
+        <div class="{{artworkClasses 'weCaughtOnFire'}}"></div>
+        <div class="{{artworkClasses 'africa'}}"></div>
+      </div>
+      <div class="chair-left" data-origin-x="1" data-origin-y="1" data-depth="0.7"></div>
+      <div class="table-left" data-origin-x="1" data-origin-y="1" data-depth="1"></div>
+      <div class="table-left-artworks" data-origin-x="1" data-origin-y="1" data-depth="1">
+        <div class="{{artworkClasses 'memchu'}}"></div>
+        <div class="memchu-overlay"></div>
+      </div>
+      <div class="table-front" data-origin-x="0" data-origin-y="1" data-depth="1.5"></div>
+    </div>
+    {{#if canMoveLeft}}
+      <button class="move-button left"></button>
+    {{/if}}
+    {{#if canMoveRight}}
+      <button class="move-button right"></button>
+    {{/if}}
+  </div>
+</template>

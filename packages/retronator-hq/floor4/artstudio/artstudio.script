@@ -6,4 +6,52 @@
 
 -> [End]
 
+## LookAtArtworks
+
+-> [LookAtArtworksLater] `_LookAtArtworksFirst`
+
+## LookAtArtworksFirst
+
+> Drawings, paintings, and prints of all kinds are found all around the studio.
+
+## LookAtArtworksLater
+
+> Which ones do you want to take a closer look at?
+
+* @Pencil and other drawings in the northwest -> [Northwest]
+* @Pen and marker drawings in the northeast -> [Northeast]
+* @Paintings and drawings in the southwest -> [Southwest]
+* @Acrylic and digital paintings in the southeast -> [Southeast]
+* @Nevermind
+
+-> [End]
+
+## Northwest
+
+`_context = 'Northwest'`
+### EnterContext
+
+-> [End]
+
+## Northeast
+
+`_context = 'Northeast'`
+### EnterContext
+
+-> [End]
+
+## Southwest
+
+`_context = 'Southwest'`
+### EnterContext
+
+-> [End]
+
+## Southeast
+
+`_context = 'Southeast'`
+### EnterContext
+
+-> [End]
+
 ## End

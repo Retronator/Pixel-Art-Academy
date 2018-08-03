@@ -30,6 +30,11 @@ class HQ.Store extends LOI.Adventure.Location
 
   @initialize()
 
+  @startRetroPixelArtScript: ->
+    retro = LOI.adventure.getCurrentThing HQ.Actors.Retro
+    script = retro.listeners[0].scripts[HQ.Actors.Retro.id()]
+    LOI.adventure.director.startScript script, label: 'PixelArt'
+
   constructor: ->
     super
 
@@ -250,6 +255,10 @@ class HQ.Store extends LOI.Adventure.Location
               complete()
               $(window).off '.medium'
 
+          PixelArt: (complete) =>
+            HQ.Store.startRetroPixelArtScript()
+            complete()
+
     class @CharacterScript extends LOI.Adventure.Script
       @id: -> "Retronator.HQ.StoreCharacter"
       @initialize()
@@ -319,6 +328,10 @@ class HQ.Store extends LOI.Adventure.Location
             # Clear the shopping cart.
             HQ.Items.ShoppingCart.clearItems()
 
+            complete()
+            
+          PixelArt: (complete) =>
+            HQ.Store.startRetroPixelArtScript()
             complete()
 
     @initialize()

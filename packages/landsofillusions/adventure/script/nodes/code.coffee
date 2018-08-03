@@ -55,7 +55,11 @@ class Script.Nodes.Code extends Script.Node
         "_locationState.#{identifier.substring 9}"
 
       else
-        "_scriptState.#{identifier}"
+        # We check things that are supposed to be in the persistent script state also against ephemeral state, because
+        # if state is not being saved, ephemeral state will still survive between reloads during the same session.
+        # Since visited labels get stored in both script and ephemeral state, we use this to maintain conversation
+        # consistency since most scripts rely on persistent script labels.
+        "(_scriptState.#{identifier} || _ephemeralState.#{identifier})"
 
   end: ->
     @evaluate()

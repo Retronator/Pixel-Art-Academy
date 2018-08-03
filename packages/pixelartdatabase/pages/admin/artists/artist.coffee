@@ -44,7 +44,7 @@ class PADB.Pages.Admin.Artists.Artist extends Artificial.Mummification.Admin.Com
   class @Pseudonym extends AM.DataInputComponent
     @register 'PixelArtDatabase.Pages.Admin.Artists.Artist.Pseudonym'
 
-    load: -> @currentData()?.preudonym
+    load: -> @currentData()?.pseudonym
 
     save: (value) -> Meteor.call "artistUpdate", @currentData()._id,
       $set:
