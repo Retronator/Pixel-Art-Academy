@@ -113,7 +113,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @commandInput.destroy()
     @dialogueSelection.destroy()
 
-    $(window).off '.text-interface'
+    $(window).off '.landsofillusions-interface-text'
 
     # Clean up body height that was set from resizing.
     $('body').css height: ''

@@ -6,7 +6,7 @@ LOI = LandsOfIllusions
 Vocabulary = LOI.Parser.Vocabulary
 
 class LOI.Interface.Text extends LOI.Interface
-  @register 'LandsOfIllusions.Adventure.Interface.Text'
+  @register 'LandsOfIllusions.Interface.Text'
 
   exitAvatarName: ->
     exitAvatar = @currentData()
@@ -231,8 +231,8 @@ class LOI.Interface.Text extends LOI.Interface
       'mouseenter .exits .exit .name': @onMouseEnterExit
       'mouseleave .exits .exit .name': @onMouseLeaveExit
       'click .exits .exit .name': @onClickExit
-      'mouseenter .text-interface': @onMouseEnterTextInterface
-      'mouseleave .text-interface': @onMouseLeaveTextInterface
+      'mouseenter .landsofillusions-interface-text': @onMouseEnterTextInterface
+      'mouseleave .landsofillusions-interface-text': @onMouseLeaveTextInterface
       'input .dummy-input': @onInputDummyInput
 
   onMouseEnterCommand: (event) ->
@@ -273,7 +273,7 @@ class LOI.Interface.Text extends LOI.Interface
 
   onMouseEnterTextInterface: (event) ->
     # Make crosshair cursor animate.
-    $textInterface = @$('.text-interface')
+    $textInterface = @$('.landsofillusions-interface-text')
     cursorTimeFrame = 0
 
     # Just to make sure, clear any leftover animations.
