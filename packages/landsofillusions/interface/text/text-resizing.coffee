@@ -15,7 +15,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     illustrationHeight = (situation.illustrationHeight.last() or 0) * scale
 
-    $textInterface = $('.adventure .text-interface')
+    $textInterface = $('.landsofillusions-adventure .landsofillusions-interface-text')
     $ui = $textInterface.find('.ui')
     $uiBackground = $textInterface.find('.ui-background')
 
