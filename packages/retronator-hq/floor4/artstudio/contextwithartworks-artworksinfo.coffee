@@ -293,7 +293,7 @@ class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
       streetFighterConverseChucks:
         artistInfo: @artistsInfo.mayaPixelskaya
         title: 'Street Fighter Converse chucks'
-        caption: "Acrylic on fabric"
+        caption: "Fabric paint on fabric"
       streetFighterIiTriptych:
         artistInfo: @artistsInfo.mayaPixelskaya
         title: 'Street Fighter II triptych'
