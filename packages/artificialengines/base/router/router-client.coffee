@@ -33,7 +33,7 @@ class AB.Router extends AB.Router
   @setParameters: (parameters) ->
     @goToRoute @currentRouteName(), parameters
 
-  @createUrl: (routeName, parameters) ->
+  @createUrl: (routeName, parameters, options = {}) ->
     # Allow sending components directly.
     routeName = routeName.componentName() if routeName.componentName
 
@@ -48,13 +48,13 @@ class AB.Router extends AB.Router
       return null
 
     # See if we need to change hosts. If route host is not defined, it will work with any host.
-    return path unless route.host
+    return path unless route.host or options.absolute
 
     # If we're already at the correct host, we also just need to change path.
-    return path if route.host is @currentRoute().host
+    return path if route.host is @currentRoute().host and not options.absolute
 
     # Build a full URL.
-    host = route.host
+    host = route.host or @currentRoute().host
 
     # Keep the current protocol and port.
     protocol = location.protocol
