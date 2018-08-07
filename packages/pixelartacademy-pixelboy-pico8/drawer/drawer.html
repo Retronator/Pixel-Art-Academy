@@ -6,7 +6,11 @@
           <ul class="cartridges">
             {{#each cartridges}}
               <li class="cartridge {{selectedClass}}">
-                <img class="image" src="{{cartridgeImageUrl}}"/>
+                <div class="case-bottom"></div>
+                <div class="memory-card">
+                  <img class="image" src="{{cartridgeImageUrl}}"/>
+                </div>
+                <div class="case-top"></div>
               </li>
             {{/each}}
           </ul>
@@ -21,10 +25,21 @@
       </div>
     </div>
     <div class="table-top"></div>
-    <div class="selected-cartridge {{activeClass}}">
-      {{#with selectedCartridge}}
-        <img class="image" src="{{cartridgeImageUrl}}"/>
-      {{/with}}
+    <div class="selected-cartridge {{activeClass}} {{pannedLeftClass}}">
+      <div class="case-bottom"></div>
+      <div class="memory-card">
+        {{#with selectedCartridge}}
+          <img class="image" src="{{cartridgeImageUrl}}"/>
+        {{/with}}
+      </div>
+      <div class="case-top">
+        <div class="share-area">
+          <p class="title">Share link</p>
+          {{#with selectedCartridge}}
+            <p class="link"><a href="{{cartridgeShareUrl}}" target="_blank">{{cartridgeShareUrl}}</a></p>
+          {{/with}}
+        </div>
+      </div>
     </div>
   </div>
 </template>

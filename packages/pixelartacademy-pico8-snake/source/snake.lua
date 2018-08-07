@@ -22,6 +22,8 @@ function _init()
 	movex=1
 	movey=0
   direction=1
+  nextdirection=nil
+  delayeddirection=nil
 	eatingleft=0
 	score=0
   dead = false
@@ -45,6 +47,29 @@ function movesnake()
 	timeleft-=1
 	if timeleft==0 then
 		timeleft=timetomove
+
+    if nextdirection then
+      direction=nextdirection
+      nextdirection=delayeddirection
+      delayeddirection=null
+    end
+
+    if direction==0 then
+      movex=-1
+      movey=0
+    end
+    if direction==1 then
+      movex=1
+      movey=0
+    end
+    if direction==2 then
+      movex=0
+      movey=-1
+    end
+    if direction==3 then
+      movex=0
+      movey=1
+    end
 
 		--move snake by adding new piece
 		snake[head+1]={}
@@ -89,32 +114,29 @@ function die()
 end
 
 function changedirection()
-  newdirection=direction
-	if btnp(0) and direction!=0 then
-		movex=-1
-		movey=0
+  newdirection=nil
+
+	if btnp(0) then
     newdirection=0
 	end
-	if btnp(1) and direction!=1 then
-		movex=1
-		movey=0
+	if btnp(1) then
     newdirection=1
 	end
-	if btnp(2) and direction!=2 then
-		movex=0
-		movey=-1
+	if btnp(2) then
     newdirection=2
   end
-	if btnp(3) and direction!=3 then
-		movex=0
-		movey=1
+	if btnp(3) then
     newdirection=3
   end
 
-  if direction!=newdirection then
-    direction=newdirection
-    timeleft=1
-    movesnake()
+  if newdirection then
+    if nextdirection then
+      delayeddirection = newdirection
+    else
+      if newdirection ~= direction then
+        nextdirection=newdirection
+      end
+    end
   end
 end
 

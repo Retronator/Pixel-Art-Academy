@@ -1,3 +1,4 @@
+AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 PADB = PixelArtDatabase
@@ -52,3 +53,12 @@ class PAA.Pico8.Cartridges.Cartridge extends LOI.Adventure.Thing
     else
       # We can use the cartridge PNG directly.
       game.cartridge.url
+
+  shareUrl: ->
+    return unless game = @game()
+
+    AB.Router.createUrl PAA.Pico8.Pages.Pico8.componentName(),
+      gameSlug: game.slug
+      projectId: @projectId()
+    ,
+      absolute: true

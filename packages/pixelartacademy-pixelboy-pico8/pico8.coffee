@@ -72,7 +72,7 @@ class PAA.PixelBoy.Apps.Pico8 extends PAA.PixelBoy.App
 
       Meteor.setTimeout =>
         @cartridge null
-        drawer.selectedCartridge null
+        drawer.deselectCartridge()
       ,
         500
 

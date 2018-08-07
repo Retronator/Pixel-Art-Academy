@@ -11,6 +11,7 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
     super
 
     @opened = new ReactiveField false
+    @pannedLeft = new ReactiveField false
     @selectedCartridge = new ReactiveField null
 
   onCreated: ->
@@ -72,6 +73,14 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
 
     url
 
+  deselectCartridge: ->
+    @selectedCartridge null
+    @pannedLeft false
+
+  cartridgeShareUrl: ->
+    cartridge = @currentData()
+    cartridge.shareUrl()
+
   openedClass: ->
     'opened' if @opened()
 
@@ -80,6 +89,9 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
 
   activeClass: ->
     'active' if @selectedCartridge()
+
+  pannedLeftClass: ->
+    'panned-left' if @pannedLeft()
 
   selectedClass: ->
     cartridge = @currentData()
@@ -90,17 +102,31 @@ class PAA.PixelBoy.Apps.Pico8.Drawer extends AM.Component
     super.concat
       'click': @onClick
       'click .cartridge': @onClickCartridge
-      'click .selected-cartridge': @onClickSelectedCartridge
+      'click .selected-cartridge .memory-card': @onClickSelectedCartridgeMemoryCard
+      'click .selected-cartridge .case-top': @onClickSelectedCartridgeCaseTop
+      'click .selected-cartridge .case-bottom': @onClickSelectedCartridgeCaseBottom
 
   onClick: (event) ->
     return unless @selectedCartridge()
-    return if $(event.target).closest('.selected-cartridge').length
 
-    @selectedCartridge null
+    $target = $(event.target)
+    return if $target.closest('.selected-cartridge').length
+
+    @deselectCartridge()
 
   onClickCartridge: (event) ->
     cartridge = @currentData()
     @selectedCartridge cartridge
 
-  onClickSelectedCartridge: (event) ->
+  onClickSelectedCartridgeMemoryCard: (event) ->
+    if @pannedLeft()
+      @pannedLeft false
+      return
+
     @pico8.cartridge @selectedCartridge()
+
+  onClickSelectedCartridgeCaseTop: (event) ->
+    @pannedLeft true
+
+  onClickSelectedCartridgeCaseBottom: (event) ->
+    @pannedLeft false
