@@ -53,7 +53,7 @@ char: Nice to meet you. I'm `@character.name()`.
 
 -> [NoJournals] `not _person.journalIds.length`
 
-person: Off course! Let me know what you think.
+person: Of course! Let me know what you think.
 
 pause
 
