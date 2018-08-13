@@ -15,9 +15,8 @@ class HQ.GalleryEast extends LOI.Adventure.Location
   @shortName: -> "gallery east"
   @description: ->
     "
-      The east wing of the gallery opens up with an atrium that is shared with the art studio one storey above.
-      More artworks line the north wall, and a big collection of video games sits on the shelves in the south. Tables in
-      the middle hold interactive installations.
+      The east wing of the gallery opens up with an atrium that is shared with the art studio one floor above.
+      More artworks line the walls, with tables in the middle holding interactive installations.
     "
   
   @initialize()

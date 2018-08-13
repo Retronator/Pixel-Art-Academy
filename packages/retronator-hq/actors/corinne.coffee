@@ -8,7 +8,8 @@ class HQ.Actors.Corinne extends LOI.Adventure.Thing
   @id: -> 'Retronator.HQ.Actors.Corinne'
   @fullName: -> "Corinne Colgan"
   @shortName: -> "Corinne"
-  @description: -> "It's Corinne Colgan, Retronator Gallery™ curator."
+  @descriptiveName: -> "![Corinne](talk to Corinne) Colgan. She is sitting behind the curator's desk."
+  @description: -> "It's Corinne Colgan, the curator of the gallery."
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.aqua
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
@@ -17,14 +18,19 @@ class HQ.Actors.Corinne extends LOI.Adventure.Thing
 
   @defaultScriptUrl: -> 'retronator_retronator-hq/actors/corinne.script'
 
+  # Listener
+
+  @avatars: ->
+    retro: HQ.Actors.Retro
+
   initializeScript: ->
-    @setCurrentThings
-      corinne: HQ.Actors.Corinne
+    Tracker.autorun (computation) =>
+      return unless corinne = LOI.adventure.getCurrentThing HQ.Actors.Corinne
+      retro = @options.listener.avatars.retro
+
+      @setThings {corinne, retro}
 
   onCommand: (commandResponse) ->
-    return
-    
-    # TODO: Enable Corinne's conversation.
     return unless corinne = LOI.adventure.getCurrentThing HQ.Actors.Corinne
 
     commandResponse.onPhrase
