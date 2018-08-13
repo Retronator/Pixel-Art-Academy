@@ -64,8 +64,8 @@ class C1.AdmissionProjects.Snake.Drawing.Coworking extends LOI.Adventure.Scene
     labels = [
       'HowToDrawChoice'
       'HowToEditInAppChoice'
-      # TODO: 'HowToDownloadChoice'
-      # TODO: 'HelpWithSoftwareChoice'
+      'HowToDownloadChoice'
+      'HelpWithSoftwareChoice'
     ]
 
     choicePlaceholderResponse.addChoice @script.startNode.labels[label].next for label in labels
