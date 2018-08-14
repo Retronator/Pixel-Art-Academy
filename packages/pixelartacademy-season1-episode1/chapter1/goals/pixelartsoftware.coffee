@@ -17,7 +17,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       In the Admission Week app, choose to receive the Drawing app for PixelBoy.
       Going forward you will decide between using the in-app editor or
       external software to complete drawing assignments.
-      Talk to Alexandra in the art studio if you need help deciding which route to take.
+      Talk to Retro in the art studio about pixel art software and decide which route to take.
     """
 
     @initialize()
@@ -33,7 +33,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Get the drawing editor"
 
     @instructions: -> """
-      Ask Alexandra for the basic editor for PixelBoy and select it on the Settings page in the Drawing app.
+      Ask Retro for the basic editor for PixelBoy and select it on the Settings page in the Drawing app.
       This will give you the ability to edit sprites right in the app.
     """
 

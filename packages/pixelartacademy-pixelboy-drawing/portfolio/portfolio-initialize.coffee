@@ -4,10 +4,24 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio
+class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio
   # We call register here because it is the last in the inheritance chain.
   @register @id()
 
+  @ExternalSoftware =
+    Aseprite: 'Aseprite'
+    PyxelEdit: 'Pyxel Edit'
+    GraphicGale: 'Graphics Gale'
+    ProMotion: 'Pro Motion'
+    GRAFX2: 'GRAFX2'
+    Photoshop: 'Photoshop'
+    Gimp: 'GIMP'
+    Krita: 'Krita'
+    Pixaki: 'Pixaki'
+    Dottable: 'Dottable'
+    Pixly: 'Pixly'
+    PixelArtStudio: 'Pixel Art Studio'
+    
   onCreated: ->
     super
 
@@ -141,50 +155,14 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.Pi
           fullName: 'None'
 
       editors
+      
+    @externalSoftware = ({value, fullName} for value, fullName of @constructor.ExternalSoftware)
 
-    @programs = _.sortBy [
-      value: 'aseprite'
-      fullName: 'Aseprite'
-    ,
-      value: 'pyxeledit'
-      fullName: 'PyxelEdit'
-    ,
-      value: 'graphicgale'
-      fullName: 'Graphics Gale'
-    ,
-      value: 'promotion'
-      fullName: 'Pro Motion'
-    ,
-      value: 'grafx2'
-      fullName: 'GRAFX2'
-    ,
-      value: 'photoshop'
-      fullName: 'Photoshop'
-    ,
-      value: 'gimp'
-      fullName: 'GIMP'
-    ,
-      value: 'krita'
-      fullName: 'Krita'
-    ,
-      value: 'pixaki'
-      fullName: 'Pixaki'
-    ,
-      value: 'dottable'
-      fullName: 'Dottable'
-    ,
-      value: 'pixly'
-      fullName: 'Pixly'
-    ,
-      value: 'pixelartstudio'
-      fullName: 'Pixel Art Studio'
-    ], 'fullName'
-
-    @programs.unshift
+    @externalSoftware.unshift
       value: null
       fullName: 'None'
-
-    @programs.push
+  
+    @externalSoftware.push
       value: 'other'
       fullName: 'Other software'
 

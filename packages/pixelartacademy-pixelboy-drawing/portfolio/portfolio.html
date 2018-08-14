@@ -61,20 +61,18 @@
                 {{else}}
                   <div class="no-editors">
                     <p>You don't have any PixelBoy editors yet.</p>
-                    <p>Talk to Alexandra in the art studio to get started.</p>
+                    <p>Talk to Retro in the store to get started.</p>
                   </div>
                 {{/if}}
               </div>
-              {{!-- TODO: Add external software support.
               <div class="settings-section">
                 <div class="title">External software</div>
                   <ul class="external editors">
-                    {{#each programs}}
-                      <li class="editor {{selectedProgramClass}}">{{fullName}}</li>
+                    {{#each externalSoftware}}
+                      <li class="editor {{selectedSoftwareClass}}">{{fullName}}</li>
                     {{/each}}
                   </ul>
               </div>
-              --}}
             </div>
           </div>
         </li>

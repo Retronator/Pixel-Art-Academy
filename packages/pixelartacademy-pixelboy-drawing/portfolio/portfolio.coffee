@@ -152,11 +152,11 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
 
     'selected' if selectedEditorId is editor.id()
 
-  selectedProgramClass: ->
-    program = @currentData()
-    selectedProgram = @drawing.state('externalSoftware') or null
+  selectedSoftwareClass: ->
+    software = @currentData()
+    selectedSoftware = @drawing.state('externalSoftware') or null
 
-    'selected' if selectedProgram is program.value
+    'selected' if selectedSoftware is software.value
 
   events: ->
     super.concat

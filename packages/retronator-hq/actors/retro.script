@@ -23,7 +23,7 @@ retro: What would you like to know?
 
 retro: Glad I could help.
 
--> [End]
+-> [Return]
 
 <!-- HARDWARE -->
 
@@ -87,8 +87,10 @@ retro:
 
 ## SoftwareQuestionsIntro
 
+`_pixelBoyDecisionAnswers = false`
+
+-> [HavePixelBoy] `@inventory['PixelArtAcademy.PixelBoy'] and not HavePixelBoy`
 -> [SoftwareQuestionsAgain] `SoftwareQuestions`
--> [HavePixelBoy] `@inventory['PixelArtAcademy.PixelBoy']`
 -> [DontHavePixelBoy]
 
 ## HavePixelBoy
@@ -96,6 +98,8 @@ retro:
 retro:
   I see you have a PixelBoy with you, so you have one main decision:
   Do you want to use the drawing tools for the PixelBoy or use other software on your computer?
+
+`_pixelBoyDecisionAnswers = true`
 
 -> [SoftwareQuestions]
 
@@ -149,11 +153,25 @@ retro: Anything in particular?
 * I want to do both pixel and non-pixel art, but I can't afford Photoshop. -> [SoftwareGenericFree] `SoftwareGeneric`
 * Can I use both PixelBoy and other software? -> [SoftwareBoth] `HavePixelBoy`
 * I want to find an app for my tablet or phone. -> [SoftwareMobile]
-* That was useful.
+* I need some time to think about it. -> [ThinkAboutIt] `_pixelBoyDecisionAnswers`
+* I know enough to make my decision. -> [MakeDecision] `_pixelBoyDecisionAnswers`
+* That was useful. `not _pixelBoyDecisionAnswers`
 
 retro: Awesome! Any other questions?
 
 -> [PixelArtQuestions]
+
+## ThinkAboutIt
+
+retro: No problem, take your time.
+
+-> [End]
+
+## MakeDecision
+
+retro: Sounds good! Let me know what it is when you want to continue.
+
+-> [Return]
 
 ## SoftwareEasiest
 
@@ -269,5 +287,11 @@ retro:
   Yeah, there's a free app simply called Pixel Art Studio.
 
 -> [SoftwareQuestions]
+
+## Return
+
+### Return
+
+-> [End]
 
 ## End

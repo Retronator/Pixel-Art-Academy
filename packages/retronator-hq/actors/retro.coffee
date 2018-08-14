@@ -18,3 +18,13 @@ class HQ.Actors.Retro extends LOI.Adventure.Thing
   initializeScript: ->
     @setCurrentThings
       retro: HQ.Actors.Retro
+      
+    @setCallbacks
+      Return: (complete) =>
+        # Hook back into the Retro's main questions.
+        store = LOI.adventure.getCurrentThing HQ.Store
+        listener = store.getListener HQ.Store.RetroListener
+        script = if LOI.characterId() then listener.characterScript else listener.userScript
+        LOI.adventure.director.startScript script, label: 'MainQuestion'
+    
+        complete()
