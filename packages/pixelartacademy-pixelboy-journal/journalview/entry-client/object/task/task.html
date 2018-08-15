@@ -1,3 +1,18 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task">
-  I AM TASK
+  {{#with task}}
+    <div class="confirmation"></div>
+    <div class="directive">
+      {{> t10e directiveTranslation}}
+    </div>
+    <div class="instructions">
+      {{> t10e instructionsTranslation}}
+    </div>
+    {{#if taskComponent}}
+      {{> Render taskComponent}}
+    {{else}}
+      <div class="complete">
+        This task will be automatically marked as complete when you fulfill the instructions.
+      </div>
+    {{/if}}
+  {{/with}}
 </template>

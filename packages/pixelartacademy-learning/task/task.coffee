@@ -14,6 +14,9 @@ class PAA.Learning.Task
   # Id string for this task used to identify the task in code.
   @id: -> throw new AE.NotImplementedException "You must specify task's id."
 
+  # The type that identifies the task class individual tasks inherit from.
+  @type: null
+
   # Short description of the task's goal.
   @directive: -> throw new AE.NotImplementedException "You must specify the task directive."
 

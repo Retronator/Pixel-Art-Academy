@@ -1,9 +1,6 @@
 PAA = PixelArtAcademy
 Entry = PAA.PixelBoy.Apps.Journal.JournalView.Entry
 
-Quill = require 'quill'
-BlockEmbed = Quill.import 'blots/block/embed'
-
 class Entry.Object.Picture extends Entry.Object
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Picture'
   @version: -> '0.1.0'

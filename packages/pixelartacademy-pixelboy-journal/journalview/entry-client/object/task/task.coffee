@@ -1,12 +1,6 @@
-AB = Artificial.Babel
-AE = Artificial.Everywhere
-AM = Artificial.Mirage
-LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Entry = PAA.PixelBoy.Apps.Journal.JournalView.Entry
-
-Quill = require 'quill'
-BlockEmbed = Quill.import 'blots/block/embed'
+IL = Illustrapedia
 
 class Entry.Object.Task extends Entry.Object
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task'
@@ -19,3 +13,24 @@ class Entry.Object.Task extends Entry.Object
     name: 'task'
     tag: 'p'
     class: 'pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task'
+
+  onCreated: ->
+    super
+
+    value = @value()
+    taskClass = PAA.Learning.Task.getClassForId value.id
+
+    @task = new taskClass
+
+    if taskClass.type
+      @taskComponent = new @constructor[taskClass.type]
+
+  taskComponentClass: ->
+    value = @value()
+    taskClass = PAA.Learning.Task.getClassForId value.id
+
+    @constructor[taskClass.type] or null
+
+  interestDocument: ->
+    interest = @currentData()
+    IL.Interest.find interest

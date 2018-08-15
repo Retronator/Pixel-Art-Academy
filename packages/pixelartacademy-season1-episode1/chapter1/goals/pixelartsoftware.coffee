@@ -17,7 +17,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       In the Admission Week app, choose to receive the Drawing app for PixelBoy.
       Going forward you will decide between using the in-app editor or
       external software to complete drawing assignments.
-      Talk to Retro in the art studio about pixel art software and decide which route to take.
+      Talk to Retro in the store about pixel art software and decide which route to take.
     """
 
     @initialize()
@@ -123,14 +123,14 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @completed: ->
         PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
 
-    class @Doodling extends PAA.Learning.Task
+    class @Doodling extends PAA.Learning.Task.Upload
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Doodling'
 
       @directive: -> "Doodling"
 
       @instructions: -> """
         Using the software of your choice, doodle on the canvas to see how the basic tools behave.
-        Figure out how to zoom in and out too. Add this task to your journal and upload the image to complete it.
+        Figure out how to zoom in and out too. Upload your test image to complete the task.
       """
 
       @predecessors: -> [Goal.DIY.ChooseSoftware]
@@ -139,7 +139,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @initialize()
 
-    class @AdvancedTools extends PAA.Learning.Task
+    class @AdvancedTools extends PAA.Learning.Task.Upload
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.AdvancedTools'
 
       @directive: -> "Learn advanced tools"
@@ -157,7 +157,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @initialize()
 
-    class @Reference extends PAA.Learning.Task
+    class @Reference extends PAA.Learning.Task.Manual
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Reference'
 
       @directive: -> "Display a reference"
@@ -173,7 +173,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @initialize()
 
-    class @Grid extends PAA.Learning.Task
+    class @Grid extends PAA.Learning.Task.Upload
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Grid'
 
       @directive: -> "Turn on the grid"
@@ -190,7 +190,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @initialize()
 
-    class @AdvancedSetup extends PAA.Learning.Task
+    class @AdvancedSetup extends PAA.Learning.Task.Manual
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.AdvancedSetup'
 
       @directive: -> "Advanced setup"

@@ -21,4 +21,7 @@ Package.onUse(function(api) {
   api.addFile('goal..');
   api.addFile('task..');
   api.addFile('task/entry');
+
+  api.addFile('task/tasks/upload');
+  api.addFile('task/tasks/manual');
 });
