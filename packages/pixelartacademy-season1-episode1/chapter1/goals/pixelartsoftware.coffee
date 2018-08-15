@@ -130,7 +130,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @instructions: -> """
         Using the software of your choice, doodle on the canvas to see how the basic tools behave.
-        Figure out how to zoom in and out too. Upload the image to your journal to complete the task.
+        Figure out how to zoom in and out too. Add this task to your journal and upload the image to complete it.
       """
 
       @predecessors: -> [Goal.DIY.ChooseSoftware]
@@ -148,6 +148,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
         Learn how to use the more advanced tools in your software
         (line tool, rectangular selection, lasso selection, move tool, ellipse selection, magic wand).
         They will speed up your process when you work on actual artworks.
+        Upload a new test image to show things you've tried.
       """
 
       @predecessors: -> [Goal.DIY.Doodling]
@@ -162,7 +163,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @directive: -> "Display a reference"
 
       @instructions: -> """
-        Talk to Alexandra in the Art Studio to learn different ways to set up reference images when drawing.
+        Talk to Retro in the Store to learn different ways to set up reference images when drawing.
+        Confirm that you've done this task in your journal.
       """
 
       @predecessors: -> [Goal.DIY.Doodling]
@@ -179,6 +181,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @instructions: -> """
         Figure out how to show the grid in your software.
         Things to explore: spacing, major vs minor guidelines, grid color and style.
+        Take a screenshot of your software with the grid displayed and upload it.
       """
 
       @predecessors: -> [Goal.DIY.Reference]

@@ -211,36 +211,44 @@ retro:
   
 ## ReferencesQuestions
 
-* What are my options? -> [Options]
-* And if it's a photo? -> [Photo] `Options`
-* I actually have a second screen. -> [SecondScreen]
-* Can I use my tablet or a phone? -> [Tablet]
-* Any other ways? -> [OtherWays]
+* What are my options? -> [ReferencesOptions]
+* I actually have a second screen. -> [ReferencesSecondScreen] `OptionsAfter`
+* Can I use my tablet or a phone? -> [ReferencesTablet] `OptionsAfter`
+* Are there any specialized programs to display references? -> [ReferencesSpecializedSoftware] `OptionsAfter`
+* Any out-of-the-box alternatives? -> [ReferencesAlternatives] `OptionsAfter`
 * I think I have an idea how I'll go about this.
 
 retro: Good. Write about it in your journal and mark it complete.
 
 -> [Return]
 
-## Options
+## ReferencesOptions
 
 retro:
   First, you can copy/paste the reference image directly to your canvas in a new layer.
-  That's only good for small things usually, like if something is already in pixel art. Like a screenshot.
+  That's only good for small things, like if something is already in pixel art. Like a screenshot.
 
--> [ReferencesQuestions]
+* And if it's bigger? -> [ReferencesOptionsBigger]
+* What else?
 
-## Photo
+retro: Next is opening the file in the same software, but as its own document.
+
+-> [ReferencesOptionsAfter]
+
+## ReferencesOptionsBigger
+
+retro: You can still open it in the same software, just have it opened as its own document.
+
+## ReferencesOptionsAfter
 
 retro:
-  You can still open it in the same software, just have it opened as its own document.
   Arrange the two documents so they're displayed side by side.
   Another option is to open it in another program, like the default image viewer.
   You'll probably need to resize your drawing program so you can see the image next to it.
 
 -> [ReferencesQuestions]
 
-## SecondScreen
+## ReferencesSecondScreen
 
 retro:
   Lucky you!
@@ -248,17 +256,27 @@ retro:
 
 -> [ReferencesQuestions]
 
-## Tablet
+## ReferencesTablet
 
 retro: Of course! That is very useful. 
 
 -> [ReferencesQuestions]
 
-## OtherWays
+## ReferencesSpecializedSoftware
+
+retro: 
+  Yes! They usually display above other software so you don't have to resize your drawing program.
+  PureRef is the one I use, but it's a bit unintuitive how to arrange things. I have to read help all the time.
+  
+-> [ReferencesQuestions]
+
+## ReferencesAlternatives
 
 retro:
-  Besides printing the reference and setting it up next to your screen, you could just draw from real life.
+  You could print the reference and physically set it up next to your screen. Or just draw what you see in real life!
   Grab a thing on your table, or go out and draw on your tablet in nature or a park.
+
+-> [ReferencesQuestions]
 
 ## GridChoice
 
@@ -270,41 +288,146 @@ retro:
   Next up is setting up the grid.
   Because you'll deal with individual pixels, it's good to actually see where the pixels are.
   When you zoom in, find a setting to turn on the grid.
-  You can usually also play with things like spacing and grid color.
+  You can also play with things like spacing and grid color.
 
-* Sounds good. And I should post about it in the journal?
+* Sounds good. -> [GridPost]
+* And I should post about it in the journal?
 
-retro:
-  Yup. I see you got the hang of it.
+retro: Yup. I see you got the hang of it.
+  
+-> [Return]
+
+## GridPost
+
+retro: Let me know once you've completed this step.
+  
+-> [Return]
+
+## BasicsDoneChoice
 
 * I think I got the basics of my software figured out.
 
 retro:
-  Awesome! You're ready to draw an a real image now.
-  Talk to Corinne downstairs to get a reference for you to copy.
+  Awesome! You're ready to draw a real image now.
+  Talk to Corinne upstairs to get a reference for you to copy.
   It will appear under Challenges in the Drawing App.
   Upload your result and you will unlock the option to download and upload sprites everywhere.
+
+## AdvancedSetupChoice
 
 * Are there any more things to learn regarding software?
 
 retro:
-  Yes, quite many. We haven't really touched on color palettes and such.
-  You can learn how to set up preview windows. Many tools need to have anti-aliasing turned off.
+  Yes, quite many. We haven't really touched on color palettes or how to set up preview windows. 
+  Many tools need to have anti-aliasing turned off if you're using generic drawings software.
 
-* I see.
+* I see. -> [AdvancedSetupVideos]
+* Ugh, so much left to learn.
+
+retro: Nah, it's not so bad. Just take it one step at a time.
+
+## AdvancedSetupVideos
 
 retro:
   If there's a video tutorial or a series about your software, you're encouraged to spend some time watching it.
   You don't have to do it right now, but it's always an option to deepen your knowledge.
+  
+## AdvancedSetupQuestions
 
+* Any recommendations for Photoshop? -> [AdvancedSetupPhotoshop] `_externalSoftware is 'Photoshop'`
+* Any recommendations for GIMP? -> [AdvancedSetupGIMP] `_externalSoftware is 'GIMP'`
+* Any recommendations for Aseprite? -> [AdvancedSetupAseprite] `_externalSoftware is 'Aseprite'`
+* Any recommendations for Pyxel Edit? -> [AdvancedSetupPyxelEdit] `_externalSoftware is 'PyxelEdit'`
+* How can I find tutorials for my software? -> [AdvancedSetupSearch]
+* Good, I'll write about it in my journal. -> [AdvancedSetupJournal]
 * Thank you so much!
 
-You're welcome!
+retro: You're welcome!
 
-* I'll see you around.
+-> [Return]
 
-Bye.
+## AdvancedSetupPhotoshop
 
+retro: MortMort makes great videos and has one about it.
+
+> Retro shows you the video on YouTube.
+
+pause
+
+### AdvancedSetupPhotoshop
+
+-> [AdvancedSetupHelped]
+
+## AdvancedSetupGIMP
+
+retro: 
+  I actually made a video about it that's quite popular.
+  It's a bit old by now, but should still help you get started.
+
+> Retro shows you his video on YouTube.
+
+pause
+
+### AdvancedSetupGIMP
+
+-> [AdvancedSetupHelped]
+
+## AdvancedSetupAseprite
+
+retro: Jebby made a series of videos that go over the basics.
+
+> Retro shows you the playlist on YouTube.
+
+pause
+
+### AdvancedSetupAseprite
+
+-> [AdvancedSetupHelped]
+
+## AdvancedSetupPyxelEdit
+
+retro: Achebit made a 3-part video about it.
+
+> Retro shows you the playlist on YouTube.
+
+pause
+
+### AdvancedSetupPyxelEdit
+
+-> [AdvancedSetupHelped]
+
+## AdvancedSetupHelped
+
+retro: I hope it helped!
+  
+-> [AdvancedSetupQuestions]
+
+## AdvancedSetupSearch
+
+retro:
+  As always, google is your friend!
+  I also like to search directly on YouTube.
+
+-> [AdvancedSetupQuestions] `['Aseprite', 'PyxelEdit', 'GraphicsGale', 'ProMotion', 'GrafX2', 'Photoshop', 'GIMP', 'Krita'].indexOf(_externalSoftware) < 0`
+
+retro: Here's what I find for `_externalSoftwareName`.
+
+> Retro fires up a YouTube search on his computer and shows it to you.
+
+pause
+
+### YouTubeSearch
+
+retro: I hope you found something helpful.
+
+-> [AdvancedSetupQuestions]
+
+## AdvancedSetupJournal
+
+retro: Perfect.
+
+-> [Return]
+    
 ## Return
 
 ### Return

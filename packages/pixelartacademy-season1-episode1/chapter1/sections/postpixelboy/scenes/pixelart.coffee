@@ -17,10 +17,29 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
   # Script
 
   initializeScript: ->
+    openWebsite = (url, complete) ->
+      website = window.open url, '_blank'
+      website.focus()
+  
+      # Wait for our window to get focus.
+      $(window).on 'focus.open-website', =>
+        complete()
+        $(window).off '.open-website'
+        
     @setCurrentThings
       retro: HQ.Actors.Retro
 
     @setCallbacks
+      AdvancedSetupPhotoshop: (complete) => openWebsite 'https://www.youtube.com/watch?v=hEGeveEsg0Q', complete
+      AdvancedSetupGIMP: (complete) => openWebsite 'https://www.youtube.com/watch?v=PONe4IIYSnQ', complete
+      AdvancedSetupAseprite: (complete) => openWebsite 'https://www.youtube.com/playlist?list=PLPHvHCBMlIQ0FEEh0QM7MZlnVMoRGgUql', complete
+      AdvancedSetupPyxelEdit: (complete) => openWebsite 'https://www.youtube.com/playlist?list=PLG0tvJ_jRDIXVXKmOFfWtN_I58SaZEDoS', complete
+
+      YouTubeSearch: (complete) =>
+        softwareName = @ephemeralState 'externalSoftwareName'
+        searchParts = softwareName.split(' ').concat ['pixel', 'art', 'setup']
+        openWebsite "https://www.youtube.com/results?search_query=#{searchParts.join '+'}", complete
+
       Return: (complete) =>
         # Hook back into the Retro's main questions.
         store = LOI.adventure.getCurrentThing HQ.Store
@@ -46,6 +65,10 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
       'ExternalSoftwareTutorialChoice'
       'ExternalSoftwareReminderChoice'
       'AdvancedToolsAndReferencesChoice'
+      'ReferencesChoice'
+      'GridChoice'
+      'BasicsDoneChoice'
+      'AdvancedSetupChoice'
     ]
 
     choicePlaceholderResponse.addChoice @script.startNode.labels[label].next for label in labels

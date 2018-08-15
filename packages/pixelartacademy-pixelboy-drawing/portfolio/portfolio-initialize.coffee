@@ -11,11 +11,11 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
   @ExternalSoftware =
     Aseprite: 'Aseprite'
     PyxelEdit: 'Pyxel Edit'
-    GraphicGale: 'Graphics Gale'
+    GraphicsGale: 'GraphicsGale'
     ProMotion: 'Pro Motion'
-    GRAFX2: 'GRAFX2'
+    GrafX2: 'GrafX2'
     Photoshop: 'Photoshop'
-    Gimp: 'GIMP'
+    GIMP: 'GIMP'
     Krita: 'Krita'
     Pixaki: 'Pixaki'
     Dottable: 'Dottable'
@@ -157,6 +157,7 @@ class PAA.PixelBoy.Apps.Drawing.Portfolio extends PixelArtAcademy.PixelBoy.Apps.
       editors
       
     @externalSoftware = ({value, fullName} for value, fullName of @constructor.ExternalSoftware)
+    @externalSoftware = _.sortBy @externalSoftware, 'fullName'
 
     @externalSoftware.unshift
       value: null
