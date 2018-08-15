@@ -9,9 +9,7 @@ class PAA.Learning.Task.Entry extends AM.Document
   # time: the time when task was completed
   # character: character that completed the task
   #   _id
-  #   avatar
-  #     fullName
   @Meta
     name: @id()
     fields: =>
-      character: @ReferenceField LOI.Character, ['avatar.fullName'], true
+      character: @ReferenceField LOI.Character, [], true

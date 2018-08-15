@@ -365,7 +365,8 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     quill = @quill()
     range = quill.getSelection()
 
-    quill.insertEmbed range.index, 'task', {}, Quill.sources.USER
+    @journalDesign.options.tasks().show (task) =>
+      quill.insertEmbed range.index, 'task', task, Quill.sources.USER
 
   onClickInsertObjectButtonTimestamp: (event) ->
     quill = @quill()

@@ -14,10 +14,13 @@ class PAA.PixelBoy.Apps.Journal.JournalView extends AM.Component
     super
 
     @journalDesign = new ReactiveField null
+    @tasks = new ReactiveField null
     @visible = new ReactiveField false
 
   onCreated: ->
     super
+    
+    @tasks new @constructor.Tasks
 
     @autorun (computation) =>
       journalId = @journal.journalId()
@@ -29,7 +32,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView extends AM.Component
 
       Tracker.nonreactive =>
         if journalDocument
-          @journalDesign new @constructor.JournalDesign[journalDocument.design.type] {journalId}
+          @journalDesign new @constructor.JournalDesign[journalDocument.design.type] {journalId, tasks: @tasks}
           @visible true
 
         else if @visible()
