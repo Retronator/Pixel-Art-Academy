@@ -11,22 +11,49 @@
     line-height 5rem
     text-transform uppercase
 
-  .confirmation
-    width 10rem
-    height 10rem
-    border 1rem solid atariGrey(2)
-    float left
+  .task
+    &.completed
+      .confirmation
+        &::after
+          content '✓'
+          position absolute
+          left 1rem
+          top -1rem
 
-  .directive
-    margin 0 0 4rem 13rem
+      .instructions
+      .complete
+        display none
 
-  .instructions
-    margin 3rem 0
-    adventure()
-    line-height 7rem
+    &:not(.ready)
+      .confirmation
+        &::before
+          content '…'
 
-  .complete
-    margin 3rem 0
-    adventure()
-    color atariGreen(2)
-    line-height 7rem
+      .instructions
+      .complete
+        display none
+
+    &.ready
+      .confirmation
+        border-color atariGrey(2)
+
+    .confirmation
+      position relative
+      width 10rem
+      height 10rem
+      border 1rem solid transparent
+      float left
+
+    .directive
+      margin 0 0 4rem 13rem
+
+    .instructions
+      margin 3rem auto
+      adventure()
+      line-height 7rem
+
+    .complete
+      margin 3rem 0
+      adventure()
+      color atariGreen(2)
+      line-height 7rem

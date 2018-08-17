@@ -1,9 +1,13 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-PAA.Learning.Task.Entry.insert.method (characterId, taskId) ->
+PAA.Learning.Task.Entry.insert.method (characterId, taskId, data) ->
   check characterId, Match.DocumentId
   check taskId, String
+  check data, Match.OptionalOrNull
+    upload: Match.Optional
+      picture:
+        url: String
 
   LOI.Authorize.characterAction characterId
 
@@ -15,8 +19,12 @@ PAA.Learning.Task.Entry.insert.method (characterId, taskId) ->
 
   return if existing
 
-  PAA.Learning.Task.Entry.documents.insert
+  entry = _.extend
     character:
       _id: characterId
     taskId: taskId
     time: new Date()
+  ,
+    data
+
+  PAA.Learning.Task.Entry.documents.insert entry

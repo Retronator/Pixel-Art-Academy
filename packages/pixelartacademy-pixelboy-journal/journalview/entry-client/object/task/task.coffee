@@ -24,19 +24,21 @@ class Entry.Object.Task extends Entry.Object
     @goal = new goalClass
     @task = _.find @goal.tasks(), (task) => task instanceof taskClass
 
-    @taskComponent = new @constructor[taskClass.type]
+    @taskComponent = new @constructor[taskClass.type] @
+
+    @_taskEntrySubscription = PAA.Learning.Task.Entry.forCharacterTaskIds.subscribe LOI.characterId(), [@task.id()]
 
   onDestroyed: ->
     super
 
     @goal.destroy()
 
-  taskComponentClass: ->
-    value = @value()
-    taskClass = PAA.Learning.Task.getClassForId value.id
+  completedClass: ->
+    'completed' if @task.completed()
 
-    @constructor[taskClass.type] or null
+  ready: ->
+    @_taskEntrySubscription.ready()
 
-  interestDocument: ->
-    interest = @currentData()
-    IL.Interest.find interest
+  readyClass: ->
+    # We are ready when we're sure we got the entry if it exists.
+    'ready' if @ready()

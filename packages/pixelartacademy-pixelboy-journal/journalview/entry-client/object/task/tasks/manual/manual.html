@@ -1,5 +1,16 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Manual">
   <div class="pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task-manual">
+    <div class="confirmation">
+      {{#if showConfirmButton}}
+        <button class="confirm-button"></button>
+      {{/if}}
+    </div>
+    <div class="directive">
+      {{> t10e task.directiveTranslation}}
+    </div>
+    <div class="instructions">
+      {{> t10e task.instructionsTranslation}}
+    </div>
     <div class="complete">
       When you've completed the instructions, put a checkmark to designate the task done.
     </div>

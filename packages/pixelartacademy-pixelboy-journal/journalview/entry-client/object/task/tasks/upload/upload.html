@@ -1,15 +1,29 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Upload">
   <div class="pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task-upload">
-    <div class="complete">
-      Upload the required image to complete the task.
+    <div class="confirmation"></div>
+    <div class="directive">
+      {{> t10e task.directiveTranslation}}
     </div>
-    <div class="upload">
-      {{#if picture}}
-      {{else}}
-        <button class="insert-picture-button">
-          <img class="icon" src="{{image '/pixelartacademy/pixelboy/apps/journal/objects-picture.png'}}">
-        </button>
-      {{/if}}
-    </div>
+    {{#if ready}}
+      <div class="instructions">
+        {{> t10e task.instructionsTranslation}}
+      </div>
+      <div class="complete">
+        {{#if uploading}}
+          Uploading …
+        {{else}}
+          Upload the required image to complete the task.
+        {{/if}}
+      </div>
+      <div class="upload">
+        {{#if pictureSource}}
+            <img class="picture" src="{{pictureSource}}">
+        {{else}}
+          <button class="insert-picture-button">
+            <img class="icon" src="{{image '/pixelartacademy/pixelboy/apps/journal/objects-picture.png'}}">
+          </button>
+        {{/if}}
+      </div>
+    {{/if}}
   </div>
 </template>

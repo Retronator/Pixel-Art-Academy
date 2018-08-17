@@ -70,8 +70,7 @@ class PAA.Learning.Task
   predecessors: -> @constructor.predecessors()
   groupNumber: -> @constructor.groupNumber()
 
-  completed: ->
-    # We need an entry made by this character.
+  entry: ->
     return unless characterId = LOI.characterId()
 
     # TODO: Add support for resetting goals/tasks
@@ -79,6 +78,10 @@ class PAA.Learning.Task
     PAA.Learning.Task.Entry.documents.findOne
       taskId: @id()
       'character._id': characterId
+
+  completed: ->
+    # We need an entry made by this character.
+    @entry()
 
   active: (otherTasks) ->
     # Predecessors need to be completed for the task to be active.

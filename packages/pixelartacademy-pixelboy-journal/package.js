@@ -45,6 +45,8 @@ Package.onUse(function(api) {
   api.addClientComponent('journalview/entry-client/object/timestamp..');
   api.addClientComponent('journalview/entry-client/object/picture..');
   api.addClientComponent('journalview/entry-client/object/task..');
+  api.addClientFile('journalview/entry-client/object/task/component');
+  api.addClientComponent('journalview/entry-client/object/task/tasks/automatic..');
   api.addClientComponent('journalview/entry-client/object/task/tasks/manual..');
   api.addClientComponent('journalview/entry-client/object/task/tasks/upload..');
 
