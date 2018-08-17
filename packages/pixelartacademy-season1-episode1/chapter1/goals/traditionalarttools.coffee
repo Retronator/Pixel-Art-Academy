@@ -12,7 +12,8 @@ class C1.Goals.TraditionalArtTools extends PAA.Learning.Goal
 
   class @ChooseMedium extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.TraditionalArtTools.ChooseMedium'
-  
+    @goal: -> Goal
+
     @directive: -> "Choose a traditional drawing medium"
   
     @instructions: -> """
@@ -23,6 +24,7 @@ class C1.Goals.TraditionalArtTools extends PAA.Learning.Goal
 
   class @Doodling extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.TraditionalArtTools.Doodling'
+    @goal: -> Goal
 
     @directive: -> "Doodling"
 
@@ -37,6 +39,7 @@ class C1.Goals.TraditionalArtTools extends PAA.Learning.Goal
 
   class @Reference extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.TraditionalArtTools.Reference'
+    @goal: -> Goal
 
     @directive: -> "Display a reference"
 
@@ -50,6 +53,7 @@ class C1.Goals.TraditionalArtTools extends PAA.Learning.Goal
 
   class @CopyReference extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.TraditionalArtTools.CopyReference'
+    @goal: -> Goal
 
     @directive: -> "Copy the reference"
 

@@ -12,6 +12,7 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
 
   class @ChooseAdmissionProject extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.ChooseAdmissionProject'
+    @goal: -> Goal
 
     @directive: -> "Choose admission project"
 
@@ -24,6 +25,7 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
 
   class @PlanAdmissionProjectRequirements extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.PlanAdmissionProjectRequirements'
+    @goal: -> Goal
 
     @directive: -> "Plan admission project requirements"
 
@@ -38,6 +40,7 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
 
   class @PlanAllRequirements extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyPlan.PlanAllRequirements'
+    @goal: -> Goal
 
     @directive: -> "Plan all requirements"
 

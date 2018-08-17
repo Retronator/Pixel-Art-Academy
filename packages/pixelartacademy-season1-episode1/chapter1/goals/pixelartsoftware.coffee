@@ -12,7 +12,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
   class @DrawingApp extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DrawingApp'
-  
+    @goal: -> Goal
+
     @directive: -> "Get the Drawing app"
   
     @instructions: -> """
@@ -31,6 +32,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
   # Main path
   class @Editor extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Editor'
+    @goal: -> Goal
 
     @directive: -> "Get the drawing editor"
 
@@ -50,6 +52,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
   class @Basics extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Basics'
+    @goal: -> Goal
 
     @directive: -> "Basics"
 
@@ -69,6 +72,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
   class @Helpers extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Helpers'
+    @goal: -> Goal
 
     @directive: -> "Helpers"
 
@@ -87,6 +91,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
   class @ColorTools extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.ColorTools'
+    @goal: -> Goal
 
     @directive: -> "Colors"
 
@@ -108,6 +113,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
   class @DIY
     class @ChooseSoftware extends PAA.Learning.Task.Automatic
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.ChooseSoftware'
+      @goal: -> Goal
 
       @directive: -> "Choose pixel art software"
 
@@ -127,12 +133,13 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     class @Doodling extends PAA.Learning.Task.Upload
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Doodling'
+      @goal: -> Goal
 
       @directive: -> "Doodling"
 
       @instructions: -> """
         Using the software of your choice, doodle on the canvas to see how the basic tools behave.
-        Figure out how to zoom in and out too. Upload your test image to complete the task.
+        Figure out how to zoom in and out too. Upload your test drawing to your journal.
       """
 
       @predecessors: -> [Goal.DIY.ChooseSoftware]
@@ -143,6 +150,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     class @AdvancedTools extends PAA.Learning.Task.Upload
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.AdvancedTools'
+      @goal: -> Goal
 
       @directive: -> "Learn advanced tools"
 
@@ -161,6 +169,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     class @Reference extends PAA.Learning.Task.Manual
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Reference'
+      @goal: -> Goal
 
       @directive: -> "Display a reference"
 
@@ -177,6 +186,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     class @Grid extends PAA.Learning.Task.Upload
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Grid'
+      @goal: -> Goal
 
       @directive: -> "Turn on the grid"
 
@@ -194,6 +204,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     class @AdvancedSetup extends PAA.Learning.Task.Manual
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.AdvancedSetup'
+      @goal: -> Goal
 
       @directive: -> "Advanced setup"
 
@@ -210,6 +221,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
   class @CopyReference extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.CopyReference'
+    @goal: -> Goal
 
     @directive: -> "Copy the reference"
 

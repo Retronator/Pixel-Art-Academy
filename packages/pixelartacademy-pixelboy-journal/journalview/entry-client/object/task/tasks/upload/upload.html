@@ -1,8 +1,15 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Upload">
   <div class="pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task-upload">
     <div class="complete">
-      Upload the required image and put a checkmark to complete the task.
+      Upload the required image to complete the task.
     </div>
-    <div class="upload"></div>
+    <div class="upload">
+      {{#if picture}}
+      {{else}}
+        <button class="insert-picture-button">
+          <img class="icon" src="{{image '/pixelartacademy/pixelboy/apps/journal/objects-picture.png'}}">
+        </button>
+      {{/if}}
+    </div>
   </div>
 </template>

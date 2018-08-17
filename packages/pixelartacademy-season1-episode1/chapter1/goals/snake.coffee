@@ -12,6 +12,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
   class @Talk extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Talk'
+    @goal: -> Goal
 
     @directive: -> "Talk to Reuben"
 
@@ -28,6 +29,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
   class @Play extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Play'
+    @goal: -> Goal
 
     @directive: -> "Play the game"
 
@@ -52,6 +54,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
   class @Draw extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Draw'
+    @goal: -> Goal
 
     @directive: -> "Draw Snake sprites"
 
@@ -85,6 +88,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
   class @PlayAgain extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.PlayAgain'
+    @goal: -> Goal
 
     @directive: -> "See sprites in action"
 

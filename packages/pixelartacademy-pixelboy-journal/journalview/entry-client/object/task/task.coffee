@@ -19,11 +19,17 @@ class Entry.Object.Task extends Entry.Object
 
     value = @value()
     taskClass = PAA.Learning.Task.getClassForId value.id
+    goalClass = taskClass.goal()
 
-    @task = new taskClass
+    @goal = new goalClass
+    @task = _.find @goal.tasks(), (task) => task instanceof taskClass
 
-    if taskClass.type
-      @taskComponent = new @constructor[taskClass.type]
+    @taskComponent = new @constructor[taskClass.type]
+
+  onDestroyed: ->
+    super
+
+    @goal.destroy()
 
   taskComponentClass: ->
     value = @value()

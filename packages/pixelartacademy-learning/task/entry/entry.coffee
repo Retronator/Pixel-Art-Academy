@@ -9,6 +9,10 @@ class PAA.Learning.Task.Entry extends AM.Document
   # time: the time when task was completed
   # character: character that completed the task
   #   _id
+  #
+  # upload: data for an upload entry
+  #   picture: an image without any semantic information
+  #     url: the url of the image itself
   @Meta
     name: @id()
     fields: =>
