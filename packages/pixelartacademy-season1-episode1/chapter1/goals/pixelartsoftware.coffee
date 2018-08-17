@@ -5,10 +5,12 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware'
 
   @displayName: -> "Pixel art software"
+    
+  @chapter: -> C1
 
   Goal = @
 
-  class @DrawingApp extends PAA.Learning.Task
+  class @DrawingApp extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DrawingApp'
   
     @directive: -> "Get the Drawing app"
@@ -22,12 +24,12 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @initialize()
 
-    completed: ->
+    completedConditions: ->
       return unless pixelBoy = LOI.adventure.getCurrentThing PAA.PixelBoy
       PAA.PixelBoy.Apps.Drawing in pixelBoy.os.currentAppsSituation().things()
 
   # Main path
-  class @Editor extends PAA.Learning.Task
+  class @Editor extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Editor'
 
     @directive: -> "Get the drawing editor"
@@ -43,10 +45,10 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @initialize()
 
-    @completed: ->
+    @completedConditions: ->
       PAA.PixelBoy.Apps.Drawing.state('editorId')?
 
-  class @Basics extends PAA.Learning.Task
+  class @Basics extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Basics'
 
     @directive: -> "Basics"
@@ -62,10 +64,10 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @initialize()
     
-    @completed: ->
+    @completedConditions: ->
       C1.Challenges.Drawing.Tutorial.Basics.completed()
 
-  class @Helpers extends PAA.Learning.Task
+  class @Helpers extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.Helpers'
 
     @directive: -> "Helpers"
@@ -80,10 +82,10 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @initialize()
 
-    @completed: ->
+    @completedConditions: ->
       C1.Challenges.Drawing.Tutorial.Helpers.completed()
 
-  class @ColorTools extends PAA.Learning.Task
+  class @ColorTools extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.ColorTools'
 
     @directive: -> "Colors"
@@ -98,13 +100,13 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @initialize()
 
-    @completed: ->
+    @completedConditions: ->
       C1.Challenges.Drawing.Tutorial.Colors.completed()
 
   # DIY path
 
   class @DIY
-    class @ChooseSoftware extends PAA.Learning.Task
+    class @ChooseSoftware extends PAA.Learning.Task.Automatic
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.ChooseSoftware'
 
       @directive: -> "Choose pixel art software"
@@ -120,7 +122,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @initialize()
 
-      @completed: ->
+      @completedConditions: ->
         PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
 
     class @Doodling extends PAA.Learning.Task.Upload
@@ -206,7 +208,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @initialize()
 
-  class @CopyReference extends PAA.Learning.Task
+  class @CopyReference extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.CopyReference'
 
     @directive: -> "Copy the reference"
@@ -222,6 +224,10 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
 
     @initialize()
+
+    @completedConditions: ->
+      # TODO
+      false
 
   @tasks: -> [
     @DrawingApp

@@ -49,9 +49,6 @@ class PAA.Learning.Task
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
 
-  # Override if the task can be automatically determined if it was completed.
-  @completed: -> null
-
   constructor: ->
     # Subscribe to this goal's translations.
     translationNamespace = @id()
@@ -74,14 +71,12 @@ class PAA.Learning.Task
   groupNumber: -> @constructor.groupNumber()
 
   completed: ->
-    # See if this task is automatically determined to be completed.
-    completed = @constructor.completed()
-    return completed if completed?
-
     # We need an entry made by this character.
     return unless characterId = LOI.characterId()
+
+    # TODO: Add support for resetting goals/tasks
     
-    @constructor.Entry.documents.findOne
+    PAA.Learning.Task.Entry.documents.findOne
       taskId: @id()
       'character._id': characterId
 

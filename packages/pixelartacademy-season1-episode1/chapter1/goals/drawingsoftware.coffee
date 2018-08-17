@@ -6,6 +6,8 @@ class C1.Goals.DrawingSoftware extends PAA.Learning.Goal
 
   @displayName: -> "Drawing software"
 
+  @chapter: -> C1
+
   Goal = @
 
   class @ChooseSoftware extends PAA.Learning.Task

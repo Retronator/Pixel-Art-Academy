@@ -6,6 +6,8 @@ class C1.Goals.PhysicalPixelArt extends PAA.Learning.Goal
 
   @displayName: -> "Physical pixel art"
 
+  @chapter: -> C1
+
   Goal = @
 
   class @ChooseMedium extends PAA.Learning.Task

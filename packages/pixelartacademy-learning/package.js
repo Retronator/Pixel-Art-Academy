@@ -20,8 +20,12 @@ Package.onUse(function(api) {
   
   api.addFile('goal..');
   api.addFile('task..');
-  api.addFile('task/entry');
 
   api.addFile('task/tasks/upload');
   api.addFile('task/tasks/manual');
+  api.addFile('task/tasks/automatic');
+
+  api.addFile('task/entry..');
+  api.addFile('task/entry/methods');
+  api.addServerFile('task/entry/subscriptions');
 });

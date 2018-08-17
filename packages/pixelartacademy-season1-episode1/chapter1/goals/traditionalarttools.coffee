@@ -6,6 +6,8 @@ class C1.Goals.TraditionalArtTools extends PAA.Learning.Goal
 
   @displayName: -> "Traditional art tools"
 
+  @chapter: -> C1
+
   Goal = @
 
   class @ChooseMedium extends PAA.Learning.Task

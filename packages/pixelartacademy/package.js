@@ -19,6 +19,7 @@ Package.onUse(function(api) {
   api.addFile('pixelartacademy');
 
   api.addFile('adventure..');
+  api.addFile('adventure/chapter..');
 
   // Layouts
 

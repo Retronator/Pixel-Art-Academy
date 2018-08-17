@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Babel
 PAA = PixelArtAcademy
 IL = Illustrapedia
@@ -17,6 +18,9 @@ class PAA.Learning.Goal
   # String to represent the goal in the UI. Note that we can't use
   # 'name' since it's an existing property holding the class name.
   @displayName: -> throw new AE.NotImplementedException "You must specify the goal name."
+    
+  # Chapter class that should oversee this goal.
+  @chapter: -> throw new AE.NotImplementedException "You must provide the chapter class that activates this goal."
 
   # Override to provide task classes that are included in this goal.
   @tasks: -> []

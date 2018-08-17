@@ -6,6 +6,8 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
   @displayName: -> "Snake game"
 
+  @chapter: -> C1
+
   Goal = @
 
   class @Talk extends PAA.Learning.Task

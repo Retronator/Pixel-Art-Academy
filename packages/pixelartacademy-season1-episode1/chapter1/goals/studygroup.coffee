@@ -6,6 +6,7 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
   @displayName: -> "Join a study group"
 
+  @chapter: -> C1
 
   Goal = @
 

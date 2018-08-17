@@ -6,6 +6,8 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   @displayName: -> "Taking the time"
 
+  @chapter: -> C1
+
   Goal = @
 
   class @SetDesiredTime extends PAA.Learning.Task

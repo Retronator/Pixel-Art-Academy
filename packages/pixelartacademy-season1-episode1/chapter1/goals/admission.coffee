@@ -6,6 +6,8 @@ class C1.Goals.Admission extends PAA.Learning.Goal
 
   @displayName: -> "Get admitted"
 
+  @chapter: -> C1
+
   class @Complete extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Admission.Complete'
 

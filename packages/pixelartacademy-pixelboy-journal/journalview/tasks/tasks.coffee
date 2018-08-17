@@ -45,6 +45,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Tasks extends AM.Component
 
       activeGoalTask.task for activeGoalTask in activeGoalTasks
 
+    # Subscribe to character's task entries.
+    PAA.Learning.Task.Entry.forCharacter.subscribe @, LOI.characterId()
+
   show: (callback) ->
     @visible true
     @_taskCallback = callback

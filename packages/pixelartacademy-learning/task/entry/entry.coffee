@@ -13,3 +13,10 @@ class PAA.Learning.Task.Entry extends AM.Document
     name: @id()
     fields: =>
       character: @ReferenceField LOI.Character, [], true
+
+  # Methods
+  @insert: @method 'insert'
+
+  # Subscriptions
+  @forCharacter: @subscription 'forCharacter'
+  @forCharacterTaskIds: @subscription 'forCharacterTaskIds'

@@ -6,6 +6,8 @@ class C1.Goals.StudyPlan extends PAA.Learning.Goal
 
   @displayName: -> "Start study plan"
 
+  @chapter: -> C1
+
   Goal = @
 
   class @ChooseAdmissionProject extends PAA.Learning.Task
