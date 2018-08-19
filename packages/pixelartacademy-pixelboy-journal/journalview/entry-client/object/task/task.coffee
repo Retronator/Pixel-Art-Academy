@@ -36,9 +36,28 @@ class Entry.Object.Task extends Entry.Object
   completedClass: ->
     'completed' if @task.completed()
 
+  active: ->
+    @task.active @goal.tasks()
+
+  activeClass: ->
+    'active' if @active()
+
   ready: ->
     @_taskEntrySubscription.ready()
 
   readyClass: ->
     # We are ready when we're sure we got the entry if it exists.
     'ready' if @ready()
+
+  prerequisitesAll: ->
+    @task.constructor.predecessorsCompleteType() is PAA.Learning.Task.PredecessorsCompleteType.All
+
+  prerequisites: ->
+    tasks = @goal.tasks()
+    prerequisites = []
+
+    for predecessorClass in @task.predecessors()
+      predecessor = _.find tasks, (task) => task instanceof predecessorClass
+      prerequisites.push predecessor unless predecessor.completed()
+
+    prerequisites

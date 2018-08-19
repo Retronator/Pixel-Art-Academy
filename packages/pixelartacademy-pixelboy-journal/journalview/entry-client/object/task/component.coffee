@@ -9,5 +9,5 @@ class Entry.Object.Task.Component extends AM.Component
 
     @task = @parent.task
 
-  ready: ->
-    @parent.ready()
+  ready: -> @parent.ready()
+  active: -> @parent.active()

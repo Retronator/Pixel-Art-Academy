@@ -1,7 +1,8 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
-C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 HQ = Retronator.HQ
+C1 = PixelArtAcademy.Season1.Episode1.Chapter1
+DIY = C1.Goals.PixelArtSoftware.DIY
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -13,6 +14,30 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/postpixelboy/scenes/pixelart.script'
 
   @initialize()
+
+  constructor: ->
+    super
+
+    @pixelArtSoftware = new C1.Goals.PixelArtSoftware
+
+    @taskClassNames = [
+      'Doodling'
+      'AdvancedTools'
+      'Reference'
+      'Grid'
+      'AdvancedSetup'
+    ]
+
+    taskClassIds = (DIY[taskClassName].id() for taskClassName in @taskClassNames)
+
+    # We need to know the status of Pixel Art Software related tasks.
+    @_taskEntriesSubscription = PAA.Learning.Task.Entry.forCharacterTaskIds.subscribe LOI.characterId(), taskClassIds
+
+  destroy: ->
+    super
+
+    @pixelArtSoftware.destroy()
+    @_taskEntriesSubscription.stop()
 
   # Script
 
@@ -51,6 +76,8 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
   # Listener
 
   onChoicePlaceholder: (choicePlaceholderResponse) ->
+    scene = @options.parent
+
     return unless choicePlaceholderResponse.scriptId is HQ.Store.RetroListener.CharacterScript.id()
     return unless choicePlaceholderResponse.placeholderId is 'MainQuestion'
 
@@ -84,3 +111,16 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
     Tracker.nonreactive =>
       @script.ephemeralState 'externalSoftware', externalSoftware
       @script.ephemeralState 'externalSoftwareName', externalSoftwareName
+
+    # We need to know which tasks the user has completed.
+    completedTasks = {}
+    tasks = scene.pixelArtSoftware.tasks()
+
+    for taskClassName in scene.taskClassNames
+      taskClass = DIY[taskClassName]
+      task = _.find tasks, (task) => task instanceof taskClass
+      completedTasks[taskClassName] = true if task.completed()
+
+    Tracker.nonreactive =>
+      @script.ephemeralState 'completedTasks', completedTasks
+

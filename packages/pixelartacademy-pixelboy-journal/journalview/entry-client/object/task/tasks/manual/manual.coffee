@@ -10,7 +10,7 @@ class Entry.Object.Task.Manual extends Entry.Object.Task.Component
   template: -> @constructor.id()
 
   showConfirmButton: ->
-    @ready() and not @task.completed()
+    @ready() and @active() and not @task.completed()
 
   events: ->
     super.concat

@@ -15,15 +15,17 @@
           Upload the required image to complete the task.
         {{/if}}
       </div>
-      <div class="upload">
-        {{#if pictureSource}}
-            <img class="picture" src="{{pictureSource}}">
-        {{else}}
-          <button class="insert-picture-button">
-            <img class="icon" src="{{image '/pixelartacademy/pixelboy/apps/journal/objects-picture.png'}}">
-          </button>
-        {{/if}}
-      </div>
+      {{#if showUpload}}
+        <div class="upload">
+          {{#if pictureSource}}
+              <img class="picture" src="{{pictureSource}}">
+          {{else}}
+            <button class="insert-picture-button">
+              <img class="icon" src="{{image '/pixelartacademy/pixelboy/apps/journal/objects-picture.png'}}">
+            </button>
+          {{/if}}
+        </div>
+      {{/if}}
     {{/if}}
   </div>
 </template>

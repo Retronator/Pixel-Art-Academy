@@ -2,7 +2,21 @@
   <div class="goal">
     {{> t10e goal.displayNameTranslation}}
   </div>
-  <div class="task {{completedClass}} {{readyClass}}">
+  <div class="task {{completedClass}} {{activeClass}} {{readyClass}}">
     {{> Render taskComponent}}
+    {{#if prerequisites.length}}
+      <div class="prerequisites">
+        {{#if prerequisitesAll}}
+          You need to complete the following tasks before you can work on this one:
+        {{else}}
+          Complete one of the following tasks to be able to work on this one:
+        {{/if}}
+        <ul class="tasks">
+          {{#each prerequisites}}
+            <li class="task">{{> t10e directiveTranslation}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
   </div>
 </template>

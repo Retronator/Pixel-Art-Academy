@@ -1,5 +1,7 @@
 # PixelArtAcademy.Season1.Episode1.Chapter1.PostPixelBoy.PixelArt
 
+<!-- PIXELBOY EDITOR -->
+
 ## UsePixelBoyEditorChoice
 
 * I've decided, I want to use the PixelBoy editor. `not AfterTutorial`
@@ -55,6 +57,8 @@ retro:
   Do that and the editor is yours to use for all drawing projects.
 
 -> [Return]
+
+<!-- EXTERNAL SOFTWARE -->
 
 ## UseExternalSoftwareChoice
 
@@ -139,7 +143,7 @@ retro:
 
 ## ExternalSoftwareTutorialChoice
 
-* I'd like some help with using my software. `AfterChosenSoftware`
+* I'd like some help with using my software. `AfterChosenSoftware and not _completedTasks.Doodling`
 
 ## ExternalSoftwareTutorial
 
@@ -164,9 +168,9 @@ retro: To get to your next task, you need to upload your test image to your jour
 
 ## AdvancedToolsAndReferencesChoice
 
-* I've played around with the software.
+* I've played around with the software. `_completedTasks.Doodling and not _completedTasks.Reference and not AdvancedToolsQuestion`
 
--> [AdvancedToolsQuestion] `not _finishedAdvancedTools`
+-> [AdvancedToolsQuestion] `not _completedTasks.AdvancedTools`
 
 retro: Awesome, let's move on to references!
 
@@ -190,7 +194,7 @@ retro: Good. Don't forget to ask me about references next time.
 
 ## ReferencesChoice
 
-* Let's go on to references.
+* Let's go on to references. `_completedTasks.Doodling and not _completedTasks.References and AdvancedToolsQuestion`
 
 -> [ReferencesWithExclamation] `not References`
 
@@ -280,7 +284,7 @@ retro:
 
 ## GridChoice
 
-* I got the hang of references. What's next? -> [Grid]
+* I got the hang of references. What's next? -> [Grid] `_completedTasks.Reference and not _completedTasks.Grid`
 
 ## Grid
 
@@ -305,7 +309,7 @@ retro: Let me know once you've completed this step.
 
 ## BasicsDoneChoice
 
-* I think I got the basics of my software figured out.
+* I think I got the basics of my software figured out. `_completedTasks.Grid`
 
 retro:
   Awesome! You're ready to draw a real image now.
@@ -315,7 +319,7 @@ retro:
 
 ## AdvancedSetupChoice
 
-* Are there any more things to learn regarding software?
+* Are there any more things to learn regarding software? `_completedTasks.Grid`
 
 retro:
   Yes, quite many. We haven't really touched on color palettes or how to set up preview windows. 

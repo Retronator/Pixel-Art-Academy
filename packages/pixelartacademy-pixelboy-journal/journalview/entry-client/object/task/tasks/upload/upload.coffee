@@ -20,6 +20,9 @@ class Entry.Object.Task.Upload extends Entry.Object.Task.Component
 
   pictureSource: ->
     @parent.task.entry()?.upload.picture.url or @preview()
+
+  showUpload: ->
+    @active() or @task.completed()
   
   events: ->
     super.concat

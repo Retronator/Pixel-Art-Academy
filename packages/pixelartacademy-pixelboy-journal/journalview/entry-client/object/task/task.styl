@@ -33,6 +33,10 @@
       .complete
         display none
 
+    &:not(.active)
+      .complete
+        display none
+
     &.ready
       .confirmation
         border-color atariGrey(2)
@@ -53,7 +57,13 @@
       line-height 7rem
 
     .complete
+    .prerequisites
       margin 3rem 0
       adventure()
-      color atariGreen(2)
       line-height 7rem
+
+    .complete
+      color atariGreen(2)
+
+    .prerequisites
+      color atariRed(2)
