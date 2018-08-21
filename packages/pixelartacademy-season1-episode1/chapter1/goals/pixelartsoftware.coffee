@@ -167,7 +167,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @initialize()
 
-    class @Reference extends PAA.Learning.Task.Manual
+    class @Reference extends PAA.Learning.Task.Survey
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Reference'
       @goal: -> Goal
 
@@ -175,12 +175,43 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @instructions: -> """
         Talk to Retro in the Store to learn different ways to set up reference images when drawing.
-        Confirm that you've done this task in your journal.
+        Mark which ways you are going to use in your journal.
       """
 
       @predecessors: -> [Goal.DIY.Doodling]
 
       @groupNumber: -> 1
+
+      @questions: -> [
+        key: 'references'
+        type: PAA.Learning.Task.Survey.QuestionType.MultipleChoice
+        prompt: "How will you display your references?"
+        multipleAnswers: true
+        required: true
+        choices: [
+          key: 'newLayer'
+          answer: "New layer in same document"
+        ,
+          key: 'samePorgram'
+          answer: "Opened in same program"
+        ,
+          key: 'anotherProgram'
+          answer: "Opened in another program (image viewer, specialized software)"
+        ,
+          key: 'secondScreen'
+          answer: "On a second screen"
+        ,
+          key: 'mobileDevice'
+          answer: "On a mobile device"
+        ,
+          key: 'printed'
+          answer: "Printed"
+        ,
+          key: 'other'
+          answer: "Other"
+          text: true
+        ]
+      ]
 
       @initialize()
 

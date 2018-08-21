@@ -34,8 +34,8 @@ class PAA.Practice.Journal.Entry extends AM.Document
   #       url
   #
   #     task: a learning task
-  #       entry: an entry created to complete the task
-  #         _id
+  #       id: the id of the task to be displayed
+  #       data: any extra data not stored in the entry
   #
   #   attributes: object with formatting directives
   #

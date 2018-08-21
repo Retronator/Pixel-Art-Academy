@@ -1,0 +1,67 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task-survey
+  .confirm-button
+    position absolute
+    left -1rem
+    top -1rem
+    width calc(100% + 2rem)
+    height calc(100% + 2rem)
+    border none
+    background none
+
+  .survey
+    adventure()
+
+    .questions
+      margin 4rem 0
+      padding-left 10rem
+
+      .question
+        .prompt
+          text-transform uppercase
+          line-height 6rem
+          margin-bottom 2rem
+
+        .multiple-choice
+          .choices
+            list-style none
+            padding 0
+
+            .choice
+              .label
+                position relative
+                cursor pointer
+
+                input[type='checkbox']
+                  display none
+
+                  &:checked + .answer::before
+                    content '✔︎'
+
+                .answer
+                  display block
+                  margin 5rem 0 5rem 10rem
+                  line-height 7rem
+
+                  &::before
+                    content ''
+                    display block
+                    position absolute
+                    left 0
+                    top -1rem
+                    width 6rem
+                    height 6rem
+                    padding 0 0 1rem 1rem
+                    margin-right 3rem
+                    vertical-align bottom
+                    border-bottom 1rem solid atariGrey(2)
+                    text-align center
+
+              .extra
+                margin-left 10rem
+
+                input
+                  background none
+                  border 1rem solid atariGrey(2)
+                  width 100rem

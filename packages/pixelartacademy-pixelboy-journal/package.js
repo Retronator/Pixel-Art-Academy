@@ -49,6 +49,7 @@ Package.onUse(function(api) {
   api.addClientComponent('journalview/entry-client/object/task/tasks/automatic..');
   api.addClientComponent('journalview/entry-client/object/task/tasks/manual..');
   api.addClientComponent('journalview/entry-client/object/task/tasks/upload..');
+  api.addClientComponent('journalview/entry-client/object/task/tasks/survey..');
 
   api.addFile('journalview/journaldesign..');
   api.addComponent('journalview/journaldesign/traditional..');
