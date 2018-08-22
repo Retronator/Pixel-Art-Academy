@@ -9,7 +9,10 @@ class C1.PostPixelBoy extends LOI.Adventure.Section
     @DrawingChallenges
     @Store
     @PixelArt
-    @GalleryEast
+    @CopyReference.GalleryEast
+    @CopyReference.GalleryWest
+    @CopyReference.Store
+    @CopyReference.Bookshelves
   ]
 
   @initialize()

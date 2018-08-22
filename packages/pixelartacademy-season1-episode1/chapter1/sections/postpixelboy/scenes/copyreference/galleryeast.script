@@ -1,4 +1,4 @@
-# PixelArtAcademy.Season1.Episode1.Chapter1.PostPixelBoy.GalleryEast
+# PixelArtAcademy.Season1.Episode1.Chapter1.PostPixelBoy.CopyReference.GalleryEast
 
 ## PixelArtSoftwareChoice
 
@@ -10,6 +10,16 @@ corinne: Getting ready to work on your admission project?
 
 * Yeah!
 * Soon enough.
+
+corinne:
+  Alright, let's head downstairs to our game library.
+  We'll pick something up for you.
+
+> Corinne goes west.
+
+### CorinneLeaves
+
+-> [End]
 
 corinne: You got it!
 
@@ -31,7 +41,11 @@ corinne:
   You can use the PixelBoy editor or your own software to complete the task.
   Whatever you use, that option will unlock for you for your admission project as well.
 
-### BackToMainQuestions
+-> [Return]
+
+## Return
+
+### Return
 
 -> [End]
 

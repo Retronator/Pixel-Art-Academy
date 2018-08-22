@@ -22,7 +22,7 @@ class HQ.GalleryEast extends LOI.Adventure.Location
   @initialize()
 
   things: -> [
-    HQ.Actors.Corinne
+    HQ.GalleryEast.Corinne
   ]
 
   exits: ->

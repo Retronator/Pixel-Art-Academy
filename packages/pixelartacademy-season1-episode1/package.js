@@ -136,7 +136,11 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/postpixelboy/scenes/drawingchallenges');
   api.addThing('chapter1/sections/postpixelboy/scenes/store');
   api.addThing('chapter1/sections/postpixelboy/scenes/pixelart');
-  api.addThing('chapter1/sections/postpixelboy/scenes/galleryeast');
+  api.addFile('chapter1/sections/postpixelboy/scenes/copyreference..');
+  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/galleryeast');
+  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/gallerywest');
+  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/store');
+  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/bookshelves');
 
   // Admission projects
   api.addFile('chapter1/sections/admissionprojects..');
