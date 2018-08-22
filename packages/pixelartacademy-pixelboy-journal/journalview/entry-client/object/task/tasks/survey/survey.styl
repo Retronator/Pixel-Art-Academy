@@ -17,10 +17,14 @@
       margin 4rem 0
       padding-left 10rem
 
+      &.single-question
+        list-style none
+        padding-left 0
+
       .question
         .prompt
           text-transform uppercase
-          line-height 6rem
+          line-height 7rem
           margin-bottom 2rem
 
         .multiple-choice
@@ -65,3 +69,8 @@
                   background none
                   border 1rem solid atariGrey(2)
                   width 100rem
+
+          .answer
+            .choices
+              list-style square
+              padding-left 10rem

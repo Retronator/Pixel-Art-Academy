@@ -9,12 +9,9 @@ class Entry.Object.Task.Manual extends Entry.Object.Task.Component
   @register @id()
   template: -> @constructor.id()
 
-  showConfirmButton: ->
-    @ready() and @active() and not @task.completed()
-
   events: ->
     super.concat
-      'click .confirm-button': @onClickConfirmButton
+      'click .enabled.confirmation': @onClickConfirmation
 
-  onClickConfirmButton: (event) ->
+  onClickConfirmation: (event) ->
     PAA.Learning.Task.Entry.insert LOI.characterId(), @parent.task.id()

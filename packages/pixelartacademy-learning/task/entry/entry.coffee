@@ -13,6 +13,9 @@ class PAA.Learning.Task.Entry extends AM.Document
   # upload: data for an upload entry
   #   picture: an image without any semantic information
   #     url: the url of the image itself
+  #
+  # survey: data for a survey entry
+  #   {questionKey}: answer data for the given question, depending on question type
   @Meta
     name: @id()
     fields: =>

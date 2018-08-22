@@ -34,16 +34,19 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
   questions: ->
     @task.constructor.questions()
 
+  singleQuestionsClass: ->
+    'single-question' if @questions().length is 1
+
   promptTranslation: ->
     question = @currentData()
     AB.translation @task._translationSubscription, "survey.#{question.key}"
 
   events: ->
     super.concat
-      'click .confirm-button': @onClickConfirmButton
+      'click .enabled.confirmation': @onClickConfirmation
 
-  onClickConfirmButton: (event) ->
-    PAA.Learning.Task.Entry.insert LOI.characterId(), @task.id()
+  onClickConfirmation: (event) ->
+    PAA.Learning.Task.Entry.insert LOI.characterId(), @parent.task.id(), survey: @state()
 
   class @MultipleChoice extends AM.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice'
@@ -84,6 +87,13 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
 
       # Option needs to be checked to show the input.
       @state()[choice.key]?
+
+    answers: ->
+      {key, value} for key, value of @state()
+
+    textAnswer: ->
+      answer = @currentData()
+      _.isString answer.value
 
     class @Choice extends AM.DataInputComponent
       @register 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice.Choice'

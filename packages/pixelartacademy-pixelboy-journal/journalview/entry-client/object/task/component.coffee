@@ -11,3 +11,7 @@ class Entry.Object.Task.Component extends AM.Component
 
   ready: -> @parent.ready()
   active: -> @parent.active()
+
+  confirmationEnabledClass: ->
+    'enabled' if @ready() and @active() and not @task.completed()
+

@@ -1,15 +1,15 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey">
   <div class="pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task-survey">
     <div class="confirmation {{confirmationEnabledClass}}">
-    </div>
-    <div class="directive">
-      {{> t10e task.directiveTranslation}}
+      <div class="directive">
+        {{> t10e task.directiveTranslation}}
+      </div>
     </div>
     <div class="instructions">
       {{> t10e task.instructionsTranslation}}
     </div>
     <form class="survey">
-      <ol class="questions">
+      <ol class="questions {{singleQuestionsClass}}">
         {{#each questions}}
           <li class="question">
             <div class="prompt">
@@ -59,15 +59,15 @@
       <div class="answer">
       {{#if multipleAnswers}}
         <ul class="choices">
-          {{#each choices}}
+          {{#each answers}}
             <li class="choice">
-              {{> t10e answerTranslation}}{{#if showText}}: {{value}}{{/if}}
+              {{> t10e answerTranslation}}{{#if textAnswer}}: {{value}}{{/if}}
             </li>
           {{/each}}
         </ul>
       {{else}}
-        {{#each choices}}
-          {{> t10e answerTranslation}}{{#if showText}}: {{value}}{{/if}}
+        {{#each answers}}
+          {{> t10e answerTranslation}}{{#if textAnswer}}: {{value}}{{/if}}
         {{/each}}
       {{/if}}
       </div>

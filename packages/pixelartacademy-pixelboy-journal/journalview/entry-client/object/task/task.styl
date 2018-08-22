@@ -1,6 +1,7 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task
+  cursor default
   border-bottom 1rem solid atariGrey(2)
 
   .goal
@@ -17,8 +18,8 @@
         &::after
           content '✓'
           position absolute
-          left 1rem
-          top -1rem
+          left 2rem
+          top 0
 
       .instructions
       .complete
@@ -38,18 +39,25 @@
         display none
 
     &.ready
-      .confirmation
+      .confirmation::before
         border-color atariGrey(2)
 
     .confirmation
       position relative
-      width 10rem
-      height 10rem
-      border 1rem solid transparent
-      float left
 
-    .directive
-      margin 0 0 4rem 13rem
+      &::before
+        position relative
+        content ''
+        width 8rem
+        height 8rem
+        border 1rem solid transparent
+        float left
+
+      &.enabled
+        cursor pointer
+
+      .directive
+        margin 0 0 4rem 13rem
 
     .instructions
       margin 3rem auto
