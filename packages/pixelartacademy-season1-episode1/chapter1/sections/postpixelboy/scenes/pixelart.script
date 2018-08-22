@@ -194,7 +194,7 @@ retro: Good. Don't forget to ask me about references next time.
 
 ## ReferencesChoice
 
-* Let's go on to references. `_completedTasks.Doodling and not _completedTasks.References and AdvancedToolsQuestion`
+* Let's go on to references. `_completedTasks.Doodling and not _completedTasks.Reference and AdvancedToolsQuestion`
 
 -> [ReferencesWithExclamation] `not References`
 
@@ -222,7 +222,7 @@ retro:
 * Any out-of-the-box alternatives? -> [ReferencesAlternatives] `OptionsAfter`
 * I think I have an idea how I'll go about this.
 
-retro: Good. Write about it in your journal and mark it complete.
+retro: Good. Write it down in your journal and mark it complete.
 
 -> [Return]
 
@@ -309,7 +309,7 @@ retro: Let me know once you've completed this step.
 
 ## BasicsDoneChoice
 
-* I think I got the basics of my software figured out. `_completedTasks.Grid`
+* I finished setting the grid. `_completedTasks.Grid and not _startedCopyReference`
 
 retro:
   Awesome! You're ready to draw a real image now.
@@ -317,9 +317,11 @@ retro:
   It will appear under Challenges in the Drawing App.
   Upload your result and you will unlock the option to download and upload sprites everywhere.
 
+-> [Return]
+
 ## AdvancedSetupChoice
 
-* Are there any more things to learn regarding software? `_completedTasks.Grid`
+* Are there any more things to learn regarding software? `_completedTasks.Grid and not _completedTasks.AdvancedSetup`
 
 retro:
   Yes, quite many. We haven't really touched on color palettes or how to set up preview windows. 
@@ -333,7 +335,7 @@ retro: Nah, it's not so bad. Just take it one step at a time.
 ## AdvancedSetupVideos
 
 retro:
-  If there's a video tutorial or a series about your software, you're encouraged to spend some time watching it.
+  If there's a video tutorial about your software, you're encouraged to spend some time watching it.
   You don't have to do it right now, but it's always an option to deepen your knowledge.
   
 ## AdvancedSetupQuestions
@@ -343,7 +345,7 @@ retro:
 * Any recommendations for Aseprite? -> [AdvancedSetupAseprite] `_externalSoftware is 'Aseprite'`
 * Any recommendations for Pyxel Edit? -> [AdvancedSetupPyxelEdit] `_externalSoftware is 'PyxelEdit'`
 * How can I find tutorials for my software? -> [AdvancedSetupSearch]
-* Good, I'll write about it in my journal. -> [AdvancedSetupJournal]
+* Good, I'll mark in my journal when I've watched some tutorials. -> [AdvancedSetupJournal]
 * Thank you so much!
 
 retro: You're welcome!
@@ -365,7 +367,7 @@ pause
 ## AdvancedSetupGIMP
 
 retro: 
-  I actually made a video about it that's quite popular.
+  I actually made a video about it that people seem to find useful.
   It's a bit old by now, but should still help you get started.
 
 > Retro shows you his video on YouTube.

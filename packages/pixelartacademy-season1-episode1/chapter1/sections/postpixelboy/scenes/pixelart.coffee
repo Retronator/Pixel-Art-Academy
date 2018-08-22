@@ -124,3 +124,6 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
     Tracker.nonreactive =>
       @script.ephemeralState 'completedTasks', completedTasks
 
+    # TODO: We need to know if the player has started the copy reference task.
+    Tracker.nonreactive =>
+      @script.ephemeralState 'startedCopyReference', false
