@@ -2,49 +2,170 @@
 
 ## Start
 
+`_choice = ''`
+
 corinne:
   Here we are! 
   Our collection is big so let's narrow it down.
   First of all you can choose if you want the art to have just two colors or more.
 
-* I'll take it easy and go with two.
-* I like colors so let's go with more.
+* I'll take it easy and go with two. -> [Monochrome]
+* I like colors, so let's go with more. -> [Color]
+
+## Monochrome
+
+`_choice += 'M'`
+
+-> [SmallBig]
+
+## Color
+
+`_choice += 'C'`
+
+## SmallBig
 
 corinne: Next question, do you want the sprite to be small or big?
 
-* Small, so I'll be done quickly.
-* I have some time, I can do big.
+* Small, so I'll be done quickly. -> [Small]
+* I have some time, I can do big. -> [Big]
+
+## Small
+
+`_choice += 'S'`
+
+-> [CharacterThing]
+
+## Big
+
+`_choice += 'B'`
+
+## CharacterThing
 
 corinne: And do you want to draw a character or something else?
 
-* A character.
-* Let's see what else you have.
+* A character. -> [Character]
+* Let's see what else you have. -> [Thing]
 
 ## Character
 
 corinne: Alright. Do you want to draw the hero or an enemy?
 
-* Always the hero.
-* Bad guys are kind of fun.
+* Always the hero. -> [Hero]
+* Bad guys are kind of fun. -> [Enemy]
 
-## OtherThings
+## Hero
+
+`_choice += 'H'`
+
+-> [ModernOld]
+
+## Enemy
+
+`_choice += 'E'`
+
+-> [ModernOld]
+
+## CharacterThing
+
+## Thing
 
 corinne: Alright. Do you want a vehicle or other objects?
 
-* Cars, boats, spaceships, whatever you got!
-* I want to draw objects.
+* Cars, boats, spaceships, whatever you got! -> [Vehicle]
+* I want to draw objects. -> [OtherObject]
+
+## Vehicle
+
+`_choice += 'V'`
+
+-> [ModernOld]
+
+## OtherObject
+
+`_choice += 'O'`
+
+-> [ModernOld]
+
+## ModernOld
+
+-> [SpecialRequest] `['MSO', 'MBE', 'CSV', 'CSO'].indexOf(_choice) > -1`
+
+corinne:
+  You can now choose between modern indie games or old classics.
+
+* I feel like indie games right now. -> [Modern]
+* 20th century nostalgia all the way. -> [Old]
+
+## Modern
+
+`_choice += 'M'`
+
+-> [SpecialRequest]
+
+## Old
+
+`_choice += 'O'`
 
 ## SpecialRequest
 
-Finally, do you have any special requests?
+-> [MSVMLuftrausers] `_choice is 'MSVM'`
+-> [CSHMCeleste] `_choice is 'CSHM'`
+-> [CSEMHookLineThinker] `_choice is 'CSEM'`
+-> [MBVMLuftrausers] `_choice is 'MBVM'`
+-> [MBOMCityClickers] `_choice is 'MBOM'`
 
-* A rubber chicken with a pulley in the middle?
+corinne: Finally, do you have any special requests?
+
+* Captain Viridian from VVVVVV? -> [MSHMVVVVVV] `_choice is 'MSHM'`
+* A disenfranchised frog from Despot Dungeons? -> [MSHMDespotGungeons] `_choice is 'MSHM'`
+* A ratman from Despot Dungeons? -> [MSEMDespotGungeons] `_choice is 'MSEM'`
+* A flying skull from l'Abbaye des Morts? -> [MSEMLAbbayeDesMorts] `_choice is 'MSEM'`
 * Anything will do.
 
-You got it!
-    
-> Corinne goes east.
+`_assetId = null`
 
-### Move
+-> [FindGame]
+
+<!-- Monochrome Small -->
+
+## MSHMVVVVVV
+`_assetId = 'MSHMVVVVVV'`
+-> [FindGame]
+
+## MSHMDespotGungeons
+`_assetId = 'MSHMDespotGungeons'`
+-> [FindGame]
+
+## MSEMDespotGungeons
+`_assetId = 'MSEMDespotGungeons'`
+-> [FindGame]
+
+## MSEMLAbbayeDesMorts
+`_assetId = 'MSEMLAbbayeDesMorts'`
+-> [FindGame]
+
+## MSVMLuftrausers
+`_assetId = 'MSVMLuftrausers'`
+-> [FindGame]
+
+## FindGame
+
+corinne: You got it!
+
+> Corinne steps to the shelves and looks for the right game folder.
+
+corinne: 
+  I think it should be in here …
+  Ah, here we go.
+
+> She takes her PixelBoy, swipes the game folder and sends a copy of the reference to your device.
+
+### ReceiveChallengeAsset
+
+corinne: 
+  There you go. 
+  Look in the Challenges section of the Drawing app.
+  You can use the PixelBoy editor or your own software to complete the task.
+  Whatever you use, that option will unlock for you for your admission project as well.
 
 ## End

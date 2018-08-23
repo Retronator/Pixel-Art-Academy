@@ -35,18 +35,6 @@ class C1.PostPixelBoy.CopyReference.GalleryEast extends LOI.Adventure.Scene
         C1.PostPixelBoy.state 'corinneState', C1.PostPixelBoy.CopyReference.CorinneStates.InGalleryWest
         complete()
         
-      ReceiveChallengeAsset: (complete) =>
-        assetId = @ephemeralState 'assetId'
-
-        challengeAssets = C1.Challenges.Drawing.PixelArtSoftware.state 'assets'
-        challengeAssets ?= []
-        challengeAssets.push
-          id: "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
-
-        C1.Challenges.Drawing.PixelArtSoftware.state 'assets', challengeAssets
-
-        complete()
-
       Return: (complete) =>
         # Hook back into Corinne's main script.
         corinne = LOI.adventure.getCurrentThing HQ.Actors.Corinne

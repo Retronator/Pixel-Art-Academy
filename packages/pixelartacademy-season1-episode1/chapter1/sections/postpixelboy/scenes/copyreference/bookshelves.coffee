@@ -36,6 +36,20 @@ class C1.PostPixelBoy.CopyReference.Bookshelves extends LOI.Adventure.Scene
         C1.PostPixelBoy.state 'corinneState', C1.PostPixelBoy.CopyReference.CorinneStates.BackInGalleryEast
         complete()
 
+      ReceiveChallengeAsset: (complete) =>
+        assetId = @ephemeralState 'assetId'
+
+        challengeAssets = C1.Challenges.Drawing.PixelArtSoftware.state 'assets'
+        challengeAssets ?= []
+        id = "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
+
+        # Add the asset it's not already added.
+        challengeAssets.push {id} unless _.find(challengeAssets, (asset) => asset.id is id)
+
+        C1.Challenges.Drawing.PixelArtSoftware.state 'assets', challengeAssets
+
+        complete()
+
   # Listener
 
   onEnter: (enterResponse) ->
@@ -49,8 +63,6 @@ class C1.PostPixelBoy.CopyReference.Bookshelves extends LOI.Adventure.Scene
       return unless corinne = LOI.adventure.getCurrentThing HQ.Actors.Corinne
       return unless corinne.ready()
       computation.stop()
-
-      @script.setThings {corinne}
 
       @startScript()
 

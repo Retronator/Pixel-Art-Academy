@@ -220,5 +220,5 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
     _.without(classes, undefined).join ' '
 
-  minClipboardScale: -> @constructor.minClipboardScale()
-  maxClipboardScale: -> @constructor.maxClipboardScale()
+  minClipboardScale: -> @constructor.minClipboardScale?()
+  maxClipboardScale: -> @constructor.maxClipboardScale?()

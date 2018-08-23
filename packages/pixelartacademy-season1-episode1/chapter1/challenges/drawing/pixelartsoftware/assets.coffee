@@ -5,10 +5,27 @@ CopyReference = C1.Challenges.Drawing.PixelArtSoftware.CopyReference
 PADB = PixelArtDatabase
 
 assets =
-  Big1BitCharacterProtagonistLouBagelsWaffleBar:
+  MSHMVVVVVV:
+    dimensions: -> width: 10, height: 21
+    backgroundColor: -> new THREE.Color '#000'
+    imageName: -> 'mshm-vvvvvv'
+    spriteInfo: -> """
+      Artwork from VVVVVV, 2009
+
+      Artist: Terry Cavanagh
+    """
+    artist:
+      name:
+        first: 'Terry'
+        last: 'Cavanagh'
+    artwork:
+      completionDate:
+        year: 2009
+
+  MBHMLouBagelsWaffleBar:
     dimensions: -> width: 36, height: 49
     paletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
-    imageName: -> 'big-1bit-character-protagonist-loubagelswafflebar'
+    imageName: -> 'mbhm-loubagelswafflebar'
     spriteInfo: -> """
       Artwork from Lou Bagel's Waffle Bar, 2018
 
@@ -22,9 +39,9 @@ assets =
       completionDate:
         year: 2018
 
-  BigColorCharacterEnemyIntoTheRift:
+  CBEMIntoTheRift:
     dimensions: -> width: 30, height: 32
-    imageName: -> 'big-color-character-enemy-intotherift'
+    imageName: -> 'cbem-intotherift'
     spriteInfo: -> """
       Artwork from [Into The Rift](http://www.starsoft.com/IntoTheRift/) (WIP)
 
@@ -44,6 +61,7 @@ for assetId, asset of assets
     class CopyReference[assetId] extends CopyReference
       @id: -> "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
       @fixedDimensions: asset.dimensions
+      @backgroundColor: asset.backgroundColor
       # Note: we don't override restrictedPaletteName since we expect the function to exist.
       @paletteName: asset.paletteName
       @imageName: asset.imageName

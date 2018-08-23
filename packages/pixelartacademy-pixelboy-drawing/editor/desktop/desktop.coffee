@@ -69,6 +69,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       activeTool: @activeTool
       cameraInput: false
       grid: => @drawingActive()
+      gridInvertColor: =>
+        displayedAsset = @displayedAsset()
+        return unless backgroundColor = displayedAsset?.backgroundColor()
+        backgroundColor.r < 0.5 or backgroundColor.g < 0.5 or backgroundColor.b < 0.5
+
       cursor: => @drawingActive()
       canvasSize: => @spriteData()?.bounds
       drawComponents: =>

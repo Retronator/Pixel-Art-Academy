@@ -12,19 +12,18 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
 
   @bitmap: -> "" # Empty sprite
 
-  # We'll provide a custom handling for goal bitmap, so we set this one to a dummy value that is different than empty.
-  @goalBitmap: -> "0"
+  @goalImageUrl: -> "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@imageName()}.png"
 
-  @image: -> throw new AE.NotImplementedException "You must provide the image name for the asset."
+  @imageName: -> throw new AE.NotImplementedException "You must provide the image name for the asset."
 
   @references: -> [
-    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@image()}-reference.png"
+    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@imageName()}-reference.png"
   ]
 
   @customPaletteImageUrl: ->
     return null if @restrictedPaletteName()
 
-    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@image()}-template.png"
+    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@imageName()}-template.png"
 
   @briefComponentClass: ->
     # Note: We need to fully qualify the name instead of using @constructor
