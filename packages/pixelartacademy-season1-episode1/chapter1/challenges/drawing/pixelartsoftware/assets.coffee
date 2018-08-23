@@ -10,7 +10,7 @@ assets =
     backgroundColor: -> new THREE.Color '#000'
     imageName: -> 'mshm-vvvvvv'
     spriteInfo: -> """
-      Artwork from VVVVVV, 2009
+      Artwork from [VVVVVV](https://thelettervsixtim.es), 2010
 
       Artist: Terry Cavanagh
     """
@@ -24,13 +24,14 @@ assets =
 
   MBHMLouBagelsWaffleBar:
     dimensions: -> width: 36, height: 49
-    paletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
     imageName: -> 'mbhm-loubagelswafflebar'
     spriteInfo: -> """
-      Artwork from Lou Bagel's Waffle Bar, 2018
+      Artwork from [Lou Bagel's Waffle Bar](https://loubagel.itch.io/lou-bagel-waffle-bar), 2018
 
       Artist: Chris Taylor
     """
+    maxClipboardScale: -> 1.5
     artist:
       name:
         first: 'Chris'
@@ -61,9 +62,9 @@ for assetId, asset of assets
     class CopyReference[assetId] extends CopyReference
       @id: -> "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
       @fixedDimensions: asset.dimensions
-      @backgroundColor: asset.backgroundColor
+      @backgroundColor: asset.backgroundColor or -> null
       # Note: we don't override restrictedPaletteName since we expect the function to exist.
-      @paletteName: asset.paletteName
+      @restrictedPaletteName: asset.restrictedPaletteName or -> null
       @imageName: asset.imageName
       @spriteInfo: asset.spriteInfo
       @maxClipboardScale: asset.maxClipboardScale

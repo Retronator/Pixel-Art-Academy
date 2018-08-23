@@ -39,6 +39,38 @@ class C1.PostPixelBoy.CopyReference.Bookshelves extends LOI.Adventure.Scene
       ReceiveChallengeAsset: (complete) =>
         assetId = @ephemeralState 'assetId'
 
+        unless assetId
+          choice = @ephemeralState 'choice'
+
+          assetsIds = [
+            'MSHMVVVVVV'
+            'MSHMDespotGungeons'
+            'MSEMDespotGungeons'
+            'MSEMLAbbayeDesMorts'
+            'MSVMLuftrausers'
+            'MBHMLouBagelsWaffleBar'
+            'MBHMNetherWorld'
+            'MBVMLuftrausers'
+            'MBOMCityClickers'
+            'CSHMCeleste'
+            'CSEMHookLineThinker'
+            'CBHMFez'
+            'CBHMOwlboy'
+            'CBHMCourierOfTheCrypts'
+            'CBHMNYKRA'
+            'CBEMSuperCrateBox'
+            'CBEMIntoTheRift'
+            'CBEMKingdom'
+            'CBEMDontGiveUp'
+            'CBVMIntoTheBreach'
+            'CBVMSuperHydorah'
+            'CBOMVirtuaVerse'
+            'CBOMThimbleWeedPark'
+          ]
+
+          possibleAssetIds = _.filter assetsIds, (assetId) => _.startsWith assetId, choice
+          assetId = Random.choice possibleAssetIds
+
         challengeAssets = C1.Challenges.Drawing.PixelArtSoftware.state 'assets'
         challengeAssets ?= []
         id = "PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.#{assetId}"
