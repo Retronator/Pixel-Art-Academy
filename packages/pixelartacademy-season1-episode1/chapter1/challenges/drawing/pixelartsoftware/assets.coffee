@@ -21,6 +21,77 @@ assets =
     artwork:
       completionDate:
         year: 2009
+  
+  MSHMDespotDungeons:
+    dimensions: -> width: 12, height: 14
+    backgroundColor: -> new THREE.Color '#1e1e1e'
+    imageName: -> 'mshm-despotdungeons'
+    spriteInfo: -> """
+      Artwork from [Despot Dungeons](https://realfast.itch.io/despot-dungeons), 2017
+
+      Artist: Hjalte Tagmose
+    """
+    artist:
+      name:
+        first: 'Hjalte'
+        last: 'Tagmose'
+    artwork:
+      completionDate:
+        year: 2017
+
+  MSEMDespotDungeons:
+    dimensions: -> width: 11, height: 14
+    backgroundColor: -> new THREE.Color '#1e1e1e'
+    imageName: -> 'msem-despotdungeons'
+    spriteInfo: -> """
+      Artwork from [Despot Dungeons](https://realfast.itch.io/despot-dungeons), 2017
+
+      Artist: Hjalte Tagmose
+    """
+    artist:
+      name:
+        first: 'Hjalte'
+        last: 'Tagmose'
+    artwork:
+      completionDate:
+        year: 2017
+
+  MSEMLAbbayeDesMorts:
+    dimensions: -> width: 15, height: 9
+    backgroundColor: -> new THREE.Color '#000'
+    imageName: -> 'msem-labbayedesmorts'
+    spriteInfo: -> """
+      Artwork from [l'Abbaye des Morts](https://www.locomalito.com/abbaye_des_morts.php), 2010
+
+      Artist: Locomalito
+    """
+    artist:
+      name:
+        first: 'Juan'
+        middle: 'Antonio'
+        last: 'Becerra'
+      pseudonym: 'Locomalito'
+    artwork:
+      completionDate:
+        year: 2010
+
+  MSVMLuftrauser:
+    dimensions: -> width: 16, height: 14
+    backgroundColor: -> new THREE.Color '#e5dcae'
+    imageName: -> 'msvm-luftrauser'
+    spriteInfo: -> """
+      Artwork from [LUFTRAUSER](https://www.newgrounds.com/portal/view/573422), 2011
+
+      Artist: Paul 'Pietepiet' Veer
+    """
+    artist:
+      name:
+        first: 'Paul'
+        last: 'Veer'
+        nickname: 'Pietepiet'
+    artwork:
+      completionDate:
+        year: 2011
 
   MBHMLouBagelsWaffleBar:
     dimensions: -> width: 36, height: 49
@@ -40,13 +111,215 @@ assets =
       completionDate:
         year: 2018
 
+  MBHMNetherWorld:
+    dimensions: -> width: 13, height: 16
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+    imageName: -> 'mbhm-netherworld'
+    spriteInfo: -> """
+      Artwork from [NetherWorld](http://www.netherworldgame.com) (WIP)
+
+      Artist: Isabel 'Erien' Armentero
+    """
+    artist:
+      name:
+        first: 'Isabel'
+        last: 'Armentero'
+        nickname: 'Erien'
+    artwork:
+      completionDate:
+        year: 2017
+
+  MBVMLuftrausers:
+    dimensions: -> width: 59, height: 18
+    backgroundColor: -> new THREE.Color '#e5ddac'
+    imageName: -> 'mbvm-luftrausers'
+    spriteInfo: -> """
+      Artwork from [LUFTRAUSERS](http://luftrausers.com), 2014
+
+      Artist: Roy Nathan de Groot
+    """
+    artist:
+      name:
+        first: 'Roy'
+        middle: 'Nathan'
+        lastPrefix: 'de'
+        last: 'Groot'
+    artwork:
+      completionDate:
+        year: 2014
+
+  MBOMCityClickers:
+    dimensions: -> width: 34, height: 22
+    backgroundColor: -> new THREE.Color '#e8cda8'
+    imageName: -> 'mbom-cityclickers'
+    spriteInfo: -> """
+      Artwork from [City Clickers](https://eigen.itch.io/city-clickers), 2017
+
+      Artist: Eigen Lenk
+    """
+    artist:
+      name:
+        first: 'Eigen'
+        last: 'Lenk'
+    artwork:
+      completionDate:
+        year: 2017
+
+  CSHMCeleste:
+    dimensions: -> width: 9, height: 7
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    backgroundColor: ->
+      paletteColor:
+        ramp: 0
+        shade: 0
+    imageName: -> 'cshm-celeste'
+    spriteInfo: -> """
+      Artwork from [CELESTE Classic](https://mattmakesgames.itch.io/celesteclassic), 2015
+
+      Artist: Noel Berry
+    """
+    artist:
+      name:
+        first: 'Noel'
+        last: 'Berry'
+    artwork:
+      completionDate:
+        year: 2015
+
+  CSEMHookLineAndThinker:
+    dimensions: -> width: 7, height: 8
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    backgroundColor: ->
+      paletteColor:
+        ramp: 1
+        shade: 0
+    imageName: -> 'csem-hooklineandthinker'
+    spriteInfo: -> """
+      Artwork from [Hook, Line and Thinker](https://rhythmlynx.itch.io/hook-line-and-thinker), 2016
+
+      Artist: Connor Halford
+    """
+    artist:
+      name:
+        first: 'Connor'
+        last: 'Halford'
+    artwork:
+      completionDate:
+        year: 2016
+
+  CSEMSuperCrateBox:
+    dimensions: -> width: 8, height: 7
+    imageName: -> 'csem-supercratebox'
+    spriteInfo: -> """
+      Artwork from [Super Crate Box](http://supercratebox.com), 2010
+
+      Artist: Roy Nathan de Groot
+    """
+    artist:
+      name:
+        first: 'Roy'
+        middle: 'Nathan'
+        lastPrefix: 'de'
+        last: 'Groot'
+    artwork:
+      completionDate:
+        year: 2010
+
+  CBHMFez:
+    dimensions: -> width: 13, height: 18
+    backgroundColor: -> new THREE.Color '#251635'
+    imageName: -> 'cbhm-fez'
+    spriteInfo: -> """
+      Artwork from [FEZ](http://www.fezgame.com), 2012
+
+      Artist: Phil Fish
+    """
+    artist:
+      name:
+        first: 'Phil'
+        last: 'Fish'
+    artwork:
+      completionDate:
+        year: 2009
+
+  CBHMOwlboy:
+    dimensions: -> width: 19, height: 38
+    imageName: -> 'cbhm-owlboy'
+    spriteInfo: -> """
+      Artwork from [Owlboy](http://www.owlboygame.com), 2016
+
+      Artist: Simon Stafsnes 'Snake' Andersen
+    """
+    maxClipboardScale: -> 2
+    artist:
+      name:
+        first: 'Simon'
+        middle: 'Stafsnes'
+        last: 'Andersen'
+        nickname: 'Snake'
+    artwork:
+      completionDate:
+        year: 2008
+
+  CBHMCourierOfTheCrypts:
+    dimensions: -> width: 15, height: 19
+    imageName: -> 'cbhm-courierofthecrypts'
+    spriteInfo: -> """
+      Artwork from [Courier of the Crypts](http://www.courierofthecrypts.com) (WIP)
+
+      Artist: Primož Vovk
+    """
+    maxClipboardScale: -> 4
+    artist:
+      name:
+        first: 'Primož'
+        last: 'Vovk'
+    artwork:
+      completionDate:
+        year: 2014
+
+  CBHMNYKRA:
+    dimensions: -> width: 10, height: 23
+    imageName: -> 'cbhm-nykra'
+    spriteInfo: -> """
+      Artwork from [NYKRA](http://nykra.com) (WIP)
+
+      Artist: Seth 'ENDESGA' Groom
+    """
+    artist:
+      name:
+        first: 'Seth'
+        last: 'Groom'
+        nickname: 'ENDESGA'
+    artwork:
+      completionDate:
+        year: 2015
+
+  CBEMSuperCrateBox:
+    dimensions: -> width: 19, height: 18
+    imageName: -> 'cbem-supercratebox'
+    spriteInfo: -> """
+      Artwork from [Super Crate Box](http://supercratebox.com), 2010
+
+      Artist: Roy Nathan de Groot
+    """
+    artist:
+      name:
+        first: 'Roy'
+        middle: 'Nathan'
+        lastPrefix: 'de'
+        last: 'Groot'
+    artwork:
+      completionDate:
+        year: 2010
+
   CBEMIntoTheRift:
     dimensions: -> width: 30, height: 32
     imageName: -> 'cbem-intotherift'
     spriteInfo: -> """
       Artwork from [Into The Rift](http://www.starsoft.com/IntoTheRift/) (WIP)
 
-      Artist: Weston Tracy
+     Artist: Weston Tracy
     """
     maxClipboardScale: -> 2.5
     artist:
@@ -56,6 +329,108 @@ assets =
     artwork:
       completionDate:
         year: 2015
+
+  CBEMKingdomNewLands:
+    dimensions: -> width: 12, height: 21
+    imageName: -> 'cbem-kingdomnewlands'
+    spriteInfo: -> """
+      Artwork from [Kingdom: New Lands](http://www.kingdomthegame.com), 2015
+
+      Artist: Thomas van den Berg
+    """
+    artist:
+      name:
+        first: 'Thomas'
+        lastPrefix: 'van den'
+        last: 'Berg'
+    artwork:
+      completionDate:
+        year: 2015
+
+  CBEMDontGiveUpACynicalTale:
+    dimensions: -> width: 22, height: 25
+    imageName: -> 'cbem-dontgiveupacynicaltale'
+    spriteInfo: -> """
+      Artwork from [DON'T GIVE UP: A Cynical Tale](https://trisbee.itch.io/dont-give-up-a-cynical-tale) (WIP)
+
+      Artist: Tristan Barona
+    """
+    artist:
+      name:
+        first: 'Tristan'
+        last: 'Barona'
+    artwork:
+      completionDate:
+        year: 2017
+
+  CBVMIntoTheBreach:
+    dimensions: -> width: 39, height: 31
+    imageName: -> 'cbvm-intothebreach'
+    spriteInfo: -> """
+      Artwork from [Into The Breach](https://subsetgames.com/itb.html), 2018
+
+      Artist: Justin Ma
+    """
+    artist:
+      name:
+        first: 'Justin'
+        last: 'Ma'
+    artwork:
+      completionDate:
+        year: 2017
+
+  CBVMSuperHydorah:
+    dimensions: -> width: 23, height: 8
+    backgroundColor: -> new THREE.Color '#000'
+    imageName: -> 'cbvm-superhydorah'
+    spriteInfo: -> """
+      Artwork from [Super Hydorah](https://www.locomalito.com/super_hydorah.php), 2017
+
+      Artist: Locomalito
+    """
+    artist:
+      name:
+        first: 'Juan'
+        middle: 'Antonio'
+        last: 'Becerra'
+      pseudonym: 'Locomalito'
+    artwork:
+      completionDate:
+        year: 2017
+
+  CBOMVirtuaVerse:
+    dimensions: -> width: 31, height: 23
+    imageName: -> 'cbom-virtuaverse'
+    spriteInfo: -> """
+      Artwork from [VirtuaVerse](https://www.facebook.com/virtuaversegame), 2017
+
+      Artist: Ra 'Valenberg' Mei
+    """
+    artist:
+      name:
+        first: 'Ra'
+        last: 'Mei'
+        nickname: 'Valenberg'
+    artwork:
+      completionDate:
+        year: 2017
+
+  CBOMThimbleweedPark:
+    dimensions: -> width: 32, height: 18
+    backgroundColor: -> new THREE.Color '#001e51'
+    imageName: -> 'cbom-thimbleweedpark'
+    spriteInfo: -> """
+      Artwork from [Thimbleweed Park](https://thimbleweedpark.com), 2017
+
+      Artist: Gary Winnick
+    """
+    artist:
+      name:
+        first: 'Gary'
+        last: 'Winnick'
+    artwork:
+      completionDate:
+        year: 2014
 
 for assetId, asset of assets
   do (assetId, asset) ->

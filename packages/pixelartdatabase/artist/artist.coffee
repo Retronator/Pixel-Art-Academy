@@ -37,12 +37,13 @@ class PADB.Artist extends AM.Document
         # Pseudonym overrides any other name so return that if present.
         return [fields._id, fields.pseudonym] if fields.pseudonym
 
-        # Otherwise construct it in the format "First Middle 'Nickname' Last"
+        # Otherwise construct it in the format "First Middle 'Nickname' prefix Last"
         if fields.name
           nameParts = [
             fields.name.first
             fields.name.middle
             "'#{fields.name.nickname}'" if fields.name.nickname
+            fields.name.lastPrefix
             fields.name.last
           ]
 

@@ -108,32 +108,33 @@ corinne:
 
 ## SpecialRequest
 
--> [MSVMLuftrausers] `_choice is 'MSVM'`
+-> [MSVMLuftrauser] `_choice is 'MSVM'`
 -> [CSHMCeleste] `_choice is 'CSHM'`
--> [CSEMHookLineThinker] `_choice is 'CSEM'`
 -> [MBVMLuftrausers] `_choice is 'MBVM'`
 -> [MBOMCityClickers] `_choice is 'MBOM'`
 
 corinne: Finally, do you have any special requests?
 
 * Captain Viridian from VVVVVV? -> [MSHMVVVVVV] `_choice is 'MSHM'`
-* A disenfranchised frog from Despot Dungeons? -> [MSHMDespotDungeons] `_choice is 'MSHM'`
-* A ratman from Despot Dungeons? -> [MSEMDespotDungeons] `_choice is 'MSEM'`
-* A flying skull from l'Abbaye des Morts? -> [MSEMLAbbayeDesMorts] `_choice is 'MSEM'`
+* Disenfranchised frog from Despot Dungeons? -> [MSHMDespotDungeons] `_choice is 'MSHM'`
+* Ratman from Despot Dungeons? -> [MSEMDespotDungeons] `_choice is 'MSEM'`
+* Flying skull from l'Abbaye des Morts? -> [MSEMLAbbayeDesMorts] `_choice is 'MSEM'`
 * Bagel from Lou Bagel's Waffle Bar? -> [MBHMLouBagelsWaffleBar] `_choice is 'MBHM'`
 * Squid from Nether World? -> [MBHMNetherWorld] `_choice is 'MBHM'`
+* Crab from Hook, Line and Thinker? -> [CSEMHookLineAndThinker] `_choice is 'CSEM'`
+* Small flying skull from Super Crate Box? -> [CSEMSuperCrateBox] `_choice is 'CSEM'`
 * Gomez from FEZ? -> [CBHMFez] `_choice is 'CBHM'`
 * Otus from Owlboy? -> [CBHMOwlboy] `_choice is 'CBHM'`
 * Courier from Courier of the Crypts? -> [CBHMCourierOfTheCrypts] `_choice is 'CBHM'`
 * Keu from NYKRA? -> [CBHMNYKRA] `_choice is 'CBHM'`
 * Big green skull from Super Crate Box? -> [CBEMSuperCrateBox] `_choice is 'CBEM'`
-* An archer from Into the Rift? -> [CBEMIntoTheRift] `_choice is 'CBEM'`
-* A greedling from Kingdom? -> [CBEMKingdom] `_choice is 'CBEM'`
-* McRobberson from Don't Give Up!? -> [CBEMDontGiveUp] `_choice is 'CBEM'`
-* A Combat Mech from Into the Breach? -> [CBVMIntoTheBreach] `_choice is 'CBVM'`
-* The spaceship from Super Hydorah? -> [CBVMSuperHydorah] `_choice is 'CBVM'`
+* Archer from Into the Rift? -> [CBEMIntoTheRift] `_choice is 'CBEM'`
+* Greedling from Kingdom: New Lands? -> [CBEMKingdomNewLands] `_choice is 'CBEM'`
+* Irate customer from DON'T GIVE UP: A Cynical Tale? -> [CBEMDontGiveUpACynicalTale] `_choice is 'CBEM'`
+* Combat mech from Into the Breach? -> [CBVMIntoTheBreach] `_choice is 'CBVM'`
+* Spaceship from Super Hydorah? -> [CBVMSuperHydorah] `_choice is 'CBVM'`
 * Pizza Amore from VirtuaVerse? -> [CBOMVirtuaVerse] `_choice is 'CBOM'`
-* Baloon animal from Thimbleweed Park? -> [CBOMThimbleWeedPark] `_choice is 'CBOM'`
+* Balloon animal from Thimbleweed Park? -> [CBOMThimbleweedPark] `_choice is 'CBOM'`
 * Anything will do.
 
 `_assetId = null`
@@ -158,8 +159,8 @@ corinne: Finally, do you have any special requests?
 `_assetId = 'MSEMLAbbayeDesMorts'`
 -> [FindGame]
 
-## MSVMLuftrausers
-`_assetId = 'MSVMLuftrausers'`
+## MSVMLuftrauser
+`_assetId = 'MSVMLuftrauser'`
 -> [FindGame]
 
 ## MBHMLouBagelsWaffleBar
@@ -182,8 +183,8 @@ corinne: Finally, do you have any special requests?
 `_assetId = 'CSHMCeleste'`
 -> [FindGame]
 
-## CSEMHookLineThinker
-`_assetId = 'CSEMHookLineThinker'`
+## CSEMHookLineAndThinker
+`_assetId = 'CSEMHookLineAndThinker'`
 -> [FindGame]
 
 ## CBHMFez
@@ -210,12 +211,12 @@ corinne: Finally, do you have any special requests?
 `_assetId = 'CBEMIntoTheRift'`
 -> [FindGame]
 
-## CBEMKingdom
-`_assetId = 'CBEMKingdom'`
+## CBEMKingdomNewLands
+`_assetId = 'CBEMKingdomNewLands'`
 -> [FindGame]
 
-## CBEMDontGiveUp
-`_assetId = 'CBEMDontGiveUp'`
+## CBEMDontGiveUpACynicalTale
+`_assetId = 'CBEMDontGiveUpACynicalTale'`
 -> [FindGame]
 
 ## CBVMIntoTheBreach
@@ -230,8 +231,8 @@ corinne: Finally, do you have any special requests?
 `_assetId = 'CBOMVirtuaVerse'`
 -> [FindGame]
 
-## CBOMThimbleWeedPark
-`_assetId = 'CBOMThimbleWeedPark'`
+## CBOMThimbleweedPark
+`_assetId = 'CBOMThimbleweedPark'`
 -> [FindGame]
 
 ## FindGame
