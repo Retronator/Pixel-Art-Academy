@@ -150,8 +150,8 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
           return false unless EJSON.equals pixel.paletteColor, goalPixel.paletteColor
 
         else
-          pixelDirectColor = if pixel.paletteColor then @_paletteToDirectColor(pixel.paletteColor) else pixel.directColor
-          return false unless EJSON.equals pixelDirectColor, goalPixel.directColor
+          pixelIntegerDirectColor = if pixel.paletteColor then @_paletteToIntegerDirectColor pixel.paletteColor else @_directToIntegerDirectColor pixel.directColor
+          return false unless EJSON.equals pixelIntegerDirectColor, goalPixel.integerDirectColor
 
       true
 
@@ -201,13 +201,18 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       for pixel in goalPixels
         map[pixel.x] ?= {}
         map[pixel.x][pixel.y] = pixel
-        pixel.directColor ?= @_paletteToDirectColor pixel.paletteColor
+        pixel.integerDirectColor = if pixel.directColor then @_directToIntegerDirectColor pixel.directColor else @_paletteToIntegerDirectColor pixel.paletteColor
 
       @goalPixelsMap map
 
-  _paletteToDirectColor: (paletteColor) ->
+  _paletteToIntegerDirectColor: (paletteColor) ->
     palette = @palette()
-    palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
+    @_directToIntegerDirectColor palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
+
+  _directToIntegerDirectColor: (color) ->
+    r: Math.round color.r * 255
+    g: Math.round color.g * 255
+    b: Math.round color.b * 255
 
   editorDrawComponents: -> [
     @engineComponent

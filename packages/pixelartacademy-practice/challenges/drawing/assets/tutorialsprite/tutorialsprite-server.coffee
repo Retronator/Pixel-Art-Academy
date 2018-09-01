@@ -60,14 +60,21 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Challe
     if references = @references?()
       spriteData.references = []
   
-      for imageUrl in references
+      for reference in references
+        # Allow sending in just the reference URL.
+        if _.isString reference
+          reference =
+            image:
+              url: reference
+
+        imageUrl = reference.image.url
+
         # Ensure we have an image with this URL.
         imageId = LOI.Assets.Image.documents.findOne(url: imageUrl)?._id
         imageId ?= LOI.Assets.Image.documents.insert url: imageUrl
 
-        spriteData.references.push
-          image:
-            _id: imageId
-            url: imageUrl
+        reference.image._id = imageId
+
+        spriteData.references.push reference
   
     LOI.Assets.Sprite.documents.insert spriteData

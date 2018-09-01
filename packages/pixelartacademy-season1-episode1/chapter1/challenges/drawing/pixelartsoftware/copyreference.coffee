@@ -17,7 +17,10 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
   @imageName: -> throw new AE.NotImplementedException "You must provide the image name for the asset."
 
   @references: -> [
-    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@imageName()}-reference.png"
+    image:
+      url: "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@imageName()}-reference.png"
+    displayOptions:
+      imageOnly: true
   ]
 
   @customPaletteImageUrl: ->

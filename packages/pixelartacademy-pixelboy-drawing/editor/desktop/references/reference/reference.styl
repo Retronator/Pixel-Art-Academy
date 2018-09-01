@@ -10,6 +10,16 @@
   transition all 1s
   cursor grab
 
+  &.image-only
+    border none
+    background none
+    box-shadow none
+    filter drop-shadow(-1rem 1rem 0 rgba(atariGrey(0), 0.2))
+
+    &.dragging
+      box-shadow none
+      filter drop-shadow(-12rem 4rem 20rem rgba(atariGrey(0), 0.2))
+
   &.dragging
     position fixed
     box-shadow -12rem 4rem 20rem rgba(atariGrey(0), 0.2)
