@@ -90,6 +90,7 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/challenges/drawing/pixelartsoftware..');
   api.addFile('chapter1/challenges/drawing/pixelartsoftware/copyreference');
+  api.addFile('chapter1/challenges/drawing/pixelartsoftware/errorenginecomponent');
   api.addFile('chapter1/challenges/drawing/pixelartsoftware/assets');
   api.addUnstyledComponent('chapter1/challenges/drawing/pixelartsoftware/briefcomponent..');
 

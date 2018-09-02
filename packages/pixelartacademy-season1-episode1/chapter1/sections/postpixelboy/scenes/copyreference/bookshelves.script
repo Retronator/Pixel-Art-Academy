@@ -119,7 +119,7 @@ corinne: Finally, do you have any special requests?
 * Disenfranchised frog from Despot Dungeons? -> [MSHMDespotDungeons] `_choice is 'MSHM'`
 * Ratman from Despot Dungeons? -> [MSEMDespotDungeons] `_choice is 'MSEM'`
 * Flying skull from l'Abbaye des Morts? -> [MSEMLAbbayeDesMorts] `_choice is 'MSEM'`
-* Bagel from Lou Bagel's Waffle Bar? -> [MBHMLouBagelsWaffleBar] `_choice is 'MBHM'`
+* Bagel chef from Lou Bagel's Waffle Bar? -> [MBHMLouBagelsWaffleBar] `_choice is 'MBHM'`
 * Squid from Nether World? -> [MBHMNetherWorld] `_choice is 'MBHM'`
 * Crab from Hook, Line and Thinker? -> [CSEMHookLineAndThinker] `_choice is 'CSEM'`
 * Small flying skull from Super Crate Box? -> [CSEMSuperCrateBox] `_choice is 'CSEM'`
@@ -131,7 +131,7 @@ corinne: Finally, do you have any special requests?
 * Archer from Into the Rift? -> [CBEMIntoTheRift] `_choice is 'CBEM'`
 * Greedling from Kingdom: New Lands? -> [CBEMKingdomNewLands] `_choice is 'CBEM'`
 * Irate customer from DON'T GIVE UP: A Cynical Tale? -> [CBEMDontGiveUpACynicalTale] `_choice is 'CBEM'`
-* Combat mech from Into the Breach? -> [CBVMIntoTheBreach] `_choice is 'CBVM'`
+* Rift Walkers Combat Mech from Into the Breach? -> [CBVMIntoTheBreach] `_choice is 'CBVM'`
 * Spaceship from Super Hydorah? -> [CBVMSuperHydorah] `_choice is 'CBVM'`
 * Pizza Amore from VirtuaVerse? -> [CBOMVirtuaVerse] `_choice is 'CBOM'`
 * Balloon animal from Thimbleweed Park? -> [CBOMThimbleweedPark] `_choice is 'CBOM'`

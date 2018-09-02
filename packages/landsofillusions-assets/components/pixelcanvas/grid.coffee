@@ -19,7 +19,7 @@ class LOI.Assets.Components.PixelCanvas.Grid
       context.strokeStyle = "rgba(255,255,255,#{gridOpacity * 3})"
 
     else
-      context.strokeStyle = "rgba(0,0,0,#{gridOpacity})"
+      context.strokeStyle = "rgba(0,0,0,#{gridOpacity * 2})"
 
     context.lineWidth = 1 / effectiveScale
     context.beginPath()

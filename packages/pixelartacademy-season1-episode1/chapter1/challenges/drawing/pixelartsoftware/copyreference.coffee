@@ -34,6 +34,31 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
     C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent
 
   @initialize()
+  
+  constructor: ->
+    super
+
+    # We override the component that shows the goal state with a custom one that only shows drawn errors.
+    @engineComponent = new @constructor.ErrorEngineComponent
+      userSpriteData: =>
+        return unless spriteId = @spriteId()
+        LOI.Assets.Sprite.documents.findOne spriteId
+
+      spriteData: =>
+        return unless goalPixels = @goalPixels()
+        return unless spriteId = @spriteId()
+
+        # Take same overall sprite data (bounds, palette) as sprite used for drawing, but exclude the pixels.
+        spriteData = LOI.Assets.Sprite.documents.findOne spriteId,
+          fields:
+            'layers': false
+
+        return unless spriteData
+
+        # Replace pixels with the goal state.
+        spriteData.layers = [pixels: goalPixels]
+
+        spriteData
 
   editorOptions: ->
     references:
@@ -41,7 +66,3 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
         enabled: false
       storage:
         enabled: false
-
-  editorDrawComponents: ->
-    # We send an empty array so we don't show the on-canvas reference.
-    []

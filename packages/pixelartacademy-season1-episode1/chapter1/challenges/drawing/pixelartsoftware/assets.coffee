@@ -19,6 +19,7 @@ assets =
         first: 'Terry'
         last: 'Cavanagh'
     artwork:
+      title: 'Captain Viridian'
       completionDate:
         year: 2009
   
@@ -36,6 +37,7 @@ assets =
         first: 'Hjalte'
         last: 'Tagmose'
     artwork:
+      title: 'Disenfranchised frog'
       completionDate:
         year: 2017
 
@@ -53,6 +55,7 @@ assets =
         first: 'Hjalte'
         last: 'Tagmose'
     artwork:
+      title: 'Ratman'
       completionDate:
         year: 2017
 
@@ -72,6 +75,7 @@ assets =
         last: 'Becerra'
       pseudonym: 'Locomalito'
     artwork:
+      title: 'Flying skull'
       completionDate:
         year: 2010
 
@@ -90,6 +94,7 @@ assets =
         last: 'Veer'
         nickname: 'Pietepiet'
     artwork:
+      title: 'Rauser'
       completionDate:
         year: 2011
 
@@ -108,6 +113,7 @@ assets =
         first: 'Chris'
         last: 'Taylor'
     artwork:
+      title: 'Bagel chef'
       completionDate:
         year: 2018
 
@@ -126,6 +132,7 @@ assets =
         last: 'Armentero'
         nickname: 'Erien'
     artwork:
+      title: 'Squid'
       completionDate:
         year: 2017
 
@@ -145,6 +152,7 @@ assets =
         lastPrefix: 'de'
         last: 'Groot'
     artwork:
+      title: 'Boat'
       completionDate:
         year: 2014
 
@@ -162,6 +170,7 @@ assets =
         first: 'Eigen'
         last: 'Lenk'
     artwork:
+      title: 'House'
       completionDate:
         year: 2017
 
@@ -183,6 +192,7 @@ assets =
         first: 'Noel'
         last: 'Berry'
     artwork:
+      title: 'Madeline'
       completionDate:
         year: 2015
 
@@ -204,6 +214,7 @@ assets =
         first: 'Connor'
         last: 'Halford'
     artwork:
+      title: 'Crab'
       completionDate:
         year: 2016
 
@@ -222,6 +233,7 @@ assets =
         lastPrefix: 'de'
         last: 'Groot'
     artwork:
+      title: 'Small flying skull'
       completionDate:
         year: 2010
 
@@ -239,6 +251,7 @@ assets =
         first: 'Phil'
         last: 'Fish'
     artwork:
+      title: 'Gomez'
       completionDate:
         year: 2009
 
@@ -258,6 +271,7 @@ assets =
         last: 'Andersen'
         nickname: 'Snake'
     artwork:
+      title: 'Otus'
       completionDate:
         year: 2008
 
@@ -275,6 +289,7 @@ assets =
         first: 'Primož'
         last: 'Vovk'
     artwork:
+      title: 'Courier'
       completionDate:
         year: 2014
 
@@ -292,6 +307,7 @@ assets =
         last: 'Groom'
         nickname: 'ENDESGA'
     artwork:
+      title: 'Keu'
       completionDate:
         year: 2015
 
@@ -310,6 +326,7 @@ assets =
         lastPrefix: 'de'
         last: 'Groot'
     artwork:
+      title: 'Big green skull'
       completionDate:
         year: 2010
 
@@ -327,6 +344,7 @@ assets =
         first: 'Weston'
         last: 'Tracy'
     artwork:
+      title: 'Archer'
       completionDate:
         year: 2015
 
@@ -344,6 +362,7 @@ assets =
         lastPrefix: 'van den'
         last: 'Berg'
     artwork:
+      title: 'Greedling'
       completionDate:
         year: 2015
 
@@ -360,6 +379,7 @@ assets =
         first: 'Tristan'
         last: 'Barona'
     artwork:
+      title: 'Irate customer'
       completionDate:
         year: 2017
 
@@ -376,6 +396,7 @@ assets =
         first: 'Justin'
         last: 'Ma'
     artwork:
+      title: 'Rift Walkers Combat Mech'
       completionDate:
         year: 2017
 
@@ -395,6 +416,7 @@ assets =
         last: 'Becerra'
       pseudonym: 'Locomalito'
     artwork:
+      title: 'Spaceship'
       completionDate:
         year: 2017
 
@@ -412,6 +434,7 @@ assets =
         last: 'Mei'
         nickname: 'Valenberg'
     artwork:
+      title: 'Pizza Amore'
       completionDate:
         year: 2017
 
@@ -429,6 +452,7 @@ assets =
         first: 'Gary'
         last: 'Winnick'
     artwork:
+      title: 'Balloon animal'
       completionDate:
         year: 2014
 
