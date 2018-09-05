@@ -43,13 +43,14 @@ class C1.PostPixelBoy.CopyReference.Bookshelves extends LOI.Adventure.Scene
           choice = @ephemeralState 'choice'
 
           assetsIds = [
-            'MSHMVVVVVV'
+            'MSHMNetherWorld'
             'MSHMDespotDungeons'
             'MSEMDespotDungeons'
             'MSEMLAbbayeDesMorts'
             'MSVMLuftrauser'
+            'MSOMMidnightDungeon'
             'MBHMLouBagelsWaffleBar'
-            'MBHMNetherWorld'
+            'MBHMVVVVVV'
             'MBVMLuftrausers'
             'MBOMCityClickers'
             'CSHMCeleste'
@@ -64,7 +65,7 @@ class C1.PostPixelBoy.CopyReference.Bookshelves extends LOI.Adventure.Scene
             'CBEMKingdomNewLands'
             'CBEMDontGiveUpACynicalTale'
             'CBVMIntoTheBreach'
-            'CBVMSuperHydorah'
+            'CBVMHydorah'
             'CBOMVirtuaVerse'
             'CBOMThimbleweedPark'
           ]

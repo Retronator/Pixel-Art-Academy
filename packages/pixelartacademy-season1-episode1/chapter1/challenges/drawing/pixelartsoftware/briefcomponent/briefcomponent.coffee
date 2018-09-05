@@ -23,6 +23,12 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
   canDownloadAndUpload: ->
     PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
 
+  customPaletteColorsString: ->
+    count = 0
+    count += ramp.shades.length for ramp in @sprite.customPalette().ramps
+
+    "#{count} color#{if count > 1 then 's' else ''}"
+
   events: ->
     super.concat
       'click .edit-button': @onClickEditButton

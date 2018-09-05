@@ -19,7 +19,7 @@ class C1.PostPixelBoy.CopyReference.GalleryEast extends LOI.Adventure.Scene
     corinneState = C1.PostPixelBoy.state 'corinneState'
 
     [
-      HQ.Actors.Corinne if corinneState in [C1.PostPixelBoy.CopyReference.CorinneStates.InGalleryWest, C1.PostPixelBoy.CopyReference.CorinneStates.InStore, C1.PostPixelBoy.CopyReference.CorinneStates.ByBookshelves]
+      HQ.GalleryEast.Corinne if corinneState in [C1.PostPixelBoy.CopyReference.CorinneStates.InGalleryWest, C1.PostPixelBoy.CopyReference.CorinneStates.InStore, C1.PostPixelBoy.CopyReference.CorinneStates.ByBookshelves]
     ]
 
   # Script
@@ -34,7 +34,11 @@ class C1.PostPixelBoy.CopyReference.GalleryEast extends LOI.Adventure.Scene
       CorinneLeaves: (complete) =>
         C1.PostPixelBoy.state 'corinneState', C1.PostPixelBoy.CopyReference.CorinneStates.InGalleryWest
         complete()
-        
+
+      CorinneLeavesAgain: (complete) =>
+        C1.PostPixelBoy.state 'corinneState', C1.PostPixelBoy.CopyReference.CorinneStates.ByBookshelves
+        complete()
+
       Return: (complete) =>
         # Hook back into Corinne's main script.
         corinne = LOI.adventure.getCurrentThing HQ.Actors.Corinne
@@ -51,8 +55,10 @@ class C1.PostPixelBoy.CopyReference.GalleryEast extends LOI.Adventure.Scene
     # Prerequisite is that the player has selected a pixel art editor.
     return unless PAA.PixelBoy.Apps.Drawing.state('editorId') or PAA.PixelBoy.Apps.Drawing.state('externalSoftware')
 
-    labels = [
-      'PixelArtSoftwareChoice'
-    ]
+    if C1.PostPixelBoy.state('corinneState') is C1.PostPixelBoy.CopyReference.CorinneStates.BackInGalleryEast
+      choiceLabel = 'AnotherSpriteChoice'
 
-    choicePlaceholderResponse.addChoice @script.startNode.labels[label].next for label in labels
+    else
+      choiceLabel = 'PixelArtSoftwareChoice'
+
+    choicePlaceholderResponse.addChoice @script.startNode.labels[choiceLabel].next

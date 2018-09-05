@@ -76,6 +76,9 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
 
     LOI.Assets.Palette.documents.findOne
       name: restrictedPaletteName
+      
+  customPalette: ->
+    @sprite()?.customPalette
 
   backgroundColor: ->
     return unless backgroundColor = @constructor.backgroundColor()

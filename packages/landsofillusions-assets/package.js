@@ -36,6 +36,7 @@ Package.onUse(function(api) {
   api.addServerFile('documents/palette/palettes-server/atari2600');
   api.addServerFile('documents/palette/palettes-server/pico8');
   api.addServerFile('documents/palette/palettes-server/black');
+  api.addServerFile('documents/palette/palettes-server/zxspectrum');
 
   api.addFile('documents/visualasset..');
   api.addFile('documents/visualasset/methods..');

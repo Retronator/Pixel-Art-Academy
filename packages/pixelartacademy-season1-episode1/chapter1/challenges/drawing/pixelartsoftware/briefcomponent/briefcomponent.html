@@ -9,8 +9,9 @@
         <span class="property-name">Palette</span>:
         {{#if restrictedPalette}}
           {{restrictedPalette.name}}
-        {{else}}
-          Custom
+        {{/if}}
+        {{#if customPalette}}
+          Custom, {{customPaletteColorsString}}
         {{/if}}
       </li>
     </ul>

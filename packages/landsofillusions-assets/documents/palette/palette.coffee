@@ -24,6 +24,7 @@ class LOI.Assets.Palette extends AM.Document
     atari2600: "Atari 2600"
     pico8: "PICO-8"
     black: "Black"
+    zxSpectrum: "ZX Spectrum"
 
   # Default palette is the Atari 2600
   @defaultPaletteName = @SystemPaletteNames.atari2600

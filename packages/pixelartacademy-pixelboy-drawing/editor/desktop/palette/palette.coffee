@@ -23,6 +23,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Compon
   swatchesClass: ->
     'swatches' if @options.paletteId?()
 
+  paletteNameClass: ->
+    return unless paletteId = @options.paletteId()
+    return unless palette = LOI.Assets.Palette.documents.findOne paletteId
+
+    _.kebabCase palette.name
+
   shadeStyle: ->
     return unless @options.paletteData?()
     shade = @currentData()

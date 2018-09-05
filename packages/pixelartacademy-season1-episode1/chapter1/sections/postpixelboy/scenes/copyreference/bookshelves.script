@@ -4,12 +4,36 @@
 
 `_choice = ''`
 
+-> [LaterTime] `SecondTime`
+-> [SecondTime] `FirstTime`
+
+## FirstTime
+
 corinne:
   Here we are! 
   Our collection is big so let's narrow it down.
-  You can choose: Do you want the art to have two colors or more than two colors?
 
-* I'll take it easy and go with two. -> [Monochrome]
+-> [MonochromeColor]
+
+## SecondTime  
+
+corinne: 
+  There you are!
+  Let's see what you decide on this time.
+
+-> [MonochromeColor]
+
+## LaterTime  
+
+corinne: Hey, you know the drill!
+
+-> [MonochromeColor]
+
+## MonochromeColor
+  
+corinne: You can choose: Do you want the art to be in just one color or more than one?
+
+* I'll take it easy and go with one. -> [Monochrome]
 * I like colors, so let's go with more. -> [Color]
 
 ## Monochrome
@@ -41,12 +65,16 @@ corinne: Next question, do you want the sprite to be small or big?
 
 ## CharacterThing
 
+-> [Character] `_choice is 'CS'`
+
 corinne: And do you want to draw a character or something else?
 
 * A character. -> [Character]
 * Let's see what else you have. -> [Thing]
 
 ## Character
+
+-> [Hero] `_choice is 'MB'`
 
 corinne: Alright. Do you want to draw the hero or an enemy?
 
@@ -88,7 +116,8 @@ corinne: Alright. Do you want a vehicle or other objects?
 
 ## ModernOld
 
--> [SpecialRequest] `['MSO', 'MBE', 'CSV', 'CSO'].indexOf(_choice) > -1`
+<!-- TODO: Remove this redirect when adding old games. -->
+-> [Modern]
 
 corinne:
   You can now choose between modern indie games or old classics.
@@ -109,18 +138,19 @@ corinne:
 ## SpecialRequest
 
 -> [MSVMLuftrauser] `_choice is 'MSVM'`
+-> [MSOMMidnightDungeon] `_choice is 'MSOM'`
 -> [CSHMCeleste] `_choice is 'CSHM'`
 -> [MBVMLuftrausers] `_choice is 'MBVM'`
 -> [MBOMCityClickers] `_choice is 'MBOM'`
 
 corinne: Finally, do you have any special requests?
 
-* Captain Viridian from VVVVVV? -> [MSHMVVVVVV] `_choice is 'MSHM'`
+* Squid from Nether World? -> [MSHMNetherWorld] `_choice is 'MSHM'`
 * Disenfranchised frog from Despot Dungeons? -> [MSHMDespotDungeons] `_choice is 'MSHM'`
 * Ratman from Despot Dungeons? -> [MSEMDespotDungeons] `_choice is 'MSEM'`
 * Flying skull from l'Abbaye des Morts? -> [MSEMLAbbayeDesMorts] `_choice is 'MSEM'`
 * Bagel chef from Lou Bagel's Waffle Bar? -> [MBHMLouBagelsWaffleBar] `_choice is 'MBHM'`
-* Squid from Nether World? -> [MBHMNetherWorld] `_choice is 'MBHM'`
+* Captain Viridian from VVVVVV? -> [MBHMVVVVVV] `_choice is 'MSBM'`
 * Crab from Hook, Line and Thinker? -> [CSEMHookLineAndThinker] `_choice is 'CSEM'`
 * Small flying skull from Super Crate Box? -> [CSEMSuperCrateBox] `_choice is 'CSEM'`
 * Gomez from FEZ? -> [CBHMFez] `_choice is 'CBHM'`
@@ -132,7 +162,7 @@ corinne: Finally, do you have any special requests?
 * Greedling from Kingdom: New Lands? -> [CBEMKingdomNewLands] `_choice is 'CBEM'`
 * Irate customer from DON'T GIVE UP: A Cynical Tale? -> [CBEMDontGiveUpACynicalTale] `_choice is 'CBEM'`
 * Rift Walkers Combat Mech from Into the Breach? -> [CBVMIntoTheBreach] `_choice is 'CBVM'`
-* Spaceship from Super Hydorah? -> [CBVMSuperHydorah] `_choice is 'CBVM'`
+* Spaceship from Hydorah? -> [CBVMHydorah] `_choice is 'CBVM'`
 * Pizza Amore from VirtuaVerse? -> [CBOMVirtuaVerse] `_choice is 'CBOM'`
 * Balloon animal from Thimbleweed Park? -> [CBOMThimbleweedPark] `_choice is 'CBOM'`
 * Anything will do.
@@ -143,8 +173,8 @@ corinne: Finally, do you have any special requests?
 
 <!-- Monochrome Small -->
 
-## MSHMVVVVVV
-`_assetId = 'MSHMVVVVVV'`
+## MSHMNetherWorld
+`_assetId = 'MSHMNetherWorld'`
 -> [FindGame]
 
 ## MSHMDespotDungeons
@@ -163,12 +193,16 @@ corinne: Finally, do you have any special requests?
 `_assetId = 'MSVMLuftrauser'`
 -> [FindGame]
 
+## MSOMMidnightDungeon
+`_assetId = 'MSOMMidnightDungeon'`
+-> [FindGame]
+
 ## MBHMLouBagelsWaffleBar
 `_assetId = 'MBHMLouBagelsWaffleBar'`
 -> [FindGame]
 
-## MBHMNetherWorld
-`_assetId = 'MBHMNetherWorld'`
+## MBHMVVVVVV
+`_assetId = 'MBHMVVVVVV'`
 -> [FindGame]
 
 ## MBVMLuftrausers
@@ -185,6 +219,10 @@ corinne: Finally, do you have any special requests?
 
 ## CSEMHookLineAndThinker
 `_assetId = 'CSEMHookLineAndThinker'`
+-> [FindGame]
+
+## CSEMSuperCrateBox
+`_assetId = 'CSEMSuperCrateBox'`
 -> [FindGame]
 
 ## CBHMFez
@@ -223,8 +261,8 @@ corinne: Finally, do you have any special requests?
 `_assetId = 'CBVMIntoTheBreach'`
 -> [FindGame]
 
-## CBVMSuperHydorah
-`_assetId = 'CBVMSuperHydorah'`
+## CBVMHydorah
+`_assetId = 'CBVMHydorah'`
 -> [FindGame]
 
 ## CBOMVirtuaVerse
@@ -254,5 +292,14 @@ corinne:
   Look in the Challenges section of the Drawing app.
   You can use the PixelBoy editor or your own software to complete the task.
   Whatever you use, that option will unlock for you for your admission project as well.
+
+* Sounds good.
+* I'll get right on it!
+
+corinne: I'll be upstairs if you need anything.
+  
+### Move
+
+> Corinne leaves west.
 
 ## End

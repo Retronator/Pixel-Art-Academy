@@ -5,24 +5,24 @@ CopyReference = C1.Challenges.Drawing.PixelArtSoftware.CopyReference
 PADB = PixelArtDatabase
 
 assets =
-  MSHMVVVVVV:
-    dimensions: -> width: 10, height: 21
-    backgroundColor: -> new THREE.Color '#000'
-    imageName: -> 'mshm-vvvvvv'
+  MSHMNetherWorld:
+    dimensions: -> width: 13, height: 16
+    imageName: -> 'mshm-netherworld'
     spriteInfo: -> """
-      Artwork from [VVVVVV](https://thelettervsixtim.es), 2010
+      Artwork from [NetherWorld](http://www.netherworldgame.com) (WIP)
 
-      Artist: Terry Cavanagh
+      Artist: Isabel 'Erien' Armentero
     """
     artist:
       name:
-        first: 'Terry'
-        last: 'Cavanagh'
+        first: 'Isabel'
+        last: 'Armentero'
+        nickname: 'Erien'
     artwork:
-      title: 'Captain Viridian'
+      title: 'Squid'
       completionDate:
-        year: 2009
-  
+        year: 2017
+
   MSHMDespotDungeons:
     dimensions: -> width: 12, height: 14
     backgroundColor: -> new THREE.Color '#1e1e1e'
@@ -61,7 +61,11 @@ assets =
 
   MSEMLAbbayeDesMorts:
     dimensions: -> width: 15, height: 9
-    backgroundColor: -> new THREE.Color '#000'
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
+    backgroundColor: ->
+      paletteColor:
+        ramp: 0
+        shade: 0
     imageName: -> 'msem-labbayedesmorts'
     spriteInfo: -> """
       Artwork from [l'Abbaye des Morts](https://www.locomalito.com/abbaye_des_morts.php), 2010
@@ -98,12 +102,31 @@ assets =
       completionDate:
         year: 2011
 
+  MSOMMidnightDungeon:
+    dimensions: -> width: 6, height: 6
+    backgroundColor: -> new THREE.Color '#000'
+    imageName: -> 'msom-midnightdungeon'
+    spriteInfo: -> """
+      Artwork from [Midnight Dungeon](https://pixelartm.itch.io/midnight-dungeon), 2018
+
+      Artist: Miguel 'PixelArtM' Sánchez
+    """
+    artist:
+      name:
+        first: 'Miguel'
+        last: 'Sánchez'
+        nickname: 'PixelArtM'
+    artwork:
+      title: 'Sword'
+      completionDate:
+        year: 2018
+
   MBHMLouBagelsWaffleBar:
     dimensions: -> width: 36, height: 49
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+    backgroundColor: -> new THREE.Color '#a394d2'
     imageName: -> 'mbhm-loubagelswafflebar'
     spriteInfo: -> """
-      Artwork from [Lou Bagel's Waffle Bar](https://loubagel.itch.io/lou-bagel-waffle-bar), 2018
+      Artwork from [Lou Bagel's Waffle Bar](https://www.loubagel.com/arcade/), 2018
 
       Artist: Chris Taylor
     """
@@ -117,24 +140,23 @@ assets =
       completionDate:
         year: 2018
 
-  MBHMNetherWorld:
-    dimensions: -> width: 13, height: 16
-    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
-    imageName: -> 'mbhm-netherworld'
+  MBHMVVVVVV:
+    dimensions: -> width: 10, height: 21
+    backgroundColor: -> new THREE.Color '#000'
+    imageName: -> 'mbhm-vvvvvv'
     spriteInfo: -> """
-      Artwork from [NetherWorld](http://www.netherworldgame.com) (WIP)
+      Artwork from [VVVVVV](https://thelettervsixtim.es), 2010
 
-      Artist: Isabel 'Erien' Armentero
+      Artist: Terry Cavanagh
     """
     artist:
       name:
-        first: 'Isabel'
-        last: 'Armentero'
-        nickname: 'Erien'
+        first: 'Terry'
+        last: 'Cavanagh'
     artwork:
-      title: 'Squid'
+      title: 'Captain Viridian'
       completionDate:
-        year: 2017
+        year: 2009
 
   MBVMLuftrausers:
     dimensions: -> width: 59, height: 18
@@ -246,6 +268,7 @@ assets =
 
       Artist: Phil Fish
     """
+    maxClipboardScale: -> 4.5
     artist:
       name:
         first: 'Phil'
@@ -319,6 +342,7 @@ assets =
 
       Artist: Roy Nathan de Groot
     """
+    maxClipboardScale: -> 4.5
     artist:
       name:
         first: 'Roy'
@@ -400,12 +424,12 @@ assets =
       completionDate:
         year: 2017
 
-  CBVMSuperHydorah:
+  CBVMHydorah:
     dimensions: -> width: 23, height: 8
     backgroundColor: -> new THREE.Color '#000'
-    imageName: -> 'cbvm-superhydorah'
+    imageName: -> 'cbvm-hydorah'
     spriteInfo: -> """
-      Artwork from [Super Hydorah](https://www.locomalito.com/super_hydorah.php), 2017
+      Artwork from [Hydorah](https://www.locomalito.com/hydorah.php), 2010
 
       Artist: Locomalito
     """
@@ -418,7 +442,7 @@ assets =
     artwork:
       title: 'Spaceship'
       completionDate:
-        year: 2017
+        year: 2010
 
   CBOMVirtuaVerse:
     dimensions: -> width: 31, height: 23

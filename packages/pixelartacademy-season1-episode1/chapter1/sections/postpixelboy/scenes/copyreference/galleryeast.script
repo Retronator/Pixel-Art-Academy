@@ -21,6 +21,22 @@ corinne:
 
 -> [End]
 
+## AnotherSpriteChoice
+
+* Can I get another sprite to draw?
+
+## AnotherSprite
+
+corinne: 
+  Back for more, huh?
+  Meet me downstairs to get another pick.
+
+> Corinne leaves west.
+
+### CorinneLeavesAgain
+
+-> [End]
+
 ## Return
 
 ### Return
