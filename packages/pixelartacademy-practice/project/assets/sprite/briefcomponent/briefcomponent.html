@@ -11,7 +11,7 @@
     {{#if noActions}}
       <div class="no-actions">
         {{#if needsSettingsSelection}}
-          Select an editor <!-- TODO: or external software --> in Settings to edit assets.
+          Select an editor or external software in Settings to edit assets.
         {{else}}
           {{#if needsToolsChallenge}}
             Complete the Pixel Art Software challenge to be able to edit assets.
@@ -25,7 +25,7 @@
             <button class="button edit-button">Edit</button>
           </li>
         {{/if}}
-        {{#if canDownloadAndUpload}}
+        {{#if canUpload}}
           <li class="action">
             <button class="button assets-button">Assets</button>
           </li>

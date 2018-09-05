@@ -14,7 +14,7 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
     @parent = @ancestorComponentWith 'editAsset'
 
   needsSettingsSelection: ->
-    not (PAA.PixelBoy.Apps.Drawing.state('editorId')) # TODO: or PAA.PixelBoy.Apps.Drawing.state('externalSoftware'))
+    not (PAA.PixelBoy.Apps.Drawing.state('editorId') or PAA.PixelBoy.Apps.Drawing.state('externalSoftware'))
 
   needsToolsChallenge: ->
     true
@@ -23,15 +23,16 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
     # Editor needs to be selected.
     return unless PAA.PixelBoy.Apps.Drawing.state('editorId')
 
-    # TODO: At least one Tools challenge needs to be completed using the editor.
-    true
+    PAA.Practice.Project.Asset.Sprite.state 'canEdit'
 
-  canDownloadAndUpload: ->
-    # TODO: At least one Tools challenge needs to be completed using the upload.
-    false
+  canUpload: ->
+    # External software needs to be selected.
+    return unless PAA.PixelBoy.Apps.Drawing.state('externalSoftware')
+
+    PAA.Practice.Project.Asset.Sprite.state 'canUpload'
     
   noActions: ->
-    not (@canEdit() or @canDownloadAndUpload())
+    not (@canEdit() or @canUpload())
 
   events: ->
     super.concat

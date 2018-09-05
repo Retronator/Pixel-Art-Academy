@@ -96,3 +96,11 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     if translation.language then translation.text else null
 
   spriteInfoTranslation: -> AB.translation @_translationSubscription, 'spriteInfo'
+
+# We want a generic state for sprite assets so we create it outside of the constructor as inherited classes don't need it. 
+# canEdit: can the user edit the sprites with built-in editors
+# canUpload: can the user upload sprites
+Sprite = PAA.Practice.Project.Asset.Sprite
+
+Sprite.stateAddress = new LOI.StateAddress "things.PixelArtAcademy.Practice.Project.Asset.Sprite"
+Sprite.state = new LOI.StateObject address: Sprite.stateAddress

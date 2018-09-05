@@ -33,7 +33,31 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     Editor: 'Editor'
     Upload: 'Upload'
 
+  constructor: ->
+    super
+    
+    # Listen to asset completed changes to determine if editor and upload options are granted.
+    @_assetsCompletedAutorun = Tracker.autorun =>
+      canEdit = false
+      canUpload = false
+
+      if pixelArtSoftwareAssets = @state 'assets'
+        for asset in pixelArtSoftwareAssets
+          if asset.completed
+            if asset.uploaded
+              canUpload = true
+
+            else
+              canEdit = true
+
+      Tracker.nonreactive =>
+        Sprite = PAA.Practice.Project.Asset.Sprite
+
+        Sprite.state 'canEdit', canEdit unless canEdit is Sprite.state 'canEdit'
+        Sprite.state 'canUpload', canUpload unless canUpload is Sprite.state 'canUpload'
+
   destroy: ->
+    @_assetsCompletedAutorun.stop()
     asset.destroy() for asset in @_pixelArtSoftwareAssets
 
   noAssetsInstructions: ->
