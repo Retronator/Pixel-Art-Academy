@@ -20,9 +20,11 @@
       {{> Render pico8}}
     {{/if}}
     <div class="background"></div>
-    <div class="sprite {{displayedAsset.styleClasses}}" {{style spriteStyle}}>
-      {{> Render pixelCanvas}}
-    </div>
+    {{#if spriteVisible}}
+      <div class="sprite {{displayedAsset.styleClasses}}" {{style spriteStyle}}>
+        {{> Render pixelCanvas}}
+      </div>
+    {{/if}}
     {{#if drawingActive}}
       <style>
         .landsofillusions-components-menu .menu-button, html.adventure .build-version {

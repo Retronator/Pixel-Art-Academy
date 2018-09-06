@@ -10,6 +10,8 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
   constructor: (@drawing) ->
     super
 
+    @secondPageActive = new ReactiveField false
+
   onCreated: ->
     super
 
@@ -57,9 +59,22 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard extends AM.Component
 
   editAsset: ->
     AB.Router.setParameter 'parameter4', 'edit'
+    
+  showSecondPage: ->
+    @secondPageActive true
+
+  closeSecondPage: ->
+    @secondPageActive false
 
   spritePlaceholderStyle: ->
     return unless spriteSize = @spriteSize()
 
     width: "#{spriteSize.contentWidth + 2 * spriteSize.borderWidth}rem"
     height: "#{spriteSize.contentHeight + 2 * spriteSize.borderWidth}rem"
+
+  events: ->
+    super.concat
+      'click .back-button': @onClickBackButton
+
+  onClickBackButton: (event) ->
+    @closeSecondPage()

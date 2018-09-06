@@ -37,6 +37,10 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
   events: ->
     super.concat
       'click .edit-button': @onClickEditButton
+      'click .assets-button': @onClickAssetsButton
 
   onClickEditButton: (event) ->
     @parent.editAsset()
+
+  onClickAssetsButton: (event) ->
+    @parent.showSecondPage()

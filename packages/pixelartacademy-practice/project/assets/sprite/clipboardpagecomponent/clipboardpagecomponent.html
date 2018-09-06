@@ -1,0 +1,22 @@
+<template name="PixelArtAcademy.Practice.Project.Asset.Sprite.ClipboardPageComponent">
+  <div class="content">
+    Image:
+    <img class="image" src="{{sprite.imageUrl}}"/>
+    {{#if palette.lospecSlug}}
+      Palette:
+      Download from <a href="https://lospec.com/palette-list/{{palette.lospecSlug}}" target="_blank">Lospec</a>.
+    {{/if}}
+    {{#with sprite.sprite}}
+      {{#if references.length}}
+        References:
+        <ul class="references">
+          {{#each references}}
+            <li class="reference">
+              <img src="{{this.image.url}}"/>
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    {{/with}}
+  </div>
+</template>

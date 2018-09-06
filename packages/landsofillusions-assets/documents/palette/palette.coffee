@@ -10,6 +10,7 @@ class LOI.Assets.Palette extends AM.Document
   #     r: red attribute (0.0-1.0)
   #     g: green attribute (0.0-1.0)
   #     b: blue attribute (0.0-1.0)
+  # lospecSlug: the URL slug used on Lospec for this palette
   @Meta
     name: @id()
 

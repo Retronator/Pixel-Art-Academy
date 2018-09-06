@@ -32,10 +32,10 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
   events: ->
     super.concat
       'click .edit-button': @onClickEditButton
-      'click .reset-button': @onClickResetButton
+      'click .assets-button': @onClickAssetsButton
 
   onClickEditButton: (event) ->
     @parent.editAsset()
 
-  onClickResetButton: (event) ->
-    PAA.Practice.Challenges.Drawing.TutorialSprite.reset @sprite.id(), @sprite.spriteId()
+  onClickAssetsButton: (event) ->
+    @parent.showSecondPage()

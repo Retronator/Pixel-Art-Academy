@@ -283,6 +283,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
   resizingDirectionClass: ->
     @references().resizingReference()?.resizingDirectionClass()
 
+  spriteVisible: ->
+    # Don't show the sprite when clipboard is on the second page.
+    not @drawing.clipboard().secondPageActive()
+
   spriteStyle: ->
     # Allow to be updated externally.
     @spriteStyleChangeDependency.depend()

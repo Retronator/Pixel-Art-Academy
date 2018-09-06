@@ -33,6 +33,11 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
     # since we're overriding with a class with the same name.
     C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent
 
+  @clipboardPageComponentClass: ->
+    # Note: We need to fully qualify the name instead of using @constructor
+    # since we're overriding with a class with the same name.
+    C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent
+
   @initialize()
   
   constructor: ->
@@ -66,3 +71,9 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
         enabled: false
       storage:
         enabled: false
+
+  templateUrl: ->
+    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@constructor.imageName()}-template.png"
+
+  referenceUrl: ->
+    @constructor.references()[0].image.url

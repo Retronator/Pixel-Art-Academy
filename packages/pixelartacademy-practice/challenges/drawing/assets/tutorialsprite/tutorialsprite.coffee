@@ -68,10 +68,6 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
     pixels
 
-  @briefComponentClass: ->
-    # Override to provide a different brief component.
-    @BriefComponent
-
   constructor: ->
     super
     
@@ -129,9 +125,6 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
         spriteData.layers = [pixels: goalPixels]
 
         spriteData
-
-    briefComponentClass = @constructor.briefComponentClass()
-    @briefComponent = new briefComponentClass @
 
     @completed = new ComputedField =>
       # Compare goal pixels with current sprite pixels.

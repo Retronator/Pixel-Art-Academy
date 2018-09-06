@@ -12,6 +12,7 @@ Document.startup ->
   #     b: blue attribute (0.0-1.0)
   palette =
     name: LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
+    lospecSlug: 'zx-spectrum'
     ramps: [
       name: 'black', shades: [r: 0, g: 0, b: 0]
     ,

@@ -1,19 +1,28 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Clipboard">
   <div class="pixelartacademy-pixelboy-apps-drawing-clipboard {{activeAssetClass}} {{editorActiveClass}}">
-    <div class="brief">
-      {{#with asset}}
-        <div class="asset {{styleClasses}}">
-          <div class="asset-name">{{> t10e displayNameTranslation}}</div>
-          <div class="description">
-            {{#Markdown}}{{description}}{{/Markdown}}
-          </div>
-          {{> Render briefComponent}}
-        </div>
-      {{/with}}
-      <div class="sprite-placeholder" {{style spritePlaceholderStyle}}></div>
-      {{#if asset.spriteInfo}}
-        <div class="sprite-info">{{#Markdown}}{{asset.spriteInfo}}{{/Markdown}}</div>
-      {{/if}}
+    <div class="bottom">
+      {{> Render asset.clipboardPageComponent}}
     </div>
+    {{#if secondPageActive}}
+      <button class="turned-page back-button"></button>
+    {{else}}
+      <div class="brief">
+        <div class="content">
+          {{#with asset}}
+            <div class="asset {{styleClasses}}">
+              <div class="asset-name">{{> t10e displayNameTranslation}}</div>
+              <div class="description">
+                {{#Markdown}}{{description}}{{/Markdown}}
+              </div>
+              {{> Render briefComponent}}
+            </div>
+          {{/with}}
+          <div class="sprite-placeholder" {{style spritePlaceholderStyle}}></div>
+          {{#if asset.spriteInfo}}
+            <div class="sprite-info">{{#Markdown}}{{asset.spriteInfo}}{{/Markdown}}</div>
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
   </div>
 </template>

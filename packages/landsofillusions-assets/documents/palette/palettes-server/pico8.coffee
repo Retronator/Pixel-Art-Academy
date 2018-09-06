@@ -35,6 +35,7 @@ Document.startup ->
   #     b: blue attribute (0.0-1.0)
   pico8Palette =
     name: pico8PaletteName
+    lospecSlug: 'pico-8'
     ramps: []
 
   for colorLine in colorLines

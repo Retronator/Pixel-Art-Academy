@@ -1,0 +1,55 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.pixelartacademy-season1-episode0-chapter1-challenges-drawing-pixelartsoftware-copyreference-clipboardpagecomponent
+  h2
+    daily()
+    font-weight bold
+
+  .asset
+    float right
+    position relative
+    right -11rem
+
+    &:hover
+      .image
+        right 2rem
+
+    &::after
+      content ''
+      position absolute
+      z-index 1
+      width 23rem
+
+    .image
+      position relative
+      width 100%
+      right 0
+      transition right 0.1s
+
+  .template-area
+    .template
+      .image
+        background atariGrey(6)
+        border 4rem solid atariGrey(6)
+        box-shadow -1rem 1rem 0 transparentify(atariGrey(6), atariGrey(7))
+
+      &::after
+        top 10rem
+        right -5rem
+        height 9rem
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/paperclip-right.png')
+
+  .reference-area
+    clear right
+
+    .reference
+      width 75rem
+
+      .image
+        filter drop-shadow(-1rem 1rem 0 transparentify(atariGrey(5), atariGrey(7)))
+
+      &::after
+        top 55rem
+        right -5rem
+        height 7rem
+        background-image image('/pixelartacademy/pixelboy/apps/drawing/clipboard/paperclip-right-2.png')

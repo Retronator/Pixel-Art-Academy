@@ -80,6 +80,7 @@ Package.onUse(function(api) {
 
   api.addFile('project/assets/sprite..');
   api.addUnstyledComponent('project/assets/sprite/briefcomponent..');
+  api.addUnstyledComponent('project/assets/sprite/clipboardpagecomponent..');
 
   // Challenges
 
