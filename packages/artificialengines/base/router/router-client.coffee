@@ -143,10 +143,10 @@ class AB.Router extends AB.Router
       # Do not react if modifier keys are present (the user might be trying to open the link in a new tab).
       return if event.metaKey or event.ctrlKey or event.shiftKey
 
-      # Do not act on download links.
-      return if $(event.target).hasAttribute 'download'
-
       link = event.currentTarget
+
+      # Do not act on download links.
+      return if link.download
 
       # Only do soft link changes when we're staying within the same host.
       if link.hostname is location.hostname
