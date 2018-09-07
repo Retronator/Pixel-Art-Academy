@@ -12,9 +12,10 @@ class C1.PostPixelBoy.CopyReference.Bookshelves extends LOI.Adventure.Scene
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/postpixelboy/scenes/copyreference/bookshelves.script'
 
-  @intro: -> """
-    You come to the bookshelves that house assorted books and a big collection of video games.
-  """
+  @translations: ->
+    corinneIntro: """
+      You come to the bookshelves that house assorted books and a big collection of video games.
+    """
 
   @initialize()
 
@@ -89,7 +90,7 @@ class C1.PostPixelBoy.CopyReference.Bookshelves extends LOI.Adventure.Scene
   onEnter: (enterResponse) ->
     if C1.PostPixelBoy.state('corinneState') is C1.PostPixelBoy.CopyReference.CorinneStates.ByBookshelves
       enterResponse.overrideIntroduction =>
-        @options.parent.translations()?.intro
+        @options.parent.translations()?.corinneIntro
 
     # Corinne should talk when at location.
     @_corinneTalksAutorun = @autorun (computation) =>

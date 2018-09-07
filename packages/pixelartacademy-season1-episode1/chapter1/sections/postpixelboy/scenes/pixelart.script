@@ -148,9 +148,11 @@ retro:
 ## ExternalSoftwareTutorial
 
 retro:
-  To start out, try different tools and just play with them.
-  In particular, try to find the pencil, eraser, and color fill (usually a bucket).
-  Learn how to zoom in and out so you can see pixels better.
+  To start out, create a new image. Something small, say 64 by 64 pixels.
+  Your software should have a toolbox with many icons. 
+  Try different tools and just play with them. In particular, try to find the pencil, eraser, and color fill (usually a bucket).
+  You might need to set the size of the pencil to 1 pixel if it's not already.
+  Learn how to zoom in and out as well so you can see pixels better.
   Make sure to save your file at the end.
 
 * Why do I need to save it? -> [WhySave]

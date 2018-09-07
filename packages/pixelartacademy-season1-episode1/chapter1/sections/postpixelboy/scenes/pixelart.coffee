@@ -81,8 +81,8 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
     return unless choicePlaceholderResponse.scriptId is HQ.Store.RetroListener.CharacterScript.id()
     return unless choicePlaceholderResponse.placeholderId is 'MainQuestion'
 
-    # Prerequisite is that the player has talked about pixel art software before.
-    return unless HQ.Actors.Retro.Listener.Script.state 'SoftwareQuestions'
+    # Prerequisite is that the player has talked about pixel art software while having the PixelBoy.
+    return unless HQ.Actors.Retro.Listener.Script.state 'HavePixelBoy'
 
     labels = [
       'UsePixelBoyEditorChoice'

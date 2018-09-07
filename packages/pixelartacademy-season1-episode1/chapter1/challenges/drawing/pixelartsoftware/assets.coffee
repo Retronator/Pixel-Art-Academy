@@ -9,10 +9,11 @@ assets =
     dimensions: -> width: 13, height: 16
     imageName: -> 'mshm-netherworld'
     spriteInfo: -> """
-      Artwork from [NetherWorld](http://www.netherworldgame.com) (WIP)
+      Artwork from [NetherWorld](http://www.netherworldgame.com), WIP
 
       Artist: Isabel 'Erien' Armentero
     """
+    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Isabel'
@@ -32,6 +33,7 @@ assets =
 
       Artist: Hjalte Tagmose
     """
+    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Hjalte'
@@ -50,6 +52,7 @@ assets =
 
       Artist: Hjalte Tagmose
     """
+    maxClipboardScale: -> 5
     artist:
       name:
         first: 'Hjalte'
@@ -302,7 +305,7 @@ assets =
     dimensions: -> width: 15, height: 19
     imageName: -> 'cbhm-courierofthecrypts'
     spriteInfo: -> """
-      Artwork from [Courier of the Crypts](http://www.courierofthecrypts.com) (WIP)
+      Artwork from [Courier of the Crypts](http://www.courierofthecrypts.com), WIP
 
       Artist: Primož Vovk
     """
@@ -320,10 +323,11 @@ assets =
     dimensions: -> width: 10, height: 23
     imageName: -> 'cbhm-nykra'
     spriteInfo: -> """
-      Artwork from [NYKRA](http://nykra.com) (WIP)
+      Artwork from [NYKRA](http://nykra.com), WIP
 
       Artist: Seth 'ENDESGA' Groom
     """
+    maxClipboardScale: -> 3.5
     artist:
       name:
         first: 'Seth'
@@ -358,7 +362,7 @@ assets =
     dimensions: -> width: 30, height: 32
     imageName: -> 'cbem-intotherift'
     spriteInfo: -> """
-      Artwork from [Into The Rift](http://www.starsoft.com/IntoTheRift/) (WIP)
+      Artwork from [Into The Rift](http://www.starsoft.com/IntoTheRift/), WIP
 
      Artist: Weston Tracy
     """
@@ -395,10 +399,11 @@ assets =
     dimensions: -> width: 22, height: 25
     imageName: -> 'cbem-dontgiveupacynicaltale'
     spriteInfo: -> """
-      Artwork from [DON'T GIVE UP: A Cynical Tale](https://trisbee.itch.io/dont-give-up-a-cynical-tale) (WIP)
+      Artwork from [DON'T GIVE UP: A Cynical Tale](https://trisbee.itch.io/dont-give-up-a-cynical-tale), WIP
 
       Artist: Tristan Barona
     """
+    maxClipboardScale: -> 3
     artist:
       name:
         first: 'Tristan'
@@ -416,6 +421,7 @@ assets =
 
       Artist: Justin Ma
     """
+    maxClipboardScale: -> 2.5
     artist:
       name:
         first: 'Justin'
@@ -449,7 +455,7 @@ assets =
     dimensions: -> width: 31, height: 23
     imageName: -> 'cbom-virtuaverse'
     spriteInfo: -> """
-      Artwork from [VirtuaVerse](https://www.facebook.com/virtuaversegame), 2017
+      Artwork from [VirtuaVerse](https://www.facebook.com/virtuaversegame), WIP
 
       Artist: Ra 'Valenberg' Mei
     """

@@ -12,9 +12,10 @@ class C1.PostPixelBoy.CopyReference.Store extends LOI.Adventure.Scene
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/postpixelboy/scenes/copyreference/store.script'
 
-  @intro: -> """
-    You walk with Corinne past store shelves.
-  """
+  @translations: ->
+    corinneIntro: """
+      You walk with Corinne past store shelves.
+    """
 
   @initialize()
 
@@ -41,7 +42,7 @@ class C1.PostPixelBoy.CopyReference.Store extends LOI.Adventure.Scene
   onEnter: (enterResponse) ->
     if C1.PostPixelBoy.state('corinneState') is C1.PostPixelBoy.CopyReference.CorinneStates.InStore
       enterResponse.overrideIntroduction =>
-        @options.parent.translations()?.intro
+        @options.parent.translations()?.corinneIntro
 
     # Corinne should talk when at location.
     @_corinneTalksAutorun = @autorun (computation) =>

@@ -22,7 +22,7 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
     spriteData = _.cloneDeep editor.spriteData()
     editor.manualSpriteData spriteData
     @sprite.manualUserSpriteData spriteData
-    @sprite.engineComponent.drawMissingPixelsUpTo x: 0, y: 0
+    @sprite.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
 
     # Open the editor and zoom in the sprite as much as possible.
     editor.manuallyActivated true

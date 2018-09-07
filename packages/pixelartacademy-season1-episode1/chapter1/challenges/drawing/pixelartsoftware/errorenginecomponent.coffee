@@ -16,7 +16,7 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ErrorEngineComponent
     @pixelToHintRatio = 5
     @hintOffset = Math.floor @pixelToHintRatio / 2
 
-    @drawMissingPixelsUpTo = new ReactiveField x: 0, y: 0
+    @drawMissingPixelsUpTo = new ReactiveField x: -1, y: -1
 
   drawToContext: (context, renderOptions = {}) ->
     return unless @ready()

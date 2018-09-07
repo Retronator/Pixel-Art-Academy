@@ -10,4 +10,4 @@ class HQ.GalleryEast.Corinne extends HQ.Actors.Corinne
 
   @initialize()
 
-  descriptiveName: -> @translations.galleryEastDescriptiveName
+  descriptiveName: -> @translations().galleryEastDescriptiveName

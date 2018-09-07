@@ -172,6 +172,7 @@ class LOI.Adventure.Thing extends AM.Component
       onCommand: (commandResponse) -> @options.parent.onCommand.call @, commandResponse
       onChoicePlaceholder: (choicePlaceholderResponse) -> @options.parent.onChoicePlaceholder.call @, choicePlaceholderResponse
       onEnter: (enterResponse) ->
+        # Automatically override the intro if it is provided.
         if @options.parent.constructor.intro
           enterResponse.overrideIntroduction =>
             @options.parent.translations()?.intro

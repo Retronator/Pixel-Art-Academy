@@ -9,7 +9,8 @@ class LOI.Parser.EnterResponse
 
     @_introductionFunction = null
 
-  # Call to indicate that exit should not be allowed.
+  # Use to provide a different introduction text to the scene. You can
+  # use the intro static method of a scene to automatically do this.
   overrideIntroduction: (introductionFunction) ->
     @_introductionFunction = introductionFunction
     
