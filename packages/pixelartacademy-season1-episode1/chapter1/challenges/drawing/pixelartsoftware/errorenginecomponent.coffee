@@ -16,6 +16,8 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ErrorEngineComponent
     @pixelToHintRatio = 5
     @hintOffset = Math.floor @pixelToHintRatio / 2
 
+    @drawMissingPixelsUpTo = new ReactiveField x: 0, y: 0
+
   drawToContext: (context, renderOptions = {}) ->
     return unless @ready()
 
@@ -53,12 +55,18 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ErrorEngineComponent
       for y in [0...spriteData.bounds.height]
         @_paintPixel spriteData, x, y, @options.backgroundColor
 
+    drawMissingPixelsUpTo = @drawMissingPixelsUpTo()
+    drawMissingPixelsUpToIndex = drawMissingPixelsUpTo.x + drawMissingPixelsUpTo.y * spriteData.bounds.width
+
     for layer in spriteData.layers
       continue unless layer.pixels
 
       for pixel in layer.pixels
-        # Skip the pixels that the user hasn't painted yet.
-        continue unless _.find userPixels, (userPixel) => userPixel.x is pixel.x and userPixel.y is pixel.y
+        # Skip the pixels that the user hasn't painted yet, unless we should draw them.
+        pixelIndex = pixel.x + pixel.y * spriteData.bounds.width
+
+        if pixelIndex > drawMissingPixelsUpToIndex
+          continue unless _.find userPixels, (userPixel) => userPixel.x is pixel.x and userPixel.y is pixel.y
 
         if pixel.paletteColor
           shades = palette.ramps[pixel.paletteColor.ramp].shades

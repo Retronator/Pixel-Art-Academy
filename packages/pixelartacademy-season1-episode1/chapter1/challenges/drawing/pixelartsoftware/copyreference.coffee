@@ -43,9 +43,15 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
   constructor: ->
     super
 
+    # Allow to manually provide user sprite data.
+    @manualUserSpriteData = new ReactiveField null
+    
     # We override the component that shows the goal state with a custom one that only shows drawn errors.
     @engineComponent = new @constructor.ErrorEngineComponent
       userSpriteData: =>
+        manualUserSpriteData = @manualUserSpriteData()
+        return manualUserSpriteData if manualUserSpriteData
+        
         return unless spriteId = @spriteId()
         LOI.Assets.Sprite.documents.findOne spriteId
 
@@ -64,6 +70,8 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
         spriteData.layers = [pixels: goalPixels]
 
         spriteData
+        
+    @uploadMode = new ReactiveField false
 
   editorOptions: ->
     references:
@@ -71,6 +79,10 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
         enabled: false
       storage:
         enabled: false
+
+  availableToolKeys: ->
+    # When we're in upload mode, don't show any tools in the editor.
+    if @uploadMode() then [] else null
 
   templateUrl: ->
     "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@constructor.imageName()}-template.png"

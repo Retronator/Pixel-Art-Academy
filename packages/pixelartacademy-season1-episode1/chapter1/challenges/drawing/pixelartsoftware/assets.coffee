@@ -380,6 +380,7 @@ assets =
 
       Artist: Thomas van den Berg
     """
+    maxClipboardScale: -> 3.5
     artist:
       name:
         first: 'Thomas'

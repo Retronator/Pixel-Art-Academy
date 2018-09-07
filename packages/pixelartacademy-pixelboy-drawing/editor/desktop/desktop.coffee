@@ -113,7 +113,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     @references new @constructor.References
       assetId: @spriteId
       documentClass: LOI.Assets.Sprite
-      editorActive: @active
+      editorActive: => @active()
       assetOptions: =>
         @displayedAsset()?.editorOptions()?.references
 
@@ -132,7 +132,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       tools: @tools
       activeTool: @activeTool
       actions: @actions
-      enabled: @active
+      enabled: => @active()
       
     # Create tools.
     @toolClasses =
@@ -253,7 +253,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
   onBackButton: ->
     # Turn off focused mode on back button.
-    return unless @focusedMode()
+    return super unless @focusedMode()
     @focusedMode false
 
     # Inform that we've handled the back button.

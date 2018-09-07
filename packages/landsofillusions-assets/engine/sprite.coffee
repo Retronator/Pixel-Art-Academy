@@ -93,6 +93,8 @@ class LOI.Assets.Engine.Sprite
             destinationColor = r: 0, g: 0, b: 0
 
         else
+          paletteColor = null
+
           # Normal color mode.
           if pixel.materialIndex?
             material = spriteData.materials[pixel.materialIndex]

@@ -3,10 +3,17 @@
     <ul class="properties">
       <li class="property fixed-dimensions">
         <span class="property-name">Size</span>:
-        {{fixedDimensions.width}}×{{fixedDimensions.height}}</li>
+        {{fixedDimensions.width}}×{{fixedDimensions.height}}
+      </li>
       <li class="property restricted-palette">
         <span class="property-name">Palette</span>:
-        {{restrictedPalette.name}}</li>
+        {{#if restrictedPalette}}
+          {{restrictedPalette.name}}
+        {{/if}}
+        {{#if customPalette}}
+          Custom, {{customPaletteColorsString}}
+        {{/if}}
+      </li>
     </ul>
     {{#if noActions}}
       <div class="no-actions">
