@@ -1,6 +1,6 @@
 <template name="PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Palette">
   <div class="pixelartacademy-pixelboy-apps-drawing-editor-desktop-palette table-item {{trayClass}} {{swatchesClass}} {{paletteNameClass}}">
-    <div class="colors">
+    <div class="colors" {{style colorsStyle}}>
       {{#each palette.ramps}}
         <div class="ramp">
           {{#if trayClass}}

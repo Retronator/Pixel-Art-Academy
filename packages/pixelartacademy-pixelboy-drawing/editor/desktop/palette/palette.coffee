@@ -29,6 +29,34 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Compon
 
     _.kebabCase palette.name
 
+  colorsStyle: ->
+    # We only need to style the tray.
+    return unless @options.paletteData?()
+
+    # Calculate the width of the palette.
+    height = 120
+    shadeSize = 11
+    rampWidth = 15
+    rampBottomMargin = 6
+    rampRightMargin = 3
+
+    width = rampWidth
+    columnHeight = 0
+
+    for ramp in @palette().ramps
+      rampHeight = ramp.shades.length * shadeSize
+      columnHeight += rampHeight + rampBottomMargin
+
+      if columnHeight > height
+        # We overflow into the new line.
+        width += rampRightMargin + rampWidth
+        columnHeight = rampHeight + rampBottomMargin
+
+    # Tray should be at least 32 wide.
+    width = Math.max 32, width
+
+    width: "#{width}rem"
+
   shadeStyle: ->
     return unless @options.paletteData?()
     shade = @currentData()

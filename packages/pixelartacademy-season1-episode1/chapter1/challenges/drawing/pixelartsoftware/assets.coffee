@@ -199,6 +199,25 @@ assets =
       completionDate:
         year: 2017
 
+  MBOMInventorious:
+    dimensions: -> width: 19, height: 22
+    backgroundColor: -> new THREE.Color '#250936'
+    imageName: -> 'mbom-inventorious'
+    spriteInfo: -> """
+      Artwork from [Inventorious](https://placeholders.itch.io/inventorious), 2018
+
+      Artist: Mati Ernst
+    """
+    maxClipboardScale: -> 3.5
+    artist:
+      name:
+        first: 'Mati'
+        last: 'Ernst'
+    artwork:
+      title: 'Necklace'
+      completionDate:
+        year: 2018
+
   CSHMCeleste:
     dimensions: -> width: 9, height: 7
     restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
@@ -262,6 +281,46 @@ assets =
       completionDate:
         year: 2010
 
+  CSVMFroggi:
+    dimensions: -> width: 16, height: 12
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.pico8
+    backgroundColor: ->
+      paletteColor:
+        ramp: 0
+        shade: 0
+    imageName: -> 'csvm-froggi'
+    spriteInfo: -> """
+      Artwork from [Froggi](https://sophieh.itch.io/froggi), 2018
+
+      Artist: Sophie Houlden
+    """
+    artist:
+      name:
+        first: 'Sophie'
+        last: 'Houlden'
+    artwork:
+      title: 'Red sports car'
+      completionDate:
+        year: 2018
+
+  CSOMTheWakingCloak:
+    dimensions: -> width: 16, height: 16
+    imageName: -> 'csom-thewakingcloak'
+    spriteInfo: -> """
+      Artwork from [The Waking Cloak](http://www.thewakingcloak.com), WIP
+
+      Artist: Daniel Müller
+    """
+    maxClipboardScale: -> 5
+    artist:
+      name:
+        first: 'Daniel'
+        last: 'Müller'
+    artwork:
+      title: 'Staff'
+      completionDate:
+        year: 2018
+
   CBHMFez:
     dimensions: -> width: 13, height: 18
     backgroundColor: -> new THREE.Color '#251635'
@@ -320,7 +379,7 @@ assets =
         year: 2014
 
   CBHMNYKRA:
-    dimensions: -> width: 10, height: 23
+    dimensions: -> width: 9, height: 23
     imageName: -> 'cbhm-nykra'
     spriteInfo: -> """
       Artwork from [NYKRA](http://nykra.com), WIP
@@ -409,12 +468,12 @@ assets =
         first: 'Tristan'
         last: 'Barona'
     artwork:
-      title: 'Irate customer'
+      title: 'Ted Tantrums'
       completionDate:
         year: 2017
 
   CBVMIntoTheBreach:
-    dimensions: -> width: 39, height: 31
+    dimensions: -> width: 31, height: 31
     imageName: -> 'cbvm-intothebreach'
     spriteInfo: -> """
       Artwork from [Into The Breach](https://subsetgames.com/itb.html), 2018

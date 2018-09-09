@@ -65,16 +65,12 @@ corinne: Next question, do you want the sprite to be small or big?
 
 ## CharacterThing
 
--> [Character] `_choice is 'CS'`
-
 corinne: And do you want to draw a character or something else?
 
 * A character. -> [Character]
 * Let's see what else you have. -> [Thing]
 
 ## Character
-
--> [Hero] `_choice is 'MB'`
 
 corinne: Alright. Do you want to draw the hero or an enemy?
 
@@ -140,8 +136,9 @@ corinne:
 -> [MSVMLuftrauser] `_choice is 'MSVM'`
 -> [MSOMMidnightDungeon] `_choice is 'MSOM'`
 -> [CSHMCeleste] `_choice is 'CSHM'`
+-> [CSVMFroggi] `_choice is 'CSVM'`
+-> [CSOMTheWakingCloak] `_choice is 'CSOM'`
 -> [MBVMLuftrausers] `_choice is 'MBVM'`
--> [MBOMCityClickers] `_choice is 'MBOM'`
 
 corinne: Finally, do you have any special requests?
 
@@ -150,7 +147,9 @@ corinne: Finally, do you have any special requests?
 * Ratman from Despot Dungeons? -> [MSEMDespotDungeons] `_choice is 'MSEM'`
 * Flying skull from l'Abbaye des Morts? -> [MSEMLAbbayeDesMorts] `_choice is 'MSEM'`
 * Bagel chef from Lou Bagel's Waffle Bar? -> [MBHMLouBagelsWaffleBar] `_choice is 'MBHM'`
-* Captain Viridian from VVVVVV? -> [MBHMVVVVVV] `_choice is 'MSBM'`
+* Captain Viridian from VVVVVV? -> [MBHMVVVVVV] `_choice is 'MBHM'`
+* House from City Clickers? -> [MBOMCityClickers] `_choice is 'MBOM'`
+* Necklace from Inventorious? -> [MBOMInventorious] `_choice is 'MBOM'`
 * Crab from Hook, Line and Thinker? -> [CSEMHookLineAndThinker] `_choice is 'CSEM'`
 * Small flying skull from Super Crate Box? -> [CSEMSuperCrateBox] `_choice is 'CSEM'`
 * Gomez from FEZ? -> [CBHMFez] `_choice is 'CBHM'`
@@ -160,7 +159,7 @@ corinne: Finally, do you have any special requests?
 * Big green skull from Super Crate Box? -> [CBEMSuperCrateBox] `_choice is 'CBEM'`
 * Archer from Into the Rift? -> [CBEMIntoTheRift] `_choice is 'CBEM'`
 * Greedling from Kingdom: New Lands? -> [CBEMKingdomNewLands] `_choice is 'CBEM'`
-* Irate customer from DON'T GIVE UP: A Cynical Tale? -> [CBEMDontGiveUpACynicalTale] `_choice is 'CBEM'`
+* Ted Tantrums from DON'T GIVE UP: A Cynical Tale? -> [CBEMDontGiveUpACynicalTale] `_choice is 'CBEM'`
 * Rift Walkers Combat Mech from Into the Breach? -> [CBVMIntoTheBreach] `_choice is 'CBVM'`
 * Spaceship from Hydorah? -> [CBVMHydorah] `_choice is 'CBVM'`
 * Pizza Amore from VirtuaVerse? -> [CBOMVirtuaVerse] `_choice is 'CBOM'`
@@ -213,6 +212,10 @@ corinne: Finally, do you have any special requests?
 `_assetId = 'MBOMCityClickers'`
 -> [FindGame]
 
+## MBOMInventorious
+`_assetId = 'MBOMInventorious'`
+-> [FindGame]
+
 ## CSHMCeleste
 `_assetId = 'CSHMCeleste'`
 -> [FindGame]
@@ -223,6 +226,14 @@ corinne: Finally, do you have any special requests?
 
 ## CSEMSuperCrateBox
 `_assetId = 'CSEMSuperCrateBox'`
+-> [FindGame]
+
+## CSVMFroggi
+`_assetId = 'CSVMFroggi'`
+-> [FindGame]
+
+## CSOMTheWakingCloak
+`_assetId = 'CSOMTheWakingCloak'`
 -> [FindGame]
 
 ## CBHMFez
@@ -297,6 +308,7 @@ corinne:
 * I'll get right on it!
 
 corinne: I'll be upstairs if you need anything.
+-> [End]
   
 ### Move
 

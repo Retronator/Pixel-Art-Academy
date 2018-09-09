@@ -12,9 +12,11 @@ Sprites used with permission from the authors for games:
 - [LUFTRAUSERS](http://luftrausers.com) by Roy Nathan de Groot
 - [City Clickers](https://eigen.itch.io/city-clickers) by Eigen Lenk
 - [Inventorious](https://placeholders.itch.io/inventorious) by Mati Ernst
-- [CELESTE Classic](https://mattmakesgames.itch.io/celesteclassic) by Noel Berry (permission from Heidy Motta)
+- [CELESTE Classic](https://mattmakesgames.itch.io/celesteclassic) by Noel Berry (permission via Heidy Motta)
 - [Hook, Line and Thinker](https://rhythmlynx.itch.io/hook-line-and-thinker) by Connor Halford
 - [Super Crate Box](http://supercratebox.com) by Roy Nathan de Groot
+- [Froggi](https://sophieh.itch.io/froggi), by Sophie Houlden
+- [The Waking Cloak](http://www.thewakingcloak.com), by Daniel Müller
 - [FEZ](http://www.fezgame.com) by Phil Fish
 - [Owlboy](http://www.owlboygame.com) by Simon Stafsnes 'Snake' Andersen
 - [Courier of the Crypts](http://www.courierofthecrypts.com) by Primož Vovk
@@ -26,4 +28,4 @@ Sprites used with permission from the authors for games:
 - [Into The Breach](https://subsetgames.com/itb.html) by Justin Ma
 - [Hydorah](https://www.locomalito.com/hydorah.php) by Locomalito
 - [VirtuaVerse](https://www.facebook.com/virtuaversegame) by Ra 'Valenberg' Mei
-- [Thimbleweed Park](https://thimbleweedpark.com) by Gary Winnick (permission from Ron Gilbert)
+- [Thimbleweed Park](https://thimbleweedpark.com) by Gary Winnick (permission via Ron Gilbert)
