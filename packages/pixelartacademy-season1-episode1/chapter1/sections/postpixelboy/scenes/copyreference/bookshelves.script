@@ -135,10 +135,11 @@ corinne:
 
 -> [MSVMLuftrauser] `_choice is 'MSVM'`
 -> [MSOMMidnightDungeon] `_choice is 'MSOM'`
+-> [MBEMSaboteurSiO] `_choice is 'MBEM'`
+-> [MBVMLuftrausers] `_choice is 'MBVM'`
 -> [CSHMCeleste] `_choice is 'CSHM'`
 -> [CSVMFroggi] `_choice is 'CSVM'`
 -> [CSOMTheWakingCloak] `_choice is 'CSOM'`
--> [MBVMLuftrausers] `_choice is 'MBVM'`
 
 corinne: Finally, do you have any special requests?
 
@@ -202,6 +203,10 @@ corinne: Finally, do you have any special requests?
 
 ## MBHMVVVVVV
 `_assetId = 'MBHMVVVVVV'`
+-> [FindGame]
+
+## MBEMSaboteurSiO
+`_assetId = 'MBEMSaboteurSiO'`
 -> [FindGame]
 
 ## MBVMLuftrausers

@@ -161,6 +161,26 @@ assets =
       completionDate:
         year: 2009
 
+  MBEMSaboteurSiO:
+    dimensions: -> width: 32, height: 46
+    restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.zxSpectrum
+    imageName: -> 'mbem-saboteursio'
+    spriteInfo: -> """
+      Artwork from [Saboteur SiO](http://www.clivetownsend.com), WIP
+
+      Artist: Ricardo Oyón Rodríguez
+    """
+    maxClipboardScale: -> 1.5
+    artist:
+      name:
+        first: 'Ricardo'
+        middle: 'Oyón'
+        last: 'Rodríguez'
+    artwork:
+      title: 'Bouncer'
+      completionDate:
+        year: 2018
+
   MBVMLuftrausers:
     dimensions: -> width: 59, height: 18
     backgroundColor: -> new THREE.Color '#e5ddac'
@@ -317,7 +337,7 @@ assets =
         first: 'Daniel'
         last: 'Müller'
     artwork:
-      title: 'Staff'
+      title: 'Staff of Moonlight'
       completionDate:
         year: 2018
 

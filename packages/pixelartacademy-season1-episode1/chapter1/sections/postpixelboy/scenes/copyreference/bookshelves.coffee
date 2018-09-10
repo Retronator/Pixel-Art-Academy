@@ -52,6 +52,7 @@ class C1.PostPixelBoy.CopyReference.Bookshelves extends LOI.Adventure.Scene
             'MSOMMidnightDungeon'
             'MBHMLouBagelsWaffleBar'
             'MBHMVVVVVV'
+            'MBEMSaboteurSiO'
             'MBVMLuftrausers'
             'MBOMCityClickers'
             'MBOMInventorious'

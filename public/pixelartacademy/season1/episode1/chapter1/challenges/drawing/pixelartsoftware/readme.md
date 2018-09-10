@@ -8,6 +8,7 @@ Sprites used with permission from the authors for games:
 - [LUFTRAUSER](https://www.newgrounds.com/portal/view/573422) by Paul 'Pietepiet' Veer
 - [Midnight Dungeon](https://pixelartm.itch.io/midnight-dungeon) by Miguel ‘PixelArtM’ Sánchez
 - [Lou Bagel's Waffle Bar](https://loubagel.itch.io/lou-bagel-waffle-bar) by Chris Taylor
+- [Saboteur SiO](http://www.clivetownsend.com) by Ricardo Oyón Rodríguez (permission via Clive Townsend)
 - [NetherWorld](http://www.netherworldgame.com) by Isabel 'Erien' Armentero
 - [LUFTRAUSERS](http://luftrausers.com) by Roy Nathan de Groot
 - [City Clickers](https://eigen.itch.io/city-clickers) by Eigen Lenk
