@@ -138,6 +138,22 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
 
         editor.manualSpriteData null
         @sprite.manualUserSpriteData null
+        @sprite.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
+
+        # Mark this asset as uploaded.
+        assets = @sprite.tutorial.state 'assets'
+        spriteId = @sprite.id()
+
+        assets = [] unless assets
+        asset = _.find assets, (asset) => asset.id is spriteId
+
+        unless asset
+          asset = id: @id()
+          assets.push asset
+
+        asset.uploaded = true
+
+        @sprite.tutorial.state 'assets', assets
 
     Meteor.setTimeout =>
       scaleSprite()
