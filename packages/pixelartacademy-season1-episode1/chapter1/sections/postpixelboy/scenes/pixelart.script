@@ -109,7 +109,7 @@ retro: After you've set your software of choice, come back and talk to me.
 
 ## ChosenSoftwareChoice
 
-* I've chosen to use `_externalSoftwareName`. `_externalSoftware and _externalSoftwareName and not AfterChosenSoftware`
+* I've chosen to use `_externalSoftwareName`. `_externalSoftware and _externalSoftwareName and UseExternalSoftware and not AfterChosenSoftware`
 
 retro: Good choice!
 

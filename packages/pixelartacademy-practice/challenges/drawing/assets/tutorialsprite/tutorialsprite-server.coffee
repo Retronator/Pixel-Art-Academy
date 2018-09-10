@@ -32,19 +32,35 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Challe
       png = PNG.sync.read paletteImageResponse.body
       ramps = []
 
+      backgroundColorArray = @backgroundColor()?.toByteArray?()
+
+      isBackground = (pixelOffset) ->
+        # Treat transparent pixels as background.
+        return true unless png.data[pixelOffset + 3]
+
+        # We're not transparent, so in case we don't have a background color, this can't be a background pixel.
+        return unless backgroundColorArray
+
+        # Compare in case this pixel matches our background color.
+        for attributeOffset in [0..2]
+          return unless png.data[pixelOffset + attributeOffset] is backgroundColorArray[attributeOffset]
+
+        # The match was made, this pixel has background color.
+        true
+
       for y in [0...png.height]
         rampOffset = y * png.width * 4
 
-        # We have a ramp if the first pixel is not transparent.
-        continue unless png.data[rampOffset + 3]
+        # We have a ramp if the first pixel is not background.
+        continue if isBackground rampOffset
 
         shades = []
 
         for x in [0...png.width]
           shadeOffset = rampOffset + x * 4
 
-          # We have no more shades after we reach a transparent pixel.
-          break unless png.data[shadeOffset + 3]
+          # We have no more shades after we reach a background pixel.
+          break if isBackground shadeOffset
 
           shades.push
             r: png.data[shadeOffset] / 255

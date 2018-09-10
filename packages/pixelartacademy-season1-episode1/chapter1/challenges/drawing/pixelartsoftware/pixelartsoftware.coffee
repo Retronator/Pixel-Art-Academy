@@ -61,7 +61,7 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     asset.destroy() for asset in @_pixelArtSoftwareAssets
 
   noAssetsInstructions: ->
-    @translations().noAssetsInstructions
+    @translations()?.noAssetsInstructions
 
   assetsData: ->
     return unless LOI.adventure.readOnlyGameState()

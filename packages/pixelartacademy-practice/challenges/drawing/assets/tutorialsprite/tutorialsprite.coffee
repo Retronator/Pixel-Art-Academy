@@ -17,6 +17,9 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
   @minClipboardScale: -> null
   @maxClipboardScale: -> null
 
+  # Override to define a background color.
+  @backgroundColor: -> null
+
   # Methods
 
   @create: new AB.Method name: "#{@id()}.create"
@@ -133,10 +136,19 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       return unless goalPixelsMap = @goalPixelsMap()
       return unless @palette()
 
-      return false unless goalPixels.length is spritePixels.length
+      # Make sure enough pixels are even present. There might be more in case of background color pixels.
+      return false if spritePixels.length < goalPixels.length
+
+      if backgroundColor = @constructor.backgroundColor()
+        # Convert background color to the same format as goal pixels.
+        backgroundColor = directColor: backgroundColor unless backgroundColor.paletteColor
+        backgroundColor.integerDirectColor = if backgroundColor.paletteColor then @_paletteToIntegerDirectColor backgroundColor.paletteColor else @_directToIntegerDirectColor backgroundColor.directColor
 
       for pixel in spritePixels
-        return false unless goalPixel = goalPixelsMap[pixel.x]?[pixel.y]
+        goalPixel = goalPixelsMap[pixel.x]?[pixel.y] or backgroundColor
+
+        # We must have a color to match against.
+        return false unless goalPixel
 
         # If any of the pixels has a direct color, we need to translate the other one too.
         if pixel.paletteColor and goalPixel.paletteColor
