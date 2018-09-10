@@ -52,6 +52,15 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
     # Draw all pixels in 3 seconds.
     pixelDrawDelay = 3000 / (imageData.width * imageData.height)
 
+    # Prepare for palette mapping.
+    palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
+    colorDistance = (color, r, g, b) => Math.abs(color.r - r) + Math.abs(color.g - g) + Math.abs(color.b - b)
+    backgroundColor = @sprite.constructor.backgroundColor()
+
+    if backgroundColor?.paletteColor
+      # Map palette color to a direct color so we can calculate distance to it.
+      backgroundColor = palette.ramps[backgroundColor.paletteColor.ramp].shades[backgroundColor.paletteColor.shade]
+
     replacePixel = (x, y) =>
       existingPixel = _.find spriteData.layers[0].pixels, (pixel) => pixel.x is x and pixel.y is y
 
@@ -63,19 +72,35 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
       a = imageData.data[pixelIndex + 3]
 
       if a
+        # This is a full pixel so find the closest palette color.
+        closestRamp = null
+        closestShade = null
+        smallestColorDistance = if backgroundColor then colorDistance backgroundColor, r, g, b else 3
+
+        for ramp, rampIndex in palette.ramps
+          for shade, shadeIndex in ramp.shades
+            distance = colorDistance shade, r, g, b
+
+            if distance < smallestColorDistance
+              smallestColorDistance = distance
+              closestRamp = rampIndex
+              closestShade = shadeIndex
+
+      # If we didn't find a palette color, delete the pixel.
+      if closestRamp? and closestShade?
+        paletteColor =
+          ramp: closestRamp
+          shade: closestShade
+
         # This is a full pixel so color it.
         if existingPixel
           # Replace data in existing pixel.
-          existingPixel.directColor = {r, g, b}
-          delete existingPixel.paletteColor if existingPixel.paletteColor
+          existingPixel.paletteColor = paletteColor
+          delete existingPixel.directColor if existingPixel.directColor
 
         else
           # Add new pixel.
-          newPixel =
-            x: x
-            y: y
-            directColor: {r, g, b}
-
+          newPixel = {x, y, paletteColor}
           spriteData.layers[0].pixels.push newPixel
 
       else if not a and existingPixel
