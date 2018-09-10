@@ -143,7 +143,7 @@ corinne:
 
 corinne: Finally, do you have any special requests?
 
-* Squid from Nether World? -> [MSHMNetherWorld] `_choice is 'MSHM'`
+* Medoo from Nether World? -> [MSHMNetherWorld] `_choice is 'MSHM'`
 * Disenfranchised frog from Despot Dungeons? -> [MSHMDespotDungeons] `_choice is 'MSHM'`
 * Ratman from Despot Dungeons? -> [MSEMDespotDungeons] `_choice is 'MSEM'`
 * Flying skull from l'Abbaye des Morts? -> [MSEMLAbbayeDesMorts] `_choice is 'MSEM'`

@@ -20,7 +20,7 @@ assets =
         last: 'Armentero'
         nickname: 'Erien'
     artwork:
-      title: 'Squid'
+      title: 'Medoo'
       completionDate:
         year: 2017
 
