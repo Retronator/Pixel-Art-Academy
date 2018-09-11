@@ -48,6 +48,13 @@
             .property-name
               text-transform uppercase
 
+            a
+              text-decoration none
+              border-bottom 1rem solid atariGrey(4)
+
+              &:hover
+                color atariGrey(2)
+
         .no-actions
           margin 8rem 0
           padding 4rem
@@ -80,15 +87,23 @@
                   background atariGreen(6)
 
             .button
-              absolute-cover-size()
-              border none
-              background none
+            .link
               color atariGrey(2)
-              font inherit
-              text-transform inherit
 
               &:hover
                 background atariGrey(6)
+
+            .button
+              absolute-cover-size()
+              border none
+              background none
+              font inherit
+              text-transform inherit
+
+            .link
+              absolute-cover()
+              text-decoration none
+              line-height 9rem
 
       .sprite-placeholder
         position relative
@@ -125,6 +140,31 @@
       padding 5rem 12rem 14rem
       daily()
       color atariGrey(1)
+
+      h2
+        daily()
+        font-weight bold
+
+      .asset
+        float right
+        position relative
+        right -11rem
+
+        &:hover
+          .image
+            right 2rem
+
+        &::after
+          content ''
+          position absolute
+          z-index 1
+          width 23rem
+
+        .image
+          position relative
+          width 100%
+          right 0
+          transition right 0.1s
 
   .turned-page
     absolute-cover-size()

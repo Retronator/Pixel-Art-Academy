@@ -33,11 +33,6 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
     # since we're overriding with a class with the same name.
     C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent
 
-  @clipboardPageComponentClass: ->
-    # Note: We need to fully qualify the name instead of using @constructor
-    # since we're overriding with a class with the same name.
-    C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent
-
   @initialize()
   
   constructor: ->
@@ -73,12 +68,20 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
         
     @uploadMode = new ReactiveField false
 
+    @_clipboardPageComponent = new C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent @
+
   editorOptions: ->
     references:
       upload:
         enabled: false
       storage:
         enabled: false
+
+  clipboardPageComponent: ->
+    # We only show this page if we can upload.
+    return unless PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
+    
+    @_clipboardPageComponent
 
   availableToolKeys: ->
     # When we're in upload mode, don't show any tools in the editor.

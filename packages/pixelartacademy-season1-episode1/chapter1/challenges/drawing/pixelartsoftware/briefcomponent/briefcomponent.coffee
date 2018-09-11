@@ -4,8 +4,7 @@ LOI = LandsOfIllusions
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
 class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extends PAA.Practice.Project.Asset.Sprite.BriefComponent
-  noActions: ->
-    false
+  @register 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent'
 
   canEdit: ->
     PAA.PixelBoy.Apps.Drawing.state('editorId')?
@@ -52,60 +51,36 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
     # Draw all pixels in 3 seconds.
     pixelDrawDelay = 3000 / (imageData.width * imageData.height)
 
-    # Prepare for palette mapping.
+    # Prepare colors.
     palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
-    colorDistance = (color, r, g, b) => Math.abs(color.r - r) + Math.abs(color.g - g) + Math.abs(color.b - b)
+
+    # See if we have a background color defined.
     backgroundColor = @sprite.constructor.backgroundColor()
 
     if backgroundColor?.paletteColor
       # Map palette color to a direct color so we can calculate distance to it.
       backgroundColor = palette.ramps[backgroundColor.paletteColor.ramp].shades[backgroundColor.paletteColor.shade]
 
+    # Create target pixels.
+    pixels = @_createPixels imageData, palette, backgroundColor
+
     replacePixel = (x, y) =>
-      existingPixel = _.find spriteData.layers[0].pixels, (pixel) => pixel.x is x and pixel.y is y
+      existingPixelIndex = _.findIndex spriteData.layers[0].pixels, (pixel) => pixel.x is x and pixel.y is y
+      newPixel = _.find pixels, (pixel) => pixel.x is x and pixel.y is y
 
-      pixelIndex = (x + y * imageData.width) * 4
-
-      r = imageData.data[pixelIndex] / 255
-      g = imageData.data[pixelIndex + 1] / 255
-      b = imageData.data[pixelIndex + 2] / 255
-      a = imageData.data[pixelIndex + 3]
-
-      if a
-        # This is a full pixel so find the closest palette color.
-        closestRamp = null
-        closestShade = null
-        smallestColorDistance = if backgroundColor then colorDistance backgroundColor, r, g, b else 3
-
-        for ramp, rampIndex in palette.ramps
-          for shade, shadeIndex in ramp.shades
-            distance = colorDistance shade, r, g, b
-
-            if distance < smallestColorDistance
-              smallestColorDistance = distance
-              closestRamp = rampIndex
-              closestShade = shadeIndex
-
-      # If we didn't find a palette color, delete the pixel.
-      if closestRamp? and closestShade?
-        paletteColor =
-          ramp: closestRamp
-          shade: closestShade
-
+      if newPixel
         # This is a full pixel so color it.
-        if existingPixel
+        if existingPixelIndex > -1
           # Replace data in existing pixel.
-          existingPixel.paletteColor = paletteColor
-          delete existingPixel.directColor if existingPixel.directColor
+          spriteData.layers[0].pixels[existingPixelIndex] = newPixel
 
         else
           # Add new pixel.
-          newPixel = {x, y, paletteColor}
           spriteData.layers[0].pixels.push newPixel
 
-      else if not a and existingPixel
-        # This is an empty pixel so remove it.
-        _.pull spriteData.layers[0].pixels, existingPixel
+      else if existingPixelIndex > -1
+        # This should be an empty pixel so remove it.
+        spriteData.layers[0].pixels.splice existingPixelIndex, 1
 
       # Re-set sprite data to force image refresh.
       editor.manualSpriteData spriteData
@@ -138,7 +113,6 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
 
         editor.manualSpriteData null
         @sprite.manualUserSpriteData null
-        @sprite.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
 
         # Mark this asset as uploaded.
         assets = @sprite.tutorial.state 'assets'
@@ -168,5 +142,8 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent extend
   onClickEditButton: (event) ->
     # Make sure sprite is not in upload mode.
     @sprite.uploadMode false
+
+    # Don't show missing pixels.
+    @sprite.engineComponent.drawMissingPixelsUpTo x: -1, y: -1
 
     super

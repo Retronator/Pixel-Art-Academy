@@ -27,21 +27,21 @@ class LOI.Adventure extends LOI.Adventure
       return unless currentSituation = @currentSituation()
       return unless currentInventory = @currentInventory()
 
-      thingClasses = _.union currentSituation.things(), currentInventory.things()
+      things = _.union currentSituation.things(), currentInventory.things()
 
-      for thingClass in thingClasses
+      for thing in things
         # Create the thing if needed. We allow passing thing instances as well, so no need to instantiate those.
-        if thingClass instanceof LOI.Adventure.Thing
-          thingInstance = thingClass
-          @_things[thingClass.id()] = thingInstance
+        if thing instanceof LOI.Adventure.Thing
+          thingInstance = thing
+          @_things[thing.id()] = thingInstance
 
         else
           # We create the instance in a non-reactive context so that
           # reruns of this autorun don't invalidate instance's autoruns.
           Tracker.nonreactive =>
-            @_things[thingClass.id()] ?= new thingClass
+            @_things[thing.id()] ?= new thing
 
-        @_things[thingClass.id()]
+        @_things[thing.id()]
 
     # Returns all physical and storyline things that are available to listen to commands.
     @currentThings = new ComputedField =>
@@ -59,20 +59,29 @@ class LOI.Adventure extends LOI.Adventure
 
     @currentInventoryThings = new ComputedField =>
       return unless currentPhysicalThings = @currentPhysicalThings()
-      return unless currentInventoryThingClasses = @currentInventory().things()
+      return unless inventoryThings = @currentInventory().things()
 
-      # Note: thing classes can also hold instances, if they were created manually by locations.
-      thing for thing in currentPhysicalThings when thing.constructor in currentInventoryThingClasses or thing in currentInventoryThingClasses
+      @_filterThings currentPhysicalThings, inventoryThings
 
     # Returns current things that are at the location (and not in the inventory).
     @currentLocationThings = new ComputedField =>
-      return unless currentSituation = @currentSituation()
       return unless currentPhysicalThings = @currentPhysicalThings()
+      return unless locationThings = @currentSituation().things()
 
-      locationThingClasses = _.union currentSituation.things()
+      @_filterThings currentPhysicalThings, locationThings
 
-      # Note: thing classes can also hold instances, if they were created manually by locations.
-      thing for thing in currentPhysicalThings when thing.constructor in locationThingClasses or thing in locationThingClasses
+  _filterThings: (sourceThings, filterThings) ->
+    intersection = []
+
+    # Note: source things are always instances, but filter things can be instances or classes.
+    for sourceThing in sourceThings
+      # Try and find the same instance or class in filter things.
+      for filterThing in filterThings
+        if sourceThing is filterThing or _.isFunction(filterThing) and sourceThing instanceof filterThing
+          intersection.push sourceThing
+          break
+
+    intersection
 
   getCurrentThing: (thingClassOrId) ->
     thingClass = _.thingClass thingClassOrId

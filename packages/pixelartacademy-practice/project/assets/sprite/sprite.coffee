@@ -31,10 +31,6 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     # Override to provide a different brief component.
     @BriefComponent
 
-  @clipboardPageComponentClass: ->
-    # Override to provide a different clipboard page component.
-    @ClipboardPageComponent
-
   @initialize: ->
     super
 
@@ -68,9 +64,6 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
 
     briefComponentClass = @constructor.briefComponentClass()
     @briefComponent = new briefComponentClass @
-
-    clipboardPageComponentClass = @constructor.clipboardPageComponentClass()
-    @clipboardPageComponent = new clipboardPageComponentClass @
 
   destroy: ->
     super

@@ -247,7 +247,7 @@ assets =
         shade: 0
     imageName: -> 'cshm-celeste'
     spriteInfo: -> """
-      Artwork from [CELESTE Classic](https://mattmakesgames.itch.io/celesteclassic), 2015
+      Artwork from [Celeste Classic](https://mattmakesgames.itch.io/celesteclassic), 2015
 
       Artist: Noel Berry
     """

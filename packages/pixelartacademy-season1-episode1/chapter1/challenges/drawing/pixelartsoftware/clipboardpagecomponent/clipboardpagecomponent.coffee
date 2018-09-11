@@ -3,11 +3,24 @@ PAA = PixelArtAcademy
 LOI = LandsOfIllusions
 C1 = PixelArtAcademy.Season1.Episode1.Chapter1
 
-class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent extends PAA.Practice.Project.Asset.Sprite.ClipboardPageComponent
+class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent extends AM.Component
   @register 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent'
 
   constructor: (@copyReference) ->
     super
+
+  onCreated: ->
+    super
+
+    @parent = @ancestorComponentWith 'closeSecondPage'
+
+    @autorun (computation) =>
+      return unless palette = @copyReference.sprite()?.palette
+      LOI.Assets.Palette.forId.subscribe @, palette._id
+
+    @palette = new ComputedField =>
+      return unless palette = @copyReference.sprite()?.palette
+      LOI.Assets.Palette.documents.findOne palette._id
 
   templateStyle: ->
     dimensions = @copyReference.constructor.fixedDimensions()
