@@ -25,6 +25,8 @@ class HQ.Actors.Corinne extends LOI.Adventure.Thing
   initializeScript: ->
     Tracker.autorun (computation) =>
       return unless corinne = LOI.adventure.getCurrentThing HQ.Actors.Corinne
+      computation.stop()
+      
       retro = @options.listener.avatars.retro
 
       @setThings {corinne, retro}

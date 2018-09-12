@@ -6,7 +6,7 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
   # assets: array of assets that the player has received from Corinne
   #   id: unique asset identifier
   #   completed: auto-updated field if the player completed this asset
-  #   completionType: the way the player completed this asset
+  #   uploaded: tells if the player used the upload action for this asset
   #
   # READONLY
   # assets: array of assets that are part of this challenge
@@ -28,10 +28,6 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
       existing game sprite in your editor of choice. First go to the Retronator HQ Gallery and talk to Corinne to
       obtain a reference image and further instructions.
     """
-
-  @CompletionType:
-    Editor: 'Editor'
-    Upload: 'Upload'
 
   constructor: ->
     super
@@ -78,7 +74,7 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     if pixelArtSoftwareAssets = @state 'assets'
       for asset in pixelArtSoftwareAssets
         assetClassName = _.last asset.id.split '.'
-        @_pixelArtSoftwareAssets[asset.id] ?= new C1.Challenges.Drawing.PixelArtSoftware.CopyReference[assetClassName] @
+        @_pixelArtSoftwareAssets[asset.id] ?= Tracker.nonreactive => new C1.Challenges.Drawing.PixelArtSoftware.CopyReference[assetClassName] @
 
         assets.push @_pixelArtSoftwareAssets[asset.id]
 

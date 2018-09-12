@@ -25,7 +25,7 @@ class C1.PostPixelBoy.DrawingChallenges extends LOI.Adventure.Scene
 
     # If the player has an editor or external software selected, we show the Pixel Art Tools challenge.
     if DrawingApp.state('editorId') or DrawingApp.state('externalSoftware')
-      @_pixelArtSoftware ?= new C1.Challenges.Drawing.PixelArtSoftware
+      @_pixelArtSoftware ?= Tracker.nonreactive => new C1.Challenges.Drawing.PixelArtSoftware
       things.push @_pixelArtSoftware
 
     # Player needs the Desktop editor selected for the tutorial to display.

@@ -269,8 +269,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @initialize()
 
     @completedConditions: ->
-      # TODO
-      false
+      assets = C1.Challenges.Drawing.PixelArtSoftware.state 'assets'
+      _.find assets, (asset) => asset.completed
 
   @tasks: -> [
     @DrawingApp

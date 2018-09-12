@@ -159,6 +159,8 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
           return false unless EJSON.equals pixelIntegerDirectColor, goalPixel.integerDirectColor
 
       true
+    ,
+      true
 
     # Save completed value to tutorial state.
     @_completedAutorun = Tracker.autorun (computation) =>
@@ -191,6 +193,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
   destroy: ->
     super
 
+    @completed.stop()
     @_completedAutorun.stop()
 
   setGoalPixels: (goalPixels) ->

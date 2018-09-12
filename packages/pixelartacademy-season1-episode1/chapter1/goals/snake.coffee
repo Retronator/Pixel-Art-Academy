@@ -10,7 +10,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
   Goal = @
 
-  class @Talk extends PAA.Learning.Task
+  class @Talk extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Talk'
     @goal: -> Goal
 
@@ -23,11 +23,11 @@ class C1.Goals.Snake extends PAA.Learning.Goal
     @interests: -> ['video game', 'arcade game']
 
     @initialize()
-    
-    @completed: ->
+
+    @completedConditions: ->
       C1.AdmissionProjects.Snake.Intro.Coworking.Listener.Script.state 'OfferedHelp'
 
-  class @Play extends PAA.Learning.Task
+  class @Play extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Play'
     @goal: -> Goal
 
@@ -44,7 +44,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
     @initialize()
 
-    @completed: ->
+    @completedConditions: ->
       # Make sure the player has the Snake cartridge.
       return unless C1.AdmissionProjects.Snake.Intro.Coworking.Listener.Script.state 'ReceiveCartridge'
 
@@ -52,7 +52,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
       # intro section is finished, we also keep this task completed based on that.
       PAA.Pico8.Cartridges.Snake.state('highScore') >= 5 or C1.AdmissionProjects.Snake.Intro.finished()
 
-  class @Draw extends PAA.Learning.Task
+  class @Draw extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.Draw'
     @goal: -> Goal
 
@@ -67,11 +67,11 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
     @predecessors: -> [Goal.Play]
 
-    # TODO: @requiredInterests: -> ['pixel art software']
+    @requiredInterests: -> ['pixel art software']
 
     @initialize()
     
-    @completed: ->
+    @completedConditions: ->
       return unless projectId = C1.Projects.Snake.readOnlyState 'activeProjectId'
 
       PAA.Practice.Project.forId.subscribe projectId
@@ -86,7 +86,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
       true
 
-  class @PlayAgain extends PAA.Learning.Task
+  class @PlayAgain extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Snake.PlayAgain'
     @goal: -> Goal
 
@@ -103,7 +103,7 @@ class C1.Goals.Snake extends PAA.Learning.Goal
 
     @initialize()
 
-    @completed: ->
+    @completedConditions: ->
       C1.AdmissionProjects.Snake.Drawing.Coworking.Listener.Script.state 'AdmissionProjectCompleted'
 
   @tasks: -> [

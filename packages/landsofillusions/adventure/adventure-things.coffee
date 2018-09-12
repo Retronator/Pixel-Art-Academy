@@ -22,26 +22,22 @@ class LOI.Adventure extends LOI.Adventure
     @_things = {}
     @_avatarsByThingId = {}
 
-    # Instantiates and returns all physical things (items, characters) that are available to listen to commands.
-    @currentPhysicalThings = new ComputedField =>
+    # Returns things that are at the location (and not in the inventory).
+    @currentLocationThings = new ComputedField =>
       return unless currentSituation = @currentSituation()
+      @_instantiateThings currentSituation.things()
+
+    # Returns things that are in the inventory.
+    @currentInventoryThings = new ComputedField =>
       return unless currentInventory = @currentInventory()
+      @_instantiateThings currentInventory.things()
 
-      things = _.union currentSituation.things(), currentInventory.things()
+    # Returns all physical things (items, characters) that are available to listen to commands.
+    @currentPhysicalThings = new ComputedField =>
+      return unless currentLocationThings = @currentLocationThings()
+      return unless currentInventoryThings = @currentInventoryThings()
 
-      for thing in things
-        # Create the thing if needed. We allow passing thing instances as well, so no need to instantiate those.
-        if thing instanceof LOI.Adventure.Thing
-          thingInstance = thing
-          @_things[thing.id()] = thingInstance
-
-        else
-          # We create the instance in a non-reactive context so that
-          # reruns of this autorun don't invalidate instance's autoruns.
-          Tracker.nonreactive =>
-            @_things[thing.id()] ?= new thing
-
-        @_things[thing.id()]
+      _.union currentInventoryThings, currentLocationThings
 
     # Returns all physical and storyline things that are available to listen to commands.
     @currentThings = new ComputedField =>
@@ -57,31 +53,25 @@ class LOI.Adventure extends LOI.Adventure
 
       _.without things, undefined, null
 
-    @currentInventoryThings = new ComputedField =>
-      return unless currentPhysicalThings = @currentPhysicalThings()
-      return unless inventoryThings = @currentInventory().things()
+  _instantiateThings: (things) ->
+    for thing in things
+      thingId = thing.id()
 
-      @_filterThings currentPhysicalThings, inventoryThings
+      # Look if the thing was already an instance.
+      if thing instanceof LOI.Adventure.Thing
+        thingInstance = thing
 
-    # Returns current things that are at the location (and not in the inventory).
-    @currentLocationThings = new ComputedField =>
-      return unless currentPhysicalThings = @currentPhysicalThings()
-      return unless locationThings = @currentSituation().things()
+      # Look into our cache if we already instantiated this thing.
+      else if @_things[thingId]
+        thingInstance = @_things[thingId]
 
-      @_filterThings currentPhysicalThings, locationThings
+      else
+        # We don't have an instance ready, so we'll have to create it. We do so in a non-reactive
+        # context so that reruns of this autorun don't invalidate instance's autoruns.
+        thingInstance = Tracker.nonreactive => new thing
+        @_things[thingId] = thingInstance
 
-  _filterThings: (sourceThings, filterThings) ->
-    intersection = []
-
-    # Note: source things are always instances, but filter things can be instances or classes.
-    for sourceThing in sourceThings
-      # Try and find the same instance or class in filter things.
-      for filterThing in filterThings
-        if sourceThing is filterThing or _.isFunction(filterThing) and sourceThing instanceof filterThing
-          intersection.push sourceThing
-          break
-
-    intersection
+      thingInstance
 
   getCurrentThing: (thingClassOrId) ->
     thingClass = _.thingClass thingClassOrId

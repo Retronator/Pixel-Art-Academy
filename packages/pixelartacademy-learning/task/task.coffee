@@ -54,6 +54,8 @@ class PAA.Learning.Task
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
 
+    @type = @constructor.type
+
   destroy: ->
     @_translationSubscription.stop()
 
