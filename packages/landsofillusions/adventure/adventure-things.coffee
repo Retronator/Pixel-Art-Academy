@@ -37,7 +37,7 @@ class LOI.Adventure extends LOI.Adventure
       return unless currentLocationThings = @currentLocationThings()
       return unless currentInventoryThings = @currentInventoryThings()
 
-      _.union currentInventoryThings, currentLocationThings
+      _.union currentLocationThings, currentInventoryThings
 
     # Returns all physical and storyline things that are available to listen to commands.
     @currentThings = new ComputedField =>

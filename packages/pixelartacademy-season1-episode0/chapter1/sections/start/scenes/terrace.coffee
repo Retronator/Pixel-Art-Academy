@@ -29,7 +29,11 @@ class C1.Start.Terrace extends LOI.Adventure.Scene
     ]
 
   _scheduleAlex: (options) ->
+    return if @_alexEntersTimeout
+
     @_alexEntersTimeout = Meteor.setTimeout =>
+      @_alexEntersTimeout = null
+
       # Don't do the action if the user is busy doing something.
       if LOI.adventure.interface.busy()
         # Retry in 10 seconds.

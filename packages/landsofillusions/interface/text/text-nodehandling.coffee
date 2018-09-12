@@ -112,6 +112,9 @@ class LOI.Interface.Text extends LOI.Interface.Text
       else if dialogueLine.actor.dialogueDeliveryType() is LOI.Avatar.DialogueDeliveryType.Saying
         actorName = dialogueLine.actor.shortName()
 
+        # Capitalize common nouns.
+        actorName = _.upperFirst actorName if dialogueLine.actor.nameNounType() is LOI.Avatar.NameNounType.Common
+
       start = "#{actorName} says: #{start}\"" if actorName
 
     if dialogueLine.next instanceof Nodes.DialogueLine and dialogueLine.next.actor is dialogueLine.actor

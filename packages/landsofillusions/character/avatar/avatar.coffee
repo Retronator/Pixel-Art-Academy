@@ -47,6 +47,8 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
     # Player characters only have one name.
     @fullName()
 
+  nameNounType: -> LOI.Avatar.NameNounType.Proper
+
   pronouns: ->
     @_avatar()?.pronouns or super
 

@@ -198,7 +198,7 @@ captain:
 
 captain: 
     You will create an alternate reality character. 
-    It will be a cybernetic organism with an artificial intelligence component—a cyborg hybrid. 
+    It will be a cybernetic organism with an artificial intelligence component—a cyborg agent. 
 
 ## IntroQuestions
 
@@ -212,7 +212,7 @@ captain:
 
 captain: 
     Yes. A cyborg is part human, part robot. 
-    Your neural connection will provide the human part, but as an AI hybrid it will also have free will of its own.
+    Your neural connection will provide the human part, but as an AI agent it will also have free will of its own.
 
 -> [IntroQuestions]
 
@@ -395,7 +395,7 @@ captain:
 
 captain:
     Indeed! Feel free to play with different characters.
-    You can even get a quick start with selecting a pre-existing character and later create one of your own. `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
+    You can even get a quick start by selecting a pre-existing character and later modify it to make it your own. `@user.itemKeys['LandsOfIllusions.Character.Avatar.AvatarEditor']`
 
 -> [MainQuestions]
 

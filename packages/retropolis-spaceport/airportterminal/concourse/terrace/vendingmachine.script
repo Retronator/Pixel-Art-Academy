@@ -14,10 +14,10 @@ machine:
     
 ## Selection
 
-* Apple juice. -> [AJ]
-* Orange juice. -> [OJ]
-* Water. -> [Water]
-* Nevermind. -> [End]
+* Apple juice -> [AJ]
+* Orange juice -> [OJ]
+* Water -> [Water]
+* Nevermind -> [End]
 
 ## AJ
 

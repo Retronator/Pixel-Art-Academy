@@ -43,6 +43,9 @@ class LOI.Adventure.Thing extends AM.Component
   # This sets how this thing's name should be corrected when not spelled correctly. 
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Word
 
+  # Common nouns are allowed to chance capitalization to conform to sentence case. Proper nouns always stay unmodified.
+  @nameNounType: -> LOI.Avatar.NameNounType.Common
+
   # The description text displayed in the interface. Default (null) means no longer descriptive name.
   @descriptiveName: -> null
 
@@ -323,6 +326,7 @@ class LOI.Adventure.Thing extends AM.Component
   fullName: -> @avatar?.fullName()
   shortName: -> @avatar?.shortName()
   nameAutoCorrectStyle: -> @avatar?.nameAutoCorrectStyle()
+  nameNounType: -> @avatar?.nameNounType()
   descriptiveName: -> @avatar?.descriptiveName()
   description: -> @avatar?.description()
   color: -> @avatar?.color()

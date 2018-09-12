@@ -75,6 +75,14 @@ class C2.Items.VideoTablet extends LOI.Adventure.Item
   onClickCloseButton: (event) ->
     @selection null
 
+  backButtonCallback: ->
+    =>
+      if @selection()
+        @selection null
+        return cancel: true
+
+      LOI.adventure.deactivateActiveItem()
+
   class @Video extends AM.Component
     @register 'PixelArtAcademy.Season1.Episode0.Chapter2.Items.VideoTablet.Video'
 

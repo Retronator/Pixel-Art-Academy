@@ -148,6 +148,9 @@ class AB.Router extends AB.Router
       # Do not act on download links.
       return if link.download
 
+      # Do not act on pure hashtag links.
+      return if _.startsWith $(link).attr('href'), '#'
+
       # Only do soft link changes when we're staying within the same host.
       if link.hostname is location.hostname
         event.preventDefault()

@@ -13,6 +13,10 @@ class LOI.Avatar
     Word: 'Word'
     Name: 'Name'
 
+  @NameNounType:
+    Common: 'Common'
+    Proper: 'Proper'
+    
   @DialogTextTransform:
     Auto: 'Auto'
     Uppercase: 'Uppercase'
@@ -37,6 +41,7 @@ class LOI.Avatar
   pronouns: -> @constructor.Pronouns.Neutral
   description: -> null
   nameAutoCorrectStyle: -> @constructor.NameAutoCorrectStyle.Word
+  nameNounType: -> @constructor.NameNounType.Common
 
   color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.grey

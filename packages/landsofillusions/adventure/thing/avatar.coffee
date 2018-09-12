@@ -48,7 +48,8 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
   description: -> @_translateIfAvailable @constructor.translationKeys.description
     
   nameAutoCorrectStyle: -> _.propertyValue @options, 'nameAutoCorrectStyle'
-    
+  nameNounType: -> _.propertyValue @options, 'nameNounType'
+
   color: ->
     # Return the desired color or use the default.
     color = _.propertyValue @options, 'color'
