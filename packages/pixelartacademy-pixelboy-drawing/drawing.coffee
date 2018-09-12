@@ -61,6 +61,15 @@ class PAA.PixelBoy.Apps.Drawing extends PAA.PixelBoy.App
     editorResult = editor.onBackButton?()
     return editorResult if editorResult?
 
+    # Close second page of the clipboard
+    clipboard = @clipboard()
+
+    if clipboard.secondPageActive()
+      clipboard.closeSecondPage()
+
+      # Inform that we've handled the back button.
+      return true
+
     portfolio = @portfolio()
 
     # We only need to handle closing groups when not on an asset.

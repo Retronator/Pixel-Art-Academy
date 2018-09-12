@@ -6,11 +6,14 @@ class C1.Goals.DrawingSoftware extends PAA.Learning.Goal
 
   @displayName: -> "Drawing software"
 
+  @chapter: -> C1
+
   Goal = @
 
   class @ChooseSoftware extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.DrawingSoftware.ChooseSoftware'
-  
+    @goal: -> Goal
+
     @directive: -> "Choose drawing software"
   
     @instructions: -> """
@@ -22,6 +25,7 @@ class C1.Goals.DrawingSoftware extends PAA.Learning.Goal
 
   class @Doodling extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.DrawingSoftware.Doodling'
+    @goal: -> Goal
 
     @directive: -> "Doodling"
 
@@ -36,6 +40,7 @@ class C1.Goals.DrawingSoftware extends PAA.Learning.Goal
 
   class @Reference extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.DrawingSoftware.Reference'
+    @goal: -> Goal
 
     @directive: -> "Display a reference"
 
@@ -49,6 +54,7 @@ class C1.Goals.DrawingSoftware extends PAA.Learning.Goal
 
   class @CopyReference extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.DrawingSoftware.CopyReference'
+    @goal: -> Goal
 
     @directive: -> "Copy the reference"
 

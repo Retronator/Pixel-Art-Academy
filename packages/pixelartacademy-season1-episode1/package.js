@@ -90,8 +90,10 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/challenges/drawing/pixelartsoftware..');
   api.addFile('chapter1/challenges/drawing/pixelartsoftware/copyreference');
+  api.addFile('chapter1/challenges/drawing/pixelartsoftware/errorenginecomponent');
   api.addFile('chapter1/challenges/drawing/pixelartsoftware/assets');
   api.addUnstyledComponent('chapter1/challenges/drawing/pixelartsoftware/briefcomponent..');
+  api.addComponent('chapter1/challenges/drawing/pixelartsoftware/clipboardpagecomponent..');
 
   api.addFile('chapter1/challenges/drawing/tutorial..');
 
@@ -135,8 +137,12 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/postpixelboy..');
   api.addFile('chapter1/sections/postpixelboy/scenes/drawingchallenges');
   api.addThing('chapter1/sections/postpixelboy/scenes/store');
-  api.addThing('chapter1/sections/postpixelboy/scenes/artstudio');
-  api.addThing('chapter1/sections/postpixelboy/scenes/galleryeast');
+  api.addThing('chapter1/sections/postpixelboy/scenes/pixelart');
+  api.addFile('chapter1/sections/postpixelboy/scenes/copyreference..');
+  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/galleryeast');
+  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/gallerywest');
+  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/store');
+  api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/bookshelves');
 
   // Admission projects
   api.addFile('chapter1/sections/admissionprojects..');

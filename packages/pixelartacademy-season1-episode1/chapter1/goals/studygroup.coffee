@@ -6,11 +6,13 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
   @displayName: -> "Join a study group"
 
+  @chapter: -> C1
 
   Goal = @
 
   class @Yearbook extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.Yearbook'
+    @goal: -> Goal
 
     @directive: -> "Create Yearbook profile"
 
@@ -22,6 +24,7 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
   class @SetPrivacySettings extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.SetPrivacySettings'
+    @goal: -> Goal
 
     @directive: -> "Set privacy settings"
 
@@ -37,6 +40,7 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
   class @MeetClassmates extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.MeetClassmates'
+    @goal: -> Goal
 
     @directive: -> "Meet your classmates"
 
@@ -50,6 +54,7 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
   class @JoinStudyGroup extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.JoinStudyGroup'
+    @goal: -> Goal
 
     @directive: -> "Join study group"
 

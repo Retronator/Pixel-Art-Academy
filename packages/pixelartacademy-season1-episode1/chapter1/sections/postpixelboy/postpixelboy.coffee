@@ -8,8 +8,11 @@ class C1.PostPixelBoy extends LOI.Adventure.Section
   @scenes: -> [
     @DrawingChallenges
     @Store
-    # TODO: @ArtStudio
-    # TODO: @GalleryEast
+    @PixelArt
+    @CopyReference.GalleryEast
+    @CopyReference.GalleryWest
+    @CopyReference.Store
+    @CopyReference.Bookshelves
   ]
 
   @initialize()

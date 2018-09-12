@@ -38,16 +38,22 @@ class PAA.PixelBoy.Apps.Journal extends PAA.PixelBoy.App
     @journalView new @constructor.JournalView @
 
     @autorun (computation) =>
-      if journalDesign = @journalView().journalDesign()
+      if @journalView().tasks()?.visible()
+        @setFixedPixelBoySize 171, 237
+
+      else if journalDesign = @journalView().journalDesign()
         pixelBoySize = journalDesign.size()
 
-        @minWidth pixelBoySize.width
-        @minHeight pixelBoySize.height
-
-        @maxWidth pixelBoySize.width
-        @maxHeight pixelBoySize.height
-
-        @resizable false
+        @setFixedPixelBoySize pixelBoySize.width, pixelBoySize.height
 
       else
         @setDefaultPixelBoySize()
+
+  onBackButton: ->
+    tasks = @journalView().tasks()
+    
+    if tasks.visible()
+      tasks.hide()
+
+      # Inform that we've handled the back button.
+      true

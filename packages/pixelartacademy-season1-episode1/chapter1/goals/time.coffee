@@ -6,10 +6,13 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   @displayName: -> "Taking the time"
 
+  @chapter: -> C1
+
   Goal = @
 
   class @SetDesiredTime extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.SetDesiredTime'
+    @goal: -> Goal
 
     @directive: -> "Set desired time to draw"
 
@@ -21,6 +24,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   class @MeaningfulAndManageable extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.MeaningfulAndManageable'
+    @goal: -> Goal
 
     @directive: -> "Analyze meaningful and manageable activities"
 
@@ -36,6 +40,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   class @StartLog extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.StartLog'
+    @goal: -> Goal
 
     @directive: -> "Start Captain's Log"
 
@@ -50,6 +55,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   class @SetDailyAlarm extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.SetDailyAlarm'
+    @goal: -> Goal
 
     @directive: -> "Set daily alarm"
 
@@ -65,6 +71,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   class @ScheduleSessions extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.ScheduleSessions'
+    @goal: -> Goal
 
     @directive: -> "Schedule drawing sessions"
 
@@ -80,6 +87,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   class @ExportCalendar extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.ExportCalendar'
+    @goal: -> Goal
 
     @directive: -> "Export calendar"
 
@@ -95,6 +103,7 @@ class C1.Goals.Time extends PAA.Learning.Goal
 
   class @ReachDesiredTime extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.Time.ReachDesiredTime'
+    @goal: -> Goal
 
     @directive: -> "Spend your desired time drawing"
 

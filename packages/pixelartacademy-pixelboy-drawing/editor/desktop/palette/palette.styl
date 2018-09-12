@@ -73,32 +73,49 @@
             absolute-cover()
             z-index 3
 
+    &.zx-spectrum
+      .colors
+        flex-direction row
+        flex-wrap wrap
+
+        .ramp
+          display flex
+          width 100%
+          height 15rem
+          margin-top 1rem
+
+          .shade
+            width 15rem
+            height 100%
+            margin-right 8rem
+
   &.tray
+    width auto
+    padding 13rem 5rem 0 11rem
+
     &::before
       content ''
       position absolute
       z-index 3
       top 2rem
-      right 0
-      width 56rem
+      left -8rem
+      width 104rem
       height 139rem
       background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/palette-tray-shadow.png')
       mix-blend-mode multiply
 
     &::after
       content ''
-      absolute-cover()
+      absolute-cover-size()
+      width 96rem
       z-index 3
       pointer-events none
       background-image image('/pixelartacademy/pixelboy/apps/drawing/editor/desktop/palette-tray.png')
 
     .colors
       display flex
-      position absolute
+      position relative
       z-index 4
-      top 13rem
-      left 11rem
-      width 32rem
       height 120rem
       flex-direction column
       flex-wrap wrap

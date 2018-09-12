@@ -12,19 +12,21 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
 
   @bitmap: -> "" # Empty sprite
 
-  # We'll provide a custom handling for goal bitmap, so we set this one to a dummy value that is different than empty.
-  @goalBitmap: -> "0"
+  @goalImageUrl: -> "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@imageName()}.png"
 
-  @image: -> throw new AE.NotImplementedException "You must provide the image name for the asset."
+  @imageName: -> throw new AE.NotImplementedException "You must provide the image name for the asset."
 
   @references: -> [
-    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@image()}-reference.png"
+    image:
+      url: "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@imageName()}-reference.png"
+    displayOptions:
+      imageOnly: true
   ]
 
   @customPaletteImageUrl: ->
     return null if @restrictedPaletteName()
 
-    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@image()}-template.png"
+    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@imageName()}-template.png"
 
   @briefComponentClass: ->
     # Note: We need to fully qualify the name instead of using @constructor
@@ -32,6 +34,41 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
     C1.Challenges.Drawing.PixelArtSoftware.CopyReference.BriefComponent
 
   @initialize()
+  
+  constructor: ->
+    super
+
+    # Allow to manually provide user sprite data.
+    @manualUserSpriteData = new ReactiveField null
+    
+    # We override the component that shows the goal state with a custom one that only shows drawn errors.
+    @engineComponent = new @constructor.ErrorEngineComponent
+      userSpriteData: =>
+        manualUserSpriteData = @manualUserSpriteData()
+        return manualUserSpriteData if manualUserSpriteData
+        
+        return unless spriteId = @spriteId()
+        LOI.Assets.Sprite.documents.findOne spriteId
+
+      spriteData: =>
+        return unless goalPixels = @goalPixels()
+        return unless spriteId = @spriteId()
+
+        # Take same overall sprite data (bounds, palette) as sprite used for drawing, but exclude the pixels.
+        spriteData = LOI.Assets.Sprite.documents.findOne spriteId,
+          fields:
+            'layers': false
+
+        return unless spriteData
+
+        # Replace pixels with the goal state.
+        spriteData.layers = [pixels: goalPixels]
+
+        spriteData
+        
+    @uploadMode = new ReactiveField false
+
+    @_clipboardPageComponent = new C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent @
 
   editorOptions: ->
     references:
@@ -40,6 +77,18 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference extends PAA.Practice.
       storage:
         enabled: false
 
-  editorDrawComponents: ->
-    # We send an empty array so we don't show the on-canvas reference.
-    []
+  clipboardPageComponent: ->
+    # We only show this page if we can upload.
+    return unless PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
+    
+    @_clipboardPageComponent
+
+  availableToolKeys: ->
+    # When we're in upload mode, don't show any tools in the editor.
+    if @uploadMode() then [] else null
+
+  templateUrl: ->
+    "/pixelartacademy/season1/episode1/chapter1/challenges/drawing/pixelartsoftware/#{@constructor.imageName()}-template.png"
+
+  referenceUrl: ->
+    @constructor.references()[0].image.url

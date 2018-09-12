@@ -14,6 +14,9 @@ class PAA.Learning.Task
   # Id string for this task used to identify the task in code.
   @id: -> throw new AE.NotImplementedException "You must specify task's id."
 
+  # The type that identifies the task class individual tasks inherit from.
+  @type: null
+
   # Short description of the task's goal.
   @directive: -> throw new AE.NotImplementedException "You must specify the task directive."
 
@@ -46,13 +49,12 @@ class PAA.Learning.Task
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
 
-  # Override if the task can be automatically determined if it was completed.
-  @completed: -> null
-
   constructor: ->
     # Subscribe to this goal's translations.
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
+
+    @type = @constructor.type
 
   destroy: ->
     @_translationSubscription.stop()
@@ -70,17 +72,18 @@ class PAA.Learning.Task
   predecessors: -> @constructor.predecessors()
   groupNumber: -> @constructor.groupNumber()
 
-  completed: ->
-    # See if this task is automatically determined to be completed.
-    completed = @constructor.completed()
-    return completed if completed?
-
-    # We need an entry made by this character.
+  entry: ->
     return unless characterId = LOI.characterId()
+
+    # TODO: Add support for resetting goals/tasks
     
-    @constructor.Entry.documents.findOne
+    PAA.Learning.Task.Entry.documents.findOne
       taskId: @id()
       'character._id': characterId
+
+  completed: ->
+    # We need an entry made by this character.
+    @entry()
 
   active: (otherTasks) ->
     # Predecessors need to be completed for the task to be active.

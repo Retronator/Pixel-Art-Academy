@@ -36,12 +36,20 @@ Package.onUse(function(api) {
   api.addFile('journalview/context/entryaction');
   api.addComponent('journalview/context/memorypreview..');
 
+  api.addComponent('journalview/tasks..');
+
   // Entry is loaded only on the client since it uses Quill that is not available on the server.
   api.addClientComponent('journalview/entry-client/entry');
 
   api.addClientFile('journalview/entry-client/object..');
   api.addClientComponent('journalview/entry-client/object/timestamp..');
   api.addClientComponent('journalview/entry-client/object/picture..');
+  api.addClientComponent('journalview/entry-client/object/task..');
+  api.addClientFile('journalview/entry-client/object/task/component');
+  api.addClientComponent('journalview/entry-client/object/task/tasks/automatic..');
+  api.addClientComponent('journalview/entry-client/object/task/tasks/manual..');
+  api.addClientComponent('journalview/entry-client/object/task/tasks/upload..');
+  api.addClientComponent('journalview/entry-client/object/task/tasks/survey..');
 
   api.addFile('journalview/journaldesign..');
   api.addComponent('journalview/journaldesign/traditional..');

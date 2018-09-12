@@ -2,15 +2,23 @@
 
 ## Start
 
-corinne: Hello! `not _IntroductionOver`
+corinne: Hello! I'm Corinne and I'm the curator of this gallery. `not IntroductionOver`
+corinne: Hello!  `IntroductionOver and not _IntroductionOver`
 corinne: Anything else? `_IntroductionOver`
 
 ## IntroductionOver
 
 ## MainQuestions
 
-* Are you the curator? -> [Curator]
-* What's going on in the gallery? -> [Gallery]
+* What exactly does a curator do? -> [CuratorWork]
+* How do you become a curator? -> [BecomeCurator] `CuratorWork`
+* You mentioned a video game library? -> [VideoGameLibrary] `CuratorWork`
+* Can I buy any of the art on display? -> [BuyArt]
+* What can I see in the gallery? -> [SeeInGalery]
+* What will the show be about? -> [ShowAbout] `SeeInGalery`
+* When you say Matej … You mean Retro? -> [Matej] `SeeInGalery`
+* I saw some other artworks downstairs. -> [FeaturedArtists] `SeeInGalery`
+* Are there any non-pixel artworks? -> [NonPixelArtworks] `SeeInGalery`
 * *MainQuestions*
 * Thank you.
 
@@ -18,14 +26,93 @@ corinne: Let me know if you need anything else.
 
 -> [End]
 
-## Curator
+## CuratorWork
 
 corinne: 
-  That would be me!
-  Can I answer any of your questions?
+  Mainly I take care of Retronator's artwork collection and organize the gallery.
+  We also have a library of art books, videos, and video games downstairs.
+  Retronator is a really small place so I do a little bit of everything.
 
 -> [MainQuestions]
 
-## Gallery
+## BuyArt
+
+corinne: 
+  Yes, you can buy prints in the store downstairs!
+  Right now only the Computer series is available and an isometric map of Stanford's campus.
+
+-> [MainQuestions]
+
+## BecomeCurator
+
+corinne: 
+  Lots of different ways!
+   You can go to school and get a degree in art.
+   Or you can get an internship or job in a gallery. 
+   Or you can wait for your friend to invite you to run their gallery!
+
+-> [MainQuestions]
+
+## VideoGameLibrary
+
+corinne: 
+  Yes, if you want to jump down the rabbit hole of history, you can find a nice selection of titles to explore.
+  If you ever need game art for reference, let me know.
+
+-> [MainQuestions]
+
+## SeeInGalery
+
+corinne: On this floor you'll find mainly Matej's pixel art works.
+
+> Corinne points to the west side of the room.
+
+corinne: 
+  On the side where you entered is the permanent collection.
+  It includes Matej's bigger pieces like Tribute, Spectropolis, and the Computers series.
+
+> Corinne turns back towards the east part.
+
+corinne: Over here we're preparing for the first show, but it's not quite ready yet.
+
+-> [MainQuestions]
+
+## ShowAbout
+
+corinne: 
+  Well, not surprisingly, it will have all Matej's ZX Spectrum works.
+  He can't stop talking about that computer, so we thought it would be only appropriate for the gallery's official opening.
+
+-> [MainQuestions]
+
+## Matej
+
+> Corinne rolls her eyes and smiles.
+
+corinne: No matter how much he wishes it, nobody calls him Retro in real life.
+
+> You hear Retro yell from downstairs.
+
+retro: That's not true, Corannia!
+
+corinne: Touché.
+
+-> [MainQuestions]
+
+## FeaturedArtists
+
+corinne: 
+  Yes, that's where we feature other artists.
+  We often rotate the works to show many diverse pixel artists.
+
+-> [MainQuestions]
+
+## NonPixelArtworks
+
+corinne: 
+  You will find those upstairs in the art studio.
+  Alexandra is creating up there too. She can let you know about mediums other than pixel art.
+
+-> [MainQuestions]
 
 ## End

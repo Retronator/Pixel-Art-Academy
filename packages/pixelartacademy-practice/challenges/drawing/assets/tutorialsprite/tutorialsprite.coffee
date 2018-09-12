@@ -17,6 +17,9 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
   @minClipboardScale: -> null
   @maxClipboardScale: -> null
 
+  # Override to define a background color.
+  @backgroundColor: -> null
+
   # Methods
 
   @create: new AB.Method name: "#{@id()}.create"
@@ -67,10 +70,6 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
             b: imageData.data[pixelOffset + 2] / 255
 
     pixels
-
-  @briefComponentClass: ->
-    # Override to provide a different brief component.
-    @BriefComponent
 
   constructor: ->
     super
@@ -130,9 +129,6 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
         spriteData
 
-    briefComponentClass = @constructor.briefComponentClass()
-    @briefComponent = new briefComponentClass @
-
     @completed = new ComputedField =>
       # Compare goal pixels with current sprite pixels.
       return unless spritePixels = @sprite()?.layers[0].pixels
@@ -140,19 +136,30 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       return unless goalPixelsMap = @goalPixelsMap()
       return unless @palette()
 
-      return false unless goalPixels.length is spritePixels.length
+      # Make sure enough pixels are even present. There might be more in case of background color pixels.
+      return false if spritePixels.length < goalPixels.length
+
+      if backgroundColor = @constructor.backgroundColor()
+        # Convert background color to the same format as goal pixels.
+        backgroundColor = directColor: backgroundColor unless backgroundColor.paletteColor
+        backgroundColor.integerDirectColor = if backgroundColor.paletteColor then @_paletteToIntegerDirectColor backgroundColor.paletteColor else @_directToIntegerDirectColor backgroundColor.directColor
 
       for pixel in spritePixels
-        return false unless goalPixel = goalPixelsMap[pixel.x]?[pixel.y]
+        goalPixel = goalPixelsMap[pixel.x]?[pixel.y] or backgroundColor
+
+        # We must have a color to match against.
+        return false unless goalPixel
 
         # If any of the pixels has a direct color, we need to translate the other one too.
         if pixel.paletteColor and goalPixel.paletteColor
           return false unless EJSON.equals pixel.paletteColor, goalPixel.paletteColor
 
         else
-          pixelDirectColor = if pixel.paletteColor then @_paletteToDirectColor(pixel.paletteColor) else pixel.directColor
-          return false unless EJSON.equals pixelDirectColor, goalPixel.directColor
+          pixelIntegerDirectColor = if pixel.paletteColor then @_paletteToIntegerDirectColor pixel.paletteColor else @_directToIntegerDirectColor pixel.directColor
+          return false unless EJSON.equals pixelIntegerDirectColor, goalPixel.integerDirectColor
 
+      true
+    ,
       true
 
     # Save completed value to tutorial state.
@@ -186,6 +193,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
   destroy: ->
     super
 
+    @completed.stop()
     @_completedAutorun.stop()
 
   setGoalPixels: (goalPixels) ->
@@ -201,13 +209,18 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       for pixel in goalPixels
         map[pixel.x] ?= {}
         map[pixel.x][pixel.y] = pixel
-        pixel.directColor ?= @_paletteToDirectColor pixel.paletteColor
+        pixel.integerDirectColor = if pixel.directColor then @_directToIntegerDirectColor pixel.directColor else @_paletteToIntegerDirectColor pixel.paletteColor
 
       @goalPixelsMap map
 
-  _paletteToDirectColor: (paletteColor) ->
+  _paletteToIntegerDirectColor: (paletteColor) ->
     palette = @palette()
-    palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
+    @_directToIntegerDirectColor palette.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
+
+  _directToIntegerDirectColor: (color) ->
+    r: Math.round color.r * 255
+    g: Math.round color.g * 255
+    b: Math.round color.b * 255
 
   editorDrawComponents: -> [
     @engineComponent
@@ -220,5 +233,5 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
 
     _.without(classes, undefined).join ' '
 
-  minClipboardScale: -> @constructor.minClipboardScale()
-  maxClipboardScale: -> @constructor.maxClipboardScale()
+  minClipboardScale: -> @constructor.minClipboardScale?()
+  maxClipboardScale: -> @constructor.maxClipboardScale?()

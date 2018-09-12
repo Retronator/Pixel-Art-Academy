@@ -8,9 +8,14 @@
       <li class="property restricted-palette">
         <span class="property-name">Palette</span>:
         {{#if restrictedPalette}}
-          {{restrictedPalette.name}}
-        {{else}}
-          Custom
+          {{#if palette.lospecSlug}}
+            <a href="https://lospec.com/palette-list/{{palette.lospecSlug}}" target="_blank">{{restrictedPalette.name}}</a>
+          {{else}}
+            {{restrictedPalette.name}}
+          {{/if}}
+        {{/if}}
+        {{#if customPalette}}
+          Custom, {{customPaletteColorsString}}
         {{/if}}
       </li>
     </ul>
@@ -20,9 +25,9 @@
           <button class="button edit-button">Edit</button>
         </li>
       {{/if}}
-      {{#if canDownloadAndUpload}}
+      {{#if canUpload}}
         <li class="action">
-          <button class="button download-button">Download</button>
+          <button class="button assets-button">Assets</button>
         </li>
         <li class="action">
           <button class="button upload-button">Upload</button>

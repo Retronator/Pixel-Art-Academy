@@ -55,6 +55,9 @@ class HQ.Store extends LOI.Adventure.Location
 
   destroy: ->
     super
+    
+    @shelves.destroy()
+    @retro.destroy()
 
   things: ->
     newestTableItem = @retro.newestTableItem()

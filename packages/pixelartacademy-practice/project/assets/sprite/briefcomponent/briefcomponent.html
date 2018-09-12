@@ -3,15 +3,26 @@
     <ul class="properties">
       <li class="property fixed-dimensions">
         <span class="property-name">Size</span>:
-        {{fixedDimensions.width}}×{{fixedDimensions.height}}</li>
+        {{fixedDimensions.width}}×{{fixedDimensions.height}}
+      </li>
       <li class="property restricted-palette">
         <span class="property-name">Palette</span>:
-        {{restrictedPalette.name}}</li>
+        {{#if restrictedPalette}}
+          {{#if palette.lospecSlug}}
+            <a href="https://lospec.com/palette-list/{{palette.lospecSlug}}" target="_blank">{{restrictedPalette.name}}</a>
+          {{else}}
+            {{restrictedPalette.name}}
+          {{/if}}
+        {{/if}}
+        {{#if customPalette}}
+          Custom, {{customPaletteColorsString}}
+        {{/if}}
+      </li>
     </ul>
     {{#if noActions}}
       <div class="no-actions">
         {{#if needsSettingsSelection}}
-          Select an editor <!-- TODO: or external software --> in Settings to edit assets.
+          Select an editor or external software in Settings to edit assets.
         {{else}}
           {{#if needsToolsChallenge}}
             Complete the Pixel Art Software challenge to be able to edit assets.
@@ -25,9 +36,9 @@
             <button class="button edit-button">Edit</button>
           </li>
         {{/if}}
-        {{#if canDownloadAndUpload}}
+        {{#if canUpload}}
           <li class="action">
-            <button class="button download-button">Download</button>
+            <a class="link download" href="{{sprite.imageUrl}}" download="{{spriteImageFileName}}.png">Download</a>
           </li>
           <li class="action">
             <button class="button upload-button">Upload</button>

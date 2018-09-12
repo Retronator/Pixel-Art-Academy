@@ -14,9 +14,15 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
 
     @spriteId = new ReactiveField null
 
+    # Allow to manually provide sprite data.
+    @manualSpriteData = new ReactiveField null
+
     @spriteData = new ComputedField =>
       spriteId = @spriteId()
-      LOI.Assets.Sprite.documents.findOne spriteId
+      @manualSpriteData() or LOI.Assets.Sprite.documents.findOne spriteId
+
+    # Allow to manually activate the editor.
+    @manuallyActivated = new ReactiveField false
 
   destroy: ->
     super
@@ -33,7 +39,14 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
       @spriteId spriteId
 
   active: ->
-    AB.Router.getParameter('parameter4') is 'edit'
+    @manuallyActivated() or AB.Router.getParameter('parameter4') is 'edit'
 
   focusedMode: ->
     @theme()?.focusedMode?()
+
+  onBackButton: ->
+    return unless @manuallyActivated()
+    @manuallyActivated false
+
+    # Inform that we've handled the back button.
+    true

@@ -1,0 +1,76 @@
+<template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey">
+  <div class="pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task-survey">
+    <div class="confirmation {{confirmationEnabledClass}}">
+      <div class="directive">
+        {{> t10e task.directiveTranslation}}
+      </div>
+    </div>
+    <div class="instructions">
+      {{> t10e task.instructionsTranslation}}
+    </div>
+    <form class="survey">
+      <ol class="questions {{singleQuestionsClass}}">
+        {{#each questions}}
+          <li class="question">
+            <div class="prompt">
+              {{> t10e promptTranslation}}
+              {{#if active}}
+                {{#unless required}}
+                  (optional)
+                {{/unless}}
+              {{/if}}
+            </div>
+            {{#if $is type 'MultipleChoice'}}
+              {{> PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice}}
+            {{/if}}
+          </li>
+        {{/each}}
+      </ol>
+    </form>
+    <div class="complete">
+      {{#if answered}}
+        When you're happy with your answers, put a checkmark next to the task name on top to designate it done.
+      {{else}}
+        Answer the provided questions to continue.
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice">
+  <div class="multiple-choice">
+    {{#if active}}
+      <ul class="choices">
+        {{#each choices}}
+          <li class="choice" data-key="{{key}}">
+            <label class="label">
+              {{> PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice.Choice}}
+              <span class="answer">{{> t10e answerTranslation}}</span>
+            </label>
+            {{#if showText}}
+              <div class="extra">
+                {{> PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Task.Survey.MultipleChoice.Text}}
+              </div>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <div class="answer">
+      {{#if multipleAnswers}}
+        <ul class="choices">
+          {{#each answers}}
+            <li class="choice">
+              {{> t10e answerTranslation}}{{#if textAnswer}}: {{value}}{{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        {{#each answers}}
+          {{> t10e answerTranslation}}{{#if textAnswer}}: {{value}}{{/if}}
+        {{/each}}
+      {{/if}}
+      </div>
+    {{/if}}
+  </div>
+</template>

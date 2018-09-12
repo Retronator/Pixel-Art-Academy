@@ -6,7 +6,7 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
   # assets: array of assets that the player has received from Corinne
   #   id: unique asset identifier
   #   completed: auto-updated field if the player completed this asset
-  #   completionType: the way the player completed this asset
+  #   uploaded: tells if the player used the upload action for this asset
   #
   # READONLY
   # assets: array of assets that are part of this challenge
@@ -29,15 +29,35 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
       obtain a reference image and further instructions.
     """
 
-  @CompletionType:
-    Editor: 'Editor'
-    Upload: 'Upload'
+  constructor: ->
+    super
+    
+    # Listen to asset completed changes to determine if editor and upload options are granted.
+    @_assetsCompletedAutorun = Tracker.autorun =>
+      canEdit = false
+      canUpload = false
+
+      if pixelArtSoftwareAssets = @state 'assets'
+        for asset in pixelArtSoftwareAssets
+          if asset.completed
+            if asset.uploaded
+              canUpload = true
+
+            else
+              canEdit = true
+
+      Tracker.nonreactive =>
+        Sprite = PAA.Practice.Project.Asset.Sprite
+
+        Sprite.state 'canEdit', canEdit unless canEdit is Sprite.state 'canEdit'
+        Sprite.state 'canUpload', canUpload unless canUpload is Sprite.state 'canUpload'
 
   destroy: ->
+    @_assetsCompletedAutorun.stop()
     asset.destroy() for asset in @_pixelArtSoftwareAssets
 
   noAssetsInstructions: ->
-    @translations().noAssetsInstructions
+    @translations()?.noAssetsInstructions
 
   assetsData: ->
     return unless LOI.adventure.readOnlyGameState()
@@ -54,7 +74,7 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     if pixelArtSoftwareAssets = @state 'assets'
       for asset in pixelArtSoftwareAssets
         assetClassName = _.last asset.id.split '.'
-        @_pixelArtSoftwareAssets[asset.id] ?= new C1.Challenges.Drawing.PixelArtSoftware.CopyReference[assetClassName] @
+        @_pixelArtSoftwareAssets[asset.id] ?= Tracker.nonreactive => new C1.Challenges.Drawing.PixelArtSoftware.CopyReference[assetClassName] @
 
         assets.push @_pixelArtSoftwareAssets[asset.id]
 

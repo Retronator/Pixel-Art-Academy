@@ -1,12 +1,5 @@
-AB = Artificial.Babel
-AE = Artificial.Everywhere
-AM = Artificial.Mirage
-LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 Entry = PAA.PixelBoy.Apps.Journal.JournalView.Entry
-
-Quill = require 'quill'
-BlockEmbed = Quill.import 'blots/block/embed'
 
 class Entry.Object.Timestamp extends Entry.Object
   @id: -> 'PixelArtAcademy.PixelBoy.Apps.Journal.JournalView.Entry.Object.Timestamp'

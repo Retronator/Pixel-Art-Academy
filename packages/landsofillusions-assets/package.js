@@ -10,11 +10,17 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'pngjs': '2.3.0'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
-  api.use('webapp', 'server');
-
   api.use('edgee:slingshot');
+  api.use('froatsnook:request');
+
+  api.use('webapp');
+  api.use('http');
 
   api.export('LandsOfIllusions');
 
@@ -36,6 +42,7 @@ Package.onUse(function(api) {
   api.addServerFile('documents/palette/palettes-server/atari2600');
   api.addServerFile('documents/palette/palettes-server/pico8');
   api.addServerFile('documents/palette/palettes-server/black');
+  api.addServerFile('documents/palette/palettes-server/zxspectrum');
 
   api.addFile('documents/visualasset..');
   api.addFile('documents/visualasset/methods..');
@@ -46,6 +53,7 @@ Package.onUse(function(api) {
   api.addClientFile('documents/sprite/sprite-client');
   api.addServerFile('documents/sprite/subscriptions');
   api.addServerFile('documents/sprite/cache-server');
+  api.addServerFile('documents/sprite/server');
   api.addFile('documents/sprite/methods..');
   api.addFile('documents/sprite/methods/addpixel');
   api.addFile('documents/sprite/methods/removepixel');

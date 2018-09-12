@@ -119,6 +119,7 @@ Package.onUse(function(api) {
 
   api.addFile('floor3/gallery/galleryeast');
   api.addFile('floor3/gallery/gallerywest');
+  api.addFile('floor3/gallery/corinne');
 
   api.addThing('floor4/artstudio..');
   api.addServerFile('floor4/artstudio/initialize-server');

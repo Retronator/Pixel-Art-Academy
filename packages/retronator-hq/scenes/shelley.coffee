@@ -87,7 +87,11 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
       return unless playerLocationId is currentLocationId
 
       switch location
-        when HQ.GalleryEast then choices = ['Drinks']
+        when HQ.GalleryEast
+          choices = [
+            # For the drinks dialogue, Corinne must be present.
+            'Drinks' if LOI.adventure.getCurrentThing HQ.Actors.Corinne
+          ]
         when HQ.GalleryWest then choices = ['Stare']
         when HQ.ArtStudio then choices = ['AhKids']
         when HQ.Store then choices = ['Melanija']
@@ -96,6 +100,9 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
 
       # Add choices that are always possible.
       choices = choices.concat ['Gold']
+
+      # Remove any invalid choices.
+      choices = _.without choices, undefined
 
       label = Random.choice choices
 

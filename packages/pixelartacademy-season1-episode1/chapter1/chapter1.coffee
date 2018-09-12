@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 HQ = Retronator.HQ
 RS = Retronator.Store
 
-class PAA.Season1.Episode1.Chapter1 extends LOI.Adventure.Chapter
+class PAA.Season1.Episode1.Chapter1 extends PAA.Adventure.Chapter
   # READ-ONLY
   # application:
   #   applied: boolean if character has applied for admission week

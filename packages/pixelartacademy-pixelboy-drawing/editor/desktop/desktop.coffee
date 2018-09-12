@@ -69,6 +69,11 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       activeTool: @activeTool
       cameraInput: false
       grid: => @drawingActive()
+      gridInvertColor: =>
+        displayedAsset = @displayedAsset()
+        return unless backgroundColor = displayedAsset?.backgroundColor()
+        backgroundColor.r < 0.5 and backgroundColor.g < 0.5 and backgroundColor.b < 0.5
+
       cursor: => @drawingActive()
       canvasSize: => @spriteData()?.bounds
       drawComponents: =>
@@ -108,7 +113,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     @references new @constructor.References
       assetId: @spriteId
       documentClass: LOI.Assets.Sprite
-      editorActive: @active
+      editorActive: => @active()
       assetOptions: =>
         @displayedAsset()?.editorOptions()?.references
 
@@ -127,7 +132,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       tools: @tools
       activeTool: @activeTool
       actions: @actions
-      enabled: @active
+      enabled: => @active()
       
     # Create tools.
     @toolClasses =
@@ -248,7 +253,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
   onBackButton: ->
     # Turn off focused mode on back button.
-    return unless @focusedMode()
+    return super unless @focusedMode()
     @focusedMode false
 
     # Inform that we've handled the back button.
@@ -277,6 +282,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
   resizingDirectionClass: ->
     @references().resizingReference()?.resizingDirectionClass()
+
+  spriteVisible: ->
+    # Don't show the sprite when clipboard is on the second page.
+    not @drawing.clipboard().secondPageActive()
 
   spriteStyle: ->
     # Allow to be updated externally.

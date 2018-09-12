@@ -145,6 +145,9 @@ class AB.Router extends AB.Router
 
       link = event.currentTarget
 
+      # Do not act on download links.
+      return if link.download
+
       # Only do soft link changes when we're staying within the same host.
       if link.hostname is location.hostname
         event.preventDefault()

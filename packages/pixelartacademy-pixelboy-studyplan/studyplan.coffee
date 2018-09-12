@@ -52,6 +52,9 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
     @blueprint new @constructor.Blueprint @
     @goalSearch new @constructor.GoalSearch @
 
+    # Subscribe to character's task entries.
+    PAA.Learning.Task.Entry.forCharacter.subscribe @, LOI.characterId()
+
     # We set size in an autorun so that it adapts to window resizes.
     @autorun (computation) => @setDefaultPixelBoySize()
 

@@ -6,10 +6,13 @@ class C1.Goals.PhysicalPixelArt extends PAA.Learning.Goal
 
   @displayName: -> "Physical pixel art"
 
+  @chapter: -> C1
+
   Goal = @
 
   class @ChooseMedium extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PhysicalPixelArt.ChooseMedium'
+    @goal: -> Goal
   
     @directive: -> "Choose a pixel art medium"
   
@@ -21,6 +24,7 @@ class C1.Goals.PhysicalPixelArt extends PAA.Learning.Goal
 
   class @Reference extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PhysicalPixelArt.Reference'
+    @goal: -> Goal
 
     @directive: -> "Display a reference"
 
@@ -34,6 +38,7 @@ class C1.Goals.PhysicalPixelArt extends PAA.Learning.Goal
 
   class @Prepare extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PhysicalPixelArt.Doodling'
+    @goal: -> Goal
 
     @directive: -> "Prepare crafting materials"
 
@@ -47,6 +52,7 @@ class C1.Goals.PhysicalPixelArt extends PAA.Learning.Goal
 
   class @CopyReference extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PhysicalPixelArt.CopyReference'
+    @goal: -> Goal
 
     @directive: -> "Copy the reference"
 

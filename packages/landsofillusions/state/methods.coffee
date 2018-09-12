@@ -168,6 +168,10 @@ LOI.GameState._resetNamespaces.method (gameStateId, namespaces) ->
     _.nestedProperty gameState.state.scripts, namespace, {}
     _.nestedProperty gameState.readOnlyState.things, namespace, {}
 
+  # On the client also prepare the state for database since it's been transformed on retrieval.
+  if Meteor.isClient
+    gameState[field] = LOI.GameState._prepareStateForDatabase gameState[field] for field in ['state', 'readOnlyState']
+
   # Everything seems OK, update the states.
   LOI.GameState.documents.update gameStateId,
     $set:

@@ -70,6 +70,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.
 
     @caption = new ComputedField =>
       reference = @data()
+      return if reference.displayOptions?.imageOnly
 
       # Find an artwork that matches this reference.
       return unless image = reference.image
@@ -92,6 +93,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.
       elements.push year if year
 
       elements.join ', '
+
+  imageOnlyClass: ->
+    reference = @data()
+    'image-only' if reference.displayOptions?.imageOnly
 
   displaySize: (scale) ->
     return unless imageSize = @imageSize()

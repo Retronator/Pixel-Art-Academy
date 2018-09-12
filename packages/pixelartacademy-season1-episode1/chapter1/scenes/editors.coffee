@@ -14,5 +14,5 @@ class C1.Editors extends LOI.Adventure.Scene
     super
 
   things: -> [
-    PAA.PixelBoy.Apps.Drawing.Editor.Desktop # TODO: if C1.PostPixelBoy.ArtStudio.Listener.Script.state 'ReceiveDesktopEditor'
+    PAA.PixelBoy.Apps.Drawing.Editor.Desktop if C1.PostPixelBoy.PixelArt.Listener.Script.state 'ReceiveDesktopEditor'
   ]

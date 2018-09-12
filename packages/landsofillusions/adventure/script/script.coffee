@@ -110,7 +110,7 @@ class LOI.Adventure.Script
     for name, callback of callbacks
       unless @startNode.callbacks[name]
         console.warn "Unknown callback", name
-        return
+        continue
 
       for callbackNode in @startNode.callbacks[name]
         callbackNode.callback = callback

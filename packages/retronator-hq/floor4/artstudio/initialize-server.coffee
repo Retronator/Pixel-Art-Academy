@@ -138,7 +138,7 @@ Document.startup ->
   # Hendry Roesly
   
   PADB.create
-    artist: name: first: 'Hendry', last: 'Roesly'
+    artist: name: first: 'Hendry', last: 'Roesly', nickname: 'Iceztiq'
     artworks: [
       type: PADB.Artwork.Types.Physical
       title: 'Day 9'
@@ -185,7 +185,7 @@ Document.startup ->
   # Matej Jan
     
   PADB.create
-    artist: name: first: 'Matej', last: 'Jan'
+    artist: name: first: 'Matej', last: 'Jan', nickname: 'Retro'
     artworks: [
       type: PADB.Artwork.Types.Physical
       title: 'Africa'
@@ -385,7 +385,7 @@ Document.startup ->
   # Sylvain Sarrailh
 
   PADB.create
-    artist: name: first: 'Sylvain', last: 'Sarrailh'
+    artist: name: first: 'Sylvain', last: 'Sarrailh', nickname: 'Tohad'
     artworks: [
       type: PADB.Artwork.Types.Image
       title: 'Amazing'
