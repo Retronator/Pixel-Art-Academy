@@ -39,6 +39,13 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       goalTask.predecessors = for predecessor in goalTask.task.predecessors()
         @goalTasksByTaskId[predecessor.id()]
 
+    @endGoalTask =
+      groupNumber: @goal.finalGroupNumber()
+      predecessors: @goalTasksByTaskId[task.id()] for task in @goal.finalTasks()
+      endTask: true
+
+    @goalTasks.push @endGoalTask
+
     # Calculate levels.
     calculateLevel = (goalTask) =>
       # See if we've already calculated it.
@@ -53,36 +60,47 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
       # Set and return the calculated level.
       goalTask.level = highestLevel + 1
 
-    calculateLevel goalTask for goalTask in @goalTasks
+    loop
+      addedNewTasks = false
 
-    # Create the end node as the last level.
-    currentMaxLevel = _.max _.map @goalTasks, 'level'
+      # (Re)calculate all levels.
+      goalTask.level = null for goalTask in @goalTasks
+      calculateLevel goalTask for goalTask in @goalTasks
 
-    @endGoalTask =
-      level: currentMaxLevel + 1
-      groupNumber: @goal.finalGroupNumber()
-      predecessors: @goalTasksByTaskId[task.id()] for task in @goal.finalTasks()
-      endTask: true
+      # Put the end goal as the last level.
+      @endGoalTask.level = 0
+      currentMaxLevel = _.max _.map @goalTasks, 'level'
+      @endGoalTask.level = currentMaxLevel + 1
 
-    @goalTasks.push @endGoalTask
+      # Create dummy goal tasks in missing levels.
+      for goalTask in @goalTasks
+        # Go over the predecessors, but clone them since we'll be mutating the array.
+        for predecessor in _.clone goalTask.predecessors when predecessor.level < goalTask.level - 1
+          # Find which nodes in the same group will need to be rewired.
+          successors = _.filter @goalTasks, (goalTask) =>
+            goalTask.groupNumber is predecessor.groupNumber and predecessor in goalTask.predecessors
 
-    # Create dummy goal tasks in missing levels.
-    for goalTask in @goalTasks
-      # Go over the predecessors, but clone them since we'll be mutating the array.
-      for predecessor in _.clone goalTask.predecessors when predecessor.level < goalTask.level - 1
-        lastGoalTask = predecessor
-        for missingLevel in [predecessor.level + 1...goalTask.level]
-          # Create the dummy goal in the same group as the predecessor and link it to the previous missing level.
-          lastGoalTask =
-            level: missingLevel
-            groupNumber: predecessor.groupNumber
-            predecessors: [lastGoalTask]
+          # The goal task itself also needs to be rewired.
+          successors.push goalTask
 
-          @goalTasks.push lastGoalTask
+          lastGoalTask = predecessor
+          for missingLevel in [predecessor.level + 1...goalTask.level]
+            # Create the dummy goal in the same group as the predecessor and link it to the previous missing level.
+            lastGoalTask =
+              level: missingLevel
+              groupNumber: predecessor.groupNumber
+              predecessors: [lastGoalTask]
 
-        # Link this goalTask's predecessor to the missing level.
-        _.pull goalTask.predecessors, predecessor
-        goalTask.predecessors.push lastGoalTask
+            @goalTasks.push lastGoalTask
+            addedNewTasks = true
+
+          # Rewire all successors to the missing level.
+          for successor in successors
+            _.pull successor.predecessors, predecessor
+            successor.predecessors.push lastGoalTask
+
+      # Continue relaxing the graph until we didn't introduce any new nodes.
+      break unless addedNewTasks
 
     @minGroupNumber = _.min _.map @goalTasks, 'groupNumber'
     @maxGroupNumber = _.max _.map @goalTasks, 'groupNumber'

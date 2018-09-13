@@ -22,10 +22,10 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
 
     @taskClassNames = [
       'Doodling'
+      'WatchTutorial'
       'AdvancedTools'
       'Reference'
       'Grid'
-      'AdvancedSetup'
     ]
 
     taskClassIds = (DIY[taskClassName].id() for taskClassName in @taskClassNames)

@@ -56,8 +56,18 @@ class Entry.Object.Task extends Entry.Object
     tasks = @goal.tasks()
     prerequisites = []
 
+    # See if we only need one predecessor completed.
+    anyCompleted = @task.constructor.predecessorsCompleteType() is PAA.Learning.Task.PredecessorsCompleteType.Any
+
     for predecessorClass in @task.predecessors()
       predecessor = _.find tasks, (task) => task instanceof predecessorClass
-      prerequisites.push predecessor unless predecessor.completed()
+
+      if predecessor.completed()
+        # We found a completed predecessor. If we only need to find one, there are no other prerequisites.
+        return [] if anyCompleted
+
+      else
+        # Add this uncompleted task as a prerequisite.
+        prerequisites.push predecessor
 
     prerequisites

@@ -131,6 +131,23 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @completedConditions: ->
         PAA.PixelBoy.Apps.Drawing.state('externalSoftware')?
 
+    class @WatchTutorial extends PAA.Learning.Task.Manual
+      @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.WatchTutorial'
+      @goal: -> Goal
+
+      @directive: -> "Watch a tutorial"
+
+      @instructions: -> """
+        If you want to prepare before we get started, watch a tutorial or two about your software.
+        Ask Retro about recommendations.
+      """
+
+      @predecessors: -> [Goal.DIY.ChooseSoftware]
+
+      @groupNumber: -> 2
+
+      @initialize()
+
     class @Doodling extends PAA.Learning.Task.Upload
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Doodling'
       @goal: -> Goal
@@ -142,7 +159,8 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
         Figure out how to zoom in and out too. Upload your test drawing to your journal.
       """
 
-      @predecessors: -> [Goal.DIY.ChooseSoftware]
+      @predecessors: -> [Goal.DIY.ChooseSoftware, Goal.DIY.WatchTutorial]
+      @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
 
       @groupNumber: -> 1
 
@@ -171,14 +189,15 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
       @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.Reference'
       @goal: -> Goal
 
-      @directive: -> "Display a reference"
+      @directive: -> "Display the reference"
 
       @instructions: -> """
+        Go to the Pixel Art Software challenge in your Drawing app and download the reference from the assets page.
         Talk to Retro in the Store to learn different ways to set up reference images when drawing.
-        Mark which ways you are going to use in your journal.
+        Try different approaches and in your journal mark which ways you are going to use.
       """
 
-      @predecessors: -> [Goal.DIY.Doodling]
+      @predecessors: -> [Goal.DIY.Doodling, Goal.GetReference]
 
       @groupNumber: -> 1
 
@@ -233,22 +252,25 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
       @initialize()
 
-    class @AdvancedSetup extends PAA.Learning.Task.Manual
-      @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.DIY.AdvancedSetup'
-      @goal: -> Goal
+  class @GetReference extends PAA.Learning.Task.Automatic
+    @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.GetReference'
+    @goal: -> Goal
 
-      @directive: -> "Advanced setup"
+    @directive: -> "Get a reference"
 
-      @instructions: -> """
-        If you're using generic drawing software, there are many things besides the grid that can make working on pixel
-        art easier. If there is a tutorial for your software, use it to improve your workspace.
-      """
+    @instructions: -> """
+      Talk to Corinne in the Gallery and get a reference to copy. It will appear under Challenges in the
+      Drawing app.
+    """
 
-      @predecessors: -> [Goal.DIY.Grid]
+    @predecessors: -> [Goal.Editor, Goal.DIY.ChooseSoftware]
+    @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
 
-      @groupNumber: -> 1
+    @initialize()
 
-      @initialize()
+    @completedConditions: ->
+      assets = C1.Challenges.Drawing.PixelArtSoftware.state 'assets'
+      assets?.length
 
   class @CopyReference extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.PixelArtSoftware.CopyReference'
@@ -257,13 +279,12 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
     @directive: -> "Copy the reference"
 
     @instructions: -> """
-      Talk to Corinne in the Gallery and get a reference to copy. It will appear under Challenges in the
-      Drawing app. Use the editor or software of your choice to re-create the reference.
+      Use the editor or software of your choice to re-create the reference.
     """
 
     @interests: -> ['pixel art software', 'pixel art', 'drawing software']
 
-    @predecessors: -> [Goal.Editor, Goal.DIY.ChooseSoftware]
+    @predecessors: -> [Goal.GetReference]
     @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
 
     @initialize()
@@ -283,13 +304,14 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     # DIY
     @DIY.ChooseSoftware
+    @DIY.WatchTutorial
     @DIY.Doodling
     @DIY.AdvancedTools
     @DIY.Reference
     @DIY.Grid
-    @DIY.AdvancedSetup
 
     # End
+    @GetReference
     @CopyReference
   ]
 
