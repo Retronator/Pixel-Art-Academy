@@ -19,7 +19,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Tasks extends AM.Component
     @visible = new ReactiveField false
 
     @goals = new ComputedField =>
-      return unless addedGoals = PAA.PixelBoy.Apps.StudyPlan.state().goals
+      return unless addedGoals = PAA.PixelBoy.Apps.StudyPlan.state()?.goals
 
       for goalId, goalData of addedGoals
         goalClass = PAA.Learning.Goal.getClassForId goalId

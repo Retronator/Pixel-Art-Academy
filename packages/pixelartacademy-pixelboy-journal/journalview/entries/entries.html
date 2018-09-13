@@ -8,6 +8,13 @@
     {{/each}}
     </ol>
     <div class="previous page-button {{previousPageVisibleClass}}">← back</div>
-    <div class="next page-button {{nextPageVisibleClass}}">next →</div>
+    <div class="next page-button {{nextPageVisibleClass}}">
+      {{#if nextPageIsNew}}
+        new
+      {{else}}
+        next
+      {{/if}}
+      →
+    </div>
   </div>
 </template>

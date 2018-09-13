@@ -26,12 +26,17 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     # We delay loading journal entries until animations have done playing.
     @startLoading = new ReactiveField false
 
+    @firstLoadDone = false
+
     @autorun (computation) =>
       return unless @startLoading()
 
       # Subscribe to all entries of the journal, if we're displaying a journal and not just one entry.
       if @journalDesign.options.journalId
-        PAA.Practice.Journal.Entry.forJournalId.subscribe @, @journalDesign.options.journalId, @entriesLimit()
+        @_journalEntriesSubscription = PAA.Practice.Journal.Entry.forJournalId.subscribe @, @journalDesign.options.journalId, @entriesLimit()
+
+    # Start on the requested entry or default to the last entry.
+    @currentEntryId = new ReactiveField @journalDesign.options.entryId or null
 
     @entries = new ComputedField =>
       # If we have a journal ID, we load the whole journal, even if we also have a specific entry to show first.
@@ -56,24 +61,22 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
       for entryDocument in entryDocuments
         entry = new PAA.PixelBoy.Apps.Journal.JournalView.Entry @, entryDocument._id
         entries.push entry
-          
-      # Add the new (empty) entry if this is a journal and it is not read-only.
-      if @journalDesign.options.journalId and not @journalDesign.options.readOnly
+
+      # Go to the last page on first load.
+      unless @firstLoadDone
+        # Wait till subscription is ready, or we have obtained entries through other means.
+        if @startLoading() and @_journalEntriesSubscription?.ready() or entries.length
+          # Mark that we've seen the first batch of entries.
+          @firstLoadDone = true
+
+          # Only change ID if we haven't got it yet.
+          @currentEntryId _.last(entries).entryId if entries.length and not @currentEntryId()
+
+      # Add the new (empty) entry if this is a journal, it is not read-only, and first load is done.
+      if @journalDesign.options.journalId and not @journalDesign.options.readOnly and @firstLoadDone
         entries.push new PAA.PixelBoy.Apps.Journal.JournalView.Entry @, null
 
       entries
-
-    # Start on the requested entry or default to the new entry.
-    @currentEntryId = new ReactiveField @journalDesign.options.entryId or null
-
-    # If this is a read-only journal, go to last page if it is not set yet.
-    if @journalDesign.options.readOnly and not @currentEntryId()
-      @autorun (computation) =>
-        return unless entries = @entries()
-        return unless entries.length
-        computation.stop()
-
-        @currentEntryId _.last(entries).entryId
 
     @currentEntry = new ComputedField =>
       currentEntryId = @currentEntryId()
@@ -87,10 +90,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
       # As a side effect of reaching a very low index, load earlier entries.
       if index < 5
         entriesLimit = @entriesLimit()
-        displayedEntriesCount = entries.length
-
-        # Also account for the empty entry.
-        displayedEntriesCount-- unless @journalDesign.options.readOnly
+        displayedEntriesCount = _.filter(entries, (entry) => entry.entryId).length
 
         # If all entries have been loaded, see if we should display some more. Note that we might be above
         # the entries limit if a specific journal entry is requested and comes from its own subscription.
@@ -201,6 +201,21 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     lastPageVisibleIndex = currentEntry.currentPageIndex() - 1 + @journalDesign.writingAreaOptions().pagesPerViewport
 
     'visible' unless @currentEntryIndex() >= entries.length - 1 and lastPageVisibleIndex >= currentEntry.pagesCount() - 1
+
+  nextPageIsNew: ->
+    return unless currentEntry = @currentEntry()
+    return unless currentEntry?.isCreated()
+    return unless entries = @entries()
+
+    # Make sure the last entry is new (it doesn't have an ID).
+    return if _.last(entries)?.entryId
+
+    # We should be on the second to last entry.
+    return unless @currentEntryIndex() is entries.length - 2
+
+    # We need to see if the viewport includes the end of the entry.
+    lastPageVisibleIndex = currentEntry.currentPageIndex() - 1 + @journalDesign.writingAreaOptions().pagesPerViewport
+    lastPageVisibleIndex >= currentEntry.pagesCount() - 1
 
   events: ->
     super.concat
