@@ -43,7 +43,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Tasks extends AM.Component
       return unless activeGoalTasks = _.filter @goalTasks(), (goalTask) =>
         goalTask.task.active goalTask.goal.tasks()
 
-      activeGoalTask.task for activeGoalTask in activeGoalTasks when activeGoalTask.type
+      activeGoalTask.task for activeGoalTask in activeGoalTasks when activeGoalTask.task.type
 
     # Subscribe to character's task entries.
     PAA.Learning.Task.Entry.forCharacter.subscribe @, LOI.characterId()
