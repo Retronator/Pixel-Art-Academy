@@ -41,7 +41,15 @@ class LOI.Adventure.Situation.Circumstance
       switch type
         when @constructor.Types.Array
           newValue = prepareArray newValue
-          value = _.difference value, newValue
+          value = _.filter value, (member) =>
+            # Don't include members that are in the remove set.
+            return false if member in newValue
+
+            # Also don't include members that are instances of classes in the remove set.
+            for newMember in newValue
+              return false if member instanceof newMember
+
+            true
 
         when @constructor.Types.Map
           delete value[property] for property of newValue

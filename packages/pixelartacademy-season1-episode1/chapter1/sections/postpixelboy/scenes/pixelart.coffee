@@ -21,6 +21,11 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
     @pixelArtSoftware = new C1.Goals.PixelArtSoftware
 
     @taskClassNames = [
+      'GetReference'
+      'CopyReference'
+    ]
+
+    @diyTaskClassNames = [
       'Doodling'
       'WatchTutorial'
       'AdvancedTools'
@@ -28,7 +33,19 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
       'Grid'
     ]
 
-    taskClassIds = (DIY[taskClassName].id() for taskClassName in @taskClassNames)
+    @taskClasses = []
+
+    for taskClassName in @taskClassNames
+      @taskClasses.push
+        name: taskClassName
+        class: C1.Goals.PixelArtSoftware[taskClassName]
+
+    for taskClassName in @diyTaskClassNames
+      @taskClasses.push
+        name: taskClassName
+        class: DIY[taskClassName]
+
+    taskClassIds = (taskClass.class.id() for taskClass in @taskClasses)
 
     # We need to know the status of Pixel Art Software related tasks.
     @_taskEntriesSubscription = PAA.Learning.Task.Entry.forCharacterTaskIds.subscribe LOI.characterId(), taskClassIds
@@ -55,10 +72,10 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
       retro: HQ.Actors.Retro
 
     @setCallbacks
-      AdvancedSetupPhotoshop: (complete) => openWebsite 'https://www.youtube.com/watch?v=hEGeveEsg0Q', complete
-      AdvancedSetupGIMP: (complete) => openWebsite 'https://www.youtube.com/watch?v=PONe4IIYSnQ', complete
-      AdvancedSetupAseprite: (complete) => openWebsite 'https://www.youtube.com/playlist?list=PLPHvHCBMlIQ0FEEh0QM7MZlnVMoRGgUql', complete
-      AdvancedSetupPyxelEdit: (complete) => openWebsite 'https://www.youtube.com/playlist?list=PLG0tvJ_jRDIXVXKmOFfWtN_I58SaZEDoS', complete
+      WatchTutorialPhotoshop: (complete) => openWebsite 'https://www.youtube.com/watch?v=hEGeveEsg0Q', complete
+      WatchTutorialGIMP: (complete) => openWebsite 'https://www.youtube.com/watch?v=PONe4IIYSnQ', complete
+      WatchTutorialAseprite: (complete) => openWebsite 'https://www.youtube.com/playlist?list=PLPHvHCBMlIQ0FEEh0QM7MZlnVMoRGgUql', complete
+      WatchTutorialPyxelEdit: (complete) => openWebsite 'https://www.youtube.com/playlist?list=PLG0tvJ_jRDIXVXKmOFfWtN_I58SaZEDoS', complete
 
       YouTubeSearch: (complete) =>
         softwareName = @ephemeralState 'externalSoftwareName'
@@ -91,11 +108,12 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
       'ChosenOtherSoftwareChoice'
       'ExternalSoftwareTutorialChoice'
       'ExternalSoftwareReminderChoice'
+      'WatchTutorialChoice'
+      'DoodlingQuestion'
       'AdvancedToolsAndReferencesChoice'
       'ReferencesChoice'
       'GridChoice'
       'BasicsDoneChoice'
-      'AdvancedSetupChoice'
     ]
 
     choicePlaceholderResponse.addChoice @script.startNode.labels[label].next for label in labels
@@ -109,21 +127,17 @@ class C1.PostPixelBoy.PixelArt extends LOI.Adventure.Scene
     externalSoftware = PAA.PixelBoy.Apps.Drawing.state 'externalSoftware'
     externalSoftwareName = PAA.PixelBoy.Apps.Drawing.Portfolio.ExternalSoftware[externalSoftware]
     Tracker.nonreactive =>
-      @script.ephemeralState 'externalSoftware', externalSoftware
-      @script.ephemeralState 'externalSoftwareName', externalSoftwareName
+      # Note, we force null instead of undefined to clean up the variable if needed.
+      @script.ephemeralState 'externalSoftware', externalSoftware or null
+      @script.ephemeralState 'externalSoftwareName', externalSoftwareName or null
 
     # We need to know which tasks the user has completed.
     completedTasks = {}
     tasks = scene.pixelArtSoftware.tasks()
 
-    for taskClassName in scene.taskClassNames
-      taskClass = DIY[taskClassName]
-      task = _.find tasks, (task) => task instanceof taskClass
-      completedTasks[taskClassName] = true if task.completed()
+    for taskClass in scene.taskClasses
+      task = _.find tasks, (task) => task instanceof taskClass.class
+      completedTasks[taskClass.name] = true if task.completed()
 
     Tracker.nonreactive =>
       @script.ephemeralState 'completedTasks', completedTasks
-
-    # TODO: We need to know if the player has started the copy reference task.
-    Tracker.nonreactive =>
-      @script.ephemeralState 'startedCopyReference', false

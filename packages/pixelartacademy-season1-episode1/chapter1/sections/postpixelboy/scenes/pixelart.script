@@ -133,22 +133,163 @@ retro:
 
 ## ExternalSoftwareReminderChoice
 
-* What was I supposed to be doing with the Drawing app again? `AfterChosenSoftware`
+* What was I supposed to be doing with the Drawing app again? `AfterChosenSoftware and not _completedTasks.CopyReference`
 
 retro:
-  You need to show you can handle the software you chose.
+  After you set what software you want to use in the Settings, you need to show you can handle the software you chose.
   Talk to Corinne upstairs in the gallery. She'll give you a reference image to copy.
   
 -> [Return]
 
 ## ExternalSoftwareTutorialChoice
 
-* I'd like some help with using my software. `AfterChosenSoftware and not _completedTasks.Doodling`
+* I'd like some help with using my software. `AfterChosenSoftware and not ExternalSoftwareTutorial`
 
 ## ExternalSoftwareTutorial
 
 retro:
-  To start out, create a new image. Something small, say 64 by 64 pixels.
+  I'm here for you! 
+  Would you prefer to first watch a tutorial on how to setup your software, or do you want to just jump in and figure things out along the way?
+  
+* I like to learn in advance. -> [PrepareInAdvance]
+* I prefer to try things out as fast as possible.
+
+retro:
+  Straight to the action, huh? I actually like to explore first too.
+  Alright, here's what you should try to do.
+  
+-> [Doodling]
+
+## PrepareInAdvance
+
+retro: That's great! 
+  
+-> [WatchTutorialIntro]
+
+## WatchTutorialChoice
+
+* Can you tell me about software tutorials again? `ExternalSoftwareTutorial and not _completedTasks.WatchTutorial`
+
+retro: No problem!
+
+-> [WatchTutorialIntro]
+
+## WatchTutorialIntro
+
+retro:
+  There are many tutorials out there, especially for popular software.
+  For apps that are geared toward pixel art, most things will be already setup for you.
+  More generic software will require additional steps for drawing pixel art.
+  
+## WatchTutorialQuestions
+
+* Any recommendations for Photoshop? -> [WatchTutorialPhotoshop] `_externalSoftware is 'Photoshop'`
+* Any recommendations for GIMP? -> [WatchTutorialGIMP] `_externalSoftware is 'GIMP'`
+* Any recommendations for Aseprite? -> [WatchTutorialAseprite] `_externalSoftware is 'Aseprite'`
+* Any recommendations for Pyxel Edit? -> [WatchTutorialPyxelEdit] `_externalSoftware is 'PyxelEdit'`
+* How can I find tutorials for my software? -> [WatchTutorialSearch]
+* What do I do after I watch tutorials? -> [WatchTutorialJournal]
+* Sounds good! `WatchTutorialJournal`
+
+retro: Yup, anything else?
+
+-> [Return]
+
+## WatchTutorialPhotoshop
+
+retro: MortMort makes great videos and has one about it.
+
+> Retro shows you the video on YouTube.
+
+pause
+
+### WatchTutorialPhotoshop
+
+-> [WatchTutorialHelped]
+
+## WatchTutorialGIMP
+
+retro: 
+  I actually made a video about it that people seem to find useful.
+  It's a bit old by now, but should still help you get started.
+
+> Retro shows you his video on YouTube.
+
+pause
+
+### WatchTutorialGIMP
+
+-> [WatchTutorialHelped]
+
+## WatchTutorialAseprite
+
+retro: Jebby made a series of videos that go over the basics.
+
+> Retro shows you the playlist on YouTube.
+
+pause
+
+### WatchTutorialAseprite
+
+-> [WatchTutorialHelped]
+
+## WatchTutorialPyxelEdit
+
+retro: Achebit made a 3-part video about it.
+
+> Retro shows you the playlist on YouTube.
+
+pause
+
+### WatchTutorialPyxelEdit
+
+-> [WatchTutorialHelped]
+
+## WatchTutorialHelped
+
+retro: I hope it helped!
+  
+-> [WatchTutorialQuestions]
+
+## WatchTutorialSearch
+
+retro:
+  As always, google is your friend!
+  I also like to search directly on YouTube.
+
+-> [WatchTutorialQuestions] `['Aseprite', 'PyxelEdit', 'GraphicsGale', 'ProMotion', 'GrafX2', 'Photoshop', 'GIMP', 'Krita'].indexOf(_externalSoftware) < 0`
+
+retro: Here's what I find for `_externalSoftwareName`.
+
+> Retro fires up a YouTube search on his computer and shows it to you.
+
+pause
+
+### YouTubeSearch
+
+retro: I hope you found something helpful.
+
+-> [WatchTutorialQuestions]
+
+## WatchTutorialJournal
+
+retro: 
+  You should go to your journal and add the 'Watch a tutorial' learning task to it.
+  After you mark it complete, let me know that you're ready to start.
+
+-> [Return]
+
+## DoodlingQuestion
+
+* I'm ready to start using my software. What should I try? `ExternalSoftwareTutorial and not _completedTasks.Doodling`
+
+retro:
+  Alright, let's get this show on the road!
+
+## Doodling
+
+retro:
+  First, create a new image. Something small, say 64 by 64 pixels.
   Your software should have a toolbox with many icons. 
   Try different tools and just play with them. In particular, try to find the pencil, eraser, and color fill (usually a bucket).
   You might need to set the size of the pencil to 1 pixel if it's not already.
@@ -218,13 +359,24 @@ retro:
 ## ReferencesQuestions
 
 * What are my options? -> [ReferencesOptions]
-* I actually have a second screen. -> [ReferencesSecondScreen] `OptionsAfter`
-* Can I use my tablet or a phone? -> [ReferencesTablet] `OptionsAfter`
-* Are there any specialized programs to display references? -> [ReferencesSpecializedSoftware] `OptionsAfter`
-* Any out-of-the-box alternatives? -> [ReferencesAlternatives] `OptionsAfter`
+* I actually have a second screen. -> [ReferencesSecondScreen] `ReferencesOptionsAfter`
+* Can I use my tablet or a phone? -> [ReferencesTablet] `ReferencesOptionsAfter`
+* Are there any specialized programs to display references? -> [ReferencesSpecializedSoftware] `ReferencesOptionsAfter`
+* Any out-of-the-box alternatives? -> [ReferencesAlternatives] `ReferencesOptionsAfter`
 * I think I have an idea how I'll go about this.
 
-retro: Good. Write it down in your journal and mark it complete.
+-> [ReferencesShortEnd] `_completedTasks.GetReference`
+
+retro: 
+  Good. Go talk to Corinne up in the Gallery and ask her for a reference.
+  Once you have it, try to display it in some of the ways we talked about. 
+  When you're done, use the Journal to complete this learning task.
+
+-> [Return]
+
+## ReferencesShortEnd
+
+retro: Good. When you're ready, use the Journal to complete this learning task.
 
 -> [Return]
 
@@ -311,131 +463,14 @@ retro: Let me know once you've completed this step.
 
 ## BasicsDoneChoice
 
-* I finished setting the grid. `_completedTasks.Grid and not _startedCopyReference`
+* I finished setting the grid. `_completedTasks.Grid and not _completedTasks.CopyReference`
 
 retro:
-  Awesome! You're ready to draw a real image now.
-  Talk to Corinne upstairs to get a reference for you to copy.
-  It will appear under Challenges in the Drawing App.
-  Upload your result and you will unlock the option to download and upload sprites everywhere.
+  Awesome! You're ready to copy the reference now, so give it a go.
+  Upload your result in the Challenges section of the Drawing app and you will unlock the option to download and upload sprites everywhere.
 
 -> [Return]
 
-## AdvancedSetupChoice
-
-* Are there any more things to learn regarding software? `_completedTasks.Grid and not _completedTasks.AdvancedSetup`
-
-retro:
-  Yes, quite many. We haven't really touched on color palettes or how to set up preview windows. 
-  Many tools need to have anti-aliasing turned off if you're using generic drawings software.
-
-* I see. -> [AdvancedSetupVideos]
-* Ugh, so much left to learn.
-
-retro: Nah, it's not so bad. Just take it one step at a time.
-
-## AdvancedSetupVideos
-
-retro:
-  If there's a video tutorial about your software, you're encouraged to spend some time watching it.
-  You don't have to do it right now, but it's always an option to deepen your knowledge.
-  
-## AdvancedSetupQuestions
-
-* Any recommendations for Photoshop? -> [AdvancedSetupPhotoshop] `_externalSoftware is 'Photoshop'`
-* Any recommendations for GIMP? -> [AdvancedSetupGIMP] `_externalSoftware is 'GIMP'`
-* Any recommendations for Aseprite? -> [AdvancedSetupAseprite] `_externalSoftware is 'Aseprite'`
-* Any recommendations for Pyxel Edit? -> [AdvancedSetupPyxelEdit] `_externalSoftware is 'PyxelEdit'`
-* How can I find tutorials for my software? -> [AdvancedSetupSearch]
-* Good, I'll mark in my journal when I've watched some tutorials. -> [AdvancedSetupJournal]
-* Thank you so much!
-
-retro: You're welcome!
-
--> [Return]
-
-## AdvancedSetupPhotoshop
-
-retro: MortMort makes great videos and has one about it.
-
-> Retro shows you the video on YouTube.
-
-pause
-
-### AdvancedSetupPhotoshop
-
--> [AdvancedSetupHelped]
-
-## AdvancedSetupGIMP
-
-retro: 
-  I actually made a video about it that people seem to find useful.
-  It's a bit old by now, but should still help you get started.
-
-> Retro shows you his video on YouTube.
-
-pause
-
-### AdvancedSetupGIMP
-
--> [AdvancedSetupHelped]
-
-## AdvancedSetupAseprite
-
-retro: Jebby made a series of videos that go over the basics.
-
-> Retro shows you the playlist on YouTube.
-
-pause
-
-### AdvancedSetupAseprite
-
--> [AdvancedSetupHelped]
-
-## AdvancedSetupPyxelEdit
-
-retro: Achebit made a 3-part video about it.
-
-> Retro shows you the playlist on YouTube.
-
-pause
-
-### AdvancedSetupPyxelEdit
-
--> [AdvancedSetupHelped]
-
-## AdvancedSetupHelped
-
-retro: I hope it helped!
-  
--> [AdvancedSetupQuestions]
-
-## AdvancedSetupSearch
-
-retro:
-  As always, google is your friend!
-  I also like to search directly on YouTube.
-
--> [AdvancedSetupQuestions] `['Aseprite', 'PyxelEdit', 'GraphicsGale', 'ProMotion', 'GrafX2', 'Photoshop', 'GIMP', 'Krita'].indexOf(_externalSoftware) < 0`
-
-retro: Here's what I find for `_externalSoftwareName`.
-
-> Retro fires up a YouTube search on his computer and shows it to you.
-
-pause
-
-### YouTubeSearch
-
-retro: I hope you found something helpful.
-
--> [AdvancedSetupQuestions]
-
-## AdvancedSetupJournal
-
-retro: Perfect.
-
--> [Return]
-    
 ## Return
 
 ### Return

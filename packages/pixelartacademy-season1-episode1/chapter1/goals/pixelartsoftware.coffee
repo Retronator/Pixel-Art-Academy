@@ -284,7 +284,7 @@ class C1.Goals.PixelArtSoftware extends PAA.Learning.Goal
 
     @interests: -> ['pixel art software', 'pixel art', 'drawing software']
 
-    @predecessors: -> [Goal.GetReference]
+    @predecessors: -> [Goal.GetReference, Goal.DIY.Grid]
     @predecessorsCompleteType: -> @PredecessorsCompleteType.Any
 
     @initialize()

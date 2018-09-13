@@ -19,7 +19,7 @@ class C1.AdmissionProjects.Snake.Drawing.Coworking extends LOI.Adventure.Scene
 
     # Wait for the drawing task to be completed. We do this reactively since querying wires subscribes internally.
     @completedDrawing = new ComputedField =>
-      C1.Goals.Snake.Draw.completed()
+      C1.Goals.Snake.Draw.completedConditions()
     ,
       true
 
