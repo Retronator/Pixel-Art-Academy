@@ -59,14 +59,17 @@ class PAA.Learning.Goal
   @interests: -> @_interests
   @requiredInterests: -> @_requiredInterests
 
-  constructor: ->
+  constructor: (@options = {}) ->
+    # By default the task is related to the current character.
+    @options.characterId ?= => LOI.characterId()
+
     @_tasks = []
     @_finalTasks = []
 
     finalTaskClasses = @constructor.finalTasks()
 
     for taskClass in @constructor.tasks()
-      task = new taskClass
+      task = new taskClass @options
       @_tasks.push task
       @_finalTasks.push task if taskClass in finalTaskClasses
 

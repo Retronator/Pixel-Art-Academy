@@ -21,9 +21,11 @@
           {{#if pictureSource}}
               <img class="picture" src="{{pictureSource}}">
           {{else}}
-            <button class="insert-picture-button">
-              <img class="icon" src="{{image '/pixelartacademy/pixelboy/apps/journal/objects-picture.png'}}">
-            </button>
+            {{#unless readOnly}}
+              <button class="insert-picture-button">
+                <img class="icon" src="{{image '/pixelartacademy/pixelboy/apps/journal/objects-picture.png'}}">
+              </button>
+            {{/unless}}
           {{/if}}
         </div>
       {{/if}}
