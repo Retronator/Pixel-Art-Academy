@@ -1,7 +1,6 @@
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-# Note: We allow to read all entries only for the player's character.
 PAA.Learning.Task.Entry.forCharacter.publish (characterId) ->
   check characterId, Match.DocumentId
 
