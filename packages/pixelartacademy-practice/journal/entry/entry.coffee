@@ -23,8 +23,6 @@ class PAA.Practice.Journal.Entry extends AM.Document
   #
   #     artwork: an artwork from the pixel art database
   #       _id
-  #       image:
-  #         url
   #
   #     picture: an image without any semantic information
   #       url: the url of the image itself
@@ -35,7 +33,9 @@ class PAA.Practice.Journal.Entry extends AM.Document
   #
   #     task: a learning task
   #       id: the id of the task to be displayed
-  #       data: any extra data not stored in the entry
+  #       entry: the specific entry that completes this task, or null if not completed
+  #         _id
+  #       data: any extra data not stored in the entry, for example temporary values before an entry is created
   #
   #   attributes: object with formatting directives
   #
@@ -47,12 +47,6 @@ class PAA.Practice.Journal.Entry extends AM.Document
     name: @id()
     fields: =>
       journal: @ReferenceField PAA.Practice.Journal, ['character'], true, 'entries', []
-      structure: [
-        insert:
-          artwork: @ReferenceField PADB.Artwork, ['image'], false
-          task:
-            entry: @ReferenceField PAA.Learning.Task.Entry, [], false
-      ]
       action: @ReferenceField LOI.Memory.Action, [], true, 'content.journalEntry', ['journal']
       memories: [@ReferenceField LOI.Memory, [], true, 'journalEntry', ['journal']]
 

@@ -49,7 +49,10 @@ class PAA.Learning.Task
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
 
-  constructor: ->
+  constructor: (@options = {}) ->
+    # By default the task is related to the current character.
+    @options.characterId ?= => LOI.characterId()
+
     # Subscribe to this goal's translations.
     translationNamespace = @id()
     @_translationSubscription = AB.subscribeNamespace translationNamespace
@@ -73,7 +76,7 @@ class PAA.Learning.Task
   groupNumber: -> @constructor.groupNumber()
 
   entry: ->
-    return unless characterId = LOI.characterId()
+    return unless characterId = @options.characterId()
 
     # TODO: Add support for resetting goals/tasks
     
@@ -86,6 +89,11 @@ class PAA.Learning.Task
     @entry()
 
   active: (otherTasks) ->
+    # We should only be determining active state for the current character.
+    unless @options.characterId() is LOI.characterId()
+      console.warn "Active task determination requested for another character."
+      return
+
     # Predecessors need to be completed for the task to be active.
     predecessors = @predecessors()
 

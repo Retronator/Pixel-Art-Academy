@@ -21,15 +21,8 @@
           left 2rem
           top 0
 
-      .instructions
-      .complete
-        display none
-
-    &:not(.ready)
-      .confirmation
-        &::before
-          content '…'
-
+    &.completed
+    &.read-only
       .instructions
       .complete
         display none
@@ -37,10 +30,6 @@
     &:not(.active)
       .complete
         display none
-
-    &.ready
-      .confirmation::before
-        border-color atariGrey(2)
 
     .confirmation
       position relative
@@ -50,7 +39,7 @@
         content ''
         width 8rem
         height 8rem
-        border 1rem solid transparent
+        border 1rem solid atariGrey(2)
         float left
 
       &.enabled
