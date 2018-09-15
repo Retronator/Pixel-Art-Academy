@@ -217,6 +217,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     lastPageVisibleIndex = currentEntry.currentPageIndex() - 1 + @journalDesign.writingAreaOptions().pagesPerViewport
     lastPageVisibleIndex >= currentEntry.pagesCount() - 1
 
+  newPageClass: ->
+    'new-page' if @nextPageIsNew()
+
   events: ->
     super.concat
       'click .previous.page-button': @onClickPreviousPageButton
