@@ -9,9 +9,8 @@ class Entry.Object.Task.Component extends AM.Component
 
     @task = @parent.task
 
-  ready: -> @parent.ready()
   active: -> @parent.active()
+  readOnly: -> @parent.readOnly()
 
   confirmationEnabledClass: ->
-    'enabled' if @ready() and @active() and not @task.completed()
-
+    'enabled' if @active() and not @task.completed()

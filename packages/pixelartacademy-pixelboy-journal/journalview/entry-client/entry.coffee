@@ -39,6 +39,18 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     @_mouseUpWindowHandler = (event) => @onMouseUpWindow event
     $(window).on 'mouseup', @_mouseUpWindowHandler
 
+    # Subscribe to character's task entries.
+    @autorun (computation) =>
+      return unless characterId = @entry()?.journal?.character?._id
+      return unless content = @entry()?.content
+
+      taskIds = []
+
+      for operation in content when operation.insert?.task?.id
+        taskIds.push operation.insert.task.id
+
+      PAA.Learning.Task.Entry.forCharacterTaskIds.subscribe @, characterId, taskIds
+
   onRendered: ->
     super
 
@@ -69,6 +81,10 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
     quill.on 'text-change', (delta, oldDelta, source) =>
       console.log "Text change", @entryId, delta, oldDelta, source if @constructor.debug
+
+      # Tell the blots they are part of this component.
+      for blot in @quill().getLines()
+        blot.domNode.component?.entryComponent @
 
       unless @entryId
         # This is an empty entry, so start it, but not if we have any pictures still uploading.
@@ -284,9 +300,12 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
         name: "Timestamp"
 
     objects
+
+  readOnly: ->
+    @journalDesign.options.readOnly
     
   readOnlyClass: ->
-    'read-only' if @journalDesign.options.readOnly
+    'read-only' if @readOnly()
 
   events: ->
     super.concat

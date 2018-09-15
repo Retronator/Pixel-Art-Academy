@@ -5,28 +5,28 @@
         {{> t10e task.directiveTranslation}}
       </div>
     </div>
-    {{#if ready}}
-      <div class="instructions">
-        {{> t10e task.instructionsTranslation}}
-      </div>
-      <div class="complete">
-        {{#if uploading}}
-          Uploading …
+    <div class="instructions">
+      {{> t10e task.instructionsTranslation}}
+    </div>
+    <div class="complete">
+      {{#if uploading}}
+        Uploading …
+      {{else}}
+        Upload the required image to complete the task.
+      {{/if}}
+    </div>
+    {{#if showUpload}}
+      <div class="upload">
+        {{#if pictureSource}}
+            <img class="picture" src="{{pictureSource}}">
         {{else}}
-          Upload the required image to complete the task.
-        {{/if}}
-      </div>
-      {{#if showUpload}}
-        <div class="upload">
-          {{#if pictureSource}}
-              <img class="picture" src="{{pictureSource}}">
-          {{else}}
+          {{#unless readOnly}}
             <button class="insert-picture-button">
               <img class="icon" src="{{image '/pixelartacademy/pixelboy/apps/journal/objects-picture.png'}}">
             </button>
-          {{/if}}
-        </div>
-      {{/if}}
+          {{/unless}}
+        {{/if}}
+      </div>
     {{/if}}
   </div>
 </template>

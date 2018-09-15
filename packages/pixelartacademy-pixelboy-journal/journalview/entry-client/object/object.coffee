@@ -11,6 +11,8 @@ BlockEmbed = Quill.import 'blots/block/embed'
 class Entry.Object extends AM.Component
   constructor: (@node, @_initialValue) ->
     super
+    
+    @entryComponent = new ReactiveField null, (a, b) => a is b
 
     console.log "Constructed component", @ if Entry.debug
     
@@ -19,6 +21,12 @@ class Entry.Object extends AM.Component
 
     @value = new ReactiveField @_initialValue
     @formats = new ReactiveField {}
+
+    @readOnly = new ComputedField =>
+      # Treat the object as read-only until we know what the entry says.
+      return true unless entryComponent = @entryComponent()
+        
+      entryComponent.journalDesign.options.readOnly
 
     console.log "Created component", @ if Entry.debug
 

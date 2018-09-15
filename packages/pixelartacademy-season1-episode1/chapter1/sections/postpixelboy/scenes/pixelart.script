@@ -168,9 +168,15 @@ retro: That's great!
 
 ## WatchTutorialChoice
 
-* Can you tell me about software tutorials again? `ExternalSoftwareTutorial and not _completedTasks.WatchTutorial`
+* Can you tell me about software tutorials again? `ExternalSoftwareTutorial and WatchTutorialIntro and not _completedTasks.WatchTutorial`
 
 retro: No problem!
+
+-> [WatchTutorialIntro]
+
+## WatchTutorialChoiceChangeMind
+
+* I'd actually like to hear about tutorials for drawing software. `ExternalSoftwareTutorial and not WatchTutorialIntro and not _completedTasks.WatchTutorial`
 
 -> [WatchTutorialIntro]
 
@@ -281,10 +287,18 @@ retro:
 
 ## DoodlingQuestion
 
-* I'm ready to start using my software. What should I try? `ExternalSoftwareTutorial and not _completedTasks.Doodling`
+* I'm ready to start using my software. What should I try? `ExternalSoftwareTutorial and not Doodling and not _completedTasks.Doodling`
 
 retro:
   Alright, let's get this show on the road!
+  
+-> [Doodling]
+
+## DoodlingQuestionAgain
+
+* What all should I try with my software again? `ExternalSoftwareTutorial and Doodling and not _completedTasks.Doodling`
+
+-> [Doodling]
 
 ## Doodling
 
