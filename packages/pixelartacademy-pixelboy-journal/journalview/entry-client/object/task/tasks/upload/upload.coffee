@@ -19,10 +19,10 @@ class Entry.Object.Task.Upload extends Entry.Object.Task.Component
     @uploading = new ReactiveField false
 
   pictureSource: ->
-    @parent.task.entry()?.upload.picture.url or @preview()
+    @parent.taskEntry()?.upload?.picture.url or @preview()
 
   showUpload: ->
-    @active() or @task.completed()
+    @active() or @parent.completed()
   
   events: ->
     super.concat

@@ -39,6 +39,18 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     @_mouseUpWindowHandler = (event) => @onMouseUpWindow event
     $(window).on 'mouseup', @_mouseUpWindowHandler
 
+    # Subscribe to character's task entries.
+    @autorun (computation) =>
+      return unless characterId = @entry()?.journal?.character?._id
+      return unless content = @entry()?.content
+
+      taskIds = []
+
+      for operation in content when operation.insert?.task?.id
+        taskIds.push operation.insert.task.id
+
+      PAA.Learning.Task.Entry.forCharacterTaskIds.subscribe @, characterId, taskIds
+
   onRendered: ->
     super
 

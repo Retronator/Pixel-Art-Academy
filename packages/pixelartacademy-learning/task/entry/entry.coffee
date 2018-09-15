@@ -2,7 +2,8 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-# An entry that is created when a character completes a task. 
+# An entry that is created when a character completes a task.
+# Note that these are public documents and should contain no sensitive information.
 class PAA.Learning.Task.Entry extends AM.Document
   @id: -> 'PixelArtAcademy.Learning.Task.Entry'
   # taskId: task ID of the task this is an entry for

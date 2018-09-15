@@ -25,7 +25,7 @@ class Entry.Object.Task extends Entry.Object
       return
 
     @characterId = new ComputedField =>
-      @entryComponent()?.entry().journal.character._id
+      @entryComponent()?.entry()?.journal.character._id
     ,
       true
       
@@ -36,26 +36,37 @@ class Entry.Object.Task extends Entry.Object
       
     @task = _.find @goal.tasks(), (task) => task instanceof taskClass
 
+    @taskEntry = new ComputedField =>
+      # Note: We must use reactive value here because it can change when setting the entry automatically below.
+      return unless entryId = @value().entry?._id
+
+      PAA.Learning.Task.Entry.documents.findOne entryId
+
     @taskComponent = new @constructor[taskClass.type] @
 
-    @_taskEntrySubscription = new ComputedField =>
-      return unless characterId = @characterId()
+    # If we don't have an entry yet, see if one exists and automatically set it.
+    unless value.entry?._id
+      # TODO: Handle resets of goals to only pick an entry after the reset date.
+      @autorun (computation) =>
+        return unless entry = @task.entry()
 
-      PAA.Learning.Task.Entry.forCharacterTaskIds.subscribe characterId, [@task.id()]
-    ,
-      true
+        # We found the entry, so update our value.
+        value.entry = _id: entry._id
+        @value value
 
   onDestroyed: ->
     super
 
     @goal?.destroy()
     @characterId?.stop()
-    @taskEntry?.stop()
-    @_taskEntrySubscription?.stop()
+
+  completed: ->
+    # Task is completed if we have an entry. We use the value version to forgo loading.
+    @value().entry?._id
 
   completedClass: ->
-    'completed' if @task.completed()
-
+    'completed' if @completed()
+    
   active: ->
     return if @readOnly()
     
@@ -63,13 +74,6 @@ class Entry.Object.Task extends Entry.Object
 
   activeClass: ->
     'active' if @active()
-
-  ready: ->
-    @_taskEntrySubscription()?.ready()
-
-  readyClass: ->
-    # We are ready when we're sure we got the entry if it exists.
-    'ready' if @ready()
 
   readOnlyClass: ->
     'read-only' if @readOnly()

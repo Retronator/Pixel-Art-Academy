@@ -25,7 +25,7 @@ class Entry.Object.Task.Survey extends Entry.Object.Task.Component
     @parent.value parentValue
 
   confirmationEnabledClass: ->
-    'enabled' if @ready() and @active() and @answered() and not @task.completed()
+    'enabled' if @active() and @answered() and not @parent.completed()
 
   answered: ->
     # TODO

@@ -3,7 +3,7 @@
     <div class="goal">
       {{> t10e goal.displayNameTranslation}}
     </div>
-    <div class="task {{completedClass}} {{activeClass}} {{readyClass}} {{readOnlyClass}}">
+    <div class="task {{completedClass}} {{activeClass}} {{readOnlyClass}}">
       {{> Render taskComponent}}
       {{#unless readOnly}}
         {{#if prerequisites.length}}
