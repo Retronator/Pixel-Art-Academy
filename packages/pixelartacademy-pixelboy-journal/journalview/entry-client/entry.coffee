@@ -20,6 +20,9 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
     @journalDesign = @entries.journalDesign
 
+    # Add ID to minimize re-rendering.
+    @_id = @entryId if @entryId
+
   onCreated: ->
     super
 
@@ -27,7 +30,6 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
 
     @display = LOI.adventure.interface.display
 
-    # TODO: When page is being recreated, we should preserve page index instead of setting it to 0.
     @currentPageIndex = new ReactiveField 0
     @pagesCount = new ReactiveField 0
     
@@ -115,7 +117,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     @autorun (computation) =>
       return unless entry = @entry()
 
-      console.log "Updating entry from database", entry if @constructor.debug
+      console.log "Updating entry from database", @entryId, entry if @constructor.debug
 
       # See if we already have the correct content.
       currentContent = quill.getContents().ops
@@ -124,13 +126,10 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
         console.log "Current content matches." if @constructor.debug
         return
 
-      console.log "Updating content." if @constructor.debug
+      console.log "Updating content.", @entryId if @constructor.debug
 
       # The content is new, update.
       quill.setContents entry.content, Quill.sources.API
-
-      # Move the cursor to the end.
-      @moveCursorToEnd()
 
   onDestroyed: ->
     super
