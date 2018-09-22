@@ -38,6 +38,8 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
     # Start on the requested entry or default to the last entry.
     @currentEntryId = new ReactiveField @journalDesign.options.entryId or null
 
+    @_entries = {}
+
     @entries = new ComputedField =>
       # If we have a journal ID, we load the whole journal, even if we also have a specific entry to show first.
       if @journalDesign.options.journalId
@@ -59,8 +61,8 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
       entries = []
 
       for entryDocument in entryDocuments
-        entry = new PAA.PixelBoy.Apps.Journal.JournalView.Entry @, entryDocument._id
-        entries.push entry
+        @_entries[entryDocument._id] ?= new PAA.PixelBoy.Apps.Journal.JournalView.Entry @, entryDocument._id
+        entries.push @_entries[entryDocument._id]
 
       # Go to the last page on first load.
       unless @firstLoadDone
@@ -166,8 +168,11 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
 
   startEntry: (delta) ->
     entryId = Random.id()
-    journalId = @journalDesign.options.journalId
 
+    # Update the entry ID of the currently edited new page, so that it stays visible until it gets replaced.
+    @currentEntry().entryId = entryId
+
+    journalId = @journalDesign.options.journalId
     PAA.Practice.Journal.Entry.insert entryId, journalId, delta.ops, null, LOI.adventure.currentSituationParameters()
 
     @currentEntryId entryId
@@ -179,6 +184,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entries extends AM.Component
       computation.stop()
 
       currentEntry.focus()
+      currentEntry.moveCursorToEnd()
 
   entryVisibleClass: ->
     entry = @currentData()
