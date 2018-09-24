@@ -11,7 +11,7 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
 
   LOI.Assets.VisualAsset._authorizeAssetAction sprite
 
-  pixels = sprite.layers[layerIndex].pixels
+  pixels = sprite.layers?[layerIndex].pixels
   x = pixel.x
   y = pixel.y
 
@@ -22,7 +22,7 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
   forward = {}
   backward = {}
 
-  if sprite.bounds.fixed
+  if sprite.bounds?.fixed
     # Make sure pixel is inside bounds.
     unless sprite.bounds.left <= pixel.x <= sprite.bounds.right and sprite.bounds.top <= pixel.y <= sprite.bounds.bottom
       throw new AE.ArgumentOutOfRangeException "Pixel must be added inside of fixed bounds."

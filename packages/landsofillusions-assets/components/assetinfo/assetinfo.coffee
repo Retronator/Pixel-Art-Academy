@@ -61,7 +61,7 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
 
       @type = AM.DataInputComponent.Types.Select
 
-    onConstructed: ->
+    onCreated: ->
       super
 
       LOI.Assets.Palette.all.subscribe @

@@ -39,7 +39,9 @@ class LOI.Assets.Components.AssetsList extends AM.Component
 
   events: ->
     super.concat
-      'click .new-asset-button': @onClickNewAssetButton
+      # HACK: Wiring this to mousedown to prevent a bug that triggers click of this button when
+      # clicking anywhere in the component. This only appears when component is embedded deep within.
+      'mousedown .new-asset-button': @onClickNewAssetButton
       'click .asset': @onClickAsset
 
   onClickNewAssetButton: (event) ->

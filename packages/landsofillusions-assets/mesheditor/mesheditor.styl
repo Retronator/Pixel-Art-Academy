@@ -1,0 +1,38 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-mesheditor
+  .landsofillusions-assets-mesheditor-cameraangles
+    float right
+    clear both
+    width 120rem
+    margin-bottom 5rem
+
+    .actions
+      text-align right
+
+    .camera-angles
+      list-style none
+      padding 0
+      margin 0
+      max-height 100rem
+      overflow-y auto
+      background atariGrey(3)
+      color atariGrey(0)
+
+      .camera-angle
+        cursor pointer
+        padding 1rem 2rem
+
+        &:hover
+          background-color atariGrey(4)
+
+        &.active
+          background-color atariGrey(5)
+          cursor default
+
+    .properties
+      > .name
+        display block
+
+        input
+          width 75rem

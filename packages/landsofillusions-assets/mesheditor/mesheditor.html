@@ -1,0 +1,18 @@
+<template name="LandsOfIllusions.Assets.MeshEditor">
+  <div class="landsofillusions-assets-mesheditor landsofillusions-assets-editor">
+    <div class="left-sidebar">
+      {{> Render assetsList}}
+      {{> Render toolbox}}
+    </div>
+    <div class="right-sidebar">
+      {{> Render navigator}}
+      {{> Render assetInfo}}
+      {{> Render materials}}
+      {{> Render landmarks}}
+      {{> Render cameraAngles}}
+    </div>
+    {{> Render pixelCanvas}}
+    {{> Render palette}}
+    {{> Render shadingSphere}}
+  </div>
+</template>

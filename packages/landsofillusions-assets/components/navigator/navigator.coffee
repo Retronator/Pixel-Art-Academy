@@ -16,10 +16,14 @@ class LOI.Assets.Components.Navigator extends AM.Component
     @zoomInPressed = new ReactiveField false
     @zoomOutPressed = new ReactiveField false
 
+    @enabled = => not @options.enabled? or @options.enabled()
+
   onRendered: ->
     super
 
     $(document).on 'keydown.landsofillusions-assets-components-navigator', (event) =>
+      return unless @enabled()
+
       switch event.keyCode
         when AC.Keys.equalSign
           @zoomIn()
@@ -37,6 +41,8 @@ class LOI.Assets.Components.Navigator extends AM.Component
       event.preventDefault() if keyboardState.isCommandOrCtrlDown()
 
     $(document).on 'keyup.landsofillusions-assets-components-navigator', (event) =>
+      return unless @enabled()
+
       switch event.which
         when AC.Keys.equalSign
           @zoomInPressed false
