@@ -136,6 +136,14 @@ class LOI.Assets.SpriteEditor extends AM.Component
 
     $('html').removeClass('asset-editor')
 
+  toolClass: ->
+    return unless tool = @activeTool()
+
+    toolClass = _.kebabCase tool.name
+    extraToolClass = tool.toolClass?()
+
+    [toolClass, extraToolClass].join ' '
+    
   events: ->
     super.concat
       'focus input': @onFocusInput
