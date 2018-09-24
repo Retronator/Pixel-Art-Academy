@@ -4,8 +4,8 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor extends AM.Component
-  @register 'LandsOfIllusions.Assets.SpriteEditor'
+class LOI.Assets.MeshEditor extends AM.Component
+  @register 'LandsOfIllusions.Assets.MeshEditor'
 
   constructor: ->
     super arguments...
@@ -18,6 +18,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @assetInfo = new ReactiveField null
     @materials = new ReactiveField null
     @landmarks = new ReactiveField null
+    @cameraAngles = new ReactiveField null
     @tools = new ReactiveField null
     @actions = new ReactiveField null
     @toolbox = new ReactiveField null
@@ -27,18 +28,31 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @paintNormals = new ReactiveField false
     @symmetryXOrigin = new ReactiveField null
 
+    @meshId = new ComputedField =>
+      AB.Router.getParameter 'meshId'
+
+    @meshData = new ComputedField =>
+      return unless meshId = @meshId()
+
+      LOI.Assets.Mesh.forId.subscribe meshId
+      LOI.Assets.Mesh.documents.findOne meshId
+
+    @cameraAngleIndex = new ReactiveField null
+
     @spriteId = new ComputedField =>
-      AB.Router.getParameter 'spriteId'
+      return unless meshData = @meshData()
+      return unless cameraAngle = meshData.cameraAngles?[@cameraAngleIndex()]
+      cameraAngle.sprite._id
 
     @spriteData = new ComputedField =>
       return unless spriteId = @spriteId()
 
-      LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, spriteId
+      LOI.Assets.Sprite.forId.subscribe spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
       
     @paletteId = new ComputedField =>
       # Minimize reactivity to only palette changes.
-      LOI.Assets.Sprite.documents.findOne(@spriteId(),
+      LOI.Assets.Mesh.documents.findOne(@meshId(),
         fields:
           palette: 1
       )?.palette?._id
@@ -67,14 +81,13 @@ class LOI.Assets.SpriteEditor extends AM.Component
       ]
       symmetryXOrigin: @symmetryXOrigin
         
-    setAssetId = (spriteId) =>
-      AB.Router.setParameters {spriteId}
+    setAssetId = (meshId) =>
+      AB.Router.setParameters {meshId}
         
     @assetsList new LOI.Assets.Components.AssetsList
-      documentClass: LOI.Assets.Sprite
-      getAssetId: @spriteId
+      documentClass: LOI.Assets.Mesh
+      getAssetId: @meshId
       setAssetId: setAssetId
-      subscription: LOI.Assets.Sprite.allGeneric
 
     @navigator new LOI.Assets.Components.Navigator
       camera: @pixelCanvas().camera
@@ -85,22 +98,25 @@ class LOI.Assets.SpriteEditor extends AM.Component
       materials: @materials
 
     @assetInfo new LOI.Assets.Components.AssetInfo
-      documentClass: LOI.Assets.Sprite
-      getAssetId: @spriteId
+      documentClass: LOI.Assets.Mesh
+      getAssetId: @meshId
       setAssetId: setAssetId
       getPaletteId: @paletteId
       setPaletteId: (paletteId) =>
-        LOI.Assets.Sprite.update @spriteId(), $set: palette: _id: paletteId
+        LOI.Assets.Mesh.update @meshId(), $set: palette: _id: paletteId
 
     @materials new LOI.Assets.Components.Materials
-      assetId: @spriteId
-      documentClass: LOI.Assets.Sprite
+      assetId: @meshId
+      documentClass: LOI.Assets.Mesh
       palette: @palette
 
     @landmarks new LOI.Assets.Components.Landmarks
-      assetId: @spriteId
-      documentClass: LOI.Assets.Sprite
+      assetId: @meshId
+      documentClass: LOI.Assets.Mesh
       pixelCanvas: @pixelCanvas
+
+    @cameraAngles new LOI.Assets.MeshEditor.CameraAngles
+      meshId: @meshId
 
     @toolbox new LOI.Assets.Components.Toolbox
       tools: @tools
@@ -117,12 +133,12 @@ class LOI.Assets.SpriteEditor extends AM.Component
 
     # Create tools.
     toolClasses = [
-      @constructor.Tools.Pencil
-      @constructor.Tools.Eraser
-      @constructor.Tools.ColorFill
-      @constructor.Tools.ColorPicker
-      @constructor.Tools.PaintNormals
-      @constructor.Tools.Symmetry
+      LOI.Assets.SpriteEditor.Tools.Pencil
+      LOI.Assets.SpriteEditor.Tools.Eraser
+      LOI.Assets.SpriteEditor.Tools.ColorFill
+      LOI.Assets.SpriteEditor.Tools.ColorPicker
+      LOI.Assets.SpriteEditor.Tools.PaintNormals
+      LOI.Assets.SpriteEditor.Tools.Symmetry
     ]
 
     tools = for toolClass in toolClasses
@@ -137,7 +153,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
     $('html').removeClass('asset-editor')
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'focus input': @onFocusInput
       'blur input': @onBlurInput
 

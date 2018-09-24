@@ -134,29 +134,30 @@ html.asset-editor
           display block
 
   .landsofillusions-assets-components-assetinfo
-    .properties
-      width 75rem
+    width 75rem
 
-      .name
-      .palette
-        display block
+    .name
+    .palette
+      display block
 
-        input
-        select
-          width 75rem
+      input
+      select
+        width 75rem
 
-      .name
-        margin-bottom 2rem
+    .name
+      margin-bottom 2rem
 
-      .palette
-        margin-bottom 5rem
+    .palette
+      margin-bottom 5rem
 
   .landsofillusions-assets-components-materials
   .landsofillusions-assets-components-landmarks
+  .landsofillusions-assets-components-camera
     width 120rem
 
     .materials-table
     .landmarks-table
+    .vectors-table
       border-collapse collapse
       table-layout fixed
       width 100%
@@ -174,6 +175,7 @@ html.asset-editor
 
       .material
       .landmark
+      .vector
         td
           border 1rem solid black
           padding 0
@@ -192,6 +194,11 @@ html.asset-editor
 
           &:focus
             outline none
+
+    .vectors-table
+      .legend
+        th
+          width 25rem
 
     .actions
       text-align right

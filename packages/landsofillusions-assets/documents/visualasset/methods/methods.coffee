@@ -35,9 +35,6 @@ LOI.Assets.VisualAsset.updateMaterial.method (assetClassName, assetId, index, ma
   assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
   asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
 
-  asset = assetClass.documents.findOne assetId
-  throw new AE.ArgumentException "Asset does not exist." unless asset
-
   # Get existing material or create new entry.
   material = asset.materials?[index] or {}
 
@@ -64,9 +61,6 @@ LOI.Assets.VisualAsset.updateLandmark.method (assetClassName, assetId, index, la
 
   assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
   asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
-
-  asset = assetClass.documents.findOne assetId
-  throw new AE.ArgumentException "Asset does not exist." unless asset
 
   # If we don't have landmarks at all, we create it as an array
   # so that sets will create index entries not object properties.

@@ -67,6 +67,8 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/replacepixels');
 
   api.addFile('documents/mesh..');
+  api.addServerFile('documents/mesh/subscriptions');
+  api.addFile('documents/mesh/methods..');
 
   api.addFile('documents/audio..');
   api.addServerFile('documents/audio/subscriptions');
@@ -100,6 +102,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/landmarks..');
   api.addUnstyledComponent('components/toolbox..');
   api.addUnstyledComponent('components/spriteimage..');
+  api.addUnstyledComponent('components/camera..');
 
   api.addUnstyledComponent('components/references..');
   api.addUnstyledComponent('components/references/reference..');
@@ -141,8 +144,8 @@ Package.onUse(function(api) {
 
   // Sprite editor
 
-  api.addComponent('spriteeditor/spriteeditor');
-  api.addFile('spriteeditor/tools/tools');
+  api.addComponent('spriteeditor..');
+  api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/pencil');
   api.addFile('spriteeditor/tools/eraser');
   api.addFile('spriteeditor/tools/colorpicker');
@@ -151,6 +154,11 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/symmetry');
   api.addFile('spriteeditor/tools/undo');
   api.addFile('spriteeditor/tools/redo');
+
+  // Mesh editor
+
+  api.addComponent('mesheditor..');
+  api.addUnstyledComponent('mesheditor/cameraangles..');
 
   // Audio editor
 

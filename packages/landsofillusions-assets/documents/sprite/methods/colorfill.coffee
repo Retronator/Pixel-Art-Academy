@@ -22,7 +22,7 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
   LOI.Assets.Asset._authorizeAssetAction sprite
 
   # Make sure the location is within the bounds.
-  unless sprite.bounds.left <= newTargetPixel.x <= sprite.bounds.right and sprite.bounds.top <= newTargetPixel.y <= sprite.bounds.bottom
+  unless sprite.bounds and sprite.bounds.left <= newTargetPixel.x <= sprite.bounds.right and sprite.bounds.top <= newTargetPixel.y <= sprite.bounds.bottom
     throw new AE.ArgumentOutOfRangeException "Pixel to be filled must be inside of bounds."
 
   forward = {}
@@ -31,7 +31,7 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
   # Create a map for fast pixel retrieval. Start will all empty objects.
   pixelMap = []
 
-  layerPixels = sprite.layers[layerIndex].pixels
+  layerPixels = sprite.layers?[layerIndex].pixels
 
   # Fill occupied spots with pixels.
   for pixel in layerPixels
