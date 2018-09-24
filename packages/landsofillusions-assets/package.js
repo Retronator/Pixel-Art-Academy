@@ -124,5 +124,13 @@ Package.onUse(function(api) {
 
   api.addComponent('mesheditor..');
   api.addUnstyledComponent('mesheditor/cameraangles..');
+  api.addUnstyledComponent('mesheditor/meshcanvas..');
+  api.addFile('mesheditor/meshcanvas/renderer');
+  api.addFile('mesheditor/meshcanvas/scenemanager');
+  api.addFile('mesheditor/meshcanvas/grid');
+  api.addFile('mesheditor/meshcanvas/cameramanager');
+  api.addFile('mesheditor/tools..');
+  api.addFile('mesheditor/tools/pixelgrid');
+  api.addFile('mesheditor/tools/planegrid');
 
 });

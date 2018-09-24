@@ -12,6 +12,7 @@ class LOI.Assets.MeshEditor extends AM.Component
 
     @sprite = new ReactiveField null
     @pixelCanvas = new ReactiveField null
+    @meshCanvas = new ReactiveField null
     @navigator = new ReactiveField null
     @palette = new ReactiveField null
     @assetsList = new ReactiveField null
@@ -27,6 +28,9 @@ class LOI.Assets.MeshEditor extends AM.Component
     @lightDirection = new ReactiveField new THREE.Vector3(0, 0, -1).normalize()
     @paintNormals = new ReactiveField false
     @symmetryXOrigin = new ReactiveField null
+    
+    @pixelGridEnabled = new ReactiveField true
+    @planeGridEnabled = new ReactiveField true
 
     @meshId = new ComputedField =>
       AB.Router.getParameter 'meshId'
@@ -80,7 +84,11 @@ class LOI.Assets.MeshEditor extends AM.Component
         @landmarks()
       ]
       symmetryXOrigin: @symmetryXOrigin
-        
+      gridEnabled: @pixelGridEnabled
+
+    @meshCanvas new @constructor.MeshCanvas
+      gridEnabled: @planeGridEnabled
+
     setAssetId = (meshId) =>
       AB.Router.setParameters {meshId}
         
@@ -139,6 +147,8 @@ class LOI.Assets.MeshEditor extends AM.Component
       LOI.Assets.SpriteEditor.Tools.ColorPicker
       LOI.Assets.SpriteEditor.Tools.PaintNormals
       LOI.Assets.SpriteEditor.Tools.Symmetry
+      LOI.Assets.MeshEditor.Tools.PixelGrid
+      LOI.Assets.MeshEditor.Tools.PlaneGrid
     ]
 
     tools = for toolClass in toolClasses
@@ -151,6 +161,14 @@ class LOI.Assets.MeshEditor extends AM.Component
     super
 
     $('html').removeClass('asset-editor')
+
+  toolClass: ->
+    return unless tool = @activeTool()
+
+    toolClass = _.kebabCase tool.name
+    extraToolClass = tool.toolClass?()
+
+    [toolClass, extraToolClass].join ' '
 
   events: ->
     super.concat

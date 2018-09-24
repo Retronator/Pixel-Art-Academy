@@ -1,5 +1,5 @@
 <template name="LandsOfIllusions.Assets.MeshEditor">
-  <div class="landsofillusions-assets-mesheditor landsofillusions-assets-editor">
+  <div class="landsofillusions-assets-mesheditor landsofillusions-assets-editor {{toolClass}}">
     <div class="left-sidebar">
       {{> Render assetsList}}
       {{> Render toolbox}}
@@ -11,6 +11,7 @@
       {{> Render landmarks}}
       {{> Render cameraAngles}}
     </div>
+    {{> Render meshCanvas}}
     {{> Render pixelCanvas}}
     {{> Render palette}}
     {{> Render shadingSphere}}
