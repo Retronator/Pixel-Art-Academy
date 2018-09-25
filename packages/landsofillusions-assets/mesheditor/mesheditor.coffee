@@ -41,11 +41,14 @@ class LOI.Assets.MeshEditor extends AM.Component
       LOI.Assets.Mesh.forId.subscribe meshId
       LOI.Assets.Mesh.documents.findOne meshId
 
-    @cameraAngleIndex = new ReactiveField null
+    @cameraAngleIndex = new ReactiveField 0
+    
+    @cameraAngle = new ComputedField =>
+      return unless meshData = @meshData()
+      meshData.cameraAngles?[@cameraAngleIndex()]
 
     @spriteId = new ComputedField =>
-      return unless meshData = @meshData()
-      return unless cameraAngle = meshData.cameraAngles?[@cameraAngleIndex()]
+      return unless cameraAngle = @cameraAngle()
       cameraAngle.sprite._id
 
     @spriteData = new ComputedField =>
@@ -87,7 +90,9 @@ class LOI.Assets.MeshEditor extends AM.Component
       gridEnabled: @pixelGridEnabled
 
     @meshCanvas new @constructor.MeshCanvas
+      pixelCanvas: @pixelCanvas
       gridEnabled: @planeGridEnabled
+      cameraAngle: @cameraAngle
 
     setAssetId = (meshId) =>
       AB.Router.setParameters {meshId}
@@ -125,6 +130,7 @@ class LOI.Assets.MeshEditor extends AM.Component
 
     @cameraAngles new LOI.Assets.MeshEditor.CameraAngles
       meshId: @meshId
+      cameraAngleIndex: @cameraAngleIndex
 
     @toolbox new LOI.Assets.Components.Toolbox
       tools: @tools

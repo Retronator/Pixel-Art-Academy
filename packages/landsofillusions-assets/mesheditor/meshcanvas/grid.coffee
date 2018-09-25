@@ -27,9 +27,11 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
 
     geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, 3
 
-    material = new THREE.LineBasicMaterial color: 0x0000ff
+    material = new THREE.LineBasicMaterial color: 0xeeeeee
 
     super geometry, material
+
+    @rotation.set Math.PI / 2, 0, 0
 
     @meshCanvas.sceneManager().scene().add @
 

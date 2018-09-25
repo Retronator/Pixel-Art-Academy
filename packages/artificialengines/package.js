@@ -9,7 +9,7 @@ Npm.depends({
   patreon: '0.3.0',
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
-  three: '0.90.0'
+  three: '0.96.0'
 });
 
 Package.onUse(function(api) {
