@@ -7,8 +7,8 @@ class LOI.Assets.Mesh extends AM.Document
   # name: text identifier for the mesh
   # cameraAngles: array of source images describing the mesh
   #   name: text identifier
-  #   picturePlaneDistance: for perspective projection, the distance in pixels the camera is away from the picture plane
-  #   pixelSize: for orthogonal projection, the size of a pixel in world units
+  #   picturePlaneDistance: the distance in pixels the camera is away from the picture plane or null for ortographic
+  #   pixelSize: the size of a camera pixel in world units
   #   position: location of the camera in world space
   #     x, y, z
   #   target: location of where the camera is pointing

@@ -12,8 +12,6 @@ class LOI.Assets.MeshEditor.CameraAngles extends AM.Component
         fields:
           cameraAngles: 1
 
-    @currentIndex = new ReactiveField null
-
     @assetsList = new ReactiveField null
 
   onCreated: ->
@@ -21,12 +19,12 @@ class LOI.Assets.MeshEditor.CameraAngles extends AM.Component
 
     @camera = new LOI.Assets.Components.Camera
       load: => @cameraAngleData()
-      save: (value) => LOI.Assets.Mesh.updateCameraAngle @options.meshId(), @currentIndex(), value
+      save: (value) => LOI.Assets.Mesh.updateCameraAngle @options.meshId(), @options.cameraAngleIndex(), value
 
     @assetsList new LOI.Assets.Components.AssetsList
       documentClass: LOI.Assets.Sprite
       getAssetId: => @cameraAngleData()?.sprite?._id
-      setAssetId: (spriteId) => LOI.Assets.Mesh.updateCameraAngle @options.meshId(), @currentIndex(), sprite: _id: spriteId
+      setAssetId: (spriteId) => LOI.Assets.Mesh.updateCameraAngle @options.meshId(), @options.cameraAngleIndex(), sprite: _id: spriteId
 
   cameraAngles: ->
     return unless cameraAngles = @meshData()?.cameraAngles
@@ -38,14 +36,14 @@ class LOI.Assets.MeshEditor.CameraAngles extends AM.Component
 
   activeClass: ->
     cameraAngle = @currentData()
-    'active' if cameraAngle.index is @currentIndex()
+    'active' if cameraAngle.index is @options.cameraAngleIndex()
 
   nameOrIndex: ->
     cameraAngle = @currentData()
     cameraAngle.name or cameraAngle.index
 
   cameraAngleData: ->
-    @meshData()?.cameraAngles[@currentIndex()]
+    @meshData()?.cameraAngles?[@options.cameraAngleIndex()]
 
   events: ->
     super(arguments...).concat
@@ -54,12 +52,12 @@ class LOI.Assets.MeshEditor.CameraAngles extends AM.Component
 
   onClickCameraAngle: (event) ->
     cameraAngle = @currentData()
-    @currentIndex cameraAngle.index
+    @options.cameraAngleIndex cameraAngle.index
 
   onClickAddCameraAngleButton: (event) ->
     index = @meshData().cameraAngles?.length or 0
     LOI.Assets.Mesh.updateCameraAngle @options.meshId(), index
-    @currentIndex index
+    @options.cameraAngleIndex index
 
   class @CameraProperty extends AM.DataInputComponent
     onCreated: ->
@@ -107,3 +105,5 @@ class LOI.Assets.MeshEditor.CameraAngles extends AM.Component
 
       @property = 'pixelSize'
       @type = AM.DataInputComponent.Types.Number
+      @customAttributes =
+        step: 0.1
