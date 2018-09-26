@@ -93,6 +93,7 @@ class LOI.Assets.MeshEditor extends AM.Component
       pixelCanvas: @pixelCanvas
       gridEnabled: @planeGridEnabled
       cameraAngle: @cameraAngle
+      currentNormal: => @shadingSphere()?.currentNormal()
 
     setAssetId = (meshId) =>
       AB.Router.setParameters {meshId}
