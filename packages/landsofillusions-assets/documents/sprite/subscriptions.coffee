@@ -12,7 +12,19 @@ LOI.Assets.Sprite.allGeneric.publish ->
   ,
     fields:
       name: 1
-      
+
+LOI.Assets.Sprite.forMeshId.publish (meshId) ->
+  check meshId, Match.DocumentId
+
+  @autorun ->
+    mesh = LOI.Assets.Mesh.documents.findOne meshId
+    throw new AE.ArgumentException "Mesh does not exist." unless mesh
+
+    spriteIds = (cameraAngle.sprite?._id for cameraAngle in mesh.cameraAngles)
+    _.pull spriteIds, undefined
+    
+    LOI.Assets.Sprite.documents.find _id: $in: spriteIds
+
 LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.publish (types) ->
   check types, [String]
 

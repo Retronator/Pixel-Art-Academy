@@ -12,6 +12,7 @@ class LOI.Assets.MeshEditor extends AM.Component
 
     @sprite = new ReactiveField null
     @pixelCanvas = new ReactiveField null
+    @mesh = new ReactiveField null
     @meshCanvas = new ReactiveField null
     @navigator = new ReactiveField null
     @palette = new ReactiveField null
@@ -38,8 +39,16 @@ class LOI.Assets.MeshEditor extends AM.Component
     @meshData = new ComputedField =>
       return unless meshId = @meshId()
 
+      # Subscribe to the mesh and all its sprites.
       LOI.Assets.Mesh.forId.subscribe meshId
-      LOI.Assets.Mesh.documents.findOne meshId
+      LOI.Assets.Sprite.forMeshId.subscribe meshId
+
+      return unless meshData = LOI.Assets.Mesh.documents.findOne meshId
+
+      # Refresh to embed all sprites.
+      meshData.refresh()
+
+      meshData
 
     @cameraAngleIndex = new ReactiveField 0
     
@@ -47,16 +56,9 @@ class LOI.Assets.MeshEditor extends AM.Component
       return unless meshData = @meshData()
       meshData.cameraAngles?[@cameraAngleIndex()]
 
-    @spriteId = new ComputedField =>
-      return unless cameraAngle = @cameraAngle()
-      cameraAngle.sprite._id
-
     @spriteData = new ComputedField =>
-      return unless spriteId = @spriteId()
+      @cameraAngle()?.sprite
 
-      LOI.Assets.Sprite.forId.subscribe spriteId
-      LOI.Assets.Sprite.documents.findOne spriteId
-      
     @paletteId = new ComputedField =>
       # Minimize reactivity to only palette changes.
       LOI.Assets.Mesh.documents.findOne(@meshId(),
@@ -89,11 +91,18 @@ class LOI.Assets.MeshEditor extends AM.Component
       symmetryXOrigin: @symmetryXOrigin
       gridEnabled: @pixelGridEnabled
 
+    @mesh new LOI.Assets.Engine.Mesh
+      meshData: @meshData
+      sceneManager: => @meshCanvas()?.sceneManager()
+
     @meshCanvas new @constructor.MeshCanvas
       pixelCanvas: @pixelCanvas
       gridEnabled: @planeGridEnabled
       cameraAngle: @cameraAngle
       currentNormal: => @shadingSphere()?.currentNormal()
+      drawComponents: => [
+        mesh()
+      ]
 
     setAssetId = (meshId) =>
       AB.Router.setParameters {meshId}

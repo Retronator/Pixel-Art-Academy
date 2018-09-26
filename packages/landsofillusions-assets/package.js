@@ -121,6 +121,12 @@ Package.onUse(function(api) {
   api.addFile('engine..');
   api.addFile('engine/sprite');
 
+  api.addFile('engine/mesh..');
+  api.addFile('engine/mesh/detectclusters');
+  api.addFile('engine/mesh/computeedges');
+  api.addFile('engine/mesh/cluster');
+  api.addFile('engine/mesh/edge');
+
   api.addFile('engine/audio..');
   api.addFile('engine/audio/node');
   api.addFile('engine/audio/schedulednode');
