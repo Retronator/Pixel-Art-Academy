@@ -28,8 +28,11 @@ class LOI.Assets.Mesh extends AM.Document
   # use the name parameter, because in production the name field has a minimized value.
   @className: 'Mesh'
 
-  constructor: ->
+  refresh: ->
     super
+
+    # Also pull in all the sprites from the database.
+    cameraAngle.sprite?.refresh() for cameraAngle in @cameraAngles
 
   # Subscriptions
   
