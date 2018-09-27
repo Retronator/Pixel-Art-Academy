@@ -9,14 +9,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
     @meshCanvas.autorun (computation) =>
       return unless cameraAngle = @meshCanvas.options.cameraAngle()
 
-      createVector = (vectorData = {}) => new THREE.Vector3 vectorData.x or 0, vectorData.y or 0, vectorData.z or 0
-
-      position = createVector cameraAngle.position
-      target = createVector cameraAngle.target
-      up = createVector cameraAngle.up
-
-      camera.matrix.lookAt position, target, up
-      camera.matrix.setPosition position
+      camera.matrix.copy cameraAngle.worldMatrix
       camera.matrix.decompose camera.position, camera.quaternion, camera.scale
 
       @camera.updated()

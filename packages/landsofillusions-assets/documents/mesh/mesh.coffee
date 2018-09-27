@@ -27,6 +27,13 @@ class LOI.Assets.Mesh extends AM.Document
   # Store the class name of the visual asset by which we can reach the class by querying LOI.Assets. We can't simply
   # use the name parameter, because in production the name field has a minimized value.
   @className: 'Mesh'
+  
+  constructor: ->
+    super
+
+    # Make rich camera angle objects.
+    if @cameraAngles
+      @cameraAngles[index] = new @constructor.CameraAngle data for data, index in @cameraAngles
 
   refresh: ->
     super arguments...

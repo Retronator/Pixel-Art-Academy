@@ -67,6 +67,7 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/replacepixels');
 
   api.addFile('documents/mesh..');
+  api.addFile('documents/mesh/cameraangle');
   api.addServerFile('documents/mesh/subscriptions');
   api.addFile('documents/mesh/methods..');
 
@@ -122,10 +123,13 @@ Package.onUse(function(api) {
   api.addFile('engine/sprite');
 
   api.addFile('engine/mesh..');
-  api.addFile('engine/mesh/detectclusters');
-  api.addFile('engine/mesh/computeedges');
   api.addFile('engine/mesh/cluster');
   api.addFile('engine/mesh/edge');
+  api.addFile('engine/mesh/detectclusters');
+  api.addFile('engine/mesh/computeedges');
+  api.addFile('engine/mesh/computeclusterplanes');
+  api.addFile('engine/mesh/projectclusterpixels');
+  api.addFile('engine/mesh/computeclustermeshes');
 
   api.addFile('engine/audio..');
   api.addFile('engine/audio/node');
@@ -164,6 +168,7 @@ Package.onUse(function(api) {
   // Mesh editor
 
   api.addComponent('mesheditor..');
+  api.addFile('mesheditor/edges');
   api.addUnstyledComponent('mesheditor/cameraangles..');
   api.addUnstyledComponent('mesheditor/meshcanvas..');
   api.addFile('mesheditor/meshcanvas/renderer');
@@ -173,6 +178,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools..');
   api.addFile('mesheditor/tools/pixelgrid');
   api.addFile('mesheditor/tools/planegrid');
+  api.addFile('mesheditor/tools/sourceimage');
 
   // Audio editor
 
