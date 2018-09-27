@@ -27,7 +27,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
       horizontalVerticesArray[i * elementsPerLine + 3] = gridSize
       horizontalVerticesArray[i * elementsPerLine + 4] = x
 
-    geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, 3
+    geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
 
     material = new THREE.LineBasicMaterial color: 0xeeeeee
 

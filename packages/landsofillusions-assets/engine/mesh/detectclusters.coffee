@@ -53,12 +53,15 @@ LOI.Assets.Engine.Mesh.detectClusters = (sprite) ->
           # This pixel matches the cluster pixel so add it to the fringe.
           fringe.push neighborPixel
 
+    # All cluster pixels were added, process cluster data.
+    cluster.process()
+
   # Compute pixel adjacency.
   for pixel in pixels
-    pixel.left = _.find pixels, (testPixel) -> testPixel.x is pixel.x - 1 and pixel.y is testPixel.y
-    pixel.right = _.find pixels, (testPixel) -> testPixel.x is pixel.x + 1 and pixel.y is testPixel.y
-    pixel.up = _.find pixels, (testPixel) -> testPixel.x is pixel.x and pixel.y is testPixel.y - 1
-    pixel.down = _.find pixels, (testPixel) -> testPixel.x is pixel.x and pixel.y is testPixel.y + 1
+    pixel.left = _.find pixels, (testPixel) -> testPixel.x is pixel.x - 1 and testPixel.y is pixel.y
+    pixel.right = _.find pixels, (testPixel) -> testPixel.x is pixel.x + 1 and testPixel.y is pixel.y
+    pixel.up = _.find pixels, (testPixel) -> testPixel.x is pixel.x and testPixel.y is pixel.y - 1
+    pixel.down = _.find pixels, (testPixel) -> testPixel.x is pixel.x and testPixel.y is pixel.y + 1
 
   console.log "Detected clusters", clusters if LOI.Assets.Engine.Mesh.debug
 

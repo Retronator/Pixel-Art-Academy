@@ -11,7 +11,9 @@ class LOI.Assets.MeshEditor extends AM.Component
     super
 
     @sprite = new ReactiveField null
+    @edges = new ReactiveField null
     @pixelCanvas = new ReactiveField null
+    @sourceImageVisible = new ReactiveField true
     @mesh = new ReactiveField null
     @meshCanvas = new ReactiveField null
     @navigator = new ReactiveField null
@@ -79,15 +81,23 @@ class LOI.Assets.MeshEditor extends AM.Component
     @sprite new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
       visualizeNormals: @paintNormals
+      
+    @edges new @constructor.Edges
+      mesh: @mesh
 
     @pixelCanvas new LOI.Assets.Components.PixelCanvas
       initialCameraScale: 8
       activeTool: @activeTool
       lightDirection: @lightDirection
-      drawComponents: => [
-        @sprite()
-        @landmarks()
-      ]
+      drawComponents: =>
+        return [] unless @sourceImageVisible()
+        
+        [
+          @sprite()
+          @landmarks()
+          @edges()
+        ]
+        
       symmetryXOrigin: @symmetryXOrigin
       gridEnabled: @pixelGridEnabled
 
@@ -165,6 +175,7 @@ class LOI.Assets.MeshEditor extends AM.Component
       LOI.Assets.SpriteEditor.Tools.Symmetry
       LOI.Assets.MeshEditor.Tools.PixelGrid
       LOI.Assets.MeshEditor.Tools.PlaneGrid
+      LOI.Assets.MeshEditor.Tools.SourceImage
     ]
 
     tools = for toolClass in toolClasses
