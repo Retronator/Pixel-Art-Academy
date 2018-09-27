@@ -179,6 +179,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools/pixelgrid');
   api.addFile('mesheditor/tools/planegrid');
   api.addFile('mesheditor/tools/sourceimage');
+  api.addFile('mesheditor/tools/movecamera');
 
   // Audio editor
 
