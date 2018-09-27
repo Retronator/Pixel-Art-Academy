@@ -171,6 +171,7 @@ class LOI.Assets.MeshEditor extends AM.Component
       LOI.Assets.SpriteEditor.Tools.Eraser
       LOI.Assets.SpriteEditor.Tools.ColorFill
       LOI.Assets.SpriteEditor.Tools.ColorPicker
+      LOI.Assets.MeshEditor.Tools.MoveCamera
       LOI.Assets.SpriteEditor.Tools.PaintNormals
       LOI.Assets.SpriteEditor.Tools.Symmetry
       LOI.Assets.MeshEditor.Tools.PixelGrid

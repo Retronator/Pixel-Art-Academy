@@ -95,5 +95,11 @@ cursor(type)
     html.scale-3-or-up &
       cursor url('/interface/cursors/3x/zoom-in.png') 21 15, zoom-in
 
+  else if type is move
+    cursor url('/interface/cursors/2x/move.png') 18 18, move
+
+    html.scale-3-or-up &
+      cursor url('/interface/cursors/3x/move.png') 27 27, move
+
   else
     cursor arguments
