@@ -33,13 +33,16 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       originCluster.plane.point = new THREE.Vector3
 
       @constructor.computeClusterPlanes clusters, originCluster, edges, cameraAngle
-      @constructor.projectClusterPixels clusters, cameraAngle
+      @constructor.projectClusterPoints clusters, cameraAngle
       return unless clusterMeshes = @constructor.computeClusterMeshes clusters, edges
 
       # Replace children.
       @remove @children[0] while @children.length
       @add clusterMeshes... if clusterMeshes.length
 
+      for cluster in clusters
+        @add cluster.getPoints()
+      
       for edge in edges when edge.line.point
         edge.generateGeometry cameraAngle
         @add edge
