@@ -128,7 +128,7 @@ Package.onUse(function(api) {
   api.addFile('engine/mesh/detectclusters');
   api.addFile('engine/mesh/computeedges');
   api.addFile('engine/mesh/computeclusterplanes');
-  api.addFile('engine/mesh/projectclusterpixels');
+  api.addFile('engine/mesh/projectclusterpoints');
   api.addFile('engine/mesh/computeclustermeshes');
 
   api.addFile('engine/audio..');
