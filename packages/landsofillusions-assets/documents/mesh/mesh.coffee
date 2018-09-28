@@ -39,7 +39,7 @@ class LOI.Assets.Mesh extends AM.Document
     super arguments...
 
     # Also pull in all the sprites from the database.
-    cameraAngle.sprite?.refresh() for cameraAngle in @cameraAngles
+    cameraAngle.sprite?.refresh() for cameraAngle in @cameraAngles if @cameraAngles
 
   # Subscriptions
   

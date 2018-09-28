@@ -136,7 +136,7 @@ class LOI.Assets.MeshEditor extends AM.Component
       setAssetId: setAssetId
       getPaletteId: @paletteId
       setPaletteId: (paletteId) =>
-        LOI.Assets.Mesh.update @meshId(), $set: palette: _id: paletteId
+        LOI.Assets.Asset.update LOI.Assets.Mesh.className, @meshId(), $set: palette: _id: paletteId
 
     @materials new LOI.Assets.Components.Materials
       assetId: @meshId

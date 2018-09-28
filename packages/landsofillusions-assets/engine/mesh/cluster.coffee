@@ -5,11 +5,13 @@ class LOI.Assets.Engine.Mesh.Cluster
     Pixel: 0
     Edge: 1
     Void: 2
+    Extra: 3
 
   @PointTypeColors: [
     [176 / 255, 60 / 255, 60 / 255]
     [188 / 255, 140 / 255, 76 / 255]
     [108 / 255, 108 / 255, 108 / 255]
+    [160 / 255, 160 / 255, 52 / 255]
   ]
 
   constructor: (@index) ->
@@ -32,6 +34,9 @@ class LOI.Assets.Engine.Mesh.Cluster
     @plane.normal = THREE.Vector3.fromObject @pixels[0].normal
 
   findPixelAtCoordinate: (x, y) ->
+    x = Math.floor x
+    y = Math.floor y
+
     _.find @pixels, (pixel) => pixel.x is x and pixel.y is y
 
   getPoints: ->
@@ -75,7 +80,7 @@ class LOI.Assets.Engine.Mesh.Cluster
     geometry = new THREE.BufferGeometry
     geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
     geometry.addAttribute 'normal', new THREE.BufferAttribute normalsArray, elementsPerVertex
-    geometry.setIndex new THREE.BufferAttribute @indices, 3
+    geometry.setIndex @indices
 
     material = new THREE.MeshBasicMaterial
       color: 0xffffff

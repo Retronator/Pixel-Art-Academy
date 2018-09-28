@@ -90,7 +90,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
       setAssetId: setAssetId
       getPaletteId: @paletteId
       setPaletteId: (paletteId) =>
-        LOI.Assets.Sprite.update @spriteId(), $set: palette: _id: paletteId
+        LOI.Assets.Asset.update LOI.Assets.Sprite.className, @spriteId(), $set: palette: _id: paletteId
 
     @materials new LOI.Assets.Components.Materials
       assetId: @spriteId
