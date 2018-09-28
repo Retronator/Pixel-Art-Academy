@@ -12,6 +12,7 @@ class LOI.Assets.MeshEditor extends AM.Component
 
     @sprite = new ReactiveField null
     @edges = new ReactiveField null
+    @horizon = new ReactiveField null
     @pixelCanvas = new ReactiveField null
     @sourceImageVisible = new ReactiveField true
     @mesh = new ReactiveField null
@@ -34,6 +35,8 @@ class LOI.Assets.MeshEditor extends AM.Component
     
     @pixelGridEnabled = new ReactiveField true
     @planeGridEnabled = new ReactiveField true
+    
+    @currentCluster = new ReactiveField null
 
     @meshId = new ComputedField =>
       AB.Router.getParameter 'meshId'
@@ -85,17 +88,22 @@ class LOI.Assets.MeshEditor extends AM.Component
     @edges new @constructor.Edges
       mesh: @mesh
 
+    @horizon new @constructor.Horizon
+      currentNormal: => @shadingSphere()?.currentNormal()
+      cameraAngle: @cameraAngle
+
     @pixelCanvas new LOI.Assets.Components.PixelCanvas
       initialCameraScale: 8
       activeTool: @activeTool
       lightDirection: @lightDirection
       drawComponents: =>
-        return [] unless @sourceImageVisible()
+        return [] unless @sourceImageVisible() and @spriteData()
         
         [
           @sprite()
           @landmarks()
           @edges()
+          @horizon()
         ]
         
       symmetryXOrigin: @symmetryXOrigin
@@ -109,6 +117,7 @@ class LOI.Assets.MeshEditor extends AM.Component
       pixelCanvas: @pixelCanvas
       gridEnabled: @planeGridEnabled
       cameraAngle: @cameraAngle
+      currentCluster: @currentCluster
       currentNormal: => @shadingSphere()?.currentNormal()
       drawComponents: => [
         mesh()
@@ -136,7 +145,14 @@ class LOI.Assets.MeshEditor extends AM.Component
       setAssetId: setAssetId
       getPaletteId: @paletteId
       setPaletteId: (paletteId) =>
+        # Update mesh palette.
         LOI.Assets.Asset.update LOI.Assets.Mesh.className, @meshId(), $set: palette: _id: paletteId
+
+        # Also update palettes of all sprites.
+        return unless cameraAngles = @meshData()?.cameraAngles
+
+        for cameraAngle in cameraAngles when cameraAngle.sprite
+          LOI.Assets.Asset.update LOI.Assets.Sprite.className, cameraAngle.sprite._id, $set: palette: _id: paletteId
 
     @materials new LOI.Assets.Components.Materials
       assetId: @meshId
@@ -170,13 +186,13 @@ class LOI.Assets.MeshEditor extends AM.Component
       LOI.Assets.SpriteEditor.Tools.Pencil
       LOI.Assets.SpriteEditor.Tools.Eraser
       LOI.Assets.SpriteEditor.Tools.ColorFill
-      LOI.Assets.SpriteEditor.Tools.ColorPicker
-      LOI.Assets.MeshEditor.Tools.MoveCamera
+      @constructor.Tools.ClusterPicker
+      @constructor.Tools.MoveCamera
       LOI.Assets.SpriteEditor.Tools.PaintNormals
       LOI.Assets.SpriteEditor.Tools.Symmetry
-      LOI.Assets.MeshEditor.Tools.PixelGrid
-      LOI.Assets.MeshEditor.Tools.PlaneGrid
-      LOI.Assets.MeshEditor.Tools.SourceImage
+      @constructor.Tools.PixelGrid
+      @constructor.Tools.PlaneGrid
+      @constructor.Tools.SourceImage
     ]
 
     tools = for toolClass in toolClasses
