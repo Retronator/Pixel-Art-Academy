@@ -11,7 +11,8 @@ Package.describe({
 });
 
 Npm.depends({
-  'pngjs': '2.3.0'
+  'pngjs': '2.3.0',
+  'delaunator': '3.0.2'
 });
 
 Package.onUse(function(api) {

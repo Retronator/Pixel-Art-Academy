@@ -1,6 +1,11 @@
 {
   "lockfileVersion": 1,
   "dependencies": {
+    "delaunator": {
+      "version": "3.0.2",
+      "resolved": "https://registry.npmjs.org/delaunator/-/delaunator-3.0.2.tgz",
+      "integrity": "sha512-GNSex8jhF1mcqtNAMYvdZ6Ng7YieYNlbOq2xshyZhLc98P8y5O7Vm6buw4A60wGOd9qvK9RcIMm5qoe4PncAPw=="
+    },
     "pngjs": {
       "version": "2.3.0",
       "resolved": "https://registry.npmjs.org/pngjs/-/pngjs-2.3.0.tgz",

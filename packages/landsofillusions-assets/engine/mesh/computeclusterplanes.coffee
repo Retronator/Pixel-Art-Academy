@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Engine.Mesh.computeClusterPlanes = (clusters, originCluster, edges, cameraAngle) ->
-  console.log "Computing cluster planes", clusters, originCluster, edges, cameraAngle if LOI.Assets.Engine.Mesh.debug
+LOI.Assets.Engine.Mesh.computeClusterPlanes = (originCluster, cameraAngle) ->
+  console.log "Computing cluster planes", originCluster, cameraAngle if LOI.Assets.Engine.Mesh.debug
 
   propagateCluster originCluster, cameraAngle, []
 
