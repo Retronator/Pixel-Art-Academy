@@ -12,6 +12,7 @@ Package.describe({
 
 Npm.depends({
   'pngjs': '2.3.0',
+  'delaunator': '3.0.2',
   'bresenham-zingl': '0.1.1'
 });
 

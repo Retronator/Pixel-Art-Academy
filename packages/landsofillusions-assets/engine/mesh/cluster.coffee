@@ -19,8 +19,11 @@ class LOI.Assets.Engine.Mesh.Cluster
     @plane =
       point: null
       normal: null
+      matrix: null
+      matrixInverse: null
       
     @points = []
+    @indices = []
 
   getPlane: ->
     new THREE.Plane().setFromNormalAndCoplanarPoint @plane.normal, @plane.point
@@ -49,7 +52,33 @@ class LOI.Assets.Engine.Mesh.Cluster
     geometry.addAttribute 'color', new THREE.BufferAttribute colorsArray, elementsPerVertex
 
     material = new THREE.PointsMaterial
-      size: 0.1
+      size: 5
       vertexColors: THREE.VertexColors
+      sizeAttenuation: false
 
     new THREE.Points geometry, material
+
+  getMesh: (wireframe = false) ->
+    elementsPerVertex = 3
+    verticesArray = new Float32Array @points.length * elementsPerVertex
+    normalsArray = new Float32Array @points.length * elementsPerVertex
+
+    for point, index in @points
+      verticesArray[index * elementsPerVertex] = point.vertex.x
+      verticesArray[index * elementsPerVertex + 1] = point.vertex.y
+      verticesArray[index * elementsPerVertex + 2] = point.vertex.z
+
+      normalsArray[index * elementsPerVertex] = @plane.normal.x
+      normalsArray[index * elementsPerVertex + 1] = @plane.normal.y
+      normalsArray[index * elementsPerVertex + 2] = @plane.normal.z
+
+    geometry = new THREE.BufferGeometry
+    geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
+    geometry.addAttribute 'normal', new THREE.BufferAttribute normalsArray, elementsPerVertex
+    geometry.setIndex new THREE.BufferAttribute @indices, 3
+
+    material = new THREE.MeshBasicMaterial
+      color: 0xffffff
+      wireframe: wireframe
+
+    new THREE.Mesh geometry, material
