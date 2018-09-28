@@ -4,19 +4,20 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
   console.log "Projecting cluster points", clusters, cameraAngle if LOI.Assets.Engine.Mesh.debug
   
   pixelDirections = [
-    property: 'up', x: 0, y: -1
+    property: 'up', vector: new THREE.Vector2 0, -1
   ,
-    property: 'down', x: 0, y: 1
+    property: 'down', vector: new THREE.Vector2 0, 1
   ,
-    property: 'left', x: -1, y: 0
+    property: 'left', vector: new THREE.Vector2 -1, 0
   ,
-    property: 'right', x: 1, y: 0
+    property: 'right', vector: new THREE.Vector2 1, 0
   ]
   
   for cluster in clusters
     cluster.points = []
     
     plane = cluster.getPlane()
+    horizon = cameraAngle.getHorizon plane.normal
 
     # Start with all cluster pixels.
     for pixelVertex in cameraAngle.projectPoints cluster.pixels, plane
@@ -31,21 +32,58 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
       for direction in pixelDirections
         continue if pixel[direction.property]
         
-        voidPixels.push
-          x: pixel.x + direction.x
-          y: pixel.y + direction.y
+        distance = cameraAngle.distanceInDirectionToHorizon new THREE.Vector2(pixel.x, pixel.y), direction.vector, horizon
+
+        # Multiply by direction sign since if it's negative we're moving away from the horizon.
+        distance *= (direction.vector.x + direction.vector.y) unless distance is Number.POSITIVE_INFINITY
+
+        # If the pixel is less than half a pixel away from the horizon, we can't produce a valid void pixel.
+        continue if distance <= 0.5
+
+        # Use a factor to bring void point 0.5 pixels or more away from the horizon.
+        factor = Math.min 1, distance - 0.5
+
+        voidPixel =
+          x: pixel.x + direction.vector.x * factor
+          y: pixel.y + direction.vector.y * factor
+
+        voidPixels.push voidPixel
+
+    voidPointsStart = cluster.points.length
 
     for voidVertex in cameraAngle.projectPoints voidPixels, plane
+      # Make sure this is not a duplicate of another void point.
+      duplicate = false
+
+      for voidPointIndex in [voidPointsStart...cluster.points.length]
+        if voidVertex.distanceToSquared(cluster.points[voidPointIndex].vertex) < 1e-10
+          duplicate = true
+          break
+
+      continue if duplicate
+
       cluster.points.push
         vertex: voidVertex
         type: LOI.Assets.Engine.Mesh.Cluster.PointTypes.Void
 
     # Add all edges.
+    edgePointsStart = cluster.points.length
+
     for edge in cluster.edges
       line = edge.getLine3()
 
       for edgeVertex in cameraAngle.projectPoints edge.vertices, plane, -0.5, -0.5
         line.closestPointToPoint edgeVertex, false, edgeVertex
+
+        # Make sure this is not a duplicate of another edge point.
+        duplicate = false
+
+        for edgePointIndex in [edgePointsStart...cluster.points.length]
+          if edgeVertex.distanceToSquared(cluster.points[edgePointIndex].vertex) < 1e-10
+            duplicate = true
+            break
+
+        continue if duplicate
 
         cluster.points.push
           vertex: edgeVertex
@@ -69,7 +107,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
     planeVector = new THREE.Vector3
 
     for point in cluster.points
-      planeVector.copy(point.vertex).applyMatrix4 cluster.plane.matrix
+      planeVector.copy(point.vertex).applyMatrix4 cluster.plane.matrixInverse
 
       # Strip the z component.
       point.vertexPlane = new THREE.Vector2 planeVector.x, planeVector.y

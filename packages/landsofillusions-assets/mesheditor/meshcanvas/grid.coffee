@@ -14,6 +14,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
     verticesArray = new Float32Array linesCount * 2 * elementsPerLine
     horizontalVerticesArray = verticesArray.subarray linesCount * elementsPerLine
 
+    colorsArray = new Float32Array linesCount * 2 * elementsPerLine
+    horizontalColorsArray = colorsArray.subarray linesCount * elementsPerLine
+
     for i in [0...linesCount]
       x = -gridSize + i
 
@@ -27,19 +30,26 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
       horizontalVerticesArray[i * elementsPerLine + 3] = gridSize
       horizontalVerticesArray[i * elementsPerLine + 4] = x
 
-    geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
+      shade = if x then 0.5 else 1
 
-    material = new THREE.LineBasicMaterial color: 0xeeeeee
+      for offset in [0..5]
+        colorsArray[i * elementsPerLine + offset] = shade
+        horizontalColorsArray[i * elementsPerLine + offset] = shade
+
+    geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
+    geometry.addAttribute 'color', new THREE.BufferAttribute colorsArray, elementsPerVertex
+
+    material = new THREE.LineBasicMaterial vertexColors: THREE.VertexColors
 
     super geometry, material
 
     @meshCanvas.sceneManager().scene().add @
 
-    if @gridEnabled
-      # Reactively change visibility of the grid.
-      @meshCanvas.autorun =>
-        @visible = @gridEnabled()
-        @meshCanvas.sceneManager().scene.updated()
+    # Reactively change visibility of the grid.
+    @meshCanvas.autorun =>
+      @visible = @meshCanvas.options.currentCluster()?
+      @visible and= @gridEnabled() if @gridEnabled
+      @meshCanvas.sceneManager().scene.updated()
 
     # Match orientation to normal.
     zero = new THREE.Vector3
@@ -47,13 +57,16 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
     right = new THREE.Vector3 1, 0, 0
 
     @meshCanvas.autorun (computation) =>
-      return unless currentNormal = @meshCanvas.options.currentNormal()
+      return unless cluster = @meshCanvas.options.currentCluster()
+      plane = cluster.getPlane()
+      
+      planePoint = new THREE.Vector3()
+      plane.projectPoint zero, planePoint
 
       # Note: We use right to align the grid at the poles since
       # there the normal and up get very close and unpredictable.
-      @matrix.lookAt zero, currentNormal, if currentNormal.y > 0.99 then right else up
+      @matrix.lookAt zero, plane.normal, if plane.normal.y > 0.99 then right else up
+      @matrix.setPosition planePoint
       @matrix.decompose @position, @quaternion, @scale
 
       @meshCanvas.sceneManager().scene.updated()
-
-#@rotation.set Math.PI / 2, 0, 0

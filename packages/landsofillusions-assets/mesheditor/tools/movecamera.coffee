@@ -53,8 +53,12 @@ class LOI.Assets.MeshEditor.Tools.MoveCamera extends LOI.Assets.Tools.Tool
     $(document).on "keydown.landsofillusions-assets-mesheditor-tools-movecamera", (event) =>
       @_rotationMode = true if event.which is AC.Keys.shift
 
+      true
+
     $(document).on "keyup.landsofillusions-assets-mesheditor-tools-movecamera", (event) =>
       @_rotationMode = false if event.which is AC.Keys.shift
+
+      true
 
   onDeactivated: ->
     $(document).off '.landsofillusions-assets-mesheditor-tools-movecamera'

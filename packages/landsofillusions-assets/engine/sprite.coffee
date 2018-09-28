@@ -5,7 +5,7 @@ class LOI.Assets.Engine.Sprite
     @ready = new ComputedField =>
       return unless spriteData = @options.spriteData()
       return unless spriteData.layers?.length and spriteData.bounds
-      return unless spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette._id
+      return unless spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette?._id
 
       true
 

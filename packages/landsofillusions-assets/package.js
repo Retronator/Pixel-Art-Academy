@@ -135,6 +135,7 @@ Package.onUse(function(api) {
 
   api.addComponent('mesheditor..');
   api.addFile('mesheditor/edges');
+  api.addFile('mesheditor/horizon');
   api.addUnstyledComponent('mesheditor/cameraangles..');
   api.addUnstyledComponent('mesheditor/meshcanvas..');
   api.addFile('mesheditor/meshcanvas/renderer');
@@ -146,5 +147,6 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools/planegrid');
   api.addFile('mesheditor/tools/sourceimage');
   api.addFile('mesheditor/tools/movecamera');
+  api.addFile('mesheditor/tools/clusterpicker');
 
 });

@@ -66,6 +66,8 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
 
       LOI.Assets.Palette.all.subscribe @
 
+      @assetInfo = @ancestorComponentOfType LOI.Assets.Components.AssetInfo
+
     options: ->
       options = for palette in LOI.Assets.Palette.documents.find().fetch()
         name: palette.name
@@ -79,20 +81,7 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
       options
 
     load: ->
-      assetData = @data()
-      assetData.palette?._id
+      @assetInfo.options.getPaletteId()
 
     save: (value) ->
-      assetData = @data()
-
-      if value
-        update =
-          $set:
-            palette:
-              _id: value
-
-      else
-        update = $unset: palette: true
-
-      assetInfo = @ancestorComponentOfType LOI.Assets.Components.AssetInfo
-      assetInfo.options.documentClass.update assetData._id, update
+      @assetInfo.options.setPaletteId value or null
