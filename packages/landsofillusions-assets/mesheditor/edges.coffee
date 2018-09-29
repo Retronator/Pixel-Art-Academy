@@ -11,11 +11,8 @@ class LOI.Assets.MeshEditor.Edges
     context.beginPath()
 
     for edge in edges
-      for vertex, index in edge.vertices
-        if index
-          context.lineTo vertex.x, vertex.y
-
-        else
-          context.moveTo vertex.x, vertex.y
+      for segment in edge.segments
+        context.moveTo segment[0].x, segment[0].y
+        context.lineTo segment[1].x, segment[1].y
 
     context.stroke()

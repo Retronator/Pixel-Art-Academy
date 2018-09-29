@@ -75,6 +75,46 @@ LOI.Assets.Engine.Mesh.computeClusterMeshes = (clusters) ->
           extraPointIndex = getExtraPointIndex voidPointIndex, pixelPointIndex, extraPoints, cluster
           indices[voidTriangleVertexIndex] = extraPointIndex
 
+      else if edgeCount is 3
+        # We have a triangle between just edge vertices. Check if it is inside or outside the cluster.
+        edgeCombinations = [
+          fromIndex: indices[0], toIndex: indices[1]
+        ,
+          fromIndex: indices[1], toIndex: indices[2]
+        ,
+          fromIndex: indices[2], toIndex: indices[0]
+        ]
+
+        triangleIsOutside = false
+
+        for edgeCombination in edgeCombinations
+          startPoint = cluster.points[edgeCombination.fromIndex]
+          endPoint = cluster.points[edgeCombination.toIndex]
+          continue unless startPoint.edge is endPoint.edge
+
+          # Find segment from start point that also includes the end point.
+          endSegmentInfo = null
+
+          for startSegmentInfo in startPoint.segments
+            endSegmentInfo = _.find endPoint.segments, (segment) => segment.edge is startSegmentInfo.edge and segment.index is startSegmentInfo.index
+            break
+
+          # If we haven't found a segment between these two points, go on to other edge combinations.
+          continue unless endSegmentInfo
+
+          # We found the segment spanning these points. See which direction they're going.
+          direction = endSegmentInfo.positionInSegment - startSegmentInfo.positionInSegment
+
+          # Edge segments are defined so that cluster A is on the inside of a clockwise circle.
+          # First we need to switch direction in case we are not cluster A of the edge.
+          direction *= -1 unless startSegmentInfo.edge.clusterA is cluster
+
+          # Delaunay gives us counter-clockwise triangles, so if direction is positive,
+          # we're on the outside of the cluster and the triangle should be discarded.
+          triangleIsOutside = direction > 0
+
+        continue if triangleIsOutside
+
       # We created required indices so add them to the cluster.
       cluster.indices.push indices...
 
