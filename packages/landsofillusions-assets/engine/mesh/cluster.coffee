@@ -63,7 +63,7 @@ class LOI.Assets.Engine.Mesh.Cluster
 
     new THREE.Points geometry, material
 
-  getMesh: (wireframe = false) ->
+  getMesh: (options = {}) ->
     elementsPerVertex = 3
     verticesArray = new Float32Array @points.length * elementsPerVertex
     normalsArray = new Float32Array @points.length * elementsPerVertex
@@ -82,8 +82,62 @@ class LOI.Assets.Engine.Mesh.Cluster
     geometry.addAttribute 'normal', new THREE.BufferAttribute normalsArray, elementsPerVertex
     geometry.setIndex @indices
 
-    material = new THREE.MeshBasicMaterial
-      color: 0xffffff
-      wireframe: wireframe
+    # Determine the color.
+    meshData = options.meshData()
+    palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
+    pixel = @pixels[0]
+    materialsData = options.materialsData?()
+    visualizeNormals = options.visualizeNormals?()
 
-    new THREE.Mesh geometry, material
+    if visualizeNormals
+      # Visualized normals mode.
+      if pixel.normal
+        normal = new THREE.Vector3 pixel.normal.x, pixel.normal.y, pixel.normal.z
+        backward = new THREE.Vector3 0, 0, 1
+
+        horizontalAngle = Math.atan2(normal.y, normal.x) + Math.PI
+        verticalAngle = normal.angleTo backward
+
+        hue = horizontalAngle / (2 * Math.PI)
+        saturation = verticalAngle / (Math.PI / 2)
+
+        directColor = new THREE.Color().setHSL hue, saturation, 0.5
+
+      else
+        directColor = r: 0, g: 0, b: 0
+
+    else
+      paletteColor = null
+
+      # Normal color mode.
+      if pixel.materialIndex?
+        material = options.meshData.materials[pixel.materialIndex]
+
+        paletteColor = _.clone material
+
+        # Override material data if we have it present.
+        if materialData = materialsData?[material.name]
+          for key, value of materialData
+            paletteColor[key] = value if value?
+
+      else if pixel.paletteColor
+        paletteColor = pixel.paletteColor
+
+      else if pixel.directColor
+        directColor = pixel.directColor
+
+      if paletteColor
+        shades = palette.ramps[paletteColor.ramp].shades
+        shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
+        directColor = shades[shadeIndex]
+
+    material = new THREE.MeshLambertMaterial
+      color: THREE.Color.fromObject directColor
+      wireframe: options.debug()
+
+    mesh = new THREE.Mesh geometry, material
+
+    mesh.castShadow = true
+    mesh.receiveShadow = true
+
+    mesh

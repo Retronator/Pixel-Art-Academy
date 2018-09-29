@@ -2,13 +2,23 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
-  constructor: (@meshCanvas, @options = {}) ->
+  constructor: (@meshCanvas) ->
     @_camera = new THREE.Camera
     @camera = new AE.ReactiveWrapper @_camera
 
     @_position = new THREE.Vector3
     @_target = new THREE.Vector3
     @_up = new THREE.Vector3
+
+    # Turn on and off the debug layer.
+    @meshCanvas.autorun (computation) =>
+      if @meshCanvas.options.debug()
+        @_camera.layers.enable 2
+
+      else
+        @_camera.layers.disable 2
+
+      @camera.updated()
 
     # When camera angle changes, match its values.
     @meshCanvas.autorun (computation) =>
