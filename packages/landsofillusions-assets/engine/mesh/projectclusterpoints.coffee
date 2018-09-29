@@ -19,8 +19,30 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
     plane = cluster.getPlane()
     horizon = cameraAngle.getHorizon plane.normal
 
-    # Start with all cluster pixels.
-    for pixelVertex in cameraAngle.projectPoints cluster.pixels, plane
+    # Start with cluster pixels.
+    pixels = []
+
+    for pixel in cluster.pixels
+      pixels.push pixel
+
+      # Also add connections between neighbors at half the distance, but only if it's an edge pixel.
+      allDirectionsAreSameCluster = true
+
+      for direction in pixelDirections
+        unless pixel[direction.property]?.cluster is cluster
+          allDirectionsAreSameCluster = false
+          break
+
+      continue if allDirectionsAreSameCluster
+
+      for direction in pixelDirections
+        continue unless pixel[direction.property]?.cluster is cluster
+
+        pixels.push
+          x: pixel.x + direction.vector.x * 0.5
+          y: pixel.y + direction.vector.y * 0.5
+
+    for pixelVertex in cameraAngle.projectPoints pixels, plane
       cluster.points.push
         vertex: pixelVertex
         type: LOI.Assets.Engine.Mesh.Cluster.PointTypes.Pixel
@@ -43,11 +65,9 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
         # Use a factor to bring void point 0.5 pixels or more away from the horizon.
         factor = Math.min 1, distance - 0.5
 
-        voidPixel =
+        voidPixels.push
           x: pixel.x + direction.vector.x * factor
           y: pixel.y + direction.vector.y * factor
-
-        voidPixels.push voidPixel
 
     voidPointsStart = cluster.points.length
 
@@ -72,7 +92,20 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
     for edge in cluster.edges
       line = edge.getLine3()
 
-      for edgeVertex in cameraAngle.projectPoints edge.vertices, plane, -0.5, -0.5
+      # Create edge vertices at double the density.
+      edgeVertices = []
+
+      for edgeVertex, index in edge.vertices
+        edgeVertices.push edgeVertex
+
+        if index < edge.vertices.length - 1
+          nextVertex = edge.vertices[index + 1]
+
+          edgeVertices.push
+            x: (edgeVertex.x + nextVertex.x) / 2
+            y: (edgeVertex.y + nextVertex.y) / 2
+
+      for edgeVertex in cameraAngle.projectPoints edgeVertices, plane, -0.5, -0.5
         line.closestPointToPoint edgeVertex, false, edgeVertex
 
         # Make sure this is not a duplicate of another edge point.
