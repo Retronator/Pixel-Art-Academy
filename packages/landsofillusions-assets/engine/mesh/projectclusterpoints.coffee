@@ -95,32 +95,39 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
       # Create edge vertices at double the density.
       edgeVertices = []
 
-      for edgeVertex, index in edge.vertices
-        edgeVertices.push edgeVertex
+      for edgeSegment in edge.segments
+        edgeVertices.push edgeSegment[0]
 
-        if index < edge.vertices.length - 1
-          nextVertex = edge.vertices[index + 1]
+        edgeVertices.push
+          x: (edgeSegment[0].x + edgeSegment[1].x) / 2
+          y: (edgeSegment[0].y + edgeSegment[1].y) / 2
 
-          edgeVertices.push
-            x: (edgeVertex.x + nextVertex.x) / 2
-            y: (edgeVertex.y + nextVertex.y) / 2
+        edgeVertices.push edgeSegment[1]
 
-      for edgeVertex in cameraAngle.projectPoints edgeVertices, plane, -0.5, -0.5
+      for edgeVertex, index in cameraAngle.projectPoints edgeVertices, plane, -0.5, -0.5
+        segmentIndex = Math.floor index / 3
+        positionInSegment = index % 3
+
         line.closestPointToPoint edgeVertex, false, edgeVertex
 
-        # Make sure this is not a duplicate of another edge point.
-        duplicate = false
+        # See if this is a duplicate of another edge point.
+        duplicate = null
 
         for edgePointIndex in [edgePointsStart...cluster.points.length]
-          if edgeVertex.distanceToSquared(cluster.points[edgePointIndex].vertex) < 1e-10
-            duplicate = true
+          edgePoint = cluster.points[edgePointIndex]
+          if edgeVertex.distanceToSquared(edgePoint.vertex) < 1e-10
+            duplicate = edgePoint
             break
 
-        continue if duplicate
+        if duplicate
+          # We have a duplicate so just notify that this segment starts there.
+          duplicate.segments.push {index: segmentIndex, positionInSegment, edge}
+          continue
 
         cluster.points.push
           vertex: edgeVertex
           type: LOI.Assets.Engine.Mesh.Cluster.PointTypes.Edge
+          segments: [{index: segmentIndex, positionInSegment, edge}]
 
     # Create the base of plane space.
     plane = new THREE.Plane cluster.plane.normal, 0
