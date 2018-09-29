@@ -18,9 +18,6 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
 
     # Generate cluster meshes.
     Tracker.autorun (computation) =>
-      # Clean up previous children.
-      @remove @children[0] while @children.length
-
       return unless meshData = @options.meshData()
       return unless cameraAngle = meshData.cameraAngles?[0]
       return unless cameraAngle.sprite
@@ -51,16 +48,34 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
         cluster.plane.point = new THREE.Vector3
         @constructor.computeClusterPlanes cluster, cameraAngle
 
+      edge.generateGeometry cameraAngle for edge in edges when edge.line.point
+
       @constructor.projectClusterPoints clusters, cameraAngle
       @constructor.computeClusterMeshes clusters
 
+    # Update scene.
+    Tracker.autorun (computation) =>
+      return unless meshData = @options.meshData()
+      return unless cameraAngle = meshData.cameraAngles?[0]
+
+      # Clean up previous children.
+      @remove @children[0] while @children.length
+
+      clusters = @clusters()
+      edges = @edges()
+
+      return unless clusters?.length and edges
+
       # Add new children.
       for cluster in clusters
-        @add cluster.getMesh true
-        @add cluster.getPoints()
+        @add cluster.getMesh @options
+
+        points = cluster.getPoints()
+        points.layers.set 2
+        @add points
       
       for edge in edges when edge.line.point
-        edge.generateGeometry cameraAngle
+        edge.layers.set 2
         @add edge
 
       @options.sceneManager().scene.updated()

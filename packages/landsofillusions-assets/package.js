@@ -183,6 +183,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools/sourceimage');
   api.addFile('mesheditor/tools/movecamera');
   api.addFile('mesheditor/tools/clusterpicker');
+  api.addFile('mesheditor/tools/debug');
 
   // Audio editor
 

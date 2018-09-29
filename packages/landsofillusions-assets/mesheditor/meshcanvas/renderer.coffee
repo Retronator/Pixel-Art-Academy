@@ -8,6 +8,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       canvas: @meshRenderer.canvas()
       context: @meshRenderer.context()
 
+    @renderer.shadowMap.enabled = true
+    @renderer.shadowMap.type = THREE.BasicShadowMap
+
     @renderer.setClearColor new THREE.Color 0x565656
     @renderer.autoClearColor = false
 

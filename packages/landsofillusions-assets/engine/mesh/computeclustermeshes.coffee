@@ -19,15 +19,17 @@ LOI.Assets.Engine.Mesh.computeClusterMeshes = (clusters) ->
     for triangle in [0...delaunay.triangles.length / 3]
       # Only add triangles that include at least one pixel.
       voidCount = 0
+      edgeCount = 0
       pixelCount = 0
       
       for pointOffset in [0..2]
         pointIndex = delaunay.triangles[triangle * 3 + pointOffset]
         switch cluster.points[pointIndex].type
           when PointTypes.Void then voidCount++
+          when PointTypes.Edge then edgeCount++
           when PointTypes.Pixel then pixelCount++
 
-      continue unless pixelCount
+      continue unless pixelCount or edgeCount is 3
       
       indices = (delaunay.triangles[triangle * 3 + offset] for offset in [0..2])
 

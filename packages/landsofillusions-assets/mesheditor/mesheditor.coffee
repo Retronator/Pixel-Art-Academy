@@ -14,7 +14,6 @@ class LOI.Assets.MeshEditor extends AM.Component
     @edges = new ReactiveField null
     @horizon = new ReactiveField null
     @pixelCanvas = new ReactiveField null
-    @sourceImageVisible = new ReactiveField true
     @mesh = new ReactiveField null
     @meshCanvas = new ReactiveField null
     @navigator = new ReactiveField null
@@ -35,7 +34,9 @@ class LOI.Assets.MeshEditor extends AM.Component
     
     @pixelGridEnabled = new ReactiveField true
     @planeGridEnabled = new ReactiveField true
-    
+    @sourceImageVisible = new ReactiveField false
+    @debug = new ReactiveField false
+
     @currentCluster = new ReactiveField null
 
     @meshId = new ComputedField =>
@@ -111,17 +112,21 @@ class LOI.Assets.MeshEditor extends AM.Component
 
     @mesh new LOI.Assets.Engine.Mesh
       meshData: @meshData
+      visualizeNormals: @paintNormals
       sceneManager: => @meshCanvas()?.sceneManager()
+      debug: @debug
 
     @meshCanvas new @constructor.MeshCanvas
       pixelCanvas: @pixelCanvas
       gridEnabled: @planeGridEnabled
       cameraAngle: @cameraAngle
+      lightDirection: @lightDirection
       currentCluster: @currentCluster
       currentNormal: => @shadingSphere()?.currentNormal()
       drawComponents: => [
         mesh()
       ]
+      debug: @debug
 
     setAssetId = (meshId) =>
       AB.Router.setParameters {meshId}
@@ -193,6 +198,7 @@ class LOI.Assets.MeshEditor extends AM.Component
       @constructor.Tools.PixelGrid
       @constructor.Tools.PlaneGrid
       @constructor.Tools.SourceImage
+      @constructor.Tools.Debug
     ]
 
     tools = for toolClass in toolClasses
