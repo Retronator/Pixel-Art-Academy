@@ -43,23 +43,29 @@ varying vec3 normalEye;
 void main()	{
   vec3 sourceColor = shades[#{@options.shadeIndex}];
 
-  // Shade color based on the normal.
-  float lightIntensity = 0.0;
+  // Accumulate directional lights.
+  float totalLightIntensity = 0.0;
 
   DirectionalLight directionalLight;
+  float lightIntensity;
 
   for (int i = 0; i < NUM_DIR_LIGHTS; i++) {
     directionalLight = directionalLights[i];
 
     // Shade using Lambert cosine law.
-    lightIntensity += dot(directionalLight.direction, normalEye);
+    lightIntensity = dot(directionalLight.direction, normalEye);
 
     // Apply shadow map.
     lightIntensity *= getShadow(directionalShadowMap[i], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[0]);
+
+    // Add to total intensity.
+    totalLightIntensity += lightIntensity;
   }
 
-  float shadeFactor = ambientLightColor.r + 0.6 * clamp(lightIntensity, 0.0, 1.0);
+  // Shade from ambient to full light based on intensity.
+  float shadeFactor = mix(ambientLightColor.r, 1.0, lightIntensity);
 
+  // Dim the color of the cluster by the shade factor.
   vec3 shadedColor = sourceColor * shadeFactor;
 
   // Find the nearest color from the palette to represent the shaded color.
@@ -84,6 +90,7 @@ void main()	{
     }
   }
 
+  // Color the pixel with the best match from the palette.
   gl_FragColor = vec4(bestColor, 1);
 }
 """
