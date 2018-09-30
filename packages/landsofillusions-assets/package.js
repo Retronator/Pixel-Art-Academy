@@ -117,6 +117,7 @@ Package.onUse(function(api) {
   api.addFile('engine/mesh/computeclusterplanes');
   api.addFile('engine/mesh/projectclusterpoints');
   api.addFile('engine/mesh/computeclustermeshes');
+  api.addFile('engine/mesh/rampmaterial');
 
   // Sprite editor
 
