@@ -89,6 +89,11 @@ class LOI.Assets.Engine.Mesh.Cluster
     materialsData = options.materialsData?()
     visualizeNormals = options.visualizeNormals?()
 
+    material = null
+    
+    materialOptions =
+      wireframe: options.debug()
+
     if visualizeNormals
       # Visualized normals mode.
       if pixel.normal
@@ -105,6 +110,9 @@ class LOI.Assets.Engine.Mesh.Cluster
 
       else
         directColor = r: 0, g: 0, b: 0
+
+      material = new THREE.MeshBasicMaterial _.extend materialOptions,
+        color: THREE.Color.fromObject directColor
 
     else
       paletteColor = null
@@ -123,17 +131,14 @@ class LOI.Assets.Engine.Mesh.Cluster
       else if pixel.paletteColor
         paletteColor = pixel.paletteColor
 
-      else if pixel.directColor
-        directColor = pixel.directColor
-
       if paletteColor
         shades = palette.ramps[paletteColor.ramp].shades
         shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
-        directColor = shades[shadeIndex]
-
-    material = new THREE.MeshLambertMaterial
-      color: THREE.Color.fromObject directColor
-      wireframe: options.debug()
+        material = new LOI.Assets.Engine.Mesh.RampMaterial _.extend materialOptions, {shades, shadeIndex}
+        
+      else
+        material = new THREE.MeshLambertMaterial _.extend materialOptions,
+          color: THREE.Color.fromObject pixel.directColor
 
     mesh = new THREE.Mesh geometry, material
 
