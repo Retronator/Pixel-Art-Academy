@@ -3,22 +3,24 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
   constructor: (@meshCanvas) ->
+    # Main camera is used to render the scene in full resolution.
     @_camera = new THREE.Camera
-    @camera = new AE.ReactiveWrapper @_camera
+
+    # Render target camera is the same as main, but slightly bigger viewport rounded to whole pixels.
+    @_renderTargetCamera = new THREE.Camera
+    @_renderTargetCamera.layers.set 0
+
+    # Picture camera is used to render the render target to the screen.
+    @_pictureCamera = new THREE.OrthographicCamera
+
+    @camera = new AE.ReactiveWrapper
+      main: @_camera
+      renderTarget: @_renderTargetCamera
+      picture: @_pictureCamera
 
     @_position = new THREE.Vector3
     @_target = new THREE.Vector3
     @_up = new THREE.Vector3
-
-    # Turn on and off the debug layer.
-    @meshCanvas.autorun (computation) =>
-      if @meshCanvas.options.debug()
-        @_camera.layers.enable 2
-
-      else
-        @_camera.layers.disable 2
-
-      @camera.updated()
 
     # When camera angle changes, match its values.
     @meshCanvas.autorun (computation) =>
@@ -31,31 +33,48 @@ class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
       @_updateCamera()
 
     @meshCanvas.autorun (computation) =>
-      return unless viewportBounds = @meshCanvas.options.pixelCanvas()?.camera()?.viewportBounds
-      return unless cameraAngle = @meshCanvas.options.cameraAngle()
-      return unless pixelSize = cameraAngle.pixelSize
+      return unless viewportBounds = @meshCanvas.options.pixelCanvas()?.camera()?.viewportBounds?.toObject()
+      @_updateProjectionMatrix viewportBounds, @_camera
 
-      # Note: We offset bounds by half a pixel because we want to look at the center of the pixel.
-      left = (viewportBounds.left() - 0.5) * pixelSize
-      right = (viewportBounds.right() - 0.5) * pixelSize
-      # Note: We want the 3D Y direction to be up, so we need to reverse it (it goes down in screen space).
-      top = -(viewportBounds.top() - 0.5) * pixelSize
-      bottom = -(viewportBounds.bottom() - 0.5) * pixelSize
-      near = pixelSize
-      far = 1000
+      renderTargetViewportBounds =
+        left: Math.floor viewportBounds.left
+        right: Math.ceil viewportBounds.right
+        top: Math.floor viewportBounds.top
+        bottom: Math.ceil viewportBounds.bottom
 
-      if picturePlaneDistance = cameraAngle.picturePlaneDistance
-        # We have a perspective projection.
-        near *= picturePlaneDistance
-        @_camera.projectionMatrix.makePerspective left, right, top, bottom, near, far
+      @_updateProjectionMatrix renderTargetViewportBounds, @_renderTargetCamera
 
-      else
-        # We have an orthographic projection.
-        @_camera.projectionMatrix.makeOrthographic left, right, top, bottom, near, far
-
-      @_camera.projectionMatrixInverse.getInverse @_camera.projectionMatrix
+      @_pictureCamera.left = viewportBounds.left
+      @_pictureCamera.right = viewportBounds.right
+      @_pictureCamera.top = viewportBounds.top
+      @_pictureCamera.bottom = viewportBounds.bottom
+      @_pictureCamera.updateProjectionMatrix()
 
       @camera.updated()
+
+  _updateProjectionMatrix: (viewportBounds, _camera) ->
+    return unless cameraAngle = @meshCanvas.options.cameraAngle()
+    return unless pixelSize = cameraAngle.pixelSize
+
+    # Note: We offset bounds by half a pixel because we want to look at the center of the pixel.
+    left = (viewportBounds.left - 0.5) * pixelSize
+    right = (viewportBounds.right - 0.5) * pixelSize
+    # Note: We want the 3D Y direction to be up, so we need to reverse it (it goes down in screen space).
+    top = -(viewportBounds.top - 0.5) * pixelSize
+    bottom = -(viewportBounds.bottom - 0.5) * pixelSize
+    near = pixelSize
+    far = 1000
+
+    if picturePlaneDistance = cameraAngle.picturePlaneDistance
+      # We have a perspective projection.
+      near *= picturePlaneDistance
+      _camera.projectionMatrix.makePerspective left, right, top, bottom, near, far
+
+    else
+      # We have an orthographic projection.
+      _camera.projectionMatrix.makeOrthographic left, right, top, bottom, near, far
+
+    _camera.projectionMatrixInverse.getInverse _camera.projectionMatrix
 
   _setVector: (vector, vectorData = {}) ->
     vector[field] = vectorData[field] or 0 for field in ['x', 'y', 'z']
@@ -64,6 +83,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
     @_camera.matrix.lookAt @_position, @_target, @_up
     @_camera.matrix.setPosition @_position
     @_camera.matrix.decompose @_camera.position, @_camera.quaternion, @_camera.scale
+
+    @_renderTargetCamera.matrix.copy @_camera.matrix
+    @_renderTargetCamera.matrix.decompose @_renderTargetCamera.position, @_renderTargetCamera.quaternion, @_renderTargetCamera.scale
 
     @camera.updated()
 

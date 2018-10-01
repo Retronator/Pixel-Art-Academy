@@ -4,11 +4,8 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.MeshCanvas.SceneManager
   constructor: (@meshCanvas) ->
-    @scene = new AE.ReactiveWrapper null
-
-    # Initialize components.
     scene = new THREE.Scene()
-    @scene scene
+    @scene = new AE.ReactiveWrapper scene
 
     ambientLight = new THREE.AmbientLight 0xffffff, 0.4
     scene.add ambientLight
@@ -29,7 +26,52 @@ class LOI.Assets.MeshEditor.MeshCanvas.SceneManager
     
     scene.add directionalLight
 
-    # Move light around
+    # Move light around.
     @meshCanvas.autorun (computation) =>
       directionalLight.position.copy @meshCanvas.options.lightDirection().clone().multiplyScalar -100
       @scene.updated()
+
+    # Picture scene.
+    pictureScene = new THREE.Scene()
+    @pictureScene = new AE.ReactiveWrapper pictureScene
+
+    @pictureRenderTarget = new THREE.WebGLRenderTarget 16, 16,
+      minFilter: THREE.NearestFilter
+      magFilter: THREE.NearestFilter
+
+    pictureMaterial = new THREE.MeshBasicMaterial
+      map: @pictureRenderTarget.texture
+      depthWrite: false
+      
+    pictureGeometry = new THREE.PlaneBufferGeometry
+
+    @picture = new THREE.Mesh pictureGeometry, pictureMaterial
+    pictureScene.add @picture
+
+    # Position picture to match source image.
+    @meshCanvas.autorun (computation) =>
+      return unless viewportBounds = @meshCanvas.options.pixelCanvas()?.camera()?.viewportBounds?.toObject()
+      return unless viewportBounds.width
+      return unless cameraAngle = @meshCanvas.options.cameraAngle()
+
+      topLeft =
+        x: Math.floor viewportBounds.left
+        y: Math.floor viewportBounds.top
+
+      bottomRight =
+        x: Math.ceil viewportBounds.right
+        y: Math.ceil viewportBounds.bottom
+
+      width = bottomRight.x - topLeft.x
+      height = bottomRight.y - topLeft.y
+
+      @pictureRenderTarget.setSize width, height
+
+      @picture.scale.x = width
+      @picture.scale.y = -height
+      @picture.scale.z = -1
+      @picture.position.x = topLeft.x + width / 2
+      @picture.position.y = topLeft.y + height / 2
+      @picture.position.z = -1
+
+      @pictureScene.updated()
