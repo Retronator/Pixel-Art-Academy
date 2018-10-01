@@ -134,8 +134,14 @@ class LOI.Assets.Engine.Mesh.Cluster
       if paletteColor
         shades = palette.ramps[paletteColor.ramp].shades
         shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
-        material = new LOI.Assets.Engine.Mesh.RampMaterial _.extend materialOptions, {shades, shadeIndex}
-        
+
+        if materialOptions.wireframe
+          material = new THREE.MeshBasicMaterial _.extend materialOptions,
+            color: THREE.Color.fromObject shades[paletteColor.shade]
+
+        else
+          material = new LOI.Assets.Engine.Mesh.RampMaterial _.extend materialOptions, {shades, shadeIndex}
+
       else
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
           color: THREE.Color.fromObject pixel.directColor

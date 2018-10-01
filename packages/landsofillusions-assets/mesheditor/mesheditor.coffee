@@ -35,6 +35,7 @@ class LOI.Assets.MeshEditor extends AM.Component
     @pixelGridEnabled = new ReactiveField true
     @planeGridEnabled = new ReactiveField true
     @sourceImageVisible = new ReactiveField false
+    @pixelImageVisible = new ReactiveField true
     @debug = new ReactiveField false
 
     @currentCluster = new ReactiveField null
@@ -123,9 +124,7 @@ class LOI.Assets.MeshEditor extends AM.Component
       lightDirection: @lightDirection
       currentCluster: @currentCluster
       currentNormal: => @shadingSphere()?.currentNormal()
-      drawComponents: => [
-        mesh()
-      ]
+      drawPixelImage: @pixelImageVisible
       debug: @debug
 
     setAssetId = (meshId) =>
@@ -198,6 +197,7 @@ class LOI.Assets.MeshEditor extends AM.Component
       @constructor.Tools.PixelGrid
       @constructor.Tools.PlaneGrid
       @constructor.Tools.SourceImage
+      @constructor.Tools.PixelImage
       @constructor.Tools.Debug
     ]
 
