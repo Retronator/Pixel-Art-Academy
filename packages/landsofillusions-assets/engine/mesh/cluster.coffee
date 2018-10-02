@@ -39,18 +39,29 @@ class LOI.Assets.Engine.Mesh.Cluster
 
     _.find @pixels, (pixel) => pixel.x is x and pixel.y is y
 
-  getPoints: ->
+  getPoints: (options) ->
     elementsPerVertex = 3
     verticesArray = new Float32Array @points.length * elementsPerVertex
     colorsArray = new Float32Array @points.length * elementsPerVertex
+
+    meshData = options.meshData()
+    palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
+    paletteColor = @pixels[0].paletteColor
+    color = palette.ramps[paletteColor.ramp].shades[paletteColor.shade]
 
     for point, index in @points
       verticesArray[index * elementsPerVertex] = point.vertex.x
       verticesArray[index * elementsPerVertex + 1] = point.vertex.y
       verticesArray[index * elementsPerVertex + 2] = point.vertex.z
 
-      for offset in [0..2]
-        colorsArray[index * elementsPerVertex + offset] = @constructor.PointTypeColors[point.type][offset]
+      if point.type is @constructor.PointTypes.Pixel
+        colorsArray[index * elementsPerVertex] = color.r
+        colorsArray[index * elementsPerVertex + 1] = color.g
+        colorsArray[index * elementsPerVertex + 2] = color.b
+
+      else
+        for offset in [0..2]
+          colorsArray[index * elementsPerVertex + offset] = @constructor.PointTypeColors[point.type][offset]
 
     geometry = new THREE.BufferGeometry
     geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
@@ -63,7 +74,7 @@ class LOI.Assets.Engine.Mesh.Cluster
 
     new THREE.Points geometry, material
 
-  getMesh: (options = {}) ->
+  getMesh: (options) ->
     elementsPerVertex = 3
     verticesArray = new Float32Array @points.length * elementsPerVertex
     normalsArray = new Float32Array @points.length * elementsPerVertex
@@ -83,7 +94,7 @@ class LOI.Assets.Engine.Mesh.Cluster
     geometry.setIndex @indices
 
     # Determine the color.
-    meshData = options.meshData()
+    return unless meshData = options.meshData()
     palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
     pixel = @pixels[0]
     materialsData = options.materialsData?()
@@ -150,5 +161,6 @@ class LOI.Assets.Engine.Mesh.Cluster
 
     mesh.castShadow = true
     mesh.receiveShadow = true
+    mesh.material.shadowSide = THREE.DoubleSide
 
     mesh

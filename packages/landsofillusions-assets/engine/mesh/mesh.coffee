@@ -30,23 +30,7 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
 
       return unless clusters?.length and edges
 
-      # Place the plane of the cluster under the Origin landmark to the coordinate system origin.
-      origin = _.find cameraAngle.sprite.landmarks, (landmark) => landmark.name is 'Origin'
-
-      # If no Origin landmark is found, use the world origin.
-      origin ?= cameraAngle.unprojectPoint new THREE.Vector3
-
-      if originCluster = _.find(clusters, (cluster) => cluster.findPixelAtCoordinate origin.x, origin.y)
-        originCluster.plane.point = new THREE.Vector3
-
-        # Compute planes for all cluster adjacent to the origin cluster.
-        @constructor.computeClusterPlanes originCluster, cameraAngle
-
-      # Now compute planes for all free-floating clusters as well.
-      for cluster in clusters when not cluster.plane.point
-        # Assume the cluster is in the origin plane.
-        cluster.plane.point = new THREE.Vector3
-        @constructor.computeClusterPlanes cluster, cameraAngle
+      @constructor.computeClusterPlanes clusters, cameraAngle
 
       edge.generateGeometry cameraAngle for edge in edges when edge.line.point
 
@@ -55,9 +39,6 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
 
     # Update scene.
     Tracker.autorun (computation) =>
-      return unless meshData = @options.meshData()
-      return unless cameraAngle = meshData.cameraAngles?[0]
-
       # Clean up previous children.
       @remove @children[0] while @children.length
 
@@ -66,13 +47,22 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
 
       return unless clusters?.length and edges
 
+      debug = @options.debug()
+      currentCluster = @options.currentCluster()
+
       # Add new children.
       for cluster in clusters
-        @add cluster.getMesh @options
+        # Do not draw unselected clusters in debug mode.
+        if not debug or debug and (not currentCluster or cluster is currentCluster)
+          continue unless mesh = cluster.getMesh @options
+          @add mesh
 
-        points = cluster.getPoints()
-        points.layers.set 2
-        @add points
+          if debug
+            mesh.layers.set 2
+
+            points = cluster.getPoints @options
+            points.layers.set 2
+            @add points
       
       for edge in edges when edge.line.point
         edge.layers.set 2

@@ -9,6 +9,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       context: @meshCanvas.context()
 
     @renderer.shadowMap.enabled = true
+    @renderer.shadowMap.autoUpdate = false
     @renderer.shadowMap.type = THREE.BasicShadowMap
 
     @renderer.setClearColor new THREE.Color 0x565656
@@ -38,9 +39,10 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
 
       camera = @meshCanvas.cameraManager().camera.withUpdates()
 
-      # Render main geometry pass that we use for depth (and color when not showing the render target).
+      # Render main geometry pass that we use for depth and shadows (and color when not showing the render target).
       camera.main.layers.set 0
       @renderer.clear()
+      @renderer.shadowMap.needsUpdate = true
       @renderer.render scene, camera.main
       
       if @meshCanvas.options.drawPixelImage()

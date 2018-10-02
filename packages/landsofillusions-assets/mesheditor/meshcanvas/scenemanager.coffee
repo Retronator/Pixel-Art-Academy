@@ -22,7 +22,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.SceneManager
     directionalLight.shadow.camera.far = 200
     directionalLight.shadow.mapSize.width = 4096
     directionalLight.shadow.mapSize.height = 4096
-    directionalLight.shadow.bias = 0.0001
+    directionalLight.shadow.bias = -0.0001
     
     scene.add directionalLight
 
