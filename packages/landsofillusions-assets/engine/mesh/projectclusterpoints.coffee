@@ -56,8 +56,9 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
         
         distance = cameraAngle.distanceInDirectionToHorizon new THREE.Vector2(pixel.x, pixel.y), direction.vector, horizon
 
-        # Multiply by direction sign since if it's negative we're moving away from the horizon.
-        distance *= (direction.vector.x + direction.vector.y) unless distance is Number.POSITIVE_INFINITY
+        unless distance is Number.POSITIVE_INFINITY
+          # Negate distance if direction is moving us away from the horizon.
+          distance *= -1 if direction.vector.cross(horizon.direction) < 0
 
         # If the pixel is less than half a pixel away from the horizon, we can't produce a valid void pixel.
         continue if distance <= 0.5

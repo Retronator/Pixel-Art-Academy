@@ -116,6 +116,7 @@ class LOI.Assets.MeshEditor extends AM.Component
       visualizeNormals: @paintNormals
       sceneManager: => @meshCanvas()?.sceneManager()
       debug: @debug
+      currentCluster: @currentCluster
 
     @meshCanvas new @constructor.MeshCanvas
       pixelCanvas: @pixelCanvas

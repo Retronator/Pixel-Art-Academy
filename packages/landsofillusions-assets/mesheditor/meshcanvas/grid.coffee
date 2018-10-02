@@ -49,8 +49,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
 
     # Reactively change visibility of the grid.
     @meshCanvas.autorun =>
-      @visible = @meshCanvas.options.currentCluster()?
-      @visible and= @gridEnabled() if @gridEnabled
+      @visible = @gridEnabled?() ? true
       @meshCanvas.sceneManager().scene.updated()
 
     # Match orientation to normal.
@@ -59,18 +58,24 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
     right = new THREE.Vector3 1, 0, 0
 
     @meshCanvas.autorun (computation) =>
-      return unless cluster = @meshCanvas.options.currentCluster()
-      plane = cluster.getPlane()
-      
-      planePoint = new THREE.Vector3()
-      plane.projectPoint zero, planePoint
+      coplanarPoint = new THREE.Vector3()
+
+      if cluster = @meshCanvas.options.currentCluster()
+        cluster.getPlane().coplanarPoint coplanarPoint
+
+      normal = @meshCanvas.options.currentNormal()
+
+      plane = new THREE.Plane().setFromNormalAndCoplanarPoint normal, coplanarPoint
+
+      planeZero = new THREE.Vector3()
+      plane.projectPoint zero, planeZero
 
       # Note: We use right to align the grid at the poles since
       # there the normal and up get very close and unpredictable.
       @matrix.lookAt zero, plane.normal, if plane.normal.y > 0.99 then right else up
 
       # Move the grid slightly above the cluster to prevent Z-fighting.
-      @matrix.setPosition planePoint.add plane.normal.clone().multiplyScalar 0.001
+      @matrix.setPosition planeZero.add plane.normal.clone().multiplyScalar 0.001
       @matrix.decompose @position, @quaternion, @scale
 
       @meshCanvas.sceneManager().scene.updated()
