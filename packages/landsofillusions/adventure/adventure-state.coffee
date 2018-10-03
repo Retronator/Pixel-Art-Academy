@@ -11,6 +11,39 @@ class LOI.Adventure extends LOI.Adventure
     DatabaseCharacter: 'DatabaseCharacter'
   
   _initializeState: ->
+    # We store who the last user was so that we can clean up user-related info when the user gets logged
+    # out. We can't just rely on us deleting this on quitting, because the server might log the user out.
+    @lastUserId = new ReactiveField null
+    Artificial.Mummification.PersistentStorage.persist
+      storageKey: 'LandsOfIllusions.Adventure.lastUserId'
+      field: @lastUserId
+      tracker: @
+      consentField: LOI.settings.persistGameState.allowed
+
+    # Listen to user changes. If we find a mismatch between the last user, delete stored info.
+    @autorun (computation) =>
+      return unless LOI.adventureInitialized()
+      return if Meteor.loggingIn()
+
+      userId = Meteor.userId()
+      lastUserId = @lastUserId()
+
+      if userId is lastUserId
+        console.log "Logged in user matches the last user.", userId if LOI.debug or LOI.Adventure.debugState
+        return
+
+      else if userId and not @gameState()
+        # We have a user, so let's also wait for their state to load before
+        # we clear the local parts (they will then be replaced from the state).
+        console.log "Logged in user does not match last user, but we don't have the state yet to clear local storage.", userId if LOI.debug or LOI.Adventure.debugState
+        return
+
+      console.log "Clearing local storage game state parts due to user mismatch. Previously:", lastUserId, "now: ", userId if LOI.debug or LOI.Adventure.debugState
+      @clearLocalStorageGameStateParts()
+
+      # Update last user ID.
+      Tracker.nonreactive => @lastUserId userId
+
     # Game state depends on whether the user is signed in or not and returns
     # the game state from database when signed in or from local storage otherwise.
     @localGameState = new LOI.LocalGameState

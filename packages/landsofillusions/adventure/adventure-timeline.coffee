@@ -20,7 +20,7 @@ class LOI.Adventure extends LOI.Adventure
       return LOI.TimelineIds.Memory if @currentMemory()
 
       if LOI.characterId() or not LOI.settings.persistGameState.allowed()
-        # Player's timeline is always read from the state. Also use when storing game state is not allowed.
+        # Character's timeline is always read from the state. Also use when storing game state is not allowed.
         return unless gameState = @gameState()
 
         # For characters, start in the present.

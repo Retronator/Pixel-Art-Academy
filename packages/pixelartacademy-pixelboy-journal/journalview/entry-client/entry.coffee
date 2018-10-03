@@ -351,11 +351,16 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Entry extends AM.Component
     # If we're clicking inside the editor, there's nothing to do.
     return if $(event.target).closest('.ql-editor').length
 
-    # Otherwise we assume we're trying to move to the end.
+    # Remember the page index we were at.
+    pageIndex = @currentPageIndex()
+
+    # Clicking in the writing area outside the editor should move us to the end.
     @moveCursorToEnd()
 
-    # HACK: moving the cursor resets scroll to 0 so we need to manually update it again.
-    @_updateEntryScrollLeft()
+    # HACK: Moving the cursor (in Safari) resets scroll to 0 so we need to manually update it again.
+    Meteor.setTimeout =>
+      @currentPageIndex pageIndex
+      @_updateEntryScrollLeft()
 
   onClickToggleObjectsButton: (event) ->
     @objectsAreaExpanded not @objectsAreaExpanded()

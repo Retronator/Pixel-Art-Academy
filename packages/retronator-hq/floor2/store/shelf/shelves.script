@@ -4,10 +4,10 @@
 
 > Which shelf do you want to look at?
 
-* @Pixel Art Academy game bundles -> [Game]
-* @Pixel Art Academy add-on upgrades -> [Upgrades]
-* @Devices from Pixel -> [Pixel]
-* @PICO-8 fantasy console -> [Pico8]
+* @Pixel Art Academy game bundles -> [Game] `not @character`
+* @Pixel Art Academy add-on upgrades -> [Upgrades] `not @character`
+* @Devices from Pixel -> [Pixel] `@character`
+* @PICO-8 fantasy console -> [Pico8] `@character`
 * @Nevermind -> [End]
 
 ## Game

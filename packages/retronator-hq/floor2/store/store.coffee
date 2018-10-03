@@ -72,8 +72,6 @@ class HQ.Store extends LOI.Adventure.Location
       HQ.Store.Display
       HQ.Store.Shelf.Game
       HQ.Store.Shelf.Upgrades
-      HQ.Store.Shelf.Pixel
-      HQ.Store.Shelf.Pico8
       HQ.Store.Shelves
       inventoryScene?.cart() unless HQ.Items.ShoppingCart.state 'inInventory'
       @elevatorButton
