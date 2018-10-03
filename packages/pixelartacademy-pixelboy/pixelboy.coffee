@@ -260,6 +260,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
   events: ->
     super.concat
       'mousedown .glass': @onMouseDownGlass
+      'scroll .os': @onScrollOS
 
   onMouseDownGlass: (event) ->
     return unless @resizable()
@@ -297,6 +298,12 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     return unless keyCode is AC.Keys.alt
 
     @open()
+
+  onScrollOS: (event) ->
+    # Prevent scrolling of the OS content. This can happen despite
+    # overflow: hidden if the browser tries to focus on input elements.
+    event.currentTarget.scrollLeft = 0
+    event.currentTarget.scrollTop = 0
 
   # Listener
 
