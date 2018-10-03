@@ -52,7 +52,7 @@ LOI.Assets.Mesh.duplicate.method (meshId) ->
 LOI.Assets.Mesh.updateCameraAngle.method (meshId, index, cameraAngleUpdate) ->
   check meshId, Match.DocumentId
   check index, Match.Integer
-  check cameraAngleUpdate, Match.OptionalOrNull
+  check cameraAngleUpdate,
     name: Match.Optional String
     picturePlaneDistance: Match.OptionalOrNull Number
     pixelSize: Match.OptionalOrNull Number

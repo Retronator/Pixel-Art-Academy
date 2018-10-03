@@ -13,11 +13,13 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
     property: 'right', vector: new THREE.Vector2 1, 0
   ]
   
+  orthogonal = not cameraAngle.picturePlaneDistance
+  
   for cluster in clusters
     cluster.points = []
     
     plane = cluster.getPlane()
-    horizon = cameraAngle.getHorizon plane.normal
+    horizon = cameraAngle.getHorizon plane.normal unless orthogonal
 
     # Start with cluster pixels.
     pixels = []
@@ -54,17 +56,22 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
       for direction in pixelDirections
         continue if pixel[direction.property]
         
-        distance = cameraAngle.distanceInDirectionToHorizon new THREE.Vector2(pixel.x, pixel.y), direction.vector, horizon
-
-        unless distance is Number.POSITIVE_INFINITY
-          # Negate distance if direction is moving us away from the horizon.
-          distance *= -1 if direction.vector.cross(horizon.direction) < 0
-
-        # If the pixel is less than half a pixel away from the horizon, we can't produce a valid void pixel.
-        continue if distance <= 0.5
-
-        # Use a factor to bring void point 0.5 pixels or more away from the horizon.
-        factor = Math.min 1, distance - 0.5
+        # Move points away from the horizon in perspective.
+        if orthogonal
+          factor = 1
+          
+        else
+          distance = cameraAngle.distanceInDirectionToHorizon new THREE.Vector2(pixel.x, pixel.y), direction.vector, horizon
+  
+          unless distance is Number.POSITIVE_INFINITY
+            # Negate distance if direction is moving us away from the horizon.
+            distance *= -1 if direction.vector.cross(horizon.direction) < 0
+  
+          # If the pixel is less than half a pixel away from the horizon, we can't produce a valid void pixel.
+          continue if distance <= 0.5
+  
+          # Use a factor to bring void point 0.5 pixels or more away from the horizon.
+          factor = Math.min 1, distance - 0.5
 
         voidPixels.push
           x: pixel.x + direction.vector.x * factor

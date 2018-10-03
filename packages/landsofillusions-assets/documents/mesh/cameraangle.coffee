@@ -22,14 +22,25 @@ class LOI.Assets.Mesh.CameraAngle
   projectPoints: (screenPoints, worldPlane, xOffset = 0, yOffset = 0) ->
     projectedWorldPoints = []
 
+    # The default is a ray from camera position shooting through the target.
+    # Note: We need to create vectors from the data which is a plain object.
     position = new THREE.Vector3().copy @position
+    direction = new THREE.Vector3().copy(@target).sub position
 
     for screenPoint in screenPoints
-      worldPoint = new THREE.Vector3 screenPoint.x + xOffset, -(screenPoint.y + yOffset), -@picturePlaneDistance
+      # Transform the point from screen space to world, positioned on the picture plane.
+      worldPoint = new THREE.Vector3 screenPoint.x + xOffset, -(screenPoint.y + yOffset), -(@picturePlaneDistance or 0)
       worldPoint.applyMatrix4 @worldMatrix
 
-      rayNormal = new THREE.Vector3().subVectors(worldPoint, position).normalize()
-      ray = new THREE.Ray position, rayNormal
+      if @picturePlaneDistance
+        # In perspective the ray is shooting through the point in world space.
+        direction = worldPoint.clone().sub(@position).normalize()
+
+      else
+        # In orthogonal the ray is shooting from the point in world space.
+        position = worldPoint.multiplyScalar @pixelSize
+
+      ray = new THREE.Ray position, direction
 
       projectedWorldPoint = new THREE.Vector3
       intersection = ray.intersectPlane worldPlane, projectedWorldPoint
@@ -52,7 +63,8 @@ class LOI.Assets.Mesh.CameraAngle
 
   getHorizon: (normal) ->
     # We transform the plane into camera space and put it to zero since all parallel planes will intersect in same spot.
-    cameraPlane = new THREE.Plane(normal).applyMatrix4 @worldMatrixInverse
+    # Note: We need to clone the normal since the plane will directly use the given vector.
+    cameraPlane = new THREE.Plane(normal.clone()).applyMatrix4 @worldMatrixInverse
     cameraPlane.constant = 0
 
     horizonDirection = new THREE.Vector3().crossVectors normal, new THREE.Vector3(0, 0, 1)
