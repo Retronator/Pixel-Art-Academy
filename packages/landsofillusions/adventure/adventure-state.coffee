@@ -32,6 +32,12 @@ class LOI.Adventure extends LOI.Adventure
         console.log "Logged in user matches the last user.", userId if LOI.debug or LOI.Adventure.debugState
         return
 
+      else if userId and not @gameState()
+        # We have a user, so let's also wait for their state to load before
+        # we clear the local parts (they will then be replaced from the state).
+        console.log "Logged in user does not match last user, but we don't have the state yet to clear local storage.", userId if LOI.debug or LOI.Adventure.debugState
+        return
+
       console.log "Clearing local storage game state parts due to user mismatch. Previously:", lastUserId, "now: ", userId if LOI.debug or LOI.Adventure.debugState
       @clearLocalStorageGameStateParts()
 
