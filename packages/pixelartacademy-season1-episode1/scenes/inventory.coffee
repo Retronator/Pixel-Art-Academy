@@ -10,9 +10,6 @@ class E1.Inventory extends LOI.Adventure.Scene
 
   @initialize()
 
-  constructor: ->
-    super
-
   # These are global things required in any character's inventory. 
   # Storyline inventory items are defined in the chapter they first appear. 
   things: -> [

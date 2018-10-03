@@ -13,9 +13,6 @@ class E1.ChinaBasinPark extends LOI.Adventure.Scene
 
   @initialize()
 
-  constructor: ->
-    super
-
   exits: ->
     "#{Vocabulary.Keys.Directions.In}": SF.Apartment.Entrance
     "#{Vocabulary.Keys.Directions.South}": SF.Apartment.Entrance
