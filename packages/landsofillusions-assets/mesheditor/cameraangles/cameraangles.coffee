@@ -56,7 +56,14 @@ class LOI.Assets.MeshEditor.CameraAngles extends AM.Component
 
   onClickAddCameraAngleButton: (event) ->
     index = @meshData().cameraAngles?.length or 0
-    LOI.Assets.Mesh.updateCameraAngle @options.meshId(), index
+
+    LOI.Assets.Mesh.updateCameraAngle @options.meshId(), index,
+      picturePlaneDistance: 32
+      pixelSize: 0.01
+      position: x: 0, y: 1, z: -2
+      target: x: 0, y: 1, z: 0
+      up: x: 0, y: 1, z: 0
+
     @options.cameraAngleIndex index
 
   class @CameraProperty extends AM.DataInputComponent
