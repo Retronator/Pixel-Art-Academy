@@ -16,6 +16,8 @@ class HQ.Items.Daily extends LOI.Adventure.Item
   template: -> @constructor.id()
 
   @fullName: -> "Retronator Daily"
+  @shortName: -> "Daily"
+  @descriptiveName: -> "Retronator ![Daily](read Daily)."
 
   @description: ->
     "

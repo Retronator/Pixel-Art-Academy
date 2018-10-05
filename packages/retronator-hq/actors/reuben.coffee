@@ -4,28 +4,29 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.Actors.Aeronaut extends LOI.Adventure.Thing
-  @id: -> 'Retronator.HQ.Actors.Aeronaut'
-  @fullName: -> "Reuben 'Aeronaut' Thiessen"
+class HQ.Actors.Reuben extends LOI.Adventure.Thing
+  @id: -> 'Retronator.HQ.Actors.Reuben'
+  @fullName: -> "Reuben Thiessen"
   @shortName: -> "Reuben"
-  @description: -> "It's Reuben Thiessen a.k.a. Aeronaut. He flew into town with his Quest Kodiak."
+  @descriptiveName: -> "![Reuben](talk to Reuben) Thiessen."
+  @description: -> "It's Reuben Thiessen a.k.a. Reuben. He flew into town with his Quest Kodiak."
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.blue
     shade: LOI.Assets.Palette.Atari2600.characterShades.lighter
 
   @initialize()
 
-  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/aeronaut.script'
+  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/reuben.script'
 
   initializeScript: ->
     @setCurrentThings
-      aeronaut: HQ.Actors.Aeronaut
+      reuben: HQ.Actors.Reuben
 
   onCommand: (commandResponse) ->
-    return unless aeronaut = LOI.adventure.getCurrentThing HQ.Actors.Aeronaut
+    return unless reuben = LOI.adventure.getCurrentThing HQ.Actors.Reuben
 
     @script.ephemeralState 'gameFinished', PAA.Season1.Episode1.Chapter1.AdmissionProjects.Snake.Drawing.finished()
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.TalkTo, aeronaut]
+      form: [Vocabulary.Keys.Verbs.TalkTo, reuben]
       action: => @startScript()

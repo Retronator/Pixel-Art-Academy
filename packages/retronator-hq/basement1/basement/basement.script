@@ -18,7 +18,7 @@ operator: Can I help you with anything else?
 
 ## Selection
 
-* I'm back to play the game. -> [Play]
+* I'm back to play the game. -> [Play] `not @character`
 * Pretty good, and you? -> [HowAreYou] `_howAreYou`
 * See you around. -> [Bye]
 

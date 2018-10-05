@@ -6,6 +6,7 @@ class HQ.Actors.Burra extends LOI.Adventure.Thing
   @id: -> 'Retronator.HQ.Actors.Burra'
   @fullName: -> "Sarah 'Burra' Burrough"
   @shortName: -> "Burra"
+  @descriptiveName: -> "Sarah '![Burra](talk to Burra)' Burrough."
   @description: -> "It's Sarah Burrough a.k.a. Burra."
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.green

@@ -6,6 +6,7 @@ class HQ.Actors.Shelley extends LOI.Adventure.Thing
   @id: -> 'Retronator.HQ.Actors.Shelley'
   @fullName: -> "Shelley Williamson"
   @shortName: -> "Shelley"
+  @descriptiveName: -> "![Shelley](talk to Shelley) Williamson."
   @description: -> "It's Shelley Williamson, Retro's art dealer."
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.brown

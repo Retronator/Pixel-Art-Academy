@@ -160,4 +160,10 @@ Package.onUse(function(api) {
   // Mixer
   api.addFile('chapter1/sections/mixer..');
   api.addThing('chapter1/sections/mixer/scenes/intercom');
+  api.addThing('chapter1/sections/mixer/scenes/gallerywest');
+  api.addFile('chapter1/sections/mixer/scenes/store');
+  api.addFile('chapter1/sections/mixer/scenes/coworking');
+  api.addFile('chapter1/sections/mixer/scenes/artstudio');
+  api.addFile('chapter1/sections/mixer/items/marker');
+  api.addFile('chapter1/sections/mixer/items/stickers');
 });

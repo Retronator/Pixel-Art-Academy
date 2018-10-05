@@ -7,6 +7,7 @@ class HQ.Elevator.NumberPad extends LOI.Adventure.Thing
   @id: -> 'Retronator.HQ.Elevator.NumberPad'
   @fullName: -> "number pad"
   @shortName: -> "pad"
+  @descriptiveName: -> "Number ![pad](use pad)."
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
   @description: -> "It's the pad that controls the elevator."
   @color: ->

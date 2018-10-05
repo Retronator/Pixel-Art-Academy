@@ -1,9 +1,9 @@
-# Retronator.HQ.Actors.Aeronaut
+# Retronator.HQ.Actors.Reuben
 
 ## Start
 
-aeronaut: Hi there! `not _IntroductionOver`
-aeronaut: What's up? `_IntroductionOver`
+reuben: Hi there! `not _IntroductionOver`
+reuben: What's up? `_IntroductionOver`
 
 ## IntroductionOver
 
@@ -19,7 +19,7 @@ aeronaut: What's up? `_IntroductionOver`
 
 -> [UpToFinished] `_gameFinished`
 
-aeronaut: 
+reuben: 
   Working on a PICO-8 game. 
   I have it running, but still need to get some graphics going.
   
@@ -27,7 +27,7 @@ aeronaut:
   
 ## UpToFinished
 
-aeronaut:
+reuben:
   Now that the Snake game is finished, I'm going to take my plane for a spin.
   Thanks again for helping with the graphics!
 

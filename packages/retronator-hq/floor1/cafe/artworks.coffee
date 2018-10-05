@@ -7,6 +7,7 @@ class HQ.Cafe.Artworks extends LOI.Adventure.Item
   @id: -> 'Retronator.HQ.Cafe.Artworks'
   @fullName: -> "featured artworks"
   @shortName: -> "artworks"
+  @descriptiveName: -> "Featured ![artworks](look at artworks)."
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
   @description: ->
     "

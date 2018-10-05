@@ -34,6 +34,21 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
 
       LOI.Adventure.Location.getClassForId currentLocationId
 
+    # We want to run this script only when no-one else is using Shelley.
+    @otherScenesUseShelley = new ComputedField =>
+      for scene in LOI.adventure.currentScenes() when scene.things and scene isnt @
+        for thingOrThingClass in scene.things() when thingOrThingClass?
+          # Scenes can provide an instance, a class, or an inherited class of Shelley, so check for all.
+          thingOrThingClassIsShelley = _.some [
+            thingOrThingClass instanceof HQ.Actors.Shelley
+            thingOrThingClass is HQ.Actors.Shelley
+            thingOrThingClass.prototype instanceof HQ.Actors.Shelley
+          ]
+
+          return true if thingOrThingClassIsShelley
+
+      false
+
   destroy: ->
     super
 
@@ -49,7 +64,7 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
   things: ->
     things = []
 
-    things.push HQ.Actors.Shelley if LOI.adventure.currentLocationId() is @currentLocationId()
+    things.push HQ.Actors.Shelley if LOI.adventure.currentLocationId() is @currentLocationId() and not @otherScenesUseShelley()
 
     things
 
@@ -62,6 +77,11 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
       if LOI.adventure.interface.busy() or LOI.adventure.currentContext()
         # Retry in 10 seconds.
         @_scheduleNextAction delay: 10000
+        return
+
+      # Don't do the action if any other scene is using Shelley.
+      if @otherScenesUseShelley()
+        @_scheduleNextAction()
         return
 
       # Looks OK, do something!

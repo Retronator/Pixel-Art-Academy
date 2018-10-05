@@ -6,7 +6,7 @@
 
 ## OfferedHelp
 
-aeronaut: 
+reuben: 
   That would be awesome! 
   It even counts as your admission project.
   
@@ -16,14 +16,14 @@ aeronaut:
 
 ## AddToStudyPlan
 
-aeronaut:
+reuben:
   First of all you should add the Snake game project to your study plan.
   Search for admission projects in the Study Plan app and it should come up.
   The Snake entry will show all the tasks you need to complete this goal.
   
 * Alright, I'll add the goal and report back.
 
-aeronaut: I'll be here.
+reuben: I'll be here.
 
 -> [End]
 
@@ -33,12 +33,12 @@ aeronaut: I'll be here.
 
 -> [HasPico8] `_hasPico8`
 
-aeronaut: Did you check out the tasks?
+reuben: Did you check out the tasks?
 
 * Oh, wait, let me go read them. -> [End]
 * The second task says something about getting PICO-8.
 
-aeronaut: Yes, it's the console I'm making the game for.
+reuben: Yes, it's the console I'm making the game for.
 
 ## Pico8Questions
 
@@ -47,13 +47,13 @@ aeronaut: Yes, it's the console I'm making the game for.
 * How do you make PICO-8 games? -> [HowToMakePico8Games]
 * Alright, I'll go grab the app. `GetPico8 or HowToMakePico8Games`
 
-aeronaut: Yup, it's just upstairs.
+reuben: Yup, it's just upstairs.
 
 -> [End]
 
 ## WhatIsPico8
 
-aeronaut:
+reuben:
   It's a fantasy console from Lexaloffle. 
   Very old school, 128 by 128 pixels display, 16 colors.
 
@@ -61,7 +61,7 @@ aeronaut:
 
 ## GetPico8
 
-aeronaut: 
+reuben: 
   To play my game, you'll want to get the app for your PixelBoy.
   You can get it in Retronator Store right here in the HQ.
   
@@ -69,7 +69,7 @@ aeronaut:
 
 ## HowToMakePico8Games
 
-aeronaut:
+reuben:
   If you want to code your own games, you need the PICO-8 devkit.
   It's $15 and runs on your PC or Raspberry Pi.
   You can buy it from Lexaloffle's website, and there's a link from Retronator Store as well.
@@ -81,7 +81,7 @@ aeronaut:
 
 * Can you tell me about PICO-8 again? 
 
-aeronaut: Of course!
+reuben: Of course!
 
 -> [Pico8Questions]
 
@@ -89,7 +89,7 @@ aeronaut: Of course!
 
 -> [HasPico8] `_hasPico8`
 
-aeronaut:
+reuben:
   I'm making the game for the PICO-8 platform, so first you'll need to get the PICO-8 app.
   
 -> [Pico8Questions]
@@ -98,11 +98,11 @@ aeronaut:
 
 * I got the PICO-8 app!
 
-aeronaut: Great! Let's begin.
+reuben: Great! Let's begin.
 
 ## HasPico8
 
-aeronaut: 
+reuben: 
   First, let me get you the game cartridge.
   It will appear in your PICO-8 app.
   
@@ -110,7 +110,7 @@ aeronaut:
 
 ## ReceiveCartridge
 
-aeronaut:
+reuben:
   It has 'programer art' for now, a bunch of squares instead of sprites basically.
   That's where you come in. But before we go on, give the game a try.
   Score at least 5 points and we'll get going.
@@ -121,7 +121,7 @@ aeronaut:
 
 * Oh, yeah, I was supposed to play your game.
 
-aeronaut: Take your time. Once you get at least 5 points, let me know.
+reuben: Take your time. Once you get at least 5 points, let me know.
   
 -> [End]
 
@@ -129,14 +129,14 @@ aeronaut: Take your time. Once you get at least 5 points, let me know.
 
 * I scored `_highScore` points!
 
-aeronaut:
+reuben:
   Nice! 
   Seems like you got the game chops. Now let's get to drawing.
   
 * Can't wait!
 * Let's do this.
 
-aeronaut:
+reuben:
   Alright, let me get you the Snake project files.
   These include the sprites, together with their specs.
   
@@ -150,7 +150,7 @@ pause
 
 > Reuben transmits the files to your PixelBoy.
 
-aeronaut:
+reuben:
   If you go to the Drawing app, the Snake game should appear in the Projects section.
   I can also help you get set up to make pixel art. Just ask.
   
@@ -158,7 +158,7 @@ aeronaut:
   
 * Hmm … I don't have the Drawing app yet.
 
-aeronaut:
+reuben:
   That's OK.
   Just wait for the next day and choose it in the Admission Week app. 
   When you get it, the Snake project will already be in there.
@@ -168,7 +168,7 @@ aeronaut:
 * Sounds good!
 * Thanks, I'll talk to you later.
 
-aeronaut: See you soon!
+reuben: See you soon!
   
 -> [End]
 
@@ -176,7 +176,7 @@ aeronaut: See you soon!
 
 > Reuben tries to transmit the files to your PixelBoy, but something goes wrong.
 
-aeronaut: 
+reuben: 
   Hmmm … 
   When I try to send you the files I get the error: `_startError.reason` `true` <!-- HACK: Added true so that the previous code block is not treated as a conditional. -->
   You should probably let Retro know about it. Message him or email to hi@retronator.com.

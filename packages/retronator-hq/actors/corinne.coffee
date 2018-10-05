@@ -8,6 +8,7 @@ class HQ.Actors.Corinne extends LOI.Adventure.Thing
   @id: -> 'Retronator.HQ.Actors.Corinne'
   @fullName: -> "Corinne Colgan"
   @shortName: -> "Corinne"
+  @descriptiveName: -> "![Corinne](talk to Corinne) Colgan."
   @description: -> "It's Corinne Colgan, the curator of the gallery."
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.aqua

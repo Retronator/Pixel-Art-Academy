@@ -7,6 +7,10 @@ class C1.Mixer extends LOI.Adventure.Section
 
   @scenes: -> [
     @Intercom
+    @Store
+    @GalleryWest
+    @ArtStudio
+    @Coworking
   ]
 
   @initialize()

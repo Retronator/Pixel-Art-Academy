@@ -34,13 +34,13 @@ class C1.AdmissionProjects.Snake.Drawing.Coworking extends LOI.Adventure.Scene
     scene = @options.parent
 
     @setCurrentThings
-      aeronaut: HQ.Actors.Aeronaut
+      reuben: HQ.Actors.Reuben
 
     @setCallbacks
       BackToMainQuestions: (complete) =>
         # Hook back into the Reuben's main script.
-        aeronaut = LOI.adventure.getCurrentThing HQ.Actors.Aeronaut
-        aeronaut.listeners[0].startScript label: 'MainQuestions'
+        reuben = LOI.adventure.getCurrentThing HQ.Actors.Reuben
+        reuben.listeners[0].startScript label: 'MainQuestions'
 
         complete()
 
@@ -49,7 +49,7 @@ class C1.AdmissionProjects.Snake.Drawing.Coworking extends LOI.Adventure.Scene
   onChoicePlaceholder: (choicePlaceholderResponse) ->
     coworking = @options.parent
     
-    return unless choicePlaceholderResponse.scriptId is HQ.Actors.Aeronaut.id()
+    return unless choicePlaceholderResponse.scriptId is HQ.Actors.Reuben.id()
     return unless choicePlaceholderResponse.placeholderId is 'MainQuestions'
 
     if coworking.completedDrawing()

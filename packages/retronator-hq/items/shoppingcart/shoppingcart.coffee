@@ -24,6 +24,7 @@ class HQ.Items.ShoppingCart extends LOI.Adventure.Item
 
   @fullName: -> "shopping cart"
   @shortName: -> "cart"
+  @descriptiveName: -> "Shopping ![cart](look in cart)."
   @nameAutoCorrectStyle: -> LOI.Avatar.NameAutoCorrectStyle.Name
 
   @description: ->

@@ -34,7 +34,7 @@ class HQ.Coworking extends LOI.Adventure.Location
       floor: 1
 
   things: -> [
-    HQ.Actors.Aeronaut
+    HQ.Actors.Reuben
     @elevatorButton
   ]
 
