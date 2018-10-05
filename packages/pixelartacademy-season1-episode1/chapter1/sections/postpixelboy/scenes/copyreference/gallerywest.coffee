@@ -40,9 +40,10 @@ class C1.PostPixelBoy.CopyReference.GalleryWest extends LOI.Adventure.Scene
   # Listener
 
   onEnter: (enterResponse) ->
-    if C1.PostPixelBoy.state('corinneState') is C1.PostPixelBoy.CopyReference.CorinneStates.InGalleryWest
-      enterResponse.overrideIntroduction =>
-        @options.parent.translations()?.corinneIntro
+    return unless C1.PostPixelBoy.state('corinneState') is C1.PostPixelBoy.CopyReference.CorinneStates.InGalleryWest
+
+    enterResponse.overrideIntroduction =>
+      @options.parent.translations()?.corinneIntro
 
     # Corinne should talk when at location.
     @_corinneTalksAutorun = @autorun (computation) =>
