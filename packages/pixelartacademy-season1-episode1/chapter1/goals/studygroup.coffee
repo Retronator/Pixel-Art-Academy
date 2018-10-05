@@ -10,17 +10,20 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
   Goal = @
 
-  class @Yearbook extends PAA.Learning.Task
+  class @Yearbook extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.Yearbook'
     @goal: -> Goal
 
     @directive: -> "Create Yearbook profile"
 
     @instructions: -> """
-      Add your name to the Yearbook and set any extra information you want to share with your classmates.
+      Find the Personal profile card in the Yearbook app and set any extra information you want to share with your classmates.
     """
 
     @initialize()
+
+    completedConditions: ->
+      PAA.PixelBoy.Apps.Yearbook.state 'profileFormOpened'
 
   class @SetPrivacySettings extends PAA.Learning.Task
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.SetPrivacySettings'
@@ -70,7 +73,8 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
   @tasks: -> [
     @Yearbook
-    @SetPrivacySettings
+    # TODO: Add privacy settings.
+    # @SetPrivacySettings
     @MeetClassmates
     @JoinStudyGroup
   ]

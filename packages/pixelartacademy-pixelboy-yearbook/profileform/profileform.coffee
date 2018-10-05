@@ -24,6 +24,9 @@ class Yearbook.ProfileForm extends AM.Component
     
     @currentPage = new ComputedField =>
       @pages[@currentPageNumber() - 1]
+      
+    # Mark that the player has opened the profile.
+    @yearbook.state 'profileFormOpened', true
     
   positionClass: ->
     return unless playerCharacterPage = @yearbook.playerCharacterPage()
