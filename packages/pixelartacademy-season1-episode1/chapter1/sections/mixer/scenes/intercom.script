@@ -1,0 +1,15 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.Intercom
+
+## Start
+
+> You hear an announcement on the intercom.
+
+shelley: 
+  The meeting for Academy of Art applicants will begin shortly.
+  Please come and join us in the Gallery on third floor.
+  
+### AnnouncementDone
+
+-> [End]
+
+## End

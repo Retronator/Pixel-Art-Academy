@@ -156,4 +156,8 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/sections/admissionprojects/snake/drawing..');
   api.addThing('chapter1/sections/admissionprojects/snake/drawing/scenes/coworking');
+
+  // Mixer
+  api.addFile('chapter1/sections/mixer..');
+  api.addThing('chapter1/sections/mixer/scenes/intercom');
 });

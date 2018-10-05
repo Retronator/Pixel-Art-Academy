@@ -22,7 +22,7 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
     @initialize()
 
-    completedConditions: ->
+    @completedConditions: ->
       PAA.PixelBoy.Apps.Yearbook.state 'profileFormOpened'
 
   class @SetPrivacySettings extends PAA.Learning.Task

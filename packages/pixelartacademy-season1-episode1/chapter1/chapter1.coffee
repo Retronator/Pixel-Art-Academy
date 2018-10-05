@@ -28,6 +28,7 @@ class PAA.Season1.Episode1.Chapter1 extends PAA.Adventure.Chapter
     @AdmissionProjects
     @AdmissionProjects.Snake.Intro
     @AdmissionProjects.Snake.Drawing
+    @Mixer
   ]
 
   @scenes: -> [

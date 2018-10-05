@@ -94,7 +94,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @narrative.scroll()
 
   _executeCommand: (command) ->
-    return unless command.length
+    return unless command?.length
 
     # Add closing quote if needed.
     numberOfQuotes = _.sumBy command, (character) => if character is '"' then 1 else 0
