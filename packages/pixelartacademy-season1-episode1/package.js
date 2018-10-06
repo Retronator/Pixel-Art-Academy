@@ -159,13 +159,17 @@ Package.onUse(function(api) {
 
   // Mixer
   api.addFile('chapter1/sections/mixer..');
+  api.addFile('chapter1/sections/mixer/context');
+  
   api.addThing('chapter1/sections/mixer/scenes/intercom');
   api.addThing('chapter1/sections/mixer/scenes/gallerywest');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest-retro');
   api.addFile('chapter1/sections/mixer/scenes/store');
   api.addFile('chapter1/sections/mixer/scenes/coworking');
   api.addFile('chapter1/sections/mixer/scenes/artstudio');
+  
   api.addThing('chapter1/sections/mixer/items/marker');
   api.addFile('chapter1/sections/mixer/items/stickers');
   api.addFile('chapter1/sections/mixer/items/nametag');
+  api.addFile('chapter1/sections/mixer/items/answer');
 });

@@ -12,7 +12,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
 
   @intro: -> """
     You enter a big gallery space that is holding a gathering.
-    You recognize some people from the HQ, others seem to be recent visitors like yourself.
+    You recognize some people from the HQ, others seem to be visitors like yourself.
   """
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/mixer/scenes/gallerywest.script'
@@ -37,6 +37,22 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
       shelley: HQ.Actors.Shelley
       reuben: HQ.Actors.Reuben
 
+    # TODO: Animate characters in callbacks.
+    @setCallbacks
+      IceBreakerStart: (complete) =>
+        console.log "Animating characters to the middle."
+        complete()
+
+      HobbyProfessionStart: (complete) =>
+        console.log "Animating characters based on hobby/profession."
+        complete()
+
+      HobbyProfessionEnd: (complete) =>
+        answers = @state 'answers'
+        console.log "Animating character to location", answers[0]
+        console.log "Animating any remaining characters based on hobby/profession."
+        complete()
+
   # Listener
 
   onEnter: (enterResponse) ->
@@ -51,8 +67,31 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
 
       @startScript label: 'RetroIntro'
 
+    # Player should be in the mixer context when they have a name tag.
+    @_enterContextAutorun = @autorun (computation) =>
+      return if LOI.adventure.currentContext() instanceof C1.Mixer.Context
+      return unless LOI.adventure.getCurrentInventoryThing C1.Mixer.NameTag
+      
+      LOI.adventure.enterContext C1.Mixer.Context
+
+      # Start the mixer script at the latest checkpoint.
+      checkpoints = [
+        'MixerStart'
+        'IceBreakerStart'
+        'HobbyProfessionWriteStart'
+      ]
+
+      for checkpoint, index in checkpoints
+        # Start at this checkpoint if we haven't reached the next one yet.
+        nextCheckpoint = checkpoints[index + 1]
+
+        unless nextCheckpoint and @script.state nextCheckpoint
+          @startScript label: checkpoint
+          return
+
   cleanup: ->
     @_retroTalksAutorun?.stop()
+    @_enterContextAutorun?.stop()
 
   onCommand: (commandResponse) ->
     return unless alexandra = LOI.adventure.getCurrentThing HQ.Actors.Alexandra

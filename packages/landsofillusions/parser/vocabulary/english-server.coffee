@@ -3,7 +3,7 @@ AB = Artificial.Babel
 Document.startup ->
   return if Meteor.settings.startEmpty
 
-  # Generate all default english vocabulary phrases
+  # Generate all default english vocabulary phrases.
   phrases =
     Directions:
       North: ['north', 'n']
@@ -61,6 +61,7 @@ Document.startup ->
       Help: ['help']
       Create: ['create', 'make']
       Write: ['write']
+      WriteOn: ['write _ on']
 
       Be:
         Present:
@@ -92,7 +93,9 @@ Document.startup ->
         Masculine: ['his']
         Neutral: ['theirs']
 
-    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'are', 'at', 'in', 'up', 'down', 'out', 'the']
+    # Note: Ignored prepositions should include those from multi-part
+    # phrases, as they will otherwise not report perfect likelihood.
+    IgnorePrepositions: ['_', 'from', 'to', 'with', 'is', 'are', 'at', 'in', 'up', 'down', 'out', 'the', 'on']
 
     Questions:
       WhichPlace: ['where']

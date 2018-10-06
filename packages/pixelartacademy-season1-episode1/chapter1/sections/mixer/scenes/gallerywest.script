@@ -41,4 +41,92 @@ retro: When you're ready to start ![use marker with stickers](use marker with st
   
 -> [End]
 
+## MixerStart
+
+shelley:
+  Welcome everyone! 
+  I hope your admission week is going great so far. 
+  My name is Shelley and I'm the coordinator for your application process to the Academy.
+  Now don't worry, that doesn't mean I'm deciding who gets admitted and who doesn't. That is really up to you.
+  I'm here to help in any way I can to make sure you complete admission week.
+  It's important to know you're not going through this process alone. Your time at the Academy—and during Admission Week—will be shared with your classmates.
+  Today you will join a study group. You and your groupmates will meet every day to see how you're progressing on your admission tasks.
+  But first let's get to know each other a little better so you have an easier time choosing your partners.
+
+> Everyone looks around each other, some more nervously than others, but all excited to get started.
+
+## IceBreakerStart
+
+`if (!answers) answers = {}`
+
+shelley:
+  Now, go to the middle of the room and make sure you have a marker at hand.
+  
+> Participants gather in the middle. 
+
+### IceBreakerStart
+
+shelley:
+  I will ask a question and you will go to the left or right side of the room based on your answer. You can stay in the center too.
+  First, do you want drawing to be mainly your hobby or profession?
+
+pause
+
+### HobbyProfessionStart
+
+* @Hobby -> [AnswerHobby]
+* @Profession -> [AnswerProfession]
+* @Somewhere in between -> [AnswerHobbyProfession]
+
+## AnswerHobby
+
+`answers[0] = 0`
+
+> After some deliberation _char_ goes left.
+
+-> [HobbyProfessionContinue]
+
+## AnswerProfession
+
+`answers[0] = 2`
+
+> After some deliberation _char_ goes right.
+
+-> [HobbyProfessionContinue]
+
+## AnswerHobbyProfession
+
+`answers[0] = 1`
+
+> After some deliberation _char_ stays in the center.
+
+## HobbyProfessionContinue
+
+### HobbyProfessionEnd
+
+> Everyone else also finds their places.
+
+## HobbyProfessionWriteStart
+
+shelley:
+  Now write down your answer on a sticker and put it next to your name tag.
+  
+-> [End]
+
+## HobbyProfessionWrite
+
+> _char_ writes "`_firstAnswer`" on a sticker and places it next to _their_ name tag.
+
+## PixelArtOtherStylesStart
+
+shelley:
+  Next question: do you want to primarily do pixel art or other styles?
+
+* Pixel art
+* Other styles
+* All styles!
+
+> Some people have to change sides, others stay where they were.
+> _char_ writes _their_ answer on another sticker.
+
 ## End

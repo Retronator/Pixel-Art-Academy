@@ -9,10 +9,11 @@ class C1.Mixer.Stickers extends LOI.Adventure.Thing
   @register @id()
 
   @fullName: -> "stickers"
+  @shortName: -> "sticker"
 
   @description: ->
     "
-      They are blank stickers good for writing things on them.
+      They are blank stickers good for writing on them.
     "
 
   @initialize()

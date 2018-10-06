@@ -8,11 +8,11 @@ class C1.Mixer.Marker extends LOI.Adventure.Thing
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.Marker'
   @register @id()
 
-  @fullName: -> "a marker"
+  @fullName: -> "marker"
 
   @description: ->
     "
-      It's good for writing big letters.
+      It's good for writing in big letters.
     "
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/mixer/items/marker.script'
