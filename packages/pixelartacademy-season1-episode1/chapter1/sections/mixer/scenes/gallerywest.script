@@ -13,4 +13,32 @@ retro:
 
 -> [End]
 
+## TalkToAlexandra
+
+alexandra: Hi! I think we'll get started soon.
+  
+-> [End]
+
+## TalkToReuben
+
+reuben: 
+  Hey, how's it going? 
+  Looks like we're almost ready to start.
+  
+-> [End]
+
+## TalkToShelley
+
+shelley:
+  Nice to see you!
+  Make yourself a name tag and we'll get started.
+  
+-> [End]
+
+## TalkToRetro
+
+retro: When you're ready to start ![use marker with stickers](use marker with stickers) to make a name tag.
+  
+-> [End]
+
 ## End

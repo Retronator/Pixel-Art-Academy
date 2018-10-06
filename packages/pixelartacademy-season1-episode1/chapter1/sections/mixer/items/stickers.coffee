@@ -16,3 +16,5 @@ class C1.Mixer.Stickers extends LOI.Adventure.Thing
     "
 
   @initialize()
+
+  displayInLocation: -> false

@@ -1,0 +1,30 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.Marker
+
+## MarkerNotInInventory
+
+> Maybe you should ![pick up a marker](pick up marker) first.
+  
+-> [End]
+
+## StickersNotInInventory
+
+> _char_ didn't ![get](get stickers) any stickers yet.
+  
+-> [End]
+
+## AlreadyHasNameTag
+
+char: I already have a name tag.
+
+-> [End]
+
+## MakeNameTag
+
+> _char_ takes the marker and writes _their_ name on a sticker.
+> _char_ places the resulting masterpiece of calligraphy on _their_ chest.
+
+## GetNameTag
+
+-> [End]
+ 
+## End

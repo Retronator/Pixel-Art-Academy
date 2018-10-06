@@ -15,18 +15,3 @@ class HQ.Actors.Reuben extends LOI.Adventure.Thing
     shade: LOI.Assets.Palette.Atari2600.characterShades.lighter
 
   @initialize()
-
-  @defaultScriptUrl: -> 'retronator_retronator-hq/actors/reuben.script'
-
-  initializeScript: ->
-    @setCurrentThings
-      reuben: HQ.Actors.Reuben
-
-  onCommand: (commandResponse) ->
-    return unless reuben = LOI.adventure.getCurrentThing HQ.Actors.Reuben
-
-    @script.ephemeralState 'gameFinished', PAA.Season1.Episode1.Chapter1.AdmissionProjects.Snake.Drawing.finished()
-
-    commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.TalkTo, reuben]
-      action: => @startScript()

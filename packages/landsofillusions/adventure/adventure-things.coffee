@@ -79,6 +79,12 @@ class LOI.Adventure extends LOI.Adventure
 
     _.find things, (thing) -> thing instanceof thingClass
 
+  getCurrentInventoryThing: (thingClassOrId) ->
+    thingClass = _.thingClass thingClassOrId
+    things = @currentInventoryThings()
+
+    _.find things, (thing) -> thing instanceof thingClass
+
   getAvatar: (thingClass) ->
     # Create the avatar if needed. It must be done in non-reactive
     # context so that subscriptions inside the avatar don't get stopped.

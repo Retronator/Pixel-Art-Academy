@@ -59,6 +59,8 @@ Document.startup ->
       HangOut: ['hang out']
       Cheat: ['cheat']
       Help: ['help']
+      Create: ['create', 'make']
+      Write: ['write']
 
       Be:
         Present:

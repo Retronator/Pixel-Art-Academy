@@ -13,5 +13,5 @@ class C1.Mixer.ArtStudio extends LOI.Adventure.Scene
   @initialize()
 
   removeThings: -> [
-    HQ.Actors.Alexandra
+    HQ.ArtStudio.Alexandra
   ]

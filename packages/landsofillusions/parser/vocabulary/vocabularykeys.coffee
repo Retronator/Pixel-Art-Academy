@@ -55,6 +55,8 @@ LOI.Parser.Vocabulary.Keys =
     HangOut: ''
     Cheat: ''
     Help: ''
+    Create: ''
+    Write: ''
 
     Be:
       Present:

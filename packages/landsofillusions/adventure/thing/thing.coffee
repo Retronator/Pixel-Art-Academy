@@ -105,7 +105,7 @@ class LOI.Adventure.Thing extends AM.Component
 
   @initialize: ->
     # Store thing class by ID and url.
-    @_thingClassesById[@id()] = @
+    @_thingClassesById[@id()] ?= @
 
     url = @url()
     if url?
@@ -155,7 +155,7 @@ class LOI.Adventure.Thing extends AM.Component
       parentThing = parent
 
       class @Script extends LOI.Adventure.Script
-        @id: -> parentThing.id()
+        @id: -> parentThing.defaultScriptId?() or parentThing.id()
         @initialize()
         initialize: -> @options.parent.initializeScript.call @
 
@@ -169,7 +169,8 @@ class LOI.Adventure.Thing extends AM.Component
         LOI.adventure.director.startBackgroundScript @script, options
 
       onScriptsLoaded: ->
-        @script = @scripts[@options.parent.id()]
+        defaultScriptId = @options.parent.constructor.defaultScriptId?() or @options.parent.id()
+        @script = @scripts[defaultScriptId]
         @options.parent.onScriptsLoaded.call @
 
       onCommand: (commandResponse) -> @options.parent.onCommand.call @, commandResponse

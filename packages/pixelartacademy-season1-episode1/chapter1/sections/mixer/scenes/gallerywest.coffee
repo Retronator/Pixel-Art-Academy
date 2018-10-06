@@ -24,6 +24,8 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     @constructor.Retro
     HQ.Actors.Alexandra
     HQ.Actors.Reuben
+    C1.Mixer.Marker
+    C1.Mixer.Stickers
   ]
     
   # Script
@@ -31,6 +33,9 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   initializeScript: ->
     @setCurrentThings
       retro: HQ.Actors.Retro
+      alexandra: HQ.Actors.Alexandra
+      shelley: HQ.Actors.Shelley
+      reuben: HQ.Actors.Reuben
 
   # Listener
 
@@ -49,6 +54,39 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   cleanup: ->
     @_retroTalksAutorun?.stop()
 
-  class @Retro extends HQ.Actors.Retro
-    @initialize()
-    @descriptiveName: -> "#{super} He is sitting behind a table with ![markers](pick up marker) and name tag ![stickers](pick up stickers)."
+  onCommand: (commandResponse) ->
+    return unless alexandra = LOI.adventure.getCurrentThing HQ.Actors.Alexandra
+    return unless retro = LOI.adventure.getCurrentThing HQ.Actors.Retro
+    return unless shelley = LOI.adventure.getCurrentThing HQ.Actors.Shelley
+    return unless reuben = LOI.adventure.getCurrentThing HQ.Actors.Reuben
+
+    return unless marker = LOI.adventure.getCurrentThing C1.Mixer.Marker
+    return unless stickers = LOI.adventure.getCurrentThing C1.Mixer.Stickers
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.TalkTo, alexandra]
+      action: => @startScript label: 'TalkToAlexandra'
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.TalkTo, retro]
+      action: => @startScript label: 'TalkToRetro'
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.TalkTo, shelley]
+      action: => @startScript label: 'TalkToShelley'
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.TalkTo, reuben]
+      action: => @startScript label: 'TalkToReuben'
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.Get, marker]
+      action: =>
+        marker.state 'inInventory', true
+        true
+
+    commandResponse.onPhrase
+      form: [Vocabulary.Keys.Verbs.Get, stickers]
+      action: =>
+        stickers.state 'inInventory', true
+        true

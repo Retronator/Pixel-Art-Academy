@@ -34,12 +34,12 @@ Package.onUse(function(api) {
 
   api.addFile('actors/actors');
   api.addFile('actors/operator');
-  api.addThing('actors/reuben');
+  api.addFile('actors/reuben');
   api.addFile('actors/burra');
   api.addThing('actors/corinne');
   api.addThing('actors/retro');
   api.addFile('actors/shelley');
-  api.addThing('actors/alexandra');
+  api.addFile('actors/alexandra');
 
   // Items
 
@@ -88,6 +88,7 @@ Package.onUse(function(api) {
   api.addScript('floor1/cafe/burra-character');
 
   api.addFile('floor1/coworking..');
+  api.addThing('floor1/coworking/reuben');
 
   api.addThing('floor2/store..');
   api.addFile('floor2/store/retro');
@@ -123,7 +124,7 @@ Package.onUse(function(api) {
 
   api.addThing('floor4/artstudio..');
   api.addServerFile('floor4/artstudio/initialize-server');
-
+  api.addThing('floor4/artstudio/alexandra');
   api.addFile('floor4/artstudio/artworks');
 
   api.addComponent('floor4/artstudio/contextwithartworks');
