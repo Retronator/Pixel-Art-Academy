@@ -119,14 +119,102 @@ shelley:
 
 ## PixelArtOtherStylesStart
 
-shelley:
-  Next question: do you want to primarily do pixel art or other styles?
+shelley: Next question: do you want to primarily do pixel art or other styles?
 
-* Pixel art
-* Other styles
-* All styles!
+* Pixel art -> [AnswerPixelArt]
+* Other styles -> [AnswerOtherStyle]
+* All styles! -> [AnswerAllStyles]
+
+## AnswerPixelArt
+
+`answers[1] = 0`
+
+-> [PixelArtOtherStylesContinue]
+
+## AnswerOtherStyle
+
+`answers[1] = 2`
+
+-> [PixelArtOtherStylesContinue]
+
+## AnswerAllStyles
+
+`answers[1] = 1`
+
+## PixelArtOtherStylesContinue
 
 > Some people have to change sides, others stay where they were.
 > _char_ writes _their_ answer on another sticker.
+
+## ExtrovertIntrovertStart
+
+shelley: Alright, extrovert or introvert?
+
+* Extrovert -> [AnswerExtrovert]
+* Introvert -> [AnswerIntrovert]
+* A bit of both -> [AnswerExtrovertIntrovert]
+
+## AnswerExtrovert
+
+`answers[2] = 0`
+
+-> [ExtrovertIntrovertContinue]
+
+## AnswerIntrovert
+
+`answers[2] = 2`
+
+-> [ExtrovertIntrovertContinue]
+
+## AnswerExtrovertIntrovert
+
+`answers[2] = 1`
+
+## ExtrovertIntrovertContinue
+
+### ExtrovertIntrovertEnd
+
+> _char_ knows exactly where to go. `not _factor1Changed`
+> You get a strange feeling your character's personality was changed by this answer. `_factor1Changed`
+
+## IndividualTeamStart
+
+shelley: Do you prefer working individually or in a team?
+
+* Individually -> [AnswerIndividual]
+* Team -> [AnswerTeam]
+* No preference -> [AnswerIndividualTeam]
+
+## AnswerIndividual
+
+`answers[3] = 0`
+
+-> [IndividualTeamContinue]
+
+## AnswerTeam
+
+`answers[3] = 2`
+
+-> [IndividualTeamContinue]
+
+## AnswerIndividualTeam
+
+`answers[3] = 1`
+
+## IndividualTeamContinue
+
+### IndividualTeamEnd
+
+> You wonder if those that like to work in a team will end up in the same group. `not _factor2Changed`
+> You wonder if _char_ will start behaving differently based on this answer. `_factor2Changed`
+
+shelley:
+  Finally …
+
+shelley:
+  All done! 
+  Now we'll take a 5 minute break to give you a chance to talk to each other.
+  Remember you can ![look at](look at) the answers your classmates wrote down.
+  Get ready to decide which group to join.
 
 ## End

@@ -25,24 +25,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
       @personalityPart personalityPart
       
       factorsProperty = personalityPart.properties.factors
-      factorPart = factorsProperty.partsByOrder()[factor.options.type]
-
-      unless factorPart
-        # The factor part does not exist yet (since there is no data for it), so we create it.
-        Tracker.nonreactive =>
-          partDataLocation = factorsProperty.options.dataLocation.child factor.options.type
-
-          partDataLocation.saveMetaData
-            type: factorsProperty.options.type
-
-          factorPartClass = LOI.Character.Part.getClassForType factorsProperty.options.type
-          factorPart = factorPartClass.create
-            dataLocation: partDataLocation
-            parent: @
-
-          # Set the factor index.
-          factorPart.properties.index.options.dataLocation factor.options.type
-
+      factorPart = factorsProperty.getFactorPart factor.options.type
       @part factorPart
 
     @hasCustomData = new ComputedField =>

@@ -223,25 +223,8 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
   _applySelectorButton: (weight) ->
     traitInfo = @currentData()
     traitsProperty = @traitsProperty()
-    traits = traitsProperty?.parts()
 
     # We should flip the weight if the trait's positive weight isn't on the right side.
     weight *= -1 unless @_rightIsPositive()
-
-    existingTrait = null
-
-    if traits
-      # See if we have an existing trait.
-      existingTrait = _.find traits, (trait) => trait.properties.key.options.dataLocation() is traitInfo.key
-
-    if existingTrait
-      # Modify the weight of existing trait.
-      existingTrait.properties.weight.options.dataLocation weight
-
-    else
-      # Create a new entry.
-      traitType = LOI.Character.Part.Types.Behavior.Personality.Trait.options.type
-      traitPart = traitsProperty.newPart traitType
-      traitPart.options.dataLocation
-        key: traitInfo.key
-        weight: weight
+    
+    traitsProperty.setTrait traitInfo.key, weight

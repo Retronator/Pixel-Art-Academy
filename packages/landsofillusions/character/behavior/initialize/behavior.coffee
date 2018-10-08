@@ -20,7 +20,7 @@ LOI.Character.Part.registerClasses
     Personality: new LOI.Character.Behavior.Personality
       type: 'Behavior.Personality'
       properties:
-        factors: new LOI.Character.Part.Property.Array
+        factors: new LOI.Character.Behavior.Personality.FactorsArray
           type: 'Behavior.Personality.Factor'
         autoTraits: new LOI.Character.Part.Property.Boolean
 

@@ -15,9 +15,9 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     You recognize some people from the HQ, others seem to be visitors like yourself.
   """
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/mixer/scenes/gallerywest.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/mixer/scenes/gallerywest/gallerywest.script'
 
-  @initialize()
+  # Note: Initialized is called in the extended class.
 
   things: -> [
     HQ.Actors.Shelley
@@ -31,6 +31,8 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   # Script
 
   initializeScript: ->
+    scene = @options.parent
+
     @setCurrentThings
       retro: HQ.Actors.Retro
       alexandra: HQ.Actors.Alexandra
@@ -51,6 +53,20 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
         answers = @state 'answers'
         console.log "Animating character to location", answers[0]
         console.log "Animating any remaining characters based on hobby/profession."
+        complete()
+
+      ExtrovertIntrovertEnd: (complete) =>
+        answers = @state 'answers'
+
+        personalityChanged = scene._changePersonality 1, 1 - answers[2]
+        @ephemeralState 'factor1Changed', personalityChanged
+        complete()
+
+      IndividualTeamEnd: (complete) =>
+        answers = @state 'answers'
+
+        personalityChanged = scene._changePersonality 2, answers[3] - 1
+        @ephemeralState 'factor2Changed', personalityChanged
         complete()
 
   # Listener
@@ -79,6 +95,9 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
         'MixerStart'
         'IceBreakerStart'
         'HobbyProfessionWriteStart'
+        'PixelArtOtherStylesStart'
+        'ExtrovertIntrovertStart'
+        'IndividualTeamStart'
       ]
 
       for checkpoint, index in checkpoints
