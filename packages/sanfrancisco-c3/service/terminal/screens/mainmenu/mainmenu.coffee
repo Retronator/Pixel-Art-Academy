@@ -10,21 +10,14 @@ class C3.Service.Terminal.MainMenu extends AM.Component
   onCreated: ->
     super
     
-    @_characters = []
-      
     @characters = new ComputedField =>
-      character.destroy() for character in @_characters
-
       user = Retronator.user()
 
       designedCharacters = _.filter user.characters, (character) =>
         LOI.Character.documents.findOne(character._id)?.designApproved
 
-      @_characters = for character in designedCharacters
-        Tracker.nonreactive =>
-          new LOI.Character.Instance character._id
-
-      @_characters
+      for character in designedCharacters
+        LOI.Character.getInstance character._id
       
     @newCharacterMade = false
 

@@ -42,7 +42,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
 
   @createIntroDescriptionScript: (memory, people, nextNode, nodeOptions) ->
     # Don't include the author in people since they will already be mentioned.
-    author = LOI.Character.getPerson memory.journalEntry[0].journal.character._id
+    author = LOI.Character.getAgent memory.journalEntry[0].journal.character._id
     people = _.without people, author
 
     translationKey = if people.length then 'introDescription' else 'introDescriptionJustAuthor'
@@ -50,7 +50,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
 
     # Format people into the description. We need to do it here first (instead of letting
     # createDescriptionScript do it) because _are_ should refer to people, not the author.
-    description = LOI.Character.People.formatText description, 'people', people if people.length
+    description = LOI.Character.Agents.formatText description, 'people', people if people.length
 
     # Format entry author into the description.
     description = LOI.Character.formatText description, 'author', author
@@ -61,7 +61,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     people = super
 
     # Add the author if not already part of the conversation.
-    author = LOI.Character.getPerson memory.journalEntry[0].journal.character._id
+    author = LOI.Character.getAgent memory.journalEntry[0].journal.character._id
     people.push author unless author in people
 
     people
@@ -211,7 +211,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
 
   onCommandWhileAdvertised: (commandResponse) ->
     return unless memory = LOI.Memory.documents.findOne @memoryId()
-    author = LOI.Character.getPerson memory.journalEntry[0].journal.character._id
+    author = LOI.Character.getAgent memory.journalEntry[0].journal.character._id
     
     # Looking at the entry enters into the context of the entry.
     action = => LOI.adventure.enterContext @

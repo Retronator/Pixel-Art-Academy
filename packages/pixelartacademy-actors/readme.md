@@ -1,5 +1,5 @@
 # Pixel Art Academy
 
-## Cast
+## Actors
 
 Main cast of actors that appear throughout the game.

@@ -55,7 +55,7 @@ shelley:
 
 > Everyone looks around each other, some more nervously than others, but all excited to get started.
 
-## IceBreakerStart
+## IceBreakersStart
 
 `if (!answers) answers = {}`
 
@@ -64,7 +64,7 @@ shelley:
   
 > Participants gather in the middle. 
 
-### IceBreakerStart
+### IceBreakersStart
 
 shelley:
   I will ask a question and you will go to the left or right side of the room based on your answer. You can stay in the center too.
@@ -121,9 +121,9 @@ shelley:
 
 shelley: Next question: do you want to primarily do pixel art or other styles?
 
-* Pixel art -> [AnswerPixelArt]
-* Other styles -> [AnswerOtherStyle]
-* All styles! -> [AnswerAllStyles]
+* @Pixel art -> [AnswerPixelArt]
+* @Other styles -> [AnswerOtherStyle]
+* @All styles! -> [AnswerAllStyles]
 
 ## AnswerPixelArt
 
@@ -150,9 +150,9 @@ shelley: Next question: do you want to primarily do pixel art or other styles?
 
 shelley: Alright, extrovert or introvert?
 
-* Extrovert -> [AnswerExtrovert]
-* Introvert -> [AnswerIntrovert]
-* A bit of both -> [AnswerExtrovertIntrovert]
+* @Extrovert -> [AnswerExtrovert]
+* @Introvert -> [AnswerIntrovert]
+* @A bit of both -> [AnswerExtrovertIntrovert]
 
 ## AnswerExtrovert
 
@@ -181,9 +181,9 @@ shelley: Alright, extrovert or introvert?
 
 shelley: Do you prefer working individually or in a team?
 
-* Individually -> [AnswerIndividual]
-* Team -> [AnswerTeam]
-* No preference -> [AnswerIndividualTeam]
+* @Individually -> [AnswerIndividual]
+* @Team -> [AnswerTeam]
+* @No preference -> [AnswerIndividualTeam]
 
 ## AnswerIndividual
 
@@ -215,6 +215,10 @@ shelley:
   All done! 
   Now we'll take a 5 minute break to give you a chance to talk to each other.
   Remember you can ![look at](look at) the answers your classmates wrote down.
-  Get ready to decide which group to join.
+  Get ready to decide which classmates to join.
+  
+## IceBreakersDone
+
+-> [End]
 
 ## End

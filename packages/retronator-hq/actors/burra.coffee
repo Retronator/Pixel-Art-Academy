@@ -1,5 +1,4 @@
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
 HQ = Retronator.HQ
 
 class HQ.Actors.Burra extends LOI.Adventure.Thing

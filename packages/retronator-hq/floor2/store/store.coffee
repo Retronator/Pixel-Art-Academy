@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 RS = Retronator.Store
 RA = Retronator.Accounts
 

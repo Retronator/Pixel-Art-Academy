@@ -1,5 +1,4 @@
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
 HQ = Retronator.HQ
 
 class HQ.LandsOfIllusions.Room.Chair extends LOI.Adventure.Item

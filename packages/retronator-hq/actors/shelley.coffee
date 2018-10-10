@@ -1,5 +1,4 @@
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
 HQ = Retronator.HQ
 
 class HQ.Actors.Shelley extends LOI.Adventure.Thing

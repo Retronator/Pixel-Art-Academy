@@ -15,14 +15,10 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
   onCreated: ->
     super
 
-    # Subscribe to user's activated characters.
-    @_charactersSubscription = LOI.Character.activatedForCurrentUser.subscribe()
-  
     @activatedCharacters = new ComputedField =>
-      return [] unless user = Retronator.user()
-      return [] unless user.characters
+      return [] unless characters = Retronator.user()?.characters
 
-      LOI.Character.getInstance character for character in user.characters when character.activated
+      LOI.Character.getInstance character for character in characters when character.activated
 
     # Which character is shown left-most. Allows to scroll through options.
     @firstCharacterOffset = new ReactiveField 0

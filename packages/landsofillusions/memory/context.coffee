@@ -70,7 +70,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     return unless description
 
     # Format people into the description.
-    description = LOI.Character.People.formatText description, 'people', people
+    description = LOI.Character.Agents.formatText description, 'people', people
 
     options = _.extend {}, nodeOptions,
       line: description
@@ -82,7 +82,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     # Add all characters that have actions in the memory.
     characterIds = _.uniq _.map memory.actions, (action) => action.character._id
 
-    LOI.Character.getPerson characterId for characterId in characterIds
+    LOI.Character.getAgent characterId for characterId in characterIds
 
   constructor: ->
     super

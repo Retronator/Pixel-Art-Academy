@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 

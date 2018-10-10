@@ -1,8 +1,8 @@
 AB = Artificial.Babel
 LOI = LandsOfIllusions
 
-class LOI.Character.People extends LOI.Adventure.Global
-  @id: -> 'LandsOfIllusions.Character.People'
+class LOI.Character.Agents extends LOI.Adventure.Global
+  @id: -> 'LandsOfIllusions.Character.Agents'
 
   @scenes: -> [
     @Scene
@@ -10,13 +10,13 @@ class LOI.Character.People extends LOI.Adventure.Global
 
   @initialize()
 
-  @formatText: (text, keyword, people) ->
-    names = (person.fullName() for person in people)
+  @formatText: (text, keyword, agents) ->
+    names = (agent.fullName() for agent in agents)
 
     # TODO: Support languages other then English.
-    peopleText = AB.Rules.English.createNounSeries names
+    agentsText = AB.Rules.English.createNounSeries names
 
-    text = text.replace new RegExp("_#{keyword}_", 'g'), (match) -> peopleText
+    text = text.replace new RegExp("_#{keyword}_", 'g'), (match) -> agentsText
 
     text = text.replace /_are_/g, (match) ->
       # TODO: Support languages other then English.
@@ -25,7 +25,7 @@ class LOI.Character.People extends LOI.Adventure.Global
     text
   
   class @Scene extends LOI.Adventure.Scene
-    @id: -> 'LandsOfIllusions.Character.People.Scene'
+    @id: -> 'LandsOfIllusions.Character.Agents.Scene'
 
     # Activate this scene on the current location/timeline. It can't be null because that would apply it to all
     # locations simultaneously, including things like inventory and apps.
@@ -48,24 +48,24 @@ class LOI.Character.People extends LOI.Adventure.Global
 
         LOI.Memory.Action.recentForTimelineLocation.subscribe timelineId, locationId, earliestTime
 
-      @currentPeople = new ComputedField =>
+      @currentAgents = new ComputedField =>
         # See if we've changed location.
         return [] unless currentTimelineId = LOI.adventure.currentTimelineId()
         return [] unless currentLocationId = LOI.adventure.currentLocationId()
 
-        # Don't process people until the actions subscription has kicked in,
+        # Don't process agents until the actions subscription has kicked in,
         # to avoid observing removing and re-adding of actions.
         return [] unless @recentActionsSubscription()?.ready()
 
-        if currentTimelineId isnt @_peopleOldTimelineId or currentLocationId isnt @_peopleOldLocationId
-          @_peopleOldTimelineId = currentTimelineId
-          @_peopleOldLocationId = currentLocationId
+        if currentTimelineId isnt @_agentsOldTimelineId or currentLocationId isnt @_agentsOldLocationId
+          @_agentsOldTimelineId = currentTimelineId
+          @_agentsOldLocationId = currentLocationId
   
           # Mark arrival time so we know which actions to treat as realtime.
-          @_peopleTimelineLocationArrivalTime = new Date()
+          @_agentsTimelineLocationArrivalTime = new Date()
   
-          # Clear the people cache.
-          @_peopleById = {}
+          # Clear the agents cache.
+          @_agentsById = {}
   
         # Filter all actions to unique characters. We don't care about reactivity
         # of time since we'll only get too many actions and not miss any.
@@ -84,7 +84,7 @@ class LOI.Character.People extends LOI.Adventure.Global
           # Sort actions by time.
           actions = _.sortBy actions, (action) => action.time.getTime()
   
-          oldPeople = _.values @_peopleById
+          oldAgents = _.values @_agentsById
   
           characterIds = _.uniq (action.character._id for action in actions)
 
@@ -97,8 +97,8 @@ class LOI.Character.People extends LOI.Adventure.Global
   
           # Return a list of characters initialized with their actions.
           for characterId in characterIds
-            # Create the person, if it's new.
-            @_peopleById[characterId] ?= LOI.Character.getPerson characterId
+            # Create the agent, if it's new.
+            @_agentsById[characterId] ?= LOI.Character.getAgent characterId
   
             lastAction = _.last _.filter actions, (action) -> action.character._id is characterId
   
@@ -106,24 +106,24 @@ class LOI.Character.People extends LOI.Adventure.Global
               # Convert to correct class.
               lastAction = lastAction.cast()
   
-              if lastAction.time < @_peopleTimelineLocationArrivalTime or inMemoryContext
+              if lastAction.time < @_agentsTimelineLocationArrivalTime or inMemoryContext
                 # Actions happened before we arrived here (or while in a
                 # different context), so no need for a transition.
-                @_peopleById[characterId].setAction lastAction
+                @_agentsById[characterId].setAction lastAction
   
               else
-                @_peopleById[characterId].transitionToAction lastAction
+                @_agentsById[characterId].transitionToAction lastAction
   
-            # Remove from old people.
-            _.pull oldPeople, @_peopleById[characterId]
+            # Remove from old agents.
+            _.pull oldAgents, @_agentsById[characterId]
   
-          # Notify old people that they are not at the location any more and remove them.
-          for oldPerson in oldPeople
-            oldPerson.transitionToAction null
+          # Notify old agents that they are not at the location any more and remove them.
+          for oldAgent in oldAgents
+            oldAgent.transitionToAction null
   
-            delete @_peopleById[oldPerson.instance._id]
+            delete @_agentsById[oldAgent.instance._id]
   
-          _.values @_peopleById
+          _.values @_agentsById
       ,
         true
 
@@ -131,7 +131,7 @@ class LOI.Character.People extends LOI.Adventure.Global
       super
 
       @recentActionsSubscription.stop()
-      @currentPeople.stop()
+      @currentAgents.stop()
 
     things: ->
-      @currentPeople()
+      @currentAgents()

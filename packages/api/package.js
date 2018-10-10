@@ -75,4 +75,19 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addAssets(path + ".script", ['client', 'server']);
   };
+  api.constructor.prototype.addData = function(path) {
+    path = expandPath(path);
+    this.addAssets(path + ".json", ['client', 'server']);
+  };
+  api.constructor.prototype.addFileWithData = function(path, architecture) {
+    path = expandPath(path);
+    this.addFiles(path + ".coffee", architecture);
+    this.addAssets(path + ".json", ['client', 'server']);
+  };
+  api.constructor.prototype.addThingWithData = function(path, architecture) {
+    path = expandPath(path);
+    this.addFiles(path + ".coffee", architecture);
+    this.addAssets(path + ".script", ['client', 'server']);
+    this.addAssets(path + ".json", ['client', 'server']);
+  };
 });

@@ -1,5 +1,4 @@
 LOI = LandsOfIllusions
-PAA = PixelArtAcademy
 HQ = Retronator.HQ
 
 class HQ.Actors.Retro extends LOI.Adventure.Thing

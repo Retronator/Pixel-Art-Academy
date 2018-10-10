@@ -19,7 +19,6 @@ Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-blog');
-  api.use('retronator:pixelartacademy-cast');
   api.use('retronator:pixelartdatabase');
 
   api.export('Retronator');

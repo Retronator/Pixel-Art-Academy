@@ -67,7 +67,8 @@ Package.onUse(function(api) {
 
   // Character
 
-  api.addFile('character/character');
+  api.addFile('character..');
+  api.addFile('character/character-helpers');
   api.addFile('character/methods');
   api.addServerFile('character/subscriptions');
   api.addServerFile('character/migrations/0000-renamecollection');
@@ -77,7 +78,9 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0004-displayname');
   api.addServerFile('character/migrations/0005-usercharactersupdate');
   api.addClientFile('character/spacebars');
-  
+  api.addFile('character/nonplayercharacter');
+  api.addFile('character/instance');
+
   // Part system
 
   api.addFile('character/part/part');
@@ -266,10 +269,11 @@ Package.onUse(function(api) {
 
   api.addFiles('adventure/script/parser/parser.coffee');
 
-  // Character instance (inherits from Thing and uses Script) and derivatives
+  // Character things (inherits from Thing and uses Script) and derivatives
 
-  api.addFile('character/instance');
   api.addFile('character/person');
+  api.addFile('character/agent');
+  api.addFile('character/actor');
 
   // Storylines
 
@@ -298,9 +302,9 @@ Package.onUse(function(api) {
 
   api.addFile('adventure/context..');
 
-  // People (requires adventure global)
+  // Agents (requires adventure global)
 
-  api.addFile('character/people');
+  api.addFile('character/agents');
 
   // Memories (requires adventure context and script nodes)
 

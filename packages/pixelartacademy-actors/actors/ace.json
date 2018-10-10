@@ -1,0 +1,84 @@
+{
+  "_id": "PixelArtAcademy.Cast.Ace",
+  "debugName": "Ace",
+  "profile": {
+    "country": "us",
+    "age": 33,
+    "aspiration": "To draw like a boss!",
+    "favorites": {
+      "computer": "NES",
+      "gameGenre": "Strategy",
+      "artMedium": "Pixel art",
+      "superhero": "Batman",
+      "quote": "You only live once"
+    }
+  },
+  "behavior": {
+    "node": {
+      "fields": {
+        "personality": {
+          "node": {
+            "fields": {
+              "factors": {
+                "node": {
+                  "fields": {
+                    "1": {
+                      "type": "Behavior.Personality.Factor",
+                      "node": {
+                        "fields": {
+                          "index": {
+                            "value": 1
+                          }
+                        }
+                      }
+                    },
+                    "2": {
+                      "type": "Behavior.Personality.Factor",
+                      "node": {
+                        "fields": {
+                          "index": {
+                            "value": 2
+                          }
+                        }
+                      }
+                    },
+                    "4": {
+                      "type": "Behavior.Personality.Factor",
+                      "node": {
+                        "fields": {
+                          "index": {
+                            "value": 4
+                          }
+                        }
+                      }
+                    },
+                    "3": {
+                      "type": "Behavior.Personality.Factor",
+                      "node": {
+                        "fields": {
+                          "index": {
+                            "value": 3
+                          }
+                        }
+                      }
+                    },
+                    "5": {
+                      "type": "Behavior.Personality.Factor",
+                      "node": {
+                        "fields": {
+                          "index": {
+                            "value": 5
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

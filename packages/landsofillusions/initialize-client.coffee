@@ -26,7 +26,7 @@ Meteor.startup ->
 
       if characterId
         # Create new character.
-        LOI.character new LOI.Character.Instance characterId
+        LOI.character LOI.Character.getInstance characterId
 
       else
         # We don't have a character any more.

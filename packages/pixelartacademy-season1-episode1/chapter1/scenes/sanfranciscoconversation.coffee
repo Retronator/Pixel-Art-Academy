@@ -22,8 +22,8 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
 
     # Subscribe to everyone's journals.
     @_journalsSubscriptionAutorun = Tracker.autorun =>
-      people = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
-      characterIds = (person._id for person in people)
+      agents = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Agent
+      characterIds = (agent._id for agent in agents)
 
       PAA.Practice.Journal.forCharacterIds.subscribe characterIds
 

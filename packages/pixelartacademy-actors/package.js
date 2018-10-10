@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'retronator:pixelartacademy-cast',
+  name: 'retronator:pixelartacademy-actors',
   version: '0.1.0',
   // Brief, one-line summary of the package.
   summary: '',
@@ -16,6 +16,8 @@ Package.onUse(function(api) {
 
   api.export('PixelArtAcademy');
 
-  api.addFiles('cast.coffee');
+  api.addFile('actors');
+  
+  api.addFileWithData('actors/ace');
 
 });

@@ -3,7 +3,7 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
-# A wrapper around a character instance that represents a character from another player.
+# A thing representation of a character, either a player character (agent) or a non-player character (actor).
 class LOI.Character.Person extends LOI.Adventure.Thing
   # PERSON STATE (part of main game state, mapped by character ID)
   # alreadyMet: boolean whether the player had any interactions with this person
@@ -14,39 +14,10 @@ class LOI.Character.Person extends LOI.Adventure.Thing
   # previousHangout: information about the hangout prior to last hangout
   #   time: real-world time of the hangout in milliseconds
   #   gameTime: fractional time in game days
-  @id: -> 'LandsOfIllusions.Character.Person'
-
-  @fullName: -> "Person"
-  @description: -> "It's a person."
-
-  @translations: ->
-    yourCharacter: "It's your character."
-
-  @initialize()
-
   constructor: (@_id) ->
-    @instance = LOI.Character.getInstance @_id
-    @action = new ReactiveField null
-
-    # We let Thing construct itself last since it'll need the character avatar (via the instance) ready.
     super
 
-    @thingAvatar = new LOI.Adventure.Thing.Avatar @
-    
-    # Subscribe to the memory of the action the person is performing.
-    @_actionSubscription = Tracker.autorun (computation) =>
-      # See if this action even is inside a memory.
-      return unless action = @action()
-      return unless action.memory
-      
-      LOI.Memory.forId.subscribe action.memory._id
-
-    @personStateAddress = new LOI.StateAddress "people.#{@_id}"
-    @personState = new LOI.StateObject address: @personStateAddress
-
-  createAvatar: ->
-    # We send instance's avatar as the main avatar.
-    @instance.avatar
+    @action = new ReactiveField null
 
   descriptiveName: ->
     text = "![_person_](talk to _person_)."
@@ -55,32 +26,7 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       text = "#{text} #{actionDescription}"
 
     LOI.Character.formatText text, 'person', @instance
-
-  ready: ->
-    conditions = [
-      super
-      @thingAvatar.ready()
-      @instance.ready()
-    ]
-
-    _.every conditions
-
-  # We pass avatar methods through to instance's avatar.
-  fullName: -> @instance.avatar.fullName()
-  shortName: -> @instance.avatar.shortName()
-  nameAutoCorrectStyle: -> @instance.avatar.nameAutoCorrectStyle()
-  dialogTextTransform: -> @instance.avatar.dialogTextTransform()
-  dialogueDeliveryType: -> @instance.avatar.dialogueDeliveryType()
-
-  # Person methods
-
-  description: ->
-    if @_id is LOI.characterId()
-      @translations().yourCharacter
-
-    else
-      @thingAvatar.description()
-
+    
   setAction: (action) ->
     # Just record the action so it's ready for upcoming transitions.
     @action action
@@ -101,6 +47,7 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       content: action.content
 
     return if EJSON.equals actionData(@action()), actionData(action)
+
     # See if we need to do the transition.
     oldAction = @action()
     skipTransition = action?.shouldSkipTransition oldAction
@@ -118,6 +65,8 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       # No action means the person left the location, so we start an ad-hoc leave action.
       action = new LOI.Memory.Actions.Leave
       action.start @
+
+  recentActions: -> throw AE.NotImplementedException "Person must provide recent actions."
 
   # The time after start of hangout that we're showing events since previous hangout.
   @preserveHangoutDuration = 10 * 60 * 1000 # 10 minutes
@@ -143,28 +92,6 @@ class LOI.Character.Person extends LOI.Adventure.Thing
     earliestTime = Math.max lastHangoutTime, Date.now() - @constructor.recentActionsEarliestTimeMaxDuration
 
     new Date earliestTime
-
-  subscribeRecentActions: ->
-    LOI.Memory.Action.recentForCharacter.subscribe @_id, @recentActionsEarliestTime()
-
-  subscribeRecentMemories: ->
-    actions = @_recentActions()
-    memoryIds = _.uniq (action.memory._id for action in actions when action.memory)
-
-    LOI.Memory.forIds.subscribe memoryIds
-
-  recentActions: ->
-    # Automatically subscribe to actions. We assume this is asked from a reactive 
-    # computation so the subscription will stop when computation ends.
-    @subscribeRecentActions()
-    
-    # Return the actions.
-    @_recentActions()
-    
-  _recentActions: ->
-    LOI.Memory.Action.documents.fetch
-      'character._id': @_id
-      time: $gte: @recentActionsEarliestTime()
 
   recordHangout: ->
     lastHangout = @personState('lastHangout')

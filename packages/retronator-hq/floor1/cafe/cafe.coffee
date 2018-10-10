@@ -1,6 +1,5 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
-PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
@@ -70,7 +69,7 @@ class HQ.Cafe extends LOI.Adventure.Location
 
           Register: (complete) =>
             # Hook back into the Chapter 2 registration script.
-            cafeScene = LOI.adventure.getCurrentThing PAA.Season1.Episode0.Chapter2.Registration.Cafe
+            cafeScene = LOI.adventure.getCurrentThing PixelArtAcademy.Season1.Episode0.Chapter2.Registration.Cafe
             cafeListener = cafeScene.listeners[0]
 
             cafeListener.startScript label: 'PlayPixelArtAcademy'

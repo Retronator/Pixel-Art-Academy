@@ -7,7 +7,7 @@ class LOI.Adventure extends LOI.Adventure
 
     # Global classes.
     @globalClasses = [
-      LOI.Character.People
+      LOI.Character.Agents
       LOI.Memory.Flashback
       PAA.Items
     ]

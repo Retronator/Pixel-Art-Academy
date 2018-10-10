@@ -15,7 +15,6 @@ Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-hq');
-  api.use('retronator:pixelartacademy-cast');
 
   api.export('Retronator');
 

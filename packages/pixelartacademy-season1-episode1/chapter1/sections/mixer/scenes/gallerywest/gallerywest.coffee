@@ -1,5 +1,6 @@
 LOI = LandsOfIllusions
-C1 = PixelArtAcademy.Season1.Episode1.Chapter1
+PAA = PixelArtAcademy
+C1 = PAA.Season1.Episode1.Chapter1
 HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
@@ -24,6 +25,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     @constructor.Retro
     HQ.Actors.Alexandra
     HQ.Actors.Reuben
+    PAA.Actors.Ace
     C1.Mixer.Marker
     C1.Mixer.Stickers
   ]
@@ -41,7 +43,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
 
     # TODO: Animate characters in callbacks.
     @setCallbacks
-      IceBreakerStart: (complete) =>
+      IceBreakersStart: (complete) =>
         console.log "Animating characters to the middle."
         complete()
 
@@ -90,23 +92,24 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
       
       LOI.adventure.enterContext C1.Mixer.Context
 
-      # Start the mixer script at the latest checkpoint.
-      checkpoints = [
-        'MixerStart'
-        'IceBreakerStart'
-        'HobbyProfessionWriteStart'
-        'PixelArtOtherStylesStart'
-        'ExtrovertIntrovertStart'
-        'IndividualTeamStart'
-      ]
+      unless @script.state 'IceBreakersDone'
+        # Start the mixer script at the latest checkpoint.
+        checkpoints = [
+          'MixerStart'
+          'IceBreakersStart'
+          'HobbyProfessionWriteStart'
+          'PixelArtOtherStylesStart'
+          'ExtrovertIntrovertStart'
+          'IndividualTeamStart'
+        ]
 
-      for checkpoint, index in checkpoints
-        # Start at this checkpoint if we haven't reached the next one yet.
-        nextCheckpoint = checkpoints[index + 1]
+        for checkpoint, index in checkpoints
+          # Start at this checkpoint if we haven't reached the next one yet.
+          nextCheckpoint = checkpoints[index + 1]
 
-        unless nextCheckpoint and @script.state nextCheckpoint
-          @startScript label: checkpoint
-          return
+          unless nextCheckpoint and @script.state nextCheckpoint
+            @startScript label: checkpoint
+            return
 
   cleanup: ->
     @_retroTalksAutorun?.stop()
