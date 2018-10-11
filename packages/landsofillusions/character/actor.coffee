@@ -11,7 +11,7 @@ class LOI.Character.Actor extends LOI.Character.Person
     @nonPlayerCharacterDocument = new ReactiveField null
     @instance = new LOI.Character.Instance @id(), @nonPlayerCharacterDocument
 
-    # We let Thing construct itself last since it'll need the character avatar (via the instance) ready.
+    # We let Person construct itself last since it'll need the character avatar (via the instance) ready.
     super
     
     # Person state for actors is saved in the thing state directly.

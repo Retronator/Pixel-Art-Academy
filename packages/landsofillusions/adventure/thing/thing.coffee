@@ -214,8 +214,8 @@ class LOI.Adventure.Thing extends AM.Component
   constructor: (@options) ->
     super
 
-    # To ease debugging, we save the ID value as a variable on the instance.
-    @ID = @id()
+    # To improve component persistence (and ease debugging), we save the ID value as _id as well.
+    @_id ?= @id()
 
     @avatar = @createAvatar()
 

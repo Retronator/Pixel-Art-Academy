@@ -14,7 +14,7 @@ class LOI.Character.Person extends LOI.Adventure.Thing
   # previousHangout: information about the hangout prior to last hangout
   #   time: real-world time of the hangout in milliseconds
   #   gameTime: fractional time in game days
-  constructor: (@_id) ->
+  constructor: ->
     super
 
     @action = new ReactiveField null
