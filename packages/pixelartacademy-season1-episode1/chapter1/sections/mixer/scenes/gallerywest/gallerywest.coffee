@@ -29,7 +29,12 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     C1.Mixer.Marker
     C1.Mixer.Stickers
   ]
-    
+
+  _doAnswerAction: (question, answer) ->
+    type = C1.Mixer.IceBreakers.AnswerAction.type
+    situation = LOI.adventure.currentSituationParameters()
+    LOI.Memory.Action.do type, LOI.characterId(), situation, {question, answer}
+
   # Script
 
   initializeScript: ->
@@ -55,6 +60,12 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
         answers = @state 'answers'
         console.log "Animating character to location", answers[0]
         console.log "Animating any remaining characters based on hobby/profession."
+        scene._doAnswerAction C1.Mixer.IceBreakers.Questions.HobbyProfession, answers[0]
+        complete()
+
+      PixelArtOtherStylesEnd: (complete) =>
+        answers = @state 'answers'
+        scene._doAnswerAction C1.Mixer.IceBreakers.Questions.PixelArtOtherStyles, answers[1]
         complete()
 
       ExtrovertIntrovertEnd: (complete) =>
@@ -62,6 +73,8 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
 
         personalityChanged = scene._changePersonality 1, 1 - answers[2]
         @ephemeralState 'factor1Changed', personalityChanged
+
+        scene._doAnswerAction C1.Mixer.IceBreakers.Questions.ExtrovertIntrovert, answers[2]
         complete()
 
       IndividualTeamEnd: (complete) =>
@@ -69,6 +82,8 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
 
         personalityChanged = scene._changePersonality 2, answers[3] - 1
         @ephemeralState 'factor2Changed', personalityChanged
+
+        scene._doAnswerAction C1.Mixer.IceBreakers.Questions.IndividualTeam, answers[3]
         complete()
 
   # Listener

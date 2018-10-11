@@ -67,7 +67,7 @@ shelley:
 ### IceBreakersStart
 
 shelley:
-  I will ask a question and you will go to the left or right side of the room based on your answer. You can stay in the center too.
+  I will ask a question and you will go to the left or right side of the room based on your answer. You can stay in the middle too.
   First, do you want drawing to be mainly your hobby or profession?
 
 pause
@@ -142,6 +142,8 @@ shelley: Next question: do you want to primarily do pixel art or other styles?
 `answers[1] = 1`
 
 ## PixelArtOtherStylesContinue
+
+### PixelArtOtherStylesEnd
 
 > Some people have to change sides, others stay where they were.
 > _char_ writes _their_ answer on another sticker.

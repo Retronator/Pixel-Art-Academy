@@ -74,7 +74,7 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
     AB.translation @_babelSubscription, @noNameTranslationKey
 
   @noName: ->
-    @noNameTranslation().translate().text
+    @noNameTranslation()?.translate().text
 
 if Meteor.isClient
   # Subscribe to the avatar namespace in all languages, so that we can show all translations of "No Name" in the

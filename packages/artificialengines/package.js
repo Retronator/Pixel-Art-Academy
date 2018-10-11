@@ -184,7 +184,8 @@ Package.onUse(function(api) {
   api.addServerFile('babel/babel-server');
   api.addClientFile('babel/babel-client');
   api.addClientFile('babel/initialize-client');
-  api.addFile('babel/helpers');
+  api.addFile('babel/helpers..');
+  api.addFile('babel/helpers/translations');
   api.addServerFile('babel/cache-server');
 
   api.addFile('babel/rules..');

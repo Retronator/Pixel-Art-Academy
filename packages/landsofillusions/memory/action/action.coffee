@@ -35,7 +35,10 @@ class LOI.Memory.Action extends AM.Document
         for translationKey of @translationKeys
           defaultText = _.propertyValue @, translationKey
           AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
-  
+
+    # Prepare any extra translations.
+    AB.Helpers.Translations.initialize @type, @translations() if @translations
+
   @Meta
     name: @id()
     fields: =>
@@ -71,6 +74,11 @@ class LOI.Memory.Action extends AM.Document
     startDescription: 'startDescription'
     activeDescription: 'activeDescription'
     endDescription: 'endDescription'
+    
+  constructor: ->
+    super
+    
+    @translations = new AB.Helpers.Translations @constructor.type
 
   startDescription: -> @_translateIfAvailable @constructor.translationKeys.startDescription
   activeDescription: -> @_translateIfAvailable @constructor.translationKeys.activeDescription

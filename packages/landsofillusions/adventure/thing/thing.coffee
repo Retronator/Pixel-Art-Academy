@@ -120,15 +120,8 @@ class LOI.Adventure.Thing extends AM.Component
     # Prepare the avatar for this thing.
     LOI.Adventure.Thing.Avatar.initialize @
 
-    # On the server, prepare any extra translations.
-    if Meteor.isServer
-      Document.startup =>
-        return if Meteor.settings.startEmpty
-      
-        translationNamespace = @id()
-
-        for translationKey, defaultText of @_translations()
-          AB.createTranslation translationNamespace, translationKey, defaultText if defaultText
+    # Prepare any extra translations.
+    AB.Helpers.Translations.initialize @id(), @_translations()
 
     # Create static state field.
     @stateAddress = new LOI.StateAddress "things.#{@id()}"
@@ -231,27 +224,14 @@ class LOI.Adventure.Thing extends AM.Component
     @_subscriptionHandles = []
 
     LOI.Adventure.initializeListenerProvider @
-
-    # Subscribe to this thing's translations.
-    translationNamespace = @constructor.id()
-    @_translationSubscription = AB.subscribeNamespace translationNamespace
     
-    @translations = new ComputedField =>
-      return unless @_translationSubscription.ready()
-
-      translations = {}
-
-      for translationKey, defaultText of @constructor._translations()
-        translated = AB.translate @_translationSubscription, translationKey
-        translations[translationKey] = translated.text if translated.language
-
-      translations
+    @translations = new AB.Helpers.Translations @constructor.id()
 
     @thingReady = new ComputedField =>
       conditions = _.flattenDeep [
         @avatar.ready()
         listener.ready() for listener in @listeners
-        @_translationSubscription.ready()
+        @translations.ready()
       ]
 
       console.log "Thing ready?", @id(), conditions if LOI.debug
@@ -263,8 +243,7 @@ class LOI.Adventure.Thing extends AM.Component
 
     handle.stop() for handle in _.union @_autorunHandles, @_subscriptionHandles
 
-    @_translationSubscription.stop()
-
+    @translations.stop()
     @thingReady.stop()
 
     LOI.Adventure.destroyListenerProvider @
