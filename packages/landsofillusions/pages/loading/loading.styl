@@ -4,7 +4,12 @@
   fixed-cover()
   z-index 1000
   background atariGrey(0)
+  opacity 0
+  transition opacity 0.2s
   cursor wait
+
+  &.visible
+    opacity 1
 
   .loading
     position absolute

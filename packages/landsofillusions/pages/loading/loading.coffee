@@ -18,6 +18,12 @@ class LOI.Pages.Loading extends AM.Component
 
     Meteor.setTimeout =>
       return unless @isRendered()
+      @$('.landsofillusions-loading').addClass 'visible'
+    ,
+      100
+    
+    Meteor.setTimeout =>
+      return unless @isRendered()
       @$('.loading').addClass 'visible'
     ,
       1000
