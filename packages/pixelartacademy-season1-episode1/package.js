@@ -171,6 +171,9 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-changepersonality');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/retro');
 
+  api.addFile('chapter1/sections/mixer/scenes/participants/participant');
+  api.addFile('chapter1/sections/mixer/scenes/participants/ace');
+
   api.addThing('chapter1/sections/mixer/items/marker');
   api.addFile('chapter1/sections/mixer/items/stickers');
   api.addFile('chapter1/sections/mixer/items/nametag');

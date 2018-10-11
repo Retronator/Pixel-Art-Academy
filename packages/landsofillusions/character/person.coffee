@@ -67,6 +67,7 @@ class LOI.Character.Person extends LOI.Adventure.Thing
       action.start @
 
   recentActions: -> throw AE.NotImplementedException "Person must provide recent actions."
+  getActions: (query) -> throw AE.NotImplementedException "Person must implement querying actions."
 
   # The time after start of hangout that we're showing events since previous hangout.
   @preserveHangoutDuration = 10 * 60 * 1000 # 10 minutes

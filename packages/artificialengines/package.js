@@ -153,6 +153,7 @@ Package.onUse(function(api) {
   api.addFile('mummification/mongohelper');
   api.addFile('mummification/document');
   api.addFile('mummification/persistentstorage');
+  api.addFile('mummification/collectionwrapper');
 
   api.addFile('mummification/hierarchy..');
   api.addFile('mummification/hierarchy/address');

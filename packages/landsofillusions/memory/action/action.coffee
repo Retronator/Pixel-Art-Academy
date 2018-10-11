@@ -39,6 +39,10 @@ class LOI.Memory.Action extends AM.Document
     # Prepare any extra translations.
     AB.Helpers.Translations.initialize @type, @translations() if @translations
 
+    # On the client also instantiate a singleton for retrieving them.
+    if Meteor.isClient
+      @_translations = new AB.Helpers.Translations @type
+
   @Meta
     name: @id()
     fields: =>
@@ -78,7 +82,7 @@ class LOI.Memory.Action extends AM.Document
   constructor: ->
     super
     
-    @translations = new AB.Helpers.Translations @constructor.type
+    @translations = @constructor._translations
 
   startDescription: -> @_translateIfAvailable @constructor.translationKeys.startDescription
   activeDescription: -> @_translateIfAvailable @constructor.translationKeys.activeDescription

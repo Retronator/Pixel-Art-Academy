@@ -6,6 +6,17 @@ RA = Retronator.Accounts
 # A base thing for non-playable characters. Wraps around the
 # character instance with a static non-player character document
 class LOI.Character.Actor extends LOI.Character.Person
+  @initialize: ->
+    super
+    
+    # Create the actions location.
+    parent = @
+    
+    class @Actions extends LOI.Adventure.Location
+      @id: -> "#{parent.id()}.Actions"
+
+      @initialize()
+
   constructor: ->
     # We must provide an NPC document for creating the character instance of this actor.
     @nonPlayerCharacterDocument = new ReactiveField null
@@ -39,6 +50,18 @@ class LOI.Character.Actor extends LOI.Character.Person
             color: @avatar.color()
 
           @nonPlayerCharacterDocument document
+          
+    # Create a collection with all current actions.
+    @actionsLocation = new @constructor.Actions
+    @actionDocuments = new AM.CollectionWrapper =>
+      situation = new LOI.Adventure.Situation
+        location: @actionsLocation
+        
+      situation.things()
 
   recentActions: ->
     # TODO: Provide actions via storyline.
+    
+  getActions: (query = {}) ->
+    for actionDocument in @actionDocuments.find(query).fetch()
+      new LOI.MemoryAction actionDocument

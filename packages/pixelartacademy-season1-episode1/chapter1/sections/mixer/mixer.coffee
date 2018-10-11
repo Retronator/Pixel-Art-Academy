@@ -11,6 +11,7 @@ class C1.Mixer extends LOI.Adventure.Section
     @GalleryWest
     @ArtStudio
     @Coworking
+    @Ace
   ]
 
   @initialize()

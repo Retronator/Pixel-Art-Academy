@@ -80,3 +80,7 @@ class LOI.Character.Agent extends LOI.Character.Person
     LOI.Memory.Action.documents.fetch
       'character._id': @_id
       time: $gte: @recentActionsEarliestTime()
+
+  getActions: (query) ->
+    LOI.Memory.Action.documents.fetch _.extend {}, query,
+      'character._id': @_id
