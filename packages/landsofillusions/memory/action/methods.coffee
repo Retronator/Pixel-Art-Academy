@@ -46,18 +46,24 @@ LOI.Memory.Action.do.method (type, characterId, situation, content, memoryId) ->
   else
     action.memory = null
 
-    if action.isMemorable
-      # Memorable actions need to be normally inserted.
-      LOI.Memory.Action.documents.insert action
-
-    else
-      # Outside of memories and memorable actions, we replace this character's last action.
-      LOI.Memory.Action.documents.upsert
+    unless action.isMemorable
+      # Clean up previous unmemorable actions.
+      removeSelector =
         'character._id': characterId
         memory: null
         isMemorable: $ne: true
-      ,
-        action
+        type: type
+        
+      if retainDuration = actionClass.retainDuration()
+        retainTime = new Date Date.now() - retainDuration * 1000
+        
+        removeSelector.time =
+          $lt: retainTime
+
+      LOI.Memory.Action.documents.remove removeSelector
+
+    # Insert the new action.
+    LOI.Memory.Action.documents.insert action
 
 LOI.Memory.Action.updateTimeAndSituation.method (actionId, time, situation) ->
   check actionId, Match.DocumentId

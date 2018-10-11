@@ -52,6 +52,7 @@ class LOI.Memory.Action extends AM.Document
     @contentPatterns[type] = pattern
 
   @isMemorable: -> false # Override to persist actions of this type even when used outside of memories.
+  @retainDuration: -> false # Override with number of seconds actions of this type are retained when not memorable.
 
   # Methods
 
