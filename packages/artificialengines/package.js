@@ -9,7 +9,7 @@ Npm.depends({
   patreon: '0.3.0',
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
-  three: '0.90.0'
+  three: '0.96.0'
 });
 
 Package.onUse(function(api) {
@@ -85,6 +85,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/daterange');
   api.addFile('everywhere/exceptions');
   api.addFile('everywhere/match');
+  api.addFile('everywhere/reactivearray');
   api.addFile('everywhere/reactivewrapper');
   api.addFile('everywhere/rectangle');
 
@@ -216,4 +217,18 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('babel/components/translatable..');
   api.addComponent('babel/components/translation..');
   api.addFile('babel/components/regionselection..');
+
+  // Artificial Spectrum
+  api.addFile('spectrum..');
+  api.addFile('spectrum/renderobject');
+  api.addFile('spectrum/animatedmesh');
+
+  api.addFiles([
+    'spectrum/creature/glmatrix.js',
+    'spectrum/creature/creaturemeshbone.js',
+    'spectrum/creature/creaturerenderer.js'
+  ], 'client');
+
+  api.addFile('spectrum/hqx..');
+  api.addFiles('spectrum/hqx/hqx.js');
 });

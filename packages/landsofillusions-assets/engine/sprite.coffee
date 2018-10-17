@@ -92,6 +92,41 @@ class LOI.Assets.Engine.Sprite
           else
             destinationColor = r: 0, g: 0, b: 0
 
+        else if renderOptions.renderNormalData
+          # Rendering of raw normal data for use in shaders.
+          if pixel.normal
+            destinationColor = r: pixel.normal.x, g: pixel.normal.y, b: pixel.normal.z
+
+          else
+            destinationColor = r: 0, g: 0, b: 0
+
+        else if renderOptions.renderPaletteData
+          # Rendering of ramp + shade + dither data for use in shaders.
+          paletteColor = null
+
+          # Normal color mode.
+          if pixel.materialIndex?
+            material = spriteData.materials[pixel.materialIndex]
+
+            paletteColor = _.clone material
+
+            # Override material data if we have it present.
+            if materialData = materialsData?[material.name]
+              for key, value of materialData
+                paletteColor[key] = value if value?
+
+          else if pixel.paletteColor
+            paletteColor = pixel.paletteColor
+            
+          if paletteColor
+            destinationColor =
+              r: paletteColor.ramp / palette.ramps.length
+              g: paletteColor.shade / palette.ramps[paletteColor.ramp].shades.length
+              b: paletteColor.dither or 0
+            
+          else
+            destinationColor = r: 0, g: 0, b: 0, a: 0
+
         else
           paletteColor = null
 
@@ -189,6 +224,6 @@ class LOI.Assets.Engine.Sprite
         @_imageData.data[pixelIndex] = destinationColor.r * 255
         @_imageData.data[pixelIndex + 1] = destinationColor.g * 255
         @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
-        @_imageData.data[pixelIndex + 3] = 255
+        @_imageData.data[pixelIndex + 3] = destinationColor.a or 255
 
     @_context.putImageData @_imageData, 0, 0

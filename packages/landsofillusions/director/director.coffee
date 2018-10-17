@@ -39,3 +39,8 @@ class LOI.Director
   stopAllScripts: (options = {}) ->
     @foregroundScriptQueue.stopAllScripts options
     @backgroundScriptQueue.stopAllScripts options
+
+  setPosition: (positions) ->
+    for thingId, position of positions
+      # TODO: Place thing to appropriate place.
+      console.log "positioning", thingId

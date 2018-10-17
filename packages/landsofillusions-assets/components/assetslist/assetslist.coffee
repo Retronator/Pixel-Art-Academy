@@ -13,7 +13,7 @@ class LOI.Assets.Components.AssetsList extends AM.Component
   onCreated: ->
     super
 
-    @options.documentClass.all.subscribe @, =>
+    @options.documentClass[@options.subscriptionName or 'all'].subscribe @, =>
       # Deselect asset if it gets deleted.
       @autorun (computation) =>
         return unless currentAssetId = @assetId()
@@ -25,7 +25,7 @@ class LOI.Assets.Components.AssetsList extends AM.Component
         @options.setAssetId null
 
   assets: ->
-    @options.documentClass.documents.find {},
+    @options.documentClass.documents.find @options.selector or {},
       sort:
         name: 1
         _id: 1

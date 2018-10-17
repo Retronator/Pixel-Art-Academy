@@ -19,6 +19,9 @@ class HQ.GalleryWest extends LOI.Adventure.Location
       The hall continues to the east wing of the gallery. Stairs continue up to the art studio.
     "
   
+  @meshId: -> 'Retronator.HQ.GalleryWest'
+  @illustrationHeight: -> 200
+
   @initialize()
 
   constructor: ->

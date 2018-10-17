@@ -20,6 +20,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
       minAspectRatio: 1 / 2
       maxAspectRatio: 2
       debug: false
+      
+    @illustrationSize = new AE.Rectangle
 
     @narrative = new LOI.Interface.Components.Narrative
       textInterface: @

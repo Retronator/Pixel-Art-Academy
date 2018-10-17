@@ -8,6 +8,9 @@ Vocabulary = LOI.Parser.Vocabulary
 class LOI.Interface.Text extends LOI.Interface
   @register 'LandsOfIllusions.Interface.Text'
 
+  world: ->
+    LOI.adventure.world
+
   exitAvatarName: ->
     exitAvatar = @currentData()
 

@@ -64,6 +64,7 @@ Package.onUse(function(api) {
 
   api.addFile('avatar/avatar');
   api.addFile('avatar/humanavatar');
+  api.addFile('avatar/humanavatar-renderobject');
 
   // Character
 
@@ -451,4 +452,13 @@ Package.onUse(function(api) {
   api.addFile('simulation..');
   api.addServerFile('simulation/server');
 
+  // Engine
+
+  api.addFile('engine..');
+  api.addClientFile('engine/spritematerial');
+
+  api.addComponent('engine/world..');
+  api.addFile('engine/world/renderermanager');
+  api.addFile('engine/world/scenemanager');
+  api.addFile('engine/world/cameramanager');
 });

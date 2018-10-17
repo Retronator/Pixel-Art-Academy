@@ -15,6 +15,7 @@ class LOI.Assets.VisualAsset extends AM.Document
   #     name: what the color represents
   #     ramp: index of the ramp within the palette
   #     shade: index of the shade in the ramp
+  #     dither: amount of dither used from 0 to 1
   # landmarks: array of named locations
   #   name: name of the landmark
   #   x, y, z: floating point location of the landmark

@@ -72,6 +72,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
       documentClass: LOI.Assets.Sprite
       getAssetId: @spriteId
       setAssetId: setAssetId
+      subscriptionName: 'allGeneric'
 
     @navigator new LOI.Assets.Components.Navigator
       camera: @pixelCanvas().camera

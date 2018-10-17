@@ -32,10 +32,9 @@ class LOI.Adventure extends LOI.Adventure
     $('html').addClass('adventure')
 
     @interface = new LOI.Interface.Text
-
     @parser = new LOI.Parser
-
     @director = new LOI.Director
+    @world = new LOI.Engine.World
 
     @_initializeState()
 

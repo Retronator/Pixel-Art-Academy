@@ -26,6 +26,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     HQ.Actors.Alexandra
     HQ.Actors.Reuben
     PAA.Actors.Ace
+    C1.Mixer.Table
     C1.Mixer.Marker
     C1.Mixer.Stickers
   ]
@@ -89,6 +90,10 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   # Listener
 
   onEnter: (enterResponse) ->
+    LOI.adventure.director.setPosition
+      "#{HQ.Actors.Shelley.id()}": 'InFrontOfProjector'
+      "#{HQ.Actors.Reuben.id()}": x: 1, y: 0, z: 1
+
     # Retro should talk when at location.
     @_retroTalksAutorun = @autorun (computation) =>
       return unless @scriptsReady()

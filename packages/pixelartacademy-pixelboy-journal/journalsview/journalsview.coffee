@@ -20,6 +20,8 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
 
     @camera = new AE.ReactiveWrapper null
 
+    @sceneImage = new ReactiveField null
+
   onCreated: ->
     super
 
@@ -35,6 +37,9 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
     @camera camera
 
     @renderer new @constructor.Renderer @
+
+    @sceneImage new AM.PixelImage
+      image: @renderer().renderer.domElement
 
     # Animate journal meshes on selection.
     @autorun (computation) =>

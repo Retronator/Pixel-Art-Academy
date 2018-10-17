@@ -16,6 +16,18 @@ LOI.Assets.Sprite.all.publish ->
     fields:
       name: 1
 
+LOI.Assets.Sprite.allGeneric.publish ->
+  # Only admins (and later sprite editors) can see all the sprite.
+  RA.authorizeAdmin userId: @userId or null
+
+  # We only return sprite names when subscribing to all so that we can list them.
+  LOI.Assets.Sprite.documents.find
+    authors:
+      $exists: false
+  ,
+    fields:
+      name: 1
+      
 LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.publish (types) ->
   check types, [String]
 

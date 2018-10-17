@@ -21,7 +21,7 @@ class AM.CollectionWrapper
           collectionWrapper.insert document
 
       # Remove old documents that aren't present anymore.
-      for documentId in currentDocumentIds when not documentId in newDocumentIds
+      for documentId in currentDocumentIds when not (documentId in newDocumentIds)
         collectionWrapper.remove documentId
 
       currentDocumentIds = newDocumentIds
