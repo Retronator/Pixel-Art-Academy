@@ -12,6 +12,7 @@ class LOI.Engine.World extends AM.Component
     @rendererManager = new ReactiveField null
     @sceneManager = new ReactiveField null
     @cameraManager = new ReactiveField null
+    @audioManager = new ReactiveField null
 
     @renderedImage = new ReactiveField null
 
@@ -30,6 +31,8 @@ class LOI.Engine.World extends AM.Component
 
     @renderedImage new AM.PixelImage
       image: rendererManager.renderer.domElement
+      
+    @audioManager new @constructor.AudioManager @
 
   onRendered: ->
     super

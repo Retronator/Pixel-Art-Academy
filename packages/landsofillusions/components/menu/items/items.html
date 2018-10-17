@@ -78,13 +78,11 @@
         {{/if}}
         <button class="next-button">▶</button>
       </li>
-      <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
-      {{!--
       <li class="menu-item"><span class="audio actionable">
         Audio:
-        {{#if audioOn}}on{{/if}}
-        {{#if audioFullscreen}}when fullscreen{{/if}}
-        {{#if audioOff}}off{{/if}}
+        {{#if $is audioEnabled 'On'}}on{{/if}}
+        {{#if $is audioEnabled 'Fullscreen'}}when fullscreen{{/if}}
+        {{#if $is audioEnabled 'Off'}}off{{/if}}
       </span></li>
       <li class="sounds menu-item">
         Sounds: <input type="range" min="0" max="100" step="10" value="{{soundLevel}}"/>
@@ -92,7 +90,7 @@
       <li class="music menu-item">
         Music: <input type="range" min="0" max="100" step="10" value="{{musicLevel}}"/>
       </li>
-      --}}
+      <li class="menu-item"><span class="actionable permissions">Permissions</span></li>
       <li class="menu-item"><span class="back-to-menu actionable">Back</span></li>
     {{/if}}
     {{#if inPermissions}}

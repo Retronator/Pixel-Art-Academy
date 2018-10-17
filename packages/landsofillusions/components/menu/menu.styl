@@ -4,26 +4,43 @@
   position fixed
   z-index 3
 
-  .menu-button
+  .toolbar
     position fixed
     top 0
     right 0
-    background none
-    border none
-    padding 8rem
-    color atariGrey(1)
-    adventure()
-    text-transform uppercase
-    opacity 0
+    padding 4rem 6rem
+    text-align right
     transition opacity 200ms
-
-    &:hover
-    &:focus
-      color atariGrey(2)
-      outline none
+    opacity 0
 
     &.visible
       opacity 1
+
+    button
+      border none
+      vertical-align top
+
+      &.menu-button
+        padding 4rem 2rem
+        background none
+        color atariGrey(1)
+        adventure()
+        text-transform uppercase
+
+        &:hover
+          color atariGrey(2)
+
+      &.toggle-audio-button
+        width 17rem
+        height 17rem
+        padding 0
+        background image('/landsofillusions/components/menu/audio-on-off.png') 17rem 0 / 34rem 34rem
+
+        &:hover
+          background-position-y 17rem
+
+        &.audio-enabled
+          background-position-x 0
 
   .menu-overlay
     fixed-cover()

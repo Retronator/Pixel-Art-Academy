@@ -1,6 +1,12 @@
 LOI = LandsOfIllusions
 
 class LOI.Settings
+  @Audio:
+    Enabled:
+      Off: 'Off'
+      Fullscreen: 'Fullscreen'
+      On: 'On'
+      
   constructor: ->
     @persistSettings = new @constructor.ConsentField
       name: 'persistSettings'
@@ -36,6 +42,11 @@ class LOI.Settings
     @graphics =
       minimumScale: new @constructor.Field 2, 'graphics.minimumScale', @persistSettings
       maximumScale: new @constructor.Field null, 'graphics.maximumScale', @persistSettings
+      
+    @audio =
+      enabled: new @constructor.Field @constructor.Audio.Enabled.Fullscreen, 'audio.enabled', @persistSettings
+      soundVolume: new @constructor.Field 100, 'audio.soundVolume', @persistSettings
+      musicVolume: new @constructor.Field 100, 'audio.musicVolume', @persistSettings
 
   toObject: ->
     values = {}

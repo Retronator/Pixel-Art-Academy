@@ -461,4 +461,5 @@ Package.onUse(function(api) {
   api.addFile('engine/world/renderermanager');
   api.addFile('engine/world/scenemanager');
   api.addFile('engine/world/cameramanager');
+  api.addFile('engine/world/audiomanager');
 });

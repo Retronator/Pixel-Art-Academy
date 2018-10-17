@@ -67,6 +67,9 @@ class LOI.Components.Menu.Items extends AM.Component
 
   isFullscreen: ->
     AM.Window.isFullscreen()
+
+  audioEnabled: ->
+    LOI.settings.audio.enabled.value()
     
   graphicsMaximumScale: ->
     LOI.settings.graphics.maximumScale.value()
@@ -102,6 +105,7 @@ class LOI.Components.Menu.Items extends AM.Component
       'click .quit': @onClickQuit
 
       # Settings
+      'click .audio': @onClickAudio
       'click .graphics-scale .previous-button': @onClickGraphicsScalePreviousButton
       'click .graphics-scale .next-button': @onClickGraphicsScaleNextButton
       'click .permissions': @onClickPermissions
@@ -155,6 +159,14 @@ class LOI.Components.Menu.Items extends AM.Component
     else
       AM.Window.enterFullscreen()
 
+      # HACK: If audio isn not yet playing, require another interaction (after
+      # this click is handled), since Safari needs it after going fullscreen.
+      audioManager = LOI.adventure.world.audioManager()
+
+      unless audioManager.enabled()
+        Meteor.setTimeout =>
+          audioManager.waitForInteraction()
+
     # Do a late UI resize to accommodate any fullscreen transitions.
     Meteor.setTimeout =>
       LOI.adventure.interface.resize()
@@ -186,6 +198,15 @@ class LOI.Components.Menu.Items extends AM.Component
         dialog: dialog
         callback: =>
           LOI.adventure.quitGame() if dialog.result
+
+  onClickAudio: (event) ->
+    currentValue = LOI.settings.audio.enabled.value()
+    values = _.values LOI.Settings.Audio.Enabled
+
+    currentIndex = _.indexOf values, currentValue
+    nextIndex = (currentIndex + 1) % values.length
+
+    LOI.settings.audio.enabled.value values[nextIndex]
 
   onClickGraphicsScalePreviousButton: (event) ->
     currentValue = LOI.settings.graphics.maximumScale.value()

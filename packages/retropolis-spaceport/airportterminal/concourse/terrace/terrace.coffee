@@ -427,3 +427,8 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
     x = Math.sin(appTime.totalAppTime / 5 + 3) * 2 * scale
     y = @middleScrollDelta * @sceneItems.frigates4.scaleFactor + Math.sin(appTime.totalAppTime / 2 + 6) * 3 * scale
     @sceneItems.frigates4.$element.css transform: "translate3d(#{x}px, #{y}px, 0)"
+
+  # Listener
+
+  onEnter: (enterResponse) ->
+    LOI.adventure.world.audioManager().play '/landsofillusions/world/beach.mp3'
