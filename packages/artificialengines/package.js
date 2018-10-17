@@ -61,9 +61,11 @@ Package.onUse(function(api) {
 	api.addFile('artificial');
 
 	// Global initialization
+  
 	api.addFile('everywhere/lodash/lodash');
 
 	// Artificial Everywhere
+  
   api.addFile('everywhere/everywhere');
 
   api.addClientFile('everywhere/jquery/positioncss');
@@ -90,49 +92,47 @@ Package.onUse(function(api) {
   api.addFile('everywhere/rectangle');
 
   // Artificial Control
-  api.addFiles('control/control.coffee');
+  
+  api.addFile('control..');
 
-  api.addFiles('control/keyboard.coffee');
-  api.addFiles('control/keyboardstate.coffee');
-  api.addFiles('control/keys.coffee');
+  api.addFile('control/keyboard');
+  api.addFile('control/keyboardstate');
+  api.addFile('control/keys');
 
   // Artificial Mirage
-  api.addFiles('mirage/mirage.coffee');
+  
+  api.addFile('mirage..');
 
-	api.addFiles('mirage/component.coffee');
-	api.addFiles('mirage/csshelper.coffee');
-  api.addFiles('mirage/datainput.coffee');
-  api.addFiles('mirage/datainput.html');
-	api.addFiles('mirage/debugfont.css');
-  api.addFiles('mirage/debugfont.import.styl', 'client', {isImport:true});
-	api.addFiles('mirage/display.html');
-	api.addFiles('mirage/display.coffee');
-	api.addFiles('mirage/display.styl');
-  api.addFiles('mirage/helpers.import.styl', 'client', {isImport:true});
-  api.addFiles('mirage/htmlhelper.coffee');
-  api.addFiles('mirage/render.coffee');
-  api.addFiles('mirage/render.html');
-  api.addFiles('mirage/window.coffee', 'client');
+	api.addFile('mirage/component');
+	api.addFile('mirage/csshelper');
+  api.addUnstyledComponent('mirage/datainput');
+	api.addCss('mirage/debugfont');
+  api.addStyleImport('mirage/debugfont');
+	api.addComponent('mirage/display');
+  api.addStyleImport('mirage/helpers');
+  api.addFile('mirage/htmlhelper');
+  api.addUnstyledComponent('mirage/render');
+  api.addClientFile('mirage/window');
   api.addUnstyledComponent('mirage/pixelimage');
 
-  api.addFiles('mirage/markdown/markdown.coffee');
-  api.addFiles('mirage/markdown/markdown.html');
+  api.addUnstyledComponent('mirage/markdown..');
 
-  api.addFiles('mirage/spacebars/meteorhelpers.coffee');
-  api.addFiles('mirage/spacebars/stringhelpers.coffee');
-  api.addFiles('mirage/spacebars/numberhelpers.coffee');
-  api.addFiles('mirage/spacebars/htmlhelpers.coffee');
-  api.addFiles('mirage/spacebars/image.coffee');
-  api.addFiles('mirage/spacebars/uncached.coffee');
+  api.addFile('mirage/spacebars/meteorhelpers');
+  api.addFile('mirage/spacebars/stringhelpers');
+  api.addFile('mirage/spacebars/numberhelpers');
+  api.addFile('mirage/spacebars/htmlhelpers');
+  api.addFile('mirage/spacebars/image');
+  api.addFile('mirage/spacebars/uncached');
 
-  api.addFiles('mirage/mixins/autoresizetextarea.coffee');
-  api.addFiles('mirage/mixins/autoselectinput.coffee');
-  api.addFiles('mirage/mixins/persistentinput.coffee');
+  api.addFile('mirage/mixins/autoresizetextarea');
+  api.addFile('mirage/mixins/autoselectinput');
+  api.addFile('mirage/mixins/persistentinput');
 
-  api.addFiles('mirage/mixins/fullscreenscrolling/fullscreenscrolling.coffee');
-  api.addFiles('mirage/mixins/fullscreenscrolling/fullscreenscrolling.styl');
+  api.addFile('mirage/mixins/fullscreenscrolling..');
+  api.addStyle('mirage/mixins/fullscreenscrolling..');
 
   // Artificial Base
+  
   // Depends on Artificial Mirage.
   api.addFile('base/base');
 
@@ -149,6 +149,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('base/router/routelink');
 
   // Artificial Mummification
+  
   api.addFile('mummification..');
 
   api.addFile('mummification/mongohelper');
@@ -171,6 +172,7 @@ Package.onUse(function(api) {
   api.addFile('mummification/admin/components/document..');
   
   // Artificial Telepathy
+  
   api.addFile('telepathy/telepathy');
 
   api.addFile('telepathy/emailcomposer');
@@ -182,6 +184,7 @@ Package.onUse(function(api) {
   api.addServerFile('telepathy/maxmind-server');
 
   // Artificial Babel
+  
   api.addFile('babel..');
   api.addServerFile('babel/babel-server');
   api.addClientFile('babel/babel-client');
@@ -219,16 +222,19 @@ Package.onUse(function(api) {
   api.addFile('babel/components/regionselection..');
 
   // Artificial Spectrum
+  
   api.addFile('spectrum..');
   api.addFile('spectrum/renderobject');
   api.addFile('spectrum/animatedmesh');
 
-  api.addFiles([
-    'spectrum/creature/glmatrix.js',
-    'spectrum/creature/creaturemeshbone.js',
-    'spectrum/creature/creaturerenderer.js'
-  ], 'client');
+  api.addClientJavascript('spectrum/creature/glmatrix');
+  api.addClientJavascript('spectrum/creature/creaturemeshbone');
+  api.addClientJavascript('spectrum/creature/creaturerenderer');
 
   api.addFile('spectrum/hqx..');
-  api.addFiles('spectrum/hqx/hqx.js');
+  api.addJavascript('spectrum/hqx..');
+
+  // Artificial Echo
+  
+  api.addFile('echo..');
 });

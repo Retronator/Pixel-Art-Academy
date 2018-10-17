@@ -29,6 +29,18 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addFiles(path + ".coffee", ['client']);
   };
+  api.constructor.prototype.addJavascript = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".js");
+  };
+  api.constructor.prototype.addServerJavascript = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".js", ['server']);
+  };
+  api.constructor.prototype.addClientJavascript = function(path) {
+    path = expandPath(path);
+    this.addFiles(path + ".js", ['client']);
+  };
   api.constructor.prototype.addHtml = function(path) {
     path = expandPath(path);
     this.addFiles(path + ".html");
