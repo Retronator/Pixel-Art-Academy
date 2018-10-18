@@ -13,7 +13,7 @@ class LOI.Assets.Components.AssetsList extends AM.Component
   onCreated: ->
     super
 
-    @options.documentClass[@options.subscriptionName or 'all'].subscribe @, =>
+    onSubscriptionReady = =>
       # Deselect asset if it gets deleted.
       @autorun (computation) =>
         return unless currentAssetId = @assetId()
@@ -23,6 +23,12 @@ class LOI.Assets.Components.AssetsList extends AM.Component
 
         # Clear the asset selection.
         @options.setAssetId null
+
+    if @options.subscription
+      @options.subscription.subscribe @, onSubscriptionReady
+
+    else
+      LOI.Assets.Asset.all.subscribe @, @options.documentClass.className, onSubscriptionReady
 
   assets: ->
     @options.documentClass.documents.find @options.selector or {},
@@ -43,7 +49,7 @@ class LOI.Assets.Components.AssetsList extends AM.Component
       'click .asset': @onClickAsset
 
   onClickNewAssetButton: (event) ->
-    @options.documentClass.insert (error, assetId) =>
+    LOI.Assets.Asset.insert @options.documentClass.className, (error, assetId) =>
       if error
         console.error error
         return

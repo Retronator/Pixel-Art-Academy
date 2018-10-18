@@ -33,7 +33,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @spriteData = new ComputedField =>
       return unless spriteId = @spriteId()
 
-      LOI.Assets.Sprite.forId.subscribe spriteId
+      LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
       
     @paletteId = new ComputedField =>
@@ -72,7 +72,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
       documentClass: LOI.Assets.Sprite
       getAssetId: @spriteId
       setAssetId: setAssetId
-      subscriptionName: 'allGeneric'
+      subscription: LOI.Assets.Sprite.allGeneric
 
     @navigator new LOI.Assets.Components.Navigator
       camera: @pixelCanvas().camera

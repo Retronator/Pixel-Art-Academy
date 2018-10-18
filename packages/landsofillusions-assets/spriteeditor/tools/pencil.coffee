@@ -37,7 +37,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LandsOfIllusions.Assets.Tools
         y: @mouseState.y
         
       # If we have fixed bounds, make sure we're inside.
-      if spriteData.bounds.fixed
+      if spriteData.bounds?.fixed
         continue unless spriteData.bounds.left <= pixel.x <= spriteData.bounds.right and spriteData.bounds.top <= pixel.y <= spriteData.bounds.bottom
 
       normal = @options.editor().shadingSphere?().currentNormal().clone()

@@ -44,15 +44,19 @@ Package.onUse(function(api) {
   api.addServerFile('documents/palette/palettes-server/black');
   api.addServerFile('documents/palette/palettes-server/zxspectrum');
 
+  api.addClientFile('documents/asset/asset-cache-client');
+  api.addServerFile('documents/asset/asset-cache-server');
+  api.addFile('documents/asset..');
+  api.addFile('documents/asset/methods..');
+  api.addFile('documents/asset/methods/history');
+  api.addServerFile('documents/asset/subscriptions');
+
   api.addFile('documents/visualasset..');
   api.addFile('documents/visualasset/methods..');
   api.addFile('documents/visualasset/methods/references');
-  api.addFile('documents/visualasset/methods/history');
 
   api.addFile('documents/sprite..');
-  api.addClientFile('documents/sprite/sprite-client');
   api.addServerFile('documents/sprite/subscriptions');
-  api.addServerFile('documents/sprite/cache-server');
   api.addServerFile('documents/sprite/server');
   api.addFile('documents/sprite/methods..');
   api.addFile('documents/sprite/methods/addpixel');
@@ -61,6 +65,8 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/replacepixels');
 
   api.addFile('documents/mesh..');
+
+  api.addFile('documents/audio..');
 
   // Upload
 

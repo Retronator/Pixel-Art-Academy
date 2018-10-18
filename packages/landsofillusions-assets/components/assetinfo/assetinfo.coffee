@@ -27,10 +27,10 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
     @options.documentClass.clear @assetId()
 
   onClickDeleteButton: (event) ->
-    @options.documentClass.remove @assetId()
+    LOI.Assets.Asset.remove @options.documentClass.className, @assetId()
 
   onClickDuplicateButton: (event) ->
-    @options.documentClass.duplicate @assetId(), (error, duplicateAssetId) =>
+    LOI.Assets.Asset.duplicate @options.documentClass.className, @assetId(), (error, duplicateAssetId) =>
       if error
         console.error error
         return
@@ -49,7 +49,7 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
       assetData = @data()
 
       assetInfo = @ancestorComponentOfType LOI.Assets.Components.AssetInfo
-      assetInfo.options.documentClass.update assetData._id,
+      LOI.Assets.Asset.update assetInfo.options.documentClass.className, assetData._id,
         $set:
           name: value
 
@@ -95,4 +95,4 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
         update = $unset: palette: true
 
       assetInfo = @ancestorComponentOfType LOI.Assets.Components.AssetInfo
-      assetInfo.options.documentClass.update assetData._id, update
+      LOI.Assets.Asset.update assetInfo.options.documentClass.className, assetData._id, update

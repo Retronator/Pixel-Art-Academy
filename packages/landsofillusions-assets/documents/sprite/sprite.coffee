@@ -26,16 +26,10 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @Meta
     name: @id()
 
-  # Store the class name of the visual asset by which we can reach the class by querying LOI.Assets. We can't simply
-  # use the name parameter, because in production the name field has a minimized value.
   @className: 'Sprite'
-
-  @cacheUrl = '/landsofillusions/assets/sprite/cache.json'
 
   # Subscriptions
   
-  @forId: @subscription 'forId'
-  @all: @subscription 'all'
   @allGeneric: @subscription 'allGeneric'
   @forCharacterPartTemplatesOfTypes: @subscription 'forCharacterPartTemplatesOfTypes'
 
@@ -74,6 +68,10 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
 
+  @_limitLayerPixels = (newCount) ->
+    # Allow up to 4,096 (64 * 64) pixels per layer.
+    throw new AE.ArgumentOutOfRangeException "Up to 4,096 pixels per layer are allowed." if newCount > 4096
+    
   _applyOperation: (forward, backward) ->
     # See if we're updating bounds.
     if forward.$set?.bounds
