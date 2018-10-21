@@ -1,0 +1,47 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-audioeditor
+  .landsofillusions-engine-world
+    background atariGrey(0)
+    top 100%
+
+  button
+  input
+  select
+    border 1rem solid atariBlue(1)
+    height 12rem
+    font inherit
+    color inherit
+
+    &:focus
+      outline none
+
+  input
+  select
+    background rgba(atariBlue(1),0.65)
+    padding 0 3rem
+
+    &[type=number]
+      padding-right 0
+
+  button
+    background atariBlue(1)
+    padding 0 5rem
+    margin-bottom 3rem
+
+  .landsofillusions-assets-components-assetinfo
+    .properties
+      .palette
+        display none
+
+  .landsofillusions-assets-components-assetslist
+    .assets
+      background atariBlue(0)
+      color atariGrey(3)
+
+      .asset
+        &:hover
+          background-color atariBlue(1)
+
+        &.active
+          background-color atariBlue(2)

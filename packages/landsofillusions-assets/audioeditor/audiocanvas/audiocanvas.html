@@ -1,0 +1,11 @@
+<template name="LandsOfIllusions.Assets.AudioEditor.AudioCanvas">
+  <div class="landsofillusions-assets-audioeditor-audiocanvas {{draggingClass}} {{draggedClass}} {{connectingClass}}">
+    <canvas class="canvas"></canvas>
+    <div class="origin" {{style originStyle}}>
+      {{#each nodeComponents}}
+        {{> Render this}}
+      {{/each}}
+    </div>
+    <div class="trash {{trashActiveClass}}">Delete</div>
+  </div>
+</template>

@@ -1,0 +1,14 @@
+<template name="LandsOfIllusions.Assets.AudioEditor">
+  <div class="landsofillusions-assets-audioeditor landsofillusions-assets-editor">
+    <div class="left-sidebar">
+      {{> Render assetsList}}
+      {{> Render toolbox}}
+    </div>
+    <div class="right-sidebar">
+      {{> Render assetInfo}}
+      {{> Render nodeLibrary}}
+    </div>
+    {{> Render audioCanvas}}
+    {{> Render world}}
+  </div>
+</template>

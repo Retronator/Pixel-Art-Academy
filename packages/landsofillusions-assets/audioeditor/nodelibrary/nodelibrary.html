@@ -1,0 +1,17 @@
+<template name="LandsOfIllusions.Assets.AudioEditor.NodeLibrary">
+  <div class="landsofillusions-assets-audioeditor-nodelibrary">
+    <div class="search">
+      <input class="input" placeholder="search" value="{{searchTerm}}"/>
+      {{#if searchTerm.length}}
+        <button class="clear-input-button"></button>
+      {{/if}}
+    </div>
+    <ul class="node-classes">
+      {{#each displayedNodeClasses}}
+        <li class="node-class">
+          {{> LandsOfIllusions.Assets.AudioEditor.Node args this}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

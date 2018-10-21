@@ -67,6 +67,9 @@ Package.onUse(function(api) {
   api.addFile('documents/mesh..');
 
   api.addFile('documents/audio..');
+  api.addFile('documents/audio/methods/addnode');
+  api.addFile('documents/audio/methods/removenode');
+  api.addFile('documents/audio/methods/updatenode');
 
   // Upload
 
@@ -107,8 +110,12 @@ Package.onUse(function(api) {
 
   // Engine
 
-  api.addFile('engine/engine');
+  api.addFile('engine..');
   api.addFile('engine/sprite');
+
+  api.addFile('engine/audio..');
+  api.addFile('engine/audio/node');
+  api.addFile('engine/audio/nodes/sound');
 
   // Sprite editor
 
@@ -123,4 +130,16 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/undo');
   api.addFile('spriteeditor/tools/redo');
 
+  // Audio editor
+
+  api.addComponent('audioeditor..');
+
+  api.addComponent('audioeditor/audiocanvas..');
+  api.addFile('audioeditor/audiocanvas/camera');
+  api.addFile('audioeditor/audiocanvas/flowchart');
+  api.addFile('audioeditor/audiocanvas/grid');
+  api.addFile('audioeditor/audiocanvas/mouse');
+
+  api.addComponent('audioeditor/node..');
+  api.addComponent('audioeditor/nodelibrary..');
 });

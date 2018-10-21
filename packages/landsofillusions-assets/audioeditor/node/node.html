@@ -1,0 +1,27 @@
+<template name="LandsOfIllusions.Assets.AudioEditor.Node">
+  <div class="landsofillusions-assets-audioeditor-node {{expandedClass}}" {{style nodeStyle}}>
+    <div class="name">
+      {{nodeName}}
+    </div>
+    <div class="parameters" {{style parametersStyle}}>
+    </div>
+    <ul class="inputs">
+      {{#each inputs}}
+        <li class="input {{validTargetClass}}" data-name="{{name}}" {{style inputStyle}}>
+          <div class="name">{{name}}</div>
+          <div class="connector"></div>
+          <div class="connection-target"></div>
+        </li>
+      {{/each}}
+    </ul>
+    <ul class="outputs">
+      {{#each outputs}}
+        <li class="output {{validTargetClass}}" data-name="{{name}}" {{style outputStyle}}>
+          <div class="name">{{name}}</div>
+          <div class="connector"></div>
+          <div class="connection-target"></div>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

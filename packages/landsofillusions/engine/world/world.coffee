@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 class LOI.Engine.World extends AM.Component
   @register 'LandsOfIllusions.Engine.World'
 
-  constructor: ->
+  constructor: (@adventure) ->
     super
 
     # Prepare all reactive fields.

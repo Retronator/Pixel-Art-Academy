@@ -9,6 +9,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
   @register @id()
 
   constructor: (goalOrOptions) ->
+    super
+
     if goalOrOptions instanceof PAA.Learning.Goal
       @goal = goalOrOptions
 

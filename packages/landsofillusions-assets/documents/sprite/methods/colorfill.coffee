@@ -19,7 +19,7 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  LOI.Assets.VisualAsset._authorizeAssetAction sprite
+  LOI.Assets.Asset._authorizeAssetAction sprite
 
   # Make sure the location is within the bounds.
   unless sprite.bounds.left <= newTargetPixel.x <= sprite.bounds.right and sprite.bounds.top <= newTargetPixel.y <= sprite.bounds.bottom

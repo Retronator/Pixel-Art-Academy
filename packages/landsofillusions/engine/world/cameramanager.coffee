@@ -10,7 +10,7 @@ class LOI.Engine.World.CameraManager
     @_camera.position.z = 2.7
 
     @world.autorun (computation) =>
-      illustrationSize = LOI.adventure.interface.illustrationSize
+      illustrationSize = @world.adventure.interface.illustrationSize
 
       @_camera.aspect = illustrationSize.width() / illustrationSize.height()
       @_camera.updateProjectionMatrix()

@@ -34,8 +34,8 @@ class LOI.Adventure extends LOI.Adventure
     @interface = new LOI.Interface.Text
     @parser = new LOI.Parser
     @director = new LOI.Director
-    @world = new LOI.Engine.World
-
+    @world = new LOI.Engine.World @
+    
     @_initializeState()
 
     # Memories need to be initialized first because timeline and location depends on the display of a memory.

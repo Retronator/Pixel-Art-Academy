@@ -52,7 +52,7 @@ class LOI.Engine.World.SceneManager
 
     addedCount = 0
 
-    @locationThings = new AE.ReactiveArray (=> LOI.adventure.currentLocationThings()),
+    @locationThings = new AE.ReactiveArray (=> @world.adventure.currentLocationThings()),
       added: (thing) =>
         # Look if the thing's avatar has a render object.
         return unless renderObject = thing.avatar.getRenderObject?()

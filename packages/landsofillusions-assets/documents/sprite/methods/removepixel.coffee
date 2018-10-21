@@ -11,7 +11,7 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  LOI.Assets.VisualAsset._authorizeAssetAction sprite
+  LOI.Assets.Asset._authorizeAssetAction sprite
 
   throw new AE.ArgumentOutOfRangeException "There are no pixels on this layer." unless sprite.layers?[layerIndex].pixels
 

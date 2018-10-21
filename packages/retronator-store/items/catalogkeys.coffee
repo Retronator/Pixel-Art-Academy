@@ -49,6 +49,8 @@ RS.Items.CatalogKeys =
     Patreon:
       PatreonKeycard: ''
       EarlyBirdKeycard: ''
+  Collaborator:
+    AudioEditor: ''
 
   Bundles:
     PixelArtAcademy:

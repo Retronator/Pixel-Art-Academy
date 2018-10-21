@@ -11,7 +11,7 @@ LOI.Assets.Sprite.replacePixels.method (spriteId, layerIndex, pixels) ->
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
 
-  LOI.Assets.VisualAsset._authorizeAssetAction sprite
+  LOI.Assets.Asset._authorizeAssetAction sprite
 
   layerPixels = sprite.layers[layerIndex]?.pixels
 

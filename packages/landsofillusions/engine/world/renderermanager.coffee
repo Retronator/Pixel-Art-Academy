@@ -12,7 +12,7 @@ class LOI.Engine.World.RendererManager
 
     # Resize the renderer when canvas size changes.
     @world.autorun =>
-      illustrationSize = LOI.adventure.interface.illustrationSize
+      illustrationSize = @world.adventure.interface.illustrationSize
 
       @renderer.setSize illustrationSize.width(), illustrationSize.height()
 

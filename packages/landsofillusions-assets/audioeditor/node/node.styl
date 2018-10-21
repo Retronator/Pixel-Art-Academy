@@ -1,0 +1,81 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-audioeditor-node
+  display block
+  position relative
+  z-index 0
+  border 1rem solid atariBlue(5)
+  background atariGrey(0)
+  cursor grab
+
+  &:hover
+    z-index 1
+
+  > .name
+    padding 5rem
+    text-align center
+    cursor pointer
+    text-transform uppercase
+
+  .parameters
+    position absolute
+    z-index 2
+    visibility hidden
+    cursor default
+
+  .inputs
+  .outputs
+    list-style none
+    visibility hidden
+
+    .input
+    .output
+      position absolute
+      height 10rem
+      cursor pointer
+      color atariGrey(6)
+
+      &.valid-target
+        .connector
+          background atariGrey(7)
+
+      .connection-target
+        position absolute
+        left -20rem
+        top -20rem
+        width 40rem
+        height 40rem
+
+      .connector
+        display block
+        position absolute
+        z-index 1
+        top 0
+        left 0
+        width 9rem
+        height 9rem
+        padding 0.5rem
+        background atariBlue(5)
+        color atariBlue(0)
+
+        &::before
+          content '↓'
+
+      &:hover:not(.invalid-target):not(.valid-target)
+        color atariGrey(7)
+
+        .connector
+          background atariBlue(7)
+
+  .inputs
+    top 0
+
+  .outputs
+    bottom 0
+
+  &.expanded
+    .parameters
+    .inputs
+    .outputs
+      visibility visible
+

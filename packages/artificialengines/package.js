@@ -88,6 +88,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/exceptions');
   api.addFile('everywhere/match');
   api.addFile('everywhere/reactivearray');
+  api.addFile('everywhere/reactivedictionary');
   api.addFile('everywhere/reactivewrapper');
   api.addFile('everywhere/rectangle');
 

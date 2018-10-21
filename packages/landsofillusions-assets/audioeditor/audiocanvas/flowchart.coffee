@@ -1,25 +1,25 @@
-PAA = PixelArtAcademy
+LOI = LandsOfIllusions
 
 #cubicBezier = require 'bresenham-zingl'
 
-class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Flowchart
-  constructor: (@blueprint) ->
+class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
+  constructor: (@audioCanvas) ->
     @$canvas = $('<canvas>')
     @canvas = @$canvas[0]
     @context = @canvas.getContext '2d'
 
   drawToContext: (context) ->
     # Render the connections to our canvas.
-    displayScale = @blueprint.display.scale()
+    displayScale = @audioCanvas.display.scale()
 
-    @canvas.width = @blueprint.bounds.width() / displayScale
-    @canvas.height = @blueprint.bounds.height() / displayScale
+    @canvas.width = @audioCanvas.bounds.width() / displayScale
+    @canvas.height = @audioCanvas.bounds.height() / displayScale
 
     return unless @canvas.width and @canvas.height
 
     imageData = @context.getImageData 0, 0, @canvas.width, @canvas.height
 
-    for connection in @blueprint.connections()
+    for connection in @audioCanvas.connections()
       @_drawConnection connection, imageData
 
     @context.putImageData imageData, 0, 0
@@ -32,7 +32,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Flowchart
   _drawConnection: (connection, imageData) ->
     # Draw the curve.
     bezierPoints = @_createBezierPoints connection
-    camera = @blueprint.camera()
+    camera = @audioCanvas.camera()
 
     bezierParameters = _.flatten _.map bezierPoints, (point) =>
       # Convert points from canvas to display coordinates.
