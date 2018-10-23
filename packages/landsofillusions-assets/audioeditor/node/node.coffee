@@ -19,6 +19,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     @borderWidth = 1
     @padding =
+      top: 3
       left: 6
       bottom: 6
 
@@ -48,27 +49,26 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       ,
         0
 
-    # Update input positions.
+    # Update input/output positions.
     @autorun (computation) =>
-      scale = @display.scale()
+      for connectionType in ['input', 'output']
+        positions = {}
 
-      # Measure name heights after they had a chance to update.
-      Meteor.setTimeout =>
-        requestAnimationFrame =>
-          for connectionType in ['input', 'output']
-            positions = {}
-            
-            names = (connection.name for connection in @nodeClass["#{connectionType}s"]())
-  
-            for name, index in names
-              positions[name] = index * 20
-  
-            @["#{connectionType}PositionsByName"] positions
-      ,
-        0
+        names = (connection.name for connection in @nodeClass["#{connectionType}s"]())
+
+        # Spread the connections around the middle of the node edge.
+        spacing = @nodeWidth() / (names.length + 1)
+
+        for name, index in names
+          positions[name] = (index + 1) * spacing
+
+        @["#{connectionType}PositionsByName"] positions
 
   position: ->
     @temporaryPosition() or @data()?.position
+
+  expanded: ->
+    @data()?.expanded
 
   nodeName: ->
     @nodeClass.nodeName()
@@ -78,6 +78,24 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
   outputs: ->
     @nodeClass.outputs()
+
+  inputPositionForName: (name) ->
+    return unless @isCreated()
+
+    x = @inputPositionsByName()?[name]
+    return unless x?
+
+    x: x
+    y: -1
+
+  outputPositionForName: (name) ->
+    return unless @isCreated()
+
+    x = @outputPositionsByName()?[name]
+    return unless x?
+
+    x: x
+    y: @nodeHeight()
 
   nodeStyle: ->
     # Make sure we have position present, as it will disappear when node is being deleted.
@@ -101,19 +119,12 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   nodeHeight: ->
     height = @nameHeight() + 2 * @borderWidth
 
-    return height unless @expanded?()
+    return height unless @expanded()
 
-    height + @parametersSize().height + @InputsHeight() + @padding.bottom
+    height + @padding.top + @parametersSize().height + @padding.bottom
 
   expandedClass: ->
-    'expanded' if @expanded?()
-
-  validTargetClass: ->
-    connection = @currentData()
-
-    return unless draggedConnection = @audioCanvas?.draggedConnection()
-
-    if connection is draggedConnection.input or draggedConnection.output then 'valid-target' else 'invalid-target'
+    'expanded' if @expanded()
 
   parametersSize: ->
     width: 80
@@ -128,33 +139,42 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     height: "#{parametersSize.height}rem"
 
   inputStyle: ->
-    inputName = @currentData()
+    input = @currentData()
     return unless inputPositionsByName = @inputPositionsByName()
 
-    left = inputPositionsByName[inputName]
+    left = inputPositionsByName[input.name]
 
     left: "#{left}rem"
 
   outputStyle: ->
-    outputName = @currentData()
+    output = @currentData()
     return unless outputPositionsByName = @outputPositionsByName()
 
-    left = outputPositionsByName[outputName]
+    left = outputPositionsByName[output.name]
 
     left: "#{left}rem"
+
+  connectorName: ->
+    connector = @currentData()
+
+    # Return just the first letter in uppercase.
+    _.toUpper(connector.name)[0]
 
   events: ->
     super.concat
       'mousedown .landsofillusions-assets-audioeditor-node': @onMouseDownNode
       'click .landsofillusions-assets-audioeditor-node > .name': @onClickName
-      'mousedown .inputs .input .connector': @onMouseDownInputConnector
-      'mouseup .inputs .input': @onMouseUpInput
-      'mouseenter .inputs .input': @onMouseEnterInput
-      'mouseleave .inputs .input': @onMouseLeaveInput
-      'mousedown .outputs .output .connector': @onMouseDownOutputConnector
-      'mouseup .outputs .output': @onMouseUpOutput
-      'mouseenter .outputs .output': @onMouseEnterOutput
-      'mouseleave .outputs .output': @onMouseLeaveOutput
+      'mousedown .input .connector': @onMouseDownInputConnector
+      'mouseup .input': @onMouseUpInput
+      'mouseenter .input': @onMouseEnterInput
+      'mouseleave .input': @onMouseLeaveInput
+      'mousedown .output .connector': @onMouseDownOutputConnector
+      'mouseup .output': @onMouseUpOutput
+      'mouseenter .output': @onMouseEnterOutput
+      'mouseleave .output': @onMouseLeaveOutput
+      'mouseenter': @onMouseEnter
+      'mouseleave': @onMouseLeave
+      'mouseup': @onMouseUp
 
   onMouseDownNode: (event) ->
     # We only deal with drag & drop for nodes inside the canvas.
@@ -181,23 +201,30 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     # Prevent node drag.
     event.stopPropagation()
 
-    @audioCanvas.modifyConnection
-      nodeId: @id
-      input: input
+    # See if we want to start a new connection or modify an existing one.
+    connections = @audioCanvas.connections()
+
+    if existingConnection = _.find(connections, (connection) => connection.endNodeId is @id and connection.input is input.name)
+      @audioCanvas.modifyConnection existingConnection
+
+    else
+      @audioCanvas.startConnection
+        nodeId: @id
+        input: input.name
 
   onMouseUpInput: (event) ->
     input = @currentData()
 
     @audioCanvas.endConnection
       nodeId: @id
-      input: input
+      input: input.name
 
   onMouseEnterInput: (event) ->
     input = @currentData()
 
     @audioCanvas.startHoverInput
       nodeId: @id
-      input: input
+      input: input.name
 
   onMouseLeaveInput: (event) ->
     @audioCanvas.endHoverInput()
@@ -211,23 +238,67 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     # Prevent node drag.
     event.stopPropagation()
 
-    @audioCanvas.modifyConnection
+    @audioCanvas.startConnection
       nodeId: @id
-      output: output
+      output: output.name
 
   onMouseUpOutput: (event) ->
     output = @currentData()
 
     @audioCanvas.endConnection
       nodeId: @id
-      output: output
+      output: output.name
 
   onMouseEnterOutput: (event) ->
     output = @currentData()
 
     @audioCanvas.startHoverOutput
       nodeId: @id
-      output: output
+      output: output.name
 
   onMouseLeaveOutput: (event) ->
     @audioCanvas.endHoverOutput()
+
+  onMouseEnter: (event) ->
+    return unless draggedConnection = @audioCanvas?.draggedConnection()
+
+    if draggedConnection.output
+      inputs = @nodeClass.inputs()
+      return unless inputs.length is 1
+
+      @audioCanvas.startHoverInput
+        nodeId: @id
+        input: inputs[0].name
+
+    else
+      outputs = @nodeClass.outputs()
+      return unless outputs.length is 1
+
+      @audioCanvas.startHoverOutput
+        nodeId: @id
+        output: outputs[0].name
+
+  onMouseLeave: (event) ->
+    return unless @audioCanvas
+
+    @audioCanvas.endHoverInput()
+    @audioCanvas.endHoverOutput()
+
+  onMouseUp: (event) ->
+    return unless draggedConnection = @audioCanvas?.draggedConnection()
+
+    if draggedConnection.output
+      inputs = @nodeClass.inputs()
+      return unless inputs.length is 1
+
+      @audioCanvas.endConnection
+        nodeId: @id
+        input: inputs[0].name
+
+    else
+      outputs = @nodeClass.outputs()
+      return unless outputs.length is 1
+
+      @audioCanvas.endConnection
+        nodeId: @id
+        output: outputs[0].name

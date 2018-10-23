@@ -75,7 +75,8 @@ class LOI.Assets.AudioEditor extends AM.Component
 
     # Create tools.
     toolClasses = [
-      #@constructor.Tools.Pencil
+      @constructor.Tools.Undo
+      @constructor.Tools.Redo
     ]
 
     tools = for toolClass in toolClasses
@@ -128,3 +129,12 @@ class LOI.Assets.AudioEditor extends AM.Component
 
   changeNodePosition: (nodeId, position) ->
     LOI.Assets.Audio.updateNode @audioId(), nodeId, {position}
+
+  addConnection: (nodeId, connection) ->
+    LOI.Assets.Audio.updateConnections @audioId(), nodeId, connection
+
+  removeConnection: (nodeId, connection) ->
+    LOI.Assets.Audio.updateConnections @audioId(), nodeId, null, connection
+
+  modifyConnection: (nodeId, connection, oldConnection) ->
+    LOI.Assets.Audio.updateConnections @audioId(), nodeId, connection, oldConnection

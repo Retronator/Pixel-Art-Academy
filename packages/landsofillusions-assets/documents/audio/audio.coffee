@@ -28,6 +28,7 @@ class LOI.Assets.Audio extends LOI.Assets.Asset
   @addNode: @method 'addNode'
   @removeNode: @method 'removeNode'
   @updateNode: @method 'updateNode'
+  @updateConnections: @method 'updateConnections'
 
   @_requireAudio: (audioId) ->
     audio = LOI.Assets.Audio.documents.findOne audioId

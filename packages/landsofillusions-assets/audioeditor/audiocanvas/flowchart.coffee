@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-#cubicBezier = require 'bresenham-zingl'
+{cubicBezier} = require 'bresenham-zingl'
 
 class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
   constructor: (@audioCanvas) ->
@@ -43,12 +43,12 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
 
     cubicBezier bezierParameters..., (x, y) => @_paintPixel imageData, x, y
 
-    # Draw the arrowhead
+    # Draw the arrowhead.
 
     for segment in [0..2]
-      x = bezierParameters[6] - segment
+      y = bezierParameters[7] - segment
 
-      for y in [bezierParameters[7] - segment..bezierParameters[7] + segment]
+      for x in [bezierParameters[6] - segment..bezierParameters[6] + segment]
         @_paintPixel imageData, x, y
 
   _paintPixel: (imageData, x, y) ->
@@ -56,24 +56,24 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
 
     pixelIndex = (x + y * imageData.width) * 4
 
-    # Fill the pixel with line color (124, 180, 212).
+    # Fill the pixel with line color (124, 140, 224).
     imageData.data[pixelIndex] = 124
-    imageData.data[pixelIndex + 1] = 180
-    imageData.data[pixelIndex + 2] = 212
+    imageData.data[pixelIndex + 1] = 140
+    imageData.data[pixelIndex + 2] = 224
     imageData.data[pixelIndex + 3] = 255
 
   _createBezierPoints: (connection) ->
     {start, end} = connection
 
     # Make the handle the shortest when a bit ahead of the start.
-    deltaX = end.x - (start.x + 10)
+    deltaY = end.y - (start.y + 10)
 
-    # Make the handle length grow faster going backwards.
-    deltaX *= -2 if deltaX < 0
+    # Make the handle length grow faster going up.
+    deltaY *= -2 if deltaY < 0
 
-    # Make the handle half the horizontal distance, but instead of linear growth, enforce a minimum length.
+    # Make the handle half the vertical distance, but instead of linear growth, enforce a minimum length.
     minimumStartingHandleLength = 40
-    handleLength = Math.pow(deltaX, 2) / (deltaX + minimumStartingHandleLength) * 0.5 + minimumStartingHandleLength
+    handleLength = Math.pow(deltaY, 2) / (deltaY + minimumStartingHandleLength) * 0.5 + minimumStartingHandleLength
 
     # Smooth out the handle towards zero at small distances.
     distance = Math.pow(Math.abs(start.y - end.y) + Math.abs(start.x - end.x), 2)
@@ -83,11 +83,11 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
 
     # Create bezier control points.
     controlStart =
-      x: start.x + handleLength
-      y: start.y
+      x: start.x
+      y: start.y + handleLength
 
     controlEnd =
-      x: end.x - handleLength
-      y: end.y
+      x: end.x
+      y: end.y - handleLength
 
     [start, controlStart, controlEnd, end]

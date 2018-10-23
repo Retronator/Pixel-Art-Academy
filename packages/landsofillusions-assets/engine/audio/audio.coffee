@@ -43,16 +43,13 @@ class LOI.Assets.Engine.Audio
     @nodesDictionary.stop()
 
     # Remove all connections.
-    ###
     for connection in @_connections
-      startNode = @_nodes[connection.endNodeId]
-      endNode = @_nodes[nodeId]
+      startNode = @_nodes[connection.startNodeId]
+      endNode = @_nodes[connection.endNodeId]
       startNode.disconnect endNode, connection.output, connection.input
 
     # Remove all nodes.
     node.destroy() for node in @_nodes
-  
-###
 
   nodes: ->
     @_nodesDependency.depend()
@@ -100,7 +97,7 @@ class LOI.Assets.Engine.Audio
     for connection in @_connections
       continue unless connection.endNodeId = nodeId
 
-      startNode = @_nodes[connection.endNodeId]
+      startNode = @_nodes[connection.startNodeId]
       endNode = @_nodes[nodeId]
 
       startNode.disconnect endNode, connection.output, connection.input
@@ -114,7 +111,7 @@ class LOI.Assets.Engine.Audio
     processedConnections = []
 
     for connection in @_waitingConnections
-      continue unless startNode = @_nodes[connection.endNodeId]
+      continue unless startNode = @_nodes[connection.startNodeId]
       continue unless endNode = @_nodes[connection.endNodeId]
 
       startNode.connect endNode, connection.output, connection.input

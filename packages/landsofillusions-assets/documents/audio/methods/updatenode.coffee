@@ -21,7 +21,7 @@ LOI.Assets.Audio.updateNode.method (audioId, nodeId, properties) ->
   change = false
 
   for property in ['position', 'expanded']
-    if properties[property]
+    if properties[property]?
       forward.$set["nodes.#{nodeId}.#{property}"] = properties[property]
       backward.$set["nodes.#{nodeId}.#{property}"] = node[property]
       change = true

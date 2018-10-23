@@ -113,19 +113,17 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
       if draggedConnection = @draggedConnection()
         # See if dragged connection is one of the existing ones.
         draggedNodeConnection = _.find connections, (connection) =>
-          _.some [
-            connection.endNodeId is draggedConnection.endNodeId and connection.input is draggedConnection.input
-            connection.startNodeId is draggedConnection.startNodeId and connection.output is draggedConnection.output
+          _.every [
+            connection.endNodeId is draggedConnection.endNodeId
+            connection.input is draggedConnection.input
+            connection.startNodeId is draggedConnection.startNodeId
+            connection.output is draggedConnection.output
           ]
 
         if draggedNodeConnection
           # Disconnect it so it will be moved with the mouse.
-          if draggedNodeConnection.input
-            draggedNodeConnection.startNodeId = null
-
-          else
-            draggedNodeConnection.output
-            draggedNodeConnection.endNodeId = null
+          draggedNodeConnection.output
+          draggedNodeConnection.endNodeId = null
 
         else
           # Add the dragged connection to connections.
@@ -138,7 +136,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
         if connection.startNodeId or hoveredOutput
           continue unless startNodeComponent = @_nodeComponentsById[connection.startNodeId or hoveredOutput.nodeId]
           continue unless componentPosition = startNodeComponent.position()
-          continue unless outputPosition = startNodeComponent.outputPositionForName connection.output
+          continue unless outputPosition = startNodeComponent.outputPositionForName hoveredOutput?.output or connection.output
   
           connection.start =
             x: componentPosition.x + outputPosition.x
@@ -150,7 +148,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
         if connection.endNodeId or hoveredInput
           continue unless endNodeComponent = @_nodeComponentsById[connection.endNodeId or hoveredInput.nodeId]
           continue unless componentPosition = endNodeComponent.position()
-          continue unless inputPosition = endNodeComponent.inputPositionForName connection.input
+          continue unless inputPosition = endNodeComponent.inputPositionForName hoveredInput?.input or connection.input
 
           connection.end =
             x: componentPosition.x + inputPosition.x
@@ -273,50 +271,63 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
     camera = @camera()
     camera.setOrigin nodeComponent.position()
 
-  startConnection: (startNodeId) ->
-    @draggedConnection {startNodeId}
+  startConnection: (options) ->
+    if options.input
+      @draggedConnection
+        endNodeId: options.nodeId
+        input: options.input
 
-  modifyConnection: (options) ->
-    # Go over all the nodes and find the first connection that matches the node and input.
-    nodes = @audioEditor.audio()?.nodes()
+    else
+      @draggedConnection
+        startNodeId: options.nodeId
+        output: options.output
 
-    for nodeId, nodeData of nodes
-      continue unless nodeData.connections
-
-      for connection in nodeData.connections
-        if connection.nodeId is options.nodeId and connection.input is options.input
-          @draggedConnection
-            startNodeId: nodeId
-            endNodeId: options.nodeId
-            input: options.input
-
-          return
+  modifyConnection: (connection) ->
+    @draggedConnection connection
 
   endConnection: (options) ->
     return unless draggedConnection = @draggedConnection()
     
-    startNodeId = if options.input then draggedConnection.startNodeId else options.nodeId
-    startNodeComponent = @_nodeComponentsById[startNodeId]
-    
-    connections = startNodeComponent.node.data().connections or []
-
-    # Remove the old data if this is an existing connection.
-    if draggedConnection.endNodeId
-      connections = _.reject connections, (connection) =>
-        connection.nodeId is draggedConnection.endNodeId and connection.input is draggedConnection.input
-
-    connections.push
+    connection =
       nodeId: if options.input then options.nodeId else draggedConnection.endNodeId
       input: options.input or draggedConnection.input
       output: options.output or draggedConnection.output
 
-    # Update node with new connections.
-    @audioEditor.setNodeConnections startNodeId, connections
+    invalid = false
+
+    # Make sure the connection goes from an input to an output.
+    invalid = true unless connection.input and connection.output
+
+    # Make sure the input is not already connected. We need to compare to actual connections in the audio
+    # engine (and not our modified ones) since the dragged connection might be going from input to output.
+    invalid = true if _.find @audioEditor.audio()?.connections(), (existingConnection) =>
+      existingConnection.endNodeId is connection.nodeId and existingConnection.input is connection.input
+
+    unless invalid
+      startNodeId = if options.input then draggedConnection.startNodeId else options.nodeId
+
+      # See if this was an existing connection.
+      if draggedConnection.startNodeId and draggedConnection.endNodeId
+        oldConnection =
+          nodeId: draggedConnection.endNodeId
+          input: draggedConnection.input
+          output: draggedConnection.output
+
+        # If the user just reconnected the same input output there's nothing to do.
+        # We still need to fall through to the end so the dragged connection ends.
+        unless EJSON.equals connection, oldConnection
+          @audioEditor.modifyConnection startNodeId, connection, oldConnection
+
+      else
+        @audioEditor.addConnection startNodeId, connection
 
     # End dragging.
     @draggedConnection null
 
   startHoverInput: (options) ->
+    # Make sure the input is not already connected.
+    return if _.find @connections(), (connection) => connection.endNodeId is options.nodeId and connection.input is options.input
+
     @hoveredInput options
 
   endHoverInput: ->
@@ -342,13 +353,12 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
 
     # If we were modifying an existing connection, remove it.
     if draggedConnection.endNodeId
-      startNodeComponent = @_nodeComponentsById[draggedConnection.startNodeId]
-      connections = startNodeComponent.node.data().connections
+      connection =
+        nodeId: draggedConnection.endNodeId
+        input: draggedConnection.input
+        output: draggedConnection.output
 
-      connections = _.reject connections, (connection) =>
-        connection.nodeId is draggedConnection.endNodeId and connection.input is draggedConnection.input and connection.output is draggedConnection.output
-
-      @audioEditor.setNodeConnections draggedConnection.startNodeId, connections
+      @audioEditor.removeConnection draggedConnection.startNodeId, connection
 
     # End connecting.
     @draggedConnection null

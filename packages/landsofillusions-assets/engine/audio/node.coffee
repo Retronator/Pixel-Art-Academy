@@ -33,3 +33,11 @@ class LOI.Assets.Engine.Audio.Node
 
   type: -> @constructor.type()
   nodeName: -> @constructor.nodeName()
+
+  connect: (node, output, input) ->
+    # TODO: Actually connect the nodes.
+    console.log "Connecting #{@id}:#{output} -> #{node.id}:#{input}"
+
+  disconnect: (node, output, input) ->
+    # TODO: Actually disconnect the nodes.
+    console.log "Disconnecting #{@id}:#{output} -> #{node.id}:#{input}"

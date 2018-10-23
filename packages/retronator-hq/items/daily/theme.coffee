@@ -326,7 +326,7 @@ class Retronator.HQ.Items.Daily.Theme
       randomWebsite = featuredWebsites[_.random featuredWebsites.length - 1]
       featuredWebsites = _.without featuredWebsites, randomWebsite
 
-    featuredWebsites.push _.last data.featuredWebsites
+    featuredWebsites.push _.last data.featuredWebsites if data.featuredWebsites.length
 
     $('.featured-websites-area').css
       height: "#{featuredWebsites.length * 50 + 140}rem"

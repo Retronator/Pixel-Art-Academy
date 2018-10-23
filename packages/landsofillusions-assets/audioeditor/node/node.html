@@ -7,19 +7,19 @@
     </div>
     <ul class="inputs">
       {{#each inputs}}
-        <li class="input {{validTargetClass}}" data-name="{{name}}" {{style inputStyle}}>
-          <div class="name">{{name}}</div>
+        <li class="input" data-name="{{name}}" {{style inputStyle}}>
           <div class="connector"></div>
           <div class="connection-target"></div>
+          <div class="name">{{connectorName}}</div>
         </li>
       {{/each}}
     </ul>
     <ul class="outputs">
       {{#each outputs}}
-        <li class="output {{validTargetClass}}" data-name="{{name}}" {{style outputStyle}}>
-          <div class="name">{{name}}</div>
+        <li class="output" data-name="{{name}}" {{style outputStyle}}>
           <div class="connector"></div>
           <div class="connection-target"></div>
+          <div class="name">{{connectorName}}</div>
         </li>
       {{/each}}
     </ul>

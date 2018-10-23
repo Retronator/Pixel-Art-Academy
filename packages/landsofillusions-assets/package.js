@@ -11,7 +11,8 @@ Package.describe({
 });
 
 Npm.depends({
-  'pngjs': '2.3.0'
+  'pngjs': '2.3.0',
+  'bresenham-zingl': '0.1.1'
 });
 
 Package.onUse(function(api) {
@@ -70,6 +71,7 @@ Package.onUse(function(api) {
   api.addFile('documents/audio/methods/addnode');
   api.addFile('documents/audio/methods/removenode');
   api.addFile('documents/audio/methods/updatenode');
+  api.addFile('documents/audio/methods/updateconnections');
 
   // Upload
 
@@ -116,6 +118,7 @@ Package.onUse(function(api) {
   api.addFile('engine/audio..');
   api.addFile('engine/audio/node');
   api.addFile('engine/audio/nodes/sound');
+  api.addFile('engine/audio/nodes/output');
 
   // Sprite editor
 
@@ -142,4 +145,8 @@ Package.onUse(function(api) {
 
   api.addComponent('audioeditor/node..');
   api.addComponent('audioeditor/nodelibrary..');
+
+  api.addFile('audioeditor/tools..');
+  api.addFile('audioeditor/tools/undo');
+  api.addFile('audioeditor/tools/redo');
 });

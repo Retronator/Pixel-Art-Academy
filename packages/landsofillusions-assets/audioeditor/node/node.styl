@@ -8,6 +8,9 @@
   background atariGrey(0)
   cursor grab
 
+  &.expanded
+    padding-top 3rem
+
   &:hover
     z-index 1
 
@@ -27,51 +30,71 @@
   .outputs
     list-style none
     visibility hidden
+    padding 0
+    margin 0
 
     .input
     .output
       position absolute
-      height 10rem
-      cursor pointer
+      cursor default
       color atariGrey(6)
 
       &.valid-target
         .connector
           background atariGrey(7)
 
+          &:hover
+            background atariGrey(7)
+
       .connection-target
         position absolute
-        left -20rem
-        top -20rem
-        width 40rem
-        height 40rem
+        left -10rem
+        width 20rem
+        height 20rem
 
       .connector
         display block
         position absolute
         z-index 1
-        top 0
-        left 0
+        top -4rem
+        left -5rem
         width 9rem
         height 9rem
-        padding 0.5rem
+        padding-left 1rem
+        text-align center
         background atariBlue(5)
         color atariBlue(0)
+        cursor text
 
         &::before
           content '↓'
 
-      &:hover:not(.invalid-target):not(.valid-target)
-        color atariGrey(7)
-
-        .connector
+        &:hover
           background atariBlue(7)
 
+      .name
+        position absolute
+        left 6rem
+
   .inputs
-    top 0
+    .input
+      top 0
+
+      .connection-target
+        top -15rem
+
+      .name
+        top -10rem
 
   .outputs
-    bottom 0
+    .output
+      bottom 0
+
+      .connection-target
+        top -5rem
+
+      .name
+        top 1rem
 
   &.expanded
     .parameters
