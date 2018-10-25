@@ -11,7 +11,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
   @version: -> '0.2.0'
 
   constructor: ->
-    super
+    super arguments...
 
     @reversedControls = new ReactiveField false
 
@@ -22,7 +22,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     @touches = new ReactiveField null
 
   onRendered: ->
-    super
+    super arguments...
 
     $(document).on 'keydown.pixelartacademy-pico8-device-handheld', (event) =>
       keyCode = event.which
@@ -42,7 +42,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
       @mouseDownDPad false
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(document).off '.pixelartacademy-pico8-device-handheld'
 
@@ -51,7 +51,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
     # Actually start with the delay after the switch has animated.
     Meteor.setTimeout =>
-      super
+      super arguments...
     ,
       200
 
@@ -60,7 +60,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
 
     # Actually stop with the delay after the switch has animated.
     Meteor.setTimeout =>
-      super
+      super arguments...
     ,
       200
 
@@ -84,7 +84,7 @@ class PAA.Pico8.Device.Handheld extends PAA.Pico8.Device
     null
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .power-toggle-button': @onClickPowerToggleButton
       'click .menu-button': @onClickMenuButton
       'mousedown .buttons': @onMouseDownButtons

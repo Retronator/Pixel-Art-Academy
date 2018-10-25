@@ -18,16 +18,10 @@ class LOI.Adventure.Location extends LOI.Adventure.Scene
   illustrationHeight: -> @constructor.illustrationHeight()
 
   @initialize: ->
-    super
+    super arguments...
 
     # Add a visited field unique to this location class.
     @visited = new ReactiveField false
-
-  # Location instance
-  constructor: (@options = {}) ->
-    # Scene expects options so make sure we aren't passing null (locations that
-    # inherit from this and override the constructor without options would do that).
-    super @options
 
   exits: -> # Override to provide location exits in {direction: location class} format
 

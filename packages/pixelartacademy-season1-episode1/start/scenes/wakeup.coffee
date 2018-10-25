@@ -20,7 +20,7 @@ class Start.WakeUp extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/start/scenes/wakeup.script'
 
   destroy: ->
-    super
+    super arguments...
 
     @cancelHint()
 

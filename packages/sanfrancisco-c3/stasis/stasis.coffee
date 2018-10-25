@@ -24,7 +24,7 @@ class C3.Stasis extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # Subscribe to all user's characters to see their designed status.
     @_charactersSubscription = LOI.Character.forCurrentUser.subscribe()
@@ -57,7 +57,7 @@ class C3.Stasis extends LOI.Adventure.Location
       vats
 
   destroy: ->
-    super
+    super arguments...
 
     @_charactersSubscription.stop()
     @characters.stop()

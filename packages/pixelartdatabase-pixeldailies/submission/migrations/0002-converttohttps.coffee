@@ -6,7 +6,7 @@ class Migration extends Document.PatchMigration
   forward: (document, collection, currentSchema, newSchema) ->
     count = @rename document, collection, currentSchema, newSchema, /http:/, 'https:'
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts
@@ -14,7 +14,7 @@ class Migration extends Document.PatchMigration
   backward: (document, collection, currentSchema, newSchema) ->
     count = @rename document, collection, currentSchema, newSchema, /https:/, 'http:'
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

@@ -6,9 +6,10 @@ class C3.Behavior.Terminal.MainMenu extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.MainMenu'
 
   constructor: (@terminal) ->
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
     
     @_characters = []
       
@@ -27,7 +28,7 @@ class C3.Behavior.Terminal.MainMenu extends AM.Component
       @_characters
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .character-selection-button': @onClickCharacterSelectionButton
 
   onClickCharacterSelectionButton: (event) ->

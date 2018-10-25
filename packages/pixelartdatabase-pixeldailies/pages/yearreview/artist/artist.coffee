@@ -53,7 +53,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
       [submissionsCursor, artworksCursor]
 
   constructor: ->
-    super
+    super arguments...
 
     @currentBackgroundIndex = new ReactiveField null
 
@@ -66,7 +66,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     @displayedSubmission = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # React to year and screen name changes.
     @autorun (computation) =>
@@ -104,7 +104,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
       PADB.PixelDailies.Pages.YearReview.Helpers.convertSubmissionToArtworks submission
 
   onRendered: ->
-    super
+    super arguments...
 
     @_$window = $(window)
 
@@ -176,7 +176,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     disabled: true if @streamViewActive()
 
   insertDOMElement: (parent, node, before) ->
-    super
+    super arguments...
     $node = $(node)
 
     return #unless $node.hasClass 'background'
@@ -198,7 +198,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
     $node = $(node)
 
     unless $node.hasClass 'background'
-      super
+      super arguments...
       return
 
     $node.addClass('old')
@@ -212,7 +212,7 @@ class PADB.PixelDailies.Pages.YearReview.Artist extends AM.Component
         1500
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .calendar.view-mode-button': @onClickCalendarViewModeButton
       'click .stream.view-mode-button': @onClickStreamViewModeButton
       'click .day': @onClickDay

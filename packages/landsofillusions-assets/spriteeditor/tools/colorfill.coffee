@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.Tools.Pencil
   constructor: ->
-    super
+    super arguments...
 
     @name = "Color fill"
     @shortcut = AC.Keys.g

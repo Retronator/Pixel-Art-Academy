@@ -22,13 +22,13 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
   @Meta
     name: @id()
     fields: =>
-      author: @ReferenceField RA.User, ['displayName', 'publicName'], false
-      authorName: @GeneratedField 'self', ['author'], (part) ->
+      author: Document.ReferenceField RA.User, ['displayName', 'publicName'], false
+      authorName: Document.GeneratedField 'self', ['author'], (part) ->
         authorName = part.author?.publicName or null
         [part._id, authorName]
-      name: @ReferenceField AB.Translation, ['translations'], false
-      description: @ReferenceField AB.Translation, ['translations'], false
-      spriteIds: [@GeneratedField 'self', ['data'], (template) ->
+      name: Document.ReferenceField AB.Translation, ['translations'], false
+      description: Document.ReferenceField AB.Translation, ['translations'], false
+      spriteIds: [Document.GeneratedField 'self', ['data'], (template) ->
         spriteIds = []
 
         addSpriteIds = (data) =>

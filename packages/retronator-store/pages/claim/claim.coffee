@@ -7,7 +7,7 @@ class RS.Pages.Claim extends AM.Component
   @register 'Retronator.Store.Pages.Claim'
   
   onCreated: ->
-    super
+    super arguments...
 
     @subscribe 'Retronator.Accounts.Transactions.Item.all'
 
@@ -53,7 +53,7 @@ class RS.Pages.Claim extends AM.Component
     disabled: true if @submittingClaim()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'submit .claim-form': @onSubmitClaimForm
       'input .key-code': @onInputKeyCode
 

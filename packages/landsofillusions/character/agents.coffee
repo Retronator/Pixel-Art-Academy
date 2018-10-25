@@ -35,7 +35,7 @@ class LOI.Character.Agents extends LOI.Adventure.Global
     @initialize()
   
     constructor: ->
-      super
+      super arguments...
 
       # Show characters that have been at the location in the last 15 minutes.
       durationInMilliseconds = 15 * 60 * 1000
@@ -128,7 +128,7 @@ class LOI.Character.Agents extends LOI.Adventure.Global
         true
 
     destroy: ->
-      super
+      super arguments...
 
       @recentActionsSubscription.stop()
       @currentAgents.stop()

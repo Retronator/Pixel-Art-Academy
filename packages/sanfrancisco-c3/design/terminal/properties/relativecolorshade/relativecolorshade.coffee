@@ -7,7 +7,7 @@ class C3.Design.Terminal.Properties.RelativeColorShade extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Properties.RelativeColorShade'
 
   onCreated: ->
-    super
+    super arguments...
 
     # TODO: Make property reactive to data change.
     @property = @data()
@@ -55,7 +55,7 @@ class C3.Design.Terminal.Properties.RelativeColorShade extends AM.Component
       backgroundColor: "##{swatch.color.getHexString()}"
 
     events: ->
-      super.concat
+      super(arguments...).concat
         'click .swatch': @onClickSwatch
         'click .previous-page-button': @onClickPreviousPageButton
         'click .next-page-button': @onClickNextPageButton

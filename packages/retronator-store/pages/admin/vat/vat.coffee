@@ -9,7 +9,7 @@ class RS.Pages.Admin.Vat extends AM.Component
   @register @id()
 
   onCreated: ->
-    super
+    super arguments...
 
     @subscribe Retronator.Store.Item.all
 
@@ -162,7 +162,7 @@ class RS.Pages.Admin.Vat extends AM.Component
 
   class @DataInput extends AM.DataInputComponent
     onCreated: ->
-      super
+      super arguments...
 
       @vat = @ancestorComponentOfType RS.Pages.Admin.Vat
 
@@ -170,7 +170,7 @@ class RS.Pages.Admin.Vat extends AM.Component
     @register 'Retronator.Store.Pages.Admin.Vat.Year'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Number
 
@@ -181,7 +181,7 @@ class RS.Pages.Admin.Vat extends AM.Component
     @register 'Retronator.Store.Pages.Admin.Vat.Month'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 
@@ -205,7 +205,7 @@ class RS.Pages.Admin.Vat extends AM.Component
     @register 'Retronator.Store.Pages.Admin.Vat.Quarter'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 
@@ -227,7 +227,7 @@ class RS.Pages.Admin.Vat extends AM.Component
 
   class @DateInput extends @DataInput
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Date
 

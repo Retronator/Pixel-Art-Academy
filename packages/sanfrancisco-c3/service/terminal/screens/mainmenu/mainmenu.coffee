@@ -6,9 +6,10 @@ class C3.Service.Terminal.MainMenu extends AM.Component
   @register 'SanFrancisco.C3.Service.Terminal.MainMenu'
 
   constructor: (@terminal) ->
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
     
     @characters = new ComputedField =>
       user = Retronator.user()
@@ -22,7 +23,7 @@ class C3.Service.Terminal.MainMenu extends AM.Component
     @newCharacterMade = false
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .character-selection-button': @onClickCharacterSelectionButton
       'click .new-character-button': @onClickNewCharacterButton
 

@@ -22,13 +22,13 @@ class LOI.Items.Sync extends LOI.Adventure.Item
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # SYNC is active, but not visible by default.
     @activatedState LOI.Adventure.Item.activatedStates.Activated
 
   onCreated: ->
-    super
+    super arguments...
 
     @fadeOut = new ReactiveField false
 
@@ -56,7 +56,7 @@ class LOI.Items.Sync extends LOI.Adventure.Item
       @onKeyUp event
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(document).off '.landsofillusions-items-sync'
 
@@ -128,7 +128,7 @@ class LOI.Items.Sync extends LOI.Adventure.Item
     'visible' unless @fadeOut()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .navigation .tab': @onClickNavigationTab
 
   onClickNavigationTab: (event) ->
@@ -214,12 +214,12 @@ class LOI.Items.Sync extends LOI.Adventure.Item
     @register @id()
 
     onCreated: ->
-      super
+      super arguments...
 
       @visible = new ReactiveField false
 
     onRendered: ->
-      super
+      super arguments...
 
       Meteor.setTimeout =>
         @visible true

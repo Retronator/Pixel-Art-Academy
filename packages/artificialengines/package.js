@@ -36,12 +36,12 @@ Package.onUse(function(api) {
     'peerlibrary:peerdb',
     'peerlibrary:peerdb-migrations',
     'peerlibrary:reactive-publish',
-    'peerlibrary:blaze-components',
-    'peerlibrary:blaze-common-component',
+    'retronator:blaze-components',
     'peerlibrary:reactive-field',
     'peerlibrary:computed-field',
     'peerlibrary:check-extension',
     'peerlibrary:server-autorun',
+    'peerlibrary:blocking',
     'peerlibrary:directcollection',
     'okgrow:router-autoscroll',
     'stevezhu:lodash',
@@ -157,6 +157,7 @@ Package.onUse(function(api) {
   api.addFile('mummification/document');
   api.addFile('mummification/persistentstorage');
   api.addFile('mummification/collectionwrapper');
+  api.addServerFile('mummification/directcollection');
 
   api.addFile('mummification/hierarchy..');
   api.addFile('mummification/hierarchy/address');

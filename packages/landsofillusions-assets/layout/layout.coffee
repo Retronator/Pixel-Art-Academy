@@ -8,7 +8,7 @@ class LOI.Assets.Layout extends BlazeComponent
     # TODO: Add image thumbnail.
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = new AM.Display
       safeAreaWidth: 350

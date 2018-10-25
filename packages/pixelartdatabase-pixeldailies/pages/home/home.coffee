@@ -29,14 +29,14 @@ class PADB.PixelDailies.Pages.Home extends AM.Component
   mixins: -> [@infiniteScroll]
 
   constructor: ->
-    super
+    super arguments...
 
     @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
       step: 3
       windowHeightCounts: 3
   
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to last themes.
     @autorun (computation) =>
@@ -76,7 +76,7 @@ class PADB.PixelDailies.Pages.Home extends AM.Component
     @register 'PixelArtDatabase.PixelDailies.Pages.Home.Theme'
 
     onCreated: ->
-      super
+      super arguments...
 
       @showingTopOnly = new ReactiveField true
 

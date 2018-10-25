@@ -34,7 +34,7 @@ class PAA.Practice.Journal extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], true
+      character: Document.ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], true
 
   # Methods
 

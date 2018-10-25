@@ -18,7 +18,7 @@ class Studio.EmailNotification extends LOI.Adventure.Thing
   @defaultScriptUrl: -> 'retronator_sanfrancisco-apartment/studio/emailnotification.script'
 
   constructor: ->
-    super
+    super arguments...
 
     @inboxLocation = new LOI.Emails.Inbox()
 
@@ -41,6 +41,6 @@ class Studio.EmailNotification extends LOI.Adventure.Thing
             email.markAsNotified()
 
   destroy: ->
-    super
+    super arguments...
 
     @_updateAutorun.stop()

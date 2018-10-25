@@ -5,7 +5,7 @@ class PAA.Artworks.Components.Uploader extends AM.Component
   @register 'PixelArtAcademy.Artworks.Components.Uploader'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .upload-button': @onClickUpload
 
   onClickUpload: ->

@@ -10,7 +10,7 @@ class LOI.Items.Components.Map extends AM.Component
   @register @id()
 
   constructor: ->
-    super
+    super arguments...
 
     @bigMap = new ReactiveField false
     @miniMap = LOI.Items.Map.state.field 'showMinimap'
@@ -79,7 +79,7 @@ class LOI.Items.Components.Map extends AM.Component
       _.sortBy _.values(locations), '_id'
     
   onRendered: ->
-    super
+    super arguments...
 
     # Resize elements.
     @autorun (computation) =>

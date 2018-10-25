@@ -6,10 +6,10 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
   @register 'PixelArtAcademy.Practice.Project.Asset.Sprite.BriefComponent'
 
   constructor: (@sprite) ->
-    super
+    super arguments...
     
   onCreated: ->
-    super
+    super arguments...
     
     @parent = @ancestorComponentWith 'editAsset'
 
@@ -52,7 +52,7 @@ class PAA.Practice.Project.Asset.Sprite.BriefComponent extends AM.Component
     _.kebabCase @sprite.displayName()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .edit-button': @onClickEditButton
       'click .assets-button': @onClickAssetsButton
       'click .upload-button': @onClickUploadButton

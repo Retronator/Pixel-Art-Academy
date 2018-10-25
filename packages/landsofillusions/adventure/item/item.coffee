@@ -41,7 +41,7 @@ class LOI.Adventure.Item extends LOI.Adventure.Thing
   isActivatable: -> false
 
   constructor: (@options) ->
-    super
+    super arguments...
     
     # An item that can be activated has 4 stages in its lifecycle. You can use this
     # as a reactive variable to depend on the state the item is currently in.

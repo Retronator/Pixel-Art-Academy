@@ -11,7 +11,7 @@ class C1.Pico8Cartridges extends LOI.Adventure.Scene
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: ->
     cartridges = [

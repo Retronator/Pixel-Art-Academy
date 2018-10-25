@@ -14,17 +14,16 @@ class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
   @location: -> HQ.Cafe
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       @HangoutGroupListener
     ]
 
   @initialize()
 
   constructor: ->
-    @members = new ReactiveField []
+    super arguments...
 
-    # Call super after because members need to be prepared.
-    super
+    @_members = new ReactiveField []
 
     # Update members when the state of members changes.
     membersField = @state.field 'members'
@@ -35,12 +34,19 @@ class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
 
       # React only to changes in member IDs.
       Tracker.nonreactive =>
-        @members (LOI.Character.getAgent memberId for memberId in memberIds)
+        @_members (LOI.Character.getAgent memberId for memberId in memberIds)
+
+    @constructed true
 
   destroy: ->
-    super
+    super arguments...
 
     @_membersAutorun.stop()
+
+  members: ->
+    return unless @constructed()
+
+    @_members()
 
   startMainQuestionsWithPerson: (person) ->
     # Start a default SF conversation.

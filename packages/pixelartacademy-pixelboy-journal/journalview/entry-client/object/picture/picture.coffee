@@ -14,7 +14,7 @@ class Entry.Object.Picture extends Entry.Object
     class: 'pixelartacademy-pixelboy-apps-journal-journalview-entry-object-picture'
 
   onCreated: ->
-    super
+    super arguments...
 
     @preview = new ReactiveField null
 

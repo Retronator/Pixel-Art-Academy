@@ -12,8 +12,8 @@ class IL.Interest extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      name: @ReferenceField AB.Translation, ['translations'], false
-      searchTerms: [@GeneratedField 'self', ['name', 'synonyms'], (interest) =>
+      name: Document.ReferenceField AB.Translation, ['translations'], false
+      searchTerms: [Document.GeneratedField 'self', ['name', 'synonyms'], (interest) =>
         searchTerms = []
 
         if interest.synonyms

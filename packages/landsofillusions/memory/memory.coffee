@@ -32,14 +32,14 @@ class LOI.Memory extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      startTime: @GeneratedField 'self', ['actions'], (memory) ->
+      startTime: Document.GeneratedField 'self', ['actions'], (memory) ->
         return [memory._id, undefined] unless memory.actions?.length
 
         orderedActions = _.sortBy memory.actions, (action) -> action.time.getTime()
 
         [memory._id, orderedActions[0].time]
 
-      endTime: @GeneratedField 'self', ['actions'], (memory) ->
+      endTime: Document.GeneratedField 'self', ['actions'], (memory) ->
         return [memory._id, undefined] unless memory.actions?.length
 
         orderedActions = _.sortBy memory.actions, 'time'
@@ -71,7 +71,7 @@ class LOI.Memory extends AM.Document
           endTime: -1
 
   constructor: ->
-    super
+    super arguments...
 
     # Sort and cast actions, to get them in the form we'd expect.
     @actions = _.sortBy @actions, (action) => action.time.getTime()

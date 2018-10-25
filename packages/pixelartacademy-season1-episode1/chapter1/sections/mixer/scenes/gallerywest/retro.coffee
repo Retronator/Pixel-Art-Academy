@@ -8,4 +8,4 @@ class C1.Mixer.GalleryWest.Retro extends HQ.Actors.Retro
   @initialize()
   
   @descriptiveName: ->
-    "#{super} He is sitting behind a table with ![markers](pick up marker) and name tag ![stickers](pick up stickers)."
+    "#{super arguments...} He is sitting behind a table with ![markers](pick up marker) and name tag ![stickers](pick up stickers)."

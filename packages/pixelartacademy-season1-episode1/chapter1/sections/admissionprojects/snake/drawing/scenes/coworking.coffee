@@ -15,7 +15,7 @@ class C1.AdmissionProjects.Snake.Drawing.Coworking extends LOI.Adventure.Scene
   @initialize()
   
   constructor: ->
-    super
+    super arguments...
 
     # Wait for the drawing task to be completed. We do this reactively since querying wires subscribes internally.
     @completedDrawing = new ComputedField =>
@@ -24,7 +24,7 @@ class C1.AdmissionProjects.Snake.Drawing.Coworking extends LOI.Adventure.Scene
       true
 
   destroy: ->
-    super
+    super arguments...
 
     @completedDrawing.stop()
     

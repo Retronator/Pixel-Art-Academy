@@ -13,7 +13,7 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @activatedCharacters = new ComputedField =>
       return [] unless characters = Retronator.user()?.characters
@@ -64,7 +64,7 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
     LOI.characterId() or LOI.adventure.currentLocationId() is LOI.Construct.Loading.id()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .character': @onClickCharacter
       'click .lands-of-illusions': @onClickLandsOfIllusions
       'click .disconnect': @onClickDisconnect

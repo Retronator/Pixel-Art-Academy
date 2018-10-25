@@ -10,7 +10,7 @@ class PADB.Pages.Admin.Profiles.Scripts extends Artificial.Mummification.Admin.C
   @twitterRefreshAll: new AB.Method name: "#{@id()}.twitterRefreshAll"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .refresh-all-button': @onClickRefreshAllButton
       'click .refresh-one-hour-button': @onClickRefreshOneHourButton
       'click .twitter-refresh-all-button': @onClickTwitterRefreshAllButton

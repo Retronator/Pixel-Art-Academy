@@ -35,7 +35,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
     Left: 'Left'
 
   constructor: ->
-    super
+    super arguments...
 
     @smiling = new ReactiveField false
 
@@ -67,7 +67,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
   # Component
 
   onCreated: ->
-    super
+    super arguments...
 
     @subscribe RS.Transaction.topRecent, 15
     @subscribe RA.User.topSupportersCurrentUser
@@ -83,7 +83,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
       @subscribe RS.Transaction.messages, @_messagesCount()
 
   onRendered: ->
-    super
+    super arguments...
 
     # Fix supporter list titles to be inside the screen.
     $supportersArea = @$('.content-area .supporters-area')
@@ -146,7 +146,7 @@ class HQ.Store.Display extends LOI.Adventure.Item
         time: -1
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .top-supporters .show-more-button': @onClickTopSupportersShowMoreButton
 
   onClickTopSupportersShowMoreButton: (event) ->

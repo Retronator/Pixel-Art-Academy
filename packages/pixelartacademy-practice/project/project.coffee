@@ -21,9 +21,9 @@ class PAA.Practice.Project extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      characters: [@ReferenceField LOI.Character, ['avatar.fullName']]
+      characters: [Document.ReferenceField LOI.Character, ['avatar.fullName']]
       assets: [
-        sprite: @ReferenceField LOI.Assets.Sprite
+        sprite: Document.ReferenceField LOI.Assets.Sprite
       ]
 
   # Subscriptions

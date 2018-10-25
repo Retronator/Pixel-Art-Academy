@@ -11,7 +11,7 @@ class C1.Apps extends LOI.Adventure.Scene
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: ->
     apps = []

@@ -6,7 +6,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8 extends AM.Component
   @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @active = new ReactiveField false
 
@@ -14,7 +14,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8 extends AM.Component
     @positionOffset = new ReactiveField x: 0, y: 0
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = @callAncestorWith 'display'
 
@@ -48,7 +48,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Pico8 extends AM.Component
     bottom: "calc(50% - #{77 + offset.y}rem)"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click': @onClick
       'mousedown': @onMouseDown
 

@@ -5,4 +5,4 @@ class RA.Pages.Admin extends AM.Component
   @register 'Retronator.Accounts.Pages.Admin'
 
   constructor: (@app) ->
-    super
+    super arguments...

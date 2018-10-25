@@ -31,7 +31,7 @@ class PADB.Artist extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      displayName: @GeneratedField 'self', ['name', 'pseudonym', 'aka'], (fields) ->
+      displayName: Document.GeneratedField 'self', ['name', 'pseudonym', 'aka'], (fields) ->
         return [fields._id, null] unless fields.name or fields.pseudonym or fields.aka
 
         # Pseudonym overrides any other name so return that if present.
@@ -59,14 +59,14 @@ class PADB.Artist extends AM.Document
         # We couldn't generate a name.
         [fields._id, null]
 
-      user: @ReferenceField RA.User, ['displayName'], false, 'artists'
+      user: Document.ReferenceField RA.User, ['displayName'], false, 'artists'
 
-      artworksCount: @GeneratedField 'self', ['artworks'], (fields) ->
+      artworksCount: Document.GeneratedField 'self', ['artworks'], (fields) ->
         return [fields._id, 0] unless fields.artworks
 
         [fields._id, fields.artworks.length]
 
-      combinedFollowersCount: @GeneratedField 'self', ['profiles'], (fields) ->
+      combinedFollowersCount: Document.GeneratedField 'self', ['profiles'], (fields) ->
         return [fields._id, 0] unless fields.profiles
 
         profiles = PADB.Profile.documents.find('artist._id': fields._id).fetch()

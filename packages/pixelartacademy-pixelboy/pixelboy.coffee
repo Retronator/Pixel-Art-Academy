@@ -37,7 +37,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     ScreenBottom: 'screen-bottom'
 
   constructor: ->
-    super
+    super arguments...
 
     # PixelBoy is always active to keep running apps, but we can show it or hide it.
     @activatedState LOI.Adventure.Item.activatedStates.Activated
@@ -77,7 +77,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     @positioningClass = new ReactiveField null
 
   onRendered: ->
-    super
+    super arguments...
 
     @overlay = @childComponentsOfType(LOI.Components.Overlay)[0]
     @backButton = @childComponentsOfType(LOI.Components.BackButton)[0]
@@ -190,7 +190,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
       @fullscreen size.width * scale >= clientWidth
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(document).off('.pixelartacademy-pixelboy')
     $('body').removeClass('pixelartacademy-pixelboy-resizing')
@@ -258,7 +258,7 @@ class PAA.PixelBoy extends LOI.Adventure.Item
     => @os.backButtonCallback()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mousedown .glass': @onMouseDownGlass
       'scroll .os': @onScrollOS
 

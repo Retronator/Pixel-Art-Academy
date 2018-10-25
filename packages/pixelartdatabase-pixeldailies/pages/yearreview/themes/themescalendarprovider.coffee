@@ -8,7 +8,7 @@ class PADB.PixelDailies.Pages.YearReview.ThemesCalendarProvider extends PADB.Pix
   @themes: new AB.Subscription name: "PixelArtDatabase.PixelDailies.Pages.YearReview.ThemesCalendarProvider.themes"
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @yearRange = new AE.DateRange year: @options.year
 

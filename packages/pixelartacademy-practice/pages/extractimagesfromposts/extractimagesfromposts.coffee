@@ -6,7 +6,7 @@ class PAA.Practice.Pages.ExtractImagesFromPosts extends AM.Component
   @register 'PixelArtAcademy.Practice.Pages.ExtractImagesFromPosts'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .process-button': @onClickProcessButton
 
   onClickProcessButton: (event) ->

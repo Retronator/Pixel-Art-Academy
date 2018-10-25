@@ -13,7 +13,7 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @subscribe RA.User.registeredEmailsForCurrentUser
     @subscribe RA.User.contactEmailForCurrentUser
@@ -47,7 +47,7 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
   # Events
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .verify-email-button': @onClickVerifyEmail
       'change .address-input': @onChangeAddressInput
       'change .primary-input': @onChangePrimaryInput
@@ -106,7 +106,7 @@ class LOI.Components.Account.General extends LOI.Components.Account.Page
     @register 'LandsOfIllusions.Components.Account.General.Username'
 
     onCreated: ->
-      super
+      super arguments...
 
       @_userBabelSubscription = AB.subscribeNamespace 'Retronator.Accounts.User'
 

@@ -24,7 +24,7 @@ class C3.Design.Terminal extends C3.Items.Terminal
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @screens =
       mainMenu: new @constructor.MainMenu @
@@ -40,7 +40,7 @@ class C3.Design.Terminal extends C3.Items.Terminal
     LOI.Character.Part.Template.forTypes.subscribe @, types, skipCurrentUsersTemplates: true
 
   onRendered: ->
-    super
+    super arguments...
 
     # Show an alpha-state disclaimer.
     @showDialog

@@ -49,7 +49,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       node.cancel()
       return
 
-    super
+    super arguments...
 
     # We don't really have to handle choice node, because the dialog selection
     # module does that, but we still want to pause before we display it.

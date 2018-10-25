@@ -6,14 +6,14 @@ class LOI.Components.Overlay extends AM.Component
   @register 'LandsOfIllusions.Components.Overlay'
 
   onCreated: ->
-    super
+    super arguments...
 
     @active = new ReactiveField false
 
     $('body').addClass('overlay-disable-scrolling')
 
   onRendered: ->
-    super
+    super arguments...
 
     @_cropBarHeight = 0
 
@@ -40,7 +40,7 @@ class LOI.Components.Overlay extends AM.Component
     @onActivating()
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $('body').removeClass('overlay-disable-scrolling')
 

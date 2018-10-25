@@ -5,6 +5,8 @@ PAA = PixelArtAcademy
 
 class PAA.PixelBoy.Apps.Journal.JournalsView.JournalMesh extends THREE.Mesh
   constructor: (@sceneManager, @journal) ->
+    super arguments...
+    
     switch @journal.design.size
       when PAA.Practice.Journal.Design.Size.Small
         @width = 20
@@ -19,18 +21,16 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.JournalMesh extends THREE.Mesh
     if @journal.design.orientation is PAA.Practice.Journal.Design.Orientation.Landscape
       [@width, @height] = [@height, @width]
 
-    geometry = new THREE.BoxGeometry @width, 2, @height
+    @geometry = new THREE.BoxGeometry @width, 2, @height
 
-    material = new THREE.MeshPhongMaterial color: 0
+    @material = new THREE.MeshPhongMaterial color: 0
 
     Tracker.autorun (computation) =>
       return unless palette = LOI.Assets.Palette.defaultPalette()
       coverColor = @journal.design.cover.color
       material.color = THREE.Color.fromObject palette.ramps[coverColor.hue].shades[coverColor.shade]
       material.needsUpdate = true
-    
-    super geometry, material
-    
+
     @position.y = 1
     @position.x = 0
     @position.z = -@height / 2

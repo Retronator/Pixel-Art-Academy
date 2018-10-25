@@ -6,7 +6,7 @@ class PAA.PixelBoy.OS extends AM.Component
   @register 'PixelArtAcademy.PixelBoy.OS'
 
   constructor: (@pixelBoy) ->
-    super
+    super arguments...
 
     @justOS = not @pixelBoy
 
@@ -92,13 +92,13 @@ class PAA.PixelBoy.OS extends AM.Component
       @display = LOI.adventure.interface.display
 
   onRendered: ->
-    super
+    super arguments...
 
     @$root = if @justOS then $('html') else @$('.pixelartacademy-pixelboy-os').closest('.os')
     @$root.addClass('pixelartacademy-pixelboy-os-root')
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @$root.removeClass('pixelartacademy-pixelboy-os-root')
 

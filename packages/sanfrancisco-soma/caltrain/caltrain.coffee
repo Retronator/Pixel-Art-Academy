@@ -20,7 +20,7 @@ class Soma.Caltrain extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
   ]

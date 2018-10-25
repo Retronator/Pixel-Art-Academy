@@ -32,7 +32,7 @@ class HQ.Locations.IdeaGarden extends LOI.Adventure.Location
     exits
 
   constructor: ->
-    super
+    super arguments...
     
     HQ.Locations.Elevator.setupElevatorExit
       location: @

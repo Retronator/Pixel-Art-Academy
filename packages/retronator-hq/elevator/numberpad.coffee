@@ -19,7 +19,7 @@ class HQ.Elevator.NumberPad extends LOI.Adventure.Thing
   @defaultScriptUrl: -> 'retronator_retronator-hq/elevator/numberpad.script'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
   onCommand: (commandResponse) ->
     numberPad = @options.parent

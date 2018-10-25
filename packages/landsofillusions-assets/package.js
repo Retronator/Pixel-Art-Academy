@@ -39,8 +39,9 @@ Package.onUse(function(api) {
   api.addFile('documents/palette/methods');
   api.addFile('documents/palette/atari2600');
   api.addServerFile('documents/palette/subscriptions');
+  api.addServerFile('documents/palette/migrations/0000-renameatari2600topixelartacademy');
 
-  api.addServerFile('documents/palette/palettes-server/atari2600');
+  api.addServerFile('documents/palette/palettes-server/pixelartacademy');
   api.addServerFile('documents/palette/palettes-server/pico8');
   api.addServerFile('documents/palette/palettes-server/black');
   api.addServerFile('documents/palette/palettes-server/zxspectrum');

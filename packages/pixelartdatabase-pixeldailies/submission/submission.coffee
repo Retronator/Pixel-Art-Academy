@@ -23,16 +23,16 @@ class PADB.PixelDailies.Submission extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      theme: @ReferenceField PADB.PixelDailies.Theme, ['hashtags'], false
+      theme: Document.ReferenceField PADB.PixelDailies.Theme, ['hashtags'], false
     triggers: =>
-      updateUserStatistics: @Trigger ['favoritesCount', 'user', 'processingError'], (submission, oldSubmission) =>
+      updateUserStatistics: Document.Trigger ['favoritesCount', 'user', 'processingError'], (submission, oldSubmission) =>
         # Update statistics of both users.
         screenNames = _.uniq [submission?.user?.screenName, oldSubmission?.user?.screenName]
         screenNames = _.without screenNames, undefined
 
         @updateUserStatistics screenName for screenName in screenNames
 
-      favoritesCountUpdated: @Trigger ['theme._id', 'favoritesCount', 'processingError'], (submission, oldSubmission) =>
+      favoritesCountUpdated: Document.Trigger ['theme._id', 'favoritesCount', 'processingError'], (submission, oldSubmission) =>
         # Update the themes of both submissions.
         themeIds = _.uniq [submission?.theme?._id, oldSubmission?.theme?._id]
         themeIds = _.without themeIds, undefined

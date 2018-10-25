@@ -20,18 +20,18 @@ class RA.User extends RA.User
     collection: Meteor.users
     fields: (fields) =>
       _.extend fields,
-        supporterName: @GeneratedField 'self', ['profile'], (user) ->
+        supporterName: Document.GeneratedField 'self', ['profile'], (user) ->
           supporterName = if user.profile?.showSupporterName then user.profile?.name else null
           [user._id, supporterName]
 
-        items: [@ReferenceField RS.Item, ['catalogKey']]
+        items: [Document.ReferenceField RS.Item, ['catalogKey']]
 
       fields
 
     triggers: (triggers) =>
       _.extend triggers,
         # Transactions for a user can update when a new registered email is added or a twitter account is linked.
-        transactionsUpdated: @Trigger ['registered_emails', 'services.twitter.screenName'], (user, oldUser) ->
+        transactionsUpdated: Document.Trigger ['registered_emails', 'services.twitter.screenName'], (user, oldUser) ->
           user?.onTransactionsUpdated()
 
       triggers

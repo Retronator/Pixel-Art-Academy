@@ -11,7 +11,7 @@ class LOI.Character.Behavior.Perk.NothingToClean extends LOI.Character.Behavior.
       """
 
   @satisfiesRequirements: (behaviorPart) ->
-    super
+    super arguments...
 
     clutterProperties = behaviorPart.properties.environment.part.properties.clutter.part.properties
     idealClutter = clutterProperties.ideal.options.dataLocation()

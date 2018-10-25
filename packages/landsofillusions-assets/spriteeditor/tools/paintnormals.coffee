@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.PaintNormals extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Paint normals"
     @shortcut = AC.Keys.n

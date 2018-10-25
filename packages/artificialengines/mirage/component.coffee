@@ -9,7 +9,7 @@ class AM.Component extends CommonComponent
   @_componentClassesByName = {}
 
   @register: (componentName) ->
-    super
+    super arguments...
 
     @_componentClassesByName[componentName] = @
 
@@ -17,18 +17,18 @@ class AM.Component extends CommonComponent
     _.values @_componentClassesByName
 
   constructor: ->
-    super
+    super arguments...
 
     # Make sure AB gets initialized before we create the first component.
     AB = Artificial.Babel
 
   onCreated: ->
-    super
+    super arguments...
 
     AB.subscribeComponent @ if Meteor.isClient
 
   onDestroyed: ->
-    super
+    super arguments...
 
     AB.unsubscribeComponent @ if Meteor.isClient
 

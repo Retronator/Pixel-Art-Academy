@@ -7,7 +7,7 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
   @register 'LandsOfIllusions.Assets.Components.ShadingSphere'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @currentNormal = new ReactiveField new THREE.Vector3 0, 0, 1
 
@@ -155,7 +155,7 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
       spriteData
 
   onCreated: ->
-    super
+    super arguments...
 
     sphereSprite = new LOI.Assets.Engine.Sprite
       spriteData: @sphereSpriteData
@@ -225,7 +225,7 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
     'active' if @editLight()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .edit-light-button': @onClickEditLightButton
 
   onClickEditLightButton: (event) ->
@@ -237,7 +237,7 @@ class LOI.Assets.Components.ShadingSphere extends AM.Component
     @register 'LandsOfIllusions.Assets.Components.ShadingSphere.AngleSnap'
 
     constructor: (@angleSnap) ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 

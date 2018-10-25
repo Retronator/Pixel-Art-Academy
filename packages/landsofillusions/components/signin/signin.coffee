@@ -9,14 +9,14 @@ class LOI.Components.SignIn extends AM.Component
   @version: -> '0.0.1'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @activatable = new LOI.Components.Mixins.Activatable()
 
   mixins: -> [@activatable]
 
   onCreated: ->
-    super
+    super arguments...
 
     @loginButtonsSession = Accounts._loginButtonsSession
 
@@ -46,7 +46,7 @@ class LOI.Components.SignIn extends AM.Component
       500
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click #login-buttons-logout': @onClickLogoutButton
 
   onClickLogoutButton: (event) ->

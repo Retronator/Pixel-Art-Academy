@@ -6,7 +6,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.ColorFill extends AM.Component
   @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.ColorFill'
   
   onCreated: ->
-    super
+    super arguments...
     
     @editor = @ancestorComponentOfType PAA.PixelBoy.Apps.Drawing.Editor.Desktop
 

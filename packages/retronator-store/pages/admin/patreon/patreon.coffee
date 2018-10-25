@@ -13,7 +13,7 @@ class RS.Pages.Admin.Patreon extends AM.Component
   @grantEarlyKeycards: new AB.Method name: "#{@id()}.grantEarlyKeycards"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .update-current-pledges': @onClickUpdateCurrentPledges
       'submit .upload-form': @onSubmitUploadForm
       'submit .refresh-form': @onSubmitRefreshForm

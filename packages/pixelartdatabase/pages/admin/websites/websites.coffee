@@ -8,7 +8,7 @@ class PADB.Pages.Admin.Websites extends Artificial.Mummification.Admin.Component
   constructor: ->
     super
       documentClass: PADB.Website
-      adminComponentClass: @constructor.Website
+      adminComponentClass: PADB.Pages.Admin.Websites.Website
       nameField: 'name'
       singularName: 'website'
       pluralName: 'websites'

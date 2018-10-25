@@ -21,7 +21,7 @@ class RS.AirportTerminal.Departures extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
   ]

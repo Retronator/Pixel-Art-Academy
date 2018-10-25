@@ -17,7 +17,7 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_retronator-hq/scenes/intercom.script'
 
   constructor: ->
-    super
+    super arguments...
 
     @_scheduleNextMessage()
 
@@ -26,7 +26,7 @@ class HQ.Scenes.Intercom extends LOI.Adventure.Scene
     @subscribe RS.Transaction.messages, 20
 
   destroy: ->
-    super
+    super arguments...
 
     Meteor.clearTimeout @_nextMessageTimeout
 

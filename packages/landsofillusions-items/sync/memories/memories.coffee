@@ -18,7 +18,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
     @previewComponents[contextId] = component
 
   onCreated: ->
-    super
+    super arguments...
 
     @limit = new ReactiveField 20
     @currentOffset = new ReactiveField 0
@@ -46,7 +46,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
     @_characterImagesDependency = new Tracker.Dependency
 
   onDestroyed: ->
-    super
+    super arguments...
 
     characterImage.updateAutorun.stop() for characterId, characterImage of @characterImages
 
@@ -130,7 +130,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
     'updated' unless memory.endTime.getTime() <= observedMemory?.time?.getTime()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'wheel': @onMouseWheel
       'click .memory .preview': @onClickMemoryPreview
 
@@ -200,7 +200,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
     @register 'LandsOfIllusions.Items.Sync.Memories.Preview'
 
     onCreated: ->
-      super
+      super arguments...
 
       memory = @data()
 

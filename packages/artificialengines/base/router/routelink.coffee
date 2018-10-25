@@ -6,6 +6,7 @@ class AB.RouteLink extends AM.Component
   @register 'Artificial.Base.RouteLink'
 
   constructor: (@text, @route, @parameters) ->
+    super arguments...
 
   isRouteActive: ->
     return unless currentRouteData = AB.Router.currentRouteData()

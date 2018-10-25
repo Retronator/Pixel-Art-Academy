@@ -16,7 +16,7 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
   renderRaw: -> true
 
   onCreated: ->
-    super
+    super arguments...
 
     @subscribe RS.Item.all
 
@@ -200,7 +200,7 @@ class LOI.Components.Account.Inventory extends LOI.Components.Account.Page
     _.sum (group.length for group in pageItems)
     
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .turn': @onClickTurn
       'click .item .name': @onClickItemName
       'click': @onClick

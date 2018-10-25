@@ -23,7 +23,7 @@ class AM.Hierarchy.Template extends AM.Document
   @forId: null
 
   constructor: ->
-    super
+    super arguments...
     
     # The field that loaded the template will want a node with our data.
     # Note that this resets the address hierarchy from here on out to this template.

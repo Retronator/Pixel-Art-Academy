@@ -5,10 +5,10 @@ class LOI.Construct.Loading.TV.MainMenu extends AM.Component
   @register 'LandsOfIllusions.Construct.Loading.TV.MainMenu'
 
   constructor: (@tv) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
   
     @activatedCharacters = new ComputedField =>
       return unless characters = Retronator.user()?.characters
@@ -54,7 +54,7 @@ class LOI.Construct.Loading.TV.MainMenu extends AM.Component
     'visible' if @firstCharacterOffset() > 0
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .character': @onClickCharacter
       'click .screen': @onClickScreen
       'click .new-character': @onClickNewCharacter

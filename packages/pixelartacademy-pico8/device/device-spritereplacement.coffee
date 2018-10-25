@@ -6,7 +6,7 @@ PAA = PixelArtAcademy
 
 class PAA.Pico8.Device extends PAA.Pico8.Device
   onCreated: ->
-    super
+    super arguments...
 
     # Enable live sprite updating.
     @_updatedPixels = []

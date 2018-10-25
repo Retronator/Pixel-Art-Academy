@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 
 class LOI.Interface.Text extends LOI.Interface.Text
   onCreated: ->
-    super
+    super arguments...
 
     console.log "Text interface is being created." if LOI.debug
 
@@ -58,7 +58,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
     @initializeHandlers()
 
   onRendered: ->
-    super
+    super arguments...
 
     console.log "Rendering text interface." if LOI.debug
 
@@ -108,7 +108,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
         hintDelayTime * 1000
 
   onDestroyed: ->
-    super
+    super arguments...
 
     console.log "Destroying text interface." if LOI.debug
 

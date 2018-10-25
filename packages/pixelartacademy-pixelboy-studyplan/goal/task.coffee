@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal.Task extends AM.Component
   @register @id()
   
   onCreated: ->
-    super
+    super arguments...
 
     @goalComponent = @ancestorComponentOfType PAA.PixelBoy.Apps.StudyPlan.Goal
     

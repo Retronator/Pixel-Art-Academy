@@ -3,7 +3,7 @@ Script = LOI.Adventure.Script
 
 class Script.Nodes.DialogueLine extends Script.Node
   constructor: (options) ->
-    super
+    super arguments...
     
     @actor = options.actor
     @actorName = options.actorName

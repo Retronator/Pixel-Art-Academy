@@ -12,7 +12,7 @@ class LOI.Character.Behavior.Perk.Focused extends LOI.Character.Behavior.Perk
       """
 
   @satisfiesRequirements: (behaviorPart) ->
-    super
+    super arguments...
 
     numberOfPersonalActivities = behaviorPart.properties.activities.activePersonalActivities().length
     numberOfPersonalActivities <= 2

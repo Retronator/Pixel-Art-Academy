@@ -5,7 +5,7 @@ class LOI.Assets.Components.Palette extends AM.Component
   @register 'LandsOfIllusions.Assets.Components.Palette'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @paletteData = new ComputedField =>
       if paletteData = @options.paletteData?()
@@ -54,7 +54,7 @@ class LOI.Assets.Components.Palette extends AM.Component
     'active' if data.ramp is @currentRamp() and data.shade is @currentShade()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .color': @onClickColor
 
   onClickColor: ->

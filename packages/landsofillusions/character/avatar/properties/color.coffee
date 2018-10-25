@@ -8,7 +8,7 @@ class LOI.Character.Avatar.Properties.Color extends LOI.Character.Part.Property
   #     shade
   #       value
   constructor: (@options = {}) ->
-    super
+    super arguments...
 
     @type = 'color'
 

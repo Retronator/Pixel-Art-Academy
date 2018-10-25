@@ -12,7 +12,7 @@ class C1.PostPixelBoy.DrawingChallenges extends LOI.Adventure.Scene
   @initialize()
 
   destroy: ->
-    super
+    super arguments...
 
     @_pixelArtSoftware?.destroy()
     @_tutorialBasics?.destroy()

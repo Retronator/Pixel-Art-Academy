@@ -17,7 +17,7 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
     Activity: 'Activity'
 
   constructor: ->
-    super
+    super arguments...
 
     # Set starting location and start moving around.
     @autorun (computation) =>
@@ -49,7 +49,7 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
       false
 
   destroy: ->
-    super
+    super arguments...
 
     Meteor.clearTimeout @_nextMessageTimeout
 

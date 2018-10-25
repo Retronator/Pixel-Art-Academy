@@ -21,14 +21,14 @@ class HQ.GalleryEast extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # We create our own instance of the NPC. We don't want to just send a class to things either,
     # because our custom class uses the same ID and it would collide with the normal NPC instance.
     @corinne = new HQ.GalleryEast.Corinne
 
   destroy: ->
-    super
+    super arguments...
 
     @corinne.destroy()
 

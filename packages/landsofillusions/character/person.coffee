@@ -15,7 +15,7 @@ class LOI.Character.Person extends LOI.Adventure.Thing
   #   time: real-world time of the hangout in milliseconds
   #   gameTime: fractional time in game days
   constructor: ->
-    super
+    super arguments...
 
     @action = new ReactiveField null
 

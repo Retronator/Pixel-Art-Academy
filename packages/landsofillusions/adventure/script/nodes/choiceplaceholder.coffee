@@ -3,7 +3,7 @@ Script = LOI.Adventure.Script
 
 class Script.Nodes.ChoicePlaceholder extends Script.Node
   constructor: (options) ->
-    super
+    super arguments...
 
     @id = options.id
     @originalNext = options.next
@@ -35,7 +35,7 @@ class Script.Nodes.ChoicePlaceholder extends Script.Node
     @update()
 
     # Finish transition.
-    super
+    super arguments...
 
   #  Choice placeholder response collects any dialog choices to add at the placeholder location.
   class @Response

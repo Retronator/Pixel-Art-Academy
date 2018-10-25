@@ -10,7 +10,7 @@ class Yearbook.ProfileForm.Favorites extends AM.Component
   @register @id()
 
   constructor: (@yearbook) ->
-    super
+    super arguments...
 
     @categories = [
       field: 'computer'
@@ -33,7 +33,7 @@ class Yearbook.ProfileForm.Favorites extends AM.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Yearbook.ProfileForm.Favorites.Favorite'
 
     constructor: ->
-      super
+      super arguments...
 
       @realtime = false
 

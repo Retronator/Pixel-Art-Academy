@@ -3,7 +3,7 @@ AS = Artificial.Spectrum
 
 class AS.AnimatedMesh extends AS.RenderObject
   constructor: (@options) ->
-    super
+    super arguments...
 
     @data = new ReactiveField @options.data
     @texture = new ReactiveField @options.texture
@@ -101,7 +101,7 @@ class AS.AnimatedMesh extends AS.RenderObject
       creatureManager.RunAtTime 0
 
   destroy: ->
-    super
+    super arguments...
 
     @creature.stop()
     @creatureManager.stop()

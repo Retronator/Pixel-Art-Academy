@@ -9,7 +9,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class HQ.ArtStudio.ContextWithArtworks extends HQ.ArtStudio.ContextWithArtworks
   constructor: ->
-    super
+    super arguments...
 
     @artistsInfo =
       alexandraHood: name: first: 'Alexandra', last: 'Hood'

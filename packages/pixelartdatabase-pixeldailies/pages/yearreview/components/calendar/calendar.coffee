@@ -12,7 +12,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
   mixins: -> [@infiniteScroll]
 
   constructor: (@provider) ->
-    super
+    super arguments...
 
     @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
       # Provider can already have a higher limit, so start there.
@@ -32,7 +32,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
     @submissions = new ReactiveField null
 
   onRendered: ->
-    super
+    super arguments...
 
     # Match provider and infinite scroll limit.
     @autorun (computation) =>
@@ -159,7 +159,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Calendar extends AM.Componen
     (not @provider.ready()) or @rendering()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mouseenter .day': @onMouseenterDay
       'mouseleave .day': @onMouseleaveDay
 

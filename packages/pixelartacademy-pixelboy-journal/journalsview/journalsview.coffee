@@ -12,7 +12,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
   template: -> @constructor.id()
 
   constructor: (@journal) ->
-    super
+    super arguments...
 
     # Prepare all reactive fields.
     @renderer = new ReactiveField null
@@ -23,7 +23,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
     @sceneImage = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     @autorun =>
       PAA.Practice.Journal.forCharacterId.subscribe @, LOI.characterId()
@@ -59,7 +59,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
         @_activeJournalMesh?.activate()
 
   onRendered: ->
-    super
+    super arguments...
 
     # Handle resize of mesh canvas.
     @autorun =>
@@ -92,7 +92,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
       @renderer().start()
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @renderer().destroy()
     @sceneManager().destroy()
@@ -116,7 +116,7 @@ class PAA.PixelBoy.Apps.Journal.JournalsView extends AM.Component
   # Events
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .new-journal-button': @onClickNewJournalButton
       'scroll .overlay': @onScrollOverlay
       'mouseenter .journal': @onMouseEnterJournal

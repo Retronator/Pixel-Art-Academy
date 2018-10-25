@@ -24,7 +24,7 @@ class LOI.Items.Map extends LOI.Adventure.Item
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # The map is active, but not visible by default.
     @activatedState LOI.Adventure.Item.activatedStates.Activated
@@ -37,12 +37,12 @@ class LOI.Items.Map extends LOI.Adventure.Item
       @onKeyUp event
 
   onCreated: ->
-    super
+    super arguments...
 
     @map = new LOI.Items.Components.Map
 
   destroy: ->
-    super
+    super arguments...
 
     $(document).off '.landsofillusions-items-map'
 
@@ -141,7 +141,7 @@ class LOI.Items.Map extends LOI.Adventure.Item
     @register 'LandsOfIllusions.Items.Map.ShowMinimap'
     
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Checkbox
 

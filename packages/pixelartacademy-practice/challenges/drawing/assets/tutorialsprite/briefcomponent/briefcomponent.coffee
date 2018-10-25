@@ -6,15 +6,15 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite.BriefComponent extends AM.C
   @register 'PixelArtAcademy.Practice.Challenges.Drawing.TutorialSprite.BriefComponent'
 
   constructor: (@sprite) ->
-    super
+    super arguments...
     
   onCreated: ->
-    super
+    super arguments...
     
     @parent = @ancestorComponentWith 'editAsset'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .start-button': @onClickStartButton
       'click .reset-button': @onClickResetButton
 

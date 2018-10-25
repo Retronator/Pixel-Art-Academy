@@ -11,7 +11,7 @@ class C1.Inbox extends LOI.Adventure.Scene
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @emails = [
       new C1.Items.ApplicationEmail
@@ -19,7 +19,7 @@ class C1.Inbox extends LOI.Adventure.Scene
     ]
 
   destroy: ->
-    super
+    super arguments...
 
     email.destroy() for email in @emails
 
@@ -32,7 +32,7 @@ class C1.Inbox extends LOI.Adventure.Scene
 
   ready: ->
     conditions = [
-      super
+      super arguments...
       email.ready() for email in @emails
     ]
 

@@ -22,9 +22,8 @@ class RS.AirportTerminal.Immigration extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
+    super arguments...
     @announcer = new RS.Items.Announcer
-
-    super
 
   things: -> [
     RS.AirportTerminal.Immigration.Terminal

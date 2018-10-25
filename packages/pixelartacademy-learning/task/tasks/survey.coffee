@@ -11,7 +11,7 @@ class PAA.Learning.Task.Survey extends PAA.Learning.Task
   @questions: -> throw new AE.NotImplementedException "You must provide survey questions."
 
   @initialize: ->
-    super
+    super arguments...
     
     # On the server, create this survey's translations.
     if Meteor.isServer

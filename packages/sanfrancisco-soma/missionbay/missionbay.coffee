@@ -21,7 +21,7 @@ class Soma.MissionBay extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
     Soma.Items.Muni

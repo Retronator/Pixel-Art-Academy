@@ -8,6 +8,8 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
   @register @id()
   
   constructor: (@audioEditor) ->
+    super arguments...
+    
     # Prepare all reactive fields.
     @camera = new ReactiveField null
     @mouse = new ReactiveField null
@@ -22,7 +24,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
     @dragHasMoved = new ReactiveField false
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = @callAncestorWith 'display'
 
@@ -179,7 +181,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
         y: @dragStartNodePosition.y + dragDelta.y
 
   onRendered: ->
-    super
+    super arguments...
 
     # DOM has been rendered, initialize.
     $audioCanvas = @$('.landsofillusions-assets-audioeditor-audiocanvas')
@@ -340,7 +342,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
     @hoveredOutput null
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mousedown': @onMouseDown
       'mouseup': @onMouseUp
 

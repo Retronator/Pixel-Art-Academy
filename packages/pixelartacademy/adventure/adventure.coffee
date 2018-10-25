@@ -18,7 +18,7 @@ class PAA.Adventure extends LOI.Adventure
     # On the landing page return the default title.
     return @constructor.title() if LOI.adventureInitialized() and @currentLocation()?.isLandingPage?()
 
-    super
+    super arguments...
 
   template: -> 'LandsOfIllusions.Adventure'
 

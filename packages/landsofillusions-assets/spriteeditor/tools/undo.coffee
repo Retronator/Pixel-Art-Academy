@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.Undo extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Undo"
     @shortcut = AC.Keys.z

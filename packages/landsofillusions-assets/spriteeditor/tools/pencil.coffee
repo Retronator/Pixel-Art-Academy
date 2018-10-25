@@ -3,18 +3,18 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.Pencil extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Pencil"
     @shortcut = AC.Keys.b
 
   onMouseDown: (event) ->
-    super
+    super arguments...
 
     @applyPencil()
 
   onMouseMove: (event) ->
-    super
+    super arguments...
 
     @applyPencil()
 

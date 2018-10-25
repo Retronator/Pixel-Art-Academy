@@ -8,7 +8,7 @@ class PADB.PixelDailies.Pages.YearReview.Layout extends BlazeComponent
     Meteor.absoluteUrl "pixelartdatabase/pixeldailies/yearreview/years/#{parameters.year}.png"
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = new AM.Display
       safeAreaWidth: 350

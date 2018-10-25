@@ -6,10 +6,10 @@ class LOI.Construct.Loading.TV.NewLink extends AM.Component
   @register 'LandsOfIllusions.Construct.Loading.TV.NewLink'
 
   constructor: (@tv) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to pre-made characters.
     LOI.Construct.Loading.PreMadeCharacter.all.subscribe @
@@ -62,7 +62,7 @@ class LOI.Construct.Loading.TV.NewLink extends AM.Component
     @currentCharacter()?.behavior.part.properties.perks.toString() or "None"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .clone-character-button': @onClickCloneCharacterButton
       'click .cancel-button': @onClickCancelButton
       'click .previous-button': @onClickPreviousButton

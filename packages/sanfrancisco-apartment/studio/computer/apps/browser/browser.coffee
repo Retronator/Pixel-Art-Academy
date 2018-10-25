@@ -7,10 +7,10 @@ class Studio.Computer.Browser extends AM.Component
   @register 'SanFrancisco.Apartment.Studio.Computer.Browser'
 
   constructor: (@computer) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     @currentRoute = new ReactiveField null
 
@@ -97,7 +97,7 @@ class Studio.Computer.Browser extends AM.Component
     'disabled' if @historyIndex() is @history().length - 1
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .close-button': @onClickCloseButton
       'change .url-input': @onChangeUrlInput
       'click a': @onClickAnchor

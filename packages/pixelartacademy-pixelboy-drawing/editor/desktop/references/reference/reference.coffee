@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.
   @register @id()
 
   constructor: ->
-    super
+    super arguments...
 
     @trayWidth = 165
     @trayHeight = 190
@@ -19,7 +19,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.
     @resizingBorder = 6
 
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to artworks for this reference.
     @autorun (computation) =>
@@ -108,12 +108,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.
     height: imageSize.height * scale + captionHeight
 
   endDrag: ->
-    super
+    super arguments...
 
     @references.hideActive false
 
   onMouseDown: (event) ->
-    super
+    super arguments...
     
     return unless event.which is 1
 
@@ -129,10 +129,10 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.References.Reference extends LOI.
     # Don't allow resizing when not displayed.
     return unless @currentDisplayed()
 
-    super
+    super arguments...
 
   referenceStyle: ->
-    style = super
+    style = super arguments...
 
     # Push assets apart when we're not editing an asset.
     if @currentDisplayed() and not @references.options.editorActive()

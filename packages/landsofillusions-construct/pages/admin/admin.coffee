@@ -5,4 +5,4 @@ class LOI.Construct.Pages.Admin extends AM.Component
   @register 'LandsOfIllusions.Construct.Pages.Admin'
 
   constructor: (@app) ->
-    super
+    super arguments...

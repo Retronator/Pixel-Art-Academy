@@ -6,12 +6,12 @@ class Studio.Computer.App extends AM.Component
   @register 'SanFrancisco.Apartment.Studio.Computer.App'
 
   onCreated: ->
-    super
+    super arguments...
 
     @computer = @ancestorComponentOfType Studio.Computer
     
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .close-button': @onClickCloseButton
 
   onClickCloseButton: (event) ->

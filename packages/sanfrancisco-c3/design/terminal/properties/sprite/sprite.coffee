@@ -7,7 +7,7 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Properties.Sprite'
 
   onCreated: ->
-    super
+    super arguments...
 
     getSpriteIdLocation = =>
       property = @data()
@@ -43,7 +43,7 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
     @spriteId()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .choose-sprite-button': @onClickChooseSpriteButton
       'click .sprite-preview': @onClickSpritePreview
       'mousemove .sprite-preview': @onMouseMoveSpritePreview

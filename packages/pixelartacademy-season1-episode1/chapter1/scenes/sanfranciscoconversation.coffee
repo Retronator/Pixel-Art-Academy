@@ -18,7 +18,7 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/scenes/sanfranciscoconversation.script'
 
   constructor: ->
-    super
+    super arguments...
 
     # Subscribe to everyone's journals.
     @_journalsSubscriptionAutorun = Tracker.autorun =>
@@ -28,7 +28,7 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
       PAA.Practice.Journal.forCharacterIds.subscribe characterIds
 
   destroy: ->
-    super
+    super arguments...
 
     @_journalsSubscriptionAutorun.stop()
 

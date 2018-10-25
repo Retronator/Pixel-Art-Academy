@@ -15,7 +15,7 @@ class C3.Stasis.Vat extends LOI.Adventure.Item
   @initialize()
   
   constructor: (@options) ->
-    super
+    super arguments...
 
   fullName: ->
     "vat holding #{@_characterFullName()}"

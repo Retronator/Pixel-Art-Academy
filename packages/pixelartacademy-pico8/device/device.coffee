@@ -14,13 +14,13 @@ class PAA.Pico8.Device extends AM.Component
     X: 5
 
   constructor: (@options = {}) ->
-    super
+    super arguments...
 
     @game = new ReactiveField null
     @projectId = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     @project = new ComputedField =>
       return unless projectId = @projectId()

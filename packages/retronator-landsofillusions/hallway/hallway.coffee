@@ -21,7 +21,7 @@ class HQ.LandsOfIllusions.Hallway extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> []
 

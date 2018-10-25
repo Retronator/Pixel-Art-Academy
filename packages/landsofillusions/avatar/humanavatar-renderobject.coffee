@@ -3,12 +3,12 @@ LOI = LandsOfIllusions
 
 class LOI.HumanAvatar extends LOI.HumanAvatar
   constructor: ->
-    super
+    super arguments...
 
     @textureDataUrl = new ReactiveField null
 
   destroy: ->
-    super
+    super arguments...
 
     @_textureUpdateAutorun.stop()
     @_renderObject?.destroy()

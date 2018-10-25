@@ -14,7 +14,7 @@ class C2.Immersion.Room extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode0/chapter2/sections/immersion/scenes/room.script'
 
   constructor: ->
-    super
+    super arguments...
 
     @operator = new HQ.Actors.Operator
 

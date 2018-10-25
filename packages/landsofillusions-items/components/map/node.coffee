@@ -9,7 +9,7 @@ class LOI.Items.Components.Map.Node extends AM.Component
   @register 'LandsOfIllusions.Items.Components.Map.Node'
   
   onCreated: ->
-    super
+    super arguments...
 
     location = @data()
 
@@ -103,7 +103,7 @@ class LOI.Items.Components.Map.Node extends AM.Component
       EJSON.equals
 
   onRendered: ->
-    super
+    super arguments...
 
     Meteor.setTimeout =>
       @$('.landsofillusions-items-components-map-node')?.addClass('visible')

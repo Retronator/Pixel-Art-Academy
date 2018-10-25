@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Renderers.Renderer
   constructor: (@options, initialize) ->
-    super
+    super arguments...
 
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize

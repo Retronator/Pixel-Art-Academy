@@ -6,7 +6,7 @@ class AM.PixelImage extends AM.Component
   @register 'Artificial.Mirage.PixelImage'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     if _.isFunction @options.image
       @image = @options.image
@@ -19,7 +19,7 @@ class AM.PixelImage extends AM.Component
     @targetHeight = @options.targetHeight or new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # Search for the first parent that has a display.
     unless @display = @options.display
@@ -38,7 +38,7 @@ class AM.PixelImage extends AM.Component
       image.src = @options.source
 
   onRendered: ->
-    super
+    super arguments...
 
     @$canvas = @$('.canvas')
     @canvas = @$canvas[0]

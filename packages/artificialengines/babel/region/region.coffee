@@ -9,7 +9,7 @@ class AB.Region extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      name: @ReferenceField AB.Translation, [], false
+      name: Document.ReferenceField AB.Translation, [], false
 
   @all: @subscription 'all'
 

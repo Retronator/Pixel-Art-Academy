@@ -2,12 +2,12 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Components.ShadingSphere.NormalPicker extends LandsOfIllusions.Assets.Tools.Tool
   onMouseDown: (event) ->
-    super
+    super arguments...
 
     @calculateNormal()
 
   onMouseMove: (event) ->
-    super
+    super arguments...
 
     @calculateNormal()
 

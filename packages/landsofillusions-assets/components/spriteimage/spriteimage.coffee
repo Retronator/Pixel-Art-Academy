@@ -7,10 +7,10 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
   @register 'LandsOfIllusions.Assets.Components.SpriteImage'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     @spriteData = new ComputedField =>
       return unless spriteId = @options.spriteId()
@@ -34,7 +34,7 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
         LOI.Assets.Palette.forId.subscribe @, spriteData.palette._id
 
   onRendered: ->
-    super
+    super arguments...
 
     @autorun =>
       canvas = @$('.canvas')[0]

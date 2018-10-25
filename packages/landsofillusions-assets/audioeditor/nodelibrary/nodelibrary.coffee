@@ -8,10 +8,10 @@ class LOI.Assets.AudioEditor.NodeLibrary extends AM.Component
   @register @id()
 
   constructor: (@audioEditor) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     @nodeClasses = LOI.Assets.Engine.Audio.Node.getClasses()
 
@@ -31,7 +31,7 @@ class LOI.Assets.AudioEditor.NodeLibrary extends AM.Component
         nodeClass: nodeClass
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mousedown .landsofillusions-assets-audioeditor-node': @onMouseDownNode
       'input .search .input': @onInputSearchInput
       'click .search .clear-input-button': @onSearchClickClearInputButton

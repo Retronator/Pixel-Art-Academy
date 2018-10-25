@@ -5,7 +5,7 @@ AM = Artificial.Mummification
 # Extended PeerDB document with common operations.
 class AM.Document extends Document
   @Meta: (meta) ->
-    super
+    super arguments...
 
     # This stores registered subclasses for this Document class.
     @_documentClasses = {}
@@ -19,8 +19,10 @@ class AM.Document extends Document
     Document.prepare => @_analyzeFields @Meta.fields, ''
 
     # Add convenience method to find and fetch documents with one call.
-    @documents.fetch = =>
-      cursor = @documents.find arguments...
+    # We can't use => because arguments would be bound to the @Meta arguments.
+    documents = @documents
+    documents.fetch = ->
+      cursor = documents.find arguments...
       cursor.fetch()
 
   @_analyzeFields: (source, path) ->

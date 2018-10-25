@@ -6,7 +6,7 @@ class PADB.Components.Stream extends AM.Component
   @register 'PixelArtDatabase.Components.Stream'
 
   constructor: (captionComponentClassOrOptions) ->
-    super
+    super arguments...
 
     if captionComponentClassOrOptions.captionComponentClass
       @options = captionComponentClassOrOptions
@@ -16,7 +16,7 @@ class PADB.Components.Stream extends AM.Component
         captionComponentClass: captionComponentClassOrOptions
 
   onCreated: ->
-    super
+    super arguments...
 
     @lowPerformance = new ReactiveField false
     @playbackSkippedCount = 0
@@ -46,7 +46,7 @@ class PADB.Components.Stream extends AM.Component
     @_artworksVisibilityData = []
 
   onRendered: ->
-    super
+    super arguments...
     
     @_$document = $(document)
     @_$app = $('.retronator-app')
@@ -73,7 +73,7 @@ class PADB.Components.Stream extends AM.Component
         @_updateArtworkAreasVisibility()
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @_$scrollParent.off '.pixelartdatabase-components-stream'
 

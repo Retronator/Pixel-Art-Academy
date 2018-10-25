@@ -11,12 +11,12 @@ class LOI.Components.Menu.Items extends AM.Component
     Permissions: 'Permissions'
 
   constructor: (@options = {}) ->
-    super
+    super arguments...
 
     @currentScreen = new ReactiveField @constructor.Screens.MainMenu
 
   onRendered: ->
-    super
+    super arguments...
 
   aboutVisible: ->
     # About is visible on the landing page.
@@ -93,7 +93,7 @@ class LOI.Components.Menu.Items extends AM.Component
     if consentField.decided() then consentField.allowed() else null
 
   events: ->
-    super.concat
+    super(arguments...).concat
       # Main menu
       'click .continue': @onClickContinue
       'click .new': @onClickNew

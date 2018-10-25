@@ -6,7 +6,7 @@ class C3.Design.Terminal.Properties.Array extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Properties.Array'
 
   onCreated: ->
-    super
+    super arguments...
 
     @showTypes = new ReactiveField false
 
@@ -16,7 +16,7 @@ class C3.Design.Terminal.Properties.Array extends AM.Component
     property.parts()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .parts .part': @onClickPart
       'click .new-array-part-button': @onClickNewArrayPartButton
       'click .new-array-part-type-button': @onClickNewArrayPartTypeButton

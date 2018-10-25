@@ -42,7 +42,7 @@ class HQ.ArtStudio.Northwest extends HQ.ArtStudio.ContextWithArtworks
     Pastels: ['giveMeTheSky', 'bust', 'blueBottle', 'lotusEspritTurbo', 'bouguereauStudy']
 
   constructor: ->
-    super
+    super arguments...
 
     @horizontalParallaxFactor = 2
 
@@ -61,7 +61,7 @@ class HQ.ArtStudio.Northwest extends HQ.ArtStudio.ContextWithArtworks
     @targetFocusPoint().x < 1
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .move-button.left': @onClickMoveButtonLeft
       'click .move-button.right': @onClickMoveButtonRight
 

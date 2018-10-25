@@ -7,12 +7,12 @@ class LOI.Components.BackButton extends AM.Component
   @register 'LandsOfIllusions.Components.BackButton'
 
   constructor: (@onCloseCallback) ->
-    super
+    super arguments...
 
     @closing = new ReactiveField false
 
   onRendered: ->
-    super
+    super arguments...
     
     @$backButton = @$('.landsofillusions-components-back-button')
 
@@ -51,7 +51,7 @@ class LOI.Components.BackButton extends AM.Component
       @onClose event
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(document).off '.landsofillusions-components-backbutton'
 
@@ -59,7 +59,7 @@ class LOI.Components.BackButton extends AM.Component
     'closing' if @closing()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .landsofillusions-components-back-button': @onClick
 
   onClick: (event) ->

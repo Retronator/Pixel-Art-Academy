@@ -30,7 +30,7 @@ class C1.Challenges.Drawing.PixelArtSoftware extends LOI.Adventure.Thing
     """
 
   constructor: ->
-    super
+    super arguments...
     
     # Listen to asset completed changes to determine if editor and upload options are granted.
     @_assetsCompletedAutorun = Tracker.autorun =>

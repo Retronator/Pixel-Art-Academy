@@ -20,7 +20,7 @@ class PADB.Profile extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      artist: @ReferenceField PADB.Artist, ['displayName'], false, 'profiles', ['platformType', 'displayName']
+      artist: Document.ReferenceField PADB.Artist, ['displayName'], false, 'profiles', ['platformType', 'displayName']
 
   @PlatformTypes:
     Twitter: 'Twitter'

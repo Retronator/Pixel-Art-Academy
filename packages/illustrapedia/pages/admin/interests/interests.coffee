@@ -7,7 +7,7 @@ class IL.Pages.Admin.Interests extends Artificial.Mummification.Admin.Components
   constructor: ->
     super
       documentClass: IL.Interest
-      adminComponentClass: @constructor.Interest
+      adminComponentClass: IL.Pages.Admin.Interests.Interest
       nameField: 'name'
       singularName: 'interest'
       pluralName: 'interests'

@@ -12,4 +12,4 @@ class PADB.Article extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      author: @ReferenceField PADB.Artist, ['displayName'], false
+      author: Document.ReferenceField PADB.Artist, ['displayName'], false

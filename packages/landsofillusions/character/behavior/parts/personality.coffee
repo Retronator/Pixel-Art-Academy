@@ -4,7 +4,7 @@ class LOI.Character.Behavior.Personality extends LOI.Character.Part
   @Factors: {}
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     return unless @options.dataLocation
 
@@ -97,7 +97,7 @@ class LOI.Character.Behavior.Personality extends LOI.Character.Part
       true
 
   destroy: ->
-    super
+    super arguments...
     
     @factorPowers?.stop()
     @mbtiPowers?.stop()

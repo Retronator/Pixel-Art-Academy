@@ -50,7 +50,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
     "#{monday.getFullYear()}.#{monday.getMonth()}.#{monday.getDate()}"
 
   constructor: ->
-    super
+    super arguments...
 
     @resizable false
 
@@ -91,7 +91,7 @@ class PAA.PixelBoy.Apps.Calendar extends PAA.PixelBoy.App
               @state "weeklyGoals.archive.#{archiveProperty}", currentGoals
 
   onCreated: ->
-    super
+    super arguments...
     
     @monthView new @constructor.MonthView @
     @goalSettings new @constructor.GoalSettings @
