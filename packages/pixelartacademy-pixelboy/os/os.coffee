@@ -38,17 +38,17 @@ class PAA.PixelBoy.OS extends AM.Component
 
         @_apps[appClass.id()]
         
-    @currentAppUrl = ComputedField =>
+    @currentAppUrl = new ComputedField =>
       appUrl = AB.Router.getParameter('parameter2')
       appClass = PAA.PixelBoy.App.getClassForUrl appUrl
 
       # Make sure this app exists.
       if appClass then appUrl else null
 
-    @currentAppPath = ComputedField =>
+    @currentAppPath = new ComputedField =>
       AB.Router.getParameter('parameter3')
 
-    @currentAppParameter = ComputedField =>
+    @currentAppParameter = new ComputedField =>
       AB.Router.getParameter('parameter4')
 
     @currentApp = new ReactiveField null

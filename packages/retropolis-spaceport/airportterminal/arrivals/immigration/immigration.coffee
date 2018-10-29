@@ -52,4 +52,4 @@ class RS.AirportTerminal.Immigration extends LOI.Adventure.Location
       @startScript label: "TerminalAvailable"
 
   cleanup: ->
-    @_terminalAvailableAutorun.stop()
+    @_terminalAvailableAutorun?.stop()

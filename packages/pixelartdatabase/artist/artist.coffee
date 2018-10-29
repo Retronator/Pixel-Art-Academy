@@ -84,13 +84,13 @@ class PADB.Artist extends AM.Document
   @all: @subscription 'all'
   @forName: new AB.Subscription
     name: "#{@id()}.forName"
-    query: (name) =>
+    query: (name) ->
       query = {}
 
       for key, value of name
         query["name.#{key}"] = value
-    
-      @documents.find query
+
+      PADB.Artist.documents.find query
   @forPseudonym: @subscription 'forPseudonym'
   
   @namePattern:

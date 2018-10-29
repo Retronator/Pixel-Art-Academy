@@ -49,7 +49,7 @@ class C1.AdmissionProjects.Snake.Drawing.Coworking extends LOI.Adventure.Scene
   onChoicePlaceholder: (choicePlaceholderResponse) ->
     coworking = @options.parent
     
-    return unless choicePlaceholderResponse.scriptId is HQ.Actors.Reuben.id()
+    return unless choicePlaceholderResponse.scriptId is HQ.Coworking.Reuben.defaultScriptId()
     return unless choicePlaceholderResponse.placeholderId is 'MainQuestions'
 
     if coworking.completedDrawing()

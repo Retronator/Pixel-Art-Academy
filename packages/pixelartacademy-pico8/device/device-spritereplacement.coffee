@@ -17,7 +17,7 @@ class PAA.Pico8.Device extends PAA.Pico8.Device
       return unless project = @project()
 
       for asset in project.assets
-        LOI.Assets.Sprite.forId.subscribe @, asset.sprite._id
+        LOI.Assets.Asset.forId.subscribe @, LOI.Assets.Sprite.className, asset.sprite._id
 
     # Listen to all sprite changes in the project.
     @autorun (computation) =>

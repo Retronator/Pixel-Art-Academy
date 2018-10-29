@@ -16,6 +16,10 @@
     &.visible
       opacity 1
 
+    &:hover
+      .toggle-audio-button
+        opacity 1
+
     button
       border none
       vertical-align top
@@ -35,6 +39,8 @@
         height 17rem
         padding 0
         background image('/landsofillusions/components/menu/audio-on-off.png') 17rem 0 / 34rem 34rem
+        opacity 0
+        transition opacity 200ms
 
         &:hover
           background-position-y 17rem

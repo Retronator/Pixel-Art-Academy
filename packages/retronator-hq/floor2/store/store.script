@@ -394,7 +394,7 @@ retro:
     Instead, it will be continuously in development.
     Over time I'll be adding more content and improving existing one.
     It's mainly just me working on it, so it'll take a while.
-    First gameplay episode will arrive around early 2018.
+    First gameplay chapter is currently in alpha access.
     
 -> [PixelArtAcademyQuestions]
     
@@ -403,10 +403,9 @@ retro:
 `_answeredAboutPixelArtAcademy = true`
 
 retro:
-    Game's main storylines will be divided into seasons and episodes.
-    Each season's production will take about a year, maybe more.
-    The result will be a couple to a few episodes per season.
-    It pretty much depends on how development goes in practice.
+    Game's main storylines will be divided into seasons, episodes, and chapters.
+    Each season will cover about one year at the Academy and will have multiple storyline episodes in it.
+    The system might change a bit in the future.
     
 ## SeasonsQuestions
 
@@ -419,7 +418,7 @@ retro: Of course, ask ahead. -> [PixelArtAcademyQuestions]
 ## Order
 
 retro:
-    No, not at all. Episodes in Pixel Art Academy are non-linear.
+    No, not at all. Episodes in Pixel Art Academy are mostly non-linear.
     You usually start them by talking to a key character.
     Some will require other things to be achieved in the game, but in general the order you complete them is up to you.
 
@@ -437,8 +436,8 @@ retro:
 ## Development
 
 retro:
-    So far I've been mostly building the adventure game engine.
-    Only the intro episode you're playing right now is finished.
+    I'm currently finishing Chapter 1 of Episode 1. Alpha players already have access to it.
+    For the rest, only the intro episode you're playing right now is finished.
     After you create a character in Chapter 3, the episode ends and you'll have to wait for next one to come out.
     However, you can already start learning to draw with the lo-fi prototype.
 
@@ -500,9 +499,9 @@ retro: I hope it was informative.
 
 retro:
     I know, it's a bit funny for a game about drawing to be just text.
-    Illustrations are definitely coming in the future and once upon a time there will even be a point-and-click interface.
-    But while I'm building the game world things change so much I would be wasting my time drawing the locations.
-    Only after things have stabilized will I take the time to make things prettier.
+    Illustrations are coming very soon, at least in some key places.
+    But while I'm building the game world, things change so much I would be wasting my time drawing the locations.
+    So now that the storyline of Episode 1, Chapter 1 is pretty much set, it's time to do the art.
 
 -> [PixelArtAcademyQuestions]
 

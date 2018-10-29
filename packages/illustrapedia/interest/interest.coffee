@@ -50,7 +50,7 @@ class IL.Interest extends AM.Document
       # Search term needs to appear at the start of a word. Note that we need to escape the backslashes.
       searchTerms.push searchTerms: new RegExp "(?:^#{word}|\\s#{word})", 'i' for word in words
 
-      @documents.find $and: searchTerms
+      IL.Interest.documents.find $and: searchTerms
 
   # Convenience method to return the interest that matches the search term exactly. This is useful
   # because interests are referenced by plain strings, which need to be matched to interest documents.

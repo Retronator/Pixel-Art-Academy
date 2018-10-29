@@ -45,11 +45,11 @@ class C1.AdmissionProjects.Snake.Intro.Coworking extends LOI.Adventure.Scene
   # Listener
 
   onChoicePlaceholder: (choicePlaceholderResponse) ->
-    return unless choicePlaceholderResponse.scriptId is HQ.Actors.Reuben.id()
+    return unless choicePlaceholderResponse.scriptId is HQ.Coworking.Reuben.defaultScriptId()
     return unless choicePlaceholderResponse.placeholderId is 'MainQuestions'
 
     # Prerequisite is to ask what Reuben's working on.
-    return unless Retronator.HQ.Actors.Reuben.Listener.Script.state 'UpTo'
+    return unless Retronator.HQ.Coworking.Reuben.Listener.Script.state 'UpTo'
 
     # If the player got the cartridge, wait on the player to score 5 points
     if @script.state 'ReceiveCartridge'

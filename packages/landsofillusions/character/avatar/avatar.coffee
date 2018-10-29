@@ -19,14 +19,14 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
       templateClass: LOI.Character.Part.Template
       # TODO: We need to set the type somehow different so it's dynamic in the location (test with create template).
       type: LOI.Character.Part.Types.Avatar.Body.options.type
-      load: => document()?.avatar()?.body
+      load: => document()?.avatar?.body
       save: (address, value) =>
         LOI.Character.updateAvatarBody document()._id, address, value
 
     outfitDataField = AM.Hierarchy.create
       templateClass: LOI.Character.Part.Template
       type: LOI.Character.Part.Types.Avatar.Outfit.options.type
-      load: => document()?.avatar()?.outfit
+      load: => document()?.avatar?.outfit
       save: (address, value) =>
         LOI.Character.updateAvatarOutfit document()._id, address, value
 

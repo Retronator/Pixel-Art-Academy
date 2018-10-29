@@ -57,7 +57,7 @@ class PAA.Practice.Project.Asset.Sprite extends PAA.Practice.Project.Asset
     @sprite = new ComputedField =>
       return unless spriteId = @spriteId()
 
-      LOI.Assets.Sprite.forId.subscribe spriteId
+      LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
     ,
       true

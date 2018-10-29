@@ -10,7 +10,7 @@
 
 retro:
   Great! You will find many different editors once you get to the Academy.
-  But to start you out, here's the Desktop editor that looks much like drawing in real life.
+  But to start you out, here's the editor called 'Desktop' that's much like drawing behind a desk in real life.
 
 > Retro gets his PixelBoy and initiates the transfer.
 
@@ -23,7 +23,7 @@ retro: There you go.
 retro:
   Now all you have to do is go to your Drawing app and select it on the Settings page.
   A new section will also show up, called Challenges.
-  You'll find a tutorial in there to teach you all about how the editor works.
+  You'll find a tutorial in there that will teach you all about how the editor works.
 
 -> [Tutorial]
 
@@ -62,12 +62,12 @@ retro:
 
 ## UseExternalSoftwareChoice
 
-* I think I want to use external software. `not UseExternalSoftware`
+* I think I want to use external software. `not _externalSoftware and not _externalSoftwareName and not AfterChosenSoftware`
 
 ## UseExternalSoftware
 
 retro:
-  That's totally fine.
+  Alright!
 
 -> [NoDrawingApp] `not _hasDrawingApp`
 
@@ -81,7 +81,7 @@ retro: I see you've already set external software in your Drawing app. `not _ext
 ## NoChosenSoftware
 
 retro:
-  Go to the Drawing app and on the Settings page choose which one.
+  Go to the Drawing app on your PixelBoy and on the Settings page choose which software you'll be using.
 
 -> [ExternalSoftwareHelpOrSet]
 
@@ -133,10 +133,9 @@ retro:
 
 ## ExternalSoftwareReminderChoice
 
-* What was I supposed to be doing with the Drawing app again? `AfterChosenSoftware and not _completedTasks.CopyReference`
+* Who was I supposed to go see about references again? `AfterChosenSoftware and not _completedTasks.CopyReference`
 
 retro:
-  After you set what software you want to use in the Settings, you need to show you can handle the software you chose.
   Talk to Corinne upstairs in the gallery. She'll give you a reference image to copy.
   
 -> [Return]

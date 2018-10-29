@@ -317,7 +317,8 @@ class PAA.PixelBoy extends LOI.Adventure.Item
 
   # Routing
 
-  LOI.Adventure.registerDirectRoute "/#{@url()}/*", =>
+  LOI.Adventure.registerDirectRoute "/#{@url()}/*", @pixelBoyRouteHandler
+  @pixelBoyRouteHandler: =>
     # HACK: Remember which app we're trying to open.
     appUrl = AB.Router.getParameter('parameter2')
     appPath = AB.Router.getParameter('parameter3')

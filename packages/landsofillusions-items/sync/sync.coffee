@@ -231,7 +231,8 @@ class LOI.Items.Sync extends LOI.Adventure.Item
 
   # Routing
 
-  LOI.Adventure.registerDirectRoute "/#{@url()}/*", =>
+  LOI.Adventure.registerDirectRoute "/#{@url()}/*", @syncRouteHandler
+  @syncRouteHandler: =>
     tabUrl = AB.Router.getParameter 'parameter2'
 
     # Show the item if we need to.

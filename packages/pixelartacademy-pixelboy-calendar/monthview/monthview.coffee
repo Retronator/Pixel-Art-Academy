@@ -70,7 +70,7 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
 
       PAA.Practice.Journal.Entry.activityForCharacter.subscribe @, characterId, dateRange
 
-    @weeks = ComputedField =>
+    @weeks = new ComputedField =>
       characterId = LOI.characterId()
 
       weeks = []

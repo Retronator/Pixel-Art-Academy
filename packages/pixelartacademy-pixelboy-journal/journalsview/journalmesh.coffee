@@ -28,8 +28,8 @@ class PAA.PixelBoy.Apps.Journal.JournalsView.JournalMesh extends THREE.Mesh
     Tracker.autorun (computation) =>
       return unless palette = LOI.Assets.Palette.defaultPalette()
       coverColor = @journal.design.cover.color
-      material.color = THREE.Color.fromObject palette.ramps[coverColor.hue].shades[coverColor.shade]
-      material.needsUpdate = true
+      @material.color = THREE.Color.fromObject palette.ramps[coverColor.hue].shades[coverColor.shade]
+      @material.needsUpdate = true
 
     @position.y = 1
     @position.x = 0
