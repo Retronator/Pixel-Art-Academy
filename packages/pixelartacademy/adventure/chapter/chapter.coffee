@@ -6,7 +6,7 @@ class PAA.Adventure.Chapter extends LOI.Adventure.Chapter
   @goals: -> [] # Override to provide any learning goals that the chapter oversees.
 
   constructor: ->
-    super
+    super arguments...
 
     # Handle learning goals for this chapter.
     goalClasses = _.filter PAA.Learning.Goal.getClasses(), (goalClass) => goalClass.chapter() is @constructor
@@ -31,7 +31,7 @@ class PAA.Adventure.Chapter extends LOI.Adventure.Chapter
           PAA.Learning.Task.Entry.insert characterId, task.id()
 
   destroy: ->
-    super
+    super arguments...
 
     @_automaticTaskEntriesSubscription.stop()
     @_automaticTasksAutorun.stop()

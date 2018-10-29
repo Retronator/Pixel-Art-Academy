@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 
 class PAA.Practice.Project.Thing extends LOI.Adventure.Thing
   constructor: (@projectId) ->
-    super
+    super arguments...
 
   assetsData: ->
     PAA.Practice.Project.documents.findOne(@projectId)?.assets

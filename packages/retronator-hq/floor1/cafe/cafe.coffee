@@ -21,14 +21,14 @@ class HQ.Cafe extends LOI.Adventure.Location
     "
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       @BurraListener
     ]
   
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @loginButtonsSession = Accounts._loginButtonsSession
 

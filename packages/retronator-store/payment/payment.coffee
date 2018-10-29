@@ -39,9 +39,9 @@ class RS.Payment extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      paymentMethod: @ReferenceField RS.PaymentMethod, [], false
-      referralUser: @ReferenceField RA.User, ['displayName'], false
-      invalid: @GeneratedField 'self', ['chargeError'], (fields) ->
+      paymentMethod: Document.ReferenceField RS.PaymentMethod, [], false
+      referralUser: Document.ReferenceField RA.User, ['displayName'], false
+      invalid: Document.GeneratedField 'self', ['chargeError'], (fields) ->
         invalid = false
         invalid = true if fields.chargeError
         [fields._id, invalid]

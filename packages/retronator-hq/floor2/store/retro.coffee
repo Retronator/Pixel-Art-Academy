@@ -4,7 +4,7 @@ Blog = Retronator.Blog
 
 class HQ.Store.Retro extends HQ.Actors.Retro
   constructor: ->
-    super
+    super arguments...
 
     Blog.Post.all.subscribe 1
 

@@ -7,12 +7,12 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       PAA.PersonUpdates
     ]
 
   constructor: ->
-    super
+    super arguments...
 
     # Active members are the ones that have done any memorable recent actions.
     @presentMembers = new ComputedField =>
@@ -28,7 +28,7 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
     @personUpdates = _.find @listeners, (listener) -> listener instanceof PAA.PersonUpdates
 
   destroy: ->
-    super
+    super arguments...
 
     @characterUpdatesHelper.destroy()
 

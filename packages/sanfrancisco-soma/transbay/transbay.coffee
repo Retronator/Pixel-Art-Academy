@@ -21,7 +21,7 @@ class Soma.Transbay extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
   ]

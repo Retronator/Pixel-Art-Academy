@@ -21,7 +21,7 @@ class RS.AirshipTerminal.Dock extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
   ]

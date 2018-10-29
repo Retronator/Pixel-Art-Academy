@@ -3,7 +3,7 @@ Script = LOI.Adventure.Script
 
 class Script.Nodes.Label extends Script.Node
   constructor: (options) ->
-    super
+    super arguments...
     
     @name = options.name
 
@@ -13,4 +13,4 @@ class Script.Nodes.Label extends Script.Node
     @script.ephemeralState @name, true
 
     # Finish transition.
-    super
+    super arguments...

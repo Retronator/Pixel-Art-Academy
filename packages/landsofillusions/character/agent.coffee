@@ -16,15 +16,16 @@ class LOI.Character.Agent extends LOI.Character.Person
   @initialize()
   
   constructor: (@_id) ->
-    @instance = LOI.Character.getInstance @_id
-
-    # We let Thing construct itself last since it'll need the character avatar (via the instance) ready.
-    super
+    super arguments...
 
     # Agent's main avatar will be the character avatar from the instance, so we manually create the avatar based on
     # this thing. This way we can use some universal avatar values that hold for all agents (like description).
-    @thingAvatar = new LOI.Adventure.Thing.Avatar @
-    
+    @thingAvatar = @avatar
+
+    # We override the main avatar to be the instance's avatar.
+    @instance = LOI.Character.getInstance @_id
+    @avatar = @instance.avatar
+
     # Subscribe to the memory of the action the person is performing.
     @_actionSubscription = Tracker.autorun (computation) =>
       # See if this action even is inside a memory.
@@ -37,13 +38,9 @@ class LOI.Character.Agent extends LOI.Character.Person
     @personStateAddress = new LOI.StateAddress "people.#{@_id}"
     @personState = new LOI.StateObject address: @personStateAddress
 
-  createAvatar: ->
-    # We send instance's avatar as the main avatar.
-    @instance.avatar
-
   ready: ->
     conditions = [
-      super
+      super arguments...
       @thingAvatar.ready()
       @instance.ready()
     ]

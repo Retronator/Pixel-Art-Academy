@@ -23,7 +23,7 @@ class LOI.Memory.Action extends AM.Document
 
   # Override register to do action initialization as well.
   @register: ->
-    super
+    super arguments...
 
     translationNamespace = @type
 
@@ -46,8 +46,8 @@ class LOI.Memory.Action extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      memory: @ReferenceField LOI.Memory, [], false, 'actions', ['time', 'character', 'type', 'content', 'memory']
-      character: @ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
+      memory: Document.ReferenceField LOI.Memory, [], false, 'actions', ['time', 'character', 'type', 'content', 'memory']
+      character: Document.ReferenceField LOI.Character, ['avatar.fullName', 'avatar.color'], false
 
   @type: @id()
   @register @type, @
@@ -80,7 +80,7 @@ class LOI.Memory.Action extends AM.Document
     endDescription: 'endDescription'
     
   constructor: ->
-    super
+    super arguments...
     
     @translations = @constructor._translations
 

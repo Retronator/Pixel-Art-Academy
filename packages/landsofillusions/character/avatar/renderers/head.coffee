@@ -55,4 +55,4 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
       context.restore()
 
     # Draw the rest as usual.
-    super
+    super arguments...

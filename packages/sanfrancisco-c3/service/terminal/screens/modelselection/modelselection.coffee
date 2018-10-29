@@ -7,10 +7,10 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
   @register 'SanFrancisco.C3.Service.Terminal.ModelSelection'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
     
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to pre-made characters.
     LOI.Construct.Loading.PreMadeCharacter.all.subscribe @
@@ -56,7 +56,7 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
     @currentCharacter()?.behavior.part.properties.perks.toString() or "None"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .clone-character-button': @onClickCloneCharacterButton
       'click .cancel-button': @onClickCancelButton
       'click .previous-button': @onClickPreviousButton

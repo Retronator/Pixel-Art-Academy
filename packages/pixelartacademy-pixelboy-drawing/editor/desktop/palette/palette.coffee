@@ -6,7 +6,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Compon
   @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Palette'
 
   palette: ->
-    return unless palette = super
+    return unless palette = super arguments...
 
     # Go over all shades of all ramps.
     for ramp in palette.ramps
@@ -67,13 +67,13 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Palette extends LOI.Assets.Compon
     # Tray skin doesn't use colors via style.
     return if @trayClass()
 
-    super
+    super arguments...
 
   class @TrayRamp extends AM.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Drawing.Editor.Desktop.Palette.TrayRamp'
 
     onRendered: ->
-      super
+      super arguments...
 
       @autorun (computation) =>
         ramp = @data()

@@ -13,7 +13,7 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @subscribe Retronator.Accounts.User.loginServicesForCurrentUser
 
@@ -41,7 +41,7 @@ class LOI.Components.Account.Services extends LOI.Components.Account.Page
   # Events
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .link-service-button': @onClickLinkService
 
   onClickLinkService: (event) ->

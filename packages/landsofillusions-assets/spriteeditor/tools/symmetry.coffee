@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.Symmetry extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Symmetry"
     @shortcut = AC.Keys.s

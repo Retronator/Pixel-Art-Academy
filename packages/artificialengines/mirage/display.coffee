@@ -6,7 +6,7 @@ class AM.Display extends AM.Component
   @register 'Artificial.Mirage.Display'
 
   constructor: (options) ->
-    super
+    super arguments...
     
     # We allow sending in our own reactive functions, but if they are not present, we create our own field.
     createField = (name) ->
@@ -41,7 +41,7 @@ class AM.Display extends AM.Component
     @debug = options.debug ? false
 
   onCreated: ->
-    super
+    super arguments...
 
     @window = AM.Window
 

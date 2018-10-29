@@ -225,7 +225,7 @@ class LOI.Interface.Text extends LOI.Interface
       100
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'wheel': @onWheel
       'wheel .scrollable': @onWheelScrollable
       'mouseenter .command': @onMouseEnterCommand

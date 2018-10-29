@@ -21,7 +21,7 @@ class HQ.Store.Table.Item extends LOI.Adventure.Thing
     new constructor @options
 
   constructor: (@options) ->
-    super @options
+    super arguments...
 
     @post = @options.post
 
@@ -58,7 +58,7 @@ class HQ.Store.Table.Item extends LOI.Adventure.Thing
   # Listener
 
   onScriptsLoaded: ->
-    super
+    super arguments...
 
     # We need to manually set the default script since we changed the ID and the default handler won't find it.
     @script = @scripts[@options.parent.constructor.id()]

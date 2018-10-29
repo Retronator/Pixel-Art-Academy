@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Upload.Context extends LOI.Assets.Upload.Context
   constructor: ->
-    super
+    super arguments...
     
     @slingshot = new Slingshot.Upload @options.name
   

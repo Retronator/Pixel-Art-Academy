@@ -5,7 +5,7 @@ class AB.Components.Translation extends AM.Component
   @register 'Artificial.Babel.Components.Translation'
 
   onCreated: ->
-    super
+    super arguments...
 
     # Reactively subscribe to the current language's translation.
     @autorun =>

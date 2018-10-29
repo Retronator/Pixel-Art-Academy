@@ -6,7 +6,7 @@ class PADB.Pages.Admin.Websites.Website extends Artificial.Mummification.Admin.C
   @register @id()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .blog-feature .render-preview-button': @onClickBlogFeatureRenderPreviewButton
 
   onClickBlogFeatureRenderPreviewButton: (event) ->
@@ -29,7 +29,7 @@ class PADB.Pages.Admin.Websites.Website extends Artificial.Mummification.Admin.C
     @register 'PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Checkbox
 
@@ -40,7 +40,7 @@ class PADB.Pages.Admin.Websites.Website extends Artificial.Mummification.Admin.C
       @register 'PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.Order'
   
       constructor: ->
-        super
+        super arguments...
   
         @type = AM.DataInputComponent.Types.Number
   
@@ -54,7 +54,7 @@ class PADB.Pages.Admin.Websites.Website extends Artificial.Mummification.Admin.C
       @register 'PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.CustomCss'
 
       constructor: ->
-        super
+        super arguments...
 
         @type = AM.DataInputComponent.Types.TextArea
 
@@ -65,7 +65,7 @@ class PADB.Pages.Admin.Websites.Website extends Artificial.Mummification.Admin.C
       @register 'PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.Width'
 
       constructor: ->
-        super
+        super arguments...
 
         @type = AM.DataInputComponent.Types.Number
 
@@ -79,7 +79,7 @@ class PADB.Pages.Admin.Websites.Website extends Artificial.Mummification.Admin.C
       @register 'PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.Height'
 
       constructor: ->
-        super
+        super arguments...
 
         @type = AM.DataInputComponent.Types.Number
 
@@ -93,7 +93,7 @@ class PADB.Pages.Admin.Websites.Website extends Artificial.Mummification.Admin.C
       @register 'PixelArtDatabase.Pages.Admin.Websites.Website.BlogFeature.RenderDelay'
 
       constructor: ->
-        super
+        super arguments...
 
         @type = AM.DataInputComponent.Types.Number
 

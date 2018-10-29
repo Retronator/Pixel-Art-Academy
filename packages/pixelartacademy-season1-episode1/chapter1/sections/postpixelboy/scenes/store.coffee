@@ -13,7 +13,7 @@ class C1.PostPixelBoy.Store extends LOI.Adventure.Scene
   @initialize()
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       @StoreListener
     ]
 

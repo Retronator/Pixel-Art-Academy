@@ -8,7 +8,7 @@ class RS.Pages.Invoice extends AM.Component
   @register @id()
 
   onCreated: ->
-    super
+    super arguments...
 
     @subscribe Retronator.Store.Item.all
 

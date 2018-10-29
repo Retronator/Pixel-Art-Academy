@@ -23,4 +23,4 @@ class PAA.Season1.Episode0.Chapter3 extends LOI.Adventure.Chapter
   @initialize()
 
   constructor: ->
-    super
+    super arguments...

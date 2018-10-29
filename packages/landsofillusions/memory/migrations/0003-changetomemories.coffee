@@ -18,7 +18,7 @@ class Migration extends Document.MajorMigration
           $unset:
             lines: true
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

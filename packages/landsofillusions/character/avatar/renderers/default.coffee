@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 # This is a default renderer that simply renders all the parts found in the properties.
 class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Renderers.Renderer
   constructor: (@options, initialize) ->
-    super
+    super arguments...
 
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize

@@ -1,9 +1,8 @@
 LOI = LandsOfIllusions
 
+# This initializes a modified Atari 2600 palette that has black and white shades padded at the end of ramps.
 Document.startup ->
   return if Meteor.settings.startEmpty
-
-  atari2600PaletteName = LOI.Assets.Palette.SystemPaletteNames.atari2600
 
   atari2600HueNames = (name for name of LOI.Assets.Palette.Atari2600.hues)
 
@@ -20,8 +19,8 @@ Document.startup ->
   #     g: green attribute (0.0-1.0)
   #     b: blue attribute (0.0-1.0)
   #
-  atari2600palette =
-    name: atari2600PaletteName
+  pixelArtAcademyPalette =
+    name: LOI.Assets.Palette.SystemPaletteNames.pixelArtAcademy
     ramps: []
 
   for rampIndex in [0..15]
@@ -29,7 +28,7 @@ Document.startup ->
       name: atari2600HueNames[rampIndex]
       shades: []
 
-    atari2600palette.ramps[rampIndex] = ramp
+    pixelArtAcademyPalette.ramps[rampIndex] = ramp
 
     # Pad with black color.
     ramp.shades[0] = new THREE.Color(0).toObject()
@@ -40,4 +39,4 @@ Document.startup ->
     # Pad with white color.
     ramp.shades[9] = new THREE.Color(0xeeeeee).toObject()
 
-  LOI.Assets.Palette.documents.upsert name: atari2600palette.name, atari2600palette
+  LOI.Assets.Palette.documents.upsert name: pixelArtAcademyPalette.name, pixelArtAcademyPalette

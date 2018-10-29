@@ -19,13 +19,13 @@ class HQ.Coworking extends LOI.Adventure.Location
     "
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
     ]
 
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # Elevator button
     @elevatorButton = new HQ.Items.ElevatorButton

@@ -7,7 +7,7 @@ class LOI.Items.Sync.Memories.Components.ActionsPreview extends AM.Component
   @register @id()
 
   onCreated: ->
-    super
+    super arguments...
 
     @memories = @ancestorComponentOfType LOI.Items.Sync.Memories
 

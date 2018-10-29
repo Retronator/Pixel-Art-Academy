@@ -9,7 +9,7 @@ class HQ.Scenes.Inventory extends LOI.Adventure.Scene
   @initialize()
   
   constructor: ->
-    super
+    super arguments...
 
     @cart = new ComputedField =>
       # Instantiate new cart for user or character.

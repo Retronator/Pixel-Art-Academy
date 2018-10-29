@@ -10,7 +10,7 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Personality.Traits'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
 
     @factor = new ReactiveField null
     @factorPartField = new ReactiveField null
@@ -23,7 +23,7 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
       factorPart.properties.traits
 
   onCreated: ->
-    super
+    super arguments...
     
   # Provide personality part to the factor axis.
   personalityPart: ->
@@ -201,7 +201,7 @@ class C3.Behavior.Terminal.Personality.Traits extends AM.Component
     color: "##{color.getHexString()}"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .done-button': @onClickDoneButton
       'click .left-selector-button': @onClickLeftSelectorButton
       'click .middle-selector-button': @onClickMiddleSelectorButton

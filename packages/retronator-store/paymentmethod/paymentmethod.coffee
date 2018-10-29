@@ -15,7 +15,7 @@ class RS.PaymentMethod extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: @ReferenceField RA.User, ['displayName'], false
+      user: Document.ReferenceField RA.User, ['displayName'], false
 
   # Methods
   

@@ -205,7 +205,7 @@ class LOI.Adventure.Thing extends AM.Component
   # Thing instance
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     # To improve component persistence (and ease debugging), we save the ID value as _id as well.
     @_id ?= @id()
@@ -266,7 +266,7 @@ class LOI.Adventure.Thing extends AM.Component
   autorun: (handler) ->
     # If we're already created, we can simply use default implementation
     # that will stop the autorun when component is removed from DOM.
-    return super if @isCreated()
+    return super(arguments...) if @isCreated()
 
     handle = Tracker.autorun handler
     @_autorunHandles.push handle
@@ -277,12 +277,48 @@ class LOI.Adventure.Thing extends AM.Component
   subscribe: (subscriptionName, params...) ->
     # If we're already created, we can simply use default implementation
     # that will stop the subscribe when component is removed from DOM.
-    return super if @isCreated()
+    return super(arguments...) if @isCreated()
 
     handle = Meteor.subscribe subscriptionName, params...
     @_subscriptionHandles.push handle
 
     handle
+
+  # A reactive field that can be used to query when a constructor has completed. Useful when you need to return the
+  # value of some functions only after all the fields have been assigned in the constructor. Returns false until true
+  # has been sent in the second parameter. The name can be used to distinguish between different constructors.
+  constructed: (name, done) ->
+    unless _.isString name
+      done = name
+      name = '_default'
+
+    @_constructed ?= {}
+
+    if done
+      if @_constructed[name] is true
+        console.error "Constructed called as done multiple times for same name", name
+        return true
+
+      dependency = @_constructed[name]
+
+      # Mark that the constructor is done, so we can return true when queried from now on.
+      # Dependency is no longer necessary since this is a one way operation.
+      @_constructed[name] = true
+
+      # Signal to all dependent callers that the change has occurred.
+      dependency?.changed()
+
+    else if @_constructed[name] is true
+      # Simply return true.
+      true
+
+    else
+      # Done hasn't been called yet for this name so we need to create a dependency for caller to be informed later.
+      @_constructed[name] ?= new Tracker.Dependency
+      @_constructed[name].depend()
+
+      # Return false to indicate we're still waiting.
+      false
 
   getListener: (listenerClass) ->
     _.find @listeners, (listener) -> listener instanceof listenerClass

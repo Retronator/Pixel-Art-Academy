@@ -21,7 +21,7 @@ class HQ.Residence.UpstairsHallway extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # Elevator button
     @elevatorButton = new HQ.Items.ElevatorButton

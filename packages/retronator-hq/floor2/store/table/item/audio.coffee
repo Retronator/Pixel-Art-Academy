@@ -33,7 +33,7 @@ class HQ.Store.Table.Item.Audio extends HQ.Store.Table.Item
       next: audioNode
 
   onCommand: (commandResponse) ->
-    super
+    super arguments...
 
     audio = @options.parent
 

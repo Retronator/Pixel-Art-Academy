@@ -15,14 +15,14 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
     JournalEntries: 'JournalEntries'
 
   constructor: (@calendar) ->
-    super
+    super arguments...
 
   mixins: -> [
     PAA.PixelBoy.Components.Mixins.PageTurner
   ]
 
   onCreated: ->
-    super
+    super arguments...
 
     @weekdays = [1..7]
 
@@ -70,7 +70,7 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
 
       PAA.Practice.Journal.Entry.activityForCharacter.subscribe @, characterId, dateRange
 
-    @weeks = ComputedField =>
+    @weeks = new ComputedField =>
       characterId = LOI.characterId()
 
       weeks = []
@@ -238,7 +238,7 @@ class PAA.PixelBoy.Apps.Calendar.MonthView extends AM.Component
     'visible' unless goalSettings.isCreated() and not goalSettings.hasGoal()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .previous-month-button': @onClickPreviousMonthButton
       'click .next-month-button': @onClickNextMonthButton
       'click .active .weekly-goals': @onClickActiveWeeklyGoals

@@ -21,12 +21,12 @@ class Apartment.Studio extends LOI.Adventure.Location
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @emailNotification = new @constructor.EmailNotification
     
   onDestroyed: ->
-    super
+    super arguments...
 
     @emailNotification.destroy()
 

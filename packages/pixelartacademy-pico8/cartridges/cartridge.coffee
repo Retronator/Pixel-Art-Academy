@@ -10,7 +10,7 @@ class PAA.Pico8.Cartridges.Cartridge extends LOI.Adventure.Thing
   @projectClass: -> null # Override to provide the project class if this cartridge can be modified.
 
   constructor: ->
-    super
+    super arguments...
 
     @game = new ComputedField =>
       return unless slug = @constructor.gameSlug()
@@ -34,7 +34,7 @@ class PAA.Pico8.Cartridges.Cartridge extends LOI.Adventure.Thing
       true
 
   destroy: ->
-    super
+    super arguments...
 
     @game.stop()
     @artwork.stop()

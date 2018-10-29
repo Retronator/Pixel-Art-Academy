@@ -63,39 +63,39 @@ class RS.Transaction extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: @ReferenceField RA.User, ['displayName', 'supporterName'], false
+      user: Document.ReferenceField RA.User, ['displayName', 'supporterName'], false
       items: [
-        item: @ReferenceField RS.Item, ['catalogKey'], false
+        item: Document.ReferenceField RS.Item, ['catalogKey'], false
         receivedGift:
-          transaction: @ReferenceField 'self', ['ownerDisplayName'], false
+          transaction: Document.ReferenceField 'self', ['ownerDisplayName'], false
         givenGift:
-          transaction: @ReferenceField 'self', ['ownerDisplayName'], false
+          transaction: Document.ReferenceField 'self', ['ownerDisplayName'], false
       ]
-      payments: [@ReferenceField RS.Payment, ['type', 'amount', 'authorizedOnly', 'invalid', 'storeCreditAmount']]
-      ownerDisplayName: @GeneratedField 'self', ['user', 'email', 'twitter'], (fields) ->
+      payments: [Document.ReferenceField RS.Payment, ['type', 'amount', 'authorizedOnly', 'invalid', 'storeCreditAmount']]
+      ownerDisplayName: Document.GeneratedField 'self', ['user', 'email', 'twitter'], (fields) ->
         displayName = fields.user?.displayName
         displayName ?= "@#{fields.twitter}" if fields.twitter
         displayName ?= fields.email or ''
         [fields._id, displayName]
-      totalValue: @GeneratedField 'self', ['items', 'tip'], (fields) ->
+      totalValue: Document.GeneratedField 'self', ['items', 'tip'], (fields) ->
         return [fields._id, 0] unless fields.items
 
         # The total value of a transaction is the sum of all items' prices and the tip.
         value = fields.tip?.amount or 0
         value += (transactionItem.price or 0) for transactionItem in fields.items
         [fields._id, value]
-      invalid: @GeneratedField 'self', ['payments'], (fields) ->
+      invalid: Document.GeneratedField 'self', ['payments'], (fields) ->
         invalid = _.some fields.payments, 'invalid'
         [fields._id, invalid]
     triggers: =>
-      transactionsUpdated: @Trigger ['user._id', 'twitter', 'email', 'invalid', 'items', 'totalValue'], (transaction, oldTransaction) =>
+      transactionsUpdated: Document.Trigger ['user._id', 'twitter', 'email', 'invalid', 'items', 'totalValue'], (transaction, oldTransaction) =>
         console.log "transaction generate items triggered!", transaction?.email or transaction?.user?._id or oldTransaction?.email or oldTransaction?.user?._id
         # If the user of this transaction has changed, the old user
         # should lose an item so they need to be updated as well.
-        @findUserForTransaction(oldTransaction)?.onTransactionsUpdated()
+        RS.Transaction.findUserForTransaction(oldTransaction)?.onTransactionsUpdated()
 
         # Update the user of this transaction.
-        @findUserForTransaction(transaction)?.onTransactionsUpdated()
+        RS.Transaction.findUserForTransaction(transaction)?.onTransactionsUpdated()
 
   # Subscriptions
   @topRecent: 'Retronator.Store.Transaction.topRecent'

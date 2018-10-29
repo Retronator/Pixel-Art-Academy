@@ -31,7 +31,7 @@ class C2.Immersion extends LOI.Adventure.Section
   @userProblemMessage = 'Retronator.HQ.LandsOfIllusions.userProblemMessage'
 
   constructor: ->
-    super
+    super arguments...
 
     # Fire the alarm when immersion can begin.
     @autorun (computation) =>

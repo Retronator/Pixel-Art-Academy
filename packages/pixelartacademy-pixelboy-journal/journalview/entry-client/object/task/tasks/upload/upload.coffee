@@ -10,10 +10,10 @@ class Entry.Object.Task.Upload extends Entry.Object.Task.Component
   template: -> @constructor.id()
 
   constructor: (@parent) ->
-    super
+    super arguments...
   
   onCreated: ->
-    super
+    super arguments...
 
     @preview = new ReactiveField null
     @uploading = new ReactiveField false
@@ -25,7 +25,7 @@ class Entry.Object.Task.Upload extends Entry.Object.Task.Component
     @active() or @parent.completed()
   
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .insert-picture-button': @onClickInsertPictureButton
 
   onClickInsertPictureButton: (event) ->

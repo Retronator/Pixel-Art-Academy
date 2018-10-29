@@ -14,10 +14,10 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
   isVisible: -> false
 
   constructor: ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     # Get all store items data.
     @_itemsSubscription = @subscribe RS.Item.all
@@ -123,7 +123,7 @@ class HQ.Store.Shelf extends LOI.Adventure.Item
     'can-buy' if @canBuy()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .add-to-cart-button': @onClickAddToCartButton
 
   onClickAddToCartButton: (event) ->

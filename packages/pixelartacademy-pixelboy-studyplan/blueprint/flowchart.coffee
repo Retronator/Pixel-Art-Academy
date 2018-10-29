@@ -1,6 +1,6 @@
 PAA = PixelArtAcademy
 
-#cubicBezier = require 'bresenham-zingl'
+{cubicBezier} = require 'bresenham-zingl'
 
 class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Flowchart
   constructor: (@blueprint) ->

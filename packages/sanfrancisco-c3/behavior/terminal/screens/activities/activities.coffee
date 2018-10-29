@@ -9,12 +9,12 @@ class C3.Behavior.Terminal.Activities extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Activities'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
 
     @property = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # We use this when the user wants to choose a different template (and templates wouldn't be shown by default).
     @forceShowTemplates = new ReactiveField false
@@ -146,7 +146,7 @@ class C3.Behavior.Terminal.Activities extends AM.Component
       _.extend {}, activity, key: activityName
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .done-button': @onClickDoneButton
       'click .replace-button': @onClickReplaceButton
       'click .save-as-template-button': @onClickSaveAsTemplateButton
@@ -215,7 +215,7 @@ class C3.Behavior.Terminal.Activities extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.Character.ActivityHoursPerWeek'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Number
       @placeholder = 0

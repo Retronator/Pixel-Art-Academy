@@ -6,7 +6,7 @@ class LOI.Engine.World extends AM.Component
   @register 'LandsOfIllusions.Engine.World'
 
   constructor: (@adventure) ->
-    super
+    super arguments...
 
     # Prepare all reactive fields.
     @rendererManager = new ReactiveField null
@@ -17,7 +17,7 @@ class LOI.Engine.World extends AM.Component
     @renderedImage = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     @app = @ancestorComponent Retronator.App
     @app.addComponent @
@@ -35,12 +35,12 @@ class LOI.Engine.World extends AM.Component
     @audioManager new @constructor.AudioManager @
 
   onRendered: ->
-    super
+    super arguments...
 
     @$world = $('.landsofillusions-engine-world')
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @app.removeComponent @
 
@@ -61,7 +61,7 @@ class LOI.Engine.World extends AM.Component
     @renderedImage().update()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mousemove canvas': @onMouseMoveCanvas
       'mouseleave canvas': @onMouseLeaveCanvas
 

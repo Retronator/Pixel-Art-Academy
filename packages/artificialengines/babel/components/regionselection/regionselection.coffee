@@ -4,13 +4,13 @@ AM = Artificial.Mirage
 # Component for choosing a country from a dropdown
 class AB.Components.RegionSelection extends AM.DataInputComponent
   constructor: ->
-    super
+    super arguments...
 
     @type = AM.DataInputComponent.Types.Select
     @allowDeselection = false
 
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to all regions and the translations of their names.
     AB.Region.all.subscribe @

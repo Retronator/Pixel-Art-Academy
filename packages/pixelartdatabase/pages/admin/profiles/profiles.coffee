@@ -8,8 +8,8 @@ class PADB.Pages.Admin.Profiles extends Artificial.Mummification.Admin.Component
   constructor: ->
     super
       documentClass: PADB.Profile
-      adminComponentClass: @constructor.Profile
-      scriptsComponentClass: @constructor.Scripts
+      adminComponentClass: PADB.Pages.Admin.Profiles.Profile
+      scriptsComponentClass: PADB.Pages.Admin.Profiles.Scripts
       nameField: 'username'
       singularName: 'profile'
       pluralName: 'profiles'

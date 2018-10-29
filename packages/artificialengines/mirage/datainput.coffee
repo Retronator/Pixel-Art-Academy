@@ -15,7 +15,7 @@ class Artificial.Mirage.DataInputComponent extends AM.Component
     'Artificial.Mirage.DataInputComponent'
 
   constructor: ->
-    super
+    super arguments...
 
     @type = @constructor.Types.Text
 

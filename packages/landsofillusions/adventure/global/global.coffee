@@ -10,13 +10,13 @@ class LOI.Adventure.Global extends LOI.Adventure.Thing
   @scenes: -> # Override to provide global scenes.
 
   constructor: ->
-    super
+    super arguments...
 
     @_scenes = for sceneClass in @constructor.scenes()
       new sceneClass parent: @
 
   destroy: ->
-    super
+    super arguments...
 
     scene.destroy() for scene in @scenes
 

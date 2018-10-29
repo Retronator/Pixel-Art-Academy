@@ -15,7 +15,7 @@ class C3.Construct.Loading extends LOI.Adventure.Scene
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @operator = new HQ.Actors.Operator
 

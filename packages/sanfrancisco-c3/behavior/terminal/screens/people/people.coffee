@@ -9,12 +9,12 @@ class C3.Behavior.Terminal.People extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.People'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
 
     @property = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # We use this when the user wants to choose a different template (and templates wouldn't be shown by default).
     @forceShowTemplates = new ReactiveField false
@@ -102,7 +102,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     @property()?.parts()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .done-button': @onClickDoneButton
       'click .replace-button': @onClickReplaceButton
       'click .save-as-template-button': @onClickSaveAsTemplateButton
@@ -158,7 +158,7 @@ class C3.Behavior.Terminal.People extends AM.Component
 
   class @EnumerationInputComponent extends AM.DataInputComponent
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 
@@ -192,7 +192,7 @@ class C3.Behavior.Terminal.People extends AM.Component
 
   class @IntegerEnumerationInputComponent extends AM.DataInputComponent
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 
@@ -220,7 +220,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.People.RelationshipType'
 
     constructor: ->
-      super
+      super arguments...
 
       @enumeration = LOI.Character.Behavior.Environment.People.RelationshipType
       @property = 'relationshipType'
@@ -229,7 +229,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.People.RelationshipStrength'
 
     constructor: ->
-      super
+      super arguments...
 
       @property = 'relationshipStrength'
 
@@ -251,7 +251,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.People.LivingProximity'
 
     constructor: ->
-      super
+      super arguments...
 
       @enumeration = LOI.Character.Behavior.Environment.People.LivingProximity
       @property = 'livingProximity'
@@ -260,7 +260,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.People.ArtSupport'
 
     constructor: ->
-      super
+      super arguments...
 
       @property = 'artSupport'
 
@@ -288,7 +288,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.People.DoesArt'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Checkbox
 
@@ -308,7 +308,7 @@ class C3.Behavior.Terminal.People extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.People.Joins'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Checkbox
 

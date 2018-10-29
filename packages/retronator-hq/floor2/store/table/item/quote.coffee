@@ -48,7 +48,7 @@ class HQ.Store.Table.Item.Quote extends HQ.Store.Table.Item
     nodes[0]
 
   onCommand: (commandResponse) ->
-    super
+    super arguments...
 
     quote = @options.parent
 

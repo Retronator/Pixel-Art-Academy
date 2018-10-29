@@ -9,29 +9,31 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
   constructor: (characterInstanceOrDocument) ->
     # We allow the avatar to be constructed for the character instance or directly for the document.
     if characterInstanceOrDocument instanceof LOI.Character.Instance
-      @document = characterInstanceOrDocument.document
+      document = characterInstanceOrDocument.document
 
     else
-      @document = => characterInstanceOrDocument
+      document = => characterInstanceOrDocument
 
     # Create the body and outfit data hierarchies first.
     bodyDataField = AM.Hierarchy.create
       templateClass: LOI.Character.Part.Template
       # TODO: We need to set the type somehow different so it's dynamic in the location (test with create template).
       type: LOI.Character.Part.Types.Avatar.Body.options.type
-      load: => @_avatar()?.body
+      load: => document()?.avatar?.body
       save: (address, value) =>
-        LOI.Character.updateAvatarBody @document()._id, address, value
+        LOI.Character.updateAvatarBody document()._id, address, value
 
     outfitDataField = AM.Hierarchy.create
       templateClass: LOI.Character.Part.Template
       type: LOI.Character.Part.Types.Avatar.Outfit.options.type
-      load: => @_avatar()?.outfit
+      load: => document()?.avatar?.outfit
       save: (address, value) =>
-        LOI.Character.updateAvatarOutfit @document()._id, address, value
+        LOI.Character.updateAvatarOutfit document()._id, address, value
 
     # Now we can call HumanAvatar's constructor which will turn this data into an actual part hierarchy.
     super {bodyDataField, outfitDataField}
+
+    @document = document
 
   _avatar: ->
     @document()?.avatar
@@ -50,7 +52,7 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
   nameNounType: -> LOI.Avatar.NameNounType.Proper
 
   pronouns: ->
-    @_avatar()?.pronouns or super
+    @_avatar()?.pronouns or super arguments...
 
   _loading: ->
     return if Meteor.isServer
@@ -63,7 +65,7 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
     @constructor.noName()
 
   color: ->
-    return super unless color = @_avatar()?.color
+    return super(arguments...) unless color = @_avatar()?.color
 
     hue: color?.hue or LOI.Assets.Palette.Atari2600.hues.grey
     shade: color?.shade or LOI.Assets.Palette.Atari2600.characterShades.normal

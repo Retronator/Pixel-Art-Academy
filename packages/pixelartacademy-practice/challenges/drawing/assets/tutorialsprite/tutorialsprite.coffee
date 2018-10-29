@@ -72,7 +72,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
     pixels
 
   constructor: ->
-    super
+    super arguments...
     
     @tutorial = @project
 
@@ -191,7 +191,7 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
       @tutorial.state 'assets', assets if updated
 
   destroy: ->
-    super
+    super arguments...
 
     @completed.stop()
     @_completedAutorun.stop()

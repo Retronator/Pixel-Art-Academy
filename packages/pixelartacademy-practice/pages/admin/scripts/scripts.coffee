@@ -9,5 +9,5 @@ class PAA.Practice.Pages.Admin.Scripts extends AM.Component
   @convertCheckIns: new AB.Method name: "#{@id()}.convertCheckIns"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .convert-check-ins': => @constructor.convertCheckIns()

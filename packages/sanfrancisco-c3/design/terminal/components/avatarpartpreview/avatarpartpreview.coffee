@@ -9,7 +9,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
     @register 'SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview.Default'
 
     onRendered: ->
-      super
+      super arguments...
 
       @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
 
@@ -70,12 +70,12 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         @context.restore()
 
     onDestroyed: ->
-      super
+      super arguments...
 
       $(window).off 'scroll', @updateInViewport
 
     events: ->
-      super.concat
+      super(arguments...).concat
         'mousemove canvas': @onMouseMoveCanvas
         'mouseleave canvas': @onMouseLeaveCanvas
 

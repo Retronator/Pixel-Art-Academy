@@ -16,7 +16,7 @@ class C1.Mixer.Intercom extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/mixer/scenes/intercom.script'
 
   constructor: ->
-    super
+    super arguments...
     
     @_playAutorun = Tracker.autorun (computation) =>
       # See if we've already played the message.

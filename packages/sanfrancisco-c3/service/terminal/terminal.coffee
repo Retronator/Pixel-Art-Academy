@@ -35,7 +35,7 @@ class C3.Service.Terminal extends C3.Items.Terminal
       500
 
   onCreated: ->
-    super
+    super arguments...
 
     @screens =
       mainMenu: new @constructor.MainMenu @

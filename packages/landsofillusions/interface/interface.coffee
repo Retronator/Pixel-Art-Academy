@@ -5,12 +5,12 @@ Nodes = LOI.Adventure.Script.Nodes
 
 class LOI.Interface extends AM.Component
   constructor: (@options) ->
-    super
+    super arguments...
 
     @locationChangeReady = new ReactiveField false
 
   onCreated: ->
-    super
+    super arguments...
 
     # React to location changes.
     @autorun (computation) =>

@@ -18,7 +18,7 @@ class LOI.Assets.Components.References extends AM.Component
     ]
     
   constructor: (@options) ->
-    super
+    super arguments...
         
     @draggingReference = new ReactiveField null
     @draggingDisplayed = new ReactiveField false
@@ -26,7 +26,7 @@ class LOI.Assets.Components.References extends AM.Component
     @resizingReference = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = @callAncestorWith 'display'
 
@@ -142,7 +142,7 @@ class LOI.Assets.Components.References extends AM.Component
     @draggingReference()?
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .upload-button': @onClickUploadButton
       'click .storage-button': @onClickStorageButton
 

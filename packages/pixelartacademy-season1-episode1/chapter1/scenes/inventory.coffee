@@ -11,7 +11,7 @@ class C1.Inventory extends LOI.Adventure.Scene
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: ->
     items = [

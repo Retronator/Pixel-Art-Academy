@@ -47,4 +47,4 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
     context.restore()
 
     # Draw the rest as usual.
-    super
+    super arguments...

@@ -7,7 +7,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   @register @id()
 
   constructor: (options) ->
-    super
+    super arguments...
 
     # We support sending in a node instance (with its ID and audio
     # canvas) or just the node class for a generic display of the node.
@@ -24,7 +24,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       bottom: 6
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = @callAncestorWith 'display'
 
@@ -34,7 +34,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     @outputPositionsByName = new ReactiveField null
 
   onRendered: ->
-    super
+    super arguments...
     
     # Update name height when in audioCanvas.
     @autorun (computation) =>
@@ -161,7 +161,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     _.toUpper(connector.name)[0]
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mousedown .landsofillusions-assets-audioeditor-node': @onMouseDownNode
       'click .landsofillusions-assets-audioeditor-node > .name': @onClickName
       'mousedown .input .connector': @onMouseDownInputConnector

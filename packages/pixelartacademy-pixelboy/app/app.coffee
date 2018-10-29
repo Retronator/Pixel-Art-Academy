@@ -9,7 +9,7 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     @_appClassesByUrl[url]
 
   @initialize: ->
-    super
+    super arguments...
 
     url = @url()
     @_appClassesByUrl[url] = @ if url?
@@ -18,7 +18,7 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     @versionedUrl "/pixelartacademy/pixelboy/apps/#{@url()}/icon.png"
 
   constructor: (@os) ->
-    super
+    super arguments...
 
     # Does this app lets the device resize?
     @resizable = new ReactiveField true
@@ -32,7 +32,7 @@ class PAA.PixelBoy.App extends LOI.Adventure.Item
     @maxHeight = new ReactiveField null
 
   onRendered: ->
-    super
+    super arguments...
     
     $appWrapper = $('.app-wrapper')
     $appWrapper.velocity 'transition.slideUpIn', complete: ->

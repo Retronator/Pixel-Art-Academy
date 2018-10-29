@@ -8,11 +8,11 @@ class LOI.Adventure.Scene extends LOI.Adventure.Thing
   @timelineId: -> # Override to set a specific timeline
   timelineId: ->
     # By default we use the timeline of the parent.
-    @constructor.timelineId() or @options.parent.timelineId()
+    @constructor.timelineId() or @options?.parent.timelineId()
 
   @fullName: -> null # Scenes don't need to be named.
 
-  constructor: (@options) ->
-    super
+  constructor: ->
+    super arguments...
 
-    @section = @options.parent if @options.parent instanceof LOI.Adventure.Section
+    @section = @options?.parent if @options?.parent instanceof LOI.Adventure.Section

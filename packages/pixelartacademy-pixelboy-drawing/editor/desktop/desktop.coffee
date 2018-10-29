@@ -18,7 +18,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @sprite = new ReactiveField null
     @pixelCanvas = new ReactiveField null
@@ -52,7 +52,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
     @spritePositionOffset = new ReactiveField x: 0, y: 0
 
   onCreated: ->
-    super
+    super arguments...
 
     @activeAsset = new ComputedField =>
       @drawing.portfolio().activeAsset()?.asset
@@ -221,7 +221,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       @_previousClipboardSpriteScale = clipboardSpriteScale
 
   onRendered: ->
-    super
+    super arguments...
 
     @autorun =>
       if @active()
@@ -245,7 +245,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
           return
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $(document).off('.pixelartacademy-pixelboy-apps-drawing-editor-desktop')
     
@@ -253,7 +253,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
 
   onBackButton: ->
     # Turn off focused mode on back button.
-    return super unless @focusedMode()
+    return super(arguments...) unless @focusedMode()
     @focusedMode false
 
     # Inform that we've handled the back button.

@@ -10,6 +10,8 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
   @register @id()
   
   constructor: (@studyPlan) ->
+    super arguments...
+
     # Prepare all reactive fields.
     @camera = new ReactiveField null
     @mouse = new ReactiveField null
@@ -24,7 +26,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @dragHasMoved = new ReactiveField false
 
   onCreated: ->
-    super
+    super arguments...
     
     @display = LOI.adventure.interface.display
 
@@ -210,7 +212,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
         y: @dragStartGoalPosition.y + dragDelta.y
 
   onRendered: ->
-    super
+    super arguments...
 
     # DOM has been rendered, initialize.
     $blueprint = @$('.pixelartacademy-pixelboy-apps-studyplan-blueprint')
@@ -232,7 +234,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
       true
 
   onDestroyed: ->
-    super
+    super arguments...
 
     for goalId, goalComponent of @goalComponentsById()
       goalComponent.goal.destroy()
@@ -353,7 +355,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint extends AM.Component
     @hoveredInterest null
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mousedown': @onMouseDown
       'mouseup': @onMouseUp
 

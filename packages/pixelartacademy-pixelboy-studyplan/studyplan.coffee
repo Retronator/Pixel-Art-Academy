@@ -41,13 +41,13 @@ class PAA.PixelBoy.Apps.StudyPlan extends PAA.PixelBoy.App
     @state('goals')?[goalId]?
 
   constructor: ->
-    super
+    super arguments...
 
     @blueprint = new ReactiveField null
     @goalSearch = new ReactiveField null
     
   onCreated: ->
-    super
+    super arguments...
 
     @blueprint new @constructor.Blueprint @
     @goalSearch new @constructor.GoalSearch @

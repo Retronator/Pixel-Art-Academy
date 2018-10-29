@@ -8,7 +8,7 @@ class PADB.PixelDailies.Pages.Home.Layout extends BlazeComponent
     Meteor.absoluteUrl "pixelartdatabase/pixeldailies/archive.png"
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = new AM.Display
       safeAreaWidth: 350

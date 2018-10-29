@@ -7,7 +7,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.AvatarPart'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
 
     # We need these fields in the constructor, because they're being set right away.
     @part = new ReactiveField null
@@ -22,7 +22,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @partStack = []
 
   onCreated: ->
-    super
+    super arguments...
 
     @hasCustomData = new ComputedField =>
       @part()?.options.dataLocation()?.data()
@@ -143,7 +143,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     _.kebabCase property.options.name
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .done-button': @onClickDoneButton
       'click .replace-button': @onClickReplaceButton
       'click .save-as-template-button': @onClickSaveAsTemplateButton

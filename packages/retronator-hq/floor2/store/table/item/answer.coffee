@@ -46,7 +46,7 @@ class HQ.Store.Table.Item.Answer extends HQ.Store.Table.Item
       next: answerNode
       
   onCommand: (commandResponse) ->
-    super
+    super arguments...
 
     answer = @options.parent
 

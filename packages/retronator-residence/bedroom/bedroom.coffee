@@ -24,7 +24,7 @@ class HQ.Residence.Bedroom extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   @state: ->
     things = {}

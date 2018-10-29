@@ -23,7 +23,7 @@ class HQ.Store.Shelves extends LOI.Adventure.Item
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   # Script
   

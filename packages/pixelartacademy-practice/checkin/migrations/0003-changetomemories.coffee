@@ -21,7 +21,7 @@ class Migration extends Document.MajorMigration
           $unset:
             conversations: true
 
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts
@@ -44,7 +44,7 @@ class Migration extends Document.MajorMigration
           $unset:
             memories: true
             
-    counts = super
+    counts = super arguments...
     counts.migrated += count
     counts.all += count
     counts

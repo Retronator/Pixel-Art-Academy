@@ -7,7 +7,7 @@ class LOI.Components.Dialog extends AM.Component
   @register 'LandsOfIllusions.Components.Dialog'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @activatable = new LOI.Components.Mixins.Activatable()
     @result = null
@@ -15,7 +15,7 @@ class LOI.Components.Dialog extends AM.Component
   mixins: -> [@activatable]
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .button': @onClickButton
 
   onClickButton: (event) ->

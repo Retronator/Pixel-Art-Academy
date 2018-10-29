@@ -14,7 +14,7 @@ class C1.Mixer.Ace extends C1.Mixer.Participant
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     # Generate ice-breaker answers for Ace.
     @createAnswers

@@ -16,7 +16,7 @@ class HQ.Items.ElevatorButton extends LOI.Adventure.Thing
   @defaultScriptUrl: -> 'retronator_retronator-hq/items/elevatorbutton/elevatorbutton.script'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
   onScriptsLoaded: ->
     button = @options.parent

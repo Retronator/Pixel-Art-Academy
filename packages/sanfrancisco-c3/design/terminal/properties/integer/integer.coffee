@@ -6,14 +6,14 @@ class C3.Design.Terminal.Properties.Integer extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Properties.Integer'
 
   onCreated: ->
-    super
+    super arguments...
 
     property = @data()
     @input = new @constructor.Input property.options.dataLocation
 
   class @Input extends AM.DataInputComponent
     constructor: (@dataLocation) ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Number
 

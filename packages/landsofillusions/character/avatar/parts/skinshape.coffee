@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Parts.SkinShape extends LOI.Character.Avatar.Parts.Shape
   constructor: (options) ->
-    super
+    super arguments...
 
     _.merge options,
       materials:

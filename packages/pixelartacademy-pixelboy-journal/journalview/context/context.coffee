@@ -58,7 +58,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     @_createDescriptionScript people, description, nextNode, nodeOptions
 
   @getPeopleForMemory: (memory) ->
-    people = super
+    people = super arguments...
 
     # Add the author if not already part of the conversation.
     author = LOI.Character.getAgent memory.journalEntry[0].journal.character._id
@@ -67,12 +67,12 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     people
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @journalEntryAvatar = new LOI.Adventure.Thing.Avatar PAA.Practice.Journal.Entry.Avatar
     
   destroy: ->
-    super
+    super arguments...
 
     @journalEntryAvatar.destroy()
 
@@ -151,15 +151,15 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
       memory._id for memory in entry.memories
 
     # Call super last because Memory Context relies on our computed fields.
-    super
+    super arguments...
 
   onRendered: ->
-    super
+    super arguments...
 
     @$context = @$('.pixelartacademy-pixelboy-apps-journal-journalview-context')
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @journalDesign.stop()
     @entryId.stop()
@@ -167,7 +167,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
 
   ready: ->
     conditions = [
-      super
+      super arguments...
       @memoryIds()
       @description()
     ]
@@ -175,7 +175,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     _.every conditions
 
   createNewMemory: ->
-    memoryId = super
+    memoryId = super arguments...
 
     PAA.Practice.Journal.Entry.addMemory @entryId(), memoryId
 

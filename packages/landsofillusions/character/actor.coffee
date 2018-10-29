@@ -7,7 +7,7 @@ RA = Retronator.Accounts
 # character instance with a static non-player character document
 class LOI.Character.Actor extends LOI.Character.Person
   @initialize: ->
-    super
+    super arguments...
     
     # Create the actions location.
     parent = @
@@ -18,13 +18,12 @@ class LOI.Character.Actor extends LOI.Character.Person
       @initialize()
 
   constructor: ->
+    super arguments...
+
     # We must provide an NPC document for creating the character instance of this actor.
     @nonPlayerCharacterDocument = new ReactiveField null
     @instance = new LOI.Character.Instance @id(), @nonPlayerCharacterDocument
 
-    # We let Person construct itself last since it'll need the character avatar (via the instance) ready.
-    super
-    
     # Person state for actors is saved in the thing state directly.
     @personStateAddress = @stateAddress
     @personState = @state

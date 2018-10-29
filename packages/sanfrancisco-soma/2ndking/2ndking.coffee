@@ -21,7 +21,7 @@ class Soma.SecondAndKing extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   things: -> [
   ]

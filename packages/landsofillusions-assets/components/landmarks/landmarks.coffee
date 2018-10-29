@@ -5,7 +5,7 @@ class LOI.Assets.Components.Landmarks extends AM.Component
   @register 'LandsOfIllusions.Assets.Components.Landmarks'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @assetData = new ComputedField =>
       assetId = @options.assetId()
@@ -16,7 +16,7 @@ class LOI.Assets.Components.Landmarks extends AM.Component
     @currentIndex = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     @_landmarkImage ?= $('<canvas>')[0]
     @_landmarkImage.width = 7
@@ -84,7 +84,7 @@ class LOI.Assets.Components.Landmarks extends AM.Component
   # Events
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .number': @onClickNumber
       'change .name-input, change .coordinate-input': @onChangeLandmark
       'click .add-landmark-button': @onClickAddLandmarkButton

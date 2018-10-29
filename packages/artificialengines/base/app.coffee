@@ -10,7 +10,7 @@ class AB.App extends AM.Component
     'Artificial.Base.App'
 
   constructor: ->
-    super
+    super arguments...
 
     @appTime = new ReactiveField
       elapsedAppTime: 0
@@ -21,12 +21,12 @@ class AB.App extends AM.Component
       AC.Keyboard.initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @run()
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @endRun()
 

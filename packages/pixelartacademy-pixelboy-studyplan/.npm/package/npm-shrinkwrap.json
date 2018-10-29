@@ -1,0 +1,10 @@
+{
+  "lockfileVersion": 1,
+  "dependencies": {
+    "bresenham-zingl": {
+      "version": "0.1.1",
+      "resolved": "https://registry.npmjs.org/bresenham-zingl/-/bresenham-zingl-0.1.1.tgz",
+      "integrity": "sha512-qMFa7KwHPU+hL1OPt+rKmnflpvmhHjs16tPARc4Lv9dWaOK44CVPrpHVvx5u1xK5mIUgYf+GKVziu+Elej5KUA=="
+    }
+  }
+}

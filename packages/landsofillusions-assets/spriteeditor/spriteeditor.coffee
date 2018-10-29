@@ -8,7 +8,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
   @register 'LandsOfIllusions.Assets.SpriteEditor'
 
   constructor: ->
-    super
+    super arguments...
 
     @sprite = new ReactiveField null
     @pixelCanvas = new ReactiveField null
@@ -46,7 +46,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @activeTool = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     $('html').addClass('asset-editor')
 
@@ -128,6 +128,6 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @tools tools
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $('html').removeClass('asset-editor')

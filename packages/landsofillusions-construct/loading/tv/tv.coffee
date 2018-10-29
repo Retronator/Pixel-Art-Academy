@@ -21,10 +21,10 @@ class LOI.Construct.Loading.TV extends LOI.Components.Computer
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     @screens =
       mainMenu: new @constructor.MainMenu @

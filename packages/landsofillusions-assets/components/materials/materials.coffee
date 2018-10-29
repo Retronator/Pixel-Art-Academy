@@ -5,7 +5,7 @@ class LOI.Assets.Components.Materials extends AM.Component
   @register 'LandsOfIllusions.Assets.Components.Materials'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @assetData = new ComputedField =>
       assetId = @options.assetId()
@@ -17,7 +17,7 @@ class LOI.Assets.Components.Materials extends AM.Component
     @currentIndex = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to the palette of this asset.
     @autorun =>
@@ -108,7 +108,7 @@ class LOI.Assets.Components.Materials extends AM.Component
     'active' if data.index is @currentIndex()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .preview-color': @onClickPreviewColor
       'change .name-input, change .ramp-input, change .shade-input, change .dither-input': @onChangeMaterial
       'click .add-material-button': @onClickAddMaterialButton

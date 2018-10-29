@@ -64,4 +64,4 @@ class HQ.Actors.Burra extends LOI.Adventure.Thing
 
     extraDescription = @translations()["description#{index}"]
 
-    "#{super} #{extraDescription}"
+    "#{super arguments...} #{extraDescription}"

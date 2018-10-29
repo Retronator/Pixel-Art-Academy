@@ -24,7 +24,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
     @activatedCharacters = new ComputedField =>
       return unless characters = Retronator.user()?.characters
 
@@ -33,12 +33,12 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
       true
 
   destroy: ->
-    super
+    super arguments...
 
     @activatedCharacters.stop()
 
   onCreated: ->
-    super
+    super arguments...
 
     @pluggedIn = new ReactiveField false
     @fastTransition = new ReactiveField false

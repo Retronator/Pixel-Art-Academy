@@ -37,7 +37,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
   coatOfArmsOffset = -2
 
   constructor: ->
-    super
+    super arguments...
 
     @_sceneBounds = new ReactiveField null
 
@@ -80,7 +80,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       middleSceneHeight
 
   onCreated: ->
-    super
+    super arguments...
 
     # Set the initializing flag for the first rendering pass, before we have time to initialize rendered elements.
     @initializingClass = new ReactiveField "initializing"
@@ -102,7 +102,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       @hasResized = true
 
   onRendered: ->
-    super
+    super arguments...
 
     @app = @ancestorComponent Retronator.App
     @app.addComponent @
@@ -256,7 +256,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
     @initializingClass ""
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @app?.removeComponent @
 

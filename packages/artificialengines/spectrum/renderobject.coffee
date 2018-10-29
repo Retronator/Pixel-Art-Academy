@@ -2,7 +2,7 @@ AS = Artificial.Spectrum
 
 class AS.RenderObject extends THREE.Object3D
   constructor: ->
-    super
+    super arguments...
 
     # Provides support for autorun calls that stop when render object is destroyed.
     @_autorunHandles = []

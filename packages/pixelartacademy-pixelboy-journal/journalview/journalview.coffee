@@ -11,14 +11,14 @@ class PAA.PixelBoy.Apps.Journal.JournalView extends AM.Component
   template: -> @constructor.id()
 
   constructor: (@journal) ->
-    super
+    super arguments...
 
     @journalDesign = new ReactiveField null
     @tasks = new ReactiveField null
     @visible = new ReactiveField false
 
   onCreated: ->
-    super
+    super arguments...
     
     @tasks new @constructor.Tasks
 

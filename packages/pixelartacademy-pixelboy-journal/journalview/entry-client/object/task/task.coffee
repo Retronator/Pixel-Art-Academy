@@ -15,7 +15,7 @@ class Entry.Object.Task extends Entry.Object
     class: 'pixelartacademy-pixelboy-apps-journal-journalview-entry-object-task'
 
   onCreated: ->
-    super
+    super arguments...
 
     value = @value()
     taskClass = PAA.Learning.Task.getClassForId value.id
@@ -55,7 +55,7 @@ class Entry.Object.Task extends Entry.Object
         @value value
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @goal?.destroy()
     @characterId?.stop()

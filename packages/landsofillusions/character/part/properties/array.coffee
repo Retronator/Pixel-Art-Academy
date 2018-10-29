@@ -8,7 +8,7 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
   #     {order2}
   #     ...
   constructor: (@options = {}) ->
-    super
+    super arguments...
 
     @type = 'array'
 
@@ -75,12 +75,12 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
       @parts parts
 
   destroy: ->
-    super
+    super arguments...
 
     @_arrayAutorun.stop()
 
   create: (options) ->
-    newArray = super
+    newArray = super arguments...
 
     if @options.templateType
       # Override template type if we have set it.

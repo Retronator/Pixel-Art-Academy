@@ -36,16 +36,16 @@ class LOI.Character extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      user: @ReferenceField RA.User, ['displayName', 'publicName'], false, 'characters', ['displayName', 'avatar.fullName', 'activated']
-      ownerName: @GeneratedField 'self', ['user'], (character) ->
+      user: Document.ReferenceField RA.User, ['displayName', 'publicName'], false, 'characters', ['displayName', 'avatar.fullName', 'activated']
+      ownerName: Document.GeneratedField 'self', ['user'], (character) ->
         ownerName = character.user?.publicName or null
         [character._id, ownerName]
-      debugName: @GeneratedField 'self', ['avatar'], (character) ->
+      debugName: Document.GeneratedField 'self', ['avatar'], (character) ->
         displayName = character.avatar?.fullName?.translations?.best?.text or null
         [character._id, displayName]
       avatar:
-        fullName: @ReferenceField AB.Translation, ['translations'], false
-        shortName: @ReferenceField AB.Translation, ['translations'], false
+        fullName: Document.ReferenceField AB.Translation, ['translations'], false
+        shortName: Document.ReferenceField AB.Translation, ['translations'], false
   
   # Methods
 

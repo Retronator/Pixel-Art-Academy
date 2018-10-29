@@ -8,7 +8,7 @@ class LOI.Assets.AudioEditor extends AM.Component
   @register 'LandsOfIllusions.Assets.AudioEditor'
 
   constructor: ->
-    super
+    super arguments...
     
     @world = new ReactiveField null
     @audio = new ReactiveField null
@@ -38,7 +38,7 @@ class LOI.Assets.AudioEditor extends AM.Component
     @currentLocationThings = => []
 
   onCreated: ->
-    super
+    super arguments...
 
     $('html').addClass('asset-editor')
 
@@ -86,7 +86,7 @@ class LOI.Assets.AudioEditor extends AM.Component
     @tools tools
 
   onDestroyed: ->
-    super
+    super arguments...
 
     $('html').removeClass('asset-editor')
     

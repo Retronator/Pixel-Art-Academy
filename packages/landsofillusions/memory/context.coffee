@@ -11,7 +11,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
   @classes = []
 
   @initialize: ->
-    super
+    super arguments...
     
     # Subscribe to context's namespace.
     if Meteor.isClient
@@ -85,12 +85,12 @@ class LOI.Memory.Context extends LOI.Adventure.Context
     LOI.Character.getAgent characterId for characterId in characterIds
 
   constructor: ->
-    super
+    super arguments...
 
     @memoryId = new ReactiveField null
   
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to all the memories.
     @autorun (computation) =>
@@ -274,7 +274,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
   onCommandWhileAdvertised: (commandResponse) ->
 
   onCommand: (commandResponse) ->
-    super
+    super arguments...
 
     # We allow to exit memories.
     return unless LOI.adventure.currentMemoryId()

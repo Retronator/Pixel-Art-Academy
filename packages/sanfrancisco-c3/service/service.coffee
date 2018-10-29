@@ -23,10 +23,10 @@ class C3.Service extends LOI.Adventure.Location
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
   destroy: ->
-    super
+    super arguments...
 
   exits: ->
     "#{Vocabulary.Keys.Directions.West}": C3.Lobby

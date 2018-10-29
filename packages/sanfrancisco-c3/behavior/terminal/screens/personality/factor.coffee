@@ -7,13 +7,13 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
   @register 'SanFrancisco.C3.Behavior.Terminal.Personality.Factor'
 
   constructor: ->
-    super
+    super arguments...
 
     @personalityPart = new ReactiveField null
     @part = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # Get this factor part from the character.
     @autorun (computation) =>
@@ -89,7 +89,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     not @partTemplate() or @isOwnPartTemplate()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .factor-edit-traits-button': @onClickEditTraitsButton
       'click .factor-save-as-template-button': @onClickSaveAsTemplateButton
       'click .factor-unlink-template-button': @onClickUnlinkTemplateButton
@@ -123,12 +123,12 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.Personality.Factor.TemplateDropdown'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 
     onCreated: ->
-      super
+      super arguments...
 
       @factorComponent = @ancestorComponentOfType C3.Behavior.Terminal.Personality.Factor
 
@@ -161,7 +161,7 @@ class C3.Behavior.Terminal.Personality.Factor extends AM.Component
     @register 'SanFrancisco.C3.Behavior.Terminal.Personality.Factor.Axis'
 
     onCreated: ->
-      super
+      super arguments...
 
       @terminal = @ancestorComponentOfType C3.Behavior.Terminal
 

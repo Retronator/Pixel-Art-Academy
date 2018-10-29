@@ -13,8 +13,8 @@ class LOI.Construct.Loading.PreMadeCharacter extends AM.Document
   @Meta
     name: @id()
     fields: =>
-      character: @ReferenceField LOI.Character, [], false
-      bio: @ReferenceField AB.Translation, ['translations'], false
+      character: Document.ReferenceField LOI.Character, [], false
+      bio: Document.ReferenceField AB.Translation, ['translations'], false
 
   # Methods
 

@@ -1,26 +1,28 @@
 LOI = LandsOfIllusions
 
 class LOI.Engine.SpriteMaterial extends THREE.ShaderMaterial
-  # Create the Atari 2600 palette texture.
+  # Create the modified Atari 2600 palette texture.
   @rampsCount = 16
   @shadesCount = 10
   @paletteData = new Uint8Array @rampsCount * @shadesCount * 3
   @paletteTexture = new THREE.DataTexture @paletteData, @rampsCount, @shadesCount, THREE.RGBFormat
 
-  Meteor.startup =>
-    Tracker.autorun (computation) =>
+  Meteor.startup ->
+    Tracker.autorun (computation) ->
       return unless palette = LOI.palette()
       computation.stop()
 
+      SpriteMaterial = LOI.Engine.SpriteMaterial
+
       for ramp, rampIndex in palette.ramps
         for shade, shadeIndex in ramp.shades
-          palettePixelIndex = rampIndex + @rampsCount * shadeIndex
+          palettePixelIndex = rampIndex + SpriteMaterial.rampsCount * shadeIndex
 
-          @paletteData[palettePixelIndex * 3] = shade.r * 255
-          @paletteData[palettePixelIndex * 3 + 1] = shade.g * 255
-          @paletteData[palettePixelIndex * 3 + 2] = shade.b * 255
+          SpriteMaterial.paletteData[palettePixelIndex * 3] = shade.r * 255
+          SpriteMaterial.paletteData[palettePixelIndex * 3 + 1] = shade.g * 255
+          SpriteMaterial.paletteData[palettePixelIndex * 3 + 2] = shade.b * 255
 
-      @paletteTexture.needsUpdate = true
+      SpriteMaterial.paletteTexture.needsUpdate = true
 
   constructor: (@options = {}) ->
     super
@@ -30,7 +32,7 @@ class LOI.Engine.SpriteMaterial extends THREE.ShaderMaterial
 
       uniforms: _.extend
         palette:
-          value: @constructor.paletteTexture
+          value: LOI.Engine.SpriteMaterial.paletteTexture
         map:
           value: null
         normalMap:
@@ -115,8 +117,8 @@ void main()	{
   float bestColorDistance = 1000000.0;
   float secondBestColorDistance = 1000000.0;
 
-  for (int shadeIndex = 0; shadeIndex < #{@constructor.shadesCount}; shadeIndex++) {
-    shadeUv.g = float(shadeIndex) / #{@constructor.shadesCount}.0;
+  for (int shadeIndex = 0; shadeIndex < #{LOI.Engine.SpriteMaterial.shadesCount}; shadeIndex++) {
+    shadeUv.g = float(shadeIndex) / #{LOI.Engine.SpriteMaterial.shadesCount}.0;
     vec3 shade = texture2D(palette, shadeUv).rgb;
 
     // Measure distance to color. We intentionally use squared distance.

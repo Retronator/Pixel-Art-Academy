@@ -6,7 +6,7 @@ class C3.Service.Terminal.Character extends AM.Component
   @register 'SanFrancisco.C3.Service.Terminal.Character'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
     
     @characterId = new ReactiveField null
     
@@ -14,7 +14,7 @@ class C3.Service.Terminal.Character extends AM.Component
       LOI.Character.getInstance @characterId()
 
   onCreated: ->
-    super
+    super arguments...
     
     nameInputOptions =
       addTranslationText: => @translation "Add language variant"
@@ -65,7 +65,7 @@ class C3.Service.Terminal.Character extends AM.Component
     @character()?.behavior.part.properties.perks.toString() or "None"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .done-button': @onClickDoneButton
       'click .delete-button': @onClickDeleteButton
 

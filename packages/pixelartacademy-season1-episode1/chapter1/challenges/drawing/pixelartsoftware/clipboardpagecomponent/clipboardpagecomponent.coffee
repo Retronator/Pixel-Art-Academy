@@ -7,10 +7,10 @@ class C1.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponen
   @register 'PixelArtAcademy.Season1.Episode1.Chapter1.Challenges.Drawing.PixelArtSoftware.CopyReference.ClipboardPageComponent'
 
   constructor: (@copyReference) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     @parent = @ancestorComponentWith 'closeSecondPage'
 

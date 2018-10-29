@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 # Game representation of a human.
 class LOI.HumanAvatar extends LOI.Avatar
   constructor: (@options) ->
-    super
+    super arguments...
 
     if @options.bodyDataField
       @body = LOI.Character.Part.Types.Avatar.Body.create
@@ -23,6 +23,6 @@ class LOI.HumanAvatar extends LOI.Avatar
       true
 
   destroy: ->
-    super
+    super arguments...
 
     @renderer.stop()

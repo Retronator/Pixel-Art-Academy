@@ -8,7 +8,7 @@ class AOA.Application extends AM.Component
   @version: -> "0.1.0"
 
   onCreated: ->
-    super
+    super arguments...
 
     @applicationSuccessful = new ReactiveField false
 
@@ -33,7 +33,7 @@ class AOA.Application extends AM.Component
     _.filter characters, (character) -> character?.activated
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .load-character-button': @onClickLoadCharacterButton
       'click .change-character-button': @onClickChangeCharacterButton
       'click .sign-in-button': @onClickSignInButton
@@ -68,7 +68,7 @@ class AOA.Application extends AM.Component
     @register 'Retropolis.City.Pages.AcademyOfArt.Application.Form'
 
     onCreated: ->
-      super
+      super arguments...
 
       @submitting = new ReactiveField false
       @applicationError = new ReactiveField false
@@ -126,7 +126,7 @@ class AOA.Application extends AM.Component
       'selected' if emailOption is contactEmail
 
     events: ->
-      super.concat
+      super(arguments...).concat
         'click .apply-button': @onClickApplyButton
 
     onClickApplyButton: (event) ->

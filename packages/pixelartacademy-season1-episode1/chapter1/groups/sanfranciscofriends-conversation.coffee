@@ -13,19 +13,19 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/groups/sanfranciscofriends-conversation.script'
 
   @listeners: ->
-    super.concat [
+    super(arguments...).concat [
       PAA.PersonUpdates
     ]
 
   @initialize()
 
   constructor: ->
-    super
+    super arguments...
 
     @characterUpdatesHelper = new PAA.CharacterUpdatesHelper
 
   destroy: ->
-    super
+    super arguments...
 
     @characterUpdatesHelper.destroy()
 

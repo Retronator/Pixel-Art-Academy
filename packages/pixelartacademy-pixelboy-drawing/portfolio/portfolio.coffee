@@ -14,7 +14,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     Settings: 'Settings'
 
   constructor: (@drawing) ->
-    super
+    super arguments...
 
     @sectionHeight = 21
     @initialGroupHeight = 17
@@ -159,7 +159,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
     'selected' if selectedSoftware is software.value
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .section': @onClickSection
       'click .group-name': @onClickGroupName
       'click': @onClick

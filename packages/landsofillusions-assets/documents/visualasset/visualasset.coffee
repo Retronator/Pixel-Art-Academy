@@ -34,10 +34,10 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   @Meta
     abstract: true
     fields: =>
-      palette: @ReferenceField LOI.Assets.Palette, ['name'], false
-      authors: [@ReferenceField LOI.Character, ['avatar.fullName']]
+      palette: Document.ReferenceField LOI.Assets.Palette, ['name'], false
+      authors: [Document.ReferenceField LOI.Character, ['avatar.fullName']]
       references: [
-        image: @ReferenceField LOI.Assets.Image, ['url']
+        image: Document.ReferenceField LOI.Assets.Image, ['url']
       ]
 
   # Methods
@@ -55,7 +55,7 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   # Helper methods
 
   constructor: ->
-    super
+    super arguments...
 
     # Add computed properties to bounds.
     if @bounds

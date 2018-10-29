@@ -6,10 +6,10 @@ class C3.Design.Terminal.MainMenu extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.MainMenu'
 
   constructor: (@terminal) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
   character: ->
     character = @currentData()
@@ -17,7 +17,7 @@ class C3.Design.Terminal.MainMenu extends AM.Component
     new LOI.Character.Instance character._id
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .character-selection-button': @onClickCharacterSelectionButton
       'click .new-character-button': @onClickNewCharacterButton
 

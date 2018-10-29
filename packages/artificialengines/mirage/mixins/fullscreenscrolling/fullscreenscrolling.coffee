@@ -4,7 +4,7 @@ AM = Artificial.Mirage
 # Enables scrolling in fullscreen via mouse wheel events.
 class Artificial.Mirage.FullscreenScrollingMixin extends BlazeComponent
   onCreated: ->
-    super
+    super arguments...
 
     @$html = $('html')
     @$window = $('window')

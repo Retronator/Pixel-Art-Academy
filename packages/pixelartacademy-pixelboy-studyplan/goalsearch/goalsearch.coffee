@@ -10,10 +10,10 @@ class PAA.PixelBoy.Apps.StudyPlan.GoalSearch extends AM.Component
   @register @id()
 
   constructor: (@studyPlan) ->
-    super
+    super arguments...
 
   onCreated: ->
-    super
+    super arguments...
 
     # Instantiate all goals.
     goalClasses = PAA.Learning.Goal.getClasses()
@@ -77,7 +77,7 @@ class PAA.PixelBoy.Apps.StudyPlan.GoalSearch extends AM.Component
     'existing' if @studyPlan.hasGoal goal.id()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mousedown .pixelartacademy-pixelboy-apps-studyplan-goal': @onMouseDownGoal
       'input .interests .search .input': @onInputInterestsSearchInput
       'focus .interests .search .input': @onFocusInterestsSearchInput

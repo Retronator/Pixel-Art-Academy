@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.AudioEditor.Tools.Redo extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Redo"
     @shortcut = AC.Keys.z

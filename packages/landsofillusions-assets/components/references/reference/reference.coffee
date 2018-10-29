@@ -18,13 +18,13 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     Southwest: 'sw'
 
   constructor: ->
-    super
+    super arguments...
 
     # Overwrite to define the border width withing which resizing should be active.
     @resizingBorder = 0
 
   onCreated: ->
-    super
+    super arguments...
 
     @references = @ancestorComponentOfType LOI.Assets.Components.References
     @display = @callAncestorWith 'display'
@@ -167,7 +167,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
     'dragging' if @references.draggingReference() is @
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'load .image': @onLoadImage
       'mousedown': @onMouseDown
       'mousemove': @onMouseMove

@@ -8,14 +8,14 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
   mixins: -> [@infiniteScroll]
 
   constructor: ->
-    super
+    super arguments...
 
     @infiniteScroll = new PADB.PixelDailies.Pages.YearReview.Components.Mixins.InfiniteScroll
       step: 10
       windowHeightCounts: 3
 
   onCreated: ->
-    super
+    super arguments...
 
     # Update current count for infinite scroll.
     @autorun (computation) =>
@@ -30,7 +30,7 @@ class PADB.PixelDailies.Pages.YearReview.Components.Stream extends AM.Component
     @register 'PixelArtDatabase.PixelDailies.Pages.YearReview.Components.Stream.ArtworkCaption'
 
     onCreated: ->
-      super
+      super arguments...
 
       @submission = new ComputedField =>
         artwork = @data()

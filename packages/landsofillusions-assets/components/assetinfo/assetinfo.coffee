@@ -5,7 +5,7 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
   @register 'LandsOfIllusions.Assets.Components.AssetInfo'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @assetId = @options.getAssetId
 
@@ -18,7 +18,7 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
     @currentIndex = new ReactiveField null
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .clear-button': @onClickClearButton
       'click .delete-button': @onClickDeleteButton
       'click .duplicate-button': @onClickDuplicateButton
@@ -57,12 +57,12 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
     @register 'LandsOfIllusions.Assets.Components.AssetInfo.Palette'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Select
 
     onConstructed: ->
-      super
+      super arguments...
 
       LOI.Assets.Palette.all.subscribe @
 

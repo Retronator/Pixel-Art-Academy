@@ -5,12 +5,12 @@ class PADB.Pages.Admin.Artworks.Artwork extends Artificial.Mummification.Admin.C
   @register 'PixelArtDatabase.Pages.Admin.Artworks.Artwork'
 
   constructor: ->
-    super
+    super arguments...
 
     @previewImage = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # Load the preview image to have measurements.
     @autorun =>
@@ -29,7 +29,7 @@ class PADB.Pages.Admin.Artworks.Artwork extends Artificial.Mummification.Admin.C
       image.src = artwork.image.url
 
   onRendered: ->
-    super
+    super arguments...
 
   style: ->
     image = @previewImage()
@@ -54,7 +54,7 @@ class PADB.Pages.Admin.Artworks.Artwork extends Artificial.Mummification.Admin.C
     @register 'PixelArtDatabase.Artworks.Components.Admin.Artwork.PixelScale'
 
     constructor: ->
-      super
+      super arguments...
       @type = 'number'
 
     load: -> @currentData()?.image?.pixelScale

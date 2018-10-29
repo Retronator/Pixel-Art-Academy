@@ -37,6 +37,7 @@ class LOI.Director
     @foregroundScriptQueue.pauseCurrentNode()
 
   stopAllScripts: (options = {}) ->
+    console.log "Stopping all scripts." if LOI.debug
     @foregroundScriptQueue.stopAllScripts options
     @backgroundScriptQueue.stopAllScripts options
 

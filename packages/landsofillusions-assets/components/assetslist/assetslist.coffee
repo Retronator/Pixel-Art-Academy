@@ -6,12 +6,12 @@ class LOI.Assets.Components.AssetsList extends AM.Component
   @register 'LandsOfIllusions.Assets.Components.AssetsList'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     @assetId = @options.getAssetId
 
   onCreated: ->
-    super
+    super arguments...
 
     onSubscriptionReady = =>
       # Deselect asset if it gets deleted.
@@ -44,7 +44,7 @@ class LOI.Assets.Components.AssetsList extends AM.Component
     'active' if @currentData()._id is @assetId()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .new-asset-button': @onClickNewAssetButton
       'click .asset': @onClickAsset
 

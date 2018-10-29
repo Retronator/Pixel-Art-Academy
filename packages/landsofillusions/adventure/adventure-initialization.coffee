@@ -7,7 +7,7 @@ class LOI.Adventure extends LOI.Adventure
   @register @id()
 
   constructor: ->
-    super
+    super arguments...
 
     # Set the global instance.
     LOI.adventure = @
@@ -25,7 +25,7 @@ class LOI.Adventure extends LOI.Adventure
     @_modalDialogsDependency = new Tracker.Dependency
 
   onCreated: ->
-    super
+    super arguments...
 
     console.log "Adventure created." if LOI.debug
 
@@ -59,7 +59,7 @@ class LOI.Adventure extends LOI.Adventure
     LOI.adventureInitialized true
 
   onRendered: ->
-    super
+    super arguments...
 
     console.log "Adventure rendered." if LOI.debug
 
@@ -73,7 +73,7 @@ class LOI.Adventure extends LOI.Adventure
       @loadGame preserveActiveItem: true
 
   onDestroyed: ->
-    super
+    super arguments...
 
     Meteor.clearInterval @_gameTimeInterval
 

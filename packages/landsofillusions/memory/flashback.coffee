@@ -23,7 +23,7 @@ class LOI.Memory.Flashback extends LOI.Adventure.Global
     @initialize()
   
     constructor: ->
-      super
+      super arguments...
 
       @memoryId = new ReactiveField null
       @memoryPlayed = new ReactiveField false

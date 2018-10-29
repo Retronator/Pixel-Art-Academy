@@ -11,7 +11,7 @@ class LOI.Construct.Pages.Admin.PreMadeCharacters extends AM.Component
   @setCharacter: new ABs.Method name: "#{@id()}.setCharacter"
   
   onCreated: ->
-    super
+    super arguments...
     
     LOI.Construct.Loading.PreMadeCharacter.all.subscribe @
     LOI.Character.forCurrentUser.subscribe @
@@ -20,14 +20,14 @@ class LOI.Construct.Pages.Admin.PreMadeCharacters extends AM.Component
     LOI.Construct.Loading.PreMadeCharacter.documents.find()
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .new-pre-made-character': => @constructor.insert()
 
   class @PreMadeCharacter extends AM.Component
     @register 'LandsOfIllusions.Construct.Pages.Admin.PreMadeCharacters.PreMadeCharacter'
 
     onCreated: ->
-      super
+      super arguments...
 
       @bioTranslatable = new AB.Components.Translatable
         type: AB.Components.Translatable.Types.TextArea
@@ -40,7 +40,7 @@ class LOI.Construct.Pages.Admin.PreMadeCharacters extends AM.Component
       @register 'LandsOfIllusions.Construct.Pages.Admin.PreMadeCharacters.PreMadeCharacter.CharacterSelection'
 
       constructor: ->
-        super
+        super arguments...
 
         @type = AM.DataInputComponent.Types.Select
 

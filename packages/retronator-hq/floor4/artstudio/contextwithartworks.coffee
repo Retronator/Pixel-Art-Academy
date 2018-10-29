@@ -9,7 +9,7 @@ Vocabulary = LOI.Parser.Vocabulary
 
 class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
   constructor: ->
-    super
+    super arguments...
 
     @verticalParallaxFactor = 1
     @horizontalParallaxFactor = 1
@@ -24,7 +24,7 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
     @_scrollTop = 0
 
   onCreated: ->
-    super
+    super arguments...
 
     # Subscribe to artists and artworks.
     for artistField, artistInfo of @artistsInfo
@@ -88,7 +88,7 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
       artworks[field] for field in fields when artworks[field]
 
   onRendered: ->
-    super
+    super arguments...
 
     @$scene = @$('.scene')
 
@@ -255,7 +255,7 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
     classes.join ' '
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .artwork': @onClickArtwork
 
   onClickArtwork: (event) ->
@@ -268,19 +268,19 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
     @register 'Retronator.HQ.ArtStudio.ContextWithArtworks.Stream'
 
     constructor: (@artworks) ->
-      super
+      super arguments...
 
       @activatable = new LOI.Components.Mixins.Activatable()
 
     mixins: -> [@activatable]
 
     onRendered: ->
-      super
+      super arguments...
 
       $(window).scrollTop 0
 
     onDestroyed: ->
-      super
+      super arguments...
 
       $(window).scrollTop 0
 
@@ -289,7 +289,7 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
       scrollParentSelector: '.retronator-hq-artstudio-contextwithartworks-stream'
 
     events: ->
-      super.concat
+      super(arguments...).concat
         'click': @onClick
 
     onClick: (event) ->

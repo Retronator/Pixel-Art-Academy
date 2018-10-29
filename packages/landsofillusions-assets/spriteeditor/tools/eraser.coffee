@@ -3,18 +3,18 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.Eraser extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Eraser"
     @shortcut = AC.Keys.e
 
   onMouseDown: (event) ->
-    super
+    super arguments...
 
     @applyEraser()
 
   onMouseMove: (event) ->
-    super
+    super arguments...
 
     @applyEraser()
 

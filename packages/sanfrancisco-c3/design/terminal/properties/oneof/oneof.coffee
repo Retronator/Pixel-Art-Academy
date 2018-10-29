@@ -6,7 +6,7 @@ class C3.Design.Terminal.Properties.OneOf extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Properties.OneOf'
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'click .avatar-part': @onClickAvatarPart
 
   onClickAvatarPart: (events) ->

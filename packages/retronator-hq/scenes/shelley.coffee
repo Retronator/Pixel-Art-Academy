@@ -17,7 +17,7 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
     Activity: 'Activity'
 
   constructor: ->
-    super
+    super arguments...
 
     # Set starting location and start moving around.
     @autorun (computation) =>
@@ -35,6 +35,7 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
 
     # We want to run this script only when no-one else is using Shelley.
     @otherScenesUseShelley = new ComputedField =>
+      return unless LOI.adventureInitialized()
       for scene in LOI.adventure.currentScenes() when scene.things and scene isnt @
         for thingOrThingClass in scene.things() when thingOrThingClass?
           # Scenes can provide an instance, a class, or an inherited class of Shelley, so check for all.
@@ -49,7 +50,7 @@ class HQ.Scenes.Shelley extends LOI.Adventure.Scene
       false
 
   destroy: ->
-    super
+    super arguments...
 
     Meteor.clearTimeout @_nextMessageTimeout
 

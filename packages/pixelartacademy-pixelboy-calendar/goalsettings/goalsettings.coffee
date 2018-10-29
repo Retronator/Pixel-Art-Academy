@@ -11,10 +11,10 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
   template: -> @constructor.id()
 
   constructor: (@calendar) ->
-    super
+    super arguments...
   
   onCreated: ->
-    super
+    super arguments...
 
     # Start on the goal settings screen if no goal has been set.
     @visible = new ReactiveField not @hasGoal()
@@ -79,7 +79,7 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
     names[difficulty - 1]
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'change .days-per-week .option-input': @onChangeDaysPerWeekOptionInput
       'click .confirm-button': @onClickConfirmButton
 
@@ -102,7 +102,7 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Calendar.GoalSettings.HoursPerWeek'
 
     constructor: ->
-      super
+      super arguments...
 
       @type = AM.DataInputComponent.Types.Number
       @customAttributes =
@@ -128,7 +128,7 @@ class PAA.PixelBoy.Apps.Calendar.GoalSettings extends AM.Component
     @register 'PixelArtAcademy.PixelBoy.Apps.Calendar.GoalSettings.HoursPerDay'
 
     load: ->
-      return unless hoursPerWeek = super
+      return unless hoursPerWeek = super arguments...
 
       Math.round(hoursPerWeek / 0.7) / 10
 

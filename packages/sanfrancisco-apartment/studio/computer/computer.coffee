@@ -20,7 +20,7 @@ class Studio.Computer extends LOI.Components.Computer
   @initialize()
 
   onCreated: ->
-    super
+    super arguments...
 
     @screens =
       desktop: new @constructor.Desktop @

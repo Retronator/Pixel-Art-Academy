@@ -4,7 +4,7 @@ PAA = PixelArtAcademy
 
 class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Move canvas"
     @shortcut = AC.Keys.h

@@ -8,7 +8,7 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
   @styleClass: -> throw new AE.NotImplementedException "Editor must provide a style class name."
 
   constructor: (@drawing) ->
-    super
+    super arguments...
 
     @theme = new ReactiveField null
 
@@ -25,12 +25,12 @@ class PAA.PixelBoy.Apps.Drawing.Editor extends LOI.Adventure.Thing
     @manuallyActivated = new ReactiveField false
 
   destroy: ->
-    super
+    super arguments...
 
     @spriteData.stop()
 
   onCreated: ->
-    super
+    super arguments...
 
     # Only update spriteId when it has a value, to prevent from destroying the sprite during transitions.
     @autorun (computation) =>

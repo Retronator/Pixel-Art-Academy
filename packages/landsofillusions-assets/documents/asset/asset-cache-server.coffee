@@ -5,7 +5,7 @@ RA = Retronator.Accounts
 
 class LOI.Assets.Asset extends AM.Document
   @Meta: (meta) ->
-    super
+    super arguments...
 
     return if meta.abstract
 

@@ -9,7 +9,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
   @register @id()
 
   constructor: (goalOrOptions) ->
-    super
+    super arguments...
 
     if goalOrOptions instanceof PAA.Learning.Goal
       @goal = goalOrOptions
@@ -134,7 +134,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
         y: position.y + Math.floor @taskHeight / 2
 
   onCreated: ->
-    super
+    super arguments...
 
     @display = LOI.adventure.interface.display
 
@@ -148,7 +148,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
         IL.Interest.forSearchTerm.subscribe interest
         
   onRendered: ->
-    super
+    super arguments...
     
     # Draw tasks map connections.
     @constructor.TasksMapConnections.draw @
@@ -325,7 +325,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Goal extends AM.Component
     top: "#{top}rem"
 
   events: ->
-    super.concat
+    super(arguments...).concat
       'mousedown .pixelartacademy-pixelboy-apps-studyplan-goal': @onMouseDownGoal
       'click .pixelartacademy-pixelboy-apps-studyplan-goal > .name': @onClickName
       'click .required-interests .interest': @onClickRequiredInterest

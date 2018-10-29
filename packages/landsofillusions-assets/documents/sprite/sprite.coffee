@@ -55,7 +55,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     materialIndex: Match.Optional Match.Integer
 
   constructor: ->
-    super
+    super arguments...
 
     # Add computed properties to bounds.
     if @bounds
