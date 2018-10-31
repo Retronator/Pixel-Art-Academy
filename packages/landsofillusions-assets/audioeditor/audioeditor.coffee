@@ -27,13 +27,16 @@ class LOI.Assets.AudioEditor extends AM.Component
     @audioData = new ComputedField =>
       return unless audioId = @audioId()
 
-      LOI.Assets.Asset.forId.subscribe LOI.Assets.Audio.className, audioId
+      LOI.Assets.Asset.forIdFull.subscribe LOI.Assets.Audio.className, audioId
       LOI.Assets.Audio.documents.findOne audioId
       
     @activeTool = new ReactiveField null
 
     @interface =
       illustrationSize: new AE.Rectangle 0, 0, 0, 0
+
+    @currentLocationId = new ComputedField =>
+      @audioData()?.editor?.locationId
 
     @currentLocationThings = => []
 
@@ -43,7 +46,9 @@ class LOI.Assets.AudioEditor extends AM.Component
     $('html').addClass('asset-editor')
 
     # Initialize components.
-    @world new LOI.Engine.World @
+    @world new LOI.Engine.World
+      adventure: @
+      updateMode: LOI.Engine.World.UpdateModes.Hover
     
     @audio new LOI.Assets.Engine.Audio
       world: @world
@@ -84,6 +89,22 @@ class LOI.Assets.AudioEditor extends AM.Component
         editor: => @
           
     @tools tools
+
+  onRendered: ->
+    super arguments...
+
+    @display = @callAncestorWith 'display'
+
+    # Update illustration size on window size changes.
+    @autorun (computation) =>
+      # Depend on display size and scale.
+      viewport = @display.viewport()
+      scale = @display.scale()
+
+      height = @$('.landsofillusions-engine-world').height() / scale
+
+      @interface.illustrationSize.width viewport.viewportBounds.width() / scale
+      @interface.illustrationSize.height height
 
   onDestroyed: ->
     super arguments...

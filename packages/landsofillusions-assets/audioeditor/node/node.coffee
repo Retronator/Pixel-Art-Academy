@@ -21,8 +21,10 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     @padding =
       top: 3
       bottom: 6
-      left: 6
-      right: 6
+      left: 7
+      right: 7
+
+    @parametersMargin = 5
 
   onCreated: ->
     super arguments...
@@ -34,6 +36,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     @inputPositionsByName = new ReactiveField null
     @outputPositionsByName = new ReactiveField null
+    @parameterPositionsByName = new ReactiveField null
 
     # Create custom content components if this is not a library node.
     if @audioCanvas
@@ -45,7 +48,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     
     # Update name height when in audioCanvas.
     @autorun (computation) =>
-      # Depend on node name and scale.
+      # Depend on scale.
       scale = @display.scale()
 
       # Measure elements after they had a chance to update.
@@ -76,6 +79,31 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
         @["#{connectionType}PositionsByName"] positions
 
+    # Update parameters positions.
+    @autorun (computation) =>
+      scale = @display.scale()
+
+      # Measure parameters heights after they had a chance to update.
+      Meteor.setTimeout =>
+        requestAnimationFrame =>
+          positions = {}
+          top = 0
+
+          for parameter in @$('.parameters .parameter')
+            $parameter = $(parameter)
+            name = $parameter.data 'name'
+
+            top += @parametersMargin
+            positions[name] = top
+
+            # Move down by the parameter height.
+            height = $parameter.outerHeight() / scale
+            top += height
+
+          @parameterPositionsByName positions
+      ,
+        0
+
   position: ->
     @temporaryPosition() or @data()?.position
 
@@ -96,22 +124,29 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
   parameterOptions: ->
     parameter = @currentData()
-    
-    type: parameter.type
-    load: =>
-      @data()?.parameters?[parameter.name]
 
-    save: (value) =>
-      @audioCanvas.audioEditor.changeNodeParameter @id, parameter.name, value
+    _.extend {}, parameter,
+      load: =>
+        @data()?.parameters?[parameter.name]
+
+      save: (value) =>
+        @audioCanvas.audioEditor.changeNodeParameter @id, parameter.name, value
 
   inputPositionForName: (name) ->
     return unless @isCreated()
 
-    x = @inputPositionsByName()?[name]
-    return unless x?
+    if x = @inputPositionsByName()?[name]
+      x: x
+      y: 0
 
-    x: x
-    y: -1
+    else if y = @parameterPositionsByName()?[name]
+      if @expanded()
+        x: 0
+        y: y + @nameHeight()
+
+      else
+        x: 0
+        y: @nodeHeight() / 2
 
   outputPositionForName: (name) ->
     return unless @isCreated()
@@ -121,6 +156,9 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     x: x
     y: @nodeHeight()
+
+  isParameter: (name) ->
+    _.find @nodeClass.parameters(), (parameter) => parameter.name is name
 
   audioManager: ->
     @audioCanvas?.audioEditor.world()?.audioManager()
@@ -174,12 +212,6 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     left: "#{left}rem"
 
-  connectorName: ->
-    connector = @currentData()
-
-    # Return just the first letter in uppercase.
-    _.toUpper(connector.name)[0]
-
   events: ->
     super(arguments...).concat
       'mousedown .landsofillusions-assets-audioeditor-node': @onMouseDownNode
@@ -192,9 +224,9 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       'mouseup .output': @onMouseUpOutput
       'mouseenter .output': @onMouseEnterOutput
       'mouseleave .output': @onMouseLeaveOutput
-      'mouseenter': @onMouseEnter
-      'mouseleave': @onMouseLeave
-      'mouseup': @onMouseUp
+      'mouseenter .landsofillusions-assets-audioeditor-node': @onMouseEnter
+      'mouseleave .landsofillusions-assets-audioeditor-node': @onMouseLeave
+      'mouseup .landsofillusions-assets-audioeditor-node': @onMouseUp
 
   onMouseDownNode: (event) ->
     # We only deal with drag & drop for nodes inside the canvas.
@@ -286,7 +318,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     return unless draggedConnection = @audioCanvas?.draggedConnection()
 
     if draggedConnection.output
-      inputs = @nodeClass.inputs()
+      inputs = _.union @nodeClass.inputs(), @nodeClass.parameters()
       return unless inputs.length is 1
 
       @audioCanvas.startHoverInput

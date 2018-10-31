@@ -37,10 +37,13 @@ class LOI.Assets.Engine.Audio.Node
     # Prepare autoruns for reactively connecting when audio connection info changes.
     @_connectionAutoruns = []
 
+    # Reactive values hold fields for connected inputs and parameters.
+    @reactiveValuesByName = new ReactiveField {}
+
   destroy: ->
     handle.stop() for handle in @_autorunHandles
 
-    @_disconnectAndStopAutoruns @_connectionAutoruns
+    @_disconnectAutoruns @_connectionAutoruns
 
   autorun: (handler) ->
     handle = Tracker.autorun handler
@@ -51,8 +54,21 @@ class LOI.Assets.Engine.Audio.Node
   type: -> @constructor.type()
   nodeName: -> @constructor.nodeName()
 
+  readInput: (input) ->
+    @reactiveValuesByName()[input]?()
+
+  readParameter: (parameter) ->
+    # See if the parameter has a connection.
+    if reactiveValue = @reactiveValuesByName()[parameter]
+      # We always return whatever is coming from the connection.
+      reactiveValue()
+
+    else
+      # We return the constant value set on the node.
+      @parameters()[parameter]
+
   connect: (node, output, input) ->
-    console.log "Connecting audio node #{@id}:#{output} -> #{node.id}:#{input}" if LOI.Assets.Engine.Audio.debug
+    console.log "Connecting audio node #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
 
     @_connect arguments...
     
@@ -73,7 +89,7 @@ class LOI.Assets.Engine.Audio.Node
       inputIndex = destinationConnection.index or 0
       outputIndex = sourceConnection.output or 0
 
-      console.log "Audio node connection created #{@id}:#{output} -> #{node.id}:#{input}" if LOI.Assets.Engine.Audio.debug
+      console.log "Audio node connection created #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
 
       source.connect destination, outputIndex, inputIndex
 
@@ -87,7 +103,7 @@ class LOI.Assets.Engine.Audio.Node
     @_connectionAutoruns.push autorun
 
   disconnect: (node, output, input) ->
-    console.log "Disconnecting audio node #{@id}:#{output} -> #{node.id}:#{input}" if LOI.Assets.Engine.Audio.debug
+    console.log "Disconnecting audio node #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
 
     @_disconnect arguments...
 
@@ -113,7 +129,7 @@ class LOI.Assets.Engine.Audio.Node
           inputIndex = destinationConnection.index or 0
           outputIndex = sourceConnection.output or 0
 
-          console.log "Audio node connection removed #{@id}:#{autorun.audioOutput} -> #{autorun.audioNode.id}:#{autorun.audioInput}" if LOI.Assets.Engine.Audio.debug
+          console.log "Audio node connection removed #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
 
           source.disconnect destination, outputIndex, inputIndex
 
@@ -124,19 +140,29 @@ class LOI.Assets.Engine.Audio.Node
   audioManager: ->
     @audio.options.world()?.audioManager()
 
-  # Override to react to nodes connecting and disconnecting.
-  onConnect: -> (input, node, output) ->
-  onDisconnect: -> (input, node, output) ->
+  onConnect: (input, node, output) ->
+    reactiveValuesByName = @reactiveValuesByName()
+    reactiveValuesByName[input] = node.getReactiveValue output
+    @reactiveValuesByName reactiveValuesByName
+
+  onDisconnect: (input, node, output) ->
+    reactiveValuesByName = @reactiveValuesByName()
+    delete reactiveValuesByName[input]
+    @reactiveValuesByName reactiveValuesByName
 
   getDestinationConnection: (input) ->
     # Override to provide destination and input index for the caller to connect to.
     destination: null
     index: 0
 
-  getSourceConnection: (outputName) ->
+  getSourceConnection: (output) ->
     # Override to provide the source and output index for connecting from.
     source: null
-    index: @getOutputIndex outputName
+    index: @getOutputIndex output
+
+  getReactiveValue: (output) ->
+    # Override to provide a reactive value for desired output.
+    null
 
   getOutputIndex: (outputName) ->
     # By default, audio index matches index in the outputs definition.
@@ -149,3 +175,9 @@ class LOI.Assets.Engine.Audio.Node
 
     else
       index
+      
+  _connectionDescription: (node, output, input) ->
+    "#{@_connectorDescription @, output} -> #{@_connectorDescription node, input}"
+
+  _connectorDescription: (node, connector) ->
+    "#{node.constructor.nodeName()}(#{_.toLower(node.id).substring 0, 5}):#{_.toUpper connector}"

@@ -34,7 +34,7 @@ class LOI.Adventure extends LOI.Adventure
     @interface = new LOI.Interface.Text
     @parser = new LOI.Parser
     @director = new LOI.Director
-    @world = new LOI.Engine.World @
+    @world = new LOI.Engine.World adventure: @
     
     @_initializeState()
 

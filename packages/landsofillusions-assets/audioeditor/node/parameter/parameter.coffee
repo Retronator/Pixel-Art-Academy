@@ -11,20 +11,39 @@ class LOI.Assets.AudioEditor.Node.Parameter extends AM.Component
 
   onCreated: ->
     super arguments...
-    
-    @dataInput = new @constructor.DataInput @options
+
+    # Show a direct data input if we have a pattern.
+    if @options.pattern
+      @dataInput = new @constructor.DataInput @options
 
   class @DataInput extends AM.DataInputComponent
     @register 'LandsOfIllusions.Assets.AudioEditor.Node.Parameter.DataInput'
 
-    constructor: (@options) ->
+    # Note: We can't simply call the variable @options since the
+    # data input component uses that for values of a select input.
+    constructor: (@dataInputOptions) ->
       super arguments...
 
-      if typeof @options.pattern is String
+      if @dataInputOptions.options
+        @type = AM.DataInputComponent.Types.Select
+
+      else if @dataInputOptions.pattern() is String
         @type = AM.DataInputComponent.Types.Text
 
+    options: ->
+      options = for option in @dataInputOptions.options
+        name: option
+        value: option
+        
+      unless @dataInputOptions.default
+        options.unshift
+          name: ''
+          value: null
+
+      options
+
     load: ->
-      @options.load()
+      @dataInputOptions.load() or @dataInputOptions.default
 
     save: (value) ->
-      @options.save value
+      @dataInputOptions.save value

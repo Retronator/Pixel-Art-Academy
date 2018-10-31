@@ -4,8 +4,12 @@ LOI = LandsOfIllusions
 
 class LOI.Engine.World extends AM.Component
   @register 'LandsOfIllusions.Engine.World'
+  
+  @UpdateModes:
+    Realtime: 'Realtime'
+    Hover: 'Hover'
 
-  constructor: (@adventure) ->
+  constructor: (@options) ->
     super arguments...
 
     # Prepare all reactive fields.
@@ -37,7 +41,15 @@ class LOI.Engine.World extends AM.Component
   onRendered: ->
     super arguments...
 
-    @$world = $('.landsofillusions-engine-world')
+    @$world = @$('.landsofillusions-engine-world')
+
+    # Do initial forced update and draw.
+    @forceUpdateAndDraw()
+
+  forceUpdateAndDraw: ->
+    appTime = Tracker.nonreactive => @app.appTime()
+    @_update appTime
+    @_draw appTime
 
   onDestroyed: ->
     super arguments...
@@ -51,10 +63,20 @@ class LOI.Engine.World extends AM.Component
     @$world.css transform: "translate3d(0, #{-scrollTop / 2}px, 0)"
 
   update: (appTime) ->
+    return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering
+
+    @_update appTime
+
+  _update: (appTime) ->
     for sceneItem in @sceneManager().scene().children when sceneItem instanceof AS.RenderObject
       sceneItem.update? appTime
 
   draw: (appTime) ->
+    return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering    
+
+    @_draw appTime
+
+  _draw: (appTime) ->
     return unless rendererManager = @rendererManager()
 
     rendererManager.draw appTime
@@ -62,8 +84,12 @@ class LOI.Engine.World extends AM.Component
 
   events: ->
     super(arguments...).concat
+      'mouseenter canvas': @onMouseEnterCanvas
       'mousemove canvas': @onMouseMoveCanvas
       'mouseleave canvas': @onMouseLeaveCanvas
+      
+  onMouseEnterCanvas: (event) ->
+    @_hovering = true
 
   onMouseMoveCanvas: (event) ->
     worldOffset = @$world.offset()
@@ -74,4 +100,8 @@ class LOI.Engine.World extends AM.Component
     @sceneManager().setLightDirection -percentageX, percentageY, -1
 
   onMouseLeaveCanvas: (event) ->
+    @_hovering = false
+
     @sceneManager().setLightDirection -1, -1, -1
+
+    @forceUpdateAndDraw()

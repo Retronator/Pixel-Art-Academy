@@ -71,6 +71,9 @@ class LOI.Adventure.Thing extends AM.Component
   @getClassForId: (id) ->
     @_thingClassesById[id]
 
+  @getClasses: ->
+    _.values @_thingClassesById
+
   # Start all things with a WIP version.
   @version: -> "0.0.1-#{@wipSuffix}"
 

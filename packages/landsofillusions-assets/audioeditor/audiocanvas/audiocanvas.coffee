@@ -138,7 +138,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
         if connection.startNodeId or hoveredOutput
           continue unless startNodeComponent = @_nodeComponentsById[connection.startNodeId or hoveredOutput.nodeId]
           continue unless componentPosition = startNodeComponent.position()
-          continue unless outputPosition = startNodeComponent.outputPositionForName hoveredOutput?.output or connection.output
+          continue unless outputPosition = startNodeComponent.outputPositionForName connection.output or hoveredOutput?.output
   
           connection.start =
             x: componentPosition.x + outputPosition.x
@@ -150,7 +150,11 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
         if connection.endNodeId or hoveredInput
           continue unless endNodeComponent = @_nodeComponentsById[connection.endNodeId or hoveredInput.nodeId]
           continue unless componentPosition = endNodeComponent.position()
-          continue unless inputPosition = endNodeComponent.inputPositionForName hoveredInput?.input or connection.input
+
+          input = connection.input or hoveredInput?.input
+          continue unless inputPosition = endNodeComponent.inputPositionForName input
+
+          connection.sideEntry = true if endNodeComponent.isParameter input
 
           connection.end =
             x: componentPosition.x + inputPosition.x

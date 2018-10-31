@@ -11,6 +11,7 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   #   backward: update delta that undoes the operation from the resulting state
   # historyPosition: how many steps of history brings you to the current state of the asset
   # lastEditTime: time when last history item was added
+  # editor: custom object with settings that do not get sent to normal users
   @Meta
     abstract: true
 
@@ -32,6 +33,7 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   # Subscriptions
 
   @forId: @subscription 'forId'
+  @forIdFull: @subscription 'forIdFull'
   @all: @subscription 'all'
 
   # Helper methods

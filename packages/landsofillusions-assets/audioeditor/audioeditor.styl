@@ -1,9 +1,26 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .landsofillusions-assets-audioeditor
-  .landsofillusions-engine-world
+  .world
+    position absolute
+    left 0
+    right 0
+    bottom 0
+    height 10%
     background atariGrey(0)
-    top 100%
+
+    .controls
+      position absolute
+      top 5rem
+      left 5rem
+      z-index 1
+
+      .location
+        select
+          width 100rem
+
+    .landsofillusions-engine-world
+      absolute-cover()
 
   button
   input

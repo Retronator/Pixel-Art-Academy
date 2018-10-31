@@ -3,6 +3,11 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Audio
   @debug = false
+
+  @ConnectionTypes:
+    Channels: 'Channels'
+    Parameter: 'Parameter'
+    ReactiveValue: 'ReactiveValue'
   
   constructor: (@options) ->
     @data = @options.audioData
@@ -94,7 +99,7 @@ class LOI.Assets.Engine.Audio
       startNodeId: nodeId
       endNodeId: connection.nodeId
       input: connection.input
-      output: connection.input
+      output: connection.output
 
   _removeConnectionsToNode: (nodeId) ->
     processedConnections = []

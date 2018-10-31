@@ -43,8 +43,7 @@ class PAA.PixelBoy.Apps.StudyPlan.Blueprint.Flowchart
 
     cubicBezier bezierParameters..., (x, y) => @_paintPixel imageData, x, y
 
-    # Draw the arrowhead
-
+    # Draw the arrowhead.
     for segment in [0..2]
       x = bezierParameters[6] - segment
 

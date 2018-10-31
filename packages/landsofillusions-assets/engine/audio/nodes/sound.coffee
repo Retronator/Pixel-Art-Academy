@@ -7,89 +7,56 @@ class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
   @initialize()
 
   @outputs: -> [
-    name: 'stereo'
+    name: 'buffer'
+    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
   ]
 
   @parameters: -> [
     name: 'url'
     pattern: String
+    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
   ]
 
   constructor: ->
     super arguments...
 
-    @_source = null
     @url = null
-
     @buffer = new ReactiveField null
 
-    # Create and destroy the source.
-    @source = new ComputedField =>
-      # Audio context needs to be valid.
+    # Create and destroy the buffer.
+    @autorun =>
       return unless audioManager = @audioManager()
 
-      if audioManager.contextValid()
-        url = @parameters()?.url
+      url = @parameters()?.url
 
-        if @_source
-          if url is @url
-            # Nothing to do, the source is already created and playing the correct URL.
-            return @_source
+      # Nothing to do if the buffer is already loading from the correct URL.
+      return if url is @url
 
-          else
-            # Disconnect the current source before creating the new one.
-            @_source.disconnect()
+      @url = url
 
-        @url = url
+      if @url
+        # Load the buffer.
+        @buffer null
 
-        if @url
-          # Create the source.
-          @_source = audioManager.context.createBufferSource();
-          @buffer null
+        request = new XMLHttpRequest
+        request.open 'GET', url, true
+        request.responseType = 'arraybuffer'
 
-          request = new XMLHttpRequest
-          request.open 'GET', url, true
-          request.responseType = 'arraybuffer'
+        request.onload = =>
+          audioManager.context.decodeAudioData request.response, (buffer) =>
+            # Make sure the url is still the same as at the start of the request.
+            return unless @parameters()?.url is url
 
-          request.onload = =>
-            audioManager.context.decodeAudioData request.response, (buffer) =>
-              @_source.buffer = buffer
-              @_source.loop = true
-              @_source.start()
+            # Update the buffer.
+            @buffer buffer
 
-              @buffer buffer
-          'arraybuffer'
-
-          request.send()
-
-        else
-          # We can't create a source without an URL.
-          @_source = null
-          @buffer null
-
-        @_source
+        request.send()
 
       else
-        # Context is not yet valid or was invalidated so disconnect an existing source.
-        if @_source
-          @_source.disconnect()
-          @_source = null
+        # We release the current buffer.
+        @buffer null
 
-          @url = null
-          @buffer null
+  getReactiveValue: (output) ->
+    return unless output is 'buffer'
 
-        null
-    ,
-      (a, b) => a is b
-    ,
-      true
-
-  destroy: ->
-    super arguments...
-
-    @_source?.disconnect()
-    @source.stop()
-
-  getSourceConnection: (outputName) ->
-    source: @source()
-    index: @getOutputIndex outputName
+    @buffer

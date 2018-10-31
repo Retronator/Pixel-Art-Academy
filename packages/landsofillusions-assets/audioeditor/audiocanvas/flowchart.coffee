@@ -44,12 +44,18 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
     cubicBezier bezierParameters..., (x, y) => @_paintPixel imageData, x, y
 
     # Draw the arrowhead.
-
     for segment in [0..2]
-      y = bezierParameters[7] - segment
+      if connection.sideEntry
+        x = bezierParameters[6] - segment
 
-      for x in [bezierParameters[6] - segment..bezierParameters[6] + segment]
-        @_paintPixel imageData, x, y
+        for y in [bezierParameters[7] - segment..bezierParameters[7] + segment]
+          @_paintPixel imageData, x, y
+
+      else
+        y = bezierParameters[7] - segment
+
+        for x in [bezierParameters[6] - segment..bezierParameters[6] + segment]
+          @_paintPixel imageData, x, y
 
   _paintPixel: (imageData, x, y) ->
     return unless 0 <= x < imageData.width and 0 <= y < imageData.height
@@ -86,8 +92,14 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
       x: start.x
       y: start.y + handleLength
 
-    controlEnd =
-      x: end.x
-      y: end.y - handleLength
+    if connection.sideEntry
+      controlEnd =
+        x: end.x - handleLength
+        y: end.y
+
+    else
+      controlEnd =
+        x: end.x
+        y: end.y - handleLength
 
     [start, controlStart, controlEnd, end]

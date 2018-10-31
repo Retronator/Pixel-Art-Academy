@@ -120,7 +120,9 @@ Package.onUse(function(api) {
   api.addFile('engine/audio..');
   api.addFile('engine/audio/node');
   api.addFile('engine/audio/nodes/sound');
+  api.addFile('engine/audio/nodes/player');
   api.addFile('engine/audio/nodes/output');
+  api.addFile('engine/audio/nodes/location');
 
   // Sprite editor
 
@@ -155,4 +157,6 @@ Package.onUse(function(api) {
   api.addFile('audioeditor/tools..');
   api.addFile('audioeditor/tools/undo');
   api.addFile('audioeditor/tools/redo');
+
+  api.addFile('audioeditor/worldcontrols/locationselect');
 });

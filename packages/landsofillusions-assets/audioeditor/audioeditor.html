@@ -9,6 +9,13 @@
       {{> Render nodeLibrary}}
     </div>
     {{> Render audioCanvas}}
-    {{> Render world}}
+    <div class="world">
+      <div class="controls">
+        <label class="location">
+          {{> LandsOfIllusions.Assets.AudioEditor.LocationSelect}}
+        </label>
+      </div>
+      {{> Render world}}
+    </div>
   </div>
 </template>

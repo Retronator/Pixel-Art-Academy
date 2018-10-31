@@ -6,15 +6,18 @@ class LOI.Engine.World.RendererManager
   constructor: (@world) ->
     @renderer = new THREE.WebGLRenderer
 
-    @renderer.setClearColor new THREE.Color 0x222222
     @renderer.shadowMap.enabled = true
     @renderer.shadowMap.type = THREE.BasicShadowMap
 
     # Resize the renderer when canvas size changes.
     @world.autorun =>
-      illustrationSize = @world.adventure.interface.illustrationSize
+      illustrationSize = @world.options.adventure.interface.illustrationSize
 
       @renderer.setSize illustrationSize.width(), illustrationSize.height()
+
+      # Force a redraw since only then does the canvas size get updated. Note that we need to
+      # call the world's draw and not just ours since world also updates the scaled pixel image.
+      @world.forceUpdateAndDraw()
 
   draw: (appTime) ->
     scene = @world.sceneManager().scene()
