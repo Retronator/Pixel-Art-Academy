@@ -130,6 +130,10 @@ class LOI.Assets.AudioEditor extends AM.Component
   changeNodePosition: (nodeId, position) ->
     LOI.Assets.Audio.updateNode @audioId(), nodeId, {position}
 
+  changeNodeParameter: (nodeId, name, value) ->
+    LOI.Assets.Audio.updateNodeParameters @audioId(), nodeId,
+      "#{name}": value
+
   addConnection: (nodeId, connection) ->
     LOI.Assets.Audio.updateConnections @audioId(), nodeId, connection
 

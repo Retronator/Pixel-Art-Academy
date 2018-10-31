@@ -9,13 +9,12 @@ class LOI.Engine.World.AudioManager
     @context.suspend()
 
     # Wait for user interaction before playing audio.
-    @_interacted = new ReactiveField false
-    @_unplayedUrls = []
+    @contextValid = new ReactiveField false
     @waitForInteraction()
 
     # Let others reactively know if audio is currently enabled.
     @enabled = new ComputedField =>
-      return false unless @_interacted()
+      return false unless @contextValid()
 
       switch LOI.settings.audio.enabled.value()
         when LOI.Settings.Audio.Enabled.On
@@ -38,10 +37,10 @@ class LOI.Engine.World.AudioManager
         @stop()
 
   waitForInteraction: ->
-    @_interacted false
+    @contextValid false
     
     $(document).on 'click.landsofillusions-engine-world-audiomanager', (event) =>
-      @_interacted true
+      @contextValid true
       $(document).off '.landsofillusions-engine-world-audiomanager'
 
   start: ->
@@ -52,9 +51,6 @@ class LOI.Engine.World.AudioManager
     @context.resume().then =>
       @_resuming = false
 
-      @play url for url in @_unplayedUrls
-      @_unplayedUrls = []
-
   stop: ->
     return unless @context.state is 'running'
     return if @_suspending
@@ -62,14 +58,3 @@ class LOI.Engine.World.AudioManager
 
     @context.suspend().then =>
       @_suspending = false
-
-  play: (url) ->
-    unless @_interacted()
-      @_unplayedUrls.push url
-      return
-
-    audio = $("<audio src='#{url}' type='audio/mpeg'>")[0]
-    soundEffect = @context.createMediaElementSource audio
-    soundEffect.connect @context.destination
-
-    audio.play()

@@ -3,7 +3,20 @@
     <div class="name">
       {{nodeName}}
     </div>
-    <div class="parameters" {{style parametersStyle}}>
+    <div class="content" {{style contentStyle}}>
+      <div class="parameters">
+        {{#each parameters}}
+          <li class="parameter" data-name="{{name}}">
+            <div class="name">{{name}}</div>
+            {{> LandsOfIllusions.Assets.AudioEditor.Node.Parameter args parameterOptions}}
+          </li>
+        {{/each}}
+      </div>
+      {{#if customContent}}
+        <div class="custom-content">
+          {{> Render customContent}}
+        </div>
+      {{/if}}
     </div>
     <ul class="inputs">
       {{#each inputs}}

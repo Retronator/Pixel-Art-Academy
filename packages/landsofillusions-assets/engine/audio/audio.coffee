@@ -2,6 +2,8 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Audio
+  @debug = false
+  
   constructor: (@options) ->
     @data = @options.audioData
     
@@ -19,7 +21,7 @@ class LOI.Assets.Engine.Audio
       added: (nodeId, node) =>
         # Create a new engine node instance that will execute the required audio operation.
         nodeClass = LOI.Assets.Engine.Audio.Node.getClassForType node.type
-        @_nodes[nodeId] = new nodeClass nodeId, @, node
+        @_nodes[nodeId] = Tracker.nonreactive => new nodeClass nodeId, @, node.parameters
         @_rewireNode nodeId, null, node.connections
         @_processWaitingConnections()
         @_nodesDependency.changed()
@@ -54,6 +56,9 @@ class LOI.Assets.Engine.Audio
   nodes: ->
     @_nodesDependency.depend()
     @_nodes
+
+  getNode: (id) ->
+    _.find @nodes(), (node) => node.id is id
     
   connections: ->
     @_connectionsDependency.depend()

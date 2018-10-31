@@ -72,6 +72,7 @@ Package.onUse(function(api) {
   api.addFile('documents/audio/methods/addnode');
   api.addFile('documents/audio/methods/removenode');
   api.addFile('documents/audio/methods/updatenode');
+  api.addFile('documents/audio/methods/updatenodeparameters');
   api.addFile('documents/audio/methods/updateconnections');
 
   // Upload
@@ -145,6 +146,10 @@ Package.onUse(function(api) {
   api.addFile('audioeditor/audiocanvas/mouse');
 
   api.addComponent('audioeditor/node..');
+  api.addComponent('audioeditor/node/parameter..');
+
+  api.addComponent('audioeditor/node/nodes/sound..');
+
   api.addComponent('audioeditor/nodelibrary..');
 
   api.addFile('audioeditor/tools..');

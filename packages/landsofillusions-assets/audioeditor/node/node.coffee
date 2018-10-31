@@ -20,8 +20,9 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     @borderWidth = 1
     @padding =
       top: 3
-      left: 6
       bottom: 6
+      left: 6
+      right: 6
 
   onCreated: ->
     super arguments...
@@ -29,9 +30,15 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     @display = @callAncestorWith 'display'
 
     @nameHeight = new ReactiveField 20
-    
+    @contentSize = new ReactiveField width: 74, height: 0
+
     @inputPositionsByName = new ReactiveField null
     @outputPositionsByName = new ReactiveField null
+
+    # Create custom content components if this is not a library node.
+    if @audioCanvas
+      if @nodeClass is LOI.Assets.Engine.Audio.Sound
+        @customContent = new LOI.Assets.AudioEditor.Node.Sound @
 
   onRendered: ->
     super arguments...
@@ -41,11 +48,16 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       # Depend on node name and scale.
       scale = @display.scale()
 
-      # Measure name height after it had a chance to update.
+      # Measure elements after they had a chance to update.
       Meteor.setTimeout =>
         # HACK: Also make sure the elements are being rendered since they will return 0 otherwise.
         requestAnimationFrame =>
           @nameHeight @$('.landsofillusions-assets-audioeditor-node > .name').outerHeight() / scale
+
+          $parameters = @$('.landsofillusions-assets-audioeditor-node > .content')
+          @contentSize
+            width: $parameters.outerWidth() / scale
+            height: $parameters.outerHeight() / scale
       ,
         0
 
@@ -79,6 +91,19 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   outputs: ->
     @nodeClass.outputs()
 
+  parameters: ->
+    @nodeClass.parameters()
+
+  parameterOptions: ->
+    parameter = @currentData()
+    
+    type: parameter.type
+    load: =>
+      @data()?.parameters?[parameter.name]
+
+    save: (value) =>
+      @audioCanvas.audioEditor.changeNodeParameter @id, parameter.name, value
+
   inputPositionForName: (name) ->
     return unless @isCreated()
 
@@ -97,6 +122,9 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     x: x
     y: @nodeHeight()
 
+  audioManager: ->
+    @audioCanvas?.audioEditor.world()?.audioManager()
+
   nodeStyle: ->
     # Make sure we have position present, as it will disappear when node is being deleted.
     return @libraryNodeStyle() unless position = @position()
@@ -110,33 +138,25 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     height: "#{@nodeHeight()}rem"
 
   libraryNodeStyle: ->
-    width: "#{@nodeWidth()}rem"
+    width: "88rem"
     height: "#{@nodeHeight()}rem"
 
   nodeWidth: ->
-    @padding.left + @parametersSize().width + 2 * @borderWidth
+    @padding.left + @contentSize().width + @padding.right + 2 * @borderWidth
 
   nodeHeight: ->
     height = @nameHeight() + 2 * @borderWidth
 
     return height unless @expanded()
 
-    height + @padding.top + @parametersSize().height + @padding.bottom
+    height + @padding.top + @contentSize().height + @padding.bottom
 
   expandedClass: ->
     'expanded' if @expanded()
 
-  parametersSize: ->
-    width: 80
-    height: 10
-
-  parametersStyle: ->
-    parametersSize = @parametersSize()
-
+  contentStyle: ->
     top: "#{@nameHeight()}rem"
     left: "#{@padding.left}rem"
-    width: "#{parametersSize.width}rem"
-    height: "#{parametersSize.height}rem"
 
   inputStyle: ->
     input = @currentData()
@@ -179,6 +199,9 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   onMouseDownNode: (event) ->
     # We only deal with drag & drop for nodes inside the canvas.
     return unless @audioCanvas
+
+    # Ignore actions inside parameters.
+    return if $(event.target).closest('.parameters').length
     
     # Prevent browser select/dragging behavior
     event.preventDefault()

@@ -9,3 +9,9 @@ class LOI.Assets.Engine.Audio.Output extends LOI.Assets.Engine.Audio.Node
   @inputs: -> [
     name: 'stereo'
   ]
+
+  getDestinationConnection: (input) ->
+    audioManager = @audioManager()
+
+    if input is 'stereo' and audioManager.contextValid()
+      destination: audioManager.context.destination

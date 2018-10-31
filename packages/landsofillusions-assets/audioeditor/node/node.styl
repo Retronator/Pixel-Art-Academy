@@ -20,18 +20,27 @@
     cursor pointer
     text-transform uppercase
 
-  .parameters
+  .content
     position absolute
     z-index 2
     visibility hidden
     cursor default
 
+    .parameters
+      list-style none
+      min-width 74rem
+      padding 0
+      margin 0
+
+    .custom-content
+      margin-top 6rem
+
   .inputs
   .outputs
     list-style none
-    visibility hidden
     padding 0
     margin 0
+    visibility hidden
 
     .input
     .output
@@ -97,7 +106,7 @@
         top 1rem
 
   &.expanded
-    .parameters
+    .content
     .inputs
     .outputs
       visibility visible
