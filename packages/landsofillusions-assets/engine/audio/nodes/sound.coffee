@@ -61,6 +61,6 @@ class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
         @buffer null
 
   getReactiveValue: (output) ->
-    return unless output is 'buffer'
+    return super arguments... unless output is 'buffer'
 
     @buffer

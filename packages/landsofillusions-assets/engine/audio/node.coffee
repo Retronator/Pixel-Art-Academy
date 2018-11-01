@@ -76,7 +76,7 @@ class LOI.Assets.Engine.Audio.Node
 
   _connect: (node, output, input) ->
     # Reactively connect to node input.
-    autorun = Tracker.autorun (computation) =>
+    autorun = Tracker.nonreactive => Tracker.autorun (computation) =>
       # Remove existing audio connection.
       @_disconnect node, output, input, false
 
@@ -87,7 +87,7 @@ class LOI.Assets.Engine.Audio.Node
       return unless source = sourceConnection?.source
 
       inputIndex = destinationConnection.index or 0
-      outputIndex = sourceConnection.output or 0
+      outputIndex = sourceConnection.index or 0
 
       console.log "Audio node connection created #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
 
@@ -127,9 +127,9 @@ class LOI.Assets.Engine.Audio.Node
 
         if destination and source
           inputIndex = destinationConnection.index or 0
-          outputIndex = sourceConnection.output or 0
+          outputIndex = sourceConnection.index or 0
 
-          console.log "Audio node connection removed #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
+          console.log "Audio node connection removed #{@_connectionDescription autorun.audioNode, autorun.audioOutput, autorun.audioInput}" if LOI.Assets.Engine.Audio.debug
 
           source.disconnect destination, outputIndex, inputIndex
 

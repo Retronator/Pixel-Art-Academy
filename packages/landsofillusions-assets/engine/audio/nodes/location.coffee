@@ -15,21 +15,26 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
     locationClasses = _.filter LOI.Adventure.Thing.getClasses(), (thingClass) =>
       thingClass.prototype instanceof LOI.Adventure.Location
 
-    locationIds = (locationClass.id() for locationClass in locationClasses when locationClass.fullName())
+    options = for locationClass in locationClasses when locationClass.fullName()
+      name: _.upperFirst locationClass.shortName()
+      value: locationClass.id()
 
+    options = _.sortBy options, 'value'
+      
     [
       name: 'id'
-      pattern: String
-      options: locationIds
+      pattern: [String]
+      options: options
+      showValuesInDropdown: true
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
     ]
 
   getReactiveValue: (output) ->
-    return unless output is 'value'
+    return super arguments... unless output is 'value'
     
     =>
-      # Location value is true if current location is the same as the id parameter.
+      # Location value is true if current location is the same as one of the id parameter values.
       currentLocationId = @audio.options.world().options.adventure.currentLocationId()
-      locationId = @readParameter 'id'
+      locationIds = @readParameter 'id'
 
-      locationId is currentLocationId
+      currentLocationId in locationIds

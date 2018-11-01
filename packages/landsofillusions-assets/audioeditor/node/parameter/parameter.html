@@ -1,5 +1,11 @@
 <template name="LandsOfIllusions.Assets.AudioEditor.Node.Parameter">
   <div class="landsofillusions-assets-audioeditor-node-parameter">
+    {{#each arrayOptions}}
+      {{> LandsOfIllusions.Assets.AudioEditor.Node.Parameter args this}}
+    {{/each}}
+    {{#if objectValues}}
+
+    {{/if}}
     {{> Render dataInput}}
   </div>
 </template>

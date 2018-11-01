@@ -13,8 +13,6 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     # canvas) or just the node class for a generic display of the node.
     {@id, @nodeClass, @audioCanvas} = options
 
-    @data = => @audioCanvas?.audioEditor.audioData()?.nodes?[@id]
-
     @temporaryPosition = new ReactiveField null
 
     @borderWidth = 1
@@ -38,10 +36,48 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     @outputPositionsByName = new ReactiveField null
     @parameterPositionsByName = new ReactiveField null
 
-    # Create custom content components if this is not a library node.
+    # Do extra preparations for nodes on the canvas (not in the library).
     if @audioCanvas
+      # Enable reading output data.
+      @outputData = new ReactiveField {}
+      
+      @autorun (computation) =>
+        return unless audioNode = @audioCanvas.audioEditor.audio().getNode @id
+
+        # Note: We have to read output data non-reactively since we're assigning it later.
+        outputData = Tracker.nonreactive => @outputData()
+
+        for output in @nodeClass.outputs()
+          # By default we read the reactive value.
+          outputData[output.name] = Tracker.nonreactive => audioNode.getReactiveValue output.name
+
+          # If we have a valid audio source, we instead provide values from an analyser.
+          sourceConnection = audioNode.getSourceConnection output.name
+          audioManager = @audioCanvas.audioEditor.world()?.audioManager()
+
+          if sourceConnection.source and audioManager?.contextValid()
+            # Wire output to an analyzer.
+            analyser = audioManager.context.createAnalyser()
+            analyser.fftSize = 2048
+            sourceConnection.source.connect analyser, sourceConnection.index
+            outputData[output.name] = analyser
+
+        @outputData outputData
+
+      # Create custom content component.
       if @nodeClass is LOI.Assets.Engine.Audio.Sound
         @customContent = new LOI.Assets.AudioEditor.Node.Sound @
+
+    # Isolate reactivity of data.
+    @data = new ComputedField =>
+      @audioCanvas?.audioEditor.audioData()?.nodes?[@id]
+    ,
+      EJSON.equals
+
+    @parametersData = new ComputedField =>
+      @data()?.parameters
+    ,
+      EJSON.equals
 
   onRendered: ->
     super arguments...
@@ -50,6 +86,9 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     @autorun (computation) =>
       # Depend on scale.
       scale = @display.scale()
+
+      # Depend on parameters data.
+      @parametersData()
 
       # Measure elements after they had a chance to update.
       Meteor.setTimeout =>
@@ -82,6 +121,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     # Update parameters positions.
     @autorun (computation) =>
       scale = @display.scale()
+      @parametersData()
 
       # Measure parameters heights after they had a chance to update.
       Meteor.setTimeout =>
@@ -125,12 +165,13 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   parameterOptions: ->
     parameter = @currentData()
 
-    _.extend {}, parameter,
-      load: =>
-        @data()?.parameters?[parameter.name]
+    Tracker.nonreactive =>
+      _.extend {}, parameter,
+        load: =>
+          @parametersData()?[parameter.name] or parameter.default
 
-      save: (value) =>
-        @audioCanvas.audioEditor.changeNodeParameter @id, parameter.name, value
+        save: (value) =>
+          @audioCanvas.audioEditor.changeNodeParameter @id, parameter.name, value
 
   inputPositionForName: (name) ->
     return unless @isCreated()

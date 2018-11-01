@@ -2,6 +2,15 @@ LOI = LandsOfIllusions
 
 {cubicBezier} = require 'bresenham-zingl'
 
+timeDomainData = new Float32Array 1024
+frequencyData = new Uint8Array 1024
+
+color = [0, 0, 0, 255]
+darkColor = [80, 92, 192]
+lightColor = [164, 184, 252]
+
+audioConnectionsDependency = new Tracker.Dependency
+
 class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
   constructor: (@audioCanvas) ->
     @$canvas = $('<canvas>')
@@ -9,6 +18,9 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
     @context = @canvas.getContext '2d'
 
   drawToContext: (context) ->
+    @_audioConnectionsDrawn = false
+    @_audioConnectionsSilent = true
+
     # Render the connections to our canvas.
     displayScale = @audioCanvas.display.scale()
 
@@ -29,6 +41,18 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
     context.imageSmoothingEnabled = false
     context.drawImage @canvas, 0, 0, context.canvas.width, context.canvas.height
 
+    # Force redraw when any audio connections were drawn since their values will change.
+    audioConnectionsDependency.depend()
+    if @_audioConnectionsDrawn and not @_redrawTimeout
+      # Only redraw every half a second when nothing is playing.
+      redrawDelay = if @_audioConnectionsSilent then 500 else 50
+
+      @_redrawTimeout = Meteor.setTimeout =>
+        audioConnectionsDependency.changed()
+        @_redrawTimeout = null
+      ,
+        redrawDelay
+
   _drawConnection: (connection, imageData) ->
     # Draw the curve.
     bezierPoints = @_createBezierPoints connection
@@ -41,7 +65,51 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
       # Convert to integers and return coordinates as an array to feed into the cubicBezier method.
       [Math.floor(point.x), Math.floor(point.y)]
 
-    cubicBezier bezierParameters..., (x, y) => @_paintPixel imageData, x, y
+    # Base color on the output value.
+    node = @audioCanvas.nodeComponentsById()[connection.startNodeId]
+
+    if outputData = node?.outputData()?[connection.output]
+      if _.isFunction outputData
+        value = outputData()
+
+      else if outputData instanceof AnalyserNode
+        analyser = outputData
+
+        # Update analyser data.
+        analyser.getFloatTimeDomainData timeDomainData
+        analyser.getByteFrequencyData frequencyData
+
+        value = 0
+        value += frequencyData[index] for index in [0...analyser.frequencyBinCount]
+        value /= 255 * analyser.frequencyBinCount / 2
+
+        @_audioConnectionsDrawn = true
+        @_audioConnectionsSilent = false if value
+
+      if _.isNumber value
+        # Map to distance from zero, clamped to 1
+        value = Math.min 1, Math.abs value
+
+      else
+        # Non-numbers map directly to 1 and 0.
+        value = if value then 1 else 0
+
+    else
+      value = 0
+
+    # Prepare the color.
+    color[element] = THREE.Math.lerp darkColor[element], lightColor[element], value for element in [0..2]
+
+    # Draw the curve.
+    pixelIndex = 0
+
+    cubicBezier bezierParameters..., (x, y) =>
+      if analyser
+        x = Math.floor x + timeDomainData[pixelIndex] * 20
+        pixelIndex += 2
+        pixelIndex -= analyser.frequencyBinCount if pixelIndex >= analyser.frequencyBinCount
+
+      @_paintPixel imageData, x, y
 
     # Draw the arrowhead.
     for segment in [0..2]
@@ -62,11 +130,7 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
 
     pixelIndex = (x + y * imageData.width) * 4
 
-    # Fill the pixel with line color (124, 140, 224).
-    imageData.data[pixelIndex] = 124
-    imageData.data[pixelIndex + 1] = 140
-    imageData.data[pixelIndex + 2] = 224
-    imageData.data[pixelIndex + 3] = 255
+    imageData.data[pixelIndex + offset] = color[offset] for offset in [0..3]
 
   _createBezierPoints: (connection) ->
     {start, end} = connection
