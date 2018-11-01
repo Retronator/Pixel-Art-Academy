@@ -20,8 +20,8 @@ caching-html-compiler@1.1.3
 callback-hook@1.1.0
 check@1.3.1
 chfritz:easycron@0.0.4
-coffeescript@2.3.1_2
-coffeescript-compiler@2.3.1_2
+coffeescript@2.3.2_1
+coffeescript-compiler@2.3.2_1
 ddp@1.4.0
 ddp-client@2.3.3
 ddp-common@1.4.0
@@ -84,9 +84,9 @@ mongo-id@1.0.7
 mongo-livedata@1.0.12
 npm-bcrypt@0.9.3
 npm-mongo@3.1.1
-oauth@1.2.5
+oauth@1.2.6
 oauth-encryption@1.3.1
-oauth1@1.2.1
+oauth1@1.2.2
 oauth2@1.2.1
 observe-sequence@1.0.16
 okgrow:router-autoscroll@0.1.8
