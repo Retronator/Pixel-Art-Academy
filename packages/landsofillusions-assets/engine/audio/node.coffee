@@ -65,7 +65,7 @@ class LOI.Assets.Engine.Audio.Node
 
     else
       # We return the constant value set on the node.
-      @parameters()[parameter]
+      @parameters()?[parameter]
 
   connect: (node, output, input) ->
     console.log "Connecting audio node #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug

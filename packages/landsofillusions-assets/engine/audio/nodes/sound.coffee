@@ -43,6 +43,10 @@ class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
         request.responseType = 'arraybuffer'
 
         request.onload = =>
+          # Make sure the URL points to an audio MIME type.
+          contentType = request.getResponseHeader 'content-type'
+          return unless _.startsWith contentType, 'audio'
+
           audioManager.context.decodeAudioData request.response, (buffer) =>
             # Make sure the url is still the same as at the start of the request.
             return unless @parameters()?.url is url
