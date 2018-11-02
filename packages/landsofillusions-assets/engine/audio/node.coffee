@@ -64,8 +64,8 @@ class LOI.Assets.Engine.Audio.Node
       reactiveValue()
 
     else
-      # We return the constant value set on the node.
-      @parameters()?[parameter]
+      # We return the constant value set on the node or default.
+      @parameters()?[parameter] ? _.find(@constructor.parameters(), (parameterInfo) => parameterInfo.name is parameter)?.default
 
   connect: (node, output, input) ->
     console.log "Connecting audio node #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug

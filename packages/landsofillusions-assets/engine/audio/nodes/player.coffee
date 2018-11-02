@@ -39,18 +39,44 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.Node
     options: _.values @Parameters
     default: @Parameters.Constant
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+  ,
+    name: 'loop'
+    pattern: Boolean
+    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+  ,
+    name: 'loop start'
+    pattern: Match.OptionalOrNull Number
+    default: 0
+    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+  ,
+    name: 'loop end'
+    pattern: Match.OptionalOrNull Number
+    default: 0
+    type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+  ,
+    name: 'playback rate'
+    pattern: Match.OptionalOrNull Number
+    default: 1
+    step: 0.1
+    type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
+  ,
+    name: 'detune'
+    pattern: Match.OptionalOrNull Number
+    default: 0
+    step: 100
+    type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
   ]
 
   constructor: ->
     super arguments...
 
-    # Reactively create and destroy audio sources.
     @_sources = []
     @_lastPlay = null
 
     # We use an intermediate (dummy) node to wire sources through so we can connect it using normal logic.
     @outNode = new ReactiveField null
 
+    # Reactively create and destroy audio sources.
     @autorun (computation) =>
       play = @readInput 'play'
       buffer = @readParameter 'buffer'
@@ -82,6 +108,10 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.Node
         # Let go of the out node as well.
         @outNode null
 
+    # Reactively update parameters.
+    @autorun (computation) =>
+      @_updateSources @_sources if @readParameter('parameters') is @constructor.Parameters.Update
+
   destroy: ->
     super arguments...
 
@@ -92,6 +122,7 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.Node
 
     source.buffer = buffer
     source.onended = => _.pull @_sources, source
+    @_updateSources [source]
     source.connect @outNode()
     source.start()
 
@@ -99,6 +130,20 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.Node
 
   _stopSources: ->
     source.stop() for source in @_sources
+
+  _updateSources: (sources) ->
+    loopEnabled = @readParameter 'loop'
+    loopStart = @readParameter 'loop start'
+    loopEnd = @readParameter 'loop end'
+    playbackRate = @readParameter 'playback rate'
+    detune = @readParameter 'detune'
+
+    for source in sources
+      source.loop = loopEnabled
+      source.loopStart = loopStart
+      source.loopEnd = loopEnd
+      source.playbackRate.value = playbackRate
+      source.detune.value = detune
 
   getSourceConnection: (output) ->
     return super arguments... unless output is 'out'

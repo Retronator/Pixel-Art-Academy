@@ -41,6 +41,27 @@
     &[type=number]
       padding-right 0
 
+  input[type='checkbox']
+    display none
+
+    & + .checkbox::before
+      content '✔'
+      display inline-block
+      box-sizing border-box
+      width 12rem
+      height 12rem
+      padding 1rem 0 1rem 2rem
+      margin-right 6rem
+      vertical-align baseline
+      border 1rem solid atariBlue(1)
+      background rgba(atariBlue(1),0.65)
+      text-align center
+      color transparent
+      cursor pointer
+
+    &:checked + .checkbox::before
+      color inherit
+
   button
     background atariBlue(1)
     padding 0 5rem

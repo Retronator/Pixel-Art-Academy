@@ -41,7 +41,8 @@ class LOI.Assets.AudioEditor.Node.Parameter extends AM.Component
 
         arrayOptions
 
-    if _.isFunction @options.pattern
+    # Note: Match objects have a pattern field on themselves.
+    else if @options.pattern?.pattern or _.isFunction @options.pattern
       # Show a single data input.
       @dataInput = new @constructor.DataInput @options
 
@@ -63,8 +64,32 @@ class LOI.Assets.AudioEditor.Node.Parameter extends AM.Component
       if @dataInputOptions.options
         @type = AM.DataInputComponent.Types.Select
 
-      else if @dataInputOptions.pattern is String
-        @type = AM.DataInputComponent.Types.Text
+      else
+        pattern = @dataInputOptions.pattern
+
+        loop
+          if pattern is Boolean
+            @type = AM.DataInputComponent.Types.Checkbox
+
+          else if pattern is Number
+            @type = AM.DataInputComponent.Types.Number
+            @customAttributes =
+              step: @dataInputOptions.step
+              min: @dataInputOptions.min
+              max: @dataInputOptions.max
+
+          else if pattern is String
+            @type = AM.DataInputComponent.Types.Text
+
+          # See if we can go deeper into the pattern.
+          if pattern.pattern
+            pattern = pattern.pattern
+
+          else if pattern.choices
+            pattern = pattern.choices[0]
+
+          else
+            break
 
     options: ->
       options = for option in @dataInputOptions.options
@@ -93,4 +118,11 @@ class LOI.Assets.AudioEditor.Node.Parameter extends AM.Component
       @dataInputOptions.load()
 
     save: (value) ->
+      if @type is AM.DataInputComponent.Types.Number
+        if value
+          value = parseFloat value
+
+        else
+          value = null
+
       @dataInputOptions.save value
