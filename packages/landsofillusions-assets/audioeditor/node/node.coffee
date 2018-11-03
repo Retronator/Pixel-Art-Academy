@@ -13,6 +13,9 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     # canvas) or just the node class for a generic display of the node.
     {@id, @nodeClass, @audioCanvas} = options
 
+    # Copy the ID for reactive rendering.
+    @_id = @id
+
     @temporaryPosition = new ReactiveField null
 
     @borderWidth = 1

@@ -24,6 +24,8 @@ class LOI.Assets.Engine.Audio
       @data()?.nodes
     ,
       added: (nodeId, node) =>
+        console.log "Added audio node", node if LOI.Assets.Engine.Audio.debug
+
         # Create a new engine node instance that will execute the required audio operation.
         nodeClass = LOI.Assets.Engine.Audio.Node.getClassForType node.type
         @_nodes[nodeId] = Tracker.nonreactive => new nodeClass nodeId, @, node.parameters
@@ -39,6 +41,8 @@ class LOI.Assets.Engine.Audio
         @_processWaitingConnections()
 
       removed: (nodeId, node) =>
+        console.log "Removed audio node", node if LOI.Assets.Engine.Audio.debug
+
         @_rewireNode nodeId, node.connections, null
         @_removeConnectionsToNode nodeId
         @_nodes[nodeId].destroy()
@@ -105,7 +109,7 @@ class LOI.Assets.Engine.Audio
     processedConnections = []
 
     for connection in @_connections
-      continue unless connection.endNodeId = nodeId
+      continue unless connection.endNodeId is nodeId
 
       startNode = @_nodes[connection.startNodeId]
       endNode = @_nodes[nodeId]

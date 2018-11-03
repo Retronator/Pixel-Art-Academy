@@ -131,8 +131,8 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
           # Add the dragged connection to connections.
           connections.push draggedConnection
 
-      hoveredInput = @hoveredInput()
-      hoveredOutput = @hoveredOutput()
+        hoveredInput = @hoveredInput()
+        hoveredOutput = @hoveredOutput()
 
       for connection in connections
         if connection.startNodeId or hoveredOutput
