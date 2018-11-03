@@ -149,4 +149,3 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.Node
     return super arguments... unless output is 'out'
 
     source: @outNode()
-    index: 0

@@ -29,12 +29,22 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
     ]
 
-  getReactiveValue: (output) ->
-    return super arguments... unless output is 'value'
-    
-    =>
+  constructor: ->
+    super arguments...
+
+    @value = new ComputedField =>
       # Location value is true if current location is the same as one of the id parameter values.
       currentLocationId = @audio.options.world().options.adventure.currentLocationId()
       locationIds = @readParameter 'id'
 
       currentLocationId in locationIds
+
+  destroy: ->
+    super arguments...
+
+    @value.stop()
+
+  getReactiveValue: (output) ->
+    return super arguments... unless output is 'value'
+    
+    @value

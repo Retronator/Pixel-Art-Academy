@@ -123,6 +123,8 @@ Package.onUse(function(api) {
   api.addFile('engine/audio/nodes/player');
   api.addFile('engine/audio/nodes/output');
   api.addFile('engine/audio/nodes/location');
+  api.addFile('engine/audio/nodes/gain');
+  api.addFile('engine/audio/nodes/delay');
 
   // Sprite editor
 

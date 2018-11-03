@@ -40,10 +40,15 @@ class LOI.Assets.Engine.Audio.Node
     # Reactive values hold fields for connected inputs and parameters.
     @reactiveValuesByName = new ReactiveField {}
 
+    # Computed fields to minimize parameter recomputation reactivity.
+    @_parameterFields = {}
+
   destroy: ->
     handle.stop() for handle in @_autorunHandles
 
     @_disconnectAutoruns @_connectionAutoruns
+
+    parameterField.stop() for parameter, parameterField of @_parameterFields
 
   autorun: (handler) ->
     handle = Tracker.autorun handler
@@ -58,14 +63,20 @@ class LOI.Assets.Engine.Audio.Node
     @reactiveValuesByName()[input]?()
 
   readParameter: (parameter) ->
-    # See if the parameter has a connection.
-    if reactiveValue = @reactiveValuesByName()[parameter]
-      # We always return whatever is coming from the connection.
-      reactiveValue()
+    unless @_parameterFields[parameter]
+      @_parameterFields[parameter] = Tracker.nonreactive => new ComputedField =>
+        # See if the parameter has a connection.
+        if reactiveValue = @reactiveValuesByName()[parameter]
+          # We always return whatever is coming from the connection.
+          reactiveValue()
 
-    else
-      # We return the constant value set on the node or default.
-      @parameters()?[parameter] ? _.find(@constructor.parameters(), (parameterInfo) => parameterInfo.name is parameter)?.default
+        else
+          # We return the constant value set on the node or default.
+          @parameters()?[parameter] ? _.find(@constructor.parameters(), (parameterInfo) => parameterInfo.name is parameter)?.default
+      ,
+        true
+
+    @_parameterFields[parameter]()
 
   connect: (node, output, input) ->
     console.log "Connecting audio node #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
@@ -93,7 +104,11 @@ class LOI.Assets.Engine.Audio.Node
 
       source.connect destination, outputIndex, inputIndex
 
-      Tracker.afterFlush => autorun.audioConnected = true
+      Tracker.afterFlush =>
+        autorun.audioSource = source
+        autorun.audioDestination = destination
+        autorun.audioInputIndex = inputIndex
+        autorun.audioOutputIndex = outputIndex
 
     # Store connection parameters on autorun so we can disconnect it later.
     autorun.audioNode = node
@@ -118,20 +133,10 @@ class LOI.Assets.Engine.Audio.Node
 
   _disconnectAutoruns: (autoruns, stop = true) ->
     for autorun in autoruns
-      if autorun.audioConnected
-        destinationConnection = autorun.audioNode.getDestinationConnection autorun.audioInput
-        destination = destinationConnection?.destination
+      if autorun.audioSource
+        console.log "Audio node connection removed #{@_connectionDescription autorun.audioNode, autorun.audioOutput, autorun.audioInput}" if LOI.Assets.Engine.Audio.debug
 
-        sourceConnection = @getSourceConnection autorun.audioOutput
-        source = sourceConnection?.source
-
-        if destination and source
-          inputIndex = destinationConnection.index or 0
-          outputIndex = sourceConnection.index or 0
-
-          console.log "Audio node connection removed #{@_connectionDescription autorun.audioNode, autorun.audioOutput, autorun.audioInput}" if LOI.Assets.Engine.Audio.debug
-
-          source.disconnect destination, outputIndex, inputIndex
+        autorun.audioSource.disconnect autorun.audioDestination, autorun.audioOutputIndex, autorun.audioInputIndex
 
       autorun.stop() if stop
 

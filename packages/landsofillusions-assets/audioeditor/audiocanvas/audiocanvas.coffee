@@ -154,7 +154,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
           input = connection.input or hoveredInput?.input
           continue unless inputPosition = endNodeComponent.inputPositionForName input
 
-          connection.sideEntry = true if endNodeComponent.isParameter input
+          connection.sideEntry = endNodeComponent.isParameter input
 
           connection.end =
             x: componentPosition.x + inputPosition.x
@@ -162,6 +162,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
 
         else
           connection.end = @mouse().canvasCoordinate()
+          connection.sideEntry = false
 
       # Remove any connections that we couldn't determine.
       _.filter connections, (connection) => connection.start and connection.end
