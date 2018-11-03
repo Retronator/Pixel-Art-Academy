@@ -9,6 +9,8 @@ color = [0, 0, 0, 255]
 darkColor = [80, 92, 192]
 lightColor = [164, 184, 252]
 
+pointHistory = (x: 0, y:0 for index in [0..4])
+
 audioConnectionsDependency = new Tracker.Dependency
 
 class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
@@ -101,13 +103,43 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
     color[element] = THREE.Math.lerp darkColor[element], lightColor[element], value for element in [0..2]
 
     # Draw the curve.
-    pixelIndex = 0
+    curveIndex = 0
+    timeDomainIndex = 0
+    historyIndex = 0
 
     cubicBezier bezierParameters..., (x, y) =>
       if analyser
-        x = Math.floor x + timeDomainData[pixelIndex] * 20
-        pixelIndex += 2
-        pixelIndex -= analyser.frequencyBinCount if pixelIndex >= analyser.frequencyBinCount
+        if curveIndex
+          # Calculate direction of the curve.
+          derivativeHistoryIndex = Math.max(0, curveIndex - pointHistory.length) % pointHistory.length
+          dx = x - pointHistory[derivativeHistoryIndex].x
+          dy = y - pointHistory[derivativeHistoryIndex].y
+
+          # Normalize into a unit vector.
+          l = Math.sqrt dx * dx + dy * dy
+          dx /= l
+          dy /= l
+
+        else
+          # Assume direction downwards (outputs are facing down).
+          dx = 0
+          dy = 1
+
+        # Save current point coordinates to history.
+        pointHistory[historyIndex].x = x
+        pointHistory[historyIndex].y = y
+        historyIndex = (historyIndex + 1) % pointHistory.length
+
+        # Add offset perpendicularly to the direction.
+        offset = timeDomainData[timeDomainIndex] * 20
+        x = Math.floor x - dy * offset
+        y = Math.floor y + dx * offset
+
+        # Move ahead in the time domain.
+        timeDomainIndex = (timeDomainIndex + 2) % analyser.frequencyBinCount
+
+        # Record that we've moved one point ahead on the curve.
+        curveIndex++
 
       @_paintPixel imageData, x, y
 

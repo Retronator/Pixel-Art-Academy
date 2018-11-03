@@ -82,7 +82,7 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.Node
       buffer = @readParameter 'buffer'
       audioManager = @audioManager()
 
-      unless buffer and audioManager
+      unless audioManager
         @_lastPlay = null
         return
 
@@ -92,7 +92,7 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.Node
         @outNode audioManager.context.createGain() unless outNode
 
         # We start sources when play changes to truthy value.
-        if play and not @_lastPlay
+        if play and not @_lastPlay and buffer
           @_startSource audioManager, buffer
 
         if @readParameter('play control') is @constructor.PlayControl.StartStop
