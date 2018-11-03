@@ -39,9 +39,17 @@ class LOI.Assets.Engine.Audio.Gain extends LOI.Assets.Engine.Audio.Node
       node.gain.value = @readParameter 'gain'
 
   getDestinationConnection: (input) ->
-    return super arguments... unless input is 'in'
+    empty = super arguments...
 
-    destination: @node()
+    switch input
+      when 'in'
+        destination: @node()
+
+      when 'gain'
+        destination: @node()?.gain
+
+      else
+        empty
 
   getSourceConnection: (output) ->
     return super arguments... unless output is 'out'

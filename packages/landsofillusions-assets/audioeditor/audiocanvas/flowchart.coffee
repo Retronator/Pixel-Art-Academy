@@ -131,7 +131,7 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
         historyIndex = (historyIndex + 1) % pointHistory.length
 
         # Add offset perpendicularly to the direction.
-        offset = _.clamp(timeDomainData[timeDomainIndex], -1, 1) * 20
+        offset = _.clamp(timeDomainData[timeDomainIndex], -1, 1) * 10
         x = Math.floor x + dy * offset
         y = Math.floor y - dx * offset
 

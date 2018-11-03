@@ -50,9 +50,17 @@ class LOI.Assets.Engine.Audio.Delay extends LOI.Assets.Engine.Audio.Node
       node.delayTime.value = @readParameter 'delayTime'
 
   getDestinationConnection: (input) ->
-    return super arguments... unless input is 'in'
+    empty = super arguments...
 
-    destination: @node()
+    switch input
+      when 'in'
+        destination: @node()
+
+      when 'delayTime'
+        destination: @node()?.delayTime
+
+      else
+        empty
 
   getSourceConnection: (output) ->
     return super arguments... unless output is 'out'

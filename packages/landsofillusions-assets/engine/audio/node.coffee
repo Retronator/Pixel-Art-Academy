@@ -98,12 +98,20 @@ class LOI.Assets.Engine.Audio.Node
       sourceConnection = @getSourceConnection output
       return unless source = sourceConnection?.source
 
-      inputIndex = destinationConnection.index or 0
-      outputIndex = sourceConnection.index or 0
+      inputIndex = destinationConnection.index
+      outputIndex = sourceConnection.index
 
       console.log "Audio node connection created #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
 
-      source.connect destination, outputIndex, inputIndex
+      if destination instanceof AudioNode
+        source.connect destination, outputIndex, inputIndex
+
+      else if destination instanceof AudioParam
+        # Audio params don't have an input index.
+        source.connect destination, outputIndex
+
+      else
+        console.error "Invalid audio destination type.", destination
 
       Tracker.afterFlush =>
         autorun.audioSource = source
@@ -137,7 +145,14 @@ class LOI.Assets.Engine.Audio.Node
       if autorun.audioSource
         console.log "Audio node connection removed #{@_connectionDescription autorun.audioNode, autorun.audioOutput, autorun.audioInput}" if LOI.Assets.Engine.Audio.debug
 
-        autorun.audioSource.disconnect autorun.audioDestination, autorun.audioOutputIndex, autorun.audioInputIndex
+        if autorun.audioDestination instanceof AudioNode
+          autorun.audioSource.disconnect autorun.audioDestination, autorun.audioOutputIndex, autorun.audioInputIndex
+
+        else if autorun.audioDestination instanceof AudioParam
+          autorun.audioSource.disconnect autorun.audioDestination, autorun.audioOutputIndex
+
+        else
+          console.error "Invalid audio destination type.", autorun.audioDestination
 
       autorun.stop() if stop
 
