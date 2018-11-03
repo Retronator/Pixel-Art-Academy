@@ -83,7 +83,7 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
 
         value = 0
         value += frequencyData[index] for index in [0...analyser.frequencyBinCount]
-        value /= 255 * analyser.frequencyBinCount / 2
+        value /= 255 * analyser.frequencyBinCount / 4
 
         @_audioConnectionsDrawn = true
         @_audioConnectionsSilent = false if value
@@ -131,9 +131,9 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
         historyIndex = (historyIndex + 1) % pointHistory.length
 
         # Add offset perpendicularly to the direction.
-        offset = timeDomainData[timeDomainIndex] * 20
-        x = Math.floor x - dy * offset
-        y = Math.floor y + dx * offset
+        offset = _.clamp(timeDomainData[timeDomainIndex], -1, 1) * 20
+        x = Math.floor x + dy * offset
+        y = Math.floor y - dx * offset
 
         # Move ahead in the time domain.
         timeDomainIndex = (timeDomainIndex + 2) % analyser.frequencyBinCount

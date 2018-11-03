@@ -119,9 +119,12 @@ Package.onUse(function(api) {
 
   api.addFile('engine/audio..');
   api.addFile('engine/audio/node');
+  api.addFile('engine/audio/schedulednode');
+
+  api.addFile('engine/audio/nodes/output');
   api.addFile('engine/audio/nodes/sound');
   api.addFile('engine/audio/nodes/player');
-  api.addFile('engine/audio/nodes/output');
+  api.addFile('engine/audio/nodes/constant');
   api.addFile('engine/audio/nodes/location');
   api.addFile('engine/audio/nodes/gain');
   api.addFile('engine/audio/nodes/delay');
