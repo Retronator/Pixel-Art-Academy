@@ -15,6 +15,12 @@ class LOI.Assets.Engine.Audio.Oscillator extends LOI.Assets.Engine.Audio.Schedul
 
   @parameters: ->
     super(arguments...).concat
+      name: 'type'
+      pattern: String
+      options: _.values @Types
+      default: @Types.Sine
+      type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    ,
       name: 'frequency'
       pattern: Match.OptionalOrNull Number
       default: 440
@@ -26,12 +32,6 @@ class LOI.Assets.Engine.Audio.Oscillator extends LOI.Assets.Engine.Audio.Schedul
       default: 0
       step: 100
       type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
-    ,
-      name: 'type'
-      pattern: String
-      options: _.values @Types
-      default: @Types.Sine
-      type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
 
   createSource: (context) ->
     context.createOscillator()

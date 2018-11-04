@@ -68,8 +68,12 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
         @outputData outputData
 
       # Create custom content component.
-      if @nodeClass is LOI.Assets.Engine.Audio.Sound
-        @customContent = new LOI.Assets.AudioEditor.Node.Sound @
+      switch @nodeClass
+        when LOI.Assets.Engine.Audio.Sound
+          @customContent = new LOI.Assets.AudioEditor.Node.Sound @
+
+        when LOI.Assets.Engine.Audio.BiquadFilter
+          @customContent = new LOI.Assets.AudioEditor.Node.BiquadFilter @
 
     # Isolate reactivity of data.
     @data = new ComputedField =>

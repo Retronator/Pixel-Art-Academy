@@ -130,6 +130,7 @@ Package.onUse(function(api) {
 
   api.addFile('engine/audio/nodes/gain');
   api.addFile('engine/audio/nodes/delay');
+  api.addFile('engine/audio/nodes/biquadfilter');
 
   api.addFile('engine/audio/nodes/location');
   api.addFile('engine/audio/nodes/number');
@@ -161,6 +162,7 @@ Package.onUse(function(api) {
   api.addComponent('audioeditor/node/parameter..');
 
   api.addComponent('audioeditor/node/nodes/sound..');
+  api.addComponent('audioeditor/node/nodes/biquadfilter..');
 
   api.addComponent('audioeditor/nodelibrary..');
 
