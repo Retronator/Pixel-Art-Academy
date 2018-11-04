@@ -42,6 +42,9 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.ScheduledNo
       
     parameters
 
+  @fixedParameterNames: ->
+    super(arguments...).concat 'buffer'
+
   registerCreateDependencies: ->
     # Sources should get created when buffer is connected.
     unless @readParameter 'buffer'
@@ -55,17 +58,3 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.ScheduledNo
     source.buffer = buffer
 
     source
-
-  updateSources: (sources) ->
-    loopEnabled = @readParameter 'loop'
-    loopStart = @readParameter 'loop start'
-    loopEnd = @readParameter 'loop end'
-    playbackRate = @readParameter 'playback rate'
-    detune = @readParameter 'detune'
-
-    for source in sources
-      source.loop = loopEnabled
-      source.loopStart = loopStart
-      source.loopEnd = loopEnd
-      source.playbackRate.value = playbackRate
-      source.detune.value = detune

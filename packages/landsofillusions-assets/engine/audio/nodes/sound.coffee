@@ -27,7 +27,7 @@ class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
     @autorun =>
       return unless audioManager = @audioManager()
 
-      url = @parameters()?.url
+      url = @parametersData()?.url
 
       # Nothing to do if the buffer is already loading from the correct URL.
       return if url is @url
@@ -49,7 +49,7 @@ class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
 
           audioManager.context.decodeAudioData request.response, (buffer) =>
             # Make sure the url is still the same as at the start of the request.
-            return unless @parameters()?.url is url
+            return unless @parametersData()?.url is url
 
             # Update the buffer.
             @buffer buffer

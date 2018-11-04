@@ -29,20 +29,23 @@ class LOI.Assets.Engine.Audio.Node
     @_nodeClassesByType[@type()] = @
     
   constructor: (@id, @audio, initialParameters) ->
-    # Parameters are compared by data equality to minimize changes in the audio engine.
-    @parameters = new ReactiveField initialParameters, EJSON.equals
+    # Parameters data is compared by equality to minimize changes in the audio engine.
+    @parametersData = new ReactiveField initialParameters, EJSON.equals
 
-    # Provides support for autorun calls that stop when node is destroyed.
+    # Further we also create computed fields to minimize reactivity per parameter.
+    @_parameterFields = {}
+
+    # Reactive value fields hold reactive value getters for connected inputs and parameters.
+    @_reactiveValueFields = {}
+
+    # Provide support for autorun calls that stop when node is destroyed.
     @_autorunHandles = []
 
     # Prepare autoruns for reactively connecting when audio connection info changes.
     @_connectionAutoruns = []
-
-    # Reactive values hold fields for connected inputs and parameters.
-    @reactiveValuesByName = new ReactiveField {}
-
-    # Computed fields to minimize parameter recomputation reactivity.
-    @_parameterFields = {}
+    
+    # Create an instance copy of parameters info.
+    @parameters = @constructor.parameters()
 
   destroy: ->
     handle.stop() for handle in @_autorunHandles
@@ -61,23 +64,27 @@ class LOI.Assets.Engine.Audio.Node
   nodeName: -> @constructor.nodeName()
 
   readInput: (input) ->
-    @reactiveValuesByName()[input]?()
+    return unless reactiveValue = @_getReactiveValueField(input)()
+
+    reactiveValue()
 
   readParameter: (parameter) ->
     unless @_parameterFields[parameter]
       @_parameterFields[parameter] = Tracker.nonreactive => new ComputedField =>
-        # See if the parameter has a connection.
-        if reactiveValue = @reactiveValuesByName()[parameter]
+        if reactiveValue = @_getReactiveValueField(parameter)()
           # We always return whatever is coming from the connection.
           reactiveValue()
 
         else
           # We return the constant value set on the node or default.
-          @parameters()?[parameter] ? _.find(@constructor.parameters(), (parameterInfo) => parameterInfo.name is parameter)?.default
+          @parametersData()?[parameter] ? _.find(@constructor.parameters(), (parameterInfo) => parameterInfo.name is parameter)?.default
       ,
         true
 
     @_parameterFields[parameter]()
+
+  _getReactiveValueField: (name) ->
+    @_reactiveValueFields[name] ?= new ReactiveField null
 
   connect: (node, output, input) ->
     console.log "Connecting audio node #{@_connectionDescription node, output, input}" if LOI.Assets.Engine.Audio.debug
@@ -162,14 +169,10 @@ class LOI.Assets.Engine.Audio.Node
     @audio.options.world()?.audioManager()
 
   onConnect: (input, node, output) ->
-    reactiveValuesByName = @reactiveValuesByName()
-    reactiveValuesByName[input] = node.getReactiveValue output
-    @reactiveValuesByName reactiveValuesByName
-
+    @_getReactiveValueField(input) node.getReactiveValue output
+    
   onDisconnect: (input, node, output) ->
-    reactiveValuesByName = @reactiveValuesByName()
-    delete reactiveValuesByName[input]
-    @reactiveValuesByName reactiveValuesByName
+    @_getReactiveValueField(input) null
 
   getDestinationConnection: (input) ->
     # Override to provide destination and input index for the caller to connect to.

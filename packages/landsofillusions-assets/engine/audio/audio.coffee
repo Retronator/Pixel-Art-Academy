@@ -36,7 +36,7 @@ class LOI.Assets.Engine.Audio
 
       updated: (nodeId, node, oldNode) =>
         # Relay (potentially) updated node parameters to the instance.
-        @_nodes[nodeId].parameters node.parameters
+        @_nodes[nodeId].parametersData node.parameters
         @_rewireNode nodeId, oldNode.connections, node.connections
         @_processWaitingConnections()
 

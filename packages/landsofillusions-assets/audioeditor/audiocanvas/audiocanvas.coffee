@@ -124,7 +124,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
 
         if draggedNodeConnection
           # Disconnect it so it will be moved with the mouse.
-          draggedNodeConnection.output
+          draggedNodeConnection.input = null
           draggedNodeConnection.endNodeId = null
 
         else
@@ -359,7 +359,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
     return unless draggedConnection = @draggedConnection()
 
     # If we were modifying an existing connection, remove it.
-    if draggedConnection.endNodeId
+    if draggedConnection.endNodeId and draggedConnection.startNodeId
       connection =
         nodeId: draggedConnection.endNodeId
         input: draggedConnection.input

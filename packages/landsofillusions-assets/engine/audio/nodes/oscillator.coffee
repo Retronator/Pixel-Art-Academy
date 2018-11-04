@@ -35,13 +35,3 @@ class LOI.Assets.Engine.Audio.Oscillator extends LOI.Assets.Engine.Audio.Schedul
 
   createSource: (context) ->
     context.createOscillator()
-
-  updateSources: (sources) ->
-    frequency = @readParameter 'frequency'
-    detune = @readParameter 'detune'
-    type = @readParameter 'type'
-
-    for source in sources
-      source.frequency.value = frequency
-      source.detune.value = detune
-      source.type = type

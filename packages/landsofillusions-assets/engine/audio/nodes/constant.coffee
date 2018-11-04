@@ -16,9 +16,3 @@ class LOI.Assets.Engine.Audio.Constant extends LOI.Assets.Engine.Audio.Scheduled
 
   createSource: (context) ->
     context.createConstantSource()
-
-  updateSources: (sources) ->
-    offset = @readParameter 'offset'
-
-    for source in sources
-      source.offset.value = offset
