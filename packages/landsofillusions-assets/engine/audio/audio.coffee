@@ -28,7 +28,12 @@ class LOI.Assets.Engine.Audio
     @_waitingConnections = []
 
     @nodesDictionary = new AE.ReactiveDictionary =>
-      @data()?.nodes
+      nodes = {}
+
+      if nodes = @data()?.nodes
+        nodes[node.id] = node for node in nodes
+
+      nodes  
     ,
       added: (nodeId, node) =>
         console.log "Added audio node", node if LOI.Assets.Engine.Audio.debug
@@ -68,6 +73,13 @@ class LOI.Assets.Engine.Audio
 
     # Remove all nodes.
     node.destroy() for node in @_nodes
+    
+  world: ->
+    if _.isFunction @options.world
+      @options.world()
+      
+    else
+      @options.world
 
   nodes: ->
     @_nodesDependency.depend()

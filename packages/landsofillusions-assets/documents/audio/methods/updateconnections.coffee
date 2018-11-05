@@ -10,7 +10,7 @@ LOI.Assets.Audio.updateConnections.method (audioId, nodeId, addedConnection, rem
   LOI.Assets.Audio._authorizeAudioAction()
 
   audio = LOI.Assets.Audio._requireAudio audioId
-  node = LOI.Assets.Audio._requireNode audio, nodeId
+  {node, nodeIndex} = LOI.Assets.Audio._requireNode audio, nodeId
 
   forward = {}
   backward = {}
@@ -28,18 +28,18 @@ LOI.Assets.Audio.updateConnections.method (audioId, nodeId, addedConnection, rem
 
         # We are modifying an existing connection. Simply replace it in place.
         forward.$set ?= {}
-        forward.$set["nodes.#{nodeId}.connections.#{existingConnectionIndex}"] = addedConnection
+        forward.$set["nodes.#{nodeIndex}.connections.#{existingConnectionIndex}"] = addedConnection
 
         backward.$set ?= {}
-        backward.$set["nodes.#{nodeId}.connections.#{existingConnectionIndex}"] = removedConnection
+        backward.$set["nodes.#{nodeIndex}.connections.#{existingConnectionIndex}"] = removedConnection
 
       else
         # We are removing a connection.
         forward.$pull ?= {}
-        forward.$pull["nodes.#{nodeId}.connections"] = removedConnection
+        forward.$pull["nodes.#{nodeIndex}.connections"] = removedConnection
 
         backward.$push ?= {}
-        backward.$push["nodes.#{nodeId}.connections"] =
+        backward.$push["nodes.#{nodeIndex}.connections"] =
           $each: [removedConnection]
           $position: existingConnectionIndex
 
@@ -50,10 +50,10 @@ LOI.Assets.Audio.updateConnections.method (audioId, nodeId, addedConnection, rem
 
       # We are adding a connection.
       forward.$push ?= {}
-      forward.$push["nodes.#{nodeId}.connections"] = addedConnection
+      forward.$push["nodes.#{nodeIndex}.connections"] = addedConnection
 
       backward.$pop ?= {}
-      backward.$pop["nodes.#{nodeId}.connections"] = 1
+      backward.$pop["nodes.#{nodeIndex}.connections"] = 1
 
     else
       throw new AE.ArgumentException "A connection needs to be added, removed, or both."
@@ -64,10 +64,10 @@ LOI.Assets.Audio.updateConnections.method (audioId, nodeId, addedConnection, rem
     throw new AE.ArgumentException "No connection to be added was specified." unless addedConnection
 
     forward.$set ?= {}
-    forward.$set["nodes.#{nodeId}.connections"] = [addedConnection]
+    forward.$set["nodes.#{nodeIndex}.connections"] = [addedConnection]
 
     backward.$unset ?= {}
-    backward.$unset["nodes.#{nodeId}.connections"] = true
+    backward.$unset["nodes.#{nodeIndex}.connections"] = true
 
   audio._applyOperation forward, backward
 

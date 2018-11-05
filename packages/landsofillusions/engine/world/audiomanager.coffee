@@ -36,6 +36,34 @@ class LOI.Engine.World.AudioManager
       else if @context.state is 'running' and not enabled
         @stop()
 
+    unless @world.options.isolatedAudio
+      # Subscribe to audio assets based on location.
+      @world.autorun =>
+        return unless locationId = LOI.adventure.currentLocationId()
+        LOI.Assets.Audio.forLocation.subscribe @world, locationId
+  
+      # Create engine audio assets.
+      @engineAudioAssets = {}
+  
+      @engineAudioDictionary = new AE.ReactiveDictionary =>
+        return {} unless locationId = LOI.adventure.currentLocationId()
+
+        audioAssets = {}
+        audioAssets[audioAsset._id] = audioAsset for audioAsset in LOI.Assets.Audio.forLocation.query(locationId).fetch()
+        audioAssets
+      ,
+        added: (audioId, audioData) =>
+          @engineAudioAssets[audioId] = new LOI.Assets.Engine.Audio
+            world: @world
+            audioData: new ReactiveField audioData
+  
+        updated: (audioId, audioData) =>
+          @engineAudioAssets[audioId].options.audioData audioData
+  
+        removed: (audioId, audio) =>
+          @engineAudioAssets[audioId].destroy()
+          delete @engineAudioAssets[audioId]
+
   waitForInteraction: ->
     @contextValid false
     

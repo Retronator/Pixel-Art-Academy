@@ -53,7 +53,7 @@ class LOI.Assets.Engine.Audio.LocationChange extends LOI.Assets.Engine.Audio.Nod
       fromLocationIds = [fromLocationIds] unless _.isArray fromLocationIds
       toLocationIds = [toLocationIds] unless _.isArray toLocationIds
 
-      newLocationId = @audio.options.world().options.adventure.currentLocationId()
+      newLocationId = @audio.world().options.adventure.currentLocationId()
       toLocation = newLocationId in toLocationIds
 
       fromLocation = @locationId in fromLocationIds

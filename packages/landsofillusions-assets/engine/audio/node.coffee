@@ -166,7 +166,7 @@ class LOI.Assets.Engine.Audio.Node
     _.pullAll @_connectionAutoruns, autoruns if stop
 
   audioManager: ->
-    @audio.options.world()?.audioManager()
+    @audio.world()?.audioManager()
 
   onConnect: (input, node, output) ->
     @_getReactiveValueField(input) node.getReactiveValue output

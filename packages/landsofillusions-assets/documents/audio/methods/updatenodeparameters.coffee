@@ -8,7 +8,7 @@ LOI.Assets.Audio.updateNodeParameters.method (audioId, nodeId, parameters) ->
   LOI.Assets.Audio._authorizeAudioAction()
 
   audio = LOI.Assets.Audio._requireAudio audioId
-  node = LOI.Assets.Audio._requireNode audio, nodeId
+  {node, nodeIndex} = LOI.Assets.Audio._requireNode audio, nodeId
 
   # Nothing to do if same parameters are sent in.
   return if EJSON.equals parameters, node.parameters
@@ -28,11 +28,11 @@ LOI.Assets.Audio.updateNodeParameters.method (audioId, nodeId, parameters) ->
     backward = $set: {}
 
     for parameterName, parameterValue of parameters
-      forward.$set["nodes.#{nodeId}.parameters.#{parameterName}"] = parameterValue
-      backward.$set["nodes.#{nodeId}.parameters.#{parameterName}"] = node.parameters[parameterName]
+      forward.$set["nodes.#{nodeIndex}.parameters.#{parameterName}"] = parameterValue
+      backward.$set["nodes.#{nodeIndex}.parameters.#{parameterName}"] = node.parameters[parameterName]
 
   else
-    forward = $set: "nodes.#{nodeId}.parameters": parameters
-    backward = $unset: "nodes.#{nodeId}.parameters": true
+    forward = $set: "nodes.#{nodeIndex}.parameters": parameters
+    backward = $unset: "nodes.#{nodeIndex}.parameters": true
 
   audio._applyOperation forward, backward

@@ -8,16 +8,18 @@ LOI.Assets.Audio.removeNode.method (audioId, nodeId) ->
   LOI.Assets.Audio._authorizeAudioAction()
 
   audio = LOI.Assets.Audio._requireAudio audioId
-  node = LOI.Assets.Audio._requireNode audio, nodeId
+  {node, nodeIndex} = LOI.Assets.Audio._requireNode audio, nodeId
 
   forward = {}
   backward = {}
 
-  forward.$unset ?= {}
-  forward.$unset["nodes.#{nodeId}"] = true
+  forward.$pull ?= {}
+  forward.$pull.nodes = id: nodeId
 
-  backward.$set ?= {}
-  backward.$set["nodes.#{nodeId}"] = node
+  backward.$push ?= {}
+  backward.$push.nodes =
+    $each: [node]
+    $position: nodeIndex
 
   # TODO: Remove all connections to this node.
 

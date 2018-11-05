@@ -77,7 +77,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     # Isolate reactivity of data.
     @data = new ComputedField =>
-      @audioCanvas?.audioEditor.audioData()?.nodes?[@id]
+      _.find @audioCanvas?.audioEditor.audioData()?.nodes, (node) => node.id is @id
     ,
       EJSON.equals
 

@@ -81,19 +81,19 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
 
       previousNodeComponents = _.values @_nodeComponentsById
 
-      for nodeId, node of nodes
-        nodeComponent = @_nodeComponentsById[nodeId]
+      for node in nodes
+        nodeComponent = @_nodeComponentsById[node.id]
 
         if nodeComponent
           _.pull previousNodeComponents, nodeComponent
 
         else
           nodeComponent = new LOI.Assets.AudioEditor.Node
-            id: nodeId
+            id: node.id
             nodeClass: LOI.Assets.Engine.Audio.Node.getClassForType node.type
             audioCanvas: @
 
-          @_nodeComponentsById[nodeId] = nodeComponent
+          @_nodeComponentsById[node.id] = nodeComponent
 
       # Destroy all components that aren't present any more.
       for unusedNodeComponent in previousNodeComponents

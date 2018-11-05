@@ -1,10 +1,10 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Assets.Audio.addNode.method (audioId, nodeId, node) ->
+LOI.Assets.Audio.addNode.method (audioId, node) ->
   check audioId, Match.DocumentId
-  check nodeId,  Match.DocumentId
   check node,
+    id: Match.DocumentId
     type: String
     position:
       x: Number
@@ -20,21 +20,19 @@ LOI.Assets.Audio.addNode.method (audioId, nodeId, node) ->
 
   if audio.nodes
     # Make sure the node doesn't already exist.
-    throw new AE.InvalidOperationException "Node with this ID already exists." if audio.nodes?[nodeId]
+    existingNode = _.find audio.nodes, (existingNode) -> existingNode.id is node.id
+    throw new AE.InvalidOperationException "Node with this ID already exists." if existingNode
 
-    forward.$set ?= {}
-    forward.$set["nodes.#{nodeId}"] = node
+    forward.$push ?= {}
+    forward.$push.nodes = node
 
-    backward.$unset ?= {}
-    backward.$unset["nodes.#{nodeId}"] = true
+    backward.$pop = {}
+    backward.$pop.nodes = 1
 
   else
     # We have to create the nodes in the first place.
-    nodes = {}
-    nodes[nodeId] = node
-    
     forward.$set ?= {}
-    forward.$set.nodes = nodes
+    forward.$set.nodes = [node]
 
     backward.$unset ?= {}
     backward.$unset.nodes = true

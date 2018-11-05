@@ -69,6 +69,7 @@ Package.onUse(function(api) {
   api.addFile('documents/mesh..');
 
   api.addFile('documents/audio..');
+  api.addServerFile('documents/audio/subscriptions');
   api.addFile('documents/audio/methods/addnode');
   api.addFile('documents/audio/methods/removenode');
   api.addFile('documents/audio/methods/updatenode');

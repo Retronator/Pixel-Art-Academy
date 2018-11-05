@@ -70,7 +70,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
       hue = parseInt hue
       shade = parseInt shade
 
-      colorHexString = LOI.Avatar.colorObject(hue: hue, shade: shade).getHexString()
+      colorHexString = LOI.Avatar.colorObject({hue, shade}).getHexString()
 
       # Link should be 2 shades lighter than the text.
       linkColor = LOI.Avatar.colorObject(hue: hue, shade: shade + 2)

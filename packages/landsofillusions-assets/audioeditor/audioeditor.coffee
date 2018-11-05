@@ -49,6 +49,7 @@ class LOI.Assets.AudioEditor extends AM.Component
     @world new LOI.Engine.World
       adventure: @
       updateMode: LOI.Engine.World.UpdateModes.Hover
+      isolatedAudio: true
     
     @audio new LOI.Assets.Engine.Audio
       world: @world
@@ -112,7 +113,6 @@ class LOI.Assets.AudioEditor extends AM.Component
     $('html').removeClass('asset-editor')
     
   addNode: (options) ->
-    nodes = @audioData().nodes or {}
     nodeType = options.nodeClass.type()
 
     # Calculate target element's position in audioCanvas.
@@ -124,21 +124,20 @@ class LOI.Assets.AudioEditor extends AM.Component
       x: elementOffset.left - audioCanvasOffset.left
       y: elementOffset.top - audioCanvasOffset.top
 
-    nodeId = Random.id()
-
     node =
+      id: Random.id()
       type: nodeType
       position: canvasCoordinate
       expanded: false
 
     # Add the node in the database.
-    LOI.Assets.Audio.addNode @audioId(), nodeId, node
+    LOI.Assets.Audio.addNode @audioId(), node
 
     audioCanvas.mouse().updateCoordinates options.event
 
     audioCanvas.startDrag
       nodePosition: canvasCoordinate
-      nodeId: nodeId
+      nodeId: node.id
       requireMove: true
 
   removeNode: (nodeId) ->

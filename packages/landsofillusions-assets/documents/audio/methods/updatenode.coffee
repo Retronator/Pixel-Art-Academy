@@ -13,7 +13,7 @@ LOI.Assets.Audio.updateNode.method (audioId, nodeId, properties) ->
   LOI.Assets.Audio._authorizeAudioAction()
 
   audio = LOI.Assets.Audio._requireAudio audioId
-  node = LOI.Assets.Audio._requireNode audio, nodeId
+  {node, nodeIndex} = LOI.Assets.Audio._requireNode audio, nodeId
 
   forward = $set: {}
   backward = $set: {}
@@ -22,8 +22,8 @@ LOI.Assets.Audio.updateNode.method (audioId, nodeId, properties) ->
 
   for property in ['position', 'expanded']
     if properties[property]?
-      forward.$set["nodes.#{nodeId}.#{property}"] = properties[property]
-      backward.$set["nodes.#{nodeId}.#{property}"] = node[property]
+      forward.$set["nodes.#{nodeIndex}.#{property}"] = properties[property]
+      backward.$set["nodes.#{nodeIndex}.#{property}"] = node[property]
       change = true
 
   throw new AE.ArgumentNullException "One of the properties needs to be updated." unless change
