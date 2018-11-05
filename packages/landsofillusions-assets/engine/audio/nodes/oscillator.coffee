@@ -20,6 +20,7 @@ class LOI.Assets.Engine.Audio.Oscillator extends LOI.Assets.Engine.Audio.Schedul
       options: _.values @Types
       default: @Types.Sine
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+      valueType: LOI.Assets.Engine.Audio.ValueTypes.String
     ,
       name: 'frequency'
       pattern: Match.OptionalOrNull Number

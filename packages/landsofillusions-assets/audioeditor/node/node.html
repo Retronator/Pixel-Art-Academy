@@ -7,7 +7,7 @@
       <div class="parameters">
         {{#each parameters}}
           <li class="parameter input" data-name="{{name}}">
-            <div class="connector"></div>
+            <div class="connector {{connectorTypeClass}}"></div>
             <div class="connection-target"></div>
             <div class="name">{{name}}</div>
             {{> LandsOfIllusions.Assets.AudioEditor.Node.Parameter args parameterOptions}}
@@ -23,7 +23,7 @@
     <ul class="inputs">
       {{#each inputs}}
         <li class="input" data-name="{{name}}" {{style inputStyle}}>
-          <div class="connector"></div>
+          <div class="connector {{connectorTypeClass}}"></div>
           <div class="connection-target"></div>
           <div class="name">{{name}}</div>
         </li>
@@ -32,7 +32,7 @@
     <ul class="outputs">
       {{#each outputs}}
         <li class="output" data-name="{{name}}" {{style outputStyle}}>
-          <div class="connector"></div>
+          <div class="connector {{connectorTypeClass}}"></div>
           <div class="connection-target"></div>
           <div class="name">{{name}}</div>
         </li>

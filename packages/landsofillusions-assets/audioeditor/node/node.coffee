@@ -260,6 +260,17 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     left: "#{left}rem"
 
+  connectorTypeClass: ->
+    connector = @currentData()
+
+    if connector.type is LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+      typeClass = connector.valueType
+
+    else
+      typeClass = connector.type
+
+    _.kebabCase typeClass
+
   events: ->
     super(arguments...).concat
       'mousedown .landsofillusions-assets-audioeditor-node': @onMouseDownNode

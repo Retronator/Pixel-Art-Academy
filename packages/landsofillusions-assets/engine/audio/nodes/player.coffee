@@ -12,21 +12,25 @@ class LOI.Assets.Engine.Audio.Player extends LOI.Assets.Engine.Audio.ScheduledNo
     parameters.unshift
       name: 'buffer'
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+      valueType: LOI.Assets.Engine.Audio.ValueTypes.Buffer
       
     parameters.push 
       name: 'loop'
       pattern: Boolean
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+      valueType: LOI.Assets.Engine.Audio.ValueTypes.Press
     ,
       name: 'loop start'
       pattern: Match.OptionalOrNull Number
       default: 0
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+      valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
     ,
       name: 'loop end'
       pattern: Match.OptionalOrNull Number
       default: 0
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+      valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
     ,
       name: 'playback rate'
       pattern: Match.OptionalOrNull Number

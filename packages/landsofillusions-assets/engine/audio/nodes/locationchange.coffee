@@ -8,8 +8,8 @@ class LOI.Assets.Engine.Audio.LocationChange extends LOI.Assets.Engine.Audio.Nod
 
   @outputs: -> [
     name: 'trigger'
-    pattern: Boolean
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Trigger
   ]
 
   @parameters: ->
@@ -28,12 +28,14 @@ class LOI.Assets.Engine.Audio.LocationChange extends LOI.Assets.Engine.Audio.Nod
       options: options
       showValuesInDropdown: true
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+      valueType: LOI.Assets.Engine.Audio.ValueTypes.String
     ,
       name: 'to'
       pattern: [String]
       options: options
       showValuesInDropdown: true
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+      valueType: LOI.Assets.Engine.Audio.ValueTypes.String
     ]
 
   constructor: ->
@@ -46,6 +48,10 @@ class LOI.Assets.Engine.Audio.LocationChange extends LOI.Assets.Engine.Audio.Nod
     @autorun (computation) =>
       return unless fromLocationIds = @readParameter 'from'
       return unless toLocationIds = @readParameter 'to'
+
+      # Create arrays if needed.
+      fromLocationIds = [fromLocationIds] unless _.isArray fromLocationIds
+      toLocationIds = [toLocationIds] unless _.isArray toLocationIds
 
       newLocationId = @audio.options.world().options.adventure.currentLocationId()
       toLocation = newLocationId in toLocationIds

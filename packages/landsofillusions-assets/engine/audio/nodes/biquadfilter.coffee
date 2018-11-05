@@ -32,6 +32,7 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
     options: _.values @Types
     default: @Types.LowPass
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.String
   ,
     name: 'frequency'
     pattern: Match.OptionalOrNull Number

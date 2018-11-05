@@ -8,8 +8,8 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
 
   @outputs: -> [
     name: 'value'
-    pattern: Boolean
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Press
   ]
 
   @parameters: ->
@@ -28,6 +28,7 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
       options: options
       showValuesInDropdown: true
       type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+      valueType: LOI.Assets.Engine.Audio.ValueTypes.String
     ]
 
   constructor: ->
@@ -35,6 +36,9 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
 
     @value = new ComputedField =>
       return unless locationIds = @readParameter 'id'
+
+      # Create an array if needed.
+      locationIds = [locationIds] unless _.isArray locationIds
 
       # Location value is true if current location is the same as one of the id parameter values.
       currentLocationId = @audio.options.world().options.adventure.currentLocationId()

@@ -9,6 +9,7 @@ class LOI.Assets.Engine.Audio.ADSR extends LOI.Assets.Engine.Audio.Node
   @inputs: -> [
     name: 'press'
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Press
   ]
 
   @outputs: -> [
@@ -28,24 +29,28 @@ class LOI.Assets.Engine.Audio.ADSR extends LOI.Assets.Engine.Audio.Node
     step: 0.1
     default: 0
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
   ,
     name: 'decay'
     pattern: Match.OptionalOrNull Number
     step: 0.1
     default: 0
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
   ,
     name: 'sustain'
     pattern: Match.OptionalOrNull Number
     step: 0.1
     default: 1
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
   ,
     name: 'release'
     pattern: Match.OptionalOrNull Number
     step: 0.1
     default: 0
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
   ]
 
   constructor: ->

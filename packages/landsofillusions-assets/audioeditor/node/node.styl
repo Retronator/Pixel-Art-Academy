@@ -46,7 +46,7 @@
         .connector
           left -12rem
 
-          &::before
+          &.parameter::before
             content '→'
 
     .custom-content
@@ -89,6 +89,24 @@
         &:hover
           background atariBlue(7)
 
+        &::before
+          content '*'
+
+        &.number::before
+          content '1'
+
+        &.string::before
+          content 'S'
+
+        &.buffer::before
+          content '♬'
+
+        &.trigger::before
+          content '◜'
+
+        &.press::before
+          content '◠'
+
   .inputs
   .outputs
     visibility hidden
@@ -106,7 +124,7 @@
         top -4rem
         left -5rem
 
-        &::before
+        &.channels::before
           content '↓'
 
       .name

@@ -8,7 +8,14 @@ class LOI.Assets.Engine.Audio
     Channels: 'Channels'
     Parameter: 'Parameter'
     ReactiveValue: 'ReactiveValue'
-  
+
+  @ValueTypes:
+    Buffer: 'Buffer'
+    Trigger: 'Trigger'
+    Press: 'Press'
+    Number: 'Number'
+    String: 'String'
+
   constructor: (@options) ->
     @data = @options.audioData
     

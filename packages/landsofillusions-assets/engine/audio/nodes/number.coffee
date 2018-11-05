@@ -12,6 +12,7 @@ class LOI.Assets.Engine.Audio.Number extends LOI.Assets.Engine.Audio.Node
   @outputs: -> [
     name: 'value'
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
   ]
 
   @parameters: -> [
@@ -19,6 +20,7 @@ class LOI.Assets.Engine.Audio.Number extends LOI.Assets.Engine.Audio.Node
     pattern: Match.OptionalOrNull NumberType
     default: 0
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
   ]
 
   constructor: ->

@@ -12,6 +12,7 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
   @inputs: -> [
     name: 'play'
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Press
   ]
 
   @outputs: -> [
@@ -25,12 +26,14 @@ class LOI.Assets.Engine.Audio.ScheduledNode extends LOI.Assets.Engine.Audio.Node
     options: _.values @PlayControl
     default: @PlayControl.StartStop
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.String
   ,
     name: 'parameters'
     pattern: String
     options: _.values @Parameters
     default: @Parameters.Update
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.String
   ]
     
   @fixedParameterNames: -> ['play control', 'parameters']

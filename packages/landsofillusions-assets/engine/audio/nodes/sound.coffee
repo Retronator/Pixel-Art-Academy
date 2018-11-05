@@ -9,12 +9,14 @@ class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
   @outputs: -> [
     name: 'buffer'
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Buffer
   ]
 
   @parameters: -> [
     name: 'url'
     pattern: String
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.String
   ]
 
   constructor: ->

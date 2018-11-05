@@ -30,6 +30,7 @@ class LOI.Assets.Engine.Audio.Delay extends LOI.Assets.Engine.Audio.Node
     max: 180
     min: 0
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
+    valueType: LOI.Assets.Engine.Audio.ValueTypes.Number
   ]
 
   constructor: ->
