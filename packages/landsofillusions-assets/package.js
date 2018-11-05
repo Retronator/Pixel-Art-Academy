@@ -135,6 +135,7 @@ Package.onUse(function(api) {
   api.addFile('engine/audio/nodes/location');
   api.addFile('engine/audio/nodes/number');
   api.addFile('engine/audio/nodes/sustainvalue');
+  api.addFile('engine/audio/nodes/adsr');
 
   // Sprite editor
 
