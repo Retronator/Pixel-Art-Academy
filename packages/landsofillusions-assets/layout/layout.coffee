@@ -11,9 +11,8 @@ class LOI.Assets.Layout extends BlazeComponent
     super arguments...
 
     @display = new AM.Display
-      safeAreaWidth: 350
-      safeAreaHeight: 350
       minScale: 2
+      maxScale: 2
 
   loading: ->
     Meteor.loggingIn()
