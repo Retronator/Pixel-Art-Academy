@@ -33,9 +33,10 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
     super arguments...
 
     @value = new ComputedField =>
+      return unless locationIds = @readParameter 'id'
+
       # Location value is true if current location is the same as one of the id parameter values.
       currentLocationId = @audio.options.world().options.adventure.currentLocationId()
-      locationIds = @readParameter 'id'
 
       currentLocationId in locationIds
 

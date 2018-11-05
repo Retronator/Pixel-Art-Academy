@@ -57,7 +57,6 @@ class LOI.Assets.Engine.Audio.BiquadFilter extends LOI.Assets.Engine.Audio.Node
   ,
     name: 'gain'
     pattern: Match.OptionalOrNull Number
-    step: 0.1
     default: 0
     min: -40
     max: 40
