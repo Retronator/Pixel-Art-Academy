@@ -133,6 +133,7 @@ Package.onUse(function(api) {
   api.addFile('engine/audio/nodes/biquadfilter');
 
   api.addFile('engine/audio/nodes/location');
+  api.addFile('engine/audio/nodes/locationchange');
   api.addFile('engine/audio/nodes/number');
   api.addFile('engine/audio/nodes/sustainvalue');
   api.addFile('engine/audio/nodes/adsr');

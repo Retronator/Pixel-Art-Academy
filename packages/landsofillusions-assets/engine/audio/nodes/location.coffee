@@ -8,6 +8,7 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
 
   @outputs: -> [
     name: 'value'
+    pattern: Boolean
     type: LOI.Assets.Engine.Audio.ConnectionTypes.ReactiveValue
   ]
 
@@ -39,11 +40,6 @@ class LOI.Assets.Engine.Audio.Location extends LOI.Assets.Engine.Audio.Node
       currentLocationId = @audio.options.world().options.adventure.currentLocationId()
 
       currentLocationId in locationIds
-
-  destroy: ->
-    super arguments...
-
-    @value.stop()
 
   getReactiveValue: (output) ->
     return super arguments... unless output is 'value'
