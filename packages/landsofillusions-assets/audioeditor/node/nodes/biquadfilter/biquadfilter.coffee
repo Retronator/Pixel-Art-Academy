@@ -44,7 +44,7 @@ class LOI.Assets.AudioEditor.Node.BiquadFilter extends AM.Component
           biquadFilterNode.getFrequencyResponse @constructor._frequencies, @constructor._magnitudeResponse, @constructor._phaseResponse
 
       # Draw phase response.
-      context.strokeStyle = "#1c5c48"
+      context.strokeStyle = "#00402c"
       context.beginPath()
 
       context.moveTo 0, 25.5
