@@ -17,6 +17,9 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
 
     @currentIndex = new ReactiveField null
 
+  showPalette: ->
+    @options.getPaletteId?
+
   events: ->
     super(arguments...).concat
       'click .clear-button': @onClickClearButton
