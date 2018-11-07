@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.Tools.PixelGrid extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Pixel grid"
     @shortcut = AC.Keys.singleQuote

@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.Tools.MoveCamera extends LOI.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Move camera"
     @shortcut = AC.Keys.c

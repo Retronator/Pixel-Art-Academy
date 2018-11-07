@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.Tools.Debug extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Debug"
     @shortcut = AC.Keys.graveAccent

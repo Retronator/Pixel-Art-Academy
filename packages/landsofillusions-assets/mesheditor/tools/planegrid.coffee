@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.Tools.PlaneGrid extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Plane grid"
     @shortcut = AC.Keys.semicolon

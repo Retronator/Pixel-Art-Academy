@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 RA = Retronator.Accounts
 LOI = LandsOfIllusions
 

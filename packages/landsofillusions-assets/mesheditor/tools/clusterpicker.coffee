@@ -3,19 +3,19 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Cluster picker"
     @shortcut = AC.Keys.i
     @holdShortcut = AC.Keys.alt
 
   onMouseDown: (event) ->
-    super
+    super arguments...
 
     @pickCluster()
 
   onMouseMove: (event) ->
-    super
+    super arguments...
 
     @pickCluster()
 

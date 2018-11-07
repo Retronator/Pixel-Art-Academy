@@ -60,7 +60,7 @@ class LOI.Assets.MeshEditor.CameraAngles extends AM.Component
     LOI.Assets.Mesh.updateCameraAngle @options.meshId(), index,
       picturePlaneDistance: 32
       pixelSize: 0.01
-      position: x: 0, y: 1, z: -2
+      position: x: 0, y: 1, z: 2
       target: x: 0, y: 1, z: 0
       up: x: 0, y: 1, z: 0
 

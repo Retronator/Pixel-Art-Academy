@@ -29,7 +29,7 @@ class LOI.Assets.Mesh extends AM.Document
   @className: 'Mesh'
   
   constructor: ->
-    super
+    super arguments...
 
     # Make rich camera angle objects.
     if @cameraAngles

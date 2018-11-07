@@ -145,7 +145,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
     [toolClass, extraToolClass].join ' '
     
   events: ->
-    super.concat
+    super(arguments...).concat
       'focus input': @onFocusInput
       'blur input': @onBlurInput
 

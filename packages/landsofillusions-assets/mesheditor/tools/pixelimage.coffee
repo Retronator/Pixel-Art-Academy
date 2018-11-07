@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.Tools.PixelImage extends LandsOfIllusions.Assets.Tools.Tool
   constructor: ->
-    super
+    super arguments...
 
     @name = "Pixel image"
 

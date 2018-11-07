@@ -1,8 +1,8 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Mesh.RampMaterial extends THREE.ShaderMaterial
-  constructor: (@options) ->
-    shades = (THREE.Color.fromObject shade for shade in @options.shades)
+  constructor: (options) ->
+    shades = (THREE.Color.fromObject shade for shade in options.shades)
 
     super
       lights: true
@@ -36,12 +36,12 @@ void main()	{
 #include <lights_pars_begin>
 #include <shadowmap_pars_fragment>
 
-uniform vec3 shades[#{@options.shades.length}];
+uniform vec3 shades[#{options.shades.length}];
 
 varying vec3 normalEye;
 
 void main()	{
-  vec3 sourceColor = shades[#{@options.shadeIndex}];
+  vec3 sourceColor = shades[#{options.shadeIndex}];
 
   // Accumulate directional lights.
   float totalLightIntensity = 0.0;
@@ -83,7 +83,7 @@ void main()	{
   float bestColorDistance = 1000000.0;
   float secondBestColorDistance = 1000000.0;
 
-  for (int shadeIndex = 0; shadeIndex < #{@options.shades.length}; shadeIndex++) {
+  for (int shadeIndex = 0; shadeIndex < #{options.shades.length}; shadeIndex++) {
     vec3 shade = shades[shadeIndex];
     // Note: We intentionally use squared distance.
     float distance = distance(shade, shadedColor);
@@ -103,3 +103,5 @@ void main()	{
   gl_FragColor = vec4(bestColor, 1);
 }
 """
+
+    @options = options

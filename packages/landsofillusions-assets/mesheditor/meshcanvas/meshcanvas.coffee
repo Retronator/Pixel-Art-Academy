@@ -7,7 +7,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends AM.Component
   @register 'LandsOfIllusions.Assets.MeshEditor.MeshCanvas'
 
   constructor: (@options) ->
-    super
+    super arguments...
 
     _.defaults @options,
       grid: true
@@ -24,7 +24,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends AM.Component
     @context = new ReactiveField null
 
   onCreated: ->
-    super
+    super arguments...
 
     # Initialize components.
     @sceneManager new @constructor.SceneManager @
@@ -54,7 +54,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends AM.Component
       @canvasPixelSize newSize
 
   onRendered: ->
-    super
+    super arguments...
 
     # DOM has been rendered, initialize.
     $meshCanvas = @$('.landsofillusions-assets-mesheditor-meshcanvas')
@@ -67,7 +67,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends AM.Component
     @renderer new @constructor.Renderer @
 
   onDestroyed: ->
-    super
+    super arguments...
 
     @renderer().destroy()
     @sceneManager().destroy()

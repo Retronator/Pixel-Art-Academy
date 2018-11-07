@@ -4,7 +4,7 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
   @debug = false
   
   constructor: (@options) ->
-    super
+    super arguments...
 
     @clusters = new ReactiveField null
     @edges = new ReactiveField null
@@ -68,4 +68,4 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
         edge.layers.set 2
         @add edge
 
-      @options.sceneManager().scene.updated()
+      @options.sceneManager()?.scene.updated()
