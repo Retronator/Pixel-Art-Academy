@@ -70,9 +70,6 @@ class LOI.Assets.AudioEditor extends AM.Component
       documentClass: LOI.Assets.Audio
       getAssetId: @audioId
       setAssetId: setAssetId
-      getPaletteId: @paletteId
-      setPaletteId: (paletteId) =>
-        LOI.Assets.Audio.update @audioId(), $set: palette: _id: paletteId
 
     @toolbox new LOI.Assets.Components.Toolbox
       tools: @tools

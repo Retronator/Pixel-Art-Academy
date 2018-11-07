@@ -5,9 +5,11 @@
         <label class="name">Name:
           {{> LandsOfIllusions.Assets.Components.AssetInfo.Name}}
         </label>
-        <label class="palette">Palette:
-          {{> LandsOfIllusions.Assets.Components.AssetInfo.Palette}}
-        </label>
+        {{#if options.getPaletteId}}
+          <label class="palette">Palette:
+            {{> LandsOfIllusions.Assets.Components.AssetInfo.Palette}}
+          </label>
+        {{/if}}
       {{/with}}
       <div class="actions">
         <button class="clear-button">Clear</button>
