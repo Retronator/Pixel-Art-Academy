@@ -87,3 +87,8 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       backward.$set.bounds = @bounds
 
     super forward, backward
+
+if Meteor.isServer
+  # Export sprites without authors.
+  LOI.GameContent.addToExport ->
+    LOI.Assets.Sprite.documents.fetch authors: $exists: false

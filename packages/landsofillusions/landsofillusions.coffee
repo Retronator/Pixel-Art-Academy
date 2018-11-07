@@ -42,3 +42,7 @@ class LandsOfIllusions
 
   @initializePackage: (packageObjects) ->
     @packages[packageObjects.id] = packageObjects
+
+  constructor: ->
+    Retronator.App.addAdminPage '/admin/landsofillusions', @constructor.Pages.Admin
+    Retronator.App.addAdminPage '/admin/landsofillusions/gamecontent', @constructor.Pages.Admin.GameContent

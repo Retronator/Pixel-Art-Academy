@@ -45,7 +45,6 @@ class LOI.Character extends AM.Document
         [character._id, displayName]
       avatar:
         fullName: Document.ReferenceField AB.Translation, ['translations'], false
-        shortName: Document.ReferenceField AB.Translation, ['translations'], false
   
   # Methods
 

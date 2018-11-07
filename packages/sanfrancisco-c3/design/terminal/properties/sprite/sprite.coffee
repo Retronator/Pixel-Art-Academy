@@ -17,16 +17,18 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
       spriteIdLocation = getSpriteIdLocation()
       spriteIdLocation()
 
-    @spriteList = new LOI.Assets.Components.AssetsList
-      documentClass: LOI.Assets.Sprite
-      getAssetId: @spriteId
-      setAssetId: (spriteId) =>
-        # Set the new sprite.
-        spriteIdLocation = getSpriteIdLocation()
-        spriteIdLocation spriteId
+    # Only administrators can change sprites.
+    if Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
+      @spriteList = new LOI.Assets.Components.AssetsList
+        documentClass: LOI.Assets.Sprite
+        getAssetId: @spriteId
+        setAssetId: (spriteId) =>
+          # Set the new sprite.
+          spriteIdLocation = getSpriteIdLocation()
+          spriteIdLocation spriteId
 
-        # Close the selection UI.
-        @showSpriteList false
+          # Close the selection UI.
+          @showSpriteList false
 
     @showSpriteList = new ReactiveField false
 

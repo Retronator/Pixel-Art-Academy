@@ -16,6 +16,7 @@ Package.onUse(function(api) {
   api.use('chfritz:easycron');
   api.use('promise');
   api.use('modules');
+  api.use('webapp');
 
   api.imply('retronator:artificialengines');
   api.imply('retronator:retronator-accounts');
@@ -38,6 +39,12 @@ Package.onUse(function(api) {
 
   // Initialize client after settings have been defined.
   api.addClientFile('initialize-client');
+
+  // Game content
+
+  api.addServerFile('gamecontent-server/gamecontent');
+  api.addServerData('gamecontent-server/gamecontent');
+  api.addServerFile('gamecontent-server/initialize');
 
   // Game state
 
@@ -375,10 +382,13 @@ Package.onUse(function(api) {
 
   // Pages
 
-  api.addFiles('pages/pages.coffee');
-  api.addFiles('pages/loading/loading.coffee');
-  api.addFiles('pages/loading/loading.html');
-  api.addFiles('pages/loading/loading.styl');
+  api.addFile('pages..');
+
+  api.addComponent('pages/loading..');
+
+  api.addUnstyledComponent('pages/admin..');
+  api.addUnstyledComponent('pages/admin/gamecontent..');
+  api.addServerFile('pages/admin/gamecontent/server');
 
   // Components
 

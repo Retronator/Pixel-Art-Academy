@@ -55,3 +55,8 @@ class LOI.Assets.Mesh extends AM.Document
   @duplicate: @method 'duplicate'
   
   @updateCameraAngle: @method 'updateCameraAngle'
+  
+if Meteor.isServer
+  # Export meshes without authors.
+  LOI.GameContent.addToExport ->
+    LOI.Assets.Mesh.documents.fetch authors: $exists: false

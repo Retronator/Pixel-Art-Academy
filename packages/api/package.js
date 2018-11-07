@@ -91,6 +91,10 @@ Package.onUse(function(api) {
     path = expandPath(path);
     this.addAssets(path + ".json", ['client', 'server']);
   };
+  api.constructor.prototype.addServerData = function(path) {
+    path = expandPath(path);
+    this.addAssets(path + ".json", ['server']);
+  };
   api.constructor.prototype.addFileWithData = function(path, architecture) {
     path = expandPath(path);
     this.addFiles(path + ".coffee", architecture);

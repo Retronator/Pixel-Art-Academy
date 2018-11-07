@@ -43,3 +43,8 @@ class LOI.Assets.Palette extends AM.Document
     colorData = ramp.shades[shadeIndex]
 
     new THREE.Color.fromObject colorData
+
+if Meteor.isServer
+  # Export all palette documents.
+  LOI.GameContent.addToExport ->
+    LOI.Assets.Palette.documents.fetch()
