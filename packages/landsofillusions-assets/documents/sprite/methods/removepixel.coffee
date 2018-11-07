@@ -15,7 +15,7 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
 
   throw new AE.ArgumentOutOfRangeException "There are no pixels on this layer." unless sprite.layers?[layerIndex].pixels
 
-  pixels = sprite.layers[layerIndex].pixels
+  pixels = sprite.layers?[layerIndex].pixels
   x = pixel.x
   y = pixel.y
   
@@ -34,7 +34,7 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
         $position: existingPixelIndex
         $each: [existingPixel]
 
-  if sprite.bounds.fixed
+  if sprite.bounds?.fixed
     # Make sure pixel is inside bounds.
     unless sprite.bounds.left <= pixel.x <= sprite.bounds.right and sprite.bounds.top <= pixel.y <= sprite.bounds.bottom
       throw new AE.ArgumentOutOfRangeException "Pixel must be added inside of fixed bounds."

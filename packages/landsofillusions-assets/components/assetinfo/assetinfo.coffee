@@ -17,6 +17,9 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
 
     @currentIndex = new ReactiveField null
 
+  showPalette: ->
+    @options.getPaletteId?
+
   events: ->
     super(arguments...).concat
       'click .clear-button': @onClickClearButton
@@ -61,10 +64,12 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
 
       @type = AM.DataInputComponent.Types.Select
 
-    onConstructed: ->
+    onCreated: ->
       super arguments...
 
       LOI.Assets.Palette.all.subscribe @
+
+      @assetInfo = @ancestorComponentOfType LOI.Assets.Components.AssetInfo
 
     options: ->
       options = for palette in LOI.Assets.Palette.documents.find().fetch()
@@ -79,20 +84,7 @@ class LOI.Assets.Components.AssetInfo extends AM.Component
       options
 
     load: ->
-      assetData = @data()
-      assetData.palette?._id
+      @assetInfo.options.getPaletteId()
 
     save: (value) ->
-      assetData = @data()
-
-      if value
-        update =
-          $set:
-            palette:
-              _id: value
-
-      else
-        update = $unset: palette: true
-
-      assetInfo = @ancestorComponentOfType LOI.Assets.Components.AssetInfo
-      LOI.Assets.Asset.update assetInfo.options.documentClass.className, assetData._id, update
+      @assetInfo.options.setPaletteId value or null

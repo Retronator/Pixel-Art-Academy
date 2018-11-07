@@ -96,7 +96,7 @@ AC.Keys =
   f12: 123
   numLock: 144
   scrollLock: 145
-  semiColon: 186
+  semicolon: 186
   equalSign: 187
   comma: 188
   dash: 189

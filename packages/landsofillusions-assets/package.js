@@ -12,6 +12,7 @@ Package.describe({
 
 Npm.depends({
   'pngjs': '2.3.0',
+  'delaunator': '3.0.2',
   'bresenham-zingl': '0.1.1'
 });
 
@@ -67,6 +68,9 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/replacepixels');
 
   api.addFile('documents/mesh..');
+  api.addFile('documents/mesh/cameraangle');
+  api.addServerFile('documents/mesh/subscriptions');
+  api.addFile('documents/mesh/methods..');
 
   api.addFile('documents/audio..');
   api.addServerFile('documents/audio/subscriptions');
@@ -100,6 +104,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/landmarks..');
   api.addUnstyledComponent('components/toolbox..');
   api.addUnstyledComponent('components/spriteimage..');
+  api.addUnstyledComponent('components/camera..');
 
   api.addUnstyledComponent('components/references..');
   api.addUnstyledComponent('components/references/reference..');
@@ -117,6 +122,16 @@ Package.onUse(function(api) {
 
   api.addFile('engine..');
   api.addFile('engine/sprite');
+
+  api.addFile('engine/mesh..');
+  api.addFile('engine/mesh/cluster');
+  api.addFile('engine/mesh/edge');
+  api.addFile('engine/mesh/detectclusters');
+  api.addFile('engine/mesh/computeedges');
+  api.addFile('engine/mesh/computeclusterplanes');
+  api.addFile('engine/mesh/projectclusterpoints');
+  api.addFile('engine/mesh/computeclustermeshes');
+  api.addFile('engine/mesh/rampmaterial');
 
   api.addFile('engine/audio..');
   api.addFile('engine/audio/node');
@@ -141,8 +156,8 @@ Package.onUse(function(api) {
 
   // Sprite editor
 
-  api.addComponent('spriteeditor/spriteeditor');
-  api.addFile('spriteeditor/tools/tools');
+  api.addComponent('spriteeditor..');
+  api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/pencil');
   api.addFile('spriteeditor/tools/eraser');
   api.addFile('spriteeditor/tools/colorpicker');
@@ -151,6 +166,26 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/symmetry');
   api.addFile('spriteeditor/tools/undo');
   api.addFile('spriteeditor/tools/redo');
+
+  // Mesh editor
+
+  api.addComponent('mesheditor..');
+  api.addFile('mesheditor/edges');
+  api.addFile('mesheditor/horizon');
+  api.addUnstyledComponent('mesheditor/cameraangles..');
+  api.addUnstyledComponent('mesheditor/meshcanvas..');
+  api.addFile('mesheditor/meshcanvas/renderer');
+  api.addFile('mesheditor/meshcanvas/scenemanager');
+  api.addFile('mesheditor/meshcanvas/grid');
+  api.addFile('mesheditor/meshcanvas/cameramanager');
+  api.addFile('mesheditor/tools..');
+  api.addFile('mesheditor/tools/pixelgrid');
+  api.addFile('mesheditor/tools/planegrid');
+  api.addFile('mesheditor/tools/sourceimage');
+  api.addFile('mesheditor/tools/pixelimage');
+  api.addFile('mesheditor/tools/movecamera');
+  api.addFile('mesheditor/tools/clusterpicker');
+  api.addFile('mesheditor/tools/debug');
 
   // Audio editor
 

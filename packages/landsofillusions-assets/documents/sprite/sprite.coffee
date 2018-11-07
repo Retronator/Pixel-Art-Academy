@@ -31,6 +31,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   # Subscriptions
   
   @allGeneric: @subscription 'allGeneric'
+  @forMeshId: @subscription 'forMeshId'
   @forCharacterPartTemplatesOfTypes: @subscription 'forCharacterPartTemplatesOfTypes'
 
   # Methods

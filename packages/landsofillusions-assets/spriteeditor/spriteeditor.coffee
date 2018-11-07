@@ -45,6 +45,8 @@ class LOI.Assets.SpriteEditor extends AM.Component
 
     @activeTool = new ReactiveField null
 
+    @canvasFocused = new ReactiveField true
+
   onCreated: ->
     super arguments...
 
@@ -76,6 +78,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
 
     @navigator new LOI.Assets.Components.Navigator
       camera: @pixelCanvas().camera
+      enabled: @canvasFocused
 
     @palette new LOI.Assets.Components.Palette
       paletteId: @paletteId
@@ -87,7 +90,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
       setAssetId: setAssetId
       getPaletteId: @paletteId
       setPaletteId: (paletteId) =>
-        LOI.Assets.Sprite.update @spriteId(), $set: palette: _id: paletteId
+        LOI.Assets.Asset.update LOI.Assets.Sprite.className, @spriteId(), $set: palette: _id: paletteId
 
     @materials new LOI.Assets.Components.Materials
       assetId: @spriteId
@@ -103,7 +106,8 @@ class LOI.Assets.SpriteEditor extends AM.Component
       tools: @tools
       activeTool: @activeTool
       actions: @actions
-      
+      enabled: @canvasFocused
+
     @shadingSphere new LOI.Assets.Components.ShadingSphere
       palette: @palette
       materials: @materials
@@ -131,3 +135,22 @@ class LOI.Assets.SpriteEditor extends AM.Component
     super arguments...
 
     $('html').removeClass('asset-editor')
+
+  toolClass: ->
+    return unless tool = @activeTool()
+
+    toolClass = _.kebabCase tool.name
+    extraToolClass = tool.toolClass?()
+
+    [toolClass, extraToolClass].join ' '
+    
+  events: ->
+    super(arguments...).concat
+      'focus input': @onFocusInput
+      'blur input': @onBlurInput
+
+  onFocusInput: (event) ->
+    @canvasFocused false
+
+  onBlurInput: (event) ->
+    @canvasFocused true

@@ -38,7 +38,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       enableInput: @options.cameraInput
 
     if @options.grid
-      @grid new @constructor.Grid @, @options.gridInvertColor
+      @grid new @constructor.Grid @, @options.gridInvertColor, @options.gridEnabled
 
     if @options.mouse
       @mouse new @constructor.Mouse @

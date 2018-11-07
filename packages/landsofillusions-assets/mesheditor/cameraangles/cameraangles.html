@@ -1,0 +1,29 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.CameraAngles">
+  <div class="landsofillusions-assets-mesheditor-cameraangles">
+    <ul class="camera-angles">
+      {{#each cameraAngles}}
+        <li class="camera-angle {{activeClass}}">{{nameOrIndex}}</li>
+      {{/each}}
+    </ul>
+    <div class="actions">
+      <button class="add-camera-angle-button">Add camera angle</button>
+    </div>
+    <div class="properties">
+      {{#with cameraAngleData}}
+        <label class="name">Name:
+          {{> LandsOfIllusions.Assets.MeshEditor.CameraAngles.Name}}
+        </label>
+        {{> Render camera}}
+        <label class="picture-plane-distance">Picture plane distance:
+          {{> LandsOfIllusions.Assets.MeshEditor.CameraAngles.PicturePlaneDistance}}
+        </label>
+        <label class="pixel-size">Pixel size:
+          {{> LandsOfIllusions.Assets.MeshEditor.CameraAngles.PixelSize}}
+        </label>
+        <label class="sprite">Sprite:
+          {{> Render assetsList}}
+        </label>
+      {{/with}}
+    </div>
+  </div>
+</template>
