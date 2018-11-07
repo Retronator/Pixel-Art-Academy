@@ -35,6 +35,4 @@ LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.publish (types) ->
   templates = LOI.Character.Part.Template._forTypes(types, {}, @userId).fetch()
   spriteIds = _.flatten (template.spriteIds for template in templates)
 
-  LOI.Assets.Sprite.documents.find
-    _id:
-      $in: spriteIds
+  LOI.Assets.Sprite.documents.find _id: $in: spriteIds
