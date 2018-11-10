@@ -123,6 +123,8 @@ class LOI.Assets.SpriteEditor extends AM.Component
       @constructor.Tools.ColorPicker
       @constructor.Tools.PaintNormals
       @constructor.Tools.Symmetry
+      @constructor.Tools.Undo
+      @constructor.Tools.Redo
     ]
 
     tools = for toolClass in toolClasses

@@ -51,6 +51,8 @@ class LOI.Assets.Engine.Sprite
     inverseLightDirection = renderOptions.lightDirection?()?.clone().multiplyScalar(-1)
     materialsData = @options.materialsData?()
     visualizeNormals = @options.visualizeNormals?()
+    flippedHorizontal = @options.flippedHorizontal
+    flippedHorizontal = flippedHorizontal() if _.isFunction flippedHorizontal
 
     for layer in spriteData.layers
       continue unless layer.pixels
@@ -158,7 +160,7 @@ class LOI.Assets.Engine.Sprite
           if inverseLightDirection
             if pixel.normal
               normal = new THREE.Vector3 pixel.normal.x, pixel.normal.y, pixel.normal.z
-              normal.x *= -1 if @options.flippedHorizontal
+              normal.x *= -1 if flippedHorizontal
 
             else
               normal = new THREE.Vector3 0, 0, 1

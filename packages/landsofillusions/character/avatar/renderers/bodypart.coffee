@@ -18,6 +18,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       @_landmarks[@options.origin.landmark] =
         x: @options.origin.x or 0
         y: @options.origin.y or 0
+        z: 0
         
       @_placeRenderers()
 
@@ -88,6 +89,8 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     else
       renderer._translation.x -= rendererLandmarks[rendererLandmarkName].x - offsetX
 
+    renderer._depth = @_landmarks[landmarkName].z or 0
+
     @_addLandmarks renderer, options unless options.skipAddingLandmarks
 
   _bodyPartType: (partName) ->
@@ -97,7 +100,10 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     # Depend on landmarks to update when renderer translations change.
     @landmarks()
 
-    for renderer in @renderers
+    # Sort renderers by depth.
+    sortedRenderers = _.sortBy @renderers, (renderer) => renderer._depth
+
+    for renderer in sortedRenderers
       @drawRendererToContext renderer, context, options
 
   drawRendererToContext: (renderer, context, options = {}) ->

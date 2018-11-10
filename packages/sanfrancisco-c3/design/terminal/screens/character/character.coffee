@@ -52,6 +52,10 @@ class C3.Design.Terminal.Character extends AM.Component
     # Instruct the back button to cancel closing (so it doesn't disappear).
     cancel: true
 
+  avatarPreviewOptions: ->
+    rotatable: true
+    viewingAngle: @terminal.viewingAngle
+
   events: ->
     super(arguments...).concat
       'click .done-button': @onClickDoneButton

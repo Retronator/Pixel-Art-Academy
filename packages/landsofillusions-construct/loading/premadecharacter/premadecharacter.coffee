@@ -63,6 +63,10 @@ if Meteor.isServer
     # Associate the template back to the (new) admin.
     unless admin = RA.User.documents.findOne username: 'admin'
       console.warn "Admin user hasn't been created yet. Restart server to update template authors."
+
+      # Delete ID to skip importing for now.
+      delete character._id
+
       return
 
     character.user = _id: admin._id

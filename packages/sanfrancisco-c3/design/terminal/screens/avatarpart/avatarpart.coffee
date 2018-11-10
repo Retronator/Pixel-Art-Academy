@@ -142,6 +142,10 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     property = @currentData()
     _.kebabCase property.options.name
 
+  avatarPreviewOptions: ->
+    rotatable: true
+    viewingAngle: @terminal.viewingAngle
+
   events: ->
     super(arguments...).concat
       'click .done-button': @onClickDoneButton

@@ -64,5 +64,22 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
 
-  getLandmarkForName: (name) ->
-    _.find @landmarks, (landmark) -> landmark.name is name
+  getLandmarkForName: (name, flipped) ->
+    if flipped
+      if name.indexOf('Left') >= 0
+        name = name.replace 'Left', 'Right'
+
+      else if name.indexOf('Right') >= 0
+        name = name.replace 'Right', 'Left'
+
+    landmark = _.find @landmarks, (landmark) -> landmark.name is name
+
+    if landmark and flipped
+      landmark =
+        name: name
+        x: -landmark.x
+        y: landmark.y
+        z: landmark.z
+
+    else
+      landmark

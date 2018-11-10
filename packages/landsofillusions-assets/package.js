@@ -121,7 +121,8 @@ Package.onUse(function(api) {
   // Engine
 
   api.addFile('engine..');
-  api.addFile('engine/sprite');
+
+  api.addFile('engine/sprite..');
 
   api.addFile('engine/mesh..');
   api.addFile('engine/mesh/cluster');

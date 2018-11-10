@@ -1,6 +1,25 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderers.Renderer
+  @sideAngles:
+    front: 0
+    frontLeft: Math.PI / 8
+    left: Math.PI / 4
+    frontRight: -Math.PI / 8
+    right: -Math.PI / 4
+
+  @mirrorSides:
+    front: 'front'
+    frontLeft: 'frontRight'
+    left: 'right'
+    backLeft: 'backRight'
+    back: 'back'
+    backRight: 'backLeft'
+    right: 'left'
+    frontRight: 'frontLeft'
+
+  @liveEditing = true
+
   constructor: (@options, initialize) ->
     super arguments...
 
@@ -8,18 +27,65 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
     return unless initialize
 
     # Shape renderer prepares all sprite directions and draws the one needed by the engine.
-    @frontSpriteData = new ComputedField =>
-      return unless spriteId = @options.frontSpriteId()
+    @spriteData = {}
+    @sprite = {}
 
-      LOI.Assets.Sprite.getFromCache spriteId
+    for side of @constructor.sideAngles
+      do (side) =>
+        # Sprites in flipped renderers need to come from the other side.
+        sourceSide = if @options.flippedHorizontal then @constructor.mirrorSides[side] else side
 
-    @frontSprite = new LOI.Assets.Engine.Sprite
-      spriteData: @frontSpriteData
-      materialsData: @options.materialsData
-      flippedHorizontal: @options.flippedHorizontal
+        @spriteData[side] = new ComputedField =>
+          spriteId = @options["#{sourceSide}SpriteId"]()
+
+          # If we didn't find a sprite for this side, we assume we should mirror the other side.
+          unless spriteId
+            mirrorSide = @constructor.mirrorSides[sourceSide]
+            spriteId = @options["#{mirrorSide}SpriteId"]()
+
+          return unless spriteId
+
+          if @constructor.liveEditing
+            LOI.Assets.Asset.forId.subscribe 'Sprite', spriteId
+            LOI.Assets.Sprite.documents.findOne spriteId
+
+          else
+            LOI.Assets.Sprite.getFromCache spriteId
+
+        @sprite[side] = new LOI.Assets.Engine.Sprite
+          side: sourceSide
+          spriteData: @spriteData[side]
+          materialsData: @options.materialsData
+          flippedHorizontal: new ComputedField =>
+            if @options["#{sourceSide}SpriteId"]()
+              @options.flippedHorizontal
+
+            else
+              not @options.flippedHorizontal
+
+    @viewingAngle = new ReactiveField (=> 0), (a, b) => a is b
+
+    @activeSide = new ComputedField =>
+      bestSide = null
+      bestSideDistance = Number.POSITIVE_INFINITY
+
+      viewingAngle = @viewingAngle()()
+
+      for side, angle of @constructor.sideAngles
+        distance = _.angleDistance viewingAngle, angle
+
+        if distance < bestSideDistance
+          bestSideDistance = distance
+          bestSide = side
+
+      bestSide
 
     @activeSprite = new ComputedField =>
-      @frontSprite
+      @sprite[@activeSide()]
+
+    @activeSpriteFlipped = new ComputedField =>
+      sprite = @activeSprite()
+      not @options["#{sprite.options.side}SpriteId"]()
 
     @translation = new ComputedField =>
       sprite = @activeSprite()
@@ -29,7 +95,7 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
       target = x: 0, y: 0
 
       if origin = @options.origin
-        source = (spriteData?.getLandmarkForName origin.landmark) or source
+        source = (spriteData?.getLandmarkForName origin.landmark, @activeSpriteFlipped()) or source
 
         target.x = origin.x or 0
         target.y = origin.y or 0
@@ -55,10 +121,14 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
     return unless spriteData.landmarks
 
     translation = @translation()
+    activeSpriteFlipped = @activeSpriteFlipped()
 
     landmarks = {}
 
     for landmark in spriteData.landmarks
+      # Get potentially flipped landmark data.
+      landmark = spriteData.getLandmarkForName landmark.name, activeSpriteFlipped
+      
       landmarks[landmark.name] = _.extend {}, landmark,
         x: landmark.x + translation.x
         y: landmark.y + translation.y
@@ -66,12 +136,19 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
     landmarks
 
   drawToContext: (context, options = {}) ->
+    # Update viewing angle.
+    @viewingAngle options.viewingAngle if options.viewingAngle
+
     sprite = @activeSprite()
 
     context.save()
 
     translation = @translation()
     context.translate translation.x, translation.y
+
+    if @activeSpriteFlipped()
+      context.translate 1, 0
+      context.scale -1, 1
 
     sprite.drawToContext context, options
     context.restore()

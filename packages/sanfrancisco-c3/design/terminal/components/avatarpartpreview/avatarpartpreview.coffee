@@ -5,13 +5,20 @@ C3 = SanFrancisco.C3
 class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
   @register 'SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview'
 
+  constructor: (@options = {}) ->
+    super arguments...
+
   class @Default extends AM.Component
     @register 'SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview.Default'
+
+    constructor: (@options = {}) ->
+      super arguments...
 
     onRendered: ->
       super arguments...
 
       @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
+      @viewingAngle = @options.viewingAngle or new ReactiveField 0
 
       @display = @callAncestorWith 'display'
 
@@ -66,6 +73,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         renderer.drawToContext @context,
           rootPart: renderer.options.part
           lightDirection: @lightDirection
+          viewingAngle: @viewingAngle
 
         @context.restore()
 
@@ -74,10 +82,14 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
       $(window).off 'scroll', @updateInViewport
 
+    rotatableClass: ->
+      'rotatable' if @options.rotatable
+
     events: ->
       super(arguments...).concat
         'mousemove canvas': @onMouseMoveCanvas
         'mouseleave canvas': @onMouseLeaveCanvas
+        'mousedown canvas': @onMouseDownCanvas
 
     onMouseMoveCanvas: (event) ->
       canvasOffset = @$canvas.offset()
@@ -87,5 +99,22 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
       @lightDirection new THREE.Vector3(-percentageX, percentageY, -1).normalize()
 
+      if @_drag
+        offset = event.pageX - @_dragStart
+        @viewingAngle @_viewingAngleStart - offset * 0.02
+
     onMouseLeaveCanvas: (event) ->
       @lightDirection new THREE.Vector3(0, -1, -1).normalize()
+
+    onMouseDownCanvas: (event) ->
+      event.preventDefault()
+
+      return unless @options.rotatable
+
+      @_dragStart = event.pageX
+      @_viewingAngleStart = @viewingAngle()
+      @_drag = true
+      
+      $(document).on 'mouseup.sanfrancisco-c3-design-terminal-components-avatarpartpreview-default', =>
+        $(document).off '.sanfrancisco-c3-design-terminal-components-avatarpartpreview-default'
+        @_drag = false

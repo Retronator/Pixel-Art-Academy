@@ -36,4 +36,8 @@ class LOI.GameContent
           delete exportedDocumentData._importDirective
           transform exportedDocumentData
 
-        documentClass.documents.upsert exportedDocumentData._id, exportedDocumentData
+        # Transform can skip importing a document by deleting the _id field.
+        continue unless exportedDocumentData._id
+        continue if documentClass.documents.findOne exportedDocumentData._id
+
+        documentClass.documents.insert exportedDocumentData
