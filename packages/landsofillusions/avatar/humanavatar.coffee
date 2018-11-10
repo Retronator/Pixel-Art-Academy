@@ -22,6 +22,16 @@ class LOI.HumanAvatar extends LOI.Avatar
     ,
       true
 
+    # We need another renderer for drawing the texture.
+    @textureRenderer = new ComputedField =>
+      new LOI.Character.Avatar.Renderers.HumanAvatar 
+        humanAvatar: @
+        renderTexture: true
+      , 
+        true
+    ,
+      true
+
   destroy: ->
     super arguments...
 

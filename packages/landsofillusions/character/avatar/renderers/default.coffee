@@ -12,6 +12,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
       flippedHorizontal: @options.flippedHorizontal
       landmarksSource: @options.landmarksSource
       materialsData: @options.materialsData
+      renderTexture: @options.renderTexture
 
     @renderers = new ComputedField =>
       renderers = []
@@ -19,11 +20,13 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
       for propertyName, property of @options.part.properties
         if property instanceof LOI.Character.Part.Property.OneOf
           renderer = property.part.createRenderer propertyRendererOptions
+          renderer.options.propertyName = propertyName
           renderers.push renderer if renderer
 
         else if property instanceof LOI.Character.Part.Property.Array
           for part in property.parts()
             renderer = part.createRenderer propertyRendererOptions
+            renderer.options.propertyName = propertyName
             renderers.push renderer if renderer
 
       renderers
@@ -61,7 +64,16 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
         # Find if any of the renderer's landmarks matches any of ours.
         rendererLandmarks = renderer.landmarks()
         for rendererLandmarkName, rendererLandmark of rendererLandmarks
-          landmark = landmarks[rendererLandmarkName]
+          # See if we're rendering to a texture and we have a custom origin defined for this renderer.
+          if @options.renderTexture and @options.textureOrigins?[renderer.options.propertyName]
+            # Wait till we find the landmark we need for this custom origin.
+            if @options.textureOrigins[renderer.options.propertyName].landmark is rendererLandmarkName
+              # Use the custom origin as the target landmark.
+              landmark = @options.textureOrigins?[renderer.options.propertyName]
+
+          else
+            landmark = landmarks[rendererLandmarkName]
+            
           if landmark or not initialLandmark
             if landmark
               renderer._translation =

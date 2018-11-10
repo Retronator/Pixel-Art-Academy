@@ -28,21 +28,21 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
 
       # Automatically update the texture.
       textureCanvas = $('<canvas>')[0]
-      textureCanvas.width = 64
-      textureCanvas.height = 64
+      textureCanvas.width = 128
+      textureCanvas.height = 128
       textureContext = textureCanvas.getContext '2d'
 
       normalCanvas = $('<canvas>')[0]
-      normalCanvas.width = 64
-      normalCanvas.height = 64
+      normalCanvas.width = 128
+      normalCanvas.height = 128
       normalContext = normalCanvas.getContext '2d'
 
       @_normalCanvas = normalCanvas
 
       @_textureUpdateAutorun = Tracker.autorun (computation) =>
-        return unless renderer = @renderer()
+        return unless renderer = @textureRenderer()
 
-        # Render palette data texture.
+        # Render palette data and normal textures.
         renderPasses = [
           canvas: textureCanvas
           context: textureContext
@@ -59,12 +59,10 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
           renderPass.context.setTransform 1, 0, 0, 1, 0, 0
           renderPass.context.clearRect 0, 0, renderPass.canvas.width, renderPass.canvas.height
 
-          renderPass.context.setTransform 1, 0, 0, 1, Math.floor(renderPass.canvas.width / 2), Math.floor(renderPass.canvas.height / 2)
           renderPass.context.save()
 
           renderer.drawToContext renderPass.context, _.extend
             rootPart: renderer.options.part
-            useTextureOffsets: true
           ,
             renderPass.options
 
@@ -86,6 +84,6 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
         @_renderObject.options.material.uniforms.map.value = renderPasses[0].texture
         @_renderObject.options.material.uniforms.normalMap.value = renderPasses[1].texture
 
-        @textureDataUrl renderPasses[0].scaledCanvas.toDataURL()
+        @textureDataUrl renderPasses[1].scaledCanvas.toDataURL()
 
     @_renderObject

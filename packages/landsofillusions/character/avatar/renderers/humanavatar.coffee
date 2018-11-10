@@ -7,10 +7,12 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
-    bodyRenderer = @options.humanAvatar.body.createRenderer()
+    bodyRenderer = @options.humanAvatar.body.createRenderer
+      renderTexture: @options.renderTexture
 
     outfitRenderer = @options.humanAvatar.outfit.createRenderer
       landmarksSource: bodyRenderer
+      renderTexture: @options.renderTexture
 
     @renderers = [bodyRenderer, outfitRenderer]
 

@@ -28,6 +28,25 @@ LOI.Character.Part.registerClasses
       renderer: new LOI.Character.Avatar.Renderers.Body
         origin:
           landmark: 'navel'
+        textureOrigins:
+          navel:
+            x: 20
+            y: 40
+          suprasternalNotch:
+            x: 20
+            y: 20
+          shoulderRight:
+            x: 40
+            y: 10
+          shoulderLeft:
+            x: 60
+            y: 10
+          acetabulumRight:
+            x: 80
+            y: 10
+          acetabulumLeft:
+            x: 100
+            y: 10
 
 LOI.Character.Part.registerClasses
   Avatar:
@@ -190,9 +209,6 @@ LOI.Character.Part.registerClasses
       Torso: new LOI.Character.Part
         type: 'Avatar.Body.Torso'
         name: 'torso'
-        renderer: new LOI.Character.Avatar.Renderers.Default
-          origin:
-            landmark: 'navel'
         properties:
           groin: new LOI.Character.Part.Property.OneOf
             name: 'groin'
@@ -203,6 +219,9 @@ LOI.Character.Part.registerClasses
           chest: new LOI.Character.Part.Property.OneOf
             name: 'chest'
             type: 'Avatar.Body.Chest'
+        renderer: new LOI.Character.Avatar.Renderers.Default
+          origin:
+            landmark: 'navel'
 
       Chest: new LOI.Character.Part
         type: 'Avatar.Body.Chest'
@@ -411,6 +430,19 @@ LOI.Character.Part.registerClasses
         renderer: new LOI.Character.Avatar.Renderers.Default
           origin:
             landmark: 'elbow'
+          textureOrigins:
+            upperArm:
+              landmark: 'shoulder'
+              x: 0
+              y: 0
+            lowerArm:
+              landmark: 'elbow'
+              x: 0
+              y: 20
+            hand:
+              landmark: 'wrist'
+              x: 0
+              y: 40
     
       UpperArm: new LOI.Character.Part
         type: 'Avatar.Body.UpperArm'
@@ -492,7 +524,20 @@ LOI.Character.Part.registerClasses
         renderer: new LOI.Character.Avatar.Renderers.Default
           origin:
             landmark: 'knee'
-    
+          textureOrigins:
+            thigh:
+              landmark: 'acetabulum'
+              x: 0
+              y: 0
+            lowerLeg:
+              landmark: 'knee'
+              x: 0
+              y: 20
+            foot:
+              landmark: 'ankle'
+              x: 0
+              y: 40
+
       Thigh: new LOI.Character.Part
         type: 'Avatar.Body.Thigh'
         name: 'thigh'
@@ -506,7 +551,7 @@ LOI.Character.Part.registerClasses
         name: 'thigh shape'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
-            landmark: 'acetabulumLeft'
+            landmark: 'acetabulum'
             x: 0
             y: -7
         landmarks:

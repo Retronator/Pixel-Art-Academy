@@ -38,6 +38,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       flippedHorizontal: @options.flippedHorizontal
       landmarksSource: @options.landmarksSource
       materialsData: @options.materialsData
+      renderTexture: @options.renderTexture
     ,
       options
 
@@ -74,14 +75,23 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
 
   _placeRenderer: (renderer, rendererLandmarkName, landmarkName, options = {}) ->
     rendererLandmarks = renderer.landmarks()
-    return unless @_landmarks[landmarkName] and rendererLandmarks?[rendererLandmarkName]
+
+    if @options.renderTexture and @options.textureOrigins?[landmarkName]
+      # Use the provided origin as the landmark target.
+      landmark = @options.textureOrigins[landmarkName]
+
+    else
+      # Map to the already placed landmark.
+      landmark = @_landmarks[landmarkName]
+
+    return unless landmark and rendererLandmarks?[rendererLandmarkName]
 
     offsetX = options.offsetX or 0
     offsetY = options.offsetY or 0
 
     renderer._translation =
-      x: @_landmarks[landmarkName].x
-      y: @_landmarks[landmarkName].y - rendererLandmarks[rendererLandmarkName].y + offsetY
+      x: landmark.x
+      y: landmark.y - rendererLandmarks[rendererLandmarkName].y + offsetY
 
     if renderer._flipHorizontal
       renderer._translation.x += rendererLandmarks[rendererLandmarkName].x + 1 - offsetX
@@ -89,7 +99,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     else
       renderer._translation.x -= rendererLandmarks[rendererLandmarkName].x - offsetX
 
-    renderer._depth = @_landmarks[landmarkName].z or 0
+    renderer._depth = landmark.z or 0
 
     @_addLandmarks renderer, options unless options.skipAddingLandmarks
 
