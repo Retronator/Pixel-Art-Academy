@@ -3,10 +3,10 @@ LOI = LandsOfIllusions
 class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderers.Renderer
   @sideAngles:
     front: 0
-    frontLeft: Math.PI / 8
-    left: Math.PI / 4
-    frontRight: -Math.PI / 8
-    right: -Math.PI / 4
+    frontLeft: Math.PI / 4
+    left: Math.PI / 2
+    frontRight: -Math.PI / 4
+    right: -Math.PI / 2
 
   @mirrorSides:
     front: 'front'
@@ -63,7 +63,11 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
             else
               not @options.flippedHorizontal
 
-    @viewingAngle = new ReactiveField (=> 0), (a, b) => a is b
+    # By default we read the viewing angle from options, but we also support sending it late from the draw call.
+    defaultViewingAngle = =>
+      @options.viewingAngle?() or 0
+
+    @viewingAngle = new ReactiveField defaultViewingAngle, (a, b) => a is b
 
     @activeSide = new ComputedField =>
       bestSide = null

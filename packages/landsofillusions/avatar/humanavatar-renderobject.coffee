@@ -28,25 +28,25 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
 
       # Automatically update the texture.
       textureCanvas = $('<canvas>')[0]
-      textureCanvas.width = 128
+      textureCanvas.width = 1024
       textureCanvas.height = 128
       textureContext = textureCanvas.getContext '2d'
 
       normalCanvas = $('<canvas>')[0]
-      normalCanvas.width = 128
+      normalCanvas.width = 1024
       normalCanvas.height = 128
       normalContext = normalCanvas.getContext '2d'
 
       @_normalCanvas = normalCanvas
 
       @_textureUpdateAutorun = Tracker.autorun (computation) =>
-        return unless renderer = @textureRenderer()
-
         # Render palette data and normal textures.
         renderPasses = [
           canvas: textureCanvas
           context: textureContext
-          options: renderPaletteData: true
+          options:
+            renderPaletteData: false
+            lightDirection: => new THREE.Vector3(0, -1, -1).normalize()
           hqxAntialiasing: false
         ,
           canvas: normalCanvas
@@ -61,12 +61,17 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
 
           renderPass.context.save()
 
-          renderer.drawToContext renderPass.context, _.extend
-            rootPart: renderer.options.part
-          ,
-            renderPass.options
+          for sideIndex in [0..7]
+            continue unless renderer = @textureRenderers[sideIndex]()
 
-          renderPass.context.restore()
+            renderPass.context.setTransform 1, 0, 0, 1, 100 * sideIndex, 0
+
+            renderer.drawToContext renderPass.context, _.extend
+              rootPart: renderer.options.part
+            ,
+              renderPass.options
+
+            renderPass.context.restore()
 
           renderPass.scaledCanvas = AS.Hqx.scale renderPass.canvas, 4, AS.Hqx.Modes.Default, renderPass.hqxAntialiasing
 
@@ -84,6 +89,6 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
         @_renderObject.options.material.uniforms.map.value = renderPasses[0].texture
         @_renderObject.options.material.uniforms.normalMap.value = renderPasses[1].texture
 
-        @textureDataUrl renderPasses[1].scaledCanvas.toDataURL()
+        @textureDataUrl renderPasses[0].scaledCanvas.toDataURL()
 
     @_renderObject

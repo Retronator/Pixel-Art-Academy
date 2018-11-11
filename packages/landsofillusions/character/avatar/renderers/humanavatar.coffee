@@ -9,10 +9,12 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
 
     bodyRenderer = @options.humanAvatar.body.createRenderer
       renderTexture: @options.renderTexture
+      viewingAngle: @options.viewingAngle
 
     outfitRenderer = @options.humanAvatar.outfit.createRenderer
       landmarksSource: bodyRenderer
       renderTexture: @options.renderTexture
+      viewingAngle: @options.viewingAngle
 
     @renderers = [bodyRenderer, outfitRenderer]
 

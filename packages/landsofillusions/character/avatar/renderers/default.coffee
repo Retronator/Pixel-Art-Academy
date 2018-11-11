@@ -13,6 +13,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
       landmarksSource: @options.landmarksSource
       materialsData: @options.materialsData
       renderTexture: @options.renderTexture
+      viewingAngle: @options.viewingAngle
 
     @renderers = new ComputedField =>
       renderers = []

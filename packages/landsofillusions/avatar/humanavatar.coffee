@@ -23,16 +23,23 @@ class LOI.HumanAvatar extends LOI.Avatar
       true
 
     # We need another renderer for drawing the texture.
-    @textureRenderer = new ComputedField =>
-      new LOI.Character.Avatar.Renderers.HumanAvatar 
-        humanAvatar: @
-        renderTexture: true
-      , 
-        true
-    ,
-      true
+    @textureRenderers = []
+    
+    for sideIndex in [0..7]
+      do (sideIndex) =>
+        @textureRenderers.push new ComputedField =>
+          new LOI.Character.Avatar.Renderers.HumanAvatar
+            humanAvatar: @
+            renderTexture: true
+            viewingAngle: =>
+              sideIndex * Math.PI / 4
+            ,
+              true
+          ,
+            true
 
   destroy: ->
     super arguments...
 
     @renderer.stop()
+    renderer.sotp() for renderer in @textureRendeders()

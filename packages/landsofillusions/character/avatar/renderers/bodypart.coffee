@@ -39,6 +39,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       landmarksSource: @options.landmarksSource
       materialsData: @options.materialsData
       renderTexture: @options.renderTexture
+      viewingAngle: @options.viewingAngle
     ,
       options
 

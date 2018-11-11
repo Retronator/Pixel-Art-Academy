@@ -29,23 +29,23 @@ LOI.Character.Part.registerClasses
         origin:
           landmark: 'navel'
         textureOrigins:
-          navel:
-            x: 20
-            y: 40
           atlas:
-            x: 20
-            y: 20
+            x: 15
+            y: 15
+          navel:
+            x: 15
+            y: 35
           shoulderRight:
-            x: 40
+            x: 35
             y: 10
           shoulderLeft:
-            x: 60
+            x: 45
             y: 10
           acetabulumRight:
-            x: 80
+            x: 60
             y: 10
           acetabulumLeft:
-            x: 100
+            x: 80
             y: 10
 
 LOI.Character.Part.registerClasses
