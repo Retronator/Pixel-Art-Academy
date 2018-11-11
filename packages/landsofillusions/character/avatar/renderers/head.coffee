@@ -7,7 +7,6 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
       part.createRenderer()
 
     # Create the rest of the renderers normally.
-    @neckRenderer = @_createRenderer 'neck'
     @headShapeRenderer = @_createRenderer 'shape'
     @leftEyeRenderer = @_createRenderer 'eyes'
     @rightEyeRenderer = @_createRenderer 'eyes', flippedHorizontal: true
@@ -16,9 +15,6 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     @facialHairRenderers = @_createRenderer 'facialHair'
 
   _placeRenderers: ->
-    # Place the neck.
-    @_placeRenderer @neckRenderer, 'atlas', 'atlas'
-
     # Place the head shape.
     @_placeRenderer @headShapeRenderer, 'atlas', 'atlas'
 

@@ -85,6 +85,7 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0003-migrateavatarfields');
   api.addServerFile('character/migrations/0004-displayname');
   api.addServerFile('character/migrations/0005-usercharactersupdate');
+  api.addServerFile('character/migrations/0006-moveneckfield');
   api.addClientFile('character/spacebars');
   api.addFile('character/nonplayercharacter');
   api.addFile('character/instance');

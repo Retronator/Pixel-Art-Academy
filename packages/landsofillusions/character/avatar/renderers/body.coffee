@@ -16,7 +16,7 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
     @_placeRenderer @torsoRenderer, 'navel', 'navel'
 
     # Place the head.
-    @_placeRenderer @headRenderer, 'suprasternalNotch', 'suprasternalNotch'
+    @_placeRenderer @headRenderer, 'atlas', 'atlas'
 
     # Place the legs.
     @_placeRenderer @leftLegRenderer, 'acetabulum', 'acetabulumLeft'

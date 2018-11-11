@@ -32,7 +32,7 @@ LOI.Character.Part.registerClasses
           navel:
             x: 20
             y: 40
-          suprasternalNotch:
+          atlas:
             x: 20
             y: 20
           shoulderRight:
@@ -55,9 +55,6 @@ LOI.Character.Part.registerClasses
         type: 'Avatar.Body.Head'
         name: 'head'
         properties:
-          neck: new LOI.Character.Part.Property.OneOf
-            name: 'neck'
-            type: 'Avatar.Body.Neck'
           shape: new LOI.Character.Part.Property.OneOf
             name: 'shape'
             type: 'Avatar.Body.HeadShape'
@@ -219,6 +216,9 @@ LOI.Character.Part.registerClasses
           chest: new LOI.Character.Part.Property.OneOf
             name: 'chest'
             type: 'Avatar.Body.Chest'
+          neck: new LOI.Character.Part.Property.OneOf
+            name: 'neck'
+            type: 'Avatar.Body.Neck'
         renderer: new LOI.Character.Avatar.Renderers.Default
           origin:
             landmark: 'navel'
