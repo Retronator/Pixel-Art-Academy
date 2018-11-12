@@ -228,6 +228,7 @@ Package.onUse(function(api) {
   api.addFile('spectrum..');
   api.addFile('spectrum/renderobject');
   api.addFile('spectrum/animatedmesh');
+  api.addFile('spectrum/imagedatahelpers');
 
   api.addClientJavascript('spectrum/creature/glmatrix');
   api.addClientJavascript('spectrum/creature/creaturemeshbone');

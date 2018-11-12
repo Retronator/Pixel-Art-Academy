@@ -56,12 +56,7 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
           side: sourceSide
           spriteData: @spriteData[side]
           materialsData: @options.materialsData
-          flippedHorizontal: new ComputedField =>
-            if @options["#{sourceSide}SpriteId"]()
-              @options.flippedHorizontal
-
-            else
-              not @options.flippedHorizontal
+          flippedHorizontal: @options.flippedHorizontal
 
     # By default we read the viewing angle from options, but we also support sending it late from the draw call.
     defaultViewingAngle = =>

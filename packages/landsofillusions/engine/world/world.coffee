@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 
 class LOI.Engine.World extends AM.Component
   @register 'LandsOfIllusions.Engine.World'
+
+  @textureDebug = false
   
   @UpdateModes:
     Realtime: 'Realtime'
@@ -46,6 +48,10 @@ class LOI.Engine.World extends AM.Component
     # Do initial forced update and draw.
     @forceUpdateAndDraw()
 
+    if @constructor.textureDebug
+      @autorun (computation) =>
+        @$('.engine-texture')[0].src = LOI.character()?.avatar.textureDataUrl()
+
   forceUpdateAndDraw: ->
     appTime = Tracker.nonreactive => @app.appTime()
     @_update appTime
@@ -70,6 +76,8 @@ class LOI.Engine.World extends AM.Component
   _update: (appTime) ->
     for sceneItem in @sceneManager().scene().children when sceneItem instanceof AS.RenderObject
       sceneItem.update? appTime
+
+      sceneItem.position.z = ((appTime.totalAppTime / 15) % 1) * 3 - 1
 
   draw: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering    

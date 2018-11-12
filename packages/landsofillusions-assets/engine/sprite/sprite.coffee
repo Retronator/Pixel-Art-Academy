@@ -81,6 +81,7 @@ class LOI.Assets.Engine.Sprite
           # Visualized normals mode.
           if pixel.normal
             normal = new THREE.Vector3 pixel.normal.x, pixel.normal.y, pixel.normal.z
+            normal.x *= -1 if flippedHorizontal
             backward = new THREE.Vector3 0, 0, 1
 
             horizontalAngle = Math.atan2(normal.y, normal.x) + Math.PI
@@ -97,7 +98,8 @@ class LOI.Assets.Engine.Sprite
         else if renderOptions.renderNormalData
           # Rendering of raw normal data for use in shaders.
           if pixel.normal
-            destinationColor = r: pixel.normal.x, g: pixel.normal.y, b: pixel.normal.z
+            destinationColor = r: pixel.normal.x * 0.5 + 0.5, g: pixel.normal.y * 0.5 + 0.5, b: pixel.normal.z * 0.5 + 0.5
+            destinationColor.r = -pixel.normal.x * 0.5 + 0.5 if flippedHorizontal
 
           else
             destinationColor = r: 0, g: 0, b: 0
@@ -122,8 +124,8 @@ class LOI.Assets.Engine.Sprite
             
           if paletteColor
             destinationColor =
-              r: paletteColor.ramp / palette.ramps.length
-              g: paletteColor.shade / palette.ramps[paletteColor.ramp].shades.length
+              r: (paletteColor.ramp + 0.5) / palette.ramps.length / 255 * 256
+              g: (paletteColor.shade + 0.5) / palette.ramps[paletteColor.ramp].shades.length / 255 * 256
               b: paletteColor.dither or 0
             
           else

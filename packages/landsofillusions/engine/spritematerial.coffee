@@ -75,6 +75,7 @@ void main()	{
   vec3 sourceColor = texture2D(palette, rampShadeDitherAlpha.rg).rgb;
 
   vec3 normal = texture2D(normalMap, vUv).xyz;
+  normal = (normal - 0.5) * 2.0;
   vec3 normalEye = normalize((modelViewMatrix * vec4(normal, 0.0)).xyz);
 
   // Accumulate directional lights.
@@ -155,5 +156,7 @@ void main()	{
 
   // Color the pixel with the best match from the palette.
   gl_FragColor = vec4(destinationColor, rampShadeDitherAlpha.a);
+
+  if (rampShadeDitherAlpha.a < 0.5) discard;
 }
 """
