@@ -83,10 +83,6 @@ class LOI.Engine.World extends AM.Component
     for sceneItem in @sceneManager().scene().children when sceneItem instanceof AS.RenderObject
       sceneItem.update? appTime
 
-      distance = ((appTime.totalAppTime / 5.5) % 1) * 5
-
-      sceneItem.position.x = 3-distance
-
   draw: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering    
 
@@ -124,4 +120,18 @@ class LOI.Engine.World extends AM.Component
     @forceUpdateAndDraw()
 
   onClickCanvas: (event) ->
-    
+    viewportCoordinate = @mouse().viewportCoordinate()
+    scene = @sceneManager().scene()
+    camera = @cameraManager().camera()
+
+    raycaster = new THREE.Raycaster
+    raycaster.setFromCamera viewportCoordinate, camera
+
+    intersects = raycaster.intersectObjects scene.children
+    return unless intersects.length
+
+    # Create move memory action.
+    type = LOI.Memory.Actions.Move.type
+    situation = LOI.adventure.currentSituationParameters()
+    LOI.Memory.Action.do type, LOI.characterId(), situation,
+      coordinates: intersects[0].point.toObject()

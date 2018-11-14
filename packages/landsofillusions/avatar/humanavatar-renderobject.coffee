@@ -11,22 +11,36 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
     super arguments...
 
     @_textureUpdateAutorun.stop()
-    @_renderObject?.destroy()
+    @_animatedMesh?.destroy()
 
   getRenderObject: ->
     return @_renderObject if @_renderObject
 
     # Create animated mesh for this human.
     Tracker.nonreactive =>
-      @_renderObject = new AS.AnimatedMesh
-        dataUrl: '/landsofillusions/avatar/left.json'
+      @_animatedMesh = new AS.AnimatedMesh
+        dataUrl: '/landsofillusions/avatar/front.json'
         castShadow: true
         receiveShadow: true
         material: new LOI.Engine.SpriteMaterial
 
-      @_renderObject.scale.multiplyScalar 0.095
+      @_animatedMesh.currentAnimationName 'Idle'
 
-      @_renderObject.currentAnimationName 'Walk'
+      bodyBottom = -10.4
+      bodyTop = 6
+
+      bodyHeight = bodyTop - bodyBottom
+      targetHeight = 1.8 # meters
+      scale = targetHeight / bodyHeight
+
+      @_animatedMesh.scale.multiplyScalar scale
+      @_animatedMesh.position.y = -bodyBottom * scale
+
+      @_renderObject = new AS.RenderObject
+      @_renderObject.update = (appTime) => @_animatedMesh.update appTime
+      @_renderObject.add @_animatedMesh
+
+      console.log "RO", @_renderObject
 
       # Automatically update the texture.
       textureCanvas = $('<canvas>')[0]
@@ -94,13 +108,13 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
 
         # We update the map (via texture field) and normal map fields
         # on material so that appropriate shader defines get turned on.
-        @_renderObject.texture texture
-        @_renderObject.options.material.normalMap = normalMap
-        @_renderObject.options.material.needsUpdate = true
+        @_animatedMesh.texture texture
+        @_animatedMesh.options.material.normalMap = normalMap
+        @_animatedMesh.options.material.needsUpdate = true
 
         # HACK: We also manually have to update the values of uniforms, to actually change the texture.
-        @_renderObject.options.material.uniforms.map.value = texture
-        @_renderObject.options.material.uniforms.normalMap.value = normalMap
+        @_animatedMesh.options.material.uniforms.map.value = texture
+        @_animatedMesh.options.material.uniforms.normalMap.value = normalMap
 
         @textureDataUrl textureScaledCanvas.toDataURL()
 

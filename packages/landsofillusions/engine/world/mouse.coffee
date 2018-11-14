@@ -23,18 +23,11 @@ class LOI.Engine.World.Mouse
         @_lastPageY = event.pageY
         @updateCoordinates()
 
-      # Also react to viewport origin changes.
-      Tracker.nonreactive =>
-        @world.autorun (computation) =>
-          @world.camera().origin()
-          @updateCoordinates()
-
       # Remove coordinates when mouse leaves the canvas.
       $world.mouseleave (event) =>
         @windowCoordinate null
         @displayCoordinate null
-        @canvasCoordinate null
-        @pixelCoordinate null
+        @viewportCoordinate null
 
   updateCoordinates: ->
     origin = @$canvas.offset()

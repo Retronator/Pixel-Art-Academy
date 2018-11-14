@@ -50,8 +50,6 @@ class LOI.Engine.World.SceneManager
     box.castShadow = true
     scene.add box
 
-    addedCount = 0
-
     @locationThings = new AE.ReactiveArray (=> @world.options.adventure.currentLocationThings()),
       added: (thing) =>
         # Look if the thing's avatar has a render object.
@@ -61,17 +59,11 @@ class LOI.Engine.World.SceneManager
         scene.add renderObject
         @scene.updated()
 
-        renderObject.position.x = addedCount
-        renderObject.position.z = -0.75 - addedCount
-        addedCount++
-
       removed: (thing) =>
         # Remove thing's render object.
         return unless renderObject = thing.avatar.getRenderObject?()
         scene.remove renderObject
         @scene.updated()
-
-        addedCount--
 
   destroy: ->
     @locationThings.stop()
