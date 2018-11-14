@@ -28,6 +28,7 @@ class LOI.Engine.SpriteMaterial extends THREE.ShaderMaterial
     super
       transparent: true
       lights: true
+      side: THREE.DoubleSide
       shadowSide: THREE.DoubleSide
 
       uniforms: _.extend

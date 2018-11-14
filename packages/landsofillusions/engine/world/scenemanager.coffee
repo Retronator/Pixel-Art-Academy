@@ -62,7 +62,7 @@ class LOI.Engine.World.SceneManager
         @scene.updated()
 
         renderObject.position.x = addedCount
-        renderObject.position.z = -1 - addedCount
+        renderObject.position.z = -0.75 - addedCount
         addedCount++
 
       removed: (thing) =>

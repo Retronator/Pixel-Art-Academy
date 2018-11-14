@@ -20,3 +20,18 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
 
   @startDescription: ->
     "_person_ enters."
+
+  createStartScript: (person, nextNode, nodeOptions = {}) ->
+    callbackNode = new Nodes.Callback
+      next: nextNode
+      callback: (complete) =>
+        complete()
+
+        personObject = person.avatar.getRenderObject()
+
+        if content.coordinates
+          personObject.position.copy content.coordinates
+
+    # Return the starting callback node.
+    callbackNode
+

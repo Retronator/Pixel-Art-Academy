@@ -19,7 +19,7 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
     # Create animated mesh for this human.
     Tracker.nonreactive =>
       @_renderObject = new AS.AnimatedMesh
-        dataUrl: '/landsofillusions/avatar/walk.json'
+        dataUrl: '/landsofillusions/avatar/left.json'
         castShadow: true
         receiveShadow: true
         material: new LOI.Engine.SpriteMaterial

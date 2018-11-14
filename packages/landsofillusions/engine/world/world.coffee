@@ -19,8 +19,11 @@ class LOI.Engine.World extends AM.Component
     @sceneManager = new ReactiveField null
     @cameraManager = new ReactiveField null
     @audioManager = new ReactiveField null
+    @mouse = new ReactiveField null
 
     @renderedImage = new ReactiveField null
+
+    @$world = new ReactiveField null
 
   onCreated: ->
     super arguments...
@@ -37,13 +40,16 @@ class LOI.Engine.World extends AM.Component
 
     @renderedImage new AM.PixelImage
       image: rendererManager.renderer.domElement
-      
+
     @audioManager new @constructor.AudioManager @
+
+    @mouse new @constructor.Mouse @
 
   onRendered: ->
     super arguments...
 
-    @$world = @$('.landsofillusions-engine-world')
+    @$world @$('.landsofillusions-engine-world')
+    @display = @callAncestorWith 'display'
 
     # Do initial forced update and draw.
     @forceUpdateAndDraw()
@@ -66,7 +72,7 @@ class LOI.Engine.World extends AM.Component
     @sceneManager().destroy()
 
   onScroll: (scrollTop) ->
-    @$world.css transform: "translate3d(0, #{-scrollTop / 2}px, 0)"
+    @$world().css transform: "translate3d(0, #{-scrollTop / 2}px, 0)"
 
   update: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering
@@ -77,7 +83,9 @@ class LOI.Engine.World extends AM.Component
     for sceneItem in @sceneManager().scene().children when sceneItem instanceof AS.RenderObject
       sceneItem.update? appTime
 
-      sceneItem.position.z = ((appTime.totalAppTime / 15) % 1) * 3 - 1
+      distance = ((appTime.totalAppTime / 5.5) % 1) * 5
+
+      sceneItem.position.x = 3-distance
 
   draw: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering    
@@ -95,17 +103,18 @@ class LOI.Engine.World extends AM.Component
       'mouseenter canvas': @onMouseEnterCanvas
       'mousemove canvas': @onMouseMoveCanvas
       'mouseleave canvas': @onMouseLeaveCanvas
+      'click canvas': @onClickCanvas
       
   onMouseEnterCanvas: (event) ->
     @_hovering = true
 
   onMouseMoveCanvas: (event) ->
-    worldOffset = @$world.offset()
+    viewportCoordinate = @mouse().viewportCoordinate()
 
-    percentageX = (event.pageX - worldOffset.left) / @$world.outerWidth() * 8 - 4
-    percentageY = (event.pageY - worldOffset.top) / @$world.outerHeight() * 2 - 2
+    percentageX = viewportCoordinate.x * 4
+    percentageY = viewportCoordinate.y + 1
 
-    @sceneManager().setLightDirection -percentageX, percentageY, -1
+    @sceneManager().setLightDirection -percentageX, -percentageY, -1
 
   onMouseLeaveCanvas: (event) ->
     @_hovering = false
@@ -113,3 +122,6 @@ class LOI.Engine.World extends AM.Component
     @sceneManager().setLightDirection -1, -1, -1
 
     @forceUpdateAndDraw()
+
+  onClickCanvas: (event) ->
+    
