@@ -40,8 +40,6 @@ class LOI.HumanAvatar extends LOI.HumanAvatar
       @_renderObject.update = (appTime) => @_animatedMesh.update appTime
       @_renderObject.add @_animatedMesh
 
-      console.log "RO", @_renderObject
-
       # Automatically update the texture.
       textureCanvas = $('<canvas>')[0]
       textureCanvas.width = 1024

@@ -60,7 +60,7 @@ class LOI.Engine.World.SceneManager
 
           move = _.findLast actions, (action) => action.type is LOI.Memory.Actions.Move.type
 
-          if move.content.coordinates
+          if move?.content?.coordinates
             renderObject.position.copy move.content.coordinates
 
         # Add it to the scene.
