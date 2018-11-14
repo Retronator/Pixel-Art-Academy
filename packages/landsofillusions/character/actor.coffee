@@ -59,7 +59,7 @@ class LOI.Character.Actor extends LOI.Character.Person
       situation.things()
 
   recentActions: ->
-    # TODO: Provide actions via storyline.
+    [] # TODO: Provide actions via storyline.
     
   getActions: (query = {}) ->
     for actionDocument in @actionDocuments.find(query).fetch()

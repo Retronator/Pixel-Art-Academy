@@ -55,6 +55,14 @@ class LOI.Engine.World.SceneManager
         # Look if the thing's avatar has a render object.
         return unless renderObject = thing.avatar.getRenderObject?()
 
+        if thing instanceof LOI.Character.Person
+          actions = thing.recentActions()
+
+          move = _.findLast actions, (action) => action.type is LOI.Memory.Actions.Move.type
+
+          if move.content.coordinates
+            renderObject.position.copy move.content.coordinates
+
         # Add it to the scene.
         scene.add renderObject
         @scene.updated()
