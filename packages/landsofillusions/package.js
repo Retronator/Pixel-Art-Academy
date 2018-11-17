@@ -70,8 +70,8 @@ Package.onUse(function(api) {
   // Avatar
 
   api.addFile('avatar/avatar');
-  api.addFile('avatar/humanavatar');
-  api.addFile('avatar/humanavatar-renderobject');
+  api.addFile('avatar/humanavatar..');
+  api.addFile('avatar/humanavatar/renderobject');
 
   // Character
 
@@ -467,6 +467,7 @@ Package.onUse(function(api) {
 
   api.addFile('engine..');
   api.addClientFile('engine/spritematerial');
+  api.addFile('engine/renderingsides');
 
   api.addComponent('engine/world..');
   api.addFile('engine/world/renderermanager');
@@ -474,4 +475,5 @@ Package.onUse(function(api) {
   api.addFile('engine/world/cameramanager');
   api.addFile('engine/world/audiomanager');
   api.addFile('engine/world/mouse');
+  api.addFile('engine/world/navigator');
 });

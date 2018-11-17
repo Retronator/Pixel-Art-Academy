@@ -56,9 +56,9 @@ class AS.AnimatedMesh extends AS.RenderObject
       data = @data()
 
       creatureManager = new AS.CreatureManager creature
+      @_autoBlendSet = false
 
-      # Animations are authored at 60 FPS.
-      creatureManager.SetTimeScale 60
+      creatureManager.SetTimeScale @options.dataFPS
 
       for name, animationData of data.animation
         creatureManager.AddAnimation new AS.CreatureAnimation data, name
@@ -88,17 +88,37 @@ class AS.AnimatedMesh extends AS.RenderObject
 
     # Reactively play animations.
     @currentAnimationName = new ReactiveField()
+    @blendTime = new ReactiveField 0
 
     @autorun (computation) =>
       return unless creatureManager = @creatureManager()
+      return unless creatureRenderer = @creatureRenderer()
 
       animationName = @currentAnimationName()
-      creatureManager.SetActiveAnimationName animationName, false
-      return unless animationName
+      animation = creatureManager.GetAnimation animationName if animationName
+
+      if animation
+        if @_autoBlendSet
+          blendRate = 1 / @blendTime() / @options.playbackFPS
+          creatureManager.AutoBlendTo animationName, blendRate
+
+        else
+          creatureManager.SetActiveAnimationName animationName
+          creatureManager.SetAutoBlending true
+          @_autoBlendSet = true
+
+      else
+        creatureManager.SetActiveAnimationName null
+        return
 
       creatureManager.SetShouldLoop true
       creatureManager.SetIsPlaying true
       creatureManager.RunAtTime 0
+      
+      # Do the first update.
+      creatureRenderer.UpdateData()
+
+    @_accumulatedTime = 0
 
   destroy: ->
     super arguments...
@@ -111,5 +131,16 @@ class AS.AnimatedMesh extends AS.RenderObject
     _.keys @data()?.animation
 
   update: (appTime) ->
-    @creatureManager()?.Update appTime.elapsedAppTime
-    @creatureRenderer()?.UpdateData()
+    @_accumulatedTime += appTime.elapsedAppTime
+
+    timeForUpdate = 1 / @options.playbackFPS
+
+    while @_accumulatedTime > timeForUpdate
+      @_accumulatedTime -= timeForUpdate
+
+      @creatureManager()?.Update timeForUpdate
+      @creatureRenderer()?.UpdateData()
+
+  syncAnimationTo: (animatedMesh) ->
+    runTime = animatedMesh.creatureManager().getRunTime()
+    @creatureManager().setRunTime runTime

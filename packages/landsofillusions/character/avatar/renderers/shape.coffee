@@ -1,24 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderers.Renderer
-  @sideAngles:
-    front: 0
-    frontLeft: Math.PI / 4
-    left: Math.PI / 2
-    frontRight: -Math.PI / 4
-    right: -Math.PI / 2
-
-  @mirrorSides:
-    front: 'front'
-    frontLeft: 'frontRight'
-    left: 'right'
-    backLeft: 'backRight'
-    back: 'back'
-    backRight: 'backLeft'
-    right: 'left'
-    frontRight: 'frontLeft'
-
-  @liveEditing = true
+  @liveEditing = false
 
   constructor: (@options, initialize) ->
     super arguments...
@@ -30,17 +13,17 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
     @spriteData = {}
     @sprite = {}
 
-    for side of @constructor.sideAngles
+    for side of LOI.Engine.RenderingSides.angles
       do (side) =>
         # Sprites in flipped renderers need to come from the other side.
-        sourceSide = if @options.flippedHorizontal then @constructor.mirrorSides[side] else side
+        sourceSide = if @options.flippedHorizontal then LOI.Engine.RenderingSides.mirrorSides[side] else side
 
         @spriteData[side] = new ComputedField =>
           spriteId = @options["#{sourceSide}SpriteId"]()
 
           # If we didn't find a sprite for this side, we assume we should mirror the other side.
           unless spriteId
-            mirrorSide = @constructor.mirrorSides[sourceSide]
+            mirrorSide = LOI.Engine.RenderingSides.mirrorSides[sourceSide]
             spriteId = @options["#{mirrorSide}SpriteId"]()
 
           return unless spriteId
@@ -67,22 +50,9 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
     defaultViewingAngle = =>
       @options.viewingAngle?() or 0
 
-    @viewingAngle = new ReactiveField defaultViewingAngle, (a, b) => a is b
+    @viewingAngleGetter = new ReactiveField defaultViewingAngle, (a, b) => a is b
 
-    @activeSide = new ComputedField =>
-      bestSide = null
-      bestSideDistance = Number.POSITIVE_INFINITY
-
-      viewingAngle = @viewingAngle()()
-
-      for side, angle of @constructor.sideAngles
-        distance = _.angleDistance viewingAngle, angle
-
-        if distance < bestSideDistance
-          bestSideDistance = distance
-          bestSide = side
-
-      bestSide
+    @activeSide = new ComputedField => LOI.Engine.RenderingSides.getSideForAngle @viewingAngleGetter()()
 
     @activeSprite = new ComputedField =>
       @sprite[@activeSide()]
@@ -141,7 +111,7 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
 
   drawToContext: (context, options = {}) ->
     # Update viewing angle.
-    @viewingAngle options.viewingAngle if options.viewingAngle
+    @viewingAngleGetter options.viewingAngle if options.viewingAngle
 
     sprite = @activeSprite()
 

@@ -27,6 +27,13 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
     personObject = person.avatar.getRenderObject()
 
     if @content.coordinates
-      personObject.position.copy @content.coordinates
+      personObject.setAnimation 'Walk'
+
+      LOI.adventure.world.navigator().moveRenderObject
+        renderObject: personObject
+        target: @content.coordinates
+        speed: 1.25
+        onCompleted: =>
+          personObject.setAnimation 'Idle'
 
     null

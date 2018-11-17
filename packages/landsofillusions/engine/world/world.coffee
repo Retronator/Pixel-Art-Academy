@@ -19,10 +19,12 @@ class LOI.Engine.World extends AM.Component
     @sceneManager = new ReactiveField null
     @cameraManager = new ReactiveField null
     @audioManager = new ReactiveField null
+
     @mouse = new ReactiveField null
+    
+    @navigator = new ReactiveField null
 
     @renderedImage = new ReactiveField null
-
     @$world = new ReactiveField null
 
   onCreated: ->
@@ -44,6 +46,8 @@ class LOI.Engine.World extends AM.Component
     @audioManager new @constructor.AudioManager @
 
     @mouse new @constructor.Mouse @
+    
+    @navigator new @constructor.Navigator @
 
   onRendered: ->
     super arguments...
@@ -56,7 +60,7 @@ class LOI.Engine.World extends AM.Component
 
     if @constructor.textureDebug
       @autorun (computation) =>
-        @$('.engine-texture')[0].src = LOI.character()?.avatar.textureDataUrl()
+        @$('.engine-texture')[0].src = LOI.character()?.avatar.getRenderObject().debugTextureDataUrl()
 
   forceUpdateAndDraw: ->
     appTime = Tracker.nonreactive => @app.appTime()
@@ -80,6 +84,8 @@ class LOI.Engine.World extends AM.Component
     @_update appTime
 
   _update: (appTime) ->
+    @navigator()?.update appTime
+
     for sceneItem in @sceneManager().scene().children when sceneItem instanceof AS.RenderObject
       sceneItem.update? appTime
 
