@@ -5,15 +5,21 @@ class LOI.Engine.RenderingSides
     Front: 'front'
     FrontLeft: 'frontLeft'
     Left: 'left'
-    FrontRight: 'frontRight'
+    BackLeft: 'backLeft'
+    Back: 'back'
+    BackRight: 'backRight'
     Right: 'right'
+    FrontRight: 'frontRight'
 
   @angles:
     front: 0
     frontLeft: Math.PI / 4
     left: Math.PI / 2
-    frontRight: -Math.PI / 4
+    backLeft: Math.PI * 3 / 4
+    back: Math.PI
+    backRight: - Math.PI * 3 / 4
     right: -Math.PI / 2
+    frontRight: -Math.PI / 4
 
   @mirrorSides:
     front: 'front'
