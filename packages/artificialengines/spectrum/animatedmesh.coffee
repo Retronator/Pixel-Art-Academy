@@ -130,11 +130,12 @@ class AS.AnimatedMesh extends AS.RenderObject
 
     timeForUpdate = 1 / @options.playbackFPS
 
-    while @_accumulatedTime > timeForUpdate
-      @_accumulatedTime -= timeForUpdate
+    return unless @_accumulatedTime > timeForUpdate
 
-      @creatureManager()?.Update timeForUpdate
-      @creatureRenderer()?.UpdateData() if updateData
+    @creatureManager()?.Update @_accumulatedTime
+    @creatureRenderer()?.UpdateData() if updateData
+
+    @_accumulatedTime = 0
 
   syncAnimationTo: (otherAnimatedMesh) ->
     return unless otherCreatureManager = otherAnimatedMesh.creatureManager()
