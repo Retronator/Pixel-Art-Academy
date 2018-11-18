@@ -144,7 +144,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         animatedMesh.options.material.uniforms.map.value = texture
         animatedMesh.options.material.uniforms.normalMap.value = normalMap
 
-      @debugTextureDataUrl normalScaledCanvas.toDataURL()
+      @debugTextureDataUrl textureScaledCanvas.toDataURL()
 
   destroy: ->
     super arguments...
@@ -164,10 +164,17 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         @currentAngle = @_targetAngle
         @_targetAngle = null
 
-      side = LOI.Engine.RenderingSides.getSideForAngle @currentAngle
-      @setCurrentSide side unless side is @currentSide
+    # Calculate angle relative to camera position.
+    camera = LOI.adventure.world.cameraManager().camera()
+    directionToCamera = new THREE.Vector3().subVectors camera.position, @position
+    cameraAngle = LOI.Engine.RenderingSides.getAngleForDirection directionToCamera
 
-    @animatedMeshes[@currentSide].update appTime
+    side = LOI.Engine.RenderingSides.getSideForAngle @currentAngle - cameraAngle
+    @setCurrentSide side unless side is @currentSide
+
+    for side, animatedMesh of @animatedMeshes
+      updateData = side is @currentSide
+      animatedMesh.update appTime, updateData
 
   setAnimation: (animationName) ->
     animatedMesh.currentAnimationName animationName for side, animatedMesh of @animatedMeshes

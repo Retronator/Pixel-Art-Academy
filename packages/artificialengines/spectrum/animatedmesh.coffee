@@ -94,22 +94,17 @@ class AS.AnimatedMesh extends AS.RenderObject
       return unless creatureManager = @creatureManager()
       return unless creatureRenderer = @creatureRenderer()
 
-      animationName = @currentAnimationName()
-      animation = creatureManager.GetAnimation animationName if animationName
+      return unless animationName = @currentAnimationName()
+      return unless creatureManager.GetAnimation animationName if animationName
 
-      if animation
-        if @_autoBlendSet
-          blendRate = 1 / @blendTime() / @options.playbackFPS
-          creatureManager.AutoBlendTo animationName, blendRate
-
-        else
-          creatureManager.SetActiveAnimationName animationName
-          creatureManager.SetAutoBlending true
-          @_autoBlendSet = true
+      if @_autoBlendSet
+        blendRate = 1 / @blendTime() / @options.playbackFPS
+        creatureManager.AutoBlendTo animationName, blendRate
 
       else
-        creatureManager.SetActiveAnimationName null
-        return
+        creatureManager.SetActiveAnimationName animationName
+        creatureManager.SetAutoBlending true
+        @_autoBlendSet = true
 
       creatureManager.SetShouldLoop true
       creatureManager.SetIsPlaying true
@@ -130,7 +125,7 @@ class AS.AnimatedMesh extends AS.RenderObject
   animationNames: ->
     _.keys @data()?.animation
 
-  update: (appTime) ->
+  update: (appTime, updateData = true) ->
     @_accumulatedTime += appTime.elapsedAppTime
 
     timeForUpdate = 1 / @options.playbackFPS
@@ -139,8 +134,17 @@ class AS.AnimatedMesh extends AS.RenderObject
       @_accumulatedTime -= timeForUpdate
 
       @creatureManager()?.Update timeForUpdate
-      @creatureRenderer()?.UpdateData()
+      @creatureRenderer()?.UpdateData() if updateData
 
-  syncAnimationTo: (animatedMesh) ->
-    runTime = animatedMesh.creatureManager().getRunTime()
-    @creatureManager().setRunTime runTime
+  syncAnimationTo: (otherAnimatedMesh) ->
+    return unless otherCreatureManager = otherAnimatedMesh.creatureManager()
+    animationName = otherCreatureManager.GetActiveAnimationName()
+    runTime = otherCreatureManager.getRunTime()
+
+    creatureManager = @creatureManager()
+    return unless creatureManager.GetAnimation animationName
+
+    creatureManager.SetBlendingAnimations animationName, animationName
+    creatureManager.RunAtTime runTime
+
+    @creatureRenderer().UpdateData()

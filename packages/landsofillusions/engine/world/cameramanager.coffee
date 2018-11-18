@@ -3,11 +3,11 @@ LOI = LandsOfIllusions
 
 class LOI.Engine.World.CameraManager
   constructor: (@world) ->
-    @_camera = new THREE.PerspectiveCamera 90, 1, 0.1, 1000
+    @_camera = new THREE.PerspectiveCamera 60, 1, 0.1, 1000
     @camera = new AE.ReactiveWrapper @_camera
 
     @_camera.position.y = 0.5
-    @_camera.position.z = 2.7
+    @_camera.position.z = 7
 
     @world.autorun (computation) =>
       illustrationSize = @world.options.adventure.interface.illustrationSize
