@@ -1,0 +1,17 @@
+<template name="LandsOfIllusions.Pages.Admin.GroupPhoto">
+  <style>
+    html {
+      font-size: {{display.scale}}px;
+    }
+  </style>
+  {{> Render display}}
+  <div class="landsofillusions-pages-admin-groupphoto">
+    <h1>Group Photo</h1>
+    {{#each characters}}
+      {{avatar.fullName}}
+      <div class="avatar">
+        {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar}}
+      </div>
+    {{/each}}
+  </div>
+</template>

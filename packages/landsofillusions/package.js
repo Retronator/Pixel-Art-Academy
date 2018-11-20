@@ -374,6 +374,10 @@ Package.onUse(function(api) {
   api.addFiles('pages/loading/loading.html');
   api.addFiles('pages/loading/loading.styl');
 
+  api.addUnstyledComponent('pages/admin..');
+  api.addComponent('pages/admin/groupphoto..');
+  api.addServerFile('pages/admin/groupphoto/subscriptions');
+
   // Components
 
   api.addFile('components..');

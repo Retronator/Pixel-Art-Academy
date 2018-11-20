@@ -43,6 +43,7 @@ class Retronator.App extends Artificial.Base.App
     new PixelArtAcademy
     new Retronator.HQ.Pages
     new LOI.World
+    new LOI
 
     AB.Router.initialize()
 
