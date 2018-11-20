@@ -9,16 +9,14 @@ class C3.Design.Terminal.Properties.Integer extends AM.Component
     super arguments...
 
     property = @data()
-    @input = new @constructor.Input property.options.dataLocation
+    @input = new @constructor.Input property.options
 
-  class @Input extends AM.DataInputComponent
-    constructor: (@dataLocation) ->
+  class @Input extends C3.Design.Terminal.Properties.Input
+    constructor: ->
       super arguments...
 
-      @type = AM.DataInputComponent.Types.Number
-
-    load: ->
-      @dataLocation()
+      @type = AM.DataInputComponent.Types.Number unless @inputOptions.values
 
     save: (value) ->
-      @dataLocation parseInt value
+      value = parseInt value if value?.length
+      super value

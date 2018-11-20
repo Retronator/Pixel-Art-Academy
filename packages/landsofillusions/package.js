@@ -67,11 +67,19 @@ Package.onUse(function(api) {
   api.addServerFile('state/migrations/0004-admissionapplication');
   api.addServerFile('state/migrations/0005-tutorialspritesremove');
 
+  // Engine
+
+  api.addFile('engine..');
+  api.addFile('engine/renderingregion');
+  api.addFile('engine/renderingsides');
+  api.addClientFile('engine/spritematerial');
+
   // Avatar
 
   api.addFile('avatar/avatar');
   api.addFile('avatar/humanavatar..');
   api.addFile('avatar/humanavatar/renderobject');
+  api.addFile('avatar/humanavatar/regions');
 
   // Character
 
@@ -463,11 +471,7 @@ Package.onUse(function(api) {
   api.addFile('simulation..');
   api.addServerFile('simulation/server');
 
-  // Engine
-
-  api.addFile('engine..');
-  api.addClientFile('engine/spritematerial');
-  api.addFile('engine/renderingsides');
+  // Engine world
 
   api.addComponent('engine/world..');
   api.addFile('engine/world/renderermanager');

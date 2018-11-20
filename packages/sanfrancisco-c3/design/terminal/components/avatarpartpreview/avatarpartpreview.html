@@ -1,6 +1,6 @@
 <template name="SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview">
   <div class="sanfrancisco-c3-design-terminal-components-avatarpartpreview">
-    {{#if $is options.type 'Avatar.Outfit.CustomColor'}}
+    {{#if $is this.options.type 'Avatar.Outfit.CustomColor'}}
       {{> SanFrancisco.C3.Design.Terminal.Components.CustomColorPreview args options}}
     {{else}}
       {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview.Default args options}}
