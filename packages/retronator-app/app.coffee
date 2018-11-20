@@ -35,6 +35,7 @@ class Retronator.App extends Artificial.Base.App
     new PixelArtAcademy.Season1.Episode1.Pages
     new PixelArtDatabase
     new PixelArtDatabase.PixelDailies
+    new LOI
     new LOI.Assets
     new LOI.Construct.Pages
     new Retropolis.City
@@ -43,7 +44,6 @@ class Retronator.App extends Artificial.Base.App
     new PixelArtAcademy
     new Retronator.HQ.Pages
     new LOI.World
-    new LOI
 
     AB.Router.initialize()
 

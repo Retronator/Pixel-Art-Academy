@@ -8,8 +8,7 @@
   <div class="landsofillusions-pages-admin-groupphoto">
     <h1>Group Photo</h1>
     {{#each characters}}
-      {{avatar.fullName}}
-      <div class="avatar">
+      <div class="avatar" title="{{avatar.fullName}}" {{style avatarStyle}}>
         {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar}}
       </div>
     {{/each}}
