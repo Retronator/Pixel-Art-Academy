@@ -10,6 +10,11 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'delaunator': '3.0.2',
+  'barycentric': '1.0.1'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
@@ -136,6 +141,7 @@ Package.onUse(function(api) {
   api.addFile('character/avatar/renderers/default');
   api.addFile('character/avatar/renderers/humanavatar');
   api.addFile('character/avatar/renderers/mappedshape');
+  api.addFile('character/avatar/renderers/mappedshape-mapsprite');
   api.addFile('character/avatar/renderers/bodypart');
   api.addFile('character/avatar/renderers/body');
   api.addFile('character/avatar/renderers/head');

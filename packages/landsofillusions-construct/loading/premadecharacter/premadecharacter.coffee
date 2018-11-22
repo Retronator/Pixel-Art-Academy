@@ -46,7 +46,7 @@ if Meteor.isServer
 
     # We omit the user in the exported characters.
     for character in characters
-      character = _.omit character, 'user'
+      delete character.user
       character._importDirective = importDirective
 
     documents.push characters...

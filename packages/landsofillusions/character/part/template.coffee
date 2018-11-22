@@ -80,4 +80,4 @@ if Meteor.isServer
       return
 
     template.author = _id: admin._id
-    template.authorName = template.author.publicName
+    template.authorName = admin.publicName
