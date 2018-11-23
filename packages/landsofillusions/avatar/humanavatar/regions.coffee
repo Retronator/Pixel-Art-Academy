@@ -38,3 +38,24 @@ LOI.HumanAvatar.Regions =
   Arms: new LOI.Engine.RenderingRegion
     id: 'Arms'
     multipleRegions: ['LeftArm', 'RightArm']
+
+  RightLeg: new LOI.Engine.RenderingRegion
+    id: 'RightLeg'
+    bounds: new AE.Rectangle 50, 0, 20, 30
+    origin:
+      landmark: 'acetabulumRight'
+      x: 10
+      y: 10
+    flipHorizontal: true
+
+  LeftLeg: new LOI.Engine.RenderingRegion
+    id: 'LeftLeg'
+    bounds: new AE.Rectangle 70, 0, 20, 30
+    origin:
+      landmark: 'acetabulumLeft'
+      x: 10
+      y: 10
+
+  Legs: new LOI.Engine.RenderingRegion
+    id: 'Legs'
+    multipleRegions: ['RightLeg', 'LeftLeg']

@@ -44,7 +44,10 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
 
   @updatePalette: @method 'updatePalette'
   @updateMaterial: @method 'updateMaterial'
+
   @updateLandmark: @method 'updateLandmark'
+  @reorderLandmark: @method 'reorderLandmark'
+  @removeLandmark: @method 'removeLandmark'
 
   @addReferenceByUrl: @method 'addReferenceByUrl'
   @updateReferenceScale: @method 'updateReferenceScale'

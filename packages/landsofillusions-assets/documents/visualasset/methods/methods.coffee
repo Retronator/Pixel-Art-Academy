@@ -80,3 +80,43 @@ LOI.Assets.VisualAsset.updateLandmark.method (assetClassName, assetId, index, la
   assetClass.documents.update assetId,
     $set:
       "landmarks.#{index}": landmark
+
+LOI.Assets.VisualAsset.reorderLandmark.method (assetClassName, assetId, index, newIndex) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+  check index, Match.Integer
+  check newIndex, Match.Integer
+
+  RA.authorizeAdmin()
+
+  assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
+  asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
+
+  movingLandmark = asset.landmarks?[index]
+  throw new AE.ArgumentException "Asset does not have the landmark." unless movingLandmark
+
+  asset.landmarks.splice index, 1
+  asset.landmarks.splice newIndex, 0, movingLandmark
+
+  assetClass.documents.update assetId,
+    $set:
+      landmarks: asset.landmarks
+
+LOI.Assets.VisualAsset.removeLandmark.method (assetClassName, assetId, index) ->
+  check assetId, Match.DocumentId
+  check assetClassName, String
+  check index, Match.Integer
+
+  RA.authorizeAdmin()
+
+  assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
+  asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
+
+  removingLandmark = asset.landmarks?[index]
+  throw new AE.ArgumentException "Asset does not have the landmark." unless removingLandmark
+
+  asset.landmarks.splice index, 1
+
+  assetClass.documents.update assetId,
+    $set:
+      landmarks: asset.landmarks

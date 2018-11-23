@@ -7,16 +7,24 @@ class LOI.Assets.Components.Landmarks extends AM.Component
   constructor: (@options) ->
     super arguments...
 
+  onCreated: ->
+    super arguments...
+
     @assetData = new ComputedField =>
       assetId = @options.assetId()
       @options.documentClass.documents.findOne assetId,
         fields:
           landmarks: 1
 
-    @currentIndex = new ReactiveField null
+    @landmarks = new ComputedField =>
+      data = @assetData()
+      return unless data?.landmarks
 
-  onCreated: ->
-    super arguments...
+      for landmark, index in data.landmarks
+        # Add index to named color data.
+        _.extend {}, landmark,
+          index: index
+          number: index + 1
 
     @_landmarkImage ?= $('<canvas>')[0]
     @_landmarkImage.width = 7
@@ -65,33 +73,28 @@ class LOI.Assets.Components.Landmarks extends AM.Component
       context.fillStyle = "white"
       context.fillText landmark.number, landmark.x + offset + 8 / scale, landmark.y + offset + 6 / scale
 
-  # Helpers
-
-  landmarks: ->
-    data = @assetData()
-    return unless data?.landmarks
-
-    for landmark, index in data.landmarks
-      # Add index to named color data.
-      _.extend {}, landmark,
-        index: index
-        number: index + 1
-
-  activeColorClass: ->
-    data = @currentData()
-    'active' if data.index is @currentIndex()
-
   # Events
 
   events: ->
     super(arguments...).concat
-      'click .number': @onClickNumber
+      'change .number-input': @onChangeNumber
       'change .name-input, change .coordinate-input': @onChangeLandmark
       'click .add-landmark-button': @onClickAddLandmarkButton
 
-  onClickNumber: (event) ->
+  onChangeNumber: (event) ->
     data = @currentData()
-    @currentIndex data.index
+
+    number = parseInt $(event.target).val()
+
+    # HACK: Replace the number back since it won't update by itself (probably since it's the edited input).
+    $(event.target).val data.number
+
+    if _.isNaN number
+      LOI.Assets.VisualAsset.removeLandmark @options.documentClass.className, @assetData()._id, data.index
+
+    else
+      newIndex = number - 1
+      LOI.Assets.VisualAsset.reorderLandmark @options.documentClass.className, @assetData()._id, data.index, newIndex
 
   onChangeLandmark: (event) ->
     $landmark = $(event.target).closest('.landmark')
