@@ -44,8 +44,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     @_addBoundsCorners sourceLandmarks, sourceLandmarksBounds, padding
     @_addBoundsCorners targetLandmarks, targetLandmarksBounds, padding
 
-    console.log "map", sourceLandmarks, targetLandmarks, padding, newSpriteData.bounds, sourceLandmarksBounds
-
     # Calculate triangulation of target landmarks.
     getX = (landmark) => landmark.x
     getY = (landmark) => landmark.y
@@ -71,8 +69,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       top = Math.floor Math.min triangle[0][1], triangle[1][1], triangle[2][1]
       bottom = Math.ceil Math.max triangle[0][1], triangle[1][1], triangle[2][1]
 
-      console.log "what", left, right, top, bottom
-
       for x in [left..right]
         for y in [top..bottom]
           # Skip already-rasterized pixels.
@@ -80,7 +76,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
           # Calculate barycentric coordinates of the point in this triangle.
           pointWeights = barycentric triangle, [x, y]
-          console.log "weights", x, y, pointWeights
           continue unless 0 <= pointWeights[0] <= 1 and 0 <= pointWeights[1] <= 1 and 0 <= pointWeights[2] <= 1
           continue unless 0.999 < pointWeights[0] + pointWeights[1] + pointWeights[2] < 1.001
 
@@ -91,8 +86,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
           mainSampleX = Math.round sampleX
           mainSampleY = Math.round sampleY
 
-          console.log "ms", mainSampleX, mainSampleY, _.find sourcePixels, (pixel) => pixel.x is mainSampleX and pixel.y is mainSampleY
-
           continue unless mainSamplePixel = _.find sourcePixels, (pixel) => pixel.x is mainSampleX and pixel.y is mainSampleY
 
           topLeftSampleX = Math.floor sampleX
@@ -100,8 +93,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
           fractionX = sampleX - topLeftSampleX
           fractionY = sampleY - topLeftSampleY
-
-          console.log "Fr", fractionX, fractionY
 
           getNormal = (offsetX, offsetY) =>
             return null unless samplePixel = _.find sourcePixels, (pixel) => pixel.x is topLeftSampleX + offsetX and pixel.y is topLeftSampleY + offsetY
@@ -145,11 +136,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
           else if normalRight
             normal = normalRight.toObject()
 
-          else
-            console.error "WTF"
-
-          console.log "main", mainSamplePixel, x, y, normal
-
           # Copy the sample pixel to target coordinates.
           targetPixels.push _.extend {}, mainSamplePixel, {x, y, normal}
 
@@ -168,8 +154,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
         newSpriteData.bounds.right = Math.max newSpriteData.bounds.right, pixel.x
         newSpriteData.bounds.top = Math.min newSpriteData.bounds.top, pixel.y
         newSpriteData.bounds.bottom = Math.max newSpriteData.bounds.bottom, pixel.y
-
-    console.log "sd", newSpriteData
 
     new LOI.Assets.Sprite newSpriteData
 

@@ -118,6 +118,10 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       @drawRendererToContext renderer, context, options
 
   drawRendererToContext: (renderer, context, options = {}) ->
+    if options.region and @options.part.options.region
+      # Skip if we're not part of the region that's being drawn.
+      return unless options.region.match @options.part.options.region
+    
     return unless @ready()
 
     context.save()

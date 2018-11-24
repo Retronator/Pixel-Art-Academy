@@ -24,7 +24,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       spriteData = @frontSpriteData()
       
       # Landmarks source provides landmarks we try to map to (our targets).
-      targetLandmarks = @options.landmarksSource?.landmarks()
+      targetLandmarks = @options.landmarksSource?()?.landmarks()
       
       @_mapSprite spriteData, _.values targetLandmarks
       

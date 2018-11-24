@@ -16,7 +16,7 @@ class LOI.Assets.Asset extends AM.Document
       HTTP.get @cacheUrl(), (error, response) =>
         assets = JSON.parse response.content
 
-        # Convert plain objects into sprites.
+        # Convert plain objects into assets.
         cache = {}
 
         for id, asset of assets
@@ -26,3 +26,23 @@ class LOI.Assets.Asset extends AM.Document
 
   @getFromCache: (id) ->
     @_cache()?[id]
+    
+  @findInCache: (matcherOrFunction) ->
+    return unless cache = @_cache()
+
+    if _.isFunction matcherOrFunction
+      for assetId, asset of cache
+        return asset if matcherOrFunction asset
+
+    else if _.isObject matcherOrFunction
+      for assetId, asset of cache
+        found = true
+
+        for key, value of matcherOrFunction
+          unless asset[key] is value
+            found = false
+            break
+
+        return asset if found
+      
+    null

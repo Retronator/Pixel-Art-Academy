@@ -37,8 +37,8 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
       landmarks = {}
 
       # If we have a landmarks source, we use it.
-      if @options.landmarksSource
-        _.extend landmarks, @options.landmarksSource.landmarks()
+      if landmarksSource = @options.landmarksSource?()
+        _.extend landmarks, landmarksSource.landmarks()
 
         initialLandmark = true if _.keys(landmarks).length
 

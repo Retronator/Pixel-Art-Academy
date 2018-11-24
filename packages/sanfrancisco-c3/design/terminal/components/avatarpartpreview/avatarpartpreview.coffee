@@ -14,6 +14,23 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
     constructor: (@options = {}) ->
       super arguments...
 
+    onCreated: ->
+      super arguments...
+
+      @designTerminal = @ancestorComponentOfType C3.Design.Terminal
+
+      @renderer = new ComputedField =>
+        return unless part = @data()
+
+        rendererOptions = {}
+
+        if @designTerminal and _.startsWith part.options.type, 'Avatar.Outfit'
+          rendererOptions.landmarksSource = => @designTerminal.screens.character.character().avatar.getRenderer().bodyRenderer
+
+        return unless part.createRenderer
+
+        part.createRenderer rendererOptions
+
     onRendered: ->
       super arguments...
 
@@ -51,9 +68,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
       @autorun (computation) =>
         return unless @inViewport()
 
-        part = @data()
-        
-        unless renderer = part?.renderer()
+        unless renderer = @renderer()
           # There's no renderer so just clear whatever is drawn.
           @context.setTransform 1, 0, 0, 1, 0, 0
           @context.clearRect 0, 0, @canvas.width, @canvas.height

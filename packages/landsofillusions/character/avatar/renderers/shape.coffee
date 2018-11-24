@@ -3,6 +3,25 @@ LOI = LandsOfIllusions
 class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderers.Renderer
   @liveEditing = true
 
+  @_defaultSpriteIdsByName = {}
+
+  @_getDefaultSpriteId: (name) ->
+    return @_defaultSpriteIdsByName[name] if @_defaultSpriteIdsByName[name]
+
+    if @liveEditing
+      @_defaultSpriteIdsByName[name] = LOI.Assets.Sprite.documents.findOne({name})?._id
+
+    else
+      @_defaultSpriteIdsByName[name] = LOI.Assets.Sprite.findInCache({name})?._id
+
+    @_defaultSpriteIdsByName[name]
+
+  if @liveEditing and Meteor.isClient
+    Meteor.startup =>
+      # Subscribe to all character part sprites.
+      types = LOI.Character.Part.allPartTypeIds()
+      LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe types
+
   constructor: (@options, initialize) ->
     super arguments...
 
@@ -10,41 +29,64 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
     return unless initialize
 
     # Shape renderer prepares all sprite directions and draws the one needed by the engine.
+    @spriteDataInfo = {}
     @spriteData = {}
     @sprite = {}
 
-    for side of LOI.Engine.RenderingSides.angles
+    for field, side of LOI.Engine.RenderingSides.Keys
       do (side) =>
         # Sprites in flipped renderers need to come from the other side.
         sourceSide = if @options.flippedHorizontal then LOI.Engine.RenderingSides.mirrorSides[side] else side
 
-        @spriteData[side] = new ComputedField =>
+        @spriteDataInfo[side] = new ComputedField =>
           spriteId = @options["#{sourceSide}SpriteId"]()
+          flipped = false
+          defaultSprite = false
 
           # If we didn't find a sprite for this side, we assume we should mirror the other side.
           unless spriteId
             mirrorSide = LOI.Engine.RenderingSides.mirrorSides[sourceSide]
             spriteId = @options["#{mirrorSide}SpriteId"]()
+            flipped = true
+
+          # If we still don't have a sprite, see if we have a default specified.
+          unless spriteId
+            if defaultName = @options.part.options.default
+              spriteName = "#{defaultName} #{_.kebabCase sourceSide}"
+              flipped = false
+              defaultSprite = true
+
+              spriteId = @constructor._getDefaultSpriteId spriteName
+
+              unless spriteId
+                spriteName = "#{defaultName} #{_.kebabCase mirrorSide}"
+                flipped = true
+
+                spriteId = @constructor._getDefaultSpriteId spriteName
 
           return unless spriteId
 
           if @constructor.liveEditing
-            LOI.Assets.Asset.forId.subscribe 'Sprite', spriteId
-            LOI.Assets.Sprite.documents.findOne spriteId
+            spriteData = LOI.Assets.Sprite.documents.findOne spriteId
 
           else
-            LOI.Assets.Sprite.getFromCache spriteId
+            spriteData = LOI.Assets.Sprite.getFromCache spriteId
+
+          {spriteData, flipped, defaultSprite}
+
+        @spriteData[side] = new ComputedField =>
+          @spriteDataInfo[side]()?.spriteData
 
         @sprite[side] = new LOI.Assets.Engine.Sprite
           side: sourceSide
           spriteData: @spriteData[side]
           materialsData: @options.materialsData
           flippedHorizontal: new ComputedField =>
-            if @options["#{sourceSide}SpriteId"]()
-              @options.flippedHorizontal
+            if @spriteDataInfo[side]()?.flipped
+              not @options.flippedHorizontal
 
             else
-              not @options.flippedHorizontal
+              @options.flippedHorizontal
 
     # By default we read the viewing angle from options, but we also support sending it late from the draw call.
     defaultViewingAngle = =>
@@ -58,8 +100,10 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
       @sprite[@activeSide()]
 
     @activeSpriteFlipped = new ComputedField =>
-      sprite = @activeSprite()
-      not @options["#{sprite.options.side}SpriteId"]()
+      @spriteDataInfo[@activeSide()]()?.flipped
+
+    @activeSpriteIsDefault = new ComputedField =>
+      @spriteDataInfo[@activeSide()]()?.defaultSprite
 
     @translation = new ComputedField =>
       sprite = @activeSprite()
@@ -112,6 +156,9 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
   drawToContext: (context, options = {}) ->
     # Update viewing angle.
     @viewingAngleGetter options.viewingAngle if options.viewingAngle
+
+    # Don't draw default sprites (we only use them to provide landmarks).
+    return if @activeSpriteIsDefault()
 
     sprite = @activeSprite()
 

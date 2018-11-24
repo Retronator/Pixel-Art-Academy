@@ -28,25 +28,6 @@ LOI.Character.Part.registerClasses
       renderer: new LOI.Character.Avatar.Renderers.Body
         origin:
           landmark: 'navel'
-        textureOrigins:
-          atlas:
-            x: 15
-            y: 15
-          navel:
-            x: 15
-            y: 35
-          shoulderRight:
-            x: 35
-            y: 10
-          shoulderLeft:
-            x: 45
-            y: 10
-          acetabulumRight:
-            x: 60
-            y: 10
-          acetabulumLeft:
-            x: 80
-            y: 10
 
 LOI.Character.Part.registerClasses
   Avatar:
@@ -71,6 +52,7 @@ LOI.Character.Part.registerClasses
             name: 'facial hair'
             type: 'Avatar.Body.FacialHair'
         renderer: new LOI.Character.Avatar.Renderers.Head
+          region: LOI.HumanAvatar.Regions.Head
           origin:
             landmark: 'atlas'
             x: 0
@@ -135,6 +117,7 @@ LOI.Character.Part.registerClasses
       HeadShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.HeadShape'
         name: 'head shape'
+        default: 'Head 2'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'atlas'
@@ -149,28 +132,6 @@ LOI.Character.Part.registerClasses
             name: 'forehead'
           mouth: new LOI.Character.Avatar.Landmark.Position
             name: 'mouth'
-
-      Neck: new LOI.Character.Part
-        type: 'Avatar.Body.Neck'
-        name: 'neck'
-        properties:
-          shape: new LOI.Character.Part.Property.OneOf
-            name: 'shape'
-            type: 'Avatar.Body.NeckShape'
-    
-      NeckShape: new LOI.Character.Avatar.Parts.SkinShape
-        type: 'Avatar.Body.NeckShape'
-        name: 'neck shape'
-        renderer: new LOI.Character.Avatar.Renderers.Shape
-          origin:
-            landmark: 'atlas'
-            x: 0
-            y: -1
-        landmarks:
-          atlas: new LOI.Character.Avatar.Landmark.Position
-            name: 'atlas'
-          suprasternalNotch: new LOI.Character.Avatar.Landmark.Position
-            name: 'suprasternalNotch'
 
       Eyes: new LOI.Character.Part
         type: 'Avatar.Body.Eyes'
@@ -220,8 +181,32 @@ LOI.Character.Part.registerClasses
             name: 'neck'
             type: 'Avatar.Body.Neck'
         renderer: new LOI.Character.Avatar.Renderers.Default
+          region: LOI.HumanAvatar.Regions.Torso
           origin:
             landmark: 'navel'
+
+      Neck: new LOI.Character.Part
+        type: 'Avatar.Body.Neck'
+        name: 'neck'
+        properties:
+          shape: new LOI.Character.Part.Property.OneOf
+            name: 'shape'
+            type: 'Avatar.Body.NeckShape'
+
+      NeckShape: new LOI.Character.Avatar.Parts.SkinShape
+        type: 'Avatar.Body.NeckShape'
+        name: 'neck shape'
+        default: 'Neck'
+        renderer: new LOI.Character.Avatar.Renderers.Shape
+          origin:
+            landmark: 'atlas'
+            x: 0
+            y: -1
+        landmarks:
+          atlas: new LOI.Character.Avatar.Landmark.Position
+            name: 'atlas'
+          suprasternalNotch: new LOI.Character.Avatar.Landmark.Position
+            name: 'suprasternalNotch'
 
       Chest: new LOI.Character.Part
         type: 'Avatar.Body.Chest'
@@ -244,6 +229,7 @@ LOI.Character.Part.registerClasses
       ChestShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.ChestShape'
         name: 'chest shape'
+        default: 'Chest mesomorph'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'xiphoid'
@@ -325,6 +311,7 @@ LOI.Character.Part.registerClasses
       AbdomenShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.AbdomenShape'
         name: 'abdomen shape'
+        default: 'Abdomen ectomorph'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'navel'
@@ -353,6 +340,7 @@ LOI.Character.Part.registerClasses
       GroinShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.GroinShape'
         name: 'groin shape'
+        default: 'Groin narrow'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'hypogastrium'
@@ -428,22 +416,10 @@ LOI.Character.Part.registerClasses
             name: 'hand'
             type: 'Avatar.Body.Hand'
         renderer: new LOI.Character.Avatar.Renderers.Default
+          region: LOI.HumanAvatar.Regions.Arms
           origin:
             landmark: 'elbow'
-          textureOrigins:
-            upperArm:
-              landmark: 'shoulder'
-              x: 0
-              y: 0
-            lowerArm:
-              landmark: 'elbow'
-              x: 0
-              y: 20
-            hand:
-              landmark: 'wrist'
-              x: 0
-              y: 40
-    
+
       UpperArm: new LOI.Character.Part
         type: 'Avatar.Body.UpperArm'
         name: 'upper arm'
@@ -455,6 +431,7 @@ LOI.Character.Part.registerClasses
       UpperArmShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.UpperArmShape'
         name: 'upper arm shape'
+        default: 'Upper arm'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'elbow'
@@ -477,6 +454,7 @@ LOI.Character.Part.registerClasses
       LowerArmShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.LowerArmShape'
         name: 'lower arm shape'
+        default: 'Lower arm'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'elbow'
@@ -499,6 +477,7 @@ LOI.Character.Part.registerClasses
       HandShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.HandShape'
         name: 'hand shape'
+        default: 'Hand'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'wrist'
@@ -522,21 +501,9 @@ LOI.Character.Part.registerClasses
             name: 'thigh'
             type: 'Avatar.Body.Thigh'
         renderer: new LOI.Character.Avatar.Renderers.Default
+          region: LOI.HumanAvatar.Regions.Legs
           origin:
             landmark: 'knee'
-          textureOrigins:
-            thigh:
-              landmark: 'acetabulum'
-              x: 0
-              y: 0
-            lowerLeg:
-              landmark: 'knee'
-              x: 0
-              y: 20
-            foot:
-              landmark: 'ankle'
-              x: 0
-              y: 40
 
       Thigh: new LOI.Character.Part
         type: 'Avatar.Body.Thigh'
@@ -549,6 +516,7 @@ LOI.Character.Part.registerClasses
       ThighShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.ThighShape'
         name: 'thigh shape'
+        default: 'Thigh 2'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'acetabulum'
@@ -571,6 +539,7 @@ LOI.Character.Part.registerClasses
       LowerLegShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.LowerLegShape'
         name: 'lower leg shape'
+        default: 'Lower leg 2'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'knee'
@@ -593,6 +562,7 @@ LOI.Character.Part.registerClasses
       FootShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.FootShape'
         name: 'foot shape'
+        default: 'Foot'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'ankle'

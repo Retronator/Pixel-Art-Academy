@@ -7,16 +7,16 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
-    bodyRenderer = @options.humanAvatar.body.createRenderer
+    @bodyRenderer = @options.humanAvatar.body.createRenderer
       renderTexture: @options.renderTexture
       viewingAngle: @options.viewingAngle
 
-    outfitRenderer = @options.humanAvatar.outfit.createRenderer
-      landmarksSource: bodyRenderer
+    @outfitRenderer = @options.humanAvatar.outfit.createRenderer
+      landmarksSource: => @bodyRenderer
       renderTexture: @options.renderTexture
       viewingAngle: @options.viewingAngle
 
-    @renderers = [bodyRenderer, outfitRenderer]
+    @renderers = [@bodyRenderer, @outfitRenderer]
 
     @_ready = new ComputedField =>
       # Make sure all the data is loaded.
@@ -32,7 +32,19 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
 
   drawToContext: (context, options = {}) ->
     return unless @ready()
-
+    
+    regions = [
+      LOI.HumanAvatar.Regions.Torso
+      LOI.HumanAvatar.Regions.Head
+      LOI.HumanAvatar.Regions.RightArm
+      LOI.HumanAvatar.Regions.LeftArm
+      LOI.HumanAvatar.Regions.RightLeg
+      LOI.HumanAvatar.Regions.LeftLeg
+    ]
+    
+    @_drawRegionToContext context, _.extend {region}, options for region in regions
+    
+  _drawRegionToContext: (context, options = {}) ->
     for renderer in @renderers
       context.save()
       renderer.drawToContext context, options

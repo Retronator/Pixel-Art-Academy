@@ -52,15 +52,8 @@ class LOI.Character.Part
         dataLocation: propertyDataLocation
         parent: @
 
-    # Create renderer for drawing this part's hierarchy.
-    @renderer = new ComputedField =>
-      @createRenderer()
-    ,
-      true
-
   destroy: ->
     property.destroy() for property in @properties
-    @renderer.stop()
 
   create: (options) ->
     # Set this part's type as template meta data.
