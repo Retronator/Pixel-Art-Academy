@@ -2,13 +2,26 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers.BodyPart
   _createRenderers: ->
-    @leftArmRenderer = @_createRenderer 'arms'
-    @rightArmRenderer = @_createRenderer 'arms', flippedHorizontal: true
+    @leftArmRenderer = @_createRenderer 'arms', 
+      regionSide: 'Left'
+    
+    @rightArmRenderer = @_createRenderer 'arms', 
+      flippedHorizontal: true
+      regionSide: 'Right'
+    
     @rightArmRenderer._flipHorizontal = true
+    
     @torsoRenderer = @_createRenderer 'torso'
+    
     @headRenderer = @_createRenderer 'head'
-    @leftLegRenderer = @_createRenderer 'legs'
-    @rightLegRenderer = @_createRenderer 'legs', flippedHorizontal: true
+    
+    @leftLegRenderer = @_createRenderer 'legs',
+      regionSide: 'Left'
+    
+    @rightLegRenderer = @_createRenderer 'legs',
+      flippedHorizontal: true
+      regionSide: 'Right'
+    
     @rightLegRenderer._flipHorizontal = true
 
   _placeRenderers: ->

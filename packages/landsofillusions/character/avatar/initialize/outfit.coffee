@@ -37,6 +37,7 @@ LOI.Character.Part.registerClasses
           region: new LOI.Character.Part.Property.String
             name: 'region'
             values: _.keys LOI.HumanAvatar.Regions
+        renderer: new LOI.Character.Avatar.Renderers.OutfitArticlePart
 
       ArticlePartShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Outfit.ArticlePartShape'

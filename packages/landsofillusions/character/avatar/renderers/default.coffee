@@ -8,12 +8,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
-    propertyRendererOptions =
-      flippedHorizontal: @options.flippedHorizontal
-      landmarksSource: @options.landmarksSource
-      materialsData: @options.materialsData
-      renderTexture: @options.renderTexture
-      viewingAngle: @options.viewingAngle
+    propertyRendererOptions = @_cloneRendererOptions()
 
     @renderers = new ComputedField =>
       renderers = []
@@ -34,18 +29,19 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
 
     @landmarks = new ComputedField =>
       # Create landmarks and update renderer translations.
-      landmarks = {}
+      landmarks = []
 
       # If we have a landmarks source, we use it.
       if landmarksSource = @options.landmarksSource?()
-        _.extend landmarks, landmarksSource.landmarks()
+        landmarks.push landmarksSource.landmarks()...
 
-        initialLandmark = true if _.keys(landmarks).length
+        initialLandmark = true if landmarks.length
 
       else
         # We start with the origin landmark.
         if @options.origin
-          landmarks[@options.origin.landmark] =
+          landmarks.push
+            name: @options.origin.landmark
             x: @options.origin.x or 0
             y: @options.origin.y or 0
 
@@ -63,17 +59,15 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
         renderer = undeterminedRenderers.shift()
 
         # Find if any of the renderer's landmarks matches any of ours.
-        rendererLandmarks = renderer.landmarks()
-        for rendererLandmarkName, rendererLandmark of rendererLandmarks
-          # See if we're rendering to a texture and we have a custom origin defined for this renderer.
-          if @options.renderTexture and @options.textureOrigins?[renderer.options.propertyName]
-            # Wait till we find the landmark we need for this custom origin.
-            if @options.textureOrigins[renderer.options.propertyName].landmark is rendererLandmarkName
-              # Use the custom origin as the target landmark.
-              landmark = @options.textureOrigins?[renderer.options.propertyName]
+        rendererLandmarks = renderer.landmarks() or []
+
+        for rendererLandmark in rendererLandmarks
+          # See if we're rendering to a texture and we have a region defined for this renderer.
+          if @options.renderTexture and @options.region
+            # TODO: Texture rendering
 
           else
-            landmark = landmarks[rendererLandmarkName]
+            landmark = _.find landmarks, (landmark) => landmark.name is rendererLandmark.name
             
           if landmark or not initialLandmark
             if landmark
@@ -85,12 +79,12 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
               renderer._translation = x: 0, y: 0
 
             # Add all other landmarks from this renderer.
-            for rendererLandmarkName, rendererLandmark of rendererLandmarks
+            for rendererLandmark, index in rendererLandmarks
               translatedLandmark = _.extend {}, rendererLandmark,
                 x: rendererLandmark.x + renderer._translation.x
                 y: rendererLandmark.y + renderer._translation.y
 
-              landmarks[rendererLandmarkName] = translatedLandmark
+              landmarks.push translatedLandmark
               initialLandmark = true
 
             processedWithoutMatch = 0
@@ -99,6 +93,8 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
         unless renderer._translation
           processedWithoutMatch++
           undeterminedRenderers.push renderer
+
+      @_applyLandmarksRegion landmarks
 
       landmarks
 
@@ -112,7 +108,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     _.find @renderers(), (renderer) -> renderer.options.part.options.type is type
 
   drawToContext: (context, options = {}) ->
-    return unless @ready()
+    return unless @_shouldDraw(options) and @ready()
 
     # Depend on landmarks to update when renderer translations change.
     @landmarks()

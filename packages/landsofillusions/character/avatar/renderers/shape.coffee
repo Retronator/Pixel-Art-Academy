@@ -141,19 +141,21 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
     translation = @translation()
     activeSpriteFlipped = @activeSpriteFlipped()
 
-    landmarks = {}
-
-    for landmark in spriteData.landmarks
+    landmarks = for landmark in spriteData.landmarks
       # Get potentially flipped landmark data.
       landmark = spriteData.getLandmarkForName landmark.name, activeSpriteFlipped
       
-      landmarks[landmark.name] = _.extend {}, landmark,
+      _.extend {}, landmark,
         x: landmark.x + translation.x
         y: landmark.y + translation.y
-
+        
+    @_applyLandmarksRegion landmarks
+    
     landmarks
 
   drawToContext: (context, options = {}) ->
+    return unless @_shouldDraw(options) and @ready()
+
     # Update viewing angle.
     @viewingAngleGetter options.viewingAngle if options.viewingAngle
 

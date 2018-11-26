@@ -416,7 +416,6 @@ LOI.Character.Part.registerClasses
             name: 'hand'
             type: 'Avatar.Body.Hand'
         renderer: new LOI.Character.Avatar.Renderers.Default
-          region: LOI.HumanAvatar.Regions.Arms
           origin:
             landmark: 'elbow'
 
@@ -433,6 +432,7 @@ LOI.Character.Part.registerClasses
         name: 'upper arm shape'
         default: 'Upper arm'
         renderer: new LOI.Character.Avatar.Renderers.Shape
+          region: LOI.HumanAvatar.Regions.UpperArms
           origin:
             landmark: 'elbow'
             x: 0
@@ -456,6 +456,7 @@ LOI.Character.Part.registerClasses
         name: 'lower arm shape'
         default: 'Lower arm'
         renderer: new LOI.Character.Avatar.Renderers.Shape
+          region: LOI.HumanAvatar.Regions.LowerArms
           origin:
             landmark: 'elbow'
             x: 0
@@ -479,6 +480,7 @@ LOI.Character.Part.registerClasses
         name: 'hand shape'
         default: 'Hand'
         renderer: new LOI.Character.Avatar.Renderers.Shape
+          region: LOI.HumanAvatar.Regions.Hands
           origin:
             landmark: 'wrist'
             x: 0
@@ -501,7 +503,6 @@ LOI.Character.Part.registerClasses
             name: 'thigh'
             type: 'Avatar.Body.Thigh'
         renderer: new LOI.Character.Avatar.Renderers.Default
-          region: LOI.HumanAvatar.Regions.Legs
           origin:
             landmark: 'knee'
 
@@ -518,6 +519,7 @@ LOI.Character.Part.registerClasses
         name: 'thigh shape'
         default: 'Thigh 2'
         renderer: new LOI.Character.Avatar.Renderers.Shape
+          region: LOI.HumanAvatar.Regions.UpperLegs
           origin:
             landmark: 'acetabulum'
             x: 0
@@ -541,6 +543,7 @@ LOI.Character.Part.registerClasses
         name: 'lower leg shape'
         default: 'Lower leg 2'
         renderer: new LOI.Character.Avatar.Renderers.Shape
+          region: LOI.HumanAvatar.Regions.LowerLegs
           origin:
             landmark: 'knee'
             x: 0
@@ -564,6 +567,7 @@ LOI.Character.Part.registerClasses
         name: 'foot shape'
         default: 'Foot'
         renderer: new LOI.Character.Avatar.Renderers.Shape
+          region: LOI.HumanAvatar.Regions.Feet
           origin:
             landmark: 'ankle'
             x: 0

@@ -40,9 +40,15 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       top: Math.max 0, sourceLandmarksBounds.top - (newSpriteData.bounds.top - 0.5)
       bottom: Math.max 0, (newSpriteData.bounds.bottom + 0.5) - sourceLandmarksBounds.bottom
 
-    # Add bound corners as extra landmarks.
-    @_addBoundsCorners sourceLandmarks, sourceLandmarksBounds, padding
-    @_addBoundsCorners targetLandmarks, targetLandmarksBounds, padding
+    # Target padding is the same unless we're in Right regions and we have to flip it.
+    targetPadding = _.clone padding
+
+    if flipHorizontal = @options.region?.id.indexOf('Right') >= 0
+      [targetPadding.left, targetPadding.right] = [targetPadding.right, targetPadding.left]
+
+    # Add bound corners as extra landmarks. Source corners need to be flipped in Right regions.
+    @_addBoundsCorners sourceLandmarks, sourceLandmarksBounds, padding, flipHorizontal
+    @_addBoundsCorners targetLandmarks, targetLandmarksBounds, targetPadding
 
     # Calculate triangulation of target landmarks.
     getX = (landmark) => landmark.x
@@ -136,6 +142,8 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
           else if normalRight
             normal = normalRight.toObject()
 
+          normal.x *= -1 if flipHorizontal
+
           # Copy the sample pixel to target coordinates.
           targetPixels.push _.extend {}, mainSamplePixel, {x, y, normal}
 
@@ -172,23 +180,23 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
     bounds
 
-  _addBoundsCorners: (landmarks, bounds, padding) ->
+  _addBoundsCorners: (landmarks, bounds, padding, flipHorizontal) ->
     landmarks.push
       name: 'boundsTopLeft'
-      x: bounds.left - padding.left
+      x: if flipHorizontal then bounds.right + padding.right else bounds.left - padding.left
       y: bounds.top - padding.top
 
     landmarks.push
       name: 'boundsTopRight'
-      x: bounds.right + padding.right
+      x: if flipHorizontal then bounds.left - padding.left else bounds.right + padding.right
       y: bounds.top - padding.top
 
     landmarks.push
       name: 'boundsBottomLeft'
-      x: bounds.left - padding.left
+      x: if flipHorizontal then bounds.right + padding.right else bounds.left - padding.left
       y: bounds.bottom + padding.bottom
 
     landmarks.push
       name: 'boundsBottomRight'
-      x: bounds.right + padding.right
+      x: if flipHorizontal then bounds.left - padding.left else bounds.right + padding.right
       y: bounds.bottom + padding.bottom

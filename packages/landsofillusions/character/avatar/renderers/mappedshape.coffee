@@ -25,8 +25,13 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       
       # Landmarks source provides landmarks we try to map to (our targets).
       targetLandmarks = @options.landmarksSource?()?.landmarks()
-      
-      @_mapSprite spriteData, _.values targetLandmarks
+
+      # Filter down to the region this shape is mapped onto.
+      if @options.region
+        targetLandmarks = _.filter targetLandmarks, (targetLandmark) =>
+          @options.region.matchRegion targetLandmark.regionId
+
+      @_mapSprite spriteData, targetLandmarks
       
     @frontSprite = new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
@@ -46,10 +51,11 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
   ready: ->
     @_ready()
     
-  landmarks: ->
-    @activeSprite()?.options.spriteData()?.landmarks
+  landmarks: -> []
 
   drawToContext: (context, options = {}) ->
+    return unless @_shouldDraw(options) and @ready()
+
     sprite = @activeSprite()
 
     context.save()

@@ -18,44 +18,129 @@ LOI.HumanAvatar.Regions =
       x: 15
       y: 15
 
-  RightArm: new LOI.Engine.RenderingRegion
-    id: 'RightArm'
-    bounds: new AE.Rectangle 30, 0, 10, 30
+  RightUpperArm: new LOI.Engine.RenderingRegion
+    id: 'RightUpperArm'
+    bounds: new AE.Rectangle 30, 0, 10, 20
     origin:
-      landmark: 'shoulderRight'
+      landmark: 'shoulder'
       x: 5
       y: 10
     flipHorizontal: true
 
-  LeftArm: new LOI.Engine.RenderingRegion
-    id: 'LeftArm'
-    bounds: new AE.Rectangle 40, 0, 10, 30
+  LeftUpperArm: new LOI.Engine.RenderingRegion
+    id: 'LeftUpperArm'
+    bounds: new AE.Rectangle 40, 0, 10, 20
     origin:
-      landmark: 'shoulderLeft'
+      landmark: 'shoulder'
       x: 5
       y: 10
 
-  Arms: new LOI.Engine.RenderingRegion
-    id: 'Arms'
-    multipleRegions: ['LeftArm', 'RightArm']
+  UpperArms: new LOI.Engine.RenderingRegion
+    id: 'UpperArms'
+    multipleRegions: ['LeftUpperArm', 'RightUpperArm']
 
-  RightLeg: new LOI.Engine.RenderingRegion
-    id: 'RightLeg'
+  RightUpperLeg: new LOI.Engine.RenderingRegion
+    id: 'RightUpperLeg'
     bounds: new AE.Rectangle 50, 0, 20, 30
     origin:
-      landmark: 'acetabulumRight'
+      landmark: 'acetabulum'
       x: 10
       y: 10
     flipHorizontal: true
 
-  LeftLeg: new LOI.Engine.RenderingRegion
-    id: 'LeftLeg'
+  LeftUpperLeg: new LOI.Engine.RenderingRegion
+    id: 'LeftUpperLeg'
     bounds: new AE.Rectangle 70, 0, 20, 30
     origin:
-      landmark: 'acetabulumLeft'
+      landmark: 'acetabulum'
       x: 10
       y: 10
 
-  Legs: new LOI.Engine.RenderingRegion
-    id: 'Legs'
-    multipleRegions: ['RightLeg', 'LeftLeg']
+  UpperLegs: new LOI.Engine.RenderingRegion
+    id: 'UpperLegs'
+    multipleRegions: ['RightUpperLeg', 'LeftUpperLeg']
+
+  RightLowerArm: new LOI.Engine.RenderingRegion
+    id: 'RightLowerArm'
+    bounds: new AE.Rectangle 30, 20, 10, 20
+    origin:
+      landmark: 'elbow'
+      x: 5
+      y: 10
+    flipHorizontal: true
+
+  LeftLowerArm: new LOI.Engine.RenderingRegion
+    id: 'LeftLowerArm'
+    bounds: new AE.Rectangle 40, 20, 10, 20
+    origin:
+      landmark: 'elbow'
+      x: 5
+      y: 10
+
+  LowerArms: new LOI.Engine.RenderingRegion
+    id: 'LowerArms'
+    multipleRegions: ['LeftLowerArm', 'RightLowerArm']
+
+  RightLowerLeg: new LOI.Engine.RenderingRegion
+    id: 'RightLowerLeg'
+    bounds: new AE.Rectangle 50, 20, 20, 20
+    origin:
+      landmark: 'knee'
+      x: 10
+      y: 10
+    flipHorizontal: true
+
+  LeftLowerLeg: new LOI.Engine.RenderingRegion
+    id: 'LeftLowerLeg'
+    bounds: new AE.Rectangle 70, 0, 20, 20
+    origin:
+      landmark: 'knee'
+      x: 10
+      y: 10
+
+  LowerLegs: new LOI.Engine.RenderingRegion
+    id: 'LowerLegs'
+    multipleRegions: ['RightLowerLeg', 'LeftLowerLeg']
+
+  RightHand: new LOI.Engine.RenderingRegion
+    id: 'RightHand'
+    bounds: new AE.Rectangle 30, 40, 10, 20
+    origin:
+      landmark: 'wrist'
+      x: 5
+      y: 10
+    flipHorizontal: true
+
+  LeftHand: new LOI.Engine.RenderingRegion
+    id: 'LeftHand'
+    bounds: new AE.Rectangle 40, 40, 10, 20
+    origin:
+      landmark: 'wrist'
+      x: 5
+      y: 10
+
+  Hands: new LOI.Engine.RenderingRegion
+    id: 'Hands'
+    multipleRegions: ['RightHand', 'LeftHand']
+
+
+  RightFoot: new LOI.Engine.RenderingRegion
+    id: 'RightFoot'
+    bounds: new AE.Rectangle 50, 40, 20, 20
+    origin:
+      landmark: 'ankle'
+      x: 10
+      y: 10
+    flipHorizontal: true
+
+  LeftFoot: new LOI.Engine.RenderingRegion
+    id: 'LeftFoot'
+    bounds: new AE.Rectangle 70, 40, 20, 20
+    origin:
+      landmark: 'ankle'
+      x: 10
+      y: 10
+
+  Feet: new LOI.Engine.RenderingRegion
+    id: 'Feet'
+    multipleRegions: ['RightFoot', 'LeftFoot']
