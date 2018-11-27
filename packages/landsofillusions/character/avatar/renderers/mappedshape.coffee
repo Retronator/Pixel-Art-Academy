@@ -54,7 +54,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
   landmarks: -> []
 
   drawToContext: (context, options = {}) ->
-    return unless @_shouldDraw(options) and @ready()
+    return unless @_shouldDraw(options) and @ready() and @_renderingConditionsSatisfied()
 
     sprite = @activeSprite()
 

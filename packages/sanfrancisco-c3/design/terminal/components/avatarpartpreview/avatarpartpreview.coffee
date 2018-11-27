@@ -26,6 +26,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
         if @designTerminal and _.startsWith part.options.type, 'Avatar.Outfit'
           rendererOptions.landmarksSource = => @designTerminal.screens.character.character().avatar.getRenderer().bodyRenderer
+          rendererOptions.bodyPart = => @designTerminal.screens.character.character().avatar.body
 
         return unless part.createRenderer
 

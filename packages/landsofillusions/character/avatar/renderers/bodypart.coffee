@@ -114,7 +114,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       @drawRendererToContext renderer, context, options
 
   drawRendererToContext: (renderer, context, options = {}) ->
-    return unless @_shouldDraw(options) and @ready()
+    return unless @ready()
 
     context.save()
 

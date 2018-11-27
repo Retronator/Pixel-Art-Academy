@@ -1,3 +1,4 @@
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 # This is a default renderer that simply renders all the parts found in the properties.
@@ -33,7 +34,7 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
 
     @landmarks = new ComputedField =>
       # Add article landmarks to source ones.
-      sourceLandmarks = @options.landmarksSource?().landmarks()
+      sourceLandmarks = @options.landmarksSource?()?.landmarks()
       rendererLandmarks = (renderer.landmarks() for renderer in @renderers())
 
       landmarks = _.flattenDeep [sourceLandmarks, rendererLandmarks]
@@ -46,7 +47,7 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
     @_ready()
 
   drawToContext: (context, options = {}) ->
-    return unless @ready()
-
+    return unless @ready() and @_renderingConditionsSatisfied()
+    
     for renderer in @renderers()
       renderer.drawToContext context, options

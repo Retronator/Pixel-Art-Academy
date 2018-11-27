@@ -10,6 +10,26 @@ LOI.HumanAvatar.Regions =
       x: 15
       y: 15
 
+  Hair: new LOI.Engine.RenderingRegion
+    id: 'Hair'
+    multipleRegions: ['HairFront', 'HairBack']
+
+  HairFront: new LOI.Engine.RenderingRegion
+    id: 'HairFront'
+    bounds: new AE.Rectangle 0, 0, 20, 20
+    origin:
+      landmark: 'atlas'
+      x: 15
+      y: 15
+
+  HairBack: new LOI.Engine.RenderingRegion
+    id: 'HairBack'
+    bounds: new AE.Rectangle 0, 0, 20, 20
+    origin:
+      landmark: 'atlas'
+      x: 15
+      y: 15
+
   Torso: new LOI.Engine.RenderingRegion
     id: 'Torso'
     bounds: new AE.Rectangle 0, 20, 20, 30
@@ -17,6 +37,14 @@ LOI.HumanAvatar.Regions =
       landmark: 'navel'
       x: 15
       y: 15
+
+  SexOrgan: new LOI.Engine.RenderingRegion
+    id: 'SexOrgan'
+    bounds: new AE.Rectangle 0, 20, 20, 30
+    origin:
+      landmark: 'pubicSymphysis'
+      x: 15
+      y: 21
 
   RightUpperArm: new LOI.Engine.RenderingRegion
     id: 'RightUpperArm'

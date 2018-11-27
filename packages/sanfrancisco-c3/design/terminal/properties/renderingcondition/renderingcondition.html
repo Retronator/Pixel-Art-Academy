@@ -1,0 +1,21 @@
+<template name="SanFrancisco.C3.Design.Terminal.Properties.RenderingCondition">
+  <div class="sanfrancisco-c3-design-terminal-properties-renderingcondition">
+    <div class="combination-type">
+      {{> Render combinationTypeInput}}
+    </div>
+    <table class="parts">
+      {{#each parts}}
+        <tr class="part">
+          <td class="part-type">
+            {{> SanFrancisco.C3.Design.Terminal.Properties.RenderingCondition.ConditionPartTypeInput}}
+          </td>
+          <td class="regex">
+            {{#if partType}}
+              {{> SanFrancisco.C3.Design.Terminal.Properties.RenderingCondition.ConditionPartRegexInput}}
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+</template>

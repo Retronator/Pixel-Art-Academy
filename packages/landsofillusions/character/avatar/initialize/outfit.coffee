@@ -28,9 +28,8 @@ LOI.Character.Part.registerClasses
         type: 'Avatar.Outfit.ArticlePart'
         name: 'article part'
         properties:
-          condition: new LOI.Character.Part.Property.String
+          condition: new LOI.Character.Avatar.Properties.RenderingCondition
             name: 'condition'
-            values: ['none', 'condition']
           shape: new LOI.Character.Part.Property.Array
             name: 'shapes'
             type: 'Avatar.Outfit.ArticlePartShape'
@@ -43,9 +42,8 @@ LOI.Character.Part.registerClasses
         type: 'Avatar.Outfit.ArticlePartShape'
         name: 'article part shape'
         properties:
-          condition: new LOI.Character.Part.Property.String
+          condition: new LOI.Character.Avatar.Properties.RenderingCondition
             name: 'condition'
-            values: ['none', 'condition']
         renderer: new LOI.Character.Avatar.Renderers.MappedShape
 
       CustomColor: new LOI.Character.Part

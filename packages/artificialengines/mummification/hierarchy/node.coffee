@@ -11,7 +11,7 @@ class AM.Hierarchy.Node
       unless hierarchyFields[fieldName]
         hierarchyFields[fieldName] = new AM.Hierarchy.Field _.extend {}, options,
           # Clear template (we don't want to pass it down since
-          # only the root note should be marked as being the template).
+          # only the root node should be marked as being the template).
           template: null
           address: options.address.fieldChild fieldName
           load: =>

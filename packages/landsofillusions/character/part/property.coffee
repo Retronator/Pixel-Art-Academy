@@ -14,3 +14,6 @@ class LOI.Character.Part.Property
 
     # We create a copy of ourselves with the data added.
     new @constructor _.extend {}, @options, options
+
+  childPartOfType: (typeTemplateOrId) ->
+    # Override to return a child part that matches the type.

@@ -108,7 +108,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     _.find @renderers(), (renderer) -> renderer.options.part.options.type is type
 
   drawToContext: (context, options = {}) ->
-    return unless @_shouldDraw(options) and @ready()
+    return unless @ready()
 
     # Depend on landmarks to update when renderer translations change.
     @landmarks()

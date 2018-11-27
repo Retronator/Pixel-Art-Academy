@@ -80,6 +80,9 @@
                     {{#if $is this.type 'boolean'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.Boolean this}}
                     {{/if}}
+                    {{#if $is this.type 'renderingCondition'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.RenderingCondition this}}
+                    {{/if}}
                   </div>
                 </li>
               {{/each}}

@@ -18,6 +18,6 @@ class LOI.Engine.RenderingRegion
 
     else
       region = regionOrRegionId
-      otherRegionIds = region.options.multipleRegions or [region.id]
+      otherRegionIds = region.getRegionIds()
     
     _.intersection(myRegionIds, otherRegionIds).length

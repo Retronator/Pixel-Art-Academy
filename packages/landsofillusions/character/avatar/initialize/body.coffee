@@ -45,9 +45,6 @@ LOI.Character.Part.registerClasses
           hair: new LOI.Character.Part.Property.Array
             name: 'hair'
             type: 'Avatar.Body.Hair'
-          hairBehind: new LOI.Character.Part.Property.Array
-            name: 'hair behind'
-            type: 'Avatar.Body.Hair'
           facialHair: new LOI.Character.Part.Property.Array
             name: 'facial hair'
             type: 'Avatar.Body.FacialHair'
@@ -75,9 +72,10 @@ LOI.Character.Part.registerClasses
       HairShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Body.HairShape'
         name: 'hair shape'
-        renderer: new LOI.Character.Avatar.Renderers.Shape
-          origin:
-            landmark: 'forehead'
+        properties:
+          region: new LOI.Character.Part.Property.String
+            name: 'region'
+            values: LOI.HumanAvatar.Regions.Hair.options.multipleRegions
         materials:
           hair: (part) ->
             hairPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Hair
@@ -368,6 +366,7 @@ LOI.Character.Part.registerClasses
         type: 'Avatar.Body.SexOrganShape'
         name: 'sex organ shape'
         renderer: new LOI.Character.Avatar.Renderers.Shape
+          region: LOI.HumanAvatar.Regions.SexOrgan
           origin:
             landmark: 'pubicSymphysis'
         landmarks:
@@ -392,6 +391,7 @@ LOI.Character.Part.registerClasses
         type: 'Avatar.Body.PubicHairShape'
         name: 'pubic hair shape'
         renderer: new LOI.Character.Avatar.Renderers.Shape
+          region: LOI.HumanAvatar.Regions.SexOrgan
           origin:
             landmark: 'pubicSymphysis'
         materials:

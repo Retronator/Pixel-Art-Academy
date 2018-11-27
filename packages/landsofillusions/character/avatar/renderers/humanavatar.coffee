@@ -13,6 +13,7 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
 
     @outfitRenderer = @options.humanAvatar.outfit.createRenderer
       landmarksSource: => @bodyRenderer
+      bodyPart: => @options.humanAvatar.body
       renderTexture: @options.renderTexture
       viewingAngle: @options.viewingAngle
 
@@ -34,10 +35,12 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
     return unless @ready()
 
     regions = [
+      LOI.HumanAvatar.Regions.HairBack
       LOI.HumanAvatar.Regions.RightUpperArm
       LOI.HumanAvatar.Regions.LeftUpperArm
       LOI.HumanAvatar.Regions.Torso
       LOI.HumanAvatar.Regions.Head
+      LOI.HumanAvatar.Regions.HairFront
       LOI.HumanAvatar.Regions.RightLowerArm
       LOI.HumanAvatar.Regions.RightHand
       LOI.HumanAvatar.Regions.LeftLowerArm
@@ -48,6 +51,7 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
       LOI.HumanAvatar.Regions.LeftFoot
       LOI.HumanAvatar.Regions.LeftLowerLeg
       LOI.HumanAvatar.Regions.LeftUpperLeg
+      LOI.HumanAvatar.Regions.SexOrgan
     ]
 
     @_drawRegionToContext context, _.extend {region}, options for region in regions

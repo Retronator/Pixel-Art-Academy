@@ -99,6 +99,7 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0004-displayname');
   api.addServerFile('character/migrations/0005-usercharactersupdate');
   api.addServerFile('character/migrations/0006-moveneckfield');
+  api.addServerFile('character/migrations/0007-mergehairfields');
   api.addClientFile('character/spacebars');
   api.addFile('character/nonplayercharacter');
   api.addFile('character/instance');
@@ -134,6 +135,7 @@ Package.onUse(function(api) {
   api.addFile('character/avatar/properties/color');
   api.addFile('character/avatar/properties/relativecolorshade');
   api.addFile('character/avatar/properties/sprite');
+  api.addFile('character/avatar/properties/renderingcondition');
 
   api.addFile('character/avatar/renderers/renderers');
   api.addFile('character/avatar/renderers/renderer');
