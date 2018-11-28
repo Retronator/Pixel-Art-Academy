@@ -15,10 +15,12 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       @_landmarks = []
 
       # We start with the origin landmark.
+      origin = @getOrigin()
+
       @_landmarks.push
-        name: @options.origin.landmark
-        x: @options.origin.x or 0
-        y: @options.origin.y or 0
+        name: origin.landmark
+        x: origin.x or 0
+        y: origin.y or 0
         z: 0
         
       @_placeRenderers()
@@ -56,17 +58,21 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     offsetX = options.offsetX or 0
     offsetY = options.offsetY or 0
 
+    regionId = @getRegionId()
+
     # Add all landmarks from this renderer.
     for rendererLandmark in renderer.landmarks()
-      translatedLandmark = _.extend {}, rendererLandmark,
-        x: renderer._translation.x + offsetX
-        y: rendererLandmark.y + renderer._translation.y + offsetY
+      translatedLandmark = _.clone rendererLandmark
 
-      if renderer._flipHorizontal
-        translatedLandmark.x -= rendererLandmark.x + 1
+      if not @options.renderTexture or rendererLandmark.regionId is regionId
+        translatedLandmark.x = renderer._translation.x + offsetX
+        translatedLandmark.y += renderer._translation.y + offsetY
 
-      else
-        translatedLandmark.x += rendererLandmark.x
+        if renderer._flipHorizontal
+          translatedLandmark.x -= rendererLandmark.x + 1
+
+        else
+          translatedLandmark.x += rendererLandmark.x
 
       @_landmarks.push translatedLandmark
 
@@ -74,12 +80,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     rendererLandmarks = renderer.landmarks()
     rendererLandmark = _.find rendererLandmarks, (landmark) => landmark.name is rendererLandmarkName
 
-    if @options.renderTexture and @options.region
-      # TODO: Use the region origin as the landmark target.
-
-    else
-      # Map to the already placed landmark.
-      landmark = _.find @_landmarks, (landmark) => landmark.name is landmarkName
+    landmark = _.find @_landmarks, (landmark) => landmark.name is landmarkName
 
     return unless landmark and rendererLandmark
 
@@ -117,6 +118,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     return unless @ready()
 
     context.save()
+    @_handleRegionTransform context, options
 
     translation = _.defaults {}, renderer._translation,
       x: 0

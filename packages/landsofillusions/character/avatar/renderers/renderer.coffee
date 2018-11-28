@@ -15,8 +15,10 @@ class LOI.Character.Avatar.Renderers.Renderer
     options = _.extend {}, @options, options
     
     # Region is a property that gets priority coming from constructor options.
-    options.region = @options.region if @options?.region
-    
+    if @options?.region
+      options.region = @options.region
+      options.regionRoot = true
+
     new @constructor options, true
 
   drawToContext: (context, options = {}) ->
@@ -36,12 +38,28 @@ class LOI.Character.Avatar.Renderers.Renderer
     return unless landmarks
 
     # Apply region ID to all landmarks that haven't had a region assigned yet.
-    return unless regionId = @_getRegionId()
+    return unless regionId = @getRegionId()
+
+    # When providing region landmarks, we need to offset them by the region offset.
+    if @options.renderTexture and @options.regionRoot
+      region = @getRegion()
+      bounds = region.options.bounds
 
     for landmark in landmarks
       landmark.regionId ?= regionId
 
-  _getRegionId: ->
+      if bounds and landmark.regionId is regionId
+        if region.id.indexOf('Right') >= 0
+          # This is a mirrored region.
+          landmark.x = bounds.right() - landmark.x
+
+        else
+          # This is a normal region.
+          landmark.x += bounds.x()
+
+        landmark.y += bounds.y()
+
+  getRegionId: ->
     if propertyRegionId = @options.part.properties.region?.options.dataLocation()
       region = LOI.HumanAvatar.Regions[propertyRegionId]
 
@@ -59,8 +77,11 @@ class LOI.Character.Avatar.Renderers.Renderer
     else
       region.id
 
+  getRegion: ->
+    LOI.HumanAvatar.Regions[@getRegionId()]
+
   _shouldDraw: (options) ->
-    return true unless regionId = @_getRegionId()
+    return true unless regionId = @getRegionId()
     return true unless drawRegion = options.region
 
     # We only draw when our region matches the one being drawn.
@@ -90,3 +111,27 @@ class LOI.Character.Avatar.Renderers.Renderer
 
     else
       _.some conditionResults
+      
+  getOrigin: ->
+    # When we're rendering to a texture, region origins override other settings.
+    if @options.renderTexture and @options.regionRoot
+      @getRegion().options.origin
+
+    else
+      @options.origin
+
+  _handleRegionTransform: (context, options) ->
+    # When we're drawing a region to a texture, we need to transform to region coordinates.
+    return unless @options.renderTexture and @options.regionRoot
+
+    # Note: We need to get the specific region for this renderer since region in options might hold multiple regions.
+    region = @getRegion()
+    bounds = region.options.bounds
+
+    if region.id.indexOf('Right') >= 0
+      # This is a mirrored region.
+      context.setTransform -1, 0, 0, 1, options.textureOffset + bounds.right() + 1, bounds.top()
+
+    else
+      # This is a normal region.
+      context.setTransform 1, 0, 0, 1, options.textureOffset + bounds.left(), bounds.top()

@@ -112,7 +112,7 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
       source = x: 0, y: 0
       target = x: 0, y: 0
 
-      if origin = @options.origin
+      if origin = @getOrigin()
         source = (spriteData?.getLandmarkForName origin.landmark, @activeSpriteFlipped()) or source
 
         target.x = origin.x or 0
@@ -165,7 +165,8 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
     sprite = @activeSprite()
 
     context.save()
-
+    @_handleRegionTransform context, options
+    
     translation = @translation()
     context.translate translation.x, translation.y
 

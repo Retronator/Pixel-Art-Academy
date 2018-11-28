@@ -30,6 +30,8 @@ class LOI.HumanAvatar extends LOI.Avatar
     ,
       true
 
+    @_renderer()
+
   createRenderer: (options) ->
     new LOI.Character.Avatar.Renderers.HumanAvatar _.extend({}, options, humanAvatar: @), true
 

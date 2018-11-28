@@ -39,11 +39,11 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
 
       else
         # We start with the origin landmark.
-        if @options.origin
+        if origin = @getOrigin()
           landmarks.push
-            name: @options.origin.landmark
-            x: @options.origin.x or 0
-            y: @options.origin.y or 0
+            name: origin.landmark
+            x: origin.x or 0
+            y: origin.y or 0
 
           initialLandmark = true
 
@@ -62,12 +62,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
         rendererLandmarks = renderer.landmarks() or []
 
         for rendererLandmark in rendererLandmarks
-          # See if we're rendering to a texture and we have a region defined for this renderer.
-          if @options.renderTexture and @options.region
-            # TODO: Texture rendering
-
-          else
-            landmark = _.find landmarks, (landmark) => landmark.name is rendererLandmark.name
+          landmark = _.find landmarks, (landmark) => landmark.name is rendererLandmark.name
             
           if landmark or not initialLandmark
             if landmark
@@ -79,10 +74,15 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
               renderer._translation = x: 0, y: 0
 
             # Add all other landmarks from this renderer.
-            for rendererLandmark, index in rendererLandmarks
-              translatedLandmark = _.extend {}, rendererLandmark,
-                x: rendererLandmark.x + renderer._translation.x
-                y: rendererLandmark.y + renderer._translation.y
+            regionId = @getRegionId()
+
+            for rendererLandmark in rendererLandmarks
+              translatedLandmark = _.clone rendererLandmark
+
+              # When rendering a texture, only translate landmarks inside the same region.
+              if not @options.renderTexture or rendererLandmark.regionId is regionId
+                translatedLandmark.x += renderer._translation.x
+                translatedLandmark.y += renderer._translation.y
 
               landmarks.push translatedLandmark
               initialLandmark = true
@@ -113,6 +113,9 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     # Depend on landmarks to update when renderer translations change.
     @landmarks()
 
+    context.save()
+    @_handleRegionTransform context, options
+
     for renderer in @renderers()
       context.save()
 
@@ -124,3 +127,5 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
 
       renderer.drawToContext context, options
       context.restore()
+
+    context.restore()

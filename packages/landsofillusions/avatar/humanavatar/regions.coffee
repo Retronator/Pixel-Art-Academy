@@ -2,9 +2,12 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 LOI.HumanAvatar.Regions =
+
+  # Head
+
   Head: new LOI.Engine.RenderingRegion
     id: 'Head'
-    bounds: new AE.Rectangle 0, 0, 20, 20
+    bounds: new AE.Rectangle 0, 0, 30, 20
     origin:
       landmark: 'atlas'
       x: 15
@@ -16,7 +19,7 @@ LOI.HumanAvatar.Regions =
 
   HairFront: new LOI.Engine.RenderingRegion
     id: 'HairFront'
-    bounds: new AE.Rectangle 0, 0, 20, 20
+    bounds: new AE.Rectangle 0, 0, 30, 20
     origin:
       landmark: 'atlas'
       x: 15
@@ -24,15 +27,17 @@ LOI.HumanAvatar.Regions =
 
   HairBack: new LOI.Engine.RenderingRegion
     id: 'HairBack'
-    bounds: new AE.Rectangle 0, 0, 20, 20
+    bounds: new AE.Rectangle 0, 0, 30, 20
     origin:
       landmark: 'atlas'
       x: 15
       y: 15
 
+  # Torso
+
   Torso: new LOI.Engine.RenderingRegion
     id: 'Torso'
-    bounds: new AE.Rectangle 0, 20, 20, 30
+    bounds: new AE.Rectangle 0, 20, 30, 30
     origin:
       landmark: 'navel'
       x: 15
@@ -40,11 +45,13 @@ LOI.HumanAvatar.Regions =
 
   SexOrgan: new LOI.Engine.RenderingRegion
     id: 'SexOrgan'
-    bounds: new AE.Rectangle 0, 20, 20, 30
+    bounds: new AE.Rectangle 0, 20, 30, 30
     origin:
       landmark: 'pubicSymphysis'
       x: 15
       y: 21
+
+  # Arms
 
   RightUpperArm: new LOI.Engine.RenderingRegion
     id: 'RightUpperArm'
@@ -67,27 +74,6 @@ LOI.HumanAvatar.Regions =
     id: 'UpperArms'
     multipleRegions: ['LeftUpperArm', 'RightUpperArm']
 
-  RightUpperLeg: new LOI.Engine.RenderingRegion
-    id: 'RightUpperLeg'
-    bounds: new AE.Rectangle 50, 0, 20, 30
-    origin:
-      landmark: 'acetabulum'
-      x: 10
-      y: 10
-    flipHorizontal: true
-
-  LeftUpperLeg: new LOI.Engine.RenderingRegion
-    id: 'LeftUpperLeg'
-    bounds: new AE.Rectangle 70, 0, 20, 30
-    origin:
-      landmark: 'acetabulum'
-      x: 10
-      y: 10
-
-  UpperLegs: new LOI.Engine.RenderingRegion
-    id: 'UpperLegs'
-    multipleRegions: ['RightUpperLeg', 'LeftUpperLeg']
-
   RightLowerArm: new LOI.Engine.RenderingRegion
     id: 'RightLowerArm'
     bounds: new AE.Rectangle 30, 20, 10, 20
@@ -108,27 +94,6 @@ LOI.HumanAvatar.Regions =
   LowerArms: new LOI.Engine.RenderingRegion
     id: 'LowerArms'
     multipleRegions: ['LeftLowerArm', 'RightLowerArm']
-
-  RightLowerLeg: new LOI.Engine.RenderingRegion
-    id: 'RightLowerLeg'
-    bounds: new AE.Rectangle 50, 20, 20, 20
-    origin:
-      landmark: 'knee'
-      x: 10
-      y: 10
-    flipHorizontal: true
-
-  LeftLowerLeg: new LOI.Engine.RenderingRegion
-    id: 'LeftLowerLeg'
-    bounds: new AE.Rectangle 70, 0, 20, 20
-    origin:
-      landmark: 'knee'
-      x: 10
-      y: 10
-
-  LowerLegs: new LOI.Engine.RenderingRegion
-    id: 'LowerLegs'
-    multipleRegions: ['RightLowerLeg', 'LeftLowerLeg']
 
   RightHand: new LOI.Engine.RenderingRegion
     id: 'RightHand'
@@ -151,6 +116,49 @@ LOI.HumanAvatar.Regions =
     id: 'Hands'
     multipleRegions: ['RightHand', 'LeftHand']
 
+  # Legs
+
+  RightUpperLeg: new LOI.Engine.RenderingRegion
+    id: 'RightUpperLeg'
+    bounds: new AE.Rectangle 50, 0, 20, 30
+    origin:
+      landmark: 'acetabulum'
+      x: 10
+      y: 10
+    flipHorizontal: true
+
+  LeftUpperLeg: new LOI.Engine.RenderingRegion
+    id: 'LeftUpperLeg'
+    bounds: new AE.Rectangle 70, 0, 20, 30
+    origin:
+      landmark: 'acetabulum'
+      x: 10
+      y: 10
+
+  UpperLegs: new LOI.Engine.RenderingRegion
+    id: 'UpperLegs'
+    multipleRegions: ['RightUpperLeg', 'LeftUpperLeg']
+
+  RightLowerLeg: new LOI.Engine.RenderingRegion
+    id: 'RightLowerLeg'
+    bounds: new AE.Rectangle 50, 20, 20, 20
+    origin:
+      landmark: 'knee'
+      x: 10
+      y: 10
+    flipHorizontal: true
+
+  LeftLowerLeg: new LOI.Engine.RenderingRegion
+    id: 'LeftLowerLeg'
+    bounds: new AE.Rectangle 70, 20, 20, 20
+    origin:
+      landmark: 'knee'
+      x: 10
+      y: 10
+
+  LowerLegs: new LOI.Engine.RenderingRegion
+    id: 'LowerLegs'
+    multipleRegions: ['RightLowerLeg', 'LeftLowerLeg']
 
   RightFoot: new LOI.Engine.RenderingRegion
     id: 'RightFoot'

@@ -55,6 +55,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     getY = (landmark) => landmark.y
 
     delaunay = Delaunator.from targetLandmarks, getX, getY
+    @debugDelaunay delaunay
 
     # Rasterize the triangles, mapping pixels from source.
     triangle = [[], [], []]
@@ -70,10 +71,10 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       triangle[2][0] = delaunay.coords[delaunay.triangles[triangleIndex * 3 + 2] * 2]
       triangle[2][1] = delaunay.coords[delaunay.triangles[triangleIndex * 3 + 2] * 2 + 1]
 
-      left = Math.floor Math.min triangle[0][0], triangle[1][0], triangle[2][0]
-      right = Math.ceil Math.max triangle[0][0], triangle[1][0], triangle[2][0]
-      top = Math.floor Math.min triangle[0][1], triangle[1][1], triangle[2][1]
-      bottom = Math.ceil Math.max triangle[0][1], triangle[1][1], triangle[2][1]
+      left = Math.ceil Math.min triangle[0][0], triangle[1][0], triangle[2][0]
+      right = Math.floor Math.max triangle[0][0], triangle[1][0], triangle[2][0]
+      top = Math.ceil Math.min triangle[0][1], triangle[1][1], triangle[2][1]
+      bottom = Math.floor Math.max triangle[0][1], triangle[1][1], triangle[2][1]
 
       for x in [left..right]
         for y in [top..bottom]

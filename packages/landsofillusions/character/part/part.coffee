@@ -12,6 +12,7 @@ class LOI.Character.Part
   @allPartTypeIds: ->
     _.flatten [
       @getPartTypeIdsUnderType 'Avatar.Body'
+      'Avatar.Outfit'
       @getPartTypeIdsUnderType 'Avatar.Outfit'
       @getPartTypeIdsUnderType 'Behavior'
     ]

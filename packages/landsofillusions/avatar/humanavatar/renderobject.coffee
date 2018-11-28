@@ -2,6 +2,9 @@ AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
 class LOI.HumanAvatar.RenderObject extends AS.RenderObject
+  @debugLandmarks = false
+  @debugMapping = false
+
   constructor: (@humanAvatar) ->
     super arguments...
 
@@ -92,10 +95,9 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       for side, sideIndex in @textureSides
         continue unless renderer = @textureRenderers[side]()
 
-        textureContext.setTransform 1, 0, 0, 1, 100 * sideIndex, 0
-
         renderer.drawToContext textureContext, _.extend
           rootPart: renderer.options.part
+          textureOffset: 100 * sideIndex, 0
         ,
           renderPaletteData: true
 
@@ -116,10 +118,9 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       for side, sideIndex in @textureSides
         continue unless renderer = @textureRenderers[side]()
 
-        normalContext.setTransform 1, 0, 0, 1, 100 * sideIndex, 0
-
         renderer.drawToContext normalContext, _.extend
           rootPart: renderer.options.part
+          textureOffset: 100 * sideIndex, 0
         ,
           renderNormalData: true
 
@@ -144,7 +145,67 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         animatedMesh.options.material.uniforms.map.value = texture
         animatedMesh.options.material.uniforms.normalMap.value = normalMap
 
-      @debugTextureDataUrl textureScaledCanvas.toDataURL()
+      debugCanvas = $('<canvas>')[0]
+      debugScale = 8
+      debugCanvas.width = 1024 * debugScale
+      debugCanvas.height = 128 * debugScale
+      debugContext = debugCanvas.getContext '2d'
+      debugContext.imageSmoothingEnabled = false
+      debugContext.drawImage textureCanvas, 0, 0, debugCanvas.width, debugCanvas.height
+      debugContext.fillStyle = 'white'
+      debugContext.lineWidth = 1 / debugScale
+
+      for side, sideIndex in @textureSides
+        continue unless renderer = @textureRenderers[side]()
+
+        debugContext.setTransform debugScale, 0, 0, debugScale, 100 * sideIndex * debugScale, 0
+
+        if @constructor.debugLandmarks
+          for landmark in renderer.bodyRenderer.landmarks() when landmark.regionId
+            debugContext.fillRect landmark.x + 0.25, landmark.y + 0.25, 0.5, 0.5
+
+        if @constructor.debugMapping
+          for articleRenderer in renderer.outfitRenderer.renderers()
+            for articlePartRenderer in articleRenderer.renderers()
+              for mappedShapeRenderer in articlePartRenderer.renderers()
+                continue unless delaunay = mappedShapeRenderer.debugDelaunay()
+
+                randomHue = _.random 360
+
+                # Stroke all the triangles.
+                debugContext.strokeStyle = "hsl(#{randomHue}, 50%, 50%)"
+                debugContext.beginPath()
+
+                for triangleIndex in [0...delaunay.triangles.length / 3]
+                  coordinateIndices = for offset in [0..2]
+                    delaunay.triangles[triangleIndex * 3 + offset]
+
+                  getCoordinate = (index, offset) =>
+                    delaunay.coords[coordinateIndices[index] * 2 + offset] + 0.5 - 0.5 / debugScale
+
+                  debugContext.moveTo getCoordinate(2, 0), getCoordinate(2, 1)
+
+                  for offset in [0..2]
+                    debugContext.lineTo getCoordinate(offset, 0), getCoordinate(offset, 1)
+
+                debugContext.stroke()
+
+                # Stroke the outside hull.
+                debugContext.strokeStyle = "hsl(#{randomHue}, 100%, 50%)"
+                debugContext.beginPath()
+
+                getHullCoordinate = (index, offset) =>
+                  delaunay.coords[index * 2 + offset] + 0.5 - 0.5 / debugScale
+
+                lastHullVertex = _.last delaunay.hull
+                debugContext.moveTo getHullCoordinate(lastHullVertex, 0), getHullCoordinate(lastHullVertex, 1)
+
+                for hullIndex in delaunay.hull
+                  debugContext.lineTo getHullCoordinate(hullIndex, 0), getHullCoordinate(hullIndex, 1)
+
+                debugContext.stroke()
+
+      @debugTextureDataUrl debugCanvas.toDataURL()
 
   destroy: ->
     super arguments...

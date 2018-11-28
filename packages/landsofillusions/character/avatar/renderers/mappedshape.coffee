@@ -9,6 +9,8 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
+    @debugDelaunay = new ReactiveField null
+
     # Shape renderer prepares all sprite directions and draws the one needed by the engine.
     @frontSpriteData = new ComputedField =>
       return unless spriteId = @options.frontSpriteId()
@@ -59,5 +61,8 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     sprite = @activeSprite()
 
     context.save()
+    context.setTransform 1, 0, 0, 1, options.textureOffset, 0
+
     sprite.drawToContext context, options
+
     context.restore()
