@@ -50,3 +50,6 @@ class LOI.Engine.RenderingSides
         closestSide = side
 
     closestSide
+
+  @getDirectionForAngle: (angle) ->
+    new THREE.Vector3 -Math.sin(angle), 0, Math.cos angle

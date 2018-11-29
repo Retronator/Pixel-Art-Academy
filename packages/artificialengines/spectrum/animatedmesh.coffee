@@ -142,7 +142,7 @@ class AS.AnimatedMesh extends AS.RenderObject
     animationName = otherCreatureManager.GetActiveAnimationName()
     runTime = otherCreatureManager.getRunTime()
 
-    creatureManager = @creatureManager()
+    return unless creatureManager = @creatureManager()
     return unless creatureManager.GetAnimation animationName
 
     creatureManager.SetBlendingAnimations animationName, animationName

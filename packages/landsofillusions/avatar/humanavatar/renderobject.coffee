@@ -20,10 +20,12 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       LOI.Engine.RenderingSides.Keys.Front
       LOI.Engine.RenderingSides.Keys.FrontLeft
       LOI.Engine.RenderingSides.Keys.Left
+      LOI.Engine.RenderingSides.Keys.BackLeft
+      LOI.Engine.RenderingSides.Keys.Back
     ]
 
-    bodyBottom = [-10.2, -10.1, -10.3]
-    bodyTop = [6, 5.8, 5.5]
+    bodyBottom = [-10.2, -10, -10.3, -9.9]
+    bodyTop = [6, 5.8, 5.5, 5.8]
 
     for side in @textureSides
       do (side) =>
@@ -225,12 +227,20 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         @currentAngle = @_targetAngle
         @_targetAngle = null
 
-    # Calculate angle relative to camera position.
-    camera = LOI.adventure.world.cameraManager().camera()
-    directionToCamera = new THREE.Vector3().subVectors camera.position, @position
-    cameraAngle = LOI.Engine.RenderingSides.getAngleForDirection directionToCamera
+    # Project the direction and calculate angle in screen coordinates.
+    direction = LOI.Engine.RenderingSides.getDirectionForAngle @currentAngle
 
-    side = LOI.Engine.RenderingSides.getSideForAngle @currentAngle - cameraAngle
+    camera = LOI.adventure.world.cameraManager().camera()
+    positionProjection = @position.clone().project camera
+    facingProjection = new THREE.Vector3().addVectors(@position, direction).project camera
+
+    projectedDirection = new THREE.Vector3().subVectors facingProjection, positionProjection
+    projectedDirection.x *= camera.aspect
+
+    # Angle 0 is pointing down (negative y direction).
+    projectedAngle = -Math.atan2 projectedDirection.x, -projectedDirection.y
+
+    side = LOI.Engine.RenderingSides.getSideForAngle projectedAngle
     @setCurrentSide side unless side is @currentSide
 
     for side, animatedMesh of @animatedMeshes
