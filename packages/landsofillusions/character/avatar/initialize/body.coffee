@@ -365,8 +365,11 @@ LOI.Character.Part.registerClasses
       SexOrganShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.SexOrganShape'
         name: 'sex organ shape'
+        properties:
+          region: new LOI.Character.Part.Property.String
+            name: 'region'
+            values: ['Torso', 'SexOrgan']
         renderer: new LOI.Character.Avatar.Renderers.Shape
-          region: LOI.HumanAvatar.Regions.SexOrgan
           origin:
             landmark: 'pubicSymphysis'
         landmarks:
@@ -390,8 +393,11 @@ LOI.Character.Part.registerClasses
       PubicHairShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Body.PubicHairShape'
         name: 'pubic hair shape'
+        properties:
+          region: new LOI.Character.Part.Property.String
+            name: 'region'
+            values: ['Torso', 'SexOrgan']
         renderer: new LOI.Character.Avatar.Renderers.Shape
-          region: LOI.HumanAvatar.Regions.SexOrgan
           origin:
             landmark: 'pubicSymphysis'
         materials:

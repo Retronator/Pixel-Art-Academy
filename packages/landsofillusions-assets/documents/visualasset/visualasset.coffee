@@ -69,20 +69,15 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
 
   getLandmarkForName: (name, flipped) ->
     if flipped
-      if name.indexOf('Left') >= 0
-        name = name.replace 'Left', 'Right'
-
-      else if name.indexOf('Right') >= 0
-        name = name.replace 'Right', 'Left'
+      originalName = name
+      name = name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
 
     landmark = _.find @landmarks, (landmark) -> landmark.name is name
 
     if landmark and flipped
-      landmark =
-        name: name
+      landmark = _.extend {}, landmark,
         x: -landmark.x
-        y: landmark.y
-        z: landmark.z
+        name: originalName
 
     else
       landmark

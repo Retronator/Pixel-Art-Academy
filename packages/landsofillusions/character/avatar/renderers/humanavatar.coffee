@@ -33,26 +33,14 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
 
   drawToContext: (context, options = {}) ->
     return unless @ready()
+    
+    if options.viewingAngle
+      side = LOI.Engine.RenderingSides.getSideForAngle options.viewingAngle()
+      
+    else 
+      side = LOI.Engine.RenderingSides.Keys.Front
 
-    regions = [
-      LOI.HumanAvatar.Regions.HairBack
-      LOI.HumanAvatar.Regions.RightUpperArm
-      LOI.HumanAvatar.Regions.LeftUpperArm
-      LOI.HumanAvatar.Regions.Torso
-      LOI.HumanAvatar.Regions.Head
-      LOI.HumanAvatar.Regions.HairFront
-      LOI.HumanAvatar.Regions.RightLowerArm
-      LOI.HumanAvatar.Regions.RightHand
-      LOI.HumanAvatar.Regions.LeftLowerArm
-      LOI.HumanAvatar.Regions.LeftHand
-      LOI.HumanAvatar.Regions.RightFoot
-      LOI.HumanAvatar.Regions.RightLowerLeg
-      LOI.HumanAvatar.Regions.RightUpperLeg
-      LOI.HumanAvatar.Regions.LeftFoot
-      LOI.HumanAvatar.Regions.LeftLowerLeg
-      LOI.HumanAvatar.Regions.LeftUpperLeg
-      LOI.HumanAvatar.Regions.SexOrgan
-    ]
+    regions = @constructor.regionsOrder[side]
 
     @_drawRegionToContext context, _.extend {region}, options for region in regions
     

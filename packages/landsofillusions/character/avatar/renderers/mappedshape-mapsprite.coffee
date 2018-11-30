@@ -43,11 +43,16 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     # Target padding is the same unless we're in Right regions and we have to flip it.
     targetPadding = _.clone padding
 
-    if flipHorizontal = @options.region?.id.indexOf('Right') >= 0
+    flipHorizontal = @options.region?.id.indexOf('Right') >= 0
+
+    boundsFlipped = flipHorizontal
+    boundsFlipped = not boundsFlipped if @activeSpriteFlipped()
+
+    if boundsFlipped
       [targetPadding.left, targetPadding.right] = [targetPadding.right, targetPadding.left]
 
     # Add bound corners as extra landmarks. Source corners need to be flipped in Right regions.
-    @_addBoundsCorners sourceLandmarks, sourceLandmarksBounds, padding, flipHorizontal
+    @_addBoundsCorners sourceLandmarks, sourceLandmarksBounds, padding, boundsFlipped
     @_addBoundsCorners targetLandmarks, targetLandmarksBounds, targetPadding
 
     # Calculate triangulation of target landmarks.

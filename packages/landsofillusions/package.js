@@ -142,6 +142,7 @@ Package.onUse(function(api) {
   api.addFile('character/avatar/renderers/shape');
   api.addFile('character/avatar/renderers/default');
   api.addFile('character/avatar/renderers/humanavatar');
+  api.addFile('character/avatar/renderers/humanavatar-regionsorder');
   api.addFile('character/avatar/renderers/mappedshape');
   api.addFile('character/avatar/renderers/mappedshape-mapsprite');
   api.addFile('character/avatar/renderers/bodypart');

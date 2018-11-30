@@ -12,18 +12,50 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     @debugDelaunay = new ReactiveField null
 
     # Shape renderer prepares all sprite directions and draws the one needed by the engine.
-    @frontSpriteData = new ComputedField =>
-      return unless spriteId = @options.frontSpriteId()
+    @spriteDataInfo = {}
+    @spriteData = {}
 
-      if @constructor.liveEditing
-        LOI.Assets.Asset.forId.subscribe 'Sprite', spriteId
-        LOI.Assets.Sprite.documents.findOne spriteId
+    for field, side of LOI.Engine.RenderingSides.Keys
+      do (side) =>
+        # Sprites in flipped renderers need to come from the other side.
+        sourceSide = if @options.flippedHorizontal then LOI.Engine.RenderingSides.mirrorSides[side] else side
 
-      else
-        LOI.Assets.Sprite.getFromCache spriteId
+        @spriteDataInfo[side] = new ComputedField =>
+          spriteId = @options["#{sourceSide}SpriteId"]()
+          flipped = false
 
-    @spriteData = new ComputedField =>
-      spriteData = @frontSpriteData()
+          # If we didn't find a sprite for this side, we assume we should mirror the other side.
+          unless spriteId
+            mirrorSide = LOI.Engine.RenderingSides.mirrorSides[sourceSide]
+            spriteId = @options["#{mirrorSide}SpriteId"]()
+            flipped = true
+
+          return unless spriteId
+
+          if @constructor.liveEditing
+            spriteData = LOI.Assets.Sprite.documents.findOne spriteId
+
+          else
+            spriteData = LOI.Assets.Sprite.getFromCache spriteId
+
+          {spriteData, flipped}
+
+        @spriteData[side] = new ComputedField =>
+          @spriteDataInfo[side]()?.spriteData
+
+    # By default we read the viewing angle from options, but we also support sending it late from the draw call.
+    defaultViewingAngle = =>
+      @options.viewingAngle?() or 0
+
+    @viewingAngleGetter = new ReactiveField defaultViewingAngle, (a, b) => a is b
+
+    @activeSide = new ComputedField => LOI.Engine.RenderingSides.getSideForAngle @viewingAngleGetter()()
+
+    @activeSpriteFlipped = new ComputedField =>
+      @spriteDataInfo[@activeSide()]()?.flipped
+
+    @activeSpriteData = new ComputedField =>
+      spriteData = @spriteData[@activeSide()]()
       
       # Landmarks source provides landmarks we try to map to (our targets).
       targetLandmarks = @options.landmarksSource?()?.landmarks()
@@ -33,22 +65,30 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
         targetLandmarks = _.filter targetLandmarks, (targetLandmark) =>
           @options.region.matchRegion targetLandmark.regionId
 
-      @_mapSprite spriteData, targetLandmarks
-      
-    @frontSprite = new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
-      materialsData: @options.materialsData
-      flippedHorizontal: @options.flippedHorizontal
+      # If we're flipped, we want to map onto flipped landmarks.
+      if @activeSpriteFlipped()
+        targetLandmarks = for landmark in targetLandmarks
+          _.extend {}, landmark,
+            name: landmark.name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
 
-    @activeSprite = new ComputedField =>
-      @frontSprite
+      @_mapSprite spriteData, targetLandmarks
+
+    @activeSprite = new LOI.Assets.Engine.Sprite
+      spriteData: @activeSpriteData
+      materialsData: @options.materialsData
+      flippedHorizontal: new ComputedField =>
+        if @activeSpriteFlipped()
+          not @options.flippedHorizontal
+
+        else
+          @options.flippedHorizontal
 
     @_ready = new ComputedField =>
       # If we have no data, in this part, there's nothing to do.
       return true unless @options.part.options.dataLocation()
 
       # Shape is ready when the sprite is ready.
-      @activeSprite().ready()
+      @activeSprite.ready()
 
   ready: ->
     @_ready()
@@ -58,11 +98,12 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
   drawToContext: (context, options = {}) ->
     return unless @_shouldDraw(options) and @ready() and @_renderingConditionsSatisfied()
 
-    sprite = @activeSprite()
+    # Update viewing angle.
+    @viewingAngleGetter options.viewingAngle if options.viewingAngle
 
     context.save()
     context.setTransform 1, 0, 0, 1, options.textureOffset, 0
 
-    sprite.drawToContext context, options
+    @activeSprite.drawToContext context, options
 
     context.restore()
