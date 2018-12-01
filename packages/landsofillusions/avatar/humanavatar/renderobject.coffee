@@ -24,8 +24,8 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       LOI.Engine.RenderingSides.Keys.Back
     ]
 
-    bodyBottom = [-10.2, -10, -10.3, -9.9]
-    bodyTop = [6, 5.8, 5.5, 5.8]
+    bodyBottom = [-10.2, -10, -10.3, -9.9, -10.2]
+    bodyTop = [6, 5.8, 5.5, 5.8, 6]
 
     for side in @textureSides
       do (side) =>
@@ -235,7 +235,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     facingProjection = new THREE.Vector3().addVectors(@position, direction).project camera
 
     projectedDirection = new THREE.Vector3().subVectors facingProjection, positionProjection
-    projectedDirection.x *= camera.aspect
+    #projectedDirection.x *= camera.aspect
 
     # Angle 0 is pointing down (negative y direction).
     projectedAngle = -Math.atan2 projectedDirection.x, -projectedDirection.y
@@ -251,12 +251,10 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     animatedMesh.currentAnimationName animationName for side, animatedMesh of @animatedMeshes
 
   faceDirection: (direction) ->
-    # Calculate turning rotation from the angle that the side implies so the turning reaction appears immediate.
-    @currentAngle = LOI.Engine.RenderingSides.angles[@currentSide]
     @_targetAngle = LOI.Engine.RenderingSides.getAngleForDirection direction
     @_angleChange = 0
     @_totalAngleChange = _.angleDistance @_targetAngle, @currentAngle
-    @_angleChangeSpeed = 8 * Math.sign _.angleDifference @_targetAngle, @currentAngle
+    @_angleChangeSpeed = 4 * Math.sign _.angleDifference @_targetAngle, @currentAngle
 
   setCurrentSide: (side) ->
     previousAnimatedMesh = @animatedMeshes[@currentSide]
