@@ -18,17 +18,17 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     for field, side of LOI.Engine.RenderingSides.Keys
       do (side) =>
         # Sprites in flipped renderers need to come from the other side.
-        sourceSide = if @options.flippedHorizontal then LOI.Engine.RenderingSides.mirrorSides[side] else side
+        flipped = @options.region?.id.indexOf('Right') >= 0
+        sourceSide = if flipped then LOI.Engine.RenderingSides.mirrorSides[side] else side
 
         @spriteDataInfo[side] = new ComputedField =>
           spriteId = @options["#{sourceSide}SpriteId"]()
-          flipped = false
 
           # If we didn't find a sprite for this side, we assume we should mirror the other side.
           unless spriteId
             mirrorSide = LOI.Engine.RenderingSides.mirrorSides[sourceSide]
             spriteId = @options["#{mirrorSide}SpriteId"]()
-            flipped = true
+            flipped = not flipped
 
           return unless spriteId
 
@@ -76,16 +76,15 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     @activeSprite = new LOI.Assets.Engine.Sprite
       spriteData: @activeSpriteData
       materialsData: @options.materialsData
-      flippedHorizontal: new ComputedField =>
-        if @activeSpriteFlipped()
-          not @options.flippedHorizontal
-
-        else
-          @options.flippedHorizontal
+      flippedHorizontal: @activeSpriteFlipped
 
     @_ready = new ComputedField =>
       # If we have no data, in this part, there's nothing to do.
-      return true unless @options.part.options.dataLocation()
+      if @constructor.liveEditing
+        return true unless @activeSpriteData()
+
+      else
+        return true unless @options.part.options.dataLocation()
 
       # Shape is ready when the sprite is ready.
       @activeSprite.ready()

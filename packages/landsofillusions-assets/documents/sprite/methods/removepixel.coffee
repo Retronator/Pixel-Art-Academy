@@ -46,7 +46,7 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
     pixelsCount = _.sumBy sprite.layers, (layer) => layer.pixels?.length or 0
 
     # We only need to update bounds if the pixel we're removing is on the edge.
-    if bounds and (x is bounds.left or x is bounds.right or y is bounds.top or y is bounds.y)
+    if bounds and (x is bounds.left or x is bounds.right or y is bounds.top or y is bounds.bottom)
       # Clear bounds if we're removing the last pixel.
       if pixelsCount is 1
         forward.$unset ?= {}

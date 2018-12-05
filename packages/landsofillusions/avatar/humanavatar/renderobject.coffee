@@ -22,6 +22,9 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       LOI.Engine.RenderingSides.Keys.Left
       LOI.Engine.RenderingSides.Keys.BackLeft
       LOI.Engine.RenderingSides.Keys.Back
+      LOI.Engine.RenderingSides.Keys.BackRight
+      LOI.Engine.RenderingSides.Keys.Right
+      LOI.Engine.RenderingSides.Keys.FrontRight
     ]
 
     bodyBottom = [-10.2, -10, -10.3, -9.9, -10.2]
