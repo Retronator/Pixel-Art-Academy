@@ -4,7 +4,7 @@ Delaunator = require 'delaunator'
 barycentric = require 'barycentric'
 
 class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Renderers.MappedShape
-  _mapSprite: (spriteData, targetLandmarks) ->
+  _mapSprite: (spriteData, sourceLandmarks, targetLandmarks) ->
     return spriteData unless targetLandmarks.length and spriteData?.bounds
 
     # Clone sprite data to the depth of the first layer so we can replace the pixels there.
@@ -16,7 +16,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     newSpriteData.palette[key] = value for own key, value of spriteData.palette
 
     # Find all the landmarks in the sprite that can be mapped to the target.
-    sourceLandmarks = _.intersectionBy newSpriteData.landmarks, targetLandmarks, 'name'
+    sourceLandmarks = _.intersectionBy sourceLandmarks, targetLandmarks, 'name'
     targetLandmarks = _.intersectionBy targetLandmarks, sourceLandmarks, 'name'
 
     # Sprite data should provide landmarks at new locations.

@@ -74,6 +74,10 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
         else
           translatedLandmark.x += rendererLandmark.x
 
+      # When returning symmetric landmarks in the same region, append the suffix to their end.
+      if renderer.options.regionSide and rendererLandmark.regionId is regionId
+        translatedLandmark.name += renderer.options.regionSide
+
       @_landmarks.push translatedLandmark
 
   _placeRenderer: (renderer, rendererLandmarkName, landmarkName, options = {}) ->

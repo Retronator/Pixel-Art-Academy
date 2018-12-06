@@ -3,8 +3,14 @@ LOI = LandsOfIllusions
 class LOI.Character.Avatar.Renderers.Chest extends LOI.Character.Avatar.Renderers.BodyPart
   _createRenderers: ->
     @chestShapeRenderer = @_createRenderer 'shape'
-    @leftBreastRenderer = @_createRenderer 'breasts'
-    @rightBreastRenderer = @_createRenderer 'breasts', flippedHorizontal: true
+
+    @leftBreastRenderer = @_createRenderer 'breasts',
+      regionSide: 'Left'
+
+    @rightBreastRenderer = @_createRenderer 'breasts',
+      flippedHorizontal: true
+      regionSide: 'Right'
+
     @rightBreastRenderer._flipHorizontal = true
 
   _placeRenderers: ->
