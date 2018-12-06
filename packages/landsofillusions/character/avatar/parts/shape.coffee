@@ -18,6 +18,12 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
         name: 'back-left'
       back: new LOI.Character.Avatar.Properties.Sprite
         name: 'back'
+      backRight: new LOI.Character.Avatar.Properties.Sprite
+        name: 'back-right'
+      right: new LOI.Character.Avatar.Properties.Sprite
+        name: 'right'
+      frontRight: new LOI.Character.Avatar.Properties.Sprite
+        name: 'front-right'
 
     super options
 

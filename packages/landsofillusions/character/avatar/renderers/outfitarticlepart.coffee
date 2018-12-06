@@ -27,7 +27,6 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
         for part in shapeParts
           renderer = part.createRenderer _.extend propertyRendererOptions,
             region: LOI.HumanAvatar.Regions[regionId]
-            regionRoot: true
 
           renderers.push renderer
 

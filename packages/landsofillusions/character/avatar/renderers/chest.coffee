@@ -10,13 +10,5 @@ class LOI.Character.Avatar.Renderers.Chest extends LOI.Character.Avatar.Renderer
   _placeRenderers: ->
     # Place the chest shape.
     @_placeRenderer @chestShapeRenderer, 'xiphoid', 'xiphoid'
-
-    # Place the breasts.
-    properties = @options.part.properties
-
-    breastsOffset =
-      offsetX: properties.breastsOffsetX.options.dataLocation() or 0
-      offsetY: properties.breastsOffsetY.options.dataLocation() or 0
-
-    @_placeRenderer @leftBreastRenderer, 'breastCenter', 'breastLeft', breastsOffset
-    @_placeRenderer @rightBreastRenderer, 'breastCenter', 'breastRight', breastsOffset
+    @_placeRenderer @leftBreastRenderer, 'breastCenter', 'breastLeft'
+    @_placeRenderer @rightBreastRenderer, 'breastCenter', 'breastRight'

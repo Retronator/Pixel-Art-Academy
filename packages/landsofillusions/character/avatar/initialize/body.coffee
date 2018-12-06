@@ -216,10 +216,6 @@ LOI.Character.Part.registerClasses
           breasts: new LOI.Character.Part.Property.OneOf
             name: 'breasts'
             type: 'Avatar.Body.Breasts'
-          breastsOffsetX: new LOI.Character.Part.Property.Integer
-            name: 'breasts horizontal offset'
-          breastsOffsetY: new LOI.Character.Part.Property.Integer
-            name: 'breasts vertical offset'
         renderer: new LOI.Character.Avatar.Renderers.Chest
           origin:
             landmark: 'xiphoid'
@@ -251,10 +247,6 @@ LOI.Character.Part.registerClasses
         type: 'Avatar.Body.Breasts'
         name: 'breasts'
         properties:
-          nippleOffsetX: new LOI.Character.Part.Property.Integer
-            name: 'nipple horizontal offset'
-          nippleOffsetY: new LOI.Character.Part.Property.Integer
-            name: 'nipple vertical offset'
           nippleShade: new LOI.Character.Avatar.Properties.RelativeColorShade
             name: 'nipple shade'
             baseColor: (part) ->
@@ -269,7 +261,7 @@ LOI.Character.Part.registerClasses
           nippleShape: new LOI.Character.Part.Property.OneOf
             name: 'nipple shape'
             type: 'Avatar.Body.NippleShape'
-        renderer: new LOI.Character.Avatar.Renderers.Breasts
+        renderer: new LOI.Character.Avatar.Renderers.Default
           origin:
             landmark: 'breastCenter'
 
@@ -279,6 +271,8 @@ LOI.Character.Part.registerClasses
         landmarks:
           breastCenter: new LOI.Character.Avatar.Landmark.Position
             name: 'breastCenter'
+          nipple: new LOI.Character.Avatar.Landmark.Position
+            name: 'nipple'
 
       BreastShapeBottom: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.BreastShapeBottom'
@@ -291,8 +285,8 @@ LOI.Character.Part.registerClasses
         type: 'Avatar.Body.NippleShape'
         name: 'nipple shape'
         landmarks:
-          breastCenter: new LOI.Character.Avatar.Landmark.Position
-            name: 'breastCenter'
+          nipple: new LOI.Character.Avatar.Landmark.Position
+            name: 'nipple'
         materials:
           nipple: (part) ->
             breastsPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Breasts

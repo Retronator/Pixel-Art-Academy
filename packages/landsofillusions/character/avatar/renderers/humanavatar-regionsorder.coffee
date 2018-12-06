@@ -84,6 +84,8 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
     LOI.HumanAvatar.Regions.RightLowerArm
     LOI.HumanAvatar.Regions.RightUpperArm
 
+    LOI.HumanAvatar.Regions.SexOrgan
+
     LOI.HumanAvatar.Regions.RightFoot
     LOI.HumanAvatar.Regions.RightLowerLeg
     LOI.HumanAvatar.Regions.RightUpperLeg
@@ -92,7 +94,6 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
     LOI.HumanAvatar.Regions.LeftLowerLeg
     LOI.HumanAvatar.Regions.LeftUpperLeg
 
-    LOI.HumanAvatar.Regions.SexOrgan
     LOI.HumanAvatar.Regions.Head
     LOI.HumanAvatar.Regions.Torso
     LOI.HumanAvatar.Regions.HairBack
@@ -109,6 +110,8 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
     LOI.HumanAvatar.Regions.RightLowerArm
     LOI.HumanAvatar.Regions.RightHand
 
+    LOI.HumanAvatar.Regions.SexOrgan
+
     LOI.HumanAvatar.Regions.RightFoot
     LOI.HumanAvatar.Regions.RightLowerLeg
     LOI.HumanAvatar.Regions.RightUpperLeg
@@ -121,7 +124,6 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
     LOI.HumanAvatar.Regions.LeftLowerArm
     LOI.HumanAvatar.Regions.LeftHand
 
-    LOI.HumanAvatar.Regions.SexOrgan
     LOI.HumanAvatar.Regions.Head
     LOI.HumanAvatar.Regions.Torso
     LOI.HumanAvatar.Regions.HairBack

@@ -149,7 +149,6 @@ Package.onUse(function(api) {
   api.addFile('character/avatar/renderers/body');
   api.addFile('character/avatar/renderers/head');
   api.addFile('character/avatar/renderers/chest');
-  api.addFile('character/avatar/renderers/breasts');
   api.addFile('character/avatar/renderers/outfitarticlepart');
 
   api.addFile('character/avatar/landmarks/position');

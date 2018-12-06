@@ -70,8 +70,11 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
                 x: landmark.x - rendererLandmark.x
                 y: landmark.y - rendererLandmark.y
 
+              renderer._depth = landmark.z or 0
+
             else
               renderer._translation = x: 0, y: 0
+              renderer._depth = 0
 
             # Add all other landmarks from this renderer.
             regionId = @getRegionId()
@@ -116,7 +119,10 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     context.save()
     @_handleRegionTransform context, options
 
-    for renderer in @renderers()
+    # Sort renderers by depth.
+    sortedRenderers = _.sortBy @renderers(), (renderer) => renderer._depth
+
+    for renderer in sortedRenderers
       context.save()
 
       translation = _.defaults {}, renderer._translation,

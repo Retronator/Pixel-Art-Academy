@@ -73,6 +73,7 @@ uniform sampler2D palette;
 
 void main()	{
   vec4 rampShadeDitherAlpha = texture2D(map, vUv);
+  rampShadeDitherAlpha.g *= 12.75;
   vec3 sourceColor = texture2D(palette, rampShadeDitherAlpha.rg).rgb;
 
   vec3 normal = texture2D(normalMap, vUv).xyz;

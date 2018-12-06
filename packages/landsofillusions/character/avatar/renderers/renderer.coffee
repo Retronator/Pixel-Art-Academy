@@ -17,7 +17,6 @@ class LOI.Character.Avatar.Renderers.Renderer
     # Region is a property that gets priority coming from constructor options.
     if @options?.region
       options.region = @options.region
-      options.regionRoot = true
 
     new @constructor options, true
 
@@ -33,6 +32,7 @@ class LOI.Character.Avatar.Renderers.Renderer
     regionSide: @options.regionSide
     region: @options.region
     bodyPart: @options.bodyPart
+    parent: @
     
   _applyLandmarksRegion: (landmarks) ->
     return unless landmarks
@@ -41,7 +41,7 @@ class LOI.Character.Avatar.Renderers.Renderer
     return unless regionId = @getRegionId()
 
     # When providing region landmarks, we need to offset them by the region offset.
-    if @options.renderTexture and @options.regionRoot
+    if @options.renderTexture and @isRegionRoot()
       region = @getRegion()
       bounds = region.options.bounds
 
@@ -80,6 +80,9 @@ class LOI.Character.Avatar.Renderers.Renderer
   getRegion: ->
     LOI.HumanAvatar.Regions[@getRegionId()]
 
+  isRegionRoot: ->
+    @getRegionId() isnt @options.parent?.getRegionId()
+
   _shouldDraw: (options) ->
     return true unless regionId = @getRegionId()
     return true unless drawRegion = options.region
@@ -114,7 +117,7 @@ class LOI.Character.Avatar.Renderers.Renderer
       
   getOrigin: ->
     # When we're rendering to a texture, region origins override other settings.
-    if @options.renderTexture and @options.regionRoot
+    if @options.renderTexture and @isRegionRoot()
       @getRegion().options.origin
 
     else
@@ -122,7 +125,7 @@ class LOI.Character.Avatar.Renderers.Renderer
 
   _handleRegionTransform: (context, options) ->
     # When we're drawing a region to a texture, we need to transform to region coordinates.
-    return unless @options.renderTexture and @options.regionRoot
+    return unless @options.renderTexture and @isRegionRoot()
 
     # Note: We need to get the specific region for this renderer since region in options might hold multiple regions.
     region = @getRegion()

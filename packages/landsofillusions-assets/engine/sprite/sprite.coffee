@@ -125,11 +125,11 @@ class LOI.Assets.Engine.Sprite
           if paletteColor
             destinationColor =
               r: (paletteColor.ramp + 0.5) / palette.ramps.length / 255 * 256
-              g: (paletteColor.shade + 0.5) / palette.ramps[paletteColor.ramp].shades.length / 255 * 256
+              g: (paletteColor.shade + 0.5) / palette.ramps[paletteColor.ramp].shades.length / 255 * 20
               b: paletteColor.dither or 0
             
           else
-            destinationColor = r: 0, g: 0, b: 0, a: 0
+            destinationColor = r: 255, g: 255, b: 255, a: 0
 
         else
           paletteColor = null
@@ -228,6 +228,6 @@ class LOI.Assets.Engine.Sprite
         @_imageData.data[pixelIndex] = destinationColor.r * 255
         @_imageData.data[pixelIndex + 1] = destinationColor.g * 255
         @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
-        @_imageData.data[pixelIndex + 3] = destinationColor.a or 255
+        @_imageData.data[pixelIndex + 3] = (destinationColor.a or 1) * 255
 
     @_context.putImageData @_imageData, 0, 0
