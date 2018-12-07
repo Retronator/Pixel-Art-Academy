@@ -113,6 +113,8 @@ Package.onUse(function(api) {
   
   api.addServerFile('character/part/migrations/0000-embeddedtranslations');
   api.addServerFile('character/part/migrations/0001-spriteids');
+  api.addServerFile('character/part/migrations/0002-articlepartstoarticlepartshapes');
+  api.addServerFile('character/part/migrations/0003-articlewitharticlepartshapes');
 
   api.addFile('character/part/property');
   api.addFile('character/part/properties/oneof');
