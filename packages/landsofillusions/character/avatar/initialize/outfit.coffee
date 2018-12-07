@@ -30,7 +30,7 @@ LOI.Character.Part.registerClasses
         properties:
           condition: new LOI.Character.Avatar.Properties.RenderingCondition
             name: 'condition'
-          shape: new LOI.Character.Part.Property.Array
+          shapes: new LOI.Character.Part.Property.Array
             name: 'shapes'
             type: 'Avatar.Outfit.ArticlePartShape'
           region: new LOI.Character.Part.Property.String

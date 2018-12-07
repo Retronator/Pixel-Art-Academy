@@ -60,51 +60,25 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     @debugDelaunay delaunay
 
     # Rasterize the triangles, mapping pixels from source.
-    triangle = [[], [], []]
-
     sourcePixels = newSpriteData.layers[0].pixels
     targetPixels = []
 
     for triangleIndex in [0...delaunay.triangles.length / 3]
-      triangle[0][0] = delaunay.coords[delaunay.triangles[triangleIndex * 3] * 2]
-      triangle[0][1] = delaunay.coords[delaunay.triangles[triangleIndex * 3] * 2 + 1]
-      triangle[1][0] = delaunay.coords[delaunay.triangles[triangleIndex * 3 + 1] * 2]
-      triangle[1][1] = delaunay.coords[delaunay.triangles[triangleIndex * 3 + 1] * 2 + 1]
-      triangle[2][0] = delaunay.coords[delaunay.triangles[triangleIndex * 3 + 2] * 2]
-      triangle[2][1] = delaunay.coords[delaunay.triangles[triangleIndex * 3 + 2] * 2 + 1]
+      # Rasterize target pixels one by one and sample from the source sprite.
+      targetTriangle = @_calculateTriangleData triangleIndex, delaunay.triangles, delaunay.coords
+      sourceTriangle = @_calculateTriangleData triangleIndex, delaunay.triangles, sourceLandmarks
 
-      left = Math.ceil Math.min triangle[0][0], triangle[1][0], triangle[2][0]
-      right = Math.floor Math.max triangle[0][0], triangle[1][0], triangle[2][0]
-      top = Math.ceil Math.min triangle[0][1], triangle[1][1], triangle[2][1]
-      bottom = Math.floor Math.max triangle[0][1], triangle[1][1], triangle[2][1]
-
-      for x in [left..right]
-        for y in [top..bottom]
+      for x in [targetTriangle.bounds.left..targetTriangle.bounds.right]
+        for y in [targetTriangle.bounds.top..targetTriangle.bounds.bottom]
           # Skip already-rasterized pixels.
           continue if _.find targetPixels, (pixel) => pixel.x is x and pixel.y is y
 
-          # Calculate barycentric coordinates of the point in this triangle.
-          pointWeights = barycentric triangle, [x, y]
-          continue unless 0 <= pointWeights[0] <= 1 and 0 <= pointWeights[1] <= 1 and 0 <= pointWeights[2] <= 1
-          continue unless 0.999 < pointWeights[0] + pointWeights[1] + pointWeights[2] < 1.001
+          continue unless sample = @_calculateSample sourceTriangle.coordinates, targetTriangle.coordinates, x, y
 
-          # Sample the pixel in the sprite.
-          sampleX = pointWeights[0] * sourceLandmarks[delaunay.triangles[triangleIndex * 3]].x + pointWeights[1] * sourceLandmarks[delaunay.triangles[triangleIndex * 3 + 1]].x + pointWeights[2] * sourceLandmarks[delaunay.triangles[triangleIndex * 3 + 2]].x
-          sampleY = pointWeights[0] * sourceLandmarks[delaunay.triangles[triangleIndex * 3]].y + pointWeights[1] * sourceLandmarks[delaunay.triangles[triangleIndex * 3 + 1]].y + pointWeights[2] * sourceLandmarks[delaunay.triangles[triangleIndex * 3 + 2]].y
-
-          mainSampleX = Math.round sampleX
-          mainSampleY = Math.round sampleY
-
-          continue unless mainSamplePixel = _.find sourcePixels, (pixel) => pixel.x is mainSampleX and pixel.y is mainSampleY
-
-          topLeftSampleX = Math.floor sampleX
-          topLeftSampleY = Math.floor sampleY
-
-          fractionX = sampleX - topLeftSampleX
-          fractionY = sampleY - topLeftSampleY
+          continue unless mainSamplePixel = _.find sourcePixels, (pixel) => pixel.x is sample.integer.x and pixel.y is sample.integer.y
 
           getNormal = (offsetX, offsetY) =>
-            return null unless samplePixel = _.find sourcePixels, (pixel) => pixel.x is topLeftSampleX + offsetX and pixel.y is topLeftSampleY + offsetY
+            return null unless samplePixel = _.find sourcePixels, (pixel) => pixel.x is sample.topLeftInteger.x + offsetX and pixel.y is sample.topLeftInteger.y + offsetY
             THREE.Vector3.fromObject samplePixel.normal
 
           normalTopLeft = getNormal 0, 0
@@ -113,7 +87,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
           normalBottomRight = getNormal 1, 1
 
           if normalTopLeft and normalBottomLeft
-            normalLeft = new THREE.Vector3().lerpVectors normalTopLeft, normalBottomLeft, fractionY
+            normalLeft = new THREE.Vector3().lerpVectors normalTopLeft, normalBottomLeft, sample.fraction.y
 
           else if normalTopLeft
             normalLeft = normalTopLeft
@@ -125,7 +99,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
             normalLeft = null
 
           if normalTopRight and normalBottomRight
-            normalRight = new THREE.Vector3().lerpVectors normalTopRight, normalBottomRight, fractionY
+            normalRight = new THREE.Vector3().lerpVectors normalTopRight, normalBottomRight, sample.fraction.y
 
           else if normalTopRight
             normalRight = normalTopRight
@@ -137,7 +111,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
             normalRight = null
 
           if normalLeft and normalRight
-            normal = new THREE.Vector3().lerpVectors(normalLeft, normalRight, fractionX).toObject()
+            normal = new THREE.Vector3().lerpVectors(normalLeft, normalRight, sample.fraction.x).toObject()
 
           else if normalLeft
             normal = normalLeft.toObject()
@@ -147,6 +121,22 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
           # Copy the sample pixel to target coordinates.
           targetPixels.push _.extend {}, mainSamplePixel, {x, y, normal}
+
+      # Go over source sprite and map pixels to the target so that each source pixel is displayed somewhere.
+      for x in [sourceTriangle.bounds.left..sourceTriangle.bounds.right]
+        for y in [sourceTriangle.bounds.top..sourceTriangle.bounds.bottom]
+          # Skip empty pixels.
+          continue unless samplePixel = _.find sourcePixels, (pixel) => pixel.x is x and pixel.y is y
+
+          # Calculate where in the target this pixel would map to.
+          continue unless sample = @_calculateSample targetTriangle.coordinates, sourceTriangle.coordinates, x, y
+
+          # Skip already-rasterized pixels.
+          continue if _.find targetPixels, (pixel) => pixel.x is sample.integer.x and pixel.y is sample.integer.y
+
+          targetPixels.push _.extend {}, samplePixel,
+            x: sample.integer.x
+            y: sample.integer.y
 
     newSpriteData.layers[0].pixels = targetPixels
     newSpriteData.bounds = null
@@ -201,3 +191,58 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       name: 'boundsBottomRight'
       x: if flipHorizontal then bounds.left - padding.left else bounds.right + padding.right
       y: bounds.bottom + padding.bottom
+
+  _calculateTriangleData: (triangleIndex, triangles, coordinates) ->
+    triangle = [[], [], []]
+
+    # See if we have an array of coordinate objects, or a flat array of x and y values interleaved.
+    if coordinates[0].x?
+      triangle[0][0] = coordinates[triangles[triangleIndex * 3]].x
+      triangle[0][1] = coordinates[triangles[triangleIndex * 3]].y
+      triangle[1][0] = coordinates[triangles[triangleIndex * 3 + 1]].x
+      triangle[1][1] = coordinates[triangles[triangleIndex * 3 + 1]].y
+      triangle[2][0] = coordinates[triangles[triangleIndex * 3 + 2]].x
+      triangle[2][1] = coordinates[triangles[triangleIndex * 3 + 2]].y
+
+    else
+      triangle[0][0] = coordinates[triangles[triangleIndex * 3] * 2]
+      triangle[0][1] = coordinates[triangles[triangleIndex * 3] * 2 + 1]
+      triangle[1][0] = coordinates[triangles[triangleIndex * 3 + 1] * 2]
+      triangle[1][1] = coordinates[triangles[triangleIndex * 3 + 1] * 2 + 1]
+      triangle[2][0] = coordinates[triangles[triangleIndex * 3 + 2] * 2]
+      triangle[2][1] = coordinates[triangles[triangleIndex * 3 + 2] * 2 + 1]
+
+    coordinates: triangle
+    bounds:
+      left: Math.ceil Math.min triangle[0][0], triangle[1][0], triangle[2][0]
+      right: Math.floor Math.max triangle[0][0], triangle[1][0], triangle[2][0]
+      top: Math.ceil Math.min triangle[0][1], triangle[1][1], triangle[2][1]
+      bottom: Math.floor Math.max triangle[0][1], triangle[1][1], triangle[2][1]
+
+  _calculateSample: (sampleCoordinates, sourceCoordinates, x, y) ->
+    # Calculate barycentric coordinates of the point in this triangle.
+    pointWeights = barycentric sourceCoordinates, [x, y]
+    return unless 0 <= pointWeights[0] <= 1 and 0 <= pointWeights[1] <= 1 and 0 <= pointWeights[2] <= 1
+    return unless 0.999 < pointWeights[0] + pointWeights[1] + pointWeights[2] < 1.001
+
+    # Sample the pixel in the sprite.
+    x = 0
+    y = 0
+
+    for index in [0..2]
+      x += pointWeights[index] * sampleCoordinates[index][0]
+      y += pointWeights[index] * sampleCoordinates[index][1]
+
+    integer =
+      x: Math.round x
+      y: Math.round y
+
+    topLeftInteger =
+      x: Math.floor x
+      y: Math.floor y
+
+    fraction =
+      x: x - topLeftInteger.x
+      y: y - topLeftInteger.y
+
+    {integer, topLeftInteger, fraction}

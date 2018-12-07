@@ -19,7 +19,7 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
       # Resolve multiple regions.
       regionIds = region.getRegionIds()
 
-      shapeParts = @options.part.properties.shape.parts()
+      shapeParts = @options.part.properties.shapes.parts()
 
       renderers = []
 
