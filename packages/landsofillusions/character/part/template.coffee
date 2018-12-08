@@ -58,6 +58,8 @@ if Meteor.isServer
   importDirective = 'LandsOfIllusions.Character.Part.Template.adminTemplates'
   
   LOI.GameContent.addToExport ->
+    documents = []
+
     # TODO: Fetch only admin templates.
     templates = LOI.Character.Part.Template.documents.fetch()
 
@@ -67,8 +69,21 @@ if Meteor.isServer
       delete template.authorName
       template._importDirective = importDirective
       
-    templates
-      
+    documents.push templates...
+
+    # Add template names and descriptions.
+    names = AB.Translation.documents.fetch
+      _id: $in: (template.name._id for template in templates)
+
+    documents.push names...
+
+    descriptions = AB.Translation.documents.fetch
+      _id: $in: (template.description._id for template in templates)
+
+    documents.push descriptions...
+
+    documents
+
   LOI.GameContent.addImportDirective importDirective, (template) ->
     # Associate the template back to the (new) admin.
     unless admin = RA.User.documents.findOne username: 'admin'
