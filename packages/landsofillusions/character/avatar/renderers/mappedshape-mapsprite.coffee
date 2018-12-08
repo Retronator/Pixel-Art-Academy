@@ -40,17 +40,40 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       top: Math.max 0, sourceLandmarksBounds.top - (newSpriteData.bounds.top - 0.5)
       bottom: Math.max 0, (newSpriteData.bounds.bottom + 0.5) - sourceLandmarksBounds.bottom
 
-    # Target padding is the same unless we're in Right regions and we have to flip it.
-    targetPadding = _.clone padding
+    # Add bound corners as extra landmarks. Source corners need to be flipped in Right regions.
+    extraSourceLandmarks = []
 
     flipHorizontal = @activeSpriteFlipped()
+    @_addBoundsCorners extraSourceLandmarks, sourceLandmarksBounds, padding, flipHorizontal
 
-    if flipHorizontal
-      [targetPadding.left, targetPadding.right] = [targetPadding.right, targetPadding.left]
+    # Express each extra landmark as a linear combination of existing ones and apply to target landmarks.
+    extraTargetLandmarks = []
+    flipFactor = if flipHorizontal then -1 else 1
 
-    # Add bound corners as extra landmarks. Source corners need to be flipped in Right regions.
-    @_addBoundsCorners sourceLandmarks, sourceLandmarksBounds, padding, flipHorizontal
-    @_addBoundsCorners targetLandmarks, targetLandmarksBounds, targetPadding
+    for extraLandmark, extraLandmarkIndex in extraSourceLandmarks
+      # Calculate distance to each existing landmark.
+      inverseDistances = for existingLandmark in sourceLandmarks
+        1 / Math.sqrt Math.pow(extraLandmark.x - existingLandmark.x, 2) + Math.pow(extraLandmark.y - existingLandmark.y, 2)
+
+      totalInverseDistances = _.sum inverseDistances
+
+      factors = for inverseDistance in inverseDistances
+        factor = inverseDistance / totalInverseDistances
+
+        # Factor can become NaN if inverse distance is infinity.
+        if _.isNaN factor then 1 else factor
+
+      # Calculate the extra target landmark with the factors.
+      extraTargetLandmark = _.extend {}, extraLandmark, x: 0, y: 0
+
+      for factor, index in factors
+        extraTargetLandmark.x += factor * (targetLandmarks[index].x + (extraLandmark.x - sourceLandmarks[index].x) * flipFactor)
+        extraTargetLandmark.y += factor * (targetLandmarks[index].y + extraLandmark.y - sourceLandmarks[index].y)
+
+      extraTargetLandmarks.push extraTargetLandmark
+
+    sourceLandmarks.push extraSourceLandmarks...
+    targetLandmarks.push extraTargetLandmarks...
 
     # Calculate triangulation of target landmarks.
     getX = (landmark) => landmark.x
