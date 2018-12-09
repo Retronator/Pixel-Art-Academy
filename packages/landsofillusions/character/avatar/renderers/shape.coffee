@@ -57,6 +57,10 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
               defaultSprite = true
 
               spriteId = @constructor._getDefaultSpriteId spriteName
+              
+              unless spriteId
+                # Try again with a sprite without a side suffix.
+                spriteId = @constructor._getDefaultSpriteId defaultName
 
               unless spriteId
                 spriteName = "#{defaultName} #{_.kebabCase mirrorSide}"

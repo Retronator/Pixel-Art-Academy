@@ -284,6 +284,7 @@ LOI.Character.Part.registerClasses
       NippleShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Body.NippleShape'
         name: 'nipple shape'
+        default: 'Nipple male'
         landmarks:
           nipple: new LOI.Character.Avatar.Landmark.Position
             name: 'nipple'
