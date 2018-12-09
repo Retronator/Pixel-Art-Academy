@@ -46,6 +46,9 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
     
   _drawRegionToContext: (context, options = {}) ->
     for renderer in @renderers
+      # Skip outfit if explicitly told so.
+      continue if @options.drawOutfit? and not @options.drawOutfit and renderer is @outfitRenderer
+
       context.save()
       renderer.drawToContext context, options
       context.restore()

@@ -32,7 +32,9 @@
         <p class="main-text avatar-item">
           <div class="name">Body</div>
           <div class="avatar-part body-part">
-            {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview avatar.body}}
+            {{#with avatar}}
+              {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args avatarBodyPreviewOptions}}
+            {{/with}}
           </div>
         </p>
         <p class="main-text avatar-item">

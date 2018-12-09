@@ -15,23 +15,31 @@ LOI.HumanAvatar.Regions =
 
   Hair: new LOI.Engine.RenderingRegion
     id: 'Hair'
-    multipleRegions: ['HairFront', 'HairBack']
+    multipleRegions: ['HairFront', 'HairMiddle', 'HairBehind']
 
   HairFront: new LOI.Engine.RenderingRegion
     id: 'HairFront'
     bounds: new AE.Rectangle 0, 0, 30, 20
     origin:
-      landmark: 'atlas'
+      landmark: 'headCenter'
       x: 15
-      y: 15
+      y: 12
 
-  HairBack: new LOI.Engine.RenderingRegion
-    id: 'HairBack'
+  HairMiddle: new LOI.Engine.RenderingRegion
+    id: 'HairMiddle'
     bounds: new AE.Rectangle 0, 0, 30, 20
     origin:
-      landmark: 'atlas'
+      landmark: 'headCenter'
       x: 15
-      y: 15
+      y: 12
+
+  HairBehind: new LOI.Engine.RenderingRegion
+    id: 'HairBehind'
+    bounds: new AE.Rectangle 0, 0, 30, 20
+    origin:
+      landmark: 'headCenter'
+      x: 15
+      y: 12
 
   # Torso
 

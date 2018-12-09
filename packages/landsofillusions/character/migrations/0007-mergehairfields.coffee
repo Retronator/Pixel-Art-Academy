@@ -26,7 +26,7 @@ class Migration extends Document.MajorMigration
               shape.node.fields.region ?= value: region
 
         setRegion hairFields, 'HairFront'
-        setRegion hairBehindFields, 'HairBack'
+        setRegion hairBehindFields, 'HairBehind'
 
         newHairFields = {}
 

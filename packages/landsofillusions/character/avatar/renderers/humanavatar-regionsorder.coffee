@@ -2,12 +2,13 @@ LOI = LandsOfIllusions
 
 LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
   "#{LOI.Engine.RenderingSides.Keys.Front}": [
-    LOI.HumanAvatar.Regions.HairBack
+    LOI.HumanAvatar.Regions.HairBehind
 
     LOI.HumanAvatar.Regions.RightUpperArm
     LOI.HumanAvatar.Regions.LeftUpperArm
 
     LOI.HumanAvatar.Regions.Torso
+    LOI.HumanAvatar.Regions.HairMiddle
     LOI.HumanAvatar.Regions.Head
     LOI.HumanAvatar.Regions.HairFront
 
@@ -29,7 +30,7 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
   ]
   
   "#{LOI.Engine.RenderingSides.Keys.FrontLeft}": [
-    LOI.HumanAvatar.Regions.HairBack
+    LOI.HumanAvatar.Regions.HairBehind
 
     LOI.HumanAvatar.Regions.RightUpperArm
     LOI.HumanAvatar.Regions.RightLowerArm
@@ -41,6 +42,7 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
 
     LOI.HumanAvatar.Regions.Torso
     LOI.HumanAvatar.Regions.SexOrgan
+    LOI.HumanAvatar.Regions.HairMiddle
     LOI.HumanAvatar.Regions.Head
     LOI.HumanAvatar.Regions.HairFront
 
@@ -54,6 +56,8 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
   ]
   
   "#{LOI.Engine.RenderingSides.Keys.Left}": [
+    LOI.HumanAvatar.Regions.HairBehind
+    
     LOI.HumanAvatar.Regions.RightUpperArm
     LOI.HumanAvatar.Regions.RightLowerArm
     LOI.HumanAvatar.Regions.RightHand
@@ -64,9 +68,9 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
 
     LOI.HumanAvatar.Regions.Torso
     LOI.HumanAvatar.Regions.SexOrgan
+    LOI.HumanAvatar.Regions.HairMiddle
     LOI.HumanAvatar.Regions.Head
     LOI.HumanAvatar.Regions.HairFront
-    LOI.HumanAvatar.Regions.HairBack
 
     LOI.HumanAvatar.Regions.LeftFoot
     LOI.HumanAvatar.Regions.LeftLowerLeg
@@ -78,7 +82,7 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
   ]
 
   "#{LOI.Engine.RenderingSides.Keys.BackLeft}": [
-    LOI.HumanAvatar.Regions.HairFront
+    LOI.HumanAvatar.Regions.HairBehind
 
     LOI.HumanAvatar.Regions.RightHand
     LOI.HumanAvatar.Regions.RightLowerArm
@@ -95,8 +99,9 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
     LOI.HumanAvatar.Regions.LeftUpperLeg
 
     LOI.HumanAvatar.Regions.Head
+    LOI.HumanAvatar.Regions.HairMiddle
     LOI.HumanAvatar.Regions.Torso
-    LOI.HumanAvatar.Regions.HairBack
+    LOI.HumanAvatar.Regions.HairFront
 
     LOI.HumanAvatar.Regions.LeftHand
     LOI.HumanAvatar.Regions.LeftLowerArm
@@ -104,7 +109,7 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
   ]
 
   "#{LOI.Engine.RenderingSides.Keys.Back}": [
-    LOI.HumanAvatar.Regions.HairFront
+    LOI.HumanAvatar.Regions.HairBehind
 
     LOI.HumanAvatar.Regions.RightUpperArm
     LOI.HumanAvatar.Regions.RightLowerArm
@@ -125,8 +130,9 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
     LOI.HumanAvatar.Regions.LeftHand
 
     LOI.HumanAvatar.Regions.Head
+    LOI.HumanAvatar.Regions.HairMiddle
     LOI.HumanAvatar.Regions.Torso
-    LOI.HumanAvatar.Regions.HairBack
+    LOI.HumanAvatar.Regions.HairFront
   ]
 
 # Last three sides are symmetric.

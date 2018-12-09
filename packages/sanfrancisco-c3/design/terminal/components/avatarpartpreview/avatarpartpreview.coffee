@@ -22,7 +22,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
       @renderer = new ComputedField =>
         return unless part = @data()
 
-        rendererOptions = {}
+        rendererOptions = _.clone @options.rendererOptions or {}
 
         if @designTerminal and _.startsWith part.options.type, 'Avatar.Outfit'
           rendererOptions.landmarksSource = => @designTerminal.screens.character.character().avatar.getRenderer().bodyRenderer

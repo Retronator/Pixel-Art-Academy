@@ -42,7 +42,7 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
   drawToContext: (context, options = {}) ->
     return unless @ready()
 
-    # Draw the hair behind first.
+    # Draw the hair behind and in the middle first.
     context.save()
 
     # Depend on landmarks to update when head renderer translations change.
@@ -54,7 +54,10 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
 
     context.translate translation.x, translation.y
 
-    for renderer in @headRenderer.getHairRenderers 'HairBack'
+    for renderer in @headRenderer.getHairRenderers 'HairBehind'
+      @headRenderer.drawRendererToContext renderer, context, options
+
+    for renderer in @headRenderer.getHairRenderers 'HairMiddle'
       @headRenderer.drawRendererToContext renderer, context, options
 
     context.restore()

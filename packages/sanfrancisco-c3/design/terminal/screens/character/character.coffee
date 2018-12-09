@@ -56,6 +56,10 @@ class C3.Design.Terminal.Character extends AM.Component
     rotatable: true
     viewingAngle: @terminal.viewingAngle
 
+  avatarBodyPreviewOptions: ->
+    rendererOptions:
+      drawOutfit: false
+
   events: ->
     super(arguments...).concat
       'click .done-button': @onClickDoneButton
@@ -124,9 +128,9 @@ class C3.Design.Terminal.Character extends AM.Component
     @terminal.switchToScreen @terminal.screens.mainMenu
 
   onClickBodyPart: (event) ->
-    @terminal.screens.avatarPart.pushPart @character().avatar.body, @character().avatar.body
+    @terminal.screens.avatarPart.pushPart @character().avatar.body, @character().avatar, drawOutfit: false
     @terminal.switchToScreen @terminal.screens.avatarPart
 
   onClickOutfitPart: (event) ->
-    @terminal.screens.avatarPart.pushPart @character().avatar.outfit, @character().avatar
+    @terminal.screens.avatarPart.pushPart @character().avatar.outfit, @character().avatar, drawOutfit: true
     @terminal.switchToScreen @terminal.screens.avatarPart
