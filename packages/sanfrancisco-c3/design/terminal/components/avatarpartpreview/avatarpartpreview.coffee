@@ -106,8 +106,11 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         'mousemove canvas': @onMouseMoveCanvas
         'mouseleave canvas': @onMouseLeaveCanvas
         'mousedown canvas': @onMouseDownCanvas
+        'dblclick canvas': @onMouseDoubleClickCanvas
 
     onMouseMoveCanvas: (event) ->
+      return unless @$canvas
+
       canvasOffset = @$canvas.offset()
 
       percentageX = (event.pageX - canvasOffset.left) / @$canvas.outerWidth() * 2 - 1
@@ -127,6 +130,9 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
       return unless @options.rotatable
 
+      Meteor.clearInterval @_rotateInterval
+      @_rotateInterval = null
+
       @_dragStart = event.pageX
       @_viewingAngleStart = @viewingAngle()
       @_drag = true
@@ -134,3 +140,16 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
       $(document).on 'mouseup.sanfrancisco-c3-design-terminal-components-avatarpartpreview-default', =>
         $(document).off '.sanfrancisco-c3-design-terminal-components-avatarpartpreview-default'
         @_drag = false
+
+    onMouseDoubleClickCanvas: (event) ->
+      return unless @options.rotatable
+
+      if @_rotateInterval
+        Meteor.clearInterval @_rotateInterval
+        @_rotateInterval = null
+
+      else
+        @_rotateInterval = Meteor.setInterval =>
+          @viewingAngle @viewingAngle() + Math.PI / 4
+        ,
+          250
