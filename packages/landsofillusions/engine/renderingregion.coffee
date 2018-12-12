@@ -4,6 +4,9 @@ class LOI.Engine.RenderingRegion
   constructor: (@options) ->
     @id = @options.id
     
+  getLandmarksRegionId: ->
+    @options.landmarksRegion or @id
+    
   getRegionIds: ->
     @options.multipleRegions or [@id]
 

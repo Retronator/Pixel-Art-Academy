@@ -62,8 +62,10 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
       # Filter down to the region this shape is mapped onto.
       if @options.region
+        landmarksRegion = LOI.HumanAvatar.Regions[@options.region.getLandmarksRegionId()]
+
         targetLandmarks = _.filter targetLandmarks, (targetLandmark) =>
-          @options.region.matchRegion targetLandmark.regionId
+          landmarksRegion.matchRegion targetLandmark.regionId
 
       # If we're flipped, we want to map onto flipped landmarks.
       if @activeSpriteFlipped() and spriteData.landmarks

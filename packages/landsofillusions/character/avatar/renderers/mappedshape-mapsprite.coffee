@@ -31,7 +31,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
     # Calculate landmark bounds.
     sourceLandmarksBounds = @_calculateLandmarkBounds sourceLandmarks
-    targetLandmarksBounds = @_calculateLandmarkBounds targetLandmarks
 
     # Calculate padding between sprite landmarks and sprite bounds.
     padding =
@@ -52,8 +51,10 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
     for extraLandmark, extraLandmarkIndex in extraSourceLandmarks
       # Calculate distance to each existing landmark.
-      inverseDistances = for existingLandmark in sourceLandmarks
-        1 / Math.sqrt Math.pow(extraLandmark.x - existingLandmark.x, 2) + Math.pow(extraLandmark.y - existingLandmark.y, 2)
+      distances = for existingLandmark in sourceLandmarks
+        Math.sqrt Math.pow(extraLandmark.x - existingLandmark.x, 2) + Math.pow(extraLandmark.y - existingLandmark.y, 2)
+
+      inverseDistances = (1 / Math.pow(distance, 2) for distance in distances)
 
       totalInverseDistances = _.sum inverseDistances
 

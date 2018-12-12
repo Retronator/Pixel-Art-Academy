@@ -59,6 +59,15 @@ LOI.HumanAvatar.Regions =
       x: 15
       y: 20
 
+  TorsoClothes: new LOI.Engine.RenderingRegion
+    id: 'TorsoClothes'
+    bounds: new AE.Rectangle 0, 20, 30, 30
+    origin:
+      landmark: 'navel'
+      x: 15
+      y: 15
+    landmarksRegion: 'Torso'
+      
   # Arms
 
   RightUpperArm: new LOI.Engine.RenderingRegion
