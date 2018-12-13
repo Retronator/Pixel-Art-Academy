@@ -42,6 +42,17 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
 
     regions = @constructor.regionsOrder[side]
 
+    # Remove regions that are being hidden by article part shapes, but only if we're drawing the outfit.
+    if not @options.drawOutfit? or @options.drawOutfit
+      hiddenRegionIds = []
+
+      for article in @options.humanAvatar.outfit.properties.articles.parts()
+        for articlePart in article.properties.parts.parts()
+          for articlePartShape in articlePart.properties.shapes.parts()
+            hiddenRegionIds.push articlePartShape.properties.hideRegions.regionIds()...
+
+      regions = _.filter regions, (region) -> region.id not in hiddenRegionIds
+
     @_drawRegionToContext context, _.extend {region}, options for region in regions
     
   _drawRegionToContext: (context, options = {}) ->

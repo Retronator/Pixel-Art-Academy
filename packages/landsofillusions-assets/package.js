@@ -66,6 +66,7 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/removepixel');
   api.addFile('documents/sprite/methods/colorfill');
   api.addFile('documents/sprite/methods/replacepixels');
+  api.addFile('documents/sprite/methods/transformpixels');
 
   api.addFile('documents/mesh..');
   api.addFile('documents/mesh/cameraangle');
@@ -167,6 +168,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/symmetry');
   api.addFile('spriteeditor/tools/undo');
   api.addFile('spriteeditor/tools/redo');
+  api.addFile('spriteeditor/tools/fliphorizontal');
 
   // Mesh editor
 

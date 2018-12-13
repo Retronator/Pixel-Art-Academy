@@ -44,6 +44,8 @@ LOI.Character.Part.registerClasses
         properties:
           condition: new LOI.Character.Avatar.Properties.RenderingCondition
             name: 'condition'
+          hideRegions: new LOI.Character.Avatar.Properties.HideRegions
+            name: 'hide regions'
         renderer: new LOI.Character.Avatar.Renderers.MappedShape
 
       CustomColor: new LOI.Character.Part

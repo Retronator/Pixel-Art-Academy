@@ -62,7 +62,6 @@ class C3.Design.Terminal.Properties.RenderingCondition extends AM.Component
       options
 
     load: ->
-      # Data can either be one of the parts, or the property itself in case of a new condition.
       part = @data()
       part.partType
 

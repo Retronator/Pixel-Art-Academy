@@ -125,6 +125,7 @@ class LOI.Assets.SpriteEditor extends AM.Component
       @constructor.Tools.Symmetry
       @constructor.Tools.Undo
       @constructor.Tools.Redo
+      @constructor.Tools.FlipHorizontal
     ]
 
     tools = for toolClass in toolClasses

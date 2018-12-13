@@ -83,6 +83,9 @@
                     {{#if $is this.type 'renderingCondition'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.RenderingCondition this}}
                     {{/if}}
+                    {{#if $is this.type 'hideRegions'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.HideRegions this}}
+                    {{/if}}
                   </div>
                 </li>
               {{/each}}

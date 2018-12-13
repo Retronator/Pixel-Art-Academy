@@ -42,6 +42,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @removePixel: @method 'removePixel'
   @colorFill: @method 'colorFill'
   @replacePixels: @method 'replacePixels'
+  @flipHorizontal: @method 'flipHorizontal'
   
   @pixelPattern = Match.ObjectIncluding
     x: Match.Integer

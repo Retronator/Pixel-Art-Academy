@@ -70,6 +70,7 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/properties/integer..');
   api.addComponent('design/terminal/properties/boolean..');
   api.addComponent('design/terminal/properties/renderingcondition..');
+  api.addComponent('design/terminal/properties/hideregions..');
 
   api.addThing('service..');
   api.addComponent('service/terminal..');

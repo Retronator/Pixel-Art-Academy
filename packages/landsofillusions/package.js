@@ -138,6 +138,7 @@ Package.onUse(function(api) {
   api.addFile('character/avatar/properties/relativecolorshade');
   api.addFile('character/avatar/properties/sprite');
   api.addFile('character/avatar/properties/renderingcondition');
+  api.addFile('character/avatar/properties/hideregions');
 
   api.addFile('character/avatar/renderers/renderers');
   api.addFile('character/avatar/renderers/renderer');

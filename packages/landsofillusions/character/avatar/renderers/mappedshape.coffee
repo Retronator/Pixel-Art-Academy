@@ -68,7 +68,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
           landmarksRegion.matchRegion targetLandmark.regionId
 
       # If we're flipped, we want to map onto flipped landmarks.
-      if @activeSpriteFlipped() and spriteData.landmarks
+      if @activeSpriteFlipped() and spriteData?.landmarks
         sourceLandmarks = for landmark in spriteData.landmarks
           _.extend {}, landmark,
             name: landmark.name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
