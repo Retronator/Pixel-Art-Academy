@@ -1,0 +1,29 @@
+<template name="FataMorgana.Menu.Dropdown">
+  <div class="fatamorgana-menu-dropdown">
+    <ul class="items">
+      {{#each items}}
+        {{#if isDivider}}
+          <li class="divider"></li>
+        {{else}}
+          {{#if items}}
+            <li class="item {{enabledClass}}">
+              <div class="caption">{{caption}}</div>
+              <div class="indicator"></div>
+              <div class="sub-menu">
+                {{> FataMorgana.Menu.Dropdown}}
+              </div>
+            </li>
+          {{else}}
+            {{#with action}}
+              <li class="item {{enabledClass}}">
+                <div class="active-status {{activeClass}}"></div>
+                <div class="caption">{{caption}}</div>
+                <div class="shortcut">{{shortcut}}</div>
+              </li>
+            {{/with}}
+          {{/if}}
+        {{/if}}
+      {{/each}}
+    </ul>
+  </div>
+</template>

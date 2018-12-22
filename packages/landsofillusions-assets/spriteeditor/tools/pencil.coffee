@@ -1,12 +1,16 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Pencil extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.Tool
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'
+
   constructor: ->
     super arguments...
 
     @name = "Pencil"
-    @shortcut = AC.Keys.b
+    @shortcut = key: AC.Keys.b
+    @icon = '/landsofillusions/assets/editor/icons/pencil.png'
 
   onMouseDown: (event) ->
     super arguments...

@@ -1,14 +1,14 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Tools.SourceImage extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.MeshEditor.Tools.SourceImage extends FM.Action
   constructor: ->
     super arguments...
 
     @name = "Source image"
 
-  toolClass: ->
-    'enabled' if @options.editor().sourceImageVisible()
+  active: -> @options.editor().sourceImageVisible()
 
   method: ->
     sourceImageVisibleField = @options.editor().sourceImageVisible

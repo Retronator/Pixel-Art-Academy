@@ -20,7 +20,7 @@ class AM.Hierarchy.Field
       return unless data = options.load()
 
       # We look if we have the value field (we can't do data.value?
-      # because it just carry null value, but the key is there).
+      # because it can just carry null value, but the key is there).
       if 'value' of data
         # This is a raw value, clean up if we previously had templates/nodes.
         cleanTemplate()

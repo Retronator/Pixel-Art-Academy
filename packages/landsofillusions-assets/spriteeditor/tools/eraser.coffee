@@ -1,12 +1,16 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Eraser extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools.Tool
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Eraser'
+
   constructor: ->
     super arguments...
 
     @name = "Eraser"
-    @shortcut = AC.Keys.e
+    @shortcut = key: AC.Keys.e
+    @icon = '/landsofillusions/assets/editor/icons/eraser.png'
 
   onMouseDown: (event) ->
     super arguments...

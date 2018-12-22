@@ -4,7 +4,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.PixelCanvas extends AM.Component
-  @register 'LandsOfIllusions.Assets.Components.PixelCanvas'
+  @id: -> 'LandsOfIllusions.Assets.Components.PixelCanvas'
+  @register @id()
 
   constructor: (@options) ->
     super arguments...

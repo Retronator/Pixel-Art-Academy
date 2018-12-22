@@ -11,8 +11,8 @@ class AC.Keyboard
     @_state = new AC.KeyboardState
     @_stateDependency = new Tracker.Dependency
 
-    $(window).keydown (event) => @onKeyDown event
-    $(window).keyup (event) => @onKeyUp event
+    $(document).keydown (event) => @onKeyDown event
+    $(document).keyup (event) => @onKeyUp event
 
   @getState: ->
     @_stateDependency.depend()

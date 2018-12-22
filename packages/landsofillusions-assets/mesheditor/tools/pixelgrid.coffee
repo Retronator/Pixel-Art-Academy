@@ -1,7 +1,8 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Tools.PixelGrid extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.MeshEditor.Tools.PixelGrid extends FM.Action
   constructor: ->
     super arguments...
 
@@ -9,9 +10,8 @@ class LOI.Assets.MeshEditor.Tools.PixelGrid extends LandsOfIllusions.Assets.Tool
     @shortcut = AC.Keys.singleQuote
     @shortcutCommandOrCtrl = true
 
-  toolClass: ->
-    'enabled' if @options.editor().pixelGridEnabled()
+  active: -> @options.editor().pixelGridEnabled()
 
-  method: ->
+  execute: ->
     pixelGridEnabledField = @options.editor().pixelGridEnabled
     pixelGridEnabledField not pixelGridEnabledField()

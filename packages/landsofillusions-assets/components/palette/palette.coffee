@@ -2,7 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.Palette extends AM.Component
-  @register 'LandsOfIllusions.Assets.Components.Palette'
+  @id: -> 'LandsOfIllusions.Assets.Components.Palette'
+  @register @id()
 
   constructor: (@options) ->
     super arguments...

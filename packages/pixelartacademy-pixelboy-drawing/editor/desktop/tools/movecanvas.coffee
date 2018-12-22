@@ -1,14 +1,16 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends LandsOfIllusions.Assets.Tools.Tool
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends FM.Tool
   constructor: ->
     super arguments...
 
     @name = "Move canvas"
-    @shortcut = AC.Keys.h
-    @holdShortcut = AC.Keys.space
+    @shortcut =
+      key: AC.Keys.h
+      holdKey: AC.Keys.space
 
     @moving = new ReactiveField false
 

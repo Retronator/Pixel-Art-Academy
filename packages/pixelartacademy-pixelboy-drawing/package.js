@@ -11,6 +11,7 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.use('retronator:fatamorgana');
   api.use('retronator:landsofillusions');
   api.use('retronator:pixelartacademy-pixelboy');
   api.use('retronator:pixelartacademy-practice');

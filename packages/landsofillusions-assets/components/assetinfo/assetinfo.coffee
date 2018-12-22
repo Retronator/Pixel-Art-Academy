@@ -2,7 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.AssetInfo extends AM.Component
-  @register 'LandsOfIllusions.Assets.Components.AssetInfo'
+  @id: -> 'LandsOfIllusions.Assets.Components.AssetInfo'
+  @register @id()
 
   constructor: (@options) ->
     super arguments...

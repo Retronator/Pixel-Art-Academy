@@ -18,6 +18,7 @@ Npm.depends({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('retronator:fatamorgana');
   api.use('edgee:slingshot');
   api.use('froatsnook:request');
 
@@ -28,7 +29,6 @@ Package.onUse(function(api) {
 
   api.addFile('assets');
 
-  api.addStyle('style/editor');
   api.addComponent('layout/layout');
 
   // Documents
@@ -87,11 +87,6 @@ Package.onUse(function(api) {
   api.addFile('upload/context..');
   api.addServerFile('upload/context/server');
   api.addClientFile('upload/context/client');
-  
-  // Tools
-
-  api.addFile('tools/tools');
-  api.addFile('tools/tool');
 
   // Components
 
@@ -103,7 +98,6 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/palette..');
   api.addUnstyledComponent('components/materials..');
   api.addUnstyledComponent('components/landmarks..');
-  api.addUnstyledComponent('components/toolbox..');
   api.addUnstyledComponent('components/spriteimage..');
   api.addUnstyledComponent('components/camera..');
 
@@ -155,21 +149,29 @@ Package.onUse(function(api) {
   api.addFile('engine/audio/nodes/number');
   api.addFile('engine/audio/nodes/sustainvalue');
   api.addFile('engine/audio/nodes/adsr');
+  
+  // Editors
+  
+  api.addComponent('editor..');
 
   // Sprite editor
 
-  api.addComponent('spriteeditor..');
+  api.addFile('spriteeditor..');
   api.addFile('spriteeditor/tools..');
+  api.addFile('spriteeditor/tools/tool');
+  api.addFile('spriteeditor/tools/arrow');
   api.addFile('spriteeditor/tools/pencil');
   api.addFile('spriteeditor/tools/eraser');
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
-  api.addFile('spriteeditor/tools/paintnormals');
-  api.addFile('spriteeditor/tools/symmetry');
-  api.addFile('spriteeditor/tools/undo');
-  api.addFile('spriteeditor/tools/redo');
-  api.addFile('spriteeditor/tools/fliphorizontal');
-
+  
+  api.addFile('spriteeditor/actions..');
+  api.addFile('spriteeditor/actions/paintnormals');
+  api.addFile('spriteeditor/actions/symmetry');
+  api.addFile('spriteeditor/actions/undo');
+  api.addFile('spriteeditor/actions/redo');
+  api.addFile('spriteeditor/actions/fliphorizontal');
+  
   // Mesh editor
 
   api.addComponent('mesheditor..');

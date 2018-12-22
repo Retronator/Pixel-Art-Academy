@@ -2,7 +2,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.Camera extends AM.Component
-  @register 'LandsOfIllusions.Assets.Components.Camera'
+  @id: -> 'LandsOfIllusions.Assets.Components.Camera'
+  @register @id()
 
   constructor: (@options) ->
     super arguments...

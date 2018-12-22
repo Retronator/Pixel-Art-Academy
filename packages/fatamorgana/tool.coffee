@@ -1,7 +1,10 @@
-LOI = LandsOfIllusions
+FM = FataMorgana
 
-class LandsOfIllusions.Assets.Tools.Tool
-  constructor: (@options) ->
+class FM.Tool
+  @id: -> throw new AE.NotImplementedException "Tool must have an ID."
+  id: -> @constructor.id()
+
+  constructor: ->
     @mouseState =
       x: null
       y: null
@@ -22,10 +25,8 @@ class LandsOfIllusions.Assets.Tools.Tool
       when 3 then @mouseState.rightButton = false
 
   onMouseMove: (event) ->
-    return unless pixelCoordinate = @options.editor().pixelCanvas().mouse().pixelCoordinate()
-
-    @mouseState.x = pixelCoordinate.x
-    @mouseState.y = pixelCoordinate.y
+    @mouseState.x = event.pageX
+    @mouseState.y = event.pageY
 
   onMouseLeaveWindow: (event) ->
     # Just in case we clean up button state when leaving. Nowadays browsers

@@ -112,9 +112,10 @@ Package.onUse(function(api) {
 	api.addComponent('mirage/display');
   api.addStyleImport('mirage/helpers');
   api.addFile('mirage/htmlhelper');
-  api.addUnstyledComponent('mirage/render');
-  api.addClientFile('mirage/window');
   api.addUnstyledComponent('mirage/pixelimage');
+  api.addUnstyledComponent('mirage/render');
+  api.addFile('mirage/shortcuthelper');
+  api.addClientFile('mirage/window');
 
   api.addUnstyledComponent('mirage/markdown..');
 

@@ -1,0 +1,13 @@
+<template name="FataMorgana.Interface">
+  <div class="fatamorgana-interface {{toolClass}}">
+    {{> FataMorgana.ApplicationArea applicationAreaData}}
+    {{#each windows}}
+      {{> FataMorgana.FloatingArea}}
+    {{/each}}
+    {{#each dialogs}}
+      <div class="dialog-area">
+        {{> FataMorgana.FloatingArea}}
+      </div>
+    {{/each}}
+  </div>
+</template>

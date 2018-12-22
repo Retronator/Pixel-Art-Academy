@@ -1,13 +1,18 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LOI.Assets.SpriteEditor.Tools.Tool
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.ColorPicker'
+
   constructor: ->
     super arguments...
 
     @name = "Color picker"
-    @shortcut = AC.Keys.i
-    @holdShortcut = AC.Keys.alt
+    @shortcut = 
+      key: AC.Keys.i
+      holdKey: AC.Keys.alt
+    @icon = '/landsofillusions/assets/editor/icons/color-picker.png'
 
   onMouseDown: (event) ->
     super arguments...

@@ -1,16 +1,16 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Tools.Debug extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.MeshEditor.Tools.Debug extends FM.Action
   constructor: ->
     super arguments...
 
     @name = "Debug"
     @shortcut = AC.Keys.graveAccent
 
-  toolClass: ->
-    'enabled' if @options.editor().debug()
+  active: -> @options.editor().debug()
 
-  method: ->
+  execute: ->
     debugField = @options.editor().debug
     debugField not debugField()

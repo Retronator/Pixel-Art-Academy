@@ -4,7 +4,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.ShadingSphere extends AM.Component
-  @register 'LandsOfIllusions.Assets.Components.ShadingSphere'
+  @id: -> 'LandsOfIllusions.Assets.Components.ShadingSphere'
+  @register @id()
 
   constructor: (@options) ->
     super arguments...

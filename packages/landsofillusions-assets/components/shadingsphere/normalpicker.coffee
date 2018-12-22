@@ -1,6 +1,7 @@
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.Components.ShadingSphere.NormalPicker extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.Components.ShadingSphere.NormalPicker extends FM.Tool
   onMouseDown: (event) ->
     super arguments...
 

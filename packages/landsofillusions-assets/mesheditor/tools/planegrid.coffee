@@ -1,7 +1,8 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Tools.PlaneGrid extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.MeshEditor.Tools.PlaneGrid extends FM.Action
   constructor: ->
     super arguments...
 
@@ -9,9 +10,8 @@ class LOI.Assets.MeshEditor.Tools.PlaneGrid extends LandsOfIllusions.Assets.Tool
     @shortcut = AC.Keys.semicolon
     @shortcutCommandOrCtrl = true
 
-  toolClass: ->
-    'enabled' if @options.editor().planeGridEnabled()
+  active: -> @options.editor().planeGridEnabled()
 
-  method: ->
+  execute: ->
     planeGridEnabledField = @options.editor().planeGridEnabled
     planeGridEnabledField not planeGridEnabledField()

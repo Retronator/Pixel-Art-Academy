@@ -1,0 +1,11 @@
+<template name="FataMorgana.SplitView">
+  <div class="fatamorgana-splitview {{dockSideClass}} {{fixedClass}} {{draggingClass}}" {{style viewStyle}}>
+    <div class="main-area">
+      {{> FataMorgana.DockedArea mainArea}}
+    </div>
+    <div class="divider"></div>
+    <div class="remaining-area">
+      {{> FataMorgana.DockedArea remainingArea}}
+    </div>
+  </div>
+</template>

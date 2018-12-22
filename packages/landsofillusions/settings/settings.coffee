@@ -34,10 +34,16 @@ class LOI.Settings
       moreInfo: "This will use your browser's local storage to store a sign-in token so that you don't need
                  to sign in again next time. Note: this will take effect after your next sign in."
 
+    @persistEditorsInterface = new @constructor.ConsentField
+      name: 'persistEditorsInterface'
+      question: "Do you want to save changes made to the user interface?"
+      moreInfo: "This will use your browser's local storage to save editor settings."
+
     # By default, we disallow all but persisting settings.
     @persistGameState.disallow() unless @persistGameState.decided()
     @persistCommandHistory.disallow() unless @persistCommandHistory.decided()
     @persistLogin.disallow() unless @persistLogin.decided()
+    @persistEditorsInterface.disallow() unless @persistEditorsInterface.decided()
 
     @graphics =
       minimumScale: new @constructor.Field 2, 'graphics.minimumScale', @persistSettings

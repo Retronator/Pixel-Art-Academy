@@ -3,7 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.Navigator extends AM.Component
-  @register "LandsOfIllusions.Assets.Components.Navigator"
+  @id: -> "LandsOfIllusions.Assets.Components.Navigator"
+  @register @id()
 
   constructor: (@options) ->
     super arguments...

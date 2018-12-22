@@ -43,6 +43,7 @@ class C3.Design.Terminal extends C3.Items.Terminal
 
   onRendered: ->
     super arguments...
+    return
 
     # Show an alpha-state disclaimer.
     @showDialog

@@ -1,15 +1,15 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Tools.PixelImage extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.MeshEditor.Tools.PixelImage extends FM.Action
   constructor: ->
     super arguments...
 
     @name = "Pixel image"
 
-  toolClass: ->
-    'enabled' if @options.editor().pixelImageVisible()
+  active: -> @options.editor().pixelImageVisible()
 
-  method: ->
+  execute: ->
     pixelImageVisibleField = @options.editor().pixelImageVisible
     pixelImageVisibleField not pixelImageVisibleField()

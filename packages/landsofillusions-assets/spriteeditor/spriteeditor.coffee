@@ -2,10 +2,75 @@ AB = Artificial.Base
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor extends AM.Component
-  @register 'LandsOfIllusions.Assets.SpriteEditor'
+class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor'
+  @register @id()
+  
+  @defaultInterfaceData: ->
+    menu =
+      type: FM.Menu.id()
+      items: [
+        caption: 'Sprite Editor'
+      ,
+        caption: 'File'
+      ,
+        caption: 'Edit'
+        items: [
+          @Actions.Undo.id()
+          @Actions.Redo.id()
+          null
+          @Actions.FlipHorizontal.id()
+        ]
+      ,
+        caption: 'View'
+        items: [
+          @Actions.PaintNormals.id()
+        ]
+      ,
+        caption: 'Window'
+      ]
+
+    toolbox =
+      type: FM.Toolbox.id()
+      width: 20
+      widthStep: 20
+      minWidth: 20
+      tools: [
+        @Tools.Arrow.id()
+        @Tools.Pencil.id()
+        @Tools.Eraser.id()
+        @Tools.ColorFill.id()
+        @Tools.ColorPicker.id()
+      ]
+
+    layouts:
+      main:
+        name: 'Main'
+        applicationArea:
+          type: FM.SplitView.id()
+          fixed: true
+          mainArea: menu
+          dockSide: FM.SplitView.DockSide.Top
+          remainingArea:
+            type: FM.SplitView.id()
+            dockSide: FM.SplitView.DockSide.Left
+            mainArea: toolbox
+            remainingArea:
+              type: FM.SplitView.id()
+              dockSide: FM.SplitView.DockSide.Right
+              mainArea:
+                type: FM.TabbedView.id()
+                width: 150
+                tabs: [
+                  contentComponentId: LOI.Assets.Components.Navigator.id()
+                ,
+                  contentComponentId: LOI.Assets.Components.AssetInfo.id()
+                ]
+              remainingArea:
+                contentComponentId: LOI.Assets.Components.PixelCanvas.id()
 
   constructor: ->
     super arguments...
@@ -18,9 +83,6 @@ class LOI.Assets.SpriteEditor extends AM.Component
     @assetInfo = new ReactiveField null
     @materials = new ReactiveField null
     @landmarks = new ReactiveField null
-    @tools = new ReactiveField null
-    @actions = new ReactiveField null
-    @toolbox = new ReactiveField null
     @shadingSphere = new ReactiveField null
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, 0, -1).normalize()
@@ -43,14 +105,8 @@ class LOI.Assets.SpriteEditor extends AM.Component
           palette: 1
       )?.palette?._id
 
-    @activeTool = new ReactiveField null
-
-    @canvasFocused = new ReactiveField true
-
   onCreated: ->
     super arguments...
-
-    $('html').addClass('asset-editor')
 
     # Initialize components.
     @sprite new LOI.Assets.Engine.Sprite
@@ -66,7 +122,9 @@ class LOI.Assets.SpriteEditor extends AM.Component
         @landmarks()
       ]
       symmetryXOrigin: @symmetryXOrigin
-        
+
+    @interface.registerContentComponent @pixelCanvas()
+
     setAssetId = (spriteId) =>
       AB.Router.setParameters {spriteId}
         
@@ -80,6 +138,8 @@ class LOI.Assets.SpriteEditor extends AM.Component
       camera: @pixelCanvas().camera
       enabled: @canvasFocused
 
+    @interface.registerContentComponent @navigator()
+
     @palette new LOI.Assets.Components.Palette
       paletteId: @paletteId
       materials: @materials
@@ -92,6 +152,8 @@ class LOI.Assets.SpriteEditor extends AM.Component
       setPaletteId: (paletteId) =>
         LOI.Assets.Asset.update LOI.Assets.Sprite.className, @spriteId(), $set: palette: _id: paletteId
 
+    @interface.registerContentComponent @assetInfo()
+
     @materials new LOI.Assets.Components.Materials
       assetId: @spriteId
       documentClass: LOI.Assets.Sprite
@@ -102,12 +164,6 @@ class LOI.Assets.SpriteEditor extends AM.Component
       documentClass: LOI.Assets.Sprite
       pixelCanvas: @pixelCanvas
 
-    @toolbox new LOI.Assets.Components.Toolbox
-      tools: @tools
-      activeTool: @activeTool
-      actions: @actions
-      enabled: @canvasFocused
-
     @shadingSphere new LOI.Assets.Components.ShadingSphere
       palette: @palette
       materials: @materials
@@ -117,43 +173,29 @@ class LOI.Assets.SpriteEditor extends AM.Component
 
     # Create tools.
     toolClasses = [
+      @constructor.Tools.Arrow
       @constructor.Tools.Pencil
       @constructor.Tools.Eraser
       @constructor.Tools.ColorFill
       @constructor.Tools.ColorPicker
-      @constructor.Tools.PaintNormals
-      @constructor.Tools.Symmetry
-      @constructor.Tools.Undo
-      @constructor.Tools.Redo
-      @constructor.Tools.FlipHorizontal
     ]
 
-    tools = for toolClass in toolClasses
-      new toolClass
+    for toolClass in toolClasses
+      @interface.registerTool new toolClass
         editor: => @
-          
-    @tools tools
-
-  onDestroyed: ->
-    super arguments...
-
-    $('html').removeClass('asset-editor')
-
-  toolClass: ->
-    return unless tool = @activeTool()
-
-    toolClass = _.kebabCase tool.name
-    extraToolClass = tool.toolClass?()
-
-    [toolClass, extraToolClass].join ' '
     
-  events: ->
-    super(arguments...).concat
-      'focus input': @onFocusInput
-      'blur input': @onBlurInput
+    # Start with the arrow tool.
+    @interface.activeTool @interface.getTool @constructor.Tools.Arrow
 
-  onFocusInput: (event) ->
-    @canvasFocused false
+    # Create actions.
+    actionClasses = [
+      @constructor.Actions.Undo
+      @constructor.Actions.Redo
+      @constructor.Actions.FlipHorizontal
+      @constructor.Actions.PaintNormals
+      @constructor.Actions.Symmetry
+    ]
 
-  onBlurInput: (event) ->
-    @canvasFocused true
+    for actionClass in actionClasses
+      @interface.registerAction new actionClass
+        editor: => @

@@ -1,7 +1,8 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LandsOfIllusions.Assets.Tools.Tool
+class LOI.Assets.MeshEditor.Tools.ClusterPicker extends FM.Tool
   constructor: ->
     super arguments...
 
