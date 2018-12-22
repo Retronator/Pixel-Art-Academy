@@ -1,4 +1,16 @@
 <template name="FataMorgana.TabbedView">
   <div class="fatamorgana-tabbedview">
+    <ul class="tabs">
+      {{#each tabs}}
+        <li class="tab {{activeClass}}">
+          {{name}}
+        </li>
+      {{/each}}
+    </ul>
+    {{#with activeTab}}
+      <div class="active-tab">
+        {{> FataMorgana.DockedArea}}
+      </div>
+    {{/with}}
   </div>
 </template>

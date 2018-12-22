@@ -56,6 +56,7 @@ class LOI.Assets.Components.Landmarks extends AM.Component
   # Renderer
 
   drawToContext: (context) ->
+    return unless @isCreated()
     return unless landmarks = @landmarks()
 
     scale = @options.pixelCanvas().camera().scale()

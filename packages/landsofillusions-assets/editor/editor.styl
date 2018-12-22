@@ -77,6 +77,40 @@ div.landsofillusions-assets-editor
       .divider
         background-color atariGrey(1)
 
+    .fatamorgana-tabbedview
+      display flex
+      width 100%
+      height 100%
+      flex-direction column
+
+      .tabs
+        display flex
+        flex-shrink 0
+        background atariGrey(0)
+        padding-top 2rem
+
+        .tab
+          padding 2rem 4rem
+          checkout()
+          text-transform uppercase
+          cursor pointer
+          white-space nowrap
+          text-overflow ellipsis
+          overflow hidden
+
+          &.active
+            background-color atariGrey(1)
+            cursor default
+
+      .active-tab
+        position relative
+        flex-grow 1
+        background-color atariGrey(1)
+
+        > .fatamorgana-area
+          absolute-cover()
+          overflow-y auto
+
     .fatamorgana-menu
       background-color atariGrey(1)
       border-bottom 1rem solid atariGrey(2)
@@ -166,19 +200,17 @@ div.landsofillusions-assets-editor
 
           &.active
             .tool-button
-              background atariGrey(0)
-              border-color atariGrey(0)
+              background atariGrey(2)
+              border-color atariGrey(2)
 
     .landsofillusions-assets-components-pixelcanvas
-      absolute-cover()
+      position relative
+      width 100%
+      height 100%
       user-select none
 
       .canvas
-        position absolute
-        top 0
-        left 0
-        width 100%
-        height 100%
+        absolute-cover-size()
         user-select none
 
     .landsofillusions-assets-components-assetslist
@@ -209,9 +241,11 @@ div.landsofillusions-assets-editor
     .landsofillusions-assets-components-assetinfo
     .landsofillusions-assets-components-materials
     .landsofillusions-assets-components-landmarks
-      float right
-      clear both
-      margin-bottom 5rem
+    .landsofillusions-assets-components-camera
+    .landsofillusions-assets-components-shadingsphere
+      width 100%
+      height 100%
+      padding 2rem
 
     .landsofillusions-assets-components-navigator
       .zoom-display
@@ -224,11 +258,7 @@ div.landsofillusions-assets-editor
           border none
 
     .landsofillusions-assets-components-palette
-      position absolute
-      bottom 5rem
-      right 5rem
       display flex
-      border 1rem solid atariGrey(0)
       flex-direction column
 
       .ramp
@@ -255,8 +285,6 @@ div.landsofillusions-assets-editor
             display block
 
     .landsofillusions-assets-components-assetinfo
-      width 75rem
-
       .name
       .palette
         display block
@@ -274,7 +302,8 @@ div.landsofillusions-assets-editor
     .landsofillusions-assets-components-materials
     .landsofillusions-assets-components-landmarks
     .landsofillusions-assets-components-camera
-      width 120rem
+      width 100%
+      height 100%
 
       .materials-table
       .landmarks-table
@@ -359,15 +388,10 @@ div.landsofillusions-assets-editor
             text-align center
 
     .landsofillusions-assets-components-shadingsphere
-      position absolute
-      bottom 5rem
-      left 5rem
       pointer-events none
 
       .options
-        display inline-block
-        vertical-align bottom
-        margin-left 5rem
+        margin-top 5rem
         pointer-events auto
 
         .option

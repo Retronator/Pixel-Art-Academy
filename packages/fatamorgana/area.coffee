@@ -6,6 +6,16 @@ class FM.Area extends AM.Component
 
   template: -> 'FataMorgana.Area'
 
+  onCreated: ->
+    super arguments...
+
+    @interface = @ancestorComponentOfType FM.Interface
+
+    # Isolate component ID to minimize reactivity.
+    @contentComponentId = new ComputedField =>
+      options = @data()
+      options?.contentComponentId
+
   areaClass: -> # Override to set a styling class for this area.
 
   areaStyle: ->
@@ -20,3 +30,6 @@ class FM.Area extends AM.Component
       style[property] = "#{value}rem"
 
     style
+
+  contentComponent: ->
+    @interface.contentComponents()[@contentComponentId()]

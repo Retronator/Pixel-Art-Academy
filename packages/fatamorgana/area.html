@@ -15,5 +15,8 @@
     {{#if $is type 'FataMorgana.Toolbox'}}
       {{> FataMorgana.Toolbox}}
     {{/if}}
+    {{#if contentComponentId}}
+      {{> Render contentComponent}}
+    {{/if}}
   </div>
 </template>

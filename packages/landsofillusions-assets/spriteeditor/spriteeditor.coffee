@@ -62,14 +62,38 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
               type: FM.SplitView.id()
               dockSide: FM.SplitView.DockSide.Right
               mainArea:
-                type: FM.TabbedView.id()
+                type: FM.SplitView.id()
+                dockSide: FM.SplitView.DockSide.Top
                 width: 150
-                tabs: [
-                  contentComponentId: LOI.Assets.Components.Navigator.id()
-                ,
-                  contentComponentId: LOI.Assets.Components.AssetInfo.id()
-                ]
-              remainingArea:
+                mainArea:
+                  type: FM.TabbedView.id()
+                  height: 200
+                  tabs: [
+                    name: 'Navigator'
+                    contentComponentId: LOI.Assets.Components.Navigator.id()
+                    active: true
+                  ,
+                    name: 'File info'
+                    contentComponentId: LOI.Assets.Components.AssetInfo.id()
+                  ,
+                    name: 'Landmarks'
+                    contentComponentId: LOI.Assets.Components.Landmarks.id()
+                  ]
+                remainingArea:
+                  type: FM.TabbedView.id()
+                  tabs: [
+                    name: 'Palette'
+                    contentComponentId: LOI.Assets.Components.Palette.id()
+                    active: true
+                  ,
+                    name: 'Materials'
+                    contentComponentId: LOI.Assets.Components.Materials.id()
+                  ,
+                    name: 'Shading'
+                    contentComponentId: LOI.Assets.Components.ShadingSphere.id()
+                  ]
+
+    remainingArea:
                 contentComponentId: LOI.Assets.Components.PixelCanvas.id()
 
   constructor: ->
@@ -144,6 +168,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       paletteId: @paletteId
       materials: @materials
 
+    @interface.registerContentComponent @palette()
+
     @assetInfo new LOI.Assets.Components.AssetInfo
       documentClass: LOI.Assets.Sprite
       getAssetId: @spriteId
@@ -159,10 +185,14 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       documentClass: LOI.Assets.Sprite
       palette: @palette
 
+    @interface.registerContentComponent @materials()
+
     @landmarks new LOI.Assets.Components.Landmarks
       assetId: @spriteId
       documentClass: LOI.Assets.Sprite
       pixelCanvas: @pixelCanvas
+
+    @interface.registerContentComponent @landmarks()
 
     @shadingSphere new LOI.Assets.Components.ShadingSphere
       palette: @palette
@@ -170,6 +200,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       lightDirection: @lightDirection
       visualizeNormals: @paintNormals
       radius: => 30
+
+    @interface.registerContentComponent @shadingSphere()
 
     # Create tools.
     toolClasses = [
