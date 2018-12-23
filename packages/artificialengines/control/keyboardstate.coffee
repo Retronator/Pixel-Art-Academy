@@ -27,6 +27,14 @@ class AC.KeyboardState
     return if shortcut.alt and not @isKeyDown AC.Keys.alt
     return if shortcut.control and not @isKeyDown AC.Keys.control
 
+    # Make sure non of the other modifiers are down.
+    return if @isCommandOrCtrlDown() and not (shortcut.command or shortcut.control or shortcut.commandOrControl)
+    return if @isMetaDown() and not (shortcut.command or shortcut.win or shortcut.super or shortcut.commandOrControl)
+
+    for keyName in ['shift', 'alt', 'control']
+      key = AC.Keys[keyName]
+      return if @isKeyDown(key) and not (shortcut[keyName] or (shortcut.key is key) or (shortcut.holdKey is key))
+
     # Make sure the main key is down.
     keyDown = true if shortcut.key and @isKeyDown shortcut.key
     holdKeyDown = true if shortcut.holdKey and @isKeyDown shortcut.holdKey
