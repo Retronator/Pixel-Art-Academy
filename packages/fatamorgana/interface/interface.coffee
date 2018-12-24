@@ -76,11 +76,14 @@ class FM.Interface extends AM.Component
     @componentsData.child componentId
     
   displayDialog: (dialog) ->
+    # Wrap the plain object into data for compatibility.
+    dialogData = new FM.Interface.Data load: => dialog
+
     # Add ID to minimize reactivity.
-    dialog._id ?= Random.id()
+    dialogData._id ?= Random.id()
 
     dialogs = @dialogs()
-    dialogs.push dialog
+    dialogs.push dialogData
     @dialogs dialogs
 
   closeDialog: (dialog) ->

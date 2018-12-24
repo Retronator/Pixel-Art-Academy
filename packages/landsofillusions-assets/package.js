@@ -160,6 +160,7 @@ Package.onUse(function(api) {
   api.addFile('editor/actions/new');
   api.addFile('editor/actions/open');
 
+  api.addComponent('editor/window..');
   api.addComponent('editor/assetopendialog..');
 
   // Sprite editor

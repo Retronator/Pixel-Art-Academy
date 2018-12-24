@@ -29,6 +29,4 @@ class FM.Menu extends FM.View
     ,
       dropdown
 
-    dialogData = new FM.Interface.Data load: => dialog
-
-    @interface.displayDialog dialogData
+    @interface.displayDialog dialog

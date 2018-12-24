@@ -34,6 +34,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           palette: 1
       )?.palette?._id
 
+    @documentClass = LOI.Assets.Sprite
     @assetClassName = 'Sprite'
     @assetData = @spriteData
     @assetId = @spriteId

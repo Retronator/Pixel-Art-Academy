@@ -10,9 +10,6 @@ class LOI.Assets.Editor.Actions.Open extends FM.Action
     
   execute: ->
     dialog =
-      type: LOI.Assets.Editor.AssetOpenDialog.id()
-      left: position.left / scale
-      top: (position.top + $item.outerHeight()) / scale
-      canDismiss: true
+      contentComponentId: LOI.Assets.Editor.AssetOpenDialog.id()
 
     @interface.displayDialog dialog
