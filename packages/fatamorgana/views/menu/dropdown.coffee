@@ -3,9 +3,9 @@ FM = FataMorgana
 
 class FM.Menu.Dropdown extends FM.View
   # items: array of entries in the dropdown
-  #   caption: text for the item
-  #   items: an array of entries shown in a sub-menu on hover
-  #     ...
+  #   [actionId]: string identifying the action to be performed
+  #   [null]: a divider between items
+  #   [{caption, items}]: an embedded dropdown of entries shown on hover
   @id: -> 'FataMorgana.Menu.Dropdown'
   @register @id()
 
@@ -17,7 +17,7 @@ class FM.Menu.Dropdown extends FM.View
   
   action: ->
     actionId = @currentData()
-    @interface.actions()[actionId]
+    @interface.getOperator actionId
 
   activeClass: ->
     action = @currentData()
@@ -25,7 +25,7 @@ class FM.Menu.Dropdown extends FM.View
 
   shortcut: ->
     action = @currentData()
-    AM.ShortcutHelper.getShortcutString action.shortcut
+    AM.ShortcutHelper.getShortcutString action.currentShortcut()
 
   enabledClass: ->
     enabled = true

@@ -1,7 +1,7 @@
 <template name="FataMorgana.Menu.Dropdown">
   <div class="fatamorgana-menu-dropdown">
     <ul class="items">
-      {{#each items}}
+      {{#each get.items}}
         {{#if isDivider}}
           <li class="divider"></li>
         {{else}}
@@ -17,7 +17,7 @@
             {{#with action}}
               <li class="item {{enabledClass}}">
                 <div class="active-status {{activeClass}}"></div>
-                <div class="caption">{{caption}}</div>
+                <div class="caption">{{displayName}}</div>
                 <div class="shortcut">{{shortcut}}</div>
               </li>
             {{/with}}

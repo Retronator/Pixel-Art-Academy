@@ -4,13 +4,9 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.Tool
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'
+  @displayName: -> "Pencil"
 
-  constructor: ->
-    super arguments...
-
-    @name = "Pencil"
-    @shortcut = key: AC.Keys.b
-    @icon = '/landsofillusions/assets/editor/icons/pencil.png'
+  @initialize()
 
   onMouseDown: (event) ->
     super arguments...

@@ -1,0 +1,13 @@
+<template name="LandsOfIllusions.Assets.Editor.AssetOpenDialog">
+  <div class="landsofillusions-assets-editor-assetsopendialog">
+    <ul class="assets">
+      {{#each assets}}
+        <li class="asset {{selectedClass}}">{{nameOrId}}</li>
+      {{/each}}
+    </ul>
+    <div class="actions">
+      <button class="cancel-button">Cancel</button>
+      <button class="open-button">Open</button>
+    </div>
+  </div>
+</template>

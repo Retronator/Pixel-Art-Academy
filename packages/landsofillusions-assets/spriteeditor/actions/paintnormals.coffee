@@ -4,15 +4,12 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Actions.PaintNormals extends FM.Action
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Actions.PaintNormals'
+  @displayName: -> "Paint normals"
+    
+  @initialize()
 
-  constructor: (@options) ->
-    super arguments...
-
-    @caption = "Paint normals"
-    @shortcut = key: AC.Keys.n
-
-  active: -> @options.editor().paintNormals()
+  active: -> @interface.parent.paintNormals()
 
   execute: ->
-    paintNormalsField = @options.editor().paintNormals
+    paintNormalsField = @interface.parent.paintNormals
     paintNormalsField not paintNormalsField()

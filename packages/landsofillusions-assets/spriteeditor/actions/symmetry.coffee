@@ -4,12 +4,9 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Actions.Symmetry extends FM.Action
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Actions.Symmetry'
-
-  constructor: (@options) ->
-    super arguments...
-
-    @caption = "Symmetry"
-    @shortcut = key: AC.Keys.s
+  @displayName: -> "Symmetry"
+    
+  @initialize()
 
   active: -> @options.editor().symmetryXOrigin()?
 

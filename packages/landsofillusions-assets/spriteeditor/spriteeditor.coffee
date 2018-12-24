@@ -7,107 +7,12 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor'
-  @register @id()
   
-  @defaultInterfaceData: ->
-    menu =
-      type: FM.Menu.id()
-      items: [
-        caption: 'Sprite Editor'
-      ,
-        caption: 'File'
-      ,
-        caption: 'Edit'
-        items: [
-          @Actions.Undo.id()
-          @Actions.Redo.id()
-          null
-          @Actions.FlipHorizontal.id()
-        ]
-      ,
-        caption: 'View'
-        items: [
-          @Actions.PaintNormals.id()
-        ]
-      ,
-        caption: 'Window'
-      ]
-
-    toolbox =
-      type: FM.Toolbox.id()
-      width: 20
-      widthStep: 20
-      minWidth: 20
-      tools: [
-        @Tools.Arrow.id()
-        @Tools.Pencil.id()
-        @Tools.Eraser.id()
-        @Tools.ColorFill.id()
-        @Tools.ColorPicker.id()
-      ]
-
-    layouts:
-      main:
-        name: 'Main'
-        applicationArea:
-          type: FM.SplitView.id()
-          fixed: true
-          mainArea: menu
-          dockSide: FM.SplitView.DockSide.Top
-          remainingArea:
-            type: FM.SplitView.id()
-            dockSide: FM.SplitView.DockSide.Left
-            mainArea: toolbox
-            remainingArea:
-              type: FM.SplitView.id()
-              dockSide: FM.SplitView.DockSide.Right
-              mainArea:
-                type: FM.SplitView.id()
-                dockSide: FM.SplitView.DockSide.Top
-                width: 150
-                mainArea:
-                  type: FM.TabbedView.id()
-                  height: 200
-                  tabs: [
-                    name: 'Navigator'
-                    contentComponentId: LOI.Assets.Components.Navigator.id()
-                    active: true
-                  ,
-                    name: 'File info'
-                    contentComponentId: LOI.Assets.Components.AssetInfo.id()
-                  ,
-                    name: 'Landmarks'
-                    contentComponentId: LOI.Assets.Components.Landmarks.id()
-                  ]
-                remainingArea:
-                  type: FM.TabbedView.id()
-                  tabs: [
-                    name: 'Palette'
-                    contentComponentId: LOI.Assets.Components.Palette.id()
-                    active: true
-                  ,
-                    name: 'Materials'
-                    contentComponentId: LOI.Assets.Components.Materials.id()
-                  ,
-                    name: 'Shading'
-                    contentComponentId: LOI.Assets.Components.ShadingSphere.id()
-                  ]
-
-    remainingArea:
-                contentComponentId: LOI.Assets.Components.PixelCanvas.id()
-
   constructor: ->
     super arguments...
 
     @sprite = new ReactiveField null
     @pixelCanvas = new ReactiveField null
-    @navigator = new ReactiveField null
-    @palette = new ReactiveField null
-    @assetsList = new ReactiveField null
-    @assetInfo = new ReactiveField null
-    @materials = new ReactiveField null
-    @landmarks = new ReactiveField null
-    @shadingSphere = new ReactiveField null
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, 0, -1).normalize()
     @paintNormals = new ReactiveField false
@@ -121,13 +26,22 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
 
       LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
-      
+
     @paletteId = new ComputedField =>
       # Minimize reactivity to only palette changes.
       LOI.Assets.Sprite.documents.findOne(@spriteId(),
         fields:
           palette: 1
       )?.palette?._id
+
+    @assetClassName = 'Sprite'
+    @assetData = @spriteData
+    @assetId = @spriteId
+    @setAssetId = (spriteId) =>
+      AB.Router.setParameters {spriteId}
+      
+    @setPalletteId = (paletteId) =>
+      LOI.Assets.Asset.update LOI.Assets.Sprite.className, @spriteId(), $set: palette: _id: paletteId
 
   onCreated: ->
     super arguments...
@@ -146,88 +60,3 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         @landmarks()
       ]
       symmetryXOrigin: @symmetryXOrigin
-
-    @interface.registerContentComponent @pixelCanvas()
-
-    setAssetId = (spriteId) =>
-      AB.Router.setParameters {spriteId}
-        
-    @assetsList new LOI.Assets.Components.AssetsList
-      documentClass: LOI.Assets.Sprite
-      getAssetId: @spriteId
-      setAssetId: setAssetId
-      subscription: LOI.Assets.Sprite.allGeneric
-
-    @navigator new LOI.Assets.Components.Navigator
-      camera: @pixelCanvas().camera
-      enabled: @canvasFocused
-
-    @interface.registerContentComponent @navigator()
-
-    @palette new LOI.Assets.Components.Palette
-      paletteId: @paletteId
-      materials: @materials
-
-    @interface.registerContentComponent @palette()
-
-    @assetInfo new LOI.Assets.Components.AssetInfo
-      documentClass: LOI.Assets.Sprite
-      getAssetId: @spriteId
-      setAssetId: setAssetId
-      getPaletteId: @paletteId
-      setPaletteId: (paletteId) =>
-        LOI.Assets.Asset.update LOI.Assets.Sprite.className, @spriteId(), $set: palette: _id: paletteId
-
-    @interface.registerContentComponent @assetInfo()
-
-    @materials new LOI.Assets.Components.Materials
-      assetId: @spriteId
-      documentClass: LOI.Assets.Sprite
-      palette: @palette
-
-    @interface.registerContentComponent @materials()
-
-    @landmarks new LOI.Assets.Components.Landmarks
-      assetId: @spriteId
-      documentClass: LOI.Assets.Sprite
-      pixelCanvas: @pixelCanvas
-
-    @interface.registerContentComponent @landmarks()
-
-    @shadingSphere new LOI.Assets.Components.ShadingSphere
-      palette: @palette
-      materials: @materials
-      lightDirection: @lightDirection
-      visualizeNormals: @paintNormals
-      radius: => 30
-
-    @interface.registerContentComponent @shadingSphere()
-
-    # Create tools.
-    toolClasses = [
-      @constructor.Tools.Arrow
-      @constructor.Tools.Pencil
-      @constructor.Tools.Eraser
-      @constructor.Tools.ColorFill
-      @constructor.Tools.ColorPicker
-    ]
-
-    for toolClass in toolClasses
-      @interface.registerTool new toolClass
-        editor: => @
-    
-    # Start with the arrow tool.
-    @interface.activeTool @interface.getTool @constructor.Tools.Arrow
-
-    # Create actions.
-    actionClasses = [
-      @constructor.Actions.Undo
-      @constructor.Actions.Redo
-      @constructor.Actions.FlipHorizontal
-      @constructor.Actions.PaintNormals
-      @constructor.Actions.Symmetry
-    ]
-
-    for actionClass in actionClasses
-      @interface.registerAction new actionClass
-        editor: => @

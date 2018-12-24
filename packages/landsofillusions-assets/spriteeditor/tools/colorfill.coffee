@@ -4,13 +4,9 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.Tools.Tool
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.ColorFill'
+  @displayName: -> "Color fill"
 
-  constructor: ->
-    super arguments...
-
-    @name = "Color fill"
-    @shortcut = key: AC.Keys.g
-    @icon = '/landsofillusions/assets/editor/icons/color-fill.png'
+  @initialize()
 
   _callMethod: (spriteId, layer, pixel) ->
     # Make sure we're filling inside of bounds.

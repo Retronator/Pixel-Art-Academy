@@ -12,10 +12,12 @@ class FM.TabbedView extends FM.View
     tab = @currentData()
     'active' if tab.active
 
-  activeTab: ->
+  activeTabData: ->
     tabbedViewData = @data()
 
-    _.find tabbedViewData.tabs, (tab) => tab.active
+    activeTabIndex = _.findIndex tabbedViewData.get('tabs'), (tab) => tab.active
+
+    tabbedViewData.child "tabs.#{activeTabIndex}"
 
   events: ->
     super(arguments...).concat
@@ -25,13 +27,10 @@ class FM.TabbedView extends FM.View
     clickedTab = @currentData()
     tabbedViewData = @data()
 
-    if clickedTab.active
-      # We clicked on an active tab, so we want to close it.
-      clickedTab.active = false
+    # If we clicked an active tab we need to close all tabs.
+    setToFalse = clickedTab.active
 
-    else
-      # Switch to another tab.
-      for tab in tabbedViewData.tabs
-        tab.active = tab is clickedTab
+    for tab, index in tabbedViewData.value().tabs
+      value = if setToFalse then false else tab is clickedTab
 
-    @interface.saveData()
+      tabbedViewData.child("tabs.#{index}").set 'active', value

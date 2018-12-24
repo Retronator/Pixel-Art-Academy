@@ -4,13 +4,9 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools.Tool
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Eraser'
+  @displayName: -> "Eraser"
 
-  constructor: ->
-    super arguments...
-
-    @name = "Eraser"
-    @shortcut = key: AC.Keys.e
-    @icon = '/landsofillusions/assets/editor/icons/eraser.png'
+  @initialize()
 
   onMouseDown: (event) ->
     super arguments...

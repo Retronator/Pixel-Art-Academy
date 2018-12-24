@@ -24,15 +24,17 @@ class LOI.Assets.Editor extends AM.Component
       tracker: @
       consentField: LOI.settings.persistEditorsInterface.allowed    
     
-    @interface = new FM.Interface
-      defaultLayoutId: 'main'
-      data: =>
+    @interface = new FM.Interface @,
+      load: =>
         # TODO: Load interface data from the server if user is logged in.
         @localInterfaceData()
-      save: =>
+
+      save: (address, value) =>
+        localInterfaceData = @localInterfaceData()
+        _.nestedProperty localInterfaceData, address, value
+        @localInterfaceData localInterfaceData
+
         # TODO: Save interface data to the server as well.
-        # Reassign the object to trigger saving to local storage.
-        @localInterfaceData @localInterfaceData()
 
   onDestroyed: ->
     super arguments...

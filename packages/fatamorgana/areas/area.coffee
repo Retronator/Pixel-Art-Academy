@@ -12,14 +12,12 @@ class FM.Area extends AM.Component
     @interface = @ancestorComponentOfType FM.Interface
 
     # Isolate component ID to minimize reactivity.
-    @contentComponentId = new ComputedField =>
-      options = @data()
-      options?.contentComponentId
+    @contentComponentId = @data().child('contentComponentId').value
 
-  areaClass: -> # Override to set a styling class for this area.
+    areaClass: -> # Override to set a styling class for this area.
 
   areaStyle: ->
-    options = @data()
+    options = @data().value()
 
     style = _.pick options, @constructor.dimensionProperties
 
@@ -31,5 +29,5 @@ class FM.Area extends AM.Component
 
     style
 
-  contentComponent: ->
-    @interface.contentComponents()[@contentComponentId()]
+  contentComponentData: ->
+    @interface.getComponentData @contentComponentId()

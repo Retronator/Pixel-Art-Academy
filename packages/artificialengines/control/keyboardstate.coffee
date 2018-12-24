@@ -20,6 +20,10 @@ class AC.KeyboardState
   isShortcutDown: (shortcut) ->
     return unless shortcut
 
+    # Allow sending in multiple shortcuts.
+    if _.isArray shortcut
+      return _.some (@isShortcutDown shortcutItem for shortcutItem in shortcut)
+
     # Make sure any required modifiers are down.
     return if shortcut.commandOrControl and not @isCommandOrCtrlDown()
     return if (shortcut.command or shortcut.win or shortcut.super) and not @isMetaDown()

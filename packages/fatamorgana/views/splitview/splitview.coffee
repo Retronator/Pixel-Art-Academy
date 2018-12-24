@@ -14,6 +14,11 @@ class FM.SplitView extends FM.View
     Bottom: 'Bottom'
     Left: 'Left'
     Right: 'Right'
+    
+  @dataFields: -> [
+    'fixed'
+    'dockSide'
+  ]
 
   onCreated: ->
     super arguments...
@@ -21,12 +26,10 @@ class FM.SplitView extends FM.View
     @_dragging = new ReactiveField false
     
   dockSideClass: ->
-    options = @data()
-    _.toLower options.dockSide
+    _.toLower @dockSide()
 
   fixedClass: ->
-    options = @data()
-    'fixed' if options.fixed
+    'fixed' if @fixed()
 
   draggingClass: ->
     'dragging' if @_dragging()
@@ -49,12 +52,13 @@ class FM.SplitView extends FM.View
       x: event.pageX
       y: event.pageY
       
-    options = @data()
+    mainAreaData = @data().child 'mainArea'
+    dockSide = @dockSide()
 
     # Remember starting dimensions of the main area.
     @_dimensionsStart =
-      width: options.mainArea.width
-      height: options.mainArea.height
+      width: mainAreaData.get 'width'
+      height: mainAreaData.get 'height'
 
     display = @callAncestorWith 'display'
     scale = display.scale()
@@ -68,34 +72,38 @@ class FM.SplitView extends FM.View
         y: event.pageY - @_dragStart.y
 
       # Flip delta when moving from right or bottom.
-      dragDelta.x *= -1 if options.dockSide is @constructor.DockSide.Right
-      dragDelta.y *= -1 if options.dockSide is @constructor.DockSide.Bottom
+      dragDelta.x *= -1 if dockSide is @constructor.DockSide.Right
+      dragDelta.y *= -1 if dockSide is @constructor.DockSide.Bottom
 
-      if options.dockSide in [@constructor.DockSide.Top, @constructor.DockSide.Bottom]
+      if dockSide in [@constructor.DockSide.Top, @constructor.DockSide.Bottom]
         # We're dragging from top or bottom, change main area height.
-        options.mainArea.height = @_dimensionsStart.height + dragDelta.y / scale
+        mainAreaData.set 'height', @_dimensionsStart.height + dragDelta.y / scale
 
       else
         # We're dragging from left or right, change main area width.
-        options.mainArea.width = @_dimensionsStart.width + dragDelta.x / scale
-
-      @interface.saveData()
+        mainAreaData.set 'width', @_dimensionsStart.width + dragDelta.x / scale
 
     $interface.on 'mouseup.fatamorgana-splitview', (event) =>
-      # Apply any size constraints.
-      if options.dockSide in [@constructor.DockSide.Top, @constructor.DockSide.Bottom]
-        if options.mainArea.heightStep
-          options.mainArea.height = Math.round(options.mainArea.height / options.mainArea.heightStep) * options.mainArea.heightStep
+      mainArea = mainAreaData.value()
 
-        if options.mainArea.minHeight
-          options.mainArea.height = Math.max options.mainArea.height, options.mainArea.minHeight
+      # Apply any size constraints.
+      if dockSide in [@constructor.DockSide.Top, @constructor.DockSide.Bottom]
+        if mainArea.heightStep
+          mainArea.height = Math.round(mainArea.height / mainArea.heightStep) * mainArea.heightStep
+
+        if mainArea.minHeight
+          mainArea.height = Math.max mainArea.height, mainArea.minHeight
+
+        mainAreaData.set 'height', mainArea.height
 
       else
-        if options.mainArea.widthStep
-          options.mainArea.width = Math.round(options.mainArea.width / options.mainArea.widthStep) * options.mainArea.widthStep
+        if mainArea.widthStep
+          mainArea.width = Math.round(mainArea.width / mainArea.widthStep) * mainArea.widthStep
 
-        if options.mainArea.minWidth
-          options.mainArea.width = Math.max options.mainArea.width, options.mainArea.minWidth
+        if mainArea.minWidth
+          mainArea.width = Math.max mainArea.width, mainArea.minWidth
+
+        mainAreaData.set 'width', mainArea.width
 
       # End drag mode.
       $interface.off '.fatamorgana-splitview'

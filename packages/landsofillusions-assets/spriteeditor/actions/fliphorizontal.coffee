@@ -4,16 +4,13 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Actions.FlipHorizontal extends FM.Action
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Actions.FlipHorizontal'
+  @displayName: -> "Flip horizontal"
+    
+  @initialize()
 
-  constructor: (@options) ->
-    super arguments...
-
-    @caption = "Flip horizontal"
-
-  enabled: ->
-    @options.editor().spriteData()
+  enabled: -> @interface.parent.spriteData()
 
   execute: ->
-    return unless spriteData = @options.editor().spriteData()
+    return unless spriteData = @interface.parent.spriteData()
 
     LOI.Assets.Sprite.flipHorizontal spriteData._id, 0

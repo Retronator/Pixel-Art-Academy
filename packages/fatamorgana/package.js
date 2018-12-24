@@ -16,17 +16,22 @@ Package.onUse(function(api) {
   api.export('FataMorgana');
 
   api.addFile('fatamorgana');
-  api.addComponent('interface');
-  api.addFile('interface-shortcuts');
-  api.addFile('action');
-  api.addFile('tool');
 
-  api.addComponent('area');
+  api.addComponent('interface..');
+  api.addFile('interface/interface-operators');
+  api.addFile('interface/data..');
+  api.addFile('interface/data/value');
+
+  api.addFile('operators/operator');
+  api.addFile('operators/action');
+  api.addFile('operators/tool');
+
+  api.addComponent('areas/area');
   api.addFile('areas/applicationarea');
   api.addFile('areas/dockedarea');
   api.addFile('areas/floatingarea');
 
-  api.addFile('view');
+  api.addFile('views/view');
   api.addComponent('views/splitview..');
   api.addComponent('views/tabbedview..');
   api.addComponent('views/menu..');

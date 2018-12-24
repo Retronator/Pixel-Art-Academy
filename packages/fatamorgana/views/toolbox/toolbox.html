@@ -1,7 +1,7 @@
 <template name="FataMorgana.Toolbox">
   <div class="fatamorgana-toolbox">
     <ul class="tools">
-      {{#each tools}}
+      {{#each get.tools}}
         {{#with tool}}
           <li class="tool {{toolClass}} {{activeToolClass}}">
             <button class="tool-button">

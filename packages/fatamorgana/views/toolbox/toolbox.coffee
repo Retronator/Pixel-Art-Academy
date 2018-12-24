@@ -3,12 +3,14 @@ AM = Artificial.Mirage
 FM = FataMorgana
 
 class FM.Toolbox extends FM.View
+  # tools: array of tools in the toolbox
+  #   [toolId]: string identifying the tool
   @id: -> 'FataMorgana.Toolbox'
   @register @id()
 
   tool: ->
     toolId = @currentData()
-    @interface.tools()[toolId]
+    @interface.getOperator toolId
 
   toolClass: ->
     tool = @currentData()

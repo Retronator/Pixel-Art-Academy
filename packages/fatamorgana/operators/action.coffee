@@ -1,10 +1,7 @@
 AM = Artificial.Mirage
 FM = FataMorgana
 
-class FM.Action
-  @id: -> throw new AE.NotImplementedException "Action must have an ID."
-  id: -> @constructor.id()
-
+class FM.Action extends FM.Operator
   execute: -> throw new AE.NotImplementedException "Action must implement an execution."
 
   enabled: -> 

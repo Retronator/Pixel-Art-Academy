@@ -1,10 +1,12 @@
 FM = FataMorgana
 
-class FM.Tool
-  @id: -> throw new AE.NotImplementedException "Tool must have an ID."
-  id: -> @constructor.id()
+class FM.Tool extends FM.Operator
+  @icon: -> # Override to provide a URL to this tool's icon.
+  icon: -> @constructor.icon()
 
   constructor: ->
+    super arguments...
+    
     @mouseState =
       x: null
       y: null

@@ -9,3 +9,9 @@ class FM.View extends AM.Component
     super arguments...
 
     @interface = @ancestorComponentOfType FM.Interface
+
+    if dataFields = @constructor.dataFields?()
+      data = @data()
+      
+      for dataField in dataFields
+        @[dataField] = data.child(dataField).value

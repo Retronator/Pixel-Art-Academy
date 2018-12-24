@@ -1,18 +1,21 @@
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.Components.Palette extends AM.Component
+class LOI.Assets.Components.Palette extends FM.View
   @id: -> 'LandsOfIllusions.Assets.Components.Palette'
   @register @id()
 
-  constructor: (@options) ->
+  constructor: ->
     super arguments...
 
     @paletteData = new ComputedField =>
-      if paletteData = @options.paletteData?()
+      return unless @isCreated()
+
+      if paletteData = @interface.parent.paletteData?()
         return paletteData
       
-      if paletteId = @options.paletteId?()
+      if paletteId = @interface.parent.paletteId?()
         LOI.Assets.Palette.forId.subscribe paletteId if paletteId
         return LOI.Assets.Palette.documents.findOne paletteId
 

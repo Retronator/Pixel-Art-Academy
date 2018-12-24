@@ -4,15 +4,9 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LOI.Assets.SpriteEditor.Tools.Tool
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.ColorPicker'
+  @displayName: -> "Color picker"
 
-  constructor: ->
-    super arguments...
-
-    @name = "Color picker"
-    @shortcut = 
-      key: AC.Keys.i
-      holdKey: AC.Keys.alt
-    @icon = '/landsofillusions/assets/editor/icons/color-picker.png'
+  @initialize()
 
   onMouseDown: (event) ->
     super arguments...

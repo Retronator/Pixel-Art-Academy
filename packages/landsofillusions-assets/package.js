@@ -154,9 +154,19 @@ Package.onUse(function(api) {
   
   api.addComponent('editor..');
 
+  api.addFile('editor/actions..');
+  api.addFile('editor/actions/undo');
+  api.addFile('editor/actions/redo');
+  api.addFile('editor/actions/new');
+  api.addFile('editor/actions/open');
+
+  api.addComponent('editor/assetopendialog..');
+
   // Sprite editor
 
   api.addFile('spriteeditor..');
+  api.addFile('spriteeditor/spriteeditor-defaultinterfacedata');
+
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
   api.addFile('spriteeditor/tools/arrow');
@@ -168,10 +178,9 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions..');
   api.addFile('spriteeditor/actions/paintnormals');
   api.addFile('spriteeditor/actions/symmetry');
-  api.addFile('spriteeditor/actions/undo');
-  api.addFile('spriteeditor/actions/redo');
   api.addFile('spriteeditor/actions/fliphorizontal');
-  
+  api.addFile('spriteeditor/actions/zoom');
+
   // Mesh editor
 
   api.addComponent('mesheditor..');
