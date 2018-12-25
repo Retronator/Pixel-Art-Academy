@@ -9,7 +9,5 @@ class LOI.Assets.Editor.Actions.Open extends FM.Action
   @initialize()
     
   execute: ->
-    dialog =
+    @interface.displayDialog
       contentComponentId: LOI.Assets.Editor.AssetOpenDialog.id()
-
-    @interface.displayDialog dialog

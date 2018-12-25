@@ -127,16 +127,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
           "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
           "#{@Actions.PaintNormals.id()}": key: AC.Keys.n
           "#{@Actions.Symmetry.id()}": key: AC.Keys.s
-          "#{@Actions.ZoomIn.id()}": [
-            key: AC.Keys.plus
-          ,
-            commandOrControl: true, key: AC.Keys.plus
-          ]
-          "#{@Actions.ZoomOut.id()}": [
-            key: AC.Keys.minus
-          ,
-            commandOrControl: true, key: AC.Keys.minus
-          ]
+          "#{@Actions.ZoomIn.id()}": [{key: AC.Keys.plus}, {commandOrControl: true, key: AC.Keys.plus}]
+          "#{@Actions.ZoomOut.id()}": [{key: AC.Keys.minus}, {commandOrControl: true, key: AC.Keys.minus}]
 
           # Tools
           "#{@Tools.Arrow.id()}": key: AC.Keys.escape

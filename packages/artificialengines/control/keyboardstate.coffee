@@ -14,7 +14,7 @@ class AC.KeyboardState
   isMetaDown: ->
     @[AC.Keys.leftMeta] or @[AC.Keys.rightMeta]
 
-  isCommandOrCtrlDown: ->
+  isCommandOrControlDown: ->
     @isMetaDown() or @isKeyDown AC.Keys.ctrl
 
   isShortcutDown: (shortcut) ->
@@ -25,14 +25,14 @@ class AC.KeyboardState
       return _.some (@isShortcutDown shortcutItem for shortcutItem in shortcut)
 
     # Make sure any required modifiers are down.
-    return if shortcut.commandOrControl and not @isCommandOrCtrlDown()
+    return if shortcut.commandOrControl and not @isCommandOrControlDown()
     return if (shortcut.command or shortcut.win or shortcut.super) and not @isMetaDown()
     return if shortcut.shift and not @isKeyDown AC.Keys.shift
     return if shortcut.alt and not @isKeyDown AC.Keys.alt
     return if shortcut.control and not @isKeyDown AC.Keys.control
 
     # Make sure non of the other modifiers are down.
-    return if @isCommandOrCtrlDown() and not (shortcut.command or shortcut.control or shortcut.commandOrControl)
+    return if @isCommandOrControlDown() and not (shortcut.command or shortcut.control or shortcut.commandOrControl)
     return if @isMetaDown() and not (shortcut.command or shortcut.win or shortcut.super or shortcut.commandOrControl)
 
     for keyName in ['shift', 'alt', 'control']

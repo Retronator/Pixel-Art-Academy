@@ -10,6 +10,9 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
   onCreated: ->
     super arguments...
 
+    @fileManager = new LOI.Assets.Components.FileManager
+      documents: LOI.Assets.Sprite.documents
+
     LOI.Assets.Asset.all.subscribe @, @interface.parent.assetClassName
 
     @selectedAssets = new ReactiveField []
@@ -29,7 +32,12 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
 
   events: ->
     super(arguments...).concat
-      'click .asset': @onClickAsset
+      'click .cancel-button': @onClickCancelButton
+      'click .open-button': @onClickOpenButton
 
-  onClickNewAssetButton: (event) ->
-    @selectedAssets [@currentData()]
+  onClickCancelButton: (event) ->
+    dialogData = @ancestorComponentOfType(FM.FloatingArea).data()
+    @interface.closeDialog dialogData
+
+  onClickOpenButton: (event) ->
+    console.log "Opening", @fileManager.selectedItems()
