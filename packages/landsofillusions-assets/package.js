@@ -100,7 +100,10 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/landmarks..');
   api.addUnstyledComponent('components/spriteimage..');
   api.addUnstyledComponent('components/camera..');
+
   api.addComponent('components/filemanager..');
+  api.addComponent('components/filemanager/directory..');
+  api.addFile('components/filemanager/directory/newfolder');
 
   api.addUnstyledComponent('components/references..');
   api.addUnstyledComponent('components/references/reference..');

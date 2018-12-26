@@ -1,0 +1,13 @@
+<template name="LandsOfIllusions.Assets.Components.FileManager.Directory">
+    <div class="landsofillusions-assets-components-filemanager-directory" {{style directoryStyle}}>
+      <ul class="items">
+        {{#each currentItems}}
+          <li class="item {{selectedClass}}">
+            <img class="icon" src="{{iconUrl}}" />
+            <span class="name">{{nameOrId}}</span>
+          </li>
+        {{/each}}
+      </ul>
+      <div class="divider"></div>
+    </div>
+</template>

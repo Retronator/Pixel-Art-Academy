@@ -1,0 +1,44 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-components-filemanager-directory
+  position relative
+  user-select none
+
+  .items
+    list-style none
+    margin 0
+    padding 0
+
+    .item
+      width 100%
+      white-space nowrap
+      overflow hidden
+      text-overflow ellipsis
+      cursor pointer
+      padding 0 3rem
+
+      &:hover
+        color atariGrey(6)
+
+      &.selected
+        background atariGrey(2)
+        color atariGrey(7)
+
+      .icon
+        width 7rem
+        height 7rem
+        margin-right 1rem
+        vertical-align middle
+
+      .name
+        vertical-align middle
+
+  .divider
+    position absolute
+    z-index 1
+    top 0
+    right 0
+    width 1rem
+    height 100%
+    cursor ew-resize
+    background atariGrey(0)

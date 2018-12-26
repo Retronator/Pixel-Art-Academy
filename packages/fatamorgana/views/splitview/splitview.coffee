@@ -36,7 +36,7 @@ class FM.SplitView extends FM.View
 
   events: ->
     super(arguments...).concat
-      'mousedown .divider': @onMouseDownDivider
+      'mousedown .fatamorgana-splitview > .divider': @onMouseDownDivider
 
   onMouseDownDivider: (event) ->
     # Only react to the divider directly in this component.

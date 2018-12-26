@@ -61,3 +61,9 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         @landmarks()
       ]
       symmetryXOrigin: @symmetryXOrigin
+
+  onRendered: ->
+    super arguments...
+
+    @interface.displayDialog
+      contentComponentId: LOI.Assets.Editor.AssetOpenDialog.id()
