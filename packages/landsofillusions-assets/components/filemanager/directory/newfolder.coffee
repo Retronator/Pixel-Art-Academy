@@ -8,4 +8,6 @@ class LOI.Assets.Components.FileManager.Directory.NewFolder extends FM.Action
 
   @initialize()
     
-  execute: ->
+  execute: (dropdown) ->
+    directory = dropdown.data().value().directory
+    directory.newFolder()

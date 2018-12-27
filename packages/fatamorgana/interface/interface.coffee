@@ -38,7 +38,7 @@ class FM.Interface extends AM.Component
   constructor: (@parent, @options) ->
     super arguments...
     
-    @inputFocused = new ReactiveField true
+    @inputFocused = new ReactiveField false
 
   onCreated: ->
     super arguments...

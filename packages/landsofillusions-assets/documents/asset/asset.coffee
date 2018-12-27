@@ -5,7 +5,7 @@ RA = Retronator.Accounts
 
 class LOI.Assets.Asset extends LOI.Assets.Asset
   @id: -> 'LandsOfIllusions.Assets.Asset'
-  # name: text identifier for the asset
+  # name: text identifier for the asset including the path
   # history: array of operations that produce this asset
   #   forward: update delta that creates the result of the operation
   #   backward: update delta that undoes the operation from the resulting state

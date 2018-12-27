@@ -44,7 +44,7 @@ class FM.Menu.Dropdown extends FM.View
     action = @currentData()
     return if action.enabled and not action.enabled()
 
-    action.execute()
+    action.execute @
 
     dialog = @data()
     @interface.closeDialog dialog

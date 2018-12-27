@@ -89,7 +89,7 @@ class FM.Interface extends FM.Interface
 
   shortcutsActive: ->
     # Make sure we're not currently typing into an input.
-    @inputFocused()
+    not @inputFocused()
 
   onKeyDown: (event) ->
     return unless @shortcutsActive()

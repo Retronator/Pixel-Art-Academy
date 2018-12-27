@@ -2,9 +2,17 @@
     <div class="landsofillusions-assets-components-filemanager-directory" {{style directoryStyle}}>
       <ul class="items">
         {{#each currentItems}}
-          <li class="item {{selectedClass}}">
-            <img class="icon" src="{{iconUrl}}" />
-            <span class="name">{{nameOrId}}</span>
+          <li class="item {{selectedClass}} {{typeClass}}">
+            <div class="entry">
+              <img class="icon" src="{{iconUrl}}" />
+              {{#if editingName}}
+                <input class="name-input" value="{{nameOrId}}"/>
+              {{else}}
+                <span class="name">
+                  {{nameOrId}}
+                </span>
+              {{/if}}
+            </div>
           </li>
         {{/each}}
       </ul>

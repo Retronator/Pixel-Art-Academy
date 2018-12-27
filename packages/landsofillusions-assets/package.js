@@ -103,6 +103,7 @@ Package.onUse(function(api) {
 
   api.addComponent('components/filemanager..');
   api.addComponent('components/filemanager/directory..');
+  api.addFile('components/filemanager/directory/folder');
   api.addFile('components/filemanager/directory/newfolder');
 
   api.addUnstyledComponent('components/references..');

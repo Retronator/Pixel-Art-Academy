@@ -2,18 +2,18 @@
 
 .landsofillusions-assets-components-filemanager-directory
   position relative
+  height 100%
   user-select none
 
   .items
     list-style none
     margin 0
     padding 0
+    height 100%
+    overflow-y auto
 
     .item
-      width 100%
-      white-space nowrap
-      overflow hidden
-      text-overflow ellipsis
+      position relative
       cursor pointer
       padding 0 3rem
 
@@ -24,14 +24,35 @@
         background atariGrey(2)
         color atariGrey(7)
 
-      .icon
-        width 7rem
-        height 7rem
-        margin-right 1rem
-        vertical-align middle
+      &.folder
+        &::after
+          content '►'
+          position absolute
+          right 2rem
+          top 0
 
-      .name
-        vertical-align middle
+        .entry
+          width calc(100% - 10rem)
+
+      .entry
+        width 100%
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+
+        .icon
+          width 7rem
+          height 7rem
+          margin-right 1rem
+          vertical-align middle
+
+        .name
+          vertical-align middle
+
+        .name-input
+          background atariGrey(1)
+          border none
+          margin 1rem
 
   .divider
     position absolute
