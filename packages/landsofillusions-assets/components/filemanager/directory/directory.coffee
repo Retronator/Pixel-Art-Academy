@@ -11,10 +11,10 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
   constructor: (@options) ->
     super arguments...
 
+    @selectedItems = new ReactiveField []
+
   onCreated: ->
     super arguments...
-
-    @selectedItems = new ReactiveField []
 
     @_selectedNames = new ReactiveField []
     @_previousSelectedNames = new ReactiveField []
@@ -40,7 +40,7 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
       files = []
 
       for document in @documents() when document.name
-        nameParts = @_nameParts document
+        nameParts = LOI.Assets.Components.FileManager.itemNameParts document, @options.path
         if firstFolder = nameParts.folders[0]
           # This is a file deeper inside the folder so just see if we need to add the folder.
           folders.push firstFolder unless firstFolder in folders
@@ -66,6 +66,10 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
 
     @editingNameItem = new ReactiveField null
 
+    @draggingOverDirectoryCount = new ReactiveField 0
+    @draggingOverFolder = new ReactiveField null
+    @draggingOverFolderCount = new ReactiveField 0
+
   onRendered: ->
     super arguments...
 
@@ -75,18 +79,6 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
     super arguments...
 
     $(document).off '.landsofillusions-assets-components-filemanager-directory'
-
-  _nameParts: (item) ->
-    name = item.name.substring @options.path.length
-    nameParts = name.split '/'
-
-    # Last part is always the filename, the rest is the path.
-    filename = _.last nameParts
-    folders = _.initial nameParts
-
-    path = folders.join '/'
-
-    {path, folders, filename}
 
   newFolder: ->
     newFolderName = "untitled folder"
@@ -107,9 +99,14 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
       $nameInput.select() if selectAll
 
   nameOrId: ->
-    data = @currentData()
+    item = @currentData()
 
-    data.name or "#{data._id.substring 0, 5}…"
+    if item.name
+      nameParts = LOI.Assets.Components.FileManager.itemNameParts item
+      nameParts.filename
+
+    else
+      "#{data._id.substring 0, 5}…"
 
   selectedClass: ->
     item = @currentData()
@@ -133,11 +130,27 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
     item = @currentData()
     item is @editingNameItem()
 
+  directoryDropTargetClass: ->
+    'drop-target' if @draggingOverFolderCount() is 0 and @draggingOverDirectoryCount() > 0
+
+  itemDropTargetClass: ->
+    item = @currentData()
+    'drop-target' if item is @draggingOverFolder() and @draggingOverFolderCount() > 0
+
   events: ->
     super(arguments...).concat
       'mousedown .divider': @onMouseDownDivider
       'contextmenu': @onContextMenu
       'click .item': @onClickItem
+      'dragstart .item': @onDragStartItem
+      'dragenter .folder': @onDragEnterFolder
+      'dragover .folder': @onDragOverFolder
+      'dragleave .folder': @onDragLeaveFolder
+      'drop .folder': @onDropFolder
+      'dragenter .items': @onDragEnterDirectory
+      'dragover .items': @onDragOverDirectory
+      'dragleave .items': @onDragLeaveDirectory
+      'drop .items, .drop .item': @onDropDirectory
       'click .name': @onClickName
       'change .name-input, blur .name-input': @onChangeNameInput
 
@@ -251,6 +264,89 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
 
     selectedItems = _.filter items, (item) => item.name in selectedNames
     @selectedItems selectedItems
+
+  onDragStartItem: (event) ->
+    item = @currentData()
+    event.originalEvent.dataTransfer.dropEffect = 'move'
+
+    # See if we're dragging one of the selected files or another one.
+    selectedItems = @selectedItems()
+
+    if item in selectedItems
+      draggedItems = selectedItems
+
+    else
+      draggedItems = [item]
+
+    @options.fileManager.startDrag draggedItems
+
+  onDragEnterFolder: (event) ->
+    folder = @currentData()
+    event.preventDefault()
+    event.originalEvent.dataTransfer.dropEffect = 'move'
+
+    if folder is @draggingOverFolder()
+      @draggingOverFolderCount @draggingOverFolderCount() + 1
+
+    else
+      @draggingOverFolder folder
+      @draggingOverFolderCount 1
+
+  onDragOverFolder: (event) ->
+    event.preventDefault()
+    event.originalEvent.dataTransfer.dropEffect = 'move'
+
+  onDragLeaveFolder: (event) ->
+    # Make sure we're leaving the active folder.
+    folder = @currentData()
+    return unless folder is @draggingOverFolder()
+
+    event.preventDefault()
+
+    @draggingOverFolderCount Math.max 0, @draggingOverFolderCount() - 1
+
+  onDropFolder: (event) ->
+    folder = @currentData()
+    event.preventDefault()
+
+    @options.fileManager.endDrag folder
+
+    @draggingOverFolderCount 0
+    @draggingOverDirectoryCount 0
+
+  onDragEnterDirectory: (event) ->
+    # Only allow dragging onto a directory that's not the source of the dragged items.
+    return if @options.fileManager.draggedItems()?[0] in @currentItems()
+
+    event.preventDefault()
+    event.originalEvent.dataTransfer.dropEffect = 'move'
+
+    @draggingOverDirectoryCount @draggingOverDirectoryCount() + 1
+
+  onDragOverDirectory: (event) ->
+    event.preventDefault()
+    event.originalEvent.dataTransfer.dropEffect = 'move'
+
+  onDragLeaveDirectory: (event) ->
+    event.preventDefault()
+
+    @draggingOverDirectoryCount Math.max 0, @draggingOverDirectoryCount() - 1
+
+  onDropDirectory: (event) ->
+    # Make sure we're dragging over the directory.
+    return if @draggingOverDirectoryCount() is 0
+
+    # Only handle dropping onto the whole directory if we're not hovering over a folder.
+    return if @draggingOverFolderCount() > 0
+
+    event.preventDefault()
+
+    # Remove trailing slash from the path.
+    folderName = _.trimEnd @options.path, '/'
+    folder = new @constructor.Folder folderName
+
+    @options.fileManager.endDrag folder
+    @draggingOverDirectoryCount 0
 
   onClickName: (event) ->
     item = @currentData()

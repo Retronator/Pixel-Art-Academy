@@ -1,8 +1,8 @@
 <template name="LandsOfIllusions.Assets.Components.FileManager.Directory">
-    <div class="landsofillusions-assets-components-filemanager-directory" {{style directoryStyle}}>
+    <div class="landsofillusions-assets-components-filemanager-directory {{directoryDropTargetClass}}" {{style directoryStyle}}>
       <ul class="items">
         {{#each currentItems}}
-          <li class="item {{selectedClass}} {{typeClass}}">
+          <li class="item {{selectedClass}} {{typeClass}} {{itemDropTargetClass}}" draggable="true">
             <div class="entry">
               <img class="icon" src="{{iconUrl}}" />
               {{#if editingName}}

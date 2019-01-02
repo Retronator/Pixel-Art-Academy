@@ -5,6 +5,13 @@
   height 100%
   user-select none
 
+  &.drop-target::after
+    content ''
+    absolute-cover()
+    right 1rem
+    border 1rem solid atariCyan(1)
+    pointer-events none
+
   .items
     list-style none
     margin 0
@@ -33,6 +40,9 @@
 
         .entry
           width calc(100% - 10rem)
+
+      &.drop-target
+        background atariCyan(1)
 
       .entry
         width 100%
