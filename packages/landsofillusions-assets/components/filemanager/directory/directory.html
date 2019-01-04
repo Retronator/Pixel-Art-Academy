@@ -2,7 +2,7 @@
     <div class="landsofillusions-assets-components-filemanager-directory {{directoryDropTargetClass}}" {{style directoryStyle}}>
       <ul class="items">
         {{#each currentItems}}
-          <li class="item {{selectedClass}} {{typeClass}} {{itemDropTargetClass}}" draggable="true">
+          <li class="item {{selectedClass}} {{typeClass}} {{itemDropTargetClass}}" {{draggableAttribute}}>
             <div class="entry">
               <img class="icon" src="{{iconUrl}}" />
               {{#if editingName}}

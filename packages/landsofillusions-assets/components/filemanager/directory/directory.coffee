@@ -11,6 +11,8 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
   constructor: (@options) ->
     super arguments...
 
+    @_id = Random.id()
+
     @selectedItems = new ReactiveField []
 
   onCreated: ->
@@ -54,7 +56,10 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
       folders = for folder in folders
         new @constructor.Folder "#{@options.path}#{folder}", _.toLower folder
 
-      folders.push @newFolders()...
+      actuallyNewFolders = _.filter @newFolders(), (folder) =>
+        not _.find folders, (existingFolder) => folder.name is existingFolder.name
+
+      folders.push actuallyNewFolders...
 
       items = folders.concat files
 
@@ -73,12 +78,12 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
   onRendered: ->
     super arguments...
 
-    $(document).on 'keydown.landsofillusions-assets-components-filemanager-directory', (event) => @onKeyDown event
+    $(document).on "keydown.landsofillusions-assets-components-filemanager-directory-#{@_id}", (event) => @onKeyDown event
 
   onDestroyed: ->
     super arguments...
 
-    $(document).off '.landsofillusions-assets-components-filemanager-directory'
+    $(document).off ".landsofillusions-assets-components-filemanager-directory-#{@_id}"
 
   newFolder: ->
     newFolderName = "untitled folder"
@@ -137,8 +142,12 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
     item = @currentData()
     'drop-target' if item is @draggingOverFolder() and @draggingOverFolderCount() > 0
 
+  draggableAttribute: ->
+    draggable: true unless @editingName()
+
   events: ->
     super(arguments...).concat
+      'click': @onClick
       'mousedown .divider': @onMouseDownDivider
       'contextmenu': @onContextMenu
       'click .item': @onClickItem
@@ -154,11 +163,12 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
       'click .name': @onClickName
       'change .name-input, blur .name-input': @onChangeNameInput
 
+  onClick: (event) ->
+    @options.fileManager.focusDirectory @
+
   onMouseDownDivider: (event) ->
     # Prevent browser select/dragging behavior.
     event.preventDefault()
-
-    $directory = @options.fileManager.$('.landsofillusions-assets-components-filemanager')
 
     # Remember starting position of drag.
     @_dragStart = event.pageX
@@ -170,17 +180,21 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
     scale = display.scale()
 
     # Wire dragging handlers.
-    $directory.on 'mousemove.landsofillusions-assets-components-filemanager-directory', (event) =>
+    $document = $(document)
+
+    $document.on 'mousemove.landsofillusions-assets-components-filemanager-directory', (event) =>
       dragDelta = event.pageX - @_dragStart
       @width @_widthStart + dragDelta / scale
 
-    $directory.on 'mouseup.landsofillusions-assets-components-filemanager-directory', (event) =>
+    $document.on 'mouseup.landsofillusions-assets-components-filemanager-directory', (event) =>
       # End drag mode.
-      $directory.off '.landsofillusions-assets-components-filemanager-directory'
+      $document.off '.landsofillusions-assets-components-filemanager-directory'
 
   onContextMenu: (event) ->
     # Prevent normal context menu from opening.
     event.preventDefault()
+
+    @options.fileManager.focusDirectory @
 
     display = @callAncestorWith 'display'
     scale = display.scale()
@@ -215,7 +229,6 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
 
     else if keyboardState.isCommandOrControlDown()
       # Add or remove the file from selection.
-
       if item.name in selectedNames
         # Remove the file from the selection
         if selectedNames.length is 1
@@ -369,6 +382,13 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
     if newName.length and newName isnt item.name
       if item instanceof @constructor.Folder
         # Rename all documents with this folder's path.
+        for document in @documents() when _.startsWith document.name, item.name
+          newDocumentName = document.name.replace item.name, newName
+          assetClassName = document.constructor.name
+
+          LOI.Assets.Asset.update assetClassName, document._id,
+            $set:
+              name: newDocumentName
 
         # Rename the new folder.
         newFolders = @newFolders()
@@ -382,7 +402,8 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
         # Rename the document.
         assetClassName = item.constructor.name
         LOI.Assets.Asset.update assetClassName, item._id,
-          name: newName
+          $set:
+            name: newName
 
     @editingNameItem null
     @_selectedNames [newName]
@@ -390,6 +411,9 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
     $input.closest('.entry').scrollLeft 0
 
   onKeyDown: (event) ->
+    # Directory needs to be focused to react to key events.
+    return unless @options.fileManager.focusedDirectory() is @
+
     # Only react if we have a selection or we're editing a name.
     selectedItems = @selectedItems()
     return unless selectedItems.length
@@ -421,6 +445,54 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
 
           # Do not scroll by default.
           event.preventDefault()
+
+        when AC.Keys.left
+          directories = @options.fileManager.directories()
+          directoryIndex = directories.indexOf @
+
+          return unless directoryIndex > 0
+
+          # Clear selection in this directory.
+          @_startRangeName null
+          @_previousSelectedNames []
+          @_selectedNames []
+
+          # Focus on previous directory.
+          @options.fileManager.focusDirectory directories[directoryIndex - 1]
+
+          # Do not let the newly focused directory also handle the event.
+          event.stopImmediatePropagation()
+
+          # Do not scroll by default.
+          event.preventDefault()
+
+        when AC.Keys.right
+          # Make sure we're on a folder.
+          selectedItems = @selectedItems()
+          return unless selectedItems.length is 1 and selectedItems[0] instanceof @constructor.Folder
+
+          # Focus on next directory.
+          directories = @options.fileManager.directories()
+          directoryIndex = directories.indexOf @
+          newDirectory = directories[directoryIndex + 1]
+          @options.fileManager.focusDirectory newDirectory
+
+          # Do not let the newly focused directory also handle the event.
+          event.stopImmediatePropagation()
+
+          # Select first item in the new directory.
+          item = newDirectory.currentItems()[0]
+          newDirectory._previousSelectedNames []
+          newDirectory._startRangeName item?.name
+          newDirectory._selectedNames if item then [item.name] else []
+          newDirectory.selectedItems if item then [item] else []
+
+          # Do not scroll by default.
+          event.preventDefault()
+
+          # Scroll to right.
+          $directories = @$('.landsofillusions-assets-components-filemanager-directory').closest('.directories')
+          $directories.scrollLeft 1e8
 
         when AC.Keys.return
           if selectedItems.length is 1

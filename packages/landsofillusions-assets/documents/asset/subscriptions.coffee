@@ -30,7 +30,7 @@ LOI.Assets.Asset.all.publish (assetClassName) ->
 
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
 
-  # We only return sprite names when subscribing to all so that we can list them.
+  # We only return asset names when subscribing to all so that we can list them.
   assetClass.documents.find {},
     fields:
       name: 1

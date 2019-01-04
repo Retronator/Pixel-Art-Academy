@@ -102,9 +102,13 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/camera..');
 
   api.addComponent('components/filemanager..');
+
   api.addComponent('components/filemanager/directory..');
   api.addFile('components/filemanager/directory/folder');
   api.addFile('components/filemanager/directory/newfolder');
+
+  api.addFile('components/filemanager/previews..');
+  api.addComponent('components/filemanager/previews/sprite..');
 
   api.addUnstyledComponent('components/references..');
   api.addUnstyledComponent('components/references/reference..');

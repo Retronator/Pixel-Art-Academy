@@ -6,6 +6,18 @@
             {{> Render this}}
           </li>
         {{/each}}
+        <li class="item-details">
+          {{#with selectedItem}}
+            <div class="preview">
+              {{#if $is selectedItemType 'Sprite'}}
+                {{> LandsOfIllusions.Assets.Components.FileManager.Previews.Sprite}}
+              {{/if}}
+            </div>
+            <div class="name">
+              {{filename}}
+            </div>
+          {{/with}}
+        </li>
       </ul>
     </div>
 </template>

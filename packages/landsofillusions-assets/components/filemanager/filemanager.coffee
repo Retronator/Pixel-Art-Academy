@@ -38,35 +38,43 @@ class LOI.Assets.Components.FileManager extends AM.Component
       # Create a stack of directories based on selected folders.
       for directory, index in @_directories
         selectedItems = directory.selectedItems()
+        break unless selectedItems.length is 1 and selectedItems[0] instanceof @constructor.Directory.Folder
 
-        if selectedItems.length is 1 and selectedItems[0] instanceof @constructor.Directory.Folder
-          folder = selectedItems[0]
+        folder = selectedItems[0]
 
-          # See if the next directory is present in our current stack.
-          nextDirectoryPath = "#{folder.name}/"
+        # See if the next directory is present in our current stack.
+        nextDirectoryPath = "#{folder.name}/"
 
-          if @_directories[index + 1]?.options.path is nextDirectoryPath
-            newDirectories.push @_directories[index + 1]
+        if @_directories[index + 1]?.options.path is nextDirectoryPath
+          newDirectories.push @_directories[index + 1]
 
-          else
-            # We need to create the new directory.
-            newDirectory = new @constructor.Directory
-              fileManager: @
-              path: nextDirectoryPath
+        else
+          # We need to create the new directory.
+          newDirectory = new @constructor.Directory
+            fileManager: @
+            path: nextDirectoryPath
 
-            newDirectories.push newDirectory
+          newDirectories.push newDirectory
 
-            # Register dependency on new directory's selected items.
-            newDirectory.selectedItems()
+          # Register dependency on new directory's selected items.
+          newDirectory.selectedItems()
 
-            # The new directory will always be at the end of the stack.
-            break
+          # The new directory will always be at the end of the stack.
+          break
 
       @_directories = newDirectories
       @_directories
 
     @draggedItems = new ReactiveField null
     
+    @focusedDirectory = new ReactiveField null
+
+    @selectedItem = new ComputedField =>
+      lastDirectory = _.last @directories()
+      selectedItems = lastDirectory.selectedItems()
+
+      if selectedItems.length is 1 then selectedItems[0] else null
+
   startDrag: (draggedItems) ->
     @draggedItems draggedItems
     
@@ -74,17 +82,41 @@ class LOI.Assets.Components.FileManager extends AM.Component
     return unless @draggedItems()
 
     for item in @draggedItems()
+      nameParts = @constructor.itemNameParts item
+
+      if targetFolder.name.length
+        newName = "#{targetFolder.name}/#{nameParts.filename}"
+
+      else
+        newName = nameParts.filename
+
       if item instanceof @constructor.Directory.Folder
         # Move all assets in the folder.
-        console.log "dragging a folder"
+        documents = @directories()[0].documents()
+
+        for document in documents when _.startsWith document.name, item.name
+          newDocumentName = document.name.replace item.name, newName
+          assetClassName = document.constructor.name
+
+          LOI.Assets.Asset.update assetClassName, document._id,
+            $set:
+              name: newDocumentName
 
       else
         # Move the asset from its current path to the new one.
-        nameParts = @constructor.itemNameParts item
-        newName = "#{targetFolder.name}/#{nameParts.filename}"
-
         LOI.Assets.Asset.update item.constructor.className, item._id,
           $set:
             name: newName
 
     @draggedItems null
+    
+  focusDirectory: (directory) ->
+    @focusedDirectory directory
+
+  selectedItemType: ->
+    selectedItem = @currentData()
+    selectedItem.constructor.className
+
+  filename: ->
+    selectedItem = @currentData()
+    @constructor.itemNameParts(selectedItem).filename

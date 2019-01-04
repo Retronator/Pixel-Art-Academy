@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Renderers.Renderer
-  @liveEditing = true
+  @liveEditing = false
 
   constructor: (@options, initialize) ->
     super arguments...

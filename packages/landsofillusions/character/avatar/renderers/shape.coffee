@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderers.Renderer
-  @liveEditing = true
+  @liveEditing = false
 
   @_defaultSpriteIdsByName = {}
 
