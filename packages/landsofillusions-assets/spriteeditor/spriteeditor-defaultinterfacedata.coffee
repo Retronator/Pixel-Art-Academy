@@ -111,7 +111,9 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
                   ]
 
               remainingArea:
-                contentComponentId: null #LOI.Assets.Components.PixelCanvas.id()
+                type: FM.EditorView.id()
+                editor:
+                  contentComponentId: LOI.Assets.Components.PixelCanvas.id()
 
     # Shortcuts
 

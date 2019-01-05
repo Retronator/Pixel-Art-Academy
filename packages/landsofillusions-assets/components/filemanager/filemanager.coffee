@@ -69,9 +69,12 @@ class LOI.Assets.Components.FileManager extends AM.Component
     
     @focusedDirectory = new ReactiveField null
 
-    @selectedItem = new ComputedField =>
+    @selectedItems = new ComputedField =>
       lastDirectory = _.last @directories()
-      selectedItems = lastDirectory.selectedItems()
+      lastDirectory.selectedItems()
+
+    @selectedItem = new ComputedField =>
+      selectedItems = @selectedItems()
 
       if selectedItems.length is 1 then selectedItems[0] else null
 

@@ -21,6 +21,7 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
     @_selectedNames = new ReactiveField []
     @_previousSelectedNames = new ReactiveField []
     @_startRangeName = new ReactiveField null
+    @_endRangeName = new ReactiveField null
 
     @width = new ReactiveField 100
 
@@ -215,49 +216,64 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
     return if @editingNameItem()
 
     item = @currentData()
-    items = @currentItems()
+    @_changeEndRange item.name
 
+  _changeEndRange: (endRangeName) ->
     selectedNames = @_selectedNames()
-    previousSelectedNames = @_previousSelectedNames()
-    startRangeName = @_startRangeName()
-
     keyboardState = AC.Keyboard.getState()
 
     if keyboardState.isKeyDown(AC.Keys.shift)
       # Update range selection.
-      endRangeName = item.name
+      @_changeSelection @_previousSelectedNames(), @_startRangeName(), endRangeName
 
     else if keyboardState.isCommandOrControlDown()
       # Add or remove the file from selection.
-      if item.name in selectedNames
+      if endRangeName in selectedNames
         # Remove the file from the selection
         if selectedNames.length is 1
           # We're removing the last item so we need to clear everything.
-          previousSelectedNames = []
-          startRangeName = null
-          endRangeName = null
+          @_changeSelection [], null, null
 
         else
           # Remove the clicked item and the last added one, which that will become the new range.
-          _.pull selectedNames, item.name
+          _.pull selectedNames, endRangeName
 
-          startRangeName = _.last selectedNames
-          _.pull selectedNames, startRangeName
+          lastName = _.last selectedNames
+          _.pull selectedNames, lastName
 
-          endRangeName = startRangeName
-          previousSelectedNames = selectedNames
+          @_changeSelection selectedNames, lastName, lastName
 
       else
         # Add the file to the selection.
-        previousSelectedNames = selectedNames
-        startRangeName = item.name
-        endRangeName = item.name
+        @_changeSelection selectedNames, endRangeName, endRangeName
 
     else
-      # Replace selection.
-      previousSelectedNames = []
-      startRangeName = item.name
-      endRangeName = item.name
+      if endRangeName in selectedNames
+        switch event.detail
+          when 1
+            # This is the first click. Replace selection after a timeout, in case a double click is being performed.
+            @_clickItemTimeout = Meteor.setTimeout =>
+              @_changeSelection [], endRangeName, endRangeName
+            ,
+              500
+
+            # We should also not cancel the renaming timeout that
+            # started if this was a click on the name inside the item.
+            doNotCancelRenaming = true
+
+          when 2
+            # This is a double click. Cancel change of selection and perform default operation.
+            Meteor.clearTimeout @_clickItemTimeout
+            @options.fileManager.options.defaultOperation?()
+
+      else
+        # Replace selection.
+        @_changeSelection [], endRangeName, endRangeName
+
+    Meteor.clearTimeout @_startRenamingItemTimeout unless doNotCancelRenaming
+
+  _changeSelection: (previousSelectedNames, startRangeName, endRangeName) ->
+    items = @currentItems()
 
     if endRangeName
       startRangeIndex = Math.max 0, _.findIndex items, (item) => item.name is startRangeName
@@ -272,6 +288,7 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
       selectedNames = previousSelectedNames
 
     @_startRangeName startRangeName
+    @_endRangeName endRangeName
     @_previousSelectedNames previousSelectedNames
     @_selectedNames selectedNames
 
@@ -368,7 +385,13 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
     selectedItems = @selectedItems()
     return unless selectedItems.length is 1 and item in selectedItems
 
-    @startRenamingItem item
+    # Start renaming after a delay to properly handle double clicks on items.
+    Meteor.clearTimeout @_startRenamingItemTimeout
+
+    @_startRenamingItemTimeout = Meteor.setTimeout =>
+      @startRenamingItem item
+    ,
+      500
 
   onChangeNameInput: (event) ->
     # Make sure the input is still relevant.
@@ -428,20 +451,17 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
 
       switch event.which
         when AC.Keys.down, AC.Keys.up
-          targetItem = _.last selectedItems
-          targetItemIndex = items.indexOf(targetItem)
+          endRangeName = @_endRangeName()
+          endRangeIndex = _.findIndex items, (item) => item.name is endRangeName
 
           if event.which is AC.Keys.down
-            newItemIndex = Math.min items.length - 1, targetItemIndex + 1
+            endRangeIndex = Math.min items.length - 1, endRangeIndex + 1
 
           else
-            newItemIndex = Math.max 0, targetItemIndex - 1
+            endRangeIndex = Math.max 0, endRangeIndex - 1
 
-          newItem = items[newItemIndex]
-          @_startRangeName newItem.name
-          @_previousSelectedNames []
-          @_selectedNames [newItem.name]
-          @selectedItems [newItem]
+          newItem = items[endRangeIndex]
+          @_changeEndRange newItem.name
 
           # Do not scroll by default.
           event.preventDefault()
@@ -453,9 +473,7 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
           return unless directoryIndex > 0
 
           # Clear selection in this directory.
-          @_startRangeName null
-          @_previousSelectedNames []
-          @_selectedNames []
+          @_changeSelection [], null, null
 
           # Focus on previous directory.
           @options.fileManager.focusDirectory directories[directoryIndex - 1]
@@ -482,10 +500,7 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
 
           # Select first item in the new directory.
           item = newDirectory.currentItems()[0]
-          newDirectory._previousSelectedNames []
-          newDirectory._startRangeName item?.name
-          newDirectory._selectedNames if item then [item.name] else []
-          newDirectory.selectedItems if item then [item] else []
+          newDirectory._changeSelection [], item?.name, item?.name
 
           # Do not scroll by default.
           event.preventDefault()
@@ -495,5 +510,8 @@ class LOI.Assets.Components.FileManager.Directory extends AM.Component
           $directories.scrollLeft 1e8
 
         when AC.Keys.return
-          if selectedItems.length is 1
+          if @options.fileManager.options.defaultOperation
+            @options.fileManager.options.defaultOperation()
+
+          else
             @startRenamingItem selectedItems[0]

@@ -12,10 +12,15 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
 
     @fileManager = new LOI.Assets.Components.FileManager
       documents: LOI.Assets.Sprite.documents
+      defaultOperation: => @_open()
 
     LOI.Assets.Asset.all.subscribe @, @interface.parent.assetClassName
 
     @selectedAssets = new ReactiveField []
+    
+  closeDialog: ->
+    dialogData = @ancestorComponentOfType(FM.FloatingArea).data()
+    @interface.closeDialog dialogData
 
   assets: ->
     @interface.parent.documentClass.documents.find {},
@@ -36,8 +41,24 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
       'click .open-button': @onClickOpenButton
 
   onClickCancelButton: (event) ->
-    dialogData = @ancestorComponentOfType(FM.FloatingArea).data()
-    @interface.closeDialog dialogData
+    @closeDialog()
 
   onClickOpenButton: (event) ->
-    console.log "Opening", @fileManager.selectedItems()
+    @_open()
+
+  _open: ->
+    # Find the editor view in the interface.
+    editorViews = @interface.allChildComponentsOfType FM.EditorView
+
+    unless editorViews.length
+      throw new AE.InvalidOperationException "There is no EditorView in the interface."
+      
+    # TODO: Select the editor view that hosts the currently active file. For now we just take the first.
+    targetEditorView = editorViews[0]
+    
+    # Open all the files in the target editor view.
+    for item in @fileManager.selectedItems()
+      targetEditorView.addFile
+        id: item._id
+    
+    @closeDialog()

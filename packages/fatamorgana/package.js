@@ -37,4 +37,5 @@ Package.onUse(function(api) {
   api.addComponent('views/menu..');
   api.addComponent('views/menu/dropdown');
   api.addComponent('views/toolbox..');
+  api.addComponent('views/editorview..');
 });

@@ -1,0 +1,20 @@
+<template name="FataMorgana.EditorView">
+  <div class="fatamorgana-editorview">
+    {{#if showTabs}}
+      <ul class="tabs">
+        {{#each get.files}}
+          <li class="tab {{activeClass}}">
+            {{#with tabData}}
+              {{name}}
+            {{/with}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    {{#with editorData}}
+      <div class="editor">
+        {{> FataMorgana.DockedArea}}
+      </div>
+    {{/with}}
+  </div>
+</template>

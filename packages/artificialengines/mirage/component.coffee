@@ -87,6 +87,16 @@ class AM.Component extends CommonComponent
     @childComponentsWith (child) ->
       child instanceof constructor
 
+  allChildComponentsOfType: (constructor) ->
+    # Start by searching the children of this component.
+    result = @childComponentsOfType constructor
+
+    # Recursively search also in each child.
+    for childComponent in @childComponents() when childComponent instanceof AM.Component
+      result.push childComponent.allChildComponentsOfType(constructor)...
+      
+    result
+
   # Code based on childComponentsWith.
   parentDataWith: (propertyOrMatcherOrFunction) ->
     if _.isString propertyOrMatcherOrFunction

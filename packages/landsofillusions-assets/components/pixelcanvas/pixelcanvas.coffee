@@ -7,6 +7,12 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
   @id: -> 'LandsOfIllusions.Assets.Components.PixelCanvas'
   @register @id()
 
+  @getDocumentForEditorView: (editorView, fileData) ->
+    return unless fileData?.id
+
+    LOI.Assets.Asset.forId.subscribe editorView, 'Sprite', fileData.id
+    LOI.Assets.Sprite.documents.findOne fileData.id
+
   constructor: (@options) ->
     super arguments...
 
