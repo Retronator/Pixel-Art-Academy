@@ -10,11 +10,12 @@ class FM.Area extends AM.Component
     super arguments...
 
     @interface = @ancestorComponentOfType FM.Interface
+    
+    # Isolate type and component ID to minimize reactivity.
+    @type = new ComputedField => @data().get 'type'
+    @contentComponentId = new ComputedField => @data().get 'contentComponentId'
 
-    # Isolate component ID to minimize reactivity.
-    @contentComponentId = @data().child('contentComponentId').value
-
-    areaClass: -> # Override to set a styling class for this area.
+  areaClass: -> # Override to set a styling class for this area.
 
   areaStyle: ->
     options = @data().value()

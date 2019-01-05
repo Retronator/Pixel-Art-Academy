@@ -10,6 +10,35 @@ class FM.EditorView extends FM.View
   @id: -> 'FataMorgana.EditorView'
   @register @id()
 
+  onCreated: ->
+    super arguments...
+
+    @filesData = new ComputedField =>
+      editorViewData = @data()
+      files = editorViewData.get('files') or []
+      file.data for file in files
+    ,
+      EJSON.equals
+
+    @activeFileIndex = new ComputedField =>
+      editorViewData = @data()
+      _.findIndex editorViewData.get('files'), (file) => file.active
+
+    @activeFileData = new ComputedField =>
+      editorViewData = @data()
+      editorViewData.child "files.#{@activeFileIndex()}"
+
+    @contentComponentId = new ComputedField =>
+      editorViewData = @data()
+      editorViewData.child('editor').get 'contentComponentId'
+
+    @autorun (computation) =>
+      filesData = @filesData()
+      contentComponentIdData = @contentComponentId()
+
+      componentClass = AM.Component.getComponentForName contentComponentIdData
+      componentClass.subscribeToDocumentsForEditorView @, filesData
+
   addFile: (fileData) ->
     editorViewData = @data()
 
@@ -38,25 +67,26 @@ class FM.EditorView extends FM.View
     componentClass = AM.Component.getComponentForName @data().get('editor').contentComponentId
     componentClass.getDocumentForEditorView @, file.data
 
-  editorData: ->
-    editorData = @data()
-
-    activeFileIndex = _.findIndex editorData.get('files'), (file) => file.active
-
-    editorData.child "tabs.#{activeFileIndex}"
-
   events: ->
     super(arguments...).concat
       'click .tab': @onClickTab
+      'click .editor': @onClickEditor
 
   onClickTab: (event) ->
-    clickedTab = @currentData()
-    editorData = @data()
+    clickedFile = @currentData()
+    editorViewData = @data()
 
     # If we clicked an active tab we need to close all tabs.
-    setToFalse = clickedTab.active
+    setToFalse = clickedFile.active
 
-    for file, index in editorData.value().files
-      value = if setToFalse then false else file is clickedTab
+    for file, index in editorViewData.value().files
+      value = if setToFalse then false else file is clickedFile
 
-      editorData.child("files.#{index}").set 'active', value
+      editorViewData.child("files.#{index}").set 'active', value
+
+    @interface.activateFile clickedFile.data
+
+  onClickEditor: (event) ->
+    # Make sure the current tab is active globally.
+    activeFile = @activeFileData().value()
+    @interface.activateFile activeFile.data

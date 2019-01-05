@@ -111,9 +111,43 @@ div.landsofillusions-assets-editor
           absolute-cover()
           overflow-y auto
 
+    .fatamorgana-editorview
+      display flex
+      width 100%
+      height 100%
+      flex-direction column
+
+      .tabs
+        display flex
+        flex-shrink 0
+        background atariGrey(1)
+        padding-top 2rem
+
+        .tab
+          padding 2rem 4rem
+          checkout()
+          cursor pointer
+          white-space nowrap
+          text-overflow ellipsis
+          overflow hidden
+          color atariGrey(4)
+
+          &.active
+            background-color atariGrey(2)
+            cursor default
+            color atariGrey(6)
+
+      .editor
+        position relative
+        flex-grow 1
+        border 1rem solid atariGrey(2)
+
+        > .fatamorgana-area
+          absolute-cover()
+          overflow hidden
+
     .fatamorgana-menu
       background-color atariGrey(1)
-      border-bottom 1rem solid atariGrey(2)
 
       .items
         margin 0 4rem

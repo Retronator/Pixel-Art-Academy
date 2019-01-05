@@ -10,12 +10,18 @@ class FM.Interface.Data.Value
     ,
       EJSON.equals
 
+    # We store a copy of the current field so that if the source object
+    # gets modified, we have the original value to compare equality to.
+    oldValue = new ComputedField =>
+      _.clone field()
+    ,
+      true
+
     value = (value) ->
       if value isnt undefined
         # Do we even need to do any change?
-        oldValue = field()
-        valueChanged = not EJSON.equals value, oldValue
-  
+        valueChanged = not EJSON.equals value, oldValue()
+
         options.save options.address, value if valueChanged
   
         return
@@ -24,6 +30,7 @@ class FM.Interface.Data.Value
 
     value.stop = ->
       field.stop()
+      oldValue.stop()
 
     # Return the state getter function (return must be explicit).
     return value

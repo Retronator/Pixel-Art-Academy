@@ -4,7 +4,7 @@ FM = FataMorgana
 
 class FM.Interface extends AM.Component
   # activeToolId: the tool that the user is currently using to perform operations
-  # activeFileId: the file that is currently the target of operations
+  # activeFileData: identifying data for the file that is currently the target of operations
   # operators: object of all operator states
   #   {operatorId}: data for the operator
   # components: object of all terminal singleton components
@@ -46,7 +46,7 @@ class FM.Interface extends AM.Component
     @data = new @constructor.Data @options
 
     @activeToolId = @data.child('activeToolId').value
-    @activeFileId = @data.child('activeFileId').value
+    @activeFileData = @data.child('activeFileData').value
 
     @currentLayoutId = new ComputedField =>
       AB.Router.currentRouteData().searchParameters.get('layout') or @data.child('layouts.currentLayoutId').value()
@@ -74,6 +74,9 @@ class FM.Interface extends AM.Component
   getComponentData: (componentClassOrId) ->
     componentId = componentClassOrId.id?() or componentClassOrId
     @componentsData.child componentId
+    
+  activateFile: (fileData) ->
+    @activeFileData fileData
     
   displayDialog: (dialog) ->
     # Wrap the plain object into data for compatibility.

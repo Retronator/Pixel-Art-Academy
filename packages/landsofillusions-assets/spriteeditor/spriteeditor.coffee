@@ -65,5 +65,5 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
   onRendered: ->
     super arguments...
 
-    @interface.displayDialog
-      contentComponentId: LOI.Assets.Editor.AssetOpenDialog.id()
+    editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
+    editorView.addFile {id} for id in ['CX9JyXqW2mZduyajR', 'KqL3XmQ7MikndhWxN']

@@ -8,15 +8,20 @@ class FM.TabbedView extends FM.View
   @id: -> 'FataMorgana.TabbedView'
   @register @id()
 
+  onCreated: ->
+    super arguments...
+    
+    @activeTabIndex = new ComputedField =>
+      tabbedViewData = @data()
+      _.findIndex tabbedViewData.get('tabs'), (tab) => tab.active
+
   activeClass: ->
     tab = @currentData()
     'active' if tab.active
 
   activeTabData: ->
     tabbedViewData = @data()
-
-    activeTabIndex = _.findIndex tabbedViewData.get('tabs'), (tab) => tab.active
-
+    activeTabIndex = @activeTabIndex()
     tabbedViewData.child "tabs.#{activeTabIndex}"
 
   events: ->

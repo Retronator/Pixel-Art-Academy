@@ -125,6 +125,7 @@ Package.onUse(function(api) {
   api.addFile('mirage/spacebars/htmlhelpers');
   api.addFile('mirage/spacebars/image');
   api.addFile('mirage/spacebars/uncached');
+  api.addFile('mirage/spacebars/debughelpers');
 
   api.addFile('mirage/mixins/autoresizetextarea');
   api.addFile('mirage/mixins/autoselectinput');

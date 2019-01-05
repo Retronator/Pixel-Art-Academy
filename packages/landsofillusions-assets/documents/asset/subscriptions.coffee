@@ -1,7 +1,7 @@
 RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
-# Subscription to a specific sprite.
+# Subscription to a specific asset for use as game assets.
 LOI.Assets.Asset.forId.publish (assetClassName, id) ->
   check assetClassName, String
   check id, Match.DocumentId
@@ -23,6 +23,18 @@ LOI.Assets.Asset.forIdFull.publish (assetClassName, id) ->
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
 
   assetClass.documents.find id
+
+LOI.Assets.Asset.forIdsFull.publish (assetClassName, ids) ->
+  check assetClassName, String
+  check ids, [Match.DocumentId]
+
+  # Only admins (and later editors) can get all the fields.
+  RA.authorizeAdmin userId: @userId or null
+
+  assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
+
+  assetClass.documents.find
+    _id: $in: ids
 
 LOI.Assets.Asset.all.publish (assetClassName) ->
   # Only admins (and later editors) can see all the assets.
