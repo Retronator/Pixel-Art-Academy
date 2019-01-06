@@ -1,6 +1,7 @@
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.PixelCanvas extends AM.Component
@@ -9,17 +10,17 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
 
   @subscribeToDocumentsForEditorView: (editorView, filesData) ->
     ids = (fileData.id for fileData in filesData)
-    LOI.Assets.Asset.forIdsFull.subscribe editorView, 'Sprite', ids
+    LOI.Assets.Asset.forIdsFull.subscribe editorView, LOI.Assets.Sprite.className, ids
 
   @getDocumentForEditorView: (editorView, fileData) ->
     return unless fileData?.id
 
     LOI.Assets.Sprite.documents.findOne fileData.id
 
-  constructor: (@options) ->
+  constructor: ->
     super arguments...
-
-    _.defaults @options,
+    
+    @options =
       cameraInput: true
       grid: true
       mouse: true
@@ -30,6 +31,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @grid = new ReactiveField null
     @mouse = new ReactiveField null
     @cursor = new ReactiveField null
+    @sprite = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null
@@ -40,6 +42,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     super arguments...
 
     @display = @callAncestorWith 'display'
+    @interface = @ancestorComponentOfType FM.Interface
 
     # Initialize components.
     @camera new @constructor.Camera @,
@@ -56,8 +59,30 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     if @options.cursor
       @cursor new @constructor.Cursor @
 
+    @spriteId = new ComputedField =>
+      @interface.activeFileData()?.id
+
+    @spriteData = new ComputedField =>
+      return unless spriteId = @spriteId()
+
+      LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, spriteId
+      LOI.Assets.Sprite.documents.findOne spriteId
+
+    @paletteId = new ComputedField =>
+      # Minimize reactivity to only palette changes.
+      LOI.Assets.Sprite.documents.findOne(@spriteId(),
+        fields:
+          palette: 1
+      )?.palette?._id
+
+    @sprite new LOI.Assets.Engine.Sprite
+      spriteData: @spriteData
+      #visualizeNormals: @paintNormals
+
+    @pixelCanvasSize = new ReactiveField width: 0, height: 0
+
     # Resize the canvas when browser window and zoom changes.
-    @autorun =>
+    @autorun (computation) =>
       canvas = @canvas()
       return unless canvas
       
@@ -78,15 +103,11 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
           newSize.height++
         
       else
-        # Depend on window size.
-        AM.Window.clientBounds()
+        # Resize to component.
+        newSize = @pixelCanvasSize()
 
-        # Resize the back buffer to canvas element size, if it actually changed. If the pixel
-        # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
-        newSize =
-          width: $(canvas).width()
-          height: $(canvas).height()
-  
+      # Resize the back buffer to canvas element size, if it actually changed. If the pixel
+      # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
       for key, value of newSize
         canvas[key] = value unless canvas[key] is value
 
@@ -94,18 +115,17 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
 
     # Redraw canvas routine.
     @autorun =>
-      camera = @camera()
-      context = @context()
-      return unless context
+      return unless context = @context()
 
       canvasPixelSize = @canvasPixelSize()
 
       context.setTransform 1, 0, 0, 1, 0, 0
       context.clearRect 0, 0, canvasPixelSize.width, canvasPixelSize.height
 
+      camera = @camera()
       camera.applyTransformToCanvas()
 
-      components = []
+      components = [@sprite()]
 
       if drawComponents = @options.drawComponents?()
         components = components.concat drawComponents
@@ -132,6 +152,19 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @canvas canvas
     @context canvas.getContext '2d'
 
+    @autorun (computation) =>
+      # Depend on editor view size.
+      AM.Window.clientBounds()
+
+      # Depend on application area changes.
+      @interface.currentApplicationAreaData().value()
+
+      # After update, measure the size.
+      Tracker.afterFlush =>
+        @pixelCanvasSize
+          width: $pixelCanvas.width()
+          height: $pixelCanvas.height()
+
     if @options.activeTool
       $(document).on 'keydown.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyDown? event
       $(document).on 'keyup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyUp? event
@@ -142,12 +175,6 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     super arguments...
 
     $(document).off '.landsofillusions-assets-components-pixelcanvas'
-
-  forceResize: ->
-    @forceResizeDependency.changed()
-
-  forceRedraw: ->
-    @forceRedrawDependency.changed()
 
   # Events
 

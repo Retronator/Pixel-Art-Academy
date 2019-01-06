@@ -53,6 +53,8 @@ class FM.EditorView extends FM.View
 
     editorViewData.set 'files', files
 
+    @interface.activateFile fileData
+
   showTabs: ->
     # We show tabs when there are multiple files to switch between.
     @data().get('files')?.length > 1
@@ -76,13 +78,8 @@ class FM.EditorView extends FM.View
     clickedFile = @currentData()
     editorViewData = @data()
 
-    # If we clicked an active tab we need to close all tabs.
-    setToFalse = clickedFile.active
-
     for file, index in editorViewData.value().files
-      value = if setToFalse then false else file is clickedFile
-
-      editorViewData.child("files.#{index}").set 'active', value
+      editorViewData.child("files.#{index}").set 'active', file is clickedFile
 
     @interface.activateFile clickedFile.data
 

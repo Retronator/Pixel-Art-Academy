@@ -11,10 +11,8 @@
         {{/each}}
       </ul>
     {{/if}}
-    {{#with activeFileData}}
-      <div class="editor">
-        {{> FataMorgana.DockedArea}}
-      </div>
-    {{/with}}
+    <div class="editor">
+      {{> FataMorgana.DockedArea child 'editor'}}
+    </div>
   </div>
 </template>

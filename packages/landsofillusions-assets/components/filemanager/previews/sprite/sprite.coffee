@@ -22,7 +22,7 @@ class LOI.Assets.Components.FileManager.Previews.Sprite extends AM.Component
       sprite = @data()
 
       # Get full sprite data.
-      LOI.Assets.Asset.forId.subscribe @, 'Sprite', sprite._id
+      LOI.Assets.Asset.forId.subscribe @, LOI.Assets.Sprite.className, sprite._id
       LOI.Assets.Sprite.documents.findOne sprite._id
 
     @sprite = new LOI.Assets.Engine.Sprite

@@ -20,6 +20,9 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
       "#{LOI.Assets.Components.ShadingSphere.id()}":
         radius: 30
 
+      "#{LOI.Assets.Components.PixelCanvas.id()}":
+        initialCameraScale: 8
+
     # Layouts
 
     menu =
