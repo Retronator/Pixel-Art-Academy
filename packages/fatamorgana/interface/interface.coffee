@@ -4,11 +4,16 @@ FM = FataMorgana
 
 class FM.Interface extends AM.Component
   # activeToolId: the tool that the user is currently using to perform operations
-  # activeFileData: identifying data for the file that is currently the target of operations
-  # operators: object of all operator states
+  # activeFileId: identifying data for the file that is currently the target of operations
+  # operators: map of all operator states
   #   {operatorId}: data for the operator
-  # components: object of all terminal singleton components
-  #   {componentId}: data for the content component
+  # components: map of all terminal singleton components
+  #   {component_id}: data for the content component
+  # files: map of all file states (local to the editor, unlike editor preferences potentially stored in the file itself)
+  #   {fileId}: data for the file
+  # componentsForFiles: map of all component states that differ per file
+  #   {fileId}
+  #     {component_id}: state for the component/file combination
   # layouts
   #   currentLayoutId: currently active layout, if not specified in the URL
   #   {layoutId}:
@@ -46,7 +51,7 @@ class FM.Interface extends AM.Component
     @data = new @constructor.Data @options
 
     @activeToolId = @data.child('activeToolId').value
-    @activeFileData = @data.child('activeFileData').value
+    @activeFileId = @data.child('activeFileId').value
 
     @currentLayoutId = new ComputedField =>
       AB.Router.currentRouteData().searchParameters.get('layout') or @data.child('layouts.currentLayoutId').value()
@@ -63,6 +68,8 @@ class FM.Interface extends AM.Component
       @data.child("shortcuts.#{@currentShortcutsMappingId()}.mapping").value()
 
     @componentsData = @data.child 'components'
+    @filesData = @data.child 'files'
+    @componentsForFilesData = @data.child 'componentsForFiles'
 
     @dialogs = new ReactiveField []
 
@@ -72,12 +79,40 @@ class FM.Interface extends AM.Component
     @data.destroy()
 
   getComponentData: (componentClassOrId) ->
-    componentId = componentClassOrId.id?() or componentClassOrId
+    componentId = _.snakeCase componentClassOrId.id?() or componentClassOrId
     @componentsData.child componentId
-    
-  activateFile: (fileData) ->
-    @activeFileData fileData
-    
+
+  getFileData: (fileId) ->
+    @filesData.child fileId
+
+  getComponentDataForFile: (componentClassOrId, fileId) ->
+    componentId = _.snakeCase componentClassOrId.id?() or componentClassOrId
+
+    @componentsForFilesData.child "#{fileId}.#{componentId}"
+
+  getComponentDataForActiveFile: (componentClassOrId) ->
+    return unless fileId = @activeFileId()
+
+    @getComponentDataForFile componentClassOrId, fileId
+
+  activateFile: (fileId) ->
+    @activeFileId fileId
+
+  getEditorForActiveFile: ->
+    activeFileId = @activeFileId()
+
+    # Get all the editor views.
+    editorViews = @allChildComponentsOfType FM.EditorView
+
+    # Search for the editor view that is showing the active file.
+    for editorView in editorViews
+      continue unless files = editorView.data().get('files')
+
+      if _.find files, (file) => file.id is activeFileId and file.active
+        return editorView.getActiveEditor()
+
+    null
+  
   displayDialog: (dialog) ->
     # Wrap the plain object into data for compatibility.
     dialogData = new FM.Interface.Data load: => dialog

@@ -25,7 +25,11 @@ class FM.Menu.Dropdown extends FM.View
 
   shortcut: ->
     action = @currentData()
-    AM.ShortcutHelper.getShortcutString action.currentShortcut()
+
+    shortcut = action.currentShortcut()
+    shortcut = shortcut[0] if _.isArray shortcut
+
+    AM.ShortcutHelper.getShortcutString shortcut
 
   enabledClass: ->
     enabled = true

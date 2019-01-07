@@ -17,7 +17,7 @@ class AC.Keyboard
   @getState: ->
     @_stateDependency.depend()
     state = new AC.KeyboardState
-    $.extend state, @_state
+    _.extend state, @_state
     state
 
   @onKeyDown: (event) ->
@@ -25,5 +25,12 @@ class AC.Keyboard
     @_stateDependency.changed()
 
   @onKeyUp: (event) ->
-    delete @_state[event.keyCode]
+    # HACK: If command is pressed, no other keys will report key up events,
+    # so we assume all other keys got released when command is released.
+    if event.keyCode in [AC.Keys.leftMeta, AC.Keys.rightMeta]
+      @_state = new AC.KeyboardState
+
+    else
+      delete @_state[event.keyCode]
+
     @_stateDependency.changed()

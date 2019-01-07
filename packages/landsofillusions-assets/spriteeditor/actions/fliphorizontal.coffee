@@ -8,7 +8,7 @@ class LOI.Assets.SpriteEditor.Actions.FlipHorizontal extends FM.Action
     
   @initialize()
 
-  enabled: -> @interface.parent.spriteData()
+  enabled: -> @interface.activeFileId()
 
   execute: ->
     return unless spriteData = @interface.parent.spriteData()

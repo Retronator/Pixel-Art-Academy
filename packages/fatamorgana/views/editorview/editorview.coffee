@@ -3,7 +3,7 @@ FM = FataMorgana
 
 class FM.EditorView extends FM.View
   # files: array of open files
-  #   data: identifying data for the file
+  #   id: identifier for the file
   #   active: true for the file that is currently displayed
   # editor:
   #   contentComponentId: the component to use for editing the active file
@@ -13,10 +13,10 @@ class FM.EditorView extends FM.View
   onCreated: ->
     super arguments...
 
-    @filesData = new ComputedField =>
+    @fileIds = new ComputedField =>
       editorViewData = @data()
       files = editorViewData.get('files') or []
-      file.data for file in files
+      file.id for file in files
     ,
       EJSON.equals
 
@@ -33,13 +33,13 @@ class FM.EditorView extends FM.View
       editorViewData.child('editor').get 'contentComponentId'
 
     @autorun (computation) =>
-      filesData = @filesData()
+      fileIds = @fileIds()
       contentComponentIdData = @contentComponentId()
 
       componentClass = AM.Component.getComponentForName contentComponentIdData
-      componentClass.subscribeToDocumentsForEditorView @, filesData
+      componentClass.subscribeToDocumentsForEditorView @, fileIds
 
-  addFile: (fileData) ->
+  addFile: (fileId) ->
     editorViewData = @data()
 
     # Get all the current files and deactivate them.
@@ -48,12 +48,16 @@ class FM.EditorView extends FM.View
 
     # Add the new file and active it.
     files.push
-      data: fileData
+      id: fileId
       active: true
 
     editorViewData.set 'files', files
 
-    @interface.activateFile fileData
+    @interface.activateFile fileId
+    
+  getActiveEditor: ->
+    componentClass = AM.Component.getComponentForName @data().get('editor').contentComponentId
+    @allChildComponentsOfType(componentClass)[0]
 
   showTabs: ->
     # We show tabs when there are multiple files to switch between.
@@ -67,7 +71,7 @@ class FM.EditorView extends FM.View
     file = @currentData()
     
     componentClass = AM.Component.getComponentForName @data().get('editor').contentComponentId
-    componentClass.getDocumentForEditorView @, file.data
+    componentClass.getDocumentForEditorView @, file.id
 
   events: ->
     super(arguments...).concat
@@ -81,9 +85,9 @@ class FM.EditorView extends FM.View
     for file, index in editorViewData.value().files
       editorViewData.child("files.#{index}").set 'active', file is clickedFile
 
-    @interface.activateFile clickedFile.data
+    @interface.activateFile clickedFile.id
 
   onClickEditor: (event) ->
     # Make sure the current tab is active globally.
     activeFile = @activeFileData().value()
-    @interface.activateFile activeFile.data
+    @interface.activateFile activeFile.id

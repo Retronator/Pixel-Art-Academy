@@ -45,6 +45,11 @@ class AM.ShortcutHelper
       if shortcut.windows and platformConvention is @PlatformConventions.Windows then string += 'Win'
       if shortcut.super and platformConvention is @PlatformConventions.Linux then string += 'Super'
 
+    # See if we have a direct label given to represent the key.
+    if shortcut.keyLabel
+      string += shortcut.keyLabel
+      return string
+
     for keyName, value of AC.Keys
       if value is shortcut.key
         replacements = []

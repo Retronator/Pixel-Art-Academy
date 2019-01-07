@@ -16,11 +16,11 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
 
     # Content Components
 
-    contentComponents =
-      "#{LOI.Assets.Components.ShadingSphere.id()}":
+    components =
+      "#{_.snakeCase LOI.Assets.Components.ShadingSphere.id()}":
         radius: 30
 
-      "#{LOI.Assets.Components.PixelCanvas.id()}":
+      "#{_.snakeCase LOI.Assets.Components.PixelCanvas.id()}":
         initialCameraScale: 8
 
     # Layouts
@@ -46,6 +46,9 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
       ,
         caption: 'View'
         items: [
+          @Actions.ZoomIn.id()
+          @Actions.ZoomOut.id()
+          null
           @Actions.PaintNormals.id()
         ]
       ,
@@ -132,8 +135,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
           "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
           "#{@Actions.PaintNormals.id()}": key: AC.Keys.n
           "#{@Actions.Symmetry.id()}": key: AC.Keys.s
-          "#{@Actions.ZoomIn.id()}": [{key: AC.Keys.plus}, {commandOrControl: true, key: AC.Keys.plus}]
-          "#{@Actions.ZoomOut.id()}": [{key: AC.Keys.minus}, {commandOrControl: true, key: AC.Keys.minus}]
+          "#{@Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
+          "#{@Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
 
           # Tools
           "#{@Tools.Arrow.id()}": key: AC.Keys.escape
@@ -143,4 +146,4 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
           "#{@Tools.Pencil.id()}": key: AC.Keys.b
 
     # Return combined interface data.
-    {activeToolId, operators, contentComponents, layouts, shortcuts}
+    {activeToolId, operators, components, layouts, shortcuts}

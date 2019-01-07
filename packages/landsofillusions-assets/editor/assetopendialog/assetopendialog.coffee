@@ -58,7 +58,6 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
     
     # Open all the files in the target editor view.
     for item in @fileManager.selectedItems()
-      targetEditorView.addFile
-        id: item._id
+      targetEditorView.addFile item._id
     
     @closeDialog()

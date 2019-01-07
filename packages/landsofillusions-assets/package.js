@@ -164,8 +164,7 @@ Package.onUse(function(api) {
   api.addComponent('editor..');
 
   api.addFile('editor/actions..');
-  api.addFile('editor/actions/undo');
-  api.addFile('editor/actions/redo');
+  api.addFile('editor/actions/history');
   api.addFile('editor/actions/new');
   api.addFile('editor/actions/open');
 

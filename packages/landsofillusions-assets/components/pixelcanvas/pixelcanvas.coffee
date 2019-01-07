@@ -5,17 +5,20 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.PixelCanvas extends AM.Component
+  # FILE DATA
+  # camera:
+  #   scale: canvas magnification
+  #   origin: the point on the sprite that should appear in the center of the canvas
+  #     x
+  #     y
   @id: -> 'LandsOfIllusions.Assets.Components.PixelCanvas'
   @register @id()
 
-  @subscribeToDocumentsForEditorView: (editorView, filesData) ->
-    ids = (fileData.id for fileData in filesData)
-    LOI.Assets.Asset.forIdsFull.subscribe editorView, LOI.Assets.Sprite.className, ids
+  @subscribeToDocumentsForEditorView: (editorView, fileIds) ->
+    LOI.Assets.Asset.forIdsFull.subscribe editorView, LOI.Assets.Sprite.className, fileIds
 
-  @getDocumentForEditorView: (editorView, fileData) ->
-    return unless fileData?.id
-
-    LOI.Assets.Sprite.documents.findOne fileData.id
+  @getDocumentForEditorView: (editorView, fileId) ->
+    LOI.Assets.Sprite.documents.findOne fileId
 
   constructor: ->
     super arguments...
@@ -44,6 +47,13 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     @display = @callAncestorWith 'display'
     @interface = @ancestorComponentOfType FM.Interface
 
+    # Create component data fields.
+    @componentData = new ComputedField =>
+      @interface.getComponentData @constructor
+
+    @componentFileData = new ComputedField =>
+      @interface.getComponentDataForActiveFile @constructor
+
     # Initialize components.
     @camera new @constructor.Camera @,
       initialScale: @options.initialCameraScale
@@ -60,13 +70,16 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       @cursor new @constructor.Cursor @
 
     @spriteId = new ComputedField =>
-      @interface.activeFileData()?.id
+      @interface.activeFileId()
 
     @spriteData = new ComputedField =>
       return unless spriteId = @spriteId()
 
       LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, spriteId
       LOI.Assets.Sprite.documents.findOne spriteId
+
+    # Create the alias for universal operators.
+    @assetData = @spriteData
 
     @paletteId = new ComputedField =>
       # Minimize reactivity to only palette changes.

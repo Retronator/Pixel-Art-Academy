@@ -6,9 +6,16 @@ class LOI.Assets.Components.PixelCanvas.Camera
     _.defaults @options,
       enableInput: true
 
+    @cameraData = new ComputedField =>
+      @pixelCanvas.componentFileData()?.child 'camera'
+
+    @scaleData = new ComputedField =>
+      @cameraData()?.child 'scale'
+
     # At camera scale 1, a canvas pixel matches a display pixel (and not window pixel).
     # Scale is used to go from canvas pixels to display pixels.
-    @scale = new ReactiveField (@options.initialScale or 1), EJSON.equals
+    @scale = new ComputedField =>
+      @scaleData()?.value() or @pixelCanvas.componentData().get('initialCameraScale') or 1
 
     # Effective scale includes the amount we're scaling our display pixels.
     # It is used to go from canvas pixels to window pixels.
@@ -16,10 +23,13 @@ class LOI.Assets.Components.PixelCanvas.Camera
       displayScale = @pixelCanvas.display.scale()
       @scale() * displayScale
 
-    @origin = new ReactiveField
-      x: @options.initialOrigin?.x or 0
-      y: @options.initialOrigin?.y or 0
-    , EJSON.equals
+    @originData = new ComputedField =>
+      @cameraData()?.child 'origin'
+
+    @origin = new ComputedField =>
+      @originData()?.value() or @pixelCanvas.componentData().get('initialCameraOrigin') or x:0, y:0
+    ,
+      EJSON.equals
 
     # Calculate viewport in canvas coordinates.
     @viewportBounds = new AE.Rectangle()
@@ -62,12 +72,12 @@ class LOI.Assets.Components.PixelCanvas.Camera
 
           oldOrigin = @origin()
 
-          @origin
+          @originData().value
             x: oldOrigin.x + canvasDelta.x
             y: oldOrigin.y + canvasDelta.y
 
   setScale: (scale) ->
-    @scale scale
+    @scaleData().value scale
 
   applyTransformToCanvas: ->
     context = @pixelCanvas.context()
