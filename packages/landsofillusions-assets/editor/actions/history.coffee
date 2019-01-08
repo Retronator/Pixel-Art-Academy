@@ -3,33 +3,30 @@ AM = Artificial.Mirage
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class HistoryAction extends FM.Action
-  assetData: -> @interface.getEditorForActiveFile()?.assetData()
-
-class LOI.Assets.Editor.Actions.Undo extends HistoryAction
+class LOI.Assets.Editor.Actions.Undo extends LOI.Assets.Editor.Actions.AssetAction
   @id: -> 'LandsOfIllusions.Assets.Editor.Actions.Undo'
   @displayName: -> "Undo"
 
   @initialize()
 
   enabled: ->
-    return unless assetData = @assetData()
-    assetData.historyPosition
+    return unless asset = @asset()
+    asset.historyPosition
 
   execute: ->
-    return unless assetData = @assetData()
-    LOI.Assets.VisualAsset.undo @interface.parent.assetClassName, assetData._id
+    asset = @asset()
+    LOI.Assets.VisualAsset.undo asset.constructor.assetClassName, asset._id
 
-class LOI.Assets.Editor.Actions.Redo extends HistoryAction
+class LOI.Assets.Editor.Actions.Redo extends LOI.Assets.Editor.Actions.AssetAction
   @id: -> 'LandsOfIllusions.Assets.Editor.Actions.Redo'
   @displayName: -> "Redo"
       
   @initialize()
 
   enabled: ->
-    return unless assetData = @assetData()
-    assetData.historyPosition < assetData.history?.length
+    return unless asset = @asset()
+    asset.historyPosition < asset.history?.length
 
   execute: ->
-    return unless assetData = @assetData()
-    LOI.Assets.VisualAsset.redo @interface.parent.assetClassName, assetData._id
+    asset = @asset()
+    LOI.Assets.VisualAsset.redo asset.constructor.assetClassName, asset._id

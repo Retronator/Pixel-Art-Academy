@@ -20,13 +20,6 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
 
     @documentClass = LOI.Assets.Sprite
     @assetClassName = @documentClass.className
-    @assetData = @spriteData
-    @assetId = @spriteId
-    @setAssetId = (spriteId) =>
-      AB.Router.setParameters {spriteId}
-      
-    @setPalletteId = (paletteId) =>
-      LOI.Assets.Asset.update LOI.Assets.Sprite.className, @spriteId(), $set: palette: _id: paletteId
 
   onCreated: ->
     super arguments...

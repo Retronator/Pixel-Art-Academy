@@ -65,6 +65,9 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
+      
+  setPaletteId: (paletteId) ->
+    LOI.Assets.Asset.update @constructor.className, @_id, $set: palette: _id: paletteId
 
   @_limitLayerPixels = (newCount) ->
     # Allow up to 4,096 (64 * 64) pixels per layer.

@@ -34,6 +34,9 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
         items: [
           LOI.Assets.Editor.Actions.New.id()
           LOI.Assets.Editor.Actions.Open.id()
+          null
+          LOI.Assets.Editor.Actions.Duplicate.id()
+          LOI.Assets.Editor.Actions.Delete.id()
         ]
       ,
         caption: 'Edit'
@@ -42,6 +45,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
           LOI.Assets.Editor.Actions.Redo.id()
           null
           @Actions.FlipHorizontal.id()
+          null
+          LOI.Assets.Editor.Actions.Clear.id()
         ]
       ,
         caption: 'View'
@@ -94,10 +99,10 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
                   tabs: [
                     name: 'Navigator'
                     contentComponentId: LOI.Assets.Components.Navigator.id()
-                    active: true
                   ,
                     name: 'File info'
                     contentComponentId: LOI.Assets.Components.AssetInfo.id()
+                    active: true
                   ,
                     name: 'Landmarks'
                     contentComponentId: LOI.Assets.Components.Landmarks.id()

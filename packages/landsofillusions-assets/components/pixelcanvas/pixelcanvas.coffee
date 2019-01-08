@@ -4,7 +4,7 @@ AM = Artificial.Mirage
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.Components.PixelCanvas extends AM.Component
+class LOI.Assets.Components.PixelCanvas extends FM.View
   # FILE DATA
   # camera:
   #   scale: canvas magnification
@@ -45,7 +45,6 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
     super arguments...
 
     @display = @callAncestorWith 'display'
-    @interface = @ancestorComponentOfType FM.Interface
 
     # Create component data fields.
     @componentData = new ComputedField =>
@@ -79,7 +78,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
       LOI.Assets.Sprite.documents.findOne spriteId
 
     # Create the alias for universal operators.
-    @assetData = @spriteData
+    @asset = @spriteData
 
     @paletteId = new ComputedField =>
       # Minimize reactivity to only palette changes.

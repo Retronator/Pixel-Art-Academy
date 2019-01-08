@@ -164,9 +164,13 @@ Package.onUse(function(api) {
   api.addComponent('editor..');
 
   api.addFile('editor/actions..');
+  api.addFile('editor/actions/assetaction');
   api.addFile('editor/actions/history');
   api.addFile('editor/actions/new');
   api.addFile('editor/actions/open');
+  api.addFile('editor/actions/delete');
+  api.addFile('editor/actions/duplicate');
+  api.addFile('editor/actions/clear');
 
   api.addComponent('editor/window..');
   api.addComponent('editor/assetopendialog..');

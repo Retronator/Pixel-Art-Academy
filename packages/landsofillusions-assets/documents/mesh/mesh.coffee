@@ -55,7 +55,17 @@ class LOI.Assets.Mesh extends AM.Document
   @duplicate: @method 'duplicate'
   
   @updateCameraAngle: @method 'updateCameraAngle'
-  
+
+  setPaletteId: (paletteId) ->
+    # Update mesh palette.
+    LOI.Assets.Asset.update @constructor.className, @, $set: palette: _id: paletteId
+
+    # Also update palettes of all sprites.
+    return unless cameraAngles = @.cameraAngles
+
+    for cameraAngle in cameraAngles when cameraAngle.sprite
+      LOI.Assets.Asset.update LOI.Assets.Sprite.className, cameraAngle.sprite._id, $set: palette: _id: paletteId
+
 if Meteor.isServer
   # Export meshes without authors.
   LOI.GameContent.addToExport ->

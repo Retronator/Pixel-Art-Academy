@@ -81,3 +81,6 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
 
     else
       landmark
+      
+  clear: ->
+    @constructor.clear @_id

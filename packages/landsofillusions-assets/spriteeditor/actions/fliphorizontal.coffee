@@ -2,15 +2,11 @@ AC = Artificial.Control
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Actions.FlipHorizontal extends FM.Action
+class LOI.Assets.SpriteEditor.Actions.FlipHorizontal extends LOI.Assets.Editor.Actions.AssetAction
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Actions.FlipHorizontal'
   @displayName: -> "Flip horizontal"
     
   @initialize()
 
-  enabled: -> @interface.activeFileId()
-
   execute: ->
-    return unless spriteData = @interface.parent.spriteData()
-
-    LOI.Assets.Sprite.flipHorizontal spriteData._id, 0
+    LOI.Assets.Sprite.flipHorizontal @asset()._id, 0
