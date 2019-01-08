@@ -9,45 +9,18 @@ class LOI.Assets.Components.Navigator extends FM.View
 
   onCreated: ->
     super arguments...
-    
-    options = @data()
-
-    @zoomLevels = options.value()?.zoomLevels or [12.5, 25, 50, 66.6, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]
 
     @zoomPercentage = new ComputedField =>
-      @interface.parent.pixelCanvas().camera()?.scale() * 100
+      @interface.getEditorForActiveFile()?.camera()?.scale() * 100
 
     @zoomInPressed = new ReactiveField false
     @zoomOutPressed = new ReactiveField false
-
-  zoomIn: ->
-    percentage = @zoomPercentage()
-
-    for zoomLevel in @zoomLevels
-      if zoomLevel > percentage
-        percentage = zoomLevel
-        break
-
-    @setZoom percentage
-
-  zoomOut: ->
-    percentage = @zoomPercentage()
-
-    for zoomLevel in @zoomLevels by -1
-      if zoomLevel < percentage
-        percentage = zoomLevel
-        break
-
-    @setZoom percentage
-
-  setZoom: (percentage) ->
-    @options.camera()?.setScale percentage / 100
 
   # Helpers
 
   zoomPercentageValue: ->
     return unless zoomPercentage = @zoomPercentage()
-    Math.round(zoomPercentage * 10, 2) / 10
+    Math.round(zoomPercentage * 10) / 10
 
   zoomInPressedClass: ->
     'pressed' if @zoomInPressed()
@@ -68,10 +41,10 @@ class LOI.Assets.Components.Navigator extends FM.View
 
     try
       zoom = parseInt $(event.target).val()
-      @setZoom zoom
+      @interface.getEditorForActiveFile()?.camera()?.setScale zoom / 100
 
   onClickZoomIn: (event) ->
-    @zoomIn()
+    @interface.getOperator(LOI.Assets.SpriteEditor.Actions.ZoomIn).execute()
 
   onClickZoomOut: (event) ->
-    @zoomOut()
+    @interface.getOperator(LOI.Assets.SpriteEditor.Actions.ZoomOut).execute()

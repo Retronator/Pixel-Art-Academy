@@ -5,8 +5,6 @@ FM = FataMorgana
 class FM.Interface extends AM.Component
   # activeToolId: the tool that the user is currently using to perform operations
   # activeFileId: identifying data for the file that is currently the target of operations
-  # operators: map of all operator states
-  #   {operatorId}: data for the operator
   # components: map of all terminal singleton components
   #   {component_id}: data for the content component
   # files: map of all file states (local to the editor, unlike editor preferences potentially stored in the file itself)
@@ -72,6 +70,8 @@ class FM.Interface extends AM.Component
     @componentsForFilesData = @data.child 'componentsForFiles'
 
     @dialogs = new ReactiveField []
+    
+    @_helperInstances = {}
 
   onDestroyed: ->
     super arguments...
@@ -112,6 +112,16 @@ class FM.Interface extends AM.Component
         return editorView.getActiveEditor()
 
     null
+    
+  getHelper: (helperClassOrId) ->
+    helperId = helperClassOrId.id?() or helperClassOrId
+
+    # Create the helper singleton on first request.
+    @_helperInstances[helperId] ?= Tracker.nonreactive =>
+      helperClass = FM.Operator.getClassForId helperId
+      @_helperInstances[helperId] = new helperClass @
+
+    @_helperInstances[helperId]
   
   displayDialog: (dialog) ->
     # Wrap the plain object into data for compatibility.

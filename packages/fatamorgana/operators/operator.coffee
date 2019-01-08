@@ -24,6 +24,7 @@ class FM.Operator
     @_operatorClassesById[@id()] = @
     
   constructor: (@interface) ->
+    @data = @interface.getComponentData @
     
   currentShortcut: ->
     @interface.getShortcutForOperator @

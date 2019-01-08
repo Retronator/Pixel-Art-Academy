@@ -8,9 +8,7 @@ class Zoom extends FM.Action
   constructor: ->
     super arguments...
 
-    @zoomLevels = new ComputedField =>
-      navigatorData = @interface.getComponentData LOI.Assets.Components.Navigator
-      navigatorData.get('zoomLevels') or [12.5, 25, 50, 66.6, 100, 200, 300, 400, 600, 800, 1200, 1600, 3200]
+    @zoomLevels = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.ZoomLevels
 
     @zoomPercentage = new ComputedField =>
       @interface.getEditorForActiveFile()?.camera()?.scale() * 100

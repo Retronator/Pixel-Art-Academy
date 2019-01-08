@@ -25,6 +25,7 @@ Package.onUse(function(api) {
   api.addFile('operators/operator');
   api.addFile('operators/action');
   api.addFile('operators/tool');
+  api.addFile('operators/helper');
 
   api.addComponent('areas/area');
   api.addFile('areas/applicationarea');

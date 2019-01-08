@@ -190,6 +190,9 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions/fliphorizontal');
   api.addFile('spriteeditor/actions/zoom');
 
+  api.addFile('spriteeditor/helpers..');
+  api.addFile('spriteeditor/helpers/zoomlevels');
+
   // Mesh editor
 
   api.addComponent('mesheditor..');
