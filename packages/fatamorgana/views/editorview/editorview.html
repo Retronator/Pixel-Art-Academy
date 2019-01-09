@@ -5,14 +5,18 @@
         {{#each get.files}}
           <li class="tab {{activeClass}}">
             {{#with tabData}}
-              {{name}}
+              <div class="name">
+                {{nameOrId}}
+              </div>
             {{/with}}
           </li>
         {{/each}}
       </ul>
     {{/if}}
     <div class="editor">
-      {{> FataMorgana.DockedArea child 'editor'}}
+      {{#if get.files.length}}
+        {{> FataMorgana.DockedArea child 'editor'}}
+      {{/if}}
     </div>
   </div>
 </template>

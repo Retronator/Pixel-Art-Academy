@@ -55,6 +55,27 @@ class FM.EditorView extends FM.View
 
     @interface.activateFile fileId
     
+  removeFile: (fileId) ->
+    editorViewData = @data()
+
+    # Get all the current files and deactivate them.
+    files = editorViewData.get('files') or []
+
+    fileIndex = _.findIndex files, (file) => file.id is fileId
+    return unless fileIndex > -1
+
+    file = files[fileIndex]
+    files.splice fileIndex, 1
+
+    # If we've removed the active file, activate the next one.
+    if file.active and files.length
+      newActiveIndex = Math.min fileIndex, files.length - 1
+
+      files[newActiveIndex].active = true
+      @interface.activateFile files[newActiveIndex].id
+
+    editorViewData.set 'files', files
+
   getActiveEditor: ->
     componentClass = AM.Component.getComponentForName @data().get('editor').contentComponentId
     @allChildComponentsOfType(componentClass)[0]
@@ -73,6 +94,10 @@ class FM.EditorView extends FM.View
     componentClass = AM.Component.getComponentForName @data().get('editor').contentComponentId
     componentClass.getDocumentForEditorView @, file.id
 
+  nameOrId: ->
+    tabData = @currentData()
+    tabData.name or tabData._id
+
   events: ->
     super(arguments...).concat
       'click .tab': @onClickTab
@@ -89,5 +114,5 @@ class FM.EditorView extends FM.View
 
   onClickEditor: (event) ->
     # Make sure the current tab is active globally.
-    activeFile = @activeFileData().value()
+    return unless activeFile = @activeFileData().value()
     @interface.activateFile activeFile.id

@@ -72,6 +72,7 @@ class FM.Interface extends AM.Component
     @dialogs = new ReactiveField []
     
     @_helperInstances = {}
+    @_helperForFileInstances = {}
 
   onDestroyed: ->
     super arguments...
@@ -97,21 +98,25 @@ class FM.Interface extends AM.Component
 
   activateFile: (fileId) ->
     @activeFileId fileId
-
-  getEditorForActiveFile: ->
-    activeFileId = @activeFileId()
-
+    
+  getEditorViewForFile: (fileId) ->
     # Get all the editor views.
     editorViews = @allChildComponentsOfType FM.EditorView
 
-    # Search for the editor view that is showing the active file.
+    # Search for the editor view that has the file opened.
     for editorView in editorViews
       continue unless files = editorView.data().get('files')
 
-      if _.find files, (file) => file.id is activeFileId and file.active
-        return editorView.getActiveEditor()
+      if _.find files, (file) => file.id is fileId
+        return editorView
 
     null
+
+  getEditorViewForActiveFile: ->
+    @getEditorViewForFile @activeFileId()
+
+  getEditorForActiveFile: ->
+    @getEditorViewForActiveFile()?.getActiveEditor()
     
   getHelper: (helperClassOrId) ->
     helperId = helperClassOrId.id?() or helperClassOrId
@@ -122,7 +127,22 @@ class FM.Interface extends AM.Component
       @_helperInstances[helperId] = new helperClass @
 
     @_helperInstances[helperId]
-  
+
+  getHelperForFile: (helperClassOrId, fileId) ->
+    helperId = helperClassOrId.id?() or helperClassOrId
+
+    # Create the helper singleton on first request.
+    @_helperForFileInstances[fileId] ?= {}
+    @_helperForFileInstances[fileId][helperId] ?= Tracker.nonreactive =>
+      helperClass = FM.Operator.getClassForId helperId
+      @_helperForFileInstances[fileId][helperId] = new helperClass @, fileId
+
+    @_helperForFileInstances[fileId][helperId]
+
+  getHelperForActiveFile: (helperClassOrId) ->
+    return unless fileId = @activeFileId()
+    @getHelperForFile helperClassOrId, fileId
+
   displayDialog: (dialog) ->
     # Wrap the plain object into data for compatibility.
     dialogData = new FM.Interface.Data load: => dialog

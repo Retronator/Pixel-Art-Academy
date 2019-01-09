@@ -112,30 +112,35 @@ div.landsofillusions-assets-editor
           overflow-y auto
 
     .fatamorgana-editorview
+      position relative
       display flex
       width 100%
       height 100%
       flex-direction column
 
       .tabs
-        display flex
         flex-shrink 0
         background atariGrey(1)
         padding-top 2rem
 
         .tab
+          float left
+          max-width 100rem
           padding 2rem 4rem
           checkout()
           cursor pointer
-          white-space nowrap
-          text-overflow ellipsis
-          overflow hidden
           color atariGrey(4)
 
           &.active
             background-color atariGrey(2)
             cursor default
             color atariGrey(6)
+
+          .name
+            white-space nowrap
+            text-overflow ellipsis
+            overflow hidden
+            direction rtl
 
       .editor
         position relative

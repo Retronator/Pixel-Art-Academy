@@ -5,6 +5,9 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.PixelCanvas extends FM.View
+  # initialCameraScale: default scale for camera if not specified on the file
+  # components: array of helper IDs that should be drawn to context
+  #
   # FILE DATA
   # camera:
   #   scale: canvas magnification
@@ -25,7 +28,6 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     
     @options =
       cameraInput: true
-      grid: true
       mouse: true
       cursor: true
 
@@ -35,6 +37,7 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     @mouse = new ReactiveField null
     @cursor = new ReactiveField null
     @sprite = new ReactiveField null
+    @spriteId = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null
@@ -45,6 +48,7 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     super arguments...
 
     @display = @callAncestorWith 'display'
+    @editorView = @ancestorComponentOfType FM.EditorView
 
     # Create component data fields.
     @componentData = new ComputedField =>
@@ -59,8 +63,7 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
       initialOrigin: @options.initialCameraOrigin
       enableInput: @options.cameraInput
 
-    if @options.grid
-      @grid new @constructor.Grid @, @options.gridInvertColor, @options.gridEnabled
+    @grid new @constructor.Grid @, @options.gridInvertColor, @options.gridEnabled
 
     if @options.mouse
       @mouse new @constructor.Mouse @
@@ -68,8 +71,8 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     if @options.cursor
       @cursor new @constructor.Cursor @
 
-    @spriteId = new ComputedField =>
-      @interface.activeFileId()
+    @autorun (computation) =>
+      @spriteId @editorView.activeFileData().value().id
 
     @spriteData = new ComputedField =>
       return unless spriteId = @spriteId()
@@ -92,6 +95,12 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
       #visualizeNormals: @paintNormals
 
     @pixelCanvasSize = new ReactiveField width: 0, height: 0
+
+    @drawComponents = new ComputedField =>
+      return unless componentIds = @componentData()?.get 'components'
+
+      for componentId in componentIds
+        @interface.getHelperForFile componentId, @spriteId()
 
     # Resize the canvas when browser window and zoom changes.
     @autorun (computation) =>
@@ -137,12 +146,12 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
       camera = @camera()
       camera.applyTransformToCanvas()
 
-      components = [@sprite()]
+      components = [@sprite(), @grid()]
 
-      if drawComponents = @options.drawComponents?()
+      if drawComponents = @drawComponents()
         components = components.concat drawComponents
-
-      for componentName in ['grid', 'cursor']
+        
+      for componentName in ['cursor']
         if @options[componentName] is true or _.isFunction(@options[componentName]) and @options[componentName]()
           components.push @[componentName]()
 
@@ -150,7 +159,10 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
         continue unless component
 
         context.save()
-        component.drawToContext context, lightDirection: @options.lightDirection
+        component.drawToContext context,
+          lightDirection: @options.lightDirection
+          camera: camera
+
         context.restore()
 
   onRendered: ->

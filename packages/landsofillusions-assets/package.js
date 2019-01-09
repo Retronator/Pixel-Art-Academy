@@ -171,6 +171,7 @@ Package.onUse(function(api) {
   api.addFile('editor/actions/delete');
   api.addFile('editor/actions/duplicate');
   api.addFile('editor/actions/clear');
+  api.addFile('editor/actions/close');
 
   api.addComponent('editor/window..');
   api.addComponent('editor/assetopendialog..');
@@ -193,9 +194,12 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions/symmetry');
   api.addFile('spriteeditor/actions/fliphorizontal');
   api.addFile('spriteeditor/actions/zoom');
+  api.addFile('spriteeditor/actions/showgrid');
+  api.addFile('spriteeditor/actions/showlandmarks');
 
   api.addFile('spriteeditor/helpers..');
   api.addFile('spriteeditor/helpers/zoomlevels');
+  api.addFile('spriteeditor/helpers/landmarks');
 
   // Mesh editor
 

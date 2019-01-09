@@ -14,5 +14,6 @@ class LOI.Assets.Editor.Actions.New extends FM.Action
         console.error error
         return
 
-      # Switch editor to the new asset.
-      @interface.parent.setAssetId assetId
+      # Open the new asset.
+      editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
+      editorView.addFile assetId

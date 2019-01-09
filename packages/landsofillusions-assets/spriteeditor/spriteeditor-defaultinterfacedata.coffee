@@ -22,6 +22,9 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
 
       "#{_.snakeCase LOI.Assets.Components.PixelCanvas.id()}":
         initialCameraScale: 8
+        components: [
+          LOI.Assets.SpriteEditor.Helpers.Landmarks.id()
+        ]
 
     # Layouts
 
@@ -35,6 +38,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
           LOI.Assets.Editor.Actions.New.id()
           LOI.Assets.Editor.Actions.Open.id()
           null
+          LOI.Assets.Editor.Actions.Close.id()
           LOI.Assets.Editor.Actions.Duplicate.id()
           LOI.Assets.Editor.Actions.Delete.id()
         ]
@@ -54,6 +58,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
           @Actions.ZoomIn.id()
           @Actions.ZoomOut.id()
           null
+          @Actions.ShowGrid.id()
+          @Actions.ShowLandmarks.id()
           @Actions.PaintNormals.id()
         ]
       ,
@@ -102,10 +108,10 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
                   ,
                     name: 'File info'
                     contentComponentId: LOI.Assets.Components.AssetInfo.id()
-                    active: true
                   ,
                     name: 'Landmarks'
                     contentComponentId: LOI.Assets.Components.Landmarks.id()
+                    active: true
                   ]
                 remainingArea:
                   type: FM.TabbedView.id()
@@ -136,12 +142,17 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
         name: "Default"
         mapping:
           # Actions
+          "#{LOI.Assets.Editor.Actions.New.id()}": commandOrControl: true, key: AC.Keys.n
+          "#{LOI.Assets.Editor.Actions.Open.id()}": commandOrControl: true, key: AC.Keys.o
+          "#{LOI.Assets.Editor.Actions.Close.id()}": commandOrControl: true, key: AC.Keys.w
           "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
           "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
           "#{@Actions.PaintNormals.id()}": key: AC.Keys.n
           "#{@Actions.Symmetry.id()}": key: AC.Keys.s
           "#{@Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
           "#{@Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
+          "#{@Actions.ShowGrid.id()}":commandOrControl: true, key: AC.Keys.singleQuote
+          "#{@Actions.ShowLandmarks.id()}":commandOrControl: true, shift: true, key: AC.Keys.l
 
           # Tools
           "#{@Tools.Arrow.id()}": key: AC.Keys.escape
