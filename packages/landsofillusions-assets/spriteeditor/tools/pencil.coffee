@@ -3,6 +3,7 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.Tool
+  # paintNormals: boolean whether only normals are being painted
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'
   @displayName: -> "Pencil"
 
@@ -23,8 +24,11 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
     xCoordinates = [[@mouseState.x, 1]]
 
-    spriteData = @options.editor().spriteData()
-    symmetryXOrigin = @options.editor().symmetryXOrigin?()
+    editor = @interface.getEditorForActiveFile()
+    spriteData = editor.spriteData()
+
+    # TODO: Get symmetry from interface data.
+    # symmetryXOrigin = @options.editor().symmetryXOrigin?()
 
     if symmetryXOrigin?
       mirroredX = -@mouseState.x + 2 * symmetryXOrigin
@@ -40,28 +44,29 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       if spriteData.bounds?.fixed
         continue unless spriteData.bounds.left <= pixel.x <= spriteData.bounds.right and spriteData.bounds.top <= pixel.y <= spriteData.bounds.bottom
 
-      normal = @options.editor().shadingSphere?().currentNormal().clone()
+      # TODO: Get normal from interface data.
+      normal = null # @options.editor().shadingSphere?().currentNormal().clone()
 
       if normal
         pixel.normal = normal
         pixel.normal.x *= xNormalFactor
   
       # See if we're setting a palette color.
-      palette = @options.editor().palette()
-      ramp = palette.currentRamp()
-      shade = palette.currentShade()
+      @paletteData = @interface.getComponentData LOI.Assets.Components.Palette
+      ramp = @paletteData.get 'ramp'
+      shade = @paletteData.get 'shade'
   
       if ramp? and shade?
         pixel.paletteColor = {ramp, shade}
   
       # See if we're setting a named color.
-      materialIndex = @options.editor().materials?().currentIndex()
+      @meterialsData = @interface.getComponentData LOI.Assets.Components.Materials
+      materialIndex = @meterialsData.get 'index'
       pixel.materialIndex = materialIndex if materialIndex?
   
       # See if we're painting a normal.
-      paintNormals = @options.editor().paintNormals?()
+      paintNormals = @data.get 'paintNormals'
   
-      spriteData = @options.editor().spriteData()
       existingPixel = _.find spriteData.layers?[0]?.pixels, (searchPixel) -> pixel.x is searchPixel.x and pixel.y is searchPixel.y
   
       if paintNormals and existingPixel

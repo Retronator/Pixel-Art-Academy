@@ -8,8 +8,12 @@ class LOI.Assets.SpriteEditor.Actions.PaintNormals extends FM.Action
     
   @initialize()
 
-  active: -> @interface.parent.paintNormals()
+  constructor: ->
+    super arguments...
+
+    @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
+
+  active: -> @paintNormalsData.value()
 
   execute: ->
-    paintNormalsField = @interface.parent.paintNormals
-    paintNormalsField not paintNormalsField()
+    @paintNormalsData.value not @paintNormalsData.value()

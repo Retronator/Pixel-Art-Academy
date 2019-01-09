@@ -6,26 +6,26 @@ class LOI.Assets.Components.Palette extends FM.View
   @id: -> 'LandsOfIllusions.Assets.Components.Palette'
   @register @id()
 
-  constructor: ->
+  onCreated: ->
     super arguments...
 
     @paletteData = new ComputedField =>
-      return unless @isCreated()
+      return unless editor = @interface.getEditorForActiveFile()
 
-      if paletteData = @interface.parent.paletteData?()
+      if paletteData = editor.paletteData?()
         return paletteData
       
-      if paletteId = @interface.parent.paletteId?()
+      if paletteId = editor.paletteId?()
         LOI.Assets.Palette.forId.subscribe paletteId if paletteId
         return LOI.Assets.Palette.documents.findOne paletteId
 
       null
-    
-    @currentRamp = new ReactiveField null
-    @currentShade = new ReactiveField null
+      
+    @currentRampData = @interface.getComponentData(@).child 'ramp'
+    @currentShadeData = @interface.getComponentData(@).child 'shade'
 
     @currentColor = new ComputedField =>
-      @paletteData()?.ramps[@currentRamp()]?.shades[@currentShade()]
+      @paletteData()?.ramps[@currentRampData.value()]?.shades[@currentShadeData.value()]
       
   palette: ->
     return unless paletteData = @paletteData()
@@ -46,16 +46,16 @@ class LOI.Assets.Components.Palette extends FM.View
     backgroundColor: "##{color.getHexString()}"
 
   setColor: (ramp, shade) ->
-    @currentRamp ramp
-    @currentShade shade
+    @currentRampData.value ramp
+    @currentShadeData.value shade
 
     # Deselect the material.
-    if materials = @options.materials?()
-      materials.setIndex null
+    materialsData = @interface.getComponentData LOI.Assets.Components.Materials
+    materialsData.set 'index', null
 
   activeColorClass: ->
     data = @currentData()
-    'active' if data.ramp is @currentRamp() and data.shade is @currentShade()
+    'active' if data.ramp is @currentRampData.value() and data.shade is @currentShadeData.value()
 
   events: ->
     super(arguments...).concat

@@ -105,7 +105,7 @@ class FM.Interface extends FM.Interface
     targetTool = _.find @tools(), (tool) => keyboardState.isShortcutDown @getShortcutForOperator tool
     targetAction = _.find @actions(), (action) => keyboardState.isShortcutDown @getShortcutForOperator action
 
-    if targetTool?.enabled()
+    if targetTool
       # We want to store the previous tool if we're activating this tool with the hold key.
       targetToolShortcut = @getShortcutForOperator targetTool
       storePreviousTool = key is targetToolShortcut.holdKey

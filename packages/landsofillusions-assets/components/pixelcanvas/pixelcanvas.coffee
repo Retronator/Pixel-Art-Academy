@@ -71,6 +71,9 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     if @options.cursor
       @cursor new @constructor.Cursor @
 
+    @toolsActive = new ComputedField =>
+      @componentData().get('toolsActive') ? true
+
     @autorun (computation) =>
       @spriteId @editorView.activeFileData().value().id
 
@@ -89,10 +92,19 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
         fields:
           palette: 1
       )?.palette?._id
+      
+    @paletteData = new ComputedField =>
+      # Minimize reactivity to only custom palette changes.
+      LOI.Assets.Sprite.documents.findOne(@spriteId(),
+        fields:
+          customPalette: 1
+      )?.customPalette
 
+    @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
+      
     @sprite new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
-      #visualizeNormals: @paintNormals
+      visualizeNormals: @paintNormalsData.value
 
     @pixelCanvasSize = new ReactiveField width: 0, height: 0
 
@@ -189,11 +201,11 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
           width: $pixelCanvas.width()
           height: $pixelCanvas.height()
 
-    if @options.activeTool
-      $(document).on 'keydown.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyDown? event
-      $(document).on 'keyup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyUp? event
-      $(document).on 'mouseup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onMouseUp? event
-      $(document).on 'mouseleave.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onMouseLeaveWindow? event
+    if @toolsActive()
+      $(document).on 'keydown.landsofillusions-assets-components-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event
+      $(document).on 'keyup.landsofillusions-assets-components-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event
+      $(document).on 'mouseup.landsofillusions-assets-components-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event
+      $(document).on 'mouseleave.landsofillusions-assets-components-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event
 
   onDestroyed: ->
     super arguments...
@@ -205,7 +217,7 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
   events: ->
     events = super arguments...
 
-    if @options.activeTool
+    if @toolsActive()
       events = events.concat
         'mousedown .canvas': @onMouseDownCanvas
         'mousemove .canvas': @onMouseMoveCanvas
@@ -216,16 +228,16 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     events
 
   onMouseDownCanvas: (event) ->
-    @options.activeTool()?.onMouseDown? event
+    @interface.activeTool()?.onMouseDown? event
 
   onMouseMoveCanvas: (event) ->
-    @options.activeTool()?.onMouseMove? event
+    @interface.activeTool()?.onMouseMove? event
 
   onMouseEnterCanvas: (event) ->
-    @options.activeTool()?.onMouseEnter? event
+    @interface.activeTool()?.onMouseEnter? event
 
   onMouseLeaveCanvas: (event) ->
-    @options.activeTool()?.onMouseLeave? event
+    @interface.activeTool()?.onMouseLeave? event
 
   onDragStartCanvas: (event) ->
-    @options.activeTool()?.onDragStart? event
+    @interface.activeTool()?.onDragStart? event

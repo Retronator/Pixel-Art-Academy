@@ -1,7 +1,11 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mirage
 FM = FataMorgana
 
 class FM.View extends AM.Component
+  @id: -> throw new AE.NotImplementedException "Views must provide an id."
+  id: -> @constructor.id()
+
   constructor: ->
     super arguments...
 

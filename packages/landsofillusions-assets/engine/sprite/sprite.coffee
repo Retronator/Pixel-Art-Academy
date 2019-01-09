@@ -10,6 +10,9 @@ class LOI.Assets.Engine.Sprite
       true
 
   drawToContext: (context, renderOptions = {}) ->
+    # HACK: Request sprite data already at the top since otherwise ready sometimes doesn't get recomputed in time.
+    spriteData = @options.spriteData()
+
     return unless @ready()
 
     @_render renderOptions
@@ -17,7 +20,7 @@ class LOI.Assets.Engine.Sprite
     # Right now we're using canvas' drawing capabilities, without using our depth data. This is done for simplicity
     # since we can let canvas' context deal with transformations and stuff. Eventually we'll want to move to either
     # a custom drawing routine or upgrade to WebGL.
-    bounds = @options.spriteData().bounds
+    bounds = spriteData.bounds
 
     context.imageSmoothingEnabled = false
     context.drawImage @_canvas, bounds.x, bounds.y

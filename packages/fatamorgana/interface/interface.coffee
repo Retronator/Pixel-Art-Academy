@@ -174,7 +174,7 @@ class FM.Interface extends AM.Component
   toolClass: ->
     return unless tool = @activeTool()
 
-    toolClass = _.kebabCase tool.name
+    toolClass = _.kebabCase tool.displayName()
     extraToolClass = tool.toolClass?()
 
     [toolClass, extraToolClass].join ' '

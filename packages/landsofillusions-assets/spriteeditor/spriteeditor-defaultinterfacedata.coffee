@@ -101,31 +101,40 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
                 width: 150
                 mainArea:
                   type: FM.TabbedView.id()
-                  height: 200
+                  height: 50
                   tabs: [
                     name: 'Navigator'
                     contentComponentId: LOI.Assets.Components.Navigator.id()
+                    active: true
                   ,
                     name: 'File info'
                     contentComponentId: LOI.Assets.Components.AssetInfo.id()
-                  ,
-                    name: 'Landmarks'
-                    contentComponentId: LOI.Assets.Components.Landmarks.id()
-                    active: true
                   ]
                 remainingArea:
-                  type: FM.TabbedView.id()
-                  tabs: [
-                    name: 'Palette'
-                    contentComponentId: LOI.Assets.Components.Palette.id()
-                    active: true
-                  ,
-                    name: 'Materials'
-                    contentComponentId: LOI.Assets.Components.Materials.id()
-                  ,
-                    name: 'Shading'
-                    contentComponentId: LOI.Assets.Components.ShadingSphere.id()
-                  ]
+                  type: FM.SplitView.id()
+                  dockSide: FM.SplitView.DockSide.Top
+                  width: 150
+                  mainArea:
+                    type: FM.TabbedView.id()
+                    height: 100
+                    tabs: [
+                      name: 'Landmarks'
+                      contentComponentId: LOI.Assets.Components.Landmarks.id()
+                      active: true
+                    ]
+                  remainingArea:
+                    type: FM.TabbedView.id()
+                    tabs: [
+                      name: 'Palette'
+                      contentComponentId: LOI.Assets.Components.Palette.id()
+                      active: true
+                    ,
+                      name: 'Materials'
+                      contentComponentId: LOI.Assets.Components.Materials.id()
+                    ,
+                      name: 'Shading'
+                      contentComponentId: LOI.Assets.Components.ShadingSphere.id()
+                    ]
 
               remainingArea:
                 type: FM.EditorView.id()
