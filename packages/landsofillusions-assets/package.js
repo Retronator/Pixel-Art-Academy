@@ -200,6 +200,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/helpers..');
   api.addFile('spriteeditor/helpers/zoomlevels');
   api.addFile('spriteeditor/helpers/landmarks');
+  api.addFile('spriteeditor/helpers/paint');
 
   // Mesh editor
 

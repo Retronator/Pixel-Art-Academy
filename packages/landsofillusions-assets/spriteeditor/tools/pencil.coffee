@@ -44,26 +44,21 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       if spriteData.bounds?.fixed
         continue unless spriteData.bounds.left <= pixel.x <= spriteData.bounds.right and spriteData.bounds.top <= pixel.y <= spriteData.bounds.bottom
 
-      # TODO: Get normal from interface data.
-      normal = null # @options.editor().shadingSphere?().currentNormal().clone()
+      paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+      normal = paintHelper.normal().clone()
 
       if normal
         pixel.normal = normal
         pixel.normal.x *= xNormalFactor
   
       # See if we're setting a palette color.
-      @paletteData = @interface.getComponentData LOI.Assets.Components.Palette
-      ramp = @paletteData.get 'ramp'
-      shade = @paletteData.get 'shade'
-  
-      if ramp? and shade?
-        pixel.paletteColor = {ramp, shade}
+      if paletteColor = paintHelper.paletteColor()
+        pixel.paletteColor = paletteColor
   
       # See if we're setting a named color.
-      @meterialsData = @interface.getComponentData LOI.Assets.Components.Materials
-      materialIndex = @meterialsData.get 'index'
-      pixel.materialIndex = materialIndex if materialIndex?
-  
+      if materialIndex = paintHelper.materialIndex()
+        pixel.materialIndex = materialIndex
+
       # See if we're painting a normal.
       paintNormals = @data.get 'paintNormals'
   

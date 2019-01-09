@@ -20,12 +20,12 @@ class LOI.Assets.Components.Palette extends FM.View
         return LOI.Assets.Palette.documents.findOne paletteId
 
       null
-      
-    @currentRampData = @interface.getComponentData(@).child 'ramp'
-    @currentShadeData = @interface.getComponentData(@).child 'shade'
+
+    @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
     @currentColor = new ComputedField =>
-      @paletteData()?.ramps[@currentRampData.value()]?.shades[@currentShadeData.value()]
+      return unless paletteColor = @paintHelper.paletteColor()
+      @paletteData()?.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
       
   palette: ->
     return unless paletteData = @paletteData()
@@ -45,22 +45,16 @@ class LOI.Assets.Components.Palette extends FM.View
 
     backgroundColor: "##{color.getHexString()}"
 
-  setColor: (ramp, shade) ->
-    @currentRampData.value ramp
-    @currentShadeData.value shade
-
-    # Deselect the material.
-    materialsData = @interface.getComponentData LOI.Assets.Components.Materials
-    materialsData.set 'index', null
-
   activeColorClass: ->
-    data = @currentData()
-    'active' if data.ramp is @currentRampData.value() and data.shade is @currentShadeData.value()
+    color = @currentData()
+    return unless currentColor = @paintHelper.paletteColor()
+
+    'active' if color.ramp is currentColor.ramp and color.shade is currentColor.shade
 
   events: ->
     super(arguments...).concat
       'click .color': @onClickColor
 
   onClickColor: ->
-    data = @currentData()
-    @setColor data.ramp, data.shade
+    color = @currentData()
+    @paintHelper.setPaletteColor color
