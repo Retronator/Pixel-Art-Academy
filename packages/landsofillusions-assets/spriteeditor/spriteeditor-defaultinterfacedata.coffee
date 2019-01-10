@@ -129,10 +129,10 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
                     ,
                       name: 'Materials'
                       contentComponentId: LOI.Assets.Editor.Materials.id()
-                      active: true
                     ,
                       name: 'Shading'
                       contentComponentId: LOI.Assets.SpriteEditor.ShadingSphere.id()
+                      active: true
                     ]
 
               remainingArea:

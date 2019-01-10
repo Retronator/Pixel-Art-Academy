@@ -22,11 +22,13 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
     return unless @mouseState.leftButton
 
     # Do we even need to remove this pixel? See if it is even there.
-    spriteData = @options.editor().spriteData()
+    editor = @interface.getEditorForActiveFile()
+    spriteData = editor.spriteData()
 
     xCoordinates = [@mouseState.x]
 
-    symmetryXOrigin = @options.editor().symmetryXOrigin?()
+    # TODO: Get symmetry from interface data.
+    # symmetryXOrigin = @options.editor().symmetryXOrigin?()
 
     if symmetryXOrigin?
       mirroredX = -@mouseState.x + 2 * symmetryXOrigin

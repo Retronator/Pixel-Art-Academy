@@ -29,6 +29,8 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
       return unless lightDirectionHelper = @lightDirectionHelper()
       lightDirectionHelper()
 
+    @visualizeNormals = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child('paintNormals').value
+
     @sphereSpriteGeometry = new ComputedField =>
       # Construct the sphere sprite.
       return unless radius = @radius()
@@ -58,28 +60,23 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
 
           pixels.push {x, y, normal, materialIndex}
 
-      layers: [pixels: pixels]
+      layers: [{pixels}]
       bounds: bounds
 
     @sphereSpriteData = new ComputedField =>
       return unless spriteData = @sphereSpriteGeometry()
       return unless editor = @interface.getEditorForActiveFile()
 
-      # Add palette information to sprite.
-      paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
-
-      visualizeNormals = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).get 'paintNormals'
-      paletteId = editor.paletteId()
-
-      if visualizeNormals
+      if @visualizeNormals()
         # Just return the sprite without any extra color information.
         spriteData
 
-      else if paletteId
-        spriteData.palette =
-          _id: paletteId
+      else if paletteId = editor.paletteId()
+        # Add palette information to sprite.
+        spriteData.palette = _id: paletteId
 
         # Get the ramp and shade we're using.
+        paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
         material = paintHelper.paletteColor()
 
         # See if we're setting a named color.
@@ -96,7 +93,7 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
         spriteData
 
       else
-        return null
+        null
 
     @circleSpriteGeometry = new ComputedField =>
       return unless palette = LOI.palette()
@@ -181,11 +178,11 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
     @pixelCanvas new LOI.Assets.Components.PixelCanvas
       cameraInput: false
       grid: false
-      cursor: true
+      cursor: false
       lightDirection: @lightDirection
       drawComponents: => [
         sphereSprite
-        circleSprite
+        #circleSprite
       ]
       activeTool: => normalPicker
 

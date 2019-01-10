@@ -15,7 +15,7 @@ class LOI.Assets.Editor.Actions.Undo extends LOI.Assets.Editor.Actions.AssetActi
 
   execute: ->
     asset = @asset()
-    LOI.Assets.VisualAsset.undo asset.constructor.assetClassName, asset._id
+    LOI.Assets.VisualAsset.undo asset.constructor.className, asset._id
 
 class LOI.Assets.Editor.Actions.Redo extends LOI.Assets.Editor.Actions.AssetAction
   @id: -> 'LandsOfIllusions.Assets.Editor.Actions.Redo'
@@ -29,4 +29,4 @@ class LOI.Assets.Editor.Actions.Redo extends LOI.Assets.Editor.Actions.AssetActi
 
   execute: ->
     asset = @asset()
-    LOI.Assets.VisualAsset.redo asset.constructor.assetClassName, asset._id
+    LOI.Assets.VisualAsset.redo asset.constructor.className, asset._id
