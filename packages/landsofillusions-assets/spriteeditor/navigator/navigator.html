@@ -1,0 +1,11 @@
+<template name="LandsOfIllusions.Assets.SpriteEditor.Navigator">
+  <div class="landsofillusions-assets-spriteeditor-navigator">
+    <div class="zoom-display">
+      {{#if zoomPercentageValue}}
+        <input class="zoom-percentage-input" value="{{zoomPercentageValue}}" />%
+      {{/if}}
+    </div>
+    <button class="zoom-in-button zoom-button {{zoomInPressedClass}}">+</button>
+    <button class="zoom-out-button zoom-button {{zoomOutPressedClass}}">-</button>
+  </div>
+</template>

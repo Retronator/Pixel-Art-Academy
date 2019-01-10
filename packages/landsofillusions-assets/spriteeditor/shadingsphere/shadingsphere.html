@@ -1,0 +1,16 @@
+<template name="LandsOfIllusions.Assets.SpriteEditor.ShadingSphere">
+  <div class="landsofillusions-assets-spriteeditor-shadingsphere">
+    {{> Render pixelCanvas}}
+    <div class="options">
+      <div class="option">
+        <button class="edit-light-button {{editLightActiveClass}}">Edit light</button>
+      </div>
+      <div class="option">
+        <label class="angle-snap">
+          Snap to:
+          {{> Render angleSnapInput}}
+        </label>
+      </div>
+    </div>
+  </div>
+</template>

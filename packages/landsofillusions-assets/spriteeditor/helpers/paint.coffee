@@ -34,4 +34,4 @@ class LOI.Assets.SpriteEditor.Helpers.Paint extends FM.Helper
     @data.set 'materialIndex', materialIndex
     
   setNormal: (normal) ->
-    @data.set 'normal', _.pick normal, ['x', 'y', 'z']
+    @data.set 'normal', if normal then _.pick normal, ['x', 'y', 'z'] else null

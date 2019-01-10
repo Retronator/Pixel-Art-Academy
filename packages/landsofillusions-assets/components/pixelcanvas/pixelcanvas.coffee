@@ -1,33 +1,17 @@
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
-FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.Components.PixelCanvas extends FM.View
-  # initialCameraScale: default scale for camera if not specified on the file
-  # components: array of helper IDs that should be drawn to context
-  #
-  # FILE DATA
-  # camera:
-  #   scale: canvas magnification
-  #   origin: the point on the sprite that should appear in the center of the canvas
-  #     x
-  #     y
-  @id: -> 'LandsOfIllusions.Assets.Components.PixelCanvas'
-  @register @id()
+class LOI.Assets.Components.PixelCanvas extends AM.Component
+  @register 'LandsOfIllusions.Assets.Components.PixelCanvas'
 
-  @subscribeToDocumentsForEditorView: (editorView, fileIds) ->
-    LOI.Assets.Asset.forIdsFull.subscribe editorView, LOI.Assets.Sprite.className, fileIds
-
-  @getDocumentForEditorView: (editorView, fileId) ->
-    LOI.Assets.Sprite.documents.findOne fileId
-
-  constructor: ->
+  constructor: (@options) ->
     super arguments...
-    
-    @options =
+
+    _.defaults @options,
       cameraInput: true
+      grid: true
       mouse: true
       cursor: true
 
@@ -36,8 +20,6 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     @grid = new ReactiveField null
     @mouse = new ReactiveField null
     @cursor = new ReactiveField null
-    @sprite = new ReactiveField null
-    @spriteId = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null
@@ -48,14 +30,6 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     super arguments...
 
     @display = @callAncestorWith 'display'
-    @editorView = @ancestorComponentOfType FM.EditorView
-
-    # Create component data fields.
-    @componentData = new ComputedField =>
-      @interface.getComponentData @constructor
-
-    @componentFileData = new ComputedField =>
-      @interface.getComponentDataForActiveFile @constructor
 
     # Initialize components.
     @camera new @constructor.Camera @,
@@ -63,7 +37,8 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
       initialOrigin: @options.initialCameraOrigin
       enableInput: @options.cameraInput
 
-    @grid new @constructor.Grid @, @options.gridInvertColor, @options.gridEnabled
+    if @options.grid
+      @grid new @constructor.Grid @, @options.gridInvertColor, @options.gridEnabled
 
     if @options.mouse
       @mouse new @constructor.Mouse @
@@ -71,51 +46,8 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     if @options.cursor
       @cursor new @constructor.Cursor @
 
-    @toolsActive = new ComputedField =>
-      @componentData().get('toolsActive') ? true
-
-    @autorun (computation) =>
-      @spriteId @editorView.activeFileData().value().id
-
-    @spriteData = new ComputedField =>
-      return unless spriteId = @spriteId()
-
-      LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, spriteId
-      LOI.Assets.Sprite.documents.findOne spriteId
-
-    # Create the alias for universal operators.
-    @asset = @spriteData
-
-    @paletteId = new ComputedField =>
-      # Minimize reactivity to only palette changes.
-      LOI.Assets.Sprite.documents.findOne(@spriteId(),
-        fields:
-          palette: 1
-      )?.palette?._id
-      
-    @paletteData = new ComputedField =>
-      # Minimize reactivity to only custom palette changes.
-      LOI.Assets.Sprite.documents.findOne(@spriteId(),
-        fields:
-          customPalette: 1
-      )?.customPalette
-
-    @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
-      
-    @sprite new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
-      visualizeNormals: @paintNormalsData.value
-
-    @pixelCanvasSize = new ReactiveField width: 0, height: 0
-
-    @drawComponents = new ComputedField =>
-      return unless componentIds = @componentData()?.get 'components'
-
-      for componentId in componentIds
-        @interface.getHelperForFile componentId, @spriteId()
-
     # Resize the canvas when browser window and zoom changes.
-    @autorun (computation) =>
+    @autorun =>
       canvas = @canvas()
       return unless canvas
       
@@ -136,11 +68,15 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
           newSize.height++
         
       else
-        # Resize to component.
-        newSize = @pixelCanvasSize()
+        # Depend on window size.
+        AM.Window.clientBounds()
 
-      # Resize the back buffer to canvas element size, if it actually changed. If the pixel
-      # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
+        # Resize the back buffer to canvas element size, if it actually changed. If the pixel
+        # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
+        newSize =
+          width: $(canvas).width()
+          height: $(canvas).height()
+  
       for key, value of newSize
         canvas[key] = value unless canvas[key] is value
 
@@ -148,22 +84,23 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
 
     # Redraw canvas routine.
     @autorun =>
-      return unless context = @context()
+      camera = @camera()
+      context = @context()
+      return unless context
 
       canvasPixelSize = @canvasPixelSize()
 
       context.setTransform 1, 0, 0, 1, 0, 0
       context.clearRect 0, 0, canvasPixelSize.width, canvasPixelSize.height
 
-      camera = @camera()
       camera.applyTransformToCanvas()
 
-      components = [@sprite(), @grid()]
+      components = []
 
-      if drawComponents = @drawComponents()
+      if drawComponents = @options.drawComponents?()
         components = components.concat drawComponents
-        
-      for componentName in ['cursor']
+
+      for componentName in ['grid', 'cursor']
         if @options[componentName] is true or _.isFunction(@options[componentName]) and @options[componentName]()
           components.push @[componentName]()
 
@@ -171,10 +108,7 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
         continue unless component
 
         context.save()
-        component.drawToContext context,
-          lightDirection: @options.lightDirection
-          camera: camera
-
+        component.drawToContext context, lightDirection: @options.lightDirection
         context.restore()
 
   onRendered: ->
@@ -188,36 +122,29 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     @canvas canvas
     @context canvas.getContext '2d'
 
-    @autorun (computation) =>
-      # Depend on editor view size.
-      AM.Window.clientBounds()
-
-      # Depend on application area changes.
-      @interface.currentApplicationAreaData().value()
-
-      # After update, measure the size.
-      Tracker.afterFlush =>
-        @pixelCanvasSize
-          width: $pixelCanvas.width()
-          height: $pixelCanvas.height()
-
-    if @toolsActive()
-      $(document).on 'keydown.landsofillusions-assets-components-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event
-      $(document).on 'keyup.landsofillusions-assets-components-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event
-      $(document).on 'mouseup.landsofillusions-assets-components-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event
-      $(document).on 'mouseleave.landsofillusions-assets-components-pixelcanvas', (event) => @interface.activeTool()?.onMouseLeaveWindow? event
+    if @options.activeTool
+      $(document).on 'keydown.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyDown? event
+      $(document).on 'keyup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onKeyUp? event
+      $(document).on 'mouseup.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onMouseUp? event
+      $(document).on 'mouseleave.landsofillusions-assets-components-pixelcanvas', (event) => @options.activeTool()?.onMouseLeaveWindow? event
 
   onDestroyed: ->
     super arguments...
 
     $(document).off '.landsofillusions-assets-components-pixelcanvas'
 
+  forceResize: ->
+    @forceResizeDependency.changed()
+
+  forceRedraw: ->
+    @forceRedrawDependency.changed()
+
   # Events
 
   events: ->
     events = super arguments...
 
-    if @toolsActive()
+    if @options.activeTool
       events = events.concat
         'mousedown .canvas': @onMouseDownCanvas
         'mousemove .canvas': @onMouseMoveCanvas
@@ -228,16 +155,16 @@ class LOI.Assets.Components.PixelCanvas extends FM.View
     events
 
   onMouseDownCanvas: (event) ->
-    @interface.activeTool()?.onMouseDown? event
+    @options.activeTool()?.onMouseDown? event
 
   onMouseMoveCanvas: (event) ->
-    @interface.activeTool()?.onMouseMove? event
+    @options.activeTool()?.onMouseMove? event
 
   onMouseEnterCanvas: (event) ->
-    @interface.activeTool()?.onMouseEnter? event
+    @options.activeTool()?.onMouseEnter? event
 
   onMouseLeaveCanvas: (event) ->
-    @interface.activeTool()?.onMouseLeave? event
+    @options.activeTool()?.onMouseLeave? event
 
   onDragStartCanvas: (event) ->
-    @interface.activeTool()?.onDragStart? event
+    @options.activeTool()?.onDragStart? event

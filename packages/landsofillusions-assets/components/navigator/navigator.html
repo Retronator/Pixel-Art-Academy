@@ -1,9 +1,7 @@
 <template name="LandsOfIllusions.Assets.Components.Navigator">
   <div class="landsofillusions-assets-components-navigator">
     <div class="zoom-display">
-      {{#if zoomPercentageValue}}
-        <input class="zoom-percentage-input" value="{{zoomPercentageValue}}" />%
-      {{/if}}
+      <input class="zoom-percentage-input" value="{{zoomPercentageValue}}" />%
     </div>
     <button class="zoom-in-button zoom-button {{zoomInPressedClass}}">+</button>
     <button class="zoom-out-button zoom-button {{zoomOutPressedClass}}">-</button>

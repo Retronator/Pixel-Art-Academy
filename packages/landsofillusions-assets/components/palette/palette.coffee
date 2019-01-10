@@ -1,31 +1,27 @@
 AM = Artificial.Mirage
-FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.Components.Palette extends FM.View
-  @id: -> 'LandsOfIllusions.Assets.Components.Palette'
-  @register @id()
+class LOI.Assets.Components.Palette extends AM.Component
+  @register 'LandsOfIllusions.Assets.Components.Palette'
 
-  onCreated: ->
+  constructor: (@options) ->
     super arguments...
 
     @paletteData = new ComputedField =>
-      return unless editor = @interface.getEditorForActiveFile()
-
-      if paletteData = editor.paletteData?()
+      if paletteData = @options.paletteData?()
         return paletteData
       
-      if paletteId = editor.paletteId?()
+      if paletteId = @options.paletteId?()
         LOI.Assets.Palette.forId.subscribe paletteId if paletteId
         return LOI.Assets.Palette.documents.findOne paletteId
 
       null
-
-    @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+    
+    @currentRamp = new ReactiveField null
+    @currentShade = new ReactiveField null
 
     @currentColor = new ComputedField =>
-      return unless paletteColor = @paintHelper.paletteColor()
-      @paletteData()?.ramps[paletteColor.ramp]?.shades[paletteColor.shade]
+      @paletteData()?.ramps[@currentRamp()]?.shades[@currentShade()]
       
   palette: ->
     return unless paletteData = @paletteData()
@@ -45,16 +41,22 @@ class LOI.Assets.Components.Palette extends FM.View
 
     backgroundColor: "##{color.getHexString()}"
 
-  activeColorClass: ->
-    color = @currentData()
-    return unless currentColor = @paintHelper.paletteColor()
+  setColor: (ramp, shade) ->
+    @currentRamp ramp
+    @currentShade shade
 
-    'active' if color.ramp is currentColor.ramp and color.shade is currentColor.shade
+    # Deselect the material.
+    if materials = @options.materials?()
+      materials.setIndex null
+
+  activeColorClass: ->
+    data = @currentData()
+    'active' if data.ramp is @currentRamp() and data.shade is @currentShade()
 
   events: ->
     super(arguments...).concat
       'click .color': @onClickColor
 
   onClickColor: ->
-    color = @currentData()
-    @paintHelper.setPaletteColor color
+    data = @currentData()
+    @setColor data.ramp, data.shade

@@ -17,10 +17,10 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
     # Content Components
 
     components =
-      "#{_.snakeCase LOI.Assets.Components.ShadingSphere.id()}":
+      "#{_.snakeCase LOI.Assets.SpriteEditor.ShadingSphere.id()}":
         radius: 30
 
-      "#{_.snakeCase LOI.Assets.Components.PixelCanvas.id()}":
+      "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
         initialCameraScale: 8
         components: [
           LOI.Assets.SpriteEditor.Helpers.Landmarks.id()
@@ -104,42 +104,41 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
                   height: 50
                   tabs: [
                     name: 'Navigator'
-                    contentComponentId: LOI.Assets.Components.Navigator.id()
+                    contentComponentId: LOI.Assets.SpriteEditor.Navigator.id()
                     active: true
                   ,
                     name: 'File info'
-                    contentComponentId: LOI.Assets.Components.AssetInfo.id()
+                    contentComponentId: LOI.Assets.SpriteEditor.AssetInfo.id()
                   ]
                 remainingArea:
                   type: FM.SplitView.id()
                   dockSide: FM.SplitView.DockSide.Top
-                  width: 150
                   mainArea:
                     type: FM.TabbedView.id()
                     height: 100
                     tabs: [
                       name: 'Landmarks'
-                      contentComponentId: LOI.Assets.Components.Landmarks.id()
+                      contentComponentId: LOI.Assets.Editor.Landmarks.id()
                       active: true
                     ]
                   remainingArea:
                     type: FM.TabbedView.id()
                     tabs: [
                       name: 'Palette'
-                      contentComponentId: LOI.Assets.Components.Palette.id()
-                      active: true
+                      contentComponentId: LOI.Assets.SpriteEditor.Palette.id()
                     ,
                       name: 'Materials'
-                      contentComponentId: LOI.Assets.Components.Materials.id()
+                      contentComponentId: LOI.Assets.SpriteEditor.Materials.id()
                     ,
                       name: 'Shading'
-                      contentComponentId: LOI.Assets.Components.ShadingSphere.id()
+                      contentComponentId: LOI.Assets.SpriteEditor.ShadingSphere.id()
+                      active: true
                     ]
 
               remainingArea:
                 type: FM.EditorView.id()
                 editor:
-                  contentComponentId: LOI.Assets.Components.PixelCanvas.id()
+                  contentComponentId: LOI.Assets.SpriteEditor.PixelCanvas.id()
 
     # Shortcuts
 

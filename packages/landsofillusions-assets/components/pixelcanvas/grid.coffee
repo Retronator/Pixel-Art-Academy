@@ -1,18 +1,10 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.PixelCanvas.Grid
-  constructor: (@pixelCanvas) ->
-    @showGridData = new ComputedField =>
-      @pixelCanvas.interface.getComponentDataForFile LOI.Assets.SpriteEditor.Actions.ShowGrid, @pixelCanvas.spriteId()
-
-    @enabled = new ComputedField =>
-      @showGridData().value() ? true
-
-  toggle: ->
-    @showGridData().value not @enabled()
+  constructor: (@pixelCanvas, @invertColor, @gridEnabled) ->
 
   drawToContext: (context) ->
-    return unless @enabled()
+    return if @gridEnabled and not @gridEnabled()
     
     camera = @pixelCanvas.camera()
     scale = camera.scale()

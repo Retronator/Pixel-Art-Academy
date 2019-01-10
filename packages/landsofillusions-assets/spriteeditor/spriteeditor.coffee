@@ -25,7 +25,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
     super arguments...
 
     # Initialize components.
-    @pixelCanvas new LOI.Assets.Components.PixelCanvas
+    @pixelCanvas new LOI.Assets.SpriteEditor.PixelCanvas
       initialCameraScale: 8
       activeTool: @activeTool
       lightDirection: @lightDirection

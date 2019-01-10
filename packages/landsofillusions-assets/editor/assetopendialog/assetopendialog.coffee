@@ -10,7 +10,7 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
   onCreated: ->
     super arguments...
 
-    @fileManager = new LOI.Assets.Components.FileManager
+    @fileManager = new LOI.Assets.Editor.FileManager
       documents: LOI.Assets.Sprite.documents
       defaultOperation: => @_open()
 

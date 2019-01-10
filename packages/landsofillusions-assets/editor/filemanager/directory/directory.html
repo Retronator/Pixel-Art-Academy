@@ -1,0 +1,21 @@
+<template name="LandsOfIllusions.Assets.Editor.FileManager.Directory">
+    <div class="landsofillusions-assets-editor-filemanager-directory {{directoryDropTargetClass}}" {{style directoryStyle}}>
+      <ul class="items">
+        {{#each currentItems}}
+          <li class="item {{selectedClass}} {{typeClass}} {{itemDropTargetClass}}" {{draggableAttribute}}>
+            <div class="entry">
+              <img class="icon" src="{{iconUrl}}" />
+              {{#if editingName}}
+                <input class="name-input" value="{{nameOrId}}"/>
+              {{else}}
+                <span class="name">
+                  {{nameOrId}}
+                </span>
+              {{/if}}
+            </div>
+          </li>
+        {{/each}}
+      </ul>
+      <div class="divider"></div>
+    </div>
+</template>

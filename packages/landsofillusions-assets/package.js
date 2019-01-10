@@ -96,31 +96,18 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/assetinfo..');
   api.addUnstyledComponent('components/navigator..');
   api.addUnstyledComponent('components/palette..');
-  api.addUnstyledComponent('components/materials..');
-  api.addUnstyledComponent('components/landmarks..');
   api.addUnstyledComponent('components/spriteimage..');
-  api.addUnstyledComponent('components/camera..');
-
-  api.addComponent('components/filemanager..');
-
-  api.addComponent('components/filemanager/directory..');
-  api.addFile('components/filemanager/directory/folder');
-  api.addFile('components/filemanager/directory/newfolder');
-
-  api.addFile('components/filemanager/previews..');
-  api.addComponent('components/filemanager/previews/sprite..');
 
   api.addUnstyledComponent('components/references..');
   api.addUnstyledComponent('components/references/reference..');
-
-  api.addUnstyledComponent('components/shadingsphere..');
-  api.addFile('components/shadingsphere/normalpicker');
 
   api.addUnstyledComponent('components/pixelcanvas..');
   api.addFile('components/pixelcanvas/mouse');
   api.addFile('components/pixelcanvas/grid');
   api.addFile('components/pixelcanvas/cursor');
   api.addFile('components/pixelcanvas/camera');
+
+  api.addFile('components/tool..');
 
   // Engine
 
@@ -173,8 +160,19 @@ Package.onUse(function(api) {
   api.addFile('editor/actions/clear');
   api.addFile('editor/actions/close');
 
-  api.addComponent('editor/window..');
+  api.addUnstyledComponent('editor/assetinfo..');
   api.addComponent('editor/assetopendialog..');
+  api.addUnstyledComponent('editor/landmarks..');
+  api.addComponent('editor/window..');
+
+  api.addComponent('editor/filemanager..');
+
+  api.addComponent('editor/filemanager/directory..');
+  api.addFile('editor/filemanager/directory/folder');
+  api.addFile('editor/filemanager/directory/newfolder');
+
+  api.addFile('editor/filemanager/previews..');
+  api.addComponent('editor/filemanager/previews/sprite..');
 
   // Sprite editor
 
@@ -201,6 +199,20 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/helpers/zoomlevels');
   api.addFile('spriteeditor/helpers/landmarks');
   api.addFile('spriteeditor/helpers/paint');
+  api.addFile('spriteeditor/helpers/lightdirection');
+
+  api.addUnstyledComponent('spriteeditor/materials..');
+  api.addUnstyledComponent('spriteeditor/navigator..');
+  api.addUnstyledComponent('spriteeditor/palette..');
+  
+  api.addUnstyledComponent('spriteeditor/pixelcanvas..');
+  api.addFile('spriteeditor/pixelcanvas/mouse');
+  api.addFile('spriteeditor/pixelcanvas/grid');
+  api.addFile('spriteeditor/pixelcanvas/cursor');
+  api.addFile('spriteeditor/pixelcanvas/camera');
+
+  api.addUnstyledComponent('spriteeditor/shadingsphere..');
+  api.addFile('spriteeditor/shadingsphere/normalpicker');
 
   // Mesh editor
 

@@ -1,31 +1,58 @@
 AM = Artificial.Mirage
-FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.Components.AssetInfo extends FM.View
-  @id: -> 'LandsOfIllusions.Assets.Components.AssetInfo'
-  @register @id()
+class LOI.Assets.Components.AssetInfo extends AM.Component
+  @register 'LandsOfIllusions.Assets.Components.AssetInfo'
 
-  onCreated: ->
+  constructor: (@options) ->
     super arguments...
 
-    @asset = new ComputedField =>
-      @interface.getEditorForActiveFile()?.asset()
+    @assetId = @options.getAssetId
+
+    @assetData = new ComputedField =>
+      @options.documentClass.documents.findOne @assetId(),
+        fields:
+          name: 1
+          palette: 1
+
+    @currentIndex = new ReactiveField null
 
   showPalette: ->
-    @interface.getEditorForActiveFile().paletteId
+    @options.getPaletteId?
+
+  events: ->
+    super(arguments...).concat
+      'click .clear-button': @onClickClearButton
+      'click .delete-button': @onClickDeleteButton
+      'click .duplicate-button': @onClickDuplicateButton
+
+  onClickClearButton: (event) ->
+    @options.documentClass.clear @assetId()
+
+  onClickDeleteButton: (event) ->
+    LOI.Assets.Asset.remove @options.documentClass.className, @assetId()
+
+  onClickDuplicateButton: (event) ->
+    LOI.Assets.Asset.duplicate @options.documentClass.className, @assetId(), (error, duplicateAssetId) =>
+      if error
+        console.error error
+        return
+
+      # Switch to the duplicate
+      @options.setAssetId duplicateAssetId
 
   class @Name extends AM.DataInputComponent
     @register 'LandsOfIllusions.Assets.Components.AssetInfo.Name'
 
     load: ->
-      asset = @data()
-      asset.name
+      assetData = @data()
+      assetData.name
 
     save: (value) ->
-      asset = @data()
+      assetData = @data()
 
-      LOI.Assets.Asset.update asset.constructor.className, asset._id,
+      assetInfo = @ancestorComponentOfType LOI.Assets.Components.AssetInfo
+      LOI.Assets.Asset.update assetInfo.options.documentClass.className, assetData._id,
         $set:
           name: value
 
@@ -57,9 +84,7 @@ class LOI.Assets.Components.AssetInfo extends FM.View
       options
 
     load: ->
-      asset = @data()
-      asset.palette?._id
+      @assetInfo.options.getPaletteId()
 
     save: (value) ->
-      asset = @data()
-      asset.setPaletteId value or null
+      @assetInfo.options.setPaletteId value or null

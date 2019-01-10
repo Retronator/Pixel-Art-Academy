@@ -23,8 +23,12 @@ class FM.Operator
     # Store action class by ID.
     @_operatorClassesById[@id()] = @
     
-  constructor: (@interface) ->
-    @data = @interface.getComponentData @
+  constructor: (@interface, @fileId) ->
+    if @fileId
+      @data = @interface.getComponentDataForFile @, @fileId
+
+    else
+      @data = @interface.getComponentData @
     
   currentShortcut: ->
     @interface.getShortcutForOperator @

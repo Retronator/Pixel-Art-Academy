@@ -133,9 +133,11 @@ class FM.Interface extends AM.Component
 
     # Create the helper singleton on first request.
     @_helperForFileInstances[fileId] ?= {}
-    @_helperForFileInstances[fileId][helperId] ?= Tracker.nonreactive =>
+
+    unless @_helperForFileInstances[fileId][helperId]
       helperClass = FM.Operator.getClassForId helperId
-      @_helperForFileInstances[fileId][helperId] = new helperClass @, fileId
+      Tracker.nonreactive =>
+        @_helperForFileInstances[fileId][helperId] = new helperClass @, fileId
 
     @_helperForFileInstances[fileId][helperId]
 
