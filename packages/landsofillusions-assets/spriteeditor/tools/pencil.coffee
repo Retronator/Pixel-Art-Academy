@@ -56,7 +56,8 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
         pixel.paletteColor = paletteColor
   
       # See if we're setting a named color.
-      if materialIndex = paintHelper.materialIndex()
+      materialIndex = paintHelper.materialIndex()
+      if materialIndex?
         pixel.materialIndex = materialIndex
 
       # See if we're painting a normal.

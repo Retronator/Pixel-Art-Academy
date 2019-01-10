@@ -155,7 +155,7 @@ class LOI.Assets.Engine.Sprite
             directColor = pixel.directColor
 
           if paletteColor
-            shades = palette.ramps[paletteColor.ramp].shades
+            continue unless shades = palette.ramps[paletteColor.ramp]?.shades
             shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
             directColor = shades[shadeIndex]
 

@@ -164,6 +164,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/assetopendialog..');
   api.addUnstyledComponent('editor/landmarks..');
   api.addComponent('editor/window..');
+  api.addUnstyledComponent('editor/materials..');
 
   api.addComponent('editor/filemanager..');
 
@@ -201,7 +202,6 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/helpers/paint');
   api.addFile('spriteeditor/helpers/lightdirection');
 
-  api.addUnstyledComponent('spriteeditor/materials..');
   api.addUnstyledComponent('spriteeditor/navigator..');
   api.addUnstyledComponent('spriteeditor/palette..');
   

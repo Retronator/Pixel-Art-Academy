@@ -63,12 +63,13 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
 
     @sphereSpriteData = new ComputedField =>
       return unless spriteData = @sphereSpriteGeometry()
+      return unless editor = @interface.getEditorForActiveFile()
 
       # Add palette information to sprite.
       paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
       visualizeNormals = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).get 'paintNormals'
-      paletteId = @interface.getEditorForActiveFile()?.paletteId()
+      paletteId = editor.paletteId()
 
       if visualizeNormals
         # Just return the sprite without any extra color information.
@@ -85,9 +86,8 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
         materialIndex = paintHelper.materialIndex()
 
         if materialIndex?
-          # TODO: Support materials.
-          assetData = @options.materials().assetData()
-          material = assetData.materials?[materialIndex]
+          asset = editor.asset()
+          material = asset.materials?[materialIndex]
 
         return unless material?.ramp? and material?.shade?
 

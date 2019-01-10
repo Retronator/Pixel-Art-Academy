@@ -1,24 +1,18 @@
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Materials extends AM.Component
-  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Materials'
+class LOI.Assets.Editor.Materials extends FM.View
+  @id: -> 'LandsOfIllusions.Assets.Editor.Materials'
   @register @id()
-
-  constructor: (@options) ->
-    super arguments...
-
-    @assetData = new ComputedField =>
-      assetId = @options.assetId()
-      @options.documentClass.documents.findOne assetId,
-        fields:
-          materials: 1
-          palette: 1
-
-    @currentIndex = new ReactiveField null
 
   onCreated: ->
     super arguments...
+
+    @assetData = new ComputedField =>
+      @interface.getEditorForActiveFile()?.asset()
+
+    @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
     # Subscribe to the palette of this asset.
     @autorun =>
@@ -29,29 +23,26 @@ class LOI.Assets.SpriteEditor.Materials extends AM.Component
 
     # Deselect index if it's outside asset's materials.
     @autorun (computation) =>
-      return if @assetData()?.materials?[@currentIndex()]
+      return unless index = @paintHelper.materialIndex()
+      return if @assetData()?.materials?[index]
       
-      Tracker.nonreactive => @currentIndex null
+      Tracker.nonreactive => @paintHelper.setMaterialIndex null
 
   setIndex: (index) ->
     # Make sure index is a number and not a string. But it could be null too for deselecting.
     index = parseInt index if index?
 
     # Set current material index.
-    @currentIndex index
-
-    # Deselect the color in the palette if we've set one of our own.
-    if index? and palette = @options.palette()
-      palette.currentRamp null
+    @paintHelper.setMaterialIndex index
 
   selectIndexWithRamp: (ramp) ->
-    @currentIndex @getIndexWithRamp ramp
+    @paintHelper.setMaterialIndex @getIndexWithRamp ramp
 
   getIndexWithRamp: (ramp) ->
     data = @assetData()
     return unless data
 
-    currentIndex = @currentIndex()
+    currentIndex = @paintHelper.materialIndex()
 
     # Skip if current index is already with desired ramp
     return currentIndex if data.materials[currentIndex]?.ramp is ramp
@@ -73,12 +64,8 @@ class LOI.Assets.SpriteEditor.Materials extends AM.Component
       newIndex++
 
     # Set the initial ramp and shade from the palette.
-    if palette = @options.palette()
-      material =
-        ramp: palette.currentRamp()
-        shade: palette.currentShade()
-
-    LOI.Assets.VisualAsset.updateMaterial @options.documentClass.className, asset._id, newIndex, material
+    material = @paintHelper.paletteColor()
+    LOI.Assets.VisualAsset.updateMaterial asset.constructor.className, asset._id, newIndex, material
 
     newIndex
 
@@ -97,16 +84,17 @@ class LOI.Assets.SpriteEditor.Materials extends AM.Component
     return unless palette = LOI.Assets.Palette.documents.findOne @assetData()?.palette?._id
 
     ramp = colorData.ramp or 0
-    maxShade = palette.ramps[ramp].shades.length - 1
-    shade = THREE.Math.clamp colorData.shade or 0, 0, maxShade
+    return unless shades = palette.ramps[ramp]?.shades
 
-    color = THREE.Color.fromObject palette.ramps[ramp].shades[shade]
+    maxShade = shades.length - 1
+    shade = THREE.Math.clamp colorData.shade or 0, 0, maxShade
+    color = THREE.Color.fromObject shades[shade]
 
     backgroundColor: "##{color.getHexString()}"
 
   activeColorClass: ->
     data = @currentData()
-    'active' if data.index is @currentIndex()
+    'active' if data.index is @paintHelper.materialIndex()
 
   events: ->
     super(arguments...).concat
@@ -131,7 +119,8 @@ class LOI.Assets.SpriteEditor.Materials extends AM.Component
       shade: @_parseIntOrNull $material.find('.shade-input').val()
       dither: @_parseFloatOrNull $material.find('.dither-input').val()
 
-    LOI.Assets.VisualAsset.updateMaterial @options.documentClass.className, @assetData()._id, index, material
+    asset = @assetData()
+    LOI.Assets.VisualAsset.updateMaterial asset.constructor.className, asset._id, index, material
 
   onClickAddMaterialButton: (event) ->
     @addNewIndex()
