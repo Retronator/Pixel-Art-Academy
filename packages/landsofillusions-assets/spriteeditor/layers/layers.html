@@ -2,7 +2,7 @@
   <div class="landsofillusions-assets-spriteeditor-layers landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
     <table class="layers-table editor-table">
       {{#each layers}}
-        <tr class="layer">
+        <tr class="layer {{activeClass}}">
           <td class="depth"><input class="depth-input" value="{{depth}}"/></td>
           <td class="thumbnail">{{> Render thumbnail}}</td>
           <td class="name"><input class="name-input" value="{{name}}" placeholder="{{placeholderName}}"/></td>

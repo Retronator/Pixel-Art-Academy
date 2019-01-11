@@ -3,11 +3,13 @@
 html.landsofillusions-assets-editor
   overflow hidden
 
+backgroundGrey = blend(rgba(atariGrey(1), 0.65) atariGrey(0))
+
 div.landsofillusions-assets-editor
   absolute-cover()
   adventure()
   color atariGrey(4)
-  background blend(rgba(atariGrey(0), 0.5) atariGrey(1))
+  background backgroundGrey
 
   *
     pixel-image-rendering()
@@ -25,7 +27,7 @@ div.landsofillusions-assets-editor
 
   input
   select
-    background rgba(atariGrey(0),0.65)
+    background backgroundGrey
     padding 0 3rem
 
     &[type=number]
@@ -68,7 +70,7 @@ div.landsofillusions-assets-editor
           height 9rem
           font-size inherit
           line-height 5rem
-          background rgba(atariGrey(0), 0.65)
+          background backgroundGrey
           cursor pointer
 
         input

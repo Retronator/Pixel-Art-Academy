@@ -24,21 +24,32 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
 
       _.sortBy layers, (layer) => -layer.origin?.z or 0
 
+    @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+
+  activeClass: ->
+    layer = @currentData()
+    'active' if layer.index is @paintHelper.layerIndex()
+
   depth: ->
     layer = @currentData()
     layer.origin?.z or 0
 
   placeholderName: ->
     layer = @currentData()
-    layer.name or "Layer #{layer.index}"
+    "Layer #{layer.index}"
 
   # Events
 
   events: ->
     super(arguments...).concat
+      'click .thumbnail': @onClickThumbnail
       'change .depth-input': @onChangeDepth
       'change .name-input': @onChangeLayer
       'click .add-layer-button': @onClickAddLayerButton
+
+  onClickThumbnail: (event) ->
+    layer = @currentData()
+    @paintHelper.setLayerIndex layer.index
 
   onChangeDepth: (event) ->
     layer = @currentData()
@@ -62,8 +73,7 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     $layer = $(event.target).closest('.layer')
 
     newData =
-      # We null the name if it's an empty string
-      name: $layer.find('.name-input').val() or null
+      name: $layer.find('.name-input').val()
       
     sprite = @sprite()
     LOI.Assets.Sprite.updateLayer sprite._id, layer.index, newData

@@ -21,9 +21,14 @@ LOI.Assets.Sprite.updateLayer.method (spriteId, layerIndex, layerUpdate) ->
 
   if sprite.layers
     if layer = sprite.layers[layerIndex]
-      if layerUpdate.name
-        forward.$set ?= {}
-        forward.$set["layers.#{layerIndex}.name"] = layerUpdate.name
+      if layerUpdate.name?
+        if layerUpdate.name
+          forward.$set ?= {}
+          forward.$set["layers.#{layerIndex}.name"] = layerUpdate.name
+
+        else
+          forward.$unset ?= {}
+          forward.$unset["layers.#{layerIndex}.name"] = true
 
         if layer.name
           backward.$set ?= {}
