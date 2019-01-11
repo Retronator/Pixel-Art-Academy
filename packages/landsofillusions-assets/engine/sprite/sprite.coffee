@@ -58,7 +58,7 @@ class LOI.Assets.Engine.Sprite
     flippedHorizontal = flippedHorizontal() if _.isFunction flippedHorizontal
 
     for layer in spriteData.layers
-      continue unless layer.pixels
+      continue unless layer?.pixels
 
       layerOrigin =
         x: layer.origin?.x or 0

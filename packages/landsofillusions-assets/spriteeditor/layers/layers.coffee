@@ -17,9 +17,12 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
       layers = _.cloneDeep sprite.layers or []
 
       # Attach layer index to layer.
-      layer.index = index for layer, index in layers
+      layer.index = index for layer, index in layers when layer
 
-      _.sortBy layers, (layer) => layer.origin?.z or 0
+      # Remove removed layers.
+      _.pull layers, null
+
+      _.sortBy layers, (layer) => -layer.origin?.z or 0
 
   depth: ->
     layer = @currentData()
@@ -52,7 +55,7 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
 
     else
       # Change the depth of the layer.
-      LOI.Assets.Sprite.updateLayer sprite._id, index, origin: z: depth
+      LOI.Assets.Sprite.updateLayer sprite._id, layer.index, origin: z: depth
 
   onChangeLayer: (event) ->
     layer = @currentData()

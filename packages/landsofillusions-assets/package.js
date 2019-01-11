@@ -67,6 +67,7 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/colorfill');
   api.addFile('documents/sprite/methods/replacepixels');
   api.addFile('documents/sprite/methods/transformpixels');
+  api.addFile('documents/sprite/methods/layers');
 
   api.addFile('documents/mesh..');
   api.addFile('documents/mesh/cameraangle');
