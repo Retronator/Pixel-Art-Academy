@@ -25,6 +25,9 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
     editor = @interface.getEditorForActiveFile()
     spriteData = editor.spriteData()
 
+    paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+    layerIndex = paintHelper.layerIndex()
+
     xCoordinates = [@mouseState.x]
 
     # TODO: Get symmetry from interface data.
@@ -41,9 +44,9 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
 
       existing = LOI.Assets.Sprite.documents.findOne
         _id: spriteData._id
-        "layers.#{0}.pixels":
+        "layers.#{layerIndex}.pixels":
           $elemMatch: pixel
 
       return unless existing
 
-      LOI.Assets.Sprite.removePixel spriteData._id, 0, pixel
+      LOI.Assets.Sprite.removePixel spriteData._id, layerIndex, pixel

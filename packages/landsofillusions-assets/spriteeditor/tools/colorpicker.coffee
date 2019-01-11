@@ -27,19 +27,25 @@ class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LOI.Assets.SpriteEditor.
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
     # Go over all pixels to find the one we want.
-    for layer in spriteData.layers
+    for layer in spriteData.layers when layer?.pixels
       for pixel in layer.pixels
         if pixel.x is @mouseState.x and pixel.y is @mouseState.y
-          if pixel.paletteColor
-            paintHelper.setPaletteColor pixel.paletteColor
-            
-          else if pixel.directColor
-            paintHelper.setDirectColor pixel.directColor
-            
-          else if pixel.materialIndex?
-            paintHelper.setMaterialIndex pixel.materialIndex
+          pixelDepth = (pixel.z or 0) + (layer.origin?.z or 0)
 
-          if pixel.normal
-            paintHelper.setNormal pixel.normal
+          if not topPixel or pixelDepth >= topPixelDepth
+            topPixel = pixel
+            topPixelDepth = pixelDepth
 
-          return
+    return unless topPixel
+
+    if topPixel.paletteColor
+      paintHelper.setPaletteColor topPixel.paletteColor
+
+    else if topPixel.directColor
+      paintHelper.setDirectColor topPixel.directColor
+
+    else if topPixel.materialIndex?
+      paintHelper.setMaterialIndex topPixel.materialIndex
+
+    if topPixel.normal
+      paintHelper.setNormal pixel.normal

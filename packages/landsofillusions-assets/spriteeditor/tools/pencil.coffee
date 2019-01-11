@@ -62,8 +62,9 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
       # See if we're painting a normal.
       paintNormals = @data.get 'paintNormals'
-  
-      existingPixel = _.find spriteData.layers?[0]?.pixels, (searchPixel) -> pixel.x is searchPixel.x and pixel.y is searchPixel.y
+
+      layerIndex = paintHelper.layerIndex()
+      existingPixel = _.find spriteData.layers?[layerIndex]?.pixels, (searchPixel) -> pixel.x is searchPixel.x and pixel.y is searchPixel.y
   
       if paintNormals and existingPixel
         # Get the color from the existing pixel.
@@ -76,11 +77,11 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       # Do we even need to add this pixel? See if one just like it is already there.
       exactMatch = LOI.Assets.Sprite.documents.findOne
         _id: spriteData._id
-        "layers.#{0}.pixels": pixel
+        "layers.#{layerIndex}.pixels": pixel
 
       continue if exactMatch
       
-      @_callMethod spriteData._id, 0, pixel
+      @_callMethod spriteData._id, layerIndex, pixel
 
   # Override to call another method.
   _callMethod: (spriteId, layer, pixel) ->

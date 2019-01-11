@@ -43,7 +43,7 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
     # Update bounds. They might be null (empty image) so account for that.
     bounds = sprite.bounds
 
-    pixelsCount = _.sumBy sprite.layers, (layer) => layer.pixels?.length or 0
+    pixelsCount = _.sumBy sprite.layers, (layer) => layer?.pixels?.length or 0
 
     # We only need to update bounds if the pixel we're removing is on the edge.
     if bounds and (x is bounds.left or x is bounds.right or y is bounds.top or y is bounds.bottom)
@@ -56,9 +56,9 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
         # Recalculate bounds completely.
         bounds = null
 
-        for layer, index in sprite.layers
+        for layer, index in sprite.layers when layer.pixels
           for pixel in layer.pixels
-            # Skip the pixel we're removing
+            # Skip the pixel we're removing.
             continue if index is layerIndex and pixel.x is x and pixel.y is y
 
             if bounds

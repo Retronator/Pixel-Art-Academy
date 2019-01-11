@@ -45,7 +45,7 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
     forward.$set.bounds = bounds
 
   if sprite.layers
-    if sprite.layers[layerIndex]
+    if sprite.layers[layerIndex]?.pixels
       if existingPixel
         existingPixelIndex = pixels.indexOf existingPixel
 
