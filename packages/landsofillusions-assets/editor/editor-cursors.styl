@@ -1,0 +1,39 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+div.landsofillusions-assets-editor
+  .fatamorgana-interface
+    &.pencil .fatamorgana-editorview .editor
+      cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/pencil.png?0.1.0') 2 0, default
+
+      html.scale-3-or-up &
+        cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/pencil.png?0.1.0') 3 0, default
+
+    &.eraser .fatamorgana-editorview .editor
+      cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/eraser.png?0.1.0') 4 2, default
+
+      html.scale-3-or-up &
+        cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/eraser.png?0.1.0') 6 3, default
+
+    &.color-picker .fatamorgana-editorview .editor
+    &.cluster-picker .fatamorgana-editorview .editor
+      cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/eyedropper.png?0.1.0') 2 0, default
+
+      html.scale-3-or-up &
+        cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/eyedropper.png?0.1.0') 3 0, default
+
+    &.color-fill .fatamorgana-editorview .editor
+      cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/colorfill.png?0.1.0') 5 30, default
+
+      html.scale-3-or-up &
+        cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/colorfill.png?0.1.0') 7 45, default
+
+    &.move-canvas
+      .fatamorgana-editorview .editor
+        cursor grab
+
+      &.dragging
+        .sprite
+          transition none !important
+
+    &.move-camera .fatamorgana-editorview .editor
+      cursor move

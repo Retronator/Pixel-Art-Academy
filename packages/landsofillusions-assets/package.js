@@ -149,6 +149,8 @@ Package.onUse(function(api) {
   // Editors
   
   api.addComponent('editor..');
+  api.addStyle('editor/editor-cursors');
+  api.addStyle('editor/editor-fatamorgana');
 
   api.addFile('editor/actions..');
   api.addFile('editor/actions/assetaction');
@@ -160,11 +162,11 @@ Package.onUse(function(api) {
   api.addFile('editor/actions/clear');
   api.addFile('editor/actions/close');
 
-  api.addUnstyledComponent('editor/assetinfo..');
+  api.addComponent('editor/assetinfo..');
   api.addComponent('editor/assetopendialog..');
-  api.addUnstyledComponent('editor/landmarks..');
+  api.addComponent('editor/landmarks..');
   api.addComponent('editor/window..');
-  api.addUnstyledComponent('editor/materials..');
+  api.addComponent('editor/materials..');
 
   api.addComponent('editor/filemanager..');
 
@@ -202,16 +204,17 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/helpers/paint');
   api.addFile('spriteeditor/helpers/lightdirection');
 
-  api.addUnstyledComponent('spriteeditor/navigator..');
-  api.addUnstyledComponent('spriteeditor/palette..');
+  api.addComponent('spriteeditor/navigator..');
+  api.addComponent('spriteeditor/palette..');
+  api.addComponent('spriteeditor/layers..');
   
-  api.addUnstyledComponent('spriteeditor/pixelcanvas..');
+  api.addComponent('spriteeditor/pixelcanvas..');
   api.addFile('spriteeditor/pixelcanvas/mouse');
   api.addFile('spriteeditor/pixelcanvas/grid');
   api.addFile('spriteeditor/pixelcanvas/cursor');
   api.addFile('spriteeditor/pixelcanvas/camera');
 
-  api.addUnstyledComponent('spriteeditor/shadingsphere..');
+  api.addComponent('spriteeditor/shadingsphere..');
   api.addFile('spriteeditor/shadingsphere/normalpicker');
 
   // Mesh editor

@@ -35,424 +35,51 @@ div.landsofillusions-assets-editor
     background atariGrey(1)
     padding 0 5rem
 
-  .fatamorgana-interface
-    absolute-cover()
+  .landsofillusions-assets-editor-panel
+    width 100%
+    height 100%
+    padding 2rem
 
-    &.pencil .fatamorgana-editorview .editor
-      cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/pencil.png?0.1.0') 2 0, default
+  .landsofillusions-assets-editor-propertytable
+    width 100%
+    height 100%
 
-      html.scale-3-or-up &
-        cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/pencil.png?0.1.0') 3 0, default
-
-    &.eraser .fatamorgana-editorview .editor
-      cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/eraser.png?0.1.0') 4 2, default
-
-      html.scale-3-or-up &
-        cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/eraser.png?0.1.0') 6 3, default
-
-    &.color-picker .fatamorgana-editorview .editor
-    &.cluster-picker .fatamorgana-editorview .editor
-      cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/eyedropper.png?0.1.0') 2 0, default
-
-      html.scale-3-or-up &
-        cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/eyedropper.png?0.1.0') 3 0, default
-
-    &.color-fill .fatamorgana-editorview .editor
-      cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/2x/colorfill.png?0.1.0') 5 30, default
-
-      html.scale-3-or-up &
-        cursor url('/pixelartacademy/pixelboy/apps/drawing/editor/cursors/3x/colorfill.png?0.1.0') 7 45, default
-
-    &.move-canvas
-      .fatamorgana-editorview .editor
-        cursor grab
-
-      &.dragging
-        .sprite
-          transition none !important
-
-    &.move-camera .fatamorgana-editorview .editor
-      cursor move
-
-    .fatamorgana-splitview
-      .divider
-        background-color atariGrey(1)
-
-    .fatamorgana-tabbedview
-      display flex
+    .editor-table
+      border-collapse collapse
+      table-layout fixed
       width 100%
-      height 100%
-      flex-direction column
 
-      .tabs
-        display flex
-        flex-shrink 0
-        background atariGrey(0)
-        padding-top 2rem
-
-        .tab
-          padding 2rem 4rem
+      .legend
+        th
           checkout()
-          text-transform uppercase
-          cursor pointer
-          white-space nowrap
-          text-overflow ellipsis
-          overflow hidden
-
-          &.active
-            background-color atariGrey(1)
-            cursor default
-
-      .active-tab
-        position relative
-        flex-grow 1
-        background-color atariGrey(1)
-
-        > .fatamorgana-area
-          absolute-cover()
-          overflow-y auto
-
-    .fatamorgana-editorview
-      position relative
-      display flex
-      width 100%
-      height 100%
-      flex-direction column
-
-      .tabs
-        flex-shrink 0
-        background atariGrey(1)
-        padding-top 2rem
-
-        .tab
-          float left
-          max-width 100rem
-          padding 2rem 4rem
-          checkout()
-          cursor pointer
-          color atariGrey(4)
-
-          &.active
-            background-color atariGrey(2)
-            cursor default
-            color atariGrey(6)
-
-          .name
-            white-space nowrap
-            text-overflow ellipsis
-            overflow hidden
-            direction rtl
-
-      .editor
-        position relative
-        flex-grow 1
-        border 1rem solid atariGrey(2)
-
-        > .fatamorgana-area
-          absolute-cover()
-          overflow hidden
-
-    .fatamorgana-menu
-      background-color atariGrey(1)
-
-      .items
-        margin 0 4rem
-
-        .item
-          padding 2rem 4rem
-          cursor pointer
-
-          &:first-child
-            color atariGrey(5)
-
-          &:hover
-            background-color atariGrey(2)
-            color atariGrey(6)
-
-    .fatamorgana-menu-dropdown
-      background-color atariGrey(1)
-      box-shadow 5rem 5rem 0 rgba(atariGrey(0), 0.5)
-
-      .items
-        padding 2rem 0
-
-        .item
-          display flex
-          padding 1rem 4rem 1rem 0
-          color atariGrey(2)
-
-          &.enabled
-            cursor pointer
-            color atariGrey(4)
-
-            &:hover
-              background-color atariGrey(2)
-              color atariGrey(6)
-
-          .active-status
-            width 14rem
-            padding-left 1rem
-            text-align center
-
-            &.active
-              &::before
-                content '✔'
-
-          .caption
-            flex-grow 1
-
-          .shortcut
-            margin-left 8rem
-
-        .divider
-          margin 3rem 0
-          height 1rem
-          background-color atariGrey(2)
-
-    .fatamorgana-toolbox
-      background-color atariGrey(1)
-      height 100%
-
-      .tools
-        display flex
-        flex-wrap wrap
-
-        .tool
+          font-weight normal
           width 20rem
-          height 20rem
+          overflow hidden
+          white-space nowrap
 
-          .tool-button
-            width 20rem
-            height 20rem
-            padding 1rem
-            border 1rem solid atariGrey(1)
-            background none
+          &.name
+            width auto
 
-            &:hover
-              background atariGrey(2)
-
-            .icon
-              width 16rem
-              height 16rem
-
-            .name
-              display none
-
-          &.active
-            .tool-button
-              background atariGrey(2)
-              border-color atariGrey(2)
-
-    .landsofillusions-assets-spriteeditor-pixelcanvas
-      position relative
-      width 100%
-      height 100%
-      user-select none
-      background blend(rgba(atariGrey(1), 0.5) atariGrey(2))
-
-      .canvas
-        absolute-cover-size()
-        user-select none
-
-    .landsofillusions-assets-editor-assetslist
-      width 100rem
-      max-height 100rem
-      overflow-y auto
-      margin-bottom 10rem
-
-      .assets
-        list-style none
-        padding 0
-        margin 0
-        background atariGrey(3)
-        color atariGrey(0)
-
-        .asset
+      tr
+        td
+          border 1rem solid black
+          padding 0
+          margin 0
+          height 9rem
+          font-size inherit
+          line-height 5rem
+          background rgba(atariGrey(0), 0.65)
           cursor pointer
-          padding 1rem 2rem
-
-          &:hover
-            background-color atariGrey(4)
-
-          &.active
-            background-color atariGrey(5)
-            cursor default
-
-    .landsofillusions-assets-editor-landmarks
-    .landsofillusions-assets-editor-assetinfo
-    .landsofillusions-assets-editor-materials
-    .landsofillusions-assets-spriteeditor-navigator
-    .landsofillusions-assets-spriteeditor-shadingsphere
-    .landsofillusions-assets-mesheditor-camera
-      width 100%
-      height 100%
-      padding 2rem
-
-    .landsofillusions-assets-spriteeditor-navigator
-      .zoom-display
-        display inline-block
-
-        .zoom-percentage-input
-          width 50rem
-          text-align right
-          background none
-          border none
-
-    .landsofillusions-assets-spriteeditor-palette
-      display flex
-      flex-direction column
-
-      .ramp
-        display flex
-
-        .color
-          width 7rem
-          height 7rem
-          position relative
-          cursor pointer
-
-          &::after
-            content ''
-            display none
-            position absolute
-            top -1rem
-            bottom -1rem
-            left -1rem
-            right -1rem
-            z-index 1
-            border 1rem solid atariGrey(4)
-
-          &.active::after
-            display block
-
-    .landsofillusions-assets-editor-assetinfo
-      .name
-      .palette
-        display block
 
         input
-        select
-          width 75rem
+          border none
+          background none
+          width 100%
+          height 10rem
 
-      .name
-        margin-bottom 2rem
+          &:focus
+            outline none
 
-      .palette
-        margin-bottom 5rem
-
-    .landsofillusions-assets-editor-materials
-    .landsofillusions-assets-editor-landmarks
-    .landsofillusions-assets-mesheditor-camera
-      width 100%
-      height 100%
-
-      .materials-table
-      .landmarks-table
-      .vectors-table
-        border-collapse collapse
-        table-layout fixed
-        width 100%
-
-        .legend
-          th
-            checkout()
-            font-weight normal
-            width 20rem
-            overflow hidden
-            white-space nowrap
-
-            &.name
-              width auto
-
-        .material
-        .landmark
-        .vector
-          td
-            border 1rem solid black
-            padding 0
-            margin 0
-            height 9rem
-            font-size inherit
-            line-height 5rem
-            background rgba(atariGrey(0), 0.65)
-            cursor pointer
-
-          input
-            border none
-            background none
-            width 100%
-            height 10rem
-
-            &:focus
-              outline none
-
-      .vectors-table
-        .legend
-          th
-            width 25rem
-
-      .actions
-        text-align right
-        margin-top 5rem
-
-    .landsofillusions-assets-editor-materials
-      .materials-table
-        .legend
-          .preview
-            width 12rem
-
-        .material
-          .preview
-            position relative
-
-            &::after
-              content ''
-              display none
-              position absolute
-              top -1rem
-              bottom -1rem
-              left -1rem
-              right -1rem
-              border 1rem solid atariGrey(4)
-
-            &.active::after
-              display block
-
-    .landsofillusions-assets-editor-landmarks
-      .landmarks-table
-        .legend
-          .number
-            width 12rem
-
-        .landmark
-          .number
-            text-align center
-
-    .landsofillusions-assets-spriteeditor-shadingsphere
-      .options
-        margin-top 5rem
-
-        .option
-          margin-top 5rem
-
-      .landsofillusions-assets-components-pixelcanvas
-        display inline-block
-        vertical-align bottom
-        position relative
-        top auto
-        right auto
-        width 80rem
-        height 80rem
-        background blend(rgba(atariGrey(1), 0.5) atariGrey(2))
-        border 1rem solid atariGrey(0)
-
-        canvas
-          absolute-cover-size()
-          user-select none
-
-      .edit-light-button
-        margin-bottom 0
-
-        &.active
-          background atariYellow(5)
-          color atariGrey(0)
+    .actions
+      text-align right
+      margin-top 5rem

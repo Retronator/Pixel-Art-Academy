@@ -117,9 +117,12 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
                     type: FM.TabbedView.id()
                     height: 100
                     tabs: [
+                      name: 'Layers'
+                      contentComponentId: LOI.Assets.SpriteEditor.Layers.id()
+                      active: true
+                    ,
                       name: 'Landmarks'
                       contentComponentId: LOI.Assets.Editor.Landmarks.id()
-                      active: true
                     ]
                   remainingArea:
                     type: FM.TabbedView.id()

@@ -182,7 +182,7 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
       lightDirection: @lightDirection
       drawComponents: => [
         sphereSprite
-        #circleSprite
+        circleSprite
       ]
       activeTool: => normalPicker
 
