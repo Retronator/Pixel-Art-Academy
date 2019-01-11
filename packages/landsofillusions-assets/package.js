@@ -208,7 +208,8 @@ Package.onUse(function(api) {
   api.addComponent('spriteeditor/navigator..');
   api.addComponent('spriteeditor/palette..');
   api.addComponent('spriteeditor/layers..');
-  
+  api.addUnstyledComponent('spriteeditor/thumbnail..');
+
   api.addComponent('spriteeditor/pixelcanvas..');
   api.addFile('spriteeditor/pixelcanvas/mouse');
   api.addFile('spriteeditor/pixelcanvas/grid');

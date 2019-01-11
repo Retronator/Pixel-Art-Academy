@@ -48,4 +48,4 @@ class LOI.Assets.SpriteEditor.Tools.ColorPicker extends LOI.Assets.SpriteEditor.
       paintHelper.setMaterialIndex topPixel.materialIndex
 
     if topPixel.normal
-      paintHelper.setNormal pixel.normal
+      paintHelper.setNormal topPixel.normal

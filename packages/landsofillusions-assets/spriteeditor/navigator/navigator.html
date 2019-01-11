@@ -1,11 +1,16 @@
 <template name="LandsOfIllusions.Assets.SpriteEditor.Navigator">
   <div class="landsofillusions-assets-spriteeditor-navigator landsofillusions-assets-editor-panel">
-    <div class="zoom-display">
-      {{#if zoomPercentageValue}}
-        <input class="zoom-percentage-input" value="{{zoomPercentageValue}}" />%
-      {{/if}}
+    <div class="thumbnail">
+      {{> LandsOfIllusions.Assets.SpriteEditor.Thumbnail sprite}}
     </div>
-    <button class="zoom-in-button zoom-button {{zoomInPressedClass}}">+</button>
-    <button class="zoom-out-button zoom-button {{zoomOutPressedClass}}">-</button>
+    <div class="controls">
+      <div class="zoom-display">
+        {{#if zoomPercentageValue}}
+          <input class="zoom-percentage-input" value="{{zoomPercentageValue}}" />%
+        {{/if}}
+      </div>
+      <button class="zoom-in-button zoom-button {{zoomInPressedClass}}">+</button>
+      <button class="zoom-out-button zoom-button {{zoomOutPressedClass}}">-</button>
+    </div>
   </div>
 </template>

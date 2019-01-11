@@ -159,6 +159,10 @@ class LOI.Assets.Engine.Sprite
             shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
             directColor = shades[shadeIndex]
 
+          unless directColor
+            console.warn "Missing color information in pixel", pixel
+            continue
+
           sourceColor = THREE.Color.fromObject directColor
 
           # Shade color based on the normal.

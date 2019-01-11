@@ -101,7 +101,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.SpriteEditor
                 width: 150
                 mainArea:
                   type: FM.TabbedView.id()
-                  height: 50
+                  height: 80
                   tabs: [
                     name: 'Navigator'
                     contentComponentId: LOI.Assets.SpriteEditor.Navigator.id()

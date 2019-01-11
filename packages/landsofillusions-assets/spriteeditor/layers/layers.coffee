@@ -38,6 +38,16 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     layer = @currentData()
     "Layer #{layer.index}"
 
+  layerThumbnail: ->
+    layer = @currentData()
+    sprite = _.clone @sprite()
+    return unless sprite.layers?[layer.index]
+
+    # Show only the single layer.
+    sprite.layers = [sprite.layers[layer.index]]
+
+    sprite
+
   # Events
 
   events: ->

@@ -4,17 +4,7 @@ LOI = LandsOfIllusions
 LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
   check spriteId, Match.DocumentId
   check layerIndex, Match.Integer
-  check newTargetPixel, Match.ObjectIncluding
-    x: Match.Integer
-    y: Match.Integer
-    paletteColor: Match.Optional Match.ObjectIncluding
-      ramp: Match.Integer
-      shade: Match.Integer
-    directColor: Match.Optional Match.ObjectIncluding
-      r: Number
-      g: Number
-      b: Number
-    materialIndex: Match.Optional Match.Integer
+  check newTargetPixel, LOI.Assets.Sprite.pixelPattern
 
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
@@ -74,22 +64,22 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
     for pixel in visited
       pixelIndex = layerPixels.indexOf pixel
       for key in ['paletteColor', 'directColor', 'materialIndex']
-        if newTargetPixel[key]
+        if newTargetPixel[key]?
           # Set new or existing property.
           forward.$set ?= {}
           forward.$set["layers.#{layerIndex}.pixels.#{pixelIndex}.#{key}"] = newTargetPixel[key]
 
-        else if pixel[key]
+        else if pixel[key]?
           # Unset existing property.
           forward.$unset ?= {}
           forward.$unset["layers.#{layerIndex}.pixels.#{pixelIndex}.#{key}"] = true
 
-        if pixel[key]
+        if pixel[key]?
           # Reset the old property.
           backward.$set ?= {}
           backward.$set["layers.#{layerIndex}.pixels.#{pixelIndex}.#{key}"] = pixel[key]
 
-        else if newTargetPixel[key]
+        else if newTargetPixel[key]?
           # The property was not set previously, so we remove it.
           backward.$unset ?= {}
           backward.$unset["layers.#{layerIndex}.pixels.#{pixelIndex}.#{key}"] = true
