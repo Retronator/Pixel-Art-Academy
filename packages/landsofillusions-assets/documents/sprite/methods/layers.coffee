@@ -6,6 +6,7 @@ LOI.Assets.Sprite.updateLayer.method (spriteId, layerIndex, layerUpdate) ->
   check layerIndex, Match.Integer
   check layerUpdate, Match.ObjectIncluding
     name: Match.OptionalOrNull String
+    visible: Match.OptionalOrNull Boolean
     origin: Match.OptionalOrNull
       x: Match.OptionalOrNull Number
       y: Match.OptionalOrNull Number
@@ -21,22 +22,23 @@ LOI.Assets.Sprite.updateLayer.method (spriteId, layerIndex, layerUpdate) ->
 
   if sprite.layers
     if layer = sprite.layers[layerIndex]
-      if layerUpdate.name?
-        if layerUpdate.name
-          forward.$set ?= {}
-          forward.$set["layers.#{layerIndex}.name"] = layerUpdate.name
+      for property in ['name', 'visible']
+        if layerUpdate[property]?
+          if layerUpdate[property]? and (not _.isString(layerUpdate[property]) or layerUpdate[property].length)
+            forward.$set ?= {}
+            forward.$set["layers.#{layerIndex}.#{property}"] = layerUpdate[property]
 
-        else
-          forward.$unset ?= {}
-          forward.$unset["layers.#{layerIndex}.name"] = true
+          else
+            forward.$unset ?= {}
+            forward.$unset["layers.#{layerIndex}.#{property}"] = true
 
-        if layer.name
-          backward.$set ?= {}
-          backward.$set["layers.#{layerIndex}.name"] = layer.name
+          if layer[property]?
+            backward.$set ?= {}
+            backward.$set["layers.#{layerIndex}.#{property}"] = layer[property]
 
-        else
-          backward.$unset ?= {}
-          backward.$unset["layers.#{layerIndex}.name"] = layerUpdate.name
+          else
+            backward.$unset ?= {}
+            backward.$unset["layers.#{layerIndex}.#{property}"] = layerUpdate[property]
 
       if layerUpdate.origin
         if layer.origin

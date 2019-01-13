@@ -34,6 +34,10 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     layer = @currentData()
     layer.origin?.z or 0
 
+  visibleCheckedAttribute: ->
+    layer = @currentData()
+    checked: true if layer.visible ? true
+
   placeholderName: ->
     layer = @currentData()
     "Layer #{layer.index}"
@@ -54,7 +58,7 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     super(arguments...).concat
       'click .thumbnail': @onClickThumbnail
       'change .depth-input': @onChangeDepth
-      'change .name-input': @onChangeLayer
+      'change .name-input, change .visible-checkbox': @onChangeLayer
       'click .add-layer-button': @onClickAddLayerButton
 
   onClickThumbnail: (event) ->
@@ -84,6 +88,7 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
 
     newData =
       name: $layer.find('.name-input').val()
+      visible: $layer.find('.visible-checkbox').is(':checked')
       
     sprite = @sprite()
     LOI.Assets.Sprite.updateLayer sprite._id, layer.index, newData

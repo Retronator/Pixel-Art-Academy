@@ -4,6 +4,11 @@
       {{#each layers}}
         <tr class="layer {{activeClass}}">
           <td class="depth"><input class="depth-input" value="{{depth}}"/></td>
+          <td class="visible">
+            <label class="label">
+              <input type="checkbox" class="visible-checkbox" {{visibleCheckedAttribute}}/><span class="icon"></span>
+            </label>
+          </td>
           <td class="thumbnail">{{> LandsOfIllusions.Assets.SpriteEditor.Thumbnail layerThumbnail}}</td>
           <td class="name"><input class="name-input" value="{{name}}" placeholder="{{placeholderName}}"/></td>
         </tr>
