@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AB = Artificial.Base
 AM = Artificial.Mirage
 FM = FataMorgana
@@ -73,6 +74,24 @@ class FM.Interface extends AM.Component
     
     @_helperInstances = {}
     @_helperForFileInstances = {}
+    @_loaders = {}
+
+    # Create file loaders.
+    @files = new AE.ReactiveArray =>
+      editorViews = @allChildComponentsOfType FM.EditorView
+
+      files = for editorView in editorViews
+        editorView.data().get 'files'
+
+      _.without _.flatten(files), undefined
+    ,
+      added: (file) =>
+        loader = @options.loaders[file.documentClassId]
+        @_loaders[file.id] = Tracker.nonreactive => new loader file.id
+
+      removed: (file) =>
+        @_loaders[file.id].destroy()
+        delete @_loaders[file.id]
 
   onDestroyed: ->
     super arguments...
@@ -144,6 +163,12 @@ class FM.Interface extends AM.Component
   getHelperForActiveFile: (helperClassOrId) ->
     return unless fileId = @activeFileId()
     @getHelperForFile helperClassOrId, fileId
+
+  getLoaderForFile: (fileId) ->
+    @_loaders[fileId]
+
+  getLoaderForActiveFile: ->
+    @getLoaderForFile @activeFileId()
 
   displayDialog: (dialog) ->
     # Wrap the plain object into data for compatibility.

@@ -11,7 +11,7 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
     super arguments...
 
     @fileManager = new LOI.Assets.Editor.FileManager
-      documents: LOI.Assets.Sprite.documents
+      documents: @interface.parent.documentClass.documents
       defaultOperation: => @_open()
 
     LOI.Assets.Asset.all.subscribe @, @interface.parent.assetClassName
@@ -58,6 +58,6 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
     
     # Open all the files in the target editor view.
     for item in @fileManager.selectedItems()
-      targetEditorView.addFile item._id
+      targetEditorView.addFile item._id, item.constructor.id()
     
     @closeDialog()

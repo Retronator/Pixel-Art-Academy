@@ -4,6 +4,7 @@ FM = FataMorgana
 class FM.EditorView extends FM.View
   # files: array of open files
   #   id: identifier for the file
+  #   documentClassId: document class of the file
   #   active: true for the file that is currently displayed
   # editor:
   #   contentComponentId: the component to use for editing the active file
@@ -39,7 +40,7 @@ class FM.EditorView extends FM.View
       componentClass = AM.Component.getComponentForName contentComponentIdData
       componentClass.subscribeToDocumentsForEditorView @, fileIds
 
-  addFile: (fileId) ->
+  addFile: (fileId, documentClassId) ->
     editorViewData = @data()
 
     # Get all the current files and deactivate them.
@@ -49,6 +50,7 @@ class FM.EditorView extends FM.View
     # Add the new file and active it.
     files.push
       id: fileId
+      documentClassId: documentClassId
       active: true
 
     editorViewData.set 'files', files

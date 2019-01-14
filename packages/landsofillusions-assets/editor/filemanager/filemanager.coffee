@@ -9,6 +9,9 @@ class LOI.Assets.Editor.FileManager extends AM.Component
   @register @id()
 
   @itemNameParts: (item, rootPath = '') ->
+    # If we have no name, the file is assumed to be in the root folder.
+    return path: '', folders: [], filename: '' unless item.name
+
     name = item.name.substring rootPath.length
     nameParts = name.split '/'
 

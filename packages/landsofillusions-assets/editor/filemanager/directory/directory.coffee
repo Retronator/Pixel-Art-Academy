@@ -30,8 +30,12 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
       documentSources = [documentSources] unless _.isArray documentSources
 
       documents = for documentSource in documentSources
-        documentSource.fetch
-          name: new RegExp "^#{@options.path}"
+        if @options.path
+          documentSource.fetch
+            name: new RegExp "^#{@options.path}"
+
+        else
+          documentSource.fetch()
 
       _.flatten documents
 
@@ -42,8 +46,15 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
       folders = []
       files = []
 
-      for document in @documents() when document.name
+      for document in @documents()
+        unless document.name or @options.path
+          # We're in the root folder and the document doesn't have a path, so we should display the item here.
+          document.sortingName = _.toLower document._id
+          files.push document
+          continue
+
         nameParts = LOI.Assets.Editor.FileManager.itemNameParts document, @options.path
+
         if firstFolder = nameParts.folders[0]
           # This is a file deeper inside the folder so just see if we need to add the folder.
           folders.push firstFolder unless firstFolder in folders
@@ -66,7 +77,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
       # Update selected items when current items change.
       selectedNames = @_selectedNames()
-      @selectedItems _.filter items, (item) => item.name in selectedNames
+      @selectedItems _.filter items, (item) => (item.name or item._id) in selectedNames
 
       _.sortBy items, 'sortingName'
 
@@ -112,7 +123,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
       nameParts.filename
 
     else
-      "#{data._id.substring 0, 5}…"
+      item._id
 
   selectedClass: ->
     item = @currentData()
@@ -216,7 +227,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     return if @editingNameItem()
 
     item = @currentData()
-    @_changeEndRange item.name
+    @_changeEndRange item.name or item._id
 
   _changeEndRange: (endRangeName) ->
     selectedNames = @_selectedNames()
@@ -276,13 +287,13 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     items = @currentItems()
 
     if endRangeName
-      startRangeIndex = Math.max 0, _.findIndex items, (item) => item.name is startRangeName
+      startRangeIndex = Math.max 0, _.findIndex items, (item) => (item.name or item._id) is startRangeName
       endRangeIndex = _.findIndex items, (item) => item.name is endRangeName
 
       # Make sure start index is smaller than the end one.
       [startRangeIndex, endRangeIndex] = [endRangeIndex, startRangeIndex] if startRangeIndex > endRangeIndex
 
-      selectedNames = _.union previousSelectedNames, (item.name for item in items[startRangeIndex..endRangeIndex])
+      selectedNames = _.union previousSelectedNames, (item.name or item._id for item in items[startRangeIndex..endRangeIndex])
 
     else
       selectedNames = previousSelectedNames
@@ -292,7 +303,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     @_previousSelectedNames previousSelectedNames
     @_selectedNames selectedNames
 
-    selectedItems = _.filter items, (item) => item.name in selectedNames
+    selectedItems = _.filter items, (item) => (item.name or item._id) in selectedNames
     @selectedItems selectedItems
 
   onDragStartItem: (event) ->
@@ -452,7 +463,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
       switch event.which
         when AC.Keys.down, AC.Keys.up
           endRangeName = @_endRangeName()
-          endRangeIndex = _.findIndex items, (item) => item.name is endRangeName
+          endRangeIndex = _.findIndex items, (item) => (item.name or item._id) is endRangeName
 
           if event.which is AC.Keys.down
             endRangeIndex = Math.min items.length - 1, endRangeIndex + 1

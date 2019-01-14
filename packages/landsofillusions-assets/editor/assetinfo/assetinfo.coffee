@@ -10,10 +10,10 @@ class LOI.Assets.Editor.AssetInfo extends FM.View
     super arguments...
 
     @asset = new ComputedField =>
-      @interface.getEditorForActiveFile()?.asset()
+      @interface.getLoaderForActiveFile()?.asset()
 
   showPalette: ->
-    @interface.getEditorForActiveFile().paletteId
+    @interface.getLoaderForActiveFile().paletteId
 
   class @Name extends AM.DataInputComponent
     @register 'LandsOfIllusions.Assets.Editor.AssetInfo.Name'

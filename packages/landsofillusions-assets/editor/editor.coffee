@@ -35,6 +35,10 @@ class LOI.Assets.Editor extends AM.Component
         @localInterfaceData localInterfaceData
 
         # TODO: Save interface data to the server as well.
+  
+      loaders:
+        "#{LOI.Assets.Sprite.id()}": LOI.Assets.SpriteEditor.SpriteLoader
+        #"#{LOI.Assets.Mesh.id()}": LOI.Assets.MeshEditor.MeshLoader
 
   onDestroyed: ->
     super arguments...

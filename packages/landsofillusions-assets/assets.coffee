@@ -3,6 +3,6 @@ AB = Artificial.Base
 
 class LOI.Assets
   constructor: ->
-    AB.Router.addRoute '/sprite-editor/:spriteId?', @constructor.Layout, @constructor.SpriteEditor
-    AB.Router.addRoute '/mesh-editor/:meshId?', @constructor.Layout, @constructor.MeshEditor
-    AB.Router.addRoute '/audio-editor/:audioId?', @constructor.Layout, @constructor.AudioEditor
+    AB.Router.addRoute '/sprite-editor', @constructor.Layout, @constructor.SpriteEditor
+    AB.Router.addRoute '/mesh-editor', @constructor.Layout, @constructor.MeshEditor
+    AB.Router.addRoute '/audio-editor', @constructor.Layout, @constructor.AudioEditor

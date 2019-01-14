@@ -10,16 +10,7 @@ class LOI.Assets.SpriteEditor.Palette extends FM.View
     super arguments...
 
     @paletteData = new ComputedField =>
-      return unless editor = @interface.getEditorForActiveFile()
-
-      if paletteData = editor.paletteData?()
-        return paletteData
-      
-      if paletteId = editor.paletteId?()
-        LOI.Assets.Palette.forId.subscribe paletteId if paletteId
-        return LOI.Assets.Palette.documents.findOne paletteId
-
-      null
+      @interface.getLoaderForActiveFile()?.palette()
 
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 

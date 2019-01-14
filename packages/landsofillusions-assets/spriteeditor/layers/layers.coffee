@@ -50,6 +50,10 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     # Show only the single layer.
     sprite.layers = [sprite.layers[layer.index]]
 
+    # Keep the layer visible.
+    sprite.layers[0] = _.clone sprite.layers[0]
+    sprite.layers[0].visible = true
+
     sprite
 
   # Events

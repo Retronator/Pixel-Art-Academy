@@ -6,6 +6,7 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Sprite'
   # layers: array of
   #   name: name of the layer
+  #   visible: boolean if this layer should be drawn
   #   origin: location of this layer's origin (0,0) in the sprite.
   #     x, y: integer 2D location of the origin
   #     z: floating point depth of the origin

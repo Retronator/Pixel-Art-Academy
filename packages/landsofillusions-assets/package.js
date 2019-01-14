@@ -153,6 +153,10 @@ Package.onUse(function(api) {
   api.addStyle('editor/editor-cursors');
   api.addStyle('editor/editor-fatamorgana');
 
+  api.addFile('editor/tools..');
+  api.addFile('editor/tools/tool');
+  api.addFile('editor/tools/arrow');
+
   api.addFile('editor/actions..');
   api.addFile('editor/actions/assetaction');
   api.addFile('editor/actions/history');
@@ -181,11 +185,10 @@ Package.onUse(function(api) {
   // Sprite editor
 
   api.addFile('spriteeditor..');
-  api.addFile('spriteeditor/spriteeditor-defaultinterfacedata');
+  api.addFile('spriteeditor/spriteloader');
 
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
-  api.addFile('spriteeditor/tools/arrow');
   api.addFile('spriteeditor/tools/pencil');
   api.addFile('spriteeditor/tools/eraser');
   api.addFile('spriteeditor/tools/colorpicker');

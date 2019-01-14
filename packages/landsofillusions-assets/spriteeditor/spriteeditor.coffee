@@ -7,36 +7,184 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor'
-  
+  @register @id()
+
   constructor: ->
     super arguments...
-
-    @sprite = new ReactiveField null
-    @pixelCanvas = new ReactiveField null
-
-    @lightDirection = new ReactiveField new THREE.Vector3(0, 0, -1).normalize()
-    @paintNormals = new ReactiveField false
-    @symmetryXOrigin = new ReactiveField null
 
     @documentClass = LOI.Assets.Sprite
     @assetClassName = @documentClass.className
 
-  onCreated: ->
-    super arguments...
+  @defaultInterfaceData: ->
+    # Operators
 
-    # Initialize components.
-    @pixelCanvas new LOI.Assets.SpriteEditor.PixelCanvas
-      initialCameraScale: 8
-      activeTool: @activeTool
-      lightDirection: @lightDirection
-      drawComponents: => [
-        @sprite()
-        @landmarks()
+    activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
+
+    operators = {}
+
+    # Content Components
+
+    components =
+      "#{_.snakeCase LOI.Assets.SpriteEditor.ShadingSphere.id()}":
+        radius: 30
+
+      "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
+        initialCameraScale: 8
+        components: [
+          LOI.Assets.SpriteEditor.Helpers.Landmarks.id()
+        ]
+
+    # Layouts
+
+    menu =
+      type: FM.Menu.id()
+      items: [
+        caption: 'Sprite Editor'
+      ,
+        caption: 'File'
+        items: [
+          LOI.Assets.Editor.Actions.New.id()
+          LOI.Assets.Editor.Actions.Open.id()
+          null
+          LOI.Assets.Editor.Actions.Close.id()
+          LOI.Assets.Editor.Actions.Duplicate.id()
+          LOI.Assets.Editor.Actions.Delete.id()
+        ]
+      ,
+        caption: 'Edit'
+        items: [
+          LOI.Assets.Editor.Actions.Undo.id()
+          LOI.Assets.Editor.Actions.Redo.id()
+          null
+          LOI.Assets.SpriteEditor.Actions.FlipHorizontal.id()
+          null
+          LOI.Assets.Editor.Actions.Clear.id()
+        ]
+      ,
+        caption: 'View'
+        items: [
+          LOI.Assets.SpriteEditor.Actions.ZoomIn.id()
+          LOI.Assets.SpriteEditor.Actions.ZoomOut.id()
+          null
+          LOI.Assets.SpriteEditor.Actions.ShowGrid.id()
+          LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
+          LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
+        ]
+      ,
+        caption: 'Window'
       ]
-      symmetryXOrigin: @symmetryXOrigin
+
+    toolbox =
+      type: FM.Toolbox.id()
+      width: 20
+      widthStep: 20
+      minWidth: 20
+      tools: [
+        LOI.Assets.Editor.Tools.Arrow.id()
+        LOI.Assets.SpriteEditor.Tools.Pencil.id()
+        LOI.Assets.SpriteEditor.Tools.Eraser.id()
+        LOI.Assets.SpriteEditor.Tools.ColorFill.id()
+        LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
+      ]
+
+    layouts =
+      currentLayoutId: 'main'
+      main:
+        name: 'Main'
+        applicationArea:
+          type: FM.SplitView.id()
+          fixed: true
+          mainArea: menu
+          dockSide: FM.SplitView.DockSide.Top
+          remainingArea:
+            type: FM.SplitView.id()
+            dockSide: FM.SplitView.DockSide.Left
+            mainArea: toolbox
+            remainingArea:
+              type: FM.SplitView.id()
+              dockSide: FM.SplitView.DockSide.Right
+              mainArea:
+                type: FM.SplitView.id()
+                dockSide: FM.SplitView.DockSide.Top
+                width: 150
+                mainArea:
+                  type: FM.TabbedView.id()
+                  height: 80
+                  tabs: [
+                    name: 'Navigator'
+                    contentComponentId: LOI.Assets.SpriteEditor.Navigator.id()
+                    active: true
+                  ,
+                    name: 'File info'
+                    contentComponentId: LOI.Assets.SpriteEditor.AssetInfo.id()
+                  ]
+                remainingArea:
+                  type: FM.SplitView.id()
+                  dockSide: FM.SplitView.DockSide.Top
+                  mainArea:
+                    type: FM.TabbedView.id()
+                    height: 100
+                    tabs: [
+                      name: 'Layers'
+                      contentComponentId: LOI.Assets.SpriteEditor.Layers.id()
+                      active: true
+                    ,
+                      name: 'Landmarks'
+                      contentComponentId: LOI.Assets.Editor.Landmarks.id()
+                    ]
+                  remainingArea:
+                    type: FM.TabbedView.id()
+                    tabs: [
+                      name: 'Palette'
+                      contentComponentId: LOI.Assets.SpriteEditor.Palette.id()
+                    ,
+                      name: 'Materials'
+                      contentComponentId: LOI.Assets.Editor.Materials.id()
+                    ,
+                      name: 'Shading'
+                      contentComponentId: LOI.Assets.SpriteEditor.ShadingSphere.id()
+                      active: true
+                    ]
+
+              remainingArea:
+                type: FM.EditorView.id()
+                editor:
+                  contentComponentId: LOI.Assets.SpriteEditor.PixelCanvas.id()
+
+    # Shortcuts
+
+    isMacOS = AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
+
+    shortcuts =
+      currentMappingId: 'default'
+      default:
+        name: "Default"
+        mapping:
+          # Actions
+          "#{LOI.Assets.Editor.Actions.New.id()}": commandOrControl: true, key: AC.Keys.n
+          "#{LOI.Assets.Editor.Actions.Open.id()}": commandOrControl: true, key: AC.Keys.o
+          "#{LOI.Assets.Editor.Actions.Close.id()}": commandOrControl: true, key: AC.Keys.w
+          "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
+          "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
+          "#{LOI.Assets.SpriteEditor.Actions.PaintNormals.id()}": key: AC.Keys.n
+          "#{LOI.Assets.SpriteEditor.Actions.Symmetry.id()}": key: AC.Keys.s
+          "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
+          "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
+          "#{LOI.Assets.SpriteEditor.Actions.ShowGrid.id()}":commandOrControl: true, key: AC.Keys.singleQuote
+          "#{LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()}":commandOrControl: true, shift: true, key: AC.Keys.l
+
+          # Tools
+          "#{LOI.Assets.Editor.Tools.Arrow.id()}": key: AC.Keys.escape
+          "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
+          "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": key: AC.Keys.i, holdKey: AC.Keys.alt
+          "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
+          "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
+
+    # Return combined interface data.
+    {activeToolId, operators, components, layouts, shortcuts}
 
   onRendered: ->
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-    editorView.addFile id for id in ['CX9JyXqW2mZduyajR', 'KqL3XmQ7MikndhWxN', 'ZZefMqG8h5gCwQztD']
+    editorView.addFile id, LOI.Assets.Sprite.id() for id in ['CX9JyXqW2mZduyajR', 'KqL3XmQ7MikndhWxN', 'ZZefMqG8h5gCwQztD']

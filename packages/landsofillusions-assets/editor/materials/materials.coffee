@@ -10,7 +10,7 @@ class LOI.Assets.Editor.Materials extends FM.View
     super arguments...
 
     @assetData = new ComputedField =>
-      @interface.getEditorForActiveFile()?.asset()
+      @interface.getLoaderForActiveFile()?.asset()
 
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 

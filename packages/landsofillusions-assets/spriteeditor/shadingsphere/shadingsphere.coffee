@@ -65,13 +65,13 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
 
     @sphereSpriteData = new ComputedField =>
       return unless spriteData = @sphereSpriteGeometry()
-      return unless editor = @interface.getEditorForActiveFile()
+      return unless loader = @interface.getLoaderForActiveFile()
 
       if @visualizeNormals()
         # Just return the sprite without any extra color information.
         spriteData
 
-      else if paletteId = editor.paletteId()
+      else if paletteId = loader.paletteId()
         # Add palette information to sprite.
         spriteData.palette = _id: paletteId
 
@@ -83,7 +83,7 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
         materialIndex = paintHelper.materialIndex()
 
         if materialIndex?
-          asset = editor.asset()
+          asset = loader.asset()
           material = asset.materials?[materialIndex]
 
         return unless material?.ramp? and material?.shade?

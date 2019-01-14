@@ -60,33 +60,13 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
 
     @autorun (computation) =>
       @spriteId @editorView.activeFileData().value().id
+      
+    @spriteLoader = new ComputedField =>
+      return unless spriteId = @spriteId()
+      @interface.getLoaderForFile spriteId
 
     @spriteData = new ComputedField =>
-      return unless spriteId = @spriteId()
-
-      LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, spriteId
-      LOI.Assets.Sprite.documents.findOne spriteId
-
-    # Create the alias for universal operators.
-    @asset = @spriteData
-
-    @paletteId = new ComputedField =>
-      # Minimize reactivity to only palette changes.
-      LOI.Assets.Sprite.documents.findOne(@spriteId(),
-        fields:
-          palette: 1
-      )?.palette?._id
-
-    @autorun (computation) =>
-      return unless paletteId = @paletteId()
-      LOI.Assets.Palette.forId.subscribe paletteId
-
-    @paletteData = new ComputedField =>
-      # Minimize reactivity to only custom palette changes.
-      LOI.Assets.Sprite.documents.findOne(@spriteId(),
-        fields:
-          customPalette: 1
-      )?.customPalette
+      @spriteLoader().sprite()
 
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
 
