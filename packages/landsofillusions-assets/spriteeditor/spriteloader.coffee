@@ -1,20 +1,29 @@
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.SpriteLoader
-  constructor: (@spriteId) ->
-    @_subscription = LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, @spriteId
+class LOI.Assets.SpriteEditor.SpriteLoader extends FM.Loader
+  constructor: ->
+    super arguments...
 
-    @sprite = new ComputedField =>
-      LOI.Assets.Sprite.documents.findOne @spriteId
+    @_subscription = LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, @fileId
+
+    @spriteData = new ComputedField =>
+      LOI.Assets.Sprite.documents.findOne @fileId
 
     # Create the alias for universal operators.
-    @asset = @sprite
+    @asset = @spriteData
 
+    @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
+
+    # Create the engine sprite.
+    @sprite = new LOI.Assets.Engine.Sprite
+      spriteData: @spriteData
+      visualizeNormals: @paintNormalsData.value
+
+    # Subscribe to the referenced palette as well.
     @paletteId = new ComputedField =>
-      @sprite()?.palette?._id
+      @spriteData()?.palette?._id
 
-    # Subscribe to a referenced palette.
     @_paletteSubscription = Tracker.autorun (computation) =>
       return unless paletteId = @paletteId()
       LOI.Assets.Palette.forId.subscribe paletteId
@@ -25,11 +34,11 @@ class LOI.Assets.SpriteEditor.SpriteLoader
 
       else
         # See if we have an embedded custom palette.
-        @sprite()?.customPalette
+        @spriteData()?.customPalette
 
   destroy: ->
     @_subscription.stop()
-    @sprite.stop()
+    @spriteData.stop()
     @paletteId.stop()
     @_paletteSubscription.stop()
     @palette.stop()

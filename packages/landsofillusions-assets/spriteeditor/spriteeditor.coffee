@@ -31,6 +31,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
         initialCameraScale: 8
         components: [
+          LOI.Assets.SpriteEditor.Helpers.PixelGrid.id()
           LOI.Assets.SpriteEditor.Helpers.Landmarks.id()
         ]
 
@@ -66,7 +67,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           LOI.Assets.SpriteEditor.Actions.ZoomIn.id()
           LOI.Assets.SpriteEditor.Actions.ZoomOut.id()
           null
-          LOI.Assets.SpriteEditor.Actions.ShowGrid.id()
+          LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
         ]
@@ -163,14 +164,14 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           # Actions
           "#{LOI.Assets.Editor.Actions.New.id()}": commandOrControl: true, key: AC.Keys.n
           "#{LOI.Assets.Editor.Actions.Open.id()}": commandOrControl: true, key: AC.Keys.o
-          "#{LOI.Assets.Editor.Actions.Close.id()}": commandOrControl: true, key: AC.Keys.w
+          "#{LOI.Assets.Editor.Actions.Close.id()}": commandOrControl: true, key: AC.Keys.c
           "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
           "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
           "#{LOI.Assets.SpriteEditor.Actions.PaintNormals.id()}": key: AC.Keys.n
           "#{LOI.Assets.SpriteEditor.Actions.Symmetry.id()}": key: AC.Keys.s
           "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
           "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
-          "#{LOI.Assets.SpriteEditor.Actions.ShowGrid.id()}":commandOrControl: true, key: AC.Keys.singleQuote
+          "#{LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()}":commandOrControl: true, key: AC.Keys.singleQuote
           "#{LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()}":commandOrControl: true, shift: true, key: AC.Keys.l
 
           # Tools

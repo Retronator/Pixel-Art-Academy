@@ -22,6 +22,8 @@ Package.onUse(function(api) {
   api.addFile('interface/data..');
   api.addFile('interface/data/value');
 
+  api.addFile('loader..');
+
   api.addFile('operators/operator');
   api.addFile('operators/action');
   api.addFile('operators/tool');

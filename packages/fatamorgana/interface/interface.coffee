@@ -87,7 +87,7 @@ class FM.Interface extends AM.Component
     ,
       added: (file) =>
         loader = @options.loaders[file.documentClassId]
-        @_loaders[file.id] = Tracker.nonreactive => new loader file.id
+        @_loaders[file.id] = Tracker.nonreactive => new loader @, file.id
 
       removed: (file) =>
         @_loaders[file.id].destroy()

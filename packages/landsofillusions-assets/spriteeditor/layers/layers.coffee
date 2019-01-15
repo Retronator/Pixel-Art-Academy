@@ -10,7 +10,7 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     super arguments...
 
     @sprite = new ComputedField =>
-      @interface.getEditorForActiveFile()?.spriteData()
+      @interface.getLoaderForActiveFile()?.spriteData()
     
     @layers = new ComputedField =>
       return unless sprite = @sprite()
@@ -44,7 +44,7 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
 
   layerThumbnail: ->
     layer = @currentData()
-    sprite = _.clone @sprite()
+    return unless sprite = _.clone @sprite()
     return unless sprite.layers?[layer.index]
 
     # Show only the single layer.

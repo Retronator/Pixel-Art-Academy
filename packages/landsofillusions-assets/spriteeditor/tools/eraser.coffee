@@ -21,10 +21,7 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
   applyEraser: ->
     return unless @mouseState.leftButton
 
-    # Do we even need to remove this pixel? See if it is even there.
-    editor = @interface.getEditorForActiveFile()
-    spriteData = editor.spriteData()
-
+    spriteData = @interface.getLoaderForActiveFile().spriteData()
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
     layerIndex = paintHelper.layerIndex()
 
@@ -42,11 +39,12 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
         x: xCoordinate
         y: @mouseState.y
 
+      # Do we even need to remove this pixel? See if it is even there.
       existing = LOI.Assets.Sprite.documents.findOne
         _id: spriteData._id
         "layers.#{layerIndex}.pixels":
           $elemMatch: pixel
 
-      return unless existing
+      continue unless existing
 
       LOI.Assets.Sprite.removePixel spriteData._id, layerIndex, pixel

@@ -29,16 +29,13 @@ class FM.EditorView extends FM.View
       editorViewData = @data()
       editorViewData.child "files.#{@activeFileIndex()}"
 
+    @activeFileId = new ComputedField =>
+      return unless activeFileData = @activeFileData()
+      activeFileData.get 'id'
+      
     @contentComponentId = new ComputedField =>
       editorViewData = @data()
       editorViewData.child('editor').get 'contentComponentId'
-
-    @autorun (computation) =>
-      fileIds = @fileIds()
-      contentComponentIdData = @contentComponentId()
-
-      componentClass = AM.Component.getComponentForName contentComponentIdData
-      componentClass.subscribeToDocumentsForEditorView @, fileIds
 
   addFile: (fileId, documentClassId) ->
     editorViewData = @data()
@@ -92,9 +89,9 @@ class FM.EditorView extends FM.View
 
   tabData: ->
     file = @currentData()
-    
-    componentClass = AM.Component.getComponentForName @data().get('editor').contentComponentId
-    componentClass.getDocumentForEditorView @, file.id
+
+    loader = @interface.getLoaderForFile file.id
+    loader.asset()
 
   nameOrId: ->
     tabData = @currentData()

@@ -159,6 +159,7 @@ Package.onUse(function(api) {
 
   api.addFile('editor/actions..');
   api.addFile('editor/actions/assetaction');
+  api.addFile('editor/actions/showaction');
   api.addFile('editor/actions/history');
   api.addFile('editor/actions/new');
   api.addFile('editor/actions/open');
@@ -166,6 +167,9 @@ Package.onUse(function(api) {
   api.addFile('editor/actions/duplicate');
   api.addFile('editor/actions/clear');
   api.addFile('editor/actions/close');
+
+  api.addFile('editor/helpers..');
+  api.addFile('editor/helpers/drawcomponent');
 
   api.addComponent('editor/assetinfo..');
   api.addComponent('editor/assetopendialog..');
@@ -199,7 +203,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions/symmetry');
   api.addFile('spriteeditor/actions/fliphorizontal');
   api.addFile('spriteeditor/actions/zoom');
-  api.addFile('spriteeditor/actions/showgrid');
+  api.addFile('spriteeditor/actions/showpixelgrid');
   api.addFile('spriteeditor/actions/showlandmarks');
 
   api.addFile('spriteeditor/helpers..');
@@ -207,6 +211,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/helpers/landmarks');
   api.addFile('spriteeditor/helpers/paint');
   api.addFile('spriteeditor/helpers/lightdirection');
+  api.addFile('spriteeditor/helpers/pixelgrid');
 
   api.addComponent('spriteeditor/navigator..');
   api.addComponent('spriteeditor/palette..');
@@ -215,7 +220,6 @@ Package.onUse(function(api) {
 
   api.addComponent('spriteeditor/pixelcanvas..');
   api.addFile('spriteeditor/pixelcanvas/mouse');
-  api.addFile('spriteeditor/pixelcanvas/grid');
   api.addFile('spriteeditor/pixelcanvas/cursor');
   api.addFile('spriteeditor/pixelcanvas/camera');
 

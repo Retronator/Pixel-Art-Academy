@@ -76,11 +76,10 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
         spriteData.palette = _id: paletteId
 
         # Get the ramp and shade we're using.
-        paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
-        material = paintHelper.paletteColor()
+        material = @paintHelper.paletteColor()
 
         # See if we're setting a named color.
-        materialIndex = paintHelper.materialIndex()
+        materialIndex = @paintHelper.materialIndex()
 
         if materialIndex?
           asset = loader.asset()

@@ -17,22 +17,12 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.PixelCanvas'
   @register @id()
 
-  @subscribeToDocumentsForEditorView: (editorView, fileIds) ->
-    LOI.Assets.Asset.forIdsFull.subscribe editorView, LOI.Assets.Sprite.className, fileIds
-
-  @getDocumentForEditorView: (editorView, fileId) ->
-    LOI.Assets.Sprite.documents.findOne fileId
-
-  constructor: ->
+  constructor: (@options) ->
     super arguments...
     
-    # Prepare all reactive fields.
     @camera = new ReactiveField null
-    @grid = new ReactiveField null
     @mouse = new ReactiveField null
     @cursor = new ReactiveField null
-    @sprite = new ReactiveField null
-    @spriteId = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null
@@ -45,60 +35,40 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
     @display = @callAncestorWith 'display'
     @editorView = @ancestorComponentOfType FM.EditorView
 
-    @componentData = @interface.getComponentData @
-    @componentFileData = new ComputedField =>
-      @interface.getComponentDataForActiveFile @
+    @spriteId = new ComputedField =>
+      if @options?.spriteId
+        @options.spriteId()
 
-    # Initialize components.
-    @camera new @constructor.Camera @
-    @grid new @constructor.Grid @
-    @mouse new @constructor.Mouse @
-    @cursor new @constructor.Cursor @
+      else
+        @editorView.activeFileId()
 
-    @toolsActive = new ComputedField =>
-      @componentData.get('toolsActive') ? true
-
-    @autorun (computation) =>
-      @spriteId @editorView.activeFileData().value().id
-      
     @spriteLoader = new ComputedField =>
       return unless spriteId = @spriteId()
       @interface.getLoaderForFile spriteId
 
-    @spriteData = new ComputedField =>
-      @spriteLoader().sprite()
+    @sprite = new ComputedField =>
+      @spriteLoader().sprite
 
-    @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
+    @componentData = @interface.getComponentData @
+    @componentFileData = new ComputedField =>
+      @interface.getComponentDataForFile @, @spriteId()
 
+    # Initialize components.
+    @camera new @constructor.Camera @
+    @mouse new @constructor.Mouse @
+    @cursor new @constructor.Cursor @
+
+    @toolsActive = @componentData.get('toolsActive') ? true
+
+    # Prepare helpers.
     @lightDirectionHelper = new ComputedField =>
       @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.LightDirection, @spriteId()
-      
-    @sprite new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
-      visualizeNormals: @paintNormalsData.value
-
-    @pixelCanvasSize = new ReactiveField width: 0, height: 0
 
     @drawComponents = new ComputedField =>
       return unless componentIds = @componentData.get 'components'
 
       for componentId in componentIds
         @interface.getHelperForFile componentId, @spriteId()
-
-    # Resize the canvas when browser window and zoom changes.
-    @autorun (computation) =>
-      canvas = @canvas()
-      return unless canvas
-
-      # Resize to component.
-      newSize = @pixelCanvasSize()
-
-      # Resize the back buffer to canvas element size, if it actually changed. If the pixel
-      # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
-      for key, value of newSize
-        canvas[key] = value unless canvas[key] is value
-
-      @canvasPixelSize newSize
 
     # Redraw canvas routine.
     @autorun =>
@@ -112,7 +82,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
       camera = @camera()
       camera.applyTransformToCanvas()
 
-      components = [@sprite(), @grid(), @cursor()]
+      components = [@sprite(), @cursor()]
 
       if drawComponents = @drawComponents()
         components.push drawComponents...
@@ -140,6 +110,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
     @canvas canvas
     @context canvas.getContext '2d'
 
+    # Resize canvas on editor changes.
     @autorun (computation) =>
       # Depend on editor view size.
       AM.Window.clientBounds()
@@ -149,11 +120,18 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
 
       # After update, measure the size.
       Tracker.afterFlush =>
-        @pixelCanvasSize
+        newSize =
           width: $pixelCanvas.width()
           height: $pixelCanvas.height()
 
-    if @toolsActive()
+        # Resize the back buffer to canvas element size, if it actually changed. If the pixel
+        # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
+        for key, value of newSize
+          canvas[key] = value unless canvas[key] is value
+
+        @canvasPixelSize newSize
+
+    if @toolsActive
       $(document).on 'keydown.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyDown? event
       $(document).on 'keyup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onKeyUp? event
       $(document).on 'mouseup.landsofillusions-assets-spriteeditor-pixelcanvas', (event) => @interface.activeTool()?.onMouseUp? event
@@ -169,7 +147,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
   events: ->
     events = super arguments...
 
-    if @toolsActive()
+    if @toolsActive
       events = events.concat
         'mousedown .canvas': @onMouseDownCanvas
         'mousemove .canvas': @onMouseMoveCanvas

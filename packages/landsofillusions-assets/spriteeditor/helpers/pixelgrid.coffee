@@ -1,20 +1,16 @@
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.PixelCanvas.Grid
-  constructor: (@pixelCanvas) ->
-    @showGridData = new ComputedField =>
-      @pixelCanvas.interface.getComponentDataForFile LOI.Assets.SpriteEditor.Actions.ShowGrid, @pixelCanvas.spriteId()
-
-    @enabled = new ComputedField =>
-      @showGridData().value() ? true
-
-  toggle: ->
-    @showGridData().value not @enabled()
+class LOI.Assets.SpriteEditor.Helpers.PixelGrid extends LOI.Assets.Editor.Helpers.DrawComponent
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Helpers.PixelGrid'
+  @initialize()
 
   drawToContext: (context) ->
     return unless @enabled()
-    
-    camera = @pixelCanvas.camera()
+
+    return unless editorView = @interface.getEditorViewForFile @fileId
+    camera = editorView.getActiveEditor().camera()
+
     scale = camera.scale()
     effectiveScale = camera.effectiveScale()
     viewportBounds = camera.viewportBounds
@@ -25,12 +21,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Grid
 
     return unless gridOpacity > 0
 
-    if @invertColor?()
-      context.strokeStyle = "rgba(230,230,230,#{gridOpacity * 3})"
-
-    else
-      context.strokeStyle = "rgba(25,25,25,#{gridOpacity * 2})"
-
+    context.strokeStyle = "rgba(25,25,25,#{gridOpacity * 2})"
     context.lineWidth = 1 / effectiveScale
     context.beginPath()
 
