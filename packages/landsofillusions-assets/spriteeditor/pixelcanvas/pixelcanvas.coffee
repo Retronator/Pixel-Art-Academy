@@ -4,18 +4,24 @@ AM = Artificial.Mirage
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
+class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
   # initialCameraScale: default scale for camera if not specified on the file
   # components: array of helper IDs that should be drawn to context
   #
-  # FILE DATA
+  # EDITOR FILE DATA
   # camera:
   #   scale: canvas magnification
   #   origin: the point on the sprite that should appear in the center of the canvas
   #     x
   #     y
+  # pixelGridEnabled: boolean whether to draw the pixel grid
+  # landmarksEnabled: boolean whether to draw the landmarks
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.PixelCanvas'
   @register @id()
+
+  @editorFileDataFieldsWithDefaults: ->
+    pixelGridEnabled: true
+    landmarksEnabled: true
 
   constructor: (@options) ->
     super arguments...
@@ -23,6 +29,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
     @camera = new ReactiveField null
     @mouse = new ReactiveField null
     @cursor = new ReactiveField null
+    @landmarks = new ReactiveField null
+    @pixelGrid = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null
@@ -33,7 +41,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
     super arguments...
 
     @display = @callAncestorWith 'display'
-    @editorView = @ancestorComponentOfType FM.EditorView
 
     @spriteId = new ComputedField =>
       if @options?.spriteId
@@ -46,8 +53,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
       return unless spriteId = @spriteId()
       @interface.getLoaderForFile spriteId
 
+    @spriteData = new ComputedField =>
+      @spriteLoader()?.spriteData()
+
     @sprite = new ComputedField =>
-      @spriteLoader().sprite
+      @spriteLoader()?.sprite
 
     @componentData = @interface.getComponentData @
     @componentFileData = new ComputedField =>
@@ -57,18 +67,30 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
     @camera new @constructor.Camera @
     @mouse new @constructor.Mouse @
     @cursor new @constructor.Cursor @
+    @landmarks new @constructor.Landmarks @
+    @pixelGrid new @constructor.PixelGrid @
 
-    @toolsActive = @componentData.get('toolsActive') ? true
+    @toolsActive = @componentData.get('toolsActive') ? true    
 
     # Prepare helpers.
     @lightDirectionHelper = new ComputedField =>
       @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.LightDirection, @spriteId()
+      
+    @landmarksHelper = new ComputedField =>
+      @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.Landmarks, @spriteId()
+
+    @fileIdForHelpers = new ComputedField =>
+      if @options?.fileIdForHelpers
+        @options.fileIdForHelpers()
+
+      else
+        @editorView.activeFileId()
 
     @drawComponents = new ComputedField =>
       return unless componentIds = @componentData.get 'components'
 
       for componentId in componentIds
-        @interface.getHelperForFile componentId, @spriteId()
+        @interface.getHelperForFile componentId, @fileIdForHelpers()
 
     # Redraw canvas routine.
     @autorun =>
@@ -82,7 +104,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.View
       camera = @camera()
       camera.applyTransformToCanvas()
 
-      components = [@sprite(), @cursor()]
+      components = [@sprite(), @pixelGrid(), @cursor(), @landmarks()]
 
       if drawComponents = @drawComponents()
         components.push drawComponents...

@@ -160,6 +160,7 @@ Package.onUse(function(api) {
   api.addFile('editor/actions..');
   api.addFile('editor/actions/assetaction');
   api.addFile('editor/actions/showaction');
+  api.addFile('editor/actions/showhelperaction');
   api.addFile('editor/actions/history');
   api.addFile('editor/actions/new');
   api.addFile('editor/actions/open');
@@ -211,7 +212,6 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/helpers/landmarks');
   api.addFile('spriteeditor/helpers/paint');
   api.addFile('spriteeditor/helpers/lightdirection');
-  api.addFile('spriteeditor/helpers/pixelgrid');
 
   api.addComponent('spriteeditor/navigator..');
   api.addComponent('spriteeditor/palette..');
@@ -222,6 +222,8 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/pixelcanvas/mouse');
   api.addFile('spriteeditor/pixelcanvas/cursor');
   api.addFile('spriteeditor/pixelcanvas/camera');
+  api.addFile('spriteeditor/pixelcanvas/landmarks');
+  api.addFile('spriteeditor/pixelcanvas/pixelgrid');
 
   api.addComponent('spriteeditor/shadingsphere..');
   api.addFile('spriteeditor/shadingsphere/normalpicker');

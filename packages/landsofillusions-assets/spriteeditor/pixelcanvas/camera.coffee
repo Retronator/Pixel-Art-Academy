@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 class LOI.Assets.SpriteEditor.PixelCanvas.Camera
   constructor: (@pixelCanvas) ->
     @cameraData = new ComputedField =>
-      @pixelCanvas.componentFileData()?.child 'camera'
+      @pixelCanvas.editorFileData()?.child 'camera'
 
     @scaleData = new ComputedField =>
       @cameraData()?.child 'scale'

@@ -10,7 +10,7 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     super arguments...
 
     @sprite = new ComputedField =>
-      @interface.getLoaderForActiveFile()?.spriteData()
+      @interface.getEditorForActiveFile()?.spriteData()
     
     @layers = new ComputedField =>
       return unless sprite = @sprite()
@@ -55,6 +55,10 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     sprite.layers[0].visible = true
 
     sprite
+    
+  showRemoveButton: ->
+    # We can remove a layer if the currently selected layer exists.
+    @sprite()?.layers?[@paintHelper.layerIndex()]
 
   # Events
 
@@ -63,7 +67,8 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
       'click .thumbnail': @onClickThumbnail
       'change .depth-input': @onChangeDepth
       'change .name-input, change .visible-checkbox': @onChangeLayer
-      'click .add-layer-button': @onClickAddLayerButton
+      'click .add-button': @onClickAddButton
+      'click .remove-button': @onClickRemoveButton
 
   onClickThumbnail: (event) ->
     layer = @currentData()
@@ -97,10 +102,15 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     sprite = @sprite()
     LOI.Assets.Sprite.updateLayer sprite._id, layer.index, newData
 
-  onClickAddLayerButton: (event) ->
+  onClickAddButton: (event) ->
     sprite = @sprite()
 
     index = sprite.layers.length or 0
     maxDepth = _.max (layer.origin?.z or 0 for layer in sprite.layers)
 
     LOI.Assets.Sprite.updateLayer sprite._id, index, origin: z: maxDepth + 1
+
+  onClickRemoveButton: (event) ->
+    sprite = @sprite()
+
+    LOI.Assets.Sprite.removeLayer sprite._id, @paintHelper.layerIndex()

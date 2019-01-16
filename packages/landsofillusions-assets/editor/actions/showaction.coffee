@@ -4,13 +4,14 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.Editor.Actions.ShowAction extends LOI.Assets.Editor.Actions.AssetAction
-  @helperClass: -> throw new AE.NotImplementedException "Show action must specify the helper class."
+  @fileDataProperty: -> throw new AE.NotImplementedException "Show action must specify the file data field."
     
   active: ->
-    @_helper().enabled()
+    # We assume the editor has a field defined with the property name.
+    property = @constructor.fileDataProperty()
+    @editor()[property]()
 
   execute: ->
-    @_helper().toggle()
-
-  _helper: ->
-    @interface.getHelperForActiveFile @constructor.helperClass()
+    property = @constructor.fileDataProperty()
+    fileData = @editorView().activeFileData()
+    fileData.set property, not @active()

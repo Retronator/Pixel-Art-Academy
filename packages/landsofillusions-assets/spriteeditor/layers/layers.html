@@ -15,7 +15,10 @@
       {{/each}}
     </table>
     <div class="actions">
-      <button class="add-layer-button">Add layer</button>
+      <button class="add-layer-button">Add</button>
+      {{#if showRemoveButton}}
+        <button class="remove-layer-button">Remove</button>
+      {{/if}}
     </div>
   </div>
 </template>

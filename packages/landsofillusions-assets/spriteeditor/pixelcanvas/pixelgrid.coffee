@@ -1,15 +1,13 @@
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Helpers.PixelGrid extends LOI.Assets.Editor.Helpers.DrawComponent
-  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Helpers.PixelGrid'
-  @initialize()
-
+class LOI.Assets.SpriteEditor.PixelCanvas.PixelGrid
+  constructor: (@pixelCanvas) ->
+    
   drawToContext: (context) ->
-    return unless @enabled()
+    return unless @pixelCanvas.pixelGridEnabled()
 
-    return unless editorView = @interface.getEditorViewForFile @fileId
-    camera = editorView.getActiveEditor().camera()
+    camera = @pixelCanvas.camera()
 
     scale = camera.scale()
     effectiveScale = camera.effectiveScale()

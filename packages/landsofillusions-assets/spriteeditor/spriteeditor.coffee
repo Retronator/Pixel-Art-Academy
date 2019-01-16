@@ -31,8 +31,6 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
         initialCameraScale: 8
         components: [
-          LOI.Assets.SpriteEditor.Helpers.PixelGrid.id()
-          LOI.Assets.SpriteEditor.Helpers.Landmarks.id()
         ]
 
     # Layouts
@@ -154,35 +152,30 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
 
     # Shortcuts
 
-    isMacOS = AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
-
     shortcuts =
       currentMappingId: 'default'
       default:
         name: "Default"
-        mapping:
-          # Actions
-          "#{LOI.Assets.Editor.Actions.New.id()}": commandOrControl: true, key: AC.Keys.n
-          "#{LOI.Assets.Editor.Actions.Open.id()}": commandOrControl: true, key: AC.Keys.o
-          "#{LOI.Assets.Editor.Actions.Close.id()}": commandOrControl: true, key: AC.Keys.c
-          "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
-          "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
-          "#{LOI.Assets.SpriteEditor.Actions.PaintNormals.id()}": key: AC.Keys.n
-          "#{LOI.Assets.SpriteEditor.Actions.Symmetry.id()}": key: AC.Keys.s
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
-          "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
-          "#{LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()}":commandOrControl: true, key: AC.Keys.singleQuote
-          "#{LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()}":commandOrControl: true, shift: true, key: AC.Keys.l
-
-          # Tools
-          "#{LOI.Assets.Editor.Tools.Arrow.id()}": key: AC.Keys.escape
-          "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
-          "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": key: AC.Keys.i, holdKey: AC.Keys.alt
-          "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
-          "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
+        mapping: @defaultShortcutsMapping()
 
     # Return combined interface data.
     {activeToolId, operators, components, layouts, shortcuts}
+
+  @defaultShortcutsMapping: ->
+    _.extend super(arguments...),
+      # Actions
+      "#{LOI.Assets.SpriteEditor.Actions.PaintNormals.id()}": key: AC.Keys.n
+      "#{LOI.Assets.SpriteEditor.Actions.Symmetry.id()}": key: AC.Keys.s
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
+      "#{LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()}":commandOrControl: true, key: AC.Keys.singleQuote
+      "#{LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()}":commandOrControl: true, shift: true, key: AC.Keys.l
+
+      # Tools
+      "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
+      "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": key: AC.Keys.i, holdKey: AC.Keys.alt
+      "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
+      "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
 
   onRendered: ->
     super arguments...

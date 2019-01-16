@@ -10,6 +10,19 @@ class LOI.Assets.Editor extends AM.Component
   template: -> 'LandsOfIllusions.Assets.Editor'
     
   @defaultInterfaceData: -> throw new AE.NotImplementedException "You have to define initial user interface layouts."
+    
+  @defaultShortcutsMapping: ->
+    isMacOS = AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
+
+    # Actions
+    "#{LOI.Assets.Editor.Actions.New.id()}": commandOrControl: true, key: AC.Keys.n
+    "#{LOI.Assets.Editor.Actions.Open.id()}": commandOrControl: true, key: AC.Keys.o
+    "#{LOI.Assets.Editor.Actions.Close.id()}": commandOrControl: true, key: AC.Keys.c
+    "#{LOI.Assets.Editor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
+    "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
+
+    # Tools
+    "#{LOI.Assets.Editor.Tools.Arrow.id()}": key: AC.Keys.escape
 
   onCreated: ->
     super arguments...
@@ -38,7 +51,7 @@ class LOI.Assets.Editor extends AM.Component
   
       loaders:
         "#{LOI.Assets.Sprite.id()}": LOI.Assets.SpriteEditor.SpriteLoader
-        #"#{LOI.Assets.Mesh.id()}": LOI.Assets.MeshEditor.MeshLoader
+        "#{LOI.Assets.Mesh.id()}": LOI.Assets.MeshEditor.MeshLoader
 
   onDestroyed: ->
     super arguments...

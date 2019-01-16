@@ -17,7 +17,7 @@ class LOI.Assets.SpriteEditor.Navigator extends FM.View
     @zoomOutPressed = new ReactiveField false
 
     @sprite = new ComputedField =>
-      @interface.getLoaderForActiveFile()?.spriteData()
+      @interface.getEditorForActiveFile()?.spriteData()
 
   # Helpers
 

@@ -75,6 +75,7 @@ class FM.Interface extends AM.Component
     @_helperInstances = {}
     @_helperForFileInstances = {}
     @_loaders = {}
+    @_loadersUpdatedDependency = new Tracker.Dependency
 
     # Create file loaders.
     @files = new AE.ReactiveArray =>
@@ -88,10 +89,12 @@ class FM.Interface extends AM.Component
       added: (file) =>
         loader = @options.loaders[file.documentClassId]
         @_loaders[file.id] = Tracker.nonreactive => new loader @, file.id
+        @_loadersUpdatedDependency.changed()
 
       removed: (file) =>
         @_loaders[file.id].destroy()
         delete @_loaders[file.id]
+        @_loadersUpdatedDependency.changed()
 
   onDestroyed: ->
     super arguments...
@@ -165,6 +168,7 @@ class FM.Interface extends AM.Component
     @getHelperForFile helperClassOrId, fileId
 
   getLoaderForFile: (fileId) ->
+    @_loadersUpdatedDependency.depend()
     @_loaders[fileId]
 
   getLoaderForActiveFile: ->
