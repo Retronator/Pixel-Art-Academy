@@ -16,4 +16,4 @@ class LOI.Assets.Editor.Actions.New extends FM.Action
 
       # Open the new asset.
       editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-      editorView.addFile assetId
+      editorView.addFile assetId, @interface.parent.documentClass.id()

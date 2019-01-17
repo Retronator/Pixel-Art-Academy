@@ -74,6 +74,8 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
           LOI.Assets.MeshEditor.Actions.ShowEdges.id()
           LOI.Assets.MeshEditor.Actions.ShowHorizon.id()
+          LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()
+          null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
         ]
       ,
@@ -189,4 +191,4 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['z3m5euLEC6KHKCZjJ']
+    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['Tc3M7PP3WLehnYRRd'] #'z3m5euLEC6KHKCZjJ']

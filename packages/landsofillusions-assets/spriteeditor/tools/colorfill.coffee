@@ -9,7 +9,7 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
   @initialize()
 
   _callMethod: (spriteId, layer, pixel) ->
-    spriteData = @interface.getLoaderForActiveFile().spriteData()
+    spriteData = @editor().spriteData()
 
     # Make sure we're filling inside of bounds.
     return unless spriteData.bounds.left <= pixel.x <= spriteData.bounds.right and spriteData.bounds.top <= pixel.y <= spriteData.bounds.bottom

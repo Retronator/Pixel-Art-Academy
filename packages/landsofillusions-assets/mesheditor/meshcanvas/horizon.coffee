@@ -5,7 +5,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Horizon
 
   drawToContext: (context) ->
     return unless @meshCanvas.horizonEnabled()
-    return unless currentNormal = @meshCanvas.currentNormal()
+    return unless currentNormal = @meshCanvas.paintHelper.normal()
     return unless cameraAngle = @meshCanvas.cameraAngle()
     
     horizon = cameraAngle.getHorizon currentNormal

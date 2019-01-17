@@ -41,23 +41,32 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     super arguments...
 
     @display = @callAncestorWith 'display'
+    
+    if @options?.sprite
+      # We have the engine sprite provided directly.
+      @sprite = new ComputedField =>
+        @options.sprite()
 
-    @spriteId = new ComputedField =>
-      if @options?.spriteId
-        @options.spriteId()
+      @spriteData = new ComputedField =>
+        @sprite()?.options.spriteData()
 
-      else
+      @spriteId = new ComputedField =>
+        @spriteData()?._id
+      
+    else
+      # We need to get the engine sprite from the loader.
+      @spriteId = new ComputedField =>
         @editorView.activeFileId()
+  
+      @spriteLoader = new ComputedField =>
+        return unless spriteId = @spriteId()
+        @interface.getLoaderForFile spriteId
 
-    @spriteLoader = new ComputedField =>
-      return unless spriteId = @spriteId()
-      @interface.getLoaderForFile spriteId
-
-    @spriteData = new ComputedField =>
-      @spriteLoader()?.spriteData()
-
-    @sprite = new ComputedField =>
-      @spriteLoader()?.sprite
+      @spriteData = new ComputedField =>
+        @spriteLoader()?.spriteData()
+  
+      @sprite = new ComputedField =>
+        @spriteLoader()?.sprite
 
     @componentData = @interface.getComponentData @
     @componentFileData = new ComputedField =>

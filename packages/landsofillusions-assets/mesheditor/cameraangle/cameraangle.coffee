@@ -30,7 +30,11 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
 
   setSprite: (spriteId) ->
     LOI.Assets.Mesh.updateCameraAngle @mesh()._id, @cameraAngleIndex(), sprite: _id: spriteId
-      
+
+  filename: ->
+    cameraAngleData = @currentData()
+    cameraAngleData.sprite.name or cameraAngleData.sprite._id
+
   events: ->
     super(arguments...).concat
       'click .sprite .value': @onClickSprite

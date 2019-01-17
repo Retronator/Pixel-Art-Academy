@@ -47,7 +47,7 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
 
       return unless clusters?.length and edges
 
-      debug = @options.debug()
+      debug = @options.debug?()
       currentCluster = @options.currentCluster()
 
       # Add new children.

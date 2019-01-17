@@ -67,6 +67,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           null
           LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
+          null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
         ]
       ,

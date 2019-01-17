@@ -21,7 +21,7 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
   applyEraser: ->
     return unless @mouseState.leftButton
 
-    spriteData = @interface.getLoaderForActiveFile().spriteData()
+    spriteData = @editor().spriteData()    
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
     layerIndex = paintHelper.layerIndex()
 

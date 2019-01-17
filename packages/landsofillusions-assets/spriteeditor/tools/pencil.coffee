@@ -24,7 +24,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
     xCoordinates = [[@mouseState.x, 1]]
 
-    spriteData = @interface.getLoaderForActiveFile().spriteData()
+    spriteData = @editor().spriteData()
 
     # TODO: Get symmetry from interface data.
     # symmetryXOrigin = @options.editor().symmetryXOrigin?()

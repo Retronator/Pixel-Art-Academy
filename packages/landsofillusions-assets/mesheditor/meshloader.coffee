@@ -21,7 +21,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
 
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
     @sceneHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.Scene, @fileId
-    @debugModeData = @interface.getHelper LOI.Assets.SpriteEditor.Actions.DebugMode
+    @debugModeData = @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).data
     @currentClusterHelper = @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.CurrentCluster, @fileId
       
     # Create the engine mesh.
@@ -51,5 +51,8 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
   destroy: ->
     @_subscription.stop()
     @_spritesSubscription.stop()
-    
-    @mesh.stop()
+    @_paletteSubscription.stop()
+
+    @meshData.stop()
+    @paletteId.stop()
+    @palette.stop()

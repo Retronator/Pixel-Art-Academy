@@ -253,7 +253,7 @@ Package.onUse(function(api) {
   api.addComponent('mesheditor/cameraangles..');
 
   api.addComponent('mesheditor/cameraangle..');
-  api.addFile('mesheditor/cameraangle/selectspritedialog');
+  api.addUnstyledComponent('mesheditor/cameraangle/selectspritedialog..');
 
   api.addComponent('mesheditor/meshcanvas..');
   api.addFile('mesheditor/meshcanvas/edges');

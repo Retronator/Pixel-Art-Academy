@@ -54,17 +54,24 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       @editorFileData()?.get('pixelRenderEnabled') or true
 
     @debugMode = new ComputedField =>
-      @interface.getOperator(LOI.Assets.SpriteEditor.Actions.DebugMode).active()
+      @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).active()
 
     # Provide the sprite we're currently editing to sprite editor views.
     @spriteData = new ComputedField =>
       @cameraAngleData()?.sprite
 
+    @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
+
+    # Create the engine sprite.
+    @sprite = new LOI.Assets.Engine.Sprite
+      spriteData: @spriteData
+      visualizeNormals: @paintNormalsData.value
+
     @edges = new @constructor.Edges @
     @horizon = new @constructor.Horizon @
 
     @pixelCanvas = new LOI.Assets.SpriteEditor.PixelCanvas
-      spriteId: => @spriteData()?._id
+      sprite: => @sprite
       fileIdForHelpers: @meshId
       drawComponents: => [
         @edges
@@ -72,8 +79,9 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       ]
 
     # Provide the pixel canvas fields to sprite editor views and tools.
-    @camera = new ComputedField => @pixelCanvas.camera()
-    @mouse = new ComputedField => @pixelCanvas.mouse()
+    for passThroughField in ['camera', 'mouse', 'pixelGridEnabled', 'landmarksEnabled']
+      do (passThroughField) =>
+        @[passThroughField] = => @pixelCanvas[passThroughField] arguments...
 
     @componentData = @interface.getComponentData @
     @componentFileData = new ComputedField =>

@@ -103,7 +103,7 @@ class LOI.Assets.Engine.Mesh.Cluster
     material = null
     
     materialOptions =
-      wireframe: options.debug()
+      wireframe: options.debug?()
 
     if visualizeNormals
       # Visualized normals mode.

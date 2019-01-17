@@ -49,7 +49,7 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
   events: ->
     super(arguments...).concat
       'click .camera-angle': @onClickCameraAngle
-      'click .add-button': @onClickAddCameraAngleButton
+      'click .add-button': @onClickAddButton
       'change .name-input': @onChangeCameraAngle
 
   onClickCameraAngle: (event) ->
