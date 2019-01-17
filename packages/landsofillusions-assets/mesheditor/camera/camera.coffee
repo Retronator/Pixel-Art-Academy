@@ -16,7 +16,7 @@ class LOI.Assets.Components.Camera extends AM.Component
 
     for name in ['position', 'target', 'up']
       vector = camera[name]
-      vectors.push _.extend {name, x: 0, y: 0, z: 0}, vector
+      vectors.push _.extend {name: _.upperFirst(name), x: 0, y: 0, z: 0}, vector
 
     vectors
 

@@ -7,33 +7,28 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
   @id: -> 'LandsOfIllusions.Assets.Editor.AssetOpenDialog'
   @register @id()
 
+  # We explicitly define the template to allow inheritance.
+  template: -> 'LandsOfIllusions.Assets.Editor.AssetOpenDialog'
+
   onCreated: ->
     super arguments...
 
-    @fileManager = new LOI.Assets.Editor.FileManager
-      documents: @interface.parent.documentClass.documents
-      defaultOperation: => @_open()
+    @fileManager = new LOI.Assets.Editor.FileManager @_fileManagerOptions()
 
+    @_subscribeToDocuments()
+
+  _fileManagerOptions: ->
+    # Override to provide options for the file manager.
+    documents: @interface.parent.documentClass.documents
+    defaultOperation: => @_open()
+    
+  _subscribeToDocuments: ->
+    # Override to subscribe to documents for the file manager.
     LOI.Assets.Asset.all.subscribe @, @interface.parent.assetClassName
-
-    @selectedAssets = new ReactiveField []
     
   closeDialog: ->
     dialogData = @ancestorComponentOfType(FM.FloatingArea).data()
     @interface.closeDialog dialogData
-
-  assets: ->
-    @interface.parent.documentClass.documents.find {},
-      sort:
-        name: 1
-        _id: 1
-
-  nameOrId: ->
-    data = @currentData()
-    data.name or "#{data._id.substring 0, 5}…"
-
-  selectedClass: ->
-    'selected' if @currentData() in @selectedAssets()
 
   events: ->
     super(arguments...).concat
@@ -47,6 +42,8 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
     @_open()
 
   _open: ->
+    # Override to provide an action on open.
+    
     # Find the editor view in the interface.
     editorViews = @interface.allChildComponentsOfType FM.EditorView
 

@@ -1,22 +1,30 @@
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.MeshCanvas extends AM.Component
-  @register 'LandsOfIllusions.Assets.MeshEditor.MeshCanvas'
+class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
+  # EDITOR FILE DATA
+  # cameraAngleIndex: which camera angle to show in this editor
+  # edgesEnabled: boolean whether to show edges between clusters
+  # horizonEnabled: boolean whether to show the horizon of the plane we're currently painting (based on the normal)
+  # pixelRenderEnabled: boolean whether to show the pixel art render instead of the high-res source
+  # planeGridEnabled: boolean whether to show the plane of the current cluster
+  # sourceImageEnabled: boolean whether to show the source sprite instead of the render
+  @id: -> 'LandsOfIllusions.Assets.MeshEditor.MeshCanvas'
+  @register @id()
+  
+  @editorFileDataFieldsWithDefaults: ->
+    cameraAngleIndex: 0
+    edgesEnabled: false
+    horizonEnabled: false
+    pixelRenderEnabled: true
+    planeGridEnabled: true
+    sourceImageEnabled: false
 
-  constructor: (@options) ->
+  constructor: ->
     super arguments...
-
-    _.defaults @options,
-      grid: true
-
-    # Prepare all reactive fields.
-    @renderer = new ReactiveField null
-    @sceneManager = new ReactiveField null
-    @cameraManager = new ReactiveField null
-    @grid = new ReactiveField null
 
     @$meshCanvas = new ReactiveField null
     @canvas = new ReactiveField null
@@ -26,32 +34,65 @@ class LOI.Assets.MeshEditor.MeshCanvas extends AM.Component
   onCreated: ->
     super arguments...
 
-    # Initialize components.
-    @sceneManager new @constructor.SceneManager @
+    @meshId = new ComputedField =>
+      @editorView.activeFileId()
 
-    @cameraManager new @constructor.CameraManager @
+    @meshLoader = new ComputedField =>
+      return unless meshId = @meshId()
+      @interface.getLoaderForFile meshId
 
-    if @options.grid
-      @grid new @constructor.Grid @, @options.gridEnabled
+    @mesh = new ComputedField =>
+      @meshLoader().mesh
 
-    # Resize the canvas when browser window and zoom changes.
-    @autorun =>
-      canvas = @canvas()
-      return unless canvas
-      
-      # Depend on window size.
-      AM.Window.clientBounds()
+    @cameraAngleData = new ComputedField =>
+      @meshLoader()?.meshData()?.cameraAngles?[@cameraAngleIndex()]
 
-      # Resize the back buffer to canvas element size, if it actually changed. If the pixel
-      # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
-      newSize =
-        width: $(canvas).width()
-        height: $(canvas).height()
+    @cameraAngle = new ComputedField =>
+      @meshLoader()?.mesh.cameraAngles?[@cameraAngleIndex()]
 
-      for key, value of newSize
-        canvas[key] = value unless canvas[key] is value
+    @pixelRenderEnabled = new ComputedField =>
+      @editorFileData()?.get('pixelRenderEnabled') or true
 
-      @canvasPixelSize newSize
+    @debugMode = new ComputedField =>
+      @interface.getOperator(LOI.Assets.SpriteEditor.Actions.DebugMode).active()
+
+    # Provide the sprite we're currently editing to sprite editor views.
+    @spriteData = new ComputedField =>
+      @cameraAngleData()?.sprite
+
+    @edges = new @constructor.Edges @
+    @horizon = new @constructor.Horizon @
+
+    @pixelCanvas = new LOI.Assets.SpriteEditor.PixelCanvas
+      spriteId: => @spriteData()?._id
+      fileIdForHelpers: @meshId
+      drawComponents: => [
+        @edges
+        @horizon
+      ]
+
+    # Provide the pixel canvas fields to sprite editor views and tools.
+    @camera = new ComputedField => @pixelCanvas.camera()
+    @mouse = new ComputedField => @pixelCanvas.mouse()
+
+    @componentData = @interface.getComponentData @
+    @componentFileData = new ComputedField =>
+      @interface.getComponentDataForFile @, @meshId()
+
+    # Prepare helpers.
+    @drawComponents = new ComputedField =>
+      return unless componentIds = @componentData.get 'components'
+
+      for componentId in componentIds
+        @interface.getHelperForFile componentId, @meshId()
+
+    @sceneHelper = new ComputedField =>
+      @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.Scene, @meshId()
+
+    @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+    
+    @currentClusterHelper = new ComputedField =>
+      @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.CurrentCluster, @meshId()
 
   onRendered: ->
     super arguments...
@@ -64,10 +105,29 @@ class LOI.Assets.MeshEditor.MeshCanvas extends AM.Component
     @canvas canvas
     @context canvas.getContext 'webgl'
 
-    @renderer new @constructor.Renderer @
+    @autorun (computation) =>
+      # Depend on editor view size.
+      AM.Window.clientBounds()
 
+      # Depend on application area changes.
+      @interface.currentApplicationAreaData().value()
+
+      # After update, measure the size.
+      Tracker.afterFlush =>
+        newSize =
+          width: $meshCanvas.width()
+          height: $meshCanvas.height()
+          
+        # Resize the back buffer to canvas element size, if it actually changed. If the pixel
+        # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
+        for key, value of newSize
+          canvas[key] = value unless canvas[key] is value
+
+        @canvasPixelSize newSize
+          
+    @renderer = new @constructor.Renderer @
+    
   onDestroyed: ->
     super arguments...
 
-    @renderer().destroy()
-    @sceneManager().destroy()
+    @renderer.destroy()

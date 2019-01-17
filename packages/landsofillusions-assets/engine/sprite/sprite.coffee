@@ -57,9 +57,7 @@ class LOI.Assets.Engine.Sprite
     flippedHorizontal = @options.flippedHorizontal
     flippedHorizontal = flippedHorizontal() if _.isFunction flippedHorizontal
 
-    for layer in spriteData.layers when layer.visible isnt false
-      continue unless layer?.pixels
-
+    for layer in spriteData.layers when layer?.pixels and layer.visible isnt false
       layerOrigin =
         x: layer.origin?.x or 0
         y: layer.origin?.y or 0

@@ -87,10 +87,16 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         @editorView.activeFileId()
 
     @drawComponents = new ComputedField =>
-      return unless componentIds = @componentData.get 'components'
+      drawComponents = []
+      
+      if componentIds = @componentData.get 'components'
+        for componentId in componentIds
+          drawComponents.push @interface.getHelperForFile componentId, @fileIdForHelpers()
+          
+      if @options?.drawComponents
+        drawComponents.push @options.drawComponents()...
 
-      for componentId in componentIds
-        @interface.getHelperForFile componentId, @fileIdForHelpers()
+      drawComponents
 
     # Redraw canvas routine.
     @autorun =>

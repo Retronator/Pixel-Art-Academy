@@ -2,232 +2,191 @@ AB = Artificial.Base
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor extends AM.Component
-  @register 'LandsOfIllusions.Assets.MeshEditor'
+class LOI.Assets.MeshEditor extends LOI.Assets.Editor
+  @id: -> 'LandsOfIllusions.Assets.MeshEditor'
+  @register @id()
 
   constructor: ->
     super arguments...
 
-    @sprite = new ReactiveField null
-    @edges = new ReactiveField null
-    @horizon = new ReactiveField null
-    @pixelCanvas = new ReactiveField null
-    @mesh = new ReactiveField null
-    @meshCanvas = new ReactiveField null
-    @navigator = new ReactiveField null
-    @palette = new ReactiveField null
-    @assetsList = new ReactiveField null
-    @assetInfo = new ReactiveField null
-    @materials = new ReactiveField null
-    @landmarks = new ReactiveField null
-    @cameraAngles = new ReactiveField null
-    @tools = new ReactiveField null
-    @actions = new ReactiveField null
-    @toolbox = new ReactiveField null
-    @shadingSphere = new ReactiveField null
+    @documentClass = LOI.Assets.Mesh
+    @assetClassName = @documentClass.className
 
-    @lightDirection = new ReactiveField new THREE.Vector3(0, 0, -1).normalize()
-    @paintNormals = new ReactiveField false
-    @symmetryXOrigin = new ReactiveField null
-    
-    @pixelGridEnabled = new ReactiveField true
-    @planeGridEnabled = new ReactiveField true
-    @sourceImageVisible = new ReactiveField false
-    @pixelImageVisible = new ReactiveField true
-    @debug = new ReactiveField false
+  @defaultInterfaceData: ->
+    # Operators
 
-    @currentCluster = new ReactiveField null
+    activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
 
-    @meshId = new ComputedField =>
-      AB.Router.getParameter 'meshId'
+    operators = {}
 
-    @meshData = new ComputedField =>
-      return unless meshId = @meshId()
+    # Content Components
 
-      # Subscribe to the mesh and all its sprites.
-      LOI.Assets.Mesh.forId.subscribe meshId
-      LOI.Assets.Sprite.forMeshId.subscribe meshId
+    components =
+      "#{_.snakeCase LOI.Assets.SpriteEditor.ShadingSphere.id()}":
+        radius: 30
 
-      return unless meshData = LOI.Assets.Mesh.documents.findOne meshId
-
-      # Refresh to embed all sprites.
-      meshData.refresh()
-
-      meshData
-
-    @cameraAngleIndex = new ReactiveField 0
-    
-    @cameraAngle = new ComputedField =>
-      return unless meshData = @meshData()
-      meshData.cameraAngles?[@cameraAngleIndex()]
-
-    @spriteData = new ComputedField =>
-      @cameraAngle()?.sprite
-
-    @paletteId = new ComputedField =>
-      # Minimize reactivity to only palette changes.
-      LOI.Assets.Mesh.documents.findOne(@meshId(),
-        fields:
-          palette: 1
-      )?.palette?._id
-
-    @activeTool = new ReactiveField null
-
-    @canvasFocused = new ReactiveField true
-
-  onCreated: ->
-    super arguments...
-
-    $('html').addClass('asset-editor')
-
-    # Initialize components.
-    @sprite new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
-      visualizeNormals: @paintNormals
-      
-    @edges new @constructor.Edges
-      mesh: @mesh
-
-    @horizon new @constructor.Horizon
-      currentNormal: => @shadingSphere()?.currentNormal()
-      cameraAngle: @cameraAngle
-
-    @pixelCanvas new LOI.Assets.Components.PixelCanvas
-      initialCameraScale: 8
-      activeTool: @activeTool
-      lightDirection: @lightDirection
-      drawComponents: =>
-        return [] unless @sourceImageVisible() and @spriteData()
-        
-        [
-          @sprite()
-          @landmarks()
-          @edges()
-          @horizon()
+      "#{_.snakeCase LOI.Assets.MeshEditor.MeshCanvas.id()}":
+        components: [
         ]
         
-      symmetryXOrigin: @symmetryXOrigin
-      gridEnabled: @pixelGridEnabled
+      "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
+        initialCameraScale: 8
+        components: [
+        ]
 
-    @mesh new LOI.Assets.Engine.Mesh
-      meshData: @meshData
-      visualizeNormals: @paintNormals
-      sceneManager: => @meshCanvas()?.sceneManager()
-      debug: @debug
-      currentCluster: @currentCluster
+    # Layouts
 
-    @meshCanvas new @constructor.MeshCanvas
-      pixelCanvas: @pixelCanvas
-      gridEnabled: @planeGridEnabled
-      cameraAngle: @cameraAngle
-      lightDirection: @lightDirection
-      currentCluster: @currentCluster
-      currentNormal: => @shadingSphere()?.currentNormal()
-      drawPixelImage: @pixelImageVisible
-      debug: @debug
+    menu =
+      type: FM.Menu.id()
+      items: [
+        caption: '3D Paint'
+      ,
+        caption: 'File'
+        items: [
+          LOI.Assets.Editor.Actions.New.id()
+          LOI.Assets.Editor.Actions.Open.id()
+          null
+          LOI.Assets.Editor.Actions.Close.id()
+          LOI.Assets.Editor.Actions.Duplicate.id()
+          LOI.Assets.Editor.Actions.Delete.id()
+        ]
+      ,
+        caption: 'Edit'
+        items: [
+          LOI.Assets.Editor.Actions.Undo.id()
+          LOI.Assets.Editor.Actions.Redo.id()
+          null
+          LOI.Assets.SpriteEditor.Actions.FlipHorizontal.id()
+          null
+          LOI.Assets.Editor.Actions.Clear.id()
+        ]
+      ,
+        caption: 'View'
+        items: [
+          LOI.Assets.SpriteEditor.Actions.ZoomIn.id()
+          LOI.Assets.SpriteEditor.Actions.ZoomOut.id()
+          null
+          LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
+          LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()
+          LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
+          LOI.Assets.MeshEditor.Actions.ShowEdges.id()
+          LOI.Assets.MeshEditor.Actions.ShowHorizon.id()
+          LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
+        ]
+      ,
+        caption: 'Window'
+      ]
 
-    setAssetId = (meshId) =>
-      AB.Router.setParameters {meshId}
-        
-    @assetsList new LOI.Assets.Components.AssetsList
-      documentClass: LOI.Assets.Mesh
-      getAssetId: @meshId
-      setAssetId: setAssetId
+    toolbox =
+      type: FM.Toolbox.id()
+      width: 20
+      widthStep: 20
+      minWidth: 20
+      tools: [
+        LOI.Assets.Editor.Tools.Arrow.id()
+        LOI.Assets.SpriteEditor.Tools.Pencil.id()
+        LOI.Assets.SpriteEditor.Tools.Eraser.id()
+        LOI.Assets.SpriteEditor.Tools.ColorFill.id()
+        LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
+      ]
 
-    @navigator new LOI.Assets.Components.Navigator
-      camera: @pixelCanvas().camera
-      enabled: @canvasFocused
+    layouts =
+      currentLayoutId: 'main'
+      main:
+        name: 'Main'
+        applicationArea:
+          type: FM.SplitView.id()
+          fixed: true
+          mainArea: menu
+          dockSide: FM.SplitView.DockSide.Top
+          remainingArea:
+            type: FM.SplitView.id()
+            dockSide: FM.SplitView.DockSide.Left
+            mainArea: toolbox
+            remainingArea:
+              type: FM.SplitView.id()
+              dockSide: FM.SplitView.DockSide.Right
+              mainArea:
+                type: FM.SplitView.id()
+                dockSide: FM.SplitView.DockSide.Top
+                width: 150
+                mainArea:
+                  type: FM.TabbedView.id()
+                  height: 80
+                  tabs: [
+                    name: 'Navigator'
+                    contentComponentId: LOI.Assets.SpriteEditor.Navigator.id()
+                    active: true
+                  ,
+                    name: 'File info'
+                    contentComponentId: LOI.Assets.SpriteEditor.AssetInfo.id()
+                  ]
+                remainingArea:
+                  type: FM.SplitView.id()
+                  dockSide: FM.SplitView.DockSide.Top
+                  mainArea:
+                    type: FM.TabbedView.id()
+                    height: 80
+                    tabs: [
+                      name: 'Layers'
+                      contentComponentId: LOI.Assets.SpriteEditor.Layers.id()
+                    ,
+                      name: 'Landmarks'
+                      contentComponentId: LOI.Assets.Editor.Landmarks.id()
+                    ,
+                      name: 'Camera angles'
+                      contentComponentId: LOI.Assets.MeshEditor.CameraAngles.id()
+                      active: true
+                    ]
+                  remainingArea:
+                    type: FM.TabbedView.id()
+                    tabs: [
+                      name: 'Palette'
+                      contentComponentId: LOI.Assets.SpriteEditor.Palette.id()
+                    ,
+                      name: 'Materials'
+                      contentComponentId: LOI.Assets.Editor.Materials.id()
+                    ,
+                      name: 'Shading'
+                      contentComponentId: LOI.Assets.SpriteEditor.ShadingSphere.id()
+                    ,
+                      name: 'Camera'
+                      contentComponentId: LOI.Assets.MeshEditor.CameraAngle.id()
+                      active: true
+                    ]
 
-    @palette new LOI.Assets.Components.Palette
-      paletteId: @paletteId
-      materials: @materials
+              remainingArea:
+                type: FM.EditorView.id()
+                editor:
+                  contentComponentId: LOI.Assets.MeshEditor.MeshCanvas.id()
 
-    @assetInfo new LOI.Assets.Components.AssetInfo
-      documentClass: LOI.Assets.Mesh
-      getAssetId: @meshId
-      setAssetId: setAssetId
-      getPaletteId: @paletteId
-      setPaletteId: (paletteId) =>
-        # Update mesh palette.
-        LOI.Assets.Asset.update LOI.Assets.Mesh.className, @meshId(), $set: palette: _id: paletteId
+    # Shortcuts
 
-        # Also update palettes of all sprites.
-        return unless cameraAngles = @meshData()?.cameraAngles
+    isMacOS = AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
 
-        for cameraAngle in cameraAngles when cameraAngle.sprite
-          LOI.Assets.Asset.update LOI.Assets.Sprite.className, cameraAngle.sprite._id, $set: palette: _id: paletteId
+    shortcuts =
+      currentMappingId: 'default'
+      default:
+        name: "Default"
+        mapping: @defaultShortcutsMapping()
 
-    @materials new LOI.Assets.Components.Materials
-      assetId: @meshId
-      documentClass: LOI.Assets.Mesh
-      palette: @palette
+    # Return combined interface data.
+    {activeToolId, operators, components, layouts, shortcuts}
 
-    @landmarks new LOI.Assets.Components.Landmarks
-      assetId: @meshId
-      documentClass: LOI.Assets.Mesh
-      pixelCanvas: @pixelCanvas
+  @defaultShortcutsMapping: ->
+    # Mesh editor uses all default and sprite editor shortcuts.
+    _.extend super(arguments...), LOI.Assets.SpriteEditor.defaultShortcutsMapping(),
+      # Actions
+      "#{LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()}":commandOrControl: true, key: AC.Keys.semicolon
 
-    @cameraAngles new LOI.Assets.MeshEditor.CameraAngles
-      meshId: @meshId
-      cameraAngleIndex: @cameraAngleIndex
+      # Tools
+      "#{LOI.Assets.MeshEditor.Tools.ClusterPicker.id()}": key: AC.Keys.i, holdKey: AC.Keys.alt
 
-    @toolbox new LOI.Assets.Components.Toolbox
-      tools: @tools
-      activeTool: @activeTool
-      actions: @actions
-      enabled: @canvasFocused
-
-    @shadingSphere new LOI.Assets.Components.ShadingSphere
-      palette: @palette
-      materials: @materials
-      lightDirection: @lightDirection
-      visualizeNormals: @paintNormals
-      radius: => 30
-
-    # Create tools.
-    toolClasses = [
-      LOI.Assets.SpriteEditor.Tools.Pencil
-      LOI.Assets.SpriteEditor.Tools.Eraser
-      LOI.Assets.SpriteEditor.Tools.ColorFill
-      @constructor.Tools.ClusterPicker
-      @constructor.Tools.MoveCamera
-      LOI.Assets.SpriteEditor.Tools.PaintNormals
-      LOI.Assets.SpriteEditor.Tools.Symmetry
-      @constructor.Tools.PixelGrid
-      @constructor.Tools.PlaneGrid
-      @constructor.Tools.SourceImage
-      @constructor.Tools.PixelImage
-      @constructor.Tools.Debug
-    ]
-
-    tools = for toolClass in toolClasses
-      new toolClass
-        editor: => @
-          
-    @tools tools
-
-  onDestroyed: ->
+  onRendered: ->
     super arguments...
 
-    $('html').removeClass('asset-editor')
-
-  toolClass: ->
-    return unless tool = @activeTool()
-
-    toolClass = _.kebabCase tool.name
-    extraToolClass = tool.toolClass?()
-
-    [toolClass, extraToolClass].join ' '
-
-  events: ->
-    super(arguments...).concat
-      'focus input': @onFocusInput
-      'blur input': @onBlurInput
-
-  onFocusInput: (event) ->
-    @canvasFocused false
-
-  onBlurInput: (event) ->
-    @canvasFocused true
+    editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
+    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['z3m5euLEC6KHKCZjJ']

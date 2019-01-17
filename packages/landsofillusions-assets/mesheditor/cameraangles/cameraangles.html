@@ -1,29 +1,18 @@
 <template name="LandsOfIllusions.Assets.MeshEditor.CameraAngles">
-  <div class="landsofillusions-assets-mesheditor-cameraangles">
-    <ul class="camera-angles">
+  <div class="landsofillusions-assets-mesheditor-cameraangles landsofillusions-assets-editor-panel landsofillusions-assets-editor-propertytable">
+    <table class="camera-angles-table editor-table">
       {{#each cameraAngles}}
-        <li class="camera-angle {{activeClass}}">{{nameOrIndex}}</li>
+        <tr class="camera-angle {{activeClass}}">
+          <td class="thumbnail">{{> LandsOfIllusions.Assets.SpriteEditor.Thumbnail sprite}}</td>
+          <td class="name"><input class="name-input" value="{{name}}" placeholder="{{placeholderName}}"/></td>
+        </tr>
       {{/each}}
-    </ul>
+    </table>
     <div class="actions">
-      <button class="add-camera-angle-button">Add camera angle</button>
-    </div>
-    <div class="properties">
-      {{#with cameraAngleData}}
-        <label class="name">Name:
-          {{> LandsOfIllusions.Assets.MeshEditor.CameraAngles.Name}}
-        </label>
-        {{> Render camera}}
-        <label class="picture-plane-distance">Picture plane distance:
-          {{> LandsOfIllusions.Assets.MeshEditor.CameraAngles.PicturePlaneDistance}}
-        </label>
-        <label class="pixel-size">Pixel size:
-          {{> LandsOfIllusions.Assets.MeshEditor.CameraAngles.PixelSize}}
-        </label>
-        <label class="sprite">Sprite:
-          {{> Render assetsList}}
-        </label>
-      {{/with}}
+      <button class="add-layer-button">Add</button>
+      {{#if showRemoveButton}}
+        <button class="remove-layer-button">Remove</button>
+      {{/if}}
     </div>
   </div>
 </template>

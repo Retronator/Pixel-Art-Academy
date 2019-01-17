@@ -26,6 +26,8 @@ class LOI.Assets.Editor.FileManager extends AM.Component
   constructor: (@options) ->
     super arguments...
 
+    @options.multipleSelect ?= true
+
   onCreated: ->
     super arguments...
 

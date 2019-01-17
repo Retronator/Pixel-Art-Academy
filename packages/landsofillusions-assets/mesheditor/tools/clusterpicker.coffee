@@ -3,12 +3,10 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.Tools.ClusterPicker extends FM.Tool
-  constructor: ->
-    super arguments...
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.ClusterPicker'
+  @displayName: -> "Cluster picker"
 
-    @name = "Cluster picker"
-    @shortcut = AC.Keys.i
-    @holdShortcut = AC.Keys.alt
+  @initialize()
 
   onMouseDown: (event) ->
     super arguments...

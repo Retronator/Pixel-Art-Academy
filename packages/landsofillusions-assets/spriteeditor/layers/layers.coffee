@@ -106,9 +106,9 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     sprite = @sprite()
 
     index = sprite.layers.length or 0
-    maxDepth = _.max (layer.origin?.z or 0 for layer in sprite.layers)
+    maxDepth = _.max (layer.origin.z for layer in sprite.layers when layer?.origin?.z?)
 
-    LOI.Assets.Sprite.updateLayer sprite._id, index, origin: z: maxDepth + 1
+    LOI.Assets.Sprite.updateLayer sprite._id, index, origin: z: (maxDepth ? -1) + 1
 
   onClickRemoveButton: (event) ->
     sprite = @sprite()

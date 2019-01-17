@@ -1,11 +1,12 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Horizon
-  constructor: (@options) ->
+class LOI.Assets.MeshEditor.MeshCanvas.Horizon
+  constructor: (@meshCanvas) ->
 
   drawToContext: (context) ->
-    return unless currentNormal = @options.currentNormal()
-    return unless cameraAngle = @options.cameraAngle()
+    return unless @meshCanvas.horizonEnabled()
+    return unless currentNormal = @meshCanvas.currentNormal()
+    return unless cameraAngle = @meshCanvas.cameraAngle()
     
     horizon = cameraAngle.getHorizon currentNormal
 

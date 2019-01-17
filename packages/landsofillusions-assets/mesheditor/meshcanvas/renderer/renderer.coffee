@@ -17,6 +17,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer.autoClearDepth = false
 
     @bounds = new AE.Rectangle()
+    
+    @pixelRender = new @constructor.PixelRender @
+    @cameraManager = new @constructor.CameraManager @
 
     # Resize the renderer when canvas size changes.
     @meshCanvas.autorun =>
@@ -31,13 +34,11 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @meshCanvas.autorun =>
       # Depend on renderer bounds.
       @bounds.width() and @bounds.height()
+      
+      sceneHelper = @meshCanvas.sceneHelper()
+      scene = sceneHelper.scene.withUpdates()
 
-      sceneManager = @meshCanvas.sceneManager()
-      scene = sceneManager.scene.withUpdates()
-      pictureScene = sceneManager.pictureScene.withUpdates()
-      renderTarget = sceneManager.pictureRenderTarget
-
-      camera = @meshCanvas.cameraManager().camera.withUpdates()
+      camera = @cameraManager.camera.withUpdates()
 
       # Render main geometry pass that we use for depth and shadows (and color when not showing the render target).
       camera.main.layers.set 0
@@ -45,21 +46,22 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
       @renderer.shadowMap.needsUpdate = true
       @renderer.render scene, camera.main
       
-      if @meshCanvas.options.drawPixelImage()
+      if @meshCanvas.pixelRenderEnabled()
         # Render main geometry to the render target.
-        @renderer.setRenderTarget renderTarget
+        @renderer.setRenderTarget @pixelRender.renderTarget
         @renderer.clear()
-        @renderer.render scene, camera.renderTarget, renderTarget
+        @renderer.render scene, camera.renderTarget, @pixelRender.renderTarget
 
         # Render the low-res picture to the main scene.
-        @renderer.render pictureScene, camera.picture
+        pixelRenderScene = @pixelRender.scene.withUpdates()
+        @renderer.render pixelRenderScene, camera.pixelRender
 
       # Render helpers that overlay the geometry.
       camera.main.layers.set 1
       @renderer.render scene, camera.main
 
       # Render debug visuals.
-      if @meshCanvas.options.debug()
+      if @meshCanvas.debugMode()
         camera.main.layers.set 2
         @renderer.render scene, camera.main
 

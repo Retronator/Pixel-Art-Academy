@@ -233,11 +233,11 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     selectedNames = @_selectedNames()
     keyboardState = AC.Keyboard.getState()
 
-    if keyboardState.isKeyDown(AC.Keys.shift)
+    if @options.fileManager.options.multipleSelect and keyboardState.isKeyDown(AC.Keys.shift)
       # Update range selection.
       @_changeSelection @_previousSelectedNames(), @_startRangeName(), endRangeName
 
-    else if keyboardState.isCommandOrControlDown()
+    else if @options.fileManager.options.multipleSelect and keyboardState.isCommandOrControlDown()
       # Add or remove the file from selection.
       if endRangeName in selectedNames
         # Remove the file from the selection
@@ -288,7 +288,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
     if endRangeName
       startRangeIndex = Math.max 0, _.findIndex items, (item) => (item.name or item._id) is startRangeName
-      endRangeIndex = _.findIndex items, (item) => item.name is endRangeName
+      endRangeIndex = _.findIndex items, (item) => (item.name or item._id) is endRangeName
 
       # Make sure start index is smaller than the end one.
       [startRangeIndex, endRangeIndex] = [endRangeIndex, startRangeIndex] if startRangeIndex > endRangeIndex
@@ -472,7 +472,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
             endRangeIndex = Math.max 0, endRangeIndex - 1
 
           newItem = items[endRangeIndex]
-          @_changeEndRange newItem.name
+          @_changeEndRange newItem.name or newItem._id
 
           # Do not scroll by default.
           event.preventDefault()

@@ -1,8 +1,9 @@
 AE = Artificial.Everywhere
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
-  constructor: (@meshCanvas) ->
+class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
+  constructor: (@renderer) ->
     # Main camera is used to render the scene in full resolution.
     @_camera = new THREE.Camera
 
@@ -10,21 +11,21 @@ class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
     @_renderTargetCamera = new THREE.Camera
     @_renderTargetCamera.layers.set 0
 
-    # Picture camera is used to render the render target to the screen.
-    @_pictureCamera = new THREE.OrthographicCamera
+    # Pixel render camera is used to render the render target to the screen.
+    @_pixelRenderCamera = new THREE.OrthographicCamera
 
     @camera = new AE.ReactiveWrapper
       main: @_camera
       renderTarget: @_renderTargetCamera
-      picture: @_pictureCamera
+      pixelRender: @_pixelRenderCamera
 
     @_position = new THREE.Vector3
     @_target = new THREE.Vector3
     @_up = new THREE.Vector3
 
     # When camera angle changes, match its values.
-    @meshCanvas.autorun (computation) =>
-      return unless cameraAngle = @meshCanvas.options.cameraAngle()
+    @renderer.meshCanvas.autorun (computation) =>
+      return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
 
       @_setVector @_position, cameraAngle.position
       @_setVector @_target, cameraAngle.target
@@ -32,8 +33,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
 
       @_updateCamera()
 
-    @meshCanvas.autorun (computation) =>
-      return unless viewportBounds = @meshCanvas.options.pixelCanvas()?.camera()?.viewportBounds?.toObject()
+    @renderer.meshCanvas.autorun (computation) =>
+      return unless viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds?.toObject()
       @_updateProjectionMatrix viewportBounds, @_camera
 
       renderTargetViewportBounds =
@@ -44,16 +45,16 @@ class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
 
       @_updateProjectionMatrix renderTargetViewportBounds, @_renderTargetCamera
 
-      @_pictureCamera.left = viewportBounds.left
-      @_pictureCamera.right = viewportBounds.right
-      @_pictureCamera.top = viewportBounds.top
-      @_pictureCamera.bottom = viewportBounds.bottom
-      @_pictureCamera.updateProjectionMatrix()
+      @_pixelRenderCamera.left = viewportBounds.left
+      @_pixelRenderCamera.right = viewportBounds.right
+      @_pixelRenderCamera.top = viewportBounds.top
+      @_pixelRenderCamera.bottom = viewportBounds.bottom
+      @_pixelRenderCamera.updateProjectionMatrix()
 
       @camera.updated()
 
   _updateProjectionMatrix: (viewportBounds, _camera) ->
-    return unless cameraAngle = @meshCanvas.options.cameraAngle()
+    return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
     return unless pixelSize = cameraAngle.pixelSize
 
     # Note: We offset bounds by half a pixel because we want to look at the center of the pixel.
@@ -98,7 +99,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.CameraManager
     @_updateCamera()
 
   _createDelta: (deltaX, deltaY) ->
-    scale = @meshCanvas.options.cameraAngle().pixelSize
+    scale = @renderer.meshCanvas.cameraAngle().pixelSize
 
     delta = new THREE.Vector3 deltaX * scale, deltaY * scale
     delta.applyQuaternion @_camera.quaternion

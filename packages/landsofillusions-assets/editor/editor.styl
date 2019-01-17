@@ -55,15 +55,14 @@ div.landsofillusions-assets-editor
         th
           checkout()
           font-weight normal
-          width 20rem
           overflow hidden
           white-space nowrap
 
-          &.name
-            width auto
+          &.row-name
+            width 33%
 
       tr
-        td
+        td:not(.row-name)
           border 1rem solid black
           padding 0
           margin 0
@@ -72,6 +71,9 @@ div.landsofillusions-assets-editor
           line-height 5rem
           background backgroundGrey
           cursor pointer
+
+        .row-name
+          line-height 7rem
 
         input
           border none
@@ -84,3 +86,24 @@ div.landsofillusions-assets-editor
 
     .actions
       margin-top 5rem
+
+  .landsofillusions-assets-editor-propertieslist
+    list-style none
+    padding 0
+
+    .property
+      display flex
+      margin-bottom 4rem
+
+      .name
+        display block
+        width calc(33% - 1rem)
+        flex-shrink 0
+        line-height 7rem
+
+      .value
+        display block
+        flex-grow 1
+
+        input
+          width 100%

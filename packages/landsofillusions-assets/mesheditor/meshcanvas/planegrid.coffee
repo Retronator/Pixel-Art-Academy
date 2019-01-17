@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
-  constructor: (@meshCanvas, @gridEnabled) ->
+  constructor: (@meshCanvas) ->
     geometry = new THREE.BufferGeometry
 
     # We create a unit grid from -gridSize to gridSize. That's 2 * gridSize +1
@@ -45,12 +45,12 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
 
     @layers.set 1
 
-    @meshCanvas.sceneManager().scene().add @
+    @meshCanvas.sceneHelper().scene().add @
 
     # Reactively change visibility of the grid.
     @meshCanvas.autorun =>
-      @visible = @gridEnabled?() ? true
-      @meshCanvas.sceneManager().scene.updated()
+      @visible = @meshCanvas.planeGridEnabled()
+      @meshCanvas.sceneHelper().scene.updated()
 
     # Match orientation to normal.
     zero = new THREE.Vector3
@@ -60,10 +60,10 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
     @meshCanvas.autorun (computation) =>
       coplanarPoint = new THREE.Vector3()
 
-      if cluster = @meshCanvas.options.currentCluster()
+      if cluster = @meshCanvas.currentClusterHelper().cluster()
         cluster.getPlane().coplanarPoint coplanarPoint
 
-      normal = @meshCanvas.options.currentNormal()
+      normal = @meshCanvas.paintHelper.normal()
 
       plane = new THREE.Plane().setFromNormalAndCoplanarPoint normal, coplanarPoint
 
@@ -78,4 +78,4 @@ class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
       @matrix.setPosition planeZero.add plane.normal.clone().multiplyScalar 0.001
       @matrix.decompose @position, @quaternion, @scale
 
-      @meshCanvas.sceneManager().scene.updated()
+      @meshCanvas.sceneHelper().scene.updated()

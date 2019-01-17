@@ -230,23 +230,39 @@ Package.onUse(function(api) {
 
   // Mesh editor
 
-  api.addComponent('mesheditor..');
-  api.addFile('mesheditor/edges');
-  api.addFile('mesheditor/horizon');
-  api.addUnstyledComponent('mesheditor/cameraangles..');
-  api.addUnstyledComponent('mesheditor/meshcanvas..');
-  api.addFile('mesheditor/meshcanvas/renderer');
-  api.addFile('mesheditor/meshcanvas/scenemanager');
-  api.addFile('mesheditor/meshcanvas/grid');
-  api.addFile('mesheditor/meshcanvas/cameramanager');
+  api.addFile('mesheditor..');
+  api.addFile('mesheditor/meshloader');
+
   api.addFile('mesheditor/tools..');
-  api.addFile('mesheditor/tools/pixelgrid');
-  api.addFile('mesheditor/tools/planegrid');
-  api.addFile('mesheditor/tools/sourceimage');
-  api.addFile('mesheditor/tools/pixelimage');
   api.addFile('mesheditor/tools/movecamera');
   api.addFile('mesheditor/tools/clusterpicker');
-  api.addFile('mesheditor/tools/debug');
+
+  api.addFile('mesheditor/actions..');
+  api.addFile('mesheditor/actions/debugmode');
+  api.addFile('mesheditor/actions/showedges');
+  api.addFile('mesheditor/actions/showhorizon');
+  api.addFile('mesheditor/actions/showpixelrender');
+  api.addFile('mesheditor/actions/showplanegrid');
+  api.addFile('mesheditor/actions/showsourceimage');
+
+  api.addFile('mesheditor/helpers..');
+  api.addFile('mesheditor/helpers/currentcluster');
+  api.addFile('mesheditor/helpers/scene');
+
+  api.addUnstyledComponent('mesheditor/camera..');
+  api.addComponent('mesheditor/cameraangles..');
+
+  api.addComponent('mesheditor/cameraangle..');
+  api.addFile('mesheditor/cameraangle/selectspritedialog');
+
+  api.addComponent('mesheditor/meshcanvas..');
+  api.addFile('mesheditor/meshcanvas/edges');
+  api.addFile('mesheditor/meshcanvas/horizon');
+  api.addFile('mesheditor/meshcanvas/planegrid');
+
+  api.addFile('mesheditor/meshcanvas/renderer..');
+  api.addFile('mesheditor/meshcanvas/renderer/cameramanager');
+  api.addFile('mesheditor/meshcanvas/renderer/pixelrender');
 
   // Audio editor
 

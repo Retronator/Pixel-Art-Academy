@@ -1,10 +1,11 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Edges
-  constructor: (@options) ->
-
+class LOI.Assets.MeshEditor.MeshCanvas.Edges
+  constructor: (@meshCanvas) ->
+    
   drawToContext: (context) ->
-    return unless edges = @options.mesh()?.edges()
+    return unless @meshCanvas.edgesEnabled()
+    return unless edges = @meshCanvas.mesh()?.edges()
 
     context.strokeStyle = "#bc8c4c"
     context.lineWidth = 0.2
