@@ -182,7 +182,10 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
     # Mesh editor uses all default and sprite editor shortcuts.
     _.extend super(arguments...), LOI.Assets.SpriteEditor.defaultShortcutsMapping(),
       # Actions
-      "#{LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()}":commandOrControl: true, key: AC.Keys.semicolon
+      "#{LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()}": commandOrControl: true, key: AC.Keys.semicolon
+      "#{LOI.Assets.MeshEditor.Actions.ShowEdges.id()}": commandOrControl: true, shift:true, key: AC.Keys.e
+      "#{LOI.Assets.MeshEditor.Actions.ShowHorizon.id()}": commandOrControl: true, shift:true, key: AC.Keys.h
+      "#{LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()}": commandOrControl: true, shift:true, key: AC.Keys.s
 
       # Tools
       "#{LOI.Assets.MeshEditor.Tools.ClusterPicker.id()}": key: AC.Keys.i, holdKey: AC.Keys.alt

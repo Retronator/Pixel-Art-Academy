@@ -73,10 +73,15 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @pixelCanvas = new LOI.Assets.SpriteEditor.PixelCanvas
       sprite: => @sprite
       fileIdForHelpers: @meshId
-      drawComponents: => [
-        @edges
-        @horizon
-      ]
+      drawComponents: =>
+        [
+          @sprite if @sourceImageEnabled()
+          @pixelCanvas.pixelGrid()
+          @edges
+          @horizon
+          @pixelCanvas.cursor()
+          @pixelCanvas.landmarks()
+        ]
 
     # Provide the pixel canvas fields to sprite editor views and tools.
     for passThroughField in ['camera', 'mouse', 'pixelGridEnabled', 'landmarksEnabled']
