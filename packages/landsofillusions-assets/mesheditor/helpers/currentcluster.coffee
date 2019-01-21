@@ -21,7 +21,7 @@ class LOI.Assets.MeshEditor.Helpers.CurrentCluster extends FM.Helper
 
   setCluster: (cluster) ->
     meshLoader = @interface.getLoaderForFile @fileId
-    clusters = meshLoader.object().clusters()
+    clusters = meshLoader.mesh.clusters()
 
     clusterIndex = clusters.indexOf cluster
     @setClusterIndex if clusterIndex >= 0 then clusterIndex else null

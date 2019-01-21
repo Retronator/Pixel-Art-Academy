@@ -18,22 +18,23 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
     @cameraAngleIndex = new ComputedField =>
       @editor()?.cameraAngleIndex()
 
-    @cameraAngleData = new ComputedField =>
-      @editor()?.cameraAngleData()
+    @cameraAngle = new ComputedField =>
+      @editor()?.cameraAngle()
 
     @camera = new LOI.Assets.Components.Camera
-      load: => @cameraAngleData()
-      save: (value) => LOI.Assets.Mesh.updateCameraAngle @mesh()._id, @cameraAngleIndex(), value
+      load: => @cameraAngle()
+      save: (value) =>
+        LOI.Assets.Mesh.updateCameraAngle @mesh()._id, @cameraAngleIndex(), value
 
     @sprite = new ComputedField => 
-      @cameraAngleData()?.sprite
+      @cameraAngle()?.sprite
 
   setSprite: (spriteId) ->
     LOI.Assets.Mesh.updateCameraAngle @mesh()._id, @cameraAngleIndex(), sprite: _id: spriteId
 
   filename: ->
-    cameraAngleData = @currentData()
-    cameraAngleData.sprite.name or cameraAngleData.sprite._id
+    cameraAngle = @currentData()
+    cameraAngle.sprite.name or cameraAngle.sprite._id
 
   events: ->
     super(arguments...).concat
@@ -50,13 +51,13 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
       @cameraAngleComponent = @ancestorComponentOfType LOI.Assets.MeshEditor.CameraAngle
 
     load: ->
-      cameraAngleData = @data()
-      cameraAngleData[@property]
+      cameraAngle = @data()
+      cameraAngle[@property]
 
     save: (value) ->
-      cameraAngleData = @data()
+      cameraAngle = @data()
       meshId = @cameraAngleComponent.mesh()._id
-      cameraAngleIndex = cameraAngleData.index
+      cameraAngleIndex = cameraAngle.index
 
       if @type is AM.DataInputComponent.Types.Number
         value = parseFloat value
@@ -73,8 +74,8 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
       @property = 'name'
 
     placeholder: ->
-      cameraAngleData = @data()
-      "Camera angle #{cameraAngleData.index}"
+      cameraAngle = @data()
+      "Camera angle #{cameraAngle.index}"
 
   class @PicturePlaneDistance extends @CameraProperty
     @register 'LandsOfIllusions.Assets.MeshEditor.CameraAngle.PicturePlaneDistance'

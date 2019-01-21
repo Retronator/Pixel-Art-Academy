@@ -95,6 +95,29 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       backward.$set.bounds = @bounds
 
     super forward, backward
+    
+  _tryRecomputeBounds: ->
+    bounds = null
+
+    for layer, index in @layers when layer?.pixels
+      for pixel in layer.pixels
+        absoluteX = pixel.x + (layer.origin?.x or 0)
+        absoluteY = pixel.y + (layer.origin?.y or 0)
+        
+        if bounds
+          bounds =
+            left: Math.min bounds.left, absoluteX
+            right: Math.max bounds.right, absoluteX
+            top: Math.min bounds.top, absoluteY
+            bottom: Math.max bounds.bottom, absoluteY
+        
+        else
+          bounds = left: absoluteX, right: absoluteX, top: absoluteY, bottom: absoluteY
+          
+    # See if bounds are even different.
+    return if EJSON.equals @bounds, bounds
+    
+    bounds
 
 if Meteor.isServer
   # Export sprites without authors.

@@ -198,6 +198,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/tools/eraser');
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
+  api.addFile('spriteeditor/tools/translate');
   
   api.addFile('spriteeditor/actions..');
   api.addFile('spriteeditor/actions/paintnormals');
@@ -234,6 +235,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/meshloader');
 
   api.addFile('mesheditor/tools..');
+  api.addFile('mesheditor/tools/tool');
   api.addFile('mesheditor/tools/movecamera');
   api.addFile('mesheditor/tools/clusterpicker');
 

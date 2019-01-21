@@ -35,7 +35,7 @@ class LOI.Assets.Components.Camera extends AM.Component
     for property in ['x', 'y', 'z']
       newVector[property] = @_parseFloatOrZero $vector.find(".coordinate-#{property} .coordinate-input").val()
 
-    @options.save "#{vector.name}": newVector
+    @options.save "#{_.toLower vector.name}": newVector
 
   _parseFloatOrZero: (string) ->
     float = parseFloat string

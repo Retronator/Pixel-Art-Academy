@@ -2,7 +2,7 @@ AC = Artificial.Control
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Tools.ClusterPicker extends FM.Tool
+class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.Tools.Tool
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.ClusterPicker'
   @displayName: -> "Cluster picker"
 
@@ -21,21 +21,27 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends FM.Tool
   pickCluster: ->
     return unless @mouseState.leftButton
 
-    mesh = @options.editor().mesh()
+    mesh = @editor().mesh()
     
     # See which cluster contains this pixel.
-    cluster = _.find(mesh.clusters(), (cluster) => cluster.findPixelAtCoordinate @mouseState.x, @mouseState.y)
-    @options.editor().currentCluster cluster
+    cluster = _.find(mesh.clusters(), (cluster) => cluster.findPixelAtCoordinate @pixelCoordinate.x, @pixelCoordinate.y)
+
+    currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
+    currentClusterHelper.setCluster cluster
 
     return unless cluster
-      
+
     pixel = cluster.pixels[0]
-      
+    paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+
     if pixel.paletteColor
-      @options.editor().palette().setColor pixel.paletteColor.ramp, pixel.paletteColor.shade
-      
+      paintHelper.setPaletteColor pixel.paletteColor
+
+    else if pixel.directColor
+      paintHelper.setDirectColor pixel.directColor
+
     else if pixel.materialIndex?
-      @options.editor().materials().setIndex pixel.materialIndex
+      paintHelper.setMaterialIndex pixel.materialIndex
 
     if pixel.normal
-      @options.editor().shadingSphere().setNormal pixel.normal
+      paintHelper.setNormal pixel.normal

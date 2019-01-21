@@ -28,7 +28,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @mesh = new LOI.Assets.Engine.Mesh
       meshData: @meshData
       visualizeNormals: @paintNormalsData.value
-      sceneManager: @sceneHelper
+      sceneManager: => @sceneHelper
       debug: @debugModeData.value
       currentCluster: @currentClusterHelper.cluster
       

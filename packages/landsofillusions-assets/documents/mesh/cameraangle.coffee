@@ -56,7 +56,7 @@ class LOI.Assets.Mesh.CameraAngle
     # Scale to picture plane.
     screenPoint.multiplyScalar -@picturePlaneDistance / screenPoint.z
 
-    # Screen scape has positive Y going down.
+    # Screen space has positive Y going down.
     screenPoint.y *= -1
 
     screenPoint

@@ -26,6 +26,8 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
   constructor: ->
     super arguments...
 
+    @planeGrid = new ReactiveField null
+
     @$meshCanvas = new ReactiveField null
     @canvas = new ReactiveField null
     @canvasPixelSize = new ReactiveField null
@@ -44,11 +46,8 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @mesh = new ComputedField =>
       @meshLoader().mesh
 
-    @cameraAngleData = new ComputedField =>
-      @meshLoader()?.meshData()?.cameraAngles?[@cameraAngleIndex()]
-
     @cameraAngle = new ComputedField =>
-      @meshLoader()?.mesh.cameraAngles?[@cameraAngleIndex()]
+      @meshLoader()?.meshData()?.cameraAngles?[@cameraAngleIndex()]
 
     @pixelRenderEnabled = new ComputedField =>
       @editorFileData()?.get('pixelRenderEnabled') or true
@@ -58,7 +57,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
     # Provide the sprite we're currently editing to sprite editor views.
     @spriteData = new ComputedField =>
-      @cameraAngleData()?.sprite
+      @cameraAngle()?.sprite
 
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
 
@@ -74,13 +73,15 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       sprite: => @sprite
       fileIdForHelpers: @meshId
       drawComponents: =>
+        sourceImageEnabled = @sourceImageEnabled()
+
         [
-          @sprite if @sourceImageEnabled()
+          @sprite if sourceImageEnabled
           @pixelCanvas.pixelGrid()
-          @edges
+          @edges if sourceImageEnabled
           @horizon
           @pixelCanvas.cursor()
-          @pixelCanvas.landmarks()
+          @pixelCanvas.landmarks() if sourceImageEnabled
         ]
 
     # Provide the pixel canvas fields to sprite editor views and tools.
@@ -106,6 +107,9 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     
     @currentClusterHelper = new ComputedField =>
       @interface.getHelperForFile LOI.Assets.MeshEditor.Helpers.CurrentCluster, @meshId()
+
+    # Initialize components.
+    @planeGrid new @constructor.PlaneGrid @
 
   onRendered: ->
     super arguments...

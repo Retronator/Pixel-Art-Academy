@@ -44,11 +44,11 @@ LOI.Assets.Sprite.updateLayer.method (spriteId, layerIndex, layerUpdate) ->
         if layer.origin
           # Apply each coordinate separately.
           for coordinate in ['x', 'y', 'z']
-            if layerUpdate.origin[coordinate]
+            if layerUpdate.origin[coordinate]?
               forward.$set ?= {}
               forward.$set["layers.#{layerIndex}.origin.#{coordinate}"] = layerUpdate.origin[coordinate]
 
-              if layer.origin[coordinate]
+              if layer.origin[coordinate]?
                 backward.$set ?= {}
                 backward.$set["layers.#{layerIndex}.origin.#{coordinate}"] = layer.origin[coordinate]
 
@@ -63,6 +63,40 @@ LOI.Assets.Sprite.updateLayer.method (spriteId, layerIndex, layerUpdate) ->
 
           backward.$unset ?= {}
           backward.$unset["layers.#{layerIndex}.origin"] = true
+
+        if layerUpdate.origin.x? or layerUpdate.origin.y?
+          # Recalculate bounds completely.
+          bounds = null
+
+          for layer, index in sprite.layers when layer?.pixels
+            if index is layerIndex
+              # Use the new origin.
+              origin =
+                x: layerUpdate.origin.x ? layer.origin.x
+                y: layerUpdate.origin.y ? layer.origin.y
+
+            else
+              # Use the existing origin.
+              origin = layer.origin
+
+            for pixel in layer.pixels
+              absoluteX = pixel.x + (origin?.x or 0)
+              absoluteY = pixel.y + (origin?.y or 0)
+
+              if bounds
+                bounds =
+                  left: Math.min bounds.left, absoluteX
+                  right: Math.max bounds.right, absoluteX
+                  top: Math.min bounds.top, absoluteY
+                  bottom: Math.max bounds.bottom, absoluteY
+
+              else
+                bounds = left: absoluteX, right: absoluteX, top: absoluteY, bottom: absoluteY
+
+          # See if bounds are even different.
+          unless EJSON.equals sprite.bounds, bounds
+            forward.$set ?= {}
+            forward.$set.bounds = bounds
 
     else
       # Add the new layer to layers.
@@ -100,11 +134,34 @@ LOI.Assets.Sprite.removeLayer.method (spriteId, layerIndex) ->
   forward = {}
   backward = {}
 
-  # Add the new layer to layers.
+  # Remove the layer from layers.
   forward.$unset ?= {}
   forward.$unset["layers.#{layerIndex}"] = true
 
   backward.$set ?= {}
   backward.$set["layers.#{layerIndex}"] = layer
 
+  # Update the bounds.
+  bounds = null
+
+  for layer, index in sprite.layers when layer?.pixels and index isnt layerIndex
+    for pixel in layer.pixels
+      absoluteX = pixel.x + (layer.origin?.x or 0)
+      absoluteY = pixel.y + (layer.origin?.y or 0)
+
+      if bounds
+        bounds =
+          left: Math.min bounds.left, absoluteX
+          right: Math.max bounds.right, absoluteX
+          top: Math.min bounds.top, absoluteY
+          bottom: Math.max bounds.bottom, absoluteY
+
+      else
+        bounds = left: absoluteX, right: absoluteX, top: absoluteY, bottom: absoluteY
+
+  # See if bounds are even different.
+  unless EJSON.equals sprite.bounds, bounds
+    forward.$set ?= {}
+    forward.$set.bounds = bounds
+    
   sprite._applyOperation forward, backward

@@ -38,22 +38,8 @@ transformPixels = (spriteId, layerIndex, transform) ->
 
   else
     # Recalculate bounds completely.
-    bounds = null
-
-    sprite.layers[layerIndex].pixels = pixels
-
-    for layer, index in sprite.layers
-      for pixel in layer.pixels
-        if bounds
-          bounds =
-            left: Math.min bounds.left, pixel.x
-            right: Math.max bounds.right, pixel.x
-            top: Math.min bounds.top, pixel.y
-            bottom: Math.max bounds.bottom, pixel.y
-
-        else
-          bounds = left: pixel.x, right: pixel.x, top: pixel.y, bottom: pixel.y
-
-    forward.$set.bounds = bounds
+    if bounds = sprite.tryRecomputeBounds()
+      forward.$set ?= {}
+      forward.$set.bounds = bounds
 
   sprite._applyOperation forward, backward

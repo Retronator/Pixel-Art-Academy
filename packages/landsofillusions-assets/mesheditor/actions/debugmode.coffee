@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 class LOI.Assets.MeshEditor.Actions.DebugMode extends FM.Action
   # boolean if debug mode is active
   @id: -> 'LandsOfIllusions.Assets.MeshEditor.Actions.DebugMode'
-  @displayName: -> "Show debug"
+  @displayName: -> "Debug mode"
     
   @initialize()
 

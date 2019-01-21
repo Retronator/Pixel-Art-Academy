@@ -18,13 +18,17 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
     @cameraAngleIndex = new ComputedField =>
       @editor()?.cameraAngleIndex()
 
-    @cameraAngleData = new ComputedField =>
+    @cameraAngle = new ComputedField =>
       @editor()?.cameraAngle()
 
   setCameraAngleIndex: (index) ->
     editorView = @interface.getEditorViewForActiveFile()
     fileData = editorView.activeFileData()
     fileData.set 'cameraAngleIndex', index
+    
+    # Also reset the camera offset if it was applied.
+    editor = editorView.getActiveEditor()
+    editor.renderer.cameraManager.reset()
 
   cameraAngles: ->
     return unless cameraAngles = @mesh()?.cameraAngles
@@ -44,7 +48,7 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
     
   showRemoveButton: ->
     # We can remove a camera angle if it exists.
-    @cameraAngleData()
+    @cameraAngle()
 
   events: ->
     super(arguments...).concat

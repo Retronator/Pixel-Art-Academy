@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.MeshCanvas.Grid extends THREE.LineSegments
+class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
   constructor: (@meshCanvas) ->
     geometry = new THREE.BufferGeometry
 

@@ -23,15 +23,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_target = new THREE.Vector3
     @_up = new THREE.Vector3
 
-    # When camera angle changes, match its values.
+    # When camera angle changes, match its values via reset.
     @renderer.meshCanvas.autorun (computation) =>
-      return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
-
-      @_setVector @_position, cameraAngle.position
-      @_setVector @_target, cameraAngle.target
-      @_setVector @_up, cameraAngle.up
-
-      @_updateCamera()
+      @reset()
 
     @renderer.meshCanvas.autorun (computation) =>
       return unless viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds?.toObject()
@@ -113,5 +107,14 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
 
     # Preserve distance to target.
     @_position.subVectors(@_position, @_target).normalize().multiplyScalar(distanceToTarget).add @_target
+
+    @_updateCamera()
+
+  reset: ->
+    return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
+
+    @_setVector @_position, cameraAngle.position
+    @_setVector @_target, cameraAngle.target
+    @_setVector @_up, cameraAngle.up
 
     @_updateCamera()

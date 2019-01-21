@@ -81,6 +81,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       minWidth: 20
       tools: [
         LOI.Assets.Editor.Tools.Arrow.id()
+        LOI.Assets.SpriteEditor.Tools.Translate.id()
         LOI.Assets.SpriteEditor.Tools.Pencil.id()
         LOI.Assets.SpriteEditor.Tools.Eraser.id()
         LOI.Assets.SpriteEditor.Tools.ColorFill.id()
@@ -151,8 +152,6 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
                 editor:
                   contentComponentId: LOI.Assets.SpriteEditor.PixelCanvas.id()
 
-    # Shortcuts
-
     shortcuts =
       currentMappingId: 'default'
       default:
@@ -177,6 +176,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": key: AC.Keys.i, holdKey: AC.Keys.alt
       "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
+      "#{LOI.Assets.SpriteEditor.Tools.Translate.id()}": key: AC.Keys.v
 
   onRendered: ->
     super arguments...

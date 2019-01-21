@@ -75,8 +75,10 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.MeshEditor.Actions.ShowEdges.id()
           LOI.Assets.MeshEditor.Actions.ShowHorizon.id()
           LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()
+          LOI.Assets.MeshEditor.Actions.ShowPixelRender.id()
           null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
+          LOI.Assets.MeshEditor.Actions.DebugMode.id()
         ]
       ,
         caption: 'Window'
@@ -92,7 +94,8 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         LOI.Assets.SpriteEditor.Tools.Pencil.id()
         LOI.Assets.SpriteEditor.Tools.Eraser.id()
         LOI.Assets.SpriteEditor.Tools.ColorFill.id()
-        LOI.Assets.SpriteEditor.Tools.ColorPicker.id()
+        LOI.Assets.MeshEditor.Tools.ClusterPicker.id()
+        LOI.Assets.MeshEditor.Tools.MoveCamera.id()
       ]
 
     layouts =
@@ -165,10 +168,6 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                 editor:
                   contentComponentId: LOI.Assets.MeshEditor.MeshCanvas.id()
 
-    # Shortcuts
-
-    isMacOS = AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
-
     shortcuts =
       currentMappingId: 'default'
       default:
@@ -186,9 +185,13 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.MeshEditor.Actions.ShowEdges.id()}": commandOrControl: true, shift:true, key: AC.Keys.e
       "#{LOI.Assets.MeshEditor.Actions.ShowHorizon.id()}": commandOrControl: true, shift:true, key: AC.Keys.h
       "#{LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()}": commandOrControl: true, shift:true, key: AC.Keys.s
+      "#{LOI.Assets.MeshEditor.Actions.ShowPixelRender.id()}": commandOrControl: true, shift:true, key: AC.Keys.p
+      "#{LOI.Assets.MeshEditor.Actions.DebugMode.id()}": commandOrControl: true, shift:true, key: AC.Keys.d
 
       # Tools
+      "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": null
       "#{LOI.Assets.MeshEditor.Tools.ClusterPicker.id()}": key: AC.Keys.i, holdKey: AC.Keys.alt
+      "#{LOI.Assets.MeshEditor.Tools.MoveCamera.id()}": key: AC.Keys.c
 
   onRendered: ->
     super arguments...

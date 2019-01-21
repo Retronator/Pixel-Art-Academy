@@ -56,22 +56,27 @@ LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
         # Recalculate bounds completely.
         bounds = null
 
-        for layer, index in sprite.layers when layer.pixels
+        for layer, index in sprite.layers when layer?.pixels
           for pixel in layer.pixels
             # Skip the pixel we're removing.
             continue if index is layerIndex and pixel.x is x and pixel.y is y
-
+      
+            absoluteX = pixel.x + (layer.origin?.x or 0)
+            absoluteY = pixel.y + (layer.origin?.y or 0)
+      
             if bounds
               bounds =
-                left: Math.min bounds.left, pixel.x
-                right: Math.max bounds.right, pixel.x
-                top: Math.min bounds.top, pixel.y
-                bottom: Math.max bounds.bottom, pixel.y
+                left: Math.min bounds.left, absoluteX
+                right: Math.max bounds.right, absoluteX
+                top: Math.min bounds.top, absoluteY
+                bottom: Math.max bounds.bottom, absoluteY
 
             else
-              bounds = left: pixel.x, right: pixel.x, top: pixel.y, bottom: pixel.y
+              bounds = left: absoluteX, right: absoluteX, top: absoluteY, bottom: absoluteY
 
-        forward.$set ?= {}
-        forward.$set.bounds = bounds
+        # See if bounds are even different.
+        unless EJSON.equals sprite.bounds, bounds
+          forward.$set ?= {}
+          forward.$set.bounds = bounds
 
   sprite._applyOperation forward, backward

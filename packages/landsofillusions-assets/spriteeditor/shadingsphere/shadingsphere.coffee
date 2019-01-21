@@ -67,32 +67,42 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
       return unless spriteData = @sphereSpriteGeometry()
       return unless loader = @interface.getLoaderForActiveFile()
 
+      paletteId = loader.paletteId()
+      paletteColor = @paintHelper.paletteColor()
+      materialIndex = @paintHelper.materialIndex()
+
       if @visualizeNormals()
         # Just return the sprite without any extra color information.
-        spriteData
+        sphereSpriteData = spriteData
 
-      else if paletteId = loader.paletteId()
+      else if paletteId and (paletteColor or materialIndex?)
         # Add palette information to sprite.
-        spriteData.palette = _id: paletteId
-
-        # Get the ramp and shade we're using.
-        material = @paintHelper.paletteColor()
-
-        # See if we're setting a named color.
-        materialIndex = @paintHelper.materialIndex()
+        sphereSpriteData = _.clone spriteData
+        sphereSpriteData.palette = _id: paletteId
 
         if materialIndex?
           asset = loader.asset()
           material = asset.materials?[materialIndex]
 
-        return unless material?.ramp? and material?.shade?
+        else
+          material = paletteColor
 
-        spriteData.materials = 0: material
+        unless material?.ramp? and material?.shade?
+          sphereSpriteData = null
 
-        spriteData
+        else
+          sphereSpriteData.materials = 0: material
 
-      else
-        null
+      unless sphereSpriteData
+        sphereSpriteData = _.clone spriteData
+
+        shades = for shade in [0..1] by 0.01
+          r: shade, g: shade, b: shade
+
+        sphereSpriteData.customPalette = ramps: [shades: shades]
+        sphereSpriteData.materials = 0: ramp: 0, shade: 100
+
+      sphereSpriteData
 
     @circleSpriteGeometry = new ComputedField =>
       return unless palette = LOI.palette()

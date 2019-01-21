@@ -2,18 +2,20 @@ AC = Artificial.Control
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Tools.MoveCamera extends FM.Tool
+class LOI.Assets.MeshEditor.Tools.MoveCamera extends LOI.Assets.MeshEditor.Tools.Tool
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.MoveCamera'
+  @displayName: -> "Move camera"
+
+  @initialize()
+
   constructor: ->
     super arguments...
-
-    @name = "Move camera"
-    @shortcut = AC.Keys.c
 
     @moving = new ReactiveField false
 
     @_rotationMode = false
 
-    @display = @options.editor().callAncestorWith 'display'
+    @display = @interface.callAncestorWith 'display'
 
   onActivated: ->
     # Listen for mouse down.
@@ -21,7 +23,7 @@ class LOI.Assets.MeshEditor.Tools.MoveCamera extends FM.Tool
       $target = $(event.target)
 
       # Only activate when we're moving on the canvas.
-      return unless $target.closest('.landsofillusions-assets-components-pixelcanvas').length
+      return unless $target.closest('.landsofillusions-assets-spriteeditor-pixelcanvas').length
 
       @moving true
 
@@ -35,7 +37,7 @@ class LOI.Assets.MeshEditor.Tools.MoveCamera extends FM.Tool
         @moving false
 
       $(document).on "mousemove.landsofillusions-assets-mesheditor-tools-movecamera-dragging", (event) =>
-        cameraManager = @options.editor().meshCanvas().cameraManager()
+        cameraManager = @editor().renderer.cameraManager
 
         x = -(event.clientX - @_mousePosition.x)
         y = event.clientY - @_mousePosition.y

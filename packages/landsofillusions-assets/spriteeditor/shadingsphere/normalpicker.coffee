@@ -1,3 +1,4 @@
+AC = Artificial.Control
 FM = FataMorgana
 LOI = LandsOfIllusions
 
@@ -17,7 +18,8 @@ class LOI.Assets.SpriteEditor.ShadingSphere.NormalPicker extends LOI.Assets.Comp
 
     shadingSphere = @options.editor()
 
-    editLight = shadingSphere.editLight()
+    keyboardState = AC.Keyboard.getState()
+    editLight = shadingSphere.editLight() or keyboardState.isKeyDown AC.Keys.shift
 
     canvasCoordinate = shadingSphere.pixelCanvas().mouse().canvasCoordinate()
 
@@ -27,7 +29,7 @@ class LOI.Assets.SpriteEditor.ShadingSphere.NormalPicker extends LOI.Assets.Comp
     # Set the new normal.
     normal = shadingSphere.canvasCoordinateToNormal canvasCoordinate, angleSnap
 
-    if shadingSphere.editLight()
+    if editLight
       # Set light direction to the inverse of the normal
       shadingSphere.lightDirectionHelper() THREE.Vector3.fromObject(normal).negate()
 

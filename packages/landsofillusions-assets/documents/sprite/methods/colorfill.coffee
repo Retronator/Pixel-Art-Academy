@@ -12,7 +12,13 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
   LOI.Assets.Asset._authorizeAssetAction sprite
 
   # Make sure the location is within the bounds.
-  unless sprite.bounds and sprite.bounds.left <= newTargetPixel.x <= sprite.bounds.right and sprite.bounds.top <= newTargetPixel.y <= sprite.bounds.bottom
+  layer = sprite.layers?[layerIndex]  
+  throw new AE.ArgumentException "Layer with provided index does not exist." unless layer
+  
+  absoluteX = newTargetPixel.x + (layer.origin?.x or 0)
+  absoluteY = newTargetPixel.y + (layer.origin?.y or 0)
+
+  unless sprite.bounds and sprite.bounds.left <= absoluteX <= sprite.bounds.right and sprite.bounds.top <= absoluteY <= sprite.bounds.bottom
     throw new AE.ArgumentOutOfRangeException "Pixel to be filled must be inside of bounds."
 
   forward = {}
@@ -21,7 +27,7 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
   # Create a map for fast pixel retrieval. Start will all empty objects.
   pixelMap = []
 
-  layerPixels = sprite.layers?[layerIndex].pixels
+  layerPixels = layer.pixels
 
   # Fill occupied spots with pixels.
   for pixel in layerPixels
@@ -104,7 +110,10 @@ LOI.Assets.Sprite.colorFill.method (spriteId, layerIndex, newTargetPixel) ->
         return if _.find created, (pixel) -> pixel.x is x and pixel.y is y
           
         # Is it out of bounds?
-        return unless sprite.bounds.left <= x <= sprite.bounds.right and sprite.bounds.top <= y <= sprite.bounds.bottom
+        absoluteX = x + (layer.origin?.x or 0)
+        absoluteY = y + (layer.origin?.y or 0)
+
+        return unless sprite.bounds.left <= absoluteX <= sprite.bounds.right and sprite.bounds.top <= absoluteY <= sprite.bounds.bottom
 
         # It seems legit, add it.
         fringe.push createPixel x, y

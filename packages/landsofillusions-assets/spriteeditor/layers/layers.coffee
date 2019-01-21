@@ -14,10 +14,11 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     
     @layers = new ComputedField =>
       return unless sprite = @sprite()
-      layers = _.cloneDeep sprite.layers or []
+      layers = _.clone sprite.layers or []
 
       # Attach layer index to layer.
-      layer.index = index for layer, index in layers when layer
+      for layer, index in layers when layer
+        layers[index] = _.extend {index}, layer
 
       # Remove removed layers.
       _.pull layers, null

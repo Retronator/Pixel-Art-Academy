@@ -11,7 +11,8 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
 
   LOI.Assets.Asset._authorizeAssetAction sprite
 
-  pixels = sprite.layers?[layerIndex].pixels
+  layer = sprite.layers?[layerIndex]
+  pixels = layer.pixels
   x = pixel.x
   y = pixel.y
 
@@ -30,19 +31,24 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
   else
     # Update bounds. They might be null (empty image) so account for that.
     bounds = sprite.bounds
+    
+    absoluteX = x + (layer.origin?.x or 0)
+    absoluteY = y + (layer.origin?.y or 0)
 
     if bounds
       bounds =
-        left: Math.min bounds.left, x
-        right: Math.max bounds.right, x
-        top: Math.min bounds.top, y
-        bottom: Math.max bounds.bottom, y
+        left: Math.min bounds.left, absoluteX
+        right: Math.max bounds.right, absoluteX
+        top: Math.min bounds.top, absoluteY
+        bottom: Math.max bounds.bottom, absoluteY
 
     else
-      bounds = left: x, right: x, top: y, bottom: y
+      bounds = left: absoluteX, right: absoluteX, top: absoluteY, bottom: absoluteY
 
-    forward.$set ?= {}
-    forward.$set.bounds = bounds
+    # See if bounds are even different.
+    unless EJSON.equals sprite.bounds, bounds
+      forward.$set ?= {}
+      forward.$set.bounds = bounds
 
   if sprite.layers
     if sprite.layers[layerIndex]?.pixels
