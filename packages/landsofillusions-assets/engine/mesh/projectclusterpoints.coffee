@@ -24,8 +24,12 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
     # Start with cluster pixels.
     pixels = []
 
+    makeAbsolute = (pixel) =>
+      x: pixel.x + cluster.origin.x
+      y: pixel.y + cluster.origin.y
+
     for pixel in cluster.pixels
-      pixels.push pixel
+      pixels.push makeAbsolute pixel
 
       # Also add connections between neighbors at half the distance, but only if it's an edge pixel.
       allDirectionsAreSameCluster = true
@@ -40,7 +44,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
       for direction in pixelDirections
         continue unless pixel[direction.property]?.cluster is cluster
 
-        pixels.push
+        pixels.push makeAbsolute
           x: pixel.x + direction.vector.x * 0.5
           y: pixel.y + direction.vector.y * 0.5
 
@@ -61,7 +65,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
           factor = 1
           
         else
-          distance = cameraAngle.distanceInDirectionToHorizon new THREE.Vector2(pixel.x, pixel.y), direction.vector, horizon
+          distance = cameraAngle.distanceInDirectionToHorizon new THREE.Vector2(pixel.x + cluster.origin.x, pixel.y + cluster.origin.y), direction.vector, horizon
   
           unless distance is Number.POSITIVE_INFINITY
             # Negate distance if direction is moving us away from the horizon.
@@ -73,7 +77,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
           # Use a factor to bring void point 0.5 pixels or more away from the horizon.
           factor = Math.min 1, distance - 0.5
 
-        voidPixels.push
+        voidPixels.push makeAbsolute
           x: pixel.x + direction.vector.x * factor
           y: pixel.y + direction.vector.y * factor
 
@@ -104,6 +108,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
       edgeVertices = []
 
       for edgeSegment in edge.segments
+        # Note: edge segments are already in absolute coordinates.
         edgeVertices.push edgeSegment[0]
 
         edgeVertices.push

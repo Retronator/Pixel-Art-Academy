@@ -14,7 +14,7 @@ class LOI.Assets.Engine.Mesh.Cluster
     [160 / 255, 160 / 255, 52 / 255]
   ]
 
-  constructor: (@index) ->
+  constructor: (@index, @layer) ->
     @pixels = []
     @edges = []
 
@@ -26,6 +26,10 @@ class LOI.Assets.Engine.Mesh.Cluster
       
     @points = []
     @indices = []
+    
+    @origin = 
+      x: @layer.origin?.x or 0
+      y: @layer.origin?.y or 0
 
   getPlane: ->
     new THREE.Plane().setFromNormalAndCoplanarPoint @plane.normal, @plane.point
@@ -33,9 +37,9 @@ class LOI.Assets.Engine.Mesh.Cluster
   process: ->
     @plane.normal = THREE.Vector3.fromObject @pixels[0].normal
 
-  findPixelAtCoordinate: (x, y) ->
-    x = Math.floor x
-    y = Math.floor y
+  findPixelAtAbsoluteCoordinate: (absoluteX, absoluteY) ->
+    x = Math.floor absoluteX - @origin.x
+    y = Math.floor absoluteY - @origin.y
 
     _.find @pixels, (pixel) => pixel.x is x and pixel.y is y
 

@@ -9,7 +9,7 @@ LOI.Assets.Engine.Mesh.computeClusterPlanes = (clusters, cameraAngle) ->
   # If no Origin landmark is found, use the world origin.
   origin ?= cameraAngle.unprojectPoint new THREE.Vector3
 
-  if originCluster = _.find(clusters, (cluster) => cluster.findPixelAtCoordinate origin.x, origin.y)
+  if originCluster = _.find(clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate origin.x, origin.y)
     originCluster.plane.point = new THREE.Vector3
 
     # Compute planes for the first time.
