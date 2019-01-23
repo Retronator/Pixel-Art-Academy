@@ -24,7 +24,7 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     mesh = @editor().mesh()
     
     # See which cluster contains this pixel.
-    cluster = _.find(mesh.clusters(), (cluster) => cluster.findPixelAtCoordinate @pixelCoordinate.x, @pixelCoordinate.y)
+    cluster = _.find(mesh.clusters(), (cluster) => cluster.findPixelAtAbsoluteCoordinate @pixelCoordinate.x, @pixelCoordinate.y)
 
     currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
     currentClusterHelper.setCluster cluster

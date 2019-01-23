@@ -24,6 +24,7 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
     spriteData = @editor().spriteData()    
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
     layerIndex = paintHelper.layerIndex()
+    layer = spriteData.layers?[layerIndex]
 
     xCoordinates = [@mouseState.x]
 
@@ -34,10 +35,14 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
       mirroredX = -@mouseState.x + 2 * symmetryXOrigin
       xCoordinates.push mirroredX
 
+    layerOrigin =
+      x: layer?.origin?.x or 0
+      y: layer?.origin?.y or 0
+
     for xCoordinate in xCoordinates
       pixel =
-        x: xCoordinate
-        y: @mouseState.y
+        x: xCoordinate - layerOrigin.x
+        y: @mouseState.y - layerOrigin.y
 
       # Do we even need to remove this pixel? See if it is even there.
       existing = LOI.Assets.Sprite.documents.findOne

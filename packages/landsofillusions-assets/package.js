@@ -246,6 +246,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/showpixelrender');
   api.addFile('mesheditor/actions/showplanegrid');
   api.addFile('mesheditor/actions/showsourceimage');
+  api.addFile('mesheditor/actions/history');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');

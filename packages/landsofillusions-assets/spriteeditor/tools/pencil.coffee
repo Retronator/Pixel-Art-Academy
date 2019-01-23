@@ -33,17 +33,25 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       mirroredX = -@mouseState.x + 2 * symmetryXOrigin
       xCoordinates.push [mirroredX, -1]
 
+    paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+
+    layerIndex = paintHelper.layerIndex()
+    layer = spriteData.layers?[layerIndex]
+
+    layerOrigin =
+      x: layer?.origin?.x or 0
+      y: layer?.origin?.y or 0
+
     for [xCoordinate, xNormalFactor] in xCoordinates
       # Create the new pixel.
       pixel =
-        x: xCoordinate
-        y: @mouseState.y
+        x: xCoordinate - layerOrigin.x
+        y: @mouseState.y - layerOrigin.y
         
       # If we have fixed bounds, make sure we're inside.
       if spriteData.bounds?.fixed
         continue unless spriteData.bounds.left <= pixel.x <= spriteData.bounds.right and spriteData.bounds.top <= pixel.y <= spriteData.bounds.bottom
 
-      paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
       normal = paintHelper.normal().clone()
 
       if normal
@@ -62,7 +70,6 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       # See if we're painting a normal.
       paintNormals = @data.get 'paintNormals'
 
-      layerIndex = paintHelper.layerIndex()
       existingPixel = _.find spriteData.layers?[layerIndex]?.pixels, (searchPixel) -> pixel.x is searchPixel.x and pixel.y is searchPixel.y
   
       if paintNormals and existingPixel

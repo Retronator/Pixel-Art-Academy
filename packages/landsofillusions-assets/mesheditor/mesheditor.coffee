@@ -56,8 +56,8 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       ,
         caption: 'Edit'
         items: [
-          LOI.Assets.Editor.Actions.Undo.id()
-          LOI.Assets.Editor.Actions.Redo.id()
+          LOI.Assets.MeshEditor.Actions.Undo.id()
+          LOI.Assets.MeshEditor.Actions.Redo.id()
           null
           LOI.Assets.SpriteEditor.Actions.FlipHorizontal.id()
           null
@@ -179,6 +179,8 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
     {activeToolId, operators, components, layouts, shortcuts}
 
   @defaultShortcutsMapping: ->
+    isMacOS = AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
+
     # Mesh editor uses all default and sprite editor shortcuts.
     _.extend super(arguments...), LOI.Assets.SpriteEditor.defaultShortcutsMapping(),
       # Actions
@@ -188,6 +190,10 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()}": commandOrControl: true, shift:true, key: AC.Keys.s
       "#{LOI.Assets.MeshEditor.Actions.ShowPixelRender.id()}": commandOrControl: true, shift:true, key: AC.Keys.p
       "#{LOI.Assets.MeshEditor.Actions.DebugMode.id()}": commandOrControl: true, shift:true, key: AC.Keys.d
+      "#{LOI.Assets.Editor.Actions.Undo.id()}": null
+      "#{LOI.Assets.Editor.Actions.Redo.id()}": null
+      "#{LOI.Assets.MeshEditor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
+      "#{LOI.Assets.MeshEditor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
 
       # Tools
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": null
