@@ -20,11 +20,12 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
 
     activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
 
-    operators = {}
-
     # Content Components
 
     components =
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Tools.Pencil.id()}":
+        drawPreview: true
+
       "#{_.snakeCase LOI.Assets.SpriteEditor.ShadingSphere.id()}":
         radius: 30
 
@@ -159,7 +160,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         mapping: @defaultShortcutsMapping()
 
     # Return combined interface data.
-    {activeToolId, operators, components, layouts, shortcuts}
+    {activeToolId, components, layouts, shortcuts}
 
   @defaultShortcutsMapping: ->
     _.extend super(arguments...),

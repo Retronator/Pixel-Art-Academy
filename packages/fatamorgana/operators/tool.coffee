@@ -13,6 +13,15 @@ class FM.Tool extends FM.Operator
       leftButton: false
       middleButton: false
       rightButton: false
+      
+  isActive: ->
+    @interface.activeToolId() is @id()
+
+  onKeyDown: (event) ->
+    # Override to handle key presses.
+
+  onKeyUp: (event) ->
+    # Override to handle key releases.
 
   onMouseDown: (event) ->
     switch event.which

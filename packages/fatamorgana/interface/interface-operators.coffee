@@ -29,7 +29,7 @@ class FM.Interface extends FM.Interface
   _getOperatorInstance: (operatorId) ->
     unless @_operatorInstances[operatorId]
       operatorClass = FM.Operator.getClassForId operatorId
-      @_operatorInstances[operatorId] = new operatorClass @
+      @_operatorInstances[operatorId] = Tracker.nonreactive => new operatorClass @
 
     @_operatorInstances[operatorId]
 
@@ -92,6 +92,8 @@ class FM.Interface extends FM.Interface
     not @inputFocused()
 
   onKeyDown: (event) ->
+    @activeTool()?.onKeyDown? event
+    
     return unless @shortcutsActive()
 
     key = event.which
@@ -124,6 +126,8 @@ class FM.Interface extends FM.Interface
     @_activeKey = key
 
   onKeyUp: (event) ->
+    @activeTool()?.onKeyUp? event
+
     return unless @shortcutsActive()
 
     # Restore the stored tool.

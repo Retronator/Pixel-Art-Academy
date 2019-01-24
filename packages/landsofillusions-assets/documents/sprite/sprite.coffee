@@ -73,6 +73,16 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   setPaletteId: (paletteId) ->
     LOI.Assets.Asset.update @constructor.className, @_id, $set: palette: _id: paletteId
 
+  findPixelAtAbsoluteCoordinate: (absoluteX, absoluteY) ->
+    for layer in @layers when layer?.pixels
+      x = absoluteX - (layer.origin?.x or 0)
+      y = absoluteY - (layer.origin?.y or 0)
+
+      pixel = _.find layer.pixels, (pixel) => pixel.x is x and pixel.y is y
+      return pixel if pixel
+
+    null
+
   @_limitLayerPixels = (newCount) ->
     # Allow up to 4,096 (64 * 64) pixels per layer.
     throw new AE.ArgumentOutOfRangeException "Up to 4,096 pixels per layer are allowed." if newCount > 4096
@@ -95,7 +105,16 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       backward.$set.bounds = @bounds
 
     super forward, backward
-    
+
+  recomputeBounds: ->
+    return unless newBounds = @_tryRecomputeBounds()
+
+    @bounds = newBounds
+    @bounds.x = @bounds.left
+    @bounds.y = @bounds.top
+    @bounds.width = @bounds.right - @bounds.left + 1
+    @bounds.height = @bounds.bottom - @bounds.top + 1
+
   _tryRecomputeBounds: ->
     bounds = null
 
@@ -114,9 +133,15 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
         else
           bounds = left: absoluteX, right: absoluteX, top: absoluteY, bottom: absoluteY
           
-    # See if bounds are even different.
-    return if EJSON.equals @bounds, bounds
-    
+    # See if bounds are even different. Note that we can't just
+    # compare for equality since @bounds have extra properties.
+    changed = false
+
+    for property, value of bounds
+      changed = true unless @bounds[property] is value
+
+    return unless changed
+
     bounds
 
 if Meteor.isServer
