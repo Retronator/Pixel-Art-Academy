@@ -204,4 +204,4 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['Tc3M7PP3WLehnYRRd'] #'z3m5euLEC6KHKCZjJ']
+    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['ad7KCjpzXPBv99enr']

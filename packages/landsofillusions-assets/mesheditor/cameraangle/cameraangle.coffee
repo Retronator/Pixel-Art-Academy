@@ -34,7 +34,7 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
 
   filename: ->
     cameraAngle = @currentData()
-    cameraAngle.sprite.name or cameraAngle.sprite._id
+    cameraAngle.sprite?.name or cameraAngle.sprite?._id
 
   events: ->
     super(arguments...).concat

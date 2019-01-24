@@ -56,7 +56,11 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     sprite.layers[0].visible = true
 
     sprite
-    
+
+  showAddButton: ->
+    # We can add a layer if we have a sprite set for the camera angle.
+    @sprite()
+
   showRemoveButton: ->
     # We can remove a layer if the currently selected layer exists.
     @sprite()?.layers?[@paintHelper.layerIndex()]
@@ -106,10 +110,17 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
   onClickAddButton: (event) ->
     sprite = @sprite()
 
-    index = sprite.layers.length or 0
-    maxDepth = _.max (layer.origin.z for layer in sprite.layers when layer?.origin?.z?)
+    index = sprite.layers?.length or 0
 
-    LOI.Assets.Sprite.updateLayer sprite._id, index, origin: z: (maxDepth ? -1) + 1
+    if sprite?.layers?.length
+      depth = 1 + _.max (layer.origin.z for layer in sprite.layers when layer?.origin?.z?)
+
+    else
+      depth = 0
+
+    LOI.Assets.Sprite.updateLayer sprite._id, index, origin: z: depth
+
+    @paintHelper.setLayerIndex index
 
   onClickRemoveButton: (event) ->
     sprite = @sprite()

@@ -15,7 +15,9 @@
       {{/each}}
     </table>
     <div class="actions">
-      <button class="add-button">Add</button>
+      {{#if showAddButton}}
+        <button class="add-button">Add</button>
+      {{/if}}
       {{#if showRemoveButton}}
         <button class="remove-button">Remove</button>
       {{/if}}
