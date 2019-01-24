@@ -59,17 +59,6 @@ LOI.Assets.Engine.Mesh.detectClusters = (sprite) ->
       # All cluster pixels were added, process cluster data.
       cluster.process()
 
-    # Compute pixel adjacency.
-    for pixel in pixels
-      pixel.left = _.find pixels, (testPixel) -> testPixel.x is pixel.x - 1 and testPixel.y is pixel.y
-      pixel.right = _.find pixels, (testPixel) -> testPixel.x is pixel.x + 1 and testPixel.y is pixel.y
-      pixel.up = _.find pixels, (testPixel) -> testPixel.x is pixel.x and testPixel.y is pixel.y - 1
-      pixel.down = _.find pixels, (testPixel) -> testPixel.x is pixel.x and testPixel.y is pixel.y + 1
-
-      # Mark edges.
-      for side in ['left', 'right', 'up', 'down']
-        pixel["#{side}IsEdge"] = true unless pixel.cluster is pixel[side]?.cluster
-
   console.log "Detected clusters", clusters if LOI.Assets.Engine.Mesh.debug
 
   clusters

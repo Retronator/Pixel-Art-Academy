@@ -17,14 +17,14 @@ class LOI.Assets.Engine.Mesh.Edge extends THREE.LineSegments
       point: null
       direction: new THREE.Vector3().crossVectors @clusterA.plane.normal, @clusterB.plane.normal
 
-  addSegment: (pixel, sourceCluster, startXOffset, startYOffset, endXOffset, endYOffset) ->
+  addSegment: (coordinates, startXOffset, startYOffset, endXOffset, endYOffset) ->
     start =
-      x: pixel.x + startXOffset + sourceCluster.origin.x
-      y: pixel.y + startYOffset + sourceCluster.origin.y
+      x: coordinates.x + startXOffset
+      y: coordinates.y + startYOffset
 
     end =
-      x: pixel.x + endXOffset + sourceCluster.origin.x
-      y: pixel.y + endYOffset + sourceCluster.origin.y
+      x: coordinates.x + endXOffset
+      y: coordinates.y + endYOffset
 
     @segments.push [start, end]
 

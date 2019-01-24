@@ -24,27 +24,23 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
     # Start with cluster pixels.
     pixels = []
 
-    makeAbsolute = (pixel) =>
-      x: pixel.x + cluster.origin.x
-      y: pixel.y + cluster.origin.y
-
     for pixel in cluster.pixels
-      pixels.push makeAbsolute pixel
+      pixels.push cluster.getAbsolutePixelCoordinates pixel
 
       # Also add connections between neighbors at half the distance, but only if it's an edge pixel.
       allDirectionsAreSameCluster = true
 
       for direction in pixelDirections
-        unless pixel[direction.property]?.cluster is cluster
+        if pixel.clusterEdges[direction.property]
           allDirectionsAreSameCluster = false
           break
 
       continue if allDirectionsAreSameCluster
 
       for direction in pixelDirections
-        continue unless pixel[direction.property]?.cluster is cluster
+        continue if pixel.clusterEdges[direction.property]
 
-        pixels.push makeAbsolute
+        pixels.push cluster.getAbsolutePixelCoordinates
           x: pixel.x + direction.vector.x * 0.5
           y: pixel.y + direction.vector.y * 0.5
 
@@ -58,7 +54,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
     
     for pixel in cluster.pixels
       for direction in pixelDirections
-        continue if pixel[direction.property]
+        continue unless pixel.clusterEdges[direction.property]
         
         # Move points away from the horizon in perspective.
         if orthogonal
@@ -77,7 +73,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
           # Use a factor to bring void point 0.5 pixels or more away from the horizon.
           factor = Math.min 1, distance - 0.5
 
-        voidPixels.push makeAbsolute
+        voidPixels.push cluster.getAbsolutePixelCoordinates
           x: pixel.x + direction.vector.x * factor
           y: pixel.y + direction.vector.y * factor
 

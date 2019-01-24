@@ -15,11 +15,21 @@ LOI.Assets.Engine.Mesh.computeEdges = (clusters) ->
       edge = new LOI.Assets.Engine.Mesh.Edge clusterA, clusterB
         
       for pixel in clusterA.pixels
-        # Note: Edge vertices are directed so that cluster A is on the right of the segment, cluster B on the left.
-        edge.addSegment pixel, clusterA, 0, 1, 0, 0 if pixel.left?.cluster is clusterB
-        edge.addSegment pixel, clusterA, 1, 0, 1, 1 if pixel.right?.cluster is clusterB
-        edge.addSegment pixel, clusterA, 0, 0, 1, 0 if pixel.up?.cluster is clusterB
-        edge.addSegment pixel, clusterA, 1, 1, 0, 1 if pixel.down?.cluster is clusterB
+        coordinates = clusterA.getAbsolutePixelCoordinates pixel
+
+        # Detect edges with neighboring pixels on all 4 sides. Note: Edge vertices are 
+        # directed so that cluster A is on the right of the segment, cluster B on the left.
+        if pixel.clusterEdges.left and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x - 1, coordinates.y)?.clusterEdges.right
+          edge.addSegment coordinates, 0, 1, 0, 0
+
+        if pixel.clusterEdges.right and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x + 1, coordinates.y)?.clusterEdges.left
+          edge.addSegment coordinates, 1, 0, 1, 1
+
+        if pixel.clusterEdges.up and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y - 1)?.clusterEdges.down
+          edge.addSegment coordinates, 0, 0, 1, 0
+
+        if pixel.clusterEdges.down and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y + 1)?.clusterEdges.up
+          edge.addSegment coordinates, 1, 1, 0, 1
 
       console.log "Computed edge between clusters #{clusterIndexA} and #{clusterIndexB}", edge if LOI.Assets.Engine.Mesh.debug
         

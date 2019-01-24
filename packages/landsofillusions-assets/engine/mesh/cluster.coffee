@@ -37,6 +37,24 @@ class LOI.Assets.Engine.Mesh.Cluster
   process: ->
     @plane.normal = THREE.Vector3.fromObject @pixels[0].normal
 
+    # Mark edges.
+    for pixel in @pixels
+      pixel.clusterNeighbors =
+        left: _.find @pixels, (testPixel) -> testPixel.x is pixel.x - 1 and testPixel.y is pixel.y
+        right: _.find @pixels, (testPixel) -> testPixel.x is pixel.x + 1 and testPixel.y is pixel.y
+        up: _.find @pixels, (testPixel) -> testPixel.x is pixel.x and testPixel.y is pixel.y - 1
+        down: _.find @pixels, (testPixel) -> testPixel.x is pixel.x and testPixel.y is pixel.y + 1
+        
+      pixel.clusterEdges = {}
+
+      # Edge is on each side that doesn't have a neighbor.
+      for side in ['left', 'right', 'up', 'down']
+        pixel.clusterEdges[side] = not pixel.clusterNeighbors[side]
+
+  getAbsolutePixelCoordinates: (pixel) ->
+    x: pixel.x + @origin.x
+    y: pixel.y + @origin.y
+
   findPixelAtAbsoluteCoordinate: (absoluteX, absoluteY) ->
     x = Math.floor absoluteX - @origin.x
     y = Math.floor absoluteY - @origin.y
