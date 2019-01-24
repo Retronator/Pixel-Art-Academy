@@ -91,7 +91,13 @@ class LOI.Assets.Engine.Sprite
             hue = horizontalAngle / (2 * Math.PI)
             saturation = verticalAngle / (Math.PI / 2)
 
-            destinationColor = new THREE.Color().setHSL hue, saturation, 0.5
+            if Math.abs(verticalAngle) > Math.PI / 2
+              lightness = 1 - Math.abs(verticalAngle) / Math.PI
+
+            else
+              lightness = 0.5
+
+            destinationColor = new THREE.Color().setHSL hue, saturation, lightness
 
           else
             destinationColor = r: 0, g: 0, b: 0

@@ -48,6 +48,7 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
       bounds.height++
 
       materialIndex = 0
+      invertZ = @paintHelper.normal().z < 0
 
       pixels = []
 
@@ -57,6 +58,7 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
           continue if pixelCenter.length() > radius
 
           normal = @canvasCoordinateToNormal pixelCenter, angleSnap
+          normal.z *= -1 if invertZ
 
           pixels.push {x, y, normal, materialIndex}
 
@@ -166,7 +168,11 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
         circleColor = ramp: 1, shade: 8
 
       else
-        circleColor = ramp: 0, shade: 8
+        if @paintHelper.normal().z < 0
+          circleColor = ramp: 0, shade: 4
+
+        else
+          circleColor = ramp: 0, shade: 8
 
       spriteData.materials =
         1: circleColor

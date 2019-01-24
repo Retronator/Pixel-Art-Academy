@@ -29,6 +29,9 @@ class LOI.Assets.SpriteEditor.ShadingSphere.NormalPicker extends LOI.Assets.Comp
     # Set the new normal.
     normal = shadingSphere.canvasCoordinateToNormal canvasCoordinate, angleSnap
 
+    # Pick on the other side of the sphere with alt.
+    normal.z *= -1 if keyboardState.isKeyDown AC.Keys.alt
+
     if editLight
       # Set light direction to the inverse of the normal
       shadingSphere.lightDirectionHelper() THREE.Vector3.fromObject(normal).negate()
