@@ -45,8 +45,8 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
       else
         # Apply locked coordinate.
-        if lockedCoordinate = @lockedCoordinate()
-          currentPixelCoordinates = _.extend {}, currentPixelCoordinates, lockedCoordinate
+        if @drawStraight()
+          currentPixelCoordinates = _.extend {}, currentPixelCoordinates, @lockedCoordinate()
 
         # Draw bresenham line from last stroke coordinates (reset after end of stroke).
         bresenhamLine lastStrokeCoordinates.x, lastStrokeCoordinates.y, currentPixelCoordinates.x, currentPixelCoordinates.y, (x, y) => pixels.push {x, y}
@@ -96,6 +96,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
     if event.which is AC.Keys.shift
       if @mouseState.leftButton
+        @lockedCoordinate null
         @drawStraight true
         
       else
@@ -116,9 +117,15 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
   onMouseMove: (event) ->
     super arguments...
 
-    @currentPixelCoordinates
+    currentPixelCoordinates = @currentPixelCoordinates()
+
+    newPixelCoordinates =
       x: @mouseState.x
       y: @mouseState.y
+
+    return if EJSON.equals currentPixelCoordinates, newPixelCoordinates
+
+    @currentPixelCoordinates newPixelCoordinates
 
     @applyPencil()
 
@@ -127,6 +134,8 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
     # End stroke.
     @lastStrokeCoordinates null
+
+    @drawStraight false
 
   applyPencil: ->
     return unless @mouseState.leftButton
@@ -140,13 +149,33 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       x: layer?.origin?.x or 0
       y: layer?.origin?.y or 0
 
+    pixels = @pixels()
+    drawStraight = @drawStraight()
+
+    if drawStraight
+      lastPixelCoordinates = @lastPixelCoordinates()
+      lastNewPixel = _.last pixels
+
+      unless lockedCoordinate = @lockedCoordinate()
+        # Calculate which direction to lock to.
+        if lastNewPixel.x is lastPixelCoordinates.x
+          # Lock to vertical straight lines.
+          lockedCoordinate = x: lastPixelCoordinates.x
+
+        else
+          lockedCoordinate = y: lastPixelCoordinates.y
+
+        @lockedCoordinate lockedCoordinate
+
     for absolutePixel in @pixels()
       absoluteCoordinates = _.pick absolutePixel, ['x', 'y']
       @lastPixelCoordinates absoluteCoordinates
       @lastStrokeCoordinates absoluteCoordinates
-      
-      # Create the new pixel in relative coordinates.
+
       pixel = _.clone absolutePixel
+      _.extend pixel, lockedCoordinate if drawStraight
+
+      # Pixel must be in relative coordinates.
       pixel.x -= layerOrigin.x
       pixel.y -= layerOrigin.y
         
