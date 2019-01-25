@@ -51,12 +51,14 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
     return unless pixelSize = cameraAngle.pixelSize
 
+    offset = cameraAngle.picturePlaneOffset or x: 0, y: 0
+
     # Note: We offset bounds by half a pixel because we want to look at the center of the pixel.
-    left = (viewportBounds.left - 0.5) * pixelSize
-    right = (viewportBounds.right - 0.5) * pixelSize
+    left = (viewportBounds.left - 0.5 + offset.x) * pixelSize
+    right = (viewportBounds.right - 0.5 + offset.x) * pixelSize
     # Note: We want the 3D Y direction to be up, so we need to reverse it (it goes down in screen space).
-    top = -(viewportBounds.top - 0.5) * pixelSize
-    bottom = -(viewportBounds.bottom - 0.5) * pixelSize
+    top = -(viewportBounds.top - 0.5 + offset.y) * pixelSize
+    bottom = -(viewportBounds.bottom - 0.5 + offset.y) * pixelSize
     near = pixelSize
     far = 1000
 

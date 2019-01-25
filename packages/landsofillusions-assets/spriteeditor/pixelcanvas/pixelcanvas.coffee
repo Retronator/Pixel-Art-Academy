@@ -101,16 +101,16 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
     @drawComponents = new ComputedField =>
       if @options?.drawComponents
-        @options.drawComponents()
+        drawComponents = _.clone @options.drawComponents()
 
       else
         drawComponents = [@sprite(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks(), @toolInfo()]
         
-        if componentIds = @componentData.get 'components'
-          for componentId in componentIds
-            drawComponents.push @interface.getHelperForFile componentId, @fileIdForHelpers()
-            
-        drawComponents
+      if componentIds = @componentData.get 'components'
+        for componentId in componentIds
+          drawComponents.push @interface.getHelperForFile componentId, @fileIdForHelpers()
+
+      drawComponents
 
     # Redraw canvas routine.
     @autorun =>
@@ -133,6 +133,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         component.drawToContext context,
           lightDirection: lightDirection
           camera: camera
+          editor: @
 
         context.restore()
 

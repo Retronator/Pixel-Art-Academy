@@ -25,9 +25,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
     pixels = []
 
     for pixel in cluster.pixels
-      pixels.push cluster.getAbsolutePixelCoordinates pixel
-
-      # Also add connections between neighbors at half the distance, but only if it's an edge pixel.
+      # We only need to add pixels on the edges of the cluster.
       allDirectionsAreSameCluster = true
 
       for direction in pixelDirections
@@ -37,6 +35,9 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
 
       continue if allDirectionsAreSameCluster
 
+      pixels.push cluster.getAbsolutePixelCoordinates pixel
+
+      # Also add connections between neighbors at half the distance.
       for direction in pixelDirections
         continue if pixel.clusterEdges[direction.property]
 
@@ -45,6 +46,16 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
           y: pixel.y + direction.vector.y * 0.5
 
     for pixelVertex in cameraAngle.projectPoints pixels, plane
+      # Make sure this is not a duplicate of another pixel point.
+      duplicate = false
+
+      for pixelPoint in cluster.points
+        if pixelVertex.distanceToSquared(pixelPoint.vertex) < 1e-10
+          duplicate = true
+          break
+
+      continue if duplicate
+
       cluster.points.push
         vertex: pixelVertex
         type: LOI.Assets.Engine.Mesh.Cluster.PointTypes.Pixel
@@ -160,5 +171,12 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
 
       # Strip the z component.
       point.vertexPlane = new THREE.Vector2 planeVector.x, planeVector.y
+
+    if LOI.Assets.Engine.Mesh.debug
+      # Make sure we haven't created any duplicates.
+      for point, index in cluster.points
+        for otherPoint, otherIndex in cluster.points[index + 1..]
+          distance = point.vertexPlane.distanceToSquared otherPoint.vertexPlane
+          console.warn "Duplicate point", distance, index, otherIndex, point, otherPoint if distance < 1e-10
 
   console.log "Created cluster points", clusters if LOI.Assets.Engine.Mesh.debug

@@ -35,6 +35,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
         initialCameraScale: 8
         components: [
+          LOI.Assets.SpriteEditor.Helpers.SafeArea.id()
         ]
 
     # Layouts
@@ -72,6 +73,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
           LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
+          LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()
           LOI.Assets.MeshEditor.Actions.ShowEdges.id()
           LOI.Assets.MeshEditor.Actions.ShowHorizon.id()
           LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()
@@ -204,4 +206,4 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['ad7KCjpzXPBv99enr']
+    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['R3RuRjSayDiockm7w']

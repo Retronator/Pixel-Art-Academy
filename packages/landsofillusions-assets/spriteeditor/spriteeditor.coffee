@@ -32,6 +32,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
         initialCameraScale: 8
         components: [
+          LOI.Assets.SpriteEditor.Helpers.SafeArea.id()
         ]
 
     # Layouts
@@ -68,6 +69,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           null
           LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
+          LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()
           null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
         ]
@@ -171,6 +173,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
       "#{LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()}":commandOrControl: true, key: AC.Keys.singleQuote
       "#{LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()}":commandOrControl: true, shift: true, key: AC.Keys.l
+      "#{LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()}":commandOrControl: true, shift: true, key: AC.Keys.a
 
       # Tools
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g

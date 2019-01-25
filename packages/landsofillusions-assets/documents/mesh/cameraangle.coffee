@@ -27,6 +27,11 @@ class LOI.Assets.Mesh.CameraAngle
     position = new THREE.Vector3().copy @position
     direction = new THREE.Vector3().copy(@target).sub position
 
+    # Apply picture plane offset.
+    if @picturePlaneOffset
+      xOffset += @picturePlaneOffset.x
+      yOffset += @picturePlaneOffset.y
+
     for screenPoint in screenPoints
       # Transform the point from screen space to world, positioned on the picture plane.
       worldPoint = new THREE.Vector3 screenPoint.x + xOffset, -(screenPoint.y + yOffset), -(@picturePlaneDistance or 0)
@@ -75,6 +80,11 @@ class LOI.Assets.Mesh.CameraAngle
     cameraPlane.projectPoint new THREE.Vector3(0, 0, -1), horizonPoint
     horizonPoint.multiplyScalar -@picturePlaneDistance / horizonPoint.z
     horizonPoint = new THREE.Vector2().copy horizonPoint
+
+    # Apply plane picture offset.
+    if @picturePlaneOffset
+      horizonPoint.x += @picturePlaneOffset.x
+      horizonPoint.y += @picturePlaneOffset.y
 
     # To go to screen space, Y needs to be negated.
     horizonDirection.y *= -1

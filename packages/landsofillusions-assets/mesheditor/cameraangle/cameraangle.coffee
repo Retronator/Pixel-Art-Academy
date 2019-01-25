@@ -39,10 +39,26 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
   events: ->
     super(arguments...).concat
       'click .sprite .value': @onClickSprite
-      
+      'change .picture-plane-offset .coordinate-input': @onChangePicturePlaneOffsetCoordinate
+
   onClickSprite: (event) ->
     @interface.displayDialog
       contentComponentId: LOI.Assets.MeshEditor.CameraAngle.SelectSpriteDialog.id()
+
+  onChangePicturePlaneOffsetCoordinate: (event) ->
+    $coordinates = $(event.target).closest('.coordinates')
+
+    coordinates = {}
+
+    for property in ['x', 'y']
+      coordinates[property] = @_parseFloatOrZero $coordinates.find(".coordinate-#{property} .coordinate-input").val()
+
+    LOI.Assets.Mesh.updateCameraAngle @mesh()._id, @cameraAngleIndex(), picturePlaneOffset: coordinates
+
+  _parseFloatOrZero: (string) ->
+    float = parseFloat string
+
+    if _.isNaN float then 0 else float
 
   class @CameraProperty extends AM.DataInputComponent
     onCreated: ->

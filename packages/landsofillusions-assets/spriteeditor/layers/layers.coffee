@@ -113,7 +113,7 @@ class LOI.Assets.SpriteEditor.Layers extends FM.View
     index = sprite.layers?.length or 0
 
     if sprite?.layers?.length
-      depth = 1 + _.max (layer.origin.z for layer in sprite.layers when layer?.origin?.z?)
+      depth = 1 + (_.max(layer.origin.z for layer in sprite.layers when layer?.origin?.z?) or 0)
 
     else
       depth = 0

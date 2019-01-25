@@ -50,7 +50,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       @meshLoader()?.meshData()?.cameraAngles?[@cameraAngleIndex()]
 
     @pixelRenderEnabled = new ComputedField =>
-      @editorFileData()?.get('pixelRenderEnabled') or true
+      @editorFileData()?.get('pixelRenderEnabled') ? true
 
     @debugMode = new ComputedField =>
       @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).active()
@@ -77,6 +77,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
         [
           @sprite if sourceImageEnabled
+          @pixelCanvas.operationPreview()
           @pixelCanvas.pixelGrid()
           @edges if sourceImageEnabled
           @horizon
@@ -85,7 +86,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
         ]
 
     # Provide the pixel canvas fields to sprite editor views and tools.
-    for passThroughField in ['camera', 'mouse', 'pixelGridEnabled', 'landmarksEnabled']
+    for passThroughField in ['camera', 'mouse', 'pixelGridEnabled', 'landmarksEnabled', 'operationPreview']
       do (passThroughField) =>
         @[passThroughField] = => @pixelCanvas[passThroughField] arguments...
 

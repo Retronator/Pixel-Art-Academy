@@ -12,7 +12,7 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
   LOI.Assets.Asset._authorizeAssetAction sprite
 
   layer = sprite.layers?[layerIndex]
-  pixels = layer.pixels
+  pixels = layer?.pixels
   x = pixel.x
   y = pixel.y
 
@@ -32,8 +32,8 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
     # Update bounds. They might be null (empty image) so account for that.
     bounds = sprite.bounds
     
-    absoluteX = x + (layer.origin?.x or 0)
-    absoluteY = y + (layer.origin?.y or 0)
+    absoluteX = x + (layer?.origin?.x or 0)
+    absoluteY = y + (layer?.origin?.y or 0)
 
     if bounds
       bounds =
@@ -51,7 +51,7 @@ LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel) ->
       forward.$set.bounds = bounds
 
   if sprite.layers
-    if sprite.layers[layerIndex]?.pixels
+    if pixels
       if existingPixel
         existingPixelIndex = pixels.indexOf existingPixel
 

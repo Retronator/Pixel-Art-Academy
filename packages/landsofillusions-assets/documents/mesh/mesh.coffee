@@ -8,6 +8,8 @@ class LOI.Assets.Mesh extends AM.Document
   # cameraAngles: array of source images describing the mesh
   #   name: text identifier
   #   picturePlaneDistance: the distance in pixels the camera is away from the picture plane or null for ortographic
+  #   picturePlaneOffset: offset of the center of the picture plane in pixels
+  #     x, y
   #   pixelSize: the size of a camera pixel in world units
   #   position: location of the camera in world space
   #     x, y, z

@@ -55,6 +55,9 @@ LOI.Assets.Mesh.updateCameraAngle.method (meshId, index, cameraAngleUpdate) ->
   check cameraAngleUpdate,
     name: Match.Optional String
     picturePlaneDistance: Match.OptionalOrNull Number
+    picturePlaneOffset: Match.Optional
+      x: Number
+      y: Number
     pixelSize: Match.OptionalOrNull Number
     position: Match.Optional vectorPattern
     target: Match.Optional vectorPattern
