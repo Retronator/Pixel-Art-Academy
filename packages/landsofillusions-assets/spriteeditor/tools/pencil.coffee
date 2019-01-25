@@ -8,6 +8,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
   # paintNormals: boolean whether only normals are being painted
   # cleanLine: boolean whether to maintain a clean line with consistent width
   # drawPreview: boolean whether to always draw preview of the pixels to be applied
+  # fractionalPerfectLines: boolean whether to allow 3:2 and 5:2 lines
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Pencil'
   @displayName: -> "Pencil"
 
@@ -26,6 +27,8 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
     @lastStrokeCoordinates = new ReactiveField null
     @lockedCoordinate = new ReactiveField null
 
+    @perfectLineRatio = new ReactiveField null
+
     # Calculate which pixels the tool would fill.
     @pixels = new ComputedField =>
       return [] unless currentPixelCoordinates = @currentPixelCoordinates()
@@ -38,8 +41,11 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       if @drawLine()
         if keyboardState.isMetaDown()
           # Draw perfect pixel art line.
+          pixels = @_perfectLine lastPixelCoordinates, currentPixelCoordinates
 
         else
+          @perfectLineRatio null
+
           # Draw bresenham line from last coordinates (persist after end of stroke).
           bresenhamLine lastPixelCoordinates.x, lastPixelCoordinates.y, currentPixelCoordinates.x, currentPixelCoordinates.y, (x, y) => pixels.push {x, y}
 
@@ -85,6 +91,96 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
 
   destroy: ->
     @pixels.stop()
+
+  infoText: ->
+    return unless @drawLine()
+    return unless ratio = @perfectLineRatio()
+
+    "#{ratio[0]}:#{ratio[1]}"
+
+  _perfectLine: (start, end) ->
+    dx = end.x - start.x
+    dy = end.y - start.y
+
+    width = Math.abs(dx) + 1
+    height = Math.abs(dy) + 1
+
+    if width > height
+      ratio = width / height
+
+    else
+      ratio = height / width
+      vertical = true
+
+    if ratio < 3 and @data.get 'fractionalPerfectLines'
+      doubleRatio = Math.round ratio * 2
+      segmentLengths = [Math.ceil(doubleRatio / 2), Math.floor(doubleRatio / 2)]
+
+      if segmentLengths[0] is segmentLengths[1]
+        denominator = 1
+        numerator = segmentLengths[0]
+
+      else
+        denominator = 2
+        numerator = segmentLengths[0] + segmentLengths[1]
+
+    else
+      numerator = Math.round ratio
+      denominator = 1
+      segmentLengths = [numerator]
+
+    if width > 1 and height > 1
+      if vertical
+        @perfectLineRatio [denominator, numerator]
+
+      else
+        @perfectLineRatio [numerator, denominator]
+
+    else
+      # Don't write the ratio for straight lines.
+      @perfectLineRatio null
+
+    sx = Math.sign dx
+    sy = Math.sign dy
+
+    lengthLeft = Math.max width, height
+    sideLeft = Math.min width, height
+
+    currentPixel = _.pick start, ['x', 'y']
+    pixels = []
+    segmentLengthIndex = 0
+    segmentLeft = segmentLengths[segmentLengthIndex]
+
+    while lengthLeft and sideLeft
+      pixels.push currentPixel
+
+      # Mark progress along segment and length.
+      segmentLeft--
+      lengthLeft--
+
+      # Move ahead along length.
+      currentPixel = _.clone currentPixel
+
+      if vertical
+        currentPixel.y += sy
+
+      else
+        currentPixel.x += sx
+
+      continue if segmentLeft
+
+      # Step sideways.
+      if vertical
+        currentPixel.x += sx
+
+      else
+        currentPixel.y += sy
+
+      sideLeft--
+      segmentLengthIndex = (segmentLengthIndex + 1) % segmentLengths.length
+      segmentLeft = segmentLengths[segmentLengthIndex]
+
+    pixels
 
   onActivated: ->
     @currentPixelCoordinates

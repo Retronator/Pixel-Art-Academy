@@ -32,6 +32,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @landmarks = new ReactiveField null
     @pixelGrid = new ReactiveField null
     @operationPreview = new ReactiveField null
+    @toolInfo = new ReactiveField null
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null
@@ -80,6 +81,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @landmarks new @constructor.Landmarks @
     @pixelGrid new @constructor.PixelGrid @
     @operationPreview new @constructor.OperationPreview @
+    @toolInfo new @constructor.ToolInfo @
 
     @toolsActive = @componentData.get('toolsActive') ? true    
 
@@ -102,7 +104,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
         @options.drawComponents()
 
       else
-        drawComponents = [@sprite(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks()]
+        drawComponents = [@sprite(), @operationPreview(), @pixelGrid(), @cursor(), @landmarks(), @toolInfo()]
         
         if componentIds = @componentData.get 'components'
           for componentId in componentIds

@@ -24,7 +24,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
 
     components =
       "#{_.snakeCase LOI.Assets.SpriteEditor.Tools.Pencil.id()}":
-        drawPreview: true
+        fractionalPerfectLines: true
 
       "#{_.snakeCase LOI.Assets.SpriteEditor.ShadingSphere.id()}":
         radius: 30
