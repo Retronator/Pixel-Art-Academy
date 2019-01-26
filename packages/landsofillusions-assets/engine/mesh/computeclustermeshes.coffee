@@ -121,8 +121,8 @@ LOI.Assets.Engine.Mesh.computeClusterMeshes = (clusters) ->
   console.log "Computed cluster meshes", clusters if LOI.Assets.Engine.Mesh.debug
 
 findTriangleVertexIndexOfType = (type, indices, cluster) ->
-  _.findIndex indices, (index) ->
-    cluster.points[index].type is type
+  for index, triangleVertexIndex in indices
+    return triangleVertexIndex if cluster.points[index].type is type
 
 getExtraPointIndex = (voidPointIndex, pixelPointIndex, extraPoints, cluster) ->
   # We have extra points indexed from smaller to bigger

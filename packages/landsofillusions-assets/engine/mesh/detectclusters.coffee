@@ -7,7 +7,7 @@ LOI.Assets.Engine.Mesh.detectClusters = (sprite) ->
 
   clusters = []
 
-  for layer in sprite.layers when layer?.pixels
+  for layer, layerIndex in sprite.layers when layer?.pixels
     pixels = layer.pixels
     
     for pixel in pixels
@@ -34,7 +34,7 @@ LOI.Assets.Engine.Mesh.detectClusters = (sprite) ->
   
             neighborX = fringePixel.x + xOffset
             neighborY = fringePixel.y + yOffset
-            continue unless neighborPixel = _.find pixels, (pixel) -> pixel.x is neighborX and pixel.y is neighborY
+            continue unless neighborPixel = sprite.getPixelAtCoordinate neighborX, neighborY, layerIndex
             continue if neighborPixel in visitedPixels
   
             visitedPixels.push neighborPixel

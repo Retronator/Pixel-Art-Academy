@@ -186,4 +186,4 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-    editorView.addFile id, LOI.Assets.Sprite.id() for id in ['CX9JyXqW2mZduyajR', 'KqL3XmQ7MikndhWxN', 'ZZefMqG8h5gCwQztD']
+    editorView.addFile id, LOI.Assets.Sprite.id() for id in ['CX9JyXqW2mZduyajR', 'KqL3XmQ7MikndhWxN', '9zJKosYnYfSAioP5d', 'ZZefMqG8h5gCwQztD']

@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
@@ -69,6 +70,18 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       @bounds.y = @bounds.top
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
+      
+    # On the client also create pixel maps.
+    if Meteor.isClient and @layers
+      for layer in @layers when layer?.pixels
+        layer._pixelMap = {}
+
+        for pixel in layer.pixels
+          layer._pixelMap[pixel.x] ?= {}
+          layer._pixelMap[pixel.x][pixel.y] = pixel
+        
+  getPixelAtCoordinate: (x, y, layerIndex) ->
+    @layers[layerIndex]._pixelMap?[x]?[y]
       
   setPaletteId: (paletteId) ->
     LOI.Assets.Asset.update @constructor.className, @_id, $set: palette: _id: paletteId

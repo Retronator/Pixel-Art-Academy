@@ -194,6 +194,7 @@ Package.onUse(function(api) {
 
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
+  api.addFile('spriteeditor/tools/stroke');
   api.addFile('spriteeditor/tools/pencil');
   api.addFile('spriteeditor/tools/eraser');
   api.addFile('spriteeditor/tools/colorpicker');

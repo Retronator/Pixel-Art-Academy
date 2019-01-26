@@ -9,6 +9,7 @@ class LOI.Assets.Engine.Mesh.Edge extends THREE.LineSegments
 
     # Note: Edge vertices are located in the top-left corner of the pixel at their vertex coordinates.
     @vertices = []
+    @verticesMap = {}
 
     # Note: Edge segments are directed so that cluster A is on the right of the segment, cluster B on the left.
     @segments = []
@@ -32,12 +33,15 @@ class LOI.Assets.Engine.Mesh.Edge extends THREE.LineSegments
     @_addVertex end
 
   findVertex: (x, y) ->
-    _.find @vertices, (vertex) => vertex.x is x and vertex.y is y
+    @verticesMap[x]?[y]
 
   _addVertex: (vertex) ->
     return if @findVertex vertex.x, vertex.y
 
     @vertices.push vertex
+
+    @verticesMap[vertex.x] ?= {}
+    @verticesMap[vertex.x][vertex.y] = vertex
 
   getLine3: ->
     new THREE.Line3 @line.point, @line.point.clone().add @line.direction

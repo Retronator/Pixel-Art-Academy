@@ -36,14 +36,21 @@ class LOI.Assets.Engine.Mesh.Cluster
 
   process: ->
     @plane.normal = THREE.Vector3.fromObject @pixels[0].normal
+    
+    # Create map for fast retrieval.
+    @pixelMap = {}
+    
+    for pixel in @pixels
+      @pixelMap[pixel.x] ?= {}
+      @pixelMap[pixel.x][pixel.y] = pixel
 
     # Mark edges.
     for pixel in @pixels
       pixel.clusterNeighbors =
-        left: _.find @pixels, (testPixel) -> testPixel.x is pixel.x - 1 and testPixel.y is pixel.y
-        right: _.find @pixels, (testPixel) -> testPixel.x is pixel.x + 1 and testPixel.y is pixel.y
-        up: _.find @pixels, (testPixel) -> testPixel.x is pixel.x and testPixel.y is pixel.y - 1
-        down: _.find @pixels, (testPixel) -> testPixel.x is pixel.x and testPixel.y is pixel.y + 1
+        left: @pixelMap[pixel.x - 1]?[pixel.y]
+        right: @pixelMap[pixel.x + 1]?[pixel.y]
+        up: @pixelMap[pixel.x]?[pixel.y - 1]
+        down:  @pixelMap[pixel.x]?[pixel.y + 1]
         
       pixel.clusterEdges = {}
 
@@ -58,8 +65,8 @@ class LOI.Assets.Engine.Mesh.Cluster
   findPixelAtAbsoluteCoordinate: (absoluteX, absoluteY) ->
     x = Math.floor absoluteX - @origin.x
     y = Math.floor absoluteY - @origin.y
-
-    _.find @pixels, (pixel) => pixel.x is x and pixel.y is y
+    
+    @pixelMap[x]?[y]
 
   getPoints: (options) ->
     elementsPerVertex = 3

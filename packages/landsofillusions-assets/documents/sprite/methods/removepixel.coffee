@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 LOI.Assets.Sprite.removePixel.method (spriteId, layerIndex, pixel) ->
   check spriteId, Match.DocumentId
   check layerIndex, Match.Integer
-  check pixel, Match.ObjectIncluding
+  check pixel,
     x: Match.Integer
     y: Match.Integer
 
