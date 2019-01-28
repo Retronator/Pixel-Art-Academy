@@ -62,4 +62,11 @@ class LOI.Assets.Editor.AssetInfo extends FM.View
 
     save: (value) ->
       asset = @data()
-      asset.setPaletteId value or null
+
+      if value
+        update = $set: palette: _id: value
+
+      else
+        update = $unset: palette: true
+
+      LOI.Assets.Asset.update asset.constructor.className, asset._id, update

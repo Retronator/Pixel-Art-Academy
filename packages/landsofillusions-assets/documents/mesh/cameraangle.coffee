@@ -2,22 +2,40 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 class LOI.Assets.Mesh.CameraAngle
-  constructor: (data) ->
-    _.extend @, data
+  constructor: (@cameraAngles, @index, data) ->
+    @_updateDependency = new Tracker.Dependency
 
-    position = @_createVector @position
-    target = @_createVector @target
-    up = @_createVector @up
+    @sourceData = {}
+    @update data
+
+  _createVector: (vectorData = {}) ->
+    new THREE.Vector3 vectorData.x or 0, vectorData.y or 0, vectorData.z or 0
+
+  toPlainObject: ->
+    @sourceData
+
+  depend: ->
+    @_updateDependency.depend()
+
+  update: (update) ->
+    # Update source data and the object itself.
+    _.merge @sourceData, update
+    _.merge @, update
+
+    # Create rich objects.
+    position = @_createVector @sourceData.position
+    target = @_createVector @sourceData.target
+    up = @_createVector @sourceData.up
 
     @worldMatrix = new THREE.Matrix4().lookAt position, target, up
     @worldMatrix.setPosition position
 
-    return unless @worldMatrix.determinant()
+    if @worldMatrix.determinant()
+      @worldMatrixInverse = new THREE.Matrix4().getInverse @worldMatrix
 
-    @worldMatrixInverse = new THREE.Matrix4().getInverse @worldMatrix
-
-  _createVector: (vectorData = {}) ->
-    new THREE.Vector3 vectorData.x or 0, vectorData.y or 0, vectorData.z or 0
+    # Signal change of the camera angle.
+    @_updateDependency.changed()
+    @cameraAngles.contentUpdated()
 
   projectPoints: (screenPoints, worldPlane, xOffset = 0, yOffset = 0) ->
     projectedWorldPoints = []

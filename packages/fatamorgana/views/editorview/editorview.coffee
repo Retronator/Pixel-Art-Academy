@@ -80,22 +80,26 @@ class FM.EditorView extends FM.View
     @allChildComponentsOfType(componentClass)[0]
 
   showTabs: ->
-    # We show tabs when there are multiple files to switch between.
-    @data().get('files')?.length > 1
+    # We show tabs when there are any files.
+    @data().get('files')?.length
 
   activeClass: ->
     tab = @currentData()
     'active' if tab.active
 
-  tabData: ->
+  asset: ->
     file = @currentData()
 
     loader = @interface.getLoaderForFile file.id
     loader.asset()
 
   nameOrId: ->
-    tabData = @currentData()
-    tabData.name or tabData._id
+    asset = @currentData()
+    asset.name or asset._id
+
+  saveIndicator: ->
+    asset = @currentData()
+    '*' if asset.dirty?()
 
   events: ->
     super(arguments...).concat

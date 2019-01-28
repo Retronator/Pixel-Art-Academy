@@ -4,9 +4,9 @@
       <ul class="tabs">
         {{#each get.files}}
           <li class="tab {{activeClass}}">
-            {{#with tabData}}
+            {{#with asset}}
               <div class="name">
-                {{nameOrId}}
+                {{saveIndicator}}{{nameOrId}}
               </div>
             {{/with}}
           </li>

@@ -5,7 +5,7 @@ class LOI.Assets.SpriteEditor.SpriteLoader extends FM.Loader
   constructor: ->
     super arguments...
 
-    @_subscription = LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, @fileId
+    @_subscription = LOI.Assets.Asset.forIdFull.subscribe LOI.Assets.Sprite.className, @fileId
 
     @spriteData = new ComputedField =>
       LOI.Assets.Sprite.documents.findOne @fileId

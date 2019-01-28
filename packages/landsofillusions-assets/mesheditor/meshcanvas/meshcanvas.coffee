@@ -47,7 +47,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       @meshLoader().mesh
 
     @cameraAngle = new ComputedField =>
-      @meshLoader()?.meshData()?.cameraAngles?[@cameraAngleIndex()]
+      @meshLoader()?.meshData()?.cameraAngles.get @cameraAngleIndex()
 
     @pixelRenderEnabled = new ComputedField =>
       @editorFileData()?.get('pixelRenderEnabled') ? true
@@ -62,10 +62,6 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
 
     # Create the engine sprite.
-    @sprite = new LOI.Assets.Engine.Sprite
-      spriteData: @spriteData
-      visualizeNormals: @paintNormalsData.value
-
     @edges = new @constructor.Edges @
     @horizon = new @constructor.Horizon @
 
@@ -76,7 +72,6 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
         sourceImageEnabled = @sourceImageEnabled()
 
         [
-          @sprite if sourceImageEnabled
           @pixelCanvas.operationPreview()
           @pixelCanvas.pixelGrid()
           @edges if sourceImageEnabled

@@ -70,8 +70,8 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/layers');
 
   api.addFile('documents/mesh..');
+  api.addFile('documents/mesh/arrayfield');
   api.addFile('documents/mesh/cameraangle');
-  api.addServerFile('documents/mesh/subscriptions');
   api.addFile('documents/mesh/methods..');
 
   api.addFile('documents/audio..');
@@ -252,13 +252,16 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/showplanegrid');
   api.addFile('mesheditor/actions/showsourceimage');
   api.addFile('mesheditor/actions/history');
+  api.addFile('mesheditor/actions/save');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');
   api.addFile('mesheditor/helpers/scene');
+  api.addFile('mesheditor/helpers/selection');
 
   api.addUnstyledComponent('mesheditor/camera..');
   api.addComponent('mesheditor/cameraangles..');
+  api.addComponent('mesheditor/objects..');
 
   api.addComponent('mesheditor/cameraangle..');
   api.addUnstyledComponent('mesheditor/cameraangle/selectspritedialog..');

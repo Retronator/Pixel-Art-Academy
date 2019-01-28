@@ -82,9 +82,6 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
         
   getPixelAtCoordinate: (x, y, layerIndex) ->
     @layers[layerIndex]._pixelMap?[x]?[y]
-      
-  setPaletteId: (paletteId) ->
-    LOI.Assets.Asset.update @constructor.className, @_id, $set: palette: _id: paletteId
 
   findPixelAtAbsoluteCoordinate: (absoluteX, absoluteY) ->
     for layer in @layers when layer?.pixels

@@ -31,12 +31,7 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
     editor.renderer.cameraManager.reset()
 
   cameraAngles: ->
-    return unless cameraAngles = @mesh()?.cameraAngles
-
-    # Add index information.
-    cameraAngle.index = index for cameraAngle, index in cameraAngles
-
-    cameraAngles
+    @mesh()?.cameraAngles.getAll()
 
   activeClass: ->
     cameraAngle = @currentData()
@@ -61,15 +56,15 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
     @setCameraAngleIndex cameraAngle.index
 
   onClickAddButton: (event) ->
-    index = @mesh().cameraAngles?.length or 0
-
-    LOI.Assets.Mesh.updateCameraAngle @mesh()._id, index,
+    mesh = @mesh()
+    index = mesh.cameraAngles.insert
       picturePlaneDistance: 32
       pixelSize: 0.01
       position: x: 0, y: 1, z: 2
       target: x: 0, y: 1, z: 0
       up: x: 0, y: 1, z: 0
 
+    # Switch to new camera angle.
     @setCameraAngleIndex index
 
   onChangeCameraAngle: (event) ->
@@ -79,4 +74,4 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
     newData =
       name: $layer.find('.name-input').val()
 
-    LOI.Assets.Mesh.updateCameraAngle @mesh()._id, cameraAngle.index, newData
+    cameraAngle.update newData

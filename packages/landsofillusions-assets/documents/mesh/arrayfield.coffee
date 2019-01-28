@@ -1,0 +1,55 @@
+AE = Artificial.Everywhere
+AM = Artificial.Mummification
+LOI = LandsOfIllusions
+
+class LOI.Assets.Mesh.ArrayField
+  constructor: (@parent, @field, @array, @contentClass) ->
+    @_updatedDependency = new Tracker.Dependency
+    
+    if @contentClass and @array
+      # Make rich objects.
+      @array[index] = new @contentClass @, index, data for data, index in @array when data
+
+  save: (saveData) ->
+    if @array
+      array = _.clone @array
+
+      if @contentClass
+        array[index] = item.toPlainObject() for item, index in array
+
+      saveData[@field] = array
+
+  getAll: ->
+    @_updatedDependency.depend()
+    @array
+
+  get: (index) ->
+    @_updatedDependency.depend()
+    return unless @array
+    return unless item = @array[index]
+
+    item.depend?()
+    item
+
+  insert: (data = {}) ->
+    index = @array?.length or 0
+    @array ?= []
+    
+    if @contentClass
+      @array[index] = new @contentClass @, index, data
+      
+    else
+      @array[index] = data
+
+    @_updatedDependency.changed()
+
+    # Return index of the new item.
+    index
+
+  remove: (index) ->
+    @array[index] = null
+    @_updatedDependency.changed()
+    
+  contentUpdated: ->
+    @_updatedDependency.changed()
+    @parent.contentUpdated()

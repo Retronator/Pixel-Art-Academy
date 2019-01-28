@@ -50,6 +50,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.Editor.Actions.New.id()
           LOI.Assets.Editor.Actions.Open.id()
           null
+          LOI.Assets.MeshEditor.Actions.Save.id()
           LOI.Assets.Editor.Actions.Close.id()
           LOI.Assets.Editor.Actions.Duplicate.id()
           LOI.Assets.Editor.Actions.Delete.id()
@@ -127,10 +128,13 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                   tabs: [
                     name: 'Navigator'
                     contentComponentId: LOI.Assets.SpriteEditor.Navigator.id()
-                    active: true
                   ,
                     name: 'File info'
                     contentComponentId: LOI.Assets.SpriteEditor.AssetInfo.id()
+                  ,
+                    name: 'Objects'
+                    contentComponentId: LOI.Assets.MeshEditor.Objects.id()
+                    active: true
                   ]
                 remainingArea:
                   type: FM.SplitView.id()
@@ -141,13 +145,13 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                     tabs: [
                       name: 'Layers'
                       contentComponentId: LOI.Assets.SpriteEditor.Layers.id()
+                      active: true
                     ,
                       name: 'Landmarks'
                       contentComponentId: LOI.Assets.Editor.Landmarks.id()
                     ,
                       name: 'Camera angles'
                       contentComponentId: LOI.Assets.MeshEditor.CameraAngles.id()
-                      active: true
                     ]
                   remainingArea:
                     type: FM.TabbedView.id()
@@ -155,9 +159,9 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                       name: 'Palette'
                       contentComponentId: LOI.Assets.SpriteEditor.Palette.id()
                     ,
-                      name: 'Materials'
-                      contentComponentId: LOI.Assets.Editor.Materials.id()
-                    ,
+#                      name: 'Materials'
+#                      contentComponentId: LOI.Assets.Editor.Materials.id()
+#                    ,
                       name: 'Shading'
                       contentComponentId: LOI.Assets.SpriteEditor.ShadingSphere.id()
                     ,
@@ -196,6 +200,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.Editor.Actions.Redo.id()}": null
       "#{LOI.Assets.MeshEditor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
       "#{LOI.Assets.MeshEditor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
+      "#{LOI.Assets.MeshEditor.Actions.Save.id()}": commandOrControl: true, key: AC.Keys.s
 
       # Tools
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": null

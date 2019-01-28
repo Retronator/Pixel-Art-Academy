@@ -12,7 +12,7 @@ LOI.Assets.Asset.forId.publish (assetClassName, id) ->
     fields:
       editor: 0
 
-# Subscription to a specific sprite.
+# Subscription to a specific asset.
 LOI.Assets.Asset.forIdFull.publish (assetClassName, id) ->
   check assetClassName, String
   check id, Match.DocumentId

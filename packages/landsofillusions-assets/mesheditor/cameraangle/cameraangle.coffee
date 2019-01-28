@@ -29,21 +29,9 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
     @sprite = new ComputedField => 
       @cameraAngle()?.sprite
 
-  setSprite: (spriteId) ->
-    LOI.Assets.Mesh.updateCameraAngle @mesh()._id, @cameraAngleIndex(), sprite: _id: spriteId
-
-  filename: ->
-    cameraAngle = @currentData()
-    cameraAngle.sprite?.name or cameraAngle.sprite?._id
-
   events: ->
     super(arguments...).concat
-      'click .sprite .value': @onClickSprite
       'change .picture-plane-offset .coordinate-input': @onChangePicturePlaneOffsetCoordinate
-
-  onClickSprite: (event) ->
-    @interface.displayDialog
-      contentComponentId: LOI.Assets.MeshEditor.CameraAngle.SelectSpriteDialog.id()
 
   onChangePicturePlaneOffsetCoordinate: (event) ->
     $coordinates = $(event.target).closest('.coordinates')
@@ -72,14 +60,12 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
 
     save: (value) ->
       cameraAngle = @data()
-      meshId = @cameraAngleComponent.mesh()._id
-      cameraAngleIndex = cameraAngle.index
 
       if @type is AM.DataInputComponent.Types.Number
         value = parseFloat value
         value = null if _.isNaN value
 
-      LOI.Assets.Mesh.updateCameraAngle meshId, cameraAngleIndex, "#{@property}": value
+      cameraAngle.update "#{@property}": value
 
   class @Name extends @CameraProperty
     @register 'LandsOfIllusions.Assets.MeshEditor.CameraAngle.Name'

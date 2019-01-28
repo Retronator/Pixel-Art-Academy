@@ -1,11 +1,11 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 # A 3D model asset.
-class LOI.Assets.Mesh extends AM.Document
+class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Mesh'
-  # name: text identifier for the mesh
-  # cameraAngles: array of source images describing the mesh
+  # cameraAngles: array of scene viewpoints
   #   name: text identifier
   #   picturePlaneDistance: the distance in pixels the camera is away from the picture plane or null for ortographic
   #   picturePlaneOffset: offset of the center of the picture plane in pixels
@@ -17,8 +17,34 @@ class LOI.Assets.Mesh extends AM.Document
   #     x, y, z
   #   up: up direction of the camera
   #     x, y, z
-  #   sprite: source image visible from this camera angle
-  #     _id
+  # objects: array of scene objects
+  #   name: name of the object
+  #   visible: boolean if the object is rendered
+  #   solver: name of the solver used to construct the mesh from the pictures
+  #   layers: array of
+  #     name: name of the layer
+  #     visible: boolean if this layer should be drawn
+  #     order: floating point order of the layer
+  #     pictures: array of images that describe the object
+  #       cameraAngle: index of the camera angle where this picture is from
+  #       bounds: dimensions of the bitmap
+  #         x, y: top-left corner relative to the camera origin (z-axis)
+  #         width, height: size of the bitmap
+  #       maps: array of texture maps that hold information for this picture
+  #         mapType: what information is contained in this map with values
+  #           materialIndex (1 byte per pixel: index)
+  #           paletteColor (2 bytes per pixel: ramp, shade)
+  #           directColor (3 bytes per pixel: r, g, b)
+  #           alpha (1 byte per pixel: a)
+  #           normal (3 bytes per pixel: x, y, z as signed bytes (-1 to 1 float mapped to -127 to 127))
+  #         data: array buffer holding the pixels, not sent to the server
+  #         compressedData: binary object with compressed version of data, sent to the server
+  # materials: array of shaders used to draw objects
+  #   name: what the materials represents
+  #   type: ID of the shader
+  #   ramp: index of the ramp within the palette
+  #   shade: index of the shade in the ramp
+  #   dither: amount of dither used from 0 to 1
   @Meta
     name: @id()
     fields: =>
@@ -30,43 +56,43 @@ class LOI.Assets.Mesh extends AM.Document
   # use the name parameter, because in production the name field has a minimized value.
   @className: 'Mesh'
   
-  constructor: ->
-    super arguments...
+  initialize: ->
+    # Track whether we need to save the mesh.
+    @dirty = new ReactiveField false
+    @_updatedDependency = new Tracker.Dependency
 
-    # Make rich camera angle objects.
-    if @cameraAngles
-      @cameraAngles[index] = new @constructor.CameraAngle data for data, index in @cameraAngles
+    # Initialize array fields
+    @cameraAngles = new @constructor.ArrayField @, 'cameraAngles', @cameraAngles, @constructor.CameraAngle
+    @objects = new @constructor.ArrayField @, 'objects', @objects
+    @materials = new @constructor.ArrayField @, 'materials', @materials
 
-  refresh: ->
-    super arguments...
+    # After mesh is initialized, mark to be in saved state.
+    @dirty false
+    
+  depend: ->
+    @_updatedDependency.depend()
 
-    # Also pull in all the sprites from the database.
-    cameraAngle.sprite?.refresh() for cameraAngle in @cameraAngles if @cameraAngles
+  contentUpdated: ->
+    @dirty true
+    @_updatedDependency.changed()
 
-  # Subscriptions
-  
-  @forId: @subscription 'forId'
-  @all: @subscription 'all'
+  save: ->
+    saveData = {}
+      
+    # Save array fields.
+    @cameraAngles.save saveData
+    @objects.save saveData
+    @materials.save saveData
+
+    # Send the mesh to server.
+    LOI.Assets.Mesh.save @_id, saveData
+
+    # Mark the state clean.
+    @dirty false
 
   # Methods
   
-  @insert: @method 'insert'
-  @update: @method 'update'
-  @clear: @method 'clear'
-  @remove: @method 'remove'
-  @duplicate: @method 'duplicate'
-  
-  @updateCameraAngle: @method 'updateCameraAngle'
-
-  setPaletteId: (paletteId) ->
-    # Update mesh palette.
-    LOI.Assets.Asset.update @constructor.className, @_id, $set: palette: _id: paletteId
-
-    # Also update palettes of all sprites.
-    return unless @cameraAngles
-
-    for cameraAngle in @cameraAngles when cameraAngle.sprite
-      LOI.Assets.Asset.update LOI.Assets.Sprite.className, cameraAngle.sprite._id, $set: palette: _id: paletteId
+  @save: @method 'save'
 
 if Meteor.isServer
   # Export meshes without authors.
