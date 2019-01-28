@@ -2,8 +2,17 @@ FM = FataMorgana
 LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.Helpers.LightDirection extends FM.Helper
+  # x, y, z: coordinates of the directional light vector
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Helpers.LightDirection'
   @initialize()
+
+  constructor: ->
+    super arguments...
+
+    if @fileId and not @data.value()
+      # Load initial value from global helper.
+      globalData = @interface.getComponentData @id()
+      @data.value globalData.value()
 
   value: (newDirection) ->
     if newDirection

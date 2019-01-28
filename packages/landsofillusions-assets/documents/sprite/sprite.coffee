@@ -148,7 +148,9 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     changed = false
 
     for property, value of bounds
-      changed = true unless @bounds[property] is value
+      unless @bounds?[property] is value
+        changed = true
+        break
 
     return unless changed
 

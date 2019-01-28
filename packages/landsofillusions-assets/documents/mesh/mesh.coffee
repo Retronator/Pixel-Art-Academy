@@ -63,7 +63,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     # Initialize array fields
     @cameraAngles = new @constructor.ArrayField @, 'cameraAngles', @cameraAngles, @constructor.CameraAngle
-    @objects = new @constructor.ArrayField @, 'objects', @objects
+    @objects = new @constructor.ArrayField @, 'objects', @objects, @constructor.Object
     @materials = new @constructor.ArrayField @, 'materials', @materials
 
     # After mesh is initialized, mark to be in saved state.

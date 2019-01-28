@@ -43,11 +43,31 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       return unless meshId = @meshId()
       @interface.getLoaderForFile meshId
 
+    @meshData = new ComputedField =>
+      @meshLoader().meshData()
+
     @mesh = new ComputedField =>
       @meshLoader().mesh
 
     @cameraAngle = new ComputedField =>
-      @meshLoader()?.meshData()?.cameraAngles.get @cameraAngleIndex()
+      @meshData()?.cameraAngles.get @cameraAngleIndex()
+
+    @selection = new ComputedField =>
+      @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.Selection
+
+    @activeObjectIndex = new ComputedField =>
+      @selection()?.objectIndex()
+
+    @activeObject = new ComputedField =>
+      @meshData()?.objects.get @activeObjectIndex()
+
+    @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+
+    @activeLayer = new ComputedField =>
+      @activeObject()?.layers.get @paintHelper.layerIndex()
+      
+    @activePicture = new ComputedField =>
+      @activeLayer()?.getPictureForCameraAngle @cameraAngleIndex()
 
     @pixelRenderEnabled = new ComputedField =>
       @editorFileData()?.get('pixelRenderEnabled') ? true
@@ -55,9 +75,31 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @debugMode = new ComputedField =>
       @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).active()
 
-    # Provide the sprite we're currently editing to sprite editor views.
+    # Provide the fake sprite data object to sprite editor views.
     @spriteData = new ComputedField =>
-      @cameraAngle()?.sprite
+      return unless meshData = @meshData()
+      return unless object = @activeObject()
+      cameraAngleIndex = @cameraAngleIndex()
+
+      # Rebuild layers from object for active camera angle.
+      spriteLayers = []
+
+      for layer in object.layers.getAll()
+        picture = layer.getPictureForCameraAngle cameraAngleIndex
+
+        spriteLayer = {}
+
+        # Copy origin from picture bounds.
+        if picture?.bounds
+          spriteLayer.origin =
+            x: picture.bounds.left or 0
+            y: picture.bounds.top or 0
+
+        spriteLayers[layer.index] = spriteLayer
+
+      new LOI.Assets.Sprite
+        palette: _.pick meshData.palette, ['_id']
+        layers: spriteLayers
 
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
 
@@ -66,7 +108,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @horizon = new @constructor.Horizon @
 
     @pixelCanvas = new LOI.Assets.SpriteEditor.PixelCanvas
-      sprite: => @sprite
+      spriteData: @spriteData
       fileIdForHelpers: @meshId
       drawComponents: =>
         sourceImageEnabled = @sourceImageEnabled()

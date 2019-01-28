@@ -25,13 +25,7 @@ class LOI.Assets.MeshEditor.Objects extends FM.View
     @selection().setObjectIndex index
 
   objects: ->
-    return unless objects = @mesh()?.objects.getAll()
-
-    # Add index information.
-    for object, index in objects when object
-      object = _.clone object
-      object.index = index
-      object
+    @mesh()?.objects.getAll()
 
   active: ->
     object = @currentData()
@@ -42,15 +36,19 @@ class LOI.Assets.MeshEditor.Objects extends FM.View
 
   visibleCheckedAttribute: ->
     object = @currentData()
-    checked: true if object.visible ? true
+    checked: true if object.visible() ? true
 
   placeholderName: ->
     object = @currentData()
     "Object #{object.index}"
 
-  inactiveName: ->
+  nameDisabledAttribute: ->
+    # Disable name editing until the object is active.
+    disabled: true unless @active()
+    
+  placeholderClass: ->
     object = @currentData()
-    object.name or @placeholderName()
+    'placeholder' unless object.name()
 
   showRemoveButton: ->
     # We can remove an object if it exists.
@@ -69,17 +67,10 @@ class LOI.Assets.MeshEditor.Objects extends FM.View
 
   onChangeObject: (event) ->
     object = @currentData()
-
-    # Since we have a modified clone of the object, re-fetch it from the mesh.
-    mesh = @mesh()
-    object = mesh.objects.get object.index
-
     $layer = $(event.target).closest('.object')
 
-    object.name = $layer.find('.name-input').val()
-    object.visible = $layer.find('.visible-checkbox').is(':checked')
-
-    mesh.objects.contentUpdated()
+    object.name $layer.find('.name-input').val()
+    object.visible $layer.find('.visible-checkbox').is(':checked')
 
   onClickAddButton: (event) ->
     mesh = @mesh()

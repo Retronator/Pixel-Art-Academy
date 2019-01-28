@@ -7,7 +7,7 @@
       padding 1rem 2rem
 
       &.active
-        td
+        td:not(.row-name)
           background atariGrey(2)
 
         .thumbnail
@@ -15,9 +15,11 @@
             display block
 
         .name
+          color atariGrey(5)
+
           .name-input
             &::placeholder
-              color atariGrey(3)
+              color atariGrey(4)
 
       .thumbnail
         position relative

@@ -22,11 +22,19 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
 
     operators = {}
 
-    # Content Components
+    # Components
 
     components =
+      "#{_.snakeCase LOI.Assets.MeshEditor.Tools.Pencil.id()}":
+        fractionalPerfectLines: true
+        drawPreview: true
+        
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.LightDirection.id()}":
+        new THREE.Vector3(2, -4, -3).normalize().toObject()
+
       "#{_.snakeCase LOI.Assets.SpriteEditor.ShadingSphere.id()}":
         radius: 30
+        angleSnap: 45
 
       "#{_.snakeCase LOI.Assets.MeshEditor.MeshCanvas.id()}":
         components: [
@@ -95,8 +103,8 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       tools: [
         LOI.Assets.Editor.Tools.Arrow.id()
         LOI.Assets.SpriteEditor.Tools.Translate.id()
-        LOI.Assets.SpriteEditor.Tools.Pencil.id()
-        LOI.Assets.SpriteEditor.Tools.Eraser.id()
+        LOI.Assets.MeshEditor.Tools.Pencil.id()
+        LOI.Assets.MeshEditor.Tools.Eraser.id()
         LOI.Assets.SpriteEditor.Tools.ColorFill.id()
         LOI.Assets.MeshEditor.Tools.ClusterPicker.id()
         LOI.Assets.MeshEditor.Tools.MoveCamera.id()
@@ -144,7 +152,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                     height: 80
                     tabs: [
                       name: 'Layers'
-                      contentComponentId: LOI.Assets.SpriteEditor.Layers.id()
+                      contentComponentId: LOI.Assets.MeshEditor.Layers.id()
                       active: true
                     ,
                       name: 'Landmarks'
@@ -158,6 +166,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                     tabs: [
                       name: 'Palette'
                       contentComponentId: LOI.Assets.SpriteEditor.Palette.id()
+                      active: true
                     ,
 #                      name: 'Materials'
 #                      contentComponentId: LOI.Assets.Editor.Materials.id()
@@ -167,7 +176,6 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                     ,
                       name: 'Camera'
                       contentComponentId: LOI.Assets.MeshEditor.CameraAngle.id()
-                      active: true
                     ]
 
               remainingArea:
@@ -206,6 +214,10 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": null
       "#{LOI.Assets.MeshEditor.Tools.ClusterPicker.id()}": key: AC.Keys.i, holdKey: AC.Keys.alt
       "#{LOI.Assets.MeshEditor.Tools.MoveCamera.id()}": key: AC.Keys.c
+      "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": null
+      "#{LOI.Assets.MeshEditor.Tools.Pencil.id()}": key: AC.Keys.b
+      "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": null
+      "#{LOI.Assets.MeshEditor.Tools.Eraser.id()}": key: AC.Keys.e
 
   onRendered: ->
     super arguments...

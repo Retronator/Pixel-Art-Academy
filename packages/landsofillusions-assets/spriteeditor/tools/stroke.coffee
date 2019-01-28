@@ -280,7 +280,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
         
       relativePixels.push relativePixel
 
-    @processPixelsOnServer spriteData, layerIndex, relativePixels
+    @applyPixels spriteData, layerIndex, relativePixels
 
-  processPixelsOnServer: (spriteData, layerIndex, pixels) ->
+  applyPixels: (spriteData, layerIndex, pixels) ->
     # Override to call a method that will send the operation on the server.

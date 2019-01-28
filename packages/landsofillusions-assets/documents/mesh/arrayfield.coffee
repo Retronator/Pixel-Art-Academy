@@ -15,13 +15,13 @@ class LOI.Assets.Mesh.ArrayField
       array = _.clone @array
 
       if @contentClass
-        array[index] = item.toPlainObject() for item, index in array
+        array[index] = item?.toPlainObject() for item, index in array
 
       saveData[@field] = array
 
   getAll: ->
     @_updatedDependency.depend()
-    @array
+    _.without @array, undefined, null
 
   get: (index) ->
     @_updatedDependency.depend()
@@ -41,15 +41,22 @@ class LOI.Assets.Mesh.ArrayField
     else
       @array[index] = data
 
-    @_updatedDependency.changed()
+    @contentUpdated()
 
     # Return index of the new item.
     index
 
-  remove: (index) ->
-    @array[index] = null
-    @_updatedDependency.changed()
-    
+  remove: (index, splice) ->
+    if splice
+      # We remove the item with splice.
+      @array.splice index, 1
+      
+    else
+      # We just clear the position in the array.
+      @array[index] = null
+
+    @contentUpdated()
+
   contentUpdated: ->
     @_updatedDependency.changed()
     @parent.contentUpdated()

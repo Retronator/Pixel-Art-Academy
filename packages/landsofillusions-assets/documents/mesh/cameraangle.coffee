@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Mesh.CameraAngle
   constructor: (@cameraAngles, @index, data) ->
-    @_updateDependency = new Tracker.Dependency
+    @_updatedDependency = new Tracker.Dependency
 
     @sourceData = {}
     @update data
@@ -15,7 +15,7 @@ class LOI.Assets.Mesh.CameraAngle
     @sourceData
 
   depend: ->
-    @_updateDependency.depend()
+    @_updatedDependency.depend()
 
   update: (update) ->
     # Update source data and the object itself.
@@ -34,7 +34,7 @@ class LOI.Assets.Mesh.CameraAngle
       @worldMatrixInverse = new THREE.Matrix4().getInverse @worldMatrix
 
     # Signal change of the camera angle.
-    @_updateDependency.changed()
+    @_updatedDependency.changed()
     @cameraAngles.contentUpdated()
 
   projectPoints: (screenPoints, worldPlane, xOffset = 0, yOffset = 0) ->

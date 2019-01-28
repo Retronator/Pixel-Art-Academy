@@ -1,6 +1,6 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
-.landsofillusions-assets-spriteeditor-layers
+.landsofillusions-assets-mesheditor-layers
   .layers-table
     .layer
       &.active
@@ -18,8 +18,8 @@
             &::placeholder
               color atariGrey(4)
 
-      .depth
-        width 20rem
+      .order
+        width 16rem
 
       .visible
         position relative
@@ -31,7 +31,6 @@
           cursor pointer
 
           .visible-checkbox
-            background red
             display none
 
             &:checked + .icon
@@ -43,6 +42,11 @@
               background-image image('/landsofillusions/assets/spriteeditor/layer-visible.png')
               width 9rem
               height 5rem
+
+      .name
+        .name-input
+          &:disabled
+            cursor pointer
 
       .thumbnail
         position relative

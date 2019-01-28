@@ -28,7 +28,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
                 
       pixel
 
-  processPixelsOnServer: (spriteData, layerIndex, pixels) ->
+  applyPixels: (spriteData, layerIndex, pixels) ->
     for pixel in pixels
       # See if we're only painting normals.
       paintNormals = @data.get 'paintNormals'

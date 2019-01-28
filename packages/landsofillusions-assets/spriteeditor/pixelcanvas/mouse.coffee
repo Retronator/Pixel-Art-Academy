@@ -28,11 +28,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Mouse
         @_lastPageY = event.pageY
         @updateCoordinates()
 
-      # Also react to viewport origin changes.
+      # Also react to viewport origin changes, when we have existing coordinates set.
       Tracker.nonreactive =>
         @pixelCanvas.autorun (computation) =>
           @pixelCanvas.camera().origin()
-          @updateCoordinates()
+          @updateCoordinates() if @pixelCoordinate()
 
       # Remove coordinates when mouse leaves the canvas.
       $pixelCanvas.mouseleave (event) =>

@@ -12,7 +12,7 @@ class LOI.Assets.MeshEditor.Helpers.Selection extends FM.Helper
     @activeFileData = new ComputedField =>
       @interface.getComponentDataForActiveFile @
 
-  objectIndex: -> @activeFileData().get 'objectIndex'
+  objectIndex: -> @activeFileData().get('objectIndex') or 0
 
   setObjectIndex: (index) ->
     @activeFileData().set 'objectIndex', index

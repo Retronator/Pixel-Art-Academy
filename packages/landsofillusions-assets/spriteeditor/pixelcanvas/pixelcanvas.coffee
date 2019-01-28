@@ -54,7 +54,10 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
       @spriteId = new ComputedField =>
         @spriteData()?._id
-      
+
+    else if @options?.spriteData
+      @spriteData = @options?.spriteData
+
     else
       # We need to get the engine sprite from the loader.
       @spriteId = new ComputedField =>
@@ -72,7 +75,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
     @componentData = @interface.getComponentData @
     @componentFileData = new ComputedField =>
-      @interface.getComponentDataForFile @, @spriteId()
+      return unless spriteId = @spriteId?()
+      @interface.getComponentDataForFile @, spriteId
 
     # Initialize components.
     @camera new @constructor.Camera @
@@ -86,18 +90,18 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @toolsActive = @componentData.get('toolsActive') ? true    
 
     # Prepare helpers.
-    @lightDirectionHelper = new ComputedField =>
-      @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.LightDirection, @spriteId()
-      
-    @landmarksHelper = new ComputedField =>
-      @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.Landmarks, @spriteId()
-
     @fileIdForHelpers = new ComputedField =>
       if @options?.fileIdForHelpers
         @options.fileIdForHelpers()
 
       else
         @editorView.activeFileId()
+
+    @lightDirectionHelper = new ComputedField =>
+      @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.LightDirection, @fileIdForHelpers()
+
+    @landmarksHelper = new ComputedField =>
+      @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.Landmarks, @fileIdForHelpers()
 
     @drawComponents = new ComputedField =>
       if @options?.drawComponents

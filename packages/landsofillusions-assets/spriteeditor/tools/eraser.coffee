@@ -17,7 +17,7 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
 
       pixel
 
-  processPixelsOnServer: (spriteData, layerIndex, pixels) ->
+  applyPixels: (spriteData, layerIndex, pixels) ->
     for pixel in pixels
       # See if there even is a pixel there.
       continue unless _.find spriteData.layers?[layerIndex]?.pixels, (searchPixel) -> pixel.x is searchPixel.x and pixel.y is searchPixel.y

@@ -8,15 +8,7 @@
               <input type="checkbox" class="visible-checkbox" {{visibleCheckedAttribute}}/><span class="icon"></span>
             </label>
           </td>
-          <td class="name">
-            {{#if active}}
-                <input class="name-input" value="{{name}}" placeholder="{{placeholderName}}"/>
-            {{else}}
-              <div class="inactive-name">
-                {{inactiveName}}
-              </div>
-            {{/if}}
-          </td>
+          <td class="name"><input class="name-input" value="{{name}}" placeholder="{{placeholderName}}" {{nameDisabledAttribute}}/></td>
         </tr>
       {{/each}}
     </table>
