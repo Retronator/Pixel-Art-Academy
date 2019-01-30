@@ -1,3 +1,4 @@
+AC = Artificial.Control
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
@@ -58,19 +59,50 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
 
         effectiveScale = @effectiveScale()
 
-        windowDelta =
-          x: event.originalEvent.deltaX
-          y: event.originalEvent.deltaY
+        if event.ctrlKey
+          # User is zooming in/out.
+          delta = event.originalEvent.deltaY
 
-        canvasDelta =
-          x: windowDelta.x / effectiveScale
-          y: windowDelta.y / effectiveScale
+          scale = @scale()
+          scaleChange = Math.pow(0.99, delta)
 
-        oldOrigin = @origin()
+          @setScale scale * scaleChange
 
-        @originData().value
-          x: oldOrigin.x + canvasDelta.x
-          y: oldOrigin.y + canvasDelta.y
+          # Also move the origin, depending on how much off-center we were zooming.
+          canvasOrigin = $pixelCanvas.offset()
+
+          mouseWindowCoordinate =
+            x: event.originalEvent.pageX - canvasOrigin.left
+            y: event.originalEvent.pageY - canvasOrigin.top
+
+          mouseCanvasCoordinate = @transformWindowToCanvas mouseWindowCoordinate
+
+          oldOrigin = @origin()
+
+          offCenter =
+            x: mouseCanvasCoordinate.x - oldOrigin.x
+            y: mouseCanvasCoordinate.y - oldOrigin.y
+
+          @originData().value
+            x: oldOrigin.x + offCenter.x * (scaleChange - 1)
+            y: oldOrigin.y + offCenter.y * (scaleChange - 1)
+
+        else
+          # User is translating.
+
+          windowDelta =
+            x: event.originalEvent.deltaX
+            y: event.originalEvent.deltaY
+
+          canvasDelta =
+            x: windowDelta.x / effectiveScale
+            y: windowDelta.y / effectiveScale
+
+          oldOrigin = @origin()
+
+          @originData().value
+            x: oldOrigin.x + canvasDelta.x
+            y: oldOrigin.y + canvasDelta.y
 
   setScale: (scale) ->
     @scaleData().value scale
