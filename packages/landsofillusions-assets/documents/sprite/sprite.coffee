@@ -98,6 +98,10 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     throw new AE.ArgumentOutOfRangeException "Up to 4,096 pixels per layer are allowed." if newCount > 4096
     
   _applyOperation: (forward, backward) ->
+    @_modifyBoundsBeforeApply arguments...
+    super arguments...
+
+  _modifyBoundsBeforeApply: (forward, backward) ->
     # See if we're updating bounds.
     if forward.$set?.bounds
       if @bounds
@@ -114,7 +118,22 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       backward.$set ?= {}
       backward.$set.bounds = @bounds
 
-    super forward, backward
+  _applyOperationAndCombineHistory: (forward, combinedForward, combinedBackward) ->
+    # See if we're updating bounds.
+    if forward.$set?.bounds
+      combinedForward.$set ?= {}
+      combinedForward.$set.bounds = forward.$set.bounds
+
+      # Restore previous bounds unless they were already being restored.
+      unless combinedBackward.$set?.bounds or combinedBackward.$unset?.bounds
+        combinedBackward.$set ?= {}
+        combinedBackward.$set.bounds = @bounds
+
+    super arguments...
+
+  _applyOperationAndConnectHistory: (forward, backward) ->
+    @_modifyBoundsBeforeApply arguments...
+    super arguments...
 
   recomputeBounds: ->
     return unless newBounds = @_tryRecomputeBounds()

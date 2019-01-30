@@ -2,7 +2,7 @@ AC = Artificial.Control
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-bresenhamLine = require('bresenham-zingl').line
+Bresenham = require('bresenham-zingl')
 
 class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools.Tool
   # cleanLine: boolean whether to maintain a clean line with consistent width
@@ -13,73 +13,27 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     @drawLine = new ReactiveField false
     @drawStraight = new ReactiveField false
-    
+
     @lastPixelCoordinates = new ReactiveField null
     @currentPixelCoordinates = new ReactiveField null
     @lastStrokeCoordinates = new ReactiveField null
+    @secondToLastStrokeCoordinates = new ReactiveField null
     @lockedCoordinate = new ReactiveField null
 
     @perfectLineRatio = new ReactiveField null
 
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
-  destroy: ->
-    @pixelCoordinates?.stop()
-    @pixels?.stop()
+    @pixels = new ReactiveField null
 
   onActivated: ->
-    @currentPixelCoordinates
-      x: @mouseState.x
-      y: @mouseState.y
-
-    # Calculate which pixels the tool would fill.
-    @pixelCoordinates = new ComputedField =>
-      return [] unless currentPixelCoordinates = @currentPixelCoordinates()
-      lastPixelCoordinates = @lastPixelCoordinates() or currentPixelCoordinates
-      lastStrokeCoordinates = @lastStrokeCoordinates() or currentPixelCoordinates
-
-      keyboardState = AC.Keyboard.getState()
-      pixels = []
-
-      if @drawLine()
-        if keyboardState.isMetaDown()
-          # Draw perfect pixel art line.
-          pixels = @perfectLine lastPixelCoordinates, currentPixelCoordinates
-
-        else
-          @perfectLineRatio null
-
-          # Draw bresenham line from last coordinates (persist after end of stroke).
-          bresenhamLine lastPixelCoordinates.x, lastPixelCoordinates.y, currentPixelCoordinates.x, currentPixelCoordinates.y, (x, y) => pixels.push {x, y}
-
-      else
-        # Apply locked coordinate.
-        if @drawStraight()
-          currentPixelCoordinates = _.extend {}, currentPixelCoordinates, @lockedCoordinate()
-
-        # Draw bresenham line from last stroke coordinates (reset after end of stroke).
-        bresenhamLine lastStrokeCoordinates.x, lastStrokeCoordinates.y, currentPixelCoordinates.x, currentPixelCoordinates.y, (x, y) => pixels.push {x, y}
-
-      # TODO: Apply symmetry.
-      # symmetryXOrigin = @options.editor().symmetryXOrigin?()
-      #if symmetryXOrigin?
-      #  mirroredX = -@mouseState.x + 2 * symmetryXOrigin
-      #  xCoordinates.push [mirroredX, -1]
-
-      pixels
-    ,
-      true
-
-    @pixels = new ComputedField =>
-      @createPixelsFromCoordinates @pixelCoordinates()
-    ,
-      true
+    @processStroke()
 
     @_previewActive = false
 
     @_updatePreviewAutorun = @autorun (computation) =>
       # Show preview when we're drawing a line and mouse is on the canvas.
-      preview = @isActive() and (@data.get('drawPreview') or @drawLine()) and @editor()?.mouse().pixelCoordinate()
+      preview = (@data.get('drawPreview') or @drawLine()) and @editor()?.mouse().pixelCoordinate()
 
       if preview
         # Update preview pixels.
@@ -96,9 +50,14 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     coordinates
 
   onDeactivated: ->
-    @pixelCoordinates.stop()
-    @pixels.stop()
     @_updatePreviewAutorun.stop()
+    @editor().operationPreview().pixels []
+
+  infoText: ->
+    return unless @drawLine()
+    return unless ratio = @perfectLineRatio()
+
+    "#{ratio[0]}:#{ratio[1]}"
 
   perfectLine: (start, end) ->
     dx = end.x - start.x
@@ -188,12 +147,24 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     super arguments...
 
     if event.which is AC.Keys.shift
+      # See if we've already started drawing.
       if @mouseState.leftButton
+        # We're already mid-stroke so we want to detect in which direction to lock the coordinate.
         @lockedCoordinate null
         @drawStraight true
-        
+
       else
-        @drawLine true
+        # When not drawing, shift triggers line drawing, but make sure no other modifiers are
+        # pressed, since that would mean we're probably in the middle of executing a shortcut.
+        keyboardState = AC.Keyboard.getState()
+
+        unless keyboardState.isCommandOrControlDown() or keyboardState.isKeyDown AC.Keys.alt
+          @drawLine true
+          @updatePixels()
+
+    else if @drawLine()
+      # React to any modifier changes when line drawing.
+      @updatePixels()
 
   onKeyUp: (event) ->
     super arguments...
@@ -201,25 +172,97 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     if event.which is AC.Keys.shift
       @drawStraight false
       @drawLine false
+      @updatePixels()
+
+    else if @drawLine()
+      # React to any modifier changes when line drawing.
+      @updatePixels()
 
   onMouseDown: (event) ->
     super arguments...
 
-    @applyTool()
+    @_strokeStarted = true
+
+    @processStroke()
 
   onMouseMove: (event) ->
     super arguments...
 
+    @processStroke()
+
+  processStroke: ->
     currentPixelCoordinates = @currentPixelCoordinates()
 
-    newPixelCoordinates =
-      x: @mouseState.x
-      y: @mouseState.y
+    if @mouseState.x? and @mouseState.y?
+      newPixelCoordinates =
+        x: @mouseState.x
+        y: @mouseState.y
 
-    return if EJSON.equals currentPixelCoordinates, newPixelCoordinates
+      if @drawStraight()
+        _.extend newPixelCoordinates, @lockedCoordinate()
 
-    @currentPixelCoordinates newPixelCoordinates
+    # This is the start of the stroke if we don't have any previous coordinates.
+    startOfStroke = not @lastStrokeCoordinates()
 
+    # Update coordinates if they are new.
+    unless EJSON.equals currentPixelCoordinates, newPixelCoordinates
+      @currentPixelCoordinates newPixelCoordinates
+
+    else
+      # Coordinates are the same, so if we're in the middle of the stroke
+      # we have already applied the tool here and there's nothing new to do.
+      return unless startOfStroke
+
+    @updatePixels()
+
+  updatePixels: ->
+    # Calculate which pixels the tool would fill.
+    return unless currentPixelCoordinates = @currentPixelCoordinates()
+    currentPixelCoordinates = new THREE.Vector2().copy currentPixelCoordinates
+    lastPixelCoordinates = new THREE.Vector2().copy @lastPixelCoordinates() or currentPixelCoordinates
+    lastStrokeCoordinates = new THREE.Vector2().copy @lastStrokeCoordinates() or currentPixelCoordinates
+    secondToLastStrokeCoordinates = new THREE.Vector2().copy @secondToLastStrokeCoordinates() or lastStrokeCoordinates
+
+    keyboardState = AC.Keyboard.getState()
+    pixelCoordinates = []
+
+    if @drawLine()
+      if keyboardState.isMetaDown()
+        # Draw perfect pixel art line.
+        pixelCoordinates = @perfectLine lastPixelCoordinates, currentPixelCoordinates
+
+      else
+        @perfectLineRatio null
+
+        # Draw bresenham line from last coordinates (which persist after end of stroke).
+        Bresenham.line lastPixelCoordinates.x, lastPixelCoordinates.y, currentPixelCoordinates.x, currentPixelCoordinates.y, (x, y) => pixelCoordinates.push {x, y}
+
+    else
+      # Apply locked coordinate.
+      if @drawStraight()
+        # Draw bresenham line from last stroke coordinates (which resets after end of stroke).
+        Bresenham.line lastStrokeCoordinates.x, lastStrokeCoordinates.y, currentPixelCoordinates.x, currentPixelCoordinates.y, (x, y) => pixelCoordinates.push {x, y}
+
+      else
+        # Draw bezier curve from last stroke coordinates (which resets after end of stroke).
+        tangentDirection = new THREE.Vector2().subVectors(currentPixelCoordinates, secondToLastStrokeCoordinates).normalize()
+        midPoint = lastStrokeCoordinates.clone().add(currentPixelCoordinates).multiplyScalar(0.5)
+
+        # Project mid-point to the tangent going from last point.
+        ray = new THREE.Ray lastStrokeCoordinates, tangentDirection
+        bezierMidPoint = new THREE.Vector2
+        ray.closestPointToPoint midPoint, bezierMidPoint
+        bezierMidPoint.round()
+
+        Bresenham.quadBezier lastStrokeCoordinates.x, lastStrokeCoordinates.y, bezierMidPoint.x, bezierMidPoint.y, currentPixelCoordinates.x, currentPixelCoordinates.y, (x, y) => pixelCoordinates.push {x, y}
+
+    # TODO: Apply symmetry.
+    # symmetryXOrigin = @options.editor().symmetryXOrigin?()
+    #if symmetryXOrigin?
+    #  mirroredX = -@mouseState.x + 2 * symmetryXOrigin
+    #  xCoordinates.push [mirroredX, -1]
+
+    @pixels @createPixelsFromCoordinates pixelCoordinates
     @applyTool()
 
   onMouseUp: (event) ->
@@ -227,8 +270,11 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     # End stroke.
     @lastStrokeCoordinates null
+    @secondToLastStrokeCoordinates null
 
     @drawStraight false
+
+    @updatePixels()
 
   applyTool: ->
     return unless @mouseState.leftButton
@@ -244,14 +290,14 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     absolutePixels = @pixels()
     drawStraight = @drawStraight()
+    currentPixelCoordinates = @currentPixelCoordinates()
 
     if drawStraight
       lastPixelCoordinates = @lastPixelCoordinates()
-      lastNewPixel = _.last absolutePixels
 
       unless lockedCoordinate = @lockedCoordinate()
         # Calculate which direction to lock to.
-        if lastNewPixel.x is lastPixelCoordinates.x
+        if currentPixelCoordinates.x is lastPixelCoordinates.x
           # Lock to vertical straight lines.
           lockedCoordinate = x: lastPixelCoordinates.x
 
@@ -261,16 +307,12 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
         @lockedCoordinate lockedCoordinate
 
     relativePixels = []
-    
+
     for absolutePixel in absolutePixels
       # If we have fixed bounds, make sure we're inside.
       if spriteData.bounds?.fixed
         continue unless spriteData.bounds.left <= absolutePixel.x <= spriteData.bounds.right and spriteData.bounds.top <= absolutePixel.y <= spriteData.bounds.bottom
 
-      absoluteCoordinates = _.pick absolutePixel, ['x', 'y']
-      @lastPixelCoordinates absoluteCoordinates
-      @lastStrokeCoordinates absoluteCoordinates
-      
       relativePixel = _.clone absolutePixel
       _.extend relativePixel, lockedCoordinate if drawStraight
 
@@ -280,7 +322,16 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
         
       relativePixels.push relativePixel
 
-    @applyPixels spriteData, layerIndex, relativePixels
+    @applyPixels spriteData, layerIndex, relativePixels, @_strokeStarted
 
-  applyPixels: (spriteData, layerIndex, pixels) ->
+    # Save start of current stroke segment to allow smoothing.
+    @secondToLastStrokeCoordinates @lastStrokeCoordinates()
+
+    # Save last absolute pixel as the end of the stroke.
+    @lastPixelCoordinates currentPixelCoordinates
+    @lastStrokeCoordinates currentPixelCoordinates
+
+    @_strokeStarted = false
+
+  applyPixels: (spriteData, layerIndex, pixels, strokeStarted) ->
     # Override to call a method that will send the operation on the server.

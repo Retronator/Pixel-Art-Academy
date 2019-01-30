@@ -28,8 +28,10 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
                 
       pixel
 
-  applyPixels: (spriteData, layerIndex, pixels) ->
-    for pixel in pixels
+  applyPixels: (spriteData, layerIndex, pixels, strokeStarted) ->
+    firstPixel = true
+
+    for pixel, index in pixels
       # See if we're only painting normals.
       paintNormals = @data.get 'paintNormals'
 
@@ -46,5 +48,11 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
         "layers.#{layerIndex}.pixels": pixel
 
       continue if exactMatch
-          
-      LOI.Assets.Sprite.addPixel spriteData._id, layerIndex, pixel
+
+      # We can combine history unless this is the first pixel of a new stroke.
+      # Note: We must make sure this is a boolean since it will be checked on the server.
+      combineHistory = not (firstPixel and strokeStarted)
+
+      LOI.Assets.Sprite.addPixel spriteData._id, layerIndex, pixel, combineHistory
+
+      firstPixel = false

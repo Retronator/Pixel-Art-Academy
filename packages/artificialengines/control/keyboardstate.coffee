@@ -31,7 +31,7 @@ class AC.KeyboardState
     return if shortcut.alt and not @isKeyDown AC.Keys.alt
     return if shortcut.control and not @isKeyDown AC.Keys.control
 
-    # Make sure non of the other modifiers are down.
+    # Make sure none of the other modifiers are down.
     return if @isCommandOrControlDown() and not (shortcut.command or shortcut.control or shortcut.commandOrControl)
     return if @isMetaDown() and not (shortcut.command or shortcut.win or shortcut.super or shortcut.commandOrControl)
 

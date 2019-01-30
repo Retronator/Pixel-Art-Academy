@@ -19,11 +19,19 @@ LOI.Assets.Asset.undo.method (assetClassName, assetId) ->
   # Create the modifier that will undo the change at this position.
   modifier = history.backward
 
+  # See if this is part of a connected step.
+  if modifier.connected
+    delete modifier.connected
+    connected = true
+
   # Decrease history position.
   modifier.$set ?= {}
   modifier.$set.historyPosition = asset.historyPosition - 1
 
   assetClass.documents.update assetId, modifier
+
+  # Apply connected undo.
+  LOI.Assets.Asset.undo assetClassName, assetId if connected
 
 LOI.Assets.Asset.redo.method (assetClassName, assetId) ->
   check assetId, Match.DocumentId
@@ -43,11 +51,19 @@ LOI.Assets.Asset.redo.method (assetClassName, assetId) ->
   # Create the modifier that will undo the change at this position.
   modifier = history.forward
 
+  # See if this is part of a connected step.
+  if modifier.connected
+    delete modifier.connected
+    connected = true
+
   # Decrease history position.
   modifier.$set ?= {}
   modifier.$set.historyPosition = asset.historyPosition + 1
 
   assetClass.documents.update assetId, modifier
+
+  # Apply connected redo.
+  LOI.Assets.Asset.redo assetClassName, assetId if connected
 
 LOI.Assets.Asset.clearHistory.method (assetClassName, assetId) ->
   check assetId, Match.DocumentId
