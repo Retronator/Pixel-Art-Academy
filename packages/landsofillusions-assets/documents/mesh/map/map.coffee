@@ -26,6 +26,9 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map
       @data = Pako.inflateRaw compressedData
       @width = @picture._bounds.width
       @height = @picture._bounds.height
+      @_origin =
+        x: @picture._bounds.x
+        y: @picture._bounds.y
       
       throw new AE.ArgumentException "Provided map data does not match picture bounds." unless @data.length is @requiredArrayLength()
 
@@ -43,12 +46,45 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map
     newData = new Uint8Array @requiredArrayLength()
 
     if @data
-      # TODO: Transfer data to new buffer.
-      newData[0] = 0
+      oldAbsoluteXStart = @_origin.x
+      oldAbsoluteXEnd = @width + @_origin.x - 1
+
+      newAbsoluteXStart = @picture._bounds.x
+      newAbsoluteXEnd = @picture._bounds.width + @picture._bounds.x - 1
+
+      # We can only copy the subset of columns that fit into the new bounds.
+      absoluteXStart = Math.max oldAbsoluteXStart, newAbsoluteXStart
+      absoluteXEnd = Math.min oldAbsoluteXEnd, newAbsoluteXEnd
+      copyWidth = absoluteXEnd - absoluteXStart + 1
+
+      sourceXStart = absoluteXStart - @_origin.x
+      targetXStart = absoluteXStart - @picture._bounds.x
+
+      bytesPerPixel = @constructor.bytesPerPixel
+      copyWidthBytes = copyWidth * bytesPerPixel
+
+      for sourceY in [0...@height]
+        absoluteY = sourceY + @_origin.y
+        targetY = absoluteY - @picture._bounds.y
+
+        # Is this line even still in bounds?
+        continue unless 0 <= targetY < @picture._bounds.height
+
+        sourceIndex = (sourceXStart + sourceY * @width) * bytesPerPixel
+        targetIndex = (targetXStart + targetY * @picture._bounds.width) * bytesPerPixel
+
+        for pixelOffset in [0...copyWidthBytes]
+          newData[targetIndex] = @data[sourceIndex]
+          sourceIndex++
+          targetIndex++
 
     @data = newData
     @width = @picture._bounds.width
     @height = @picture._bounds.height
+
+    @_origin =
+      x: @picture._bounds.x
+      y: @picture._bounds.y
 
   getPixel: (x, y) ->
     throw new AE.NotImplementedException "Map must provide how to construct a pixel."

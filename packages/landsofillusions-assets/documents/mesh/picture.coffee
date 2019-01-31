@@ -161,8 +161,6 @@ class LOI.Assets.Mesh.Object.Layer.Picture
   getMapValuesForPixelRelative: (x, y) ->
     flagsMap = @getMap @constructor.Map.Types.Flags
 
-    console.log "pp", x, y, flagsMap.getPixel x, y
-
     return unless flags = flagsMap.getPixel x, y
 
     mapValues = {}

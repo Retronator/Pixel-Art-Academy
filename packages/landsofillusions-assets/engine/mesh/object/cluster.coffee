@@ -18,8 +18,6 @@ class LOI.Assets.Engine.Mesh.Object.Cluster
     @pixels = []
     @edges = []
 
-    console.log "cluster", @pixelProperties
-
     @plane =
       point: null
       normal: null

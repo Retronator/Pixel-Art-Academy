@@ -9,7 +9,6 @@ LOI.Assets.Engine.Mesh.Object.detectClusters = (object) ->
 
   for layer, layerIndex in layers
     continue unless picture = layer.pictures.get 0
-    console.log "bounds", picture, picture.bounds()
     continue unless bounds = picture.bounds()
     continue unless flagsMap = picture.maps[LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.Flags]
     continue unless normalMap = picture.maps[LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.Normal]
@@ -19,8 +18,6 @@ LOI.Assets.Engine.Mesh.Object.detectClusters = (object) ->
     assignedPixels = new Uint8Array width * height
     visitedPixels = new Uint8Array width * height
 
-    console.log "Det", flagsMap, normalMap, bounds
-
     for x in [0...bounds.width]
       for y in [0...bounds.height]
         unless flagsMap.pixelExists x, y
@@ -29,7 +26,7 @@ LOI.Assets.Engine.Mesh.Object.detectClusters = (object) ->
 
         # Skip pixels that have already been assigned to a cluster.
         pixelIndex = x + y * width
-        return if assignedPixels[pixelIndex]
+        continue if assignedPixels[pixelIndex]
 
         # We found a new pixel that is not part of a cluster yet.
         clusterIndex = clusters.length
@@ -39,10 +36,7 @@ LOI.Assets.Engine.Mesh.Object.detectClusters = (object) ->
         cluster = new LOI.Assets.Engine.Mesh.Object.Cluster clusterIndex, picture, pixelProperties
         clusters.push cluster
 
-        pixel =
-          x: x + bounds.x
-          y: y + bounds.y
-
+        pixel = {x, y}
         fringe = [pixel]
         visitedPixels.fill 0
         visitedPixels[pixelIndex] = 1
@@ -52,8 +46,12 @@ LOI.Assets.Engine.Mesh.Object.detectClusters = (object) ->
         while fringe.length
           # Add a fringe pixel to cluster.
           fringePixel = fringe.pop()
-          fringePixel.cluster = cluster
-          cluster.pixels.push fringePixel
+
+          cluster.pixels.push
+            x: fringePixel.x + bounds.x
+            y: fringePixel.y + bounds.y
+            cluster: cluster
+
           assignedPixels[fringePixel.x + fringePixel.y * width] = 1
 
           # Add all neighboring pixels.
@@ -83,9 +81,7 @@ LOI.Assets.Engine.Mesh.Object.detectClusters = (object) ->
               continue unless normalMap.pixelsAreSameAtIndices normalMapPixelIndex, normalMapNeighborMapIndex
 
               # This pixel matches the cluster pixel so add it to the fringe.
-              fringe.push
-                x: neighborX + bounds.x
-                y: neighborY + bounds.y
+              fringe.push x: neighborX, y: neighborY
 
         # All cluster pixels were added, process cluster data.
         cluster.process()

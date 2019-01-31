@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Mesh extends THREE.Object3D
-  @debug = true
+  @debug = false
   
   constructor: (@options) ->
     super arguments...
