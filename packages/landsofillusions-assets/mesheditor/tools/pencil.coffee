@@ -9,5 +9,11 @@ class LOI.Assets.MeshEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools.P
   @initialize()
   
   applyPixels: (spriteData, layerIndex, pixels) ->
-    picture = @editor.activePicture()
-    picture.setPixel pixel for pixel in pixels
+    # We set the rest of the color properties to null to delete them.
+    for pixel in pixels
+      pixel.materialIndex ?= null
+      pixel.paletteColor ?= null
+      pixel.directColor ?= null
+
+    picture = @editor().activePicture()
+    picture.setPixels pixels

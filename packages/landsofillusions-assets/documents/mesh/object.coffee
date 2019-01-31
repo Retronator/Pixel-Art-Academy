@@ -10,7 +10,7 @@ class LOI.Assets.Mesh.Object
     for field in ['name', 'visible', 'solver']
       @[field] = new LOI.Assets.Mesh.ValueField @, field, data[field]
 
-    @layers = new LOI.Assets.Mesh.ArrayField @, 'layers', data.layers, LOI.Assets.Mesh.Layer
+    @layers = new LOI.Assets.Mesh.ArrayField @, 'layers', data.layers, @constructor.Layer
 
   toPlainObject: ->
     plainObject = {}

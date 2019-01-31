@@ -1,7 +1,7 @@
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
-class LOI.Assets.Mesh.Layer
+class LOI.Assets.Mesh.Object.Layer
   constructor: (@layers, @index, data) ->
     @object = @layers.parent
     
@@ -10,7 +10,7 @@ class LOI.Assets.Mesh.Layer
     for field in ['name', 'visible', 'order']
       @[field] = new LOI.Assets.Mesh.ValueField @, field, data[field]
 
-    @pictures = new LOI.Assets.Mesh.ArrayField @, 'pictures', data.layers, LOI.Assets.Mesh.Picture
+    @pictures = new LOI.Assets.Mesh.ArrayField @, 'pictures', data.pictures, @constructor.Picture
 
   toPlainObject: ->
     plainObject = {}
@@ -26,10 +26,10 @@ class LOI.Assets.Mesh.Layer
     @_updatedDependency.changed()
     @layers.contentUpdated()
 
-  getPictureForCameraAngle: (cameraAngleIndex) ->
-    picture = _.find @pictures.getAll(), (picture) => picture.cameraAngle()?.index is cameraAngleIndex
+  getPictureForCameraAngleIndex: (cameraAngleIndex) ->
+    picture = @pictures.get cameraAngleIndex
     return picture if picture
     
-    # Picture hasn't been created yet, so insert it and retry.
-    @pictures.insert cameraAngle: cameraAngleIndex
-    @getPictureForCameraAngle cameraAngleIndex
+    # Picture hasn't been created yet, so insert and retry.
+    @pictures.insert {}, cameraAngleIndex
+    @pictures.get cameraAngleIndex

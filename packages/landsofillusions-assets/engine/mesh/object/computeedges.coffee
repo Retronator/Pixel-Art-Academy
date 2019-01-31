@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Engine.Mesh.computeEdges = (clusters) ->
+LOI.Assets.Engine.Mesh.Object.computeEdges = (clusters) ->
   edges = []
   return edges unless clusters.length
 
@@ -12,7 +12,7 @@ LOI.Assets.Engine.Mesh.computeEdges = (clusters) ->
       clusterA = clusters[clusterIndexA]
       clusterB = clusters[clusterIndexB]
       
-      edge = new LOI.Assets.Engine.Mesh.Edge clusterA, clusterB
+      edge = new LOI.Assets.Engine.Mesh.Object.Edge clusterA, clusterB
         
       for pixel in clusterA.pixels
         coordinates = clusterA.getAbsolutePixelCoordinates pixel

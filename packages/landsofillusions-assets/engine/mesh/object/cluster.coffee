@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Mesh.Cluster
+class LOI.Assets.Engine.Mesh.Object.Cluster
   @PointTypes:
     Pixel: 0
     Edge: 1
@@ -14,9 +14,11 @@ class LOI.Assets.Engine.Mesh.Cluster
     [160 / 255, 160 / 255, 52 / 255]
   ]
 
-  constructor: (@index, @layer) ->
+  constructor: (@index, @picture, @pixelProperties) ->
     @pixels = []
     @edges = []
+
+    console.log "cluster", @pixelProperties
 
     @plane =
       point: null
@@ -28,14 +30,14 @@ class LOI.Assets.Engine.Mesh.Cluster
     @indices = []
     
     @origin = 
-      x: @layer.origin?.x or 0
-      y: @layer.origin?.y or 0
+      x: @picture.bounds?.x or 0
+      y: @picture.bounds?.y or 0
 
   getPlane: ->
     new THREE.Plane().setFromNormalAndCoplanarPoint @plane.normal, @plane.point
 
   process: ->
-    @plane.normal = THREE.Vector3.fromObject @pixels[0].normal
+    @plane.normal = THREE.Vector3.fromObject @pixelProperties.normal
     
     # Create map for fast retrieval.
     @pixelMap = {}
@@ -75,7 +77,7 @@ class LOI.Assets.Engine.Mesh.Cluster
 
     meshData = options.meshData()
     palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
-    paletteColor = @pixels[0].paletteColor
+    paletteColor = @pixelProperties.paletteColor
     color = palette.ramps[paletteColor.ramp].shades[paletteColor.shade]
 
     for point, index in @points
@@ -125,7 +127,7 @@ class LOI.Assets.Engine.Mesh.Cluster
     # Determine the color.
     return unless meshData = options.meshData()
     palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
-    pixel = @pixels[0]
+    pixel = @pixelProperties
     materialsData = options.materialsData?()
     visualizeNormals = options.visualizeNormals?()
 
@@ -180,7 +182,7 @@ class LOI.Assets.Engine.Mesh.Cluster
             color: THREE.Color.fromObject shades[paletteColor.shade]
 
         else
-          material = new LOI.Assets.Engine.Mesh.RampMaterial _.extend materialOptions, {shades, shadeIndex}
+          material = new LOI.Assets.Engine.Mesh.Object.RampMaterial _.extend materialOptions, {shades, shadeIndex}
 
       else
         material = new THREE.MeshLambertMaterial _.extend materialOptions,

@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
+LOI.Assets.Engine.Mesh.Object.projectClusterPoints = (clusters, cameraAngle) ->
   console.log "Projecting cluster points", clusters, cameraAngle if LOI.Assets.Engine.Mesh.debug
   
   pixelDirections = [
@@ -58,7 +58,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
 
       cluster.points.push
         vertex: pixelVertex
-        type: LOI.Assets.Engine.Mesh.Cluster.PointTypes.Pixel
+        type: LOI.Assets.Engine.Mesh.Object.Cluster.PointTypes.Pixel
 
     # Add void pixels.
     voidPixels = []
@@ -103,7 +103,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
 
       cluster.points.push
         vertex: voidVertex
-        type: LOI.Assets.Engine.Mesh.Cluster.PointTypes.Void
+        type: LOI.Assets.Engine.Mesh.Object.Cluster.PointTypes.Void
 
     # Add all edges.
     edgePointsStart = cluster.points.length
@@ -146,7 +146,7 @@ LOI.Assets.Engine.Mesh.projectClusterPoints = (clusters, cameraAngle) ->
 
         cluster.points.push
           vertex: edgeVertex
-          type: LOI.Assets.Engine.Mesh.Cluster.PointTypes.Edge
+          type: LOI.Assets.Engine.Mesh.Object.Cluster.PointTypes.Edge
           segments: [{index: segmentIndex, positionInSegment, edge}]
 
     # Create the base of plane space.

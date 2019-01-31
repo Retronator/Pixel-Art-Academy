@@ -67,7 +67,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       @activeObject()?.layers.get @paintHelper.layerIndex()
       
     @activePicture = new ComputedField =>
-      @activeLayer()?.getPictureForCameraAngle @cameraAngleIndex()
+      @activeLayer()?.getPictureForCameraAngleIndex @cameraAngleIndex()
 
     @pixelRenderEnabled = new ComputedField =>
       @editorFileData()?.get('pixelRenderEnabled') ? true
@@ -85,7 +85,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       spriteLayers = []
 
       for layer in object.layers.getAll()
-        picture = layer.getPictureForCameraAngle cameraAngleIndex
+        picture = layer.getPictureForCameraAngleIndex cameraAngleIndex
 
         spriteLayer = {}
 

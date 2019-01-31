@@ -2,9 +2,9 @@ LOI = LandsOfIllusions
 
 Delaunator = require 'delaunator'
 
-PointTypes = LOI.Assets.Engine.Mesh.Cluster.PointTypes
+PointTypes = LOI.Assets.Engine.Mesh.Object.Cluster.PointTypes
 
-LOI.Assets.Engine.Mesh.computeClusterMeshes = (clusters) ->
+LOI.Assets.Engine.Mesh.Object.computeClusterMeshes = (clusters) ->
   console.log "Computing cluster meshes", clusters if LOI.Assets.Engine.Mesh.debug
 
   getX = (point) => point.vertexPlane.x

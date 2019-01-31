@@ -18,6 +18,9 @@ class LOI.Assets.Mesh.ValueField
 
     # Allow correct handling of instanceof operator.
     Object.setPrototypeOf valueField, @constructor.prototype
+    
+    valueField.changedLocally = ->
+      updatedDependency.changed()
 
     valueField.save = (saveData) ->
       return if value is undefined 

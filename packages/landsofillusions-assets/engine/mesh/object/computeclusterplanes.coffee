@@ -1,13 +1,10 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Engine.Mesh.computeClusterPlanes = (clusters, cameraAngle) ->
+LOI.Assets.Engine.Mesh.Object.computeClusterPlanes = (clusters, cameraAngle) ->
   console.log "Computing cluster planes", clusters, cameraAngle if LOI.Assets.Engine.Mesh.debug
 
-  # Place the plane of the cluster under the Origin landmark to the coordinate system origin.
-  origin = _.find cameraAngle.sprite.landmarks, (landmark) => landmark.name is 'Origin'
-
-  # If no Origin landmark is found, use the world origin.
-  origin ?= cameraAngle.unprojectPoint new THREE.Vector3
+  # See if we have a cluster overlapping the camera origin and set it as the base to calculate other clusters from.
+  origin = cameraAngle.unprojectPoint new THREE.Vector3
 
   if originCluster = _.find(clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate origin.x, origin.y)
     originCluster.plane.point = new THREE.Vector3

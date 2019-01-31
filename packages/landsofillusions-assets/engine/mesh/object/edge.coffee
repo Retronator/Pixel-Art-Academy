@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Mesh.Edge extends THREE.LineSegments
+class LOI.Assets.Engine.Mesh.Object.Edge extends THREE.LineSegments
   constructor: (@clusterA, @clusterB) ->
     # We let the original constructor create new geometry and material objects.
     super undefined

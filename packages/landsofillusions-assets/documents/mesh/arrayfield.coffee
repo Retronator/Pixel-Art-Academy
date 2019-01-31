@@ -5,6 +5,7 @@ LOI = LandsOfIllusions
 class LOI.Assets.Mesh.ArrayField
   constructor: (@parent, @field, @array, @contentClass) ->
     @_updatedDependency = new Tracker.Dependency
+    @_arrayChangedDependency = new Tracker.Dependency
     
     if @contentClass and @array
       # Make rich objects.
@@ -22,6 +23,10 @@ class LOI.Assets.Mesh.ArrayField
   getAll: ->
     @_updatedDependency.depend()
     _.without @array, undefined, null
+    
+  getAllWithoutUpdates: ->
+    @_arrayChangedDependency.depend()
+    _.without @array, undefined, null
 
   get: (index) ->
     @_updatedDependency.depend()
@@ -31,8 +36,8 @@ class LOI.Assets.Mesh.ArrayField
     item.depend?()
     item
 
-  insert: (data = {}) ->
-    index = @array?.length or 0
+  insert: (data = {}, index) ->
+    index ?= @array?.length or 0
     @array ?= []
     
     if @contentClass
@@ -42,6 +47,7 @@ class LOI.Assets.Mesh.ArrayField
       @array[index] = data
 
     @contentUpdated()
+    @_arrayChangedDependency.changed()
 
     # Return index of the new item.
     index
@@ -56,6 +62,7 @@ class LOI.Assets.Mesh.ArrayField
       @array[index] = null
 
     @contentUpdated()
+    @_arrayChangedDependency.changed()
 
   contentUpdated: ->
     @_updatedDependency.changed()

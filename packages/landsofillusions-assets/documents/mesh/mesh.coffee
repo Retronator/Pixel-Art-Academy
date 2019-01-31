@@ -25,20 +25,20 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #     name: name of the layer
   #     visible: boolean if this layer should be drawn
   #     order: floating point order of the layer
-  #     pictures: array of images that describe the object
-  #       cameraAngle: index of the camera angle where this picture is from
+  #     pictures: array of images that describe the object, indexed by cameraAngle index
   #       bounds: dimensions of the bitmap
   #         x, y: top-left corner relative to the camera origin (z-axis)
   #         width, height: size of the bitmap
-  #       maps: array of texture maps that hold information for this picture
-  #         mapType: what information is contained in this map with values
-  #           materialIndex (1 byte per pixel: index)
-  #           paletteColor (2 bytes per pixel: ramp, shade)
-  #           directColor (3 bytes per pixel: r, g, b)
-  #           alpha (1 byte per pixel: a)
-  #           normal (3 bytes per pixel: x, y, z as signed bytes (-1 to 1 float mapped to -127 to 127))
-  #         data: array buffer holding the pixels, not sent to the server
-  #         compressedData: binary object with compressed version of data, sent to the server
+  #       maps: object of texture maps that hold information for this picture
+  #         {type}: what information is contained in this map, with possible values:
+  #             mapFlags (1 byte per pixel: which of the maps are valid at each pixel)
+  #             materialIndex (flag value 1, 1 byte per pixel: index)
+  #             paletteColor (flag value 2, 2 bytes per pixel: ramp, shade)
+  #             directColor (flag value 4, 3 bytes per pixel: r, g, b)
+  #             alpha (flag value 8, 1 byte per pixel: a)
+  #             normal (flag value 16, 3 bytes per pixel: x, y, z as signed bytes (-1 to 1 float mapped to -127 to 127))
+  #           data: array buffer holding the pixels, not sent to the server
+  #           compressedData: binary object with compressed version of data, sent to the server
   # materials: array of shaders used to draw objects
   #   name: what the materials represents
   #   type: ID of the shader
