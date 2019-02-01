@@ -3,9 +3,12 @@ LOI = LandsOfIllusions
 
 Pako = require 'pako'
 
-compressionOptions = strategy: Pako.Z_RLE
+compressionOptions =
+  level: Pako.Z_BEST_COMPRESSION
 
 class LOI.Assets.Mesh.Object.Layer.Picture.Map
+  @debug = true
+
   @Types:
     Flags: "flags"
     MaterialIndex: "materialIndex"
@@ -37,7 +40,13 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map
       @resizeToPictureBounds()
 
   getCompressedData: ->
-    Pako.deflateRaw @data, compressionOptions
+    compressedData = Pako.deflateRaw @data, compressionOptions
+
+    if @constructor.debug
+      compressionRatio = compressedData.length / @data.length
+      console.log "Compressed map #{@constructor.type} from #{@data.length} to #{compressedData.length} (#{Math.round compressionRatio * 100}%)."
+
+    compressedData
     
   requiredArrayLength: ->
     @picture._bounds.width * @picture._bounds.height * @constructor.bytesPerPixel
@@ -93,7 +102,7 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map
     throw new AE.NotImplementedException "Map must provide how to set a pixel."
 
   clearPixel: (x, y) ->
-    dataIndex = calculateDataIndex x, y
+    dataIndex = @calculateDataIndex x, y
 
     for offset in [0...@constructor.bytesPerPixel]
       @data[dataIndex + offset] = 0

@@ -9,5 +9,5 @@ class LOI.Assets.MeshEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools.E
   @initialize()
 
   applyPixels: (spriteData, layerIndex, pixels) ->
-    picture = @editor.activePicture()
+    picture = @editor().activePicture()
     picture.clearPixels pixels

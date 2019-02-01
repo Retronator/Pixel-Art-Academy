@@ -23,17 +23,20 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
         name: Match.Optional String
         visible: Match.Optional Boolean
         order: Match.Optional Number
-        pictures: Match.Optional [
+        pictures: Match.OptionalOrNull [ Match.OptionalOrNull
           cameraAngle: Match.Optional Number
           bounds: Match.Optional
-            left: Number
-            right: Number
-            top: Number
-            bottom: Number
-          maps: Match.Optional [
-            mapType: Match.Optional String
-            compressedData: Match.Where EJSON.isBinary
-          ]
+            x: Number
+            y: Number
+            width: Number
+            height: Number
+          maps: Match.Optional
+            flags: Match.Optional mapPattern
+            materialIndex: Match.Optional mapPattern
+            paletteColor: Match.Optional mapPattern
+            directColor: Match.Optional mapPattern
+            alpha: Match.Optional mapPattern
+            normal: Match.Optional mapPattern
         ]
       ]
     ]
@@ -53,3 +56,6 @@ vectorPattern =
   x: Number
   y: Number
   z: Number
+
+mapPattern =
+  compressedData: Match.Where EJSON.isBinary

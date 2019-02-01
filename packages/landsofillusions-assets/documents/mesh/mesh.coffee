@@ -31,7 +31,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #         width, height: size of the bitmap
   #       maps: object of texture maps that hold information for this picture
   #         {type}: what information is contained in this map, with possible values:
-  #             mapFlags (1 byte per pixel: which of the maps are valid at each pixel)
+  #             flags (1 byte per pixel: which of the maps are valid at each pixel)
   #             materialIndex (flag value 1, 1 byte per pixel: index)
   #             paletteColor (flag value 2, 2 bytes per pixel: ramp, shade)
   #             directColor (flag value 4, 3 bytes per pixel: r, g, b)
