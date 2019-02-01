@@ -95,6 +95,37 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map
       x: @picture._bounds.x
       y: @picture._bounds.y
 
+  computeBounds: ->
+    # Calculate relative bounds of filled pixels in this map.
+    bounds = null
+
+    byteIndex = 0
+    for y in [0...@height]
+      for x in [0...@width]
+        for offset in [0...@constructor.bytesPerPixel]
+          if @data[byteIndex] > 0
+            if bounds
+              bounds.left = x if x < bounds.left
+              bounds.right = x if x > bounds.right
+              bounds.bottom = y if y > bounds.bottom
+
+            else
+              bounds =
+                left: x
+                right: x
+                top: y
+                bottom: y
+
+          byteIndex++
+
+    return unless bounds
+
+    # Transform to absolute bounds.
+    x: @_origin.x + bounds.left
+    y: @_origin.y + bounds.top
+    width: bounds.right - bounds.left + 1
+    height: bounds.bottom - bounds.top + 1
+
   getPixel: (x, y) ->
     throw new AE.NotImplementedException "Map must provide how to construct a pixel."
 
@@ -111,8 +142,8 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map
     (x + y * @width) * @constructor.bytesPerPixel
 
   pixelsAreSame: (x1, y1, x2, y2) ->
-    dataIndex1 = calculateDataIndex x1, y1
-    dataIndex2 = calculateDataIndex x2, y2
+    dataIndex1 = @calculateDataIndex x1, y1
+    dataIndex2 = @calculateDataIndex x2, y2
 
     @pixelsAreSameAtIndices dataIndex1, dataIndex2
 

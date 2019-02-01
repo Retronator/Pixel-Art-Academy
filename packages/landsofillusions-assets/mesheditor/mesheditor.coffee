@@ -28,7 +28,10 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{_.snakeCase LOI.Assets.MeshEditor.Tools.Pencil.id()}":
         fractionalPerfectLines: true
         drawPreview: true
-        
+
+      "#{_.snakeCase LOI.Assets.MeshEditor.Tools.ColorFill.id()}":
+        cornerNeighbors: true
+
       "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.LightDirection.id()}":
         new THREE.Vector3(2, -4, -3).normalize().toObject()
 
@@ -105,7 +108,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         LOI.Assets.SpriteEditor.Tools.Translate.id()
         LOI.Assets.MeshEditor.Tools.Pencil.id()
         LOI.Assets.MeshEditor.Tools.Eraser.id()
-        LOI.Assets.SpriteEditor.Tools.ColorFill.id()
+        LOI.Assets.MeshEditor.Tools.ColorFill.id()
         LOI.Assets.MeshEditor.Tools.ClusterPicker.id()
         LOI.Assets.MeshEditor.Tools.MoveCamera.id()
       ]
@@ -218,6 +221,8 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.MeshEditor.Tools.Pencil.id()}": key: AC.Keys.b
       "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": null
       "#{LOI.Assets.MeshEditor.Tools.Eraser.id()}": key: AC.Keys.e
+      "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": null
+      "#{LOI.Assets.MeshEditor.Tools.ColorFill.id()}": key: AC.Keys.g
 
   onRendered: ->
     super arguments...

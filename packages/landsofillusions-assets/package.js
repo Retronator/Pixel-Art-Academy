@@ -260,6 +260,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools/clusterpicker');
   api.addFile('mesheditor/tools/pencil');
   api.addFile('mesheditor/tools/eraser');
+  api.addFile('mesheditor/tools/colorfill');
 
   api.addFile('mesheditor/actions..');
   api.addFile('mesheditor/actions/debugmode');

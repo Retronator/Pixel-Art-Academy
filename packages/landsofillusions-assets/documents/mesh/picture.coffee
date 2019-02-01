@@ -54,7 +54,7 @@ class LOI.Assets.Mesh.Object.Layer.Picture
   cameraAngle: ->
     @layer.object.mesh.cameraAngles.get @cameraAngleIndex
 
-  setPixels: (pixels) ->
+  setPixels: (pixels, relative) ->
     # Update bounds to accommodate all new pixels.
     boundsUpdated = false
 
@@ -74,21 +74,29 @@ class LOI.Assets.Mesh.Object.Layer.Picture
       boundsUpdated = true
       
     for pixel in pixels
-      if pixel.x < @_bounds.left
-        boundsUpdated = true
-        @_bounds.left = pixel.x
+      # We need to update bounds in absolute coordinates.
+      absoluteX = pixel.x
+      absoluteY = pixel.y
 
-      if pixel.x > @_bounds.right
-        boundsUpdated = true
-        @_bounds.right = pixel.x
+      if relative
+        absoluteX += @_bounds.x
+        absoluteY += @_bounds.y
 
-      if pixel.y < @_bounds.top
+      if absoluteX < @_bounds.left
         boundsUpdated = true
-        @_bounds.top = pixel.y
+        @_bounds.left = absoluteX
 
-      if pixel.y > @_bounds.bottom
+      if absoluteX > @_bounds.right
         boundsUpdated = true
-        @_bounds.bottom = pixel.y
+        @_bounds.right = absoluteX
+
+      if absoluteY < @_bounds.top
+        boundsUpdated = true
+        @_bounds.top = absoluteY
+
+      if absoluteY > @_bounds.bottom
+        boundsUpdated = true
+        @_bounds.bottom = absoluteY
 
     # Ensure we have the flags map before we resize bounds.
     flagsMap = @getMap @constructor.Map.Types.Flags
@@ -104,46 +112,88 @@ class LOI.Assets.Mesh.Object.Layer.Picture
 
     # Transfer pixels to maps.      
     for pixel in pixels
-      x = pixel.x - @_bounds.x
-      y = pixel.y - @_bounds.y
+      # We need to send pixels with relative coordinates.
+      relativeX = pixel.x
+      relativeY = pixel.y
+
+      unless relative
+        relativeX -= @_bounds.x
+        relativeY -= @_bounds.y
 
       for mapType, value of pixel when mapType isnt 'x' and mapType isnt 'y'
         if value?
           map = @getMap mapType
-          map.setPixel x, y, value
-          flagsMap.setPixelFlag x, y, map.constructor.flagValue
+          map.setPixel relativeX, relativeY, value
+          flagsMap.setPixelFlag relativeX, relativeY, map.constructor.flagValue
           
         else
           # We only need to clear the pixel if we have the map.
           continue unless map = @maps[mapType]
-          map.clearPixel x, y
-          flagsMap.clearPixelFlag x, y, map.constructor.flagValue
+          map.clearPixel relativeX, relativeY
+          flagsMap.clearPixelFlag relativeX, relativeY, map.constructor.flagValue
 
     @contentUpdated()
     
-  clearPixels: (pixels) ->
+  clearPixels: (pixels, relative) ->
     # Clear pixels from maps.
     for type, map of @maps
       for pixel in pixels
-        map.clearPixel pixel.x - @_bounds.x, pixel.y - @_bounds.y
+        # We need to send pixels with relative coordinates.
+        relativeX = pixel.x
+        relativeY = pixel.y
+
+        unless relative
+          relativeX -= @_bounds.x
+          relativeY -= @_bounds.y
+
+        map.clearPixel relativeX, relativeY
 
     # Update bounds to account for removed pixels.
     recomputeBounds = false
 
     for pixel in pixels
-      # Only if the pixel is on the edge we might need to recompute bounds.
-      if pixel.x is @_bounds.left or pixel.x is @_bounds.right or pixel.y is @_bounds.top or pixel.y is @_bounds.bottom
+      # We need to update bounds in absolute coordinates.
+      absoluteX = pixel.x
+      absoluteY = pixel.y
+
+      if relative
+        absoluteX += @_bounds.x
+        absoluteY += @_bounds.y
+
+      # Only if the pixel is on the edge we need to recompute bounds.
+      if absoluteX is @_bounds.left or absoluteX is @_bounds.right or absoluteY is @_bounds.top or absoluteY is @_bounds.bottom
         recomputeBounds = true
+        break
 
     if recomputeBounds
       # Analyze the flags map to see which pixels are present.
-      @_bounds = @maps[@constructor.Map.Types.Flags].computeBounds()
-      @_calculateBoundsParameters()
-      @bounds.changedLocally()
-      
-      # Resize maps.
-      for type, map of @maps
-        map.resizeToPictureBounds()
+      newBounds = @maps.flags.computeBounds()
+      boundsHaveChanged = false
+
+      if newBounds? is @_bounds?
+        for key, value of newBounds
+          unless @_bounds[key] is value
+            boundsHaveChanged = true
+            break
+
+      else
+        boundsHaveChanged = true
+
+      if boundsHaveChanged
+        @_bounds = newBounds
+
+        if @_bounds
+          @_calculateBoundsEdges()
+
+          @bounds @_bounds
+
+          # Resize maps.
+          for type, map of @maps
+            map.resizeToPictureBounds()
+
+        else
+          # Delete all maps.
+          @maps = {}
 
     @contentUpdated()
     
@@ -169,3 +219,11 @@ class LOI.Assets.Mesh.Object.Layer.Picture
       mapValues[type] = map.getPixel x, y
 
     mapValues
+    
+  pixelExists: (x, y) ->
+    @pixelExistsRelative x - @_bounds.x, y - @_bounds.y
+
+  pixelExistsRelative: (x, y) ->
+    flagsMap = @getMap @constructor.Map.Types.Flags
+
+    flagsMap.pixelExists x, y
