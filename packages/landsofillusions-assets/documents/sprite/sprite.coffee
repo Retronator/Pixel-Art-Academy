@@ -41,7 +41,9 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @clear: @method 'clear'
 
   @addPixel: @method 'addPixel'
+  @addPixels: @method 'addPixels'
   @removePixel: @method 'removePixel'
+  @removePixels: @method 'removePixels'
   @colorFill: @method 'colorFill'
   @replacePixels: @method 'replacePixels'
   @flipHorizontal: @method 'flipHorizontal'
@@ -49,17 +51,21 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @updateLayer: @method 'updateLayer'
   @removeLayer: @method 'removeLayer'
   
-  @pixelPattern = Match.ObjectIncluding
+  @pixelPattern =
     x: Match.Integer
     y: Match.Integer
-    paletteColor: Match.Optional Match.ObjectIncluding
+    paletteColor: Match.Optional
       ramp: Match.Integer
       shade: Match.Integer
-    directColor: Match.Optional Match.ObjectIncluding
+    directColor: Match.Optional
       r: Number
       g: Number
       b: Number
     materialIndex: Match.Optional Match.Integer
+    normal: Match.Optional
+      x: Number
+      y: Number
+      z: Number
 
   constructor: ->
     super arguments...

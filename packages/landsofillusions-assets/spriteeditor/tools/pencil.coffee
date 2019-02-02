@@ -18,7 +18,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
     
     return [] unless paint.directColor or paint.paletteColor or paint.materialIndex?
 
-    paint.normal = @paintHelper.normal().clone()
+    paint.normal = @paintHelper.normal().toObject()
 
     for coordinate in coordinates
       pixel = _.clone coordinate
@@ -29,9 +29,7 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
       pixel
 
   applyPixels: (spriteData, layerIndex, pixels, strokeStarted) ->
-    firstPixel = true
-
-    for pixel, index in pixels
+    changedPixels = _.filter pixels, (pixel) =>
       # See if we're only painting normals.
       paintNormals = @data.get 'paintNormals'
 
@@ -42,17 +40,9 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
         for property in ['materialIndex', 'paletteColor', 'directColor']
           pixel[property] = existingPixel[property] if existingPixel[property]?
       
-      # Do we even need to add this pixel? See if one just like it is already there.
-      exactMatch = LOI.Assets.Sprite.documents.findOne
-        _id: spriteData._id
-        "layers.#{layerIndex}.pixels": pixel
+      # We need to add this pixel unless one just like it is already there.
+      not EJSON.equals existingPixel, pixel
 
-      continue if exactMatch
+    return unless changedPixels.length
 
-      # We can combine history unless this is the first pixel of a new stroke.
-      # Note: We must make sure this is a boolean since it will be checked on the server.
-      combineHistory = not (firstPixel and strokeStarted)
-
-      LOI.Assets.Sprite.addPixel spriteData._id, layerIndex, pixel, combineHistory
-
-      firstPixel = false
+    LOI.Assets.Sprite.addPixels spriteData._id, layerIndex, changedPixels, not strokeStarted

@@ -23,7 +23,7 @@ class LOI.Assets.SpriteEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.To
 
     return [] unless paint.directColor or paint.paletteColor or paint.materialIndex?
 
-    paint.normal = paintHelper.normal().clone()
+    paint.normal = paintHelper.normal().toObject()
 
     spriteData = @editor().spriteData()    
     layerIndex = paintHelper.layerIndex()

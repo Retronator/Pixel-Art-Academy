@@ -63,8 +63,8 @@ Package.onUse(function(api) {
   api.addServerFile('documents/sprite/subscriptions');
   api.addServerFile('documents/sprite/server');
   api.addFile('documents/sprite/methods..');
-  api.addFile('documents/sprite/methods/addpixel');
-  api.addFile('documents/sprite/methods/removepixel');
+  api.addFile('documents/sprite/methods/addpixels');
+  api.addFile('documents/sprite/methods/removepixels');
   api.addFile('documents/sprite/methods/colorfill');
   api.addFile('documents/sprite/methods/replacepixels');
   api.addFile('documents/sprite/methods/transformpixels');
