@@ -10,3 +10,5 @@ class LOI.Assets.Editor.Tools.Tool extends FM.Tool
 
     @editor = new ComputedField =>
       @interface.getEditorForActiveFile()
+    ,
+      (a, b) => a is b

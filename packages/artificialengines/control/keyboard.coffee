@@ -21,11 +21,22 @@ class AC.Keyboard
     state
 
   @onKeyDown: (event) ->
+    # HACK: If command is pressed, no other non-modifier keys will report key up events,
+    # so we assume all other keys got released prior to this new key being pressed.
+    if @_state.isMetaDown()
+      # Create a new state and copy only modifier keys from the previous one.
+      state = new AC.KeyboardState
+
+      for modifierKey in [AC.Keys.leftMeta, AC.Keys.rightMeta, AC.Keys.shift, AC.Keys.alt]
+        state[modifierKey] = @_state[modifierKey]
+
+      @_state = state
+
     @_state[event.keyCode] = true
     @_stateDependency.changed()
 
   @onKeyUp: (event) ->
-    # HACK: If command is pressed, no other keys will report key up events,
+    # HACK: If command is pressed, no other non-modifier keys will report key up events,
     # so we assume all other keys got released when command is released.
     if event.keyCode in [AC.Keys.leftMeta, AC.Keys.rightMeta]
       @_state = new AC.KeyboardState

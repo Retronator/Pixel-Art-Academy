@@ -23,6 +23,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @perfectLineRatio = new ReactiveField null
 
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
+    @brushHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Brush
 
     @pixels = new ReactiveField null
 
@@ -30,6 +31,11 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @processStroke()
 
     @_previewActive = false
+
+    @_cursorChangesAutorun = @autorun (computation) =>
+      # React to cursor changes.
+      @editor().cursor().cursorArea()
+      Tracker.nonreactive => @processStroke()
 
     @_updatePreviewAutorun = @autorun (computation) =>
       # Show preview when we're drawing a line and mouse is on the canvas.
@@ -50,6 +56,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     coordinates
 
   onDeactivated: ->
+    @_cursorChangesAutorun.stop()
     @_updatePreviewAutorun.stop()
     @editor().operationPreview().pixels []
 
@@ -181,37 +188,26 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
   onMouseDown: (event) ->
     super arguments...
 
-    @_strokeStarted = true
+    # If mouse down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
+    Tracker.afterFlush =>
+      @_strokeStarted = true
 
-    @processStroke()
-
-  onMouseMove: (event) ->
-    super arguments...
-
-    @processStroke()
+      @processStroke()
 
   processStroke: ->
     currentPixelCoordinates = @currentPixelCoordinates()
 
-    if @mouseState.x? and @mouseState.y?
-      newPixelCoordinates =
-        x: @mouseState.x
-        y: @mouseState.y
+    cursorArea = @editor().cursor().cursorArea()
+
+    if cursorArea.position
+      newPixelCoordinates = _.clone cursorArea.position.centerCoordinates
 
       if @drawStraight()
         _.extend newPixelCoordinates, @lockedCoordinate()
 
-    # This is the start of the stroke if we don't have any previous coordinates.
-    startOfStroke = not @lastStrokeCoordinates()
-
     # Update coordinates if they are new.
     unless EJSON.equals currentPixelCoordinates, newPixelCoordinates
       @currentPixelCoordinates newPixelCoordinates
-
-    else
-      # Coordinates are the same, so if we're in the middle of the stroke
-      # we have already applied the tool here and there's nothing new to do.
-      return unless startOfStroke
 
     @updatePixels()
 
@@ -226,10 +222,27 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     keyboardState = AC.Keyboard.getState()
     pixelCoordinates = []
 
+    drawStraight = @drawStraight()
+
+    if @mouseState.leftButton and drawStraight
+      unless lockedCoordinate = @lockedCoordinate()
+        # Calculate which direction to lock to.
+        if currentPixelCoordinates.x is lastPixelCoordinates.x
+          # Lock to vertical straight lines.
+          lockedCoordinate = x: lastPixelCoordinates.x
+
+        else
+          lockedCoordinate = y: lastPixelCoordinates.y
+
+        @lockedCoordinate lockedCoordinate
+
     if @drawLine()
       if keyboardState.isMetaDown()
         # Draw perfect pixel art line.
         pixelCoordinates = @perfectLine lastPixelCoordinates, currentPixelCoordinates
+
+        # Match current coordinates to the ending perfect coordinates.
+        @currentPixelCoordinates _.last pixelCoordinates
 
       else
         @perfectLineRatio null
@@ -239,7 +252,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     else
       # Apply locked coordinate.
-      if @drawStraight()
+      if drawStraight
         # Draw bresenham line from last stroke coordinates (which resets after end of stroke).
         Bresenham.line lastStrokeCoordinates.x, lastStrokeCoordinates.y, currentPixelCoordinates.x, currentPixelCoordinates.y, (x, y) => pixelCoordinates.push {x, y}
 
@@ -255,6 +268,26 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
         bezierMidPoint.round()
 
         Bresenham.quadBezier lastStrokeCoordinates.x, lastStrokeCoordinates.y, bezierMidPoint.x, bezierMidPoint.y, currentPixelCoordinates.x, currentPixelCoordinates.y, (x, y) => pixelCoordinates.push {x, y}
+
+    # Apply the brush mask to coordinates.
+    cursorArea = @editor().cursor().cursorArea()
+    offset = cursorArea.position.centerOffset
+    brushCoordinates = {}
+
+    for pixel in pixelCoordinates
+      for column, x in cursorArea.shape
+        for value, y in column when value
+          brushX = pixel.x - offset + x
+          brushY = pixel.y - offset + y
+          brushCoordinates[brushX] ?= {}
+          brushCoordinates[brushX][brushY] = x: brushX, y: brushY
+
+    # Collect created pixels.
+    pixelCoordinates = []
+
+    for x, row of brushCoordinates
+      for y, pixel of row
+        pixelCoordinates.push pixel
 
     # TODO: Apply symmetry.
     # symmetryXOrigin = @options.editor().symmetryXOrigin?()
@@ -289,23 +322,6 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
       y: layer?.origin?.y or 0
 
     absolutePixels = @pixels()
-    drawStraight = @drawStraight()
-    currentPixelCoordinates = @currentPixelCoordinates()
-
-    if drawStraight
-      lastPixelCoordinates = @lastPixelCoordinates()
-
-      unless lockedCoordinate = @lockedCoordinate()
-        # Calculate which direction to lock to.
-        if currentPixelCoordinates.x is lastPixelCoordinates.x
-          # Lock to vertical straight lines.
-          lockedCoordinate = x: lastPixelCoordinates.x
-
-        else
-          lockedCoordinate = y: lastPixelCoordinates.y
-
-        @lockedCoordinate lockedCoordinate
-
     relativePixels = []
 
     for absolutePixel in absolutePixels
@@ -313,10 +329,8 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
       if spriteData.bounds?.fixed
         continue unless spriteData.bounds.left <= absolutePixel.x <= spriteData.bounds.right and spriteData.bounds.top <= absolutePixel.y <= spriteData.bounds.bottom
 
-      relativePixel = _.clone absolutePixel
-      _.extend relativePixel, lockedCoordinate if drawStraight
-
       # Pixel must be in relative coordinates.
+      relativePixel = _.clone absolutePixel
       relativePixel.x -= layerOrigin.x
       relativePixel.y -= layerOrigin.y
         
@@ -328,6 +342,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @secondToLastStrokeCoordinates @lastStrokeCoordinates()
 
     # Save last absolute pixel as the end of the stroke.
+    currentPixelCoordinates = @currentPixelCoordinates()
     @lastPixelCoordinates currentPixelCoordinates
     @lastStrokeCoordinates currentPixelCoordinates
 

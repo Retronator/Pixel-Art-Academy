@@ -120,10 +120,11 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
           @horizon
           @pixelCanvas.cursor()
           @pixelCanvas.landmarks() if sourceImageEnabled
+          @pixelCanvas.toolInfo()
         ]
 
     # Provide the pixel canvas fields to sprite editor views and tools.
-    for passThroughField in ['camera', 'mouse', 'pixelGridEnabled', 'landmarksEnabled', 'operationPreview']
+    for passThroughField in ['camera', 'mouse', 'cursor', 'pixelGridEnabled', 'landmarksEnabled', 'operationPreview', 'toolInfo']
       do (passThroughField) =>
         @[passThroughField] = => @pixelCanvas[passThroughField] arguments...
 

@@ -25,6 +25,10 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
     components =
       "#{_.snakeCase LOI.Assets.SpriteEditor.Tools.Pencil.id()}":
         fractionalPerfectLines: true
+        drawPreview: true
+
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
+        round: true
 
       "#{_.snakeCase LOI.Assets.SpriteEditor.ShadingSphere.id()}":
         radius: 30
@@ -72,6 +76,12 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()
           null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
+        ]
+      ,
+        caption: 'Tools'
+        items: [
+          LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
+          LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
         ]
       ,
         caption: 'Window'
@@ -141,13 +151,13 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
                     tabs: [
                       name: 'Palette'
                       contentComponentId: LOI.Assets.SpriteEditor.Palette.id()
+                      active: true
                     ,
                       name: 'Materials'
                       contentComponentId: LOI.Assets.Editor.Materials.id()
                     ,
                       name: 'Shading'
                       contentComponentId: LOI.Assets.SpriteEditor.ShadingSphere.id()
-                      active: true
                     ]
 
               remainingArea:
@@ -174,6 +184,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()}":commandOrControl: true, key: AC.Keys.singleQuote
       "#{LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()}":commandOrControl: true, shift: true, key: AC.Keys.l
       "#{LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()}":commandOrControl: true, shift: true, key: AC.Keys.a
+      "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [{key: AC.Keys.openBracket}, {key: AC.Keys.openBracket, commandOrControl: true}]
+      "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [{key: AC.Keys.closeBracket}, {key: AC.Keys.closeBracket, commandOrControl: true}]
 
       # Tools
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g
@@ -186,4 +198,4 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-    editorView.addFile id, LOI.Assets.Sprite.id() for id in ['CX9JyXqW2mZduyajR', 'KqL3XmQ7MikndhWxN', '9zJKosYnYfSAioP5d', 'ZZefMqG8h5gCwQztD']
+    editorView.addFile id, LOI.Assets.Sprite.id() for id in ['7GrXmSSGKtjdnZzmF']

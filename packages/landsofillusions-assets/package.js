@@ -224,6 +224,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions/showpixelgrid');
   api.addFile('spriteeditor/actions/showlandmarks');
   api.addFile('spriteeditor/actions/showsafearea');
+  api.addFile('spriteeditor/actions/brushsize');
 
   api.addFile('spriteeditor/helpers..');
   api.addFile('spriteeditor/helpers/zoomlevels');
@@ -231,6 +232,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/helpers/paint');
   api.addFile('spriteeditor/helpers/lightdirection');
   api.addFile('spriteeditor/helpers/safearea');
+  api.addFile('spriteeditor/helpers/brush');
 
   api.addComponent('spriteeditor/navigator..');
   api.addComponent('spriteeditor/palette..');

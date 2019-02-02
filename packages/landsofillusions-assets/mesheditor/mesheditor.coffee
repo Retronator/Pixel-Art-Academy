@@ -32,6 +32,9 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{_.snakeCase LOI.Assets.MeshEditor.Tools.ColorFill.id()}":
         cornerNeighbors: true
 
+      "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.Brush.id()}":
+        round: true
+
       "#{_.snakeCase LOI.Assets.SpriteEditor.Helpers.LightDirection.id()}":
         new THREE.Vector3(2, -4, -3).normalize().toObject()
 
@@ -93,6 +96,12 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           null
           LOI.Assets.SpriteEditor.Actions.PaintNormals.id()
           LOI.Assets.MeshEditor.Actions.DebugMode.id()
+        ]
+      ,
+        caption: 'Tools'
+        items: [
+          LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()
+          LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()
         ]
       ,
         caption: 'Window'
