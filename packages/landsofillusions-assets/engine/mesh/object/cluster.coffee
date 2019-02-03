@@ -104,6 +104,9 @@ class LOI.Assets.Engine.Mesh.Object.Cluster
     new THREE.Points geometry, material
 
   getMesh: (options) ->
+    return unless meshData = options.meshData()
+    return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
+
     elementsPerVertex = 3
     verticesArray = new Float32Array @points.length * elementsPerVertex
     normalsArray = new Float32Array @points.length * elementsPerVertex
@@ -123,8 +126,6 @@ class LOI.Assets.Engine.Mesh.Object.Cluster
     geometry.setIndex @indices
 
     # Determine the color.
-    return unless meshData = options.meshData()
-    palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
     pixel = @pixelProperties
     materialsData = options.materialsData?()
     visualizeNormals = options.visualizeNormals?()
@@ -171,8 +172,8 @@ class LOI.Assets.Engine.Mesh.Object.Cluster
       else if pixel.paletteColor
         paletteColor = pixel.paletteColor
 
-      if paletteColor
-        shades = palette.ramps[paletteColor.ramp].shades
+      if paletteColor and palette.ramps[paletteColor.ramp]
+        shades = palette.ramps[paletteColor.ramp]?.shades
         shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
 
         if materialOptions.wireframe
@@ -182,9 +183,13 @@ class LOI.Assets.Engine.Mesh.Object.Cluster
         else
           material = new LOI.Assets.Engine.Mesh.Object.RampMaterial _.extend materialOptions, {shades, shadeIndex}
 
-      else
+      else if pixel.directColor
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
           color: THREE.Color.fromObject pixel.directColor
+
+      else
+        material = new THREE.MeshLambertMaterial _.extend materialOptions,
+          color: new THREE.Color 0xffffff
 
     mesh = new THREE.Mesh geometry, material
 

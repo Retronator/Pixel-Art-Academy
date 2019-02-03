@@ -217,7 +217,7 @@ class LOI.Assets.Engine.Sprite
 
               ditherPercentage = 2 * bestColorDistance / (bestColorDistance + secondBestColorDistance)
 
-              if ditherPercentage > 1 - (paletteColor.dither or 0)
+              if ditherPercentage > 1 - (paletteColor?.dither or 0)
                 if Math.abs(pixel.x % 2) + Math.abs(pixel.y % 2) is 1
                   destinationColor = secondBestColor
 

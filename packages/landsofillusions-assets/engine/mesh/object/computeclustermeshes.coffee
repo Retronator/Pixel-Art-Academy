@@ -14,7 +14,12 @@ LOI.Assets.Engine.Mesh.Object.computeClusterMeshes = (clusters) ->
     cluster.indices = []
     extraPoints = {}
 
-    delaunay = Delaunator.from cluster.points, getX, getY
+    try
+      delaunay = Delaunator.from cluster.points, getX, getY
+
+    catch error
+      console.warn error if LOI.Assets.Engine.Mesh.debug
+      continue
 
     for triangle in [0...delaunay.triangles.length / 3]
       # Only add triangles that include at least one pixel.

@@ -82,6 +82,11 @@ class LOI.Assets.Mesh.CameraAngle
     # Screen space has positive Y going down.
     screenPoint.y *= -1
 
+    # Apply picture plane offset.
+    if @picturePlaneOffset
+      screenPoint.x -= @picturePlaneOffset.x
+      screenPoint.y -= @picturePlaneOffset.y
+
     screenPoint
 
   getHorizon: (normal) ->

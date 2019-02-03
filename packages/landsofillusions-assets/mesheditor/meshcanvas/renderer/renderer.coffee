@@ -59,9 +59,12 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         @renderer.render pixelRenderScene, camera.pixelRender
 
       if @meshCanvas.sourceImageEnabled()
-        # Render the source image to the main scene.
-        sourceImageScene = @sourceImage.scene.withUpdates()
-        @renderer.render sourceImageScene, camera.pixelRender
+        @sourceImage.image.material.texturesDepenency.depend()
+        uniforms = @sourceImage.image.material.uniforms
+        if uniforms.map.value and uniforms.normalMap.value
+          # Render the source image to the main scene.
+          sourceImageScene = @sourceImage.scene.withUpdates()
+          @renderer.render sourceImageScene, camera.pixelRender
 
       # Render helpers that overlay the geometry.
       camera.main.layers.set 1

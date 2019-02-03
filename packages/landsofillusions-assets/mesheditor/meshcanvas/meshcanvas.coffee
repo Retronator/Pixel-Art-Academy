@@ -18,10 +18,10 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
   @editorFileDataFieldsWithDefaults: ->
     cameraAngleIndex: 0
     edgesEnabled: false
-    horizonEnabled: false
+    horizonEnabled: true
     pixelRenderEnabled: true
     planeGridEnabled: true
-    sourceImageEnabled: true
+    sourceImageEnabled: false
 
   constructor: ->
     super arguments...
@@ -116,7 +116,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
         [
           @pixelCanvas.operationPreview()
           @pixelCanvas.pixelGrid()
-          @edges if sourceImageEnabled
+          @edges
           @horizon
           @pixelCanvas.cursor()
           @pixelCanvas.landmarks() if sourceImageEnabled

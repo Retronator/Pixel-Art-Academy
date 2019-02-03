@@ -85,7 +85,6 @@ void main()	{
 
   for (int shadeIndex = 0; shadeIndex < #{options.shades.length}; shadeIndex++) {
     vec3 shade = shades[shadeIndex];
-    // Note: We intentionally use squared distance.
     float distance = distance(shade, shadedColor);
 
     if (distance < bestColorDistance) {

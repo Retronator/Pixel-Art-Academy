@@ -41,7 +41,7 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
     for property in ['x', 'y']
       coordinates[property] = @_parseFloatOrZero $coordinates.find(".coordinate-#{property} .coordinate-input").val()
 
-    LOI.Assets.Mesh.updateCameraAngle @mesh()._id, @cameraAngleIndex(), picturePlaneOffset: coordinates
+    @cameraAngle().update picturePlaneOffset: coordinates
 
   _parseFloatOrZero: (string) ->
     float = parseFloat string
