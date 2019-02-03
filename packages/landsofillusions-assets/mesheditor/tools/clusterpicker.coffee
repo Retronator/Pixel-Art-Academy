@@ -24,24 +24,25 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     mesh = @editor().mesh()
     
     # See which cluster contains this pixel.
-    cluster = _.find(mesh.clusters(), (cluster) => cluster.findPixelAtAbsoluteCoordinate @pixelCoordinate.x, @pixelCoordinate.y)
+    for object in mesh.objects()
+      cluster = _.find(object.clusters(), (cluster) => cluster.findPixelAtAbsoluteCoordinate @pixelCoordinate.x, @pixelCoordinate.y)
 
     currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
     currentClusterHelper.setCluster cluster
 
     return unless cluster
 
-    pixel = cluster.pixels[0]
+    properties = cluster.pixelProperties
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
-    if pixel.paletteColor
-      paintHelper.setPaletteColor pixel.paletteColor
+    if properties.paletteColor
+      paintHelper.setPaletteColor properties.paletteColor
 
-    else if pixel.directColor
-      paintHelper.setDirectColor pixel.directColor
+    else if properties.directColor
+      paintHelper.setDirectColor properties.directColor
 
-    else if pixel.materialIndex?
-      paintHelper.setMaterialIndex pixel.materialIndex
+    else if properties.materialIndex?
+      paintHelper.setMaterialIndex properties.materialIndex
 
-    if pixel.normal
-      paintHelper.setNormal pixel.normal
+    if properties.normal
+      paintHelper.setNormal properties.normal

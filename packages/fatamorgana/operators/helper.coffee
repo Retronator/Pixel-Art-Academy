@@ -19,4 +19,6 @@ class FM.Helper extends FM.Operator
     # Return the function instead of constructed object. Return must be explicit.
     return getterSetter
 
-  value: -> # Override to provide a getter/setter for this helper.
+  value: ->
+    # Override to provide a getter/setter for this helper.
+    @data.value()

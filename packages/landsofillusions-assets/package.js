@@ -295,6 +295,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/meshcanvas/renderer..');
   api.addFile('mesheditor/meshcanvas/renderer/cameramanager');
   api.addFile('mesheditor/meshcanvas/renderer/pixelrender');
+  api.addFile('mesheditor/meshcanvas/renderer/sourceimage..');
 
   // Audio editor
 

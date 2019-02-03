@@ -19,7 +19,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.PixelRender
     @picture = new THREE.Mesh geometry, material
     scene.add @picture
 
-    # TODO: Position picture to match source image.
     @renderer.meshCanvas.autorun (computation) =>
       return unless viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds?.toObject()
       return unless viewportBounds.width

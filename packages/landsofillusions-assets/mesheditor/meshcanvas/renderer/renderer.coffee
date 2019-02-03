@@ -19,6 +19,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @bounds = new AE.Rectangle()
     
     @pixelRender = new @constructor.PixelRender @
+    @sourceImage = new @constructor.SourceImage @
+
     @cameraManager = new @constructor.CameraManager @
 
     # Resize the renderer when canvas size changes.
@@ -55,6 +57,11 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         # Render the low-res picture to the main scene.
         pixelRenderScene = @pixelRender.scene.withUpdates()
         @renderer.render pixelRenderScene, camera.pixelRender
+
+      if @meshCanvas.sourceImageEnabled()
+        # Render the source image to the main scene.
+        sourceImageScene = @sourceImage.scene.withUpdates()
+        @renderer.render sourceImageScene, camera.pixelRender
 
       # Render helpers that overlay the geometry.
       camera.main.layers.set 1

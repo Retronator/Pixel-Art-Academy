@@ -4,7 +4,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
   constructor: (@meshCanvas) ->
     geometry = new THREE.BufferGeometry
 
-    # We create a unit grid from -gridSize to gridSize. That's 2 * gridSize +1
+    # We create a unit grid from -gridSize to gridSize. That's 2 * gridSize + 1
     # lines in each direction and each line has 2 vertices (start and end).
     gridSize = 100
     linesCount = 2 * gridSize + 1

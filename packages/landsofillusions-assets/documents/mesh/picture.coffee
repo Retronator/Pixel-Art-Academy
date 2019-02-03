@@ -135,6 +135,8 @@ class LOI.Assets.Mesh.Object.Layer.Picture
     @contentUpdated()
     
   clearPixels: (pixels, relative) ->
+    return unless @_bounds
+
     # Clear pixels from maps.
     for type, map of @maps
       for pixel in pixels
@@ -145,6 +147,8 @@ class LOI.Assets.Mesh.Object.Layer.Picture
         unless relative
           relativeX -= @_bounds.x
           relativeY -= @_bounds.y
+
+        continue unless 0 <= relativeX < map.width and 0 <= relativeY < map.height
 
         map.clearPixel relativeX, relativeY
 

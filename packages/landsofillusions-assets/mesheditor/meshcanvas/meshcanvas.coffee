@@ -21,7 +21,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     horizonEnabled: false
     pixelRenderEnabled: true
     planeGridEnabled: true
-    sourceImageEnabled: false
+    sourceImageEnabled: true
 
   constructor: ->
     super arguments...

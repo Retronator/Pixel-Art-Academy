@@ -11,8 +11,9 @@ class LOI.Assets.MeshEditor.Helpers.CurrentCluster extends FM.Helper
     super arguments...
 
     @cluster = new ComputedField =>
-      return unless objectIndex = @objectIndex()
-      return unless clusterIndex = @clusterIndex()
+      objectIndex = @objectIndex()
+      clusterIndex = @clusterIndex()
+      return unless objectIndex? and clusterIndex?
 
       return unless meshLoader = @interface.getLoaderForFile @fileId
       return unless meshObjects = meshLoader.mesh.objects()
