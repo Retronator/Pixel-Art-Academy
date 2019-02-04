@@ -98,6 +98,11 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.MeshEditor.Actions.DebugMode.id()
         ]
       ,
+        caption: 'Scene'
+        items: [
+          LOI.Assets.MeshEditor.Actions.ShadowsEnabled.id()
+        ]
+      ,
         caption: 'Tools'
         items: [
           LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()

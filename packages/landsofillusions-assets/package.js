@@ -273,11 +273,13 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/showsourceimage');
   api.addFile('mesheditor/actions/history');
   api.addFile('mesheditor/actions/save');
+  api.addFile('mesheditor/actions/shadowsenabled');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');
   api.addFile('mesheditor/helpers/scene');
   api.addFile('mesheditor/helpers/selection');
+  api.addFile('mesheditor/helpers/shadowsenabled');
 
   api.addUnstyledComponent('mesheditor/camera..');
   api.addComponent('mesheditor/cameraangles..');

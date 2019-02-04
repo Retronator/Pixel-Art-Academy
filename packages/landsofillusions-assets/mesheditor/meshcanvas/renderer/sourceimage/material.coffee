@@ -10,6 +10,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.SourceImage.Material extends THR
       lights: true
       side: THREE.DoubleSide
       shadowSide: THREE.DoubleSide
+      depthWrite: false
 
       uniforms: _.extend
         palette:
