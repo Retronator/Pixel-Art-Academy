@@ -21,13 +21,26 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
   pickCluster: ->
     return unless @mouseState.leftButton
 
-    mesh = @editor().mesh()
-    
-    # See which cluster contains this pixel.
-    for object in mesh.objects()
-      cluster = _.find(object.clusters(), (cluster) => cluster.findPixelAtAbsoluteCoordinate @pixelCoordinate.x, @pixelCoordinate.y)
-
     currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
+    currentCluster = currentClusterHelper.cluster()
+
+    mesh = @editor().mesh()
+
+    # See which clusters contain this pixel.
+    clusters = _.flatten(
+      for object in mesh.objects()
+        _.filter(object.clusters(), (cluster) => cluster.findPixelAtAbsoluteCoordinate @pixelCoordinate.x, @pixelCoordinate.y)
+    )
+
+    # Reset selection when picked clusters change.
+    @_clusterIndex = 0 if _.xor(clusters, @_previousClusters).length
+
+    # If we have more than one choice, move to the next one that isn't selected yet.
+    if clusters.length > 1
+      @_clusterIndex++ while clusters[@_clusterIndex % clusters.length] is currentCluster
+
+    cluster = clusters[@_clusterIndex % clusters.length]
+    @_previousClusters = clusters
     currentClusterHelper.setCluster cluster
 
     return unless cluster
@@ -46,3 +59,5 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
 
     if properties.normal
       paintHelper.setNormal properties.normal
+
+    paintHelper.setLayerIndex cluster.picture.layer.index
