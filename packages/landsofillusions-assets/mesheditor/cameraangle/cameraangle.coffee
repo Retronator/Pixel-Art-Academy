@@ -24,7 +24,7 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
     @camera = new LOI.Assets.Components.Camera
       load: => @cameraAngle()
       save: (value) =>
-        LOI.Assets.Mesh.updateCameraAngle @mesh()._id, @cameraAngleIndex(), value
+        @cameraAngle().update value
 
     @sprite = new ComputedField => 
       @cameraAngle()?.sprite

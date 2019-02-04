@@ -35,8 +35,10 @@ class LOI.Assets.Mesh.Object.Layer.Picture
 
   toPlainObject: ->
     plainObject =
-      bounds: _.pick @_bounds, ['x', 'y', 'width', 'height']
       maps: {}
+      
+    if @_bounds
+      plainObject.bounds = _.pick @_bounds, ['x', 'y', 'width', 'height']
 
     for type, map of @maps
       plainObject.maps[type] =

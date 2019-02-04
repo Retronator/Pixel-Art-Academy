@@ -29,8 +29,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.SourceImage
 
     meshCanvas.autorun (computation) =>
       return unless picture = meshCanvas.activePicture()
+      return unless bounds = picture.bounds()
 
-      bounds = picture.bounds()
       @image.scale.x = bounds.width
       @image.scale.y = bounds.height
       @image.position.x = bounds.x + bounds.width / 2

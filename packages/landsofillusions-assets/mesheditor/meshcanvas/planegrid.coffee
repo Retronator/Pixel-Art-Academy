@@ -72,7 +72,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
 
       # Note: We use right to align the grid at the poles since
       # there the normal and up get very close and unpredictable.
-      @matrix.lookAt zero, plane.normal, if plane.normal.y > 0.99 then right else up
+      @matrix.lookAt zero, plane.normal, if Math.abs(plane.normal.y) > 0.99 then right else up
 
       # Move the grid slightly above the cluster to prevent Z-fighting.
       @matrix.setPosition planeZero.add plane.normal.clone().multiplyScalar 0.001
