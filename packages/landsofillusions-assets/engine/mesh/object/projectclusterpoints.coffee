@@ -128,7 +128,8 @@ LOI.Assets.Engine.Mesh.Object.projectClusterPoints = (clusters, cameraAngle) ->
         segmentIndex = Math.floor index / 3
         positionInSegment = index % 3
 
-        line.closestPointToPoint edgeVertex, false, edgeVertex
+        # Project vertex onto the edge, except for edges with coplanar clusters since those don't have to be straight.
+        line.closestPointToPoint edgeVertex, false, edgeVertex unless edge.coplanarClusters
 
         # See if this is a duplicate of another edge point.
         duplicate = null

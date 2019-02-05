@@ -32,6 +32,10 @@ class LOI.Assets.Engine.Mesh.Object.Edge extends THREE.LineSegments
     @_addVertex start
     @_addVertex end
 
+  process: ->
+    # If direction has no length, it's a result of a cross product between two coplanar clusters.
+    @coplanarClusters = true unless @line.direction.length()
+
   findVertex: (x, y) ->
     @verticesMap[x]?[y]
 

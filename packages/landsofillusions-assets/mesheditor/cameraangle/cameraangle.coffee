@@ -1,3 +1,4 @@
+AC = Artificial.Control
 AM = Artificial.Mirage
 FM = FataMorgana
 LOI = LandsOfIllusions
@@ -24,6 +25,29 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
     @camera = new LOI.Assets.Components.Camera
       load: => @cameraAngle()
       save: (value) =>
+        # If we hold down shift, move target and position at the same time.
+        keyboardState = AC.Keyboard.getState()
+        if keyboardState.isKeyDown AC.Keys.shift
+          if value.position and not value.target
+            sourceProperty = 'position'
+            destinationProperty = 'target'
+
+          else if value.target and not value.position
+            sourceProperty = 'target'
+            destinationProperty = 'position'
+
+          if sourceProperty
+            # See which coordinates changed.
+            cameraAngle = @cameraAngle()
+
+            for coordinate in ['x', 'y', 'z']
+              unless cameraAngle[sourceProperty]?[coordinate] is value[sourceProperty][coordinate]
+                # This coordinate is being changed, so we want to apply the same delta to the destination vector.
+                delta = value[sourceProperty][coordinate] - (cameraAngle[sourceProperty]?[coordinate] or 0)
+
+                value[destinationProperty] ?= _.clone cameraAngle[destinationProperty] or {x: 0, y: 0, z:0}
+                value[destinationProperty][coordinate] += delta
+
         @cameraAngle().update value
 
     @sprite = new ComputedField => 

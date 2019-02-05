@@ -43,7 +43,7 @@ class LOI.Assets.MeshEditor.Tools.MoveCamera extends LOI.Assets.MeshEditor.Tools
         y = event.clientY - @_mousePosition.y
 
         if @_rotationMode
-          cameraManager.moveAroundTarget x, y
+          cameraManager.moveAroundTarget x * 6, y * 4
           
         else
           cameraManager.move x, y

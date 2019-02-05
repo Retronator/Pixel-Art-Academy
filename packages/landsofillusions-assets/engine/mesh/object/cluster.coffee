@@ -111,6 +111,8 @@ class LOI.Assets.Engine.Mesh.Object.Cluster
     verticesArray = new Float32Array @points.length * elementsPerVertex
     normalsArray = new Float32Array @points.length * elementsPerVertex
 
+    nanWarned = false
+
     for point, index in @points
       verticesArray[index * elementsPerVertex] = point.vertex.x
       verticesArray[index * elementsPerVertex + 1] = point.vertex.y
@@ -119,6 +121,10 @@ class LOI.Assets.Engine.Mesh.Object.Cluster
       normalsArray[index * elementsPerVertex] = @plane.normal.x
       normalsArray[index * elementsPerVertex + 1] = @plane.normal.y
       normalsArray[index * elementsPerVertex + 2] = @plane.normal.z
+
+      if not nanWarned and _.isNaN point.vertex.x
+        console.warn "Cluster on layer #{@picture.layer.name()} has invalid vertices at", index, @
+        nanWarned = true
 
     geometry = new THREE.BufferGeometry
     geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex

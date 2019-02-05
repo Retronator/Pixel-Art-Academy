@@ -11,7 +11,7 @@ class LOI.Assets.MeshEditor.Helpers.ShadowsEnabled extends FM.Helper
       @data.value newValue
       return
 
-    @data.value() ? true
+    @data.value()
 
   enabled: -> @value()
   toggle: -> @value not @value()

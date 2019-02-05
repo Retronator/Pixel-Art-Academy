@@ -11,6 +11,8 @@ class LOI.Assets.Mesh.ArrayField
       # Make rich objects.
       @array[index] = new @contentClass @, index, data for data, index in @array when data
 
+    @_itemFields = {}
+
   save: (saveData) ->
     if @array
       array = _.clone @array
@@ -29,7 +31,7 @@ class LOI.Assets.Mesh.ArrayField
     _.without @array, undefined, null
 
   get: (index) ->
-    @_updatedDependency.depend()
+    @_arrayChangedDependency.depend()
     return unless @array
     return unless item = @array[index]
 
@@ -54,7 +56,7 @@ class LOI.Assets.Mesh.ArrayField
 
   remove: (index, splice) ->
     if splice
-      # We remove the item with splice.
+      # We remove the item with splice. This is only OK for arrays that are never referenced by index.
       @array.splice index, 1
       
     else

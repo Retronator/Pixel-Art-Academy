@@ -40,15 +40,13 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
   placeholderName: ->
     cameraAngle = @currentData()
     "Camera angle #{cameraAngle.index}"
-    
-  showRemoveButton: ->
-    # We can remove a camera angle if it exists.
-    @cameraAngle()
 
   events: ->
     super(arguments...).concat
       'click .camera-angle': @onClickCameraAngle
       'click .add-button': @onClickAddButton
+      'click .remove-button': @onClickRemoveButton
+      'click .duplicate-button': @onClickDuplicateButton
       'change .name-input': @onChangeCameraAngle
 
   onClickCameraAngle: (event) ->
@@ -56,13 +54,26 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
     @setCameraAngleIndex cameraAngle.index
 
   onClickAddButton: (event) ->
-    mesh = @mesh()
-    index = mesh.cameraAngles.insert
+    index = @mesh().cameraAngles.insert
       picturePlaneDistance: 32
       pixelSize: 0.01
       position: x: 0, y: 1, z: 2
       target: x: 0, y: 1, z: 0
       up: x: 0, y: 1, z: 0
+
+    # Switch to new camera angle.
+    @setCameraAngleIndex index
+
+  onClickRemoveButton: (event) ->
+    mesh = @mesh()
+    mesh.cameraAngles.remove @cameraAngleIndex()
+
+  onClickDuplicateButton: (event) ->
+    # Create a copy without the name and insert it to create a duplicate.
+    copy = _.clone @cameraAngle().toPlainObject()
+    delete copy.name
+
+    index = @mesh().cameraAngles.insert copy
 
     # Switch to new camera angle.
     @setCameraAngleIndex index

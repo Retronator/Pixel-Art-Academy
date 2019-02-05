@@ -44,10 +44,12 @@ LOI.Assets.Engine.Mesh.Object.computeEdges = (clusters) ->
         if pixel.clusterEdges.down and clusterB.findPixelAtAbsoluteCoordinate(coordinates.x, coordinates.y)?.clusterEdges.down
           edge.addSegment coordinates, 1, 1, 0, 1
 
-      console.log "Computed edge between clusters #{clusterIndexA} and #{clusterIndexB}", edge if LOI.Assets.Engine.Mesh.debug
-        
       # See if we found any neighbors.
       continue unless edge.segments.length
+
+      edge.process()
+
+      console.log "Computed edge between clusters #{clusterIndexA} and #{clusterIndexB}", edge if LOI.Assets.Engine.Mesh.debug
 
       edges.push edge
       clusterA.edges.push edge

@@ -45,6 +45,8 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
 
     return unless cluster
 
+    console.log "Picked cluster", cluster if LOI.Assets.Engine.Mesh.debug
+
     properties = cluster.pixelProperties
     paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
