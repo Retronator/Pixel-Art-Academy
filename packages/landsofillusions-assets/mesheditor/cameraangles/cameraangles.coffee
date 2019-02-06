@@ -1,3 +1,4 @@
+AC = Artificial.Control
 AM = Artificial.Mirage
 FM = FataMorgana
 LOI = LandsOfIllusions
@@ -51,7 +52,18 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
 
   onClickCameraAngle: (event) ->
     cameraAngle = @currentData()
-    @setCameraAngleIndex cameraAngle.index
+
+    # If we hold down shift, do a smooth transition.
+    keyboardState = AC.Keyboard.getState()
+    if keyboardState.isKeyDown AC.Keys.shift
+      @editor().renderer.cameraManager.transition cameraAngle,
+        duration: 2000
+        complete: =>
+          @setCameraAngleIndex cameraAngle.index
+
+    else
+      # Immediately switch the camera angle.
+      @setCameraAngleIndex cameraAngle.index
 
   onClickAddButton: (event) ->
     index = @mesh().cameraAngles.insert

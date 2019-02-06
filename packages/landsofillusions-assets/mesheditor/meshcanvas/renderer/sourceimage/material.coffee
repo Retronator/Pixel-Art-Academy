@@ -1,3 +1,4 @@
+AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.MeshCanvas.Renderer.SourceImage.Material extends THREE.ShaderMaterial
@@ -19,6 +20,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.SourceImage.Material extends THR
           value: null
         normalMap:
           value: null
+        drawNormals:
+          value: false
       ,
         THREE.UniformsLib.lights
 
@@ -44,8 +47,11 @@ void main()	{
 #include <packing>
 #include <lights_pars_begin>
 
+#{AS.GLSL.hsl2rgb}
+
 uniform mat4 modelViewMatrix;
 uniform sampler2D palette;
+uniform bool drawNormals;
 
 void main()	{
   vec4 rampShadeDitherAlpha = texture2D(map, vUv);
@@ -53,6 +59,19 @@ void main()	{
 
   vec3 normal = texture2D(normalMap, vUv).xyz;
   normal = (normal - 0.5) * 2.0;
+
+  if (drawNormals) {
+    vec3 backward = vec3(0, 0, 1);
+
+    float horizontalAngle = atan(normal.y, normal.x) + PI;
+    float verticalAngle = acos(dot(normal, backward));
+
+    float hue = horizontalAngle / PI2;
+    float saturation = verticalAngle / PI_HALF;
+
+    gl_FragColor = vec4(hsl2rgb(hue, saturation, 0.5), rampShadeDitherAlpha.a);
+    return;
+  }
 
   // Accumulate directional lights.
   float totalLightIntensity = 0.0;
@@ -130,7 +149,14 @@ void main()	{
     @texturesDepenency = new Tracker.Dependency
     meshCanvas = @sourceImage.renderer.meshCanvas
 
-    # Automatically update the palette texture.
+    # Turn normal mode on/off.
+    meshCanvas.autorun =>
+      @uniforms.drawNormals.value = meshCanvas.interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).get 'paintNormals'
+      @needsUpdate = true
+
+      @texturesDepenency.changed()
+
+    # Reactively update the palette texture.
     meshCanvas.autorun =>
       return unless palette = meshCanvas.meshLoader()?.palette()
 
@@ -150,7 +176,9 @@ void main()	{
       @uniforms.palette.value = paletteTexture
       @needsUpdate = true
 
-    # Automatically update the color texture.
+      @texturesDepenency.changed()
+
+    # Reactively update the color texture.
     meshCanvas.autorun =>
       return unless picture = meshCanvas.activePicture()
       return unless paletteColorMap = picture.maps.paletteColor
@@ -177,7 +205,7 @@ void main()	{
 
       @texturesDepenency.changed()
 
-    # Automatically update the normal texture.
+    # Reactively update the normal texture.
     meshCanvas.autorun =>
       return unless picture = meshCanvas.activePicture()
       return unless normalMap = picture.maps.normal

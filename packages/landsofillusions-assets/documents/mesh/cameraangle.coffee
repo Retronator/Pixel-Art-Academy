@@ -5,11 +5,11 @@ class LOI.Assets.Mesh.CameraAngle
   constructor: (@cameraAngles, @index, data) ->
     @_updatedDependency = new Tracker.Dependency
 
+    @worldMatrix = new THREE.Matrix4
+    @worldMatrixInverse = new THREE.Matrix4
+
     @sourceData = {}
     @update data
-
-  _createVector: (vectorData = {}) ->
-    new THREE.Vector3 vectorData.x or 0, vectorData.y or 0, vectorData.z or 0
 
   toPlainObject: ->
     @sourceData
@@ -22,20 +22,50 @@ class LOI.Assets.Mesh.CameraAngle
     _.merge @sourceData, update
     _.merge @, update
 
-    # Create rich objects.
     position = @_createVector @sourceData.position
     target = @_createVector @sourceData.target
     up = @_createVector @sourceData.up
 
-    @worldMatrix = new THREE.Matrix4().lookAt position, target, up
+    @worldMatrix.lookAt position, target, up
     @worldMatrix.setPosition position
 
-    if @worldMatrix.determinant()
-      @worldMatrixInverse = new THREE.Matrix4().getInverse @worldMatrix
+    @worldMatrixInverse.getInverse @worldMatrix if @worldMatrix.determinant()
 
     # Signal change of the camera angle.
     @_updatedDependency.changed()
     @cameraAngles.contentUpdated()
+
+  _updateWorldMatrix: ->
+
+  _createVector: (vectorData = {}) ->
+    new THREE.Vector3 vectorData.x or 0, vectorData.y or 0, vectorData.z or 0
+
+  getProjectionMatrixForViewport: (viewportBounds, target) ->
+    return unless @pixelSize
+    
+    offset = @picturePlaneOffset or x: 0, y: 0
+
+    # Note: We offset bounds by half a pixel because we want to look at the center of the pixel.
+    left = (viewportBounds.left - 0.5 + offset.x) * @pixelSize
+    right = (viewportBounds.right - 0.5 + offset.x) * @pixelSize
+    # Note: We want the 3D Y direction to be up, so we need to reverse it (it goes down in screen space).
+    top = -(viewportBounds.top - 0.5 + offset.y) * @pixelSize
+    bottom = -(viewportBounds.bottom - 0.5 + offset.y) * @pixelSize
+    near = @pixelSize
+    far = 1000
+
+    target ?= new THREE.Matrix4
+
+    if @picturePlaneDistance
+      # We have a perspective projection.
+      near *= @picturePlaneDistance
+      target.makePerspective left, right, top, bottom, near, far
+
+    else
+      # We have an orthographic projection.
+      target.makeOrthographic left, right, top, bottom, near, far
+
+    target
 
   projectPoints: (screenPoints, worldPlane, xOffset = 0, yOffset = 0) ->
     projectedWorldPoints = []

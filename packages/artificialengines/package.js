@@ -73,6 +73,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/three..');
   api.addFile('everywhere/three/color');
   api.addFile('everywhere/three/vectors');
+  api.addFile('everywhere/three/matrices');
 
   api.addFile('everywhere/lodash/lettercase');
   api.addFile('everywhere/lodash/nestedproperty');
@@ -238,6 +239,9 @@ Package.onUse(function(api) {
 
   api.addFile('spectrum/hqx..');
   api.addJavascript('spectrum/hqx..');
+
+  api.addFile('spectrum/glsl..');
+  api.addFile('spectrum/glsl/hsl2rgb');
 
   // Artificial Echo
   

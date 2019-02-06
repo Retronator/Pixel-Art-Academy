@@ -23,6 +23,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_target = new THREE.Vector3
     @_up = new THREE.Vector3
 
+    # Dummy DOM element to run velocity on.
+    @$animate = $('<div>')
+
     # When camera angle changes, match its values via reset.
     @renderer.meshCanvas.autorun (computation) =>
       @reset()
@@ -49,28 +52,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
 
   _updateProjectionMatrix: (viewportBounds, _camera) ->
     return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
-    return unless pixelSize = cameraAngle.pixelSize
+    return unless cameraAngle.pixelSize
 
-    offset = cameraAngle.picturePlaneOffset or x: 0, y: 0
-
-    # Note: We offset bounds by half a pixel because we want to look at the center of the pixel.
-    left = (viewportBounds.left - 0.5 + offset.x) * pixelSize
-    right = (viewportBounds.right - 0.5 + offset.x) * pixelSize
-    # Note: We want the 3D Y direction to be up, so we need to reverse it (it goes down in screen space).
-    top = -(viewportBounds.top - 0.5 + offset.y) * pixelSize
-    bottom = -(viewportBounds.bottom - 0.5 + offset.y) * pixelSize
-    near = pixelSize
-    far = 1000
-
-    if picturePlaneDistance = cameraAngle.picturePlaneDistance
-      # We have a perspective projection.
-      near *= picturePlaneDistance
-      _camera.projectionMatrix.makePerspective left, right, top, bottom, near, far
-
-    else
-      # We have an orthographic projection.
-      _camera.projectionMatrix.makeOrthographic left, right, top, bottom, near, far
-
+    cameraAngle.getProjectionMatrixForViewport viewportBounds, _camera.projectionMatrix
     _camera.projectionMatrixInverse.getInverse _camera.projectionMatrix
 
   _setVector: (vector, vectorData = {}) ->
@@ -80,7 +64,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_camera.matrix.lookAt @_position, @_target, @_up
     @_camera.matrix.setPosition @_position
     @_camera.matrix.decompose @_camera.position, @_camera.quaternion, @_camera.scale
+    @_updateTargetCamera()
 
+  _updateTargetCamera: ->
     @_renderTargetCamera.matrix.copy @_camera.matrix
     @_renderTargetCamera.matrix.decompose @_renderTargetCamera.position, @_renderTargetCamera.quaternion, @_renderTargetCamera.scale
 
@@ -111,6 +97,49 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_position.subVectors(@_position, @_target).normalize().multiplyScalar(distanceToTarget).add @_target
 
     @_updateCamera()
+
+  transition: (cameraAngle, options) ->
+    startPosition = @_camera.position.clone()
+    startRotation = @_camera.quaternion.clone()
+    startScale = @_camera.scale.clone()
+
+    startProjection = @_camera.projectionMatrix.clone()
+    startProjectionRenderTarget = @_renderTargetCamera.projectionMatrix.clone()
+
+    endPosition = new THREE.Vector3
+    endRotation = new THREE.Quaternion
+    endScale = new THREE.Vector3
+    cameraAngle.worldMatrix.decompose endPosition, endRotation, endScale
+
+    viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds?.toObject()
+    endProjection = cameraAngle.getProjectionMatrixForViewport viewportBounds
+
+    renderTargetViewportBounds =
+      left: Math.floor viewportBounds.left
+      right: Math.ceil viewportBounds.right
+      top: Math.floor viewportBounds.top
+      bottom: Math.ceil viewportBounds.bottom
+
+    endProjectionRenderTarget = cameraAngle.getProjectionMatrixForViewport renderTargetViewportBounds
+
+    @$animate.velocity('stop').velocity
+      tween: [1, 0]
+    ,
+      _.extend options,
+        progress: (elements, complete, remaining, current, tweenValue) =>
+          # Update world matrix parameters.
+          @_camera.position.lerpVectors startPosition, endPosition, tweenValue
+          THREE.Quaternion.slerp startRotation, endRotation, @_camera.quaternion, tweenValue
+          @_camera.scale.lerpVectors startScale, endScale, tweenValue
+
+          # Update projection matrices.
+          @_camera.projectionMatrix.lerpMatrices startProjection, endProjection, tweenValue
+          @_camera.projectionMatrixInverse.getInverse @_camera.projectionMatrix
+
+          @_renderTargetCamera.projectionMatrix.lerpMatrices startProjectionRenderTarget, endProjectionRenderTarget, tweenValue
+          @_renderTargetCamera.projectionMatrixInverse.getInverse @_renderTargetCamera.projectionMatrix
+
+          @_updateTargetCamera()
 
   reset: ->
     return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
