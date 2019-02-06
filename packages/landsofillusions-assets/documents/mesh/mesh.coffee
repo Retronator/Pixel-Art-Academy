@@ -47,10 +47,6 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   dither: amount of dither used from 0 to 1
   @Meta
     name: @id()
-    fields: =>
-      cameraAngles: [
-        sprite: Document.ReferenceField LOI.Assets.Sprite, [], false
-      ]
 
   # Store the class name of the visual asset by which we can reach the class by querying LOI.Assets. We can't simply
   # use the name parameter, because in production the name field has a minimized value.
