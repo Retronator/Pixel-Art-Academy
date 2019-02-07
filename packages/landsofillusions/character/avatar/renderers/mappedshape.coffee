@@ -1,7 +1,13 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Renderers.Renderer
-  @liveEditing = false
+  @liveEditing = true
+
+  if @liveEditing and Meteor.isClient and not LOI.Character.Avatar.Renderers.Shape.liveEditing
+    Meteor.startup =>
+      # Subscribe to all character part sprites.
+      types = LOI.Character.Part.allPartTypeIds()
+      LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe types
 
   constructor: (@options, initialize) ->
     super arguments...
@@ -84,12 +90,8 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       flippedHorizontal: @activeSpriteFlipped
 
     @_ready = new ComputedField =>
-      # If we have no data, in this part, there's nothing to do.
-      if @constructor.liveEditing
-        return true unless @activeSpriteData()
-
-      else
-        return true unless @options.part.options.dataLocation()
+      # If we have no sprite in this part, there's nothing to do.
+      return true unless @spriteDataInfo[@activeSide()]()
 
       # Shape is ready when the sprite is ready.
       @activeSprite.ready()

@@ -1,6 +1,7 @@
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+AS = Artificial.Spectrum
 FM = FataMorgana
 LOI = LandsOfIllusions
 
@@ -150,6 +151,10 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     # Initialize components.
     @planeGrid new @constructor.PlaneGrid @
 
+    # Register with the app to support updates.
+    @app = @ancestorComponent Retronator.App
+    @app.addComponent @
+
   onRendered: ->
     super arguments...
 
@@ -187,3 +192,19 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     super arguments...
 
     @renderer.destroy()
+
+    @app.removeComponent @
+
+  update: (appTime) ->
+    sceneHelper = @sceneHelper()
+    scene = sceneHelper.scene()
+    camera = @renderer.cameraManager.camera().main
+
+    sceneUpdated = false
+
+    for sceneItem in scene.children when sceneItem instanceof AS.RenderObject
+      if sceneItem.update?
+        sceneItem.update appTime, {camera}
+        sceneUpdated = true
+
+    sceneHelper.scene.updated() if sceneUpdated

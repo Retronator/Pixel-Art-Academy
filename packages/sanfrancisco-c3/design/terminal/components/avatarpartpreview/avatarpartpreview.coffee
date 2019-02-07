@@ -120,7 +120,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
       if @_drag
         offset = event.pageX - @_dragStart
-        @viewingAngle @_viewingAngleStart - offset * 0.04
+        @viewingAngle @_viewingAngleStart + offset * 0.04
 
     onMouseLeaveCanvas: (event) ->
       @lightDirection new THREE.Vector3(0, -1, -1).normalize()

@@ -1,0 +1,211 @@
+{
+  "_id": "Retronator.HQ.Actors.Retro",
+  "debugName": "Retro",
+  "avatar": {
+    "body": {
+      "node": {
+        "fields": {
+          "head": {
+            "node": {
+              "fields": {
+                "shape": {
+                  "templateId": "i7hjzpmyGPBtxgQJa"
+                },
+                "eyes": {
+                  "node": {
+                    "fields": {
+                      "shape": {
+                        "templateId": "erC7k2NXJ7YNqqgng"
+                      },
+                      "iris": {
+                        "node": {
+                          "fields": {
+                            "hue": {
+                              "value": 15
+                            },
+                            "shade": {
+                              "value": 3
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "hair": {
+                  "node": {
+                    "fields": {
+
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "skin": {
+            "node": {
+              "fields": {
+                "hue": {
+                  "value": 3
+                },
+                "shade": {
+                  "value": 8
+                }
+              }
+            }
+          },
+          "torso": {
+            "node": {
+              "fields": {
+                "chest": {
+                  "node": {
+                    "fields": {
+                      "shape": {
+                        "templateId": "MTSoZJdMjfrNzxNSG"
+                      },
+                      "breasts": {
+                        "templateId": "sPLoxK392ecH79C3B"
+                      }
+                    }
+                  }
+                },
+                "groin": {
+                  "node": {
+                    "fields": {
+                      "shape": {
+                        "templateId": "CGPE834KfMaAA5PAF"
+                      },
+                      "sexOrgan": {
+                        "templateId": "EYD8nz6ismrZ5sDHi"
+                      }
+                    }
+                  }
+                },
+                "neck": {
+                  "templateId": "4fwgybBqL8j8CRwK9"
+                },
+                "abdomen": {
+                  "templateId": "mJioY559vfEGohrG5"
+                }
+              }
+            }
+          },
+          "legs": {
+            "templateId": "6iQW2T2tHGkeSd8om"
+          },
+          "arms": {
+            "templateId": "7xjZxMuokHKgCsBLX"
+          }
+        }
+      }
+    },
+    "fullName": {
+      "_id": "DXwKRdqMRuZKzNoSB",
+      "translations": {
+        "text": "Test male",
+        "quality": 0,
+        "best": {
+          "text": "Test male",
+          "quality": 0,
+          "languageRegion": ""
+        }
+      }
+    },
+    "outfit": {
+      "node": {
+        "fields": {
+          "articles": {
+            "node": {
+              "fields": {
+                "5": {
+                  "templateId": "B7aB6HBnrv7ZNcWYf",
+                  "type": "Avatar.Outfit.Article"
+                },
+                "7": {
+                  "templateId": "p8NHnwTJ5jqhXQx2F",
+                  "type": "Avatar.Outfit.Article"
+                },
+                "8": {
+                  "templateId": "H38i6zpCDe7rGnfqe",
+                  "type": "Avatar.Outfit.Article"
+                },
+                "9": {
+                  "node": {
+                    "fields": {
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "templateId": "oMpprFCQYGymfCn5F",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "1": {
+                              "templateId": "DuhfwKmCzAM6M5Xe8",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "3": {
+                              "type": "Avatar.Outfit.ArticlePart",
+                              "node": {
+                                "fields": {
+                                  "region": {
+                                    "value": "TorsoClothes"
+                                  },
+                                  "shapes": {
+                                    "node": {
+                                      "fields": {
+                                        "0": {
+                                          "templateId": "ss6ApZ3wDwEjQbY44",
+                                          "type": "Avatar.Outfit.ArticlePartShape"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 0
+                                        },
+                                        "shade": {
+                                          "value": 1
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": "Avatar.Outfit.Article"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "designApproved": true,
+  "behaviorApproved": true,
+  "activated": true
+}

@@ -85,7 +85,7 @@ void main()	{
 
   DirectionalLight directionalLight;
   float lightIntensity;
-  float shadow;
+  float shadow = 1.0;
 
   for (int i = 0; i < NUM_DIR_LIGHTS; i++) {
     directionalLight = directionalLights[i];
@@ -93,14 +93,16 @@ void main()	{
     // Shade using Lambert cosine law.
     lightIntensity = saturate(dot(directionalLight.direction, normalEye));
 
-    // Apply shadow map. For some reason we must address the map with a constant, not the index i.
-    if (i==0) {
-      shadow = getShadow(directionalShadowMap[0], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[0]);
-    }
-    #if NUM_DIR_LIGHTS > 1
-      else if (i==1) {
-        shadow = getShadow(directionalShadowMap[1], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[1]);
+    #ifdef USE_SHADOWMAP
+      // Apply shadow map. For some reason we must address the map with a constant, not the index i.
+      if (i==0) {
+        shadow = getShadow(directionalShadowMap[0], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[0]);
       }
+      #if NUM_DIR_LIGHTS > 1
+        else if (i==1) {
+          shadow = getShadow(directionalShadowMap[1], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[1]);
+        }
+      #endif
     #endif
 
     // Add to total intensity.

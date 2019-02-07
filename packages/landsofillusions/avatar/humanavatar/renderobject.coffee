@@ -30,6 +30,12 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     bodyBottom = [-10.2, -10, -10.3, -9.9, -10.2]
     bodyTop = [6, 5.8, 5.5, 5.8, 6]
 
+    @_cameraPosition = new THREE.Vector3
+    @_cameraRotation = new THREE.Quaternion
+    @_cameraScale = new THREE.Vector3
+    @_cameraEuler = new THREE.Euler
+    @_cameraDirection = new THREE.Vector3
+
     for side in @textureSides
       do (side) =>
         # Create avatar renderers for drawing the textures. They need to be
@@ -48,7 +54,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
     for side, sideAngle of LOI.Engine.RenderingSides.angles
       # Create the animated mesh.
-      if sideAngle < 0
+      if sideAngle > 0
         sideName = LOI.Engine.RenderingSides.mirrorSides[side]
 
       else
@@ -220,7 +226,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
     @_textureUpdateAutorun.stop()
 
-  update: (appTime) ->
+  update: (appTime, options = {}) ->
     if @_targetAngle?
       angleDelta = @_angleChangeSpeed * appTime.elapsedAppTime
       @_angleChange += Math.abs angleDelta
@@ -231,24 +237,23 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         @_targetAngle = null
 
     # Project the direction and calculate angle in screen coordinates.
-    direction = LOI.Engine.RenderingSides.getDirectionForAngle @currentAngle
+    camera = options.camera or LOI.adventure.world.cameraManager().camera()
+    camera.matrix.decompose @_cameraPosition, @_cameraRotation, @_cameraScale
 
-    camera = LOI.adventure.world.cameraManager().camera()
-    positionProjection = @position.clone().project camera
-    facingProjection = new THREE.Vector3().addVectors(@position, direction).project camera
+    @_cameraDirection.subVectors @_cameraPosition, @position
+    cameraAngle = LOI.Engine.RenderingSides.getAngleForDirection @_cameraDirection
 
-    projectedDirection = new THREE.Vector3().subVectors facingProjection, positionProjection
-    #projectedDirection.x *= camera.aspect
-
-    # Angle 0 is pointing down (negative y direction).
-    projectedAngle = -Math.atan2 projectedDirection.x, -projectedDirection.y
-
-    side = LOI.Engine.RenderingSides.getSideForAngle projectedAngle
+    # Get the side based on how much the camera is away from where the character is facing.
+    side = LOI.Engine.RenderingSides.getSideForAngle cameraAngle - @currentAngle
     @setCurrentSide side unless side is @currentSide
 
     for side, animatedMesh of @animatedMeshes
       updateData = side is @currentSide
       animatedMesh.update appTime, updateData
+
+    # Avatar sprite should always face the camera.
+    @_cameraEuler.setFromQuaternion @_cameraRotation, "YXZ"
+    @rotation.y = @_cameraEuler.y
 
   setAnimation: (animationName) ->
     animatedMesh.currentAnimationName animationName for side, animatedMesh of @animatedMeshes

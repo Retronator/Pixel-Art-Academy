@@ -73,6 +73,10 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       else
         # See if we have an embedded custom palette.
         @meshData()?.customPalette
+        
+    # Create a dummy character.
+    Tracker.nonreactive =>
+      @character = new Retronator.HQ.Actors.Retro
 
   destroy: ->
     @_subscription.stop()
@@ -82,3 +86,5 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @meshData.stop()
     @paletteId.stop()
     @palette.stop()
+
+    @character.destroy()

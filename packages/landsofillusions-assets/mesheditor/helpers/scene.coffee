@@ -39,3 +39,12 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       lightDirection = @lightDirectionHelper()
       directionalLight.position.copy lightDirection.clone().multiplyScalar -100
       @scene.updated()
+
+    # Add the character to the scene once we get the loader.
+    @autorun (computation) =>
+      return unless meshLoader = @interface.getLoaderForFile @fileId
+      computation.stop()
+
+      character = meshLoader.character.instance.avatar.getRenderObject()
+      scene.add character
+      @scene.updated()

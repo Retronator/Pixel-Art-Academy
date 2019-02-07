@@ -36,7 +36,7 @@ Package.onUse(function(api) {
   api.addFile('actors/reuben');
   api.addFile('actors/burra');
   api.addThing('actors/corinne');
-  api.addThing('actors/retro');
+  api.addThingWithData('actors/retro');
   api.addFile('actors/shelley');
   api.addFile('actors/alexandra');
 

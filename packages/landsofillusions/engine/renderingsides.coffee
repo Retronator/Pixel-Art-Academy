@@ -13,13 +13,13 @@ class LOI.Engine.RenderingSides
 
   @angles:
     front: 0
-    frontLeft: Math.PI / 4
-    left: Math.PI / 2
-    backLeft: Math.PI * 3 / 4
+    frontLeft: -Math.PI / 4
+    left: -Math.PI / 2
+    backLeft: -Math.PI * 3 / 4
     back: Math.PI
-    backRight: - Math.PI * 3 / 4
-    right: -Math.PI / 2
-    frontRight: -Math.PI / 4
+    backRight: Math.PI * 3 / 4
+    right: Math.PI / 2
+    frontRight: Math.PI / 4
 
   @mirrorSides:
     front: 'front'
@@ -33,7 +33,7 @@ class LOI.Engine.RenderingSides
 
   @getAngleForDirection: (direction) ->
     # Angle 0 is pointing towards the camera (positive Z direction).
-    -Math.atan2 direction.x, direction.z
+    Math.atan2 direction.x, direction.z
 
   @getSideForDirection: (direction) ->
     @getSideForAngle @getAngleForDirection direction
@@ -52,4 +52,4 @@ class LOI.Engine.RenderingSides
     closestSide
 
   @getDirectionForAngle: (angle) ->
-    new THREE.Vector3 -Math.sin(angle), 0, Math.cos angle
+    new THREE.Vector3 Math.sin(angle), 0, Math.cos angle

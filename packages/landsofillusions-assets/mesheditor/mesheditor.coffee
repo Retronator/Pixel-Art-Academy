@@ -9,12 +9,6 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
   @id: -> 'LandsOfIllusions.Assets.MeshEditor'
   @register @id()
 
-  constructor: ->
-    super arguments...
-
-    @documentClass = LOI.Assets.Mesh
-    @assetClassName = @documentClass.className
-
   @defaultInterfaceData: ->
     # Operators
 
@@ -47,7 +41,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         ]
         
       "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
-        initialCameraScale: 8
+        initialCameraScale: 2
         components: [
           LOI.Assets.SpriteEditor.Helpers.SafeArea.id()
         ]
@@ -238,8 +232,27 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": null
       "#{LOI.Assets.MeshEditor.Tools.ColorFill.id()}": key: AC.Keys.g
 
+  constructor: ->
+    super arguments...
+
+    @documentClass = LOI.Assets.Mesh
+    @assetClassName = @documentClass.className
+
+    # Pretend to be the global adventure instance.
+    LOI.adventure = @
+
+  onCreated: ->
+    super arguments...
+
+    # Subscribe to all character part templates.
+    types = LOI.Character.Part.allPartTypeIds()
+
+    LOI.Character.Part.Template.forTypes.subscribe @, types
+
   onRendered: ->
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
     editorView.addFile id, LOI.Assets.Mesh.id() for id in ['R3RuRjSayDiockm7w']
+
+  currentScenes: -> []
