@@ -41,19 +41,21 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
       # Add new children.
       for cluster in clusters
         # Do not draw unselected clusters in debug mode.
-        if not debug or debug and (not currentCluster or cluster is currentCluster)
-          continue unless mesh = cluster.getMesh @mesh.options
-          @add mesh
+        continue if debug and currentCluster and currentCluster isnt cluster
+        continue unless mesh = cluster.getMesh @mesh.options
+        
+        @add mesh
 
-          if debug
-            mesh.layers.set 2
+        if debug
+          mesh.layers.set 2
 
-            points = cluster.getPoints @mesh.options
-            points.layers.set 2
-            @add points
-      
-      for edge in edges when edge.line.point
-        edge.layers.set 2
-        @add edge
+          points = cluster.getPoints @mesh.options
+          points.layers.set 2
+          @add points
+
+      if debug
+        for edge in edges when edge.line.point
+          edge.layers.set 2
+          @add edge
 
       @mesh.options.sceneManager.scene.updated()

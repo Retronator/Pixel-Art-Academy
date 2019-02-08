@@ -103,37 +103,26 @@ class LOI.Engine.World extends AM.Component
   events: ->
     super(arguments...).concat
       'mouseenter canvas': @onMouseEnterCanvas
-      'mousemove canvas': @onMouseMoveCanvas
       'mouseleave canvas': @onMouseLeaveCanvas
       'click canvas': @onClickCanvas
       
   onMouseEnterCanvas: (event) ->
     @_hovering = true
 
-  onMouseMoveCanvas: (event) ->
-    viewportCoordinate = @mouse().viewportCoordinate()
-
-    percentageX = viewportCoordinate.x * 4
-    percentageY = viewportCoordinate.y + 1
-
-    @sceneManager().setLightDirection -percentageX, -percentageY, -1
-
   onMouseLeaveCanvas: (event) ->
     @_hovering = false
-
-    @sceneManager().setLightDirection -1, -1, -1
-
     @forceUpdateAndDraw()
 
   onClickCanvas: (event) ->
-    viewportCoordinate = @mouse().viewportCoordinate()
+    displayCoordinate = @mouse().displayCoordinate()
+    illustrationSize = @options.adventure.interface.illustrationSize
     scene = @sceneManager().scene()
-    camera = @cameraManager().camera()
 
-    raycaster = new THREE.Raycaster
-    raycaster.setFromCamera viewportCoordinate, camera
+    raycaster = @cameraManager().getRaycaster
+      x: displayCoordinate.x - illustrationSize.width() / 2
+      y: displayCoordinate.y - illustrationSize.height() / 2
 
-    intersects = raycaster.intersectObjects scene.children
+    intersects = raycaster.intersectObjects scene.children, true
     return unless intersects.length
 
     # Create move memory action.

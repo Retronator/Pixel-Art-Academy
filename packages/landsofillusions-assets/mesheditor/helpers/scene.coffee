@@ -19,7 +19,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
 
     directionalLight.castShadow = true
-    d = 10
+    d = 20
     directionalLight.shadow.camera.left = -d
     directionalLight.shadow.camera.right = d
     directionalLight.shadow.camera.top = d

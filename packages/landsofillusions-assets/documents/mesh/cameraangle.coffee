@@ -151,3 +151,29 @@ class LOI.Assets.Mesh.CameraAngle
     return Number.POSITIVE_INFINITY unless denominator
 
     new THREE.Vector2().subVectors(horizon.origin, screenPoint).cross(horizon.direction) / denominator
+
+  getRaycaster: (screenPoint) ->
+    # The default is a ray from camera position shooting through the target.
+    # Note: We need to create vectors from the data which is a plain object.
+    position = @_createVector @position
+    direction = @_createVector(@target).sub position
+
+    # Apply picture plane offset.
+    xOffset = @picturePlaneOffset?.x or 0
+    yOffset = @picturePlaneOffset?.y or 0
+
+    # Transform the point from screen space to world, positioned on the picture plane.
+    worldPoint = new THREE.Vector3 screenPoint.x + xOffset, -(screenPoint.y + yOffset), -(@picturePlaneDistance or 0)
+    worldPoint.applyMatrix4 @worldMatrix
+
+    if @picturePlaneDistance
+      # In perspective the ray is shooting through the point in world space.
+      direction = worldPoint.sub @position
+
+    else
+      # In orthogonal the ray is shooting from the point in world space.
+      position = worldPoint.multiplyScalar @pixelSize
+
+    direction.normalize()
+
+    new THREE.Raycaster position, direction

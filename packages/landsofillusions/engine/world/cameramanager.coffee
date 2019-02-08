@@ -52,3 +52,5 @@ class LOI.Engine.World.CameraManager
   _setVector: (vector, vectorData = {}) ->
     vector[field] = vectorData[field] or 0 for field in ['x', 'y', 'z']
 
+  getRaycaster: (screenPoint) ->
+    @_cameraAngle.getRaycaster screenPoint
