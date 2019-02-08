@@ -36,7 +36,7 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
       return unless clusters?.length and edges
 
       debug = @mesh.options.debug?()
-      currentCluster = @mesh.options.currentCluster()
+      currentCluster = @mesh.options.currentCluster?()
 
       # Add new children.
       for cluster in clusters
@@ -56,4 +56,4 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
         edge.layers.set 2
         @add edge
 
-      @mesh.options.sceneManager()?.scene.updated()
+      @mesh.options.sceneManager.scene.updated()

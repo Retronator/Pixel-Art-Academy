@@ -23,7 +23,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @asset = @meshData
 
     # Also listen to updates in non-managed fields.
-    @_subscription = LOI.Assets.Asset.forIdFull.subscribe LOI.Assets.Mesh.className, @fileId
+    @_subscription = LOI.Assets.Asset.forId.subscribe LOI.Assets.Mesh.className, @fileId
 
     @autorun (computation) =>
       return unless meshData = LOI.Assets.Mesh.documents.findOne @fileId
@@ -54,7 +54,7 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @mesh = new LOI.Assets.Engine.Mesh
       meshData: @meshData
       visualizeNormals: @paintNormalsData.value
-      sceneManager: => @sceneHelper
+      sceneManager: @sceneHelper
       debug: @debugModeData.value
       currentCluster: @currentClusterHelper.cluster
 
@@ -83,8 +83,8 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @_spritesSubscription.stop()
     @_paletteSubscription.stop()
 
-    @meshData.stop()
     @paletteId.stop()
     @palette.stop()
 
+    @mesh.destroy()
     @character.destroy()

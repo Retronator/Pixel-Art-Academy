@@ -64,11 +64,11 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     @initializeScrolling()
 
-    # Resize on viewport, fullscreen, and illustration height changes.
+    # Resize on viewport, fullscreen, and illustration changes.
     @autorun (computation) =>
       @display.viewport()
       AM.Window.isFullscreen()
-      LOI.adventure.currentSituation()?.illustrationHeight()
+      LOI.adventure.currentSituation()?.illustration()
 
       Tracker.afterFlush =>
         @resize()

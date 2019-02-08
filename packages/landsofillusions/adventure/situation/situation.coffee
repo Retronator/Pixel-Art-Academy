@@ -12,7 +12,7 @@ class LOI.Adventure.Situation
       things: CircumstanceTypes.Array
       exits: CircumstanceTypes.Map
       description: CircumstanceTypes.Array
-      illustrationHeight: CircumstanceTypes.Array
+      illustration: CircumstanceTypes.Array
       postscript: CircumstanceTypes.Array
 
     # Create all the circumstances as properties of the situation.

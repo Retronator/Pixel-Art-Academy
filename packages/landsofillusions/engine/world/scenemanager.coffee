@@ -13,7 +13,7 @@ class LOI.Engine.World.SceneManager
     directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
 
     directionalLight.castShadow = true
-    d = 10
+    d = 20
     directionalLight.shadow.camera.left = -d
     directionalLight.shadow.camera.right = d
     directionalLight.shadow.camera.top = d
@@ -29,27 +29,29 @@ class LOI.Engine.World.SceneManager
 
     scene.add directionalLight
 
-    plane = new THREE.Mesh new THREE.PlaneGeometry(7, 7), new THREE.MeshLambertMaterial(color: 0xcccccc)
-    plane.position.y = -0.95
-    plane.rotation.x = -Math.PI / 2
-    plane.receiveShadow = true
-    scene.add plane
+    # Add location mesh.
+    @_currentLocationMesh = null
+    
+    @world.autorun (computation) =>
+      return unless illustrationName = LOI.adventure.currentLocation()?.illustration()?.name
 
-    box = new THREE.Mesh new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial(color: 0xcccccc, shadowSide: THREE.DoubleSide)
-    box.position.x = 2
-    box.position.y = -0.5
-    box.receiveShadow = true
-    box.castShadow = true
-    scene.add box
+      LOI.Assets.Asset.forName.subscribe LOI.Assets.Mesh.className, illustrationName
+      return unless meshData = LOI.Assets.Mesh.documents.findOne name: illustrationName
 
-    box = new THREE.Mesh new THREE.BoxGeometry(3, 2, 1), new THREE.MeshLambertMaterial(color: 0xcccccc, shadowSide: THREE.DoubleSide)
-    box.position.x = -1
-    box.position.z = -1.5
-    box.position.y = 0
-    box.receiveShadow = true
-    box.castShadow = true
-    scene.add box
-
+      # Remove previous mesh.
+      if @_currentLocationMesh
+        scene.remove @_currentLocationMesh
+        @_currentLocationMesh.destroy()
+      
+      # Initialize mesh data, since it's a rich document, and create an engine mesh based on the data.
+      meshData.initialize()
+      @_currentLocationMesh = new LOI.Assets.Engine.Mesh
+        meshData: => meshData
+        sceneManager: @
+        
+      # Initialize the camera from the camera angle.
+      @world.cameraManager().setFromCameraAngle meshData.cameraAngles.get 0
+      
     @locationThings = new AE.ReactiveArray (=> @world.options.adventure.currentLocationThings()),
       added: (thing) =>
         # Look if the thing's avatar has a render object.

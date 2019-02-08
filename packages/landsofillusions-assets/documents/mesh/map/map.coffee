@@ -1,4 +1,4 @@
-AM = Artificial.Mummification
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 Pako = require 'pako'

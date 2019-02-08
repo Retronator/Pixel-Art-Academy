@@ -15,7 +15,7 @@ class LOI.Interface.Text extends LOI.Interface.Text
 
     # Illustration size is given in display pixels (rem units).
     @illustrationSize.width viewport.viewportBounds.width() / scale
-    @illustrationSize.height situation.illustrationHeight.last() or 0
+    @illustrationSize.height situation.illustration.last()?.height or 0
 
     $textInterface = $('.landsofillusions-adventure .landsofillusions-interface-text')
     $ui = $textInterface.find('.ui')

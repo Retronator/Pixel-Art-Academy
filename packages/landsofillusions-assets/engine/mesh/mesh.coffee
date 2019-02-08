@@ -8,15 +8,16 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
 
     @objects = new ReactiveField null
 
-    # Add the mesh to the scene once it's ready.
+    # Add the mesh to the scene.
     Tracker.autorun (computation) =>
-      return unless scene = @options.sceneManager()?.scene()
+      return unless scene = @options.sceneManager.scene()
       computation.stop()
 
       scene.add @
+      @options.sceneManager.scene.updated()
 
     # Generate objects.
-    Tracker.autorun (computation) =>
+    @_generateObjectsAutorun = Tracker.autorun (computation) =>
       return unless meshData = @options.meshData()
       return unless objectsData = meshData.objects.getAllWithoutUpdates()
       
@@ -26,7 +27,7 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       @objects meshObjects
 
     # Update mesh children.
-    Tracker.autorun (computation) =>
+    @_updateChildrenAutorun = Tracker.autorun (computation) =>
       # Clean up previous children.
       @remove @children[0] while @children.length
 
@@ -36,4 +37,8 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       # Add new children.
       @add object for object in objects
 
-      @options.sceneManager()?.scene.updated()
+      @options.sceneManager.scene.updated()
+
+  destroy: ->
+    @_generateObjectsAutorun.stop()
+    @_updateChildrenAutorun.stop()
