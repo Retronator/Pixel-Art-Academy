@@ -11,7 +11,6 @@ LOI.Assets.Engine.Mesh.Object.detectClusters = (object) ->
     continue unless picture = layer.pictures.get 0
     continue unless bounds = picture.bounds()
     continue unless flagsMap = picture.maps[LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.Flags]
-    continue unless normalMap = picture.maps[LOI.Assets.Mesh.Object.Layer.Picture.Map.Types.Normal]
 
     width = bounds.width
     height = bounds.height
@@ -40,8 +39,6 @@ LOI.Assets.Engine.Mesh.Object.detectClusters = (object) ->
         fringe = [pixel]
         visitedPixels.fill 0
         visitedPixels[pixelIndex] = 1
-
-        normalMapPixelIndex = normalMap.calculateDataIndex x, y
 
         while fringe.length
           # Add a fringe pixel to cluster.
@@ -77,8 +74,14 @@ LOI.Assets.Engine.Mesh.Object.detectClusters = (object) ->
               continue unless flagsMap.pixelExists neighborX, neighborY
 
               # Check if this pixel is part of the same cluster.
-              normalMapNeighborMapIndex = normalMap.calculateDataIndex neighborX, neighborY
-              continue unless normalMap.pixelsAreSameAtIndices normalMapPixelIndex, normalMapNeighborMapIndex
+              same = true
+
+              for type, map of picture.maps
+                unless map.pixelsAreSame x, y, neighborX, neighborY
+                  same = false
+                  break
+
+              continue unless same
 
               # This pixel matches the cluster pixel so add it to the fringe.
               fringe.push x: neighborX, y: neighborY

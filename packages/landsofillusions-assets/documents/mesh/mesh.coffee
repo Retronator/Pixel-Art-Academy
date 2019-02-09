@@ -32,6 +32,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #       maps: object of texture maps that hold information for this picture
   #         {type}: what information is contained in this map, with possible values:
   #             flags (1 byte per pixel: which of the maps are valid at each pixel)
+  #             clusterId (2 bytes per pixel: which cluster this pixel belongs to)
   #             materialIndex (flag value 1, 1 byte per pixel: index)
   #             paletteColor (flag value 2, 2 bytes per pixel: ramp, shade)
   #             directColor (flag value 4, 3 bytes per pixel: r, g, b)
@@ -39,6 +40,18 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #             normal (flag value 16, 3 bytes per pixel: x, y, z as signed bytes (-1 to 1 float mapped to -127 to 127))
   #           data: array buffer holding the pixels, not sent to the server
   #           compressedData: binary object with compressed version of data, sent to the server
+  #       clusters: map of auto-generated clusters detected in the picture
+  #         {id}: unique integer identifying this cluster in the layer
+  #           sourceCoordinates: the location in the picture where this cluster's map information is taken from
+  #             x, y
+  #     clusters: map of auto-generated clusters in world space
+  #       {id}: unique integer identifying this cluster in the layer
+  #         plane: the plane on which the cluster lies
+  #           point, normal
+  #         vertexBuffer: Float32Array with vertices of the cluster, not sent to the server
+  #         compressedVertexBuffer: binary object with compressed version of vertextBuffer, sent to the server
+  #         indexBuffer: UInt32Array with indices of the cluster, not sent to the server
+  #         compressedIndexBuffer: binary object with compressed version of indexBuffer, sent to the server
   # materials: array of shaders used to draw objects
   #   name: what the materials represents
   #   type: ID of the shader

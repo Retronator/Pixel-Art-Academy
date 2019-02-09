@@ -253,6 +253,6 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['R3RuRjSayDiockm7w']
+    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['X2p6nSKcFe3EqigNH']
 
   currentScenes: -> []

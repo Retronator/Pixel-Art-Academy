@@ -7,7 +7,7 @@ compressionOptions =
   level: Pako.Z_BEST_COMPRESSION
 
 class LOI.Assets.Mesh.Object.Layer.Picture.Map
-  @debug = true
+  @debug = false
 
   @Types:
     Flags: "flags"
