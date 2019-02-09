@@ -17,12 +17,14 @@ class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools
 
       pixel
 
-  applyPixels: (spriteData, layerIndex, pixels) ->
-    for pixel in pixels
-      # See if there even is a pixel there.
-      continue unless _.find spriteData.layers?[layerIndex]?.pixels, (searchPixel) -> pixel.x is searchPixel.x and pixel.y is searchPixel.y
-
+  applyPixels: (spriteData, layerIndex, relativePixels, strokeStarted) ->
+    changedPixels = for pixel in relativePixels when spriteData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
       # We must send only the coordinates to the server.
-      pixel = _.pick pixel, ['x', 'y']
+      _.pick pixel, ['x', 'y']
 
-      LOI.Assets.Sprite.removePixel spriteData._id, layerIndex, pixel
+    return unless changedPixels.length
+
+    LOI.Assets.Sprite.removePixels spriteData._id, layerIndex, changedPixels, not strokeStarted
+
+    # Register that we've processed the start of the stroke.
+    @startOfStrokeProcessed()

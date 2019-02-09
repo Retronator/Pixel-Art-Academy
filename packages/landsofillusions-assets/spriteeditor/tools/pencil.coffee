@@ -28,12 +28,12 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
                 
       pixel
 
-  applyPixels: (spriteData, layerIndex, pixels, strokeStarted) ->
-    changedPixels = _.filter pixels, (pixel) =>
+  applyPixels: (spriteData, layerIndex, relativePixels, strokeStarted) ->
+    changedPixels = _.filter relativePixels, (pixel) =>
       # See if we're only painting normals.
       paintNormals = @data.get 'paintNormals'
 
-      existingPixel = _.find spriteData.layers?[layerIndex]?.pixels, (searchPixel) -> pixel.x is searchPixel.x and pixel.y is searchPixel.y
+      existingPixel = spriteData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
   
       if paintNormals and existingPixel
         # Get the color from the existing pixel.
@@ -46,3 +46,6 @@ class LOI.Assets.SpriteEditor.Tools.Pencil extends LOI.Assets.SpriteEditor.Tools
     return unless changedPixels.length
 
     LOI.Assets.Sprite.addPixels spriteData._id, layerIndex, changedPixels, not strokeStarted
+
+    # Register that we've processed the start of the stroke.
+    @startOfStrokeProcessed()

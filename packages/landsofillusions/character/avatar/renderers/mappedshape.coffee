@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Renderers.Renderer
-  @liveEditing = true
+  @liveEditing = false
 
   if @liveEditing and Meteor.isClient and not LOI.Character.Avatar.Renderers.Shape.liveEditing
     Meteor.startup =>

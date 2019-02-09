@@ -66,6 +66,10 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       x: Number
       y: Number
       z: Number
+  
+  @_limitLayerPixels = (newCount) ->
+    # Allow up to 4,096 (64 * 64) pixels per layer.
+    throw new AE.ArgumentOutOfRangeException "Up to 4,096 pixels per layer are allowed." if newCount > 4096
 
   constructor: ->
     super arguments...
@@ -85,23 +89,74 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
         for pixel in layer.pixels
           layer._pixelMap[pixel.x] ?= {}
           layer._pixelMap[pixel.x][pixel.y] = pixel
+          
+  # Pixel retrieval
         
-  getPixelAtCoordinate: (x, y, layerIndex) ->
-    @layers[layerIndex]._pixelMap?[x]?[y]
+  getPixelForLayerAtCoordinates: (layerIndex, x, y) ->
+    @layers?[layerIndex]?._pixelMap?[x]?[y]
+  
+  getPixelForLayerAtAbsoluteCoordinates: (layerIndex, absoluteX, absoluteY) ->
+    return unless layer = @layers?[layerIndex]
+    x = absoluteX - (layer.origin?.x or 0)
+    y = absoluteY - (layer.origin?.y or 0)
 
-  findPixelAtAbsoluteCoordinate: (absoluteX, absoluteY) ->
-    for layer in @layers when layer?.pixels
+    @getPixelForLayerAtCoordinates layerIndex, x, y
+    
+  findPixelAtAbsoluteCoordinates: (absoluteX, absoluteY) ->
+    for layer, layerIndex in @layers when layer?.pixels
       x = absoluteX - (layer.origin?.x or 0)
       y = absoluteY - (layer.origin?.y or 0)
 
-      pixel = _.find layer.pixels, (pixel) => pixel.x is x and pixel.y is y
+      pixel = @getPixelForLayerAtCoordinates layerIndex, x, y
       return pixel if pixel
 
     null
+    
+  # Bounds operations
 
-  @_limitLayerPixels = (newCount) ->
-    # Allow up to 4,096 (64 * 64) pixels per layer.
-    throw new AE.ArgumentOutOfRangeException "Up to 4,096 pixels per layer are allowed." if newCount > 4096
+  recomputeBounds: ->
+    return unless newBounds = @getRecomputedBoundsIfNew()
+
+    @bounds = newBounds
+    @bounds.x = @bounds.left
+    @bounds.y = @bounds.top
+    @bounds.width = @bounds.right - @bounds.left + 1
+    @bounds.height = @bounds.bottom - @bounds.top + 1
+
+  getRecomputedBoundsIfNew: ->
+    bounds = null
+
+    for layer, index in @layers when layer?.pixels
+      for pixel in layer.pixels
+        absoluteX = pixel.x + (layer.origin?.x or 0)
+        absoluteY = pixel.y + (layer.origin?.y or 0)
+
+        if bounds
+          bounds =
+            left: Math.min bounds.left, absoluteX
+            right: Math.max bounds.right, absoluteX
+            top: Math.min bounds.top, absoluteY
+            bottom: Math.max bounds.bottom, absoluteY
+
+        else
+          bounds = left: absoluteX, right: absoluteX, top: absoluteY, bottom: absoluteY
+
+    # Nothing to do if bounds are the same.
+    return if @boundsMatch bounds
+
+    # Bounds are different, return them.
+    bounds
+    
+  boundsMatch: (properties) ->
+    # See if bounds match the sent properties. Note that we can't just
+    # compare for equality since @bounds might have extra properties.
+    for property, value of properties
+      unless @bounds?[property] is value
+        return false
+
+    true
+    
+  # History operations
     
   _applyOperation: (forward, backward) ->
     @_modifyBoundsBeforeApply arguments...
@@ -140,46 +195,6 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   _applyOperationAndConnectHistory: (forward, backward) ->
     @_modifyBoundsBeforeApply arguments...
     super arguments...
-
-  recomputeBounds: ->
-    return unless newBounds = @_tryRecomputeBounds()
-
-    @bounds = newBounds
-    @bounds.x = @bounds.left
-    @bounds.y = @bounds.top
-    @bounds.width = @bounds.right - @bounds.left + 1
-    @bounds.height = @bounds.bottom - @bounds.top + 1
-
-  _tryRecomputeBounds: ->
-    bounds = null
-
-    for layer, index in @layers when layer?.pixels
-      for pixel in layer.pixels
-        absoluteX = pixel.x + (layer.origin?.x or 0)
-        absoluteY = pixel.y + (layer.origin?.y or 0)
-        
-        if bounds
-          bounds =
-            left: Math.min bounds.left, absoluteX
-            right: Math.max bounds.right, absoluteX
-            top: Math.min bounds.top, absoluteY
-            bottom: Math.max bounds.bottom, absoluteY
-        
-        else
-          bounds = left: absoluteX, right: absoluteX, top: absoluteY, bottom: absoluteY
-          
-    # See if bounds are even different. Note that we can't just
-    # compare for equality since @bounds have extra properties.
-    changed = false
-
-    for property, value of bounds
-      unless @bounds?[property] is value
-        changed = true
-        break
-
-    return unless changed
-
-    bounds
 
 if Meteor.isServer
   # Export sprites without authors.

@@ -1,14 +1,14 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel, combineHistory = false) ->
+LOI.Assets.Sprite.addPixel.method (spriteId, layerIndex, pixel, combineHistory) ->
   LOI.Assets.Sprite.addPixels spriteId, layerIndex, [pixel], combineHistory
   
-LOI.Assets.Sprite.addPixels.method (spriteId, layerIndex, pixels, combineHistory = false) ->
+LOI.Assets.Sprite.addPixels.method (spriteId, layerIndex, pixels, combineHistory) ->
   check spriteId, Match.DocumentId
   check layerIndex, Match.Integer
   check pixels, [LOI.Assets.Sprite.pixelPattern]
-  check combineHistory, Boolean
+  check combineHistory, Match.OptionalOrNull Boolean
 
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
@@ -18,7 +18,7 @@ LOI.Assets.Sprite.addPixels.method (spriteId, layerIndex, pixels, combineHistory
   layer = sprite.layers?[layerIndex]
   layerPixels = layer?.pixels
 
-  # Make sure all updates are necessary.
+  # Make sure the update is necessary.
   throw new AE.InvalidOperationException "No pixels are being added." unless pixels.length
 
   for pixel in pixels
@@ -58,7 +58,7 @@ LOI.Assets.Sprite.addPixels.method (spriteId, layerIndex, pixels, combineHistory
         bounds = left: absoluteX, right: absoluteX, top: absoluteY, bottom: absoluteY
 
     # See if bounds are even different.
-    unless EJSON.equals sprite.bounds, bounds
+    unless sprite.boundsMatch bounds
       forward.$set ?= {}
       forward.$set.bounds = bounds
 

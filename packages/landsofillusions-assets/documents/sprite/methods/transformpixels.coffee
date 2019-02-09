@@ -38,7 +38,7 @@ transformPixels = (spriteId, layerIndex, transform) ->
 
   else
     # Recalculate bounds completely.
-    if bounds = sprite.tryRecomputeBounds()
+    if bounds = sprite.getRecomputedBoundsIfNew()
       forward.$set ?= {}
       forward.$set.bounds = bounds
 

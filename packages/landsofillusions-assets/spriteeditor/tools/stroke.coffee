@@ -188,11 +188,22 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
   onMouseDown: (event) ->
     super arguments...
 
-    # If mouse down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
-    Tracker.afterFlush =>
-      @_strokeStarted = true
+    # Register that the stroke has just started.
+    @_strokeStarted = true
 
-      @processStroke()
+    # If mouse down and move happen in the same frame (such as when using a stylus), allow the cursor to fully update.
+    Tracker.afterFlush => @processStroke()
+
+  onMouseUp: (event) ->
+    super arguments...
+
+    # End stroke.
+    @lastStrokeCoordinates null
+    @secondToLastStrokeCoordinates null
+
+    @drawStraight false
+
+    @updatePixels()
 
   processStroke: ->
     currentPixelCoordinates = @currentPixelCoordinates()
@@ -298,17 +309,6 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @pixels @createPixelsFromCoordinates pixelCoordinates
     @applyTool()
 
-  onMouseUp: (event) ->
-    super arguments...
-
-    # End stroke.
-    @lastStrokeCoordinates null
-    @secondToLastStrokeCoordinates null
-
-    @drawStraight false
-
-    @updatePixels()
-
   applyTool: ->
     return unless @mouseState.leftButton
 
@@ -346,7 +346,8 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
     @lastPixelCoordinates currentPixelCoordinates
     @lastStrokeCoordinates currentPixelCoordinates
 
+  startOfStrokeProcessed: ->
     @_strokeStarted = false
 
-  applyPixels: (spriteData, layerIndex, pixels, strokeStarted) ->
+  applyPixels: (spriteData, layerIndex, relativePixels, strokeStarted) ->
     # Override to call a method that will send the operation on the server.
