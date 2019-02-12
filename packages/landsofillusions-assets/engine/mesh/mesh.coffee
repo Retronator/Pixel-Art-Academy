@@ -1,8 +1,6 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Mesh extends THREE.Object3D
-  @debug = false
-  
   constructor: (@options) ->
     super arguments...
 
@@ -21,10 +19,10 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       return unless meshData = @options.meshData()
       return unless objectsData = meshData.objects.getAllWithoutUpdates()
       
-      meshObjects = for objectData in objectsData
+      engineObjects = for objectData in objectsData
         new @constructor.Object @, objectData
 
-      @objects meshObjects
+      @objects engineObjects
 
     # Update mesh children.
     @_updateChildrenAutorun = Tracker.autorun (computation) =>
@@ -42,3 +40,5 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
   destroy: ->
     @_generateObjectsAutorun.stop()
     @_updateChildrenAutorun.stop()
+
+    object.destroy() for object in @objects()

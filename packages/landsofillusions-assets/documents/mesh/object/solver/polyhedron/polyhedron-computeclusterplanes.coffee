@@ -1,29 +1,31 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Engine.Mesh.Object.computeClusterPlanes = (clusters, cameraAngle) ->
-  console.log "Computing cluster planes", clusters, cameraAngle if LOI.Assets.Engine.Mesh.debug
+LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterPlanes = (clusters, cameraAngle) ->
+  console.log "Computing cluster planes", clusters, cameraAngle if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
 
   # See if we have a cluster overlapping the camera origin and set it as the base to calculate other clusters from.
   origin = cameraAngle.unprojectPoint new THREE.Vector3
 
+  visitedClusters = []
+
   if originCluster = _.find(clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate origin.x, origin.y)
-    originCluster.plane.point = new THREE.Vector3
+    originCluster.setPlanePoint new THREE.Vector3
 
     # Compute planes for the first time.
-    propagateCluster originCluster, cameraAngle, [], []
+    propagateCluster originCluster, cameraAngle, visitedClusters, []
 
   # Set all free-floating clusters to go through the origin.
-  for cluster in clusters when not cluster.plane.point
+  for cluster in clusters when cluster not in visitedClusters
     # Assume the cluster is in the origin plane.
-    cluster.plane.point = new THREE.Vector3
-    propagateCluster cluster, cameraAngle, [], []
+    cluster.setPlanePoint new THREE.Vector3
+    propagateCluster cluster, cameraAngle, visitedClusters, []
 
 propagateCluster = (cluster, cameraAngle, visitedClusters, nextClusters) ->
   visitedClusters.push cluster
 
   # Position all edges based on our plane.
-  for edge in cluster.edges
-    otherCluster = if edge.clusterA is cluster then edge.clusterB else edge.clusterA
+  for otherClusterId, edge of cluster.edges
+    otherCluster = edge.getOtherCluster cluster
 
     # Skip clusters that have already been determined.
     if otherCluster.plane.point
@@ -41,11 +43,11 @@ propagateCluster = (cluster, cameraAngle, visitedClusters, nextClusters) ->
     edge.line.point.multiplyScalar 1 / vertices.length
 
     # Anchor the other cluster to the edge point.
-    otherCluster.plane.point = edge.line.point
+    otherCluster.setPlanePoint edge.line.point
 
   # Propagate to other clusters.
-  for edge in cluster.edges
-    otherCluster = if edge.clusterA is cluster then edge.clusterB else edge.clusterA
+  for otherClusterId, edge of cluster.edges
+    otherCluster = edge.getOtherCluster cluster
 
     continue if otherCluster in visitedClusters or otherCluster in nextClusters
 

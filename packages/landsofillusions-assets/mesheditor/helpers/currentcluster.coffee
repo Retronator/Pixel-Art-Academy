@@ -3,7 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.Helpers.CurrentCluster extends FM.Helper
   # objectIndex: index of the object for this cluster
-  # clusterIndex: index of the cluster within the object
+  # clusterId: ID of the cluster within the object
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Helpers.CurrentCluster'
   @initialize()
   
@@ -12,33 +12,27 @@ class LOI.Assets.MeshEditor.Helpers.CurrentCluster extends FM.Helper
 
     @cluster = new ComputedField =>
       objectIndex = @objectIndex()
-      clusterIndex = @clusterIndex()
-      return unless objectIndex? and clusterIndex?
+      clusterId = @clusterId()
+      return unless objectIndex? and clusterId?
 
       return unless meshLoader = @interface.getLoaderForFile @fileId
-      return unless meshObjects = meshLoader.mesh.objects()
-      return unless clusters = meshObjects[objectIndex]?.clusters()
-      
-      clusters[clusterIndex]
+      return unless meshObject = meshLoader.meshData().objects.get objectIndex
 
-  clusterIndex: -> @data.get 'clusterIndex'
-  setClusterIndex: (index) -> @data.set 'clusterIndex', index
+      meshObject.clusters()[clusterId]
+
+  clusterId: -> @data.get 'clusterId'
+  setClusterId: (index) -> @data.set 'clusterId', index
 
   objectIndex: -> @data.get 'objectIndex'
   setObjectIndex: (index) -> @data.set 'objectIndex', index
 
   setCluster: (cluster) ->
     unless cluster
-      @setClusterIndex null
+      @setClusterId null
       @setObjectIndex null
       return
 
-    object = cluster.picture.layer.object
+    @setClusterId cluster.id
 
-    meshLoader = @interface.getLoaderForFile @fileId
-    meshObjects = meshLoader.mesh.objects()
-    clusters = meshObjects[object.index].clusters()
-
-    clusterIndex = clusters.indexOf cluster
-    @setClusterIndex clusterIndex
+    object = cluster.layer.object
     @setObjectIndex object.index

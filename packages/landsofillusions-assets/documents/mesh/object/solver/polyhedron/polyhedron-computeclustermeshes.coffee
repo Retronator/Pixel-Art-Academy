@@ -2,10 +2,10 @@ LOI = LandsOfIllusions
 
 Delaunator = require 'delaunator'
 
-PointTypes = LOI.Assets.Engine.Mesh.Object.Cluster.PointTypes
+LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterMeshes = (clusters) ->
+  console.log "Computing cluster meshes", clusters if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
 
-LOI.Assets.Engine.Mesh.Object.computeClusterMeshes = (clusters) ->
-  console.log "Computing cluster meshes", clusters if LOI.Assets.Engine.Mesh.debug
+  PointTypes = LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes
 
   getX = (point) => point.vertexPlane.x
   getY = (point) => point.vertexPlane.y
@@ -123,7 +123,7 @@ LOI.Assets.Engine.Mesh.Object.computeClusterMeshes = (clusters) ->
       # We created required indices so add them to the cluster.
       cluster.indices.push indices...
 
-  console.log "Computed cluster meshes", clusters if LOI.Assets.Engine.Mesh.debug
+  console.log "Computed cluster meshes", clusters if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
 
 findTriangleVertexIndexOfType = (type, indices, cluster) ->
   for index, triangleVertexIndex in indices
@@ -149,7 +149,7 @@ getExtraPointIndex = (voidPointIndex, pixelPointIndex, extraPoints, cluster) ->
     extraPoints[smallerIndex][biggerIndex] = cluster.points.length
 
     cluster.points.push
-      type: PointTypes.Extra
+      type: LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes.Extra
       vertex: new THREE.Vector3().subVectors(pixelPoint.vertex, voidPoint.vertex).multiplyScalar(0.5).add voidPoint.vertex
 
   extraPoints[smallerIndex][biggerIndex]

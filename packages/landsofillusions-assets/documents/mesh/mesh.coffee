@@ -20,7 +20,13 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   # objects: array of scene objects
   #   name: name of the object
   #   visible: boolean if the object is rendered
-  #   solver: name of the solver used to construct the mesh from the pictures
+  #   solver: name of the solver used to construct the mesh from the pictures, with possible values:
+  #     polyhedron (default, object with only flat surfaces)
+  #     organic (object with a continuously curved surface)
+  #     plane (all clusters are positioned in one plane)
+  #     rope (deformable lines)
+  #     cloth (deformable surface)
+  #   lastClusterId: the last unique integer used to create a cluster
   #   layers: array of
   #     name: name of the layer
   #     visible: boolean if this layer should be drawn
@@ -42,16 +48,21 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #           compressedData: binary object with compressed version of data, sent to the server
   #       clusters: map of auto-generated clusters detected in the picture
   #         {id}: unique integer identifying this cluster in the layer
-  #           sourceCoordinates: the location in the picture where this cluster's map information is taken from
+  #           sourceCoordinates: absolute coordinates in the picture where this cluster's map information is taken from
   #             x, y
   #     clusters: map of auto-generated clusters in world space
   #       {id}: unique integer identifying this cluster in the layer
-  #         plane: the plane on which the cluster lies
-  #           point, normal
-  #         vertexBuffer: Float32Array with vertices of the cluster, not sent to the server
-  #         compressedVertexBuffer: binary object with compressed version of vertextBuffer, sent to the server
-  #         indexBuffer: UInt32Array with indices of the cluster, not sent to the server
-  #         compressedIndexBuffer: binary object with compressed version of indexBuffer, sent to the server
+  #         properties: user-defined properties set on the cluster
+  #           navigable: boolean if the cluster is navigable for pathfinding purposes
+  #         material: subset of properties of the picture cluster (relevant map values at source coordinates)
+  #           materialIndex, paletteColor, directColor, alpha, normal
+  #         geometry:
+  #           vertices: Float32Array with vertices of the cluster, not sent to the server
+  #           compressedVertices: binary object with compressed version of vertices, sent to the server
+  #           normals: Float32Array with normals of the cluster, not sent to the server
+  #           compressedNormals: binary object with compressed version of normals, sent to the server
+  #           indices: UInt32Array with indices of the cluster, not sent to the server
+  #           compressedIndices: binary object with compressed version of indices, sent to the server
   # materials: array of shaders used to draw objects
   #   name: what the materials represents
   #   type: ID of the shader

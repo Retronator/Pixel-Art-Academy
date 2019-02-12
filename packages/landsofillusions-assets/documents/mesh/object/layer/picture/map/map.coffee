@@ -11,6 +11,7 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map
 
   @Types:
     Flags: "flags"
+    ClusterId: "clusterId"
     MaterialIndex: "materialIndex"
     PaletteColor: "paletteColor"
     DirectColor: "directColor"
@@ -137,6 +138,15 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map
 
     for offset in [0...@constructor.bytesPerPixel]
       @data[dataIndex + offset] = 0
+
+  isPixelCleared: (x, y) ->
+    dataIndex = @calculateDataIndex x, y
+
+    # Pixel is not cleared if any value is not zero.
+    for offset in [0...@constructor.bytesPerPixel]
+      return false if @data[dataIndex + offset]
+      
+    true
 
   calculateDataIndex: (x, y) ->
     (x + y * @width) * @constructor.bytesPerPixel

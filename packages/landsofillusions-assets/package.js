@@ -71,22 +71,42 @@ Package.onUse(function(api) {
   api.addFile('documents/sprite/methods/layers');
 
   api.addFile('documents/mesh..');
+  api.addFile('documents/mesh/methods');
   api.addFile('documents/mesh/valuefield');
   api.addFile('documents/mesh/arrayfield');
+  api.addFile('documents/mesh/mapfield');
   api.addFile('documents/mesh/cameraangle');
-  api.addFile('documents/mesh/object');
-  api.addFile('documents/mesh/layer');
-  api.addFile('documents/mesh/picture');
 
-  api.addFile('documents/mesh/map..');
-  api.addFile('documents/mesh/map/flags');
-  api.addFile('documents/mesh/map/materialindex');
-  api.addFile('documents/mesh/map/palettecolor');
-  api.addFile('documents/mesh/map/directcolor');
-  api.addFile('documents/mesh/map/alpha');
-  api.addFile('documents/mesh/map/normal');
+  api.addFile('documents/mesh/object..');
 
-  api.addFile('documents/mesh/methods..');
+  api.addFile('documents/mesh/object/layer..');
+  api.addFile('documents/mesh/object/layer/cluster');
+
+  api.addFile('documents/mesh/object/layer/picture..');
+  api.addFile('documents/mesh/object/layer/picture/picture-clearpixels');
+  api.addFile('documents/mesh/object/layer/picture/picture-setpixels');
+  api.addFile('documents/mesh/object/layer/picture/picture-recomputeclusters');
+  api.addFile('documents/mesh/object/layer/picture/picture-detectclusters');
+  api.addFile('documents/mesh/object/layer/picture/picture-matchdetectedclusters');
+  api.addFile('documents/mesh/object/layer/picture/cluster');
+
+  api.addFile('documents/mesh/object/layer/picture/map..');
+  api.addFile('documents/mesh/object/layer/picture/map/flags');
+  api.addFile('documents/mesh/object/layer/picture/map/materialindex');
+  api.addFile('documents/mesh/object/layer/picture/map/palettecolor');
+  api.addFile('documents/mesh/object/layer/picture/map/directcolor');
+  api.addFile('documents/mesh/object/layer/picture/map/alpha');
+  api.addFile('documents/mesh/object/layer/picture/map/normal');
+  api.addFile('documents/mesh/object/layer/picture/map/clusterid');
+
+  api.addFile('documents/mesh/object/solver..');
+  api.addFile('documents/mesh/object/solver/polyhedron..');
+  api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-computeclustermeshes');
+  api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-computeclusterplanes');
+  api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-computeedges');
+  api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-projectclusterpoints');
+  api.addFile('documents/mesh/object/solver/polyhedron/cluster');
+  api.addFile('documents/mesh/object/solver/polyhedron/edge');
 
   api.addFile('documents/audio..');
   api.addServerFile('documents/audio/subscriptions');
@@ -131,15 +151,10 @@ Package.onUse(function(api) {
   api.addFile('engine/sprite..');
 
   api.addFile('engine/mesh..');
-  api.addFile('engine/mesh/object..');
-  api.addFile('engine/mesh/object/cluster');
-  api.addFile('engine/mesh/object/edge');
-  api.addFile('engine/mesh/object/detectclusters');
-  api.addFile('engine/mesh/object/computeedges');
-  api.addFile('engine/mesh/object/computeclusterplanes');
-  api.addFile('engine/mesh/object/projectclusterpoints');
-  api.addFile('engine/mesh/object/computeclustermeshes');
-  api.addFile('engine/mesh/object/rampmaterial');
+  api.addFile('engine/mesh/object');
+  api.addFile('engine/mesh/layer');
+  api.addFile('engine/mesh/cluster');
+  api.addFile('engine/mesh/rampmaterial');
 
   api.addFile('engine/audio..');
   api.addFile('engine/audio/node');

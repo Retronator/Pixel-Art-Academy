@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Engine.Mesh.Object.projectClusterPoints = (clusters, cameraAngle) ->
-  console.log "Projecting cluster points", clusters, cameraAngle if LOI.Assets.Engine.Mesh.debug
+LOI.Assets.Mesh.Object.Solver.Polyhedron.projectClusterPoints = (clusters, cameraAngle) ->
+  console.log "Projecting cluster points", clusters, cameraAngle if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
   
   pixelDirections = [
     property: 'up', vector: new THREE.Vector2 0, -1
@@ -58,7 +58,7 @@ LOI.Assets.Engine.Mesh.Object.projectClusterPoints = (clusters, cameraAngle) ->
 
       cluster.points.push
         vertex: pixelVertex
-        type: LOI.Assets.Engine.Mesh.Object.Cluster.PointTypes.Pixel
+        type: LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes.Pixel
 
     # Add void pixels.
     voidPixels = []
@@ -103,12 +103,12 @@ LOI.Assets.Engine.Mesh.Object.projectClusterPoints = (clusters, cameraAngle) ->
 
       cluster.points.push
         vertex: voidVertex
-        type: LOI.Assets.Engine.Mesh.Object.Cluster.PointTypes.Void
+        type: LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes.Void
 
     # Add all edges.
     edgePointsStart = cluster.points.length
 
-    for edge in cluster.edges
+    for otherClusterId, edge of cluster.edges
       line = edge.getLine3()
 
       # Create edge vertices at double the density.
@@ -147,7 +147,7 @@ LOI.Assets.Engine.Mesh.Object.projectClusterPoints = (clusters, cameraAngle) ->
 
         cluster.points.push
           vertex: edgeVertex
-          type: LOI.Assets.Engine.Mesh.Object.Cluster.PointTypes.Edge
+          type: LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes.Edge
           segments: [{index: segmentIndex, positionInSegment, edge}]
 
     # Create the base of plane space.
@@ -173,11 +173,11 @@ LOI.Assets.Engine.Mesh.Object.projectClusterPoints = (clusters, cameraAngle) ->
       # Strip the z component.
       point.vertexPlane = new THREE.Vector2 planeVector.x, planeVector.y
 
-    if LOI.Assets.Engine.Mesh.debug
+    if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
       # Make sure we haven't created any duplicates.
       for point, index in cluster.points
         for otherPoint, otherIndex in cluster.points[index + 1..]
           distance = point.vertexPlane.distanceToSquared otherPoint.vertexPlane
           console.warn "Duplicate point", distance, index, otherIndex, point, otherPoint if distance < 1e-10
 
-  console.log "Created cluster points", clusters if LOI.Assets.Engine.Mesh.debug
+  console.log "Created cluster points", clusters if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug

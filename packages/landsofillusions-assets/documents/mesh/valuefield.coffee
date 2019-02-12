@@ -23,7 +23,7 @@ class LOI.Assets.Mesh.ValueField
       updatedDependency.changed()
 
     valueField.save = (saveData) ->
-      return if value is undefined 
+      return if value is undefined
       saveData[field] = value
 
     valueField.apply = (obj, args) ->

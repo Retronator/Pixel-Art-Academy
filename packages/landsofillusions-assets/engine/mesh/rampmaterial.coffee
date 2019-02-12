@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Mesh.Object.RampMaterial extends THREE.ShaderMaterial
+class LOI.Assets.Engine.Mesh.RampMaterial extends THREE.ShaderMaterial
   constructor: (options) ->
     shades = (THREE.Color.fromObject shade for shade in options.shades)
 

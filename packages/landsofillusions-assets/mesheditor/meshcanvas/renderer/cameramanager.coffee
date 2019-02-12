@@ -149,3 +149,31 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_setVector @_up, cameraAngle.up
 
     @_updateCamera()
+
+  getRaycaster: (picturePlanePoint) ->
+    return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
+
+    # The default is a ray from camera position shooting through the target.
+    # Note: We need to create vectors from the data which is a plain object.
+    position = @_position.clone()
+    direction = @_target.clone().sub @_position
+
+    # Apply picture plane offset.
+    xOffset = cameraAngle.picturePlaneOffset?.x or 0
+    yOffset = cameraAngle.picturePlaneOffset?.y or 0
+
+    # Transform the point from screen space to world, positioned on the picture plane.
+    worldPoint = new THREE.Vector3 picturePlanePoint.x + xOffset, -(picturePlanePoint.y + yOffset), -(cameraAngle.picturePlaneDistance or 0)
+    worldPoint.applyMatrix4 @_camera.matrix
+
+    if cameraAngle.picturePlaneDistance
+      # In perspective the ray is shooting through the point in world space.
+      direction = worldPoint.sub @_position
+
+    else
+      # In orthogonal the ray is shooting from the point in world space.
+      position = worldPoint.multiplyScalar cameraAngle.pixelSize
+
+    direction.normalize()
+
+    new THREE.Raycaster position, direction

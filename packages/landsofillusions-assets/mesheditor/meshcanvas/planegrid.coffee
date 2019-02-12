@@ -61,7 +61,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
       coplanarPoint = new THREE.Vector3()
 
       if cluster = @meshCanvas.currentClusterHelper().cluster()
-        cluster.getPlane().coplanarPoint coplanarPoint
+        polyhedronCluster = cluster.layer.object.solver.clusters[cluster.id]
+        polyhedronCluster.getPlane().coplanarPoint coplanarPoint
 
       normal = @meshCanvas.paintHelper.normal()
 

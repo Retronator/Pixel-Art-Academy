@@ -9,7 +9,10 @@ class LOI.Assets.Mesh.ArrayField
     
     if @contentClass and @array
       # Make rich objects.
-      @array[index] = new @contentClass @, index, data for data, index in @array when data
+      @array = _.clone @array
+
+      for data, index in @array when data
+        @array[index] = new @contentClass @, index, data
 
     @_itemFields = {}
 
@@ -24,10 +27,13 @@ class LOI.Assets.Mesh.ArrayField
 
   getAll: ->
     @_updatedDependency.depend()
-    _.without @array, undefined, null
+    @_getAll()
     
   getAllWithoutUpdates: ->
     @_arrayChangedDependency.depend()
+    @_getAll()
+    
+  _getAll: ->
     _.without @array, undefined, null
 
   get: (index) ->
