@@ -53,6 +53,8 @@ class LOI.Character.Actor extends LOI.Character.Person
     # Create a collection with all current actions.
     @actionsLocation = new @constructor.Actions
     @actionDocuments = new AM.CollectionWrapper =>
+      return unless LOI.adventureInitialized()
+      
       situation = new LOI.Adventure.Situation
         location: @actionsLocation
         

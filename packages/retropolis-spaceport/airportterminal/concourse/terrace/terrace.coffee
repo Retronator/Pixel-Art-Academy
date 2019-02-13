@@ -75,7 +75,7 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
       height = @_sceneBounds()?.height() / @display?.scale()
 
     else
-      middleSceneHeight
+      height = middleSceneHeight
 
     height ?= 0
 

@@ -73,7 +73,7 @@ receptionist:
 ## DesignControl
 
 receptionist:
-  You will want to head over to Design Control to the north. 
+  You will want to head over north to Design Control. 
   Talk to Dr. Shelley there if you have any questions.
 
 * Perfect, I will do that. -> [GoodDay]

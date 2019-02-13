@@ -40,5 +40,3 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
   destroy: ->
     @_generateObjectsAutorun.stop()
     @_updateChildrenAutorun.stop()
-
-    object.destroy() for object in @objects()

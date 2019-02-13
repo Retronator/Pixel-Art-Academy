@@ -2,7 +2,7 @@ AC = Artificial.Control
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.ShadingSphere.NormalPicker extends LOI.Assets.Components.Tool
+class LOI.Assets.SpriteEditor.ShadingSphere.NormalPicker extends LOI.Assets.Components.Tools.Tool
   onMouseDown: (event) ->
     super arguments...
 

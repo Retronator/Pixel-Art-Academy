@@ -132,6 +132,7 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/navigator..');
   api.addUnstyledComponent('components/palette..');
   api.addUnstyledComponent('components/spriteimage..');
+  api.addUnstyledComponent('components/toolbox..');
 
   api.addUnstyledComponent('components/references..');
   api.addUnstyledComponent('components/references/reference..');
@@ -142,7 +143,14 @@ Package.onUse(function(api) {
   api.addFile('components/pixelcanvas/cursor');
   api.addFile('components/pixelcanvas/camera');
 
-  api.addFile('components/tool..');
+  api.addFile('components/tools..');
+  api.addFile('components/tools/tool');
+  api.addFile('components/tools/pencil');
+  api.addFile('components/tools/eraser');
+  api.addFile('components/tools/colorfill');
+  api.addFile('components/tools/colorpicker');
+  api.addFile('components/tools/undo');
+  api.addFile('components/tools/redo');
 
   // Engine
 

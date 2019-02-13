@@ -20,6 +20,11 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Projec
   # Override to define a background color.
   @backgroundColor: -> null
 
+  # Override to define a palette.
+  @restrictedPaletteName: -> null
+  @customPaletteImageUrl: -> null
+  @customPalette: -> null
+
   # Methods
 
   @create: new AB.Method name: "#{@id()}.create"

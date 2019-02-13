@@ -159,7 +159,7 @@ class LOI.Components.Menu.Items extends AM.Component
     else
       AM.Window.enterFullscreen()
 
-      # HACK: If audio isn not yet playing, require another interaction (after
+      # HACK: If audio is not yet playing, require another interaction (after
       # this click is handled), since Safari needs it after going fullscreen.
       audioManager = LOI.adventure.world.audioManager()
 

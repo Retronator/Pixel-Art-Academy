@@ -26,7 +26,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
   constructor: ->
     super arguments...
     @activatedCharacters = new ComputedField =>
-      return unless characters = Retronator.user()?.characters
+      return [] unless characters = Retronator.user()?.characters
 
       LOI.Character.getInstance character._id for character in characters when character.activated
     ,
@@ -104,7 +104,7 @@ class HQ.Items.OperatorLink extends LOI.Adventure.Item
     currentCharacter = LOI.character()
 
     # For each agent, create a choice node. Reverse the nodes so they appear in the same order.
-    for character in @activatedCharacters() when character._id isnt currentCharacter?_id
+    for character in @activatedCharacters() when character._id isnt currentCharacter?._id
       do (character) =>
         callbackNode = new Nodes.Callback
           callback: (complete) =>

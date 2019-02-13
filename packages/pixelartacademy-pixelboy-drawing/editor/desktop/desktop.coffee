@@ -136,13 +136,13 @@ class PAA.PixelBoy.Apps.Drawing.Editor.Desktop extends PAA.PixelBoy.Apps.Drawing
       
     # Create tools.
     @toolClasses =
-      "#{PAA.Practice.Software.Tools.ToolKeys.Pencil}": LOI.Assets.SpriteEditor.Tools.Pencil
-      "#{PAA.Practice.Software.Tools.ToolKeys.Eraser}": LOI.Assets.SpriteEditor.Tools.Eraser
-      "#{PAA.Practice.Software.Tools.ToolKeys.ColorFill}": LOI.Assets.SpriteEditor.Tools.ColorFill
-      "#{PAA.Practice.Software.Tools.ToolKeys.ColorPicker}": LOI.Assets.SpriteEditor.Tools.ColorPicker
+      "#{PAA.Practice.Software.Tools.ToolKeys.Pencil}": LOI.Assets.Components.Tools.Pencil
+      "#{PAA.Practice.Software.Tools.ToolKeys.Eraser}": LOI.Assets.Components.Tools.Eraser
+      "#{PAA.Practice.Software.Tools.ToolKeys.ColorFill}": LOI.Assets.Components.Tools.ColorFill
+      "#{PAA.Practice.Software.Tools.ToolKeys.ColorPicker}": LOI.Assets.Components.Tools.ColorPicker
       "#{PAA.Practice.Software.Tools.ToolKeys.MoveCanvas}": @constructor.Tools.MoveCanvas
-      "#{PAA.Practice.Software.Tools.ToolKeys.Undo}": LOI.Assets.SpriteEditor.Tools.Undo
-      "#{PAA.Practice.Software.Tools.ToolKeys.Redo}": LOI.Assets.SpriteEditor.Tools.Redo
+      "#{PAA.Practice.Software.Tools.ToolKeys.Undo}": LOI.Assets.Components.Tools.Undo
+      "#{PAA.Practice.Software.Tools.ToolKeys.Redo}": LOI.Assets.Components.Tools.Redo
 
     @toolInstances = {}
     

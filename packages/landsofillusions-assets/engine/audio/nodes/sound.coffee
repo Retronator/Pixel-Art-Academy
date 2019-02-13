@@ -28,6 +28,7 @@ class LOI.Assets.Engine.Audio.Sound extends LOI.Assets.Engine.Audio.Node
     # Create and destroy the buffer.
     @autorun =>
       return unless audioManager = @audioManager()
+      return unless audioManager.contextValid()
 
       url = @parametersData()?.url
 

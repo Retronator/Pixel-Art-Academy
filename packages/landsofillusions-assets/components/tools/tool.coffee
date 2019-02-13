@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.Components.Tool
+class LOI.Assets.Components.Tools.Tool
   constructor: (@options) ->
     @mouseState =
       x: null
