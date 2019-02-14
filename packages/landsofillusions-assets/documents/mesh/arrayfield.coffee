@@ -36,6 +36,16 @@ class LOI.Assets.Mesh.ArrayField
   _getAll: ->
     _.without @array, undefined, null
 
+  getFirst: ->
+    @_arrayChangedDependency.depend()
+    return unless @array
+
+    # Find first existing item and retrieve it.
+    for item, index in @array when item
+      return @get index
+
+    null
+
   get: (index) ->
     @_arrayChangedDependency.depend()
     return unless @array
@@ -43,6 +53,16 @@ class LOI.Assets.Mesh.ArrayField
 
     item.depend?()
     item
+
+  find: (query) ->
+    itemIndex = _.findIndex @array, (item) =>
+      # See if all fields of the query match this item.
+      for key, value of query
+        return unless _.propertyValue(item, key) is value
+
+      true
+
+    @get itemIndex
 
   insert: (data = {}, index) ->
     index ?= @array?.length or 0

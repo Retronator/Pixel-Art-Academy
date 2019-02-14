@@ -19,8 +19,9 @@ class HQ.GalleryWest extends LOI.Adventure.Location
       The hall continues to the east wing of the gallery. Stairs continue up to the art studio.
     "
   
-  @illustration: -> 
+  @illustration: ->
     name: 'retronator/hq/floor3/gallery/gallery'
+    cameraAngle: 'West'
     height: 120
 
   @initialize()

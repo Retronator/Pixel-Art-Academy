@@ -31,27 +31,49 @@ class LOI.Engine.World.SceneManager
 
     # Add location mesh.
     @_currentLocationMesh = null
+    @_currentIllustrationName = null
     
     @world.autorun (computation) =>
-      return unless illustrationName = LOI.adventure.currentLocation()?.illustration()?.name
+      illustration = LOI.adventure.currentLocation()?.illustration()
+      return unless illustrationName = illustration?.name
 
       LOI.Assets.Asset.forName.subscribe LOI.Assets.Mesh.className, illustrationName
       return unless meshData = LOI.Assets.Mesh.documents.findOne name: illustrationName
 
-      # Remove previous mesh.
-      if @_currentLocationMesh
-        scene.remove @_currentLocationMesh
-        @_currentLocationMesh.destroy()
-      
-      # Initialize mesh data, since it's a rich document, and create an engine mesh based on the data.
-      meshData.initialize()
-      @_currentLocationMesh = new LOI.Assets.Engine.Mesh
-        meshData: => meshData
-        sceneManager: @
-        
-      # Initialize the camera from the camera angle.
-      @world.cameraManager().setFromCameraAngle meshData.cameraAngles.get 0
-      
+      # Only react to illustration and mesh changes.
+      Tracker.nonreactive =>
+        cameraAngle = =>
+          cameraAngles = @_currentLocationMesh.options.meshData().cameraAngles
+
+          if illustration.cameraAngle
+            cameraAngles.find name: illustration.cameraAngle
+
+          else
+            cameraAngles.getFirst()
+
+        if illustrationName is @_currentIllustrationName
+          # Transition to other camera angle.
+          @world.cameraManager().transitionToCameraAngle cameraAngle(),
+            duration: 3000
+            easing: 'ease-in-out'
+  
+        else
+          @_currentIllustrationName = illustrationName
+
+          # Remove previous mesh.
+          if @_currentLocationMesh
+            scene.remove @_currentLocationMesh
+            @_currentLocationMesh.destroy()
+
+          # Initialize mesh data, since it's a rich document, and create an engine mesh based on the data.
+          meshData.initialize()
+          @_currentLocationMesh = new LOI.Assets.Engine.Mesh
+            meshData: => meshData
+            sceneManager: @
+
+          # Initialize the camera from the camera angle.
+          @world.cameraManager().setFromCameraAngle cameraAngle()
+
     @locationThings = new AE.ReactiveArray (=> @world.options.adventure.currentLocationThings()),
       added: (thing) =>
         # Look if the thing's avatar has a render object.
