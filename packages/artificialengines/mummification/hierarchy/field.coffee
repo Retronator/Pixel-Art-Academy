@@ -13,6 +13,7 @@ class AM.Hierarchy.Field
       templateSubscription?.stop()
 
     cleanNode = ->
+      node?.options.load.stop()
       node?.destroy()
       node = null
 
@@ -51,10 +52,14 @@ class AM.Hierarchy.Field
             Tracker.nonreactive =>
               node = new AM.Hierarchy.Node _.extend {}, options,
                 address: options.address.nodeChild()
-                load: =>
+                load: new ComputedField =>
                   # We dynamically load the value from the parent so that we
                   # don't have to keep re-creating nodes whenever data changes.
                   options.load()?.node
+                ,
+                  EJSON.equals
+                ,
+                  true
 
         # Return the node.
         node
@@ -67,6 +72,8 @@ class AM.Hierarchy.Field
         console.error "Data field", options.address.string(), "got value", data
         console.trace()
         throw new AE.InvalidOperationException "Data field is not in correct format."
+    ,
+      EJSON.equals
     ,
       true
 
