@@ -75,6 +75,7 @@ class LOI.Assets.Mesh.Object.Layer.Picture extends LOI.Assets.Mesh.Object.Layer.
       else
         # We don't have a cluster map yet, so we need to do a full recomputation.
         @_clusterRecomputeMask.fill 1
+        changedClusters = _.mapValues @clusters, 'properties'
 
       # Detect clusters within the new recomputation mask.
       detectedClusters = @_detectClusters()

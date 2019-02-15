@@ -58,6 +58,8 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
       @planeChanged = true
       
   getPlane: ->
+    return unless @plane.point and @plane.normal
+
     new THREE.Plane().setFromNormalAndCoplanarPoint @plane.normal, @plane.point
 
   updatePixels: ->

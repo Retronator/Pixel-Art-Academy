@@ -105,7 +105,9 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     @materials.save saveData
 
     # Send the mesh to server.
-    LOI.Assets.Mesh.save @_id, saveData
+    LOI.Assets.Mesh.save @_id, saveData, (error) =>
+      if error
+        console.error "Error saving mesh", saveData, error
 
     # Mark the state clean.
     @dirty false

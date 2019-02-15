@@ -39,7 +39,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
             directColor: Match.Optional mapPattern
             alpha: Match.Optional mapPattern
             normal: Match.Optional mapPattern
-          clusters: Match.Where (clusters) ->
+          clusters: Match.Optional Match.Where (clusters) ->
             for id, cluster of clusters
               check parseInt(id), Match.Integer
               check cluster,
@@ -47,7 +47,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
                   x: Match.Integer
                   y: Match.Integer
         ]
-        clusters: Match.Where (clusters) ->
+        clusters: Match.Optional Match.Where (clusters) ->
           for id, cluster of clusters
             check parseInt(id), Match.Integer
             check cluster,

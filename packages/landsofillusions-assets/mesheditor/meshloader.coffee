@@ -40,7 +40,10 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       else
         # Initialize the singleton mesh data.
         @_meshData = meshData
-        @_meshData.initialize()
+
+        Tracker.nonreactive =>
+          @_meshData.initialize()
+          object.solver.initialize() for object in @_meshData.objects.getAll()
 
       # Signal change from server.
       @_meshDataDependency.changed()

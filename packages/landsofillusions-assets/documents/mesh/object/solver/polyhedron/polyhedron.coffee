@@ -14,6 +14,25 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
     # Initialize clusters.
     for clusterId, clusterData of @object.clusters()
       @clusters[clusterId] = new @constructor.Cluster clusterData
+      
+  initialize: ->
+    clustersArray = _.values @clusters
+
+    console.log "Initialize solver with clusters", @clusters if @constructor.debug
+
+    # Update pixels in clusters that need recomputation.
+    cluster.updatePixels() for cluster in clustersArray
+
+    # Compute edges.
+    @edges = @constructor.computeEdges clustersArray
+
+    # Recompute cluster planes.
+    cameraAngle = @object.mesh.cameraAngles.get 0
+    @constructor.computeClusterPlanes clustersArray, cameraAngle
+
+    # Recompute clusters that have have changed.
+    @constructor.projectClusterPoints clustersArray, cameraAngle
+    @constructor.computeClusterMeshes clustersArray
 
   update: (addedClusterIds, updatedClusterIds, removedClusterIds) ->
     clustersData = @object.clusters()

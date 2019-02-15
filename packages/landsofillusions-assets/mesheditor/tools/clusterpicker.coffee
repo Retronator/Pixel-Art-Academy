@@ -11,14 +11,14 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
   onMouseDown: (event) ->
     super arguments...
 
-    @pickCluster()
+    @pickCluster true
 
   onMouseMove: (event) ->
     super arguments...
 
-    @pickCluster()
+    @pickCluster false
 
-  pickCluster: ->
+  pickCluster: (cycle) ->
     return unless @mouseState.leftButton
 
     currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
@@ -46,12 +46,20 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     for intersection in intersections when intersection.object.parent instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
       clusters.push intersection.object.parent.clusterData
 
-    # Reset selection when picked clusters change.
-    @_clusterIndex = 0 if _.xor(clusters, @_previousClusters).length
+    # Get only one instance of each cluster (if it was picked multiple times).
+    clusters = _.uniq clusters
 
-    # If we have more than one choice, move to the next one that isn't selected yet.
-    if clusters.length > 1
-      @_clusterIndex++ while clusters[@_clusterIndex % clusters.length] is currentCluster
+    if cycle
+      # Reset selection when picked clusters change.
+      @_clusterIndex = 0 if _.xor(clusters, @_previousClusters).length
+
+      # If we have more than one choice, move to the next one that isn't selected yet.
+      if clusters.length > 1
+        @_clusterIndex++ while clusters[@_clusterIndex % clusters.length] is currentCluster
+
+    else
+      # Always choose first cluster.
+      @_clusterIndex = 0
 
     cluster = clusters[@_clusterIndex % clusters.length]
     @_previousClusters = clusters

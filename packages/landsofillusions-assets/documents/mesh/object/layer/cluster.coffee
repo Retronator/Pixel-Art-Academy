@@ -7,8 +7,9 @@ compressionOptions =
   level: Pako.Z_BEST_COMPRESSION
 
 class LOI.Assets.Mesh.Object.Layer.Cluster
-  constructor: (@layers, @id, data) ->
+  constructor: (@layers, id, data) ->
     @layer = @layers.parent
+    @id = parseInt id
 
     @_updatedDependency = new Tracker.Dependency
 

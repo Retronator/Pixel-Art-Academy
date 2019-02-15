@@ -14,13 +14,13 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
       @remove @children[0] while @children.length
 
       # Add the new mesh.
-      mesh = @mesh()
-      @add mesh
+      if mesh = @mesh()
+        @add mesh
 
       @layer.object.mesh.options.sceneManager.scene.updated()
 
   _generateGeometry: ->
-    geometryData = @clusterData.geometry()
+    return unless geometryData = @clusterData.geometry()
 
     geometry = new THREE.BufferGeometry
     geometry.addAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
@@ -103,7 +103,10 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
     material
 
   _generateMesh: ->
-    mesh = new THREE.Mesh @geometry(), @material()
+    return unless geometry = @geometry()
+    return unless material = @material()
+
+    mesh = new THREE.Mesh geometry, material
 
     mesh.castShadow = true
     mesh.receiveShadow = true

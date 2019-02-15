@@ -2,8 +2,9 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Assets.Mesh.Object.Layer.Picture.Cluster
-  constructor: (@picture, @id, data) ->
+  constructor: (@picture, id, data) ->
     @_updatedDependency = new Tracker.Dependency
+    @id = parseInt id
 
     @_setSourceCoordinates data.sourceCoordinates
 

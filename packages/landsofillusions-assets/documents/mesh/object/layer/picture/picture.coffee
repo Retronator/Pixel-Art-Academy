@@ -18,7 +18,7 @@ class LOI.Assets.Mesh.Object.Layer.Picture
       @_calculateBoundsEdges()
 
       # Create all maps.
-      for type, map of data.maps when type isnt @constructor.Map.Types.ClusterId
+      for type, map of data.maps
         className = _.upperFirst type
         @maps[type] = new @constructor.Map[className] @, map.compressedData
 
@@ -28,7 +28,7 @@ class LOI.Assets.Mesh.Object.Layer.Picture
     @bounds = new LOI.Assets.Mesh.ValueField @, 'bounds', @_bounds
 
     # Recompute clusters for the first time if we didn't get them.
-    @_recomputeClusters [], [] unless data.clusters
+    @_recomputeClusters [], [] unless data.clusters and data.maps?.clusterId
 
   _calculateBoundsEdges: ->
     @_bounds.left = @_bounds.x
