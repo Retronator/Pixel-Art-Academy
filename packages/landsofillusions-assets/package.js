@@ -206,11 +206,14 @@ Package.onUse(function(api) {
   api.addFile('editor/actions/duplicate');
   api.addFile('editor/actions/clear');
   api.addFile('editor/actions/close');
+  api.addFile('editor/actions/persisteditorsinterface');
+  api.addFile('editor/actions/resetinterface');
 
   api.addFile('editor/helpers..');
   api.addFile('editor/helpers/drawcomponent');
 
   api.addComponent('editor/assetinfo..');
+  api.addComponent('editor/dialog..');
   api.addComponent('editor/assetopendialog..');
   api.addComponent('editor/landmarks..');
   api.addComponent('editor/window..');

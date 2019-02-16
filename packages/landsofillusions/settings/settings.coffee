@@ -36,7 +36,7 @@ class LOI.Settings
 
     @persistEditorsInterface = new @constructor.ConsentField
       name: 'persistEditorsInterface'
-      question: "Do you want to save changes made to the user interface?"
+      question: "Do you want to automatically save changes made to the user interface?"
       moreInfo: "This will use your browser's local storage to save editor settings."
 
     # By default, we disallow all but persisting settings.

@@ -16,7 +16,7 @@ class LOI.Assets.MeshEditor.Helpers.CurrentCluster extends FM.Helper
       return unless objectIndex? and clusterId?
 
       return unless meshLoader = @interface.getLoaderForFile @fileId
-      return unless meshObject = meshLoader.meshData().objects.get objectIndex
+      return unless meshObject = meshLoader.meshData()?.objects.get objectIndex
 
       meshObject.clusters()[clusterId]
 

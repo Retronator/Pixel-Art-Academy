@@ -75,7 +75,12 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   # Store the class name of the visual asset by which we can reach the class by querying LOI.Assets. We can't simply
   # use the name parameter, because in production the name field has a minimized value.
   @className: 'Mesh'
-  
+
+  # Methods
+
+  @load: @method 'load'
+  @save: @method 'save'
+
   initialize: ->
     # Track whether we need to save the mesh.
     @dirty = new ReactiveField false
@@ -111,10 +116,6 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     # Mark the state clean.
     @dirty false
-
-  # Methods
-  
-  @save: @method 'save'
 
 if Meteor.isServer
   # Export meshes without authors.

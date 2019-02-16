@@ -21,9 +21,6 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
   pickCluster: (cycle) ->
     return unless @mouseState.leftButton
 
-    currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
-    currentCluster = currentClusterHelper.cluster()
-
     meshCanvas = @editor()
 
     raycaster = meshCanvas.renderer.cameraManager.getRaycaster meshCanvas.mouse().pixelCoordinate()
@@ -48,6 +45,9 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
 
     # Get only one instance of each cluster (if it was picked multiple times).
     clusters = _.uniq clusters
+
+    currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
+    currentCluster = currentClusterHelper.cluster()
 
     if cycle
       # Reset selection when picked clusters change.
@@ -84,4 +84,9 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     if material.normal
       paintHelper.setNormal material.normal
 
+    # Change the active layer.
     paintHelper.setLayerIndex cluster.layer.index
+
+    # Change the selected object.
+    selectionHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.Selection
+    selectionHelper.setObjectIndex cluster.layer.object.index

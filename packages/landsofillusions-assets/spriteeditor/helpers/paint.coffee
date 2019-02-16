@@ -26,7 +26,7 @@ class LOI.Assets.SpriteEditor.Helpers.Paint extends FM.Helper
   paletteColor: -> @data.get 'paletteColor'
   directColor: -> @data.get 'directColor'
   materialIndex: -> @data.get 'materialIndex'
-  layerIndex: -> @activeFileData().get('layerIndex') or 0
+  layerIndex: -> @activeFileData()?.get('layerIndex') or 0
 
   setPaletteColor: (paletteColor) -> @_setColor _.pick paletteColor, ['ramp', 'shade']
   setDirectColor: (directColor) -> @_setColor null, _.pick directColor, ['r', 'g', 'b']

@@ -31,4 +31,4 @@ class FM.Area extends AM.Component
     style
 
   contentComponentData: ->
-    @interface.getComponentData @contentComponentId()
+    @data().get('contentComponentData') or @interface.getComponentData @contentComponentId()

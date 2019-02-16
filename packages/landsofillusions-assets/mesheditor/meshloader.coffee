@@ -22,28 +22,35 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     # Create the alias for universal operators.
     @asset = @meshData
 
+    # Load the full document from the server. Note: we can't get this with a subscription
+    # because we're already subscribed to the name-only version of the meshes.
+    LOI.Assets.Mesh.load @fileId, (error, meshData) =>
+      if error
+        console.error error
+        return
+
+      # Initialize the singleton mesh data.
+      @_meshData = new LOI.Assets.Mesh meshData
+      @_meshData.initialize()
+      object.solver.initialize() for object in @_meshData.objects.getAll()
+
+      # Signal initial change.
+      @_meshDataDependency.changed()
+
     # Also listen to updates in non-managed fields.
     @_subscription = LOI.Assets.Asset.forId.subscribe LOI.Assets.Mesh.className, @fileId
 
     @autorun (computation) =>
       return unless meshData = LOI.Assets.Mesh.documents.findOne @fileId
-      
-      if @_meshData
-        # Overwrite plain properties of the singleton mesh data.
-        for property in ['name', 'editor', 'palette', 'authors', 'references']
-          if meshData[property]
-            @_meshData[property] = meshData[property]
-  
-          else if @_meshData[property]
-            delete @_meshData[property]
-            
-      else
-        # Initialize the singleton mesh data.
-        @_meshData = meshData
+      return unless @_meshData
 
-        Tracker.nonreactive =>
-          @_meshData.initialize()
-          object.solver.initialize() for object in @_meshData.objects.getAll()
+      # Overwrite plain properties of the singleton mesh data.
+      for property in ['name', 'editor', 'palette', 'authors', 'references']
+        if meshData[property]
+          @_meshData[property] = meshData[property]
+
+        else if @_meshData[property]
+          delete @_meshData[property]
 
       # Signal change from server.
       @_meshDataDependency.changed()

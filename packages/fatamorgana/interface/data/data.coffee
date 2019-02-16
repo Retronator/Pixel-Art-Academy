@@ -3,7 +3,7 @@ FM = FataMorgana
 class FM.Interface.Data
   constructor: (@options) ->
     @options.address ?= ''
-    @value = new @constructor.Value @options
+    @value = Tracker.nonreactive => new @constructor.Value @options
 
     @_children = {}
 
@@ -17,14 +17,14 @@ class FM.Interface.Data
 
       @_children[field] = new @constructor
         address: childAddress
-        load: @options.load
+        load: => _.nestedProperty @value(), field
         save: @options.save
         parent: @
 
     @_children[field]
 
   get: (field) ->
-    if field
+    if field?
       child = @child field
       child.value()
 

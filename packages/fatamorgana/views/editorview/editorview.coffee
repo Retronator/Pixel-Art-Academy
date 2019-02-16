@@ -37,6 +37,8 @@ class FM.EditorView extends FM.View
       editorViewData = @data()
       editorViewData.child('editor').get 'contentComponentId'
 
+    @tabDataChanged = new Tracker.Dependency
+
   addFile: (fileId, documentClassId) ->
     editorViewData = @data()
 
@@ -80,6 +82,8 @@ class FM.EditorView extends FM.View
     @allChildComponentsOfType(componentClass)[0]
 
   showTabs: ->
+    @tabDataChanged.changed()
+
     # We show tabs when there are any files.
     @data().get('files')?.length
 
@@ -89,11 +93,11 @@ class FM.EditorView extends FM.View
 
   asset: ->
     file = @currentData()
-
-    loader = @interface.getLoaderForFile file.id
-    loader.asset()
+    @interface.getLoaderForFile(file.id)?.asset()
 
   nameOrId: ->
+    @tabDataChanged.changed()
+
     asset = @currentData()
     asset.name or asset._id
 

@@ -104,6 +104,10 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         ]
       ,
         caption: 'Window'
+        items: [
+          LOI.Assets.Editor.Actions.PersistEditorsInterface.id()
+          LOI.Assets.Editor.Actions.ResetInterface.id()
+        ]
       ]
 
     toolbox =
@@ -210,11 +214,11 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
     _.extend super(arguments...), LOI.Assets.SpriteEditor.defaultShortcutsMapping(),
       # Actions
       "#{LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()}": commandOrControl: true, key: AC.Keys.semicolon
-      "#{LOI.Assets.MeshEditor.Actions.ShowEdges.id()}": commandOrControl: true, shift:true, key: AC.Keys.e
-      "#{LOI.Assets.MeshEditor.Actions.ShowHorizon.id()}": commandOrControl: true, shift:true, key: AC.Keys.h
-      "#{LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()}": commandOrControl: true, shift:true, key: AC.Keys.s
-      "#{LOI.Assets.MeshEditor.Actions.ShowPixelRender.id()}": commandOrControl: true, shift:true, key: AC.Keys.p
-      "#{LOI.Assets.MeshEditor.Actions.DebugMode.id()}": commandOrControl: true, shift:true, key: AC.Keys.d
+      "#{LOI.Assets.MeshEditor.Actions.ShowEdges.id()}": commandOrControl: true, shift: true, key: AC.Keys.e
+      "#{LOI.Assets.MeshEditor.Actions.ShowHorizon.id()}": commandOrControl: true, shift: true, key: AC.Keys.h
+      "#{LOI.Assets.MeshEditor.Actions.ShowSourceImage.id()}": commandOrControl: true, shift: true, key: AC.Keys.s
+      "#{LOI.Assets.MeshEditor.Actions.ShowPixelRender.id()}": commandOrControl: true, shift: true, key: AC.Keys.p
+      "#{LOI.Assets.MeshEditor.Actions.DebugMode.id()}": commandOrControl: true, shift: true, key: AC.Keys.d
       "#{LOI.Assets.Editor.Actions.Undo.id()}": null
       "#{LOI.Assets.Editor.Actions.Redo.id()}": null
       "#{LOI.Assets.MeshEditor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
@@ -253,6 +257,6 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-    editorView.addFile id, LOI.Assets.Mesh.id() for id in ['X2p6nSKcFe3EqigNH']
+    editorView.addFile id, LOI.Assets.Mesh.id() for id in []
 
   currentScenes: -> []

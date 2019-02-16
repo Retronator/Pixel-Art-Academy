@@ -24,7 +24,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
       # Add new children.
       for cluster in clusters
         # Do not draw unselected clusters in debug mode.
-        continue if debug and currentCluster and currentCluster isnt cluster
+        continue if debug and currentCluster and currentCluster isnt cluster.clusterData
 
         @add cluster
 

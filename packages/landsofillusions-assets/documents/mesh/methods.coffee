@@ -2,7 +2,13 @@ AE = Artificial.Everywhere
 RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
+LOI.Assets.Mesh.load.method (meshId) ->
+  check meshId, Match.DocumentId
+
+  LOI.Assets.Mesh.documents.findOne meshId
+
 LOI.Assets.Mesh.save.method (meshId, data) ->
+  check meshId, Match.DocumentId
   check data,
     cameraAngles: Match.Optional [ Match.OptionalOrNull
       name: Match.Optional String

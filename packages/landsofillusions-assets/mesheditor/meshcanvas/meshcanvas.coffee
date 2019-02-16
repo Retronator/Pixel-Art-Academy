@@ -31,7 +31,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
     @$meshCanvas = new ReactiveField null
     @canvas = new ReactiveField null
-    @canvasPixelSize = new ReactiveField null
+    @canvasPixelSize = new ReactiveField null, EJSON.equals
     @context = new ReactiveField null
 
   onCreated: ->
@@ -45,10 +45,10 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       @interface.getLoaderForFile meshId
 
     @meshData = new ComputedField =>
-      @meshLoader().meshData()
+      @meshLoader()?.meshData()
 
     @mesh = new ComputedField =>
-      @meshLoader().mesh
+      @meshLoader()?.mesh
 
     @cameraAngle = new ComputedField =>
       @meshData()?.cameraAngles.get @cameraAngleIndex()
@@ -172,6 +172,9 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
       # Depend on application area changes.
       @interface.currentApplicationAreaData().value()
+      
+      # Depend on editor view tab changes.
+      @editorView.tabDataChanged.depend()
 
       # After update, measure the size.
       Tracker.afterFlush =>
@@ -196,6 +199,8 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @app.removeComponent @
 
   update: (appTime) ->
+    return unless @isRendered()
+
     sceneHelper = @sceneHelper()
     scene = sceneHelper.scene()
     camera = @renderer.cameraManager.camera().main

@@ -36,7 +36,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
     @$pixelCanvas = new ReactiveField null
     @canvas = new ReactiveField null
-    @canvasPixelSize = new ReactiveField width: 0, height: 0
+    @canvasPixelSize = new ReactiveField {width: 0, height: 0}, EJSON.equals
     @context = new ReactiveField null
 
   onCreated: ->
@@ -159,6 +159,9 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
       # Depend on application area changes.
       @interface.currentApplicationAreaData().value()
+
+      # Depend on editor view tab changes.
+      @editorView.tabDataChanged.depend()
 
       # After update, measure the size.
       Tracker.afterFlush =>

@@ -129,7 +129,7 @@ class FM.Interface extends AM.Component
     for editorView in editorViews
       continue unless files = editorView.data().get('files')
 
-      if _.find files, (file) => file.id is fileId
+      if _.find(files, (file) => file.id is fileId)
         return editorView
 
     null

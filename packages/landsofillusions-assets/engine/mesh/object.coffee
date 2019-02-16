@@ -23,3 +23,9 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
       @add layer for layer in layers
 
       @mesh.options.sceneManager.scene.updated()
+
+    # Update visibility.
+    Tracker.autorun (computation) =>
+      @visible = objectData.visible()
+
+      @mesh.options.sceneManager.scene.updated()

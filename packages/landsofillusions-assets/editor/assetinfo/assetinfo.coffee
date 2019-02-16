@@ -13,7 +13,7 @@ class LOI.Assets.Editor.AssetInfo extends FM.View
       @interface.getLoaderForActiveFile()?.asset()
 
   showPalette: ->
-    @interface.getLoaderForActiveFile().paletteId
+    @interface.getLoaderForActiveFile()?.paletteId
 
   class @Name extends AM.DataInputComponent
     @register 'LandsOfIllusions.Assets.Editor.AssetInfo.Name'
