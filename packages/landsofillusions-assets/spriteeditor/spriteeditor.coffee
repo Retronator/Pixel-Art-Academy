@@ -32,6 +32,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
 
       "#{_.snakeCase LOI.Assets.SpriteEditor.ShadingSphere.id()}":
         radius: 30
+        angleSnap: 30
 
       "#{_.snakeCase LOI.Assets.SpriteEditor.PixelCanvas.id()}":
         initialCameraScale: 8
@@ -198,4 +199,4 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
     super arguments...
 
     editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-    editorView.addFile id, LOI.Assets.Sprite.id() for id in ['7GrXmSSGKtjdnZzmF']
+    editorView.addFile id, LOI.Assets.Sprite.id() for id in []

@@ -26,6 +26,9 @@ class FM.Interface extends FM.Interface
     @actions = new ComputedField => _.filter @operators(), (operator) => operator instanceof FM.Action
     @tools = new ComputedField => _.filter @operators(), (operator) => operator instanceof FM.Tool
 
+    # Notify the initial tool that it has activated, after the rest of initialization.
+    Meteor.setTimeout => @activeTool()?.onActivated?()
+
   _getOperatorInstance: (operatorId) ->
     unless @_operatorInstances[operatorId]
       operatorClass = FM.Operator.getClassForId operatorId
