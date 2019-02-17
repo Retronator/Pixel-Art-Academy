@@ -22,7 +22,13 @@ class FM.TabbedView extends FM.View
   activeTabData: ->
     tabbedViewData = @data()
     activeTabIndex = @activeTabIndex()
+    return unless activeTabIndex >= 0
+
     tabbedViewData.child "tabs.#{activeTabIndex}"
+
+  overrideAreaSize: ->
+    # We want to control the size of the area when no tab is selected.
+    not @activeTabData()
 
   events: ->
     super(arguments...).concat

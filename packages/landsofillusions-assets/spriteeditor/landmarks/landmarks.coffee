@@ -2,8 +2,8 @@ AM = Artificial.Mirage
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.Editor.Landmarks extends FM.View
-  @id: -> 'LandsOfIllusions.Assets.Editor.Landmarks'
+class LOI.Assets.SpriteEditor.Landmarks extends FM.View
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Landmarks'
   @register @id()
 
   onCreated: ->

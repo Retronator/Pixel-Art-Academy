@@ -64,8 +64,11 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
     @paintHelper = @interface.getHelper LOI.Assets.SpriteEditor.Helpers.Paint
 
+    @activeLayerIndex = new ComputedField =>
+      @paintHelper.layerIndex()
+
     @activeLayer = new ComputedField =>
-      @activeObject()?.layers.get @paintHelper.layerIndex()
+      @activeObject()?.layers.get @activeLayerIndex()
       
     @activePicture = new ComputedField =>
       @activeLayer()?.getPictureForCameraAngleIndex @cameraAngleIndex()
@@ -111,16 +114,21 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     @pixelCanvas = new LOI.Assets.SpriteEditor.PixelCanvas
       spriteData: @spriteData
       fileIdForHelpers: @meshId
+      landmarksHelperClass: LOI.Assets.MeshEditor.Helpers.Landmarks
       drawComponents: =>
         sourceImageEnabled = @sourceImageEnabled()
+
+        # Some of the elements are derived from the first camera angle,
+        # so we only draw them when looking from that camera angle.
+        drawCameraAngleZeroElements = @cameraAngleIndex() is 0
 
         [
           @pixelCanvas.operationPreview()
           @pixelCanvas.pixelGrid()
-          @edges
-          @horizon
+          @edges if sourceImageEnabled and drawCameraAngleZeroElements
+          @horizon if sourceImageEnabled
           @pixelCanvas.cursor()
-          @pixelCanvas.landmarks() if sourceImageEnabled
+          @pixelCanvas.landmarks() if sourceImageEnabled and drawCameraAngleZeroElements
           @pixelCanvas.toolInfo()
         ]
 

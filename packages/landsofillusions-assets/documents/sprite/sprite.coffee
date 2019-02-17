@@ -67,6 +67,12 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       y: Number
       z: Number
   
+  @landmarkPattern =
+    name: Match.OptionalOrNull String
+    x: Match.OptionalOrNull Number
+    y: Match.OptionalOrNull Number
+    z: Match.OptionalOrNull Number
+
   @_limitLayerPixels = (newCount) ->
     # Allow up to 4,096 (64 * 64) pixels per layer.
     throw new AE.ArgumentOutOfRangeException "Up to 4,096 pixels per layer are allowed." if newCount > 4096

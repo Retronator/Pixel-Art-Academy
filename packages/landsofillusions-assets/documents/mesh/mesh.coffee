@@ -81,6 +81,14 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   @load: @method 'load'
   @save: @method 'save'
 
+  @landmarkPattern =
+    name: Match.OptionalOrNull String
+    object: Match.Optional Number
+    layer: Match.Optional Number
+    cameraAngle: Match.Optional Number
+    x: Match.Optional Number
+    y: Match.Optional Number
+
   initialize: ->
     # Track whether we need to save the mesh.
     @dirty = new ReactiveField false

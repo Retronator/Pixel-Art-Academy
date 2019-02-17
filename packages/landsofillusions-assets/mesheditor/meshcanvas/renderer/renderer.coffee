@@ -60,7 +60,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
         pixelRenderScene = @pixelRender.scene.withUpdates()
         @renderer.render pixelRenderScene, camera.pixelRender
 
-      if @meshCanvas.sourceImageEnabled()
+      if @meshCanvas.sourceImageEnabled() and @meshCanvas.activePicture()?.bounds()
         @sourceImage.image.material.texturesDepenency.depend()
         uniforms = @sourceImage.image.material.uniforms
         if uniforms.map.value and uniforms.normalMap.value

@@ -7,11 +7,13 @@ class LOI.Assets.Editor.Actions.ShowAction extends LOI.Assets.Editor.Actions.Ass
   @fileDataProperty: -> throw new AE.NotImplementedException "Show action must specify the file data field."
     
   active: ->
+    return unless editor = @editor()
+
     property = @constructor.fileDataProperty()
 
     # We see if the editor has a field defined with the property name.
     # We use this first in case the editor overrides the default value.
-    if field = @editor()[property]
+    if field = editor[property]
       field()
 
     else
@@ -20,6 +22,8 @@ class LOI.Assets.Editor.Actions.ShowAction extends LOI.Assets.Editor.Actions.Ass
       fileData.get property
 
   execute: ->
+    return unless editorView = @editorView()
+
     property = @constructor.fileDataProperty()
-    fileData = @editorView().activeFileData()
+    fileData = editorView.activeFileData()
     fileData.set property, not @active()

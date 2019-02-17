@@ -215,7 +215,6 @@ Package.onUse(function(api) {
   api.addComponent('editor/assetinfo..');
   api.addComponent('editor/dialog..');
   api.addComponent('editor/assetopendialog..');
-  api.addComponent('editor/landmarks..');
   api.addComponent('editor/window..');
   api.addComponent('editor/materials..');
 
@@ -264,6 +263,7 @@ Package.onUse(function(api) {
   api.addComponent('spriteeditor/palette..');
   api.addComponent('spriteeditor/layers..');
   api.addUnstyledComponent('spriteeditor/thumbnail..');
+  api.addComponent('spriteeditor/landmarks..');
 
   api.addComponent('spriteeditor/pixelcanvas..');
   api.addFile('spriteeditor/pixelcanvas/mouse');
@@ -306,11 +306,13 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/scene');
   api.addFile('mesheditor/helpers/selection');
   api.addFile('mesheditor/helpers/shadowsenabled');
+  api.addFile('mesheditor/helpers/landmarks');
 
   api.addUnstyledComponent('mesheditor/camera..');
   api.addComponent('mesheditor/cameraangles..');
   api.addComponent('mesheditor/objects..');
   api.addComponent('mesheditor/layers..');
+  api.addComponent('mesheditor/landmarks..');
 
   api.addComponent('mesheditor/cameraangle..');
   api.addUnstyledComponent('mesheditor/cameraangle/selectspritedialog..');

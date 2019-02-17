@@ -86,6 +86,10 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         ]
       ,
         caption: 'Window'
+        items: [
+          LOI.Assets.Editor.Actions.PersistEditorsInterface.id()
+          LOI.Assets.Editor.Actions.ResetInterface.id()
+        ]
       ]
 
     toolbox =
@@ -145,7 +149,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
                       active: true
                     ,
                       name: 'Landmarks'
-                      contentComponentId: LOI.Assets.Editor.Landmarks.id()
+                      contentComponentId: LOI.Assets.SpriteEditor.Landmarks.id()
                     ]
                   remainingArea:
                     type: FM.TabbedView.id()

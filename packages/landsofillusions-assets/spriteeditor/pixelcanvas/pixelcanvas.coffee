@@ -101,7 +101,8 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.LightDirection, @fileIdForHelpers()
 
     @landmarksHelper = new ComputedField =>
-      @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.Landmarks, @fileIdForHelpers()
+      landmarksHelperClass = @options.landmarksHelperClass or LOI.Assets.SpriteEditor.Helpers.Landmarks
+      @interface.getHelperForFile landmarksHelperClass, @fileIdForHelpers()
 
     @drawComponents = new ComputedField =>
       if @options?.drawComponents

@@ -33,6 +33,11 @@ class FM.SplitView extends FM.View
 
   draggingClass: ->
     'dragging' if @_dragging()
+    
+  showDivider: ->
+    # Don't show the divider when the main area controls its own size.
+    return true unless mainArea = @childComponents()[0]
+    not mainArea.childComponentOverridesSize()
 
   events: ->
     super(arguments...).concat
@@ -48,7 +53,7 @@ class FM.SplitView extends FM.View
     $interface = @interface.$('.fatamorgana-interface')
 
     # Remember starting position of drag.
-    @_dragStart = 
+    @_dragStart =
       x: event.pageX
       y: event.pageY
       
@@ -67,7 +72,7 @@ class FM.SplitView extends FM.View
     @_dragging true
 
     $interface.on 'mousemove.fatamorgana-splitview', (event) =>
-      dragDelta = 
+      dragDelta =
         x: event.pageX - @_dragStart.x
         y: event.pageY - @_dragStart.y
 

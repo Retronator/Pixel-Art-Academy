@@ -171,7 +171,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                       active: true
                     ,
                       name: 'Landmarks'
-                      contentComponentId: LOI.Assets.Editor.Landmarks.id()
+                      contentComponentId: LOI.Assets.MeshEditor.Landmarks.id()
                     ,
                       name: 'Camera angles'
                       contentComponentId: LOI.Assets.MeshEditor.CameraAngles.id()

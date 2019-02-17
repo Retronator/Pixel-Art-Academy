@@ -51,15 +51,12 @@ LOI.Assets.VisualAsset.updateLandmark.method (assetClassName, assetId, index, la
   check assetId, Match.DocumentId
   check assetClassName, String
   check index, Match.Integer
-  check landmarkUpdate, Match.OptionalOrNull Match.ObjectIncluding
-    name: Match.OptionalOrNull String
-    x: Match.OptionalOrNull Number
-    y: Match.OptionalOrNull Number
-    z: Match.OptionalOrNull Number
 
   RA.authorizeAdmin()
 
   assetClass = LOI.Assets.VisualAsset._requireAssetClass assetClassName
+  check landmarkUpdate, Match.OptionalOrNull Match.ObjectIncluding assetClass.landmarkPattern
+
   asset = LOI.Assets.VisualAsset._requireAsset assetId, assetClass
 
   # If we don't have landmarks at all, we create it as an array

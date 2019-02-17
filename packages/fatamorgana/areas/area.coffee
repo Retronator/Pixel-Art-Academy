@@ -16,8 +16,15 @@ class FM.Area extends AM.Component
     @contentComponentId = new ComputedField => @data().get 'contentComponentId'
 
   areaClass: -> # Override to set a styling class for this area.
+    
+  childComponentOverridesSize: ->
+    return unless childComponent = @childComponents()[0]
+    childComponent?.overrideAreaSize?()
 
   areaStyle: ->
+    # We should not fix the area size if a child component asks to control it instead.
+    return {} if @childComponentOverridesSize()
+    
     options = @data().value()
 
     style = _.pick options, @constructor.dimensionProperties
@@ -31,4 +38,8 @@ class FM.Area extends AM.Component
     style
 
   contentComponentData: ->
-    @data().get('contentComponentData') or @interface.getComponentData @contentComponentId()
+    if contentComponentData = @data().get 'contentComponentData'
+      return contentComponentData
+
+    return unless contentComponentId = @contentComponentId()
+    @interface.getComponentData contentComponentId
