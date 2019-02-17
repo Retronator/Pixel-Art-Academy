@@ -38,16 +38,18 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
       Tracker.nonreactive => @processStroke()
 
     @_updatePreviewAutorun = @autorun (computation) =>
+      return unless editor = @editor()
+
       # Show preview when we're drawing a line and mouse is on the canvas.
-      preview = (@data.get('drawPreview') or @drawLine()) and @editor()?.mouse().pixelCoordinate()
+      preview = (@data.get('drawPreview') or @drawLine()) and editor.mouse().pixelCoordinate()
 
       if preview
         # Update preview pixels.
-        @editor().operationPreview().pixels @pixels()
+        editor.operationPreview().pixels @pixels()
 
       else if @_previewActive
         # Remove pixels, since we were the ones providing them.
-        @editor().operationPreview().pixels []
+        editor.operationPreview().pixels []
 
       @_previewActive = preview
 
