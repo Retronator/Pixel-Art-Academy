@@ -34,7 +34,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
 
     @_cursorChangesAutorun = @autorun (computation) =>
       # React to cursor changes.
-      @editor().cursor().cursorArea()
+      return unless @editor()?.cursor().cursorArea()
       Tracker.nonreactive => @processStroke()
 
     @_updatePreviewAutorun = @autorun (computation) =>
@@ -208,7 +208,7 @@ class LOI.Assets.SpriteEditor.Tools.Stroke extends LOI.Assets.SpriteEditor.Tools
   processStroke: ->
     currentPixelCoordinates = @currentPixelCoordinates()
 
-    cursorArea = @editor().cursor().cursorArea()
+    return unless cursorArea = @editor()?.cursor().cursorArea()
 
     if cursorArea.position
       newPixelCoordinates = _.clone cursorArea.position.centerCoordinates
