@@ -35,7 +35,11 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     intersectionsBackward = raycaster.intersectObjects scene.children, true
 
     intersections = intersectionsForward.concat intersectionsBackward
-    return unless intersections.length
+    currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
+
+    unless intersections.length
+      currentClusterHelper.setCluster null
+      return
 
     # Filter intersetctions to clusters.
     clusters = []
@@ -46,7 +50,6 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     # Get only one instance of each cluster (if it was picked multiple times).
     clusters = _.uniq clusters
 
-    currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
     currentCluster = currentClusterHelper.cluster()
 
     if cycle
