@@ -13,4 +13,6 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
     hue: LOI.Assets.Palette.Atari2600.hues.olive
     shade: LOI.Assets.Palette.Atari2600.characterShades.darker
 
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/alexandra.json'
+
   @initialize()

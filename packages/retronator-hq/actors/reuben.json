@@ -1,5 +1,5 @@
 {
-  "_id": "PixelArtAcademy.Cast.Ace",
+  "_id": "Retronator.HQ.Actors.Reuben",
   "avatar": {
     "body": {
       "node": {
@@ -11,25 +11,7 @@
                   "templateId": "i7hjzpmyGPBtxgQJa"
                 },
                 "eyes": {
-                  "node": {
-                    "fields": {
-                      "shape": {
-                        "templateId": "erC7k2NXJ7YNqqgng"
-                      },
-                      "iris": {
-                        "node": {
-                          "fields": {
-                            "hue": {
-                              "value": 2
-                            },
-                            "shade": {
-                              "value": 3
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "templateId": "F8dcQeT4nqa7MWc3a"
                 },
                 "hair": {
                   "node": {
@@ -45,7 +27,7 @@
                                     "value": 15
                                   },
                                   "shade": {
-                                    "value": 2
+                                    "value": 3
                                   }
                                 }
                               }
@@ -53,12 +35,8 @@
                             "shapes": {
                               "node": {
                                 "fields": {
-                                  "1": {
+                                  "0": {
                                     "templateId": "Q8cWtGFN3pLazXdpo",
-                                    "type": "Avatar.Body.HairShape"
-                                  },
-                                  "2": {
-                                    "templateId": "SisPS8sWnToFjice3",
                                     "type": "Avatar.Body.HairShape"
                                   }
                                 }
@@ -77,20 +55,6 @@
                         "type": "Avatar.Body.FacialHair",
                         "node": {
                           "fields": {
-                            "shapes": {
-                              "node": {
-                                "fields": {
-                                  "0": {
-                                    "templateId": "ueE5J89P6eC98gpaC",
-                                    "type": "Avatar.Body.FacialHairShape"
-                                  },
-                                  "1": {
-                                    "templateId": "L9auHNHoJvMoymMw4",
-                                    "type": "Avatar.Body.FacialHairShape"
-                                  }
-                                }
-                              }
-                            },
                             "color": {
                               "node": {
                                 "fields": {
@@ -98,7 +62,17 @@
                                     "value": 15
                                   },
                                   "shade": {
-                                    "value": 1
+                                    "value": 3
+                                  }
+                                }
+                              }
+                            },
+                            "shapes": {
+                              "node": {
+                                "fields": {
+                                  "0": {
+                                    "templateId": "ueE5J89P6eC98gpaC",
+                                    "type": "Avatar.Body.FacialHairShape"
                                   }
                                 }
                               }
@@ -112,6 +86,9 @@
               }
             }
           },
+          "legs": {
+            "templateId": "6iQW2T2tHGkeSd8om"
+          },
           "skin": {
             "node": {
               "fields": {
@@ -124,47 +101,26 @@
               }
             }
           },
+          "arms": {
+            "templateId": "7xjZxMuokHKgCsBLX"
+          },
           "torso": {
             "node": {
               "fields": {
-                "chest": {
-                  "node": {
-                    "fields": {
-                      "shape": {
-                        "templateId": "MTSoZJdMjfrNzxNSG"
-                      },
-                      "breasts": {
-                        "templateId": "msYEu22o9AmirdWL7"
-                      },
-                      "breastsOffsetX": {
-                        "value": -1
-                      }
-                    }
-                  }
+                "groin": {
+                  "templateId": "wBK5ydL4BfnShu7Rk"
                 },
                 "abdomen": {
                   "templateId": "mJioY559vfEGohrG5"
                 },
-                "groin": {
-                  "node": {
-                    "fields": {
-                      "shape": {
-                        "templateId": "CGPE834KfMaAA5PAF"
-                      }
-                    }
-                  }
+                "chest": {
+                  "templateId": "7RwsLqEJrCzQag7J3"
                 },
                 "neck": {
                   "templateId": "4fwgybBqL8j8CRwK9"
                 }
               }
             }
-          },
-          "arms": {
-            "templateId": "7xjZxMuokHKgCsBLX"
-          },
-          "legs": {
-            "templateId": "6iQW2T2tHGkeSd8om"
           }
         }
       }
@@ -194,7 +150,7 @@
                                           "value": 0
                                         },
                                         "shade": {
-                                          "value": 4
+                                          "value": 5
                                         }
                                       }
                                     }
@@ -228,8 +184,7 @@
                   },
                   "type": "Avatar.Outfit.Article"
                 },
-                "1": {
-                  "type": "Avatar.Outfit.Article",
+                "2": {
                   "node": {
                     "fields": {
                       "parts": {
@@ -258,7 +213,7 @@
                                           "value": 0
                                         },
                                         "shade": {
-                                          "value": 3
+                                          "value": 2
                                         }
                                       }
                                     }
@@ -280,7 +235,7 @@
                                           "value": 0
                                         },
                                         "shade": {
-                                          "value": 2
+                                          "value": 7
                                         }
                                       }
                                     }
@@ -293,9 +248,10 @@
                         }
                       }
                     }
-                  }
+                  },
+                  "type": "Avatar.Outfit.Article"
                 },
-                "2": {
+                "3": {
                   "node": {
                     "fields": {
                       "parts": {
@@ -348,7 +304,7 @@
                                           "value": 10
                                         },
                                         "shade": {
-                                          "value": 1
+                                          "value": 6
                                         }
                                       }
                                     }
@@ -364,7 +320,7 @@
                   },
                   "type": "Avatar.Outfit.Article"
                 },
-                "3": {
+                "4": {
                   "node": {
                     "fields": {
                       "customColors": {
@@ -380,10 +336,32 @@
                                     "node": {
                                       "fields": {
                                         "hue": {
-                                          "value": 0
+                                          "value": 9
                                         },
                                         "shade": {
+                                          "value": 2
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            },
+                            "1": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "secondary"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
                                           "value": 1
+                                        },
+                                        "shade": {
+                                          "value": 6
                                         }
                                       }
                                     }
@@ -405,6 +383,10 @@
                             "3": {
                               "templateId": "oMpprFCQYGymfCn5F",
                               "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "4": {
+                              "templateId": "5uwF57Am86vmt35Qj",
+                              "type": "Avatar.Outfit.ArticlePart"
                             }
                           }
                         }
@@ -412,111 +394,6 @@
                     }
                   },
                   "type": "Avatar.Outfit.Article"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "behavior": {
-    "node": {
-      "fields": {
-        "personality": {
-          "templateId": "h4tkC2svAxwoz7kYY"
-        },
-        "activities": {
-          "templateId": "5ksytZWpJXZ4rXB84"
-        },
-        "environment": {
-          "node": {
-            "fields": {
-              "clutter": {
-                "node": {
-                  "fields": {
-                    "average": {
-                      "value": 3
-                    },
-                    "ideal": {
-                      "value": 3
-                    }
-                  }
-                }
-              },
-              "people": {
-                "node": {
-                  "fields": {
-                    "9": {
-                      "node": {
-                        "fields": {
-                          "doesArt": {
-                            "value": false
-                          },
-                          "joins": {
-                            "value": true
-                          },
-                          "relationshipType": {
-                            "value": "Wife"
-                          },
-                          "livingProximity": {
-                            "value": "Roommate"
-                          },
-                          "artSupport": {
-                            "value": 1
-                          },
-                          "relationshipStrength": {
-                            "value": 3
-                          }
-                        }
-                      },
-                      "type": "Behavior.Environment.Person"
-                    },
-                    "10": {
-                      "node": {
-                        "fields": {
-                          "relationshipType": {
-                            "value": "Son"
-                          },
-                          "relationshipStrength": {
-                            "value": 3
-                          },
-                          "livingProximity": {
-                            "value": "Housemate"
-                          },
-                          "artSupport": {
-                            "value": 0
-                          },
-                          "joins": {
-                            "value": true
-                          }
-                        }
-                      },
-                      "type": "Behavior.Environment.Person"
-                    },
-                    "11": {
-                      "node": {
-                        "fields": {
-                          "relationshipType": {
-                            "value": "Daughter"
-                          },
-                          "joins": {
-                            "value": true
-                          },
-                          "relationshipStrength": {
-                            "value": 3
-                          },
-                          "livingProximity": {
-                            "value": "Housemate"
-                          },
-                          "artSupport": {
-                            "value": 0
-                          }
-                        }
-                      },
-                      "type": "Behavior.Environment.Person"
-                    }
-                  }
                 }
               }
             }

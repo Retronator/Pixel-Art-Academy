@@ -11,6 +11,8 @@ class HQ.Actors.Reuben extends LOI.Adventure.Thing
   @description: -> "It's Reuben Thiessen a.k.a. Reuben. He flew into town with his Quest Kodiak."
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.blue
-    shade: LOI.Assets.Palette.Atari2600.characterShades.lighter
+    shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
+
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/reuben.json'
 
   @initialize()

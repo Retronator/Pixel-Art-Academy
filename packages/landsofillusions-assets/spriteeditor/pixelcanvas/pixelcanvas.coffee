@@ -87,7 +87,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
     @operationPreview new @constructor.OperationPreview @
     @toolInfo new @constructor.ToolInfo @
 
-    @toolsActive = @componentData.get('toolsActive') ? true    
+    @toolsActive = @componentData.get('toolsActive') ? true
 
     # Prepare helpers.
     @fileIdForHelpers = new ComputedField =>
@@ -101,7 +101,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       @interface.getHelperForFile LOI.Assets.SpriteEditor.Helpers.LightDirection, @fileIdForHelpers()
 
     @landmarksHelper = new ComputedField =>
-      landmarksHelperClass = @options.landmarksHelperClass or LOI.Assets.SpriteEditor.Helpers.Landmarks
+      landmarksHelperClass = @options?.landmarksHelperClass or LOI.Assets.SpriteEditor.Helpers.Landmarks
       @interface.getHelperForFile landmarksHelperClass, @fileIdForHelpers()
 
     @drawComponents = new ComputedField =>

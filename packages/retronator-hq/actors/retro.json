@@ -1,6 +1,5 @@
 {
   "_id": "Retronator.HQ.Actors.Retro",
-  "debugName": "Retro",
   "avatar": {
     "body": {
       "node": {
@@ -204,8 +203,5 @@
         }
       }
     }
-  },
-  "designApproved": true,
-  "behaviorApproved": true,
-  "activated": true
+  }
 }

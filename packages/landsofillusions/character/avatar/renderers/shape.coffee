@@ -52,7 +52,12 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
           # If we still don't have a sprite, see if we have a default specified.
           unless spriteId
             if defaultName = @options.part.options.default
-              spriteName = "#{defaultName} #{_.kebabCase sourceSide}"
+              if _.last(defaultName) is '/'
+                spriteName = "#{defaultName}#{_.kebabCase sourceSide}"
+
+              else
+                spriteName = "#{defaultName} #{_.kebabCase sourceSide}"
+
               flipped = false
               defaultSprite = true
 
@@ -126,9 +131,9 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
       y: target.y - source.y
 
     @_ready = new ComputedField =>
-      # If we have no data, in this part, there's nothing to do.
-      return true unless @options.part.options.dataLocation()
-      
+      # If we have no data in this part for this side, there's nothing to do.
+      return true unless @spriteDataInfo[@activeSide()]()
+
       # Shape is ready when the sprite is ready.
       @activeSprite().ready()
 

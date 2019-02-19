@@ -181,7 +181,6 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
 
     sphereSprite = new LOI.Assets.Engine.Sprite
       spriteData: @sphereSpriteData
-      lightDirection: @lightDirection
       visualizeNormals: @visualizeNormals
 
     circleSprite = new LOI.Assets.Engine.Sprite
