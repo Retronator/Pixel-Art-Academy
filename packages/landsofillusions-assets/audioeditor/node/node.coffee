@@ -223,6 +223,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     width: "#{@nodeWidth()}rem"
     height: "#{@nodeHeight()}rem"
     transform: "scale(#{scale})"
+    borderWidth: "#{1 / scale}rem"
 
   libraryNodeStyle: ->
     width: "88rem"
@@ -275,7 +276,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   events: ->
     super(arguments...).concat
       'mousedown .landsofillusions-assets-audioeditor-node': @onMouseDownNode
-      'click .landsofillusions-assets-audioeditor-node > .name': @onClickName
+      'dblclick .landsofillusions-assets-audioeditor-node > .name': @onDoubleClickName
       'mousedown .input .connector': @onMouseDownInputConnector
       'mouseup .input': @onMouseUpInput
       'mouseenter .input': @onMouseEnterInput
@@ -302,7 +303,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       nodeId: @id
       nodePosition: @data().position
 
-  onClickName: (event) ->
+  onDoubleClickName: (event) ->
     return unless @audioCanvas
 
     @audioCanvas.audioLoader().changeNodeExpanded @id, not @data().expanded

@@ -252,6 +252,10 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
     transform: "translate3d(#{originInWindow.x}px, #{originInWindow.y}px, 0)"
 
   startDrag: (options) ->
+    # Nothing to do if we're already dragging this node (this
+    # happens when initiating drag by clicking in the node library).
+    return if @dragNodeId() is options.nodeId
+
     @dragStartCanvasCoordinate = @mouse().canvasCoordinate()
     @dragStartNodePosition = options.nodePosition
     @dragRequireMove options.requireMove
@@ -387,7 +391,9 @@ class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
       'mouseup': @onMouseUp
 
   onMouseDown: (event) ->
-    # Reset dragging on any start of clicks.
+    # Reset dragging on any start of clicks, unless we're already dragging.
+    return if @dragNodeId()
+
     @dragHasMoved false
 
   onMouseUp: (event) ->
