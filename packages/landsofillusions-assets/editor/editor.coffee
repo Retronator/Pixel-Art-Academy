@@ -35,7 +35,7 @@ class LOI.Assets.Editor extends AM.Component
       storageKey: "#{@constructor.id()}.interface"
       field: @localInterfaceData
       tracker: @
-      consentField: LOI.settings.persistEditorsInterface.allowed    
+      consentField: LOI.settings.persistEditorsInterface.allowed
     
     @interface = new FM.Interface @,
       load: =>
@@ -52,6 +52,7 @@ class LOI.Assets.Editor extends AM.Component
       loaders:
         "#{LOI.Assets.Sprite.id()}": LOI.Assets.SpriteEditor.SpriteLoader
         "#{LOI.Assets.Mesh.id()}": LOI.Assets.MeshEditor.MeshLoader
+        "#{LOI.Assets.Audio.id()}": LOI.Assets.AudioEditor.AudioLoader
 
   onDestroyed: ->
     super arguments...

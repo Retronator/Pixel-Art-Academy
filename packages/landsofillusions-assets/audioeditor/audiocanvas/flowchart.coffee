@@ -6,10 +6,10 @@ timeDomainData = new Float32Array 1024
 frequencyData = new Uint8Array 1024
 
 color = [0, 0, 0, 255]
-darkColor = [80, 92, 192]
-lightColor = [164, 184, 252]
+darkColor = [108, 108, 108]
+lightColor = [178, 178, 178]
 
-pointHistory = (x: 0, y:0 for index in [0..4])
+pointHistory = (x: 0, y: 0 for index in [0..4])
 
 audioConnectionsDependency = new Tracker.Dependency
 
@@ -26,8 +26,9 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
     # Render the connections to our canvas.
     displayScale = @audioCanvas.display.scale()
 
-    @canvas.width = @audioCanvas.bounds.width() / displayScale
-    @canvas.height = @audioCanvas.bounds.height() / displayScale
+    size = @audioCanvas.canvasPixelSize()
+    @canvas.width = size.width / displayScale
+    @canvas.height = size.height / displayScale
 
     return unless @canvas.width and @canvas.height
 

@@ -4,9 +4,10 @@
   display block
   position relative
   z-index 0
-  border 1rem solid atariBlue(5)
+  border 1rem solid atariGrey(3)
   background atariGrey(0)
   cursor grab
+  transform-origin top left
 
   &.expanded
     padding-top 3rem
@@ -82,12 +83,12 @@
         height 9rem
         padding-left 1rem
         text-align center
-        background atariBlue(5)
-        color atariBlue(0)
+        background atariGrey(3)
+        color atariGrey(0)
         cursor text
 
         &:hover
-          background atariBlue(7)
+          background atariGrey(4)
 
         &::before
           content '*'

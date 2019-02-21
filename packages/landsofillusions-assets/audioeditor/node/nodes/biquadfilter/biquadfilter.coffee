@@ -22,7 +22,7 @@ class LOI.Assets.AudioEditor.Node.BiquadFilter extends AM.Component
     super arguments...
 
     @audioNode = new ComputedField => 
-      return unless audio = @node.audioCanvas.audioEditor.audio()
+      return unless audio = @node.audioCanvas.audio()
       audio.getNode @node.id
 
   onRendered: ->

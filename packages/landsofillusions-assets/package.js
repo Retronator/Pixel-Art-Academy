@@ -329,10 +329,15 @@ Package.onUse(function(api) {
 
   // Audio editor
 
-  api.addComponent('audioeditor..');
+  api.addFile('audioeditor..');
+  api.addFile('audioeditor/audioloader');
+
+  api.addComponent('audioeditor/adventureview..');
+  api.addComponent('audioeditor/adventureview/adventure..');
+
+  api.addFile('audioeditor/adventureview/controls/locationselect');
 
   api.addComponent('audioeditor/audiocanvas..');
-  api.addFile('audioeditor/audiocanvas/camera');
   api.addFile('audioeditor/audiocanvas/flowchart');
   api.addFile('audioeditor/audiocanvas/grid');
   api.addFile('audioeditor/audiocanvas/mouse');
@@ -348,6 +353,4 @@ Package.onUse(function(api) {
   api.addFile('audioeditor/tools..');
   api.addFile('audioeditor/tools/undo');
   api.addFile('audioeditor/tools/redo');
-
-  api.addFile('audioeditor/worldcontrols/locationselect');
 });

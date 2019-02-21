@@ -79,7 +79,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       @interface.getComponentDataForFile @, spriteId
 
     # Initialize components.
-    @camera new @constructor.Camera @
+    @camera new @constructor.Camera @, $parent: @$pixelCanvas
     @mouse new @constructor.Mouse @
     @cursor new @constructor.Cursor @
     @landmarks new @constructor.Landmarks @

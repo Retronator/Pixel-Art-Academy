@@ -4,8 +4,8 @@ AE = Artificial.Everywhere
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
-class LOI.Assets.AudioEditor.LocationSelect extends AM.DataInputComponent
-  @register 'LandsOfIllusions.Assets.AudioEditor.LocationSelect'
+class LOI.Assets.AudioEditor.AdventureView.LocationSelect extends AM.DataInputComponent
+  @register 'LOI.Assets.AudioEditor.AdventureView.LocationSelect'
 
   constructor: ->
     super arguments...
@@ -15,7 +15,7 @@ class LOI.Assets.AudioEditor.LocationSelect extends AM.DataInputComponent
   onCreated: ->
     super arguments...
 
-    @audioEditor = @ancestorComponentOfType LOI.Assets.AudioEditor
+    @adventureView = @ancestorComponentOfType LOI.Assets.AudioEditor.AdventureView
 
   options: ->
     locationClasses = _.filter LOI.Adventure.Thing.getClasses(), (thingClass) =>
@@ -37,9 +37,7 @@ class LOI.Assets.AudioEditor.LocationSelect extends AM.DataInputComponent
     options
 
   load: ->
-    @audioEditor.audioData()?.editor?.locationId
+    @activeFileData().get 'locationId'
 
   save: (value) ->
-    LOI.Assets.Asset.update LOI.Assets.Audio.className, @audioEditor.audioId(),
-      $set:
-        'editor.locationId': value
+    @activeFileData().set 'locationId', value

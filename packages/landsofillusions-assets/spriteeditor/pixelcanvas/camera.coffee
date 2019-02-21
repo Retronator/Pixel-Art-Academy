@@ -3,7 +3,7 @@ AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Assets.SpriteEditor.PixelCanvas.Camera
-  constructor: (@pixelCanvas) ->
+  constructor: (@pixelCanvas, options) ->
     @cameraData = new ComputedField =>
       @pixelCanvas.editorFileData()?.child 'camera'
 
@@ -50,11 +50,11 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
 
     # Wire up mouse wheel event once the sprite editor is rendered.
     @pixelCanvas.autorun (computation) =>
-      $pixelCanvas = @pixelCanvas.$pixelCanvas()
-      return unless $pixelCanvas
+      $parent = options.$parent()
+      return unless $parent
       computation.stop()
 
-      $pixelCanvas.on 'wheel', (event) =>
+      $parent.on 'wheel', (event) =>
         event.preventDefault()
 
         effectiveScale = @effectiveScale()
@@ -69,7 +69,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
           @setScale scale * scaleChange
 
           # Also move the origin, depending on how much off-center we were zooming.
-          canvasOrigin = $pixelCanvas.offset()
+          canvasOrigin = $parent.offset()
 
           mouseWindowCoordinate =
             x: event.originalEvent.pageX - canvasOrigin.left

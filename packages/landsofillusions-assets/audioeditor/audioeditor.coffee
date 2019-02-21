@@ -2,160 +2,137 @@ AB = Artificial.Base
 AC = Artificial.Control
 AE = Artificial.Everywhere
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.AudioEditor extends AM.Component
-  @register 'LandsOfIllusions.Assets.AudioEditor'
+class LOI.Assets.AudioEditor extends LOI.Assets.Editor
+  @id: -> 'LandsOfIllusions.Assets.AudioEditor'
+  @register @id()
+
+  @defaultInterfaceData: ->
+    # Operators
+
+    activeToolId = LOI.Assets.Editor.Tools.Arrow.id()
+
+    # Content Components
+
+    components = {}
+    
+    # Layouts
+
+    menu =
+      type: FM.Menu.id()
+      items: [
+        caption: 'Audio Editor'
+      ,
+        caption: 'File'
+        items: [
+          LOI.Assets.Editor.Actions.New.id()
+          LOI.Assets.Editor.Actions.Open.id()
+          null
+          LOI.Assets.Editor.Actions.Close.id()
+          LOI.Assets.Editor.Actions.Duplicate.id()
+          LOI.Assets.Editor.Actions.Delete.id()
+        ]
+      ,
+        caption: 'Edit'
+        items: [
+          LOI.Assets.Editor.Actions.Undo.id()
+          LOI.Assets.Editor.Actions.Redo.id()
+        ]
+      ,
+        caption: 'View'
+        items: [
+          LOI.Assets.SpriteEditor.Actions.ZoomIn.id()
+          LOI.Assets.SpriteEditor.Actions.ZoomOut.id()
+        ]
+      ,
+        caption: 'Window'
+        items: [
+          LOI.Assets.Editor.Actions.PersistEditorsInterface.id()
+          LOI.Assets.Editor.Actions.ResetInterface.id()
+        ]
+      ]
+
+    toolbox =
+      type: FM.Toolbox.id()
+      width: 20
+      widthStep: 20
+      minWidth: 20
+      tools: [
+        LOI.Assets.Editor.Tools.Arrow.id()
+      ]
+
+    layouts =
+      currentLayoutId: 'main'
+      main:
+        name: 'Main'
+        applicationArea:
+          type: FM.SplitView.id()
+          fixed: true
+          mainArea: menu
+          dockSide: FM.SplitView.DockSide.Top
+          remainingArea:
+            type: FM.SplitView.id()
+            dockSide: FM.SplitView.DockSide.Left
+            mainArea: toolbox
+            remainingArea:
+              type: FM.SplitView.id()
+              dockSide: FM.SplitView.DockSide.Right
+              mainArea:
+                type: FM.SplitView.id()
+                dockSide: FM.SplitView.DockSide.Top
+                width: 150
+                mainArea:
+                  type: FM.TabbedView.id()
+                  height: 80
+                  tabs: [
+                    name: 'Navigator'
+                    active: true
+                  ]
+                remainingArea:
+                  type: FM.TabbedView.id()
+                  tabs: [
+                    name: 'Nodes'
+                    contentComponentId: LOI.Assets.AudioEditor.NodeLibrary.id()
+                    active: true
+                  ]
+
+              remainingArea:
+                type: FM.SplitView.id()
+                dockSide: FM.SplitView.DockSide.Bottom
+                mainArea:
+                  height: 100
+                  type: LOI.Assets.AudioEditor.AdventureView.id()
+
+                remainingArea:
+                  type: FM.EditorView.id()
+                  editor:
+                    contentComponentId: LOI.Assets.AudioEditor.AudioCanvas.id()
+
+    shortcuts =
+      currentMappingId: 'default'
+      default:
+        name: "Default"
+        mapping: @defaultShortcutsMapping()
+
+    # Return combined interface data.
+    {activeToolId, components, layouts, shortcuts}
+
+  @defaultShortcutsMapping: ->
+    _.extend super(arguments...),
+      # Actions
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
 
   constructor: ->
     super arguments...
-    
-    @world = new ReactiveField null
-    @audio = new ReactiveField null
 
-    @audioCanvas = new ReactiveField null
-    @nodeLibrary = new ReactiveField null
-    @assetsList = new ReactiveField null
-    @assetInfo = new ReactiveField null
-    @tools = new ReactiveField null
-    @actions = new ReactiveField null
-    @toolbox = new ReactiveField null
-
-    @audioId = new ComputedField =>
-      AB.Router.getParameter 'audioId'
-
-    @audioData = new ComputedField =>
-      return unless audioId = @audioId()
-
-      LOI.Assets.Asset.forId.subscribe LOI.Assets.Audio.className, audioId
-      LOI.Assets.Audio.documents.findOne audioId
-      
-    @activeTool = new ReactiveField null
-
-    @interface =
-      illustrationSize: new AE.Rectangle 0, 0, 0, 0
-
-    @currentLocationId = new ComputedField =>
-      @audioData()?.editor?.locationId
-
-    @currentLocationThings = => []
-
-  onCreated: ->
-    super arguments...
-
-    $('html').addClass('asset-editor')
-
-    # Initialize components.
-    @world new LOI.Engine.World
-      adventure: @
-      updateMode: LOI.Engine.World.UpdateModes.Hover
-      isolatedAudio: true
-    
-    @audio new LOI.Assets.Engine.Audio
-      world: @world
-      audioData: @audioData
-
-    @audioCanvas new @constructor.AudioCanvas @
-    @nodeLibrary new @constructor.NodeLibrary @
-
-    setAssetId = (audioId) =>
-      AB.Router.setParameters {audioId}
-        
-    @assetsList new LOI.Assets.Components.AssetsList
-      documentClass: LOI.Assets.Audio
-      getAssetId: @audioId
-      setAssetId: setAssetId
-
-    @assetInfo new LOI.Assets.Components.AssetInfo
-      documentClass: LOI.Assets.Audio
-      getAssetId: @audioId
-      setAssetId: setAssetId
-
-    @toolbox new LOI.Assets.Components.Toolbox
-      tools: @tools
-      activeTool: @activeTool
-      actions: @actions
-
-    # Create tools.
-    toolClasses = [
-      @constructor.Tools.Undo
-      @constructor.Tools.Redo
-    ]
-
-    tools = for toolClass in toolClasses
-      new toolClass
-        editor: => @
-          
-    @tools tools
+    @documentClass = LOI.Assets.Audio
+    @assetClassName = @documentClass.className
 
   onRendered: ->
     super arguments...
 
-    @display = @callAncestorWith 'display'
-
-    # Update illustration size on window size changes.
-    @autorun (computation) =>
-      # Depend on display size and scale.
-      viewport = @display.viewport()
-      scale = @display.scale()
-
-      height = @$('.landsofillusions-engine-world').height() / scale
-
-      @interface.illustrationSize.width viewport.viewportBounds.width() / scale
-      @interface.illustrationSize.height height
-
-  onDestroyed: ->
-    super arguments...
-
-    $('html').removeClass('asset-editor')
-    
-  addNode: (options) ->
-    nodeType = options.nodeClass.type()
-
-    # Calculate target element's position in audioCanvas.
-    audioCanvas = @audioCanvas()
-    elementOffset = $(options.element).offset()
-    audioCanvasOffset = audioCanvas.$audioCanvas().offset()
-
-    canvasCoordinate = audioCanvas.camera().transformWindowToCanvas
-      x: elementOffset.left - audioCanvasOffset.left
-      y: elementOffset.top - audioCanvasOffset.top
-
-    node =
-      id: Random.id()
-      type: nodeType
-      position: canvasCoordinate
-      expanded: false
-
-    # Add the node in the database.
-    LOI.Assets.Audio.addNode @audioId(), node
-
-    audioCanvas.mouse().updateCoordinates options.event
-
-    audioCanvas.startDrag
-      nodePosition: canvasCoordinate
-      nodeId: node.id
-      requireMove: true
-
-  removeNode: (nodeId) ->
-    # Remove the node in the database
-    LOI.Assets.Audio.removeNode @audioId(), nodeId
-
-  changeNodeExpanded: (nodeId, expanded) ->
-    LOI.Assets.Audio.updateNode @audioId(), nodeId, {expanded}
-
-  changeNodePosition: (nodeId, position) ->
-    LOI.Assets.Audio.updateNode @audioId(), nodeId, {position}
-
-  changeNodeParameter: (nodeId, name, value) ->
-    LOI.Assets.Audio.updateNodeParameters @audioId(), nodeId,
-      "#{name}": value
-
-  addConnection: (nodeId, connection) ->
-    LOI.Assets.Audio.updateConnections @audioId(), nodeId, connection
-
-  removeConnection: (nodeId, connection) ->
-    LOI.Assets.Audio.updateConnections @audioId(), nodeId, null, connection
-
-  modifyConnection: (nodeId, connection, oldConnection) ->
-    LOI.Assets.Audio.updateConnections @audioId(), nodeId, connection, oldConnection
+    editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
+    editorView.addFile id, LOI.Assets.Audio.id() for id in []

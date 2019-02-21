@@ -186,9 +186,9 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Actions.Symmetry.id()}": key: AC.Keys.s
       "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
       "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
-      "#{LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()}":commandOrControl: true, key: AC.Keys.singleQuote
-      "#{LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()}":commandOrControl: true, shift: true, key: AC.Keys.l
-      "#{LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()}":commandOrControl: true, shift: true, key: AC.Keys.a
+      "#{LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()}": commandOrControl: true, key: AC.Keys.singleQuote
+      "#{LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()}": commandOrControl: true, shift: true, key: AC.Keys.l
+      "#{LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()}": commandOrControl: true, shift: true, key: AC.Keys.a
       "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [{key: AC.Keys.openBracket}, {key: AC.Keys.openBracket, commandOrControl: true}]
       "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [{key: AC.Keys.closeBracket}, {key: AC.Keys.closeBracket, commandOrControl: true}]
 

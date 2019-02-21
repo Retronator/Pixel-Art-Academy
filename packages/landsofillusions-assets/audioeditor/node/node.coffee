@@ -45,7 +45,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
       @outputData = new ReactiveField {}
       
       @autorun (computation) =>
-        return unless audioNode = @audioCanvas.audioEditor.audio().getNode @id
+        return unless audioNode = @audioCanvas.audio().getNode @id
 
         # Note: We have to read output data non-reactively since we're assigning it later.
         outputData = Tracker.nonreactive => @outputData()
@@ -56,7 +56,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
           # If we have a valid audio source, we instead provide values from an analyser.
           sourceConnection = audioNode.getSourceConnection output.name
-          audioManager = @audioCanvas.audioEditor.world()?.audioManager()
+          audioManager = @audioCanvas.world()?.audioManager()
 
           if sourceConnection.source and audioManager?.contextValid()
             # Wire output to an analyzer.
@@ -77,7 +77,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
 
     # Isolate reactivity of data.
     @data = new ComputedField =>
-      _.find @audioCanvas?.audioEditor.audioData()?.nodes, (node) => node.id is @id
+      _.find @audioCanvas?.audioData()?.nodes, (node) => node.id is @id
     ,
       EJSON.equals
 
@@ -178,7 +178,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
           @parametersData()?[parameter.name] or parameter.default
 
         save: (value) =>
-          @audioCanvas.audioEditor.changeNodeParameter @id, parameter.name, value
+          @audioCanvas.audioLoader().changeNodeParameter @id, parameter.name, value
 
   inputPositionForName: (name) ->
     return unless @isCreated()
@@ -209,7 +209,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     _.find @nodeClass.parameters(), (parameter) => parameter.name is name
 
   audioManager: ->
-    @audioCanvas?.audioEditor.world()?.audioManager()
+    @audioCanvas?.world()?.audioManager()
 
   nodeStyle: ->
     # Make sure we have position present, as it will disappear when node is being deleted.
@@ -222,6 +222,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
     top: "#{position.y * scale}rem"
     width: "#{@nodeWidth()}rem"
     height: "#{@nodeHeight()}rem"
+    transform: "scale(#{scale})"
 
   libraryNodeStyle: ->
     width: "88rem"
@@ -304,7 +305,7 @@ class LOI.Assets.AudioEditor.Node extends AM.Component
   onClickName: (event) ->
     return unless @audioCanvas
 
-    @audioCanvas.audioEditor.changeNodeExpanded @id, not @data().expanded
+    @audioCanvas.audioLoader().changeNodeExpanded @id, not @data().expanded
 
   onMouseDownInputConnector: (event) ->
     input = @currentData()

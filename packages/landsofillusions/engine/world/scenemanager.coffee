@@ -49,7 +49,7 @@ class LOI.Engine.World.SceneManager
     @_currentIllustrationName = null
     
     @world.autorun (computation) =>
-      illustration = LOI.adventure.currentSituation()?.illustration()
+      illustration = @world.options.adventure.currentSituation()?.illustration()
       return unless illustrationName = illustration?.name
 
       LOI.Assets.Asset.forName.subscribe LOI.Assets.Mesh.className, illustrationName

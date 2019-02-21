@@ -1,12 +1,19 @@
 AE = Artificial.Everywhere
 AB = Artificial.Babel
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
+class LOI.Assets.AudioEditor.AudioCanvas extends FM.EditorView.Editor
+  # EDITOR FILE DATA
+  # camera:
+  #   scale: canvas magnification
+  #   origin: the point on the sprite that should appear in the center of the canvas
+  #     x
+  #     y
   @id: -> 'LandsOfIllusions.Assets.AudioEditor.AudioCanvas'
   @register @id()
-  
+
   constructor: (@audioEditor) ->
     super arguments...
     
@@ -15,10 +22,12 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
     @mouse = new ReactiveField null
     @grid = new ReactiveField null
     @flowchart = new ReactiveField null
-    @bounds = new AE.Rectangle()
+
     @$audioCanvas = new ReactiveField null
     @canvas = new ReactiveField null
+    @canvasPixelSize = new ReactiveField {width: 0, height: 0}, EJSON.equals
     @context = new ReactiveField null
+
     @dragNodeId = new ReactiveField null
     @dragRequireMove = new ReactiveField false
     @dragHasMoved = new ReactiveField false
@@ -28,42 +37,44 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
 
     @display = @callAncestorWith 'display'
 
+    @audioId = new ComputedField =>
+      @editorView.activeFileId()
+
+    @audioLoader = new ComputedField =>
+      return unless audioId = @audioId()
+      @interface.getLoaderForFile audioId
+
+    @audioData = new ComputedField =>
+      @audioLoader()?.audioData()
+
+    @audio = new ComputedField =>
+      @audioLoader()?.audio
+
+    @world = new ComputedField =>
+      adventureViews = @interface.allChildComponentsOfType LOI.Assets.AudioEditor.AdventureView
+      adventureViews[0]?.adventure.world
+
+    @componentData = @interface.getComponentData @
+    @componentFileData = new ComputedField =>
+      return unless spriteId = @spriteId?()
+      @interface.getComponentDataForFile @, spriteId
+
     # Initialize components.
-    @camera new @constructor.Camera @
+    @camera new LOI.Assets.SpriteEditor.PixelCanvas.Camera @, $parent: @$audioCanvas
     @mouse new @constructor.Mouse @
     @grid new @constructor.Grid @
     @flowchart new @constructor.Flowchart @
 
-    # Resize the canvas when browser window and zoom changes.
-    @autorun =>
-      canvas = @canvas()
-      return unless canvas
-
-      # Depend on window size.
-      AM.Window.clientBounds()
-
-      # Resize the back buffer to canvas element size, if it actually changed. If the pixel
-      # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
-      newSize =
-        width: $(canvas).width()
-        height: $(canvas).height()
-
-      for key, value of newSize
-        canvas[key] = value unless canvas[key] is value
-
-      # Bounds are reported in window pixels as well.
-      @bounds.width newSize.width
-      @bounds.height newSize.height
-
     # Redraw canvas routine.
     @autorun =>
-      camera = @camera()
-      context = @context()
-      return unless context
+      return unless context = @context()
+
+      canvasPixelSize = @canvasPixelSize()
 
       context.setTransform 1, 0, 0, 1, 0, 0
-      context.clearRect 0, 0, @bounds.width(), @bounds.height()
+      context.clearRect 0, 0, canvasPixelSize.width, canvasPixelSize.height
 
+      camera = @camera()
       camera.applyTransformToCanvas()
 
       for component in [@grid(), @flowchart()]
@@ -77,7 +88,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
     @_nodeComponentsById = {}
 
     @nodeComponentsById = new ComputedField =>
-      return unless nodes = @audioEditor.audioData()?.nodes
+      return unless nodes = @audioData()?.nodes
 
       previousNodeComponents = _.values @_nodeComponentsById
 
@@ -110,7 +121,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
 
     @connections = new ComputedField =>
       # Create a deep clone of the connections so that we can manipulate them.
-      connections = _.cloneDeep @audioEditor.audio()?.connections() or []
+      connections = _.cloneDeep @audio()?.connections() or []
 
       if draggedConnection = @draggedConnection()
         # See if dragged connection is one of the existing ones.
@@ -196,6 +207,30 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
     @canvas canvas
     @context canvas.getContext '2d'
 
+    # Resize canvas on editor changes.
+    @autorun (computation) =>
+      # Depend on editor view size.
+      AM.Window.clientBounds()
+
+      # Depend on application area changes.
+      @interface.currentApplicationAreaData().value()
+
+      # Depend on editor view tab changes.
+      @editorView.tabDataChanged.depend()
+
+      # After update, measure the size.
+      Tracker.afterFlush =>
+        newSize =
+          width: $audioCanvas.width()
+          height: $audioCanvas.height()
+
+        # Resize the back buffer to canvas element size, if it actually changed. If the pixel
+        # canvas is not actually sized relative to window, we shouldn't force a redraw of the sprite.
+        for key, value of newSize
+          canvas[key] = value unless canvas[key] is value
+
+        @canvasPixelSize newSize
+
     # Prevent click events from happening when dragging was active. We need to manually add this event
     # listener so that we can set setCapture to true and make this listener be called before child click events.
     $audioCanvas[0].addEventListener 'click', =>
@@ -230,12 +265,12 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
       # See if we ended up dragging over the trash.
       if @mouseOverTrash()
         # Delete the node.
-        @audioEditor.removeNode options.nodeId
+        @audioLoader().removeNode options.nodeId
 
       else
         # Save temporary position into the database.
         nodeComponent = @nodeComponentsById()[options.nodeId]
-        @audioEditor.changeNodePosition options.nodeId, nodeComponent.position()
+        @audioLoader().changeNodePosition options.nodeId, nodeComponent.position()
         nodeComponent.temporaryPosition null
 
       @dragNodeId null
@@ -307,7 +342,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
 
     # Make sure the input is not already connected. We need to compare to actual connections in the audio
     # engine (and not our modified ones) since the dragged connection might be going from input to output.
-    invalid = true if _.find @audioEditor.audio()?.connections(), (existingConnection) =>
+    invalid = true if _.find @audio()?.connections(), (existingConnection) =>
       existingConnection.endNodeId is connection.nodeId and existingConnection.input is connection.input
 
     unless invalid
@@ -323,10 +358,10 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
         # If the user just reconnected the same input output there's nothing to do.
         # We still need to fall through to the end so the dragged connection ends.
         unless EJSON.equals connection, oldConnection
-          @audioEditor.modifyConnection startNodeId, connection, oldConnection
+          @audioLoader().modifyConnection startNodeId, connection, oldConnection
 
       else
-        @audioEditor.addConnection startNodeId, connection
+        @audioLoader().addConnection startNodeId, connection
 
     # End dragging.
     @draggedConnection null
@@ -365,7 +400,7 @@ class LOI.Assets.AudioEditor.AudioCanvas extends AM.Component
         input: draggedConnection.input
         output: draggedConnection.output
 
-      @audioEditor.removeConnection draggedConnection.startNodeId, connection
+      @audioLoader().removeConnection draggedConnection.startNodeId, connection
 
     # End connecting.
     @draggedConnection null

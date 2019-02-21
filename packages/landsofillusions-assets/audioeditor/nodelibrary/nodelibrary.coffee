@@ -1,14 +1,12 @@
 AB = Artificial.Babel
 AC = Artificial.Control
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.AudioEditor.NodeLibrary extends AM.Component
+class LOI.Assets.AudioEditor.NodeLibrary extends FM.View
   @id: -> 'LandsOfIllusions.Assets.AudioEditor.NodeLibrary'
   @register @id()
-
-  constructor: (@audioEditor) ->
-    super arguments...
 
   onCreated: ->
     super arguments...
@@ -43,7 +41,8 @@ class LOI.Assets.AudioEditor.NodeLibrary extends AM.Component
     event.preventDefault()
 
     # Add this node to the canvas.
-    @audioEditor.addNode
+    loader = @interface.getLoaderForActiveFile()
+    loader.addNode
       nodeClass: nodeClassInfo.nodeClass
       element: event.currentTarget
       event: event

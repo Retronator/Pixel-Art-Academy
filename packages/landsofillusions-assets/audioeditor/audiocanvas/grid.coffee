@@ -9,7 +9,7 @@ class LOI.Assets.AudioEditor.AudioCanvas.Grid
     displayScale = @audioCanvas.display.scale()
     viewportBounds = camera.viewportBounds
 
-    context.strokeStyle = "#00187c"
+    context.strokeStyle = "#404040"
     context.lineWidth = 1 / scale
     context.beginPath()
 
