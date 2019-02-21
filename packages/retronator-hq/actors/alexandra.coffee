@@ -3,7 +3,7 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.Actors.Alexandra extends LOI.Adventure.Thing
+class HQ.Actors.Alexandra extends LOI.Character.Actor
   @id: -> 'Retronator.HQ.Actors.Alexandra'
   @fullName: -> "Alexandra Hood"
   @shortName: -> "Alexandra"

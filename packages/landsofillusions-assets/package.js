@@ -162,7 +162,6 @@ Package.onUse(function(api) {
   api.addFile('engine/mesh/object');
   api.addFile('engine/mesh/layer');
   api.addFile('engine/mesh/cluster');
-  api.addFile('engine/mesh/rampmaterial');
 
   api.addFile('engine/audio..');
   api.addFile('engine/audio/node');

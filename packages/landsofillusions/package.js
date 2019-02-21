@@ -78,7 +78,13 @@ Package.onUse(function(api) {
   api.addFile('engine..');
   api.addFile('engine/renderingregion');
   api.addFile('engine/renderingsides');
-  api.addClientFile('engine/spritematerial');
+
+  api.addClientFile('engine/materials..');
+  api.addClientFile('engine/materials/spritematerial');
+  api.addClientFile('engine/materials/rampmaterial');
+
+  api.addClientFile('engine/materials/shaderchunks..');
+  api.addClientFile('engine/materials/shaderchunks/lighting');
 
   // Avatar
 

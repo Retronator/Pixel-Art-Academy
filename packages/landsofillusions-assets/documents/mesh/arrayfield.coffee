@@ -56,6 +56,8 @@ class LOI.Assets.Mesh.ArrayField
 
   find: (query) ->
     itemIndex = _.findIndex @array, (item) =>
+      return unless item
+
       # See if all fields of the query match this item.
       for key, value of query
         return unless _.propertyValue(item, key) is value

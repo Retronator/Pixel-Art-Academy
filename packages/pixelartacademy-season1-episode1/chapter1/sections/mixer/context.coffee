@@ -8,7 +8,10 @@ class C1.Mixer.Context extends LOI.Adventure.Context
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.Context'
 
   @initialize()
-  
+
+  @illustration: ->
+    cameraAngle: 'Mixer'
+
   # Listener
   
   @avatars: ->

@@ -37,7 +37,10 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
     if options.viewingAngle
       side = LOI.Engine.RenderingSides.getSideForAngle options.viewingAngle()
       
-    else 
+    else if @options.viewingAngle
+      side = LOI.Engine.RenderingSides.getSideForAngle @options.viewingAngle()
+
+    else
       side = LOI.Engine.RenderingSides.Keys.Front
 
     regions = @constructor.regionsOrder[side]

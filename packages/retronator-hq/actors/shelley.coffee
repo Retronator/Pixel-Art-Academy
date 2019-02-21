@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
-class HQ.Actors.Shelley extends LOI.Adventure.Thing
+class HQ.Actors.Shelley extends LOI.Character.Actor
   @id: -> 'Retronator.HQ.Actors.Shelley'
   @fullName: -> "Shelley Williamson"
   @shortName: -> "Shelley"

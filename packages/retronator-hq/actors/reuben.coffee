@@ -3,7 +3,7 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.Actors.Reuben extends LOI.Adventure.Thing
+class HQ.Actors.Reuben extends LOI.Character.Actor
   @id: -> 'Retronator.HQ.Actors.Reuben'
   @fullName: -> "Reuben Thiessen"
   @shortName: -> "Reuben"

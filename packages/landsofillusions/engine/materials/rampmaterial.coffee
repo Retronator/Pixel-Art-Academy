@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Mesh.RampMaterial extends THREE.ShaderMaterial
+class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
   constructor: (options) ->
     shades = (THREE.Color.fromObject shade for shade in options.shades)
 
@@ -17,16 +17,15 @@ class LOI.Assets.Engine.Mesh.RampMaterial extends THREE.ShaderMaterial
       vertexShader: """
 #include <shadowmap_pars_vertex>
 
-varying vec3 normalEye;
+varying vec3 vNormal;
 
 void main()	{
-  normalEye = normalize((modelViewMatrix * vec4(normal, 0.0)).xyz);
+  vNormal = normalize((modelViewMatrix * vec4(normal, 0.0)).xyz);
 
-  vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-  gl_Position = projectionMatrix * viewMatrix * worldPosition;
-
-  // Shadow map.
-  #{THREE.ShaderChunk.shadowmap_vertex}
+  #include <begin_vertex>
+	#include <project_vertex>
+  #include <worldpos_vertex>
+	#include <shadowmap_vertex>
 }
 """
 
@@ -38,40 +37,12 @@ void main()	{
 
 uniform vec3 shades[#{options.shades.length}];
 
-varying vec3 normalEye;
+varying vec3 vNormal;
 
 void main()	{
   vec3 sourceColor = shades[#{options.shadeIndex}];
 
-  // Accumulate directional lights.
-  float totalLightIntensity = 0.0;
-
-  DirectionalLight directionalLight;
-  float lightIntensity;
-  float shadow = 1.0;
-
-  for (int i = 0; i < NUM_DIR_LIGHTS; i++) {
-    directionalLight = directionalLights[i];
-
-    // Shade using Lambert cosine law.
-    lightIntensity = saturate(dot(directionalLight.direction, normalEye));
-
-    #ifdef USE_SHADOWMAP
-      // Apply shadow map. For some reason we must address the map with a constant, not the index i.
-      if (i==0) {
-        shadow = getShadow(directionalShadowMap[0], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[0]);
-      }
-
-      #if NUM_DIR_LIGHTS > 1
-        else if (i==1) {
-          shadow = getShadow(directionalShadowMap[1], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[1]);
-        }
-      #endif
-    #endif
-
-    // Add to total intensity.
-    totalLightIntensity += lightIntensity * shadow;
-  }
+  #{LOI.Engine.Materials.ShaderChunks.totalLightIntensity}
 
   // Shade from ambient to full light based on intensity.
   float shadeFactor = mix(ambientLightColor.r, 1.0, totalLightIntensity);

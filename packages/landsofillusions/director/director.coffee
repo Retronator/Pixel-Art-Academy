@@ -43,5 +43,8 @@ class LOI.Director
 
   setPosition: (positions) ->
     for thingId, position of positions
-      # TODO: Place thing to appropriate place.
-      console.log "positioning", thingId
+      thing = LOI.adventure.getCurrentThing thingId
+      renderObject = thing.avatar.getRenderObject()
+
+      if _.isObject position
+        renderObject.position.copy position

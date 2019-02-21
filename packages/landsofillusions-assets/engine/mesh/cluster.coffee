@@ -90,7 +90,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
             color: THREE.Color.fromObject shades[paletteColor.shade]
 
         else
-          material = new LOI.Assets.Engine.Mesh.RampMaterial _.extend materialOptions, {shades, shadeIndex}
+          material = new LOI.Engine.Materials.RampMaterial _.extend materialOptions, {shades, shadeIndex}
 
       else if materialData.directColor
         material = new THREE.MeshLambertMaterial _.extend materialOptions,

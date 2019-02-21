@@ -16,6 +16,10 @@ class LOI.HumanAvatar extends LOI.Avatar
         dataLocation: new AM.Hierarchy.Location
           rootField: @options.outfitDataField
 
+    @dataReady = new ComputedField =>
+      # Human avatar has data ready when both body and outfit have a document in them.
+      @body.options.dataLocation.options.rootField.options.load()? and @outfit.options.dataLocation.options.rootField.options.load()?
+
   destroy: ->
     super arguments...
 
@@ -25,7 +29,7 @@ class LOI.HumanAvatar extends LOI.Avatar
   getRenderer: ->
     return @_renderer() if @_renderer
     
-    @_renderer = new ComputedField => 
+    @_renderer = new ComputedField =>
       @createRenderer()
     ,
       true

@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-class LOI.Engine.SpriteMaterial extends THREE.ShaderMaterial
+class LOI.Engine.Materials.SpriteMaterial extends THREE.ShaderMaterial
   # Create the modified Atari 2600 palette texture.
   @rampsCount = 16
   @shadesCount = 10
@@ -12,7 +12,7 @@ class LOI.Engine.SpriteMaterial extends THREE.ShaderMaterial
       return unless palette = LOI.palette()
       computation.stop()
 
-      SpriteMaterial = LOI.Engine.SpriteMaterial
+      SpriteMaterial = LOI.Engine.Materials.SpriteMaterial
 
       for ramp, rampIndex in palette.ramps
         for shade, shadeIndex in ramp.shades
@@ -33,7 +33,7 @@ class LOI.Engine.SpriteMaterial extends THREE.ShaderMaterial
 
       uniforms: _.extend
         palette:
-          value: LOI.Engine.SpriteMaterial.paletteTexture
+          value: LOI.Engine.Materials.SpriteMaterial.paletteTexture
         map:
           value: null
         normalMap:
@@ -47,14 +47,12 @@ class LOI.Engine.SpriteMaterial extends THREE.ShaderMaterial
 #include <shadowmap_pars_vertex>
 
 void main()	{
-  // Transform position.
-  vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-  gl_Position = projectionMatrix * viewMatrix * worldPosition;
-
   // Send through UV coordinates.
   vUv = uv;
 
-  // Compute shadow map.
+  #include <begin_vertex>
+	#include <project_vertex>
+  #include <worldpos_vertex>
 	#include <shadowmap_vertex>
 }
 """
@@ -78,36 +76,9 @@ void main()	{
 
   vec3 normal = texture2D(normalMap, vUv).xyz;
   normal = (normal - 0.5) * 2.0;
-  vec3 normalEye = normalize((modelViewMatrix * vec4(normal, 0.0)).xyz);
+  vec3 vNormal = normalize((modelViewMatrix * vec4(normal, 0.0)).xyz);
 
-  // Accumulate directional lights.
-  float totalLightIntensity = 0.0;
-
-  DirectionalLight directionalLight;
-  float lightIntensity;
-  float shadow = 1.0;
-
-  for (int i = 0; i < NUM_DIR_LIGHTS; i++) {
-    directionalLight = directionalLights[i];
-
-    // Shade using Lambert cosine law.
-    lightIntensity = saturate(dot(directionalLight.direction, normalEye));
-
-    #ifdef USE_SHADOWMAP
-      // Apply shadow map. For some reason we must address the map with a constant, not the index i.
-      if (i==0) {
-        shadow = getShadow(directionalShadowMap[0], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[0]);
-      }
-      #if NUM_DIR_LIGHTS > 1
-        else if (i==1) {
-          shadow = getShadow(directionalShadowMap[1], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[1]);
-        }
-      #endif
-    #endif
-
-    // Add to total intensity.
-    totalLightIntensity += lightIntensity * shadow;
-  }
+  #{LOI.Engine.Materials.ShaderChunks.totalLightIntensity}
 
   // Shade from ambient to full light based on intensity.
   float shadeFactor = mix(ambientLightColor.r, 1.0, totalLightIntensity);
@@ -122,8 +93,8 @@ void main()	{
   float bestColorDistance = 1000000.0;
   float secondBestColorDistance = 1000000.0;
 
-  for (int shadeIndex = 0; shadeIndex < #{LOI.Engine.SpriteMaterial.shadesCount}; shadeIndex++) {
-    shadeUv.g = float(shadeIndex) / #{LOI.Engine.SpriteMaterial.shadesCount}.0;
+  for (int shadeIndex = 0; shadeIndex < #{LOI.Engine.Materials.SpriteMaterial.shadesCount}; shadeIndex++) {
+    shadeUv.g = float(shadeIndex) / #{LOI.Engine.Materials.SpriteMaterial.shadesCount}.0;
     vec3 shade = texture2D(palette, shadeUv).rgb;
 
     // Measure distance to color. We intentionally use squared distance.

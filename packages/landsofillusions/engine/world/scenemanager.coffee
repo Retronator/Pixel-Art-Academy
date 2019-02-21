@@ -10,7 +10,24 @@ class LOI.Engine.World.SceneManager
     ambientLight = new THREE.AmbientLight 0xffffff, 0.4
     scene.add ambientLight
 
-    directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
+    directionalLight = new THREE.DirectionalLight 0xffffff, 0.4
+
+    directionalLight.castShadow = true
+    d = 20
+    directionalLight.shadow.camera.left = -d
+    directionalLight.shadow.camera.right = d
+    directionalLight.shadow.camera.top = d
+    directionalLight.shadow.camera.bottom = -d
+    directionalLight.shadow.camera.near = 0.5
+    directionalLight.shadow.camera.far = 5
+    directionalLight.shadow.mapSize.width = 4096
+    directionalLight.shadow.mapSize.height = 4096
+    directionalLight.shadow.bias = -0.01
+
+    directionalLight.position.set 0, 4, 0.5
+    scene.add directionalLight
+
+    directionalLight = new THREE.DirectionalLight 0xffffff, 1.2
 
     directionalLight.castShadow = true
     d = 20
@@ -24,9 +41,7 @@ class LOI.Engine.World.SceneManager
     directionalLight.shadow.mapSize.height = 4096
     directionalLight.shadow.bias = -0.0001
 
-    @directionalLight = directionalLight
-    @setLightDirection -1, -1, -1
-
+    directionalLight.position.set 100, 100, 100
     scene.add directionalLight
 
     # Add location mesh.
@@ -34,7 +49,7 @@ class LOI.Engine.World.SceneManager
     @_currentIllustrationName = null
     
     @world.autorun (computation) =>
-      illustration = LOI.adventure.currentLocation()?.illustration()
+      illustration = LOI.adventure.currentSituation()?.illustration()
       return unless illustrationName = illustration?.name
 
       LOI.Assets.Asset.forName.subscribe LOI.Assets.Mesh.className, illustrationName
@@ -99,7 +114,3 @@ class LOI.Engine.World.SceneManager
 
   destroy: ->
     @locationThings.stop()
-    
-  setLightDirection: (x, y, z) ->
-    @directionalLight.position.set(x, y, z).normalize().multiplyScalar(-100)
-    @directionalLight.lookAt 0, 0, 0

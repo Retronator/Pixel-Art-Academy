@@ -66,7 +66,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         playbackFPS: 8
         castShadow: true
         receiveShadow: true
-        material: new LOI.Engine.SpriteMaterial
+        material: new LOI.Engine.Materials.SpriteMaterial
 
       animatedMesh.blendTime 0.2
       animatedMesh.currentAnimationName 'Idle'
@@ -80,8 +80,6 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       animatedMesh.position.y = -bodyBottom[sideIndex] * scale
       animatedMesh.scale.x *= -1 if sideAngle < 0
       animatedMesh.visible = false unless side is @currentSide
-
-      @add animatedMesh
 
       @animatedMeshes[side] = animatedMesh
 
@@ -97,14 +95,28 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     normalContext = normalCanvas.getContext '2d'
 
     @_textureUpdateAutorun = Tracker.autorun (computation) =>
+      return unless @humanAvatar.dataReady()
+
       # Render palette color map.
       textureContext.setTransform 1, 0, 0, 1, 0, 0
       textureContext.clearRect 0, 0, textureCanvas.width, textureCanvas.height
 
       textureContext.save()
 
+      textureRenderers = {}
+      allRenderersReady = true
+
       for side, sideIndex in @textureSides
-        continue unless renderer = @textureRenderers[side]()
+        textureRenderers[side] = @textureRenderers[side]()
+
+        unless textureRenderers[side]?.ready()
+          allRenderersReady = false
+          break
+
+      return unless allRenderersReady
+
+      for side, sideIndex in @textureSides
+        renderer = textureRenderers[side]
 
         renderer.drawToContext textureContext, _.extend
           rootPart: renderer.options.part
@@ -127,7 +139,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       normalContext.save()
 
       for side, sideIndex in @textureSides
-        continue unless renderer = @textureRenderers[side]()
+        renderer = textureRenderers[side]
 
         renderer.drawToContext normalContext, _.extend
           rootPart: renderer.options.part
@@ -167,7 +179,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       debugContext.lineWidth = 1 / debugScale
 
       for side, sideIndex in @textureSides
-        continue unless renderer = @textureRenderers[side]()
+        renderer = textureRenderers[side]
 
         debugContext.setTransform debugScale, 0, 0, debugScale, 100 * sideIndex * debugScale, 0
 
@@ -217,6 +229,13 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
                 debugContext.stroke()
 
       @debugTextureDataUrl debugCanvas.toDataURL()
+
+      unless @_textureRendered
+        @_textureRendered = true
+
+        # Add all animated meshes to the object.
+        for side, sideAngle of LOI.Engine.RenderingSides.angles
+          @add @animatedMeshes[side]
 
   destroy: ->
     super arguments...
