@@ -44,3 +44,5 @@ class LOI.Assets.AudioEditor.AdventureView.Adventure extends AM.Component
         @currentLocation()?.illustration()
 
     @currentLocationThings = => []
+
+    @isGameStateEmpty = => false

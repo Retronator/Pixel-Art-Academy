@@ -5,7 +5,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.AudioEditor.AdventureView.LocationSelect extends AM.DataInputComponent
-  @register 'LOI.Assets.AudioEditor.AdventureView.LocationSelect'
+  @register 'LandsOfIllusions.Assets.AudioEditor.AdventureView.LocationSelect'
 
   constructor: ->
     super arguments...
@@ -37,7 +37,7 @@ class LOI.Assets.AudioEditor.AdventureView.LocationSelect extends AM.DataInputCo
     options
 
   load: ->
-    @activeFileData().get 'locationId'
+    @adventureView.activeFileData().get 'locationId'
 
   save: (value) ->
-    @activeFileData().set 'locationId', value
+    @adventureView.activeFileData().set 'locationId', value

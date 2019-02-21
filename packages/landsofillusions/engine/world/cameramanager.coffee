@@ -90,4 +90,4 @@ class LOI.Engine.World.CameraManager
           @cameraAngle cameraAngle
 
   getRaycaster: (screenPoint) ->
-    @cameraAngle().getRaycaster screenPoint
+    @cameraAngle()?.getRaycaster screenPoint
