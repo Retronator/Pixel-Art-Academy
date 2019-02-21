@@ -3,7 +3,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.AssetsList extends AM.Component
-  @register 'LandsOfIllusions.Assets.Components.AssetsList'
+  @id: -> 'LandsOfIllusions.Assets.Components.AssetsList'
+  @register @id()
 
   constructor: (@options) ->
     super arguments...

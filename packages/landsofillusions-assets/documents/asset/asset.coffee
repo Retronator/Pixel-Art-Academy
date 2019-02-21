@@ -5,8 +5,8 @@ RA = Retronator.Accounts
 
 class LOI.Assets.Asset extends LOI.Assets.Asset
   @id: -> 'LandsOfIllusions.Assets.Asset'
-  # name: text identifier for the audio composition
-  # history: array of operations that produce this audio
+  # name: text identifier for the asset including the path
+  # history: array of operations that produce this asset
   #   forward: update delta that creates the result of the operation
   #   backward: update delta that undoes the operation from the resulting state
   # historyPosition: how many steps of history brings you to the current state of the asset
@@ -33,7 +33,8 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   # Subscriptions
 
   @forId: @subscription 'forId'
-  @forIdFull: @subscription 'forIdFull'
+  @forIdsFull: @subscription 'forIdsFull'
+  @forName: @subscription 'forName'
   @all: @subscription 'all'
 
   # Helper methods
@@ -96,6 +97,51 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
     modifier.$push.history =
       $position: historyPosition
       $each: [EJSON.stringify {forward, backward}]
+      $slice: historyPosition + 1
+
+    modifier.$set ?= {}
+    modifier.$set.historyPosition = historyPosition + 1
+
+    @constructor.documents.update @_id, modifier
+
+  _getLastHistory: ->
+    return unless @historyPosition
+    return unless @history?[@historyPosition - 1]
+
+    EJSON.parse @history[@historyPosition - 1]
+
+  _applyOperationAndConnectHistory: (forward, backward) ->
+    # Mark the forward action of last history to be connected.
+    lastHistory = @_getLastHistory()
+    lastHistory.forward.connected = true
+
+    @constructor.documents.update @_id,
+      $set:
+        "history.#{@historyPosition - 1}": EJSON.stringify lastHistory
+
+    # Mark the backward action of the history to be connected.
+    backward.connected = true
+
+    @_applyOperation arguments...
+
+  _applyOperationAndCombineHistory: (forward, combinedForward, combinedBackward) ->
+    # Update last edit time.
+    combinedForward.$set.lastEditTime = new Date()
+
+    # Create the update modifier.
+    modifier = _.cloneDeep forward
+
+    # Replace history step.
+    historyPosition = @historyPosition - 1
+
+    modifier.$push ?= {}
+    modifier.$push.history =
+      $position: historyPosition
+      $each: [
+        EJSON.stringify
+          forward: combinedForward
+          backward: combinedBackward
+      ]
       $slice: historyPosition + 1
 
     modifier.$set ?= {}

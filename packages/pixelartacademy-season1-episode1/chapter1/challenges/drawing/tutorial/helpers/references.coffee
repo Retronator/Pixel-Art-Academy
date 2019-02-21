@@ -14,7 +14,10 @@ class C1.Challenges.Drawing.Tutorial.Helpers.References extends PAA.Practice.Cha
     """
 
   @fixedDimensions: -> width: 7, height: 16
-  @restrictedPaletteName: -> LOI.Assets.Palette.SystemPaletteNames.black
+  @customPalette: ->
+    ramps: [
+      shades: [r: 0.95, g: 0.30, b: 0.5]
+    ]
 
   @bitmapString: -> "" # Empty sprite
 

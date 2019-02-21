@@ -3,7 +3,7 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class HQ.Actors.Alexandra extends LOI.Adventure.Thing
+class HQ.Actors.Alexandra extends LOI.Character.Actor
   @id: -> 'Retronator.HQ.Actors.Alexandra'
   @fullName: -> "Alexandra Hood"
   @shortName: -> "Alexandra"
@@ -12,5 +12,7 @@ class HQ.Actors.Alexandra extends LOI.Adventure.Thing
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.olive
     shade: LOI.Assets.Palette.Atari2600.characterShades.darker
+
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/alexandra.json'
 
   @initialize()

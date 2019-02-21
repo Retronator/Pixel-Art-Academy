@@ -15,7 +15,7 @@ class HQ.Store.Counter extends LOI.Adventure.Context
 
   @version: -> '0.0.1'
 
-  @illustrationHeight: -> 240
+  @illustration: -> height: 240
 
   @initialize()
 

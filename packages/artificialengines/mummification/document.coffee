@@ -4,6 +4,11 @@ AM = Artificial.Mummification
 
 # Extended PeerDB document with common operations.
 class AM.Document extends Document
+  @_documentClassesById = {}
+
+  @getClassForId: (id) ->
+    @_documentClassesById[id]
+
   @Meta: (meta) ->
     super arguments...
 
@@ -11,6 +16,9 @@ class AM.Document extends Document
     @_documentClasses = {}
 
     return if meta.abstract
+
+    # This enables retrieval of all document classes in general.
+    @_documentClassesById[meta.name] = @
 
     # Referrers are incoming references from other documents.
     @referrers = []

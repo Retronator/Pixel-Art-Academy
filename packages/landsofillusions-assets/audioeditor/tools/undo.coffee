@@ -1,19 +1,21 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.AudioEditor.Tools.Undo extends LandsOfIllusions.Assets.Tools.Tool
-  constructor: ->
+class LOI.Assets.AudioEditor.Tools.Undo extends FM.Tool
+  constructor: (@options) ->
     super arguments...
 
-    @name = "Undo"
-    @shortcut = AC.Keys.z
-    @shortcutCommandOrCtrl = true
+    @caption = "Undo"
+    @shortcut =
+      commandOrControl: true
+      key: AC.Keys.z
 
-  toolClass: ->
+  enabled: ->
     return unless audioData = @options.editor().audioData()
-    'enabled' if audioData.historyPosition
+    audioData.historyPosition
 
-  method: ->
+  execute: ->
     audioData = @options.editor().audioData()
     return unless audioData.historyPosition
 

@@ -27,7 +27,7 @@ class LOI.Assets.AudioEditor extends AM.Component
     @audioData = new ComputedField =>
       return unless audioId = @audioId()
 
-      LOI.Assets.Asset.forIdFull.subscribe LOI.Assets.Audio.className, audioId
+      LOI.Assets.Asset.forId.subscribe LOI.Assets.Audio.className, audioId
       LOI.Assets.Audio.documents.findOne audioId
       
     @activeTool = new ReactiveField null

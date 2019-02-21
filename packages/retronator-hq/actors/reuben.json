@@ -1,0 +1,405 @@
+{
+  "_id": "Retronator.HQ.Actors.Reuben",
+  "avatar": {
+    "body": {
+      "node": {
+        "fields": {
+          "head": {
+            "node": {
+              "fields": {
+                "shape": {
+                  "templateId": "i7hjzpmyGPBtxgQJa"
+                },
+                "eyes": {
+                  "templateId": "F8dcQeT4nqa7MWc3a"
+                },
+                "hair": {
+                  "node": {
+                    "fields": {
+                      "0": {
+                        "type": "Avatar.Body.Hair",
+                        "node": {
+                          "fields": {
+                            "color": {
+                              "node": {
+                                "fields": {
+                                  "hue": {
+                                    "value": 15
+                                  },
+                                  "shade": {
+                                    "value": 3
+                                  }
+                                }
+                              }
+                            },
+                            "shapes": {
+                              "node": {
+                                "fields": {
+                                  "0": {
+                                    "templateId": "Q8cWtGFN3pLazXdpo",
+                                    "type": "Avatar.Body.HairShape"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "facialHair": {
+                  "node": {
+                    "fields": {
+                      "0": {
+                        "type": "Avatar.Body.FacialHair",
+                        "node": {
+                          "fields": {
+                            "color": {
+                              "node": {
+                                "fields": {
+                                  "hue": {
+                                    "value": 15
+                                  },
+                                  "shade": {
+                                    "value": 3
+                                  }
+                                }
+                              }
+                            },
+                            "shapes": {
+                              "node": {
+                                "fields": {
+                                  "0": {
+                                    "templateId": "ueE5J89P6eC98gpaC",
+                                    "type": "Avatar.Body.FacialHairShape"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "legs": {
+            "templateId": "6iQW2T2tHGkeSd8om"
+          },
+          "skin": {
+            "node": {
+              "fields": {
+                "hue": {
+                  "value": 3
+                },
+                "shade": {
+                  "value": 7
+                }
+              }
+            }
+          },
+          "arms": {
+            "templateId": "7xjZxMuokHKgCsBLX"
+          },
+          "torso": {
+            "node": {
+              "fields": {
+                "groin": {
+                  "templateId": "wBK5ydL4BfnShu7Rk"
+                },
+                "abdomen": {
+                  "templateId": "mJioY559vfEGohrG5"
+                },
+                "chest": {
+                  "templateId": "7RwsLqEJrCzQag7J3"
+                },
+                "neck": {
+                  "templateId": "4fwgybBqL8j8CRwK9"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "outfit": {
+      "node": {
+        "fields": {
+          "articles": {
+            "node": {
+              "fields": {
+                "0": {
+                  "node": {
+                    "fields": {
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 0
+                                        },
+                                        "shade": {
+                                          "value": 5
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      },
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "6": {
+                              "templateId": "uadYJZnm9Ns3fzpzr",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "7": {
+                              "templateId": "3vzBy9DtD8ZZPeiBq",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "8": {
+                              "templateId": "DqBMSA3G7s5Fqd7ck",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": "Avatar.Outfit.Article"
+                },
+                "2": {
+                  "node": {
+                    "fields": {
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "templateId": "SPvHy2qnWgsee6nYq",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            }
+                          }
+                        }
+                      },
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 0
+                                        },
+                                        "shade": {
+                                          "value": 2
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            },
+                            "1": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "secondary"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 0
+                                        },
+                                        "shade": {
+                                          "value": 7
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": "Avatar.Outfit.Article"
+                },
+                "3": {
+                  "node": {
+                    "fields": {
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "1": {
+                              "templateId": "LBzTxWov6QfQXz64A",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "2": {
+                              "templateId": "yHa5pyaPqGteAYzcF",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "3": {
+                              "templateId": "xvEi6qMJbehs5RsNP",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "4": {
+                              "templateId": "hm3pj7sgM9xirzFEc",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "5": {
+                              "templateId": "bwT3HuKeefhEf4pw3",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "6": {
+                              "templateId": "p2z7RSTrhSo4u2XuG",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "7": {
+                              "templateId": "GFTnghFMdGnrZJzL4",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            }
+                          }
+                        }
+                      },
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 10
+                                        },
+                                        "shade": {
+                                          "value": 6
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": "Avatar.Outfit.Article"
+                },
+                "4": {
+                  "node": {
+                    "fields": {
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 9
+                                        },
+                                        "shade": {
+                                          "value": 2
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            },
+                            "1": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "secondary"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 1
+                                        },
+                                        "shade": {
+                                          "value": 6
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      },
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "2": {
+                              "templateId": "DuhfwKmCzAM6M5Xe8",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "3": {
+                              "templateId": "oMpprFCQYGymfCn5F",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "4": {
+                              "templateId": "5uwF57Am86vmt35Qj",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": "Avatar.Outfit.Article"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -10,23 +10,26 @@ class LOI.Character.Part
     _.merge @Types, classes
           
   @allPartTypeIds: ->
+    _.flatten [
+      @getPartTypeIdsUnderType 'Avatar.Body'
+      'Avatar.Outfit'
+      @getPartTypeIdsUnderType 'Avatar.Outfit'
+      @getPartTypeIdsUnderType 'Behavior'
+    ]
+    
+  @getPartTypeIdsUnderType = (type) =>
     types = []
-  
-    addTypes = (type) =>
-      # Go over all the properties of the type and add all sub-types.
-      typeClass = _.nestedProperty LOI.Character.Part.Types, type
-  
-      for propertyName, property of typeClass.options.properties when property.options?.type?
-        templateType = property.options.templateType or property.options.type
-        type = property.options.type
-  
-        types.push templateType
-        addTypes type
-  
-    addTypes 'Avatar.Body'
-    addTypes 'Avatar.Outfit'
-    addTypes 'Behavior'
-  
+
+    # Go over all the properties of the type and add all sub-types.
+    typeClass = _.nestedProperty LOI.Character.Part.Types, type
+
+    for propertyName, property of typeClass.options.properties when property.options?.type?
+      templateType = property.options.templateType or property.options.type
+      type = property.options.type
+
+      types.push templateType
+      types.push @getPartTypeIdsUnderType(type)...
+      
     types
 
   # Helper to access Types with a nested string.
@@ -52,15 +55,8 @@ class LOI.Character.Part
         dataLocation: propertyDataLocation
         parent: @
 
-    # Create renderer for drawing this part's hierarchy.
-    @renderer = new ComputedField =>
-      @createRenderer()
-    ,
-      true
-
   destroy: ->
     property.destroy() for property in @properties
-    @renderer.stop()
 
   create: (options) ->
     # Set this part's type as template meta data.
@@ -90,3 +86,13 @@ class LOI.Character.Part
       parent = parent.options.parent
 
     parent
+
+  childPartOfType: (typeTemplateOrId) ->
+    targetType = typeTemplateOrId.options?.type or typeTemplateOrId
+    return @ if @options.type is targetType
+
+    for propertyName, property of @properties
+      child = property.childPartOfType typeTemplateOrId
+      return child if child
+      
+    null

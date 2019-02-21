@@ -5,10 +5,7 @@ LOI = LandsOfIllusions
 
 class LOI.Engine.World.AudioManager
   constructor: (@world) ->
-    @context = new (window.AudioContext or window.webkitAudioContext)
-    @context.suspend()
-
-    # Wait for user interaction before playing audio.
+    # Wait for user interaction before creating audio context.
     @contextValid = new ReactiveField false
     @waitForInteraction()
 
@@ -28,6 +25,7 @@ class LOI.Engine.World.AudioManager
 
     # Start and stop context based on enabled state.
     @world.autorun =>
+      return unless @contextValid()
       enabled = @enabled()
 
       if @context.state is 'suspended' and enabled
@@ -66,9 +64,14 @@ class LOI.Engine.World.AudioManager
 
   waitForInteraction: ->
     @contextValid false
-    
+
     $(document).on 'click.landsofillusions-engine-world-audiomanager', (event) =>
+      unless @context
+        @context = new (window.AudioContext or window.webkitAudioContext)
+        @context.suspend()
+
       @contextValid true
+
       $(document).off '.landsofillusions-engine-world-audiomanager'
 
   start: ->

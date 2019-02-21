@@ -1,19 +1,29 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.AudioEditor.Tools.Redo extends LandsOfIllusions.Assets.Tools.Tool
-  constructor: ->
+class LOI.Assets.AudioEditor.Tools.Redo extends FM.Tool
+  constructor: (@options) ->
     super arguments...
 
-    @name = "Redo"
-    @shortcut = AC.Keys.z
-    @shortcutCommandOrCtrl = true
-    @shortcutShift = true
+    @caption = "Redo"
 
-  toolClass: ->
+    if AM.ShortcutHelper.currentPlatformConvention is AM.ShortcutHelper.PlatformConventions.MacOS
+      @shortcut =
+        command: true
+        shift: true
+        key: AC.Keys.z
+
+    else
+      @shortcut =
+        control: true
+        key: AC.Keys.y
+
+  enabled: ->
     return unless audioData = @options.editor().audioData()
-    'enabled' if audioData.historyPosition < audioData.history?.length
+    audioData.historyPosition < audioData.history?.length
 
+  execute: ->
   method: ->
     audioData = @options.editor().audioData()
     return unless audioData.historyPosition < audioData.history?.length

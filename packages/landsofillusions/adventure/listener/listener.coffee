@@ -62,6 +62,9 @@ class LOI.Adventure.Listener
         scriptFile.promise
 
       Promise.all(scriptFilePromises).then (scriptFiles) =>
+        # Make sure listener was not already destroyed while we were loading files.
+        return if @_destroyed
+
         for scriptFile in scriptFiles
           # Add the loaded and translated script nodes to this location.
           _.extend @scripts, scriptFile.scripts
@@ -84,6 +87,8 @@ class LOI.Adventure.Listener
     @avatars = null
 
     @cleanup()
+
+    @_destroyed = true
 
   autorun: (handler) ->
     handle = Tracker.autorun handler

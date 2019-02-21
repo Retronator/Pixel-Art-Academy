@@ -32,34 +32,34 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
 
     @_journalsSubscriptionAutorun.stop()
 
-  startMainQuestionsWithPerson: (person) ->
-    @_prepareScriptForPerson person
+  startMainQuestionsWithAgent: (agent) ->
+    @_prepareScriptForAgent agent
 
     script = @listeners[0].script
     LOI.adventure.director.startScript script, label: 'MainQuestions'
 
-  _prepareScriptForPerson: (person) ->
+  _prepareScriptForAgent: (agent) ->
     script = @listeners[0].script
 
-    # Replace the person with target character.
-    script.setThings {person}
+    # Replace the agent with target character.
+    script.setThings {agent}
 
-    # Prepare an ephemeral object for this person (we need it to be unique for the current person).
-    ephemeralPeople = script.ephemeralState('people') or {}
-    ephemeralPeople[person._id] ?= {}
-    ephemeralPerson = ephemeralPeople[person._id]
+    # Prepare an ephemeral object for this agent (we need it to be unique for the current agent).
+    ephemeralAgents = script.ephemeralState('agents') or {}
+    ephemeralAgents[agent._id] ?= {}
+    ephemeralAgent = ephemeralAgents[agent._id]
 
     journals = PAA.Practice.Journal.documents.fetch
-      'character._id': person._id
+      'character._id': agent._id
     ,
       sort:
         order: 1
 
-    _.extend ephemeralPerson,
+    _.extend ephemeralAgent,
       journalIds: (journal._id for journal in journals)
 
-    script.ephemeralState 'people', ephemeralPeople
-    script.ephemeralState 'person', ephemeralPerson
+    script.ephemeralState 'agents', ephemeralAgents
+    script.ephemeralState 'agent', ephemeralAgent
 
   # Script
 
@@ -68,8 +68,8 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
       Journal: (complete) =>
         complete()
 
-        person = @ephemeralState 'person'
-        journalId = person.journalIds[0]
+        agent = @ephemeralState 'agent'
+        journalId = agent.journalIds[0]
 
         # Create the journal view context and enter it.
         context = new PAA.PixelBoy.Apps.Journal.JournalView.Context {journalId}
@@ -92,15 +92,15 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
     location = LOI.adventure.currentLocation()
     return unless location.region().id() in regionIds
     
-    people = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
+    agents = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Agent
     characterId = LOI.characterId()
 
     scene = @options.parent
 
-    for person in people when person._id isnt characterId
-      do (person) =>
+    for agent in agents when agent._id isnt characterId
+      do (agent) =>
         commandResponse.onPhrase
-          form: [Vocabulary.Keys.Verbs.TalkTo, person.avatar]
+          form: [Vocabulary.Keys.Verbs.TalkTo, agent.avatar]
           action: =>
-            scene._prepareScriptForPerson person
+            scene._prepareScriptForAgent agent
             @startScript()

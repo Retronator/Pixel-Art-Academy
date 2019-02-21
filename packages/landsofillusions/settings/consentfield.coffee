@@ -30,8 +30,7 @@ class LOI.Settings.ConsentField
     @decided true
 
   disallow: ->
-    @allowed false
-    @decided true
+    @allow false
 
   showDialog: (callback) ->
     dialog = new LOI.Components.Dialog

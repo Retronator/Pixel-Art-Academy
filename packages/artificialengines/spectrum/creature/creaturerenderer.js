@@ -127,7 +127,11 @@ CreatureRenderer.prototype.UpdateData = function()
 	set_vertices.needsUpdate = true;
 	for(var i = 0; i < target_creature.total_num_pts * 3; i++)
 	{
-		set_vertices.array[i] = target_creature.render_pts[i];
+    if (i % 3 == 2) {
+      set_vertices.array[i] = -target_creature.render_pts[i];
+    } else {
+      set_vertices.array[i] = target_creature.render_pts[i];
+    }
 	}
 	
 	// uvs

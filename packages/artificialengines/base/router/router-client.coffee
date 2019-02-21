@@ -172,13 +172,16 @@ class AB.Router extends AB.Router
         currentRoute.layoutClass.renderComponent parentComponent
 
   @onPathChange: ->
-    host = location.hostname
-    path = location.pathname
+    url = new URL location
+
+    host = url.hostname
+    path = url.pathname
+    searchParameters = url.searchParams
 
     {route, matchData} = @findRoute host, path
 
     if matchData
-      currentRouteData = _.extend {route, path, host}, matchData
+      currentRouteData = _.extend {route, path, host, searchParameters}, matchData
       @currentRouteData currentRouteData
 
     else

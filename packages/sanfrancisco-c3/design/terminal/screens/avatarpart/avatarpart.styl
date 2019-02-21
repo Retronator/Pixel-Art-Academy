@@ -56,9 +56,13 @@
 
       .property
         position relative
+        z-index 1
         display inline-block
         vertical-align top
         margin 0 4rem 4rem 0
+
+        &:hover
+          z-index 2
 
         &::after
           content ''

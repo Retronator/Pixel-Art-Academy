@@ -13,11 +13,13 @@ Package.describe({
 Npm.depends({
   'pngjs': '2.3.0',
   'delaunator': '3.0.2',
-  'bresenham-zingl': '0.1.1'
+  'bresenham-zingl': '0.1.1',
+  'pako': '1.0.8'
 });
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('retronator:fatamorgana');
   api.use('edgee:slingshot');
   api.use('froatsnook:request');
 
@@ -28,7 +30,6 @@ Package.onUse(function(api) {
 
   api.addFile('assets');
 
-  api.addStyle('style/editor');
   api.addComponent('layout/layout');
 
   // Documents
@@ -62,15 +63,50 @@ Package.onUse(function(api) {
   api.addServerFile('documents/sprite/subscriptions');
   api.addServerFile('documents/sprite/server');
   api.addFile('documents/sprite/methods..');
-  api.addFile('documents/sprite/methods/addpixel');
-  api.addFile('documents/sprite/methods/removepixel');
+  api.addFile('documents/sprite/methods/addpixels');
+  api.addFile('documents/sprite/methods/removepixels');
   api.addFile('documents/sprite/methods/colorfill');
   api.addFile('documents/sprite/methods/replacepixels');
+  api.addFile('documents/sprite/methods/transformpixels');
+  api.addFile('documents/sprite/methods/layers');
 
   api.addFile('documents/mesh..');
+  api.addFile('documents/mesh/methods');
+  api.addFile('documents/mesh/valuefield');
+  api.addFile('documents/mesh/arrayfield');
+  api.addFile('documents/mesh/mapfield');
   api.addFile('documents/mesh/cameraangle');
-  api.addServerFile('documents/mesh/subscriptions');
-  api.addFile('documents/mesh/methods..');
+
+  api.addFile('documents/mesh/object..');
+
+  api.addFile('documents/mesh/object/layer..');
+  api.addFile('documents/mesh/object/layer/cluster');
+
+  api.addFile('documents/mesh/object/layer/picture..');
+  api.addFile('documents/mesh/object/layer/picture/picture-clearpixels');
+  api.addFile('documents/mesh/object/layer/picture/picture-setpixels');
+  api.addFile('documents/mesh/object/layer/picture/picture-recomputeclusters');
+  api.addFile('documents/mesh/object/layer/picture/picture-detectclusters');
+  api.addFile('documents/mesh/object/layer/picture/picture-matchdetectedclusters');
+  api.addFile('documents/mesh/object/layer/picture/cluster');
+
+  api.addFile('documents/mesh/object/layer/picture/map..');
+  api.addFile('documents/mesh/object/layer/picture/map/flags');
+  api.addFile('documents/mesh/object/layer/picture/map/materialindex');
+  api.addFile('documents/mesh/object/layer/picture/map/palettecolor');
+  api.addFile('documents/mesh/object/layer/picture/map/directcolor');
+  api.addFile('documents/mesh/object/layer/picture/map/alpha');
+  api.addFile('documents/mesh/object/layer/picture/map/normal');
+  api.addFile('documents/mesh/object/layer/picture/map/clusterid');
+
+  api.addFile('documents/mesh/object/solver..');
+  api.addFile('documents/mesh/object/solver/polyhedron..');
+  api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-computeclustermeshes');
+  api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-computeclusterplanes');
+  api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-computeedges');
+  api.addFile('documents/mesh/object/solver/polyhedron/polyhedron-projectclusterpoints');
+  api.addFile('documents/mesh/object/solver/polyhedron/cluster');
+  api.addFile('documents/mesh/object/solver/polyhedron/edge');
 
   api.addFile('documents/audio..');
   api.addServerFile('documents/audio/subscriptions');
@@ -86,11 +122,6 @@ Package.onUse(function(api) {
   api.addFile('upload/context..');
   api.addServerFile('upload/context/server');
   api.addClientFile('upload/context/client');
-  
-  // Tools
-
-  api.addFile('tools/tools');
-  api.addFile('tools/tool');
 
   // Components
 
@@ -100,17 +131,11 @@ Package.onUse(function(api) {
   api.addUnstyledComponent('components/assetinfo..');
   api.addUnstyledComponent('components/navigator..');
   api.addUnstyledComponent('components/palette..');
-  api.addUnstyledComponent('components/materials..');
-  api.addUnstyledComponent('components/landmarks..');
-  api.addUnstyledComponent('components/toolbox..');
   api.addUnstyledComponent('components/spriteimage..');
-  api.addUnstyledComponent('components/camera..');
+  api.addUnstyledComponent('components/toolbox..');
 
   api.addUnstyledComponent('components/references..');
   api.addUnstyledComponent('components/references/reference..');
-
-  api.addUnstyledComponent('components/shadingsphere..');
-  api.addFile('components/shadingsphere/normalpicker');
 
   api.addUnstyledComponent('components/pixelcanvas..');
   api.addFile('components/pixelcanvas/mouse');
@@ -118,20 +143,25 @@ Package.onUse(function(api) {
   api.addFile('components/pixelcanvas/cursor');
   api.addFile('components/pixelcanvas/camera');
 
+  api.addFile('components/tools..');
+  api.addFile('components/tools/tool');
+  api.addFile('components/tools/pencil');
+  api.addFile('components/tools/eraser');
+  api.addFile('components/tools/colorfill');
+  api.addFile('components/tools/colorpicker');
+  api.addFile('components/tools/undo');
+  api.addFile('components/tools/redo');
+
   // Engine
 
   api.addFile('engine..');
-  api.addFile('engine/sprite');
+
+  api.addFile('engine/sprite..');
 
   api.addFile('engine/mesh..');
+  api.addFile('engine/mesh/object');
+  api.addFile('engine/mesh/layer');
   api.addFile('engine/mesh/cluster');
-  api.addFile('engine/mesh/edge');
-  api.addFile('engine/mesh/detectclusters');
-  api.addFile('engine/mesh/computeedges');
-  api.addFile('engine/mesh/computeclusterplanes');
-  api.addFile('engine/mesh/projectclusterpoints');
-  api.addFile('engine/mesh/computeclustermeshes');
-  api.addFile('engine/mesh/rampmaterial');
 
   api.addFile('engine/audio..');
   api.addFile('engine/audio/node');
@@ -153,39 +183,149 @@ Package.onUse(function(api) {
   api.addFile('engine/audio/nodes/number');
   api.addFile('engine/audio/nodes/sustainvalue');
   api.addFile('engine/audio/nodes/adsr');
+  
+  // Editors
+  
+  api.addComponent('editor..');
+  api.addStyle('editor/editor-cursors');
+  api.addStyle('editor/editor-fatamorgana');
+
+  api.addFile('editor/tools..');
+  api.addFile('editor/tools/tool');
+  api.addFile('editor/tools/arrow');
+
+  api.addFile('editor/actions..');
+  api.addFile('editor/actions/assetaction');
+  api.addFile('editor/actions/showaction');
+  api.addFile('editor/actions/showhelperaction');
+  api.addFile('editor/actions/history');
+  api.addFile('editor/actions/new');
+  api.addFile('editor/actions/open');
+  api.addFile('editor/actions/delete');
+  api.addFile('editor/actions/duplicate');
+  api.addFile('editor/actions/clear');
+  api.addFile('editor/actions/close');
+  api.addFile('editor/actions/persisteditorsinterface');
+  api.addFile('editor/actions/resetinterface');
+
+  api.addFile('editor/helpers..');
+  api.addFile('editor/helpers/drawcomponent');
+
+  api.addComponent('editor/assetinfo..');
+  api.addComponent('editor/dialog..');
+  api.addComponent('editor/assetopendialog..');
+  api.addComponent('editor/window..');
+  api.addComponent('editor/materials..');
+
+  api.addComponent('editor/filemanager..');
+
+  api.addComponent('editor/filemanager/directory..');
+  api.addFile('editor/filemanager/directory/folder');
+  api.addFile('editor/filemanager/directory/newfolder');
+
+  api.addFile('editor/filemanager/previews..');
+  api.addComponent('editor/filemanager/previews/sprite..');
 
   // Sprite editor
 
-  api.addComponent('spriteeditor..');
+  api.addFile('spriteeditor..');
+  api.addFile('spriteeditor/spriteloader');
+
   api.addFile('spriteeditor/tools..');
+  api.addFile('spriteeditor/tools/tool');
+  api.addFile('spriteeditor/tools/stroke');
   api.addFile('spriteeditor/tools/pencil');
   api.addFile('spriteeditor/tools/eraser');
   api.addFile('spriteeditor/tools/colorpicker');
   api.addFile('spriteeditor/tools/colorfill');
-  api.addFile('spriteeditor/tools/paintnormals');
-  api.addFile('spriteeditor/tools/symmetry');
-  api.addFile('spriteeditor/tools/undo');
-  api.addFile('spriteeditor/tools/redo');
+  api.addFile('spriteeditor/tools/translate');
+  
+  api.addFile('spriteeditor/actions..');
+  api.addFile('spriteeditor/actions/paintnormals');
+  api.addFile('spriteeditor/actions/symmetry');
+  api.addFile('spriteeditor/actions/fliphorizontal');
+  api.addFile('spriteeditor/actions/zoom');
+  api.addFile('spriteeditor/actions/showpixelgrid');
+  api.addFile('spriteeditor/actions/showlandmarks');
+  api.addFile('spriteeditor/actions/showsafearea');
+  api.addFile('spriteeditor/actions/brushsize');
+
+  api.addFile('spriteeditor/helpers..');
+  api.addFile('spriteeditor/helpers/zoomlevels');
+  api.addFile('spriteeditor/helpers/landmarks');
+  api.addFile('spriteeditor/helpers/paint');
+  api.addFile('spriteeditor/helpers/lightdirection');
+  api.addFile('spriteeditor/helpers/safearea');
+  api.addFile('spriteeditor/helpers/brush');
+
+  api.addComponent('spriteeditor/navigator..');
+  api.addComponent('spriteeditor/palette..');
+  api.addComponent('spriteeditor/layers..');
+  api.addUnstyledComponent('spriteeditor/thumbnail..');
+  api.addComponent('spriteeditor/landmarks..');
+
+  api.addComponent('spriteeditor/pixelcanvas..');
+  api.addFile('spriteeditor/pixelcanvas/mouse');
+  api.addFile('spriteeditor/pixelcanvas/cursor');
+  api.addFile('spriteeditor/pixelcanvas/camera');
+  api.addFile('spriteeditor/pixelcanvas/landmarks');
+  api.addFile('spriteeditor/pixelcanvas/pixelgrid');
+  api.addFile('spriteeditor/pixelcanvas/operationpreview');
+  api.addFile('spriteeditor/pixelcanvas/toolinfo');
+
+  api.addComponent('spriteeditor/shadingsphere..');
+  api.addFile('spriteeditor/shadingsphere/normalpicker');
 
   // Mesh editor
 
-  api.addComponent('mesheditor..');
-  api.addFile('mesheditor/edges');
-  api.addFile('mesheditor/horizon');
-  api.addUnstyledComponent('mesheditor/cameraangles..');
-  api.addUnstyledComponent('mesheditor/meshcanvas..');
-  api.addFile('mesheditor/meshcanvas/renderer');
-  api.addFile('mesheditor/meshcanvas/scenemanager');
-  api.addFile('mesheditor/meshcanvas/grid');
-  api.addFile('mesheditor/meshcanvas/cameramanager');
+  api.addFile('mesheditor..');
+  api.addFile('mesheditor/meshloader');
+
   api.addFile('mesheditor/tools..');
-  api.addFile('mesheditor/tools/pixelgrid');
-  api.addFile('mesheditor/tools/planegrid');
-  api.addFile('mesheditor/tools/sourceimage');
-  api.addFile('mesheditor/tools/pixelimage');
+  api.addFile('mesheditor/tools/tool');
   api.addFile('mesheditor/tools/movecamera');
   api.addFile('mesheditor/tools/clusterpicker');
-  api.addFile('mesheditor/tools/debug');
+  api.addFile('mesheditor/tools/pencil');
+  api.addFile('mesheditor/tools/eraser');
+  api.addFile('mesheditor/tools/colorfill');
+
+  api.addFile('mesheditor/actions..');
+  api.addFile('mesheditor/actions/debugmode');
+  api.addFile('mesheditor/actions/showedges');
+  api.addFile('mesheditor/actions/showhorizon');
+  api.addFile('mesheditor/actions/showpixelrender');
+  api.addFile('mesheditor/actions/showplanegrid');
+  api.addFile('mesheditor/actions/showsourceimage');
+  api.addFile('mesheditor/actions/history');
+  api.addFile('mesheditor/actions/save');
+  api.addFile('mesheditor/actions/shadowsenabled');
+
+  api.addFile('mesheditor/helpers..');
+  api.addFile('mesheditor/helpers/currentcluster');
+  api.addFile('mesheditor/helpers/scene');
+  api.addFile('mesheditor/helpers/selection');
+  api.addFile('mesheditor/helpers/shadowsenabled');
+  api.addFile('mesheditor/helpers/landmarks');
+
+  api.addUnstyledComponent('mesheditor/camera..');
+  api.addComponent('mesheditor/cameraangles..');
+  api.addComponent('mesheditor/objects..');
+  api.addComponent('mesheditor/layers..');
+  api.addComponent('mesheditor/landmarks..');
+
+  api.addComponent('mesheditor/cameraangle..');
+  api.addUnstyledComponent('mesheditor/cameraangle/selectspritedialog..');
+
+  api.addComponent('mesheditor/meshcanvas..');
+  api.addFile('mesheditor/meshcanvas/edges');
+  api.addFile('mesheditor/meshcanvas/horizon');
+  api.addFile('mesheditor/meshcanvas/planegrid');
+
+  api.addFile('mesheditor/meshcanvas/renderer..');
+  api.addFile('mesheditor/meshcanvas/renderer/cameramanager');
+  api.addFile('mesheditor/meshcanvas/renderer/pixelrender');
+  api.addFile('mesheditor/meshcanvas/renderer/sourceimage..');
+  api.addFile('mesheditor/meshcanvas/renderer/sourceimage/material');
 
   // Audio editor
 

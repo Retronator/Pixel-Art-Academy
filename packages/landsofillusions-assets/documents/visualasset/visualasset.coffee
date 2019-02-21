@@ -44,7 +44,10 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
 
   @updatePalette: @method 'updatePalette'
   @updateMaterial: @method 'updateMaterial'
+
   @updateLandmark: @method 'updateLandmark'
+  @reorderLandmark: @method 'reorderLandmark'
+  @removeLandmark: @method 'removeLandmark'
 
   @addReferenceByUrl: @method 'addReferenceByUrl'
   @updateReferenceScale: @method 'updateReferenceScale'
@@ -64,5 +67,20 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
       @bounds.width = @bounds.right - @bounds.left + 1
       @bounds.height = @bounds.bottom - @bounds.top + 1
 
-  getLandmarkForName: (name) ->
-    _.find @landmarks, (landmark) -> landmark.name is name
+  getLandmarkForName: (name, flipped) ->
+    if flipped
+      originalName = name
+      name = name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
+
+    landmark = _.find @landmarks, (landmark) -> landmark.name is name
+
+    if landmark and flipped
+      landmark = _.extend {}, landmark,
+        x: -landmark.x
+        name: originalName
+
+    else
+      landmark
+      
+  clear: ->
+    @constructor.clear @_id

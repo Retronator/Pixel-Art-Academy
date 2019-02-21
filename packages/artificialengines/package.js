@@ -73,6 +73,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/three..');
   api.addFile('everywhere/three/color');
   api.addFile('everywhere/three/vectors');
+  api.addFile('everywhere/three/matrices');
 
   api.addFile('everywhere/lodash/lettercase');
   api.addFile('everywhere/lodash/nestedproperty');
@@ -112,9 +113,10 @@ Package.onUse(function(api) {
 	api.addComponent('mirage/display');
   api.addStyleImport('mirage/helpers');
   api.addFile('mirage/htmlhelper');
-  api.addUnstyledComponent('mirage/render');
-  api.addClientFile('mirage/window');
   api.addUnstyledComponent('mirage/pixelimage');
+  api.addUnstyledComponent('mirage/render');
+  api.addFile('mirage/shortcuthelper');
+  api.addClientFile('mirage/window');
 
   api.addUnstyledComponent('mirage/markdown..');
 
@@ -124,6 +126,7 @@ Package.onUse(function(api) {
   api.addFile('mirage/spacebars/htmlhelpers');
   api.addFile('mirage/spacebars/image');
   api.addFile('mirage/spacebars/uncached');
+  api.addFile('mirage/spacebars/debughelpers');
 
   api.addFile('mirage/mixins/autoresizetextarea');
   api.addFile('mirage/mixins/autoselectinput');
@@ -228,6 +231,7 @@ Package.onUse(function(api) {
   api.addFile('spectrum..');
   api.addFile('spectrum/renderobject');
   api.addFile('spectrum/animatedmesh');
+  api.addFile('spectrum/imagedatahelpers');
 
   api.addClientJavascript('spectrum/creature/glmatrix');
   api.addClientJavascript('spectrum/creature/creaturemeshbone');
@@ -235,6 +239,9 @@ Package.onUse(function(api) {
 
   api.addFile('spectrum/hqx..');
   api.addJavascript('spectrum/hqx..');
+
+  api.addFile('spectrum/glsl..');
+  api.addFile('spectrum/glsl/hsl2rgb');
 
   // Artificial Echo
   

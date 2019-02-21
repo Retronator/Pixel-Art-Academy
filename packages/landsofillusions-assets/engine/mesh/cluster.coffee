@@ -1,114 +1,53 @@
 LOI = LandsOfIllusions
 
-class LOI.Assets.Engine.Mesh.Cluster
-  @PointTypes:
-    Pixel: 0
-    Edge: 1
-    Void: 2
-    Extra: 3
+class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
+  constructor: (@layer, @clusterData) ->
+    super arguments...
 
-  @PointTypeColors: [
-    [176 / 255, 60 / 255, 60 / 255]
-    [188 / 255, 140 / 255, 76 / 255]
-    [108 / 255, 108 / 255, 108 / 255]
-    [160 / 255, 160 / 255, 52 / 255]
-  ]
+    @geometry = new ComputedField => @_generateGeometry()
+    @material = new ComputedField => @_generateMaterial()
+    @mesh = new ComputedField => @_generateMesh()
+    
+    # Update scene.
+    Tracker.autorun (computation) =>
+      # Clean up previous children.
+      @remove @children[0] while @children.length
 
-  constructor: (@index) ->
-    @pixels = []
-    @edges = []
+      # Add the new mesh.
+      if mesh = @mesh()
+        @add mesh
 
-    @plane =
-      point: null
-      normal: null
-      matrix: null
-      matrixInverse: null
-      
-    @points = []
-    @indices = []
+      @layer.object.mesh.options.sceneManager.scene.updated()
 
-  getPlane: ->
-    new THREE.Plane().setFromNormalAndCoplanarPoint @plane.normal, @plane.point
-
-  process: ->
-    @plane.normal = THREE.Vector3.fromObject @pixels[0].normal
-
-  findPixelAtCoordinate: (x, y) ->
-    x = Math.floor x
-    y = Math.floor y
-
-    _.find @pixels, (pixel) => pixel.x is x and pixel.y is y
-
-  getPoints: (options) ->
-    elementsPerVertex = 3
-    verticesArray = new Float32Array @points.length * elementsPerVertex
-    colorsArray = new Float32Array @points.length * elementsPerVertex
-
-    meshData = options.meshData()
-    palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
-    paletteColor = @pixels[0].paletteColor
-    color = palette.ramps[paletteColor.ramp].shades[paletteColor.shade]
-
-    for point, index in @points
-      verticesArray[index * elementsPerVertex] = point.vertex.x
-      verticesArray[index * elementsPerVertex + 1] = point.vertex.y
-      verticesArray[index * elementsPerVertex + 2] = point.vertex.z
-
-      if point.type is @constructor.PointTypes.Pixel
-        colorsArray[index * elementsPerVertex] = color.r
-        colorsArray[index * elementsPerVertex + 1] = color.g
-        colorsArray[index * elementsPerVertex + 2] = color.b
-
-      else
-        for offset in [0..2]
-          colorsArray[index * elementsPerVertex + offset] = @constructor.PointTypeColors[point.type][offset]
+  _generateGeometry: ->
+    return unless geometryData = @clusterData.geometry()
 
     geometry = new THREE.BufferGeometry
-    geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
-    geometry.addAttribute 'color', new THREE.BufferAttribute colorsArray, elementsPerVertex
+    geometry.addAttribute 'position', new THREE.BufferAttribute geometryData.vertices, 3
+    geometry.addAttribute 'normal', new THREE.BufferAttribute geometryData.normals, 3
+    geometry.setIndex new THREE.BufferAttribute geometryData.indices, 1
 
-    material = new THREE.PointsMaterial
-      size: 5
-      vertexColors: THREE.VertexColors
-      sizeAttenuation: false
+    geometry
 
-    new THREE.Points geometry, material
+  _generateMaterial: ->
+    meshData = @clusterData.layer.object.mesh
+    return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
 
-  getMesh: (options) ->
-    elementsPerVertex = 3
-    verticesArray = new Float32Array @points.length * elementsPerVertex
-    normalsArray = new Float32Array @points.length * elementsPerVertex
-
-    for point, index in @points
-      verticesArray[index * elementsPerVertex] = point.vertex.x
-      verticesArray[index * elementsPerVertex + 1] = point.vertex.y
-      verticesArray[index * elementsPerVertex + 2] = point.vertex.z
-
-      normalsArray[index * elementsPerVertex] = @plane.normal.x
-      normalsArray[index * elementsPerVertex + 1] = @plane.normal.y
-      normalsArray[index * elementsPerVertex + 2] = @plane.normal.z
-
-    geometry = new THREE.BufferGeometry
-    geometry.addAttribute 'position', new THREE.BufferAttribute verticesArray, elementsPerVertex
-    geometry.addAttribute 'normal', new THREE.BufferAttribute normalsArray, elementsPerVertex
-    geometry.setIndex @indices
-
-    # Determine the color.
-    return unless meshData = options.meshData()
-    palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
-    pixel = @pixels[0]
+    options = @layer.object.mesh.options
     materialsData = options.materialsData?()
     visualizeNormals = options.visualizeNormals?()
 
-    material = null
-    
     materialOptions =
-      wireframe: options.debug()
+      wireframe: options.debug?() or false
+
+    # Determine the color.
+    materialData = @clusterData.material()
+    material = null
 
     if visualizeNormals
       # Visualized normals mode.
-      if pixel.normal
-        normal = new THREE.Vector3 pixel.normal.x, pixel.normal.y, pixel.normal.z
+      if materialData.normal
+        normal = new THREE.Vector3 materialData.normal.x, materialData.normal.y, materialData.normal.z
         backward = new THREE.Vector3 0, 0, 1
 
         horizontalAngle = Math.atan2(normal.y, normal.x) + Math.PI
@@ -129,8 +68,8 @@ class LOI.Assets.Engine.Mesh.Cluster
       paletteColor = null
 
       # Normal color mode.
-      if pixel.materialIndex?
-        material = options.meshData.materials[pixel.materialIndex]
+      if materialData.materialIndex?
+        material = meshData.materials[materialData.materialIndex]
 
         paletteColor = _.clone material
 
@@ -139,11 +78,11 @@ class LOI.Assets.Engine.Mesh.Cluster
           for key, value of materialData
             paletteColor[key] = value if value?
 
-      else if pixel.paletteColor
-        paletteColor = pixel.paletteColor
+      else if materialData.paletteColor
+        paletteColor = materialData.paletteColor
 
-      if paletteColor
-        shades = palette.ramps[paletteColor.ramp].shades
+      if paletteColor and palette.ramps[paletteColor.ramp]
+        shades = palette.ramps[paletteColor.ramp]?.shades
         shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
 
         if materialOptions.wireframe
@@ -151,16 +90,27 @@ class LOI.Assets.Engine.Mesh.Cluster
             color: THREE.Color.fromObject shades[paletteColor.shade]
 
         else
-          material = new LOI.Assets.Engine.Mesh.RampMaterial _.extend materialOptions, {shades, shadeIndex}
+          material = new LOI.Engine.Materials.RampMaterial _.extend materialOptions, {shades, shadeIndex}
+
+      else if materialData.directColor
+        material = new THREE.MeshLambertMaterial _.extend materialOptions,
+          color: THREE.Color.fromObject materialData.directColor
 
       else
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
-          color: THREE.Color.fromObject pixel.directColor
+          color: new THREE.Color 0xffffff
+
+    material
+
+  _generateMesh: ->
+    return unless geometry = @geometry()
+    return unless material = @material()
 
     mesh = new THREE.Mesh geometry, material
 
     mesh.castShadow = true
     mesh.receiveShadow = true
     mesh.material.shadowSide = THREE.DoubleSide
+    mesh.layers.set 2 if @layer.object.mesh.options.debug?()
 
     mesh

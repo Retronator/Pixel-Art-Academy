@@ -4,7 +4,8 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Components.SpriteImage extends AM.Component
-  @register 'LandsOfIllusions.Assets.Components.SpriteImage'
+  @id: -> 'LandsOfIllusions.Assets.Components.SpriteImage'
+  @register @id()
 
   constructor: (@options) ->
     super arguments...

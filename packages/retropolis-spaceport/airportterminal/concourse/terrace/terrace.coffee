@@ -70,14 +70,16 @@ class RS.AirportTerminal.Terrace extends LOI.Adventure.Location
   titleSectionVisibleClass: ->
     'visible' if @isLandingPage()
 
-  illustrationHeight: ->
+  illustration: ->
     if @isLandingPage()
-      illustrationHeight = @_sceneBounds()?.height() / @display?.scale()
-
-      illustrationHeight or 0
+      height = @_sceneBounds()?.height() / @display?.scale()
 
     else
-      middleSceneHeight
+      height = middleSceneHeight
+
+    height ?= 0
+
+    {height}
 
   onCreated: ->
     super arguments...

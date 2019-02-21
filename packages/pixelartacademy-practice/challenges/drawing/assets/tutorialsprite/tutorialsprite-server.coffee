@@ -72,6 +72,9 @@ class PAA.Practice.Challenges.Drawing.TutorialSprite extends PAA.Practice.Challe
 
       spriteData.customPalette =
         ramps: ramps
+        
+    else if customPalette = @customPalette()
+      spriteData.customPalette = customPalette
 
     if references = @references?()
       spriteData.references = []

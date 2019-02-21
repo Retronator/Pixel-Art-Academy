@@ -59,14 +59,18 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/components/avatarpartpreview/avatarpartpreview');
   api.addComponent('design/terminal/components/customcolorpreview/customcolorpreview');
 
-  api.addFile('design/terminal/properties/properties');
-  api.addComponent('design/terminal/properties/oneof/oneof');
-  api.addComponent('design/terminal/properties/array/array');
-  api.addComponent('design/terminal/properties/color/color');
-  api.addComponent('design/terminal/properties/relativecolorshade/relativecolorshade');
-  api.addComponent('design/terminal/properties/sprite/sprite');
-  api.addComponent('design/terminal/properties/string/string');
-  api.addComponent('design/terminal/properties/integer/integer');
+  api.addFile('design/terminal/properties..');
+  api.addFile('design/terminal/properties/input');
+  api.addComponent('design/terminal/properties/oneof..');
+  api.addComponent('design/terminal/properties/array..');
+  api.addComponent('design/terminal/properties/color..');
+  api.addComponent('design/terminal/properties/relativecolorshade..');
+  api.addComponent('design/terminal/properties/sprite..');
+  api.addComponent('design/terminal/properties/string..');
+  api.addComponent('design/terminal/properties/integer..');
+  api.addComponent('design/terminal/properties/boolean..');
+  api.addComponent('design/terminal/properties/renderingcondition..');
+  api.addComponent('design/terminal/properties/hideregions..');
 
   api.addThing('service..');
   api.addComponent('service/terminal..');

@@ -1,89 +1,115 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Renderers.Renderer
+  @liveEditing = false
+
+  if @liveEditing and Meteor.isClient and not LOI.Character.Avatar.Renderers.Shape.liveEditing
+    Meteor.startup =>
+      # Subscribe to all character part sprites.
+      types = LOI.Character.Part.allPartTypeIds()
+      LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe types
+
   constructor: (@options, initialize) ->
     super arguments...
 
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
+    @debugDelaunay = new ReactiveField null
+
     # Shape renderer prepares all sprite directions and draws the one needed by the engine.
-    @frontSpriteData = new ComputedField =>
-      return unless spriteId = @options.frontSpriteId()
+    @spriteDataInfo = {}
+    @spriteData = {}
 
-      LOI.Assets.Sprite.getFromCache spriteId
+    for field, side of LOI.Engine.RenderingSides.Keys
+      do (side) =>
+        # Sprites in flipped renderers need to come from the other side.
+        flipped = @options.region?.id.indexOf('Right') >= 0
+        sourceSide = if flipped then LOI.Engine.RenderingSides.mirrorSides[side] else side
 
-    @frontSprite = new LOI.Assets.Engine.Sprite
-      spriteData: @frontSpriteData
-      materialsData: @options.materialsData
-      flippedHorizontal: @options.flippedHorizontal
+        @spriteDataInfo[side] = new ComputedField =>
+          spriteId = @options["#{sourceSide}SpriteId"]()
 
-    @activeSprite = new ComputedField =>
-      @frontSprite
+          # If we didn't find a sprite for this side, we assume we should mirror the other side.
+          unless spriteId
+            mirrorSide = LOI.Engine.RenderingSides.mirrorSides[sourceSide]
+            spriteId = @options["#{mirrorSide}SpriteId"]()
+            flipped = not flipped
 
-    @translation = new ComputedField =>
+          return unless spriteId
+
+          if @constructor.liveEditing
+            spriteData = LOI.Assets.Sprite.documents.findOne spriteId
+
+          else
+            spriteData = LOI.Assets.Sprite.getFromCache spriteId
+
+          {spriteData, flipped}
+
+        @spriteData[side] = new ComputedField =>
+          @spriteDataInfo[side]()?.spriteData
+
+    # By default we read the viewing angle from options, but we also support sending it late from the draw call.
+    defaultViewingAngle = =>
+      @options.viewingAngle?() or 0
+
+    @viewingAngleGetter = new ReactiveField defaultViewingAngle, (a, b) => a is b
+
+    @activeSide = new ComputedField => LOI.Engine.RenderingSides.getSideForAngle @viewingAngleGetter()()
+
+    @activeSpriteFlipped = new ComputedField =>
+      @spriteDataInfo[@activeSide()]()?.flipped
+
+    @activeSpriteData = new ComputedField =>
+      spriteData = @spriteData[@activeSide()]()
+      
       # Landmarks source provides landmarks we try to map to (our targets).
-      targetLandmarks = @options.landmarksSource?.landmarks()
+      targetLandmarks = @options.landmarksSource?()?.landmarks()
 
-      # Source landmark is the data set directly in the sprite.
-      # We try to map from sprite (source) to provided landmarks (target).
-      source = x: 0, y: 0
-      target = x: 0, y: 0
+      # Filter down to the region this shape is mapped onto.
+      if @options.region
+        landmarksRegion = LOI.HumanAvatar.Regions[@options.region.getLandmarksRegionId()]
 
-      # Translation in a mapped sprite is calculated so that sprite's landmarks map onto the provided ones.
-      sprite = @activeSprite()
-      spriteData = sprite.options.spriteData()
+        targetLandmarks = _.filter targetLandmarks, (targetLandmark) =>
+          landmarksRegion.matchRegion targetLandmark.regionId
 
-      if spriteData?.landmarks and targetLandmarks
-        for spriteLandmark in spriteData.landmarks
-          # See if we have this landmark in our source.
-          if targetLandmark = targetLandmarks[spriteLandmark.name]
-            target = targetLandmark
-            source.x = spriteLandmark.x or 0
-            source.y = spriteLandmark.y or 0
+      # If we're flipped, we want to map onto flipped landmarks.
+      if @activeSpriteFlipped() and spriteData?.landmarks
+        sourceLandmarks = for landmark in spriteData.landmarks
+          _.extend {}, landmark,
+            name: landmark.name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
+            
+      else
+        sourceLandmarks = spriteData?.landmarks
+            
+      @_mapSprite spriteData, sourceLandmarks, targetLandmarks
 
-            # For now we just attach to the first matched landmark.
-            # TODO: Match to multiple landmarks and calculate necessary scaling to achieve perfect map.
-            break
-
-      x: target.x - source.x
-      y: target.y - source.y
+    @activeSprite = new LOI.Assets.Engine.Sprite
+      spriteData: @activeSpriteData
+      materialsData: @options.materialsData
+      flippedHorizontal: @activeSpriteFlipped
 
     @_ready = new ComputedField =>
-      # If we have no data, in this part, there's nothing to do.
-      return true unless @options.part.options.dataLocation()
+      # If we have no sprite in this part, there's nothing to do.
+      return true unless @spriteDataInfo[@activeSide()]()
 
       # Shape is ready when the sprite is ready.
-      @activeSprite().ready()
+      @activeSprite.ready()
 
   ready: ->
     @_ready()
     
-  landmarks: ->
-    # Provide active sprite's landmarks, but translate them to the origin.
-    return unless spriteData = @activeSprite().options.spriteData()
-
-    # If there are no landmarks, there's nothing to do.
-    return unless spriteData.landmarks
-
-    translation = @translation()
-
-    landmarks = {}
-
-    for landmark in spriteData.landmarks
-      landmarks[landmark.name] = _.extend {}, landmark,
-        x: landmark.x + translation.x
-        y: landmark.y + translation.y
-
-    landmarks
+  landmarks: -> []
 
   drawToContext: (context, options = {}) ->
-    sprite = @activeSprite()
+    return unless @_shouldDraw(options) and @ready() and @_renderingConditionsSatisfied()
+
+    # Update viewing angle.
+    @viewingAngleGetter options.viewingAngle if options.viewingAngle
 
     context.save()
+    context.setTransform 1, 0, 0, 1, options.textureOffset, 0
 
-    translation = @translation()
-    context.translate translation.x, translation.y
+    @activeSprite.drawToContext context, options
 
-    sprite.drawToContext context, options
     context.restore()

@@ -33,12 +33,12 @@ Package.onUse(function(api) {
 
   api.addFile('actors/actors');
   api.addFile('actors/operator');
-  api.addFile('actors/reuben');
+  api.addFileWithData('actors/reuben');
   api.addFile('actors/burra');
   api.addThing('actors/corinne');
-  api.addThing('actors/retro');
-  api.addFile('actors/shelley');
-  api.addFile('actors/alexandra');
+  api.addThingWithData('actors/retro');
+  api.addFileWithData('actors/shelley');
+  api.addFileWithData('actors/alexandra');
 
   // Items
 

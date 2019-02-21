@@ -41,7 +41,7 @@ class HQ.ArtStudio.Pencils extends HQ.ArtStudio.ContextWithArtworks
     @handVisible true
 
   sceneStyle: ->
-    hiddenHeight = @sceneSize.height - @illustrationHeight()
+    hiddenHeight = @sceneSize.height - @illustration().height
 
     top: "-#{hiddenHeight * 0.6}rem"
 

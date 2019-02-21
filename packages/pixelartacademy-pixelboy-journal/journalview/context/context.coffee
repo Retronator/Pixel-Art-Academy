@@ -14,7 +14,7 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
   
   @initialize()
   
-  @illustrationHeight: -> 240
+  @illustration: -> height: 240
 
   @canHandleMemory: (memory) ->
     memory.journalEntry?
@@ -197,12 +197,15 @@ class PAA.PixelBoy.Apps.Journal.JournalView.Context extends LOI.Memory.Context
     else
       "You look at #{possessiveName} journal."
 
-  illustrationHeight: ->
+  illustration: ->
     return unless @isCreated()
     return unless journalDesign = @journalDesign()
+    
+    illustration = super(arguments...) or {}
 
-    # We use a padding of 10.
-    journalDesign.size().height + 20
+    _.extend illustration,
+      # We use a padding of 10.
+      height: journalDesign.size().height + 20
 
   onScroll: (scrollTop) ->
     return unless @isRendered()

@@ -1,0 +1,10 @@
+<template name="FataMorgana.Area">
+  <div class="fatamorgana-area {{areaClass}}" {{style areaStyle}}>
+    {{#if type}}
+      {{> Template.dynamic template=type}}
+    {{/if}}
+    {{#if contentComponentId}}
+      {{> Template.dynamic template=contentComponentId data=contentComponentData}}
+    {{/if}}
+  </div>
+</template>

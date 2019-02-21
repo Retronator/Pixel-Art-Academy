@@ -1,8 +1,9 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
-class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends LandsOfIllusions.Assets.Tools.Tool
+class PAA.PixelBoy.Apps.Drawing.Editor.Desktop.Tools.MoveCanvas extends LOI.Assets.Components.Tools.Tool
   constructor: ->
     super arguments...
 

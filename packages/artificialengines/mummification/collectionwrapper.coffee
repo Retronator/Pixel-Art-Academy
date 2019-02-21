@@ -9,7 +9,7 @@ class AM.CollectionWrapper
     currentDocumentIds = []
 
     updateAutorun = Tracker.autorun (computation) ->
-      newDocuments = documentsFunction()
+      newDocuments = documentsFunction() or []
       newDocumentIds = (document._id for document in newDocuments)
 
       # Insert or update new documents.

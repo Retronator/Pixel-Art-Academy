@@ -20,7 +20,7 @@ class AM.Hierarchy
       node: value.data()
 
     else if _.isObject value
-      # We've converting a standard object, which should become a node. Covert its properties as well first.
+      # We've converting a standard object, which should become a node. Convert its properties as well first.
       node = fields: {}
 
       for propertyName, property of value

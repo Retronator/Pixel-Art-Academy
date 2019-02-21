@@ -1,0 +1,38 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.CameraAngle">
+  <div class="landsofillusions-assets-mesheditor-cameraangle landsofillusions-assets-editor-panel">
+    <ul class="properties landsofillusions-assets-editor-propertieslist">
+      {{#with cameraAngle}}
+        <label class="property name">
+          <span class="name">Name</span>
+          <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.CameraAngle.Name}}</span>
+        </label>
+        <div class="property camera">
+          {{> Render camera}}
+        </div>
+        <label class="property picture-plane-distance">
+          <span class="name">Picture plane distance</span>
+          <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.CameraAngle.PicturePlaneDistance}}</span>
+        </label>
+        <label class="property picture-plane-offset">
+          <span class="name">Picture plane offset</span>
+          <span class="value landsofillusions-assets-editor-propertytable">
+            <table class="vectors-table editor-table">
+              <tr class="legend">
+                <th class="coordinate-x">x</th>
+                <th class="coordinate-y">y</th>
+              </tr>
+              <tr class="coordinates">
+                <td class="coordinate-x"><input class="coordinate-input" type="number" value="{{picturePlaneOffset.x}}"/></td>
+                <td class="coordinate-y"><input class="coordinate-input" type="number" value="{{picturePlaneOffset.y}}"/></td>
+              </tr>
+            </table>
+          </span>
+        </label>
+        <label class="property pixel-size">
+          <span class="name">Pixel size</span>
+          <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.CameraAngle.PixelSize}}</span>
+        </label>
+      {{/with}}
+    </ul>
+  </div>
+</template>

@@ -76,7 +76,7 @@ class LOI.Assets.Components.Toolbox extends AM.Component
 
     # Find if the pressed key matches any of the tools' shortcuts.
     keyboardState = AC.Keyboard.getState()
-    commandOrCtrlDown = keyboardState.isCommandOrCtrlDown()
+    commandOrCtrlDown = keyboardState.isCommandOrControlDown()
     shiftDown = keyboardState.isKeyDown AC.Keys.shift
 
     targetTool = _.find @options.tools(), (tool) =>

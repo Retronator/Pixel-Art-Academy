@@ -165,6 +165,7 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
       'click': @onClick
       'mouseenter .asset': @onMouseEnterAsset
       'mouseleave .asset': @onMouseLeaveAsset
+      'click .brief': @onClickBrief
       'click .asset': @onClickAsset
       'click .pixel-boy .editor': @onClickPixelBoyEditor
       'click .external .editor': @onClickExternalEditor
@@ -221,7 +222,13 @@ class PixelArtAcademy.PixelBoy.Apps.Drawing.Portfolio extends AM.Component
   onMouseLeaveAsset: (event) ->
     @hoveredAsset null
 
+  onClickBrief: (event) ->
+    @_goToClickedAsset()
+
   onClickAsset: (event) ->
+    @_goToClickedAsset()
+
+  _goToClickedAsset: ->
     assetData = @currentData()
 
     # Set active sprite ID.

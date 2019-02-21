@@ -53,3 +53,46 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
 
   @insert: @method 'insert'
   @updateData: @method 'updateData'
+
+if Meteor.isServer
+  importDirective = 'LandsOfIllusions.Character.Part.Template.adminTemplates'
+  
+  LOI.GameContent.addToExport ->
+    documents = []
+
+    # TODO: Fetch only admin templates.
+    templates = LOI.Character.Part.Template.documents.fetch()
+
+    # Strip authors from templates.
+    for template in templates
+      delete template.author
+      delete template.authorName
+      template._importDirective = importDirective
+      
+    documents.push templates...
+
+    # Add template names and descriptions.
+    names = AB.Translation.documents.fetch
+      _id: $in: (template.name._id for template in templates)
+
+    documents.push names...
+
+    descriptions = AB.Translation.documents.fetch
+      _id: $in: (template.description._id for template in templates)
+
+    documents.push descriptions...
+
+    documents
+
+  LOI.GameContent.addImportDirective importDirective, (template) ->
+    # Associate the template back to the (new) admin.
+    unless admin = RA.User.documents.findOne username: 'admin'
+      console.warn "Admin user hasn't been created yet. Restart server to update template authors."
+
+      # Delete ID to skip importing for now.
+      delete template._id
+
+      return
+
+    template.author = _id: admin._id
+    template.authorName = admin.publicName

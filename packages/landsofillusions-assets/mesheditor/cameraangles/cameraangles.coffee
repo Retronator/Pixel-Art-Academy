@@ -1,116 +1,100 @@
+AC = Artificial.Control
 AM = Artificial.Mirage
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.CameraAngles extends AM.Component
-  @register 'LandsOfIllusions.Assets.MeshEditor.CameraAngles'
-
-  constructor: (@options) ->
-    super arguments...
-
-    @meshData = new ComputedField =>
-      LOI.Assets.Mesh.documents.findOne @options.meshId(),
-        fields:
-          cameraAngles: 1
-
-    @assetsList = new ReactiveField null
+class LOI.Assets.MeshEditor.CameraAngles extends FM.View
+  @id: -> 'LandsOfIllusions.Assets.MeshEditor.CameraAngles'
+  @register @id()
 
   onCreated: ->
     super arguments...
 
-    @camera = new LOI.Assets.Components.Camera
-      load: => @cameraAngleData()
-      save: (value) => LOI.Assets.Mesh.updateCameraAngle @options.meshId(), @options.cameraAngleIndex(), value
+    @mesh = new ComputedField =>
+      @interface.getLoaderForActiveFile()?.meshData()
 
-    @assetsList new LOI.Assets.Components.AssetsList
-      documentClass: LOI.Assets.Sprite
-      getAssetId: => @cameraAngleData()?.sprite?._id
-      setAssetId: (spriteId) => LOI.Assets.Mesh.updateCameraAngle @options.meshId(), @options.cameraAngleIndex(), sprite: _id: spriteId
+    @editor = new ComputedField =>
+      @interface.getEditorForActiveFile()
+
+    @cameraAngleIndex = new ComputedField =>
+      @editor()?.cameraAngleIndex()
+
+    @cameraAngle = new ComputedField =>
+      @editor()?.cameraAngle()
+
+  setCameraAngleIndex: (index) ->
+    editorView = @interface.getEditorViewForActiveFile()
+    fileData = editorView.activeFileData()
+    fileData.set 'cameraAngleIndex', index
+    
+    # Also reset the camera offset if it was applied.
+    editor = editorView.getActiveEditor()
+    editor.renderer.cameraManager.reset()
 
   cameraAngles: ->
-    return unless cameraAngles = @meshData()?.cameraAngles
-
-    # Add index information.
-    cameraAngle.index = index for cameraAngle, index in cameraAngles
-
-    cameraAngles
+    @mesh()?.cameraAngles.getAll()
 
   activeClass: ->
     cameraAngle = @currentData()
-    'active' if cameraAngle.index is @options.cameraAngleIndex()
+    'active' if cameraAngle.index is @cameraAngleIndex()
 
-  nameOrIndex: ->
+  placeholderName: ->
     cameraAngle = @currentData()
-    cameraAngle.name or cameraAngle.index
-
-  cameraAngleData: ->
-    @meshData()?.cameraAngles?[@options.cameraAngleIndex()]
+    "Camera angle #{cameraAngle.index}"
 
   events: ->
     super(arguments...).concat
       'click .camera-angle': @onClickCameraAngle
-      'click .add-camera-angle-button': @onClickAddCameraAngleButton
+      'click .add-button': @onClickAddButton
+      'click .remove-button': @onClickRemoveButton
+      'click .duplicate-button': @onClickDuplicateButton
+      'change .name-input': @onChangeCameraAngle
 
   onClickCameraAngle: (event) ->
     cameraAngle = @currentData()
-    @options.cameraAngleIndex cameraAngle.index
 
-  onClickAddCameraAngleButton: (event) ->
-    index = @meshData().cameraAngles?.length or 0
+    # If we hold down shift, do a smooth transition.
+    keyboardState = AC.Keyboard.getState()
+    if keyboardState.isKeyDown AC.Keys.shift
+      @editor().renderer.cameraManager.transition cameraAngle,
+        duration: 2000
+        complete: =>
+          @setCameraAngleIndex cameraAngle.index
 
-    LOI.Assets.Mesh.updateCameraAngle @options.meshId(), index,
+    else
+      # Immediately switch the camera angle.
+      @setCameraAngleIndex cameraAngle.index
+
+  onClickAddButton: (event) ->
+    index = @mesh().cameraAngles.insert
       picturePlaneDistance: 32
       pixelSize: 0.01
       position: x: 0, y: 1, z: 2
       target: x: 0, y: 1, z: 0
       up: x: 0, y: 1, z: 0
 
-    @options.cameraAngleIndex index
+    # Switch to new camera angle.
+    @setCameraAngleIndex index
 
-  class @CameraProperty extends AM.DataInputComponent
-    onCreated: ->
-      super arguments...
+  onClickRemoveButton: (event) ->
+    mesh = @mesh()
+    mesh.cameraAngles.remove @cameraAngleIndex()
 
-      @meshEditor = @ancestorComponentOfType LOI.Assets.MeshEditor
+  onClickDuplicateButton: (event) ->
+    # Create a copy without the name and insert it to create a duplicate.
+    copy = _.clone @cameraAngle().toPlainObject()
+    delete copy.name
 
-    load: ->
-      cameraAngleData = @data()
-      cameraAngleData[@property]
+    index = @mesh().cameraAngles.insert copy
 
-    save: (value) ->
-      cameraAngleData = @data()
-      meshId = @meshEditor.meshId()
-      cameraAngleIndex = cameraAngleData.index
+    # Switch to new camera angle.
+    @setCameraAngleIndex index
 
-      if @type is AM.DataInputComponent.Types.Number
-        value = parseFloat value
-        value = null if _.isNaN value
+  onChangeCameraAngle: (event) ->
+    cameraAngle = @currentData()
+    $layer = $(event.target).closest('.camera-angle')
 
-      LOI.Assets.Mesh.updateCameraAngle meshId, cameraAngleIndex, "#{@property}": value
+    newData =
+      name: $layer.find('.name-input').val()
 
-  class @Name extends @CameraProperty
-    @register 'LandsOfIllusions.Assets.MeshEditor.CameraAngles.Name'
-
-    constructor: ->
-      super arguments...
-
-      @property = 'name'
-
-  class @PicturePlaneDistance extends @CameraProperty
-    @register 'LandsOfIllusions.Assets.MeshEditor.CameraAngles.PicturePlaneDistance'
-
-    constructor: ->
-      super arguments...
-
-      @property = 'picturePlaneDistance'
-      @type = AM.DataInputComponent.Types.Number
-
-  class @PixelSize extends @CameraProperty
-    @register 'LandsOfIllusions.Assets.MeshEditor.CameraAngles.PixelSize'
-
-    constructor: ->
-      super arguments...
-
-      @property = 'pixelSize'
-      @type = AM.DataInputComponent.Types.Number
-      @customAttributes =
-        step: 0.1
+    cameraAngle.update newData

@@ -23,11 +23,6 @@ class C1.PostPixelBoy.DrawingChallenges extends LOI.Adventure.Scene
     things = []
     DrawingApp = PAA.PixelBoy.Apps.Drawing
 
-    # If the player has an editor or external software selected, we show the Pixel Art Tools challenge.
-    if DrawingApp.state('editorId') or DrawingApp.state('externalSoftware')
-      @_pixelArtSoftware ?= Tracker.nonreactive => new C1.Challenges.Drawing.PixelArtSoftware
-      things.push @_pixelArtSoftware
-
     # Player needs the Desktop editor selected for the tutorial to display.
     if DrawingApp.state('editorId') is PAA.PixelBoy.Apps.Drawing.Editor.Desktop.id()
       @_tutorialBasics ?= Tracker.nonreactive => new C1.Challenges.Drawing.Tutorial.Basics
@@ -38,5 +33,10 @@ class C1.PostPixelBoy.DrawingChallenges extends LOI.Adventure.Scene
         @_tutorialHelpers ?= Tracker.nonreactive => new C1.Challenges.Drawing.Tutorial.Helpers
 
         things.push @_tutorialColors, @_tutorialHelpers
+
+    # If the player has an editor or external software selected, we show the Pixel Art Tools challenge.
+    if DrawingApp.state('editorId') or DrawingApp.state('externalSoftware')
+      @_pixelArtSoftware ?= Tracker.nonreactive => new C1.Challenges.Drawing.PixelArtSoftware
+      things.push @_pixelArtSoftware
 
     things

@@ -183,21 +183,23 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
     scale = LOI.adventure.interface.display.scale()
 
     halfWidth = viewport.viewportBounds.width() / scale / 2
-    halfHeight = @illustrationHeight() / 2
+    halfHeight = @illustration().height / 2
 
     x: _.clamp focusPoint.x, halfWidth / @sceneSize.width, (@sceneSize.width - halfWidth) / @sceneSize.width
     y: _.clamp focusPoint.y, halfHeight / @sceneSize.height, (@sceneSize.height - halfHeight) / @sceneSize.height
 
-  illustrationHeight: ->
+  illustration: ->
     viewport = LOI.adventure.interface.display.viewport()
     scale = LOI.adventure.interface.display.scale()
 
     if @dialogueMode()
       # In dialogue mode we only fill half the screen minus one line (8rem).
-      viewport.viewportBounds.height() / scale / 2 - 8
+      height = viewport.viewportBounds.height() / scale / 2 - 8
 
     else
-      @sceneSize.height
+      height = @sceneSize.height
+    
+    {height}
       
   onScroll: (scrollTop) ->
     return unless @isRendered()
@@ -210,9 +212,10 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
 
     viewport = LOI.adventure.interface.display.viewport()
     scale = LOI.adventure.interface.display.scale()
+    illustrationHeight = @illustration().height
 
     scrollableWidth = @sceneSize.width * scale - viewport.viewportBounds.width()
-    scrollableHeight = @sceneSize.height * scale - @illustrationHeight() * scale
+    scrollableHeight = @sceneSize.height * scale - illustrationHeight * scale
 
     # The scene top also needs to take into account that scrolling reduces the size of the illustration (the UI covers
     # it from the bottom). The smaller the illustration (or the bigger the scroll top), the more scrollable height
@@ -221,7 +224,7 @@ class HQ.ArtStudio.ContextWithArtworks extends LOI.Adventure.Context
 
     focusFactor =
       x: _.clamp (@_focusPoint.x * @sceneSize.width * scale - viewport.viewportBounds.width() / 2) / scrollableWidth, 0, 1
-      y: _.clamp (@_focusPoint.y * @sceneSize.height * scale - @illustrationHeight() * scale / 2) / scrollableHeight, 0, 1
+      y: _.clamp (@_focusPoint.y * @sceneSize.height * scale - illustrationHeight * scale / 2) / scrollableHeight, 0, 1
 
     focusFactor.x = @_focusPoint.x if _.isNaN focusFactor.x
     focusFactor.y = @_focusPoint.y if _.isNaN focusFactor.y

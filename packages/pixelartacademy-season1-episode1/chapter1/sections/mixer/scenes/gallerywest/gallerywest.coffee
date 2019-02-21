@@ -93,6 +93,9 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     LOI.adventure.director.setPosition
       "#{HQ.Actors.Shelley.id()}": 'InFrontOfProjector'
       "#{HQ.Actors.Reuben.id()}": x: 1, y: 0, z: 1
+      "#{HQ.Actors.Alexandra.id()}": x: 2, y: 0, z: 2
+      "#{HQ.Actors.Retro.id()}": x: 3, y: 0, z: 1
+      "#{PAA.Actors.Ace.id()}": x: 4, y: 0, z: 2
 
     # Retro should talk when at location.
     @_retroTalksAutorun = @autorun (computation) =>

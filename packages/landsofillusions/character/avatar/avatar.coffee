@@ -9,7 +9,7 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
   constructor: (characterInstanceOrDocument) ->
     # We allow the avatar to be constructed for the character instance or directly for the document.
     if characterInstanceOrDocument instanceof LOI.Character.Instance
-      document = characterInstanceOrDocument.document
+      document = => characterInstanceOrDocument.document avatar: true
 
     else
       document = => characterInstanceOrDocument
@@ -19,14 +19,22 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
       templateClass: LOI.Character.Part.Template
       # TODO: We need to set the type somehow different so it's dynamic in the location (test with create template).
       type: LOI.Character.Part.Types.Avatar.Body.options.type
-      load: => document()?.avatar?.body
+      load: new ComputedField =>
+        document()?.avatar?.body
+      ,
+        EJSON.equals
+
       save: (address, value) =>
         LOI.Character.updateAvatarBody document()._id, address, value
 
     outfitDataField = AM.Hierarchy.create
       templateClass: LOI.Character.Part.Template
       type: LOI.Character.Part.Types.Avatar.Outfit.options.type
-      load: => document()?.avatar?.outfit
+      load: new ComputedField =>
+        document()?.avatar?.outfit
+      ,
+        EJSON.equals
+
       save: (address, value) =>
         LOI.Character.updateAvatarOutfit document()._id, address, value
 

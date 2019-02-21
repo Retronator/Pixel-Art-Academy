@@ -12,14 +12,20 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
 
     @landmarks = new ComputedField =>
       # Create landmarks and update renderer translations.
-      @_landmarks = {}
+      @_landmarks = []
 
       # We start with the origin landmark.
-      @_landmarks[@options.origin.landmark] =
-        x: @options.origin.x or 0
-        y: @options.origin.y or 0
+      origin = @getOrigin()
+
+      @_landmarks.push
+        name: origin.landmark
+        x: origin.x or 0
+        y: origin.y or 0
+        z: 0
         
       @_placeRenderers()
+
+      @_applyLandmarksRegion @_landmarks
 
       @_landmarks
 
@@ -33,12 +39,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     property = @options.part.properties[propertyName]
 
     # Add pass-through renderer options.
-    propertyRendererOptions = _.extend
-      flippedHorizontal: @options.flippedHorizontal
-      landmarksSource: @options.landmarksSource
-      materialsData: @options.materialsData
-    ,
-      options
+    propertyRendererOptions = _.extend @_cloneRendererOptions(), options
 
     if property.part
       renderer = property.part.createRenderer propertyRendererOptions
@@ -57,36 +58,50 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     offsetX = options.offsetX or 0
     offsetY = options.offsetY or 0
 
+    regionId = @getRegionId()
+
     # Add all landmarks from this renderer.
-    for rendererLandmarkName, rendererLandmark of renderer.landmarks()
-      translatedLandmark = _.extend {}, rendererLandmark,
-        x: renderer._translation.x + offsetX
-        y: rendererLandmark.y + renderer._translation.y + offsetY
+    for rendererLandmark in renderer.landmarks()
+      translatedLandmark = _.clone rendererLandmark
 
-      if renderer._flipHorizontal
-        translatedLandmark.x -= rendererLandmark.x + 1
+      if not @options.renderTexture or rendererLandmark.regionId is regionId
+        translatedLandmark.x = renderer._translation.x + offsetX
+        translatedLandmark.y += renderer._translation.y + offsetY
 
-      else
-        translatedLandmark.x += rendererLandmark.x
+        if renderer._flipHorizontal
+          translatedLandmark.x -= rendererLandmark.x + 1
 
-      @_landmarks[rendererLandmarkName] = translatedLandmark
+        else
+          translatedLandmark.x += rendererLandmark.x
+
+      # When returning symmetric landmarks in the same region, append the suffix to their end.
+      if renderer.options.regionSide and rendererLandmark.regionId is regionId
+        translatedLandmark.name += renderer.options.regionSide
+
+      @_landmarks.push translatedLandmark
 
   _placeRenderer: (renderer, rendererLandmarkName, landmarkName, options = {}) ->
     rendererLandmarks = renderer.landmarks()
-    return unless @_landmarks[landmarkName] and rendererLandmarks?[rendererLandmarkName]
+    rendererLandmark = _.find rendererLandmarks, (landmark) => landmark.name is rendererLandmarkName
+
+    landmark = _.find @_landmarks, (landmark) => landmark.name is landmarkName
+
+    return unless landmark and rendererLandmark
 
     offsetX = options.offsetX or 0
     offsetY = options.offsetY or 0
 
     renderer._translation =
-      x: @_landmarks[landmarkName].x
-      y: @_landmarks[landmarkName].y - rendererLandmarks[rendererLandmarkName].y + offsetY
+      x: landmark.x
+      y: landmark.y - rendererLandmark.y + offsetY
 
     if renderer._flipHorizontal
-      renderer._translation.x += rendererLandmarks[rendererLandmarkName].x + 1 - offsetX
+      renderer._translation.x += rendererLandmark.x + 1 - offsetX
 
     else
-      renderer._translation.x -= rendererLandmarks[rendererLandmarkName].x - offsetX
+      renderer._translation.x -= rendererLandmark.x - offsetX
+
+    renderer._depth = landmark.z or 0
 
     @_addLandmarks renderer, options unless options.skipAddingLandmarks
 
@@ -97,13 +112,17 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     # Depend on landmarks to update when renderer translations change.
     @landmarks()
 
-    for renderer in @renderers
+    # Sort renderers by depth.
+    sortedRenderers = _.sortBy @renderers, (renderer) => renderer._depth
+
+    for renderer in sortedRenderers
       @drawRendererToContext renderer, context, options
 
   drawRendererToContext: (renderer, context, options = {}) ->
     return unless @ready()
 
     context.save()
+    @_handleRegionTransform context, options
 
     translation = _.defaults {}, renderer._translation,
       x: 0

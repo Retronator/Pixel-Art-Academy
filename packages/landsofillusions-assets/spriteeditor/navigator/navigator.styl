@@ -1,0 +1,27 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-spriteeditor-navigator
+  display flex
+  flex-direction column
+
+  .thumbnail
+    flex-grow 1
+    position relative
+    margin 2rem
+
+    .canvas
+      absolute-cover-size()
+      object-fit contain
+
+  .controls
+    flex-shrink 0
+    margin-top 2rem
+
+    .zoom-display
+      display inline-block
+
+      .zoom-percentage-input
+        width 50rem
+        text-align right
+        background none
+        border none

@@ -1,0 +1,16 @@
+<template name="LandsOfIllusions.Assets.Editor.Dialog">
+  {{#LandsOfIllusions.Assets.Editor.Window}}
+    <div class="landsofillusions-assets-editor-dialog">
+      {{> Render fileManager}}
+      <div class="message">{{message}}</div>
+      {{#if moreInfo}}
+        <div class="more-info">{{moreInfo}}</div>
+      {{/if}}
+      <div class="actions">
+        {{#each buttons}}
+          <button class="button">{{text}}</button>
+        {{/each}}
+      </div>
+    </div>
+  {{/LandsOfIllusions.Assets.Editor.Window}}
+</template>

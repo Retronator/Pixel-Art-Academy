@@ -1,0 +1,176 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+div.landsofillusions-assets-editor
+  .fatamorgana-interface
+    absolute-cover()
+
+    .fatamorgana-splitview
+      .divider
+        background-color atariGrey(1)
+
+    .fatamorgana-tabbedview
+      display flex
+      width 100%
+      height 100%
+      flex-direction column
+
+      .tabs
+        display flex
+        flex-shrink 0
+        background atariGrey(0)
+        padding-top 2rem
+
+        .tab
+          padding 2rem 4rem
+          checkout()
+          text-transform uppercase
+          cursor pointer
+          white-space nowrap
+          text-overflow ellipsis
+          overflow hidden
+
+          &.active
+            background-color atariGrey(1)
+            cursor default
+            text-overflow none
+            flex-shrink 0
+
+      .active-tab
+        position relative
+        flex-grow 1
+        background-color atariGrey(1)
+
+        > .fatamorgana-area
+          absolute-cover()
+          overflow-y auto
+
+    .fatamorgana-editorview
+      position relative
+      display flex
+      width 100%
+      height 100%
+      flex-direction column
+
+      .tabs
+        flex-shrink 0
+        background atariGrey(1)
+        padding-top 2rem
+
+        .tab
+          float left
+          max-width 100rem
+          padding 2rem 4rem
+          checkout()
+          cursor pointer
+          color atariGrey(4)
+
+          &.active
+            background-color atariGrey(2)
+            cursor default
+            color atariGrey(6)
+
+          .name
+            white-space nowrap
+            text-overflow ellipsis
+            overflow hidden
+            direction rtl
+
+      .editor
+        position relative
+        flex-grow 1
+        border 1rem solid atariGrey(2)
+
+        > .fatamorgana-area
+          absolute-cover()
+          overflow hidden
+
+    .fatamorgana-menu
+      background-color atariGrey(1)
+
+      .items
+        margin 0 4rem
+
+        .item
+          padding 2rem 4rem
+          cursor pointer
+
+          &:first-child
+            color atariGrey(5)
+
+          &:hover
+            background-color atariGrey(2)
+            color atariGrey(6)
+
+    .fatamorgana-menu-dropdown
+      background-color atariGrey(1)
+      box-shadow 5rem 5rem 0 rgba(atariGrey(0), 0.5)
+
+      .items
+        padding 2rem 0
+
+        .item
+          display flex
+          padding 1rem 4rem 1rem 0
+          color atariGrey(2)
+
+          &.enabled
+            cursor pointer
+            color atariGrey(4)
+
+            &:hover
+              background-color atariGrey(2)
+              color atariGrey(6)
+
+          .active-status
+            width 14rem
+            padding-left 1rem
+            text-align center
+
+            &.active
+              &::before
+                content '✔'
+
+          .caption
+            flex-grow 1
+
+          .shortcut
+            margin-left 8rem
+
+        .divider
+          margin 3rem 0
+          height 1rem
+          background-color atariGrey(2)
+
+    .fatamorgana-toolbox
+      background-color atariGrey(1)
+      height 100%
+
+      .tools
+        display flex
+        flex-wrap wrap
+
+        .tool
+          width 20rem
+          height 20rem
+
+          .tool-button
+            width 20rem
+            height 20rem
+            padding 1rem
+            border 1rem solid atariGrey(1)
+            background none
+
+            &:hover
+              background atariGrey(2)
+
+            .icon
+              width 16rem
+              height 16rem
+
+            .name
+              display none
+
+          &.active
+            .tool-button
+              background atariGrey(2)
+              border-color atariGrey(2)

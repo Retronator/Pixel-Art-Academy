@@ -1,0 +1,45 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-mesheditor-objects
+  .objects-table
+    .object
+      cursor pointer
+      padding 1rem 2rem
+
+      &.active
+        td:not(.row-name)
+          background atariGrey(2)
+
+        .name
+          color atariGrey(5)
+
+          .name-input
+            &::placeholder
+              color atariGrey(4)
+
+      .visible
+        position relative
+        width 15rem
+        height 100%
+
+        .label
+          absolute-cover()
+          cursor pointer
+
+          .visible-checkbox
+            display none
+
+            &:checked + .icon
+              display block
+              position absolute
+              top 50%
+              left 50%
+              transform translate(-50%, -50%)
+              background-image image('/landsofillusions/assets/spriteeditor/layer-visible.png')
+              width 9rem
+              height 5rem
+
+      .name
+        .name-input
+          &:disabled
+            cursor pointer

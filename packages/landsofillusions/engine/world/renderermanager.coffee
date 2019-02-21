@@ -15,9 +15,10 @@ class LOI.Engine.World.RendererManager
 
       @renderer.setSize illustrationSize.width(), illustrationSize.height()
 
-      # Force a redraw since only then does the canvas size get updated. Note that we need to
-      # call the world's draw and not just ours since world also updates the scaled pixel image.
-      @world.forceUpdateAndDraw()
+      if @world.isRendered()
+        # Force a redraw since only then does the canvas size get updated. Note that we need to
+        # call the world's draw and not just ours since world also updates the scaled pixel image.
+        @world.forceUpdateAndDraw()
 
   draw: (appTime) ->
     scene = @world.sceneManager().scene()

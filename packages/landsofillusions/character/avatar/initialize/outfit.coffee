@@ -24,9 +24,28 @@ LOI.Character.Part.registerClasses
             name: 'custom colors'
             type: 'Avatar.Outfit.CustomColor'
 
-      ArticlePart: new LOI.Character.Avatar.Parts.Shape
+      ArticlePart: new LOI.Character.Part
         type: 'Avatar.Outfit.ArticlePart'
         name: 'article part'
+        properties:
+          condition: new LOI.Character.Avatar.Properties.RenderingCondition
+            name: 'condition'
+          shapes: new LOI.Character.Part.Property.Array
+            name: 'shapes'
+            type: 'Avatar.Outfit.ArticlePartShape'
+          region: new LOI.Character.Part.Property.String
+            name: 'region'
+            values: _.keys(LOI.HumanAvatar.Regions).sort()
+        renderer: new LOI.Character.Avatar.Renderers.OutfitArticlePart
+
+      ArticlePartShape: new LOI.Character.Avatar.Parts.Shape
+        type: 'Avatar.Outfit.ArticlePartShape'
+        name: 'article part shape'
+        properties:
+          condition: new LOI.Character.Avatar.Properties.RenderingCondition
+            name: 'condition'
+          hideRegions: new LOI.Character.Avatar.Properties.HideRegions
+            name: 'hide regions'
         renderer: new LOI.Character.Avatar.Renderers.MappedShape
 
       CustomColor: new LOI.Character.Part

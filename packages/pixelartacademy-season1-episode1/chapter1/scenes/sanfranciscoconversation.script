@@ -2,17 +2,17 @@
 
 ## Start
 
--> [SaidHi] `_person.saidHi`
+-> [SaidHi] `_agent.saidHi`
 
-`_person.saidHi = true`
+`_agent.saidHi = true`
 
--> [AlreadyMetGreeting] `personInstance.personState('alreadyMet')`
+-> [AlreadyMetGreeting] `agentInstance.agentState('alreadyMet')`
 
 char: Uhm … hi!
 
-person: Hi there!
+agent: Hi there!
 
-`personInstance.personState('alreadyMet', true)`
+`agentInstance.agentState('alreadyMet', true)`
 
 -> [MainQuestions]
 
@@ -20,40 +20,40 @@ person: Hi there!
 
 char: Hi!
 
-person: Hey, nice to see you again.
+agent: Hey, nice to see you again.
 
 -> [MainQuestions]
 
 ## SaidHi
 
-person: What's up?
+agent: What's up?
 
 -> [MainQuestions]
 
 ## MainQuestions
 
-* What's your name? -> [YourName] `not personInstance.personState('introduced')`
-* *PersonConversationMainQuestions*
-* Can I see your study journal? -> [Journal] `personInstance.personState('introduced')`
+* What's your name? -> [YourName] `not agentInstance.agentState('introduced')`
+* *AgentConversationMainQuestions*
+* Can I see your study journal? -> [Journal] `agentInstance.agentState('introduced')`
 * Bye now! -> [End]
 
 ## YourName
 
-person: I'm `personInstance.fullName()`.
+agent: I'm `agentInstance.fullName()`.
 
 > _char_ extends _their_ hand.
 
 char: Nice to meet you. I'm `@character.name()`.
 
-`personInstance.personState('introduced', true)`
+`agentInstance.agentState('introduced', true)`
 
 -> [MainQuestions]
 
 ## Journal
 
--> [NoJournals] `not _person.journalIds.length`
+-> [NoJournals] `not _agent.journalIds.length`
 
-person: Of course! Let me know what you think.
+agent: Of course! Let me know what you think.
 
 pause
 
@@ -63,7 +63,7 @@ pause
 
 ## NoJournals
 
-person: Oh, I don't actually have one.
+agent: Oh, I don't actually have one.
 
 -> [MainQuestions]
 

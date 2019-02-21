@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
-class HQ.Actors.Retro extends LOI.Adventure.Thing
+class HQ.Actors.Retro extends LOI.Character.Actor
   @id: -> 'Retronator.HQ.Actors.Retro'
   @fullName: -> "Matej 'Retro' Jan"
   @shortName: -> "Retro"
@@ -11,9 +11,10 @@ class HQ.Actors.Retro extends LOI.Adventure.Thing
     hue: LOI.Assets.Palette.Atari2600.hues.red
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
-  @initialize()
-
   @defaultScriptUrl: -> 'retronator_retronator-hq/actors/retro.script'
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/retro.json'
+
+  @initialize()
 
   initializeScript: ->
     @setCurrentThings

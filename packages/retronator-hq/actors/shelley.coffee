@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 HQ = Retronator.HQ
 
-class HQ.Actors.Shelley extends LOI.Adventure.Thing
+class HQ.Actors.Shelley extends LOI.Character.Actor
   @id: -> 'Retronator.HQ.Actors.Shelley'
   @fullName: -> "Shelley Williamson"
   @shortName: -> "Shelley"
@@ -10,5 +10,7 @@ class HQ.Actors.Shelley extends LOI.Adventure.Thing
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.brown
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
+
+  @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/shelley.json'
 
   @initialize()

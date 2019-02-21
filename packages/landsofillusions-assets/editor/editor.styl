@@ -1,0 +1,109 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+html.landsofillusions-assets-editor
+  overflow hidden
+
+backgroundGrey = blend(rgba(atariGrey(1), 0.65) atariGrey(0))
+
+div.landsofillusions-assets-editor
+  absolute-cover()
+  adventure()
+  color atariGrey(4)
+  background backgroundGrey
+
+  *
+    pixel-image-rendering()
+    background-size 100% 100%
+
+  button
+  input
+  select
+    border 1rem solid atariGrey(0)
+    font inherit
+    color inherit
+
+    &:focus
+      outline none
+
+  input
+  select
+    background backgroundGrey
+    padding 0 3rem
+
+    &[type=number]
+      padding-right 0
+
+  button
+    background atariGrey(1)
+    padding 0 5rem
+
+  .landsofillusions-assets-editor-panel
+    width 100%
+    height 100%
+    padding 2rem
+
+  .landsofillusions-assets-editor-propertytable
+    width 100%
+    height 100%
+
+    .editor-table
+      border-collapse collapse
+      table-layout fixed
+      width 100%
+
+      .legend
+        th
+          checkout()
+          font-weight normal
+          overflow hidden
+          white-space nowrap
+
+          &.row-name
+            width 33%
+
+      tr
+        td:not(.row-name)
+          border 1rem solid black
+          padding 0
+          margin 0
+          height 9rem
+          font-size inherit
+          line-height 5rem
+          background backgroundGrey
+          cursor pointer
+
+        .row-name
+          line-height 7rem
+
+        input
+          border none
+          background none
+          width 100%
+          height 10rem
+
+          &:focus
+            outline none
+
+    .actions
+      margin-top 5rem
+
+  .landsofillusions-assets-editor-propertieslist
+    list-style none
+    padding 0
+
+    .property
+      display flex
+      margin-bottom 4rem
+
+      .name
+        display block
+        width calc(33% - 1rem)
+        flex-shrink 0
+        line-height 7rem
+
+      .value
+        display block
+        flex-grow 1
+
+        input
+          width 100%

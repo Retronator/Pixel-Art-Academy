@@ -5,9 +5,12 @@ LOI = LandsOfIllusions
 Vocabulary = LOI.Parser.Vocabulary
 
 class LOI.Adventure.Context extends LOI.Adventure.Thing
-  # The maximum height of context's illustration. By default there is no illustration (height 0).
-  @illustrationHeight: -> 0
-  illustrationHeight: -> @constructor.illustrationHeight()
+  @illustration: -> 
+    # Override to provide information about the illustration (name, height)
+    # for this context. By default there is no illustration.
+    null
+  
+  illustration: -> @constructor.illustration()
 
   @fullName: -> null # Contexts don't need to be named.
 

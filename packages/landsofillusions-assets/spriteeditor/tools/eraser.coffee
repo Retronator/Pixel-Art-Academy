@@ -1,47 +1,30 @@
 AC = Artificial.Control
+FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.Tools.Eraser extends LandsOfIllusions.Assets.Tools.Tool
-  constructor: ->
-    super arguments...
+class LOI.Assets.SpriteEditor.Tools.Eraser extends LOI.Assets.SpriteEditor.Tools.Stroke
+  @id: -> 'LandsOfIllusions.Assets.SpriteEditor.Tools.Eraser'
+  @displayName: -> "Eraser"
 
-    @name = "Eraser"
-    @shortcut = AC.Keys.e
+  @initialize()
 
-  onMouseDown: (event) ->
-    super arguments...
+  createPixelsFromCoordinates: (coordinates) ->
+    for coordinate in coordinates
+      pixel = _.clone coordinate
 
-    @applyEraser()
+      # Set direct color to color of the background to fake erasing.
+      pixel.directColor = r: 0.34, g: 0.34, b: 0.34
 
-  onMouseMove: (event) ->
-    super arguments...
+      pixel
 
-    @applyEraser()
+  applyPixels: (spriteData, layerIndex, relativePixels, strokeStarted) ->
+    changedPixels = for pixel in relativePixels when spriteData.getPixelForLayerAtCoordinates layerIndex, pixel.x, pixel.y
+      # We must send only the coordinates to the server.
+      _.pick pixel, ['x', 'y']
 
-  applyEraser: ->
-    return unless @mouseState.leftButton
+    return unless changedPixels.length
 
-    # Do we even need to remove this pixel? See if it is even there.
-    spriteData = @options.editor().spriteData()
+    LOI.Assets.Sprite.removePixels spriteData._id, layerIndex, changedPixels, not strokeStarted
 
-    xCoordinates = [@mouseState.x]
-
-    symmetryXOrigin = @options.editor().symmetryXOrigin?()
-
-    if symmetryXOrigin?
-      mirroredX = -@mouseState.x + 2 * symmetryXOrigin
-      xCoordinates.push mirroredX
-
-    for xCoordinate in xCoordinates
-      pixel =
-        x: xCoordinate
-        y: @mouseState.y
-
-      existing = LOI.Assets.Sprite.documents.findOne
-        _id: spriteData._id
-        "layers.#{0}.pixels":
-          $elemMatch: pixel
-
-      return unless existing
-
-      LOI.Assets.Sprite.removePixel spriteData._id, 0, pixel
+    # Register that we've processed the start of the stroke.
+    @startOfStrokeProcessed()

@@ -1,0 +1,16 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-mesheditor-meshcanvas
+  absolute-cover()
+  user-select none
+
+  > .canvas
+    position absolute
+    top 0
+    left 0
+    // Note: We have to use !important because THREE.js will style the div itself and thus fix the size.
+    width 100% !important
+    height 100% !important
+
+  .landsofillusions-assets-spriteeditor-pixelcanvas
+    background none

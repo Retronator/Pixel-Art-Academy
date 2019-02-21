@@ -10,10 +10,27 @@ class LOI.Engine.World.SceneManager
     ambientLight = new THREE.AmbientLight 0xffffff, 0.4
     scene.add ambientLight
 
-    directionalLight = new THREE.DirectionalLight 0xffffff, 0.6
+    directionalLight = new THREE.DirectionalLight 0xffffff, 0.4
 
     directionalLight.castShadow = true
-    d = 10
+    d = 20
+    directionalLight.shadow.camera.left = -d
+    directionalLight.shadow.camera.right = d
+    directionalLight.shadow.camera.top = d
+    directionalLight.shadow.camera.bottom = -d
+    directionalLight.shadow.camera.near = 0.5
+    directionalLight.shadow.camera.far = 5
+    directionalLight.shadow.mapSize.width = 4096
+    directionalLight.shadow.mapSize.height = 4096
+    directionalLight.shadow.bias = -0.01
+
+    directionalLight.position.set 0, 4, 0.5
+    scene.add directionalLight
+
+    directionalLight = new THREE.DirectionalLight 0xffffff, 1.2
+
+    directionalLight.castShadow = true
+    d = 20
     directionalLight.shadow.camera.left = -d
     directionalLight.shadow.camera.right = d
     directionalLight.shadow.camera.top = d
@@ -24,46 +41,70 @@ class LOI.Engine.World.SceneManager
     directionalLight.shadow.mapSize.height = 4096
     directionalLight.shadow.bias = -0.0001
 
-    @directionalLight = directionalLight
-    @setLightDirection -1, -1, -1
-
+    directionalLight.position.set 100, 100, 100
     scene.add directionalLight
 
-    plane = new THREE.Mesh new THREE.PlaneGeometry(7, 7), new THREE.MeshLambertMaterial(color: 0xcccccc)
-    plane.position.y = -0.95
-    plane.rotation.x = -Math.PI / 2
-    plane.receiveShadow = true
-    scene.add plane
+    # Add location mesh.
+    @_currentLocationMesh = null
+    @_currentIllustrationName = null
+    
+    @world.autorun (computation) =>
+      illustration = LOI.adventure.currentSituation()?.illustration()
+      return unless illustrationName = illustration?.name
 
-    box = new THREE.Mesh new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial(color: 0xcccccc, shadowSide: THREE.DoubleSide)
-    box.position.x = 2
-    box.position.y = -0.5
-    box.receiveShadow = true
-    box.castShadow = true
-    scene.add box
+      LOI.Assets.Asset.forName.subscribe LOI.Assets.Mesh.className, illustrationName
+      return unless meshData = LOI.Assets.Mesh.documents.findOne name: illustrationName
 
-    box = new THREE.Mesh new THREE.BoxGeometry(3, 2, 1), new THREE.MeshLambertMaterial(color: 0xcccccc, shadowSide: THREE.DoubleSide)
-    box.position.x = -1
-    box.position.z = -1.5
-    box.position.y = 0
-    box.receiveShadow = true
-    box.castShadow = true
-    scene.add box
+      # Only react to illustration and mesh changes.
+      Tracker.nonreactive =>
+        cameraAngle = =>
+          cameraAngles = @_currentLocationMesh.options.meshData().cameraAngles
 
-    addedCount = 0
+          if illustration.cameraAngle
+            cameraAngles.find name: illustration.cameraAngle
+
+          else
+            cameraAngles.getFirst()
+
+        if illustrationName is @_currentIllustrationName
+          # Transition to other camera angle.
+          @world.cameraManager().transitionToCameraAngle cameraAngle(),
+            duration: 3000
+            easing: 'ease-in-out'
+  
+        else
+          @_currentIllustrationName = illustrationName
+
+          # Remove previous mesh.
+          if @_currentLocationMesh
+            scene.remove @_currentLocationMesh
+            @_currentLocationMesh.destroy()
+
+          # Initialize mesh data, since it's a rich document, and create an engine mesh based on the data.
+          meshData.initialize()
+          @_currentLocationMesh = new LOI.Assets.Engine.Mesh
+            meshData: => meshData
+            sceneManager: @
+
+          # Initialize the camera from the camera angle.
+          @world.cameraManager().setFromCameraAngle cameraAngle()
 
     @locationThings = new AE.ReactiveArray (=> @world.options.adventure.currentLocationThings()),
       added: (thing) =>
         # Look if the thing's avatar has a render object.
         return unless renderObject = thing.avatar.getRenderObject?()
 
+        if thing instanceof LOI.Character.Person
+          actions = thing.recentActions()
+
+          move = _.findLast actions, (action) => action.type is LOI.Memory.Actions.Move.type
+
+          if move?.content?.coordinates
+            renderObject.position.copy move.content.coordinates
+
         # Add it to the scene.
         scene.add renderObject
         @scene.updated()
-
-        renderObject.position.x = addedCount
-        renderObject.position.z = -addedCount
-        addedCount++
 
       removed: (thing) =>
         # Remove thing's render object.
@@ -71,11 +112,5 @@ class LOI.Engine.World.SceneManager
         scene.remove renderObject
         @scene.updated()
 
-        addedCount--
-
   destroy: ->
     @locationThings.stop()
-    
-  setLightDirection: (x, y, z) ->
-    @directionalLight.position.set(x, y, z).normalize().multiplyScalar(-100)
-    @directionalLight.lookAt 0, 0, 0

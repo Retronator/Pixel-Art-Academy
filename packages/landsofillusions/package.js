@@ -10,12 +10,19 @@ Package.describe({
   documentation: 'README.md'
 });
 
+Npm.depends({
+  'delaunator': '3.0.2',
+  'barycentric': '1.0.1'
+});
+
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
   api.use('chfritz:easycron');
+
   api.use('promise');
   api.use('modules');
+  api.use('webapp');
 
   api.imply('retronator:artificialengines');
   api.imply('retronator:retronator-accounts');
@@ -39,6 +46,12 @@ Package.onUse(function(api) {
   // Initialize client after settings have been defined.
   api.addClientFile('initialize-client');
 
+  // Game content
+
+  api.addServerFile('gamecontent-server/gamecontent');
+  api.addServerData('gamecontent-server/gamecontent');
+  api.addServerFile('gamecontent-server/initialize');
+
   // Game state
 
   api.addFile('state/gamestate');
@@ -60,11 +73,25 @@ Package.onUse(function(api) {
   api.addServerFile('state/migrations/0004-admissionapplication');
   api.addServerFile('state/migrations/0005-tutorialspritesremove');
 
+  // Engine
+
+  api.addFile('engine..');
+  api.addFile('engine/renderingregion');
+  api.addFile('engine/renderingsides');
+
+  api.addClientFile('engine/materials..');
+  api.addClientFile('engine/materials/spritematerial');
+  api.addClientFile('engine/materials/rampmaterial');
+
+  api.addClientFile('engine/materials/shaderchunks..');
+  api.addClientFile('engine/materials/shaderchunks/lighting');
+
   // Avatar
 
   api.addFile('avatar/avatar');
-  api.addFile('avatar/humanavatar');
-  api.addFile('avatar/humanavatar-renderobject');
+  api.addFile('avatar/humanavatar..');
+  api.addFile('avatar/humanavatar/renderobject');
+  api.addFile('avatar/humanavatar/regions');
 
   // Character
 
@@ -78,6 +105,8 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0003-migrateavatarfields');
   api.addServerFile('character/migrations/0004-displayname');
   api.addServerFile('character/migrations/0005-usercharactersupdate');
+  api.addServerFile('character/migrations/0006-moveneckfield');
+  api.addServerFile('character/migrations/0007-mergehairfields');
   api.addClientFile('character/spacebars');
   api.addFile('character/nonplayercharacter');
   api.addFile('character/instance');
@@ -91,6 +120,8 @@ Package.onUse(function(api) {
   
   api.addServerFile('character/part/migrations/0000-embeddedtranslations');
   api.addServerFile('character/part/migrations/0001-spriteids');
+  api.addServerFile('character/part/migrations/0002-articlepartstoarticlepartshapes');
+  api.addServerFile('character/part/migrations/0003-articlewitharticlepartshapes');
 
   api.addFile('character/part/property');
   api.addFile('character/part/properties/oneof');
@@ -113,18 +144,22 @@ Package.onUse(function(api) {
   api.addFile('character/avatar/properties/color');
   api.addFile('character/avatar/properties/relativecolorshade');
   api.addFile('character/avatar/properties/sprite');
+  api.addFile('character/avatar/properties/renderingcondition');
+  api.addFile('character/avatar/properties/hideregions');
 
   api.addFile('character/avatar/renderers/renderers');
   api.addFile('character/avatar/renderers/renderer');
   api.addFile('character/avatar/renderers/shape');
   api.addFile('character/avatar/renderers/default');
   api.addFile('character/avatar/renderers/humanavatar');
+  api.addFile('character/avatar/renderers/humanavatar-regionsorder');
   api.addFile('character/avatar/renderers/mappedshape');
+  api.addFile('character/avatar/renderers/mappedshape-mapsprite');
   api.addFile('character/avatar/renderers/bodypart');
   api.addFile('character/avatar/renderers/body');
   api.addFile('character/avatar/renderers/head');
   api.addFile('character/avatar/renderers/chest');
-  api.addFile('character/avatar/renderers/breasts');
+  api.addFile('character/avatar/renderers/outfitarticlepart');
 
   api.addFile('character/avatar/landmarks/position');
 
@@ -375,10 +410,13 @@ Package.onUse(function(api) {
 
   // Pages
 
-  api.addFiles('pages/pages.coffee');
-  api.addFiles('pages/loading/loading.coffee');
-  api.addFiles('pages/loading/loading.html');
-  api.addFiles('pages/loading/loading.styl');
+  api.addFile('pages..');
+
+  api.addComponent('pages/loading..');
+
+  api.addUnstyledComponent('pages/admin..');
+  api.addUnstyledComponent('pages/admin/gamecontent..');
+  api.addServerFile('pages/admin/gamecontent/server');
 
   // Components
 
@@ -452,14 +490,13 @@ Package.onUse(function(api) {
   api.addFile('simulation..');
   api.addServerFile('simulation/server');
 
-  // Engine
-
-  api.addFile('engine..');
-  api.addClientFile('engine/spritematerial');
+  // Engine world
 
   api.addComponent('engine/world..');
   api.addFile('engine/world/renderermanager');
   api.addFile('engine/world/scenemanager');
   api.addFile('engine/world/cameramanager');
   api.addFile('engine/world/audiomanager');
+  api.addFile('engine/world/mouse');
+  api.addFile('engine/world/navigator');
 });

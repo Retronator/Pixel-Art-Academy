@@ -14,3 +14,6 @@ class LOI.Character.Part.Property.OneOf extends LOI.Character.Part.Property
       @part = partClass.create
         dataLocation: @options.dataLocation
         parent: @
+
+  childPartOfType: (typeTemplateOrId) ->
+    @part.childPartOfType typeTemplateOrId

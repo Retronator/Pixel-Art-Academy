@@ -1,76 +1,520 @@
 {
   "_id": "PixelArtAcademy.Cast.Ace",
-  "debugName": "Ace",
-  "profile": {
-    "country": "us",
-    "age": 33,
-    "aspiration": "To draw like a boss!",
-    "favorites": {
-      "computer": "NES",
-      "gameGenre": "Strategy",
-      "artMedium": "Pixel art",
-      "superhero": "Batman",
-      "quote": "You only live once"
+  "avatar": {
+    "body": {
+      "node": {
+        "fields": {
+          "head": {
+            "node": {
+              "fields": {
+                "shape": {
+                  "templateId": "i7hjzpmyGPBtxgQJa"
+                },
+                "eyes": {
+                  "node": {
+                    "fields": {
+                      "shape": {
+                        "templateId": "erC7k2NXJ7YNqqgng"
+                      },
+                      "iris": {
+                        "node": {
+                          "fields": {
+                            "hue": {
+                              "value": 2
+                            },
+                            "shade": {
+                              "value": 3
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "hair": {
+                  "node": {
+                    "fields": {
+                      "0": {
+                        "type": "Avatar.Body.Hair",
+                        "node": {
+                          "fields": {
+                            "color": {
+                              "node": {
+                                "fields": {
+                                  "hue": {
+                                    "value": 15
+                                  },
+                                  "shade": {
+                                    "value": 2
+                                  }
+                                }
+                              }
+                            },
+                            "shapes": {
+                              "node": {
+                                "fields": {
+                                  "1": {
+                                    "templateId": "Q8cWtGFN3pLazXdpo",
+                                    "type": "Avatar.Body.HairShape"
+                                  },
+                                  "2": {
+                                    "templateId": "SisPS8sWnToFjice3",
+                                    "type": "Avatar.Body.HairShape"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "facialHair": {
+                  "node": {
+                    "fields": {
+                      "0": {
+                        "type": "Avatar.Body.FacialHair",
+                        "node": {
+                          "fields": {
+                            "shapes": {
+                              "node": {
+                                "fields": {
+                                  "0": {
+                                    "templateId": "ueE5J89P6eC98gpaC",
+                                    "type": "Avatar.Body.FacialHairShape"
+                                  },
+                                  "1": {
+                                    "templateId": "L9auHNHoJvMoymMw4",
+                                    "type": "Avatar.Body.FacialHairShape"
+                                  }
+                                }
+                              }
+                            },
+                            "color": {
+                              "node": {
+                                "fields": {
+                                  "hue": {
+                                    "value": 15
+                                  },
+                                  "shade": {
+                                    "value": 1
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "skin": {
+            "node": {
+              "fields": {
+                "hue": {
+                  "value": 3
+                },
+                "shade": {
+                  "value": 7
+                }
+              }
+            }
+          },
+          "torso": {
+            "node": {
+              "fields": {
+                "chest": {
+                  "node": {
+                    "fields": {
+                      "shape": {
+                        "templateId": "MTSoZJdMjfrNzxNSG"
+                      },
+                      "breasts": {
+                        "templateId": "msYEu22o9AmirdWL7"
+                      },
+                      "breastsOffsetX": {
+                        "value": -1
+                      }
+                    }
+                  }
+                },
+                "abdomen": {
+                  "templateId": "mJioY559vfEGohrG5"
+                },
+                "groin": {
+                  "node": {
+                    "fields": {
+                      "shape": {
+                        "templateId": "CGPE834KfMaAA5PAF"
+                      }
+                    }
+                  }
+                },
+                "neck": {
+                  "templateId": "4fwgybBqL8j8CRwK9"
+                }
+              }
+            }
+          },
+          "arms": {
+            "templateId": "7xjZxMuokHKgCsBLX"
+          },
+          "legs": {
+            "templateId": "6iQW2T2tHGkeSd8om"
+          }
+        }
+      }
+    },
+    "outfit": {
+      "node": {
+        "fields": {
+          "articles": {
+            "node": {
+              "fields": {
+                "0": {
+                  "node": {
+                    "fields": {
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 0
+                                        },
+                                        "shade": {
+                                          "value": 4
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      },
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "6": {
+                              "templateId": "uadYJZnm9Ns3fzpzr",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "7": {
+                              "templateId": "3vzBy9DtD8ZZPeiBq",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "8": {
+                              "templateId": "DqBMSA3G7s5Fqd7ck",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": "Avatar.Outfit.Article"
+                },
+                "1": {
+                  "type": "Avatar.Outfit.Article",
+                  "node": {
+                    "fields": {
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "templateId": "SPvHy2qnWgsee6nYq",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            }
+                          }
+                        }
+                      },
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 0
+                                        },
+                                        "shade": {
+                                          "value": 3
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            },
+                            "1": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "secondary"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 0
+                                        },
+                                        "shade": {
+                                          "value": 2
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "2": {
+                  "node": {
+                    "fields": {
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "1": {
+                              "templateId": "LBzTxWov6QfQXz64A",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "2": {
+                              "templateId": "yHa5pyaPqGteAYzcF",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "3": {
+                              "templateId": "xvEi6qMJbehs5RsNP",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "4": {
+                              "templateId": "hm3pj7sgM9xirzFEc",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "5": {
+                              "templateId": "bwT3HuKeefhEf4pw3",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "6": {
+                              "templateId": "p2z7RSTrhSo4u2XuG",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "7": {
+                              "templateId": "GFTnghFMdGnrZJzL4",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            }
+                          }
+                        }
+                      },
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 10
+                                        },
+                                        "shade": {
+                                          "value": 1
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": "Avatar.Outfit.Article"
+                },
+                "3": {
+                  "node": {
+                    "fields": {
+                      "customColors": {
+                        "node": {
+                          "fields": {
+                            "0": {
+                              "node": {
+                                "fields": {
+                                  "name": {
+                                    "value": "main"
+                                  },
+                                  "color": {
+                                    "node": {
+                                      "fields": {
+                                        "hue": {
+                                          "value": 0
+                                        },
+                                        "shade": {
+                                          "value": 1
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "type": "Avatar.Outfit.CustomColor"
+                            }
+                          }
+                        }
+                      },
+                      "parts": {
+                        "node": {
+                          "fields": {
+                            "2": {
+                              "templateId": "DuhfwKmCzAM6M5Xe8",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            },
+                            "3": {
+                              "templateId": "oMpprFCQYGymfCn5F",
+                              "type": "Avatar.Outfit.ArticlePart"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "type": "Avatar.Outfit.Article"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "behavior": {
     "node": {
       "fields": {
         "personality": {
+          "templateId": "h4tkC2svAxwoz7kYY"
+        },
+        "activities": {
+          "templateId": "5ksytZWpJXZ4rXB84"
+        },
+        "environment": {
           "node": {
             "fields": {
-              "factors": {
+              "clutter": {
                 "node": {
                   "fields": {
-                    "1": {
-                      "type": "Behavior.Personality.Factor",
+                    "average": {
+                      "value": 3
+                    },
+                    "ideal": {
+                      "value": 3
+                    }
+                  }
+                }
+              },
+              "people": {
+                "node": {
+                  "fields": {
+                    "9": {
                       "node": {
                         "fields": {
-                          "index": {
+                          "doesArt": {
+                            "value": false
+                          },
+                          "joins": {
+                            "value": true
+                          },
+                          "relationshipType": {
+                            "value": "Wife"
+                          },
+                          "livingProximity": {
+                            "value": "Roommate"
+                          },
+                          "artSupport": {
                             "value": 1
-                          }
-                        }
-                      }
-                    },
-                    "2": {
-                      "type": "Behavior.Personality.Factor",
-                      "node": {
-                        "fields": {
-                          "index": {
-                            "value": 2
-                          }
-                        }
-                      }
-                    },
-                    "4": {
-                      "type": "Behavior.Personality.Factor",
-                      "node": {
-                        "fields": {
-                          "index": {
-                            "value": 4
-                          }
-                        }
-                      }
-                    },
-                    "3": {
-                      "type": "Behavior.Personality.Factor",
-                      "node": {
-                        "fields": {
-                          "index": {
+                          },
+                          "relationshipStrength": {
                             "value": 3
                           }
                         }
-                      }
+                      },
+                      "type": "Behavior.Environment.Person"
                     },
-                    "5": {
-                      "type": "Behavior.Personality.Factor",
+                    "10": {
                       "node": {
                         "fields": {
-                          "index": {
-                            "value": 5
+                          "relationshipType": {
+                            "value": "Son"
+                          },
+                          "relationshipStrength": {
+                            "value": 3
+                          },
+                          "livingProximity": {
+                            "value": "Housemate"
+                          },
+                          "artSupport": {
+                            "value": 0
+                          },
+                          "joins": {
+                            "value": true
                           }
                         }
-                      }
+                      },
+                      "type": "Behavior.Environment.Person"
+                    },
+                    "11": {
+                      "node": {
+                        "fields": {
+                          "relationshipType": {
+                            "value": "Daughter"
+                          },
+                          "joins": {
+                            "value": true
+                          },
+                          "relationshipStrength": {
+                            "value": 3
+                          },
+                          "livingProximity": {
+                            "value": "Housemate"
+                          },
+                          "artSupport": {
+                            "value": 0
+                          }
+                        }
+                      },
+                      "type": "Behavior.Environment.Person"
                     }
                   }
                 }

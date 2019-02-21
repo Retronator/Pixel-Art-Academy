@@ -1,0 +1,23 @@
+<template name="LandsOfIllusions.Assets.Editor.FileManager">
+    <div class="landsofillusions-assets-editor-filemanager">
+      <ul class="directories">
+        {{#each directories}}
+          <li class="directory">
+            {{> Render this}}
+          </li>
+        {{/each}}
+        <li class="item-details">
+          {{#with selectedItem}}
+            <div class="preview">
+              {{#if $is selectedItemType 'Sprite'}}
+                {{> LandsOfIllusions.Assets.Editor.FileManager.Previews.Sprite}}
+              {{/if}}
+            </div>
+            <div class="name">
+              {{filename}}
+            </div>
+          {{/with}}
+        </li>
+      </ul>
+    </div>
+</template>

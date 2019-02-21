@@ -36,9 +36,9 @@ class LOI.Assets.Components.Navigator extends AM.Component
         else
           return
 
-      # Also allow for cmd/ctrl combination.
+      # Also allow for command/control combination.
       keyboardState = AC.Keyboard.getState()
-      event.preventDefault() if keyboardState.isCommandOrCtrlDown()
+      event.preventDefault() if keyboardState.isCommandOrControlDown()
 
     $(document).on 'keyup.landsofillusions-assets-components-navigator', (event) =>
       return unless @enabled()

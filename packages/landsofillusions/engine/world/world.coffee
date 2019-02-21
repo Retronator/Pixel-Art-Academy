@@ -4,6 +4,8 @@ LOI = LandsOfIllusions
 
 class LOI.Engine.World extends AM.Component
   @register 'LandsOfIllusions.Engine.World'
+
+  @textureDebug = false
   
   @UpdateModes:
     Realtime: 'Realtime'
@@ -18,7 +20,12 @@ class LOI.Engine.World extends AM.Component
     @cameraManager = new ReactiveField null
     @audioManager = new ReactiveField null
 
+    @mouse = new ReactiveField null
+    
+    @navigator = new ReactiveField null
+
     @renderedImage = new ReactiveField null
+    @$world = new ReactiveField null
 
   onCreated: ->
     super arguments...
@@ -35,16 +42,25 @@ class LOI.Engine.World extends AM.Component
 
     @renderedImage new AM.PixelImage
       image: rendererManager.renderer.domElement
-      
+
     @audioManager new @constructor.AudioManager @
+
+    @mouse new @constructor.Mouse @
+    
+    @navigator new @constructor.Navigator @
 
   onRendered: ->
     super arguments...
 
-    @$world = @$('.landsofillusions-engine-world')
+    @$world @$('.landsofillusions-engine-world')
+    @display = @callAncestorWith 'display'
 
     # Do initial forced update and draw.
     @forceUpdateAndDraw()
+
+    if @constructor.textureDebug
+      @autorun (computation) =>
+        @$('.engine-texture')[0].src = LOI.character()?.avatar.getRenderObject().debugTextureDataUrl()
 
   forceUpdateAndDraw: ->
     appTime = Tracker.nonreactive => @app.appTime()
@@ -60,7 +76,7 @@ class LOI.Engine.World extends AM.Component
     @sceneManager().destroy()
 
   onScroll: (scrollTop) ->
-    @$world.css transform: "translate3d(0, #{-scrollTop / 2}px, 0)"
+    @$world().css transform: "translate3d(0, #{-scrollTop / 2}px, 0)"
 
   update: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering
@@ -68,6 +84,8 @@ class LOI.Engine.World extends AM.Component
     @_update appTime
 
   _update: (appTime) ->
+    @navigator()?.update appTime
+
     for sceneItem in @sceneManager().scene().children when sceneItem instanceof AS.RenderObject
       sceneItem.update? appTime
 
@@ -85,23 +103,30 @@ class LOI.Engine.World extends AM.Component
   events: ->
     super(arguments...).concat
       'mouseenter canvas': @onMouseEnterCanvas
-      'mousemove canvas': @onMouseMoveCanvas
       'mouseleave canvas': @onMouseLeaveCanvas
+      'click canvas': @onClickCanvas
       
   onMouseEnterCanvas: (event) ->
     @_hovering = true
 
-  onMouseMoveCanvas: (event) ->
-    worldOffset = @$world.offset()
-
-    percentageX = (event.pageX - worldOffset.left) / @$world.outerWidth() * 8 - 4
-    percentageY = (event.pageY - worldOffset.top) / @$world.outerHeight() * 2 - 2
-
-    @sceneManager().setLightDirection -percentageX, percentageY, -1
-
   onMouseLeaveCanvas: (event) ->
     @_hovering = false
-
-    @sceneManager().setLightDirection -1, -1, -1
-
     @forceUpdateAndDraw()
+
+  onClickCanvas: (event) ->
+    displayCoordinate = @mouse().displayCoordinate()
+    illustrationSize = @options.adventure.interface.illustrationSize
+    scene = @sceneManager().scene()
+
+    raycaster = @cameraManager().getRaycaster
+      x: displayCoordinate.x - illustrationSize.width() / 2
+      y: displayCoordinate.y - illustrationSize.height() / 2
+
+    intersects = raycaster.intersectObjects scene.children, true
+    return unless intersects.length
+
+    # Create move memory action.
+    type = LOI.Memory.Actions.Move.type
+    situation = LOI.adventure.currentSituationParameters()
+    LOI.Memory.Action.do type, LOI.characterId(), situation,
+      coordinates: intersects[0].point.toObject()

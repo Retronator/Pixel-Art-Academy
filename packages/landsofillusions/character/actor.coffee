@@ -20,9 +20,14 @@ class LOI.Character.Actor extends LOI.Character.Person
   constructor: ->
     super arguments...
 
+    # Agent's main avatar will be the character avatar from the instance, so we manually create the avatar based on
+    # this thing. This way we can use some universal avatar values that hold for all actors (like description).
+    @thingAvatar = @avatar
+
     # We must provide an NPC document for creating the character instance of this actor.
     @nonPlayerCharacterDocument = new ReactiveField null
     @instance = new LOI.Character.Instance @id(), @nonPlayerCharacterDocument
+    @avatar = @instance.avatar
 
     # Person state for actors is saved in the thing state directly.
     @personStateAddress = @stateAddress
@@ -44,22 +49,36 @@ class LOI.Character.Actor extends LOI.Character.Person
           document.avatar ?= {}
 
           _.extend document.avatar,
-            fullName: @avatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
-            pronouns: @avatar.pronouns()
-            color: @avatar.color()
+            fullName: @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
+            pronouns: @thingAvatar.pronouns()
+            color: @thingAvatar.color()
 
           @nonPlayerCharacterDocument document
           
     # Create a collection with all current actions.
     @actionsLocation = new @constructor.Actions
     @actionDocuments = new AM.CollectionWrapper =>
+      return unless LOI.adventureInitialized()
+      
       situation = new LOI.Adventure.Situation
         location: @actionsLocation
         
       situation.things()
 
+  ready: ->
+    conditions = [
+      super arguments...
+      @thingAvatar.ready()
+      @instance.ready()
+    ]
+
+    _.every conditions
+
+  description: ->
+    @thingAvatar.description()
+
   recentActions: ->
-    # TODO: Provide actions via storyline.
+    [] # TODO: Provide actions via storyline.
     
   getActions: (query = {}) ->
     for actionDocument in @actionDocuments.find(query).fetch()

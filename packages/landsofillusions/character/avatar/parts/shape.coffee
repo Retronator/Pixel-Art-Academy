@@ -10,6 +10,20 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
     _.extend options.properties,
       front: new LOI.Character.Avatar.Properties.Sprite
         name: 'front'
+      frontLeft: new LOI.Character.Avatar.Properties.Sprite
+        name: 'front-left'
+      left: new LOI.Character.Avatar.Properties.Sprite
+        name: 'left'
+      backLeft: new LOI.Character.Avatar.Properties.Sprite
+        name: 'back-left'
+      back: new LOI.Character.Avatar.Properties.Sprite
+        name: 'back'
+      backRight: new LOI.Character.Avatar.Properties.Sprite
+        name: 'back-right'
+      right: new LOI.Character.Avatar.Properties.Sprite
+        name: 'right'
+      frontRight: new LOI.Character.Avatar.Properties.Sprite
+        name: 'front-right'
 
     super options
 
@@ -18,6 +32,13 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
     options = _.extend {}, options,
       part: @
       frontSpriteId: @options.dataLocation.child('front.spriteId')
+      frontLeftSpriteId: @options.dataLocation.child('frontLeft.spriteId')
+      leftSpriteId: @options.dataLocation.child('left.spriteId')
+      backLeftSpriteId: @options.dataLocation.child('backLeft.spriteId')
+      backSpriteId: @options.dataLocation.child('back.spriteId')
+      backRightSpriteId: @options.dataLocation.child('backRight.spriteId')
+      rightSpriteId: @options.dataLocation.child('right.spriteId')
+      frontRightSpriteId: @options.dataLocation.child('frontRight.spriteId')
 
     existingMaterialData = options.materialsData
 

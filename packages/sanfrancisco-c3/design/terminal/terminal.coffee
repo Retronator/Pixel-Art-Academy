@@ -38,9 +38,12 @@ class C3.Design.Terminal extends C3.Items.Terminal
 
     # We already get all the templates for the current user, so we shouldn't return those.
     LOI.Character.Part.Template.forTypes.subscribe @, types, skipCurrentUsersTemplates: true
+    
+    @viewingAngle = new ReactiveField 0
 
   onRendered: ->
     super arguments...
+    return
 
     # Show an alpha-state disclaimer.
     @showDialog

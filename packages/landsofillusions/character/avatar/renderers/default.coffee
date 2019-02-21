@@ -8,10 +8,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
-    propertyRendererOptions =
-      flippedHorizontal: @options.flippedHorizontal
-      landmarksSource: @options.landmarksSource
-      materialsData: @options.materialsData
+    propertyRendererOptions = @_cloneRendererOptions()
 
     @renderers = new ComputedField =>
       renderers = []
@@ -19,31 +16,34 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
       for propertyName, property of @options.part.properties
         if property instanceof LOI.Character.Part.Property.OneOf
           renderer = property.part.createRenderer propertyRendererOptions
+          renderer.options.propertyName = propertyName
           renderers.push renderer if renderer
 
         else if property instanceof LOI.Character.Part.Property.Array
           for part in property.parts()
             renderer = part.createRenderer propertyRendererOptions
+            renderer.options.propertyName = propertyName
             renderers.push renderer if renderer
 
       renderers
 
     @landmarks = new ComputedField =>
       # Create landmarks and update renderer translations.
-      landmarks = {}
+      landmarks = []
 
       # If we have a landmarks source, we use it.
-      if @options.landmarksSource
-        _.extend landmarks, @options.landmarksSource.landmarks()
+      if landmarksSource = @options.landmarksSource?()
+        landmarks.push landmarksSource.landmarks()...
 
-        initialLandmark = true if _.keys(landmarks).length
+        initialLandmark = true if landmarks.length
 
       else
         # We start with the origin landmark.
-        if @options.origin
-          landmarks[@options.origin.landmark] =
-            x: @options.origin.x or 0
-            y: @options.origin.y or 0
+        if origin = @getOrigin()
+          landmarks.push
+            name: origin.landmark
+            x: origin.x or 0
+            y: origin.y or 0
 
           initialLandmark = true
 
@@ -59,25 +59,35 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
         renderer = undeterminedRenderers.shift()
 
         # Find if any of the renderer's landmarks matches any of ours.
-        rendererLandmarks = renderer.landmarks()
-        for rendererLandmarkName, rendererLandmark of rendererLandmarks
-          landmark = landmarks[rendererLandmarkName]
+        rendererLandmarks = renderer.landmarks() or []
+
+        for rendererLandmark in rendererLandmarks
+          landmark = _.find landmarks, (landmark) => landmark.name is rendererLandmark.name
+            
           if landmark or not initialLandmark
             if landmark
               renderer._translation =
                 x: landmark.x - rendererLandmark.x
                 y: landmark.y - rendererLandmark.y
 
+              renderer._depth = landmark.z or 0
+
             else
               renderer._translation = x: 0, y: 0
+              renderer._depth = 0
 
             # Add all other landmarks from this renderer.
-            for rendererLandmarkName, rendererLandmark of rendererLandmarks
-              translatedLandmark = _.extend {}, rendererLandmark,
-                x: rendererLandmark.x + renderer._translation.x
-                y: rendererLandmark.y + renderer._translation.y
+            regionId = @getRegionId()
 
-              landmarks[rendererLandmarkName] = translatedLandmark
+            for rendererLandmark in rendererLandmarks
+              translatedLandmark = _.clone rendererLandmark
+
+              # When rendering a texture, only translate landmarks inside the same region.
+              if not @options.renderTexture or rendererLandmark.regionId is regionId
+                translatedLandmark.x += renderer._translation.x
+                translatedLandmark.y += renderer._translation.y
+
+              landmarks.push translatedLandmark
               initialLandmark = true
 
             processedWithoutMatch = 0
@@ -86,6 +96,8 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
         unless renderer._translation
           processedWithoutMatch++
           undeterminedRenderers.push renderer
+
+      @_applyLandmarksRegion landmarks
 
       landmarks
 
@@ -104,7 +116,13 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     # Depend on landmarks to update when renderer translations change.
     @landmarks()
 
-    for renderer in @renderers()
+    context.save()
+    @_handleRegionTransform context, options
+
+    # Sort renderers by depth.
+    sortedRenderers = _.sortBy @renderers(), (renderer) => renderer._depth
+
+    for renderer in sortedRenderers
       context.save()
 
       translation = _.defaults {}, renderer._translation,
@@ -115,3 +133,5 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
 
       renderer.drawToContext context, options
       context.restore()
+
+    context.restore()

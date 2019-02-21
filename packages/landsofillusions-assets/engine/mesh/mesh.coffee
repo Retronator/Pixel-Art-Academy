@@ -1,71 +1,42 @@
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Mesh extends THREE.Object3D
-  @debug = false
-  
   constructor: (@options) ->
     super arguments...
 
-    @clusters = new ReactiveField null
-    @edges = new ReactiveField null
+    @objects = new ReactiveField null
 
-    # Add the object to the scene once it's ready.
+    # Add the mesh to the scene.
     Tracker.autorun (computation) =>
-      return unless scene = @options.sceneManager()?.scene()
+      return unless scene = @options.sceneManager.scene()
       computation.stop()
 
       scene.add @
+      @options.sceneManager.scene.updated()
 
-    # Generate cluster meshes.
-    Tracker.autorun (computation) =>
+    # Generate objects.
+    @_generateObjectsAutorun = Tracker.autorun (computation) =>
       return unless meshData = @options.meshData()
-      return unless cameraAngle = meshData.cameraAngles?[0]
-      return unless cameraAngle.sprite
+      return unless objectsData = meshData.objects.getAllWithoutUpdates()
+      
+      engineObjects = for objectData in objectsData
+        new @constructor.Object @, objectData
 
-      clusters = @constructor.detectClusters cameraAngle.sprite
-      edges = @constructor.computeEdges clusters if clusters
+      @objects engineObjects
 
-      @clusters clusters
-      @edges edges
-
-      return unless clusters?.length and edges
-
-      @constructor.computeClusterPlanes clusters, cameraAngle
-
-      edge.generateGeometry cameraAngle for edge in edges when edge.line.point
-
-      @constructor.projectClusterPoints clusters, cameraAngle
-      @constructor.computeClusterMeshes clusters
-
-    # Update scene.
-    Tracker.autorun (computation) =>
+    # Update mesh children.
+    @_updateChildrenAutorun = Tracker.autorun (computation) =>
       # Clean up previous children.
       @remove @children[0] while @children.length
 
-      clusters = @clusters()
-      edges = @edges()
-
-      return unless clusters?.length and edges
-
-      debug = @options.debug()
-      currentCluster = @options.currentCluster()
+      objects = @objects()
+      return unless objects?.length
 
       # Add new children.
-      for cluster in clusters
-        # Do not draw unselected clusters in debug mode.
-        if not debug or debug and (not currentCluster or cluster is currentCluster)
-          continue unless mesh = cluster.getMesh @options
-          @add mesh
+      @add object for object in objects
 
-          if debug
-            mesh.layers.set 2
+      @options.sceneManager.scene.updated()
 
-            points = cluster.getPoints @options
-            points.layers.set 2
-            @add points
-      
-      for edge in edges when edge.line.point
-        edge.layers.set 2
-        @add edge
-
-      @options.sceneManager()?.scene.updated()
+  destroy: ->
+    @_generateObjectsAutorun.stop()
+    @_updateChildrenAutorun.stop()
