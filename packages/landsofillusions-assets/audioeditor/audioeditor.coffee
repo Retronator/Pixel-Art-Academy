@@ -122,8 +122,18 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
   @defaultShortcutsMapping: ->
     _.extend super(arguments...),
       # Actions
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
-      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [{key: AC.Keys.dash}, {commandOrControl: true, key: AC.Keys.dash}]
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [
+        {key: AC.Keys.equalSign, keyLabel: '+'}
+        {commandOrControl: true, key: AC.Keys.equalSign}
+        {key: AC.Keys.numPlus}
+        {key: AC.Keys.t}
+      ]
+      "#{LOI.Assets.SpriteEditor.Actions.ZoomOut.id()}": [
+        {key: AC.Keys.dash}
+        {commandOrControl: true, key: AC.Keys.dash}
+        {key: AC.Keys.numMinus}
+        {key: AC.Keys.r}
+      ]
 
   constructor: ->
     super arguments...
