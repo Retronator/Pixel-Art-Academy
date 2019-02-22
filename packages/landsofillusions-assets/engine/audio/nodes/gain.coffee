@@ -19,7 +19,7 @@ class LOI.Assets.Engine.Audio.Gain extends LOI.Assets.Engine.Audio.Node
   @parameters: -> [
     name: 'gain'
     pattern: Match.OptionalOrNull Number
-    step: 0.1
+    step: 1
     default: 1
     type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
   ]

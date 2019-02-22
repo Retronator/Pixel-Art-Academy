@@ -25,7 +25,7 @@ class LOI.Assets.Engine.Audio.Oscillator extends LOI.Assets.Engine.Audio.Schedul
       name: 'frequency'
       pattern: Match.OptionalOrNull Number
       default: 440
-      step: 10
+      step: 1
       type: LOI.Assets.Engine.Audio.ConnectionTypes.Parameter
     ,
       name: 'detune'
