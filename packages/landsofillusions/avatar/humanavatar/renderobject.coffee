@@ -240,7 +240,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
   destroy: ->
     super arguments...
 
-    renderer.stop() for renderer in @textureRendeders()
+    renderer.stop() for side, renderer of @textureRendeders
     animatedMesh.destroy() for side, animatedMesh of @animatedMeshes
 
     @_textureUpdateAutorun.stop()

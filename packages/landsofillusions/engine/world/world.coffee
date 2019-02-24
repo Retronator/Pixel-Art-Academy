@@ -118,9 +118,10 @@ class LOI.Engine.World extends AM.Component
     illustrationSize = @options.adventure.interface.illustrationSize
     scene = @sceneManager().scene()
 
-    return unless raycaster = @cameraManager().getRaycaster
+    return unless raycaster = @cameraManager().getRaycaster(
       x: displayCoordinate.x - illustrationSize.width() / 2
       y: displayCoordinate.y - illustrationSize.height() / 2
+    )
 
     intersects = raycaster.intersectObjects scene.children, true
     return unless intersects.length

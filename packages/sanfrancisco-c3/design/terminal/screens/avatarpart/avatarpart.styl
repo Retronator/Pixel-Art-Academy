@@ -1,6 +1,42 @@
 @import "{retronator:landsofillusions}/style/style.import"
 
 .sanfrancisco-c3-design-terminal-avatarpart
+  &.own-template
+    .main-content
+      background rgba(atariCyan(0), 0.5)
+
+      &::after
+        content ''
+        absolute-cover()
+        border 1rem solid atariCyan(2)
+        pointer-events none
+
+    .action-button
+      border 1rem solid atariCyan(2)
+      color atariCyan(4)
+
+      &:hover
+        z-index 1
+        border-color atariCyan(4)
+        color atariCyan(6)
+        outline none
+
+    .main-actions
+      .action-button
+        &:hover
+          &::after
+            background atariCyan(2)
+
+        &.main-button
+          border 1rem solid atariAqua(2)
+
+          &::after
+            background atariAqua(1)
+
+          &:hover
+            &::after
+              background atariAqua(2)
+
   .main-content
     absolute-cover()
     overflow-y auto

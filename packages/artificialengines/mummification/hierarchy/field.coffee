@@ -4,13 +4,15 @@ AM = Artificial.Mummification
 class AM.Hierarchy.Field
   # For data passed to the field, refer to template document structure.
   constructor: (options) ->
-    templateSubscription = null
     node = null
+    templateNode = null
     placeholderNode = null
     metaData = null
 
     cleanTemplate = ->
-      templateSubscription?.stop()
+      templateNode?.options.load.stop()
+      templateNode?.destroy()
+      templateNode = null
 
     cleanNode = ->
       node?.options.load.stop()
@@ -30,11 +32,31 @@ class AM.Hierarchy.Field
         # Simply return the value.
         data.value
 
-      else if data.templateId
+      # Note: We allow templateId for backwards compatibility.
+      else if data.template or data.templateId
         cleanNode()
+        
+        if data.template?.data
+          return templateNode if templateNode
 
-        # Return the template document's root node (it will be null until the subscription kicks in).
-        options.templateClass.documents.findOne(data.templateId)?.node
+          # We create a node similarly to how the template prepares it, but we load directly the embedded data instead
+          # of needing to query template document. Note that we reset the address hierarchy from here on out to match
+          # the address relative to the template.
+          templateNode = Tracker.nonreactive => new AM.Hierarchy.Node
+            templateClass: options.templateClass
+            template: _id: data.template.id
+            address: new AM.Hierarchy.Address
+            load: new ComputedField => data.template.data
+            save: =>
+              throw new AE.InvalidOperationException "You cannot modify published versions of templates."
+
+          templateNode
+  
+        else
+          # Return the template document's root node (it will be null until the subscription kicks in).
+          templateId = data.templateId or data.template.id
+
+          options.templateClass.documents.findOne(templateId)?.node
 
       else if data.node
         cleanTemplate()
@@ -109,11 +131,7 @@ class AM.Hierarchy.Field
       # If we have a node, make sure the node is ready.
       return value.ready() if value instanceof AM.Hierarchy.Node
       
-      # We're done loading if this is not a template.
-      return true unless templateSubscription
-      
-      # Otherwise wait till the template is loaded.
-      templateSubscription.ready()
+      true
 
     # Gets a node, even if the data for it does not exist yet.
     # This allows us to save at locations that haven't been set yet.

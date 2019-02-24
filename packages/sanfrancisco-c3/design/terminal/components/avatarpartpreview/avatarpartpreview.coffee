@@ -1,4 +1,5 @@
 AM = Artificial.Mirage
+AMu = Artificial.Mummification
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
@@ -19,14 +20,37 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
       @designTerminal = @ancestorComponentOfType C3.Design.Terminal
 
+      @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
+      @viewingAngle = @options.viewingAngle or new ReactiveField 0
+
       @renderer = new ComputedField =>
         return unless part = @data()
 
         rendererOptions = _.clone @options.rendererOptions or {}
 
         if @designTerminal and _.startsWith part.options.type, 'Avatar.Outfit'
-          rendererOptions.landmarksSource = => @designTerminal.screens.character.character().avatar.getRenderer().bodyRenderer
-          rendererOptions.bodyPart = => @designTerminal.screens.character.character().avatar.body
+          rendererOptions.landmarksSource = =>
+            # If we're editing a character, use its landmarks to position clothes.
+            if character = @designTerminal.screens.character.character()
+              character.avatar.getRenderer().bodyRenderer
+
+            else
+              # Without a character, we rely on landmarks from default
+              # body parts that get created when no data is loaded.
+              unless @_defaultBodyRenderer
+                @_defaultBodyPart = LOI.Character.Part.Types.Avatar.Body.create
+                  dataLocation: new AMu.Hierarchy.Location
+                    rootField: AMu.Hierarchy.create
+                      templateClass: LOI.Character.Part.Template
+                      type: LOI.Character.Part.Types.Avatar.Body.options.type
+                      load: => null
+
+                @_defaultBodyRenderer = @_defaultBodyPart.createRenderer
+                  viewingAngle: @viewingAngle
+
+              @_defaultBodyRenderer
+
+          rendererOptions.bodyPart = => @designTerminal.screens.character.character()?.avatar.body or @_defaultBodyPart
 
         return unless part.createRenderer
 
@@ -34,9 +58,6 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
     onRendered: ->
       super arguments...
-
-      @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
-      @viewingAngle = @options.viewingAngle or new ReactiveField 0
 
       @display = @callAncestorWith 'display'
 

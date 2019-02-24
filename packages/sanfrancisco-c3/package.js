@@ -49,11 +49,12 @@ Package.onUse(function(api) {
   api.addComponent('behavior/terminal/components/activitypartspreview/activitypartspreview');
   api.addComponent('behavior/terminal/components/peoplepropertypreview/peoplepropertypreview');
 
-  api.addThing('design/design');
-  api.addComponent('design/terminal/terminal');
-  api.addComponent('design/terminal/screens/mainmenu/mainmenu');
-  api.addComponent('design/terminal/screens/character/character');
-  api.addComponent('design/terminal/screens/avatarpart/avatarpart');
+  api.addThing('design..');
+  api.addFile('design/templatepart');
+  api.addComponent('design/terminal..');
+  api.addComponent('design/terminal/screens/mainmenu..');
+  api.addComponent('design/terminal/screens/character..');
+  api.addComponent('design/terminal/screens/avatarpart..');
 
   api.addFile('design/terminal/components/components');
   api.addComponent('design/terminal/components/avatarpartpreview/avatarpartpreview');

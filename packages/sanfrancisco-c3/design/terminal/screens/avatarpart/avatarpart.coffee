@@ -104,7 +104,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
   isOwnPartTemplate: ->
     userId = Meteor.userId()
-    template = @partTemplate()
+    return unless template = @partTemplate()
     template.author?._id is userId
 
   isEditable: ->
@@ -119,6 +119,13 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     return true unless @part() instanceof LOI.Character.Avatar.Parts.Shape
 
     Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
+
+  templatePublished: ->
+    template = @partTemplate()
+    template.published
+
+  rootTemplate: ->
+    @partTemplate() and not @partStack.length and not @terminal.screens.character.characterId()
 
   backButtonCallback: ->
     @closePart()
@@ -135,12 +142,22 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       # Pop this part off the stack.
       @popPart()
 
-      # We return back to the character screen if there's no more parts to show.
-      @terminal.switchToScreen @terminal.screens.character unless @part()
+      unless @part()
+        # There are no more parts to show, so we exit avatar part editor.
+        if @terminal.screens.character.characterId()
+          # We were editing a character so we return to the character screen.
+          @terminal.switchToScreen @terminal.screens.character
+
+        else
+          # We were editing a template so we go straight to main menu.
+          @terminal.switchToScreen @terminal.screens.mainMenu
 
   partClass: ->
     return unless part = @part()
     _.kebabCase part.options.type
+
+  ownTemplateClass: ->
+    'own-template' if @isOwnPartTemplate()
 
   propertyClass: ->
     property = @currentData()

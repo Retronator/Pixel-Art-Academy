@@ -17,34 +17,36 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
   #   _id
   #   translations
   # type: type of this part
-  # data: data of the template (root node), as inherited from hierarchy template
   # spriteIds: generated array of all sprite Ids found in the template data
   @Meta
     name: @id()
-    fields: =>
-      author: Document.ReferenceField RA.User, ['displayName', 'publicName'], false
-      authorName: Document.GeneratedField 'self', ['author'], (part) ->
-        authorName = part.author?.publicName or null
-        [part._id, authorName]
-      name: Document.ReferenceField AB.Translation, ['translations'], false
-      description: Document.ReferenceField AB.Translation, ['translations'], false
-      spriteIds: [Document.GeneratedField 'self', ['data'], (template) ->
-        spriteIds = []
+    fields: (fields) =>
+      _.extend fields,
+        author: Document.ReferenceField RA.User, ['displayName', 'publicName'], false
+        authorName: Document.GeneratedField 'self', ['author'], (part) ->
+          authorName = part.author?.publicName or null
+          [part._id, authorName]
+        name: Document.ReferenceField AB.Translation, ['translations'], false
+        description: Document.ReferenceField AB.Translation, ['translations'], false
+        spriteIds: [Document.GeneratedField 'self', ['data'], (template) ->
+          spriteIds = []
 
-        addSpriteIds = (data) =>
-          return unless data
+          addSpriteIds = (data) =>
+            return unless data
 
-          for fieldName, fieldData of data
-            if fieldName is 'spriteId'
-              spriteIds.push fieldData.value if fieldData?.value
+            for fieldName, fieldData of data
+              if fieldName is 'spriteId'
+                spriteIds.push fieldData.value if fieldData?.value
 
-            else if _.isObject fieldData
-              addSpriteIds fieldData
+              else if _.isObject fieldData
+                addSpriteIds fieldData
 
-        addSpriteIds template.data
+          addSpriteIds template.data
 
-        [template._id, spriteIds]
-      ]
+          [template._id, spriteIds]
+        ]
+
+      fields
 
   @forId: @subscription 'forId'
   @forType: @subscription 'forType'
@@ -53,7 +55,14 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
 
   @insert: @method 'insert'
   @updateData: @method 'updateData'
+  @publish: @method 'publish'
+  @revert: @method 'revert'
 
+  @_authorizeTemplateAction: (template) ->
+    # User must be the author of this template.
+    user = Retronator.requireUser()
+    throw new AE.UnauthorizedException "You must be the author of the template to change it." unless template.author._id is user._id
+  
 if Meteor.isServer
   importDirective = 'LandsOfIllusions.Character.Part.Template.adminTemplates'
   
@@ -86,7 +95,7 @@ if Meteor.isServer
 
   LOI.GameContent.addImportDirective importDirective, (template) ->
     # Associate the template back to the (new) admin.
-    unless admin = RA.User.documents.findOne username: 'admin'
+    unless admin = RA.User.documents.findOne(username: 'admin')
       console.warn "Admin user hasn't been created yet. Restart server to update template authors."
 
       # Delete ID to skip importing for now.

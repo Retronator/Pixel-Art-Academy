@@ -102,6 +102,9 @@ updateCharacterPart = (field, characterId, address, value) ->
   field += ".#{address}" if address
 
   if value?
+    # Denormalize data into a template field.
+    AM.Hierarchy.Template._denormalizeTemplateField value.template, LOI.Character.Part.Template if value.template
+
     update =
       $set:
         "#{field}": value

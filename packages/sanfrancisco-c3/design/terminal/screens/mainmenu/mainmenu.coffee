@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
@@ -8,23 +9,79 @@ class C3.Design.Terminal.MainMenu extends AM.Component
   constructor: (@terminal) ->
     super arguments...
 
+    @templatesTypeFilter = new ReactiveField null
+
   onCreated: ->
     super arguments...
 
-  character: ->
-    character = @currentData()
+    @characters = new ComputedField =>
+      return unless characters = Retronator.user()?.characters
 
-    new LOI.Character.Instance character._id
+      # Load full documents so we can tell if designs are approved.
+      characters = for character in characters
+        LOI.Character.documents.findOne character._id
+
+      _.pull characters, undefined
+
+      for character in characters
+        character.translatedName = AB.translate(character.avatar.fullName).text
+
+      _.sortBy characters, 'translatedName'
+
+    @templates = new ComputedField =>
+      type = @templatesTypeFilter() or /Avatar/
+
+      # Get all the templates this user is author of.
+      templates = LOI.Character.Part.Template.documents.fetch
+        'author._id': Meteor.userId()
+        type: type
+
+      for template in templates
+        template.translatedName = AB.translate(template.name).text
+
+      _.sortBy templates, 'translatedName'
+
+    partTypes = _.flatten [
+      LOI.Character.Part.getPartTypeIdsUnderType 'Avatar.Body'
+      'Avatar.Outfit'
+      LOI.Character.Part.getPartTypeIdsUnderType 'Avatar.Outfit'
+    ]
+
+    templateCategories = for partType in partTypes
+      type: partType
+      name: _.last partType.split('.')
+
+    @templateCategories = _.sortBy templateCategories, 'name'
+
+  templateCategorySelectedAttribute: ->
+    option = @currentData()
+
+    'selected' if option.type is @templatesTypeFilter()
+
+  templateVersion: ->
+    template = @currentData()
+
+    if template.dataPublished
+      # We're showing the last published version.
+      template.latestVersion.index + 1
+
+    else
+      # We're editing the next version.
+      versionsCount = template.versions?.length or 0
+      versionsCount + 1
 
   events: ->
     super(arguments...).concat
       'click .character-selection-button': @onClickCharacterSelectionButton
       'click .new-character-button': @onClickNewCharacterButton
+      'change .category-selection': @onChangeCategorySelection
+      'click .template-selection-button': @onClickTemplateSelectionButton
+      'click .new-template-button': @onClickNewTemplateButton
 
   onClickCharacterSelectionButton: (event) ->
-    characterInstance = @currentData()
+    character = @currentData()
 
-    @terminal.screens.character.setCharacterId characterInstance._id
+    @terminal.screens.character.setCharacterId character._id
     @terminal.switchToScreen @terminal.screens.character
 
   onClickNewCharacterButton: (event) ->
@@ -35,3 +92,19 @@ class C3.Design.Terminal.MainMenu extends AM.Component
 
       @terminal.screens.character.setCharacterId characterId
       @terminal.switchToScreen @terminal.screens.character
+
+  onChangeCategorySelection: (event) ->
+    @templatesTypeFilter $(event.target).val()
+
+  onClickTemplateSelectionButton: (event) ->
+    template = @currentData()
+    templatePart = new C3.Design.TemplatePart template._id
+
+    @terminal.screens.avatarPart.pushPart templatePart.part, templatePart.part
+    @terminal.switchToScreen @terminal.screens.avatarPart
+
+    # Clean up any previous character selection so the interface knows we're editing a template.
+    @terminal.screens.character.setCharacterId null
+
+  onClickNewTemplateButton: (event) ->
+    # TODO: Go to the template type selection.

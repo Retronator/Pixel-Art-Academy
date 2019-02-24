@@ -52,11 +52,14 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
           # If we still don't have a sprite, see if we have a default specified.
           unless spriteId
             if defaultName = @options.part.options.default
-              if _.last(defaultName) is '/'
-                spriteName = "#{defaultName}#{_.kebabCase sourceSide}"
+              addSideToDefaultName = (side) =>
+                if _.last(defaultName) is '/'
+                  "#{defaultName}#{_.kebabCase side}"
 
-              else
-                spriteName = "#{defaultName} #{_.kebabCase sourceSide}"
+                else
+                  "#{defaultName} #{_.kebabCase side}"
+
+              spriteName = addSideToDefaultName sourceSide
 
               flipped = false
               defaultSprite = true
@@ -68,9 +71,8 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
                 spriteId = @constructor._getDefaultSpriteId defaultName
 
               unless spriteId
-                spriteName = "#{defaultName} #{_.kebabCase mirrorSide}"
+                spriteName = addSideToDefaultName mirrorSide
                 flipped = true
-
                 spriteId = @constructor._getDefaultSpriteId spriteName
 
           return unless spriteId

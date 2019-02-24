@@ -6,35 +6,49 @@
     </p>
     <p class="main-text">
       Please select an agent to work on or create a new one.
-      {{! TODO: Uncomment when templates are back in: Advanced users can also create and modify individual body part templates.!}}
+      Advanced users can also create and modify individual body parts and clothing.
     </p>
-    <div class="ai-agents section">
+    <div class="characters section">
       <h2 class="section-title">Agents</h2>
       <ul class="document-selection">
-        {{#each currentUser.characters}}
-          {{#with character}}
-            <li class="document">
-              <button class="document-selection-button character-selection-button">
-                {{avatar.fullName}}
-                {{#unless document.designApproved}} (draft){{/unless}}
-              </button>
-            </li>
-          {{/with}}
+        {{#each characters}}
+          <li class="document">
+            <button class="document-selection-button character-selection-button">
+              {{translatedName}}
+              {{#unless designApproved}} (draft){{/unless}}
+            </button>
+          </li>
         {{/each}}
       </ul>
       <div class="actions">
         <button class="action-button new-character-button">New</button>
       </div>
     </div>
-    {{! TODO: Finish template editing section
-    <div class="cyborg-parts section">
+    <div class="templates section">
       <h2 class="section-title">Cyborg Parts</h2>
+      <div class="category">
+        <select class="category-selection">
+          <option value="">All</option>
+          {{#each templateCategories}}
+            <option value="{{type}}" {{templateCategorySelectedAttribute}}>{{name}}</option>
+          {{/each}}
+        </select>
+      </div>
       <ul class="document-selection">
+        {{#each templates}}
+          <li class="document">
+            <button class="document-selection-button template-selection-button">
+              {{translatedName}}
+              (v{{templateVersion}}{{#unless dataPublished}}, draft{{/unless}})
+            </button>
+          </li>
+        {{/each}}
       </ul>
       <div class="actions">
-        <button class="action-button new-character-part-button">New</button>
+        {{#if templatesTypeFilter}}
+          <button class="action-button new-character-part-button">New</button>
+        {{/if}}
       </div>
     </div>
-    }}
   </div>
 </template>

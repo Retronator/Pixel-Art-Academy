@@ -11,21 +11,11 @@ class C3.Behavior.Terminal.MainMenu extends AM.Component
   onCreated: ->
     super arguments...
     
-    @_characters = []
-      
     @characters = new ComputedField =>
-      character.destroy() for character in @_characters
-
       user = Retronator.user()
 
-      designedCharacters = _.filter user.characters, (character) =>
+      _.filter user.characters, (character) =>
         LOI.Character.documents.findOne(character._id)?.designApproved
-
-      @_characters = for character in designedCharacters
-        Tracker.nonreactive =>
-          new LOI.Character.Instance character._id
-
-      @_characters
 
   events: ->
     super(arguments...).concat

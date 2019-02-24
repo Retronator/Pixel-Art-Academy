@@ -1,5 +1,5 @@
 <template name="SanFrancisco.C3.Design.Terminal.AvatarPart">
-  <div class="sanfrancisco-c3-design-terminal-avatarpart screen {{partClass}}">
+  <div class="sanfrancisco-c3-design-terminal-avatarpart screen {{partClass}} {{ownTemplateClass}}">
     <div class="main-content">
       <h1 class="screen-title">{{titleCase part.options.name}} Design</h1>
       {{#if showTemplates}}
@@ -110,17 +110,26 @@
       {{#if showTemplates}}
         <button class="main-button action-button done-button">Back</button>
       {{else}}
-        <button class="main-button action-button done-button">Done</button>
-        <button class="action-button replace-button">Replace</button>
         {{#if partTemplate}}
-          {{#if canCreateNew}}
-            {{#if isOwnPartTemplate}}
-              <button class="action-button unlink-template-button">Unlink template</button>
-            {{else}}
-              <button class="action-button unlink-template-button">Modify</button>
-            {{/if}}
+          {{#if templatePublished}}
+            <button class="main-button action-button done-button">Done</button>
+          {{else}}
+            <button class="main-button action-button publish-button">Publish</button>
+            <button class="action-button done-button">Save as draft</button>
           {{/if}}
+          {{#unless rootTemplate}}
+            <button class="action-button replace-button">Replace</button>
+            {{#if canCreateNew}}
+              {{#if isOwnPartTemplate}}
+                <button class="action-button unlink-template-button">Unlink template</button>
+              {{else}}
+                <button class="action-button unlink-template-button">Modify</button>
+              {{/if}}
+            {{/if}}
+          {{/unless}}
         {{else}}
+          <button class="main-button action-button done-button">Done</button>
+          <button class="action-button replace-button">Replace</button>
           {{#if isAdmin}}
             <button class="action-button save-as-template-button">Save as template</button>
           {{/if}}
