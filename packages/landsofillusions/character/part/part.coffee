@@ -11,13 +11,21 @@ class LOI.Character.Part
           
   @allPartTypeIds: ->
     _.flatten [
+      @allAvatarPartTypeIds()
+      @allBehaviorPartTypeIds()
+    ]
+    
+  @allAvatarPartTypeIds: ->
+    _.flatten [
       @getPartTypeIdsUnderType 'Avatar.Body'
       'Avatar.Outfit'
       @getPartTypeIdsUnderType 'Avatar.Outfit'
-      @getPartTypeIdsUnderType 'Behavior'
     ]
     
-  @getPartTypeIdsUnderType = (type) =>
+  @allBehaviorPartTypeIds: ->
+    @getPartTypeIdsUnderType 'Behavior'
+    
+  @getPartTypeIdsUnderType: (type) =>
     types = []
 
     # Go over all the properties of the type and add all sub-types.

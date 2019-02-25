@@ -36,11 +36,13 @@ class C3.Design.Terminal extends C3.Items.Terminal
     # Subscribe to all user's characters to see their designed status.
     LOI.Character.forCurrentUser.subscribe @
 
-    # Subscribe to all character part templates and the sprites that they use.
-    types = LOI.Character.Part.allPartTypeIds()
+    # Subscribe to all character part templates.
+    types = LOI.Character.Part.allAvatarPartTypeIds()
 
     # We already get all the templates for the current user, so we shouldn't return those.
-    LOI.Character.Part.Template.forTypes.subscribe @, types, skipCurrentUsersTemplates: true
+    LOI.Character.Part.Template.forTypes.subscribe @, types,
+      skipCurrentUsersTemplates: true
+      onlyPublished: true
     
     @viewingAngle = new ReactiveField 0
 

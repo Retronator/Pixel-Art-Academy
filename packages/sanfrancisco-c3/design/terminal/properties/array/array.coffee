@@ -2,7 +2,7 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
 
-class C3.Design.Terminal.Properties.Array extends AM.Component
+class C3.Design.Terminal.Properties.Array extends C3.Design.Terminal.Properties.Property
   @register 'SanFrancisco.C3.Design.Terminal.Properties.Array'
 
   onCreated: ->

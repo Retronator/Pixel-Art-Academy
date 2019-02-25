@@ -19,10 +19,14 @@ LOI.Character.Part.Template.forTypes.publish (types, options) ->
 LOI.Character.Part.Template._forTypes = (types, options = {}, userId) ->
   check options,
     skipCurrentUsersTemplates: Match.Optional Boolean
+    onlyPublished: Match.Optional Boolean
 
   query =
     type:
       $in: types
+
+  fields =
+    author: 0
 
   # If the user is subscribed to templates for current user, we shouldn't return those, because otherwise the same
   # document might be sent from two subscriptions, making it unpredictable if the author field will be present (it
@@ -31,9 +35,13 @@ LOI.Character.Part.Template._forTypes = (types, options = {}, userId) ->
     query['author._id'] =
       $ne: userId
 
-  LOI.Character.Part.Template.documents.find query,
-    fields:
-      author: 0
+  if options.onlyPublished
+    query.latestVersion = $exists: true
+    _.extend fields,
+      data: 0
+      versions: 0
+
+  LOI.Character.Part.Template.documents.find query, {fields}
 
 LOI.Character.Part.Template.forCurrentUser.publish ->
   LOI.Character.Part.Template.documents.find

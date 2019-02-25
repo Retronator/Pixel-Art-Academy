@@ -91,11 +91,16 @@ class AM.Hierarchy.Location
       templateMetaData = newTemplateMetaData
 
     # Sets this field to inherit data from a template.
-    location.setTemplate = (templateId) ->
+    location.setTemplate = (templateId, versionIndex) ->
       field = location.field()
+      
+      template =
+        id: templateId
+        
+      template.version = versionIndex if versionIndex?
 
       # Add field meta data.
-      data = _.extend {templateId}, metaData
+      data = _.extend {template}, metaData
 
       field.options.save field.options.address.string(), data
 
@@ -134,6 +139,33 @@ class AM.Hierarchy.Location
 
       # We save this using parent's save function and address, not the template's.
       field.options.save field.options.address.string(), data
+      
+    location.publishTemplate = ->
+      field = location.field()
+      node = field()
+      throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
+      
+      templateId = node.template._id
+      field.options.templateClass.publish templateId, (error, versionIndex) =>
+        if error
+          console.error error
+          return
+
+        # Update this node to the newly published template version.
+        location.setTemplate templateId, versionIndex
+        
+    location.revertTemplate = ->
+      field = location.field()
+      node = field()
+      throw new AE.InvalidOperationException "Location doesn't hold a template." unless node.template
+
+      templateId = node.template._id
+      field.options.templateClass.revert templateId, (error, versionIndex) =>
+        if error
+          console.error error
+          return
+
+        location.setTemplate templateId, versionIndex
 
     # Return the location getter/setter function (return must be explicit).
     return location

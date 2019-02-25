@@ -62,6 +62,7 @@ Package.onUse(function(api) {
 
   api.addFile('design/terminal/properties..');
   api.addFile('design/terminal/properties/input');
+  api.addFile('design/terminal/properties/property');
   api.addComponent('design/terminal/properties/oneof..');
   api.addComponent('design/terminal/properties/array..');
   api.addComponent('design/terminal/properties/color..');

@@ -55,7 +55,11 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   templates: ->
     return unless type = @type()
 
-    LOI.Character.Part.Template.documents.find {type},
+    LOI.Character.Part.Template.documents.find
+      type: type
+      latestVersion:
+        $exists: true
+    ,
       sort:
         'name.translations.best.text': 1
 
@@ -65,7 +69,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
     dataField = AMu.Hierarchy.create
       templateClass: LOI.Character.Part.Template
-      load: => template
+      load: => node: template.latestVersion.data
 
     part.create
       dataLocation: new AMu.Hierarchy.Location
@@ -101,15 +105,49 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   # Note that we can't name this helper 'template' since that would override Blaze Component template method.
   partTemplate: ->
     @part()?.options.dataLocation()?.template
+    
+  fullPartTemplate: ->
+    return unless embeddedTemplate = @partTemplate()
+
+    # We must fetch the full template that has author data.
+    LOI.Character.Part.Template.documents.findOne embeddedTemplate._id
 
   isOwnPartTemplate: ->
     userId = Meteor.userId()
-    return unless template = @partTemplate()
+    return unless template = @fullPartTemplate()
     template.author?._id is userId
 
+  isTemplateEditable: ->
+    # The template is editable if it belongs to the user and is not locked to a version.
+    @isOwnPartTemplate() and not @partTemplate().version?
+
+  isTemplatePublishable: ->
+    # The template is publishable when it has been edited.
+    @isTemplateEditable() and not @fullPartTemplate().dataPublished
+
+  canPublishTemplate: ->
+    return unless @isTemplatePublishable()
+    return unless node = @part()?.options.dataLocation().data()
+
+    # The template can be successfully published only when no unversioned templates are used.
+    try
+      AMu.Hierarchy.Template.assertNoDraftTemplates node
+      
+    catch
+      return false
+      
+    true
+
+  publishButtonMainButtonClass: ->
+    'main-button' if @canPublishTemplate()
+
+  canRevertTemplate: ->
+    # The template can be reverted when it can be published and we have a latest version to revert to.
+    @isTemplatePublishable() and @fullPartTemplate().latestVersion
+
   isEditable: ->
-    # User can edit the part if it is not a template or if the template belongs to them.
-    @canCreateNew() and (not @partTemplate() or @isOwnPartTemplate())
+    # User can edit the part if it is not a template or if the template is editable.
+    @canCreateNew() and (not @partTemplate() or @isTemplateEditable())
 
   editableClass: ->
     'editable' if @isEditable()
@@ -121,8 +159,8 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     Retronator.user()?.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
 
   templatePublished: ->
-    template = @partTemplate()
-    template.published
+    template = @fullPartTemplate()
+    template.dataPublished
 
   rootTemplate: ->
     @partTemplate() and not @partStack.length and not @terminal.screens.character.characterId()
@@ -139,6 +177,10 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       @forceShowTemplates false
 
     else
+      # See if we've set any data to this part and delete it if not.
+      partDataLocation = @part()?.options.dataLocation
+      partDataLocation.remove() unless partDataLocation()
+
       # Pop this part off the stack.
       @popPart()
 
@@ -171,9 +213,12 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   events: ->
     super(arguments...).concat
       'click .done-button': @onClickDoneButton
+      'click .publish-button': @onClickPublishButton
       'click .replace-button': @onClickReplaceButton
       'click .save-as-template-button': @onClickSaveAsTemplateButton
       'click .unlink-template-button': @onClickUnlinkTemplateButton
+      'click .modify-template-button': @onClickModifyTemplateButton
+      'click .revert-template-button': @onClickRevertTemplateButton
       'click .new-part-button': @onClickNewPartButton
       'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
@@ -181,9 +226,18 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       'mouseleave .template': @onMouseLeaveTemplate
 
   onClickDoneButton: (event) ->
-    # See if we've set any data to this part and delete it if not.
-    partDataLocation = @part()?.options.dataLocation
-    partDataLocation.remove() unless partDataLocation()
+    @closePart()
+
+  onClickPublishButton: (event) ->
+    unless @canPublishTemplate()
+      @terminal.showDialog
+        message: "You can't publish a template that includes draft templates."
+        cancelButtonText: "OK"
+
+      return
+
+    # Publish a new version of this template.
+    @part()?.options.dataLocation.publishTemplate()
 
     @closePart()
 
@@ -197,6 +251,14 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
   onClickUnlinkTemplateButton: (event) ->
     @part()?.options.dataLocation.unlinkTemplate()
+
+  onClickModifyTemplateButton: (event) ->
+    # Set the same template without a version.
+    templateId = @partTemplate()._id
+    @part()?.options.dataLocation.setTemplate templateId
+
+  onClickRevertTemplateButton: (event) ->
+    @part()?.options.dataLocation.revertTemplate()
 
   onClickNewPartButton: (event) ->
     # Delete current data at this node.
@@ -215,7 +277,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   onClickTemplate: (event) ->
     template = @currentData()
 
-    @part()?.options.dataLocation.setTemplate template._id
+    @part()?.options.dataLocation.setTemplate template._id, template.latestVersion.index
 
     @forceShowTemplates false
     @hoveredTemplate null

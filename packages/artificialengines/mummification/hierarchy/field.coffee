@@ -44,7 +44,10 @@ class AM.Hierarchy.Field
           # the address relative to the template.
           templateNode = Tracker.nonreactive => new AM.Hierarchy.Node
             templateClass: options.templateClass
-            template: _id: data.template.id
+            template:
+              _id: data.template.id
+              version: data.template.version
+              data: data.template.data
             address: new AM.Hierarchy.Address
             load: new ComputedField => data.template.data
             save: =>

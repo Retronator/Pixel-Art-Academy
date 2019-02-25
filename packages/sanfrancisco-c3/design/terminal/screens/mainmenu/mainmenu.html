@@ -39,7 +39,9 @@
           <li class="document">
             <button class="document-selection-button template-selection-button">
               {{translatedName}}
-              (v{{templateVersion}}{{#unless dataPublished}}, draft{{/unless}})
+              {{#unless dataPublished}}
+                ({{#if $gt templateVersion 1}}v{{templateVersion}}, {{/if}}draft)
+              {{/unless}}
             </button>
           </li>
         {{/each}}

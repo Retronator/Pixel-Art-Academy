@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AE = Artificial.Everywhere
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
@@ -26,12 +27,12 @@ LOI.Character.Part.Template.updateData.method (templateId, address, value) ->
   RA.authorizeAdmin()
 
   template = LOI.Character.Part.Template.documents.findOne templateId
-
-  # User must be the author of this template.
-  user = Retronator.requireUser()
-  throw new AE.UnauthorizedException "You must be the author of the template to change it." unless template.author._id is user._id
+  LOI.Character.Part.Template._authorizeTemplateAction template
 
   if value?
+    # Denormalize data into a template field when we have a specific version (otherwise we want live updating).
+    AM.Hierarchy.Template.denormalizeTemplateField LOI.Character.Part.Template, value.template if value.template?.version?
+    
     update =
       $set:
         "data.#{address}": value
@@ -40,4 +41,28 @@ LOI.Character.Part.Template.updateData.method (templateId, address, value) ->
       $unset:
         "data.#{address}": true
 
+  # Mark change to the data.
+  update.$set ?= {}
+  update.$set.dataPublished = false
+
   LOI.Character.Part.Template.documents.update templateId, update
+
+LOI.Character.Part.Template.publish.method (templateId) ->
+  check templateId, Match.DocumentId
+  
+  RA.authorizeAdmin()
+
+  template = LOI.Character.Part.Template.documents.findOne templateId
+  LOI.Character.Part.Template._authorizeTemplateAction template
+  
+  AM.Hierarchy.Template._publish LOI.Character.Part.Template, template
+
+LOI.Character.Part.Template.revert.method (templateId) ->
+  check templateId, Match.DocumentId
+  
+  RA.authorizeAdmin()
+
+  template = LOI.Character.Part.Template.documents.findOne templateId
+  LOI.Character.Part.Template._authorizeTemplateAction template
+
+  AM.Hierarchy.Template._revert LOI.Character.Part.Template, template

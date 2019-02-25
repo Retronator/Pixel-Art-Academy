@@ -21,12 +21,14 @@
             {{#with partTemplate}}
               <div class="template-info">
                 {{#if isOwnPartTemplate}}
-                  <div class="name">
-                    <span class="label">Template</span>: {{> renderTemplateNameInput name}}
-                  </div>
-                  <p class="main-text">
-                    You are the designer of this template and can edit it.
-                  </p>
+                  {{#with fullPartTemplate}}
+                    <div class="name">
+                      <span class="label">Template</span>: {{> renderTemplateNameInput name}}
+                    </div>
+                    <p class="main-text">
+                      You are the designer of this template and can edit it.
+                    </p>
+                  {{/with}}
                 {{else}}
                   <div class="name">
                     <span class="label">Model</span>: {{> t9n name}}
@@ -111,16 +113,24 @@
         <button class="main-button action-button done-button">Back</button>
       {{else}}
         {{#if partTemplate}}
-          {{#if templatePublished}}
-            <button class="main-button action-button done-button">Done</button>
-          {{else}}
-            <button class="main-button action-button publish-button">Publish</button>
+          {{#if isTemplatePublishable}}
+            <button class="{{publishButtonMainButtonClass}} action-button publish-button">Publish</button>
             <button class="action-button done-button">Save as draft</button>
+          {{else}}
+            <button class="main-button action-button done-button">Done</button>
           {{/if}}
           {{#unless rootTemplate}}
             <button class="action-button replace-button">Replace</button>
+          {{/unless}}
+          {{#if canRevertTemplate}}
+            <button class="action-button revert-template-button">Revert template</button>
+          {{/if}}
+          {{#unless rootTemplate}}
             {{#if canCreateNew}}
               {{#if isOwnPartTemplate}}
+                {{#unless isTemplateEditable}}
+                  <button class="action-button modify-template-button">Modify template</button>
+                {{/unless}}
                 <button class="action-button unlink-template-button">Unlink template</button>
               {{else}}
                 <button class="action-button unlink-template-button">Modify</button>
@@ -134,7 +144,9 @@
             <button class="action-button save-as-template-button">Save as template</button>
           {{/if}}
         {{/if}}
-        <button class="action-button delete-button danger-button">Delete</button>
+        {{#unless rootTemplate}}
+          <button class="action-button delete-button danger-button">Delete</button>
+        {{/unless}}
       {{/if}}
     </div>
   </div>

@@ -1,5 +1,6 @@
 AB = Artificial.Babel
 AE = Artificial.Everywhere
+AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
 LOI.Character.insert.method ->
@@ -102,8 +103,8 @@ updateCharacterPart = (field, characterId, address, value) ->
   field += ".#{address}" if address
 
   if value?
-    # Denormalize data into a template field.
-    AM.Hierarchy.Template._denormalizeTemplateField value.template, LOI.Character.Part.Template if value.template
+    # Denormalize data into a template field when we have a specific version (otherwise we want live updating).
+    AM.Hierarchy.Template.denormalizeTemplateField LOI.Character.Part.Template, value.template if value.template?.version?
 
     update =
       $set:
