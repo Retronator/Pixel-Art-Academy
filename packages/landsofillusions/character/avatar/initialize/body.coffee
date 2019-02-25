@@ -79,10 +79,13 @@ LOI.Character.Part.registerClasses
         materials:
           hair: (part) ->
             hairPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Hair
-            hairPart.properties.color
+            hairPart?.properties.color or LOI.Character.Part.Types.Avatar.Body.HairShape.options.defaultHair
         landmarks:
           forehead: new LOI.Character.Avatar.Landmark.Position
             name: 'forehead'
+        defaultHair:
+          hue: => LOI.Assets.Palette.Atari2600.hues.orange
+          shade: => 6
 
       FacialHair: new LOI.Character.Part
         type: 'Avatar.Body.FacialHair'
@@ -107,7 +110,7 @@ LOI.Character.Part.registerClasses
         materials:
           facialHair: (part) ->
             facialHairPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.FacialHair
-            facialHairPart.properties.color
+            facialHairPart?.properties.color or LOI.Character.Part.Types.Avatar.Body.HairShape.options.defaultHair
         landmarks:
           mouth: new LOI.Character.Avatar.Landmark.Position
             name: 'mouth'
@@ -157,10 +160,13 @@ LOI.Character.Part.registerClasses
         materials:
           iris: (part) ->
             eyesPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Eyes
-            eyesPart.properties.iris
+            eyesPart?.properties.iris or LOI.Character.Part.Types.Avatar.Body.EyeShape.options.defaultIris
         landmarks:
           eyeCenter: new LOI.Character.Avatar.Landmark.Position
             name: 'eyeCenter'
+        defaultIris:
+          hue: => LOI.Assets.Palette.Atari2600.hues.blue
+          shade: => 5
 
       Torso: new LOI.Character.Part
         type: 'Avatar.Body.Torso'
@@ -251,7 +257,7 @@ LOI.Character.Part.registerClasses
             name: 'nipple shade'
             baseColor: (part) ->
               bodyPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body
-              bodyPart.properties.skin
+              bodyPart?.properties.skin or LOI.Character.Avatar.Parts.SkinShape.defaultSkin
           topShape: new LOI.Character.Part.Property.OneOf
             name: 'top shape'
             type: 'Avatar.Body.BreastShapeTop'
@@ -400,7 +406,7 @@ LOI.Character.Part.registerClasses
         materials:
           pubicHair: (part) ->
             pubicHairPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.PubicHair
-            pubicHairPart.properties.color
+            pubicHairPart?.properties.color or LOI.Character.Part.Types.Avatar.Body.HairShape.options.defaultHair
         landmarks:
           pubicSymphysis: new LOI.Character.Avatar.Landmark.Position
             name: 'pubicSymphysis'

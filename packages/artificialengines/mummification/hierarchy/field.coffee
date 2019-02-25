@@ -44,10 +44,12 @@ class AM.Hierarchy.Field
           # the address relative to the template.
           templateNode = Tracker.nonreactive => new AM.Hierarchy.Node
             templateClass: options.templateClass
-            template:
+            # We need to pass on embedded template fields, however id is saved without underscore so
+            # we need to add it to pretend this is a normal template document (and not embedded).
+            template: _.extend
               _id: data.template.id
-              version: data.template.version
-              data: data.template.data
+            ,
+              data.template
             address: new AM.Hierarchy.Address
             load: new ComputedField => data.template.data
             save: =>

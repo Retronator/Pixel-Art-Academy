@@ -94,7 +94,7 @@ class AM.Hierarchy.Template extends AM.Document
   @_revert: (templateClass, template) ->
     throw new AE.ArgumentException "The given template does not have a last version to revert to." unless template.latestVersion
 
-    LOI.Character.Part.Template.documents.update template._id,
+    templateClass.documents.update template._id,
       $set:
         data: template.latestVersion.data
         dataPublished: true

@@ -63,6 +63,13 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
     user = Retronator.requireUser()
     throw new AE.UnauthorizedException "You must be the author of the template to change it." unless template.author._id is user._id
   
+  @denormalizeTemplateField: (templateField) ->
+    AM.Hierarchy.Template.denormalizeTemplateField LOI.Character.Part.Template, templateField
+
+    # Also denormalize the name since we need it for conditional template name checking.
+    referencedTemplate = LOI.Character.Part.Template.documents.findOne templateField.id
+    templateField.name = referencedTemplate.name.translations?.best?.text
+
 if Meteor.isServer
   importDirective = 'LandsOfIllusions.Character.Part.Template.adminTemplates'
   

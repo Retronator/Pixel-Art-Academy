@@ -103,8 +103,12 @@ class LOI.Character.Avatar.Renderers.Renderer
       part = bodyPart.childPartOfType partType
       partNode = part.options.dataLocation()
 
-      # See if the part is a template and its name matches our test regex.
-      templateName = partNode?.template?.name.translations.best.text
+      # See if the part is a template and its name matches our test regex. The name is saved on the embedded template.
+      templateName = partNode?.template?.name
+
+      # For live templates, we have to manually go into the translations.
+      templateName = templateName.translations.best.text if templateName?.translations
+
       new RegExp(regex).test templateName
 
     return true unless conditionResults.length

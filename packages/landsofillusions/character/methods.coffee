@@ -104,7 +104,7 @@ updateCharacterPart = (field, characterId, address, value) ->
 
   if value?
     # Denormalize data into a template field when we have a specific version (otherwise we want live updating).
-    AM.Hierarchy.Template.denormalizeTemplateField LOI.Character.Part.Template, value.template if value.template?.version?
+    LOI.Character.Part.Template.denormalizeTemplateField value.template if value.template?.version?
 
     update =
       $set:
