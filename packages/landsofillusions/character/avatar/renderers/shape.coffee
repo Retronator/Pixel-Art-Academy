@@ -39,6 +39,9 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
         sourceSide = if @options.flippedHorizontal then LOI.Engine.RenderingSides.mirrorSides[side] else side
 
         @spriteDataInfo[side] = new ComputedField =>
+          # Don't start loading until the cache is ready.
+          return unless @liveEditing or LOI.Assets.Sprite.cacheReady()
+          
           spriteId = @options["#{sourceSide}SpriteId"]()
           flipped = false
           defaultSprite = false
@@ -133,6 +136,9 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
       y: target.y - source.y
 
     @_ready = new ComputedField =>
+      # Wait until the cache is ready.
+      return unless @liveEditing or LOI.Assets.Sprite.cacheReady()
+
       # If we have no data in this part for this side, there's nothing to do.
       return true unless @spriteDataInfo[@activeSide()]()
 

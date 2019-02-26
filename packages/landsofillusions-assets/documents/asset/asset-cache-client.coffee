@@ -24,6 +24,9 @@ class LOI.Assets.Asset extends AM.Document
 
         @_cache cache
 
+  @cacheReady: ->
+    @_cache()?
+
   @getFromCache: (id) ->
     @_cache()?[id]
     
@@ -44,5 +47,5 @@ class LOI.Assets.Asset extends AM.Document
             break
 
         return asset if found
-      
+
     null

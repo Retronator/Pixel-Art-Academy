@@ -28,6 +28,9 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
         sourceSide = if flipped then LOI.Engine.RenderingSides.mirrorSides[side] else side
 
         @spriteDataInfo[side] = new ComputedField =>
+          # Don't start loading until the cache is ready.
+          return unless @liveEditing or LOI.Assets.Sprite.cacheReady()
+
           spriteId = @options["#{sourceSide}SpriteId"]()
 
           # If we didn't find a sprite for this side, we assume we should mirror the other side.
@@ -101,6 +104,9 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     @usedLandmarksCenter = new ComputedField => @_usedLandmarksCenter()
 
     @_ready = new ComputedField =>
+      # Wait until the cache is ready.
+      return unless @liveEditing or LOI.Assets.Sprite.cacheReady()
+
       # If we have no sprite in this part, there's nothing to do.
       return true unless @spriteDataInfo[@activeSide()]()
 
