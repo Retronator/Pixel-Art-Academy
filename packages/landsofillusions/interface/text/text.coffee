@@ -293,8 +293,8 @@ class LOI.Interface.Text extends LOI.Interface
       cursorFrame = 3 if cursorTimeFrame is 4
 
       unless cursorFrame is @_previousCursorFrame
-        $textInterface.addClass("cursor-frame-#{cursorFrame}")
-        $textInterface.removeClass("cursor-frame-#{@_previousCursorFrame}")
+        $textInterface?.addClass("cursor-frame-#{cursorFrame}")
+        $textInterface?.removeClass("cursor-frame-#{@_previousCursorFrame}")
         @_previousCursorFrame = cursorFrame
     ,
       175

@@ -179,7 +179,13 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     else
       # See if we've set any data to this part and delete it if not.
       partDataLocation = @part()?.options.dataLocation
-      partDataLocation.remove() unless partDataLocation()
+      partNode = partDataLocation()
+      partDataLocation.remove() unless partNode
+
+      # If we're on a live template that hasn't been modified, fix the version.
+      # Note: we must make sure we have latest version ready since it won't be if we've just published the template.
+      if partNode?.template and not partNode.template.version and partNode.template.dataPublished and partNode.template.latestVersion
+        partDataLocation.setTemplate partNode.template._id, partNode.template.latestVersion.index
 
       # Pop this part off the stack.
       @popPart()
