@@ -18,5 +18,4 @@ class LOI.Assets.Editor.Actions.Duplicate extends LOI.Assets.Editor.Actions.Asse
 
       # Open the duplicate.
       editorView = @interface.allChildComponentsOfType(FM.EditorView)[0]
-      editorView.addFile duplicateAssetId
-
+      editorView.addFile duplicateAssetId, asset.constructor.id()

@@ -98,13 +98,25 @@ class C3.Design.Terminal.MainMenu extends AM.Component
 
   onClickTemplateSelectionButton: (event) ->
     template = @currentData()
-    templatePart = new C3.Design.TemplatePart template._id
+
+    @_openTemplate template._id
+
+  onClickNewTemplateButton: (event) ->
+    data = fields: {}
+    metaData = type: @templatesTypeFilter()
+
+    LOI.Character.Part.Template.insert data, metaData, (error, templateId) =>
+      if error
+        console.error error
+        return
+
+      @_openTemplate templateId
+
+  _openTemplate: (templateId) ->
+    templatePart = new C3.Design.TemplatePart templateId
 
     @terminal.screens.avatarPart.pushPart templatePart.part, templatePart.part
     @terminal.switchToScreen @terminal.screens.avatarPart
 
     # Clean up any previous character selection so the interface knows we're editing a template.
     @terminal.screens.character.setCharacterId null
-
-  onClickNewTemplateButton: (event) ->
-    # TODO: Go to the template type selection.

@@ -59,7 +59,19 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
     @activeSpriteFlipped = new ComputedField =>
       @spriteDataInfo[@activeSide()]()?.flipped
-
+      
+    @activeSourceLandmarks = new ComputedField =>
+      spriteData = @spriteData[@activeSide()]()
+      
+      # If we're flipped, we want to map onto flipped landmarks.
+      if @activeSpriteFlipped() and spriteData?.landmarks
+        for landmark in spriteData.landmarks
+          _.extend {}, landmark,
+            name: landmark.name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
+            
+      else
+        spriteData?.landmarks
+      
     @activeSpriteData = new ComputedField =>
       spriteData = @spriteData[@activeSide()]()
       
@@ -72,15 +84,8 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
         targetLandmarks = _.filter targetLandmarks, (targetLandmark) =>
           landmarksRegion.matchRegion targetLandmark.regionId
-
-      # If we're flipped, we want to map onto flipped landmarks.
-      if @activeSpriteFlipped() and spriteData?.landmarks
-        sourceLandmarks = for landmark in spriteData.landmarks
-          _.extend {}, landmark,
-            name: landmark.name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
-            
-      else
-        sourceLandmarks = spriteData?.landmarks
+          
+      sourceLandmarks = @activeSourceLandmarks()
             
       @_mapSprite spriteData, sourceLandmarks, targetLandmarks
 
@@ -88,6 +93,12 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       spriteData: @activeSpriteData
       materialsData: @options.materialsData
       flippedHorizontal: @activeSpriteFlipped
+
+    @usedLandmarks = new ComputedField =>
+      return unless landmarks = @activeSourceLandmarks()
+      landmark.name for landmark in landmarks
+
+    @usedLandmarksCenter = new ComputedField => @_usedLandmarksCenter()
 
     @_ready = new ComputedField =>
       # If we have no sprite in this part, there's nothing to do.
@@ -108,7 +119,13 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     @viewingAngleGetter options.viewingAngle if options.viewingAngle
 
     context.save()
-    context.setTransform 1, 0, 0, 1, options.textureOffset, 0
+
+    if @options.centerOnUsedLandmarks
+      center = @usedLandmarksCenter()
+      context.translate -center.x, -center.y
+
+    else
+      context.setTransform 1, 0, 0, 1, options.textureOffset, 0
 
     @activeSprite.drawToContext context, options
 

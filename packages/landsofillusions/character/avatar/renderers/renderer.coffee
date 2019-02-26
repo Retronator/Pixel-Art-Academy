@@ -10,6 +10,9 @@ class LOI.Character.Avatar.Renderers.Renderer
   landmarks: ->
     # Override to provide landmarks in this renderer's coordinate system.
 
+  usedLandmarks: ->
+    # Override to provide a list of landmark names that the mapped shapes have used to render themselves.
+
   create: (options) ->
     # We create a copy of ourselves with the instance options added.
     options = _.extend {}, @options, options
@@ -91,6 +94,8 @@ class LOI.Character.Avatar.Renderers.Renderer
     drawRegion.matchRegion regionId
 
   _renderingConditionsSatisfied: ->
+    return true if @options.ignoreRenderingConditions
+    
     # We can evaluate conditions only when we have a bodyPart source set.
     return true unless bodyPart = @options.bodyPart()
 
@@ -142,3 +147,23 @@ class LOI.Character.Avatar.Renderers.Renderer
     else
       # This is a normal region.
       context.setTransform 1, 0, 0, 1, options.textureOffset + bounds.left(), bounds.top()
+
+  _usedLandmarksCenter: ->
+    center = x: 0, y: 0
+
+    return center unless landmarks = @options.landmarksSource?()?.landmarks()
+    return center unless usedLandmarks = @usedLandmarks()
+  
+    foundLandmarksCount = 0
+  
+    for usedLandmark in usedLandmarks
+      continue unless landmark = _.find landmarks, (landmark) => landmark.name is usedLandmark
+      center.x += landmark.x
+      center.y += landmark.y
+      foundLandmarksCount++
+  
+    if foundLandmarksCount > 0
+      center.x /= foundLandmarksCount
+      center.y /= foundLandmarksCount
+  
+    center

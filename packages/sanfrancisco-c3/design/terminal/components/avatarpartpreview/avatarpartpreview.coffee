@@ -50,6 +50,9 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
               @_defaultBodyRenderer
 
+          rendererOptions.centerOnUsedLandmarks = true
+          rendererOptions.ignoreRenderingConditions = true
+
           rendererOptions.bodyPart = => @designTerminal.screens.character.character()?.avatar.body or @_defaultBodyPart
 
         return unless part.createRenderer

@@ -37,7 +37,8 @@ class AM.Hierarchy.Field
         cleanNode()
         
         if data.template?.data
-          return templateNode if templateNode
+          # We need to recreate the node when template id or version changes.
+          return templateNode if templateNode?.options.template.id is data.template.id and templateNode?.options.template.version is data.template.version
 
           # We create a node similarly to how the template prepares it, but we load directly the embedded data instead
           # of needing to query template document. Note that we reset the address hierarchy from here on out to match

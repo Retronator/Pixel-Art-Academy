@@ -101,6 +101,12 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
 
       landmarks
 
+    @usedLandmarks = new ComputedField =>
+      landmarks = _.uniq _.flatten (renderer.usedLandmarks?() for renderer in @renderers())
+      _.without landmarks, undefined
+      
+    @usedLandmarksCenter = new ComputedField => @_usedLandmarksCenter()
+
     @_ready = new ComputedField =>
       _.every @renderers(), (renderer) => renderer.ready()
 
@@ -125,10 +131,18 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     for renderer in sortedRenderers
       context.save()
 
-      translation = _.defaults {}, renderer._translation,
-        x: 0
-        y: 0
+      if @options.centerOnUsedLandmarks
+        center = @usedLandmarksCenter()
 
+        translation =
+          x: -center.x
+          y: -center.y
+
+      else
+        translation = _.defaults {}, renderer._translation,
+          x: 0
+          y: 0
+  
       context.translate translation.x, translation.y
 
       renderer.drawToContext context, options

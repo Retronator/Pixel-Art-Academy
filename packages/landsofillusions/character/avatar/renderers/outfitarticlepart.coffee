@@ -39,6 +39,12 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
 
       landmarks = _.flattenDeep [sourceLandmarks, rendererLandmarks]
       _.without landmarks, undefined
+      
+    @usedLandmarks = new ComputedField =>
+      landmarks = _.uniq _.flatten (renderer.usedLandmarks() for renderer in @renderers())
+      _.without landmarks, undefined
+
+    @usedLandmarksCenter = new ComputedField => @_usedLandmarksCenter()
 
     @_ready = new ComputedField =>
       _.every @renderers(), (renderer) => renderer.ready()
@@ -48,6 +54,10 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
 
   drawToContext: (context, options = {}) ->
     return unless @ready() and @_renderingConditionsSatisfied()
+
+    if @options.centerOnUsedLandmarks
+      center = @usedLandmarksCenter()
+      context.translate -center.x, -center.y
     
     for renderer in @renderers()
       renderer.drawToContext context, options

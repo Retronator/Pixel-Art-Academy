@@ -20,10 +20,6 @@ Meteor.startup ->
 
     # Only react to character changes.
     Tracker.nonreactive =>
-      # Destroy the current character if we have it.
-      currentCharacter = LOI.character()
-      currentCharacter?.destroy()
-
       if characterId
         # Create new character.
         LOI.character LOI.Character.getInstance characterId
