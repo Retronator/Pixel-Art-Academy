@@ -7,17 +7,32 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
-    @bodyRenderer = @options.humanAvatar.body.createRenderer
+    rendererOptions =
       renderTexture: @options.renderTexture
-      viewingAngle: @options.viewingAngle
+      renderingSides: @options.renderingSides
 
-    @outfitRenderer = @options.humanAvatar.outfit.createRenderer
+    @bodyRenderer = @options.humanAvatar.body.createRenderer rendererOptions
+
+    @outfitRenderer = @options.humanAvatar.outfit.createRenderer _.extend
       landmarksSource: => @bodyRenderer
       bodyPart: => @options.humanAvatar.body
-      renderTexture: @options.renderTexture
-      viewingAngle: @options.viewingAngle
+    ,
+      rendererOptions
 
     @renderers = [@bodyRenderer, @outfitRenderer]
+    
+    @hiddenRegionIds = new ComputedField =>
+      hiddenRegionIds = []
+
+      for article in @options.humanAvatar.outfit.properties.articles.parts()
+        for articlePart in article.properties.parts.parts()
+          for articlePartShape in articlePart.properties.shapes.parts()
+            hiddenRegionIds.push articlePartShape.properties.hideRegions.regionIds()...
+
+      hiddenRegionIds
+
+    ,
+      true
 
     @_ready = new ComputedField =>
       # Make sure all the data is loaded.
@@ -27,41 +42,34 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
       return unless _.every @renderers, (renderer) => renderer.ready()
 
       true
+    ,
+      true
+    
+  destroy: ->
+    @hiddenRegionIds.stop()
+    @_ready.stop()
 
   ready: ->
     @_ready()
 
   drawToContext: (context, options = {}) ->
-    return unless @ready()
+    super arguments...
     
-    if options.viewingAngle
-      side = LOI.Engine.RenderingSides.getSideForAngle options.viewingAngle()
-      
-    else if @options.viewingAngle
-      side = LOI.Engine.RenderingSides.getSideForAngle @options.viewingAngle()
+    return unless @ready()
 
-    else
-      side = LOI.Engine.RenderingSides.Keys.Front
-
-    regions = @constructor.regionsOrder[side]
+    regions = @constructor.regionsOrder[options.side]
 
     # Remove regions that are being hidden by article part shapes, but only if we're drawing the outfit.
-    if not @options.drawOutfit? or @options.drawOutfit
-      hiddenRegionIds = []
-
-      for article in @options.humanAvatar.outfit.properties.articles.parts()
-        for articlePart in article.properties.parts.parts()
-          for articlePartShape in articlePart.properties.shapes.parts()
-            hiddenRegionIds.push articlePartShape.properties.hideRegions.regionIds()...
-
-      regions = _.filter regions, (region) -> region.id not in hiddenRegionIds
+    if not options.drawOutfit? or options.drawOutfit
+      regions = _.filter regions, (region) => region.id not in @hiddenRegionIds()
 
     @_drawRegionToContext context, _.extend {region}, options for region in regions
     
   _drawRegionToContext: (context, options = {}) ->
     for renderer in @renderers
-      # Skip outfit if explicitly told so.
-      continue if @options.drawOutfit? and not @options.drawOutfit and renderer is @outfitRenderer
+      # Skip body or outfit drawing if explicitly told so.
+      continue if options.drawBody? and not options.drawBody and renderer is @bodyRenderer
+      continue if options.drawOutfit? and not options.drawOutfit and renderer is @outfitRenderer
 
       context.save()
       renderer.drawToContext context, options

@@ -57,7 +57,10 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
       context.clearRect 0, 0, canvas.width, canvas.height
 
       context.save()
-      @sprite.drawToContext context, lightDirection: @options.lightDirection
+
+      @sprite.drawToContext context,
+        lightDirection: @options.lightDirection()
+
       context.restore()
 
   canvasStyle: ->

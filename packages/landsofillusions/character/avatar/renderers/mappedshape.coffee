@@ -5,8 +5,8 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
   if @liveEditing and Meteor.isClient and not LOI.Character.Avatar.Renderers.Shape.liveEditing
     Meteor.startup =>
-      # Subscribe to all character part sprites.
-      types = LOI.Character.Part.allPartTypeIds()
+      # Subscribe to all outfit sprites.
+      types = LOI.Character.Part.allAvatarOutfitPartTypeIds()
       LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe types
 
   constructor: (@options, initialize) ->
@@ -15,14 +15,17 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
-    @debugDelaunay = new ReactiveField null
-
-    # Shape renderer prepares all sprite directions and draws the one needed by the engine.
     @spriteDataInfo = {}
     @spriteData = {}
+    @sourceLandmarks = {}
+    @mappedSpriteData = {}
+    @sprite = {}
+    @debugDelaunay = {}
 
-    for field, side of LOI.Engine.RenderingSides.Keys
+    for side in @options.renderingSides
       do (side) =>
+        @debugDelaunay[side] = new ReactiveField null
+
         # Sprites in flipped renderers need to come from the other side.
         flipped = @options.region?.id.indexOf('Right') >= 0
         sourceSide = if flipped then LOI.Engine.RenderingSides.mirrorSides[side] else side
@@ -48,91 +51,110 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
             spriteData = LOI.Assets.Sprite.getFromCache spriteId
 
           {spriteData, flipped}
+        ,
+          true
 
         @spriteData[side] = new ComputedField =>
           @spriteDataInfo[side]()?.spriteData
+        ,
+          true
 
-    # By default we read the viewing angle from options, but we also support sending it late from the draw call.
-    defaultViewingAngle = =>
-      @options.viewingAngle?() or 0
+        @sourceLandmarks[side] = new ComputedField =>
+          return unless spriteDataInfo = @spriteDataInfo[side]()
+          return unless spriteData = spriteDataInfo.spriteData
 
-    @viewingAngleGetter = new ReactiveField defaultViewingAngle, (a, b) => a is b
+          # If we're flipped, we want to map onto flipped landmarks.
+          if spriteDataInfo.flipped and spriteData.landmarks
+            for landmark in spriteData.landmarks
+              _.extend {}, landmark,
+                name: landmark.name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
 
-    @activeSide = new ComputedField => LOI.Engine.RenderingSides.getSideForAngle @viewingAngleGetter()()
-
-    @activeSpriteFlipped = new ComputedField =>
-      @spriteDataInfo[@activeSide()]()?.flipped
+          else
+            spriteData.landmarks
+        ,
+          true
       
-    @activeSourceLandmarks = new ComputedField =>
-      spriteData = @spriteData[@activeSide()]()
-      
-      # If we're flipped, we want to map onto flipped landmarks.
-      if @activeSpriteFlipped() and spriteData?.landmarks
-        for landmark in spriteData.landmarks
-          _.extend {}, landmark,
-            name: landmark.name.replace('Left', '_').replace('Right', 'Left').replace('_', 'Right')
-            
-      else
-        spriteData?.landmarks
-      
-    @activeSpriteData = new ComputedField =>
-      spriteData = @spriteData[@activeSide()]()
-      
-      # Landmarks source provides landmarks we try to map to (our targets).
-      targetLandmarks = @options.landmarksSource?()?.landmarks()
+        @mappedSpriteData[side] = new ComputedField =>
+          return unless spriteDataInfo = @spriteDataInfo[side]()
+          return unless spriteData = spriteDataInfo.spriteData
 
-      # Filter down to the region this shape is mapped onto.
-      if @options.region
-        landmarksRegion = LOI.HumanAvatar.Regions[@options.region.getLandmarksRegionId()]
+          # Landmarks source provides landmarks we try to map to (our targets).
+          targetLandmarks = @options.landmarksSource?()?.landmarks[side]()
 
-        targetLandmarks = _.filter targetLandmarks, (targetLandmark) =>
-          landmarksRegion.matchRegion targetLandmark.regionId
-          
-      sourceLandmarks = @activeSourceLandmarks()
-            
-      @_mapSprite spriteData, sourceLandmarks, targetLandmarks
+          # Filter down to the region this shape is mapped onto.
+          if @options.region
+            landmarksRegion = LOI.HumanAvatar.Regions[@options.region.getLandmarksRegionId()]
 
-    @activeSprite = new LOI.Assets.Engine.Sprite
-      spriteData: @activeSpriteData
-      materialsData: @options.materialsData
-      flippedHorizontal: @activeSpriteFlipped
+            targetLandmarks = _.filter targetLandmarks, (targetLandmark) =>
+              landmarksRegion.matchRegion targetLandmark.regionId
 
-    @usedLandmarks = new ComputedField =>
-      return unless landmarks = @activeSourceLandmarks()
-      landmark.name for landmark in landmarks
+          sourceLandmarks = @sourceLandmarks[side]()
 
-    @usedLandmarksCenter = new ComputedField => @_usedLandmarksCenter()
+          @_mapSprite side, spriteData, sourceLandmarks, targetLandmarks, spriteDataInfo.flipped
+
+        @sprite[side] = new LOI.Assets.Engine.Sprite
+          spriteData: @mappedSpriteData[side]
+          materialsData: @options.materialsData
+          flippedHorizontal: new ComputedField =>
+            @spriteDataInfo[side]()?.flipped
+          ,
+            true
+
+        @landmarks[side] = => []
+
+        @usedLandmarks[side] = new ComputedField =>
+          return unless landmarks = @sourceLandmarks[side]()
+          landmark.name for landmark in landmarks
+        ,
+          true
+
+        @usedLandmarksCenter[side] = new ComputedField =>
+          @_usedLandmarksCenter side
+        ,
+          true
 
     @_ready = new ComputedField =>
       # Wait until the cache is ready.
       return unless @liveEditing or LOI.Assets.Sprite.cacheReady()
 
-      # If we have no sprite in this part, there's nothing to do.
-      return true unless @spriteDataInfo[@activeSide()]()
+      for side in @options.renderingSides
+        # If we have no data in this part for this side, there's nothing to do.
+        continue unless @spriteDataInfo[side]()
 
-      # Shape is ready when the sprite is ready.
-      @activeSprite.ready()
+        # Shape is ready when the sprite is ready.
+        return false unless @sprite[side].ready()
+
+      true
+
+  destroy: ->
+    for side in @options.renderingSides
+      @spriteDataInfo[side].stop()
+      @spriteData[side].stop()
+      @sourceLandmarks[side].stop()
+      @mappedSpriteData[side].stop()
+      @sprite[side].options.flippedHorizontal.stop()
+      @usedLandmarks[side].stop()
+      @usedLandmarksCenter[side].stop()
+
+    @_ready.stop()
 
   ready: ->
     @_ready()
-    
-  landmarks: -> []
 
   drawToContext: (context, options = {}) ->
-    return unless @_shouldDraw(options) and @ready() and @_renderingConditionsSatisfied()
+    super arguments...
 
-    # Update viewing angle.
-    @viewingAngleGetter options.viewingAngle if options.viewingAngle
+    return unless @_shouldDraw(options) and @ready() and @_renderingConditionsSatisfied()
 
     context.save()
 
     if @options.centerOnUsedLandmarks
-      center = @usedLandmarksCenter()
+      center = @usedLandmarksCenter[options.side]()
       context.translate -center.x, -center.y
 
     else
       context.setTransform 1, 0, 0, 1, options.textureOffset, 0
 
-    @activeSprite.drawToContext context, options
+    @sprite[options.side].drawToContext context, options
 
     context.restore()

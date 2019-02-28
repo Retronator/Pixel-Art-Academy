@@ -4,8 +4,8 @@ Delaunator = require 'delaunator'
 barycentric = require 'barycentric'
 
 class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Renderers.MappedShape
-  _mapSprite: (spriteData, sourceLandmarks, targetLandmarks) ->
-    return spriteData unless targetLandmarks.length and spriteData?.bounds
+  _mapSprite: (side, spriteData, sourceLandmarks, targetLandmarks, flipHorizontal) ->
+    return spriteData unless targetLandmarks.length and spriteData.bounds
 
     # Clone sprite data to the depth of the first layer so we can replace the pixels there.
     newSpriteData = {}
@@ -42,7 +42,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     # Add bound corners as extra landmarks. Source corners need to be flipped in Right regions.
     extraSourceLandmarks = []
 
-    flipHorizontal = @activeSpriteFlipped()
     @_addBoundsCorners extraSourceLandmarks, sourceLandmarksBounds, padding, flipHorizontal
 
     # Express each extra landmark as a linear combination of existing ones and apply to target landmarks.
@@ -81,7 +80,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     getY = (landmark) => landmark.y
 
     delaunay = Delaunator.from targetLandmarks, getX, getY
-    @debugDelaunay delaunay
+    @debugDelaunay[side] delaunay
 
     # Rasterize the triangles, mapping pixels from source.
     sourcePixels = newSpriteData.layers[0].pixels

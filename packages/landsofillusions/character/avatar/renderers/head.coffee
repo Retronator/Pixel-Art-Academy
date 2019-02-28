@@ -14,19 +14,19 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     @rightEyeRenderer._flipHorizontal = true
     @facialHairRenderers = @_createRenderer 'facialHair'
 
-  _placeRenderers: ->
+  _placeRenderers: (side) ->
     # Place the head shape.
-    @_placeRenderer @headShapeRenderer, 'atlas', 'atlas'
+    @_placeRenderer side, @headShapeRenderer, 'atlas', 'atlas'
 
     # Place the eyes.
-    @_placeRenderer @leftEyeRenderer, 'eyeCenter', 'eyeLeft'
-    @_placeRenderer @rightEyeRenderer, 'eyeCenter', 'eyeRight'
+    @_placeRenderer side, @leftEyeRenderer, 'eyeCenter', 'eyeLeft'
+    @_placeRenderer side, @rightEyeRenderer, 'eyeCenter', 'eyeRight'
 
     # Place the hair.
-    @_placeRenderer hairRenderer, 'headCenter', 'headCenter' for hairRenderer in @hairRenderers
+    @_placeRenderer side, hairRenderer, 'headCenter', 'headCenter' for hairRenderer in @hairRenderers
 
     # Place the facial hair.
-    @_placeRenderer facialHairRenderer, 'mouth', 'mouth' for facialHairRenderer in @facialHairRenderers
+    @_placeRenderer side, facialHairRenderer, 'mouth', 'mouth' for facialHairRenderer in @facialHairRenderers
 
   getHairRenderers: (regionId) ->
     hairRenderers = for hairRenderer in @hairRenderers
@@ -42,7 +42,7 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     return unless @ready()
 
     # Depend on landmarks to update when renderer translations change.
-    @landmarks()
+    @landmarks[options.side]()
 
     # If we're drawing only the head also draw the hair behind and in the middle.
     if options.rootPart is @options.part

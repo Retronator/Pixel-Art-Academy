@@ -17,7 +17,15 @@ class LOI.Character.Part
     
   @allAvatarPartTypeIds: ->
     _.flatten [
-      @getPartTypeIdsUnderType 'Avatar.Body'
+      @allAvatarBodyPartTypeIds()
+      @allAvatarOutfitPartTypeIds()
+    ]
+
+  @allAvatarBodyPartTypeIds: ->
+    @getPartTypeIdsUnderType 'Avatar.Body'
+
+  @allAvatarOutfitPartTypeIds: ->
+    _.flatten [
       'Avatar.Outfit'
       @getPartTypeIdsUnderType 'Avatar.Outfit'
     ]

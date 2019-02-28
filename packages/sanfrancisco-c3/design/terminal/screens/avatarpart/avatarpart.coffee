@@ -11,7 +11,6 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
     # We need these fields in the constructor, because they're being set right away.
     @part = new ReactiveField null
-    @previewPart = new ReactiveField null
     @previewOptions = new ReactiveField null
 
     # We use this when the user wants to choose a different template (and templates wouldn't be shown by default).
@@ -75,16 +74,13 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       dataLocation: new AMu.Hierarchy.Location
         rootField: dataField
 
-  pushPart: (part, previewPart, previewOptions) ->
+  pushPart: (part, previewOptions) ->
     # Put current part on the stack
     currentPart = @part()
     @partStack.push currentPart if currentPart
 
     # Set new part as active.
     @part part
-
-    # Replace the preview part, if it's present.
-    @previewPart previewPart if previewPart
 
     # Replace preview options, if they're present.
     @previewOptions previewOptions if previewOptions
@@ -212,9 +208,11 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     _.kebabCase property.options.name
 
   avatarPreviewOptions: ->
-    rotatable: true
-    viewingAngle: @terminal.viewingAngle
-    rendererOptions: @previewOptions()
+    _.extend
+      rotatable: true
+      viewingAngle: @terminal.viewingAngle
+    ,
+      @previewOptions()
 
   events: ->
     super(arguments...).concat

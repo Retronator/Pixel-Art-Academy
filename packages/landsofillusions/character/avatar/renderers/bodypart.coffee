@@ -10,27 +10,42 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     @renderers = []
     @_createRenderers()
 
-    @landmarks = new ComputedField =>
-      # Create landmarks and update renderer translations.
-      @_landmarks = []
+    @_landmarks = {}
 
-      # We start with the origin landmark.
-      origin = @getOrigin()
+    for side in @options.renderingSides
+      do (side) =>
+        @landmarks[side] = new ComputedField =>
+          # Create landmarks and update renderer translations.
+          @_landmarks[side] = []
 
-      @_landmarks.push
-        name: origin.landmark
-        x: origin.x or 0
-        y: origin.y or 0
-        z: 0
-        
-      @_placeRenderers()
+          # We start with the origin landmark.
+          origin = @getOrigin()
 
-      @_applyLandmarksRegion @_landmarks
+          @_landmarks[side].push
+            name: origin.landmark
+            x: origin.x or 0
+            y: origin.y or 0
+            z: 0
 
-      @_landmarks
+          @_placeRenderers side
+          @_applyLandmarksRegion @_landmarks[side]
+
+          @_landmarks[side]
+        ,
+          true
 
     @_ready = new ComputedField =>
       _.every @renderers, (renderer) => renderer.ready()
+    ,
+      true
+    
+  destroy: ->
+    renderer.destroy() for renderer in @renderers
+
+    for side in @options.renderingSides
+      @landmarks[side].stop()
+
+    @_ready.stop()
 
   ready: ->
     @_ready()
@@ -54,19 +69,19 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
 
         renderer
 
-  _addLandmarks: (renderer, options = {}) ->
+  _addLandmarks: (side, renderer, options = {}) ->
     offsetX = options.offsetX or 0
     offsetY = options.offsetY or 0
 
     regionId = @getRegionId()
 
     # Add all landmarks from this renderer.
-    for rendererLandmark in renderer.landmarks()
+    for rendererLandmark in renderer.landmarks[side]()
       translatedLandmark = _.clone rendererLandmark
 
       if not @options.renderTexture or rendererLandmark.regionId is regionId
-        translatedLandmark.x = renderer._translation.x + offsetX
-        translatedLandmark.y += renderer._translation.y + offsetY
+        translatedLandmark.x = renderer._translation[side].x + offsetX
+        translatedLandmark.y += renderer._translation[side].y + offsetY
 
         if renderer._flipHorizontal
           translatedLandmark.x -= rendererLandmark.x + 1
@@ -78,42 +93,43 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
       if renderer.options.regionSide and rendererLandmark.regionId is regionId
         translatedLandmark.name += renderer.options.regionSide
 
-      @_landmarks.push translatedLandmark
+      @_landmarks[side].push translatedLandmark
 
-  _placeRenderer: (renderer, rendererLandmarkName, landmarkName, options = {}) ->
-    rendererLandmarks = renderer.landmarks()
+  _placeRenderer: (side, renderer, rendererLandmarkName, landmarkName, options = {}) ->
+    rendererLandmarks = renderer.landmarks[side]()
     rendererLandmark = _.find rendererLandmarks, (landmark) => landmark.name is rendererLandmarkName
 
-    landmark = _.find @_landmarks, (landmark) => landmark.name is landmarkName
+    landmark = _.find @_landmarks[side], (landmark) => landmark.name is landmarkName
 
     return unless landmark and rendererLandmark
 
     offsetX = options.offsetX or 0
     offsetY = options.offsetY or 0
 
-    renderer._translation =
+    renderer._translation[side] =
       x: landmark.x
       y: landmark.y - rendererLandmark.y + offsetY
 
     if renderer._flipHorizontal
-      renderer._translation.x += rendererLandmark.x + 1 - offsetX
+      renderer._translation[side].x += rendererLandmark.x + 1 - offsetX
 
     else
-      renderer._translation.x -= rendererLandmark.x - offsetX
+      renderer._translation[side].x -= rendererLandmark.x - offsetX
 
-    renderer._depth = landmark.z or 0
+    renderer._depth[side] = landmark.z or 0
 
-    @_addLandmarks renderer, options unless options.skipAddingLandmarks
+    @_addLandmarks side, renderer, options unless options.skipAddingLandmarks
 
   _bodyPartType: (partName) ->
     LOI.Character.Part.Types.Avatar.Body[partName].options.type
 
   drawToContext: (context, options = {}) ->
+    
     # Depend on landmarks to update when renderer translations change.
-    @landmarks()
+    @landmarks[options.side]()
 
     # Sort renderers by depth.
-    sortedRenderers = _.sortBy @renderers, (renderer) => renderer._depth
+    sortedRenderers = _.sortBy @renderers, (renderer) => renderer._depth[options.side]
 
     for renderer in sortedRenderers
       @drawRendererToContext renderer, context, options
@@ -124,7 +140,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     context.save()
     @_handleRegionTransform context, options
 
-    translation = _.defaults {}, renderer._translation,
+    translation = _.defaults {}, renderer._translation[options.side],
       x: 0
       y: 0
 

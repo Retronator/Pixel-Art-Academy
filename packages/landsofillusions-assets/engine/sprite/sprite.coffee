@@ -51,7 +51,7 @@ class LOI.Assets.Engine.Sprite
     @_depthBuffer.fill Number.NEGATIVE_INFINITY
 
     # Prepare constants.
-    inverseLightDirection = renderOptions.lightDirection?()?.clone().multiplyScalar(-1)
+    inverseLightDirection = renderOptions.lightDirection?.clone().multiplyScalar(-1)
     materialsData = @options.materialsData?()
     visualizeNormals = @options.visualizeNormals?()
     flippedHorizontal = @options.flippedHorizontal

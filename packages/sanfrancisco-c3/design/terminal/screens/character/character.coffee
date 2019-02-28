@@ -13,9 +13,23 @@ class C3.Design.Terminal.Character extends AM.Component
     @character = new ComputedField =>
       LOI.Character.getInstance @characterId()
 
+    @_characterRenderer = null
+    @characterRenderer = new ComputedField =>
+      return unless character = @character()
+
+      @_characterRenderer?.destroy()
+      @_characterRenderer = character.avatar.createRenderer()
+
+      @_characterRenderer
+      
+  destroy: ->
+    @character.stop()
+    @characterRenderer.stop()
+    @_characterRenderer?.destroy()
+
   onCreated: ->
     super arguments...
-    
+
     nameInputOptions =
       addTranslationText: => @translation "Add language variant"
       removeTranslationText: => @translation "Remove language variant"
@@ -55,10 +69,15 @@ class C3.Design.Terminal.Character extends AM.Component
   avatarPreviewOptions: ->
     rotatable: true
     viewingAngle: @terminal.viewingAngle
+    renderer: @characterRenderer()
 
   avatarBodyPreviewOptions: ->
-    rendererOptions:
-      drawOutfit: false
+    renderer: @characterRenderer()
+    drawOutfit: false
+
+  avatarOutfitPreviewOptions: ->
+    renderer: @characterRenderer()
+    drawBody: false
 
   events: ->
     super(arguments...).concat
@@ -128,9 +147,14 @@ class C3.Design.Terminal.Character extends AM.Component
     @terminal.switchToScreen @terminal.screens.mainMenu
 
   onClickBodyPart: (event) ->
-    @terminal.screens.avatarPart.pushPart @character().avatar.body, @character().avatar, drawOutfit: false
+    @terminal.screens.avatarPart.pushPart @character().avatar.body,
+      renderer: @characterRenderer()
+      drawOutfit: false
+
     @terminal.switchToScreen @terminal.screens.avatarPart
 
   onClickOutfitPart: (event) ->
-    @terminal.screens.avatarPart.pushPart @character().avatar.outfit, @character().avatar, drawOutfit: true
+    @terminal.screens.avatarPart.pushPart @character().avatar.outfit,
+      renderer: @characterRenderer()
+
     @terminal.switchToScreen @terminal.screens.avatarPart

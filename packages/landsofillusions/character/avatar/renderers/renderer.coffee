@@ -2,16 +2,27 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Renderer
   constructor: (@options, initialize) ->
+    return unless initialize
+
+    # By default we prepare for drawing all rendering sides.
+    @options.renderingSides ?= _.values LOI.Engine.RenderingSides.Keys
+
+    # For each rendering side provide landmarks in this renderer's coordinate system.
+    @landmarks = {}
+
+    # For each rendering side provide a list of landmark names that the mapped shapes have used to render themselves.
+    @usedLandmarks = {}
+
+    # For each rendering side provide average position of all used landmarks.
+    @usedLandmarksCenter = {}
+
+    # For each rendering side, store local translations and sorting depth of the renderer.
+    @_translation = {}
+    @_depth = {}
 
   ready: ->
     # Override to delay rendering while not ready.
     true
-
-  landmarks: ->
-    # Override to provide landmarks in this renderer's coordinate system.
-
-  usedLandmarks: ->
-    # Override to provide a list of landmark names that the mapped shapes have used to render themselves.
 
   create: (options) ->
     # We create a copy of ourselves with the instance options added.
@@ -31,10 +42,10 @@ class LOI.Character.Avatar.Renderers.Renderer
     landmarksSource: @options.landmarksSource
     materialsData: @options.materialsData
     renderTexture: @options.renderTexture
-    viewingAngle: @options.viewingAngle
     regionSide: @options.regionSide
     region: @options.region
     bodyPart: @options.bodyPart
+    renderingSides: @options.renderingSides
     parent: @
     
   _applyLandmarksRegion: (landmarks) ->
@@ -148,11 +159,11 @@ class LOI.Character.Avatar.Renderers.Renderer
       # This is a normal region.
       context.setTransform 1, 0, 0, 1, options.textureOffset + bounds.left(), bounds.top()
 
-  _usedLandmarksCenter: ->
+  _usedLandmarksCenter: (side) ->
     center = x: 0, y: 0
 
-    return center unless landmarks = @options.landmarksSource?()?.landmarks()
-    return center unless usedLandmarks = @usedLandmarks()
+    return center unless landmarks = @options.landmarksSource?()?.landmarks[side]()
+    return center unless usedLandmarks = @usedLandmarks[side]()
   
     foundLandmarksCount = 0
   

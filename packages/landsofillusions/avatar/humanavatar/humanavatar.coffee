@@ -23,26 +23,16 @@ class LOI.HumanAvatar extends LOI.Avatar
   destroy: ->
     super arguments...
 
-    @_renderer?.stop()
+    @_renderer?.destroy()
     @_renderObject?.destroy()
     
   getRenderer: ->
-    return @_renderer() if @_renderer
-    
-    @_renderer = new ComputedField =>
-      @createRenderer()
-    ,
-      true
-
-    @_renderer()
+    @_renderer ?= Tracker.nonreactive => @createRenderer()
+    @_renderer
 
   createRenderer: (options) ->
     new LOI.Character.Avatar.Renderers.HumanAvatar _.extend({}, options, humanAvatar: @), true
 
   getRenderObject: ->
-    return @_renderObject if @_renderObject
-
-    Tracker.nonreactive =>
-      @_renderObject = new @constructor.RenderObject @
-
+    @_renderObject ?= Tracker.nonreactive => new @constructor.RenderObject @
     @_renderObject

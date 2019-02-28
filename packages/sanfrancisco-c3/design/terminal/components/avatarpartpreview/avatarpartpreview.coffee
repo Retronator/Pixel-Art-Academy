@@ -23,16 +23,23 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
       @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
       @viewingAngle = @options.viewingAngle or new ReactiveField 0
 
+      @_renderer = null
+      @_landmarksSourceRenderer = null
+
       @renderer = new ComputedField =>
+        return @options.renderer if @options.renderer
+        
         return unless part = @data()
+        return unless part.createRenderer
+        @_renderer?.destroy()
 
         rendererOptions = _.clone @options.rendererOptions or {}
 
         if @designTerminal and _.startsWith part.options.type, 'Avatar.Outfit'
           rendererOptions.landmarksSource = =>
             # If we're editing a character, use its landmarks to position clothes.
-            if character = @designTerminal.screens.character.character()
-              character.avatar.getRenderer().bodyRenderer
+            if characterRenderer = @designTerminal.screens.character.characterRenderer()
+              characterRenderer.bodyRenderer
 
             else
               # Without a character, we rely on landmarks from default
@@ -46,7 +53,6 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
                       load: => null
 
                 @_defaultBodyRenderer = @_defaultBodyPart.createRenderer
-                  viewingAngle: @viewingAngle
 
               @_defaultBodyRenderer
 
@@ -55,9 +61,8 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
           rendererOptions.bodyPart = => @designTerminal.screens.character.character()?.avatar.body or @_defaultBodyPart
 
-        return unless part.createRenderer
-
-        part.createRenderer rendererOptions
+        @_renderer = part.createRenderer rendererOptions
+        @_renderer
 
     onRendered: ->
       super arguments...
@@ -112,15 +117,21 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         # Draw and pass the root part in options so we can do different rendering paths based on it.
         renderer.drawToContext @context,
           rootPart: renderer.options.part
-          lightDirection: @lightDirection
-          viewingAngle: @viewingAngle
+          lightDirection: @lightDirection()
+          side: LOI.Engine.RenderingSides.getSideForAngle @viewingAngle()
+          drawBody: @options.drawBody
+          drawOutfit: @options.drawOutfit
 
         @context.restore()
 
     onDestroyed: ->
       super arguments...
 
+      @_renderer?.destroy()
+      @_defaultBodyRenderer?.destroy()
+
       $(window).off 'scroll', @updateInViewport
+      Meteor.clearInterval @_rotateInterval
 
     rotatableClass: ->
       'rotatable' if @options.rotatable

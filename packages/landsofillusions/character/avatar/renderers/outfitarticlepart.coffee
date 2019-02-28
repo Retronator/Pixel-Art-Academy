@@ -32,31 +32,53 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
 
       renderers
 
-    @landmarks = new ComputedField =>
-      # Add article landmarks to source ones.
-      sourceLandmarks = @options.landmarksSource?()?.landmarks()
-      rendererLandmarks = (renderer.landmarks() for renderer in @renderers())
-
-      landmarks = _.flattenDeep [sourceLandmarks, rendererLandmarks]
-      _.without landmarks, undefined
-      
-    @usedLandmarks = new ComputedField =>
-      landmarks = _.uniq _.flatten (renderer.usedLandmarks() for renderer in @renderers())
-      _.without landmarks, undefined
-
-    @usedLandmarksCenter = new ComputedField => @_usedLandmarksCenter()
+    for side in @options.renderingSides
+      do (side) =>
+        @landmarks[side] = new ComputedField =>
+          # Add article landmarks to source ones.
+          sourceLandmarks = @options.landmarksSource?()?.landmarks[side]()
+          rendererLandmarks = (renderer.landmarks[side]() for renderer in @renderers())
+    
+          landmarks = _.flattenDeep [sourceLandmarks, rendererLandmarks]
+          _.without landmarks, undefined
+        ,
+          true
+          
+        @usedLandmarks[side] = new ComputedField =>
+          landmarks = _.uniq _.flatten (renderer.usedLandmarks[side]() for renderer in @renderers())
+          _.without landmarks, undefined
+        ,
+          true
+    
+        @usedLandmarksCenter[side] = new ComputedField =>
+          @_usedLandmarksCenter side
+        ,
+          true
 
     @_ready = new ComputedField =>
       _.every @renderers(), (renderer) => renderer.ready()
+      
+  destroy: ->
+    renderer.destroy() for renderer in @renderers()
+    @renderers.stop()
+
+    for side in @options.renderingSides
+      @landmarks[side].stop()
+      @usedLandmarks[side].stop()
+      @usedLandmarksCenter[side].stop()
+
+    @_ready.stop()
 
   ready: ->
     @_ready()
 
   drawToContext: (context, options = {}) ->
+    super arguments...
+    
     return unless @ready() and @_renderingConditionsSatisfied()
 
     if @options.centerOnUsedLandmarks
-      center = @usedLandmarksCenter()
+      center = @usedLandmarksCenter[options.side]()
       context.translate -center.x, -center.y
     
     for renderer in @renderers()

@@ -13,8 +13,8 @@ class LOI.Character.Avatar.Renderers.Chest extends LOI.Character.Avatar.Renderer
 
     @rightBreastRenderer._flipHorizontal = true
 
-  _placeRenderers: ->
+  _placeRenderers: (side) ->
     # Place the chest shape.
-    @_placeRenderer @chestShapeRenderer, 'xiphoid', 'xiphoid'
-    @_placeRenderer @leftBreastRenderer, 'breastCenter', 'breastLeft'
-    @_placeRenderer @rightBreastRenderer, 'breastCenter', 'breastRight'
+    @_placeRenderer side, @chestShapeRenderer, 'xiphoid', 'xiphoid'
+    @_placeRenderer side, @leftBreastRenderer, 'breastCenter', 'breastLeft'
+    @_placeRenderer side, @rightBreastRenderer, 'breastCenter', 'breastRight'

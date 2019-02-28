@@ -2,10 +2,10 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers.BodyPart
   _createRenderers: ->
-    @leftArmRenderer = @_createRenderer 'arms', 
+    @leftArmRenderer = @_createRenderer 'arms',
       regionSide: 'Left'
     
-    @rightArmRenderer = @_createRenderer 'arms', 
+    @rightArmRenderer = @_createRenderer 'arms',
       flippedHorizontal: true
       regionSide: 'Right'
     
@@ -24,20 +24,20 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
     
     @rightLegRenderer._flipHorizontal = true
 
-  _placeRenderers: ->
+  _placeRenderers: (side) ->
     # Place the torso.
-    @_placeRenderer @torsoRenderer, 'navel', 'navel'
+    @_placeRenderer side, @torsoRenderer, 'navel', 'navel'
 
     # Place the head.
-    @_placeRenderer @headRenderer, 'atlas', 'atlas'
+    @_placeRenderer side, @headRenderer, 'atlas', 'atlas'
 
     # Place the legs.
-    @_placeRenderer @leftLegRenderer, 'acetabulum', 'acetabulumLeft'
-    @_placeRenderer @rightLegRenderer, 'acetabulum', 'acetabulumRight'
+    @_placeRenderer side, @leftLegRenderer, 'acetabulum', 'acetabulumLeft'
+    @_placeRenderer side, @rightLegRenderer, 'acetabulum', 'acetabulumRight'
 
     # Place the arms.
-    @_placeRenderer @leftArmRenderer, 'shoulder', 'shoulderLeft'
-    @_placeRenderer @rightArmRenderer, 'shoulder', 'shoulderRight'
+    @_placeRenderer side, @leftArmRenderer, 'shoulder', 'shoulderLeft'
+    @_placeRenderer side, @rightArmRenderer, 'shoulder', 'shoulderRight'
   
   drawToContext: (context, options = {}) ->
     return unless @ready()
@@ -46,9 +46,9 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
     context.save()
 
     # Depend on landmarks to update when head renderer translations change.
-    @landmarks()
+    @landmarks[options.side]()
 
-    translation = _.defaults {}, @headRenderer._translation,
+    translation = _.defaults {}, @headRenderer._translation[options.side],
       x: 0
       y: 0
 

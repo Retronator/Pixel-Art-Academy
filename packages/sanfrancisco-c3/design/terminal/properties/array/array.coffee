@@ -14,6 +14,10 @@ class C3.Design.Terminal.Properties.Array extends C3.Design.Terminal.Properties.
     property = @data()
     
     property.parts()
+  
+  avatarPartPreviewOptions: ->
+    rendererOptions:
+      renderingSides: [LOI.Engine.RenderingSides.Keys.Front]
 
   events: ->
     super(arguments...).concat
