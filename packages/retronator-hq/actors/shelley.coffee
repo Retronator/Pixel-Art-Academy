@@ -12,5 +12,6 @@ class HQ.Actors.Shelley extends LOI.Character.Actor
     shade: LOI.Assets.Palette.Atari2600.characterShades.normal
 
   @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/shelley.json'
+  @textureUrls: -> '/retronator/hq/actors/shelley'
 
   @initialize()

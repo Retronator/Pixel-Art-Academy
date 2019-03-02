@@ -51,8 +51,17 @@ class AM.Hierarchy.Template extends AM.Document
     referencedTemplate = templateClass.documents.findOne templateField.id
     throw new AE.ArgumentNullException "The specified template does not exist." unless referencedTemplate
 
-    templateField.data = referencedTemplate.versions?[templateField.version]
-    throw new AE.ArgumentNullException "The specified template version does not exist." unless templateField.data
+    # Find the version either in the versions array or see if it matches the latest version.
+    # This allows us to only subscribe to the latest version on the client and still get a match.
+    versionData = referencedTemplate.versions?[templateField.version]
+    versionData ?= referencedTemplate.latestVersion.data if referencedTemplate.latestVersion?.index is templateField.version
+
+    if versionData
+      templateField.data = versionData
+
+    # On the client we allow to skip setting the data and wait for a server update, but on the server this is an error.
+    else if Meteor.isServer
+      throw new AE.ArgumentNullException "The specified template version does not exist."
 
   @assertNoDraftTemplates: (node) ->
     for fieldName, field of node.fields

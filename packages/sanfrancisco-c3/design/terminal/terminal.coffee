@@ -22,6 +22,9 @@ class C3.Design.Terminal extends C3.Items.Terminal
     "
 
   @initialize()
+  
+  constructor: (@options = {}) ->
+    super arguments...
 
   onCreated: ->
     super arguments...

@@ -1,0 +1,23 @@
+<template name="LandsOfIllusions.Pages.Admin.Characters">
+  <div class="admin-page">
+    <h1>Characters</h1>
+    <h2>Editors</h2>
+    <ul>
+      <li><strong><a href="{{routerPath 'LandsOfIllusions.Pages.Admin.Characters.AvatarEditor'}}">Avatar editor</a></strong>:
+        Edit character avatars and avatar parts.</li>
+      <li><strong><a href="{{routerPath 'LandsOfIllusions.Pages.Admin.Characters.BehaviorEditor'}}">Behavior editor</a></strong>:
+        Edit character behavior and behavior templates.</li>
+    </ul>
+    <h2>Avatar renderer</h2>
+    <p>
+      <input class="character-id" placeholder="Character ID"/>
+      <input class="character-url" placeholder="Character Url"/>
+      <input class="password" placeholder="Password"/>
+      <button class="render-avatar-button">Render</button>
+      {{#with avatarUrls}}
+        <img src="{{paletteData}}"/>
+        <img src="{{normal}}"/>
+      {{/with}}
+    </p>
+  </div>
+</template>

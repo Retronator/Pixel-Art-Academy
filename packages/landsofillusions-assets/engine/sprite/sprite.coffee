@@ -2,6 +2,12 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Sprite
   constructor: (@options) ->
+    @options.createCanvas ?= (width, height) =>
+      canvas = $('<canvas>')[0]
+      canvas.width = width
+      canvas.height = height
+      canvas
+
     @ready = new ComputedField =>
       return unless spriteData = @options.spriteData()
       return unless spriteData.layers?.length and spriteData.bounds
@@ -30,12 +36,10 @@ class LOI.Assets.Engine.Sprite
     palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette?._id
 
     # Build a new canvas if needed.
-    @_canvas ?= $('<canvas>')[0]
+    unless @_canvas?.width is spriteData.bounds.width and @_canvas?.height is spriteData.bounds.height
+      @_canvas = @options.createCanvas spriteData.bounds.width, spriteData.bounds.height
 
     # Resize the canvas if needed.
-    @_canvas.width = spriteData.bounds.width unless @_canvas.width is spriteData.bounds.width
-    @_canvas.height = spriteData.bounds.height unless @_canvas.height is spriteData.bounds.height
-
     @_context = @_canvas.getContext '2d'
     @_imageData = @_context.getImageData 0, 0, @_canvas.width, @_canvas.height
     @_canvasPixelsCount = @_canvas.width * @_canvas.height

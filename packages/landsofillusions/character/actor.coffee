@@ -33,7 +33,7 @@ class LOI.Character.Actor extends LOI.Character.Person
       # We must provide an NPC document for creating the character instance of this actor.
       nonPlayerCharacterDocument = new ReactiveField null
 
-      @instance = new LOI.Character.Instance id, nonPlayerCharacterDocument
+      @instance = Tracker.nonreactive => new LOI.Character.Instance id, nonPlayerCharacterDocument
       @constructor.instances[id] = @instance
 
       # Load the NPC document.
@@ -47,16 +47,23 @@ class LOI.Character.Actor extends LOI.Character.Person
 
           document = new LOI.NonPlayerCharacter EJSON.parse result.content
 
-          @autorun (computation) =>
-            # Inject avatar properties.
-            document.avatar ?= {}
+          # Inject avatar properties.
+          document.avatar ?= {}
 
+          _.extend document.avatar,
+            fullName: @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
+            pronouns: @thingAvatar.pronouns()
+            color: @thingAvatar.color()
+
+          if textureUrls = @constructor.textureUrls?()
             _.extend document.avatar,
-              fullName: @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
-              pronouns: @thingAvatar.pronouns()
-              color: @thingAvatar.color()
+              textures:
+                paletteData:
+                  url: "#{textureUrls}-palettedata.png"
+                normals:
+                  url: "#{textureUrls}-normals.png"
 
-            nonPlayerCharacterDocument document
+          nonPlayerCharacterDocument document
 
     @avatar = @instance.avatar
 

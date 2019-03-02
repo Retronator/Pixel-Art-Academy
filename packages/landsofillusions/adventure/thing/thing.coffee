@@ -153,7 +153,11 @@ class LOI.Adventure.Thing extends AM.Component
       class @Script extends LOI.Adventure.Script
         @id: -> parentThing.defaultScriptId?() or parentThing.id()
         @initialize()
-        initialize: -> @options.parent.initializeScript.call @
+        initialize: ->
+          # Make sure listener was not already destroyed while we were loading files.
+          return if @options.listener._destroyed
+
+          @options.parent.initializeScript.call @
 
       @avatars: -> parent.avatars()
       @initialize()

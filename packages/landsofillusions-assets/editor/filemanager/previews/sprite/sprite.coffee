@@ -45,7 +45,7 @@ class LOI.Assets.Editor.FileManager.Previews.Sprite extends AM.Component
       canvas.height = spriteData.bounds.height
 
       context.translate -spriteData.bounds.left, -spriteData.bounds.top
-      @sprite.drawToContext context, lightDirection: @lightDirection
+      @sprite.drawToContext context, lightDirection: @lightDirection()
 
   onRendered: ->
     super arguments...

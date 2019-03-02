@@ -77,7 +77,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
             # Draw and pass the root part in options so we can do different rendering paths based on it.
             renderer.drawToContext context,
               rootPart: character.avatar
-              lightDirection: => new THREE.Vector3(0, -1, -1).normalize()
+              lightDirection: new THREE.Vector3(0, -1, -1).normalize()
 
             canvas.toBlob (blob) =>
               # Update the image.

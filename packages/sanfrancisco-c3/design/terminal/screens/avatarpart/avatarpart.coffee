@@ -45,6 +45,11 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
     @hoveredTemplate = new ReactiveField null
 
+    # We must provide a preview part even though we send the custom renderer because avatar part
+    # preview component determines which preview type to use based on the part send in the data.
+    @previewPart = new ComputedField =>
+      @terminal.screens.character.character().avatar
+
   renderTemplateNameInput: ->
     @templateNameInput.renderComponent @currentComponent()
 

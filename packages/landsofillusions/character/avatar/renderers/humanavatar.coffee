@@ -10,6 +10,8 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
     rendererOptions =
       renderTexture: @options.renderTexture
       renderingSides: @options.renderingSides
+      createCanvas: @options.createCanvas
+      useDatabaseSprites: @options.useDatabaseSprites
 
     @bodyRenderer = @options.humanAvatar.body.createRenderer rendererOptions
 

@@ -24,6 +24,11 @@ class LOI.Character extends AM.Document
   #     shade: relative shade from -2 to +2
   #   body: avatar data for character's body representation
   #   outfit: avatar data for character's current clothes/accessories
+  #   textures: pre-rendered avatar texture maps
+  #     paletteData: the base texture with color information
+  #       url
+  #     normals: texture map with normals
+  #       url
   # behavior: avatar data for character's behavior design
   # profile: miscellaneous information that the user is free to edit as they please
   #   age: integer, 13 to 150

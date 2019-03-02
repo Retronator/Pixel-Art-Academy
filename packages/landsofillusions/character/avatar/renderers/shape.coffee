@@ -1,26 +1,18 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderers.Renderer
-  @liveEditing = false
-
   @_defaultSpriteIdsByName = {}
 
-  @_getDefaultSpriteId: (name) ->
+  @_getDefaultSpriteId: (name, useDatabaseSprites) ->
     return @_defaultSpriteIdsByName[name] if @_defaultSpriteIdsByName[name]
 
-    if @liveEditing
+    if useDatabaseSprites
       @_defaultSpriteIdsByName[name] = LOI.Assets.Sprite.documents.findOne({name})?._id
 
     else
       @_defaultSpriteIdsByName[name] = LOI.Assets.Sprite.findInCache({name})?._id
 
     @_defaultSpriteIdsByName[name]
-
-  if @liveEditing and Meteor.isClient
-    Meteor.startup =>
-      # Subscribe to all body sprites.
-      types = LOI.Character.Part.allAvatarBodyPartTypeIds()
-      LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe types
 
   constructor: (@options, initialize) ->
     super arguments...
@@ -40,7 +32,7 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
 
         @spriteDataInfo[side] = new ComputedField =>
           # Don't start loading until the cache is ready.
-          return unless @liveEditing or LOI.Assets.Sprite.cacheReady()
+          return unless @options.useDatabaseSprites or LOI.Assets.Sprite.cacheReady()
           
           spriteId = @options["#{sourceSide}SpriteId"]()
           flipped = false
@@ -67,20 +59,20 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
               flipped = false
               defaultSprite = true
 
-              spriteId = @constructor._getDefaultSpriteId spriteName
+              spriteId = @constructor._getDefaultSpriteId spriteName, @options.useDatabaseSprites
               
               unless spriteId
                 # Try again with a sprite without a side suffix.
-                spriteId = @constructor._getDefaultSpriteId defaultName
+                spriteId = @constructor._getDefaultSpriteId defaultName, @options.useDatabaseSprites
 
               unless spriteId
                 spriteName = addSideToDefaultName mirrorSide
                 flipped = true
-                spriteId = @constructor._getDefaultSpriteId spriteName
+                spriteId = @constructor._getDefaultSpriteId spriteName, @options.useDatabaseSprites
 
           return unless spriteId
 
-          if @constructor.liveEditing
+          if @options.useDatabaseSprites
             spriteData = LOI.Assets.Sprite.documents.findOne spriteId
 
           else
@@ -107,6 +99,7 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
               @options.flippedHorizontal
           ,
             true
+          createCanvas: @options.createCanvas
 
         @translation[side] = new ComputedField =>
           return unless spriteDataInfo = @spriteDataInfo[side]()
@@ -150,7 +143,7 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
 
     @_ready = new ComputedField =>
       # Wait until the cache is ready.
-      return unless @liveEditing or LOI.Assets.Sprite.cacheReady()
+      return unless @options.useDatabaseSprites or LOI.Assets.Sprite.cacheReady()
 
       for side in @options.renderingSides
         # If we have no data in this part for this side, there's nothing to do.

@@ -7,18 +7,18 @@ class AS.Hqx
     NoBlending: 'NoBlending'
     AlphaOnly: 'AlphaOnly'
 
-  @scale: (image, scale, mode, antialiasing) ->
+  @scale: (image, scale, mode, antialiasing, createCanvas) ->
     switch mode
       when @Modes.NoBlending
-        @_hqx image, scale, antialiasing, 0, 0, 0
+        @_hqx image, scale, antialiasing, createCanvas, 0, 0, 0
       
       when @Modes.AlphaOnly
-        @_scaleAlphaOnly image, scale, antialiasing
+        @_scaleAlphaOnly image, scale, antialiasing, createCanvas
 
       else
-        @_hqx image, scale, antialiasing
+        @_hqx image, scale, antialiasing, createCanvas
 
-  @_scaleAlphaOnly: (image, scale, antialiasing) ->
+  @_scaleAlphaOnly: (image, scale, antialiasing, createCanvas) ->
     sourceCanvas = $('<canvas>')[0]
     sourceCanvas.width = image.width
     sourceCanvas.height = image.height
@@ -42,7 +42,7 @@ class AS.Hqx
 
     sourceContext.putImageData sourceImageData, 0, 0
 
-    targetCanvas = @_hqx sourceCanvas, scale, antialiasing
+    targetCanvas = @_hqx sourceCanvas, scale, antialiasing, createCanvas
     targetContext = targetCanvas.getContext '2d'
     targetImageData = targetContext.getImageData 0, 0, targetCanvas.width, targetCanvas.height
 

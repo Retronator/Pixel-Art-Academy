@@ -25,6 +25,8 @@ class LOI.HumanAvatar extends LOI.Avatar
 
     @_renderer?.destroy()
     @_renderObject?.destroy()
+
+    @dataReady.stop()
     
   getRenderer: ->
     @_renderer ?= Tracker.nonreactive => @createRenderer()

@@ -12,13 +12,18 @@ Package.describe({
 
 Npm.depends({
   'delaunator': '3.0.2',
-  'barycentric': '1.0.1'
+  'barycentric': '1.0.1',
+  'canvas': '2.3.1',
+  'pngjs': '2.3.0'
 });
 
 Package.onUse(function(api) {
   api.use('retronator:artificialengines');
   api.use('retronator:retronator-accounts');
+
   api.use('chfritz:easycron');
+  api.use('jparker:crypto-aes');
+  api.use('froatsnook:request');
 
   api.use('promise');
   api.use('modules');
@@ -91,6 +96,7 @@ Package.onUse(function(api) {
   api.addFile('avatar/avatar');
   api.addFile('avatar/humanavatar..');
   api.addFile('avatar/humanavatar/renderobject');
+  api.addFile('avatar/humanavatar/texturerenderer');
   api.addFile('avatar/humanavatar/regions');
 
   // Character
@@ -415,8 +421,14 @@ Package.onUse(function(api) {
   api.addComponent('pages/loading..');
 
   api.addUnstyledComponent('pages/admin..');
+
   api.addUnstyledComponent('pages/admin/gamecontent..');
   api.addServerFile('pages/admin/gamecontent/server');
+
+  api.addUnstyledComponent('pages/admin/characters..');
+  api.addServerFile('pages/admin/characters/avatartexture');
+
+  api.addComponent('pages/admin/characters/avatareditor..');
 
   // Components
 

@@ -10,7 +10,7 @@ class LOI.NonPlayerCharacter
   #   body: avatar data for character's body representation
   #   outfit: avatar data for character's current clothes/accessories
   # behavior: avatar data for character's behavior design
-  # profile: miscellaneous information that the user is free to edit as they please
+  # profile: miscellaneous information about the NPC
   #   age: integer, 13 to 150
   #   country: ISO region code
   #   aspiration: any string

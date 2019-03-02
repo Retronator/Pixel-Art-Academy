@@ -7,14 +7,22 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     # Prepare renderer only when it has been asked to initialize.
     return unless initialize
 
-    @renderers = []
-    @_createRenderers()
+    @_renderers = []
+    @renderers = new ComputedField =>
+      renderer.destroy() for renderer in @_renderers
+
+      @_renderers = []
+      @_createRenderers()
+      @_renderers
 
     @_landmarks = {}
 
     for side in @options.renderingSides
       do (side) =>
         @landmarks[side] = new ComputedField =>
+          # Depend on renderers.
+          @renderers()
+
           # Create landmarks and update renderer translations.
           @_landmarks[side] = []
 
@@ -35,12 +43,12 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
           true
 
     @_ready = new ComputedField =>
-      _.every @renderers, (renderer) => renderer.ready()
+      _.every @renderers(), (renderer) => renderer.ready()
     ,
       true
     
   destroy: ->
-    renderer.destroy() for renderer in @renderers
+    renderer.destroy() for renderer in @renderers()
 
     for side in @options.renderingSides
       @landmarks[side].stop()
@@ -58,14 +66,14 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
 
     if property.part
       renderer = property.part.createRenderer propertyRendererOptions
-      @renderers.push renderer
+      @_renderers.push renderer
 
       renderer
 
     else if property.parts
       for part in property.parts()
         renderer = part.createRenderer propertyRendererOptions
-        @renderers.push renderer
+        @_renderers.push renderer
 
         renderer
 
@@ -129,7 +137,7 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     @landmarks[options.side]()
 
     # Sort renderers by depth.
-    sortedRenderers = _.sortBy @renderers, (renderer) => renderer._depth[options.side]
+    sortedRenderers = _.sortBy @renderers(), (renderer) => renderer._depth[options.side]
 
     for renderer in sortedRenderers
       @drawRendererToContext renderer, context, options

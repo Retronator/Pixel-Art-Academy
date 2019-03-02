@@ -18,7 +18,8 @@ class C3.Design.Terminal.Character extends AM.Component
       return unless character = @character()
 
       @_characterRenderer?.destroy()
-      @_characterRenderer = character.avatar.createRenderer()
+      @_characterRenderer = character.avatar.createRenderer
+        useDatabaseSprites: @terminal.options.useDatabaseSprites
 
       @_characterRenderer
       

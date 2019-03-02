@@ -112,7 +112,9 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     @_enterContextAutorun = @autorun (computation) =>
       return if LOI.adventure.currentContext() instanceof C1.Mixer.Context
       return unless LOI.adventure.getCurrentInventoryThing C1.Mixer.NameTag
-      
+      return unless shelley = LOI.adventure.getCurrentThing HQ.Actors.Shelley
+      return unless shelley.ready()
+
       LOI.adventure.enterContext C1.Mixer.Context
 
       unless @script.state 'IceBreakersDone'

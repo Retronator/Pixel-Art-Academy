@@ -1,14 +1,6 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Renderers.Renderer
-  @liveEditing = false
-
-  if @liveEditing and Meteor.isClient and not LOI.Character.Avatar.Renderers.Shape.liveEditing
-    Meteor.startup =>
-      # Subscribe to all outfit sprites.
-      types = LOI.Character.Part.allAvatarOutfitPartTypeIds()
-      LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe types
-
   constructor: (@options, initialize) ->
     super arguments...
 
@@ -32,7 +24,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
         @spriteDataInfo[side] = new ComputedField =>
           # Don't start loading until the cache is ready.
-          return unless @liveEditing or LOI.Assets.Sprite.cacheReady()
+          return unless @options.useDatabaseSprites or LOI.Assets.Sprite.cacheReady()
 
           spriteId = @options["#{sourceSide}SpriteId"]()
 
@@ -44,7 +36,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
           return unless spriteId
 
-          if @constructor.liveEditing
+          if @options.useDatabaseSprites
             spriteData = LOI.Assets.Sprite.documents.findOne spriteId
 
           else
@@ -99,6 +91,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
             @spriteDataInfo[side]()?.flipped
           ,
             true
+          createCanvas: @options.createCanvas
 
         @landmarks[side] = => []
 
@@ -115,7 +108,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
     @_ready = new ComputedField =>
       # Wait until the cache is ready.
-      return unless @liveEditing or LOI.Assets.Sprite.cacheReady()
+      return unless @options.useDatabaseSprites or LOI.Assets.Sprite.cacheReady()
 
       for side in @options.renderingSides
         # If we have no data in this part for this side, there's nothing to do.

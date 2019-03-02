@@ -49,6 +49,10 @@ class LOI.Items.Sync.Immersion extends LOI.Items.Sync.Tab
 
     'active' if LOI.characterId() is characterInstance._id
 
+  avatarPreviewOptions: ->
+    rendererOptions:
+      renderingSides: [LOI.Engine.RenderingSides.Keys.Front]
+
   landsOfIllusionsActiveClass: ->
     'active' if LOI.adventure.currentTimelineId() is LOI.TimelineIds.Construct
 

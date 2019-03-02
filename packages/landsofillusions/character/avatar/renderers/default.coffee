@@ -11,22 +11,24 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     propertyRendererOptions = @_cloneRendererOptions()
     @_translation = {}
 
+    @_renderers = []
     @renderers = new ComputedField =>
-      renderers = []
+      renderer.destroy() for renderer in @_renderers
+      @_renderers = []
 
       for propertyName, property of @options.part.properties
         if property instanceof LOI.Character.Part.Property.OneOf
           renderer = property.part.createRenderer propertyRendererOptions
           renderer.options.propertyName = propertyName
-          renderers.push renderer if renderer
+          @_renderers.push renderer if renderer
 
         else if property instanceof LOI.Character.Part.Property.Array
           for part in property.parts()
             renderer = part.createRenderer propertyRendererOptions
             renderer.options.propertyName = propertyName
-            renderers.push renderer if renderer
+            @_renderers.push renderer if renderer
 
-      renderers
+      @_renderers
 
     for side in @options.renderingSides
       do (side) =>

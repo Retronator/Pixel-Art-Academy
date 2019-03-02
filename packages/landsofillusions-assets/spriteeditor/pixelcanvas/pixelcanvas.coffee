@@ -136,7 +136,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
         context.save()
         component.drawToContext context,
-          lightDirection: lightDirection
+          lightDirection: lightDirection()
           camera: camera
           editor: @
 

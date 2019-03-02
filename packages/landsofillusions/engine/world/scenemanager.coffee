@@ -7,10 +7,10 @@ class LOI.Engine.World.SceneManager
     scene = new THREE.Scene()
     @scene = new AE.ReactiveWrapper scene
 
-    ambientLight = new THREE.AmbientLight 0xffffff, 0.4
+    ambientLight = new THREE.AmbientLight 0xffffff, 0.5
     scene.add ambientLight
 
-    directionalLight = new THREE.DirectionalLight 0xffffff, 0.4
+    directionalLight = new THREE.DirectionalLight 0xffffff, 0.5
 
     directionalLight.castShadow = true
     d = 20
@@ -27,7 +27,7 @@ class LOI.Engine.World.SceneManager
     directionalLight.position.set 0, 4, 0.5
     scene.add directionalLight
 
-    directionalLight = new THREE.DirectionalLight 0xffffff, 1.2
+    directionalLight = new THREE.DirectionalLight 0xffffff, 1.5
 
     directionalLight.castShadow = true
     d = 20

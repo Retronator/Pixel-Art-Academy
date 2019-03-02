@@ -46,3 +46,5 @@ class LandsOfIllusions
   constructor: ->
     Retronator.App.addAdminPage '/admin/landsofillusions', @constructor.Pages.Admin
     Retronator.App.addAdminPage '/admin/landsofillusions/gamecontent', @constructor.Pages.Admin.GameContent
+    Retronator.App.addAdminPage '/admin/landsofillusions/characters', @constructor.Pages.Admin.Characters
+    Retronator.App.addAdminPage '/admin/landsofillusions/characters/avatareditor', @constructor.Pages.Admin.Characters.AvatarEditor

@@ -38,8 +38,13 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
       save: (address, value) =>
         LOI.Character.updateAvatarOutfit document()._id, address, value
 
+    textures = new ComputedField =>
+      document()?.avatar?.textures
+    ,
+      EJSON.equals
+
     # Now we can call HumanAvatar's constructor which will turn this data into an actual part hierarchy.
-    super {bodyDataField, outfitDataField}
+    super {bodyDataField, outfitDataField, textures}
 
     @document = document
 

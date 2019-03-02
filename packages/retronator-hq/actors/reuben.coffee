@@ -14,5 +14,6 @@ class HQ.Actors.Reuben extends LOI.Character.Actor
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
 
   @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/reuben.json'
+  @textureUrls: -> '/retronator/hq/actors/reuben'
 
   @initialize()

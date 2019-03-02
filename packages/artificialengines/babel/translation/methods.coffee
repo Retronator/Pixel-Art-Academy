@@ -50,7 +50,7 @@ AB.Translation._update = (translationId, language, text) ->
     return if Meteor.isClient
 
     # On the server, throw an error on missing translations.
-    throw new AE.ArgumentException "Translation does not exist."
+    throw new AE.ArgumentException "Translation does not exist.", translationId
 
   languageProperty = language.toLowerCase().replace '-', '.'
 

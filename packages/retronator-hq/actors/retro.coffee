@@ -13,6 +13,7 @@ class HQ.Actors.Retro extends LOI.Character.Actor
 
   @defaultScriptUrl: -> 'retronator_retronator-hq/actors/retro.script'
   @nonPlayerCharacterDocumentUrl: -> 'retronator_retronator-hq/actors/retro.json'
+  @textureUrls: -> '/retronator/hq/actors/retro'
 
   @initialize()
 
