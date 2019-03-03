@@ -51,7 +51,11 @@
       </div>
       <div class="main-actions">
         {{#if document.designApproved}}
-          <button class="main-button action-button done-button">Done</button>
+          {{#if document.avatar.textures.needUpdate}}
+            <button class="main-button action-button done-button">Update</button>
+          {{else}}
+            <button class="main-button action-button done-button">Done</button>
+          {{/if}}
           <button class="action-button danger-button delete-button">Retire</button>
         {{else}}
           <button class="main-button action-button done-button">Create</button>

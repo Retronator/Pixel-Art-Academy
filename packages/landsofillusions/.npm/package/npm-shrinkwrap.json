@@ -21,6 +21,18 @@
       "resolved": "https://registry.npmjs.org/are-we-there-yet/-/are-we-there-yet-1.1.5.tgz",
       "integrity": "sha512-5hYdAkZlcG8tOLujVDTgCT+uPX0VnpAH28gWsLfzpXYm7wP6mp5Q/gYyR7YQ0cKVJcXJnl3j2kpBan13PtQf6w=="
     },
+    "aws-sdk": {
+      "version": "2.1.50",
+      "resolved": "https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.1.50.tgz",
+      "integrity": "sha1-Zd3CuEDmkCEIftNfKC1jKgUpShs=",
+      "dependencies": {
+        "sax": {
+          "version": "0.5.3",
+          "resolved": "https://registry.npmjs.org/sax/-/sax-0.5.3.tgz",
+          "integrity": "sha1-N3NxSg2RV8qqcwKXHvpcbc2lUtY="
+        }
+      }
+    },
     "balanced-match": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.0.tgz",
@@ -308,6 +320,28 @@
       "resolved": "https://registry.npmjs.org/robust-sum/-/robust-sum-1.0.0.tgz",
       "integrity": "sha1-FmRuUlKStNJdgnV6KGlV4Lv6U9k="
     },
+    "s3-streaming-upload": {
+      "version": "0.2.3",
+      "resolved": "https://registry.npmjs.org/s3-streaming-upload/-/s3-streaming-upload-0.2.3.tgz",
+      "integrity": "sha1-ELjbc8A0VQGI7Vj3cS5PSFXqGCI=",
+      "dependencies": {
+        "isarray": {
+          "version": "0.0.1",
+          "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz",
+          "integrity": "sha1-ihis/Kmo9Bd+Cav8YDiTmwXR7t8="
+        },
+        "readable-stream": {
+          "version": "1.0.34",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz",
+          "integrity": "sha1-Elgg40vIQtLyqq+v5MKRbuMsFXw="
+        },
+        "string_decoder": {
+          "version": "0.10.31",
+          "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz",
+          "integrity": "sha1-YuIDvEF2bGwoyfyEMB2rHFMQ+pQ="
+        }
+      }
+    },
     "safe-buffer": {
       "version": "5.1.2",
       "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz",
@@ -387,6 +421,23 @@
       "version": "1.0.2",
       "resolved": "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz",
       "integrity": "sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8="
+    },
+    "xml2js": {
+      "version": "0.2.8",
+      "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.2.8.tgz",
+      "integrity": "sha1-m4FpCTFjH/CdGVdUn69U9PmAs8I=",
+      "dependencies": {
+        "sax": {
+          "version": "0.5.8",
+          "resolved": "https://registry.npmjs.org/sax/-/sax-0.5.8.tgz",
+          "integrity": "sha1-1HLbIo6zMcJQaw6MFVJK25OdEsE="
+        }
+      }
+    },
+    "xmlbuilder": {
+      "version": "0.4.2",
+      "resolved": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-0.4.2.tgz",
+      "integrity": "sha1-F3bWXz/brUcKCNhgTN6xxOVA/4M="
     },
     "yallist": {
       "version": "3.0.3",

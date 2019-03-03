@@ -14,7 +14,8 @@ Npm.depends({
   'delaunator': '3.0.2',
   'barycentric': '1.0.1',
   'canvas': '2.3.1',
-  'pngjs': '2.3.0'
+  'pngjs': '2.3.0',
+  's3-streaming-upload': '0.2.3'
 });
 
 Package.onUse(function(api) {
@@ -104,6 +105,7 @@ Package.onUse(function(api) {
   api.addFile('character..');
   api.addFile('character/character-helpers');
   api.addFile('character/methods');
+  api.addServerFile('character/methods-server-renderavatartextures');
   api.addServerFile('character/subscriptions');
   api.addServerFile('character/migrations/0000-renamecollection');
   api.addServerFile('character/migrations/0001-userpublicname');

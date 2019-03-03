@@ -25,6 +25,8 @@ class LOI.Character extends AM.Document
   #   body: avatar data for character's body representation
   #   outfit: avatar data for character's current clothes/accessories
   #   textures: pre-rendered avatar texture maps
+  #     needUpdate: boolean whether body or outfit have changed and the textures need to be re-rendered
+  #     version: integer version that increases on each render
   #     paletteData: the base texture with color information
   #       url
   #     normals: texture map with normals
@@ -64,6 +66,7 @@ class LOI.Character extends AM.Document
   @updateBehavior: @method 'updateBehavior'
   @updateProfile: @method 'updateProfile'
   @updateContactEmail: @method 'updateContactEmail'
+  @renderAvatarTextures: @method 'renderAvatarTextures'
 
   @approveDesign: @method 'approveDesign'
   @approveBehavior: @method 'approveBehavior'

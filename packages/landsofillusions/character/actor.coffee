@@ -56,12 +56,14 @@ class LOI.Character.Actor extends LOI.Character.Person
             color: @thingAvatar.color()
 
           if textureUrls = @constructor.textureUrls?()
+            version = @constructor.version()
+
             _.extend document.avatar,
               textures:
                 paletteData:
-                  url: "#{textureUrls}-palettedata.png"
+                  url: "#{textureUrls}-palettedata.png?#{version}"
                 normals:
-                  url: "#{textureUrls}-normals.png"
+                  url: "#{textureUrls}-normals.png?#{version}"
 
           nonPlayerCharacterDocument document
 

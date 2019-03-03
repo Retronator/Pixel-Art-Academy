@@ -99,7 +99,7 @@ LOI.Character.updateColor.method (characterId, hue, shade) ->
 
   LOI.Character.documents.update characterId, $set: set
 
-updateCharacterPart = (field, characterId, address, value) ->
+updateCharacterPart = (field, characterId, address, value, additionalUpdate) ->
   field += ".#{address}" if address
 
   if value?
@@ -114,7 +114,15 @@ updateCharacterPart = (field, characterId, address, value) ->
       $unset:
         "#{field}": true
 
+  if additionalUpdate
+    _.merge update, additionalUpdate
+
   LOI.Character.documents.update characterId, update
+
+updateAvatarPart =  (field, characterId, address, value) ->
+  updateCharacterPart field, characterId, address, value,
+    $set:
+      'avatar.textures.needUpdate': true
 
 LOI.Character.updateAvatarBody.method (characterId, address, value) ->
   check characterId, Match.DocumentId
@@ -124,7 +132,7 @@ LOI.Character.updateAvatarBody.method (characterId, address, value) ->
   LOI.Authorize.characterAction characterId
   LOI.Authorize.avatarEditor()
 
-  updateCharacterPart 'avatar.body', characterId, address, value
+  updateAvatarPart 'avatar.body', characterId, address, value
 
 LOI.Character.updateAvatarOutfit.method (characterId, address, value) ->
   check characterId, Match.DocumentId
@@ -134,7 +142,7 @@ LOI.Character.updateAvatarOutfit.method (characterId, address, value) ->
   # Note that we don't authorize avatar editor because all players can change their outfit.
   LOI.Authorize.characterAction characterId
 
-  updateCharacterPart 'avatar.outfit', characterId, address, value
+  updateAvatarPart 'avatar.outfit', characterId, address, value
 
 LOI.Character.updateBehavior.method (characterId, address, value) ->
   check characterId, Match.DocumentId
@@ -188,6 +196,9 @@ LOI.Character.approveDesign.method (characterId) ->
   LOI.Character.documents.update characterId,
     $set:
       designApproved: true
+      
+  # Also render avatar textures for the first time.
+  LOI.Character.renderAvatarTextures characterId
 
 LOI.Character.approveBehavior.method (characterId) ->
   check characterId, Match.DocumentId

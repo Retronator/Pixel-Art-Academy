@@ -47,7 +47,7 @@ WebApp.connectHandlers.use '/admin/landsofillusions/characters/avatartexture.png
     ,
       true
 
-    # Create and automatically update textures.
+    # Render the textures.
     textureRenderer = new LOI.HumanAvatar.TextureRenderer {humanAvatar, humanAvatarRenderer, createCanvas}
     textureRenderer.render()
 
