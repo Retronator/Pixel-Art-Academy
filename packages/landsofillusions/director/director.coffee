@@ -46,9 +46,31 @@ class LOI.Director
       thing = LOI.adventure.getCurrentThing thingId
       renderObject = thing.avatar.getRenderObject()
 
-      if _.isString position
-        landmarkName = position
-        mesh = LOI.adventure.world.sceneManager().currentLocationMeshData()
-        position = mesh.getLandmarkWorldPosition landmarkName
-
+      continue unless position = @_getPosition position
       renderObject.position.copy position
+
+  facePosition: (positions) ->
+    for thingId, position of positions
+      thing = LOI.adventure.getCurrentThing thingId
+      renderObject = thing.avatar.getRenderObject()
+
+      continue unless position = @_getPosition position
+
+      direction = new THREE.Vector3().subVectors position, renderObject.position
+      direction.normalize()
+      renderObject.faceDirection direction
+
+  _getPosition: (positionOrLandmarkName) ->
+    if _.isString positionOrLandmarkName
+      landmarkName = positionOrLandmarkName
+      mesh = LOI.adventure.world.sceneManager().currentLocationMeshData()
+      position = mesh.getLandmarkWorldPosition landmarkName
+
+      unless position
+        console.warn "Couldn't find landmark", landmarkName
+        return
+
+    else
+      position = positionOrLandmarkName
+
+    THREE.Vector3.fromObject position

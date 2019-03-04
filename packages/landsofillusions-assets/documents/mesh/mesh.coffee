@@ -148,7 +148,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     return unless layer = @objects.get(landmark.object)?.layers.get(landmark.layer)
     return unless picture = layer.getPictureForCameraAngleIndex landmark.cameraAngle
     
-    clusterId = picture.getClusterIdForPixel landmark.x, landmark.y
+    clusterId = picture.getClusterIdForPixel Math.round(landmark.x), Math.round(landmark.y)
     return unless clusterPlaneData = layer.clusters.get(clusterId).plane()
     return unless cameraAngle = @cameraAngles.get landmark.cameraAngle
 

@@ -89,13 +89,14 @@ class AS.AnimatedMesh extends AS.RenderObject
     # Reactively play animations.
     @currentAnimationName = new ReactiveField()
     @blendTime = new ReactiveField 0
+    @randomStart = new ReactiveField false
 
     @autorun (computation) =>
       return unless creatureManager = @creatureManager()
       return unless creatureRenderer = @creatureRenderer()
 
       return unless animationName = @currentAnimationName()
-      return unless creatureManager.GetAnimation animationName if animationName
+      return unless animation = creatureManager.GetAnimation animationName if animationName
 
       if @_autoBlendSet
         blendRate = 1 / @blendTime() / @options.playbackFPS
@@ -108,7 +109,15 @@ class AS.AnimatedMesh extends AS.RenderObject
 
       creatureManager.SetShouldLoop true
       creatureManager.SetIsPlaying true
-      creatureManager.RunAtTime 0
+      
+      if @randomStart
+        length = animation.endTime
+        time = Math.random() * length
+        
+      else
+        time = 0
+        
+      creatureManager.RunAtTime time
       
       # Do the first update.
       creatureRenderer.UpdateData()

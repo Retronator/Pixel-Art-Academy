@@ -42,6 +42,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
       animatedMesh.blendTime 0.2
       animatedMesh.currentAnimationName 'Idle'
+      animatedMesh.randomStart true
 
       sideIndex = LOI.HumanAvatar.TextureRenderer.textureSides.indexOf sideName
       bodyHeight = bodyTop[sideIndex] - bodyBottom[sideIndex]
