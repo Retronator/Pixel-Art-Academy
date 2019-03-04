@@ -48,6 +48,8 @@ class LOI.Engine.World.SceneManager
     @_currentLocationMesh = null
     @_currentIllustrationName = null
     
+    @currentLocationMeshData = new ReactiveField null
+
     @world.autorun (computation) =>
       illustration = @world.options.adventure.currentSituation()?.illustration()
       return unless illustrationName = illustration?.name
@@ -88,6 +90,9 @@ class LOI.Engine.World.SceneManager
 
           # Initialize the camera from the camera angle.
           @world.cameraManager().setFromCameraAngle cameraAngle()
+
+          # Report we have new mesh data.
+          @currentLocationMeshData meshData
 
     @locationThings = new AE.ReactiveArray (=> @world.options.adventure.currentLocationThings()),
       added: (thing) =>

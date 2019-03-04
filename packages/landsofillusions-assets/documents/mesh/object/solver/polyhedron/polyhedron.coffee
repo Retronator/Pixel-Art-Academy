@@ -90,6 +90,10 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
 
     # Generate geometries and send them to layer clusters.
     for cluster in changedClusters
-      clustersData[cluster.id].geometry cluster.generateGeometry()
+      clusterData = clustersData[cluster.id]
+      clusterData.geometry cluster.generateGeometry()
+      clusterData.plane
+        point: cluster.plane.point.toObject()
+        normal: cluster.plane.normal.toObject()
 
     console.log "Generated geometry for clusters", changedClusters if @constructor.debug

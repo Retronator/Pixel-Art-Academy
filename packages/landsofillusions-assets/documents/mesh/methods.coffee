@@ -59,6 +59,9 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
             check cluster,
               properties: Match.Optional
                 navigable: Match.Optional Boolean
+              plane: Match.Optional
+                point: vectorPattern
+                normal: vectorPattern
               material: Match.Optional
                 paletteColor: Match.Optional
                   ramp: Match.Integer
@@ -69,10 +72,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
                   b: Number
                 materialIndex: Match.Optional Match.Integer
                 alpha: Match.Optional Number
-                normal: Match.Optional
-                  x: Number
-                  y: Number
-                  z: Number
+                normal: Match.Optional vectorPattern
               geometry: Match.Optional
                 compressedVertices: Match.Where EJSON.isBinary
                 compressedNormals: Match.Where EJSON.isBinary

@@ -46,5 +46,9 @@ class LOI.Director
       thing = LOI.adventure.getCurrentThing thingId
       renderObject = thing.avatar.getRenderObject()
 
-      if _.isObject position
-        renderObject.position.copy position
+      if _.isString position
+        landmarkName = position
+        mesh = LOI.adventure.world.sceneManager().currentLocationMeshData()
+        position = mesh.getLandmarkWorldPosition landmarkName
+
+      renderObject.position.copy position

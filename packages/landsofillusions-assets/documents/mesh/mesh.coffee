@@ -54,6 +54,11 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #       {id}: unique integer identifying this cluster in the layer
   #         properties: user-defined properties set on the cluster
   #           navigable: boolean if the cluster is navigable for pathfinding purposes
+  #         plane: the world plane for flat clusters
+  #           point: a point in the plane
+  #             x, y, z
+  #           normal: the normal of the plane
+  #             x, y, z
   #         material: subset of properties of the picture cluster (relevant map values at source coordinates)
   #           materialIndex, paletteColor, directColor, alpha, normal
   #         geometry:
@@ -69,6 +74,11 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   ramp: index of the ramp within the palette
   #   shade: index of the shade in the ramp
   #   dither: amount of dither used from 0 to 1
+  # landmarks: array of named locations, as defined for visual asset
+  #   ...
+  #   object: integer index of the object this landmark is on
+  #   layer: integer index of the object layer this landmarks is on
+  #   cameraAngle: integer index of the camera layer this landmark's (x,y) location is defined from
   @Meta
     name: @id()
 
@@ -124,6 +134,34 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     # Mark the state clean.
     @dirty false
+    
+  getLandmarkWorldPosition: (landmarkOrIndexOrName) ->
+    if _.isString landmarkOrIndexOrName
+      landmark = _.find @landmarks, (landmark) -> landmark.name is landmarkOrIndexOrName
+
+    else if _.isNumber landmarkOrIndexOrName
+      landmark = @landmarks[landmarkOrIndexOrName]
+
+    else
+      return unless landmark = landmarkOrIndexOrName
+
+    return unless layer = @objects.get(landmark.object)?.layers.get(landmark.layer)
+    return unless picture = layer.getPictureForCameraAngleIndex landmark.cameraAngle
+    
+    clusterId = picture.getClusterIdForPixel landmark.x, landmark.y
+    return unless clusterPlaneData = layer.clusters.get(clusterId).plane()
+    return unless cameraAngle = @cameraAngles.get landmark.cameraAngle
+
+    planeNormal = THREE.Vector3.fromObject clusterPlaneData.normal
+    planePoint = THREE.Vector3.fromObject clusterPlaneData.point
+    plane = new THREE.Plane().setFromNormalAndCoplanarPoint planeNormal, planePoint
+
+    points = [
+      x: landmark.x
+      y: landmark.y
+    ]
+
+    cameraAngle.projectPoints(points, plane)[0]
 
 if Meteor.isServer
   # Export meshes without authors.

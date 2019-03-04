@@ -20,7 +20,7 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
         normals: @_decompressData data.geometry.compressedNormals, Float32Array
         indices: @_decompressData data.geometry.compressedIndices, Uint32Array
 
-    for field in ['properties', 'material', 'geometry']
+    for field in ['properties', 'plane', 'material', 'geometry']
       @[field] = new LOI.Assets.Mesh.ValueField @, field, data[field]
       
   _decompressData: (compressedByteArray, arrayClass) ->
@@ -30,7 +30,7 @@ class LOI.Assets.Mesh.Object.Layer.Cluster
   toPlainObject: ->
     plainObject = {}
 
-    @[field].save plainObject for field in ['properties', 'material', 'geometry']
+    @[field].save plainObject for field in ['properties', 'plane', 'material', 'geometry']
 
     # Compress geometry.
     plainObject.geometry =
