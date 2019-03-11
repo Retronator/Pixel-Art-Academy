@@ -27,11 +27,14 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
       save: (address, value) =>
         LOI.Character.updateAvatarBody document()._id, address, value
 
+    # Allow to supply a different outfit than the default one stored on the avatar.
+    customOutfit = new ReactiveField null
+
     outfitDataField = AM.Hierarchy.create
       templateClass: LOI.Character.Part.Template
       type: LOI.Character.Part.Types.Avatar.Outfit.options.type
       load: new ComputedField =>
-        document()?.avatar?.outfit
+        customOutfit() or document()?.avatar?.outfit
       ,
         EJSON.equals
 
@@ -39,7 +42,7 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
         LOI.Character.updateAvatarOutfit document()._id, address, value
 
     textures = new ComputedField =>
-      document()?.avatar?.textures
+      if customOutfit() then null else document()?.avatar?.textures
     ,
       EJSON.equals
 
@@ -47,6 +50,7 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
     super {bodyDataField, outfitDataField, textures}
 
     @document = document
+    @customOutfit = customOutfit
 
   _avatar: ->
     @document()?.avatar

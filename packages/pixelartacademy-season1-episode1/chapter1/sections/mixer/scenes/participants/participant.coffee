@@ -9,7 +9,7 @@ class C1.Mixer.Participant extends LOI.Adventure.Scene
   createAnswers: (answerData) ->
     @answerActionDocuments = for question, answer of answerData
       _id: Random.id()
-      type: C1.Mixer.IceBreakers.AnswerAction.id()
+      type: C1.Mixer.IceBreakers.AnswerAction.type
       question: question
       answer: answer
 

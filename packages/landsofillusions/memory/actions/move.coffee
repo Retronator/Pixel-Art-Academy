@@ -26,7 +26,7 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
   createStartScript: (person, nextNode, nodeOptions = {}) ->
     personObject = person.avatar.getRenderObject()
 
-    if @content.coordinates
+    if @content?.coordinates
       personObject.setAnimation 'Walk'
 
       LOI.adventure.world.navigator().moveRenderObject

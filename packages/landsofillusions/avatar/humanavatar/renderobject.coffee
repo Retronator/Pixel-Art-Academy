@@ -60,13 +60,27 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       # See if we will get texture data, or we need to render them ad-hoc.
       return unless @humanAvatar.dataReady()
 
-      if textures = @humanAvatar.options.textures?()
+      textures = @humanAvatar.options.textures?()
+
+      if not @humanAvatar.customOutfit()
         @_textureUpdateAutorun?.stop()
         
         # Read the textures from the URLs.
         @updatePaletteDataTexture new THREE.TextureLoader().load textures.paletteData.url
         @updateNormalsTexture new THREE.TextureLoader().load textures.normals.url
         @textureUpdateFinished()
+
+        # Make sure the textures are actually reachable and fallback to on-the-fly rendering otherwise.
+        image = new Image
+        image.addEventListener 'error', =>
+          console.warn "Couldn't reach avatar texture", textures.paletteData.url
+          
+          # Set the current outfit as a custom outfit to trigger rendering.
+          @humanAvatar.customOutfit @humanAvatar.outfit.options.dataLocation.options.rootField.options.load()
+        ,
+          false
+
+        image.src = textures.paletteData.url
 
       else
         # Create texture renderers.
@@ -219,6 +233,10 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
   setAnimation: (animationName) ->
     animatedMesh.currentAnimationName animationName for side, animatedMesh of @animatedMeshes
+    
+  facePosition: (positionOrLandmark) ->
+    position = LOI.adventure.world.getPositionVector positionOrLandmark
+    @faceDirection new THREE.Vector3().subVectors position, @position
 
   faceDirection: (direction) ->
     @_targetAngle = LOI.Engine.RenderingSides.getAngleForDirection direction

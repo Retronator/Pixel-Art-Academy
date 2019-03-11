@@ -134,13 +134,21 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     # Mark the state clean.
     @dirty false
-    
-  getLandmarkWorldPosition: (landmarkOrIndexOrName) ->
+
+  getLandmarkPositionVector: (landmarkOrIndexOrName) ->
     if _.isString landmarkOrIndexOrName
       landmark = _.find @landmarks, (landmark) -> landmark.name is landmarkOrIndexOrName
 
+      unless landmark
+        console.warn "Couldn't find landmark", landmarkOrIndexOrName
+        return
+
     else if _.isNumber landmarkOrIndexOrName
       landmark = @landmarks[landmarkOrIndexOrName]
+
+      unless landmark
+        console.warn "Couldn't find landmark index", landmarkOrIndexOrName
+        return
 
     else
       return unless landmark = landmarkOrIndexOrName

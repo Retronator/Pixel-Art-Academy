@@ -121,6 +121,10 @@ shelley:
 
 shelley: Next question: do you want to primarily do pixel art or other styles?
 
+pause
+
+### PixelArtOtherStylesStart
+
 * @Pixel art -> [AnswerPixelArt]
 * @Other styles -> [AnswerOtherStyle]
 * @All styles! -> [AnswerAllStyles]
@@ -152,6 +156,10 @@ shelley: Next question: do you want to primarily do pixel art or other styles?
 
 shelley: Alright, extrovert or introvert?
 
+pause
+
+### ExtrovertIntrovertStart
+
 * @Extrovert -> [AnswerExtrovert]
 * @Introvert -> [AnswerIntrovert]
 * @A bit of both -> [AnswerExtrovertIntrovert]
@@ -182,6 +190,10 @@ shelley: Alright, extrovert or introvert?
 ## IndividualTeamStart
 
 shelley: Do you prefer working individually or in a team?
+
+pause
+
+### IndividualTeamStart
 
 * @Individually -> [AnswerIndividual]
 * @Team -> [AnswerTeam]

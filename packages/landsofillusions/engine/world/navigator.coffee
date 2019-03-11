@@ -9,10 +9,11 @@ class LOI.Engine.World.Navigator
   moveRenderObject: (options) ->
     # Remove any existing movements for this render object.
     _.remove @_movements, (movement) => movement.options.renderObject is options.renderObject
+      
+    target = LOI.adventure.world.getPositionVector options.target
+    path = [THREE.Vector3.fromObject target]
 
-    path = [THREE.Vector3.fromObject options.target]
     movement = {options, path}
-
     @_movements.push movement
 
   update: (appTime) ->
@@ -32,8 +33,8 @@ class LOI.Engine.World.Navigator
       distance = appTime.elapsedAppTime * movement.options.speed
       movement.options.renderObject.position.add movement.direction.clone().multiplyScalar distance
 
-      # See if we've reached the end of the path segment
-      if movement.pathSegment.closestPointToPointParameter(movement.options.renderObject.position) >= 1
+      # See if we've reached the end of the path segment.
+      unless distance and movement.pathSegment.closestPointToPointParameter(movement.options.renderObject.position) < 1
         # See if this is the end of the path.
         if movement.path.length is 1
           # Position the object directly to the end point.

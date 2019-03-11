@@ -100,4 +100,4 @@ class LOI.Character.Actor extends LOI.Character.Person
     
   getActions: (query = {}) ->
     for actionDocument in @actionDocuments.find(query).fetch()
-      new LOI.MemoryAction actionDocument
+      new LOI.Memory.Action actionDocument

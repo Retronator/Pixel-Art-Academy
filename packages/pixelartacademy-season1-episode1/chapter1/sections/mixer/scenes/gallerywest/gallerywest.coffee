@@ -31,10 +31,51 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     C1.Mixer.Stickers
   ]
 
+  _animateActorsOnQuestion: (question) ->
+    actorClasses = [
+      PAA.Actors.Ace
+    ]
+
+    for actorClass in actorClasses
+      actor = LOI.adventure.getCurrentThing actorClass
+
+      # Find which answer the actor chose.
+      action = actor.getActions(
+        type: C1.Mixer.IceBreakers.AnswerAction.type
+        question: question
+      )[0]
+
+      # Go to the landmark that corresponds to the answer.
+      @_movePersonToLandmark actor, action.answer
+
+  _movePersonToLandmark: (person, answer) ->
+    renderObject = person.avatar.getRenderObject()
+    renderObject.setAnimation 'Walk'
+
+    answerLandmarks = [
+      'MixerLeft'
+      'MixerMiddle'
+      'MixerRight'
+    ]
+
+    landmark = answerLandmarks[answer]
+
+    LOI.adventure.world.navigator().moveRenderObject
+      renderObject: renderObject
+      target: landmark
+      speed: 1.25
+      onCompleted: =>
+        renderObject.setAnimation 'Idle'
+        renderObject.facePosition 'InFrontOfProjector'
+
   _doAnswerAction: (question, answer) ->
     type = C1.Mixer.IceBreakers.AnswerAction.type
     situation = LOI.adventure.currentSituationParameters()
-    LOI.Memory.Action.do type, LOI.characterId(), situation, {question, answer}
+    character = LOI.character()
+    LOI.Memory.Action.do type, character._id, situation, {question, answer}
+
+    # Move the character to the landmark.
+    @_movePersonToLandmark character, answer
 
   # Script
 
@@ -54,7 +95,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
         complete()
 
       HobbyProfessionStart: (complete) =>
-        console.log "Animating characters based on hobby/profession."
+        scene._animateActorsOnQuestion C1.Mixer.IceBreakers.Questions.HobbyProfession
         complete()
 
       HobbyProfessionEnd: (complete) =>
@@ -64,9 +105,17 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
         scene._doAnswerAction C1.Mixer.IceBreakers.Questions.HobbyProfession, answers[0]
         complete()
 
+      PixelArtOtherStylesStart: (complete) =>
+        scene._animateActorsOnQuestion C1.Mixer.IceBreakers.Questions.PixelArtOtherStyles
+        complete()
+
       PixelArtOtherStylesEnd: (complete) =>
         answers = @state 'answers'
         scene._doAnswerAction C1.Mixer.IceBreakers.Questions.PixelArtOtherStyles, answers[1]
+        complete()
+
+      ExtrovertIntrovertStart: (complete) =>
+        scene._animateActorsOnQuestion C1.Mixer.IceBreakers.Questions.ExtrovertIntrovert
         complete()
 
       ExtrovertIntrovertEnd: (complete) =>
@@ -76,6 +125,10 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
         @ephemeralState 'factor1Changed', personalityChanged
 
         scene._doAnswerAction C1.Mixer.IceBreakers.Questions.ExtrovertIntrovert, answers[2]
+        complete()
+
+      IndividualTeamStart: (complete) =>
+        scene._animateActorsOnQuestion C1.Mixer.IceBreakers.Questions.IndividualTeam
         complete()
 
       IndividualTeamEnd: (complete) =>

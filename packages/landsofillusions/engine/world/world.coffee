@@ -78,6 +78,27 @@ class LOI.Engine.World extends AM.Component
   onScroll: (scrollTop) ->
     @$world().css transform: "translate3d(0, #{-scrollTop / 2}px, 0)"
 
+  getPositionVector: (source) ->
+    if _.isString source
+      # See if the source is a name of a thing in the scene.
+      if thingClass = _.thingClass source
+        thing = LOI.adventure.getCurrentThing thingClass
+        thing.avatar.getRenderObject().position
+
+      else
+        # Assume we have a landmark.
+        mesh = @sceneManager().currentLocationMeshData()
+        mesh.getLandmarkPositionVector source
+
+    else if source.position
+      source.position
+
+    else if source.avatar
+      source.avatar.getRenderObject().position
+      
+    else
+      THREE.Vector3.fromObject source
+
   update: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering
 
@@ -90,7 +111,7 @@ class LOI.Engine.World extends AM.Component
       sceneItem.update? appTime
 
   draw: (appTime) ->
-    return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering    
+    return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering
 
     @_draw appTime
 
