@@ -92,11 +92,15 @@ Package.onUse(function(api) {
   api.addClientFile('engine/materials/shaderchunks..');
   api.addClientFile('engine/materials/shaderchunks/lighting');
 
+  api.addFile('engine/debug..');
+  api.addFile('engine/debug/dummysceneitem');
+
   // Avatar
 
   api.addFile('avatar/avatar');
   api.addFile('avatar/humanavatar..');
   api.addFile('avatar/humanavatar/renderobject');
+  api.addFile('avatar/humanavatar/physicsobject');
   api.addFile('avatar/humanavatar/texturerenderer');
   api.addFile('avatar/humanavatar/regions');
 
@@ -511,6 +515,7 @@ Package.onUse(function(api) {
   api.addFile('engine/world/scenemanager');
   api.addFile('engine/world/cameramanager');
   api.addFile('engine/world/audiomanager');
+  api.addFile('engine/world/physicsmanager');
   api.addFile('engine/world/mouse');
   api.addFile('engine/world/navigator');
 });

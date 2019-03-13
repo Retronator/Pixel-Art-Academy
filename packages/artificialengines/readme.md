@@ -21,6 +21,12 @@ _Input hardware abstraction_
 
 Helpers for keyboard, mouse and other input devices.
 
+### Artificial Echo
+
+_Acoustic waves simulation_
+
+Helpers for web audio.
+
 ### Artificial Everywhere
 
 _Useful bits and pieces_
@@ -40,6 +46,12 @@ into a system, specially designed to adapt to different display resolutions and 
 _Data storage_
 
 Classes, extensions and helpers for database storage.
+
+### Artificial Reality
+
+_Laws of physics_
+
+Integration of the Bullet physics engine (via Ammo.js).
 
 ### Artificial Spectrum
 

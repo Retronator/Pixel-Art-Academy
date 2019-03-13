@@ -43,19 +43,23 @@ class LOI.Director
 
   setPosition: (positions) ->
     for thingId, position of positions
-      thing = LOI.adventure.getCurrentThing thingId
-      renderObject = thing.avatar.getRenderObject()
-
       continue unless position = LOI.adventure.world.getPositionVector position
+
+      thing = LOI.adventure.getCurrentThing thingId
+
+      renderObject = thing.avatar.getRenderObject()
       renderObject.position.copy position
+
+      physicsObject = thing.avatar.getPhysicsObject()
+      physicsObject.setPosition position
 
   facePosition: (positions) ->
     for thingId, position of positions
       thing = LOI.adventure.getCurrentThing thingId
-      renderObject = thing.avatar.getRenderObject()
+      physicsObject = thing.avatar.getPhysicsObject()
 
       continue unless position = LOI.adventure.world.getPositionVector position
 
-      direction = new THREE.Vector3().subVectors position, renderObject.position
+      direction = new THREE.Vector3().subVectors position, THREE.Vector3.fromObject physicsObject.getPosition()
       direction.normalize()
-      renderObject.faceDirection direction
+      physicsObject.faceDirection direction

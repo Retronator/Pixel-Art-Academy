@@ -1,4 +1,6 @@
+AC = Artificial.Control
 AS = Artificial.Spectrum
+AR = Artificial.Reality
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
@@ -19,6 +21,7 @@ class LOI.Engine.World extends AM.Component
     @sceneManager = new ReactiveField null
     @cameraManager = new ReactiveField null
     @audioManager = new ReactiveField null
+    @physicsManager = new ReactiveField null
 
     @mouse = new ReactiveField null
     
@@ -44,6 +47,7 @@ class LOI.Engine.World extends AM.Component
       image: rendererManager.renderer.domElement
 
     @audioManager new @constructor.AudioManager @
+    @physicsManager new @constructor.PhysicsManager @
 
     @mouse new @constructor.Mouse @
     
@@ -106,6 +110,7 @@ class LOI.Engine.World extends AM.Component
 
   _update: (appTime) ->
     @navigator()?.update appTime
+    @physicsManager()?.update appTime
 
     for sceneItem in @sceneManager().scene().children when sceneItem instanceof AS.RenderObject
       sceneItem.update? appTime
@@ -147,8 +152,28 @@ class LOI.Engine.World extends AM.Component
     intersects = raycaster.intersectObjects scene.children, true
     return unless intersects.length
 
-    # Create move memory action.
-    type = LOI.Memory.Actions.Move.type
-    situation = LOI.adventure.currentSituationParameters()
-    LOI.Memory.Action.do type, LOI.characterId(), situation,
-      coordinates: intersects[0].point.toObject()
+    keyboardState = AC.Keyboard.getState()
+
+    if keyboardState.isKeyDown AC.Keys.shift
+      point = intersects[0].point
+
+    else
+      point = _.last(intersects).point
+
+    if keyboardState.isKeyDown AC.Keys.leftMeta
+      newObject = new LOI.Engine.Debug.DummySceneItem.Ball point, 0.5
+
+    else if keyboardState.isKeyDown AC.Keys.rightMeta
+      newObject = new LOI.Engine.Debug.DummySceneItem.Box point, 0.5
+
+    else
+      # Create move memory action.
+      type = LOI.Memory.Actions.Move.type
+      situation = LOI.adventure.currentSituationParameters()
+      LOI.Memory.Action.do type, LOI.characterId(), situation,
+        coordinates: _.last(intersects).point.toObject()
+
+    if newObject
+      sceneManager = @sceneManager()
+      sceneManager.scene().add newObject.renderObject
+      sceneManager.scene.updated()

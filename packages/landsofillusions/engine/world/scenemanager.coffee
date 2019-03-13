@@ -22,7 +22,7 @@ class LOI.Engine.World.SceneManager
     directionalLight.shadow.camera.far = 5
     directionalLight.shadow.mapSize.width = 4096
     directionalLight.shadow.mapSize.height = 4096
-    directionalLight.shadow.bias = -0.01
+    directionalLight.shadow.bias = -0.002
 
     directionalLight.position.set 0, 4, 0.5
     scene.add directionalLight
@@ -119,3 +119,16 @@ class LOI.Engine.World.SceneManager
 
   destroy: ->
     @locationThings.stop()
+
+  getAllChildren: (filterParameter) ->
+    filter = _.filterFunction filterParameter
+    scene = @scene.withUpdates()
+
+    children = []
+
+    addAllChildren = (item) ->
+      children.push item if filter item
+      addAllChildren child for child in item.children
+
+    addAllChildren scene
+    children

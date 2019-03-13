@@ -8,6 +8,8 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
   constructor: (@humanAvatar) ->
     super arguments...
 
+    @parentItem = @humanAvatar
+
     @debugTextureDataUrl = new ReactiveField null
 
     @animatedMeshes = {}
@@ -18,6 +20,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     bodyBottom = [-10.2, -10, -10.3, -9.9, -10.2]
     bodyTop = [6, 5.8, 5.5, 5.8, 6]
 
+    @_rotationEuler = new THREE.Euler
     @_cameraPosition = new THREE.Vector3
     @_cameraRotation = new THREE.Quaternion
     @_cameraScale = new THREE.Vector3
@@ -203,15 +206,6 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
   update: (appTime, options = {}) ->
     return unless @_textureRendered
 
-    if @_targetAngle?
-      angleDelta = @_angleChangeSpeed * appTime.elapsedAppTime
-      @_angleChange += Math.abs angleDelta
-      @currentAngle += angleDelta
-
-      if @_angleChange > @_totalAngleChange
-        @currentAngle = @_targetAngle
-        @_targetAngle = null
-
     # Project the direction and calculate angle in screen coordinates.
     camera = options.camera or LOI.adventure.world.cameraManager().camera()
     camera.matrix.decompose @_cameraPosition, @_cameraRotation, @_cameraScale
@@ -234,16 +228,6 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
   setAnimation: (animationName) ->
     animatedMesh.currentAnimationName animationName for side, animatedMesh of @animatedMeshes
     
-  facePosition: (positionOrLandmark) ->
-    position = LOI.adventure.world.getPositionVector positionOrLandmark
-    @faceDirection new THREE.Vector3().subVectors position, @position
-
-  faceDirection: (direction) ->
-    @_targetAngle = LOI.Engine.RenderingSides.getAngleForDirection direction
-    @_angleChange = 0
-    @_totalAngleChange = _.angleDistance @_targetAngle, @currentAngle
-    @_angleChangeSpeed = 4 * Math.sign _.angleDifference @_targetAngle, @currentAngle
-
   setCurrentSide: (side) ->
     previousAnimatedMesh = @animatedMeshes[@currentSide]
     previousAnimatedMesh.visible = false

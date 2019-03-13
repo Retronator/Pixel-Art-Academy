@@ -38,3 +38,7 @@ class LOI.HumanAvatar extends LOI.Avatar
   getRenderObject: ->
     @_renderObject ?= Tracker.nonreactive => new @constructor.RenderObject @
     @_renderObject
+
+  getPhysicsObject: ->
+    @_physicsObject ?= Tracker.nonreactive => new @constructor.PhysicsObject @
+    @_physicsObject

@@ -9,7 +9,8 @@ Npm.depends({
   patreon: '0.3.0',
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
-  three: '0.96.0'
+  three: '0.96.0',
+  "ammo.js": "git+https://github.com/kripken/ammo.js.git"
 });
 
 Package.onUse(function(api) {
@@ -57,6 +58,7 @@ Package.onUse(function(api) {
 
   api.export('Artificial');
   api.export('THREE');
+  api.export('Ammo');
 
 	api.addFile('artificial');
 
@@ -73,6 +75,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/three..');
   api.addFile('everywhere/three/color');
   api.addFile('everywhere/three/vectors');
+  api.addFile('everywhere/three/quaternion');
   api.addFile('everywhere/three/matrices');
 
   api.addFile('everywhere/lodash/lettercase');
@@ -81,6 +84,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/lodash/math');
   api.addFile('everywhere/lodash/objects');
   api.addFile('everywhere/lodash/strings');
+  api.addFile('everywhere/lodash/filterfunction');
 
   api.addFile('everywhere/csvparser');
   api.addFile('everywhere/date');
@@ -242,6 +246,16 @@ Package.onUse(function(api) {
 
   api.addFile('spectrum/glsl..');
   api.addFile('spectrum/glsl/hsl2rgb');
+  
+  // Artificial Reality
+  
+  api.addFile('reality..');
+  api.addFile('reality/ammo..');
+
+  api.addFile('reality/physicsobject');
+
+  api.addFile('reality/ammo/vectors');
+  api.addFile('reality/ammo/quaternion');
 
   // Artificial Echo
   
