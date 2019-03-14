@@ -14,6 +14,11 @@ class AR.PhysicsObject
 
     handle
 
+  setMass: (mass) ->
+    @mass = mass
+    @collisionShape?.calculateLocalInertia @mass, @localInertia
+    @body?.setMassProps @mass, @localInertia
+
   getPosition: ->
     transform = new Ammo.btTransform
     @motionState.getWorldTransform transform

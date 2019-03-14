@@ -206,6 +206,15 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
   update: (appTime, options = {}) ->
     return unless @_textureRendered
 
+    if @_targetAngle?
+      angleDelta = @_angleChangeSpeed * appTime.elapsedAppTime
+      @_angleChange += Math.abs angleDelta
+      @currentAngle += angleDelta
+
+      if @_angleChange > @_totalAngleChange
+        @currentAngle = @_targetAngle
+        @_targetAngle = null
+
     # Project the direction and calculate angle in screen coordinates.
     camera = options.camera or LOI.adventure.world.cameraManager().camera()
     camera.matrix.decompose @_cameraPosition, @_cameraRotation, @_cameraScale
@@ -235,3 +244,15 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     @currentSide = side
     @animatedMeshes[@currentSide].visible = true
     @animatedMeshes[@currentSide].syncAnimationTo previousAnimatedMesh
+
+  facePosition: (positionOrLandmark) ->
+    facingPosition = LOI.adventure.world.getPositionVector positionOrLandmark
+    position = THREE.Vector3.fromObject @getPosition()
+
+    @faceDirection new THREE.Vector3().subVectors facingPosition, position
+
+  faceDirection: (direction) ->
+    @_targetAngle = LOI.Engine.RenderingSides.getAngleForDirection direction
+    @_angleChange = 0
+    @_totalAngleChange = _.angleDistance @_targetAngle, @currentAngle
+    @_angleChangeSpeed = 4 * Math.sign _.angleDifference @_targetAngle, @currentAngle

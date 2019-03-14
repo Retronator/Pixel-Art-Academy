@@ -60,10 +60,8 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
 
     landmark = answerLandmarks[answer]
 
-    physicsObject = person.avatar.getPhysicsObject()
-
-    LOI.adventure.world.navigator().movePhysicsObject
-      physicsObject: physicsObject
+    LOI.adventure.world.navigator().moveAvatar
+      avatar: person.avatar
       target: landmark
       speed: 1.25
       onCompleted: =>

@@ -6,9 +6,11 @@ class LOI.Engine.World.Navigator
   constructor: (@world) ->
     @_movements = []
 
-  movePhysicsObject: (options) ->
-    # Remove any existing movements for this physics object.
-    _.remove @_movements, (movement) => movement.options.physicsObject is options.physicsObject
+    @_direction = new THREE.Vector3
+
+  moveAvatar: (options) ->
+    # Remove any existing movements for this avatar.
+    _.remove @_movements, (movement) => movement.options.avatar is options.avatar
       
     target = LOI.adventure.world.getPositionVector options.target
     path = [THREE.Vector3.fromObject target]
@@ -18,28 +20,35 @@ class LOI.Engine.World.Navigator
 
   update: (appTime) ->
     for movement in @_movements
+      physicsObject = movement.options.avatar.getPhysicsObject()
+      position = physicsObject.getPosition()
+
       unless movement.pathSegment
         # Set the next path segment.
-        start = movement.options.physicsObject.getPosition()
         end = movement.path[0]
-        movement.pathSegment = new THREE.Line3 start, end
+        movement.pathSegment = new THREE.Line3 position, end
 
-        # Direct the object towards the segment end.
-        movement.direction = new THREE.Vector3().subVectors end, start
-        movement.direction.normalize()
-        movement.options.physicsObject.faceDirection? movement.direction
+      # Update path segment start each frame to avatar's actual position.
+      movement.pathSegment.start = position
 
-      # Move the object in the desired direction.
+      # Direct the avatar towards the segment end.
+      @_direction.copy(movement.pathSegment.end).sub position
+      @_direction.normalize()
+
+      renderObject = movement.options.avatar.getRenderObject()
+      renderObject.faceDirection? @_direction
+
+      # Move the avatar in the desired direction.
       distance = appTime.elapsedAppTime * movement.options.speed
-      newPosition = movement.direction.clone().multiplyScalar(distance).add movement.options.physicsObject.getPosition()
-      movement.options.physicsObject.setPosition newPosition
+      newPosition = @_direction.multiplyScalar(distance).add position
+      physicsObject.setPosition newPosition
 
       # See if we've reached the end of the path segment.
       unless distance and movement.pathSegment.closestPointToPointParameter(newPosition) < 1
         # See if this is the end of the path.
         if movement.path.length is 1
-          # Position the object directly to the end point.
-          movement.options.physicsObject.setPosition movement.path[0]
+          # Position the avatar directly to the end point.
+          physicsObject.setPosition movement.path[0]
 
           # Notify that the movement has completed.
           movement.options.onCompleted?()

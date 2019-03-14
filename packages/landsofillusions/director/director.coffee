@@ -55,11 +55,11 @@ class LOI.Director
 
   facePosition: (positions) ->
     for thingId, position of positions
-      thing = LOI.adventure.getCurrentThing thingId
-      physicsObject = thing.avatar.getPhysicsObject()
-
       continue unless position = LOI.adventure.world.getPositionVector position
 
-      direction = new THREE.Vector3().subVectors position, THREE.Vector3.fromObject physicsObject.getPosition()
+      thing = LOI.adventure.getCurrentThing thingId
+      renderObject = thing.avatar.getRenderObject()
+
+      direction = new THREE.Vector3().subVectors position, renderObject.position
       direction.normalize()
-      physicsObject.faceDirection direction
+      renderObject.faceDirection direction

@@ -7,10 +7,13 @@ class LOI.HumanAvatar.PhysicsObject extends AR.PhysicsObject
 
     @parentItem = @humanAvatar
 
-    @mass = 1
+    @walkMass = 75
+    @idleMass = 10000
+    
+    @mass = @idleMass
     @localInertia = new Ammo.btVector3 0, 0, 0
 
-    capsuleShape = new Ammo.btCapsuleShape 0.3, 1.2
+    capsuleShape = new Ammo.btCapsuleShape 0.25, 1.3
     capsuleTransform = new Ammo.btTransform new Ammo.btQuaternion(0, 0, 0, 1), new Ammo.btVector3(0, 0.9, 0)
 
     @collisionShape = new Ammo.btCompoundShape
@@ -27,32 +30,5 @@ class LOI.HumanAvatar.PhysicsObject extends AR.PhysicsObject
     @body = new Ammo.btRigidBody @rigidBodyInfo
     @body.setAngularFactor 0
 
-    # Create kinematic body.
-    @body.setCollisionFlags @body.getCollisionFlags() | 2
-
-    # Disable deactivation.
+    # Disable deactivation so we can manually move the body by direct positioning.
     @body.setActivationState 4
-
-    @currentAngle = 0
-
-  update: (appTime) ->
-    if @_targetAngle?
-      angleDelta = @_angleChangeSpeed * appTime.elapsedAppTime
-      @_angleChange += Math.abs angleDelta
-      @currentAngle += angleDelta
-
-      if @_angleChange > @_totalAngleChange
-        @currentAngle = @_targetAngle
-        @_targetAngle = null
-
-  facePosition: (positionOrLandmark) ->
-    facingPosition = LOI.adventure.world.getPositionVector positionOrLandmark
-    position = THREE.Vector3.fromObject @getPosition()
-
-    @faceDirection new THREE.Vector3().subVectors facingPosition, position
-
-  faceDirection: (direction) ->
-    @_targetAngle = LOI.Engine.RenderingSides.getAngleForDirection direction
-    @_angleChange = 0
-    @_totalAngleChange = _.angleDistance @_targetAngle, @currentAngle
-    @_angleChangeSpeed = 4 * Math.sign _.angleDifference @_targetAngle, @currentAngle

@@ -75,10 +75,6 @@ class LOI.Engine.World.PhysicsManager
       rotation = @_transform.getRotation()
       renderObject.quaternion.setFromBulletQuaternion rotation
 
-      # Transfer current angle when the physics object defines it.
-      if physicsObject.currentAngle?
-        renderObject.currentAngle = physicsObject.currentAngle
-
   destroy: ->
     @sceneItems.stop()
 

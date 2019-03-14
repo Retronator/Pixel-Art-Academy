@@ -29,12 +29,14 @@ class LOI.Memory.Actions.Move extends LOI.Memory.Action
 
     if @content?.coordinates
       renderObject.setAnimation 'Walk'
+      physicsObject.setMass physicsObject.walkMass
 
-      LOI.adventure.world.navigator().movePhysicsObject
-        physicsObject: physicsObject
+      LOI.adventure.world.navigator().moveAvatar
+        avatar: person.avatar
         target: @content.coordinates
         speed: 1.25
         onCompleted: =>
           renderObject.setAnimation 'Idle'
+          physicsObject.setMass physicsObject.idleMass
 
     null
