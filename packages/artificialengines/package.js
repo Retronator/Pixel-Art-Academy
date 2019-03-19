@@ -77,6 +77,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/three/vectors');
   api.addFile('everywhere/three/quaternion');
   api.addFile('everywhere/three/matrices');
+  api.addFile('everywhere/three/object3d');
 
   api.addFile('everywhere/lodash/lettercase');
   api.addFile('everywhere/lodash/nestedproperty');
@@ -256,6 +257,7 @@ Package.onUse(function(api) {
 
   api.addFile('reality/ammo/vectors');
   api.addFile('reality/ammo/quaternion');
+  api.addFile('reality/ammo/collisionobject');
 
   // Artificial Echo
   

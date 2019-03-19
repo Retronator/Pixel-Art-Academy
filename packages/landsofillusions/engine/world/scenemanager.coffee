@@ -117,6 +117,10 @@ class LOI.Engine.World.SceneManager
         scene.remove renderObject
         @scene.updated()
 
+    @physicalItems = new ComputedField =>
+      renderObjectsWithPhysics = @getAllChildren (item) => item.parentItem?.getPhysicsObject
+      renderObjectWithPhysics.parentItem for renderObjectWithPhysics in renderObjectsWithPhysics
+
   destroy: ->
     @locationThings.stop()
 

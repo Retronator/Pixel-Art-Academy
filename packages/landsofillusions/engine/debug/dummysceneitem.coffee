@@ -37,7 +37,7 @@ class LOI.Engine.Debug.DummySceneItem
       @mass = 1
       @localInertia = new Ammo.btVector3 0, 0, 0
 
-      @collisionShape = @parentItem.createCollisionShape()
+      @collisionShape = @createCollisionShape()
       @collisionShape.calculateLocalInertia @mass, @localInertia
 
       transform = new Ammo.btTransform Ammo.btQuaternion.identity, @parentItem.position.toBulletVector3()
@@ -46,25 +46,38 @@ class LOI.Engine.Debug.DummySceneItem
       rigidBodyInfo = new Ammo.btRigidBodyConstructionInfo @mass, @motionState, @collisionShape, @localInertia
       @body = new Ammo.btRigidBody rigidBodyInfo
 
+    createCollisionShape: (options) ->
+      @parentItem.createCollisionShape options
+
+    createDebugObject: (options) ->
+      options = _.extend {}, options,
+        debug: true
+
+      new THREE.Mesh @parentItem.createGeometry(options), options.material
+
 class LOI.Engine.Debug.DummySceneItem.Ball extends LOI.Engine.Debug.DummySceneItem
   constructor: (@position, @radius) ->
     super arguments...
     @initialize()
 
-  createGeometry: ->
-    new THREE.SphereBufferGeometry @radius, 32, 32
+  createGeometry: (options = {}) ->
+    segments = if options.debug then 8 else 32
+    radius = @radius + (options.occupationMargin or 0) + (options.extrude or 0)
+    new THREE.SphereBufferGeometry radius, segments, segments
 
-  createCollisionShape: ->
-    new Ammo.btSphereShape @radius
+  createCollisionShape: (options = {}) ->
+    radius = @radius + (options.occupationMargin or 0)
+    new Ammo.btSphereShape radius
 
 class LOI.Engine.Debug.DummySceneItem.Box extends LOI.Engine.Debug.DummySceneItem
   constructor: (@position, @halfSize) ->
     super arguments...
     @initialize()
 
-  createGeometry: ->
-    size = @halfSize * 2
+  createGeometry: (options = {}) ->
+    size = (@halfSize + (options.occupationMargin or 0) + (options.extrude or 0)) * 2
     new THREE.BoxBufferGeometry size, size, size
 
-  createCollisionShape: ->
-    new Ammo.btBoxShape new Ammo.btVector3(@halfSize, @halfSize, @halfSize)
+  createCollisionShape: (options = {}) ->
+    halfSize = @halfSize + (options.occupationMargin or 0)
+    new Ammo.btBoxShape new Ammo.btVector3(halfSize, halfSize, halfSize)

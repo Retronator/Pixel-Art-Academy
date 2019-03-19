@@ -5,6 +5,10 @@ class AR.PhysicsObject
     # Provides support for autorun calls that stop when physics object is destroyed.
     @_autorunHandles = []
 
+    @_transform = new Ammo.btTransform
+    @_vector3 = new Ammo.btVector3
+    @_quaternion = new Ammo.btQuaternion
+
   destroy: ->
     handle.stop() for handle in @_autorunHandles
 
@@ -20,31 +24,40 @@ class AR.PhysicsObject
     @body?.setMassProps @mass, @localInertia
 
   getPosition: ->
-    transform = new Ammo.btTransform
-    @motionState.getWorldTransform transform
-    transform.getOrigin().toObject()
+    @motionState.getWorldTransform @_transform
+    @_transform.getOrigin().toObject()
+
+  getPositionTo: (target) ->
+    @motionState.getWorldTransform @_transform
+    origin = @_transform.getOrigin()
+    target.x = origin.x()
+    target.y = origin.y()
+    target.z = origin.z()
 
   setPosition: (position) ->
-    transform = new Ammo.btTransform
-    @motionState.getWorldTransform transform
+    @motionState.getWorldTransform @_transform
 
-    transform.setOrigin Ammo.btVector3.fromObject position
-    @motionState.setWorldTransform transform
+    @_vector3.copy position
+    @_transform.setOrigin @_vector3
+    @motionState.setWorldTransform @_transform
 
     # Also set it directly on body if it's not a kinematic object.
-    @body.setWorldTransform transform unless @body.isKinematicObject()
+    @body.setWorldTransform @_transform unless @body.isKinematicObject()
 
   getRotation: ->
-    transform = new Ammo.btTransform
-    @motionState.getWorldTransform transform
-    transform.getRotation().toObject()
+    @motionState.getWorldTransform @_transform
+    @_transform.getRotation().toObject()
 
   setRotation: (rotation) ->
-    transform = new Ammo.btTransform
-    @motionState.getWorldTransform transform
+    @motionState.getWorldTransform @_transform
 
-    transform.setRotation Ammo.btQuaternion.fromObject rotation
-    @motionState.setWorldTransform transform
+    @_quaternion.copy rotation
+    @_transform.setRotation @_quaternion
+    @motionState.setWorldTransform @_transform
 
     # Also set it directly on body if it's not a kinematic object.
-    @body.setWorldTransform transform unless @body.isKinematicObject()
+    @body.setWorldTransform @_transform unless @body.isKinematicObject()
+    
+  setFixedRotation: (value = true) ->
+    @hasFixedRotation = value
+    @body.setAngularFactor if value then 0 else 1

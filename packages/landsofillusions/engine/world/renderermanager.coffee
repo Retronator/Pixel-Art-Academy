@@ -3,6 +3,11 @@ AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Engine.World.RendererManager
+  @RenderLayers:
+    Main: 0
+    PhysicsDebug: 1
+    SpaceOccupationDebug: 2
+    
   constructor: (@world) ->
     @renderer = new THREE.WebGLRenderer
 
@@ -23,6 +28,12 @@ class LOI.Engine.World.RendererManager
   draw: (appTime) ->
     scene = @world.sceneManager().scene()
     camera = @world.cameraManager().camera()
+
+    camera.layers.set @constructor.RenderLayers.Main
+
+    # Draw debug elements that should be rendered within the depth of the scene.
+    camera.layers.enable @constructor.RenderLayers.PhysicsDebug if @world.physicsDebug()
+    camera.layers.enable @constructor.RenderLayers.SpaceOccupationDebug if @world.spaceOccupationDebug()
 
     @renderer.render scene, camera
 

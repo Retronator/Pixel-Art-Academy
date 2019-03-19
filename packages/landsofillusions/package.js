@@ -517,5 +517,7 @@ Package.onUse(function(api) {
   api.addFile('engine/world/audiomanager');
   api.addFile('engine/world/physicsmanager');
   api.addFile('engine/world/mouse');
-  api.addFile('engine/world/navigator');
+  api.addFile('engine/world/navigator..');
+  api.addFile('engine/world/navigator/spaceoccupation..');
+  api.addFile('engine/world/navigator/spaceoccupation/placeholder');
 });

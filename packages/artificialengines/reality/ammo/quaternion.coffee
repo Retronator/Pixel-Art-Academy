@@ -11,10 +11,13 @@ Ammo.btQuaternion::toThreeQuaternion = ->
   new THREE.Quaternion @x(), @y(), @z(), @w()
 
 Ammo.btQuaternion::setFromThreeQuaternion = (threeQuaternion) ->
-  @setX threeQuaternion.x
-  @setY threeQuaternion.y
-  @setZ threeQuaternion.z
-  @setW threeQuaternion.w
+  @copy threeQuaternion
+
+Ammo.btQuaternion::copy = (source) ->
+  @setX source.x
+  @setY source.y
+  @setZ source.z
+  @setW source.w
 
 # Create a new quaternion from a plain object.
 Ammo.btQuaternion.fromObject = (object) ->

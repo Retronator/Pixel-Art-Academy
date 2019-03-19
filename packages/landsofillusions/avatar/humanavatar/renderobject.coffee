@@ -247,9 +247,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
   facePosition: (positionOrLandmark) ->
     facingPosition = LOI.adventure.world.getPositionVector positionOrLandmark
-    position = THREE.Vector3.fromObject @getPosition()
-
-    @faceDirection new THREE.Vector3().subVectors facingPosition, position
+    @faceDirection new THREE.Vector3().subVectors facingPosition, @position
 
   faceDirection: (direction) ->
     @_targetAngle = LOI.Engine.RenderingSides.getAngleForDirection direction

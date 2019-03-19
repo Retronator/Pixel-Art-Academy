@@ -10,9 +10,12 @@ Ammo.btVector3::toThreeVector3 = ->
   new THREE.Vector3 @x(), @y(), @z()
 
 Ammo.btVector3::setFromThreeVector3 = (threeVector3) ->
-  @setX threeVector3.x
-  @setY threeVector3.y
-  @setZ threeVector3.z
+  @copy threeVector3
+
+Ammo.btVector3::copy = (source) ->
+  @setX source.x
+  @setY source.y
+  @setZ source.z
 
 # Create a new vector from a plain object.
 Ammo.btVector3.fromObject = (object) ->

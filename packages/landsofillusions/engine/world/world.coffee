@@ -30,6 +30,9 @@ class LOI.Engine.World extends AM.Component
     @renderedImage = new ReactiveField null
     @$world = new ReactiveField null
 
+    @physicsDebug = new ReactiveField false
+    @spaceOccupationDebug = new ReactiveField false
+
   onCreated: ->
     super arguments...
 
