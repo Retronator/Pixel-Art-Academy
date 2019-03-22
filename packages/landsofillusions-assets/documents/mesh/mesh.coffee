@@ -53,6 +53,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #     clusters: map of auto-generated clusters in world space
   #       {id}: unique integer identifying this cluster in the layer
   #         properties: user-defined properties set on the cluster
+  #           name: unique name by which the cluster can be referenced in code
   #           navigable: boolean if the cluster is navigable for pathfinding purposes
   #         plane: the world plane for flat clusters
   #           point: a point in the plane
@@ -134,10 +135,21 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     # Mark the state clean.
     @dirty false
+    
+  getLandmarkByName: (landmarkName) ->
+    _.find @landmarks, (landmark) -> landmark.name is landmarkName
+
+  getClusterByName: (clusterName) ->
+    for object in @objects.getAll()
+      for layer in object.layers.getAll()
+        if cluster = layer.getClusterByName clusterName
+          return cluster
+          
+    null
 
   getLandmarkPositionVector: (landmarkOrIndexOrName) ->
     if _.isString landmarkOrIndexOrName
-      landmark = _.find @landmarks, (landmark) -> landmark.name is landmarkOrIndexOrName
+      landmark = @getLandmarkByName landmarkOrIndexOrName
 
       unless landmark
         console.warn "Couldn't find landmark", landmarkOrIndexOrName

@@ -6,6 +6,7 @@ class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
 
     super
       lights: true
+      shadowSide: THREE.FrontSide
 
       uniforms: _.extend
         shades:

@@ -20,23 +20,28 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
 
   # Note: Initialized is called in the extended class.
 
-  things: -> [
+  @actorClasses = [
+    PAA.Actors.Ace
+    PAA.Actors.Ty
+    PAA.Actors.Saanvi
+    PAA.Actors.Mae
+    PAA.Actors.Lisa
+    PAA.Actors.Jaxx
+  ]
+
+  things: -> _.flatten [
     HQ.Actors.Shelley
     @constructor.Retro
     HQ.Actors.Alexandra
     HQ.Actors.Reuben
-    PAA.Actors.Ace
+    @constructor.actorClasses
     C1.Mixer.Table
     C1.Mixer.Marker
     C1.Mixer.Stickers
   ]
 
   _animateActorsOnQuestion: (question) ->
-    actorClasses = [
-      PAA.Actors.Ace
-    ]
-
-    for actorClass in actorClasses
+    for actorClass in @constructor.actorClasses
       actor = LOI.adventure.getCurrentThing actorClass
 
       # Find which answer the actor chose.
@@ -46,19 +51,20 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
       )[0]
 
       # Go to the landmark that corresponds to the answer.
-      @_movePersonToLandmark actor, action.answer
+      @_movePersonToAnswerLandmark actor, action.answer
 
-  _movePersonToLandmark: (person, answer) ->
-    renderObject = person.avatar.getRenderObject()
-    renderObject.setAnimation 'Walk'
-
+  _movePersonToAnswerLandmark: (person, answer) ->
     answerLandmarks = [
       'MixerLeft'
       'MixerMiddle'
       'MixerRight'
     ]
 
-    landmark = answerLandmarks[answer]
+    @_movePersonToLandmark person, answerLandmarks[answer]
+
+  _movePersonToLandmark: (person, landmark) ->
+    renderObject = person.avatar.getRenderObject()
+    renderObject.setAnimation 'Walk'
 
     LOI.adventure.world.navigator().moveAvatar
       avatar: person.avatar
@@ -75,7 +81,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     LOI.Memory.Action.do type, character._id, situation, {question, answer}
 
     # Move the character to the landmark.
-    @_movePersonToLandmark character, answer
+    @_movePersonToAnswerLandmark character, answer
 
   # Script
 
@@ -91,7 +97,15 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     # TODO: Animate characters in callbacks.
     @setCallbacks
       IceBreakersStart: (complete) =>
-        console.log "Animating characters to the middle."
+        # Animate characters to the middle.
+        characters = _.flatten [
+          LOI.character()
+          LOI.adventure.getCurrentThing actorClass for actorClass in scene.constructor.actorClasses
+        ]
+
+        for character in characters
+          scene._movePersonToLandmark character, 'MixerMiddle'
+
         complete()
 
       HobbyProfessionStart: (complete) =>
@@ -143,21 +157,35 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   # Listener
 
   onEnter: (enterResponse) ->
+    scene = @options.parent
+
     @_positionActorsAutorun = @autorun (computation) =>
       # Wait until the location mesh has loaded, so that we have landmark positions.
       return unless LOI.adventure.world.sceneManager().currentLocationMeshData()
       computation.stop()
 
-      LOI.adventure.director.setPosition
+      startingPositions =
         "#{HQ.Actors.Shelley.id()}": 'InFrontOfProjector'
         "#{HQ.Actors.Reuben.id()}": 'MixerSideReuben'
         "#{HQ.Actors.Alexandra.id()}": 'MixerSideAlexandra'
         "#{HQ.Actors.Retro.id()}": 'MixerTable'
-        "#{PAA.Actors.Ace.id()}": 'MixerMiddle'
+
+      for actorClass in scene.constructor.actorClasses
+        startingPositions[actorClass.id()] = 'GalleryFloor'
+
+      LOI.adventure.director.setPosition startingPositions
 
       LOI.adventure.director.facePosition
         "#{HQ.Actors.Reuben.id()}": 'MixerMiddle'
         "#{HQ.Actors.Alexandra.id()}": 'MixerMiddle'
+
+      # Make actors face random directions.
+      for actorClass in scene.constructor.actorClasses
+        actor = LOI.adventure.getCurrentThing actorClass
+
+        direction = new THREE.Vector3 Math.random() * 2 - 1, 0, Math.random() * 2 - 1
+        direction.normalize()
+        actor.avatar.getRenderObject().faceDirection direction
 
     # Retro should talk when at location.
     @_retroTalksAutorun = @autorun (computation) =>

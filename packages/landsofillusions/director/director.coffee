@@ -46,6 +46,7 @@ class LOI.Director
       continue unless position = LOI.adventure.world.getPositionVector position
 
       thing = LOI.adventure.getCurrentThing thingId
+      position = LOI.adventure.world.findEmptySpace thing.avatar, position
 
       renderObject = thing.avatar.getRenderObject()
       renderObject.position.copy position

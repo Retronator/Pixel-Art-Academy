@@ -58,6 +58,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
             check parseInt(id), Match.Integer
             check cluster,
               properties: Match.Optional
+                name: Match.Optional String
                 navigable: Match.Optional Boolean
               plane: Match.Optional
                 point: vectorPattern

@@ -16,7 +16,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
 
   constructor: (@layerCluster) ->
     @id = @layerCluster.id
-    @pictureCluster = @layerCluster.layer.findPictureCluster @id
+    @pictureCluster = @layerCluster.layer.getPictureCluster @id
     @picture = @pictureCluster.picture
 
     @edges = {}

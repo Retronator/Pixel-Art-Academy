@@ -57,7 +57,6 @@ class LOI.Engine.World.Navigator.SpaceOccupation
       removed: (item) =>
         placeholder = _.find @placeholders, (placeholder) => placeholder.sourceItem is item
         @dynamicsWorld.removeRigidBody placeholder.body
-        physicsObject.destroy()
 
         _.pull @placeholders, placeholder
         @_placeholdersUpdated.changed()

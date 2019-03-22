@@ -32,6 +32,8 @@ class LOI.Engine.Materials.SpriteMaterial extends THREE.ShaderMaterial
       shadowSide: THREE.DoubleSide
 
       uniforms: _.extend
+        uvTransform:
+          value: new THREE.Matrix3().identity()
         palette:
           value: LOI.Engine.Materials.SpriteMaterial.paletteTexture
         map:
@@ -47,9 +49,7 @@ class LOI.Engine.Materials.SpriteMaterial extends THREE.ShaderMaterial
 #include <shadowmap_pars_vertex>
 
 void main()	{
-  // Send through UV coordinates.
-  vUv = uv;
-
+	#include <uv_vertex>
   #include <begin_vertex>
 	#include <project_vertex>
   #include <worldpos_vertex>

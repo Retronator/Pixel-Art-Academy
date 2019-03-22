@@ -22,9 +22,9 @@ class LOI.Engine.World.SceneManager
     directionalLight.shadow.camera.far = 5
     directionalLight.shadow.mapSize.width = 4096
     directionalLight.shadow.mapSize.height = 4096
-    directionalLight.shadow.bias = -0.002
+    directionalLight.shadow.bias = -0.01
 
-    directionalLight.position.set 0, 4, 0.5
+    directionalLight.position.set 0, 3.5, 0.4
     scene.add directionalLight
 
     directionalLight = new THREE.DirectionalLight 0xffffff, 1.5

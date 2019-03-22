@@ -35,10 +35,16 @@ class LOI.Assets.Mesh.Object.Layer
     @pictures.insert {}, cameraAngleIndex
     @pictures.get cameraAngleIndex
     
-  findPictureCluster: (clusterId) ->
+  getPictureCluster: (clusterId) ->
     for picture in @pictures.getAll()
       if cluster = picture.clusters[clusterId]
         return cluster
+
+  getClusterByName: (clusterName) ->
+    for clusterId, cluster of @clusters.getAll()
+      return cluster if cluster.properties()?.name is clusterName
+      
+    null
 
   newCluster: (clusterId, material) ->
     @clusters.insert clusterId, {material}

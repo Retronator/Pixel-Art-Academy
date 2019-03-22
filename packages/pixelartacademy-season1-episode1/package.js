@@ -173,6 +173,11 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/sections/mixer/scenes/participants/participant');
   api.addFile('chapter1/sections/mixer/scenes/participants/ace');
+  api.addFile('chapter1/sections/mixer/scenes/participants/ty');
+  api.addFile('chapter1/sections/mixer/scenes/participants/saanvi');
+  api.addFile('chapter1/sections/mixer/scenes/participants/mae');
+  api.addFile('chapter1/sections/mixer/scenes/participants/lisa');
+  api.addFile('chapter1/sections/mixer/scenes/participants/jaxx');
 
   api.addThing('chapter1/sections/mixer/items/marker');
   api.addFile('chapter1/sections/mixer/items/stickers');

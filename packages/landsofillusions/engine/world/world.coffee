@@ -93,9 +93,19 @@ class LOI.Engine.World extends AM.Component
         thing.avatar.getRenderObject().position
 
       else
-        # Assume we have a landmark.
+        # See if we have a landmark with this name.
         mesh = @sceneManager().currentLocationMeshData()
-        mesh.getLandmarkPositionVector source
+        
+        if mesh.getLandmarkByName source
+          mesh.getLandmarkPositionVector source
+
+        else #if cluster = mesh.getClusterByName source
+          # TODO: Get a random location on the cluster.
+          x = (Math.random() - 0.5) * 15
+          y = 0
+          z = (Math.random() - 0.5) * 10
+
+          new THREE.Vector3 x, y, z
 
     else if source.position
       source.position
@@ -105,6 +115,9 @@ class LOI.Engine.World extends AM.Component
       
     else
       THREE.Vector3.fromObject source
+
+  findEmptySpace: (item, position) ->
+    @navigator().spaceOccupation.findEmptySpace item, position
 
   update: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering

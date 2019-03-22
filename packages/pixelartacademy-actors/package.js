@@ -19,5 +19,9 @@ Package.onUse(function(api) {
   api.addFile('actors');
   
   api.addFileWithData('actors/ace');
-
+  api.addFileWithData('actors/ty');
+  api.addFileWithData('actors/saanvi');
+  api.addFileWithData('actors/mae');
+  api.addFileWithData('actors/lisa');
+  api.addFileWithData('actors/jaxx');
 });

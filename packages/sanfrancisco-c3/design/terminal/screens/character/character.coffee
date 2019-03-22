@@ -107,6 +107,9 @@ class C3.Design.Terminal.Character extends AM.Component
             console.error error
             return
 
+          # Nothing to do if we're using the character editor outside of the game.
+          return unless LOI.adventure
+
           # Close the terminal and proceed with the story.
           # TODO: Homage cinematic to Ghost in the Shell.
           LOI.adventure.deactivateActiveItem()
