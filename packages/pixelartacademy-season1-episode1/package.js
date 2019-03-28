@@ -175,6 +175,8 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-listener');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/retro');
 
+  api.addThing('chapter1/sections/mixer/scenes/gallerywest/student..');
+
   api.addFile('chapter1/sections/mixer/scenes/participants/participant');
   api.addFile('chapter1/sections/mixer/scenes/participants/ace');
   api.addFile('chapter1/sections/mixer/scenes/participants/ty');

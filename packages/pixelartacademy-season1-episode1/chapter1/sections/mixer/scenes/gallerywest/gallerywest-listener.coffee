@@ -88,7 +88,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
       LOI.adventure.director.setPosition startingPositions
       LOI.adventure.director.facePosition startingFacingPositions
 
-      if eventPhase is C1.Mixer.GalleryWest.EventPhases.Answering
+      unless eventPhase is C1.Mixer.GalleryWest.EventPhases.Answering
         # Make actors face random directions.
         for actorClass in scene.constructor.actorClasses
           actor = LOI.adventure.getCurrentThing actorClass
@@ -141,7 +141,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
     @_retroTalksAutorun?.stop()
     @_enterContextAutorun?.stop()
 
-    @_agentActionsSubscription.stop()
+    @_agentActionsSubscription?.stop()
 
   onCommand: (commandResponse) ->
     scene = @options.parent

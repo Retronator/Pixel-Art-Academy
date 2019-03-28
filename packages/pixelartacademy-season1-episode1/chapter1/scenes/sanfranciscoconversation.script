@@ -6,13 +6,13 @@
 
 `_agent.saidHi = true`
 
--> [AlreadyMetGreeting] `agentInstance.agentState('alreadyMet')`
+-> [AlreadyMetGreeting] `agentInstance.personState('alreadyMet')`
 
 char: Uhm … hi!
 
 agent: Hi there!
 
-`agentInstance.agentState('alreadyMet', true)`
+`agentInstance.personState('alreadyMet', true)`
 
 -> [MainQuestions]
 
@@ -32,9 +32,9 @@ agent: What's up?
 
 ## MainQuestions
 
-* What's your name? -> [YourName] `not agentInstance.agentState('introduced')`
+* What's your name? -> [YourName] `not agentInstance.personState('introduced')`
 * *AgentConversationMainQuestions*
-* Can I see your study journal? -> [Journal] `agentInstance.agentState('introduced')`
+* Can I see your study journal? -> [Journal] `agentInstance.personState('introduced')`
 * Bye now! -> [End]
 
 ## YourName
@@ -45,7 +45,7 @@ agent: I'm `agentInstance.fullName()`.
 
 char: Nice to meet you. I'm `@character.name()`.
 
-`agentInstance.agentState('introduced', true)`
+`agentInstance.personState('introduced', true)`
 
 -> [MainQuestions]
 

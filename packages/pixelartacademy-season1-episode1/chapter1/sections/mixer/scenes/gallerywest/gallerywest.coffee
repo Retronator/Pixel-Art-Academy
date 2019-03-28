@@ -18,6 +18,11 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/mixer/scenes/gallerywest/gallerywest.script'
 
+  @listeners: -> [
+    @Listener
+    @Student
+  ]
+
   # Note: Initialized is called in the extended class.
 
   @actorClasses = [

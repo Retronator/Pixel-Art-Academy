@@ -22,7 +22,7 @@ class LOI.Adventure.Listener
 
   constructor: (@options = {}) ->
     # Subscribe to this listener's script translations.
-    translationNamespace = @id?() or @options.parent?.id()
+    translationNamespace = @id() or @options.parent?.id()
 
     if translationNamespace
       @_scriptTranslationSubscription = AB.subscribeNamespace "#{translationNamespace}.Script"
@@ -89,6 +89,8 @@ class LOI.Adventure.Listener
     @cleanup()
 
     @_destroyed = true
+
+  id: -> @constructor.id?()
 
   autorun: (handler) ->
     handle = Tracker.autorun handler

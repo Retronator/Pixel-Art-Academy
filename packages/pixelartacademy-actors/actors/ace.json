@@ -1,5 +1,17 @@
 {
   "_id": "PixelArtAcademy.Cast.Ace",
+  "profile": {
+    "age": 39,
+    "country": "ru",
+    "aspiration": "Make art for a living.",
+    "favorites": {
+      "computer": "ZX Spectrum",
+      "gameGenre": "Post-apocalyptic RPG",
+      "artMedium": "Digital painting",
+      "superhero": "Mad Max",
+      "quote": "War. War never changes."
+    }
+  },
   "avatar": {
     "fullName": {
       "_id": "iJtTEetQakrpbqw56",
