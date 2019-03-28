@@ -75,9 +75,15 @@ class LOI.Adventure extends LOI.Adventure
 
   getCurrentThing: (thingClassOrId) ->
     thingClass = _.thingClass thingClassOrId
+    characterId = thingClassOrId unless thingClass
     things = @currentThings()
 
-    _.find things, (thing) -> thing instanceof thingClass
+    _.find things, (thing) =>
+      if characterId
+        thing._id is characterId
+
+      else
+        thing instanceof thingClass
 
   getCurrentInventoryThing: (thingClassOrId) ->
     thingClass = _.thingClass thingClassOrId

@@ -81,7 +81,9 @@ Package.onUse(function(api) {
   api.addFile('chapter1/groups/family');
 
   api.addThing('chapter1/groups/admissionsstudygroup..');
-  api.addFile('chapter1/groups/admissionsstudygroup/coworking');
+  api.addFile('chapter1/groups/admissionsstudygroup/a');
+  api.addFile('chapter1/groups/admissionsstudygroup/b');
+  api.addFile('chapter1/groups/admissionsstudygroup/c');
 
   api.addFile('chapter1/projects..');
   api.addFile('chapter1/projects/snake');
@@ -169,6 +171,8 @@ Package.onUse(function(api) {
 
   api.addThing('chapter1/sections/mixer/scenes/gallerywest..');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-changepersonality');
+  api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-script');
+  api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-listener');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/retro');
 
   api.addFile('chapter1/sections/mixer/scenes/participants/participant');
@@ -186,4 +190,5 @@ Package.onUse(function(api) {
 
   api.addFile('chapter1/sections/mixer/icebreakers..');
   api.addFile('chapter1/sections/mixer/icebreakers/answeraction');
+  api.addServerFile('chapter1/sections/mixer/icebreakers/subscriptions');
 });

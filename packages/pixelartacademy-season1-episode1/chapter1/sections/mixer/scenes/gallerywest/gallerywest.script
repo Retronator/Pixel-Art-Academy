@@ -231,8 +231,40 @@ shelley:
   Remember you can ![look at](look at) the answers your classmates wrote down.
   Get ready to decide which classmates to join.
   
+### StartTalkToClassmates
+
 ## IceBreakersDone
 
+-> [End]
+
+## TalkToRetroDuringBreak
+
+retro: You have about `_talkToClassmatesMinutesLeft` minutes left to decide which classmates you'd like to be in the study group with. `_talkToClassmatesMinutesLeft > 1`
+retro: We're almost ready to start with forming groups. Ask your classmates any last questions if you have them. `_talkToClassmatesMinutesLeft <= 1`
+  
+-> [End]
+
+## TalkToAlexandraDuringBreak
+
+alexandra:
+  You can ![look at](look at) other students and read what answers they wrote.
+  That way you can join a group with others that have similar goals to yours.
+  
+-> [End]
+
+## TalkToReubenDuringBreak
+
+reuben: 
+  If you wrote down your aspirations or favorites in your Yearbook profile, those are good things to talk about with your classmates.
+  
+-> [End]
+
+## TalkToShelleyDuringBreak
+
+shelley:
+  Get to know other students by talking to them.
+  At the end you will be split into groups so think about who you'd like to join.
+  
 -> [End]
 
 ## End

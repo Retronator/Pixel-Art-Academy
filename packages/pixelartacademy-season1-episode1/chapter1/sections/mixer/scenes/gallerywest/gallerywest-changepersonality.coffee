@@ -5,8 +5,6 @@ HQ = Retronator.HQ
 Vocabulary = LOI.Parser.Vocabulary
 
 class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
-  @initialize()
-
   _changePersonality: (factorType, answerPosition) ->
     # Compare player's answer to character's actual factor score. Answer position is -1 for negative, +1 for positive desire.
     personality = LOI.character().behavior.part.properties.personality.part
