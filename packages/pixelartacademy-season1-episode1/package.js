@@ -186,9 +186,11 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/mixer/scenes/participants/jaxx');
 
   api.addThing('chapter1/sections/mixer/items/marker');
+  api.addFile('chapter1/sections/mixer/items/sticker');
   api.addFile('chapter1/sections/mixer/items/stickers');
   api.addFile('chapter1/sections/mixer/items/nametag');
   api.addFile('chapter1/sections/mixer/items/answer');
+  api.addFile('chapter1/sections/mixer/items/answers');
 
   api.addFile('chapter1/sections/mixer/icebreakers..');
   api.addFile('chapter1/sections/mixer/icebreakers/answeraction');

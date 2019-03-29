@@ -172,12 +172,13 @@ class LOI.Parser.CommandResponse
   generateAvatarActions: ->
     avatarActions = []
 
-    addMatchingPhraseActionToAvatar = (matchingPhraseAction, avatar) =>
+    addMatchingPhraseActionToAvatar = (matchingPhraseAction, avatar, possessive) =>
       avatarAction = _.find avatarActions, (avatarAction) => avatarAction.avatar is avatar
 
       unless avatarAction
         avatarAction =
           avatar: avatar
+          possessive: possessive
           actions: []
 
         avatarActions.push avatarAction
@@ -202,7 +203,7 @@ class LOI.Parser.CommandResponse
           # phrases.
           avatar = alias.possessive or alias
 
-          addMatchingPhraseActionToAvatar matchingPhraseAction, avatar
+          addMatchingPhraseActionToAvatar matchingPhraseAction, avatar, alias.possessive
 
     console.log "Found avatars in actions.", avatarActions if LOI.debug
 
@@ -219,6 +220,10 @@ class LOI.Parser.CommandResponse
       fullNamePhrases = AB.Helpers.generatePhrases text: normalizeAvatarName avatarAction.avatar.fullName()
 
       phrases = _.union shortNamePhrases, fullNamePhrases
+
+      # Create possessive versions of the phrases if needed.
+      # TODO: Localize for other than English.
+      phrases = (AB.Rules.English.createPossessive phrase for phrase in phrases) if avatarAction.possessive
 
       for phrase in phrases
         # Calculate how likely this phrase is in the command.

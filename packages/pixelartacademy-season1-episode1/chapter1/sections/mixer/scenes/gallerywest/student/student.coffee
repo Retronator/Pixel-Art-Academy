@@ -12,6 +12,13 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
     'retronator_pixelartacademy-season1-episode1/chapter1/sections/mixer/scenes/gallerywest/student/student.script'
   ]
 
+  @avatars: ->
+    answer: C1.Mixer.Answer
+    answers: C1.Mixer.Answers
+    nameTag: C1.Mixer.NameTag
+    sticker: C1.Mixer.Sticker
+    stickers: C1.Mixer.Stickers
+
   class @Script extends LOI.Adventure.Script
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.GalleryWest.Student'
     @initialize()
@@ -40,14 +47,11 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
   @initialize()
 
   onEnter: (enterResponse) ->
-    console.log "setting up countries"
     # Subscribe to all regions and the translations of their names.
     @_regionNamesSubscription ?= AB.Translation.forNamespace.subscribe 'Artificial.Babel.Region.Names'
 
   cleanup: ->
     super arguments...
-
-    console.log "cleaning up countries."
 
     @_regionNamesSubscription?.stop()
     @_regionNamesSubscription = null
@@ -88,3 +92,25 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
             @script.prepareForStudent actor
             
             LOI.adventure.director.startScript @script
+
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.LookAt, actor]
+          priority: 1
+          action: =>
+            console.log "loko at actor"
+
+        lookAtAnswersAction = =>
+          console.log "loko at answers"
+
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.LookAt, possessive: actor, [@avatars.answers, @avatars.answer]]
+          action: lookAtAnswersAction
+
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.LookAt, possessive: actor, [@avatars.stickers, @avatars.sticker]]
+          action: lookAtAnswersAction
+
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.LookAt, possessive: actor, @avatars.nameTag]
+          action: =>
+            console.log "loko at name tag"

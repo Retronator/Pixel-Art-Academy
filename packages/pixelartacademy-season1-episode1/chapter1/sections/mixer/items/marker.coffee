@@ -24,6 +24,7 @@ class C1.Mixer.Marker extends LOI.Adventure.Thing
   # Listener
   
   @avatars: ->
+    sticker: C1.Mixer.Sticker
     stickers: C1.Mixer.Stickers
     nameTag: C1.Mixer.NameTag
 
@@ -54,11 +55,11 @@ class C1.Mixer.Marker extends LOI.Adventure.Thing
       action: nameTagAction
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.Use, @avatars.stickers]
+      form: [Vocabulary.Keys.Verbs.Use, [@avatars.sticker, @avatars.stickers]]
       action: nameTagAction
 
     commandResponse.onPhrase
-      form: [Vocabulary.Keys.Verbs.UseWith, marker, @avatars.stickers]
+      form: [Vocabulary.Keys.Verbs.UseWith, marker, [@avatars.sticker, @avatars.stickers]]
       action: nameTagAction
 
     commandResponse.onPhrase

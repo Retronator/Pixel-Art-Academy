@@ -7,8 +7,9 @@
       "integrity": "sha512-nffhOpkymDECQyR0mnsUtoCE8RlX38G0rYP+wgLWFyZuUyuuojSSvi/+euOiQBIn63whYwYVIIH1TvE3tu4OEg=="
     },
     "ammo.js": {
-      "version": "git+https://github.com/kripken/ammo.js.git",
-      "resolved": "git+https://github.com/kripken/ammo.js.git#ac08f42d3995cfa2b719aa8a9bb5b766c7f63404"
+      "version": "0.0.10",
+      "resolved": "https://registry.npmjs.org/ammo.js/-/ammo.js-0.0.10.tgz",
+      "integrity": "sha1-r9FucYbdPPeEN0Rk86Tljzd3aVA="
     },
     "asn1": {
       "version": "0.2.4",
@@ -169,6 +170,11 @@
       "version": "0.1.2",
       "resolved": "https://registry.npmjs.org/isstream/-/isstream-0.1.2.tgz",
       "integrity": "sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo="
+    },
+    "jaro-winkler": {
+      "version": "0.2.8",
+      "resolved": "https://registry.npmjs.org/jaro-winkler/-/jaro-winkler-0.2.8.tgz",
+      "integrity": "sha1-Zyfg0LcJHiQ2+TVt6b+I+tI+U0o="
     },
     "jsbn": {
       "version": "0.1.1",

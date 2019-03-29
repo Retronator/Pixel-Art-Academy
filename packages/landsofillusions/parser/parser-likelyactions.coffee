@@ -29,7 +29,9 @@ class LOI.Parser extends LOI.Parser
 
     if LOI.debug
       console.log "We're not sure what the user wanted ... top 10 possibilities:"
-      console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision, likelyAction.priority for likelyAction in likelyActions[0...10]
+
+      for likelyAction in likelyActions[0...10]
+        console.log likelyAction.translatedForm.join(' '), likelyAction.likelihood, likelyAction.precision, likelyAction.priority, likelyAction
 
     # If the most likely action is not above 60%, we tell the user we don't understand.
     bestLikelihood = likelyActions[0].likelihood
@@ -57,7 +59,7 @@ class LOI.Parser extends LOI.Parser
       likelyActions = _.filter likelyActions, (likelyAction) =>
         likelyAction.precision is bestPrecision
 
-    # If all actions that are left have the same likelihood and precision, take the one with the highest priority
+    # If all actions that are left have the same likelihood and precision, take the one with the highest priority.
     equalPrecision = _.first(likelyActions).precision is _.last(likelyActions).precision
 
     if equalLikelihood and equalPrecision
@@ -66,8 +68,8 @@ class LOI.Parser extends LOI.Parser
       likelyActions = _.filter likelyActions, (likelyAction) =>
         likelyAction.priority is bestPriority
 
-    # If we have only one possibility left, just choose that one (autocorrect style).
-    if likelyActions.length is 1
+    # If we have only one possibility left and it's close enough, just choose that one (autocorrect style).
+    if likelyActions.length is 1 and likelyActions[0].likelihood > 0.8
       likelyAction = likelyActions[0]
 
       commandNodeSequence = @_createCommandNodeSequence likelyAction

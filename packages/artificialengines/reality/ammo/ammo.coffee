@@ -1,3 +1,3 @@
 # Export into global namespace.
-Ammo = require('ammo.js')()
+Ammo = require('./build/ammo.js')()
 window.Ammo = Ammo if Meteor.isClient

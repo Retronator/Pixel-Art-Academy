@@ -10,7 +10,7 @@ Npm.depends({
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
   three: '0.96.0',
-  "ammo.js": "git+https://github.com/kripken/ammo.js.git"
+  'jaro-winkler': '0.2.8'
 });
 
 Package.onUse(function(api) {
@@ -250,7 +250,9 @@ Package.onUse(function(api) {
   api.addFile('spectrum/glsl/hsl2rgb');
   
   // Artificial Reality
-  
+
+  api.addJavascript('reality/ammo/build/ammo');
+
   api.addFile('reality..');
   api.addFile('reality/ammo..');
 

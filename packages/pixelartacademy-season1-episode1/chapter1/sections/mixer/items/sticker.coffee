@@ -4,15 +4,15 @@ HQ = Retronator.HQ
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class C1.Mixer.Stickers extends LOI.Adventure.Thing
-  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.Stickers'
+class C1.Mixer.Sticker extends LOI.Adventure.Thing
+  @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.Sticker'
   @register @id()
 
-  @fullName: -> "stickers"
+  @fullName: -> "sticker"
 
   @description: ->
     "
-      They are blank stickers good for writing on them.
+      It is a blank sticker, good for writing on it.
     "
 
   @initialize()

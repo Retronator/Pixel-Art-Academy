@@ -1,5 +1,7 @@
 AB = Artificial.Babel
 
+jaroWinklerSimilarity = require 'jaro-winkler'
+
 class AB.Helpers
   # Generates an array of phrases made out of 1 to maxWordsInPhrase sequential words from the text.
   # - text: text from which to generate phrases
@@ -50,10 +52,11 @@ class AB.Helpers
     for phraseFromText in options.textPhrases
       distance = @levenshteinDistance options.phrase, phraseFromText
 
-      # Normalize to original phrase length.
-      match = 1 - distance / options.phrase.length
+      # Normalize to original phrase length and penalize short lengths.
+      weightedLength = Math.max 1, options.phrase.length - 5 / options.phrase.length
+      match = 1 - distance / weightedLength
 
-      bestMatch = Math.max bestMatch, match
+      bestMatch = match if match > bestMatch
 
     bestMatch
 
@@ -78,3 +81,6 @@ class AB.Helpers
         d[i + 1][j + 1] = Math.min d[i][j + 1] + 1, d[i + 1][j] + 1, d[i][j] + cost
 
     d[n][m]
+
+  @jaroWinklerSimilarity = (word1, word2, options) ->
+    jaroWinklerSimilarity word1, word2, options

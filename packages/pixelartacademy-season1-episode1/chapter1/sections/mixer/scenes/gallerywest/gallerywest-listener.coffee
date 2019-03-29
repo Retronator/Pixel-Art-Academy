@@ -10,6 +10,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
   @avatars: ->
     answer: C1.Mixer.Answer
+    sticker: C1.Mixer.Sticker
 
   onEnter: (enterResponse) ->
     scene = @options.parent
@@ -180,7 +181,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
           true
   
       commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.Get, stickers]
+        form: [Vocabulary.Keys.Verbs.Get, [@avatars.sticker, stickers]]
         action: =>
           stickers.state 'inInventory', true
           true
@@ -200,12 +201,12 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         action: writeAnswerAction
 
       commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.Use, stickers]
+        form: [Vocabulary.Keys.Verbs.Use, [@avatars.sticker, stickers]]
         priority: 1
         action: writeAnswerAction
 
       commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.UseWith, marker, stickers]
+        form: [Vocabulary.Keys.Verbs.UseWith, marker, [@avatars.sticker, stickers]]
         priority: 1
         action: writeAnswerAction
 
@@ -214,7 +215,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         action: writeAnswerAction
 
       commandResponse.onPhrase
-        form: [Vocabulary.Keys.Verbs.WriteOn, @avatars.answer, stickers]
+        form: [Vocabulary.Keys.Verbs.WriteOn, @avatars.answer, [@avatars.sticker, stickers]]
         action: writeAnswerAction
 
     if eventPhase is C1.Mixer.GalleryWest.EventPhases.TalkToClassmates
