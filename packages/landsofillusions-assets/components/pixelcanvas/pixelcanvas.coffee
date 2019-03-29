@@ -108,7 +108,7 @@ class LOI.Assets.Components.PixelCanvas extends AM.Component
         continue unless component
 
         context.save()
-        component.drawToContext context, lightDirection: @options.lightDirection()
+        component.drawToContext context, lightDirection: @options.lightDirection?()
         context.restore()
 
   onRendered: ->

@@ -59,7 +59,7 @@ class LOI.Assets.Components.SpriteImage extends AM.Component
       context.save()
 
       @sprite.drawToContext context,
-        lightDirection: @options.lightDirection()
+        lightDirection: @options.lightDirection?()
 
       context.restore()
 
