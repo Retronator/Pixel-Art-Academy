@@ -29,7 +29,7 @@ class LOI.Character extends LOI.Character
 
     @agents[id]
     
-  @formatText: (text, keyword, character) ->
+  @formatText: (text, keyword, character, onlyQualifiedPronouns) ->
     pronouns = character.avatar.pronouns()
 
     getPronoun = (key) =>
@@ -53,17 +53,27 @@ class LOI.Character extends LOI.Character
       ['their', 'Adjective']
       ['theirs', 'Possessive']
     ]
-      text = text.replace new RegExp("_(t|T)#{pronounPair[0].substring(1)}_", 'g'), (match, pronounCase) ->
+      pronounReplacement = (match, pronounCase) ->
         pronoun = getPronoun pronounPair[1]
 
         if pronounCase is 'T' then pronoun = _.upperFirst pronoun
 
         pronoun
 
-    text = text.replace /_are_/g, (match) ->
+      unless onlyQualifiedPronouns
+        # Do replacement on pronouns without a keyword qualifier.
+        text = text.replace new RegExp("_(t|T)#{pronounPair[0].substring(1)}_", 'g'), pronounReplacement
+
+      # Replace pronouns qualified with the keyword.
+      text = text.replace new RegExp("_#{keyword}:(t|T)#{pronounPair[0].substring(1)}_", 'g'), pronounReplacement
+
+    beSubstituion = (match) ->
       # We assume neutral pronouns use plural verbs.
       # TODO: Can we make this assumption? Probably depends on language's properties.
       numberCategory = if pronouns is LOI.Avatar.Pronouns.Neutral then 'Plural' else 'Singular'
       LOI.adventure.parser.vocabulary.getPhrases("Verbs.Be.Present.3rdPerson.#{numberCategory}")?[0]
+
+    text = text.replace /_are_/g, beSubstituion unless onlyQualifiedPronouns
+    text = text.replace new RegExp("_#{keyword}:are", 'g'), beSubstituion
 
     text

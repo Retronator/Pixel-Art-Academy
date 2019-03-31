@@ -138,6 +138,24 @@ The interface will highlight the text "open the door" and display the command hi
 
 The case of the command (`_they_` vs `_They_`) is preserved (she/he/they and She/He/They).
 
+`_are_` will be substituted with singular (is) or plural (are) verb depending on the pronouns of the character.
+
+#### Other names and pronouns
+
+Similar to character names, substitutions can be created for other things using their shorthand name.
+
+`_thing_` will be substituted with thing's short name.
+
+`_thing:they_` and all variants (them/their/theirs) will be substituted with thing's pronouns.
+
+`_thing's_` will be substituted with possessive form of thing's name.
+
+`_thing:are_` will be substituted with singular or plural verb.
+
+#### Character groups
+
+`_are_` will be substituted with singular (is) or plural (are) verb depending on the size of the group.
+
 ### Text formatting
 
 #### Colors

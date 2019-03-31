@@ -41,9 +41,11 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
       @ephemeralState 'student', ephemeralStudent
       
       profile = @options.listener.prepareProfile student.instance.document().profile
-
       @ephemeralState 'studentProfile', profile
   
+      answers = @options.listener.prepareAnswers student
+      @ephemeralState 'studentAnswers', answers
+
   @initialize()
 
   onEnter: (enterResponse) ->
@@ -70,6 +72,17 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
       
     profile
 
+  prepareAnswers: (student) ->
+    answers = {}
+
+    for question of C1.Mixer.IceBreakers.Questions
+      answers[question] = student.getActions(
+        type: C1.Mixer.IceBreakers.AnswerAction.type
+        'content.question': question
+      )[0].content.answer
+
+    answers
+
   onScriptsLoaded: ->
     @script = @scripts[@id()]
 
@@ -82,25 +95,30 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
       do (actorClass) =>
         actor = LOI.adventure.getCurrentThing actorClass
 
+        prepareScriptForStudent = =>
+          profile = @prepareProfile LOI.character().document().profile
+          @script.ephemeralState 'profile', profile
+
+          @script.prepareForStudent actor
+
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.TalkTo, actor]
           action: =>
             # Prepare character variables.
-            profile = @prepareProfile LOI.character().document().profile
-            @script.ephemeralState 'profile', profile
-            
-            @script.prepareForStudent actor
-            
+            prepareScriptForStudent()
             LOI.adventure.director.startScript @script
 
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.LookAt, actor]
           priority: 1
           action: =>
-            console.log "loko at actor"
+            prepareScriptForStudent()
+            LOI.adventure.director.startNode new NarrativeNode line: actor.description()
+            LOI.adventure.director.startScript @script, label: 'LookAtStudent'
 
         lookAtAnswersAction = =>
-          console.log "loko at answers"
+          prepareScriptForStudent()
+          LOI.adventure.director.startScript @script, label: 'LookAtAnswers'
 
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.LookAt, possessive: actor, [@avatars.answers, @avatars.answer]]
@@ -113,4 +131,5 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.LookAt, possessive: actor, @avatars.nameTag]
           action: =>
-            console.log "loko at name tag"
+            prepareScriptForStudent()
+            LOI.adventure.director.startScript @script, label: 'LookAtNameTag'

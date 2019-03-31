@@ -348,6 +348,7 @@ class LOI.Adventure.Thing extends AM.Component
 
   fullName: -> @avatar?.fullName()
   shortName: -> @avatar?.shortName()
+  pronouns: -> @avatar?.pronouns()
   nameAutoCorrectStyle: -> @avatar?.nameAutoCorrectStyle()
   nameNounType: -> @avatar?.nameNounType()
   descriptiveName: -> @avatar?.descriptiveName()

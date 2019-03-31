@@ -16,16 +16,13 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
       reuben: HQ.Actors.Reuben
 
     @setCallbacks
+      MixerStart: (complete) =>
+        # Students move into audience position.
+        scene._moveStudentsToAudience()
+      
       IceBreakersStart: (complete) =>
-        # Animate characters to the middle.
-        characters = _.flatten [
-          LOI.character()
-          LOI.adventure.getCurrentThing actorClass for actorClass in scene.constructor.actorClasses
-        ]
-
-        for character in characters
-          scene._movePersonToLandmark character, 'MixerMiddle'
-
+        # Animate students to the middle.
+        scene._moveStudentsToLandmark 'MixerMiddle'
         complete()
 
       HobbyProfessionStart: (complete) =>
@@ -74,4 +71,27 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       StartTalkToClassmates: (complete) =>
         scene.state 'talkToClassmatesStart', Date.now()
+        complete()
+
+      JoinStudyGroupStart: (complete) =>
+        # Students face Shelley.
+        scene._moveStudentsToAudience()
+        complete()
+
+      JoinStudyGroupMovement: (complete) =>
+        complete()
+
+      JoinStudyGroupContinue: (complete) =>
+        complete()
+
+      JoinStudyGroupAlexandra: (complete) =>
+        complete()
+
+      JoinStudyGroupReuben: (complete) =>
+        complete()
+
+      JoinStudyGroupShelley: (complete) =>
+        complete()
+
+      CoordinatorAssignment: (complete) =>
         complete()

@@ -136,13 +136,27 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
           unless nextCheckpoint and @script.state nextCheckpoint
             @startScript label: checkpoint
             return
+            
+    # Script should continue when break time has passed.
+    if eventPhase is C1.Mixer.GalleryWest.EventPhases.TalkToClassmates
+      @_continueAfterBreakAutorun = @autorun (computation) =>
+        # Wait until time left can be determined.
+        return unless scene.talkToClassmatesMinutesLeft()?
+
+        scene.scheduleTalkToClassmatesEnd()
+        computation.stop()
 
   cleanup: ->
+    scene = @options.parent
+
     @_positionActorsAutorun?.stop()
     @_retroTalksAutorun?.stop()
     @_enterContextAutorun?.stop()
+    @_continueAfterBreakAutorun?.stop()
 
     @_agentActionsSubscription?.stop()
+
+    scene.cleanTalkToClassmatesEnd()
 
   onCommand: (commandResponse) ->
     scene = @options.parent

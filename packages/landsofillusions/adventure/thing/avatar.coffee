@@ -46,7 +46,8 @@ class LOI.Adventure.Thing.Avatar extends LOI.Avatar
   shortName: -> @_translateIfAvailable @constructor.translationKeys.shortName
   descriptiveName: -> @_translateIfAvailable @constructor.translationKeys.descriptiveName
   description: -> @_translateIfAvailable @constructor.translationKeys.description
-    
+
+  pronouns: -> _.propertyValue @options, 'pronouns'
   nameAutoCorrectStyle: -> _.propertyValue @options, 'nameAutoCorrectStyle'
   nameNounType: -> _.propertyValue @options, 'nameNounType'
 

@@ -5,7 +5,7 @@ class PAA.Actors.Jaxx extends LOI.Character.Actor
   @id: -> 'PixelArtAcademy.Actors.Jaxx'
   @fullName: -> "Jaxx"
   @description: -> "It's Jaxx, a crafty asian young adult."
-  @pronouns: -> @constructor.Pronouns.Neutral
+  @pronouns: -> LOI.Avatar.Pronouns.Neutral
   @color: ->
     hue: LOI.Assets.Palette.Atari2600.hues.red
     shade: LOI.Assets.Palette.Atari2600.characterShades.darkest
