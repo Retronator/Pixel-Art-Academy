@@ -104,7 +104,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     group = LOI.Adventure.Thing.getClassForId studyGroupId
 
     letter = _.last studyGroupId
-    location = group.location().shortName()
+    location = if letter is 'C' then group.location().longName() else group.location().shortName()
     studyGroup = {letter, location}
 
     script = @listeners[0].script

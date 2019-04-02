@@ -63,8 +63,11 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
     document.avatar?.fullName?.translate().text or @_noName()
 
   shortName: ->
-    # Player characters only have one name.
-    @fullName()
+    # We only want to return the loading text the document hasn't loaded yet. When
+    # it has loaded, avatar could be null, in which case we need to return no-name.
+    return @_loading() unless document = @document()
+
+    document.avatar?.shortName?.translate().text or @fullName()
 
   nameNounType: -> LOI.Avatar.NameNounType.Proper
 

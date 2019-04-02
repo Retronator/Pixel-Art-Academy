@@ -19,6 +19,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
       MixerStart: (complete) =>
         # Students move into audience position.
         scene._moveStudentsToAudience()
+        complete()
       
       IceBreakersStart: (complete) =>
         # Animate students to the middle.
@@ -71,6 +72,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       StartTalkToClassmates: (complete) =>
         scene.state 'talkToClassmatesStart', Date.now()
+        scene.scheduleTalkToClassmatesEnd()
         complete()
 
       JoinStudyGroupStart: (complete) =>
