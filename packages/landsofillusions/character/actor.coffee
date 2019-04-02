@@ -52,6 +52,7 @@ class LOI.Character.Actor extends LOI.Character.Person
 
           _.extend document.avatar,
             fullName: @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.fullName
+            shortName: @thingAvatar.getTranslation LOI.Adventure.Thing.Avatar.translationKeys.shortName
             pronouns: @thingAvatar.pronouns()
             color: @thingAvatar.color()
 
@@ -92,8 +93,17 @@ class LOI.Character.Actor extends LOI.Character.Person
 
     _.every conditions
 
-  description: ->
-    @thingAvatar.description()
+  # Avatar pass-through methods go to the thing avatar.
+  fullName: -> @thingAvatar?.fullName()
+  shortName: -> @thingAvatar?.shortName()
+  pronouns: -> @thingAvatar?.pronouns()
+  nameAutoCorrectStyle: -> @thingAvatar?.nameAutoCorrectStyle()
+  nameNounType: -> @thingAvatar?.nameNounType()
+  descriptiveName: -> @thingAvatar?.descriptiveName()
+  description: -> @thingAvatar?.description()
+  color: -> @thingAvatar?.color()
+  dialogTextTransform: -> @thingAvatar?.dialogTextTransform()
+  dialogueDeliveryType: -> @thingAvatar?.dialogueDeliveryType()
 
   recentActions: ->
     [] # TODO: Provide actions via storyline.

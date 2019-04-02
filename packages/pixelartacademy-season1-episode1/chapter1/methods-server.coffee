@@ -8,29 +8,22 @@ C1.applyCharacter.method (characterId, contactEmail) ->
   check contactEmail, String
 
   LOI.Authorize.player()
-  LOI.Authorize.characterAction characterId
-
-  # Character must be activated.
-  character = LOI.Character.documents.findOne characterId
-  throw new AE.InvalidOperationException "Character is not activated." unless character.activated
-
-  characterGameState = LOI.GameState.documents.findOne 'character._id': characterId
-  throw new AE.InvalidOperationException "Character does not have a game state." unless characterGameState
+  {character, gameState} = LOI.Authorize.characterGameplayAction characterId
 
   # Change character's contact email.
   LOI.Character.updateContactEmail characterId, contactEmail
 
   # Set the applied field on the application state.
-  _.nestedProperty characterGameState.readOnlyState, "things.#{C1.id()}.application.applied", true
+  _.nestedProperty gameState.readOnlyState, "things.#{C1.id()}.application.applied", true
 
   # Set the date.
-  time = characterGameState.state.gameTime
-  _.nestedProperty characterGameState.readOnlyState, "things.#{C1.id()}.application.applicationTime", time
-  _.nestedProperty characterGameState.readOnlyState, "things.#{C1.id()}.application.applicationRealTime", Date.now()
+  time = gameState.state.gameTime
+  _.nestedProperty gameState.readOnlyState, "things.#{C1.id()}.application.applicationTime", time
+  _.nestedProperty gameState.readOnlyState, "things.#{C1.id()}.application.applicationRealTime", Date.now()
 
-  LOI.GameState.documents.update characterGameState._id,
+  LOI.GameState.documents.update gameState._id,
     $set:
-      readOnlyState: characterGameState.readOnlyState
+      readOnlyState: gameState.readOnlyState
       
   # Fetch the character again to get their contact email.
   character = LOI.Character.documents.findOne characterId

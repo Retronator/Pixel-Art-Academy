@@ -1,3 +1,4 @@
+AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PAA.Season1.Episode1.Chapter1
@@ -39,6 +40,12 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     'MixerMiddle'
     'MixerRight'
   ]
+  
+  @groups = [
+    C1.Groups.AdmissionsStudyGroup.A
+    C1.Groups.AdmissionsStudyGroup.B
+    C1.Groups.AdmissionsStudyGroup.C
+  ]
 
   @EventPhases =
     BeforeStart: 'BeforeStart'
@@ -46,7 +53,12 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     Answering: 'Answering'
     TalkToClassmates: 'TalkToClassmates'
     JoinGroup: 'JoinGroup'
+    CoordinatorIntro: 'CoordinatorIntro'
 
+  # Methods
+
+  @joinGroup: new AB.Method name: "#{@id()}.joinGroup"
+    
   things: -> _.flatten [
     HQ.Actors.Shelley
     @constructor.Retro
@@ -61,6 +73,8 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   eventPhase: ->
     script = @listeners[0].script
 
+    return C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro if script.state 'CoordinatorIntro'
+    return C1.Mixer.GalleryWest.EventPhases.JoinGroup if script.state 'JoinStudyGroupIntro'
     return C1.Mixer.GalleryWest.EventPhases.TalkToClassmates if script.state 'IceBreakersDone'
     return C1.Mixer.GalleryWest.EventPhases.Answering if script.state 'HobbyProfessionContinue'
     return C1.Mixer.GalleryWest.EventPhases.Intro if script.state 'MixerStart'
@@ -84,6 +98,20 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     
   cleanTalkToClassmatesEnd: ->
     Meteor.clearTimeout @_talkToClassmatesEndTimeout
+    
+  prepareGroupInfoInScript: ->
+    return unless studyGroupId = C1.readOnlyState 'studyGroupId'
+    group = LOI.Adventure.Thing.getClassForId studyGroupId
+
+    letter = _.last studyGroupId
+    location = group.location().shortName()
+    studyGroup = {letter, location}
+
+    script = @listeners[0].script
+    script.ephemeralState 'studyGroup', studyGroup
+    
+    script.setCurrentThings
+      coordinator: group.coordinator()
 
   _animateActorsOnQuestion: (question) ->
     for actorClass in @constructor.actorClasses
@@ -101,7 +129,9 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   _movePersonToAnswerLandmark: (person, answer) ->
     @_movePersonToLandmark person, @constructor.answerLandmarks[answer]
 
-  _movePersonToLandmark: (person, landmark) ->
+  _movePersonToLandmark: (person, landmark, options = {}) ->
+    options.faceLandmark ?= 'InFrontOfProjector'
+
     renderObject = person.avatar.getRenderObject()
     renderObject.setAnimation 'Walk'
 
@@ -111,7 +141,9 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
       speed: 1.25
       onCompleted: =>
         renderObject.setAnimation 'Idle'
-        renderObject.facePosition 'InFrontOfProjector'
+        renderObject.facePosition options.faceLandmark
+
+        options.onCompleted?()
 
   _doAnswerAction: (question, answer) ->
     type = C1.Mixer.IceBreakers.AnswerAction.type
@@ -129,7 +161,7 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   _faceStudentsToLandmark: (landmark) ->
     for student in @_getStudents()
       renderObject = student.avatar.getRenderObject()
-      renderObject.facePosition 'InFrontOfProjector'
+      renderObject.facePosition landmark
 
   _moveStudentsToAudience: ->
     for student in @_getStudents()

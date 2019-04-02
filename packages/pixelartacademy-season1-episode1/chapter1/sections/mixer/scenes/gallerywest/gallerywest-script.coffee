@@ -74,24 +74,83 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         complete()
 
       JoinStudyGroupStart: (complete) =>
-        # Students face Shelley.
+        # Students form the audience around Shelley.
         scene._moveStudentsToAudience()
         complete()
 
       JoinStudyGroupMovement: (complete) =>
+        # Students go to their group.
+        actors = (LOI.adventure.getCurrentThing actorClass for actorClass in scene.constructor.actorClasses)
+
+        for actor in actors
+          do (actor) =>
+            groupIndex = _.findIndex scene.constructor.groups, (group) => actor.constructor in group.npcMembers()
+
+            # Start movement after some deliberation.
+            Meteor.setTimeout =>
+              landmark = scene.constructor.answerLandmarks[groupIndex]
+              scene._movePersonToLandmark actor, landmark, faceLandmark: landmark
+            ,
+              Math.random() * 10000
+
         complete()
 
+      JoinStudyGroupMakeChoice: (complete) =>
+        # Read which group the player chose.
+        groupIndex = @state 'groupChoice'
+
+        # Mark membership in the group.
+        group = scene.constructor.groups[groupIndex]
+        C1.Mixer.GalleryWest.joinGroup LOI.characterId(), group.id()
+
+        # Move character to his group.
+        landmark = scene.constructor.answerLandmarks[groupIndex]
+
+        # Temporarily add just group letter information.
+        studyGroup = letter: _.last group.id()
+        @ephemeralState 'studyGroup', studyGroup
+
+        scene._movePersonToLandmark LOI.character(), landmark,
+          faceLandmark: landmark
+          onCompleted: =>
+            complete()
+
       JoinStudyGroupContinue: (complete) =>
+        # Everyone looks at Shelly.
+        scene._faceStudentsToLandmark 'InFrontOfProjector'
         complete()
 
       JoinStudyGroupAlexandra: (complete) =>
+        alexandra = LOI.adventure.getCurrentThing HQ.Actors.Alexandra
+        scene._movePersonToLandmark alexandra, 'MixerLeft'
         complete()
 
       JoinStudyGroupReuben: (complete) =>
+        reuben = LOI.adventure.getCurrentThing HQ.Actors.Reuben
+        scene._movePersonToLandmark reuben, 'MixerRight'
         complete()
 
       JoinStudyGroupShelley: (complete) =>
-        complete()
+        shelley = LOI.adventure.getCurrentThing HQ.Actors.Shelley
+        scene._movePersonToLandmark shelley, 'MixerMiddle',
+          onCompleted: =>
+            complete()
 
-      CoordinatorAssignment: (complete) =>
+      CoordinatorIntro: (complete) =>
+        scene.prepareGroupInfoInScript()
+        
+        # Make students and coordinators face each other.
+        facingPositions =
+          "#{HQ.Actors.Shelley.id()}": 'MixerMiddle'
+          "#{HQ.Actors.Reuben.id()}": 'MixerRight'
+          "#{HQ.Actors.Alexandra.id()}": 'MixerLeft'
+
+        for actorClass in scene.constructor.actorClasses
+          group = _.find scene.constructor.groups, (group) => actorClass in group.npcMembers()
+          facingPositions[actorClass.id()] = group.coordinator().id()
+
+        # TODO: Make agents face their coordinator.
+
+        LOI.adventure.director.facePosition facingPositions
+          
         complete()

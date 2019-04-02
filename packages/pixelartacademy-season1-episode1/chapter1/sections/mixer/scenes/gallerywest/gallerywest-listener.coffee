@@ -43,7 +43,6 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
       if eventPhase is C1.Mixer.GalleryWest.EventPhases.Answering
         # Position the students based on their answer to the previous
         # question (so that they will animate to the new one).
-
         answerStarts = [
           'HobbyProfessionWriteStart'
           'ExtrovertIntrovertStart'
@@ -80,6 +79,22 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
           startingPositions[personId] = C1.Mixer.GalleryWest.answerLandmarks[action.content.answer]
           startingFacingPositions[personId] = 'InFrontOfProjector'
+
+      else if eventPhase in [C1.Mixer.GalleryWest.EventPhases.JoinGroup, C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro]
+        # Position students in their groups.
+        actors = (LOI.adventure.getCurrentThing actorClass for actorClass in C1.Mixer.GalleryWest.actorClasses)
+
+        for actorClass in scene.constructor.actorClasses
+          groupIndex = _.findIndex scene.constructor.groups, (group) => actorClass in group.npcMembers()
+          startingPositions[actorClass.id()] = scene.constructor.answerLandmarks[groupIndex]
+
+        # TODO: Position agents.
+
+        if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
+          # Position coordinators.
+          startingPositions[HQ.Actors.Shelley.id()] = 'MixerMiddle'
+          startingPositions[HQ.Actors.Reuben.id()] = 'MixerRight'
+          startingPositions[HQ.Actors.Alexandra.id()] = 'MixerLeft'
 
       else
         # Position students randomly.
@@ -118,25 +133,40 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       LOI.adventure.enterContext C1.Mixer.Context
 
-      unless @script.state 'IceBreakersDone'
-        # Start the mixer script at the latest checkpoint.
-        checkpoints = [
-          'MixerStart'
-          'IceBreakersStart'
-          'HobbyProfessionWriteStart'
-          'PixelArtOtherStylesStart'
-          'ExtrovertIntrovertStart'
-          'IndividualTeamStart'
-        ]
+      # Autostart script interactions.
+      @_autoStartScriptAutorun?.stop()
+      Tracker.nonreactive =>
+        @_autoStartScriptAutorun = @autorun (computation) =>
+          # Wait until the location mesh has loaded, so that we have landmark positions.
+          return unless LOI.adventure.world.sceneManager().currentLocationMeshData()
+          computation.stop()
 
-        for checkpoint, index in checkpoints
-          # Start at this checkpoint if we haven't reached the next one yet.
-          nextCheckpoint = checkpoints[index + 1]
+          unless @script.state 'IceBreakersDone'
+            # Start the mixer script at the latest checkpoint.
+            checkpoints = [
+              'MixerStart'
+              'IceBreakersStart'
+              'HobbyProfessionWriteStart'
+              'PixelArtOtherStylesStart'
+              'ExtrovertIntrovertStart'
+              'IndividualTeamStart'
+            ]
 
-          unless nextCheckpoint and @script.state nextCheckpoint
-            @startScript label: checkpoint
-            return
-            
+            for checkpoint, index in checkpoints
+              # Start at this checkpoint if we haven't reached the next one yet.
+              nextCheckpoint = checkpoints[index + 1]
+
+              unless nextCheckpoint and @script.state nextCheckpoint
+                @startScript label: checkpoint
+                return
+
+          if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
+            if @script.state 'JoinStudyGroupContinue'
+              @startScript label: 'JoinStudyGroupContinue'
+
+          if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
+            @startScript label: 'CoordinatorIntro'
+
     # Script should continue when break time has passed.
     if eventPhase is C1.Mixer.GalleryWest.EventPhases.TalkToClassmates
       @_continueAfterBreakAutorun = @autorun (computation) =>
@@ -145,6 +175,10 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
         scene.scheduleTalkToClassmatesEnd()
         computation.stop()
+        
+    # Script needs group info after the join group section.
+    if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
+      scene.prepareGroupInfoInScript()
 
   cleanup: ->
     scene = @options.parent
@@ -153,6 +187,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
     @_retroTalksAutorun?.stop()
     @_enterContextAutorun?.stop()
     @_continueAfterBreakAutorun?.stop()
+    @_autoStartScriptAutorun?.stop()
 
     @_agentActionsSubscription?.stop()
 

@@ -26,5 +26,5 @@ class C1.Mixer extends LOI.Adventure.Section
     C1.Goals.StudyGroup.Yearbook.completedConditions() is true
 
   @finished: ->
-    # TODO: Mixer section is over when the character has joined a study group.
-    false
+    # Mixer is over when the player has finished the Gallery West script.
+    C1.Mixer.GalleryWest.scriptState('MixerEnd') is true

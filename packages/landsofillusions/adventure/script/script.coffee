@@ -30,6 +30,8 @@ class LOI.Adventure.Script
     @_processOnServer() if Meteor.isServer
     @_processOnClient() if Meteor.isClient
 
+    @things = {}
+
   _processOnServer: ->
     # On the server we need to prepare translation documents for the script.
 
@@ -84,7 +86,7 @@ class LOI.Adventure.Script
 
   # Sets things that have a shorthand name in the script (actors, thing variables in script context).
   setThings: (things = {}) ->
-    @things = things
+    _.extend @things, things
 
     # Set actors to thing instances, based on actor names.
     for node in @nodes

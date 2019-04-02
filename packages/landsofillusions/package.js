@@ -226,6 +226,7 @@ Package.onUse(function(api) {
   // Membership
 
   api.addFile('character/membership..');
+  api.addServerFile('character/membership/server');
 
   // User
 
