@@ -31,7 +31,9 @@ class LOI.Character.Instance
       @document()?
       @avatar.ready()
     ]
-    
+
+    console.log "Character instance ready?", @id, conditions if LOI.debug
+
     _.every conditions
 
   # Avatar pass-through methods

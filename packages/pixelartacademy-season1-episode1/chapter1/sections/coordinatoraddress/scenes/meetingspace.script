@@ -1,0 +1,34 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.CoordinatorAddress.MeetingSpace
+
+## Start
+
+coordinator: Alright, let's have a quick first meeting.
+
+> Everyone sits down in a circle.
+
+coordinator: 
+  I know you got to know each other a bit already, but just to make sure we all know each other's names, let's do a round of introductions.
+  You can just say your name and if you want a fun fact about yourself.
+  Why don't we start with you, _npc1_.
+  
+npc1:
+  Hi, my name is _npc1_ like _coordinator_ said. 
+  I just graduated from UC Berkeley, so I'm looking for what to do next in life. Going to Retropolis seemed like a perfect choice since I don't want to get involved with the business side of making art. `_studyGroup.npc1.name is 'Ty'`
+  I come from India, but my family moved to the US when I was a teenager. `_studyGroup.npc1.name is 'Saanvi'`
+  I am a graphic designer. I did pixel art back in the 90s and I want to get back into it. `_studyGroup.npc1.name is 'Mae'`
+
+<!-- Agents dynamic introductions -->
+  
+<!-- Player introduction -->
+
+coordinator:
+  And last we have …
+  
+npc2:
+  I'm _npc2_. `_studyGroup.npc2.name is 'Ace'`
+  I'm _npc2_. `_studyGroup.npc2.name is 'Lisa'`
+  I'm _npc2_. `_studyGroup.npc2.name is 'Jaxx'`
+
+-> [End]
+
+## End

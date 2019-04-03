@@ -178,7 +178,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         
     # Script needs group info after the join group section.
     if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
-      scene.prepareGroupInfoInScript()
+      C1.prepareGroupInfoInScript @script
 
   cleanup: ->
     scene = @options.parent

@@ -98,20 +98,6 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     
   cleanTalkToClassmatesEnd: ->
     Meteor.clearTimeout @_talkToClassmatesEndTimeout
-    
-  prepareGroupInfoInScript: ->
-    return unless studyGroupId = C1.readOnlyState 'studyGroupId'
-    group = LOI.Adventure.Thing.getClassForId studyGroupId
-
-    letter = _.last studyGroupId
-    location = if letter is 'C' then group.location().longName() else group.location().shortName()
-    studyGroup = {letter, location}
-
-    script = @listeners[0].script
-    script.ephemeralState 'studyGroup', studyGroup
-    
-    script.setCurrentThings
-      coordinator: group.coordinator()
 
   _animateActorsOnQuestion: (question) ->
     for actorClass in @constructor.actorClasses

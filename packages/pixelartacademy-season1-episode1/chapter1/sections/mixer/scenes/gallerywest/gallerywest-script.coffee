@@ -139,7 +139,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
             complete()
 
       CoordinatorIntro: (complete) =>
-        scene.prepareGroupInfoInScript()
+        C1.prepareGroupInfoInScript @
         
         # Make students and coordinators face each other.
         facingPositions =

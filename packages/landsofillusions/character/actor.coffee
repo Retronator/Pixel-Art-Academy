@@ -68,6 +68,8 @@ class LOI.Character.Actor extends LOI.Character.Person
 
           nonPlayerCharacterDocument document
 
+          console.log "NPC document loaded", @id(), document if LOI.debug
+
     @avatar = @instance.avatar
 
     # Person state for actors is saved in the thing state directly.
@@ -90,6 +92,8 @@ class LOI.Character.Actor extends LOI.Character.Person
       @thingAvatar.ready()
       @instance.ready()
     ]
+
+    console.log "Actor ready?", @id(), conditions if LOI.debug
 
     _.every conditions
 

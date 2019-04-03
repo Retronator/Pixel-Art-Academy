@@ -123,21 +123,26 @@ Package.onUse(function(api) {
   api.addFile('chapter1/challenges/drawing/tutorial/helpers/references');
 
   // Intro
+
   api.addFile('chapter1/sections/intro..');
   api.addThing('chapter1/sections/intro/scenes/studio');
 
   // Waiting
+
   api.addFile('chapter1/sections/waiting..');
 
   // Pre-PixelBoy
+
   api.addFile('chapter1/sections/prepixelboy..');
   api.addThing('chapter1/sections/prepixelboy/scenes/store');
 
   // PixelBoy
+
   api.addFile('chapter1/sections/pixelboy..');
   api.addThing('chapter1/sections/pixelboy/scenes/store');
 
   // Post-PixelBoy
+
   api.addFile('chapter1/sections/postpixelboy..');
   api.addFile('chapter1/sections/postpixelboy/scenes/drawingchallenges');
   api.addThing('chapter1/sections/postpixelboy/scenes/store');
@@ -149,9 +154,11 @@ Package.onUse(function(api) {
   api.addThing('chapter1/sections/postpixelboy/scenes/copyreference/bookshelves');
 
   // Admission projects
+
   api.addFile('chapter1/sections/admissionprojects..');
 
   // Snake
+
   api.addFile('chapter1/sections/admissionprojects/snake..');
 
   api.addFile('chapter1/sections/admissionprojects/snake/intro..');
@@ -161,6 +168,7 @@ Package.onUse(function(api) {
   api.addThing('chapter1/sections/admissionprojects/snake/drawing/scenes/coworking');
 
   // Mixer
+
   api.addFile('chapter1/sections/mixer..');
   api.addFile('chapter1/sections/mixer/context');
   
@@ -196,4 +204,10 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/mixer/icebreakers..');
   api.addFile('chapter1/sections/mixer/icebreakers/answeraction');
   api.addServerFile('chapter1/sections/mixer/icebreakers/subscriptions');
+
+  // Coordinator address
+
+  api.addFile('chapter1/sections/coordinatoraddress..');
+
+  api.addThing('chapter1/sections/coordinatoraddress/scenes/meetingspace');
 });

@@ -95,11 +95,16 @@ class LOI.Adventure.Script
 
         node.actor = things[node.actorName]
 
-    # Perform avatar substitutions in lines.
-    for shorthand, person of things when person instanceof LOI.Character.Person
-      for node in @nodes when node.line
+      if node.line
+        # Store the original line text so we can later retrieve it.
         node.sourceLine ?= node.line
-        node.line = LOI.Character.formatText node.sourceLine, shorthand, person, true
+
+        # Start substitutions with the original line.
+        node.line = node.sourceLine
+
+        # Perform avatar substitutions.
+        for shorthand, person of @things when person instanceof LOI.Character.Person
+          node.line = LOI.Character.formatText node.line, shorthand, person, true
 
   setCurrentThings: (thingClasses) ->
     Tracker.autorun (computation) =>
