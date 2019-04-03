@@ -92,6 +92,10 @@ Document.startup ->
         Feminine: ['hers']
         Masculine: ['his']
         Neutral: ['theirs']
+      Reflexive:
+        Feminine: ['herself']
+        Masculine: ['himself']
+        Neutral: ['themselves']
 
     # Note: Ignored prepositions should include those from multi-part
     # phrases, as they will otherwise not report perfect likelihood.

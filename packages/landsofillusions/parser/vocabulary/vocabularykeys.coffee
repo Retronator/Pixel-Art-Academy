@@ -88,6 +88,10 @@ LOI.Parser.Vocabulary.Keys =
       Feminine: ''
       Masculine: ''
       Neutral: ''
+    Reflexive:
+      Feminine: ''
+      Masculine: ''
+      Neutral: ''
 
   IgnorePrepositions: ''
 

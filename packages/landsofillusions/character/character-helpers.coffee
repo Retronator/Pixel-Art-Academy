@@ -52,6 +52,7 @@ class LOI.Character extends LOI.Character
       ['them', 'Objective']
       ['their', 'Adjective']
       ['theirs', 'Possessive']
+      ['themselves', 'Reflexive']
     ]
       pronounReplacement = (match, pronounCase) ->
         pronoun = getPronoun pronounPair[1]

@@ -143,7 +143,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
           unless @script.state 'IceBreakersDone'
             # Start the mixer script at the latest checkpoint.
-            checkpoints = [
+            @startScriptAtLatestCheckpoint [
               'MixerStart'
               'IceBreakersStart'
               'HobbyProfessionWriteStart'
@@ -151,14 +151,6 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
               'ExtrovertIntrovertStart'
               'IndividualTeamStart'
             ]
-
-            for checkpoint, index in checkpoints
-              # Start at this checkpoint if we haven't reached the next one yet.
-              nextCheckpoint = checkpoints[index + 1]
-
-              unless nextCheckpoint and @script.state nextCheckpoint
-                @startScript label: checkpoint
-                return
 
           if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
             if @script.state 'JoinStudyGroupContinue'

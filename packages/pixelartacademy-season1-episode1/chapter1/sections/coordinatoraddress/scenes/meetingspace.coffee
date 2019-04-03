@@ -32,15 +32,27 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
       coordinator if coordinator is HQ.Actors.Shelley
       group.npcMembers()
     ]
+
+  listenForCharacterIntroduction: ->
+    @listeners[0].listenForCharacterIntroduction = true
+
+  # Script
     
   initializeScript: ->
     scene = @options.parent
 
+    @setCallbacks
+      PlayerIntroduction: (complete) =>
+        scene.listenForCharacterIntroduction()
+        complete()
+
+  # Listener
+
   onEnter: (enterResponse) ->
     scene = @options.parent
 
-    # Coordinator should talk when at location.
-    @_coordinatorTalksAutorun = @autorun (computation) =>
+    # Script should start automatically when at location.
+    @_scriptStartAutorun = @autorun (computation) =>
       return unless @scriptsReady()
       return unless group = scene.group()
       return unless coordinator = LOI.adventure.getCurrentThing group.coordinator()
@@ -56,7 +68,40 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
       @script.setThings {coordinator, npc1, npc2}
 
       C1.prepareGroupInfoInScript @script
-      @startScript()
+      
+      @startScriptAtLatestCheckpoint [
+        'Start'
+        'AgentsIntroduction'
+        'PlayerIntroduction'
+        'SecondNPCIntroduction'
+      ]
       
   cleanup: ->
-    @_coordinatorTalksAutorun?.stop()
+    @_scriptStartAutorun?.stop()
+
+  onCommand: (commandResponse) ->
+    if @listenForCharacterIntroduction
+      # Hijack the say command.
+      sayAction = (likelyAction) =>
+        # Remove text from narrative since it will be displayed in a separate node.
+        LOI.adventure.interface.narrative.removeLastCommand()
+
+        message = _.trim _.last(likelyAction.translatedForm), '"'
+
+        dialogueLine = new LOI.Adventure.Script.Nodes.DialogueLine
+          actor: LOI.Character.getAgent LOI.characterId()
+          line: message
+          next: @script.startNode.labels.PlayerIntroductionEnd
+
+        LOI.adventure.director.startNode dialogueLine
+
+      commandResponse.onPhrase
+        form: [Vocabulary.Keys.Verbs.Say, '""']
+        priority: 1
+        action: sayAction
+
+      # Allow hijack just quotes.
+      commandResponse.onPhrase
+        form: ['""']
+        priority: 1
+        action: sayAction

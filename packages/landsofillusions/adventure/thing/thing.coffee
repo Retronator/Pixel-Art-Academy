@@ -201,6 +201,15 @@ class LOI.Adventure.Thing extends AM.Component
 
           Tracker.nonreactive => callback?()
 
+      startScriptAtLatestCheckpoint: (checkpointLabels) ->
+        for label, index in checkpointLabels
+          # Start at this checkpoint if we haven't reached the next one yet.
+          nextLabel = checkpointLabels[index + 1]
+  
+          unless nextLabel and @script.state nextLabel
+            @startScript {label}
+            return
+
   @createAvatar: ->
     # Note: We fully qualify Avatar (instead of @Avatar) because this gets called from classes that inherit from Thing.
     new LOI.Adventure.Thing.Avatar @
