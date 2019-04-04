@@ -33,5 +33,7 @@ class LOI.Assets.SpriteEditor.Thumbnail extends AM.Component
 
       @context.setTransform 1, 0, 0, 1, -spriteData.bounds.x, -spriteData.bounds.y
 
+      lightDirectionHelper = @lightDirectionHelper()
+
       @sprite.drawToContext @context,
-        lightDirection: @lightDirectionHelper()
+        lightDirection: lightDirectionHelper()

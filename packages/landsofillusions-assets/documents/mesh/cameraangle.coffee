@@ -35,6 +35,13 @@ class LOI.Assets.Mesh.CameraAngle
     @_updatedDependency.changed()
     @cameraAngles.contentUpdated()
 
+    mesh = @cameraAngles.parent
+
+    # Update solvers after the objects have been initialized as an array field.
+    if mesh.objects instanceof LOI.Assets.Mesh.ArrayField
+      for object in mesh.objects.getAllWithoutUpdates() when object
+        object.solver.recompute()
+
   _updateWorldMatrix: ->
 
   _createVector: (vectorData = {}) ->
