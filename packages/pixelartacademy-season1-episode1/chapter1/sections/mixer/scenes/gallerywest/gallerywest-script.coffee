@@ -27,7 +27,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         complete()
 
       HobbyProfessionStart: (complete) =>
-        scene._animateActorsOnQuestion C1.Mixer.IceBreakers.Questions.HobbyProfession
+        scene._animateOtherStudentsOnQuestion C1.Mixer.IceBreakers.Questions.HobbyProfession
         complete()
 
       HobbyProfessionEnd: (complete) =>
@@ -36,7 +36,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         complete()
 
       PixelArtOtherStylesStart: (complete) =>
-        scene._animateActorsOnQuestion C1.Mixer.IceBreakers.Questions.PixelArtOtherStyles
+        scene._animateOtherStudentsOnQuestion C1.Mixer.IceBreakers.Questions.PixelArtOtherStyles
         complete()
 
       PixelArtOtherStylesEnd: (complete) =>
@@ -45,7 +45,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         complete()
 
       ExtrovertIntrovertStart: (complete) =>
-        scene._animateActorsOnQuestion C1.Mixer.IceBreakers.Questions.ExtrovertIntrovert
+        scene._animateOtherStudentsOnQuestion C1.Mixer.IceBreakers.Questions.ExtrovertIntrovert
         complete()
 
       ExtrovertIntrovertEnd: (complete) =>
@@ -58,7 +58,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         complete()
 
       IndividualTeamStart: (complete) =>
-        scene._animateActorsOnQuestion C1.Mixer.IceBreakers.Questions.IndividualTeam
+        scene._animateOtherStudentsOnQuestion C1.Mixer.IceBreakers.Questions.IndividualTeam
         complete()
 
       IndividualTeamEnd: (complete) =>
@@ -72,8 +72,11 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       StartTalkToClassmates: (complete) =>
         scene.state 'talkToClassmatesStart', Date.now()
-        scene.scheduleTalkToClassmatesEnd()
-        complete()
+
+        # Wait for state to be propagated.
+        Tracker.afterFlush =>
+          scene.scheduleTalkToClassmatesEnd()
+          complete()
 
       JoinStudyGroupStart: (complete) =>
         # Students form the audience around Shelley.

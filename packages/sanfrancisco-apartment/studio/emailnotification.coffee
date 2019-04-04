@@ -37,6 +37,10 @@ class Studio.EmailNotification extends LOI.Adventure.Thing
         Tracker.nonreactive =>
           @listeners[0].startScript()
 
+          # TODO: Remove after finished debugging double notifications.
+          console.log "email ping"
+          console.trace()
+
           for email in inbox.things() when not email.wasNotified()
             email.markAsNotified()
 

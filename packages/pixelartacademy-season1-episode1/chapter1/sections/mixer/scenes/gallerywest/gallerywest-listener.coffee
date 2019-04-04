@@ -18,15 +18,25 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
     # Determine event phase.
     eventPhase = scene.eventPhase()
 
+    # Subscribe to latest group members.
+    @_studyGroupMembershipSubscription = C1.Mixer.GalleryWest.latestStudyGroupMembers.subscribe()
+
     # Subscribe to agents' actions.
-    @_agentActionsSubscription = C1.Mixer.IceBreakers.AnswerAction.latestAnswersForCharacter.subscribe LOI.characterId()
+    @_agentActionsSubscriptions = new ReactiveField null
+
+    @_agentActionsSubscriptionsAutorun = @autorun (computation) =>
+      subscriptions = for agent in scene.agents()
+        C1.Mixer.IceBreakers.AnswerAction.latestAnswersForCharacter.subscribe agent._id
+
+      @_agentActionsSubscriptions subscriptions
 
     @_positionActorsAutorun = @autorun (computation) =>
       # Wait until the location mesh has loaded, so that we have landmark positions.
       return unless LOI.adventure.world.sceneManager().currentLocationMeshData()
 
       # Wait until the agent actions have arrived.
-      return unless @_agentActionsSubscription.ready()
+      for subscription in @_agentActionsSubscriptions()
+        return unless subscription.ready()
 
       computation.stop()
 
@@ -64,10 +74,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
           else
             break
             
-        actors = (LOI.adventure.getCurrentThing actorClass for actorClass in C1.Mixer.GalleryWest.actorClasses)
-        agents = (LOI.Character.getAgent characterId for characterId in [LOI.characterId()])
-        
-        for person in [actors..., agents...]
+        for person in scene.students()
           # Find which answer the actor chose.
           action = person.getActions(
             type: C1.Mixer.IceBreakers.AnswerAction.type
@@ -88,7 +95,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
           groupIndex = _.findIndex scene.constructor.groups, (group) => actorClass in group.npcMembers()
           startingPositions[actorClass.id()] = scene.constructor.answerLandmarks[groupIndex]
 
-        # TODO: Position agents.
+        # TODO: Position other agents.
 
         if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
           # Position coordinators.
@@ -153,8 +160,10 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
             ]
 
           if eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup
-            if @script.state 'JoinStudyGroupContinue'
-              @startScript label: 'JoinStudyGroupContinue'
+            @startScriptAtLatestCheckpoint [
+              'JoinStudyGroupIntro'
+              'JoinStudyGroupContinue'
+            ]
 
           if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
             @startScript label: 'CoordinatorIntro'
@@ -180,8 +189,9 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
     @_enterContextAutorun?.stop()
     @_continueAfterBreakAutorun?.stop()
     @_autoStartScriptAutorun?.stop()
+    @_agentActionsSubscriptionsAutorun?.stop()
 
-    @_agentActionsSubscription?.stop()
+    @_studyGroupMembershipSubscription?.stop()
 
     scene.cleanTalkToClassmatesEnd()
 

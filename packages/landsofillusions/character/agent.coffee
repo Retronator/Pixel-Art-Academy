@@ -3,7 +3,7 @@ AM = Artificial.Mummification
 LOI = LandsOfIllusions
 RA = Retronator.Accounts
 
-# A wrapper around a character instance that represents a character from another player.
+# A wrapper around a character instance that represents a character from a player.
 class LOI.Character.Agent extends LOI.Character.Person
   @id: -> 'LandsOfIllusions.Character.Agent'
 

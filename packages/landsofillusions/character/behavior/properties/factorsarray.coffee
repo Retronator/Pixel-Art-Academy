@@ -18,6 +18,6 @@ class LOI.Character.Behavior.Personality.FactorsArray extends LOI.Character.Part
         parent: @
   
       # Set the factor index.
-      factorPart.properties.index.options.dataLocation factor.options.type
+      factorPart.properties.index.options.dataLocation type
 
     factorPart

@@ -58,17 +58,51 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   # Methods
 
   @joinGroup: new AB.Method name: "#{@id()}.joinGroup"
-    
-  things: -> _.flatten [
-    HQ.Actors.Shelley
-    @constructor.Retro
-    HQ.Actors.Alexandra
-    HQ.Actors.Reuben
-    @constructor.actorClasses
-    C1.Mixer.Table
-    C1.Mixer.Marker
-    C1.Mixer.Stickers
-  ]
+  
+  # Subscriptions
+  
+  @latestStudyGroupMembers = new AB.Subscription
+    name: "#{@id()}.latestStudyGroupMembers"
+    query: =>
+      membershipIds = []
+
+      # TODO: Change to @groups when upgrading to CoffeeScript 2.4.
+      for group in C1.Mixer.GalleryWest.groups
+        memberships = LOI.Character.Membership.documents.fetch
+          groupId: group.id
+        ,
+          sort:
+            joinTime: -1
+          limit: 2
+
+        for membership in memberships
+          membershipIds.push membership._id
+
+      LOI.Character.Membership.documents.find
+        _id: $in: membershipIds
+
+  otherAgents: ->
+    # Two latest agents from each study group should be present at the mixer.
+    for membership in @constructor.latestStudyGroupMembers.query().fetch()
+      LOI.Character.getAgent membership.character._id
+      
+  agents: -> [LOI.agent(), @otherAgents()...]
+  actors: -> LOI.adventure.getCurrentThing actorClass for actorClass in @constructor.actorClasses
+  students: -> [@agents()..., @actors()...]
+  otherStudents: -> [@otherAgents()..., @actors()...]
+
+  things: ->
+    _.flatten [
+      HQ.Actors.Shelley
+      @constructor.Retro
+      HQ.Actors.Alexandra
+      HQ.Actors.Reuben
+      @constructor.actorClasses
+      @otherAgents()
+      C1.Mixer.Table
+      C1.Mixer.Marker
+      C1.Mixer.Stickers
+    ]
 
   eventPhase: ->
     script = @listeners[0].script
@@ -99,18 +133,16 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   cleanTalkToClassmatesEnd: ->
     Meteor.clearTimeout @_talkToClassmatesEndTimeout
 
-  _animateActorsOnQuestion: (question) ->
-    for actorClass in @constructor.actorClasses
-      actor = LOI.adventure.getCurrentThing actorClass
-
-      # Find which answer the actor chose.
-      action = actor.getActions(
+  _animateOtherStudentsOnQuestion: (question) ->
+    for student in @otherStudents()
+      # Find which answer the student chose.
+      action = student.getActions(
         type: C1.Mixer.IceBreakers.AnswerAction.type
         'content.question': question
       )[0]
 
       # Go to the landmark that corresponds to the answer.
-      @_movePersonToAnswerLandmark actor, action.content.answer
+      @_movePersonToAnswerLandmark student, action.content.answer
 
   _movePersonToAnswerLandmark: (person, answer) ->
     @_movePersonToLandmark person, @constructor.answerLandmarks[answer]
@@ -141,16 +173,16 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
     @_movePersonToAnswerLandmark character, answer
 
   _moveStudentsToLandmark: (landmark) ->
-    for student in @_getStudents()
+    for student in @students()
       @_movePersonToLandmark student, landmark
 
   _faceStudentsToLandmark: (landmark) ->
-    for student in @_getStudents()
+    for student in @students()
       renderObject = student.avatar.getRenderObject()
       renderObject.facePosition landmark
 
   _moveStudentsToAudience: ->
-    for student in @_getStudents()
+    for student in @students()
       renderObject = student.avatar.getRenderObject()
       center = LOI.adventure.world.getPositionVector 'InFrontOfProjector'
       relativePositionToCenter = new THREE.Vector3().subVectors renderObject.position, center
@@ -169,9 +201,3 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
       targetPosition = new THREE.Vector3().addVectors center, relativePositionToCenter
 
       @_movePersonToLandmark student, targetPosition
-
-  _getStudents: ->
-    _.flatten [
-      LOI.character()
-      LOI.adventure.getCurrentThing actorClass for actorClass in @constructor.actorClasses
-    ]

@@ -183,6 +183,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/gallerywest-listener');
   api.addFile('chapter1/sections/mixer/scenes/gallerywest/retro');
   api.addServerFile('chapter1/sections/mixer/scenes/gallerywest/methods-server');
+  api.addServerFile('chapter1/sections/mixer/scenes/gallerywest/subscriptions');
 
   api.addThing('chapter1/sections/mixer/scenes/gallerywest/student..');
 

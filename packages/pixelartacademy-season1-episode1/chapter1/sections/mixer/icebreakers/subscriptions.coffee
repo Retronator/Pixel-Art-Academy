@@ -17,7 +17,7 @@ C1.Mixer.IceBreakers.AnswerAction.latestAnswersForCharacter.publish (characterId
   for question of C1.Mixer.IceBreakers.Questions
     answerActionsForQuestion[question] = _.find (answerActions), (answerAction) => answerAction.content.question is question
 
-  answerActionIds = (answerAction._id for question, answerAction of answerActionsForQuestion)
+  answerActionIds = (answerAction._id for question, answerAction of answerActionsForQuestion when answerAction)
 
   LOI.Memory.Action.documents.find
     _id: $in: answerActionIds
