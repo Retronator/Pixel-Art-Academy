@@ -14,3 +14,7 @@ class LOI.Character.Membership extends AM.Document
     name: @id()
     fields: =>
       character: Document.ReferenceField LOI.Character, ['debugName']
+
+  # Subscriptions
+
+  @forCharacterId: @subscription 'forCharacterId'

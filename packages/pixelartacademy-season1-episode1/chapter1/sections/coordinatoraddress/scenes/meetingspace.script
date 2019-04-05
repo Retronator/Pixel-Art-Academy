@@ -20,6 +20,20 @@ npc1:
 <!-- Agents dynamic introductions -->
 
 ## AgentsIntroduction
+
+> Introductions continue around the circle.
+
+### AgentsIntroduction
+
+-> [End]
+
+## DefaultIntroduction
+
+pc: Hi! I'm _pc_.
+
+### DefaultIntroductionEnd
+
+-> [end]
   
 <!-- Player introduction -->
 

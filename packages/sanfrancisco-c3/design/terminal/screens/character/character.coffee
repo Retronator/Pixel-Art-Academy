@@ -102,10 +102,14 @@ class C3.Design.Terminal.Character extends AM.Component
       confirmButtonClass: "positive-button"
       cancelButtonText: "Cancel"
       confirmAction: =>
+        # TODO: Show a loading screen since texture rendering takes a while.
         LOI.Character.approveDesign character._id, (error) =>
           if error
             console.error error
+            # TODO: Show an error dialog to the user.
             return
+
+          # TODO: Remove loading screen.
 
           # Nothing to do if we're using the character editor outside of the game.
           return unless LOI.adventure
