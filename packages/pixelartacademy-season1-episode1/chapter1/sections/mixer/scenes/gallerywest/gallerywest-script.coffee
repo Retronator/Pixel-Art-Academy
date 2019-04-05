@@ -85,18 +85,22 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       JoinStudyGroupMovement: (complete) =>
         # Students go to their group.
-        actors = (LOI.adventure.getCurrentThing actorClass for actorClass in scene.constructor.actorClasses)
+        moveStudent = (student, groupIndex) =>
+          # Start movement after some deliberation.
+          Meteor.setTimeout =>
+            landmark = scene.constructor.answerLandmarks[groupIndex]
+            scene._movePersonToLandmark student, landmark, faceLandmark: landmark
+          ,
+            Math.random() * 5000
 
-        for actor in actors
-          do (actor) =>
-            groupIndex = _.findIndex scene.constructor.groups, (group) => actor.constructor in group.npcMembers()
+        for actor in scene.actors()
+          groupIndex = _.findIndex scene.constructor.groups, (group) => actor.constructor in group.npcMembers()
+          moveStudent actor, groupIndex
 
-            # Start movement after some deliberation.
-            Meteor.setTimeout =>
-              landmark = scene.constructor.answerLandmarks[groupIndex]
-              scene._movePersonToLandmark actor, landmark, faceLandmark: landmark
-            ,
-              Math.random() * 10000
+        for agent in scene.otherAgents()
+          group = LOI.Adventure.Thing.getClassForId agent.studyGroupMembership.groupId
+          groupIndex = scene.constructor.groups.indexOf group
+          moveStudent agent, groupIndex
 
         complete()
 
@@ -143,19 +147,35 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       CoordinatorIntro: (complete) =>
         C1.prepareGroupInfoInScript @
-        
-        # Make students and coordinators face each other.
-        facingPositions =
+        # Make coordinators face the students.
+        LOI.adventure.director.facePosition
           "#{HQ.Actors.Shelley.id()}": 'MixerMiddle'
           "#{HQ.Actors.Reuben.id()}": 'MixerRight'
           "#{HQ.Actors.Alexandra.id()}": 'MixerLeft'
+
+        complete()
+
+      CoordinatorAddressStart: (complete) =>
+        # Make students face the coordinators.
+        facingPositions = {}
 
         for actorClass in scene.constructor.actorClasses
           group = _.find scene.constructor.groups, (group) => actorClass in group.npcMembers()
           facingPositions[actorClass.id()] = group.coordinator().id()
 
-        # TODO: Make agents face their coordinator.
+        for agent in scene.otherAgents()
+          group = LOI.Adventure.Thing.getClassForId agent.studyGroupMembership.groupId
+          facingPositions[agent._id] = group.coordinator().id()
+
+        characterStudyGroupId = C1.readOnlyState 'studyGroupId'
+        characterStudyGroup = LOI.Adventure.Thing.getClassForId characterStudyGroupId
+        facingPositions[LOI.characterId()] = characterStudyGroup.coordinator().id()
 
         LOI.adventure.director.facePosition facingPositions
           
+        complete()
+
+      MixerEnd: (complete) =>
+        # Exit the mixer context.
+        LOI.adventure.exitContext()
         complete()

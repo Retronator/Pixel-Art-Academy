@@ -89,13 +89,18 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       else if eventPhase in [C1.Mixer.GalleryWest.EventPhases.JoinGroup, C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro]
         # Position students in their groups.
-        actors = (LOI.adventure.getCurrentThing actorClass for actorClass in C1.Mixer.GalleryWest.actorClasses)
-
         for actorClass in scene.constructor.actorClasses
           groupIndex = _.findIndex scene.constructor.groups, (group) => actorClass in group.npcMembers()
           startingPositions[actorClass.id()] = scene.constructor.answerLandmarks[groupIndex]
 
-        # TODO: Position other agents.
+        for agent in scene.otherAgents()
+          group = LOI.Adventure.Thing.getClassForId agent.studyGroupMembership.groupId
+          groupIndex = scene.constructor.groups.indexOf group
+          startingPositions[agent._id] = scene.constructor.answerLandmarks[groupIndex]
+
+        group = LOI.Adventure.Thing.getClassForId C1.readOnlyState 'studyGroupId'
+        groupIndex = scene.constructor.groups.indexOf group
+        startingPositions[LOI.characterId()] = scene.constructor.answerLandmarks[groupIndex]
 
         if eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
           # Position coordinators.

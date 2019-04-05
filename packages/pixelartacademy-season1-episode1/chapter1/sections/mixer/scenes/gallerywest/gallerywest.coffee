@@ -84,7 +84,10 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   otherAgents: ->
     # Two latest agents from each study group should be present at the mixer.
     for membership in @constructor.latestStudyGroupMembers.query().fetch()
-      LOI.Character.getAgent membership.character._id
+      # Also attach the memebership information to the agent.
+      agent = LOI.Character.getAgent membership.character._id
+      agent.studyGroupMembership = membership
+      agent
       
   agents: -> [LOI.agent(), @otherAgents()...]
   actors: -> LOI.adventure.getCurrentThing actorClass for actorClass in @constructor.actorClasses
@@ -141,8 +144,12 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
         'content.question': question
       )[0]
 
-      # Go to the landmark that corresponds to the answer.
-      @_movePersonToAnswerLandmark student, action.content.answer
+      # Go to the landmark that corresponds to the answer, after some deliberation.
+      do (student, action) =>
+        Meteor.setTimeout =>
+          @_movePersonToAnswerLandmark student, action.content.answer
+        ,
+          Math.random() * 5000
 
   _movePersonToAnswerLandmark: (person, answer) ->
     @_movePersonToLandmark person, @constructor.answerLandmarks[answer]
