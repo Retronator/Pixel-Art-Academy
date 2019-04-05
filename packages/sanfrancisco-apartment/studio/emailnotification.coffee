@@ -33,16 +33,22 @@ class Studio.EmailNotification extends LOI.Adventure.Thing
         location: @inboxLocation
         timelineId: LOI.adventure.currentTimelineId()
 
+      # TODO: Remove debug output after fixing double notifications.
+      console.log "Checking inbox"
+      console.log "not?", email.wasNotified(), email for email in inbox.things()
+
       unless _.every (email.wasNotified() for email in inbox.things())
         Tracker.nonreactive =>
           @listeners[0].startScript()
 
-          # TODO: Remove after finished debugging double notifications.
           console.log "email ping"
-          console.trace()
+          console.log "not?", email.wasNotified(), email for email in inbox.things()
 
           for email in inbox.things() when not email.wasNotified()
+            console.log "marking email", email
             email.markAsNotified()
+
+        console.log "done notifs"
 
   destroy: ->
     super arguments...

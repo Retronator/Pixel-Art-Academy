@@ -209,6 +209,9 @@ Package.onUse(function(api) {
   // Coordinator address
 
   api.addFile('chapter1/sections/coordinatoraddress..');
+  api.addFile('chapter1/sections/coordinatoraddress/context');
+  api.addFile('chapter1/sections/coordinatoraddress/characterintroduction');
+  api.addServerFile('chapter1/sections/coordinatoraddress/subscriptions');
 
   api.addThing('chapter1/sections/coordinatoraddress/scenes/meetingspace');
 });

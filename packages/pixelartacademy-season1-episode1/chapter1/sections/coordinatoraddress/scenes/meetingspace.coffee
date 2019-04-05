@@ -46,11 +46,22 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
         scene.listenForCharacterIntroduction()
         complete()
 
+      MeetingEnd: (complete) =>
+        # Exit context after the section had time to end.
+        Meteor.setTimeout => LOI.adventure.exitContext()
+        complete()
+
   # Listener
 
   onEnter: (enterResponse) ->
     scene = @options.parent
 
+    # Player should be in the coordinator address context.
+    @_enterContextAutorun = @autorun (computation) =>
+      return if LOI.adventure.currentContext() instanceof C1.CoordinatorAddress.Context
+
+      LOI.adventure.enterContext C1.CoordinatorAddress.Context
+      
     # Script should start automatically when at location.
     @_scriptStartAutorun = @autorun (computation) =>
       return unless @scriptsReady()
@@ -77,6 +88,7 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
       ]
       
   cleanup: ->
+    @_enterContextAutorun?.stop()
     @_scriptStartAutorun?.stop()
 
   onCommand: (commandResponse) ->
@@ -86,14 +98,20 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
         # Remove text from narrative since it will be displayed in a separate node.
         LOI.adventure.interface.narrative.removeLastCommand()
 
-        message = _.trim _.last(likelyAction.translatedForm), '"'
+        introduction = _.trim _.last(likelyAction.translatedForm), '"'
 
         dialogueLine = new LOI.Adventure.Script.Nodes.DialogueLine
-          actor: LOI.Character.getAgent LOI.characterId()
-          line: message
+          actor: LOI.agent()
+          line: introduction
           next: @script.startNode.labels.PlayerIntroductionEnd
 
         LOI.adventure.director.startNode dialogueLine
+
+        # Create an action for this character's introduction.
+        LOI.Memory.Action.do C1.CoordinatorAddress.CharacterIntroduction.type, LOI.characterId(),
+          LOI.adventure.currentSituationParameters()
+        ,
+          {introduction}
 
       commandResponse.onPhrase
         form: [Vocabulary.Keys.Verbs.Say, '""']

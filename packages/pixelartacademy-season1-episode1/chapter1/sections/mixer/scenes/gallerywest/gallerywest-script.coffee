@@ -176,6 +176,6 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         complete()
 
       MixerEnd: (complete) =>
-        # Exit the mixer context.
-        LOI.adventure.exitContext()
+        # Exit context after the section had time to end.
+        Meteor.setTimeout => LOI.adventure.exitContext()
         complete()

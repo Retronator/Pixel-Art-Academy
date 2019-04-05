@@ -8,9 +8,9 @@
 
 -> [AlreadyMetGreeting] `studentInstance.personState('alreadyMet')`
 
-student: Hi, I'm `studentInstance.fullName()`.
+char: Hi, I'm `@character.name()`.
 
-char: Nice to meet you, `studentInstance.fullName()`. I'm `@character.name()`.
+student: Nice to meet you, `@character.name()`. I'm `studentInstance.fullName()`.
 
 `studentInstance.personState('alreadyMet', true)`
 `studentInstance.personState('introduced', true)`
