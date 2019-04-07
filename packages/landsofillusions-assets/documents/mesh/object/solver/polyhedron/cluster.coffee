@@ -135,8 +135,8 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     verticesArray = new Float32Array @points.length * elementsPerVertex
     colorsArray = new Float32Array @points.length * elementsPerVertex
 
-    meshData = options.meshData()
-    palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
+    mesh = @layerCluster.layer.object.mesh
+    palette = mesh.customPalette or LOI.Assets.Palette.documents.findOne mesh.palette._id
     paletteColor = @properties.paletteColor
     color = palette.ramps[paletteColor.ramp].shades[paletteColor.shade]
 

@@ -62,6 +62,12 @@ class LOI.Assets.Mesh.MapField
     @contentUpdated()
     @_mapChangedDependency.changed()
 
+  clear: ->
+    @map = {}
+
+    @contentUpdated()
+    @_mapChangedDependency.changed()
+
   contentUpdated: ->
     @_updatedDependency.changed()
     @parent.contentUpdated()

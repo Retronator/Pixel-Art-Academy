@@ -17,7 +17,16 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
       if mesh = @mesh()
         @add mesh
 
-      @layer.object.mesh.options.sceneManager.scene.updated()
+      options = @layer.object.mesh.options
+
+      if options.debug?()
+        # Add points.
+        solverCluster = @clusterData.layer.object.solver.clusters[@clusterData.id]
+        points = solverCluster.getPoints()
+        points.layers.set 2
+        @add points
+
+      options.sceneManager.scene.updated()
 
   _generateGeometry: ->
     return unless geometryData = @clusterData.geometry()

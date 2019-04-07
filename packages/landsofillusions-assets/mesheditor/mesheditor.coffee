@@ -72,6 +72,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
           LOI.Assets.SpriteEditor.Actions.FlipHorizontal.id()
           null
           LOI.Assets.Editor.Actions.Clear.id()
+          LOI.Assets.MeshEditor.Actions.RecomputeMesh.id()
         ]
       ,
         caption: 'View'

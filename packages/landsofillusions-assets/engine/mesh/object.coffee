@@ -22,6 +22,19 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
       # Add new children.
       @add layer for layer in layers
 
+      if @mesh.options.debug?()
+        currentCluster = @mesh.options.currentCluster?()
+
+        # Add edge lines.
+        for edge in objectData.solver.edges
+
+          # Do not draw edges of unselected clusters in debug mode.
+          continue if currentCluster and currentCluster not in [edge.clusterA.layerCluster, edge.clusterB.layerCluster]
+
+          lineSegments = edge.getLineSegments objectData.mesh.cameraAngles.get 0
+          lineSegments.layers.set 2
+          @add lineSegments
+      
       @mesh.options.sceneManager.scene.updated()
 
     # Update visibility.

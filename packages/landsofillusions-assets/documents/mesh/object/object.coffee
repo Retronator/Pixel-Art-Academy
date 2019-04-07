@@ -60,3 +60,18 @@ class LOI.Assets.Mesh.Object
 
   setSolver: (solverClassName) ->
     @solver = new @constructor.Solver[solverClassName] @
+    
+  recompute: ->
+    # Clear all layer clusters.
+    for layer in @layers.getAll()
+      layer.clusters.clear()
+
+    # Create a fresh solver.
+    @solver = new @solver.constructor @
+
+    # Recompute all clusters.
+    @lastClusterId = 0
+
+    for layer in @layers.getAll()
+      for picture in layer.pictures.getAll()
+        picture.recomputeClusters()

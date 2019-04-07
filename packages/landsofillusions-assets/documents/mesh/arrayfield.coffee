@@ -94,6 +94,12 @@ class LOI.Assets.Mesh.ArrayField
     @contentUpdated()
     @_arrayChangedDependency.changed()
 
+  clear: ->
+    @array = []
+
+    @contentUpdated()
+    @_arrayChangedDependency.changed()
+
   contentUpdated: ->
     @_updatedDependency.changed()
     @parent.contentUpdated()

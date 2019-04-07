@@ -28,7 +28,15 @@ class LOI.Assets.Mesh.Object.Layer.Picture
     @bounds = new LOI.Assets.Mesh.ValueField @, 'bounds', @_bounds
 
     # Recompute clusters for the first time if we didn't get them.
-    @_recomputeClusters [], [] unless data.clusters and data.maps?.clusterId
+    @recomputeClusters() unless data.clusters and data.maps?.clusterId
+    
+  recomputeClusters: ->
+    # Remove all cluster data.
+    @clusters = {}
+    delete @maps.clusterId
+
+    # Do a fresh recomputation.
+    @_recomputeClusters [], []
 
   _calculateBoundsEdges: ->
     @_bounds.left = @_bounds.x

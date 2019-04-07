@@ -299,6 +299,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/history');
   api.addFile('mesheditor/actions/save');
   api.addFile('mesheditor/actions/shadowsenabled');
+  api.addFile('mesheditor/actions/recomputemesh');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');
