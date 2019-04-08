@@ -87,7 +87,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
           startingPositions[personId] = C1.Mixer.GalleryWest.answerLandmarks[action.content.answer]
           startingFacingPositions[personId] = 'InFrontOfProjector'
 
-      else if eventPhase in [C1.Mixer.GalleryWest.EventPhases.JoinGroup, C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro]
+      else if (eventPhase is C1.Mixer.GalleryWest.EventPhases.JoinGroup and @script.state 'JoinStudyGroupContinue') or eventPhase is C1.Mixer.GalleryWest.EventPhases.CoordinatorIntro
         # Position students in their groups.
         for actorClass in scene.constructor.actorClasses
           groupIndex = _.findIndex scene.constructor.groups, (group) => actorClass in group.npcMembers()
@@ -112,6 +112,9 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
         # Position students randomly.
         for actorClass in scene.constructor.actorClasses
           startingPositions[actorClass.id()] = 'GalleryFloor'
+
+        for agent in scene.otherAgents()
+          startingPositions[agent._id] = 'GalleryFloor'
 
       LOI.adventure.director.setPosition startingPositions
       LOI.adventure.director.facePosition startingFacingPositions

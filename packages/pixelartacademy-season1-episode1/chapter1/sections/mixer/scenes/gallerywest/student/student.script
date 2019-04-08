@@ -51,7 +51,7 @@ char: `_profile.country`!
 
 ## Age
 
-student: No problem, I'm `_studentProfile.age`.
+student: Of course, I'm `_studentProfile.age`.
 
 `_ageDifference = _profile.age - _studentProfile.age`
 -> [SameAge] `_ageDifference is 0`
@@ -194,9 +194,9 @@ char: `_profile.aspiration` `true` <!-- We add a no-op condition to output just 
 > Introvert `_studentAnswers.ExtrovertIntrovert == 2`
 > Extrovert/Introvert `_studentAnswers.ExtrovertIntrovert == 1`
 
-> Individually `_studentAnswers.IndividualTeam == 0`
+> Individual `_studentAnswers.IndividualTeam == 0`
 > Team `_studentAnswers.IndividualTeam == 2`
-> Individually/Team `_studentAnswers.IndividualTeam == 1`
+> Individual/Team `_studentAnswers.IndividualTeam == 1`
 
 -> [End]
 

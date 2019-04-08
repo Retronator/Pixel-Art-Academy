@@ -102,6 +102,7 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
 
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.TalkTo, student]
+          priority: 1
           action: =>
             # Prepare character variables.
             prepareScriptForStudent()

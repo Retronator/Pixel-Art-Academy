@@ -62,14 +62,14 @@ coordinator:
   
 npc2:
   Hello everyone! I'm _npc2_ and I come from Russia. I here hope to be accepted to the Academy and do art for living. Apologize in advance for my English. `_studyGroup.npc2.name is 'Ace'`
-  Hey, I'm _npc2_. I love all kinds of art, movies, music … So if anyone is going to a party, let me know! `_studyGroup.npc2.name is 'Lisa'`
+  Hey, I'm _npc2_. I love all kinds of art, movies, music, dancing … If anyone is going to a party, let me know! `_studyGroup.npc2.name is 'Lisa'`
   Hi, I'm _npc2_. I love building things. I have a huge collection of LEGOs. Probably way too many LEGOs. `_studyGroup.npc2.name is 'Jaxx'`
 
 > _coordinator_ smiles at _npc2_.
 
 coordinator: 
   We understand you great, no worries. `_studyGroup.npc2.name is 'Ace'`
-  Alright, we will. `_studyGroup.npc2.name is 'Lisa'`
+  Sounds good, we will. `_studyGroup.npc2.name is 'Lisa'`
   Well, there's no such thing as too many LEGOs. `_studyGroup.npc2.name is 'Jaxx'`
   
 coordinator:

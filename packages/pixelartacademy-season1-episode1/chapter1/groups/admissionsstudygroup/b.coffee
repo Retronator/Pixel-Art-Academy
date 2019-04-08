@@ -5,7 +5,7 @@ HQ = Retronator.HQ
 
 class C1.Groups.AdmissionsStudyGroup.B extends C1.Groups.AdmissionsStudyGroup
   @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup.B'
-  @location: -> HQ.Bookshelves
+  @location: -> HQ.Store.Bookshelves
 
   @coordinator: -> HQ.Actors.Shelley
   @npcMembers: -> [
