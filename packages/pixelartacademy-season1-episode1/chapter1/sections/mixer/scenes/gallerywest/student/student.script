@@ -55,10 +55,10 @@ student: Of course, I'm `_studentProfile.age`.
 
 `_ageDifference = _profile.age - _studentProfile.age`
 -> [SameAge] `_ageDifference is 0`
--> [AskDirectly] `_ageDifference <= -5 or _ageDifference >= 5`.
+-> [AskDirectly] `_ageDifference <= -5 or _ageDifference >= 5`
 
-student: And I'm guessing you're a bit younger? `_ageDifference < 0`.
-student: And you're kind of the same, or a bit older? `_ageDifference > 0`.
+student: And I'm guessing you're a bit younger? `_ageDifference < 0`
+student: And you're kind of the same, or a bit older? `_ageDifference > 0`
 
 char: Yeah, I'm `_profile.age`!
 
