@@ -32,6 +32,34 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
 
     _.remove @segments, (segment) -> not segment.added
 
+    # Calculate adjacency.
+    @lines = []
+
+    segment.line = null for segment in @segments
+
+    pointEquals = (a, b) => a.x is b.x and a.y is b.y
+
+    for segment, startIndex in @segments when not segment.line
+      line = [segment]
+      segment.line = line
+      added = true
+
+      while added
+        added = false
+
+        for testSegmentIndex in [startIndex + 1...@segments.length]
+          testSegment = @segments[testSegmentIndex]
+          continue if testSegment.line
+
+          for lineSegment in line
+            if pointEquals(lineSegment[0], testSegment[0]) or pointEquals(lineSegment[0], testSegment[1]) or pointEquals(lineSegment[1], testSegment[0]) or pointEquals(lineSegment[1], testSegment[1])
+              line.push testSegment
+              testSegment.line = line
+              added = true
+              break
+
+      @lines.push line
+
   addSegment: (coordinates, startXOffset, startYOffset, endXOffset, endYOffset) ->
     start =
       x: coordinates.x + startXOffset
