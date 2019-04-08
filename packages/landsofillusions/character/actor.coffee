@@ -103,7 +103,15 @@ class LOI.Character.Actor extends LOI.Character.Person
   pronouns: -> @thingAvatar?.pronouns()
   nameAutoCorrectStyle: -> @thingAvatar?.nameAutoCorrectStyle()
   nameNounType: -> @thingAvatar?.nameNounType()
-  descriptiveName: -> @thingAvatar?.descriptiveName()
+
+  descriptiveName: ->
+    # Only use thing's descriptive name if it's actually defined.
+    if @constructor.descriptiveName()
+      @thingAvatar?.descriptiveName()
+
+    else
+      super arguments...
+
   description: -> @thingAvatar?.description()
   color: -> @thingAvatar?.color()
   dialogTextTransform: -> @thingAvatar?.dialogTextTransform()

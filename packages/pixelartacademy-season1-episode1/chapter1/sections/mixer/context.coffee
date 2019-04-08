@@ -9,8 +9,17 @@ class C1.Mixer.Context extends LOI.Adventure.Context
 
   @initialize()
 
-  @illustration: ->
-    cameraAngle: 'Mixer'
+  illustration: ->
+    if C1.Mixer.GalleryWest.Listener.Script.state 'CoordinatorIntro'
+      studyGroupId = C1.readOnlyState 'studyGroupId'
+      letter = _.last studyGroupId
+
+      cameraAngle = "Mixer group #{letter}"
+
+    else
+      cameraAngle = 'Mixer'
+
+    {cameraAngle}
 
   # Listener
   

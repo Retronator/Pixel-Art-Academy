@@ -4,6 +4,7 @@ PAA = PixelArtAcademy
 C1 = PAA.Season1.Episode1.Chapter1
 
 Vocabulary = LOI.Parser.Vocabulary
+Nodes = LOI.Adventure.Script.Nodes
 
 class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
   @id: -> "PixelArtAcademy.Season1.Episode1.Chapter1.Mixer.GalleryWest.Student"
@@ -91,29 +92,27 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
     return unless scene.eventPhase() is C1.Mixer.GalleryWest.EventPhases.TalkToClassmates
 
     # You should be able to talk to all PC and NPC students.
-    for actorClass in scene.constructor.actorClasses
-      do (actorClass) =>
-        actor = LOI.adventure.getCurrentThing actorClass
-
+    for student in scene.otherStudents()
+      do (student) =>
         prepareScriptForStudent = =>
           profile = @prepareProfile LOI.character().document().profile
           @script.ephemeralState 'profile', profile
 
-          @script.prepareForStudent actor
+          @script.prepareForStudent student
 
         commandResponse.onPhrase
-          form: [Vocabulary.Keys.Verbs.TalkTo, actor]
+          form: [Vocabulary.Keys.Verbs.TalkTo, student]
           action: =>
             # Prepare character variables.
             prepareScriptForStudent()
             LOI.adventure.director.startScript @script
 
         commandResponse.onPhrase
-          form: [Vocabulary.Keys.Verbs.LookAt, actor]
+          form: [Vocabulary.Keys.Verbs.LookAt, student]
           priority: 1
           action: =>
             prepareScriptForStudent()
-            LOI.adventure.director.startNode new NarrativeNode line: actor.description()
+            LOI.adventure.director.startNode new Nodes.NarrativeLine line: student.description()
             LOI.adventure.director.startScript @script, label: 'LookAtStudent'
 
         lookAtAnswersAction = =>
@@ -121,15 +120,15 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Listener
           LOI.adventure.director.startScript @script, label: 'LookAtAnswers'
 
         commandResponse.onPhrase
-          form: [Vocabulary.Keys.Verbs.LookAt, possessive: actor, [@avatars.answers, @avatars.answer]]
+          form: [Vocabulary.Keys.Verbs.LookAt, possessive: student, [@avatars.answers, @avatars.answer]]
           action: lookAtAnswersAction
 
         commandResponse.onPhrase
-          form: [Vocabulary.Keys.Verbs.LookAt, possessive: actor, [@avatars.stickers, @avatars.sticker]]
+          form: [Vocabulary.Keys.Verbs.LookAt, possessive: student, [@avatars.stickers, @avatars.sticker]]
           action: lookAtAnswersAction
 
         commandResponse.onPhrase
-          form: [Vocabulary.Keys.Verbs.LookAt, possessive: actor, @avatars.nameTag]
+          form: [Vocabulary.Keys.Verbs.LookAt, possessive: student, @avatars.nameTag]
           action: =>
             prepareScriptForStudent()
             LOI.adventure.director.startScript @script, label: 'LookAtNameTag'

@@ -183,8 +183,8 @@ char: `_profile.aspiration` `true` <!-- We add a no-op condition to output just 
 ## DisplayAnswers
 
 > Hobby `_studentAnswers.HobbyProfession == 0`
-> Profession `_studentAnswers.HobbyProfession == 2`
-> Hobby/Profession `_studentAnswers.HobbyProfession == 1`
+> Professional `_studentAnswers.HobbyProfession == 2`
+> Hobby/Professional `_studentAnswers.HobbyProfession == 1`
 
 > Pixel art `_studentAnswers.PixelArtOtherStyles == 0`
 > Non-pixel art styles `_studentAnswers.PixelArtOtherStyles == 2`

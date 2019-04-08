@@ -47,7 +47,6 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
     @listeners[0].listenForCharacterIntroduction = true
 
   _introduceNextAgent: ->
-    console.log "left", @_agentIdsLeftForIntruductions
     unless agentId = @_agentIdsLeftForIntruductions.shift()
       # Continue to the rest of the meeting.
       @listeners[0].startScript label: 'PlayerIntroduction'

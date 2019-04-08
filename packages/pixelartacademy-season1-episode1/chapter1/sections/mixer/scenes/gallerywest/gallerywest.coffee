@@ -69,7 +69,8 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
       # TODO: Change to @groups when upgrading to CoffeeScript 2.4.
       for group in C1.Mixer.GalleryWest.groups
         memberships = LOI.Character.Membership.documents.fetch
-          groupId: group.id
+          groupId: group.id()
+          'character._id': $ne: LOI.characterId()
         ,
           sort:
             joinTime: -1

@@ -245,7 +245,7 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
     if eventPhase is C1.Mixer.GalleryWest.EventPhases.Answering
       writeAnswerAction = =>
         firstAnswerIndex = @script.state('answers')[0]
-        answers = ['Hobby', 'Hobby + Professional', 'Professional']
+        answers = ['Hobby', 'Hobby/Professional', 'Professional']
 
         @script.ephemeralState 'firstAnswer', answers[firstAnswerIndex]
 

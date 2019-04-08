@@ -17,7 +17,6 @@ class C3.Design.Terminal.MainMenu extends AM.Component
     @characters = new ComputedField =>
       return unless characters = Retronator.user()?.characters
 
-      # Load full documents so we can tell if designs are approved.
       characters = for character in characters
         LOI.Character.documents.findOne character._id
 

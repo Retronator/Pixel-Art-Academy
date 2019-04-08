@@ -8,7 +8,7 @@ class LOI.Character.Agent extends LOI.Character.Person
   @id: -> 'LandsOfIllusions.Character.Agent'
 
   @fullName: -> "Person"
-  @description: -> "It's a person."
+  @description: -> "It's _person_."
 
   @translations: ->
     yourCharacter: "It's your character."
@@ -52,7 +52,7 @@ class LOI.Character.Agent extends LOI.Character.Person
       @translations().yourCharacter
 
     else
-      @thingAvatar.description()
+      LOI.Character.formatText @thingAvatar.description(), 'person', @instance
 
   # Actions
 

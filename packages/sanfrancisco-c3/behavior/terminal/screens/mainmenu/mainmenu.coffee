@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
 C3 = SanFrancisco.C3
@@ -12,10 +13,19 @@ class C3.Behavior.Terminal.MainMenu extends AM.Component
     super arguments...
     
     @characters = new ComputedField =>
-      user = Retronator.user()
+      return unless characters = Retronator.user()?.characters
 
-      _.filter user.characters, (character) =>
-        LOI.Character.documents.findOne(character._id)?.designApproved
+      characters = for character in characters
+        LOI.Character.documents.findOne
+          _id: character._id
+          designApproved: true
+
+      _.pull characters, undefined
+
+      for character in characters
+        character.translatedName = AB.translate(character.avatar.fullName).text
+
+      _.sortBy characters, 'translatedName'
 
   events: ->
     super(arguments...).concat
