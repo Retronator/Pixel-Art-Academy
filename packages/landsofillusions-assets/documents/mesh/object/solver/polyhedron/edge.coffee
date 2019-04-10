@@ -1,5 +1,7 @@
 LOI = LandsOfIllusions
 
+TheilSenRegression = require 'ml-regression-theil-sen'
+
 class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
   constructor: (@clusterA, @clusterB) ->
     # Note: Edge segments are directed so that cluster A is on the right of the segment, cluster B on the left.
@@ -32,6 +34,8 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
 
     _.remove @segments, (segment) -> not segment.added
 
+    return unless @segments.length
+
     # Calculate adjacency.
     @lines = []
 
@@ -59,6 +63,55 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
               break
 
       @lines.push line
+
+    # Calculate best line fit.
+    verticesX = []
+    verticesY = []
+
+    for segment in @segments
+      verticesX.push (segment[0].x + segment[1].x) / 2
+      verticesY.push (segment[0].y + segment[1].y) / 2
+
+    regression = new TheilSenRegression verticesX, verticesY
+
+    # Filter out outliers.
+    minRootMeanSquareDeviation = Number.POSITIVE_INFINITY
+
+    rootMeanSquareDeviations = for line in @lines
+      vertices = []
+
+      for segment in line
+        vertices.push @findVertex segment[0].x, segment[0].y
+        vertices.push @findVertex segment[1].x, segment[1].y
+
+      vertices = _.uniq vertices
+
+      verticesX = (vertex.x for vertex in vertices)
+      verticesY = (vertex.y for vertex in vertices)
+
+      line.score = regression.score verticesX, verticesY
+
+      minRootMeanSquareDeviation = Math.min minRootMeanSquareDeviation, line.score.rmsd
+
+    # Remove all lines with more than double the deviation of the best line.
+    removedLines = _.remove @lines, (line) => line.score.rmsd > minRootMeanSquareDeviation * 2
+
+    for removedLine in removedLines
+      # Remove segments from the map.
+      for removedSegment in removedLine
+        @segmentsMap[removedSegment[0].x][removedSegment[0].y][removedSegment[1].x][removedSegment[1].y] = null
+
+      # Remove segments from the array.
+      _.pull @segments, removedLine...
+
+    # Recalculate edge vertices (used to create edge points when triangulating cluster meshes).
+    # Note: Edge vertices are located in the top-left corner of the pixel at their vertex coordinates.
+    @vertices = []
+    @verticesMap = {}
+
+    for segment in @segments
+      @_addVertex segment[0]
+      @_addVertex segment[1]
 
   addSegment: (coordinates, startXOffset, startYOffset, endXOffset, endYOffset) ->
     start =

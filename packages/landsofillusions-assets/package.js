@@ -14,7 +14,8 @@ Npm.depends({
   'pngjs': '2.3.0',
   'delaunator': '3.0.2',
   'bresenham-zingl': '0.1.1',
-  'pako': '1.0.8'
+  'pako': '1.0.8',
+  'ml-regression-theil-sen': '1.0.0'
 });
 
 Package.onUse(function(api) {
