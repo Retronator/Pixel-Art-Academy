@@ -1,58 +1,74 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterPlanes = (clusters, cameraAngle) ->
-  console.log "Computing cluster planes", clusters, cameraAngle if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
+LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterPlanes = (clusters, edges, cameraAngle) ->
+  console.log "Computing cluster planes", clusters, edges, cameraAngle if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
+
+  # Reset all cluster plane and edge points.
+  cluster.plane.point = null for cluster in clusters
+  edge.line.point = null for edge in edges
 
   # See if we have a cluster overlapping the camera origin and set it as the base to calculate other clusters from.
   origin = cameraAngle.unprojectPoint new THREE.Vector3
 
-  visitedClusters = []
+  clustersLeftCount = clusters.length
 
   if originCluster = _.find(clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate origin.x, origin.y)
     originCluster.setPlanePoint new THREE.Vector3
+    clustersLeftCount--
 
-    # Compute planes for the first time.
-    propagateCluster originCluster, cameraAngle, visitedClusters, []
+  sortedEdges = _.reverse _.sortBy edges, (edge) => edge.segments.length
 
-  # Set all free-floating clusters to go through the origin.
-  for cluster in clusters when cluster not in visitedClusters
-    # Assume the cluster is in the origin plane.
-    cluster.setPlanePoint new THREE.Vector3
-    propagateCluster cluster, cameraAngle, visitedClusters, []
+  while clustersLeftCount
+    positionedCluster = true
 
-propagateCluster = (cluster, cameraAngle, visitedClusters, nextClusters) ->
-  visitedClusters.push cluster
+    while positionedCluster
+      positionedCluster = false
 
-  # Position all edges based on our plane.
-  for otherClusterId, edge of cluster.edges
-    otherCluster = edge.getOtherCluster cluster
+      for edge in sortedEdges when not edge.line.point
+        if edge.clusterA.plane.point and edge.clusterB.plane.point
+          # Both clusters have been positioned, we only need to place this edge.
+          edge.calculateLinePoint()
+          continue
 
-    # Skip clusters that have already been determined.
-    if otherCluster.plane.point
-      # See if the edge needs to bo positioned.
-      edge.caluclateLinePoint() unless edge.line.point
-      continue
+        else if not (edge.clusterA.plane.point or edge.clusterB.plane.point)
+          # None of the clusters have been positioned so we can't do anything with this edge yet.
+          continue
 
-    # Project edge vertices onto cluster. Note that edge vertices are positioned
-    # into the top-left corner of the pixel, so we use the -0.5 offset.
-    vertices = cameraAngle.projectPoints edge.vertices, cluster.getPlane(), -0.5, -0.5
+        else
+          # We can position one of the clusters.
+          if edge.clusterA.plane.point
+            # Cluster B needs to be positioned based on cluster A.
+            sourceCluster = edge.clusterA
+            targetCluster = edge.clusterB
 
-    # Edge point is the average of the projected vertices.
-    edge.line.point = new THREE.Vector3
-    edge.line.point.add vertex for vertex in vertices
-    edge.line.point.multiplyScalar 1 / vertices.length
+          else
+            # Cluster A needs to be positioned based on cluster B.
+            sourceCluster = edge.clusterB
+            targetCluster = edge.clusterA
 
-    # Anchor the other cluster to the edge point.
-    otherCluster.setPlanePoint edge.line.point
+          # Project edge vertices onto cluster. Note that edge vertices are positioned
+          # into the top-left corner of the pixel, so we use the -0.5 offset.
+          vertices = cameraAngle.projectPoints edge.vertices, sourceCluster.getPlane(), -0.5, -0.5
 
-  # Propagate to other clusters.
-  for otherClusterId, edge of cluster.edges
-    otherCluster = edge.getOtherCluster cluster
+          # Edge point is the average of the projected vertices.
+          edge.line.point = new THREE.Vector3
+          edge.line.point.add vertex for vertex in vertices
+          edge.line.point.multiplyScalar 1 / vertices.length
 
-    continue if otherCluster in visitedClusters or otherCluster in nextClusters
+          # Anchor the other cluster to the edge point.
+          targetCluster.setPlanePoint edge.line.point
 
-    nextClusters.push otherCluster
+          positionedCluster = true
+          clustersLeftCount--
+          break
 
-  return unless nextCluster = nextClusters.shift()
+    # We've positioned all the clusters we could. See if there are any clusters left not positioned.
+    if clustersLeftCount
+      # Place the first not positioned cluster to origin.
+      for cluster in clusters when not cluster.plane.point
+        cluster.setPlanePoint new THREE.Vector3
+        clustersLeftCount--
+        break
 
-  propagateCluster nextCluster, cameraAngle, visitedClusters, nextClusters
+  # All clusters have been positioned. Make sure all edges are positioned too.
+  edge.calculateLinePoint() for edge in edges when not edge.line.point

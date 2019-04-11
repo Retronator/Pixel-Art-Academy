@@ -28,7 +28,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
 
     # Recompute cluster planes.
     cameraAngle = @object.mesh.cameraAngles.get 0
-    @constructor.computeClusterPlanes clustersArray, cameraAngle
+    @constructor.computeClusterPlanes clustersArray, @edges, cameraAngle
 
     # Recompute clusters that have have changed.
     @constructor.projectClusterPoints clustersArray, cameraAngle
@@ -80,7 +80,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
 
     # Recompute cluster planes.
     cameraAngle = @object.mesh.cameraAngles.get 0
-    @constructor.computeClusterPlanes clustersArray, cameraAngle
+    @constructor.computeClusterPlanes clustersArray, @edges, cameraAngle
     
     # Recompute clusters that have have changed.
     changedClusters = (cluster for cluster in clustersArray when cluster.changed())
