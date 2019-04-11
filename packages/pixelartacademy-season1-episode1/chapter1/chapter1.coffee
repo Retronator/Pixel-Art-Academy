@@ -43,6 +43,9 @@ class PAA.Season1.Episode1.Chapter1 extends PAA.Adventure.Chapter
     @Groups.SanFranciscoFriends
     @Groups.SanFranciscoFriends.Conversation
     @Groups.Family
+    @Groups.AdmissionsStudyGroup.A
+    @Groups.AdmissionsStudyGroup.B
+    @Groups.AdmissionsStudyGroup.C
   ]
 
   @initialize()

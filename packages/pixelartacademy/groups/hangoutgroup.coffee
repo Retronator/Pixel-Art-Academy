@@ -137,6 +137,7 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
         form: [[Vocabulary.Keys.Verbs.HangOut, Vocabulary.Keys.Verbs.SitDown]]
         action: =>
           presentMembers = scene.presentMembers()
+
           switch presentMembers.length
             when 0 then label = 'NoOne'
             when 1
@@ -165,10 +166,14 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
 
               things = {}
 
-              for personIndex in [1..3]
+              for personIndex in [1..persons.length]
                 things["person#{personIndex}"] = persons[personIndex]
-                @groupScript.ephemeralState "person#{personIndex}", persons[personIndex]?
+                @groupScript.ephemeralState "person#{personIndex}", true
 
               @groupScript.setThings things
+
+          # Clear out the rest of the people.
+          for personIndex in [presentMembers.length + 1..3]
+            @groupScript.ephemeralState "person#{personIndex}", false
 
           LOI.adventure.director.startScript @groupScript, {label}

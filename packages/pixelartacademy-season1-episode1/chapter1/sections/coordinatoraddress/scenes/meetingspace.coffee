@@ -54,6 +54,13 @@ class C1.CoordinatorAddress.MeetingSpace extends LOI.Adventure.Scene
 
     agent = LOI.Character.getAgent agentId
 
+    # Mark agent as met and introduced.
+    agent.personState 'alreadyMet', true
+    agent.personState 'introduced', true
+
+    # Record hangout with agent.
+    agent.recordHangout()
+
     # See if this agent made a custom introduction.
     if introductionAction = C1.CoordinatorAddress.CharacterIntroduction.latestIntroductionForCharacter.query(agentId).fetch()[0]
       # Agent says the introduction directly.

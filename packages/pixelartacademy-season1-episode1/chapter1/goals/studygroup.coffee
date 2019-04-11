@@ -41,7 +41,7 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
     @initialize()
 
-  class @MeetClassmates extends PAA.Learning.Task
+  class @MeetClassmates extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.MeetClassmates'
     @goal: -> Goal
 
@@ -55,7 +55,10 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
 
     @initialize()
 
-  class @JoinStudyGroup extends PAA.Learning.Task
+    @completedConditions: ->
+      C1.Mixer.GalleryWest.scriptState 'MixerStart'
+
+  class @JoinStudyGroup extends PAA.Learning.Task.Automatic
     @id: -> 'PixelArtAcademy.Season1.Episode1.Chapter1.Goals.StudyGroup.JoinStudyGroup'
     @goal: -> Goal
 
@@ -70,6 +73,9 @@ class C1.Goals.StudyGroup extends PAA.Learning.Goal
     @predecessors: -> [Goal.MeetClassmates]
 
     @initialize()
+
+    @completedConditions: ->
+      C1.readOnlyState 'studyGroupId'
 
   @tasks: -> [
     @Yearbook

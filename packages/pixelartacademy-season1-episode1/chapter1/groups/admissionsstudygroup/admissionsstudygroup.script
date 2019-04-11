@@ -1,57 +1,93 @@
 # PixelArtAcademy.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup
 
-## MainQuestions
+## Start
+## JustOne
 
-* Let's hang out sometimes. -> [HangOut] `person.introduced and not _person.inGroup`
-* What's new? -> [WhatsNew] `_person.inGroup`
-* Can I see your study journal? -> [Journal]
-* Bye now! -> [End]
+> _char_ sits down and waits for the study group meeting to start.
 
-## YourName
+coordinator: Hello everyone!
 
-person: I'm `_person.name`.
+person1: Hello! `_person1`
+person2: Hey! `_person2`
+person3: Hi! `_person3`
 
-> _char_ extends _their_ hand.
-
-char: Nice to meet you. I'm `@character.name()`.
-
-`person.introduced = true`
-
--> [MainQuestions]
-
-## HangOut
-
-person: Sounds good! I'll see you at Retronator Café?
-char: it's a deal.
-
-### HangOut
-
--> [MainQuestions]
-
-## WhatsNew
-
-### WhatsNew
-
--> [End]
-
-## Journal
-
--> [NoJournals] `not _person.journalIds.length`
-
-person: Of course! Let me know what you think.
+coordinator: 
+  Let's start our study group meeting.
+  I hope you've made good progress on your admission week tasks.
+  We'll do a quick report of what you've been working on. 
 
 pause
 
-### Journal
+### WhatsNew
+
+## FollowUp
+
+### FollowUp
+
+## ReportProgress
+
+### ReportProgress
+
+coordinator: Good job!
+
+-> [ReciprocityStart] `_person1`
+
+<!-- Don't show the dialog for no reciprocity if it hasn't been explained what it is yet. -->
+-> [AcceptanceCelebrationStart] `not ReciprocityExplanation`
+
+## NoReciprocity
+
+coordinator: Since no-one else is here we'll skip the reciprocity ring.
+
+-> [AcceptanceCelebrationStart]
+
+## ReciprocityStart
+
+-> [Reciprocity] `ReciprocityExplanation`
+
+## ReciprocityExplanation
+
+coordinator: This is how reciprocity ring works.
+
+## Reciprocity
+
+coordinator: Does anyone have any things you want to ask your groupmates?
+
+-> [AcceptanceCelebrationStart]
+
+## AcceptanceCelebrationStart 
+
+-> [MeetingEnd] `not _acceptanceCelebration`
+
+## AcceptanceCelebration
+
+coordinator: Today we have a happy celebration moment!
+
+## MeetingEnd
+
+coordinator:
+  OK, that's it for today.
+  Keep up the pace and I'll see you next time.
 
 -> [End]
 
-## NoJournals
+## FollowUpEnd
 
-person: Oh, I don't actually have one.
+* @Report own progress -> [ReportProgress]
 
--> [MainQuestions]
+## NoOne
 
--> [End]
+> _char_ sits down by _coordinator_.
+
+coordinator: 
+  Looks like it's just you today.
+  But no problem, we'll catch up with the rest tomorrow.
+  So, what have you been working on?
+  
+-> [ReportProgress]
+
+<!-- Not used in admission group hangout. -->
+
+### JustOne
 
 ## End

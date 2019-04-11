@@ -25,12 +25,12 @@ class LOI.Adventure extends LOI.Adventure
     # Returns things that are at the location (and not in the inventory).
     @currentLocationThings = new ComputedField =>
       return unless currentSituation = @currentSituation()
-      @_instantiateThings currentSituation.things()
+      _.uniq @_instantiateThings currentSituation.things()
 
     # Returns things that are in the inventory.
     @currentInventoryThings = new ComputedField =>
       return unless currentInventory = @currentInventory()
-      @_instantiateThings currentInventory.things()
+      _.uniq @_instantiateThings currentInventory.things()
 
     # Returns all physical things (items, characters) that are available to listen to commands.
     @currentPhysicalThings = new ComputedField =>
@@ -72,6 +72,10 @@ class LOI.Adventure extends LOI.Adventure
         @_things[thingId] = thingInstance
 
       thingInstance
+
+  getThing: (thingClassOrId) ->
+    thingClass = _.thingClass thingClassOrId
+    @_instantiateThings([thingClass])[0]
 
   getCurrentThing: (thingClassOrId) ->
     thingClass = _.thingClass thingClassOrId

@@ -113,6 +113,7 @@ class LOI.Adventure.Script
       things = {}
       for key, thingClass of thingClasses
         return unless things[key] = LOI.adventure.getCurrentThing thingClass
+        return unless things[key].ready()
 
       computation.stop()
 
@@ -127,10 +128,6 @@ class LOI.Adventure.Script
 
       for callbackNode in @startNode.callbacks[name]
         callbackNode.callback = callback
-
-    # We expect all callbacks to be set in one go so warn about any that were left unset.
-    for name, callbacks of @startNode.callbacks
-      console.warn "Callback for #{name} was not set" unless callbacks[0]?.callback
 
   _addNode: (node) ->
     # Add the node only if it hasn't already added.
