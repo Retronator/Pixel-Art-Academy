@@ -71,6 +71,11 @@ class LOI.Interface.Text extends LOI.Interface.Text
   _handleDialogueLine: (dialogueLine, options) ->
     return if not options.background and @_waitForNode dialogueLine
 
+    if dialogueLine.command
+      # This is a command to the interface. Simply continue without outputting anything to the narratice.
+      dialogueLine.end()
+      return
+
     unless dialogueLine.actor
       # There is no actor, which means the player is saying this. Simply dump it into the narrative and finish.
       text = @_evaluateLine dialogueLine

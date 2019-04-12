@@ -15,10 +15,10 @@ class LOI.Adventure.Context extends LOI.Adventure.Thing
   @fullName: -> null # Contexts don't need to be named.
 
   onCommand: (commandResponse) ->
-    # You can exit contexts with the back command.
+    # You can exit contexts with the back or continue commands.
     return unless LOI.adventure.currentContext() is @options.parent
 
     commandResponse.onExactPhrase
-      form: [Vocabulary.Keys.Directions.Back]
+      form: [[Vocabulary.Keys.Directions.Back, Vocabulary.Keys.Verbs.Continue]]
       action: =>
         LOI.adventure.exitContext()

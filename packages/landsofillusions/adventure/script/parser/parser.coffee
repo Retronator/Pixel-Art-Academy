@@ -274,6 +274,8 @@ class LOI.Adventure.ScriptFile.Parser
     * dialog line
     --or--
     * @dialog line ...
+    --or--
+    * !dialog line ...
   ###
   _parseChoice: (line) ->
     # Extract the potential conditional out of the line.
@@ -287,21 +289,30 @@ class LOI.Adventure.ScriptFile.Parser
     result = @_parseJump line
     [..., jumpNode] = result if result
     
-    if choiceLine[0] is '@'
-      choiceLine = choiceLine[1..]
-      
-      # Force the player to be the actor, even when synced to the character.
-      actorName = 'player'
-      
-    else
-      # Don't determine an actor (the player or the player's character will deliver it).
-      actorName = null
+    switch choiceLine[0]
+      when '@'
+        choiceLine = choiceLine[1..]
+
+        # Force the player to be the actor, even when synced to the character.
+        actorName = 'player'
+
+      when '!'
+        choiceLine = choiceLine[1..]
+
+        # Mark as command.
+        actorName = null
+        command = true
+
+      else
+        # Don't determine an actor (the player or the player's character will deliver it).
+        actorName = null
 
     # Create a dialog node followed by the jump (or following to the last non-choice node if no jump is present).
     dialogNode = new Nodes.DialogueLine
       line: choiceLine
       next: jumpNode or @lastNonChoiceNode
       actorName: actorName
+      command: command
       
     # Create a choice node that delivers the line if chosen.
     choiceNode = new Nodes.Choice

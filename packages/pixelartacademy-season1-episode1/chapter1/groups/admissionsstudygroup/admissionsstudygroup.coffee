@@ -3,6 +3,8 @@ LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 C1 = PAA.Season1.Episode1.Chapter1
 
+Vocabulary = LOI.Parser.Vocabulary
+
 class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
   # Uses membership to determine its members for the current character.
   @fullName: -> "admissions study group"
@@ -74,6 +76,11 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
       @constructor.coordinator()
     ]
 
+  listenForReciprocityAsk: (@_reciprocityAskCompleteCallback) ->
+    groupListener = _.find @listeners, (listener) => listener instanceof @constructor.HangoutGroupListener
+    groupListener.listenForReciprocityAsk = true
+    groupListener.groupScript.ephemeralState 'reciprocityAsked', false
+
   # Listener
 
   onEnter: (enterResponse) ->
@@ -132,3 +139,69 @@ class C1.Groups.AdmissionsStudyGroup extends PAA.Groups.HangoutGroup
               complete()
 
           LOI.adventure.director.startScript script, label: 'JustUpdateStart'
+
+        ReciprocityAsk: (complete) =>
+          # Pause current callback node so player can perform the say command.
+          LOI.adventure.director.pauseCurrentNode()
+
+          scene.listenForReciprocityAsk complete
+
+    onCommand: (commandResponse) ->
+      scene = @options.parent
+
+      super arguments...
+
+      if @listenForReciprocityAsk
+        # Hijack the say command.
+        sayAction = (likelyAction) =>
+          # Remove text from narrative since it will be displayed from the script.
+          LOI.adventure.interface.narrative.removeLastCommand()
+
+          # Create a new conversation memory.
+          context = new LOI.Memory.Contexts.Conversation()
+          memoryId = context.displayNewMemory()
+          contextId = context.id()
+
+          # Add the Say action.
+          timelineId = LOI.adventure.currentTimelineId()
+          locationId = LOI.adventure.currentLocationId()
+
+          situation = {timelineId, locationId, contextId}
+
+          message = _.trim _.last(likelyAction.translatedForm), '"'
+
+          content =
+            say:
+              text: message
+
+          LOI.Memory.Action.do LOI.Memory.Actions.Say.type, LOI.characterId(), situation, content, memoryId
+
+          LOI.adventure.enterContext context
+
+          Tracker.autorun (computation) =>
+            return if LOI.adventure.currentContext()
+            computation.stop()
+
+            # Mark that a question was asked.
+            @groupScript.ephemeralState 'reciprocityAsked', true
+
+            # Continue with the script.
+            scene._reciprocityAskCompleteCallback()
+
+        commandResponse.onPhrase
+          form: [Vocabulary.Keys.Verbs.Say, '""']
+          priority: 1
+          action: sayAction
+
+        # Also hijack just quotes.
+        commandResponse.onPhrase
+          form: ['""']
+          priority: 1
+          action: sayAction
+
+        # React to back and continue if the player changes their mind and does not use the say command.
+        commandResponse.onExactPhrase
+          form: [[Vocabulary.Keys.Directions.Back, Vocabulary.Keys.Verbs.Continue]]
+          priority: -1
+          action: =>
+            scene._reciprocityAskCompleteCallback()

@@ -132,7 +132,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
         characterId = action.character._id
 
         # Convert the character into a person, performing the starting action.
-        person = new LOI.Character.Person characterId
+        person = new LOI.Character.Agent characterId
         person.setAction action
 
         person
@@ -145,7 +145,7 @@ class LOI.Memory.Context extends LOI.Adventure.Context
           characterPresent = _.find people, (person) => person._id is characterId
 
           # Create a person without an action set.
-          people.push new LOI.Character.Person characterId unless characterPresent
+          people.push new LOI.Character.Agent characterId unless characterPresent
 
       people
     ,

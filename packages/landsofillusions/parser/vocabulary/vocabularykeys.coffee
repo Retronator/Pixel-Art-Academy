@@ -58,6 +58,7 @@ LOI.Parser.Vocabulary.Keys =
     Create: ''
     Write: ''
     WriteOn: ''
+    Continue: ''
 
     Be:
       Present:

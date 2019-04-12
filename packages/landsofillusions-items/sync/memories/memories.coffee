@@ -59,7 +59,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
           updateAutorun: Tracker.autorun (computation) =>
             # Render avatar to image.
             character = LOI.Character.getInstance characterId
-            renderer = character.avatar.renderer()
+            renderer = character.avatar.getRenderer()
 
             # Wait until character has loaded and renderer is ready.
             return unless character.document()

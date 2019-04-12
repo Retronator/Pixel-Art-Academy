@@ -30,30 +30,63 @@ pause
 
 coordinator: Good job!
 
--> [ReciprocityStart] `_person1`
+-> [ReciprocityStart] `true or _person1`
 
 <!-- Don't show the dialog for no reciprocity if it hasn't been explained what it is yet. -->
 -> [AcceptanceCelebrationStart] `not ReciprocityExplanation`
 
 ## NoReciprocity
 
-coordinator: Since no-one else is here we'll skip the reciprocity ring.
+coordinator: Since no-one else is here we'll skip the reciprocity round.
 
 -> [AcceptanceCelebrationStart]
 
 ## ReciprocityStart
 
--> [Reciprocity] `ReciprocityExplanation`
+-> [Reciprocity] `false and ReciprocityExplanation`
 
 ## ReciprocityExplanation
 
-coordinator: This is how reciprocity ring works.
+coordinator: 
+  Next up we'll do a reciprocity round.
+  We're here to support each other and help in any way we can.
 
 ## Reciprocity
 
 coordinator: Does anyone have any things you want to ask your groupmates?
 
--> [AcceptanceCelebrationStart]
+* !Ask a question -> [ReciprocityAsk]
+* !Continue -> [ReciprocityOtherAsks]
+
+## ReciprocityAsk
+
+> Use the ![say](say) command to ask a specific question. Type ![continue](continue) or ![back](back) to proceed with the meeting.
+
+### ReciprocityAsk
+
+-> [ReciprocityAskCanceled] `not _reciprocityAsked`
+
+coordinator: Thank you, _char_. We'll think about it and get back to you.
+
+-> [ReciprocityOtherAsks] `MemoriesExplanation`
+
+## MemoriesExplanation
+
+> In order to not have to wait for others to reply in real-time, your SYNC device has recorded this moment in time as a memory.
+> Using the Memories tab in your SYNC interface, you can return to any recorded point in the past.
+> When other characters reply to your question, their answers will appear inside the memory.
+
+-> [ReciprocityOtherAsks]
+
+## ReciprocityAskCanceled
+
+> _char_ changes their mind and doesn't ask a question.
+
+## ReciprocityOtherAsks
+
+-> [AcceptanceCelebrationStart] `not _otherAsksCount`
+
+coordinator: Anyone else? `_reciprocityAsked`
 
 ## AcceptanceCelebrationStart 
 

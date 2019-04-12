@@ -62,6 +62,7 @@ Document.startup ->
       Create: ['create', 'make']
       Write: ['write']
       WriteOn: ['write _ on']
+      Continue: ['continue', 'proceed', 'carry on']
 
       Be:
         Present:
