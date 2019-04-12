@@ -180,9 +180,17 @@ void main()	{
 
     # Reactively update the color texture.
     meshCanvas.autorun =>
-      return unless picture = meshCanvas.activePicture()
-      return unless paletteColorMap = picture.maps.paletteColor
-      return unless bounds = picture.bounds()
+      picture = meshCanvas.activePicture()
+      paletteColorMap = picture?.maps.paletteColor
+      bounds = picture?.bounds()
+
+      unless paletteColorMap and bounds
+        @map = null
+        @uniforms.map.value = null
+        @needsUpdate = true
+        @texturesDepenency.changed()
+
+        return
 
       textureData = new Uint8Array bounds.width * bounds.height * 4
 

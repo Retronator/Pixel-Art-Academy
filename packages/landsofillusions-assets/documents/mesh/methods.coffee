@@ -20,6 +20,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
       position: Match.Optional vectorPattern
       target: Match.Optional vectorPattern
       up: Match.Optional vectorPattern
+      customMatrix: Match.Optional [Match.OptionalOrNull Number]
     ]
     objects: Match.Optional [ Match.OptionalOrNull
       name: Match.Optional String

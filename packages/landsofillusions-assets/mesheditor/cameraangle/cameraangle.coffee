@@ -22,7 +22,7 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
     @cameraAngle = new ComputedField =>
       @editor()?.cameraAngle()
 
-    @camera = new LOI.Assets.Components.Camera
+    @camera = new LOI.Assets.MeshEditor.Camera
       load: => @cameraAngle()
       save: (value) =>
         # If we hold down shift, move target and position at the same time.
@@ -45,12 +45,16 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
                 # This coordinate is being changed, so we want to apply the same delta to the destination vector.
                 delta = value[sourceProperty][coordinate] - (cameraAngle[sourceProperty]?[coordinate] or 0)
 
-                value[destinationProperty] ?= _.clone cameraAngle[destinationProperty] or {x: 0, y: 0, z:0}
+                value[destinationProperty] ?= _.clone cameraAngle[destinationProperty] or {x: 0, y: 0, z: 0}
                 value[destinationProperty][coordinate] += delta
 
         @cameraAngle().update value
 
-    @sprite = new ComputedField => 
+    @customMatrix = new LOI.Assets.MeshEditor.Matrix
+      load: => @cameraAngle().customMatrix
+      save: (value) => @cameraAngle().update customMatrix: value
+
+    @sprite = new ComputedField =>
       @cameraAngle()?.sprite
 
   events: ->

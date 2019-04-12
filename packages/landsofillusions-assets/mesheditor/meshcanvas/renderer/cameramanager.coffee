@@ -6,10 +6,12 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
   constructor: (@renderer) ->
     # Main camera is used to render the scene in full resolution.
     @_camera = new THREE.Camera
+    @_camera.matrixAutoUpdate = false
 
     # Render target camera is the same as main, but slightly bigger viewport rounded to whole pixels.
     @_renderTargetCamera = new THREE.Camera
     @_renderTargetCamera.layers.set 0
+    @_renderTargetCamera.matrixAutoUpdate = false
 
     # Pixel render camera is used to render the render target to the screen.
     @_pixelRenderCamera = new THREE.OrthographicCamera
@@ -22,6 +24,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @_position = new THREE.Vector3
     @_target = new THREE.Vector3
     @_up = new THREE.Vector3
+
+    @_customMatrix = new THREE.Matrix4
+    @_identityMatrix = new THREE.Matrix4
 
     # Dummy DOM element to run velocity on.
     @$animate = $('<div>')
@@ -54,21 +59,38 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
     return unless cameraAngle.pixelSize
 
+    @_setMatrix @_customMatrix, cameraAngle.customMatrix
+
     cameraAngle.getProjectionMatrixForViewport viewportBounds, _camera.projectionMatrix
+    #_camera.projectionMatrix.premultiply @_customMatrix
     _camera.projectionMatrixInverse.getInverse _camera.projectionMatrix
 
   _setVector: (vector, vectorData = {}) ->
     vector[field] = vectorData[field] or 0 for field in ['x', 'y', 'z']
 
+  _setMatrix: (matrix, matrixData = []) ->
+    for element, index in @_identityMatrix.elements
+      matrix.elements[index] = matrixData[index] ? element
+
   _updateCamera: ->
+    @_camera.matrix.copy @_identityMatrix
     @_camera.matrix.lookAt @_position, @_target, @_up
     @_camera.matrix.setPosition @_position
     @_camera.matrix.decompose @_camera.position, @_camera.quaternion, @_camera.scale
+
     @_updateTargetCamera()
+
+    @_camera.matrix.multiply @_customMatrix
+    @_camera.matrixWorldNeedsUpdate = true
+
+    @camera.updated()
 
   _updateTargetCamera: ->
     @_renderTargetCamera.matrix.copy @_camera.matrix
     @_renderTargetCamera.matrix.decompose @_renderTargetCamera.position, @_renderTargetCamera.quaternion, @_renderTargetCamera.scale
+
+    @_renderTargetCamera.matrix.multiply @_customMatrix
+    @_renderTargetCamera.matrixWorldNeedsUpdate = true
 
     @camera.updated()
 
@@ -131,6 +153,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
           @_camera.position.lerpVectors startPosition, endPosition, tweenValue
           THREE.Quaternion.slerp startRotation, endRotation, @_camera.quaternion, tweenValue
           @_camera.scale.lerpVectors startScale, endScale, tweenValue
+          @_camera.updateMatrix()
 
           # Update projection matrices.
           @_camera.projectionMatrix.lerpMatrices startProjection, endProjection, tweenValue
@@ -141,12 +164,16 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
 
           @_updateTargetCamera()
 
+          #@_camera.matrix.multiply @_customMatrix
+
   reset: ->
     return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
 
     @_setVector @_position, cameraAngle.position
     @_setVector @_target, cameraAngle.target
     @_setVector @_up, cameraAngle.up
+
+    @_setMatrix @_customMatrix, cameraAngle.customMatrix
 
     @_updateCamera()
 

@@ -310,6 +310,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/landmarks');
 
   api.addUnstyledComponent('mesheditor/camera..');
+  api.addUnstyledComponent('mesheditor/matrix..');
   api.addComponent('mesheditor/cameraangles..');
   api.addComponent('mesheditor/objects..');
   api.addComponent('mesheditor/layers..');
