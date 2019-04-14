@@ -128,10 +128,10 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             journalId: journalEntry.journal._id
             entryId: journalEntry._id
 
-          LOI.adventure.enterContext context
-
           # Pause current callback node so context interactions can execute.
           LOI.adventure.director.pauseCurrentNode()
+
+          LOI.adventure.enterContext context
 
           # Wait until the context is closed.
           Tracker.autorun (computation) =>

@@ -173,7 +173,8 @@ class PAA.Groups.HangoutGroup extends LOI.Adventure.Group
               @groupScript.setThings things
 
           # Clear out the rest of the people.
-          for personIndex in [presentMembers.length + 1..3]
-            @groupScript.ephemeralState "person#{personIndex}", false
+          if presentMembers.length < 3
+            for personIndex in [presentMembers.length + 1..3]
+              @groupScript.ephemeralState "person#{personIndex}", false
 
           LOI.adventure.director.startScript @groupScript, {label}

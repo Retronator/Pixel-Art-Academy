@@ -81,3 +81,6 @@ class LOI.Memory extends AM.Document
     # Create the context for this memory document and enter it. The context will already be displaying this memory.
     context = LOI.Memory.Context.createContext @
     LOI.adventure.enterContext context
+
+  chronologicalActions: ->
+    _.sortBy @actions, 'time'

@@ -18,11 +18,19 @@ coordinator:
 
 pause
 
+<!-- Report -->
+
 ### WhatsNew
 
 ## FollowUp
 
 ### FollowUp
+
+-> [End]
+
+## FollowUpEnd
+
+* !Report own progress -> [ReportProgress]
 
 ## ReportProgress
 
@@ -30,7 +38,7 @@ pause
 
 coordinator: Good job!
 
--> [ReciprocityStart] `true or _person1`
+-> [ReciprocityStart] `_person1`
 
 <!-- Don't show the dialog for no reciprocity if it hasn't been explained what it is yet. -->
 -> [AcceptanceCelebrationStart] `not ReciprocityExplanation`
@@ -41,9 +49,15 @@ coordinator: Since no-one else is here we'll skip the reciprocity round.
 
 -> [AcceptanceCelebrationStart]
 
+<!-- Reciprocity player -->
+
 ## ReciprocityStart
 
--> [Reciprocity] `false and ReciprocityExplanation`
+### ReciprocityStart
+
+`_reciprocityAsked = false`
+
+-> [Reciprocity] `ReciprocityExplanation`
 
 ## ReciprocityExplanation
 
@@ -53,40 +67,85 @@ coordinator:
 
 ## Reciprocity
 
-coordinator: Does anyone have any things you want to ask your groupmates?
+coordinator: Does anyone have any things you want to ask or share with your groupmates?
 
-* !Ask a question -> [ReciprocityAsk]
+* !Start conversation -> [ReciprocityAsk]
 * !Continue -> [ReciprocityOtherAsks]
 
 ## ReciprocityAsk
 
-> Use the ![say](say) command to ask a specific question. Type ![continue](continue) or ![back](back) to proceed with the meeting.
+> Use the ![say](say "") command with the message in "quotes" to ask or share something. Type ![continue](continue) to proceed with the meeting.
 
 ### ReciprocityAsk
 
 -> [ReciprocityAskCanceled] `not _reciprocityAsked`
-
-coordinator: Thank you, _char_. We'll think about it and get back to you.
-
--> [ReciprocityOtherAsks] `MemoriesExplanation`
+-> [ReciprocityMemoryCreated] `MemoriesExplanation`
 
 ## MemoriesExplanation
 
-> In order to not have to wait for others to reply in real-time, your SYNC device has recorded this moment in time as a memory.
+> In order to not have to wait for others to reply in real-time, your SYNC device has recorded this moment as a memory.
 > Using the Memories tab in your SYNC interface, you can return to any recorded point in the past.
 > When other characters reply to your question, their answers will appear inside the memory.
+
+-> [ReciprocityAskThankYou]
+
+## ReciprocityMemoryCreated
+
+> Memory created for this conversation. Check your SYNC interface later to read any replies.
+
+-> [ReciprocityAskThankYou]
+
+## ReciprocityAskThankYou
+
+coordinator: Thank you, _char_.
 
 -> [ReciprocityOtherAsks]
 
 ## ReciprocityAskCanceled
 
-> _char_ changes their mind and doesn't ask a question.
+> _char_ changes their mind and doesn't say anything.
+
+<!-- Reciprocity others -->
 
 ## ReciprocityOtherAsks
 
--> [AcceptanceCelebrationStart] `not _otherAsksCount`
+### ReciprocityOtherAsks
 
-coordinator: Anyone else? `_reciprocityAsked`
+`_firstAnyoneElse = false`
+
+## ReciprocityOtherAsksStart
+
+-> [AcceptanceCelebrationStart] `not _otherAsksLeft`
+
+coordinator: Anyone else has anything to share? `_reciprocityAsked and not _firstAnyoneElse`
+coordinator: Anyone else? `_reciprocityAsked and firstAnyoneElse`
+
+`if (_reciprocityAsked) _firstAnyoneElse = true;`
+
+### ReciprocityOtherAsksStart
+
+`reciprocityAsked = true;`
+
+pause
+
+* !Reply -> [ReciprocityOtherAsksReply]
+* !Continue -> [ReciprocityOtherAsksStart]
+
+## ReciprocityOtherAsksReply
+
+> Use the ![say](say "") command with the message in "quotes" to reply. Type ![continue](continue) to proceed with the meeting.
+
+### ReciprocityOtherAsksReply
+
+-> [ReciprocityOtherAsksCanceled] `not _reciprocityReplied`
+
+-> [ReciprocityOtherAsksStart]
+
+## ReciprocityAskCanceled
+
+> _char_ changes their mind and doesn't reply.
+
+-> [ReciprocityOtherAsksStart]
 
 ## AcceptanceCelebrationStart 
 
@@ -104,9 +163,23 @@ coordinator:
 
 -> [End]
 
-## FollowUpEnd
+## ContinueMeetingHint
 
-* @Report own progress -> [ReportProgress]
+-> [ContinueMeetingHintShort] `ContinueMeetingHintLong`
+
+## ContinueMeetingHintLong
+
+> You can add additional replies with the ![say](say "") command.
+> The say keyword is optional. You can simply type your message in quotes.
+> Type ![continue](continue) when you're ready to proceed with the meeting.
+
+-> [End]
+
+## ContinueMeetingHintShort
+
+> Type ![continue](continue) to proceed with the meeting.
+
+-> [End]
 
 ## NoOne
 
@@ -117,6 +190,8 @@ coordinator:
   But no problem, we'll catch up with the rest tomorrow.
   So, what have you been working on?
   
+pause
+
 -> [ReportProgress]
 
 <!-- Not used in admission group hangout. -->
