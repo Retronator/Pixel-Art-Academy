@@ -14,13 +14,16 @@ person3: Hi! `_person3`
 coordinator: 
   Let's start our study group meeting.
   I hope you've made good progress on your admission week tasks.
-  We'll do a quick report of what you've been working on. 
+  We'll do a quick report of what you've been working on.
+  Who wants to go first?
 
 pause
 
 <!-- Report -->
 
 ### WhatsNew
+
+> You can now ask your groupmates more about the things they worked on, or report your own progress to continue.
 
 ## FollowUp
 
@@ -38,39 +41,92 @@ pause
 
 coordinator: Good job!
 
+<!-- Reciprocity -->
+
 -> [ReciprocityStart] `_person1`
 
 <!-- Don't show the dialog for no reciprocity if it hasn't been explained what it is yet. -->
--> [AcceptanceCelebrationStart] `not ReciprocityExplanation`
+-> [ReciprocityEnd] `not ReciprocityExplanation`
 
 ## NoReciprocity
 
 coordinator: Since no-one else is here we'll skip the reciprocity round.
 
--> [AcceptanceCelebrationStart]
-
-<!-- Reciprocity player -->
+-> [ReciprocityEnd]
 
 ## ReciprocityStart
 
 ### ReciprocityStart
 
-`_reciprocityAsked = false`
-
--> [Reciprocity] `ReciprocityExplanation`
+-> [ReciprocityShort] `ReciprocityExplanation`
 
 ## ReciprocityExplanation
 
 coordinator: 
   Next up we'll do a reciprocity round.
   We're here to support each other and help in any way we can.
+  
+-> [Reciprocity]
+
+## ReciprocityShort
+
+coordinator:
+  Next up is reciprocity.
 
 ## Reciprocity
 
-coordinator: Does anyone have any things you want to ask or share with your groupmates?
+coordinator: Would anyone like to ask or share anything with the group?
 
-* !Start conversation -> [ReciprocityAsk]
-* !Continue -> [ReciprocityOtherAsks]
+<!-- Reciprocity others -->
+
+## ReciprocityOtherAsks
+
+### ReciprocityOtherAsks
+
+`_firstAnyoneElse = false`
+
+## ReciprocityOtherAsksStart
+
+coordinator: Anyone else has anything to share? `_reciprocityAsked and not _firstAnyoneElse`
+coordinator: Anyone else? `_reciprocityAsked and _firstAnyoneElse`
+
+-> [ReciprocityPlayer] `not _otherAsksLeft`
+
+`if (_reciprocityAsked) _firstAnyoneElse = true;`
+
+### ReciprocityOtherAsksStart
+
+`_reciprocityAsked = true;`
+
+pause
+
+* !Reply -> [ReciprocityOtherAsksReply]
+* !Continue -> [ReciprocityOtherAsksStart]
+
+## ReciprocityOtherAsksReply
+
+> Use the ![say](say "") command with the message in "quotes" to reply. Type ![continue](continue) to proceed with the meeting.
+
+### ReciprocityOtherAsksReply
+
+-> [ReciprocityOtherAsksCanceled] `not _reciprocityReplied`
+
+-> [ReciprocityOtherAsksStart]
+
+## ReciprocityOtherAsksCanceled
+
+> _char_ changes their mind and doesn't reply.
+
+-> [ReciprocityOtherAsksStart]
+
+<!-- Reciprocity player -->
+
+## ReciprocityPlayer
+
+`_reciprocityAsked = false`
+
+* !Ask or share something -> [ReciprocityAsk]
+* !Continue -> [ReciprocityEnd]
 
 ## ReciprocityAsk
 
@@ -91,7 +147,7 @@ coordinator: Does anyone have any things you want to ask or share with your grou
 
 ## ReciprocityMemoryCreated
 
-> Memory created for this conversation. Check your SYNC interface later to read any replies.
+> A new Memory was created for this conversation. Check your SYNC interface later to read any replies.
 
 -> [ReciprocityAskThankYou]
 
@@ -99,53 +155,17 @@ coordinator: Does anyone have any things you want to ask or share with your grou
 
 coordinator: Thank you, _char_.
 
--> [ReciprocityOtherAsks]
+-> [AcceptanceCelebrationStart]
 
 ## ReciprocityAskCanceled
 
 > _char_ changes their mind and doesn't say anything.
 
-<!-- Reciprocity others -->
+-> [ReciprocityEnd]
 
-## ReciprocityOtherAsks
+## ReciprocityEnd
 
-### ReciprocityOtherAsks
-
-`_firstAnyoneElse = false`
-
-## ReciprocityOtherAsksStart
-
--> [AcceptanceCelebrationStart] `not _otherAsksLeft`
-
-coordinator: Anyone else has anything to share? `_reciprocityAsked and not _firstAnyoneElse`
-coordinator: Anyone else? `_reciprocityAsked and firstAnyoneElse`
-
-`if (_reciprocityAsked) _firstAnyoneElse = true;`
-
-### ReciprocityOtherAsksStart
-
-`reciprocityAsked = true;`
-
-pause
-
-* !Reply -> [ReciprocityOtherAsksReply]
-* !Continue -> [ReciprocityOtherAsksStart]
-
-## ReciprocityOtherAsksReply
-
-> Use the ![say](say "") command with the message in "quotes" to reply. Type ![continue](continue) to proceed with the meeting.
-
-### ReciprocityOtherAsksReply
-
--> [ReciprocityOtherAsksCanceled] `not _reciprocityReplied`
-
--> [ReciprocityOtherAsksStart]
-
-## ReciprocityAskCanceled
-
-> _char_ changes their mind and doesn't reply.
-
--> [ReciprocityOtherAsksStart]
+-> [AcceptanceCelebrationStart]
 
 ## AcceptanceCelebrationStart 
 
@@ -169,15 +189,11 @@ coordinator:
 
 ## ContinueMeetingHintLong
 
-> You can add additional replies with the ![say](say "") command.
-> The say keyword is optional. You can simply type your message in quotes.
-> Type ![continue](continue) when you're ready to proceed with the meeting.
-
--> [End]
+> You can add additional replies with the ![say](say "") command. You can also simply type your message within quotation marks.
 
 ## ContinueMeetingHintShort
 
-> Type ![continue](continue) to proceed with the meeting.
+> Type ![continue](continue) when you're ready to proceed with the meeting.
 
 -> [End]
 

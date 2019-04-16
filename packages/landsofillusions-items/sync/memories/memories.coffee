@@ -78,6 +78,7 @@ class LOI.Items.Sync.Memories extends LOI.Items.Sync.Tab
             renderer.drawToContext context,
               rootPart: character.avatar
               lightDirection: new THREE.Vector3(0, -1, -1).normalize()
+              side: LOI.Engine.RenderingSides.Keys.Front
 
             canvas.toBlob (blob) =>
               # Update the image.

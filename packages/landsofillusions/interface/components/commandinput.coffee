@@ -121,9 +121,12 @@ class LOI.Interface.Components.CommandInput
       sayCommandPhrases = LOI.adventure.parser.vocabulary.getPhrases LOI.Parser.Vocabulary.Keys.Verbs.Say
 
       for sayCommandPhrase in sayCommandPhrases
-        if _.endsWith commandBeforeCaret, sayCommandPhrase
+        if commandBeforeCaret is sayCommandPhrase
           addition += '"'
           break
+
+    # If the quote is pressed directly behind a quote, don't add it.
+    return if addition is '"' and _.endsWith commandBeforeCaret, '"'
 
     newCommand = "#{commandBeforeCaret}#{addition}#{@commandAfterCaret()}"
 

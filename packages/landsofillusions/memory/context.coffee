@@ -53,6 +53,8 @@ class LOI.Memory.Context extends LOI.Adventure.Context
 
   # Override to create a context if the memory document matches this context.
   @tryCreateContext: (memory) ->
+    return unless @canHandleMemory memory
+
     # Create the context for this entry.
     context = new @
 

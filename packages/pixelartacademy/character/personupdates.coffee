@@ -25,6 +25,14 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             actions = _.sortBy actions, (action) => action.time.getTime()
             actions = (action.cast() for action in actions)
 
+            # Apply action filters
+            relevantActionClasses = @_options.relevantActionClasses or [
+              PAA.Practice.Journal.Entry.Action
+              LOI.Memory.Actions.Say
+            ]
+
+            _.remove actions, (action) -> action.constructor not in relevantActionClasses
+
             relevantActionsCount = 0
             knownActionsCount = 0
 
@@ -133,6 +141,12 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
           LOI.adventure.enterContext context
 
+          # Add a hint to interact with the journal.
+          Meteor.setTimeout =>
+            LOI.adventure.director.startScript @, label: 'JournalEntryHint'
+          ,
+            100
+
           # Wait until the context is closed.
           Tracker.autorun (computation) =>
             return if LOI.adventure.currentContext()
@@ -141,10 +155,10 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             complete()
 
         GoOverJournalEntryConversations: (complete) =>
-          @options.listener._goOverConversations complete, 'journalEntryConversations'
+          @options.listener._goOverConversations complete, 'journalEntryConversations', hintLabel: 'JournalEntryHint'
 
         GoOverConversations: (complete) =>
-          @options.listener._goOverConversations complete, 'plainConversations'
+          @options.listener._goOverConversations complete, 'plainConversations', hintLabel: 'ConversationHint'
 
         NextConversation: => # Dummy callback as it will be set from GoOverConversations.
 
@@ -153,7 +167,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
           complete()
 
-  _goOverConversations: (complete, conversationsFieldName) ->
+  _goOverConversations: (complete, conversationsFieldName, hintLabel) ->
     conversationsToGoOver = _.clone @script.ephemeralState(conversationsFieldName).conversations
 
     # Pause current callback node so context interactions can execute.
@@ -163,6 +177,12 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
       # Enter the next conversation.
       conversation = conversationsToGoOver.shift()
       LOI.adventure.enterMemory conversation.memoryId
+
+      # Show the hint for conversation interaction.
+      Meteor.setTimeout =>
+        LOI.adventure.director.startScript @script, label: hintLabel
+      ,
+        100
 
       # Wait until the context is closed.
       Tracker.autorun (computation) =>
