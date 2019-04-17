@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AEt = Artificial.Everything
 AB = Artificial.Babel
 AM = Artificial.Mirage
 LOI = LandsOfIllusions
@@ -6,6 +7,9 @@ LOI = LandsOfIllusions
 Vocabulary = LOI.Parser.Vocabulary
 
 class LOI.Adventure.Thing extends AM.Component
+  # Things should support aggregation.
+  _.inherit @, AEt.Item
+
   template: -> 'LandsOfIllusions.Adventure.Thing'
     
   # Static thing properties and methods

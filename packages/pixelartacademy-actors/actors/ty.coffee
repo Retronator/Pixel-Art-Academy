@@ -14,3 +14,8 @@ class PAA.Actors.Ty extends LOI.Character.Actor
   @textureUrls: -> '/pixelartacademy/actors/ty'
 
   @initialize()
+
+  constructor: ->
+    super arguments...
+
+    @require PAA.Student

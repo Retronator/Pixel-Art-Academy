@@ -14,3 +14,8 @@ class PAA.Actors.Saanvi extends LOI.Character.Actor
   @textureUrls: -> '/pixelartacademy/actors/saanvi'
 
   @initialize()
+
+  constructor: ->
+    super arguments...
+
+    @require PAA.Student

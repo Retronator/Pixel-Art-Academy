@@ -76,8 +76,8 @@ Package.onUse(function(api) {
   api.addFile('chapter1/goals/snake');
 
   api.addFile('chapter1/groups..');
-  api.addThing('chapter1/groups/sanfranciscofriends');
-  api.addThing('chapter1/groups/sanfranciscofriends-conversation');
+  api.addThing('chapter1/groups/sanfranciscofriends..');
+  api.addThing('chapter1/groups/sanfranciscofriends/conversation..');
   api.addFile('chapter1/groups/family');
 
   api.addThing('chapter1/groups/admissionsstudygroup..');

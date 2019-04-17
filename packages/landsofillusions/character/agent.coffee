@@ -18,6 +18,9 @@ class LOI.Character.Agent extends LOI.Character.Person
   constructor: (@_id) ->
     super arguments...
 
+    # All agents are (potential) students.
+    @require PixelArtAcademy.Student
+
     # Agent's main avatar will be the character avatar from the instance, so we manually create the avatar based on
     # this thing. This way we can use some universal avatar values that hold for all agents (like description).
     @thingAvatar = @avatar

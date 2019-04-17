@@ -41,6 +41,9 @@ class LOI.Adventure.Script
 
     # Process nodes.
     for node in @nodes
+      # Save the original next so we can query it in cases when nodes get rewired.
+      node.originalNext = node.next
+
       # Replace jump nodes with actual label nodes they point to.
       for property in ['node', 'next']
         if node[property] instanceof @constructor.Nodes.Jump

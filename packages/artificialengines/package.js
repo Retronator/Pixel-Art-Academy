@@ -86,6 +86,7 @@ Package.onUse(function(api) {
   api.addFile('everywhere/lodash/objects');
   api.addFile('everywhere/lodash/strings');
   api.addFile('everywhere/lodash/filterfunction');
+  api.addFile('everywhere/lodash/inherit');
 
   api.addFile('everywhere/csvparser');
   api.addFile('everywhere/date');
@@ -265,4 +266,10 @@ Package.onUse(function(api) {
   // Artificial Echo
   
   api.addFile('echo..');
+
+  // Artificial Everything
+
+  api.addFile('everything..');
+  api.addFile('everything/item');
+  api.addFile('everything/part');
 });

@@ -59,7 +59,7 @@ class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
     @id: -> "PixelArtAcademy.Season1.Episode1.Chapter1.Groups.SanFranciscoFriends.HangoutGroupListener"
 
     @scriptUrls: -> [
-      'retronator_pixelartacademy-season1-episode1/chapter1/groups/sanfranciscofriends.script'
+      'retronator_pixelartacademy-season1-episode1/chapter1/groups/sanfranciscofriends/sanfranciscofriends.script'
     ]
 
     class @Script extends PAA.Groups.HangoutGroup.GroupListener.Script

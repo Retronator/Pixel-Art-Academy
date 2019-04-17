@@ -49,4 +49,9 @@ class Script.Nodes.ChoicePlaceholder extends Script.Node
     addChoice: (node) ->
       @_nodes.push node
 
+    addChoices: (node) ->
+      while node and (node instanceof Script.Nodes.Choice) or (node.node instanceof Script.Nodes.Choice)
+        @addChoice node
+        node = node.originalNext or node.next
+
     nodes: -> @_nodes

@@ -14,3 +14,8 @@ class PAA.Actors.Jaxx extends LOI.Character.Actor
   @textureUrls: -> '/pixelartacademy/actors/jaxx'
 
   @initialize()
+
+  constructor: ->
+    super arguments...
+
+    @require PAA.Student

@@ -10,7 +10,7 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
     # Applies to all locations.
     null
 
-  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/groups/sanfranciscofriends-conversation.script'
+  @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/groups/sanfranciscofriends/conversation/conversation.script'
 
   @listeners: ->
     super(arguments...).concat [

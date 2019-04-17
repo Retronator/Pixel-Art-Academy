@@ -14,3 +14,8 @@ class PAA.Actors.Mae extends LOI.Character.Actor
   @textureUrls: -> '/pixelartacademy/actors/mae'
 
   @initialize()
+
+  constructor: ->
+    super arguments...
+
+    @require PAA.Student

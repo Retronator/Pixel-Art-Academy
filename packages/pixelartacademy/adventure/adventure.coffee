@@ -2,6 +2,7 @@ AB = Artificial.Base
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
+# The adventure component that is served from pixelart.academy.
 class PAA.Adventure extends LOI.Adventure
   @id: -> 'PixelArtAcademy.Adventure'
   @register @id()

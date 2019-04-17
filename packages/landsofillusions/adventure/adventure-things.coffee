@@ -53,6 +53,18 @@ class LOI.Adventure extends LOI.Adventure
 
       _.without things, undefined, null
 
+    @currentPeople = new ComputedField =>
+      _.filter @currentLocationThings(), (thing) => thing instanceof LOI.Character.Person
+
+    @currentAgents = new ComputedField =>
+      _.filter @currentLocationThings(), (thing) => thing instanceof LOI.Character.Agent
+
+    @currentOtherAgents = new ComputedField =>
+      _.without @currentAgents(), LOI.agent()
+
+    @currentActors = new ComputedField =>
+      _.filter @currentLocationThings(), (thing) => thing instanceof LOI.Character.Actor
+
   _instantiateThings: (things) ->
     for thing in things
       thingId = thing.id()

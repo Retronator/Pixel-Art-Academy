@@ -15,6 +15,7 @@ class PAA.Season1.Episode1 extends LOI.Adventure.Episode
     @Inventory
     @ChinaBasinPark
     @Store
+    PAA.Student.Conversation
   ]
     
   @startSection: -> @Start

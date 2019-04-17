@@ -17,63 +17,25 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/scenes/sanfranciscoconversation.script'
 
-  constructor: ->
-    super arguments...
-
-    # Subscribe to everyone's journals.
-    @_journalsSubscriptionAutorun = Tracker.autorun =>
-      agents = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Agent
-      characterIds = (agent._id for agent in agents)
-
-      PAA.Practice.Journal.forCharacterIds.subscribe characterIds
-
-  destroy: ->
-    super arguments...
-
-    @_journalsSubscriptionAutorun.stop()
-
-  startMainQuestionsWithAgent: (agent) ->
-    @_prepareScriptForAgent agent
+  startMainQuestionsWithPerson: (person) ->
+    @_prepareScriptForPerson person
 
     script = @listeners[0].script
     LOI.adventure.director.startScript script, label: 'MainQuestions'
 
-  _prepareScriptForAgent: (agent) ->
+  _prepareScriptForPerson: (person) ->
     script = @listeners[0].script
 
-    # Replace the agent with target character.
-    script.setThings {agent}
+    # Replace the person with target character.
+    script.setThings {person}
 
-    # Prepare an ephemeral object for this agent (we need it to be unique for the current agent).
-    ephemeralAgents = script.ephemeralState('agents') or {}
-    ephemeralAgents[agent._id] ?= {}
-    ephemeralAgent = ephemeralAgents[agent._id]
+    # Prepare an ephemeral object for this person (we need it to be unique for the current person).
+    ephemeralPersons = script.ephemeralState('persons') or {}
+    ephemeralPersons[person._id] ?= {}
+    ephemeralPerson = ephemeralPersons[person._id]
 
-    journals = PAA.Practice.Journal.documents.fetch
-      'character._id': agent._id
-    ,
-      sort:
-        order: 1
-
-    _.extend ephemeralAgent,
-      journalIds: (journal._id for journal in journals)
-
-    script.ephemeralState 'agents', ephemeralAgents
-    script.ephemeralState 'agent', ephemeralAgent
-
-  # Script
-
-  initializeScript: ->
-    @setCallbacks
-      Journal: (complete) =>
-        complete()
-
-        agent = @ephemeralState 'agent'
-        journalId = agent.journalIds[0]
-
-        # Create the journal view context and enter it.
-        context = new PAA.PixelBoy.Apps.Journal.JournalView.Context {journalId}
-        LOI.adventure.enterContext context
+    script.ephemeralState 'persons', ephemeralPersons
+    script.ephemeralState 'person', ephemeralPerson
 
   # Listener
 
@@ -92,15 +54,15 @@ class C1.SanFranciscoConversation extends LOI.Adventure.Scene
     location = LOI.adventure.currentLocation()
     return unless location.region().id() in regionIds
     
-    agents = _.filter LOI.adventure.currentLocationThings(), (thing) => thing instanceof LOI.Character.Agent
+    people = LOI.adventure.currentPeople()
     characterId = LOI.characterId()
 
     scene = @options.parent
 
-    for agent in agents when agent._id isnt characterId
-      do (agent) =>
+    for person in people when person._id isnt characterId
+      do (person) =>
         commandResponse.onPhrase
-          form: [Vocabulary.Keys.Verbs.TalkTo, agent.avatar]
+          form: [Vocabulary.Keys.Verbs.TalkTo, person.avatar]
           action: =>
-            scene._prepareScriptForAgent agent
+            scene._prepareScriptForPerson person
             @startScript()
