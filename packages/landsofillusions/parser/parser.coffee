@@ -35,11 +35,6 @@ class LOI.Parser
     # Create a rich command object.
     command = new LOI.Parser.Command command
 
-    # Report this command to analytics. Use command text as action and location ID as label.
-    eventCategory = 'Adventure Command'
-    eventAction = command.normalizedCommand
-    eventLabel = LOI.adventure.currentLocationId()
-
     # Get all command responses from all the listeners.
     commandResponses = for listener in LOI.adventure.currentListeners()
       # Create the command response object.

@@ -26,7 +26,8 @@ class LandsOfIllusions
   @character = new ReactiveField null
 
   @agent: ->
-    LOI.Character.getAgent @characterId()
+    return unless characterId = @characterId()
+    LOI.Character.getAgent characterId
 
   # Helper to get the default Lands of Illusions palette.
   @palette: ->

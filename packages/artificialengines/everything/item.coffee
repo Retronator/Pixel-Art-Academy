@@ -38,6 +38,10 @@ class AEt.Item
     partEntry = _.find @_partEntries, (partEntry) => partEntry.class is partClass
     partEntry?.part
 
+  parts: ->
+    return [] unless @_partEntries
+    partEntry.part for partEntry of @_partEntries
+
   # See if this item can be cast into a certain type.
   is: (partClass) -> @as(partClass)?
 

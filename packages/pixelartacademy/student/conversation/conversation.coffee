@@ -1,9 +1,10 @@
+AB = Artificial.Babel
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
 Vocabulary = LOI.Parser.Vocabulary
 
-class PAA.Student.Conversation extends LOI.Adventure.Scene
+class PAA.Student.Conversation extends LOI.Adventure.Scene.ConversationBranch
   @id: -> 'PixelArtAcademy.Student.Conversation'
 
   @location: ->
@@ -13,6 +14,7 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene
   @initialize()
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy/student/conversation/conversation.script'
+  @returnLabel: -> 'MainQuestions'
 
   constructor: ->
     super arguments...
@@ -53,15 +55,33 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene
     script.ephemeralState 'students', ephemeralStudents
     script.ephemeralState 'student', ephemeralStudent
 
+    # Prepare student's and character's profile.
+    studentProfile = @prepareProfile student.instance.document().profile
+    script.ephemeralState 'studentProfile', studentProfile
+
+    profile = @prepareProfile LOI.character().document().profile
+    script.ephemeralState 'profile', profile
+
+  prepareProfile: (profile) ->
+    profile = _.cloneDeep profile or {}
+
+    if profile.country
+      # Insert translated country name.
+      countryTranslation = AB.existingTranslation 'Artificial.Babel.Region.Names', profile.country
+      profile.country = countryTranslation.translate()?.text
+
+    if profile.aspiration
+      # Replace any newline characters with spaces.
+      profile.aspiration = profile.aspiration.replace /\n/g, ' '
+
+    profile
+
   # Script
 
   initializeScript: ->
-    @setCallbacks
-      Return: (complete) =>
-        # Return back to main questions of the calling script.
-        LOI.adventure.director.startScript @_returnScript, label: 'MainQuestions'
-        complete()
+    super arguments...
 
+    @setCallbacks
       Journal: (complete) =>
         complete()
 
@@ -75,6 +95,8 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene
   # Listener
 
   onChoicePlaceholder: (choicePlaceholderResponse) ->
+    super arguments...
+
     scene = @options.parent
 
     return unless choicePlaceholderResponse.placeholderId is 'PersonConversationMainQuestions'
@@ -86,9 +108,6 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene
     # Save the student to our script.
     student = person
     @script.setThings {student}
-
-    # Save the script so we know where to return to.
-    @script._returnScript = choicePlaceholderResponse.script
 
     choicePlaceholderResponse.addChoices @script.startNode.labels.MainQuestions.next
 

@@ -9,6 +9,7 @@ class C1.Mixer extends LOI.Adventure.Section
     @Intercom
     @Store
     @GalleryWest
+    @GalleryWest.Student
     @ArtStudio
     @Coworking
     @Ace

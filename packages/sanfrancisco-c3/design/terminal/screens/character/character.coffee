@@ -154,7 +154,8 @@ class C3.Design.Terminal.Character extends AM.Component
   _returnToMenu: ->
     # Render the textures if needed.
     character = @character()
-    LOI.Character.renderAvatarTextures character._id if character.document().avatar?.textures?.needUpdate
+    document = character.document()
+    LOI.Character.renderAvatarTextures character._id if document.designApproved and document.avatar?.textures?.needUpdate
 
     @terminal.switchToScreen @terminal.screens.mainMenu
 

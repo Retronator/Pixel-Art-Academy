@@ -332,6 +332,8 @@ Package.onUse(function(api) {
   api.addFile('adventure/section..');
   api.addComponent('adventure/chapter..');
   api.addFile('adventure/scene..');
+  api.addFile('adventure/scene/personconversation');
+  api.addFile('adventure/scene/conversationbranch');
 
   // Locations and inventory
 
