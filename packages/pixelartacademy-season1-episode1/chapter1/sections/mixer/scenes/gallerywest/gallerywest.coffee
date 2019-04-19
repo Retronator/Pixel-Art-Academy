@@ -12,10 +12,12 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   @location: ->
     HQ.GalleryWest
 
-  @intro: -> """
-    You enter a big gallery space that is holding a gathering.
-    You recognize some people from the HQ, others seem to be visitors like yourself.
-  """
+  @translations: ->
+    # We provide intro through translations, not @intro, since we provide a custom binding for it.
+    intro: """
+      You enter a big gallery space that is holding a gathering.
+      You recognize some people from the HQ, others seem to be visitors like yourself.
+    """
 
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/sections/mixer/scenes/gallerywest/gallerywest.script'
 
@@ -80,13 +82,16 @@ class C1.Mixer.GalleryWest extends LOI.Adventure.Scene
   otherAgents: ->
     # Two latest agents from each study group should be present at the mixer.
     for membership in @constructor.latestStudyGroupMembers.query().fetch()
-      # Also attach the memebership information to the agent.
+      # Also attach the membership information to the agent.
       agent = LOI.Character.getAgent membership.character._id
       agent.studyGroupMembership = membership
       agent
       
   agents: -> [LOI.agent(), @otherAgents()...]
-  actors: -> LOI.adventure.getCurrentThing actorClass for actorClass in @constructor.actorClasses
+  actors: ->
+    actors = (LOI.adventure.getCurrentThing actorClass for actorClass in @constructor.actorClasses)
+    _.without actors, null, undefined
+
   students: -> [@agents()..., @actors()...]
   otherStudents: -> [@otherAgents()..., @actors()...]
 

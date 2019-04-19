@@ -139,9 +139,16 @@ class C1.Mixer.GalleryWest extends C1.Mixer.GalleryWest
 
       @startScript label: 'RetroIntro'
 
+    enterResponse.overrideIntroduction =>
+      # Change the intro text when in the mixer context.
+      return unless LOI.adventure.currentContext() instanceof C1.Mixer.Context
+      scene.translations()?.intro
+
     # Player should be in the mixer context when they have a name tag.
     @_enterContextAutorun = @autorun (computation) =>
-      return if LOI.adventure.currentContext() instanceof C1.Mixer.Context
+      # Don't overwrite an existing context.
+      return if LOI.adventure.currentContext()
+
       return unless LOI.adventure.getCurrentInventoryThing C1.Mixer.NameTag
       return unless shelley = LOI.adventure.getCurrentThing HQ.Actors.Shelley
       return unless shelley.ready()

@@ -34,7 +34,7 @@ class C1.Groups.SanFranciscoFriends extends PAA.Groups.HangoutGroup
 
       # React only to changes in member IDs.
       Tracker.nonreactive =>
-        @_members (LOI.Character.getAgent memberId for memberId in memberIds)
+        @_members (LOI.Character.getPerson memberId for memberId in memberIds)
 
     @constructed true
 

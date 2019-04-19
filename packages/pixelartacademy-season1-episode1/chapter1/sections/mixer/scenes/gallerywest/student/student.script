@@ -2,9 +2,9 @@
 
 ## Start
 
--> [SaidHi] `_student.saidHi`
+-> [SaidHi] `_person.saidHi`
 
-`_student.saidHi = true`
+`_person.saidHi = true`
 
 -> [AlreadyMetGreeting] `studentInstance.personState('alreadyMet')`
 

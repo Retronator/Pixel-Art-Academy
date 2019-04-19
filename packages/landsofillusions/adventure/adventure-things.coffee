@@ -90,6 +90,11 @@ class LOI.Adventure extends LOI.Adventure
 
   getThing: (thingClassOrId) ->
     thingClass = _.thingClass thingClassOrId
+
+    unless thingClass
+      console.warn "Unknown thing requested.", thingClassOrId
+      return
+
     @_instantiateThings([thingClass])[0]
 
   getCurrentThing: (thingClassOrId) ->

@@ -37,18 +37,24 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
     @setCallbacks
       AddAsMember: (complete) =>
         # Add person we're talking to as a member to the group.
-        memberStateField = C1.Groups.SanFranciscoFriends.state.field "members.#{@things.person._id}"
-        memberState = memberStateField()
+        # Note that we can't include person ID in the state field
+        # address since it can have dots in the name (for actors).
+        membersStateField = C1.Groups.SanFranciscoFriends.state.field "members"
+        members = membersStateField() or {}
+        memberState = members[@things.person._id]
 
         # Prepare the whole member state if needed.
-        memberState ?=
-          id: @things.person._id
+        unless memberState
+          memberState =
+            id: @things.person._id
+
+          members[@things.person._id] = memberState
 
         # Set the character as active.
         memberState.active = true
 
         # Save the new state.
-        memberStateField memberState
+        membersStateField members
 
         # Return back to main questions of the calling script.
         LOI.adventure.director.startScript @_returnScript, label: 'MainQuestions'
@@ -86,7 +92,7 @@ class C1.Groups.SanFranciscoFriends.Conversation extends LOI.Adventure.Scene
     @script._returnScript = choicePlaceholderResponse.script
 
     # Check if this person is an active member and show the choices accordingly.
-    if C1.Groups.SanFranciscoFriends.state "members.#{person._id}.active"
+    if C1.Groups.SanFranciscoFriends.state("members")?[person._id]?.active
       label = 'MainQuestionsMember'
 
     else

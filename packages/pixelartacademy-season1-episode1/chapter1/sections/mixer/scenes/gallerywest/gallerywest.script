@@ -79,9 +79,9 @@ pause
 
 ### HobbyProfessionStart
 
-* @Hobby -> [AnswerHobby]
-* @Profession -> [AnswerProfession]
-* @Somewhere in between -> [AnswerHobbyProfession]
+* !Hobby -> [AnswerHobby]
+* !Profession -> [AnswerProfession]
+* !Somewhere in between -> [AnswerHobbyProfession]
 
 ## AnswerHobby
 
@@ -130,9 +130,9 @@ pause
 
 ### PixelArtOtherStylesStart
 
-* @Pixel art -> [AnswerPixelArt]
-* @Other styles -> [AnswerOtherStyle]
-* @All styles! -> [AnswerAllStyles]
+* !Pixel art -> [AnswerPixelArt]
+* !Other styles -> [AnswerOtherStyle]
+* !All styles! -> [AnswerAllStyles]
 
 ## AnswerPixelArt
 
@@ -165,9 +165,9 @@ pause
 
 ### ExtrovertIntrovertStart
 
-* @Extrovert -> [AnswerExtrovert]
-* @Introvert -> [AnswerIntrovert]
-* @A bit of both -> [AnswerExtrovertIntrovert]
+* !Extrovert -> [AnswerExtrovert]
+* !Introvert -> [AnswerIntrovert]
+* !A bit of both -> [AnswerExtrovertIntrovert]
 
 ## AnswerExtrovert
 
@@ -200,9 +200,9 @@ pause
 
 ### IndividualTeamStart
 
-* @Individually -> [AnswerIndividual]
-* @Team -> [AnswerTeam]
-* @No preference -> [AnswerIndividualTeam]
+* !Individually -> [AnswerIndividual]
+* !Team -> [AnswerTeam]
+* !No preference -> [AnswerIndividualTeam]
 
 ## AnswerIndividual
 
@@ -293,9 +293,9 @@ pause
 
 > Which study group do you want to join?
 
-* @Group A -> [GroupA]
-* @Group B -> [GroupB]
-* @Group C -> [GroupC]
+* !Group A -> [GroupA]
+* !Group B -> [GroupB]
+* !Group C -> [GroupC]
 
 ## GroupA
 
@@ -341,7 +341,7 @@ shelley:
   
 shelley:
   Thank you everyone for coming! 
-  Now follow your coordinators to the group's meeting place where you will get additional instructions.
+  Now follow your coordinator to your group's meeting place where you will get additional instructions.
     
 > After Shelley finishes the address, she goes to meet her students in group B.
 

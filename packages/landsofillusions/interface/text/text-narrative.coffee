@@ -8,8 +8,8 @@ class LOI.Interface.Text extends LOI.Interface.Text
     return unless location
 
     if currentIntroductionFunction = @_currentIntroductionFunction()
-      introduction = currentIntroductionFunction()
-      return @_formatOutput introduction
+      if introduction = currentIntroductionFunction()
+        return @_formatOutput introduction
 
     if location.constructor.visited() and not LOI.adventure.currentContext()
       fullName = location.avatar.fullName()

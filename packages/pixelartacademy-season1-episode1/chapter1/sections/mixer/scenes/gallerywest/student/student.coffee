@@ -19,11 +19,14 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Scene.PersonConversatio
     stickers: C1.Mixer.Stickers
 
   prepareForStudent: (student) ->
-    # Replace the student with target character.
-    @setThings {student}
+    @prepareScriptForPerson student
 
-    answers = @options.listener.prepareAnswers student
-    @ephemeralState 'studentAnswers', answers
+    # Replace the student with target character.
+    script = @listeners[0].script
+    script.setThings {student}
+
+    answers = @prepareAnswers student
+    script.ephemeralState 'studentAnswers', answers
 
   @initialize()
 
@@ -40,16 +43,15 @@ class C1.Mixer.GalleryWest.Student extends LOI.Adventure.Scene.PersonConversatio
 
   onCommand: (commandResponse) ->
     scene = @options.parent
-    return unless scene.eventPhase() is C1.Mixer.GalleryWest.EventPhases.TalkToClassmates
+
+    return unless galleryWestScene = LOI.adventure.getCurrentThing C1.Mixer.GalleryWest
+    return unless galleryWestScene.eventPhase() is C1.Mixer.GalleryWest.EventPhases.TalkToClassmates
 
     # You should be able to talk to all PC and NPC students.
-    for student in scene.otherStudents()
+    for student in galleryWestScene.otherStudents()
       do (student) =>
         prepareScriptForStudent = =>
-          profile = @prepareProfile LOI.character().document().profile
-          @script.ephemeralState 'profile', profile
-
-          @script.prepareForStudent student
+          scene.prepareForStudent student
 
         commandResponse.onPhrase
           form: [Vocabulary.Keys.Verbs.TalkTo, student]

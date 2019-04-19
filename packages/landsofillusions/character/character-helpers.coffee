@@ -28,7 +28,14 @@ class LOI.Character extends LOI.Character
         @agents[id] = new @Agent id
 
     @agents[id]
-    
+
+  @getPerson: (id) ->
+    if Match.test id, Match.DocumentId
+      @getAgent id
+
+    else
+      LOI.adventure.getThing id
+
   @formatText: (text, keyword, character, onlyQualifiedPronouns) ->
     pronouns = character.avatar.pronouns()
 
