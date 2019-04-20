@@ -63,6 +63,8 @@ class C1.Goals.Snake extends PAA.Learning.Goal
       for the snake body and food piece in the Projects section of the Drawing app.
     """
 
+    @icon = PAA.Learning.Task.Icons.Drawing
+
     @interests: -> ['snake', 'food']
 
     @predecessors: -> [Goal.Play]

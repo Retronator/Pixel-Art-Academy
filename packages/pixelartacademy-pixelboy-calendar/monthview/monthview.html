@@ -28,6 +28,9 @@
                       {{#if activitiesAreJournalEntries}}
                         {{> PixelArtAcademy.PixelBoy.Apps.Calendar.MonthView.JournalEntries this.data}}
                       {{/if}}
+                      {{#if activitiesAreTasks}}
+                        {{> PixelArtAcademy.PixelBoy.Apps.Calendar.MonthView.Tasks this.data}}
+                      {{/if}}
                     </li>
                   {{/each}}
                   </ul>

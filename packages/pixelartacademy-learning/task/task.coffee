@@ -8,6 +8,12 @@ class PAA.Learning.Task
     All: 'All'
     Any: 'Any'
 
+  @Icons:
+    Task: 'Task'
+    Drawing: 'Drawing'
+    Reading: 'Reading'
+    Video: 'Video'
+
   @getClassForId: (id) ->
     @_taskClassesById[id]
 
@@ -16,6 +22,9 @@ class PAA.Learning.Task
 
   # The type that identifies the task class individual tasks inherit from.
   @type: null
+
+  # The icon that represents the kind of work done in this task.
+  @icon: @Icons.Task
 
   # Short description of the task's goal.
   @directive: -> throw new AE.NotImplementedException "You must specify the task directive."
