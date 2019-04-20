@@ -1,0 +1,24 @@
+@import "{retronator:landsofillusions}/style/style.import"
+
+.landsofillusions-assets-mesheditor-materials
+  .materials-table
+    .legend
+      .preview
+        width 12rem
+
+    .material
+      .preview
+        position relative
+
+        &::after
+          content ''
+          display none
+          position absolute
+          top -1rem
+          bottom -1rem
+          left -1rem
+          right -1rem
+          border 1rem solid atariGrey(4)
+
+        &.active::after
+          display block

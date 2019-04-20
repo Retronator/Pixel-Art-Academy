@@ -77,6 +77,7 @@ Package.onUse(function(api) {
   api.addFile('documents/mesh/arrayfield');
   api.addFile('documents/mesh/mapfield');
   api.addFile('documents/mesh/cameraangle');
+  api.addFile('documents/mesh/material');
 
   api.addFile('documents/mesh/object..');
 
@@ -315,6 +316,7 @@ Package.onUse(function(api) {
   api.addComponent('mesheditor/objects..');
   api.addComponent('mesheditor/layers..');
   api.addComponent('mesheditor/landmarks..');
+  api.addComponent('mesheditor/materials..');
 
   api.addComponent('mesheditor/cameraangle..');
   api.addUnstyledComponent('mesheditor/cameraangle/selectspritedialog..');

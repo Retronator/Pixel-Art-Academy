@@ -62,7 +62,7 @@ class LOI.Assets.MeshEditor.Landmarks extends FM.View
       name: $landmark.find('.name-input').val() or null
       
     for property in ['x', 'y']
-      value = @_parseFloatOrNull $landmark.find(".coordinate-#{property} .coordinate-input").val()
+      value = _.parseFloatOrNull $landmark.find(".coordinate-#{property} .coordinate-input").val()
       landmark[property] = value if value?
 
     asset = @landmarksHelper().asset()
@@ -77,8 +77,3 @@ class LOI.Assets.MeshEditor.Landmarks extends FM.View
       object: meshCanvas.activeObjectIndex()
       layer: meshCanvas.activeLayerIndex()
       cameraAngle: meshCanvas.cameraAngleIndex()
-
-  _parseFloatOrNull: (string) ->
-    float = parseFloat string
-
-    if _.isNaN float then null else float

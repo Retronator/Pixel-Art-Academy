@@ -82,10 +82,11 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
       ]
     ]
     materials: Match.Optional [
-      name: Match.Optional String
-      ramp: Match.Optional Number
-      shade: Match.Optional Number
-      dither: Match.Optional Number
+      name: Match.OptionalOrNull String
+      type: Match.OptionalOrNull String
+      ramp: Match.OptionalOrNull Number
+      shade: Match.OptionalOrNull Number
+      dither: Match.OptionalOrNull Number
     ]
 
   RA.authorizeAdmin()

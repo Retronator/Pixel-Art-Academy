@@ -42,8 +42,6 @@ class LOI.Assets.Mesh.CameraAngle
       for object in mesh.objects.getAllWithoutUpdates() when object
         object.solver.recompute()
 
-  _updateWorldMatrix: ->
-
   _createVector: (vectorData = {}) ->
     new THREE.Vector3 vectorData.x or 0, vectorData.y or 0, vectorData.z or 0
 

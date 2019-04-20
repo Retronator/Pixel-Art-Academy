@@ -50,7 +50,7 @@ class LOI.Assets.SpriteEditor.Landmarks extends FM.View
       name: $landmark.find('.name-input').val() or null
       
     for property in ['x', 'y', 'z']
-      landmark[property] = @_parseFloatOrNull $landmark.find(".coordinate-#{property} .coordinate-input").val()
+      landmark[property] = _.parseFloatOrNull $landmark.find(".coordinate-#{property} .coordinate-input").val()
 
     asset = @landmarksHelper().asset()
     LOI.Assets.VisualAsset.updateLandmark asset.constructor.className, asset._id, index, landmark
@@ -59,8 +59,3 @@ class LOI.Assets.SpriteEditor.Landmarks extends FM.View
     asset = @landmarksHelper().asset()
     index = asset.landmarks?.length or 0
     LOI.Assets.VisualAsset.updateLandmark asset.constructor.className, asset._id, index, {}
-
-  _parseFloatOrNull: (string) ->
-    float = parseFloat string
-
-    if _.isNaN float then null else float

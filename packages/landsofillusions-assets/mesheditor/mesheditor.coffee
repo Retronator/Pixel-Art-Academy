@@ -184,9 +184,9 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                       contentComponentId: LOI.Assets.SpriteEditor.Palette.id()
                       active: true
                     ,
-#                      name: 'Materials'
-#                      contentComponentId: LOI.Assets.Editor.Materials.id()
-#                    ,
+                      name: 'Materials'
+                      contentComponentId: LOI.Assets.MeshEditor.Materials.id()
+                    ,
                       name: 'Shading'
                       contentComponentId: LOI.Assets.SpriteEditor.ShadingSphere.id()
                     ,
