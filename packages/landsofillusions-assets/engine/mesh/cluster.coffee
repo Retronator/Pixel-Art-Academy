@@ -43,7 +43,6 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
     return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
 
     options = @layer.object.mesh.options
-    materialsData = options.materialsData?()
     visualizeNormals = options.visualizeNormals?()
 
     materialOptions =
@@ -78,9 +77,9 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
 
       # Normal color mode.
       if materialData.materialIndex?
-        material = meshData.materials[materialData.materialIndex]
+        material = meshData.materials.get materialData.materialIndex
 
-        paletteColor = _.clone material
+        paletteColor = _.clone material.toPlainObject()
 
         # Override material data if we have it present.
         if materialData = materialsData?[material.name]

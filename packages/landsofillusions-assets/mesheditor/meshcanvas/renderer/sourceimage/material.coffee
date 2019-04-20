@@ -181,8 +181,12 @@ void main()	{
     # Reactively update the color texture.
     meshCanvas.autorun =>
       picture = meshCanvas.activePicture()
+      flagsMap = picture?.maps.flags
       paletteColorMap = picture?.maps.paletteColor
+      materialIndexMap = picture?.maps.materialIndex
       bounds = picture?.bounds()
+      meshData = meshCanvas.meshData()
+      materialIndexFlagValue = LOI.Assets.Mesh.Object.Layer.Picture.Map.MaterialIndex.flagValue
 
       unless paletteColorMap and bounds
         @map = null
@@ -199,10 +203,19 @@ void main()	{
           continue unless picture.pixelExistsRelative x, y
 
           dataIndex = (x + y * bounds.width) * 4
-          mapIndex = paletteColorMap.calculateDataIndex x, y
 
-          textureData[dataIndex] = paletteColorMap.data[mapIndex]
-          textureData[dataIndex + 1] = paletteColorMap.data[mapIndex + 1]
+          if flagsMap.pixelHasFlag x, y, materialIndexFlagValue
+            materialIndex = materialIndexMap.getPixel x, y
+            material = meshData.materials.get materialIndex
+
+            textureData[dataIndex] = material.ramp
+            textureData[dataIndex + 1] = material.shade
+
+          else
+            paletteColorMapIndex = paletteColorMap.calculateDataIndex x, y
+            textureData[dataIndex] = paletteColorMap.data[paletteColorMapIndex]
+            textureData[dataIndex + 1] = paletteColorMap.data[paletteColorMapIndex + 1]
+
           textureData[dataIndex + 2] = 0 # TODO: Add dithering support.
           textureData[dataIndex + 3] = 255
 

@@ -7,7 +7,7 @@ class LOI.Assets.Mesh.Object.Layer.Picture.Map.MaterialIndex extends LOI.Assets.
 
   getPixel: (x, y) ->
     dataIndex = @calculateDataIndex x, y
-    materialIndex: @data[dataIndex]
+    @data[dataIndex]
 
   setPixel: (x, y, value) ->
     dataIndex = @calculateDataIndex x, y
