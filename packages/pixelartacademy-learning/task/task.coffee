@@ -58,6 +58,15 @@ class PAA.Learning.Task
         translationNamespace = @id()
         AB.createTranslation translationNamespace, property, @[property]() for property in ['directive', 'instructions']
 
+  @getAdventureInstanceForId: (taskId) ->
+    for episode in LOI.adventure.episodes()
+      for chapter in episode.chapters
+        for task in chapter.tasks
+          return task if task.id() is taskId
+
+    console.warn "Unknown task requested.", taskId
+    null
+
   constructor: (@options = {}) ->
     # By default the task is related to the current character.
     @options.characterId ?= => LOI.characterId()

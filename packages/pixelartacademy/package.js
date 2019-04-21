@@ -27,6 +27,10 @@ Package.onUse(function(api) {
   api.addFile('layouts..');
   api.addFile('layouts/adminaccess..');
 
+  api.addFile('character/person');
+  api.addFile('character/agent');
+  api.addFile('character/actor');
+
   api.addServerFile('character/methods');
 
   api.addThing('character/personupdates');

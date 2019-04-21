@@ -1,3 +1,4 @@
+AB = Artificial.Babel
 LOI = LandsOfIllusions
 PAA = PixelArtAcademy
 
@@ -22,19 +23,25 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             # We've now got all documents we need to carry out this conversation.
             # Find the actions this person made since earliest time.
             actions = @_options.person.recentActions @_options.earliestTime
-            actions = _.sortBy actions, (action) => action.time.getTime()
-            actions = (action.cast() for action in actions)
+            tasks = @_options.person.recentTasks @_options.earliestTime
 
-            # Apply action filters
-            relevantActionClasses = @_options.relevantActionClasses or [
+            updates = [actions..., tasks...]
+            updates = _.sortBy updates, (update) => update.time.getTime()
+
+            for update, index in updates when update.type
+              updates[index] = update.cast()
+
+            # Apply update filters
+            relevantUpdateClasses = @_options.relevantUpdateClasses or [
               PAA.Practice.Journal.Entry.Action
               LOI.Memory.Actions.Say
+              PAA.Learning.Task.Entry
             ]
 
-            _.remove actions, (action) -> action.constructor not in relevantActionClasses
+            _.remove updates, (action) -> action.constructor not in relevantUpdateClasses
 
-            relevantActionsCount = 0
-            knownActionsCount = 0
+            relevantUpdatesCount = 0
+            knownUpdatesCount = 0
 
             # Journal entries
             journalEntries =
@@ -42,12 +49,39 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
             @ephemeralState 'journalEntries', journalEntries
 
-            for action in actions when action instanceof PAA.Practice.Journal.Entry.Action
-              relevantActionsCount++
+            for update in updates when update instanceof PAA.Practice.Journal.Entry.Action
+              relevantUpdatesCount++
               
               journalEntries.entries.push
                 # Note: journalEntry is wrapped in an array since it's a reverse field.
-                entry: action.content.journalEntry[0]
+                entry: update.content.journalEntry[0]
+
+            # Learning tasks
+            learningTasks =
+              tasks: []
+              goals: []
+
+            @ephemeralState 'learningTasks', learningTasks
+
+            for update in updates when update instanceof PAA.Learning.Task.Entry
+              relevantUpdatesCount++
+
+              continue unless task = PAA.Learning.Task.getAdventureInstanceForId update.taskId
+
+              goal = _.find learningTasks.goals, (goal) => goal.id is task.options.goal.id()
+
+              unless goal
+                goal =
+                  id: task.options.goal.id()
+                  displayName: task.options.goal.displayName()
+
+                learningTasks.goals.push goal
+
+              learningTasks.tasks.push
+                directive: task.directive()
+                goal: goal
+
+            learningTasks.taskDirectives = AB.Rules.English.createNounSeries (task.directive for task in learningTasks.tasks)
 
             # Conversations
             createConversations = => conversations: []
@@ -70,7 +104,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
               continue if action.memory._id in processedMemoryIds
               processedMemoryIds.push action.memory._id
 
-              relevantActionsCount++
+              relevantUpdatesCount++
 
               # Figure out the participants.
               memory = LOI.Memory.documents.findOne action.memory._id
@@ -87,7 +121,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
               # Skip conversations where the player character is already part of.
               if (_.find characters, (character) => character._id is LOI.characterId())
-                knownActionsCount++
+                knownUpdatesCount++
                 continue
 
               participants = (summarizeCharacter character for character in characters)
@@ -103,7 +137,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
                 # Skip conversations where the player character is the author.
                 if author._id is LOI.characterId()
-                  knownActionsCount++
+                  knownUpdatesCount++
                   continue
 
                 conversation.journalEntry =
@@ -116,13 +150,13 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
                 # This is a plain conversation. In these skip the ones where the person was the only participant.
                 unless characters.length
                   # Don't even count such conversations.
-                  relevantActionsCount--
+                  relevantUpdatesCount--
                   continue
 
                 plainConversations.conversations.push conversation
 
-            @ephemeralState 'relevantActionsCount', relevantActionsCount
-            @ephemeralState 'knownActionsCount', knownActionsCount
+            @ephemeralState 'relevantUpdatesCount', relevantUpdatesCount
+            @ephemeralState 'knownUpdatesCount', knownUpdatesCount
 
             complete()
 

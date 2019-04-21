@@ -12,18 +12,24 @@ person: Hmmm, let's see …
 
 pause
 
--> [NothingNew] `_relevantActionsCount is 0`
--> [NothingUnknown] `_relevantActionsCount is _knownActionsCount`
+-> [NothingNew] `_relevantUpdatesCount is 0`
+-> [NothingUnknown] `_relevantUpdatesCount is _knownUpdatesCount`
 
 ## Update
 
--> [EndUpdateNoPause] `_relevantActionsCount is 0`
+-> [EndUpdateNoPause] `_relevantUpdatesCount is 0`
 
 ## JournalEntries
 
 person: I wrote a new journal entry. `_journalEntries.entries.length is 1`
 
 person: I wrote some new entries in my journal. `_journalEntries.entries.length > 1`
+
+## JournalEntries
+
+person: I finished one of the learning tasks. `_learningTasks.tasks.length is 1`
+
+person: I finished some of the learning tasks. `_learningTasks.tasks.length > 1`
 
 ## CommentsOnJournalEntries
 
@@ -61,6 +67,11 @@ person: I've been reading some Daily articles. `_dailyConversations.conversation
 
 * Which journal entry did you write? -> [JournalEntrySingle] `_journalEntries.entries.length is 1`
 * Can I see the journal entries you wrote? -> [JournalEntryMultiple] `_journalEntries.entries.length > 1`
+
+<!-- Learning tasks -->
+
+* Which learning task did you complete? -> [LearningTaskSingle] `_learningTasks.tasks.length is 1`
+* Which learning tasks did you complete? -> [LearningTaskMultiple] `_learningTasks.tasks.length > 1`
 
 <!-- Comments on journal entries -->
 
@@ -117,6 +128,22 @@ pause
 ### ReadFirstJournalEntry
 
 -> [Return]
+
+<!-- Learning tasks -->
+
+## LearningTaskSingle
+
+person: It was the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal.
+
+-> [FollowUp]
+
+## LearningTaskMultiple
+
+person: Let's see … I did `_learningTasks.taskDirectives` from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.goals.length is 1`
+
+person: Let's see … I did `_learningTasks.taskDirectives`. `_learningTasks.goals.length > 1`
+
+-> [FollowUp]
 
 <!-- Journal entry conversations -->
 
