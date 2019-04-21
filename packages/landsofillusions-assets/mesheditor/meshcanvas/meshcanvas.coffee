@@ -101,9 +101,16 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
 
         spriteLayers[layer.index] = spriteLayer
 
+      # The sprite expects materials as a map instead of an array.
+      materials = {}
+
+      for material, index in @meshData().materials.getAll() or []
+        materials[index] = material
+
       new LOI.Assets.Sprite
         palette: _.pick meshData.palette, ['_id']
         layers: spriteLayers
+        materials: materials
 
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
 

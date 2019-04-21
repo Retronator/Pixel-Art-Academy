@@ -84,7 +84,8 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
 
         if materialIndex?
           asset = loader.asset()
-          material = asset.materials?[materialIndex]
+          materials = asset.materials?.getAll?() or asset.materials
+          material = materials[materialIndex]
 
         else
           material = paletteColor

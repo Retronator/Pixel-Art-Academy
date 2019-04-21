@@ -17,7 +17,7 @@ class LOI.Assets.MeshEditor.Materials extends FM.View
     # Deselect index if it's outside asset's materials.
     @autorun (computation) =>
       return unless index = @paintHelper.materialIndex()
-      return if @mesh()?.materials?[index]
+      return if @mesh()?.materials.get index
       
       Tracker.nonreactive => @paintHelper.setMaterialIndex null
 
@@ -73,8 +73,8 @@ class LOI.Assets.MeshEditor.Materials extends FM.View
     backgroundColor: "##{color.getHexString()}"
 
   activeColorClass: ->
-    data = @currentData()
-    'active' if data.index is @paintHelper.materialIndex()
+    material = @currentData()
+    'active' if material.index is @paintHelper.materialIndex()
 
   events: ->
     super(arguments...).concat
