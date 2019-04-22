@@ -122,7 +122,13 @@ class LOI.Engine.World extends AM.Component
   update: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering
 
+    # Don't update when you can't see the game world.
+    return unless @worldIsVisible()
+
     @_update appTime
+
+  worldIsVisible: ->
+    @options.adventure.interface.illustrationSize.height()
 
   _update: (appTime) ->
     @navigator()?.update appTime
@@ -133,6 +139,9 @@ class LOI.Engine.World extends AM.Component
 
   draw: (appTime) ->
     return if @options.updateMode is @constructor.UpdateModes.Hover and not @_hovering
+
+    # Don't draw when you can't see the game world.
+    return unless @worldIsVisible()
 
     @_draw appTime
 
