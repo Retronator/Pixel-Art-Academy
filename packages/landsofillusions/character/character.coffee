@@ -37,6 +37,9 @@ class LOI.Character extends AM.Document
   #   country: ISO region code
   #   aspiration: any string
   #   favorites: an object of strings for various categories
+  #   weeklyGoals: character's current commitment goal
+  #     daysWithActivities: how many days in a week need to contain activities
+  #     totalHours: how many hours in a week need to be spent on activities
   # designApproved: whether the character has finished the design stage
   # behaviorApproved: whether the character has finished the behavior stage
   # activated: whether the character has been deployed in the world

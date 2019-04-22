@@ -2,26 +2,56 @@
 
 ## MainQuestions
 
-* How's progress going on admission week tasks? -> [TaskProgress]
-* Which goals did you complete so far? -> [CompletedGoals]
-* What's your commitment goal? -> [CommitmentGoal]
-* Which admission project did you choose? -> [AdmissionProject]
+* How's it going with admission week? -> [TaskProgress]
+* Which goals did you complete so far? -> [CompletedGoals] `TaskProgress`
+* What's your commitment goal? -> [CommitmentGoal] `TaskProgress`
+* Which admission project did you choose? -> [AdmissionProject] `TaskProgress`
 
 ## TaskProgress
 
-groupmate: It's …
+### WaitToLoad
+
+-> [TaskProgressNothing] `not _learningTasks.tasks.length`
+
+groupmate: I finished the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks.length is 1 and _learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length is 0`
+
+groupmate: Let's see … I worked on the `_learningTasks.tasks[0].goal.displayName` goal and finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.goals.length is 1`
+
+groupmate: Let's see … I finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.goals.length > 1`
+
+-> [Return]
+
+## TaskProgressNothing
+
+groupmate: Hm, I haven't been able to complete any new tasks actually.
 
 -> [Return]
 
 ## CompletedGoals
 
-groupmate: It's …
+### WaitToLoad
+
+groupmate: I haven't done any goals yet. `not _completedGoalsCount`
+groupmate: I completed the `_completedGoals` goal. `_completedGoalsCount is 1`
+groupmate: I completed `_completedGoals` goals. `_completedGoalsCount > 1`
 
 -> [Return]
 
 ## CommitmentGoal
 
-groupmate: It's …
+### WaitToLoad
+
+groupmate: I'm still thinking about it. `not _weeklyGoals or not (_weeklyGoals.daysWithActivities or _weeklyGoals.totalHours)`
+
+groupmate: Nothing too serious, just once a week. `_weeklyGoals and _weeklyGoals.daysWithActivities is 1 and not _weeklyGoals.totalHours`
+
+groupmate: I want to spend at least `_weeklyGoals.daysWithActivities` days per week on art. `_weeklyGoals and _weeklyGoals.daysWithActivities isnt 1 and not _weeklyGoals.totalHours`
+
+groupmate: I'm taking it easy, just an hour per week. `_weeklyGoals and not _weeklyGoals.daysWithActivities and _weeklyGoals.totalHours is 1`
+
+groupmate: I want to spend at least `_weeklyGoals.totalHours` hours per week on art. `_weeklyGoals and not _weeklyGoals.daysWithActivities and _weeklyGoals.totalHours isnt 1`
+
+groupmate: I want to practice at least `_weeklyGoals.totalHours` hours per week on `_weeklyGoals.daysWithActivities` different days. `_weeklyGoals and _weeklyGoals.daysWithActivities and _weeklyGoals.totalHours`
 
 -> [Return]
 

@@ -10,3 +10,7 @@ LOI.Character.Agent::recentTasks = ->
   PAA.Learning.Task.Entry.documents.fetch
     'character._id': @_id
     time: $gte: @recentActionsEarliestTime()
+
+LOI.Character.Agent::getTasks = (query) ->
+  PAA.Learning.Task.Entry.documents.fetch _.extend {}, query,
+    'character._id': @_id

@@ -22,8 +22,8 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
             # We've now got all documents we need to carry out this conversation.
             # Find the actions this person made since earliest time.
-            actions = @_options.person.recentActions @_options.earliestTime
-            tasks = @_options.person.recentTasks @_options.earliestTime
+            actions = @_options.person.recentActions()
+            tasks = @_options.person.recentTasks()
 
             updates = [actions..., tasks...]
             updates = _.sortBy updates, (update) => update.time.getTime()

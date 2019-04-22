@@ -23,21 +23,93 @@ class C1.Groups.AdmissionsStudyGroup.GroupmateConversation extends LOI.Adventure
   destroy: ->
     super arguments...
 
-  prepareScriptForGroupmate: (groupmate) ->
+    @_groupmateTasksSubscription?.stop()
+
+  prepareScriptForGroupmate: (@currentGroupmate) ->
     script = @listeners[0].script
 
     # Replace the groupmate with target character.
-    script.setThings {groupmate}
+    script.setThings groupmate: @currentGroupmate
 
     # Transfer ephemeral state for the groupmate from main to this script.
     ephemeralPersons = script._mainScript.ephemeralState 'persons'
-    ephemeralGroupmate = ephemeralPersons[groupmate._id]
+    ephemeralGroupmate = ephemeralPersons[@currentGroupmate._id]
     script.ephemeralState 'groupmate', ephemeralGroupmate
+
+    # Subscribe to tasks for the groupmate.
+    @_groupmateTasksSubscription?.stop()
+
+    if @currentGroupmate instanceof LOI.Character.Agent
+      @_groupmateTasksSubscription = PAA.Learning.Task.Entry.forCharacter.subscribe @currentGroupmate._id
+
+    else
+      @_groupmateTasksSubscription = null
 
   # Script
 
   initializeScript: ->
     super arguments...
+
+    scene = @options.parent
+
+    @setCallbacks
+      WaitToLoad: (complete) =>
+        Tracker.autorun (computation) =>
+          return unless not scene._groupmateTasksSubscription or scene._groupmateTasksSubscription.ready()
+          computation.stop()
+
+          # Prepare data for task progress answer.
+
+          learningTasks =
+            tasks: []
+            goals: []
+
+          @ephemeralState 'learningTasks', learningTasks
+
+          for taskEntry in scene.currentGroupmate.recentTasks()
+            continue unless task = PAA.Learning.Task.getAdventureInstanceForId taskEntry.taskId
+
+            goal = _.find learningTasks.goals, (goal) => goal.id is task.options.goal.id()
+
+            unless goal
+              goal =
+                id: task.options.goal.id()
+                displayName: task.options.goal.displayName()
+
+              learningTasks.goals.push goal
+
+            learningTasks.tasks.push
+              directive: task.directive()
+              goal: goal
+
+          learningTasks.taskDirectives = AB.Rules.English.createNounSeries (task.directive for task in learningTasks.tasks)
+
+          # Prepare data for completed goals answer.
+
+          completedGoals = []
+
+          for taskEntry in scene.currentGroupmate.getTasks()
+            continue unless task = PAA.Learning.Task.getAdventureInstanceForId taskEntry.taskId
+            continue if _.find completedGoals, (goal) => goal.id is task.options.goal.id()
+
+            # See if this task is a final task for the goal.
+            continue unless task.constructor in task.options.goal.constructor.finalTasks()
+
+            completedGoals.push task.options.goal
+
+          @ephemeralState 'completedGoals', AB.Rules.English.createNounSeries (goal.displayName() for goal in completedGoals)
+          @ephemeralState 'completedGoalsCount', completedGoals.length
+
+          # Prepare data for commitment goal answer.
+
+          weeklyGoals = scene.currentGroupmate.instance.document().profile?.weeklyGoals
+
+          # Round any fractional values to 1 digit. Note that the result is a string.
+          weeklyGoals[property] = value.toFixed 1 for property, value of weeklyGoals when value % 1 isnt 0
+
+          @ephemeralState 'weeklyGoals', weeklyGoals
+
+          complete()
 
   # Listener
 
