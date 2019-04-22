@@ -38,10 +38,10 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene.ConversationBranch
     # Replace the student with target character.
     script.setThings {student}
 
-    # Prepare an ephemeral object for this student (we need it to be unique for the current student).
-    ephemeralStudents = script.ephemeralState('students') or {}
-    ephemeralStudents[student._id] ?= {}
-    ephemeralStudent = ephemeralStudents[student._id]
+    # Transfer ephemeral state for the groupmate from main to this script.
+    ephemeralPersons = script._mainScript.ephemeralState 'persons'
+    ephemeralStudent = ephemeralPersons[student._id]
+    script.ephemeralState 'student', ephemeralStudent
 
     journals = PAA.Practice.Journal.documents.fetch
       'character._id': student._id
@@ -51,9 +51,6 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene.ConversationBranch
 
     _.extend ephemeralStudent,
       journalIds: (journal._id for journal in journals)
-
-    script.ephemeralState 'students', ephemeralStudents
-    script.ephemeralState 'student', ephemeralStudent
 
     # Prepare student's and character's profile.
     studentProfile = @prepareProfile student.instance.document().profile
@@ -104,10 +101,10 @@ class PAA.Student.Conversation extends LOI.Adventure.Scene.ConversationBranch
     # This choices only apply to students.
     person = choicePlaceholderResponse.script.things.person
     return unless person.is PAA.Student
-
-    # Save the student to our script.
     student = person
-    @script.setThings {student}
+
+    # Save the script so we can access its ephemeral state.
+    @script._mainScript = choicePlaceholderResponse.script
 
     choicePlaceholderResponse.addChoices @script.startNode.labels.MainQuestions.next
 

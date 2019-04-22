@@ -85,6 +85,7 @@ Package.onUse(function(api) {
   api.addFile('chapter1/groups/admissionsstudygroup/b');
   api.addFile('chapter1/groups/admissionsstudygroup/c');
   api.addFile('chapter1/groups/admissionsstudygroup/conversation');
+  api.addThing('chapter1/groups/admissionsstudygroup/groupmateconversation');
   api.addServerFile('chapter1/groups/admissionsstudygroup/subscriptions');
 
   api.addFile('chapter1/projects..');

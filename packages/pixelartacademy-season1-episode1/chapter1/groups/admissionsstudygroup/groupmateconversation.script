@@ -1,0 +1,38 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup.GroupmateConversation
+
+## MainQuestions
+
+* How's progress going on admission week tasks? -> [TaskProgress]
+* Which goals did you complete so far? -> [CompletedGoals]
+* What's your commitment goal? -> [CommitmentGoal]
+* Which admission project did you choose? -> [AdmissionProject]
+
+## TaskProgress
+
+groupmate: It's …
+
+-> [Return]
+
+## CompletedGoals
+
+groupmate: It's …
+
+-> [Return]
+
+## CommitmentGoal
+
+groupmate: It's …
+
+-> [Return]
+
+## AdmissionProject
+
+groupmate: It's …
+
+-> [Return]
+
+## Return
+
+### Return
+
+## End
