@@ -47,6 +47,7 @@ class PAA.Season1.Episode1.Chapter1 extends PAA.Adventure.Chapter
     @Groups.AdmissionsStudyGroup.B
     @Groups.AdmissionsStudyGroup.C
     @Groups.AdmissionsStudyGroup.GroupmateConversation
+    @Groups.AdmissionsStudyGroup.CoordinatorConversation
   ]
 
   @initialize()

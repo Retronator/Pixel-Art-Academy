@@ -1,0 +1,37 @@
+# PixelArtAcademy.Season1.Episode1.Chapter1.Groups.AdmissionsStudyGroup.CoordinatorConversation
+
+## CoordinatorMainQuestions
+
+* I have a question about admission week. -> [AdmissionWeekQuestionsIntro]
+
+## AdmissionWeekQuestionsIntro
+
+coordinator: Sure, how can I help?
+
+`_answered = false`
+
+## AdmissionWeekQuestions
+
+* A? -> [A]
+* Thanks! -> [Thanks] `_answered`
+* Actually … -> [Return] `not _answered`
+
+## Thanks
+
+coordinator: My pleasure!
+
+-> [Return]
+
+## A
+
+`_answered = true`
+
+coordinator: A.
+
+-> [AdmissionWeekQuestions]
+
+## Return
+
+### Return
+
+## End

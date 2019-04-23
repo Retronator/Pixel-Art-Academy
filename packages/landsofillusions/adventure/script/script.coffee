@@ -16,6 +16,7 @@ class LOI.Adventure.Script
     
   constructor: (@options) ->
     @startNode = @options.startNode
+    @things = {}
 
     # Gather all the nodes in this graph for easier processing.
     @nodes = []
@@ -29,8 +30,6 @@ class LOI.Adventure.Script
     # Now process the script nodes.
     @_processOnServer() if Meteor.isServer
     @_processOnClient() if Meteor.isClient
-
-    @things = {}
 
   _processOnServer: ->
     # On the server we need to prepare translation documents for the script.

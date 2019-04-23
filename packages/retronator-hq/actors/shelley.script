@@ -1,0 +1,34 @@
+# Retronator.HQ.Actors.Shelley
+
+## Start
+
+shelley: Hey! -> [MainQuestions] `IntroductionOver and not _IntroductionOver`
+shelley: Can I help with something else? -> [MainQuestions] `_IntroductionOver`
+
+shelley: 
+  Hi there, I'm Shelley!
+  I run the application process for the Academy. I'm also Matej's art dealer.
+
+char: Hi, I'm _char_. Nice to meet you!
+
+## IntroductionOver
+
+## MainQuestions
+
+* *CoordinatorMainQuestions*
+* What kind of art does Matej do? -> [RetroArt]
+* See you around.
+
+shelley: Laters.
+
+-> [End]
+
+## RetroArt
+
+shelley: 
+  His main thing is pixel art, but he makes traditional pieces as well sometimes.
+  You can see his best pixel works in the gallery and the traditional stuff up in the art studio.
+
+-> [MainQuestions]
+
+## End

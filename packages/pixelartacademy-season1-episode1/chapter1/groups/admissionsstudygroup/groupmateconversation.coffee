@@ -17,9 +17,6 @@ class C1.Groups.AdmissionsStudyGroup.GroupmateConversation extends LOI.Adventure
   @defaultScriptUrl: -> 'retronator_pixelartacademy-season1-episode1/chapter1/groups/admissionsstudygroup/groupmateconversation.script'
   @returnLabel: -> 'MainQuestions'
 
-  constructor: ->
-    super arguments...
-
   destroy: ->
     super arguments...
 

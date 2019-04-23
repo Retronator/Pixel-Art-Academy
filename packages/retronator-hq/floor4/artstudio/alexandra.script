@@ -24,6 +24,7 @@ alexandra: How else can I help?
 * Is that your painting? -> [YourPainting]
 * I'm surprised to find non-pixel art at Retronator. -> [RetronatorJustPixelArt]
 * Can I ask you questions about art? -> [ArtQuestionsIntro] `YourPainting or RetronatorJustPixelArt`
+* *CoordinatorMainQuestions*
 * What are you drinking? -> [Drinking]
 * What are you listening to? -> [Listening]
 * Sorry, nevermind. `not _MainQuestions`
