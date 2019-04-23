@@ -26,7 +26,7 @@ class PAA.CharacterUpdatesHelper
 
     @tasksSubscription = new ComputedField =>
       return unless agent = @agent()
-      agent.subscribeRecentTasks()
+      agent.subscribeRecentTaskEntries()
     ,
       true
 

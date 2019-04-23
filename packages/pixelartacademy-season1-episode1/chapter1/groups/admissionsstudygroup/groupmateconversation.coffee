@@ -66,15 +66,15 @@ class C1.Groups.AdmissionsStudyGroup.GroupmateConversation extends LOI.Adventure
 
           @ephemeralState 'learningTasks', learningTasks
 
-          for taskEntry in scene.currentGroupmate.recentTasks()
+          for taskEntry in scene.currentGroupmate.recentTaskEntries()
             continue unless task = PAA.Learning.Task.getAdventureInstanceForId taskEntry.taskId
 
-            goal = _.find learningTasks.goals, (goal) => goal.id is task.options.goal.id()
+            goal = _.find learningTasks.goals, (goal) => goal.id is task.goal.id()
 
             unless goal
               goal =
-                id: task.options.goal.id()
-                displayName: task.options.goal.displayName()
+                id: task.goal.id()
+                displayName: task.goal.displayName()
 
               learningTasks.goals.push goal
 
@@ -87,15 +87,16 @@ class C1.Groups.AdmissionsStudyGroup.GroupmateConversation extends LOI.Adventure
           # Prepare data for completed goals answer.
 
           completedGoals = []
+          taskEntries = scene.currentGroupmate.getTaskEntries()
 
-          for taskEntry in scene.currentGroupmate.getTasks()
+          for taskEntry in taskEntries
             continue unless task = PAA.Learning.Task.getAdventureInstanceForId taskEntry.taskId
-            continue if _.find completedGoals, (goal) => goal.id is task.options.goal.id()
+            continue if _.find completedGoals, (goal) => goal.id is task.goal.id()
 
             # See if this task is a final task for the goal.
-            continue unless task.constructor in task.options.goal.constructor.finalTasks()
+            continue unless task.constructor in task.goal.constructor.finalTasks()
 
-            completedGoals.push task.options.goal
+            completedGoals.push task.goal
 
           @ephemeralState 'completedGoals', AB.Rules.English.createNounSeries (goal.displayName() for goal in completedGoals)
           @ephemeralState 'completedGoalsCount', completedGoals.length
@@ -108,6 +109,21 @@ class C1.Groups.AdmissionsStudyGroup.GroupmateConversation extends LOI.Adventure
           weeklyGoals[property] = value.toFixed 1 for property, value of weeklyGoals when value % 1 isnt 0
 
           @ephemeralState 'weeklyGoals', weeklyGoals
+
+          # Prepare data for admission project answer.
+          taskEntries = _.sortBy taskEntries, 'time'
+
+          admissionProject = null
+
+          for taskEntry in taskEntries by -1
+            continue unless task = PAA.Learning.Task.getAdventureInstanceForId taskEntry.taskId
+            goal = task.goal
+
+            if _.find(goal.constructor.tasks(), (taskClass) => 'academy of art admission project' in taskClass.interests())
+              admissionProject = goal.displayName()
+              break
+
+          @ephemeralState 'admissionProject', admissionProject
 
           complete()
 

@@ -13,7 +13,7 @@
 
 -> [TaskProgressNothing] `not _learningTasks.tasks.length`
 
-groupmate: I finished the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks.length is 1 and _learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length is 0`
+groupmate: I finished the `_learningTasks.tasks[0].directive` task from the `_learningTasks.tasks[0].goal.displayName` goal. `_learningTasks.tasks.length is 1`
 
 groupmate: Let's see … I worked on the `_learningTasks.tasks[0].goal.displayName` goal and finished tasks `_learningTasks.taskDirectives`. `_learningTasks.tasks.length > 1 and _learningTasks.goals.length is 1`
 
@@ -57,7 +57,11 @@ groupmate: I want to practice at least `_weeklyGoals.totalHours` hours per week 
 
 ## AdmissionProject
 
-groupmate: It's …
+### WaitToLoad
+
+groupmate: Hmm, I actually haven't decided on one yet. `not _admissionProject`
+
+groupmate: Currently I'm working on the `_admissionProject`. `_admissionProject`
 
 -> [Return]
 

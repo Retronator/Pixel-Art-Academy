@@ -23,7 +23,7 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
             # We've now got all documents we need to carry out this conversation.
             # Find the actions this person made since earliest time.
             actions = @_options.person.recentActions()
-            tasks = @_options.person.recentTasks()
+            tasks = @_options.person.recentTaskEntries()
 
             updates = [actions..., tasks...]
             updates = _.sortBy updates, (update) => update.time.getTime()
@@ -68,12 +68,12 @@ class PAA.PersonUpdates extends LOI.Adventure.Listener
 
               continue unless task = PAA.Learning.Task.getAdventureInstanceForId update.taskId
 
-              goal = _.find learningTasks.goals, (goal) => goal.id is task.options.goal.id()
+              goal = _.find learningTasks.goals, (goal) => goal.id is task.goal.id()
 
               unless goal
                 goal =
-                  id: task.options.goal.id()
-                  displayName: task.options.goal.displayName()
+                  id: task.goal.id()
+                  displayName: task.goal.displayName()
 
                 learningTasks.goals.push goal
 

@@ -68,7 +68,7 @@ class LOI.Interface.Components.DialogueSelection
 
       # Alright, we found all the choices. We select the choice at the
       # previous index to prevent selection changing on recomputations.
-      selectIndex = @selectedDialogueLineIndex() or 0
+      selectIndex = _.clamp @selectedDialogueLineIndex() or 0, 0, choiceNodes.length - 1
       @selectedDialogueLine choiceNodes[selectIndex].node
 
       # Return the embedded dialog nodes as the selection.
@@ -117,6 +117,6 @@ class LOI.Interface.Components.DialogueSelection
 
     index = _.indexOf choices, @selectedDialogueLine()
 
-    newIndex = _.clamp index + offset, 0, choices.length - 1
+    newIndex = (index + offset + choices.length) % choices.length
     @selectedDialogueLine choices[newIndex]
     @selectedDialogueLineIndex newIndex
