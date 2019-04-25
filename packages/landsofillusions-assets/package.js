@@ -218,6 +218,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/assetopendialog..');
   api.addComponent('editor/window..');
   api.addComponent('editor/materials..');
+  api.addComponent('editor/references..');
 
   api.addComponent('editor/filemanager..');
 

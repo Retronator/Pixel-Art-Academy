@@ -31,6 +31,7 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #     x, y: floating point position values
   #   scale: data for how big to display the reference
   #   order: integer value for sorting references
+  #   displayMode: where to display the reference (inside the image, over the interface …)
   @Meta
     abstract: true
     fields: =>
@@ -39,6 +40,12 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
       references: [
         image: Document.ReferenceField LOI.Assets.Image, ['url']
       ]
+
+  @ReferenceDisplayModes:
+    EmbeddedUnder: 'EmbeddedUnder'
+    EmbeddedOver: 'EmbeddedOver'
+    FloatingInside: 'FloatingInside'
+    FloatingOutside: 'FloatingOutside'
 
   # Methods
 
@@ -53,6 +60,7 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   @updateReferenceScale: @method 'updateReferenceScale'
   @updateReferencePosition: @method 'updateReferencePosition'
   @updateReferenceDisplayed: @method 'updateReferenceDisplayed'
+  @updateReferenceDisplayMode: @method 'updateReferenceDisplayMode'
   @reorderReferenceToTop: @method 'reorderReferenceToTop'
   
   # Helper methods

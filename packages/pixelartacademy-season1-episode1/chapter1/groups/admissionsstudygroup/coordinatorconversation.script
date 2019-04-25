@@ -10,9 +10,17 @@ coordinator: Sure, how can I help?
 
 `_answered = false`
 
+-> [AdmissionWeekQuestions]
+
+## AdmissionWeekQuestionsReturn
+
+`_answered = true`
+
 ## AdmissionWeekQuestions
 
-* A? -> [A]
+* What all do I need to do to get accepted to the Academy? -> [Conditions]
+* How do I join a study group? -> [StudyGroup]
+* What's a good commitment goal? 
 * Thanks! -> [Thanks] `_answered`
 * Actually … -> [Return] `not _answered`
 
@@ -22,13 +30,16 @@ coordinator: My pleasure!
 
 -> [Return]
 
-## A
+## Conditions
 
-`_answered = true`
+coordinator: 
+  There are four main goals you need to complete, and you can do them in any order you want.
+  One is to join a study group and get to know some of your future classmates.
+  Another is to decide how much time you want to put into drawing per week and then fulfill that commitment.
+  You'll have to design a study plan that will help you complete all the admission week tasks.
+  Finally, your biggest goal is to complete an admission project and set a baseline for yourself, where your skills are at the moment.
 
-coordinator: A.
-
--> [AdmissionWeekQuestions]
+-> [AdmissionWeekQuestionsReturn]
 
 ## Return
 

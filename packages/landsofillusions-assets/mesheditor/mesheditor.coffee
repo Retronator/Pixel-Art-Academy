@@ -158,6 +158,9 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                   ,
                     name: 'Objects'
                     contentComponentId: LOI.Assets.MeshEditor.Objects.id()
+                  ,
+                    name: 'References'
+                    contentComponentId: LOI.Assets.Editor.References.id()
                     active: true
                   ]
                 remainingArea:

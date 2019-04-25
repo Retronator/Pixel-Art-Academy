@@ -4,7 +4,7 @@ LOI = LandsOfIllusions
 LOI.Assets.VisualAsset.addReferenceByUrl.method (assetClassName, assetId, characterId, url, position, scale, displayed) ->
   check assetId, Match.DocumentId
   check assetClassName, String
-  check characterId, Match.DocumentId
+  check characterId, Match.OptionalOrNull Match.DocumentId
   check url, String
   check position, Match.OptionalOrNull
     x: Number
@@ -52,6 +52,11 @@ LOI.Assets.VisualAsset.updateReferenceDisplayed.method (assetClassName, assetId,
   check displayed, Boolean
 
   updateReference assetClassName, assetId, imageId, 'displayed', displayed
+
+LOI.Assets.VisualAsset.updateReferenceDisplayMode.method (assetClassName, assetId, imageId, displayMode) ->
+  check displayMode, Match.Enum LOI.Assets.VisualAsset.ReferenceDisplayModes
+
+  updateReference assetClassName, assetId, imageId, 'displayMode', displayMode
 
 updateReference = (assetClassName, assetId, imageId, key, value) ->
   check assetId, Match.DocumentId

@@ -29,3 +29,7 @@ Match.PositiveInteger = Match.Where (value) ->
 Match.NonNegativeInteger = Match.Where (value) ->
   check value, Match.Integer
   value >= 0
+
+Match.Enum = (enumeration) ->
+  Match.Where (value) ->
+    value in _.values enumeration
