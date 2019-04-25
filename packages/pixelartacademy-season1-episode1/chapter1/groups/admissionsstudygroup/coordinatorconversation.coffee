@@ -33,8 +33,10 @@ class C1.Groups.AdmissionsStudyGroup.CoordinatorConversation extends LOI.Adventu
 
     return unless choicePlaceholderResponse.placeholderId is 'CoordinatorMainQuestions'
 
+    # You can talk to coordinators after they've been introduced in the mixer
+    # section. Shelley can always answer these questions, but only to a character.
     coordinator = choicePlaceholderResponse.script.things.coordinator
-    return unless C1.Mixer.finished() or coordinator instanceof HQ.Actors.Shelley
+    return unless C1.Mixer.finished() or (LOI.characterId() and coordinator instanceof HQ.Actors.Shelley)
 
     # Save the script so we can access its ephemeral state.
     @script._mainScript = choicePlaceholderResponse.script

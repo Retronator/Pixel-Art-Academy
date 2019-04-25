@@ -22,11 +22,9 @@ class HQ.Actors.Shelley extends LOI.Character.Actor
   # Script
 
   initializeScript: ->
-    Tracker.autorun (computation) =>
-      return unless shelley = LOI.adventure.getCurrentThing HQ.Actors.Shelley
-      computation.stop()
-
-      @setThings {shelley, coordinator: shelley}
+    @setCurrentThings
+      shelley: HQ.Actors.Shelley
+      coordinator: HQ.Actors.Shelley
 
   # Listener
 
@@ -35,4 +33,11 @@ class HQ.Actors.Shelley extends LOI.Character.Actor
 
     commandResponse.onPhrase
       form: [Vocabulary.Keys.Verbs.TalkTo, shelley]
-      action: => @startScript()
+      action: =>
+        C1 = PixelArtAcademy.Season1.Episode1.Chapter1
+
+        @script.ephemeralState 'application',
+          applied: C1.state('application')?.applied
+          accepted: C1.readOnlyState('application')?.accepted
+
+        @startScript()

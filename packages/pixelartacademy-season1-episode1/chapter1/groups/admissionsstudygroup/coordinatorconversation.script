@@ -18,9 +18,11 @@ coordinator: Sure, how can I help?
 
 ## AdmissionWeekQuestions
 
-* What all do I need to do to get accepted to the Academy? -> [Conditions]
-* How do I join a study group? -> [StudyGroup]
-* What's a good commitment goal? 
+* What do I need to do to get accepted to the Academy? -> [Conditions]
+* How do I join a study group? -> [StudyGroup] `Conditions`
+* What's a good commitment goal? -> [CommitmentGoal] `Conditions`
+* Where do I design a study plan? -> [StudyPlan] `Conditions`
+* What kind of admission projects are there? -> [AdmissionProjects] `Conditions`
 * Thanks! -> [Thanks] `_answered`
 * Actually … -> [Return] `not _answered`
 
@@ -33,11 +35,46 @@ coordinator: My pleasure!
 ## Conditions
 
 coordinator: 
-  There are four main goals you need to complete, and you can do them in any order you want.
+  There are four main goals you need to complete. You can do them in any order you want.
   One is to join a study group and get to know some of your future classmates.
   Another is to decide how much time you want to put into drawing per week and then fulfill that commitment.
   You'll have to design a study plan that will help you complete all the admission week tasks.
   Finally, your biggest goal is to complete an admission project and set a baseline for yourself, where your skills are at the moment.
+
+-> [AdmissionWeekQuestionsReturn]
+
+## StudyGroup
+
+coordinator:
+  After you get the Yearbook App, fill out your profile to help your classmates get to know you.
+  You don't have to share things if you don't want to, but they can give you talking points when meeting other students.
+  In any case, wait for the meeting to be announced. We usually hold it in the Gallery on third floor.
+
+-> [AdmissionWeekQuestionsReturn]
+
+## CommitmentGoal
+
+coordinator:
+  This really depends on your lifestyle and ambitions. 
+  In general, the more consistent schedule you have, the better. Go over your week and see where you could have regular play times.
+  The Calendar app will give you a difficulty rating based on your choice. Use it as a guide so you don't overcommit.
+
+-> [AdmissionWeekQuestionsReturn]
+
+## StudyPlan
+
+coordinator:
+  It's all done on your PixelBoy. The Study Plan app lets you search for things you're interested in and give you goals based on it.
+  For now, only goals related to admission week will be available to you. Make sure you add all prerequisites to the blueprint.
+
+-> [AdmissionWeekQuestionsReturn]
+
+## AdmissionProjects
+
+coordinator:
+  Art is all about practice, so it's best to get your hands dirty as soon as possible. You'll have to do something concrete in your area of interest.
+  It could be working on a video game, helping out with the sprite archive, drawing from life in the art studio, environment sketching, real-life pixel art …
+  Talk to different people at Retronator Headquarters and see what they're working on. They might be able to give you something to do.
 
 -> [AdmissionWeekQuestionsReturn]
 

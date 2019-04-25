@@ -41,6 +41,7 @@ class HQ.ArtStudio.Alexandra extends HQ.Actors.Alexandra
 
     @setCurrentThings
       alexandra: HQ.Actors.Alexandra
+      coordinator: HQ.Actors.Alexandra
       
     @setCallbacks
       DigitalEquipment: (complete) =>

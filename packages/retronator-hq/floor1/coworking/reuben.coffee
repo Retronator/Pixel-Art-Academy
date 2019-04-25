@@ -12,6 +12,7 @@ class HQ.Coworking.Reuben extends HQ.Actors.Reuben
   initializeScript: ->
     @setCurrentThings
       reuben: HQ.Actors.Reuben
+      coordinator: HQ.Actors.Reuben
 
   onCommand: (commandResponse) ->
     return unless reuben = LOI.adventure.getCurrentThing HQ.Actors.Reuben
