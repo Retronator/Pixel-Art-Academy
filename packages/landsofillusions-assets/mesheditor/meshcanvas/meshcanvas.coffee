@@ -28,6 +28,7 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     super arguments...
 
     @planeGrid = new ReactiveField null
+    @references = new ReactiveField null
 
     @$meshCanvas = new ReactiveField null
     @canvas = new ReactiveField null
@@ -166,6 +167,20 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
     # Initialize components.
     @planeGrid new @constructor.PlaneGrid @
 
+    @references new LOI.Assets.Editor.References.DisplayComponent
+      assetId: @meshId
+      documentClass: LOI.Assets.Mesh
+      assetOptions: =>
+        upload:
+          enabled: false
+        storage:
+          enabled: false
+      embeddedTransform: =>
+        camera = @pixelCanvas.camera()
+
+        origin: camera.origin()
+        scale: camera.scale()
+
     # Register with the app to support updates.
     @app = @ancestorComponent Retronator.App
     @app.addComponent @
@@ -228,3 +243,8 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
         sceneUpdated = true
 
     sceneHelper.scene.updated() if sceneUpdated
+
+  draggingClass: ->
+    'dragging' if _.some [
+      @references().dragging()
+    ]

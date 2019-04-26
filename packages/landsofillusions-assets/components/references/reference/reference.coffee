@@ -20,7 +20,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   constructor: ->
     super arguments...
 
-    # Overwrite to define the border width withing which resizing should be active.
+    # Overwrite to define the border width within which resizing should be active.
     @resizingBorder = 0
 
   onCreated: ->
@@ -66,7 +66,7 @@ class LOI.Assets.Components.References.Reference extends AM.Component
         @references.removeUploadingReference reference._id, imageId
         
   displaySize: (scale) ->
-    imageSize = @imageSize()
+    return unless imageSize = @imageSize()
     scale ?= @currentScale()
 
     width: imageSize.width * scale
@@ -131,6 +131,10 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   currentOrder: ->
     return unless reference = @data()
     _.propertyValue(reference, 'order') or 0
+
+  currentDisplayMode: ->
+    return unless reference = @data()
+    _.propertyValue(reference, 'displayMode') or LOI.Assets.VisualAsset.ReferenceDisplayModes.FloatingInside
 
   setPosition: (position) ->
     @_setReferenceProperty 'position', position
@@ -214,7 +218,8 @@ class LOI.Assets.Components.References.Reference extends AM.Component
   onMouseMove: (event) ->
     return if @resizingScale()?
 
-    displayScale = @display.scale()
+    draggingScale = @references.draggingScale()
+    displayScale = @display.scale() * draggingScale
 
     offset = $(@firstNode()).offset()
 
@@ -223,11 +228,13 @@ class LOI.Assets.Components.References.Reference extends AM.Component
 
     displaySize = @displaySize()
 
+    resizingBorder = @resizingBorder / draggingScale
+
     direction = ''
-    direction += 'n' if y < @resizingBorder
-    direction += 's' if y > displaySize.height - @resizingBorder
-    direction += 'w' if x < @resizingBorder
-    direction += 'e' if x > displaySize.width - @resizingBorder
+    direction += 'n' if y < resizingBorder
+    direction += 's' if y > displaySize.height - resizingBorder
+    direction += 'w' if x < resizingBorder
+    direction += 'e' if x > displaySize.width - resizingBorder
 
     @resizingDirection direction
 

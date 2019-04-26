@@ -22,6 +22,9 @@ class LOI.Assets.Components.References extends AM.Component
     @draggingReference = new ReactiveField null
     @draggingDisplayed = new ReactiveField false
 
+    # Override to provide a custom scaling factor for dragging.
+    @draggingScale = => 1
+
     @resizingReference = new ReactiveField null
 
   onCreated: ->
@@ -36,7 +39,7 @@ class LOI.Assets.Components.References extends AM.Component
           references: 1
           
     @assetOptions = new ComputedField =>
-      _.defaultsDeep {}, @options.assetOptions(),
+      _.defaultsDeep {}, @options.assetOptions?(),
         upload:
           enabled: true
         storage:
@@ -92,7 +95,7 @@ class LOI.Assets.Components.References extends AM.Component
       @draggingReference null
 
     $(document).on "mousemove.landsofillusions-assets-components-references", (event) =>
-      scale = @display.scale()
+      scale = @display.scale() * @draggingScale()
 
       dragDelta =
         x: (event.pageX - @_dragStartMousePosition.x) / scale
