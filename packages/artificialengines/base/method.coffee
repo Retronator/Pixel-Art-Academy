@@ -6,6 +6,9 @@ class AB.Method
     # We want the method to behave as a function that calls the Meteor method.
     method = (args...) -> Meteor.call options.name, args...
 
+    # We provide the apply variation as well.
+    method.apply = (args...) -> Meteor.apply options.name, args...
+
     # Method that registers the handler.
     method.method = (handler) ->
       if Artificial.debug

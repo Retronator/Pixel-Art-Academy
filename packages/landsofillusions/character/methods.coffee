@@ -196,9 +196,13 @@ LOI.Character.approveDesign.method (characterId) ->
   LOI.Character.documents.update characterId,
     $set:
       designApproved: true
-      
-  # Also render avatar textures for the first time.
-  LOI.Character.renderAvatarTextures characterId
+
+  # On the server, in the background render avatar textures for the first time. Note that we can't simply add a
+  # callback to the renderAvatarTextures call since the client will still wait for all the database operations to
+  # complete before its callback is called. Running from a timeout is a sort of hack around this.
+  if Meteor.isServer
+    Meteor.setTimeout Meteor.bindEnvironment =>
+      LOI.Character.renderAvatarTextures characterId
 
 LOI.Character.approveBehavior.method (characterId) ->
   check characterId, Match.DocumentId

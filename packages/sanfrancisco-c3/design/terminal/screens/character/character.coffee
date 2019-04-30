@@ -62,7 +62,7 @@ class C3.Design.Terminal.Character extends AM.Component
 
   backButtonCallback: ->
     # We return to main menu.
-    @_returnToMenu()
+    @_updateAndReturnToMenu()
 
     # Instruct the back button to cancel closing (so it doesn't disappear).
     cancel: true
@@ -91,9 +91,9 @@ class C3.Design.Terminal.Character extends AM.Component
   onClickDoneButton: (event) ->
     character = @currentData()
 
-    # If the design is already approved, there is nothing to do, simply return to main menu.
+    # If the design is already approved, simply return to main menu, which will update the design if needed.
     if character.document().designApproved
-      @_returnToMenu()
+      @_updateAndReturnToMenu()
       return
 
     @terminal.showDialog
@@ -123,7 +123,7 @@ class C3.Design.Terminal.Character extends AM.Component
 
   onClickSaveDraftButton: (event) ->
     # We simply return to main menu.
-    @_returnToMenu()
+    @_updateAndReturnToMenu()
 
   onClickDeleteButton: (event) ->
     character = @currentData()
@@ -149,9 +149,9 @@ class C3.Design.Terminal.Character extends AM.Component
             return
 
           # Return to main menu.
-          @_returnToMenu()
+          @_updateAndReturnToMenu()
 
-  _returnToMenu: ->
+  _updateAndReturnToMenu: ->
     # Render the textures if needed.
     character = @character()
     document = character.document()
