@@ -47,25 +47,32 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       animatedMesh.currentAnimationName 'Idle'
       animatedMesh.randomStart true
 
-      sideIndex = LOI.HumanAvatar.TextureRenderer.textureSides.indexOf sideName
-      bodyHeight = bodyTop[sideIndex] - bodyBottom[sideIndex]
-      targetHeight = 1.8 # meters
-      scale = targetHeight / bodyHeight
-
-      animatedMesh.scale.multiplyScalar scale
-      animatedMesh.position.y = -bodyBottom[sideIndex] * scale
-      animatedMesh.scale.x *= -1 if sideAngle < 0
       animatedMesh.visible = false unless side is @currentSide
 
       @animatedMeshes[side] = animatedMesh
 
-    Tracker.autorun (computation) =>
+    @_prepareMeshAutorun = Tracker.autorun (computation) =>
+      heightValue = @humanAvatar.body.properties.height.options.dataLocation()
+      heightOptions = LOI.Character.Part.Types.Avatar.Body.options.properties.height.options
+      targetHeight = _.clamp heightValue or heightOptions.default, heightOptions.min, heightOptions.max
+
+      for side, sideAngle of LOI.Engine.RenderingSides.angles
+        sideIndex = LOI.HumanAvatar.TextureRenderer.textureSides.indexOf sideName
+        bodyHeight = bodyTop[sideIndex] - bodyBottom[sideIndex]
+        scale = targetHeight / bodyHeight
+
+        animatedMesh = @animatedMeshes[side]
+        animatedMesh.scale.set scale, scale, scale
+        animatedMesh.scale.x *= -1 if sideAngle < 0
+        animatedMesh.position.y = -bodyBottom[sideIndex] * scale
+
+    @_prepareTexturesAutorun = Tracker.autorun (computation) =>
       # See if we will get texture data, or we need to render them ad-hoc.
       return unless @humanAvatar.dataReady()
 
       textures = @humanAvatar.options.textures?()
 
-      if not @humanAvatar.customOutfit()
+      unless @humanAvatar.customOutfit()
         @_textureUpdateAutorun?.stop()
         
         # Read the textures from the URLs.
@@ -169,8 +176,10 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
   destroy: ->
     super arguments...
 
+    @_prepareMeshAutorun?.stop()
+    @_prepareTexturesAutorun?.stop()
+
     @humanAvatarRenderer?.destroy()
-    @_textureUpdateAutorun?.stop()
 
     animatedMesh.destroy() for side, animatedMesh of @animatedMeshes
 

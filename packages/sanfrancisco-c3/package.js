@@ -69,6 +69,7 @@ Package.onUse(function(api) {
   api.addComponent('design/terminal/properties/relativecolorshade..');
   api.addComponent('design/terminal/properties/sprite..');
   api.addComponent('design/terminal/properties/string..');
+  api.addComponent('design/terminal/properties/number..');
   api.addComponent('design/terminal/properties/integer..');
   api.addComponent('design/terminal/properties/boolean..');
   api.addComponent('design/terminal/properties/renderingcondition..');

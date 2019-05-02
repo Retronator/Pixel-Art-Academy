@@ -141,7 +141,8 @@ Package.onUse(function(api) {
   api.addFile('character/part/properties/integer');
   api.addFile('character/part/properties/string');
   api.addFile('character/part/properties/boolean');
-  
+  api.addFile('character/part/properties/number');
+
   // Avatar parts
 
   api.addFile('character/avatar/avatar');

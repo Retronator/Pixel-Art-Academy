@@ -21,6 +21,9 @@
     "body": {
       "node": {
         "fields": {
+          "height": {
+            "value": 2.1
+          },
           "head": {
             "node": {
               "fields": {

@@ -25,6 +25,12 @@ LOI.Character.Part.registerClasses
         legs: new LOI.Character.Part.Property.OneOf
           name: 'legs'
           type: 'Avatar.Body.Legs'
+        height: new LOI.Character.Part.Property.Number
+          name: 'height'
+          min: 1.5
+          max: 2.5
+          step: 0.05
+          default: 1.65
       renderer: new LOI.Character.Avatar.Renderers.Body
         origin:
           landmark: 'navel'

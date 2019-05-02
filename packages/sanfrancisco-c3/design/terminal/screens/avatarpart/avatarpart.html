@@ -76,6 +76,9 @@
                     {{#if $is this.type 'string'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.String this}}
                     {{/if}}
+                    {{#if $is this.type 'number'}}
+                      {{> SanFrancisco.C3.Design.Terminal.Properties.Number this}}
+                    {{/if}}
                     {{#if $is this.type 'integer'}}
                       {{> SanFrancisco.C3.Design.Terminal.Properties.Integer this}}
                     {{/if}}

@@ -4,6 +4,9 @@
     "body": {
       "node": {
         "fields": {
+          "height": {
+            "value": 1.7
+          },
           "head": {
             "node": {
               "fields": {
