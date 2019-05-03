@@ -44,7 +44,7 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
 
     # Add materials.
     for materialName, materialProvider of @options.materials
-      materialProperty = materialProvider @
+      continue unless materialProperty = materialProvider @
 
       do (materialName, materialProperty) ->
         options.materialsData = new ComputedField =>

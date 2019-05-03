@@ -14,6 +14,6 @@ class LOI.Assets.SpriteEditor.Helpers.LightDirection extends FM.Helper
     unless direction = @data.value()
       # Load initial value from global helper.
       globalData = @interface.getComponentData @id()
-      direction = globalData?.value() or x: 0, y: 0, z: 0
+      direction = globalData?.value() or x: 0, y: 0, z: -1
 
     THREE.Vector3.fromObject(direction).normalize()

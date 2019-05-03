@@ -304,7 +304,7 @@ LOI.Character.Part.registerClasses
             name: 'nipple'
         materials:
           nipple: (part) ->
-            breastsPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Breasts
+            return unless breastsPart = part.ancestorPartOfType LOI.Character.Part.Types.Avatar.Body.Breasts
             breastsPart.properties.nippleShade
 
       Abdomen: new LOI.Character.Part

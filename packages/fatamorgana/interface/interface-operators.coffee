@@ -113,7 +113,13 @@ class FM.Interface extends FM.Interface
     if targetTool
       # We want to store the previous tool if we're activating this tool with the hold key.
       targetToolShortcut = @getShortcutForOperator targetTool
-      storePreviousTool = key is targetToolShortcut.holdKey
+
+      if _.isArray targetToolShortcut
+        storePreviousTool = _.find targetToolShortcut, (shortcut) => shortcut.holdKey
+
+      else
+        storePreviousTool = key is targetToolShortcut.holdKey
+
       @activateTool targetTool, storePreviousTool
       
     if targetAction?.enabled()
