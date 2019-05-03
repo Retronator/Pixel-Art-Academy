@@ -7,11 +7,12 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @renderer = new THREE.WebGLRenderer
       canvas: @meshCanvas.canvas()
       context: @meshCanvas.context()
+      alpha: true
 
     @renderer.shadowMap.autoUpdate = false
     @renderer.shadowMap.type = THREE.BasicShadowMap
 
-    @renderer.setClearColor new THREE.Color 0x565656
+    @renderer.setClearColor 0x565656, 0
     @renderer.autoClearColor = false
     @renderer.autoClearDepth = false
 

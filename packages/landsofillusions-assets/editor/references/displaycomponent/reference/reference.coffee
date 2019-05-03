@@ -14,6 +14,9 @@ class LOI.Assets.Editor.References.DisplayComponent.Reference extends LOI.Assets
   onCreated: ->
     super arguments...
 
+  displayModeClass: ->
+    _.kebabCase @currentDisplayMode()
+
   referenceStyle: ->
     scale = @currentScale()
 
@@ -25,7 +28,9 @@ class LOI.Assets.Editor.References.DisplayComponent.Reference extends LOI.Assets
 
     position = @draggingPosition() or @currentPosition()
 
-    if @currentDisplayMode() in [LOI.Assets.VisualAsset.ReferenceDisplayModes.EmbeddedUnder, LOI.Assets.VisualAsset.ReferenceDisplayModes.EmbeddedOver]
+    currentDisplayMode = @currentDisplayMode()
+
+    if currentDisplayMode in [LOI.Assets.VisualAsset.ReferenceDisplayModes.EmbeddedUnder, LOI.Assets.VisualAsset.ReferenceDisplayModes.EmbeddedOver]
       # We're positioned relative to image origin.
       embeddedTransform = @references.options.embeddedTransform()
 

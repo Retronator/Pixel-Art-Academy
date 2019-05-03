@@ -15,6 +15,19 @@
     // Note: We have to use !important because THREE.js will style the div itself and thus fix the size.
     width 100% !important
     height 100% !important
+    z-index 1
+
+  .landsofillusions-assets-editor-references-displaycomponent-reference
+    &.embedded-over
+    &.floating-inside
+      z-index 2
 
   .landsofillusions-assets-spriteeditor-pixelcanvas
     background none
+
+// We disable canvases when the arrow tool is selected so we can move references placed underneath it.
+.fatamorgana-interface.arrow
+  .landsofillusions-assets-mesheditor-meshcanvas
+    .canvas
+    .landsofillusions-assets-spriteeditor-pixelcanvas
+      pointer-events none
