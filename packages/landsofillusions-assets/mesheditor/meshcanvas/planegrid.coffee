@@ -6,8 +6,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
 
     # We create a unit grid from -gridSize to gridSize. That's 2 * gridSize + 1
     # lines in each direction and each line has 2 vertices (start and end).
-    gridSize = 100
-    linesCount = 2 * gridSize + 1
+    gridSize = 1000
+    spacing = 10
+    linesCount = 2 * (gridSize / spacing) + 1
     elementsPerVertex = 3
     elementsPerLine = elementsPerVertex * 2
 
@@ -18,7 +19,7 @@ class LOI.Assets.MeshEditor.MeshCanvas.PlaneGrid extends THREE.LineSegments
     horizontalColorsArray = colorsArray.subarray linesCount * elementsPerLine
 
     for i in [0...linesCount]
-      x = -gridSize + i
+      x = -gridSize + i * spacing
 
       verticesArray[i * elementsPerLine] = x
       verticesArray[i * elementsPerLine + 1] = -gridSize
