@@ -11,9 +11,10 @@ class FM.Area extends AM.Component
 
     @interface = @ancestorComponentOfType FM.Interface
     
-    # Isolate type and component ID to minimize reactivity.
+    # Isolate data values to minimize reactivity.
     @type = new ComputedField => @data().get 'type'
     @contentComponentId = new ComputedField => @data().get 'contentComponentId'
+    @contentComponentData = new ComputedField => @data().get 'contentComponentData'
 
   areaClass: -> # Override to set a styling class for this area.
     
@@ -37,9 +38,11 @@ class FM.Area extends AM.Component
 
     style
 
-  contentComponentData: ->
-    if contentComponentData = @data().get 'contentComponentData'
+  componentData: ->
+    # We allow sending custom component data for particular instances (such as for dialogs).
+    if contentComponentData = @contentComponentData()
       return contentComponentData
 
+    # Otherwise get global data from the interface.
     return unless contentComponentId = @contentComponentId()
     @interface.getComponentData contentComponentId
