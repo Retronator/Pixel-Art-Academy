@@ -280,7 +280,6 @@ LOI.Character.Part.registerClasses
       BreastShapeTop: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.BreastShapeTop'
         name: 'breasts shape top'
-        default: 'landsofillusions/character/avatar/body/torso/chest/breasts/top/2/Breast top 2'
         landmarks:
           breastCenter: new LOI.Character.Avatar.Landmark.Position
             name: 'breastCenter'
@@ -290,7 +289,6 @@ LOI.Character.Part.registerClasses
       BreastShapeBottom: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.BreastShapeBottom'
         name: 'breasts shape bottom'
-        default: 'landsofillusions/character/avatar/body/torso/chest/breasts/bottom/2/Breast bottom 2'
         landmarks:
           breastCenter: new LOI.Character.Avatar.Landmark.Position
             name: 'breastCenter'
@@ -298,7 +296,6 @@ LOI.Character.Part.registerClasses
       NippleShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Body.NippleShape'
         name: 'nipple shape'
-        default: 'landsofillusions/character/avatar/body/torso/chest/breasts/nipples/Nipple male'
         landmarks:
           nipple: new LOI.Character.Avatar.Landmark.Position
             name: 'nipple'
@@ -445,7 +442,7 @@ LOI.Character.Part.registerClasses
       UpperArmShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.UpperArmShape'
         name: 'upper arm shape'
-        default: 'landsofillusions/character/avatar/body/arms/upperarm/Upper arm'
+        default: 'landsofillusions/character/avatar/body/arms/upperarm/1/Upper arm 1'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           region: LOI.HumanAvatar.Regions.UpperArms
           origin:
@@ -532,7 +529,7 @@ LOI.Character.Part.registerClasses
       ThighShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.ThighShape'
         name: 'thigh shape'
-        default: 'landsofillusions/character/avatar/body/legs/thigh/Thigh 2'
+        default: 'landsofillusions/character/avatar/body/legs/thigh/2/Thigh 2'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           region: LOI.HumanAvatar.Regions.UpperLegs
           origin:
@@ -556,7 +553,7 @@ LOI.Character.Part.registerClasses
       LowerLegShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.LowerLegShape'
         name: 'lower leg shape'
-        default: 'landsofillusions/character/avatar/body/legs/lowerleg/Lower leg 2'
+        default: 'landsofillusions/character/avatar/body/legs/lowerleg/2/Lower leg 2'
         renderer: new LOI.Character.Avatar.Renderers.Shape
           region: LOI.HumanAvatar.Regions.LowerLegs
           origin:

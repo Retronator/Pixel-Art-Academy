@@ -90,6 +90,8 @@ class LOI.Assets.Editor.FileManager extends AM.Component
     return unless @draggedItems()
 
     for item in @draggedItems()
+      continue if item is targetFolder
+
       nameParts = @constructor.itemNameParts item
 
       if targetFolder.name.length

@@ -9,7 +9,6 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     return unless initialize
 
     propertyRendererOptions = @_cloneRendererOptions()
-    @_translation = {}
 
     @_renderers = []
     @renderers = new ComputedField =>
@@ -75,11 +74,11 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
                     x: landmark.x - rendererLandmark.x
                     y: landmark.y - rendererLandmark.y
     
-                  renderer._depth = landmark.z or 0
+                  renderer._depth[side] = landmark.z or 0
     
                 else
                   renderer._translation[side] = x: 0, y: 0
-                  renderer._depth = 0
+                  renderer._depth[side] = 0
     
                 # Add all other landmarks from this renderer.
                 regionId = @getRegionId()
