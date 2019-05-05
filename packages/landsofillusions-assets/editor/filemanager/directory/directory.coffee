@@ -207,6 +207,9 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
       $document.off '.landsofillusions-assets-editor-filemanager-directory'
 
   onContextMenu: (event) ->
+    # Context menu works only when we're inside FataMorgana UI.
+    return unless userInterface = @ancestorComponentOfType FM.Interface
+
     # Prevent normal context menu from opening.
     event.preventDefault()
 
@@ -225,7 +228,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
         LOI.Assets.Editor.FileManager.Directory.NewFolder.id()
       ]
 
-    @ancestorComponentOfType(FM.Interface).displayDialog dialog
+    userInterface.displayDialog dialog
 
   onClickItem: (event) ->
     return if @editingNameItem()

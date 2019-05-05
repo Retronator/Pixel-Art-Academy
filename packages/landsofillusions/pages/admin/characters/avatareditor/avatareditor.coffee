@@ -21,5 +21,8 @@ class LOI.Pages.Admin.Characters.AvatarEditor extends AM.Component
     types = LOI.Character.Part.allAvatarPartTypeIds()
     LOI.Assets.Sprite.forCharacterPartTemplatesOfTypes.subscribe types
 
+    # Subscribe to all sprite names.
+    LOI.Assets.Asset.all.subscribe LOI.Assets.Sprite.className
+
     # Create a terminal that uses sprites from the database to allow live editing
     @terminal = new SanFrancisco.C3.Design.Terminal useDatabaseSprites: true

@@ -83,7 +83,7 @@ class LOI.Assets.Editor.FileManager extends AM.Component
 
       if selectedItems.length is 1 then selectedItems[0] else null
 
-    @applyPath @constructor._lastPath if @constructor._lastPath
+    @selectItem @constructor._lastPath if @constructor._lastPath
 
   onDestroyed: ->
     super arguments...
@@ -93,7 +93,7 @@ class LOI.Assets.Editor.FileManager extends AM.Component
     # Remember currently opened folder.
     @constructor._lastPath = _.last(@_directories).options.path
 
-  applyPath: (path) ->
+  selectItem: (path) ->
     pathParts = _.trim(path, '/').split '/'
 
     @_applyPathParts 0, pathParts
@@ -106,10 +106,10 @@ class LOI.Assets.Editor.FileManager extends AM.Component
       return unless directory = @directories()?[directoryIndex]
       return unless directory.isRendered()
 
-      folderPath = "#{directory.options.path}#{pathParts[0]}"
+      itemPath = "#{directory.options.path}#{pathParts[0]}"
 
-      return unless _.find directory.currentItems(), (item) => item.name is folderPath
-      directory.selectItem folderPath
+      return unless _.find directory.currentItems(), (item) => item.name is itemPath
+      directory.selectItem itemPath
       @focusDirectory directory
 
       computation.stop()
