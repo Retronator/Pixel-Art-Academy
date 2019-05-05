@@ -83,6 +83,44 @@ class LOI.Assets.Editor.FileManager extends AM.Component
 
       if selectedItems.length is 1 then selectedItems[0] else null
 
+    @applyPath @constructor._lastPath if @constructor._lastPath
+
+  onDestroyed: ->
+    super arguments...
+
+    @_applyPathPartsAutorun?.stop()
+
+    # Remember currently opened folder.
+    @constructor._lastPath = _.last(@_directories).options.path
+
+  applyPath: (path) ->
+    pathParts = _.trim(path, '/').split '/'
+
+    @_applyPathParts 0, pathParts
+
+  _applyPathParts: (directoryIndex, pathParts) ->
+    return unless pathParts.length
+
+    @_applyPathPartsAutorun = Tracker.autorun (computation) =>
+      # Wait till the directory has the folder ready.
+      return unless directory = @directories()?[directoryIndex]
+      return unless directory.isRendered()
+
+      folderPath = "#{directory.options.path}#{pathParts[0]}"
+
+      return unless _.find directory.currentItems(), (item) => item.name is folderPath
+      directory.selectItem folderPath
+      @focusDirectory directory
+
+      computation.stop()
+
+      Tracker.afterFlush =>
+        # Scroll to right.
+        $directories = @$('.landsofillusions-assets-editor-filemanager-directory').closest('.directories')
+        $directories.scrollLeft 1e8
+
+        @_applyPathParts directoryIndex + 1, pathParts[1..]
+
   startDrag: (draggedItems) ->
     @draggedItems draggedItems
     

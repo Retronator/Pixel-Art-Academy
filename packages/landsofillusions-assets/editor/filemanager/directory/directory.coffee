@@ -77,7 +77,8 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
       # Update selected items when current items change.
       selectedNames = @_selectedNames()
-      @selectedItems _.filter items, (item) => (item.name or item._id) in selectedNames
+      newSelectedNames = _.filter items, (item) => (item.name or item._id) in selectedNames
+      @selectedItems newSelectedNames
 
       _.sortBy items, 'sortingName'
 
@@ -96,6 +97,9 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     super arguments...
 
     $(document).off ".landsofillusions-assets-editor-filemanager-directory-#{@_id}"
+
+  selectItem: (name) ->
+    @_changeSelection [], name, name
 
   newFolder: ->
     newFolderName = "untitled folder"
