@@ -46,7 +46,13 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
 
           # If we still don't have a sprite, see if we have a default specified.
           unless spriteId
-            if defaultName = @options.part.options.default
+            defaultName = @options.part.options.default
+
+            # When rendering articles we use extra default parts to provide all possible landmarks.
+            if @options.useArticleLandmarks
+              defaultName ?= @options.part.options.articleLandmarksDefault
+
+            if defaultName
               addSideToDefaultName = (side) =>
                 if _.last(defaultName) is '/'
                   "#{defaultName}#{_.kebabCase side}"

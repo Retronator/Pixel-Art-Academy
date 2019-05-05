@@ -280,6 +280,7 @@ LOI.Character.Part.registerClasses
       BreastShapeTop: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.BreastShapeTop'
         name: 'breasts shape top'
+        articleLandmarksDefault: 'landsofillusions/character/avatar/body/torso/chest/breasts/top/2/Breast top 2'
         landmarks:
           breastCenter: new LOI.Character.Avatar.Landmark.Position
             name: 'breastCenter'
@@ -289,6 +290,7 @@ LOI.Character.Part.registerClasses
       BreastShapeBottom: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.BreastShapeBottom'
         name: 'breasts shape bottom'
+        articleLandmarksDefault: 'landsofillusions/character/avatar/body/torso/chest/breasts/bottom/2/Breast bottom 2'
         landmarks:
           breastCenter: new LOI.Character.Avatar.Landmark.Position
             name: 'breastCenter'

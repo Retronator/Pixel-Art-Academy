@@ -44,17 +44,18 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
             else
               # Without a character, we rely on landmarks from default
               # body parts that get created when no data is loaded.
-              unless @_defaultBodyRenderer
-                @_defaultBodyPart = LOI.Character.Part.Types.Avatar.Body.create
+              unless @constructor._defaultBodyRenderer
+                @constructor._defaultBodyPart = LOI.Character.Part.Types.Avatar.Body.create
                   dataLocation: new AMu.Hierarchy.Location
                     rootField: AMu.Hierarchy.create
                       templateClass: LOI.Character.Part.Template
                       type: LOI.Character.Part.Types.Avatar.Body.options.type
                       load: => null
 
-                @_defaultBodyRenderer = @_defaultBodyPart.createRenderer
+                @constructor._defaultBodyRenderer = @constructor._defaultBodyPart.createRenderer
+                  useArticleLandmarks: true
 
-              @_defaultBodyRenderer
+              @constructor._defaultBodyRenderer
 
           rendererOptions.centerOnUsedLandmarks = true
           rendererOptions.ignoreRenderingConditions = true
