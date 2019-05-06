@@ -27,7 +27,7 @@ class C3.Design.Terminal.Properties.Sprite.OpenDialog extends AM.Component
   onClickCancelButton: (event) ->
     @options.close()
 
-  @onClickDeselectButton: (event) ->
+  onClickDeselectButton: (event) ->
     @options.setSpriteId null
     @options.close()
 

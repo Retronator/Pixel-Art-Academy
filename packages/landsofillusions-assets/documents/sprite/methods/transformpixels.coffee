@@ -19,7 +19,7 @@ transformPixels = (spriteId, layerIndex, transform) ->
 
   layerPixels = sprite.layers[layerIndex].pixels
 
-  pixels = _.cloneDeep layerPixels 
+  pixels = _.cloneDeep layerPixels
   transform pixel for pixel in pixels
 
   forward =
@@ -37,7 +37,10 @@ transformPixels = (spriteId, layerIndex, transform) ->
         throw new AE.ArgumentOutOfRangeException "Pixels must fit inside of fixed bounds."
 
   else
-    # Recalculate bounds completely.
+    # Recalculate bounds completely. Note that we need to replace the
+    # pixels on the sprite since recomputation works with local data.
+    sprite.layers[layerIndex].pixels = pixels
+
     if bounds = sprite.getRecomputedBoundsIfNew()
       forward.$set ?= {}
       forward.$set.bounds = bounds

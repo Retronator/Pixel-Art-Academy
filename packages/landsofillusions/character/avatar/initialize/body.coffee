@@ -298,6 +298,7 @@ LOI.Character.Part.registerClasses
       NippleShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Body.NippleShape'
         name: 'nipple shape'
+        default: 'landsofillusions/character/avatar/body/torso/chest/breasts/nipples/Nipple male'
         landmarks:
           nipple: new LOI.Character.Avatar.Landmark.Position
             name: 'nipple'
@@ -373,11 +374,13 @@ LOI.Character.Part.registerClasses
       SexOrganShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.SexOrganShape'
         name: 'sex organ shape'
+        articleLandmarksDefault: 'landsofillusions/character/avatar/body/torso/groin/sexorgan/male/Sex organ male'
         properties:
           region: new LOI.Character.Part.Property.String
             name: 'region'
             values: ['Torso', 'SexOrgan']
         renderer: new LOI.Character.Avatar.Renderers.Shape
+          region: LOI.HumanAvatar.Regions.SexOrgan
           origin:
             landmark: 'pubicSymphysis'
         landmarks:
