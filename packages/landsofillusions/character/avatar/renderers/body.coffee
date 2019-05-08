@@ -54,11 +54,8 @@ class LOI.Character.Avatar.Renderers.Body extends LOI.Character.Avatar.Renderers
 
     context.translate translation.x, translation.y
 
-    for renderer in @headRenderer.getHairRenderers 'HairBehind'
-      @headRenderer.drawRendererToContext renderer, context, options
-
-    for renderer in @headRenderer.getHairRenderers 'HairMiddle'
-      @headRenderer.drawRendererToContext renderer, context, options
+    @headRenderer.drawHairRenderersToContext 'HairBehind', context, options
+    @headRenderer.drawHairRenderersToContext 'HairMiddle', context, options
 
     context.restore()
 

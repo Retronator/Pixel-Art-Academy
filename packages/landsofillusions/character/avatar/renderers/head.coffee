@@ -28,15 +28,22 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     # Place the facial hair.
     @_placeRenderer side, facialHairRenderer, 'mouth', 'mouth' for facialHairRenderer in @facialHairRenderers
 
-  getHairRenderers: (regionId) ->
-    hairRenderers = for hairRenderer in @hairRenderers
-      # Get all hair shape renderers and copy the parent's translation to them.
-      renderers = hairRenderer.renderers()
-      renderer._translation = hairRenderer._translation for renderer in renderers
-      renderers
+  _applyLandmarksRegion: (landmarks) ->
+    # Head landmarks should be available in hair regions as well.
+    headLandmarks = _.filter landmarks, (landmark) => landmark.regionId is LOI.HumanAvatar.Regions.Head.id
 
-    _.filter _.flatten(hairRenderers), (hairRenderer) =>
-      hairRenderer.options.part.properties.region.options.dataLocation() is regionId
+    for region in [LOI.HumanAvatar.Regions.HairFront, LOI.HumanAvatar.Regions.HairMiddle, LOI.HumanAvatar.Regions.HairBehind]
+      for headLandmark in headLandmarks
+        # See if this landmark already exists in this region.
+        continue if _.find landmarks, (landmark) -> landmark.name is headLandmark.name and landmark.regionId is region.id
+
+        # Clone the landmark to the new region.
+        landmark = _.clone headLandmark
+        landmark.regionId = region.id
+        landmarks.push landmark
+
+    # Continue to process the landmarks.
+    super arguments...
 
   drawToContext: (context, options = {}) ->
     return unless @ready()
@@ -46,15 +53,29 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
 
     # If we're drawing only the head also draw the hair behind and in the middle.
     if options.rootPart is @options.part
-      for renderer in @getHairRenderers 'HairBehind'
-        @drawRendererToContext renderer, context, options
-
-      for renderer in @getHairRenderers 'HairMiddle'
-        @drawRendererToContext renderer, context, options
+      @drawHairRenderersToContext 'HairBehind', context, options
+      @drawHairRenderersToContext 'HairMiddle', context, options
 
     # Draw main head renderers.
     super arguments...
 
     # Draw hair over head renderers.
-    for renderer in @getHairRenderers 'HairFront'
-      @drawRendererToContext renderer, context, options
+    @drawHairRenderersToContext 'HairFront', context, options
+
+  drawHairRenderersToContext: (regionId, context, options) ->
+    for hairRenderer in @hairRenderers
+      # Apply hair renderer's transform.
+      context.save()
+
+      translation = _.defaults {}, hairRenderer._translation[options.side],
+        x: 0
+        y: 0
+
+      context.translate translation.x, translation.y
+
+      # Draw hair shapes in the desired region.
+      for hairShapeRenderer in hairRenderer.renderers() when hairShapeRenderer.options.part.properties.region.options.dataLocation() is regionId
+        @drawRendererToContext hairShapeRenderer, context, options
+
+      # Restore context back to head's transform.
+      context.restore()
