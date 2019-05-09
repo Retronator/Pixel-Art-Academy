@@ -113,6 +113,9 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         @context.setTransform 1, 0, 0, 1, Math.floor(@canvas.width / 2), Math.floor(@canvas.height / 2)
         @context.clearRect 0, 0, @canvas.width, @canvas.height
 
+        if @options.originOffset
+          @context.translate @options.originOffset.x, @options.originOffset.y
+
         @context.save()
         
         # Draw and pass the root part in options so we can do different rendering paths based on it.

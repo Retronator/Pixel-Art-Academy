@@ -33,6 +33,9 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
 
     AB.subscribeNamespace 'LandsOfIllusions.Character.Behavior.Perk', subscribeProvider: @
 
+    @_initialPreviewViewingAngle = -Math.PI / 4
+    @previewViewingAngle = new ReactiveField @_initialPreviewViewingAngle
+
   backButtonCallback: ->
     # We return to main menu.
     @_returnToMenu()
@@ -54,6 +57,13 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
 
   perks: ->
     @currentCharacter()?.behavior.part.properties.perks.toString() or "None"
+
+  avatarPreviewOptions: ->
+    rotatable: true
+    viewingAngle: @previewViewingAngle
+    originOffset:
+      x: -3
+      y: 8
 
   events: ->
     super(arguments...).concat
@@ -84,13 +94,18 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
     newIndex = @currentPreMadeCharacterIndex() - 1
     newIndex = @preMadeCharacters().length - 1 if newIndex < 0
 
-    @currentPreMadeCharacterIndex newIndex
+    @_selectCharacter newIndex
 
   onClickNextButton: (event) ->
     newIndex = @currentPreMadeCharacterIndex() + 1
     newIndex = 0 if newIndex >= @preMadeCharacters().length
 
-    @currentPreMadeCharacterIndex newIndex
+    @_selectCharacter newIndex
+
+  _selectCharacter: (index) ->
+    # Reset viewing angle.
+    @previewViewingAngle @_initialPreviewViewingAngle
+    @currentPreMadeCharacterIndex index
 
   _returnToMenu: ->
     @terminal.switchToScreen @terminal.screens.mainMenu
