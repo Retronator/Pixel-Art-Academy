@@ -51,12 +51,6 @@ Package.onUse(function(api) {
   // Initialize client after settings have been defined.
   api.addClientFile('initialize-client');
 
-  // Game content
-
-  api.addServerFile('gamecontent-server/gamecontent');
-  api.addServerData('gamecontent-server/gamecontent');
-  api.addServerFile('gamecontent-server/initialize');
-
   // Game state
 
   api.addFile('state/gamestate');
@@ -431,9 +425,6 @@ Package.onUse(function(api) {
   api.addComponent('pages/loading..');
 
   api.addUnstyledComponent('pages/admin..');
-
-  api.addUnstyledComponent('pages/admin/gamecontent..');
-  api.addServerFile('pages/admin/gamecontent/server');
 
   api.addUnstyledComponent('pages/admin/characters..');
   api.addServerFile('pages/admin/characters/avatartexture');

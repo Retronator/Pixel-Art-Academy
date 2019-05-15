@@ -191,5 +191,5 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
 if Meteor.isServer
   # Export meshes without authors.
-  LOI.GameContent.addToExport ->
+  AM.DatabaseContent.addToExport ->
     LOI.Assets.Mesh.documents.fetch authors: $exists: false

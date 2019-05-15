@@ -72,8 +72,8 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
 
 if Meteor.isServer
   importDirective = 'LandsOfIllusions.Character.Part.Template.adminTemplates'
-  
-  LOI.GameContent.addToExport ->
+
+  AM.DatabaseContent.addToExport ->
     documents = []
 
     # TODO: Fetch only admin templates.
@@ -100,7 +100,7 @@ if Meteor.isServer
 
     documents
 
-  LOI.GameContent.addImportDirective importDirective, (template) ->
+  AM.DatabaseContent.addImportDirective importDirective, (template) ->
     # Associate the template back to the (new) admin.
     unless admin = RA.User.documents.findOne(username: 'admin')
       console.warn "Admin user hasn't been created yet. Restart server to update template authors."

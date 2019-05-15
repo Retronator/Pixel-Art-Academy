@@ -46,5 +46,5 @@ class LOI.Assets.Palette extends AM.Document
 
 if Meteor.isServer
   # Export all palette documents.
-  LOI.GameContent.addToExport ->
+  AM.DatabaseContent.addToExport ->
     LOI.Assets.Palette.documents.fetch()

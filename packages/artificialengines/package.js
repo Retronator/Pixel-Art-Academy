@@ -55,6 +55,7 @@ Package.onUse(function(api) {
   api.imply(packages);
 
   api.use('webapp', 'server');
+  api.use('froatsnook:request', 'server');
 
   api.export('Artificial');
   api.export('THREE');
@@ -175,6 +176,11 @@ Package.onUse(function(api) {
   api.addFile('mummification/hierarchy/field');
   api.addFile('mummification/hierarchy/template');
   api.addFile('mummification/hierarchy/location');
+
+  // Game content
+
+  api.addServerFile('mummification/databasecontent-server/databasecontent');
+  api.addServerFile('mummification/databasecontent-server/initialize');
 
   // Depends on Artificial Base.
   api.addFile('mummification/admin..');

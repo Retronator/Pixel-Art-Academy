@@ -5,7 +5,7 @@ LOI = LandsOfIllusions
 
 BSON = require 'bson'
 Pako = require 'pako'
-# PNG = require 'fast-png'
+PNG = require 'fast-png'
 
 compressionOptions =
   level: Pako.Z_BEST_COMPRESSION

@@ -26,8 +26,8 @@ class LOI.Construct.Loading.PreMadeCharacter extends AM.Document
 
 if Meteor.isServer
   importDirective = 'LandsOfIllusions.Character.preMadeCharacter'
-  
-  LOI.GameContent.addToExport ->
+
+  AM.DatabaseContent.addToExport ->
     documents = []
 
     # Export all pre-made character documents.
@@ -58,8 +58,8 @@ if Meteor.isServer
     documents.push names...
 
     documents
-      
-  LOI.GameContent.addImportDirective importDirective, (character) ->
+
+  AM.DatabaseContent.addImportDirective importDirective, (character) ->
     # Associate the template back to the (new) admin.
     unless admin = RA.User.documents.findOne username: 'admin'
       console.warn "Admin user hasn't been created yet. Restart server to update template authors."

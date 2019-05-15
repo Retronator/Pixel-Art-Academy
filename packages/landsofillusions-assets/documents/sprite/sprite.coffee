@@ -205,7 +205,16 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
     @_modifyBoundsBeforeApply arguments...
     super arguments...
 
+  # Database content
+
+  exportDatabaseContent: ->
+    arrayBuffer = Buffer.from @name or @_id
+
+    arrayBuffer: arrayBuffer
+    path: "#{@name or @_id}.txt"
+    lastEditTime: @lastEditTime
+
 if Meteor.isServer
   # Export sprites without authors.
-  LOI.GameContent.addToExport ->
+  AM.DatabaseContent.addToExport ->
     LOI.Assets.Sprite.documents.fetch authors: $exists: false

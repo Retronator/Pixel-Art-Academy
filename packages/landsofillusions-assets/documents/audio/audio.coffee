@@ -72,5 +72,5 @@ class LOI.Assets.Audio extends LOI.Assets.Asset
 
 if Meteor.isServer
   # Export all audio documents.
-  LOI.GameContent.addToExport ->
+  AM.DatabaseContent.addToExport ->
     LOI.Assets.Audio.documents.fetch()
