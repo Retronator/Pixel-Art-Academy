@@ -17,6 +17,8 @@ class LOI.Assets.Editor extends AM.Component
     # Actions
     "#{LOI.Assets.Editor.Actions.New.id()}": commandOrControl: true, key: AC.Keys.n
     "#{LOI.Assets.Editor.Actions.Open.id()}": commandOrControl: true, key: AC.Keys.o
+    "#{LOI.Assets.Editor.Actions.Import.id()}": commandOrControl: true, key: AC.Keys.i
+    "#{LOI.Assets.Editor.Actions.Export.id()}": commandOrControl: true, key: AC.Keys.e
     "#{LOI.Assets.Editor.Actions.Close.id()}": commandOrControl: true, key: AC.Keys.c
     "#{LOI.Assets.Editor.Actions.Undo.id()}": [{commandOrControl: true, key: AC.Keys.z}, {key: AC.Keys.z}]
     "#{LOI.Assets.Editor.Actions.Redo.id()}": if isMacOS then [{command: true, shift: true, key: AC.Keys.z}, {key: AC.Keys.x}] else control: true, key: AC.Keys.y

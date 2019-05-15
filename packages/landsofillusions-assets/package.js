@@ -54,6 +54,7 @@ Package.onUse(function(api) {
 
   api.addClientFile('documents/asset/asset-cache-client');
   api.addServerFile('documents/asset/asset-cache-server');
+  api.addFile('documents/asset/asset-databasecontent');
   api.addFile('documents/asset..');
   api.addFile('documents/asset/methods..');
   api.addFile('documents/asset/methods/history');
@@ -260,8 +261,6 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions/showlandmarks');
   api.addFile('spriteeditor/actions/showsafearea');
   api.addFile('spriteeditor/actions/brushsize');
-  api.addFile('spriteeditor/actions/export');
-  api.addFile('spriteeditor/actions/import');
 
   api.addFile('spriteeditor/helpers..');
   api.addFile('spriteeditor/helpers/zoomlevels');

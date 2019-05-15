@@ -10,7 +10,9 @@ PNG = require 'fast-png'
 class LOI.Assets.Editor.Actions.Import extends FM.Action
   @id: -> 'LandsOfIllusions.Assets.Editor.Actions.Import'
   @displayName: -> "Import"
-    
+
+  @initialize()
+
   execute: ->
     # Ask user for file.
     $fileInput = $('<input type="file"/>')
@@ -91,7 +93,7 @@ class LOI.Assets.Editor.Actions.Import extends FM.Action
     BSON.deserialize binaryData
 
   _saveAsset: (asset) ->
-    assetClassName = @constructor.assetClass.className
+    assetClassName = @interface.parent.assetClassName
 
     LOI.Assets.Asset.exists assetClassName, asset._id, (error, exists) =>
       if error

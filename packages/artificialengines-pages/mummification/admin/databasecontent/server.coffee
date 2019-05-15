@@ -18,14 +18,14 @@ WebApp.connectHandlers.use '/admin/artificial/mummification/databasecontent/data
   for documentClassId, exportedDocuments of databaseContent
     fileInformation[documentClassId] = []
 
-    for document in exportedDocuments when document.exportDatabaseContent
-      {arrayBuffer, path, lastEditTime} = document.exportDatabaseContent()
+    for document in exportedDocuments when document instanceof LandsOfIllusions.Assets.Sprite
+      {arrayBuffer, path, lastEditTime} = document.getDatabaseContent()
 
       # Store file information.
       fileInformation[documentClassId].push {path, lastEditTime}
 
       # Place file in the archive.
-      archive.append arrayBuffer, name: path
+      archive.append Buffer.from(arrayBuffer), name: path
 
   # Place file information in the archive.
   archive.append JSON.stringify(fileInformation), name: 'databasecontent.json'

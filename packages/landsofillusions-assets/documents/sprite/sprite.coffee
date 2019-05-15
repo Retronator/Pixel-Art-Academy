@@ -2,6 +2,12 @@ AE = Artificial.Everywhere
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
+if Meteor.isServer
+  {createCanvas} = require 'canvas'
+
+else
+  createCanvas = null
+
 # A 2D pixel art asset.
 class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Sprite'
@@ -207,12 +213,13 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
 
   # Database content
 
-  exportDatabaseContent: ->
-    arrayBuffer = Buffer.from @name or @_id
+  getPreviewImage: ->
+    engineSprite = new LOI.Assets.Engine.Sprite
+      spriteData: => @
+      createCanvas: createCanvas
 
-    arrayBuffer: arrayBuffer
-    path: "#{@name or @_id}.txt"
-    lastEditTime: @lastEditTime
+    engineSprite.getCanvas
+      lightDirection: new THREE.Vector3 0, 0, -1
 
 if Meteor.isServer
   # Export sprites without authors.

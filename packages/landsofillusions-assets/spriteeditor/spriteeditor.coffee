@@ -51,10 +51,10 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.Editor.Actions.New.id()
           LOI.Assets.Editor.Actions.Open.id()
-          LOI.Assets.SpriteEditor.Actions.Import.id()
+          LOI.Assets.Editor.Actions.Import.id()
           null
           LOI.Assets.Editor.Actions.Close.id()
-          LOI.Assets.SpriteEditor.Actions.Export.id()
+          LOI.Assets.Editor.Actions.Export.id()
           LOI.Assets.Editor.Actions.Duplicate.id()
           LOI.Assets.Editor.Actions.Delete.id()
         ]
@@ -184,8 +184,6 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
   @defaultShortcutsMapping: ->
     _.extend super(arguments...),
       # Actions
-      "#{LOI.Assets.SpriteEditor.Actions.Import.id()}": commandOrControl: true, key: AC.Keys.i
-      "#{LOI.Assets.SpriteEditor.Actions.Export.id()}": commandOrControl: true, key: AC.Keys.e
       "#{LOI.Assets.SpriteEditor.Actions.PaintNormals.id()}": key: AC.Keys.n
       "#{LOI.Assets.SpriteEditor.Actions.Symmetry.id()}": key: AC.Keys.s
       "#{LOI.Assets.SpriteEditor.Actions.ZoomIn.id()}": [{key: AC.Keys.equalSign, keyLabel: '+'}, {commandOrControl: true, key: AC.Keys.equalSign}]
