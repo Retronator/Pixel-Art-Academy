@@ -12,10 +12,13 @@ Package.describe({
 
 Npm.depends({
   'pngjs': '2.3.0',
+  'fast-png': '4.0.1',
   'delaunator': '3.0.2',
   'bresenham-zingl': '0.1.1',
   'pako': '1.0.8',
-  'ml-regression-theil-sen': '1.0.0'
+  'ml-regression-theil-sen': '1.0.0',
+  'canvas': '2.3.1',
+  'bson': '4.0.2'
 });
 
 Package.onUse(function(api) {
@@ -209,6 +212,8 @@ Package.onUse(function(api) {
   api.addFile('editor/actions/close');
   api.addFile('editor/actions/persisteditorsinterface');
   api.addFile('editor/actions/resetinterface');
+  api.addFile('editor/actions/export');
+  api.addFile('editor/actions/import');
 
   api.addFile('editor/helpers..');
   api.addFile('editor/helpers/drawcomponent');
@@ -255,6 +260,8 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions/showlandmarks');
   api.addFile('spriteeditor/actions/showsafearea');
   api.addFile('spriteeditor/actions/brushsize');
+  api.addFile('spriteeditor/actions/export');
+  api.addFile('spriteeditor/actions/import');
 
   api.addFile('spriteeditor/helpers..');
   api.addFile('spriteeditor/helpers/zoomlevels');

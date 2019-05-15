@@ -46,3 +46,12 @@ LOI.Assets.Asset.duplicate.method (assetClassName, assetId) ->
     duplicate[key] = value
 
   assetClass.documents.insert duplicate
+
+LOI.Assets.Asset.exists.method (assetClassName, assetId) ->
+  check assetClassName, String
+  check assetId, Match.DocumentId
+
+  RA.authorizeAdmin()
+
+  assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
+  assetClass.documents.findOne(assetId)?

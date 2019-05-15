@@ -122,12 +122,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     @_updatedDependency.changed()
 
   save: ->
-    saveData = {}
-      
-    # Save array fields.
-    @cameraAngles.save saveData
-    @objects.save saveData
-    @materials.save saveData
+    saveData = @getSaveData()
 
     # Send the mesh to server.
     LOI.Assets.Mesh.save @_id, saveData, (error) =>
@@ -136,6 +131,16 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     # Mark the state clean.
     @dirty false
+
+  getSaveData: ->
+    saveData = {}
+
+    # Save array fields.
+    @cameraAngles.save saveData
+    @objects.save saveData
+    @materials.save saveData
+
+    saveData
     
   getLandmarkByName: (landmarkName) ->
     _.find @landmarks, (landmark) -> landmark.name is landmarkName

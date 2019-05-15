@@ -27,7 +27,6 @@ Package.onUse(function(api) {
   api.use('froatsnook:request');
 
   api.use('promise');
-  api.use('modules');
   api.use('webapp');
 
   api.imply('retronator:artificialengines');

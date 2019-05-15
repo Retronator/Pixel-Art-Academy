@@ -7,10 +7,10 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterPlanes = (clusters, edges
   cluster.plane.point = null for cluster in clusters
   edge.line.point = null for edge in edges
 
-  # See if we have a cluster overlapping the camera origin and set it as the base to calculate other clusters from.
-  origin = cameraAngle.unprojectPoint new THREE.Vector3
-
   clustersLeftCount = clusters.length
+
+  # See if we have a cluster overlapping the camera target and set it as the base to calculate other clusters from.
+  origin = cameraAngle.unprojectPoint cameraAngle.target
 
   if originCluster = _.find(clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate origin.x, origin.y)
     originCluster.setPlanePoint new THREE.Vector3

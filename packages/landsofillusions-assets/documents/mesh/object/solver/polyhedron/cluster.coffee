@@ -137,7 +137,13 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
 
     mesh = @layerCluster.layer.object.mesh
     palette = mesh.customPalette or LOI.Assets.Palette.documents.findOne mesh.palette._id
+
     paletteColor = @properties.paletteColor
+
+    unless paletteColor
+      if @properties.materialIndex?
+        paletteColor = mesh.materials.get @properties.materialIndex
+
     color = palette.ramps[paletteColor.ramp].shades[paletteColor.shade]
 
     for point, index in @points

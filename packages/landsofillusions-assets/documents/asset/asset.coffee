@@ -30,6 +30,8 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   @redo: @method 'redo'
   @clearHistory: @method 'clearHistory'
 
+  @exists: @method 'exists'
+
   # Subscriptions
 
   @forId: @subscription 'forId'

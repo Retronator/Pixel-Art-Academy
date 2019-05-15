@@ -97,7 +97,7 @@ class LOI.Assets.MeshEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.Tool
             pixelIsSame = true
 
             if fillColors
-              for mapType of colorProperties
+              for mapType in colorProperties
                 continue unless map = picture.maps[mapType]
                 unless map.pixelsAreSame targetX, targetY, neighborX, neighborY
                   pixelIsSame = false

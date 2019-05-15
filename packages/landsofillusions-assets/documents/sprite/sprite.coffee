@@ -95,7 +95,10 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
         for pixel in layer.pixels
           layer._pixelMap[pixel.x] ?= {}
           layer._pixelMap[pixel.x][pixel.y] = pixel
-          
+
+  getSaveData: ->
+    @
+
   # Pixel retrieval
         
   getPixelForLayerAtCoordinates: (layerIndex, x, y) ->

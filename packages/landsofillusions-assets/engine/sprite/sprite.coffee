@@ -31,6 +31,22 @@ class LOI.Assets.Engine.Sprite
     context.imageSmoothingEnabled = false
     context.drawImage @_canvas, bounds.x, bounds.y
 
+  getImageData: (renderOptions = {}) ->
+    # HACK: Request sprite data already at the top since otherwise ready sometimes doesn't get recomputed in time.
+    @options.spriteData()
+    return unless @ready()
+
+    @_render renderOptions
+    @_imageData
+
+  getCanvas: (renderOptions = {}) ->
+    # HACK: Request sprite data already at the top since otherwise ready sometimes doesn't get recomputed in time.
+    @options.spriteData()
+    return unless @ready()
+
+    @_render renderOptions
+    @_canvas
+
   _render: (renderOptions) ->
     spriteData = @options.spriteData()
     palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette?._id
