@@ -231,8 +231,8 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
 
       # Tools
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": null
-      "#{LOI.Assets.MeshEditor.Tools.ClusterPicker.id()}": key: AC.Keys.i, holdKey: AC.Keys.alt
-      "#{LOI.Assets.MeshEditor.Tools.MoveCamera.id()}": key: AC.Keys.c
+      "#{LOI.Assets.MeshEditor.Tools.ClusterPicker.id()}": [{key: AC.Keys.i, holdKey: AC.Keys.alt}, {holdKey: AC.Keys.c}]
+      "#{LOI.Assets.MeshEditor.Tools.MoveCamera.id()}": key: AC.Keys.m
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": null
       "#{LOI.Assets.MeshEditor.Tools.Pencil.id()}": key: AC.Keys.b
       "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": null

@@ -28,6 +28,11 @@ class LOI.Assets.Mesh.ArrayField
   getAll: ->
     @_updatedDependency.depend()
     @_getAll()
+
+  getAllAsIndexedMap: ->
+    map = {}
+    map[index] = item for item, index in @getAll() or []
+    map
     
   getAllWithoutUpdates: ->
     @_arrayChangedDependency.depend()

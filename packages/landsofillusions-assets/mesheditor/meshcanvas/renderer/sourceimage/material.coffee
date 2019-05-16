@@ -208,8 +208,9 @@ void main()	{
             materialIndex = materialIndexMap.getPixel x, y
             material = meshData.materials.get materialIndex
 
-            textureData[dataIndex] = material.ramp
-            textureData[dataIndex + 1] = material.shade
+            # Note: When switching between active files, materials might not yet be available.
+            textureData[dataIndex] = material?.ramp
+            textureData[dataIndex + 1] = material?.shade
 
           else
             paletteColorMapIndex = paletteColorMap.calculateDataIndex x, y

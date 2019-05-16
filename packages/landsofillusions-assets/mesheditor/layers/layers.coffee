@@ -46,21 +46,41 @@ class LOI.Assets.MeshEditor.Layers extends FM.View
     "Layer #{layer.index}"
 
   layerThumbnail: ->
-    # TODO
-    return
-
     layer = @currentData()
-    return unless mesh = _.clone @mesh()
-    return unless mesh.layers?[layer.index]
 
-    # Show only the single layer.
-    mesh.layers = [mesh.layers[layer.index]]
+    object = layer.object
+    mesh = object.mesh
 
-    # Keep the layer visible.
-    mesh.layers[0] = _.clone mesh.layers[0]
-    mesh.layers[0].visible = true
+    return unless meshCanvas = @interface.getEditorForActiveFile()
+    cameraAngleIndex = meshCanvas.cameraAngleIndex()
 
-    mesh
+    # Rebuild layers from object for active camera angle.
+    picture = layer.getPictureForCameraAngleIndex cameraAngleIndex
+    return unless bounds = picture.bounds()
+
+    # Generate layer pixels.
+    spriteLayer =
+      pixels: []
+
+    for y in [0...bounds.height]
+      for x in [0...bounds.width]
+        continue unless picture.pixelExistsRelative x, y
+
+        pixel = picture.getMapValuesForPixelRelative x, y
+        _.extend pixel,
+          x: bounds.x + x
+          y: bounds.y + y
+
+        spriteLayer.pixels.push pixel
+
+    # The sprite expects materials as a map instead of an array.
+    materials = mesh.materials.getAllAsIndexedMap()
+
+    new LOI.Assets.Sprite
+      palette: _.pick mesh.palette, ['_id']
+      layers: [spriteLayer]
+      materials: materials
+      bounds: bounds
 
   nameDisabledAttribute: ->
     # Disable name editing until the layer is active.

@@ -81,36 +81,15 @@ class LOI.Assets.MeshEditor.MeshCanvas extends FM.EditorView.Editor
       @interface.getOperator(LOI.Assets.MeshEditor.Actions.DebugMode).active()
 
     # Provide the fake sprite data object to sprite editor views.
+    # Currently this is used only to draw tool previews correctly.
     @spriteData = new ComputedField =>
       return unless meshData = @meshData()
-      return unless object = @activeObject()
-      cameraAngleIndex = @cameraAngleIndex()
-
-      # Rebuild layers from object for active camera angle.
-      spriteLayers = []
-
-      for layer in object.layers.getAll()
-        picture = layer.getPictureForCameraAngleIndex cameraAngleIndex
-
-        spriteLayer = {}
-
-        # Copy origin from picture bounds.
-        if picture?.bounds
-          spriteLayer.origin =
-            x: picture.bounds.left or 0
-            y: picture.bounds.top or 0
-
-        spriteLayers[layer.index] = spriteLayer
 
       # The sprite expects materials as a map instead of an array.
-      materials = {}
-
-      for material, index in @meshData().materials.getAll() or []
-        materials[index] = material
+      materials = @meshData().materials.getAllAsIndexedMap()
 
       new LOI.Assets.Sprite
         palette: _.pick meshData.palette, ['_id']
-        layers: spriteLayers
         materials: materials
 
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
