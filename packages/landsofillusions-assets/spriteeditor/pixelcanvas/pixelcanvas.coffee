@@ -60,16 +60,18 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
 
     else
       # We need to get the engine sprite from the loader.
-      @spriteId = new ComputedField =>
-        @editorView.activeFileId()
-  
       @spriteLoader = new ComputedField =>
-        return unless spriteId = @spriteId()
-        @interface.getLoaderForFile spriteId
+        activeFileData = @editorView.activeFileData()
+        fileId = activeFileData.get 'id'
+        @interface.getLoaderForFile fileId
 
       @spriteData = new ComputedField =>
         @spriteLoader()?.spriteData()
-  
+
+      @spriteId = new ComputedField =>
+        return unless spriteData = @spriteData()
+        spriteData._id
+
       @sprite = new ComputedField =>
         @spriteLoader()?.sprite
 

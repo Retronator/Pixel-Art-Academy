@@ -20,7 +20,19 @@ LOI.Assets.Asset.forId.publish (assetClassName, id) ->
 
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
 
-  assetClass.documents.find id    
+  assetClass.documents.find id
+
+LOI.Assets.Asset.forPath.publish (assetClassName, path) ->
+  check assetClassName, String
+  check path, String
+
+  assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
+
+  # Escape forward slashes.
+  path = path.replace /\//g, '\/'
+
+  assetClass.documents.find
+    name: ///^#{path}///
 
 LOI.Assets.Asset.all.publish (assetClassName) ->
   # Only admins (and later editors) can see all the assets.

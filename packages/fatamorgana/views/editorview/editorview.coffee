@@ -91,9 +91,9 @@ class FM.EditorView extends FM.View
     tab = @currentData()
     'active' if tab.active
 
-  asset: ->
+  loader: ->
     file = @currentData()
-    @interface.getLoaderForFile(file.id)?.asset()
+    @interface.getLoaderForFile file.id
 
   nameOrId: ->
     @tabDataChanged.changed()
@@ -102,8 +102,8 @@ class FM.EditorView extends FM.View
     asset.name or asset._id
 
   saveIndicator: ->
-    asset = @currentData()
-    '*' if asset.dirty?()
+    loader = @currentData()
+    '*' if loader.asset()?.dirty?()
 
   events: ->
     super(arguments...).concat

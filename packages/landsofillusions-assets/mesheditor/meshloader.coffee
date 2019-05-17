@@ -22,6 +22,10 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     # Create the alias for universal operators.
     @asset = @meshData
 
+    @displayName = new ComputedField =>
+      return unless meshData = @meshData()
+      meshData.name or meshData._id
+
     # Load the full document from the server. Note: we can't get this with a subscription
     # because we're already subscribed to the name-only version of the meshes.
     LOI.Assets.Mesh.load @fileId, (error, meshData) =>

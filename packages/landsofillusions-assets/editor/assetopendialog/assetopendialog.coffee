@@ -55,6 +55,12 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
     
     # Open all the files in the target editor view.
     for item in @fileManager.selectedItems()
-      targetEditorView.addFile item._id, item.constructor.id()
+      if item instanceof LOI.Assets.Editor.FileManager.Directory.Folder
+        # We have a directory. See if its extension indicates a package of files.
+        if _.endsWith item.name, '.rot8'
+          targetEditorView.addFile item.name, LOI.Assets.Sprite.Rot8.id()
+
+      else
+        targetEditorView.addFile item._id, item.constructor.id()
     
     @closeDialog()

@@ -1,21 +1,21 @@
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.SpriteEditor.SpriteLoader extends FM.Loader
+class LOI.Assets.SpriteEditor.Rot8Loader extends FM.Loader
   constructor: ->
     super arguments...
 
-    @_subscription = LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, @fileId
+    @_subscription = LOI.Assets.Asset.forPath.subscribe LOI.Assets.Sprite.className, @fileId
+
+    @activeSide = new ReactiveField LOI.Engine.RenderingSides.Keys.Front
 
     @spriteData = new ComputedField =>
-      LOI.Assets.Sprite.documents.findOne @fileId
+      LOI.Assets.Sprite.documents.findOne name: "#{@fileId}/#{_.kebabCase @activeSide()}"
 
     # Create the alias for universal operators.
     @asset = @spriteData
 
-    @displayName = new ComputedField =>
-      return unless spriteData = @spriteData()
-      spriteData.name or spriteData._id
+    @displayName = new ComputedField => @fileId
 
     @paintNormalsData = @interface.getComponentData(LOI.Assets.SpriteEditor.Tools.Pencil).child 'paintNormals'
 

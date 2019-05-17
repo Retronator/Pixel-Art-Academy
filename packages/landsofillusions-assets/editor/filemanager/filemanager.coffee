@@ -75,8 +75,13 @@ class LOI.Assets.Editor.FileManager extends AM.Component
     @focusedDirectory = new ReactiveField null
 
     @selectedItems = new ComputedField =>
-      lastDirectory = _.last @directories()
-      lastDirectory.selectedItems()
+      directories = @directories()
+      lastDirectory = _.last directories
+      selectedItems = lastDirectory.selectedItems()
+      return selectedItems if selectedItems.length
+
+      # We didn't have any selected items in the last directory. Send the selected folder (if we have one) instead.
+      directories[directories.length - 2]?.selectedItems() or []
 
     @selectedItem = new ComputedField =>
       selectedItems = @selectedItems()

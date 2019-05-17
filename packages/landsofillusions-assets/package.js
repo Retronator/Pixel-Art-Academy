@@ -65,6 +65,7 @@ Package.onUse(function(api) {
   api.addFile('documents/visualasset/methods/references');
 
   api.addFile('documents/sprite..');
+  api.addFile('documents/sprite/rot8');
   api.addServerFile('documents/sprite/subscriptions');
   api.addServerFile('documents/sprite/server');
   api.addFile('documents/sprite/methods..');
@@ -243,6 +244,7 @@ Package.onUse(function(api) {
 
   api.addFile('spriteeditor..');
   api.addFile('spriteeditor/spriteloader');
+  api.addFile('spriteeditor/rot8loader');
 
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
@@ -271,7 +273,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/helpers/safearea');
   api.addFile('spriteeditor/helpers/brush');
 
-  api.addFile('spriteeditor/navigator..');
+  api.addComponent('spriteeditor/navigator..');
   api.addComponent('spriteeditor/palette..');
   api.addComponent('spriteeditor/layers..');
   api.addUnstyledComponent('spriteeditor/thumbnail..');

@@ -1,5 +1,5 @@
-<template name="LandsOfIllusions.Assets.Editor.Navigator">
-  <div class="landsofillusions-assets-editor-navigator landsofillusions-assets-editor-panel">
+<template name="LandsOfIllusions.Assets.SpriteEditor.Navigator">
+  <div class="landsofillusions-assets-spriteeditor-navigator landsofillusions-assets-editor-navigator landsofillusions-assets-editor-panel">
     <div class="thumbnail">
       {{> LandsOfIllusions.Assets.SpriteEditor.Thumbnail sprite}}
     </div>
@@ -11,6 +11,13 @@
         <button class="zoom-in-button zoom-button {{zoomInPressedClass}}">+</button>
         <button class="zoom-out-button zoom-button {{zoomOutPressedClass}}">-</button>
       </div>
+      {{#if rot8side}}
+        <div class="rot8">
+          <span class="side">{{rot8side}}</span>
+          <button class="rotate-left-button rotate-button">←</button>
+          <button class="rotate-right-button rotate-button">→</button>
+        </div>
+      {{/if}}
     </div>
   </div>
 </template>
