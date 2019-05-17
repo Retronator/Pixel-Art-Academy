@@ -224,6 +224,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/assetopendialog..');
   api.addComponent('editor/window..');
   api.addComponent('editor/materials..');
+  api.addComponent('editor/navigator..');
 
   api.addComponent('editor/references..');
   api.addComponent('editor/references/displaycomponent..');
@@ -270,7 +271,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/helpers/safearea');
   api.addFile('spriteeditor/helpers/brush');
 
-  api.addComponent('spriteeditor/navigator..');
+  api.addFile('spriteeditor/navigator..');
   api.addComponent('spriteeditor/palette..');
   api.addComponent('spriteeditor/layers..');
   api.addUnstyledComponent('spriteeditor/thumbnail..');
@@ -320,6 +321,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/shadowsenabled');
   api.addFile('mesheditor/helpers/landmarks');
 
+  api.addFile('mesheditor/navigator..');
   api.addUnstyledComponent('mesheditor/camera..');
   api.addUnstyledComponent('mesheditor/matrix..');
   api.addComponent('mesheditor/cameraangles..');

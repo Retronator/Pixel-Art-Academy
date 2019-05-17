@@ -132,3 +132,21 @@ class LOI.Assets.Mesh.Object.Layer.Picture
     return unless flagsMap = @maps[@constructor.Map.Types.Flags]
 
     flagsMap.pixelExists x, y
+
+  getSpritePixels: ->
+    return unless bounds = @bounds()
+
+    pixels = []
+
+    for y in [0...bounds.height]
+      for x in [0...bounds.width]
+        continue unless @pixelExistsRelative x, y
+
+        pixel = @getMapValuesForPixelRelative x, y
+        _.extend pixel,
+          x: bounds.x + x
+          y: bounds.y + y
+
+        pixels.push pixel
+
+    pixels

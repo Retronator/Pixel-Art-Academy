@@ -59,3 +59,10 @@ class LOI.Assets.Mesh.Object.Layer
       
   removeCluster: (clusterId) ->
     @clusters.remove clusterId
+
+  getSpriteBoundsAndPixelsForCameraAngle: (cameraAngleIndex) ->
+    picture = @getPictureForCameraAngleIndex cameraAngleIndex
+    bounds = picture.bounds
+    pixels = picture.getSpritePixels()
+
+    {bounds, pixels}

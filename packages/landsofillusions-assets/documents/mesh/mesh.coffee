@@ -189,6 +189,28 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     cameraAngle.projectPoints(points, plane)[0]
 
+  getSpriteBoundsAndLayersForCameraAngle: (cameraAngleIndex) ->
+    spriteLayers = []
+    spriteBounds = null
+
+    for object in mesh.objects.getAll()
+      {bounds, layers} = object.getSpriteBoundsAndLayersForCameraAngle cameraAngleIndex
+
+      continue unless bounds
+
+      boundsRectangle = AE.Rectangle.fromDimensions bounds
+
+      if spriteBounds
+        spriteBounds = spriteBounds.union boundsRectangle
+
+      else
+        spriteBounds = boundsRectangle
+
+      spriteLayers.push layers...
+
+    bounds: spriteBounds?.toObject()
+    layers: spriteLayers
+
 if Meteor.isServer
   # Export meshes without authors.
   AM.DatabaseContent.addToExport ->

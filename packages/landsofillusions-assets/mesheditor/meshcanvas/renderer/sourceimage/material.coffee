@@ -188,7 +188,7 @@ void main()	{
       meshData = meshCanvas.meshData()
       materialIndexFlagValue = LOI.Assets.Mesh.Object.Layer.Picture.Map.MaterialIndex.flagValue
 
-      unless paletteColorMap and bounds
+      unless meshData and paletteColorMap and bounds
         @map = null
         @uniforms.map.value = null
         @needsUpdate = true

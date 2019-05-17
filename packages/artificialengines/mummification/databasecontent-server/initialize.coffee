@@ -1,7 +1,7 @@
 Request = request
 
 Document.prepare ->
-  return if Meteor.settings.startEmpty
+  return # if Meteor.settings.startEmpty
 
   # See if we have a database content folder.
   databaseContentUrl = Meteor.absoluteUrl "databasecontent/databasecontent.json"

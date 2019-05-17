@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 AM = Artificial.Mirage
 FM = FataMorgana
 LOI = LandsOfIllusions
@@ -41,6 +42,25 @@ class LOI.Assets.MeshEditor.Objects extends FM.View
   placeholderName: ->
     object = @currentData()
     "Object #{object.index}"
+
+  objectThumbnail: ->
+    object = @currentData()
+    mesh = object.mesh
+
+    return unless meshCanvas = @interface.getEditorForActiveFile()
+    cameraAngleIndex = meshCanvas.cameraAngleIndex()
+
+    # Rebuild layers from object for active camera angle.
+    {bounds, layers} = object.getSpriteBoundsAndLayersForCameraAngle cameraAngleIndex
+
+    # The sprite expects materials as a map instead of an array.
+    materials = mesh.materials.getAllAsIndexedMap()
+
+    new LOI.Assets.Sprite
+      palette: _.pick mesh.palette, ['_id']
+      layers: layers
+      materials: materials
+      bounds: bounds
 
   nameDisabledAttribute: ->
     # Disable name editing until the object is active.

@@ -151,7 +151,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                   height: 80
                   tabs: [
                     name: 'Navigator'
-                    contentComponentId: LOI.Assets.SpriteEditor.Navigator.id()
+                    contentComponentId: LOI.Assets.MeshEditor.Navigator.id()
                   ,
                     name: 'File info'
                     contentComponentId: LOI.Assets.SpriteEditor.AssetInfo.id()

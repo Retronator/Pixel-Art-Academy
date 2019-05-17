@@ -1,3 +1,4 @@
+AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
 class LOI.Assets.Mesh.Object
@@ -75,3 +76,29 @@ class LOI.Assets.Mesh.Object
     for layer in @layers.getAll()
       for picture in layer.pictures.getAll()
         picture.recomputeClusters()
+
+  getSpriteBoundsAndLayersForCameraAngle: (cameraAngleIndex) ->
+    bounds = null
+    layers = []
+
+    for layer in @layers.getAll()
+      picture = layer.getPictureForCameraAngleIndex cameraAngleIndex
+      continue unless bounds = picture.bounds()
+
+      boundsRectangle = AE.Rectangle.fromDimensions bounds
+
+      if bounds
+        bounds = bounds.union boundsRectangle
+
+      else
+        bounds = boundsRectangle
+
+      # Generate layer pixels.
+      spriteLayer =
+        pixels: picture.getSpritePixels()
+
+      layers.push spriteLayer
+
+    bounds = bounds?.toObject()
+
+    {bounds, layers}
