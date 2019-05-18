@@ -9,12 +9,6 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
   @id: -> 'LandsOfIllusions.Assets.SpriteEditor'
   @register @id()
 
-  constructor: ->
-    super arguments...
-
-    @documentClass = LOI.Assets.Sprite
-    @assetClassName = @documentClass.className
-
   @defaultInterfaceData: ->
     # Operators
 
@@ -200,6 +194,12 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Tools.Eraser.id()}": key: AC.Keys.e
       "#{LOI.Assets.SpriteEditor.Tools.Pencil.id()}": key: AC.Keys.b
       "#{LOI.Assets.SpriteEditor.Tools.Translate.id()}": key: AC.Keys.v
+
+  constructor: ->
+    super arguments...
+
+    @documentClass = LOI.Assets.Sprite
+    @assetClassName = @documentClass.className
 
   onRendered: ->
     super arguments...
