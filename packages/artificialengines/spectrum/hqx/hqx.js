@@ -217,7 +217,7 @@ var getImagePixels = function( image, x, y, width, height ) {
 };
 
 
-Artificial.Spectrum.Hqx._hqx = function( img, scale, useAntialiasing, createCanvas, trY, trU, trV ) {
+Artificial.Spectrum.Hqx._hqx = function( img, scale, useAntialiasing, trY, trU, trV ) {
 	// We can only scale with a factor of 2, 3 or 4
 	if( [2,3,4].indexOf(scale) === -1 ) {
 		return img;
@@ -228,13 +228,6 @@ Artificial.Spectrum.Hqx._hqx = function( img, scale, useAntialiasing, createCanv
   if (trV === undefined) trV = _trV;
 
   antialiasing = useAntialiasing === undefined ? true : useAntialiasing;
-
-  createCanvas = createCanvas || function(width, height) {
-    var canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    return canvas;
-  };
 
 	var orig, origCtx, scaled, origPixels;
 	if (img.getContext){
@@ -263,7 +256,7 @@ Artificial.Spectrum.Hqx._hqx = function( img, scale, useAntialiasing, createCanv
 	else if( scale === 4 ) hq4x( img.width, img.height, trY, trU, trV );
 	// alternative: window['hq'+scale+'x']( img.width, img.height );
 
-  scaled = createCanvas(img.width * scale, img.height * scale);
+  scaled = new Artificial.Mirage.Canvas(img.width * scale, img.height * scale);
 
 	var scaledCtx = scaled.getContext('2d');
 	var scaledPixels = scaledCtx.getImageData( 0, 0, scaled.width, scaled.height );

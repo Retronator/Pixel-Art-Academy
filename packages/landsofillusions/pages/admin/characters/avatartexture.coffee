@@ -3,8 +3,6 @@ LOI = LandsOfIllusions
 RA = Retronator.Accounts
 Request = request
 
-{createCanvas} = require 'canvas'
-
 WebApp.connectHandlers.use '/admin/landsofillusions/characters/avatartexture.png', (request, response, next) ->
   query = request.query
   adminPassword = Meteor.settings.admin?.password or ''
@@ -47,7 +45,7 @@ WebApp.connectHandlers.use '/admin/landsofillusions/characters/avatartexture.png
       true
 
     # Render the textures.
-    textureRenderer = new LOI.HumanAvatar.TextureRenderer {humanAvatar, humanAvatarRenderer, createCanvas}
+    textureRenderer = new LOI.HumanAvatar.TextureRenderer {humanAvatar, humanAvatarRenderer}
     textureRenderer.render()
 
     canvas = textureRenderer[canvasField]

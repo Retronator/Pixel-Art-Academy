@@ -1,4 +1,5 @@
 AE = Artificial.Everywhere
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 {Uploader} = require 's3-streaming-upload'
@@ -26,7 +27,7 @@ LOI.Character.renderAvatarTextures.method (characterId) ->
     true
 
   # Render the textures.
-  textureRenderer = new LOI.HumanAvatar.TextureRenderer {humanAvatar, humanAvatarRenderer, createCanvas}
+  textureRenderer = new LOI.HumanAvatar.TextureRenderer {humanAvatar, humanAvatarRenderer}
   textureRenderer.render()
 
   paletteDataPNGStream = textureRenderer.scaledPaletteDataCanvas.createPNGStream

@@ -1,3 +1,4 @@
+AM = Artificial.Mirage
 AS = Artificial.Spectrum
 LOI = LandsOfIllusions
 
@@ -14,18 +15,12 @@ class LOI.HumanAvatar.TextureRenderer
   ]
 
   constructor: (@options = {}) ->
-    @options.createCanvas ?= (width, height) =>
-      canvas = $('<canvas>')[0]
-      canvas.width = width
-      canvas.height = height
-      canvas
-
     # Create and automatically update textures.
-    @paletteDataCanvas = @options.createCanvas 1024, 128
-    @paletteDataContext = @paletteDataCanvas.getContext '2d'
+    @paletteDataCanvas = new AM.Canvas 1024, 128
+    @paletteDataContext = @paletteDataCanvas.context
 
-    @normalsCanvas = @options.createCanvas 1024, 128
-    @normalsContext = @normalsCanvas.getContext '2d'
+    @normalsCanvas = new AM.Canvas 1024, 128
+    @normalsContext = @normalsCanvas.context
 
   render: ->
     return unless @options.humanAvatar.dataReady()
@@ -48,7 +43,7 @@ class LOI.HumanAvatar.TextureRenderer
 
       @paletteDataContext.restore()
 
-    @scaledPaletteDataCanvas = AS.Hqx.scale @paletteDataCanvas, 4, AS.Hqx.Modes.Default, false, @options.createCanvas
+    @scaledPaletteDataCanvas = AS.Hqx.scale @paletteDataCanvas, 4, AS.Hqx.Modes.Default, false
 
     # Render normal map.
     @normalsContext.setTransform 1, 0, 0, 1, 0, 0
