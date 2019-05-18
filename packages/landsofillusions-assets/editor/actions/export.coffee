@@ -23,7 +23,7 @@ class LOI.Assets.Editor.Actions.Export extends LOI.Assets.Editor.Actions.AssetAc
 
     name = asset.name or asset._id
     nameStartIndex = name.lastIndexOf('/') or 0
-    name = "#{name.substring nameStartIndex}.json.png"
+    name = "#{name.substring nameStartIndex}.#{_.toLower asset.constructor.className}.png"
 
     link = $link[0]
     link.download = name

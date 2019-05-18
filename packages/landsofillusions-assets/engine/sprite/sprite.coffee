@@ -1,13 +1,8 @@
+AM = Artificial.Mirage
 LOI = LandsOfIllusions
 
 class LOI.Assets.Engine.Sprite
   constructor: (@options) ->
-    @options.createCanvas ?= (width, height) =>
-      canvas = $('<canvas>')[0]
-      canvas.width = width
-      canvas.height = height
-      canvas
-
     @ready = new ComputedField =>
       return unless spriteData = @options.spriteData()
       return unless spriteData.layers?.length and spriteData.bounds
@@ -53,11 +48,11 @@ class LOI.Assets.Engine.Sprite
 
     # Build a new canvas if needed.
     unless @_canvas?.width is spriteData.bounds.width and @_canvas?.height is spriteData.bounds.height
-      @_canvas = @options.createCanvas spriteData.bounds.width, spriteData.bounds.height
+      @_canvas = new AM.Canvas spriteData.bounds.width, spriteData.bounds.height
 
     # Resize the canvas if needed.
-    @_context = @_canvas.getContext '2d'
-    @_imageData = @_context.getImageData 0, 0, @_canvas.width, @_canvas.height
+    @_context = @_canvas.context
+    @_imageData = @_canvas.getFullImageData()
     @_canvasPixelsCount = @_canvas.width * @_canvas.height
 
     # Clear the image buffer to transparent.
@@ -272,4 +267,4 @@ class LOI.Assets.Engine.Sprite
           @_imageData.data[pixelIndex + 2] = destinationColor.b * 255
           @_imageData.data[pixelIndex + 3] = (destinationColor.a or 1) * 255
 
-    @_context.putImageData @_imageData, 0, 0
+    @_canvas.putFullImageData @_imageData

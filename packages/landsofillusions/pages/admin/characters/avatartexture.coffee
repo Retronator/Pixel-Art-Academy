@@ -42,7 +42,6 @@ WebApp.connectHandlers.use '/admin/landsofillusions/characters/avatartexture.png
     humanAvatarRenderer = new LOI.Character.Avatar.Renderers.HumanAvatar
       humanAvatar: humanAvatar
       renderTexture: true
-      createCanvas: createCanvas
       useDatabaseSprites: true
     ,
       true

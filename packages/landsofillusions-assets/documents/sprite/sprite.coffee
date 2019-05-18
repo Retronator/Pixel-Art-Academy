@@ -2,12 +2,6 @@ AE = Artificial.Everywhere
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
-if Meteor.isServer
-  {createCanvas} = require 'canvas'
-
-else
-  createCanvas = null
-
 # A 2D pixel art asset.
 class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Sprite'
@@ -101,9 +95,6 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
         for pixel in layer.pixels
           layer._pixelMap[pixel.x] ?= {}
           layer._pixelMap[pixel.x][pixel.y] = pixel
-
-  getSaveData: ->
-    @
 
   # Pixel retrieval
         
@@ -213,10 +204,12 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
 
   # Database content
 
+  getSaveData: ->
+    @
+
   getPreviewImage: ->
     engineSprite = new LOI.Assets.Engine.Sprite
       spriteData: => @
-      createCanvas: createCanvas
 
     engineSprite.getCanvas
       lightDirection: new THREE.Vector3 0, 0, -1

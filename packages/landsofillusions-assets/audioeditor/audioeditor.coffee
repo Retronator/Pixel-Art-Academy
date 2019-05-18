@@ -29,8 +29,10 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.Editor.Actions.New.id()
           LOI.Assets.Editor.Actions.Open.id()
+          LOI.Assets.Editor.Actions.Import.id()
           null
           LOI.Assets.Editor.Actions.Close.id()
+          LOI.Assets.Editor.Actions.Export.id()
           LOI.Assets.Editor.Actions.Duplicate.id()
           LOI.Assets.Editor.Actions.Delete.id()
         ]
@@ -88,6 +90,7 @@ class LOI.Assets.AudioEditor extends LOI.Assets.Editor
                   height: 80
                   tabs: [
                     name: 'Navigator'
+                    contentComponentId: LOI.Assets.AudioEditor.Navigator.id()
                     active: true
                   ]
                 remainingArea:

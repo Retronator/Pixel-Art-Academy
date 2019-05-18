@@ -13,6 +13,10 @@ class LOI.Assets.AudioEditor.AudioLoader extends FM.Loader
     # Create the alias for universal operators.
     @asset = @audioData
 
+    @displayName = new ComputedField =>
+      return unless audioData = @audioData()
+      audioData.name or audioData._id
+
     @world = new ComputedField =>
       adventureViews = @interface.allChildComponentsOfType LOI.Assets.AudioEditor.AdventureView
       adventureViews[0]?.adventure.world

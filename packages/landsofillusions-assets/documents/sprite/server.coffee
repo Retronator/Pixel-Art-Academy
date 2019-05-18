@@ -1,9 +1,7 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
-Request = request
 
 {PNG} = require 'pngjs'
-{createCanvas} = require 'canvas'
 
 WebApp.connectHandlers.use '/assets/sprite.png', (request, response, next) ->
   query = request.query
@@ -12,7 +10,6 @@ WebApp.connectHandlers.use '/assets/sprite.png', (request, response, next) ->
   throw new AE.ArgumentException "Sprite not found." unless sprite
 
   engineSprite = new LOI.Assets.Engine.Sprite
-    createCanvas: createCanvas
     spriteData: -> sprite
 
   spriteImageData = engineSprite.getImageData()

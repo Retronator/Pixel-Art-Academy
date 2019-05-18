@@ -58,7 +58,7 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
 
   _drawConnection: (connection, imageData) ->
     # Draw the curve.
-    bezierPoints = @_createBezierPoints connection
+    bezierPoints = @constructor.createBezierPoints connection
     camera = @audioCanvas.camera()
 
     bezierParameters = _.flatten _.map bezierPoints, (point) =>
@@ -165,7 +165,7 @@ class LOI.Assets.AudioEditor.AudioCanvas.Flowchart
 
     imageData.data[pixelIndex + offset] = color[offset] for offset in [0..3]
 
-  _createBezierPoints: (connection) ->
+  @createBezierPoints: (connection) ->
     {start, end} = connection
 
     # Make the handle the shortest when a bit ahead of the start.

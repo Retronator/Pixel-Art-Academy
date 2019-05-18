@@ -46,7 +46,6 @@ class LOI.Character.Avatar.Renderers.Renderer
     region: @options.region
     bodyPart: @options.bodyPart
     renderingSides: @options.renderingSides
-    createCanvas: @options.createCanvas
     useDatabaseSprites: @options.useDatabaseSprites
     useArticleLandmarks: @options.useArticleLandmarks
     parent: @

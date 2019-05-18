@@ -105,7 +105,6 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
               @options.flippedHorizontal
           ,
             true
-          createCanvas: @options.createCanvas
 
         @translation[side] = new ComputedField =>
           return unless spriteDataInfo = @spriteDataInfo[side]()

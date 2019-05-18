@@ -91,7 +91,6 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
             @spriteDataInfo[side]()?.flipped
           ,
             true
-          createCanvas: @options.createCanvas
 
         @landmarks[side] = => []
 

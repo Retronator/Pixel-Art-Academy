@@ -1,7 +1,6 @@
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-{createCanvas} = require 'canvas'
 {Uploader} = require 's3-streaming-upload'
 {PassThrough} = require 'stream'
 
@@ -22,7 +21,6 @@ LOI.Character.renderAvatarTextures.method (characterId) ->
   humanAvatarRenderer = new LOI.Character.Avatar.Renderers.HumanAvatar
     humanAvatar: humanAvatar
     renderTexture: true
-    createCanvas: createCanvas
     useDatabaseSprites: true
   ,
     true

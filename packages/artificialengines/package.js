@@ -10,7 +10,8 @@ Npm.depends({
   'tumblr.js': '1.1.1',
   'path-to-regexp': '2.1.0',
   three: '0.96.0',
-  'jaro-winkler': '0.2.8'
+  'jaro-winkler': '0.2.8',
+  'canvas': '2.3.1'
 });
 
 Package.onUse(function(api) {
@@ -113,6 +114,7 @@ Package.onUse(function(api) {
   
   api.addFile('mirage..');
 
+  api.addFile('mirage/canvas');
 	api.addFile('mirage/component');
 	api.addFile('mirage/csshelper');
   api.addUnstyledComponent('mirage/datainput');
