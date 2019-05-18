@@ -220,8 +220,3 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
 
     engineSprite.getCanvas
       lightDirection: new THREE.Vector3 0, 0, -1
-
-if Meteor.isServer
-  # Export sprites without authors.
-  AM.DatabaseContent.addToExport ->
-    LOI.Assets.Sprite.documents.fetch authors: $exists: false

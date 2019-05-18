@@ -41,15 +41,21 @@ class LOI.Assets.Mesh.ArrayField
   _getAll: ->
     _.without @array, undefined, null
 
-  getFirst: ->
+  getFirstIndex: ->
     @_arrayChangedDependency.depend()
     return unless @array
 
     # Find first existing item and retrieve it.
     for item, index in @array when item
-      return @get index
+      return index
 
     null
+
+  getFirst: ->
+    firstIndex = @getFirstIndex()
+    return unless firstIndex?
+
+    @get firstIndex
 
   get: (index) ->
     @_arrayChangedDependency.depend()

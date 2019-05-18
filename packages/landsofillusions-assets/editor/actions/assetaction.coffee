@@ -4,6 +4,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.Editor.Actions.AssetAction extends FM.Action
   enabled: -> @interface.activeFileId()
-  asset: -> @interface.getLoaderForActiveFile()?.asset()
+  loader: -> @interface.getLoaderForActiveFile()
+  asset: -> @loader()?.asset()
   editor: -> @interface.getEditorForActiveFile()
   editorView: -> @interface.getEditorViewForActiveFile()

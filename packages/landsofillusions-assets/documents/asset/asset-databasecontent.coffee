@@ -23,6 +23,65 @@ else
 class LOI.Assets.Asset extends LOI.Assets.Asset
   @databaseContentDebug = false
 
+  @import: (imageData) ->
+    # Read embedded information.
+    embeddedData = new Uint8Array imageData.width * imageData.height * 4
+    header = new Uint32Array embeddedData.buffer, 0, 1
+
+    x = 0
+    y = 0
+    retrieveWidth = imageData.width - 1
+    retrieveHeight = imageData.height - 1
+    retrieveRemaining = retrieveWidth
+    dx = 1
+    dy = 0
+
+    for dataIndex in [0...embeddedData.length]
+      index = (x + y * imageData.width) * 4
+
+      break if dataIndex > 4 and dataIndex >= header[0] + 4
+
+      value = 0
+
+      for offset in [0..3]
+        # Get 2 bits of the value.
+        value += (imageData.data[index + offset] & 3) << offset * 2
+
+      embeddedData[dataIndex] = value
+
+      # Progress around the border.
+      x += dx
+      y += dy
+
+      retrieveRemaining--
+      continue if retrieveRemaining
+
+      if dx
+        dy = dx
+        dx = 0
+        retrieveRemaining = retrieveHeight
+
+      else
+        if dy > 0
+          dx = -1
+
+        else
+          dx = 1
+          retrieveWidth -= 2
+          retrieveHeight -= 2
+          x++
+          y++
+
+        dy = 0
+        retrieveRemaining = retrieveWidth
+
+    compressedBinaryDataLength = header[0]
+    compressedBinaryData = new Uint8Array embeddedData.buffer, 4, compressedBinaryDataLength
+
+    binaryData = Pako.inflateRaw compressedBinaryData
+    BSON.deserialize binaryData
+
+  getSaveData: -> throw new AE.NotImplementedException "Asset must provide an object with save data for exporting database content."
   getPreviewImage: -> throw new AE.NotImplementedException "Asset must provide a preview image for exporting database content."
 
   getDatabaseContent: ->

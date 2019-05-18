@@ -57,8 +57,10 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.Editor.Actions.New.id()
           LOI.Assets.Editor.Actions.Open.id()
+          LOI.Assets.Editor.Actions.Import.id()
           null
           LOI.Assets.MeshEditor.Actions.Save.id()
+          LOI.Assets.Editor.Actions.Export.id()
           LOI.Assets.Editor.Actions.Close.id()
           LOI.Assets.Editor.Actions.Duplicate.id()
           LOI.Assets.Editor.Actions.Delete.id()

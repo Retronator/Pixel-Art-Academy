@@ -10,6 +10,11 @@ class LOI.Assets.Editor.Navigator extends FM.View
   onCreated: ->
     super arguments...
 
+    @editor = new ComputedField =>
+      @interface.getEditorForActiveFile()
+    ,
+      (a, b) => a is b
+
     @zoomPercentage = new ComputedField =>
       @interface.getEditorForActiveFile()?.camera()?.scale() * 100
 

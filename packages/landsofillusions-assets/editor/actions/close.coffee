@@ -10,4 +10,4 @@ class LOI.Assets.Editor.Actions.Close extends LOI.Assets.Editor.Actions.AssetAct
     
   execute: ->
     editorView = @interface.getEditorViewForActiveFile()
-    editorView.removeFile @asset()._id
+    editorView.removeFile @loader().fileId

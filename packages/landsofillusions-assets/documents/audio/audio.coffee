@@ -69,8 +69,3 @@ class LOI.Assets.Audio extends LOI.Assets.Asset
     return if user.hasItem Retronator.Store.Items.CatalogKeys.Retronator.Admin
 
     throw new AE.UnauthorizedException "You are not an audio editor or administrator."
-
-if Meteor.isServer
-  # Export all audio documents.
-  AM.DatabaseContent.addToExport ->
-    LOI.Assets.Audio.documents.fetch()

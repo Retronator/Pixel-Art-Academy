@@ -12,6 +12,11 @@ class LOI.Assets.MeshEditor.Layers extends FM.View
     @mesh = new ComputedField =>
       @interface.getLoaderForActiveFile()?.meshData()
 
+    @meshCanvas = new ComputedField =>
+      @interface.getEditorForActiveFile()
+    ,
+      (a, b) => a is b
+
     @selection = new ComputedField =>
       @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.Selection
 
@@ -51,7 +56,7 @@ class LOI.Assets.MeshEditor.Layers extends FM.View
     object = layer.object
     mesh = object.mesh
 
-    return unless meshCanvas = @interface.getEditorForActiveFile()
+    return unless meshCanvas = @meshCanvas()
     cameraAngleIndex = meshCanvas.cameraAngleIndex()
 
     # Generate layer pixels.

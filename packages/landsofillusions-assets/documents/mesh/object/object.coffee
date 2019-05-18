@@ -83,15 +83,15 @@ class LOI.Assets.Mesh.Object
 
     for layer in @layers.getAll()
       picture = layer.getPictureForCameraAngleIndex cameraAngleIndex
-      continue unless bounds = picture.bounds()
+      continue unless pictureBounds = picture.bounds()
 
-      boundsRectangle = AE.Rectangle.fromDimensions bounds
+      pictureBoundsRectangle = AE.Rectangle.fromDimensions pictureBounds
 
       if bounds
-        bounds = bounds.union boundsRectangle
+        bounds = bounds.union pictureBoundsRectangle
 
       else
-        bounds = boundsRectangle
+        bounds = pictureBoundsRectangle
 
       # Generate layer pixels.
       spriteLayer =

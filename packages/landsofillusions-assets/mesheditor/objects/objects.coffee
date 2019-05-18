@@ -13,6 +13,11 @@ class LOI.Assets.MeshEditor.Objects extends FM.View
     @mesh = new ComputedField =>
       @interface.getLoaderForActiveFile()?.meshData()
 
+    @meshCanvas = new ComputedField =>
+      @interface.getEditorForActiveFile()
+    ,
+      (a, b) => a is b
+
     @selection = new ComputedField =>
       @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.Selection
 
@@ -47,7 +52,7 @@ class LOI.Assets.MeshEditor.Objects extends FM.View
     object = @currentData()
     mesh = object.mesh
 
-    return unless meshCanvas = @interface.getEditorForActiveFile()
+    return unless meshCanvas = @meshCanvas()
     cameraAngleIndex = meshCanvas.cameraAngleIndex()
 
     # Rebuild layers from object for active camera angle.

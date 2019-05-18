@@ -62,7 +62,7 @@ class LOI.Assets.Mesh.Object.Layer
 
   getSpriteBoundsAndPixelsForCameraAngle: (cameraAngleIndex) ->
     picture = @getPictureForCameraAngleIndex cameraAngleIndex
-    bounds = picture.bounds
+    bounds = picture.bounds()
     pixels = picture.getSpritePixels()
 
     {bounds, pixels}

@@ -2,6 +2,12 @@ AE = Artificial.Everywhere
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
+if Meteor.isServer
+  {createCanvas} = require 'canvas'
+
+else
+  createCanvas = null
+
 # A 3D model asset.
 class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Mesh'
@@ -132,16 +138,6 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     # Mark the state clean.
     @dirty false
 
-  getSaveData: ->
-    saveData = {}
-
-    # Save array fields.
-    @cameraAngles.save saveData
-    @objects.save saveData
-    @materials.save saveData
-
-    saveData
-    
   getLandmarkByName: (landmarkName) ->
     _.find @landmarks, (landmark) -> landmark.name is landmarkName
 
@@ -193,7 +189,8 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     spriteLayers = []
     spriteBounds = null
 
-    for object in mesh.objects.getAll()
+    # Rebuild layers from objects for camera angle.
+    for object in @objects.getAll()
       {bounds, layers} = object.getSpriteBoundsAndLayersForCameraAngle cameraAngleIndex
 
       continue unless bounds
@@ -211,7 +208,35 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     bounds: spriteBounds?.toObject()
     layers: spriteLayers
 
-if Meteor.isServer
-  # Export meshes without authors.
-  AM.DatabaseContent.addToExport ->
-    LOI.Assets.Mesh.documents.fetch authors: $exists: false
+  getPreviewSprite: (cameraAngleIndex) ->
+    cameraAngleIndex ?= @cameraAngles.getFirstIndex()
+    {bounds, layers} = @getSpriteBoundsAndLayersForCameraAngle cameraAngleIndex
+
+    # The sprite expects materials as a map instead of an array.
+    materials = @materials.getAllAsIndexedMap()
+
+    new LOI.Assets.Sprite
+      palette: _.pick @palette, ['_id']
+      layers: layers
+      materials: materials
+      bounds: bounds
+
+  # Database content
+
+  getSaveData: ->
+    saveData = {}
+
+    # Save array fields.
+    @cameraAngles.save saveData
+    @objects.save saveData
+    @materials.save saveData
+
+    saveData
+
+  getPreviewImage: ->
+    engineSprite = new LOI.Assets.Engine.Sprite
+      spriteData: => @getPreviewSprite()
+      createCanvas: createCanvas
+
+    engineSprite.getCanvas
+      lightDirection: new THREE.Vector3 0, 0, -1
