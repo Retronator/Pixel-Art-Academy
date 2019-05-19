@@ -12,6 +12,8 @@ Package.onUse(function(api) {
   api.use('retronator:retronator');
   api.use('retronator:retronator-accounts');
 
+  api.use('jparker:crypto-aes');
+
   api.use('webapp');
 
   api.export('Artificial');

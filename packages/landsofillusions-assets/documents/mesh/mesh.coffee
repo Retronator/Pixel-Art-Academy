@@ -2,12 +2,6 @@ AE = Artificial.Everywhere
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
 
-if Meteor.isServer
-  {createCanvas} = require 'canvas'
-
-else
-  createCanvas = null
-
 # A 3D model asset.
 class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   @id: -> 'LandsOfIllusions.Assets.Mesh'
@@ -119,6 +113,8 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     # After mesh is initialized, mark to be in saved state.
     @dirty false
+
+    @_initialized = true
     
   depend: ->
     @_updatedDependency.depend()
@@ -128,7 +124,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     @_updatedDependency.changed()
 
   save: ->
-    saveData = @getSaveData()
+    saveData = @getManuallySavedData()
 
     # Send the mesh to server.
     LOI.Assets.Mesh.save @_id, saveData, (error) =>
@@ -137,6 +133,16 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
 
     # Mark the state clean.
     @dirty false
+
+  getManuallySavedData: ->
+    saveData = {}
+
+    # Save array fields.
+    @cameraAngles.save saveData
+    @objects.save saveData
+    @materials.save saveData
+
+    saveData
 
   getLandmarkByName: (landmarkName) ->
     _.find @landmarks, (landmark) -> landmark.name is landmarkName
@@ -224,19 +230,17 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   # Database content
 
   getSaveData: ->
-    saveData = {}
+    if @_initialized
+      _.extend {}, @, @getManuallySavedData()
 
-    # Save array fields.
-    @cameraAngles.save saveData
-    @objects.save saveData
-    @materials.save saveData
-
-    saveData
+    else
+      @
 
   getPreviewImage: ->
+    @initialize() unless @_initialized
+
     engineSprite = new LOI.Assets.Engine.Sprite
       spriteData: => @getPreviewSprite()
-      createCanvas: createCanvas
 
     engineSprite.getCanvas
       lightDirection: new THREE.Vector3 0, 0, -1

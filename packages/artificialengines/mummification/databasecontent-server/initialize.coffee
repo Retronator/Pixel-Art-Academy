@@ -1,14 +1,17 @@
+AM = Artificial.Mummification
+
 Request = request
 
 Document.prepare ->
-  return # if Meteor.settings.startEmpty
+  return if Meteor.settings.startEmpty
 
-  # See if we have a database content folder.
+  # Database content is active only when any export getters were registered.
+  return unless AM.DatabaseContent.exportGetters.length
+
+  # Try to retrieve the database content descriptor.
   databaseContentUrl = Meteor.absoluteUrl "databasecontent/databasecontent.json"
-  databaseContentResponse = Request.getSync databaseContentUrl, encoding: null
+  Request.get databaseContentUrl, encoding: null, (error, response, body) ->
+    return unless _.startsWith response.headers['content-type'], 'application/json'
 
-  return unless _.startsWith databaseContentResponse.response.headers['content-type'], 'application/json'
-
-  databaseContent = JSON.parse databaseContentResponse.body.toString()
-
-  LOI.DatabaseContent.import databaseContent
+    databaseContent = JSON.parse body.toString()
+    AM.DatabaseContent.import databaseContent

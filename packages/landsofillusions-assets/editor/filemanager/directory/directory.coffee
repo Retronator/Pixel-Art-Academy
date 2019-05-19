@@ -218,15 +218,20 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     display = @callAncestorWith 'display'
     scale = display.scale()
 
+    dropdownItems = [
+      LOI.Assets.Editor.FileManager.Directory.NewFolder.id()
+    ]
+
+    if @selectedItems().length
+      dropdownItems.push LOI.Assets.Editor.FileManager.Directory.CreateRot8.id()
+
     dialog =
       directory: @
       type: FM.Menu.Dropdown.id()
       left: event.pageX / scale
       top: event.pageY / scale
       canDismiss: true
-      items: [
-        LOI.Assets.Editor.FileManager.Directory.NewFolder.id()
-      ]
+      items: dropdownItems
 
     userInterface.displayDialog dialog
 

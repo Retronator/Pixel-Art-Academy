@@ -116,6 +116,7 @@ Package.onUse(function(api) {
   api.addFile('documents/mesh/object/solver/polyhedron/edge');
 
   api.addFile('documents/audio..');
+  api.addFile('documents/audio/audio-getpreviewimage');
   api.addServerFile('documents/audio/subscriptions');
   api.addFile('documents/audio/methods/addnode');
   api.addFile('documents/audio/methods/removenode');
@@ -236,6 +237,7 @@ Package.onUse(function(api) {
   api.addComponent('editor/filemanager/directory..');
   api.addFile('editor/filemanager/directory/folder');
   api.addFile('editor/filemanager/directory/newfolder');
+  api.addFile('editor/filemanager/directory/createrot8');
 
   api.addFile('editor/filemanager/previews..');
   api.addComponent('editor/filemanager/previews/sprite..');
@@ -367,6 +369,7 @@ Package.onUse(function(api) {
   api.addComponent('audioeditor/node/nodes/sound..');
   api.addComponent('audioeditor/node/nodes/biquadfilter..');
 
+  api.addUnstyledComponent('audioeditor/navigator..');
   api.addComponent('audioeditor/nodelibrary..');
 
   api.addFile('audioeditor/tools..');

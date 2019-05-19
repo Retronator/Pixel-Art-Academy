@@ -10,16 +10,6 @@ PNG = require 'fast-png'
 compressionOptions =
   level: Pako.Z_BEST_COMPRESSION
 
-if Meteor.isServer
-  {createCanvas} = require 'canvas'
-
-else
-  createCanvas = (width, height) =>
-    canvas = $('<canvas>')[0]
-    canvas.width = width
-    canvas.height = height
-    canvas
-
 class LOI.Assets.Asset extends LOI.Assets.Asset
   @databaseContentDebug = false
 
@@ -126,12 +116,12 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
     magnification++ while maxSize * magnification < 200 and magnification < 8
 
     # Create the canvas and fill it with background color.
-    canvas = createCanvas width * magnification, height * magnification
+    canvas = new Artificial.Mirage.Canvas width * magnification, height * magnification
 
     palette = LOI.palette()
     backgroundValue = Math.floor (palette.ramps[0].shades[2].r + palette.ramps[0].shades[3].r) * 128
 
-    context = canvas.getContext '2d'
+    context = canvas.context
     context.fillStyle = "rgb(#{backgroundValue}, #{backgroundValue}, #{backgroundValue})"
     context.fillRect 0, 0, canvas.width, canvas.height
 
@@ -142,7 +132,7 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
       context.drawImage previewImage, borderOffset, borderOffset, previewImage.width * magnification, previewImage.height * magnification
 
     # Embed binary data into the border of the image, filling pixels around the edge in clockwise direction.
-    imageData = context.getImageData 0, 0, canvas.width, canvas.height
+    imageData = canvas.getFullImageData()
 
     x = 0
     y = 0

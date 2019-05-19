@@ -16,6 +16,7 @@ Npm.depends({
 
 Package.onUse(function(api) {
   api.use('retronator:landsofillusions');
+  api.use('retronator:landsofillusions-assets');
   api.use('retronator:retronator');
   api.use('retronator:retronator-store');
   api.use('retronator:retronator-blog');
