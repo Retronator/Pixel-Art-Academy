@@ -141,8 +141,9 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
 
   iconUrl: ->
     item = @currentData()
+    iconName = item.iconName?() or _.toLower item.constructor.name
 
-    "/landsofillusions/assets/components/filemanager/#{_.toLower item.constructor.name}.png"
+    "/landsofillusions/assets/components/filemanager/#{iconName}.png"
 
   directoryStyle: ->
     width: "#{@width()}rem"

@@ -215,6 +215,8 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     layers: spriteLayers
 
   getPreviewSprite: (cameraAngleIndex) ->
+    @initialize() unless @_initialized
+
     cameraAngleIndex ?= @cameraAngles.getFirstIndex()
     {bounds, layers} = @getSpriteBoundsAndLayersForCameraAngle cameraAngleIndex
 
@@ -230,15 +232,18 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   # Database content
 
   getSaveData: ->
+    saveData = super arguments...
+
+    _.extend saveData, _.pick @, ['cameraAngles', 'objects']
+
     if @_initialized
-      _.extend {}, @, @getManuallySavedData()
+      saveData = _.omit saveData, ['cameraAngles', 'objects', 'materials']
+      _.extend saveData, @getManuallySavedData()
 
     else
-      @
+      saveData
 
   getPreviewImage: ->
-    @initialize() unless @_initialized
-
     engineSprite = new LOI.Assets.Engine.Sprite
       spriteData: => @getPreviewSprite()
 

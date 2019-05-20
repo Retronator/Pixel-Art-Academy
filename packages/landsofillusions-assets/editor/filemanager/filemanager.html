@@ -12,6 +12,12 @@
               {{#if $is selectedItemType 'Sprite'}}
                 {{> LandsOfIllusions.Assets.Editor.FileManager.Previews.Sprite}}
               {{/if}}
+              {{#if $is selectedItemType 'Mesh'}}
+                {{> LandsOfIllusions.Assets.Editor.FileManager.Previews.Mesh}}
+              {{/if}}
+              {{#if $is selectedItemType 'Audio'}}
+                {{> LandsOfIllusions.Assets.Editor.FileManager.Previews.Audio}}
+              {{/if}}
             </div>
             <div class="name">
               {{filename}}

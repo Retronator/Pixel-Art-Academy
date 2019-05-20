@@ -92,3 +92,8 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
       
   clear: ->
     @constructor.clear @_id
+
+  getSaveData: ->
+    saveData = super arguments...
+
+    _.extend saveData, _.pick @, ['palette', 'customPalette', 'materials', 'landmarks', 'authors', 'references']

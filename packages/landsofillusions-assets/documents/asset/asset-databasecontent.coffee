@@ -71,7 +71,10 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
     binaryData = Pako.inflateRaw compressedBinaryData
     BSON.deserialize binaryData
 
-  getSaveData: -> throw new AE.NotImplementedException "Asset must provide an object with save data for exporting database content."
+  getSaveData: ->
+    # Override to add other properties to save.
+    _.pick @, ['_id', 'name', 'history', 'historyPosition', 'lastEditTime', 'editor']
+
   getPreviewImage: -> throw new AE.NotImplementedException "Asset must provide a preview image for exporting database content."
 
   getDatabaseContent: ->

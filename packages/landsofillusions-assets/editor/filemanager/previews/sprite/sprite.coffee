@@ -18,12 +18,7 @@ class LOI.Assets.Editor.FileManager.Previews.Sprite extends AM.Component
   onCreated: ->
     super arguments...
 
-    @spriteData = new ComputedField =>
-      sprite = @data()
-
-      # Get full sprite data.
-      LOI.Assets.Asset.forId.subscribe @, LOI.Assets.Sprite.className, sprite._id
-      LOI.Assets.Sprite.documents.findOne sprite._id
+    @spriteData = new ComputedField => @_getSpriteData()
 
     @sprite = new LOI.Assets.Engine.Sprite
       spriteData: @spriteData
@@ -46,6 +41,13 @@ class LOI.Assets.Editor.FileManager.Previews.Sprite extends AM.Component
 
       context.translate -spriteData.bounds.left, -spriteData.bounds.top
       @sprite.drawToContext context, lightDirection: @lightDirection()
+
+  _getSpriteData: ->
+    sprite = @data()
+
+    # Get full sprite data.
+    LOI.Assets.Asset.forId.subscribe @, LOI.Assets.Sprite.className, sprite._id
+    LOI.Assets.Sprite.documents.findOne sprite._id
 
   onRendered: ->
     super arguments...

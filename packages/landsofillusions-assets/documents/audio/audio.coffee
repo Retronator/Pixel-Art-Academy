@@ -73,4 +73,6 @@ class LOI.Assets.Audio extends LOI.Assets.Asset
   # Database content
 
   getSaveData: ->
-    @
+    saveData = super arguments...
+
+    _.extend saveData, _.pick @, ['nodes']

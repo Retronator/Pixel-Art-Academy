@@ -205,7 +205,9 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
   # Database content
 
   getSaveData: ->
-    @
+    saveData = super arguments...
+
+    _.extend saveData, _.pick @, ['layers', 'bounds']
 
   getPreviewImage: ->
     engineSprite = new LOI.Assets.Engine.Sprite
