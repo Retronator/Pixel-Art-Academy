@@ -11,7 +11,9 @@ Npm.depends({
   'path-to-regexp': '2.1.0',
   three: '0.96.0',
   'jaro-winkler': '0.2.8',
-  'canvas': '2.3.1'
+  'canvas': '2.3.1',
+  'pako': '1.0.8',
+  'bson': '4.0.2'
 });
 
 Package.onUse(function(api) {
@@ -171,6 +173,7 @@ Package.onUse(function(api) {
   api.addFile('mummification/persistentstorage');
   api.addFile('mummification/collectionwrapper');
   api.addServerFile('mummification/directcollection');
+  api.addFile('mummification/embeddedimagedata');
 
   api.addFile('mummification/hierarchy..');
   api.addFile('mummification/hierarchy/address');
@@ -219,6 +222,7 @@ Package.onUse(function(api) {
   api.addFile('babel/lodash/languageregion');
 
   api.addFile('babel/translation/translation');
+  api.addFile('babel/translation/translation-databasecontent');
   api.addServerFile('babel/translation/subscriptions');
   api.addFile('babel/translation/methods');
   api.addServerFile('babel/translation/migrations/0000-renamecollection');

@@ -3,8 +3,8 @@ AB = Artificial.Babel
 ABs = Artificial.Base
 LOI = LandsOfIllusions
 
-class LOI.Construct.Pages.Admin.PreMadeCharacters extends AM.Component
-  @id: -> 'LandsOfIllusions.Construct.Pages.Admin.PreMadeCharacters'
+class LOI.Pages.Admin.Characters.PreMadeCharacters extends AM.Component
+  @id: -> 'LandsOfIllusions.Pages.Admin.Characters.PreMadeCharacters'
   @register @id()
 
   @insert: new ABs.Method name: "#{@id()}.insert"
@@ -13,18 +13,18 @@ class LOI.Construct.Pages.Admin.PreMadeCharacters extends AM.Component
   onCreated: ->
     super arguments...
     
-    LOI.Construct.Loading.PreMadeCharacter.all.subscribe @
+    LOI.Character.PreMadeCharacter.all.subscribe @
     LOI.Character.forCurrentUser.subscribe @
 
   preMadeCharacters: ->
-    LOI.Construct.Loading.PreMadeCharacter.documents.find()
+    LOI.Character.PreMadeCharacter.documents.find()
 
   events: ->
     super(arguments...).concat
       'click .new-pre-made-character': => @constructor.insert()
 
   class @PreMadeCharacter extends AM.Component
-    @register 'LandsOfIllusions.Construct.Pages.Admin.PreMadeCharacters.PreMadeCharacter'
+    @register 'LandsOfIllusions.Pages.Admin.Characters.PreMadeCharacters.PreMadeCharacter'
 
     onCreated: ->
       super arguments...
@@ -37,7 +37,7 @@ class LOI.Construct.Pages.Admin.PreMadeCharacters extends AM.Component
       @bioTranslatable.renderComponent @currentComponent()
 
     class @CharacterSelection extends AM.DataInputComponent
-      @register 'LandsOfIllusions.Construct.Pages.Admin.PreMadeCharacters.PreMadeCharacter.CharacterSelection'
+      @register 'LandsOfIllusions.Pages.Admin.Characters.PreMadeCharacters.PreMadeCharacter.CharacterSelection'
 
       constructor: ->
         super arguments...

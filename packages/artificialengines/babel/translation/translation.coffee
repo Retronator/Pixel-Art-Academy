@@ -94,7 +94,7 @@ class AB.Translation extends AM.Document
 
   @_addTranslation: (translations, translationData, languageCode, regionCode) ->
     # Translation is present if it holds a text field.
-    return unless translationData.text?
+    return unless translationData?.text?
 
     languageRegion = _.joinLanguageRegion languageCode, regionCode
 

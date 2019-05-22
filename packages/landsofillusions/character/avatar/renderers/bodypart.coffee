@@ -132,7 +132,8 @@ class LOI.Character.Avatar.Renderers.BodyPart extends LOI.Character.Avatar.Rende
     LOI.Character.Part.Types.Avatar.Body[partName].options.type
 
   drawToContext: (context, options = {}) ->
-    
+    super arguments...
+
     # Depend on landmarks to update when renderer translations change.
     @landmarks[options.side]()
 

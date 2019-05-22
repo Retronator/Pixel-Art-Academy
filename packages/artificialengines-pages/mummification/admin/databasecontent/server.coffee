@@ -23,25 +23,7 @@ WebApp.connectHandlers.use '/admin/artificial/mummification/databasecontent/data
     archive.pipe response
     archive.on 'end', -> response.end()
 
-    fileInformation = {}
-    databaseContent = AM.DatabaseContent.export()
-
-    for documentClassId, exportedDocuments of databaseContent
-      fileInformation[documentClassId] = []
-
-      for document in exportedDocuments when document.getDatabaseContent
-        {arrayBuffer, path, lastEditTime} = document.getDatabaseContent()
-
-        # Store file information.
-        fileInformation[documentClassId].push {path, lastEditTime}
-
-        # Place file in the archive.
-        archive.append Buffer.from(arrayBuffer), name: path
-
-    # Place file information in the archive.
-    archive.append JSON.stringify(fileInformation), name: 'databasecontent.json'
-
-    archive.finalize()
+    AM.DatabaseContent.export archive
 
   catch error
     console.error error

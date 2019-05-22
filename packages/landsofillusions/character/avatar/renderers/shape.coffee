@@ -57,8 +57,11 @@ class LOI.Character.Avatar.Renderers.Shape extends LOI.Character.Avatar.Renderer
                 if _.last(defaultName) is '/'
                   "#{defaultName}#{_.kebabCase side}"
 
+                else if _.endsWith defaultName, '.rot8'
+                  "#{defaultName}/#{_.kebabCase side}"
+
                 else
-                  "#{defaultName} #{_.kebabCase side}"
+                  defaultName
 
               spriteName = addSideToDefaultName sourceSide
 

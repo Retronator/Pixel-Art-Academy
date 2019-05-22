@@ -17,8 +17,7 @@ Npm.depends({
   'bresenham-zingl': '0.1.1',
   'pako': '1.0.8',
   'ml-regression-theil-sen': '1.0.0',
-  'canvas': '2.3.1',
-  'bson': '4.0.2'
+  'canvas': '2.3.1'
 });
 
 Package.onUse(function(api) {

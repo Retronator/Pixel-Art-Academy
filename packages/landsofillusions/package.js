@@ -15,7 +15,8 @@ Npm.depends({
   'barycentric': '1.0.1',
   'canvas': '2.3.1',
   'pngjs': '2.3.0',
-  's3-streaming-upload': '0.2.3'
+  's3-streaming-upload': '0.2.3',
+  'fast-png': '4.0.1'
 });
 
 Package.onUse(function(api) {
@@ -100,6 +101,7 @@ Package.onUse(function(api) {
   // Character
 
   api.addFile('character..');
+  api.addServerFile('character/character-server-databasecontent');
   api.addFile('character/character-helpers');
   api.addFile('character/methods');
   api.addServerFile('character/methods-server-renderavatartextures');
@@ -119,7 +121,9 @@ Package.onUse(function(api) {
   // Part system
 
   api.addFile('character/part/part');
+  api.addServerFile('character/part/part-server-databasecontent');
   api.addFile('character/part/template');
+  api.addServerFile('character/part/template-server-databasecontent');
   api.addFile('character/part/methods');
   api.addServerFile('character/part/subscriptions');
   
@@ -155,6 +159,7 @@ Package.onUse(function(api) {
 
   api.addFile('character/avatar/renderers/renderers');
   api.addFile('character/avatar/renderers/renderer');
+  api.addServerFile('character/avatar/renderers/renderer-server-databasecontent');
   api.addFile('character/avatar/renderers/shape');
   api.addFile('character/avatar/renderers/default');
   api.addFile('character/avatar/renderers/humanavatar');
@@ -222,6 +227,15 @@ Package.onUse(function(api) {
   api.addFile('character/membership..');
   api.addServerFile('character/membership/server');
   api.addServerFile('character/membership/subscriptions');
+
+  // Pre-made characters
+
+  api.addFile('character/premadecharacter/premadecharacter');
+  api.addServerFile('character/premadecharacter/premadecharacter-server-databasecontent');
+  api.addFile('character/premadecharacter/methods');
+  api.addServerFile('character/premadecharacter/subscriptions');
+
+  api.addServerFile('character/premadecharacter/migrations/0000-renamecollection');
 
   // User
 
@@ -430,6 +444,9 @@ Package.onUse(function(api) {
   api.addServerFile('pages/admin/characters/avatartexture');
 
   api.addComponent('pages/admin/characters/avatareditor..');
+
+  api.addUnstyledComponent('pages/admin/characters/premadecharacters/premadecharacters');
+  api.addServerFile('pages/admin/characters/premadecharacters/methods-server');
 
   // Components
 

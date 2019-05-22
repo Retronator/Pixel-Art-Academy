@@ -24,7 +24,7 @@ class LOI.Assets.Editor.Actions.Import extends FM.Action
         imageData = PNG.decode fileReader.result
 
         # Retrieve asset from image data.
-        asset = LOI.Assets.Asset.import imageData
+        asset = LOI.Assets.Asset.importDatabaseContent imageData
 
         @_saveAsset asset
 

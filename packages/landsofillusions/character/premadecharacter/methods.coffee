@@ -2,7 +2,7 @@ AB = Artificial.Babel
 AE = Artificial.Everywhere
 LOI = LandsOfIllusions
 
-LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser.method (preMadeCharacterId, name) ->
+LOI.Character.PreMadeCharacter.cloneToCurrentUser.method (preMadeCharacterId, name) ->
   check preMadeCharacterId, Match.DocumentId
   check name, String
 
@@ -12,7 +12,7 @@ LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser.method (preMadeCharact
   LOI.Authorize.player()
 
   # Find the selected pre-made character.
-  preMadeCharacter = LOI.Construct.Loading.PreMadeCharacter.documents.findOne preMadeCharacterId
+  preMadeCharacter = LOI.Character.PreMadeCharacter.documents.findOne preMadeCharacterId
   throw new AE.ArgumentException "Desired pre-made character does not exist." unless preMadeCharacter
 
   # Find the character we're cloning.

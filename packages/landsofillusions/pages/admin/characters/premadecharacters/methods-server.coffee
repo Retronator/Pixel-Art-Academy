@@ -2,7 +2,7 @@ AB = Artificial.Babel
 RA = Retronator.Accounts
 LOI = LandsOfIllusions
 
-LOI.Construct.Pages.Admin.PreMadeCharacters.insert.method ->
+LOI.Pages.Admin.Characters.PreMadeCharacters.insert.method ->
   RA.authorizeAdmin()
 
   # Create the bio translation.
@@ -12,14 +12,14 @@ LOI.Construct.Pages.Admin.PreMadeCharacters.insert.method ->
     bio:
       _id: bioTranslationId
 
-  LOI.Construct.Loading.PreMadeCharacter.documents.insert preMadeCharacter
+  LOI.Character.PreMadeCharacter.documents.insert preMadeCharacter
 
-LOI.Construct.Pages.Admin.PreMadeCharacters.setCharacter.method (preMadeCharacterId, characterId) ->
+LOI.Pages.Admin.Characters.PreMadeCharacters.setCharacter.method (preMadeCharacterId, characterId) ->
   check preMadeCharacterId, Match.DocumentId
   check characterId, Match.DocumentId
 
   RA.authorizeAdmin()
 
-  LOI.Construct.Loading.PreMadeCharacter.documents.update preMadeCharacterId,
+  LOI.Character.PreMadeCharacter.documents.update preMadeCharacterId,
     $set:
       'character._id': characterId

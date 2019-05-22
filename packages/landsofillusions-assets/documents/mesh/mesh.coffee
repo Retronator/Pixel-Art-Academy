@@ -241,7 +241,9 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
       _.extend saveData, @getManuallySavedData()
 
     else
-      saveData
+      # We refetch the mesh instead of simply send the @ reference because this
+      # instance might get initialized later to generate the preview image.
+      LOI.Assets.Mesh.documents.findOne @_id
 
   getPreviewImage: ->
     engineSprite = new LOI.Assets.Engine.Sprite

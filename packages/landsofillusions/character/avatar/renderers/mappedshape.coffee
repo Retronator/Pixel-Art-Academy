@@ -144,7 +144,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
       center = @usedLandmarksCenter[options.side]()
       context.translate -center.x, -center.y
 
-    else
+    else if @options.renderTexture
       context.setTransform 1, 0, 0, 1, options.textureOffset, 0
 
     @sprite[options.side].drawToContext context, options

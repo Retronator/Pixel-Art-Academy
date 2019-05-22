@@ -13,10 +13,10 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
     super arguments...
 
     # Subscribe to pre-made characters.
-    LOI.Construct.Loading.PreMadeCharacter.all.subscribe @
+    LOI.Character.PreMadeCharacter.all.subscribe @
 
     @preMadeCharacters = new ComputedField =>
-      LOI.Construct.Loading.PreMadeCharacter.documents.find().fetch()
+      LOI.Character.PreMadeCharacter.documents.find().fetch()
 
     @characters = new ComputedField =>
       LOI.Character.getInstance preMadeCharacter.character._id for preMadeCharacter in @preMadeCharacters()
@@ -79,7 +79,7 @@ class C3.Service.Terminal.ModelSelection extends AM.Component
 
   onClickConfirmCloneButton: (event) ->
     name = @$('.name-input').val()
-    LOI.Construct.Loading.PreMadeCharacter.cloneToCurrentUser @currentPreMadeCharacter()._id, name
+    LOI.Character.PreMadeCharacter.cloneToCurrentUser @currentPreMadeCharacter()._id, name
     @_returnToMenu()
 
     @terminal.createdCharacter = true
