@@ -1,0 +1,3 @@
+en-US: Pants thighs
+
+{"_id":"EfZF94unykFD9w8tP","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Pants thighs","quality":0},"best":{"text":"Pants thighs","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants thighs","quality":0,"languageRegion":"en-US"}}}

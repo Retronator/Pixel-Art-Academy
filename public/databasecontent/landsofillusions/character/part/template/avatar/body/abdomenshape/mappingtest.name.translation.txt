@@ -1,0 +1,3 @@
+en-US: Mapping test
+
+{"_id":"Wp6ZmmK5gL4aaPsb2","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Mapping test","quality":0},"best":{"text":"Mapping test","quality":0,"languageRegion":"en-US"}},"best":{"text":"Mapping test","quality":0,"languageRegion":"en-US"}}}

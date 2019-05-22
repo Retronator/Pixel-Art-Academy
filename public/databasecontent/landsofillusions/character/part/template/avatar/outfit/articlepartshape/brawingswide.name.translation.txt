@@ -1,0 +1,3 @@
+en-US: Bra wings wide
+
+{"_id":"88XmHarJBXQzYzEHB","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Bra wings wide","quality":0},"best":{"text":"Bra wings wide","quality":0,"languageRegion":"en-US"}},"best":{"text":"Bra wings wide","quality":0,"languageRegion":"en-US"}}}

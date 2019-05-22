@@ -1,0 +1,3 @@
+en-US: Short split left
+
+{"_id":"9FTHbFCdKj4JuJM3s","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Short split left","quality":0},"best":{"text":"Short split left","quality":0,"languageRegion":"en-US"}},"best":{"text":"Short split left","quality":0,"languageRegion":"en-US"}}}

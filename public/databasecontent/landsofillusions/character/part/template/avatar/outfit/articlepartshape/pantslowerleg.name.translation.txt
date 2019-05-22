@@ -1,0 +1,3 @@
+en-US: Pants lower-leg
+
+{"_id":"7N4zHLMiRmMRor6iR","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Pants lower-leg","quality":0},"best":{"text":"Pants lower-leg","quality":0,"languageRegion":"en-US"}},"best":{"text":"Pants lower-leg","quality":0,"languageRegion":"en-US"}}}

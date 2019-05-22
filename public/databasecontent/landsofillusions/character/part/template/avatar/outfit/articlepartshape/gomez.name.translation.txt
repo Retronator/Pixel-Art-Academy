@@ -1,0 +1,3 @@
+en: Gomez
+
+{"_id":"XpJjWeMZ6SnpAsxb4","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Gomez","quality":0,"best":{"text":"Gomez","quality":0,"languageRegion":"en"}},"best":{"text":"Gomez","quality":0,"languageRegion":"en"}}}

@@ -1,0 +1,3 @@
+en-US: Cap backwards
+
+{"_id":"SBLFgkv98rpwMAjPc","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Cap backwards","quality":0},"best":{"text":"Cap backwards","quality":0,"languageRegion":"en-US"}},"best":{"text":"Cap backwards","quality":0,"languageRegion":"en-US"}}}

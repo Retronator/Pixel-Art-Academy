@@ -1,0 +1,3 @@
+en-US: Test underwear
+
+{"_id":"jozNdbgQSQLcBGqft","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Test underwear","quality":0},"best":{"text":"Test underwear","quality":0,"languageRegion":"en-US"}},"best":{"text":"Test underwear","quality":0,"languageRegion":"en-US"}}}

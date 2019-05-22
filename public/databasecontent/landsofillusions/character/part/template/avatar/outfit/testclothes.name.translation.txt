@@ -1,0 +1,3 @@
+en-US: Test clothes
+
+{"_id":"zeeRtmAjxaLeKFz68","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Test clothes","quality":0},"best":{"text":"Test clothes","quality":0,"languageRegion":"en-US"}},"best":{"text":"Test clothes","quality":0,"languageRegion":"en-US"}}}

@@ -1,0 +1,3 @@
+en: Short split right
+
+{"_id":"EdjXhm2XdsWhTMh8k","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Short split right","quality":0,"best":{"text":"Short split right","quality":0,"languageRegion":"en"}},"best":{"text":"Short split right","quality":0,"languageRegion":"en"}}}

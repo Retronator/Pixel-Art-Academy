@@ -1,0 +1,3 @@
+en: Leggings
+
+{"_id":"vo7vxSX9qixAhf8EY","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Leggings","quality":0,"best":{"text":"Leggings","quality":0,"languageRegion":"en"}},"best":{"text":"Leggings","quality":0,"languageRegion":"en"}}}

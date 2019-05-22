@@ -1,0 +1,3 @@
+en: Ada is an undergraduate student, spending most of her time in school, and meeting her friends. Still, she tries to spend plenty of time drawing.
+
+{"_id":"jzsgukJJCFtaPKvQD","_schema":"2.0.0","translations":{"en":{"text":"Ada is an undergraduate student, spending most of her time in school, and meeting her friends. Still, she tries to spend plenty of time drawing.","quality":0,"best":{"text":"Ada is an undergraduate student, spending most of her time in school, and meeting her friends. Still, she tries to spend plenty of time drawing.","quality":0,"languageRegion":"en"}},"best":{"text":"Ada is an undergraduate student, spending most of her time in school, and meeting her friends. Still, she tries to spend plenty of time drawing.","quality":0,"languageRegion":"en"}}}

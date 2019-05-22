@@ -1,0 +1,3 @@
+en-US: Bra straps straight
+
+{"_id":"TJFQwn9kcab5r6MRP","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Bra straps straight","quality":0},"best":{"text":"Bra straps straight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Bra straps straight","quality":0,"languageRegion":"en-US"}}}

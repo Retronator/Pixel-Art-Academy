@@ -1,0 +1,3 @@
+en-US: T-shirt close tight 2
+
+{"_id":"destoEkzGXkZmnCzM","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"T-shirt close tight 2","quality":0},"best":{"text":"T-shirt close tight 2","quality":0,"languageRegion":"en-US"}},"best":{"text":"T-shirt close tight 2","quality":0,"languageRegion":"en-US"}}}

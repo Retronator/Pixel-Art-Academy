@@ -1,0 +1,3 @@
+en-US: Bra cup round
+
+{"_id":"bcTD9mM7SqBRHmtaY","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Bra cup round","quality":0},"best":{"text":"Bra cup round","quality":0,"languageRegion":"en-US"}},"best":{"text":"Bra cup round","quality":0,"languageRegion":"en-US"}}}

@@ -1,0 +1,3 @@
+en: Shaved
+
+{"_id":"4jeuyQ7c3zpvWabYE","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Shaved","quality":0,"best":{"text":"Shaved","quality":0,"languageRegion":"en"}},"best":{"text":"Shaved","quality":0,"languageRegion":"en"}}}

@@ -1,0 +1,3 @@
+en-US: Jeans torso
+
+{"_id":"xBFw5vEH93kqZdXYe","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Jeans torso","quality":0},"best":{"text":"Jeans torso","quality":0,"languageRegion":"en-US"}},"best":{"text":"Jeans torso","quality":0,"languageRegion":"en-US"}}}

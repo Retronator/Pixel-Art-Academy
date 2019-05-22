@@ -1,0 +1,3 @@
+en: Super Trooper Bros S
+
+{"_id":"5K7jnayiZfDMYtPmQ","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Super Trooper Bros S","quality":0,"best":{"text":"Super Trooper Bros S","quality":0,"languageRegion":"en"}},"best":{"text":"Super Trooper Bros S","quality":0,"languageRegion":"en"}}}

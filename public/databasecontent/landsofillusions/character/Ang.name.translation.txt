@@ -1,0 +1,3 @@
+: Ang
+
+{"_id":"3sxhJWiwPm2PC7xDJ","_schema":"2.0.0","translations":{"text":"Ang","quality":0,"best":{"text":"Ang","quality":0,"languageRegion":""}}}

@@ -1,0 +1,3 @@
+en: Hand 1
+
+{"_id":"Y6Fxp8Lic2ciqQmLD","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Hand 1","quality":0,"best":{"text":"Hand 1","quality":0,"languageRegion":"en"}},"best":{"text":"Hand 1","quality":0,"languageRegion":"en"}}}

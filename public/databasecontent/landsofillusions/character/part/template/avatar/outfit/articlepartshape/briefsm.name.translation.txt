@@ -1,0 +1,3 @@
+en: Briefs M
+
+{"_id":"g5s7o2uwsuPX3bGQE","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Briefs M","quality":0,"best":{"text":"Briefs M","quality":0,"languageRegion":"en"}},"best":{"text":"Briefs M","quality":0,"languageRegion":"en"}}}

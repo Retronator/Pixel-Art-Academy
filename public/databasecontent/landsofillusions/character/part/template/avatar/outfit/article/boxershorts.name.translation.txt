@@ -1,0 +1,3 @@
+en: Boxer shorts
+
+{"_id":"bNTgvMPpuRmf6PQrs","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Boxer shorts","quality":0,"best":{"text":"Boxer shorts","quality":0,"languageRegion":"en"}},"best":{"text":"Boxer shorts","quality":0,"languageRegion":"en"}}}

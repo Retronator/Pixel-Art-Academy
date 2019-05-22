@@ -1,0 +1,3 @@
+en: Pants L
+
+{"_id":"aaWzoGjuLYCYixgSN","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Pants L","quality":0,"best":{"text":"Pants L","quality":0,"languageRegion":"en"}},"best":{"text":"Pants L","quality":0,"languageRegion":"en"}}}
