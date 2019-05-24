@@ -1,3 +1,3 @@
 en-US: Underwear bottom briefs
 
-{"_id":"T7X8ZdKgJuFbLXQZq","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Underwear bottom briefs","quality":0},"best":{"text":"Underwear bottom briefs","quality":0,"languageRegion":"en-US"}},"best":{"text":"Underwear bottom briefs","quality":0,"languageRegion":"en-US"}}}
+{"_id":"T7X8ZdKgJuFbLXQZq","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Underwear bottom briefs","quality":0},"best":{"text":"Underwear bottom briefs","quality":0,"languageRegion":"en-US"}},"best":{"text":"Underwear bottom briefs","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1558519120700}}

@@ -1,3 +1,3 @@
 en-US: Leggings pattern random lower-leg 2
 
-{"_id":"9tt8Kv4AtRC85FmnD","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Leggings pattern random lower-leg 2","quality":0},"best":{"text":"Leggings pattern random lower-leg 2","quality":0,"languageRegion":"en-US"}},"best":{"text":"Leggings pattern random lower-leg 2","quality":0,"languageRegion":"en-US"}}}
+{"_id":"9tt8Kv4AtRC85FmnD","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Leggings pattern random lower-leg 2","quality":0},"best":{"text":"Leggings pattern random lower-leg 2","quality":0,"languageRegion":"en-US"}},"best":{"text":"Leggings pattern random lower-leg 2","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1558519138257}}

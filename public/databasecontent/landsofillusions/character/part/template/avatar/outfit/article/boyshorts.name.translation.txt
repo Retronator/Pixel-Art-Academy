@@ -1,3 +1,3 @@
-en-US: Boyshorts
+en: Boyshorts
 
-{"_id":"2bxfYyXdLoJF8SCEj","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Boyshorts","quality":0},"best":{"text":"Boyshorts","quality":0,"languageRegion":"en-US"}},"best":{"text":"Boyshorts","quality":0,"languageRegion":"en-US"}}}
+{"_id":"6P3SsKsfooHp4Aetf","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Boyshorts","quality":0,"best":{"text":"Boyshorts","quality":0,"languageRegion":"en"}},"best":{"text":"Boyshorts","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1558708401892}}

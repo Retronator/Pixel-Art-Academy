@@ -1,3 +1,3 @@
 en-US: Sleepwear
 
-{"_id":"5JjBAKsAkcic5CTHb","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Sleepwear","quality":0},"best":{"text":"Sleepwear","quality":0,"languageRegion":"en-US"}},"best":{"text":"Sleepwear","quality":0,"languageRegion":"en-US"}}}
+{"_id":"5JjBAKsAkcic5CTHb","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Sleepwear","quality":0},"best":{"text":"Sleepwear","quality":0,"languageRegion":"en-US"}},"best":{"text":"Sleepwear","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1558519127434}}

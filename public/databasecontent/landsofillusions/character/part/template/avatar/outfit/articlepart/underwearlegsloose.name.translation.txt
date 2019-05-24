@@ -1,3 +1,3 @@
 en-US: Underwear legs loose
 
-{"_id":"HvgmnaDJgj8pMrpTc","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Underwear legs loose","quality":0},"best":{"text":"Underwear legs loose","quality":0,"languageRegion":"en-US"}},"best":{"text":"Underwear legs loose","quality":0,"languageRegion":"en-US"}}}
+{"_id":"HvgmnaDJgj8pMrpTc","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Underwear legs loose","quality":0},"best":{"text":"Underwear legs loose","quality":0,"languageRegion":"en-US"}},"best":{"text":"Underwear legs loose","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1558519143870}}
