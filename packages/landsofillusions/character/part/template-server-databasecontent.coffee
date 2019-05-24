@@ -9,7 +9,8 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
     name: @id()
     replaceParent: true
 
-  @importDatabaseContent: (arrayBuffer) ->
+  @importDatabaseContent: (imageData) ->
+    AM.EmbeddedImageData.extract imageData
 
   databaseContentPath: ->
     return unless @type and @name.translations

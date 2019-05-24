@@ -12,6 +12,12 @@ class AB.Translation extends AB.Translation
     replaceParent: true
 
   @importDatabaseContent: (arrayBuffer) ->
+    decoder = new util.TextDecoder
+    content = decoder.decode arrayBuffer
+
+    # The last line will have JSON content.
+    lines = content.split '\n'
+    EJSON.parse _.last lines
 
   exportDatabaseContent: ->
     # See if we have a custom path on the object itself (it would be set manually before exporting).
@@ -28,6 +34,9 @@ class AB.Translation extends AB.Translation
       # We can only reference this document by ID so we put it in a common translation folder.
       path = "artificial/babel/translation/#{@_id}"
 
+    # Add last edit time if needed so that documents don't need unnecessary imports.
+    @lastEditTime ?= new Date()
+
     # The content is a list of all translations plus the JSON information.
     content = ""
 
@@ -40,9 +49,6 @@ class AB.Translation extends AB.Translation
     encoder = new util.TextEncoder
     arrayBuffer = encoder.encode content
 
-    # We don't currently store edit times, so we assume we have the latest translation.
-    lastEditTime = new Date()
-
     arrayBuffer: arrayBuffer
     path: "#{path}.translation.txt"
-    lastEditTime: lastEditTime
+    lastEditTime: @lastEditTime

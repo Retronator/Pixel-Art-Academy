@@ -23,6 +23,7 @@ AB.Translation._insert = (namespace, key, defaultText) ->
   translationId = AB.Translation.documents.insert
     namespace: namespace
     key: key
+    lastEditTime: new Date
 
   if Meteor.isServer
     # Insert the provided default text or fall back to just the key.
@@ -80,6 +81,7 @@ AB.Translation._update = (translationId, language, text) ->
   AB.Translation.documents.update translationId,
     $set:
       translations: translation.translations
+      lastEditTime: new Date
 
 AB.Translation.remove.method (translationId) ->
   check translationId, Match.DocumentId
@@ -170,6 +172,7 @@ AB.Translation._removeLanguage = (translationId, language) ->
   AB.Translation.documents.update translationId,
     $set:
       translations: translation.translations
+      lastEditTime: new Date
 
 AB.Translation.moveLanguage.method (translationId, oldLanguage, newLanguage) ->
   check translationId, Match.DocumentId
@@ -231,3 +234,4 @@ AB.Translation._moveLanguage = (translationId, oldLanguage, newLanguage) ->
   AB.Translation.documents.update translationId,
     $set:
       translations: translation.translations
+      lastEditTime: new Date

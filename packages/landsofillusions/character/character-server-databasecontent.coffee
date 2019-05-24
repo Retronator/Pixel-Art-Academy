@@ -10,7 +10,8 @@ class LOI.Character extends LOI.Character
     name: @id()
     replaceParent: true
 
-  @importDatabaseContent: (arrayBuffer) ->
+  @importDatabaseContent: (imageData) ->
+    AM.EmbeddedImageData.extract imageData
 
   databaseContentPath: ->
     "landsofillusions/character/#{@debugName}"

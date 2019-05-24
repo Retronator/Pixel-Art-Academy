@@ -1,6 +1,7 @@
 AM = Artificial.Mummification
 
 Request = request
+requestGet = Meteor.wrapAsync Request.get, Request
 
 Document.prepare ->
   return if Meteor.settings.startEmpty
@@ -10,7 +11,7 @@ Document.prepare ->
 
   # Try to retrieve the database content directory.
   directoryUrl = Meteor.absoluteUrl "databasecontent/directory.json"
-  Request.get directoryUrl, encoding: null, (error, response, body) ->
+  requestGet directoryUrl, encoding: null, (error, response, body) ->
     return unless _.startsWith response.headers['content-type'], 'application/json'
 
     directory = EJSON.parse body.toString()

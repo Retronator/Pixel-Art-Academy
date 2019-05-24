@@ -222,7 +222,7 @@ Package.onUse(function(api) {
   api.addFile('babel/lodash/languageregion');
 
   api.addFile('babel/translation/translation');
-  api.addFile('babel/translation/translation-databasecontent');
+  api.addServerFile('babel/translation/translation-server-databasecontent');
   api.addServerFile('babel/translation/subscriptions');
   api.addFile('babel/translation/methods');
   api.addServerFile('babel/translation/migrations/0000-renamecollection');
