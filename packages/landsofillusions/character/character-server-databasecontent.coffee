@@ -10,7 +10,8 @@ class LOI.Character extends LOI.Character
     name: @id()
     replaceParent: true
 
-  @importDatabaseContent: (imageData) ->
+  @importDatabaseContent: (arrayBuffer) ->
+    imageData = PNG.decode arrayBuffer
     AM.EmbeddedImageData.extract imageData
 
   databaseContentPath: ->

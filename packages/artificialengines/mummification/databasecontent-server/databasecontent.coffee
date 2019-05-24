@@ -52,7 +52,7 @@ class AM.DatabaseContent
     archive.finalize()
 
   @import: (directory) ->
-    for documentClassId, documentsInformation of directory.documents when documentClassId is Artificial.Babel.Translation.id()
+    for documentClassId, documentsInformation of directory.documents
       documentClass = AM.Document.getClassForId documentClassId
 
       for documentInformation in documentsInformation
@@ -60,11 +60,16 @@ class AM.DatabaseContent
 
         # See how old the document in the database is. If it has no last edit time, assume it's outdated.
         currentLastEditTime = currentDocument?.lastEditTime or new Date 0
+        exportedLastEditTime = documentInformation.lastEditTime or directory.exportTime
+
+        # Make sure last edit time isn't a string, but a full date object.
+        currentLastEditTime = new Date currentLastEditTime if _.isString currentLastEditTime
+        exportedLastEditTime = new Date exportedLastEditTime if _.isString exportedLastEditTime
 
         # There's nothing to do if the document in the database is already synced with the document on disk.
-        continue if currentLastEditTime.getTime() is documentInformation.lastEditTime.getTime()
+        continue if currentLastEditTime.getTime() is exportedLastEditTime.getTime()
 
-        if currentLastEditTime < documentInformation.lastEditTime
+        if currentLastEditTime < exportedLastEditTime
           # The database document is older so we need to update it.
           do (documentInformation, documentClass) =>
             url = Meteor.absoluteUrl "databasecontent/#{documentInformation.path}"
@@ -91,9 +96,11 @@ class AM.DatabaseContent
 
               # Add last edit time if needed so that documents don't need unnecessary imports.
               unless importedDocument.lastEditTime and importedDocument.lastEditTime >= documentInformation.lastEditTime
-                importedDocument.lastEditTime = documentInformation.lastEditTime
+                importedDocument.lastEditTime = exportedLastEditTime
 
               documentClass.documents.upsert importedDocument._id, importedDocument
+
+              console.log "Updated database content with path", documentInformation.path
 
         else
           # The database document is newer so we should avoid overwriting new content.

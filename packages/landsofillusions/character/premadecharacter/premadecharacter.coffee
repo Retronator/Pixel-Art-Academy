@@ -10,6 +10,7 @@ class LOI.Character.PreMadeCharacter extends AM.Document
   # bio: description of the character
   #   _id
   #   translations
+  # lastEditTime: time of last database content export
   @Meta
     name: @id()
     fields: =>

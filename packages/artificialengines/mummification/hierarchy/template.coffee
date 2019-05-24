@@ -71,13 +71,13 @@ class AM.Hierarchy.Template extends AM.Document
       else if field.node
         @assertNoDraftTemplates field.node
 
-  @_publish: (templateClass, template) ->
+  @_publish: (templateClass, template, update = {}) ->
     # Make sure template data doesn't reference any draft (unversioned) templates.
     @assertNoDraftTemplates template.data
 
     if template.versions
       # We add current data as a new version.
-      update =
+      _.merge update,
         $push:
           versions: template.data
 
@@ -85,7 +85,7 @@ class AM.Hierarchy.Template extends AM.Document
 
     else
       # We need to create the versions array as well.
-      update =
+      _.merge update,
         $set:
           versions: [template.data]
 
@@ -100,13 +100,15 @@ class AM.Hierarchy.Template extends AM.Document
     # Return the version index.
     versionIndex
 
-  @_revert: (templateClass, template) ->
+  @_revert: (templateClass, template, update = {}) ->
     throw new AE.ArgumentException "The given template does not have a last version to revert to." unless template.latestVersion
 
-    templateClass.documents.update template._id,
+    _.merge update,
       $set:
         data: template.latestVersion.data
         dataPublished: true
+
+    templateClass.documents.update template._id, update
 
     # Return the index of the reverted version.
     template.latestVersion.index

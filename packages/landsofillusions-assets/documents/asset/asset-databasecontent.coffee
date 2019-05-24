@@ -6,8 +6,8 @@ RA = Retronator.Accounts
 PNG = require 'fast-png'
 
 class LOI.Assets.Asset extends LOI.Assets.Asset
-  @importDatabaseContent: (imageData) ->
-    AM.EmbeddedImageData.extract imageData
+  @importDatabaseContent: (arrayBuffer) ->
+    imageData = PNG.decode arrayBuffer
 
   getSaveData: ->
     # Override to add other properties to save.

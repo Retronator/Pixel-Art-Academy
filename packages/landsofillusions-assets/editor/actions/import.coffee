@@ -21,10 +21,8 @@ class LOI.Assets.Editor.Actions.Import extends FM.Action
       # Load the image.
       fileReader = new FileReader
       fileReader.addEventListener 'load', =>
-        imageData = PNG.decode fileReader.result
-
-        # Retrieve asset from image data.
-        asset = LOI.Assets.Asset.importDatabaseContent imageData
+        # Retrieve asset from image.
+        asset = LOI.Assets.Asset.importDatabaseContent fileReader.result
 
         @_saveAsset asset
 

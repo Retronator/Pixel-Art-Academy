@@ -16,6 +16,7 @@ LOI.Character.Part.Template.insert.method (data, metaData) ->
     author: _id: userId
     name: _id: AB.Translation.documents.insert ownerId: userId
     description: _id: AB.Translation.documents.insert ownerId: userId
+    lastEditTime: new Date
     type: metaData.type
     data: data
 
@@ -45,6 +46,8 @@ LOI.Character.Part.Template.updateData.method (templateId, address, value) ->
   update.$set ?= {}
   update.$set.dataPublished = false
 
+  update.$set.lastEditTime = new Date
+
   LOI.Character.Part.Template.documents.update templateId, update
 
 LOI.Character.Part.Template.publish.method (templateId) ->
@@ -55,7 +58,9 @@ LOI.Character.Part.Template.publish.method (templateId) ->
   template = LOI.Character.Part.Template.documents.findOne templateId
   LOI.Character.Part.Template._authorizeTemplateAction template
   
-  AM.Hierarchy.Template._publish LOI.Character.Part.Template, template
+  AM.Hierarchy.Template._publish LOI.Character.Part.Template, template,
+    $set:
+      lastEditTime: new Date
 
 LOI.Character.Part.Template.revert.method (templateId) ->
   check templateId, Match.DocumentId
@@ -65,4 +70,6 @@ LOI.Character.Part.Template.revert.method (templateId) ->
   template = LOI.Character.Part.Template.documents.findOne templateId
   LOI.Character.Part.Template._authorizeTemplateAction template
 
-  AM.Hierarchy.Template._revert LOI.Character.Part.Template, template
+  AM.Hierarchy.Template._revert LOI.Character.Part.Template, template,
+    $set:
+      lastEditTime: new Date

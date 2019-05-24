@@ -11,6 +11,8 @@ class LOI.Character.PreMadeCharacter extends LOI.Character.PreMadeCharacter
     replaceParent: true
 
   @importDatabaseContent: (arrayBuffer) ->
+    imageData = PNG.decode arrayBuffer
+    AM.EmbeddedImageData.extract imageData
 
   databaseContentPath: ->
     name = @character.refresh().debugName

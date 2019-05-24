@@ -1,6 +1,7 @@
 AB = Artificial.Babel
 AM = Artificial.Mummification
 LOI = LandsOfIllusions
+RA = Retronator.Accounts
 
 PNG = require 'fast-png'
 
@@ -9,7 +10,8 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
     name: @id()
     replaceParent: true
 
-  @importDatabaseContent: (imageData) ->
+  @importDatabaseContent: (arrayBuffer) ->
+    imageData = PNG.decode arrayBuffer
     AM.EmbeddedImageData.extract imageData
 
   databaseContentPath: ->
@@ -32,9 +34,12 @@ class LOI.Character.Part.Template extends LOI.Character.Part.Template
     # Encode the PNG.
     arrayBuffer = PNG.encode imageData
 
+    # Add last edit time if needed so that documents don't need unnecessary imports.
+    @lastEditTime ?= new Date()
+
     arrayBuffer: arrayBuffer
     path: "#{@databaseContentPath()}.template.png"
-    lastEditTime: new Date()
+    lastEditTime: @lastEditTime
 
   getPreviewImage: ->
     # Create the template hierarchy.

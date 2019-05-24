@@ -16,6 +16,7 @@ class LOI.Character.Part.Template extends AM.Hierarchy.Template
   # description: how this part was described by the author
   #   _id
   #   translations
+  # lastEditTime: time when last update operation was performed
   # type: type of this part
   # spriteIds: generated array of all sprite Ids found in the template data
   @Meta
