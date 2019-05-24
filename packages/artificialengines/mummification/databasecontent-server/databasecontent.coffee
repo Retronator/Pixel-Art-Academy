@@ -95,7 +95,6 @@ class AM.DatabaseContent
 
               documentClass.documents.upsert importedDocument._id, importedDocument
 
-
         else
           # The database document is newer so we should avoid overwriting new content.
           console.warn "Document #{documentClassId}:#{documentInformation._id} at #{documentInformation.path} has been updated since the export."
