@@ -8,16 +8,14 @@ class LOI.Assets.SpriteEditor.Helpers.Landmarks extends FM.Helper
   constructor: ->
     super arguments...
 
-    @asset = new ComputedField =>
-      LOI.Assets.Sprite.documents.findOne @fileId,
-        fields:
-          landmarks: 1
+    @sprite = new ComputedField =>
+      @interface.getEditorForActiveFile()?.spriteData()
 
     @landmarks = new ComputedField =>
-      asset = @asset()
-      return unless asset?.landmarks
+      sprite = @sprite()
+      return unless sprite?.landmarks
 
-      for landmark, index in asset.landmarks
+      for landmark, index in sprite.landmarks
         # Add index to named color data.
         _.extend {}, landmark,
           index: index

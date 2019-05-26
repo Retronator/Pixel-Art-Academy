@@ -26,15 +26,7 @@ class LOI.Assets.SpriteEditor.Navigator extends LOI.Assets.Editor.Navigator
       'click .rotate-right-button': @onClickRotateRight
 
   onClickRotateLeft: (event) ->
-    @_rotate -1
+    @interface.getOperator(LOI.Assets.SpriteEditor.Actions.Rot8Left).execute()
 
   onClickRotateRight: (event) ->
-    @_rotate 1
-
-  _rotate: (direction) ->
-    loader = @interface.getLoaderForActiveFile()
-    activeSide = loader.activeSide()
-    sides = _.values LOI.Engine.RenderingSides.Keys
-
-    activeSideIndex = _.indexOf sides, activeSide
-    loader.activeSide sides[(activeSideIndex + direction + 8) % 8]
+    @interface.getOperator(LOI.Assets.SpriteEditor.Actions.Rot8Right).execute()

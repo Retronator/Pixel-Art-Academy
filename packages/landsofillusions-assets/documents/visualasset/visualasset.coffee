@@ -62,7 +62,11 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   @updateReferenceDisplayed: @method 'updateReferenceDisplayed'
   @updateReferenceDisplayMode: @method 'updateReferenceDisplayMode'
   @reorderReferenceToTop: @method 'reorderReferenceToTop'
-  
+
+  # Subscriptions
+
+  @allSystem: @subscription 'allSystem'
+
   # Helper methods
 
   constructor: ->

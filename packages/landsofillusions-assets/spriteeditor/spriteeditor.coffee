@@ -68,6 +68,9 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           LOI.Assets.SpriteEditor.Actions.ZoomIn.id()
           LOI.Assets.SpriteEditor.Actions.ZoomOut.id()
           null
+          LOI.Assets.SpriteEditor.Actions.Rot8Left.id()
+          LOI.Assets.SpriteEditor.Actions.Rot8Right.id()
+          null
           LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
           LOI.Assets.SpriteEditor.Actions.ShowLandmarks.id()
           LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()
@@ -187,6 +190,8 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
       "#{LOI.Assets.SpriteEditor.Actions.ShowSafeArea.id()}": commandOrControl: true, shift: true, key: AC.Keys.a
       "#{LOI.Assets.SpriteEditor.Actions.BrushSizeDecrease.id()}": [{key: AC.Keys.openBracket}, {key: AC.Keys.openBracket, commandOrControl: true}]
       "#{LOI.Assets.SpriteEditor.Actions.BrushSizeIncrease.id()}": [{key: AC.Keys.closeBracket}, {key: AC.Keys.closeBracket, commandOrControl: true}]
+      "#{LOI.Assets.SpriteEditor.Actions.Rot8Left.id()}": key: AC.Keys.comma
+      "#{LOI.Assets.SpriteEditor.Actions.Rot8Right.id()}": key: AC.Keys.period
 
       # Tools
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": key: AC.Keys.g

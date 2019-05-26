@@ -62,6 +62,7 @@ Package.onUse(function(api) {
   api.addFile('documents/visualasset..');
   api.addFile('documents/visualasset/methods..');
   api.addFile('documents/visualasset/methods/references');
+  api.addServerFile('documents/visualasset/subscriptions');
 
   api.addFile('documents/sprite..');
   api.addFile('documents/sprite/rot8');
@@ -267,6 +268,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions/showlandmarks');
   api.addFile('spriteeditor/actions/showsafearea');
   api.addFile('spriteeditor/actions/brushsize');
+  api.addFile('spriteeditor/actions/rot8');
 
   api.addFile('spriteeditor/helpers..');
   api.addFile('spriteeditor/helpers/zoomlevels');

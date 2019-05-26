@@ -2,9 +2,11 @@ LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers.BodyPart
   _createRenderers: ->
-    # We create hair renderer separately so we can draw front and back hair in correct order.
     rendererOptions = @_cloneRendererOptions()
-    @hairRenderers = for part in @options.part.properties.hair.parts()
+
+    # We create (facial) hair renderer separately so we can draw front and back parts in correct order.
+    hairParts = [@options.part.properties.hair.parts()..., @options.part.properties.facialHair.parts()...]
+    @hairRenderers = for part in hairParts
       part.createRenderer rendererOptions
 
     # Create the rest of the renderers normally.
@@ -12,7 +14,6 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     @leftEyeRenderer = @_createRenderer 'eyes'
     @rightEyeRenderer = @_createRenderer 'eyes', flippedHorizontal: true
     @rightEyeRenderer._flipHorizontal = true
-    @facialHairRenderers = @_createRenderer 'facialHair'
 
   _placeRenderers: (side) ->
     # Place the head shape.
@@ -23,10 +24,9 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     @_placeRenderer side, @rightEyeRenderer, 'eyeCenter', 'eyeRight'
 
     # Place the hair.
-    @_placeRenderer side, hairRenderer, 'headCenter', 'headCenter' for hairRenderer in @hairRenderers
-
-    # Place the facial hair.
-    @_placeRenderer side, facialHairRenderer, 'mouth', 'mouth' for facialHairRenderer in @facialHairRenderers
+    for hairRenderer in @hairRenderers
+      @_placeRenderer side, hairRenderer, 'headCenter', 'headCenter'
+      @_placeRenderer side, hairRenderer, 'mouth', 'mouth'
 
   _applyLandmarksRegion: (landmarks) ->
     # Head landmarks should be available in hair regions as well.

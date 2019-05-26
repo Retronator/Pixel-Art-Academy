@@ -19,12 +19,15 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
 
   _fileManagerOptions: ->
     # Override to provide options for the file manager.
+
     documents: @interface.parent.documentClass.documents
     defaultOperation: => @_open()
-    
+
   _subscribeToDocuments: ->
     # Override to subscribe to documents for the file manager.
-    LOI.Assets.Asset.all.subscribe @, @interface.parent.assetClassName
+
+    subscription = @interface.parent.documentClass.allSystem or @interface.parent.documentClass.all
+    subscription.subscribe @, @interface.parent.assetClassName
     
   closeDialog: ->
     dialogData = @ancestorComponentOfType(FM.FloatingArea).data()

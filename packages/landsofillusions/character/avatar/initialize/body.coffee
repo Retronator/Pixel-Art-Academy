@@ -110,6 +110,10 @@ LOI.Character.Part.registerClasses
       FacialHairShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Body.FacialHairShape'
         name: 'facial hair shape'
+        properties:
+          region: new LOI.Character.Part.Property.String
+            name: 'region'
+            values: LOI.HumanAvatar.Regions.Hair.options.multipleRegions
         renderer: new LOI.Character.Avatar.Renderers.Shape
           origin:
             landmark: 'mouth'
