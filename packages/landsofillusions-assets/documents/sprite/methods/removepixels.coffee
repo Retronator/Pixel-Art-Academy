@@ -66,7 +66,7 @@ LOI.Assets.Sprite.removePixels.method (spriteId, layerIndex, pixels, combineHist
     pixelsCount = _.sumBy sprite.layers, (layer) => layer?.pixels?.length or 0
 
     # Clear bounds if we're removing the last pixels.
-    if pixelsCount is pixels.length
+    unless pixelsCount
       lastForward.$unset ?= {}
       lastForward.$unset.bounds = true
 

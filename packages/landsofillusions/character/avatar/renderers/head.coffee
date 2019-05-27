@@ -5,7 +5,7 @@ class LOI.Character.Avatar.Renderers.Head extends LOI.Character.Avatar.Renderers
     rendererOptions = @_cloneRendererOptions()
 
     # We create (facial) hair renderer separately so we can draw front and back parts in correct order.
-    hairParts = [@options.part.properties.hair.parts()..., @options.part.properties.facialHair.parts()...]
+    hairParts = [@options.part.properties.facialHair.parts()..., @options.part.properties.hair.parts()...]
     @hairRenderers = for part in hairParts
       part.createRenderer rendererOptions
 
