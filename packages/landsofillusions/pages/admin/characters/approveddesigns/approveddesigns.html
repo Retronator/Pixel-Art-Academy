@@ -1,0 +1,32 @@
+<template name="LandsOfIllusions.Pages.Admin.Characters.ApprovedDesigns">
+  <style>
+    html {
+      font-size: {{display.scale}}px;
+    }
+  </style>
+  {{> Render display}}
+  <div class="landsofillusions-pages-admin-characters-approveddesigns admin-page">
+    <h1>Characters with approved design</h1>
+    <div class="controls">
+      Characters per page <input class="limit-input" type="number" value="{{limit}}"/><br/>
+      Draw outfit <input class="draw-outfit-checkbox" type="checkbox" {{drawOutfitCheckedAttribute}}/><br/>
+      <button class="previous-button">Previous</button>
+      {{minIndex}}–{{maxIndex}}
+      <button class="next-button">Next</button>
+    </div>
+    {{#each characters}}
+      <div class="character">
+        {{t7e avatar.fullName}}
+        <div class="avatar">
+          {{> LandsOfIllusions.Pages.Admin.Characters.ApprovedDesigns.Avatar}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+<template name="LandsOfIllusions.Pages.Admin.Characters.ApprovedDesigns.Avatar">
+  {{#with avatar}}
+    {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args avatarPreviewOptions}}
+  {{/with}}
+</template>

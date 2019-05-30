@@ -92,7 +92,9 @@ class AM.DatabaseContent
                 transform importedDocument
 
               # Transform can skip importing a document by deleting the _id field.
-              return unless importedDocument._id
+              unless importedDocument._id
+                console.log "Skipping import of document with path", documentInformation.path
+                return
 
               # Add last edit time if needed so that documents don't need unnecessary imports.
               unless importedDocument.lastEditTime and importedDocument.lastEditTime >= documentInformation.lastEditTime

@@ -8,6 +8,7 @@ PNG = require 'fast-png'
 class LOI.Assets.Asset extends LOI.Assets.Asset
   @importDatabaseContent: (arrayBuffer) ->
     imageData = PNG.decode arrayBuffer
+    AM.EmbeddedImageData.extract imageData
 
   getSaveData: ->
     # Override to add other properties to save.

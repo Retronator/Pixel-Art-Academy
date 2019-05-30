@@ -9,7 +9,7 @@ class AM.Hierarchy.Template extends AM.Document
   #       template: a reference to a template which should be inserted at this field
   #         id: id of the template document
   #         version: the index of a specific version of data
-  #         data: the denormalized data of the template's specified version
+  #         data: optional denormalized data of the template's specified version, used when faster performance is required
   #       node: a non-terminal value of the field that continues the hierarchy
   #         fields:
   #           {field}:

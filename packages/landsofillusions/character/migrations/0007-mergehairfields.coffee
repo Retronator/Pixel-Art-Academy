@@ -21,8 +21,8 @@ class Migration extends Document.MajorMigration
         hairBehindFields = _.values document.avatar.body.node.fields.head.node.fields.hairBehind?.node.fields
 
         setRegion = (fields, region) =>
-          for fieldOrder, field of fields when field.node and field.type is 'Avatar.Body.Hair'
-            for shapeOrder, shape of field.node.fields.shapes.node.fields when shape.node and shape.type is 'Avatar.Body.HairShape'
+          for fieldOrder, field of fields when field.type is 'Avatar.Body.Hair' and field.node?.fields?.shapes?.node?.fields
+            for shapeOrder, shape of field.node.fields.shapes.node.fields when shape.node?.fields and shape.type is 'Avatar.Body.HairShape'
               shape.node.fields.region ?= value: region
 
         setRegion hairFields, 'HairFront'

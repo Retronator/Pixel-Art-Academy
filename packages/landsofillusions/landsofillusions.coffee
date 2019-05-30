@@ -52,3 +52,4 @@ class LandsOfIllusions
     Retronator.App.addAdminPage '/admin/landsofillusions/characters', @constructor.Pages.Admin.Characters
     Retronator.App.addAdminPage '/admin/landsofillusions/characters/avatareditor', @constructor.Pages.Admin.Characters.AvatarEditor
     Retronator.App.addAdminPage '/admin/landsofillusions/characters/pre-made-characters', @constructor.Pages.Admin.Characters.PreMadeCharacters
+    Retronator.App.addAdminPage '/admin/landsofillusions/characters/approveddesigns', @constructor.Pages.Admin.Characters.ApprovedDesigns

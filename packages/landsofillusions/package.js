@@ -114,6 +114,7 @@ Package.onUse(function(api) {
   api.addServerFile('character/migrations/0005-usercharactersupdate');
   api.addServerFile('character/migrations/0006-moveneckfield');
   api.addServerFile('character/migrations/0007-mergehairfields');
+  api.addServerFile('character/migrations/0008-linkshapetemplates');
   api.addClientFile('character/spacebars');
   api.addFile('character/nonplayercharacter');
   api.addFile('character/instance');
@@ -447,6 +448,9 @@ Package.onUse(function(api) {
 
   api.addUnstyledComponent('pages/admin/characters/premadecharacters/premadecharacters');
   api.addServerFile('pages/admin/characters/premadecharacters/methods-server');
+
+  api.addComponent('pages/admin/characters/approveddesigns..');
+  api.addServerFile('pages/admin/characters/approveddesigns/subscriptions');
 
   // Components
 
