@@ -1,0 +1,3 @@
+en-US: Friendly muttonchops
+
+{"_id":"2wXFtThFjMiw2yq7P","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1558964430468},"translations":{"en":{"us":{"text":"Friendly muttonchops","quality":0},"best":{"text":"Friendly muttonchops","quality":0,"languageRegion":"en-US"}},"best":{"text":"Friendly muttonchops","quality":0,"languageRegion":"en-US"}}}

@@ -1,0 +1,3 @@
+en-US: Mutton chops
+
+{"_id":"8gktr75srSCTnsZpT","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1558964384708},"translations":{"en":{"us":{"text":"Mutton chops","quality":0},"best":{"text":"Mutton chops","quality":0,"languageRegion":"en-US"}},"best":{"text":"Mutton chops","quality":0,"languageRegion":"en-US"}}}

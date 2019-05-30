@@ -1,0 +1,3 @@
+en: Left medium curly ends
+
+{"_id":"GcqaFSGwpHm6h2twZ","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Left medium curly ends","quality":0,"best":{"text":"Left medium curly ends","quality":0,"languageRegion":"en"}},"best":{"text":"Left medium curly ends","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559079679476}}

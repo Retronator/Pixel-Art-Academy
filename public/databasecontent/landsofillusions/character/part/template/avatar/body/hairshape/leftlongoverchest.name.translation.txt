@@ -1,0 +1,3 @@
+en-US: Left long over chest
+
+{"_id":"dwET8fE8u2RrPGDpx","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Left long over chest","quality":0},"best":{"text":"Left long over chest","quality":0,"languageRegion":"en-US"}},"best":{"text":"Left long over chest","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1559079513199}}

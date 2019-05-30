@@ -1,0 +1,3 @@
+en: Left shoulder behind ear
+
+{"_id":"SWhCcy8mpdqNwMBJL","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Left shoulder behind ear","quality":0,"best":{"text":"Left shoulder behind ear","quality":0,"languageRegion":"en"}},"best":{"text":"Left shoulder behind ear","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559157734156}}

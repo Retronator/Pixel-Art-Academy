@@ -1,0 +1,3 @@
+en-US: Spiky top
+
+{"_id":"v6jT6eAmbyBdzosNi","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559075061738},"translations":{"en":{"us":{"text":"Spiky top","quality":0},"best":{"text":"Spiky top","quality":0,"languageRegion":"en-US"}},"best":{"text":"Spiky top","quality":0,"languageRegion":"en-US"}}}

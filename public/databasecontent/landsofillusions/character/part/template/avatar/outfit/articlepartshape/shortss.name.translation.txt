@@ -1,0 +1,3 @@
+en: Shorts S
+
+{"_id":"e8K7pm3GXsx6Zc3Lu","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Shorts S","quality":0,"best":{"text":"Shorts S","quality":0,"languageRegion":"en"}},"best":{"text":"Shorts S","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559209374714}}

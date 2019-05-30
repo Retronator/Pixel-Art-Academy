@@ -1,0 +1,3 @@
+en: Spiky
+
+{"_id":"P5AJCo8vgs3wfo3tp","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Spiky","quality":0,"best":{"text":"Spiky","quality":0,"languageRegion":"en"}},"best":{"text":"Spiky","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559066954249}}
