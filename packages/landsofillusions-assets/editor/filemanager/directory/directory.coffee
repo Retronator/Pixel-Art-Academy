@@ -219,12 +219,23 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
     display = @callAncestorWith 'display'
     scale = display.scale()
 
-    dropdownItems = [
-      LOI.Assets.Editor.FileManager.Directory.NewFolder.id()
-    ]
+    dropdownItems = []
 
-    if @selectedItems().length
-      dropdownItems.push LOI.Assets.Editor.FileManager.Directory.CreateRot8.id()
+    selectedItems = @selectedItems()
+    selectedItem = @selectedItems()?[0]
+
+    if selectedItems.length is 1 and selectedItem instanceof LOI.Assets.Editor.FileManager.Directory.Folder and selectedItem.name is 'trash'
+      dropdownItems.push LOI.Assets.Editor.FileManager.Directory.EmptyTrash.id()
+
+    else
+      dropdownItems.push LOI.Assets.Editor.FileManager.Directory.NewFolder.id()
+
+      if selectedItems.length
+        dropdownItems.push LOI.Assets.Editor.FileManager.Directory.CreateRot8.id()
+        dropdownItems.push LOI.Assets.Editor.FileManager.Directory.Duplicate.id()
+
+        unless _.startsWith selectedItem.name, 'trash/'
+          dropdownItems.push LOI.Assets.Editor.FileManager.Directory.Delete.id()
 
     dialog =
       directory: @

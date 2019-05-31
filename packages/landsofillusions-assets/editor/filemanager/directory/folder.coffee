@@ -9,5 +9,6 @@ class LOI.Assets.Editor.FileManager.Directory.Folder
 
   iconName: ->
     return 'rot8' if _.endsWith @name, '.rot8'
+    return 'trash' if @name is 'trash'
 
     'folder'

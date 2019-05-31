@@ -238,6 +238,9 @@ Package.onUse(function(api) {
   api.addFile('editor/filemanager/directory/folder');
   api.addFile('editor/filemanager/directory/newfolder');
   api.addFile('editor/filemanager/directory/createrot8');
+  api.addFile('editor/filemanager/directory/duplicate');
+  api.addFile('editor/filemanager/directory/delete');
+  api.addFile('editor/filemanager/directory/emptytrash');
 
   api.addFile('editor/filemanager/previews..');
   api.addComponent('editor/filemanager/previews/sprite..');

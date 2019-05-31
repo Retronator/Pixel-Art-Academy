@@ -10,13 +10,12 @@ class LOI.Assets.Editor.Actions.Delete extends LOI.Assets.Editor.Actions.AssetAc
     
   execute: ->
     asset = @asset()
-    assetClassName = @interface.parent.assetClassName
 
     @interface.displayDialog
       contentComponentId: LOI.Assets.Editor.Dialog.id()
       contentComponentData:
         title: "Delete #{asset.constructor.className}"
-        message: "Do you want to delete #{asset.name}?"
+        message: "Do you want to move to trash #{asset.name}?"
         buttons: [
           text: "Delete"
           value: true
@@ -31,5 +30,7 @@ class LOI.Assets.Editor.Actions.Delete extends LOI.Assets.Editor.Actions.AssetAc
           editorView.removeFile asset._id
 
           Tracker.afterFlush =>
-            # Now also remove it in the database.
-            LOI.Assets.Asset.remove asset.constructor.className, asset._id
+            # Now also move it to trash.
+            LOI.Assets.Asset.update asset.constructor.className, asset._id,
+              $set:
+                name: "trash/#{asset.name}"
