@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Avatar.Renderers.Renderer
-  constructor: (@options, initialize) ->
+  constructor: (@options = {}, initialize) ->
     return unless initialize
 
     # By default we prepare for drawing all rendering sides.

@@ -152,7 +152,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
     @_handleRegionTransform context, options
 
     # Sort renderers by depth.
-    sortedRenderers = _.sortBy @renderers(), (renderer) => renderer._depth[options.side]
+    sortedRenderers = @_getSortedRenderers options
 
     for renderer in sortedRenderers
       context.save()
@@ -175,3 +175,7 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
       context.restore()
 
     context.restore()
+
+  _getSortedRenderers: (options) ->
+    # Override to provide a custom sorting of renderers.
+    _.sortBy @renderers(), (renderer) => renderer._depth[options.side]

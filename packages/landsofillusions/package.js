@@ -170,6 +170,7 @@ Package.onUse(function(api) {
   api.addFile('character/avatar/renderers/bodypart');
   api.addFile('character/avatar/renderers/body');
   api.addFile('character/avatar/renderers/head');
+  api.addFile('character/avatar/renderers/hair');
   api.addFile('character/avatar/renderers/chest');
   api.addFile('character/avatar/renderers/outfitarticlepart');
 

@@ -37,5 +37,11 @@ class C3.Design.Terminal.Properties.Sprite.OpenDialog extends AM.Component
   _open: (selectedItem) =>
     selectedItem ?= @fileManager.selectedItems()[0]
 
-    @options.setSpriteId selectedItem._id if selectedItem
-    @options.close()
+    if selectedItem
+      if _.endsWith selectedItem.name, '.rot8'
+        @options.setRot8Sprites selectedItem.name
+
+      else
+        @options.setSpriteId selectedItem._id
+
+      @options.close()

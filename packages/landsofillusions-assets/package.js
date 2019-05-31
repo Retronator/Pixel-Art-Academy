@@ -236,11 +236,13 @@ Package.onUse(function(api) {
 
   api.addComponent('editor/filemanager/directory..');
   api.addFile('editor/filemanager/directory/folder');
-  api.addFile('editor/filemanager/directory/newfolder');
-  api.addFile('editor/filemanager/directory/createrot8');
-  api.addFile('editor/filemanager/directory/duplicate');
-  api.addFile('editor/filemanager/directory/delete');
-  api.addFile('editor/filemanager/directory/emptytrash');
+
+  api.addFile('editor/filemanager/directory/actions/newfolder');
+  api.addFile('editor/filemanager/directory/actions/createrot8');
+  api.addFile('editor/filemanager/directory/actions/duplicate');
+  api.addFile('editor/filemanager/directory/actions/delete');
+  api.addFile('editor/filemanager/directory/actions/emptytrash');
+  api.addFile('editor/filemanager/directory/actions/fliphorizontal');
 
   api.addFile('editor/filemanager/previews..');
   api.addComponent('editor/filemanager/previews/sprite..');

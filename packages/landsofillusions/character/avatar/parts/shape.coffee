@@ -57,3 +57,13 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
           materialsData
 
     @options.renderer.create options
+
+  setRot8Sprites: (path) ->
+    # See which of the directions there are sprites of.
+    for property, side of LOI.Engine.RenderingSides.Keys
+      name = "#{path}/#{_.kebabCase side}"
+
+      continue unless sprite = LOI.Assets.Sprite.documents.findOne {name}
+
+      spriteIdLocation = @properties[side].options.dataLocation.child 'spriteId'
+      spriteIdLocation sprite._id

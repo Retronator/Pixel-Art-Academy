@@ -31,6 +31,10 @@ class C3.Design.Terminal.Properties.Sprite extends AM.Component
           spriteIdLocation = getSpriteIdLocation()
           spriteIdLocation spriteId
 
+        setRot8Sprites: (path) =>
+          property = @data()
+          property.options.parent.setRot8Sprites path
+
     @openDialogVisible = new ReactiveField false
 
     @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()

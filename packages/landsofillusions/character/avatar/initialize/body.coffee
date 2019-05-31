@@ -74,6 +74,7 @@ LOI.Character.Part.registerClasses
           shapes: new LOI.Character.Part.Property.Array
             name: 'shapes'
             type: 'Avatar.Body.HairShape'
+        renderer: new LOI.Character.Avatar.Renderers.Hair
 
       HairShape: new LOI.Character.Avatar.Parts.Shape
         type: 'Avatar.Body.HairShape'
