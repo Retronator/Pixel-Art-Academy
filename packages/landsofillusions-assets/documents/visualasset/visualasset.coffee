@@ -15,6 +15,10 @@ class LOI.Assets.VisualAsset extends LOI.Assets.Asset
   #     ramp: index of the ramp within the palette
   #     shade: index of the shade in the ramp
   #     dither: amount of dither used from 0 to 1
+  #     reflection: information about specular reflections
+  #       intensity: how strong the reflections is, from 0 upwards
+  #       shininess: how sharp the reflection is, from 0 upwards.
+  #       smoothFactor: integer size of the blur kernel to smooth the normals
   # landmarks: array of named locations
   #   name: name of the landmark
   #   x, y, z: floating point location of the landmark

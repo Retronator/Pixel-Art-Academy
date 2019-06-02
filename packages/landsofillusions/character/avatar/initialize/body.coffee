@@ -65,12 +65,13 @@ LOI.Character.Part.registerClasses
         type: 'Avatar.Body.Hair'
         name: 'hair'
         properties:
-          color: new LOI.Character.Avatar.Properties.Color
+          color: new LOI.Character.Avatar.Properties.HairColor
             name: 'color'
             colorsPresetName: 'Default'
             default:
               hue: 0
               shade: 2
+              shine: 2
           shapes: new LOI.Character.Part.Property.Array
             name: 'shapes'
             type: 'Avatar.Body.HairShape'
@@ -93,6 +94,10 @@ LOI.Character.Part.registerClasses
         defaultHair:
           hue: => LOI.Assets.Palette.Atari2600.hues.orange
           shade: => 6
+          reflection: =>
+            intensity: 0.06
+            shininess: 5
+            smoothFactor: 1
 
       FacialHair: new LOI.Character.Part
         type: 'Avatar.Body.FacialHair'

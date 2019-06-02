@@ -191,8 +191,18 @@ class LOI.Assets.Engine.Sprite
 
           sourceColor = THREE.Color.fromObject directColor
 
-          # Shade color based on the normal.
           if inverseLightDirection
+            # Shade color based on the normal.
+            shadeFactor = 0
+
+            # Ambient lighting.
+            sceneAmbientCoefficient = 0.4
+            materialAmbientCoefficient = 1
+
+            if sceneAmbientCoefficient and materialAmbientCoefficient
+              shadeFactor += sceneAmbientCoefficient * materialAmbientCoefficient
+
+            # Diffuse lighting
             if pixel.normal
               normal = new THREE.Vector3 pixel.normal.x, pixel.normal.y, pixel.normal.z
               normal.x *= -1 if flippedHorizontal
@@ -200,13 +210,50 @@ class LOI.Assets.Engine.Sprite
             else
               normal = new THREE.Vector3 0, 0, 1
 
-            shadeFactor = 0.4 + 0.6 * THREE.Math.clamp normal.dot(inverseLightDirection), 0, 1
+            normalLightProduct = THREE.Math.clamp normal.dot(inverseLightDirection), 0, 1
 
-          else
-            shadeFactor = 1
+            lightDiffuseCoefficient = 0.6
+            materialDiffuseCoefficient = 1
 
-          if shadeFactor < 1
-            shadedColor = sourceColor.multiplyScalar(shadeFactor)
+            if lightDiffuseCoefficient and materialDiffuseCoefficient
+              shadeFactor += normalLightProduct * lightDiffuseCoefficient * materialDiffuseCoefficient
+
+            lightSpecularCoefficient = 1
+            materialSpecularCoefficient = 0
+
+            if paletteColor?.reflection
+              materialSpecularCoefficient = paletteColor.reflection.intensity
+              shininess = paletteColor.reflection.shininess
+
+            shadedColor = sourceColor.clone().multiplyScalar shadeFactor
+
+            if lightSpecularCoefficient and materialSpecularCoefficient
+              smoothFactor = paletteColor.reflection.smoothFactor or 0
+
+              # Average the normal.
+              averageNormal = new THREE.Vector3
+
+              for offsetX in [-smoothFactor..smoothFactor]
+                for offsetY in [-smoothFactor..smoothFactor]
+                  if sampleNormal = layer._pixelMap[pixel.x + offsetX]?[pixel.y + offsetY]?.normal
+                    averageNormal.add sampleNormal
+
+              averageNormal.normalize()
+              averageNormal.x *= -1 if flippedHorizontal
+
+              averageNormalLightProduct = THREE.Math.clamp averageNormal.dot(inverseLightDirection), 0, 1
+
+              # Calculate the perfectly reflected ray.
+              reflection = averageNormal.clone().multiplyScalar(2 * averageNormalLightProduct).sub inverseLightDirection
+
+              # We assume the inverse view direction to be (0, 0, 1).
+              # Dot product is then the equivalent of the z coordinate.
+              reflectionViewProduct = THREE.Math.clamp reflection.z, 0, 1
+
+              lightFactor = Math.pow(reflectionViewProduct, shininess) * lightSpecularCoefficient * materialSpecularCoefficient
+              lightColor = new THREE.Color(0xffffff).multiplyScalar lightFactor
+
+              shadedColor.add lightColor
 
             if palette
               # Find the nearest color from the palette to represent the shaded color.
@@ -235,7 +282,7 @@ class LOI.Assets.Engine.Sprite
 
               destinationColor = bestColor
 
-              # Dither routine
+              # Apply dithering.
 
               ditherPercentage = 2 * bestColorDistance / (bestColorDistance + secondBestColorDistance)
 

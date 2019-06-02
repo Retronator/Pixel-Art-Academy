@@ -29,6 +29,10 @@ LOI.Assets.VisualAsset.updateMaterial.method (assetClassName, assetId, index, ma
     ramp: Match.OptionalOrNull Match.Integer
     shade: Match.OptionalOrNull Match.Integer
     dither: Match.OptionalOrNull Number
+    reflection: Match.OptionalOrNull
+      intensity: Match.OptionalOrNull Number
+      shininess: Match.OptionalOrNull Number
+      smoothFactor: Match.OptionalOrNull Match.Integer
 
   RA.authorizeAdmin()
 

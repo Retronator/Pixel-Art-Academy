@@ -12,6 +12,10 @@ class LOI.Character.Avatar.Properties.RelativeColorShade extends LOI.Character.P
     # Hue remains the same.
     @options.baseColor(@options.parent).hue()
 
+  reflection: ->
+    # Reflection remains the same.
+    @options.baseColor(@options.parent).reflection()
+
   baseShade: ->
     @options.baseColor(@options.parent).shade()
 

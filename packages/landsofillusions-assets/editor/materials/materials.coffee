@@ -99,14 +99,14 @@ class LOI.Assets.Editor.Materials extends FM.View
   events: ->
     super(arguments...).concat
       'click .preview-color': @onClickPreviewColor
-      'change .name-input, change .ramp-input, change .shade-input, change .dither-input': @onChangeMaterial
+      'change .attribute-input': @onChangeAttributeInput
       'click .add-material-button': @onClickAddMaterialButton
 
   onClickPreviewColor: (event) ->
     data = @currentData()
     @setIndex data.index
 
-  onChangeMaterial: (event) ->
+  onChangeAttributeInput: (event) ->
     $material = $(event.target).closest('.material')
 
     index = _.parseIntOrNull @currentData().index
@@ -118,6 +118,12 @@ class LOI.Assets.Editor.Materials extends FM.View
       ramp: _.parseIntOrNull $material.find('.ramp-input').val()
       shade: _.parseIntOrNull $material.find('.shade-input').val()
       dither: _.parseFloatOrNull $material.find('.dither-input').val()
+
+    reflection =
+      intensity: _.parseFloatOrNull $material.find('.reflection-intensity-input').val()
+      shininess: _.parseFloatOrNull $material.find('.reflection-shininess-input').val()
+
+    material.reflection = reflection if reflection.intensity? or reflection.shininess?
 
     asset = @assetData()
     LOI.Assets.VisualAsset.updateMaterial asset.constructor.className, asset._id, index, material

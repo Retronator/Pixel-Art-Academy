@@ -154,6 +154,7 @@ Package.onUse(function(api) {
   api.addFile('character/avatar/properties/properties');
   api.addFile('character/avatar/properties/color');
   api.addFile('character/avatar/properties/relativecolorshade');
+  api.addFile('character/avatar/properties/haircolor');
   api.addFile('character/avatar/properties/sprite');
   api.addFile('character/avatar/properties/renderingcondition');
   api.addFile('character/avatar/properties/hideregions');

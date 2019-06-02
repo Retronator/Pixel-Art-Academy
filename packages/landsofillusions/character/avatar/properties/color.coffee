@@ -7,6 +7,8 @@ class LOI.Character.Avatar.Properties.Color extends LOI.Character.Part.Property
   #       value
   #     shade
   #       value
+  #     reflection
+  #       value
   constructor: (@options = {}) ->
     super arguments...
 
@@ -31,3 +33,10 @@ class LOI.Character.Avatar.Properties.Color extends LOI.Character.Part.Property
     return shade if shade?
 
     @options.default?.shade
+
+  reflection: ->
+    colorNode = @options.dataLocation()
+    reflection = colorNode? 'reflection'
+
+    # Compare for existence since shade can be 0.
+    reflection or @options.default?.reflection

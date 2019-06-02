@@ -27,13 +27,12 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
         hues.purple
         hues.magenta
       ]
-      shades: [1, 2, 3, 4, 5, 6, 7, 8]
+      shades: [0, 1, 2, 3, 4, 5, 6, 7, 8]
       huePreviewShade: 4
 
     Skin:
       width: 7
       hues: [
-        hues.red
         hues.peach
         hues.orange
         hues.brown
@@ -48,6 +47,7 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
         hues.indigo
         hues.purple
         hues.magenta
+        hues.red
         hues.grey
       ]
       shades: [2, 3, 4, 5, 6, 7, 8]
@@ -122,9 +122,8 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
     hasNextPage: @pageNumber.hues() < @pagesCount.hues() - 1
     pageNumber: @pageNumber.hues
     save: (value) =>
-      @property.options.dataLocation
-        hue: value
-        shade: selectedShade
+      hueLocation = @property.options.dataLocation.child 'hue'
+      hueLocation value
 
   shades: ->
     selectedHue = @selectedHue()
@@ -140,9 +139,8 @@ class C3.Design.Terminal.Properties.Color extends AM.Component
     pageNumber: @pageNumber.shades
     valueField: @selectedShade
     save: (value) =>
-      @property.options.dataLocation
-        hue: selectedHue
-        shade: value
+      shadeLocation = @property.options.dataLocation.child 'shade'
+      shadeLocation value
 
   hueIsSelected: ->
     @selectedHue()?

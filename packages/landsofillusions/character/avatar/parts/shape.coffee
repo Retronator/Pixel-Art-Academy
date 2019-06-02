@@ -53,6 +53,7 @@ class LOI.Character.Avatar.Parts.Shape extends LOI.Character.Part
           materialsData[materialName] =
             ramp: materialProperty.hue()
             shade: materialProperty.shade()
+            reflection: materialProperty.reflection()
 
           materialsData
 
