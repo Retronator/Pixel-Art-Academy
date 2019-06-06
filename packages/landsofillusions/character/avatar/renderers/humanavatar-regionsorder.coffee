@@ -9,12 +9,6 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
 
     LOI.HumanAvatar.Regions.Torso
 
-    LOI.HumanAvatar.Regions.RightLowerArm
-    LOI.HumanAvatar.Regions.RightHand
-
-    LOI.HumanAvatar.Regions.LeftLowerArm
-    LOI.HumanAvatar.Regions.LeftHand
-
     LOI.HumanAvatar.Regions.RightLowerLeg
     LOI.HumanAvatar.Regions.RightUpperLeg
     LOI.HumanAvatar.Regions.RightFoot
@@ -26,6 +20,13 @@ LOI.Character.Avatar.Renderers.HumanAvatar.regionsOrder =
     LOI.HumanAvatar.Regions.SexOrgan
 
     LOI.HumanAvatar.Regions.TorsoClothes
+
+    LOI.HumanAvatar.Regions.RightLowerArm
+    LOI.HumanAvatar.Regions.RightHand
+
+    LOI.HumanAvatar.Regions.LeftLowerArm
+    LOI.HumanAvatar.Regions.LeftHand
+
     LOI.HumanAvatar.Regions.HairMiddle
     LOI.HumanAvatar.Regions.Head
     LOI.HumanAvatar.Regions.HairFront
