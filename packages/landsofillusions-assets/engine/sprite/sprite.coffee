@@ -44,6 +44,10 @@ class LOI.Assets.Engine.Sprite
 
   _render: (renderOptions) ->
     spriteData = @options.spriteData()
+
+    # On the server we need to manually request pixel maps.
+    spriteData.requirePixelMaps() if Meteor.isServer
+
     palette = spriteData.customPalette or LOI.Assets.Palette.documents.findOne spriteData.palette?._id
 
     # Build a new canvas if needed.

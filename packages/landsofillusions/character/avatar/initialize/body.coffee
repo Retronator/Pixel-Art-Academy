@@ -183,6 +183,7 @@ LOI.Character.Part.registerClasses
         defaultIris:
           hue: => LOI.Assets.Palette.Atari2600.hues.blue
           shade: => 5
+          reflection: => null
 
       Torso: new LOI.Character.Part
         type: 'Avatar.Body.Torso'

@@ -4,6 +4,7 @@ class LOI.Character.Avatar.Parts.SkinShape extends LOI.Character.Avatar.Parts.Sh
   @defaultSkin =
     hue: => LOI.Assets.Palette.Atari2600.hues.peach
     shade: => 4
+    reflection: => null
 
   constructor: (options) ->
     super arguments...

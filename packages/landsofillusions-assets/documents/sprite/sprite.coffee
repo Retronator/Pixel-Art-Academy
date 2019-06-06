@@ -88,13 +88,19 @@ class LOI.Assets.Sprite extends LOI.Assets.VisualAsset
       @bounds.height = @bounds.bottom - @bounds.top + 1
       
     # On the client also create pixel maps.
-    if Meteor.isClient and @layers
-      for layer in @layers when layer?.pixels
-        layer._pixelMap = {}
+    @requirePixelMaps() if Meteor.isClient
 
-        for pixel in layer.pixels
-          layer._pixelMap[pixel.x] ?= {}
-          layer._pixelMap[pixel.x][pixel.y] = pixel
+  requirePixelMaps: ->
+    return unless @layers?[0].pixels
+
+    for layer in @layers when layer?.pixels
+      continue if layer._pixelMap
+
+      layer._pixelMap = {}
+
+      for pixel in layer.pixels
+        layer._pixelMap[pixel.x] ?= {}
+        layer._pixelMap[pixel.x][pixel.y] = pixel
 
   # Pixel retrieval
         

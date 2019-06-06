@@ -23,7 +23,7 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
     # TODO: Also transform any non-mapped landmarks.
     newSpriteData.landmarks = _.clone targetLandmarks
 
-    return newSpriteData unless sourceLandmarks.length
+    return new LOI.Assets.Sprite newSpriteData unless sourceLandmarks.length
 
     # Order the landmarks by name so we make sure both arrays have them positioned at same indices.
     sourceLandmarks = _.sortBy sourceLandmarks, 'name'
