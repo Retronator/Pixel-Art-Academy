@@ -1,3 +1,3 @@
 en: Leggings spartans sheer M
 
-{"_id":"zT4PaiARJqSjETdGK","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Leggings spartans sheer M","quality":0,"best":{"text":"Leggings spartans sheer M","quality":0,"languageRegion":"en"}},"best":{"text":"Leggings spartans sheer M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559209358092}}
+{"_id":"zT4PaiARJqSjETdGK","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Leggings spartans sheer M","quality":0,"best":{"text":"Leggings spartans sheer M","quality":0,"languageRegion":"en"}},"best":{"text":"Leggings spartans sheer M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802587129}}

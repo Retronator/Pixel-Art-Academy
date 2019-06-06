@@ -1,0 +1,3 @@
+en-US: Right short wavy behind
+
+{"_id":"gvn5ojkDt8cQ8xg4H","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559601341328},"translations":{"en":{"us":{"text":"Right short wavy behind","quality":0},"best":{"text":"Right short wavy behind","quality":0,"languageRegion":"en-US"}},"best":{"text":"Right short wavy behind","quality":0,"languageRegion":"en-US"}}}

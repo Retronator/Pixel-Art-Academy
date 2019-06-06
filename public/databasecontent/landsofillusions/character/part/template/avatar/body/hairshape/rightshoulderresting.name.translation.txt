@@ -1,0 +1,3 @@
+en: Right shoulder resting
+
+{"_id":"nfHotmfHF9BgsPBfT","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Right shoulder resting","quality":0,"best":{"text":"Right shoulder resting","quality":0,"languageRegion":"en"}},"best":{"text":"Right shoulder resting","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559228152088}}

@@ -1,3 +1,3 @@
 en: Boxer briefs blue M
 
-{"_id":"SpZcjeEiB3AtPeeEr","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Boxer briefs blue M","quality":0,"best":{"text":"Boxer briefs blue M","quality":0,"languageRegion":"en"}},"best":{"text":"Boxer briefs blue M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559209348590}}
+{"_id":"SpZcjeEiB3AtPeeEr","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Boxer briefs blue M","quality":0,"best":{"text":"Boxer briefs blue M","quality":0,"languageRegion":"en"}},"best":{"text":"Boxer briefs blue M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802576466}}

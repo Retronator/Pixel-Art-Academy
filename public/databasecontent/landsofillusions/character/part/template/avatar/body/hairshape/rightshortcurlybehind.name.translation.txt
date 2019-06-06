@@ -1,0 +1,3 @@
+en-US: Right short curly behind
+
+{"_id":"hv8XRwtM3BTFhRaEL","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559561536590},"translations":{"en":{"us":{"text":"Right short curly behind","quality":0},"best":{"text":"Right short curly behind","quality":0,"languageRegion":"en-US"}},"best":{"text":"Right short curly behind","quality":0,"languageRegion":"en-US"}}}

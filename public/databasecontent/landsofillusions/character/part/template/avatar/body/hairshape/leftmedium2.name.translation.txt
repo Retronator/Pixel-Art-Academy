@@ -1,3 +1,3 @@
 en: Left medium 2
 
-{"_id":"omy63fTkYLfc8TL5e","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Left medium 2","quality":0,"best":{"text":"Left medium 2","quality":0,"languageRegion":"en"}},"best":{"text":"Left medium 2","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559209313165}}
+{"_id":"omy63fTkYLfc8TL5e","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Left medium 2","quality":0,"best":{"text":"Left medium 2","quality":0,"languageRegion":"en"}},"best":{"text":"Left medium 2","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802535342}}

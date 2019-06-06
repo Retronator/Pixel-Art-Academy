@@ -1,3 +1,3 @@
 en: Side right short 1
 
-{"_id":"K3YnPiLNKZcDcwYiK","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Side right short 1","quality":0,"best":{"text":"Side right short 1","quality":0,"languageRegion":"en"}},"best":{"text":"Side right short 1","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559209312625}}
+{"_id":"K3YnPiLNKZcDcwYiK","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Side right short 1","quality":0,"best":{"text":"Side right short 1","quality":0,"languageRegion":"en"}},"best":{"text":"Side right short 1","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802534875}}

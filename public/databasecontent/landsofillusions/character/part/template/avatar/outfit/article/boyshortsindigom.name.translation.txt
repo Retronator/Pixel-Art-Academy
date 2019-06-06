@@ -1,3 +1,3 @@
 en: Boyshorts indigo M
 
-{"_id":"D5jKs6k8kHuHRpFg8","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Boyshorts indigo M","quality":0,"best":{"text":"Boyshorts indigo M","quality":0,"languageRegion":"en"}},"best":{"text":"Boyshorts indigo M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559209351665}}
+{"_id":"D5jKs6k8kHuHRpFg8","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Boyshorts indigo M","quality":0,"best":{"text":"Boyshorts indigo M","quality":0,"languageRegion":"en"}},"best":{"text":"Boyshorts indigo M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802579763}}

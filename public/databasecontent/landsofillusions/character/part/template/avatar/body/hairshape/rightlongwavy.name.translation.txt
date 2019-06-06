@@ -1,0 +1,3 @@
+en-US: Right long wavy
+
+{"_id":"Y7pG6Hh6ijhcW7TvW","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559689803259},"translations":{"en":{"us":{"text":"Right long wavy","quality":0},"best":{"text":"Right long wavy","quality":0,"languageRegion":"en-US"}},"best":{"text":"Right long wavy","quality":0,"languageRegion":"en-US"}}}

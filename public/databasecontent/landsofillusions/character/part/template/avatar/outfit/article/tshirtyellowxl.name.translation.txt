@@ -1,3 +1,3 @@
 en: T-shirt yellow XL
 
-{"_id":"H4F5Y4LLrz7tBxEWC","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"T-shirt yellow XL","quality":0,"best":{"text":"T-shirt yellow XL","quality":0,"languageRegion":"en"}},"best":{"text":"T-shirt yellow XL","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559209350923}}
+{"_id":"H4F5Y4LLrz7tBxEWC","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"T-shirt yellow XL","quality":0,"best":{"text":"T-shirt yellow XL","quality":0,"languageRegion":"en"}},"best":{"text":"T-shirt yellow XL","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802578913}}

@@ -1,3 +1,3 @@
 en: Bra straps M
 
-{"_id":"5CEico6burA7DACZ8","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Bra straps M","quality":0,"best":{"text":"Bra straps M","quality":0,"languageRegion":"en"}},"best":{"text":"Bra straps M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559209373547}}
+{"_id":"5CEico6burA7DACZ8","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Bra straps M","quality":0,"best":{"text":"Bra straps M","quality":0,"languageRegion":"en"}},"best":{"text":"Bra straps M","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802604517}}
