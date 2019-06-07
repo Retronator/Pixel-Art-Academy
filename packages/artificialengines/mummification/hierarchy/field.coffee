@@ -197,7 +197,13 @@ class AM.Hierarchy.Field
       placeholderNode?.destroy()
 
     field.isTemplate = ->
-      options.load()?.templateId
+      return unless data = options.load()
+      data.template or data.templateId
+
+    field.getTemplate = ->
+      return unless data = options.load()
+      return unless templateId = data.templateId or data.template.id
+      options.templateClass.documents.findOne templateId
 
     # Return the field getter/setter function (return must be explicit).
     return field

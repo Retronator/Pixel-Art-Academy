@@ -107,13 +107,6 @@
         {{/with}}
       {{/if}}
     </div>
-    {{#if showTemplates}}
-      {{#with hoveredTemplate}}
-        <div class="hovered-template">
-          <div class="name">{{> t9n name}}</div>
-        </div>
-      {{/with}}
-    {{/if}}
     <div class="main-actions">
       {{#if showTemplates}}
         <button class="main-button action-button done-button">Back</button>
@@ -154,6 +147,11 @@
           <button class="action-button delete-button danger-button">Delete</button>
         {{/unless}}
       {{/if}}
+      {{#with hoveredTemplate}}
+        <div class="hovered-template">
+          <div class="name">{{> t9n name}}</div>
+        </div>
+      {{/with}}
     </div>
   </div>
 </template>

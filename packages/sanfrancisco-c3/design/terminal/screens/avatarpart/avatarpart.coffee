@@ -80,7 +80,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
         rootField: dataField
 
   pushPart: (part, previewOptions) ->
-    # Put current part on the stack
+    # Put current part on the stack.
     currentPart = @part()
     @partStack.push currentPart if currentPart
 
@@ -93,6 +93,9 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     # Reset force modes.
     @forceShowTemplates false
     @forceShowEditor false
+
+    # Clear hovered template.
+    @hoveredTemplate? null
 
   popPart: ->
     # Get the last part from the stack.
@@ -231,8 +234,8 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
       'click .new-part-button': @onClickNewPartButton
       'click .delete-button': @onClickDeleteButton
       'click .template': @onClickTemplate
-      'mouseenter .template': @onMouseEnterTemplate
-      'mouseleave .template': @onMouseLeaveTemplate
+      'mouseenter .avatar-part': @onMouseEnterAvatarPart
+      'mouseleave .avatar-part': @onMouseLeaveAvatarPart
 
   onClickDoneButton: (event) ->
     @closePart()
@@ -291,10 +294,21 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @forceShowTemplates false
     @hoveredTemplate null
 
-  onMouseEnterTemplate: (event) ->
-    template = @currentData()
+  onMouseEnterAvatarPart: (event) ->
+    data = @currentData()
+
+    if data instanceof LOI.Character.Part.Template
+      template = data
+
+    else if data instanceof LOI.Character.Part
+      field = data.options.dataLocation.field()
+      return unless field.isTemplate()
+      template = field.getTemplate()
+
+    else
+      return
 
     @hoveredTemplate template
 
-  onMouseLeaveTemplate: (event) ->
+  onMouseLeaveAvatarPart: (event) ->
     @hoveredTemplate null
