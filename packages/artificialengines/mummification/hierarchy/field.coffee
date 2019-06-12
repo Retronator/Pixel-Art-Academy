@@ -106,11 +106,15 @@ class AM.Hierarchy.Field
       true
 
     # We want the hierarchy field to behave as a getter/setter.
-    field = (value) ->
+    field = (value, valueIsRaw) ->
       # Is this a setter? We compare to undefined and not just use
       # value? since we want to be able to set the value null to the field.
       if value isnt undefined
-        storedValue = AM.Hierarchy.convertObjectToStoredValue value
+        if valueIsRaw
+          storedValue = value
+
+        else
+          storedValue = AM.Hierarchy.convertObjectToStoredValue value
 
         # Add meta data if we have it set.
         _.extend storedValue, metaData if metaData

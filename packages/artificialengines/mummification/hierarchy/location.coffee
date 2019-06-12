@@ -35,12 +35,12 @@ class AM.Hierarchy.Location
       result
 
     # We want the hierarchy location to behave as a getter/setter.
-    location = (value) ->
+    location = (value, valueIsRaw) ->
       # Get field at this location.
       field = getField()
 
       # Delegate the get/set.
-      field value
+      field value, valueIsRaw
 
     location.field = getField
 

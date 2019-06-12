@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
-  # An array property is a node with fields giving the order (with a floating point number) of its parts.
+  # An array property is a node with fields giving the order (with a floating point number with _ instead of .) of its parts.
   # node
   #   fields
   #     {order1}
@@ -31,14 +31,21 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
         @parts []
         return
 
-      orderedFieldKeys = _.sortBy _.keys(fields), (orderKey) -> parseFloat orderKey
-      @_highestOrder = if orderedFieldKeys.length then parseFloat _.last orderedFieldKeys else null
+      dotFields = {}
+      for orderKey, value of fields
+        dotFields[orderKey.replace '_', '.'] = value
+
+      dotFieldKeys = _.map _.keys(dotFields), (orderKey) -> parseFloat orderKey
+      orderedDotFieldKeys = _.sortBy dotFieldKeys, (key) -> key
+      @_highestOrder = if orderedDotFieldKeys.length then _.last orderedDotFieldKeys else null
 
       partsByOrder = {}
-      parts = for fieldKey in orderedFieldKeys
+      parts = for dotFieldKey in orderedDotFieldKeys
+        fieldKey = "#{dotFieldKey}".replace '.', '_'
+
         # Create a property that reads from data location with this order key.
         partData = fields[fieldKey]
-        part = @_partsByOrder[fieldKey]
+        part = @_partsByOrder[dotFieldKey]
 
         # If we have the part already, make sure it's of the correct type.
         unless part?.options.type is partData.type
@@ -58,7 +65,7 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
           # Add the _id field so that foreach knows to reuse/recreate the field.
           part._id = Random.id() if part
 
-        partsByOrder[fieldKey] = part
+        partsByOrder[dotFieldKey] = part
 
         part
 
@@ -102,3 +109,41 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
       partClass.create
         dataLocation: newDataLocation
         parent: @
+
+  reorderPart: (part, newPartIndex) ->
+    oldPartIndex = @parts().indexOf part
+    return if oldPartIndex is newPartIndex
+
+    partPairs = _.toPairs @_partsByOrder
+    partPair[0] = parseFloat partPair[0] for partPair in partPairs
+    partPairs = _.sortBy partPairs, (pair) => pair[0]
+
+    oldPartOrder = partPairs[oldPartIndex][0]
+
+    # Remove moving part so we can calculate which parts we need to place the moving part in between.
+    _.remove partPairs, (pair) => pair[1] is part
+
+    if newPartIndex is 0
+      newPartOrder = partPairs[newPartIndex][0] - 1
+
+    else if newPartIndex >= partPairs.length
+      newPartOrder = partPairs[partPairs.length - 1][0] + 1
+
+    else
+      newPartOrder = (partPairs[newPartIndex - 1][0] + partPairs[newPartIndex][0]) / 2
+
+    partsNode = @options.dataLocation()
+    fields = partsNode?.data()?.fields
+
+    # Clone the moving part to the new order.
+    oldPartField = "#{oldPartOrder}".replace '.', '_'
+    movingPartData = fields[oldPartField]
+
+    newPartField = "#{newPartOrder}".replace '.', '_'
+    newLocation = @options.dataLocation.child newPartField
+
+    # Send in the raw data value.
+    newLocation movingPartData, true
+
+    # Remove current part data.
+    part.options.dataLocation.remove()

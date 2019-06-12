@@ -4,9 +4,6 @@
       <h1 class="screen-title">{{titleCase part.options.name}} Design</h1>
       {{#if showTemplates}}
         <div class="templates-area">
-          {{#if canCreateNew}}
-            <button class="new-part-button avatar-part">New</button>
-          {{/if}}
           <ul class="templates">
             {{#each templates}}
               <li class="template avatar-part">
@@ -14,6 +11,9 @@
               </li>
             {{/each}}
           </ul>
+          {{#if canCreateNew}}
+            <button class="new-part-button avatar-part">Custom</button>
+          {{/if}}
         </div>
       {{else}}
         <div class="instructions">
