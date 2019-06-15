@@ -7,7 +7,9 @@
           <ul class="templates">
             {{#each templates}}
               <li class="template avatar-part">
-                {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview templatePart}}
+                {{#with templatePart}}
+                  {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args templatePreviewOptions}}
+                {{/with}}
               </li>
             {{/each}}
           </ul>

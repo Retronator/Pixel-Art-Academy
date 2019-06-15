@@ -78,23 +78,25 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
       @context = @canvas.getContext '2d'
 
       @inViewport = new ReactiveField false
+      @inViewport true unless @options.renderInViewportOnly
 
-      @updateInViewport = =>
-        viewport = @display.viewport()
+      if @options.renderInViewportOnly
+        @updateInViewport = =>
+          viewport = @display.viewport()
 
-        canvasDimensions = @$canvas.offset()
-        canvasDimensions.top -= @$window.scrollTop()
-        canvasDimensions.bottom = canvasDimensions.top + @$canvas.height()
+          canvasDimensions = @$canvas.offset()
+          canvasDimensions.top -= @$window.scrollTop()
+          canvasDimensions.bottom = canvasDimensions.top + @$canvas.height()
 
-        # See if the canvas is anywhere in the viewport + one viewport height before/after.
-        viewportHeight = viewport.viewportBounds.height()
+          # See if the canvas is anywhere in the viewport + one viewport height before/after.
+          viewportHeight = viewport.viewportBounds.height()
 
-        @inViewport canvasDimensions.top < viewport.viewportBounds.bottom() + viewportHeight and canvasDimensions.bottom > viewport.viewportBounds.top() - viewportHeight
+          @inViewport canvasDimensions.top < viewport.viewportBounds.bottom() + viewportHeight and canvasDimensions.bottom > viewport.viewportBounds.top() - viewportHeight
 
-      @autorun (computation) =>
-        @updateInViewport()
+        @autorun (computation) =>
+          @updateInViewport()
 
-      $(window).on 'scroll', @updateInViewport
+        $(window).on 'scroll', @updateInViewport
 
       @autorun (computation) =>
         return unless @inViewport()
@@ -134,18 +136,43 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
       @_renderer?.destroy()
       @_defaultBodyRenderer?.destroy()
 
-      $(window).off 'scroll', @updateInViewport
+      if @options.renderInViewportOnly
+        $(@options.scrollContainer).off 'scroll', @updateInViewport
+
       Meteor.clearInterval @_rotateInterval
+
+    toggleRotation: ->
+      if @_rotateInterval
+        @stopRotation()
+
+      else
+        @startRotation()
+
+    startRotation: ->
+      return if @_rotateInterval
+
+      @_rotateInterval = Meteor.setInterval =>
+        @viewingAngle @viewingAngle() + Math.PI / 4
+      ,
+        250
+
+    stopRotation: ->
+      Meteor.clearInterval @_rotateInterval
+      @_rotateInterval = null
 
     rotatableClass: ->
       'rotatable' if @options.rotatable
 
     events: ->
       super(arguments...).concat
+        'mouseenter canvas': @onMouseEnterCanvas
         'mousemove canvas': @onMouseMoveCanvas
         'mouseleave canvas': @onMouseLeaveCanvas
         'mousedown canvas': @onMouseDownCanvas
         'dblclick canvas': @onMouseDoubleClickCanvas
+
+    onMouseEnterCanvas: (event) ->
+      @startRotation() if @options.rotateOnHover
 
     onMouseMoveCanvas: (event) ->
       return unless @$canvas
@@ -163,6 +190,9 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
     onMouseLeaveCanvas: (event) ->
       @lightDirection new THREE.Vector3(0, -1, -1).normalize()
+
+      @stopRotation() if @options.rotateOnHover
+      @viewingAngle 0 if @options.resetViewingAngleOnLeave
 
     onMouseDownCanvas: (event) ->
       event.preventDefault()
@@ -183,12 +213,4 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
     onMouseDoubleClickCanvas: (event) ->
       return unless @options.rotatable
 
-      if @_rotateInterval
-        Meteor.clearInterval @_rotateInterval
-        @_rotateInterval = null
-
-      else
-        @_rotateInterval = Meteor.setInterval =>
-          @viewingAngle @viewingAngle() + Math.PI / 4
-        ,
-          250
+      @toggleRotation()
