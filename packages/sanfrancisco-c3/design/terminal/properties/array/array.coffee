@@ -13,21 +13,55 @@ class C3.Design.Terminal.Properties.Array extends C3.Design.Terminal.Properties.
     @draggingPartIndex = new ReactiveField null
     @draggingVisiblyActive = new ReactiveField false
 
-  parts: ->
-    property = @data()
-    parts = property.parts()
+    # We display only main parts and merge their counterparts into them.
+    @displayedParts = new ComputedField =>
+      property = @data()
+      displayedParts = []
+      lastTemplatePart = null
+      lastTemplate = null
 
-    draggingPart = @draggingPart()
-    draggingPartIndex = @draggingPartIndex()
+      # Merge counterparts.
+      for part, arrayIndex in property.parts()
+        delete part.counterpartTemplateParts
 
-    return parts unless draggingPart and draggingPartIndex?
+        field = part.options.dataLocation.field()
 
-    # Place dragging part to requested index.
-    parts = _.without parts, draggingPart
-    parts.splice draggingPartIndex, 0, draggingPart
+        if field.isTemplate()
+          template = field.getTemplate()
+          [prefix, ..., suffix] = template.name.translations.best.text.split ' '
 
-    parts
-  
+          if lastTemplate and suffix in ['middle', 'behind']
+            if template.name.translations.best.text is "#{lastTemplate.name.translations.best.text} #{suffix}"
+              # Merge the counterpart.
+              lastTemplatePart.counterpartTemplateParts ?= []
+              lastTemplatePart.counterpartTemplateParts.push part
+              continue
+
+          lastTemplate = template
+          lastTemplatePart = part
+
+        else
+          lastTemplate = null
+          lastTemplatePart = null
+
+        displayedParts.push part
+
+      displayedParts
+
+    # Actual displayed parts also have the dragging part put into the future order as a preview.
+    @parts = new ComputedField =>
+      parts = @displayedParts()
+      draggingPart = @draggingPart()
+      draggingPartIndex = @draggingPartIndex()
+
+      return parts unless draggingPart and draggingPartIndex?
+
+      # Place dragging part to requested index.
+      parts = _.without parts, draggingPart
+      parts.splice draggingPartIndex, 0, draggingPart
+
+      parts
+
   avatarPartPreviewOptions: ->
     rendererOptions:
       renderingSides: [LOI.Engine.RenderingSides.Keys.Front]
@@ -50,6 +84,7 @@ class C3.Design.Terminal.Properties.Array extends C3.Design.Terminal.Properties.
 
   onMouseDownPart: (event) ->
     part = @currentData()
+    startingIndex = @parts().indexOf part
 
     @draggingPart part
     @draggingPartIndex null
@@ -66,8 +101,40 @@ class C3.Design.Terminal.Properties.Array extends C3.Design.Terminal.Properties.
       $(document).off '.sanfrancisco-c3-design-terminal-properties-array'
 
       draggingPartIndex = @draggingPartIndex()
-      property = @data()
-      property.reorderPart part, draggingPartIndex if draggingPartIndex?
+
+      if draggingPartIndex? and draggingPartIndex isnt startingIndex
+        # Determine actual array index of where the part was dragged to.
+        if draggingPartIndex > startingIndex
+          # We're moving forward so we need to get at the end of the last part (which might have more counterparts).
+          precedingParts = @displayedParts()[..draggingPartIndex]
+          arrayIndex = precedingParts.length - 1
+
+        else
+          # We're moving backwards so we need to get at the location before the part we're moving to.
+          precedingParts = @displayedParts()[...draggingPartIndex]
+          arrayIndex = precedingParts.length
+
+        for precedingPart in precedingParts
+          arrayIndex += precedingPart.counterpartTemplateParts.length if precedingPart.counterpartTemplateParts
+
+        property = @data()
+        property.reorderPart part, arrayIndex
+
+        if part.counterpartTemplateParts
+          # Place all counterparts after the part.
+          for counterpart, offset in part.counterpartTemplateParts
+            # We need to flush computations so the parts get updated correctly before sending another reorder request.
+            Tracker.flush()
+
+            # Place the counterpart in order after the main part.
+            if draggingPartIndex > startingIndex
+              # We're moving forward so the main index will keep moving backwards as we
+              # displace parts forward and we just need to keep inserting in the same space.
+              property.reorderPart counterpart, arrayIndex
+
+            else
+              # We're moving backwards so we need to keep increasing the position where we're inserting the counterparts.
+              property.reorderPart counterpart, arrayIndex + offset + 1
 
       @draggingPart null
       @draggingPartIndex null

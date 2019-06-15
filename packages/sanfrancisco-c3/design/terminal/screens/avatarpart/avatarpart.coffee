@@ -332,7 +332,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
     @part()?.options.dataLocation.createTemplate()
 
   onClickUnlinkTemplateButton: (event) ->
-    @part()?.options.dataLocation.unlinkTemplate()
+    @_applyPartAction 'unlinkTemplate'
 
   onClickModifyTemplateButton: (event) ->
     # Set the same template without a version.
@@ -351,10 +351,18 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
 
   onClickDeleteButton: (event) ->
     # Delete current data at this node.
-    @part()?.options.dataLocation.remove()
+    @_applyPartAction 'remove'
 
     # Pop this part off the stack.
     @closePart()
+
+  _applyPartAction: (action) ->
+    if part = @part()
+      part.options.dataLocation[action]()
+
+      if part.counterpartTemplateParts
+        for counterpart in part.counterpartTemplateParts
+          counterpart.options.dataLocation[action]()
 
   onClickTemplate: (event) ->
     template = @currentData()

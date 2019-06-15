@@ -98,8 +98,9 @@ class LOI.Character.Part.Property.Array extends LOI.Character.Part.Property
 
   newPart: (type) ->
     newOrder = if @_highestOrder? then @_highestOrder + 1 else 0
+    newField = "#{newOrder}".replace '.', '_'
 
-    newDataLocation = @options.dataLocation.child newOrder
+    newDataLocation = @options.dataLocation.child newField
 
     # Set field meta data.
     newDataLocation.saveMetaData
