@@ -53,10 +53,21 @@
       text-transform uppercase
       checkout()
 
-    .templates
-      list-style none
-      margin 0
-      padding 0
+    .template-group
+      &::after
+        content ''
+        display block
+        clear both
+
+      .title
+        text-transform uppercase
+        margin 2rem 0
+        checkout()
+
+      .templates
+        list-style none
+        margin 0
+        padding 0
 
   .hovered-template
     margin-top 20rem

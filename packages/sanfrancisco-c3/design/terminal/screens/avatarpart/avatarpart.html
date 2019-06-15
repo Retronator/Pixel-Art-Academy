@@ -4,18 +4,27 @@
       <h1 class="screen-title">{{titleCase part.options.name}} Design</h1>
       {{#if showTemplates}}
         <div class="templates-area">
-          <ul class="templates">
-            {{#each templates}}
-              <li class="template avatar-part">
-                {{#with templatePart}}
-                  {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args templatePreviewOptions}}
-                {{/with}}
-              </li>
-            {{/each}}
-          </ul>
-          {{#if canCreateNew}}
-            <button class="new-part-button avatar-part">Custom</button>
-          {{/if}}
+          {{#each templateGroups}}
+            <div class="template-group">
+              {{#if title}}
+                <div class="title">{{title}}</div>
+              {{/if}}
+              <ul class="templates">
+                {{#each templates}}
+                  <li class="template avatar-part">
+                    {{#with templatePart}}
+                      {{> SanFrancisco.C3.Design.Terminal.Components.AvatarPartPreview args templatePreviewOptions}}
+                    {{/with}}
+                  </li>
+                {{/each}}
+              </ul>
+              {{#if lastGroup}}
+                {{#if canCreateNew}}
+                  <button class="new-part-button avatar-part">Custom</button>
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/each}}
         </div>
       {{else}}
         <div class="instructions">

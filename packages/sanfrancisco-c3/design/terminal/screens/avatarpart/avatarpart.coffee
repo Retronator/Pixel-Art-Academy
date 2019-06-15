@@ -56,16 +56,55 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   renderTemplateDescriptionInput: ->
     @templateDescriptionInput.renderComponent @currentComponent()
 
-  templates: ->
+  templateGroups: ->
     return unless type = @type()
 
-    LOI.Character.Part.Template.documents.find
+    templates = LOI.Character.Part.Template.documents.fetch
       type: type
       latestVersion:
         $exists: true
     ,
       sort:
         'name.translations.best.text': 1
+
+    return [{templates, lastGroup: true}] if templates.length < 30
+
+    groups = []
+    currentGroup = title: null
+    lastTemplate = null
+
+    for template in templates
+      [prefix, ..., suffix] = template.name.translations.best.text.split ' '
+
+      # See if this template is a middle/behind counterpart.
+      if lastTemplate and suffix in ['middle', 'behind']
+        if template.name.translations.best.text is "#{lastTemplate.name.translations.best.text} #{suffix}"
+          # Add the counterpart template to the main template.
+          lastTemplate.counterpartTemplates ?= []
+          lastTemplate.counterpartTemplates.push template
+          continue
+
+      # See if this template should start a new group.
+      if prefix is currentGroup.title
+        # The prefix is still the same, so add the template to existing group.
+        currentGroup.templates.push template
+
+      else
+        # Create a new group.
+        currentGroup =
+          title: prefix
+          templates: [template]
+
+        groups.push currentGroup
+
+      lastTemplate = template
+
+    groups.push
+      title: 'Custom'
+      templates: []
+      lastGroup: true
+
+    groups
 
   templatePart: ->
     template = @currentData()
@@ -320,7 +359,14 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
   onClickTemplate: (event) ->
     template = @currentData()
 
-    @part()?.options.dataLocation.setTemplate template._id, template.latestVersion.index
+    if part = @part()
+      part.options.dataLocation.setTemplate template._id, template.latestVersion.index
+
+      if template.counterpartTemplates
+        for counterpartTemplate in template.counterpartTemplates
+          array = part.options.parent
+          newPart = array.newPart part.options.type
+          newPart.options.dataLocation.setTemplate counterpartTemplate._id, counterpartTemplate.latestVersion.index
 
     @forceShowTemplates false
     @hoveredTemplate null
