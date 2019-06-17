@@ -25,9 +25,10 @@ class C3.Design.Terminal.Properties.Array extends C3.Design.Terminal.Properties.
         delete part.counterpartTemplateParts
 
         field = part.options.dataLocation.field()
+        template = if field.isTemplate() then field.getTemplate() else null
 
-        if field.isTemplate()
-          template = field.getTemplate()
+        # Make sure the template was actually retrieved.
+        if template
           [prefix, ..., suffix] = template.name.translations.best.text.split ' '
 
           if lastTemplate and suffix in ['middle', 'behind']
