@@ -1,0 +1,3 @@
+en-US: Quiff up
+
+{"_id":"pND9vMMmisfyrhZS3","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560761398468},"translations":{"en":{"us":{"text":"Quiff up","quality":0},"best":{"text":"Quiff up","quality":0,"languageRegion":"en-US"}},"best":{"text":"Quiff up","quality":0,"languageRegion":"en-US"}}}
