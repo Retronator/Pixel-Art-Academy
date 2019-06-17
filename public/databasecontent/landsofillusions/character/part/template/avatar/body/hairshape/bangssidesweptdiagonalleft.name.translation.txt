@@ -1,0 +1,3 @@
+en-US: Bangs side-swept diagonal left
+
+{"_id":"xo27kS3zeCifdaPRB","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559940608843},"translations":{"en":{"us":{"text":"Bangs side-swept diagonal left","quality":0},"best":{"text":"Bangs side-swept diagonal left","quality":0,"languageRegion":"en-US"}},"best":{"text":"Bangs side-swept diagonal left","quality":0,"languageRegion":"en-US"}}}

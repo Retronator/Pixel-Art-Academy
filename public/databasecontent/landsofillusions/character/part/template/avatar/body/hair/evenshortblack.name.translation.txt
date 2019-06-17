@@ -1,3 +1,0 @@
-en: Even short black
-
-{"_id":"E3425oMpenb7Kubiu","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Even short black","quality":0,"best":{"text":"Even short black","quality":0,"languageRegion":"en"}},"best":{"text":"Even short black","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802534137}}

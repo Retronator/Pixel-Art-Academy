@@ -1,0 +1,3 @@
+en-US: Jeans shorts legs
+
+{"_id":"ygt3crTF754tbEMfe","ownerId":"EgjBhk6tLtrakzr5N","_schema":"2.0.0","translations":{"en":{"us":{"text":"Jeans shorts legs","quality":0},"best":{"text":"Jeans shorts legs","quality":0,"languageRegion":"en-US"}},"best":{"text":"Jeans shorts legs","quality":0,"languageRegion":"en-US"}},"lastEditTime":{"$date":1560600834277}}

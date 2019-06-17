@@ -1,3 +1,0 @@
-en: Right curl
-
-{"_id":"TDekuF6axT6LXk7rw","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Right curl","quality":0,"best":{"text":"Right curl","quality":0,"languageRegion":"en"}},"best":{"text":"Right curl","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1558519085746}}

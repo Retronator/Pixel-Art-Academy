@@ -1,0 +1,3 @@
+en-US: Long straight side-swept full left
+
+{"_id":"iZCa2qvnJbDKneiuF","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560160524525},"translations":{"en":{"us":{"text":"Long straight side-swept full left","quality":0},"best":{"text":"Long straight side-swept full left","quality":0,"languageRegion":"en-US"}},"best":{"text":"Long straight side-swept full left","quality":0,"languageRegion":"en-US"}}}

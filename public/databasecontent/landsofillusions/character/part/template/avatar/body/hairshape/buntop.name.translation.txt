@@ -1,3 +1,0 @@
-en: Bun top
-
-{"_id":"XBrHMD3nizg9YArJq","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Bun top","quality":0,"best":{"text":"Bun top","quality":0,"languageRegion":"en"}},"best":{"text":"Bun top","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802534955}}

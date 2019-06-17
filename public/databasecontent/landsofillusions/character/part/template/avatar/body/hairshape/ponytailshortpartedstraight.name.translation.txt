@@ -1,0 +1,3 @@
+en-US: Ponytail short parted straight
+
+{"_id":"hjiA5Avb6QWGeowBX","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560728685792},"translations":{"en":{"us":{"text":"Ponytail short parted straight","quality":0},"best":{"text":"Ponytail short parted straight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Ponytail short parted straight","quality":0,"languageRegion":"en-US"}}}

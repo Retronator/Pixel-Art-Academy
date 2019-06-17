@@ -1,0 +1,3 @@
+en-US: Ponytail low medium straight
+
+{"_id":"P59LSzTd2cn9psZGR","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560713375096},"translations":{"en":{"us":{"text":"Ponytail low medium straight","quality":0},"best":{"text":"Ponytail low medium straight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Ponytail low medium straight","quality":0,"languageRegion":"en-US"}}}

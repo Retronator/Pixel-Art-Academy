@@ -1,0 +1,3 @@
+en-US: Back around left straight middle
+
+{"_id":"DBCB7yp5dhtxb94LS","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560160281809},"translations":{"en":{"us":{"text":"Back around left straight middle","quality":0},"best":{"text":"Back around left straight middle","quality":0,"languageRegion":"en-US"}},"best":{"text":"Back around left straight middle","quality":0,"languageRegion":"en-US"}}}

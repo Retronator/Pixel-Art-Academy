@@ -1,0 +1,3 @@
+en-US: Quiff spiky
+
+{"_id":"N4KwiCApcwJAXcuCs","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560729156763},"translations":{"en":{"us":{"text":"Quiff spiky","quality":0},"best":{"text":"Quiff spiky","quality":0,"languageRegion":"en-US"}},"best":{"text":"Quiff spiky","quality":0,"languageRegion":"en-US"}}}

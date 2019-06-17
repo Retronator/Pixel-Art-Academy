@@ -1,0 +1,3 @@
+en-US: Short side-swept pixie right
+
+{"_id":"AHqS5G6pxrCFnNy24","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560157784651},"translations":{"en":{"us":{"text":"Short side-swept pixie right","quality":0},"best":{"text":"Short side-swept pixie right","quality":0,"languageRegion":"en-US"}},"best":{"text":"Short side-swept pixie right","quality":0,"languageRegion":"en-US"}}}

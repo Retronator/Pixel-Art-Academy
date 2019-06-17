@@ -1,0 +1,3 @@
+en-US: Medium straight with blunt bangs and short sides
+
+{"_id":"6b3g8tnSRHfAwHnmr","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560502393876},"translations":{"en":{"us":{"text":"Medium straight with blunt bangs and short sides","quality":0},"best":{"text":"Medium straight with blunt bangs and short sides","quality":0,"languageRegion":"en-US"}},"best":{"text":"Medium straight with blunt bangs and short sides","quality":0,"languageRegion":"en-US"}}}

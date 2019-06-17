@@ -1,3 +1,0 @@
-en: Afro brown
-
-{"_id":"kwAdEewfHffHane24","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Afro brown","quality":0,"best":{"text":"Afro brown","quality":0,"languageRegion":"en"}},"best":{"text":"Afro brown","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802533923}}

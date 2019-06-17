@@ -1,3 +1,0 @@
-en: Behind medium 1
-
-{"_id":"u7CSmEuBjckNkPhA8","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Behind medium 1","quality":0,"best":{"text":"Behind medium 1","quality":0,"languageRegion":"en"}},"best":{"text":"Behind medium 1","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802535785}}

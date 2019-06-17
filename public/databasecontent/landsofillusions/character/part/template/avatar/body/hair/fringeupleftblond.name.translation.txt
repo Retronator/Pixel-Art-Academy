@@ -1,3 +1,0 @@
-en: Fringe up-left blond
-
-{"_id":"5BeGJviF8aiKcfyGF","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Fringe up-left blond","quality":0,"best":{"text":"Fringe up-left blond","quality":0,"languageRegion":"en"}},"best":{"text":"Fringe up-left blond","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802533776}}

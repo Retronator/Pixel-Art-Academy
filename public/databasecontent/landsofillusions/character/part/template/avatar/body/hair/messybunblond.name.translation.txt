@@ -1,3 +1,0 @@
-en: Messy bun blond
-
-{"_id":"9vu7nY95vfRRkZTMC","ownerId":"KL8MacXXDs7F4kfup","_schema":"2.0.0","translations":{"en":{"text":"Messy bun blond","quality":0,"best":{"text":"Messy bun blond","quality":0,"languageRegion":"en"}},"best":{"text":"Messy bun blond","quality":0,"languageRegion":"en"}},"lastEditTime":{"$date":1559802534291}}

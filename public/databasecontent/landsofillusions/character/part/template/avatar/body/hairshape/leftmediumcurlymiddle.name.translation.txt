@@ -1,0 +1,3 @@
+en-US: Left medium curly middle
+
+{"_id":"CnDBpS6X5rLPsCAAd","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560193313417},"translations":{"en":{"us":{"text":"Left medium curly middle","quality":0},"best":{"text":"Left medium curly middle","quality":0,"languageRegion":"en-US"}},"best":{"text":"Left medium curly middle","quality":0,"languageRegion":"en-US"}}}

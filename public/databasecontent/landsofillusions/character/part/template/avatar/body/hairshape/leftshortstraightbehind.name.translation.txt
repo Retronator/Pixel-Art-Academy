@@ -1,0 +1,3 @@
+en-US: Left short straight behind
+
+{"_id":"qdZnrHRwvommkLdpp","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1559924655957},"translations":{"en":{"us":{"text":"Left short straight behind","quality":0},"best":{"text":"Left short straight behind","quality":0,"languageRegion":"en-US"}},"best":{"text":"Left short straight behind","quality":0,"languageRegion":"en-US"}}}

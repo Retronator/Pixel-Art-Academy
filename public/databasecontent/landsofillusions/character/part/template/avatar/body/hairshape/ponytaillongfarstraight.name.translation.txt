@@ -1,0 +1,3 @@
+en-US: Ponytail long far straight
+
+{"_id":"6attxfDLyQM8RZzQX","ownerId":"9udfGdvJX7TyFMiE2","_schema":"2.0.0","lastEditTime":{"$date":1560728152366},"translations":{"en":{"us":{"text":"Ponytail long far straight","quality":0},"best":{"text":"Ponytail long far straight","quality":0,"languageRegion":"en-US"}},"best":{"text":"Ponytail long far straight","quality":0,"languageRegion":"en-US"}}}
