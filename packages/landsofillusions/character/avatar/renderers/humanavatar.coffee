@@ -37,7 +37,7 @@ class LOI.Character.Avatar.Renderers.HumanAvatar extends LOI.Character.Avatar.Re
 
     @_ready = new ComputedField =>
       # Make sure all the data is loaded.
-      return unless @options.humanAvatar.body.ready() and @options.humanAvatar.outfit.ready()
+      return unless @options.humanAvatar.body.options.dataLocation()?.data() and @options.humanAvatar.outfit.options.dataLocation()?.data()
 
       # Make sure all the sprites have been rendered and positioned.
       return unless _.every @renderers, (renderer) => renderer.ready()

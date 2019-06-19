@@ -34,7 +34,20 @@ class LOI.Character.Avatar extends LOI.HumanAvatar
       templateClass: LOI.Character.Part.Template
       type: LOI.Character.Part.Types.Avatar.Outfit.options.type
       load: new ComputedField =>
-        customOutfit() or document()?.avatar?.outfit
+        # Custom outfit has priority.
+        data = customOutfit()
+        return data if data
+
+        # Avatar outfit is tried next.
+        avatar = document()?.avatar
+        data = avatar?.outfit
+        return data if data
+
+        # If we still have no outfit data, we allow the character to appear naked (for example in character creation).
+        # In that case we send an a dummy node out to discern from the state where we're still loading the data.
+        return unless avatar
+
+        node: fields: {}
       ,
         EJSON.equals
 
