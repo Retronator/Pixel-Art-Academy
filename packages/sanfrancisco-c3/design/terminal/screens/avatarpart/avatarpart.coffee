@@ -119,35 +119,7 @@ class C3.Design.Terminal.AvatarPart extends AM.Component
         rootField: dataField
 
   templatePreviewOptions: ->
-    templatePart = @currentData()
-
-    dummies = LOI.Assets.Sprite.documents.fetch name: /dummy/
-    dummyIds = (dummy._id for dummy in dummies)
-
-    if templatePart instanceof LOI.Character.Avatar.Parts.Shape
-      data = templatePart.options.dataLocation().data()
-
-      # Find which rendering side has a sprite assigned. We prefer some angles more than the others.
-      for renderingSide in [
-        LOI.Engine.RenderingSides.Keys.Front
-        LOI.Engine.RenderingSides.Keys.Back
-        LOI.Engine.RenderingSides.Keys.Left
-        LOI.Engine.RenderingSides.Keys.Right
-        LOI.Engine.RenderingSides.Keys.FrontLeft
-        LOI.Engine.RenderingSides.Keys.FrontRight
-        LOI.Engine.RenderingSides.Keys.BackLeft
-        LOI.Engine.RenderingSides.Keys.BackRight
-        # Repeat front so it becomes the default.
-        LOI.Engine.RenderingSides.Keys.Front
-      ]
-        spriteId = data.fields[renderingSide]?.node?.fields?.spriteId?.value
-        break if spriteId and spriteId not in dummyIds
-
-    renderingSide ?= LOI.Engine.RenderingSides.Keys.Front
-
-    viewingAngle: => LOI.Engine.RenderingSides.angles[renderingSide]
-    rendererOptions:
-      renderingSides: [renderingSide]
+    chooseNonEmptyViewingAngle: true
 
   pushPart: (part, previewOptions) ->
     # Put current part on the stack.

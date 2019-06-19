@@ -6,8 +6,7 @@ class C3.Design.Terminal.Properties.OneOf extends C3.Design.Terminal.Properties.
   @register 'SanFrancisco.C3.Design.Terminal.Properties.OneOf'
 
   avatarPartPreviewOptions: ->
-    rendererOptions:
-      renderingSides: [LOI.Engine.RenderingSides.Keys.Front]
+    chooseNonEmptyViewingAngle: true
 
   events: ->
     super(arguments...).concat

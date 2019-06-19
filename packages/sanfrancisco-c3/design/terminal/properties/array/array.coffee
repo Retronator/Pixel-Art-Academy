@@ -64,8 +64,7 @@ class C3.Design.Terminal.Properties.Array extends C3.Design.Terminal.Properties.
       parts
 
   avatarPartPreviewOptions: ->
-    rendererOptions:
-      renderingSides: [LOI.Engine.RenderingSides.Keys.Front]
+    chooseNonEmptyViewingAngle: true
 
   draggingClass: ->
     'dragging' if @draggingVisiblyActive()

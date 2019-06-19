@@ -20,8 +20,43 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
 
       @designTerminal = @ancestorComponentOfType C3.Design.Terminal
 
+      # See if we want automatic choice of the viewing angle.
+      if @options.chooseNonEmptyViewingAngle
+        @renderingSide = new ComputedField =>
+          part = @data()
+          data = part.options.dataLocation()?.data()
+
+          if data and part instanceof LOI.Character.Avatar.Parts.Shape
+            dummies = LOI.Assets.Sprite.documents.fetch name: /dummy/
+            dummyIds = (dummy._id for dummy in dummies)
+
+            # Find which rendering side has a sprite assigned. We prefer some angles more than the others.
+            for renderingSide in [
+              LOI.Engine.RenderingSides.Keys.Front
+              LOI.Engine.RenderingSides.Keys.Back
+              LOI.Engine.RenderingSides.Keys.Left
+              LOI.Engine.RenderingSides.Keys.Right
+              LOI.Engine.RenderingSides.Keys.FrontLeft
+              LOI.Engine.RenderingSides.Keys.FrontRight
+              LOI.Engine.RenderingSides.Keys.BackLeft
+              LOI.Engine.RenderingSides.Keys.BackRight
+              # Repeat front so it becomes the default.
+              LOI.Engine.RenderingSides.Keys.Front
+            ]
+              spriteId = data.fields[renderingSide]?.node?.fields?.spriteId?.value
+              break if spriteId and spriteId not in dummyIds
+
+          renderingSide ?= LOI.Engine.RenderingSides.Keys.Front
+          renderingSide
+
+        @viewingAngle = new ComputedField => LOI.Engine.RenderingSides.angles[@renderingSide()]
+        @rendererOptions = new ComputedField => renderingSides: [@renderingSide()]
+
+      else
+        @viewingAngle = @options.viewingAngle or new ReactiveField 0
+        @rendererOptions = => @options.rendererOptions
+
       @lightDirection = new ReactiveField new THREE.Vector3(0, -1, -1).normalize()
-      @viewingAngle = @options.viewingAngle or new ReactiveField 0
 
       @_renderer = null
       @_landmarksSourceRenderer = null
@@ -33,7 +68,7 @@ class C3.Design.Terminal.Components.AvatarPartPreview extends AM.Component
         return unless part.createRenderer
         @_renderer?.destroy()
 
-        rendererOptions = _.clone @options.rendererOptions or {}
+        rendererOptions = _.clone @rendererOptions() or {}
 
         if @designTerminal and _.startsWith part.options.type, 'Avatar.Outfit'
           rendererOptions.landmarksSource = =>
