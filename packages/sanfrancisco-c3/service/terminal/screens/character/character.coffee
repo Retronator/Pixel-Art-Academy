@@ -33,6 +33,9 @@ class C3.Service.Terminal.Character extends AM.Component
         # Return true to prevent the default update to be executed.
         true
 
+    @_initialPreviewViewingAngle = -Math.PI / 4
+    @previewViewingAngle = new ReactiveField @_initialPreviewViewingAngle
+
   setCharacterId: (characterId) ->
     @characterId characterId
 
@@ -63,6 +66,13 @@ class C3.Service.Terminal.Character extends AM.Component
 
   perks: ->
     @character()?.behavior.part.properties.perks.toString() or "None"
+
+  avatarPreviewOptions: ->
+    rotatable: true
+    viewingAngle: @previewViewingAngle
+    originOffset:
+      x: -3
+      y: 8
 
   events: ->
     super(arguments...).concat
