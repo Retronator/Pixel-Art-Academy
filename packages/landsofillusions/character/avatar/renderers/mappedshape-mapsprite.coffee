@@ -88,8 +88,14 @@ class LOI.Character.Avatar.Renderers.MappedShape extends LOI.Character.Avatar.Re
 
     for triangleIndex in [0...delaunay.triangles.length / 3]
       # Rasterize target pixels one by one and sample from the source sprite.
-      targetTriangle = @_calculateTriangleData triangleIndex, delaunay.triangles, delaunay.coords
       sourceTriangle = @_calculateTriangleData triangleIndex, delaunay.triangles, sourceLandmarks
+
+      # Make sure the source triangle is not degenerate since that leads to unpredictable mapping on the edges.
+      side1 = new THREE.Vector2 sourceTriangle.coordinates[1][0] - sourceTriangle.coordinates[0][0], sourceTriangle.coordinates[1][1] - sourceTriangle.coordinates[0][1]
+      side2 = new THREE.Vector2 sourceTriangle.coordinates[2][0] - sourceTriangle.coordinates[0][0], sourceTriangle.coordinates[2][1] - sourceTriangle.coordinates[0][1]
+      continue if Math.abs(side1.cross(side2)) < 0.00001
+
+      targetTriangle = @_calculateTriangleData triangleIndex, delaunay.triangles, delaunay.coords
 
       for x in [targetTriangle.bounds.left..targetTriangle.bounds.right]
         for y in [targetTriangle.bounds.top..targetTriangle.bounds.bottom]

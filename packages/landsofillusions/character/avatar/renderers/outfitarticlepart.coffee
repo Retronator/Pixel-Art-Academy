@@ -79,7 +79,7 @@ class LOI.Character.Avatar.Renderers.OutfitArticlePart extends LOI.Character.Ava
 
     if @options.centerOnUsedLandmarks
       center = @usedLandmarksCenter[options.side]()
-      context.translate -center.x, -center.y
+      context.translate -Math.round(center.x), -Math.round(center.y)
     
     for renderer in @renderers()
       renderer.drawToContext context, options

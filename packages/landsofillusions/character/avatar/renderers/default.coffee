@@ -161,8 +161,8 @@ class LOI.Character.Avatar.Renderers.Default extends LOI.Character.Avatar.Render
         center = @usedLandmarksCenter[options.side]()
 
         translation =
-          x: -center.x
-          y: -center.y
+          x: -Math.round center.x
+          y: -Math.round center.y
 
       else
         translation = _.defaults {}, renderer._translation[options.side],

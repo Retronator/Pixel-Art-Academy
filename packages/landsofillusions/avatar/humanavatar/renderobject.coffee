@@ -117,6 +117,8 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
           debugCanvas.width = 1024 * debugScale
           debugCanvas.height = 128 * debugScale
           debugContext = debugCanvas.getContext '2d'
+          debugContext.fillStyle = '#ccc'
+          debugContext.fillRect 0, 0, debugCanvas.width, debugCanvas.height
           debugContext.imageSmoothingEnabled = false
           debugContext.drawImage @textureRenderer.paletteDataCanvas, 0, 0, debugCanvas.width, debugCanvas.height
           debugContext.fillStyle = 'white'
