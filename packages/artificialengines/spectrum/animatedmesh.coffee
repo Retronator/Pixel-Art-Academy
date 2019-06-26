@@ -6,6 +6,7 @@ class AS.AnimatedMesh extends AS.RenderObject
     super arguments...
 
     @data = new ReactiveField @options.data
+    @boneCorrections = new ReactiveField @options.boneCorrections
     @texture = new ReactiveField @options.texture
 
     # Load data and texture if provided with their URLs.
@@ -46,6 +47,30 @@ class AS.AnimatedMesh extends AS.RenderObject
     # Create creature objects.
     @creature = new ComputedField =>
       return unless data = @data()
+
+      boneCorrections = @boneCorrections()
+      return if @options.waitForBoneCorrections and not boneCorrections
+
+      if boneCorrections
+        data = _.clone data
+        data.skeleton = _.clone data.skeleton
+
+        for boneName, correction of boneCorrections
+          data.skeleton[boneName] = _.cloneDeep data.skeleton[boneName]
+          bone = data.skeleton[boneName]
+          matrix4 = new THREE.Matrix4
+          matrix4.elements = bone.restParentMat
+
+          matrix3 = new THREE.Matrix3().setFromMatrix4 matrix4
+          matrix3 = new THREE.Matrix3().getInverse matrix3
+
+          translation = new THREE.Vector2 correction.x, -correction.y
+          translation.applyMatrix3(matrix3).multiplyScalar -1
+
+          bone.localRestStartPt[0] += translation.x
+          bone.localRestStartPt[1] += translation.y
+          bone.localRestEndPt[0] += translation.x
+          bone.localRestEndPt[1] += translation.y
 
       new AS.Creature data
     ,

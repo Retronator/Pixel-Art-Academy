@@ -18,10 +18,10 @@ class HQ.GalleryWest extends LOI.Adventure.Location
       artworks made by Matej 'Retro' Jan. One day you'll be able to look at them, but they're not coded into the game yet.
       The hall continues to the east wing of the gallery. Stairs continue up to the art studio.
     "
-  
+
   @illustration: ->
     name: 'retronator/hq/floor3/gallery/gallery'
-    cameraAngle: 'West'
+    cameraAngle: 'Center'
     height: 120
 
   @initialize()

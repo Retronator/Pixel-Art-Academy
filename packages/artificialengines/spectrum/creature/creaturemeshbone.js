@@ -4274,7 +4274,8 @@ CreatureManager.prototype.PoseCreature = function(animation_name_in, target_pts,
        k <= end;
        k+=3)
     {
-       target_pts[k + 2] = -j * 0.001;
+      // MOD: Z coordinate is inverted for correct rendering order.
+      target_pts[k + 2] = j * 0.001;
     }
      
   }

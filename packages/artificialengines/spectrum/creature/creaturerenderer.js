@@ -110,7 +110,7 @@ function CreatureRenderer(name, manager_in, material_in)
 
 };
 
-Artificial.Spectrum.CreatureRenderer = CreatureRenderer
+Artificial.Spectrum.CreatureRenderer = CreatureRenderer;
 
 CreatureRenderer.prototype.UpdateData = function()
 {	
@@ -127,11 +127,7 @@ CreatureRenderer.prototype.UpdateData = function()
 	set_vertices.needsUpdate = true;
 	for(var i = 0; i < target_creature.total_num_pts * 3; i++)
 	{
-    if (i % 3 == 2) {
-      set_vertices.array[i] = -target_creature.render_pts[i];
-    } else {
-      set_vertices.array[i] = target_creature.render_pts[i];
-    }
+    set_vertices.array[i] = target_creature.render_pts[i];
 	}
 	
 	// uvs

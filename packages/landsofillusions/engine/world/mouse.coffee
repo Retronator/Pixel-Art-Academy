@@ -16,7 +16,7 @@ class LOI.Engine.World.Mouse
       return unless $world = @world.$world()
       computation.stop()
 
-      @$canvas = $world.find('.canvas')
+      @$canvas = $world.find('canvas')
 
       $world.mousemove (event) =>
         @_lastPageX = event.pageX

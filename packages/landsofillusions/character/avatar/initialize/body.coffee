@@ -242,6 +242,8 @@ LOI.Character.Part.registerClasses
         renderer: new LOI.Character.Avatar.Renderers.Chest
           origin:
             landmark: 'xiphoid'
+            x: 0
+            y: 1.5
 
       ChestShape: new LOI.Character.Avatar.Parts.SkinShape
         type: 'Avatar.Body.ChestShape'

@@ -1,6 +1,8 @@
 <template name="LandsOfIllusions.Engine.World">
   <div class="landsofillusions-engine-world">
-    {{> Render renderedImage}}
+    {{#if renderedImage}}
+      {{> Render renderedImage}}
+    {{/if}}
   </div>
   <img class="engine-texture"/>
 </template>

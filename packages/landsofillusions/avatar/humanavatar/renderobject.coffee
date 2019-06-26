@@ -42,6 +42,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         castShadow: true
         receiveShadow: true
         material: new LOI.Engine.Materials.SpriteMaterial
+        waitForBoneCorrections: true
 
       animatedMesh.blendTime 0.2
       animatedMesh.currentAnimationName 'Idle'
@@ -57,14 +58,54 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
       targetHeight = _.clamp heightValue or heightOptions.default, heightOptions.min, heightOptions.max
 
       for side, sideAngle of LOI.Engine.RenderingSides.angles
+        # TODO: Remove when we're not using mirrored animation files.
+        if sideAngle > 0
+          sideName = LOI.Engine.RenderingSides.mirrorSides[side]
+
+        else
+          sideName = side
+
         sideIndex = LOI.HumanAvatar.TextureRenderer.textureSides.indexOf sideName
+
         bodyHeight = bodyTop[sideIndex] - bodyBottom[sideIndex]
         scale = targetHeight / bodyHeight
 
         animatedMesh = @animatedMeshes[side]
         animatedMesh.scale.set scale, scale, scale
-        animatedMesh.scale.x *= -1 if sideAngle < 0
+        animatedMesh.scale.x *= -1 if sideAngle > 0
         animatedMesh.position.y = -bodyBottom[sideIndex] * scale
+
+        # Calculate bone corrections relative to default body.
+        boneCorrections = @_calculateBoneCorrections sideName
+
+        # TODO: Remove when bones are properly named.
+        if sideName is 'backLeft'
+          mirroredBoneCorrections = {}
+
+          for bone, correction of boneCorrections
+            if _.endsWith bone, 'Right'
+              bone = bone.replace 'Right', 'Left'
+
+            else if _.endsWith bone, 'Left'
+              bone = bone.replace 'Left', 'Right'
+
+            mirroredBoneCorrections[bone] = correction
+
+          boneCorrections = mirroredBoneCorrections
+
+        # We need to transform corrections from pixels to character units. The standard character size is 49 pixels.
+        unitsPerPixel = bodyHeight / 49
+
+        for bone, correction of boneCorrections
+          correction.x *= unitsPerPixel
+          correction.y *= unitsPerPixel
+
+        animatedMesh.boneCorrections boneCorrections
+
+        # Further reposition the character upwards if the body was extended downwards from the navel.
+        for bone in ['Acetabulum', 'Knee', 'Ankle', 'Foot']
+          if correction = boneCorrections["#{bone} Left"]?.y
+            animatedMesh.position.y += correction * scale
 
     @_prepareTexturesAutorun = Tracker.autorun (computation) =>
       # See if we will get texture data, or we need to render them ad-hoc.
@@ -72,7 +113,8 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
       textures = @humanAvatar.options.textures?()
 
-      unless @humanAvatar.customOutfit()
+      # If we have textures prepared and don't have a custom outfit, we load pre-rendered textures.
+      if textures.paletteData and textures.normals and not @humanAvatar.customOutfit()
         @_textureUpdateAutorun?.stop()
         
         # Read the textures from the URLs.
@@ -93,7 +135,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
         image.src = textures.paletteData.url
 
       else
-        # Create texture renderers.
+        # We need to render textures ad-hoc. Create texture renderers.
         @humanAvatarRenderer ?= new LOI.Character.Avatar.Renderers.HumanAvatar
           humanAvatar: @humanAvatar
           renderTexture: true
@@ -234,7 +276,7 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
     cameraAngle = LOI.Engine.RenderingSides.getAngleForDirection @_cameraDirection
 
     # Get the side based on how much the camera is away from where the character is facing.
-    side = LOI.Engine.RenderingSides.getSideForAngle cameraAngle - @currentAngle
+    side = LOI.Engine.RenderingSides.getSideForAngle @currentAngle - cameraAngle
     @setCurrentSide side unless side is @currentSide
 
     for side, animatedMesh of @animatedMeshes

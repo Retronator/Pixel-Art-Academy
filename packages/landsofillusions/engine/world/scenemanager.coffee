@@ -53,9 +53,7 @@ class LOI.Engine.World.SceneManager
     @world.autorun (computation) =>
       illustration = @world.options.adventure.currentSituation()?.illustration()
       return unless illustrationName = illustration?.name
-
-      LOI.Assets.Asset.forName.subscribe LOI.Assets.Mesh.className, illustrationName
-      return unless meshData = LOI.Assets.Mesh.documents.findOne name: illustrationName
+      return unless meshData = LOI.Assets.Mesh.findInCache name: illustrationName
 
       # Only react to illustration and mesh changes.
       Tracker.nonreactive =>

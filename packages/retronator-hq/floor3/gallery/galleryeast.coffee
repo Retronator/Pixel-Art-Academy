@@ -18,11 +18,6 @@ class HQ.GalleryEast extends LOI.Adventure.Location
       More artworks line the walls, with tables in the middle holding interactive installations.
     "
 
-  @illustration: ->
-    name: 'retronator/hq/floor3/gallery/gallery'
-    cameraAngle: 'East'
-    height: 120
-
   @initialize()
 
   constructor: ->

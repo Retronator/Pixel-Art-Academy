@@ -116,6 +116,7 @@ Package.onUse(function(api) {
   
   api.addFile('mirage..');
 
+  api.addClientFile('mirage/browser');
   api.addFile('mirage/canvas');
 	api.addFile('mirage/component');
 	api.addFile('mirage/csshelper');

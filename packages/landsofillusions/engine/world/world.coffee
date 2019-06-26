@@ -27,7 +27,6 @@ class LOI.Engine.World extends AM.Component
     
     @navigator = new ReactiveField null
 
-    @renderedImage = new ReactiveField null
     @$world = new ReactiveField null
 
     @physicsDebug = new ReactiveField false
@@ -46,8 +45,10 @@ class LOI.Engine.World extends AM.Component
     rendererManager = new @constructor.RendererManager @
     @rendererManager rendererManager
 
-    @renderedImage new AM.PixelImage
-      image: rendererManager.renderer.domElement
+    # HACK: In Safari we need to manually upscale the rendered image.
+    if AM.Browser.isSafari()
+      @renderedImage = new AM.PixelImage
+        image: rendererManager.renderer.domElement
 
     @audioManager new @constructor.AudioManager @
     @physicsManager new @constructor.PhysicsManager @
@@ -64,6 +65,10 @@ class LOI.Engine.World extends AM.Component
 
     # Do initial forced update and draw.
     @forceUpdateAndDraw()
+
+    # Add the WebGL canvas directly to DOM unless we're manually upscaling it.
+    unless @renderedImage
+      @$('.landsofillusions-engine-world').append @rendererManager().renderer.domElement
 
     if @constructor.textureDebug
       @autorun (computation) =>
@@ -149,7 +154,7 @@ class LOI.Engine.World extends AM.Component
     return unless rendererManager = @rendererManager()
 
     rendererManager.draw appTime
-    @renderedImage().update()
+    @renderedImage?.update()
 
   events: ->
     super(arguments...).concat

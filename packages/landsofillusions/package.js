@@ -94,6 +94,7 @@ Package.onUse(function(api) {
   api.addFile('avatar/avatar');
   api.addFile('avatar/humanavatar..');
   api.addFile('avatar/humanavatar/renderobject');
+  api.addFile('avatar/humanavatar/renderobject-bonecorrections');
   api.addFile('avatar/humanavatar/physicsobject');
   api.addFile('avatar/humanavatar/texturerenderer');
   api.addFile('avatar/humanavatar/regions');
