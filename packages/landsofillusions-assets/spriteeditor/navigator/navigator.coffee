@@ -9,7 +9,7 @@ class LOI.Assets.SpriteEditor.Navigator extends LOI.Assets.Editor.Navigator
 
   template: -> @constructor.id()
 
-  getThumbnailSpriteData: ->
+  sprite: ->
     @interface.getEditorForActiveFile()?.spriteData()
 
   rot8side: ->

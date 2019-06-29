@@ -38,8 +38,17 @@ class LOI.Assets.Editor.Actions.Import extends FM.Action
         console.error error
         return
 
+      addAndOpen = =>
+        LOI.Assets.Asset.update assetClassName, asset._id, asset, upsert: true
+
+        # Open the imported asset.
+        editorViews = @interface.allChildComponentsOfType FM.EditorView
+        targetEditorView = editorViews[0]
+        targetEditorView.addFile asset._id, @interface.parent.documentClass.id()
+
       unless exists
-        LOI.Assets.Asset.insert asset
+        addAndOpen()
+        return
 
       # Ask the user if they want to overwrite, keep both, or cancel the action.
       answers =
@@ -70,9 +79,4 @@ class LOI.Assets.Editor.Actions.Import extends FM.Action
               when answers.KeepBoth
                 asset._id = Random.id()
 
-            LOI.Assets.Asset.update assetClassName, asset._id, asset, upsert: true
-
-            # Open the imported asset.
-            editorViews = @interface.allChildComponentsOfType FM.EditorView
-            targetEditorView = editorViews[0]
-            targetEditorView.addFile asset._id, @interface.parent.documentClass.id()
+            addAndOpen()

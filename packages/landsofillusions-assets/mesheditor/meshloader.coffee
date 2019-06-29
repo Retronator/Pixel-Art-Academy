@@ -87,7 +87,9 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       else
         # See if we have an embedded custom palette.
         @meshData()?.customPalette
-        
+
+    @_pictureThumbnails = []
+
   destroy: ->
     @_subscription.stop()
     @_paletteSubscription.stop()
@@ -96,3 +98,25 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
     @palette.stop()
 
     @mesh.destroy()
+
+  getPictureThumbnail: (picture) ->
+    pictureThumbnail = _.find @_pictureThumbnails, (pictureThumbnail) => pictureThumbnail.picture is picture
+
+    unless pictureThumbnail
+      Tracker.nonreactive =>
+        thumbnail = new LOI.Assets.MeshEditor.Thumbnail.Picture picture
+
+        update = _.debounce =>
+          thumbnail.update()
+        ,
+          1000
+
+        @autorun =>
+          picture.depend()
+          update()
+
+        pictureThumbnail = {picture, thumbnail}
+        @_pictureThumbnails.push pictureThumbnail
+
+    # Return the thumbnail itself.
+    pictureThumbnail.thumbnail

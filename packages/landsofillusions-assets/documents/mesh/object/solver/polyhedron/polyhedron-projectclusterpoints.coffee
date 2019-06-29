@@ -45,12 +45,15 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron.projectClusterPoints = (clusters, camer
           x: pixel.x + direction.vector.x * 0.5
           y: pixel.y + direction.vector.y * 0.5
 
-    for pixelVertex in cameraAngle.projectPoints pixels, plane
+    # Project pixels to cluster space.
+    pixelVertices = cameraAngle.projectPoints pixels, plane
+
+    for pixelVertex in pixelVertices
       # Make sure this is not a duplicate of another pixel point.
       duplicate = false
 
       for pixelPoint in cluster.points
-        if pixelVertex.distanceToSquared(pixelPoint.vertex) < 1e-10
+        if pixelVertex.manhattanDistanceTo(pixelPoint.vertex) < 1e-10
           duplicate = true
           break
 
@@ -95,7 +98,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron.projectClusterPoints = (clusters, camer
       duplicate = false
 
       for voidPointIndex in [voidPointsStart...cluster.points.length]
-        if voidVertex.distanceToSquared(cluster.points[voidPointIndex].vertex) < 1e-10
+        if voidVertex.manhattanDistanceTo(cluster.points[voidPointIndex].vertex) < 1e-10
           duplicate = true
           break
 
@@ -136,7 +139,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron.projectClusterPoints = (clusters, camer
 
         for edgePointIndex in [edgePointsStart...cluster.points.length]
           edgePoint = cluster.points[edgePointIndex]
-          if edgeVertex.distanceToSquared(edgePoint.vertex) < 1e-10
+          if edgeVertex.manhattanDistanceTo(edgePoint.vertex) < 1e-10
             duplicate = edgePoint
             break
 
@@ -177,7 +180,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron.projectClusterPoints = (clusters, camer
       # Make sure we haven't created any duplicates.
       for point, index in cluster.points
         for otherPoint, otherIndex in cluster.points[index + 1..]
-          distance = point.vertexPlane.distanceToSquared otherPoint.vertexPlane
+          distance = point.vertexPlane.manhattanDistanceTo otherPoint.vertexPlane
           console.warn "Duplicate point", distance, index, otherIndex, point, otherPoint if distance < 1e-10
 
   console.log "Created cluster points", clusters if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug

@@ -50,22 +50,17 @@ class LOI.Assets.MeshEditor.Objects extends FM.View
 
   objectThumbnail: ->
     object = @currentData()
-    mesh = object.mesh
 
     return unless meshCanvas = @meshCanvas()
     cameraAngleIndex = meshCanvas.cameraAngleIndex()
 
-    # Rebuild layers from object for active camera angle.
-    {bounds, layers} = object.getSpriteBoundsAndLayersForCameraAngle cameraAngleIndex
+    return unless loader = @interface.getLoaderForActiveFile()
 
-    # The sprite expects materials as a map instead of an array.
-    materials = mesh.materials.getAllAsIndexedMap()
+    pictureThumbnails = for layer in object.layers.getAll()
+      picture = layer.getPictureForCameraAngleIndex cameraAngleIndex
+      loader.getPictureThumbnail picture
 
-    new LOI.Assets.Sprite
-      palette: _.pick mesh.palette, ['_id']
-      layers: layers
-      materials: materials
-      bounds: bounds
+    new LOI.Assets.MeshEditor.Thumbnail.Pictures pictureThumbnails
 
   nameDisabledAttribute: ->
     # Disable name editing until the object is active.

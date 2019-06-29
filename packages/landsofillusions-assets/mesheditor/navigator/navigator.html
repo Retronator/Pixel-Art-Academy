@@ -1,6 +1,8 @@
-<template name="LandsOfIllusions.Assets.Editor.Navigator">
-  <div class="landsofillusions-assets-editor-navigator landsofillusions-assets-editor-panel">
-    <div class="thumbnail"></div>
+<template name="LandsOfIllusions.Assets.MeshEditor.Navigator">
+  <div class="landsofillusions-assets-editor-navigator landsofillusions-assets-mesheditor-navigator landsofillusions-assets-editor-panel">
+    <div class="thumbnail">
+      {{> LandsOfIllusions.Assets.MeshEditor.Thumbnail meshThumbnail}}
+    </div>
     <div class="controls">
       <div class="zoom-display">
         {{#if zoomPercentageValue}}

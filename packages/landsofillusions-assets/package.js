@@ -333,7 +333,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/helpers/shadowsenabled');
   api.addFile('mesheditor/helpers/landmarks');
 
-  api.addFile('mesheditor/navigator..');
+  api.addUnstyledComponent('mesheditor/navigator..');
   api.addUnstyledComponent('mesheditor/camera..');
   api.addUnstyledComponent('mesheditor/matrix..');
   api.addComponent('mesheditor/cameraangles..');
@@ -341,6 +341,9 @@ Package.onUse(function(api) {
   api.addComponent('mesheditor/layers..');
   api.addComponent('mesheditor/landmarks..');
   api.addComponent('mesheditor/materials..');
+  api.addUnstyledComponent('mesheditor/thumbnail..');
+  api.addFile('mesheditor/thumbnail/picture');
+  api.addFile('mesheditor/thumbnail/pictures');
 
   api.addComponent('mesheditor/cameraangle..');
   api.addUnstyledComponent('mesheditor/cameraangle/selectspritedialog..');

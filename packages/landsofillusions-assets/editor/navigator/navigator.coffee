@@ -21,10 +21,6 @@ class LOI.Assets.Editor.Navigator extends FM.View
     @zoomInPressed = new ReactiveField false
     @zoomOutPressed = new ReactiveField false
 
-    @sprite = new ComputedField => @getThumbnailSpriteData()
-
-  getThumbnailSpriteData: -> throw new AE.NotImplementedException "Navigator must provide thumbnail sprite data."
-
   # Helpers
 
   zoomPercentageValue: ->

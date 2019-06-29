@@ -43,20 +43,19 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     @pixelsChanged = false
     @edgesChanged = false
     @planeChanged = false
+    @previousPlane = _.clone @plane
 
   changed: ->
     @pixelsChanged or @edgesChanged or @planeChanged
 
   setPlaneNormal: (normal) ->
-    unless @plane.normal?.equals normal
-      @plane.normal = THREE.Vector3.fromObject normal
-      @planeChanged = true
+    @plane.normal = THREE.Vector3.fromObject normal
+    @planeChanged = true unless @previousPlane.normal?.equals normal
 
   setPlanePoint: (point) ->
-    unless @plane.point?.equals point
-      @plane.point = THREE.Vector3.fromObject point
-      @planeChanged = true
-      
+    @plane.point = THREE.Vector3.fromObject point
+    @planeChanged = true unless @previousPlane.point?.equals point
+
   getPlane: ->
     return unless @plane.point and @plane.normal
 
