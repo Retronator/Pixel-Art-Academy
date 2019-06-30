@@ -63,8 +63,11 @@ class LOI.Assets.Mesh.Object
     @solver = new @constructor.Solver[solverClassName] @
     
   recompute: ->
-    # Clear all layer clusters.
+    previousLayerClusters = []
+
+    # Clear all layer clusters, but store their data.
     for layer in @layers.getAll()
+      previousLayerClusters.push layer.clusters.getAll()
       layer.clusters.clear()
 
     # Create a fresh solver.
@@ -72,10 +75,35 @@ class LOI.Assets.Mesh.Object
 
     # Recompute all clusters.
     @lastClusterId = 0
+    previousPictureClusters = []
 
     for layer in @layers.getAll()
+      layerClusters = []
       for picture in layer.pictures.getAll()
+        # Save cluster info so we can map to them later.
+        layerClusters.push picture.clusters
+
         picture.recomputeClusters()
+
+      previousPictureClusters.push layerClusters
+
+    # Match previous clusters to the new ones.
+    for layer, layerIndex in @layers.getAll()
+      for picture, pictureIndex in layer.pictures.getAll()
+        for previousClusterId, previousPictureCluster of previousPictureClusters[layerIndex][pictureIndex]
+          # See if we have properties for this cluster.
+          previousCluster = previousLayerClusters[layerIndex][previousClusterId]
+          continue unless properties = previousCluster.properties()
+
+          # See which cluster ID is now at the cluster's source coordinates.
+          newClusterId = picture.getClusterIdForPixel previousPictureCluster.sourceCoordinates.x, previousPictureCluster.sourceCoordinates.y
+          newCluster = layer.clusters.get newClusterId
+
+          # Transfer properties to the enw cluster.
+          newCluster.properties properties
+
+    # Trigger dummy solver update to reposition cluster based on new properties.
+    @solver.update [], [], []
 
   getSpriteBoundsAndLayersForCameraAngle: (cameraAngleIndex) ->
     bounds = null
