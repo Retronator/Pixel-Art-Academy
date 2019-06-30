@@ -61,6 +61,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
               properties: Match.Optional
                 name: Match.Optional String
                 navigable: Match.Optional Boolean
+                coplanarPoint: Match.Optional sparseVectorPattern
               plane: Match.Optional
                 point: vectorPattern
                 normal: vectorPattern
@@ -98,6 +99,11 @@ vectorPattern =
   x: Number
   y: Number
   z: Number
+
+sparseVectorPattern =
+  x: Match.OptionalOrNull Number
+  y: Match.OptionalOrNull Number
+  z: Match.OptionalOrNull Number
 
 mapPattern =
   compressedData: Match.Where EJSON.isBinary

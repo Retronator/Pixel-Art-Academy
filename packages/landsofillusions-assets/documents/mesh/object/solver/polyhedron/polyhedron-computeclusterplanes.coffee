@@ -4,10 +4,21 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterPlanes = (clusters, edges
   console.log "Computing cluster planes", clusters, edges, cameraAngle if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
 
   # Reset all cluster plane and edge points.
-  cluster.plane.point = null for cluster in clusters
-  edge.line.point = null for edge in edges
-
   clustersLeftCount = clusters.length
+
+  for cluster in clusters
+    if coplanarPoint = cluster.layerCluster.properties()?.coplanarPoint
+      # Note: coplanar point does not have to have all coordinates defined.
+      planePoint = new THREE.Vector3()
+      planePoint[coordinate] = value for coordinate, value of coplanarPoint when value?
+      console.log "Setting cluster #{cluster.id} to coplanar point.", planePoint if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
+      cluster.setPlanePoint planePoint
+      clustersLeftCount--
+
+    else
+      cluster.plane.point = null
+
+  edge.line.point = null for edge in edges
 
   # See if we have a cluster overlapping the camera target.
   origin = cameraAngle.unprojectPoint cameraAngle.target
@@ -16,7 +27,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterPlanes = (clusters, edges
   # Otherwise look if a cluster is at the (0, 0) pixel.
   originCluster ?= _.find clusters, (cluster) => cluster.findPixelAtAbsoluteCoordinate 0, 0
 
-  if originCluster
+  if originCluster and not originCluster.plane.point
     # Use the origin cluster as the base to calculate other clusters from.
     console.log "Setting cluster #{originCluster.id} to origin." if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
     originCluster.setPlanePoint new THREE.Vector3

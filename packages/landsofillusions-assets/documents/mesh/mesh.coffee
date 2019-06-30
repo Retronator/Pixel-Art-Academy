@@ -56,6 +56,8 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #         properties: user-defined properties set on the cluster
   #           name: unique name by which the cluster can be referenced in code
   #           navigable: boolean if the cluster is navigable for pathfinding purposes
+  #           coplanarPoint: forces the cluster to use this point for its plane
+  #             x, y, z
   #         plane: the world plane for flat clusters
   #           point: a point in the plane
   #             x, y, z

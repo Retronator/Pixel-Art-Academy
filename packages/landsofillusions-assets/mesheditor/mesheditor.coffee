@@ -197,6 +197,9 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
                     ,
                       name: 'Camera'
                       contentComponentId: LOI.Assets.MeshEditor.CameraAngle.id()
+                    ,
+                      name: 'Cluster'
+                      contentComponentId: LOI.Assets.MeshEditor.Cluster.id()
                     ]
 
               remainingArea:

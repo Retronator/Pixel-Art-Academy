@@ -33,6 +33,25 @@ div.landsofillusions-assets-editor
     &[type=number]
       padding-right 0
 
+  input[type='checkbox']
+    display none
+
+    & + .checkmark::before
+      content '✔'
+      display inline-block
+      width 7rem
+      height 7rem
+      padding 0 0 1rem 1rem
+      margin-right 6rem
+      vertical-align baseline
+      border 1rem solid atariGrey(0)
+      background backgroundGrey
+      text-align center
+      color transparent
+
+    &:checked + .checkmark::before
+      color inherit
+
   button
     background atariGrey(1)
     padding 0 5rem
