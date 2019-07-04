@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Mesh.Object.Solver.Polyhedron.projectClusterPoints = (clusters, cameraAngle) ->
+LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, cameraAngle) ->
   console.log "Projecting cluster points", clusters, cameraAngle if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
   
   pixelDirections = [

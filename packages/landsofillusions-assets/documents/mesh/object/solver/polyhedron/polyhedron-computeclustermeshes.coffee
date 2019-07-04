@@ -2,7 +2,7 @@ LOI = LandsOfIllusions
 
 Delaunator = require 'delaunator'
 
-LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterMeshes = (clusters) ->
+LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterMeshes = (clusters) ->
   console.log "Computing cluster meshes", clusters if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
 
   PointTypes = LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster.PointTypes

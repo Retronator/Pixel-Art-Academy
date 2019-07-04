@@ -7,6 +7,10 @@ compressionOptions =
   level: Pako.Z_BEST_COMPRESSION
 
 class LOI.Assets.Mesh.Object.Layer.Cluster
+  @AttachmentTypes:
+    Contact: 'contact'
+    Fixed: 'fixed'
+
   constructor: (@layers, id, data) ->
     @layer = @layers.parent
     @id = parseInt id

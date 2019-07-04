@@ -1,6 +1,6 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Mesh.Object.Solver.Polyhedron.computeEdges = (clusters) ->
+LOI.Assets.Mesh.Object.Solver.Polyhedron::computeEdges = (clusters) ->
   allEdges = []
   return allEdges unless clusters.length
 

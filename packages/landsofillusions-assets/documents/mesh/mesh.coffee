@@ -58,6 +58,10 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #           navigable: boolean if the cluster is navigable for pathfinding purposes
   #           coplanarPoint: forces the cluster to use this point for its plane
   #             x, y, z
+  #           attachment: how the cluster relates to other objects in the scene, with possible values:
+  #             null (does not relate to other objects)
+  #             contact (gets positioned against another object's cluster with the opposite normal
+  #             fixed (same as contact, but also creates a physical bond to the other object)
   #         plane: the world plane for flat clusters
   #           point: a point in the plane
   #             x, y, z

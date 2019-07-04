@@ -69,7 +69,7 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
         value = parseFloat value
         value = null if _.isNaN value
 
-      if value?
+      if value? and value isnt ''
         properties ?= {}
         properties[@property] = value
 
@@ -99,3 +99,30 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
 
       @property = 'navigable'
       @type = AM.DataInputComponent.Types.Checkbox
+
+  class @Attachment extends @ClusterProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.Cluster.Attachment'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'attachment'
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      options = [
+        name: 'None'
+        value: ''
+      ]
+
+      for name, value of LOI.Assets.Mesh.Object.Layer.Cluster.AttachmentTypes
+        options.push {name, value}
+
+      options
+
+    save: ->
+      super arguments...
+
+      # Trigger solver update with the changed cluster.
+      cluster = @data()
+      cluster.layer.object.solver.update [], [cluster.id], []

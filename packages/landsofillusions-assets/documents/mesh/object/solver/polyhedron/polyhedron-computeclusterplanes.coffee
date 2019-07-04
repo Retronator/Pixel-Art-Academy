@@ -1,19 +1,59 @@
 LOI = LandsOfIllusions
 
-LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterPlanes = (clusters, edges, cameraAngle) ->
+LOI.Assets.Mesh.Object.Solver.Polyhedron::computeClusterPlanes = (clusters, edges, cameraAngle) ->
   console.log "Computing cluster planes", clusters, edges, cameraAngle if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
 
   # Reset all cluster plane and edge points.
   clustersLeftCount = clusters.length
 
   for cluster in clusters
-    if coplanarPoint = cluster.layerCluster.properties()?.coplanarPoint
+    properties = cluster.layerCluster.properties()
+
+    if coplanarPoint = properties?.coplanarPoint
       # Note: coplanar point does not have to have all coordinates defined.
       planePoint = new THREE.Vector3()
       planePoint[coordinate] = value for coordinate, value of coplanarPoint when value?
       console.log "Setting cluster #{cluster.id} to coplanar point.", planePoint if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
       cluster.setPlanePoint planePoint
       clustersLeftCount--
+
+    else if attachment = properties?.attachment
+      # Find a cluster in other layers that has the opposite normal.
+      otherObjects = for otherObject in @object.mesh.objects.getAll() when otherObject isnt @object
+        layers = for layer in otherObject.layers.getAll()
+          picture: layer.getPictureForCameraAngleIndex cameraAngle.index
+
+        {layers}
+
+      attachmentTarget = null
+
+      for pixel in cluster.pixels
+        normal = new THREE.Vector3().copy(pixel.normal).normalize()
+
+        for otherObject in otherObjects
+          for layer in otherObject.layers
+            continue unless layer.picture?.pixelExists pixel.x, pixel.y
+
+            otherPixel = layer.picture.getMapValuesForPixel pixel.x, pixel.y
+
+            # See if the normals are
+            otherNormal = new THREE.Vector3().copy(otherPixel.normal).normalize()
+
+            dotProduct = normal.dot otherNormal
+            continue unless -1.001 < dotProduct < -0.999
+
+            attachmentTarget = layer.picture.layer.clusters.get layer.picture.getClusterIdForPixel pixel.x, pixel.y
+            break
+
+          break if attachmentTarget
+        break if attachmentTarget
+
+      if attachmentTarget
+        # Set this cluster in the same plane as the target cluster.
+        planePoint = attachmentTarget.plane().point
+        console.log "Setting cluster #{cluster.id} to attachment cluster.", planePoint if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
+        cluster.setPlanePoint planePoint
+        clustersLeftCount--
 
     else
       cluster.plane.point = null

@@ -24,15 +24,15 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
     cluster.updatePixels() for cluster in clustersArray
 
     # Compute edges.
-    @edges = @constructor.computeEdges clustersArray
+    @edges = @computeEdges clustersArray
 
     # Recompute cluster planes.
     cameraAngle = @object.mesh.cameraAngles.get 0
-    @constructor.computeClusterPlanes clustersArray, @edges, cameraAngle
+    @computeClusterPlanes clustersArray, @edges, cameraAngle
 
     # Recompute clusters that have have changed.
-    @constructor.projectClusterPoints clustersArray, cameraAngle
-    @constructor.computeClusterMeshes clustersArray
+    @projectClusterPoints clustersArray, cameraAngle
+    @computeClusterMeshes clustersArray
 
   update: (addedClusterIds, updatedClusterIds, removedClusterIds) ->
     clustersData = @object.clusters()
@@ -76,17 +76,17 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
     console.log "Recomputed pixels in clusters", recomputePixelsClusters if @constructor.debug
 
     # Compute edges.
-    @edges = @constructor.computeEdges clustersArray
+    @edges = @computeEdges clustersArray
 
     # Recompute cluster planes.
     cameraAngle = @object.mesh.cameraAngles.get 0
-    @constructor.computeClusterPlanes clustersArray, @edges, cameraAngle
+    @computeClusterPlanes clustersArray, @edges, cameraAngle
     
     # Recompute clusters that have have changed.
     changedClusters = (cluster for cluster in clustersArray when cluster.changed())
 
-    @constructor.projectClusterPoints changedClusters, cameraAngle
-    @constructor.computeClusterMeshes changedClusters
+    @projectClusterPoints changedClusters, cameraAngle
+    @computeClusterMeshes changedClusters
 
     # Generate geometries and send them to layer clusters.
     for cluster in changedClusters
