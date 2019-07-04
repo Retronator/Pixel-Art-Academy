@@ -83,7 +83,39 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeEdges = (clusters) ->
       # If the edge has any segments, it is a valid edge and will be part of the topology.
       allEdges.push edge if edge.segments.length
 
-  console.log "All edges in topology are", allEdges if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
+  console.log "All detected edges are", allEdges if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
+
+  # Filter out small edges that overlap longer edges. These usually appear on jaggies of overlapping clusters.
+  finalEdges = []
+
+  allEdges = _.sortBy allEdges, (edge) => edge.segments.length
+
+  for edge in allEdges
+    # See if this edge is contained in either clusters' other edges.
+    containedWithinEdge = null
+
+    for cluster in [edge.clusterA, edge.clusterB]
+      for otherClusterId, otherEdge of cluster.edges when otherEdge isnt edge
+        contained = true
+
+        for segment in edge.segments
+          unless otherEdge.segmentsMap[segment[0].x]?[segment[0].y]?[segment[1].x]?[segment[1].y]
+            contained = false
+            break
+
+        if contained
+          containedWithinEdge = otherEdge
+
+      break if containedWithinEdge
+
+    if containedWithinEdge
+      edge.removeFromClusters()
+      console.log "Filtering edge between clusters #{edge.clusterA.id} and #{edge.clusterB.id} as it is contained within edge between clusters #{containedWithinEdge.clusterA.id} and #{containedWithinEdge.clusterB.id} .", edge, containedWithinEdge if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
+
+    else
+      finalEdges.push edge
+
+  console.log "Final edges in topology are", finalEdges if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
   
   cluster.recomputeEdges = false for cluster in recomputeEdgesClusters
 

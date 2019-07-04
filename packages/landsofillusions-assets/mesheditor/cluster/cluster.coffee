@@ -20,6 +20,11 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
       return unless currentClusterHelper = @editor()?.currentClusterHelper()
       currentClusterHelper.cluster()
 
+  planePoint: ->
+    cluster = @currentData()
+
+    cluster.plane().point
+
   events: ->
     super(arguments...).concat
       'change .coplanar-point .coordinate-input': @onChangeCoplanarPointCoordinate

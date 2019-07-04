@@ -14,6 +14,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Edges
     currentCluster = currentClusterHelper.cluster()
 
     for object in objects
+      continue if currentCluster and currentCluster.layer.object isnt object
+
       context.beginPath()
 
       for edge in object.solver.edges
