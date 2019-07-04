@@ -18,7 +18,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterPlanes = (clusters, edges
     else
       cluster.plane.point = null
 
-  edge.line.point = null for edge in edges
+  edge.startLinePointRecomputation() for edge in edges
 
   # See if we have a cluster overlapping the camera target.
   origin = cameraAngle.unprojectPoint cameraAngle.target
@@ -74,14 +74,15 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron.computeClusterPlanes = (clusters, edges
           console.warn "Edge vertices not projected successfully.", cameraAngle, edge.vertices, sourceCluster.getPlane() unless vertices.length
 
           # Edge point is the average of the projected vertices.
-          edge.line.point = new THREE.Vector3
-          edge.line.point.add vertex for vertex in vertices
-          edge.line.point.multiplyScalar 1 / vertices.length
+          linePoint = new THREE.Vector3
+          linePoint.add vertex for vertex in vertices
+          linePoint.multiplyScalar 1 / vertices.length
+          edge.setLinePoint linePoint
 
           # Anchor the other cluster to the edge point.
-          targetCluster.setPlanePoint edge.line.point
+          targetCluster.setPlanePoint linePoint
 
-          console.log "Cluster #{targetCluster.id} point is", edge.line.point, edge, vertices if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
+          console.log "Cluster #{targetCluster.id} point is", linePoint, edge, vertices if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
 
           positionedCluster = true
           clustersLeftCount--

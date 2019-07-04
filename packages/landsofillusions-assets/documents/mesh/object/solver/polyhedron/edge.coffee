@@ -153,10 +153,24 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
     # If direction has no length, it's a result of a cross product between two coplanar clusters.
     @coplanarClusters = true unless @line.direction.length()
 
+  startLinePointRecomputation: ->
+    @previousLinePoint = @line.point
+    @line.point = null
+
   calculateLinePoint: ->
     # We assume both clusters have their planes fully determined, which means this edge is fully determined too.
-    @line.point = new THREE.Vector3
-    @clusterA.getPlane().projectPoint @clusterB.plane.point, @line.point
+    linePoint = new THREE.Vector3
+    @clusterA.getPlane().projectPoint @clusterB.plane.point, linePoint
+    @setLinePoint linePoint
+
+  setLinePoint: (linePoint) ->
+    @line.point = linePoint
+
+    return if @previousLinePoint and @line.point.equals @previousLinePoint
+
+    # Inform the affected clusters that the edge position has changed.
+    @clusterA.edgesChanged = true
+    @clusterB.edgesChanged = true
 
   addToClusters: ->
     @clusterA.addEdge @

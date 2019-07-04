@@ -39,14 +39,14 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
       properties ?= {}
       properties.coplanarPoint = coordinates
 
-    else
+    else if properties
       delete properties.coplanarPoint
       properties = null unless _.keys(properties).length
 
     cluster.properties properties
 
-    # Trigger solver update with no changed clusters.
-    cluster.layer.object.solver.update [], [], []
+    # Trigger solver update with the changed cluster.
+    cluster.layer.object.solver.update [], [cluster.id], []
 
   _parseFloatOrNull: (string) ->
     float = parseFloat string
@@ -73,7 +73,7 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
         properties ?= {}
         properties[@property] = value
 
-      else
+      else if properties
         delete properties[@property]
         properties = null unless _.keys(properties).length
 
