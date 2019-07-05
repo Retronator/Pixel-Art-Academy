@@ -68,8 +68,15 @@ void main()	{
 
     float hue = horizontalAngle / PI2;
     float saturation = verticalAngle / PI_HALF;
+    float lightness = 0.5;
 
-    gl_FragColor = vec4(hsl2rgb(hue, saturation, 0.5), rampShadeDitherAlpha.a);
+    float absoluteVerticalAngle = abs(verticalAngle);
+
+    if (absoluteVerticalAngle > PI_HALF) {
+     lightness = 1.0 - absoluteVerticalAngle / PI;
+    }
+
+    gl_FragColor = vec4(hsl2rgb(hue, saturation, lightness), rampShadeDitherAlpha.a);
     return;
   }
 

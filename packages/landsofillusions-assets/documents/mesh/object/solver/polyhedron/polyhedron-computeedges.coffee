@@ -29,6 +29,9 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeEdges = (clusters) ->
       else
         edge = new LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge clusterA, clusterB
 
+        # We do not allow edges between clusters facing opposite directions.
+        continue unless edge.line.direction.length() or clusterA.plane.normal.dot(clusterB.plane.normal) > 0
+
       for pixel in clusterA.pixels
         coordinates = clusterA.getAbsolutePixelCoordinates pixel
 
@@ -119,4 +122,4 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeEdges = (clusters) ->
   
   cluster.recomputeEdges = false for cluster in recomputeEdgesClusters
 
-  allEdges
+  finalEdges

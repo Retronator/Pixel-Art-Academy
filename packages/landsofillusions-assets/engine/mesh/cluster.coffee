@@ -64,7 +64,13 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
         hue = horizontalAngle / (2 * Math.PI)
         saturation = verticalAngle / (Math.PI / 2)
 
-        directColor = new THREE.Color().setHSL hue, saturation, 0.5
+        if Math.abs(verticalAngle) > Math.PI / 2
+          lightness = 1 - Math.abs(verticalAngle) / Math.PI
+
+        else
+          lightness = 0.5
+
+        directColor = new THREE.Color().setHSL hue, saturation, lightness
 
       else
         directColor = r: 0, g: 0, b: 0
