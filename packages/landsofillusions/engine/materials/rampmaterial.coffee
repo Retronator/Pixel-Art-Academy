@@ -72,8 +72,15 @@ void main()	{
     }
   }
 
+  vec3 destinationColor = bestColor;
+
+  /* Smooth shading routine
+  float blendFactor = bestColorDistance / (bestColorDistance + secondBestColorDistance);
+  vec3 destinationColor = mix(bestColor, secondBestColor, blendFactor);
+  */
+
   // Color the pixel with the best match from the palette.
-  gl_FragColor = vec4(bestColor, 1);
+  gl_FragColor = vec4(destinationColor, 1);
 }
 """
 
