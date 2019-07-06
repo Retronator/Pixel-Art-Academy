@@ -48,7 +48,11 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
       delete properties.coplanarPoint
       properties = null unless _.keys(properties).length
 
-    cluster.properties properties
+    if properties?
+      cluster.properties properties
+
+    else
+      cluster.properties.clear()
 
     # Trigger solver update with the changed cluster.
     cluster.layer.object.solver.update [], [cluster.id], []
@@ -82,7 +86,11 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
         delete properties[@property]
         properties = null unless _.keys(properties).length
 
-      cluster.properties properties
+      if properties?
+        cluster.properties properties
+
+      else
+        cluster.properties.clear()
 
   class @Name extends @ClusterProperty
     @register 'LandsOfIllusions.Assets.MeshEditor.Cluster.Name'
