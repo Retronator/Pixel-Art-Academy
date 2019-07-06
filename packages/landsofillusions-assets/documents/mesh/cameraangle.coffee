@@ -157,6 +157,16 @@ class LOI.Assets.Mesh.CameraAngle
 
     new THREE.Vector2().subVectors(horizon.origin, screenPoint).cross(horizon.direction) / denominator
 
+  distanceToHorizon: (screenPoint, horizon) ->
+    pointToHorizonOrigin = new THREE.Vector2().subVectors horizon.origin, screenPoint
+    projectionLength = pointToHorizonOrigin.dot horizon.direction
+    direction = pointToHorizonOrigin.clone().sub horizon.direction.clone().multiplyScalar projectionLength
+
+    denominator = direction.cross horizon.direction
+    return Number.POSITIVE_INFINITY unless denominator
+
+    pointToHorizonOrigin.cross(horizon.direction) / Math.abs denominator
+
   getRaycaster: (screenPoint) ->
     # The default is a ray from camera position shooting through the target.
     # Note: We need to create vectors from the data which is a plain object.
