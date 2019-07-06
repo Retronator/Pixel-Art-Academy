@@ -124,7 +124,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
 
     mesh.castShadow = true
     mesh.receiveShadow = true
-    mesh.material.shadowSide = THREE.DoubleSide
+    mesh.material.shadowSide = THREE.BackSide
     mesh.layers.set 2 if @layer.object.mesh.options.debug?()
 
     mesh
