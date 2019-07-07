@@ -346,6 +346,9 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/thumbnail/pictures');
   api.addComponent('mesheditor/cameraangle..');
   api.addComponent('mesheditor/cluster..');
+  api.addComponent('mesheditor/materialdialog..');
+  api.addUnstyledComponent('mesheditor/spriteselectdialog..');
+  api.addUnstyledComponent('mesheditor/texturemappingmatrix..');
 
   api.addComponent('mesheditor/meshcanvas..');
   api.addFile('mesheditor/meshcanvas/edges');

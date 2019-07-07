@@ -82,6 +82,9 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   ramp: index of the ramp within the palette
   #   shade: index of the shade in the ramp
   #   dither: amount of dither used from 0 to 1
+  #   texture:
+  #     spriteId: ID of the sprite to be used as the texture
+  #     mappingMatrix: array of 6 matrix elements
   # landmarks: array of named locations, as defined for visual asset
   #   ...
   #   object: integer index of the object this landmark is on

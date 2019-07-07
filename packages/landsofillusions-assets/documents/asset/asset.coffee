@@ -35,7 +35,6 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
   # Subscriptions
 
   @forId: @subscription 'forId'
-  @forIdsFull: @subscription 'forIdsFull'
   @forName: @subscription 'forName'
   @forPath: @subscription 'forPath'
   @all: @subscription 'all'

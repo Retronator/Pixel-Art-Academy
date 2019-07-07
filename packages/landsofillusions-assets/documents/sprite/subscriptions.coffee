@@ -21,10 +21,10 @@ LOI.Assets.Sprite.forMeshId.publish (meshId) ->
     mesh = LOI.Assets.Mesh.documents.findOne meshId
     throw new AE.ArgumentException "Mesh does not exist." unless mesh
 
-    # Nothing to return if there are no camera angles.
-    return unless mesh.cameraAngles
+    # Nothing to return if there are no materials.
+    return unless mesh.materials
 
-    spriteIds = (cameraAngle.sprite?._id for cameraAngle in mesh.cameraAngles)
+    spriteIds = (material.texture?.spriteId for material in mesh.materials)
     _.pull spriteIds, undefined
     
     LOI.Assets.Sprite.documents.find _id: $in: spriteIds

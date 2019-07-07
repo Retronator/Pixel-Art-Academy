@@ -72,11 +72,11 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
       debug: @debugModeData.value
       currentCluster: @currentClusterHelper.cluster
 
-    # Subscribe to the referenced palette as well.
+    # Subscribe to the referenced palette.
     @paletteId = new ComputedField =>
       @meshData()?.palette?._id
 
-    @_paletteSubscription = Tracker.autorun (computation) =>
+    @_paletteSubscriptionAutorun = Tracker.autorun (computation) =>
       return unless paletteId = @paletteId()
       LOI.Assets.Palette.forId.subscribe paletteId
 
@@ -88,11 +88,21 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
         # See if we have an embedded custom palette.
         @meshData()?.customPalette
 
+    # Subscribe to texture sprites.
+    @_textureSpritesSubscriptionAutorun = Tracker.autorun (computation) =>
+      return unless meshData = @meshData()
+
+      # Note that we can't use Sprite.forMeshId subscription here since
+      # we want to subscribe to the live (unsaved) mesh material data.
+      for material in meshData.materials.getAll() when material.texture?.spriteId
+        LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, material.texture.spriteId
+
     @_pictureThumbnails = []
 
   destroy: ->
     @_subscription.stop()
-    @_paletteSubscription.stop()
+    @_paletteSubscriptionAutorun.stop()
+    @_textureSpritesSubscriptionAutorun.stop()
 
     @paletteId.stop()
     @palette.stop()

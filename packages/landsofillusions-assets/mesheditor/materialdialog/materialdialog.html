@@ -1,0 +1,44 @@
+<template name="LandsOfIllusions.Assets.MeshEditor.MaterialDialog">
+  {{#LandsOfIllusions.Assets.Editor.Window windowData}}
+    <div class="landsofillusions-assets-mesheditor-materialdialog">
+      {{#with material}}
+        <div class="preview">
+          PREVIEW
+        </div>
+        <div class="properties landsofillusions-assets-editor-propertieslist">
+          <label class="property name">
+            <span class="name">Name</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Name}}</span>
+          </label>
+          <label class="property type">
+            <span class="name">Type</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Type}}</span>
+          </label>
+          <label class="property ramp">
+            <span class="name">Ramp</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Ramp}}</span>
+          </label>
+          <label class="property shade">
+            <span class="name">Shade</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Shade}}</span>
+          </label>
+          <label class="property dither">
+            <span class="name">Dither</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Dither}}</span>
+          </label>
+          <div class="property texture">
+            <div class="name">Texture</div>
+            <div class="value">
+              <div class="texture-name"><input class="texture-name-input" value="{{textureName}}" disabled/></div>
+              <div class="texture-browse"><button class="texture-browse-button">…</button></div>
+            </div>
+          </div>
+          <label class="property texture-mapping">
+            <span class="name">Texture mapping</span>
+            <span class="value">{{> Render textureMappingMatrix}}</span>
+          </label>
+        </div>
+      {{/with}}
+    </div>
+  {{/LandsOfIllusions.Assets.Editor.Window}}
+</template>

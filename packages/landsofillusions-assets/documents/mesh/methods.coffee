@@ -89,6 +89,9 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
       ramp: Match.OptionalOrNull Number
       shade: Match.OptionalOrNull Number
       dither: Match.OptionalOrNull Number
+      texture: Match.Optional
+        spriteId: Match.Optional Match.DocumentId
+        mappingMatrix: Match.Optional [Match.OptionalOrNull Number]
     ]
 
   RA.authorizeAdmin()

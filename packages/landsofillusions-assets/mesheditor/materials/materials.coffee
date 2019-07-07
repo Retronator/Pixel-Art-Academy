@@ -79,26 +79,28 @@ class LOI.Assets.MeshEditor.Materials extends FM.View
   events: ->
     super(arguments...).concat
       'click .preview-color': @onClickPreviewColor
-      'change .name-input, change .ramp-input, change .shade-input, change .dither-input': @onChangeMaterial
+      'dblclick .preview-color': @onDoubleClickPreviewColor
+      'change .name-input': @onChangeName
       'click .add-material-button': @onClickAddMaterialButton
 
   onClickPreviewColor: (event) ->
     material = @currentData()
     @setIndex material.index
 
-  onChangeMaterial: (event) ->
+  onDoubleClickPreviewColor: (event) ->
     material = @currentData()
 
-    $material = $(event.target).closest('.material')
+    @interface.displayDialog
+      contentComponentId: LOI.Assets.MeshEditor.MaterialDialog.id()
+      contentComponentData:
+        materialIndex: material.index
 
-    newData =
+  onChangeName: (event) ->
+    material = @currentData()
+
+    material.update
       # We null the name if it's an empty string
-      name: $material.find('.name-input').val() or null
-      ramp: _.parseIntOrNull $material.find('.ramp-input').val()
-      shade: _.parseIntOrNull $material.find('.shade-input').val()
-      dither: _.parseFloatOrNull $material.find('.dither-input').val()
-
-    material.update newData
+      name: $(event.target).val() or null
 
   onClickAddMaterialButton: (event) ->
     @addNewIndex()
