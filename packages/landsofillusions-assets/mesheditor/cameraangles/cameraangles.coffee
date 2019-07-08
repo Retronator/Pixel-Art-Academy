@@ -82,7 +82,7 @@ class LOI.Assets.MeshEditor.CameraAngles extends FM.View
 
   onClickDuplicateButton: (event) ->
     # Create a copy without the name and insert it to create a duplicate.
-    copy = _.clone @cameraAngle().toPlainObject()
+    copy = @cameraAngle().toPlainObject()
     delete copy.name
 
     index = @mesh().cameraAngles.insert copy

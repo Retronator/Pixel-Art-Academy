@@ -79,12 +79,18 @@ Package.onUse(function(api) {
   api.addFile('engine/renderingregion');
   api.addFile('engine/renderingsides');
 
+  api.addClientFile('engine/textures..');
+  api.addClientFile('engine/textures/palette');
+  api.addClientFile('engine/textures/sprite');
+
   api.addClientFile('engine/materials..');
   api.addClientFile('engine/materials/spritematerial');
   api.addClientFile('engine/materials/rampmaterial');
 
   api.addClientFile('engine/materials/shaderchunks..');
   api.addClientFile('engine/materials/shaderchunks/lighting');
+  api.addClientFile('engine/materials/shaderchunks/palette');
+  api.addClientFile('engine/materials/shaderchunks/sprite');
 
   api.addFile('engine/debug..');
   api.addFile('engine/debug/dummysceneitem');

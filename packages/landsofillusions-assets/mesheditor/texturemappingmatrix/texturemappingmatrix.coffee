@@ -14,7 +14,7 @@ class LOI.Assets.MeshEditor.TextureMappingMatrix extends AM.Component
     matrix = [1, 0, 0, 0, 1, 0]
 
     if matrixData = @options.load()
-      matrix = _.defaults matrixData, matrix
+      matrix = _.defaults [], matrixData, matrix
 
     for rowName, rowIndex in ['u', 'v']
       name: rowName

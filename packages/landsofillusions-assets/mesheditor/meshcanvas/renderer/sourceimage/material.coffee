@@ -3,8 +3,7 @@ LOI = LandsOfIllusions
 
 class LOI.Assets.MeshEditor.MeshCanvas.Renderer.SourceImage.Material extends THREE.ShaderMaterial
   constructor: (@sourceImage) ->
-    paletteTextureData = new Uint8Array 256 * 256 * 4
-    paletteTexture = new THREE.DataTexture paletteTextureData, 256, 256, THREE.RGBAFormat
+    paletteTexture = new LOI.Engine.Textures.Palette
 
     super
       transparent: true
@@ -55,7 +54,11 @@ uniform bool drawNormals;
 
 void main()	{
   vec4 rampShadeDitherAlpha = texture2D(map, vUv);
-  vec3 sourceColor = texture2D(palette, rampShadeDitherAlpha.xy).rgb;
+
+  vec2 paletteColor = rampShadeDitherAlpha.xy;
+  paletteColor = (paletteColor * 255.0 + 0.5) / 256.0;
+
+  #{LOI.Engine.Materials.ShaderChunks.readSourceColorFromPalette}
 
   vec3 normal = texture2D(normalMap, vUv).xyz;
   normal = (normal - 0.5) * 2.0;
@@ -166,19 +169,7 @@ void main()	{
     # Reactively update the palette texture.
     meshCanvas.autorun =>
       return unless palette = meshCanvas.meshLoader()?.palette()
-
-      paletteTextureData.fill 0
-
-      for ramp, rampIndex in palette.ramps
-        for shade, shadeIndex in ramp.shades
-          dataIndex = (rampIndex + shadeIndex * 256) * 4
-
-          paletteTextureData[dataIndex] = shade.r * 255
-          paletteTextureData[dataIndex + 1] = shade.g * 255
-          paletteTextureData[dataIndex + 2] = shade.b * 255
-          paletteTextureData[dataIndex + 3] = 255
-
-      paletteTexture.needsUpdate = true
+      paletteTexture.update palette
 
       @uniforms.palette.value = paletteTexture
       @needsUpdate = true

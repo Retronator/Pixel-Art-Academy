@@ -9,7 +9,7 @@ class LOI.Assets.Mesh.Material
     @update data
 
   toPlainObject: ->
-    @sourceData
+    _.clone @sourceData
 
   depend: ->
     @_updatedDependency.depend()

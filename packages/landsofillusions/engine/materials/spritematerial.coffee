@@ -33,7 +33,7 @@ class LOI.Engine.Materials.SpriteMaterial extends THREE.ShaderMaterial
 
       uniforms: _.extend
         uvTransform:
-          value: new THREE.Matrix3().identity()
+          value: new THREE.Matrix3
         palette:
           value: LOI.Engine.Materials.SpriteMaterial.paletteTexture
         map:

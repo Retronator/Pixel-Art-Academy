@@ -12,7 +12,7 @@ class LOI.Assets.Mesh.CameraAngle
     @update data
 
   toPlainObject: ->
-    @sourceData
+    _.clone @sourceData
 
   depend: ->
     @_updatedDependency.depend()

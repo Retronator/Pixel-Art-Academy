@@ -80,31 +80,25 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
 
     else
       paletteColor = null
+      meshMaterial = null
 
       # Normal color mode.
       if materialData.materialIndex?
-        material = meshData.materials.get materialData.materialIndex
-
-        paletteColor = _.clone material.toPlainObject()
-
-        # Override material data if we have it present.
-        if materialData = materialsData?[material.name]
-          for key, value of materialData
-            paletteColor[key] = value if value?
+        meshMaterial = meshData.materials.get materialData.materialIndex
+        paletteColor = meshMaterial.toPlainObject()
 
       else if materialData.paletteColor
         paletteColor = materialData.paletteColor
 
       if paletteColor and palette.ramps[paletteColor.ramp]
         shades = palette.ramps[paletteColor.ramp]?.shades
-        shadeIndex = THREE.Math.clamp paletteColor.shade, 0, shades.length - 1
 
         if materialOptions.wireframe
           material = new THREE.MeshBasicMaterial _.extend materialOptions,
             color: THREE.Color.fromObject shades[paletteColor.shade]
 
         else
-          material = new LOI.Engine.Materials.RampMaterial _.extend materialOptions, {shades, shadeIndex}
+          material = new LOI.Engine.Materials.RampMaterial _.extend materialOptions, {palette, paletteColor, texture: meshMaterial?.texture}
 
       else if materialData.directColor
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
