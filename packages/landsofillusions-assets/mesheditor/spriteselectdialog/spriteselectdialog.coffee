@@ -15,7 +15,7 @@ class LOI.Assets.MeshEditor.SpriteSelectDialog extends LOI.Assets.Editor.AssetOp
     multipleSelect: false
 
   _subscribeToDocuments: ->
-    LOI.Assets.Asset.all.subscribe @, LOI.Assets.Sprite.className
+    LOI.Assets.VisualAsset.allSystem.subscribe @, LOI.Assets.Sprite.className
 
   _open: (selectedItem) ->
     selectedItem ?= @fileManager.selectedItems()[0]

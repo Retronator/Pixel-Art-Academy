@@ -82,6 +82,7 @@ Package.onUse(function(api) {
   api.addClientFile('engine/textures..');
   api.addClientFile('engine/textures/palette');
   api.addClientFile('engine/textures/sprite');
+  api.addClientFile('engine/textures/mip');
 
   api.addClientFile('engine/materials..');
   api.addClientFile('engine/materials/spritematerial');

@@ -34,6 +34,8 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
 
   textureName: ->
     return unless material = @material()
+    return material.texture.spriteName if material.texture?.spriteName
+
     return unless spriteId = material.texture?.spriteId
     return unless sprite = LOI.Assets.Sprite.documents.findOne spriteId
 
@@ -50,10 +52,19 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
       contentComponentId: LOI.Assets.MeshEditor.SpriteSelectDialog.id()
       contentComponentData:
         open: (selectedItem) =>
-          texture = material.texture or {}
-          texture.spriteId = selectedItem._id
+          # We need to replace instead of update material data since we want to remove texture fields (update only merges values).
+          materialData = material.toPlainObject()
+          materialData.texture ?= {}
 
-          material.update {texture}
+          if _.endsWith selectedItem.name, '.mip'
+            materialData.texture.spriteName = selectedItem.name
+            delete materialData.texture.spriteId
+
+          else
+            materialData.texture.spriteId = selectedItem._id
+            delete materialData.texture.spriteName
+
+          material.replace materialData
 
   class @MaterialProperty extends AM.DataInputComponent
     onCreated: ->

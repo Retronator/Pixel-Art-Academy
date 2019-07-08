@@ -84,6 +84,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   dither: amount of dither used from 0 to 1
   #   texture:
   #     spriteId: ID of the sprite to be used as the texture
+  #     spriteName: Name of the sprite or mip to be used as the texture
   #     mappingMatrix: array of 6 matrix elements
   # landmarks: array of named locations, as defined for visual asset
   #   ...

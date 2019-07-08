@@ -5,15 +5,22 @@ class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
     paletteTexture = new LOI.Engine.Textures.Palette options.palette
 
     if options.texture
-      # Find the sprite in cache or documents.
-      sprite = LOI.Assets.Sprite.getFromCache options.texture.spriteId
+      if options.texture.spriteId
+        # Find the sprite in cache or documents.
+        sprite = LOI.Assets.Sprite.getFromCache options.texture.spriteId
 
-      unless sprite
-        sprite = LOI.Assets.Sprite.documents.findOne options.texture.spriteId
+        unless sprite
+          sprite = LOI.Assets.Sprite.documents.findOne options.texture.spriteId
 
-      if sprite
-        # Create the sprite textures.
-        spriteTextures = new LOI.Engine.Textures.Sprite sprite
+        if sprite
+          # Create the sprite textures.
+          spriteTextures = new LOI.Engine.Textures.Sprite sprite
+
+      else if options.texture.spriteName
+        spriteTextures = new LOI.Engine.Textures.Mip options.texture.spriteName
+
+      width = spriteTextures?.paletteColorTexture?.image.width or 1
+      powerOf2Texture = (width & (width - 1)) is 0
 
       # Create texture mapping matrix.
       elements = [1, 0, 0, 0, 1, 0, 0, 0, 1]
@@ -42,6 +49,8 @@ class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
           value: options.paletteColor?.shade
         smoothShading:
           value: options.smoothShading
+        powerOf2Texture:
+          value: powerOf2Texture
       ,
         THREE.UniformsLib.lights
 
@@ -86,6 +95,7 @@ uniform sampler2D palette;
 uniform float ramp;
 uniform float shade;
 uniform bool smoothShading;
+uniform bool powerOf2Texture;
 
 varying vec3 vNormal;
 

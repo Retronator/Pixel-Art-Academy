@@ -91,6 +91,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
       dither: Match.OptionalOrNull Number
       texture: Match.Optional
         spriteId: Match.Optional Match.DocumentId
+        spriteName: Match.Optional String
         mappingMatrix: Match.Optional [Match.OptionalOrNull Number]
     ]
 

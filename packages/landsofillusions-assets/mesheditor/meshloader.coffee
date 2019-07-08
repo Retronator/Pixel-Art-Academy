@@ -94,8 +94,12 @@ class LOI.Assets.MeshEditor.MeshLoader extends FM.Loader
 
       # Note that we can't use Sprite.forMeshId subscription here since
       # we want to subscribe to the live (unsaved) mesh material data.
-      for material in meshData.materials.getAll() when material.texture?.spriteId
-        LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, material.texture.spriteId
+      for material in meshData.materials.getAll() when material.texture
+        if material.texture.spriteId
+          LOI.Assets.Asset.forId.subscribe LOI.Assets.Sprite.className, material.texture.spriteId
+
+        else if material.texture.spriteName
+          LOI.Assets.Asset.forPath.subscribe LOI.Assets.Sprite.className, material.texture.spriteName
 
     @_pictureThumbnails = []
 

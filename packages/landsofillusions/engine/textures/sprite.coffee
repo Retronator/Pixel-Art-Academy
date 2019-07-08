@@ -1,19 +1,13 @@
 LOI = LandsOfIllusions
 
 class LOI.Engine.Textures.Sprite
-  constructor: (sprite) ->
-    @update sprite if sprite
-    
-  update: (sprite) ->
+  @generateData: (sprite) ->
     width = sprite.bounds.width
     height = sprite.bounds.height
 
     # Create data textures.
     paletteColorData = new Uint8Array width * height * 4
-    @paletteColorTexture = new THREE.DataTexture paletteColorData, width, height, THREE.RGBAFormat
-
     normalData = new Uint8Array width * height * 3
-    @normalTexture = new THREE.DataTexture normalData, width, height, THREE.RGBFormat
 
     for layer in sprite.layers when layer?.pixels and layer.visible isnt false
       layerOrigin =
@@ -43,6 +37,21 @@ class LOI.Engine.Textures.Sprite
           normalData[pixelIndex * 3] = (pixel.normal.x + 1) * 127
           normalData[pixelIndex * 3 + 1] = (pixel.normal.y + 1) * 127
           normalData[pixelIndex * 3 + 2] = (pixel.normal.z + 1) * 127
+
+    {paletteColorData, normalData}
+
+  constructor: (sprite) ->
+    @update sprite if sprite
+    
+  update: (sprite) ->
+    width = sprite.bounds.width
+    height = sprite.bounds.height
+
+    {paletteColorData, normalData} = LOI.Engine.Textures.Sprite.generateData sprite
+
+    # Create data textures.
+    @paletteColorTexture = new THREE.DataTexture paletteColorData, width, height, THREE.RGBAFormat
+    @normalTexture = new THREE.DataTexture normalData, width, height, THREE.RGBFormat
 
     for texture in [@paletteColorTexture, @normalTexture]
       texture.needsUpdate = true

@@ -5,8 +5,7 @@ class LOI.Assets.Mesh.Material
   constructor: (@materials, @index, data) ->
     @_updatedDependency = new Tracker.Dependency
 
-    @sourceData = {}
-    @update data
+    @replace data
 
   toPlainObject: ->
     _.clone @sourceData
@@ -22,6 +21,10 @@ class LOI.Assets.Mesh.Material
     # Signal change of the material.
     @_updatedDependency.changed()
     @materials.contentUpdated()
+
+  replace: (data) ->
+    @sourceData = {}
+    @update data
 
   _createVector: (vectorData = {}) ->
     new THREE.Vector3 vectorData.x or 0, vectorData.y or 0, vectorData.z or 0

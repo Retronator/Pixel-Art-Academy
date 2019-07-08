@@ -1,8 +1,12 @@
 LOI = LandsOfIllusions
 
 LOI.Engine.Materials.ShaderChunks.readSpriteData = """
-  // Wrap UV coordinates manually since we want to use non-power-of-2 textures.
-  vec2 spriteUv = vUv - floor(vUv);
+  vec2 spriteUv = vUv;
+
+  if (!powerOf2Texture) {
+    // Wrap UV coordinates manually since we want to wrap a non-power-of-2 texture.
+    spriteUv -= floor(vUv);
+  }
 
   // Read palette color from main map.
   vec2 paletteColor = texture2D(map, spriteUv).xy;
