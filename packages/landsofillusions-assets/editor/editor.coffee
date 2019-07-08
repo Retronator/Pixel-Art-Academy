@@ -54,6 +54,7 @@ class LOI.Assets.Editor extends AM.Component
       loaders:
         "#{LOI.Assets.Sprite.id()}": LOI.Assets.SpriteEditor.SpriteLoader
         "#{LOI.Assets.Sprite.Rot8.id()}": LOI.Assets.SpriteEditor.Rot8Loader
+        "#{LOI.Assets.Sprite.Mip.id()}": LOI.Assets.SpriteEditor.MipLoader
         "#{LOI.Assets.Mesh.id()}": LOI.Assets.MeshEditor.MeshLoader
         "#{LOI.Assets.Audio.id()}": LOI.Assets.AudioEditor.AudioLoader
 

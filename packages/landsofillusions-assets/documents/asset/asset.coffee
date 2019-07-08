@@ -32,6 +32,8 @@ class LOI.Assets.Asset extends LOI.Assets.Asset
 
   @exists: @method 'exists'
 
+  @getData: @method 'getData'
+
   # Subscriptions
 
   @forId: @subscription 'forId'

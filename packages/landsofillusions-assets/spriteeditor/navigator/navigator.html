@@ -18,6 +18,15 @@
           <button class="rotate-right-button rotate-button">→</button>
         </div>
       {{/if}}
+      {{#if mipmaps}}
+        <ol class="mipmaps">
+          {{#each mipmaps}}
+            <li class="mipmap {{activeMipmapClass}}">
+              <button class="mipmap-button">{{bounds.width}}</button>
+            </li>
+          {{/each}}
+        </ol>
+      {{/if}}
     </div>
   </div>
 </template>

@@ -25,7 +25,7 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
       @cameraData()?.child 'origin'
 
     @origin = new ComputedField =>
-      @originData()?.value() or @pixelCanvas.componentData.get('initialCameraOrigin') or x:0, y:0
+      @originData()?.value() or @pixelCanvas.componentData.get('initialCameraOrigin') or x: 0, y: 0
     ,
       EJSON.equals
 
@@ -106,6 +106,9 @@ class LOI.Assets.SpriteEditor.PixelCanvas.Camera
 
   setScale: (scale) ->
     @scaleData().value scale
+
+  setOrigin: (origin) ->
+    @originData().value origin
 
   applyTransformToCanvas: ->
     context = @pixelCanvas.context()

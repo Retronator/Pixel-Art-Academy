@@ -63,6 +63,9 @@ class LOI.Assets.Editor.AssetOpenDialog extends FM.View
         if _.endsWith item.name, '.rot8'
           targetEditorView.addFile item.name, LOI.Assets.Sprite.Rot8.id()
 
+        else if _.endsWith item.name, '.mip'
+          targetEditorView.addFile item.name, LOI.Assets.Sprite.Mip.id()
+
       else
         targetEditorView.addFile item._id, item.constructor.id()
     

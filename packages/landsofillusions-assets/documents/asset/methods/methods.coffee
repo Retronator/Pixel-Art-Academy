@@ -55,3 +55,11 @@ LOI.Assets.Asset.exists.method (assetClassName, assetId) ->
 
   assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
   assetClass.documents.findOne(assetId)?
+
+LOI.Assets.Asset.getData.method (assetClassName, assetId, fields) ->
+  check assetClassName, String
+  check assetId, Match.DocumentId
+  check fields, Match.OptionalOrNull Object
+
+  assetClass = LOI.Assets.Asset._requireAssetClass assetClassName
+  assetClass.documents.findOne assetId, {fields}

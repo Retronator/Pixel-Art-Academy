@@ -233,6 +233,7 @@ class LOI.Assets.Editor.FileManager.Directory extends AM.Component
       if selectedItems.length
         dropdownItems.push LOI.Assets.Editor.FileManager.Directory.Duplicate.id()
         dropdownItems.push LOI.Assets.Editor.FileManager.Directory.CreateRot8.id()
+        dropdownItems.push LOI.Assets.Editor.FileManager.Directory.CreateMip.id()
         dropdownItems.push LOI.Assets.Editor.FileManager.Directory.FlipHorizontal.id()
 
         unless _.startsWith selectedItem.name, 'trash/'

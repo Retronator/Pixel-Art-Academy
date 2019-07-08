@@ -66,6 +66,7 @@ Package.onUse(function(api) {
 
   api.addFile('documents/sprite..');
   api.addFile('documents/sprite/rot8');
+  api.addFile('documents/sprite/mip');
   api.addServerFile('documents/sprite/subscriptions');
   api.addServerFile('documents/sprite/server');
   api.addFile('documents/sprite/methods..');
@@ -243,6 +244,7 @@ Package.onUse(function(api) {
   api.addFile('editor/filemanager/directory/actions/delete');
   api.addFile('editor/filemanager/directory/actions/emptytrash');
   api.addFile('editor/filemanager/directory/actions/fliphorizontal');
+  api.addFile('editor/filemanager/directory/actions/createmip');
 
   api.addFile('editor/filemanager/previews..');
   api.addComponent('editor/filemanager/previews/sprite..');
@@ -254,6 +256,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor..');
   api.addFile('spriteeditor/spriteloader');
   api.addFile('spriteeditor/rot8loader');
+  api.addFile('spriteeditor/miploader');
 
   api.addFile('spriteeditor/tools..');
   api.addFile('spriteeditor/tools/tool');
