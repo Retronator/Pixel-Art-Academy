@@ -12,7 +12,7 @@ LOI.Engine.Materials.ShaderChunks.totalLightIntensity = """
     directionalLight = directionalLights[i];
 
     // Shade using Lambert cosine law.
-    lightIntensity = saturate(dot(directionalLight.direction, vNormal)) * directionalLight.color.r;
+    lightIntensity = saturate(dot(directionalLight.direction, normal)) * directionalLight.color.r;
 
     shadow = 1.0;
 

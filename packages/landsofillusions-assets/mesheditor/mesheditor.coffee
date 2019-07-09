@@ -98,6 +98,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         caption: 'Scene'
         items: [
           LOI.Assets.MeshEditor.Actions.ShadowsEnabled.id()
+          LOI.Assets.MeshEditor.Actions.SmoothShadingEnabled.id()
         ]
       ,
         caption: 'Tools'

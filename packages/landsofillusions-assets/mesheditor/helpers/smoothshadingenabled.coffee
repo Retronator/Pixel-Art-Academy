@@ -1,9 +1,9 @@
 FM = FataMorgana
 LOI = LandsOfIllusions
 
-class LOI.Assets.MeshEditor.Helpers.ShadowsEnabled extends FM.Helper
-  # boolean whether shadows are enabled
-  @id: -> 'LandsOfIllusions.Assets.MeshEditor.Helpers.ShadowsEnabled'
+class LOI.Assets.MeshEditor.Helpers.SmoothShadingEnabled extends FM.Helper
+  # boolean whether smooth shading is enabled
+  @id: -> 'LandsOfIllusions.Assets.MeshEditor.Helpers.SmoothShadingEnabled'
   @initialize()
 
   value: (newValue) ->

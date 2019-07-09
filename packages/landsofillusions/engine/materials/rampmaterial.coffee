@@ -38,6 +38,8 @@ class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
           value: spriteTextures?.paletteColorTexture
         normalMap:
           value: spriteTextures?.normalTexture
+        normalScale:
+          value: new THREE.Vector2 1, 1
         textureMapping:
           value: textureMapping
         ramp:
@@ -63,8 +65,15 @@ varying vec3 vNormal;
 
 #endif
 
+#ifdef USE_NORMALMAP
+  varying vec3 vViewPosition;
+#endif
+
+
 void main()	{
-  vNormal = normalize((modelViewMatrix * vec4(normal, 0.0)).xyz);
+  #include <beginnormal_vertex>
+  #include <defaultnormal_vertex>
+  vNormal = normalize(transformedNormal);
 
   #include <begin_vertex>
 	#include <project_vertex>
@@ -74,7 +83,10 @@ void main()	{
   #ifdef USE_MAP
     // Map the texture from position to UV coordinates.
     vUv = (textureMapping * position).xy;
+  #endif
 
+  #ifdef USE_NORMALMAP
+    vViewPosition = - mvPosition.xyz;
   #endif
 }
 """
@@ -94,9 +106,14 @@ uniform float shade;
 uniform bool smoothShading;
 uniform bool powerOf2Texture;
 
+#{LOI.Engine.Materials.ShaderChunks.readSpriteDataParameters}
+
 varying vec3 vNormal;
 
 void main()	{
+  // Prepare normal.
+  #include <normal_fragment_begin>
+
   // Determine palette color (ramp and shade).
   #ifdef USE_MAP
     #{LOI.Engine.Materials.ShaderChunks.readSpriteData}

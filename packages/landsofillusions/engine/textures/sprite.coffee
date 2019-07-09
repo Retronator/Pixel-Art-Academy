@@ -35,7 +35,8 @@ class LOI.Engine.Textures.Sprite
 
         if pixel.normal
           normalData[pixelIndex * 3] = (pixel.normal.x + 1) * 127
-          normalData[pixelIndex * 3 + 1] = (pixel.normal.y + 1) * 127
+          # Note: Normal maps expect positive Y to point up.
+          normalData[pixelIndex * 3 + 1] = (-pixel.normal.y + 1) * 127
           normalData[pixelIndex * 3 + 2] = (pixel.normal.z + 1) * 127
 
     {paletteColorData, normalData}
