@@ -46,6 +46,7 @@ class LOI.Engine.Textures.Sprite
   update: (sprite) ->
     width = sprite.bounds.width
     height = sprite.bounds.height
+    @isPowerOf2 = (width & (width - 1)) is 0 and (height & (height - 1)) is 0
 
     {paletteColorData, normalData} = LOI.Engine.Textures.Sprite.generateData sprite
 
@@ -54,4 +55,11 @@ class LOI.Engine.Textures.Sprite
     @normalTexture = new THREE.DataTexture normalData, width, height, THREE.RGBFormat
 
     for texture in [@paletteColorTexture, @normalTexture]
+      if @isPowerOf2
+        texture.wrapS = THREE.RepeatWrapping
+        texture.wrapT = THREE.RepeatWrapping
+
+      texture.minFilter = THREE.LinearFilter
+      texture.anisotropy = 16
+
       texture.needsUpdate = true

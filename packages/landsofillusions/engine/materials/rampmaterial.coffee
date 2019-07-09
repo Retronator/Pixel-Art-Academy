@@ -19,9 +19,6 @@ class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
       else if options.texture.spriteName
         spriteTextures = new LOI.Engine.Textures.Mip options.texture.spriteName
 
-      width = spriteTextures?.paletteColorTexture?.image.width or 1
-      powerOf2Texture = (width & (width - 1)) is 0
-
       # Create texture mapping matrix.
       elements = [1, 0, 0, 0, 1, 0, 0, 0, 1]
 
@@ -50,7 +47,7 @@ class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
         smoothShading:
           value: options.smoothShading
         powerOf2Texture:
-          value: powerOf2Texture
+          value: spriteTextures?.isPowerOf2
       ,
         THREE.UniformsLib.lights
 
@@ -121,16 +118,15 @@ void main()	{
 
   // Find the nearest color from the palette to represent the shaded color.
   vec3 bestColor;
-  float bestColorDistance = 1000000.0;
-  float bestColorSignedDistance;
-
-  vec3 secondBestColor;
-  float secondBestColorDistance = 1000000.0;
+  float bestColorDistance;
 
   bool passedZero = false;
   vec3 earlierColor;
   vec3 laterColor;
   float blendFactor;
+
+  vec3 previousColor;
+  float previousSignedDistance;
 
   for (int shadeIndex = 0; shadeIndex < 255; shadeIndex++) {
     paletteColor.y = (float(shadeIndex) + 0.5) / 256.0;
@@ -140,31 +136,34 @@ void main()	{
     // Measure distance to color.
     vec3 difference = shade - shadedColor;
     float signedDistance = difference.x + difference.y + difference.z;
-    float distance = abs(signedDistance); // abs(difference.x) + abs(difference.y) + abs(difference.z);
+    float distance = abs(difference.x) + abs(difference.y) + abs(difference.z);
 
-    if (distance < bestColorDistance) {
-      secondBestColor = bestColor;
-      secondBestColorDistance = bestColorDistance;
+    if (shadeIndex == 0) {
+      // Set initial values in first loop iteration.
       bestColor = shade;
       bestColorDistance = distance;
-      bestColorSignedDistance = signedDistance;
+    } else {
+      // See if we've crossed zero distance, which means our target shaded color is between the previous and current shade.
+      if (previousSignedDistance < 0.0 && signedDistance >= 0.0 || previousSignedDistance >= 0.0 && signedDistance < 0.0) {
+        passedZero = true;
+        earlierColor = previousColor;
+        laterColor = shade;
+        blendFactor = abs(previousSignedDistance) / abs(signedDistance - previousSignedDistance);
+      }
 
-    } else if (distance < secondBestColorDistance) {
-      secondBestColor = shade;
-      secondBestColorDistance = distance;
+      if (distance < bestColorDistance) {
+        bestColor = shade;
+        bestColorDistance = distance;
 
-    // Note: We have to make sure the distance increased, since there could be two of the same colors in the palette.
-    } else if (distance > bestColorDistance) {
-      break;
+      // Note: We have to make sure the distance increased since there could be two of the same colors in the palette.
+      } else if (distance > bestColorDistance) {
+        // We have increased the distance, which means we're moving away from the best color and can safely quit.
+        break;
+      }
     }
 
-    if (smoothShading && bestColorSignedDistance < 0.0 && signedDistance >= 0.0 || bestColorSignedDistance >= 0.0 && signedDistance < 0.0) {
-      // We've started moving away from the closest color.
-      passedZero = true;
-      earlierColor = bestColor;
-      laterColor = shade;
-      blendFactor = abs(0.0 - bestColorSignedDistance) / abs(signedDistance - bestColorSignedDistance);
-    }
+    previousSignedDistance = signedDistance;
+    previousColor = shade;
   }
 
   vec3 destinationColor = bestColor;

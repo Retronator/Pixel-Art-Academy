@@ -49,3 +49,24 @@ class LOI.Assets.Asset extends AM.Document
         return asset if found
 
     null
+
+  @findAllInCache: (matcherOrFunction) ->
+    assets = []
+    return assets unless cache = @_cache()
+
+    if _.isFunction matcherOrFunction
+      for assetId, asset of cache
+        assets.push asset if matcherOrFunction asset
+
+    else if _.isObject matcherOrFunction
+      for assetId, asset of cache
+        found = true
+
+        for key, value of matcherOrFunction
+          unless asset[key] is value
+            found = false
+            break
+
+        assets.push asset if found
+
+    assets

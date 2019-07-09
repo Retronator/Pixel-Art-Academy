@@ -6,7 +6,7 @@ class LOI.Engine.Textures.Mip
     
   update: (mipPath) ->
     # Find sprites in cache or documents.
-    mipmaps = LOI.Assets.Sprite.findInCache (sprite) =>
+    mipmaps = LOI.Assets.Sprite.findAllInCache (sprite) =>
       _.startsWith sprite.name, mipPath
 
     unless mipmaps.length
@@ -20,24 +20,24 @@ class LOI.Engine.Textures.Mip
     # Sort largest width to smallest.
     _.sortBy mipmaps, (mipmap) => -(mipmap.bounds?.width or 0)
 
-    @spriteTextures = for mipmap in mipmaps
-      # Create the sprite textures.
-      new LOI.Engine.Textures.Sprite mipmap
-
+    # Create data textures.
     sprite = _.first mipmaps
 
     width = sprite.bounds.width
     height = sprite.bounds.height
+    @isPowerOf2 = (width & (width - 1)) is 0 and (height & (height - 1)) is 0
+    console.warn "Mip textures must be power of 2" unless @isPowerOf2
 
     {paletteColorData, normalData} = LOI.Engine.Textures.Sprite.generateData sprite
 
-    # Create data textures.
     @paletteColorTexture = new THREE.DataTexture paletteColorData, width, height, THREE.RGBAFormat
     @normalTexture = new THREE.DataTexture normalData, width, height, THREE.RGBFormat
 
+    # Add the main data as the first mipmap.
     @paletteColorTexture.mipmaps.push {width, height, data: paletteColorData}
     @normalTexture.mipmaps.push {width, height, data: normalData}
 
+    # Add the rest of the mipmaps.
     for mipmap in mipmaps[1..]
       {paletteColorData, normalData} = LOI.Engine.Textures.Sprite.generateData mipmap
 
@@ -52,7 +52,10 @@ class LOI.Engine.Textures.Mip
         data: normalData
 
     for texture in [@paletteColorTexture, @normalTexture]
-      texture.wrapS = THREE.RepeatWrapping
-      texture.wrapT = THREE.RepeatWrapping
-      texture.minFilter = THREE.NearestMipMapNearestFilter
+      if @isPowerOf2
+        texture.wrapS = THREE.RepeatWrapping
+        texture.wrapT = THREE.RepeatWrapping
+        texture.minFilter = THREE.LinearMipMapLinearFilter
+        texture.anisotropy = 16
+
       texture.needsUpdate = true
