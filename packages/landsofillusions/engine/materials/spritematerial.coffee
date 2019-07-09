@@ -24,7 +24,7 @@ class LOI.Engine.Materials.SpriteMaterial extends THREE.ShaderMaterial
 
       SpriteMaterial.paletteTexture.needsUpdate = true
 
-  constructor: (@options = {}) ->
+  constructor: (options = {}) ->
     super
       transparent: true
       lights: true
@@ -40,6 +40,8 @@ class LOI.Engine.Materials.SpriteMaterial extends THREE.ShaderMaterial
           value: null
         normalMap:
           value: null
+        smoothShading:
+          value: options.smoothShading
       ,
         THREE.UniformsLib.lights
 
@@ -68,6 +70,7 @@ void main()	{
 
 uniform mat4 modelViewMatrix;
 uniform sampler2D palette;
+uniform bool smoothShading;
 
 void main()	{
   vec4 rampShadeDitherAlpha = texture2D(map, vUv);
@@ -87,47 +90,72 @@ void main()	{
   vec3 shadedColor = sourceColor * shadeFactor;
 
   // Find the nearest color from the palette to represent the shaded color.
-  vec2 shadeUv = rampShadeDitherAlpha.rg;
+  vec2 paletteColor = rampShadeDitherAlpha.rg;
   vec3 bestColor;
-  vec3 secondBestColor;
-  float bestColorDistance = 1000000.0;
-  float secondBestColorDistance = 1000000.0;
+  float bestColorDistance;
+
+  bool passedZero = false;
+  vec3 earlierColor;
+  vec3 laterColor;
+  float blendFactor = 0.0;
+
+  vec3 previousColor;
+  float previousSignedDistance;
 
   for (int shadeIndex = 0; shadeIndex < #{LOI.Engine.Materials.SpriteMaterial.shadesCount}; shadeIndex++) {
-    shadeUv.g = float(shadeIndex) / #{LOI.Engine.Materials.SpriteMaterial.shadesCount}.0;
-    vec3 shade = texture2D(palette, shadeUv).rgb;
+    paletteColor.g = float(shadeIndex) / #{LOI.Engine.Materials.SpriteMaterial.shadesCount}.0;
+    vec3 shade = texture2D(palette, paletteColor).rgb;
 
-    // Measure distance to color. We intentionally use squared distance.
-    float distance = distance(shade, shadedColor);
+    // Measure distance to color.
+    vec3 difference = shade - shadedColor;
+    float signedDistance = difference.x + difference.y + difference.z;
+    float distance = abs(difference.x) + abs(difference.y) + abs(difference.z);
 
-    if (distance < bestColorDistance) {
-      secondBestColor = bestColor;
-      secondBestColorDistance = bestColorDistance;
+    if (shadeIndex == 0) {
+      // Set initial values in first loop iteration.
       bestColor = shade;
       bestColorDistance = distance;
-    } else if (distance < secondBestColorDistance) {
-      secondBestColor = shade;
-      secondBestColorDistance = distance;
+      earlierColor = shade;
+      laterColor = shade;
+    } else {
+      // See if we've crossed zero distance, which means our target shaded color is between the previous and current shade.
+      if (previousSignedDistance < 0.0 && signedDistance >= 0.0 || previousSignedDistance >= 0.0 && signedDistance < 0.0) {
+        passedZero = true;
+        earlierColor = previousColor;
+        laterColor = shade;
+        blendFactor = abs(previousSignedDistance) / abs(signedDistance - previousSignedDistance);
+      }
+
+      if (distance < bestColorDistance) {
+        bestColor = shade;
+        bestColorDistance = distance;
+
+      // Note: We have to make sure the distance increased since there could be two of the same colors in the palette.
+      } else if (distance > bestColorDistance) {
+        // We have increased the distance, which means we're moving away from the best color and can safely quit.
+        break;
+      }
     }
+
+    previousSignedDistance = signedDistance;
+    previousColor = shade;
   }
 
   vec3 destinationColor = bestColor;
 
   // Apply dithering.
-  float ditherPercentage = 2.0 * bestColorDistance / (bestColorDistance + secondBestColorDistance);
-
   int x = int(mod(gl_FragCoord.x, 2.0));
   int y = int(mod(gl_FragCoord.y, 2.0));
 
-  if (ditherPercentage > 1.0 - rampShadeDitherAlpha.b) {
+  if (abs(0.5 - blendFactor) < rampShadeDitherAlpha.b / 2.0) {
     if (x==y) {
-      destinationColor = secondBestColor;
+      destinationColor = earlierColor;
+    } else {
+      destinationColor = laterColor;
     }
-  } //else {
-    // Apply smooth shading.
-    //float blendFactor = bestColorDistance / (bestColorDistance + secondBestColorDistance);
-    //destinationColor = mix(bestColor, secondBestColor, blendFactor);
-  //}
+  } else if (smoothShading && passedZero) {
+    destinationColor = mix(earlierColor, laterColor, blendFactor);
+  }
 
   // Color the pixel with the best match from the palette.
   gl_FragColor = vec4(destinationColor, rampShadeDitherAlpha.a);
@@ -135,3 +163,5 @@ void main()	{
   if (rampShadeDitherAlpha.a < 0.5) discard;
 }
 """
+
+    @options = options
