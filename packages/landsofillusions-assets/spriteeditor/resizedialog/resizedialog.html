@@ -1,0 +1,24 @@
+<template name="LandsOfIllusions.Assets.SpriteEditor.ResizeDialog">
+  {{#LandsOfIllusions.Assets.Editor.Window title="Resize sprite"}}
+    <div class="landsofillusions-assets-spriteeditor-resizedialog">
+      <div class="properties landsofillusions-assets-editor-propertieslist">
+        <label class="property width">
+          <span class="name">Width</span>
+          <span class="value"><input class="width-input" type="number" min="1" value="{{width}}"></span>
+        </label>
+        <label class="property height">
+          <span class="name">Height</span>
+          <span class="value"><input class="height-input" type="number" min="1" value="{{height}}"></span>
+        </label>
+        <label class="property keepproportions">
+          <span class="name">Keep proportions</span>
+          <span class="value"><input class="keepproportions-checkbox" type="checkbox" {{checkedAttribute}}><span class="checkmark"></span></span>
+        </label>
+      </div>
+      <div class="actions">
+        <button class="cancel-button">Cancel</button>
+        <button class="resize-button">Resize</button>
+      </div>
+    </div>
+  {{/LandsOfIllusions.Assets.Editor.Window}}
+</template>

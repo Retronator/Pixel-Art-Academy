@@ -75,7 +75,6 @@ class LOI.Assets.SpriteEditor.PixelCanvas extends FM.EditorView.Editor
       @sprite = new ComputedField =>
         @spriteLoader()?.sprite
 
-    @componentData = @interface.getComponentData @
     @componentFileData = new ComputedField =>
       return unless spriteId = @spriteId?()
       @interface.getComponentDataForFile @, spriteId

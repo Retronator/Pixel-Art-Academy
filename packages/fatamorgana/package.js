@@ -40,6 +40,7 @@ Package.onUse(function(api) {
   api.addComponent('views/menu..');
   api.addComponent('views/menu/dropdown');
   api.addComponent('views/toolbox..');
+  api.addFile('views/dialog..');
 
   api.addComponent('views/editorview..');
   api.addFile('views/editorview/editor');

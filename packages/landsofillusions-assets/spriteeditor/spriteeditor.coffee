@@ -58,6 +58,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           LOI.Assets.Editor.Actions.Undo.id()
           LOI.Assets.Editor.Actions.Redo.id()
           null
+          LOI.Assets.SpriteEditor.Actions.Resize.id()
           LOI.Assets.SpriteEditor.Actions.FlipHorizontal.id()
           null
           LOI.Assets.Editor.Actions.Clear.id()
