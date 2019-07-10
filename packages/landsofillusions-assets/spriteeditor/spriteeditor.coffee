@@ -60,6 +60,7 @@ class LOI.Assets.SpriteEditor extends LOI.Assets.Editor
           null
           LOI.Assets.SpriteEditor.Actions.Resize.id()
           LOI.Assets.SpriteEditor.Actions.FlipHorizontal.id()
+          LOI.Assets.SpriteEditor.Actions.GenerateMipmaps.id()
           null
           LOI.Assets.Editor.Actions.Clear.id()
         ]

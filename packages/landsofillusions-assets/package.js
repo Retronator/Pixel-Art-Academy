@@ -279,6 +279,7 @@ Package.onUse(function(api) {
   api.addFile('spriteeditor/actions/brushsize');
   api.addFile('spriteeditor/actions/rot8');
   api.addFile('spriteeditor/actions/resize');
+  api.addFile('spriteeditor/actions/generatemipmaps');
 
   api.addFile('spriteeditor/helpers..');
   api.addFile('spriteeditor/helpers/zoomlevels');

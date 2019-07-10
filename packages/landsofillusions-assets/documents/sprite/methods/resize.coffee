@@ -7,6 +7,10 @@ LOI.Assets.Sprite.resize.method (spriteId, width, height) ->
   check height, Match.PositiveInteger
 
   sprite = LOI.Assets.Sprite.documents.findOne spriteId
+
+  # On the client we can simply quit if we don't have the sprite available.
+  return if @isSimulation and not sprite
+
   throw new AE.ArgumentException "Sprite does not exist." unless sprite
   throw new AE.ArgumentException "Sprite needs to have bounds." unless sprite.bounds
 
