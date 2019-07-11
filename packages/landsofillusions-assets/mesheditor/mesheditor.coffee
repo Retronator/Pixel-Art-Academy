@@ -247,6 +247,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.MeshEditor.Tools.Eraser.id()}": key: AC.Keys.e
       "#{LOI.Assets.SpriteEditor.Tools.ColorFill.id()}": null
       "#{LOI.Assets.MeshEditor.Tools.ColorFill.id()}": key: AC.Keys.g
+      "#{LOI.Assets.MeshEditor.Tools.Translate.id()}": key: AC.Keys.v
 
   constructor: ->
     super arguments...
