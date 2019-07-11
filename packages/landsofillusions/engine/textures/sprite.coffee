@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Engine.Textures.Sprite
-  @generateData: (sprite) ->
+  @generateData: (sprite, @options = {}) ->
     width = sprite.bounds.width
     height = sprite.bounds.height
 
@@ -16,9 +16,10 @@ class LOI.Engine.Textures.Sprite
         z: layer.origin?.z or 0
 
       for pixel in layer.pixels
-        # Find pixel index in the image buffer.
-        x = pixel.x + layerOrigin.x - sprite.bounds.x
-        y = pixel.y + layerOrigin.y - sprite.bounds.y
+        # Find pixel index in the image buffer. Textures have origin
+        # in the bottom-left corner, so we have to flip the Y direction.
+        x = pixel.x + layerOrigin.x - sprite.bounds.left
+        y = sprite.bounds.bottom - (pixel.y + layerOrigin.y)
         pixelIndex = x + y * width
 
         paletteColor = null
@@ -35,8 +36,7 @@ class LOI.Engine.Textures.Sprite
 
         if pixel.normal
           normalData[pixelIndex * 3] = (pixel.normal.x + 1) * 127
-          # Note: Normal maps expect positive Y to point up.
-          normalData[pixelIndex * 3 + 1] = (-pixel.normal.y + 1) * 127
+          normalData[pixelIndex * 3 + 1] = (pixel.normal.y + 1) * 127
           normalData[pixelIndex * 3 + 2] = (pixel.normal.z + 1) * 127
 
     {paletteColorData, normalData}
@@ -60,7 +60,10 @@ class LOI.Engine.Textures.Sprite
         texture.wrapS = THREE.RepeatWrapping
         texture.wrapT = THREE.RepeatWrapping
 
-      texture.minFilter = THREE.LinearFilter
-      texture.anisotropy = 16
+      # See if any of the filters are set to linear (nearest is default for data textures).
+      texture.minFilter = THREE.LinearFilter if @options.minificationFilter is LOI.Assets.Mesh.TextureFilters.Linear
+      texture.magFilter = THREE.LinearFilter if @options.magnificationFilter is LOI.Assets.Mesh.TextureFilters.Linear
+
+      texture.anisotropy = if @options.anisotropicFiltering then LOI.settings.graphics.anisotropicFilteringSamples.value() or 0
 
       texture.needsUpdate = true

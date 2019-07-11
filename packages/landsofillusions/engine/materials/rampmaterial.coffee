@@ -14,10 +14,10 @@ class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
 
         if sprite
           # Create the sprite textures.
-          spriteTextures = new LOI.Engine.Textures.Sprite sprite
+          spriteTextures = new LOI.Engine.Textures.Sprite sprite, options.texture
 
       else if options.texture.spriteName
-        spriteTextures = new LOI.Engine.Textures.Mip options.texture.spriteName
+        spriteTextures = new LOI.Engine.Textures.Mip options.texture.spriteName, options.texture
 
       # Create texture mapping matrix.
       elements = [1, 0, 0, 0, 1, 0, 0, 0, 1]
@@ -26,6 +26,13 @@ class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
         elements = _.defaults [], options.texture.mappingMatrix, elements
 
       textureMapping = new THREE.Matrix3().set elements...
+
+      # Apply mapping offset.
+      offsetMatrix = new THREE.Matrix3()
+      offsetMatrix.elements[6] = options.texture.mappingOffset?.x or 0
+      offsetMatrix.elements[7] = options.texture.mappingOffset?.y or 0
+
+      textureMapping.multiply offsetMatrix
 
     super
       lights: true
@@ -50,6 +57,8 @@ class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
           value: options.smoothShading
         powerOf2Texture:
           value: spriteTextures?.isPowerOf2
+        mipmapBias:
+          value: options.texture?.mipmapBias or 0
       ,
         THREE.UniformsLib.lights
 
@@ -105,6 +114,7 @@ uniform float ramp;
 uniform float shade;
 uniform bool smoothShading;
 uniform bool powerOf2Texture;
+uniform float mipmapBias;
 
 #{LOI.Engine.Materials.ShaderChunks.readSpriteDataParameters}
 
@@ -194,8 +204,9 @@ void main()	{
 }
 """
 
-    # Maps need to be set on the object itself as well for shader defines to kick in.
-    @map = @uniforms.map.value
-    @normalMap = @uniforms.normalMap.value
+    if @uniforms.map.value
+      # Maps need to be set on the object itself as well for shader defines to kick in.
+      @map = @uniforms.map.value
+      @normalMap = @uniforms.normalMap.value
 
     @options = options

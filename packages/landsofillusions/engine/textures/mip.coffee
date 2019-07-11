@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Engine.Textures.Mip
-  constructor: (mipPath) ->
+  constructor: (mipPath, @options = {}) ->
     @update mipPath if mipPath
     
   update: (mipPath) ->
@@ -18,7 +18,7 @@ class LOI.Engine.Textures.Mip
     return unless mipmaps.length
 
     # Sort largest width to smallest.
-    _.sortBy mipmaps, (mipmap) => -(mipmap.bounds?.width or 0)
+    mipmaps = _.sortBy mipmaps, (mipmap) => -(mipmap.bounds?.width or 0)
 
     # Create data textures.
     sprite = _.first mipmaps
@@ -53,9 +53,29 @@ class LOI.Engine.Textures.Mip
 
     for texture in [@paletteColorTexture, @normalTexture]
       if @isPowerOf2
+        # We can use mipmapping and coordinate wrapping.
         texture.wrapS = THREE.RepeatWrapping
         texture.wrapT = THREE.RepeatWrapping
-        texture.minFilter = THREE.LinearMipMapLinearFilter
-        texture.anisotropy = 16
+
+        # See if any of the filters are set to linear (nearest is default for data textures).
+        if @options.minificationFilter is LOI.Assets.Mesh.TextureFilters.Linear and @options.mipmapFilter is LOI.Assets.Mesh.TextureFilters.Linear
+          texture.minFilter = THREE.LinearMipMapLinearFilter
+
+        else if @options.minificationFilter is LOI.Assets.Mesh.TextureFilters.Linear
+          texture.minFilter = THREE.LinearMipMapNearestFilter
+
+        else if @options.mipmapFilter is LOI.Assets.Mesh.TextureFilters.Linear
+          texture.minFilter = THREE.NearestMipMapLinearFilter
+
+        else
+          texture.minFilter = THREE.NearestMipMapNearestFilter
+
+      else
+        # The textures are not power of two so we can't use mipmap filters.
+        texture.minFilter = THREE.LinearFilter if @options.minificationFilter is LOI.Assets.Mesh.TextureFilters.Linear
+
+      texture.magFilter = THREE.LinearFilter if @options.magnificationFilter is LOI.Assets.Mesh.TextureFilters.Linear
+
+      texture.anisotropy = if @options.anisotropicFiltering then LOI.settings.graphics.anisotropicFilteringSamples.value() or 0
 
       texture.needsUpdate = true

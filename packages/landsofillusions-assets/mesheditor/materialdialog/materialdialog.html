@@ -33,10 +33,49 @@
               <div class="texture-browse"><button class="texture-browse-button">…</button></div>
             </div>
           </div>
-          <label class="property texture-mapping">
-            <span class="name">Texture mapping</span>
-            <span class="value">{{> Render textureMappingMatrix}}</span>
-          </label>
+          {{#if textureIsAssigned}}
+            <label class="property texture-mapping">
+              <span class="name">Mapping</span>
+              <span class="value">{{> Render textureMappingMatrix}}</span>
+            </label>
+            <div class="property texture-offset">
+              <div class="name">Offset</div>
+              <div class="value landsofillusions-assets-editor-propertytable">
+                <table class="editor-table">
+                  <tr class="legend">
+                    <th class="coordinate-x">x</th>
+                    <th class="coordinate-y">y</th>
+                  </tr>
+                  <tr class="coordinates">
+                    <td class="coordinate-x"><input class="coordinate-input" type="number" value="{{texture.mappingOffset.x}}" placeholder="0" step="0.01"/></td>
+                    <td class="coordinate-y"><input class="coordinate-input" type="number" value="{{texture.mappingOffset.y}}" placeholder="0" step="0.01"/></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <label class="property texture-anisotropicfiltering">
+              <span class="name">Anisotropic filtering</span>
+              <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.AnisotropicFiltering}}<span class="checkmark"></span></span>
+            </label>
+            <label class="property texture-minificationfilter">
+              <span class="name">Minification filter</span>
+              <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MinificationFilter}}</span>
+            </label>
+            <label class="property texture-magnificationfilter">
+              <span class="name">Magnification filter</span>
+              <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MagnificationFilter}}</span>
+            </label>
+            {{#if textureIsMip}}
+              <label class="property texture-mipmapfilter">
+                <span class="name">Mipmap filter</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MipmapFilter}}</span>
+              </label>
+              <label class="property texture-mipmapbias">
+                <span class="name">Mipmap bias</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.MipmapBias}}</span>
+              </label>
+            {{/if}}
+          {{/if}}
         </div>
       {{/with}}
     </div>

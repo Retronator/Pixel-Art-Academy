@@ -33,11 +33,6 @@ class LOI.Assets.MeshEditor.Camera extends AM.Component
     newVector = {}
 
     for property in ['x', 'y', 'z']
-      newVector[property] = @_parseFloatOrZero $vector.find(".coordinate-#{property} .coordinate-input").val()
+      newVector[property] = _.parseFloatOrZero $vector.find(".coordinate-#{property} .coordinate-input").val()
 
     @options.save "#{_.toLower vector.name}": newVector
-
-  _parseFloatOrZero: (string) ->
-    float = parseFloat string
-
-    if _.isNaN float then 0 else float

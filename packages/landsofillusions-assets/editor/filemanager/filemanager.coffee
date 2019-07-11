@@ -111,9 +111,26 @@ class LOI.Assets.Editor.FileManager extends AM.Component
       return unless directory = @directories()?[directoryIndex]
       return unless directory.isRendered()
 
-      itemPath = "#{directory.options.path}#{pathParts[0]}"
+      searchString = pathParts[0]
 
-      return unless _.find directory.currentItems(), (item) => item.name is itemPath
+      # Try to see if path part is an asset ID.
+      itemById = _.find directory.documents(), (item) => item._id is searchString
+
+      if itemById
+        if itemById.name
+          # Break down the name into parts, just like we would if we were given a direct name.
+          pathParts = _.trim(itemById.name, '/').split '/'
+          itemPath = "#{directory.options.path}#{pathParts[0]}"
+
+        else
+          itemPath = item._id
+
+      else
+        # Try to see if we have an item with the specified path.
+        itemPath = "#{directory.options.path}#{searchString}"
+
+        return unless _.find directory.currentItems(), (item) => item.name is itemPath
+
       directory.selectItem itemPath
       @focusDirectory directory
 

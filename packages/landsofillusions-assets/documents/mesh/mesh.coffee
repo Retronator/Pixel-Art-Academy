@@ -85,7 +85,14 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   texture:
   #     spriteId: ID of the sprite to be used as the texture
   #     spriteName: Name of the sprite or mip to be used as the texture
-  #     mappingMatrix: array of 6 matrix elements
+  #     mappingMatrix: array of 6 matrix elements for transforming vertex positions to texture coordinates
+  #     mappingOffset: 2D vector how much to offset texture coordinates by
+  #       x, y
+  #     anisotropicFiltering: boolean whether to use anisotropic filtering
+  #     minificationFilter: texture filtering used for reducing the texture
+  #     magnificationFilter: texture filtering used for enlarging the texture
+  #     mipmapFilter: texture filtering used for sampling mipmaps
+  #     mipmapBias: floating point number used to adjust mipmap selection
   # landmarks: array of named locations, as defined for visual asset
   #   ...
   #   object: integer index of the object this landmark is on
@@ -110,6 +117,10 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
     cameraAngle: Match.Optional Number
     x: Match.Optional Number
     y: Match.Optional Number
+
+  @TextureFilters:
+    Nearest: 'Nearest'
+    Linear: 'Linear'
 
   initialize: ->
     # Track whether we need to save the mesh.

@@ -36,11 +36,6 @@ class LOI.Assets.MeshEditor.TextureMappingMatrix extends AM.Component
     matrix = @options.load() or []
 
     for property, index in ['x', 'y', 'z']
-      matrix[row.index * 3 + index] = @_parseFloatOrZero $row.find(".element-#{property} .element-input").val()
+      matrix[row.index * 3 + index] = _.parseFloatOrZero $row.find(".element-#{property} .element-input").val()
 
     @options.save matrix
-
-  _parseFloatOrZero: (string) ->
-    float = parseFloat string
-
-    if _.isNaN float then 0 else float

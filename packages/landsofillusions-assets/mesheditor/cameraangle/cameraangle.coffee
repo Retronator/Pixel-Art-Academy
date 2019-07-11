@@ -67,14 +67,9 @@ class LOI.Assets.MeshEditor.CameraAngle extends FM.View
     coordinates = {}
 
     for property in ['x', 'y']
-      coordinates[property] = @_parseFloatOrZero $coordinates.find(".coordinate-#{property} .coordinate-input").val()
+      coordinates[property] = _.parseFloatOrZero $coordinates.find(".coordinate-#{property} .coordinate-input").val()
 
     @cameraAngle().update picturePlaneOffset: coordinates
-
-  _parseFloatOrZero: (string) ->
-    float = parseFloat string
-
-    if _.isNaN float then 0 else float
 
   class @CameraProperty extends AM.DataInputComponent
     onCreated: ->

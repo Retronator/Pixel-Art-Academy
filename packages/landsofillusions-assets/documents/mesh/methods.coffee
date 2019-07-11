@@ -90,9 +90,17 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
       shade: Match.OptionalOrNull Number
       dither: Match.OptionalOrNull Number
       texture: Match.Optional
-        spriteId: Match.Optional Match.DocumentId
-        spriteName: Match.Optional String
+        spriteId: Match.OptionalOrNull Match.DocumentId
+        spriteName: Match.OptionalOrNull String
         mappingMatrix: Match.Optional [Match.OptionalOrNull Number]
+        mappingOffset: Match.Optional
+          x: Number
+          y: Number
+        anisotropicFiltering: Match.OptionalOrNull Boolean
+        minificationFilter: Match.OptionalOrNull String
+        magnificationFilter: Match.OptionalOrNull String
+        mipmapFilter: Match.OptionalOrNull String
+        mipmapBias: Match.OptionalOrNull Number
     ]
 
   RA.authorizeAdmin()
