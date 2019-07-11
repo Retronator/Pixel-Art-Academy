@@ -150,3 +150,25 @@ class LOI.Assets.Mesh.Object.Layer.Picture
         pixels.push pixel
 
     pixels
+
+  translate: (x, y) ->
+    # Offset the bounds.
+    @_bounds.x += x
+    @_bounds.y += y
+    @_calculateBoundsEdges()
+
+    updated = []
+
+    # Move cluster origin points.
+    for clusterId, cluster of @clusters
+      cluster.updateSourceCoordinates
+        x: cluster.sourceCoordinates.x + x
+        y: cluster.sourceCoordinates.y + y
+
+      updated.push clusterId
+
+    # Update solver.
+    @layer.object.solver?.update [], updated, []
+
+    # Signal that picture has updated.
+    @contentUpdated()

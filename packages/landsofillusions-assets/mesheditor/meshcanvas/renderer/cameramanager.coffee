@@ -32,8 +32,16 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     @$animate = $('<div>')
 
     # When camera angle changes, match its values via reset.
+    @_previousCameraAngle = null
+
     @renderer.meshCanvas.autorun (computation) =>
+      return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
+      return if cameraAngle is @_previousCameraAngle
+
+      console.log "reset camera"
       @reset()
+
+      @_previousCameraAngle = cameraAngle
 
     @renderer.meshCanvas.autorun (computation) =>
       return unless viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds?.toObject()

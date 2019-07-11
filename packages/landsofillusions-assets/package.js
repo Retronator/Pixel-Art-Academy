@@ -320,6 +320,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/tools/pencil');
   api.addFile('mesheditor/tools/eraser');
   api.addFile('mesheditor/tools/colorfill');
+  api.addFile('mesheditor/tools/translate');
 
   api.addFile('mesheditor/actions..');
   api.addFile('mesheditor/actions/debugmode');
@@ -333,6 +334,7 @@ Package.onUse(function(api) {
   api.addFile('mesheditor/actions/shadowsenabled');
   api.addFile('mesheditor/actions/recomputemesh');
   api.addFile('mesheditor/actions/smoothshadingenabled');
+  api.addFile('mesheditor/actions/resetcamera');
 
   api.addFile('mesheditor/helpers..');
   api.addFile('mesheditor/helpers/currentcluster');

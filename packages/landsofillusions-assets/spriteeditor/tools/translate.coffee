@@ -26,10 +26,6 @@ class LOI.Assets.SpriteEditor.Tools.Translate extends LOI.Assets.SpriteEditor.To
         x: event.clientX
         y: event.clientY
 
-      @_layerOrigin =
-        x: layer.origin?.x or 0
-        y: layer.origin?.y or 0
-
       # Wire end of dragging on mouse up.
       $(document).on "mouseup.landsofillusions-assets-spriteeditor-tools-translate-mousemove", (event) =>
         $(document).off '.landsofillusions-assets-spriteeditor-tools-translate-mousemove'

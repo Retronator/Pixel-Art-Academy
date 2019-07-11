@@ -81,6 +81,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
         items: [
           LOI.Assets.SpriteEditor.Actions.ZoomIn.id()
           LOI.Assets.SpriteEditor.Actions.ZoomOut.id()
+          LOI.Assets.MeshEditor.Actions.ResetCamera.id()
           null
           LOI.Assets.SpriteEditor.Actions.ShowPixelGrid.id()
           LOI.Assets.MeshEditor.Actions.ShowPlaneGrid.id()
@@ -121,7 +122,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       minWidth: 20
       tools: [
         LOI.Assets.Editor.Tools.Arrow.id()
-        LOI.Assets.SpriteEditor.Tools.Translate.id()
+        LOI.Assets.MeshEditor.Tools.Translate.id()
         LOI.Assets.MeshEditor.Tools.Pencil.id()
         LOI.Assets.MeshEditor.Tools.Eraser.id()
         LOI.Assets.MeshEditor.Tools.ColorFill.id()
@@ -234,6 +235,7 @@ class LOI.Assets.MeshEditor extends LOI.Assets.Editor
       "#{LOI.Assets.MeshEditor.Actions.Undo.id()}": commandOrControl: true, key: AC.Keys.z
       "#{LOI.Assets.MeshEditor.Actions.Redo.id()}": if isMacOS then command: true, shift: true, key: AC.Keys.z else control: true, key: AC.Keys.y
       "#{LOI.Assets.MeshEditor.Actions.Save.id()}": commandOrControl: true, key: AC.Keys.s
+      "#{LOI.Assets.MeshEditor.Actions.ResetCamera.id()}": key: AC.Keys.graveAccent
 
       # Tools
       "#{LOI.Assets.SpriteEditor.Tools.ColorPicker.id()}": null
