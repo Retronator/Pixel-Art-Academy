@@ -129,11 +129,12 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
       @type = AM.DataInputComponent.Types.Select
 
     options: ->
-      for name, value of LOI.Engine.Materials.Types
-        {name, value}
+      for id in LOI.Engine.Materials.Material.getIds()
+        name: id
+        value: id
 
     load: ->
-      super(arguments...) or LOI.Engine.Materials.Types.RampMaterial
+      super(arguments...) or LOI.Engine.Materials.RampMaterial.id()
 
   class @Ramp extends @MaterialProperty
     @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Ramp'

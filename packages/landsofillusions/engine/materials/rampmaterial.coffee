@@ -1,6 +1,9 @@
 LOI = LandsOfIllusions
 
-class LOI.Engine.Materials.RampMaterial extends THREE.ShaderMaterial
+class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
+  @id: -> 'LandsOfIllusions.Engine.Materials.RampMaterial'
+  @initialize()
+
   constructor: (options) ->
     paletteTexture = new LOI.Engine.Textures.Palette options.palette
 

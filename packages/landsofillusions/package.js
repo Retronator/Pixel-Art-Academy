@@ -85,6 +85,7 @@ Package.onUse(function(api) {
   api.addClientFile('engine/textures/mip');
 
   api.addClientFile('engine/materials..');
+  api.addClientFile('engine/materials/material');
   api.addClientFile('engine/materials/spritematerial');
   api.addClientFile('engine/materials/rampmaterial');
 
