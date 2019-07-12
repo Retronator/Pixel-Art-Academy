@@ -4,28 +4,31 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
   @id: -> 'LandsOfIllusions.Engine.Materials.RampMaterial'
   @initialize()
 
+  @createTextureMappingMatrices: (textureOptions) ->
+    # Create the texture mapping matrix
+    elements = [1, 0, 0, 0, 1, 0, 0, 0, 1]
+
+    if textureOptions.mappingMatrix
+      elements = _.defaults [], textureOptions.mappingMatrix, elements
+
+    mapping = new THREE.Matrix3().set elements...
+
+    offset = new THREE.Matrix3()
+    offset.elements[6] = textureOptions.mappingOffset?.x or 0
+    offset.elements[7] = textureOptions.mappingOffset?.y or 0
+
+    {mapping, offset}
+
   constructor: (options) ->
     paletteTexture = new LOI.Engine.Textures.Palette options.palette
 
     if options.texture
       spriteTextures = LOI.Engine.Textures.getTextures options.texture
-
-      # Create texture mapping matrix.
-      elements = [1, 0, 0, 0, 1, 0, 0, 0, 1]
-
-      if options.texture.mappingMatrix
-        elements = _.defaults [], options.texture.mappingMatrix, elements
-
-      textureMapping = new THREE.Matrix3().set elements...
-
-      # Apply mapping offset.
-      textureMappingOffset = new THREE.Matrix3()
-      textureMappingOffset.elements[6] = options.texture.mappingOffset?.x or 0
-      textureMappingOffset.elements[7] = options.texture.mappingOffset?.y or 0
+      textureMapping = LOI.Engine.Materials.RampMaterial.createTextureMappingMatrices options.texture
 
     super
       lights: true
-      shadowSide: THREE.FrontSide
+      shadowSide: THREE.BackSide
 
       uniforms: _.extend
         palette:
@@ -37,9 +40,9 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
         normalScale:
           value: new THREE.Vector2 1, 1
         textureMapping:
-          value: textureMapping
+          value: textureMapping?.mapping
         uvTransform:
-          value: textureMappingOffset
+          value: textureMapping?.offset
         ramp:
           value: options.paletteColor?.ramp
         shade:

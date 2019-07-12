@@ -5,7 +5,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
     super arguments...
 
     @geometry = new ComputedField => @_generateGeometry()
-    @material = new ComputedField => @_generateMaterial()
+    @materials = new ComputedField => @_generateMaterials()
     @mesh = new ComputedField => @_generateMesh()
     
     # Update scene.
@@ -38,7 +38,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
 
     geometry
 
-  _generateMaterial: ->
+  _generateMaterials: ->
     meshData = @clusterData.layer.object.mesh
     return unless palette = meshData.customPalette or LOI.Assets.Palette.documents.findOne meshData.palette._id
 
@@ -101,6 +101,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
           smoothShading = options.smoothShading?()
           materialId = materialOptions.type or LOI.Engine.Materials.RampMaterial.id()
           material = LOI.Engine.Materials.getMaterial materialId, _.extend materialOptions, {palette, paletteColor, texture: meshMaterial?.texture, smoothShading}
+          depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), _.extend texture: meshMaterial?.texture
 
       else if materialData.directColor
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
@@ -110,17 +111,18 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
           color: new THREE.Color 0xffffff
 
-    material
+    main: material
+    depth: depthMaterial
 
   _generateMesh: ->
     return unless geometry = @geometry()
-    return unless material = @material()
+    return unless materials = @materials()
 
-    mesh = new THREE.Mesh geometry, material
+    mesh = new THREE.Mesh geometry, materials.main
 
     mesh.castShadow = true
     mesh.receiveShadow = true
-    mesh.material.shadowSide = THREE.BackSide
+    mesh.customDepthMaterial = materials.depth
     mesh.layers.set 2 if @layer.object.mesh.options.debug?()
 
     mesh

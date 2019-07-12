@@ -109,6 +109,7 @@ class LOI.Engine.Textures.Sprite
         if paletteColor
           paletteColorData[pixelIndex * 4] = paletteColor.ramp
           paletteColorData[pixelIndex * 4 + 1] = paletteColor.shade
+          paletteColorData[pixelIndex * 4 + 3] = 255
 
         if pixel.normal
           normalData[pixelIndex * 3] = (pixel.normal.x + 1) * 127

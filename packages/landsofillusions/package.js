@@ -88,6 +88,7 @@ Package.onUse(function(api) {
   api.addClientFile('engine/materials/material');
   api.addClientFile('engine/materials/spritematerial');
   api.addClientFile('engine/materials/rampmaterial');
+  api.addClientFile('engine/materials/depthmaterial');
 
   api.addClientFile('engine/materials/shaderchunks..');
   api.addClientFile('engine/materials/shaderchunks/lighting');

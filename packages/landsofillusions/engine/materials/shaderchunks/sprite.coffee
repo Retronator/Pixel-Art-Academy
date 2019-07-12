@@ -35,12 +35,21 @@ LOI.Engine.Materials.ShaderChunks.readSpriteData = """
   }
 
   // Read palette color from main map.
-  vec2 paletteColor = texture2D(map, spriteUv, mipmapBias).xy;
+  vec4 sample = texture2D(map, spriteUv, mipmapBias);
+
+  // Discard transparent pixels.
+  if (sample.a == 0.0) discard;
+
+  // Palette color (ramp and shade) is stored in the red and green channels.
+  vec2 paletteColor = sample.rg;
   paletteColor = (paletteColor * 255.0 + 0.5) / 256.0;
 
-  // Read normal from normal map.
-  vec3 spriteNormal = texture2D(normalMap, spriteUv, mipmapBias).xyz * 2.0 - 1.0;
+  #ifdef USE_NORMALMAP
+    // Read normal from normal map.
+    vec3 spriteNormal = texture2D(normalMap, spriteUv, mipmapBias).xyz * 2.0 - 1.0;
 
-  // Modify the surface normal based on the normal map.
-  normal = applyNormalMap(-vViewPosition, normal, spriteNormal);
+    // Modify the surface normal based on the normal map.
+    normal = applyNormalMap(-vViewPosition, normal, spriteNormal);
+
+  #endif
 """
