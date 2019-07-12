@@ -60,7 +60,7 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
     @interface.displayDialog
       contentComponentId: LOI.Assets.MeshEditor.SpriteSelectDialog.id()
       contentComponentData:
-        selectItem: material.texture.spriteId or material.texture.spriteName
+        selectItem: material.texture?.spriteId or material.texture?.spriteName
         open: (selectedItem) =>
           materialData = material.toPlainObject()
           texture = materialData.texture or {}

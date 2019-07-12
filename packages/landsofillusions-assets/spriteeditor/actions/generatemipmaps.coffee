@@ -48,4 +48,5 @@ class LOI.Assets.SpriteEditor.Actions.GenerateMipmaps extends LOI.Assets.Editor.
           name: "#{mipLoader.fileId}/#{width}"
 
       # Resize the duplicate to desired width.
-      LOI.Assets.Sprite.resize newMipmapId, width, width, (error) =>
+      height = Math.max 1, width / largestMipmap.bounds.width * largestMipmap.bounds.height
+      LOI.Assets.Sprite.resize newMipmapId, width, height, (error) =>

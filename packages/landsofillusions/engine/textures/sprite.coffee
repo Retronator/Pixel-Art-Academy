@@ -1,7 +1,7 @@
 LOI = LandsOfIllusions
 
 class LOI.Engine.Textures.Sprite
-  @generateData: (sprite, @options = {}) ->
+  @generateData: (sprite) ->
     width = sprite.bounds.width
     height = sprite.bounds.height
 
@@ -41,7 +41,7 @@ class LOI.Engine.Textures.Sprite
 
     {paletteColorData, normalData}
 
-  constructor: (sprite) ->
+  constructor: (sprite, @options = {}) ->
     @update sprite if sprite
     
   update: (sprite) ->

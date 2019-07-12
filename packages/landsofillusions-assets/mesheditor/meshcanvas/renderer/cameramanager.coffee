@@ -38,7 +38,6 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
       return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
       return if cameraAngle is @_previousCameraAngle
 
-      console.log "reset camera"
       @reset()
 
       @_previousCameraAngle = cameraAngle
