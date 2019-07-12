@@ -31,16 +31,17 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
     # Dummy DOM element to run velocity on.
     @$animate = $('<div>')
 
-    # When camera angle changes, match its values via reset.
-    @_previousCameraAngle = null
+    # Minimize reactivity of camera angle updates.
+    @currentCameraAngle = new ComputedField =>
+      @renderer.meshCanvas.cameraAngle()
+    ,
+      (a, b) => a is b
+    ,
+      true
 
+    # Continuously update camera when camera angle changes.
     @renderer.meshCanvas.autorun (computation) =>
-      return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
-      return if cameraAngle is @_previousCameraAngle
-
       @reset()
-
-      @_previousCameraAngle = cameraAngle
 
     @renderer.meshCanvas.autorun (computation) =>
       return unless viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds?.toObject()
@@ -174,7 +175,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.CameraManager
           #@_camera.matrix.multiply @_customMatrix
 
   reset: ->
-    return unless cameraAngle = @renderer.meshCanvas.cameraAngle()
+    return unless cameraAngle = @currentCameraAngle()
+    cameraAngle.depend()
 
     @_setVector @_position, cameraAngle.position
     @_setVector @_target, cameraAngle.target

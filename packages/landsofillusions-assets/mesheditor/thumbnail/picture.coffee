@@ -14,7 +14,11 @@ class LOI.Assets.MeshEditor.Thumbnail.Picture
     @_updatedDependency.depend()
     return unless bounds = @bounds()
 
+    # Update the thumbnail if we don't have a canvas yet.
     @update() unless @_canvas
+
+    # If the update still couldn't create a canvas, nothing to do yet.
+    return unless @_canvas
 
     context.imageSmoothingEnabled = false
     context.drawImage @_canvas, bounds.x, bounds.y

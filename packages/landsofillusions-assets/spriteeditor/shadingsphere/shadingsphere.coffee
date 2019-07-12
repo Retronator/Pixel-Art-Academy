@@ -62,7 +62,14 @@ class LOI.Assets.SpriteEditor.ShadingSphere extends FM.View
 
           pixels.push {x, y, normal, materialIndex}
 
-      layers: [{pixels}]
+      _pixelMap = {}
+
+      if pixels
+        for pixel in pixels
+          _pixelMap[pixel.x] ?= {}
+          _pixelMap[pixel.x][pixel.y] = pixel
+
+      layers: [{pixels, _pixelMap}]
       bounds: bounds
 
     @sphereSpriteData = new ComputedField =>

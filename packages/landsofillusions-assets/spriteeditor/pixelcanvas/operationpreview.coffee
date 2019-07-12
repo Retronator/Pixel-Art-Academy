@@ -6,11 +6,17 @@ class LOI.Assets.SpriteEditor.PixelCanvas.OperationPreview
     
     @spriteData = new ComputedField =>
       return unless originalSpriteData = @pixelCanvas.spriteData()
-      
+
+      pixels = @pixels()
+      _pixelMap = {}
+
+      if pixels
+        for pixel in pixels
+          _pixelMap[pixel.x] ?= {}
+          _pixelMap[pixel.x][pixel.y] = pixel
+
       spriteData = _.clone originalSpriteData
-      spriteData.layers = [
-        pixels: @pixels()
-      ]
+      spriteData.layers = [{pixels, _pixelMap}]
 
       # Reset bounds and recompute.
       spriteData.recomputeBounds()
