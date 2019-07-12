@@ -36,6 +36,9 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer
     @meshCanvas.autorun =>
       # Depend on renderer bounds.
       @bounds.width() and @bounds.height()
+
+      # Depend on material changes.
+      LOI.Engine.Materials.depend()
       
       sceneHelper = @meshCanvas.sceneHelper()
       scene = sceneHelper.scene.withUpdates()

@@ -8,19 +8,7 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
     paletteTexture = new LOI.Engine.Textures.Palette options.palette
 
     if options.texture
-      if options.texture.spriteId
-        # Find the sprite in cache or documents.
-        sprite = LOI.Assets.Sprite.getFromCache options.texture.spriteId
-
-        unless sprite
-          sprite = LOI.Assets.Sprite.documents.findOne options.texture.spriteId
-
-        if sprite
-          # Create the sprite textures.
-          spriteTextures = new LOI.Engine.Textures.Sprite sprite, options.texture
-
-      else if options.texture.spriteName
-        spriteTextures = new LOI.Engine.Textures.Mip options.texture.spriteName, options.texture
+      spriteTextures = LOI.Engine.Textures.getTextures options.texture
 
       # Create texture mapping matrix.
       elements = [1, 0, 0, 0, 1, 0, 0, 0, 1]
@@ -31,11 +19,9 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
       textureMapping = new THREE.Matrix3().set elements...
 
       # Apply mapping offset.
-      offsetMatrix = new THREE.Matrix3()
-      offsetMatrix.elements[6] = options.texture.mappingOffset?.x or 0
-      offsetMatrix.elements[7] = options.texture.mappingOffset?.y or 0
-
-      textureMapping.multiply offsetMatrix
+      textureMappingOffset = new THREE.Matrix3()
+      textureMappingOffset.elements[6] = options.texture.mappingOffset?.x or 0
+      textureMappingOffset.elements[7] = options.texture.mappingOffset?.y or 0
 
     super
       lights: true
@@ -45,13 +31,15 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
         palette:
           value: paletteTexture
         map:
-          value: spriteTextures?.paletteColorTexture
+          value: null
         normalMap:
-          value: spriteTextures?.normalTexture
+          value: null
         normalScale:
           value: new THREE.Vector2 1, 1
         textureMapping:
           value: textureMapping
+        uvTransform:
+          value: textureMappingOffset
         ramp:
           value: options.paletteColor?.ramp
         shade:
@@ -59,7 +47,7 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
         smoothShading:
           value: options.smoothShading
         powerOf2Texture:
-          value: spriteTextures?.isPowerOf2
+          value: null
         mipmapBias:
           value: options.texture?.mipmapBias or 0
       ,
@@ -74,7 +62,6 @@ varying vec3 vNormal;
 
 #ifdef USE_MAP
   uniform mat3 textureMapping;
-
 #endif
 
 #ifdef USE_NORMALMAP
@@ -94,7 +81,11 @@ void main()	{
 
   #ifdef USE_MAP
     // Map the texture from position to UV coordinates.
-    vUv = (textureMapping * position).xy;
+    vec3 mappedPosition = textureMapping * position;
+
+    // Set the z coordinate to 1 so we can apply the UV transform.
+    mappedPosition.z = 1.0;
+    vUv = (uvTransform * mappedPosition).xy;
   #endif
 
   #ifdef USE_NORMALMAP
@@ -207,9 +198,20 @@ void main()	{
 }
 """
 
-    if @uniforms.map.value
-      # Maps need to be set on the object itself as well for shader defines to kick in.
-      @map = @uniforms.map.value
-      @normalMap = @uniforms.normalMap.value
+    if spriteTextures
+      Tracker.nonreactive =>
+        Tracker.autorun =>
+          spriteTextures.depend()
+
+          @uniforms.map.value = spriteTextures.paletteColorTexture
+          @uniforms.normalMap.value = spriteTextures.normalTexture
+          @uniforms.powerOf2Texture.value = spriteTextures.isPowerOf2
+
+          # Maps need to be set on the object itself as well for shader defines to kick in.
+          @map = spriteTextures.paletteColorTexture
+          @normalMap = spriteTextures.normalTexture
+
+          @needsUpdate = true
+          @_dependency.changed()
 
     @options = options

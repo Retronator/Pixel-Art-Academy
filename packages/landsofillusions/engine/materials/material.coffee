@@ -18,3 +18,11 @@ class LOI.Engine.Materials.Material extends THREE.ShaderMaterial
   @initialize: ->
     # Store material class by ID.
     @_materialClassesById[@id()] = @
+
+  constructor: ->
+    super arguments...
+
+    @_dependency = new Tracker.Dependency
+
+  depend: ->
+    @_dependency.depend()
