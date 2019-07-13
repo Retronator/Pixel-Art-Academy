@@ -89,6 +89,18 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
       ramp: Match.OptionalOrNull Number
       shade: Match.OptionalOrNull Number
       dither: Match.OptionalOrNull Number
+      translucency: Match.Optional
+        amount: Match.OptionalOrNull Number
+        dither: Match.OptionalOrNull Number
+        tint: Match.OptionalOrNull Boolean
+        blending: Match.Optional
+          preset: Match.OptionalOrNull String
+          equation: Match.OptionalOrNull String
+          sourceFactor: Match.OptionalOrNull String
+          destinationFactor: Match.OptionalOrNull String
+        shadow: Match.Optional
+          dither: Match.OptionalOrNull Number
+          tint: Match.OptionalOrNull Boolean
       texture: Match.Optional
         spriteId: Match.OptionalOrNull Match.DocumentId
         spriteName: Match.OptionalOrNull String

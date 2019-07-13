@@ -26,6 +26,46 @@
             <span class="name">Dither</span>
             <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.Dither}}</span>
           </label>
+          <label class="property translucency-amount">
+            <span class="name">Translucency amount</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyAmount}}</span>
+          </label>
+          <label class="property translucency-dither">
+            <span class="name">Translucency dither</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyDither}}</span>
+          </label>
+          <label class="property translucency-ting">
+            <span class="name">Translucency tint</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyTint}}<span class="checkmark"></span></span>
+          </label>
+          {{#if translucencyAmount}}
+            <label class="property translucency-blending-preset">
+              <span class="name">Blending</span>
+              <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingPreset}}</span>
+            </label>
+            {{#if translucencyCustomBlending}}
+              <label class="property translucency-blending-equation">
+                <span class="name">Equation</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingEquation}}</span>
+              </label>
+              <label class="property translucency-blending-sourcefactor">
+                <span class="name">Source factor</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingSourceFactor}}</span>
+              </label>
+              <label class="property translucency-blending-destinationfactor">
+                <span class="name">Destination factor</span>
+                <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingDestinationFactor}}</span>
+              </label>
+            {{/if}}
+          {{/if}}
+          <label class="property translucency-shadow-dither">
+            <span class="name">Shadow dither</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyShadowDither}}</span>
+          </label>
+          <label class="property translucency-shadow-tint">
+            <span class="name">Shadow tint</span>
+            <span class="value">{{> LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyShadowTint}}<span class="checkmark"></span></span>
+          </label>
           <div class="property texture">
             <div class="name">Texture</div>
             <div class="value">

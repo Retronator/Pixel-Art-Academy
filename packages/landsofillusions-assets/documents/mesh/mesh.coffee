@@ -82,6 +82,18 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #   ramp: index of the ramp within the palette
   #   shade: index of the shade in the ramp
   #   dither: amount of dither used from 0 to 1
+  #   translucency:
+  #     amount: amount from 0 to 1, how much the rest of the scene should be seen through this material
+  #     dither: amount from 0 to 1, how much of transparency dither to apply to this material
+  #     tint: boolean whether the ramp of this material should be applied to the objects behind it
+  #     blending:
+  #       preset: one of THREE.js blending mode keys
+  #       equation: one of THREE.js blending equation keys
+  #       sourceFactor: one of THREE.js source factor keys
+  #       destinationFactor: one of THREE.js destination factor keys
+  #     shadow:
+  #       dither: amount from 0 to 1, how much the shadow is dithered (default matches the translucency dither)
+  #       tint: boolean whether the ramp of this material should be applied to the objects in the shadow of it
   #   texture:
   #     spriteId: ID of the sprite to be used as the texture
   #     spriteName: Name of the sprite or mip to be used as the texture

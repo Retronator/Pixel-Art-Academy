@@ -26,33 +26,49 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
       spriteTextures = LOI.Engine.Textures.getTextures options.texture
       textureMapping = LOI.Engine.Materials.RampMaterial.createTextureMappingMatrices options.texture
 
+    transparent = options.translucency?.amount
+    doubleSide = transparent or options.translucency?.dither or options.translucency?.tint
+
     super
       lights: true
-      shadowSide: THREE.BackSide
+      shadowSide: if doubleSide then THREE.DoubleSide else THREE.BackSide
+      transparent: transparent
+      side: if doubleSide then THREE.DoubleSide else THREE.FrontSide
 
       uniforms: _.extend
+        # Color information
+        ramp:
+          value: options.ramp
+        shade:
+          value: options.shade
+        dither:
+          value: options.dither
         palette:
           value: paletteTexture
+
+        # Shading
+        smoothShading:
+          value: options.smoothShading
+
+        # Texture
         map:
           value: null
         normalMap:
           value: null
         normalScale:
           value: new THREE.Vector2 1, 1
+        powerOf2Texture:
+          value: null
         textureMapping:
           value: textureMapping?.mapping
         uvTransform:
           value: textureMapping?.offset
-        ramp:
-          value: options.paletteColor?.ramp
-        shade:
-          value: options.paletteColor?.shade
-        smoothShading:
-          value: options.smoothShading
-        powerOf2Texture:
-          value: null
         mipmapBias:
           value: options.texture?.mipmapBias or 0
+
+        # Translucency
+        opacity:
+          value: 1 - (options.translucency?.amount or 0)
       ,
         THREE.UniformsLib.lights
 
@@ -112,6 +128,7 @@ uniform float shade;
 uniform bool smoothShading;
 uniform bool powerOf2Texture;
 uniform float mipmapBias;
+uniform float opacity;
 
 #{LOI.Engine.Materials.ShaderChunks.readSpriteDataParameters}
 
@@ -197,7 +214,7 @@ void main()	{
   }
 
   // Color the pixel with the best match from the palette.
-  gl_FragColor = vec4(destinationColor, 1);
+  gl_FragColor = vec4(destinationColor, opacity);
 }
 """
 

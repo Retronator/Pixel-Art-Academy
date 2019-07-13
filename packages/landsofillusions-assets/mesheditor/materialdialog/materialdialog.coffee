@@ -32,6 +32,12 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
   windowData: ->
     title: @material()?.name or 'Material'
 
+  translucencyAmount: ->
+    @material()?.translucency?.amount
+
+  translucencyCustomBlending: ->
+    @material()?.translucency?.blending?.preset is 'CustomBlending'
+
   textureIsAssigned: ->
     return unless material = @material()
     material.texture?.spriteName or material.texture?.spriteId
@@ -96,9 +102,6 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
     material.update {texture}
 
   class @MaterialProperty extends AM.DataInputComponent
-    onCreated: ->
-      super arguments...
-
     load: ->
       material = @data()
       material[@property]
@@ -144,7 +147,7 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
 
       @property = 'ramp'
       @type = AM.DataInputComponent.Types.Number
-
+      @placeholder = 0
       @customAttributes =
         min: 0
 
@@ -156,7 +159,7 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
 
       @property = 'shade'
       @type = AM.DataInputComponent.Types.Number
-
+      @placeholder = 0
       @customAttributes =
         min: 0
 
@@ -168,16 +171,194 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
 
       @property = 'dither'
       @type = AM.DataInputComponent.Types.Number
-
+      @placeholder = 0
       @customAttributes =
         min: 0
         max: 1
         step: 0.1
 
-  class @TextureProperty extends AM.DataInputComponent
-    onCreated: ->
+  class @TranslucencyProperty extends AM.DataInputComponent
+    load: ->
+      material = @data()
+      material.translucency?[@property]
+
+    save: (value) ->
+      material = @data()
+
+      if @type is AM.DataInputComponent.Types.Number
+        value = _.parseFloatOrNull value
+
+      material.update
+        translucency:
+          "#{@property}": value
+
+  class @TranslucencyAmount extends @TranslucencyProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyAmount'
+
+    constructor: ->
       super arguments...
 
+      @property = 'amount'
+      @type = AM.DataInputComponent.Types.Number
+      @placeholder = 0
+      @customAttributes =
+        step: 0.1
+
+  class @TranslucencyDither extends @TranslucencyProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyDither'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'dither'
+      @type = AM.DataInputComponent.Types.Number
+      @placeholder = 0
+      @customAttributes =
+        step: 0.1
+
+  class @TranslucencyTint extends @TranslucencyProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyTint'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'tint'
+      @type = AM.DataInputComponent.Types.Checkbox
+
+  class @TranslucencyBlendingProperty extends AM.DataInputComponent
+    constructor: ->
+      super arguments...
+
+      @type = AM.DataInputComponent.Types.Select
+
+    options: ->
+      for value in @values
+        name: value
+        value: value
+
+    load: ->
+      material = @data()
+      material.translucency?.blending?[@property] or @default
+
+    save: (value) ->
+      material = @data()
+
+      material.update
+        translucency:
+          blending:
+            "#{@property}": value
+
+  class @TranslucencyBlendingPreset extends @TranslucencyBlendingProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingPreset'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'preset'
+
+      @values = [
+        'NoBlending'
+        'NormalBlending'
+        'AdditiveBlending'
+        'SubtractiveBlending'
+        'MultiplyBlending'
+        'CustomBlending'
+      ]
+
+      @default = 'NormalBlending'
+
+  class @TranslucencyBlendingEquation extends @TranslucencyBlendingProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingEquation'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'equation'
+
+      @values = [
+        'AddEquation'
+        'SubtractEquation'
+        'ReverseSubtractEquation'
+        'MinEquation'
+        'MaxEquation'
+      ]
+
+      @default = 'AddEquation'
+
+  class @TranslucencyBlendingSourceFactor extends @TranslucencyBlendingProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingSourceFactor'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'sourceFactor'
+
+      @values = [
+        'ZeroFactor'
+        'OneFactor'
+        'SrcColorFactor'
+        'OneMinusSrcColorFactor'
+        'SrcAlphaFactor'
+        'OneMinusSrcAlphaFactor'
+        'DstAlphaFactor'
+        'OneMinusDstAlphaFactor'
+        'DstColorFactor'
+        'OneMinusDstColorFactor'
+        'SrcAlphaSaturateFactor'
+      ]
+
+      @default = 'SrcAlphaFactor'
+
+  class @TranslucencyBlendingDestinationFactor extends @TranslucencyBlendingSourceFactor
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyBlendingDestinationFactor'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'destinationFactor'
+
+      _.pull @values, 'SrcAlphaSaturateFactor'
+
+      @default = 'OneMinusSrcAlphaFactor'
+
+  class @TranslucencyShadowProperty extends AM.DataInputComponent
+    load: ->
+      material = @data()
+      material.translucency?.shadow?[@property]
+
+    save: (value) ->
+      material = @data()
+
+      if @type is AM.DataInputComponent.Types.Number
+        value = _.parseFloatOrNull value
+
+      material.update
+        translucency:
+          shadow:
+            "#{@property}": value
+
+  class @TranslucencyShadowDither extends @TranslucencyShadowProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyShadowDither'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'dither'
+      @type = AM.DataInputComponent.Types.Number
+      @placeholder = 0
+      @customAttributes =
+        step: 0.1
+
+  class @TranslucencyShadowTint extends @TranslucencyShadowProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyShadowTint'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'tint'
+      @type = AM.DataInputComponent.Types.Checkbox
+
+  class @TextureProperty extends AM.DataInputComponent
     load: ->
       material = @data()
       material.texture?[@property]
@@ -188,10 +369,9 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
       if @type is AM.DataInputComponent.Types.Number
         value = _.parseFloatOrNull value
 
-      texture = _.clone material.texture or {}
-      texture[@property] = value
-
-      material.update {texture}
+      material.update
+        texture:
+          "#{@property}": value
 
   class @AnisotropicFiltering extends @TextureProperty
     @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.AnisotropicFiltering'
