@@ -26,14 +26,15 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
       spriteTextures = LOI.Engine.Textures.getTextures options.texture
       textureMapping = LOI.Engine.Materials.RampMaterial.createTextureMappingMatrices options.texture
 
-    transparent = options.translucency?.amount
-    doubleSide = transparent or options.translucency?.dither or options.translucency?.tint
+    # Note: We can't leave parameters undefined or THREE.js will issue a warning.
+    transparent = options.translucency?.amount or false
+    doubleSide = transparent or options.translucency?.dither
 
-    super
+    parameters =
       lights: true
+      side: if doubleSide then THREE.DoubleSide else THREE.FrontSide
       shadowSide: if doubleSide then THREE.DoubleSide else THREE.BackSide
       transparent: transparent
-      side: if doubleSide then THREE.DoubleSide else THREE.FrontSide
 
       uniforms: _.extend
         # Color information
@@ -217,6 +218,15 @@ void main()	{
   gl_FragColor = vec4(destinationColor, opacity);
 }
 """
+    blending = options.translucency?.blending
+
+    if transparent and blending
+      parameters.blending = THREE[blending.preset] if blending.preset?
+      parameters.blendEquation = THREE[blending.equation] if blending.equation?
+      parameters.blendSrc = THREE[blending.sourceFactor] if blending.sourceFactor?
+      parameters.blendDst = THREE[blending.destinationFactor] if blending.destinationFactor?
+
+    super parameters
 
     if spriteTextures
       Tracker.nonreactive =>
