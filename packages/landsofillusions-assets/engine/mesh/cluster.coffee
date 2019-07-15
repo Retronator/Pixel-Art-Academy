@@ -26,7 +26,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
         points.layers.set 2
         @add points
 
-      options.sceneManager.scene.updated()
+      options.sceneManager.addedSceneObjects()
 
   _generateGeometry: ->
     return unless geometryData = @clusterData.geometry()
@@ -82,31 +82,36 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
       # Normal color mode.
       if clusterMaterial.materialIndex?
         # Cluster has a material assigned. Add the material properties to material options.
-        meshMaterial = meshData.materials.get clusterMaterial.materialIndex
-        _.extend materialOptions, meshMaterial.toPlainObject()
+        meshMaterial = meshData.materials.get(clusterMaterial.materialIndex).toPlainObject()
 
       else if clusterMaterial.paletteColor
         # Cluster has a direct palette color set. Add palette color's properties (ramp, shade) to material options.
-        _.extend materialOptions, clusterMaterial.paletteColor
+        meshMaterial = clusterMaterial.paletteColor
 
       # See if we have correct properties for a ramp material.
-      if materialOptions.ramp? and palette.ramps[materialOptions.ramp]
-        shades = palette.ramps[materialOptions.ramp]?.shades
+      if meshMaterial.ramp? and palette.ramps[meshMaterial.ramp]
+        shades = palette.ramps[meshMaterial.ramp]?.shades
 
         if materialOptions.wireframe
           material = new THREE.MeshBasicMaterial _.extend materialOptions,
-            color: THREE.Color.fromObject shades[materialOptions.shade]
+            color: THREE.Color.fromObject shades[meshMaterial.shade]
 
         else
           # Note: We can't set extra properties on material options sooner since other materials don't support them.
-          _.extend materialOptions,
+          _.extend materialOptions, meshMaterial,
             palette: palette
             smoothShading: options.smoothShading?()
 
           materialId = materialOptions.type or LOI.Engine.Materials.RampMaterial.id()
           material = LOI.Engine.Materials.getMaterial materialId, materialOptions
 
-          depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(), texture: meshMaterial?.texture
+          depthMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.DepthMaterial.id(),
+            texture: meshMaterial?.texture
+            translucency: meshMaterial?.translucency
+
+          shadowColorMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.ShadowColorMaterial.id(), materialOptions
+
+          preprocessingMaterial = LOI.Engine.Materials.getMaterial LOI.Engine.Materials.PreprocessingMaterial.id(), materialOptions
 
       else if clusterMaterial.directColor
         material = new THREE.MeshLambertMaterial _.extend materialOptions,
@@ -118,6 +123,8 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
 
     main: material
     depth: depthMaterial
+    shadowColor: shadowColorMaterial
+    preprocessing: preprocessingMaterial
 
   _generateMesh: ->
     return unless geometry = @geometry()
@@ -125,9 +132,13 @@ class LOI.Assets.Engine.Mesh.Object.Layer.Cluster extends THREE.Object3D
 
     mesh = new THREE.Mesh geometry, materials.main
 
+    mesh.mainMaterial = materials.main
+    mesh.shadowColorMaterial = materials.shadowColor
+    mesh.customDepthMaterial = materials.depth
+    mesh.preprocessingMaterial = materials.preprocessing
+
     mesh.castShadow = true
     mesh.receiveShadow = true
-    mesh.customDepthMaterial = materials.depth
     mesh.layers.set 2 if @layer.object.mesh.options.debug?()
 
     mesh

@@ -28,7 +28,7 @@ class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
 
         @add cluster
 
-      @object.mesh.options.sceneManager.scene.updated()
+      @object.mesh.options.sceneManager.addedSceneObjects()
 
     # Update visibility.
     Tracker.autorun (computation) =>

@@ -35,7 +35,7 @@ class LOI.Assets.Engine.Mesh.Object extends THREE.Object3D
           lineSegments.layers.set 2
           @add lineSegments
       
-      @mesh.options.sceneManager.scene.updated()
+      @mesh.options.sceneManager.addedSceneObjects()
 
     # Update visibility.
     Tracker.autorun (computation) =>

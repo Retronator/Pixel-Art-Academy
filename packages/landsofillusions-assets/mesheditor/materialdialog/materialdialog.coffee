@@ -345,9 +345,12 @@ class LOI.Assets.MeshEditor.MaterialDialog extends FM.View
 
       @property = 'dither'
       @type = AM.DataInputComponent.Types.Number
-      @placeholder = 0
       @customAttributes =
         step: 0.1
+
+    placeholder: ->
+      material = @data()
+      material.translucency?.dither or 0
 
   class @TranslucencyShadowTint extends @TranslucencyShadowProperty
     @register 'LandsOfIllusions.Assets.MeshEditor.MaterialDialog.TranslucencyShadowTint'

@@ -58,7 +58,7 @@ void main()	{
   vec2 paletteColor = rampShadeDitherAlpha.xy;
   paletteColor = (paletteColor * 255.0 + 0.5) / 256.0;
 
-  #{LOI.Engine.Materials.ShaderChunks.readSourceColorFromPalette}
+  #{LOI.Engine.Materials.ShaderChunks.readSourceColorFromPaletteFragment}
 
   vec3 normal = texture2D(normalMap, vUv).xyz;
   normal = (normal - 0.5) * 2.0;

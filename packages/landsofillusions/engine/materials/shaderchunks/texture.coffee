@@ -1,6 +1,20 @@
 LOI = LandsOfIllusions
 
-LOI.Engine.Materials.ShaderChunks.readSpriteDataParameters = """
+LOI.Engine.Materials.ShaderChunks.mapTextureVertex = """
+  #ifdef USE_MAP
+    // Map the texture from position to UV coordinates.
+    vec3 mappedPosition = textureMapping * position;
+
+    // Set the z coordinate to 1 so we can apply the UV transform.
+    mappedPosition.z = 1.0;
+    vUv = (uvTransform * mappedPosition).xy;
+  #endif
+"""
+
+LOI.Engine.Materials.ShaderChunks.readTextureDataParametersFragment = """
+  uniform bool powerOf2Texture;
+  uniform float mipmapBias;
+
   #ifdef USE_NORMALMAP
     varying vec3 vViewPosition;
 
@@ -26,7 +40,7 @@ LOI.Engine.Materials.ShaderChunks.readSpriteDataParameters = """
   #endif
 """
 
-LOI.Engine.Materials.ShaderChunks.readSpriteData = """
+LOI.Engine.Materials.ShaderChunks.readTextureDataFragment = """
   vec2 spriteUv = vUv;
 
   if (!powerOf2Texture) {
@@ -41,7 +55,7 @@ LOI.Engine.Materials.ShaderChunks.readSpriteData = """
   if (sample.a == 0.0) discard;
 
   // Palette color (ramp and shade) is stored in the red and green channels.
-  vec2 paletteColor = sample.rg;
+  paletteColor = sample.rg;
   paletteColor = (paletteColor * 255.0 + 0.5) / 256.0;
 
   #ifdef USE_NORMALMAP

@@ -5,7 +5,7 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
   @initialize()
 
   @createTextureMappingMatrices: (textureOptions) ->
-    # Create the texture mapping matrix
+    # Create the texture mapping matrix.
     elements = [1, 0, 0, 0, 1, 0, 0, 0, 1]
 
     if textureOptions.mappingMatrix
@@ -19,24 +19,61 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
 
     {mapping, offset}
 
+  @getTransparentProperty: (options) ->
+    # Note: We make dithered materials transparent too (even though this is not
+    # required for rendering) so that they get properly hidden for opaque shadow map.
+    options.translucency?.amount or options.translucency?.dither
+
+  @getTextureUniforms: (options) ->
+    textureMapping = LOI.Engine.Materials.RampMaterial.createTextureMappingMatrices options.texture if options.texture
+
+    map:
+      value: null
+    powerOf2Texture:
+      value: null
+    textureMapping:
+      value: textureMapping?.mapping
+    uvTransform:
+      value: textureMapping?.offset
+    mipmapBias:
+      value: options.texture?.mipmapBias or 0
+
+  @updateTextures: (material) ->
+    spriteTextures = LOI.Engine.Textures.getTextures material.options.texture
+
+    Tracker.nonreactive =>
+      Tracker.autorun =>
+        spriteTextures.depend()
+
+        material.uniforms.map.value = spriteTextures.paletteColorTexture
+        material.uniforms.normalMap.value = spriteTextures.normalTexture if material.uniforms.normalMap
+        material.uniforms.powerOf2Texture.value = spriteTextures.isPowerOf2
+
+        # Maps need to be set on the object itself as well for shader defines to kick in.
+        material.map = spriteTextures.paletteColorTexture
+        material.normalMap = spriteTextures.normalTexture  if material.uniforms.normalMap
+
+        material.needsUpdate = true
+        material._dependency.changed()
+
   constructor: (options) ->
     paletteTexture = new LOI.Engine.Textures.Palette options.palette
 
-    if options.texture
-      spriteTextures = LOI.Engine.Textures.getTextures options.texture
-      textureMapping = LOI.Engine.Materials.RampMaterial.createTextureMappingMatrices options.texture
-
-    # Note: We can't leave parameters undefined or THREE.js will issue a warning.
-    transparent = options.translucency?.amount or false
-    doubleSide = transparent or options.translucency?.dither
+    transparent = LOI.Engine.Materials.RampMaterial.getTransparentProperty options
 
     parameters =
       lights: true
-      side: if doubleSide then THREE.DoubleSide else THREE.FrontSide
-      shadowSide: if doubleSide then THREE.DoubleSide else THREE.BackSide
-      transparent: transparent
+      side: if transparent then THREE.DoubleSide else THREE.FrontSide
+      shadowSide: if transparent then THREE.DoubleSide else THREE.BackSide
+
+      # Note: We can't leave parameters undefined or THREE.js will issue a warning.
+      transparent: transparent or false
 
       uniforms: _.extend
+        # Globals
+        renderSize:
+          value: null
+
         # Color information
         ramp:
           value: options.ramp
@@ -50,26 +87,26 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
         # Shading
         smoothShading:
           value: options.smoothShading
-
-        # Texture
-        map:
+        directionalShadowColorMap:
+          value: []
+        directionalOpaqueShadowMap:
+          value: []
+        preprocessingMap:
           value: null
+      ,
+        # Texture
+        LOI.Engine.Materials.RampMaterial.getTextureUniforms options
+      ,
         normalMap:
           value: null
         normalScale:
           value: new THREE.Vector2 1, 1
-        powerOf2Texture:
-          value: null
-        textureMapping:
-          value: textureMapping?.mapping
-        uvTransform:
-          value: textureMapping?.offset
-        mipmapBias:
-          value: options.texture?.mipmapBias or 0
 
         # Translucency
         opacity:
           value: 1 - (options.translucency?.amount or 0)
+        translucencyDither:
+          value: options.translucency?.dither or 0
       ,
         THREE.UniformsLib.lights
 
@@ -88,7 +125,6 @@ varying vec3 vNormal;
   varying vec3 vViewPosition;
 #endif
 
-
 void main()	{
   #include <beginnormal_vertex>
   #include <defaultnormal_vertex>
@@ -99,14 +135,7 @@ void main()	{
   #include <worldpos_vertex>
 	#include <shadowmap_vertex>
 
-  #ifdef USE_MAP
-    // Map the texture from position to UV coordinates.
-    vec3 mappedPosition = textureMapping * position;
-
-    // Set the z coordinate to 1 so we can apply the UV transform.
-    mappedPosition.z = 1.0;
-    vUv = (uvTransform * mappedPosition).xy;
-  #endif
+  #{LOI.Engine.Materials.ShaderChunks.mapTextureVertex}
 
   #ifdef USE_NORMALMAP
     vViewPosition = - mvPosition.xyz;
@@ -123,39 +152,70 @@ void main()	{
 #include <lights_pars_begin>
 #include <shadowmap_pars_fragment>
 
-uniform sampler2D palette;
+#{LOI.Engine.Materials.ShaderChunks.ditherParametersFragment}
+
+// Globals
+uniform vec2 renderSize;
+
+// Color information
 uniform float ramp;
 uniform float shade;
-uniform bool smoothShading;
-uniform bool powerOf2Texture;
-uniform float mipmapBias;
-uniform float opacity;
+uniform float dither;
+uniform sampler2D palette;
 
-#{LOI.Engine.Materials.ShaderChunks.readSpriteDataParameters}
+// Shading
+uniform bool smoothShading;
+#{LOI.Engine.Materials.ShaderChunks.totalLightIntensityParametersFragment}
+uniform sampler2D preprocessingMap;
+
+// Texture
+#{LOI.Engine.Materials.ShaderChunks.readTextureDataParametersFragment}
+
+// Translucency
+uniform float opacity;
+uniform float translucencyDither;
 
 varying vec3 vNormal;
 
 void main()	{
+  // Apply translucency dither first since that can discard the whole fragment altogether.
+  if (dither4levels(translucencyDither)) discard;
+
   // Prepare normal.
   #include <normal_fragment_begin>
 
   // Determine palette color (ramp and shade).
+  vec2 paletteColor;
+
   #ifdef USE_MAP
-    #{LOI.Engine.Materials.ShaderChunks.readSpriteData}
+    #{LOI.Engine.Materials.ShaderChunks.readTextureDataFragment}
 
   #else
     // We're using constants, read from uniforms.
-    vec2 paletteColor = vec2((ramp + 0.5) / 256.0, (shade + 0.5) / 256.0);
+    #{LOI.Engine.Materials.ShaderChunks.setPaletteColorFromUniformsFragment}
 
   #endif
 
-  #{LOI.Engine.Materials.ShaderChunks.readSourceColorFromPalette}
+  // Calculate total light intensity. This step also tints the palette color based
+  // on shadow color, so we have to do it before applying tinting in preprocessing.
+  #{LOI.Engine.Materials.ShaderChunks.totalLightIntensityFragment}
+
+  // Apply preprocessing info. The parameters are:
+  // r: tint ramp
+  // g: tint shade
+  vec2 normalizedCoordinates = gl_FragCoord.xy / renderSize;
+  vec4 preprocessingInfo = texture2D(preprocessingMap, normalizedCoordinates);
+
+  // Tint the color if needed.
+  if (preprocessingInfo.r < 1.0) {
+    paletteColor.r = (preprocessingInfo.r * 255.0 + 0.5) / 256.0;
+  }
+
+  // Get actual RGB values for this palette color.
+  #{LOI.Engine.Materials.ShaderChunks.readSourceColorFromPaletteFragment}
 
   // Shade from ambient to full light based on intensity.
-  #{LOI.Engine.Materials.ShaderChunks.totalLightIntensity}
   float shadeFactor = mix(ambientLightColor.r, 1.0, totalLightIntensity);
-
-  // Dim the color of the cluster by the shade factor.
   vec3 shadedColor = sourceColor * shadeFactor;
 
   // Find the nearest color from the palette to represent the shaded color.
@@ -227,21 +287,6 @@ void main()	{
       parameters.blendDst = THREE[blending.destinationFactor] if blending.destinationFactor?
 
     super parameters
-
-    if spriteTextures
-      Tracker.nonreactive =>
-        Tracker.autorun =>
-          spriteTextures.depend()
-
-          @uniforms.map.value = spriteTextures.paletteColorTexture
-          @uniforms.normalMap.value = spriteTextures.normalTexture
-          @uniforms.powerOf2Texture.value = spriteTextures.isPowerOf2
-
-          # Maps need to be set on the object itself as well for shader defines to kick in.
-          @map = spriteTextures.paletteColorTexture
-          @normalMap = spriteTextures.normalTexture
-
-          @needsUpdate = true
-          @_dependency.changed()
-
     @options = options
+
+    LOI.Engine.Materials.RampMaterial.updateTextures @ if @options.texture

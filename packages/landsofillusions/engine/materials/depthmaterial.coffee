@@ -5,24 +5,16 @@ class LOI.Engine.Materials.DepthMaterial extends LOI.Engine.Materials.Material
   @initialize()
 
   constructor: (options) ->
-    if options.texture
-      spriteTextures = LOI.Engine.Textures.getTextures options.texture
-      textureMapping = LOI.Engine.Materials.RampMaterial.createTextureMappingMatrices options.texture
+    transparent = LOI.Engine.Materials.RampMaterial.getTransparentProperty options
 
-    super
-      uniforms: _.extend
-        map:
-          value: null
-        textureMapping:
-          value: textureMapping?.mapping
-        uvTransform:
-          value: textureMapping?.offset
-        powerOf2Texture:
-          value: null
-        mipmapBias:
-          value: options.texture?.mipmapBias or 0
-        opacity:
-          value: 1
+    parameters =
+      # Because single-sided surfaces cast shadow on the back side,
+      # we need to render this shader only on back sides as well.
+      side: if transparent then THREE.DoubleSide else THREE.BackSide
+
+      uniforms:
+        # Texture
+        LOI.Engine.Materials.RampMaterial.getTextureUniforms options
 
       vertexShader: """
 #include <common>
@@ -37,14 +29,7 @@ void main()	{
 	#include <project_vertex>
   #include <worldpos_vertex>
 
-  #ifdef USE_MAP
-    // Map the texture from position to UV coordinates.
-    vec3 mappedPosition = textureMapping * position;
-
-    // Set the z coordinate to 1 so we can apply the UV transform.
-    mappedPosition.z = 1.0;
-    vUv = (uvTransform * mappedPosition).xy;
-  #endif
+  #{LOI.Engine.Materials.ShaderChunks.mapTextureVertex}
 }
 """
 
@@ -54,31 +39,20 @@ void main()	{
 #include <map_pars_fragment>
 #include <packing>
 
-uniform bool powerOf2Texture;
-uniform float mipmapBias;
+#{LOI.Engine.Materials.ShaderChunks.readTextureDataParametersFragment}
 
 void main()	{
   // Discard transparent pixels for textured fragments.
   #ifdef USE_MAP
-    #{LOI.Engine.Materials.ShaderChunks.readSpriteData}
+    vec2 paletteColor;
+    #{LOI.Engine.Materials.ShaderChunks.readTextureDataFragment}
   #endif
 
   gl_FragColor = packDepthToRGBA(gl_FragCoord.z);
 }
 """
 
-    if spriteTextures
-      Tracker.nonreactive =>
-        Tracker.autorun =>
-          spriteTextures.depend()
-
-          @uniforms.map.value = spriteTextures.paletteColorTexture
-          @uniforms.powerOf2Texture.value = spriteTextures.isPowerOf2
-
-          # Map needs to be set on the object itself as well for shader defines to kick in.
-          @map = spriteTextures.paletteColorTexture
-
-          @needsUpdate = true
-          @_dependency.changed()
-
+    super parameters
     @options = options
+
+    LOI.Engine.Materials.RampMaterial.updateTextures @ if @options.texture

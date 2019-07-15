@@ -19,6 +19,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.PixelRender
     @picture = new THREE.Mesh geometry, material
     scene.add @picture
 
+    @size = new ReactiveField null
+
     @renderer.meshCanvas.autorun (computation) =>
       return unless viewportBounds = @renderer.meshCanvas.pixelCanvas.camera()?.viewportBounds?.toObject()
       return unless viewportBounds.width
@@ -33,6 +35,8 @@ class LOI.Assets.MeshEditor.MeshCanvas.Renderer.PixelRender
 
       width = bottomRight.x - topLeft.x
       height = bottomRight.y - topLeft.y
+
+      @size {width, height}
 
       @renderTarget.setSize width, height
 

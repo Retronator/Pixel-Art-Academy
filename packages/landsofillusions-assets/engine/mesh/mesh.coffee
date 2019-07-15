@@ -12,7 +12,7 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       computation.stop()
 
       scene.add @
-      @options.sceneManager.scene.updated()
+      @options.sceneManager.addedSceneObjects()
 
     # Generate objects.
     @_generateObjectsAutorun = Tracker.autorun (computation) =>
@@ -35,7 +35,7 @@ class LOI.Assets.Engine.Mesh extends THREE.Object3D
       # Add new children.
       @add object for object in objects
 
-      @options.sceneManager.scene.updated()
+      @options.sceneManager.addedSceneObjects()
 
   destroy: ->
     @_generateObjectsAutorun.stop()
