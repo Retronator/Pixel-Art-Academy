@@ -99,11 +99,15 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
           right: @pixelMap[pixel.x + 1]?[pixel.y]
           up: @pixelMap[pixel.x]?[pixel.y - 1]
           down: @pixelMap[pixel.x]?[pixel.y + 1]
+          leftUp: @pixelMap[pixel.x - 1]?[pixel.y - 1]
+          rightUp: @pixelMap[pixel.x + 1]?[pixel.y - 1]
+          leftDown: @pixelMap[pixel.x - 1]?[pixel.y + 1]
+          rightDown: @pixelMap[pixel.x + 1]?[pixel.y + 1]
 
         pixel.clusterEdges = {}
 
         # Edge is on each side that doesn't have a neighbor.
-        for side in ['left', 'right', 'up', 'down']
+        for side in ['left', 'right', 'up', 'down', 'leftUp', 'rightUp', 'leftDown', 'rightDown']
           pixel.clusterEdges[side] = not pixel.clusterNeighbors[side]
 
     @recomputePixels = false

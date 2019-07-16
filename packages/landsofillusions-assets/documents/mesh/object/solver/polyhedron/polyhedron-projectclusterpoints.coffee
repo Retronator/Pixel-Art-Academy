@@ -4,6 +4,40 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
   console.log "Projecting cluster points", clusters, cameraAngle if LOI.Assets.Mesh.Object.Solver.Polyhedron.debug
   
   pixelDirections = [
+    property: 'up'
+    vector: new THREE.Vector2 0, -1
+    extras: [
+      property: 'leftUp', vector: new THREE.Vector2 -0.5, -1
+    ,
+      property: 'rightUp', vector: new THREE.Vector2 0.5, -1
+    ]
+  ,
+    property: 'down'
+    vector: new THREE.Vector2 0, 1
+    extras: [
+      property: 'leftDown', vector: new THREE.Vector2 -0.5, 1
+    ,
+      property: 'rightDown', vector: new THREE.Vector2 0.5, 1
+    ]
+  ,
+    property: 'left'
+    vector: new THREE.Vector2 -1, 0
+    extras: [
+      property: 'leftUp', vector: new THREE.Vector2 -1, -0.5
+    ,
+      property: 'leftDown', vector: new THREE.Vector2 -1, 0.5
+    ]
+  ,
+    property: 'right'
+    vector: new THREE.Vector2 1, 0
+    extras: [
+      property: 'rightUp', vector: new THREE.Vector2 1, -0.5
+    ,
+      property: 'rightDown', vector: new THREE.Vector2 1, 0.5
+    ]
+  ]
+
+  pixelDirections8 = [
     property: 'up', vector: new THREE.Vector2 0, -1
   ,
     property: 'down', vector: new THREE.Vector2 0, 1
@@ -11,6 +45,14 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
     property: 'left', vector: new THREE.Vector2 -1, 0
   ,
     property: 'right', vector: new THREE.Vector2 1, 0
+  ,
+    property: 'leftUp', vector: new THREE.Vector2 -1, -1
+  ,
+    property: 'rightUp', vector: new THREE.Vector2 1, -1
+  ,
+    property: 'leftDown', vector: new THREE.Vector2 -1, 1
+  ,
+    property: 'rightDown', vector: new THREE.Vector2 1, 1
   ]
   
   orthogonal = not cameraAngle.picturePlaneDistance
@@ -38,7 +80,7 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
       pixels.push cluster.getAbsolutePixelCoordinates pixel
 
       # Also add connections between neighbors at half the distance.
-      for direction in pixelDirections
+      for direction in pixelDirections8
         continue if pixel.clusterEdges[direction.property]
 
         pixels.push cluster.getAbsolutePixelCoordinates
@@ -98,6 +140,17 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::projectClusterPoints = (clusters, came
           y: pixel.y + direction.vector.y * factor
 
         voidPixels.push voidPixel
+
+        # Add extra density void pixels.
+        for extra in direction.extras
+          # Only create ones where there is an edge.
+          continue unless pixel.clusterEdges[extra.property]
+
+          voidPixel = cluster.getAbsolutePixelCoordinates
+            x: pixel.x + extra.vector.x * factor
+            y: pixel.y + extra.vector.y * factor
+
+          voidPixels.push voidPixel
 
     voidPointsStart = cluster.points.length
 
