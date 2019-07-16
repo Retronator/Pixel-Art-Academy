@@ -62,6 +62,7 @@ class LOI.Assets.Mesh extends LOI.Assets.VisualAsset
   #             null (does not relate to other objects)
   #             contact (gets positioned against another object's cluster with the opposite normal
   #             fixed (same as contact, but also creates a physical bond to the other object)
+  #           extrusion: how much to extrude the cluster by (generates extra geometry)
   #         plane: the world plane for flat clusters
   #           point: a point in the plane
   #             x, y, z

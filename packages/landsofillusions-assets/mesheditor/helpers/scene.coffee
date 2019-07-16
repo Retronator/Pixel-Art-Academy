@@ -90,7 +90,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
       @scene.updated()
 
   getUniforms: ->
-    meshCanvas = @meshCanvas()
+    return unless meshCanvas = @meshCanvas()
 
     # Mesh canvas needs to be rendered for the renderer to be available.
     return unless meshCanvas.isRendered()

@@ -139,3 +139,15 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
       # Trigger solver update with the changed cluster.
       cluster = @data()
       cluster.layer.object.solver.update [], [cluster.id], []
+
+  class @Extrusion extends @ClusterProperty
+    @register 'LandsOfIllusions.Assets.MeshEditor.Cluster.Extrusion'
+
+    constructor: ->
+      super arguments...
+
+      @property = 'extrusion'
+      @type = AM.DataInputComponent.Types.Number
+      @customAttributes =
+        min: 0
+        step: 0.1
