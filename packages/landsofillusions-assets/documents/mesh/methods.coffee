@@ -63,7 +63,7 @@ LOI.Assets.Mesh.save.method (meshId, data) ->
                 navigable: Match.Optional Boolean
                 coplanarPoint: Match.Optional sparseVectorPattern
                 attachment: Match.Optional String
-                extrusions: Match.Optional Number
+                extrusion: Match.Optional Number
               plane: Match.Optional
                 point: vectorPattern
                 normal: vectorPattern

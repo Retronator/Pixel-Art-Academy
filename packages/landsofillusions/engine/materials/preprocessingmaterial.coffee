@@ -5,13 +5,8 @@ class LOI.Engine.Materials.PreprocessingMaterial extends LOI.Engine.Materials.Ma
   @initialize()
 
   constructor: (options) ->
-    transparent = LOI.Engine.Materials.RampMaterial.getTransparentProperty options
-
     parameters =
-      side: if transparent then THREE.DoubleSide else THREE.FrontSide
-
-      # Preprocessing information should come from the closest object so
-      # we need to completely overwrite previous values (including alpha).
+      # Preprocessing information should come from the closest object so we shouldn't use blending.
       blending: THREE.NoBlending
 
       uniforms: _.extend

@@ -5,12 +5,12 @@ class LOI.Engine.Materials.DepthMaterial extends LOI.Engine.Materials.Material
   @initialize()
 
   constructor: (options) ->
-    transparent = LOI.Engine.Materials.RampMaterial.getTransparentProperty options
-
     parameters =
-      # Because single-sided surfaces cast shadow on the back side,
-      # we need to render this shader only on back sides as well.
-      side: if transparent then THREE.DoubleSide else THREE.BackSide
+      # Because surfaces cast shadow on the back side, we need to render this shader only on back sides as well.
+      side: THREE.BackSide
+
+      # Depth information should come from the closest object so we shouldn't use blending.
+      blending: THREE.NoBlending
 
       uniforms:
         # Texture

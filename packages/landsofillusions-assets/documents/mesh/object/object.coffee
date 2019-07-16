@@ -87,7 +87,9 @@ class LOI.Assets.Mesh.Object
 
       previousPictureClusters.push layerClusters
 
-    # Match previous clusters to the new ones.
+    # Match previous clusters to the new ones. Also accumulate the clusters with properties.
+    clustersWithChangedProperties = []
+
     for layer, layerIndex in @layers.getAll()
       for picture, pictureIndex in layer.pictures.getAll()
         for previousClusterId, previousPictureCluster of previousPictureClusters[layerIndex][pictureIndex]
@@ -99,11 +101,14 @@ class LOI.Assets.Mesh.Object
           newClusterId = picture.getClusterIdForPixel previousPictureCluster.sourceCoordinates.x, previousPictureCluster.sourceCoordinates.y
           newCluster = layer.clusters.get newClusterId
 
-          # Transfer properties to the enw cluster.
+          # Transfer properties to the new cluster.
           newCluster.properties properties
 
-    # Trigger dummy solver update to reposition cluster based on new properties.
-    @solver.update [], [], []
+          # Mark that we've changed properties to this cluster.
+          clustersWithChangedProperties.push newCluster.id
+
+    # Trigger solver update to recompute cluster based on new properties.
+    @solver.update [], clustersWithChangedProperties, []
 
   getSpriteBoundsAndLayersForCameraAngle: (cameraAngleIndex) ->
     bounds = null

@@ -35,7 +35,7 @@ class LOI.Assets.MeshEditor.Helpers.Scene extends FM.Helper
     shadow.camera.far = 200
     shadow.mapSize.width = 4096
     shadow.mapSize.height = 4096
-    shadow.bias = -0.00005
+    shadow.bias = 0
 
     for extraShadowMap in ['opaqueMap', 'colorMap']
       shadow[extraShadowMap] = new THREE.WebGLRenderTarget shadow.mapSize.x, shadow.mapSize.y,

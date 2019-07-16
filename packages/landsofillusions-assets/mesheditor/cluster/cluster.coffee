@@ -75,8 +75,7 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
       properties = cluster.properties()
 
       if @type is AM.DataInputComponent.Types.Number
-        value = parseFloat value
-        value = null if _.isNaN value
+        value = _.parseFloatOrNull value
 
       if value? and value isnt ''
         properties ?= {}
@@ -151,3 +150,10 @@ class LOI.Assets.MeshEditor.Cluster extends FM.View
       @customAttributes =
         min: 0
         step: 0.1
+
+    save: ->
+      super arguments...
+
+      # Trigger solver update with the changed cluster.
+      cluster = @data()
+      cluster.layer.object.solver.update [], [cluster.id], []

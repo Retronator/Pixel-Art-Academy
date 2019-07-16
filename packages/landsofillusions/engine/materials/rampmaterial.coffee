@@ -63,11 +63,9 @@ class LOI.Engine.Materials.RampMaterial extends LOI.Engine.Materials.Material
 
     parameters =
       lights: true
-      side: if transparent then THREE.DoubleSide else THREE.FrontSide
-      shadowSide: if transparent then THREE.DoubleSide else THREE.BackSide
 
-      # Note: We can't leave parameters undefined or THREE.js will issue a warning.
-      transparent: transparent or false
+      # Note: We need the transparent property to be a boolean since it's compared by equality against true/false.
+      transparent: transparent > 0
 
       uniforms: _.extend
         # Globals

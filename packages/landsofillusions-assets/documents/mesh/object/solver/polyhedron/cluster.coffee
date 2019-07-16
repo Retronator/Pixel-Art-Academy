@@ -62,8 +62,9 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     new THREE.Plane().setFromNormalAndCoplanarPoint @plane.normal, @plane.point
 
   updatePixels: ->
-    @properties = @pictureCluster.properties
-    @setPlaneNormal @properties.normal
+    @material = @layerCluster.material()
+    @properties = @layerCluster.properties()
+    @setPlaneNormal @material.normal
     
     # Create map for fast retrieval.
     @pixels = []
@@ -141,11 +142,11 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     mesh = @layerCluster.layer.object.mesh
     palette = mesh.customPalette or LOI.Assets.Palette.documents.findOne mesh.palette._id
 
-    paletteColor = @properties.paletteColor
+    paletteColor = @material.paletteColor
 
     unless paletteColor
-      if @properties.materialIndex?
-        paletteColor = mesh.materials.get @properties.materialIndex
+      if @material.materialIndex?
+        paletteColor = mesh.materials.get @material.materialIndex
 
     color = palette.ramps[paletteColor.ramp].shades[paletteColor.shade]
 
@@ -175,24 +176,158 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Cluster
     new THREE.Points geometry, material
 
   generateGeometry: (options) ->
-    elementsPerVertex = 3
-    vertices = new Float32Array @points.length * elementsPerVertex
-    normals = new Float32Array @points.length * elementsPerVertex
-    indices = new Uint32Array @indices
-
     nanWarned = false
+    elementsPerVertex = 3
 
-    for point, index in @points
-      vertices[index * elementsPerVertex] = point.vertex.x
-      vertices[index * elementsPerVertex + 1] = point.vertex.y
-      vertices[index * elementsPerVertex + 2] = point.vertex.z
+    if @properties?.extrusion
+      # Calculate hull edges.
+      hullMap = {}
 
-      normals[index * elementsPerVertex] = @plane.normal.x
-      normals[index * elementsPerVertex + 1] = @plane.normal.y
-      normals[index * elementsPerVertex + 2] = @plane.normal.z
+      addEdge = (index1, index2) =>
+        # Map to vertex indices.
+        index1 = @indices[index1]
+        index2 = @indices[index2]
 
-      if not nanWarned and _.isNaN point.vertex.x
-        console.warn "Cluster on layer #{@picture.layer.name()} has invalid vertices at", index, @
-        nanWarned = true
+        if hullMap[index1]?[index2]
+          # The edge is represented twice so it's not on the hull.
+          hullMap[index1][index2] = false
+
+        else if hullMap[index2]?[index1]
+          # Also not a hull edge.
+          hullMap[index2][index1] = false
+
+        else
+          # This edge hasn't been added yet so we do it.
+          hullMap[index1] ?= {}
+          hullMap[index1][index2] = true
+
+      for triangleIndexStart in [0...@indices.length] by 3
+        addEdge triangleIndexStart, triangleIndexStart + 1
+        addEdge triangleIndexStart + 1, triangleIndexStart + 2
+        addEdge triangleIndexStart + 2, triangleIndexStart
+
+      # Accumulate hull edges from the map.
+      hullEdges = []
+
+      for startIndex, endings of hullMap
+        for endIndex, value of endings when value
+          hullEdges.push
+            start: parseInt startIndex
+            end: parseInt endIndex
+
+          break
+
+      # Create vertices and normals.
+      verticesCount = @points.length * 2 + hullEdges.length * 4
+      vertices = new Float32Array verticesCount * elementsPerVertex
+      normals = new Float32Array verticesCount * elementsPerVertex
+
+      oppositeClusterVertexIndexOffset = @points.length
+      extrusionVertexIndexOffset = 2 * oppositeClusterVertexIndexOffset
+
+      # Extrude by the provided factor in the reverse direction of the plane normal.
+      extrusionVector = @plane.normal.clone().multiplyScalar -@properties.extrusion
+
+      for point, index in @points
+        vertices[index * elementsPerVertex] = point.vertex.x
+        vertices[index * elementsPerVertex + 1] = point.vertex.y
+        vertices[index * elementsPerVertex + 2] = point.vertex.z
+
+        normals[index * elementsPerVertex] = @plane.normal.x
+        normals[index * elementsPerVertex + 1] = @plane.normal.y
+        normals[index * elementsPerVertex + 2] = @plane.normal.z
+
+        # Offset the position by the extrusion
+        vertices[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex] = point.vertex.x + extrusionVector.x
+        vertices[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex + 1] = point.vertex.y + extrusionVector.y
+        vertices[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex + 2] = point.vertex.z + extrusionVector.z
+
+        # Flip the normal for the reverse cluster.
+        normals[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex] = -@plane.normal.x
+        normals[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex + 1] = -@plane.normal.y
+        normals[(oppositeClusterVertexIndexOffset + index) * elementsPerVertex + 2] = -@plane.normal.z
+
+        if not nanWarned and _.isNaN point.vertex.x
+          console.warn "Cluster on layer #{@picture.layer.name()} has invalid vertices at", index, @
+          nanWarned = true
+
+      # Create extrusion vertices.
+      for hullEdge, edgeIndex in hullEdges
+        startPoint = @points[hullEdge.start]
+        endPoint = @points[hullEdge.end]
+
+        # First two points are the start and end points.
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex] = startPoint.vertex.x
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 1] = startPoint.vertex.y
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 2] = startPoint.vertex.z
+
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 3] = endPoint.vertex.x
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 4] = endPoint.vertex.y
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 5] = endPoint.vertex.z
+
+        # Second two points are the extruded start and end points.
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 6] = startPoint.vertex.x + extrusionVector.x
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 7] = startPoint.vertex.y + extrusionVector.y
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 8] = startPoint.vertex.z + extrusionVector.z
+
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 9] = endPoint.vertex.x + extrusionVector.x
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 10] = endPoint.vertex.y + extrusionVector.y
+        vertices[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + 11] = endPoint.vertex.z + extrusionVector.z
+
+        # Calculate the normal of the extrusion.
+        normal = new THREE.Vector3().subVectors endPoint.vertex, startPoint.vertex
+        normal.cross @plane.normal
+        normal.normalize()
+
+        for pointIndex in [0..3]
+          normals[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + pointIndex * 3] = normal.x
+          normals[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + pointIndex * 3 + 1] = normal.y
+          normals[(extrusionVertexIndexOffset + edgeIndex * 4) * elementsPerVertex + pointIndex * 3 + 2] = normal.z
+
+      # Create indices.
+      oppositeClusterIndicesIndexOffset = @indices.length
+      extrusionIndicesIndexOffset = 2 * oppositeClusterIndicesIndexOffset
+
+      indicesCount = @indices.length * 2 + hullEdges.length * 6
+      indices = new Uint32Array indicesCount
+
+      # Fill cluster indices.
+      for triangleIndexStart in [0...@indices.length] by 3
+        indices[triangleIndexStart] = @indices[triangleIndexStart]
+        indices[triangleIndexStart + 1] = @indices[triangleIndexStart + 1]
+        indices[triangleIndexStart + 2] = @indices[triangleIndexStart + 2]
+
+        # Reverse cluster needs orientation of the triangle reversed.
+        indices[oppositeClusterIndicesIndexOffset + triangleIndexStart] = @indices[triangleIndexStart] + oppositeClusterVertexIndexOffset
+        indices[oppositeClusterIndicesIndexOffset + triangleIndexStart + 1] = @indices[triangleIndexStart + 2] + oppositeClusterVertexIndexOffset
+        indices[oppositeClusterIndicesIndexOffset + triangleIndexStart + 2] = @indices[triangleIndexStart + 1] + oppositeClusterVertexIndexOffset
+
+      # Fill extrusion indices.
+      for hullEdge, edgeIndex in hullEdges
+        indices[extrusionIndicesIndexOffset + edgeIndex * 6] = extrusionVertexIndexOffset + edgeIndex * 4
+        indices[extrusionIndicesIndexOffset + edgeIndex * 6 + 1] = extrusionVertexIndexOffset + edgeIndex * 4 + 3
+        indices[extrusionIndicesIndexOffset + edgeIndex * 6 + 2] = extrusionVertexIndexOffset + edgeIndex * 4 + 1
+
+        indices[extrusionIndicesIndexOffset + edgeIndex * 6 + 3] = extrusionVertexIndexOffset + edgeIndex * 4
+        indices[extrusionIndicesIndexOffset + edgeIndex * 6 + 4] = extrusionVertexIndexOffset + edgeIndex * 4 + 2
+        indices[extrusionIndicesIndexOffset + edgeIndex * 6 + 5] = extrusionVertexIndexOffset + edgeIndex * 4 + 3
+
+    else
+      vertices = new Float32Array @points.length * elementsPerVertex
+      normals = new Float32Array @points.length * elementsPerVertex
+      indices = new Uint32Array @indices
+
+      for point, index in @points
+        vertices[index * elementsPerVertex] = point.vertex.x
+        vertices[index * elementsPerVertex + 1] = point.vertex.y
+        vertices[index * elementsPerVertex + 2] = point.vertex.z
+
+        normals[index * elementsPerVertex] = @plane.normal.x
+        normals[index * elementsPerVertex + 1] = @plane.normal.y
+        normals[index * elementsPerVertex + 2] = @plane.normal.z
+
+        if not nanWarned and _.isNaN point.vertex.x
+          console.warn "Cluster on layer #{@picture.layer.name()} has invalid vertices at", index, @
+          nanWarned = true
 
     {vertices, normals, indices}

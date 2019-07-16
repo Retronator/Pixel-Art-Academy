@@ -5,15 +5,11 @@ class LOI.Engine.Materials.ShadowColorMaterial extends LOI.Engine.Materials.Mate
   @initialize()
 
   constructor: (options) ->
-    transparent = LOI.Engine.Materials.RampMaterial.getTransparentProperty options
-
     parameters =
-      # Because single-sided surfaces cast shadow on the back side,
-      # we need to render this shader only on back sides as well.
-      side: if transparent then THREE.DoubleSide else THREE.BackSide
+      # Because surfaces cast shadow on the back side, we need to render this shader only on back sides as well.
+      side: THREE.BackSide
 
-      # Shadow color should contain information from the closest object so
-      # we need to completely overwrite previous values (including alpha).
+      # Shadow color information should come from the closest object so we shouldn't use blending.
       blending: THREE.NoBlending
 
       uniforms: _.extend
