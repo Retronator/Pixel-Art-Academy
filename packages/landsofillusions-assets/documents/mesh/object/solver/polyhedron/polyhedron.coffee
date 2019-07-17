@@ -30,7 +30,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron extends LOI.Assets.Mesh.Object.So
     cameraAngle = @object.mesh.cameraAngles.get 0
     @computeClusterPlanes clustersArray, @edges, cameraAngle
 
-    # Recompute clusters that have have changed.
+    # Recompute clusters.
     @projectClusterPoints clustersArray, cameraAngle
     @computeClusterMeshes clustersArray
 

@@ -77,7 +77,7 @@ class LOI.Assets.Mesh.Object.Solver.Polyhedron.Edge
     # Filter out outliers.
     minRootMeanSquareDeviation = Number.POSITIVE_INFINITY
 
-    rootMeanSquareDeviations = for line in @lines
+    for line in @lines
       vertices = []
 
       for segment in line

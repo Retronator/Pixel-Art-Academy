@@ -98,16 +98,36 @@ LOI.Assets.Mesh.Object.Solver.Polyhedron::computeEdges = (clusters) ->
     containedWithinEdge = null
 
     for cluster in [edge.clusterA, edge.clusterB]
-      for otherClusterId, otherEdge of cluster.edges when otherEdge isnt edge
-        contained = true
+      otherCluster = edge.getOtherCluster cluster
 
-        for segment in edge.segments
-          unless otherEdge.segmentsMap[segment[0].x]?[segment[0].y]?[segment[1].x]?[segment[1].y]
-            contained = false
-            break
+      # Only delete edges based on other straight edges (not coplanar).
+      for neighborClusterId, neighborEdge of cluster.edges when neighborEdge isnt edge
+        # Coplanar edges should not be considered for removal of other edges.
+        continue if neighborEdge.coplanarClusters
 
-        if contained
-          containedWithinEdge = otherEdge
+        # Also make sure the two other clusters aren't coplanar.
+        if otherCluster.edges[neighborClusterId]?.coplanarClusters
+          continue
+
+        # Coplanar edge segments do not have priority and should be deleted where overlapping other straight edges.
+        if edge.coplanarClusters
+          # Throw out any of the segments that are part of another edge.
+          _.remove edge.segments, (segment) => neighborEdge.segmentsMap[segment[0].x]?[segment[0].y]?[segment[1].x]?[segment[1].y] or neighborEdge.segmentsMap[segment[1].x]?[segment[1].y]?[segment[0].x]?[segment[0].y]
+
+          # If no more segments remain, the coplanar edge was completely contained in other edges.
+          unless edge.segments.length
+            containedWithinEdge = neighborEdge
+
+        else
+          contained = true
+
+          for segment in edge.segments
+            unless neighborEdge.segmentsMap[segment[0].x]?[segment[0].y]?[segment[1].x]?[segment[1].y] or neighborEdge.segmentsMap[segment[1].x]?[segment[1].y]?[segment[0].x]?[segment[0].y]
+              contained = false
+              break
+
+          if contained
+            containedWithinEdge = neighborEdge
 
       break if containedWithinEdge
 
