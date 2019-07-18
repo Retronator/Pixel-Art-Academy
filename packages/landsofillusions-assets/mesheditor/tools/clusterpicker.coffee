@@ -23,6 +23,33 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
 
     meshCanvas = @editor()
 
+    if meshCanvas.sourceImageEnabled()
+      @_pickCluster2D cycle
+
+    else
+      @_pickCluster3D cycle
+
+  _pickCluster2D: (cycle) ->
+    meshCanvas = @editor()
+    mesh = meshCanvas.meshData()
+    cameraAngleIndex = meshCanvas.cameraAngleIndex()
+
+    # Find clusters at the clicked coordinate.
+    clusters = []
+    pixelCoordinate = meshCanvas.mouse().pixelCoordinate()
+
+    for object in mesh.objects.getAll()
+      for layer in object.layers.getAll()
+        picture = layer.getPictureForCameraAngleIndex cameraAngleIndex
+
+        clusterId = picture.getClusterIdForPixel pixelCoordinate.x, pixelCoordinate.y
+        clusters.push layer.clusters.get clusterId if clusterId
+
+    @_pickFromClusters cycle, clusters
+
+  _pickCluster3D: (cycle) ->
+    meshCanvas = @editor()
+
     raycaster = meshCanvas.renderer.cameraManager.getRaycaster meshCanvas.mouse().pixelCoordinate()
     scene = meshCanvas.sceneHelper().scene()
 
@@ -35,13 +62,8 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
     intersectionsBackward = raycaster.intersectObjects scene.children, true
 
     intersections = intersectionsForward.concat intersectionsBackward
-    currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
 
-    unless intersections.length
-      currentClusterHelper.setCluster null
-      return
-
-    # Filter intersetctions to clusters.
+    # Filter intersections to clusters.
     clusters = []
 
     for intersection in intersections when intersection.object.parent instanceof LOI.Assets.Engine.Mesh.Object.Layer.Cluster
@@ -49,6 +71,15 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
 
     # Get only one instance of each cluster (if it was picked multiple times).
     clusters = _.uniq clusters
+
+    @_pickFromClusters cycle, clusters
+
+  _pickFromClusters: (cycle, clusters) ->
+    currentClusterHelper = @interface.getHelperForActiveFile LOI.Assets.MeshEditor.Helpers.CurrentCluster
+
+    unless clusters.length
+      currentClusterHelper.setCluster null
+      return
 
     currentCluster = currentClusterHelper.cluster()
 

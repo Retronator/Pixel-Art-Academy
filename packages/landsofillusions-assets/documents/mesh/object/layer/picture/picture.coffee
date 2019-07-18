@@ -105,6 +105,7 @@ class LOI.Assets.Mesh.Object.Layer.Picture
     @getMapValuesForPixelRelative x - @_bounds.x, y - @_bounds.y
 
   getMapValuesForPixelRelative: (x, y) ->
+    return unless @_relativeCoordinateInBounds x, y
     return unless flagsMap = @maps[@constructor.Map.Types.Flags]
     return unless flags = flagsMap.getPixel x, y
 
@@ -114,11 +115,15 @@ class LOI.Assets.Mesh.Object.Layer.Picture
       mapValues[type] = map.getPixel x, y
 
     mapValues
+
+  _relativeCoordinateInBounds: (x, y) ->
+    0 <= x < @_bounds.width and 0 <= y < @_bounds.height
     
   getClusterIdForPixel: (x, y) ->
     @getClusterIdForPixelRelative x - @_bounds.x, y - @_bounds.y
 
   getClusterIdForPixelRelative: (x, y) ->
+    return unless @pixelExistsRelative x, y
     return unless clusterIdMap = @maps[@constructor.Map.Types.ClusterId]
     clusterIdMap.getPixel x, y
 
@@ -126,9 +131,7 @@ class LOI.Assets.Mesh.Object.Layer.Picture
     @pixelExistsRelative x - @_bounds.x, y - @_bounds.y
 
   pixelExistsRelative: (x, y) ->
-    # Make sure the pixel is inside bounds.
-    return unless 0 <= x < @_bounds.width and 0 <= y < @_bounds.height
-    
+    return unless @_relativeCoordinateInBounds x, y
     return unless flagsMap = @maps[@constructor.Map.Types.Flags]
 
     flagsMap.pixelExists x, y
