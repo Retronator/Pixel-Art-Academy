@@ -126,5 +126,23 @@ class LOI.Assets.MeshEditor.Tools.ColorFill extends LOI.Assets.SpriteEditor.Tool
         pixel.paletteColor ?= null
         pixel.directColor ?= null
 
+    # Remember cluster properties if present.
+    if targetExists
+      clusterId = picture.getClusterIdForPixelRelative targetX, targetY
+      cluster = picture.layer.clusters.get clusterId
+      clusterProperties = cluster.properties()
+
     # Set pixels with relative coordinates.
     picture.setPixels pixels, true
+
+    # Search for the new cluster and set its properties
+    if clusterProperties
+      # See which cluster ID is now at the cluster's source coordinates.
+      newClusterId = picture.getClusterIdForPixelRelative targetX, targetY
+      newCluster = picture.layer.clusters.get newClusterId
+
+      # Transfer properties to the new cluster.
+      newCluster.properties clusterProperties
+
+      # Trigger solver update with the new properties.
+      picture.layer.object.solver.update [], [newCluster.id], []

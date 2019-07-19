@@ -50,7 +50,8 @@ class LOI.Assets.MeshEditor.Tools.ClusterPicker extends LOI.Assets.MeshEditor.To
   _pickCluster3D: (cycle) ->
     meshCanvas = @editor()
 
-    raycaster = meshCanvas.renderer.cameraManager.getRaycaster meshCanvas.mouse().pixelCoordinate()
+    canvasCoordinate = meshCanvas.mouse().canvasCoordinate()
+    raycaster = meshCanvas.renderer.cameraManager.getRaycaster x: canvasCoordinate.x - 0.5, y: canvasCoordinate.y - 0.5
     scene = meshCanvas.sceneHelper().scene()
 
     intersectionsForward = raycaster.intersectObjects scene.children, true
