@@ -7,42 +7,80 @@ class LOI.Engine.World.SceneManager
     scene = new THREE.Scene()
     @scene = new AE.ReactiveWrapper scene
 
+    @sceneObjectsAddedDependency = new Tracker.Dependency
+
+    @directionalLights = new ReactiveField []
+    
     ambientLight = new THREE.AmbientLight 0xffffff, 0.5
     scene.add ambientLight
 
-    directionalLight = new THREE.DirectionalLight 0xffffff, 0.5
+    interiorLighting = new THREE.DirectionalLight 0xffffff, 0.5
 
-    directionalLight.castShadow = true
+    interiorLighting.castShadow = true
     d = 20
-    directionalLight.shadow.camera.left = -d
-    directionalLight.shadow.camera.right = d
-    directionalLight.shadow.camera.top = d
-    directionalLight.shadow.camera.bottom = -d
-    directionalLight.shadow.camera.near = 0.5
-    directionalLight.shadow.camera.far = 5
-    directionalLight.shadow.mapSize.width = 4096
-    directionalLight.shadow.mapSize.height = 4096
-    directionalLight.shadow.bias = -0.01
+    interiorLighting.shadow.camera.left = -d
+    interiorLighting.shadow.camera.right = d
+    interiorLighting.shadow.camera.top = d
+    interiorLighting.shadow.camera.bottom = -d
+    interiorLighting.shadow.camera.near = 0.5
+    interiorLighting.shadow.camera.far = 5
+    interiorLighting.shadow.mapSize.width = 4096
+    interiorLighting.shadow.mapSize.height = 4096
+    interiorLighting.shadow.bias = 0
 
-    directionalLight.position.set 0, 3.5, 0.4
-    scene.add directionalLight
+    for extraShadowMap in ['opaqueMap', 'colorMap']
+      interiorLighting.shadow[extraShadowMap] = new THREE.WebGLRenderTarget interiorLighting.shadow.mapSize.x, interiorLighting.shadow.mapSize.y,
+        minFilter: THREE.NearestFilter
+        magFilter: THREE.NearestFilter
 
-    directionalLight = new THREE.DirectionalLight 0xffffff, 1.5
+    interiorLighting.position.set 0, 3.5, 0.4
+    scene.add interiorLighting
+    
+    sun = new THREE.DirectionalLight 0xffffff, 1.5
 
-    directionalLight.castShadow = true
+    sun.castShadow = true
     d = 20
-    directionalLight.shadow.camera.left = -d
-    directionalLight.shadow.camera.right = d
-    directionalLight.shadow.camera.top = d
-    directionalLight.shadow.camera.bottom = -d
-    directionalLight.shadow.camera.near = 50
-    directionalLight.shadow.camera.far = 400
-    directionalLight.shadow.mapSize.width = 4096
-    directionalLight.shadow.mapSize.height = 4096
-    directionalLight.shadow.bias = -0.0001
+    sun.shadow.camera.left = -d
+    sun.shadow.camera.right = d
+    sun.shadow.camera.top = d
+    sun.shadow.camera.bottom = -d
+    sun.shadow.camera.near = 50
+    sun.shadow.camera.far = 400
+    sun.shadow.mapSize.width = 4096
+    sun.shadow.mapSize.height = 4096
+    sun.shadow.bias = 0
 
-    directionalLight.position.set 100, 100, 100
-    scene.add directionalLight
+    for extraShadowMap in ['opaqueMap', 'colorMap']
+      sun.shadow[extraShadowMap] = new THREE.WebGLRenderTarget sun.shadow.mapSize.x, sun.shadow.mapSize.y,
+        minFilter: THREE.NearestFilter
+        magFilter: THREE.NearestFilter
+        
+    sun.position.set 100, 100, 100
+    scene.add sun
+
+    @directionalLights [interiorLighting, sun]
+
+    # Apply uniforms to new objects when they get added.
+    @world.autorun (computation) =>
+      return unless uniforms = @getUniforms()
+      @sceneObjectsAddedDependency.depend()
+
+      scene.traverse (object) =>
+        return unless object.mainMaterial?.uniforms and not object.mainMaterial.uniformsInitialized
+        object.mainMaterial.uniformsInitialized = true
+
+        @_applyUniformsToMaterial uniforms, object.mainMaterial
+
+    # Apply uniforms to all objects when uniforms change.
+    @world.autorun (computation) =>
+      return unless uniforms = @getUniforms()
+
+      scene.traverse (object) =>
+        return unless object.mainMaterial?.uniforms
+
+        @_applyUniformsToMaterial uniforms, object.mainMaterial
+
+      @scene.updated()
 
     # Add location mesh.
     @_currentLocationMesh = null
@@ -85,6 +123,7 @@ class LOI.Engine.World.SceneManager
           @_currentLocationMesh = new LOI.Assets.Engine.Mesh
             meshData: => meshData
             sceneManager: @
+            smoothShading: => true
 
           # Initialize the camera from the camera angle.
           @world.cameraManager().setFromCameraAngle cameraAngle()
@@ -134,3 +173,24 @@ class LOI.Engine.World.SceneManager
 
     addAllChildren scene
     children
+
+  getUniforms: ->
+    return unless rendererManager = @world.rendererManager()
+
+    illustrationSize = @world.options.adventure.interface.illustrationSize
+    directionalLights = @directionalLights()
+
+    renderSize: new THREE.Vector2 illustrationSize.width(), illustrationSize.height()
+    directionalOpaqueShadowMap: (directionalLight.shadow.opaqueMap.texture for directionalLight in directionalLights)
+    directionalShadowColorMap: (directionalLight.shadow.colorMap.texture for directionalLight in directionalLights)
+    preprocessingMap: rendererManager.preprocessingRenderTarget.texture
+
+  addedSceneObjects: ->
+    @sceneObjectsAddedDependency.changed()
+    @scene.updated()
+
+  _applyUniformsToMaterial: (uniforms, material) ->
+    for uniform, value of uniforms
+      if material.uniforms[uniform]
+        material.uniforms[uniform].value = value
+        material.needsUpdate = true

@@ -87,9 +87,9 @@ LOI.Engine.Materials.ShaderChunks.totalLightIntensityFragment = """
     totalLightIntensity += lightIntensity * shadowColor.a;
 
     // Tint the fragment if shadow color is set.
-    if (shadowColor.r < 1.0) {
-      paletteColor.r = (shadowColor.r * 255.0 + 0.5) / 256.0;
-    }
+    // Note: We don't use parenthesis since the pragma unroll would match them and close the unroll.
+    if (shadowColor.r < 1.0) paletteColor.r = (shadowColor.r * 255.0 + 0.5) / 256.0;
+
   }
 
 """

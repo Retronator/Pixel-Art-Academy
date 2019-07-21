@@ -3,7 +3,10 @@ LOI = LandsOfIllusions
 class LOI.Assets.Engine.Mesh.Object.Layer extends THREE.Object3D
   constructor: (@object, layerData) ->
     super arguments...
-    
+
+    @isLayer = true
+    @isRenderable = not _.startsWith layerData.name()?.toLowerCase(), 'hint'
+
     @clusters = new ComputedField =>
       return unless clustersData = layerData.clusters.getAllWithoutUpdates()
 
