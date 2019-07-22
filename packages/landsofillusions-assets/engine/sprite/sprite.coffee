@@ -157,8 +157,8 @@ class LOI.Assets.Engine.Sprite
             
           if paletteColor
             destinationColor =
-              r: (paletteColor.ramp + 0.5) / palette.ramps.length / 255 * 256
-              g: (paletteColor.shade + 0.5) / palette.ramps[paletteColor.ramp].shades.length / 255 * 20
+              r: paletteColor.ramp / 255
+              g: paletteColor.shade / 255
               b: paletteColor.dither or 0
             
           else

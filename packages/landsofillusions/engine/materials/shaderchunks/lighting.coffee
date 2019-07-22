@@ -93,3 +93,9 @@ LOI.Engine.Materials.ShaderChunks.totalLightIntensityFragment = """
   }
 
 """
+
+LOI.Engine.Materials.ShaderChunks.shadeSourceColorFragment = """
+  // Shade from ambient to full light based on intensity.
+  float shadeFactor = mix(ambientLightColor.r, 1.0, totalLightIntensity);
+  vec3 shadedColor = sourceColor * shadeFactor;
+"""

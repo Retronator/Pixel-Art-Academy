@@ -97,6 +97,7 @@ Package.onUse(function(api) {
   api.addClientFile('engine/materials/shaderchunks/palette');
   api.addClientFile('engine/materials/shaderchunks/texture');
   api.addClientFile('engine/materials/shaderchunks/dither');
+  api.addClientFile('engine/materials/shaderchunks/preprocessing');
 
   api.addFile('engine/debug..');
   api.addFile('engine/debug/dummysceneitem');

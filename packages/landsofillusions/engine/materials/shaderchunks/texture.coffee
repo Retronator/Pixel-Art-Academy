@@ -67,3 +67,8 @@ LOI.Engine.Materials.ShaderChunks.readTextureDataFragment = """
 
   #endif
 """
+
+LOI.Engine.Materials.ShaderChunks.readTextureDataShadingDitherFragment = """
+  // Dither is stored in the blue channel.
+  shadingDither = sample.b;
+"""

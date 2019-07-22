@@ -146,7 +146,7 @@ class LOI.Engine.World.SceneManager
 
         # Add it to the scene.
         scene.add renderObject
-        @scene.updated()
+        @addedSceneObjects()
 
       removed: (thing) =>
         # Remove thing's render object.

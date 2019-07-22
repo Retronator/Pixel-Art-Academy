@@ -28,7 +28,7 @@ class AS.AnimatedMesh extends AS.RenderObject
 
     @_depthMaterial = new THREE.MeshDepthMaterial
       depthPacking: THREE.RGBADepthPacking
-      alphaTest: 0.5
+      alphaTest: 1
 
     @materials = new AE.ReactiveWrapper
       main: @_material

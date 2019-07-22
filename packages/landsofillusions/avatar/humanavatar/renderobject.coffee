@@ -52,6 +52,11 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
       @animatedMeshes[side] = animatedMesh
 
+      do (animatedMesh) =>
+        animatedMesh._updateCreatureRendererAutorun = Tracker.autorun (computation) =>
+          return unless creatureRenderer = animatedMesh.creatureRenderer()
+          creatureRenderer.renderMesh.mainMaterial = animatedMesh.options.material
+
     @_prepareMeshAutorun = Tracker.autorun (computation) =>
       heightValue = @humanAvatar.body.properties.height.options.dataLocation()
       heightOptions = LOI.Character.Part.Types.Avatar.Body.options.properties.height.options
@@ -225,7 +230,9 @@ class LOI.HumanAvatar.RenderObject extends AS.RenderObject
 
     @humanAvatarRenderer?.destroy()
 
-    animatedMesh.destroy() for side, animatedMesh of @animatedMeshes
+    for side, animatedMesh of @animatedMeshes
+      animatedMesh._updateCreatureRendererAutorun.stop()
+      animatedMesh.destroy()
 
   updatePaletteDataTexture: (texture) ->
     texture.magFilter = THREE.NearestFilter

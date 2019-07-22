@@ -160,6 +160,7 @@ uniform float ramp;
 uniform float shade;
 uniform float dither;
 uniform sampler2D palette;
+#{LOI.Engine.Materials.ShaderChunks.paletteParametersFragment}
 
 // Shading
 uniform bool smoothShading;
@@ -182,15 +183,18 @@ void main()	{
   // Prepare normal.
   #include <normal_fragment_begin>
 
-  // Determine palette color (ramp and shade).
+  // Determine palette color (ramp and shade) and dither.
   vec2 paletteColor;
+  float shadingDither;
 
   #ifdef USE_MAP
     #{LOI.Engine.Materials.ShaderChunks.readTextureDataFragment}
+    #{LOI.Engine.Materials.ShaderChunks.readTextureDataShadingDitherFragment}
 
   #else
     // We're using constants, read from uniforms.
     #{LOI.Engine.Materials.ShaderChunks.setPaletteColorFromUniformsFragment}
+    shadingDither = dither;
 
   #endif
 
@@ -198,79 +202,17 @@ void main()	{
   // on shadow color, so we have to do it before applying tinting in preprocessing.
   #{LOI.Engine.Materials.ShaderChunks.totalLightIntensityFragment}
 
-  // Apply preprocessing info. The parameters are:
-  // r: tint ramp
-  // g: tint shade
-  vec2 normalizedCoordinates = gl_FragCoord.xy / renderSize;
-  vec4 preprocessingInfo = texture2D(preprocessingMap, normalizedCoordinates);
-
-  // Tint the color if needed.
-  if (preprocessingInfo.r < 1.0) {
-    paletteColor.r = (preprocessingInfo.r * 255.0 + 0.5) / 256.0;
-  }
+  // Apply preprocessing info.
+  #{LOI.Engine.Materials.ShaderChunks.applyPreprocessingFragment}
 
   // Get actual RGB values for this palette color.
   #{LOI.Engine.Materials.ShaderChunks.readSourceColorFromPaletteFragment}
 
-  // Shade from ambient to full light based on intensity.
-  float shadeFactor = mix(ambientLightColor.r, 1.0, totalLightIntensity);
-  vec3 shadedColor = sourceColor * shadeFactor;
+  // Calculate the shaded color.
+  #{LOI.Engine.Materials.ShaderChunks.shadeSourceColorFragment}
 
-  // Find the nearest color from the palette to represent the shaded color.
-  vec3 bestColor;
-  float bestColorDistance;
-
-  bool passedZero = false;
-  vec3 earlierColor;
-  vec3 laterColor;
-  float blendFactor;
-
-  vec3 previousColor;
-  float previousSignedDistance;
-
-  for (int shadeIndex = 0; shadeIndex < 255; shadeIndex++) {
-    paletteColor.y = (float(shadeIndex) + 0.5) / 256.0;
-    vec4 shadeEntry = texture2D(palette, paletteColor);
-    vec3 shade = shadeEntry.rgb;
-
-    // Measure distance to color.
-    vec3 difference = shade - shadedColor;
-    float signedDistance = difference.x + difference.y + difference.z;
-    float distance = abs(difference.x) + abs(difference.y) + abs(difference.z);
-
-    if (shadeIndex == 0) {
-      // Set initial values in first loop iteration.
-      bestColor = shade;
-      bestColorDistance = distance;
-    } else {
-      // See if we've crossed zero distance, which means our target shaded color is between the previous and current shade.
-      if (previousSignedDistance < 0.0 && signedDistance >= 0.0 || previousSignedDistance >= 0.0 && signedDistance < 0.0) {
-        passedZero = true;
-        earlierColor = previousColor;
-        laterColor = shade;
-        blendFactor = abs(previousSignedDistance) / abs(signedDistance - previousSignedDistance);
-      }
-
-      if (distance < bestColorDistance) {
-        bestColor = shade;
-        bestColorDistance = distance;
-
-      // Note: We have to make sure the distance increased since there could be two of the same colors in the palette.
-      } else if (distance > bestColorDistance) {
-        // We have increased the distance, which means we're moving away from the best color and can safely quit.
-        break;
-      }
-    }
-
-    previousSignedDistance = signedDistance;
-    previousColor = shade;
-  }
-
-  vec3 destinationColor = bestColor;
-
-  if (smoothShading && passedZero) {
-    destinationColor = mix(earlierColor, laterColor, blendFactor);
-  }
+  // Bound shaded color to palette ramp.
+  vec3 destinationColor = boundColorToPaletteRamp(shadedColor, paletteColor.r, shadingDither, smoothShading);
 
   // Color the pixel with the best match from the palette.
   gl_FragColor = vec4(destinationColor, opacity);
