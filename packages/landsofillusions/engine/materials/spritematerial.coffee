@@ -92,6 +92,7 @@ void main()	{
 
   // Calculate total light intensity. This step also tints the palette color based
   // on shadow color, so we have to do it before applying tinting in preprocessing.
+  float shadowBiasOffset = -0.001;
   #{LOI.Engine.Materials.ShaderChunks.totalLightIntensityFragment}
 
   // Apply preprocessing info.

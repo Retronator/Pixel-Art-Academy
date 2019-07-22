@@ -23,7 +23,7 @@ class LOI.Engine.World.SceneManager
     interiorLighting.shadow.camera.top = d
     interiorLighting.shadow.camera.bottom = -d
     interiorLighting.shadow.camera.near = 0.5
-    interiorLighting.shadow.camera.far = 5
+    interiorLighting.shadow.camera.far = 40
     interiorLighting.shadow.mapSize.width = 4096
     interiorLighting.shadow.mapSize.height = 4096
     interiorLighting.shadow.bias = 0
@@ -123,7 +123,6 @@ class LOI.Engine.World.SceneManager
           @_currentLocationMesh = new LOI.Assets.Engine.Mesh
             meshData: => meshData
             sceneManager: @
-            smoothShading: => true
 
           # Initialize the camera from the camera angle.
           @world.cameraManager().setFromCameraAngle cameraAngle()
@@ -184,6 +183,7 @@ class LOI.Engine.World.SceneManager
     directionalOpaqueShadowMap: (directionalLight.shadow.opaqueMap.texture for directionalLight in directionalLights)
     directionalShadowColorMap: (directionalLight.shadow.colorMap.texture for directionalLight in directionalLights)
     preprocessingMap: rendererManager.preprocessingRenderTarget.texture
+    smoothShading: LOI.settings.graphics.smoothShading.value()
 
   addedSceneObjects: ->
     @sceneObjectsAddedDependency.changed()

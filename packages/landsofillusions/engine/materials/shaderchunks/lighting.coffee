@@ -75,7 +75,7 @@ LOI.Engine.Materials.ShaderChunks.totalLightIntensityFragment = """
     lightIntensity = saturate(dot(directionalLight.direction, normal)) * directionalLight.color.r;
 
     #ifdef USE_SHADOWMAP
-      shadowColor = getShadowColor(directionalShadowMap[ i ], directionalOpaqueShadowMap[ i ], directionalShadowColorMap[ i ], directionalLight.shadowBias, vDirectionalShadowCoord[ i ]);
+      shadowColor = getShadowColor(directionalShadowMap[ i ], directionalOpaqueShadowMap[ i ], directionalShadowColorMap[ i ], directionalLight.shadowBias + shadowBiasOffset, vDirectionalShadowCoord[ i ]);
 
     #else
       // We aren't using shadows, let all the light go through (full translucency).

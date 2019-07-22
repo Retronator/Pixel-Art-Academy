@@ -49,6 +49,7 @@ class LOI.Settings
       minimumScale: new @constructor.Field 2, 'graphics.minimumScale', @persistSettings
       maximumScale: new @constructor.Field null, 'graphics.maximumScale', @persistSettings
       anisotropicFilteringSamples: new @constructor.Field 16, 'graphics.anisotropicFilteringSamples', @persistSettings
+      smoothShading: new @constructor.Field true, 'graphics.smoothShading', @persistSettings
 
     @audio =
       enabled: new @constructor.Field @constructor.Audio.Enabled.Fullscreen, 'audio.enabled', @persistSettings

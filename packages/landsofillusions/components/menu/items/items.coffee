@@ -70,7 +70,10 @@ class LOI.Components.Menu.Items extends AM.Component
 
   audioEnabled: ->
     LOI.settings.audio.enabled.value()
-    
+
+  smoothShading: ->
+    LOI.settings.graphics.smoothShading.value()
+
   graphicsMaximumScale: ->
     LOI.settings.graphics.maximumScale.value()
 
@@ -108,6 +111,7 @@ class LOI.Components.Menu.Items extends AM.Component
       'click .audio': @onClickAudio
       'click .graphics-scale .previous-button': @onClickGraphicsScalePreviousButton
       'click .graphics-scale .next-button': @onClickGraphicsScaleNextButton
+      'click .smooth-shading': @onClickSmoothShading
       'click .permissions': @onClickPermissions
       'click .back-to-menu': @onClickBackToMenu
 
@@ -222,6 +226,10 @@ class LOI.Components.Menu.Items extends AM.Component
 
     LOI.settings.graphics.minimumScale.value currentValue
     LOI.settings.graphics.maximumScale.value currentValue
+
+  onClickSmoothShading: (event) ->
+    smoothShadingValue = LOI.settings.graphics.smoothShading.value
+    smoothShadingValue not smoothShadingValue()
 
   onClickPermissions: (event) ->
     @currentScreen @constructor.Screens.Permissions
